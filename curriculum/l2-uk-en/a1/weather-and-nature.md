@@ -323,7 +323,7 @@ Unlike English, where "winter" is a noun that needs a preposition "in" to become
 *   *Example:* **Взимку холодно і йде сніг.**
 *   *Description:* Взимку ми святкуємо Різдво. Усі дерева білі. Ми носимо шапки і шарфи.
 
-**2. Весна** [vɛsˈnɑ] — Spring
+**2. Весна** [ʋɛsˈnɑ] — Spring
 *   **Коли?** (When?): **Навесні** [nɑʋɛsˈnʲi] — In spring
 *   *Association:* Flowers, green grass, warming up.
 *   *Example:* **Навесні тепло і світить сонце.**

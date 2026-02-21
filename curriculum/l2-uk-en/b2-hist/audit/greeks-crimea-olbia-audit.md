@@ -1,8 +1,8 @@
 # Audit Report: M03 — greeks-crimea-olbia.md
 **Level:** B2-HIST | **Module:** M03 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 18:44:14
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-21 15:27:26
 
 ## Configuration
 **Type:** B2-history
@@ -33,6 +33,52 @@
 - Required types used: 3/3 (comparative-study, critical-analysis, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[EUPHONY]** Line 96: «у Ольвії» — у перед голосним; має бути «в Ольвії»
+  - FIX: Replace «у» with «в» (before vowel)
+- **[EUPHONY]** Line 107: «з четвертого» — з перед з/с/ш/ч; має бути «із четвертого»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 112: «донині і є» — і між голосними; має бути «й є»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 112: «в промислових» — в перед збігом приголосних; має бути «у промислових»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 112: «в світі» — в перед збігом приголосних; має бути «у світі»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 147: «з численними» — з перед з/с/ш/ч; має бути «із численними»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 152: «в Криму» — в перед збігом приголосних; має бути «у Криму»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 173: «в ньому» — в перед збігом приголосних; має бути «у ньому»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 183: «в храмах» — в перед збігом приголосних; має бути «у храмах»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 200: «в класичному» — в перед збігом приголосних; має бути «у класичному»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 203: «в цьому» — в перед збігом приголосних; має бути «у цьому»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 205: «в Криму» — в перед збігом приголосних; має бути «у Криму»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 208: «в ґрунт» — в перед збігом приголосних; має бути «у ґрунт»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 230: «в храмі» — в перед збігом приголосних; має бути «у храмі»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 237: «в Криму» — в перед збігом приголосних; має бути «у Криму»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 242: «з засновників» — з перед з/с/ш/ч; має бути «із засновників»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 253: «у ювелірному» — у перед голосним; має бути «в ювелірному»
+  - FIX: Replace «у» with «в» (before vowel)
+- **[EUPHONY]** Line 71: повторення і/й без «та» — «...тих ремісників і торговців...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 73: повторення і/й без «та» — «..., була спалена і безжально погр...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 19 violations (severe - consider revision)
+
 ## Gates
 - **Words:** ✅ 5182/5000 (raw: 5424)
 - **Activities:** ✅ 5/3
@@ -45,7 +91,7 @@
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 19 violations
 - **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
 - **Richness:** ✅ 95% (history)

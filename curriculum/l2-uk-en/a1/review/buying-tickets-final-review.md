@@ -16,7 +16,7 @@ File: `buying-tickets.md`, line 35
 
 **Issue 3: IPA — місце missing tie bar (x2)**
 File: `buying-tickets.md`, lines 173 and 174
-`[ˈm⁽ʲ⁾isʲtse]` — the "ц" (tse) portion of місце lacks a tie bar. Should be `[ˈm⁽ʲ⁾isʲt͡se]` for consistency with project standard.
+`[ˈm⁽ʲ⁾isʲt͡se]` — the "ц" (tse) portion of місце lacks a tie bar. Should be `[ˈm⁽ʲ⁾isʲt͡se]` for consistency with project standard.
 
 **Issue 4: IPA — відправлення uses dialectal [u̯] for в**
 File: `buying-tickets.md`, line 183
@@ -77,8 +77,8 @@ FILE: curriculum/l2-uk-en/a1/buying-tickets.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/buying-tickets.md
 ---OLD---
-*   **Нижнє місце** [ˈnɪʒnʲɛ ˈm⁽ʲ⁾isʲtse] is the "lower seat/bunk". It is usually preferred because you can sit on it during the day and don't have to climb.
-*   **Верхнє місце** [ˈʋɛrxnʲɛ ˈm⁽ʲ⁾isʲtse] is the "upper seat/bunk". It is often cheaper, but requires some agility to access.
+*   **Нижнє місце** [ˈnɪʒnʲɛ ˈm⁽ʲ⁾isʲt͡se] is the "lower seat/bunk". It is usually preferred because you can sit on it during the day and don't have to climb.
+*   **Верхнє місце** [ˈʋɛrxnʲɛ ˈm⁽ʲ⁾isʲt͡se] is the "upper seat/bunk". It is often cheaper, but requires some agility to access.
 ---NEW---
 *   **Нижнє місце** [ˈnɪʒnʲɛ ˈm⁽ʲ⁾isʲt͡se] is the "lower seat/bunk". It is usually preferred because you can sit on it during the day and don't have to climb.
 *   **Верхнє місце** [ˈʋɛrxnʲɛ ˈm⁽ʲ⁾isʲt͡se] is the "upper seat/bunk". It is often cheaper, but requires some agility to access.

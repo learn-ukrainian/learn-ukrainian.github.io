@@ -49,6 +49,7 @@ GEMINI_CLI = shutil.which("gemini") or "gemini"
 # Set GEMINI_SESSION so .bashrc disables hostile aliases (eza, bat, zoxide)
 _PARENT_ENV = os.environ.copy()
 _PARENT_ENV["GEMINI_SESSION"] = "1"
+_PARENT_ENV["LEARN_UKRAINIAN_PIPELINE"] = "1"  # Suppress inbox hooks during pipeline runs
 
 
 def _git_status_snapshot() -> set[str]:
@@ -325,32 +326,36 @@ def init_db():
     return conn
 
 def get_db():
-    """Get database connection."""
+    """Get database connection with auto-migration (#604)."""
     if not DB_PATH.exists():
         return init_db()
     conn = sqlite3.connect(DB_PATH)
-    
-    # Check for missing columns (migration for existing DBs)
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA table_info(messages)")
-    columns = [row[1] for row in cursor.fetchall()]
-    
-    if "status" not in columns:
-        print("🔧 Migrating database: adding 'status' column to 'messages' table")
-        conn.execute("ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+    conn.execute("PRAGMA busy_timeout=5000")
+
+    try:
+        # Check for missing columns (migration for existing DBs)
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(messages)")
+        columns = [row[1] for row in cursor.fetchall()]
+
+        if "status" not in columns:
+            print("🔧 Migrating database: adding 'status' column to 'messages' table")
+            conn.execute("ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+
+        # Ensure sessions table exists
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS sessions (
+                task_id TEXT PRIMARY KEY,
+                claude_session_id TEXT,
+                gemini_session_id TEXT,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+        """)
         conn.commit()
-        
-    # Ensure sessions table exists
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS sessions (
-            task_id TEXT PRIMARY KEY,
-            claude_session_id TEXT,
-            gemini_session_id TEXT,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        )
-    """)
-    conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     return conn
 
 
@@ -983,6 +988,8 @@ Format your response clearly.
                 env=_PARENT_ENV,  # Inherit PATH so CLI tools are found
                 start_new_session=True  # Survive parent exit
             )
+            # Close the log fd in the parent — child inherited it (#604)
+            lf.close()
             print(f"   PID: {proc.pid}")
 
             # Write PID file for the CHILD process so lock checks work
@@ -1049,16 +1056,43 @@ Format your response clearly.
                         env=_PARENT_ENV
                     )
 
+                    # Watchdog: kill process if it exceeds timeout (#604)
+                    _timed_out = False
+                    _watchdog_timer = None
+                    if timeout_val:
+                        def _kill_on_timeout():
+                            nonlocal _timed_out
+                            _timed_out = True
+                            print(f"\n⏰ Gemini CLI timed out after {timeout_val}s — killing process")
+                            sys.stdout.flush()
+                            try:
+                                proc.kill()
+                            except OSError:
+                                pass
+                        import threading
+                        _watchdog_timer = threading.Timer(timeout_val, _kill_on_timeout)
+                        _watchdog_timer.daemon = True
+                        _watchdog_timer.start()
+
                     # Read stdout in real-time, collect for response routing
                     output_lines = []
-                    for line in proc.stdout:
-                        print(line, end='')  # Real-time to log file
-                        sys.stdout.flush()
-                        output_lines.append(line)
+                    try:
+                        for line in proc.stdout:
+                            print(line, end='')  # Real-time to log file
+                            sys.stdout.flush()
+                            output_lines.append(line)
+                    except (IOError, ValueError):
+                        pass  # Pipe broken after kill
 
                     # Wait for process to finish, get stderr
                     proc.wait()
+                    if _watchdog_timer:
+                        _watchdog_timer.cancel()
                     stderr = proc.stderr.read() if proc.stderr else ""
+
+                    if _timed_out:
+                        stderr += f"\n[bridge] Process killed after {timeout_val}s timeout"
+                        proc.returncode = -9  # Signal killed
 
                     if proc.returncode != 0:
                         # Detect model unavailability (fail fast, no retry)
@@ -1293,6 +1327,8 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 env=_PARENT_ENV,  # Inherit PATH so CLI tools are found
                 start_new_session=True  # Survive parent exit
             )
+            # Close the log fd in the parent — child inherited it (#604)
+            lf.close()
             print(f"   PID: {proc.pid}")
 
             # Write PID file for the CHILD process so lock checks work
@@ -1338,14 +1374,41 @@ Do NOT use MCP tools to send your response - just output your response directly.
                 env=_PARENT_ENV
             )
 
+            # Watchdog: kill process if it exceeds timeout (#604)
+            _timed_out = False
+            _watchdog_timer = None
+            if timeout_val:
+                def _kill_on_timeout():
+                    nonlocal _timed_out
+                    _timed_out = True
+                    print(f"\n⏰ Claude CLI timed out after {timeout_val}s — killing process")
+                    sys.stdout.flush()
+                    try:
+                        proc.kill()
+                    except OSError:
+                        pass
+                import threading
+                _watchdog_timer = threading.Timer(timeout_val, _kill_on_timeout)
+                _watchdog_timer.daemon = True
+                _watchdog_timer.start()
+
             output_lines = []
-            for line in proc.stdout:
-                print(line, end='')
-                sys.stdout.flush()
-                output_lines.append(line)
+            try:
+                for line in proc.stdout:
+                    print(line, end='')
+                    sys.stdout.flush()
+                    output_lines.append(line)
+            except (IOError, ValueError):
+                pass  # Pipe broken after kill
 
             proc.wait()
+            if _watchdog_timer:
+                _watchdog_timer.cancel()
             stderr = proc.stderr.read() if proc.stderr else ""
+
+            if _timed_out:
+                stderr += f"\n[bridge] Process killed after {timeout_val}s timeout"
+                proc.returncode = -9
 
             if proc.returncode != 0:
                 error_msg = stderr.strip() or "Unknown error"

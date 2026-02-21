@@ -1,7 +1,7 @@
 # Audit Report: M06 — being-and-becoming.md
 **Level:** A2 | **Module:** M06 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-20 12:26:23
+**Generated:** 2026-02-21 10:11:28
 
 ## Configuration
 **Type:** A2-grammar
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина, орудний, називний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина, називний, орудний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
@@ -49,20 +49,20 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 3042/3000 (raw: 3278)
+- **Words:** ✅ 3047/3000 (raw: 3283)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 59.9% (target 50-60% (A2.1))
+- **Immersion:** 🇺🇦 60.0% (target 50-60% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -74,6 +74,6 @@
 | **Being and Becoming: Identity in Motion** | ✅ | 76 | Included in Core |
 | **Вступ: Роль та ідентичність** | ✅ | 427 | Included in Core |
 | **Презентація: Бути, стати, працювати** | ✅ | 989 | Included in Core |
-| **Практика: Від мрії до реальності** | ✅ | 765 | Included in Core |
+| **Практика: Від мрії до реальності** | ✅ | 770 | Included in Core |
 | **Діалоги: Кар'єра та робота** | ✅ | 730 | Included in Core |
 | **Підсумок** | ✅ | 55 | Included in Core |

@@ -21,14 +21,14 @@
   3 Outline Compliance Errors
   failing gates:
     meta: Valid Structure | Lint: 4 Format Errors
-    lesson: 2890/3000 (raw: 3101) | pedagogy: 4 violations | immersion: 23.5% LOW (target 50-60% (A2.1))
+    lesson: 2890/3000 (raw: 3101) | pedagogy: 3 violations | immersion: 23.5% LOW (target 50-60% (A2.1))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
      → Revision recommended (severity 65/100)
-     → 5 violations (moderate)
+     → 4 violations (moderate)
      → Immersion 26% off target (major rebalancing needed)
      → 4 format errors
 

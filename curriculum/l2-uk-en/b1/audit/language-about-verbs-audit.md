@@ -1,7 +1,7 @@
 # Audit Report: M02 — language-about-verbs.md
 **Level:** B1 | **Module:** M02 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 01:02:14
+**Generated:** 2026-02-21 09:31:53
 
 ## Configuration
 **Type:** B1-bridge
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4634/4000 (raw: 5028)
+- **Words:** ✅ 4645/4000 (raw: 5039)
 - **Activities:** ✅ 7/4
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/3 types
@@ -44,7 +44,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 14 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ⚠️ 3 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
@@ -61,7 +61,7 @@
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| examples | 100 | 20 | 100% | 29% | 28.6% |
+| examples | 99 | 20 | 100% | 29% | 28.6% |
 | engagement | 7 | 5 | 100% | 19% | 19.0% |
 | variety | 0.95 | - | 95% | 10% | 9.0% |
 | cultural | 1 | 2 | 50% | 10% | 4.8% |
@@ -77,13 +77,13 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Мова про дієслова** | ✅ | 57 | Included in Core |
-| **Вступ: Система дієслова** | ✅ | 357 | Included in Core |
-| **Вид дієслова: Основи термінології** | ✅ | 729 | Included in Core |
+| **Вступ: Система дієслова** | ✅ | 355 | Included in Core |
+| **Вид дієслова: Основи термінології** | ✅ | 728 | Included in Core |
 | **Характер дії: Процес і результат** | ✅ | 548 | Included in Core |
-| **Час дієслова: Минулий, теперішній, майбутній** | ✅ | 487 | Included in Core |
+| **Час дієслова: Минулий, теперішній, майбутній** | ✅ | 488 | Included in Core |
 | **Термінологія заперечення** | ✅ | 414 | Included in Core |
 | **Додаткові граматичні категорії: Спосіб, стан та особа** | ✅ | 540 | Included in Core |
 | **Форми дієслова: Складена та синтетична** | ✅ | 540 | Included in Core |
 | **Практикум: Читаємо граматичні пояснення** | ✅ | 379 | Included in Core |
-| **Міні-діалоги: Говоримо про граматику** | ✅ | 331 | Included in Core |
+| **Міні-діалоги: Говоримо про граматику** | ✅ | 344 | Included in Core |
 | **Підсумок і самоперевірка** | ✅ | 252 | Included in Core |

@@ -2,7 +2,7 @@
   "module": "kniaz-sviatoslav",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T21:47:16.332896Z",
+  "last_audit": "2026-02-21T15:10:41.462784Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-19T11:10:48.510036Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5324/5000 (raw: 5741)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5324/5000 (raw: 5741) | pedagogy: 33 violations"
     },
     "activities": {
       "status": "pass",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

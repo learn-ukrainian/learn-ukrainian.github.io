@@ -1628,13 +1628,21 @@ and routes phases to the best LLM: Gemini for research/prose, Claude for activit
 # Just verify (run audit, print PASS/FAIL, exit)
 .venv/bin/python scripts/build_module_v3.py {track} {num} --verify
 
-# + Phase F: Claude final QA gate after Phase D
+# + Phase F: optional final QA gate after Phase D
 .venv/bin/python scripts/build_module_v3.py {track} {num} --final-review
+
+# Phase F via Gemini (cross-agent: D=Claude, F=Gemini)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review --final-review-agent gemini
 ```
+
+**Cross-agent pipeline:**
+
+Phase D (review) always uses Claude — the opposite agent from Phase B (Gemini builds content).
+This prevents self-review gaming detected by anti-gaming audit checks (issue #610).
 
 **Hybrid LLM routing — `--use-claude`:**
 
-By default, Phase C (activities) uses Claude and Phase F (final review) uses Claude.
+By default, Phases A/B/C use Gemini and Phase D uses Claude.
 Use `--use-claude` to route additional phases to Claude (useful when running from a terminal
 to avoid Claude Code's 2-minute bash timeout, or to use Claude's superior activity quality):
 
@@ -1657,6 +1665,7 @@ to avoid Claude Code's 2-minute bash timeout, or to use Claude's superior activi
 Default models are set in `scripts/batch_gemini_config.py` and auto-selected based on track type:
 - Seminar tracks (c1-bio, b2-hist, c1-hist, lit, oes, ruth): **claude-opus-4-6** for Claude phases
 - Core tracks (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro): **claude-sonnet-4-6** for Claude phases
+- Phase D (review): always **claude-opus-4-6** (cross-agent review needs best model)
 - Phase F (final review): always **claude-opus-4-6** regardless of track
 
 Override models per-phase when needed:
@@ -1664,6 +1673,9 @@ Override models per-phase when needed:
 ```bash
 # Use Opus for activities even on a core track
 .venv/bin/python scripts/build_module_v3.py a1 {num} --claude-model-C claude-opus-4-6
+
+# Use Sonnet for Phase D review (faster, cheaper)
+.venv/bin/python scripts/build_module_v3.py {track} {num} --claude-model-D claude-sonnet-4-6
 
 # Use Sonnet for final review (faster, cheaper)
 .venv/bin/python scripts/build_module_v3.py {track} {num} --final-review --claude-model-F claude-sonnet-4-6

@@ -2,7 +2,7 @@
   "module": "sloviany-origins",
   "level": "B2",
   "plan_version": "0.0.1",
-  "last_audit": "2026-02-19T18:44:16.956812Z",
+  "last_audit": "2026-02-21T15:10:38.412899Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-19T11:02:07.764603Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5120/5000 (raw: 5368)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5120/5000 (raw: 5368) | pedagogy: 17 violations"
     },
     "activities": {
       "status": "pass",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 8,
-    "fail_count": 0,
+    "pass_count": 6,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

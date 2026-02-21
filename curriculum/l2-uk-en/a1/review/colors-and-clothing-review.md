@@ -51,7 +51,7 @@ Plan-Content Alignment: PASS
 ### Issue 2: Phonetic Precision
 - **Location**: Section "Вказівний займенник «Ці»"
 - **Original**: `[t sʲ i]`
-- **Problem**: While technically correct for "ці", the spacing suggests separate phonemes rather than the affricate `[tsʲ]`.
+- **Problem**: While technically correct for "ці", the spacing suggests separate phonemes rather than the affricate `[t͡sʲ]`.
 - **Fix**: Minor polish, ensuring standard IPA formatting where possible, though the current one is readable. (Not blocking).
 
 ## Ukrainian Language Issues

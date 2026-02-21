@@ -2,5 +2,31 @@
   "track": "a2",
   "slug": "dative-verbs",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-21T00:07:33Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T00:07:33Z",
+      "note": "adopted-existing-meta"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-21T00:07:34Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-21T00:11:39Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-21T00:14:25Z",
+      "attempts": 1
+    }
+  }
 }

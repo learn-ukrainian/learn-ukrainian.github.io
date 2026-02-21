@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T14:38:59Z",
+      "ts": "2026-02-21T00:08:37Z",
       "task_id": "v3-akt-zluki-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

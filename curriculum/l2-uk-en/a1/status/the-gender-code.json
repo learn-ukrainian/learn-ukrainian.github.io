@@ -2,7 +2,7 @@
   "module": "the-gender-code",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T00:46:29.327783Z",
+  "last_audit": "2026-02-21T17:28:36.167044Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-20T21:41:13.452366Z",
@@ -24,14 +24,14 @@
       "message": "2304/2000 (raw: 2560)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "9/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "26/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 4,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

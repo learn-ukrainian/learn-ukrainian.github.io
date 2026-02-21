@@ -2,5 +2,32 @@
   "track": "a1",
   "slug": "combined-practice",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T00:17:03Z",
+      "task_id": "v3-combined-practice-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-21T00:18:24Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-21T00:20:22Z",
+      "task_id": "v3-combined-practice-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-21T00:27:52Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-21T00:31:59Z",
+      "attempts": 2,
+      "note": "escalation-claude"
+    }
+  }
 }

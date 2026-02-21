@@ -305,9 +305,29 @@ Follow the full review protocol. In summary:
 ### STEP 3: Auto-Fail Checklist
 - Russianisms (кушать→їсти, приймати участь→брати участь, etc.)
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
+- **Colonial framing** — Ukrainian defined by contrast with Russian (see below)
 - Grammar scope violations
 - Activity errors
 - Beginner safety ("Would I Continue?" test)
+
+### STEP 3a: Colonial Framing Check (MANDATORY)
+
+**Search the content for any passage that defines Ukrainian by contrast with Russian.** This is colonial framing and must be flagged.
+
+**Flag these patterns:**
+- "Unlike Russian..." / "Different from Russian..."
+- "Russian does not have/use..." (defining Ukrainian via Russian's absence)
+- "Looks/sounds like Russian..."
+- References to "Russian script/alphabet/letters" as comparison point
+- "To a Western eye..." (patronizing framing)
+
+**Legitimate exceptions** — do NOT flag these:
+- `[!myth-buster]` blocks explicitly debunking Russian propaganda
+- `[!decolonization]` blocks discussing resistance or language independence
+- Historical context about Russification, bans, or colonial repression
+- Kyiv/Kiev transliteration context
+
+**If colonial framing is found:** Score Language ≤ 7, flag as Critical Issue, and include a fix that presents the Ukrainian feature on its own terms without Russian as baseline.
 
 ### STEP 3b: LLM Fingerprint Scan (MANDATORY)
 
@@ -372,6 +392,20 @@ Your review MUST contain:
 4. **Fabricated citations** → REJECTED.
 
 **Your review scores DO NOT determine whether the module passes.** The automated audit gates are the real quality check. Be the skeptic. Find real problems.
+
+---
+
+## REVIEWER IDENTIFICATION (REQUIRED METADATA)
+
+Your review MUST start with a `Reviewed-By` metadata line so automated checks can verify cross-agent review integrity. Place this as the very first line of your review output:
+
+```
+**Reviewed-By:** {YOUR_MODEL_ID}
+```
+
+Example: `**Reviewed-By:** gemini-2.5-pro` or `**Reviewed-By:** claude-sonnet-4-6`
+
+This is checked by the `SELF_REVIEW_DETECTED` audit gate — if the same model family built and reviewed the content, the review is rejected.
 
 ---
 

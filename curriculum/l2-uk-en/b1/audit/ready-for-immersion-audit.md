@@ -1,7 +1,7 @@
 # Audit Report: M05 — ready-for-immersion.md
 **Level:** B1 | **Module:** M05 | **Phase:** B1.0 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-20 17:42:29
+**Generated:** 2026-02-21 01:37:34
 
 ## Configuration
 **Type:** B1-bridge
@@ -41,7 +41,7 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/20
+- **Vocab:** ✅ 27/20
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format

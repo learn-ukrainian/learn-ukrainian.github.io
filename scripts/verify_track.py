@@ -78,6 +78,18 @@ def read_status(status_file):
         return json.load(f)
 
 
+def is_status_stale(status_file, content_file):
+    """Check if the status cache is stale (content modified after audit ran).
+
+    Returns True if content file is strictly newer than the status file.
+    Equal mtimes (e.g., from git checkout) are NOT treated as stale (#602).
+    For robust equal-mtime handling, use content hashing (see #618).
+    """
+    if not status_file.exists() or not content_file or not content_file.exists():
+        return False
+    return content_file.stat().st_mtime > status_file.stat().st_mtime
+
+
 def classify_module(status, full_mode):
     """Classify a module as pass/content-complete/fail based on status JSON."""
     if status is None:
@@ -178,7 +190,7 @@ def main():
         content_file = find_content_file(track_dir, slug)
 
         if content_file is None:
-            results.append((num, slug, "no-file", ["content .md not found"]))
+            results.append((num, slug, "no-file", ["content .md not found"], False))
             print(f"  {DIM}M{num:02d} {slug}: no content file{RESET}")
             continue
 
@@ -190,15 +202,24 @@ def main():
         status = read_status(status_file)
         classification, problems = classify_module(status, args.full)
 
+        # Staleness detection: flag passes that may be outdated (#602)
+        stale = False
+        if args.quick and classification in ("pass", "content-complete"):
+            if is_status_stale(status_file, content_file):
+                stale = True
+                problems.insert(0, "STALE: content modified after last audit")
+
         sidecar_missing = check_sidecar_files(track_dir, slug, args.full)
         if sidecar_missing:
             problems.extend(sidecar_missing)
             if classification == "pass":
                 classification = "fail"
 
-        results.append((num, slug, classification, problems))
+        results.append((num, slug, classification, problems, stale))
 
-        if classification == "pass":
+        if stale:
+            icon = f"{YELLOW}STALE{RESET}"
+        elif classification == "pass":
             icon = f"{GREEN}PASS{RESET}"
         elif classification == "content-complete":
             icon = f"{YELLOW}PROSE{RESET}"
@@ -215,11 +236,12 @@ def main():
     print(f"{'=' * 70}")
 
     total = len(results)
-    pass_count = sum(1 for _, _, s, _ in results if s == "pass")
-    prose_count = sum(1 for _, _, s, _ in results if s == "content-complete")
-    fail_count = sum(1 for _, _, s, _ in results if s == "fail")
-    no_file_count = sum(1 for _, _, s, _ in results if s == "no-file")
-    no_status_count = sum(1 for _, _, s, _ in results if s == "no-status")
+    pass_count = sum(1 for _, _, s, _, _ in results if s == "pass")
+    prose_count = sum(1 for _, _, s, _, _ in results if s == "content-complete")
+    fail_count = sum(1 for _, _, s, _, _ in results if s == "fail")
+    no_file_count = sum(1 for _, _, s, _, _ in results if s == "no-file")
+    no_status_count = sum(1 for _, _, s, _, _ in results if s == "no-status")
+    stale_count = sum(1 for _, _, _, _, st in results if st)
 
     print(f"  {BOLD}SUMMARY: {args.track}{RESET}")
     print(f"  Total:            {total}")
@@ -227,13 +249,15 @@ def main():
     if not args.full:
         print(f"  {YELLOW}Content-complete: {prose_count}{RESET}")
     print(f"  {RED}Fail:             {fail_count}{RESET}")
+    if stale_count:
+        print(f"  {YELLOW}Stale passes:     {stale_count}{RESET}  (re-run without --quick to revalidate)")
     if no_file_count:
         print(f"  {DIM}No content file:  {no_file_count}{RESET}")
     if no_status_count:
         print(f"  {DIM}No status JSON:   {no_status_count}{RESET}")
     print(f"{'=' * 70}")
 
-    failing = [(n, s, p) for n, s, cls, p in results if cls == "fail"]
+    failing = [(n, s, p) for n, s, cls, p, _ in results if cls == "fail"]
     if failing:
         print()
         print(f"  {RED}{BOLD}FAILING MODULES:{RESET}")

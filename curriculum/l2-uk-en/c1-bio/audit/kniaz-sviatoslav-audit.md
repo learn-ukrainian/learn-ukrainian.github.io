@@ -1,7 +1,7 @@
 # Audit Report: M02 — kniaz-sviatoslav.md
 **Level:** C1-BIO | **Module:** M02 | **Phase:** C1.3 | **Pedagogy:** CBI | **Target:** 5000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 21:47:16
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-21 15:10:41
 
 ## Configuration
 **Type:** C1-biography
@@ -31,6 +31,80 @@
 - Required types used: 2/2 (essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[EUPHONY]** Line 18: «в візантійську» — в перед в/ф; має бути «у візантійську»
+  - FIX: Replace «в» with «у» (before в or ф)
+- **[EUPHONY]** Line 33: «в XVI» — в перед збігом приголосних; має бути «у XVI»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 33: «в дружинній» — в перед збігом приголосних; має бути «у дружинній»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 60: «в цьому» — в перед збігом приголосних; має бути «у цьому»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 72: «в військових» — в перед в/ф; має бути «у військових»
+  - FIX: Replace «в» with «у» (before в or ф)
+- **[EUPHONY]** Line 92: «у араби» — у перед голосним; має бути «в араби»
+  - FIX: Replace «у» with «в» (before vowel)
+- **[EUPHONY]** Line 102: «в глибокий» — в перед збігом приголосних; має бути «у глибокий»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 150: «міцно і я» — і між голосними; має бути «й я»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 157: «сорочку і єдиною» — і між голосними; має бути «й єдиною»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 157: «з човна» — з перед з/с/ш/ч; має бути «із човна»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 175: «з черепа» — з перед з/с/ш/ч; має бути «із черепа»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 177: «в степовій» — в перед збігом приголосних; має бути «у степовій»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 177: «з черепа» — з перед з/с/ш/ч; має бути «із черепа»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 177: «з черепа» — з перед з/с/ш/ч; має бути «із черепа»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 188: «в ключових» — в перед збігом приголосних; має бути «у ключових»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 188: «в Древлянській» — в перед збігом приголосних; має бути «у Древлянській»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 241: «в трактаті» — в перед збігом приголосних; має бути «у трактаті»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 243: «з човна» — з перед з/с/ш/ч; має бути «із човна»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 256: «поведінка і етика» — і між голосними; має бути «й етика»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 269: «жити і як» — і між голосними; має бути «й як»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 9: повторення і/й без «та» — «...ького типу, що й Богдан Хмельни...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 23: повторення і/й без «та» — «...сну жадібність і порушення непи...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 30: повторення і/й без «та» — «...ння лівої щоки і прощення ворог...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 31: повторення і/й без «та» — «...б не зрозуміли і не прийняли кн...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 39: повторення і/й без «та» — «...їхній [Ітіль] і Білу Вежу взяв...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 41: повторення і/й без «та» — «...али відкритими і вразливими як...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 55: повторення і/й без «та» — «...з карбункулом і двома перлинам...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 57: повторення і/й без «та» — «...ки пораненим), і мерз так само,...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 66: повторення і/й без «та» — «...л (зброярства) і торгівлі здоби...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 75: повторення і/й без «та» — «...ув центральним і визначальним...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 77: повторення і/й без «та» — «...бсолютно чужим і незрозумілим ц...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 84: повторення і/й без «та» — «...о важливим, як і архетип Матері...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 84: повторення і/й без «та» — «...його ментальну і візуальну відм...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 33 violations (severe - consider revision)
+
 ## Gates
 - **Words:** ✅ 5324/5000 (raw: 5741)
 - **Activities:** ✅ 4/3
@@ -43,7 +117,7 @@
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 33 violations
 - **Content_heavy:** ✅ Content-heavy OK (4 activities)
 - **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)

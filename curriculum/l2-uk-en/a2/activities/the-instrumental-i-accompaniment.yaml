@@ -38,7 +38,7 @@
     - name: '-ою (Feminine Hard)'
       items: ['з мамою', 'з сестрою', 'з водою', 'з дружиною', 'з Ольгою']
     - name: '-ею / -єю (Feminine Soft)'
-      items: ['з Марією', 'з надією', 'з доцею', 'з Юлією', 'з мрією']
+      items: ['з Марією', 'з Надією', 'з доцею', 'з Юлією', 'з мрією']
 
 - type: quiz
   title: 'Милозвучність: з, із, зі (Euphony)'
@@ -55,8 +55,8 @@
           correct: false
         - text: 'без'
           correct: false
-    - question: 'Він розмовляє ____ мною.'
-      explanation: 'Mnoiu starts with a cluster (mn), so we need the buffer vowel i (zi).'
+    - question: 'Він часто розмовляє ____ мною по телефону.'
+      explanation: 'Мною starts with a cluster (мн-), so we need the buffer vowel і → зі.'
       options:
         - text: 'зі'
           correct: true
@@ -66,8 +66,8 @@
           correct: false
         - text: 'до'
           correct: false
-    - question: 'Вона гуляє ____ собакою.'
-      explanation: 'Sobakoiu starts with a single consonant, so standard з is fine.'
+    - question: 'Вона щодня гуляє ____ собакою в парку.'
+      explanation: 'Собакою starts with a single consonant, so standard з is fine.'
       options:
         - text: 'з'
           correct: true
@@ -77,8 +77,8 @@
           correct: false
         - text: 'над'
           correct: false
-    - question: 'Ми вчимося ____ студентом.'
-      explanation: 'Studentom starts with a cluster (st), so we use zi.'
+    - question: 'Ми вчимося в університеті ____ студентом із Канади.'
+      explanation: 'Студентом starts with a cluster (ст-), so we use зі.'
       options:
         - text: 'зі'
           correct: true
@@ -88,8 +88,8 @@
           correct: false
         - text: 'про'
           correct: false
-    - question: 'Ти будеш ____ Андрієм?'
-      explanation: 'Andriiem starts with a vowel, so we use з.'
+    - question: 'Ти будеш на вечірці ____ Андрієм?'
+      explanation: 'Андрієм starts with a vowel, so we use з.'
       options:
         - text: 'з'
           correct: true
@@ -99,8 +99,8 @@
           correct: false
         - text: 'при'
           correct: false
-    - question: 'Я зустрічаюся ____ школою.'
-      explanation: 'Shkoloiu starts with a sibilant cluster (shk), so zi is easier to say.'
+    - question: 'Він завжди зустрічається ____ школярами на майданчику.'
+      explanation: 'Школярами starts with a sibilant cluster (шк-), so зі is easier to say.'
       options:
         - text: 'зі'
           correct: true
@@ -111,7 +111,7 @@
         - text: 'біля'
           correct: false
     - question: 'Він працює разом ____ сестрою.'
-      explanation: 'After razom, we often use iz for rhythm, though z is also possible. Here iz flows well.'
+      explanation: 'After разом, we often use із for rhythm, though з is also possible. Here із flows well.'
       options:
         - text: 'із'
           correct: true
@@ -121,20 +121,19 @@
           correct: false
         - text: 'для'
           correct: false
-    - question: 'Вона живе ____ Львовом.'
-      explanation: 'Lvovom starts with a cluster (lv), but z is often acceptable, though zi/iz is smoother. However, context implies accompaniment.'
+    - question: 'Ми підемо на свято ____ знайомими з роботи.'
+      explanation: 'Знайомими starts with a cluster (зн-), so we use зі for smooth pronunciation.'
       options:
         - text: 'зі'
-          correct: false
+          correct: true
         - text: 'з'
           correct: false
-        - text: 'під'
-          correct: true
-        - text: 'над'
+        - text: 'із'
           correct: false
-      explanation: 'Trick question! Living *under* Lviv? No, wait. Let us stick to accompaniment. Re-doing this item to be clearer about accompaniment.' 
-    - question: 'Хто піде ____ зіркою?'
-      explanation: 'Zirkoiu starts with z, so we need zi to avoid z-z clash.'
+        - text: 'без'
+          correct: false
+    - question: 'Хто з акторів піде на прем''єру ____ зіркою?'
+      explanation: 'Зіркою starts with з-, so we need зі to avoid the awkward з+з clash.'
       options:
         - text: 'зі'
           correct: true
@@ -229,18 +228,18 @@
   title: 'Складіть речення (Sentence Structure)'
   instruction: 'Arrange the words to form correct sentences about accompaniment.'
   items:
-    - words: ['Я', 'гуляю', 'з', 'собакою']
-      answer: 'Я гуляю з собакою'
-    - words: ['Ми', 'з', 'другом', 'розмовляємо']
-      answer: 'Ми розмовляємо з другом'
-    - words: ['Він', 'живе', 'з', 'батьками']
-      answer: 'Він живе з батьками'
-    - words: ['Ти', 'підеш', 'зі', 'мною?']
-      answer: 'Ти підеш зі мною?'
-    - words: ['Вона', 'зустрічається', 'з', 'Андрієм']
-      answer: 'Вона зустрічається з Андрієм'
-    - words: ['Оксана', 'працює', 'разом', 'з', 'Ігорем']
-      answer: 'Оксана працює разом з Ігорем'
+    - words: ['у', 'гуляю', 'Я', 'парку', 'з', 'великому', 'часто', 'собакою']
+      answer: 'Я часто гуляю з собакою у великому парку'
+    - words: ['кожного', 'з', 'телефону', 'другом', 'Ми', 'розмовляємо', 'по', 'вечора']
+      answer: 'Ми розмовляємо з другом по телефону кожного вечора'
+    - words: ['квартирі', 'Він', 'з', 'батьками', 'новій', 'живе', 'у']
+      answer: 'Він живе з батьками у новій квартирі'
+    - words: ['мною', 'на', 'Ти', 'підеш', 'зі', 'суботу?', 'концерт', 'у']
+      answer: 'Ти підеш зі мною на концерт у суботу?'
+    - words: ['площі', 'Вона', 'Андрієм', 'зустрічається', 'біля', 'з', 'кафе', 'на']
+      answer: 'Вона зустрічається з Андрієм біля кафе на площі'
+    - words: ['Оксана', 'у', 'разом', 'компанії', 'великій', 'з', 'працює', 'Ігорем']
+      answer: 'Оксана працює разом з Ігорем у великій компанії'
 
 - type: error-correction
   title: 'Знайдіть помилку (Find the Error)'
@@ -267,7 +266,7 @@
       options: ['Юлією', 'Юлії', 'Юлію', 'Юлі']
       explanation: 'Feminine names ending in -ія change to -єю.'
     - sentence: 'Ти будеш каву з я?'
-      error: 'я'
+      error: 'з я'
       answer: 'зі мною'
       options: ['зі мною', 'з мною', 'з я', 'мною']
       explanation: 'The pronoun я is irregular in Instrumental: зі мною.'
@@ -297,6 +296,14 @@
       right: 'з собакою'
     - left: 'Розмовляти (To talk)'
       right: 'з директором'
+    - left: 'Спілкуватися (To communicate)'
+      right: 'з іноземцями'
+    - left: 'Знайомитися (To get acquainted)'
+      right: 'зі знайомою'
+    - left: 'Обідати (To have lunch)'
+      right: 'з родиною'
+    - left: 'Святкувати (To celebrate)'
+      right: 'з друзями'
 
 - type: fill-in
   title: 'Мішані форми (Mixed Drill)'
@@ -362,8 +369,8 @@
         - text: 'Ми гуляємо з студентом.'
           correct: false
       min_correct: 2
-      explanation: 'Words starting with clusters like mn- or st- usually require зі.'
-    - question: 'Which sentences are correct?'
+      explanation: 'Words starting with clusters like мн- or ст- usually require зі.'
+    - question: 'Which sentences have the correct soft endings?'
       options:
         - text: 'Я зустрічаюся з Андрієм.'
           correct: true
@@ -375,21 +382,57 @@
           correct: false
       min_correct: 2
       explanation: 'Soft stems require soft endings: Андрій → Андрієм, Марія → Марією.'
+    - question: 'Which sentences use the plural Instrumental correctly?'
+      options:
+        - text: 'Ми гуляємо з друзями.'
+          correct: true
+        - text: 'Ми гуляємо з друзі.'
+          correct: false
+        - text: 'Вона працює з колегами.'
+          correct: true
+        - text: 'Вона працює з колеги.'
+          correct: false
+      min_correct: 2
+      explanation: 'Plural Instrumental uses -ами/-ями: друзі → друзями, колеги → колегами.'
+    - question: 'Which sentences correctly use the preposition з for accompaniment?'
+      options:
+        - text: 'Він обідає з сестрою в кафе.'
+          correct: true
+        - text: 'Він обідає сестрою в кафе.'
+          correct: false
+        - text: 'Вона танцює з партнером.'
+          correct: true
+        - text: 'Вона танцює партнером.'
+          correct: false
+      min_correct: 2
+      explanation: 'The preposition з is required when talking about accompaniment. Without it, the sentence is ungrammatical.'
+    - question: 'Which sentences have the correct feminine Instrumental ending?'
+      options:
+        - text: 'Я розмовляю з подругою.'
+          correct: true
+        - text: 'Я розмовляю з подругой.'
+          correct: false
+        - text: 'Він живе з бабусею.'
+          correct: true
+        - text: 'Він живе з бабусей.'
+          correct: false
+      min_correct: 2
+      explanation: 'Hard feminine nouns take -ою (подруга → подругою), soft feminine nouns take -ею (бабуся → бабусею).'
 
 - type: cloze
   title: 'Історія про відпустку (Vacation Story)'
-  passage: 'Минулого літа я їздив на море. Я їздив не сам, а {{1}} (друг). Його звати Іван. Ми жили в готелі {{2}} (море). Щовечора ми гуляли {{3}} (пляж). Одного разу ми познайомилися {{4}} (дівчина). Її звати Олена. Вона була там {{5}} (сестра). Ми всі разом пішли на вечерю. Я сидів поруч {{6}} (Олена). Іван розмовляв {{7}} (сестра) Олени. Ми їли рибу {{8}} (овочі) і пили чай {{9}} (лимон). Це був чудовий час {{10}} (друзі)!'
+  passage: 'Минулого літа я їздив на море. Я їздив не сам, а {{1}} (друг). Його звати Іван. Ми жили в готелі разом {{2}} (Іван). Щовечора ми гуляли {{3}} (хлопці) біля моря. Одного разу ми познайомилися {{4}} (дівчина). Її звати Олена. Вона була там {{5}} (сестра). Ми всі разом пішли на вечерю. Я сидів поруч {{6}} (Олена). Іван розмовляв {{7}} (сестра) Олени. Ми їли рибу {{8}} (овочі) і пили чай {{9}} (лимон). Це був чудовий час {{10}} (друзі)! Олена сфотографувалася {{11}} (Іван) на пам''ять. Ми домовилися зустрітися {{12}} (родина) наступного літа.'
   instruction: 'Fill in the blanks with the correct form of the words in parentheses.'
   blanks:
     - id: 1
       answer: 'з другом'
       options: ['з другом', 'з друга', 'з другу', 'з друзі']
     - id: 2
-      answer: 'над морем'
-      options: ['над морем', 'з морем', 'під морем', 'за морем']
+      answer: 'з Іваном'
+      options: ['з Іваном', 'з Івана', 'з Івану', 'з Іване']
     - id: 3
-      answer: 'пляжем'
-      options: ['пляжем', 'з пляжем', 'пляжу', 'на пляжі']
+      answer: 'з хлопцями'
+      options: ['з хлопцями', 'з хлопців', 'з хлопцям', 'з хлопці']
     - id: 4
       answer: 'з дівчиною'
       options: ['з дівчиною', 'з дівчини', 'з дівчині', 'з дівчину']
@@ -411,3 +454,9 @@
     - id: 10
       answer: 'з друзями'
       options: ['з друзями', 'з друзів', 'з друзях', 'з друзі']
+    - id: 11
+      answer: 'з Іваном'
+      options: ['з Іваном', 'з Івана', 'з Івану', 'з Івані']
+    - id: 12
+      answer: 'з родиною'
+      options: ['з родиною', 'з родини', 'з родині', 'з родину']

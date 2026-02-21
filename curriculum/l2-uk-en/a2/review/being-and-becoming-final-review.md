@@ -1,191 +1,184 @@
-## Adversarial QA Review: being-and-becoming (a2-06)
-
-Word count: 3278 (target: 3000) — PASS.
-Russianisms scan: CLEAN.
-Russian characters (ы, э, ё, ъ): CLEAN.
-Plan sections: All 4 present (Вступ, Презентація, Практика, Діалоги) — PASS.
-Activity variety: 12 types — PASS.
+Now I have all the information I need for a thorough review. Let me compile the findings.
 
 ---
 
-### Issues Found
+# Phase 9: Final Adversarial QA — being-and-becoming (a2-06)
 
-**Issue 1: Dialogue 1 gender agreement error** (content:387)
-`**Марина:** (сміється) Так, вгадала.`
-Oleg asks "Ти дизайнерка?" — he is the one guessing. Marina's confirmation should agree with *his* gender: "вгадав" (masculine past tense), not "вгадала." As written, "вгадала" means "(I) guessed" which is nonsensical in this context.
+## Issues Found
 
-**Issue 2: History section title capitalization** (content:274)
-`Він **був Великим князем Київським**.`
-Per Ukrainian orthographic rules, ranks/titles are lowercase in running text: великий князь, гетьман, президент. The same file correctly lowercases "гетьманом" for Khmelnytskyi. This is an inconsistency.
+### ISSUE 1: Cloze passage — logical error ("вступила до університету і стала економісткою")
+**File:** `activities/being-and-becoming.yaml`, line 423
+**Text:** `Вона вступила до університету і стала {{5}}.`
+**Problem:** "Вступити до" means "to enroll in." You don't become an economist by enrolling — you become one by graduating. The prose content correctly says "Вона **закінчила** економічний університет і стала економісткою" (line 253 of .md). The cloze should match.
+**Fix:** "вступила до університету" → "закінчила університет"
 
-**Issue 3: Unjumble 5 — capitalization mismatch + missing comma** (activities:261-262)
-- words: `['Ми', ... 'я', 'що']` → answer: `'Я впевнений що ми будемо дуже хорошими колегами'`
-- "Ми" is capitalized in words but lowercase in answer; "я" is lowercase in words but capitalized in answer. This creates a confusing word bank where "Ми" appears to be the sentence opener.
-- Ukrainian grammar requires a comma before "що" in subordinate clauses: "Я впевнений**,** що..."
-- **Fix approach**: Replace with simpler sentence to avoid both issues.
+### ISSUE 2: Cloze blank 7 — story inconsistency (менеджером vs аналітиком)
+**File:** `activities/being-and-becoming.yaml`, lines 443-445
+**Text:** Blank 7 answer is `менеджером`
+**Problem:** The cloze says she worked as "аналітиком" (blank 6), then "Вона не хотіла бути менеджером все життя." If she worked as an analyst, she wouldn't want to be an analyst forever — not a manager. The prose story has no manager role for Iryna. The answer should be "аналітиком" for story coherence.
 
-**Issue 4: Cloze activity — 8 orphaned blanks** (activities:443-466)
-The passage contains only `{{1}}` through `{{6}}`, but 14 blanks are defined. Blanks 7–14 (жінкою, дизайнеркою, успішною, колегою, студенткою, подругою, сестрою, мамою) are never referenced in the passage. These are dead data that will cause rendering bugs or silent failures.
+### ISSUE 3: Pedagogical contradiction — "Вона є успішною директоркою" uses є + Instrumental in present tense
+**File:** `being-and-becoming.md`, line 232
+**Text:** `*   Вона є успішною **директоркою**.`
+**Problem:** The module explicitly teaches (line 116): "In the present tense, it is invisible (Zero Copula)." and "But when we travel to the past or future, it appears, and it demands the Instrumental case." Two paragraphs after the feminitives section, we see "є" + Instrumental in a present-tense example. This directly contradicts the taught rule. A2 learners will be confused. Should use present-tense Nominative construction instead.
+**Fix:** → `*   Вона — успішна **директорка**.`
 
-**Issue 5: Vocabulary IPA inconsistency** (vocabulary:91)
-`волонтер` has IPA `"vɔlɔnˈtɛr"` using /v/. All other entries use /ʋ/ for Ukrainian "в" (фахівець → `fɑxiˈʋɛt͡sʲ`, працювати → `prɑt͡sʲuˈʋɑtɪ`, тестувальник → `tɛstuˈʋɑlʲnɪk`). Ukrainian "в" before a vowel is labiodental approximant /ʋ/, not labiodental fricative /v/.
+### ISSUE 4: Group-sort spelling inconsistency — "учитель" vs "вчителька"
+**File:** `activities/being-and-becoming.yaml`, line 128
+**Text:** Masculine group has `'учитель'` but feminine group has `'вчителька'`
+**Problem:** The module content uses "вчитель" consistently (line 73: "Вчитель → вчителем"). The group-sort masculine uses "учитель" while the feminine uses "вчителька" (derived from "вчитель"). Both spellings are valid per the 2019 orthography, but within one module, consistency matters. A learner seeing "учитель" here but "вчитель" everywhere else will be confused.
 
-**Issue 6: Vocabulary duplicate entries** (vocabulary:5-12, 21-24, 29-32)
-Three terms appear twice with only capitalization difference: називний/Називний, орудний/Орудний, множина/Множина. Builder artifact — removing duplicates.
+### ISSUE 5: Feminitive fill-in spelling inconsistency — "учитель/учителька"
+**File:** `activities/being-and-becoming.yaml`, lines 470-472
+**Text:** `'Він — учитель, вона — (учитель) ________.'` with answer `'учителька'`
+**Problem:** Same inconsistency as Issue 4. The rest of the module uses "вчитель/вчителька".
+
+### ISSUE 6: Вправа 2 pedagogical tension — "Вона стала директором" marked correct without feminitive note
+**File:** `being-and-becoming.md`, line 332
+**Text:** `3. **Так.**` (answering whether "Вона стала директором" is correct grammar)
+**Problem:** The module actively teaches feminitives and the 2019 reform. Marking "Вона стала директором" as simply correct without noting the modern preference creates tension. The prose itself shows both forms: "стала лікаркою (або лікарем)" at line 245. A brief parenthetical note preserves the answer while reinforcing the feminitive teaching.
+
+### ISSUE 7: Duplicate vocabulary entries
+**File:** `vocabulary/being-and-becoming.yaml`, lines 81-92
+**Text:** Three entries duplicated with different capitalization:
+- "Називний відмінок" duplicates "називний відмінок" (lines 1-4)
+- "Орудний відмінок" duplicates "орудний відмінок" (lines 9-12)
+- "Множина" duplicates "множина" (lines 17-20)
+
+### ISSUE 8 (FLAG ONLY): Missing "ставати" — plan-required vocabulary
+The plan explicitly lists `ставати (to be becoming)` as REQUIRED vocabulary. The imperfective counterpart to "стати" is never introduced or used anywhere in the content or activities. This is a notable plan compliance gap that would require prose additions.
+
+### ISSUE 9 (FLAG ONLY): Missing "юристка" — plan-required vocabulary pair
+The plan requires `юрист / юристка`. Only the masculine "юрист/юристом" appears (dialogue 3). The feminitive is absent from both prose and activities.
+
+### ISSUE 10 (FLAG ONLY): Missing "програмувальник" — plan-specified formal variant
+Plan says: "mention formal програмувальник vs. universally used програміст." Research notes confirm this. Not in the content.
+
+### ISSUE 11 (FLAG ONLY): Missing "громадянин/громадянка" — plan-recommended State Standard example
+Plan recommends: "громадянин / громадянка (citizen) — мріє стати громадянкою України (State Standard example)." Neither the word nor the example appears anywhere.
 
 ---
 
-### Fixes
+## Verification Summary
+
+- Content lines read: 482 (full file)
+- Activity items checked: ~96 items across 12 activities
+- Unjumble word arrays verified: 6/6 (all words match answers)
+- Fill-in answers verified: all produce grammatical sentences
+- Ukrainian sentences grammar-checked: ~120
+- IPA transcriptions verified: 23 entries (tie bars present on affricates, ʋ for В, u̯ for coda В)
+- Russianisms scan: CLEAN
+- Russian characters scan: CLEAN
+- Factual claims verified: Zelenskyy 2019 ✓, Khmelnytsky 5 UAH ✓, Baptism 988 ✓, Skovoroda epitaph ✓, Krushelnytska Butterfly ✓, Hetman 1648 ✓
+- LLM artifacts: minor ("magical verbs") but within persona
+- Word count: 3278 raw / 3042 effective (target 3000) ✓
+
+---
+
+## Fixes
 
 ===FIX_START===
-FILE: curriculum/l2-uk-en/a2/being-and-becoming.md
+FILE: curriculum/l2-uk-en/a2/activities/being-and-becoming.yaml
 ---OLD---
-**Марина:** (сміється) Так, вгадала. Я **працюю графічною дизайнеркою**. Малюю логотипи. А ти?
+  passage: 'Коли Ірина була маленькою {{1}}, вона мріяла стати {{2}}. Її батьки були {{3}}, тому вони хотіли, щоб вона теж стала {{4}}. Але життя змінилося. Вона вступила до університету і стала {{5}}. Після навчання вона п'ять років працювала {{6}} у банку. Це було нудно. Вона не хотіла бути {{7}} все життя. Зараз вона змінила професію. Тепер Ірина працює {{8}}. Вона також планує стати {{9}}. Її друзі стали {{10}}, а вона стала {{11}}. Вона дуже щаслива бути {{12}} людиною.'
 ---NEW---
-**Марина:** (сміється) Так, вгадав. Я **працюю графічною дизайнеркою**. Малюю логотипи. А ти?
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a2/being-and-becoming.md
----OLD---
-Він **був Великим князем Київським**. Він охрестив Русь у 988 році. Він був могутнім правителем і мудрим політиком.
----NEW---
-Він **був великим князем київським**. Він охрестив Русь у 988 році. Він був могутнім правителем і мудрим політиком.
+  passage: 'Коли Ірина була маленькою {{1}}, вона мріяла стати {{2}}. Її батьки були {{3}}, тому вони хотіли, щоб вона теж стала {{4}}. Але життя змінилося. Вона закінчила університет і стала {{5}}. Після навчання вона п'ять років працювала {{6}} у банку. Це було нудно. Вона не хотіла бути {{7}} все життя. Зараз вона змінила професію. Тепер Ірина працює {{8}}. Вона також планує стати {{9}}. Її друзі стали {{10}}, а вона стала {{11}}. Вона дуже щаслива бути {{12}} людиною.'
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/activities/being-and-becoming.yaml
 ---OLD---
-    - words: ['Ми', 'колегами', 'будемо', 'дуже', 'хорошими', 'впевнений', 'я', 'що']
-      answer: 'Я впевнений що ми будемо дуже хорошими колегами'
----NEW---
-    - words: ['Ми', 'будемо', 'дуже', 'хорошими', 'колегами', 'обов'язково']
-      answer: 'Ми обов'язково будемо дуже хорошими колегами'
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a2/activities/being-and-becoming.yaml
----OLD---
-    - id: 6
-      answer: 'творчою'
-      options: ['творчою', 'творча', 'творчій', 'творчу']
     - id: 7
-      answer: 'жінкою'
-      options: ['жінкою', 'жінка', 'жінки', 'жінку']
-    - id: 8
-      answer: 'дизайнеркою'
-      options: ['дизайнеркою', 'дизайнерка', 'дизайнерки', 'дизайнерку']
-    - id: 9
-      answer: 'успішною'
-      options: ['успішною', 'успішна', 'успішній', 'успішну']
-    - id: 10
-      answer: 'колегою'
-      options: ['колегою', 'колега', 'колеги', 'колегу']
-    - id: 11
-      answer: 'студенткою'
-      options: ['студенткою', 'студентка', 'студентки', 'студентку']
-    - id: 12
-      answer: 'подругою'
-      options: ['подругою', 'подруга', 'подруги', 'подругу']
-    - id: 13
-      answer: 'сестрою'
-      options: ['сестрою', 'сестра', 'сестри', 'сестру']
-    - id: 14
-      answer: 'мамою'
-      options: ['мамою', 'мама', 'мами', 'маму']
+      answer: 'менеджером'
+      options: ['менеджером', 'менеджер', 'менеджера', 'менеджеру']
 ---NEW---
-    - id: 6
-      answer: 'творчою'
-      options: ['творчою', 'творча', 'творчій', 'творчу']
+    - id: 7
+      answer: 'аналітиком'
+      options: ['аналітиком', 'аналітик', 'аналітика', 'аналітику']
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a2/being-and-becoming.md
+---OLD---
+*   Вона є успішною **директоркою**.
+---NEW---
+*   Вона — успішна **директорка**.
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a2/activities/being-and-becoming.yaml
+---OLD---
+        - 'учитель'
+        - 'директор'
+---NEW---
+        - 'вчитель'
+        - 'директор'
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a2/activities/being-and-becoming.yaml
+---OLD---
+    - sentence: 'Він — учитель, вона — (учитель) ________.'
+      answer: 'учителька'
+      options: ['учителька', 'учителькою', 'учителі', 'учителя']
+---NEW---
+    - sentence: 'Він — вчитель, вона — (вчитель) ________.'
+      answer: 'вчителька'
+      options: ['вчителька', 'вчителькою', 'вчителі', 'вчителя']
+===FIX_END===
+
+===FIX_START===
+FILE: curriculum/l2-uk-en/a2/being-and-becoming.md
+---OLD---
+3. **Так.**
+4. **Так.**
+</details>
+---NEW---
+3. **Так.** (Але сучасна форма: **стала директоркою**)
+4. **Так.**
+</details>
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/being-and-becoming.yaml
 ---OLD---
-- term: називний
-  ipa: "nɑzɪu̯ˈnɪj"
-  translation: "Nominative"
-  pos: adjective
-- term: Називний
-  ipa: "nɑzɪu̯ˈnɪj"
-  translation: "Nominative"
-  pos: adjective
----NEW---
-- term: називний
-  ipa: "nɑzɪu̯ˈnɪj"
-  translation: "Nominative"
-  pos: adjective
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a2/vocabulary/being-and-becoming.yaml
----OLD---
-- term: орудний
-  ipa: "ɔˈrudnɪj"
-  translation: "Instrumental"
-  pos: adjective
-- term: Орудний
-  ipa: "ɔˈrudnɪj"
-  translation: "Instrumental"
-  pos: adjective
----NEW---
-- term: орудний
-  ipa: "ɔˈrudnɪj"
-  translation: "Instrumental"
-  pos: adjective
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a2/vocabulary/being-and-becoming.yaml
----OLD---
-- term: множина
-  ipa: "mnɔʒɪˈnɑ"
-  translation: "plural"
-  pos: noun
+- term: Називний відмінок
+  ipa: "nɑzɪu̯ˈnɪj vidˈminɔk"
+  translation: "Nominative case"
+  pos: noun phrase
+- term: Орудний відмінок
+  ipa: "ɔˈrudnɪj vidˈminɔk"
+  translation: "Instrumental case"
+  pos: noun phrase
 - term: Множина
   ipa: "mnɔʒɪˈnɑ"
   translation: "plural"
   pos: noun
 ---NEW---
-- term: множина
-  ipa: "mnɔʒɪˈnɑ"
-  translation: "plural"
-  pos: noun
-===FIX_END===
-
-===FIX_START===
-FILE: curriculum/l2-uk-en/a2/vocabulary/being-and-becoming.yaml
----OLD---
-- term: волонтер
-  ipa: "vɔlɔnˈtɛr"
-  translation: "volunteer"
-  pos: noun
----NEW---
-- term: волонтер
-  ipa: "ʋɔlɔnˈtɛr"
-  translation: "volunteer"
-  pos: noun
+---
 ===FIX_END===
 
 ---
 
-### Observations (not requiring fixes)
+## Assessment
 
-**Plan vocabulary gap**: The plan's `vocabulary_hints.required` lists ставати, служити, залишатися, виявитися, здаватися — all absent from content. The meta correctly narrows scope to 3 core verbs (бути, стати, працювати), which is appropriate for A2. This is a plan-meta alignment issue, not a content defect.
+**Strengths:**
+- Excellent pedagogy: "Costume Analogy" and "Nominative Trap" are strong A2-appropriate scaffolds
+- The Iryna narrative is genuinely engaging and models the full grammar range naturally
+- Activities are dense (12 activities, 10 types, ~96 items) with good variety
+- Feminitives section is well-integrated and culturally current
+- IT/coworking context is authentic and relevant
+- IPA in vocabulary is clean (tie bars, ʋ, correct stress)
+- No Russianisms, no Russian characters, no broken activities
+- Word count exceeds target (3042/3000)
 
-**"Я є студент" (content:23)**: Uses explicit copula for pedagogical contrast with past/future forms. Slightly unnatural for spoken Ukrainian but justified — the module addresses Zero Copula at line 116.
+**Weaknesses (flagged, not fixed — require prose expansion):**
+- Missing `ставати` (imperfective) — plan-required vocabulary, never introduced
+- Missing `юристка` — plan requires both gender forms
+- Missing `програмувальник` — plan-specified formal variant
+- Missing `громадянин/громадянка` — plan-recommended State Standard example
 
-**учитель/вчитель inconsistency**: Content uses "вчитель" throughout; activities use "учитель" in some places. Both forms are valid per 2019 orthography (учитель = formal, вчитель = colloquial). Not an error, but worth noting for future consistency passes.
-
-### Strengths
-
-- The **Costume Analogy** and **Nominative Trap** are genuinely excellent pedagogical devices — memorable and accurate.
-- The **"як" debunking** is thorough and correctly addresses the #1 L1 interference error for English/German speakers.
-- **Feminitives section** is factually correct (2019 orthography, not "new" but restored tradition) and culturally well-calibrated.
-- **Historical figures** are factually accurate: Zelenskyy 2019 ✓, Khmelnytskyi 1648 & 5-hryvnia note ✓, Skovoroda epitaph ✓, Krushelnytska & Madama Butterfly ✓.
-- No LLM artifacts detected: no purple prose openers, no "Це не просто X, а Y" pattern, no invented statistics.
-
----
+These gaps are notable for plan compliance but don't rise to REJECT level: the core grammar (бути/стати/працювати + Instrumental) is thoroughly taught and drilled, the content exceeds word target, and the activities are robust. The missing items would strengthen the module if added in a future pass.
 
 ===VERDICT===
 APPROVE

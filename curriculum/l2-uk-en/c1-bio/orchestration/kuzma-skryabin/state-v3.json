@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T10:25:40Z",
+      "ts": "2026-02-21T00:12:02Z",
       "task_id": "v3-kuzma-skryabin-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

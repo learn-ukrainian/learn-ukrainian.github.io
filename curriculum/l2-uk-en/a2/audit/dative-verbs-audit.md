@@ -1,7 +1,7 @@
 # Audit Report: M03 — dative-verbs.md
 **Level:** A2 | **Module:** M03 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-20 19:27:19
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-21 01:14:26
 
 ## Configuration
 **Type:** A2-grammar
@@ -16,37 +16,53 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Перевірка розуміння: Кому чи Кого? | 8 | 8 | ✅ |
+| 2 | group-sort | Сортування дієслів | 12 | 12 | ✅ |
+| 3 | match-up | Знайдіть пару | 12 | 8 | ✅ |
+| 4 | fill-in | Закінчення іменників | 8 | 8 | ✅ |
+| 5 | error-correction | Виправте помилки | 6 | 6 | ✅ |
+| 6 | unjumble | Складіть речення | 6 | 6 | ✅ |
+| 7 | translate | Переклад конструкцій "Мені подобається" | 6 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть адресата | 6 | 6 | ✅ |
+| 9 | fill-in | Займенники у Давальному відмінку | 8 | 8 | ✅ |
+| 10 | fill-in | Подобається чи Подобаються? | 8 | 8 | ✅ |
+| 11 | unjumble | Складніші речення | 6 | 6 | ✅ |
+| 12 | cloze | Діалог: Толока | 14 | 12 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 10-14) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Це коли все село збирається...'
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: давальний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[EUPHONY]** Line 333: «прокидається і одразу» — і між голосними; має бути «й одразу»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (18 occurrences): (Dative pronouns), (Dative nouns), (To help) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 ## Recommendation
-**📝 UPDATE** (severity 35/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
-- Immersion 15% off target
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 3058/3000 (raw: 3477)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Words:** ✅ 3452/3000 (raw: 3923)
+- **Activities:** ✅ 12/10
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 9/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 38/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 24 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ⚠️ 28 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 3 violations
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** ❌ 34.9% LOW (target 50-60% (A2.1))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 51.9% (target 50-60% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -56,8 +72,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Dative Verbs: The Art of Giving and Connecting** | ✅ | 71 | Included in Core |
-| **Вступ: Керування та Адресат** | ✅ | 350 | Included in Core |
-| **Презентація: Дієслова Давального відмінка** | ✅ | 1256 | Included in Core |
-| **Практика: Відмінки в дії** | ✅ | 626 | Included in Core |
-| **Діалоги: Взаємодопомога та Вдячність** | ✅ | 548 | Included in Core |
-| **Підсумок** | ✅ | 207 | Included in Core |
+| **Вступ: Керування та Адресат** | ✅ | 458 | Included in Core |
+| **Презентація: Дієслова Давального відмінка** | ✅ | 1284 | Included in Core |
+| **Практика: Відмінки в дії** | ✅ | 845 | Included in Core |
+| **Діалоги: Взаємодопомога та Вдячність** | ✅ | 612 | Included in Core |
+| **Підсумок** | ✅ | 182 | Included in Core |

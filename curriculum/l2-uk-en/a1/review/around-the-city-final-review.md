@@ -12,11 +12,11 @@ Now I have everything. Here is my full adversarial review.
 
 The project convention for Ukrainian В is [ʋ] (labiodental approximant), confirmed across all other A1 vocabulary files. The `around-the-city.yaml` vocab file uses [v] in 5 entries: наліво, направо, ліворуч, праворуч, вулиця. The content `.md` file correctly uses [ʋ]. This is a hard inconsistency that must be fixed.
 
-- `vocabulary/around-the-city.yaml:41` — `[nɑˈlʲivɔ]` should be `[nɑˈlʲiʋɔ]`
-- `vocabulary/around-the-city.yaml:43` — `[nɑˈprɑvɔ]` should be `[nɑˈprɑʋɔ]`
-- `vocabulary/around-the-city.yaml:49` — `[lʲiˈvɔrʊt͡ʃ]` should be `[lʲiˈʋɔrʊt͡ʃ]`
-- `vocabulary/around-the-city.yaml:55` — `[prɑˈvɔrʊt͡ʃ]` should be `[prɑˈʋɔrʊt͡ʃ]`
-- `vocabulary/around-the-city.yaml:1` — `[ˈvulɪt͡sʲɑ]` should be `[ˈʋulɪt͡sʲɑ]`
+- `vocabulary/around-the-city.yaml:41` — `[nɑˈlʲiʋɔ]` should be `[nɑˈlʲiʋɔ]`
+- `vocabulary/around-the-city.yaml:43` — `[nɑˈprɑʋɔ]` should be `[nɑˈprɑʋɔ]`
+- `vocabulary/around-the-city.yaml:49` — `[lʲiˈʋɔrut͡ʃ]` should be `[lʲiˈʋɔrut͡ʃ]`
+- `vocabulary/around-the-city.yaml:55` — `[prɑˈʋɔrut͡ʃ]` should be `[prɑˈʋɔrut͡ʃ]`
+- `vocabulary/around-the-city.yaml:1` — `[ˈʋulɪt͡sʲɑ]` should be `[ˈʋulɪt͡sʲɑ]`
 
 ---
 
@@ -75,7 +75,7 @@ Central to the cultural section, has IPA in the content ([mɑrˈʃrutkɑ]), but 
 ---
 
 **Minor observations (not fixing):**
-- Content uses [u] for unstressed у where [ʊ] is more precise (куди, зупинка, спочатку) — acceptable in broad transcription
+- Content uses [u] for unstressed у where [u] is more precise (куди, зупинка, спочатку) — acceptable in broad transcription
 - Quiz explanation (line 379) calls площа "м'яка група" — it's technically "мішана група" (mixed declension), but the answer "площі" is correct and the distinction is beyond A1
 - "банк" and "назад" are used in activities but confirmed as already introduced in earlier modules (a1-01/a1-13 and a1-12 respectively) — no fix needed
 - Plan asks for "Майдан Незалежності vs Площа Ринок" contrast; content discusses both concepts but doesn't name these specific examples — minor gap in the meta, not content error
@@ -192,7 +192,7 @@ FILE: curriculum/l2-uk-en/a1/activities/around-the-city.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/vocabulary/around-the-city.yaml
 ---OLD---
-- ipa: '[ˈvulɪt͡sʲɑ]'
+- ipa: '[ˈʋulɪt͡sʲɑ]'
   lemma: вулиця
   pos: noun
   translation: street
@@ -206,19 +206,19 @@ FILE: curriculum/l2-uk-en/a1/vocabulary/around-the-city.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/vocabulary/around-the-city.yaml
 ---OLD---
-- ipa: '[nɑˈlʲivɔ]'
+- ipa: '[nɑˈlʲiʋɔ]'
   lemma: наліво
   pos: adverb
   translation: to the left
-- ipa: '[nɑˈprɑvɔ]'
+- ipa: '[nɑˈprɑʋɔ]'
   lemma: направо
   pos: adverb
   translation: to the right
-- ipa: '[lʲiˈvɔrʊt͡ʃ]'
+- ipa: '[lʲiˈʋɔrut͡ʃ]'
   lemma: ліворуч
   pos: adverb
   translation: on the left
-- ipa: '[prɑˈvɔrʊt͡ʃ]'
+- ipa: '[prɑˈʋɔrut͡ʃ]'
   lemma: праворуч
   pos: adverb
   translation: on the right
@@ -231,11 +231,11 @@ FILE: curriculum/l2-uk-en/a1/vocabulary/around-the-city.yaml
   lemma: направо
   pos: adverb
   translation: to the right
-- ipa: '[lʲiˈʋɔrʊt͡ʃ]'
+- ipa: '[lʲiˈʋɔrut͡ʃ]'
   lemma: ліворуч
   pos: adverb
   translation: on the left
-- ipa: '[prɑˈʋɔrʊt͡ʃ]'
+- ipa: '[prɑˈʋɔrut͡ʃ]'
   lemma: праворуч
   pos: adverb
   translation: on the right

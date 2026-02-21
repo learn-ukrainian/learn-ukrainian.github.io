@@ -16,12 +16,15 @@ Tools provided:
     - acknowledge_message: Mark message as read
 """
 
+import asyncio
 import json
-import sqlite3
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+import aiosqlite
 
 # MCP protocol imports
 try:
@@ -35,46 +38,93 @@ except ImportError:
 # Database path
 DB_PATH = Path(__file__).parent / "messages.db"
 
-def init_db():
-    """Initialize SQLite database for message storage."""
-    conn = sqlite3.connect(DB_PATH)
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS messages (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            task_id TEXT,
-            from_llm TEXT NOT NULL,
-            to_llm TEXT NOT NULL,
-            message_type TEXT DEFAULT 'message',
-            content TEXT NOT NULL,
-            data TEXT,
-            payload TEXT,
-            timestamp TEXT NOT NULL,
-            acknowledged INTEGER DEFAULT 0,
-            status TEXT DEFAULT 'pending'
-        )
-    """)
-    conn.execute("""
-        CREATE INDEX IF NOT EXISTS idx_to_llm ON messages(to_llm, acknowledged)
-    """)
-    conn.execute("""
-        CREATE INDEX IF NOT EXISTS idx_task ON messages(task_id)
-    """)
-    # Sessions table - track CLI session IDs for each agent per task
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS sessions (
-            task_id TEXT PRIMARY KEY,
-            claude_session_id TEXT,
-            gemini_session_id TEXT,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
+# Limits
+MAX_CONTENT_LENGTH = 10000
+VALID_AGENTS = ("claude", "gemini")
 
-def get_db():
-    """Get database connection."""
-    return sqlite3.connect(DB_PATH)
+# Write lock — serializes all DB writes within this process.
+# Cross-process writes are serialized by SQLite WAL mode + busy_timeout.
+_write_lock = asyncio.Lock()
+
+
+async def init_db():
+    """Initialize SQLite database for message storage with WAL mode."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        # WAL mode: allows concurrent reads while serializing writes.
+        # busy_timeout: wait up to 5s for locks instead of failing immediately.
+        await db.execute("PRAGMA journal_mode=WAL")
+        await db.execute("PRAGMA busy_timeout=5000")
+
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT,
+                from_llm TEXT NOT NULL,
+                to_llm TEXT NOT NULL,
+                message_type TEXT DEFAULT 'message',
+                content TEXT NOT NULL,
+                data TEXT,
+                payload TEXT,
+                timestamp TEXT NOT NULL,
+                acknowledged INTEGER DEFAULT 0,
+                status TEXT DEFAULT 'pending',
+                claimed_by TEXT,
+                claimed_at TEXT
+            )
+        """)
+        await db.execute("""
+            CREATE INDEX IF NOT EXISTS idx_to_llm ON messages(to_llm, acknowledged)
+        """)
+        await db.execute("""
+            CREATE INDEX IF NOT EXISTS idx_task ON messages(task_id)
+        """)
+        # Migration: add claimed_by/claimed_at to existing tables
+        try:
+            await db.execute("ALTER TABLE messages ADD COLUMN claimed_by TEXT")
+        except Exception:
+            pass  # Column already exists
+        try:
+            await db.execute("ALTER TABLE messages ADD COLUMN claimed_at TEXT")
+        except Exception:
+            pass  # Column already exists
+        # Sessions table - track CLI session IDs for each agent per task
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS sessions (
+                task_id TEXT PRIMARY KEY,
+                claude_session_id TEXT,
+                gemini_session_id TEXT,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+        """)
+        # Message history table - soft-delete audit trail
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS message_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                original_id INTEGER NOT NULL,
+                task_id TEXT,
+                from_llm TEXT NOT NULL,
+                to_llm TEXT NOT NULL,
+                message_type TEXT,
+                content TEXT NOT NULL,
+                data TEXT,
+                timestamp TEXT NOT NULL,
+                action TEXT NOT NULL,
+                action_at TEXT NOT NULL
+            )
+        """)
+        await db.execute("""
+            CREATE INDEX IF NOT EXISTS idx_history_original ON message_history(original_id)
+        """)
+        await db.commit()
+
+
+async def get_db() -> aiosqlite.Connection:
+    """Get an async database connection with WAL mode and busy timeout."""
+    db = await aiosqlite.connect(DB_PATH)
+    await db.execute("PRAGMA busy_timeout=5000")
+    return db
+
 
 # Initialize server
 server = Server("message-broker")
@@ -224,7 +274,7 @@ async def list_tools() -> list[Tool]:
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
     """Handle tool calls."""
 
-    init_db()  # Ensure DB exists
+    await init_db()  # Ensure DB exists
 
     if name == "send_message":
         return await handle_send_message(arguments)
@@ -243,240 +293,323 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 
 async def handle_send_message(args: dict) -> list[TextContent]:
     """Send a message to another LLM."""
-    conn = get_db()
-    cursor = conn.cursor()
+    # Input validation
+    from_llm = args.get("from_llm", "")
+    to_llm = args.get("to", "")
+    content = args.get("content", "")
 
-    timestamp = datetime.now(timezone.utc).isoformat()
+    if from_llm not in VALID_AGENTS:
+        return [TextContent(type="text", text=json.dumps({
+            "error": f"Invalid from_llm: '{from_llm}'. Must be one of: {', '.join(VALID_AGENTS)}"
+        }))]
+    if to_llm not in VALID_AGENTS:
+        return [TextContent(type="text", text=json.dumps({
+            "error": f"Invalid to: '{to_llm}'. Must be one of: {', '.join(VALID_AGENTS)}"
+        }))]
+    if not isinstance(content, str) or not content.strip():
+        return [TextContent(type="text", text=json.dumps({
+            "error": "Content must be a non-empty string."
+        }))]
+    if len(content) > MAX_CONTENT_LENGTH:
+        return [TextContent(type="text", text=json.dumps({
+            "error": f"Content too long ({len(content)} chars). Maximum is {MAX_CONTENT_LENGTH}."
+        }))]
 
-    # Merge model info into data field as JSON
-    data = args.get("data")
-    metadata = {}
-    if data:
+    async with _write_lock:
+        db = await get_db()
         try:
-            metadata = json.loads(data) if isinstance(data, str) and data.startswith('{') else {"raw": data}
-        except json.JSONDecodeError:
-            metadata = {"raw": data}
+            timestamp = datetime.now(timezone.utc).isoformat()
 
-    if args.get("from_model"):
-        metadata["from_model"] = args["from_model"]
-    if args.get("to_model"):
-        metadata["to_model"] = args["to_model"]
+            # Merge model info into data field as JSON
+            data = args.get("data")
+            metadata = {}
+            if data:
+                try:
+                    metadata = json.loads(data) if isinstance(data, str) and data.startswith('{') else {"raw": data}
+                except json.JSONDecodeError:
+                    metadata = {"raw": data}
 
-    data_json = json.dumps(metadata) if metadata else None
+            if args.get("from_model"):
+                metadata["from_model"] = args["from_model"]
+            if args.get("to_model"):
+                metadata["to_model"] = args["to_model"]
 
-    cursor.execute("""
-        INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, data, timestamp)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (
-        args.get("task_id"),
-        args["from_llm"],
-        args["to"],
-        args.get("message_type", "message"),
-        args["content"],
-        data_json,
-        timestamp
-    ))
+            data_json = json.dumps(metadata) if metadata else None
+            task_id = args.get("task_id")
+            message_type = args.get("message_type", "message")
 
-    msg_id = cursor.lastrowid
-    conn.commit()
-    conn.close()
+            cursor = await db.execute("""
+                INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, data, timestamp)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (task_id, from_llm, to_llm, message_type, content, data_json, timestamp))
 
-    result = {
-        "status": "sent",
-        "message_id": msg_id,
-        "from": args["from_llm"],
-        "to": args["to"],
-        "from_model": args.get("from_model"),
-        "to_model": args.get("to_model"),
-        "timestamp": timestamp
-    }
+            msg_id = cursor.lastrowid
 
-    return [TextContent(type="text", text=json.dumps(result, indent=2))]
+            # Log to history
+            await db.execute("""
+                INSERT INTO message_history (original_id, task_id, from_llm, to_llm, message_type, content, data, timestamp, action, action_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'sent', ?)
+            """, (msg_id, task_id, from_llm, to_llm, message_type, content, data_json, timestamp, timestamp))
+
+            await db.commit()
+
+            result = {
+                "status": "sent",
+                "message_id": msg_id,
+                "from": from_llm,
+                "to": to_llm,
+                "from_model": args.get("from_model"),
+                "to_model": args.get("to_model"),
+                "timestamp": timestamp
+            }
+
+            return [TextContent(type="text", text=json.dumps(result, indent=2))]
+        finally:
+            await db.close()
 
 async def handle_receive_messages(args: dict) -> list[TextContent]:
-    """Receive messages for an LLM."""
-    conn = get_db()
-    cursor = conn.cursor()
+    """Receive messages for an LLM.
 
-    query = "SELECT id, task_id, from_llm, message_type, content, data, timestamp, acknowledged FROM messages WHERE to_llm = ?"
-    params = [args["for_llm"]]
+    Uses atomic claim-then-read to prevent multiple sessions from
+    picking up the same message. A session_id identifies the caller;
+    if not provided, one is generated from PID + timestamp.
 
-    if args.get("since_id"):
-        query += " AND id > ?"
-        params.append(args["since_id"])
+    Stale claims (>10 min old) are automatically released so crashed
+    sessions don't permanently lock messages.
+    """
+    async with _write_lock:
+        db = await get_db()
+        try:
+            session_id = args.get("session_id") or f"pid-{os.getpid()}-{datetime.now(timezone.utc).strftime('%H%M%S')}"
+            now = datetime.now(timezone.utc).isoformat()
 
-    if args.get("task_id"):
-        query += " AND task_id = ?"
-        params.append(args["task_id"])
+            # Release stale claims (session crashed or timed out — 10 min TTL)
+            await db.execute("""
+                UPDATE messages SET claimed_by = NULL, claimed_at = NULL
+                WHERE claimed_by IS NOT NULL
+                  AND claimed_at < datetime('now', '-10 minutes')
+                  AND acknowledged = 0
+            """)
 
-    if args.get("unread_only", True):
-        query += " AND acknowledged = 0"
+            # Build WHERE clause
+            where = ["to_llm = ?"]
+            params: list[Any] = [args["for_llm"]]
 
-    query += " ORDER BY id ASC LIMIT ?"
-    params.append(args.get("limit", 10))
+            if args.get("since_id"):
+                where.append("id > ?")
+                params.append(args["since_id"])
 
-    cursor.execute(query, params)
-    rows = cursor.fetchall()
+            if args.get("task_id"):
+                where.append("task_id = ?")
+                params.append(args["task_id"])
 
-    # Auto-acknowledge fetched messages
-    if rows:
-        ids = [row[0] for row in rows]
-        placeholders = ",".join("?" * len(ids))
-        cursor.execute(f"UPDATE messages SET acknowledged = 1 WHERE id IN ({placeholders})", ids)
-        conn.commit()
+            if args.get("unread_only", True):
+                where.append("acknowledged = 0")
+                where.append("claimed_by IS NULL")  # Only unclaimed messages
 
-    conn.close()
+            where_clause = " AND ".join(where)
+            limit = args.get("limit", 10)
 
-    messages = []
-    for row in rows:
-        msg = {
-            "id": row[0],
-            "task_id": row[1],
-            "from": row[2],
-            "type": row[3],
-            "content": row[4],
-            "timestamp": row[6],
-            "acknowledged": bool(row[7])
-        }
-        if row[5]:  # data field
-            msg["data"] = row[5]
-        messages.append(msg)
+            # Atomic claim: UPDATE first, then SELECT claimed rows
+            await db.execute(f"""
+                UPDATE messages SET claimed_by = ?, claimed_at = ?
+                WHERE id IN (
+                    SELECT id FROM messages
+                    WHERE {where_clause}
+                    ORDER BY id ASC
+                    LIMIT ?
+                )
+            """, [session_id, now] + params + [limit])
 
-    result = {
-        "count": len(messages),
-        "messages": messages
-    }
+            # Fetch the messages we just claimed
+            cursor = await db.execute("""
+                SELECT id, task_id, from_llm, message_type, content, data, timestamp, acknowledged
+                FROM messages
+                WHERE claimed_by = ? AND acknowledged = 0
+                ORDER BY id ASC
+            """, [session_id])
+            rows = await cursor.fetchall()
 
-    return [TextContent(type="text", text=json.dumps(result, indent=2))]
+            # Auto-acknowledge claimed messages
+            if rows:
+                ids = [row[0] for row in rows]
+                placeholders = ",".join("?" * len(ids))
+                await db.execute(f"UPDATE messages SET acknowledged = 1 WHERE id IN ({placeholders})", ids)
+
+            await db.commit()
+
+            messages = []
+            for row in rows:
+                msg = {
+                    "id": row[0],
+                    "task_id": row[1],
+                    "from": row[2],
+                    "type": row[3],
+                    "content": row[4],
+                    "timestamp": row[6],
+                    "acknowledged": bool(row[7])
+                }
+                if row[5]:  # data field
+                    msg["data"] = row[5]
+                messages.append(msg)
+
+            result = {
+                "count": len(messages),
+                "messages": messages
+            }
+
+            return [TextContent(type="text", text=json.dumps(result, indent=2))]
+        finally:
+            await db.close()
 
 async def handle_check_inbox(args: dict) -> list[TextContent]:
     """Quick inbox check. Also sweeps stale messages (TTL: 6h)."""
-    conn = get_db()
-    cursor = conn.cursor()
+    db = await get_db()
+    try:
+        # TTL sweep is a write — serialize it
+        async with _write_lock:
+            cursor = await db.execute("""
+                UPDATE messages SET acknowledged = 1
+                WHERE acknowledged = 0
+                  AND timestamp < datetime('now', '-6 hours')
+            """)
+            if cursor.rowcount > 0:
+                await db.commit()
 
-    # TTL sweep: auto-ack messages older than 6 hours (prevents unbounded queue growth)
-    cursor.execute("""
-        UPDATE messages SET acknowledged = 1
-        WHERE acknowledged = 0
-          AND timestamp < datetime('now', '-6 hours')
-    """)
-    if cursor.rowcount > 0:
-        conn.commit()
+        # Reads don't need the write lock
+        cursor = await db.execute("""
+            SELECT COUNT(*) FROM messages
+            WHERE to_llm = ? AND acknowledged = 0
+        """, (args["for_llm"],))
 
-    cursor.execute("""
-        SELECT COUNT(*) FROM messages
-        WHERE to_llm = ? AND acknowledged = 0
-    """, (args["for_llm"],))
+        row = await cursor.fetchone()
+        unread = row[0] if row else 0
 
-    unread = cursor.fetchone()[0]
+        cursor = await db.execute("""
+            SELECT from_llm, COUNT(*) FROM messages
+            WHERE to_llm = ? AND acknowledged = 0
+            GROUP BY from_llm
+        """, (args["for_llm"],))
 
-    cursor.execute("""
-        SELECT from_llm, COUNT(*) FROM messages
-        WHERE to_llm = ? AND acknowledged = 0
-        GROUP BY from_llm
-    """, (args["for_llm"],))
+        by_sender = {row[0]: row[1] for row in await cursor.fetchall()}
 
-    by_sender = {row[0]: row[1] for row in cursor.fetchall()}
-    conn.close()
+        result = {
+            "unread_count": unread,
+            "by_sender": by_sender
+        }
 
-    result = {
-        "unread_count": unread,
-        "by_sender": by_sender
-    }
-
-    return [TextContent(type="text", text=json.dumps(result, indent=2))]
+        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    finally:
+        await db.close()
 
 async def handle_get_conversation(args: dict) -> list[TextContent]:
     """Get full conversation for a task."""
-    conn = get_db()
-    cursor = conn.cursor()
+    db = await get_db()
+    try:
+        cursor = await db.execute("""
+            SELECT id, from_llm, to_llm, message_type, content, data, timestamp
+            FROM messages
+            WHERE task_id = ?
+            ORDER BY id ASC
+            LIMIT ?
+        """, (args["task_id"], args.get("limit", 50)))
 
-    cursor.execute("""
-        SELECT id, from_llm, to_llm, message_type, content, data, timestamp
-        FROM messages
-        WHERE task_id = ?
-        ORDER BY id ASC
-        LIMIT ?
-    """, (args["task_id"], args.get("limit", 50)))
+        rows = await cursor.fetchall()
 
-    rows = cursor.fetchall()
-    conn.close()
+        messages = []
+        for row in rows:
+            msg = {
+                "id": row[0],
+                "from": row[1],
+                "to": row[2],
+                "type": row[3],
+                "content": row[4],
+                "timestamp": row[6]
+            }
+            if row[5]:
+                msg["data"] = row[5]
+            messages.append(msg)
 
-    messages = []
-    for row in rows:
-        msg = {
-            "id": row[0],
-            "from": row[1],
-            "to": row[2],
-            "type": row[3],
-            "content": row[4],
-            "timestamp": row[6]
+        result = {
+            "task_id": args["task_id"],
+            "message_count": len(messages),
+            "messages": messages
         }
-        if row[5]:
-            msg["data"] = row[5]
-        messages.append(msg)
 
-    result = {
-        "task_id": args["task_id"],
-        "message_count": len(messages),
-        "messages": messages
-    }
-
-    return [TextContent(type="text", text=json.dumps(result, indent=2))]
+        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    finally:
+        await db.close()
 
 async def handle_acknowledge_message(args: dict) -> list[TextContent]:
     """Acknowledge a message."""
-    conn = get_db()
-    cursor = conn.cursor()
+    async with _write_lock:
+        db = await get_db()
+        try:
+            now = datetime.now(timezone.utc).isoformat()
 
-    cursor.execute("""
-        UPDATE messages SET acknowledged = 1 WHERE id = ?
-    """, (args["message_id"],))
+            # Fetch the original message for history logging
+            cursor = await db.execute("""
+                SELECT id, task_id, from_llm, to_llm, message_type, content, data, timestamp
+                FROM messages WHERE id = ?
+            """, (args["message_id"],))
+            row = await cursor.fetchone()
 
-    updated = cursor.rowcount
-    conn.commit()
-    conn.close()
+            cursor = await db.execute("""
+                UPDATE messages SET acknowledged = 1 WHERE id = ?
+            """, (args["message_id"],))
 
-    result = {
-        "status": "acknowledged" if updated else "not_found",
-        "message_id": args["message_id"]
-    }
+            updated = cursor.rowcount
 
-    return [TextContent(type="text", text=json.dumps(result, indent=2))]
+            # Log to history if the message existed
+            if row:
+                await db.execute("""
+                    INSERT INTO message_history (original_id, task_id, from_llm, to_llm, message_type, content, data, timestamp, action, action_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'acknowledged', ?)
+                """, (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], now))
+
+            await db.commit()
+
+            result = {
+                "status": "acknowledged" if updated else "not_found",
+                "message_id": args["message_id"]
+            }
+
+            return [TextContent(type="text", text=json.dumps(result, indent=2))]
+        finally:
+            await db.close()
 
 async def handle_list_tasks(args: dict) -> list[TextContent]:
     """List active tasks."""
-    conn = get_db()
-    cursor = conn.cursor()
+    db = await get_db()
+    try:
+        cursor = await db.execute("""
+            SELECT task_id, COUNT(*), MAX(timestamp)
+            FROM messages
+            WHERE task_id IS NOT NULL
+            GROUP BY task_id
+            ORDER BY MAX(timestamp) DESC
+        """)
 
-    cursor.execute("""
-        SELECT task_id, COUNT(*), MAX(timestamp)
-        FROM messages
-        WHERE task_id IS NOT NULL
-        GROUP BY task_id
-        ORDER BY MAX(timestamp) DESC
-    """)
+        rows = await cursor.fetchall()
 
-    rows = cursor.fetchall()
-    conn.close()
+        tasks = [
+            {
+                "task_id": row[0],
+                "message_count": row[1],
+                "last_activity": row[2]
+            }
+            for row in rows
+        ]
 
-    tasks = [
-        {
-            "task_id": row[0],
-            "message_count": row[1],
-            "last_activity": row[2]
-        }
-        for row in rows
-    ]
-
-    return [TextContent(type="text", text=json.dumps({"tasks": tasks}, indent=2))]
+        return [TextContent(type="text", text=json.dumps({"tasks": tasks}, indent=2))]
+    finally:
+        await db.close()
 
 async def main():
     """Run the MCP server."""
-    init_db()
+    await init_db()
     async with stdio_server() as (read_stream, write_stream):
         await server.run(read_stream, write_stream, server.create_initialization_options())
 
 if __name__ == "__main__":
-    import asyncio
     asyncio.run(main())

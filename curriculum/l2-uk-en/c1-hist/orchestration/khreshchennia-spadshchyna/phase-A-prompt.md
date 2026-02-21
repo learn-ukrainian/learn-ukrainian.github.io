@@ -1,139 +1,130 @@
-===RESEARCH_START===
+# Phase A: Meta Outline Only (Research Already Exists)
 
-# Дослідження: Спадщина Хрещення: Візантійська традиція
+> **You are Gemini, executing Phase A (meta-only mode) of an optimised rebuild (build_module_v3).**
+> **Research is already complete. Your ONLY task: Rebuild the meta outline from the existing research.**
 
-## Використані джерела
-1. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua) — статті "Хрещення Русі", "Візантійська культура".
-2. [Інститут історії України НАНУ (history.org.ua)](http://resource.history.org.ua) — "Володимир Святославич", "Київська митрополія".
-3. [Ізборник (litopys.org.ua)](http://litopys.org.ua) — "Повість минулих літ", Іларіон "Слово про Закон і Благодать".
-4. [Радіо Свобода (radiosvoboda.org)](https://www.radiosvoboda.org) — інтерв'ю з істориками про Томос і спадщину.
+---
 
-## Хронологія
-- **860**: Похід Аскольда на Константинополь, так зване "перше хрещення" (Фотієве).
-- **957**: Візит княгині Ольги до Константинополя, її особисте хрещення.
-- **988**: Офіційне Хрещення Русі Володимиром Великим, одруження з Анною Порфірогенетою.
-- **1037**: Завершення будівництва Софії Київської — символу візантійської величі в Києві.
-- **1051**: Обрання Іларіона першим митрополитом-русином (автор "Слова про Закон і Благодать").
-- **1448**: Самовільне відокремлення Московської церкви від Київської митрополії.
-- **1686**: Незаконна анексія Київської митрополії Москвою (скасована у 2018).
-- **2019**: Надання Томосу про автокефалію ПЦУ Вселенським Патріархом.
+## Your Input
 
-## Ключові факти та цитати
-- **Іларіон ("Слово про Закон і Благодать")**: «Не в поганій бо і не в невідомій землі були ми, а в Руській, про яку знають і чують у всіх чотирьох кінцях світу». (Ствердження рівності Русі з Візантією).
-- **Вибір віри**: Це був насамперед геополітичний вибір — входження до кола цивілізованих держав ("Bizantine Commonwealth").
-- **Культурний трансфер**: Візантія дала не лише релігію, а й модель влади (василевс-князь), право (Номоканон), літературу та кам'яне будівництво.
+Read the **existing research notes** (already complete — do NOT re-research):
 
-## Engagement Hooks (mapped to sections)
-- Section "Вступ — Релігія і нація": [!context] — Пояснення концепції "Bizantine Commonwealth" (Візантійська співдружність) Дмитра Оболенського.
-- Section "Хрещення Русі — факти і міфи": [!myth-buster] — Міф про "мирне хрещення" vs реальність "вогнем і мечем" у Новгороді та язичницький опір.
-- Section "Візантійська спадщина: Сакральний простір": [!history-bite] — Значення шлюбу з багрянородною принцесою Анною (для Візантії це було приниженням, для Русі — тріумфом).
-- Section "Візантійська спадщина: Слово і Закон": [!quote] — Уривок зі "Слова про Закон і Благодать" про велич Києва.
-- Section "Дебати про спадщину": [!decolonization] — Як Москва привласнила концепцію "Третього Риму" та київську спадщину після 1686 року.
-- Section "Спадщина для ідентичності": [!culture] — Унікальність українського бароко як синтезу візантійської та західної традицій.
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-hist/research/khreshchennia-spadshchyna-research.md
+```
 
-## Деколонізаційний контекст
-- **Імперський міф**: "Київ — матір міст руських" у значенні колиски "триєдиного народу".
-- **Українська реальність**: Київська Русь була частиною європейського простору через династичні шлюби, а московська традиція сформувалася пізніше під впливом Орди та ізоляціонізму. "Спадщина" була вкрадена і переписана.
-- **Термінологія**: Відмова від терміну "спільна колиска". Чітке розрізнення Київської (європейської) та Московської (євразійської) моделей православ'я.
+Read the plan file (SOURCE OF TRUTH for structure):
 
-## Contested Terms (Contested Terms Table)
-| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
-|---------|-------------------------|--------------------------------|
-| **Хрещення Русі** | Початок історії "Російської православної церкви", спільна історія "трьох братніх народів". | Цивілізаційний вибір Києва, входження України в європейський християнський простір. |
-| **Канонічна територія** | Територія колишнього СРСР, підвладна РПЦ. | Історична територія Київської митрополії Вселенського патріархату. |
-| **Розкол** | Відхід українців від "матері-церкви" (Москви). | Повернення до матері-церкви (Константинополя) і відновлення історичної справедливості. |
-| **Третій Рим** | Москва як єдина спадкоємиця Візантії. | Політична доктрина для виправдання експансії; Київ зберіг автентичнішу візантійську традицію (відкритість, соборність). |
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/c1-hist/khreshchennia-spadshchyna.yaml
+```
 
-## Section-Mapped Research Notes
+Read the current meta file (for reference — you will replace the content_outline):
 
-### Вступ — Релігія і нація
-Релігія в середньовіччі — це не приватна справа, а маркер політичної лояльності та цивілізаційної приналежності. Хрещення 988 року — це вступ до "клубу" легітимних монархій.
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-hist/meta/khreshchennia-spadshchyna.yaml
+```
 
-### Хрещення Русі — факти і міфи
-Літописна легенда про "вибір віри" — літературний топос. Реальні причини: необхідність ідеологічної єдності для різноплемінної держави, союз з Візантією проти внутрішніх і зовнішніх ворогів. Володимир до хрещення — жорстокий язичник (братовбивство, гарем). Хрещення змінило етику влади (десятина, школи).
+---
 
-### Візантійська спадщина: Сакральний простір
-Архітектура: хрестово-купольний храм (Софія). Мозаїки і фрески — "біблія для неписьменних". Ікона — вікно в вічність (зворотна перспектива). Літургія — театралізоване дійство, що об'єднує громаду.
+## Your Task
 
-### Візантійська спадщина: Слово і Закон
-Кирилиця — інструмент культурної незалежності (на відміну від латини, мова богослужіння була зрозумілою). Перекладна література: Іоанн Златоуст, житія святих. Номоканон — основа церковного і сімейного права.
+**Rebuild** the `content_outline` from scratch using:
+- The **plan's section structure** as the skeleton (match section names exactly)
+- The **research notes** to inform depth, word allocation, and specific bullet points
 
-### Церква і держава
-Модель "симфонії" (співзвуччя) влади світської і духовної. На практиці — залежність митрополита від Патріарха, але князя — від Бога. Київські митрополити часто були греками, що гарантувало зв'язок з імперією.
+The existing meta `content_outline` is likely outdated (wrong section sizes, stale points). Do NOT copy it. Start fresh from the plan + research.
 
-### Дебати про спадщину
-Боротьба за київську спадщину між Москвою та Україною. 1686 рік — переломний момент (підпорядкування Москві). 2018-2019 — відновлення історичної справедливості (Томос). Різниця в ментальності: київське православ'я (відкрите, барокове, вплив католицької освіти в 17 ст.) vs московське (ізоляціоністське, одержавлене).
+### Rules
 
-### Спадщина для ідентичності
-Православ'я як код культури, навіть для атеїстів (календар, свята, етика). Але українська ідентичність ширша: Греко-Католицька Церква (синтез Сходу і Заходу), протестантизм. Секуляризація суспільства.
+- **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
+- Allocations must sum to approximately **5000** words (±10% acceptable)
+- Minimum section allocation: 200 words (merge smaller sections)
+- For modules with target ≥ 4000w, aim for **8-12 sections minimum** — this prevents any one section from consuming a disproportionate share of the module.
+- **No single section may consume more than 25% of the total word target.** A 5000w module → max 1250w per section. If a plan section would exceed this, you MUST split it.
+- Each section must have `section`, `words`, and `points` fields
+- Section names must be in Ukrainian (these become H2 headings in the lesson)
+- **Section names must match plan exactly** — if the plan has a `content_outline` with section names,
+  use those EXACT names (or very close Ukrainian equivalents). When splitting a large plan section,
+  add a subtitle (e.g. "Читання: I — Походження").
+- Points reflect research findings — cite specific facts, dates, quotes where relevant
+- Check the subject's vital status: living person → "Значення" / "Вплив"; deceased → "Спадщина" / "Наслідки"
 
-### Підсумок
-Хрещення — точка неповернення. Україна є спадкоємицею візантійської традиції, але в її європейському, демократичному варіанті (соборноправність).
+### How to split a plan section (CRITICAL)
 
-===RESEARCH_END===
+**The plan's bullet points are section topics, not sub-bullets.** A plan section with 10 bullet points should become 3-5 meta sections, not one giant section.
 
+**Process:**
+1. Count the bullet points in each plan section
+2. If a section has 5+ bullets: group them into thematic clusters of 2-4 bullets
+3. Each cluster becomes its own meta section with the parent name as prefix:
+   - `"Читання: I — Розселення та племінна мозаїка"` (bullets 1-4)
+   - `"Читання: II — Суспільний устрій і права"` (bullets 5-7)
+   - `"Читання: III — Духовний світ та побут"` (bullets 8-11)
+   - etc.
+4. Allocate words based on research depth for each cluster
+
+**Example:** A plan section `Читання` with 14 bullet points should NOT become one 3200w meta section. It should become 4-5 sub-sections of 600-800w each. The bullets tell you what the sub-sections should cover.
+
+---
+
+## Output Format
+
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+
+### Output Block: Meta Outline
+
+```
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Вступ: Релігія як цивілізаційний код"
-    words: 400
+  - section: "{Section 1 name in Ukrainian}"
+    words: {allocation}
     points:
-      - "Релігійна приналежність у Середньовіччі як маркер 'свій-чужий' та політичної легітимності."
-      - "Концепція 'Візантійської співдружності' (D. Obolensky) та місце Русі в ній."
-      - "Геополітичний контекст 988 року: чому Володимир обрав саме Константинополь."
-  - section: "Хрещення Русі: Міфологія та Реальність"
-    words: 700
+      - "{key point 1 — informed by research}"
+      - "{key point 2}"
+  - section: "{Section 2 name}"
+    words: {allocation}
     points:
-      - "Аналіз літописної легенди про 'вибір віри': літературний топос vs прагматизм."
-      - "Політичні мотиви: шлюб з Анною Порфірогенетою як визнання статусу наддержави."
-      - "Деконструкція міфу про 'мирне хрещення': опір язичницьких еліт та народу (Новгород, Ростов)."
-      - "Трансформація етики влади: від язичницького вождя до християнського монарха (благодійність, церковна десятина)."
-  - section: "Візантійська спадщина: Сакральний простір та Естетика"
-    words: 800
-    points:
-      - "Архітектура як ідеологія: Софія Київська як Новий Єрусалим та символ мудрості."
-      - "Мова візантійського мистецтва: канон, зворотна перспектива ікони, символіка мозаїк."
-      - "Літургія як синтез мистецтв: вплив обряду на формування естетичних смаків русичів."
-      - "Роль монастирів (Києво-Печерська лавра) як центрів аскези та культури."
-  - section: "Візантійська спадщина: Слово, Закон та Інституції"
-    words: 800
-    points:
-      - "Кирило-Мефодіївська традиція: богослужіння зрозумілою мовою як фактор культурної автономії."
-      - "Література та освіта: переклади як трансфер знань, зародження оригінального письменства (Іларіон, Нестор)."
-      - "Правова рецепція: вплив Номоканону та Еклоги на 'Руську Правду' та церковні устави."
-      - "Церковна організація: митрополія, єпархії та парафіяльна мережа як каркас державності."
-  - section: "Церква і Держава: Модель 'Симфонії' на Русі"
-    words: 700
-    points:
-      - "Візантійський ідеал 'симфонії' влади та його реалізація в київських умовах."
-      - "Статус Київської митрополії: між канонічним послухом Константинополю та волею київських князів."
-      - "Спроби автокефалії: обрання Іларіона (1051) та Климента Смолятича як вияв церковної суб'єктності."
-      - "Роль церкви у князівських міжусобицях: миротворча функція та моральний авторитет."
-  - section: "Історіографічна війна: Битва за Київську Спадщину"
-    words: 700
-    points:
-      - "Концепція 'Третього Риму' та московська узурпація київської спадщини."
-      - "1686 рік: неканонічне підпорядкування Київської митрополії Москві та його наслідки."
-      - "Українська православна традиція (XVII ст.): відкритість до Заходу, вплив бароко, соборність vs московський централізм."
-      - "Томос 2019 року як відновлення історичної справедливості та повернення до материнської церкви."
-  - section: "Спадщина для ідентичності: Від Середньовіччя до Сучасності"
-    words: 500
-    points:
-      - "Православ'я як фундамент української культурної ідентичності (календар, звичаї, ментальність)."
-      - "Релігійний плюралізм: феномен УГКЦ як синтезу візантійського обряду та європейської інституційності."
-      - "Секуляризація та сучасні виклики: роль церкви в громадянському суспільстві (Майдан, волонтерство)."
-  - section: "Підсумок: Європейський вибір Володимира"
-    words: 400
-    points:
-      - "Хрещення як остаточне входження Русі-України в європейський цивілізаційний простір."
-      - "Тяглість візантійської традиції в українській культурі попри століття бездержавності."
-      - "Сучасне переосмислення спадщини: від 'спільної колиски' до власної суб'єктності."
+      - "..."
+  # ... all sections
+  # Total: ~5000 words
 ===META_OUTLINE_END===
+```
 
+### Validation checklist (complete before outputting):
+
+- [ ] All section names are Ukrainian
+- [ ] Section names match plan structure
+- [ ] Each section has `words` and `points`
+- [ ] Sum of all `words` ≈ 5000
+- [ ] No section has fewer than 200 words
+- [ ] Points reflect research findings
+- [ ] 8-12 sections for ≥ 4000w targets
+
+---
+
+## Friction Report (MANDATORY)
+
+After the meta outline output, include:
+
+```
 ===FRICTION_START===
-**Phase**: Phase A: Research + Meta (Seminar)
-**Step**: Full Phase A
-**Friction Type**: NONE
-**Raw Error**: None
-**Self-Correction**: Split the massive "Byzantine Heritage" plan section into two granular meta sections ("Sacred Space" and "Word & Law") to maintain word count balance and allow deeper analysis of each aspect.
-**Proposed Tooling Fix**: N/A
+**Phase**: Phase A: Meta Outline Only (research-exists mode)
+**Step**: {what you were doing when friction occurred, or "Full meta outline"}
+**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
 ===FRICTION_END===
+```
+
+---
+
+## Boundaries
+
+- Do NOT re-research — use only the provided research file
+- Do NOT write lesson content — only the meta outline
+- Do NOT generate activities or vocabulary
+- Do NOT skip any section from the plan's content_outline
+- Do NOT reference persona names or voice instructions
+- Do NOT request skills, delegate to Claude, or skip this phase

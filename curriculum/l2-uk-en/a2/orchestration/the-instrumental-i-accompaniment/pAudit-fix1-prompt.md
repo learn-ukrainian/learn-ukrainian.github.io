@@ -20,16 +20,16 @@
   audit script returned non-zero exit code
   3 Outline Compliance Errors
   failing gates:
-    lesson: 2432/3000 (raw: 2663) | pedagogy: 6 violations | immersion: 23.9% LOW (target 50-60% (A2.1))
+    lesson: 2349/3000 (raw: 2666) | pedagogy: 3 violations | immersion: 89.7% HIGH (target 50-60% (A2.1))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
-     → Revision recommended (severity 70/100)
-     → 7 violations (significant)
-     → Immersion 26% off target (major rebalancing needed)
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 75/100)
+     → 4 violations (moderate)
+     → 3 grammar-level violations (fundamental)
+     → Immersion 30% off target (major rebalancing needed)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/audit/the-instrumental-i-accompaniment-audit.md

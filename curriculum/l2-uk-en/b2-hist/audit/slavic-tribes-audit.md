@@ -1,7 +1,7 @@
 # Audit Report: M05 — slavic-tribes.md
 **Level:** B2-HIST | **Module:** M05 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 18:44:18
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-21 15:10:39
 
 ## Configuration
 **Type:** B2-history
@@ -34,6 +34,33 @@
 - Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[EUPHONY]** Line 17: «в племена» — в перед збігом приголосних; має бути «у племена»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 153: «культуру і одну» — і між голосними; має бути «й одну»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 157: «сакральною і абсолютною» — і між голосними; має бути «й абсолютною»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 203: «у їхніх» — у перед голосним; має бути «в їхніх»
+  - FIX: Replace «у» with «в» (before vowel)
+- **[EUPHONY]** Line 10: повторення і/й без «та» — «...— це вертикаль і підкорення...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 13: повторення і/й без «та» — «...ідний і тихий, і поштивість до...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 14: повторення і/й без «та» — «...ькову доблесть і витривалість...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 15: повторення і/й без «та» — «...забивали коней і корів, і, зреш...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 16: повторення і/й без «та» — «...їдять хробаки і гаддя...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+- **[EUPHONY]** Line 21: повторення і/й без «та» — «...ргові партнери і мандрівники)...»; використайте «та» для другого сполучника
+  - FIX: Replace second «і»/«й» with «та» for conjunction variety
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 10 violations (significant)
+
 ## Gates
 - **Words:** ✅ 5027/5000 (raw: 5291)
 - **Activities:** ✅ 7/3
@@ -46,7 +73,7 @@
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 10 violations
 - **Content_heavy:** ✅ Content-heavy OK (7 activities)
 - **Immersion:** 🇺🇦 99.7% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)

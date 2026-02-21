@@ -37,12 +37,16 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import logging
+import os
 import re
 import textwrap
 import time
 import sys
 from pathlib import Path
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Setup: ensure scripts/ is on sys.path
@@ -72,6 +76,7 @@ import build_module as v1
 from build_module import (
     is_phase_complete, load_state, save_state, _now_iso,
     extract_phase_output, write_placeholders,
+    write_review_with_hash,
     ModuleContext,
 )
 from batch_gemini_config import (
@@ -109,8 +114,16 @@ PHASE_LABELS_V3: dict[str, str] = {
     "F":     "Final Review (agent-selectable)",
 }
 
-MAX_AUDIT_FIX_ITERS = 3
+MAX_AUDIT_FIX_ITERS_CORE = 3
+MAX_AUDIT_FIX_ITERS_SEMINAR = 5
 MAX_D_ITERS = 3
+
+
+def _max_audit_iters(track: str) -> int:
+    """Seminar tracks get more fix attempts due to higher word counts and complexity (#607)."""
+    if track in SEMINAR_TRACKS or track in PRO_TRACKS:
+        return MAX_AUDIT_FIX_ITERS_SEMINAR
+    return MAX_AUDIT_FIX_ITERS_CORE
 ESCALATION_MODEL_CLAUDE = "claude-opus-4-6"       # Escalation: Claude fixes what Gemini can't
 ESCALATION_MODEL_GEMINI = PRO_MODEL                # Escalation: Gemini fixes what Claude can't
 
@@ -140,16 +153,33 @@ def _load_state_v3(ctx: ModuleContext) -> dict:
     if sf.exists():
         try:
             return json.loads(sf.read_text("utf-8"))
-        except Exception:
-            pass
+        except Exception as e:
+            # Back up corrupted file before resetting (#601)
+            from datetime import datetime
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+            backup = sf.with_suffix(f".corrupted.{ts}.json")
+            sf.rename(backup)
+            logger.warning(
+                "state-v3.json corrupted for %s/%s — backed up to %s, resetting state. Error: %s",
+                ctx.track, ctx.slug, backup.name, e,
+            )
     return {"track": ctx.track, "slug": ctx.slug, "mode": "v3", "phases": {}}
 
 
 def _save_state_v3(ctx: ModuleContext, state: dict) -> None:
-    import json
+    import json, tempfile
     sf = _state_file_v3(ctx)
     sf.parent.mkdir(parents=True, exist_ok=True)
-    sf.write_text(json.dumps(state, indent=2, ensure_ascii=False), "utf-8")
+    # Atomic write: write to temp file then rename to avoid partial writes (#601)
+    content = json.dumps(state, indent=2, ensure_ascii=False)
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=sf.parent, suffix=".tmp")
+    try:
+        with os.fdopen(tmp_fd, "w", encoding="utf-8") as f:
+            f.write(content)
+        Path(tmp_path).replace(sf)
+    except Exception:
+        Path(tmp_path).unlink(missing_ok=True)
+        raise
 
 
 def _is_phase_v3_complete(ctx: ModuleContext, phase_id: str, state: dict) -> bool:
@@ -375,6 +405,12 @@ def _dispatch_claude_phase(
     cmd = [claude_bin, "--model", model, "-p", prompt, "--output-format", "text"]
     if allow_tools:
         cmd.extend(["--allowedTools", ",".join(allow_tools)])
+    # Reinforce output format — Claude sometimes ignores delimiters in long prompts
+    cmd.extend(["--append-system-prompt",
+                 "CRITICAL: Your output MUST contain ===REVIEW_START=== and ===REVIEW_END=== "
+                 "delimiters wrapping the full structured review. Output without these delimiters "
+                 "is automatically discarded. Do NOT summarize — produce the FULL review with "
+                 "all 13 dimensions scored, all required H2 sections, and all citations."])
 
     try:
         from build_module import _run_with_heartbeat
@@ -1174,10 +1210,13 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
     """Audit loop: runs prose/enrichment audit (content_only), dispatches fixes.
 
     Combines v2's Phase 3 (prose) and Phase 5 (enrichment) into one loop.
-    Max 3 iterations. Uses run_verify (content_only=True) — skips review gate
-    since the review file doesn't exist yet (Phase D creates it).
+    Max iterations are track-aware (#607). Uses run_verify (content_only=True) —
+    skips activity + review gates since this loop focuses on prose fixes.
+    Activity validation runs in the pre-D gate via --skip-review (#606).
     """
     phase = "audit"
+    max_iters = getattr(ctx, "max_fix", None) or _max_audit_iters(ctx.track)
+
     if _is_phase_v3_complete(ctx, phase, state):
         log("  Audit: SKIP (already complete)")
         return True
@@ -1187,7 +1226,7 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
     if audit_state.get("status") == "failed" and not ctx.force_phase:
         prev_attempts = audit_state.get("attempts", 0)
         was_escalated = "escalation" in audit_state.get("note", "")
-        if prev_attempts >= MAX_AUDIT_FIX_ITERS:
+        if prev_attempts >= max_iters:
             if was_escalated:
                 log(f"  Audit: SKIP — both agents exhausted. Use --force-phase audit to retry.")
                 return False
@@ -1217,17 +1256,32 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
         log("  Audit: DRY-RUN — would run audit loop")
         return True
 
-    # Auto-fix pass: apply deterministic fixes (euphony, formatting) before
+    # Auto-fix pass: apply deterministic fixes (euphony, IPA, formatting) before
     # calling any LLM. Zero API cost, instant.
     content_path = ctx.paths["md"]
+    auto_fix_total = 0
     if content_path.exists():
         from audit.checks.euphony import auto_fix_euphony
         text = content_path.read_text("utf-8")
         fixed_text, num_fixes = auto_fix_euphony(text, str(content_path))
         if num_fixes > 0:
             content_path.write_text(fixed_text, "utf-8")
-            log(f"  Audit: Auto-fixed {num_fixes} euphony violation(s) — no API call needed")
+            auto_fix_total += num_fixes
+            log(f"  Audit: Auto-fixed {num_fixes} euphony violation(s)")
 
+        # IPA normalization (w→ʋ, v→ʋ, affricate tie-bars)
+        from lint_ipa import apply_fixes as ipa_apply_fixes
+        vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+        for target in [content_path, vocab_path, ctx.paths.get("activities")]:
+            if target and target.exists():
+                t = target.read_text("utf-8")
+                fixed_t, n = ipa_apply_fixes(t)
+                if n > 0:
+                    target.write_text(fixed_t, "utf-8")
+                    auto_fix_total += n
+                    log(f"  Audit: Auto-fixed {n} IPA issue(s) in {target.name}")
+
+        if auto_fix_total > 0:
             # Re-audit after auto-fix — may already pass
             passed, output = run_verify(content_path, content_only=True)
             if passed:
@@ -1238,11 +1292,11 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
                 return True
             log("  Audit: Auto-fix applied but other issues remain — entering LLM fix loop")
 
-    for attempt in range(1, MAX_AUDIT_FIX_ITERS + 1):
+    for attempt in range(1, max_iters + 1):
         if attempt == 1:
             log("  Audit: Initial full audit...")
         else:
-            log(f"  Audit: Audit after fix {attempt - 1}/{MAX_AUDIT_FIX_ITERS - 1}...")
+            log(f"  Audit: Audit after fix {attempt - 1}/{max_iters - 1}...")
 
         passed, output = run_verify(ctx.paths["md"], content_only=True)
 
@@ -1263,8 +1317,8 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
         else:
             log(f"  Audit: FAIL (fix {attempt - 1} insufficient)")
 
-        if attempt >= MAX_AUDIT_FIX_ITERS:
-            log(f"  Audit: EXHAUSTED — {MAX_AUDIT_FIX_ITERS - 1} Gemini fix attempts")
+        if attempt >= max_iters:
+            log(f"  Audit: EXHAUSTED — {max_iters - 1} Gemini fix attempts")
             # Escalate to Claude Opus before giving up
             if _escalate_fix(ctx, output, "Audit", content_only=True):
                 _mark_phase_v3(ctx, state, phase, "complete",
@@ -1282,7 +1336,7 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
         fix_prompt_file = ctx.orch_dir / f"pAudit-fix{fix_num}-prompt.md"
         fix_prompt_file.write_text(fix_prompt, "utf-8")
 
-        log(f"  Audit: Dispatching fix {fix_num}/{MAX_AUDIT_FIX_ITERS - 1}...")
+        log(f"  Audit: Dispatching fix {fix_num}/{max_iters - 1}...")
         fix_output = _gemini_output_path(ctx.slug, f"pAudit-fix{fix_num}")
         ok, _ = dispatch_gemini(
             _dispatch_prompt(ctx, fix_prompt_file),
@@ -1322,6 +1376,33 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     if _is_phase_v3_complete(ctx, phase, state):
         log("  Phase D: SKIP (already complete)")
         return True
+
+    # Pre-D activity validation gate (#606)
+    # Activities must exist AND pass audit before Phase D can proceed.
+    # Uses --skip-review since the review file doesn't exist yet.
+    act_path = ctx.paths.get("activities")
+    vocab_path = ctx.paths.get("vocabulary")
+    missing = []
+    if act_path and not act_path.exists():
+        missing.append(f"activities: {act_path.name}")
+    if vocab_path and not vocab_path.exists():
+        missing.append(f"vocabulary: {vocab_path.name}")
+    if missing:
+        log(f"  Phase D: BLOCKED — missing sidecar files: {', '.join(missing)}")
+        log(f"  Phase D: Run Phase C first or create missing files")
+        return False
+
+    if not ctx.dry_run:
+        log("  Phase D: Pre-D activity validation (--skip-review)...")
+        pre_d_passed, pre_d_output = run_verify(ctx.paths["md"], skip_review=True)
+        if not pre_d_passed:
+            pre_d_log = ctx.orch_dir / "pD-pre-validation.log"
+            pre_d_log.write_text(pre_d_output, "utf-8")
+            log("  Phase D: BLOCKED — activity/vocab audit failed (see pD-pre-validation.log)")
+            for line in pre_d_output.strip().split("\n")[-5:]:
+                log(f"    {line}")
+            return False
+        log("  Phase D: Pre-D validation PASS")
 
     d1_template = PHASES_DIR / "phase-D1-evidence-review.md"
     d2_template = PHASES_DIR / "phase-D2-repair.md"
@@ -1384,11 +1465,18 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     if "Reviewed-By:" not in review_text:
         review_text = f"**Reviewed-By:** {claude_model_D}\n\n{review_text}"
 
-    # Save review
-    ctx.paths["review"].parent.mkdir(parents=True, exist_ok=True)
-    ctx.paths["review"].write_text(review_text, "utf-8")
+    # Save review with content hash for staleness detection (#618)
+    write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
     (ctx.orch_dir / "phase-D-review-1.md").write_text(review_text, "utf-8")
     log(f"  Phase D.1: Review saved → {ctx.paths['review'].name}")
+
+    # Auto-fix euphony before auditing — deterministic, zero API cost
+    from audit.checks.euphony import auto_fix_euphony
+    text = ctx.paths["md"].read_text("utf-8")
+    fixed_text, n_euphony = auto_fix_euphony(text, str(ctx.paths["md"]))
+    if n_euphony > 0:
+        ctx.paths["md"].write_text(fixed_text, "utf-8")
+        log(f"  Phase D.1: Auto-fixed {n_euphony} euphony violation(s)")
 
     # Run full audit to check review quality + content
     log("  Phase D.1: Running audit after review...")
@@ -1403,6 +1491,20 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
         mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
         return True
+
+    # Citation failure detection (#615): if the review itself is bad (fabricated
+    # citations), don't proceed to D.2 content repair — that can't fix a bad review.
+    # Instead, delete the review and mark as failed for retry.
+    # Only match CRITICAL violations (❌ prefix) — warning-severity cases are inconclusive.
+    _CITATION_FAILURES = ("FABRICATED_CITATIONS", "UNVERIFIED_CITATIONS")
+    if any(f"\u274c [{tag}]" in audit_out for tag in _CITATION_FAILURES):
+        log("  Phase D.1: REVIEW QUALITY FAILURE — fabricated/unverified citations detected")
+        log("  Phase D.1: Deleting bad review (D.2 cannot fix a bad review)")
+        if ctx.paths["review"].exists():
+            ctx.paths["review"].unlink()
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
+                       note="d1-citation-failure")
+        return False
 
     # -----------------------------------------------------------------------
     # Step 2: Targeted Repair (only if Step 1 didn't pass audit)
@@ -1441,6 +1543,13 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     else:
         log("  Phase D.2: WARNING — no SECTION_FIX delimiters in output")
         (ctx.orch_dir / "phase-D2-raw-output.md").write_text(raw_output2, "utf-8")
+
+    # Auto-fix euphony before final audit
+    text2 = ctx.paths["md"].read_text("utf-8")
+    fixed_text2, n_euphony2 = auto_fix_euphony(text2, str(ctx.paths["md"]))
+    if n_euphony2 > 0:
+        ctx.paths["md"].write_text(fixed_text2, "utf-8")
+        log(f"  Phase D.2: Auto-fixed {n_euphony2} euphony violation(s)")
 
     # Final re-audit
     log("  Phase D.2: Running final audit...")
@@ -1527,12 +1636,11 @@ def _phase_F_gemini(ctx: ModuleContext) -> bool:
         log("  Phase F (Gemini): Dispatch failed")
         return False
 
-    # Extract and save review
+    # Extract and save review with content hash (#618)
     review_text = _extract_delimiter(raw_output, "===REVIEW_START===", "===REVIEW_END===")
     if review_text:
         final_review_path = ctx.paths["review"].parent / f"{ctx.slug}-final-review.md"
-        final_review_path.parent.mkdir(parents=True, exist_ok=True)
-        final_review_path.write_text(review_text, "utf-8")
+        write_review_with_hash(final_review_path, review_text, ctx.paths["md"])
         (ctx.orch_dir / "phase-9-final-review.md").write_text(review_text, "utf-8")
         log(f"  Phase F (Gemini): Review saved → {final_review_path.name}")
 
@@ -1774,6 +1882,9 @@ def preflight_v3(args: argparse.Namespace) -> ModuleContext:
     if not hasattr(ctx, "restart_from"):
         ctx.restart_from = getattr(args, "restart_from", None)  # type: ignore[attr-defined]
 
+    # --max-fix N: override audit fix iterations
+    ctx.max_fix = getattr(args, "max_fix", None)  # type: ignore[attr-defined]
+
     return ctx
 
 
@@ -1841,6 +1952,7 @@ def main() -> int:
               %(prog)s a1 12 --no-track-context        # Skip track context injection
               %(prog)s a1 12 --force-phase B           # Re-run Phase B only
               %(prog)s a1 12 --force-phase D           # Re-run review+fix only
+              %(prog)s a1 12 --max-fix 7                # Override audit fix iterations
               %(prog)s a1 12 --final-review            # + Claude QA gate (Phase F)
         """),
     )
@@ -1871,7 +1983,7 @@ def main() -> int:
     parser.add_argument("--research-only", action="store_true", dest="research_only",
                         help="Run Phase A only (pre-seed research for all modules)")
     parser.add_argument("--final-review", action="store_true", dest="final_review",
-                        help="Run Phase F: final QA gate after Phase D")
+                        help="Run Phase F: final QA gate after Phase D (optional)")
     parser.add_argument("--final-review-agent", type=str, default="claude",
                         choices=["claude", "gemini"], dest="final_review_agent",
                         help="Agent for Phase F final review (default: claude)")
@@ -1886,6 +1998,8 @@ def main() -> int:
                         help="Claude model for Phase D/review (default: claude-opus-4-6)")
     parser.add_argument("--claude-model-F", type=str, default=None, dest="claude_model_F",
                         help="Claude model for Phase F/final-review (default: claude-opus-4-6)")
+    parser.add_argument("--max-fix", type=int, default=None, dest="max_fix",
+                        help="Override max audit fix iterations (default: 3 core, 5 seminar)")
 
     args = parser.parse_args()
 
@@ -1946,13 +2060,19 @@ def main() -> int:
                                 # Layer 2 guards protect A/B/C; pipeline runs only F+E
                                 print(f"  PARTIAL: audit passes, needs final review", flush=True)
                         else:
-                            # Full audit fails — check content-only
-                            co_passed, _ = run_verify(paths["md"], content_only=True)
-                            if co_passed:
-                                # Content OK, but review/enrichment gates fail
+                            # Full audit fails — check content+activities (skip review)
+                            sr_passed, _ = run_verify(paths["md"], skip_review=True)
+                            if sr_passed:
+                                # Content+activities OK, needs review only
                                 # Fall through — Layer 2 guards protect A/B/C
-                                print(f"  PARTIAL: content passes, needs review/enrichment", flush=True)
-                            # else: both fail → full pipeline (no print, just fall through)
+                                print(f"  PARTIAL: content+activities pass, needs review", flush=True)
+                            else:
+                                co_passed, _ = run_verify(paths["md"], content_only=True)
+                                if co_passed:
+                                    # Content OK, but activities/review gates fail
+                                    # Fall through — Layer 2 guards protect A/B/C
+                                    print(f"  PARTIAL: content passes, needs activities/review", flush=True)
+                                # else: all fail → full pipeline (no print, just fall through)
                 except Exception:
                     pass
 
@@ -1973,6 +2093,7 @@ def main() -> int:
                 claude_model_C=getattr(args, "claude_model_C", None),
                 claude_model_D=getattr(args, "claude_model_D", None),
                 claude_model_F=getattr(args, "claude_model_F", None),
+                max_fix=getattr(args, "max_fix", None),
             )
             rc = _run_single_module(single_args)
             if rc == 0:
@@ -2009,9 +2130,14 @@ def main() -> int:
                 print(f"PASS: {slug} (fully complete)", flush=True)
                 return 0
             else:
+                # Check intermediate levels: content+activities or content-only
+                passed_sr, _ = run_verify(content_path, skip_review=True)
+                if passed_sr:
+                    print(f"CONTENT+ACTIVITIES: {slug} (needs review)", flush=True)
+                    return 0
                 passed_co, _ = run_verify(content_path, content_only=True)
                 if passed_co:
-                    print(f"CONTENT-COMPLETE: {slug} (activities still needed)", flush=True)
+                    print(f"CONTENT-ONLY: {slug} (activities not validated)", flush=True)
                     return 0
                 print(f"FAIL: {slug}", flush=True)
                 for line in output.strip().split("\n")[-20:]:

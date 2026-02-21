@@ -2,14 +2,14 @@
   "module": "sentence-structure",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-20T14:59:45.353487Z",
+  "last_audit": "2026-02-21T11:24:01.981741Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T14:57:49.384794Z",
-    "meta": "2026-02-20T01:59:43.806761Z",
-    "activities": "2026-02-20T14:59:32.556118Z",
+    "md": "2026-02-21T10:55:13.827812Z",
+    "meta": "2026-02-21T01:32:07.091536Z",
+    "activities": "2026-02-21T10:55:13.828267Z",
     "vocabulary": "2026-02-20T02:09:48.336181Z",
-    "plan": "2026-02-18T19:03:34.315333Z",
+    "plan": "2026-02-20T21:18:06.815513Z",
     "research": "2026-02-20T01:59:43.802451Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4363/4000 (raw: 4593)"
+      "message": "4344/4000 (raw: 4574)"
     },
     "activities": {
       "status": "pass",
@@ -34,9 +34,9 @@
       "message": "25/20"
     },
     "naturalness": {
-      "status": "info",
+      "status": "pass",
       "violations": 0,
-      "message": "PENDING \u2014 awaiting review"
+      "message": "9.0/10 (High)"
     },
     "ipa": {
       "status": "pass",
@@ -51,15 +51,15 @@
     "review": {
       "status": "fail",
       "violations": 1,
-      "message": "Only 6/35 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
+      "message": "Review only covers 2/9 (22%) content sections. Missed: \u0412\u0441\u0442\u0443\u043f: \u0410\u043d\u0430\u0442\u043e\u043c\u0456\u044f \u043c\u043e\u0432\u0438, \u0414\u0440\u0443\u0433\u043e\u0440\u044f\u0434\u043d\u0456 \u0447\u043b\u0435\u043d\u0438 \u0440\u0435\u0447\u0435\u043d\u043d\u044f, \u0422\u0438\u043f\u0438 \u0440\u0435\u0447\u0435\u043d\u044c: \u041f\u0440\u043e\u0441\u0442\u0456 \u0442\u0430 \u0441\u043a\u043b\u0430\u0434\u043d\u0456, \u0427\u0430\u0441\u0442\u0438\u043d\u0438 \u0441\u043a\u043b\u0430\u0434\u043d\u043e\u0433\u043e \u0440\u0435\u0447\u0435\u043d\u043d\u044f, \u0421\u043f\u043e\u043b\u0443\u0447\u043d\u0438\u043a\u0438 \u0442\u0430 \u0437\u0432'\u044f\u0437\u043e\u043a. A thorough review must address each major section of the content."
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "Only 6/35 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
+      "Review only covers 2/9 (22%) content sections. Missed: \u0412\u0441\u0442\u0443\u043f: \u0410\u043d\u0430\u0442\u043e\u043c\u0456\u044f \u043c\u043e\u0432\u0438, \u0414\u0440\u0443\u0433\u043e\u0440\u044f\u0434\u043d\u0456 \u0447\u043b\u0435\u043d\u0438 \u0440\u0435\u0447\u0435\u043d\u043d\u044f, \u0422\u0438\u043f\u0438 \u0440\u0435\u0447\u0435\u043d\u044c: \u041f\u0440\u043e\u0441\u0442\u0456 \u0442\u0430 \u0441\u043a\u043b\u0430\u0434\u043d\u0456, \u0427\u0430\u0441\u0442\u0438\u043d\u0438 \u0441\u043a\u043b\u0430\u0434\u043d\u043e\u0433\u043e \u0440\u0435\u0447\u0435\u043d\u043d\u044f, \u0421\u043f\u043e\u043b\u0443\u0447\u043d\u0438\u043a\u0438 \u0442\u0430 \u0437\u0432'\u044f\u0437\u043e\u043a. A thorough review must address each major section of the content."
     ],
-    "pass_count": 6,
+    "pass_count": 7,
     "fail_count": 1,
     "deferred_count": 0
   }

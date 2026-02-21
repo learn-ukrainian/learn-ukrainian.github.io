@@ -26,11 +26,11 @@ Ukrainian cities rely heavily on public transport.
 Це серце Києва, Харкова та Дніпра. Це швидко, надійно і дешево.
 In Kyiv, it is also a bomb shelter and an architectural marvel. The stations are often like underground palaces.
 
-**Автобус** [ɑu̯ˈtɔbʊs] — Bus.
+**Автобус** [ɑu̯ˈtɔbus] — Bus.
 Це великий муніципальний транспорт. Автобуси їздять регулярно.
 They follow a strict schedule and stop only at designated stops.
 
-**Тролейбус** [trɔˈlʲɛɪ̯bʊs] — Trolleybus.
+**Тролейбус** [trɔˈlʲɛɪ̯bus] — Trolleybus.
 Це електричний автобус. Він має «роги», підключені до дротів. Це повільніше, ніж метро, але дуже екологічно.
 
 **Трамвай** [trɑmˈʋɑɪ̯] — Tram.
@@ -97,7 +97,7 @@ Now that we know *how* to move, let's learn the specific vocabulary for stops, t
 
 In English, we often use "station" for everything. In Ukrainian, there is a strict difference.
 
-**Зупинка** [zʊˈpɪnkɑ] — A stop.
+**Зупинка** [zuˈpɪnkɑ] — A stop.
 Це місце для наземного транспорту: автобуса, трамвая, тролейбуса. Зазвичай це просто навіс або знак на вулиці.
 *   **Автобусна зупинка** — Bus stop.
 *   **Наступна зупинка** — Next stop.
@@ -118,7 +118,7 @@ In English, we often use "station" for everything. In Ukrainian, there is a stri
 
 If you travel by Kyiv metro, you will memorize certain phrases forever. They are played at every station.
 
-**«Обережно, двері зачиняються»** [ɔbɛˈrɛʒnɔ dʋɛˈri zɑt͡ʃɪˈɲɑjʊtʲsʲɑ] — Caution, the doors are closing.
+**«Обережно, двері зачиняються»** [ɔbɛˈrɛʒnɔ dʋɛˈri zɑt͡ʃɪˈɲɑjutʲsʲɑ] — Caution, the doors are closing.
 This is the signal to step back. The doors in older trains close with considerable force!
 
 **«Наступна станція...»** — Next station is...
@@ -147,7 +147,7 @@ The announcement often tells you which streets you can reach from the station.
 **Валідатор** [ʋɑlʲiˈdɑtɔr] — Validator.
 Це помаранчевий або жовтий пристрій в автобусі. Треба прикласти сюди картку або телефон.
 
-**Прокомпостувати** [prɔkɔmpɔstʊˈʋɑtɪ] — To validate (old style).
+**Прокомпостувати** [prɔkɔmpɔstuˈʋɑtɪ] — To validate (old style).
 Історично це означало пробити дірки у паперовому квитку. Старші люди досі вживають це слово, але молодь каже **завалідувати**.
 *   **Треба завалідувати квиток** — Need to validate the ticket.
 

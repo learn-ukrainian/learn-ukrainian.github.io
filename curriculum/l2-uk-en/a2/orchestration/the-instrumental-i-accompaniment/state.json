@@ -19,7 +19,41 @@
       "status": "complete",
       "timestamp": "2026-02-20T01:54:43Z",
       "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:31:18Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:31:18Z",
+      "note": "v3-audit"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-21T07:31:52Z",
+      "note": "v3-phase-D-escalation"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-21T07:31:52Z",
+      "note": "v3-phase-D-escalation"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-21T07:31:52Z",
+      "note": "v3-phase-D-escalation"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-21T07:40:25Z",
+      "verdict": "NEEDS_WORK"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-21T07:41:49Z"
     }
   },
-  "last_updated": "2026-02-20T11:26:23Z"
+  "last_updated": "2026-02-21T07:41:49Z"
 }

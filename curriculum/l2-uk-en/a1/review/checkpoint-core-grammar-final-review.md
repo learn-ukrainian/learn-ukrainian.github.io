@@ -24,7 +24,7 @@ Now let me do a thorough deep review. I've read all files. Here is my adversaria
 
 ### Issue 4: IPA for Щ missing tie bar on affricate
 **File:** `checkpoint-core-grammar.md`, lines 49, 58, 69
-**Text:** `[ʃtʃ]` (three occurrences)
+**Text:** `[ʃt͡ʃ]` (three occurrences)
 **Problem:** Ukrainian Ч is the affricate [t͡ʃ], so Щ = [ʃ] + [t͡ʃ] = [ʃt͡ʃ]. The tie bar distinguishes an affricate from a consonant sequence. Minor at A1, but since IPA is being used explicitly, it should be correct.
 
 ### Issue 5: Accusative Life Hack incomplete — omits -я ending
@@ -103,7 +103,7 @@ FILE: curriculum/l2-uk-en/a1/checkpoint-core-grammar.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/checkpoint-core-grammar.md
 ---OLD---
-*   **Щ (Shch)** — is a combination of sounds [ʃtʃ]. Imagine you are saying "fresh cheese" very quickly.
+*   **Щ (Shch)** — is a combination of sounds [ʃt͡ʃ]. Imagine you are saying "fresh cheese" very quickly.
 ---NEW---
 *   **Щ (Shch)** — is a combination of sounds [ʃt͡ʃ]. Imagine you are saying "fresh cheese" very quickly.
 ===FIX_END===
@@ -111,7 +111,7 @@ FILE: curriculum/l2-uk-en/a1/checkpoint-core-grammar.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/checkpoint-core-grammar.md
 ---OLD---
-*   **Борщ** (borscht) — at the end hear the full [ʃtʃ], do not swallow sounds.
+*   **Борщ** (borscht) — at the end hear the full [ʃt͡ʃ], do not swallow sounds.
 ---NEW---
 *   **Борщ** (borscht) — at the end hear the full [ʃt͡ʃ], do not swallow sounds.
 ===FIX_END===
@@ -119,7 +119,7 @@ FILE: curriculum/l2-uk-en/a1/checkpoint-core-grammar.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/checkpoint-core-grammar.md
 ---OLD---
-How many sounds does the letter "Щ" designate? It should sound like [ʃtʃ]. If you read it as "sh", try again!
+How many sounds does the letter "Щ" designate? It should sound like [ʃt͡ʃ]. If you read it as "sh", try again!
 ---NEW---
 How many sounds does the letter "Щ" designate? It should sound like [ʃt͡ʃ]. If you read it as "sh", try again!
 ===FIX_END===
@@ -171,7 +171,7 @@ FILE: curriculum/l2-uk-en/a1/activities/checkpoint-core-grammar.yaml
 | 1 | "тато" as soft sign example (ends in -о, not -ь) | Critical — factual error | Yes |
 | 2 | Missing stress marks on плачу́/пла́чу minimal pair | Critical — defeats lesson | Yes |
 | 3 | "студентом" leaks Instrumental (A2) into A1 | High — scope violation | Yes |
-| 4 | IPA [ʃtʃ] missing tie bar → [ʃt͡ʃ] | Minor — accuracy | Yes |
+| 4 | IPA [ʃt͡ʃ] missing tie bar → [ʃt͡ʃ] | Minor — accuracy | Yes |
 | 5 | Accusative Life Hack omits -я → -ю | Medium — incomplete rule | Yes |
 | 6 | Activity title "1 до 5" contains 8 pairs | Medium — misleading | Yes |
 | 7 | Activity title "В чи У?" tests case forms, not preposition | Medium — misleading | Yes |

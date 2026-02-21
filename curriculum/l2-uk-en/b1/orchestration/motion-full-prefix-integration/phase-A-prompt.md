@@ -51,6 +51,14 @@ Research **Рух: інтеграція префіксів** for the **B1** core
 4. **Cross-References**: Note which modules this builds on and prepares for (check the plan's `connects_to` field).
 5. **Common Errors**: Identify 2-3 common learner mistakes for this grammar point/topic.
 
+### Decolonized Framing
+
+When researching, frame Ukrainian independently — **never as a derivative or variant of Russian:**
+- Describe Ukrainian features positively ("Ukrainian has...", "Ukrainian uses...")
+- Do NOT use Russian as the baseline for comparisons ("Unlike Russian...", "Different from Russian...")
+- If comparing language systems is useful, use non-Russian languages (Polish, Portuguese, etc.)
+- Note how topics have been historically misframed by Russian/Soviet sources and provide the Ukrainian-centric perspective
+
 ### Additional for Core B (B1.6+, B2, C1, C2, PRO)
 
 - Domain-specific vocabulary collocations from professional glossaries (PRO tracks)

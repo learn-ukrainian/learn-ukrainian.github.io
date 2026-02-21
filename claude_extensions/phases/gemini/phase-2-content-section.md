@@ -213,7 +213,8 @@ Maximum ~15-25 IPA annotations per module (one per new word). If you have more, 
 ```
 
 **Rules:**
-- Use IPA symbols in square brackets: `[x]`, `[ʃ]`, `[tʃ]`, `[ʒ]`, `[ts]`, `[dʒ]`
+- Use IPA symbols in square brackets: `[x]`, `[ʃ]`, `[t͡ʃ]`, `[ʒ]`, `[t͡s]`, `[d͡ʒ]`
+- Affricates MUST have tie-bars: `[t͡ʃ]` (ч), `[d͡ʒ]` (дж), `[t͡s]` (ц), `[d͡z]` (дз)
 - Add English approximation for accessibility: `[ʃ] — like «sh» in «shoe»`
 - Mark palatalization: `[lʲ]`, `[dʲ]`, `[nʲ]`, `[tʲ]` (NOT just `[l]`, `[d]`)
 - Mark the soft Л correctly: `[lʲ]` vs hard `[l]`

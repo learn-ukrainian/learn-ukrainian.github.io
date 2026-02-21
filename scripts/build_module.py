@@ -767,13 +767,45 @@ def extract_phase_output(
     return result.returncode == 0
 
 
-def run_verify(content_path: Path, content_only: bool = True) -> tuple[bool, str]:
-    """Run otaman_verify.py or hetman_verify.py. Returns (passed, output)."""
+def run_verify(content_path: Path, content_only: bool = True,
+               skip_review: bool = False) -> tuple[bool, str]:
+    """Run verification gate. Returns (passed, output).
+
+    Modes:
+      content_only=True:  otaman_verify.py — prose only (skip activities + review)
+      content_only=False: hetman_verify.py — full audit (all gates)
+      skip_review=True:   audit_module.sh --skip-review — prose + activities (skip review)
+    """
+    if skip_review:
+        audit_script = str(PROJECT_ROOT / "scripts" / "audit_module.sh")
+        result = subprocess.run(
+            [audit_script, "--skip-review", str(content_path)],
+            cwd=str(PROJECT_ROOT), capture_output=True, text=True, timeout=300,
+        )
+        output = (result.stdout or "") + (result.stderr or "")
+        passed = result.returncode == 0
+        return passed, output
+
     script = "otaman_verify.py" if content_only else "hetman_verify.py"
     result = run_script([str(SCRIPTS_DIR / script), str(content_path)], capture=True, timeout=300)
     output = (result.stdout or "") + (result.stderr or "")
     passed = result.returncode == 0
     return passed, output
+
+
+def write_review_with_hash(review_path: Path, review_text: str,
+                           content_path: Path) -> None:
+    """Write review file with embedded content hash for staleness detection (#618).
+
+    Embeds an HTML comment with a short MD5 hash of the module content at the time
+    of review. The API /issues endpoint uses this to detect stale reviews when
+    mtime comparison is unreliable (git checkout, worktrees, same-second writes).
+    """
+    import hashlib
+    content_hash = hashlib.md5(content_path.read_bytes()).hexdigest()[:12]
+    header = f"<!-- content-hash: {content_hash} -->\n"
+    review_path.parent.mkdir(parents=True, exist_ok=True)
+    review_path.write_text(header + review_text, "utf-8")
 
 
 # ---------------------------------------------------------------------------

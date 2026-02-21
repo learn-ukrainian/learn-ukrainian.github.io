@@ -8,7 +8,7 @@ Now I have everything I need. Here is my deep adversarial review.
 
 ### ISSUE 1 — Vocabulary YAML: цікаво IPA completely wrong
 **File:** vocabulary YAML, line 71
-**Current:** `[ˈtʲsʲikɑvo]`
+**Current:** `[ˈtʲsʲikɑʋo]`
 **Problem:** Three errors in one transcription: (1) Ukrainian "ц" is the affricate [t͡s], NOT separate [tʲsʲ]; (2) stress is on the second syllable (ці-**КА**-во), not the first; (3) "в" should be [ʋ] not [v]. Correct: `[t͡sʲiˈkɑʋo]`.
 
 ### ISSUE 2 — Vocabulary YAML: Systematic [v] instead of [ʋ] for Ukrainian В
@@ -17,7 +17,7 @@ Now I have everything I need. Here is my deep adversarial review.
 
 ### ISSUE 3 — Vocabulary YAML: Missing tie bars on affricates
 **File:** vocabulary YAML, lines 49, 106
-**Problem:** дзвонити has `[dz...]` — "дз" is an affricate requiring tie bar: `[d͡z...]`. боляче has `[...tʃe]` — "ч" is an affricate requiring tie bar: `[...t͡ʃe]`.
+**Problem:** дзвонити has `[dz...]` — "дз" is an affricate requiring tie bar: `[d͡z...]`. боляче has `[...t͡ʃe]` — "ч" is an affricate requiring tie bar: `[...t͡ʃe]`.
 
 ### ISSUE 4 — Vocabulary YAML: подобатися, здаватися — palatalized т before и
 **File:** vocabulary YAML, lines 37, 55
@@ -100,7 +100,7 @@ FILE: curriculum/l2-uk-en/a2/activities/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[vɑm]'
+- ipa: '[ʋɑm]'
   lemma: вам
   notes: Dative form of 'ви'
   pos: pronoun
@@ -132,7 +132,7 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[dzvoˈnɪtɪ]'
+- ipa: '[d͡zʋoˈnɪtɪ]'
   lemma: дзвонити
   notes: governs Dative case
   pos: verb
@@ -148,7 +148,7 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[zdɑˈvɑtʲisʲɑ]'
+- ipa: '[zdɑˈʋɑtʲisʲɑ]'
   lemma: здаватися
   notes: governs Dative case (impersonal)
   pos: verb
@@ -164,7 +164,7 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[ˈtʲsʲikɑvo]'
+- ipa: '[ˈtʲsʲikɑʋo]'
   lemma: цікаво
   notes: impersonal state
   pos: adverb
@@ -180,7 +180,7 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[ˈvɛselo]'
+- ipa: '[ˈʋɛselo]'
   lemma: весело
   notes: impersonal state
   pos: adverb
@@ -196,7 +196,7 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[ˈvɑʒko]'
+- ipa: '[ˈʋɑʒko]'
   lemma: важко
   notes: impersonal state
   pos: adverb
@@ -212,7 +212,7 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[ˈbɔlʲɑtʃe]'
+- ipa: '[ˈbɔlʲɑt͡ʃe]'
   lemma: боляче
   notes: impersonal state
   pos: adverb
@@ -228,7 +228,7 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[dɑˈvɑlʲnɪj]'
+- ipa: '[dɑˈʋɑlʲnɪj]'
   lemma: давальний
   notes: grammatical term
   pos: adjective

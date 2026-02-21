@@ -2,12 +2,12 @@
   "module": "trypillian-civilization",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-20T01:48:00.909514Z",
+  "last_audit": "2026-02-21T16:45:14.447956Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-19T11:33:35.174865Z",
+    "md": "2026-02-21T16:26:08.848406Z",
     "meta": "2026-02-19T11:16:32.387801Z",
-    "activities": "2026-02-19T11:33:35.176114Z",
+    "activities": "2026-02-21T16:26:08.849364Z",
     "vocabulary": "2026-02-19T11:19:28.785242Z",
     "plan": "2026-02-18T19:03:37.551241Z",
     "research": "2026-02-18T00:18:37.003993Z"
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5240/5000 (raw: 5482) | pedagogy: 17 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5240/5000 (raw: 5482)"
     },
     "activities": {
       "status": "pass",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
+    "pass_count": 6,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

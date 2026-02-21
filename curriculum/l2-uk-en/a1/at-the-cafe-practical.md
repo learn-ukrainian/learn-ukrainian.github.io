@@ -184,7 +184,7 @@ To ask for the bill:
 
 The waiter will ask how you want to pay. This uses the **Instrumental Case**, but for now, just memorize these two "chunks" as fixed adverbs describing *how* you pay.
 
-*   **Готівкою** [ɦɔˈtʲiwkɔju] — *By cash*
+*   **Готівкою** [ɦɔˈtʲiʋkɔju] — *By cash*
 *   **Карткою** [ˈkɑrtkɔju] — *By card*
 
 > [!context]
@@ -328,7 +328,7 @@ Language reflects location. In Western Ukraine, specifically in Halychyna (Galic
 
 > **Словничок діалекту:**
 > *   **Філіжанка** [fʲilʲiˈʒɑnkɐ] — чашка (cup). This is the most famous Lviv word.
-> *   **Пляцок** [ˈplʲɑtsɔk] — пиріг (cake/pie). It implies a homemade-style cake, often with layers.
+> *   **Пляцок** [ˈplʲɑt͡sɔk] — пиріг (cake/pie). It implies a homemade-style cake, often with layers.
 > *   **Коліжанка** [kɔlʲiˈʒɑnkɐ] — подруга (female friend/colleague).
 > *   **Файно** [ˈfɑjnɔ] — добре (good/nice). "Файна кава" means "Good coffee".
 

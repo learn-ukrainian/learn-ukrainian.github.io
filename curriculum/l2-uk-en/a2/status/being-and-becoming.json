@@ -2,14 +2,14 @@
   "module": "being-and-becoming",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-20T12:26:24.001309Z",
+  "last_audit": "2026-02-21T10:11:28.961509Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T09:35:01.923397Z",
+    "md": "2026-02-21T10:11:25.361419Z",
     "meta": "2026-02-20T08:57:27.511949Z",
-    "activities": "2026-02-20T09:38:59.983928Z",
-    "vocabulary": "2026-02-20T09:38:30.718800Z",
-    "plan": "2026-02-18T19:03:32.467049Z",
+    "activities": "2026-02-21T10:11:25.361737Z",
+    "vocabulary": "2026-02-21T08:49:55.435307Z",
+    "plan": "2026-02-20T20:59:43.309614Z",
     "research": "2026-02-20T08:57:27.508722Z"
   },
   "gates": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3042/3000 (raw: 3278)"
+      "message": "3047/3000 (raw: 3283)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "23/1"
+      "message": "20/1"
     },
     "naturalness": {
       "status": "info",

@@ -24,7 +24,7 @@ Related: a1-26-describing-things, a1-28-description-adverbs
 
 **Чорний** [ˈt͡ʃɔrnɪj] (black) represents the earth — the fertile "chornozem" (black soil) that creates life. While it can signify sorrow in specific contexts, it largely symbolizes wisdom, experience, and the richness of the land. It is grounded and respectful.
 
-**Білий** [ˈbʲilɪj] (white) is the color of purity and the divine world. A **біла сорочка** [ˈbʲiɫɑ sɔˈrɔt͡ʃkɑ] (white shirt) is the standard canvas for embroidery because it represents a clean, pure soul.
+**Білий** [ˈbʲilɪj] (white) is the color of purity and the divine world. A **біла сорочка** [ˈbʲilɑ sɔˈrɔt͡ʃkɑ] (white shirt) is the standard canvas for embroidery because it represents a clean, pure soul.
 
 > [!culture]
 > **Cultural Insight: Два кольори**
@@ -88,7 +88,7 @@ Now let's expand our palette and learn how these adjectives behave. Remember, in
 | Black | **чорний** | **чорна** | **чорне** |
 | Red | **червоний** | **червона** | **червоне** |
 | Blue | **синій** [ˈsɪnʲij] | **синя** [ˈsɪnʲɑ] | **синє** [ˈsɪnʲe] |
-| Green | **зелений** [zeˈɫenɪj] | **зелена** [zeˈɫenɑ] | **зелене** [zeˈɫene] |
+| Green | **зелений** [zeˈlenɪj] | **зелена** [zeˈlenɑ] | **зелене** [zeˈlene] |
 | Yellow | **жовтий** [ˈʒɔu̯tɪj] | **жовта** [ˈʒɔu̯tɑ] | **жовте** [ˈʒɔu̯te] |
 
 Notice the pattern? Most colors follow the "Hard Group" endings (**-ий**, **-а**, **-е**).
@@ -157,7 +157,7 @@ Let's learn the names of common items. Pay attention to their gender, as this di
 **Сорочка** [sɔˈrɔt͡ʃkɑ] (shirt) is feminine.
 *   **Це — нова сорочка.**
 
-**Сукня** [ˈsuknʲɑ] (dress) is feminine. A common synonym is **плаття** [ˈpɫɑtʲːɑ] (neuter), but **сукня** is often considered more elegant and stylistically purely Ukrainian.
+**Сукня** [ˈsuknʲɑ] (dress) is feminine. A common synonym is **плаття** [ˈplɑtʲːɑ] (neuter), but **сукня** is often considered more elegant and stylistically purely Ukrainian.
 *   **Вона має гарну сукню.**
 
 **Светр** [sʋetr] (sweater) is masculine.

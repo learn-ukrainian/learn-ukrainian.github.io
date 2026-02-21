@@ -16,13 +16,13 @@
   gender: m
   translation: gram
   example: "Двісті грам сиру."
-- ipa: '[ˈʃtʊkɑ]'
+- ipa: '[ˈʃtukɑ]'
   lemma: штука
   pos: noun
   gender: f
   translation: piece / item
   example: "Одна штука."
-- ipa: '[pʊˈt͡ʃɔk]'
+- ipa: '[puˈt͡ʃɔk]'
   lemma: пучок
   pos: noun
   gender: m
@@ -38,7 +38,7 @@
   pos: noun
   translation: vegetables
   notes: always plural
-- ipa: '[ˈfrʊktɪ]'
+- ipa: '[ˈfruktɪ]'
   lemma: фрукти
   pos: noun
   translation: fruits
@@ -64,7 +64,7 @@
   pos: noun
   gender: m
   translation: vendor / seller
-- ipa: '[ˈjɑblʊkɔ]'
+- ipa: '[ˈjɑblukɔ]'
   lemma: яблуко
   pos: noun
   gender: n
@@ -85,13 +85,13 @@
   pos: noun
   gender: m
   translation: cucumber
-- ipa: '[ˈmɔrkvɑ]'
+- ipa: '[ˈmɔrkʋɑ]'
   lemma: морква
   pos: noun
   gender: f
   translation: carrot
   notes: usually singular (collective)
-- ipa: '[t͡sɪˈbʊlʲɑ]'
+- ipa: '[t͡sɪˈbulʲɑ]'
   lemma: цибуля
   pos: noun
   gender: f

@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T09:58:42Z",
+      "ts": "2026-02-21T00:11:04Z",
       "task_id": "v3-vasyl-shkliar-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

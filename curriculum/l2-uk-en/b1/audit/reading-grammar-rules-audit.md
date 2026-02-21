@@ -1,7 +1,7 @@
 # Audit Report: M03 — reading-grammar-rules.md
 **Level:** B1 | **Module:** M03 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-20 14:48:13
+**Generated:** 2026-02-21 01:21:17
 
 ## Configuration
 **Type:** B1-bridge
@@ -23,8 +23,8 @@
 | 2 | match-up | Інструкції та їх значення | 16 | 8 | ✅ |
 | 3 | fill-in | Граматичні пояснення | 8 | 8 | ✅ |
 | 4 | group-sort | Категорії термінів | 15 | 6 | ✅ |
-| 5 | true-false | Правда чи міф про мову? | 8 | 8 | ✅ |
-| 6 | mark-the-words | Знайдіть дієслова-інструкції | 6 | 6 | ✅ |
+| 5 | true-false | Правда чи міф про мову? | 10 | 8 | ✅ |
+| 6 | mark-the-words | Знайдіть дієслова-інструкції | 11 | 6 | ✅ |
 | 7 | error-correction | Виправте мовні помилки | 6 | 6 | ✅ |
 
 **Summary:**
@@ -35,7 +35,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4606/4000 (raw: 4961)
+- **Words:** ✅ 4556/4000 (raw: 4911)
 - **Activities:** ✅ 7/4
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/3 types
@@ -70,7 +70,7 @@
 | visual | 12 | 3 | 100% | 5% | 5.0% |
 | questions | 42 | 5 | 100% | 5% | 5.0% |
 | tables | 2 | 2 | 100% | 4% | 4.0% |
-| paragraph_var | 0.95 | - | 95% | 3% | 2.8% |
+| paragraph_var | 0.93 | - | 93% | 3% | 2.8% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
 | **TOTAL** | | | | | **99.5%** |
 
@@ -79,14 +79,14 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Читаємо граматичні правила** | ✅ | 57 | Included in Core |
-| **Вступ: Читаємо граматику українською** | ✅ | 438 | Included in Core |
+| **Вступ: Читаємо граматику українською** | ✅ | 417 | Included in Core |
 | **Моделі граматичних пояснень** | ✅ | 590 | Included in Core |
 | **Слова-інструкції** | ✅ | 426 | Included in Core |
 | **Моделі порівняння** | ✅ | 384 | Included in Core |
 | **Дієслова в інструкціях до вправ** | ✅ | 456 | Included in Core |
-| **Аналітичні терміни** | ✅ | 457 | Included in Core |
-| **Термінологія стилю та регістру** | ✅ | 456 | Included in Core |
-| **Терміни словотвору** | ✅ | 385 | Included in Core |
+| **Аналітичні терміни** | ✅ | 448 | Included in Core |
+| **Термінологія стилю та регістру** | ✅ | 442 | Included in Core |
+| **Терміни словотвору** | ✅ | 379 | Included in Core |
 | **Практика** | ✅ | 354 | Included in Core |
 | **Діалоги** | ✅ | 395 | Included in Core |
 | **Підсумок** | ✅ | 208 | Included in Core |

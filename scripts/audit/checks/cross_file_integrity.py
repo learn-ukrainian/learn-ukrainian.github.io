@@ -57,8 +57,11 @@ def load_module_vocabulary(md_path: Path) -> Set[str]:
 
         vocab = set()
         for entry in entries:
-            if isinstance(entry, dict) and 'lemma' in entry:
-                vocab.add(entry['lemma'].lower())
+            if isinstance(entry, dict):
+                if 'lemma' in entry:
+                    vocab.add(entry['lemma'].lower())
+                elif 'uk' in entry:
+                    vocab.add(entry['uk'].lower())
 
         return vocab
     except Exception:

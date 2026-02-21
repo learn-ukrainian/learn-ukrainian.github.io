@@ -97,12 +97,12 @@ FILE: curriculum/l2-uk-en/a1/at-the-market.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-market.md
 ---OLD---
-**штука** [ˈʃtʊkɑ] — piece / item
+**штука** [ˈʃtukɑ] — piece / item
 Used when you buy things individually, like eggs or large fruits. **Це для яєць або фруктів.** (This is for eggs or fruits.)
 
 ### The "Kilogram" Pattern
 ---NEW---
-**штука** [ˈʃtʊkɑ] — piece / item
+**штука** [ˈʃtukɑ] — piece / item
 Used when you buy things individually, like eggs or large fruits. **Це для яєць або фруктів.** (This is for eggs or fruits.)
 
 **літр** [lʲitr] — liter
@@ -270,13 +270,13 @@ items:
   gender: m
   translation: gram
   example: "Двісті грам сиру."
-- ipa: '[ˈʃtʊkɑ]'
+- ipa: '[ˈʃtukɑ]'
   lemma: штука
   pos: noun
   gender: f
   translation: piece / item
   example: "Одна штука."
-- ipa: '[pʊˈt͡ʃɔk]'
+- ipa: '[puˈt͡ʃɔk]'
   lemma: пучок
   pos: noun
   gender: m
@@ -292,7 +292,7 @@ items:
   pos: noun
   translation: vegetables
   notes: always plural
-- ipa: '[ˈfrʊktɪ]'
+- ipa: '[ˈfruktɪ]'
   lemma: фрукти
   pos: noun
   translation: fruits
@@ -318,7 +318,7 @@ items:
   pos: noun
   gender: m
   translation: vendor / seller
-- ipa: '[ˈjɑblʊkɔ]'
+- ipa: '[ˈjɑblukɔ]'
   lemma: яблуко
   pos: noun
   gender: n
@@ -339,13 +339,13 @@ items:
   pos: noun
   gender: m
   translation: cucumber
-- ipa: '[ˈmɔrkvɑ]'
+- ipa: '[ˈmɔrkʋɑ]'
   lemma: морква
   pos: noun
   gender: f
   translation: carrot
   notes: usually singular (collective)
-- ipa: '[t͡sɪˈbʊlʲɑ]'
+- ipa: '[t͡sɪˈbulʲɑ]'
   lemma: цибуля
   pos: noun
   gender: f

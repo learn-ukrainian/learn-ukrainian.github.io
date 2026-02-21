@@ -10,7 +10,7 @@
   lemma: майдан
   pos: noun
   translation: square, plaza
-- ipa: '[zʊˈpɪnkɑ]'
+- ipa: '[zuˈpɪnkɑ]'
   lemma: зупинка
   pos: noun
   translation: stop (bus/tram)
@@ -46,11 +46,11 @@
   lemma: направо
   pos: adverb
   translation: to the right
-- ipa: '[lʲiˈʋɔrʊt͡ʃ]'
+- ipa: '[lʲiˈʋɔrut͡ʃ]'
   lemma: ліворуч
   pos: adverb
   translation: on the left
-- ipa: '[prɑˈʋɔrʊt͡ʃ]'
+- ipa: '[prɑˈʋɔrut͡ʃ]'
   lemma: праворуч
   pos: adverb
   translation: on the right
@@ -66,7 +66,7 @@
   lemma: де
   pos: adverb
   translation: where (location)
-- ipa: '[kʊˈdɪ]'
+- ipa: '[kuˈdɪ]'
   lemma: куди
   pos: adverb
   translation: where to (direction)

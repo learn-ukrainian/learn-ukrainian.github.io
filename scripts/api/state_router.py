@@ -46,6 +46,43 @@ from research_quality import assess_research_compat, find_research_path
 
 router = APIRouter(tags=["state"])
 
+
+def _extract_content_hash(review_path: Path) -> Optional[str]:
+    """Extract content hash from review file header (#618).
+
+    Reviews written by write_review_with_hash() start with:
+        <!-- content-hash: abc123def456 -->
+    Returns the hash string, or None if not found.
+    """
+    try:
+        with open(review_path, "r", encoding="utf-8") as f:
+            first_line = f.readline()
+        m = re.match(r"<!-- content-hash: ([a-f0-9]+) -->", first_line)
+        return m.group(1) if m else None
+    except Exception:
+        return None
+
+
+def _is_review_stale(review_path: Path, content_path: Optional[Path]) -> bool:
+    """Check if a review file is stale relative to its content (#618).
+
+    Uses content hash if available (robust, mtime-independent).
+    Falls back to mtime comparison with <= for older reviews without hash.
+    """
+    if not content_path or not content_path.exists():
+        return False
+
+    import hashlib
+    review_hash = _extract_content_hash(review_path)
+    if review_hash:
+        current_hash = hashlib.md5(content_path.read_bytes()).hexdigest()[:12]
+        return review_hash != current_hash
+
+    # Fallback: mtime comparison with <= (safe default for older reviews)
+    content_mtime = content_path.stat().st_mtime
+    return content_mtime > 0 and review_path.stat().st_mtime <= content_mtime
+
+
 # ==================== CONSTANTS ====================
 
 CURRICULUM_YAML = CURRICULUM_ROOT / "curriculum.yaml"
@@ -297,7 +334,7 @@ def _compute_summary() -> dict:
     tracks_out = {}
     totals = {
         "total": 0, "research_done": 0, "content_done": 0,
-        "audit_passing": 0, "final_review_done": 0,
+        "audit_passing": 0, "reviewed": 0, "final_review_done": 0,
     }
 
     for level_cfg in LEVELS:
@@ -312,6 +349,7 @@ def _compute_summary() -> dict:
         research_done = 0
         content_done = 0
         audit_passing = 0
+        reviewed = 0
         final_review_done = 0
 
         for num, slug in plan_slugs:
@@ -328,6 +366,9 @@ def _compute_summary() -> dict:
             if audit["status"] == "pass":
                 audit_passing += 1
 
+            review_file = track_dir / "review" / f"{slug}-review.md"
+            if review_file.exists():
+                reviewed += 1
             final_review = track_dir / "review" / f"{slug}-final-review.md"
             if final_review.exists():
                 final_review_done += 1
@@ -339,6 +380,7 @@ def _compute_summary() -> dict:
             "research_done": research_done,
             "content_done": content_done,
             "audit_passing": audit_passing,
+            "reviewed": reviewed,
             "final_review_done": final_review_done,
         }
 
@@ -346,6 +388,7 @@ def _compute_summary() -> dict:
         totals["research_done"] += research_done
         totals["content_done"] += content_done
         totals["audit_passing"] += audit_passing
+        totals["reviewed"] += reviewed
         totals["final_review_done"] += final_review_done
 
     return {"generated_at": generated_at, "tracks": tracks_out, "totals": totals}
@@ -1406,15 +1449,13 @@ async def outstanding_issues(
                     if matches:
                         content_file = matches[0]
                         break
-                content_mtime = content_file.stat().st_mtime if content_file and content_file.exists() else 0
-
                 for review_filename in [f"{slug}-review.md", f"{slug}-final-review.md"]:
                     review_file = review_dir / review_filename
                     if not review_file.exists():
                         continue
 
-                    # Skip stale reviews: if content was rebuilt after the review, issues are outdated
-                    if content_mtime > 0 and review_file.stat().st_mtime < content_mtime:
+                    # Skip stale reviews: content changed since review was written (#618)
+                    if _is_review_stale(review_file, content_file):
                         continue
 
                     text = review_file.read_text()

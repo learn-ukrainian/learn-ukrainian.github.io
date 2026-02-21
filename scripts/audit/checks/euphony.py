@@ -300,6 +300,15 @@ def _check_rule4_variety(content: str, line_offset: int = 0) -> List[Dict]:
         iy_matches = list(re.finditer(r'(?<!\w)[іЙйІ](?!\w)', sentence))
         has_ta = bool(re.search(r'(?<!\w)та(?!\w)', sentence))
 
+        # Skip correlative "і...і..." ("both...and...") — valid Ukrainian
+        # Pattern: two і/й within ~30 chars of each other, often with comma between
+        if len(iy_matches) == 2:
+            span = iy_matches[1].start() - iy_matches[0].end()
+            between = sentence[iy_matches[0].end():iy_matches[1].start()]
+            if span < 30 and ',' in between:
+                char_pos += len(sentence) + 1
+                continue
+
         if len(iy_matches) >= 2 and not has_ta:
             # Flag the second occurrence
             second = iy_matches[1]
@@ -477,6 +486,12 @@ def _fix_rule4_variety(content: str, file_path: str = "") -> tuple[str, int]:
         iy_positions = [j for j, w in enumerate(words)
                         if w.lower().strip(".,;:!?«»\"'()") in ("і", "й")]
         has_ta = any(w.lower().strip(".,;:!?«»\"'()") == "та" for w in words)
+        # Skip correlative "і...і..." ("both...and...") — valid Ukrainian
+        if len(iy_positions) == 2:
+            between_words = words[iy_positions[0]+1:iy_positions[1]]
+            between_text = " ".join(between_words)
+            if len(between_words) <= 3 and "," in between_text:
+                continue
         if len(iy_positions) >= 2 and not has_ta:
             # Replace the second occurrence with та
             idx = iy_positions[1]

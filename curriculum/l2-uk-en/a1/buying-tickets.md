@@ -32,7 +32,7 @@ Example:
 *   **Це швидкий поїзд.** (This is a fast train.)
 
 ### Автобус та Маршрутка (Bus and Minibus)
-For shorter distances or routes not covered by trains, you will use a bus. A large intercity bus is an **автобус** [ɐu̯ˈtɔbʊs]. However, unique to Ukraine and its neighbors is the **маршрутка** [mɐrˈʃrutkɐ]. This is a smaller minibus (often yellow) that travels on fixed routes. While an **автобус** usually departs from a large terminal called an **автовокзал** [ɐu̯tɔʋɔɡˈzɑl], a **маршрутка** might stop at a smaller local **автостанція** [ɐu̯tɔˈstɑnt͡s⁽ʲ⁾ijɐ] or even just a designated stop on the street.
+For shorter distances or routes not covered by trains, you will use a bus. A large intercity bus is an **автобус** [ɐu̯ˈtɔbus]. However, unique to Ukraine and its neighbors is the **маршрутка** [mɐrˈʃrutkɐ]. This is a smaller minibus (often yellow) that travels on fixed routes. While an **автобус** usually departs from a large terminal called an **автовокзал** [ɐu̯tɔʋɔɡˈzɑl], a **маршрутка** might stop at a smaller local **автостанція** [ɐu̯tɔˈstɑnt͡s⁽ʲ⁾ijɐ] or even just a designated stop on the street.
 
 Маршрутка — це маленький автобус. Вона їздить по місту.
 
@@ -111,7 +111,7 @@ Let's look at more examples. Try to read them aloud:
 ### Тип поїздки (Trip Type)
 The cashier will ask if you want a return ticket. You have two main options to memorize as fixed phrases.
 1.  **В один бік** [ʋ ɔˈdɪn b⁽ʲ⁾ik] — literally "in one side" (one-way).
-2.  **Туди й назад** [tʊˈdɪ j nɐˈzɑd] — literally "there and back" (round trip).
+2.  **Туди й назад** [tuˈdɪ j nɐˈzɑd] — literally "there and back" (round trip).
 
 Ви їдете тільки туди? Чи ви їдете назад? Скажіть це на касі.
 
@@ -138,7 +138,7 @@ You have named the city, but the cashier needs more details. Trains in Ukraine h
 Касир запитує вас. Ви відповідаєте. Ви обираєте вагон. Ви обираєте місце.
 
 ### Купе (Coupe)
-This is the standard "closed compartment" class. A **купе** [kʊˈpɛ] has four bunks (two lower, two upper) and a sliding door that closes for privacy. It is comfortable, quiet, and perfect for sleeping. The word **купе** is indeclinable—it never changes its form.
+This is the standard "closed compartment" class. A **купе** [kuˈpɛ] has four bunks (two lower, two upper) and a sliding door that closes for privacy. It is comfortable, quiet, and perfect for sleeping. The word **купе** is indeclinable—it never changes its form.
 
 Це класичний вагон. Це зручний вагон. Тут є двері. Тут тихо і спокійно. Ви можете спати.
 
@@ -181,7 +181,7 @@ Example:
 ### Розклад: Відправлення і Прибуття
 To manage your time, you need to ask about the schedule. There are two key nouns here:
 1.  **Відправлення** [ʋ⁽ʲ⁾idˈprɑʋlʲɐnʲːɐ] — Departure.
-2.  **Прибуття** [prɪbʊˈtʲːɑ] — Arrival.
+2.  **Прибуття** [prɪbuˈtʲːɑ] — Arrival.
 
 Коли поїзд їде? Коли поїзд буде у Львові? Дивіться розклад.
 

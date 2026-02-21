@@ -4,7 +4,7 @@
   context: "Іменник відповідає на питання хто? або що?"
 - word: дієслово
   translation: verb
-  ipa: [dʲijɛˈslɔwɔ]
+  ipa: [dʲijɛˈslɔʋɔ]
   context: "Дієслово означає дію."
 - word: прикметник
   translation: adjective
@@ -16,7 +16,7 @@
   context: "Займенник замінює іменник."
 - word: числівник
   translation: numeral
-  ipa: [tʃɪsˈlʲiu̯nɪk]
+  ipa: [t͡ʃɪsˈlʲiu̯nɪk]
   context: "Числівник позначає кількість."
 - word: прислівник
   translation: adverb
@@ -24,7 +24,7 @@
   context: "Прислівник не змінюється."
 - word: сполучник
   translation: conjunction
-  ipa: [spɔˈlutʃnɪk]
+  ipa: [spɔˈlut͡ʃnɪk]
   context: "Сполучник з'єднує слова."
 - word: прийменник
   translation: preposition
@@ -32,11 +32,11 @@
   context: "Прийменник стоїть перед іменником."
 - word: частка
   translation: particle
-  ipa: [ˈtʃastkɐ]
+  ipa: [ˈt͡ʃastkɐ]
   context: "Частка додає відтінок значення."
 - word: вигук
   translation: interjection
-  ipa: [ˈwɪɦʊk]
+  ipa: [ˈʋɪɦuk]
   context: "Вигук виражає емоції."
 - word: відмінок
   translation: case
@@ -48,7 +48,7 @@
   context: "Іменники мають чоловічий, жіночий або середній рід."
 - word: число
   translation: number
-  ipa: [tʃɪsˈlɔ]
+  ipa: [t͡ʃɪsˈlɔ]
   context: "Число може бути одниною або множиною."
 - word: підмет
   translation: subject
@@ -56,7 +56,7 @@
   context: "Підмет — це головний член речення."
 - word: присудок
   translation: predicate
-  ipa: [ˈprɪsʊdɔk]
+  ipa: [ˈprɪsudɔk]
   context: "Присудок відповідає на питання що робить підмет?"
 - word: корінь
   translation: root
@@ -64,9 +64,9 @@
   context: "Корінь — це спільна частина споріднених слів."
 - word: закінчення
   translation: ending
-  ipa: [zɐˈkintʃɛnʲːɐ]
+  ipa: [zɐˈkint͡ʃɛnʲːɐ]
   context: "Закінчення змінюється при відмінюванні."
 - word: метамова
   translation: metalanguage
-  ipa: [mɛtɐˈmɔwɐ]
+  ipa: [mɛtɐˈmɔʋɐ]
   context: "Метамова — це мова про мову."

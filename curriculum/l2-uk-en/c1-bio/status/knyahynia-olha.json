@@ -2,7 +2,7 @@
   "module": "knyahynia-olha",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T22:26:45.908678Z",
+  "last_audit": "2026-02-21T15:10:40.613253Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-19T22:23:51.313376Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5239/5000 (raw: 5465)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5239/5000 (raw: 5465) | pedagogy: 16 violations"
     },
     "activities": {
       "status": "pass",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 8,
-    "fail_count": 0,
+    "pass_count": 6,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

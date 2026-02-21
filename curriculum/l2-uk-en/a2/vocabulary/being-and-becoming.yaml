@@ -78,15 +78,3 @@
   ipa: "ʋɔlɔnˈtɛr"
   translation: "volunteer"
   pos: noun
-- term: Називний відмінок
-  ipa: "nɑzɪu̯ˈnɪj vidˈminɔk"
-  translation: "Nominative case"
-  pos: noun phrase
-- term: Орудний відмінок
-  ipa: "ɔˈrudnɪj vidˈminɔk"
-  translation: "Instrumental case"
-  pos: noun phrase
-- term: Множина
-  ipa: "mnɔʒɪˈnɑ"
-  translation: "plural"
-  pos: noun

@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T19:56:58Z",
+      "ts": "2026-02-21T00:16:03Z",
       "task_id": "v3-radianska-propaganda-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

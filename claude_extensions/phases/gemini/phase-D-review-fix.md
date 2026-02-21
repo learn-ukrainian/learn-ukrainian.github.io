@@ -10,23 +10,25 @@ Do not assume you wrote this content. Do not be generous.**
 
 ---
 
-## MANDATORY PRE-CHECK: Citation Verification Protocol
+## MANDATORY PRE-CHECK: Read All Files First
+
+**You have file system access.** Use the Read tool to read every file listed below BEFORE writing any review text.
 
 **BEFORE writing any review sentence that quotes Ukrainian text:**
 
-1. Read the actual content file from disk (not from memory)
-2. For EVERY Ukrainian sentence you plan to cite, run:
-   ```bash
-   grep -c "first 5-6 words of the sentence" {CONTENT_PATH}
+1. Use the Read tool to read the actual content file
+2. For EVERY Ukrainian sentence you plan to cite, use Grep to verify it exists:
    ```
-3. If grep returns 0 — **the sentence does not exist in the current file**. Do NOT cite it.
-4. Only include sentences that grep confirms are present.
+   Grep pattern="first 5-6 words" path="{CONTENT_PATH}"
+   ```
+3. If Grep returns no matches — **the sentence does not exist**. Do NOT cite it.
+4. Only include sentences that Grep confirms are present.
 
-**Why this matters**: Quoting from memory produces citations that fail automated verification, causing your review to be flagged as UNVERIFIED_CITATIONS and regenerated from scratch.
+**Why this matters**: Quoting from memory produces citations that fail automated verification, causing your review to be flagged as UNVERIFIED_CITATIONS and regenerated from scratch. This is the #1 cause of Phase D failures.
 
 ---
 
-## Files to Read (ALL REQUIRED)
+## Files to Read (ALL REQUIRED — use Read tool)
 
 Read ALL of these files before writing anything:
 
@@ -35,8 +37,11 @@ Read ALL of these files before writing anything:
 3. **Vocabulary**: `{VOCAB_PATH}`
 4. **Plan** (source of truth for scope): `{PLAN_PATH}`
 5. **Meta** (build config): `{META_PATH}`
+6. **Research notes** (seminar tracks only — for fact verification): `{RESEARCH_PATH}`
 
 **Do not proceed until you have read every line of the content and every activity item.**
+
+**For seminar tracks** (b2-hist, c1-bio, c1-hist, lit, oes, ruth): you MUST also read the research notes. If they contain a Key Facts Ledger, use it as the ground truth for verifying dates, events, attributions, and quotes in the prose.
 
 ---
 
@@ -85,7 +90,37 @@ Follow the full review protocol. In summary:
 - Activity errors
 - Beginner safety ("Would I Continue?" test)
 
-### STEP 3a: Colonial Framing Check (MANDATORY)
+### STEP 3a: Factual Accuracy Check (MANDATORY — ALL TRACKS)
+
+#### Part 1: Callout Box Verification (ALL tracks, ALL levels)
+
+**Scrutinize EVERY `[!did-you-know]`, `[!myth-buster]`, `[!culture-note]`, `[!fun-fact]` block.** These are the #1 source of LLM fabrication across all tracks.
+
+1. **Superlative claims**: Flag "first in Europe", "the only language that...", "unique to Ukrainian" — these are often exaggerations. Verify or flag.
+2. **Named individuals and works**: If the prose names a historical figure, book, or institution, verify the attribution is correct. Flag fabricated titles (e.g., works that don't exist).
+3. **Statistics and dates**: Any number presented as fact ("80% of...", "founded in 1576") must be plausible. Flag unsourced statistics and unverifiable dates.
+4. **Real-world examples**: If the text presents something as a real announcement, sign, or cultural practice, verify plausibility. Flag fabricated "authentic" examples (e.g., fake metro announcements, invented store slogans).
+5. **Etymologies**: If the text explains a word origin, verify it's correct. Flag folk etymologies presented as fact.
+
+**If factual errors are found in callout boxes:** Score Factual Accuracy ≤ 8, flag as Critical Issue. Fabricated claims presented as fact are auto-fail regardless of track.
+
+#### Part 2: Grammar Rule Verification (core grammar tracks — A1 through C2 core)
+
+1. **Grammar explanations**: Verify every rule statement is accurate. Flag overgeneralizations (e.g., claiming a rule applies universally when it has exceptions).
+
+#### Part 3: Research Cross-Reference (seminar tracks only — b2-hist, c1-bio, c1-hist, lit, oes, ruth)
+
+**Additionally verify factual claims against the research notes.**
+
+1. **Dates**: Cross-reference every date in the prose against the Key Facts Ledger or research chronology. Flag any discrepancy (e.g., "Research says 1648, prose says 1649").
+2. **Named attributions**: Verify who said/did what. Misattributed quotes or actions are critical errors.
+3. **Chronological sequence**: Events must appear in correct temporal order. Flag inversions.
+4. **Primary quotes**: If the prose quotes a historical figure, verify the quote exists in the research notes. Fabricated quotes are auto-fail.
+5. **Claims not in research**: Flag any historical claim in the prose that has no grounding in the research notes. This may indicate hallucination.
+
+**If factual errors are found against research notes:** Score Factual Accuracy ≤ 7, flag as Critical Issue, and provide the correct fact from the research notes.
+
+### STEP 3c: Colonial Framing Check (MANDATORY)
 
 **Search the content for any passage that defines Ukrainian by contrast with Russian.** This is colonial framing and must be flagged.
 
@@ -104,7 +139,7 @@ Follow the full review protocol. In summary:
 
 **If colonial framing is found:** Score Language ≤ 7, flag as Critical Issue, and include a fix that presents the Ukrainian feature on its own terms without Russian as baseline.
 
-### STEP 3b: LLM Fingerprint Scan (MANDATORY)
+### STEP 3d: LLM Fingerprint Scan (MANDATORY)
 
 **Structural monotony test**: Read the first 2 lines of each H2 section. Do 3+ sections start the same way? If yes → LLM Fingerprint ≤ 7.
 
@@ -120,7 +155,7 @@ Follow the full review protocol. In summary:
 
 **Example plausibility test**: Would a real Ukrainian speaker actually say each example sentence? Flag implausible examples. If 2+ implausible → LLM Fingerprint ≤ 8.
 
-### STEP 4: Score 12 Dimensions
+### STEP 4: Score 13 Dimensions
 
 | # | Dimension | Auto-fail |
 |---|-----------|-----------|
@@ -136,13 +171,20 @@ Follow the full review protocol. In summary:
 | 10 | Beginner Safety | <7 |
 | 11 | LLM Fingerprint | <7 |
 | 12 | Linguistic Accuracy | <9 |
+| 13 | Factual Accuracy | <8 |
 
 **Weighted Overall:**
 ```
 Overall = (Experience × 1.5 + Coherence × 1.0 + Relevance × 1.0 + Educational × 1.2 +
           Language × 1.1 + Pedagogy × 1.2 + Immersion × 1.0 + Activities × 1.3 +
-          Richness × 0.9 + Beginner_Safety × 1.3 + LLM × 1.0 + Linguistic_Accuracy × 1.5) / 14.0
+          Richness × 0.9 + Beginner_Safety × 1.3 + LLM × 1.0 + Linguistic_Accuracy × 1.5 +
+          Factual_Accuracy × 1.5) / 15.5
 ```
+
+**Note on Factual Accuracy:**
+- **ALL tracks**: Callout boxes (`[!did-you-know]`, `[!myth-buster]`, `[!culture-note]`, `[!fun-fact]`) must be verified for fabricated claims, exaggerated superlatives, and invented examples. Auto-fail < 8. Do NOT auto-score 9 for any track.
+- **Seminar tracks**: Additionally scored against research notes and Key Facts Ledger.
+- **Weight 1.5**: Same as Linguistic Accuracy — factual errors are as damaging as grammar errors.
 
 ---
 
@@ -170,6 +212,20 @@ Your review MUST contain:
 
 ---
 
+## REVIEWER IDENTIFICATION (REQUIRED METADATA)
+
+Your review MUST start with a `Reviewed-By` metadata line so automated checks can verify cross-agent review integrity. Place this as the very first line of your review output:
+
+```
+**Reviewed-By:** {YOUR_MODEL_ID}
+```
+
+Example: `**Reviewed-By:** gemini-2.5-pro` or `**Reviewed-By:** claude-sonnet-4-6`
+
+This is checked by the `SELF_REVIEW_DETECTED` audit gate — if the same model family built and reviewed the content, the review is rejected.
+
+---
+
 ## REQUIRED REVIEW SECTIONS (AUTOMATED VALIDATION)
 
 Your review is checked by regex. Missing ANY of these H2 headers = AUTOMATIC REJECTION:
@@ -178,8 +234,9 @@ Your review is checked by regex. Missing ANY of these H2 headers = AUTOMATIC REJ
 |---|------------------------|
 | 1 | `## Scores` |
 | 2 | `## Critical Issues Found` |
-| 3 | `## Verification Summary` |
-| 4 | `## Verdict` |
+| 3 | `## Factual Verification` (seminar tracks only) |
+| 4 | `## Verification Summary` |
+| 5 | `## Verdict` |
 
 ---
 
@@ -273,6 +330,7 @@ Plan-Content Alignment: [PASS/FAIL]
 | 10 | Beginner Safety | X/10 | <7 | ["Would I Continue?" X/5] |
 | 11 | LLM Fingerprint | X/10 | <7 | [specific finding] |
 | 12 | Linguistic Accuracy | X/10 | <9 | [specific finding] |
+| 13 | Factual Accuracy | X/10 | <8 | [specific finding or "N/A — core track"] |
 
 **Weighted Overall:** {show calculation} = **X.X/10**
 
@@ -325,6 +383,19 @@ Plan-Content Alignment: [PASS/FAIL]
 ```
 {Recalculate weighted overall with projected scores}
 ```
+
+## Factual Verification    <!-- REQUIRED for seminar tracks — rejection if missing -->
+
+- Research notes consulted: {YES/NO/NOT_APPLICABLE}
+- Key Facts Ledger present: {YES/NO}
+- Dates checked: {X} ({all correct / N discrepancies listed below})
+- Named figures verified: {X}
+- Primary quotes cross-referenced: {X/Y matched}
+- Chronological sequence: {CONSISTENT / ISSUES}
+- Claims without research grounding: {N found — listed below if any}
+
+{If discrepancies found, list each one:}
+{- Line N: Prose says "1649" but research says "1648" for [event]}
 
 ## Verification Summary    <!-- REQUIRED — rejection if missing -->
 

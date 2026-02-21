@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T20:58:39Z",
+      "ts": "2026-02-21T00:22:17Z",
       "task_id": "v3-syntez-ahentsnist-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

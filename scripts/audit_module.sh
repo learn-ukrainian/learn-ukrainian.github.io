@@ -11,7 +11,8 @@
 #   3. Returns audit exit code (0 = pass, 1 = fail)
 #
 # Options:
-#   --skip-activities   Content-only audit: defer activity/vocab gates
+#   --skip-activities   Content-only audit: defer activity/vocab gates (internal: prose-only loop)
+#   --skip-review       Validate content+activities, defer review gate only (#606)
 #
 # Examples:
 #   scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
@@ -22,12 +23,16 @@ set -euo pipefail
 
 # Parse arguments
 SKIP_ACTIVITIES=""
+SKIP_REVIEW=""
 MODULE_PATH=""
 
 for arg in "$@"; do
     case "$arg" in
         --skip-activities)
             SKIP_ACTIVITIES="--skip-activities"
+            ;;
+        --skip-review)
+            SKIP_REVIEW="--skip-review"
             ;;
         *)
             MODULE_PATH="$arg"
@@ -37,7 +42,7 @@ done
 
 # Check arguments
 if [ -z "$MODULE_PATH" ]; then
-    echo "Usage: $0 [--skip-activities] <module-path>"
+    echo "Usage: $0 [--skip-activities] [--skip-review] <module-path>"
     echo "Example: $0 curriculum/l2-uk-en/b1/09-aspect-future.md"
     exit 1
 fi
@@ -76,7 +81,7 @@ echo ""
 # Run audit_module.py with tee to save output
 # Capture exit code separately
 set +e
-.venv/bin/python scripts/audit_module.py $SKIP_ACTIVITIES "$MODULE_PATH" 2>&1 | tee "$LOG_PATH"
+.venv/bin/python scripts/audit_module.py $SKIP_ACTIVITIES $SKIP_REVIEW "$MODULE_PATH" 2>&1 | tee "$LOG_PATH"
 AUDIT_EXIT_CODE=${PIPESTATUS[0]}
 set -e
 

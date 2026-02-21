@@ -60,10 +60,15 @@
       "timestamp": "2026-02-20T13:48:11Z",
       "note": "v3-phase-D-escalation"
     },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-21T00:09:55Z",
+      "verdict": "APPROVE"
+    },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-20T13:48:11Z"
+      "timestamp": "2026-02-21T00:09:56Z"
     }
   },
-  "last_updated": "2026-02-20T13:48:11Z"
+  "last_updated": "2026-02-21T00:09:56Z"
 }

@@ -21,27 +21,27 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   overall status is 'fail' (must be 'pass')
-  Missing required activity types: true-false
+  Only 12/32 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect).
   failing gates:
-    lesson: 4363/4000 (raw: 4593) | pedagogy: 4 violations
+    review: Only 12/32 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect).
 
   Hetman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
 
-
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 15/100)
-     → 4 violations (moderate)
-
-
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/sentence-structure-audit.md
+    🕵️  Review Validation: 1 critical, 0 warnings
+       ❌ [UNVERIFIED_CITATIONS] Only 12/32 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect).
+    🎭 Review Gaming: 0 critical, 2 warnings
+       ⚠️  [REVIEW_LOW_SECTION_COVERAGE] Review covers 3/9 (33%) content sections. Consider addressing all major sections for a complete review.
+       ⚠️  [MISSING_REVIEWER_ID] Review is missing 'Reviewed-By:' metadata. Add '**Reviewed-By:** {model_id}' to the review header to enable cross-agent verification.
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/status/sentence-structure.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
   Critical Failures:
-    • Missing required activity types: true-false
+    • Only 12/32 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect).
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/sentence-structure-audit.log for details)
         ```
@@ -152,7 +152,7 @@ _Візуалізація залежності:_
 
 ## Синтаксис у дії: Розбір
 
-Тепер найцікавіше. Давайте зробимо повний **синтаксичний розбір** (syntactic analysis) реального речення. Це як розв'язати математичне рівняння або розгадати детективну загадку. Ця навичка допоможе вам розуміти найскладніші тексти.
+Тепер найцікавіше. Зробімо повний **синтаксичний розбір** (syntactic analysis) реального речення. Це як розв'язати математичне рівняння або розгадати детективну загадку. Ця навичка допоможе вам розуміти найскладніші тексти.
 
 **Речення для аналізу:** _Вчора мій старий друг несподівано подарував мені дуже цікаву книгу._
 
@@ -197,7 +197,7 @@ _Візуалізація залежності:_
 
 ## Діалоги: Розбір польотів
 
-Давайте подивимося, як ці граматичні терміни працюють у реальному житті, коли люди обговорюють мову, редагують тексти або згадують школу.
+Подивімося, як ці граматичні терміни працюють у реальному житті, коли люди обговорюють мову, редагують тексти або згадують школу.
 
 ### Діалог 1: Редактор і Письменник
 
@@ -218,7 +218,7 @@ _Візуалізація залежності:_
 **Марк:** Ну ось дивись: «Я хочу піти в парк і я хочу купити морозиво». Де тут коми?
 **Іра:** Давай рахувати. Перша основа: «Я хочу». Друга основа: «я хочу». Бачиш? Дві дії, два підмети.
 **Марк:** А між ними є **сполучник** «і».
-**Іра:** Точно! Перед «і» треба ставити кому, бо це дві різні думки, дві різні «квартири». Виходить: «Я хочу піти в парк, і я хочу купити морозиво».
+**Іра:** Точно! Перед «і» треба ставити кому, бо це дві різні думки, дві різні «квартири». Виходить: «Я хочу піти в парк, та я хочу купити морозиво».
 **Марк:** А якщо я приберу друге слово «я»?
 **Іра:** Тоді буде **просте речення** з однорідними присудками: «Я хочу піти і купити». Тоді кома не потрібна, бо герой один!
 **Марк:** Ого, це змінює все! Треба просто рахувати дієслова.

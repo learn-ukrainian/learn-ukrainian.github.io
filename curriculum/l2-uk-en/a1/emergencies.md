@@ -26,8 +26,8 @@ Related: a1-31 (Body and Health), a1-41 (Phone Basics)
 Але також є старі номери. Вони працюють дуже добре, і всі люди знають ці номери:
 
 * Номер **101** — це **пожежна** [pɔˈʒɛʒnɐ] (fire service). Є пожежа. Ви телефонуєте 101.
-* Номер **102** — це **поліція** [pɔˈlʲitsʲijɐ] (police). Є аварія. Ви телефонуєте 102.
-* Номер **103** — це **швидка** [ʃwɪdˈkɑ] (ambulance). Є травма. Ви телефонуєте 103.
+* Номер **102** — це **поліція** [pɔˈlʲit͡sʲijɐ] (police). Є аварія. Ви телефонуєте 102.
+* Номер **103** — це **швидка** [ʃʋɪdˈkɑ] (ambulance). Є травма. Ви телефонуєте 103.
 
 Дуже важливо знати ці номери. Вони гарантують вашу безпеку.
 
@@ -105,7 +105,7 @@ Notice carefully how remarkably short and profoundly direct the Ukrainian senten
 ### Scenario 2: Lost or Stolen Documents
 It is important to remember that not all intense emergencies involve immediate physical danger to your body. Sometimes, you might accidentally lose your international passport or have your wallet stolen, which is a highly stressful and disorienting experience, especially when you are navigating life in a foreign country. In these specific cases, you will need to physically approach and speak with a police officer to officially report the unfortunate incident.
 
-You absolutely need to master two key action verbs here: **шукати** [ʃʊˈkɑtɪ] (to look for) and **брати** [ˈbrɑtɪ] (to take). If you are speaking with a working police officer, they will inevitably ask detailed questions about your missing **документи** [dɔkʊˈmɛntɪ] (documents) and may formally ask you to sit down and write a detailed **заява** [zɐˈjɑʋɐ] (statement, official report, or application).
+You absolutely need to master two key action verbs here: **шукати** [ʃuˈkɑtɪ] (to look for) and **брати** [ˈbrɑtɪ] (to take). If you are speaking with a working police officer, they will inevitably ask detailed questions about your missing **документи** [dɔkuˈmɛntɪ] (documents) and may formally ask you to sit down and write a detailed **заява** [zɐˈjɑʋɐ] (statement, official report, or application).
 
 > [!tip] Практична порада: Що робити?
 > If you are not absolutely sure what happened to your bag, it is usually a much better legal strategy to start the conversation by simply saying you are looking for it (**«Я шукаю...»**). This phrasing immediately initiates the administrative helpful process.

@@ -104,12 +104,17 @@ issue_*_body.md
 # Batch runner state (generated at runtime)
 batch_state/
 
-# Orchestration build artifacts — NOT gitignored during active rebuilds
-# so Gemini can read prompt files. Re-add '**/orchestration/' after track completion.
-# **/orchestration/
+# Orchestration build artifacts — TRACKED for pipeline analytics
+# Lock files and raw LLM dumps are excluded; everything else is valuable data
+# (prompts, reviews, audit logs, state, completion reports)
+**/orchestration/**/state.json.lock
+**/orchestration/**/*-raw-output.md
 
 # Archive of old content (pre-rebuild snapshots)
 _archive/
 
 # MCP broker PID files
 .mcp/servers/message-broker/pids/
+
+# Test artifacts
+test_git_mtime/

@@ -62,7 +62,8 @@ a:hover { text-decoration: underline; }
 .module-cell.fail { background: var(--red); }
 .module-cell.unaudited { background: var(--yellow); }
 .module-cell.missing { background: var(--gray); color: var(--text3); }
-.module-cell .qa-badge { position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #58a6ff; border: 1px solid var(--bg2); }
+.module-cell .review-badge { position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #a371f7; border: 1px solid var(--bg2); }
+.module-cell .qa-badge { position: absolute; top: -3px; left: -3px; width: 8px; height: 8px; border-radius: 50%; background: #58a6ff; border: 1px solid var(--bg2); }
 
 /* Side panel */
 .side-panel { position: fixed; top: 0; right: -480px; width: 480px; height: 100vh; background: var(--bg2); border-left: 1px solid var(--border); transition: right 0.3s; z-index: 100; overflow-y: auto; padding: 24px; }
@@ -195,7 +196,8 @@ a:hover { text-decoration: underline; }
   <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Fail</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> Unaudited</div>
   <div class="legend-item"><div class="legend-dot" style="background:var(--gray)"></div> Missing</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#58a6ff;border-radius:50%"></div> Claude QA done (dot = top-right of cell)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a371f7;border-radius:50%"></div> Reviewed (top-right dot)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#58a6ff;border-radius:50%"></div> Final QA (top-left dot, optional)</div>
 </div>
 
 <div class="overlay" id="overlay"></div>
@@ -298,13 +300,15 @@ async function toggleTrack(trackId) {
 function renderModuleGrid(container, data, trackId) {
   const cells = data.modules.map(m => {
     const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
-    const qaBadge = m.has_final_review ? '<div class="qa-badge" title="Claude QA done"></div>' : '';
-    const qaLabel = m.has_final_review ? ' ✓QA' : (m.status === 'pass' ? ' ⏳QA' : '');
+    const reviewBadge = m.has_review ? '<div class="review-badge" title="Reviewed"></div>' : '';
+    const qaBadge = m.has_final_review ? '<div class="qa-badge" title="Final QA done"></div>' : '';
+    const reviewLabel = m.has_review ? ' ✓Rev' : '';
+    const qaLabel = m.has_final_review ? ' ✓QA' : '';
     return `
       <div class="module-cell ${cls}" onclick="openModule('${trackId}','${m.slug}')" title="${m.slug}">
         ${m.num}
-        ${qaBadge}
-        <div class="tooltip">${m.slug} (${m.status})${qaLabel}</div>
+        ${reviewBadge}${qaBadge}
+        <div class="tooltip">${m.slug} (${m.status})${reviewLabel}${qaLabel}</div>
       </div>
     `;
   }).join('');

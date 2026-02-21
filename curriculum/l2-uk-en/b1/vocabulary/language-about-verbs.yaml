@@ -1,19 +1,19 @@
-- ipa: '[vɪd]'
+- ipa: '[ʋɪd]'
   lemma: вид
   notes: Grammatical category indicating the flow of action
   pos: noun
   translation: aspect
-- ipa: '[dɔˈkɔnɐnɪj vɪd]'
+- ipa: '[dɔˈkɔnɐnɪj ʋɪd]'
   lemma: доконаний вид
   notes: Focuses on the result or completion of an action
   pos: noun phrase
   translation: perfective aspect
-- ipa: '[nɛdɔˈkɔnɐnɪj vɪd]'
+- ipa: '[nɛdɔˈkɔnɐnɪj ʋɪd]'
   lemma: недоконаний вид
   notes: Focuses on the process, duration, or repetition of an action
   pos: noun phrase
   translation: imperfective aspect
-- ipa: '[vɪdɔˈwɑ ˈpɑrɐ]'
+- ipa: '[ʋɪdɔˈʋɑ ˈpɑrɐ]'
   lemma: видова пара
   notes: Two verbs with the same meaning but different aspect (e.g., читати/прочитати)
   pos: noun phrase
@@ -28,17 +28,17 @@
   notes: Keyword for imperfective aspect; action in progress
   pos: noun
   translation: process
-- ipa: '[rɛzʊlʲˈtɑt]'
+- ipa: '[rɛzulʲˈtɑt]'
   lemma: результат
   notes: Keyword for perfective aspect; completed action
   pos: noun
   translation: result
-- ipa: '[trɪˈwɑlʲisʲtʲ]'
+- ipa: '[trɪˈʋɑlʲisʲtʲ]'
   lemma: тривалість
   notes: Answers 'how long?'; indicates imperfective aspect
   pos: noun
   translation: duration
-- ipa: '[pɔwˈtɔrɛnʲːɐ]'
+- ipa: '[pɔʋˈtɔrɛnʲːɐ]'
   lemma: повторення
   notes: Answers 'how often?'; indicates imperfective aspect
   pos: noun
@@ -88,7 +88,7 @@
   notes: Grammatical category (indicative, conditional, imperative)
   pos: noun
   translation: mood
-- ipa: '[nɐkɐˈzɔwɪj ˈspɔsib]'
+- ipa: '[nɐkɐˈzɔʋɪj ˈspɔsib]'
   lemma: наказовий спосіб
   notes: Used for commands and requests
   pos: noun phrase
@@ -103,17 +103,17 @@
   notes: Grammatical person (1st, 2nd, 3rd)
   pos: noun
   translation: person
-- ipa: '[pɔt͡ʃɐtˈkɔwɐ ˈfɔrmɐ]'
+- ipa: '[pɔt͡ʃɐtˈkɔʋɐ ˈfɔrmɐ]'
   lemma: початкова форма
   notes: The infinitive form found in dictionaries (ending in -ти)
   pos: noun phrase
   translation: initial form
-- ipa: '[dʲijɛwidˈmʲinʲʊwɐnʲːɐ]'
+- ipa: '[dʲijɛʋidˈmʲinʲuʋɐnʲːɐ]'
   lemma: дієвідмінювання
   notes: Changing a verb by person and number
   pos: noun
   translation: conjugation
-- ipa: '[skɫɐˈdɛnɐ ˈfɔrmɐ]'
+- ipa: '[sklɐˈdɛnɐ ˈfɔrmɐ]'
   lemma: складена форма
   notes: Future tense with 'буду' + infinitive
   pos: noun phrase

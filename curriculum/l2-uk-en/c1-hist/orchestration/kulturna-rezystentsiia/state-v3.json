@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T20:41:29Z",
+      "ts": "2026-02-21T00:21:20Z",
       "task_id": "v3-kulturna-rezystentsiia-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

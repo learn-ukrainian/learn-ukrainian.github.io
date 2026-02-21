@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T21:06:09Z",
+      "ts": "2026-02-21T00:24:28Z",
       "task_id": "v3-finalnyi-syntez-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

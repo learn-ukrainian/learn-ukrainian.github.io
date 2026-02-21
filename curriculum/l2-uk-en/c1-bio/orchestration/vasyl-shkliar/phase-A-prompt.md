@@ -1,147 +1,130 @@
-===RESEARCH_START===
+# Phase A: Meta Outline Only (Research Already Exists)
 
-# Дослідження: Василь Шкляр: Майстер історичного роману
+> **You are Gemini, executing Phase A (meta-only mode) of an optimised rebuild (build_module_v3).**
+> **Research is already complete. Your ONLY task: Rebuild the meta outline from the existing research.**
 
-## Використані джерела
-1. [Енциклопедія Сучасної України](https://esu.com.ua) — стаття про Василя Шкляра (загальна біографія).
-2. [Історична Правда](https://www.istpravda.com.ua) — матеріали про відмову від Шевченківської премії та історичне підґрунтя романів.
-3. [ЛітАкцент](https://litakcent.com) — літературна критика роману "Чорний Ворон" та "Залишенець".
-4. [Радіо Свобода](https://www.radiosvoboda.org) — інтерв'ю з письменником про мову та політику.
-5. [Укрінформ](https://www.ukrinform.ua) — новини про екранізації та громадську діяльність.
+---
 
-## Хронологія
-- **10 червня 1951**: Народився в с. Ганжалівка, Черкаська область.
-- **1973**: Закінчив філологічний факультет Київського університету ім. Т. Шевченка.
-- **1976**: Дебютна збірка прози "Перший сніг".
-- **1986**: Вихід роману "Праліс".
-- **1999**: Вихід роману "Ключ" (Гран-прі "Коронації слова"), початок широкої популярності.
-- **2009**: Публікація роману "Залишенець. Чорний Ворон".
-- **2011**: Присудження Шевченківської премії та публічна відмова від неї через міністра Дмитра Табачника.
-- **2014**: Вихід роману "Маруся".
-- **2015**: Входження до політради партії "УКРОП".
-- **2017**: Вихід роману "Троща" про УПА.
-- **2019**: Вихід роману "Характерник"; екранізація "Чорного Ворона".
+## Your Input
 
-## Ключові факти та цитати
-- **Про мотивацію героїв**: "Ні, не було у нас зовсім страху, він звітрився разом з надією, бо коли в чоловіка уже й надія пощезла, то який може бути страх?" ("Чорний Ворон").
-- **Про державу**: "Ніколи не кажи: в цій державі. Так завжди казали ті, для кого вона чужа. Кажи: наша." ("Чорний Ворон").
-- **Позиція щодо премії**: "Моя позиція, пане Президент, ніяк не стосується Вас особисто, але поки при владі є Дмитро Табачник, я не зможу прийняти премію." (З листа до Януковича).
-- **Про історію**: "Нам історію писали загарбники, які називали себе героями, а наших героїв, навпаки, – бандитами."
-- **Політична діяльність**: У 90-х був прес-секретарем УРП, займався політичною журналістикою в гарячих точках.
-- **Унікальність**: Відродив інтерес до Холодноярської республіки на масовому рівні; називають "батьком українського бестселера".
+Read the **existing research notes** (already complete — do NOT re-research):
 
-## Engagement Hooks (mapped to sections)
-- Section "Вступ — Бестселер як національний феномен": [!context] — Пояснення феномену масової історичної прози в Україні 2000-х як відповіді на запит ідентичності.
-- Section "Чорний Ворон та історична пам'ять: I — Епос Холодного Яру": [!history-bite] — Про реального Чорного Ворона (Івана Чорноуса) та інших отаманів.
-- Section "Чорний Ворон та історична пам'ять: II — Битва за визнання": [!quote] — Цитата з відкритого листа про відмову від премії.
-- Section "Залишенець та продовження циклу": [!myth-buster] — Спростування радянського міфу про "бандитизм" повстанців (холодноярців та упівців).
-- Section "Вплив на українську культуру": [!culture] — Про фільм "Чорний Ворон" (2019) і чому книга завжди глибша за екранізацію.
-- Section "Дискусія — Історична правда vs художня вигадка": [!decolonization] — Як Шкляр повертає суб'єктність українцям, яких імперія змальовувала пасивними жертвами або злочинцями.
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/research/vasyl-shkliar-research.md
+```
 
-## Деколонізаційний контекст
-- **Imperial/Soviet myth**: Холодноярці та вояки УПА — "бандити", "буржуазні націоналісти", "зрадники", які заважали "світлому радянському майбутньому".
-- **Ukrainian reality**: Це були учасники національно-визвольних змагань, які захищали свою землю, родини та гідність від окупаційного більшовицького режиму. Шкляр показує їх не як фанатиків, а як людей, доведених до відчаю терором.
+Read the plan file (SOURCE OF TRUTH for structure):
 
-## Contested Terms
-| Concept | Imperial framing | Ukrainian framing |
-|---------|-----------------|-------------------|
-| Холодноярці | Бандити, куркулі, контрреволюціонери | Повстанці, борці за незалежність, захисники селян |
-| Радянська влада (1920-ті) | Визволителі, встановлення порядку | Окупанти, продрозверстка, червоний терор |
-| Бандерівці/УПА | Пособники нацистів, карателі | Армія без держави, рух опору проти двох тоталітаризмів |
-| Визвольні змагання | Громадянська війна | Українська революція, війна за незалежність |
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/c1-bio/vasyl-shkliar.yaml
+```
 
-## Section-Mapped Research Notes
+Read the current meta file (for reference — you will replace the content_outline):
 
-### Вступ — Бестселер як національний феномен
-Василь Шкляр став першим сучасним письменником, який довів, що українська історична книга може бути комерційно успішним блокбастером. "Чорний Ворон" вийшов сукупним накладом понад 300 тисяч примірників (феноменально для України). Це не просто література, це інструмент пробудження національної пам'яті.
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/meta/vasyl-shkliar.yaml
+```
 
-### Журналістські роки та формування
-Народився на Черкащині (серце козаччини). Освіта: філолог, знавець вірменської мови. Робота в пресі дала вміння писати гостро, динамічно, тримати увагу читача. Досвід "гарячих точок" (Чечня, Абхазія) в 90-х як журналіста дав розуміння психології війни.
+---
 
-### Шлях до літератури
-Починав з традиційної прози ("Перший сніг", "Праліс"). У 90-х шукав нові форми. "Ключ" (1999) — містичний детектив, який приніс йому славу "батька українського готичного детективу" і Гран-прі "Коронації слова". Це був етап відточування стилю: напружений сюжет, містика, еротика.
+## Your Task
 
-### Чорний Ворон та історична пам'ять: I — Епос Холодного Яру
-13 років збирав матеріали. Робота в архівах СБУ (допуск дали в часи Ющенка). Сюжет: 1920-ті роки, Холодний Яр, отаман Чорний Ворон. Герої не "картонні", а живі люди з сумнівами і болем. "Залишенець" — той, хто свідомо залишився боротися до кінця, без надії на перемогу.
+**Rebuild** the `content_outline` from scratch using:
+- The **plan's section structure** as the skeleton (match section names exactly)
+- The **research notes** to inform depth, word allocation, and specific bullet points
 
-### Чорний Ворон та історична пам'ять: II — Битва за визнання
-Скандал 2011 року: Шевченківський комітет присудив премію, але Шкляр відмовився її брати з рук влади Януковича (через Табачника). Це стало політичним актом. Люди зібрали йому "Народну Шевченківську премію" (еквівалент грошової суми), яку він передав на екранізацію.
+The existing meta `content_outline` is likely outdated (wrong section sizes, stale points). Do NOT copy it. Start fresh from the plan + research.
 
-### Залишенець та продовження циклу
-"Маруся" (2014) — про отаманшу Марусю Соколовську (Житомирщина). "Троща" (2017) — про УПА, зраду і підпілля. "Характерник" (2019) — запорожці у XVIII ст. Шкляр створює альтернативну історію України — історію не поразки, а героїчного спротиву. Стиль: натуралізм, діалектна мова, динаміка.
+### Rules
 
-### Вплив на українську культуру
-Екранізація "Чорного Ворона" (2019) — велике кіно, але книга глибша. Аудіокниги (озвучував сам автор або відомі актори). Громадянська позиція: підтримка мови, участь у політиці (УКРОП), волонтерство. Він — моральний авторитет.
+- **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
+- Allocations must sum to approximately **5000** words (±10% acceptable)
+- Minimum section allocation: 200 words (merge smaller sections)
+- For modules with target ≥ 4000w, aim for **8-12 sections minimum** — this prevents any one section from consuming a disproportionate share of the module.
+- **No single section may consume more than 25% of the total word target.** A 5000w module → max 1250w per section. If a plan section would exceed this, you MUST split it.
+- Each section must have `section`, `words`, and `points` fields
+- Section names must be in Ukrainian (these become H2 headings in the lesson)
+- **Section names must match plan exactly** — if the plan has a `content_outline` with section names,
+  use those EXACT names (or very close Ukrainian equivalents). When splitting a large plan section,
+  add a subtitle (e.g. "Читання: I — Походження").
+- Points reflect research findings — cite specific facts, dates, quotes where relevant
+- Check the subject's vital status: living person → "Значення" / "Вплив"; deceased → "Спадщина" / "Наслідки"
 
-### Дискусія — Історична правда vs художня вигадка
-Критика: звинувачення в ксенофобії (щодо росіян, євреїв, китайців у текстах), "плакатність", спрощення. Відповідь Шкляра: це художній твір, і він показує правду того часу очима своїх героїв. Дискусія про те, чи має право митець на упередженість у часи війни.
+### How to split a plan section (CRITICAL)
 
-===RESEARCH_END===
+**The plan's bullet points are section topics, not sub-bullets.** A plan section with 10 bullet points should become 3-5 meta sections, not one giant section.
 
+**Process:**
+1. Count the bullet points in each plan section
+2. If a section has 5+ bullets: group them into thematic clusters of 2-4 bullets
+3. Each cluster becomes its own meta section with the parent name as prefix:
+   - `"Читання: I — Розселення та племінна мозаїка"` (bullets 1-4)
+   - `"Читання: II — Суспільний устрій і права"` (bullets 5-7)
+   - `"Читання: III — Духовний світ та побут"` (bullets 8-11)
+   - etc.
+4. Allocate words based on research depth for each cluster
+
+**Example:** A plan section `Читання` with 14 bullet points should NOT become one 3200w meta section. It should become 4-5 sub-sections of 600-800w each. The bullets tell you what the sub-sections should cover.
+
+---
+
+## Output Format
+
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+
+### Output Block: Meta Outline
+
+```
 ===META_OUTLINE_START===
 content_outline:
-  - section: Вступ — Бестселер як національний феномен
-    words: 400
+  - section: "{Section 1 name in Ukrainian}"
+    words: {allocation}
     points:
-      - "Чорний Ворон" як культурний вибух 2009 року: тиражі, резонанс.
-      - Відродження інтересу до історії через масову літературу.
-      - Постать Шкляра як "політичного письменника" мимоволі.
-  - section: Журналістські роки та формування
-    words: 600
+      - "{key point 1 — informed by research}"
+      - "{key point 2}"
+  - section: "{Section 2 name}"
+    words: {allocation}
     points:
-      - Дитинство на Черкащині: тінь Холодного Яру.
-      - Навчання в Києві та Єревані: філологічний гарт.
-      - Журналістський досвід 90-х: робота в гарячих точках та прес-службах.
-      - Вплив журналістики на лаконічний та гострий стиль письма.
-  - section: Шлях до літератури
-    words: 600
-    points:
-      - Ранні твори радянського періоду: пошук власного голосу.
-      - "Ключ" (1999) як переломний момент: народження українського бестселера.
-      - Містичний детектив та еротика як інструменти залучення читача.
-      - Гран-прі "Коронації слова" і визнання в літпроцесі.
-  - section: Чорний Ворон та історична пам'ять: I — Епос Холодного Яру
-    words: 800
-    points:
-      - 13 років роботи в архівах СБУ: документальна основа роману.
-      - Образ отамана Чорного Ворона: синтез реального Івана Чорноуса та легенди.
-      - Філософія "залишенця": боротьба без надії на перемогу як моральний вибір.
-      - Деколонізація термінології: повернення слова "повстанці" замість "бандити".
-  - section: Чорний Ворон та історична пам'ять: II — Битва за визнання
-    words: 600
-    points:
-      - Шевченківська премія 2011: колізія з режимом Януковича.
-      - Відкритий лист Президенту і вимога відставки Табачника.
-      - Феномен "Народної Шевченківської премії": солідарність читачів.
-      - Політизація літературного твору в умовах загрози ідентичності.
-  - section: Залишенець та продовження циклу
-    words: 800
-    points:
-      - Роман "Маруся" (2014): жіноче обличчя повстанського руху.
-      - "Троща" (2017): складна правда про УПА, зраду і внутрішні конфлікти.
-      - "Характерник" (2019): заглиблення в козацьку містику XVIII століття.
-      - Спільна ідея циклу: неперервність українського збройного опору.
-  - section: Вплив на українську культуру
-    words: 600
-    points:
-      - Екранізація "Чорного Ворона" (2019): успіхи та втрати при адаптації.
-      - Роль Шкляра у формуванні "моди на історію" серед молоді.
-      - Громадянська активність: волонтерство, політична позиція, мовне питання.
-      - Шкляр як публічний інтелектуал і моральний авторитет.
-  - section: Дискусія — Історична правда vs художня вигадка
-    words: 600
-    points:
-      - Звинувачення критиків у "ксенофобії" та "натуралізмі": аналіз аргументів.
-      - Відповідь автора: право на суб'єктивну правду жертви агресії.
-      - Баланс між архівом і художнім домислом: де закінчується документ.
-      - Значення творчості Шкляра для дерадянізації свідомості українців.
+      - "..."
+  # ... all sections
+  # Total: ~5000 words
 ===META_OUTLINE_END===
+```
 
+### Validation checklist (complete before outputting):
+
+- [ ] All section names are Ukrainian
+- [ ] Section names match plan structure
+- [ ] Each section has `words` and `points`
+- [ ] Sum of all `words` ≈ 5000
+- [ ] No section has fewer than 200 words
+- [ ] Points reflect research findings
+- [ ] 8-12 sections for ≥ 4000w targets
+
+---
+
+## Friction Report (MANDATORY)
+
+After the meta outline output, include:
+
+```
 ===FRICTION_START===
-**Phase**: Phase A: Research + Meta (Seminar)
-**Step**: Full Phase A
-**Friction Type**: NONE
-**Raw Error**: None
-**Self-Correction**: Split the "Чорний Ворон" section into two parts (Novel analysis and Prize scandal) to ensure balanced word counts and clearer thematic focus, adhering to the "max 25% word count per section" rule.
-**Proposed Tooling Fix**: N/A
+**Phase**: Phase A: Meta Outline Only (research-exists mode)
+**Step**: {what you were doing when friction occurred, or "Full meta outline"}
+**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
 ===FRICTION_END===
+```
+
+---
+
+## Boundaries
+
+- Do NOT re-research — use only the provided research file
+- Do NOT write lesson content — only the meta outline
+- Do NOT generate activities or vocabulary
+- Do NOT skip any section from the plan's content_outline
+- Do NOT reference persona names or voice instructions
+- Do NOT request skills, delegate to Claude, or skip this phase

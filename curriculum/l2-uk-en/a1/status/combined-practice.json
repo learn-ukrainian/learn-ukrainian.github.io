@@ -1,0 +1,64 @@
+{
+  "module": "combined-practice",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-21T01:39:17.104606Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-21T01:38:22.446263Z",
+    "meta": "2026-02-21T01:17:03.019971Z",
+    "activities": "2026-02-21T01:38:21.743664Z",
+    "vocabulary": "2026-02-21T01:20:22.182234Z",
+    "plan": "2026-02-20T20:43:43.523004Z",
+    "research": "2026-02-21T01:17:03.017361Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "3057/2000 (raw: 3304) | pedagogy: 17 violations | immersion: 34.5% LOW (target 35-55% (M43))"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "3 IPA issues (run lint_ipa.py --fix)"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

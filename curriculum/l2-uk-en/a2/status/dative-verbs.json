@@ -2,14 +2,14 @@
   "module": "dative-verbs",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-20T19:27:19.434707Z",
+  "last_audit": "2026-02-21T01:14:26.091768Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T19:27:02.404356Z",
+    "md": "2026-02-21T01:14:24.712848Z",
     "meta": "2026-02-20T19:20:01.861701Z",
-    "activities": "2026-02-20T18:10:20.054279Z",
-    "vocabulary": "2026-02-20T18:10:20.066726Z",
-    "plan": "2026-02-18T19:03:32.565582Z",
+    "activities": "2026-02-21T01:14:24.713365Z",
+    "vocabulary": "2026-02-21T01:11:23.504362Z",
+    "plan": "2026-02-20T20:59:28.378230Z",
     "research": "2026-02-20T19:20:01.853560Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "3058/3000 (raw: 3477) | pedagogy: 3 violations | immersion: 34.9% LOW (target 50-60% (A2.1))"
+      "status": "pass",
+      "violations": 0,
+      "message": "3452/3000 (raw: 3923)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "38/1"
     },
     "naturalness": {
       "status": "info",
@@ -41,7 +41,7 @@
     "ipa": {
       "status": "warn",
       "violations": 0,
-      "message": "24 IPA issues (run lint_ipa.py --fix)"
+      "message": "28 IPA issues (run lint_ipa.py --fix)"
     },
     "research": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "2 Outline Compliance Errors"
-    ],
-    "pass_count": 2,
-    "fail_count": 1,
-    "deferred_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

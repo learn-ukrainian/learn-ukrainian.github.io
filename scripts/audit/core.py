@@ -95,6 +95,8 @@ from .checks.state_standard_compliance import (
     check_state_standard_compliance,
 )
 from .checks.review_validation import check_review_validity
+from .checks.content_gaming import check_content_gaming
+from .checks.review_gaming import check_review_gaming
 # Vocabulary integrity checking removed - not needed (naturalness catches bad vocabulary)
 from .checks.outline_compliance import (
     check_outline_compliance,
@@ -756,7 +758,8 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
     except Exception:
         return None
 
-def audit_module(file_path: str, skip_activities: bool = False) -> bool:
+def audit_module(file_path: str, skip_activities: bool = False,
+                 skip_review: bool = False) -> bool:
     """
     Orchestrates the audit process for a single module file.
     Returns True on success, False on failure.
@@ -765,6 +768,9 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
         skip_activities: When True, defer activity/vocab gates (content-only audit
                          for the otaman content sprint). Deferred gates return INFO
                          status and do NOT cause critical failures.
+        skip_review: When True, defer review gate only (#606). Used by the v3 audit
+                     phase to validate content + activities but not the review file
+                     (which Phase D creates later).
     """
     if not os.path.exists(file_path):
         print(f"Error: File {file_path} not found.")
@@ -1769,6 +1775,17 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
 
         content_quality_violations.extend(prose_violations)
 
+    # Run content gaming detection (Issue #610)
+    gaming_violations = check_content_gaming(content, file_path)
+
+    if gaming_violations:
+        print(f"  🎭 Content gaming violations found: {len(gaming_violations)}")
+        for v in gaming_violations:
+            sev_icon = "❌" if v['severity'] == 'critical' else "⚠️"
+            print(f"     {sev_icon} [{v['type']}] {v['issue']}")
+
+        content_quality_violations.extend(gaming_violations)
+
     # Convert purity violations to standard pedagogical violations for reporting
     for v in content_quality_violations:
         pedagogical_violations.append({
@@ -2238,7 +2255,7 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
     # Skipped in content-only mode (skip_activities) because Phase D creates the review
     review_violations = []
     review_gate_status = "skipped"
-    if skip_activities:
+    if skip_activities or skip_review:
         review_gate_status = "deferred"
     elif not has_critical_failure:
         module_slug_for_review = Path(file_path).stem
@@ -2259,6 +2276,42 @@ def audit_module(file_path: str, skip_activities: bool = False) -> bool:
                 review_gate_status = "pass"
         else:
             review_gate_status = "pass"  # No violations
+
+        # Review Gaming Detection (Issue #610)
+        # Find and read the review file to run gaming checks
+        from slug_utils import review_path as _review_path_fn
+        _review_base = Path(file_path).parent
+        _review_canonical = _review_path_fn(_review_base, module_slug_for_review)
+        _review_file_path = None
+        if _review_canonical.exists():
+            _review_file_path = _review_canonical
+        else:
+            _bare = to_bare_slug(module_slug_for_review)
+            _legacy = _review_base / 'audit' / f'{_bare}-review.md'
+            if _legacy.exists():
+                _review_file_path = _legacy
+
+        if _review_file_path:
+            try:
+                _review_text = _review_file_path.read_text(encoding='utf-8')
+                gaming_review_violations = check_review_gaming(
+                    _review_text, content, file_path, level_code, module_slug_for_review
+                )
+                if gaming_review_violations:
+                    g_crits = [v for v in gaming_review_violations if v['severity'] == 'critical']
+                    g_warns = [v for v in gaming_review_violations if v['severity'] == 'warning']
+                    print(f"  🎭 Review Gaming: {len(g_crits)} critical, {len(g_warns)} warnings")
+                    for v in g_crits:
+                        print(f"     ❌ [{v['type']}] {v['message']}")
+                        critical_failure_reasons.append(v['message'])
+                    for v in g_warns:
+                        print(f"     ⚠️  [{v['type']}] {v['message']}")
+                    review_violations.extend(gaming_review_violations)
+                    if g_crits and review_gate_status == "pass":
+                        review_gate_status = "fail"
+                        has_critical_failure = True
+            except OSError:
+                pass  # Can't read review file — skip gaming checks
     else:
         review_gate_status = "skipped"  # Content gates failed, review not checked
 

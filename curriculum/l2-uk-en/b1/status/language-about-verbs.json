@@ -2,13 +2,13 @@
   "module": "language-about-verbs",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T01:02:14.666013Z",
+  "last_audit": "2026-02-21T09:31:53.341019Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T14:45:54.897457Z",
+    "md": "2026-02-21T01:09:55.309504Z",
     "meta": "2026-02-18T13:14:29.357463Z",
-    "activities": "2026-02-20T14:45:54.897790Z",
-    "vocabulary": "2026-02-18T13:30:48.739963Z",
+    "activities": "2026-02-21T01:09:54.481800Z",
+    "vocabulary": "2026-02-21T01:09:54.482787Z",
     "plan": "2026-02-20T21:18:24.239073Z",
     "research": "2026-02-17T11:34:50.185833Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4634/4000 (raw: 5028)"
+      "message": "4645/4000 (raw: 5039)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
     "ipa": {
       "status": "warn",
       "violations": 0,
-      "message": "14 IPA issues (run lint_ipa.py --fix)"
+      "message": "3 IPA issues (run lint_ipa.py --fix)"
     },
     "research": {
       "status": "pass",

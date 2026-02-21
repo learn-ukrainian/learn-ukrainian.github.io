@@ -14,7 +14,7 @@ Related: a1-21 (Yesterday), a1-23 (What Time Is It), a1-25 (My Daily Routine)
 
 ## Розминка: Час летить (Time Flies)
 
-In the last lesson, we talked about "yesterday". You already know how to say **я працював** [ja prɑt͡sʲʊˈʋɑu̯] (I worked) or **я читала** [ja t͡ʃɪˈtɑlɑ] (I read). That was the past tense. But life moves forward. Today we open the door to the future.
+In the last lesson, we talked about "yesterday". You already know how to say **я працював** [ja prɑt͡sʲuˈʋɑu̯] (I worked) or **я читала** [ja t͡ʃɪˈtɑlɑ] (I read). That was the past tense. But life moves forward. Today we open the door to the future.
 
 Imagine a timeline:
 *   **Вчора** (Yesterday) — is history.
@@ -24,7 +24,7 @@ Imagine a timeline:
 ### Ukrainian Future is Simple
 I have great news for you. In English, the future tense can be complex: "I will", "I am going to", "I shall", "I am doing (tomorrow)". In Ukrainian for beginners, everything is much simpler. You do not need to memorize many different constructions.
 
-You need only one small helper word — **буду** [ˈbudʊ] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть. (The Ukrainian language is music. Listen and speak.)
+You need only one small helper word — **буду** [ˈbudu] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть. (The Ukrainian language is music. Listen and speak.)
 
 > [!tip]
 > **Teacher's Tip**
@@ -53,7 +53,7 @@ Let's learn the forms of the word "бути" for the future tense. This is the o
 
 | Person | Singular | Plural |
 | :--- | :--- | :--- |
-| **I** (Я) | **буду** [ˈbudʊ] | **ми будемо** [ˈbudemɔ] |
+| **I** (Я) | **буду** [ˈbudu] | **ми будемо** [ˈbudemɔ] |
 | **You** (Ти) | **будеш** [ˈbudeʃ] | **ви будете** [ˈbudete] |
 | **He/She/It** (Він/Вона/Воно) | **буде** [ˈbude] | **вони будуть** [ˈbudutʲ] |
 
@@ -67,7 +67,7 @@ Let's see how this works in sentences.
 
 *   **Я буду працювати** завтра. (I will work tomorrow.)
 *   Що **ти будеш робити**? (What will you do?)
-*   **Ми будемо гуляти** [ɦʊˈlʲɑtɪ] у парку. (We will walk in the park.)
+*   **Ми будемо гуляти** [ɦuˈlʲɑtɪ] у парку. (We will walk in the park.)
 *   **Вони будуть відпочивати** [ʋidpɔt͡ʃɪˈʋɑtɪ]. (They will rest.)
 *   **Вона буде писати** книгу. (She will write a book.)
 *   **Ми будемо слухати** музику. (We will listen to music.)
@@ -141,8 +141,8 @@ Look at this pattern:
 
 This is a very common mistake. Memorize these phrases as whole blocks:
 *   **наступного тижня** [nɑˈstupnɔɦɔ ˈtɪʒnʲa] — next week
-*   **наступного року** [ˈrɔkʊ] — next year
-*   **наступного разу** [ˈrɑzʊ] — next time
+*   **наступного року** [ˈrɔku] — next year
+*   **наступного разу** [ˈrɑzu] — next time
 *   **наступного місяця** [ˈmʲisʲat͡sʲa] — next month
 
 > [!note]
@@ -206,7 +206,7 @@ Now that we have grammar and vocabulary, let's talk about the most pleasant thin
 *   **канікули** [kɑˈnʲikulɪ] — holidays / break (school/university)
 
 ### Складаємо плани (Making Plans)
-In Ukrainian, we use the phrase **мати плани** (to have plans) or **планувати** [plɑnʊˈʋɑtɪ] (to plan).
+In Ukrainian, we use the phrase **мати плани** (to have plans) or **планувати** [plɑnuˈʋɑtɪ] (to plan).
 
 *   У тебе є **плани** на вихідні? (Do you have plans for the weekend?)
 *   Ми **плануємо** поїхати в гори. (We are planning to go to the mountains.)

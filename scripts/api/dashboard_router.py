@@ -115,7 +115,9 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
             except Exception:
                 pass
 
-        # Final review (Claude QA gate)
+        # Cross-agent review (Phase D) and optional final review (Phase F)
+        review_file = track_dir / "review" / f"{slug}-review.md"
+        has_review = review_file.exists()
         final_review_file = track_dir / "review" / f"{slug}-final-review.md"
         has_final_review = final_review_file.exists()
 
@@ -133,8 +135,10 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
                 "lesson": has_md,
                 "activities": has_activities,
                 "vocabulary": has_vocab,
+                "review": has_review,
                 "final_review": has_final_review,
             },
+            "has_review": has_review,
             "has_final_review": has_final_review,
             "last_audit": last_audit,
             "is_fresh": result.is_fresh if result else False,
@@ -150,6 +154,7 @@ def _scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
         "fail": sum(1 for m in modules if m["status"] == "fail"),
         "unaudited": sum(1 for m in modules if m["status"] == "unaudited"),
         "missing": sum(1 for m in modules if m["status"] == "missing"),
+        "reviewed": sum(1 for m in modules if m.get("has_review")),
         "final_review": sum(1 for m in modules if m.get("has_final_review")),
     }
 

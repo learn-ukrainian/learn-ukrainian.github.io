@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T17:34:04Z",
+      "ts": "2026-02-21T00:12:07Z",
       "task_id": "v3-syntez-diaspora-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T20:30:39Z",
+      "ts": "2026-02-21T00:19:12Z",
       "task_id": "v3-pislya-stalina-shistdesiatnyky-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

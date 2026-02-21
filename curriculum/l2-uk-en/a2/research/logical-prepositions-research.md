@@ -32,5 +32,5 @@ Alignment: This module covers the core A2 requirements for expressing purpose (`
 
 ## Notes for Content Writing
 - **Immersion Goal**: Aim for **50-60% Ukrainian**. Keep grammar explanations in English (Band 1 rules) but use Ukrainian for the "Story of the Letter" and Pharmacy dialogues.
-- **IPA Focus**: Ensure stress marks for all prepositions, especially `після` [ˈpʲisʲlʲa] and `завдяки` [zawˈdakɪ].
+- **IPA Focus**: Ensure stress marks for all prepositions, especially `після` [ˈpʲisʲlʲa] and `завдяки` [zaʋˈdakɪ].
 - **Visuals**: A table comparing `через` (cause) vs `для` (purpose) vs `про` (topic) is essential for this level.

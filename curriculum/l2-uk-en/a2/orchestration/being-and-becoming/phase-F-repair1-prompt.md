@@ -20,19 +20,18 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   overall status is 'fail' (must be 'pass')
-  Missing required activity types: fill-in, match-up, quiz
+  Structure: Missing '## Vocabulary' header OR vocabulary sidecar
   failing gates:
-    lesson: 3042/3000 (raw: 3278) | pedagogy: 1 violations
-    activities: 0/10 | density: 0 < 12 | unique_types: 0/4 types | priority: No priority types
+    meta: Missing '## Vocabulary' header OR vocabulary sidecar
 
   Hetman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 30/100)
-     → 2 violations (minor)
-     → Activity count below minimum
-     → Activity density below minimum
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
+     → 1 violations (minor)
+     → Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/audit/being-and-becoming-audit.md
@@ -41,7 +40,7 @@
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
   Critical Failures:
-    • Missing required activity types: fill-in, match-up, quiz
+    • Structure: Missing '## Vocabulary' header OR vocabulary sidecar
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/being-and-becoming-audit.log for details)
         ```

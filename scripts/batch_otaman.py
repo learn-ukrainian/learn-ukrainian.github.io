@@ -35,6 +35,7 @@ Usage:
 """
 
 import argparse
+import fcntl
 import json
 import logging
 import os
@@ -324,17 +325,38 @@ def dispatch_otaman(track_name: str, num: int, slug: str,
 # State management
 # ---------------------------------------------------------------------------
 
+def _state_lockfile() -> Path:
+    """Path for the state file advisory lock."""
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    return STATE_FILE.with_suffix(".lock")
+
+
 def load_state() -> dict:
-    """Load or initialize dispatcher state."""
-    if STATE_FILE.exists():
-        try:
-            return json.loads(STATE_FILE.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError):
-            pass
+    """Load or initialize dispatcher state (with file lock for inter-process safety)."""
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    lock_path = _state_lockfile()
+    try:
+        with open(lock_path, "w") as lf:
+            fcntl.flock(lf, fcntl.LOCK_SH)
+            try:
+                if STATE_FILE.exists():
+                    return json.loads(STATE_FILE.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                pass
+            finally:
+                fcntl.flock(lf, fcntl.LOCK_UN)
+    except OSError:
+        # Fallback: read without lock
+        if STATE_FILE.exists():
+            try:
+                return json.loads(STATE_FILE.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                pass
     return {
         "started": datetime.now(timezone.utc).isoformat(),
         "tracks": {},
         "history": [],
+        "running_tracks": [],
         "stats": {
             "total_dispatches": 0,
             "total_modules_passed": 0,
@@ -344,13 +366,25 @@ def load_state() -> dict:
 
 
 def save_state(state: dict):
-    """Save state atomically."""
+    """Save state atomically (with file lock for inter-process safety)."""
     with _state_lock:
         state["last_updated"] = datetime.now(timezone.utc).isoformat()
         STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-        tmp = STATE_FILE.with_suffix(".tmp")
-        tmp.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
-        tmp.replace(STATE_FILE)
+        lock_path = _state_lockfile()
+        try:
+            with open(lock_path, "w") as lf:
+                fcntl.flock(lf, fcntl.LOCK_EX)
+                try:
+                    tmp = STATE_FILE.with_suffix(".tmp")
+                    tmp.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
+                    tmp.replace(STATE_FILE)
+                finally:
+                    fcntl.flock(lf, fcntl.LOCK_UN)
+        except OSError as e:
+            log.warning(f"File lock failed during save: {e}. Writing without lock.")
+            tmp = STATE_FILE.with_suffix(".tmp")
+            tmp.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
+            tmp.replace(STATE_FILE)
 
 
 def get_track_state(state: dict, track_name: str) -> dict:
@@ -390,6 +424,44 @@ class BatchOtaman:
         # Tracks currently running (prevent same-track parallel)
         self._running_tracks: set[str] = set()
         self._running_lock = Lock()
+        self._daemon_lock_fd = None
+        # Crash recovery: only in non-dry-run mode and only if we hold the daemon lock (#603)
+        if not self.dry_run:
+            self._acquire_daemon_lock()
+            stale_running = self.state.get("running_tracks", [])
+            if stale_running:
+                log.warning(f"Crash recovery: clearing {len(stale_running)} stale running tracks: {stale_running}")
+                for track_name in stale_running:
+                    ts = get_track_state(self.state, track_name)
+                    if ts["state"] == TrackState.RUNNING:
+                        ts["state"] = TrackState.ELIGIBLE
+                self.state["running_tracks"] = []
+                save_state(self.state)
+
+    def _acquire_daemon_lock(self):
+        """Acquire exclusive daemon lock to prevent multiple dispatchers (#603)."""
+        daemon_lock_path = STATE_FILE.parent / "otaman_daemon.lock"
+        STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            self._daemon_lock_fd = open(daemon_lock_path, "w")
+            fcntl.flock(self._daemon_lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            self._daemon_lock_fd.write(str(os.getpid()))
+            self._daemon_lock_fd.flush()
+        except BlockingIOError:
+            log.error("Another batch_otaman dispatcher is already running. Exiting.")
+            sys.exit(1)
+        except OSError as e:
+            log.warning(f"Could not acquire daemon lock: {e}. Proceeding without lock.")
+
+    def _release_daemon_lock(self):
+        """Release daemon lock on clean exit."""
+        if self._daemon_lock_fd:
+            try:
+                fcntl.flock(self._daemon_lock_fd, fcntl.LOCK_UN)
+                self._daemon_lock_fd.close()
+            except OSError:
+                pass
+            self._daemon_lock_fd = None
 
     def _should_include(self, track_name: str) -> bool:
         if track_name in self.exclude_tracks:
@@ -449,7 +521,13 @@ class BatchOtaman:
                         if datetime.now(timezone.utc) < until:
                             continue
                     except (ValueError, TypeError):
-                        pass
+                        # Replace malformed timestamp with fresh cooldown to prevent permanent brick
+                        fresh = datetime.fromtimestamp(
+                            time.time() + COOLDOWN_SECONDS, tz=timezone.utc
+                        ).isoformat()
+                        log.warning(f"  [{track_name}] Malformed cooldown_until={cooldown_until!r}, reset to {fresh}")
+                        ts["cooldown_until"] = fresh
+                        continue
                 ts["state"] = TrackState.ELIGIBLE
 
             # Check dependencies
@@ -486,6 +564,8 @@ class BatchOtaman:
 
         with self._running_lock:
             self._running_tracks.add(track)
+            self.state["running_tracks"] = sorted(self._running_tracks)
+        save_state(self.state)
 
         try:
             result = dispatch_otaman(track, num, slug)
@@ -511,6 +591,8 @@ class BatchOtaman:
         finally:
             with self._running_lock:
                 self._running_tracks.discard(track)
+                self.state["running_tracks"] = sorted(self._running_tracks)
+            save_state(self.state)
 
     def _format_table(self, summaries: dict) -> str:
         """Format status table."""
@@ -676,9 +758,14 @@ class BatchOtaman:
             log.info(f"Pausing {INTER_DISPATCH_PAUSE}s...")
             time.sleep(INTER_DISPATCH_PAUSE)
 
+        # Clean exit: clear running_tracks (#603)
+        with self._running_lock:
+            self._running_tracks.clear()
+            self.state["running_tracks"] = []
         # Final summary
         self._print_summary()
         save_state(self.state)
+        self._release_daemon_lock()
 
     def _print_summary(self):
         stats = self.state.get("stats", {})

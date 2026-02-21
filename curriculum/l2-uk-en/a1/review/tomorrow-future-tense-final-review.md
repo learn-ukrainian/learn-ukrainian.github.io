@@ -72,9 +72,9 @@ Now I have everything I need. Let me compile the full adversarial review.
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-You need only one small helper word — **буду** [ˈbudʊ] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть.
+You need only one small helper word — **буду** [ˈbudu] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть.
 ---NEW---
-You need only one small helper word — **буду** [ˈbudʊ] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть. (The Ukrainian language is music. Listen and speak.)
+You need only one small helper word — **буду** [ˈbudu] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть. (The Ukrainian language is music. Listen and speak.)
 ===FIX_END===
 
 ===FIX_START===

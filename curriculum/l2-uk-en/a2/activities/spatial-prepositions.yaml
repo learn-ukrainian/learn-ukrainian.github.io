@@ -34,7 +34,7 @@
     - name: 'Орудний (Instrumental - Static)'
       items: ['під', 'над', 'перед', 'за', 'між']
     - name: 'Родовий (Genitive - Proximity/Motion)'
-      items: ['біля', 'напроти', 'до', 'з']
+      items: ['біля', 'напроти', 'до', 'з', 'навколо']
     - name: 'Змінний (Locative or Accusative)'
       items: ['в', 'на']
 
@@ -172,22 +172,22 @@
   title: 'Складіть речення'
   instruction: 'Reorder the words to form correct sentences about location and motion.'
   items:
-    - words: ['Кіт', 'спить', 'під', 'столом']
-      answer: 'Кіт спить під столом'
-    - words: ['Ми', 'йдемо', 'в', 'театр']
-      answer: 'Ми йдемо в театр'
-    - words: ['Ваза', 'стоїть', 'на', 'вікні']
-      answer: 'Ваза стоїть на вікні'
-    - words: ['Я', 'ставлю', 'чашку', 'на', 'стіл']
-      answer: 'Я ставлю чашку на стіл'
-    - words: ['Банк', 'знаходиться', 'напроти', 'пошти']
-      answer: 'Банк знаходиться напроти пошти'
-    - words: ['Ми', 'живемо', 'біля', 'парку']
-      answer: 'Ми живемо біля парку'
-    - words: ['Лампа', 'висить', 'над', 'диваном']
-      answer: 'Лампа висить над диваном'
-    - words: ['Дерево', 'росте', 'перед', 'будинком']
-      answer: 'Дерево росте перед будинком'
+    - words: ['Наш', 'сірий', 'кіт', 'завжди', 'спить', 'під', 'кухонним', 'столом']
+      answer: 'Наш сірий кіт завжди спить під кухонним столом'
+    - words: ['Ми', 'з', 'друзями', 'йдемо', 'в', 'новий', 'театр']
+      answer: 'Ми з друзями йдемо в новий театр'
+    - words: ['Красива', 'ваза', 'з', 'квітами', 'стоїть', 'на', 'вікні']
+      answer: 'Красива ваза з квітами стоїть на вікні'
+    - words: ['Я', 'завжди', 'ставлю', 'чашку', 'з', 'чаєм', 'на', 'стіл']
+      answer: 'Я завжди ставлю чашку з чаєм на стіл'
+    - words: ['Великий', 'банк', 'знаходиться', 'прямо', 'напроти', 'старої', 'пошти']
+      answer: 'Великий банк знаходиться прямо напроти старої пошти'
+    - words: ['Ми', 'з', 'родиною', 'живемо', 'біля', 'великого', 'парку']
+      answer: 'Ми з родиною живемо біля великого парку'
+    - words: ['Нова', 'яскрава', 'лампа', 'висить', 'прямо', 'над', 'диваном']
+      answer: 'Нова яскрава лампа висить прямо над диваном'
+    - words: ['Старе', 'високе', 'дерево', 'росте', 'прямо', 'перед', 'цим', 'будинком']
+      answer: 'Старе високе дерево росте прямо перед цим будинком'
 
 - type: error-correction
   title: 'Виправте помилки'
@@ -251,40 +251,44 @@
       right: 'вниз (down)'
     - left: 'всередині (inside)'
       right: 'ззовні (outside)'
+    - left: 'далеко (far)'
+      right: 'близько (close)'
+    - left: 'вперед (forward)'
+      right: 'назад (backward)'
 
 - type: fill-in
   title: 'Дайте команду (Give a command)'
   instruction: 'Complete the command to move an object to a specific place.'
   items:
-    - sentence: 'Поставте вазу ___ (on the table).'
+    - sentence: 'Поставте вазу ___. Квіти будуть гарно виглядати.'
       answer: 'на стіл'
       explanation: 'Motion onto surface = Accusative.'
       options: ['на стіл', 'на столі', 'під стіл', 'за стіл']
-    - sentence: 'Покладіть килим ___ (on the floor).'
+    - sentence: 'Покладіть килим ___. Так буде тепліше.'
       answer: 'на підлогу'
       explanation: 'Motion onto surface = Accusative.'
       options: ['на підлогу', 'на підлозі', 'під підлогу', 'в підлогу']
-    - sentence: 'Повісьте картину ___ (on the wall).'
+    - sentence: 'Повісьте картину ___. Кімната буде красивішою.'
       answer: 'на стіну'
       explanation: 'Motion onto surface = Accusative.'
       options: ['на стіну', 'на стіні', 'під стіну', 'за стіну']
-    - sentence: 'Покладіть ключі ___ (into the bag).'
+    - sentence: 'Покладіть ключі ___. Ви їх не загубите.'
       answer: 'в сумку'
       explanation: 'Motion into container = Accusative.'
       options: ['в сумку', 'в сумці', 'на сумку', 'під сумку']
-    - sentence: 'Заховайте гроші ___ (under the mattress).'
+    - sentence: 'Заховайте гроші ___. Там безпечно.'
       answer: 'під матрац'
       explanation: 'Motion to under = Accusative.'
       options: ['під матрац', 'під матрацом', 'на матрац', 'за матрац']
-    - sentence: 'Сядьте ___ (between parents).'
-      answer: 'між батьками'
-      explanation: 'Motion into space between (often uses Instrumental even for motion with між, or Accusative depending on strictness, here sticking to common usage).'
-      options: ['між батьками', 'між батьків', 'між батьку', 'між батька']
-    - sentence: 'Станьте ___ (in front of the mirror).'
+    - sentence: 'Сядьте ___ мамою та татом.'
+      answer: 'між'
+      explanation: 'Position between two people = Instrumental with між.'
+      options: ['між', 'біля', 'перед', 'за']
+    - sentence: 'Станьте ___. Подивіться на своє відображення.'
       answer: 'перед дзеркалом'
-      explanation: 'Standing position (result) or taking a stand = Instrumental.'
+      explanation: 'Standing position (result) = Instrumental.'
       options: ['перед дзеркалом', 'перед дзеркала', 'перед дзеркалу', 'перед дзеркалі']
-    - sentence: 'Йдіть ___ (to the metro).'
+    - sentence: 'Йдіть ___. Там зупинка автобуса.'
       answer: 'до метро'
       explanation: 'Motion towards = Genitive.'
       options: ['до метро', 'в метро', 'на метро', 'під метро']
@@ -293,7 +297,7 @@
   title: 'Куди чи Де? (Where to vs Where?)'
   instruction: 'Identify if the situation answers "Де?" (Location) or "Куди?" (Direction).'
   items:
-    - question: 'Я йду в кінотеатр.'
+    - question: 'Я йду в кінотеатр після роботи.'
       explanation: 'Movement towards a goal.'
       options:
         - text: 'Куди? (Direction)'
@@ -304,7 +308,7 @@
           correct: false
         - text: 'Чому? (Reason)'
           correct: false
-    - question: 'Ми сидимо в кінотеатрі.'
+    - question: 'Ми сидимо в кінотеатрі та дивимося фільм.'
       explanation: 'Static position inside.'
       options:
         - text: 'Де? (Location)'
@@ -315,7 +319,7 @@
           correct: false
         - text: 'Звідки? (Origin)'
           correct: false
-    - question: 'Кіт стрибнув на стіл.'
+    - question: 'Кіт стрибнув на стіл і розбив чашку.'
       explanation: 'Action of jumping onto.'
       options:
         - text: 'Куди? (Direction)'
@@ -326,7 +330,7 @@
           correct: false
         - text: 'Що? (Object)'
           correct: false
-    - question: 'Ваза стоїть на столі.'
+    - question: 'Красива ваза з квітами стоїть на столі.'
       explanation: 'Static position on top.'
       options:
         - text: 'Де? (Location)'
@@ -337,7 +341,7 @@
           correct: false
         - text: 'Звідки? (Origin)'
           correct: false
-    - question: 'Я йду додому.'
+    - question: 'Я йду додому після довгого робочого дня.'
       explanation: 'Movement towards home.'
       options:
         - text: 'Куди? (Direction)'
@@ -346,9 +350,9 @@
           correct: false
         - text: 'Як? (Manner)'
           correct: false
-        - text: 'Де? (Location)'
+        - text: 'Звідки? (Origin)'
           correct: false
-    - question: 'Я вдома.'
+    - question: 'Я зараз вдома і відпочиваю після роботи.'
       explanation: 'Static position at home.'
       options:
         - text: 'Де? (Location)'
@@ -359,7 +363,7 @@
           correct: false
         - text: 'Чому? (Reason)'
           correct: false
-    - question: 'Ми їдемо з Києва.'
+    - question: 'Ми їдемо з Києва до Львова поїздом.'
       explanation: 'Movement from a source.'
       options:
         - text: 'Звідки? (Origin)'
@@ -370,7 +374,7 @@
           correct: false
         - text: 'Коли? (Time)'
           correct: false
-    - question: 'Книга впала під стіл.'
+    - question: 'Книга впала зі столу прямо під стіл.'
       explanation: 'Movement to under.'
       options:
         - text: 'Куди? (Direction)'

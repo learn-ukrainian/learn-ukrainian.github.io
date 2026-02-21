@@ -37,12 +37,12 @@
 - Errors found: 1 minor
 - Details:
   - [ˈpɔjizd] for поїзд — correct
-  - [kʊˈpɛ] for купе — correct
+  - [kuˈpɛ] for купе — correct
   - [plɐtˈskɑrt] for плацкарт — correct
-  - [ˈnɪʒnʲɛ ˈm⁽ʲ⁾isʲtse] for нижнє місце — correct
-  - [ˈʋɛrxnʲɛ ˈm⁽ʲ⁾isʲtse] for верхнє місце — correct
+  - [ˈnɪʒnʲɛ ˈm⁽ʲ⁾isʲt͡se] for нижнє місце — correct
+  - [ˈʋɛrxnʲɛ ˈm⁽ʲ⁾isʲt͡se] for верхнє місце — correct
   - [ʋ⁽ʲ⁾idˈprɑu̯lʲɐnʲːɐ] for відправлення — minor: [u̯] for в in cluster is dialectal, standard would be [ʋ]; not blocking
-  - [prɪbʊˈtʲːɑ] for прибуття — correct
+  - [prɪbuˈtʲːɑ] for прибуття — correct
   - [plɐtˈfɔrmɐ] for платформа — correct
   - [ʋɐˈɦɔn] for вагон — correct
   - [ˈkɑsɐ] for каса — correct

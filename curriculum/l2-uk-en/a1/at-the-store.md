@@ -20,10 +20,10 @@ Related: a1-37 (At the Market), a1-39 (Buying Tickets)
 Англійською ми кажемо "store". Українською є різниця.
 
 **Магазин** [mɑɦɑˈzɪn] — це загальне слово. Це може бути магазин одягу. Це може бути будівельний магазин. Або це продуктовий магазин.
-*   **Продуктовий магазин** [prɔdʊkˈtɔʋɪi̯ mɑɦɑˈzɪn] — Grocery store.
+*   **Продуктовий магазин** [prɔdukˈtɔʋɪi̯ mɑɦɑˈzɪn] — Grocery store.
 *   **Я йду в магазин.** — I am going to the store.
 
-**Супермаркет** [sʊperˈmɑrket] — це великий магазин самообслуговування. Тут українці купують продукти на тиждень.
+**Супермаркет** [superˈmɑrket] — це великий магазин самообслуговування. Тут українці купують продукти на тиждень.
 *   **Цей супермаркет дуже великий.** — This supermarket is very big.
 *   **Ми в супермаркеті.** — We are in the supermarket.
 
@@ -49,12 +49,12 @@ Related: a1-37 (At the Market), a1-39 (Buying Tickets)
     *   This focuses on the *movement* to a destination.
     *   *Usage:* "Where are you?" "Я йду в магазин." (I am walking to the store).
 
-2.  **Робити закупи** [rɔˈbɪtɪ zɑˈkʊpɪ] — To do the shopping.
+2.  **Робити закупи** [rɔˈbɪtɪ zɑˈkupɪ] — To do the shopping.
     *   This focuses on the *activity* of buying supplies.
     *   *Usage:* "What are you doing on Saturday?" "Я роблю закупи." (I am doing the shopping).
 
 > [!warning]
-> **Avoid the Russianism:** You might hear some people use the word "покупка" (purchase) to mean shopping, but standard Ukrainian prefers **купівля** [kʊˈpiʋlʲɑ] for the process or **закупи** for the activity. Stick to "Я йду в магазин" for now—it is always correct!
+> **Avoid the Russianism:** You might hear some people use the word "покупка" (purchase) to mean shopping, but standard Ukrainian prefers **купівля** [kuˈpiʋlʲɑ] for the process or **закупи** for the activity. Stick to "Я йду в магазин" for now—it is always correct!
 
 ## Відділи та товари
 
@@ -63,9 +63,9 @@ Related: a1-37 (At the Market), a1-39 (Buying Tickets)
 ### Основні відділи
 Ось три головні відділи:
 
-1.  **Овочі та фрукти** [ˈɔʋɔt͡ʃi tɑ ˈfrʊktɪ] — Vegetables and fruits. Зазвичай це перший відділ.
+1.  **Овочі та фрукти** [ˈɔʋɔt͡ʃi tɑ ˈfruktɪ] — Vegetables and fruits. Зазвичай це перший відділ.
     *   **Це перший відділ.** Тут завжди свіжі продукти.
-    *   **Яблука** [ˈjɑblʊkɑ], **банани** [bɑˈnɑnɪ], **картопля** [kɑrˈtɔplʲɑ] і **морква** [ˈmɔrkvɑ].
+    *   **Яблука** [ˈjɑblukɑ], **банани** [bɑˈnɑnɪ], **картопля** [kɑrˈtɔplʲɑ] і **морква** [ˈmɔrkʋɑ].
     *   **Я люблю свіжі фрукти.** (I love fresh fruits.)
 
 2.  **Хліб** [xlʲib] та **Випічка** [ˈʋɪpit͡ʃkɑ] — Bread and Bakery.
@@ -83,7 +83,7 @@ Related: a1-37 (At the Market), a1-39 (Buying Tickets)
 ### Молочний та М'ясний відділи
 Ці відділи дуже важливі.
 
-**Молочний відділ** [mɔˈlɔtʃnɪi̯ ʋidˈdʲil] — Dairy department.
+**Молочний відділ** [mɔˈlɔt͡ʃnɪi̯ ʋidˈdʲil] — Dairy department.
 Тут є **молоко** (milk), **масло** (butter) і **сметана**. Також тут є **кефір** та **ряжанка**.
 *   **Я купую молоко і сир.** (I buy milk and cheese.)
 *   **Сметана тут.** (Sour cream is here.)
@@ -97,7 +97,7 @@ Related: a1-37 (At the Market), a1-39 (Buying Tickets)
 This is the "Confectionery" or "Sweets" department. Часто він називається просто **Солодощі** [sɔlɔˈdɔʃt͡ʃi].
 
 **Українці мають «солодкий зуб» (sweet tooth).** У цьому відділі ви знайдете:
-*   **Цукерки** [t͡sʊˈkɛrkɪ] — Candies/Chocolates.
+*   **Цукерки** [t͡suˈkɛrkɪ] — Candies/Chocolates.
 *   **Печиво** [ˈpɛt͡ʃɪʋɔ] — Cookies/Biscuits.
 *   **Торти** [ˈtɔrtɪ] — Cakes.
 
@@ -115,7 +115,7 @@ Imagine you are going to the store. Here is your list in Ukrainian.
 > 7. **Вода** (без газу)
 
 ### Grammar: У якому відділі?
-To ask "In which department...?", we use the phrase **У якому відділі...?** [u jɑˈkɔmʊ ʋidˈdʲilʲi]. Notice that the word *відділ* changes to *відділі*. This is the Locative case, which tells us *where* something is.
+To ask "In which department...?", we use the phrase **У якому відділі...?** [u jɑˈkɔmu ʋidˈdʲilʲi]. Notice that the word *відділ* changes to *відділі*. This is the Locative case, which tells us *where* something is.
 
 *   **У якому відділі молоко?** — In which department is the milk?
 *   **У якому відділі цукерки?** — In which department are the sweets?
@@ -142,14 +142,14 @@ To ask "In which department...?", we use the phrase **У якому відділ
 > **Fact:** No! **Знаходити** means "to find" (active), but **знаходити** + **ся** (reflexive) means "to find itself" or "to be located." If you say "Я знаходжу хліб," you mean "I am finding bread" (like a treasure hunter). If you ask "Де знаходиться хліб?", you mean "Where is the bread located?"
 
 ### Скажіть, будь ласка...
-Ввічливість відкриває двері. Перед питанням використовуйте магічну фразу: **Скажіть, будь ласка...** [skɑˈʒitʲ bʊdʲ ˈlɑskɑ] (Tell me, please...).
+Ввічливість відкриває двері. Перед питанням використовуйте магічну фразу: **Скажіть, будь ласка...** [skɑˈʒitʲ budʲ ˈlɑskɑ] (Tell me, please...).
 
 *   **Скажіть, будь ласка, де цукор?** — Tell me please, where is the sugar?
 *   **Вибачте, скажіть, будь ласка, де вода?** — Excuse me, tell me please, where is the water?
 
 **Вибачте** [ʋɪˈbɑt͡ʃtɛ] — "Excuse me" — це чудове слово. Воно привертає увагу працівника.
 
-Ви також можете сказати: **Підкажіть, будь ласка...** [pidkɑˈʒitʲ bʊdʲ ˈlɑskɑ] (Could you tell me, please...). Це теж дуже ввічливо.
+Ви також можете сказати: **Підкажіть, будь ласка...** [pidkɑˈʒitʲ budʲ ˈlɑskɑ] (Could you tell me, please...). Це теж дуже ввічливо.
 *   **Підкажіть, будь ласка, де кава?** — Could you tell me, please, where is the coffee?
 
 ### Тут vs Там
@@ -284,7 +284,7 @@ Examples:
 ### Asking about Price
 Іноді ціни немає. Треба запитати: "Скільки це коштує?".
 
-*   **Скільки коштує?** [ˈskilʲkɪ kɔʃˈtʊjɛ] — How much does it cost?
+*   **Скільки коштує?** [ˈskilʲkɪ kɔʃˈtujɛ] — How much does it cost?
     *   *Usage:* **Скільки коштує молоко?** (How much does milk cost?)
 
 *   **Яка ціна?** [jɑˈkɑ t͡sʲiˈnɑ] — What is the price?

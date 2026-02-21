@@ -10,9 +10,9 @@ Good, I have all the source files. Now let me conduct the deep adversarial revie
 
 Ukrainian В before a vowel is the labiodental approximant [ʋ], not the bilabial [w]. This is a systematic error across three transcriptions:
 
-- **Line 60**: `[d͡zwoˈnɪtɪ]` for дзвонити — should be `[d͡zʋoˈnɪtɪ]`
-- **Line 134**: `[xwɪˈlɪnkɐ]` for хвилинку — should be `[xʋɪˈlɪnkɐ]`
-- **Line 217**: `[pɛrɛd͡zwoˈnɪtɪ]` for передзвонити — should be `[pɛrɛd͡zʋoˈnɪtɪ]`
+- **Line 60**: `[d͡zʋoˈnɪtɪ]` for дзвонити — should be `[d͡zʋoˈnɪtɪ]`
+- **Line 134**: `[xʋɪˈlɪnkɐ]` for хвилинку — should be `[xʋɪˈlɪnkɐ]`
+- **Line 217**: `[pɛrɛd͡zʋoˈnɪtɪ]` for передзвонити — should be `[pɛrɛd͡zʋoˈnɪtɪ]`
 
 Note: the module correctly uses [ʋ] for телефонувати `[tɛlɛfonuˈʋɑtɪ]` on the same line 60, and for До зв'язку `[do zʋjɐzˈku]` on line 148 — so this is inconsistency, not ignorance.
 
@@ -45,7 +45,7 @@ The group-sort categorizes «Що Ви хотіли?» under "Офіційний
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/phone-basics.md
 ---OLD---
-**дзвонити** [d͡zwoˈnɪtɪ]
+**дзвонити** [d͡zʋoˈnɪtɪ]
 ---NEW---
 **дзвонити** [d͡zʋoˈnɪtɪ]
 ===FIX_END===
@@ -53,7 +53,7 @@ FILE: curriculum/l2-uk-en/a1/phone-basics.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/phone-basics.md
 ---OLD---
-**Зачекайте одну хвилинку.** [xwɪˈlɪnkɐ]
+**Зачекайте одну хвилинку.** [xʋɪˈlɪnkɐ]
 ---NEW---
 **Зачекайте одну хвилинку.** [xʋɪˈlɪnkɐ]
 ===FIX_END===
@@ -61,7 +61,7 @@ FILE: curriculum/l2-uk-en/a1/phone-basics.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/phone-basics.md
 ---OLD---
-**передзвонити** [pɛrɛd͡zwoˈnɪtɪ]
+**передзвонити** [pɛrɛd͡zʋoˈnɪtɪ]
 ---NEW---
 **передзвонити** [pɛrɛd͡zʋoˈnɪtɪ]
 ===FIX_END===

@@ -64,7 +64,7 @@ from build_module import (
     load_state, save_state, is_phase_complete, _now_iso,
     # Dispatch helpers
     run_script, fill_template, dispatch_gemini,
-    extract_phase_output, run_verify, VENV_PYTHON,
+    extract_phase_output, run_verify, write_review_with_hash, VENV_PYTHON,
     # Phase helpers
     _build_seam_context, _parse_section, _apply_section_fixes,
     _identify_affected_sections, _build_fix_prompt,
@@ -882,9 +882,8 @@ def phase_6_claude_review(ctx: ModuleContext) -> bool:
         log("  Phase 6 (Claude): FAILED — falling back to Gemini review")
         return phase_6_review(ctx)
 
-    # Save review to canonical path
-    ctx.paths["review"].parent.mkdir(parents=True, exist_ok=True)
-    ctx.paths["review"].write_text(review_text, encoding="utf-8")
+    # Save review with content hash for staleness detection (#618)
+    write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
 
     # Also save to orchestration dir
     extracted = ctx.orch_dir / "phase-6-review.md"
@@ -1020,10 +1019,9 @@ def phase_9_final_review(ctx: ModuleContext) -> bool:
         log("  Phase 9: FAILED — Claude CLI unavailable")
         return False  # Hard fail: can't review without Claude
 
-    # Save final review report
+    # Save final review with content hash for staleness detection (#618)
     final_review_path = ctx.paths["review"].parent / f"{ctx.slug}-final-review.md"
-    final_review_path.parent.mkdir(parents=True, exist_ok=True)
-    final_review_path.write_text(report, encoding="utf-8")
+    write_review_with_hash(final_review_path, report, ctx.paths["md"])
     log(f"  Phase 9: Report saved → {final_review_path.name}")
 
     # Save to orchestration dir too

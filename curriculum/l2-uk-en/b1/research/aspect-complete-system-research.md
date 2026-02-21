@@ -1,33 +1,35 @@
 # Дослідження: Вид дієслова: повна система
 
 ## State Standard Reference
-§4.2.3.1: "утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду: хотів, хотіла, хотіло, хотіли; побачив, побачила, побачило, побачили; ... дієвідмінювання дієслів недоконаного виду в майбутньому часі... дієвідмінювання дієслів доконаного виду в майбутньому часі: скажу, закричите, поборють."
-Alignment: This module systematically covers the formation and usage of aspect pairs in past and future tenses as explicitly required by the standard for B1 level (lines 2269-2291).
+§4.2.3.1: "утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду... дієвідмінювання дієслів недоконаного виду в майбутньому часі – складена форма: буду боротися... синтетична форма: боротимуся... дієвідмінювання дієслів доконаного виду в майбутньому часі: скажу, закричите, поборють."
+Alignment: Цей модуль безпосередньо розкриває повну видову систему дієслів у всіх часах згідно зі стандартом, звертаючи особливу увагу на розрізнення аналітичної та синтетичної форм майбутнього часу недоконаного виду, а також синтетичної форми доконаного виду.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **процес** | High (General/Academic) | *у процесі*, *навчальний процес*, *тривалий процес*, *контролювати процес* |
-| **результат** | High (General) | *досягти результату*, *кінцевий результат*, *позитивний результат*, *у результаті* |
-| **тривалість** | Med (General/Formal) | *тривалість дії*, *середня тривалість*, *тривалість життя* |
-| **завершення** | Med (Formal) | *після завершення*, *успішне завершення*, *стадія завершення* |
-| **намір** | High (General) | *мати намір*, *серйозні наміри*, *з наміром* |
+| процес | Дуже висока (загальновживане) | у процесі, навчальний процес, тривалий процес, контролювати процес |
+| результат | Дуже висока (загальновживане) | досягти результату, кінцевий результат, позитивний результат, у результаті |
+| тривалість | Висока (формальний/науковий стиль) | тривалість дії, середня тривалість, тривалість життя |
+| завершення | Середня (офіційно-діловий) | після завершення, успішне завершення, стадія завершення |
+| намір | Висока (когнітивна сфера) | мати намір, серйозні наміри, з наміром |
 
 ## Cultural Hooks
-1. **Сергій Параджанов "Тіні забутих предків"**: The film's visual language alternates between static, painting-like frames (Perfective/Result) and swirling, dynamic camera movement (Imperfective/Process). This artistic dichotomy perfectly illustrates the "Director's Lens" metaphor for aspect.
-2. **Folk Wisdom**: "Зробив діло — гуляй сміло" (Perfective: Result leads to freedom) vs. "Вік живи — вік учись" (Imperfective: Life and learning are continuous processes).
-3. **Philosophical Distinction**: The Ukrainian worldview distinguishes clearly between *being* in a state (переживати - Impf) and *changing* reality (зробити - Perf).
+1. Візуальна мова Сергія Параджанова у культовому фільмі «Тіні забутих предків»: використання динамічної камери для передачі безперервного процесу (недоконаний вид) та статичних, майже живописних кадрів для фіксації результату і завершеності (доконаний вид).
+2. Українська пареміологія (народна мудрість): прислів'я «Зробив діло — гуляй сміло» (доконаний вид акцентує, що лише результат дає свободу) та «Вік живи — вік учись» (недоконаний вид ілюструє життя як безперервний процес).
 
 ## Common Learner Errors
-1. **Analytic Future with Perfective**: *«Я буду написати»* → *«Я напишу»* (Perfective future is synthetic) OR *«Я буду писати»* (Imperfective future). Cause: Overgeneralization of English "will + verb" structure.
-2. **Negation Aspect**: *«Я не прочитав цей фільм»* → *«Я не читав/не бачив цей фільм»*. Cause: Learners use Perfective for single past events even under negation, whereas Ukrainian often prefers Imperfective to deny the *fact* of the action.
-3. **General Factual Confusion**: *«Ти прочитав "Кобзар"?»* (focus on finishing) vs *«Ти читав "Кобзар"?»* (focus on experience). Cause: Learners default to Perfective for completed past actions, missing the "General Factual" usage of Imperfective.
+1. Овергенералізація аналітичного майбутнього часу → "буду + доконаний вид" (неправильно: «Я буду написати»; правильно: «Я напишу» або «Я буду писати») — виникає через калькування англійської структури "will + infinitive".
+2. Використання недоконаного виду замість доконаного для вираження досвіду з акцентом на завершенні → неправильно: «Ти читав Кобзар?» (коли питають про повне ознайомлення), правильно: «Ти прочитав Кобзар?» — змішування загальнофактичного значення з результативним.
+3. Логіка заперечення факту дії → очікування доконаного виду для одноразових подій, але українська мова віддає перевагу недоконаному для повного заперечення події в минулому (правильно: «Я не бачив цей фільм», неправильно: «Я не побачив цей фільм»).
 
 ## Cross-References
-- Builds on: A2 aspect basics (recognition of pairs), B1-05 (Metalanguage).
-- Prepares for: B1-07 (Aspect in Past), B1-08 (Result vs Process), B1-15 (Checkpoint).
+- Builds on: b1-05 (Metalanguage checkpoint), A2 aspect basics (impf/pf recognition)
+- Prepares for: b1-07 (Aspect in past - single vs repeated), b1-08 (Aspect in past - result vs process), b1-15 (Aspect mastery checkpoint)
 
 ## Notes for Content Writing
-- **Visuals**: Use the camera lens metaphor consistently. "Video mode" = Imperfective (zoom in on process). "Photo mode" = Perfective (snapshot of result).
-- **Ingressive Aspect**: When introducing `полюбити` or `побігти`, clarify that the prefix `по-` here marks the *start* of the state/action, not just a generic perfective.
-- **TTT Structure**: Ensure the diagnostic test traps the "General Factual" error early to create a "teachable moment".
+- Модуль має бути на 100% україномовним (ніякого англійського скаффолдингу в тексті, поясненнях чи заголовках).
+- Уникати порівнянь видової системи української мови з російською. Для контрастивного аналізу (за потреби) залучати польську або португальську мови як нейтральний фон.
+- Використовувати модальне хеджування («ймовірно», «можливо», «як правило») для підкреслення семантичних нюансів вибору виду.
+- Кожен концепт має бути детально пояснений перед тим, як з'являтиметься в прикладах.
+- Усі елементи однієї категорії повинні бути представлені на однаковому рівні глибини (кожен отримує власний підзаголовок H3).
+- Використовувати TTT (Test-Teach-Test) педагогіку. Включити схеми вибору виду (алгоритми) та таблиці з розбором прикладів.

@@ -18,18 +18,18 @@
   Module:  dative-verbs
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  4 Outline Compliance Errors
+  2 Outline Compliance Errors
   failing gates:
-    lesson: 2034/3000 (raw: 2412) | pedagogy: 4 violations | immersion: 79.9% HIGH (target 50-60% (A2.1))
+    lesson: 3058/3000 (raw: 3477) | pedagogy: 2 violations | immersion: 34.9% LOW (target 50-60% (A2.1))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 35/100)
-     → 5 violations (moderate)
-     → Immersion 20% off target
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
+     → 3 violations (minor)
+     → Immersion 15% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/audit/dative-verbs-audit.md
@@ -38,7 +38,7 @@
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
   Critical Failures:
-    • 4 Outline Compliance Errors
+    • 2 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/dative-verbs-audit.log for details)
         ```

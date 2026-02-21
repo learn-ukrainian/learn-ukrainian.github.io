@@ -1,4 +1,4 @@
-FAIL: build_module_v2.py c1-hist 136 — E2E
+PASS: build_module_v2.py c1-hist 136 — E2E
 
   Module:   finalnyi-syntez
   Track:    c1-hist
@@ -6,5 +6,5 @@ FAIL: build_module_v2.py c1-hist 136 — E2E
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-20T23:41:43Z
+  Verdict:  PASS
+  Date:     2026-02-21T00:24:28Z

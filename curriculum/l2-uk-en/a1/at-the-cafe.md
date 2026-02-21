@@ -18,7 +18,7 @@ Related: a1-18 (Food and Shopping), a1-36 (At the Restaurant)
 
 **Добрий день!** I am so glad you stopped by. Take a seat, make yourself comfortable. Can you smell that? That represents the soul of a Ukrainian city: the aroma of fresh **кава** [ˈkaʋɐ] (coffee).
 
-For us, coffee is not just a drink; it is a ritual. Especially in cities like Lviv, people can sit for hours with one small cup, talking about life, love, and politics. We don't just "drink coffee"—we "go for coffee" (**піти на каву** [piˈtɪ nɑ ˈkaʋʊ]). It implies spending time together, even if you actually drink tea or juice.
+For us, coffee is not just a drink; it is a ritual. Especially in cities like Lviv, people can sit for hours with one small cup, talking about life, love, and politics. We don't just "drink coffee"—we "go for coffee" (**піти на каву** [piˈtɪ nɑ ˈkaʋu]). It implies spending time together, even if you actually drink tea or juice.
 
 > [!culture]
 > **Cultural Insight: The Slow Sip**
@@ -57,7 +57,7 @@ When you enter a café, you become a guest. The relationship between a guest and
 The absolute first rule: Say hello. Walking up to the counter and just saying "Latte, please" is considered rude.
 
 - **Добрий день!** [ˈdɔ.brɪi̯ dɛnʲ] — Good day! (Standard, polite)
-- **Вітаю!** [ʋʲiˈtɑ.jʊ] — Greetings! (Friendly, slightly less formal but very common)
+- **Вітаю!** [ʋʲiˈtɑ.ju] — Greetings! (Friendly, slightly less formal but very common)
 
 ### The Golden Rule: «Ви» vs «Ти»
 In a café, you are always on **Ви** terms with the staff, regardless of their age. Even if the barista looks like a teenager, you use **Ви**. This creates a professional distance and shows respect.
@@ -151,14 +151,14 @@ These words are easy. You don't have to do anything.
 - **Дайте сік.** (Give juice.)
 - **Я візьму сік.** (I will take juice.)
 
-**Круасан** [krʊ.ɐˈsɑn] (Croissant) — Masculine.
+**Круасан** [kru.ɐˈsɑn] (Croissant) — Masculine.
 - **Я замовлю круасан.** (I will order a croissant.)
 - **Я буду круасан.** (I will have a croissant.)
 
 ### How to Say "I Will Have..."
 You cannot just shout "Coffee!" politely. You need a phrase to introduce your order.
 
-**1. Я буду...** [jɑ ˈbu.dʊ]
+**1. Я буду...** [jɑ ˈbu.du]
 Literally: "I will be..." (Meaning: I will have...)
 This is very common and polite.
 - **Я буду воду.** (I will have water.)
@@ -232,11 +232,11 @@ Coffee is often customized. We use the preposition **з** (with) or **без** (
 - **з медом** [z ˈmɛ.dɔm] — with honey
 
 **Без** (Without) + Genitive Case (chunks):
-- **без цукру** [bɛz ˈt͡su.krʊ] — without sugar
+- **без цукру** [bɛz ˈt͡su.kru] — without sugar
 - **без молока** [bɛz mo.loˈkɑ] — without milk
-- **без газу** [bɛz ˈɦɑ.zʊ] — without gas
+- **без газу** [bɛz ˈɦɑ.zu] — without gas
 - **без лимона** [bɛz lɪˈmɔ.nɐ] — without lemon
-- **без меду** [bɛz ˈmɛ.dʊ] — without honey
+- **без меду** [bɛz ˈmɛ.du] — without honey
 
 > [!tip]
 > **Запам'ятайте!** (Memorize!)
@@ -299,7 +299,7 @@ To get the bill, catch the waiter's eye and say:
 
 ### Payment Methods
 The waiter will ask:
-- **Готівкою чи карткою?** [ɦoˈtʲiu̯.ko.jʊ t͡ʃɪ ˈkɑrt.ko.jʊ]
+- **Готівкою чи карткою?** [ɦoˈtʲiu̯.ko.ju t͡ʃɪ ˈkɑrt.ko.ju]
 
 Your answers:
 - **Карткою, будь ласка.** (By card, please.)

@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-19T20:39:10Z",
+      "ts": "2026-02-21T00:20:32Z",
       "task_id": "v3-syntez-pislya-2014-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

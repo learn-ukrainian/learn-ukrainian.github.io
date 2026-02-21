@@ -107,7 +107,8 @@ a:hover { text-decoration: underline; }
   <div class="stat-card"><div class="value" style="color:var(--orange)" id="total-research">—</div><div class="label">Research Done</div></div>
   <div class="stat-card"><div class="value" style="color:var(--blue)" id="total-content">—</div><div class="label">Content Done</div></div>
   <div class="stat-card"><div class="value" style="color:var(--green)" id="total-audit">—</div><div class="label">Audit Passing</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--purple)" id="total-review">—</div><div class="label">Final Reviews</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--purple)" id="total-reviewed">—</div><div class="label">Reviewed</div></div>
+  <div class="stat-card"><div class="value" style="color:#58a6ff" id="total-final-review">—</div><div class="label">Final QA</div></div>
 </div>
 
 <div class="container">
@@ -190,7 +191,7 @@ async function loadModulePanel(trackId, panel) {
 }
 
 function renderTrack(trackId, trackData) {
-  const { total, profile, research_done, content_done, audit_passing, final_review_done } = trackData;
+  const { total, profile, research_done, content_done, audit_passing, reviewed, final_review_done } = trackData;
   const profileColor = PROFILE_COLOR[profile] || '#8b949e';
 
   return `
@@ -212,7 +213,11 @@ function renderTrack(trackId, trackData) {
           ${progressBar(audit_passing, total, 'fill-audit')}
         </div>
         <div class="phase-col">
-          <div class="phase-label">Final Review</div>
+          <div class="phase-label">Reviewed</div>
+          ${progressBar(reviewed || 0, total, 'fill-review')}
+        </div>
+        <div class="phase-col">
+          <div class="phase-label">Final QA</div>
           ${progressBar(final_review_done, total, 'fill-review')}
         </div>
       </div>
@@ -243,7 +248,8 @@ async function load() {
     document.getElementById('total-research').textContent = t.research_done;
     document.getElementById('total-content').textContent = t.content_done;
     document.getElementById('total-audit').textContent = t.audit_passing;
-    document.getElementById('total-review').textContent = t.final_review_done;
+    document.getElementById('total-reviewed').textContent = t.reviewed || 0;
+    document.getElementById('total-final-review').textContent = t.final_review_done;
 
     const container = document.getElementById('tracks-container');
     const trackEntries = Object.entries(data.tracks)

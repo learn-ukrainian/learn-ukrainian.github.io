@@ -97,6 +97,12 @@ from .imperial_terminology import (
 from .euphony import (
     check_euphony_violations,
 )
+from .content_gaming import (
+    check_content_gaming,
+)
+from .review_gaming import (
+    check_review_gaming,
+)
 
 __all__ = [
     # Grammar
@@ -174,4 +180,8 @@ __all__ = [
     'check_imperial_terminology',
     # Euphony
     'check_euphony_violations',
+    # Content Gaming Detection
+    'check_content_gaming',
+    # Review Gaming Detection
+    'check_review_gaming',
 ]

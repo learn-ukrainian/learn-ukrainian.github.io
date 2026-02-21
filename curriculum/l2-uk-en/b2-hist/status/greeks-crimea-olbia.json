@@ -2,7 +2,7 @@
   "module": "greeks-crimea-olbia",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-19T18:44:14.988109Z",
+  "last_audit": "2026-02-21T15:27:26.729065Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-19T11:57:52.152058Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5182/5000 (raw: 5424)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5182/5000 (raw: 5424) | pedagogy: 19 violations"
     },
     "activities": {
       "status": "pass",
@@ -49,16 +49,16 @@
       "message": "Refresh recommended: Research has 5+ sources but content cites 0"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

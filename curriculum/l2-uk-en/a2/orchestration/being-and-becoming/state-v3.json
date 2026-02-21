@@ -2,5 +2,31 @@
   "track": "a2",
   "slug": "being-and-becoming",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-21T07:42:01Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-21T07:42:01Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T07:42:03Z",
+      "note": "adopted-existing-meta"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-21T09:07:45Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-21T09:11:26Z",
+      "attempts": 1
+    }
+  }
 }
