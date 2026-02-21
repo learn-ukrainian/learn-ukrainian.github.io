@@ -2,6 +2,9 @@
 
 This document describes all scripts and workflows for module creation, validation, and generation.
 
+> **Housekeeping (2026-02-21):** 189 unused/one-off scripts archived to `scripts/_archived/`.
+> 81 active scripts remain in `scripts/`. See [#616](https://github.com/krisztiankoos/learn-ukrainian/issues/616).
+
 > **🚀 Module Creation Workflow:**
 >
 > Use `/module {level} {num}` as the main entry point. See [9-Phase Workflow](#9-phase-module-workflow-rfc-001) below.

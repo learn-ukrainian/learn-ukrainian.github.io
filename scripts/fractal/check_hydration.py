@@ -37,7 +37,6 @@ def find_template(focus, level):
     
     for c in candidates:
         path = template_dir / c
-        print(f"DEBUG: Checking {path} (Exists: {path.exists()})")
         if path.exists():
             return path
     return None
