@@ -19,7 +19,7 @@
 **Operational Directives**:
 
 1.  **Content Standards**:
-    *   **Word Count**: Adhere to level-specific minimum targets (A1: 2000, A2: 3000, B1: 4000, B2: 4000, C1: 4000, C2: 5000, Seminars: 5000).
+    *   **Word Count** (from `config.py` v2026-02-15): A1: 2000, A2: 3000, B1+: 4000, Seminars (B2-HIST/C1-BIO/C1-HIST/LIT/C2/OES/RUTH): 5000. If this date is older than config.py's latest change, re-read config.py.
     *   **Activity Density**: Comply with level-specific schemas (e.g., A1-B1: ~8-10 activities/12 items; Seminar tracks: 3-9 activities/1+ items for deep analysis).
     *   **Audit Compliance**: Pass `audit_module.py` and `pipeline.py` gates.
     *   **Linguistic Depth**: Ensure IPA, Ukrainian quotes, proverbs (B1+), cultural context.

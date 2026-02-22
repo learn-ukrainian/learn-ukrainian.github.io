@@ -8,6 +8,7 @@
 
 **NEVER negotiate word counts down.**
 
+Word targets (from `config.py` v2026-02-15 — if stale, re-read config.py):
 - A1 modules: **2000 words minimum**
 - A2 modules: **3000 words minimum**
 - B1+ Regular modules: **4000 words minimum**
@@ -358,7 +359,7 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 .venv/bin/python scripts/validate_plan_config.py {level}
 ```
 
-**Word targets by level (from config.py, Feb 2026):**
+**Word targets by level (from `config.py` v2026-02-15 — if stale, re-read config.py):**
 | Level | Config Key | target_words |
 |-------|------------|--------------|
 | A1 | A1 | 2000 |
