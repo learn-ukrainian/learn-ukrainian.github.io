@@ -1,5 +1,9 @@
 # Lessons Learned - Self-Improvement Log
 
+> **Note**: Entries before 2026-02-20 use legacy numeric phase names (0/1/2/3/4/5).
+> Canonical pipeline phases are: **A** (Research+Meta), **B** (Content), **C** (Activities+Vocab),
+> **audit** (Automated), **D** (Cross-Agent Review), **F** (Final QA).
+
 **Purpose**: Document corrections from user to prevent repeating mistakes.
 
 **Format**:

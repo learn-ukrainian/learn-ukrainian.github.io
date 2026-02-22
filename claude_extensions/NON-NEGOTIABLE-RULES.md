@@ -8,10 +8,10 @@
 
 **NEVER negotiate word counts down.**
 
-- B2 History modules: **4000 words minimum** (often 4300+ with all sections)
-- B2 Regular modules: **1800 words minimum**
-- C1 Biography modules: **4000 words minimum**
-- C1 Regular modules: **2000 words minimum**
+- A1 modules: **2000 words minimum**
+- A2 modules: **3000 words minimum**
+- B1+ Regular modules: **4000 words minimum**
+- Seminar tracks (B2-HIST, C1-BIO, C1-HIST, LIT, C2, OES, RUTH): **5000 words minimum**
 
 **If a module is under target:**
 
@@ -86,9 +86,9 @@ TOTAL: 1400 / 1400 ✅
 2. Fix sections >10% under target
 3. Don't worry about sections slightly over target (content depth is good)
 
-### 4. Stage 4 Loop - Complete or Fail
+### 4. Phase D Loop (Review → Fix → Pass)
 
-**Stage 4 is a loop: Review → Fix → Review → Fix until PASS.**
+**Phase D is a loop: Review → Fix → Review → Fix until PASS.**
 
 **You do NOT:**
 
@@ -336,7 +336,7 @@ scripts/audit_module.sh {md_file}
 # If still violations, repeat cycle (rare with comprehensive fix)
 ```
 
-**This is MANDATORY for /module-fix and all Stage 4 work.**
+**This is MANDATORY for /module-fix and all Phase D work.**
 
 **If you use iterative fix-audit loops, you are wasting tokens and user time.**
 
@@ -358,19 +358,21 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 .venv/bin/python scripts/validate_plan_config.py {level}
 ```
 
-**Word targets by level (from config.py):**
+**Word targets by level (from config.py, Feb 2026):**
 | Level | Config Key | target_words |
 |-------|------------|--------------|
-| A1 | A1 | 300-750 (graduated) |
-| A2 | A2 | 1000 |
-| B1 | B1-grammar/vocab/cultural | 1200-1500 |
-| B2 | B2 | 1750 |
-| B2-HIST | B2-history | 4000 |
-| C1 | C1 | 2000-3500 |
-| C1-HIST | C1-history | 4000 |
-| C1-BIO | C1-biography | 4000 |
-| LIT | LIT | 4500 |
-| C2 | C2 | 2000 |
+| A1 | A1 | 2000 |
+| A2 | A2 | 3000 |
+| B1 | B1-grammar/vocab/cultural | 4000 |
+| B2 | B2 | 4000 |
+| B2-HIST | B2-history | 5000 |
+| C1 | C1 | 4000 |
+| C1-HIST | C1-history | 5000 |
+| C1-BIO | C1-biography | 5000 |
+| LIT | LIT | 5000 |
+| C2 | C2 | 5000 |
+| OES | OES | 5000 |
+| RUTH | RUTH | 5000 |
 
 **You MUST:**
 

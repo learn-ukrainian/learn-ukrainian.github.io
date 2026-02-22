@@ -71,6 +71,29 @@ Generate two YAML blocks: activities and vocabulary.
 
 Using a forbidden type wastes the entire activity generation phase. Check the allowed list BEFORE writing each activity.
 
+### Correct Quiz Schema (REFERENCE — read this FIRST)
+
+**This is the EXACT correct quiz structure. Anchor to this pattern before reading mistakes below.**
+
+```yaml
+- type: quiz
+  title: "Перевірте знання"
+  items:  # minItems: 8, question ≥5 words
+    - question: "Яка частина мови позначає дію або стан предмета?"  # ≥5 words!
+      explanation: "Дієслово позначає дію або стан."  # HERE at question level
+      options:  # exactly 4
+        - text: "дієслово"
+          correct: true
+        - text: "іменник"
+          correct: false
+        - text: "прикметник"
+          correct: false
+        - text: "прислівник"
+          correct: false
+```
+
+**Key rules**: `explanation` at QUESTION level (not inside options), `question` ≥5 words, exactly 4 options, exactly 1 `correct: true`.
+
 ### Common Schema Mistakes (FIX BEFORE OUTPUT)
 
 **These mistakes caused audit failures in previous rebuilds. Check EVERY activity against these rules:**
@@ -302,24 +325,9 @@ Return TWO YAML blocks with clear delimiters:
           correct: false
 ```
 
-#### quiz (reminder — explanation goes at QUESTION level)
+#### quiz
 
-```yaml
-- type: quiz
-  title: "Перевірте знання"
-  items:  # minItems: 8, question ≥5 words
-    - question: "Яка частина мови позначає дію або стан предмета?"  # ≥5 words!
-      explanation: "Дієслово позначає дію або стан."  # HERE at question level
-      options:  # exactly 4
-        - text: "дієслово"
-          correct: true
-        - text: "іменник"
-          correct: false
-        - text: "прикметник"
-          correct: false
-        - text: "прислівник"
-          correct: false
-```
+See **"Correct Quiz Schema"** section above for the full reference pattern.
 
 ❌ WRONG: `explanation` inside an option object — it goes at the question level
 

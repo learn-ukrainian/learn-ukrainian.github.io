@@ -26,7 +26,20 @@
     *   **Historical Accuracy**: Verify via Ukrainian primary sources only.
     *   **Decolonization**: Actively debunk Russian/Soviet myths; highlight Ukrainian agency.
     *   **Theory-First**: Integrate grammar/history explanations before practice.
-    *   **Anti-Hallucination Mandate (Crucial)**: Never fabricate or embellish linguistic or historical facts to artificially elevate the Ukrainian language ("Patriotic Hallucination"). All claims must be grounded in verified academic reality, enforced via rigorous Phase 0 fact-checking.
+    *   **Anti-Hallucination Mandate (Crucial)**: Never fabricate or embellish linguistic or historical facts to artificially elevate the Ukrainian language ("Patriotic Hallucination"). All claims must be grounded in verified academic reality, enforced via rigorous Phase A fact-checking.
+
+### Canonical Pipeline Phases
+
+| Pipeline Phase | Name | Agent | Legacy Name (pre-Feb 2026) |
+|---------------|------|-------|----------------------------|
+| **A** | Research + Meta | Gemini | Phase 0 / 0.5 / 1 |
+| **B** | Content prose | Gemini | Phase 2 |
+| **C** | Activities + Vocab | Gemini | Phase 3 |
+| **audit** | Automated audit + fix | Script | — |
+| **D** | Adversarial review | Claude | Phase 4 / 5 |
+| **F** | Final QA gate | Selectable | Phase 7 |
+
+> **Always use letter names (A/B/C/D/F).** Numeric names (0/1/2/3/4/5) are deprecated.
 
 2.  **Research Protocol**:
     *   **Source Priority**: Ukrainian academic sites (esu.com.ua, history.org.ua, elib.nlu.org.ua, litopys.org.ua).
@@ -221,7 +234,7 @@ yq '.levels.c1.modules' curriculum/l2-uk-en/curriculum.yaml
 16. **Word Targets are MINIMUMS**: NEVER reduce `word_target` to match short content. Expand content to meet targets.
 17. **Seminar Batch Limit (CRITICAL)**: For Seminar Tracks (`c1-bio`, `b2-hist`, `lit`), the optimal processing batch is 2 modules. This ensures high linguistic quality and prevents context exhaustion or output truncation.
 18. **Sniper Search Strategy (MANDATORY)**: Always include `site:esu.com.ua OR site:history.org.ua OR site:elib.nlu.org.ua` in research queries to ensure C1-level academic accuracy and decolonized narratives.
-19. **Historiographical Mapping (Phase 0.5)**: For high-tension modules, include a "Contested Terms" table in research notes comparing Polish/Ukrainian/Russian terminology.
+19. **Historiographical Mapping (Phase A enrichment)**: For high-tension modules, include a "Contested Terms" table in research notes comparing Polish/Ukrainian/Russian terminology.
 20. **Propaganda Filter**: Reviewers must explicitly check if phrasing echoes Russian dezinformatsiia framing (especially for Volhynia, Holodomor, OUN/UPA).
 21. **Semantic Nuance Gate (C1+)**: Ensure sufficient usage of modal hedging markers («можливо», «ймовірно», «з одного боку», «водночас») to reflect complexity.
 22. **Brutally Honest Self-Review**: You are the final gatekeeper. Reviews must be brutally honest and critical. If content is "trash" or doesn't meet the "Theory-First" depth, reject and fix it immediately. No sugarcoating.
@@ -246,7 +259,7 @@ yq '.levels.c1.modules' curriculum/l2-uk-en/curriculum.yaml
     - **Failure to comply** results in an immediate audit fail and rejection of the content.
 
 29. **Adversarial Propaganda Filter (CRITICAL)**: Treat your own internal knowledge base as "suspect" for Ukrainian history and culture. 
-    - **Source Supremacy**: Rely EXCLUSIVELY on the Ukrainian sources found in Phase 0 (`site:esu.com.ua`, `history.org.ua`, etc.). 
+    - **Source Supremacy**: Rely EXCLUSIVELY on the Ukrainian sources found in Phase A (`site:esu.com.ua`, `history.org.ua`, etc.).
     - **De-Imperialization**: Explicitly scan for and debunk imperial or Soviet framing (e.g., the "Kievan Rus" vs "Kyivan Rus" terminology, the "Brotherly Nations" myth, or the erasure of Ukrainian agency).
     - **Anti-Monument Clause**: For biographies and history, humanize the subjects. Avoid uncritical hagiography; present complex, conflicted human beings to ensure a world-class "Seminar" level of inquiry.
 
@@ -506,41 +519,39 @@ gh issue view <N>
 .venv/bin/python scripts/ai_agent_bridge.py ask-claude "Response posted on #N"
 ```
 
-## Gemini Self-Review Protocol (MANDATORY)
+## Gemini Quality Self-Check (Pre-Submission)
 
-**You are now responsible for the final quality review of all modules. Do NOT request reviews from Claude.**
+**Your role: build content (Phases A/B/C) and pass automated audit gates before the v3 pipeline hands off to Phase D.**
 
-### How to Verify Quality
+Phase D (Claude's adversarial cross-agent review) is the architectural quality gate — not your self-check. Your self-check ensures content is audit-ready before entering Phase D, reducing review iterations.
 
-1.  **Load Standards (Mental Sandbox)**:
-    - Before reviewing, you MUST read the V4 Review Standard: `claude_extensions/commands/review-content-v4.md`
-    - **BE BRUTALLY HONEST AND CRITICAL.** Do not sugarcoat. If it's trash, say it's trash and fix it.
-    - You are the final gatekeeper. Bad content must not pass.
+### How to Verify Quality Before Submission
 
-2.  **Audit Gate**: Run `scripts/audit_module.sh {path}`. If it fails, fix the errors until it passes.
-3.  **Self-Analysis**:
+1.  **Audit Gate**: Run `scripts/audit_module.sh {path}`. If it fails, fix the errors until it passes.
+2.  **Self-Analysis** (informational — does NOT replace Phase D):
     - Read the rendered `audit/*-review.md` file after running the audit.
     - Check the **Richness** score meets the track target (usually 95%+).
     - Check **Naturalness** is 10/10.
     - Verify **Immersion** is within range (95-100% for B2+).
     - Verify **Activity Count** and **Types** meet the specific module requirements.
-4.  **Content Sanity Check (Manual)**:
+3.  **Content Sanity Check (Manual)**:
     - Did you include the required engagement callouts (`[!myth-buster]`, `[!history-bite]`)?
     - Is the word count real (not just filler)?
     - Are the headers structurally correct per the `content_outline`?
 
-### When to Contact Claude
+### Cross-Agent Review Architecture
+
+- **Gemini builds** (Phases A/B/C) → **Claude reviews** (Phase D). An LLM must NEVER review its own work.
+- Do NOT manually request reviews from Claude outside the v3 pipeline — Phase D handles this automatically.
+- If Phase D rejects your content, the pipeline sends you fix instructions. Fix and resubmit.
+
+### When to Contact Claude Directly
 
 Only contact Claude for:
 
 - Complex architectural questions where you are completely blocked.
-- Debugging obscure script errors that you cannot resolve after analysis.
-- **NEVER** for standard content reviews.
-
-### Hard Limits
-
-- **Trust the Audit Script**: If `audit_module.sh` says PASS, it passes.
-- **Auto-Fix**: If audit fails, fix it yourself. Do not ask for help unless stuck for 3+ attempts.
+- Debugging obscure script errors that you cannot resolve after 3+ attempts.
+- **NEVER** for standard content reviews — Phase D handles those.
 
 ## GitHub Issues Task Workflow (NEW)
 
@@ -727,4 +738,4 @@ forbidden_claims:
 
 ## B2+ Module Creation Workflow (V2.0)
 
-Follow Phase 0 (Research First) for all Seminar Tracks before writing content. Ensure all technical gates pass via `audit_module.py`.
+Follow Phase A (Research First) for all Seminar Tracks before writing content. Ensure all technical gates pass via `audit_module.py`.
