@@ -1836,12 +1836,55 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         if n_preD > 0:
             log(f"  Phase D: {n_preD} deterministic fix(es) applied (pre-validation)")
 
+        # Pre-D activity validation with fix loop (#633)
+        # If activities/vocab fail audit, dispatch Gemini to fix before blocking.
+        MAX_PRE_D_FIXES = 2
         log("  Phase D: Pre-D activity validation (--skip-review)...")
         pre_d_passed, pre_d_output = run_verify(ctx.paths["md"], skip_review=True)
+
+        for pre_d_fix in range(MAX_PRE_D_FIXES):
+            if pre_d_passed:
+                break
+
+            log(f"  Phase D: Pre-D validation FAIL — dispatching Gemini fix {pre_d_fix + 1}/{MAX_PRE_D_FIXES}...")
+            fix_prompt = _build_fix_prompt(ctx, pre_d_output, content_only=False)
+            fix_prompt_file = ctx.orch_dir / f"pD-prevalidation-fix{pre_d_fix + 1}-prompt.md"
+            fix_prompt_file.write_text(fix_prompt, "utf-8")
+
+            fix_output = _gemini_output_path(ctx.slug, f"pD-prevalidation-fix{pre_d_fix + 1}")
+            ok, _ = dispatch_gemini(
+                _dispatch_prompt(ctx, fix_prompt_file),
+                task_id=f"v3-{ctx.slug}-pD-prevalidation-fix{pre_d_fix + 1}",
+                model=ctx.model, allow_write=True, output_file=fix_output,
+                timeout=TIMEOUT_FIX,
+            )
+            if not ok:
+                log(f"  Phase D: Pre-D fix dispatch failed")
+                continue
+
+            if fix_output.exists():
+                fix_text = fix_output.read_text("utf-8")
+                if "===SECTION_FIX_START===" in fix_text:
+                    # Apply section-level fixes to content
+                    _apply_section_fixes(ctx.paths["md"], fix_text)
+                    # Apply FIND/REPLACE fixes to activities YAML (section-fix
+                    # format doesn't work on YAML; try find-replace instead)
+                    if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+                        _apply_find_replace_fixes(ctx.paths["activities"], fix_text)
+                elif "FIND:" in fix_text and "REPLACE:" in fix_text:
+                    # Pure FIND/REPLACE output — apply to both files
+                    _apply_find_replace_fixes(ctx.paths["md"], fix_text)
+                    if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+                        _apply_find_replace_fixes(ctx.paths["activities"], fix_text)
+
+            # Re-run deterministic fixes + re-validate
+            _run_deterministic_fixes(ctx)
+            pre_d_passed, pre_d_output = run_verify(ctx.paths["md"], skip_review=True)
+
         if not pre_d_passed:
             pre_d_log = ctx.orch_dir / "pD-pre-validation.log"
             pre_d_log.write_text(pre_d_output, "utf-8")
-            log("  Phase D: BLOCKED — activity/vocab audit failed (see pD-pre-validation.log)")
+            log("  Phase D: BLOCKED — activity/vocab audit failed after fix attempts (see pD-pre-validation.log)")
             for line in pre_d_output.strip().split("\n")[-5:]:
                 log(f"    {line}")
             return False
