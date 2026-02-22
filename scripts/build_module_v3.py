@@ -372,7 +372,8 @@ def _validate_audit_state(ctx: ModuleContext, state: dict) -> None:
 
 CLAUDE_MODEL_ACTIVITIES = "claude-sonnet-4-6"   # Phase C default
 CLAUDE_MODEL_RESEARCH   = "claude-sonnet-4-6"   # Phase A default
-CLAUDE_MODEL_REVIEW     = "claude-opus-4-6"     # Phase D default (cross-agent review needs best model)
+CLAUDE_MODEL_REVIEW     = "claude-opus-4-6"     # Phase D.1/D.2 default (deep analysis + repair needs best model)
+CLAUDE_MODEL_REREVIEW   = "claude-sonnet-4-6"   # Phase D.3 default (re-review verifies fixes landed — Sonnet suffices)
 
 
 def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
@@ -2005,7 +2006,10 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             log(f"  Phase D{iter_suffix}: {n_postD2} deterministic fix(es) applied (pre-re-review)")
 
         # --- D.3: Re-review ---
-        log(f"  Phase D.3{iter_suffix}: Re-reviewing repaired content via Claude ({claude_model_D})...")
+        # D.3 uses Sonnet (cheaper) — deep analysis was done in D.1 (Opus),
+        # D.3 just verifies fixes landed and re-scores.
+        rereview_model = CLAUDE_MODEL_REREVIEW
+        log(f"  Phase D.3{iter_suffix}: Re-reviewing repaired content via Claude ({rereview_model})...")
 
         metrics_post = _compute_audit_metrics(ctx)
         sections_post = _extract_h2_sections(ctx.paths["md"])
@@ -2024,7 +2028,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
 
         ok3, raw_output3 = _dispatch_claude_phase(
             prompt_file3, f"Phase D.3{iter_suffix} (re-review)",
-            model=claude_model_D, timeout=TIMEOUT_REVIEW,
+            model=rereview_model, timeout=TIMEOUT_REVIEW,
             allow_tools=["Read", "Grep", "Glob"],
         )
 
@@ -2040,7 +2044,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
                     review_text3 = None  # Don't use rejected review
                 else:
                     if "Reviewed-By:" not in review_text3:
-                        review_text3 = f"**Reviewed-By:** {claude_model_D}\n\n{review_text3}"
+                        review_text3 = f"**Reviewed-By:** {rereview_model}\n\n{review_text3}"
                     write_review_with_hash(ctx.paths["review"], review_text3, ctx.paths["md"])
                     (ctx.orch_dir / f"phase-D-review-{review_file_num}.md").write_text(
                         review_text3, "utf-8")
