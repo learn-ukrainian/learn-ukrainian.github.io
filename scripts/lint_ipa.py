@@ -15,6 +15,7 @@ Errors detected:
   v → ʋ       Same (inside IPA brackets)
   o → ɔ       Ukrainian о is open-mid back rounded [ɔ] (inside IPA brackets)
   e → ɛ       Ukrainian е is open-mid front unrounded [ɛ] (inside IPA brackets)
+  i̯ → j       Non-syllabic i diacritic → standard palatal approximant (inside IPA brackets)
 
 Usage:
   .venv/bin/python scripts/lint_ipa.py FILE              # lint one file
@@ -154,6 +155,16 @@ def lint_brackets(text: str) -> list[Issue]:
             if not is_ipa_bracket(content, after):
                 continue
 
+            # Check for non-syllabic i̯ (should be j — standard palatal approximant)
+            # Ukrainian й is always [j]; i̯ is an alternative notation, not an allophone
+            for m in re.finditer(r'i\u032F', content):
+                abs_col = bstart + 1 + m.start()
+                ctx = content[max(0, m.start()-10):m.end()+10]
+                issues.append(Issue(line_idx, abs_col, 'IPA-011',
+                                    'i̯', 'j', f'[...{ctx}...]'))
+            # NOTE: u̯ is NOT normalized — it's a legitimate allophone of В
+            # after vowels (жовтий [ˈʒɔu̯tɪj], любов [lʲuˈbɔu̯])
+
             # Check for /o/ (should be /ɔ/ in Ukrainian)
             for m in re.finditer(r'o', content):
                 abs_col = bstart + 1 + m.start()
@@ -246,6 +257,9 @@ def _fix_brackets_in_line(line: str) -> str:
 
         if is_ipa_bracket(content, after):
             fixed = content
+            # Fix i̯ → j (non-syllabic i diacritic → standard palatal approximant)
+            # Must come before o/e replacements to avoid mangling diacritics
+            fixed = fixed.replace('i\u032F', 'j')
             # Fix o → ɔ (Ukrainian о is open-mid [ɔ], not close-mid [o])
             fixed = fixed.replace('o', 'ɔ')
             # Fix e → ɛ (Ukrainian е is open-mid [ɛ], not close-mid [e])

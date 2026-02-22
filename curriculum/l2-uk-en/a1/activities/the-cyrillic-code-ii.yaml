@@ -35,6 +35,7 @@
     - Щ
     - Ч
     - Ц
+    - Й
     name: Consonants (Приголосні)
   - items:
     - Є
@@ -118,8 +119,8 @@
       text: Ї
     - correct: false
       text: Є
-    question: Which letter was repressed in 1933 to make Ukrainian look more like
-      Russian?
+    question: Which letter was removed from the Ukrainian alphabet in 1933 and restored
+      in 1990?
   - explanation: The letter Ц makes the 'ts' sound, as in 'cats' or 'tsunami'.
     options:
     - correct: true
@@ -136,7 +137,7 @@
     - correct: true
       text: Ь
     - correct: false
-      text: Ъ
+      text: Р
     - correct: false
       text: Б
     - correct: false
@@ -230,7 +231,7 @@
     - діти
     - дити
     - дати
-    - дети
+    - дути
     sentence: Це мої д___ти. (These are my children.)
   - answer: літо
     explanation: Літо (summer) uses the soft І, which softens the L sound.
@@ -238,7 +239,7 @@
     - літо
     - лито
     - лато
-    - лето
+    - луто
     sentence: Я люблю л___то. (I love summer.)
   - answer: пити
     explanation: Пити (to drink) uses the hard И.
@@ -249,7 +250,7 @@
     - пети
     sentence: Я хочу п___ти чай. (I want to drink tea.)
   - answer: Київ
-    explanation: Kyiv starts with a hard K, so it uses И.
+    explanation: Київ uses И after К — the sound is the relaxed "grin" vowel [ɪ], not the tense "smile" vowel [i].
     options:
     - Київ
     - Кіїв
