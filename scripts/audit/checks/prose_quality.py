@@ -282,6 +282,111 @@ def _find_line_in_original(content: str, search_text: str) -> int:
     return 0
 
 
+def _normalize_opener(text: str) -> str:
+    """Normalize a section opener for lexical overlap comparison.
+
+    Strips markdown formatting, numbers, punctuation, and lowercases.
+    """
+    # Remove markdown bold/italic
+    text = re.sub(r'[*_]+', '', text)
+    # Remove leading #
+    text = re.sub(r'^#+\s*', '', text)
+    # Remove numbers and punctuation (keep letters and spaces)
+    text = re.sub(r'[^\w\s]', '', text)
+    # Collapse whitespace and lowercase
+    return ' '.join(text.lower().split())
+
+
+def _lexical_overlap(a: str, b: str) -> float:
+    """Compute word-level Jaccard similarity between two strings."""
+    words_a = set(a.split())
+    words_b = set(b.split())
+    if not words_a or not words_b:
+        return 0.0
+    intersection = words_a & words_b
+    union = words_a | words_b
+    return len(intersection) / len(union)
+
+
+def check_structural_monotony(content: str, max_similar: int = 3) -> List[Dict]:
+    """Detect monotonous section openers — H2/H3 sections starting the same way.
+
+    Counts section openers (first non-empty line after header) sharing >70%
+    lexical overlap. Auto-fails if more than `max_similar` sections match.
+
+    This catches the pattern where an LLM generates "The letter X is..." for
+    every subsection — a structural monotony issue that was previously only
+    detected by subjective LLM scoring in Phase D reviews.
+    """
+    violations = []
+
+    # Extract H2 and H3 section openers
+    lines = content.split('\n')
+    openers: list[tuple[str, str, int]] = []  # (header, opener_text, line_num)
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        if re.match(r'^#{2,3}\s+\S', line):
+            header = line.strip()
+            # Find first non-empty, non-header line after this header
+            j = i + 1
+            while j < len(lines):
+                next_line = lines[j].strip()
+                if next_line and not next_line.startswith('#') and not next_line.startswith('<!--'):
+                    openers.append((header, next_line, j + 1))
+                    break
+                j += 1
+        i += 1
+
+    if len(openers) < 4:
+        return violations
+
+    # Normalize openers
+    normalized = [(hdr, _normalize_opener(opener), opener, ln) for hdr, opener, ln in openers]
+
+    # Find groups of similar openers (>70% lexical overlap)
+    # Use a simple clustering: for each pair, check overlap
+    n = len(normalized)
+    similar_groups: list[list[int]] = []
+    assigned = set()
+
+    for i in range(n):
+        if i in assigned:
+            continue
+        group = [i]
+        for j in range(i + 1, n):
+            if j in assigned:
+                continue
+            if _lexical_overlap(normalized[i][1], normalized[j][1]) > 0.70:
+                group.append(j)
+        if len(group) > max_similar:
+            similar_groups.append(group)
+            assigned.update(group)
+
+    for group in similar_groups:
+        sample_openers = [normalized[idx][2][:60] for idx in group[:3]]
+        sample_headers = [normalized[idx][0][:40] for idx in group[:3]]
+        first_line = normalized[group[0]][3]
+        violations.append({
+            'type': 'STRUCTURAL_MONOTONY',
+            'severity': 'critical',
+            'issue': (
+                f"{len(group)} of {n} section openers share >70% lexical overlap. "
+                f"Sections: {'; '.join(sample_headers)}... "
+                f"Opener pattern: \"{sample_openers[0]}...\""
+            ),
+            'fix': (
+                "Diversify section openings. Each section should start with a "
+                "unique approach: questions, examples, cultural hooks, direct "
+                "instruction, comparisons — not the same template."
+            ),
+            'line': first_line,
+        })
+
+    return violations
+
+
 def check_prose_quality(content: str, yaml_content: dict | None = None) -> List[Dict]:
     """Main entry point for prose quality checks.
 
@@ -302,5 +407,6 @@ def check_prose_quality(content: str, yaml_content: dict | None = None) -> List[
     violations.extend(check_llm_fingerprints(content))
     violations.extend(check_llm_persona_leaks(content))
     violations.extend(check_inline_english(content, level))
+    violations.extend(check_structural_monotony(content))
 
     return violations

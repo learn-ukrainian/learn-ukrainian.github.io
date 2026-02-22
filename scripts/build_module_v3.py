@@ -373,7 +373,7 @@ def _validate_audit_state(ctx: ModuleContext, state: dict) -> None:
 CLAUDE_MODEL_ACTIVITIES = "claude-sonnet-4-6"   # Phase C default
 CLAUDE_MODEL_RESEARCH   = "claude-sonnet-4-6"   # Phase A default
 CLAUDE_MODEL_REVIEW     = "claude-opus-4-6"     # Phase D.1/D.2 default (deep analysis + repair needs best model)
-CLAUDE_MODEL_REREVIEW   = "claude-sonnet-4-6"   # Phase D.3 default (re-review verifies fixes landed — Sonnet suffices)
+CLAUDE_MODEL_REREVIEW   = "claude-opus-4-6"     # Phase D.3 default — same model as D.1 to prevent calibration drift (#633)
 
 
 def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
@@ -746,17 +746,98 @@ def _inject_metrics_into_prompt(prompt_text: str, metrics: dict[str, str]) -> st
     return prompt_text
 
 
+def _build_d3_context(d1_review: str, repair_cycle: int) -> str:
+    """Build D.3 context injection with D.1 findings and D.2 repair info (#633).
+
+    Gives D.3 focus (knows what to verify) without blinding it (still does
+    full review and can find regressions from D.2 rewrites).
+    """
+    # Extract the key parts of the D.1 review for context
+    # Truncate to avoid bloating the prompt — keep issues + verdict
+    review_lines = d1_review.strip().split('\n')
+    # Keep first 80 lines max (scores + issues + verdict — skip lengthy evidence)
+    truncated = '\n'.join(review_lines[:80])
+    if len(review_lines) > 80:
+        truncated += f"\n\n... ({len(review_lines) - 80} more lines truncated)"
+
+    return f"""## D.3 Re-Review Context (Repair Cycle {repair_cycle})
+
+> **You are re-reviewing content that was already reviewed and repaired.**
+> A previous D.1 review found issues. D.2 applied targeted FIND/REPLACE fixes.
+> Your job: **verify the fixes landed correctly AND check for regressions** introduced by the repair.
+
+### What D.1 Found (previous review summary)
+
+<details>
+<summary>D.1 Review (click to expand)</summary>
+
+{truncated}
+
+</details>
+
+### Your D.3 Re-Review Focus
+
+1. **Verify each D.1 issue was fixed** — check that the specific problems from D.1 no longer exist in the current content
+2. **Check for D.2 regressions** — D.2 rewrites may have introduced new errors (broken sentences, orphaned references, formatting damage)
+3. **Score the current state** — your scores reflect the content AS IT IS NOW, not the D.1 review's scores
+4. **Do NOT auto-pass** — if D.2 fixes created new problems, flag them even though the originals are fixed
+
+---"""
+
+
 def _extract_audit_failures(audit_output: str) -> str:
-    """Extract the actionable failure lines from audit output for the repair prompt."""
+    """Extract actionable failure lines from audit output for the D.2 repair prompt.
+
+    Captures: gate failures, pedagogical violations (including ROBOTIC_STRUCTURE,
+    STRUCTURAL_MONOTONY), immersion hints, and severity indicators. This ensures
+    D.2 can fix both review issues AND audit gate failures in one pass (#633).
+    """
     lines = audit_output.strip().split("\n")
-    # Keep FAIL lines, error lines, and gate descriptions
     failure_lines = []
+    # Track whether we're inside a pedagogical violations section
+    in_ped_section = False
+
     for line in lines:
         stripped = line.strip()
-        if any(kw in stripped.upper() for kw in ["FAIL", "ERROR", "VIOLATION", "MISSING", "GATE"]):
+
+        # Gate failures and error keywords
+        if any(kw in stripped.upper() for kw in [
+            "FAIL", "ERROR", "VIOLATION", "MISSING", "GATE",
+            "ROBOTIC", "MONOTONY", "IMMERSION TOO", "SEVERITY",
+        ]):
             failure_lines.append(stripped)
-        elif stripped.startswith("❌") or stripped.startswith("🔴"):
+            continue
+
+        # Emoji-prefixed status lines
+        if stripped.startswith("❌") or stripped.startswith("🔴") or stripped.startswith("⚠️"):
             failure_lines.append(stripped)
+            continue
+
+        # Pedagogical violation details (type-tagged lines)
+        if stripped.startswith("- **[") or stripped.startswith("- ["):
+            failure_lines.append(stripped)
+            continue
+
+        # Immersion fix hints
+        if "IMMERSION" in stripped.upper() and ("LOW" in stripped.upper() or "HIGH" in stripped.upper()):
+            failure_lines.append(stripped)
+            continue
+
+        # Section headers for context
+        if stripped.startswith("## PEDAGOGICAL") or stripped.startswith("## Low Density"):
+            in_ped_section = True
+            failure_lines.append(stripped)
+            continue
+
+        # Lines inside pedagogical violation section (don't break on blank lines —
+        # pedagogical sections may have blank lines between bullet points #633)
+        if in_ped_section:
+            if stripped.startswith("## "):
+                in_ped_section = False
+            elif stripped:
+                failure_lines.append(stripped)
+                continue
+
     if not failure_lines:
         # Fallback: return last 40 lines
         return "\n".join(lines[-40:])
@@ -767,6 +848,7 @@ def _extract_audit_failures(audit_output: str) -> str:
 # These require structural rewrite, not targeted repair.
 _DIFFUSE_FAILURE_CODES = {
     "ROBOTIC_STRUCTURE",        # Sentence pattern repetition throughout
+    "STRUCTURAL_MONOTONY",      # Section openers share >70% lexical overlap (#633)
     "CONTENT_REDUNDANCY",       # Duplicate sentences across sections
     "EXCESSIVE_METAPHOR",       # Too many metaphors (prose style issue)
     "THEORY_FRONTLOADING",      # Structure issue: too much theory before practice
@@ -2020,8 +2102,9 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             log(f"  Phase D{iter_suffix}: {n_postD2} deterministic fix(es) applied (pre-re-review)")
 
         # --- D.3: Re-review ---
-        # D.3 uses Sonnet (cheaper) — deep analysis was done in D.1 (Opus),
-        # D.3 just verifies fixes landed and re-scores.
+        # D.3 uses same model as D.1 to prevent cross-model calibration drift (#633).
+        # Previously used Sonnet which scored differently from Opus on subjective
+        # dimensions (e.g., LLM Fingerprint), causing unnecessary extra cycles.
         rereview_model = CLAUDE_MODEL_REREVIEW
         log(f"  Phase D.3{iter_suffix}: Re-reviewing repaired content via Claude ({rereview_model})...")
 
@@ -2038,6 +2121,22 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         prompt3_text = prompt_file3.read_text("utf-8")
         prompt3_text = _inject_metrics_into_prompt(prompt3_text, metrics_post)
         prompt3_text = prompt3_text.replace("{COMPUTED_H2_SECTIONS}", sections_post)
+
+        # Inject D.1 context into D.3 so the re-reviewer has focus (#633).
+        # D.3 still does a full review (can find regressions from D.2 rewrites)
+        # but knows what D.1 found and what D.2 attempted to fix.
+        d3_context = _build_d3_context(current_review, d2_iter + 1)
+        # Insert after the "---" separator following the H2 sections block
+        insertion_marker = "## Tier-Specific Review Guidance"
+        if insertion_marker in prompt3_text:
+            prompt3_text = prompt3_text.replace(
+                insertion_marker,
+                d3_context + "\n\n" + insertion_marker,
+            )
+        else:
+            log(f"  Phase D.3{iter_suffix}: WARNING — D.3 context marker not found, appending to end")
+            prompt3_text += "\n\n" + d3_context
+
         prompt_file3.write_text(prompt3_text, "utf-8")
 
         ok3, raw_output3 = _dispatch_claude_phase(
