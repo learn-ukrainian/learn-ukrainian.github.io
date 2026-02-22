@@ -641,16 +641,6 @@ _DIFFUSE_FAILURE_CODES = {
     "LOW_IMMERSION",            # Fundamental language balance problem
 }
 
-# Review keywords that indicate diffuse issues (from D.1 review text).
-# These are specific phrases unlikely to appear in unrelated contexts.
-_DIFFUSE_REVIEW_KEYWORDS = [
-    "structural rewrite needed",
-    "needs rebuild",
-    "fundamental restructuring",
-    "wholesale rewrite",
-]
-
-
 def _run_deterministic_fixes(ctx: ModuleContext) -> int:
     """Run all zero-cost deterministic fixes on a module's files.
 
@@ -729,15 +719,16 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
     return total
 
 
-def _all_issues_diffuse(audit_output: str, review_text: str) -> bool:
-    """Determine if ALL issues are diffuse (not fixable by FIND/REPLACE).
+def _all_issues_diffuse(audit_output: str) -> bool:
+    """Determine if ALL audit issues are diffuse (not fixable by FIND/REPLACE).
 
-    Returns True only if there are failure signals AND every one is diffuse.
-    If there are ANY targeted failures (grammar, missing content, wrong facts),
-    returns False so D.2 can attempt a repair.
+    Returns True only if audit has failing codes AND every one is diffuse.
+    If audit passed (no failing codes), returns False — review issues are
+    always targeted (specific lines/fixes) and should go to D.2.
 
-    Classification is deterministic — based on audit failure codes and
-    review keywords, not LLM judgment (#623).
+    Classification is deterministic — based on audit failure codes only.
+    Review text is NOT used for classification because review issues are
+    always targeted (specific lines, specific fixes) by definition (#623).
     """
     import re as _re
 
@@ -749,21 +740,19 @@ def _all_issues_diffuse(audit_output: str, review_text: str) -> bool:
             codes_in_line = _re.findall(r'\[([A-Z_]{3,})\]', line)
             failing_codes.update(codes_in_line)
 
-    if not failing_codes and not review_text:
-        return False  # No signal at all — don't skip D.2
+    # If audit passed (no failing codes), ALL issues come from the review.
+    # Review issues are targeted by definition — the reviewer identifies specific
+    # lines, calques, grammar errors, activity mismatches. Never skip D.2 here.
+    if not failing_codes:
+        return False
 
-    # Check if ALL failing codes are diffuse
+    # Check if ALL failing audit codes are diffuse (not fixable by FIND/REPLACE)
     has_targeted = bool(failing_codes - _DIFFUSE_FAILURE_CODES)
     if has_targeted:
-        return False  # At least one targeted issue exists
+        return False  # At least one targeted audit issue exists
 
-    # Also check review text for diffuse keywords (exact phrase match)
-    review_lower = review_text.lower() if review_text else ""
-    has_diffuse_review = any(kw in review_lower for kw in _DIFFUSE_REVIEW_KEYWORDS)
-
-    # Only return True if we found diffuse signals and NO targeted signals
-    has_diffuse_audit = bool(failing_codes & _DIFFUSE_FAILURE_CODES)
-    return has_diffuse_audit or has_diffuse_review
+    # All audit failures are diffuse — D.2 FIND/REPLACE won't help
+    return True
 
 
 # ---------------------------------------------------------------------------
@@ -1826,7 +1815,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
 
     # Pre-D.2 triage: skip D.2 if all REMAINING issues are diffuse (not fixable
     # by FIND/REPLACE). Only runs AFTER deterministic fixes have been tried.
-    if _all_issues_diffuse(audit_out, review_text):
+    if _all_issues_diffuse(audit_out):
         log("  Phase D.2: SKIPPED — all remaining issues are diffuse (needs rebuild, not repair)")
         _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
                        note="needs-rebuild-diffuse-issues")
