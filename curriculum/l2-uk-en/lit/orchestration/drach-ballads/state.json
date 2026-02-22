@@ -1,0 +1,14 @@
+{
+  "slug": "drach-ballads",
+  "track": "lit",
+  "module_num": 157,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-22T17:48:04Z",
+      "task_id": "yw-drach-ballads-p0"
+    }
+  },
+  "last_updated": "2026-02-22T17:48:04Z"
+}

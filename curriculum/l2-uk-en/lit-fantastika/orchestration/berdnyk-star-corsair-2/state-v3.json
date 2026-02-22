@@ -1,0 +1,13 @@
+{
+  "track": "lit-fantastika",
+  "slug": "berdnyk-star-corsair-2",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T12:35:24Z",
+      "task_id": "v3-berdnyk-star-corsair-2-pA",
+      "mode": "full"
+    }
+  }
+}

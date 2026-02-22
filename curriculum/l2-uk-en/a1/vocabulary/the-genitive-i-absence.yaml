@@ -1,4 +1,4 @@
-- ipa: '[neˈmɑje]'
+- ipa: '[nɛˈmɑjɛ]'
   lemma: немає
   pos: predicative
   translation: there is no / there are no
@@ -16,7 +16,7 @@
   notes: Substance → Genitive ending -у (цукру)
   pos: noun (masc.)
   translation: sugar
-- ipa: '[t͡ʃɑi̯]'
+- ipa: '[t͡ʃɑj]'
   lemma: чай
   notes: Substance → Genitive ending -ю (чаю)
   pos: noun (masc.)
@@ -36,7 +36,7 @@
   notes: Device/technology → Genitive ending -у (телефону)
   pos: noun (masc.)
   translation: phone
-- ipa: '[ʋoˈdɑ]'
+- ipa: '[ʋɔˈdɑ]'
   lemma: вода
   notes: Hard ending -а → Genitive -и (води)
   pos: noun (fem.)
@@ -46,7 +46,7 @@
   notes: Hard ending -а → Genitive -и (кави)
   pos: noun (fem.)
   translation: coffee
-- ipa: '[proˈblɛmɑ]'
+- ipa: '[prɔˈblɛmɑ]'
   lemma: проблема
   notes: Hard ending -а → Genitive -и (проблеми)
   pos: noun (fem.)
@@ -61,12 +61,12 @@
   notes: Soft ending -я → Genitive -ї (сім'ї)
   pos: noun (fem.)
   translation: family
-- ipa: '[moloˈkɔ]'
+- ipa: '[mɔlɔˈkɔ]'
   lemma: молоко
   notes: Ending -о → Genitive -а (молока)
   pos: noun (neut.)
   translation: milk
-- ipa: '[ˈmjɑso]'
+- ipa: '[ˈmjɑsɔ]'
   lemma: м'ясо
   notes: Ending -о → Genitive -а (м'яса)
   pos: noun (neut.)
@@ -76,12 +76,12 @@
   notes: Concrete object → Genitive ending -а (хліба)
   pos: noun (masc.)
   translation: bread
-- ipa: '[ˈɦrɔʃi]'
+- ipa: '[ɦrɔʃʲi]'
   lemma: гроші
   notes: 'Plural only. Genitive: грошей'
   pos: noun (plural)
   translation: money
-- ipa: '[ʋoˈɦɔnʲ]'
+- ipa: '[ʋɔˈɦɔnʲ]'
   lemma: вогонь
   notes: 'Genitive: вогню'
   pos: noun (masc.)

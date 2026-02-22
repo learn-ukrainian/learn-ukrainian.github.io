@@ -2,12 +2,12 @@
   "module": "my-world-objects",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T00:46:30.638655Z",
+  "last_audit": "2026-02-22T16:05:24.971018Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T21:51:36.587973Z",
+    "md": "2026-02-21T23:30:05.693020Z",
     "meta": "2026-02-19T19:17:38.767055Z",
-    "activities": "2026-02-19T19:24:53.110918Z",
+    "activities": "2026-02-21T23:30:05.693686Z",
     "vocabulary": "2026-02-19T19:24:53.111973Z",
     "plan": "2026-02-20T20:35:56.206067Z",
     "research": "2026-02-19T19:17:38.757088Z"
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Clean IPA"
+      "message": "15 IPA issues (run lint_ipa.py --fix)"
     },
     "research": {
       "status": "pass",
@@ -57,7 +57,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 6,
     "fail_count": 0,
     "deferred_count": 0
   }

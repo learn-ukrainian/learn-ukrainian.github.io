@@ -65,9 +65,9 @@ Most adjectives in Ukrainian belong to the "Hard Group". This means their stem (
 
 ### Чоловічий рід (Masculine)
 For masculine nouns, hard group adjectives end in **-ий**.
-*   **новий** [noˈʋɪj] — new
-*   **гарний** [ˈɦɑrnɪj] — beautiful/nice/good
-*   **старий** [stɑˈrɪj] — old
+*   **нови́й** — new
+*   **га́рний** — beautiful/nice/good
+*   **стари́й** — old
 
 _Examples:_
 *   **Новий студент**
@@ -78,9 +78,9 @@ _Examples:_
 
 ### Жіночий рід (Feminine)
 For feminine nouns, the ending changes to **-а**. This matches the typical -а ending of feminine nouns (like ма**ма**, кав**а**).
-*   **нова** [noˈʋɑ]
-*   **гарна** [ˈɦɑrnɑ]
-*   **стара** [stɑˈrɑ]
+*   **нова́**
+*   **га́рна**
+*   **стара́**
 
 _Examples:_
 *   **Нова школа**
@@ -91,9 +91,9 @@ _Examples:_
 
 ### Середній рід (Neuter)
 For neuter nouns, the ending changes to **-е**. This matches the typical -е/-о ending of neuter nouns (like мор**е**, вікн**о**).
-*   **нове** [noˈʋɛ]
-*   **гарне** [ˈɦɑrnɛ]
-*   **старе** [stɑˈrɛ]
+*   **нове́**
+*   **га́рне**
+*   **старе́**
 
 _Examples:_
 *   **Нове авто**
@@ -104,9 +104,9 @@ _Examples:_
 
 ### Множина (Plural)
 For plural nouns (regardless of gender), the ending is **-і**.
-*   **нові** [noˈʋi]
-*   **гарні** [ˈɦɑrnʲi]
-*   **старі** [stɑˈrʲi]
+*   **нові́**
+*   **га́рні**
+*   **старі́**
 
 _Examples:_
 *   **Нові друзі** — *Masculine base*
@@ -128,13 +128,13 @@ When you look up an adjective in a dictionary, you will always find the **Mascul
 
 A small but common group of adjectives belongs to the "Soft Group". Their stem ends in a "soft" consonant, usually **-н-**. Because the stem is soft, it requires "soft" vowels in the endings to maintain that sound.
 
-The most important word in this group is **синій** [ˈsɪnʲij] (blue/dark blue). If you master this one word, you master the whole group.
+The most important word in this group is **си́ній** (blue/dark blue). If you master this one word, you master the whole group.
 
 ### Чоловічий рід (Masculine)
 Instead of hard **-ий**, the soft group ends in **-ій**. We see **і**, which indicates that the preceding consonant is soft.
 *   **синій** (blue)
-*   **вечірній** [ʋeˈt͡ʃirnʲij] (evening - adj.)
-*   **давній** [ˈdɑu̯nʲij] (ancient)
+*   **вечі́рній** (evening - adj.)
+*   **да́вній** (ancient)
 
 _Examples:_
 *   **Синій автобус**
@@ -142,9 +142,9 @@ _Examples:_
 
 ### Жіночий рід (Feminine)
 Instead of hard **-а**, the soft group ends in **-я**. Notice **я** softens the consonant before it.
-*   **синя** [ˈsɪnʲɑ]
-*   **вечірня** [ʋeˈt͡ʃirnʲɑ]
-*   **давня** [ˈdɑu̯nʲɑ]
+*   **си́ня**
+*   **вечі́рня**
+*   **да́вня**
 
 _Examples:_
 *   **Синя річка**
@@ -152,9 +152,9 @@ _Examples:_
 
 ### Середній рід (Neuter)
 Instead of hard **-е**, the soft group ends in **-є**. Here we use **є** [je] following the soft consonant.
-*   **синє** [ˈsɪnʲe]
-*   **вечірнє** [ʋeˈt͡ʃirnʲe]
-*   **давнє** [ˈdɑu̯nʲe]
+*   **си́нє**
+*   **вечі́рнє**
+*   **да́внє**
 
 _Examples:_
 *   **Синє море**
@@ -162,9 +162,9 @@ _Examples:_
 
 ### Множина (Plural)
 The plural ending is **-і**, just like the hard group! This is the only place they overlap perfectly.
-*   **сині** [ˈsɪnʲi]
-*   **вечірні** [ʋeˈt͡ʃirnʲi]
-*   **давні** [ˈdɑu̯nʲi]
+*   **си́ні**
+*   **вечі́рні**
+*   **да́вні**
 
 _Examples:_
 *   **Сині очі**
@@ -219,8 +219,8 @@ When you say **«Цей театр старий»**, you are not just naming it.
 To describe things well, we need opposites (antonyms). These pairs help us define the world by contrast. Let's learn the most essential pairs.
 
 ### Великий ↔ Малий
-*   **великий** [ʋeˈlɪkɪj] (big/large/great)
-*   **малий** [mɑˈlɪj] (small/little)
+*   **вели́кий** (big/large/great)
+*   **мали́й** (small/little)
 
 We use these for physical size.
 *   **Київ — велике місто.** (Kyiv is a big city.)
@@ -245,8 +245,8 @@ We use **старий** for old objects or people. We use **давній** for s
 *   **Київ — давнє місто.** (Kyiv is an ancient city.)
 
 ### Добрий ↔ Поганий
-*   **добрий** [ˈdɔbrɪj] (good/kind)
-*   **поганий** [poˈɦɑnɪj] (bad)
+*   **до́брий** (good/kind)
+*   **пога́ний** (bad)
 
 These are universal evaluators.
 *   **Добрий ранок!**
@@ -254,16 +254,16 @@ These are universal evaluators.
 *   **Він добра людина.** — *Note: **людина** (person) is grammatically feminine, so the adjective is **добра** even when speaking about a man.*
 
 ### Дорогий ↔ Дешевий
-*   **дорогий** [doroˈɦɪj] (expensive/dear)
-*   **дешевий** [deˈʃɛʋɪj] (cheap)
+*   **дороги́й** (expensive/dear)
+*   **деше́вий** (cheap)
 
 *   **Цей ресторан дорогий.** (This restaurant is expensive.)
 *   **Цей квиток дешевий.** (This ticket is cheap.)
 *   **Моя дорога мамо!** (My dear mom!)
 
 ### Чистий ↔ Брудний
-*   **чистий** [ˈt͡ʃɪstɪj] (clean/pure)
-*   **брудний** [ˈbrudnɪj] (dirty)
+*   **чи́стий** (clean/pure)
+*   **брудни́й** (dirty)
 
 Cleanliness is very important in Ukrainian culture.
 *   **Мій дім чистий.** (My house is clean.)
@@ -271,8 +271,8 @@ Cleanliness is very important in Ukrainian culture.
 *   **Чиста вода.** (Clean water.)
 
 ### Світлий ↔ Темний
-*   **світлий** [ˈsʋitlɪj] (bright/light)
-*   **темний** [ˈtɛmnɪj] (dark)
+*   **сві́тлий** (bright/light)
+*   **те́мний** (dark)
 
 We use these for light, colors, or rooms.
 *   **Світла кімната.** (A bright room.)
@@ -308,9 +308,9 @@ If the room is not good:
 ### Describing People (Люди)
 When describing people, adjectives carry emotion and personality.
 
-*   **Молодий** [moloˈdɪj] (young)
-*   **Цікавий** [t͡sʲiˈkɑʋɪj] (interesting)
-*   **Добрий** [ˈdɔbrɪj] (kind)
+*   **Молоди́й** (young)
+*   **Ціка́вий** (interesting)
+*   **До́брий** (kind)
 
 Let's describe a character:
 *   **Вона молода жінка.** (She is a young woman.)
@@ -364,7 +364,7 @@ Let's see how these words work in real conversation.
 **Олена**: Це добре. А камера **добра**?
 **Андрій**: Так, фото дуже **якісні** (high quality).
 
-*   **телефон** (phone) is Masculine → новий, чорний [ˈt͡ʃɔrnɪj] (black), швидкий [ˈʃʋɪdkɪj] (fast), дорогий, дешевий.
+*   **телефон** (phone) is Masculine → новий, чо́рний (black), швидки́й (fast), дорогий, дешевий.
 
 ### Dialogue 2: The Apartment Hunt
 *Situation: Discussing a rental option.*
@@ -379,7 +379,7 @@ Let's see how these words work in real conversation.
 **Клієнт**: Добре. Ціна **нормальна**?
 **Рієлтор**: Так, ціна дуже **гарна**.
 
-*   **квартира** (apartment), **кухня** (kitchen), **ціна** (price) are all Feminine → нова, велика, світла, мала, зручна [ˈzrut͡ʃnɑ] (comfortable), нормальна [norˈmɑlʲnɑ] (normal), гарна.
+*   **квартира** (apartment), **кухня** (kitchen), **ціна** (price) are all Feminine → нова, велика, світла, мала, зру́чна (comfortable), норма́льна (normal), гарна.
 *   **вікно** (window) is Neuter → велике.
 
 ### Dialogue 3: У магазині
@@ -395,7 +395,7 @@ Let's see how these words work in real conversation.
 > **Clarifying Questions**
 > If someone says "Give me the pen" and there are two pens, you can ask:
 > **Яка саме?** (Which one exactly?)
-> *   **Синя чи червона?** (The blue one or the red one?) — *Note: червоний [t͡ʃerˈʋɔnɪj] = red.*
+> *   **Синя чи червона?** (The blue one or the red one?) — *Note: черво́ний = red.*
 
 ## Практика: Мій дім
 

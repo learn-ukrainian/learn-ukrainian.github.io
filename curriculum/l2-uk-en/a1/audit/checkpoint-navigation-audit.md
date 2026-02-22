@@ -1,7 +1,7 @@
 # Audit Report: M20 — checkpoint-navigation.md
 **Level:** A1 | **Module:** M20 | **Phase:** A1.2 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:40
+**Generated:** 2026-02-22 16:05:36
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -47,7 +47,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 1 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

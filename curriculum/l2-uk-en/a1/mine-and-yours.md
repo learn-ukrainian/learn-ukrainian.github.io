@@ -81,7 +81,7 @@ But in Ukrainian, **мій** and **твій** are alive. They are best friends o
 *   **Neuter (it):** **моє ім'я** (my name), **моє місто** (my city), **моє авто** (my car). Pay attention to the **-є** ending.
 *   **Plural (they):** **мої друзі** (my friends), **мої окуляри** (my glasses). Finally, note the **-ї** ending.
 
-Now look at **твій** [tʲʋʲij]. It mirrors **мій** perfectly. You just change the first letter from M to T:
+Now look at **твій**. It mirrors **мій** perfectly. You just change the first letter from M to T:
 *   **Masculine:** **твій зошит** (your notebook).
 *   **Feminine:** **твоя сестра** (your sister).
 *   **Neuter:** **твоє вікно** (your window).
@@ -157,13 +157,13 @@ With these two words, you don't need to think about the object's gender at all. 
 > **Pronunciation Alert**
 > Be careful with the pronunciation of **його**.
 > The letter **г** is [ɦ] (voiced 'h'). It is NOT a hard 'g'.
-> The stress is on the second syllable: йо**го** [jɔˈɦɔ].
+> The stress is on the second syllable: йо**го**.
 
 ### Займенник «Їхній»: Стандарт проти суржику
 
 How do we say "their"? Be careful here. Many students (and even some native speakers influenced by Russian) say "їх дім". This is not standard literary Ukrainian.
 
-The correct, beautiful word is **їхній** [ˈjixnʲij]. Unlike "his/her", this word **does** behave like an adjective! It changes by gender, just like **мій**.
+The correct, beautiful word is **ї́хній**. Unlike "his/her", this word **does** behave like an adjective! It changes by gender, just like **мій**.
 
 Paradigm of **їхній** (their):
 *   **Masculine:** **їхній син** (their son).
@@ -180,7 +180,7 @@ Using "їх" (like "це їх дім") is considered colloquial. Use **їхні�
 
 ### Свій: Концепція «Власний»
 
-Finally, let's touch on an advanced concept. Ukrainian has the special reflexive pronoun **свій** [sʲʋʲij] (one's own).
+Finally, let's touch on an advanced concept. Ukrainian has the special reflexive pronoun **свій** (one's own).
 
 What does it mean? It means the object belongs to the **subject** of the sentence.
 
@@ -440,5 +440,5 @@ But true, organic Ukrainian loves declension. It loves flexibility and nuance. S
 | **її** | [jiˈji] | her | pronoun | - | unchangeable |
 | **їхній** | [ˈjixnʲij] | their | pronoun | masc. | |
 | **чий?** | [t͡ʃɪj] | whose? | pronoun | masc. | |
-| **займенник** | [zɐjˈmɛnːɪk] | pronoun | noun | masc. | grammar term |
+| **займенник** | [zɑjˈmɛnːɪk] | pronoun | noun | masc. | grammar term |
 | **прикметник** | [prɪkˈmɛtnɪk] | adjective | noun | masc. | grammar term |

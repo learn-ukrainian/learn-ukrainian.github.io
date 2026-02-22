@@ -66,10 +66,10 @@ These letters are your "Safe Harbor." They look exactly like their Latin counter
 Let's combine these into your first Ukrainian words.
 
 **Examples:**
--   **мама** [ˈmɑmɑ] (mom) — Looks and sounds exactly like you expect.
--   **кіт** [kʲit] (cat) — Note the soft "i" makes the K sound a bit lighter.
--   **так** [tɑk] (yes) — A powerful little word.
--   **такт** [tɑkt] (tact) — Musical beat or social tact.
+-   **ма́ма** (mom) — Looks and sounds exactly like you expect.
+-   **кіт** (cat) — Note the soft "i" makes the K sound a bit lighter.
+-   **так** (yes) — A powerful little word.
+-   **такт** (tact) — Musical beat or social tact.
 
 ### Group 2: False Friends (The Traps)
 Now, engage your focus. These letters are the "spies." They wear familiar disguises but carry different sounds. If you make a mistake, it will likely be here.
@@ -98,7 +98,7 @@ Now, engage your focus. These letters are the "spies." They wear familiar disgui
 -   **Mnemonic**: Think of a **R**oaring engine or a **P**urring cat. The cat says "Rrrrr."
 
 **Example:**
--   **парк** [pɑrk] (park) — Notice the first letter is a real P (which we will learn next), and the third letter is this trilled R.
+-   **парк** (park) — Notice the first letter is a real P (which we will learn next), and the third letter is this trilled R.
 
 #### The "C" Trap: С
 -   **Symbol**: **С с**
@@ -177,7 +177,7 @@ Now that we have our decoding tools, let's apply them to words you will definite
 | Ukrainian | IPA | English | Context/Collocation |
 | :--- | :--- | :--- | :--- |
 | **банк** | [bɑnk] | bank | **національний банк** (national bank) |
-| **метро** | [meˈtrɔ] | metro | **станція метро** (metro station) |
+| **метро** | [mɛˈtrɔ] | metro | **станція метро** (metro station) |
 | **кафе** | [kɑˈfɛ] | café | **ідемо в кафе** (let's go to a cafe) |
 | **факт** | [fɑkt] | fact | **це факт** (it's a fact) |
 | **план** | [plɑn] | plan | **бізнес-план** (business plan) |
@@ -210,14 +210,14 @@ This might seem simple, but you are speaking Ukrainian! You are using the nomina
 ### The "Yes" Words
 The word **так** is small but mighty. It is your primary tool for agreement.
 
--   **Так** [tɑk] — Yes.
+-   **Так** — Yes.
 -   **Так, будь ласка** [tɑk budʲ ˈlɑskɑ] — Yes, please. *Use this for polite acceptance.*
 -   **Так, звісно** [tɑk ˈzʋʲisnɔ] — Yes, of course. *Use this for enthusiastic agreement.*
 
 ### Coffee Culture Check
 A small but important distinction:
--   **Кафе** [kɑˈfɛ] = The place (Café).
--   **Кава** [ˈkɑʋɑ] = The drink (Coffee).
+-   **Кафе́** = The place (Café).
+-   **Ка́ва** = The drink (Coffee).
 
 **Кафе** is where you sit; **кава** is what you sip. You go to a **кафе** to drink **каву** (coffee). Two different words — two different things.
 
@@ -259,11 +259,11 @@ Let's bring it all together. You have learned True Friends (easy), False Friends
 **Це факт: мама і тато в метро.**
 
 Let's break it down:
-1.  **Це** [t͡sɛ] (This) — *A high-frequency starter word. The letter Ц is a sneak preview — you will learn it properly in Module 2.*
+1.  **Це** (This) — *A high-frequency starter word. The letter Ц is a sneak preview — you will learn it properly in Module 2.*
 2.  **факт** (fact) — *Cognate.* Note the **Ф** (hands on hips).
 3.  **мама** (mom) — *True Friend.*
 4.  **і** (and) — *The connector.*
-5.  **тато** [ˈtɑtɔ] (dad) — *True Friend.*
+5.  **та́то** (dad) — *True Friend.*
 6.  **в** [u/v] (in) — *Preposition.*
 7.  **метро** (metro) — *Cognate.*
 

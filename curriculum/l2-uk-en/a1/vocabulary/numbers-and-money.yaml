@@ -14,7 +14,7 @@
   lemma: чотири
   pos: num
   translation: four
-- ipa: '[pjatʲ]'
+- ipa: '[pjɑtʲ]'
   lemma: п'ять
   pos: num
   translation: five
@@ -22,11 +22,11 @@
   lemma: десять
   pos: num
   translation: ten
-- ipa: '[ɔdɪˈnɑdt͡sʲɑtʲ]'
+- ipa: '[ɔdɪˈnɑd͡zʲt͡sʲɑtʲ]'
   lemma: одинадцять
   pos: num
   translation: eleven
-- ipa: '[ˈdʋɑdt͡sʲɑtʲ]'
+- ipa: '[ˈdʋɑd͡zʲt͡sʲɑtʲ]'
   lemma: двадцять
   pos: num
   translation: twenty
@@ -34,23 +34,23 @@
   lemma: сто
   pos: num
   translation: one hundred
-- ipa: '[ˈɦrɪʋnʲɑ]'
+- ipa: '[ˈɦrɪu̯nʲɑ]'
   lemma: гривня
   pos: noun
   translation: hryvnia
-- ipa: '[kɔˈpijka]'
+- ipa: '[kɔˈpʲijkɑ]'
   lemma: копійка
   pos: noun
   translation: kopeck
-- ipa: '[ˈskilʲkɪ]'
+- ipa: '[ˈsʲkʲilʲkɪ]'
   lemma: скільки
   pos: adv
   translation: how much
-- ipa: '[kɔʃtuˈʋɑtɪ]'
+- ipa: '[ˈkɔʃtuˈʋɑtɪ]'
   lemma: коштувати
   pos: verb
   translation: to cost
-- ipa: '[t͡siˈnɑ]'
+- ipa: '[t͡sʲiˈnɑ]'
   lemma: ціна
   pos: noun
   translation: price
@@ -66,7 +66,7 @@
   lemma: здача
   pos: noun
   translation: change (money)
-- ipa: '[ɦɔˈtiu̯kɑ]'
+- ipa: '[ɦɔˈtʲiu̯kɑ]'
   lemma: готівка
   pos: noun
   translation: cash

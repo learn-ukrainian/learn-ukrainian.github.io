@@ -40,6 +40,10 @@ Research **Chmut Institutions** for the **lit-essay** track. Produce structured 
 5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography and what the Ukrainian-centric framing should be.
 6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.
 
+### Research Output Cap
+Keep research notes under **4000 words** (seminar tracks need depth for historiographical mapping).
+Focus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.
+
 If this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:
 
 ```markdown
@@ -89,6 +93,17 @@ After completing research, rebuild the `content_outline` using:
 
 ---
 
+## Downstream Audit Gates (Phase B content will be checked for)
+
+Plan your research and outline knowing that Phase B content must pass these gates:
+- **Word count**: minimum **4000** words — allocate outline sections accordingly
+- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
+- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)
+- **Duplicate headers**: ensure outline section names don't share keywords
+- **IPA vowels**: if research includes pronunciation, use correct IPA: о = [ɔ], е = [ɛ], ч = [t͡ʃ]
+
+---
+
 ## Output Format
 
 > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
@@ -99,6 +114,31 @@ After completing research, rebuild the `content_outline` using:
 ===RESEARCH_START===
 
 # Дослідження: Chmut Institutions
+
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Chmut Institutions"
+vital_status: "deceased" # or "alive"
+dates:
+  birth: "YYYY-MM-DD"    # or approximate: "~YYYY"
+  death: "YYYY-MM-DD"    # omit if alive
+  key_events:
+    - year: YYYY
+      event: "Event description (Ukrainian)"
+    - year: YYYY
+      event: "Event description"
+primary_quotes:
+  - text: "Exact Ukrainian quote"
+    source: "Source name, year"
+    attribution: "Who said/wrote it"
+  - text: "..."
+    source: "..."
+    attribution: "..."
+forbidden_claims:
+  - "Common myth or Russian propaganda claim to avoid"
+  - "..."
+```
 
 ## Використані джерела
 1. [Source name](URL) — brief description
@@ -157,6 +197,7 @@ content_outline:
 
 ### Validation checklist (complete before outputting meta):
 
+- [ ] Key Facts Ledger is present with dates, quotes, and forbidden claims
 - [ ] All section names are Ukrainian
 - [ ] Section names match plan structure
 - [ ] Each section has `words` and `points`

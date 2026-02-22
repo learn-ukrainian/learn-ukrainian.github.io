@@ -14,7 +14,7 @@
   lemma: зупинка
   pos: noun
   translation: stop (bus/tram)
-- ipa: '[ɑpˈtɛkɑ]'
+- ipa: '[ɑˈptɛkɑ]'
   lemma: аптека
   pos: noun
   translation: pharmacy
@@ -22,7 +22,7 @@
   lemma: пошта
   pos: noun
   translation: post office
-- ipa: '[ˈstɑnt͡sʲijɑ]'
+- ipa: '[ˈstɑnʲt͡sʲijɑ]'
   lemma: станція
   pos: noun
   translation: station
@@ -58,7 +58,7 @@
   lemma: біля
   pos: preposition
   translation: near, by
-- ipa: '[nɑu̯ˈprɔtɪ]'
+- ipa: '[nɑˈʋprɔtɪ]'
   lemma: навпроти
   pos: preposition
   translation: opposite
@@ -82,7 +82,7 @@
   lemma: назад
   pos: adverb
   translation: back, backwards
-- ipa: '[sʲʋitlɔˈfɔr]'
+- ipa: '[sʲʋʲitlɔˈfɔr]'
   lemma: світлофор
   pos: noun
   translation: traffic light

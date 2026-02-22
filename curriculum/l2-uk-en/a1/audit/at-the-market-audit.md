@@ -1,7 +1,7 @@
 # Audit Report: M37 — at-the-market.md
 **Level:** A1 | **Module:** M37 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 01:01:48
+**Generated:** 2026-02-22 16:05:49
 
 ## Configuration
 **Type:** A1
@@ -47,11 +47,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 14 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ⚠️ 21 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.3% (target 35-55% (M37))
+- **Immersion:** 🇺🇦 35.2% (target 35-55% (M37))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

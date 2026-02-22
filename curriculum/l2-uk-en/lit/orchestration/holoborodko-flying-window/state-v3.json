@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "holoborodko-flying-window",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T10:24:43Z",
+      "task_id": "v3-holoborodko-flying-window-pA",
+      "mode": "full"
+    }
+  }
+}

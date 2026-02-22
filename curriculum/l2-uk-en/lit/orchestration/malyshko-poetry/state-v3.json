@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "malyshko-poetry",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T10:00:35Z",
+      "task_id": "v3-malyshko-poetry-pA",
+      "mode": "full"
+    }
+  }
+}

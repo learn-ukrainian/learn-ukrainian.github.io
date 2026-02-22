@@ -81,6 +81,12 @@ TRACKS = [
     {"id": "c1-hist", "name": "C1-HIST", "path": "c1-hist"},
     {"id": "c1-bio", "name": "C1-BIO", "path": "c1-bio"},
     {"id": "lit", "name": "LIT", "path": "lit"},
+    {"id": "lit-essay", "name": "LIT-ESSAY", "path": "lit-essay"},
+    {"id": "lit-fantastika", "name": "LIT-FANTASTIKA", "path": "lit-fantastika"},
+    {"id": "lit-hist-fic", "name": "LIT-HIST-FIC", "path": "lit-hist-fic"},
+    {"id": "lit-humor", "name": "LIT-HUMOR", "path": "lit-humor"},
+    {"id": "lit-juvenile", "name": "LIT-JUVENILE", "path": "lit-juvenile"},
+    {"id": "lit-war", "name": "LIT-WAR", "path": "lit-war"},
     {"id": "oes", "name": "OES", "path": "oes"},
     {"id": "ruth", "name": "RUTH", "path": "ruth"},
 ]

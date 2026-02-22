@@ -22,39 +22,39 @@ In this section, we will look at the main types of transport and the grammar of 
 
 Ukrainian cities rely heavily on public transport.
 
-**Метро** [mɛˈtrɔ] — The Metro.
+**Метро́** — The Metro.
 Це серце Києва, Харкова та Дніпра. Це швидко, надійно і дешево.
 In Kyiv, it is also a bomb shelter and an architectural marvel. The stations are often like underground palaces.
 
-**Автобус** [ɑu̯ˈtɔbus] — Bus.
+**Авто́бус** — Bus.
 Це великий муніципальний транспорт. Автобуси їздять регулярно.
 They follow a strict schedule and stop only at designated stops.
 
-**Тролейбус** [trɔˈlʲɛɪ̯bus] — Trolleybus.
+**Троле́йбус** — Trolleybus.
 Це електричний автобус. Він має «роги», підключені до дротів. Це повільніше, ніж метро, але дуже екологічно.
 
-**Трамвай** [trɑmˈʋɑɪ̯] — Tram.
+**Трамва́й** — Tram.
 Трамвай їде рейками. У Львові це король центру міста.
 In Kyiv, the tram takes you from the railway station to the historic Podil district.
 
-**Маршрутка** [mɑrˈʃrutkɑ] — Minibus taxi.
+**Маршру́тка** — Minibus taxi.
 Повна назва — **маршрутне таксі**, але всі кажуть просто **маршрутка**.
 These are smaller yellow or white buses. They go everywhere, even where the metro does not. They have their own unique social rules!
 
 > [!culture]
 > **Deepest in the World**
-> The station **Арсенальна** [ɑrsɛˈnɑlʲnɑ] in Kyiv is the deepest metro station in the world, at 105.5 meters underground. The escalator ride takes about 5 minutes! People actually read books or listen to podcasts just while riding down to the train.
+> The station **Арсена́льна** in Kyiv is the deepest metro station in the world, at 105.5 meters underground. The escalator ride takes about 5 minutes! People actually read books or listen to podcasts just while riding down to the train.
 
 ### Іти чи Їхати? (To Walk or To Ride?)
 
 In English, you can say "I go to the park" (walking) and "I go to Lviv" (driving). In Ukrainian, these are two completely different actions. You must choose the right verb.
 
-**Іти** [iˈtɪ] — To go on foot (to walk).
+**Іти́** — To go on foot (to walk).
 Use this when you are using your legs.
 *   Я **йду** в парк. — I am walking to the park.
 *   Він **іде** додому. — He is walking home.
 
-**Їхати** [ˈjixɑtɪ] — To go by vehicle (to ride/drive).
+**Ї́хати** — To go by vehicle (to ride/drive).
 Use this for any transport: car, bus, bike, train, or metro. Even if you are just a passenger standing still inside the bus, you are **їхати**.
 *   Я **їду** на роботу. — I am riding to work.
 *   Ми **їдемо** в Київ. — We are travelling to Kyiv.
@@ -97,13 +97,13 @@ Now that we know *how* to move, let's learn the specific vocabulary for stops, t
 
 In English, we often use "station" for everything. In Ukrainian, there is a strict difference.
 
-**Зупинка** [zuˈpɪnkɑ] — A stop.
+**Зупи́нка** — A stop.
 Це місце для наземного транспорту: автобуса, трамвая, тролейбуса. Зазвичай це просто навіс або знак на вулиці.
 *   **Автобусна зупинка** — Bus stop.
 *   **Наступна зупинка** — Next stop.
 *   **Я чекаю на зупинці** — I am waiting at the stop.
 
-**Станція** [ˈstɑnt͡sʲijɑ] — A station.
+**Ста́нція** — A station.
 Це велика будівля або інфраструктурний об'єкт. Ми використовуємо це слово *тільки* для метро та залізниці.
 *   **Станція метро** — Metro station.
 *   **Станція «Хрещатик»** — Khreshchatyk station.
@@ -135,19 +135,19 @@ The announcement often tells you which streets you can reach from the station.
 
 Як платити? У Києві старі квитки вже зникають.
 
-**Квиток** [kʋɪˈtɔk] — Ticket.
+**Квито́к** — Ticket.
 Це загальне слово. Це може бути QR-код. Але це все одно **квиток**.
 *   **Купити квиток** — To buy a ticket.
 *   **Один квиток, будь ласка** — One ticket, please.
 
-**Проїзний** [prɔjiˈznɪɪ̯] — Travel pass / Transit card.
+**Проїзни́й** — Travel pass / Transit card.
 Це пластикова картка або передплата у додатку.
 *   **У мене є проїзний** — I have a pass.
 
-**Валідатор** [ʋɑlʲiˈdɑtɔr] — Validator.
+**Валідатор** — Validator.
 Це помаранчевий або жовтий пристрій в автобусі. Треба прикласти сюди картку або телефон.
 
-**Прокомпостувати** [prɔkɔmpɔstuˈʋɑtɪ] — To validate (old style).
+**Прокомпостува́ти** — To validate (old style).
 Історично це означало пробити дірки у паперовому квитку. Старші люди досі вживають це слово, але молодь каже **завалідувати**.
 *   **Треба завалідувати квиток** — Need to validate the ticket.
 
@@ -159,7 +159,7 @@ The announcement often tells you which streets you can reach from the station.
 
 Often, one train is not enough. You need to switch lines.
 
-**Пересадка** [pɛrɛˈsɑdkɑ] — Transfer.
+**Переса́дка** — Transfer.
 *   **Станція пересадки** — Transfer station.
 *   **Ми робимо пересадку** — We are making a transfer.
 

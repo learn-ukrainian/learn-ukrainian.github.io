@@ -1,84 +1,104 @@
 items:
   - lemma: "спочатку"
+    ipa: '[spɔˈt͡ʃɑtku]'
     translation: "first, at first, initially"
     pos: "adverb"
     usage: "«спочатку я» (firstly I), «спочатку треба» (firstly one needs)"
   - lemma: "потім"
+    ipa: '[ˈpɔtʲim]'
     translation: "then, afterwards"
     pos: "adverb"
     usage: "«а потім» (and then), «потім ми» (then we)"
   - lemma: "нарешті"
+    ipa: '[nɑˈrɛʃtʲi]'
     translation: "finally, at last"
     pos: "adverb"
     usage: "use to close a sequence started with «спочатку»"
   - lemma: "тому що"
+    ipa: '[tɔˈmu ʃt͡ʃɔ]'
     translation: "because"
     pos: "conjunction"
     notes: "Standard A1 form, used in writing or formal speech"
   - lemma: "бо"
+    ipa: '[bɔ]'
     translation: "because"
     pos: "conjunction"
     notes: "colloquial, shorter version of «тому що», high frequency in speech"
   - lemma: "якщо"
+    ipa: '[jɑˈkʃt͡ʃɔ]'
     translation: "if"
     pos: "conjunction"
     usage: "«якщо ви» (if you), «якщо є» (if there is)"
   - lemma: "але"
+    ipa: '[ɑˈlɛ]'
     translation: "but"
     pos: "conjunction"
     usage: "«але потім» (but then), «але не» (but not)"
   - lemma: "і"
+    ipa: '[i]'
     translation: "and"
     pos: "conjunction"
     notes: "becomes «й» after vowels for euphony"
   - lemma: "також"
+    ipa: '[ˈtɑˈkɔʒ]'
     translation: "also, too"
     pos: "adverb"
     notes: "word order: never at the end of a sentence"
   - lemma: "разом"
+    ipa: '[ˈrɑzɔm]'
     translation: "together"
     pos: "adverb"
     usage: "«разом з» (together with), «ходімо разом» (let's go together)"
   - lemma: "план"
+    ipa: '[plɑn]'
     translation: "plan"
     pos: "noun"
     gender: "m"
     example: "Це мій план."
   - lemma: "проблема"
+    ipa: '[prɔˈblɛmɑ]'
     translation: "problem"
     pos: "noun"
     gender: "f"
     usage: "«немає проблеми» (no problem)"
   - lemma: "вирішити"
+    ipa: '[ˈʋɪrʲiʃɪtɪ]'
     translation: "to solve, to decide"
     pos: "verb"
     aspect: "perfective"
     usage: "«вирішити проблему» (solve a problem)"
   - lemma: "змінити"
+    ipa: '[zʲmʲiˈnɪtɪ]'
     translation: "to change"
     pos: "verb"
     aspect: "perfective"
     usage: "«змінити плани» (change plans)"
   - lemma: "кава"
+    ipa: '[ˈkɑʋɑ]'
     translation: "coffee"
     pos: "noun"
     gender: "f"
   - lemma: "базар"
+    ipa: '[bɑˈzɑr]'
     translation: "market, bazaar"
     pos: "noun"
     gender: "m"
   - lemma: "купувати"
+    ipa: '[kupuˈʋɑtɪ]'
     translation: "to buy"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "овочі"
+    ipa: '[ˈɔʋɔt͡ʃʲi]'
     translation: "vegetables"
     pos: "noun"
     gender: "m"
   - lemma: "фрукти"
+    ipa: '[ˈfruktɪ]'
     translation: "fruits"
     pos: "noun"
     gender: "m"
   - lemma: "дорого"
+    ipa: '[ˈdɔrɔɦɔ]'
     translation: "expensive"
     pos: "adverb"

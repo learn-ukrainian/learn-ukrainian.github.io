@@ -4,7 +4,7 @@
   gender: m
   translation: market
   example: "Я йду на ринок."
-- ipa: '[kʲiloˈɦrɑm]'
+- ipa: '[kʲilɔˈɦrɑm]'
   lemma: кілограм
   pos: noun
   gender: m
@@ -28,7 +28,7 @@
   gender: m
   translation: bunch (of greens)
   example: "Пучок петрушки."
-- ipa: '[ˈsʋʲiʒɪj]'
+- ipa: '[ˈsʲʋʲiʒɪj]'
   lemma: свіжий
   pos: adj
   translation: fresh
@@ -43,12 +43,12 @@
   pos: noun
   translation: fruits
   notes: usually plural
-- ipa: '[ˈskʲilʲkɪ]'
+- ipa: '[ˈsʲkʲilʲkɪ]'
   lemma: скільки
   pos: adv
   translation: how much / how many
   usage: "Скільки коштує?"
-- ipa: '[ˈdɑjte]'
+- ipa: '[ˈdɑjtɛ]'
   lemma: дайте
   pos: verb
   translation: give (imperative, polite)
@@ -59,7 +59,7 @@
   gender: f
   translation: change (money)
   example: "Ваша здача."
-- ipa: '[prodɑˈʋɛt͡sʲ]'
+- ipa: '[prɔdɑˈʋɛt͡sʲ]'
   lemma: продавець
   pos: noun
   gender: m
@@ -75,12 +75,12 @@
   gender: f
   translation: potato
   notes: usually singular in Ukrainian (collective)
-- ipa: '[pomʲiˈdɔr]'
+- ipa: '[pɔmʲiˈdɔr]'
   lemma: помідор
   pos: noun
   gender: m
   translation: tomato
-- ipa: '[oˈɦʲirɔk]'
+- ipa: '[ɔɦʲiˈrɔk]'
   lemma: огірок
   pos: noun
   gender: m
@@ -101,7 +101,7 @@
   lemma: смачний
   pos: adj
   translation: tasty / delicious
-- ipa: '[soˈlɔdkɪj]'
+- ipa: '[sɔˈlɔdkɪj]'
   lemma: солодкий
   pos: adj
   translation: sweet
@@ -109,12 +109,12 @@
   lemma: стиглий
   pos: adj
   translation: ripe
-- ipa: '[ɦoˈtʲiu̯kɑ]'
+- ipa: '[ɦɔˈtʲiu̯kɑ]'
   lemma: готівка
   pos: noun
   gender: f
   translation: cash
-- ipa: '[ˈzʋɑʒte]'
+- ipa: '[ˈzʋɑʒtɛ]'
   lemma: зважте
   pos: verb
   translation: weigh (imperative, polite)

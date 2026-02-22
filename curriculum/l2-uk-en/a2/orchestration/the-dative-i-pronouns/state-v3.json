@@ -20,13 +20,15 @@
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-20T23:55:02Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-22T18:18:52Z",
+      "attempts": 3,
+      "note": "escalation-claude"
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-20T23:55:02Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-22T18:23:46Z",
+      "attempts": 1,
+      "note": "d1-only"
     }
   }
 }

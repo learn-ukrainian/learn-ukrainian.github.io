@@ -33,7 +33,7 @@
   notes: Type 2 (-ити); Mutation t→ch (я плачу)
   pos: verb
   translation: to pay
-- ipa: '[ˈʋt͡ʃɪtɪ]'
+- ipa: '[ˈʍt͡ʃɪtɪ]'
   lemma: вчити
   notes: Type 2 (-ити)
   pos: verb
@@ -63,15 +63,15 @@
   notes: 'Fem. (Acc: каву)'
   pos: noun
   translation: coffee
-- ipa: '[pɔˈmɪlkɑ]'
+- ipa: '[ˈpɔˈmɪlkɑ]'
   lemma: помилка
   pos: noun
   translation: mistake
-- ipa: '[sʲʋit]'
+- ipa: '[sʲʋʲit]'
   lemma: світ
   pos: noun
   translation: world
-- ipa: '[ˈprɑʋdɑ]'
+- ipa: '[ˈprɑu̯dɑ]'
   lemma: правда
   pos: noun
   translation: truth
@@ -87,7 +87,7 @@
   lemma: сюрприз
   pos: noun
   translation: surprise
-- ipa: '[ʃt͡ʃɔˈdnʲɑ]'
+- ipa: '[ʃt͡ʃɔˈdʲnʲɑ]'
   lemma: щодня
   pos: adverb
   translation: every day

@@ -1,7 +1,7 @@
 # Audit Report: M24 — can-must-want-modals.md
 **Level:** A1 | **Module:** M24 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:43
+**Generated:** 2026-02-22 16:05:39
 
 ## Configuration
 **Type:** A1-grammar
@@ -45,7 +45,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 15/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 13 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

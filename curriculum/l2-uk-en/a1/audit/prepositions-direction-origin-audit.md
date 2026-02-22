@@ -1,7 +1,7 @@
 # Audit Report: M30 — prepositions-direction-origin.md
 **Level:** A1 | **Module:** M30 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 01:01:44
+**Generated:** 2026-02-22 16:05:44
 
 ## Configuration
 **Type:** A1-grammar
@@ -47,7 +47,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 1 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

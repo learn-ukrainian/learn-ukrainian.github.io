@@ -1,0 +1,13 @@
+{
+  "track": "lit-hist-fic",
+  "slug": "hist-fic-synthesis",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T06:49:09Z",
+      "task_id": "v3-hist-fic-synthesis-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Audit Report: M17 — numbers-and-money.md
 **Level:** A1 | **Module:** M17 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:38
+**Generated:** 2026-02-22 16:05:34
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,6 +37,15 @@
 - Required types used: 2/2 (fill-in, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_BALANCE_BLOATED]** Section 'Теорія: Числа та гроші' has 1404 words (49% of total). Bloated sections: 'Теорія: Числа та гроші' (49%)
+  - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 2641/2000 (raw: 2964)
 - **Activities:** ✅ 10/8
@@ -47,7 +56,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 1 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

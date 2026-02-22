@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "sentsov-numbers",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T11:52:33Z",
+      "task_id": "v3-sentsov-numbers-pA",
+      "mode": "full"
+    }
+  }
+}

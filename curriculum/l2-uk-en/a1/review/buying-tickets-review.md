@@ -1,132 +1,206 @@
-# Review: Buying Tickets
+<!-- content-hash: 3eaeb8a8c0de -->
+**Reviewed-By:** claude-opus-4-6
+
+# Рецензія: Buying Tickets
 
 **Level:** A1 | **Module:** 39
-**Overall Score:** 9.0/10
-**Status:** PASS
-**Reviewed:** 2026-02-20
-**Review Prompt:** review-content-core-a v1.0
+**Overall Score:** 7.9/10
+**Status:** FAIL
+**Reviewed:** 2026-02-22
 
-## Scores Breakdown
+## Plan Verification
 
-| Dimension | Score | Notes |
-|-----------|-------|-------|
-| Lesson Quality | 9/10 | Warm, encouraging tutor voice. "Щасливої дороги!" framing is motivating. Minor LLM pattern in opening. |
-| Coherence | 9/10 | Excellent flow: transport types -> ticket buying -> details -> dialogues -> culture -> summary. |
-| Relevance | 10/10 | Perfectly aligned with meta content_outline. All 5 sections covered. |
-| Educational | 9/10 | Clear "до + Genitive" pattern with city examples. Carriage types well explained. |
-| Language | 9/10 | Ukrainian is natural and simple. One issue: "молодец" on line 316 should be "молодець". |
-| Pedagogy | 9/10 | Good PPP scaffolding. Grammar taught as chunks first, then pattern. 4 dialogues reinforce learning. |
-| L1/L2 Balance | 9/10 | 35.9% Ukrainian — within 35-40% target for A1 M39. |
-| Activities | 9/10 | 10 activities, good variety (group-sort, match-up, quiz, fill-in, unjumble). All items correct. |
-| Richness | 10/10 | Excellent cultural depth: підстаканники, провідник, food-sharing tradition, Intercity trains. |
-| Beginner Safety | 10/10 | "Would I Continue?" 5/5. Encouragement throughout. Progress celebration at end. |
-| LLM Fingerprint | 8/10 | "In this lesson, we will master the exact phrases" (line 17) — AI pattern. "Чому це важливо?" block. |
-| Linguistic Accuracy | 9/10 | Grammar explanations correct. One overclaim: "Неправильно: я їду в Київ" — actually valid for direction. |
+```
+Plan-Content Alignment: PARTIAL FAIL
+- Sections: 5/5 match meta content_outline (Види транспорту та вокзали, Купівля квитка та напрямок, Деталі подорожі: Клас і Розклад, Практика: Діалоги на вокзалі, Подорож поїздом: Традиції)
+- Vocabulary: 5/5 required from plan present, 9/9 recommended present, 0 extra. MISSING: "електронний квиток" (plan vocabulary_hints.required mentions it, content has zero coverage)
+- Grammar scope: CLEAN — до + Genitive is within scope, no scope creep
+- Objectives: 4/4 addressed (buy tickets ✓, specify destination/class ✓, understand ticket info ✓, ask schedules ✓)
+- Plan deviations: (1) "електронний квиток (QR-код)" completely absent; (2) plan specifies "Наратив про подорож у Карпати" but reading text is about Odesa; (3) "квиткова каса" and "центральний вокзал" collocations from plan not used; (4) "автовокзал vs залізничний вокзал" reinforcement in practice section missing
+```
 
-**Weighted Overall:** (9x1.5 + 9x1.0 + 10x1.0 + 9x1.2 + 9x1.1 + 9x1.2 + 9x1.0 + 9x1.3 + 10x0.9 + 10x1.3 + 8x1.0 + 9x1.5) / 14.0 = **9.16/10**
+## Scores
 
-## L1/L2 Balance Analysis
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 7/10 | <7 | Cold opening at line 11: «Купівля квитків — це просто.» — no greeting, no warmth. Weak motivation box «Це важливо для вас.» (line 15). Good dialogues in section «Практика: Діалоги на вокзалі» partially compensate. |
+| 2 | Coherence | 8/10 | <7 | Logical flow: transport types → ticket buying → details → practice → culture. Good section-to-section transitions. Minor: section «Подорож поїздом: Традиції» repeats провідник/постіль info already covered in section «Деталі подорожі: Клас і Розклад». |
+| 3 | Relevance | 9/10 | <7 | Highly practical topic for A1 travelers. Covers all essential ticket-buying scenarios. Missing only electronic tickets/QR codes which are now standard for Укрзалізниця. |
+| 4 | Educational | 8/10 | <7 | Strong до + Genitive pattern teaching with city examples in section «Купівля квитка та напрямок». Missing "електронний квиток" from plan. 4 dialogues provide excellent practice in section «Практика: Діалоги на вокзалі». |
+| 5 | Language | 8/10 | <8 | Ukrainian prose is clean — no Russianisms, no calques. However, bridging sentences in intro are robotic: «Це важливий урок. Ви хочете купити квиток? Ви хочете поїхати до Львова? Це прекрасно. Ви маєте знати слова.» (line 19) — stilted string of simple declarations. |
+| 6 | Pedagogy | 8/10 | <7 | PPP structure works. Good Present in sections «Види транспорту та вокзали» and «Купівля квитка та напрямок». Practice dialogues are strong. However, ~1000 words of presentation before first reader-active moment (line 103 "read aloud") is too long for beginners. |
+| 7 | Immersion | 7/10 | <6 | 35.9% vs target 35-55%. Within range but barely at the floor. For module 39/44 (A1.4 phase), immersion could be higher. Most sections have only 1-2 Ukrainian bridging sentences before reverting to English. |
+| 8 | Activities | 7/10 | <7 | 10 activities with good variety (group-sort, match-up, quiz, fill-in, unjumble). BUT: unjumble activity has systematic comma omissions in 3/6 answers — contradicts the lesson's own emphasis on «будь ласка» as polite formula. |
+| 9 | Richness | 8/10 | <6 | Good cultural hooks: підстаканник tradition, плацкарт food-sharing culture, провідник role. 4 situated dialogues. Named cities (Київ, Львів, Одеса, Харків, Умань, Дніпро, Житомир, Херсон, Вінниця). Reading text «Моя подорож» at line 266-269. |
+| 10 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5 — see Beginner Safety Audit below. Cold opening hurts, but dialogues and closing encouragement («Ви молодець!» line 316) partially recover. |
+| 11 | LLM Fingerprint | 7/10 | <7 | 14 identical "Example:" blocks with same formatting pattern. Every content section follows: English paragraph → 1-2 Ukrainian bridging sentences → "Example:" → bulleted Ukrainian sentences. This is unmistakably template-generated. |
+| 12 | Linguistic Accuracy | 8/10 | <9 | Prose Ukrainian is grammatically clean. However, unjumble activity answers systematically omit required commas: «Один квиток будь ласка» (should have comma), «Скажіть будь ласка де каса» (needs two commas). Line 179 «Дайте нижнє місце.» contradicts politeness emphasis by omitting "будь ласка". |
+| 13 | Factual Accuracy | 9/10 | <8 | Transport descriptions accurate. Підстаканник, купе/плацкарт distinctions correct. Intercity trains box (line 168-169) accurate. [!myth-buster] about train safety (line 300-302) is reasonable. No fabricated claims. |
 
-- **Target immersion:** 35-40% Ukrainian (A1 M39)
-- **Actual immersion:** ~35.9% Ukrainian
-- **Assessment:** On target. English support present for all grammar explanations and cultural context. Ukrainian used for examples, short narrative passages, and dialogues.
-
-## IPA Verification
-
-- Transcriptions checked: 12
-- Errors found: 1 minor
-- Details:
-  - [ˈpɔjizd] for поїзд — correct
-  - [kuˈpɛ] for купе — correct
-  - [plɐtˈskɑrt] for плацкарт — correct
-  - [ˈnɪʒnʲɛ ˈm⁽ʲ⁾isʲt͡se] for нижнє місце — correct
-  - [ˈʋɛrxnʲɛ ˈm⁽ʲ⁾isʲt͡se] for верхнє місце — correct
-  - [ʋ⁽ʲ⁾idˈprɑu̯lʲɐnʲːɐ] for відправлення — minor: [u̯] for в in cluster is dialectal, standard would be [ʋ]; not blocking
-  - [prɪbuˈtʲːɑ] for прибуття — correct
-  - [plɐtˈfɔrmɐ] for платформа — correct
-  - [ʋɐˈɦɔn] for вагон — correct
-  - [ˈkɑsɐ] for каса — correct
-  - [ˈdɔʋ⁽ʲ⁾idkɐ] for довідка — correct
-  - [ʃt͡ʃɐˈslɪʋɔji dɔˈrɔɦɪ] for Щасливої дороги — correct
-
-## State Standard Check
-
-- Grammar point: Genitive case with preposition "до" for direction/destination
-- Compliance: Compliant. City name endings (-а/-я for masculine consonant stems, -и/-і for feminine -а stems) are correctly stated.
-- Note: The module correctly limits Genitive to the "до + City" chunk pattern, avoiding full case theory.
+**Weighted Overall:** (7×1.5 + 8×1.0 + 9×1.0 + 8×1.2 + 8×1.1 + 8×1.2 + 7×1.0 + 7×1.3 + 8×0.9 + 8×1.3 + 7×1.0 + 8×1.5 + 9×1.5) / 15.5 = (10.5 + 8.0 + 9.0 + 9.6 + 8.8 + 9.6 + 7.0 + 9.1 + 7.2 + 10.4 + 7.0 + 12.0 + 13.5) / 15.5 = 121.7 / 15.5 = **7.9/10**
 
 ## Auto-Fail Checklist Results
 
-- Russianisms: 1 found — "молодец" (line 316) should be "молодець"
-- Calques: CLEAN
-- Grammar scope: CLEAN (Genitive limited to chunks)
-- Activity errors: CLEAN
-- Beginner Safety: 5/5
+- Russianisms: [CLEAN]
+- Calques: [CLEAN]
+- Colonial framing: [CLEAN] — no Russian-baseline comparisons found
+- Grammar scope: [CLEAN] — до + Genitive presented as lexicalized chunks, appropriate for A1
+- Activity errors: [3 ISSUES] — unjumble punctuation (see Critical Issue 2)
+- Beginner safety: 4/5
+- Factual accuracy: [CLEAN]
+- **AUTO-FAIL TRIGGERED**: Linguistic Accuracy 8/10 < 9 threshold
+
+## Critical Issues Found
+
+### Issue 1: Cold Opening — No Warm Greeting (Experience Quality / Beginner Safety)
+- **Location**: Lines 11-19 / Section «Купівля квитків» (intro before first H2)
+- **Original**: «Купівля квитків — це просто.» (line 11) followed by «Це важливо для вас.» (line 15) and «Це важливий урок. Ви хочете купити квиток? Ви хочете поїхати до Львова? Це прекрасно. Ви маєте знати слова. Слухайте і читайте.» (line 19)
+- **Problem**: No "Привіт!" or warm greeting. The opening line is a flat declarative statement. The motivation box «Це важливо для вас.» is vague — WHY is it important? The Ukrainian bridging at line 19 reads like a robot: 6 consecutive simple declarations. For module 39 (late A1), a learner should feel welcomed, not lectured.
+- **Fix**: Open with "Привіт! Сьогодні ми вчимо нові слова." Replace motivation box with concrete hook: "Imagine you're at the Kyiv train station, ready to explore Ukraine — but you need a ticket first." Replace line 19 with a warmer, more varied bridging paragraph.
+
+### Issue 2: Unjumble Activities — Systematic Comma Omission (Linguistic Accuracy / Activities)
+- **Location**: Activities file, unjumble activity (lines 186, 190, 194)
+- **Original**: answer: `"Один квиток будь ласка"` (line 186), answer: `"Я хочу нижнє місце будь ласка"` (line 190), answer: `"Скажіть будь ласка де каса"` (line 194)
+- **Problem**: All three answers omit commas before/around «будь ласка». The content itself consistently uses the comma: «Один квиток, будь ласка.» (line 70), «Я хочу нижнє місце, будь ласка.» (line 177). This directly contradicts what the lesson teaches and presents incorrect Ukrainian punctuation as the "correct" answer. 3 out of 6 unjumble items are affected.
+- **Fix**: Add commas: `"Один квиток, будь ласка"`, `"Я хочу нижнє місце, будь ласка"`, `"Скажіть, будь ласка, де каса"`
+
+### Issue 3: Structural Monotony — 14 Identical "Example:" Blocks (LLM Fingerprint)
+- **Location**: Lines 30, 39, 54, 69, 92, 118, 152, 162, 176, 190, 200, 282, 296, 307 — across all sections
+- **Original**: Every section follows the pattern: English explanation paragraph → 1-2 Ukrainian bridging sentences → bare `Example:` label → bulleted bold Ukrainian sentences with English translation in parentheses.
+- **Problem**: 14 consecutive instances of the exact same structural template. No variation — no "Try these:", no "Here's how it sounds:", no inline examples, no dialogue snippets mixed in. This screams LLM generation.
+- **Fix**: Vary example presentation — use inline examples in some sections, "Спробуйте:" or "Прочитайте:" headers in others, integrate some examples directly into the prose rather than as standalone blocks.
+
+### Issue 4: Plan Compliance — Missing "електронний квиток" Coverage
+- **Location**: Section «Купівля квитка та напрямок» (lines 58-133)
+- **Problem**: The plan (vocabulary_hints.required) explicitly lists "електронний квиток" as required vocabulary. The plan section "Каса та замовлення" point 2 specifies: "Вивчення різниці між «квитковою касою» та «електронним квитком» (QR-код)". The content has ZERO mention of electronic tickets, QR codes, or online booking — which is now the primary way to buy tickets on Укрзалізниця. The collocation "квиткова каса" also doesn't appear.
+- **Fix**: Add 3-4 sentences about електронний квиток/QR-код to section «Купівля квитка та напрямок», with an example like "Я маю електронний квиток на телефоні."
+
+### Issue 5: Impolite Example Contradicts Politeness Teaching (Pedagogy)
+- **Location**: Line 179 / Section «Деталі подорожі: Клас і Розклад»
+- **Original**: «Дайте нижнє місце.» (line 179)
+- **Problem**: This bare imperative "Give a lower bunk" without "будь ласка" contradicts the module's own politeness emphasis. The [!note] at line 74-78 and [!tip] at line 262-264 both stress the importance of «будь ласка», yet this example models impolite speech. At A1, learners will internalize whatever examples they see.
+- **Fix**: Change to «Дайте нижнє місце, будь ласка.»
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 179 | «Дайте нижнє місце.» | «Дайте нижнє місце, будь ласка.» | Pedagogical inconsistency |
+| Act. 186 | «Один квиток будь ласка» | «Один квиток, будь ласка» | Punctuation |
+| Act. 190 | «Я хочу нижнє місце будь ласка» | «Я хочу нижнє місце, будь ласка» | Punctuation |
+| Act. 194 | «Скажіть будь ласка де каса» | «Скажіть, будь ласка, де каса» | Punctuation |
 
 ## Beginner Safety Audit
 
-"Would I Continue?" Test:
-- Overwhelmed? Pass — concepts introduced gradually, 5-7 words per section
-- Instructions clear? Pass — always clear what to do and why
-- Quick wins? Pass — "Один квиток, будь ласка" is immediately usable
-- Ukrainian scary? Pass — every Ukrainian word has English support
-- Come back tomorrow? Pass — cultural content (tea tradition, плацкарт experience) creates genuine curiosity
-- **Result:** 5/5
+"Would I Continue?" Test: 4/5
+- Overwhelmed? **Pass** — manageable chunks, vocabulary introduced in small groups (3-5 per subsection)
+- Instructions clear? **Pass** — English explanations are clear throughout, grammar table at line 128-132 is excellent
+- Quick wins? **Fail** — first reader-active moment is "read aloud" at line 103, approximately 1000 words into the module. No mini-exercise or prompt before that.
+- Ukrainian scary? **Pass** — Ukrainian introduced gently with English support. Bridging sentences are short and simple.
+- Come back tomorrow? **Pass** — Dialogues in section «Практика: Діалоги на вокзалі» are engaging and practical. Reading text «Моя подорож» (line 269) is delightful. Closing encouragement «Ви молодець!» (line 316) is motivating.
 
-Emotional beats found: 8
-- Welcome: Yes ("Купівля квитків — це просто" + importance framing)
-- Curiosity: Yes (вокзал vs станція distinction, tea tradition)
-- Quick wins: 3 (core formula, city pattern, dialogue practice)
-- Encouragement: 3 ("Це просто", "Щасливої дороги!", "Ви молодец!")
-- Progress marker: Yes ("Congratulations! You are now ready to navigate...")
-
-## Issues Found
-
-### Issue 1: Russicism — "молодец"
-**Location:** Line 316
-**Original:** "Ви молодец!"
-**Problem:** "Молодец" is Russian. Ukrainian requires soft sign: "молодець".
-**Fix:** Change to "Ви молодець!"
-**Status:** Noted for fix
-
-### Issue 2: Overclaim about "в Київ"
-**Location:** Line 99-101
-**Original:** "Never say квиток в Київ. Always use до." + "Неправильно: я їду в Київ."
-**Problem:** The advice for tickets ("квиток до Києва" not "квиток в Київ") is correct. However, the blanket statement "Неправильно: я їду в Київ" is linguistically inaccurate — "їхати в Київ" is standard Ukrainian for direction with accusative case. The distinction should be about the ticket context only.
-**Fix:** Soften to "For tickets, always use до: квиток до Києва" and remove the Ukrainian line marking "я їду в Київ" as wrong.
-**Status:** Noted for fix (non-blocking — pedagogically useful simplification for A1)
-
-### Issue 3: Vocabulary file Latin lemma
-**Location:** vocabulary/buying-tickets.yaml, line 61
-**Original:** `lemma: "rozklad"` (Latin transliteration)
-**Problem:** Lemma field uses Latin instead of Cyrillic. Line 65 has the correct `lemma: "розклад"` (duplicate key).
-**Fix:** Remove the Latin line; keep only the Cyrillic lemma.
-**Status:** Noted for fix
-
-### Issue 4: LLM Fingerprint
-**Location:** Line 17
-**Original:** "In this lesson, we will master the exact phrases you need"
-**Problem:** Generic AI opening pattern ("In this lesson, we will...")
-**Fix:** Rephrase to more natural tutor voice: "Let's learn the exact phrases you need"
-**Status:** Minor — not blocking
-
-## Verification Summary
-
-- Lines read: 327 (full .md file)
-- Activity items checked: 82 (across 10 activity blocks)
-- Ukrainian sentences verified: ~55
-- English sentences verified: ~40
-- IPA transcriptions verified: 12
-- Issues found: 4
-- Issues blocking: 0 (all minor or pedagogical simplifications)
+**Emotional beat mapping:**
+- Welcome/orientation: WEAK — no greeting, «Це важливо для вас» is flat
+- Curiosity trigger: PRESENT — travel to Lviv, Carpathians mentioned in English intro (line 17)
+- Quick wins: LATE — first occurs ~halfway through module
+- Encouragement: PRESENT — «Це прекрасно» (line 19), «Ви молодець!» (line 316)
+- Progress marker: PRESENT — «Тепер ви знаєте все» (line 316), self-check questions (lines 320-326)
 
 ## Strengths
 
-- **Cultural Depth**: The підстаканник tradition, провідник role, and food-sharing customs make this feel like genuine preparation for Ukrainian travel.
-- **Practical Dialogues**: 4 realistic scenarios (train ticket, bus station, carriage confusion, information desk) cover the most likely encounters.
-- **Grammar as Chunks**: Teaching "до + City" as memorized phrases rather than abstract Genitive theory is perfect for A1.
-- **Emotional Arc**: Opens with "this is simple", builds confidence through patterns, celebrates with "Щасливої дороги!"
+- **Excellent dialogue section**: Section «Практика: Діалоги на вокзалі» has 4 well-constructed, realistic dialogues covering different scenarios (train, bus, clarification, information desk). These are the strongest part of the module.
+- **Cultural depth**: Section «Подорож поїздом: Традиції» authentically captures Ukrainian train culture — підстаканник, провідник, food-sharing tradition. The paragraph at line 292 «Українці люблять їсти в поїзді. Це наша традиція.» is natural and engaging.
+- **Grammar table**: The Direction vs Location comparison table at lines 128-132 in section «Купівля квитка та напрямок» is pedagogically excellent — visual, concise, and immediately clarifies a common confusion.
+- **City coverage**: Uses 9 real Ukrainian cities (Київ, Львів, Одеса, Харків, Умань, Дніпро, Житомир, Херсон, Вінниця) providing diverse Genitive pattern practice.
+- **Reading text**: «Моя подорож» (line 269) is a gem — short, flowing, uses all key vocabulary in a natural narrative.
 
-## Recommendation
+## Fix Plan to Reach 9.0/10 (REQUIRED — score < 9.0)
 
-**PASS** — Strong A1 module with excellent cultural grounding and practical dialogue practice. The "до + Genitive" pattern is well scaffolded. Minor issues (one Russicism "молодец" -> "молодець", one overclaim about "в Київ") do not affect overall quality. Activities are varied and schema-valid.
+### Linguistic Accuracy: 8/10 → 9/10
+**What to fix:**
+1. Activities file line 186: Change answer to `"Один квиток, будь ласка"` — add comma
+2. Activities file line 190: Change answer to `"Я хочу нижнє місце, будь ласка"` — add comma
+3. Activities file line 194: Change answer to `"Скажіть, будь ласка, де каса"` — add two commas
+4. Line 179: Change «Дайте нижнє місце.» → «Дайте нижнє місце, будь ласка.» — consistency with politeness teaching
+
+**Expected score after fix:** 9/10
+
+### Experience Quality: 7/10 → 9/10
+**What to fix:**
+1. Line 11: Replace «Купівля квитків — це просто.» with warm greeting: "Привіт! Сьогодні ви навчитеся купувати квитки."
+2. Lines 13-16: Rewrite motivation box with concrete scenario instead of vague «Це важливо для вас.»
+3. Line 19: Replace robotic bridging with warmer, varied sentences
+
+**Expected score after fix:** 9/10
+
+### LLM Fingerprint: 7/10 → 8/10
+**What to fix:**
+1. Vary "Example:" labels — use "Спробуйте:", "Прочитайте:", "Ось як це звучить:" for at least 5 of the 14 blocks
+2. Integrate 3-4 examples directly into prose paragraphs instead of standalone blocks
+3. Open at least 2 sections differently (not English paragraph → Ukrainian bridging → Example:)
+
+**Expected score after fix:** 8/10
+
+### Activities: 7/10 → 8/10
+**What to fix:**
+1. Fix all 3 unjumble comma issues (see Linguistic Accuracy above)
+2. Consider adding comma as a separate token in unjumble word lists for explicit punctuation practice
+
+**Expected score after fix:** 8/10
+
+### Immersion: 7/10 → 8/10
+**What to fix:**
+1. Add 2-3 more Ukrainian bridging sentences per section (especially in section «Види транспорту та вокзали» and «Деталі подорожі: Клас і Розклад»)
+2. Convert some English-only explanations to bilingual (Ukrainian first, English gloss)
+
+**Expected score after fix:** 8/10
+
+### Educational: 8/10 → 9/10
+**What to fix:**
+1. Add coverage of "електронний квиток" and QR-code in section «Купівля квитка та напрямок» (3-4 sentences + 1 example)
+2. Add "квиткова каса" collocation (plan required)
+
+**Expected score after fix:** 9/10
+
+### Projected Overall After Fixes
+```
+Experience: 9×1.5=13.5, Coherence: 8×1.0=8.0, Relevance: 9×1.0=9.0
+Educational: 9×1.2=10.8, Language: 8×1.1=8.8, Pedagogy: 8×1.2=9.6
+Immersion: 8×1.0=8.0, Activities: 8×1.3=10.4, Richness: 8×0.9=7.2
+Beginner Safety: 9×1.3=11.7, LLM: 8×1.0=8.0, Linguistic Accuracy: 9×1.5=13.5
+Factual Accuracy: 9×1.5=13.5
+Total = 132.0 / 15.5 = 8.5/10
+```
+
+## Factual Verification
+
+- Research notes consulted: NOT_APPLICABLE (A1 core track — no research file)
+- Key Facts Ledger present: NO
+- Dates checked: 0 (no historical dates in content)
+- Named figures verified: 0 (no named historical figures)
+- Primary quotes cross-referenced: N/A
+- Chronological sequence: N/A
+- Claims without research grounding: N/A
+
+**Callout box verification (all tracks):**
+- [!culture] line 43-47: Вокзал vs станція distinction — **ACCURATE**. Вокзал is indeed used for major terminals; станція for metro/smaller stops.
+- [!note] line 74-78: Politeness at ticket window — **ACCURATE**. Naming destination + count + будь ласка is standard.
+- [!warning] line 97-101: «квиток до Києва» vs «квиток в Київ» — **ACCURATE** for formal/written context. (Note: colloquially «квиток в Київ» is heard but «до» is standard for tickets.)
+- [!fact] line 167-169: Інтерсіті trains — **ACCURATE**. Інтерсіті+ connects Kyiv-Lviv-Kharkiv-Odesa.
+- [!tip] line 262-264: «будь ласка» usage — **ACCURATE**.
+- [!myth-buster] line 300-302: Train safety — **ACCURATE**. Ukrainian trains are generally safe; food sharing is genuine cultural practice.
+
+## Verification Summary
+
+- Content lines read: 328
+- Activity items checked: 65 (across 10 activities)
+- Ukrainian sentences verified: 38
+- IPA transcriptions checked: 8 (залізничний вокзал, каса, довідка, розклад, в один бік, туди й назад, нижнє місце, верхнє місце)
+- Factual claims verified: 6 (all callout boxes)
+- Issues found: 5
+
+## Verdict
+
+**FAIL**
+
+Blocking issues: (1) **Linguistic Accuracy 8/10 < 9 auto-fail** — systematic comma omission in 3/6 unjumble activity answers contradicts the lesson's own politeness teaching; (2) **LLM Fingerprint 7/10** — 14 identical "Example:" blocks create unmistakable template monotony; (3) **Plan compliance gap** — required vocabulary item "електронний квиток" completely absent from content. The cold opening without a greeting also hurts beginner safety. Fixes are straightforward: correct activity punctuation, add warm greeting, vary example formatting, add electronic ticket coverage.

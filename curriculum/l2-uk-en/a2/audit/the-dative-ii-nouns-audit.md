@@ -1,7 +1,7 @@
 # Audit Report: M02 — the-dative-ii-nouns.md
 **Level:** A2 | **Module:** M02 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 01:07:32
+**Generated:** 2026-02-22 19:30:08
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,6 +38,15 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_NOT_IN_CONTENT]** Only 17/26 (65%) vocabulary words appear in content+activities. Missing: бажати, бракувати, вистачати, вірити, гість, довіряти, заважати, личити (+1 more)
+  - FIX: Integrate missing vocabulary words into the prose or activities. Each vocab word should appear at least once in context.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 3689/3000 (raw: 4021)

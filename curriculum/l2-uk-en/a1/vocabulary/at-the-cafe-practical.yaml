@@ -1,93 +1,113 @@
 items:
   - lemma: "кава"
+    ipa: '[ˈkɑʋɑ]'
     translation: "coffee"
     pos: "noun"
     gender: "f"
     usage: "я буду каву (Acc.)"
   - lemma: "чай"
+    ipa: '[t͡ʃɑj]'
     translation: "tea"
     pos: "noun"
     gender: "m"
     usage: "зелений/чорний чай"
   - lemma: "меню"
+    ipa: '[mɛˈnʲu]'
     translation: "menu"
     pos: "noun"
     gender: "n"
     notes: "indeclinable (never changes form)"
   - lemma: "рахунок"
+    ipa: '[rɑˈxunɔk]'
     translation: "bill"
     pos: "noun"
     gender: "m"
     example: "Можна рахунок?"
   - lemma: "будь ласка"
+    ipa: '[budʲ ˈlɑskɑ]'
     translation: "please"
     pos: "phrase"
     notes: "literally: be affection/kindness"
   - lemma: "дякую"
+    ipa: '[dʲɑkuju]'
     translation: "thank you"
     pos: "verb"
     notes: "often used as an interjection"
   - lemma: "готівка"
+    ipa: '[ɦɔˈtʲiu̯kɑ]'
     translation: "cash"
     pos: "noun"
     gender: "f"
     usage: "платити готівкою (Instr.)"
   - lemma: "картка"
+    ipa: '[ˈkɑrtkɑ]'
     translation: "card"
     pos: "noun"
     gender: "f"
     usage: "платити карткою (Instr.)"
   - lemma: "круасан"
+    ipa: '[kruɑˈsɑn]'
     translation: "croissant"
     pos: "noun"
     gender: "m"
   - lemma: "тістечко"
+    ipa: '[ˈtʲistɛt͡ʃkɔ]'
     translation: "pastry/cake"
     pos: "noun"
     gender: "n"
     notes: "small cake or pastry"
   - lemma: "молоко"
+    ipa: '[mɔlɔˈkɔ]'
     translation: "milk"
     pos: "noun"
     gender: "n"
     usage: "з молоком (Instr.)"
   - lemma: "цукор"
+    ipa: '[ˈt͡sukɔr]'
     translation: "sugar"
     pos: "noun"
     gender: "m"
     usage: "без цукру (Gen.)"
   - lemma: "вода"
+    ipa: '[ʋɔˈdɑ]'
     translation: "water"
     pos: "noun"
     gender: "f"
     usage: "можна воду? (Acc.)"
   - lemma: "сік"
+    ipa: '[sʲik]'
     translation: "juice"
     pos: "noun"
     gender: "m"
   - lemma: "філіжанка"
+    ipa: '[fʲilʲiˈʒɑnkɑ]'
     translation: "cup"
     pos: "noun"
     gender: "f"
     notes: "Western Ukrainian dialect (synonym: чашка)"
   - lemma: "бариста"
+    ipa: '[bɑrɪstɑ]'
     translation: "barista"
     pos: "noun"
     gender: "m"
   - lemma: "офіціант"
+    ipa: '[ɔfʲit͡sʲiˈɑnt]'
     translation: "waiter"
     pos: "noun"
     gender: "m"
   - lemma: "клієнт"
+    ipa: '[klʲiˈjɛnt]'
     translation: "client/customer"
     pos: "noun"
     gender: "m"
   - lemma: "пляцок"
+    ipa: '[ˈplʲɑt͡sɔk]'
     translation: "cake/pie"
     pos: "noun"
     gender: "m"
     notes: "Western Ukrainian dialect (Galician)"
   - lemma: "файно"
+    ipa: '[ˈfɑjnɔ]'
     translation: "nice/good"
     pos: "adverb"
     notes: "Western Ukrainian dialect"

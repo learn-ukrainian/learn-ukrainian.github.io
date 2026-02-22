@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "synthesis-2",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T06:56:32Z",
+      "task_id": "v3-synthesis-2-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """IPA linter for Ukrainian curriculum content.
 
-Scans .md files for IPA transcriptions in square brackets and catches
+Scans .md and .yaml files for IPA transcriptions in square brackets and catches
 systematic errors that Gemini consistently produces.
 
 Errors detected:
@@ -16,6 +16,7 @@ Errors detected:
   o → ɔ       Ukrainian о is open-mid back rounded [ɔ] (inside IPA brackets)
   e → ɛ       Ukrainian е is open-mid front unrounded [ɛ] (inside IPA brackets)
   i̯ → j       Non-syllabic i diacritic → standard palatal approximant (inside IPA brackets)
+  ɐ → ɑ       Near-open central → open back (our convention)
 
 Usage:
   .venv/bin/python scripts/lint_ipa.py FILE              # lint one file
@@ -108,6 +109,7 @@ GLOBAL_RULES = [
     # Simple string replacements
     ('ʊ', 'u', 'IPA-001', '/ʊ/ → /u/ (no lax vowel in Ukrainian)'),
     ('ɫ', 'l', 'IPA-002', '/ɫ/ → /l/ (no dark L in Ukrainian)'),
+    ('ɐ', 'ɑ', 'IPA-012', '/ɐ/ → /ɑ/ (our convention uses open back vowel)'),
 ]
 
 # Regex-based global rules (need negative lookbehind for tie-bar)

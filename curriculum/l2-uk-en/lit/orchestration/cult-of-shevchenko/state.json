@@ -1,0 +1,14 @@
+{
+  "slug": "cult-of-shevchenko",
+  "track": "lit",
+  "module_num": 20,
+  "mode": "e2e",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-22T17:21:42Z",
+      "task_id": "yw-cult-of-shevchenko-p0"
+    }
+  },
+  "last_updated": "2026-02-22T17:21:42Z"
+}

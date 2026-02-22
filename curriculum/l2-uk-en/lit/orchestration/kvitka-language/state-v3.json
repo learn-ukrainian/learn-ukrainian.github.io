@@ -2,12 +2,5 @@
   "track": "lit",
   "slug": "kvitka-language",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T22:50:43Z",
-      "task_id": "v3-kvitka-language-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

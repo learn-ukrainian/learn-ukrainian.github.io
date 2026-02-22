@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "vinhranovskyi-poetry",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T10:08:51Z",
+      "task_id": "v3-vinhranovskyi-poetry-pA",
+      "mode": "full"
+    }
+  }
+}

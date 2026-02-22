@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "bu-ba-bu-carnival",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T10:34:50Z",
+      "task_id": "v3-bu-ba-bu-carnival-pA",
+      "mode": "full"
+    }
+  }
+}

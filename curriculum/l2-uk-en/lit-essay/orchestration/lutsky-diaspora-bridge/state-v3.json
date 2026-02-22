@@ -1,0 +1,13 @@
+{
+  "track": "lit-essay",
+  "slug": "lutsky-diaspora-bridge",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T14:55:03Z",
+      "task_id": "v3-lutsky-diaspora-bridge-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -484,65 +484,111 @@ function renderResearch(data) {
   let html = `
     <h2>Research Coverage <span class="badge" style="background:${badgeColor};color:var(--bg)">${pct}% researched (${totalResearched}/${totalMods})</span></h2>
     <div class="research-stats-row">
-      <div class="research-stat"><div class="value" style="color:var(--green)">${totalExemplary}</div><div class="label">Exemplary (8-10)</div></div>
-      <div class="research-stat"><div class="value" style="color:var(--blue)">${totalSolid}</div><div class="label">Solid (6-7)</div></div>
-      <div class="research-stat"><div class="value" style="color:var(--yellow)">${totalAdequate}</div><div class="label">Adequate (4-5)</div></div>
-      <div class="research-stat"><div class="value" style="color:#f0883e">${totalThin}</div><div class="label">Thin (2-3)</div></div>
+      <div class="research-stat"><div class="value" style="color:var(--green)">${totalExemplary}</div><div class="label">Exemplary (9-10)</div></div>
+      <div class="research-stat"><div class="value" style="color:var(--blue)">${totalSolid}</div><div class="label">Solid (7-8)</div></div>
+      <div class="research-stat"><div class="value" style="color:var(--yellow)">${totalAdequate}</div><div class="label">Adequate (5-6)</div></div>
+      <div class="research-stat"><div class="value" style="color:#f0883e">${totalThin}</div><div class="label">Thin (2-4)</div></div>
       <div class="research-stat"><div class="value" style="color:var(--red)">${totalStub}</div><div class="label">Stub (0-1)</div></div>
     </div>
     <div class="research-legend">
-      <div class="leg"><div class="dot" style="background:var(--green)"></div>Exemplary (8-10/10)</div>
-      <div class="leg"><div class="dot" style="background:var(--blue)"></div>Solid (6-7/10)</div>
-      <div class="leg"><div class="dot" style="background:var(--yellow)"></div>Adequate (4-5/10)</div>
-      <div class="leg"><div class="dot" style="background:#f0883e"></div>Thin (2-3/10)</div>
+      <div class="leg"><div class="dot" style="background:var(--green)"></div>Exemplary (9-10/10)</div>
+      <div class="leg"><div class="dot" style="background:var(--blue)"></div>Solid (7-8/10)</div>
+      <div class="leg"><div class="dot" style="background:var(--yellow)"></div>Adequate (5-6/10)</div>
+      <div class="leg"><div class="dot" style="background:#f0883e"></div>Thin (2-4/10)</div>
       <div class="leg"><div class="dot" style="background:var(--bg3)"></div>No rubric / missing</div>
     </div>
   `;
 
+  // Group tracks by classification
+  const classificationOrder = ['core', 'professional', 'history', null];
+  const classificationLabels = {
+    'core': 'Core Levels (A1\u2013C2)',
+    'professional': 'Professional Tracks (B2-PRO, C1-PRO)',
+    'history': 'Seminar & Literary Tracks',
+  };
+  const grouped = {};
   data.tracks.forEach(track => {
-    const rs = track.research_stats;
-    const total = track.module_count;
-    const researched = rs.total || 0;
-    const hasRubric = !!rs.profile;
-    const trackPct = total > 0 ? Math.round(researched / total * 100) : 0;
-    const segPct = q => total > 0 ? ((rs[q] || 0) / total * 100).toFixed(1) : 0;
-    const trackId = track.id.replace(/[^a-z0-9-]/g, '');
-    const rubricLabel = hasRubric ? ` (${rs.profile})` : '';
-    const missingCount = total - researched;
+    const profile = track.research_stats.profile || 'other';
+    if (!grouped[profile]) grouped[profile] = [];
+    grouped[profile].push(track);
+  });
+
+  classificationOrder.forEach(profile => {
+    const key = profile || 'other';
+    const tracks = grouped[key];
+    if (!tracks || tracks.length === 0) return;
+    const label = classificationLabels[key] || 'Other';
+
+    // Aggregate stats for this group
+    let gMods = 0, gRes = 0, gEx = 0, gSo = 0, gAd = 0, gTh = 0, gSt = 0;
+    tracks.forEach(t => {
+      const rs = t.research_stats;
+      gMods += t.module_count;
+      gRes += rs.total || 0;
+      gEx += rs.exemplary || 0;
+      gSo += rs.solid || 0;
+      gAd += rs.adequate || 0;
+      gTh += rs.thin || 0;
+      gSt += rs.stub || 0;
+    });
+    const gPct = gMods > 0 ? Math.round(gRes / gMods * 100) : 0;
+    const below9 = gSo + gAd + gTh + gSt;
 
     html += `
-      <div class="research-track">
-        <div class="research-track-header" onclick="document.getElementById('rmods-${trackId}').classList.toggle('open')">
-          <span class="research-track-name">${track.name}${rubricLabel}</span>
-          <div class="research-bar">
-            ${hasRubric ? `
-              <div class="seg strong" style="width:${segPct('exemplary')}%"></div>
-              <div class="seg good" style="width:${segPct('solid')}%"></div>
-              <div class="seg thin" style="width:${segPct('adequate')}%"></div>
-              <div class="seg stub" style="width:${segPct('thin')}%"></div>
-            ` : `
-              <div class="seg good" style="width:${total > 0 ? (researched / total * 100).toFixed(1) : 0}%"></div>
-            `}
-            <div class="seg missing" style="width:${total > 0 ? (missingCount / total * 100).toFixed(1) : 0}%"></div>
-          </div>
-          <span class="research-pct">${trackPct}% (${researched}/${total})</span>
-        </div>
-        <div class="research-modules" id="rmods-${trackId}">
-          <div class="research-grid">
-            ${track.modules.map(m => {
-              const q = m.quality || (m.exists ? 'no-rubric' : 'missing');
-              const needsResearch = !m.exists && !m.has_content;
-              const scoreLabel = m.score != null ? `${m.score}/10` : (m.exists ? `${m.words}w` : '');
-              return `<div class="research-mod${needsResearch ? ' needs-research' : ''}">
-                <div class="rq ${q}"></div>
-                <span class="slug" title="${m.slug}">${m.num.toString().padStart(3,'0')} ${m.slug}</span>
-                <span class="words">${scoreLabel}</span>
-              </div>`;
-            }).join('')}
-          </div>
-        </div>
+      <div style="margin-top:20px;margin-bottom:8px;display:flex;align-items:center;gap:10px;">
+        <h3 style="font-size:14px;font-weight:700;color:var(--text);">${label}</h3>
+        <span style="font-size:11px;color:var(--text3);">${gRes}/${gMods} researched (${gPct}%)</span>
+        ${below9 > 0 ? `<span style="font-size:11px;padding:1px 8px;border-radius:10px;background:rgba(248,81,73,0.15);color:var(--red);">${below9} below 9/10</span>` : `<span style="font-size:11px;padding:1px 8px;border-radius:10px;background:rgba(63,185,80,0.15);color:var(--green);">all 9/10+</span>`}
       </div>
     `;
+
+    tracks.forEach(track => {
+      const rs = track.research_stats;
+      const total = track.module_count;
+      const researched = rs.total || 0;
+      const hasRubric = !!rs.profile;
+      const trackPct = total > 0 ? Math.round(researched / total * 100) : 0;
+      const segPct = q => total > 0 ? ((rs[q] || 0) / total * 100).toFixed(1) : 0;
+      const trackId = track.id.replace(/[^a-z0-9-]/g, '');
+      const missingCount = total - researched;
+      const trackBelow9 = (rs.solid || 0) + (rs.adequate || 0) + (rs.thin || 0) + (rs.stub || 0);
+      const below9Label = trackBelow9 > 0 ? ` <span style="color:var(--red);font-size:11px;">${trackBelow9} &lt;9</span>` : '';
+
+      html += `
+        <div class="research-track">
+          <div class="research-track-header" onclick="document.getElementById('rmods-${trackId}').classList.toggle('open')">
+            <span class="research-track-name">${track.name}${below9Label}</span>
+            <div class="research-bar">
+              ${hasRubric ? `
+                <div class="seg strong" style="width:${segPct('exemplary')}%"></div>
+                <div class="seg good" style="width:${segPct('solid')}%"></div>
+                <div class="seg thin" style="width:${segPct('adequate')}%"></div>
+                <div class="seg stub" style="width:${segPct('thin')}%"></div>
+              ` : `
+                <div class="seg good" style="width:${total > 0 ? (researched / total * 100).toFixed(1) : 0}%"></div>
+              `}
+              <div class="seg missing" style="width:${total > 0 ? (missingCount / total * 100).toFixed(1) : 0}%"></div>
+            </div>
+            <span class="research-pct">${trackPct}% (${researched}/${total})</span>
+          </div>
+          <div class="research-modules" id="rmods-${trackId}">
+            <div class="research-grid">
+              ${track.modules.map(m => {
+                const q = m.quality || (m.exists ? 'no-rubric' : 'missing');
+                const needsResearch = !m.exists && !m.has_content;
+                const scoreLabel = m.score != null ? `${m.score}/10` : (m.exists ? `${m.words}w` : '');
+                const isBelow9 = m.score != null && m.score < 9;
+                return `<div class="research-mod${needsResearch ? ' needs-research' : ''}${isBelow9 ? ' needs-research' : ''}">
+                  <div class="rq ${q}"></div>
+                  <span class="slug" title="${m.slug}">${m.num.toString().padStart(3,'0')} ${m.slug}</span>
+                  <span class="words"${isBelow9 ? ' style="color:var(--red);font-weight:600;"' : ''}>${scoreLabel}</span>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    });
   });
 
   card.innerHTML = html;

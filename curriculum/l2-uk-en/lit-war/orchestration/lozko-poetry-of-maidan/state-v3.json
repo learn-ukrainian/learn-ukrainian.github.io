@@ -4,8 +4,10 @@
   "mode": "v3",
   "phases": {
     "v3-A": {
-      "status": "failed",
-      "ts": "2026-02-20T22:48:02Z"
+      "status": "complete",
+      "ts": "2026-02-21T22:41:45Z",
+      "task_id": "v3-lozko-poetry-of-maidan-pA",
+      "mode": "full"
     }
   }
 }

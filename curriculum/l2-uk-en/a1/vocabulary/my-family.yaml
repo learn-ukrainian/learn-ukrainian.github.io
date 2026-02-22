@@ -1,91 +1,112 @@
 items:
   - lemma: "мама"
+    ipa: '[ˈmɑmɑ]'
     translation: "mom"
     pos: "noun"
     gender: "f"
     example: "Це моя мама."
   - lemma: "тато"
+    ipa: '[ˈtɑtɔ]'
     translation: "dad"
     pos: "noun"
     gender: "m"
     notes: "Grammatically masculine despite -o ending"
     example: "Мій тато вдома."
   - lemma: "батьки"
+    ipa: '[bɑˈtʲkɪ]'
     translation: "parents"
     pos: "noun"
     notes: "Plural only"
   - lemma: "син"
+    ipa: '[sɪn]'
     translation: "son"
     pos: "noun"
     gender: "m"
   - lemma: "донька"
+    ipa: '[ˈdɔnʲkɑ]'
     translation: "daughter"
     pos: "noun"
     gender: "f"
   - lemma: "діти"
+    ipa: '[ˈdʲitɪ]'
     translation: "children"
     pos: "noun"
     notes: "Plural"
   - lemma: "дитина"
+    ipa: '[dɪˈtɪnɑ]'
     translation: "child"
     pos: "noun"
     gender: "f"
   - lemma: "брат"
+    ipa: '[brɑt]'
     translation: "brother"
     pos: "noun"
     gender: "m"
   - lemma: "сестра"
+    ipa: '[sɛˈstrɑ]'
     translation: "sister"
     pos: "noun"
     gender: "f"
   - lemma: "дідусь"
+    ipa: '[dʲiˈdusʲ]'
     translation: "grandfather"
     pos: "noun"
     gender: "m"
   - lemma: "бабуся"
+    ipa: '[bɑˈbusʲɑ]'
     translation: "grandmother"
     pos: "noun"
     gender: "f"
   - lemma: "дядько"
+    ipa: '[ˈdʲɑdʲkɔ]'
     translation: "uncle"
     pos: "noun"
     gender: "m"
   - lemma: "тітка"
+    ipa: '[ˈtʲitkɑ]'
     translation: "aunt"
     pos: "noun"
     gender: "f"
   - lemma: "онук"
+    ipa: '[ɔˈnuk]'
     translation: "grandson"
     pos: "noun"
     gender: "m"
   - lemma: "онука"
+    ipa: '[ɔˈnukɑ]'
     translation: "granddaughter"
     pos: "noun"
     gender: "f"
   - lemma: "чоловік"
+    ipa: '[t͡ʃɔlɔˈʋʲik]'
     translation: "husband"
     pos: "noun"
     gender: "m"
     notes: "Also means 'man'"
   - lemma: "дружина"
+    ipa: '[druˈʒɪnɑ]'
     translation: "wife"
     pos: "noun"
     gender: "f"
   - lemma: "сім'я"
+    ipa: '[sʲiˈmjɑ]'
     translation: "family"
     pos: "noun"
     gender: "f"
     notes: "Nuclear family unit"
   - lemma: "родина"
+    ipa: '[rɔˈdɪnɑ]'
     translation: "family"
     pos: "noun"
     gender: "f"
     notes: "Extended family / Kin"
   - lemma: "старший"
+    ipa: '[stɑrʃɪj]'
     translation: "older"
     pos: "adj"
     notes: "Masculine form"
   - lemma: "молодший"
+    ipa: '[mɔˈlɔd͡ʒʃɪj]'
     translation: "younger"
     pos: "adj"
     notes: "Masculine form"

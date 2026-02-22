@@ -1,0 +1,13 @@
+{
+  "track": "lit-essay",
+  "slug": "essay-synthesis-1",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T14:48:53Z",
+      "task_id": "v3-essay-synthesis-1-pA",
+      "mode": "full"
+    }
+  }
+}

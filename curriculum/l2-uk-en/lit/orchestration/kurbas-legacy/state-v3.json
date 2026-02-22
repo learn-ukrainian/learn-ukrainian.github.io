@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "kurbas-legacy",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T07:42:16Z",
+      "task_id": "v3-kurbas-legacy-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "track": "lit-hist-fic",
+  "slug": "ivanychuk-malvy",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T23:26:56Z",
+      "task_id": "v3-ivanychuk-malvy-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Audit Report: M15 — around-the-city.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:37
+**Generated:** 2026-02-22 16:05:32
 
 ## Configuration
 **Type:** A1
@@ -47,7 +47,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 4 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

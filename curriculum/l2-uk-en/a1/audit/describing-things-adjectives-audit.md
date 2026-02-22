@@ -1,7 +1,7 @@
 # Audit Report: M26 — describing-things-adjectives.md
 **Level:** A1 | **Module:** M26 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:44
+**Generated:** 2026-02-22 16:05:41
 
 ## Configuration
 **Type:** A1-grammar
@@ -47,7 +47,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 26/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 20 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

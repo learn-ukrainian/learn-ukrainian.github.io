@@ -1,7 +1,7 @@
 # Audit Report: M22 — tomorrow-future-tense.md
 **Level:** A1 | **Module:** M22 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:42
+**Generated:** 2026-02-22 16:05:38
 
 ## Configuration
 **Type:** A1-grammar
@@ -47,7 +47,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 7 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ⚠️ 9 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

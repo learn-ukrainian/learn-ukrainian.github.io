@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "osmachka-prose",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T09:23:10Z",
+      "task_id": "v3-osmachka-prose-pA",
+      "mode": "full"
+    }
+  }
+}

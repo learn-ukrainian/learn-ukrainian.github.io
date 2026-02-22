@@ -1,8 +1,8 @@
 # Audit Report: M32 — my-family.md
 **Level:** A1 | **Module:** M32 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 21:07:47
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-22 19:00:47
 
 ## Configuration
 **Type:** A1-vocab
@@ -38,8 +38,17 @@
 - Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[GRAMMAR]** Dative case used at A1: 'чолові'
+  - FIX: Dative case not allowed until A2 (M31+). Restructure sentence.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 3317/2000 (raw: 3649)
+- **Words:** ✅ 3278/2000 (raw: 3610)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -50,9 +59,9 @@
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.2% (target 35-55% (M32))
+- **Immersion:** 🇺🇦 35.6% (target 35-55% (M32))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 - **Research:** ✅ Content aligned with research
@@ -61,10 +70,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **My Family (Моя сім'я)** | ✅ | 117 | Included in Core |
-| **Розминка: Члени сім'ї (Warm-up: Family Members)** | ✅ | 605 | Included in Core |
-| **Близька та розширена родина (Close and Extended Family)** | ✅ | 631 | Included in Core |
-| **Опис родини: Вік та характер (Describing Family: Age & Character)** | ✅ | 557 | Included in Core |
-| **Практика: Моя сім'я (Practice: My Family)** | ✅ | 485 | Included in Core |
-| **Діалоги та фотоальбом** | ✅ | 611 | Included in Core |
+| **My Family (Моя сім'я)** | ✅ | 115 | Included in Core |
+| **Розминка: Члени сім'ї (Warm-up: Family Members)** | ✅ | 591 | Included in Core |
+| **Близька та розширена родина (Close and Extended Family)** | ✅ | 620 | Included in Core |
+| **Опис родини: Вік та характер (Describing Family: Age & Character)** | ✅ | 552 | Included in Core |
+| **Практика: Моя сім'я (Practice: My Family)** | ✅ | 482 | Included in Core |
+| **Діалоги та фотоальбом** | ✅ | 607 | Included in Core |
 | **Підсумок: Розповідь про себе (Summary)** | ✅ | 311 | Included in Core |

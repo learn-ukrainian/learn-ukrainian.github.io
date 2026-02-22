@@ -13,17 +13,6 @@
       "ts": "2026-02-20T22:15:32Z",
       "note": "migrated-from-v2"
     },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-20T22:15:32Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-D": {
-      "status": "pending",
-      "ts": "",
-      "attempts": 0,
-      "note": "reset-review-score-below-threshold"
-    },
     "v3-A": {
       "status": "complete",
       "ts": "2026-02-20T22:15:33Z",

@@ -1,7 +1,7 @@
 # Audit Report: M01 — the-dative-i-pronouns.md
 **Level:** A2 | **Module:** M01 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 01:00:32
+**Generated:** 2026-02-22 19:23:48
 
 ## Configuration
 **Type:** A2-grammar
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3504/3000 (raw: 3832)
+- **Words:** ✅ 4016/3000 (raw: 4364)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
@@ -53,7 +53,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 52.8% (target 50-60% (A2.1))
+- **Immersion:** 🇺🇦 51.2% (target 50-60% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -63,8 +63,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Dative I — Pronouns** | ✅ | 57 | Included in Core |
-| **Introduction / Вступ** | ✅ | 566 | Included in Core |
-| **Presentation / Презентація** | ✅ | 1614 | Included in Core |
-| **Practice / Практика** | ✅ | 568 | Included in Core |
-| **Dialogues / Діалоги** | ✅ | 491 | Included in Core |
+| **Introduction / Вступ** | ✅ | 570 | Included in Core |
+| **Presentation / Презентація** | ✅ | 1469 | Included in Core |
+| **States and Verbs / Стани і дієслова** | ✅ | 645 | Included in Core |
+| **Practice / Практика** | ✅ | 574 | Included in Core |
+| **Dialogues / Діалоги** | ✅ | 493 | Included in Core |
 | **Підсумок** | ✅ | 208 | Included in Core |

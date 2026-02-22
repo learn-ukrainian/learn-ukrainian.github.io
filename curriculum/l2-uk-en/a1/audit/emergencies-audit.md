@@ -1,7 +1,7 @@
 # Audit Report: M42 — emergencies.md
 **Level:** A1 | **Module:** M42 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 01:06:11
+**Generated:** 2026-02-22 16:05:53
 
 ## Configuration
 **Type:** A1
@@ -47,7 +47,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 4 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

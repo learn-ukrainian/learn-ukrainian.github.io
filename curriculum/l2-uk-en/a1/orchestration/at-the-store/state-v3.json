@@ -20,14 +20,13 @@
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-22T07:03:39Z",
+      "ts": "2026-02-22T08:28:11Z",
       "attempts": 1
     },
     "v3-D": {
-      "status": "pending",
-      "ts": "",
-      "attempts": 0,
-      "note": "reset-triage-bug-fix"
+      "status": "complete",
+      "ts": "2026-02-22T08:38:10Z",
+      "attempts": 2
     }
   }
 }

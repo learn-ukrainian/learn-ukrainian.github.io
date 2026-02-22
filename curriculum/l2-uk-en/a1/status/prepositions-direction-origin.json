@@ -2,10 +2,10 @@
   "module": "prepositions-direction-origin",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T01:01:44.113530Z",
+  "last_audit": "2026-02-22T16:05:44.192960Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T15:09:28.620802Z",
+    "md": "2026-02-21T18:06:35.752302Z",
     "meta": "2026-02-19T23:56:46.046070Z",
     "activities": "2026-02-20T22:35:30.649184Z",
     "vocabulary": "2026-02-20T15:09:28.621377Z",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "1 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +49,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+    ],
     "pass_count": 6,
-    "fail_count": 0,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

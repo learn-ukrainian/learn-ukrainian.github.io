@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "koval-prose-renaissance",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T11:29:00Z",
+      "task_id": "v3-koval-prose-renaissance-pA",
+      "mode": "full"
+    }
+  }
+}

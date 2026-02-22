@@ -49,70 +49,22 @@ def get_stressifier():
     return _stressifier
 
 
-# =============================================================================
-# UKRAINIAN PHONEME TO IPA MAPPING
-# =============================================================================
-
-# Ukrainian letters to IPA (simplified, standard pronunciation)
-CYRILLIC_TO_IPA = {
-    'а': 'a', 'б': 'b', 'в': 'ʋ', 'г': 'ɦ', 'ґ': 'g',
-    'д': 'd', 'е': 'ɛ', 'є': 'jɛ', 'ж': 'ʒ', 'з': 'z',
-    'и': 'ɪ', 'і': 'i', 'ї': 'ji', 'й': 'j', 'к': 'k',
-    'л': 'l', 'м': 'm', 'н': 'n', 'о': 'ɔ', 'п': 'p',
-    'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f',
-    'х': 'x', 'ц': 't͡s', 'ч': 't͡ʃ', 'ш': 'ʃ', 'щ': 'ʃt͡ʃ',
-    'ь': 'ʲ', 'ю': 'ju', 'я': 'ja', "'": '', 'ʼ': '',
-}
-
 # Stress mark (combining acute accent)
 STRESS_MARK = '\u0301'
 
 
 def stressed_to_ipa(stressed_word: str) -> str:
-    """
-    Convert a stressed Ukrainian word to IPA notation.
-    
-    Example:
-        Input: "культу́ра" (with combining acute accent after у)
-        Output: "/kulʲˈtura/"
+    """Convert a stressed Ukrainian word to IPA notation.
+
+    Delegates to the deterministic IPA generator (ipa-uk + post-processing).
     """
     if not stressed_word:
         return ''
-    
-    ipa_chars = []
-    stress_placed = False
-    prev_char = ''
-    
-    i = 0
-    while i < len(stressed_word):
-        char = stressed_word[i].lower()
-        
-        # Check if next character is stress mark
-        is_stressed = (i + 1 < len(stressed_word) and 
-                       stressed_word[i + 1] == STRESS_MARK)
-        
-        # Skip the stress mark itself
-        if char == STRESS_MARK:
-            i += 1
-            continue
-        
-        # Get IPA for this character
-        ipa = CYRILLIC_TO_IPA.get(char, char)
-        
-        # Place stress mark BEFORE the stressed vowel's syllable
-        if is_stressed and not stress_placed:
-            ipa_chars.append('ˈ')
-            stress_placed = True
-        
-        ipa_chars.append(ipa)
-        prev_char = char
-        i += 1
-    
-    # Wrap in slashes
-    result = ''.join(ipa_chars)
-    if result:
-        return f"/{result}/"
-    return ''
+    from generate_ipa import generate_ipa
+    # Strip stress marks — generate_ipa adds its own via Stressifier
+    clean = stressed_word.replace(STRESS_MARK, '')
+    result = generate_ipa(clean)
+    return result or ''
 
 
 # =============================================================================

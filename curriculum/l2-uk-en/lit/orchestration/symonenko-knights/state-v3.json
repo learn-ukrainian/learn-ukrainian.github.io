@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "symonenko-knights",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T09:24:40Z",
+      "task_id": "v3-symonenko-knights-pA",
+      "mode": "full"
+    }
+  }
+}

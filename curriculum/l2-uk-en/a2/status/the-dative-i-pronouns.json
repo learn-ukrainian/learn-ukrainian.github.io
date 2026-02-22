@@ -2,13 +2,13 @@
   "module": "the-dative-i-pronouns",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T01:00:32.952146Z",
+  "last_audit": "2026-02-22T19:23:48.170468Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T01:00:30.222963Z",
+    "md": "2026-02-22T19:18:03.713490Z",
     "meta": "2026-02-20T01:59:53.829795Z",
     "activities": "2026-02-21T01:00:30.223563Z",
-    "vocabulary": "2026-02-21T01:00:30.224513Z",
+    "vocabulary": "2026-02-22T18:45:34.212199Z",
     "plan": "2026-02-20T20:59:22.435683Z",
     "research": "2026-02-20T01:58:18.941469Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3504/3000 (raw: 3832)"
+      "message": "4016/3000 (raw: 4364)"
     },
     "activities": {
       "status": "pass",

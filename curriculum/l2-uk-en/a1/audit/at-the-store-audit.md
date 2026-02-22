@@ -1,7 +1,7 @@
 # Audit Report: M38 — at-the-store.md
 **Level:** A1 | **Module:** M38 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 01:01:49
+**Generated:** 2026-02-22 16:05:50
 
 ## Configuration
 **Type:** A1
@@ -46,7 +46,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 13 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ⚠️ 6 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

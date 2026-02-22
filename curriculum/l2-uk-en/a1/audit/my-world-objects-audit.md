@@ -1,7 +1,7 @@
 # Audit Report: M05 — my-world-objects.md
 **Level:** A1 | **Module:** M05 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:30
+**Generated:** 2026-02-22 16:05:24
 
 ## Configuration
 **Type:** A1-grammar
@@ -46,7 +46,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 15 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

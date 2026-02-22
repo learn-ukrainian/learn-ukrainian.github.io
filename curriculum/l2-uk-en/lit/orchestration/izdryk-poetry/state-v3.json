@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "izdryk-poetry",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T11:22:31Z",
+      "task_id": "v3-izdryk-poetry-pA",
+      "mode": "full"
+    }
+  }
+}

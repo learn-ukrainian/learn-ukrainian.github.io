@@ -37,7 +37,7 @@ If you want to ask "Do you read?", you never translate the word "do". You simply
 ### Базове заперечення: Сила "Не"
 Just as we need to ask, we also need to be able to deny. The world isn't always "yes." Sometimes it is "no."
 
-To make a sentence negative in Ukrainian, we use the particle **не** [nɛ]. This tiny word is incredibly powerful. It stands like a guard directly *before* the word it negates, usually the verb.
+To make a sentence negative in Ukrainian, we use the particle **не**. This tiny word is incredibly powerful. It stands like a guard directly *before* the word it negates, usually the verb.
 
 *   **Я розумію.** (I understand.)
 *   **Я не розумію.** (I do not understand.)
@@ -49,8 +49,8 @@ Notice again: no "do not", no "don't". Just **не**. It is clean, efficient, an
 ### Пастка для учнів: "Ні" проти "Не"
 There is a common stumbling block for beginners: confusing the *answer* "No" with the *particle* "Not". In English, they sound different. In Ukrainian, they look similar but function differently.
 
-**Ні** [nʲi] is the answer to a question. It stands alone or starts a sentence.
-**Не** [nɛ] is the grammar tool. It never stands alone; it must attach to a word.
+**Ні** is the answer to a question. It stands alone or starts a sentence.
+**Не** is the grammar tool. It never stands alone; it must attach to a word.
 
 *   Q: **Ти читаєш?** (Do you read?)
 *   A: **Ні, я не читаю.** (No, I do not read.)
@@ -60,7 +60,7 @@ Think of **Ні** as a wall that stops the conversation, and **не** as a shiel
 ## Граматика: Як будувати питання
 
 ### Питання "Так/Ні" і частка "Чи"
-The most formal and classic way to ask a Yes/No question in Ukrainian is to use the particle **чи** [t͡ʃɪ]. This small word acts like a flag at the beginning of the sentence. It signals to the listener: "Attention! A question is coming!"
+The most formal and classic way to ask a Yes/No question in Ukrainian is to use the particle **чи**. This small word acts like a flag at the beginning of the sentence. It signals to the listener: "Attention! A question is coming!"
 
 **Структура:**
 **Чи** + Subject + Verb?
@@ -108,8 +108,8 @@ To turn a statement into a question without words, you must raise your pitch sha
 ### Відповіді: "Так" і "Ні"
 When someone asks you a Yes/No question, you need the tools to respond.
 
-**Так** [tɑk] — Yes.
-**Ні** [nʲi] — No.
+**Так** — Yes.
+**Ні** — No.
 
 These are your primary tools. You can use them alone, but it is often more polite to expand your answer slightly.
 
@@ -154,7 +154,7 @@ Here are the essential ones you need to know now:
 Notice that we do not need "is" or "are" in strictly present tense questions like "Who is this?". **Хто це?** literally means "Who this?". The verb "to be" is silent/implied.
 
 ### "Що" проти "Шо": Реальність
-You will learn **що** [ʃt͡ʃɔ] in textbooks. It is the literary, correct standard form. However, if you listen to Ukrainians on the street, in movies, or on YouTube, you will hear a different sound constantly: **шо** [ʃɔ].
+You will learn **що** in textbooks. It is the literary, correct standard form. However, if you listen to Ukrainians on the street, in movies, or on YouTube, you will hear a different sound constantly: **шо**.
 
 **Що** = Standard, literary, polite.
 **Шо** = Very casual, spoken, sometimes considered "Surzhyk" (mixed language) or just lazy pronunciation.
@@ -169,10 +169,10 @@ As a learner, you should always aim to say **що**. It makes you sound educated
 ### Слова частоти: Відповіді на "Коли?"
 When someone asks **Коли?**, you often answer with a frequency word. Here are the four most useful ones:
 
-*   **завжди** [zɑu̯ˈʒdɪ] — always
-*   **часто** [ˈt͡ʃɑstɔ] — often
-*   **іноді** [iˈnɔdʲi] — sometimes
-*   **ніколи** [nʲiˈkɔlɪ] — never
+*   **за́вжди́** — always
+*   **ча́сто** — often
+*   **і́ноді** — sometimes
+*   **ніколи** — never
 
 **Приклади:**
 *   **Коли ти читаєш?** — **Завжди ввечері.** (Always in the evening.)

@@ -114,9 +114,9 @@ PHASE_LABELS_V3: dict[str, str] = {
     "F":     "Final Review (agent-selectable)",
 }
 
-MAX_AUDIT_FIX_ITERS_CORE = 3
-MAX_AUDIT_FIX_ITERS_SEMINAR = 5
-MAX_D_ITERS = 3
+MAX_AUDIT_FIX_ITERS_CORE = 6
+MAX_AUDIT_FIX_ITERS_SEMINAR = 8
+MAX_D_ITERS = 4
 
 
 def _max_audit_iters(track: str) -> int:
@@ -820,10 +820,24 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
             logger.warning("Auto-fix: euphony failed", exc_info=True)
             log(f"    Auto-fix: euphony failed: {e}")
 
+    # 1.5 IPA generation (vocabulary YAML)
+    vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+    if vocab_path and vocab_path.exists():
+        try:
+            from generate_ipa import regenerate_vocab_ipa
+            n = regenerate_vocab_ipa(vocab_path)
+            if n > 0:
+                total += n
+                log(f"    Auto-fix: {n} IPA field(s) generated in {vocab_path.name}")
+        except Exception as e:
+            logger.warning("Auto-fix: IPA generation failed", exc_info=True)
+            log(f"    Auto-fix: IPA generation failed: {e}")
+
     # 2. IPA normalization (content, vocab, activities)
     try:
         from lint_ipa import apply_fixes as ipa_apply_fixes
-        vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+        if not vocab_path:
+            vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
         for target in [content_path, vocab_path, ctx.paths.get("activities")]:
             if target and target.exists():
                 t = target.read_text("utf-8")

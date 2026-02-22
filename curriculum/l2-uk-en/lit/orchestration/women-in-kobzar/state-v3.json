@@ -2,12 +2,5 @@
   "track": "lit",
   "slug": "women-in-kobzar",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T23:02:00Z",
-      "task_id": "v3-women-in-kobzar-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

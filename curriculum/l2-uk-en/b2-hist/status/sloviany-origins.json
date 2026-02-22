@@ -2,12 +2,12 @@
   "module": "sloviany-origins",
   "level": "B2",
   "plan_version": "0.0.1",
-  "last_audit": "2026-02-21T22:12:24.920666Z",
+  "last_audit": "2026-02-21T23:09:46.072700Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T20:20:11.642230Z",
+    "md": "2026-02-21T23:09:43.391181Z",
     "meta": "2026-02-19T09:50:25.141490Z",
-    "activities": "2026-02-19T10:57:46.720153Z",
+    "activities": "2026-02-21T23:09:43.391824Z",
     "vocabulary": "2026-02-18T19:18:58.648643Z",
     "plan": "2026-02-18T19:04:01.613163Z",
     "research": "2026-02-18T00:18:37.001930Z"
@@ -49,19 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 2,
-      "message": "Review has only 2 Ukrainian citation(s) for 5368-word content (need at least 8). A proper review must cite specific Ukrainian sentences from the content to support its assessment. Quote the actual text with \u00ab\u00bb or \"\"."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review has only 2 Ukrainian citation(s) for 5368-word content (need at least 8). A proper review must cite specific Ukrainian sentences from the content to support its assessment. Quote the actual text with \u00ab\u00bb or \"\".",
-      "Review only covers 0/7 (0%) content sections. Missed: \u0412\u0441\u0442\u0443\u043f: \u0415\u0442\u0438\u043c\u043e\u043b\u043e\u0433\u0456\u044f \u0442\u0430 \u0456\u0434\u0435\u043d\u0442\u0438\u0447\u043d\u0456\u0441\u0442\u044c, \u0427\u0438\u0442\u0430\u043d\u043d\u044f: I \u2014 \u0410\u0440\u0445\u0435\u043e\u043b\u043e\u0433\u0456\u044f \u0442\u0430 \u0433\u0435\u043e\u0433\u0440\u0430\u0444\u0456\u044f \u0440\u043e\u0437\u0441\u0435\u043b\u0435\u043d\u043d\u044f, \u0427\u0438\u0442\u0430\u043d\u043d\u044f: II \u2014 \u0410\u043d\u0442\u0441\u044c\u043a\u0438\u0439 \u0441\u043e\u044e\u0437: \u0425\u0440\u043e\u043d\u0456\u043a\u0438 \u0431\u043e\u0440\u043e\u0442\u044c\u0431\u0438, \u0427\u0438\u0442\u0430\u043d\u043d\u044f: III \u2014 \u041c\u0430\u0442\u0435\u0440\u0456\u0430\u043b\u044c\u043d\u0438\u0439 \u0441\u0432\u0456\u0442 \u0442\u0430 \u0441\u0443\u0441\u043f\u0456\u043b\u044c\u043d\u0438\u0439 \u0443\u0441\u0442\u0440\u0456\u0439, \u041f\u0435\u0440\u0432\u0438\u043d\u043d\u0456 \u0434\u0436\u0435\u0440\u0435\u043b\u0430: \u0421\u0432\u0456\u0434\u0447\u0435\u043d\u043d\u044f \u0441\u0443\u0447\u0430\u0441\u043d\u0438\u043a\u0456\u0432. A thorough review must address each major section of the content."
-    ],
-    "pass_count": 7,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 8,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

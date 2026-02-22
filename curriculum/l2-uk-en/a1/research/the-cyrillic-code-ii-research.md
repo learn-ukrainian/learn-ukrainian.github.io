@@ -1,36 +1,35 @@
 # Дослідження: The Cyrillic Code II
 
 ## State Standard Reference
+§4.1.4: "Тверді та м’які приголосні: лист – ліс, Рим – Рівне, палац – палець."
 §4.1.3: "М’який знак: Львів, шість."
-§4.1.4: "Тверді та м’які приголосні: лист – ліс, Рим – Рівне... Дзвінкі та глухі приголосні: голодний – холодний."
-Alignment: Module teaches identification of hard vs soft consonants (regulated by И/І and Ь) and unique Ukrainian consonants (Г/Ґ), directly fulfilling §4.1.3 and §4.1.4 requirements for phonetic distinction at A1.
+§4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець."
+Alignment: The module teaches the alphabet and the critical phonetic distinctions mapped out in A1 Level §4.1.1, 4.1.3, and 4.1.4, specifically targeting soft/hard consonants, the soft sign, and proper capitalization/spelling of identity terms.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| центр | High (Top 300) | у центрі, центр міста, торговий центр |
-| чай | High (Top 500) | пити чай, чорний чай, чашка чаю |
-| школа | Very High (Top 200) | у школі, нова школа, іти до школи |
-| гарний | High (Top 300) | гарний день, гарна дівчина, дуже гарний |
-| жити | Very High (Top 50) | жити в Україні, жити добре |
-| день | Very High (Top 50) | добрий день, кожен день, цілий день |
-| Європа | High (Cultural) | жити в Європі, Західна Європа |
-| яблуко | Medium (Food) | смачне яблуко, червоне яблуко |
+| центр | Top 300 | у центрі, центр міста, торговий центр |
+| чай | Top 500 | пити чай, чорний чай, чашка чаю |
+| школа | Top 200 | у школі, нова школа, іти до школи |
+| гарний | Top 300 | гарний день, дуже гарний |
+| жити | Top 50 | жити в Україні, жити добре |
+| день | Top 50 | добрий день, кожен день, цілий день |
 
 ## Cultural Hooks
-1. **The Letter Ї**: Became a symbol of resistance in occupied Mariupol (2022) and general Ukrainian distinctness, as it does not exist in Russian. Used in graffiti to mark Ukrainian presence.
-2. **The Repressed Letter Ґ**: Banned in the 1933 orthography reform ("Skrypnykivka" reversal) to make Ukrainian closer to Russian. Restored only in 1990. Its usage is a shibboleth for proper Ukrainian education.
+1. The Repressed Letter Ґ: The letter Ґ was removed from the Ukrainian alphabet in 1933 during the Soviet orthographic reforms to force Ukrainian closer to Russian. It was officially restored only in 1990. Using it today is a mark of educated, authentic Ukrainian.
+2. The Letter Ї as Resistance: In 2022, during the occupation of Mariupol, residents painted the letter Ї on walls and monuments. Because the letter does not exist in the Russian alphabet, it became a powerful, concise symbol of Ukrainian presence and defiance.
 
 ## Common Learner Errors
-1. **Г vs Ґ**: Learners often use the hard English 'g' for both. Correction: Г is voiced 'h' (head), Ґ is 'g' (go).
-2. **Ignored Soft Sign (Ь)**: Treating it as silent. Correction: It changes the *previous* consonant, smashing the tongue flat against the roof of the mouth (palatalization).
-3. **И vs І Confusion**: Learners hear them as the same "ee" sound. Correction: І is a smile (dots = eyes), И is a grimace/relaxed jaw (lower pitch, harder sound).
+1. Г vs Ґ confusion → Using a hard English 'g' for both. Г is a voiced, breathy 'h' (like in 'head'), while Ґ is the rare hard 'g' (like in 'go').
+2. И vs І confusion → Pronouncing both as the English 'ee' (like in 'see'). И is harder, lower-pitched (grin), while І is high and bright (smile).
+3. The 'Silent' Soft Sign (Ь) → Ignoring the Ь completely. It's not silent; it changes the preceding consonant by palatalizing it (pressing the tongue to the roof of the mouth).
 
 ## Cross-References
-- Builds on: a1-01 (The Cyrillic Code I) — uses the first 19 letters.
-- Prepares for: a1-03 (The Gender Code) — identification of hard/soft endings is crucial for gender determination.
+- Builds on: a1-01 (The Cyrillic Code I)
+- Prepares for: a1-03 (The Gender Code)
 
 ## Notes for Content Writing
-- **Immersion**: A1.1 Level. Use English for all explanations. Ukrainian only for examples/drills.
-- **Pedagogy**: Focus on *contrast*. Always show pairs: Г-Ґ, И-І, С-СЬ.
-- **Visuals**: Describe the "Smile vs Grin" technique visually in the text.
+- Frame the Cyrillic alphabet not as a hurdle, but as a key to Ukrainian identity.
+- Avoid comparing Ukrainian letters directly to Russian. Use English phonetic equivalents (e.g., 'h' for Г) or distinct physiological descriptions (Smile vs. Grin).
+- English scaffolding is required for A1.1, so explain the physiological mechanics (palatalization, voiced fricatives) clearly in English before showing Ukrainian examples.

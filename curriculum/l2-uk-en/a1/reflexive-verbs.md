@@ -141,14 +141,14 @@ Let's see this rhythm in action with the verb **сміятися** (to laugh):
 | **-ть** (consonant) | **-ся** | Вони сміють**ся** | They laugh |
 
 ### Finding them in the Dictionary
-When you look up a new word, the dictionary form (the infinitive) will always end in **-тися** [tɪsʲɐ].
+When you look up a new word, the dictionary form (the infinitive) will always end in **-тися** [tɪsʲɑ].
 *   **мити** (to wash) + **ся** = **митися** (to wash oneself)
 *   **одягати** (to dress) + **ся** = **одягатися** (to get dressed)
 
 ### Conjugation Table (Present Tense)
 Let's conjugate a very common reflexive verb: **дивитися** (to look / to watch). Note that the base verb **дивити** belongs to the second conjugation group (like *говорити*), so it takes **-и-** endings.
 
-**Дивитися** [dɪˈʋɪtɪsʲɐ] — to look / to watch
+**Диви́тися** — to look / to watch
 
 | Pronoun | Base Form | + Suffix | Full Word | Notes |
 | :--- | :--- | :--- | :--- | :--- |
@@ -392,12 +392,12 @@ It fuses together into a special sound: a **long, soft [ts']**.
 It sounds like water hitting a hot pan: *tsss*. Or like a bee buzzing softly.
 
 *   Written: **дивиться**
-*   Pronounced: [dɪˈʋɪ**t͡sʲːɐ**] (dee-VY-tssya)
+*   Pronounced: [dɪˈʋɪ**t͡sʲːɑ**] (dee-VY-tssya)
 
 ### Accent Reduction: The Shibboleth
 This sound instantly distinguishes a native Ukrainian speaker. In Russian, the reflexive ending is hard and short. In Ukrainian, it is **soft** and **long**.
 To practice, smile when you say it. The smile raises your tongue and makes the sound soft.
-*   **Він сміється.** [ʋin smɪˈjɛ-**t͡sʲːɐ**]
+*   **Він сміється.** [ʋin smɪˈjɛ-**t͡sʲːɑ**]
 
 Try saying it five times: *Сміється, сміється, сміється...* Make that *ts* sound long and gentle.
 

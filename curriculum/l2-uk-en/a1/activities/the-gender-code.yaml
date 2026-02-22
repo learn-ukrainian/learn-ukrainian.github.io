@@ -538,17 +538,17 @@
     - correct: false
       text: Спільний
     question: Якого роду слово «день»?
-  - explanation: Тато — це чоловік, тому чоловічий рід.
+  - explanation: Тато — чоловічий рід, тому правильно «мій тато».
     options:
     - correct: true
-      text: Чоловічий
+      text: мій тато
     - correct: false
-      text: Середній
+      text: моє тато
     - correct: false
-      text: Жіночий
+      text: моя тато
     - correct: false
-      text: Невідомий
-    question: Якого роду слово «тато»?
+      text: мої тато
+    question: Яке словосполучення правильне?
   - explanation: Мама — жіночий рід, закінчується на -а.
     options:
     - correct: true

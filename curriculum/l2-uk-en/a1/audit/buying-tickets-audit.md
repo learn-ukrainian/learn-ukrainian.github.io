@@ -1,7 +1,7 @@
 # Audit Report: M39 — buying-tickets.md
 **Level:** A1 | **Module:** M39 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 01:01:50
+**Generated:** 2026-02-22 16:05:51
 
 ## Configuration
 **Type:** A1
@@ -47,7 +47,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 4 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ⚠️ 2 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

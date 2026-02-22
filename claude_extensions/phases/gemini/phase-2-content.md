@@ -101,12 +101,14 @@ All items in a category: SAME format, SAME depth (±20%), SAME example count (±
 
 ### Rule 4: Example Variety
 
-FORBIDDEN: 5+ consecutive `_Приклад:_` lines. Mix these formats across sections:
-- Standalone examples with context (max 3-4 consecutive)
+FORBIDDEN: 5+ consecutive examples in the same format (bullet lists, `_Приклад:_` blocks, `**Ukrainian.** (English.)` lines — any uniform pattern). Mix these formats across sections:
+- Standalone examples with context (max 3-4 consecutive in one format)
 - **Comparison tables** (paradigms, aspect pairs, case usage)
 - Inline examples woven into prose
 - **Mini-dialogues** showing real usage
 - Callout boxes with examples
+
+**Anti-batching rule**: If you notice 3+ sections each presenting examples as identical bullet lists, STOP and vary the format. Use a table in one section, inline examples in another, a dialogue in a third.
 
 ### Rule 5: Callout Type Variety
 
@@ -241,6 +243,8 @@ Before submitting, scan your ENTIRE output for these. They cause automatic audit
 | слідуючий | наступний |
 | любий (= будь-який) | будь-який |
 | на то, що | на те, що |
+| красивий | гарний |
+| прекрасне / прекрасний | чудовий / чудове |
 
 Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian text.
 
@@ -260,35 +264,26 @@ Ukrainian prose must follow euphony rules. Scan your output before submitting:
 
 Key: й can ONLY follow a vowel. After a consonant, always use і — even before a vowel.
 
-### Pronunciation: IPA Only (HARD FAIL if Latin transliteration found)
+### Pronunciation (HARD FAIL if Latin transliteration found)
 
-**Level-gated IPA rules:**
-- **A1–A2**: IPA allowed ONLY on the **first occurrence** of each new vocabulary word when it is introduced. NEVER transcribe full sentences, example phrases, or words the student has already seen in earlier modules. The goal is a pronunciation hint on unfamiliar words, not a phonetics textbook.
-- **B1+**: Do NOT include inline IPA `[...]` transcriptions in the content markdown. IPA belongs ONLY in the vocabulary YAML file. Students at B1+ can read Cyrillic — cluttering prose with `[tʃɪˈtɑu̯]` breaks immersion and readability.
+**Level-gated pronunciation rules:**
+- **A1–A2**: Use **stress marks** (мі́сто, not [ˈmʲistɔ]) for pronunciation hints on the first occurrence of new vocabulary words. Do NOT use inline IPA `[...]` in prose content — IPA is generated deterministically in vocabulary YAML by our tooling.
+- **B1+**: No pronunciation annotations in content. IPA lives in vocabulary YAML only.
 
-**When IPA IS used (A1–A2 content, or any vocabulary file):**
-- ALL pronunciation MUST use IPA symbols. Latin transliterations are BANNED.
-- Maximum ~15-25 IPA annotations per module (one per new word). If you have more, you are over-annotating.
+**Latin transliterations are BANNED at ALL levels.** Never use kh, sh, ch, zh, ts, ya, yu, ye, shch.
 
 ```markdown
 ❌ WRONG (Latin transliteration):
 "Х sounds like 'kh' in Scottish 'loch'"
 "хліб (khlib)"
 
-✅ RIGHT (IPA with English approximation):
-"**Х** — [x], like the «ch» in Scottish «loch»"
+❌ WRONG (inline IPA in A1/A2 prose):
 "**хліб** — [xlʲib]"
-```
 
-**IPA Rules:**
-- Use IPA symbols in square brackets: `[x]`, `[ʃ]`, `[t͡ʃ]`, `[ʒ]`, `[t͡s]`, `[d͡ʒ]`
-- Affricates MUST have tie-bars: `[t͡ʃ]` (ч), `[d͡ʒ]` (дж), `[t͡s]` (ц), `[d͡z]` (дз)
-- Add English approximation for accessibility: `[ʃ] — like «sh» in «shoe»`
-- Mark palatalization: `[lʲ]`, `[dʲ]`, `[nʲ]`, `[tʲ]` (NOT just `[l]`, `[d]`)
-- Mark the soft Л correctly: `[lʲ]` vs hard `[l]`
-- Use `[ʋ]` for Ukrainian В (NOT `[v]` or `[w]` — it's a labiodental approximant)
-- Use `/u/` for Ukrainian у (NOT `/ʊ/` — Ukrainian has no lax /ʊ/ phoneme)
-- NEVER use Latin shortcuts: kh, sh, ch, zh, ts, ya, yu, ye, shch
+✅ RIGHT (stress mark + English approximation):
+"**Х**, like the «ch» in Scottish «loch»"
+"**хлі́б** — like English «hleeb» but with a «ch» sound"
+```
 
 ### Typography
 

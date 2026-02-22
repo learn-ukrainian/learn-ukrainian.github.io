@@ -1,7 +1,7 @@
 # Audit Report: M36 — at-the-restaurant.md
 **Level:** A1 | **Module:** M36 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 01:01:48
+**Generated:** 2026-02-22 16:05:48
 
 ## Configuration
 **Type:** A1
@@ -36,6 +36,15 @@
 - Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_BALANCE_BLOATED]** Section 'Презентація: Як зробити замовлення' has 1214 words (41% of total). Bloated sections: 'Презентація: Як зробити замовлення' (41%)
+  - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2882/2000 (raw: 3094)

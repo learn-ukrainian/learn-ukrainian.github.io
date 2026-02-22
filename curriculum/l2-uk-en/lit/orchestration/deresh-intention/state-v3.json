@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "deresh-intention",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T11:50:48Z",
+      "task_id": "v3-deresh-intention-pA",
+      "mode": "full"
+    }
+  }
+}

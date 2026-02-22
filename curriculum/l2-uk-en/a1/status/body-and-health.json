@@ -2,7 +2,7 @@
   "module": "body-and-health",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T01:01:44.782338Z",
+  "last_audit": "2026-02-22T16:05:44.942971Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-20T22:43:07.230015Z",
@@ -49,16 +49,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 7,
-    "fail_count": 0,
+    "status": "fail",
+    "blocking_issues": [
+      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+    ],
+    "pass_count": 6,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

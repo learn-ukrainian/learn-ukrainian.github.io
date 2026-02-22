@@ -2,7 +2,7 @@
 
 > **Чому це важливо?**
 >
-> This is a fundamental skill. In this module, you will learn how to say who you are and identify the world around you. You will master the unique "Zero Copula" system that makes Ukrainian sentences elegant and direct, and you'll learn the crucial cultural code of polite address so you can speak with confidence and respect from day one.
+> Ready to introduce yourself in Ukrainian? By the end of this module, you'll say who you are and identify the world around you — all without using a single word for "is." You'll master the unique "Zero Copula" system and learn the crucial cultural code of polite address, so you can speak with confidence and respect from day one.
 
 ## Вступ: Де дієслово «бути»?
 
@@ -11,7 +11,6 @@
 In English, you can barely speak a sentence without the verb "to be". You say "I am happy," "This is a table," "They are here." It is the glue that holds the language together.
 
 In Ukrainian, however, this verb (am, is, are) almost completely disappears in the present tense. We call this phenomenon the **Zero Copula**. It means the link between the subject (who we are talking about) and the predicate (what we say about them) is implied, not spoken. The connection is so strong it doesn't need a word to express it.
----END---
 
 Look at this comparison:
 
@@ -22,6 +21,9 @@ Look at this comparison:
 
 > [!observe]
 > Did you notice the dash (—) in the Ukrainian sentence? In written Ukrainian, we often use a dash to replace the missing verb "to be". In speech, we simply make a tiny pause, almost like a comma. This pause separates the subject from the description, giving the sentence a rhythm.
+
+> [!tip]
+> **Try it now:** If "Я — студент" means "I am a student," how would you say "She is a student"? (Hint: "She" = **Вона**, "student (female)" = **студентка**.) Answer: **Вона — студентка.**
 
 ### The Philosophy of Silence
 
@@ -57,23 +59,23 @@ To speak about yourself and others, you need **Personal Pronouns**. Let's meet t
 First, let's look at the pronouns we use for single people or things.
 
 **1. The First Person:**
-*   **Я** [jɑ] — I.
+*   **Я** — I.
     *   *Usage:* Use this to talk about yourself. Always capitalized at the start of a sentence.
     *   *Example:* **Я тут.** (I [am] here.)
 
 **2. The Second Person:**
-*   **Ти** [tɪ] — You (informal/singular).
+*   **Ти** — You (informal/singular).
     *   *Usage:* Use this with friends, family, and children. It implies closeness.
     *   *Example:* **Ти там.** (You [are] there.)
 
 **3. The Third Person:**
-*   **Він** [ʋin] — He.
+*   **Він** — He.
     *   *Usage:* Used for men, boys, and masculine objects.
     *   *Example:* **Він — студент.** (He [is] a student.)
-*   **Вона** [ʋɔˈnɑ] — She.
+*   **Вона́** — She.
     *   *Usage:* Used for women, girls, and feminine objects.
     *   *Example:* **Вона — мама.** (She [is] mom.)
-*   **Воно** [ʋɔˈnɔ] — It.
+*   **Воно́** — It.
     *   *Usage:* Used for neuter objects and abstract concepts.
     *   *Example:* **Воно тут.** (It [is] here.)
 
@@ -82,17 +84,17 @@ First, let's look at the pronouns we use for single people or things.
 Now, let's look at the groups.
 
 **1. The First Person Plural:**
-*   **Ми** [mɪ] — We.
+*   **Ми** — We.
     *   *Usage:* You and I, or you and us.
     *   *Example:* **Ми — студенти.** (We [are] students.)
 
 **2. The Second Person Plural (and Formal):**
-*   **Ви** [ʋɪ] — You (plural) OR You (formal singular).
+*   **Ви** — You (plural) OR You (formal singular).
     *   *Usage:* This is a special word. You use it for a group of people ("Hey guys, where are **you**?"). But you ALSO use it for ONE person if you want to be polite, formal, or show respect.
     *   *Example:* **Ви — вчитель.** (You [are] a teacher.)
 
 **3. The Third Person Plural:**
-*   **Вони** [ʋɔˈnɪ] — They.
+*   **Вони́** — They.
     *   *Usage:* Any group of people or objects.
     *   *Example:* **Вони тут.** (They [are] here.)
 
@@ -106,10 +108,10 @@ In English, if you see a table, a lamp, or a window, you call them all "it". In 
 
 Never default to **воно** (it) just because something isn't human!
 
-*   **Студент** [stuˈdɛnt] (student, m.) → **Він** (He)
+*   **Студе́нт** (student, m.) → **Він** (He)
 *   **Стіл** [stil] (table, m.) → **Він** (He)
-*   **Лампа** [ˈlɑmpɑ] (lamp, f.) → **Вона** (She)
-*   **Вікно** [ʋikˈnɔ] (window, n.) → **Воно** (It)
+*   **Ла́мпа** (lamp, f.) → **Вона** (She)
+*   **Вікно́** (window, n.) → **Воно** (It)
 
 > [!context]
 > **Think like a Ukrainian:**
@@ -130,14 +132,13 @@ Here are some examples of how to identify people and things.
 *   **Вона — українка.** [ukrɑˈjinkɑ] (She [is] a Ukrainian.)
 
 Notice the pair: **українець** (male) / **українка** (female). Ukrainian uses different word endings for men and women. You will see this pattern again with professions: **студент** / **студентка**, **вчитель** / **вчителька**.
----END---
 
 **2. Identifying Locations (Simple):**
 *   **Я тут.** [tut] (I [am] here.)
 *   **Ми там.** [tɑm] (We [are] there.)
 *   **Де ви?** [dɛ] (Where [are] you?) — *"Ви де?" also works in casual speech.*
 
-**3. Identifying Qualities (Simple):**
+**3. More Identification Patterns:**
 *   **Він вдома.** [ˈʋdɔmɑ] (He [is] at home.)
 *   **Україна — це дім.** (Ukraine [is] home.)
 *   **Київ — це місто.** (Kyiv [is] a city.)
@@ -148,11 +149,11 @@ In Ukrainian, we need nothing but the words themselves. It is pure efficiency.
 
 What if you are NOT a student? Or he is NOT a teacher?
 
-To make a sentence negative, we simply add the particle **не** [nɛ] before the word we are negating.
+To make a sentence negative, we simply add the particle **не** before the word we are negating.
 
 *   **Я — не студент.** (I [am] not a student.)
 *   **Він — не вчитель.** (He [is] not a teacher.)
-*   **Вона — не тут.** (She [is] not here.)
+*   **Вона не тут.** (She [is] not here.)
 
 The structure remains the same: Subject + **не** + Predicate.
 
@@ -162,7 +163,7 @@ The structure remains the same: Subject + **не** + Predicate.
 
 ### The Word: Це
 
-There is one more tiny but useful word. It is **це** [t͡sɛ].
+There is one more tiny but useful word. It is **це**.
 
 It translates to "this is", "that is", "it is", or simply "this". You use it to introduce someone or point something out.
 
@@ -250,8 +251,7 @@ Imagine you are talking to different people. Which pronoun do you choose: **Ти
 
 ---
 
-## Ваша черга: Розкажіть про себе
----END---
+## Ваш вихід: Розкажіть про себе
 
 ### Building Your Intro
 
@@ -271,7 +271,6 @@ Here is a template for a perfect A1 introduction:
 
 **Example:**
 *   **Привіт. Мене звати Том. Я — студент. Я тут.**
----END---
 
 ### Describing Others
 
@@ -308,7 +307,6 @@ Imagine you are checking into a hotel. The receptionist asks you questions.
 
 **Receptionist:** Добрий день. Хто ви? (Good day. Who are you?)
 **Ви:** Добрий день. Мене звати Алекс. (Good day. My name is Alex.)
----END---
 **Receptionist:** Ви турист? (Are you a tourist?)
 **Ви:** Так, я — турист. (Yes, I am a tourist.)
 **Receptionist:** Добре. Ви — тут. Це — готель "Київ". (Good. You are here. This is Hotel "Kyiv".)
@@ -356,11 +354,9 @@ In this module, you learned how to identify people and things in Ukrainian. You 
 2.  **Pronouns:** Matches for gender (він/вона/воно) and number (ми/ви/вони).
 3.  **Nationality Pairs:** українець (m.) / українка (f.) — different endings for men and women.
 4.  **Objects have Gender:** A table is a "he", a lamp is a "she".
----END---
 5.  **Це:** The pointer word for "this is".
 6.  **Мене звати:** The standard way to say your name.
 7.  **Safety Net:** Always start with **Ви** with strangers.
----END---
 
 **Перевірте себе:**
 

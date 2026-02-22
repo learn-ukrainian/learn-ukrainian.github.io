@@ -22,6 +22,10 @@
       "status": "complete",
       "ts": "2026-02-19T10:24:49Z",
       "attempts": 1
+    },
+    "v3-D": {
+      "status": "pending",
+      "note": "reset-section-coverage-english-review"
     }
   }
 }

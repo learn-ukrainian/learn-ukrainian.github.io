@@ -1,7 +1,7 @@
 # Audit Report: M21 — yesterday-past-tense.md
 **Level:** A1 | **Module:** M21 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:41
+**Generated:** 2026-02-22 16:05:37
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,6 +37,15 @@
 - Required types used: 1/1 (fill-in) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_BALANCE_BLOATED]** Section 'Граматика: Минулий час дієслів' has 1173 words (45% of total). Bloated sections: 'Граматика: Минулий час дієслів' (45%)
+  - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 2389/2000 (raw: 2725)
 - **Activities:** ✅ 10/8
@@ -47,7 +56,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 5 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

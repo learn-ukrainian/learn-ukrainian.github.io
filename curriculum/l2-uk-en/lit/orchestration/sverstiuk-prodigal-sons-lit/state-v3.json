@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "sverstiuk-prodigal-sons-lit",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T10:15:17Z",
+      "task_id": "v3-sverstiuk-prodigal-sons-lit-pA",
+      "mode": "full"
+    }
+  }
+}

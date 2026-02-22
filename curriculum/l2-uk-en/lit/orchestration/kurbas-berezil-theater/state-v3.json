@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "kurbas-berezil-theater",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T07:39:45Z",
+      "task_id": "v3-kurbas-berezil-theater-pA",
+      "mode": "full"
+    }
+  }
+}

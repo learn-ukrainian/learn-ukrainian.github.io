@@ -1,24 +1,24 @@
-- ipa: '[ˈu̯t͡ʃɔrɑ]'
+- ipa: '[ˈʍt͡ʃɔrɑ]'
   lemma: вчора
   pos: adv
   translation: yesterday
-- ipa: '[sʲoˈɦɔdʲnʲi]'
+- ipa: '[sʲɔˈɦɔdʲnʲi]'
   lemma: сьогодні
   pos: adv
   translation: today
-- ipa: '[mɪˈnulɪi̯]'
+- ipa: '[mɪˈnulɪj]'
   lemma: минулий
   pos: adj
   translation: past, last
-- ipa: '[ˈtɪʒdenʲ]'
+- ipa: '[ˈtɪʒdɛnʲ]'
   lemma: тиждень
   pos: noun
   translation: week
-- ipa: '[ˈmisʲɑt͡sʲ]'
+- ipa: '[ˈmʲisʲɑt͡sʲ]'
   lemma: місяць
   pos: noun
   translation: month
-- ipa: '[rik]'
+- ipa: '[rʲik]'
   lemma: рік
   pos: noun
   translation: year
@@ -26,7 +26,7 @@
   lemma: бути
   pos: verb
   translation: to be
-- ipa: '[roˈbɪtɪ]'
+- ipa: '[rɔˈbɪtɪ]'
   lemma: робити
   pos: verb
   translation: to do, to make
@@ -46,15 +46,15 @@
   lemma: їсти
   pos: verb
   translation: to eat
-- ipa: '[i̯tɪ]'
+- ipa: '[jtɪ]'
   lemma: йти
   pos: verb
   translation: to go (on foot)
-- ipa: '[xoˈdɪtɪ]'
+- ipa: '[xɔˈdɪtɪ]'
   lemma: ходити
   pos: verb
   translation: to walk, to go
-- ipa: '[dɪˈʋɪtɪsʲɐ]'
+- ipa: '[dɪˈʋɪtɪsʲɑ]'
   lemma: дивитися
   pos: verb
   translation: to watch
@@ -74,7 +74,7 @@
   lemma: грати
   pos: verb
   translation: to play
-- ipa: '[prɔkɪˈdɑtɪsʲɐ]'
+- ipa: '[prɔkɪdɑtɪsʲɑ]'
   lemma: прокидатися
   pos: verb
   translation: to wake up

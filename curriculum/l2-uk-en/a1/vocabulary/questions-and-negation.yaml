@@ -39,7 +39,7 @@
   lemma: як
   pos: adverb
   translation: how
-- ipa: '[ˈskʲilʲkɪ]'
+- ipa: '[ˈsʲkʲilʲkɪ]'
   lemma: скільки
   pos: adverb
   translation: how much / how many
@@ -47,43 +47,43 @@
   lemma: куди
   pos: adverb
   translation: where to
-- ipa: '[zɑu̯ˈʒdɪ]'
+- ipa: '[ˈzɑˈʋʒdɪ]'
   lemma: завжди
   pos: adverb
   translation: always
-- ipa: '[nʲiˈkɔ.lɪ]'
+- ipa: '[nʲikɔlɪ]'
   lemma: ніколи
   pos: adverb
   translation: never
-- ipa: '[zɑ.zʋɪˈt͡ʃɑi̯]'
+- ipa: '[zɑzʋɪˈt͡ʃɑj]'
   lemma: зазвичай
   pos: adverb
   translation: usually
-- ipa: '[ˈznɑ.tɪ]'
+- ipa: '[ˈznɑtɪ]'
   lemma: знати
   pos: verb
   translation: to know
-- ipa: '[rɔ.zuˈmʲi.tɪ]'
+- ipa: '[rɔzuˈmʲitɪ]'
   lemma: розуміти
   pos: verb
   translation: to understand
-- ipa: '[ˈsɪr.nɪk]'
+- ipa: '[ˈsɪrnɪk]'
   lemma: сирник
   pos: noun
   translation: cottage cheese pancake (syrnyk)
-- ipa: '[ˈsmɑt͡ʃ.nɔ]'
+- ipa: '[ˈsmɑt͡ʃnɔ]'
   lemma: смачно
   pos: adverb
   translation: tasty / deliciously
-- ipa: '[zʋɪˈt͡ʃɑi̯.nɔ]'
+- ipa: '[zʋɪˈt͡ʃɑjnɔ]'
   lemma: звичайно
   pos: adverb
   translation: of course / certainly
-- ipa: '[dʲi.jɛˈslɔ.ʋɔ]'
+- ipa: '[dʲijɛˈslɔʋɔ]'
   lemma: дієслово
   pos: noun
   translation: verb
-- ipa: '[ˈzʋʲidkɪ]'
+- ipa: '[ˈzʲʋʲidkɪ]'
   lemma: звідки
   pos: adverb
   translation: where from
@@ -91,7 +91,7 @@
   lemma: часто
   pos: adverb
   translation: often
-- ipa: '[iˈnɔdʲi]'
+- ipa: '[ˈinɔdʲi]'
   lemma: іноді
   pos: adverb
   translation: sometimes

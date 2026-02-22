@@ -22,20 +22,20 @@ In Ukraine, a full meal traditionally consists of three distinct parts. You will
 
 **Перше (The First Course)**
 This course is almost always a soup. In Ukrainian dining culture, "liquid food" is considered essential for digestion and health.
-*   **Борщ** [bɔrʃt͡ʃ] — traditional beet soup.
+*   **Борщ** — traditional beet soup.
 *   **Суп** [sup] — any other type of soup.
-*   **Капусняк** [kɐpusˈnʲɑk] — cabbage soup, a classic Ukrainian winter dish.
+*   **Капусня́к** — cabbage soup, a classic Ukrainian winter dish.
 
 **Друге (The Second Course)**
 This is the main dish, usually consisting of meat or fish plus a garnish (side dish).
-*   **Гарнір** [ɦɐrˈnʲir] — side dish (potatoes, buckwheat, rice).
+*   **Гарні́р** — side dish (potatoes, buckwheat, rice).
 *   **М'ясо** — meat.
 *   **Риба** — fish.
 
 **Третє (The Third Course / Dessert)**
 This is typically a sweet drink or a dessert.
 *   **Компот** — boiled fruit drink.
-*   **Десерт** [dɛˈsɛrt] — cake, pie, or sweets.
+*   **Десе́рт** — cake, pie, or sweets.
 
 > [!culture]
 > **The "First" Rule**
@@ -46,11 +46,11 @@ This is typically a sweet drink or a dessert.
 In English, we often use "cafe" for a place with coffee and "restaurant" for a place with food. In Ukraine, the distinction is slightly different.
 
 **Кафе (Cafe)**
-A **кафе** [kɐˈfɛ] is a casual place where you can eat a full meal. This establishment is not just for coffee! You can order borshch, varenyky, and meat dishes in a cafe. The atmosphere is less formal and usually cheaper.
+A **кафе́** is a casual place where you can eat a full meal. This establishment is not just for coffee! You can order borshch, varenyky, and meat dishes in a cafe. The atmosphere is less formal and usually cheaper.
 *   *Example:* «Ходімо в кафе на обід.» (Let's go to a cafe for lunch.)
 
 **Ресторан (Restaurant)**
-A **ресторан** [rɛstɔˈrɑn] implies a more formal atmosphere, often with evening service, waiters in uniform, and perhaps live music. Ukrainians choose this place for an occasion, a date, or a celebration.
+A **рестора́н** implies a more formal atmosphere, often with evening service, waiters in uniform, and perhaps live music. Ukrainians choose this place for an occasion, a date, or a celebration.
 *   *Example:* «Сьогодні ввечері ми йдемо в ресторан.» (Tonight we are going to a restaurant.)
 
 ### Тост: «Будьмо!»
@@ -83,9 +83,9 @@ Now that we are seated, let's learn the step-by-step process of ordering a meal.
 Popular places in Kyiv or Lviv can be very busy, especially on Friday and Saturday evenings. Booking a table in advance is wise.
 
 To do this, use the phrase **«Я хотів би замовити столик...»** (I would like to book a table...).
-*   **Столик** [ˈstɔlɪk] — a little table (diminutive form, very common in hospitality).
-*   **Замовити** [zɐˈmɔʋɪtɪ] — to order / to book.
-*   **Забронювати** [zɐbrɔnʲuˈʋɑtɪ] — to reserve (specifically for tables and rooms).
+*   **Сто́лик** — a little table (diminutive form, very common in hospitality).
+*   **Замо́вити** — to order / to book.
+*   **Забронюва́ти** — to reserve (specifically for tables and rooms).
 
 > [!tip]
 > **Замовити чи забронювати?**
@@ -111,7 +111,7 @@ Use **«...будь ласка»** (please) at the end of your request.
 *   «Столик на терасі, будь ласка.» (A table on the terrace, please.)
 
 **The Waiter:**
-The person serving you is the **офіціант** [ɔfʲit͡sʲiˈɑnt].
+The person serving you is the **офіціа́нт**.
 *   *Host:* «Ваш офіціант підійде за хвилину.» (Your waiter will approach in a minute.)
 
 ### Крок 3: Меню та запитання (The Menu)
@@ -135,7 +135,7 @@ Here is what a typical menu page might look like. Try to read it and choose what
 
 **Перші страви (Soups)**
 *   Борщ український (350 г) — 120 ₴
-*   Курячий бульйон [bulʲˈjɔn] (300 г) — 95 ₴
+*   Ку́рячий бульйо́н (300 г) — 95 ₴
 *   Суп грибний (300 г) — 110 ₴
 
 **Основні страви (Mains)**
@@ -147,7 +147,7 @@ Here is what a typical menu page might look like. Try to read it and choose what
 **Гарніри (Sides)**
 *   Картопля пюре (150 г) — 60 ₴
 *   Рис і овочі (150 г) — 65 ₴
-*   Гречка [ˈɦrɛt͡ʃkɐ] (150 г) — 50 ₴
+*   Гре́чка (150 г) — 50 ₴
 
 **Напої (Drinks)**
 *   Чай (чорний / зелений) — 45 ₴
@@ -159,8 +159,8 @@ Here is what a typical menu page might look like. Try to read it and choose what
 
 Let's look closer at what you are ordering:
 *   **Борщ** — це червоний суп. Там є буряк, картопля, капуста.
-*   **Вареники** [ʋɐˈrɛnɪkɪ] — це тісто і начинка. Начинка: картопля, сир або капуста.
-*   **Деруни** [dɛˈrunɪ] — це млинці з картоплі. Дуже смачно зі **сметаною** (< **сметана** [smɛˈtɑnɐ] — sour cream).
+*   **Варе́ники** — це тісто і начинка. Начинка: картопля, сир або капуста.
+*   **Деруни́** — це млинці з картоплі. Дуже смачно зі **сметаною** (< **смета́на** — sour cream).
 *   **Котлета** — це м'ясна страва. В Україні котлета — це не "cutlet" (шматок м'яса), а фарш (minced meat).
 *   **Салат** — це свіжі овочі: помідори, огірки, цибуля, перець.
 *   **Кава** — це популярний гарячий напій. Українці дуже люблять каву.
@@ -228,7 +228,7 @@ Modern Ukrainian restaurants are very accommodating to dietary restrictions. Use
 When you are finished, you ask for the bill.
 
 **Asking for the bill:**
-*   **Рахунок** [rɐˈxunɔk] — bill / check.
+*   **Раху́нок** — bill / check.
 *   «Рахунок, будь ласка.» (The bill, please.)
 *   «Можна рахунок?» (May [I have] the bill?)
 *   «Скільки з мене?» (How much do I owe? — Literally: "How much from me?")
@@ -243,7 +243,7 @@ Tipping is expected in Ukrainian restaurants.
 *   **Standard:** 10% is polite. 15% is generous.
 *   **How to pay:** Even if you pay for the meal by card, it is often better to leave the tip in cash on the table. However, many modern terminals now have a "tip" option on the screen.
 *   **Rounding up:** You can also say **«Без решти»** — Keep the change (if paying cash).
-*   **Рахунок vs Чек:** A **рахунок** is the bill you receive before payment. A **чек** [t͡ʃɛk] is the fiscal receipt you get after payment.
+*   **Рахунок vs Чек:** A **рахунок** is the bill you receive before payment. A **чек** is the fiscal receipt you get after payment.
 
 > [!myth-buster]
 > **"Счёт" vs "Рахунок"**
@@ -408,7 +408,7 @@ Ukrainian meals almost always include bread.
 Це дуже важлива фраза. (This is a very important phrase.)
 
 This is the most essential phrase for dining.
-*   **Смачного!** [smɐt͡ʃˈnɔɦɔ] — Bon appétit / Enjoy your meal.
+*   **Смачного!** [smɑt͡ʃˈnɔɦɔ] — Bon appétit / Enjoy your meal.
 
 **When to use it:**
 1.  **Waiter to Guest:** When the waiter puts the plate on the table, they will say «Смачного!». You should answer «Дякую!».

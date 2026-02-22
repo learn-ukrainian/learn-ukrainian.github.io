@@ -1,4 +1,4 @@
-FAIL: build_module_v2.py b2-hist 5 — E2E
+PASS: build_module_v2.py b2-hist 5 — E2E
 
   Module:   slavic-tribes
   Track:    b2-hist
@@ -6,5 +6,5 @@ FAIL: build_module_v2.py b2-hist 5 — E2E
   Words:    5291 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-21T18:19:26Z
+  Verdict:  PASS
+  Date:     2026-02-21T21:13:15Z

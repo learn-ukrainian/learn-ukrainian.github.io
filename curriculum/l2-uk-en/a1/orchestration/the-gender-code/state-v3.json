@@ -20,13 +20,13 @@
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-20T20:34:55Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-22T09:04:35Z",
+      "attempts": 1
     },
     "v3-D": {
       "status": "complete",
-      "ts": "2026-02-20T20:34:55Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-22T11:30:14Z",
+      "attempts": 3
     }
   }
 }

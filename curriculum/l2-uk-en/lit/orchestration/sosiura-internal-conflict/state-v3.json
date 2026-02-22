@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "sosiura-internal-conflict",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T08:36:39Z",
+      "task_id": "v3-sosiura-internal-conflict-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -14,7 +14,7 @@ Related: a1-31 (Body and Health), a1-41 (Phone Basics)
 ## Вступ
 
 ### The Core Concept of Help
-Коли ви в новій країні й є проблема, найважливіше — знати, як просити про допомогу. In the Ukrainian language, the core noun for assistance or aid is **допомога** [dɔpɔˈmɔɦɐ] (help). Це слово дуже часто звучить у реальному житті. Воно формує основу багатьох критичних фраз. Ви шукаєте вулицю. Потрібен лікар. Потрібна поліція. Усюди допомагає це слово. Вони рятують життя. Ви маєте знати його дуже добре. 
+Коли ви в новій країні й є проблема, найважливіше — знати, як просити про допомогу. In the Ukrainian language, the core noun for assistance or aid is **допомо́га** (help). Це слово дуже часто звучить у реальному житті. Воно формує основу багатьох критичних фраз. Ви шукаєте вулицю. Потрібен лікар. Потрібна поліція. Усюди допомагає це слово. Вони рятують життя. Ви маєте знати його дуже добре. 
 
 Коли є велика проблема, ви кажете: **«Допоможіть, будь ласка!»** (Help, please!). Це дуже важлива фраза. Також ви можете сказати: **«Тут потрібна термінова допомога.»** (Urgent help is needed here.) або **«Тут потрібна допомога.»** (Help is needed here.).
 
@@ -25,9 +25,9 @@ Related: a1-31 (Body and Health), a1-41 (Phone Basics)
 
 Але також є старі номери. Вони працюють дуже добре, і всі люди знають ці номери:
 
-* Номер **101** — це **пожежна** [pɔˈʒɛʒnɐ] (fire service). Є пожежа. Ви телефонуєте 101.
-* Номер **102** — це **поліція** [pɔˈlʲit͡sʲijɐ] (police). Є аварія. Ви телефонуєте 102.
-* Номер **103** — це **швидка** [ʃʋɪdˈkɑ] (ambulance). Є травма. Ви телефонуєте 103.
+* Номер **101** — це **поже́жна** (fire service). Є пожежа. Ви телефонуєте 101.
+* Номер **102** — це **полі́ція** (police). Є аварія. Ви телефонуєте 102.
+* Номер **103** — це **швидка́** (ambulance). Є травма. Ви телефонуєте 103.
 
 Дуже важливо знати ці номери. Вони гарантують вашу безпеку.
 
@@ -64,7 +64,7 @@ For feminine nouns ending in the vowel **-я**, the ending shifts to **-є**:
 Ви не можете сказати "Я дзвоню поліцію" (Incorrect). Правильна українська фраза звучить так: **«Я викликаю поліцію.»** (Correct: I am officially summoning the police.). Також неправильно казати "Треба визивати швидку" (Incorrect: Colonial Russism). Правильний і дуже красивий варіант: **«Треба викликати швидку.»** (Correct: It is necessary to summon an ambulance.). Це важливо знати.
 
 ### Describing Your Location
-Диспетчер відповідає на телефон. Перше і дуже важливе запитання: "Де ви?". Ви маєте бути готові. Ви називаєте вашу **адресу** [ɐˈdrɛsɐ] (address) дуже чітко. Іноді ви не знаєте вулицю. Іноді ви не знаєте номер будинку. Тоді ви використовуєте прийменники місця. Це дуже допомагає.
+Диспетчер відповідає на телефон. Перше і дуже важливе запитання: "Де ви?". Ви маєте бути готові. Ви називаєте вашу **адре́су** (address) дуже чітко. Іноді ви не знаєте вулицю. Іноді ви не знаєте номер будинку. Тоді ви використовуєте прийменники місця. Це дуже допомагає.
 
 Ви можете використовувати прийменник **біля** (near). Ви називаєте великий об'єкт. Прийменник **біля** вимагає Родового відмінка (Genitive case). Слово змінює закінчення. Але багато іноземних слів не змінюються. Наприклад, слово "метро" завжди "метро".
 
@@ -73,11 +73,11 @@ For feminine nouns ending in the vowel **-я**, the ending shifts to **-є**:
 Описуйте місце просто. Називайте великі об'єкти біля вас. Це найкраща стратегія. Це допомагає швидко передати інформацію диспетчеру.
 
 ### Stating the Problem
-Диспетчер знає вашу адресу. Далі ви швидко описуєте проблему. Це конкретна **небезпека** [nɛbɛzˈpɛkɐ] (danger). Тут не потрібна складна граматика. Одне або два прості слова працюють ідеально. Диспетчер добре розуміє ситуацію. Він знає ситуацію. Правильна допомога їде.
+Диспетчер знає вашу адресу. Далі ви швидко описуєте проблему. Це конкретна **небезпе́ка** (danger). Тут не потрібна складна граматика. Одне або два прості слова працюють ідеально. Диспетчер добре розуміє ситуацію. Він знає ситуацію. Правильна допомога їде.
 
-На дорозі є проблема. Машини зіткнулися. Ви використовуєте спеціальне слово **аварія** [ɐˈʋɑrʲijɐ] (accident). В офіційних ситуаціях використовують абревіатуру **ДТП** (дорожньо-транспортна пригода). Вона звучить у поліції. Вона звучить у новинах. 
+На дорозі є проблема. Машини зіткнулися. Ви використовуєте спеціальне слово **ава́рія** (accident). В офіційних ситуаціях використовують абревіатуру **ДТП** (дорожньо-транспортна пригода). Вона звучить у поліції. Вона звучить у новинах. 
 
-Людина має фізичний біль. Вона постраждала. Ви обов'язково кажете слово **травма** [ˈtrɑu̯mɐ] (injury). Диспетчер чує це слово. Він одразу відправляє швидку медичну допомогу. Людину везуть у місцеву **лікарню** [lʲiˈkɑrnʲɐ] (hospital).
+Людина має фізичний біль. Вона постраждала. Ви обов'язково кажете слово **тра́вма** (injury). Диспетчер чує це слово. Він одразу відправляє швидку медичну допомогу. Людину везуть у місцеву **ліка́рню** (hospital).
 
 Диспетчер запитує про проблему. Ви відповідаєте: **«Тут на вулиці сталася аварія.»** (An accident happened here on the street.). Ви також можете використати абревіатуру: **«Увага, тут велика ДТП.»** (Attention, there is a major traffic accident here.). Хтось має травму. Тоді ви пояснюєте: **«Тут серйозна травма.»** (There is a serious injury here.). І ви додаєте: **«Тут дуже потрібна лікарня.»** (A hospital is desperately needed here.). Це дає диспетчеру чітку інформацію.
 
@@ -87,7 +87,7 @@ For feminine nouns ending in the vowel **-я**, the ending shifts to **-є**:
 ## Практика
 
 ### Scenario 1: Reporting a Traffic Accident
-Let us now systematically put all these individual linguistic pieces together into a highly realistic, practical scenario. Imagine for a moment that you have just witnessed a severe car accident on a busy city street. You immediately dial 112 on your phone. The central dispatcher answers your call. You need to focus, stay entirely calm, state the core problem, provide your exact location, and clearly mention if there is a **свідок** [ˈsʲʋidɔk] (witness) present at the scene.
+Let us now systematically put all these individual linguistic pieces together into a highly realistic, practical scenario. Imagine for a moment that you have just witnessed a severe car accident on a busy city street. You immediately dial 112 on your phone. The central dispatcher answers your call. You need to focus, stay entirely calm, state the core problem, provide your exact location, and clearly mention if there is a **сві́док** (witness) present at the scene.
 
 Here is exactly how a simple, highly effective emergency phone call might look in practice:
 
@@ -105,7 +105,7 @@ Notice carefully how remarkably short and profoundly direct the Ukrainian senten
 ### Scenario 2: Lost or Stolen Documents
 It is important to remember that not all intense emergencies involve immediate physical danger to your body. Sometimes, you might accidentally lose your international passport or have your wallet stolen, which is a highly stressful and disorienting experience, especially when you are navigating life in a foreign country. In these specific cases, you will need to physically approach and speak with a police officer to officially report the unfortunate incident.
 
-You absolutely need to master two key action verbs here: **шукати** [ʃuˈkɑtɪ] (to look for) and **брати** [ˈbrɑtɪ] (to take). If you are speaking with a working police officer, they will inevitably ask detailed questions about your missing **документи** [dɔkuˈmɛntɪ] (documents) and may formally ask you to sit down and write a detailed **заява** [zɐˈjɑʋɐ] (statement, official report, or application).
+You absolutely need to master two key action verbs here: **шука́ти** (to look for) and **бра́ти** (to take). If you are speaking with a working police officer, they will inevitably ask detailed questions about your missing **докуме́нти** (documents) and may formally ask you to sit down and write a detailed **зая́ва** (statement, official report, or application).
 
 > [!tip] Практична порада: Що робити?
 > If you are not absolutely sure what happened to your bag, it is usually a much better legal strategy to start the conversation by simply saying you are looking for it (**«Я шукаю...»**). This phrasing immediately initiates the administrative helpful process.

@@ -1,7 +1,7 @@
 # Audit Report: M07 — questions-and-negation.md
 **Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:31
+**Generated:** 2026-02-22 16:05:26
 
 ## Configuration
 **Type:** A1-grammar
@@ -34,6 +34,15 @@
 - Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
 - Required types used: 1/1 (fill-in) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_NOT_IN_CONTENT]** Only 15/24 (62%) vocabulary words appear in content+activities. Missing: де, звідки, коли, куди, ні, так, хто, чому (+1 more)
+  - FIX: Integrate missing vocabulary words into the prose or activities. Each vocab word should appear at least once in context.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2723/2000 (raw: 2888)

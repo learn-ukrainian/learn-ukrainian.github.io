@@ -1,0 +1,13 @@
+{
+  "track": "lit-fantastika",
+  "slug": "kidruk-bot-thriller",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T15:16:04Z",
+      "task_id": "v3-kidruk-bot-thriller-pA",
+      "mode": "full"
+    }
+  }
+}

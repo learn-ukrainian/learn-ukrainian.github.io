@@ -1,0 +1,13 @@
+{
+  "track": "lit-war",
+  "slug": "yaryna-chornohuz-war",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T23:13:27Z",
+      "task_id": "v3-yaryna-chornohuz-war-pA",
+      "mode": "full"
+    }
+  }
+}

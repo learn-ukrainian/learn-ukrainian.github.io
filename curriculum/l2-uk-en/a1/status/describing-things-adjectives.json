@@ -2,7 +2,7 @@
   "module": "describing-things-adjectives",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T00:46:44.827916Z",
+  "last_audit": "2026-02-22T16:05:41.104924Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-21T00:18:20.359460Z",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Clean IPA"
+      "message": "20 IPA issues (run lint_ipa.py --fix)"
     },
     "research": {
       "status": "pass",
@@ -49,16 +49,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 7,
-    "fail_count": 0,
+    "status": "fail",
+    "blocking_issues": [
+      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+    ],
+    "pass_count": 5,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

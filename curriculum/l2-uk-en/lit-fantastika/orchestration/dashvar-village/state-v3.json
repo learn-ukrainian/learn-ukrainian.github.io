@@ -1,0 +1,13 @@
+{
+  "track": "lit-fantastika",
+  "slug": "dashvar-village",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T13:04:24Z",
+      "task_id": "v3-dashvar-village-pA",
+      "mode": "full"
+    }
+  }
+}

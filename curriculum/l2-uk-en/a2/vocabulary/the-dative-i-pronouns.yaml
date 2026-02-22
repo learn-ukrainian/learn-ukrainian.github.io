@@ -1,14 +1,14 @@
-- ipa: '[meˈnʲi]'
+- ipa: '[mɛˈnʲi]'
   lemma: мені
   notes: Dative form of 'я'
   pos: pronoun
   translation: to me
-- ipa: '[toˈbʲi]'
+- ipa: '[tɔˈbʲi]'
   lemma: тобі
   notes: Dative form of 'ти'
   pos: pronoun
   translation: to you (singular)
-- ipa: '[joˈmu]'
+- ipa: '[jɔmu]'
   lemma: йому
   notes: Dative form of 'він' / 'воно'
   pos: pronoun
@@ -33,17 +33,17 @@
   notes: Dative form of 'вони'
   pos: pronoun
   translation: to them
-- ipa: '[poˈdɔbɑtɪsʲɑ]'
+- ipa: '[pɔˈdɔbɑtɪsʲɑ]'
   lemma: подобатися
   notes: governs Dative case (Subject pleases Recipient)
   pos: verb
   translation: to like / to please
-- ipa: '[dopomɑˈɦɑtɪ]'
+- ipa: '[dɔpɔmɑˈɦɑtɪ]'
   lemma: допомагати
   notes: governs Dative case
   pos: verb
   translation: to help
-- ipa: '[d͡zʋoˈnɪtɪ]'
+- ipa: '[d͡zʋɔˈnɪtɪ]'
   lemma: дзвонити
   notes: governs Dative case
   pos: verb
@@ -53,7 +53,7 @@
   notes: governs Dative case (impersonal)
   pos: verb
   translation: to seem
-- ipa: '[poˈtʲrʲibno]'
+- ipa: '[pɔˈtʲrʲibnɔ]'
   lemma: потрібно
   notes: impersonal usage with Dative
   pos: adverb
@@ -63,67 +63,67 @@
   notes: impersonal usage with Dative
   pos: adverb
   translation: need / necessary
-- ipa: '[neobˈxʲidno]'
+- ipa: '[nɛɔˈbxʲidnɔ]'
   lemma: необхідно
   notes: stronger than 'треба'
   pos: adverb
   translation: necessary / essential
-- ipa: '[t͡sʲiˈkɑʋo]'
+- ipa: '[t͡sʲiˈkɑʋɔ]'
   lemma: цікаво
   notes: impersonal state
   pos: adverb
   translation: interesting / interested
-- ipa: '[ˈnudno]'
+- ipa: '[ˈnudnɔ]'
   lemma: нудно
   notes: impersonal state
   pos: adverb
   translation: boring / bored
-- ipa: '[ˈʋɛselo]'
+- ipa: '[ˈʋɛsɛlɔ]'
   lemma: весело
   notes: impersonal state
   pos: adverb
   translation: fun / merry
-- ipa: '[ˈsumno]'
+- ipa: '[ˈsumnɔ]'
   lemma: сумно
   notes: impersonal state
   pos: adverb
   translation: sad
-- ipa: '[ˈʋɑʒko]'
+- ipa: '[ˈʋɑʒkɔ]'
   lemma: важко
   notes: impersonal state
   pos: adverb
   translation: difficult / hard
-- ipa: '[ˈlɛɦko]'
+- ipa: '[ˈlɛɦkɔ]'
   lemma: легко
   notes: impersonal state
   pos: adverb
   translation: easy
-- ipa: '[prɪˈjɛmno]'
+- ipa: '[prɪˈjɛmnɔ]'
   lemma: приємно
   notes: impersonal state
   pos: adverb
   translation: pleasant / nice
-- ipa: '[ˈbɔlʲɑt͡ʃe]'
+- ipa: '[ˈbɔlʲɑt͡ʃɛ]'
   lemma: боляче
   notes: impersonal state
   pos: adverb
   translation: painful / hurts
-- ipa: '[ˈxɔlodno]'
+- ipa: '[ˈxɔlɔdnɔ]'
   lemma: холодно
   notes: impersonal state
   pos: adverb
   translation: cold
-- ipa: '[ˈʒɑrko]'
+- ipa: '[ˈʒɑrkɔ]'
   lemma: жарко
   notes: impersonal state
   pos: adverb
   translation: hot
-- ipa: '[ˈɦɑrno]'
+- ipa: '[ˈɦɑrnɔ]'
   lemma: гарно
   notes: impersonal state
   pos: adverb
   translation: nice / good / well
-- ipa: '[nɑzɪu̯ˈnɪj]'
+- ipa: '[nɑzɪˈʋnɪj]'
   lemma: називний
   notes: grammatical term
   pos: adjective
@@ -133,7 +133,7 @@
   notes: grammatical term
   pos: noun
   translation: pronoun
-- ipa: '[prɪkˈmɛtnɪk]'
+- ipa: '[prɪˈkmɛtnɪk]'
   lemma: прикметник
   notes: grammatical term
   pos: noun
@@ -153,12 +153,12 @@
   notes: governs Dative case (давати комусь)
   pos: verb
   translation: to give
-- ipa: '[dʲɑˈkuʋɑtɪ]'
+- ipa: '[dʲɑkuʋɑtɪ]'
   lemma: дякувати
   notes: governs Dative case (дякую тобі)
   pos: verb
   translation: to thank
-- ipa: '[poˈrʲiɦ]'
+- ipa: '[pɔˈrʲiɦ]'
   lemma: поріг
   notes: 'Cultural context: не через поріг'
   pos: noun

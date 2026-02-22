@@ -1,109 +1,151 @@
-# Рецензія: The Dative I — Pronouns
+<!-- content-hash: 43b39dfd27d0 -->
+**Reviewed-By:** claude-opus-4-6
 
-**Level:** A2 | **Module:** 1
-**Overall Score:** 9.6/10
-**Status:** PASS
-**Reviewed:** 2026-02-19
-
-## Plan Verification
-
-Plan-Content Alignment: PASS
-- Sections: All present (Intro, Presentation, Practice, Dialogues).
-- Vocabulary: All required items covered.
-- Grammar scope: Focuses strictly on Dative pronouns and basic constructions.
-- Objectives: Met.
+---
 
 ## Scores
 
-| # | Dimension | Score | Auto-fail | Evidence |
-|---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 10/10 | <7 | Excellent "Encouraging Cultural Guide" persona. Warm, empathetic tone ("Це ключ до вираження ваших почуттів"). |
-| 2 | Coherence | 10/10 | <7 | Logical flow from pronouns to structures (like, need, state). |
-| 3 | Relevance | 10/10 | <7 | Extremely high-frequency structures ("Мені треба", "Мені холодно"). |
-| 4 | Educational | 10/10 | <7 | Clear explanations of "subject inversion" logic for English speakers. |
-| 5 | Language | 9/10 | <8 | Natural dialogues. Minor issue with "Мені треба води" vs taught rule. |
-| 6 | Pedagogy | 10/10 | <7 | "Subject Inversion" visual aid description is great. |
-| 7 | Immersion | 10/10 | <6 | ~55%, fits A2 Band 1 perfectly. |
-| 8 | Activities | 8/10 | <7 | Good variety, but missing commas in unjumble answers (punctuation error). |
-| 9 | Richness | 10/10 | <6 | Cultural notes on hospitality, thresholds, and flower numbers are fantastic. |
-| 10 | Beginner Safety | 10/10 | <7 | Very supportive ("You did a great job!"). |
-| 11 | LLM Fingerprint | 9/10 | <7 | Feels custom-written, avoids generic AI patterns. |
-| 12 | Linguistic Accuracy | 9/10 | <9 | "Мені болить" is acceptable for Dative practice, though "У мене болить" is also standard. |
+| # | Dimension | Score | Evidence Summary |
+|---|-----------|-------|-----------------|
+| 1 | Language Quality | 8/10 | Mostly solid Ukrainian; two grammatical inconsistencies (case after "треба" at L324 vs L224; Cyrillic inside IPA at L112); "Чому?" ambiguity unaddressed at L22 |
+| 2 | Lesson Quality | 8/10 | 4/5 on "Would I Continue?" — good pacing and encouragement at end, but cold opening (no warm greeting); excellent cultural hooks; clear progression WELCOME→PRESENT→PRACTICE→CELEBRATE |
+| 3 | Activity Quality | 9/10 | 12 activities, 7 distinct types, strong distractor design; good recognition→production progression; unjumble items (activity 4) have 7-8 word chains which may overwhelm A2 |
+| 4 | Richness | 8/10 | 8 engagement boxes across 5 callout types; strong cultural content (threshold taboo, flower norms, bread and salt); missing explicit teaching of дякувати despite plan requirement |
+| 5 | LLM Fingerprint | 7/10 | "ключ до" metaphor repeated 3× (L14, L18, L89); "це не просто" rhetoric used 2× (L59, L87); 3/5 H2 sections open with English-first pattern |
+| 6 | Immersion Balance | 9/10 | 51.2% — right in target range (50-60%); English explanations for grammar, Ukrainian for examples and dialogues; well-scaffolded |
+| 7 | Factual Accuracy | 8/10 | Grammar rules are accurate; cultural claims verifiable; case governance after "треба" inconsistently presented; "Чому?" dative question pedagogically misleading without disambiguation |
 
-**Weighted Overall:** 9.6/10
+**Overall: 57/70**
 
-## Auto-Fail Checklist Results
-
-- Russianisms: CLEAN
-- Calques: CLEAN
-- Grammar scope: CLEAN
-- Activity errors: Unjumble punctuation missing.
-- Beginner Safety: 5/5
+---
 
 ## Critical Issues Found
 
-### Issue 1: Invalid Callout Type
-- **Location**: Section "Practice", Exercise 3.
-- **Original**: `> [!observe]`
-- **Problem**: `[!observe]` is not a valid callout type in the project schema.
-- **Fix**: Change to `> [!cultural]` as it discusses cultural norms about flowers.
+### Issue 1 (Grammar — CRITICAL): Contradictory case after "треба"
 
-### Issue 2: Punctuation in Activities
-- **Location**: `activities/the-dative-i-pronouns.yaml`, type: `unjumble`.
-- **Original**: `answer: 'На жаль йому зовсім не подобається...'` (and others)
-- **Problem**: Missing commas in complex sentences (e.g., after introductory words "На жаль", "Вибачте", "Скажіть").
-- **Fix**: Add commas to the answer keys.
+**Location**: Section «Практика» L324 vs Section «Презентація» L224
 
-### Issue 3: Grammatical Consistency
-- **Location**: Dialogue "В гостях".
-- **Original**: `— Мені треба лише води, дякую.`
-- **Problem**: The lesson teaches `Dat + треба + Nom`. "Води" is Genitive. While natural, it contradicts the specific rule just taught ("Nominative Noun").
-- **Fix**: Change to `— Мені потрібна лише вода, дякую.` (Nominative) to align with the rule.
+The module teaches two contradictory constructions for "I need coffee":
 
-## Ukrainian Language Issues
+- L224 (in `[!context]` box): «Мені треба каву» — explicitly labeled "Using Accusative case, common in speech"
+- L324 (in practice drill): «Мені треба кава» — uses Nominative without explanation
 
-| Line | Current | Corrected | Type |
-|------|---------|-----------|------|
-| 322 (MD) | `[!observe]` | `[!cultural]` | Schema Violation |
-| 433 (MD) | `Мені треба лише води` | `Мені потрібна лише вода` | Grammar Consistency |
-| 87 (YAML) | `На жаль йому` | `На жаль, йому` | Punctuation |
-| 89 (YAML) | `Скажіть чи` | `Скажіть, чи` | Punctuation |
-| 294 (YAML) | `здається що` | `здається, що` | Punctuation |
+A2 learners seeing both forms in the same module will be confused. The module must pick one approach and be consistent. Standard grammar would favor either «Мені потрібна кава» (Nominative with agreeing потрібна) or «Мені треба кави» (Genitive). The Accusative form «Мені треба каву» is colloquial. Using bare Nominative «Мені треба кава» after invariable "треба" is non-standard.
 
-## Beginner Safety Audit
+**Fix**: Align L324 to match L224, or better yet, use the standard construction «Мені потрібна кава» in the practice drill (which is already taught at L218-220) and reserve the «треба» + noun discussion for the [!context] callout.
 
-"Would I Continue?" Test: 5/5
-- Overwhelmed? No.
-- Instructions clear? Yes.
-- Quick wins? Yes.
-- Ukrainian scary? No.
-- Come back tomorrow? Yes.
+### Issue 2 (Plan Compliance — MODERATE): дякувати not explicitly taught
 
-## Strengths
-- The "Subject/Object Inversion" explanation is pedagogically brilliant for English speakers.
-- Cultural notes (Threshold, Flowers, Hospitality) add immense value and "soul".
-- "Мені приємно" as a polite response is a great practical tip.
+**Location**: Missing from sections «Презентація» and «Стани і дієслова»
 
-## Fix Plan to Reach 10/10
+The plan (meta content_outline, section 3, point 4) specifically requires: *"explaining why «допомагати» (to help) and «дякувати» (to thank) require Dative (кому?)"*. The content covers допомагати in a dedicated subsection (L272-279) but never explicitly teaches дякувати as a dative-governing verb. It appears only as "Дякую" in dialogues (L78, L382, L385, L390, L403, L427) without explicit grammar instruction. Vocabulary YAML includes it (L156-159: `governs Dative case (дякую тобі)`), but the lesson prose never makes this explicit.
 
-### Activities: 8/10 → 10/10
-**What to fix:**
-1. Fix punctuation in all `unjumble` answers.
+**Fix**: Add a brief subsection under «Дієслова з Давальним відмінком» (after L292) teaching дякувати with examples: «Дякую **тобі** за подарунок», «Дякую **вам** за допомогу». Show that it takes Dative, not Accusative.
 
-### Language: 9/10 → 10/10
-**What to fix:**
-1. Align dialogue usage with taught grammar rules (Nominative with "треба/потрібно").
+### Issue 3 (LLM Fingerprint — MODERATE): "ключ до" metaphor repetition
+
+**Locations**: L14, L18, L89
+
+The "key to" metaphor is used three times in close proximity:
+
+- L14: «це ключ до вираження ваших почуттів, потреб та бажань»
+- L18: «Це ключ до вираження ваших почуттів та потреб»
+- L89: «Це ключ до справжнього розуміння українського менталітету»
+
+Lines 14 and 18 are nearly identical (same sentence structure within 4 lines). This is a clear LLM generation artifact — the model repeated its own framing across the epigraph and the section opening.
+
+**Fix**: Keep "ключ до" in one location only (suggest L14 in the epigraph). Replace L18 with a different framing (e.g., «Він відкриває двері до вашого внутрішнього світу»). Replace L89 with a direct statement (e.g., «Ви почнете думати українською, а не перекладати з англійської»).
+
+### Issue 4 (Notation — MINOR): Cyrillic in IPA context
+
+**Location**: Section «Презентація» L112
+
+The text reads: «Зверніть увагу на м'якість у вимові — [нʲ]». The symbol inside brackets is Cyrillic "н" rather than Latin IPA "n". Correct IPA should be [nʲ]. Additionally, the comparison to English "nice" is misleading — English /n/ before /aɪ/ is not palatalized the way Ukrainian /nʲ/ is.
+
+**Fix**: Change `[нʲ]` to `[nʲ]`. Replace the "nice" comparison with a more accurate description (e.g., "The tip of your tongue touches your palate softly, producing a [nʲ] sound — softer than English 'n'").
+
+### Issue 5 (Pedagogy — MODERATE): "Чому?" ambiguity
+
+**Location**: Section «Вступ» L22
+
+The lesson states the Dative answers «Кому?» — To whom? and «Чому?» — To what? without noting that «Чому?» overwhelmingly means "Why?" in everyday Ukrainian. For an A2 learner who has already encountered «Чому?» = "Why?" in A1, this creates real confusion. The dual meaning needs acknowledgment.
+
+**Fix**: Add a brief note at L22: "Be careful: «Чому?» in everyday speech most often means 'Why?'. As a Dative question ('To what?'), it is used primarily in grammar contexts and formal Ukrainian. In daily conversation, you will mostly use «Кому?» (To whom?)."
+
+### Issue 6 (Structure — MINOR): H1 `# Підсумок` should be H2
+
+**Location**: L447
+
+All content sections use `##` (H2) for major divisions, but the summary uses `#` (H1). This breaks the heading hierarchy.
+
+**Fix**: Change `# Підсумок` to `## Підсумок`.
+
+---
+
+## Factual Verification
+
+### Callout Box Audit
+
+| Callout | Location | Type | Claim | Verdict |
+|---------|----------|------|-------|---------|
+| Українська гостинність | L42-44 | [!culture] | Hosts ask «Вам зручно?» / «Що вам дати?» | **PASS** — Standard Ukrainian hospitality behavior |
+| Ритм мови | L125-127 | [!tip] | Мені/Тобі rhyme | **PASS** — Both end in -і with penultimate stress |
+| Типова помилка | L171-173 | [!warning] | «Я подобаю музику» is incorrect | **PASS** — Correct; подобатися requires dative subject |
+| Як сказати "I need a coffee" | L222-224 | [!context] | «Мені треба каву» uses Accusative, common in speech | **PASS** — Colloquial Accusative after "треба" is attested |
+| "Мені приємно" | L264-266 | [!culture] | Standard polite response when meeting someone | **PASS** — Standard Ukrainian etiquette |
+| Подарунки через поріг | L300-302 | [!myth-buster] | Never pass items across the threshold | **PASS** — Well-documented Ukrainian superstition |
+| Квіти для живих | L352-354 | [!culture] | Odd number of flowers for living, even for funerals | **PASS** — Well-known cultural rule across Eastern Europe |
+| Хліб і сіль | L412-414 | [!history-bite] | Bread and salt as ancient hospitality symbol | **PASS** — Documented Slavic tradition; claims are reasonable |
+
+### Grammar Rule Verification
+
+| Rule | Location | Verdict |
+|------|----------|---------|
+| Dative pronoun paradigm (мені, тобі, йому, їй, нам, вам, їм) | L99-108 | **PASS** — All forms correct |
+| подобатися governs Dative + Nominative subject | L147-189 | **PASS** — Correctly explained with singular/plural agreement |
+| Verb agreement with подобається/подобаються | L177-184 | **PASS** — Singular/plural distinction correct |
+| потрібен/потрібна/потрібне gender agreement | L216-220 | **PASS** — Masculine/feminine/neuter correctly demonstrated |
+| Impersonal state constructions (Dative + adverb) | L234-257 | **PASS** — Standard Ukrainian impersonal pattern |
+| допомагати governs Dative | L272-279 | **PASS** — Correct; standard dative verb |
+| дзвонити governs Dative | L282-285 | **PASS** — Correct |
+| "Мені треба кава" (Nominative after треба) | L324 | **FLAG** — Non-standard; contradicts L224 |
+
+---
 
 ## Verification Summary
 
-- Content lines read: ~480
-- Activity items checked: 10 types
-- Ukrainian sentences verified: All
-- IPA transcriptions checked: All (Verified correct)
-- Issues found: 3 (1 schema, 1 grammar consistency, 1 punctuation)
+| Check | Result | Notes |
+|-------|--------|-------|
+| Colonial framing | **CLEAR** | No Russian comparisons found |
+| Russianisms | **CLEAR** | No кушать, приймати участь, etc. |
+| LLM fingerprint patterns | **FLAGGED** | "ключ до" 3×; "це не просто" 2×; English-first section openings 3/5 |
+| Factual accuracy (callouts) | **CLEAR** | All 8 callout boxes verified |
+| Grammar accuracy | **FLAGGED** | Case inconsistency after "треба" (L224 vs L324) |
+| Plan compliance | **FLAGGED** | дякувати not explicitly taught; "Культурний код та етикет" section from meta not standalone H2 (content distributed via callouts) |
+| Activity errors | **CLEAR** | All 12 activities verified, items are correct |
+| Beginner safety | **PASS** | 4/5 on "Would I Continue?" test — warm closing, cold opening |
+| Section coverage | All 5 H2 sections referenced: «Вступ», «Презентація», «Стани і дієслова», «Практика», «Діалоги» |
+
+### Sections Referenced
+
+- Section «Introduction / Вступ»: "ключ до" repetition (L14, L18), Чому? ambiguity (L22)
+- Section «Presentation / Презентація»: Cyrillic IPA (L112), "ключ до" (L89), подобатися/потрібно coverage strong
+- Section «States and Verbs / Стани і дієслова»: Well-structured physical→emotional states, missing дякувати
+- Section «Practice / Практика»: Case inconsistency (L324), good error correction drill (L356-371)
+- Section «Dialogues / Діалоги»: Strong real-world scenarios, implicit дякувати usage
+
+---
 
 ## Verdict
 
-**PASS**
+**PASS WITH FIXES**
 
-Excellent module. Minor fixes required for schema compliance and punctuation in activities.
+The module is a solid A2 grammar lesson with strong pedagogy — the подобатися inversion explanation is particularly well-executed, the dialogues are natural and culturally rich, and the 12 activities provide excellent variety. The 51.2% immersion ratio is right on target.
+
+However, three issues require repair before the module is fully sound:
+
+1. **The "треба" + noun case inconsistency** (L224 vs L324) is the most urgent — an A2 learner will be confused seeing both "каву" and "кава" in the same module without explanation.
+2. **дякувати needs explicit teaching** per the plan's own requirements — a 3-sentence subsection would suffice.
+3. **The "ключ до" triple repetition** is a visible LLM artifact that should be deduplicated.
+
+The remaining issues (Cyrillic IPA, "Чому?" ambiguity, H1 heading, missing warm greeting) are minor polish items that don't block content quality but should be addressed.

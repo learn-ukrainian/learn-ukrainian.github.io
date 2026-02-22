@@ -1,0 +1,13 @@
+{
+  "track": "lit-war",
+  "slug": "war-lit-synthesis",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T23:10:18Z",
+      "task_id": "v3-war-lit-synthesis-pA",
+      "mode": "full"
+    }
+  }
+}

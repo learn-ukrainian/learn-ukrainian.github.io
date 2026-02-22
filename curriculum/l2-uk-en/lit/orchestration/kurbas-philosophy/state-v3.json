@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "kurbas-philosophy",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T07:41:08Z",
+      "task_id": "v3-kurbas-philosophy-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Audit Report: M06 — the-living-verb-i.md
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:31
+**Generated:** 2026-02-22 16:05:25
 
 ## Configuration
 **Type:** A1-grammar
@@ -47,7 +47,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 2 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

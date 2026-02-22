@@ -1,7 +1,7 @@
 # Audit Report: M34 — checkpoint-core-grammar.md
 **Level:** A1 | **Module:** M34 | **Phase:** A1.3 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 01:01:46
+**Generated:** 2026-02-22 16:05:47
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -45,7 +45,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 8/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 1 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

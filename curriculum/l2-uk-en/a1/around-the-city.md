@@ -15,7 +15,7 @@ Related: a1-13 (Locative), a1-14 (Mine/Yours), a1-40 (Taking Transport)
 ## Вступ: Місто та орієнтири
 
 ### Серце міста (The Heart of the City)
-Центр міста — це серце життя. Тут ми зустрічаємось, гуляємо і п’ємо каву. Головне місце — це **площа** [ˈplɔʃt͡ʃɑ] або **майдан** [mɑjˈdɑn].
+Центр міста — це серце життя. Тут ми зустрічаємось, гуляємо і п’ємо каву. Головне місце — це **пло́ща** або **майда́н**.
 
 In almost every Ukrainian city, life revolves around a central open space. This is not just a patch of concrete; it is the meeting point, the navigation hub, and the cultural heart. When you arrange to meet someone, you will often hear: «Давай зустрінемось на площі» (Let's meet at the square).
 
@@ -42,7 +42,7 @@ There are two fundamental questions you will ask in a new city. They look simila
 
 When a Ukrainian gives you directions, they paint a picture. They won't say "Walk 200 meters north." They will say: "Go to the church, then turn left at the bank."
 
-To understand them, you need to recognize key buildings and infrastructure. We don't count steps; we look for the **аптека** [ɑpˈtɛkɑ] (pharmacy) or the **пошта** [ˈpɔʃtɑ] (post office). This lesson focuses on these visual anchors. By the end of this module, you will be able to guide a tourist from the opera house to the best coffee shop in town.
+To understand them, you need to recognize key buildings and infrastructure. We don't count steps; we look for the **апте́ка** (pharmacy) or the **по́шта** (post office). This lesson focuses on these visual anchors. By the end of this module, you will be able to guide a tourist from the opera house to the best coffee shop in town.
 
 ## Лексика: Напрямки та місця
 
@@ -52,7 +52,7 @@ To understand them, you need to recognize key buildings and infrastructure. We d
 To move through the city, you need a few core adverbs. These are your controls—forward, left, right, and back.
 
 #### Прямо (Straight)
-**Прямо** [ˈprʲɑmɔ] means "straight ahead." It is an adverb describing the path.
+**Пря́мо** means "straight ahead." It is an adverb describing the path.
 *   «Ідіть прямо.» (Go straight.)
 *   «Ми йдемо прямо.» (We are going straight.)
 
@@ -60,16 +60,16 @@ Use this when the path is clear and direct. Note that sometimes you might hear �
 
 #### Наліво and Направо (Left and Right)
 These are the most common ways to say "to the left" and "to the right" in everyday speech.
-*   **Наліво** [nɑˈlʲiʋɔ] (to the left)
-*   **Направо** [nɑˈprɑʋɔ] (to the right)
+*   **Налі́во** (to the left)
+*   **Напра́во** (to the right)
 
 *   «Поверніть наліво.» (Turn left.)
 *   «Подивіться направо.» (Look right.)
 
 #### Ліворуч and Праворуч (Formal/Standard Synonyms)
 You will often see these words on street signs, GPS systems, or hear them in more formal instructions. They mean exactly the same thing as *наліво* and *направо*, but usually imply "on the left hand side" or "on the right hand side."
-*   **Ліворуч** [lʲiˈʋɔrut͡ʃ] (on the left / to the left)
-*   **Праворуч** [prɑˈʋɔrut͡ʃ] (on the right / to the right)
+*   **Ліво́руч** (on the left / to the left)
+*   **Право́руч** (on the right / to the right)
 
 > [!tip]
 > **Synonym Alert**: You can use **наліво** and **ліворуч** interchangeably for directions. *Ліворуч* sounds slightly more elegant and precise. Try using *ліворуч* when describing where a building is located ("The bank is on the left"), and *наліво* for the action of turning ("Turn left").
@@ -80,14 +80,14 @@ You will often see these words on street signs, GPS systems, or hear them in mor
 Let's build your mental map of a city. These are the places you will search for most often.
 
 #### Вулиця (Street)
-**Вулиця** [ˈʋulɪt͡sʲɑ] is the generic word for street.
+**Ву́лиця** is the generic word for street.
 *   «Це стара вулиця.» (This is an old street.)
 *   «Ми на вулиці.» (We are on the street / outside.)
 
 Notice the preposition **на**. Even though buildings are *on* the street, we think of the street as an open surface.
 
 #### Зупинка (Stop)
-**Зупинка** [zuˈpɪnkɑ] refers to a bus, tram, or trolleybus stop. It is crucial for public transport.
+**Зупи́нка** refers to a bus, tram, or trolleybus stop. It is crucial for public transport.
 *   «Де зупинка?» (Where is the stop?)
 *   «Я чекаю на зупинці.» (I am waiting at the stop.)
 
@@ -97,7 +97,7 @@ Notice the preposition **на**. Even though buildings are *on* the street, we t
 *   «Він в аптеці.» (He is in the pharmacy.)
 
 #### Станція (Station)
-**Станція** [ˈstɑnt͡sʲijɑ] usually refers to a metro station (*станція метро*) or a small train station. Large intercity train hubs are often called *вокзал*, but *станція* is your daily word for the subway.
+**Ста́нція** usually refers to a metro station (*станція метро*) or a small train station. Large intercity train hubs are often called *вокзал*, but *станція* is your daily word for the subway.
 *   «Це станція "Університет".» (This is "University" station.)
 *   «Ми на станції.» (We are at the station.)
 
@@ -132,7 +132,7 @@ To describe exactly where something is relative to something else, we need more 
 In Ukrainian, these prepositions demand specific cases. To keep things simple for A1, we will learn them as **fixed patterns** or chunks. You don't need to memorize the full case declension table yet—just learn how the ending changes for these specific words.
 
 #### Біля (Near/By)
-**Біля** [ˈbʲilʲɑ] means "near," "by," or "at." It requires the **Genitive case**.
+**Бі́ля** means "near," "by," or "at." It requires the **Genitive case**.
 For feminine nouns ending in **-а**, the ending changes to **-и**.
 For feminine nouns ending in **-я**, the ending changes to **-і**.
 
@@ -144,7 +144,7 @@ For feminine nouns ending in **-я**, the ending changes to **-і**.
 *   «Ми біля пошти.» (We are near the post office.)
 
 #### Навпроти (Opposite)
-**Навпроти** [nɑu̯ˈprɔtɪ] means "opposite" or "across from." It also uses the same **Genitive pattern** as *біля*.
+**Навпро́ти** means "opposite" or "across from." It also uses the same **Genitive pattern** as *біля*.
 
 *   **парк** → **навпроти парку** (opposite the park)
 *   **школа** → **навпроти школи** (opposite the school)
@@ -162,8 +162,8 @@ For feminine nouns ending in **-я**, the ending changes to **-і**.
 #### За та Перед (Behind and In front of)
 These prepositions use the **Instrumental case**, which is advanced for now. For A1, we will just recognize them in context or use them with simple nouns.
 
-*   **За** [zɑ] — Behind
-*   **Перед** [ˈpɛrɛd] — In front of
+*   **За** — Behind
+*   **Пе́ред** — In front of
 
 Let's focus on **біля** and **навпроти** as your primary tools for now, as they are extremely common in directions.
 
@@ -265,8 +265,8 @@ Read this dialogue. Note the mix of location and direction words.
 Інструкція має бути чіткою. Спочатку ми робимо одну дію. Потім іншу.
 
 To give a good direction, you need to sequence your instructions.
-*   **Спочатку** [spɔˈt͡ʃɑtku] — First / At first
-*   **Потім** [ˈpɔtʲim] — Then / Later
+*   **Споча́тку** — First / At first
+*   **По́тім** — Then / Later
 
 *   «**Спочатку** прямо. **Потім** направо.» (First straight. Then right.)
 *   «**Спочатку** до банку. **Потім** наліво.» (First to the bank. Then left.)
@@ -307,7 +307,7 @@ This simple exchange covers:
 ### Феномен маршрутки (The Marshrutka Phenomenon)
 Маршрутка — це маленький автобус. Це дуже популярний транспорт в Україні. Вона швидка, але іноді хаотична. Це як таксі, але дешевше. Вона зупиняється на зупинках. Іноді вона не зупиняється. Треба кричати!
 
-In many Ukrainian cities, the **маршрутка** [mɑrˈʃrutkɑ] (minibus) is the most common way to get around. Unlike big municipal buses that stop at every official stop, a marshrutka driver might skip a stop if nobody wants to get off or on.
+In many Ukrainian cities, the **маршру́тка** (minibus) is the most common way to get around. Unlike big municipal buses that stop at every official stop, a marshrutka driver might skip a stop if nobody wants to get off or on.
 
 Therefore, you must speak up! When you see your destination, you shout from the back of the bus:
 «**На зупинці, будь ласка!**» (At the stop, please!)

@@ -1,289 +1,322 @@
 <!-- SCOPE
-Covers: The final 14 letters of the Ukrainian alphabet (Г, Ґ, Є, Ї, Ж, Ш, Щ, Ч, Ц, Ь, Ю, Я), distinction between И/І and Г/Ґ, soft sign usage.
-Not covered:
-  - Cursive handwriting details → a1-01
-  - Noun gender rules → a1-03
+Covers: The final 14 letters of the Ukrainian Cyrillic alphabet (Г, Ґ, Ж, Ш, Щ, Ч, Ц, Є, Ї, Ю, Я, Ь, И, І, Й).
+Not covered: 
+  - The first 19 letters (covered in a1-01)
 Related: a1-01 (The Cyrillic Code I), a1-03 (The Gender Code)
 -->
 
-# The Cyrillic Code II
+# The Cyrillic Code II: The Final 14 Letters
 
 > **Чому це важливо?**
->
-> You have already unlocked the "friendly" half of the alphabet — the letters that look or sound familiar. Now we meet the "Identity Letters." These are the unique characters that make Ukrainian look and sound like *Ukrainian*, distinct from any other Slavic language. Mastering these 14 letters is your passport to sounding authentic rather than like a tourist reading from a phrasebook.
+> 
+> Mastering the complete Ukrainian alphabet is your key to unlocking the true sound and soul of the language. These final fourteen letters contain the most distinctive sounds in Ukrainian—the unique consonants, the melodic vowels, and the powerful symbols of linguistic identity that make Ukrainian completely its own.
 
-## Розминка: Повернення до Абетки
+## Вступ
 
-### Ласкаво просимо (Welcome Back)
-Welcome back to your journey into the Ukrainian language. In our previous lesson, we built a solid foundation with the first 19 letters — the "False Friends" and the "New Friends." You learned that **Р** is not "P" but [r], and **Н** is not "H" but [n]. Before we tackle the unique sounds of Ukrainian, let's take a moment to ensure your foundation is secure. If the basic vowels and consonants are shaky, the more complex sounds we introduce today will be much harder to master.
+Welcome back to our journey through the Ukrainian alphabet! If you are reading this, you have already conquered the first nineteen letters of the Cyrillic code. You know how to read essential vowels, recognize the familiar consonants, and sound out basic words. That is a massive accomplishment. Take a moment to appreciate the progress you have made. You are no longer looking at random shapes; you are looking at language.
 
-### Діагностична перевірка (Diagnostic Check)
-Let's verify your progress. Look at the words below. Can you read them aloud confidently? You should be able to recognize every letter here from our first session.
+In this lesson, we will conquer the final fourteen letters. We call these the "Identity Letters." Why? Because these letters contain the sounds and symbols that make the Ukrainian language distinctly, unmistakably Ukrainian. They are the phonetic fingerprint of the culture. By mastering them, you are not just learning to read; you are learning to respect the unique acoustic heritage of Ukraine. 
 
-*   **Мама** (Mom)
-*   **Тато** (Dad)
-*   **Там** (There)
-*   **Він** (He)
-*   **Сон** (Dream)
+To help you build a perfect foundation, we will rely heavily on English explanations in this module. This is intentional scaffolding. The physical mechanics of producing new sounds—where to place your tongue, how to shape your lips, and when to use your vocal cords—require precise, clear instructions. Once you understand the mechanics in English, you will be fully prepared to apply them in Ukrainian. 
 
-If you hesitated on **Він** (He) or **Сон** (Dream), remember: **В** is [ʋ] (like a soft 'v') and **С** is [s] (like in 'sun'). Today, we are going to complete the puzzle. We will learn the letters that give Ukrainian its melodic, soft, and distinct character. By the end of this lesson, you will be able to read any word in Ukrainian.
+Before we dive into the new material, let us do a quick diagnostic check of the letters you learned in the first part of the Cyrillic Code. Can you comfortably sound out these combinations? Look at the shapes, remember their sounds, and read them aloud. 
 
-> [!tip]
-> **Learning Strategy**
-> Don't try to memorize the alphabet in alphabetical order like a song. Focus on *sound groups*. Today we will group letters by their "personality" — the Hissers, the Iotated Vowels, and the Unique Seven.
+**ма́ма** (mother)
+**та́то** (father)
+**бра́т** (brother)
+**кі́т** (cat)
 
----
+If those felt natural, you are perfectly primed for what comes next. If you hesitated, do not worry—repetition is a natural part of language learning. Our goal today is to focus on the sounds that might feel a bit more foreign to an English speaker. We will take them one by one, breaking down exactly how to pronounce them, when to use them, and the fascinating cultural history behind them. 
 
-## Презентація: Унікальні літери та звуки
+## Унікальні приголосні
 
-### Унікальна Сімка: Літери Ідентичності
-Ukrainian has specific letters that serve as markers of identity. When you see these, you know instantly you are reading Ukrainian. Let's meet the most famous pair first: **Г** and **Ґ**.
+Our first stop is the "Unique Seven." These seven consonants represent sounds that often require a combination of letters to produce in English, or they might feel entirely new to your mouth. We will break down the physical mechanics for each one so you can pronounce them with confidence. Зверніть увагу: (Pay attention:)
 
-#### The Letter Г (He)
-This is the most common "H" sound in Ukrainian. It looks like a gallows or a simplistic gamma: **Г**.
-*   **Sound**: [ɦ]. It sounds like the "h" in "ahead" or "behave," but deeper and with your voice box vibrating. It is NOT the hard "g" in "go."
-*   **Usage**: It appears everywhere. It is a soft, deep sound.
-*   **Example**: **гарний** [ˈɦɑrnɪi̯] (beautiful).
+### The Letter Г (The Voiced Fricative)
 
-#### The Letter Ґ (Ge)
-This letter has a small upturn on the top right, like a little hook: **Ґ**.
-*   **Sound**: [ɡ]. This is the hard "g" sound, exactly like in "go" or "get."
-*   **Usage**: This letter is rare! It appears in only a few dozen common words.
-*   **Example**: **ґанок** [ˈɡɑnɔk] (porch).
+The letter **Г** is often a stumbling block for beginners, but it is actually quite simple if you know the trick. This letter represents a voiced, breathy sound, very similar to the English "h" in the word "head" or "home." To produce it, you constrict your throat slightly more than you would for a regular English "h," allowing your vocal cords to vibrate. 
 
-> [!warning]
-> **Common Mistake Alert**
-> Do not confuse them!
-> *   **Г** = Soft, voiced "h" (Standard Ukrainian sound).
-> *   **Ґ** = Hard "g" (Rare, specific words).
-> If you pronounce **Г** as a hard "g", you will lose the authentic Ukrainian sound. Using the correct soft [ɦ] for **Г** is the #1 way to improve your accent immediately.
+Many learners mistakenly pronounce **Г** as a hard English "g." This is incorrect and will immediately mark your accent as foreign. Think of it as a deep, resonant exhalation. 
 
-### Шиплячі приголосні (The Hissing Consonants)
-Ukrainian has a rich set of "hissing" sounds. They might look intimidating, but they are very consistent.
+**га́рний** (beautiful / good)
+**голова́** (head)
+**го́ра** (mountain)
+**гаря́чий** (hot)
+**гуля́ти** (to walk)
+**го́лос** (voice)
+**горо́д** (garden)
+**губа́** (lip)
+**гра́ти** (to play)
 
-#### Ж (Zhe)
-*   **Sound**: [ʒ]. Think of the "s" in "pleasure" or "measure." It looks like a beetle or a snowflake.
-*   **Example**: **жити** [ˈʒɪtɪ] (to live).
+A Ukrainian speaker uses this sound constantly. When you say that someone is having a good day, you will use this breathy, voiced consonant. Це дуже важливо. (This is very important.)
 
-#### Ш (Sha)
-*   **Sound**: [ʃ]. Pronounced exactly like the "sh" in "shoe" or "shop." It looks like a trident with a flat bottom.
-*   **Example**: **школа** [ˈʃkɔlɑ] (school).
+### The Letter Ґ (The Restored Hard G)
 
-#### Щ (Shcha)
-*   **Sound**: [ʃt͡ʃ]. This is a combination of Ш + Ч. Imagine "sh-ch" in "fresh cheese." It looks like **Ш** with a little tail.
-*   **Example**: **ще** [ʃt͡ʃɛ] (still/more).
+The letter **Ґ** is the true equivalent of the hard English "g," as heard in the words "go" or "great." Visually, it looks exactly like the previous letter, but with a small upturned hook on the top right. 
 
-#### Ч (Che)
-*   **Sound**: [t͡ʃ]. Corresponds to the "ch" in "chair" or "check." It looks like the number 4.
-*   **Example**: **чай** [t͡ʃɑi̯] (tea).
+This letter carries immense cultural weight. While relatively rare in modern Ukrainian vocabulary, when it appears, you must pronounce it crisply.
 
-#### Ц (Tse)
-*   **Sound**: [t͡s]. Identical to the "ts" in "cats" or "boots." It looks like a square U with a tail.
-*   **Example**: **центр** [t͡sɛntr] (center).
+**ґа́нок** (porch)
+**ґру́нт** (soil/ground)
+**ґу́дзик** (button)
+**аґру́с** (gooseberry)
 
-### Йотовані голосні: Секрет м'якості
-Ukrainian is a melodic language because we avoid clumping consonants together. To help with this, we have "iotated" vowels. These are vowels that have a hidden "Y" sound built into them. They perform a magic trick: they soften the consonant that comes before them.
+> [!decolonization] The Repressed Letter
+> The letter **Ґ** was forcefully removed from the Ukrainian alphabet in 1933 during the Soviet orthographic reforms. The goal was to artificially force the Ukrainian language closer to Russian by eliminating unique Ukrainian phonetic features. It was not officially restored to the alphabet until 1990. Today, using the letter **Ґ** correctly is a powerful mark of an educated, authentic Ukrainian speaker who embraces the true history of the language.
 
-#### Є (Ye)
-*   **Sound**: [jɛ]. Pronounced as "ye" in "yes."
-*   **Example**: **Європа** [jɛu̯ˈrɔpɑ] (Europe). At the start of a word, you hear the full "ye" sound. After a consonant, the [j] merges and softens that consonant.
+### The Letter Ж (The Voiced Postalveolar)
 
-#### Ю (Yu)
-*   **Sound**: [ju]. Similar to "yu" in "you" or "universe."
-*   **Example**: **юнак** [juˈnɑk] (young man).
+The letter **Ж** looks a bit like a spider or a snowflake, making it highly memorable. It produces a deep, buzzing sound, identical to the "s" in the English word "pleasure," the "g" in "mirage," or the French "j" in "bonjour."
 
-#### Я (Ya)
-*   **Sound**: [jɑ]. Matches the "ya" in "yard."
-*   **Example**: **яблуко** [ˈjɑblukɔ] (apple).
+To make this sound, round your lips slightly, push your tongue up near the roof of your mouth, and push air through while vibrating your vocal cords. The resulting sound is rich and warm that appears in some of the most fundamental Ukrainian words.
 
-### Символ опору: Ї
-This is perhaps the most culturally significant letter in the alphabet right now.
-*   **Sound**: [ji]. Produces a sharp "yee" sound, as in "yield" or "yeast." It is sharp and distinct.
-*   **Contrast**: Unlike **І** (which is just [i]), **Ї** *always* has two dots and *always* includes the "y" sound [j] + [i].
-*   **Example**: **їжа** [ˈjiʒɑ] (food).
+**жи́ти** (to live)
+**жі́нка** (woman / wife)
+**жу́к** (beetle)
+**журна́л** (magazine)
 
-> [!culture]
-> **The Letter of Independence**
-> The letter **Ї** belongs exclusively to Ukrainian — no other language uses it. It has become a powerful symbol of identity and resistance. During the occupation of Mariupol, residents painted **Ї** on sidewalks and fences to declare that the city remained Ukrainian. Language is more than communication; it is belonging.
+You will use this letter frequently when talking about your life, where you live, and your daily experiences.
 
-### М'який знак: Ь
-This letter has **no sound of its own**. It is a modifier. It tells you to pronounce the *previous* consonant softly.
-*   **Symbol**: **Ь**. It looks like a "b" with a shorter top loop.
-*   **Instruction**: When you see **Ь**, flatten your tongue against the roof of your mouth while saying the consonant before it.
-*   **Example**: **день** [dɛnʲ] (day).
-    *   Without soft sign: *den* (hard n).
-    *   With soft sign: *den'* (soft n, sounds lighter and higher).
-*   **Example**: **шість** [ʃistʲ] (six). The final **Т** is softened — it ends with a light, gentle release.
-*   **Example**: **Львів** [lʲʋiu̯] (Lviv). The "L" is soft, almost like the "l" in "leaf," not the hard "l" in "ball."
+### The Letter Ш (The Voiceless Postalveolar)
 
-### Апостроф: Анти-м'якшувач (The Apostrophe)
-If the Soft Sign (Ь) brings letters closer together, the Apostrophe (**'**) pushes them apart.
-*   **Symbol**: **'** (looks like a floating comma).
-*   **Function**: It acts as a "hard stop" or a separator. It prevents the consonant from merging with the iotated vowel (Я, Ю, Є, Ї). It ensures the vowel keeps its full "y" sound.
-*   **Example**: **сім'я** [sʲimˈjɑ] (family).
-    *   Pronunciation: "sim-ya". There is a tiny pause between "m" and "ya".
-    *   Without the apostrophe, it would sound like one mushy syllable. With it, it is crisp: Sim-Ya.
+The letter **Ш** resembles a pitchfork or a comb pointing upward. Its sound is very familiar to English speakers: it is exactly like the "sh" in the words "show," "shoe," or "hush."
 
-### Велика дискусія: И проти І
-This is the most common stumbling block for English speakers. Both sound like "i", but they are different phonemes in Ukrainian.
+Unlike the buzzing **Ж**, the letter **Ш** is voiceless. Your vocal cords do not vibrate when you say it. This creates a strong rush of air through your rounded lips. 
 
-#### І (The Soft I)
-*   **Symbol**: **І** (like distinct English I).
-*   **Sound**: [i]. Like "ee" in "see" or "meet."
-*   **Facial Expression**: Lips spread slightly, corners pulled back — not a grin, just the natural position for "ee".
-*   **Function**: It softens the consonant before it.
-*   **Example**: **літо** [ˈlʲitɔ] (summer). Notice the "L" becomes soft.
+**шко́ла** (school)
+**шви́дко** (fast/quickly)
+**ша́пка** (hat)
+**ша́фа** (wardrobe)
+**широ́кий** (wide)
+**шокола́д** (chocolate)
+**шука́ти** (to look for)
+**шу́м** (noise)
 
-#### И (The Hard I)
-*   **Symbol**: **И** (looks like a backwards N).
-*   **Sound**: [ɪ]. Like the "i" in "bit" or "sit." Tongue stays high — just pulled slightly back from **І**.
-*   **Facial Expression**: Lips relaxed, no spread. Jaw stays up.
-*   **Function**: It keeps the consonant before it HARD.
-*   **Example**: **ми** [mɪ] (we). The "m" stays hard.
+This sound is essential for discussing education, clothing, and many daily actions. Whenever you talk about going to study, you will need this crisp, voiceless consonant.
 
-> [!observe]
-> **The "see" vs. "bit" Test**
-> Say the English word *see* and hold the vowel: "eeee." That is **І** — tongue forward, lips spread.
-> Now say the English word *bit* and hold that "i": tongue pulls slightly back, lips relax. That is **И**.
-> Both vowels keep your tongue **high** — the jaw barely moves. The only difference is where your tongue sits: **front** for **І**, **centre-back** for **И**.
+### The Letter Щ (The Consonant Cluster)
 
-### The Short Й
-*   **Symbol**: **Й** (N with a hat).
-*   **Sound**: [j]. Like the "y" in "boy" or "toy."
-*   **Usage**: It usually comes *after* a vowel to close a syllable.
-*   **Example**: **мій** [mij] (my).
+The letter **Щ** looks just like the previous letter, **Ш**, but it has a small tail hanging down on the bottom right side. This small tail changes the sound entirely. Instead of a simple "sh," the letter **Щ** represents a combination of two sounds merged together: "sh" + "ch." 
 
----
+Think of the sound you make when saying the phrase "fresh cheese." That middle cluster—where the "sh" transitions smoothly into the "ch"—is exactly how you pronounce **Щ**. The result is a sustained, hissing, and popping noise.
 
-## Практика: Читаємо та розрізняємо
+**ще́** (still / more)
+**що́** (what)
+**борщ** (traditional beet soup)
+**дощ** (rain)
 
-Now that we have met the cast of characters, let's put them to work. We will focus on high-frequency words that you will use every day. Reading isn't just about recognizing shapes; it's about training your mouth to make new shapes.
+> [!tip] Pronunciation Trick
+> Do not try to separate the sounds when pronouncing **Щ**. It should not sound like two separate letters. Practice saying "sh-ch" faster and faster until it blends into one continuous, forceful burst of air.
 
-### Читаємо нові звуки
-Try to read these words aloud. Focus on the special letters we just discussed.
+### The Letter Ч (The Voiceless Affricate)
 
-1.  **центр** [t͡sɛntr] — center. Note the **Ц** [t͡s] at the start. It is sharp, like a snare drum.
-2.  **чай** [t͡ʃɑi̯] — tea. Note the **Ч** [t͡ʃ] and the short **Й** [j] at the end. It sounds cozy.
-3.  **школа** [ˈʃkɔlɑ] — school. Start with the hush sound **Ш** [ʃ]. It is soft and wide.
-4.  **гарний** [ˈɦɑrnɪi̯] — beautiful. Start with the soft, voiced **Г** [ɦ]. Do not say "garniy." Say "harniy" with voice.
-5.  **жінка** [ˈʒinkɑ] — woman. Feel the vibration in the **Ж** [ʒ]. It buzzes.
+The letter **Ч** looks somewhat like an upside-down English lowercase "h," or perhaps a stylized chair. Fittingly, its sound is identical to the "ch" in the English words "chair," "cheese," or "match."
 
-### Тренування шиплячих (Hissing Drills)
-The "hissing" consonants (**Ж, Ш, Ч, Щ**) give Ukrainian its texture. Let's practice them in isolation.
-*   **Ж** (The Beetle): **жук** — beetle, **жаба** — frog. Feel your vocal cords vibrating.
-*   **Ш** (The Quiet): **шапка** — hat, **шарф** — scarf. This is pure air, no voice.
-*   **Ч** (The Train): **час** — time, **чому** — why. Sharp and explosive.
-*   **Щ** (The Fresh Cheese): **борщ** — borshch, **дощ** — rain. This is the longest sound. It combines the soft wind of **Ш** and the sharp stop of **Ч**.
+This produces a sharp, voiceless, stopping sound. Your tongue taps the roof of your mouth to stop the air, then releases it quickly.
 
-### Розрізняємо звуки: Г проти Ґ
-Listen to the difference in your head (or say them aloud).
-*   **Г**: **гарний** (beautiful). Soft, flowing. The standard sound. Imagine air flowing over a smooth stone.
-*   **Ґ**: **ґанок** (porch). Hard, stopping. The rare sound. Imagine the stone hitting a wall.
-*   **Rule of Thumb**: If you are unsure, guess **Г**. It is 100 times more common than **Ґ**.
+**ча́й** (tea)
+**чита́ти** (to read)
+**ча́с** (time)
+**хло́пець** (boy/guy)
 
-### Розрізняємо звуки: И проти І
-This distinction changes meaning and is crucial for being understood.
-*   **жити** [ˈʒɪtɪ] (to live) — Uses **И**. The "Zh" and "t" are hard. The sound is deep in your chest.
-*   **діти** [ˈdʲitɪ] (children) — Uses **І**. The "d" becomes very soft [dʲ], sounding almost like "dy".
-*   **пити** [ˈpɪtɪ] (to drink) — Uses **И**. Hard "p".
-*   **літо** [ˈlʲitɔ] (summer) — Uses **І**. Soft "l".
-*   **ми** (we) vs **мій** (my) — **Ми** is deep and hard. **Мій** is soft and light.
+This is one of the most comforting words in the language. Offering someone a hot beverage is a staple of Ukrainian hospitality, making this letter an absolute necessity for social interactions.
 
-### Виклик м'якого знака
-Read these words. Remember to flatten your tongue against the roof of your mouth for the letter before **Ь**.
-*   **день** [dɛnʲ] (day). Not "den". It ends with a soft release, like air escaping.
-*   **сіль** [sʲilʲ] (salt). Both the "s" (due to **і**) and the "l" (due to **ь**) are soft.
-*   **тінь** [tʲinʲ] (shadow). Soft "t" and soft "n".
-*   **батько** [ˈbɑtʲkɔ] (father). The **Т** is soft before the hard **К**.
+### The Letter Ц (The Alveolar Affricate)
 
-### Сила апострофа
-Don't rush this word. Respect the stop.
-*   **сім'я** [sʲimˈjɑ] (family).
-*   **м'ясо** [ˈmjɑsɔ] (meat). "M-yaso". The pause makes it clear.
-*   **п'ять** [pjɑtʲ] (five). "P-yat". Distinct and separated.
+The letter **Ц** looks like an upside-down English "U" with a small tail on the bottom right. It represents the sound "ts," exactly like the end of the English words "cats," "boots," or "hats."
 
----
+This is a single consonant sound in Ukrainian, not a combination of two separate letters. It requires a quick, sharp tap of the tongue against the back of your top teeth.
 
-## Продукція: Активне читання
+**це́нтр** (center)
+**ціка́во** (interesting)
+**цу́кор** (sugar)
+**цибу́ля** (onion)
 
-### Контекстне читання
-Letters behave differently depending on their neighbors. Let's read some short phrases.
+You will hear this sound constantly when navigating a Ukrainian city or ordering coffee. The sound itself is crisp, short, and precise.
 
-1.  **Добрий день** [ˈdɔbrɪi̯ dɛnʲ] — Good day.
-    *   *Check*: Did you pronounce **И** deeply in *добрий*? Did you soften the **Н** in *день*?
-2.  **Ніч** [nʲit͡ʃ] — Night.
-    *   *Check*: A simple, strong word. Contrast it with **день**.
-3.  **Гарна школа** [ˈɦɑrnɑ ˈʃkɔlɑ] — Beautiful school.
-    *   *Check*: Did you use the voiced **Г** [ɦ]? Did you make a clear **Ш** [ʃ]?
-4.  **Я хочу чай** [jɑ ˈxɔt͡ʃu t͡ʃɑi̯] — I want tea.
-    *   *Check*: **Я** starts with a "y" sound. **Ч** is crisp.
-5.  **Це моя сім'я** [t͡sɛ mɔˈjɑ sʲimˈjɑ] — This is my family.
-    *   *Check*: **Ц** is sharp. **Я** is full. **'** creates a pause.
+## Йотовані голосні та М’який знак
 
-### Географічний виклик (Geography Challenge)
-Ukrainian cities often contain these unique letters. Can you read them?
-*   **Львів** (Lviv) — Soft L, soft v. The City of Lions.
-*   **Чернігів** (Chernihiv) — Starts with **Ч**, contains **Г** and **І**.
-*   **Житомир** (Zhytomyr) — Starts with **Ж**, contains hard **И**.
-*   **Запоріжжя** (Zaporizhzhia) — The ultimate boss level! **З**, **Р**, **І**, double **Ж**, **Я**. (Za-po-ri-zh-zhia).
+Now we move to a fascinating group of letters: the iotated vowels and the famous soft sign. These letters are the secret to Ukrainian euphony—the natural musicality and smoothness of the language. They exist to soften consonants, link syllables smoothly, and prevent awkward, clunky sound combinations.
 
-### Самоперевірка: Тест "Київ"
-Can you read the capital of Ukraine correctly?
-*   **Київ** [ˈkɪjiu̯].
-    *   **К** is hard because it is followed by **И**.
-    *   **ї** adds the "yi" sound [ji].
-    *   **в** at the end sounds like a soft [u̯] or "w".
-    *   Result: KY-yiv. It is not "Key-ev."
+### The Letter Є (Iotated E)
 
-### Позиція має значення
-Look at the letter **Я** in these two words:
-1.  **Яблуко** (Apple) — Starts the word. Pronounced fully as [jɑ].
-2.  **Моя** (my/mine) — Follows a vowel. Also pronounced [jɑ], just as in a word-initial position.
+The letter **Є** looks like the English capital "E," but rounded into a semicircle with a line through the middle. As an "iotated" vowel, meaning it starts with a "y" sound. Its pronunciation matches the English word "yeah" or the beginning of "yellow."
 
-The short rule: after a vowel or at the start of a word, **Я** sounds like "ya". After a consonant, the "y" merges into the consonant — you'll study that pattern in detail later.
+This letter is crucial because it never represents a hard, flat vowel. It always carries that initial, gliding "y" sound, which helps smooth out the transition from a consonant.
 
----
+**Євро́па** (Europe)
+**єди́ний** (only/single)
+**є́нот** (raccoon)
+**Моє́** (my / mine - neuter)
 
-## Культурний контекст: Українська ідентичність
+Because Ukraine is deeply integrated into the European continent, you will see and hear this letter whenever discussing geography, politics, or travel. 
 
-### Правильна назва: Kyiv
-You will often see the debate about the spelling of Ukraine's capital. This is not just spelling; it is about which language you are transliterating from.
-*   The outdated spelling comes from the Russian transliteration of "Киев" (where **И** is read as **І**).
-*   **Kyiv** comes from the Ukrainian **Київ**.
-    *   **К** + **И** (hard y) + **Ї** (yi) + **В**.
-Using the spelling **Kyiv** respects the Ukrainian pronunciation and the state language. The same logic applies to names: **Олена** (Olena) instead of Elena, and everyday objects like **олівець** (pencil).
+### The Letter Ї (Iotated I)
 
-### Репресована літера Ґ
-We mentioned that **Ґ** is rare. There is a tragic historical reason for this. In 1933, during the Soviet era, the letter **Ґ** was removed from the official Ukrainian orthography — part of a broader Russification of Ukrainian spelling under Soviet pressure. It was only reinstated in 1990, shortly before Ukraine regained independence.
-Using the letter **Ґ** in words like **ґанок** (porch), **ґудзик** (button), or **дзиґа** (top) is an act of reclaiming historical truth.
+The letter **Ї** is a vertical line with two dots on top. The pronunciation is "yi," much like the English word "yield" or the beginning of "yeast." 
 
-> [!myth-buster]
-> **"Ukrainian is just a dialect of Russian"**
-> Looking at the alphabet alone disproves this. Ukrainian is the only language whose alphabet contains all four of these letters: **Ґ**, **Є**, **Ї**, **І**. The letter **Ї** exists in no other alphabet on earth. These are not cosmetic variations — they represent sounds and phonetic principles unique to Ukrainian.
-> Ukrainian is a melodious, vocalic language with its own grammar, vocabulary, and literary tradition stretching back centuries. Calling it a "dialect" of anything is like calling Portuguese a dialect of Spanish — linguistically absurd and historically ignorant.
+This letter is distinctively, uniquely Ukrainian. It does not exist in the alphabets of neighboring Slavic languages, making it a pure marker of Ukrainian linguistic identity.
 
-### Примітка про почерк
-In printed text, **т** looks like a small "T". But in italics or cursive (which is often used in logos and menus), the lowercase **_т_** looks like an English "_m_".
-*   **д** (d) often looks like a written English "_g_" in italics: **_д_**.
-Don't be confused if you see a sign that looks like "pecmopah" — it is **ресторан** (restaurant)!
+**ї́жа** (food)
+**ї́хати** (to drive/ride)
+**Ки́їв** (Kyiv - capital of Ukraine)
+**Украї́на** (Ukraine)
+
+> [!culture] A Symbol of Defiance
+> In 2022, during the brutal occupation of the Ukrainian city of Mariupol, the letter **Ї** took on profound new meaning. Local residents and partisan fighters began painting the letter **Ї** on walls, fences, and monuments throughout the city. Because the letter is exclusively Ukrainian, this simple act of graffiti became a powerful, silent declaration of resistance, proving that the Ukrainian spirit could not be erased.
+
+### The Letter Ю (Iotated U)
+
+The letter **Ю** looks like a vertical line attached to the letter "O" by a small bridge. The sound perfectly matches the English word "you" or the beginning of "youth."
+
+Like the other iotated vowels, its primary job is to provide a smooth, gliding sound. Speakers frequently use it to show affection or to create softer, gentler forms of names.
+
+**юна́к** (young man)
+**лю́ди** (people)
+**Ю́лія** (Yuliia - a name)
+**люблю́** (I love)
+
+You will encounter this letter often when reading literature or discussing people, as it adds a distinct melody to the vocabulary.
+
+### The Letter Я (Iotated A)
+
+The letter **Я** looks like a backwards English capital "R." The letter sounds like "ya," just like the English word "yard" or "yacht."
+
+Beyond being a letter, **Я** is also a complete word. Importantly, **Я** functions as the Ukrainian pronoun for "I." You will use this letter every single time you talk about yourself, your feelings, or your actions.
+
+**я́блуко** (apple)
+**дя́кую** (thank you)
+**я́** (I)
+**я́к** (how)
+
+This is one of the most frequently used symbols in the entire language. Mastering its confident, gliding sound is essential for basic communication.
+
+### The Soft Sign Ь (The Palatalizer)
+
+The letter **Ь** is completely unique because it has no sound of its own. Instead, it functions purely as a modifier. It looks like a lowercase English "b," but its purpose is to change the consonant that comes immediately before it.
+
+Many learners mistakenly call this a "silent letter" and ignore it completely. This is a massive error. The soft sign tells you to "palatalize" the preceding consonant. To do this, you press the flat, middle part of your tongue upward against the roof of your mouth while pronouncing the consonant. It makes the consonant sound lighter, softer, and almost as if a tiny "y" sound is escaping at the end.
+
+**де́нь** (day)
+**сі́ль** (salt)
+**ші́сть** (six)
+**кі́нь** (horse)
+**Льві́в** (Lviv - city in western Ukraine)
+
+> [!warning] Do Not Ignore the Soft Sign
+> If you ignore the soft sign and pronounce **де́нь** with a hard English "n," you will sound robotic. Practice pressing your tongue to the roof of your mouth. The difference between a hard consonant and a soft consonant is critical in Ukrainian grammar.
+
+## Голосні та напівголосні
+
+Our final group contains the core vowels and semivowels that give Ukrainian its rhythmic, steady pacing. Distinguishing between these sounds is the hallmark of excellent pronunciation and clear comprehension.
+
+### The Letter И (The Hard I)
+
+The letter **И** looks like a backwards English capital "N." It represents a sound that does not perfectly exist in English, making it one of the trickiest vowels to master. This produces a hard, deep, low-pitched vowel.
+
+To produce it, use the "Grin" technique. Relax your jaw, pull your lips back slightly into a strained grimace or grin, and try to say the English word "ill" or "bit" from the back of your throat. It should sound slightly guttural. 
+
+**си́н** (son)
+**ви́** (you - plural/formal)
+**ми́** (we)
+**ти́** (you - singular/informal)
+
+This vowel is incredibly common. It often appears at the ends of words to indicate plural nouns, making it a critical sound for everyday grammar.
+
+### The Letter І (The Soft I)
+
+The letter **І** looks exactly like the English capital "I," complete with a dot on top when it is lowercase (and sometimes even when uppercase in certain fonts). It represents a high, bright, sharp "ee" sound, exactly like the English word "see" or "meet."
+
+To produce it, use the "Smile" technique. Spread your lips wide into a big smile and push the sound forward in your mouth. Unlike the low-pitched **И**, the letter **І** is high and clear.
+
+**сі́к** (juice)
+**сті́л** (table)
+**ні́ч** (night)
+**хлі́б** (bread)
+
+> [!fact] The Minimal Pair Test
+> To truly master Ukrainian vowels, you must be able to hear the difference between **И** (the grin) and **І** (the smile). Consider the cities of Rome and Rivne. Rome is **Ри́м** (deep, hard И). Rivne is **Рі́вне** (bright, smiling І). Practicing these contrasts will rapidly improve your accent.
+
+### The Letter Й (The Short Y)
+
+The letter **Й** looks exactly like the hard vowel **И**, but it wears a small curved hat on top. This hat transforms the letter from a full vowel into a "semivowel." 
+
+It is pronounced as a very short, clipped "y" sound, similar to the "y" in the English word "boy" or "toy." It never forms a syllable on its own; it always attaches to a true vowel to create a gliding combination.
+
+**ча́й** (tea)
+**його́** (his/him)
+**чита́ти** (to read)
+**мі́й** (my / mine)
+**да́й** (give)
+
+You will use this semivowel constantly when expressing possession or describing objects, as it is a key component of Ukrainian adjectives. Запам'ятайте це правило. (Remember this rule.)
+
+## Практика та вимова
+
+Давайте практикувати! (Let's practice!) 
+
+Now that we have covered the physical mechanics and cultural context of every letter, it is time to put your knowledge into practice. Reading is a physical skill. You must train your eyes to recognize the shapes and train your mouth to produce the corresponding sounds. Слухайте уважно. (Listen carefully.) Повторюйте: (Repeat:)
+
+### Contrast Drills for the Ear
+
+The most common errors for English speakers involve failing to distinguish between sounds that seem identical to a foreign ear. Let's practice the critical contrasts. Read these pairs aloud, exaggerating the differences.
+
+**The Smile vs. The Grin (І vs. И):**
+Feel the tension in your jaw change.
+**кі́т** (cat) — **ки́т** (whale)
+**ді́д** (grandfather) — **ди́м** (smoke)
+
+**The Breath vs. The Hard Stop (Г vs. Ґ):**
+Ensure the first is a breathy "h" and the second is a sharp, hard "g."
+**га́рний** (beautiful) — **ґа́нок** (porch)
+**гаря́чий** (hot) — **ґу́дзик** (button)
+
+**The Hard Consonant vs. The Palatalized Consonant (С vs. СЬ):**
+Press your tongue flat to the roof of your mouth for the soft sign.
+**су́п** (soup) — **о́сь** (here is)
+**сі́к** (juice) — **я́сь** (clear - root word)
+
+Чудова робота! (Great job!)
+
+### Spelling Ukrainian Identity
+
+Давайте читати. (Let's read.) Now let's apply the State Standard by practicing the correct spelling and pronunciation of the most important identity markers in the language. These words combine the unique consonants, the iotated vowels, and the soft sign.
+
+**Ки́їв** (Kyiv)
+Notice the deep, hard **И** followed immediately by the uniquely Ukrainian **Ї**. It is a challenging transition, but mastering it shows deep respect for the capital.
+
+**ки́ївський** (Kyivan / of Kyiv)
+This adjective requires the soft sign **Ь** in the middle, softening the "v" sound, before moving into the ending.
+
+**Украї́на** (Ukraine)
+The name of the country features the strong, bright **Ї** right in the center, carrying the stress of the word. 
+
+**украї́нець** (Ukrainian man)
+This noun ends with the alveolar affricate **Ц** followed by the soft sign **Ь**, creating a crisp, soft finish.
+
+### High-Frequency Reading Practice
+
+Let's test your reading flow using some of the most common words in the Ukrainian language. Read the bolded Ukrainian words aloud. 
+
+When you want to meet a **друг** (friend), you might suggest going to the **це́нтр** (center) of the **мі́сто** (city). 
+Once there, you could sit in a **кафе́** (cafe) and drink hot **ча́й** (tea). 
+You might talk about your children going to a new **шко́ла** (school) to study **мо́ва** (language). 
+You will probably agree that it is a very **га́рний** (beautiful) **де́нь** (day). 
+Because ultimately, to **жи́ти** (to live) in peace, appreciating every single **де́нь** (day), is the greatest goal of all. **Сла́ва Украї́ні!** (Glory to Ukraine!)
+
+Take a deep breath. You have officially unlocked the entire Cyrillic code. You possess the tools to read any word in the Ukrainian language. 
 
 ---
 
 # Підсумок
 
-Вітаємо! Ви знаєте весь алфавіт. «Фальшиві друзі» — не секрет. «Нові друзі» — знайомі. Тепер ви знаєте «Літери ідентичності». Українська мова — унікальна.
-
-You can now distinguish between the soft voiced **Г** and the hard explosive **Ґ**. You understand that **Ї** is more than just a letter; it is a symbol of resistance. You know that a smile makes an **І**, and a relaxed jaw makes an **И**. And you know the secret of the Soft Sign **Ь** — it has no sound, but it changes everything.
-
-Це не малюнки. Це букви. Ви читаєте українською.
+You have successfully navigated the final fourteen letters of the Ukrainian alphabet. You have learned that Ukrainian is an independent phonetic system with sounds that require precise physical mechanics. We explored the "Unique Seven" consonants, ensuring you can differentiate the breathy **Г** from the hard, historically restored **Ґ**. You discovered the musicality of the iotated vowels (**Є, Ї, Ю, Я**) and the crucial palatalizing function of the soft sign (**Ь**). Finally, you mastered the critical distinction between the "grinning" **И** and the "smiling" **І**. You are no longer just recognizing shapes; you are reading authentic Ukrainian.
 
 **Перевірте себе:**
+1. What is the physical difference in your mouth when pronouncing the letter **И** versus the letter **І**?
+2. Which letter was banned from the alphabet during the Soviet era and why is its use significant today?
+3. How does the soft sign (**Ь**) change the consonant that comes immediately before it?
+4. What is the difference in sound between the letter **Ш** and the letter **Щ**?
+5. Why is the letter **Ї** considered a unique marker of Ukrainian identity, and how was it used in 2022?
 
-1.  How do you pronounce **Г** versus **Ґ**? Which one is more common?
-2.  What does the soft sign (**Ь**) do to the consonant before it?
-3.  Explain the difference in facial expression when pronouncing **І** vs **И**.
-4.  Why is the letter **Ї** culturally significant in Ukraine?
-5.  Read the word **Київ**. Which vowel is hard and which is soft?
-6.  What sound does **Щ** make?
-
-In the next module, we will stop looking at letters in isolation and start looking at how words change shape. We will discover the "Gender Code" — the secret to knowing whether a word is masculine, feminine, or neuter just by looking at its ending.
+---

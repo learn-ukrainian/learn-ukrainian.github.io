@@ -1,7 +1,7 @@
 # Audit Report: M18 — food-and-shopping.md
 **Level:** A1 | **Module:** M18 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:39
+**Generated:** 2026-02-22 16:05:34
 
 ## Configuration
 **Type:** A1-vocab
@@ -46,7 +46,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 34/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 1 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

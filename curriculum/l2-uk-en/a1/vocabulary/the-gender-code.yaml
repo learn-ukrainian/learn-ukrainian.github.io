@@ -3,7 +3,7 @@
   notes: Grammatical gender (masculine, feminine, neuter)
   pos: noun
   translation: gender; kind; lineage
-- ipa: '[ˈsɔn.t͡se]'
+- ipa: '[ˈsɔnt͡sɛ]'
   lemma: сонце
   notes: Neuter gender (ends in -e)
   pos: noun
@@ -13,12 +13,12 @@
   notes: Masculine gender (consonant ending)
   pos: noun
   translation: table
-- ipa: '[ˈknɪ.ɦɑ]'
+- ipa: '[ˈknɪɦɑ]'
   lemma: книга
   notes: Feminine gender (ends in -a)
   pos: noun
   translation: book
-- ipa: '[ʋʲikˈnɔ]'
+- ipa: '[ʋʲiˈknɔ]'
   lemma: вікно
   notes: Neuter gender (ends in -o)
   pos: noun
@@ -28,12 +28,12 @@
   notes: Masculine gender
   pos: noun
   translation: house; home
-- ipa: '[ˈmɑ.mɑ]'
+- ipa: '[ˈmɑmɑ]'
   lemma: мама
   notes: Feminine gender
   pos: noun
   translation: mom
-- ipa: '[ˈtɑ.tɔ]'
+- ipa: '[ˈtɑtɔ]'
   lemma: тато
   notes: Masculine gender despite -o ending (biological gender rules)
   pos: noun
@@ -43,27 +43,27 @@
   notes: Masculine gender
   pos: noun
   translation: brother
-- ipa: '[seˈstrɑ]'
+- ipa: '[sɛˈstrɑ]'
   lemma: сестра
   notes: Feminine gender
   pos: noun
   translation: sister
-- ipa: '[ˈmʲis.tɔ]'
+- ipa: '[ˈmʲistɔ]'
   lemma: місто
   notes: Neuter gender
   pos: noun
   translation: city
-- ipa: '[ˈmɔ.re]'
+- ipa: '[ˈmɔrɛ]'
   lemma: море
   notes: Neuter gender
   pos: noun
   translation: sea
-- ipa: '[ˈsɛr.t͡se]'
+- ipa: '[ˈsɛrt͡sɛ]'
   lemma: серце
   notes: Neuter gender
   pos: noun
   translation: heart
-- ipa: '[zemˈlʲɑ]'
+- ipa: '[zɛˈmlʲɑ]'
   lemma: земля
   notes: Feminine gender
   pos: noun
@@ -78,52 +78,52 @@
   notes: Feminine gender (consonant ending exception)
   pos: noun
   translation: night
-- ipa: '[ˈimjɑ]'
+- ipa: '[iˈmjɑ]'
   lemma: ім'я
   notes: Neuter gender (ends in -я but is neuter)
   pos: noun
   translation: name
-- ipa: '[soˈbɑ.kɑ]'
+- ipa: '[sɔˈbɑkɑ]'
   lemma: собака
   notes: Masculine gender despite -a ending
   pos: noun
   translation: dog
-- ipa: '[t͡ʃo.loˈʋʲik]'
+- ipa: '[t͡ʃɔlɔˈʋʲik]'
   lemma: чоловік
   notes: Masculine gender
   pos: noun
   translation: man; husband
-- ipa: '[ˈʒin.kɑ]'
+- ipa: '[ˈʒʲinkɑ]'
   lemma: жінка
   notes: Feminine gender
   pos: noun
   translation: woman; wife; feminine (gender)
-- ipa: '[t͡ʃo.loˈʋʲi.t͡ʃɪj]'
+- ipa: '[t͡ʃɔlɔˈʋʲit͡ʃɪj]'
   lemma: чоловічий
   notes: Adjective used for grammatical gender
   pos: adj
   translation: masculine
-- ipa: '[ʒiˈnɔ.t͡ʃɪj]'
+- ipa: '[ʒʲiˈnɔt͡ʃɪj]'
   lemma: жіночий
   notes: Adjective used for grammatical gender
   pos: adj
   translation: feminine
-- ipa: '[seˈrɛd.nʲij]'
+- ipa: '[sɛˈrɛdʲnʲij]'
   lemma: середній
   notes: Adjective used for grammatical gender
   pos: adj
   translation: neuter; middle; average
-- ipa: '[ɑr.teˈfɑkt]'
+- ipa: '[ɑrtɛˈfɑkt]'
   lemma: артефакт
   notes: S.T.A.L.K.E.R. hook; masculine consonant ending
   pos: noun
   translation: artifact
-- ipa: '[ˈzɔ.nɑ]'
+- ipa: '[zɔnɑ]'
   lemma: зона
   notes: S.T.A.L.K.E.R. hook; feminine -a ending
   pos: noun
   translation: zone
-- ipa: '[uˈkrɪtːʲɑ]'
+- ipa: '[ukrɪˈtʲːɑ]'
   lemma: укриття
   notes: S.T.A.L.K.E.R. hook; neuter -я ending after doubled consonant
   pos: noun

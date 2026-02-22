@@ -2,13 +2,13 @@
   "module": "my-family",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T21:07:47.592615Z",
+  "last_audit": "2026-02-22T19:00:47.545818Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T22:48:38.179496Z",
+    "md": "2026-02-22T18:47:35.773463Z",
     "meta": "2026-02-20T01:17:21.681770Z",
     "activities": "2026-02-20T22:49:32.671335Z",
-    "vocabulary": "2026-02-20T00:58:52.566171Z",
+    "vocabulary": "2026-02-22T18:44:47.005817Z",
     "plan": "2026-02-20T20:42:23.339671Z",
     "research": "2026-02-20T00:56:20.340408Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3317/2000 (raw: 3649)"
+      "status": "fail",
+      "violations": 1,
+      "message": "3278/2000 (raw: 3610) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -49,17 +49,15 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review only covers 0/6 (0%) content sections. Missed: \u0420\u043e\u0437\u043c\u0438\u043d\u043a\u0430: \u0427\u043b\u0435\u043d\u0438 \u0441\u0456\u043c'\u0457 (Warm-up: Family Members), \u0411\u043b\u0438\u0437\u044c\u043a\u0430 \u0442\u0430 \u0440\u043e\u0437\u0448\u0438\u0440\u0435\u043d\u0430 \u0440\u043e\u0434\u0438\u043d\u0430 (Close and Extended Family), \u041e\u043f\u0438\u0441 \u0440\u043e\u0434\u0438\u043d\u0438: \u0412\u0456\u043a \u0442\u0430 \u0445\u0430\u0440\u0430\u043a\u0442\u0435\u0440 (Describing Family: Age & Character), \u041f\u0440\u0430\u043a\u0442\u0438\u043a\u0430: \u041c\u043e\u044f \u0441\u0456\u043c'\u044f (Practice: My Family), \u0414\u0456\u0430\u043b\u043e\u0433\u0438 \u0442\u0430 \u0444\u043e\u0442\u043e\u0430\u043b\u044c\u0431\u043e\u043c. A thorough review must address each major section of the content."
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Review only covers 0/6 (0%) content sections. Missed: \u0420\u043e\u0437\u043c\u0438\u043d\u043a\u0430: \u0427\u043b\u0435\u043d\u0438 \u0441\u0456\u043c'\u0457 (Warm-up: Family Members), \u0411\u043b\u0438\u0437\u044c\u043a\u0430 \u0442\u0430 \u0440\u043e\u0437\u0448\u0438\u0440\u0435\u043d\u0430 \u0440\u043e\u0434\u0438\u043d\u0430 (Close and Extended Family), \u041e\u043f\u0438\u0441 \u0440\u043e\u0434\u0438\u043d\u0438: \u0412\u0456\u043a \u0442\u0430 \u0445\u0430\u0440\u0430\u043a\u0442\u0435\u0440 (Describing Family: Age & Character), \u041f\u0440\u0430\u043a\u0442\u0438\u043a\u0430: \u041c\u043e\u044f \u0441\u0456\u043c'\u044f (Practice: My Family), \u0414\u0456\u0430\u043b\u043e\u0433\u0438 \u0442\u0430 \u0444\u043e\u0442\u043e\u0430\u043b\u044c\u0431\u043e\u043c. A thorough review must address each major section of the content."
-    ],
-    "pass_count": 7,
+    "blocking_issues": [],
+    "pass_count": 6,
     "fail_count": 1,
     "deferred_count": 0
   }

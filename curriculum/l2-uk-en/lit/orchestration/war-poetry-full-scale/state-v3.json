@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "war-poetry-full-scale",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T12:14:26Z",
+      "task_id": "v3-war-poetry-full-scale-pA",
+      "mode": "full"
+    }
+  }
+}

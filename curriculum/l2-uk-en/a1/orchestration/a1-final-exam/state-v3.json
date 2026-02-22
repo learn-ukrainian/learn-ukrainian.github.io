@@ -2,5 +2,26 @@
   "track": "a1",
   "slug": "a1-final-exam",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T08:08:18Z",
+      "task_id": "v3-a1-final-exam-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-22T08:11:18Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-22T08:13:58Z",
+      "task_id": "v3-a1-final-exam-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-22T08:17:51Z",
+      "attempts": 2
+    }
+  }
 }

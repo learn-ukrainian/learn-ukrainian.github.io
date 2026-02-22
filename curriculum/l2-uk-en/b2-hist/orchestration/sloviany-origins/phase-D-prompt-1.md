@@ -57,7 +57,7 @@ Activities:       5
 Vocabulary items: 25
 Engagement boxes: 10
 Immersion:        99.5% (target: 85-95%)
-Audit status:     FAIL
+Audit status:     PASS
 ```
 
 ## Content Sections (H2 headers in the content file)

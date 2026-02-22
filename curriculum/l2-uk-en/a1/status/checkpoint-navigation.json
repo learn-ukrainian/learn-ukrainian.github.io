@@ -2,13 +2,13 @@
   "module": "checkpoint-navigation",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T00:46:40.660641Z",
+  "last_audit": "2026-02-22T16:05:36.505222Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-20T23:42:54.006414Z",
     "meta": "2026-02-19T22:59:27.857161Z",
     "activities": "2026-02-20T23:42:54.008037Z",
-    "vocabulary": "2026-02-19T10:40:30.123395Z",
+    "vocabulary": "2026-02-21T18:06:33.676062Z",
     "plan": "2026-02-20T20:40:58.184385Z",
     "research": "2026-02-19T22:59:27.846910Z"
   },
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "1 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +49,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+    ],
     "pass_count": 6,
-    "fail_count": 0,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

@@ -105,16 +105,16 @@ Why Genitive? Because you are wishing *of* something (some amount of happiness, 
 
 Here are the big four wishes you will hear constantly. I have added the IPA pronunciation for the first time, because some are tricky!
 
-1. **Щастя** — [ˈʃt͡ʃɑstʲɐ] (happiness)
+1. **Ща́стя** (happiness)
    - Usage: «Бажаю щастя!»
    - Це дуже популярне побажання. Всі хочуть щастя. Щастя — це гарний момент.
-2. **Здоров'я** — [zdɔˈrɔu̯jɐ] (health)
+2. **Здоро́в'я** (health)
    - Usage: «Бажаю здоров'я!»
    - Здоров'я — це найважливіше. Без здоров'я немає нічого. Ми завжди бажаємо здоров'я.
-3. **Успіху** — [uˈspʲixu] (success)
+3. **У́спіху** (success)
    - Usage: «Бажаю успіху!»
    - Це побажання для роботи. Також для навчання. Ваш керівник бажає вам успіху.
-4. **Любові** — [lʲuˈbɔʋʲi] (love)
+4. **Любо́ві** (love)
    - Usage: «Бажаю любові!»
    - Молодятам ми бажаємо любові. Або друзям. Любов гріє серце.
 

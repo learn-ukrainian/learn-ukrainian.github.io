@@ -1,105 +1,131 @@
 items:
   - lemma: "новий"
+    ipa: '[nɔˈʋɪj]'
     translation: "new"
     pos: "adj"
     example: "Це новий телефон."
   - lemma: "старий"
+    ipa: '[stɑˈrɪj]'
     translation: "old"
     pos: "adj"
     example: "Це старий дім."
   - lemma: "гарний"
+    ipa: '[ˈɦɑrnɪj]'
     translation: "beautiful, nice, good"
     pos: "adj"
     example: "Сьогодні гарна погода."
   - lemma: "великий"
+    ipa: '[ʋɛˈlɪkɪj]'
     translation: "big, large"
     pos: "adj"
     example: "Київ — велике місто."
   - lemma: "малий"
+    ipa: '[mɑˈlɪj]'
     translation: "small, little"
     pos: "adj"
     example: "Це мала дитина."
   - lemma: "добрий"
+    ipa: '[ˈdɔbrɪj]'
     translation: "good, kind"
     pos: "adj"
     example: "Він добрий чоловік."
   - lemma: "поганий"
+    ipa: '[pɔˈɦɑnɪj]'
     translation: "bad"
     pos: "adj"
     example: "У мене поганий настрій."
   - lemma: "цікавий"
+    ipa: '[t͡sʲiˈkɑʋɪj]'
     translation: "interesting"
     pos: "adj"
     example: "Це цікава книга."
   - lemma: "синій"
+    ipa: '[ˈsɪnʲij]'
     translation: "dark blue"
     pos: "adj"
     example: "Мені подобається синій колір."
   - lemma: "червоний"
+    ipa: '[t͡ʃɛˈrʋɔnɪj]'
     translation: "red"
     pos: "adj"
     example: "Це червоне яблуко."
   - lemma: "молодий"
+    ipa: '[mɔlɔˈdɪj]'
     translation: "young"
     pos: "adj"
     example: "Вона молода жінка."
   - lemma: "дорогий"
+    ipa: '[dɔrɔˈɦɪj]'
     translation: "expensive, dear"
     pos: "adj"
     example: "Цей ресторан дорогий."
   - lemma: "дешевий"
+    ipa: '[dɛˈʃɛʋɪj]'
     translation: "cheap"
     pos: "adj"
     example: "Цей квиток дешевий."
   - lemma: "смачний"
+    ipa: '[smɑˈt͡ʃnɪj]'
     translation: "tasty, delicious"
     pos: "adj"
     example: "Борщ дуже смачний."
   - lemma: "світлий"
+    ipa: '[ˈsʲʋʲitlɪj]'
     translation: "bright, light"
     pos: "adj"
     example: "Кімната світла."
   - lemma: "зручний"
+    ipa: '[ˈzrut͡ʃnɪj]'
     translation: "comfortable, convenient"
     pos: "adj"
     example: "Це крісло зручне."
   - lemma: "нормальний"
+    ipa: '[nɔrˈmɑlʲnɪj]'
     translation: "normal, okay"
     pos: "adj"
     example: "Ціна нормальна."
   - lemma: "чорний"
+    ipa: '[ˈt͡ʃɔrnɪj]'
     translation: "black"
     pos: "adj"
     example: "У мене чорний кіт."
   - lemma: "швидкий"
+    ipa: '[ʃʋɪˈdkɪj]'
     translation: "fast, quick"
     pos: "adj"
     example: "Цей телефон швидкий."
   - lemma: "білий"
+    ipa: '[ˈbʲilɪj]'
     translation: "white"
     pos: "adj"
     example: "Це біле вікно."
   - lemma: "множина"
+    ipa: '[mnɔʒɪˈnɑ]'
     translation: "plural"
     pos: "noun"
     example: "Слово «книги» — це множина."
   - lemma: "темний"
+    ipa: '[ˈtɛmnɪj]'
     translation: "dark"
     pos: "adj"
     example: "Це темна кімната."
   - lemma: "давній"
+    ipa: '[ˈdɑu̯nʲij]'
     translation: "ancient, old"
     pos: "adj"
     example: "Київ — давнє місто."
   - lemma: "чистий"
+    ipa: '[ˈt͡ʃɪstɪj]'
     translation: "clean"
     pos: "adj"
     example: "Стіл чистий."
   - lemma: "брудний"
+    ipa: '[bruˈdnɪj]'
     translation: "dirty"
     pos: "adj"
     example: "Це брудне вікно."
   - lemma: "нудний"
+    ipa: '[nuˈdnɪj]'
     translation: "boring"
     pos: "adj"
     example: "Цей фільм нудний."

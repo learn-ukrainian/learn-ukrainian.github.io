@@ -13,21 +13,20 @@
       "ts": "2026-02-20T23:25:07Z",
       "note": "migrated-from-v2"
     },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-20T23:25:07Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-D": {
-      "status": "pending",
-      "ts": "",
-      "attempts": 0,
-      "note": "reset-review-score-below-threshold"
-    },
     "v3-A": {
       "status": "complete",
       "ts": "2026-02-20T23:25:08Z",
       "note": "adopted-existing-meta"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-22T06:45:47Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-22T06:54:28Z",
+      "attempts": 2
     }
   }
 }

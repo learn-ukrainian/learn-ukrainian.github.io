@@ -20,11 +20,11 @@ Related: a1-26-describing-things, a1-28-description-adverbs
 Англійці кажуть: синій колір — це сум. В Україні все інакше.
 (English people say: blue is sorrow. In Ukraine everything is different.)
 
-**Червоний** [t͡ʃerˈʋɔnɪj] (red) is the most powerful color in Ukrainian folklore. It is not a signal of danger, but a symbol of **life**, energy, and love. Historically, red was believed to have protective properties. That is why you will see red threads or red beads used as amulets, and why red plays such a dominant role in traditional embroidery.
+**Черво́ний** (red) is the most powerful color in Ukrainian folklore. It is not a signal of danger, but a symbol of **life**, energy, and love. Historically, red was believed to have protective properties. That is why you will see red threads or red beads used as amulets, and why red plays such a dominant role in traditional embroidery.
 
-**Чорний** [ˈt͡ʃɔrnɪj] (black) represents the earth — the fertile "chornozem" (black soil) that creates life. While it can signify sorrow in specific contexts, it largely symbolizes wisdom, experience, and the richness of the land. It is grounded and respectful.
+**Чо́рний** (black) represents the earth — the fertile "chornozem" (black soil) that creates life. While it can signify sorrow in specific contexts, it largely symbolizes wisdom, experience, and the richness of the land. It is grounded and respectful.
 
-**Білий** [ˈbʲilɪj] (white) is the color of purity and the divine world. A **біла сорочка** [ˈbʲilɑ sɔˈrɔt͡ʃkɑ] (white shirt) is the standard canvas for embroidery because it represents a clean, pure soul.
+**Бі́лий** (white) is the color of purity and the divine world. A **бі́ла соро́чка** (white shirt) is the standard canvas for embroidery because it represents a clean, pure soul.
 
 > [!culture]
 > **Cultural Insight: Два кольори**
@@ -61,7 +61,7 @@ Identifying colors is your first step in description. It anchors your vocabulary
 
 ### Який колір ви любите?
 One of the first things friends ask each other is about preferences.
-**«Який колір ви любите?»** [jaˈkɪj ˈkɔlʲir ʋɪ ˈlʲubɪte] — "What color do you love?"
+**«Який колір ви любите?»** [jaˈkɪj ˈkɔlʲir ʋɪ ˈlʲubɪtɛ] — "What color do you love?"
 
 To answer this, you use the verb **любити** (to love/like):
 **«Я люблю...»** (I love...).
@@ -72,7 +72,7 @@ To answer this, you use the verb **любити** (to love/like):
 
 > [!tip]
 > **Pronunciation Tip**
-> Pay attention to the soft **ль** [lʲ] in **колір**. It is not the hard "l" of "ball," but the soft, palatalized sound, as if you are trying to say "l" and "y" at the same time.
+> Pay attention to the soft **ль** in **колір**. It is not the hard "l" of "ball," but the soft, palatalized sound, as if you are trying to say "l" and "y" at the same time.
 
 ## Основні кольори та узгодження
 
@@ -87,9 +87,9 @@ Now let's expand our palette and learn how these adjectives behave. Remember, in
 | White | **білий** | **біла** | **біле** |
 | Black | **чорний** | **чорна** | **чорне** |
 | Red | **червоний** | **червона** | **червоне** |
-| Blue | **синій** [ˈsɪnʲij] | **синя** [ˈsɪnʲɑ] | **синє** [ˈsɪnʲe] |
-| Green | **зелений** [zeˈlenɪj] | **зелена** [zeˈlenɑ] | **зелене** [zeˈlene] |
-| Yellow | **жовтий** [ˈʒɔu̯tɪj] | **жовта** [ˈʒɔu̯tɑ] | **жовте** [ˈʒɔu̯te] |
+| Blue | **си́ній** | **си́ня** | **си́нє** |
+| Green | **зеле́ний** | **зеле́на** | **зеле́не** |
+| Yellow | **жо́втий** | **жо́вта** | **жо́вте** |
 
 Notice the pattern? Most colors follow the "Hard Group" endings (**-ий**, **-а**, **-е**).
 **Синій** is a "Soft Group" adjective, so it uses soft endings (**-ій**, **-я**, **-є**).
@@ -154,31 +154,31 @@ Notice that **хакі** ignored the gender and number of "jacket," "coat," and 
 ### Базовий гардероб
 Let's learn the names of common items. Pay attention to their gender, as this dictates the color form you must use.
 
-**Сорочка** [sɔˈrɔt͡ʃkɑ] (shirt) is feminine.
+**Соро́чка** (shirt) is feminine.
 *   **Це — нова сорочка.**
 
-**Сукня** [ˈsuknʲɑ] (dress) is feminine. A common synonym is **плаття** [ˈplɑtʲːɑ] (neuter), but **сукня** is often considered more elegant and stylistically purely Ukrainian.
+**Су́кня** (dress) is feminine. A common synonym is **пла́ття** (neuter), but **сукня** is often considered more elegant and stylistically purely Ukrainian.
 *   **Вона має гарну сукню.**
 
-**Светр** [sʋetr] (sweater) is masculine.
+**Светр** (sweater) is masculine.
 *   **Це — теплий светр.**
 
-**Куртка** [ˈkurtkɑ] (jacket/coat) is feminine.
+**Ку́ртка** (jacket/coat) is feminine.
 *   **Де твоя куртка?**
 
-**Взуття** [ʋzuˈtʲːɑ] (footwear/shoes) is collective and neuter.
+**Взуття́** (footwear/shoes) is collective and neuter.
 *   **Зручне взуття.**
 
 ### Дієслово «носити»
-To say you wear something generally (as a habit or style), we use the verb **носити** [nɔˈsɪtɪ]. This is a Class II verb.
+To say you wear something generally (as a habit or style), we use the verb **носи́ти**. This is a Class II verb.
 
 Let's conjugate it:
-*   **Я ношу** [nɔˈʃu] — note the sound change **с** → **ш**!
-*   **Ти носиш** [ˈnɔsɪʃ]
+*   **Я но́шу** — note the sound change **с** → **ш**!
+*   **Ти но́сиш**
 *   **Він/Вона носить** [ˈnɔsɪtʲ]
-*   **Ми носимо** [ˈnɔsɪmɔ]
-*   **Ви носите** [ˈnɔsɪte]
-*   **Вони носять** [ˈnɔsʲɑtʲ]
+*   **Ми но́симо**
+*   **Ви но́сите**
+*   **Вони́ но́сять**
 
 **Приклад:**
 *   **Я часто ношу светр.**
@@ -211,7 +211,7 @@ This applies to both the noun AND the adjective describing it.
 > If you make a mistake and say "Я ношу синя сукня," it sounds like "I wear she."
 
 ### Носити чи Одягати?
-You might hear another verb: **одягати** [ɔdʲɑˈɦɑtɪ]. What is the difference?
+You might hear another verb: **одяга́ти**. What is the difference?
 
 *   **Носити** describes the state or habit. "I wear glasses." "He wears suits."
 *   **Одягати** describes the action of putting something on right now. "I am putting on a coat."
@@ -225,9 +225,9 @@ For describing appearance or style, **носити** is usually what you need.
 
 ### Слова тільки у множині
 Common examples include:
-*   **Штани** [ʃtɑˈnɪ] (pants/trousers)
-*   **Джинси** [ˈd͡ʒɪnsɪ] (jeans)
-*   **Окуляри** [ɔkuˈlʲɑrɪ] (glasses)
+*   **Штани́** (pants/trousers)
+*   **Джи́нси** (jeans)
+*   **Окуля́ри** (glasses)
 
 You cannot say "один штан" or "одна джинса". They simply do not exist in the singular.
 
@@ -241,7 +241,7 @@ Because these words are always plural, adjectives describing them must also be p
 *   **старі штани**
 
 ### Вказівний займенник «Ці»
-When pointing at these items, you must use the plural demonstrative pronoun **ці** [t͡sʲi] (these), never "цей" or "ця".
+When pointing at these items, you must use the plural demonstrative pronoun **ці** (these), never "цей" or "ця".
 
 **Приклади:**
 *   **Ці штани — дорогі.**
@@ -250,7 +250,7 @@ When pointing at these items, you must use the plural demonstrative pronoun **ц
 
 > [!warning]
 > **Don't count with "один"**
-> You cannot say "один штани" (one pants). For plural-only nouns, we use a special collective number **одні** [ɔdˈnʲi].
+> You cannot say "один штани" (one pants). For plural-only nouns, we use a special collective number **одні́**.
 > *   **У мене є одні джинси.** (I have one pair of jeans.)
 
 ## Опис зовнішності та вишиванка
@@ -258,7 +258,7 @@ When pointing at these items, you must use the plural demonstrative pronoun **ц
 Одяг — це частина культури. В Україні головний одяг — це **вишиванка**.
 
 ### Вишиванка: Одяг-Оберіг
-The **вишиванка** [ʋɪʃɪˈʋɑnkɑ] is an embroidered shirt. But traditionally, it was not just decoration. It was an **оберіг** [ɔbeˈrʲiɦ] — a protective talisman.
+The **виши́ва́нка** is an embroidered shirt. But traditionally, it was not just decoration. It was an **обері́г** — a protective talisman.
 
 Embroidery was placed on the collar, cuffs, and hem — the places where the shirt "opened" to the world. The patterns were believed to seal the wearer's energy and protect them from bad spirits or the "evil eye."
 
@@ -294,12 +294,12 @@ This focuses on what the person is wearing.
 У магазині ми дивимося на дві речі: розмір і ціна.
 (In the shop we look at two things: size and price.)
 
-**Розмір** [rɔzˈmʲir] (size):
+**Розмір** (size):
 *   **Який це розмір?** (What size is this?)
 *   **Це — розмір М.** (This is size M.)
 *   **У вас є більший розмір?** (Do you have a bigger size?)
 
-**Ціна** [t͡sʲiˈnɑ] (price):
+**Ціна́** (price):
 To ask the price, we use the verb **коштувати** (to cost).
 *   **Скільки це коштує?** (How much does this cost?)
 *   **Скільки коштують ці джинси?** (How much do these jeans cost?) Note the plural verb!
@@ -333,8 +333,8 @@ Notice how the client asks for specific features (color, item) and verifies the 
 ### Key Phrases to Remember
 *   **Я шукаю...** [ja ʃuˈkɑju] — I am looking for... (+ Accusative)
 *   **Можна поміряти?** [ˈmɔʒnɑ pɔˈmʲirʲɑtɪ] — Can I try (it) on?
-*   **Це гарно виглядає.** [t͡se ˈɦɑrnɔ ʋɪɦlʲɑˈdɑje] — This looks good.
-*   **Я беру це.** [ja beˈru t͡se] — I'll take it.
+*   **Це гарно виглядає.** [t͡sɛ ˈɦɑrnɔ ʋɪɦlʲɑˈdɑjɛ] — This looks good.
+*   **Я беру це.** [ja bɛˈru t͡sɛ] — I'll take it.
 
 ## Практика: Опис одягу
 

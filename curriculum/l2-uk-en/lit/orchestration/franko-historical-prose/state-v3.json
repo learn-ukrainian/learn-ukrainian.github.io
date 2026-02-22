@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "franko-historical-prose",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T23:09:04Z",
+      "task_id": "v3-franko-historical-prose-pA",
+      "mode": "full"
+    }
+  }
+}

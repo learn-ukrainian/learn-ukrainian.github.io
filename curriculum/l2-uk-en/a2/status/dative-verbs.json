@@ -2,13 +2,13 @@
   "module": "dative-verbs",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T01:14:26.091768Z",
+  "last_audit": "2026-02-22T19:35:43.356651Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T01:14:24.712848Z",
+    "md": "2026-02-22T10:13:37.851179Z",
     "meta": "2026-02-20T19:20:01.861701Z",
-    "activities": "2026-02-21T01:14:24.713365Z",
-    "vocabulary": "2026-02-21T01:11:23.504362Z",
+    "activities": "2026-02-22T10:13:37.851850Z",
+    "vocabulary": "2026-02-22T18:46:33.494306Z",
     "plan": "2026-02-20T20:59:28.378230Z",
     "research": "2026-02-20T19:20:01.853560Z"
   },
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "28 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -57,7 +57,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 7,
     "fail_count": 0,
     "deferred_count": 0
   }

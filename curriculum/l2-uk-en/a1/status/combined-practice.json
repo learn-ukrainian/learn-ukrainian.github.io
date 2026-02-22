@@ -2,12 +2,12 @@
   "module": "combined-practice",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T01:39:17.104606Z",
+  "last_audit": "2026-02-22T16:05:54.104152Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T01:38:22.446263Z",
+    "md": "2026-02-22T09:06:56.361051Z",
     "meta": "2026-02-21T01:17:03.019971Z",
-    "activities": "2026-02-21T01:38:21.743664Z",
+    "activities": "2026-02-22T09:06:56.361460Z",
     "vocabulary": "2026-02-21T01:20:22.182234Z",
     "plan": "2026-02-20T20:43:43.523004Z",
     "research": "2026-02-21T01:17:03.017361Z"
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "3057/2000 (raw: 3304) | pedagogy: 17 violations | immersion: 34.5% LOW (target 35-55% (M43))"
+      "status": "pass",
+      "violations": 0,
+      "message": "3149/2000 (raw: 3393)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "3 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,15 +49,17 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
-    "pass_count": 4,
+    "blocking_issues": [
+      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+    ],
+    "pass_count": 6,
     "fail_count": 1,
     "deferred_count": 0
   }

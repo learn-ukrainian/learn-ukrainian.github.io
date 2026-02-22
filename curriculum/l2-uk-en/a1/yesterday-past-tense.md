@@ -15,7 +15,7 @@ Related: a1-20 (Checkpoint), a1-25 (Daily Routine)
 ## Розминка: Вчора і сьогодні
 
 ### Теперішній і Минулий: Концепція (Present vs. Past)
-Imagine we are standing in a museum. Right now, in this moment, we are looking at a painting. This is **сьогодні** [sʲoˈɦɔdʲnʲi] (today). But everything we see around us — the artifacts, the books, the history — happened before. That is **вчора** [ˈu̯t͡ʃɔrɑ] (yesterday).
+Imagine we are standing in a museum. Right now, in this moment, we are looking at a painting. This is **сього́дні** (today). But everything we see around us — the artifacts, the books, the history — happened before. That is **вчо́ра** (yesterday).
 
 In Ukrainian, shifting from "now" to "then" is surprisingly elegant. Unlike English, which has "walk/walked," "go/went," "buy/bought," Ukrainian follows a very consistent musical pattern. The verb changes its ending to reflect the gender of the person speaking. It is like putting on a different hat depending on who is telling the story.
 
@@ -28,7 +28,7 @@ Look at this simple contrast:
 The word "yesterday" acts as a key. When you use it, the verb must change its shape to fit the lock.
 
 ### Cultural Hook: The First Book (1574)
-Let me share a story from my work at the museum. On February 15, 1574, a man named Ivan Fedorov did something that changed our history forever. He **друкував** [drukuˈʋɑu̯] (was printing) the first book in Ukraine, the "Apostol," in the city of Lviv.
+Let me share a story from my work at the museum. On February 15, 1574, a man named Ivan Fedorov did something that changed our history forever. He **друкува́в** (was printing) the first book in Ukraine, the "Apostol," in the city of Lviv.
 
 Why do I tell you this? Because history gives us the best grammar examples.
 *   Іван Федоров **жив** (lived).
@@ -46,20 +46,20 @@ The most powerful word for stepping back in time is **вчора** (yesterday). 
 
 > [!tip]
 > **Порада щодо вимови**
-> Слово **вчора** починається зі звука [u̯], схожого на англійське "w" у слові "wow". Це не різкий звук "v". Він звучить м'яко: [u̯t͡ʃɔrɑ].
+> Слово **вчора** почина́ється зі зву́ка, схожого на англійське "w" у слові "wow". Це не різкий звук "v". Він звучить м'яко: [u̯t͡ʃɔrɑ].
 
 When you use these words, you do not need any prepositions like "in" or "on." You simply say the time phrase.
 *   **Вчора ввечері** я читав. (Yesterday evening I read.)
 *   **Вчора зранку** ми пили каву. (Yesterday morning we drank coffee.)
 
 ### Time Marker: Минулий (Last)
-To talk about longer periods of time, we use the adjective **минулий** [mɪˈnulɪi̯] (past/last). This word changes its ending to match the noun it describes, just like any other adjective.
+To talk about longer periods of time, we use the adjective **мину́лий** (past/last). This word changes its ending to match the noun it describes, just like any other adjective.
 
 However, in time expressions, we use a specific case form (Genitive), which answers the question "when?". Here are the three gold phrases you must memorize:
 
-1.  **минулого тижня** [mɪˈnulɔɦɔ ˈtɪʒnʲɑ] — last week
-2.  **минулого місяця** [ˈmisʲɑt͡sʲɑ] — last month
-3.  **минулого року** [ˈrɔku] — last year
+1.  **мину́лого ти́жня** — last week
+2.  **мину́лого мі́сяця** — last month
+3.  **мину́лого ро́ку** — last year
 
 > [!warning]
 > **Жодних прийменників!**
@@ -157,12 +157,12 @@ Remember, **не** and the verb are two separate words, but they work together a
 ### The Verb "To Be" (Бути)
 In the present tense, we usually omit the verb "to be" (Я — студент). But in the past tense, it is mandatory. You cannot skip it.
 
-The verb **бути** [ˈbutɪ] (to be) follows the exact same pattern we just learned:
+The verb **бу́ти** (to be) follows the exact same pattern we just learned:
 *   Stem: бу-
-*   Masculine: **був** [buu̯] (was)
-*   Feminine: **була** [buˈlɑ] (was)
-*   Neuter: **було** [buˈlɔ] (was)
-*   Plural: **були** [buˈlɪ] (were)
+*   Masculine: **був** (was)
+*   Feminine: **була́** (was)
+*   Neuter: **було́** (was)
+*   Plural: **були́** (were)
 
 Examples:
 *   Я **був** удома. (I was at home - male speaker)
@@ -180,23 +180,23 @@ Examples:
 > **Був** — це тільки *головне* слово (main verb) (Я був щасливий, Я був там).
 
 ### Irregular Verb: Їсти (To Eat)
-While most verbs are regular, a few ancient ones have slight quirks. **Їсти** [ˈjistɪ] (to eat) is one of them. The stem is **ї-**.
+While most verbs are regular, a few ancient ones have slight quirks. **Ї́сти** (to eat) is one of them. The stem is **ї-**.
 
-*   Він **їв** [jiu̯]. (He ate.) — *Notice the ending is just -в added to ї.*
-*   Вона **їла** [ˈjilɑ]. (She ate.)
-*   Вони **їли** [ˈjilɪ]. (They ate.)
+*   Він **їв**. (He ate.) — *Notice the ending is just -в added to ї.*
+*   Вона **ї́ла**. (She ate.)
+*   Вони **ї́ли**. (They ate.)
 
 Example:
 *   Вчора ми **їли** піцу. (Yesterday we ate pizza.)
 
 ### Irregular Verb: Йти (To Go)
-The verb **йти** [i̯tɪ] (to go/walk) is the trickiest one. Its stem changes completely in the past — just like "go" becomes "went" in English.
+The verb **йти** (to go/walk) is the trickiest one. Its stem changes completely in the past — just like "go" becomes "went" in English.
 
 You cannot say «йтив». You must use the special past stem **іш-**:
 
-*   Він **ішов** [iˈʃɔu̯]. (He walked/was walking.)
-*   Вона **ішла** [iˈʃlɑ]. (She walked/was walking.)
-*   Вони **ішли** [iˈʃlɪ]. (They walked/were walking.)
+*   Він **ішо́в**. (He walked/was walking.)
+*   Вона **ішла́**. (She walked/was walking.)
+*   Вони **ішли́**. (They walked/were walking.)
 
 > [!note]
 > **Чергування: Йшов чи Ішов?**
@@ -222,7 +222,7 @@ Notice how the endings change to match the subject: *день був* (masculine
 
 > [!culture]
 > **Закон ЗУНР (1919)**
-> До речі, про історію. Саме 15 лютого 1919 року сталася ще одна подія. ЗУНР (Західноукраїнська Народна Республіка) **ухвалила** [uxʋɑˈlɪlɑ] закон про українську мову.
+> До речі, про історію. Саме 15 лютого 1919 року сталася ще одна подія. ЗУНР (Західноукраїнська Народна Республіка) **ухвали́ла** закон про українську мову.
 > *   Республіка (жіночий рід) → **ухвалила** (минулий час, вона).
 > Навіть уряди повинні дотримуватися правил граматики!
 
@@ -236,10 +236,10 @@ Now it is your turn to build a story. Let's look at a typical day and describe i
 Here are the building blocks for your story:
 
 1.  **вставати** (to get up) → я встав / встала
-2.  **пити** [ˈpɪtɪ] (to drink) → пив / пила каву
+2.  **пи́ти** (to drink) → пив / пила каву
 3.  **робити** (to do) → робив / робила зарядку (exercises)
 4.  **читати** (to read) → читав / читала новини
-5.  **дивитися** [dɪˈʋɪtɪsʲɐ] (to watch) → дивився / дивилася фільм
+5.  **диви́тися** (to watch) → дивився / дивилася фільм
 
 *Приклад розповіді (Чоловік):*
 Вчора я **встав** не дуже рано. Це була восьма година. Спочатку я **пив** велику чашку чорної кави. Я **читав** спортивні новини в інтернеті. Новини були про футбол. Потім я **ходив** у парк. Погода була гарна. Сонце **світило** і небо було синє. Парк був гарний. Там було багато дерев. Я трохи **бігав**. Потім я **слухав** музику. Вдень я **працював**, а ввечері **був** удома. Я **готував** пасту на вечерю. Паста була дуже смачна. Потім я **дивився** старий фільм. Це був спокійний день. Я **не працював** багато.

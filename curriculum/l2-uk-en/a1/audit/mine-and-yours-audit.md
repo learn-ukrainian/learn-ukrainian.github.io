@@ -1,7 +1,7 @@
 # Audit Report: M14 — mine-and-yours.md
 **Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:36
+**Generated:** 2026-02-22 16:05:31
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,6 +36,15 @@
 - Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
 - Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_NOT_IN_CONTENT]** Only 13/21 (62%) vocabulary words appear in content+activities. Missing: його, мій, наш, наша, твоя, твоє, твій, її
+  - FIX: Integrate missing vocabulary words into the prose or activities. Each vocab word should appear at least once in context.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 3021/2000 (raw: 3503)

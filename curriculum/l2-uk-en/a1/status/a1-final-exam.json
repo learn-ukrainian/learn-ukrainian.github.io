@@ -1,0 +1,66 @@
+{
+  "module": "a1-final-exam",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-22T16:05:54.894319Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-22T09:16:33.418760Z",
+    "meta": "2026-02-22T09:08:18.375105Z",
+    "activities": "2026-02-22T09:13:58.737740Z",
+    "vocabulary": "2026-02-22T09:13:58.738068Z",
+    "plan": "2026-02-20T20:44:14.270426Z",
+    "research": "2026-02-22T09:08:18.372301Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3558/2000 (raw: 3697)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "20/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "1 IPA issues (run lint_ipa.py --fix)"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+    ],
+    "pass_count": 5,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

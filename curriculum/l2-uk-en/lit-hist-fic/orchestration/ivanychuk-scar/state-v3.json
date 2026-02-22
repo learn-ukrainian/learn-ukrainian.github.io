@@ -1,0 +1,13 @@
+{
+  "track": "lit-hist-fic",
+  "slug": "ivanychuk-scar",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T01:11:33Z",
+      "task_id": "v3-ivanychuk-scar-pA",
+      "mode": "full"
+    }
+  }
+}

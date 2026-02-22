@@ -14,9 +14,8 @@
       "note": "migrated-from-v2"
     },
     "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-21T00:32:27Z",
-      "note": "migrated-from-v2"
+      "status": "pending",
+      "note": "reset-section-coverage-english-review"
     },
     "v3-A": {
       "status": "complete",

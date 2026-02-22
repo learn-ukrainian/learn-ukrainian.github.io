@@ -1,4 +1,4 @@
-FAIL: build_module_v2.py lit-war 2 — E2E
+PASS: build_module_v2.py lit-war 2 — E2E
 
   Module:   lozko-poetry-of-maidan
   Track:    lit-war
@@ -6,5 +6,5 @@ FAIL: build_module_v2.py lit-war 2 — E2E
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-20T22:48:02Z
+  Verdict:  PASS
+  Date:     2026-02-21T22:41:45Z

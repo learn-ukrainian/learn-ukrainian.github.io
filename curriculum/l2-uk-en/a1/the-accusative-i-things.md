@@ -109,8 +109,8 @@ In Ukrainian, when you simply name these things, they are the **Subject** of the
 But what happens when *you* become the actor?
 
 Imagine you are looking at a photo.
-*   **Це лампа** [ˈlɑmpɑ]. (This is a lamp.) — Here, the lamp is the subject. It is just being a lamp.
-*   **Я бачу лампу** [ˈlɑmpu]. (I see a lamp.) — Now, *you* are the subject. You are doing the action (seeing). The lamp is receiving the action.
+*   **Це ла́мпа**. (This is a lamp.) — Here, the lamp is the subject. It is just being a lamp.
+*   **Я ба́чу ла́мпу**. (I see a lamp.) — Now, *you* are the subject. You are doing the action (seeing). The lamp is receiving the action.
 
 This role—receiving the action—is called the **Direct Object**. In Ukrainian, to show that a word is a Direct Object, we often have to change its ending. This form is called the **Accusative Case** (Знахідний відмінок).
 
@@ -124,8 +124,8 @@ In English, the word "book" doesn't change:
 *   *Object:* I am reading the **book**.
 
 In Ukrainian, it changes!
-*   *Subject:* **Книга** [ˈknɪɦɑ] на столі.
-*   *Object:* Я читаю **книгу** [ˈknɪɦu].
+*   *Subject:* **Кни́га** на столі.
+*   *Object:* Я читаю **кни́гу**.
 
 > [!observe]
 > **Look closely at the ending.**
@@ -149,20 +149,20 @@ If a word is feminine and ends in **-а** or **-я**, it MUST change when it is 
 *   **-а** changes to **-у**
 *   **-я** changes to **-ю**
 
-Let's look at how this works with the verb **бачити** [ˈbɑt͡ʃɪtɪ] (to see).
+Let's look at how this works with the verb **ба́чити** (to see).
 
-*   **кава** [ˈkɑʋɑ] (coffee) → Я бачу **каву**.
-*   **газета** [ɦɑˈzɛtɑ] (newspaper) → Я бачу **газету**.
-*   **кухня** [ˈkuxnʲɑ] (kitchen) → Я бачу **кухню**.
+*   **ка́ва** (coffee) → Я бачу **каву**.
+*   **газе́та** (newspaper) → Я бачу **газету**.
+*   **ку́хня** (kitchen) → Я бачу **кухню**.
 
 Usage note: You apply this rule whenever you are doing something *to* a feminine object—seeing it, buying it, reading it, or loving it.
 
 ### Чоловічий рід неістот (Masculine Inanimate)
 Here is the "Safe Harbor" I promised you. For masculine objects (inanimate), the Accusative Case looks **exactly the same** as the Nominative Case (dictionary form).
 
-*   **стіл** [sʲtʲil] (table) → Я бачу **стіл**. (No change!)
-*   **телефон** [tɛlɛˈfɔn] (phone) → Я бачу **телефон**.
-*   **парк** [pɑrk] (park) → Я бачу **парк**.
+*   **стіл** (table) → Я бачу **стіл**. (No change!)
+*   **телефо́н** (phone) → Я бачу **телефон**.
+*   **парк** (park) → Я бачу **парк**.
 
 > [!warning]
 > **Don't overthink it!**
@@ -171,9 +171,9 @@ Here is the "Safe Harbor" I promised you. For masculine objects (inanimate), the
 ### Середній рід (Neuter Gender)
 Neuter nouns join the "Safe Harbor" club. They also **do not change**.
 
-*   **вікно** [ʋʲikˈnɔ] (window) → Я бачу **вікно**.
-*   **місто** [ˈmʲistɔ] (city) → Я бачу **місто**.
-*   **море** [ˈmɔrɛ] (sea) → Я бачу **море**.
+*   **вікно́** (window) → Я бачу **вікно**.
+*   **мі́сто** (city) → Я бачу **місто**.
+*   **мо́ре** (sea) → Я бачу **море**.
 
 ### Summary Table: To Change or Not to Change?
 **Подивіться на цю таблицю.** (Look at this table.)
@@ -190,24 +190,24 @@ Neuter nouns join the "Safe Harbor" club. They also **do not change**.
 
 The Accusative case is "triggered" by specific verbs. When you use these verbs, the next noun usually needs to be in the Accusative.
 
-1.  **мати** [ˈmɑtɪ] (to have)
-    *   Я маю **проблему** [prɔˈblɛmu]. (I have a problem.)
-    *   Я маю **час** [t͡ʃɑs]. (I have time.)
+1.  **ма́ти** (to have)
+    *   Я маю **пробле́му**. (I have a problem.)
+    *   Я маю **час**. (I have time.)
 
-2.  **хотіти** [xɔˈtʲitɪ] (to want)
-    *   Я хочу **піцу** [ˈpʲit͡su]. (I want pizza.)
-    *   Я хочу **чай** [t͡ʃɑi̯]. (I want tea.)
+2.  **хоті́ти** (to want)
+    *   Я хочу **пі́цу**. (I want pizza.)
+    *   Я хочу **чай**. (I want tea.)
 
-3.  **брати** [ˈbrɑtɪ] (to take)
-    *   Я беру **сумку** [ˈsumku]. (I take the bag.)
+3.  **бра́ти** (to take)
+    *   Я беру **су́мку**. (I take the bag.)
     *   Я беру **телефон**. (I take the phone.)
 
-4.  **купувати** [kupuˈʋɑtɪ] (to buy)
-    *   Він купує **машину** [mɑˈʃɪnu]. (He is buying a car.)
-    *   Ми купуємо **хліб** [xlʲib]. (We are buying bread.)
+4.  **купува́ти** (to buy)
+    *   Він купує **маши́ну**. (He is buying a car.)
+    *   Ми купуємо **хліб**. (We are buying bread.)
 
-5.  **чути** [ˈt͡ʃutɪ] (to hear)
-    *   Я чую **музику** [ˈmuzɪku]. (I hear music.)
+5.  **чу́ти** (to hear)
+    *   Я чую **му́зику**. (I hear music.)
     *   Я чую **звук** [zvuk]. (I hear a sound.)
 
 ## Практика: Вчимося змінювати закінчення
@@ -240,16 +240,16 @@ Imagine you are a machine transforming words.
 ### Using "Мати" (To Have)
 The verb "to have" is one of the most common triggers. In Ukrainian, we often use the phrase "Я маю..." (I have...).
 
-*   **Я маю ідею** [iˈdɛju]. (I have an idea.) — *ідея → ідею*
+*   **Я маю іде́ю**. (I have an idea.) — *ідея → ідею*
 *   **Я маю план**. (I have a plan.) — *план → план* (Masculine, no change)
-*   **Я маю можливість** [mɔʒˈlɪʋʲisʲtʲ]. (I have an opportunity.) — *можливість → можливість* (Feminine, but ends in a consonant, not -а/-я — no change!)
+*   **Я маю можли́вість**. (I have an opportunity.) — *можливість → можливість* (Feminine, but ends in a consonant, not -а/-я — no change!)
 ---
 
 ### Using "Хотіти" (To Want)
 
 *   **Я хочу каву.** (I want coffee.)
 *   **Ти хочеш воду?** (Do you want water?)
-*   **Ми хочемо спокій** [ˈspɔkʲii̯]. (We want peace.)
+*   **Ми хо́чемо спо́кій**. (We want peace.)
 
 > [!tip]
 > **Check your own speech.**
@@ -272,13 +272,13 @@ Imagine a wizard who changes things just by touching them. But he only changes *
 Let's look at a conversation between two friends, Oksana and Andriy.
 
 **Оксана:** Привіт, Андрію! Що ти робиш?
-**Андрій:** Привіт! Я читаю **книгу** [ˈknɪɦu]. А ти?
-**Оксана:** Я п'ю **каву** [ˈkɑʋu]. Ти хочеш **каву**?
-**Андрій:** Ні, дякую. Я хочу **воду** [ˈʋɔdu].
+**Андрій:** Привіт! Я читаю **кни́гу**. А ти?
+**Оксана:** Я п'ю **ка́ву**. Ти хочеш **каву**?
+**Андрій:** Ні, дякую. Я хочу **воду́**.
 **Оксана:** Добре. Ось вода.
-**Андрій:** Дякую. Слухай, я маю **ідею** [iˈdɛju].
+**Андрій:** Дякую. Слухай, я маю **іде́ю**.
 **Оксана:** Яку ідею? (What idea?)
-**Андрій:** Я хочу купити **піцу** [ˈpʲit͡su].
+**Андрій:** Я хочу купити **пі́цу**.
 **Оксана:** О, супер! Я теж люблю **піцу**.
 
 Notice how natural it sounds. They don't say "Я хочу вода" or "Я читаю книга." They flow into the Accusative case effortlessly.
@@ -336,45 +336,45 @@ Let's visit a small shop.
 ### Я бачу... (I see...)
 You are walking through a store. What do you see on the shelves?
 
-*   Я бачу **ціну** [t͡sʲiˈnu]. (I see the price.)
-*   Я бачу **знижку** [ˈznɪʒku]. (I see a discount.)
-*   Я бачу **товар** [tɔˈʋɑr]. (I see goods/product.)
-*   Я бачу **касу** [ˈkɑsu]. (I see the checkout.)
-*   Я бачу **чергу** [ˈt͡ʃɛrɦu]. (I see a queue.)
+*   Я бачу **ціну́**. (I see the price.)
+*   Я бачу **зни́жку**. (I see a discount.)
+*   Я бачу **това́р**. (I see goods/product.)
+*   Я бачу **ка́су**. (I see the checkout.)
+*   Я бачу **че́ргу́**. (I see a queue.)
 
 ### Вдома: Я беру... (At home: I take...)
 You are getting ready to go out.
 
-*   Я беру **парасолю** [pɑrɑˈsɔlʲu]. (I take an umbrella.)
-*   Я беру **куртку** [ˈkurtku]. (I take a jacket.)
-*   Я беру **ключ** [klʲut͡ʃ]. (I take the key.)
+*   Я беру **парасо́лю**. (I take an umbrella.)
+*   Я беру **ку́ртку**. (I take a jacket.)
+*   Я беру **ключ**. (I take the key.)
 
 ### Сцена: Збираємо валізу (Packing a suitcase)
 You are going on vacation! **Валіза велика.** (The suitcase is big.) **Я беру все.** (I take everything.) What goes into the suitcase?
 
 **Я беру...** (I take...)
-*   ... **паспорт** [ˈpɑspɔrt] (passport) — *masculine, no change*.
-*   ... **квиток** [kʋɪˈtɔk] (ticket) — *masculine, no change*.
-*   ... **карту** [ˈkɑrtu] (map/card) — *feminine, change!*
-*   ... **щітку** [ˈʃt͡ʃitku] (toothbrush) — *feminine, change!*
-*   ... **фотоапарат** [fɔtɔɑpɑˈrɑt] (camera) — *masculine, no change*.
+*   ... **па́спорт** (passport) — *masculine, no change*.
+*   ... **квито́к** (ticket) — *masculine, no change*.
+*   ... **ка́рту** (map/card) — *feminine, change!*
+*   ... **щі́тку** (toothbrush) — *feminine, change!*
+*   ... **фотоапара́т** (camera) — *masculine, no change*.
 
 > [!culture]
 > **Гречка — The Strategic Reserve**
-> In Ukraine, **гречка** [ˈɦrɛt͡ʃkɑ] (buckwheat) is more than just food; it's a strategic resource. When people worry about the economy, they buy *гречку*.
+> In Ukraine, **гре́чка** (buckwheat) is more than just food; it's a strategic resource. When people worry about the economy, they buy *гречку*.
 > *   Я купую **гречку**.
 > Note clearly: *гречка* becomes *гречку*.
 
 ## Культурний погляд: Базар чи супермаркет?
 
 ### Базар (The Market)
-In Ukraine, the **базар** [bɑˈzɑr] (market) is a vital institution. It is not just a place to buy food; it is a place to talk, to smell, and to taste. Even with modern supermarkets everywhere, many people prefer the bazaar for fresh meat, dairy, and vegetables.
+In Ukraine, the **база́р** (market) is a vital institution. It is not just a place to buy food; it is a place to talk, to smell, and to taste. Even with modern supermarkets everywhere, many people prefer the bazaar for fresh meat, dairy, and vegetables.
 
 At the bazaar, you don't just take things; you ask to see them.
 *   **Покажіть, будь ласка, цю диню** [ˈdɪnʲu]. (Please show me this melon.)
 *   **Дайте, будь ласка, грушу** [ˈɦruʃu]. (Give me the pear, please.)
 *   **Зважте, будь ласка, капусту** [kɑˈpustu]. (Please weigh the cabbage.)
-*   **Я хочу спробувати сметану** [smɛˈtɑnu]. (I want to taste the sour cream.)
+*   **Я хо́чу спро́бувати смета́ну**. (I want to taste the sour cream.)
 
 The words *диня*, *груша*, *капуста*, and *сметана* are all feminine, so they change to *диню*, *грушу*, *капусту*, and *сметану*.
 
@@ -393,17 +393,17 @@ Since **пакет** is masculine and inanimate, it does not change. It is very 
 
 ### Сувеніри (Souvenirs)
 When you visit Ukraine, you will want to bring something home.
-*   Я купую **вишиванку** [ʋɪʃɪˈʋɑnku]. (I buy an embroidered shirt.)
-*   Я купую **магніт** [mɑɦˈnʲit]. (I buy a magnet.)
-*   Я купую **булаву** [bulɑˈʋu]. (I buy a mace - symbol of power.)
-*   Я купую **тарілку** [tɑˈrʲilku]. (I buy a plate.)
+*   Я купую **виши́ва́нку**. (I buy an embroidered shirt.)
+*   Я купую **магні́т**. (I buy a magnet.)
+*   Я купую **булаву́**. (I buy a mace - symbol of power.)
+*   Я купую **тарі́лку**. (I buy a plate.)
 
 ### Що ми купуємо щодня?
 Ukrainians often buy fresh **хліб** daily.
 *   Я купую **свіжий хліб**. (I buy fresh bread.)
 
 But maybe you want a sweet bun?
-*   Я хочу **булочку** [ˈbulɑt͡ʃku]. (I want a bun.)
+*   Я хочу **бу́лочку**. (I want a bun.)
 
 See the difference? Bread (*хліб*) stays the same. The bun (*булочка*) changes. This is the rhythm of the Ukrainian language.
 

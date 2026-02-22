@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "izdryk-votsatsek",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T11:20:40Z",
+      "task_id": "v3-izdryk-votsatsek-pA",
+      "mode": "full"
+    }
+  }
+}

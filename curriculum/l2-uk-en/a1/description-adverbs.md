@@ -24,9 +24,9 @@ When we describe a person or an object (a noun), we use an **Adjective**. You al
 *   **Endings:** -ий, -а, -е.
 
 Here are some examples:
-*   Це **гарний** [ˈɦɑrnɪj] хлопець. (This is a nice boy.) — *Який хлопець?*
-*   Це **швидка** [ʃʋɪdˈkɑ] машина. (This is a fast car.) — *Яка машина?*
-*   Це **добре** [ˈdɔbrɛ] вино. (This is good wine.) — *Яке вино?*
+*   Це **га́рний** хлопець. (This is a nice boy.) — *Який хлопець?*
+*   Це **швидка́** машина. (This is a fast car.) — *Яка машина?*
+*   Це **до́бре** вино. (This is good wine.) — *Яке вино?*
 
 > [!note]
 > Notice that adjectives always agree with the noun they describe. If the noun changes, the adjective changes too.
@@ -39,9 +39,9 @@ When we describe an action (a verb), we use an **Adverb**. This word never chang
 *   **Endings:** Mostly **-о**.
 
 Here are some examples:
-*   Він **гарно** [ˈɦɑrnɔ] співає. (He sings nicely.) — *Як співає?*
-*   Він їде **швидко** [ˈʃʋɪdkɔ]. (He drives fast.) — *Як їде?*
-*   Ми сидимо **тихо** [ˈtɪxɔ]. (We are sitting quietly.) — *Як сидимо?*
+*   Він **га́рно** співає. (He sings nicely.) — *Як співає?*
+*   Він їде **шви́дко**. (He drives fast.) — *Як їде?*
+*   Ми сидимо **ти́хо**. (We are sitting quietly.) — *Як сидимо?*
 
 ### Візуальна схема: Який vs Як
 
@@ -84,14 +84,14 @@ To make an adverb of manner (describing *how*), we usually take the stem of the 
 Let's break it down step-by-step:
 1.  Take the adjective: **голосний** (loud).
 2.  Remove the ending `-ий`: **голосн-**.
-3.  Add `-о`: **голосно** [ˈɦɔlɔsnɔ].
+3.  Add `-о`: **го́лосно**.
 
 Here are some examples:
 *   **тихий** (quiet) → **тихо** (quietly)
     *   *Ми сидимо тихо.* (We sit quietly.)
-*   **легкий** (easy/light) → **легко** [ˈlɛxkɔ] (easily)
+*   **легкий** (easy/light) → **ле́гко** (easily)
     *   *Він робить це легко.* (He does this easily.)
-*   **важкий** (difficult/heavy) → **важко** [ˈʋɑʃkɔ] (with difficulty/hard)
+*   **важкий** (difficult/heavy) → **ва́жко** (with difficulty/hard)
     *   *Це важко читати.* (This is hard to read.)
 
 > [!tip]
@@ -145,17 +145,17 @@ Life is routine. To talk about your habits, you need adverbs of frequency. These
 
 Let's look at the spectrum from 100% to 0%. Memorize this order.
 
-1.  **завжди** [zɑu̯ˈʒdɪ] — Always (100%)
+1.  **за́вжди́** — Always (100%)
     *   *Я **завжди** снідаю вдома.* (I always have breakfast at home.)
-2.  **зазвичай** [zɑzʋɪˈt͡ʃɑj] — Usually (80-90%)
+2.  **зазвича́й** — Usually (80-90%)
     *   *Ми **зазвичай** працюємо тут.* (We usually work here.)
-3.  **часто** [ˈt͡ʃɑstɔ] — Often (60-70%)
+3.  **ча́сто** — Often (60-70%)
     *   *Ви **часто** гуляєте?* (Do you often walk?)
-4.  **іноді** [ˈinɔdʲi] — Sometimes (30-50%)
+4.  **і́ноді** — Sometimes (30-50%)
     *   *Він **іноді** забуває.* (He sometimes forgets.)
-5.  **рідко** [ˈrʲidkɔ] — Rarely (10-20%)
+5.  **рі́дко** — Rarely (10-20%)
     *   *Я **рідко** п'ю каву.* (I rarely drink coffee.)
-6.  **ніколи** [nʲiˈkɔlɪ] — Never (0%)
+6.  **ніколи** — Never (0%)
     *   *Вони **ніколи** не спізнюються.* (They are never late.)
 
 > [!tip]
@@ -210,22 +210,22 @@ Sometimes "good" is not enough. You want to say "very good" or "not good at all"
 
 Here are the four most useful modifiers:
 
-1.  **дуже** [ˈduʒɛ] — very / really
+1.  **ду́же** — very / really
     *   It boosts the meaning.
     *   *Це **дуже** цікаво.* (This is very interesting.)
     *   *Він бігає **дуже** швидко.* (He runs very fast.)
 
-2.  **трохи** [ˈtrɔxɪ] — a little / a bit
+2.  **тро́хи** — a little / a bit
     *   It softens the meaning.
     *   *Я **трохи** втомився.* (I am a little tired.)
     *   *Ми говоримо **трохи** тихо.* (We are speaking a bit quietly.)
 
-3.  **зовсім** [ˈzɔu̯sʲim] — at all / completely / quite
+3.  **зо́всім** — at all / completely / quite
     *   Often used with negatives to mean "not at all".
     *   *Я **зовсім** не знаю.* (I do not know at all.)
     *   *Це **зовсім** не важко.* (This is not hard at all.)
 
-4.  **майже** [ˈmɑjʒɛ] — almost
+4.  **ма́йже** — almost
     *   Shows you are close to the limit.
     *   *Ми **майже** вдома.* (We are almost home.)
     *   *Вона **майже** готова.* (She is almost ready.)
@@ -292,7 +292,7 @@ Now let's put it all together. You have the tools to describe your life: *action
 
 Read this short text. Notice how the adverbs paint a picture of the person's personality.
 
-*Я живу **активно** [ɑkˈtɪu̯nɔ]. Я **завжди** прокидаюся **рано** [ˈrɑnɔ] (early)! Я снідаю **швидко**. Я **дуже** поспішаю. На роботі я працюю **старанно** [stɑˈrɑnnɔ] (diligently). Увечері я відпочиваю **спокійно**: слухаю музику або читаю. Я **ніколи не** дивлюся телевізор. Телевізор — це нудно. Я люблю читати цікаві книги. Я читаю **швидко** і **уважно**.*
+*Я живу **акти́вно**. Я **завжди** прокидаюся **ра́но** (early)! Я снідаю **швидко**. Я **дуже** поспішаю. На роботі я працюю **стара́нно** (diligently). Увечері я відпочиваю **спокійно**: слухаю музику або читаю. Я **ніколи не** дивлюся телевізор. Телевізор — це нудно. Я люблю читати цікаві книги. Я читаю **швидко** і **уважно**.*
 
 (I live actively. I always wake up early! I eat breakfast quickly. I am in a great hurry. At work I work diligently. In the evening I rest calmly: I listen to music or read. I never watch TV. TV is boring. I love reading interesting books. I read fast and attentively.)
 
@@ -302,9 +302,9 @@ Let's see a conversation between two friends, Olena and Ihor. They discuss their
 
 **Олена:** Ігорю, привіт! Ти **часто** займаєшся спортом?
 **Ігор:** Привіт, Олено! Так, **дуже часто**. Я бігаю щоранку в парку. Це корисно і весело. А ти бігаєш?
-**Олена:** О ні. Я **ніколи не** бігаю. Це для мене **занадто** [zɑˈnɑdtɔ] (too) важко. Я швидко втомлююся.
+**Олена:** О ні. Я **ніколи не** бігаю. Це для мене **зана́дто** (too) важко. Я швидко втомлююся.
 **Ігор:** Чому? Це **легко**! Можливо, ти просто біжиш **дуже швидко**? Спробуй бігти **повільно**.
-**Олена:** Ні, я не люблю бігати. Я люблю спати **довго** [ˈdɔu̯ɦɔ] (long/late). Я прокидаюся **пізно**, п'ю каву повільно і читаю новини.
+**Олена:** Ні, я не люблю бігати. Я люблю спати **до́вго** (long/late). Я прокидаюся **пізно**, п'ю каву повільно і читаю новини.
 **Ігор:** Зрозуміло. Ми живемо **зовсім** по-різному! Ти живеш спокійно, а я живу активно.
 **Олена:** Так, це правда. Але ми **добре** розуміємо один одного!
 **Ігор:** Так! До речі (by the way), ти **сьогодні** вільна?

@@ -1,49 +1,49 @@
-- ipa: '[dɐˈʋatɪ]'
+- ipa: '[dɑˈʋɑtɪ]'
   lemma: давати
   notes: + Dative (recipient)
   pos: verb
   translation: to give
-- ipa: '[dɐruˈʋatɪ]'
+- ipa: '[dɑruˈʋɑtɪ]'
   lemma: дарувати
   notes: + Dative; odd number of flowers for living!
   pos: verb
   translation: to gift; to bestow
-- ipa: '[nɐdsɪˈlatɪ]'
+- ipa: '[nɑd͡zsɪˈlɑtɪ]'
   lemma: надсилати
   notes: + Dative
   pos: verb
   translation: to send (digital/post)
-- ipa: '[pɔˈkazuʋɐtɪ]'
+- ipa: '[pɔˈkɑzuʋɑtɪ]'
   lemma: показувати
   notes: + Dative
   pos: verb
   translation: to show
-- ipa: '[pɔˈjasnʲuʋɐtɪ]'
+- ipa: '[pɔˈjɑsʲnʲuʋɑtɪ]'
   lemma: пояснювати
   notes: + Dative
   pos: verb
   translation: to explain
-- ipa: '[rɔzpɔʋiˈdatɪ]'
+- ipa: '[rɔzpɔʋʲiˈdɑtɪ]'
   lemma: розповідати
   notes: + Dative
   pos: verb
   translation: to tell; to narrate
-- ipa: '[dɔpɔmɐˈɦatɪ]'
+- ipa: '[dɔpɔmɑˈɦɑtɪ]'
   lemma: допомагати
   notes: + Dative (NOT Accusative!)
   pos: verb
   translation: to help
-- ipa: '[zɐʋɐˈʒatɪ]'
+- ipa: '[zɑʋɑˈʒɑtɪ]'
   lemma: заважати
   notes: + Dative
   pos: verb
   translation: to bother; to disturb
-- ipa: '[ʋʲidpɔʋiˈdatɪ]'
+- ipa: '[ʋʲidpɔʋʲiˈdɑtɪ]'
   lemma: відповідати
   notes: + Dative
   pos: verb
   translation: to answer
-- ipa: '[tɛlɛfɔnuˈʋatɪ]'
+- ipa: '[tɛlɛfɔnuˈʋɑtɪ]'
   lemma: телефонувати
   notes: + Dative
   pos: verb
@@ -53,26 +53,26 @@
   notes: Impersonal + Dative
   pos: verb
   translation: to suit (clothing/style)
-- ipa: '[pidˈxɔdɪtɪ]'
+- ipa: '[pʲiˈdxɔdɪtɪ]'
   lemma: підходити
   notes: + Dative (suitable for)
   pos: verb
   translation: to suit; to fit; to approach
-- ipa: '[ʋɪstɐˈt͡ʃatɪ]'
+- ipa: '[ʋɪstɑˈt͡ʃɑtɪ]'
   lemma: вистачати
   notes: Impersonal + Dative (person) + Genitive (quantity)
   pos: verb
   translation: to be enough; to suffice
-- ipa: '[brɐkuˈʋatɪ]'
+- ipa: '[brɑkuˈʋɑtɪ]'
   lemma: бракувати
   notes: Impersonal + Dative (person) + Genitive (quantity)
   pos: verb
   translation: to lack; to be missing
-- ipa: '[pɔdɐˈrunɔk]'
+- ipa: '[pɔdɑˈrunɔk]'
   lemma: подарунок
   pos: noun
   translation: gift; present
-- ipa: '[ˈsʋʲatɔ]'
+- ipa: '[ˈsʲʋʲɑtɔ]'
   lemma: свято
   pos: noun
   translation: holiday; celebration
@@ -80,46 +80,46 @@
   lemma: іменинник
   pos: noun
   translation: birthday person; name-day person
-- ipa: '[ɦisʲtʲ]'
+- ipa: '[ɦʲisʲtʲ]'
   lemma: гість
   pos: noun
   translation: guest
-- ipa: '[ˈkʋitkɐ]'
+- ipa: '[ˈkʋʲitkɑ]'
   lemma: квітка
   notes: 'Plural: квіти [ˈkʋitɪ]'
   pos: noun
   translation: flower
-- ipa: '[prɪkˈmɛtɐ]'
+- ipa: '[prɪˈkmɛtɑ]'
   lemma: прикмета
   notes: погана прикмета = bad omen
   pos: noun
   translation: omen; sign; superstition
-- ipa: '[ʋiˈtatɪ]'
+- ipa: '[ʋʲiˈtɑtɪ]'
   lemma: вітати
   notes: + Accusative (person) + з (Instrumental) (occasion)
   pos: verb
   translation: to congratulate; to greet
-- ipa: '[bɐˈʒatɪ]'
+- ipa: '[bɑˈʒɑtɪ]'
   lemma: бажати
   notes: + Dative (person) + Genitive (thing wished)
   pos: verb
   translation: to wish
-- ipa: '[ˈradɪtɪ]'
+- ipa: '[ˈrɑdɪtɪ]'
   lemma: радити
   notes: + Dative
   pos: verb
   translation: to advise
-- ipa: '[ˈʋirɪtɪ]'
+- ipa: '[ˈʋʲirɪtɪ]'
   lemma: вірити
   notes: + Dative (person)
   pos: verb
   translation: to believe
-- ipa: '[dɔʋiˈrʲatɪ]'
+- ipa: '[dɔʋʲiˈrʲɑtɪ]'
   lemma: довіряти
   notes: + Dative
   pos: verb
   translation: to trust
-- ipa: '[dɐˈʋalʲnɪj]'
+- ipa: '[dɑˈʋɑlʲnɪj]'
   lemma: давальний
   pos: adj
   translation: dative

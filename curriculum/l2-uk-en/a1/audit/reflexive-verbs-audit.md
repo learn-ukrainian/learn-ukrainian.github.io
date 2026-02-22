@@ -1,7 +1,7 @@
 # Audit Report: M09 — reflexive-verbs.md
 **Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:33
+**Generated:** 2026-02-22 16:05:28
 
 ## Configuration
 **Type:** A1-grammar
@@ -47,7 +47,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 12 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "domontovych-dr-seraphicus",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T08:12:03Z",
+      "task_id": "v3-domontovych-dr-seraphicus-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "track": "lit-war",
+  "slug": "kalytko-borders-lit",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T23:02:59Z",
+      "task_id": "v3-kalytko-borders-lit-pA",
+      "mode": "full"
+    }
+  }
+}

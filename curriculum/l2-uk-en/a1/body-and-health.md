@@ -6,18 +6,18 @@
 
 ## Розминка: Частини тіла
 
-We begin with the foundation: the human body. In Ukrainian, the word for "body" is **тіло** [ˈtʲilɔ]. Knowing the names of body parts is the first step to describing symptoms.
+We begin with the foundation: the human body. In Ukrainian, the word for "body" is **ті́ло**. Knowing the names of body parts is the first step to describing symptoms.
 
 ### Голова та обличчя
 The most common complaints start here.
 
-**Голова** [ɦɔlɔˈʋa] (head) — feminine. It is the center of our thoughts and pain.
-*   **Обличчя** [ɔbˈlɪt͡ʃʲːa] (face) — neuter.
-*   **Око** [ˈɔkɔ] (eye) — neuter. Plural: **очі** [ˈɔt͡ʃʲi] (eyes).
-*   **Вухо** [ˈʋuxɔ] (ear) — neuter. Plural: **вуха** [ˈʋuxa] (ears).
-*   **Ніс** [nʲis] (nose) — masculine.
-*   **Рот** [rɔt] (mouth) — masculine.
-*   **Горло** [ˈɦɔrlɔ] (throat) — neuter. This is a very common word in winter. _Collocation:_ **полоскати горло** (to gargle).
+**Голова́** (head) — feminine. It is the center of our thoughts and pain.
+*   **Обли́ччя** (face) — neuter.
+*   **Око́** (eye) — neuter. Plural: **о́чі** (eyes).
+*   **Ву́хо** (ear) — neuter. Plural: **ву́ха** (ears).
+*   **Ніс** (nose) — masculine.
+*   **Рот** (mouth) — masculine.
+*   **Го́рло** (throat) — neuter. This is a very common word in winter. _Collocation:_ **полоскати горло** (to gargle).
 
 _Usage Note:_ When we talk about eyes or ears, we almost always use the plural: **очі** and **вуха**. The singular form is rare.
 
@@ -29,15 +29,15 @@ _Usage Note:_ When we talk about eyes or ears, we almost always use the plural: 
 ### Тулуб і кінцівки (Torso and Limbs)
 Let's look at the rest of the body.
 
-**Спина** [spɪˈna] (back) — feminine. Back pain is familiar to everyone.
-**Живіт** [ʒɪˈʋit] (stomach) — masculine.
-**Серце** [ˈsɛrt͡sɛ] (heart) — neuter.
+**Спи́на** (back) — feminine. Back pain is familiar to everyone.
+**Живі́т** (stomach) — masculine.
+**Се́рце** (heart) — neuter.
 
 **Кінцівки** (Limbs):
-*   **Рука** [ruˈka] (arm/hand). In Ukrainian, **рука** is the entire limb. There is a word **кисть** [kɪstʲ] (hand/wrist), but we rarely use it.
-*   **Нога** [nɔˈɦa] (leg/foot). Similarly, **нога** is the entire limb.
+*   **Рука́** (arm/hand). In Ukrainian, **рука** is the entire limb. There is a word **кисть** (hand/wrist), but we rarely use it.
+*   **Нога́** (leg/foot). Similarly, **нога** is the entire limb.
 
-_Usage Note:_ Ukrainians distinguish sides simply: **права** [ˈpraʋa] **рука** (right hand) and **ліва** [ˈlʲiʋa] **рука** (left hand).
+_Usage Note:_ Ukrainians distinguish sides simply: **права́** **рука** (right hand) and **лі́ва** **рука** (left hand).
 
 ### Перевірка: Множина (Plural Forms)
 Most body parts follow standard plural rules.
@@ -73,7 +73,7 @@ _(At me + hurts + [singular body part])_
 
 In this sentence:
 *   The **Body Part** (e.g., head) is the **Subject** (підмет).
-*   **Болить** [bɔˈlɪtʲ] is the **Predicate** (присудок).
+*   **Боли́ть** is the **Predicate** (присудок).
 
 The verb **болить** agrees with the body part, not with you!
 
@@ -95,7 +95,7 @@ The verb **болить** agrees with the body part, not with you!
 > *   ❌ У мене **болять** голова.
 
 ### Множина: «У мене болять...»
-If multiple things hurt (eyes, legs, arms), the verb changes to plural: **болять** [bɔˈlʲatʲ].
+If multiple things hurt (eyes, legs, arms), the verb changes to plural: **боля́ть**.
 
 **У мене** + **болять** + **[plural body parts]**
 
@@ -109,16 +109,16 @@ _Usage Note:_ Compare the endings: **болить** (singular) vs **болять
 ### Симптоми (Symptoms)
 To give details, we need symptom words. These often follow "У мене..." (I have...).
 
-*   **Температура** [tɛmpɛraˈtura] (fever/temperature).
+*   **Температу́ра** (fever/temperature).
     *   _Фраза:_ **У мене висока температура.** (I have a high fever.)
     *   _Дія:_ **Міряти температуру.** (To measure temperature.)
-*   **Кашель** [ˈkaʃɛlʲ] (cough).
+*   **Ка́шель** (cough).
     *   _Фраза:_ **У мене сильний кашель.** (I have a strong cough.)
     *   _Фраза:_ **У мене сухий кашель.** (I have a dry cough.)
-*   **Нежить** [ˈnɛʒɪtʲ] (runny nose).
+*   **Не́жить** (runny nose).
     *   _Фраза:_ **У мене нежить.** (I have a runny nose.)
     *   _Фраза:_ **У мене сильний нежить.** (I have a strong runny nose.)
-*   **Головний біль** [ɦɔlɔu̯ˈnɪi̯ bʲilʲ] (headache).
+*   **Головни́й біль** (headache).
     *   _Фраза:_ **У мене головний біль.** (I have a headache.)
 
 _Comparison:_ You can say "У мене болить голова" OR "У мене головний біль". Both are correct.
@@ -129,14 +129,14 @@ Being "sick" (adjective) and "getting sick" (verb) are different concepts in Ukr
 
 ### Adjective vs Verb
 
-**Хворий** [ˈxʋɔrɪi̯] (sick - adjective).
+**Хво́рий** (sick - adjective).
 This describes a state or a person.
 *   **Він хворий.** (He is sick.)
 *   **Я сьогодні хворий.** (I am sick today.)
 *   **Вона хвора.** (She is sick - feminine.)
 *   **Вони хворі.** (They are sick.)
 
-**Хворіти** [xʋɔˈrʲitɪ] (to be sick/to ail - verb).
+**Хворі́ти** (to be sick/to ail - verb).
 This describes the process.
 *   **Я часто хворію.** (I get sick often.)
 *   **Він зараз хворіє.** (He is currently sick.)
@@ -151,7 +151,7 @@ This describes the process.
 > *   _Ukrainian:_ **Ти хворієш?** (Are you ailing/sick?)
 
 ### Як ви себе почуваєте?
-To ask "How do you feel?", we use the reflexive verb **почувати** [pɔt͡ʃuˈʋatɪ] (to feel) + **себе** (oneself).
+To ask "How do you feel?", we use the reflexive verb **почува́ти** (to feel) + **себе** (oneself).
 
 *   **Як ви себе почуваєте?** (How do you feel? - Formal)
 *   **Як ти себе почуваєш?** (How do you feel? - Informal)
@@ -179,7 +179,7 @@ There is also a shorter, very common way to express your state:
 > *   ❌ **Я** погано.
 
 ### Необхідність: «Треба до лікаря»
-When you need help or must do something, use the word **треба** [ˈtrɛba] (it is necessary).
+When you need help or must do something, use the word **тре́ба** (it is necessary).
 
 *   **Треба до лікаря.** (It is necessary [to go] to the doctor.)
 *   **Мені потрібно до лікаря.** (I need [to go] to the doctor.) — same meaning, personal form.
@@ -191,7 +191,7 @@ When you need help or must do something, use the word **треба** [ˈtrɛba] 
 
 Note the prepositions: **до** + Genitive for people (**до лікаря**) and **в/у** + Accusative for places (**в лікарню**).
 
-**Лікар** [ˈlʲikar] (doctor).
+**Лі́кар** (doctor).
 *   **Сімейний лікар** (Family doctor) — this is your main doctor.
 *   **Іти до лікаря** (To go to the doctor).
 *   **Викликати лікаря** (To call a doctor).
@@ -200,14 +200,14 @@ Note the prepositions: **до** + Genitive for people (**до лікаря**) an
 > **False Friend: Лікар vs Лікарня**
 >
 > *   **Лікар** = Doctor (the person).
-> *   **Лікарня** [lʲiˈkarnʲa] = Hospital (the building).
+> *   **Ліка́рня** = Hospital (the building).
 >
 > Do not say "Я йду в лікар."
 > Say: **Я йду до лікаря** or **Я йду в лікарню**.
 
 ## Лексика: В аптеці
 
-**Аптека** [apˈtɛka] (Pharmacy) — this is where we buy medicine.
+**Апте́ка** (Pharmacy) — this is where we buy medicine.
 
 *   **Аптека працює.** (The pharmacy is working.)
 *   **Я йду в аптеку.** (I go to the pharmacy.)
@@ -216,7 +216,7 @@ Note the prepositions: **до** + Genitive for people (**до лікаря**) an
 *   **Аптекар працює в аптеці.** (The pharmacist works in the pharmacy.)
 
 ### Купуємо ліки (Buying Medicine)
-**Ліки** [ˈlʲikɪ] (medicine) — this word is always plural. It has no singular form.
+**Лі́ки** (medicine) — this word is always plural. It has no singular form.
 
 When buying medicine, we use the preposition **від** (from/against) + Genitive.
 
@@ -227,11 +227,11 @@ When buying medicine, we use the preposition **від** (from/against) + Genitiv
 *   **Ліки від нежитю** (Medicine for runny nose).
 *   **Ліки від болю у горлі** (Medicine for sore throat).
 
-**Таблетки** [tabˈlɛtkɪ] (pills).
-**Сироп** [sɪˈrɔp] (syrup).
-**Вітаміни** [ʋitaˈmʲinɪ] (vitamins).
-**Спрей** [sprɛi̯] (spray).
-**Мазь** [mazʲ] (ointment).
+**Табле́тки** (pills).
+**Сиро́п** (syrup).
+**Вітамі́ни** (vitamins).
+**Спрей** (spray).
+**Мазь** (ointment).
 
 *   **Тут є сироп.** (Here is syrup.)
 *   **В аптеці є таблетки.** (There are pills in the pharmacy.)
@@ -240,7 +240,7 @@ When buying medicine, we use the preposition **від** (from/against) + Genitiv
 *   **Це хороша мазь.** (This is a good ointment.)
 
 ### Рецепт (The Prescription)
-Some medicines need a document. This is a **рецепт** [rɛˈt͡sɛpt].
+Some medicines need a document. This is a **реце́пт**.
 *   **Тут треба рецепт.** (A prescription is needed here.)
 *   **Можна без рецепту?** (Is it possible without a prescription?)
 *   **У мене є рецепт.** (I have a prescription.)
@@ -249,7 +249,7 @@ Some medicines need a document. This is a **рецепт** [rɛˈt͡sɛpt].
 > [!culture]
 > **Природна аптека**
 >
-> Ukrainians love natural remedies. Many people drink **малиновий чай** (raspberry tea) or **калиновий чай** (viburnum tea) with **мед** [mɛd] (honey). **Малина** [maˈlɪna] reduces fever, **калина** [kaˈlɪna] boosts immunity, and **мед** soothes a sore throat. If a Ukrainian friend offers you tea when you are sick, accept it. It is their way of caring for you.
+> Ukrainians love natural remedies. Many people drink **малиновий чай** (raspberry tea) or **калиновий чай** (viburnum tea) with **мед** (honey). **Ма́лина** reduces fever, **кали́на** boosts immunity, and **мед** soothes a sore throat. If a Ukrainian friend offers you tea when you are sick, accept it. It is their way of caring for you.
 
 ### Корисні фрази (Key Phrases)
 *   **Дайте, будь ласка...** (Give [me], please...)
@@ -274,14 +274,14 @@ The dialogue starts with greetings.
 *   **Що сталося?** (What happened?)
 
 **Пацієнт (Patient):**
-*   **Мене турбує** [turˈbujɛ] **кашель.** (A cough bothers me.)
+*   **Ме́не турбу́є** **кашель.** (A cough bothers me.)
 *   **У мене болить живіт.** (My stomach hurts.)
 *   **Я погано сплю.** (I sleep badly.)
 *   **У мене немає апетиту.** (I have no appetite.)
 *   **Мене турбує серце.** (My heart bothers me.)
 *   **Мене турбує головний біль.** (A headache bothers me.)
 
-**Апетит** [apɛˈtɪt] — masculine gender.
+**Апети́т** — masculine gender.
 
 *   **Лікар питає: «Як ви?»** (The doctor asks: "How are you?")
 *   **Я кажу: «Погано».** (I say: "Bad".)

@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "bahrianyi-tiger-trappers",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T09:07:45Z",
+      "task_id": "v3-bahrianyi-tiger-trappers-pA",
+      "mode": "full"
+    }
+  }
+}

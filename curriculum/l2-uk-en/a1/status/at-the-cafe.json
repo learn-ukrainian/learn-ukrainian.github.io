@@ -2,12 +2,12 @@
   "module": "at-the-cafe",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T00:46:40.001113Z",
+  "last_audit": "2026-02-22T16:05:35.738980Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T23:37:14.412121Z",
+    "md": "2026-02-22T00:27:13.144508Z",
     "meta": "2026-02-18T22:47:21.905770Z",
-    "activities": "2026-02-20T14:34:23.065848Z",
+    "activities": "2026-02-22T00:27:13.145979Z",
     "vocabulary": "2026-02-18T22:54:00.956677Z",
     "plan": "2026-02-20T20:41:06.032688Z",
     "research": "2026-02-18T22:47:21.902210Z"
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2655/2000 (raw: 3067)"
+      "message": "2648/2000 (raw: 3060)"
     },
     "activities": {
       "status": "pass",
@@ -41,7 +41,7 @@
     "ipa": {
       "status": "warn",
       "violations": 0,
-      "message": "9 IPA issues (run lint_ipa.py --fix)"
+      "message": "24 IPA issues (run lint_ipa.py --fix)"
     },
     "research": {
       "status": "pass",

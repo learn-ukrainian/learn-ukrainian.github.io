@@ -1,7 +1,7 @@
 # Audit Report: M25 — my-daily-routine.md
 **Level:** A1 | **Module:** M25 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:44
+**Generated:** 2026-02-22 16:05:40
 
 ## Configuration
 **Type:** A1
@@ -36,6 +36,15 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[SECTION_BALANCE_BLOATED]** Section 'Ранок, день та вечір' has 1605 words (55% of total). Bloated sections: 'Ранок, день та вечір' (55%)
+  - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 2846/2000 (raw: 3080)
 - **Activities:** ✅ 9/8
@@ -46,7 +55,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 24 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

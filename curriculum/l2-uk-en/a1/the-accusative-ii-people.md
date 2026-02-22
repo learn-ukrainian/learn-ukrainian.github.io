@@ -182,7 +182,7 @@ Task: Look at the list. Which ones are **істоти** (animate)?
 ### Magic Verbs
 We use the Accusative case often with these verbs.
 
-#### 1. Бачити [ˈbɑt͡ʃɪtɪ]
+#### 1. Ба́чити
 _To see_
 
 *   Я бачу **друга**. (I see a friend — male.)
@@ -190,7 +190,7 @@ _To see_
 *   Ми бачимо **кота**. (We see a cat.)
 *   Ти бачиш **собаку**. (You see a dog.)
 
-#### 2. Знати [ˈznɑtɪ]
+#### 2. Зна́ти
 _To know_
 
 *   Я знаю **лікаря**. (I know the doctor.)
@@ -198,7 +198,7 @@ _To know_
 *   Вона знає **сусіда**. (She knows the neighbor.)
 *   Ми знаємо **президента**. (We know the president.)
 
-#### 3. Любити [lʲuˈbɪtɪ]
+#### 3. Люби́ти
 _To love / To like_
 
 *   Він любить **маму**. (He loves mom.)
@@ -206,7 +206,7 @@ _To love / To like_
 *   Дитина любить **пса**. (The child loves the dog.)
 *   Ми любимо **Україну**. (We love Ukraine.)
 
-#### 4. Чекати [t͡ʃɛˈkɑtɪ]
+#### 4. Чека́ти
 _To wait for_
 
 *   Я чекаю **тата**. (I am waiting for dad.)

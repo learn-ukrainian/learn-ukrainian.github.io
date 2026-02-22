@@ -1,0 +1,7 @@
+# Full IPA overrides: lemma -> complete IPA string (with brackets)
+# Use when ipa-uk produces completely wrong output (loanwords, proper nouns, OOV).
+# Format:  word: "[IPA]"
+#
+# Examples:
+# менеджмент: "[ˈmɛnɛd͡ʒmɛnt]"
+# Дніпро: "[dʲnʲiˈprɔ]"

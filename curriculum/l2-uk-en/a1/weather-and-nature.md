@@ -35,7 +35,7 @@ In Ukraine, there are four seasons.
 Це **зима**, **весна**, **літо** та **осінь**.
 This is winter, spring, summer, and autumn.
 
-We have snowy winters, blooming springs, hot summers, and golden autumns. This variety means our vocabulary for **погода** [pɔˈɦɔdɑ] (weather) is rich and expressive. You will hear people talking about the weather in the elevator, at the bus stop, and in the office. It is the safest way to start a conversation.
+We have snowy winters, blooming springs, hot summers, and golden autumns. This variety means our vocabulary for **пого́да** (weather) is rich and expressive. You will hear people talking about the weather in the elevator, at the bus stop, and in the office. It is the safest way to start a conversation.
 
 **Українською:**
 Ви вже знаєте прикметники (*новий*, *добрий*).
@@ -57,7 +57,7 @@ In Ukrainian, we describe how it feels outside without blaming anyone for it!
 > [!culture]
 > **Бабине літо**
 >
-> В Україні є **бабине літо** [ˈbɑbɪne ˈlʲitɔ]. Це теплі дні у вересні або жовтні. Світить сонце. Люди гуляють у парку. Це дуже гарний час.
+> В Україні є **ба́бине лі́то**. Це теплі дні у вересні або жовтні. Світить сонце. Люди гуляють у парку. Це дуже гарний час.
 >
 > In late September or early October, Ukraine often enjoys a period of warm, sunny days called "Indian summer" (literally "grandmother's summer"). It is a beloved time when people go to parks, forests, and enjoy the last warmth before winter.
 
@@ -78,10 +78,10 @@ Ukrainian is more efficient. We drop the "it" and the "is". We just use the adve
 **Structure:**
 > **[Adverb]**
 
-*   **Холодно** [ˈxɔlɔdnɔ] — Cold
-*   **Тепло** [tɛpˈlɔ] — Warm
-*   **Спекотно** [speˈkɔtnɔ] — Hot
-*   **Прохолодно** [prɔˈxɔlɔdnɔ] — Cool
+*   **Хо́лодно** — Cold
+*   **Тепло́** — Warm
+*   **Спекотно** — Hot
+*   **Прохоло́дно** — Cool
 
 > [!warning]
 > **Don't Translate "It"**
@@ -94,28 +94,28 @@ Ukrainian is more efficient. We drop the "it" and the "is". We just use the adve
 
 Let's arrange these words from the highest temperature to the lowest, so you can always choose the right one.
 
-1.  **Спекотно** [speˈkɔtnɔ] — Hot (30°C+)
+1.  **Спекотно** — Hot (30°C+)
     *   *Example:* **Влітку дуже спекотно.**
     *   **Українською:**
         Літо. Київ. Липень. Асфальт плавиться. Я хочу морозиво. Я кажу: «Хух, як спекотно!»
     *   **English:**
         Summer. Kyiv. July. Asphalt melts. I want ice cream. I say: "Phew, how hot it is!"
 
-2.  **Тепло** [tɛpˈlɔ] — Warm (20°C - 25°C)
+2.  **Тепло́** — Warm (20°C - 25°C)
     *   *Example:* **Сьогодні тепло.**
     *   **Українською:**
         Травень. Я ношу футболку. Сонце світить лагідно. Ми кажемо: «Сьогодні так тепло і приємно.»
     *   **English:**
         May. I wear a t-shirt. The sun shines gently. We say: "Today is so warm and pleasant."
 
-3.  **Прохолодно** [prɔˈxɔlɔdnɔ] — Cool (10°C - 15°C)
+3.  **Прохоло́дно** — Cool (10°C - 15°C)
     *   *Example:* **Увечері вже прохолодно.**
     *   **Українською:**
         Вечір. Вересень. Я одягаю куртку. Люди кажуть: «Стає прохолодно.»
     *   **English:**
         Evening. September. I put on a jacket. People say: "It is becoming cool."
 
-4.  **Холодно** [ˈxɔlɔdnɔ] — Cold (0°C and below)
+4.  **Хо́лодно** — Cold (0°C and below)
     *   *Example:* **Взимку холодно.**
     *   **Українською:**
         Січень. Я бачу сніг. Я одягаю шапку і рукавиці. Я кажу: «Брр, дуже холодно!»
@@ -159,8 +159,8 @@ In English, you say "It is raining" or "It rains." In Ukrainian, we use a motion
 **The Verb: Йти (to go/walk)**
 We use the form **йде** [jde] (he/she/it goes) for precipitation.
 
-*   **Дощ** [dɔʃt͡ʃ] — Rain
-*   **Сніг** [sʲnʲiɦ] — Snow
+*   **Дощ** — Rain
+*   **Сніг** — Snow
 
 **Examples:**
 *   **Йде дощ.** — It is raining. (Literally: Rain goes.)
@@ -185,18 +185,18 @@ We use the form **йде** [jde] (he/she/it goes) for precipitation.
 
 When the weather is nice, we talk about the sun and clouds.
 
-*   **Сонце** [ˈsɔnt͡sɛ] — Sun
-*   **Хмара** [ˈxmɑrɑ] — Cloud
-*   **Вітер** [ˈʋʲitɛr] — Wind
+*   **Со́нце** — Sun
+*   **Хма́ра** — Cloud
+*   **Ві́тер** — Wind
 
 **Active Verbs:**
 *   **Світить сонце.** [ˈsʋʲitɪtʲ] — The sun is shining.
 *   **Дме вітер.** [dmɛ] — The wind is blowing.
 
 **Static Descriptions (Adverbs):**
-*   **Сонячно** [ˈsɔnʲɑt͡ʃnɔ] — Sunny
-*   **Хмарно** [ˈxmɑrnɔ] — Cloudy
-*   **Вітряно** [ˈʋʲitrʲɑnɔ] — Windy
+*   **Со́нячно** — Sunny
+*   **Хма́рно** — Cloudy
+*   **Ві́тряно** — Windy
 
 ### Час (Time Markers)
 
@@ -268,7 +268,7 @@ The most common way to ask "What is the weather like?" uses the word **яка**.
 If you are planning a trip, "good weather" might not be precise enough.
 
 **1. Temperature:**
-*   **Яка температура?** [tempeˈrɑturɑ] — What is the temperature?
+*   **Яка температура?** [tɛmpɛˈrɑturɑ] — What is the temperature?
 *   **Скільки градусів?** [ˈskʲilʲkɪ ˈɦrɑdusʲiʋ] — How many degrees?
 
 **Answers:**
@@ -318,25 +318,25 @@ The cycle of the year defines the rhythm of life. Let's learn the four seasons a
 Unlike English, where "winter" is a noun that needs a preposition "in" to become an adverbial phrase, Ukrainian has specific single words for "in winter", "in summer", etc. These are fossilized forms that you must memorize.
 
 **1. Зима** [zɪˈmɑ] — Winter
-*   **Коли?** (When?): **Взимку** [ˈʋzɪmku] — In winter
+*   **Коли?** (When?): **Взи́мку** — In winter
 *   *Association:* Cold, snow, holidays.
 *   *Example:* **Взимку холодно і йде сніг.**
 *   *Description:* Взимку ми святкуємо Різдво. Усі дерева білі. Ми носимо шапки і шарфи.
 
 **2. Весна** [ʋɛsˈnɑ] — Spring
-*   **Коли?** (When?): **Навесні** [nɑʋɛsˈnʲi] — In spring
+*   **Коли?** (When?): **Навесні́** — In spring
 *   *Association:* Flowers, green grass, warming up.
 *   *Example:* **Навесні тепло і світить сонце.**
 *   *Description:* Навесні природа прокидається. З'являються перші квіти. Птахи співають пісні.
 
 **3. Літо** [ˈlʲitɔ] — Summer
-*   **Коли?** (When?): **Влітку** [ˈʋlʲitku] — In summer
+*   **Коли?** (When?): **Влі́тку** — In summer
 *   *Association:* Holidays, sea, sun, heat.
 *   *Example:* **Влітку спекотно.**
 *   *Description:* Влітку у школі канікули. Люди їдуть на море або в гори. Дні дуже довгі, а ночі короткі.
 
 **4. Осінь** [ˈɔsʲinʲ] — Autumn
-*   **Коли?** (When?): **Восени** [ʋɔsɛˈnɪ] — In autumn
+*   **Коли?** (When?): **Восени́** — In autumn
 *   *Association:* Yellow leaves, rain, school starts.
 *   *Example:* **Восени хмарно і йде дощ.**
 * *Description:* Восени дуже гарно. Листя стає жовтим і червоним. Але часто йде дощ та дме вітер.
@@ -391,8 +391,8 @@ We use weather to explain our actions.
 
 ### Прогноз погоди (Weather Forecast)
 
-*   **Прогноз** [prɔɦˈnɔz] — Forecast
-*   **Градус** [ˈɦrɑdus] — Degree
+*   **Прогно́з** — Forecast
+*   **Гра́дус** — Degree
 
 When you check your phone, you are looking for the **прогноз погоди**.
 
@@ -404,7 +404,7 @@ We can express a result and a reason using simple, short sentences. Keep your st
 > **[Result]. [Reason].**
 
 *   **Ми не гуляємо. Холодно.** — We are not walking. It is cold.
-*   **Я беру парасолю. Йде дощ.** — I am taking an umbrella. It is raining. (**Парасоля** [pɑrɑˈsɔlʲɑ] = umbrella).
+*   **Я беру парасолю. Йде дощ.** — I am taking an umbrella. It is raining. (**Парасо́ля** = umbrella).
 *   **Ми йдемо в парк. Світить сонце.** — We are going to the park. The sun is shining.
 
 ### Умовні речення (Simple Conditionals)

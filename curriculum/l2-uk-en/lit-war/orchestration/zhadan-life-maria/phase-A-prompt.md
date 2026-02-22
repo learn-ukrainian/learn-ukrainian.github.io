@@ -100,6 +100,31 @@ After completing research, rebuild the `content_outline` using:
 
 # Дослідження: Zhadan Life Maria
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Zhadan Life Maria"
+vital_status: "deceased" # or "alive"
+dates:
+  birth: "YYYY-MM-DD"    # or approximate: "~YYYY"
+  death: "YYYY-MM-DD"    # omit if alive
+  key_events:
+    - year: YYYY
+      event: "Event description (Ukrainian)"
+    - year: YYYY
+      event: "Event description"
+primary_quotes:
+  - text: "Exact Ukrainian quote"
+    source: "Source name, year"
+    attribution: "Who said/wrote it"
+  - text: "..."
+    source: "..."
+    attribution: "..."
+forbidden_claims:
+  - "Common myth or Russian propaganda claim to avoid"
+  - "..."
+```
+
 ## Використані джерела
 1. [Source name](URL) — brief description
 2. ...
@@ -157,6 +182,7 @@ content_outline:
 
 ### Validation checklist (complete before outputting meta):
 
+- [ ] Key Facts Ledger is present with dates, quotes, and forbidden claims
 - [ ] All section names are Ukrainian
 - [ ] Section names match plan structure
 - [ ] Each section has `words` and `points`

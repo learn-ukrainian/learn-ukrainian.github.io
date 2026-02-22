@@ -1,68 +1,88 @@
 items:
   - lemma: "телефон"
+    ipa: '[tɛlɛˈfɔn]'
     translation: "phone"
     pos: "noun"
     gender: "m"
   - lemma: "дзвонити"
+    ipa: '[d͡zʋɔˈnɪtɪ]'
     translation: "to call"
     pos: "verb"
   - lemma: "відповідати"
+    ipa: '[ʋʲidpɔʋʲiˈdɑtɪ]'
     translation: "to answer"
     pos: "verb"
   - lemma: "номер"
+    ipa: '[ˈnɔmɛr]'
     translation: "number"
     pos: "noun"
     gender: "m"
   - lemma: "повідомлення"
+    ipa: '[pɔʋʲiˈdɔmlɛnʲːɑ]'
     translation: "message"
     pos: "noun"
     gender: "n"
   - lemma: "зайнятий"
+    ipa: '[ˈzɑjnʲɑtɪj]'
     translation: "busy"
     pos: "adjective"
   - lemma: "передзвонити"
+    ipa: '[pɛrɛd͡zʋɔˈnɪtɪ]'
     translation: "to call back"
     pos: "verb"
   - lemma: "алло"
+    ipa: '[ɑˈlːɔ]'
     translation: "hello (on the phone)"
     pos: "interjection"
   - lemma: "слухаю"
+    ipa: '[ˈsluxɑju]'
     translation: "I am listening (polite phone answer)"
     pos: "verb"
   - lemma: "хвилинка"
+    ipa: '[xʋɪˈlɪnkɑ]'
     translation: "a moment / a little minute"
     pos: "noun"
     gender: "f"
   - lemma: "помилитися"
+    ipa: '[pɔmɪlɪtɪsʲɑ]'
     translation: "to make a mistake"
     pos: "verb"
   - lemma: "передати"
+    ipa: '[pɛrɛˈdɑtɪ]'
     translation: "to pass on"
     pos: "verb"
   - lemma: "телефонувати"
+    ipa: '[tɛlɛfɔnuˈʋɑtɪ]'
     translation: "to phone"
     pos: "verb"
   - lemma: "зачекайте"
+    ipa: '[zɑt͡ʃɛˈkɑjtɛ]'
     translation: "wait (formal imperative)"
     pos: "verb"
   - lemma: "до зв'язку"
+    ipa: '[dɔ zʋjɑzku]'
     translation: "talk soon / until the connection"
     pos: "phrase"
   - lemma: "повторіть"
+    ipa: '[pɔu̯tɔˈrʲitʲ]'
     translation: "repeat (formal imperative)"
     pos: "verb"
   - lemma: "кур'єр"
+    ipa: '[kuˈrjɛr]'
     translation: "courier / delivery driver"
     pos: "noun"
     gender: "m"
   - lemma: "лінія"
+    ipa: '[ˈlʲinʲijɑ]'
     translation: "line (phone line)"
     pos: "noun"
     gender: "f"
   - lemma: "особистий"
+    ipa: '[ɔsɔˈbɪstɪj]'
     translation: "personal"
     pos: "adjective"
   - lemma: "зв'язок"
+    ipa: '[zʋjɑzɔk]'
     translation: "connection"
     pos: "noun"
     gender: "m"

@@ -1,0 +1,13 @@
+{
+  "track": "lit-hist-fic",
+  "slug": "ivanychuk-water",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T14:50:58Z",
+      "task_id": "v3-ivanychuk-water-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-FAIL: build_module_v2.py a2 3 — E2E
+PASS: build_module_v2.py a2 3 — E2E
 
   Module:   dative-verbs
   Track:    a2
@@ -6,5 +6,5 @@ FAIL: build_module_v2.py a2 3 — E2E
   Words:    3923 (target: 3000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-21T00:24:26Z
+  Verdict:  PASS
+  Date:     2026-02-22T18:35:42Z

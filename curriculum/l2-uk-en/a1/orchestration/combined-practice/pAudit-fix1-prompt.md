@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2645/2000 (raw: 2885) | pedagogy: 19 violations | immersion: 19.0% LOW (target 35-55% (M43))
+    lesson: 3057/2000 (raw: 3304) | pedagogy: 18 violations | immersion: 34.4% LOW (target 35-55% (M43))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Replace second «і»/«й» with «та» for conjunction variety
+       → FIX: Rewrite in neutral educational voice. Remove first-person teacher persona.
 
 
-  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 90/100)
-     → 19 violations (severe - consider revision)
-     → 15 grammar-level violations (fundamental)
-     → Immersion 16% off target
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 18 violations (severe - consider revision)
+     → 13 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/combined-practice-audit.md

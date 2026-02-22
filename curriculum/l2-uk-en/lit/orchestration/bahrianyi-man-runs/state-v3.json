@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "bahrianyi-man-runs",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T09:11:59Z",
+      "task_id": "v3-bahrianyi-man-runs-pA",
+      "mode": "full"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "yohansen-experimental",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T08:00:17Z",
+      "task_id": "v3-yohansen-experimental-pA",
+      "mode": "full"
+    }
+  }
+}

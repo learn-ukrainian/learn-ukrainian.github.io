@@ -1,7 +1,7 @@
 # Audit Report: M19 — at-the-cafe.md
 **Level:** A1 | **Module:** M19 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:39
+**Generated:** 2026-02-22 16:05:35
 
 ## Configuration
 **Type:** A1
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2655/2000 (raw: 3067)
+- **Words:** ✅ 2648/2000 (raw: 3060)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -46,11 +46,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 9 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ⚠️ 24 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.0% (target 25-40% (M19))
+- **Immersion:** 🇺🇦 25.4% (target 25-40% (M19))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,9 +60,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **At the Café** | ✅ | 63 | Included in Core |
-| **Розминка: Кава — це культура** | ✅ | 356 | Included in Core |
+| **Розминка: Кава — це культура** | ✅ | 359 | Included in Core |
 | **Презентація: Привітання та ввічливість** | ✅ | 366 | Included in Core |
-| **Замовлення: Знахідний відмінок** | ✅ | 462 | Included in Core |
+| **Замовлення: Знахідний відмінок** | ✅ | 452 | Included in Core |
 | **Уточнення: Яку каву ви бажаєте?** | ✅ | 446 | Included in Core |
 | **Рахунок та оплата** | ✅ | 278 | Included in Core |
 | **Практика: У кав'ярні** | ✅ | 279 | Included in Core |

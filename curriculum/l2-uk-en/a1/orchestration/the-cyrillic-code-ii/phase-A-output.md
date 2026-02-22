@@ -1,13 +1,13 @@
-✅ Message sent to Gemini (ID: 9325)
-✓ Message 9325 acknowledged
+✅ Message sent to Gemini (ID: 14207) [auto-acked: self-addressed]
+✓ Message 14207 acknowledged
    Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
 
-🚀 Invoking Gemini to process message #9325...
-📨 Message #9325
+🚀 Invoking Gemini to process message #14207...
+📨 Message #14207
    From: gemini → To: gemini
    Type: query
    Task: v3-the-cyrillic-code-ii-pA
-   Time: 2026-02-20T07:49:23.260206+00:00
+   Time: 2026-02-22T18:32:03.571136+00:00
 
 ============================================================
 
@@ -23,84 +23,74 @@ Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/
 # Дослідження: The Cyrillic Code II
 
 ## State Standard Reference
+§4.1.4: "Тверді та м’які приголосні: лист – ліс, Рим – Рівне, палац – палець."
 §4.1.3: "М’який знак: Львів, шість."
-§4.1.4: "Тверді та м’які приголосні: лист – ліс, Рим – Рівне... Дзвінкі та глухі приголосні: голодний – холодний."
-Alignment: Module teaches identification of hard vs soft consonants (regulated by И/І and Ь) and unique Ukrainian consonants (Г/Ґ), directly fulfilling §4.1.3 and §4.1.4 requirements for phonetic distinction at A1.
+§4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець."
+Alignment: The module teaches the alphabet and the critical phonetic distinctions mapped out in A1 Level §4.1.1, 4.1.3, and 4.1.4, specifically targeting soft/hard consonants, the soft sign, and proper capitalization/spelling of identity terms.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| центр | High (Top 300) | у центрі, центр міста, торговий центр |
-| чай | High (Top 500) | пити чай, чорний чай, чашка чаю |
-| школа | Very High (Top 200) | у школі, нова школа, іти до школи |
-| гарний | High (Top 300) | гарний день, гарна дівчина, дуже гарний |
-| жити | Very High (Top 50) | жити в Україні, жити добре |
-| день | Very High (Top 50) | добрий день, кожен день, цілий день |
-| Європа | High (Cultural) | жити в Європі, Західна Європа |
-| яблуко | Medium (Food) | смачне яблуко, червоне яблуко |
+| центр | Top 300 | у центрі, центр міста, торговий центр |
+| чай | Top 500 | пити чай, чорний чай, чашка чаю |
+| школа | Top 200 | у школі, нова школа, іти до школи |
+| гарний | Top 300 | гарний день, дуже гарний |
+| жити | Top 50 | жити в Україні, жити добре |
+| день | Top 50 | добрий день, кожен день, цілий день |
 
 ## Cultural Hooks
-1. **The Letter Ї**: Became a symbol of resistance in occupied Mariupol (2022) and general Ukrainian distinctness, as it does not exist in Russian. Used in graffiti to mark Ukrainian presence.
-2. **The Repressed Letter Ґ**: Banned in the 1933 orthography reform ("Skrypnykivka" reversal) to make Ukrainian closer to Russian. Restored only in 1990. Its usage is a shibboleth for proper Ukrainian education.
+1. The Repressed Letter Ґ: The letter Ґ was removed from the Ukrainian alphabet in 1933 during the Soviet orthographic reforms to force Ukrainian closer to Russian. It was officially restored only in 1990. Using it today is a mark of educated, authentic Ukrainian.
+2. The Letter Ї as Resistance: In 2022, during the occupation of Mariupol, residents painted the letter Ї on walls and monuments. Because the letter does not exist in the Russian alphabet, it became a powerful, concise symbol of Ukrainian presence and defiance.
 
 ## Common Learner Errors
-1. **Г vs Ґ**: Learners often use the hard English 'g' for both. Correction: Г is voiced 'h' (head), Ґ is 'g' (go).
-2. **Ignored Soft Sign (Ь)**: Treating it as silent. Correction: It changes the *previous* consonant, smashing the tongue flat against the roof of the mouth (palatalization).
-3. **И vs І Confusion**: Learners hear them as the same "ee" sound. Correction: І is a smile (dots = eyes), И is a grimace/relaxed jaw (lower pitch, harder sound).
+1. Г vs Ґ confusion → Using a hard English 'g' for both. Г is a voiced, breathy 'h' (like in 'head'), while Ґ is the rare hard 'g' (like in 'go').
+2. И vs І confusion → Pronouncing both as the English 'ee' (like in 'see'). И is harder, lower-pitched (grin), while І is high and bright (smile).
+3. The 'Silent' Soft Sign (Ь) → Ignoring the Ь completely. It's not silent; it changes the preceding consonant by palatalizing it (pressing the tongue to the roof of the mouth).
 
 ## Cross-References
-- Builds on: a1-01 (The Cyrillic Code I) — uses the first 19 letters.
-- Prepares for: a1-03 (The Gender Code) — identification of hard/soft endings is crucial for gender determination.
+- Builds on: a1-01 (The Cyrillic Code I)
+- Prepares for: a1-03 (The Gender Code)
 
 ## Notes for Content Writing
-- **Immersion**: A1.1 Level. Use English for all explanations. Ukrainian only for examples/drills.
-- **Pedagogy**: Focus on *contrast*. Always show pairs: Г-Ґ, И-І, С-СЬ.
-- **Visuals**: Describe the "Smile vs Grin" technique visually in the text.
+- Frame the Cyrillic alphabet not as a hurdle, but as a key to Ukrainian identity.
+- Avoid comparing Ukrainian letters directly to Russian. Use English phonetic equivalents (e.g., 'h' for Г) or distinct physiological descriptions (Smile vs. Grin).
+- English scaffolding is required for A1.1, so explain the physiological mechanics (palatalization, voiced fricatives) clearly in English before showing Ukrainian examples.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Розминка: Повернення до Абетки"
-    words: 250
+  - section: "Вступ"
+    words: 300
     points:
-      - "Quick visual recall of Part I letters to build confidence (5-minute review)."
-      - "Diagnostic reading challenge: simple words using only Module 1 letters."
-      - "The 'Identity Gap': Introduce why the remaining 14 letters are the key to sounding truly Ukrainian (not just like 'Russian with an accent')."
-      - "Immersion Level Note: English instructions, clearly marked Ukrainian examples."
-
-  - section: "Презентація: Унікальні літери та звуки"
-    words: 800
+      - "Note on Immersion: explicitly state the need for English scaffolding to explain phonetics."
+      - "Briefly review the first 19 letters (from a1-01) with a quick reading diagnostic to build confidence."
+      - "Introduce the 'Identity Letters' concept: frame the remaining 14 letters not just as sounds, but as keys to Ukrainian distinctness and history."
+  - section: "Унікальні приголосні"
+    words: 450
     points:
-      - "The Unique Seven (Г, Ґ, Ж, Ш, Щ, Ч, Ц): Explicit instruction on Г (voiced glottal fricative) vs Ґ (voiced velar plosive). The 'Identity Letters'."
-      - "The Iotated Four (Є, Ї, Ю, Я): Explain the mechanics (Y + Vowel) and their dual function (sound vs softening)."
-      - "Cultural Hook: The Letter Ї as a symbol of resistance and distinctness."
-      - "The Soft Sign (Ь): Physical pronunciation guide (tongue position). Examples per Standard: Львів, шість."
-      - "Hard И vs Soft І: The 'Smile (І) vs Grin (И)' technique. Visual/physical cues for differentiation."
-      - "Short Й: Brief comparison to English 'y' (boy/toy) vs 'j' (jump)."
-
-  - section: "Практика: Читаємо та розрізняємо"
-    words: 500
+      - "Present the 'Unique Seven' consonants (Г, Ґ, Ж, Ш, Щ, Ч, Ц) with clear English phonetic scaffolding."
+      - "Directly address the Г vs Ґ distinction: define Г as a voiced 'h' (head) and Ґ as the hard 'g' (go), providing minimal pairs."
+      - "Cultural Hook: tell the story of the repressed letter Ґ (banned 1933-1990) as a symbol of Soviet erasure and modern restoration."
+  - section: "Йотовані голосні та М’який знак"
+    words: 450
     points:
-      - "Guided Reading: High-frequency words integrating new letters (центр, чай, школа, гарний)."
-      - "Differentiation Drills: Minimal pair work for Г/Ґ and И/І to fix common errors."
-      - "Softness Drill: Reading words with Ь to practice palatalization (день, тінь)."
-      - "Euphony Check: Practice smooth transitions with iotated vowels (Європа, яблуко)."
-
-  - section: "Продукція: Активне читання"
-    words: 250
+      - "Introduce the Iotated Four (Є, Ї, Ю, Я), explaining their function in smoothing consonant clusters (euphony)."
+      - "Cultural Hook: highlight the letter Ї as a modern symbol of resistance, referencing its use in 2022 Mariupol graffiti."
+      - "Explain the Soft Sign (Ь) mechanically: correct the 'silent letter' myth by describing palatalization (tongue pressed flat against the roof of the mouth)."
+      - "Drill State Standard §4.1.3 examples: 'Львів', 'шість', and 'день', breaking down the phonetic shift."
+  - section: "Голосні та напівголосні"
+    words: 400
     points:
-      - "Phrase Reading: Combining known words into meaningful chunks ('Добрий день', 'Гарна школа')."
-      - "Self-Assessment Checklist: Can you hear the difference between И and І? Can you say Г correctly?"
-      - "The Kyiv Challenge: Reading 'Київ' correctly (Ky-yiv) vs the Russian 'Kiev'. State Standard §4.1.1 alignment."
-
-  - section: "Культурний контекст: Українська ідентичність"
-    words: 200
+      - "Contrast Hard I (И) and Soft I (І) using the 'Smile (І) vs Grin (И)' physiological technique."
+      - "Demonstrate the И/І distinction using State Standard §4.1.4 minimal pairs: 'Рим – Рівне'."
+      - "Introduce the Short Y (Й) and explain its usage in high-frequency collocations, separating it from the English 'y' sound."
+  - section: "Практика та вимова"
+    words: 400
     points:
-      - "Kyiv Spelling: The linguistic reason behind 'Kyiv' vs 'Kiev' (transliteration of И vs Russian E)."
-      - "The Repressed Letter Ґ: Historical context of the 1933 ban and 1990 restoration."
-      - "Handwriting Note: Warning about italic forms of т, д, г to prevent reading confusion."
-
+      - "Provide contrast drills for common hearing errors: И vs І, Г vs Ґ, and hard vs soft consonants (С vs СЬ)."
+      - "Apply State Standard §4.1.1 by practicing the correct spelling and pronunciation of identity markers: 'Київ', 'київський', 'Україна', 'українець'."
+      - "Guided reading practice: feature high-frequency vocabulary (центр, чай, школа, гарний, жити, день) with specific focus on proper word stress and phonetic accuracy."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -114,8 +104,8 @@ content_outline:
 
 
 ────────────────────────────────────────
-✅ Gemini finished (5218 chars)
-✅ Message sent to Claude (ID: 9326)
-✓ Message 9326 acknowledged
-   Auto-acknowledged reply #9326 (stdout delivery — no inbox accumulation)
-✓ Message 9325 acknowledged
+✅ Gemini finished (5285 chars)
+✅ Message sent to Claude (ID: 14208)
+✓ Message 14208 acknowledged
+   Auto-acknowledged reply #14208 (stdout delivery — no inbox accumulation)
+✓ Message 14207 acknowledged

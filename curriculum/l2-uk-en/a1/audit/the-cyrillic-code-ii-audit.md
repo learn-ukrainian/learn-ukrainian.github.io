@@ -1,7 +1,7 @@
 # Audit Report: M02 — the-cyrillic-code-ii.md
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 21:08:59
+**Generated:** 2026-02-22 19:39:18
 
 ## Configuration
 **Type:** A1-grammar
@@ -20,7 +20,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Letter to Sound Match | 12 | 8 | ✅ |
-| 2 | group-sort | Consonants vs. Vowels | 13 | 12 | ✅ |
+| 2 | group-sort | Consonants vs. Vowels | 14 | 12 | ✅ |
 | 3 | quiz | Identity Letters Challenge | 8 | 8 | ✅ |
 | 4 | fill-in | Г or Ґ? | 8 | 8 | ✅ |
 | 5 | fill-in | И or І? | 8 | 8 | ✅ |
@@ -35,17 +35,8 @@
 - Required types used: 2/2 (match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_BALANCE_BLOATED]** Section 'Презентація: Унікальні літери та звуки' has 1103 words (41% of total). Bloated sections: 'Презентація: Унікальні літери та звуки' (41%)
-  - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2626/2000 (raw: 2868)
+- **Words:** ✅ 2951/2000 (raw: 3147)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -58,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 6.5% (target 5-15% (M02))
+- **Immersion:** 🇺🇦 5.0% (target 5-15% (M02))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -67,10 +58,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Cyrillic Code II** | ✅ | 68 | Included in Core |
-| **Розминка: Повернення до Абетки** | ✅ | 231 | Included in Core |
-| **Презентація: Унікальні літери та звуки** | ✅ | 1019 | Included in Core |
-| **Практика: Читаємо та розрізняємо** | ✅ | 480 | Included in Core |
-| **Продукція: Активне читання** | ✅ | 297 | Included in Core |
-| **Культурний контекст: Українська ідентичність** | ✅ | 322 | Included in Core |
-| **Підсумок** | ✅ | 209 | Included in Core |
+| **The Cyrillic Code II: The Final 14 Letters** | ✅ | 53 | Included in Core |
+| **Вступ** | ✅ | 319 | Included in Core |
+| **Унікальні приголосні** | ✅ | 886 | Included in Core |
+| **Йотовані голосні та М’який знак** | ✅ | 653 | Included in Core |
+| **Голосні та напівголосні** | ✅ | 398 | Included in Core |
+| **Практика та вимова** | ✅ | 457 | Included in Core |
+| **Підсумок** | ✅ | 185 | Included in Core |

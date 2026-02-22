@@ -27,8 +27,8 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-20T17:06:20Z",
-      "note": "v3-audit-escalation"
+      "timestamp": "2026-02-22T08:43:06Z",
+      "note": "v3-audit"
     },
     "3a": {
       "status": "complete",
@@ -42,33 +42,29 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-20T17:08:09Z",
+      "timestamp": "2026-02-22T08:50:04Z",
       "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-20T17:08:09Z",
+      "timestamp": "2026-02-22T08:50:04Z",
       "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-20T17:06:20Z",
-      "note": "v3-audit-escalation"
+      "timestamp": "2026-02-22T08:43:06Z",
+      "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-20T17:08:09Z",
+      "timestamp": "2026-02-22T08:50:04Z",
       "note": "v3-phase-D"
     },
     "9-final-review": {
       "status": "complete",
       "timestamp": "2026-02-20T20:27:43Z",
       "verdict": "APPROVE"
-    },
-    "8": {
-      "status": "complete",
-      "timestamp": "2026-02-20T20:28:57Z"
     }
   },
-  "last_updated": "2026-02-20T20:28:57Z"
+  "last_updated": "2026-02-22T18:00:34Z"
 }

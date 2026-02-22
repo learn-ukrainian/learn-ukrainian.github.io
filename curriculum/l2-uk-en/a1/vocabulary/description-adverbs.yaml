@@ -3,7 +3,7 @@
   pos: adverb
   translation: well
   notes: "Irregular adverb from 'добрий' (good)"
-- ipa: '[ˈpɔɦɑnɔ]'
+- ipa: '[pɔˈɦɑnɔ]'
   lemma: погано
   pos: adverb
   translation: badly/poorly
@@ -18,7 +18,7 @@
   pos: adverb
   translation: slowly
   example: "Говоріть повільно, будь ласка."
-- ipa: '[zɑu̯ˈʒdɪ]'
+- ipa: '[ˈzɑˈʋʒdɪ]'
   lemma: завжди
   pos: adverb
   translation: always
@@ -31,7 +31,7 @@
   lemma: іноді
   pos: adverb
   translation: sometimes
-- ipa: '[nʲiˈkɔlɪ]'
+- ipa: '[nʲikɔlɪ]'
   lemma: ніколи
   pos: adverb
   translation: never
@@ -52,11 +52,11 @@
   lemma: зазвичай
   pos: adverb
   translation: usually
-- ipa: '[ˈlɛxkɔ]'
+- ipa: '[ˈlɛɦkɔ]'
   lemma: легко
   pos: adverb
   translation: easily
-- ipa: '[ˈʋɑʃkɔ]'
+- ipa: '[ˈʋɑʒkɔ]'
   lemma: важко
   pos: adverb
   translation: hard/with difficulty
@@ -66,7 +66,7 @@
   pos: adverb
   translation: very/really
   notes: "Always placed BEFORE the word it modifies"
-- ipa: '[ɑkˈtɪu̯nɔ]'
+- ipa: '[ɑˈktɪu̯nɔ]'
   lemma: активно
   pos: adverb
   translation: actively

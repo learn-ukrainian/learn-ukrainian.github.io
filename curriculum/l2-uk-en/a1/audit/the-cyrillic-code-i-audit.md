@@ -1,7 +1,7 @@
 # Audit Report: M01 — the-cyrillic-code-i.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 00:46:28
+**Generated:** 2026-02-22 19:00:33
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2613/2000 (raw: 2991)
+- **Words:** ✅ 2603/2000 (raw: 2981)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -61,8 +61,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Cyrillic Code I** | ✅ | 53 | Included in Core |
 | **Розминка: Чому кирилиця?** | ✅ | 476 | Included in Core |
-| **Презентація: Літери-друзі та літери-пастки** | ✅ | 870 | Included in Core |
-| **Практика: Читаємо міжнародні слова** | ✅ | 310 | Included in Core |
+| **Презентація: Літери-друзі та літери-пастки** | ✅ | 865 | Included in Core |
+| **Практика: Читаємо міжнародні слова** | ✅ | 307 | Included in Core |
 | **Культурний контекст: Українська ідентичність літери «І»** | ✅ | 387 | Included in Core |
-| **Продукція: Ваші перші слова** | ✅ | 340 | Included in Core |
+| **Продукція: Ваші перші слова** | ✅ | 338 | Included in Core |
 | **Підсумок** | ✅ | 177 | Included in Core |

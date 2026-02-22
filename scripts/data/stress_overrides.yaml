@@ -1,0 +1,8 @@
+# Stress overrides: lemma -> stressed form (with combining acute accent)
+# Add entries here when ukrainian_word_stress produces wrong stress.
+# Vocab files contain lemmas (dictionary forms), so stress errors are rarer
+# than with arbitrary inflected text.
+#
+# Format:  word: "wó̤rd"  (combining acute U+0301 after stressed vowel)
+любов: "любо́в"
+разом: "ра́зом"

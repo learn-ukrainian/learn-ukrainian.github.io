@@ -1,0 +1,13 @@
+{
+  "track": "lit",
+  "slug": "kostenko-marusia-churai-2",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T09:38:01Z",
+      "task_id": "v3-kostenko-marusia-churai-2-pA",
+      "mode": "full"
+    }
+  }
+}

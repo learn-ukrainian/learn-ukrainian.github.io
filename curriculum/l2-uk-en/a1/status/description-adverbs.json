@@ -2,12 +2,12 @@
   "module": "description-adverbs",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T00:51:00.453217Z",
+  "last_audit": "2026-02-22T16:05:42.643506Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T00:50:58.598463Z",
+    "md": "2026-02-22T07:54:27.761261Z",
     "meta": "2026-02-19T23:03:16.908547Z",
-    "activities": "2026-02-21T00:50:57.776329Z",
+    "activities": "2026-02-22T07:54:27.761584Z",
     "vocabulary": "2026-02-19T23:25:57.863490Z",
     "plan": "2026-02-20T20:42:08.431247Z",
     "research": "2026-02-19T23:03:16.903164Z"
@@ -49,16 +49,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 7,
-    "fail_count": 0,
+    "status": "fail",
+    "blocking_issues": [
+      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+    ],
+    "pass_count": 6,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

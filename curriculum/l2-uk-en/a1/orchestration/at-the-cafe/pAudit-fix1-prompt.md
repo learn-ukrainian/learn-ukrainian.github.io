@@ -1,4 +1,4 @@
-        # Fix Phase — full audit failures
+        # Fix Phase — content-only audit failures
 
         The following audit errors must be fixed for module `at-the-cafe`:
 
@@ -6,32 +6,32 @@
 
         ```
         ============================================================
-  HETMAN VERIFY: at-the-cafe
+  OTAMAN VERIFY: at-the-cafe
 ============================================================
 
-[1/4] Running full audit...
-[2/4] Checking sidecar files...
-[3/4] Reading status JSON...
-[4/4] Checking overall status...
+[1/3] Running audit with --skip-activities...
+[2/3] Reading status JSON...
+[3/3] Checking orchestration artifacts...
 
 ────────────────────────────────────────────────────────────
   VERDICT: FAIL
   Module:  at-the-cafe
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  overall status is 'fail' (must be 'pass')
-  3 Outline Compliance Errors
   failing gates:
-    lesson: 2184/2000 (raw: 2519) | pedagogy: 8 violations | immersion: 17.0% LOW (target 25-40% (M19))
+    lesson: 2655/2000 (raw: 3067) | pedagogy: 1 violations
 
-  Hetman has NOT completed this module.
+  Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-     → Revision recommended (severity 60/100)
-     → 8 violations (significant)
-     → 4 grammar-level violations (fundamental)
-     → Immersion 8% off target (minor)
+  📚 PEDAGOGICAL VIOLATIONS FOUND:
+    [LLM_PERSONA_LEAK] LLM persona leak: 'I am so glad' — content should not role-play as a teacher/character
+       → FIX: Rewrite in neutral educational voice. Remove first-person teacher persona.
+
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
+     → 1 violations (minor)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/at-the-cafe-audit.md
@@ -39,17 +39,14 @@
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  Critical Failures:
-    • 3 Outline Compliance Errors
-
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/at-the-cafe-audit.log for details)
         ```
 
         ## Files to Fix
 
         - Content: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/at-the-cafe.md`
-        - Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/at-the-cafe.yaml`
-        - Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/at-the-cafe.yaml`
+
+
 
         ## Instructions
 

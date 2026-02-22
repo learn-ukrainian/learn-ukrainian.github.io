@@ -14,9 +14,9 @@ Related: a1-35 (At the Café Practical), a1-42 (Emergencies)
 
 ## Вступ: Культура планування
 
-Привіт! I am your Ukrainian teacher, and I am so glad you are here. Today, we are taking a huge step forward. We are moving from simple, isolated statements to building your own stories. 
+Привіт! Today, we are taking a huge step forward. We are moving from simple, isolated statements to building your own stories. 
 
-Imagine you are in a vibrant city like Lviv or Kyiv. How does a typical day of planning start? It almost always starts with one magical phrase: **піти на каву** [pʲiˈtɪ nɑ ˈkɑʋu] (to go for coffee). 
+Imagine you are in a vibrant city like Lviv or Kyiv. How does a typical day of planning start? It almost always starts with one magical phrase: **піти на ка́ву** (to go for coffee). 
 
 > [!culture] **The Coffee Ritual**
 > In Ukraine, particularly in western cities like Lviv, "going for coffee" is much more than consuming a beverage. It is the universal premise for meetings, planning the day, discussing business, or catching up with friends. It is the ritualistic starting point of the day's narrative. When someone says, «Пішли на каву!» (Let's go for coffee!), they are inviting you into a conversation and a shared experience.
@@ -68,7 +68,7 @@ Use **але** when the second part of your sentence contradicts or restricts th
     (I want to buy a cake, but I do not have money.)
 *   **Кафе дуже гарне, але кава тут дорога.** 
     (The café is very nice, but the coffee here is expensive.)
-*   **Ми хотіли піти в парк, але почався дощ.** 
+*   **Ми хотіли піти в парк. Але почався дощ.** 
     (We wanted to go to the park, but it started to rain.)
 
 **Usage note:**
@@ -83,7 +83,7 @@ Now that we can connect sentences with "and" and "but," we need to give our stor
 To tell a compelling story, you need clear sequence markers. These adverbs guide your listener through the timeline of events, from the beginning to the end.
 
 #### 1. Спочатку (First / At first / Initially)
-**Спочатку** [spɔˈt͡ʃɑtku] is used to introduce the very first action in your sequence. It sets the stage.
+**Споча́тку** is used to introduce the very first action in your sequence. It sets the stage.
 
 **How it works:**
 Place **спочатку** at the beginning of your sentence or right before the main verb.
@@ -93,20 +93,20 @@ Place **спочатку** at the beginning of your sentence or right before the
     (First, we go for coffee.)
 *   **Спочатку треба купити квитки.** 
     (First, [one] needs to buy tickets.)
-*   **Спочатку я читаю меню, а потім замовляю.** 
+*   **Спочатку я читаю меню. А потім замовляю.** 
     (First I read the menu, and then I order.)
 
 **Usage note:**
 Using **спочатку** immediately signals to your listener that a multi-step story or plan is about to unfold. 
 
 #### 2. Потім (Then / Afterwards)
-**Потім** [ˈpɔtʲim] indicates the next step in the sequence. 
+**По́тім** indicates the next step in the sequence. 
 
 **How it works:**
 Use it to link the middle events of your narrative. It frequently pairs with the conjunction **а** (and/but - indicating a slight shift) as **а потім** (and then).
 
 **Examples:**
-*   **Спочатку ми йдемо на каву, а потім ми гуляємо.** 
+*   **Спочатку ми йдемо на каву. А потім ми гуляємо.** 
     (First we go for coffee, and then we walk.)
 *   **Я працюю, потім відпочиваю.** 
     (I work, then I rest.)
@@ -117,7 +117,7 @@ Use it to link the middle events of your narrative. It frequently pairs with the
 While **потім** is very useful, avoid repeating it more than twice in one story. If you have a long list of events, try connecting them with **і** instead of starting every sentence with **потім**.
 
 #### 3. Нарешті (Finally / At last)
-**Нарешті** [nɑˈrɛʃtʲi] provides the satisfying conclusion to your sequence. 
+**Наре́шті** provides the satisfying conclusion to your sequence. 
 
 **How it works:**
 Use it for the absolute last step of your plan, or to express relief that something long-awaited has finally happened.
@@ -125,7 +125,7 @@ Use it for the absolute last step of your plan, or to express relief that someth
 **Examples:**
 *   **І нарешті ми йдемо в кіно.** 
     (And finally, we are going to the cinema.)
-*   **Спочатку робота, потім спортзал, і нарешті вечеря.** 
+*   **Спочатку робота. Потім спортзал. Нарешті вечеря.** 
     (First work, then the gym, and finally dinner.)
 *   **Нарешті вихідні!** 
     (Finally, the weekend!)
@@ -148,28 +148,28 @@ In our daily lives, we constantly need to explain *why* we are doing things or w
 It is composed of two words and is used in written texts, formal speech, and whenever you want to be very clear and deliberate about a reason. A comma always precedes it.
 
 **Examples:**
-*   **Віктор не може говорити, тому що він хворий.** 
+*   **Віктор не може говорити, **тому що** він хворий.** 
     (Viktor cannot speak, because he is sick.)
-*   **Я вивчаю українську мову, тому що я люблю Україну.** 
+*   **Я вивчаю українську мову, **тому що** я люблю Україну.** 
     (I am studying the Ukrainian language, because I love Ukraine.)
-*   **Ми не йдемо в парк, тому що йде дощ.** 
+*   **Ми не йдемо в парк, **тому що** йде дощ.** 
     (We are not going to the park, because it is raining.)
 
 **Usage note:**
 Use **тому що** in your essays, formal emails, or when giving a serious explanation.
 
 #### Бо (Because — Spoken / Colloquial)
-**Бо** [bɔ] is the short, punchy, universally loved spoken equivalent of "because." 
+**Бо** is the short, punchy, universally loved spoken equivalent of "because." 
 
 **How it works:**
 Native speakers overwhelmingly prefer **бо** in everyday conversation. It is fast, expressive, and gives Ukrainian speech its natural, rhythmic bounce.
 
 **Examples:**
-*   **Я п'ю воду, бо хочу пити.** 
+*   **Я п'ю воду, **бо** хочу пити.** 
     (I am drinking water, because I want to drink / am thirsty.)
-*   **Ми вдома, бо холодно.** 
+*   **Ми вдома, **бо** холодно.** 
     (We are at home, because it is cold.)
-*   **Не купуй це, бо воно дороге.** 
+*   **Не купуй це, **бо** воно дороге.** 
     (Do not buy this, because it is expensive.)
 
 **Usage note:**
@@ -186,7 +186,7 @@ If you want to sound like a local sipping coffee in Lviv, use **бо**. It immed
 
 ### Слово «також» (The word "also/too")
 
-Let us fix another very common structural error. The word **також** [tɑˈkɔʒ] means "also" or "too." English speakers naturally want to put "too" at the absolute end of the sentence: "I want coffee too." If you do this in Ukrainian, it sounds very unnatural.
+Let us fix another very common structural error. The word **та́ко́ж** means "also" or "too." English speakers naturally want to put "too" at the absolute end of the sentence: "I want coffee too." If you do this in Ukrainian, it sounds very unnatural.
 
 **How it works:**
 In Ukrainian, **також** should be placed *before* the verb, or right next to the word it emphasizes. It almost NEVER goes at the very end of the sentence.
@@ -215,9 +215,9 @@ The **базар** (market) is the beating heart of fresh food and social intera
 > [!history-bite] **The Heart of the Community**
 > Historically, the market square was the center of every Ukrainian town or village. Today, local bazars (базари) or rynoks (ринки) remain essential. People prefer the bazar for fresh vegetables, fruits, and homemade dairy, trusting the "babusias" (grandmothers) who bring produce from their own gardens over large chain stores.
 
-Let us look at a multi-turn interaction combining what we know. We will use the word **разом** [ˈrɑzɔm] (together) to coordinate actions.
+Let us look at a multi-turn interaction combining what we know. We will use the word **ра́зом** (together) to coordinate actions.
 
-**Олена:** Вікторе, спочатку ми йдемо на базар, бо ми купуємо овочі.
+**Олена:** Вікторе, спочатку ми йдемо на базар, **бо** ми купуємо овочі.
 (Viktor, first we go to the market, because we are buying vegetables.)
 **Віктор:** Добре. Що ми купуємо?
 (Good. What are we buying?)
@@ -237,19 +237,19 @@ Notice how the narrative flows:
 
 ### Вирішення проблем: «Якщо» (Problem-solving: "If")
 
-At the bazar, or in any real-life situation, things do not always go as planned. What if the market is closed? What if they don't have tomatoes? To handle unexpected changes, we use the conditional word **якщо** [jɑkˈʃt͡ʃɔ] (if).
+At the bazar, or in any real-life situation, things do not always go as planned. What if the market is closed? What if they don't have tomatoes? To handle unexpected changes, we use the conditional word **якщо́** (if).
 
 **How it works:**
 Use **якщо** to introduce a condition or a problem. Then, use a comma and provide the solution or the consequence in the second part of the sentence. Often, the second part starts with **то** (then), though it is optional.
 
 **Examples:**
-*   **Якщо ринок не працює, ми йдемо в супермаркет.** 
+*   ****Якщо** ринок не працює, ми йдемо в супермаркет.** 
     (If the market is not working, we go to the supermarket.)
-*   **Якщо у мене немає грошей, я не купую каву.** 
+*   ****Якщо** у мене немає грошей, я не купую каву.** 
     (If I do not have money, I do not buy coffee.)
-*   **Якщо ти хочеш, ми можемо піти разом.** 
+*   ****Якщо** ти хочеш, ми можемо піти разом.** 
     (If you want, we can go together.)
-*   **Я допоможу, якщо це проблема.** 
+*   **Я допоможу, **якщо** це проблема.** 
     (I will help, if this is a problem.)
 
 **Usage note:**
@@ -260,7 +260,7 @@ Use **якщо** to introduce a condition or a problem. Then, use a comma and pr
 > `[Якщо + condition] , [solution] .`
 > This simple structure gives you immense flexibility to express complex thoughts even with a beginner's vocabulary.
 
-### Додаткова практика читання (Additional reading practice)
+### Додаткова практика читання
 
 Ось історія про день Олени. Читайте і шукайте нові слова.
 Олена має вихідний день. Вона не працює. Погода дуже гарна. Сонце світить. Небо чисте. Олена йде в парк. Вона любить гуляти. Там є велике озеро. Біля озера є гарне кафе. Олена хоче пити. Вона купує каву. Кава смачна. Потім вона читає нову книгу. Книга дуже цікава. Це детектив. 
@@ -274,30 +274,34 @@ Use **якщо** to introduce a condition or a problem. Then, use a comma and pr
 Увечері люди відпочивають. Вони йдуть у театр. Вони слухають музику. Деякі люди йдуть у кіно. Вони дивляться нові фільми. Інші люди просто гуляють. Вони дивляться на зірки. Нічне місто дуже гарне. Ліхтарі світять яскраво. 
 Вихідні дні тут чудові. Можна піти на концерт. Можна поїхати далеко. Там тихо. Там є ліс і річка. Можна дихати свіжим повітрям. Люди роблять пікнік. Вони готують м'ясо та овочі. Вони грають в ігри. Вони співають пісні. Це дуже весело. Всі люблять такі вихідні.
 
-Олена також має сім'ю. Її брат живе близько. Він працює у школі. Він вчитель. Олена і брат часто бачаться. Вони п'ють чай разом. Брат має дружину. Її звати Марія. Вона лікар. Вони хороші люди. Вони допомагають один одному. Олена рада бачити їх. Україна має сильні традиції. Сім'я — це важливо. Всі цінують сім'ю.
+Олена також має сім'ю. Її брат живе близько. Він працює у школі. Він вчитель. Олена і брат часто бачаться. Вони п'ють чай разом. Брат має дружину. Її звати Марія. Вона лікар. Вони хороші люди. Вони допомагають один одному. Олена рада бачити їх. Україна має сильні традиції. Сім'я — це важливо. Всі цінують сім'ю.\n\nКиїв має чудові ресторани. Там є українська їжа. Люди люблять борщ. Вони також люблять вареники. Це дуже смачно. Сім'ї вечеряють разом. Вони говорять про день. Діти п'ють сік. Дорослі п'ють чай. Всі раді.
 
 ## Висновок: Мій наратив
 
-Ми багато чого вивчили сьогодні. Тепер у вас є інструменти для створення складних історій українською мовою. Давайте об'єднаємо всі ці елементи в один текст: Планування (кава), Дії (базар) та Вирішення проблем (якщо/тоді).
+Ми багато чого вивчили сьогодні. Тепер у вас є інструменти для створення складних історій українською мовою. Давайте об'єднаємо ці елементи. Ми пишемо текст про каву і базар.
 
 Прочитайте цей текст про день. Спробуйте знайти всі нові слова. Ми вивчили їх сьогодні.
 
 Це місто Львів. Львів має гарну архітектуру. Тут є багато кафе. Люди п'ють каву. Вони говорять про плани. Вони також читають книги. Це дуже цікаво. Ми любимо такі міста. Там завжди приємно гуляти. Україна має багато таких міст. Ви також можете їх відвідати. Це дуже гарний досвід. Ми раді бачити вас тут.
 
-**Мій ідеальний день** (My ideal day)
-«Спочатку я зустрічаю друга, і ми йдемо на каву, бо ранок дуже теплий. Я також замовляю круасан. Потім ми йдемо на базар. Я хочу купити свіжі фрукти, але сьогодні там дуже багато людей. Якщо яблука дуже дорогі, я купую груші. Нарешті, ми йдемо додому та готуємо вечерю разом, тому що ми дуже любимо їсти смачну українську їжу.»
+**Мій ідеальний день**
+«Спочатку я зустрічаю друга. Ми йдемо на каву. **Бо** ранок теплий. Я також замовляю круасан. Потім ми йдемо на базар. Я хочу купити свіжі фрукти. Але там дуже багато людей. **Якщо** яблука дуже дорогі, я купую груші. Нарешті ми йдемо додому. Ми готуємо вечерю разом. **Тому що** ми любимо смачну українську їжу.»
 
-(First I meet a friend, and we go for coffee, because the morning is very warm. I also order a croissant. Then we go to the market. I want to buy fresh fruits, but today there are very many people there. If apples are very expensive, I buy pears. Finally, we go home and prepare dinner together, because we really love to eat tasty Ukrainian food.)
+(First I meet a friend. We go for coffee, because the morning is warm. I also order a croissant. Then we go to the market. I want to buy fresh fruits. But there are very many people there. If apples are expensive, I buy pears. Finally, we go home. We prepare dinner together. Because we love Ukrainian food.)
 
 **Let's break down why this works so well:**
 *   It uses **спочатку**, **потім**, and **нарешті** to give the story a clear beginning, middle, and end.
 *   It connects parallel actions with **і** (зустрічаю друга, і ми йдемо).
-*   It gives a colloquial reason with **бо** (бо ранок теплий) and a formal reason with **тому що** (тому що ми дуже любимо).
+*   It gives a colloquial reason with **бо** (**бо** ранок теплий) and a formal reason with **тому що** (**тому що** ми дуже любимо).
 *   It places **також** correctly before the verb (Я також замовляю).
 *   It creates a contrast with **але** (але сьогодні там багато людей).
-*   It solves a potential problem with **якщо** (Якщо яблука дорогі, я купую груші).
+*   It solves a potential problem with **якщо** (**Якщо** яблука дорогі, я купую груші).
 
-Практикуйте ці слова та структури кожного дня. Крок за кроком, ви будуєте свою здатність не просто повторювати окремі фрази, а створювати власні історії українською мовою. Продовжуйте — і результати вас порадують.
+Практикуйте ці слова та структури кожного дня. Кожного дня ви будуєте нові навички. Ви можете створювати власні історії українською мовою. Продовжуйте — і результати вас порадують.
+
+**Додаткова історія для читання**
+
+У суботу вранці я завжди встаю рано. Спочатку я п'ю чай. Я дуже люблю зелений чай. Потім я читаю новини в інтернеті. Я не дивлюся телевізор, **бо** там багато реклами. Одинадцята година. Я йду на зустріч. Мій друг також іде. Ми домовилися піти в музей. **Якщо** погода буде гарна, ми потім підемо гуляти в парк. Але сьогодні йде дощ. **Тому що** йде дощ, ми вирішили піти в кафе. Ми замовили каву та десерти. Я також їв круасан. Ми багато говорили про роботу та відпочинок. Нарешті ми пішли додому. День був дуже приємний. Я люблю такі вихідні. 
 
 ---
 
@@ -315,6 +319,6 @@ Today, we learned how to build complex sentences (складні речення)
 2. What is the difference in feeling between using «тому що» and «бо»?
 3. Where should you place the word «також» in the sentence: «Я хочу каву» (I want coffee too)?
 4. Combine these two sentences using «але»: «Я люблю яблука. Яблука дорогі.»
-5. Create a simple "problem-solution" sentence starting with «Якщо ринок не працює...»
+5. Create a simple "problem-solution" sentence starting with «**Якщо** ринок не працює...»
 
 ---

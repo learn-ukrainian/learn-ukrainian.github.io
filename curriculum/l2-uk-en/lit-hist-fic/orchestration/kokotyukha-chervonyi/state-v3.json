@@ -1,0 +1,13 @@
+{
+  "track": "lit-hist-fic",
+  "slug": "kokotyukha-chervonyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T06:45:15Z",
+      "task_id": "v3-kokotyukha-chervonyi-pA",
+      "mode": "full"
+    }
+  }
+}

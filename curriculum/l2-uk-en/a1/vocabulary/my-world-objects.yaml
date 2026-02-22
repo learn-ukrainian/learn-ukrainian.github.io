@@ -1,4 +1,4 @@
-- ipa: '[t͡sei̯]'
+- ipa: '[t͡sɛj]'
   lemma: цей
   notes: Used for masculine nouns near the speaker
   pos: pronoun
@@ -8,7 +8,7 @@
   notes: Used for feminine nouns near the speaker
   pos: pronoun
   translation: this (fem.)
-- ipa: '[t͡se]'
+- ipa: '[t͡sɛ]'
   lemma: це
   notes: Used for neuter nouns near speaker OR general identification (This is...)
   pos: pronoun
@@ -18,7 +18,7 @@
   notes: Plural form for near objects
   pos: pronoun
   translation: these
-- ipa: '[tɔi̯]'
+- ipa: '[tɔj]'
   lemma: той
   notes: Used for masculine nouns far from the speaker
   pos: pronoun
@@ -28,7 +28,7 @@
   notes: Used for feminine nouns far from the speaker
   pos: pronoun
   translation: that (fem.)
-- ipa: '[te̞]'
+- ipa: '[tɛ]'
   lemma: те
   notes: Used for neuter nouns far from the speaker
   pos: pronoun
@@ -53,7 +53,7 @@
   notes: Masculine
   pos: noun
   translation: sofa
-- ipa: '[te̞le̞ˈfɔn]'
+- ipa: '[tɛlɛˈfɔn]'
   lemma: телефон
   notes: Masculine
   pos: noun
@@ -68,7 +68,7 @@
   notes: Feminine
   pos: noun
   translation: book
-- ipa: '[kimˈnɑtɑ]'
+- ipa: '[kʲiˈmnɑtɑ]'
   lemma: кімната
   notes: Feminine
   pos: noun
@@ -78,7 +78,7 @@
   notes: Feminine
   pos: noun
   translation: lamp
-- ipa: '[ʋʲikˈnɔ]'
+- ipa: '[ʋʲiˈknɔ]'
   lemma: вікно
   notes: Neuter
   pos: noun

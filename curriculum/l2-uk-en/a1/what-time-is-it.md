@@ -17,7 +17,7 @@ Related: a1-17 (Numbers), a1-22 (Future Tense), a1-25 (Daily Routine)
 Вітаємо на уроці про час. Уявіть вокзал **Київ-Пасажирський**. Поїзди прибувають. Люди чекають. Вони дивляться на годинник. Час — це важливо. В Україні поїзди точні.
 
 > [!culture] **Ukrzaliznytsia Punctuality**
-> The Ukrainian railway system, **Укрзалізниця** [u.kr.zɑ.ˈlʲi.znɪ.t͡sʲɑ], is legendary for its resilience and punctuality. Even during the most difficult times of war, the vast majority of trains continue to run on schedule. In Ukraine, time is respected. Being "on time" (**вчасно** [ˈu̯t͡ʃɑs.nɔ]) is a sign of reliability.
+> The Ukrainian railway system, **Укрзалізни́ця**, is legendary for its resilience and punctuality. Even during the most difficult times of war, the vast majority of trains continue to run on schedule. In Ukraine, time is respected. Being "on time" (**вча́сно**) is a sign of reliability.
 
 Тут ми маємо два питання. Перше питання: "Котра година?". Друге питання: "О котрій годині?".
 
@@ -78,12 +78,12 @@ For minutes (**хвилини**), we use a simple "digital" style. It is perfect
 
 Формат: **[Година (жіночий рід)] + [Хвилина (число)]**
 
-*   10:20 — **Десята двадцять** [dɛˈsʲɑ.tɑ ˈdʋɑ.t͡sʲɑtʲ]
-*   05:30 — **П'ята тридцять** [ˈpjɑ.tɑ ˈtrɪ.t͡sʲɑtʲ]
-*   08:15 — **Восьма п'ятнадцять** [ˈʋɔsʲ.mɑ pjɑtˈnɑ.t͡sʲɑtʲ]
-*   02:45 — **Друга сорок п'ять** [ˈdru.ɦɑ ˈsɔ.rɔk pjɑtʲ]
-*   11:10 — **Одинадцята десять** [ɔ.dɪ.nɑˈd͡t͡sʲɑ.tɑ ˈdɛ.sʲɑtʲ]
-*   12:50 — **Дванадцята п'ятдесят** [dʋɑ.nɑˈd͡t͡sʲɑ.tɑ pjɑt.dɛˈsʲɑt]
+*   10:20 — **Деся́та два́дцять**
+*   05:30 — **П'ята́ три́дцять**
+*   08:15 — **Во́сьма п'ятна́дцять**
+*   02:45 — **Дру́га со́рок п'ять**
+*   11:10 — **Одина́дцята де́сять**
+*   12:50 — **Двана́дцята п'ятдеся́т**
 
 Цей метод — простий. Ви говорите годину і хвилини. Це ввічливо та правильно.
 
@@ -92,7 +92,7 @@ For minutes (**хвилини**), we use a simple "digital" style. It is perfect
 
 ### Defining "Now"
 
-To say "now", use the word **зараз** [ˈzɑ.rɑz].
+To say "now", use the word **за́раз**.
 
 *   **Зараз третя десять.** (It is 3:10 now.)
 *   **Зараз шоста сорок.** (It is 6:40 now.)
@@ -134,13 +134,13 @@ If you are not sure, use **приблизно** (approximately) or **майже*
 
 Українські назви днів тижня дуже логічні. Note that they are written with a lowercase letter unless they start a sentence.
 
-1.  **понеділок** [pɔ.nɛˈdʲi.lɔk] — **Monday**. Literally "after Sunday" (по-неділі).
-2.  **вівторок** [ʋiu̯ˈtɔ.rɔk] — **Tuesday**. From "second" (вторий).
-3.  **середа** [sɛ.rɛˈdɑ] — **Wednesday**. The "middle" (середина) of the work week.
-4.  **четвер** [t͡ʃɛtˈʋɛr] — **Thursday**. The "fourth" (четвертий) day.
-5.  **п'ятниця** [ˈpjɑt.nɪ.t͡sʲɑ] — **Friday**. The "fifth" (п'ятий) day.
-6.  **субота** [suˈbɔ.tɑ] — **Saturday**. From "Sabbath".
-7.  **неділя** [nɛˈdʲi.lʲɑ] — **Sunday**. Literally "no work" (не діло).
+1.  **понеді́лок** — **Monday**. Literally "after Sunday" (по-неділі).
+2.  **вівто́рок** — **Tuesday**. From "second" (вторий).
+3.  **середа́** — **Wednesday**. The "middle" (середина) of the work week.
+4.  **четве́р** — **Thursday**. The "fourth" (четвертий) day.
+5.  **п'я́тниця** — **Friday**. The "fifth" (п'ятий) day.
+6.  **субо́та** — **Saturday**. From "Sabbath".
+7.  **неді́ля** — **Sunday**. Literally "no work" (не діло).
 
 ### Grammar: "On" a Day (Accusative)
 
@@ -163,9 +163,9 @@ For feminine nouns (ending in -а/-я), the ending changes to **-у** or **-ю**
 ### Weekly Context
 
 Ми часто говоримо про планування тижня.
-*   **тиждень** [ˈtɪʒ.dɛnʲ] — week
-*   **сьогодні** [sʲɔˈɦɔd.nʲi] — today
-*   **завтра** [ˈzɑu̯.trɑ] — tomorrow
+*   **ти́ждень** — week
+*   **сього́дні** — today
+*   **за́втра** — tomorrow
 
 Коли ми плануємо:
 *   **на цьому тижні** — on this week (Locative)
@@ -179,27 +179,27 @@ For feminine nouns (ending in -а/-я), the ending changes to **-у** or **-ю**
 
 ### Winter (Зима)
 
-*   **грудень** [ˈɦru.dɛnʲ] — **December**. From **грудка** (frozen clod of earth).
-*   **січень** [ˈsʲi.t͡ʃɛnʲ] — **January**. From **сікти** (to cut/slash), referring to biting winds or cutting wood.
-*   **лютий** [ˈlʲu.tɪj] — **February**. Literally "fierce" or "ferocious" cold.
+*   **гру́день** — **December**. From **грудка** (frozen clod of earth).
+*   **сі́чень** — **January**. From **сікти** (to cut/slash), referring to biting winds or cutting wood.
+*   **лю́тий** — **February**. Literally "fierce" or "ferocious" cold.
 
 ### Spring (Весна)
 
-*   **березень** [ˈbɛ.rɛ.zɛnʲ] — **March**. Named after the birch tree (**береза**) sap.
-*   **квітень** [ˈkʋʲi.tɛnʲ] — **April**. Derived from the word for flowers (**квіти**).
-*   **травень** [ˈtrɑ.ʋɛnʲ] — **May**. Comes from the word for grass (**трава**).
+*   **бе́резень** — **March**. Named after the birch tree (**береза**) sap.
+*   **кві́тень** — **April**. Derived from the word for flowers (**квіти**).
+*   **тра́вень** — **May**. Comes from the word for grass (**трава**).
 
 ### Summer (Літо)
 
-*   **червень** [ˈt͡ʃɛr.ʋɛnʲ] — **June**. From **червоний** (red), referencing berries or cochineal insects.
-*   **липень** [ˈlɪ.pɛnʲ] — **July**. The time when the linden tree (**липа**) blooms.
-*   **серпень** [ˈsɛr.pɛnʲ] — **August**. Named after the sickle (**серп**) used for harvest.
+*   **че́рвень** — **June**. From **червоний** (red), referencing berries or cochineal insects.
+*   **ли́пень** — **July**. The time when the linden tree (**липа**) blooms.
+*   **се́рпень** — **August**. Named after the sickle (**серп**) used for harvest.
 
 ### Autumn (Осінь)
 
-*   **вересень** [ˈʋɛ.rɛ.sɛnʲ] — **September**. The month of heather (**верес**) blooming.
-*   **жовтень** [ˈʒɔu̯.tɛnʲ] — **October**. The month of yellow (**жовтий**) leaves.
-*   **листопад** [lɪs.tɔˈpɑd] — **November**. Literally "leaf fall" (**листя** + **падати**).
+*   **ве́ресень** — **September**. The month of heather (**верес**) blooming.
+*   **жо́втень** — **October**. The month of yellow (**жовтий**) leaves.
+*   **листопа́д** — **November**. Literally "leaf fall" (**листя** + **падати**).
 
 ### Grammar: "In" a Month (Locative)
 
@@ -244,7 +244,7 @@ Often, in speech, we drop the word **годині**:
 ### Until (До)
 
 The preposition **до** indicates the end of a duration or a deadline. It requires the **Genitive case**.
-*   **до** [dɔ] — until / to
+*   **до** — until / to
 
 Examples:
 *   **Я працюю до п'ятої.** (I work until five.)
@@ -253,7 +253,7 @@ Examples:
 ### After (Після)
 
 The preposition **після** indicates a time later than an event. It also requires the **Genitive case**.
-*   **після** [ˈpʲis.lʲɑ] — after
+*   **пі́сля** — after
 
 Examples:
 *   **Після шостої я вдома.** (After six I am at home.)
@@ -288,12 +288,12 @@ However, in casual conversation, people often use the 12-hour format and add the
 
 Let's look at a typical day for a conductor (**провідник**) on Ukrzaliznytsia.
 
-*   **прокидатися** [prɔ.kɪˈdɑ.tɪ.sʲɑ] — to wake up
-*   **снідати** [ˈsʲnʲi.dɑ.tɪ] — to have breakfast
-*   **працювати** [prɑ.t͡sʲuˈʋɑ.tɪ] — to work
-*   **обідати** [ɔˈbʲi.dɑ.tɪ] — to have lunch
-*   **вечеряти** [ʋɛ.t͡ʃɛˈrʲɑ.tɪ] — to have dinner
-*   **лягати спати** [lʲɑˈɦɑ.tɪ ˈspɑ.tɪ] — to go to sleep
+*   **прокидатися** — to wake up
+*   **сні́дати** — to have breakfast
+*   **працюва́ти** — to work
+*   **обі́дати** — to have lunch
+*   **вече́ряти** — to have dinner
+*   **ляга́ти спа́ти** — to go to sleep
 
 **Example Schedule:**
 *   06:00 — Я прокидаюся о шостій ранку.

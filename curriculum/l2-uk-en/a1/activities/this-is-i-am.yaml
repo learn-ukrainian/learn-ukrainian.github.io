@@ -368,7 +368,7 @@
     - correct: false
       text: Вона це тут.
     - correct: false
-      text: Тут вона.
+      text: Вона є тут.
     question: Translate 'She is here'.
   - explanation: We = Ми, Students = студенти.
     options:

@@ -102,11 +102,11 @@ Students often confuse "Де" and "Куди".
 
 We need verbs of motion. At A1, we use two pairs.
 
-1.  **йти** [ɪˈtɪ] (to go on foot).
+1.  **йти** (to go on foot).
     *   Я йду. (I am walking.)
     *   Ти йдеш. (You are walking.)
     *   Він йде. (He is walking.)
-2.  **їхати** [ˈjixɐtɪ] (to go by transport).
+2.  **ї́хати** (to go by transport).
     *   Я їду. (I am driving/riding.)
     *   Ти їдеш. (You are driving/riding.)
     *   Ми їдемо. (We are driving/riding.)
@@ -158,7 +158,7 @@ Use **на** (on/at) for surfaces and events.
 
 ### Культурний аспект: Вдома (At Home)
 
-**Вдома** [u̯ˈdɔmɐ] is an adverb. It means "at home".
+**Вдо́ма** is an adverb. It means "at home".
 
 *   Де ти? — Я **вдома**.
 *   Ми сьогодні **вдома**.
