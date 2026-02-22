@@ -48,6 +48,18 @@ Read these files from disk:
 docs/ACTIVITY-YAML-REFERENCE.md
 ```
 
+## Downstream Audit Gates (your activities will be checked for)
+
+These are the top failure causes from previous rebuilds — write with them in mind:
+- **Schema violations**: `additionalProperties: false` means ANY unlisted field = instant fail. Read `{SCHEMA_PATH}` before writing.
+- **Item counts**: `true-false` often requires 12 items, `quiz` requires 8+. Check `minItems` in schema.
+- **Forbidden fields**: `id` only on `reading` type (seminar tracks). `tasks` forbidden in `reading` — use `instruction`.
+- **Russian characters**: ы, э, ё, ъ in any activity text = hard fail
+- **Ukrainian quotes**: do NOT use «» in YAML values — they break parsing with colons
+- **IPA in YAML**: NEVER include IPA symbols in YAML — pronunciation goes in markdown content only
+
+---
+
 ## Your Task
 
 Generate two YAML blocks: activities and vocabulary.

@@ -28,7 +28,6 @@ Usage:
     .venv/bin/python scripts/build_module_v3.py a1 12 --rebuild
     .venv/bin/python scripts/build_module_v3.py a1 12 --dry-run
     .venv/bin/python scripts/build_module_v3.py a1 12 --verify
-    .venv/bin/python scripts/build_module_v3.py a1 12 --no-track-context
     .venv/bin/python scripts/build_module_v3.py a1 12 --force-phase B
     .venv/bin/python scripts/build_module_v3.py a1 12 --force-phase D
     .venv/bin/python scripts/build_module_v3.py a1 12 --final-review
@@ -133,12 +132,6 @@ TIMEOUT_CONTENT = 600       # Phase A/B: research + content generation (10 min)
 TIMEOUT_ACTIVITIES = 600    # Phase C: activities + vocab (10 min)
 TIMEOUT_FIX = 600           # Audit/D/F fix dispatches (10 min — was 300, too tight)
 TIMEOUT_REVIEW = 600        # Phase D review+fix (10 min)
-
-# Cap for track context injection
-TRACK_CONTEXT_MAX_MODULES_CORE = 5      # Core tracks: last 5 modules for consistency
-TRACK_CONTEXT_MAX_MODULES_SEMINAR = 0   # Seminar tracks: independent topics, skip entirely
-TRACK_CONTEXT_MAX_CHARS = 150_000       # Hard char cap (~50K tokens)
-
 
 # ---------------------------------------------------------------------------
 # State file — v3 uses a separate file so v2 and v3 don't collide
@@ -588,20 +581,6 @@ def _dispatch_claude_phase(
     except Exception as e:
         log(f"  Claude CLI exception: {e}")
         return False, ""
-
-
-# ---------------------------------------------------------------------------
-# Track context injection
-# ---------------------------------------------------------------------------
-
-def _write_track_context(ctx: ModuleContext) -> Path:
-    """Track context is not needed — plans, research, and enriched meta outlines
-    already give Gemini everything required for consistent, non-repetitive content.
-    Returns an empty file (kept for interface compatibility with Phase B/C).
-    """
-    context_path = ctx.orch_dir / "track-context.md"
-    context_path.write_text("", "utf-8")
-    return context_path
 
 
 # ---------------------------------------------------------------------------
@@ -1182,12 +1161,8 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
 # Phase B: Content (delegates to v2's phase_2_v2 + track context)
 # ---------------------------------------------------------------------------
 
-def phase_B_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) -> bool:
-    """Phase B: Write prose. Delegates to v2's phase_2_content with track context override.
-
-    Track context is injected by writing track-context.md and setting
-    TRACK_CONTEXT_PATH placeholder override before dispatching.
-    """
+def phase_B_v3(ctx: ModuleContext, state: dict) -> bool:
+    """Phase B: Write prose. Delegates to v2's phase_2_content."""
     phase = "B"
     if _is_phase_v3_complete(ctx, phase, state):
         log("  Phase B: SKIP (already complete)")
@@ -1214,22 +1189,6 @@ def phase_B_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
     if ctx.dry_run:
         log("  Phase B: DRY-RUN — would dispatch content (phase-2-content.md)")
         return True
-
-    # Inject track context path into placeholders if requested
-    if use_track_context:
-        log("  Phase B: Building track context...")
-        track_ctx_path = _write_track_context(ctx)
-        # Inject TRACK_CONTEXT_PATH override so fill_template uses it
-        # We monkey-patch the placeholder file temporarily via overrides in fill_template
-        # (The template references {TRACK_CONTEXT_PATH} optionally — no-strict mode ignores unknowns)
-        ctx._track_context_path = str(track_ctx_path)  # type: ignore[attr-defined]
-        log(f"  Phase B: Track context → {track_ctx_path.name} "
-            f"({track_ctx_path.stat().st_size:,} bytes)")
-
-    # Use v2's phase_2_content — it handles archive detection, adoption, etc.
-    # Temporarily inject TRACK_CONTEXT_PATH as a fill_template override by wrapping dispatch
-    if use_track_context and hasattr(ctx, "_track_context_path"):
-        _inject_track_context_placeholder(ctx, "TRACK_CONTEXT_PATH")
 
     ok = v2.phase_2_v2(ctx)
 
@@ -1299,36 +1258,12 @@ def _invalidate_stale_artifacts(ctx: ModuleContext) -> None:
         log(f"  Phase B: Invalidated stale audit: {audit_file.name}")
 
 
-def _inject_track_context_placeholder(ctx: ModuleContext, key: str) -> None:
-    """Append TRACK_CONTEXT_PATH to placeholders.yaml so phase-2-content.md can use it.
-
-    Uses --no-strict so if the template doesn't reference it, it's silently ignored.
-    """
-    import yaml
-    placeholder_path = ctx.orch_dir / "placeholders.yaml"
-    if not placeholder_path.exists():
-        return
-    try:
-        data = yaml.safe_load(placeholder_path.read_text("utf-8")) or {}
-        data[key] = getattr(ctx, "_track_context_path", "")
-        placeholder_path.write_text(
-            yaml.dump(data, allow_unicode=True, default_flow_style=False),
-            "utf-8",
-        )
-    except Exception as e:
-        log(f"  Phase B: WARNING — could not inject {key}: {e}")
-
-
 # ---------------------------------------------------------------------------
 # Phase C: Activities + Vocabulary (single combined call)
 # ---------------------------------------------------------------------------
 
-def phase_C_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) -> bool:
-    """Phase C: Generate activities + vocabulary in a single Gemini call.
-
-    Uses existing phase-3-activities.md template (outputs both ACTIVITIES + VOCABULARY).
-    Injects track context if available.
-    """
+def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
+    """Phase C: Generate activities + vocabulary in a single Gemini call."""
     phase = "C"
     if _is_phase_v3_complete(ctx, phase, state):
         log("  Phase C: SKIP (already complete)")
@@ -1350,14 +1285,6 @@ def phase_C_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
             if voc_path and voc_path.exists():
                 voc_path.unlink(missing_ok=True)
                 log("  Phase C: Also deleted stale vocabulary (paired with invalid activities)")
-
-    # Inject track context
-    if use_track_context:
-        if not hasattr(ctx, "_track_context_path"):
-            track_ctx_path = _write_track_context(ctx)
-            ctx._track_context_path = str(track_ctx_path)  # type: ignore[attr-defined]
-            log(f"  Phase C: Track context → {Path(ctx._track_context_path).name}")
-        _inject_track_context_placeholder(ctx, "TRACK_CONTEXT_PATH")
 
     template = PHASES_DIR / "phase-3-activities.md"
     if not template.exists():
@@ -2255,21 +2182,19 @@ def _phase_F_gemini(ctx: ModuleContext) -> bool:
 # ---------------------------------------------------------------------------
 
 PHASE_FUNCTIONS_V3: dict[str, Any] = {
-    "A":     phase_A_v3,        # takes (ctx, state)
-    "B":     phase_B_v3,        # takes (ctx, state, use_track_context)
-    "C":     phase_C_v3,        # takes (ctx, state, use_track_context)
-    "audit": phase_audit_v3,    # takes (ctx, state)
-    "D":     phase_D_v3,        # takes (ctx, state)
-    "E":     phase_E_v3,        # takes (ctx) — delegates to v2
-    "F":     phase_F_v3,        # takes (ctx) — delegates to v2
+    "A":     phase_A_v3,        # (ctx, state)
+    "B":     phase_B_v3,        # (ctx, state)
+    "C":     phase_C_v3,        # (ctx, state)
+    "audit": phase_audit_v3,    # (ctx, state)
+    "D":     phase_D_v3,        # (ctx, state)
+    "E":     phase_E_v3,        # (ctx) — delegates to v2
+    "F":     phase_F_v3,        # (ctx) — delegates to v2
 }
 
 
-def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False,
-                    no_track_context: bool = False) -> bool:
+def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False) -> bool:
     """Execute the v3 optimised pipeline."""
     state = _load_state_v3(ctx)
-    use_tc = not no_track_context
 
     # Layer 3: One-time v2→v3 state migration (skipped on --force-phase and --rebuild)
     if not ctx.force_phase and not getattr(ctx, "refresh", False):
@@ -2281,8 +2206,6 @@ def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False,
     log(f"\nPipeline v3: 4-call optimised — {len(PHASE_SEQUENCE_V3)} phases")
     if ctx.dry_run:
         log("  (DRY-RUN — no Gemini dispatches)")
-    if no_track_context:
-        log("  (--no-track-context — skipping track context injection)")
     log("")
 
     # Print phase plan
@@ -2313,7 +2236,7 @@ def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False,
                 phases.pop(sid, None)
             _save_state_v3(ctx, state)
         func = PHASE_FUNCTIONS_V3[force_key]
-        return _call_phase_func(func, force_key, ctx, state, use_tc)
+        return _call_phase_func(func, force_key, ctx, state)
 
     # --restart-from
     restart_from = getattr(ctx, "restart_from", None)
@@ -2332,7 +2255,7 @@ def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False,
         _save_state_v3(ctx, state)
         log(f"  --restart-from {restart_upper}: running phases {', '.join(remaining)}")
         for phase_id in remaining:
-            if not _call_phase_func(PHASE_FUNCTIONS_V3[phase_id], phase_id, ctx, state, use_tc):
+            if not _call_phase_func(PHASE_FUNCTIONS_V3[phase_id], phase_id, ctx, state):
                 log(f"\n  PIPELINE STOPPED at phase {phase_id}")
                 return False
         # Don't fall through to MDX here — handled below
@@ -2342,7 +2265,7 @@ def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False,
     # MDX (Phase E) is always deferred to after all other phases including F
     for phase_id in PHASE_SEQUENCE_V3:
         func = PHASE_FUNCTIONS_V3[phase_id]
-        if not _call_phase_func(func, phase_id, ctx, state, use_tc):
+        if not _call_phase_func(func, phase_id, ctx, state):
             log(f"\n  PIPELINE STOPPED at phase {phase_id}")
             return False
 
@@ -2415,11 +2338,9 @@ def _run_final_phases(ctx: ModuleContext, state: dict) -> bool:
 
 
 def _call_phase_func(func: Any, phase_id: str, ctx: ModuleContext,
-                     state: dict, use_tc: bool) -> bool:
+                     state: dict) -> bool:
     """Call a v3 phase function with the right signature."""
-    if phase_id in ("B", "C"):
-        return func(ctx, state, use_tc)
-    elif phase_id in ("E", "F"):
+    if phase_id in ("E", "F"):
         return func(ctx)
     else:
         return func(ctx, state)
@@ -2438,7 +2359,6 @@ def preflight_v3(args: argparse.Namespace) -> ModuleContext:
     ctx.state["mode"] = "v3"
 
     # v3-specific flags
-    ctx.no_track_context = getattr(args, "no_track_context", False)  # type: ignore[attr-defined]
     ctx.research_only = getattr(args, "research_only", False)  # type: ignore[attr-defined]
 
     # --use-claude: set of phase IDs to dispatch via Claude CLI instead of Gemini
@@ -2563,8 +2483,6 @@ def main() -> int:
                         help="Regenerate prose from updated research")
     parser.add_argument("--verify", action="store_true",
                         help="Just run audit, print PASS/FAIL, exit")
-    parser.add_argument("--no-track-context", action="store_true", dest="no_track_context",
-                        help="Skip track context injection in Phases B and C")
     parser.add_argument("--research-only", action="store_true", dest="research_only",
                         help="Run Phase A only (pre-seed research for all modules)")
     parser.add_argument("--final-review", action="store_true", dest="final_review",
@@ -2691,7 +2609,6 @@ def main() -> int:
                 force_research=getattr(args, "force_research", False),
                 dry_run=args.dry_run,
                 refresh=getattr(args, "refresh", False), verify=False,
-                no_track_context=args.no_track_context,
                 research_only=args.research_only,
                 final_review=getattr(args, "final_review", False),
                 final_review_agent=getattr(args, "final_review_agent", "claude"),
@@ -2805,7 +2722,6 @@ def _run_single_module(args: argparse.Namespace) -> int:
         ok = run_pipeline_v3(
             ctx,
             research_only=getattr(ctx, "research_only", False),
-            no_track_context=getattr(ctx, "no_track_context", False),
         )
         elapsed = time.time() - t0
         elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"

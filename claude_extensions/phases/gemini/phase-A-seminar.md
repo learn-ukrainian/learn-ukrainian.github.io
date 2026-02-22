@@ -89,6 +89,17 @@ After completing research, rebuild the `content_outline` using:
 
 ---
 
+## Downstream Audit Gates (Phase B content will be checked for)
+
+Plan your research and outline knowing that Phase B content must pass these gates:
+- **Word count**: minimum **{WORD_TARGET}** words — allocate outline sections accordingly
+- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
+- **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)
+- **Duplicate headers**: ensure outline section names don't share keywords
+- **IPA vowels**: if research includes pronunciation, use correct IPA: о = [ɔ], е = [ɛ], ч = [t͡ʃ]
+
+---
+
 ## Output Format
 
 > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.

@@ -26,6 +26,20 @@ Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).
 - **Engagement callouts**: {ENGAGEMENT_MIN}+ across sections, at least 4 different types
 - **Example sentences**: {EXAMPLE_MIN}+ in varied formats (inline, standalone, tables, dialogues)
 
+## Downstream Audit Gates (your content will be checked for)
+
+Write with these in mind — errors here trigger Phase D repair cycles:
+- **Word count**: minimum **{WORD_TARGET}** words (hard gate)
+- **Colonial framing**: NEVER define Ukrainian by contrast with Russian (hard fail)
+- **Russianisms**: banned words — кушати, приймати участь, получати, самий кращий, слідуючий (hard fail)
+- **Russian characters**: ы, э, ё, ъ must NEVER appear (hard fail)
+- **IPA vowels**: Ukrainian о = [ɔ] always, е = [ɛ] always, ч = [t͡ʃ] with tie-bar
+- **Euphony**: і/й, у/в, з/із alternation (auto-fixable but better to write correctly)
+- **Engagement callouts**: {ENGAGEMENT_MIN}+ using counted types ([!tip], [!warning], [!quote], [!myth-buster], [!culture], [!fact], [!context], [!reflection], [!note])
+- **Duplicate headers**: no two H2s sharing the same keyword (e.g., two headers containing «спадщина»)
+
+---
+
 ## Section Word Budgets
 
 **The global word target is the hard gate. Section budgets are guidance** — aim for each section's target, but natural variation (±30%) between sections is fine as long as no section is starved (<50% of its budget) and the total meets the global minimum.

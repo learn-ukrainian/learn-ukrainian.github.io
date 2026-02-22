@@ -569,6 +569,8 @@ This command:
 | `manifest_utils.py`       | Manifest validation & lookup   | `.venv/bin/python scripts/manifest_utils.py validate`        |
 | `validate_plan_config.py` | Plan vs config.py validation   | `.venv/bin/python scripts/validate_plan_config.py b1`        |
 | `assess_research.py`     | Research quality & upgrade      | `.venv/bin/python scripts/assess_research.py b2-hist --upgrade-process` |
+| `enrich_research_quotes.py` | Convert `"..."` → `«»` in research files | `.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks c1-hist` |
+| `enrich_research_gaps.py`   | Close deterministic research gaps (quotes, sections) | `.venv/bin/python scripts/enrich_research_gaps.py --apply` |
 
 ### Slug & Path Utilities (Python)
 
@@ -1622,9 +1624,6 @@ and routes phases to the best LLM: Gemini for research/prose, Claude for activit
 # Re-run a single phase (A/B/C/audit/D/E/F)
 .venv/bin/python scripts/build_module_v3.py {track} {num} --force-phase D
 
-# Skip track context injection in Phases B and C
-.venv/bin/python scripts/build_module_v3.py {track} {num} --no-track-context
-
 # Dry-run (show plan, no LLM dispatches)
 .venv/bin/python scripts/build_module_v3.py {track} {num} --dry-run
 
@@ -2167,6 +2166,33 @@ npm run status:all             # Generate all levels
 **Self-healing retries:** `--upgrade-process` retries each module up to 3 attempts (`MAX_RESEARCH_UPGRADE_RETRIES`). Hard failures (build error, timeout, missing file) stop retries immediately. Ctrl+C exits cleanly with a progress summary.
 
 **v3 integration:** after a successful upgrade, `--upgrade-process` automatically clears Phase A from `state-v3.json` for that module. This forces `build_module_v3.py` to regenerate the meta outline from the improved research on the next run. Modules whose research wasn't upgraded keep their Phase A cached.
+
+### enrich_research_quotes.py
+
+**Purpose:** Convert inline `"..."` quotes to `«»` guillemets in research files so the `primary_quotes` scorer counts them. Only converts quotes with 20+ Cyrillic characters inside the "Ключові факти та цитати" section and blockquote lines. No content changes — only quote mark characters.
+
+```bash
+# Preview changes (default)
+.venv/bin/python scripts/enrich_research_quotes.py --dry-run
+
+# Apply to specific tracks
+.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks c1-hist c1-bio
+
+# Apply to default tracks (b2-hist, c1-hist, c1-bio)
+.venv/bin/python scripts/enrich_research_quotes.py --apply
+```
+
+### enrich_research_gaps.py
+
+**Purpose:** Close deterministic research quality gaps without LLM calls. Adds blockquote-formatted primary source quotes (from existing `«»` text), skeleton `section_notes` and `decolonization` sections where missing. Reports remaining gaps that need Gemini enrichment (sources, chronology).
+
+```bash
+# Preview (default)
+.venv/bin/python scripts/enrich_research_gaps.py --dry-run
+
+# Apply fixes
+.venv/bin/python scripts/enrich_research_gaps.py --apply
+```
 
 ### Full Research → Build Workflow (v3)
 

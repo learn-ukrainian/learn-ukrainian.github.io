@@ -65,6 +65,15 @@ When researching, frame Ukrainian independently — **never as a derivative or v
 - Stylistic/dialectal features from academic sources (C2)
 - Register distinctions (formal vs. informal usage)
 
+## Downstream Audit Gates (Phase B content will be checked for)
+
+Plan your outline knowing that Phase B content must pass these gates:
+- **Word count**: minimum **{WORD_TARGET}** words — allocate outline sections accordingly
+- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
+- **Russianisms**: ensure vocabulary_hints and examples avoid banned words (кушати→їсти, получати→отримувати)
+- **IPA vowels**: Ukrainian о = [ɔ] always, е = [ɛ] always, ч = [t͡ʃ] with tie-bar
+- **Duplicate headers**: ensure outline section names don't share keywords
+
 ---
 
 ## PART 2: Meta Outline

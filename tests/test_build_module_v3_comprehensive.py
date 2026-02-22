@@ -12,7 +12,6 @@ Covers functions NOT already tested in test_v3_state.py and test_build_pipeline.
 - _invalidate_stale_artifacts — artifact cleanup on rebuild
 - _is_final_review_done — Phase F completion check
 - _call_phase_func — dispatch signature routing
-- _write_track_context — returns empty file (dead code)
 
 Plus regression tests for bugs fixed in #625:
 - subprocess import (NameError on timeout)
@@ -44,7 +43,6 @@ from scripts.build_module_v3 import (
     _research_file_is_usable,
     _is_final_review_done,
     _call_phase_func,
-    _write_track_context,
     _run_deterministic_fixes,
     _deterministic_fix_mtimes,
     _extract_delimiter,
@@ -304,66 +302,51 @@ class TestCallPhaseFunc:
     def test_phase_a_gets_ctx_state(self):
         """Phase A functions get (ctx, state)."""
         func = MagicMock(return_value=True)
-        ctx, state, use_tc = MagicMock(), {}, True
-        result = _call_phase_func(func, "A", ctx, state, use_tc)
+        ctx, state = MagicMock(), {}
+        result = _call_phase_func(func, "A", ctx, state)
         func.assert_called_once_with(ctx, state)
         assert result is True
 
-    def test_phase_b_gets_track_context(self):
-        """Phase B functions get (ctx, state, use_track_context)."""
+    def test_phase_b_gets_ctx_state(self):
+        """Phase B functions get (ctx, state)."""
         func = MagicMock(return_value=True)
-        ctx, state, use_tc = MagicMock(), {}, False
-        _call_phase_func(func, "B", ctx, state, use_tc)
-        func.assert_called_once_with(ctx, state, False)
+        ctx, state = MagicMock(), {}
+        _call_phase_func(func, "B", ctx, state)
+        func.assert_called_once_with(ctx, state)
 
-    def test_phase_c_gets_track_context(self):
-        """Phase C functions get (ctx, state, use_track_context)."""
+    def test_phase_c_gets_ctx_state(self):
+        """Phase C functions get (ctx, state)."""
         func = MagicMock(return_value=True)
-        ctx, state, use_tc = MagicMock(), {}, True
-        _call_phase_func(func, "C", ctx, state, use_tc)
-        func.assert_called_once_with(ctx, state, True)
+        ctx, state = MagicMock(), {}
+        _call_phase_func(func, "C", ctx, state)
+        func.assert_called_once_with(ctx, state)
 
     def test_phase_e_gets_ctx_only(self):
         """Phase E functions get (ctx) only."""
         func = MagicMock(return_value=True)
-        ctx, state, use_tc = MagicMock(), {}, True
-        _call_phase_func(func, "E", ctx, state, use_tc)
+        ctx, state = MagicMock(), {}
+        _call_phase_func(func, "E", ctx, state)
         func.assert_called_once_with(ctx)
 
     def test_phase_f_gets_ctx_only(self):
         """Phase F functions get (ctx) only."""
         func = MagicMock(return_value=True)
-        ctx, state, use_tc = MagicMock(), {}, True
-        _call_phase_func(func, "F", ctx, state, use_tc)
+        ctx, state = MagicMock(), {}
+        _call_phase_func(func, "F", ctx, state)
         func.assert_called_once_with(ctx)
 
     def test_audit_gets_ctx_state(self):
         """Audit phase functions get (ctx, state)."""
         func = MagicMock(return_value=True)
-        ctx, state, use_tc = MagicMock(), {}, True
-        _call_phase_func(func, "audit", ctx, state, use_tc)
+        ctx, state = MagicMock(), {}
+        _call_phase_func(func, "audit", ctx, state)
         func.assert_called_once_with(ctx, state)
 
     def test_returns_false_on_failure(self):
         """Propagates return value from phase function."""
         func = MagicMock(return_value=False)
-        result = _call_phase_func(func, "D", MagicMock(), {}, True)
+        result = _call_phase_func(func, "D", MagicMock(), {})
         assert result is False
-
-
-# ---------------------------------------------------------------------------
-# _write_track_context (dead code — returns empty file)
-# ---------------------------------------------------------------------------
-
-class TestWriteTrackContext:
-    """Tests for the track context writer (currently a no-op)."""
-
-    def test_returns_empty_file(self, mock_ctx):
-        """Should write an empty file and return its path."""
-        result = _write_track_context(mock_ctx)
-        assert result.exists()
-        assert result.read_text("utf-8") == ""
-        assert result.name == "track-context.md"
 
 
 # ---------------------------------------------------------------------------
