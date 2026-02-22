@@ -666,25 +666,31 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
 
     # 1. Euphony auto-fix (content .md)
     if content_path and content_path.exists():
-        from audit.checks.euphony import auto_fix_euphony
-        text = content_path.read_text("utf-8")
-        fixed_text, n = auto_fix_euphony(text, str(content_path))
-        if n > 0:
-            content_path.write_text(fixed_text, "utf-8")
-            total += n
-            log(f"    Auto-fix: {n} euphony violation(s)")
+        try:
+            from audit.checks.euphony import auto_fix_euphony
+            text = content_path.read_text("utf-8")
+            fixed_text, n = auto_fix_euphony(text, str(content_path))
+            if n > 0:
+                content_path.write_text(fixed_text, "utf-8")
+                total += n
+                log(f"    Auto-fix: {n} euphony violation(s)")
+        except Exception as e:
+            log(f"    Auto-fix: euphony failed: {e}")
 
     # 2. IPA normalization (content, vocab, activities)
-    from lint_ipa import apply_fixes as ipa_apply_fixes
-    vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
-    for target in [content_path, vocab_path, ctx.paths.get("activities")]:
-        if target and target.exists():
-            t = target.read_text("utf-8")
-            fixed_t, n = ipa_apply_fixes(t)
-            if n > 0:
-                target.write_text(fixed_t, "utf-8")
-                total += n
-                log(f"    Auto-fix: {n} IPA issue(s) in {target.name}")
+    try:
+        from lint_ipa import apply_fixes as ipa_apply_fixes
+        vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+        for target in [content_path, vocab_path, ctx.paths.get("activities")]:
+            if target and target.exists():
+                t = target.read_text("utf-8")
+                fixed_t, n = ipa_apply_fixes(t)
+                if n > 0:
+                    target.write_text(fixed_t, "utf-8")
+                    total += n
+                    log(f"    Auto-fix: {n} IPA issue(s) in {target.name}")
+    except Exception as e:
+        log(f"    Auto-fix: IPA normalization failed: {e}")
 
     # 3. YAML schema fixes (activities file)
     act_path = ctx.paths.get("activities")
