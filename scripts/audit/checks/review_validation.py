@@ -64,7 +64,7 @@ TIER_CONFIG = {
         'review_cmd': '/review-content-core-a',
         'tier_ref': 'claude_extensions/commands/review-tiers/tier-1-beginner.md',
         'min_chars': 400,
-        'min_dimensions': 5,
+        'min_dimensions': 7,
         'required_headers': [
             _HEADER_SCORES,
             _HEADER_ISSUES,

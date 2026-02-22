@@ -131,7 +131,7 @@ ESCALATION_MODEL_GEMINI = PRO_MODEL                # Escalation: Gemini fixes wh
 TIMEOUT_CONTENT = 600       # Phase A/B: research + content generation (10 min)
 TIMEOUT_ACTIVITIES = 600    # Phase C: activities + vocab (10 min)
 TIMEOUT_FIX = 600           # Audit/D/F fix dispatches (10 min — was 300, too tight)
-TIMEOUT_REVIEW = 600        # Phase D review+fix (10 min)
+TIMEOUT_REVIEW = 900        # Phase D review (15 min — D.1 uses tool access, needs more time)
 
 # ---------------------------------------------------------------------------
 # State file — v3 uses a separate file so v2 and v3 don't collide
@@ -555,7 +555,7 @@ def _dispatch_claude_phase(
                  "CRITICAL: Your output MUST contain ===REVIEW_START=== and ===REVIEW_END=== "
                  "delimiters wrapping the full structured review. Output without these delimiters "
                  "is automatically discarded. Do NOT summarize — produce the FULL review with "
-                 "all 13 dimensions scored, all required H2 sections, and all citations."])
+                 "all dimensions scored, all required H2 sections, and all citations."])
 
     try:
         from build_module import _run_with_heartbeat

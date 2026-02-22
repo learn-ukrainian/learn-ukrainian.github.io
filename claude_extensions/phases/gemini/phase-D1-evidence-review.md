@@ -163,33 +163,7 @@ Follow the full review protocol. In summary:
 
 **Example plausibility test**: Would a real Ukrainian speaker actually say each example sentence? Flag implausible examples. If 2+ implausible → LLM Fingerprint ≤ 8.
 
-### STEP 4: Score 13 Dimensions
-
-| # | Dimension | Auto-fail |
-|---|-----------|-----------|
-| 1 | Experience Quality | <7 |
-| 2 | Coherence | <7 |
-| 3 | Relevance | <7 |
-| 4 | Educational | <7 |
-| 5 | Language | <8 |
-| 6 | Pedagogy | <7 |
-| 7 | Immersion | <6 |
-| 8 | Activities | <7 |
-| 9 | Richness | <6 |
-| 10 | Beginner Safety | <7 |
-| 11 | LLM Fingerprint | <7 |
-| 12 | Linguistic Accuracy | <9 |
-| 13 | Factual Accuracy | <8 |
-
-**Weighted Overall:**
-```
-Overall = (Experience x 1.5 + Coherence x 1.0 + Relevance x 1.0 + Educational x 1.2 +
-          Language x 1.1 + Pedagogy x 1.2 + Immersion x 1.0 + Activities x 1.3 +
-          Richness x 0.9 + Beginner_Safety x 1.3 + LLM x 1.0 + Linguistic_Accuracy x 1.5 +
-          Factual_Accuracy x 1.5) / 15.5
-```
-
-**Factual Accuracy note:** ALL tracks — verify callout boxes (`[!did-you-know]`, `[!myth-buster]`, `[!culture-note]`, `[!fun-fact]`) for fabricated claims. Seminar tracks — additionally verify against research notes/Key Facts Ledger. Do NOT auto-score 9 for any track.
+{SCORING_SECTION}
 
 ---
 

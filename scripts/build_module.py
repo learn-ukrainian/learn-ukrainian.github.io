@@ -2846,6 +2846,99 @@ def get_tier_guidance(track: str) -> str:
     return f"(Tier guidance file not found: {tier_file})"
 
 
+def _is_tier1(track: str) -> bool:
+    """Check if a track belongs to Tier 1 (beginner: A1/A2)."""
+    key = "lit" if track.startswith("lit-") else track
+    tier_file = TIER_MAP.get(key)
+    if not tier_file:
+        base = track.split("-")[0]
+        tier_file = TIER_MAP.get(base, "tier-2-core.md")
+    return tier_file == "tier-1-beginner.md"
+
+
+def _get_scoring_section(track: str) -> str:
+    """Return the STEP 4 scoring block with tier-appropriate dimensions."""
+    if _is_tier1(track):
+        return """### STEP 4: Score 7 Dimensions
+
+| # | Dimension | Weight | Auto-fail |
+|---|-----------|--------|-----------|
+| 1 | Experience Quality | 1.5 | <7 |
+| 2 | Language | 1.1 | <8 |
+| 3 | Pedagogy | 1.2 | <7 |
+| 4 | Activities | 1.3 | <7 |
+| 5 | Beginner Safety | 1.3 | <7 |
+| 6 | LLM Fingerprint | 1.0 | <7 |
+| 7 | Linguistic Accuracy | 1.5 | <9 |
+
+**Weighted Overall:**
+```
+Overall = (Experience x 1.5 + Language x 1.1 + Pedagogy x 1.2 +
+          Activities x 1.3 + Beginner_Safety x 1.3 + LLM x 1.0 +
+          Linguistic_Accuracy x 1.5) / 8.9
+```
+
+**Why 7 dimensions?** A1/A2 modules are short and topic-constrained, so Coherence, Relevance, Educational, Immersion, Richness, and Factual Accuracy are noise at this level — they auto-pass trivially and waste reviewer attention. Focus scoring on what actually differentiates good beginner modules."""
+    else:
+        return """### STEP 4: Score 13 Dimensions
+
+| # | Dimension | Auto-fail |
+|---|-----------|-----------|
+| 1 | Experience Quality | <7 |
+| 2 | Coherence | <7 |
+| 3 | Relevance | <7 |
+| 4 | Educational | <7 |
+| 5 | Language | <8 |
+| 6 | Pedagogy | <7 |
+| 7 | Immersion | <6 |
+| 8 | Activities | <7 |
+| 9 | Richness | <6 |
+| 10 | Beginner Safety | <7 |
+| 11 | LLM Fingerprint | <7 |
+| 12 | Linguistic Accuracy | <9 |
+| 13 | Factual Accuracy | <8 |
+
+**Weighted Overall:**
+```
+Overall = (Experience x 1.5 + Coherence x 1.0 + Relevance x 1.0 + Educational x 1.2 +
+          Language x 1.1 + Pedagogy x 1.2 + Immersion x 1.0 + Activities x 1.3 +
+          Richness x 0.9 + Beginner_Safety x 1.3 + LLM x 1.0 + Linguistic_Accuracy x 1.5 +
+          Factual_Accuracy x 1.5) / 15.5
+```
+
+**Factual Accuracy note:** ALL tracks — verify callout boxes (`[!did-you-know]`, `[!myth-buster]`, `[!culture-note]`, `[!fun-fact]`) for fabricated claims. Seminar tracks — additionally verify against research notes/Key Facts Ledger. Do NOT auto-score 9 for any track."""
+
+
+def _get_scoring_output_table(track: str) -> str:
+    """Return the dimension rows for the review output template."""
+    if _is_tier1(track):
+        return """| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | X/10 | <7 | [specific finding] |
+| 2 | Language | X/10 | <8 | [specific finding] |
+| 3 | Pedagogy | X/10 | <7 | [specific finding] |
+| 4 | Activities | X/10 | <7 | [specific finding] |
+| 5 | Beginner Safety | X/10 | <7 | ["Would I Continue?" X/5] |
+| 6 | LLM Fingerprint | X/10 | <7 | [specific finding] |
+| 7 | Linguistic Accuracy | X/10 | <9 | [specific finding] |"""
+    else:
+        return """| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | X/10 | <7 | [specific finding] |
+| 2 | Coherence | X/10 | <7 | [specific finding] |
+| 3 | Relevance | X/10 | <7 | [specific finding] |
+| 4 | Educational | X/10 | <7 | [specific finding] |
+| 5 | Language | X/10 | <8 | [specific finding] |
+| 6 | Pedagogy | X/10 | <7 | [specific finding] |
+| 7 | Immersion | X/10 | <6 | [actual % vs target] |
+| 8 | Activities | X/10 | <7 | [specific finding] |
+| 9 | Richness | X/10 | <6 | [specific finding] |
+| 10 | Beginner Safety | X/10 | <7 | ["Would I Continue?" X/5] |
+| 11 | LLM Fingerprint | X/10 | <7 | [specific finding] |
+| 12 | Linguistic Accuracy | X/10 | <9 | [specific finding] |
+| 13 | Factual Accuracy | X/10 | <8 | [specific finding or "N/A — core track"] |"""
+
+
 def _read_phase_file(filename: str) -> str:
     """Read a file from PHASES_DIR, returning its content or a fallback message."""
     path = PHASES_DIR / filename
@@ -2890,6 +2983,8 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "LEVEL_CONSTRAINTS": ctx.level_constraints,
         "TIER_GUIDANCE": get_tier_guidance(ctx.track),
         "D1_OUTPUT_FORMAT": _read_phase_file("phase-D1-output-format.md"),
+        "SCORING_SECTION": _get_scoring_section(ctx.track),
+        "SCORING_OUTPUT_TABLE": _get_scoring_output_table(ctx.track),
     }
 
     # Add activity config

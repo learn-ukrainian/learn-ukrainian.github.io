@@ -26,21 +26,7 @@ Plan-Content Alignment: [PASS/FAIL]
 
 ## Scores    <!-- REQUIRED — rejection if missing -->
 
-| # | Dimension | Score | Auto-fail | Evidence |
-|---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | X/10 | <7 | [specific finding] |
-| 2 | Coherence | X/10 | <7 | [specific finding] |
-| 3 | Relevance | X/10 | <7 | [specific finding] |
-| 4 | Educational | X/10 | <7 | [specific finding] |
-| 5 | Language | X/10 | <8 | [specific finding] |
-| 6 | Pedagogy | X/10 | <7 | [specific finding] |
-| 7 | Immersion | X/10 | <6 | [actual % vs target] |
-| 8 | Activities | X/10 | <7 | [specific finding] |
-| 9 | Richness | X/10 | <6 | [specific finding] |
-| 10 | Beginner Safety | X/10 | <7 | ["Would I Continue?" X/5] |
-| 11 | LLM Fingerprint | X/10 | <7 | [specific finding] |
-| 12 | Linguistic Accuracy | X/10 | <9 | [specific finding] |
-| 13 | Factual Accuracy | X/10 | <8 | [specific finding or "N/A — core track"] |
+{SCORING_OUTPUT_TABLE}
 
 **Weighted Overall:** {show calculation} = **X.X/10**
 
