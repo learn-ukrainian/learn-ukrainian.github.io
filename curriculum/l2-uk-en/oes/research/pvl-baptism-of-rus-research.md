@@ -1,5 +1,29 @@
 # Дослідження: Pvl Baptism Of Rus
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Pvl Baptism Of Rus"
+dates:
+  key_events:
+primary_quotes:
+  - text: "І спитав Володимир: \"А де закон ваш?\" І вони сказали: \"Пост по силі...\" Володимир же сказав: «Ідіте знову, бо батьки наші сього не прийняли"
+    source: "Вибір віри"
+    attribution: ""
+  - text: "Аще не обрящеться хто заутра на ріці, богат чи убог, чи нищ, чи роботник, — противен мені да буде"
+    source: "Хрещення киян"
+    attribution: ""
+  - text: "Повелі прив'язати коневі до хвоста і волочити з Гори... і приставив 12 мужів бити його палицями"
+    source: "Повалення Перуна"
+    attribution: ""
+  - text: "Повелє"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Хрещення Русі — початок російської державності\". \"Колиска трьох братніх народів\"."
+  - "Церковнослов'янська мова = \"давньоросійська\"."
+```
+
 ## Використані джерела
 1. [Ізборник](http://litopys.org.ua/pvlyar/yar.htm) — Повість временних літ (текст і переклад В. Яременка)
 2. [Енциклопедія історії України](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Khreschennia_Rusi) — Академічна стаття про Хрещення Русі

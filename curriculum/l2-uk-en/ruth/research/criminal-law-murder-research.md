@@ -1,5 +1,25 @@
 # Дослідження: Criminal Law Murder
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Criminal Law Murder"
+dates:
+  key_events:
+primary_quotes:
+  - text: "А єсли бы которій шляхтич... чловека простого стану забил, и был на горячей крови пойман... тогды того шляхтича-убийцу горлом карати"
+    source: ""
+    attribution: ""
+  - text: "Головщина"
+    source: ""
+    attribution: ""
+  - text: "На гарячій крові"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Russian historiography claims the Statutes as \"Russian Law\" (`Русское право`) or emphasizes their \"feudal cruelty\" to justify later Tsarist/Soviet \"liberation\"."
+```
+
 ## Використані джерела
 1. [Encyclopedia of Ukraine](http://www.encyclopediaofukraine.com) — Academic overview of the Lithuanian Statutes and criminal law.
 2. [Історія держави і права України (підручник)](https://history.org.ua) — Detailed analysis of the evolution of criminal law from Ruska Pravda to the Statutes.

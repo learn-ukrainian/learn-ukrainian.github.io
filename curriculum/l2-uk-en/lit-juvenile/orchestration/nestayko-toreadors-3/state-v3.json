@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-20T22:41:44Z",
+      "ts": "2026-02-22T19:52:51Z",
       "task_id": "v3-nestayko-toreadors-3-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

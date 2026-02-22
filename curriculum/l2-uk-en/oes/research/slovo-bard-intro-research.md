@@ -1,5 +1,32 @@
 # Дослідження: Slovo Bard Intro
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Slovo Bard Intro"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Не лѣпо ли ны бяшетъ, братие, начяти старыми словесы трудныхъ повѣстій о пълку Игоревѣ, Игоря Святъславлича?"
+    source: "Вступ"
+    attribution: ""
+  - text: "Боянъ бо вѣщій, аще кому хотяше пѣснь творити, то растѣкашется мыслію по древу, сѣрымъ вълкомъ по земли, шизымъ орломъ под облакы."
+    source: "Боян"
+    attribution: ""
+  - text: "по былинамь сего времени"
+    source: ""
+    attribution: ""
+  - text: "по замышленію Бояню"
+    source: ""
+    attribution: ""
+  - text: "Слова"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Слово» — пам'ятка «общєруской» або російської літератури."
+  - "Скептицизм щодо автентичності як інструмент знецінення давньої української культури (мовляв, у XII ст. не могли написати такий шедевр)."
+```
+
 ## Використані джерела
 1. [Літопис руський (Іпатіївський список)](http://litopys.org.ua/ipatlet/ipat.htm) — Першоджерело історичних подій 1185 року.
 2. [Енциклопедія історії України: Слово о полку Ігоревім](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Slovo_o_polku_Ihorevim) — Академічний огляд історії тексту, авторства та досліджень.

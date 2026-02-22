@@ -1,5 +1,28 @@
 # Дослідження: Social Contract (Суспільний договір)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Social Contract (Суспільний договір)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Вдови і дівчата не повинні йти заміж проти своєї волі"
+    source: ""
+    attribution: ""
+  - text: "вдови козацькі й осиротілі діти козацькі, козацькі господарства і жінки, яких чоловіки перебувають на війні... не були обтяжені жодними податками і поборами"
+    source: ""
+    attribution: ""
+  - text: "навчати сиріт і бідних дітей"
+    source: ""
+    attribution: ""
+  - text: "Нічого про нас без нас"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Росія принесла \"порядок\" у \"дике поле\" і \"хаос\" Речі Посполитої."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Литовські Статути](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Lytovski_statuty) — аналіз трьох редакцій Статуту як правової основи.
 2. [Ізборник: Пакти й Конституції прав і вольностей Війська Запорозького (1710)](http://litopys.org.ua/old18/old18_07.htm) — повний текст Конституції Пилипа Орлика українською мовою.

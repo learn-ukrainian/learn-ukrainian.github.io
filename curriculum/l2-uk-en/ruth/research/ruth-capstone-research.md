@@ -1,5 +1,31 @@
 # Дослідження: Ruth Capstone
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Ruth Capstone"
+dates:
+  key_events:
+primary_quotes:
+  - text: "А писар земский маеть по-руску литерами и словы рускими вси листы выписывати"
+    source: ""
+    attribution: ""
+  - text: "чресла — стегна"
+    source: ""
+    attribution: ""
+  - text: "бдѣти — пильновати"
+    source: ""
+    attribution: ""
+  - text: "зіло"
+    source: ""
+    attribution: ""
+  - text: "обоз"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Староукраїнська мова — це \"западнорусский письменный язык\", зіпсований польськими впливами."
+```
+
 ## Використані джерела
 1. [Ізборник](http://litopys.org.ua) — Основний масив першоджерел (літописи, статути, твори Сковороди).
 2. [Енциклопедія Сучасної України](https://esu.com.ua) — Статті про староукраїнську мову та Пересопницьке Євангеліє.

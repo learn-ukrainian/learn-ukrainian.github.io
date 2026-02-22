@@ -1,5 +1,31 @@
 # Дослідження: Phase 1 Checkpoint
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Phase 1 Checkpoint"
+dates:
+  key_events:
+primary_quotes:
+  - text: "от говѣновоє : ко Нѣжьньцю дає 60 дєсят коуно... а попъ пс-лъ"
+    source: ""
+    attribution: ""
+  - text: "Господи, помози рабу своєму..."
+    source: ""
+    attribution: ""
+  - text: "дві сестрі"
+    source: ""
+    attribution: ""
+  - text: "очі"
+    source: ""
+    attribution: ""
+  - text: "уші"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Радянська наука постулювала існування єдиної «давньоруської народності» і єдиної розмовної мови, яка розпалася лише в XIV-XV ст."
+```
+
 ## Використані джерела
 1.  **Німчук В. В. Історія української мови. Хрестоматія X-XIII ст.** (litopys.org.ua) — Фундаментальна праця з аналізу ранніх пам'яток, зокрема берестяних грамот та графіті.
 2.  **Висоцький С. О. Давньоруські написи Софії Київської** (litopys.org.ua) — Детальне дослідження епіграфіки Софійського собору, мовний аналіз написів.

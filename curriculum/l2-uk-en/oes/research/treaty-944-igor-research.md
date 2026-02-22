@@ -1,5 +1,15 @@
 # Дослідження: Treaty 944 Igor (Договір 944 року)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Treaty 944 Igor (Договір 944 року)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Трактування Русі як \"колиски трьох братніх народів\" або виключно слов'янської держави з ігноруванням норманського елементу. Радянська історіографія часто замовчувала скандинавські імена послів."
+```
+
 ## Використані джерела
 1. [Літопис руський (за Іпатіївським списком)](http://litopys.org.ua/litop/lit02.htm) — Першоджерело, що містить повний текст договору під 945 (6453) роком.
 2. [Енциклопедія історії України: Договір Київської Русі з Візантією 944](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Dogovir_Kyivskoi_1944) — Академічний аналіз умов та історичного контексту (М.Ф. Котляр).

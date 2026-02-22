@@ -1,5 +1,31 @@
 # Дослідження: Simple Tongue Vyshensky
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Simple Tongue Vyshensky"
+dates:
+  key_events:
+primary_quotes:
+  - text: "словенську"
+    source: ""
+    attribution: ""
+  - text: "богоспасенну"
+    source: ""
+    attribution: ""
+  - text: "плідну"
+    source: ""
+    attribution: ""
+  - text: "простій"
+    source: ""
+    attribution: ""
+  - text: "книжною українською мовою"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Вишенський — представник «общерусской» культури, захисник «єдності з Москвою»."
+```
+
 ## Використані джерела
 1.  [Іван Вишенський (Енциклопедія історії України)](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Vyshenskyj_I) — академічний огляд біографії та поглядів.
 2.  [Іван Вишенський. Твори (Ізборник)](http://litopys.org.ua/ukrleit/lig10.htm) — тексти творів, зокрема «Послання до єпископів».

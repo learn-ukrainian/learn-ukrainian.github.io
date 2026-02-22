@@ -597,6 +597,79 @@ def _extract_delimiter(text: str, start_tag: str, end_tag: str) -> str | None:
     return text[s:e].strip()
 
 
+def _extract_delimiter_tolerant(text: str, start_tag: str, end_tag: str) -> str | None:
+    """Extract delimited content, tolerating missing end tag.
+
+    First tries exact extraction. If the end tag is missing but the start tag
+    exists (Gemini truncation or missing closing delimiter), extracts from start
+    tag to the last valid YAML line (strips bridge status footer lines).
+    Validates result with yaml.safe_load before returning.
+    """
+    # Try exact match first
+    exact = _extract_delimiter(text, start_tag, end_tag)
+    if exact:
+        return exact
+
+    # Tolerant: start tag present, end tag missing
+    if start_tag not in text:
+        return None
+
+    s = text.index(start_tag) + len(start_tag)
+    raw = text[s:]
+
+    # Strip non-YAML lines from the end (bridge footer, status messages)
+    lines = raw.split("\n")
+    yaml_lines = []
+    for line in lines:
+        # Stop at bridge status markers or separator lines
+        stripped = line.strip()
+        if stripped.startswith("─") or stripped.startswith("✅") or stripped.startswith("✓"):
+            break
+        if stripped.startswith("===") and stripped.endswith("==="):
+            break
+        yaml_lines.append(line)
+
+    # Trim trailing blank lines
+    while yaml_lines and not yaml_lines[-1].strip():
+        yaml_lines.pop()
+
+    candidate = "\n".join(yaml_lines).strip()
+    if not candidate:
+        return None
+
+    # Validate it's parseable YAML before accepting
+    import yaml
+    try:
+        parsed = yaml.safe_load(candidate)
+        if parsed and isinstance(parsed, dict) and "items" in parsed:
+            log(f"    Tolerant extraction: recovered {len(parsed['items'])} vocab items (missing {end_tag})")
+            return candidate
+    except yaml.YAMLError:
+        # Try truncating to last complete entry (last line ending with a complete value)
+        # Find the last complete `- lemma:` block
+        last_good = -1
+        for i, line in enumerate(yaml_lines):
+            if line.strip().startswith("- lemma:"):
+                last_good = i
+        if last_good > 0 and last_good > 1:
+            # Find next `- lemma:` or end, take up to before it
+            for j in range(last_good, len(yaml_lines)):
+                ln = yaml_lines[j].strip()
+                if j > last_good and ln.startswith("- lemma:"):
+                    break
+            # Keep lines up to (but not including) the incomplete last entry
+            trimmed = "\n".join(yaml_lines[:last_good]).strip()
+            try:
+                parsed = yaml.safe_load(trimmed)
+                if parsed and isinstance(parsed, dict) and "items" in parsed:
+                    log(f"    Tolerant extraction: recovered {len(parsed['items'])} vocab items (trimmed incomplete entry)")
+                    return trimmed
+            except yaml.YAMLError:
+                pass
+
+    return None
+
+
 def _count_diff_lines(before: str, after: str) -> int:
     """Count the number of changed lines between two texts.
 
@@ -1359,6 +1432,60 @@ def _invalidate_stale_artifacts(ctx: ModuleContext) -> None:
 # Phase C: Activities + Vocabulary (single combined call)
 # ---------------------------------------------------------------------------
 
+def _build_vocab_only_prompt(ctx: ModuleContext) -> str | None:
+    """Build a lightweight prompt for vocabulary-only generation.
+
+    Used as fallback when Phase C output is truncated (activities extracted
+    but vocabulary cut off by output token limit).
+    """
+    content_path = ctx.paths.get("md")
+    plan_path = ctx.paths.get("plan")
+    meta_path = ctx.paths.get("meta")
+
+    if not content_path or not content_path.exists():
+        return None
+
+    plan_ref = f"\n\n**Plan file** (vocabulary_hints — follow this list):\n```\n{plan_path}\n```" if plan_path and plan_path.exists() else ""
+    meta_ref = f"\n\n**Meta file** (vocab count target):\n```\n{meta_path}\n```" if meta_path and meta_path.exists() else ""
+
+    return f"""You are a TEXT GENERATOR. Generate ONLY vocabulary YAML for a Ukrainian language module.
+
+Read the lesson content:
+```
+{content_path}
+```
+{plan_ref}{meta_ref}
+
+## Task
+
+Generate vocabulary YAML for the key terms taught in this lesson. Follow vocabulary_hints from the plan file if available.
+
+## Format
+
+Each entry uses: `lemma` (Ukrainian), `translation` (English), `pos` (part of speech).
+Optional: `gender` (m/f/n for nouns), `aspect` (perfective/imperfective for verbs), `notes`, `usage`, `example`.
+
+Do NOT include `ipa` fields.
+
+## Output
+
+You MUST output BOTH the opening AND closing delimiters. The closing delimiter is MANDATORY.
+
+===VOCABULARY_START===
+
+items:
+  - lemma: "слово"
+    translation: "word"
+    pos: "noun"
+    gender: "n"
+
+===VOCABULARY_END===
+
+CRITICAL: You MUST end your output with the line ===VOCABULARY_END=== — the pipeline CANNOT extract your work without it.
+Output NOTHING else. No commentary, no explanation. Just the delimited vocabulary YAML.
+"""
+
+
 def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
     """Phase C: Generate activities + vocabulary in a single Gemini call."""
     phase = "C"
@@ -1382,6 +1509,49 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
             if voc_path and voc_path.exists():
                 voc_path.unlink(missing_ok=True)
                 log("  Phase C: Also deleted stale vocabulary (paired with invalid activities)")
+
+    # Fast path: if activities exist and valid but vocabulary is missing (truncation
+    # recovery), skip the full dispatch and go straight to vocabulary-only.
+    if (act_path and act_path.exists() and act_path.stat().st_size > 10
+            and (not voc_path or not voc_path.exists())):
+        from build_module_v2 import _validate_activities_yaml
+        if _validate_activities_yaml(act_path):
+            log("  Phase C: Activities exist and valid, vocabulary missing — vocab-only dispatch")
+            use_claude = "C" in getattr(ctx, "use_claude", set())
+            vocab_prompt = _build_vocab_only_prompt(ctx)
+            if vocab_prompt:
+                vocab_prompt_file = ctx.orch_dir / "phase-C-vocab-fallback.md"
+                vocab_prompt_file.write_text(vocab_prompt, "utf-8")
+                if use_claude:
+                    claude_model = getattr(ctx, "claude_model_C", CLAUDE_MODEL_ACTIVITIES)
+                    vok, vraw = _dispatch_claude_phase(
+                        vocab_prompt_file, "Phase C vocab", model=claude_model, timeout=300,
+                    )
+                else:
+                    vok, vraw = dispatch_gemini(
+                        _dispatch_prompt(ctx, vocab_prompt_file),
+                        task_id=f"v3-{ctx.slug}-pC-vocab",
+                        model=ctx.model, stdout_only=True,
+                        output_file=_gemini_output_path(ctx.slug, "pC-vocab"),
+                        timeout=300,
+                    )
+                if vok:
+                    vocab_text = _extract_delimiter_tolerant(vraw, "===VOCABULARY_START===", "===VOCABULARY_END===")
+                    if vocab_text and voc_path:
+                        voc_path.parent.mkdir(parents=True, exist_ok=True)
+                        voc_path.write_text(vocab_text, "utf-8")
+                        log(f"  Phase C: Vocabulary generated via fast-path → {voc_path.name}")
+                        # Validate activities schema before marking complete
+                        from build_module_v2 import _validate_activities_yaml as _vact
+                        if not _vact(act_path):
+                            log("  Phase C: FAILED — activities YAML failed schema validation")
+                            _mark_phase_v3(ctx, state, phase, "failed", note="activities-schema-invalid")
+                            return False
+                        mark_phase_locked(ctx, "3a", "complete", note="v3-phase-C")
+                        mark_phase_locked(ctx, "3b", "complete", note="v3-phase-C")
+                        _mark_phase_v3(ctx, state, phase, "complete", task_id=f"v3-{ctx.slug}-pC-vocab")
+                        return True
+            log("  Phase C: Vocab fast-path failed — falling through to full dispatch")
 
     template = PHASES_DIR / "phase-3-activities.md"
     if not template.exists():
@@ -1431,12 +1601,48 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
             log(f"  Phase C: Activities extracted → {act_path.name}")
 
     if not wrote_vocab:
-        vocab_text = _extract_delimiter(raw_output, "===VOCABULARY_START===", "===VOCABULARY_END===")
+        vocab_text = _extract_delimiter_tolerant(raw_output, "===VOCABULARY_START===", "===VOCABULARY_END===")
         if vocab_text and voc_path:
             voc_path.parent.mkdir(parents=True, exist_ok=True)
             voc_path.write_text(vocab_text, "utf-8")
             wrote_vocab = True
             log(f"  Phase C: Vocabulary extracted → {voc_path.name}")
+
+    # Vocabulary fallback: if activities extracted but vocabulary truncated (Gemini
+    # hit output token limit), dispatch a lightweight vocabulary-only call.
+    # Affects ~10% of Phase C runs — truncation always cuts vocabulary since it
+    # comes after activities in the output.
+    if wrote_activities and not wrote_vocab and "===VOCABULARY_START===" in raw_output:
+        log("  Phase C: Vocabulary truncated (VOCABULARY_START without END) — dispatching vocab-only fallback")
+        vocab_prompt = _build_vocab_only_prompt(ctx)
+        if vocab_prompt:
+            vocab_prompt_file = ctx.orch_dir / "phase-C-vocab-fallback.md"
+            vocab_prompt_file.write_text(vocab_prompt, "utf-8")
+
+            if use_claude:
+                claude_model = getattr(ctx, "claude_model_C", CLAUDE_MODEL_ACTIVITIES)
+                vok, vraw = _dispatch_claude_phase(
+                    vocab_prompt_file, "Phase C vocab", model=claude_model, timeout=300,
+                )
+            else:
+                vok, vraw = dispatch_gemini(
+                    _dispatch_prompt(ctx, vocab_prompt_file),
+                    task_id=f"v3-{ctx.slug}-pC-vocab",
+                    model=ctx.model, stdout_only=True,
+                    output_file=_gemini_output_path(ctx.slug, "pC-vocab"),
+                    timeout=300,
+                )
+            if vok:
+                vocab_text = _extract_delimiter_tolerant(vraw, "===VOCABULARY_START===", "===VOCABULARY_END===")
+                if vocab_text and voc_path:
+                    voc_path.parent.mkdir(parents=True, exist_ok=True)
+                    voc_path.write_text(vocab_text, "utf-8")
+                    wrote_vocab = True
+                    log(f"  Phase C: Vocabulary extracted from fallback → {voc_path.name}")
+                else:
+                    log("  Phase C: Vocab fallback returned no valid delimited content")
+            else:
+                log("  Phase C: Vocab fallback dispatch failed")
 
     if not wrote_activities or not wrote_vocab:
         log(f"  Phase C: FAILED — missing files: activities={wrote_activities}, vocab={wrote_vocab}")

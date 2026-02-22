@@ -1,5 +1,26 @@
 # Дослідження: Numbers Currency (OES)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Numbers Currency (OES)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Аже убиють огнищанина у клети, то 80 гривен за нь, а людием не надобе"
+    source: "Руська Правда"
+    attribution: ""
+  - text: "...мънє не надобє..."
+    source: ""
+    attribution: ""
+  - text: "гривънъ"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Берестяні грамоти — унікальне надбання Новгорода (\"русского мира\")."
+  - "\"Рубль\" — давня валюта Русі."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Грошовий обіг](http://resource.history.org.ua/) — Фундаментальний огляд грошових систем на українських землях.
 2. [Звенигородська берестяна грамота №1](https://uk.wikipedia.org/wiki/Звенигородська_берестяна_грамота) — Деталі знахідки та інтерпретації тексту.

@@ -165,7 +165,7 @@ These shapes are new to you. They have no "baggage" from English, so you can lea
 > **The Anti-Surzhyk Alert**
 > You might see characters in some apps or textbooks that look like an "e" with two dots, a backwards "e", or a "bl" combination. These three letters **do not exist** in Ukrainian.
 >
-> If you spot them in a "Ukrainian" resource, that resource is mixing in Russian. Ukrainian has its own elegant system — **Є** for the "ye" sound, **І** for the "ee" sound, and **И** for the deep vowel. Trust the real Ukrainian alphabet.
+> If you spot them in a "Ukrainian" resource, that resource is mixing in Russian. Ukrainian has its own elegant system — **Є** for the "ye" sound, **І** for the "ee" sound, and **И** for the short vowel (as in "bit"). Trust the real Ukrainian alphabet.
 
 ---
 
@@ -241,7 +241,7 @@ The letter **Ґ** has a dramatic story. In 1933, Soviet authorities removed it f
 ### Pronunciation Nuance
 This letter isn't just for show. It represents a very specific sound.
 -   **І** is sharp, high, and front (like "mach**i**ne").
--   **И** (which looks like a backwards N) is deep, lower, and harder (like "m**y**th" or "r**hy**thm").
+-   **И** (which looks like a backwards N) is slightly lower and more relaxed (like "m**y**th" or "r**hy**thm").
 
 We will master the deep **И** in the next lesson, but for now, embrace the **І**. It is your bridge between the alphabet you know and the new one you are learning.
 

@@ -1,0 +1,93 @@
+items:
+  - lemma: "готувати"
+    ipa: '[ɦɔtuˈʋɑtɪ]'
+    translation: "to cook (process)"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "приготувати"
+    ipa: '[prɪɦɔtuˈʋɑtɪ]'
+    translation: "to cook (result)"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "мити"
+    ipa: '[ˈmɪtɪ]'
+    translation: "to wash (process)"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "помити"
+    ipa: '[pɔˈmɪtɪ]'
+    translation: "to wash (result)"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "дзвонити"
+    ipa: '[d͡zʋɔˈnɪtɪ]'
+    translation: "to call (process)"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "подзвонити"
+    ipa: '[pɔd͡zʋɔˈnɪtɪ]'
+    translation: "to call (result)"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "купувати"
+    ipa: '[kupuˈʋɑtɪ]'
+    translation: "to buy (process)"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "купити"
+    ipa: '[kuˈpɪtɪ]'
+    translation: "to buy (result)"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "знаходити"
+    ipa: '[znɑˈxɔdɪtɪ]'
+    translation: "to be finding, to locate"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "знайти"
+    ipa: '[znɑjˈtɪ]'
+    translation: "to find (result)"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "забувати"
+    ipa: '[zɑbuˈʋɑtɪ]'
+    translation: "to forget (habit/process)"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "забути"
+    ipa: '[zɑˈbutɪ]'
+    translation: "to forget (result)"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "будувати"
+    ipa: '[buduˈʋɑtɪ]'
+    translation: "to build (process)"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "побудувати"
+    ipa: '[pɔbuduˈʋɑtɪ]'
+    translation: "to build (result)"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "питати"
+    ipa: '[pɪˈtɑtɪ]'
+    translation: "to ask (process)"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "запитати"
+    ipa: '[zɑpɪˈtɑtɪ]'
+    translation: "to ask (result)"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "відповідати"
+    ipa: '[ʋʲidpɔʋʲiˈdɑtɪ]'
+    translation: "to answer (process)"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "відповісти"
+    ipa: '[ʋʲidpɔˈʋʲiˈstɪ]'
+    translation: "to answer (result)"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "платити"
+    ipa: '[plɑˈtɪtɪ]'

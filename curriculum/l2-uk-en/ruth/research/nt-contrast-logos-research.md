@@ -1,5 +1,25 @@
 # Дослідження: Nt Contrast Logos (Пересопницьке Євангеліє vs Острозька Біблія)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Nt Contrast Logos (Пересопницьке Євангеліє vs Острозька Біблія)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Перлина української мови"
+    source: ""
+    attribution: ""
+  - text: "із язика болгарського на мову руську"
+    source: ""
+    attribution: ""
+  - text: "Сия книгы, Ветхаго і Новаго завѣта, по языку словенску..."
+    source: "Острозька Біблія, післямова Федорова"
+    attribution: ""
+forbidden_claims:
+  - "Острозька Біблія часто привласнюється російською історіографією як \"общерусское достояние\", ігноруючи її суто волинське походження та контекст українського (руського) відродження."
+```
+
 ## Використані джерела
 1. [Litopys.org.ua: Пересопницьке Євангеліє](http://litopys.org.ua/ukrmova/um27.htm) — Аналіз мовних особливостей та історії створення.
 2. [Litopys.org.ua: Острозька Біблія](http://litopys.org.ua/old16_17/old16_06.htm) — Детальний опис видання та його культурного значення.

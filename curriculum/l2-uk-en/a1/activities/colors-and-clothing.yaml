@@ -1,272 +1,393 @@
 - type: match-up
-  title: "Кольори: Українська та Англійська"
+  title: 'Кольори: Українська та Англійська'
   pairs:
-    - left: "білий"
-      right: "white"
-    - left: "чорний"
-      right: "black"
-    - left: "червоний"
-      right: "red"
-    - left: "синій"
-      right: "blue"
-    - left: "зелений"
-      right: "green"
-    - left: "жовтий"
-      right: "yellow"
-    - left: "бордо"
-      right: "maroon"
-    - left: "хакі"
-      right: "khaki"
-
+  - left: білий
+    right: white
+  - left: чорний
+    right: black
+  - left: червоний
+    right: red
+  - left: синій
+    right: blue
+  - left: зелений
+    right: green
+  - left: жовтий
+    right: yellow
+  - left: бордо
+    right: maroon
+  - left: хакі
+    right: khaki
+  instruction: З'єднайте відповідні елементи.
 - type: match-up
-  title: "Одяг: Знайдіть пару"
+  title: 'Одяг: Знайдіть пару'
   pairs:
-    - left: "сорочка"
-      right: "shirt"
-    - left: "сукня"
-      right: "dress"
-    - left: "светр"
-      right: "sweater"
-    - left: "куртка"
-      right: "jacket"
-    - left: "штани"
-      right: "pants"
-    - left: "окуляри"
-      right: "glasses"
-    - left: "взуття"
-      right: "footwear"
-    - left: "джинси"
-      right: "jeans"
-
+  - left: сорочка
+    right: shirt
+  - left: сукня
+    right: dress
+  - left: светр
+    right: sweater
+  - left: куртка
+    right: jacket
+  - left: штани
+    right: pants
+  - left: окуляри
+    right: glasses
+  - left: взуття
+    right: footwear
+  - left: джинси
+    right: jeans
+  instruction: З'єднайте відповідні елементи.
 - type: group-sort
-  title: "Сортування за родом"
-  instruction: "Sort the clothing and objects into the correct grammatical category."
+  title: Сортування за родом
+  instruction: Sort the clothing and objects into the correct grammatical category.
   groups:
-    - name: "Чоловічий (Він)"
-      items: ["светр", "автобус", "стіл"]
-    - name: "Жіночий (Вона)"
-      items: ["сорочка", "сукня", "куртка", "машина"]
-    - name: "Середній (Воно)"
-      items: ["взуття", "яблуко", "вікно"]
-    - name: "Множина (Вони)"
-      items: ["штани", "окуляри", "джинси"]
-
+  - name: Чоловічий (Він)
+    items:
+    - светр
+    - автобус
+    - стіл
+  - name: Жіночий (Вона)
+    items:
+    - сорочка
+    - сукня
+    - куртка
+    - машина
+  - name: Середній (Воно)
+    items:
+    - взуття
+    - яблуко
+    - вікно
+  - name: Множина (Вони)
+    items:
+    - штани
+    - окуляри
+    - джинси
 - type: quiz
-  title: "Який це колір? (Узгодження)"
-  instruction: "Choose the correct form of the adjective to match the noun."
+  title: Який це колір? (Узгодження)
+  instruction: Choose the correct form of the adjective to match the noun.
   items:
-    - question: "Скажіть, будь ласка, якого кольору цей автобус?"
-      explanation: "Автобус is masculine, so we use the ending -ий."
-      options:
-        - text: "червоний"
-          correct: true
-        - text: "червона"
-          correct: false
-        - text: "червоне"
-          correct: false
-        - text: "червоні"
-          correct: false
-    - question: "Скажіть, будь ласка, якого кольору ця машина?"
-      explanation: "Машина is feminine, so we use the ending -а."
-      options:
-        - text: "зелена"
-          correct: true
-        - text: "зелений"
-          correct: false
-        - text: "зелене"
-          correct: false
-        - text: "зелені"
-          correct: false
-    - question: "Скажіть, будь ласка, якого кольору це яблуко?"
-      explanation: "Яблуко is neuter, so we use the ending -е."
-      options:
-        - text: "жовте"
-          correct: true
-        - text: "жовтий"
-          correct: false
-        - text: "жовта"
-          correct: false
-        - text: "жовті"
-          correct: false
-    - question: "Скажіть, будь ласка, якого кольору ці штани?"
-      explanation: "Штани is plural, so we use the ending -і."
-      options:
-        - text: "чорні"
-          correct: true
-        - text: "чорний"
-          correct: false
-        - text: "чорна"
-          correct: false
-        - text: "чорне"
-          correct: false
-    - question: "Скажіть, будь ласка, якого кольору ця сукня?"
-      explanation: "Сукня is feminine. Синій is a soft adjective, so feminine is синя."
-      options:
-        - text: "синя"
-          correct: true
-        - text: "синій"
-          correct: false
-        - text: "синє"
-          correct: false
-        - text: "сині"
-          correct: false
-    - question: "Скажіть, будь ласка, якого кольору цей папір?"
-      explanation: "Папір is masculine, so we use the standard form білий."
-      options:
-        - text: "білий"
-          correct: true
-        - text: "біла"
-          correct: false
-        - text: "біле"
-          correct: false
-        - text: "білі"
-          correct: false
-    - question: "Скажіть, будь ласка, якого кольору ця куртка?"
-      explanation: "Куртка is feminine."
-      options:
-        - text: "червона"
-          correct: true
-        - text: "червоний"
-          correct: false
-        - text: "червоне"
-          correct: false
-        - text: "червоні"
-          correct: false
-    - question: "Скажіть, будь ласка, якого кольору ці окуляри?"
-      explanation: "Окуляри is plural."
-      options:
-        - text: "чорні"
-          correct: true
-        - text: "чорний"
-          correct: false
-        - text: "чорна"
-          correct: false
-        - text: "чорне"
-          correct: false
-
+  - question: Скажіть, будь ласка, якого кольору цей автобус?
+    explanation: Автобус is masculine, so we use the ending -ий.
+    options:
+    - text: червоний
+      correct: true
+    - text: червона
+      correct: false
+    - text: червоне
+      correct: false
+    - text: червоні
+      correct: false
+  - question: Скажіть, будь ласка, якого кольору ця машина?
+    explanation: Машина is feminine, so we use the ending -а.
+    options:
+    - text: зелена
+      correct: true
+    - text: зелений
+      correct: false
+    - text: зелене
+      correct: false
+    - text: зелені
+      correct: false
+  - question: Скажіть, будь ласка, якого кольору це яблуко?
+    explanation: Яблуко is neuter, so we use the ending -е.
+    options:
+    - text: жовте
+      correct: true
+    - text: жовтий
+      correct: false
+    - text: жовта
+      correct: false
+    - text: жовті
+      correct: false
+  - question: Скажіть, будь ласка, якого кольору ці штани?
+    explanation: Штани is plural, so we use the ending -і.
+    options:
+    - text: чорні
+      correct: true
+    - text: чорний
+      correct: false
+    - text: чорна
+      correct: false
+    - text: чорне
+      correct: false
+  - question: Скажіть, будь ласка, якого кольору ця сукня?
+    explanation: Сукня is feminine. Синій is a soft adjective, so feminine is синя.
+    options:
+    - text: синя
+      correct: true
+    - text: синій
+      correct: false
+    - text: синє
+      correct: false
+    - text: сині
+      correct: false
+  - question: Скажіть, будь ласка, якого кольору цей папір?
+    explanation: Папір is masculine, so we use the standard form білий.
+    options:
+    - text: білий
+      correct: true
+    - text: біла
+      correct: false
+    - text: біле
+      correct: false
+    - text: білі
+      correct: false
+  - question: Скажіть, будь ласка, якого кольору ця куртка?
+    explanation: Куртка is feminine.
+    options:
+    - text: червона
+      correct: true
+    - text: червоний
+      correct: false
+    - text: червоне
+      correct: false
+    - text: червоні
+      correct: false
+  - question: Скажіть, будь ласка, якого кольору ці окуляри?
+    explanation: Окуляри is plural.
+    options:
+    - text: чорні
+      correct: true
+    - text: чорний
+      correct: false
+    - text: чорна
+      correct: false
+    - text: чорне
+      correct: false
 - type: fill-in
-  title: "Оберіть правильне закінчення"
-  instruction: "Complete the sentence with the correctly agreed adjective."
+  title: Оберіть правильне закінчення
+  instruction: Complete the sentence with the correctly agreed adjective.
   items:
-    - sentence: "Це {{answer}} сорочка."
-      answer: "червона"
-      options: ["червона", "червоний", "червоне", "червоні"]
-      explanation: "Сорочка is feminine."
-    - sentence: "Це {{answer}} светр."
-      answer: "синій"
-      options: ["синій", "синя", "синє", "сині"]
-      explanation: "Светр is masculine."
-    - sentence: "Це {{answer}} окуляри."
-      answer: "чорні"
-      options: ["чорні", "чорний", "чорна", "чорне"]
-      explanation: "Окуляри is plural."
-    - sentence: "Це {{answer}} вікно."
-      answer: "біле"
-      options: ["біле", "білий", "біла", "білі"]
-      explanation: "Вікно is neuter."
-    - sentence: "Це {{answer}} куртка."
-      answer: "зелена"
-      options: ["зелена", "зелений", "зелене", "зелені"]
-      explanation: "Куртка is feminine."
-    - sentence: "Це {{answer}} штани."
-      answer: "нові"
-      options: ["нові", "новий", "нова", "нове"]
-      explanation: "Штани is plural."
-    - sentence: "Це {{answer}} сукня."
-      answer: "нова"
-      options: ["нова", "новий", "нове", "нові"]
-      explanation: "Сукня is feminine."
-    - sentence: "Це {{answer}} взуття."
-      answer: "зручне"
-      options: ["зручне", "зручний", "зручна", "зручні"]
-      explanation: "Взуття is neuter."
-
+  - sentence: Це {{answer}} сорочка.
+    answer: червона
+    options:
+    - червона
+    - червоний
+    - червоне
+    - червоні
+    explanation: Сорочка is feminine.
+  - sentence: Це {{answer}} светр.
+    answer: синій
+    options:
+    - синій
+    - синя
+    - синє
+    - сині
+    explanation: Светр is masculine.
+  - sentence: Це {{answer}} окуляри.
+    answer: чорні
+    options:
+    - чорні
+    - чорний
+    - чорна
+    - чорне
+    explanation: Окуляри is plural.
+  - sentence: Це {{answer}} вікно.
+    answer: біле
+    options:
+    - біле
+    - білий
+    - біла
+    - білі
+    explanation: Вікно is neuter.
+  - sentence: Це {{answer}} куртка.
+    answer: зелена
+    options:
+    - зелена
+    - зелений
+    - зелене
+    - зелені
+    explanation: Куртка is feminine.
+  - sentence: Це {{answer}} штани.
+    answer: нові
+    options:
+    - нові
+    - новий
+    - нова
+    - нове
+    explanation: Штани is plural.
+  - sentence: Це {{answer}} сукня.
+    answer: нова
+    options:
+    - нова
+    - новий
+    - нове
+    - нові
+    explanation: Сукня is feminine.
+  - sentence: Це {{answer}} взуття.
+    answer: зручне
+    options:
+    - зручне
+    - зручний
+    - зручна
+    - зручні
+    explanation: Взуття is neuter.
 - type: match-up
-  title: "Культура та Граматика"
-  instruction: "Match the concept to its meaning."
+  title: Культура та Граматика
+  instruction: Match the concept to its meaning.
   pairs:
-    - left: "Червоний"
-      right: "Symbol of life and energy"
-    - left: "Чорний"
-      right: "Symbol of earth and wisdom"
-    - left: "Білий"
-      right: "Symbol of purity"
-    - left: "Вишиванка"
-      right: "Protective talisman"
-    - left: "Носити"
-      right: "To wear (habitually)"
-    - left: "Одягати"
-      right: "To put on (action)"
-    - left: "Я ношу"
-      right: "I wear"
-    - left: "Ти носиш"
-      right: "You wear"
-
+  - left: Червоний
+    right: Symbol of life and energy
+  - left: Чорний
+    right: Symbol of earth and wisdom
+  - left: Білий
+    right: Symbol of purity
+  - left: Вишиванка
+    right: Protective talisman
+  - left: Носити
+    right: To wear (habitually)
+  - left: Одягати
+    right: To put on (action)
+  - left: Я ношу
+    right: I wear
+  - left: Ти носиш
+    right: You wear
 - type: unjumble
-  title: "Складіть прості речення"
+  title: Складіть прості речення
   items:
-    - words: ["Це", "нова", "сорочка"]
-      answer: "Це нова сорочка"
-    - words: ["Я", "маю", "синій", "светр"]
-      answer: "Я маю синій светр"
-    - words: ["Де", "мої", "окуляри"]
-      answer: "Де мої окуляри"
-    - words: ["Це", "розмір", "сорок", "вісім"]
-      answer: "Це розмір сорок вісім"
-    - words: ["Я", "люблю", "синій", "колір"]
-      answer: "Я люблю синій колір"
-    - words: ["Це", "зручне", "взуття"]
-      answer: "Це зручне взуття"
-
+  - words:
+    - Це
+    - нова
+    - сорочка
+    answer: Це нова сорочка
+  - words:
+    - Я
+    - маю
+    - синій
+    - светр
+    answer: Я маю синій светр
+  - words:
+    - Де
+    - мої
+    - окуляри
+    answer: Де мої окуляри
+  - words:
+    - Це
+    - розмір
+    - сорок
+    - вісім
+    answer: Це розмір сорок вісім
+  - words:
+    - Я
+    - люблю
+    - синій
+    - колір
+    answer: Я люблю синій колір
+  - words:
+    - Це
+    - зручне
+    - взуття
+    answer: Це зручне взуття
+  instruction: Розташуйте слова у правильному порядку.
 - type: fill-in
-  title: "Граматика: Дієслово та Відмінок"
-  instruction: "Fill in the blank with the correct verb form or case ending."
+  title: 'Граматика: Дієслово та Відмінок'
+  instruction: Fill in the blank with the correct verb form or case ending.
   items:
-    - sentence: "Я {{answer}} білу сорочку."
-      answer: "ношу"
-      options: ["ношу", "носиш", "носить", "носимо"]
-      explanation: "First person singular of носити is ношу."
-    - sentence: "Вона носить {{answer}} сукню."
-      answer: "червону"
-      options: ["червону", "червона", "червоний", "червоне"]
-      explanation: "Accusative case for feminine adjective: червона -> червону."
-    - sentence: "Ми {{answer}} джинси."
-      answer: "носимо"
-      options: ["носимо", "ношу", "носиш", "носять"]
-      explanation: "We (ми) -> носимо."
-    - sentence: "Ти маєш {{answer}} куртку."
-      answer: "нову"
-      options: ["нову", "нова", "новий", "нове"]
-      explanation: "Accusative case for feminine adjective: нова -> нову."
-    - sentence: "Він {{answer}} чорний костюм."
-      answer: "носить"
-      options: ["носить", "ношу", "носиш", "носять"]
-      explanation: "He (він) -> носить."
-    - sentence: "Я купую {{answer}} штани."
-      answer: "сині"
-      options: ["сині", "синій", "синю", "синє"]
-      explanation: "Plural adjectives do not change in Accusative Inanimate."
-    - sentence: "Ви {{answer}} окуляри."
-      answer: "носите"
-      options: ["носите", "ношу", "носиш", "носять"]
-      explanation: "You (plural/formal) -> носите."
-    - sentence: "Вони мають {{answer}} машину."
-      answer: "чорну"
-      options: ["чорну", "чорна", "чорний", "чорне"]
-      explanation: "Accusative case for feminine adjective: чорна -> чорну."
-
+  - sentence: Я {{answer}} білу сорочку.
+    answer: ношу
+    options:
+    - ношу
+    - носиш
+    - носить
+    - носимо
+    explanation: First person singular of носити is ношу.
+  - sentence: Вона носить {{answer}} сукню.
+    answer: червону
+    options:
+    - червону
+    - червона
+    - червоний
+    - червоне
+    explanation: 'Accusative case for feminine adjective: червона -> червону.'
+  - sentence: Ми {{answer}} джинси.
+    answer: носимо
+    options:
+    - носимо
+    - ношу
+    - носиш
+    - носять
+    explanation: We (ми) -> носимо.
+  - sentence: Ти маєш {{answer}} куртку.
+    answer: нову
+    options:
+    - нову
+    - нова
+    - новий
+    - нове
+    explanation: 'Accusative case for feminine adjective: нова -> нову.'
+  - sentence: Він {{answer}} чорний костюм.
+    answer: носить
+    options:
+    - носить
+    - ношу
+    - носиш
+    - носять
+    explanation: He (він) -> носить.
+  - sentence: Я купую {{answer}} штани.
+    answer: сині
+    options:
+    - сині
+    - синій
+    - синю
+    - синє
+    explanation: Plural adjectives do not change in Accusative Inanimate.
+  - sentence: Ви {{answer}} окуляри.
+    answer: носите
+    options:
+    - носите
+    - ношу
+    - носиш
+    - носять
+    explanation: You (plural/formal) -> носите.
+  - sentence: Вони мають {{answer}} машину.
+    answer: чорну
+    options:
+    - чорну
+    - чорна
+    - чорний
+    - чорне
+    explanation: 'Accusative case for feminine adjective: чорна -> чорну.'
 - type: unjumble
-  title: "Побудуйте речення"
+  title: Побудуйте речення
   items:
-    - words: ["Я", "люблю", "зелений", "колір"]
-      answer: "Я люблю зелений колір"
-    - words: ["Сьогодні", "на", "мені", "сині", "джинси"]
-      answer: "Сьогодні на мені сині джинси"
-    - words: ["Скільки", "коштують", "ці", "джинси"]
-      answer: "Скільки коштують ці джинси"
-    - words: ["Я", "хочу", "нову", "сукню"]
-      answer: "Я хочу нову сукню"
-    - words: ["У", "вас", "є", "більший", "розмір"]
-      answer: "У вас є більший розмір"
-    - words: ["Ця", "сукня", "коштує", "тисячу", "гривень"]
-      answer: "Ця сукня коштує тисячу гривень"
+  - words:
+    - Я
+    - люблю
+    - зелений
+    - колір
+    answer: Я люблю зелений колір
+  - words:
+    - Сьогодні
+    - на
+    - мені
+    - сині
+    - джинси
+    answer: Сьогодні на мені сині джинси
+  - words:
+    - Скільки
+    - коштують
+    - ці
+    - джинси
+    answer: Скільки коштують ці джинси
+  - words:
+    - Я
+    - хочу
+    - нову
+    - сукню
+    answer: Я хочу нову сукню
+  - words:
+    - У
+    - вас
+    - є
+    - більший
+    - розмір
+    answer: У вас є більший розмір
+  - words:
+    - Ця
+    - сукня
+    - коштує
+    - тисячу
+    - гривень
+    answer: Ця сукня коштує тисячу гривень
+  instruction: Розташуйте слова у правильному порядку.

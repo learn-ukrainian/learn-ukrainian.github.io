@@ -1,5 +1,15 @@
 # Дослідження: Руїна (1657–1687)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Руїна (1657–1687)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Руїна як доказ нездатності українців до державотворення (\"failed state\"), що виправдовує поглинання Росією (\"возз'єднання\")."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Руїна](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruina) — академічний огляд періоду.
 2. [Літопис Самовидця](http://litopys.org.ua/samovyd/sam.htm) — ключове джерело, опис хаосу та руйнувань.

@@ -1,4 +1,4 @@
-        # Fix Phase — full audit failures
+        # Fix Phase — content-only audit failures
 
         The following audit errors must be fixed for module `colors-and-clothing`:
 
@@ -6,35 +6,32 @@
 
         ```
         ============================================================
-  HETMAN VERIFY: colors-and-clothing
+  OTAMAN VERIFY: colors-and-clothing
 ============================================================
 
-[1/4] Running full audit...
-[2/4] Checking sidecar files...
-[3/4] Reading status JSON...
-[4/4] Checking overall status...
+[1/3] Running audit with --skip-activities...
+[2/3] Reading status JSON...
+[3/3] Checking orchestration artifacts...
 
 ────────────────────────────────────────────────────────────
   VERDICT: FAIL
   Module:  colors-and-clothing
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  overall status is 'fail' (must be 'pass')
   failing gates:
-    lesson: 2429/2000 (raw: 2666) | pedagogy: 33 violations | immersion: 20.5% LOW (target 35-55% (M27))
-    activities: 10/8 | density: 6 < 12
+    lesson: 2304/2000 (raw: 2542) | pedagogy: 1 violations
 
-  Hetman has NOT completed this module.
+  Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+  📚 PEDAGOGICAL VIOLATIONS FOUND:
+    [GRAMMAR] Participle used before B1: 'улюблений'
+       → FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
 
 
-  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 100/100)
-     → 34 violations (severe - consider revision)
-     → 7 grammar-level violations (fundamental)
-     → Immersion 14% off target
-     → Activity density below minimum
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
+     → 1 violations (minor)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/colors-and-clothing-audit.md
@@ -48,8 +45,8 @@
         ## Files to Fix
 
         - Content: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/colors-and-clothing.md`
-        - Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/colors-and-clothing.yaml`
-        - Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/colors-and-clothing.yaml`
+
+
 
         ## Instructions
 

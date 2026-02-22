@@ -1,5 +1,23 @@
 # Дослідження: Мова Реалізму: Стиль Нечуя-Левицького
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Мова Реалізму: Стиль Нечуя-Левицького"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Нечуй-Левицький — це колосальне, всеосяжне око України"
+    source: ""
+    attribution: ""
+  - text: "мова баби, що продає на базарі насіння"
+    source: ""
+    attribution: ""
+  - text: "книжність"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Нечуй-Левицький Іван Семенович](https://esu.com.ua/search_articles.php?id=73943) — Огляд життя та творчості письменника, його внесок у розвиток літературної мови.
 2. [Інститут історії України НАНУ: НЕЧУЙ-ЛЕВИЦЬКИЙ Іван Семенович](http://history.org.ua/?termin=Nechuy_Levytsky_I) — Аналіз полеміки щодо мовної норми наприкінці XIX — на початку XX століття.

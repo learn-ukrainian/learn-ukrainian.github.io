@@ -1,5 +1,25 @@
 # Дослідження: Pvl Varangians
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Pvl Varangians"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Земля наша велика і щедра, а порядку в ній нема. Приходьте княжити і володіти нами"
+    source: "Про безлад"
+    attribution: "1"
+  - text: "Бо так звали тих варягів — русь, як ото одні звуться свеями, а другі — норманами, англами, інші — готами, — отак і ці"
+    source: "Про ідентичність"
+    attribution: "2"
+  - text: "Русь"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Покликання варягів\" як доказ нездатності слов'ян до державотворення без зовнішньої (царської) руки. Пізніше — концепція \"спільної колиски\" трьох народів, що починається з Рюрика."
+```
+
 ## Використані джерела
 1. [Літопис руський (за Іпатським списком)](http://litopys.org.ua/ipatlet/ipat01.htm) — Першоджерело тексту Повісті врем’яних літ.
 2. [Енциклопедія історії України: Варяги](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Variagy) — Академічний огляд ролі варягів та історіографії.

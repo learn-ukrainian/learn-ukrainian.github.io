@@ -1,5 +1,28 @@
 # Дослідження: Battle Descriptions (Описи битв)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Battle Descriptions (Описи битв)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Нестатечная приязнь вовку з бараном, так християнинові з бесурманином"
+    source: ""
+    attribution: ""
+  - text: "і так тоє войско все розбито"
+    source: ""
+    attribution: ""
+  - text: "війська, як хмари грозові"
+    source: ""
+    attribution: ""
+  - text: "ріки крові"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Козаки — неорганізований натовп («чернь»), що перемагав лише завдяки татарам або москвинам. Берестечко — доказ нездатності до самостійної війни."
+```
+
 ## Використані джерела
 1.  [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Повні тексти козацьких літописів (Самовидця, Грабянки, Величка).
 2.  [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Стаття "Берестецька битва 1651".

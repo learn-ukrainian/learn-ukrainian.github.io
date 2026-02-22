@@ -1,5 +1,28 @@
 # Дослідження: Eyewitness Samovydets (Літопис Самовидця)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Eyewitness Samovydets (Літопис Самовидця)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Початок і причина войни Хмельницького єсть єдине од ляхів на православіє гоніння і козакам отягощеніє"
+    source: "Причина війни"
+    attribution: ""
+  - text: "...чого не звикла була Україна терпіти, вимисли великії були од старостов і од намісников і жидов"
+    source: "Соціальний гніт"
+    attribution: ""
+  - text: "Там же, на Жовтій Воді, поляки не могли дати ради проти сили незносной орди і козацтва..."
+    source: "Жовті Води"
+    attribution: ""
+  - text: "проста мова"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Російська історіографія часто трактувала 1648 рік як рух до «возз'єднання» з Росією."
+```
+
 ## Використані джерела
 1. [Litopys.org.ua](http://litopys.org.ua/samovyd/sam.htm) — Повний текст Літопису Самовидця за виданням Я. І. Дзири (1971).
 2. [History.org.ua](http://resource.history.org.ua/) — Енциклопедія історії України: стаття про Романа Ракушку-Романовського та Літопис Самовидця.

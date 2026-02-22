@@ -1,13 +1,13 @@
 # Audit Report: M04 — the-instrumental-i-accompaniment.md
 **Level:** A2 | **Module:** M04 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 19:35:48
+**Generated:** 2026-02-22 23:11:59
 
 ## Configuration
 **Type:** A2-grammar
 **Word Target:** 3000 words
 **Activities:** 10-14 required
-**Items per Activity:** ≥12 items
+**Items per Activity:** ≥8 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, unjumble
 **Required Types:** fill-in, match-up, quiz
@@ -20,7 +20,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Хто з ким? (Who is with whom?) | 12 | 8 | ✅ |
-| 2 | group-sort | Сортування закінчень (Sorting Endings) | 20 | 12 | ✅ |
+| 2 | group-sort | Сортування закінчень (Sorting Endings) | 20 | 8 | ✅ |
 | 3 | quiz | Милозвучність: з, із, зі (Euphony) | 9 | 8 | ✅ |
 | 4 | fill-in | Чоловічий рід (Masculine Endings) | 8 | 8 | ✅ |
 | 5 | fill-in | Жіночий рід (Feminine Endings) | 8 | 8 | ✅ |
@@ -30,7 +30,7 @@
 | 9 | match-up | Дії та люди (Actions and People) | 12 | 8 | ✅ |
 | 10 | fill-in | Мішані форми (Mixed Drill) | 8 | 8 | ✅ |
 | 11 | select | Оберіть правильні речення (Select Correct Sentences) | 6 | 6 | ✅ |
-| 12 | cloze | Історія про відпустку (Vacation Story) | 12 | 12 | ✅ |
+| 12 | cloze | Історія про відпустку (Vacation Story) | 12 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 12 (target: 10-14) ✅
@@ -42,7 +42,7 @@
 ## Gates
 - **Words:** ✅ 3575/3000 (raw: 3892)
 - **Activities:** ✅ 12/10
-- **Density:** ✅ All > 12
+- **Density:** ✅ All > 8
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4

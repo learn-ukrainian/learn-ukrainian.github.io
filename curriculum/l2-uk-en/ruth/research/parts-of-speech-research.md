@@ -1,5 +1,19 @@
 # Дослідження: Частини мови (Parts of Speech)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Частини мови (Parts of Speech)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Грамматіка єсть відомость, єжє право глаголати і писати"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Граматика Смотрицького — це \"спільна східнослов'янська\" або \"російська\" спадщина."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України](http://resource.history.org.ua/) — статті про Мелетія Смотрицького, Лаврентія Зизанія, Братські школи.
 2. [Ізборник](http://litopys.org.ua/) — тексти граматик Зизанія (1596) та Смотрицького (1619), дослідження В.В. Німчука.

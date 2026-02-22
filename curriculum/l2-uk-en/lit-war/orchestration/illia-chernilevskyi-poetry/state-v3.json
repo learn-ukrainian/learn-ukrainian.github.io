@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-21T23:16:19Z",
+      "ts": "2026-02-22T20:21:24Z",
       "task_id": "v3-illia-chernilevskyi-poetry-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

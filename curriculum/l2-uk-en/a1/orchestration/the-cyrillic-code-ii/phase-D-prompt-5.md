@@ -52,10 +52,10 @@ Read ALL of these files before writing anything:
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Ancient Manuscript Restorer
-Word count:       3511 / 2000 (175.6%)
+Word count:       3032 / 2000 (151.6%)
 Activities:       8
 Vocabulary items: 20
-Engagement boxes: 7
+Engagement boxes: 4
 Immersion:        5.3% (target: 5-15%)
 Audit status:     FAIL
 ```
@@ -320,7 +320,7 @@ Follow the full review protocol. In summary:
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms (кушать→їсти, приймати участь→брати участь, etc.)
+- Russianisms (кушать→їсти, приймати участь→брати участь, красивий→гарний, прекрасне→чудове, etc.)
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
 - **Colonial framing** — Ukrainian defined by contrast with Russian (see below)
 - Grammar scope violations
@@ -380,13 +380,18 @@ Follow the full review protocol. In summary:
 
 **Structural monotony test**: Read the first 2 lines of each H2 section. Do 3+ sections start the same way? If yes → LLM Fingerprint ≤ 7.
 
-**Example batching test**: Search for consecutive `_Приклад:_` lines. If 3+ sections all have exactly 3-4 consecutive examples in the same position → LLM Fingerprint ≤ 7.
+**Example batching test**: Look for uniform example blocks — 3+ sections each presenting examples in the exact same format (e.g., identical `**Ukrainian.** (English.)` bullet lists of 5+ items, or identical `_Приклад:_` blocks). The problem is *uniformity across sections*, not examples themselves. Varied formats (tables, inline, dialogues mixed with bullet lists) are fine. If 3+ sections use identical example formatting → LLM Fingerprint ≤ 7.
 
-**Metaphor density test**: Count distinct metaphors. If >4 per module → LLM Fingerprint ≤ 7. Flag cliches like "діамант", "двигун", "душа мови", "дзеркало", "музика", "архітектура".
+**Generic AI rhetoric test**: Flag these specific patterns that real Ukrainian tutors don't use:
+- "це не просто" / "це не лише" / "не просто X, а Y" used 2+ times → ≤ 7
+- Stacked abstract nouns: sentences with 3+ abstract nouns like "soul, history, and heartbeat" or "identity, resilience, and strength" — if 3+ such sentences found → ≤ 7
+- Generic AI clichés: "діамант", "двигун прогресу", "дзеркало культури", "архітектура мови" — these are LLM-typical, not natural Ukrainian
+- "It is important to note..." / "In this lesson, we will explore..." formality
 
-**Rhetoric pattern test**: Search for "це не просто" / "це не лише" / "не просто X, а Y". If used 2+ times → LLM Fingerprint ≤ 7.
-
-**Purple prose test**: Flag sentences with 3+ abstract nouns stacked. If 3+ found → LLM Fingerprint ≤ 7.
+**IMPORTANT — What is NOT an LLM fingerprint:**
+- Natural Ukrainian metaphors, proverbs, and phraseology — Ukrainian is a metaphor-rich language. Pedagogical analogies ("Smile vs Grin technique", "like a pitchfork") that help learners understand pronunciation are GOOD teaching, not AI artifacts
+- Rich, substantive content that exceeds the word target — word targets are MINIMUMS. More content is better if it's pedagogically useful. Do NOT penalize word count overshoot in any dimension. Only penalize obvious filler/padding (repetitive motivational prose, saying the same thing three ways)
+- Varied callout boxes, cultural hooks, and engagement elements
 
 **Callout monotony test**: Are 3+ callouts using the same title? If yes → flag as repetitive.
 

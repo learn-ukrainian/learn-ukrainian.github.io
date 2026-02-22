@@ -1,5 +1,13 @@
 # Дослідження: Stefanyk Novellas
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Stefanyk Novellas"
+dates:
+  key_events:
+```
+
 ## Key marginalia and Facts Ledger
 <!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
 ```yaml

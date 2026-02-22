@@ -1,0 +1,13 @@
+{
+  "track": "a2",
+  "slug": "preferences-and-choices",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T23:07:13Z",
+      "task_id": "v3-preferences-and-choices-pA",
+      "mode": "full"
+    }
+  }
+}

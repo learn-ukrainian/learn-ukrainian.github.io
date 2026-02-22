@@ -1,0 +1,33 @@
+{
+  "track": "a2",
+  "slug": "aspect-mastery-pairs",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T21:46:47Z",
+      "task_id": "v3-aspect-mastery-pairs-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-22T21:48:25Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-22T22:25:14Z",
+      "task_id": "v3-aspect-mastery-pairs-pC-vocab"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-22T22:30:43Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-22T22:36:06Z",
+      "attempts": 1,
+      "note": "d1-only"
+    }
+  }
+}

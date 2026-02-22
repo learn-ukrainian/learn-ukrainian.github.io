@@ -67,13 +67,13 @@ Let's open the window and see what is happening outside!
 
 ## Презентація 1: Опис погоди (Прислівники)
 
-How does it feel right now? To answer this, we use special "state" words. These look exactly like adverbs (words ending in **-о**). You know them.
+Як відчувається погода зараз? (How does it feel right now?) To answer this, we use special "state" words. These look exactly like adverbs (words ending in **-о**). You know them.
 
 ### Опис стану (Impersonal Adverbs)
 
-In English, grammar requires a "dummy subject" — the word "it". You say "It is cold." "It" doesn't actually refer to anything; it's just a grammatical placeholder.
+Англійська граматика вимагає (English grammar requires) a "dummy subject" — the word "it". You say "It is cold." "It" doesn't actually refer to anything; it's just a grammatical placeholder.
 
-Ukrainian is more efficient. We drop the "it" and the "is". We just use the adverb describing the state.
+Українська мова простіша. (Ukrainian is simpler.) We drop the "it" and the "is". We just use the adverb describing the state.
 
 **Structure:**
 > **[Adverb]**
@@ -86,13 +86,13 @@ Ukrainian is more efficient. We drop the "it" and the "is". We just use the adve
 > [!warning]
 > **Don't Translate "It"**
 >
-> A classic beginner mistake is saying «Це холодно» — This is cold. This is wrong!
-> *   Correct: **Холодно.** — It is cold.
-> *   Correct: **Сьогодні тепло.** — Today it is warm.
+> A classic beginner mistake is saying «Це холодно» — This is cold. Це неправильно! (This is wrong!)
+> *   Правильно (Correct): **Холодно.** — It is cold.
+> *   Правильно (Correct): **Сьогодні тепло.** — Today it is warm.
 
 ### Температурна шкала (The Temperature Scale)
 
-Let's arrange these words from the highest temperature to the lowest, so you can always choose the right one.
+Давайте подивимось на ці слова від найвищої температури до найнижчої (Let's look at these words from the highest temperature to the lowest), so you can always choose the right one.
 
 1.  **Спекотно** — Hot (30°C+)
     *   *Example:* **Влітку дуже спекотно.**
@@ -125,8 +125,8 @@ Let's arrange these words from the highest temperature to the lowest, so you can
 > [!tip]
 > **Adverb or Adjective?**
 >
-> If you are describing a *thing* (like tea), use an adjective: **Цей чай холодний.** — This tea is cold.
-> If you are describing the *environment* or *atmosphere*, use the adverb: **На вулиці холодно.** — It is cold outside.
+> Ми описуємо предмет (We are describing a *thing* like tea), use an adjective: **Цей чай холодний.** — This tea is cold.
+> Ми описуємо атмосферу (We are describing the *environment* or *atmosphere*), use the adverb: **На вулиці холодно.** — It is cold outside.
 
 ### Читання: Ранок (Reading: Morning)
 
@@ -215,7 +215,7 @@ For precipitation (nouns like "rain" or "snow"), we change the verb "to go":
 
 ### Читання: Прогулянка під дощем (Reading: Walk in the Rain)
 
-**Українською:**
+**Текст для читання:**
 Вчора була субота. Зранку світило сонце.
 Було тепло і гарно.
 Ми пішли в парк.
@@ -239,75 +239,46 @@ Strong rain was falling.
 
 ## Презентація 3: Запитання про погоду
 
-**Українською:**
-Тепер ви знаєте слова.
-Давайте поговоримо.
-Ви можете запитати про погоду.
-Це просто.
+To start a conversation about the weather, you need to know how to ask questions. The most common way is to ask "What is the weather like today?".
 
-**English:**
-Now you know the words.
-Let's talk.
-You can ask about the weather.
-It is simple.
+### Основні питання (Basic Questions)
 
-### Загальне питання (General Question)
+**1. Яка сьогодні погода?** (What is the weather today?)
+*   *Answer:* **Сьогодні тепло і сонячно.** (Today it is warm and sunny.)
 
-The most common way to ask "What is the weather like?" uses the word **яка**. This word means "which" or "what kind of".
+**2. На вулиці холодно?** (Is it cold outside?)
+*   *Answer:* **Так, дуже холодно.** (Yes, very cold.)
+*   *Answer:* **Ні, тепло.** (No, warm.)
 
-*   **Яка сьогодні погода?** [jɑˈkɑ sʲɔˈɦɔdnʲi pɔˈɦɔdɑ] — What is the weather like today?
+**3. Йде дощ?** (Is it raining?)
+*   *Answer:* **Так, зараз іде дощ.** (Yes, it is raining now.)
+*   *Answer:* **Ні, дощу немає.** (No, there is no rain.)
 
-**Typical Answers:**
-*   **Сьогодні гарна погода.** [ˈɦɑrnɑ] — Today is good weather.
-*   **Сьогодні чудова погода.** [t͡ʃuˈdɔʋɑ] — Today is wonderful weather.
-*   **Сьогодні погана погода.** [pɔˈɦɑnɑ] — Today is bad weather.
-*   **Сьогодні жахлива погода.** [ʒɑxˈlɪʋɑ] — Today is terrible weather.
+**4. Який прогноз на завтра?** (What is the forecast for tomorrow?)
+*   *Answer:* **Завтра буде сонячно.** (Tomorrow it will be sunny.)
 
-### Детальні питання (Specific Questions)
-
-If you are planning a trip, "good weather" might not be precise enough.
-
-**1. Temperature:**
-*   **Яка температура?** [tɛmpɛˈrɑturɑ] — What is the temperature?
-*   **Скільки градусів?** [ˈskʲilʲkɪ ˈɦrɑdusʲiʋ] — How many degrees?
-
-**Answers:**
-*   **Плюс двадцять.** (+20)
-*   **Мінус п'ять.** (-5)
-*   **Нуль.** (0)
-
-**2. Precipitation:**
-*   **На вулиці йде дощ?** — Is it raining outside?
-*   **Сьогодні хмарно?** — Is it cloudy today?
-
-> [!observe]
-> **Dialogue Context**
+> [!tip]
+> **Який чи Яка?**
 >
-> **Андрій:** Привіт! Яка сьогодні погода у Львові?
-> **Марія:** Привіт! Тут холодно і йде дощ. А у Києві?
-> **Андрій:** А у нас світить сонце і тепло.
+> **Погода** (weather) is feminine, so we ask **Яка** погода?
+> **Прогноз** (forecast) is masculine, so we ask **Який** прогноз?
 
-Notice how simple this exchange is? You describe the state (**холодно**, **тепло**) and the action (**йде дощ**, **світить сонце**).
+### Читання: Розмова по телефону (Reading: Phone Conversation)
 
-### Ввічлива розмова (Polite Conversation)
+Listen to how people discuss weather on the phone:
 
-In Ukraine, it is polite to ask about the weather when you call someone in another city.
-
-**Телефонна розмова (Phone Call):**
-**Оля:** Алло, мамо! Привіт. Як ти?
-**Мама:** Привіт, доню. Все добре.
-**Оля:** А яка у вас погода?
-**Мама:** Ой, у нас жахлива погода. Холодно, вітряно, йде сніг. Я сиджу вдома.
-**Оля:** Зрозуміло. А у нас тепло. Світить сонце.
-**Мама:** Це добре. Гуляй на свіжому повітрі!
+— Алло, привіт! Яка у вас погода?
+— Привіт. У нас дуже погана погода. Холодно і йде дощ. А у вас?
+— А у нас чудово! Світить сонце і дуже тепло.
+— Це добре. Я сиджу вдома і п'ю гарячий чай.
+— А я зараз іду гуляти в парк.
 
 **Translation:**
-**Olya:** Hello, mom! Hi. How are you?
-**Mom:** Hi, daughter. Everything is good.
-**Olya:** And what is the weather like there (with you)?
-**Mom:** Oh, we have terrible weather. Cold, windy, snow is falling. I am sitting at home.
-**Olya:** I understand. And here it is warm. The sun is shining.
-**Mom:** That is good. Walk in the fresh air!
+— Hello, hi! What is the weather like at your place?
+— Hi. We have very bad weather. It is cold and raining. And at yours?
+— And we have it great! The sun is shining and it is very warm.
+— That is good. I am sitting at home and drinking hot tea.
+— And I am going for a walk in the park right now.
 
 ## Презентація 4: Пори року та час
 
@@ -381,80 +352,59 @@ Example: **Січень — це зима.** (January is winter.)
 
 ## Презентація 5: Прогноз та планування
 
-**Українською:**
-Давайте складемо план.
-Ми використовуємо погоду. Ми пояснюємо наші дії.
-
-**English:**
-Let's make a plan.
-We use weather to explain our actions.
+Now that you know how to talk about the current weather, you can make plans for tomorrow. For this, we use the future tense: **буде** (will be) or **піде** (will go).
 
 ### Прогноз погоди (Weather Forecast)
 
-*   **Прогно́з** — Forecast
-*   **Гра́дус** — Degree
+To talk about tomorrow, we say **завтра** (tomorrow) and add **буде** (will be). Let's see how it works.
 
-When you check your phone, you are looking for the **прогноз погоди**.
+*   **Завтра буде тепло.** — Tomorrow it will be warm.
+*   **Завтра буде холодно.** — Tomorrow it will be cold.
+*   **Завтра буде сонячно.** — Tomorrow it will be sunny.
 
-### Причина та Наслідок (Cause and Effect)
+When we talk about rain or snow, we say **піде дощ** or **буде дощ**.
 
-We can express a result and a reason using simple, short sentences. Keep your statements clear.
+*   **Завтра піде дощ.** — Tomorrow it will rain.
+*   **Завтра піде сніг.** — Tomorrow it will snow.
 
-**Structure:**
-> **[Result]. [Reason].**
+### Планування (Making Plans)
 
-*   **Ми не гуляємо. Холодно.** — We are not walking. It is cold.
-*   **Я беру парасолю. Йде дощ.** — I am taking an umbrella. It is raining. (**Парасо́ля** = umbrella).
-*   **Ми йдемо в парк. Світить сонце.** — We are going to the park. The sun is shining.
+The weather often dictates our plans. We can use the word **тому** (therefore, so) to explain why we do something.
 
-### Умовні речення (Simple Conditionals)
+*   **На вулиці тепло, тому ми йдемо в парк.** — It is warm outside, so we are going to the park.
+*   **Йде дощ, тому я буду вдома.** — It is raining, so I will be at home.
+*   **Завтра буде холодно, тому я візьму куртку.** — Tomorrow it will be cold, so I will take a jacket.
 
-We can also make simple plans.
-
-*   **Буде дощ? Ми будемо вдома.** — Will it rain? We will be at home.
-*   **Буде тепло? Ми підемо в парк.** — Will it be warm? We will go to the park.
-
-> [!culture]
-> **Typical Ukrainian Weather**
+> [!important]
+> **Причина і наслідок**
 >
-> *   **Взимку** Ukrainians dress very warmly. Even if it is -5°C, you will see heavy coats and hats.
-> *   **Навесні** everyone waits for Easter. Usually, the weather becomes truly warm after Easter.
-> *   **Влітку** many people go to the Carpathians or to the lakes to escape the heat.
-> *   **Восени** looks beautiful in Kyiv. The parks turn gold and red.
+> In Ukrainian, we connect the weather and our actions simply.
+> [Факт про погоду] + **тому** + [Моя дія].
+> [Fact about weather] + **therefore** + [My action].
 
-### Планування вихідних (Planning the Weekend)
+### Читання: Мої плани (Reading: My Plans)
 
-**Українською:**
-У суботу ми хочемо поїхати на пікнік.
-Але ми дивимося прогноз погоди.
-Вранці буде сонце. Це добре.
-Але вдень буде дощ і вітер. Це погано.
-Увечері буде холодно.
-Ми думаємо: що робити?
-Буде дощ? Тоді пікнік — це погана ідея.
-Ми вирішуємо: ми підемо в кіно.
-Там тепло і сухо.
+**Ось мої плани на вихідні:**
+Я дивлюся телевізор. Там прогноз погоди.
+Завтра неділя.
+Вранці буде світити сонце і буде дуже тепло.
+Тому ми з друзями підемо в ліс.
+Ми візьмемо чай і бутерброди.
+Але ввечері погода зміниться.
+Буде вітер і піде сильний дощ.
+Тому ми поїдемо додому рано.
+Вдома тепло і затишно.
 
 **Translation:**
-On Saturday we want to go on a picnic.
-But we look at the weather forecast.
-In the morning there will be sun. This is good.
-But in the day there will be rain and wind. This is bad.
-In the evening it will be cold.
-We think: what to do?
-Will it rain? Then a picnic is a bad idea.
-We decide: we will go to the cinema.
-It is warm and dry there.
-
-### Читання: Прогноз на тиждень (Reading: Weekly Forecast)
-
-**Понеділок:** Буде сонце. Тепло. +20.
-**Вівторок:** Буде хмарно. +18.
-**Середа:** Буде дощ. Холодно. +10.
-**Четвер:** Буде вітер. +12.
-**П'ятниця:** Буде сонце. Чудова погода. +22.
-**Субота:** Ми йдемо в парк.
-**Неділя:** Ми будемо вдома.
+I am watching TV. There is the weather forecast.
+Tomorrow is Sunday.
+In the morning the sun will shine and it will be very warm.
+Therefore my friends and I will go to the forest.
+We will take tea and sandwiches.
+But in the evening the weather will change.
+There will be wind and heavy rain will fall.
+Therefore we will go home early.
+At home it is warm and cozy.
 
 ## Практика: Розмови про природу
 
@@ -492,7 +442,7 @@ Let's see how two friends, **Олена** and **Ігор**, talk about their pla
 
 ### Історія: Моя улюблена пора року (Story: My Favorite Season)
 
-**Українською:**
+**Розповідь Олексія:**
 Мене звати Олексій.
 Я живу в Києві.
 Моя улюблена пора року — це весна.

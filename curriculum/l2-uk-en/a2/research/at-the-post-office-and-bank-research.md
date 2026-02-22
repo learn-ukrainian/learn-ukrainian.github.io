@@ -1,37 +1,34 @@
 # Дослідження: At the Post Office and Bank
 
 ## State Standard Reference
-§3.11: "Послуги: банк; пошта; бібліотека; спортзал, басейн; таксі."
-Alignment: This module covers the core service contexts of "Bank" and "Post Office" defined in the A2 thematic catalogue. It also aligns with §4.2.2.4 (Accusative case for direct objects like "відправити листа") and §4.2.1.3 (Numerals for handling amounts and postal codes).
+§3.11: "Послуги: банк; пошта"
+§4.2.2.4: "Знахідний відмінок: Із прийменниками: в, у, на (кінцевий пункт руху суб’єкта)"
+§4.2.2.6: "Місцевий відмінок: у, в, на (місце перебування особи чи предмета)"
+Alignment: This module covers the required A2 thematic vocabulary for services (post office, bank) and directly contrasts the Accusative case for direction with the Locative case for location.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| пошта | High / General | на пошті, іти на пошту |
-| банк | High / General | у банку, іти в банк |
-| лист | High / General | писати листа, відправити листа |
-| посилка | High / General | отримати посилку, вага посилки |
-| гроші | High / General | знімати гроші, міняти гроші |
-| картка | High / General | банківська картка, термін дії |
-| рахунок | High / General | відкрити рахунок, стан рахунку |
-| готівка | Medium / General | платити готівкою, знімати готівку |
-| валюта | Medium / General | курс валют, обмін валют |
+| пошта | High | на пошті, іти на пошту |
+| банк | High | у банку, іти в банк |
+| посилка | High | отримати посилку, відправити посилку |
+| рахунок | High | відкрити рахунок, стан рахунку |
+| готівка | Medium | знімати готівку, платити готівкою |
 
 ## Cultural Hooks
-1. **Воєнні марки Укрпошти**: Ukrposhta gained global fame starting in 2022 with its "Russian warship, go...!" stamp. Philately became a patriotic movement in Ukraine, with people lining up for hours to buy stamps that symbolize resistance. (Source: Ukrposhta Official / BBC News).
-2. **Цифровий банкінг (Monobank/Privat24)**: Ukraine has one of the world's most advanced digital banking ecosystems. Almost every Ukrainian uses a mobile app for instant transfers, paying bills by QR code, and even splitting bills at restaurants. (Source: Monobank / Ministry of Digital Transformation of Ukraine).
+1. **The "Russian warship, go...!" stamp phenomenon:** Ukrposhta's patriotic stamps became a symbol of Ukrainian resistance and national pride during the 2022 invasion.
+2. **Digital Banking Ecosystem:** Ukraine's highly advanced digital banking apps like Monobank and Privat24 (instant transfers, QR codes) which contrast with traditional banking systems in many other countries.
 
 ## Common Learner Errors
-1. **Mixing up "рахунок" and "счет"** → Use **рахунок** — Learners with Russian background often use "счет" (Russian), which is a common "surzhyk" error. In Ukrainian, "рахунок" is used for both a bank account and a restaurant bill.
-2. **Direction vs. Location (Accusative vs. Locative)** → **іду на пошту** (Accusative) vs. **я на пошті** (Locative) — A2 learners often struggle with case selection after the same preposition based on motion.
-3. **Accusative of Inanimate Nouns** → **відправити посилку** (Accusative) — Learners may forget to change the ending of feminine nouns (-а to -у) because masculine inanimate nouns don't change.
+1. Accusative feminine ending omission → `відправити посилк-у` (not *посилка*) — Learners forget to decline inanimate feminine nouns in the Accusative.
+2. Direction vs. Location confusion → `іду на пошту` (Accusative for direction) vs. `я на пошті` (Locative for location) — Requires explicit contrast and drilling.
+3. Lexical interference (Surzhyk) → using the Russian `счет` instead of Ukrainian `рахунок` — Emphasize that `рахунок` is used for both banking and restaurants.
 
 ## Cross-References
-- Builds on: a2-01 through a2-09 (Noun declension basics), a1 (Numbers 1-100).
-- Prepares for: a2-11 (Checkpoint - Case Mastery), a2-53 (Shopping & Services), a2-69 (Digital Life & Online Services).
+- Builds on: a2-01 through a2-09 (all case knowledge)
+- Prepares for: a2-11 (Checkpoint - Cases), a2-53 (Shopping & Services), a2-69 (Online Services)
 
 ## Notes for Content Writing
-- Focus on the **polite imperative** and requests (я б хотів/хотіла, будь ласка).
-- Use **Ukrposhta** and **Monobank** as authentic examples of branding and UI terminology.
-- Ensure clear explanation of **Accusative for services** (what you are sending/buying).
-- Numbers 100-1000 should be practiced in the context of money (UAH) and postal codes (indices).
+- Avoid Russian comparisons. Frame Ukrainian digital banking as a leading, modern standard.
+- Emphasize the cultural significance of Ukrposhta in modern Ukrainian society.
+- Immersion is 50-60% (Band 1): English for the grammar theory (Accusative vs Locative concept), Ukrainian for dialogues, examples, and practice.

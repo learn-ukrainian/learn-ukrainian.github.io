@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 18 — E2E
+FAIL: build_module_v2.py a2 18 — E2E
 
   Module:   bigger-better-stronger
   Track:    a2
   Mode:     e2e
-  Words:    0 (target: 3000)
+  Words:    3740 (target: 3000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-20T11:26:26Z
+  Verdict:  FAIL
+  Date:     2026-02-22T22:45:29Z

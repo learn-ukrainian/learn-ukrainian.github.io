@@ -1,194 +1,130 @@
-<!-- content-hash: 42c1ff9d5a3a -->
-# Рецензія: Description: Adverbs
-
+<!-- content-hash: 4beb10c26792 -->
 **Reviewed-By:** claude-opus-4-6
-
-**Level:** A1 | **Module:** 28
-**Overall Score:** 8.0/10
-**Status:** FAIL
-**Reviewed:** 2026-02-22
-
-## Plan Verification
-
-```
-Plan-Content Alignment: PARTIAL FAIL
-- Sections: 5/5 H2 sections present and match meta outline
-- Vocabulary: 20/20 items present; 4 recommended items missing (тут, там, сьогодні, завтра)
-- Grammar scope: VIOLATION — comparative adverb form "тихіше" introduced despite SCOPE excluding it
-- Objectives: 4/4 objectives addressed
-- Persona: MISSING — plan specifies "Food Critic" roleplay but no food critic content exists
-```
 
 ## Scores
 
-| # | Dimension | Score | Auto-fail | Evidence |
-|---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Well-structured lesson arc with warm opening, stories, dialogues, and self-check. Missing Food Critic persona from plan. Closing self-check questions lack a "You can now..." celebration. |
-| 2 | Coherence | 8/10 | <7 | Good flow: adj vs adv distinction → formation → frequency → intensity → practice. Marred by word order inconsistency: teaches "after verb" rule (line 130) but own examples use "before verb" for «добре» (lines 64, 117, 364, 381). |
-| 3 | Relevance | 9/10 | <7 | Daily habits, lifestyle, station dialogue — all highly relevant to A1 learner needs. Strong practical orientation. |
-| 4 | Educational | 7/10 | <7 | Solid grammar explanations and formation rule. Scope violation with comparative «тихіше». Word order teaching contradicts own examples. The "Ніколи не..." activity (8 identical-answer items) drills one point excessively without progressive complexity. |
-| 5 | Language | 8/10 | <8 | Clean of Russianisms and colonial framing. One unnatural sentence: «Я роблю фінал» (line 250). English explanations are clear and B1-accessible. |
-| 6 | Pedagogy | 7/10 | <7 | PPP structure executed well. Missing Food Critic persona entirely — plan explicitly requires "Roleplay as a 'Food Critic' describing how someone cooks or eats." Word order rule taught at line 130 is contradicted by own examples at lines 64, 117, 381. |
-| 7 | Immersion | 7/10 | <6 | 35.2% vs target 35-55% — technically within range but at absolute floor. For an A1.3 Consolidation module, this is low. |
-| 8 | Activities | 8/10 | <7 | 10 activities with good variety (group-sort, fill-in, match-up, quiz, unjumble). Unjumble line 170-171 expects "Я добре розумію" (adverb before verb) contradicting the lesson's stated rule. "Ніколи не..." fill-in: all 8 items have identical answer "не" — excessive repetition. |
-| 9 | Richness | 8/10 | <6 | Strong cultural elements: «Добре» as agreement marker, proverb «Тихіше їдеш — далі будеш», multiple named characters (Іван, Олена, Ігор, Максим, Олег, Андрій, Марія). Missing food/cooking cultural angle from plan. |
-| 10 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5. Clear English scaffolding, encouraging tip boxes, manageable chunks. Module is long (2915 words, 145% target) but well-structured. Minor: no explicit "You can now..." celebration at end. |
-| 11 | LLM Fingerprint | 8/10 | <7 | "Here are some examples:" appears 3× (lines 26, 41, 89) — structural monotony. "Let's" appears 8× as section openers. Voice is otherwise warm and natural tutoring tone, no purple prose or "це не просто" patterns. |
-| 12 | Linguistic Accuracy | 8/10 | <9 | IPA stress error: «зовсім» transcribed as [ˈzɔu̯sʲim] (line 223) — stress should be on second syllable [zɔu̯ˈsʲim]. Unnatural sentence «Я роблю фінал» (line 250). Word order examples contradicting stated rules. |
-| 13 | Factual Accuracy | 9/10 | <8 | [!culture] box on «добре» (line 120-126): accurate. [!myth-buster] on "very much" placement (line 271-275): accurate. Proverb «Тихіше їдеш — далі будеш» (line 336): real proverb, correctly cited. Grammar rules are accurate. |
-
-**Weighted Overall:**
-```
-(8×1.5) + (8×1.0) + (9×1.0) + (7×1.2) + (8×1.1) + (7×1.2) + (7×1.0) + (8×1.3) + (8×0.9) + (9×1.3) + (8×1.0) + (8×1.5) + (9×1.5)
-= 12 + 8 + 9 + 8.4 + 8.8 + 8.4 + 7 + 10.4 + 7.2 + 11.7 + 8 + 12 + 13.5
-= 124.4 / 15.5 = **8.0/10**
-```
-
-## Auto-Fail Checklist Results
-
-- Russianisms: [CLEAN]
-- Calques: «Я роблю фінал» (line 250) — possible English calque of "I'm doing the final"
-- Colonial framing: [CLEAN] — no Russian comparisons found
-- Grammar scope: [VIOLATION] — comparative form «тихіше» (line 336-340) introduced and explained despite SCOPE comment (line 3) explicitly excluding "Comparative/Superlative degrees of adverbs (B1 topic)"
-- Activity errors: Unjumble answer "Я добре розумію" (activity line 171) contradicts lesson's stated word order rule
-- Beginner safety: 5/5
-- Factual accuracy: [CLEAN]
+| # | Dimension | Score | Evidence Summary |
+|---|-----------|-------|-----------------|
+| 1 | **Lesson Quality** | 8/10 | Warm, well-paced tutoring arc from concept introduction to production practice. Clear WELCOME→PREVIEW→PRESENT→PRACTICE→CELEBRATE structure. However, the **Food Critic persona** specified in the plan is entirely absent — no roleplay element appears anywhere in the content. Multiple characters (Ivan, Olena, Ihor, Oleh, Maksym) add variety. Deducted for missing persona and for the proverb scope violation. |
+| 2 | **Factual Accuracy** | 8/10 | Grammar rules are correct (adjective→adverb derivation, double negation rule, word order). The proverb «Тихіше їдеш — далі будеш» is a real Ukrainian proverb. The cultural note about «добре» as universal agreement marker is accurate. However, **IPA errors in the vocabulary file** (double stress on завжди, missing stress on ніколи, likely wrong stress on іноді) and inconsistent stress marking in content (line 148: «за́вжди́» with two accent marks) reduce accuracy. |
+| 3 | **Language** | 8/10 | Ukrainian is mostly natural and correct. No Russianisms detected, no colonial framing. English explanations are clear and warm. Issues: (1) Line 99 English gloss «Logic is beautiful!» does not accurately translate «Це логічно і красиво!» (should be: "This is logical and beautiful!"). (2) Line 99 — English "Do you know the word 'fast'? Then you know the word 'fast'" fails to demonstrate the adjective→adverb distinction it's trying to show. (3) Line 348 — «весело» translated as "fun" instead of "merrily/happily" (adverb, not adjective). |
+| 4 | **Richness** | 8/10 | Good variety: 3 dialogues (lifestyle chat, train station, greeting), 3 narratives (Ivan, Oleh, Maksym), proverb, cultural insight. Named Ukrainian characters throughout. Visual tables and comparison charts used effectively. Deducted for missing Food Critic roleplay (planned richness element) and for the 4 spatial/temporal markers from the plan (тут, там, сьогодні, завтра) appearing only incidentally, not taught systematically. |
+| 5 | **Immersion** | 8/10 | Audit reports 35.4% against a 35-55% target — at the absolute floor. For a module marked A1.3 (Consolidation), this is low. The [!tip] boxes labeled «Українською:» provide good Ukrainian immersion moments, but the overall English-heavy balance leaves room for more Ukrainian scaffolding, especially in the section «Практика: Звички та Стиль Життя» where more Ukrainian-only comprehension passages would strengthen immersion. |
+| 6 | **Activity Quality** | 7/10 | 10 activities with 6 distinct types — good variety (group-sort, fill-in, match-up, quiz, unjumble). However: (1) The «Ніколи не...» fill-in (Activity 7) has **8 items all with the identical answer "не"** — after item 2, this is pure busywork with zero cognitive challenge. (2) Quiz item about завжди stress offers "завЖДИ" and "завжДИ" as distinct options, but both mark the same vowel/syllable — ambiguous and poorly constructed. (3) Unjumble activity 5 answer «Я добре розумію» places adverb BEFORE verb, contradicting the activity instruction stating adverbs of manner go AFTER the verb. |
+| 7 | **LLM Fingerprint** | 7/10 | Three patterns detected: (1) **Callout monotony**: 3 [!tip] boxes all titled «**Українською:**» (lines 98, 258, 372) — identical structure. (2) **Structural monotony in example introductions**: "Here are some examples:" appears identically 3 times (lines 26, 41, 89). (3) The unjumble activity word order pattern is formulaic — all items follow identical structure with no variation. No generic AI rhetoric ("it is important to note", "in this lesson we will explore"), and section openings are varied. |
+| 8 | **Humanity & Warmth** | 9/10 | Regular encouragement throughout: «Ви вже знаєте багато слів!» (line 373), «Це чудовий прогрес» (line 373), «Говоріть українською часто і сміливо!» (line 373). Direct address ("you") is pervasive. The warning box on line 55 is framed helpfully, not punitively. The closing «Перевірте себе» self-check and «Все буде добре!» (line 390) end on an upbeat note. One point deducted because no explicit "Don't worry, this is normal" reassurance moment exists in the early sections where learners first encounter the adjective/adverb distinction. |
 
 ## Critical Issues Found
 
-### Issue 1: IPA Stress Error on «зовсім»
-- **Location**: Line 223 / Section «Презентація 3: Ступені та Інтенсивність»
-- **Original**: «**зовсім** [ˈzɔu̯sʲim] — at all / completely / quite»
-- **Problem**: Stress mark placed on first syllable [ˈzɔu̯sʲim]. The correct stress for зовсім is on the second syllable: зовСІМ.
-- **Fix**: Change IPA to `[zɔu̯ˈsʲim]`
+### Issue 1: MISSING_PERSONA — Food Critic roleplay entirely absent
+- **Severity:** Critical (plan compliance)
+- **Location:** Entire module — missing section
+- **Evidence:** The plan (`plans/a1/description-adverbs.yaml`, line 51-52) explicitly requires: *"Roleplay as a 'Food Critic' (persona) describing how someone cooks or eats (добре, погано, дуже смачно)."* The meta file confirms `persona.role: Food Critic`. Zero Food Critic content exists anywhere in the module. The persona field exists for a reason — it's the module's signature engagement hook.
+- **Fix:** Add a short Food Critic roleplay subsection within section «Практика: Звички та Стиль Життя». Example frame: student acts as a restaurant critic describing a meal using adverbs (готує смачно, подає швидко, обслуговує добре). This would add ~150 words and fulfill the plan requirement.
 
-### Issue 2: Unnatural Ukrainian «Я роблю фінал»
-- **Location**: Line 250 / Section «Презентація 3: Ступені та Інтенсивність»
-- **Original**: «Я знаю. Я вже **майже** готовий. Я роблю фінал.»
-- **Problem**: «Робити фінал» is not natural Ukrainian. This appears to be a calque from English "I'm doing the final." A native speaker would say «Я закінчую» or «Я завершую».
-- **Fix**: Replace with «Я знаю. Я вже **майже** готовий. Я закінчую.»
+### Issue 2: IPA errors in vocabulary file — double stress, missing stress, wrong stress
+- **Severity:** Critical (factual accuracy)
+- **Location:** `vocabulary/description-adverbs.yaml` lines 21, 30, 34
+- **Evidence:**
+  - Line 21: завжди has IPA `[ˈzɑˈʋʒdɪ]` — **two primary stress marks** is invalid IPA. Should be `[zɑˈʋʒdɪ]` (stress on second syllable only).
+  - Line 34: ніколи has IPA `[nʲikɔlɪ]` — **no stress mark at all**. Should be `[nʲiˈkɔlɪ]`.
+  - Line 30: іноді has IPA `[ˈinɔdʲi]` — standard pronunciation is іно́ді `[iˈnɔdʲi]` (stress on second syllable). Current IPA places stress on first syllable.
+- **Fix:** Correct all three IPA transcriptions to standard stress positions.
 
-### Issue 3: Grammar Scope Violation — Comparative Form «тихіше»
-- **Location**: Lines 336-340 / Section «Практика: Звички та Стиль Життя»
-- **Original**: «**тихіше** (quieter/slower) acts as an adverb describing the manner of movement»
-- **Problem**: The SCOPE comment (line 3) explicitly states "Not covered: Comparative/Superlative degrees of adverbs (B1 topic)." Yet the content introduces and explains the comparative form «тихіше». The plan used «Повільно їдеш — далі будеш» (basic adverb form) rather than «Тихіше їдеш — далі будеш» (comparative form), presumably to avoid this scope violation.
-- **Fix**: Either (a) replace the proverb with «Повільно їдеш — далі будеш» as the plan intended and remove the comparative grammar explanation, or (b) keep the authentic proverb but remove the grammar explanation of «тихіше» and simply gloss it as "slower" without morphological analysis.
+### Issue 3: Scope violation — comparative adverb form «тихіше» used despite scope exclusion
+- **Severity:** Significant (scope creep)
+- **Location:** Content line 336, 340, 418
+- **Evidence:** The module's own scope comment (line 3) states: *"Not covered: Comparative/Superlative degrees of adverbs (B1 topic)."* Yet the proverb «Тихіше їдеш — далі будеш» prominently features the comparative form «тихіше», and line 340 explicitly parses it: «Here, **тихіше** (quieter/slower) acts as an adverb describing the manner of movement.» The plan's cultural hook (line 49) actually specifies the NON-comparative variant: «Повільно їдеш — далі будеш» — which avoids this scope issue entirely.
+- **Fix:** Replace with the plan-specified variant «Повільно їдеш — далі будеш», which uses the base-form adverb «повільно» already taught in the module.
 
-### Issue 4: Missing Food Critic Persona
-- **Location**: Entire module / All sections
-- **Original**: N/A — content does not exist
-- **Problem**: The plan (line 51-52) specifies `role: Food Critic` with direction to include "Roleplay as a 'Food Critic' (persona) describing how someone cooks or eats (добре, погано, дуже смачно)." The meta also lists persona role as "Food Critic." This is completely absent from the module.
-- **Fix**: Add a Food Critic roleplay subsection to section «Практика: Звички та Стиль Життя», e.g., a dialogue where the learner plays a food critic evaluating how a chef cooks (швидко, повільно, смачно, добре, погано).
+### Issue 4: Activity monotony — «Ніколи не...» fill-in has 8 identical answers
+- **Severity:** Significant (activity quality)
+- **Location:** `activities/description-adverbs.yaml` lines 196-224
+- **Evidence:** All 8 items in this fill-in activity have the answer "не" with near-identical options ["не", "ні", X, Y]. After the first 2 items, the pattern is completely transparent. The distractors (ні, так, на, ми, ви, ще, за, це) are arbitrary and don't test understanding of the double negation rule — they test recognition that the answer is always "не".
+- **Fix:** Reduce to 4 items of this type, then add 4 items that mix "ніколи не" sentences with regular negative sentences (requiring "не" alone) to create actual cognitive contrast. Or convert to a sentence-building exercise where the learner places both "ніколи" and "не" in the correct positions.
 
-### Issue 5: Word Order Inconsistency Between Rule and Examples
-- **Location**: Lines 64, 117, 381 vs. line 130 / Sections «Розминка: Як чи Який?» and «Презентація: Утворення та Винятки»
-- **Original**: Rule at line 130: "the most neutral position is **after the verb**" / Examples: «Він **добре** знає Київ» (line 64), «Я **добре** розумію» (line 117)
-- **Problem**: The lesson teaches that manner adverbs go after the verb (line 130) and advises learners to "stick to after the verb" (line 138). But the module's own examples repeatedly place «добре» before the verb. This confuses A1 learners who are trying to internalize the rule.
-- **Fix**: Either (a) change the examples to match the rule: «Він знає Київ **добре**», «Я розумію **добре**»; or (b) explicitly note that «добре» is commonly used before the verb as a natural exception to the general pattern. Option (b) is linguistically more honest. Also fix unjumble activity (activity line 170-171) to match whichever approach is chosen.
+### Issue 5: Quiz item with ambiguous options for завжди stress
+- **Severity:** Moderate (activity quality)
+- **Location:** `activities/description-adverbs.yaml` lines 110-120
+- **Evidence:** The question asks «Де наголос у слові 'завжди'?» with options "завЖДИ" (correct), "ЗАВжди" (incorrect), "завжДИ" (incorrect). However, "завЖДИ" and "завжДИ" both highlight the second syllable and differ only in how many consonants are capitalized. Since stress falls on the vowel И regardless, these two options are phonetically indistinguishable. A learner who correctly identifies second-syllable stress could reasonably choose either.
+- **Fix:** Replace the confusing options with syllable-based alternatives: "за-ВЖДИ" (correct) vs "ЗА-вжди" (incorrect), making the syllable distinction unambiguous.
 
-### Issue 6: Repetitive Activity — "Ніколи не..." Fill-in
-- **Location**: Activity lines 196-224 / Activity #7
-- **Original**: 8 items all with identical answer "не" and identical structure "X ніколи {{answer}} Y"
-- **Problem**: All 8 items test the exact same point with zero progressive difficulty. After item 2, the learner is clicking "не" mechanically. This doesn't develop competence — it tests short-term memory of a single word.
-- **Fix**: Reduce to 4 items and add 4 items that mix "ніколи не" with other frequency adverb patterns (e.g., "Я _____ снідаю вдома" where the answer is "зазвичай" or "часто"), creating a discriminative exercise rather than a repetition drill.
+### Issue 6: Double stress marks on завжди in content
+- **Severity:** Moderate (accuracy)
+- **Location:** Content line 148
+- **Evidence:** «**за́вжди́**» shows accent marks on both syllables. The module's own tip (line 162) says: *"Notice the stress in **завжди**. It is on the second syllable: zav-ZHDY."* The content contradicts itself by marking two stresses in the vocabulary entry but one stress in the explanation.
+- **Fix:** Change to «завжди́» with a single accent on the final syllable, consistent with the explanation.
 
-## Ukrainian Language Issues
-
-| Line | Current | Corrected | Type |
-|------|---------|-----------|------|
-| 223 | «зовсім [ˈzɔu̯sʲim]» | «зовсім [zɔu̯ˈsʲim]» | IPA stress error |
-| 250 | «Я роблю фінал» | «Я закінчую» | Unnatural/calque |
-| 336 | «Тихіше їдеш — далі будеш» (with grammar explanation of comparative) | Remove comparative grammar analysis or use «Повільно їдеш — далі будеш» | Scope violation |
-
-## Beginner Safety Audit
-
-"Would I Continue?" Test: 5/5
-- Overwhelmed? **Pass** — Good chunking despite 2915 words. Clear section breaks and visual tables.
-- Instructions clear? **Pass** — English explanations are concise and B1-accessible. Grammar rules use clear formulas.
-- Quick wins? **Pass** — First section (adj vs adv distinction) builds on known adjective knowledge. Pairs table at line 50-53 gives immediate understanding.
-- Ukrainian scary? **Pass** — Ukrainian introduced with English translations throughout. IPA provided for key words. Tip boxes in Ukrainian are simple and encouraging.
-- Come back tomorrow? **Pass** — Engaging stories (Ivan, Maksym, Oleh), realistic dialogues (station, friends), and a motivational closing tip box.
-
-## Strengths
-- Clear conceptual distinction between adjectives and adverbs through the Який?/Як? framework with visual table (section «Розминка: Як чи Який?»)
-- Multiple named characters with distinct lifestyles (Іван the student, Максим the musician, Олег the office worker) make practice sections engaging
-- Strong cultural grounding with the «Добре» usage insight (line 120-126) and the proverb (line 336)
-- Good activity variety: 6 distinct activity types across 10 exercises
-- Double negation rule (section «Презентація 2: Як часто?», lines 185-203) is clearly explained with formula and correct/incorrect examples
-
-## Fix Plan to Reach 9/10 (REQUIRED — score < 9.0)
-
-### Linguistic Accuracy: 8/10 → 9/10
-**What to fix:**
-1. Line 223: Change IPA `[ˈzɔu̯sʲim]` → `[zɔu̯ˈsʲim]` — wrong stress placement
-2. Line 250: Change «Я роблю фінал» → «Я закінчую» — unnatural Ukrainian
-3. Lines 64, 117, 381: Either move «добре» after the verb in examples OR add an explicit note that «добре» commonly precedes the verb — resolves contradiction with rule at line 130
-
-**Expected score after fix:** 9/10
-
-### Pedagogy: 7/10 → 9/10
-**What to fix:**
-1. Add Food Critic roleplay subsection to section «Практика: Звички та Стиль Життя» — plan mandates this persona
-2. Resolve word order rule/example conflict (see Linguistic Accuracy fix #3)
-3. Lines 336-340: Remove comparative grammar explanation of «тихіше» — keep the proverb as cultural exposure only, or replace with plan's version «Повільно їдеш — далі будеш»
-
-**Expected score after fix:** 9/10
-
-### Educational: 7/10 → 9/10
-**What to fix:**
-1. Activity lines 196-224: Reduce "Ніколи не..." to 4 items, add 4 discriminative items mixing different frequency adverbs
-2. Activity line 170-171: Fix unjumble answer to match the taught word order rule
-3. Resolve scope violation (comparative form)
-
-**Expected score after fix:** 9/10
-
-### Coherence: 8/10 → 9/10
-**What to fix:**
-1. Resolve the word order contradiction (fixes #3 from Linguistic Accuracy above)
-2. Add transitional sentence before section «Практика: Звички та Стиль Життя» that sets up the Food Critic angle
-
-**Expected score after fix:** 9/10
-
-### LLM Fingerprint: 8/10 → 9/10
-**What to fix:**
-1. Lines 26, 41, 89: Vary the "Here are some examples:" transitions — use different phrasings (e.g., "Try these:", "Look at how this works:", "See the pattern:")
-2. Reduce "Let's" openers — at least 3 of the 8 instances should use different transitions
-
-**Expected score after fix:** 9/10
-
-### Projected Overall After Fixes
-```
-(9×1.5) + (9×1.0) + (9×1.0) + (9×1.2) + (8×1.1) + (9×1.2) + (7×1.0) + (8×1.3) + (8×0.9) + (9×1.3) + (9×1.0) + (9×1.5) + (9×1.5)
-= 13.5 + 9 + 9 + 10.8 + 8.8 + 10.8 + 7 + 10.4 + 7.2 + 11.7 + 9 + 13.5 + 13.5
-= 134.2 / 15.5 = 8.7/10
-```
+### Issue 7: Unjumble item contradicts stated rule
+- **Severity:** Moderate (activity quality)
+- **Location:** `activities/description-adverbs.yaml` lines 170-171
+- **Evidence:** Activity 5 instruction states: «прислівник способу (Як?) зазвичай стоїть після дієслова» (manner adverb usually goes after the verb). But item 3 gives answer «Я добре розумію» with "добре" BEFORE the verb "розумію". While this IS natural Ukrainian (idiomatic collocation), it directly contradicts the rule the exercise claims to practice.
+- **Fix:** Either change to «Я розумію добре» to match the stated rule, or add a brief note acknowledging that «добре» in this collocation naturally precedes the verb.
 
 ## Factual Verification
 
-- Research notes consulted: NOT_APPLICABLE (core grammar track, not seminar)
-- Key Facts Ledger present: NO
-- Dates checked: 0 (no historical dates in module)
-- Named figures verified: 0 (characters are fictional — Ivan, Maksym, Oleh, etc.)
-- Primary quotes cross-referenced: 1 — proverb «Тихіше їдеш — далі будеш» is a real Ukrainian proverb, correctly cited
-- Chronological sequence: NOT_APPLICABLE
-- Claims without research grounding: 0
-
-**Callout box verification:**
-- [!culture] (line 120): «Добре» as universal agreement word — VERIFIED, culturally accurate
-- [!myth-buster] (line 271): "very much" placement difference English vs Ukrainian — VERIFIED, linguistically accurate
-- [!quote] (line 335): Proverb and meaning — VERIFIED (though comparative form is scope concern, not factual error)
+| Claim | Location | Status | Note |
+|-------|----------|--------|------|
+| Adverb formation: stem + -о | Line 79-83 | ✅ Correct | Standard morphological rule |
+| добрий → добре (not добро) | Line 114-115 | ✅ Correct | добро is indeed a noun meaning "goodness/property" |
+| «Добре» as universal agreement | Line 120-126 | ✅ Correct | Well-documented cultural pragmatic marker |
+| Double negation: ніколи + не required | Lines 186-199 | ✅ Correct | Standard Ukrainian syntax rule |
+| «Дуже» must precede modified word | Lines 253-269 | ✅ Correct | Standard word order rule |
+| Proverb «Тихіше їдеш — далі будеш» | Line 336 | ✅ Real proverb | Both variants (Повільно/Тихіше) are attested in the research notes |
+| Frequency scale order | Lines 148-159 | ✅ Correct | завжди→зазвичай→часто→іноді→рідко→ніколи is standard |
+| English translation of «Це логічно і красиво!» | Line 99 | ⚠️ Inaccurate | Translated as "Logic is beautiful!" but literally means "This is logical and beautiful!" |
+| Translation of «весело» as "fun" | Line 348 | ⚠️ Imprecise | «Весело» as adverb = "merrily/happily", not "fun" (adjective in English) |
 
 ## Verification Summary
 
-- Content lines read: 419
-- Activity items checked: 80+ (across 10 activities)
-- Ukrainian sentences verified: 45+
-- IPA transcriptions checked: 12 (1 error found: зовсім)
-- Factual claims verified: 3 callout boxes
-- Issues found: 6
+### Plan Compliance
+- **Section structure:** All 5 planned H2 sections present ✅
+- **Objectives coverage:** All 4 learning objectives addressed ✅
+- **Vocabulary required:** All 8 required items appear in vocabulary file ✅
+- **Vocabulary recommended:** 7/11 recommended items in vocab file; тут, там, сьогодні, завтра used in content but not in vocabulary YAML ⚠️
+- **Persona:** Food Critic roleplay **missing entirely** ❌
+- **Cultural hook:** Proverb present but uses scope-violating variant ⚠️
+
+### Section-by-Section Coverage
+- Section «Розминка: Як чи Який?» — Covers adjective vs adverb distinction clearly with visual table (line 50-53). Good examples, important warning box. ✅
+- Section «Презентація: Утворення та Винятки» — Formation rule, exception добрий→добре, cultural «добре» insight, word order. Complete coverage. ✅
+- Section «Презентація 2: Як часто?» — Frequency scale, Ivan narrative, double negation rule. Strong section with narrative context. ✅
+- Section «Презентація 3: Ступені та Інтенсивність» — All 4 modifiers covered (дуже, трохи, зовсім, майже). Dialogue and position rule. ✅
+- Section «Практика: Звички та Стиль Життя» — Integration text, 2 dialogues, 2 narratives, self-assessment questions. Rich but missing Food Critic roleplay. ⚠️
+
+### Colonial Framing
+No colonial framing detected. All comparisons are with English (legitimate L1 contrast for target audience). ✅
+
+### LLM Fingerprint Summary
+- Section openings: Varied ✅
+- Example formatting: Mostly varied (tables, bullets, dialogues, inline) ✅
+- Callout monotony: 3× «**Українською:**» titled [!tip] boxes ❌
+- Structural monotony: 3× "Here are some examples:" (lines 26, 41, 89) ❌
+- Generic AI rhetoric: None detected ✅
+- Implausible examples: None — all examples are natural daily-life situations ✅
+
+### Beginner Safety ("Would I Continue?" Test)
+| Question | Result | Evidence |
+|----------|--------|----------|
+| Overwhelmed? | ✅ Pass | Concepts introduced one at a time, frequent practice |
+| Instructions clear? | ✅ Pass | Each grammar point has explicit rule + examples |
+| Quick wins? | ✅ Pass | First adj/adv pair exercise gives immediate feedback |
+| Was Ukrainian scary? | ✅ Pass | Good English scaffolding throughout |
+| Would I come back? | ✅ Pass | Encouraging tone, clear progress markers |
+
+**Result: 5/5 → Lesson Quality base score 10, adjusted to 8 for missing persona and scope violation.**
 
 ## Verdict
 
-**FAIL**
+**REVISE** — 3 critical issues, 4 moderate issues requiring fixes before pass.
 
-Blocking issues: (1) Linguistic Accuracy 8/10 triggers auto-fail threshold (<9). IPA stress error on «зовсім» and unnatural «Я роблю фінал» must be fixed. (2) Grammar scope violation — comparative form «тихіше» explained despite explicit SCOPE exclusion. (3) Missing Food Critic persona required by plan and meta. (4) Word order rule contradicted by own examples creates pedagogical confusion for A1 learners.
+**Priority fixes:**
+1. Add Food Critic roleplay to section «Практика: Звички та Стиль Життя» (plan compliance)
+2. Fix 3 IPA errors in vocabulary file (завжди, ніколи, іноді)
+3. Replace proverb with plan-specified «Повільно їдеш — далі будеш» variant
+4. Rework «Ніколи не...» fill-in activity to add cognitive variation
+5. Fix завжди quiz item options and double stress marks in content
+6. Vary the 3 «Українською:» callout titles and the 3 «Here are some examples:» introductions
+7. Fix English translations on lines 99 and 348
+
+**What works well:** Solid pedagogical structure, warm and encouraging tone, rich narrative contexts with named characters, correct grammar teaching, good variety of activity types, clean formatting. The core lesson is genuinely effective — these fixes are polishing issues, not structural problems.

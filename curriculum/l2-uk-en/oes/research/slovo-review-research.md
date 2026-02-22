@@ -1,5 +1,31 @@
 # Дослідження: Slovo Review (Слово: Підсумок)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Slovo Review (Слово: Підсумок)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "О Руська земле! Уже за шеломянем єси!"
+    source: ""
+    attribution: "1"
+  - text: "Лучче ж би потяту бути, аніж полоненому бути"
+    source: ""
+    attribution: "2"
+  - text: "Слово"
+    source: ""
+    attribution: "3"
+  - text: "трудна повість"
+    source: ""
+    attribution: "3"
+  - text: "золоте слово"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Слово» — пам'ятка «російської» літератури (на тій підставі, що оригінал знайдено в Росії, а Київська Русь — «колиска трьох народів»)."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Слово о полку Ігоревім](https://esu.com.ua/search_articles.php?id=SLOVO) — загальний огляд, історія відкриття, значення.
 2. [Ізборник: Текст і переклади Слова](http://litopys.org.ua/slovo67/slovo.htm) — оригінальні тексти, коментарі, переклади українською.

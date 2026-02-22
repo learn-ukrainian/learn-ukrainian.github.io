@@ -1,5 +1,15 @@
 # Дослідження: Граматична лабораторія (Grammar Lab Parsing)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Граматична лабораторія (Grammar Lab Parsing)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Російська граматична традиція розвивалася самостійно і впливала на українську."
+```
+
 ## Використані джерела
 1. [Ізборник](http://litopys.org.ua/smotr/smotr.htm) — Мелетій Смотрицький, «Грамматіки Славенския правилноє Сѵнтаґма» (1619). Основне першоджерело.
 2. [Енциклопедія Сучасної України](https://esu.com.ua/article-67156) — Стаття про Мелетія Смотрицького та його внесок у мовознавство.

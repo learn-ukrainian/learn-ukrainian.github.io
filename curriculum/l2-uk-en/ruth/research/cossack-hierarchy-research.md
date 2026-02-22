@@ -1,5 +1,15 @@
 # Дослідження: Cossack Hierarchy (Козацька старшина)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Cossack Hierarchy (Козацька старшина)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Козацька старшина — це лише «класові експлуататори», які зрадили народ і перетворилися на дворянство. Також міф про «анархію» на Січі."
+```
+
 ## Використані джерела
 1. [History.org.ua](http://history.org.ua) — Енциклопедія історії України: статті «Генеральна старшина», «Козацька старшина», «Генеральний писар».
 2. [Litopys.org.ua](http://litopys.org.ua) — Тексти «Пакти і Конституції» Пилипа Орлика, «Літопис гадяцького полковника Григорія Грабянки».

@@ -1,5 +1,25 @@
 # Дослідження: Ihor Campaign Chronicle
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Ihor Campaign Chronicle"
+dates:
+  key_events:
+primary_quotes:
+  - text: "І коли він був біля Дінця, то подивився угору і побачив сонце, що стояло, яко місяць. І сказав він боярам своїм і дружині своїй: «Бачите ви се? Що се є за знамення?"
+    source: "Літопис, про затемнення"
+    attribution: ""
+  - text: "Тоді Ігор глянув на світле сонце й побачив, що воно тьмою всіх його воїнів покрило"
+    source: "Слово"
+    attribution: ""
+  - text: "сватом"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Похід Ігоря — це боротьба «російського народу» проти «дикого степу». Ідеалізація Ігоря як загальнонаціонального героя."
+```
+
 ## Використані джерела
 1. [Літопис руський (за Іпатіївським списком). Роки 1185-1195](http://litopys.org.ua/liplet/liplet04.htm) — Основне першоджерело, переклад Леоніда Махновця.
 2. [Ігор Святославич — Енциклопедія історії України](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Igor_Sviatoslavych) — Академічна біографія князя, політичний контекст.

@@ -1,5 +1,31 @@
 # Дослідження: Review Social Pyramid
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Review Social Pyramid"
+dates:
+  key_events:
+primary_quotes:
+  - text: "людьми"
+    source: ""
+    attribution: ""
+  - text: "купу"
+    source: ""
+    attribution: ""
+  - text: "Аже оубиеть мужь мужа, то мьстити брату брата... аче ли не будеть мьстника, то 40 гривенъ за голову"
+    source: ""
+    attribution: ""
+  - text: "Аже оубиють огнищанина оу клети... то платити за нь 80 гривенъ убиицям"
+    source: ""
+    attribution: ""
+  - text: "А въ сельскомъ старостѣ княжѣ і в ратайнѣмъ 12 гривнѣ. А в рядовичѣ княжѣ 5 гривнѣ"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Радянська історіографія нав'язувала жорстку схему «феодалізму» з тотальним закріпаченням та класовою боротьбою. Російська імперська наука трактувала Русь як «колиску трьох братніх народів» зі спільною соціальною структурою."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruska_Pravda) — фундаментальний огляд законодавства та соціальних категорій.
 2. [Літопис Руський (за Іпатським списком)](http://litopys.org.ua/ipatlet/ipat.htm) — першоджерело для контексту соціальних відносин.

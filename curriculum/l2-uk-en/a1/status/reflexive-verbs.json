@@ -2,13 +2,13 @@
   "module": "reflexive-verbs",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:28.038348Z",
+  "last_audit": "2026-02-22T23:19:28.064695Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T22:18:41.347122Z",
+    "md": "2026-02-22T18:47:35.802952Z",
     "meta": "2026-02-19T17:50:24.955428Z",
     "activities": "2026-02-20T22:18:41.347960Z",
-    "vocabulary": "2026-02-19T18:06:11.205694Z",
+    "vocabulary": "2026-02-22T18:40:43.334788Z",
     "plan": "2026-02-20T20:39:34.937381Z",
     "research": "2026-02-19T17:50:24.947357Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2701/2000 (raw: 3356)"
+      "message": "2700/2000 (raw: 3355)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "12 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
-    ],
-    "pass_count": 5,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

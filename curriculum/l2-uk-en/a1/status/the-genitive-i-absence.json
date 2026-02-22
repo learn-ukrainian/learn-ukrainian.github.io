@@ -2,13 +2,13 @@
   "module": "the-genitive-i-absence",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:33.397191Z",
+  "last_audit": "2026-02-22T23:19:33.751310Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T00:06:24.601553Z",
+    "md": "2026-02-22T18:47:35.828068Z",
     "meta": "2026-02-19T23:22:03.581107Z",
     "activities": "2026-02-22T00:06:24.602161Z",
-    "vocabulary": "2026-02-20T23:17:28.316073Z",
+    "vocabulary": "2026-02-22T18:40:46.990080Z",
     "plan": "2026-02-20T20:40:36.206524Z",
     "research": "2026-02-19T23:22:03.572508Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2248/2000 (raw: 2694)"
+      "message": "2227/2000 (raw: 2673)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "54 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
-    ],
-    "pass_count": 5,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

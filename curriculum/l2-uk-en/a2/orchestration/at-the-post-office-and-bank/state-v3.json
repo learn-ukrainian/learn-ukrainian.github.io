@@ -1,0 +1,33 @@
+{
+  "track": "a2",
+  "slug": "at-the-post-office-and-bank",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T19:29:42Z",
+      "task_id": "v3-at-the-post-office-and-bank-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-22T19:31:09Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-22T19:33:11Z",
+      "task_id": "v3-at-the-post-office-and-bank-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-22T19:37:54Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-22T19:42:39Z",
+      "attempts": 1,
+      "note": "d1-only"
+    }
+  }
+}

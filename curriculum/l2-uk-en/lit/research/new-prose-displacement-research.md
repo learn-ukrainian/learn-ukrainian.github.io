@@ -1,5 +1,31 @@
 # Дослідження: New Prose Displacement
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "New Prose Displacement"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Мондегрін"
+    source: ""
+    attribution: ""
+  - text: "мондегрін"
+    source: ""
+    attribution: ""
+  - text: "напомацки"
+    source: ""
+    attribution: ""
+  - text: "Доця"
+    source: ""
+    attribution: ""
+  - text: "Мова стає не просто інструментом спілкування, а новим домом, єдиним простором, який окупант не може відібрати"
+    source: "концептуальна"
+    attribution: ""
+forbidden_claims:
+  - "Російськомовне населення сходу України є частиною «русского мира», і вони природно тяжіють до Росії. Біженці — це маргінали без власного культурного обличчя."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — огляд творчості письменників-переселенців (зокрема Володимира Рафєєнка).
 2. [Українська Вікіпедія (uk.wikipedia.org)](https://uk.wikipedia.org/) — статті «Рафєєнко Володимир Володимирович» та «Доця (роман)» для відновлення хронології та сприйняття текстів.

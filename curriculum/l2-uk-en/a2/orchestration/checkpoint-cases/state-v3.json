@@ -1,0 +1,33 @@
+{
+  "track": "a2",
+  "slug": "checkpoint-cases",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T19:43:45Z",
+      "task_id": "v3-checkpoint-cases-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-22T19:46:02Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-22T20:53:16Z",
+      "task_id": "v3-checkpoint-cases-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-22T20:57:01Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-22T21:02:26Z",
+      "attempts": 1,
+      "note": "d1-only"
+    }
+  }
+}

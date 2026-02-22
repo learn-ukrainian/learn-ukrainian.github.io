@@ -1,170 +1,171 @@
+# Рецензія: The Cyrillic Code II: The Final 15 Letters
+
 **Reviewed-By:** claude-sonnet-4-6
 
-# Рецензія: The Cyrillic Code II
-
-**Level:** A1.1 | **Module:** a1-02
-**Overall Score:** 7.9/10
+**Level:** A1 | **Module:** a1-02
+**Overall Score:** 7.8/10
 **Status:** FAIL
 **Reviewed:** 2026-02-22
 
 ## Plan Verification
 
 ```
-Plan-Content Alignment: PASS
-- Sections: 5/5 present (Вступ, Унікальні приголосні, Йотовані голосні та М'який знак,
-  Голосні та напівголосні, Практика та вимова)
-- Vocabulary: 8/8 required words present (центр, чай, школа, гарний, жити, день,
-  Європа, яблуко); 6/6 recommended words present
-- Grammar scope: CLEAN — no grammar from later modules; phonetics/alphabet only
-- Objectives: All 4 learning objectives addressed
+Plan-Content Alignment: PARTIAL PASS
+- Sections: PASS — all 5 H2 sections present (Вступ, Унікальні приголосні,
+  Йотовані голосні та М'який знак, Голосні та напівголосні, Практика та вимова)
+- Vocabulary: PARTIAL — plan required 8 items ✓; recommended ніч present in
+  content but MISSING from vocab file; тінь and літо in vocab file have no
+  content anchor
+- Grammar scope: PASS — no grammar from later modules introduced
+- Objectives: PASS — all 4 learning objectives addressed
+- Count discrepancy: Plan subtitle says "The Final 14 Letters"; content correctly
+  counts 15 (Г Ґ Ж Ш Щ Ч Ц Є Ї Ю Я Ь И І Й = 15). Plan needs updating.
 ```
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Strong warm opening and closing; section «Унікальні приголосні» is dense (90 lines, 7 consonants, 30+ examples); mechanical Підсумок paragraph (line 307) |
-| 2 | Language | 8/10 | <8 | One history-bite hyperbole ("violently removed", line 69); misleading голос/голова note (line 55); IPA inconsistency between vocab YAML and content for Європа |
-| 3 | Pedagogy | 8/10 | <7 | Good PPP structure, culturally rich hooks; "quick wins" are concentrated at end rather than distributed; self-check questions at Підсумок are metalinguistically demanding for A1.1 |
-| 4 | Activities | 8/10 | <7 | 8 activities, 6 different types — good variety; item counts diverge from plan (plan: 20/quiz, actual: 8/quiz); all content accurate |
-| 5 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5 pass — density of section «Унікальні приголосні» causes borderline overwhelm; module length 3684 words is 84% over target for A1.1 |
-| 6 | LLM Fingerprint | 7/10 | <7 | Structural monotony: Ж, Ш, Щ, Ч, Ц all in identical template format (5 consecutive); line 253 purple phrase; Підсумок paragraph is mechanical exhaustive enumeration |
-| 7 | Linguistic Accuracy | 8/10 | <9 | **AUTO-FAIL**: vocabulary YAML IPA error: Європа [jɛu̯ˈrɔpɑ] (в incorrectly transcribed as glide u̯, not approximant ʋ); мій [mij] missing palatalization marker; non-standard [ˈr⁽ʲ⁾iʋnɛ] for Рівне in content |
+| 1 | Experience Quality | 8/10 | <7 | Warm opening and culturally rich hooks; persona ("Ancient Manuscript Restorer") absent; monotonous middle section of 15 consecutive letter descriptions |
+| 2 | Language | 8/10 | <8 | Ukrainian phrases grammatically clean; Ц visual description is inaccurate; borderline implied-Russian comparison on Ї without naming Russian |
+| 3 | Pedagogy | 7/10 | <7 | ALL practice deferred to Section «Практика та вимова» — 15 consecutive letter presentations with zero embedded interaction violates ≤2 concepts before exercise |
+| 4 | Activities | 8/10 | <7 | 8 activities, 6 types, all technically correct; тінь and літо in vocab file are not in content; "ahead" as Г example weaker than content's "head/home" |
+| 5 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5 — concern: long slog before structured practice; emotional beats present but sparsely distributed through letter sections |
+| 6 | LLM Fingerprint | 6/10 | <7 | **AUTO-FAIL**: 13 of 15 H3 letter subsections open identically ("The letter X [visual description]..."); ALL 15 use the same bold-word + parenthetical-English example format |
+| 7 | Linguistic Accuracy | 9/10 | <9 | IPA correct throughout; phonetic rules accurate; one inaccurate visual description of Ц |
 
 **Weighted Overall:**
 ```
-(8×1.5 + 8×1.1 + 8×1.2 + 8×1.3 + 8×1.3 + 7×1.0 + 8×1.5) / 8.9
-= (12.0 + 8.8 + 9.6 + 10.4 + 10.4 + 7.0 + 12.0) / 8.9
-= 70.2 / 8.9
-= 7.9/10
+(8×1.5) + (8×1.1) + (7×1.2) + (8×1.3) + (8×1.3) + (6×1.0) + (9×1.5)
+= 12.0 + 8.8 + 8.4 + 10.4 + 10.4 + 6.0 + 13.5
+= 69.5 / 8.9 = **7.8/10**
 ```
 
 ## Auto-Fail Checklist Results
 
 - Russianisms: CLEAN
 - Calques: CLEAN
-- Grammar scope: CLEAN — alphabet/phonetics only, no later-module grammar introduced
-- Colonial framing: CLEAN — decolonization callout (line 175–176) uses `[!decolonization]` tag, legitimate exception; history-bite vaguely references "other languages in the empire" without naming Russian
-- Activity errors: CLEAN — all answers correct, all distractors plausible
-- Beginner safety: 4/5 — borderline on "overwhelmed" due to dense consonant section
-- Factual accuracy: One hyperbole — "violently removed" (line 69) not supported by research notes; research says "banned" only
+- Grammar scope: CLEAN — no later-module grammar introduced
+- Activity errors: CLEAN — all answers factually correct
+- Beginner safety: 4/5 (concern: no embedded exercises in the 15-letter presentation block)
+- Factual accuracy: CLEAN — Ґ ban dates (1933/1990) confirmed; Ї-Mariupol 2022 culturally grounded
+- **LLM Fingerprint: AUTO-FAIL** — 13/15 H3 subsections with identical opening structure
 
 ## Critical Issues Found
 
-### Issue 1: Vocabulary YAML — IPA Error for Європа (Linguistic Accuracy — AUTO-FAIL)
-- **Location**: `vocabulary/the-cyrillic-code-ii.yaml` line 25; cross-reference `the-cyrillic-code-ii.md` line 142
-- **Original**: `ipa: '[jɛu̯ˈrɔpɑ]'` (vocabulary YAML)
-- **Problem**: Ukrainian в is the labiodental approximant [ʋ], not the non-syllabic glide [u̯]. The vocab file transcribes the "вр" sequence in Європа as a labial glide [u̯] + [r], which misrepresents the consonant to learners. The content file correctly uses `[jɛˈʋrɔpɑ]` (line 142). This internal inconsistency between the two files is a linguistic accuracy failure — a learner comparing both would receive contradictory phonological information.
-- **Fix**: Change vocab IPA to `'[jɛˈʋrɔpɑ]'` to match content and standard Ukrainian phonology.
+### Issue 1: Severe Structural Monotony — LLM Fingerprint (Auto-Fail)
+- **Location**: Lines 35, 53, 67, 80, 97, 111, 124, 141, 154, 168, 181, 214, 227, 241 / Sections «Унікальні приголосні», «Йотовані голосні та М'який знак», «Голосні та напівголосні»
+- **Problem**: 13 of 15 H3 letter subsections open with the formula "The letter **X** [visual description]..." and every single one of the 15 subsections presents vocabulary examples in the format `**слово** (translation)` in a bare bullet list. The example batching threshold (3+ sections, same format) is exceeded more than four times over. This reads as a reference guide generated by formula, not as a patient tutor's lesson. A real tutor would vary their approach — use a table for one group, a mini-dialogue for another, a comparison chart for Г/Ґ.
+- **Fix**: Rewrite the opening line of at least 8 of the 13 identical subsections with varied pedagogical voices. Example alternatives: lead with a cultural hook for Ж, open with the contrast to Ш for the Щ section, open the Ї section with the Mariupol story before the phonetics. Introduce at least two different example formats across the 15 sections (e.g., a comparison table for И/І, a pronunciation-focused mini-dialogue for Ч/Ц, inline prose examples for Й).
 
-### Issue 2: Vocabulary YAML — IPA Error for мій (Linguistic Accuracy — AUTO-FAIL)
-- **Location**: `vocabulary/the-cyrillic-code-ii.yaml` line 61
-- **Original**: `ipa: '[mij]'`
-- **Problem**: In Ukrainian, м before і is palatalized: мій = [mʲij]. The vocabulary file omits the palatalization superscript [ʲ]. Since this module specifically teaches palatalization via the Soft Sign, omitting the palatalization marker in a vocabulary item for мій directly contradicts the lesson's core phonetic teaching.
-- **Fix**: Change to `ipa: '[mʲij]'`
+### Issue 2: Inaccurate Visual Description of Ц
+- **Location**: Line 126 / Section «Унікальні приголосні»
+- **Original**: «The letter **Ц** looks like an upside-down English "U" with a small tail on the bottom right.»
+- **Problem**: An upside-down "U" produces the shape ∩ (a smooth arch), which looks nothing like Ц. The letter Ц has two vertical strokes joined at the top by a horizontal bar — structurally similar to П — with a short descending hook from the bottom-right corner. Teaching learners to expect a U-shape will confuse them when they see the actual letter.
+- **Fix**: Replace with: «The letter **Ц** looks like the letter П (two vertical legs joined at the top) with a small hook curling down from the bottom-right corner — like a backwards "J" attached to a little gate.»
 
-### Issue 3: History-Bite Hyperbole — "violently removed" (Language)
-- **Location**: Line 69, Section «Унікальні приголосні», callout `[!history-bite]`
-- **Original**: «During the Soviet era, specifically from 1933 to 1990, this letter was officially banned and violently removed from the Ukrainian alphabet.»
-- **Problem**: The letter Ґ was removed through an administrative orthographic reform decree (the 1933 "Kharkiv reforms"), not through physical violence. The research notes describe it as "banned from the Ukrainian alphabet" — they do not use the word "violently." Using this word in a factual historical callout is hyperbole that misleads learners about the mechanism of the suppression and overstates a claim that cannot be substantiated.
-- **Fix**: Change to «During the Soviet era, specifically from 1933 to 1990, this letter was officially banned and systematically erased from the Ukrainian alphabet.»
+### Issue 3: Vocabulary File Contains Two Orphaned Items
+- **Location**: Vocabulary file lines 53–56 (літо) and 69–72 (тінь)
+- **Problem**: `тінь` (shadow) and `літо` (summer) appear in the vocabulary file but are not mentioned anywhere in the content file. Grepping confirms тінь returns zero matches in the content. Grepping `літо` also returns zero matches in the content. Both appear only in activities (as answer choices), not in the lesson prose where they would be introduced. A learner encountering these words in activities has never seen them explained.
+- **Fix**: Either (a) add brief inline mentions of тінь and літо to the letter-example word lists in «Голосні та напівголосні» (under І and Й respectively), or (b) replace them in the vocabulary file with `ніч` (night), which IS in the content at line 235 and IS in the plan's recommended list.
 
-### Issue 4: Misleading Pedagogical Note — голос/голова (Language / Beginner Safety)
-- **Location**: Line 55, Section «Унікальні приголосні»
-- **Original**: «**голос** [ˈɦɔlɔs] (voice) — Notice the similarity to "head" (голова).»
-- **Problem**: голос (voice) and голова (head) share the sequence гол- but are unrelated in meaning and have different etymologies (голос from Proto-Slavic *golsъ; голова from *golva). The note invites beginners to draw a connection between "voice" and "head" that does not exist. For A1 learners without Ukrainian context, "similarity to 'head'" implies a semantic or mnemonic link, but actually misleads. The intent appears to be phonetic reinforcement (both start with Г), but the execution creates a false conceptual bridge.
-- **Fix**: Remove the reference to голова entirely, or rewrite as: «**голос** [ˈɦɔlɔs] (voice) — Another Г word from this list to reinforce the soft, voiced "h" opening.»
-
-### Issue 5: LLM Fingerprint — Structural Monotony in Consonant Presentations (LLM Fingerprint)
-- **Location**: Lines 75–120, Section «Унікальні приголосні»
-- **Problem**: Five consonants (Ж, Ш, Щ, Ч, Ц) are each presented in an identical template: **bold letter (Name)** → one-sentence English description → bullet list of 4–6 IPA examples. While Г and Ґ have differentiated presentation, the five remaining consonants are structurally cloned. A learner reading through the section encounters five visually identical blocks in sequence, which signals mechanical generation and can cause reading fatigue. The LLM fingerprint threshold for structural monotony (3+ sections in same format) is met.
-- **Fix**: Vary at least 2 of the 5 presentations. For example, group Ж and Ш explicitly as a voiced/unvoiced pair with a comparison table, then present Щ = Ш+Ч visually with a phoneme-splitting diagram. This breaks the repetition while adding pedagogical value.
-
-### Issue 6: Non-Standard IPA Notation — Рівне (Linguistic Accuracy)
-- **Location**: Line 219, Section «Голосні та напівголосні»
-- **Original**: «**Рівне** [ˈr⁽ʲ⁾iʋnɛ] (Rivne, a Ukrainian city)»
-- **Problem**: The notation ⁽ʲ⁾ (superscript palatalization in parentheses) indicates an optional phonetic feature and is non-standard in teaching IPA contexts. It appears in phonological research papers but is inappropriate in A1 beginner materials where learners are learning IPA for the first time. A student would not know how to interpret ⁽ʲ⁾ and has been given no guide to this convention anywhere in the module.
-- **Fix**: Simplify to `[ˈriʋnɛ]` (standard unpalatalized) or `[ˈrʲiʋnɛ]` (fully soft), and add a brief note: "The 'r' can sound slightly soft in natural speech."
+### Issue 4: Practice Deferred Entirely to Final Section
+- **Location**: Sections «Унікальні приголосні», «Йотовані голосні та М'який знак», «Голосні та напівголосні» (lines 31–253)
+- **Problem**: The module presents 15 letter subsections — approximately 1500+ words of content — with zero embedded interaction. The first practice opportunity appears in Section «Практика та вимова» (line 255). For A1 learners, this violates the ≤2-concepts-before-exercise guideline and risks cognitive overload. The Tier 1 rubric's "NO_QUICK_WIN" pattern applies: long slog before any reward.
+- **Fix**: Add one brief embedded check between «Унікальні приголосні» and «Йотовані голосні та М'який знак» (e.g., "Quick Check: Can you say all seven consonants aloud? Try: **гарний, ґанок, журнал, школа, щось, чай, центр**") and one between «Йотовані голосні та М'який знак» and «Голосні та напівголосні» (e.g., "Read aloud: **Євро́па, їжа, люди, сім'я, де́нь**").
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| vocab line 25 | `'[jɛu̯ˈrɔpɑ]'` | `'[jɛˈʋrɔpɑ]'` | IPA Error — wrong consonant symbol |
-| vocab line 61 | `'[mij]'` | `'[mʲij]'` | IPA Error — missing palatalization |
-| content line 219 | `[ˈr⁽ʲ⁾iʋnɛ]` | `[ˈriʋnɛ]` | IPA — non-standard notation for A1 |
-| content line 69 | «violently removed» | «systematically erased» | English — historical hyperbole |
+| 126 | «looks like an upside-down English "U"» | «looks like the letter П with a small hook at the bottom right» | Visual description inaccuracy |
+| 158 | «It does not exist in the alphabets of neighboring Slavic languages» | «It is found only in Ukrainian» (positive framing, no implied-Russian comparison) | Borderline colonial framing |
+| Vocab | `тінь` [tʲinʲ] in vocab file | Replace with `ніч` [nʲit͡ʃ] — present in content line 235, in plan recommended list | Vocab file / content mismatch |
 
 ## Beginner Safety Audit
 
 "Would I Continue?" Test: 4/5
+- Overwhelmed? **PASS** — pacing within each subsection is comfortable; structure is clear
+- Instructions clear? **PASS** — every section announces what you'll learn; phonetic mechanics explained in plain English
+- Quick wins? **PASS (borderline)** — early diagnostic (lines 24–28) provides one quick win; middle section lacks interaction points but isn't punishing
+- Ukrainian scary? **PASS** — 5.1% Ukrainian with immediate translations; appropriately gentle for A1.1
+- Come back tomorrow? **PASS** — celebratory closing ("You have officially unlocked the entire Cyrillic code" line 308) is motivating
 
-- **Overwhelmed?** BORDERLINE — Section «Унікальні приголосні» runs 90 lines with 7 consonants and 30+ examples before any practice break. An A1.1 beginner who has just learned the alphabet may find this cognitively demanding. Other sections (Йотовані голосні та М'який знак, Голосні та напівголосні) are better paced.
-- **Instructions clear?** PASS — Every section explains what to do, translations are provided, IPA is present. No ambiguity.
-- **Quick wins?** PASS — The Вступ review (мама, тато, брат, вода) creates immediate success. Practice drills in section «Практика та вимова» provide further wins.
-- **Ukrainian scary?** PASS — Ukrainian text is always accompanied by IPA and English translation. Scaffolding is consistently applied.
-- **Come back tomorrow?** PASS — Warm closing on line 301 («You've officially decoded the entire Cyrillic script — look how far you've come!») with «Молодець!» provides a strong positive close.
+**Required emotional beats:**
+- Welcome/orientation: ✓ Line 16 — "Welcome back to our journey through the Ukrainian alphabet!"
+- Curiosity trigger: ✓ Line 12 — "Identity Letters" framing
+- Quick wins: ✓ Diagnostic lines 24–28; Чудова робота! line 280
+- Encouragement: ✓ Line 29 — "If you hesitated, do not worry—repetition is a natural part of language learning"
+- Progress marker: ✓ Lines 308–314
 
-**Emotional safety note**: The «[!tip]» on line 29 («If you hesitated on any of the review words, it is completely normal. Reading a new alphabet takes time...») is an excellent "don't worry" moment that validates anxiety. The module has ≥2 "don't worry" moments and ≥2 "you can do it" moments. Beginner safety is solid overall.
-
-**Module length concern**: 3684 words at A1.1 is 84% over the 2000-word target. For a single study session at this level, this may be too much content. However, since the module is a reference-format phonetics guide (learners can scan rather than read linearly), this does not constitute a hard fail on beginner safety — but should be noted for revision.
+**Emotional gap**: Sections «Унікальні приголосні», «Йотовані голосні та М'який знак», and «Голосні та напівголосні» run for approximately 1500 words with only one encouragement phrase embedded (line 51: «Це дуже важливо.»). Learners need at least one emotional check-in per major section to sustain engagement.
 
 ## Strengths
 
-- **Cultural framing is excellent**: The `[!history-bite]` callout about Ґ (line 68–69) and the `[!decolonization]` callout about Ї (lines 175–176) are pedagogically strong and culturally appropriate. These hooks give the alphabet linguistic meaning beyond mechanics.
-- **Physiological pronunciation guidance**: The "Smile vs Grin" technique (section «Голосні та напівголосні», lines 209–214) is a memorable, concrete physical cue that gives learners a kinesthetic anchor. The palatalization mechanics on lines 183–186 are unusually clear for A1 material.
-- **Warm tutor voice throughout**: Section openings are varied and personal. «Три літери left — and they need your full attention» (line 202) is direct and human. The Вступ greeting «Привіт! Welcome back to the Ukrainian alphabet!» (line 16) sets the right tone.
-- **Research alignment**: All cultural claims in the module align with the research notes. The Ґ ban dates (1933–1990), the Ї graffiti resistance context, and the State Standard minimal pairs (Рим – Рівне) are all correctly applied.
-- **Activity variety**: 8 activities using 6 types (match-up, group-sort, quiz, fill-in, anagram, true-false) across all key letters. The анagram activity and group-sort are appropriate cognitive variety for A1.
+- **Cultural hooks are outstanding**: The [!decolonization] callout on Ґ (lines 64–65) accurately covers the 1933 Soviet ban and 1990 restoration with appropriate historical gravity. The [!culture] callout on Ї (lines 165–166) correctly frames the 2022 Mariupol resistance symbolism. Both serve the A1 learner by connecting phonetics to living history.
+- **"Smile vs Grin" technique is excellent pedagogy**: The И/І physiological technique (lines 218–231) is the kind of concrete, embodied instruction that makes phonetics stick. The Рим–Рівне minimal pair (line 239) precisely executes the State Standard §4.1.4 requirement.
+- **Pronunciation mechanics are consistently accurate**: The voiced-fricative description of Г, the affricate characterization of Щ ("fresh cheese" technique at line 101), the palatalization explanation for Ь (lines 199–208) — all are phonetically correct and learner-accessible.
+- **Closing is strong**: Lines 308–322 provide a genuine sense of accomplishment with the "Перевірте себе" review questions anchoring learning without being intimidating.
+- **IPA throughout vocabulary file is correct**: Verified all 20 entries — no transcription errors detected.
 
 ## Fix Plan to Reach 9/10
 
-### Linguistic Accuracy: 8/10 → 9/10
+### LLM Fingerprint: 6/10 → 8/10
 **What to fix:**
-1. `vocabulary/the-cyrillic-code-ii.yaml` line 25: Change `ipa: '[jɛu̯ˈrɔpɑ]'` → `ipa: '[jɛˈʋrɔpɑ]'` — eliminates the u̯/ʋ mismatch with content file
-2. `vocabulary/the-cyrillic-code-ii.yaml` line 61: Change `ipa: '[mij]'` → `ipa: '[mʲij]'` — adds palatalization to match content file (line 243) and lesson teaching
-3. Content line 219: Change `[ˈr⁽ʲ⁾iʋnɛ]` → `[ˈriʋnɛ]` — eliminates non-standard notation
+1. Lines 35–50 (Г subsection): Change «The letter **Г** is often a stumbling block for beginners, but it is actually quite simple...» → Open with the Ukrainian cultural context instead: «Imagine you are greeting your Ukrainian neighbour on a warm morning. "Га́рний де́нь!" — beautiful day! That breathy, vibrating "h" you hear at the start? That is the letter Г.» Then move to the mechanics.
+2. Lines 97–109 (Щ subsection): Change «The letter **Щ** looks just like the previous letter, **Ш**, but it has a small tail...» → Lead with a visual comparison table: insert a two-column mini-table showing Ш vs. Щ side by side with their sounds, rather than a prose opening.
+3. Lines 214–225 (И subsection): Change «The letter **И** looks like a backwards English capital "N."» → Open with the contrast: «Your mouth knows two modes: a bright, forward smile and a relaxed, back-of-the-throat grin. These two modes map perfectly to Ukrainian's two most-confused vowels.» Then introduce И and І together as a paired system rather than two separate identical-format entries.
+4. All 15 example word blocks: Replace at least 5 of the bare bold-list formats with at least two alternative formats — e.g., a pronunciation comparison table for Г/Ґ, an inline "try it" box for Щ, an embedded mini-dialogue for Ч ("Хочеш **ча́ю**? — Would you like some **tea**?").
 
-**Expected score after fix:** 9/10 (IPA errors in both files corrected)
+**Expected score after fix:** 8/10
 
-### LLM Fingerprint: 7/10 → 8/10
+### Pedagogy: 7/10 → 8/10
 **What to fix:**
-1. Lines 75–120, Section «Унікальні приголосні»: Break structural monotony in consonant blocks. Group Ж + Ш explicitly as a voiced/unvoiced pair with a compact comparison; keep Щ = Ш+Ч demonstration; this creates 2 distinct presentation formats instead of 5 identical ones.
-2. Line 253: Change «Knowledge, however, must be forged into skill through deliberate, conscious practice.» → «Now let's take everything from your head and put it into your mouth.» — informal, matches warm tutor voice
-3. Line 307 (Підсумок): Trim the mechanical sequential enumeration of all 6 topics. Two sentences max, focusing on the learner's achievement, not inventory.
+1. After line 136 (end of «Унікальні приголосні»): Add a brief transition exercise — «Quick Drill: Read aloud, focusing on the buzzing vs. hissing distinction: **жити** — **шко́ла** — **що** — **ча́й** — **це́нтр** — **ґа́нок**. Чудово! (Great!)»
+2. After line 209 (end of «Йотовані голосні та М'який знак»): Add a micro-check — «Before moving on: can you read these words confidently? **Євро́па — Украї́на — лю́ди — де́нь — Льві́в**. If yes, you are ready for the final vowel pair!»
 
-**Expected score after fix:** 8/10 (monotony reduced but not eliminated)
+**Expected score after fix:** 8/10
 
-### Language: 8/10 → 9/10
+### Vocabulary File: Fix orphan items
 **What to fix:**
-1. Line 69: Change «officially banned and violently removed» → «officially banned and systematically erased» — removes unsubstantiated hyperbole
-2. Line 55: Remove or rewrite the «Notice the similarity to "head" (голова)» note — eliminates misleading semantic implication
+1. Remove `тінь` from vocabulary file (not in content).
+2. Remove `літо` from vocabulary file (not in content) OR add «Лі́то (summer) in Ukraine is warm and beautiful.» as an example sentence in the І section (line 233 area).
+3. Add `ніч` [nʲit͡ʃ] (night, noun) to vocabulary file to replace тінь — it IS in the content at line 235.
 
-**Expected score after fix:** 9/10
+**Expected score after fix:** Activities 8 → 9
 
 ### Projected Overall After Fixes
 ```
-Linguistic Accuracy: 8 → 9
-LLM Fingerprint: 7 → 8
-Language: 8 → 9
+LLM Fingerprint: 6 → 8
+Pedagogy: 7 → 8
+Activities: 8 → 9
 
-(8×1.5 + 9×1.1 + 8×1.2 + 8×1.3 + 8×1.3 + 8×1.0 + 9×1.5) / 8.9
-= (12.0 + 9.9 + 9.6 + 10.4 + 10.4 + 8.0 + 13.5) / 8.9
-= 73.8 / 8.9
-= 8.3/10 → PASS (all auto-fail thresholds met)
+(8×1.5) + (8×1.1) + (8×1.2) + (9×1.3) + (8×1.3) + (8×1.0) + (9×1.5)
+= 12.0 + 8.8 + 9.6 + 11.7 + 10.4 + 8.0 + 13.5
+= 74.0 / 8.9 = 8.3/10 — PASS
 ```
+
+## Factual Verification
+
+- Research notes consulted: NOT_APPLICABLE (A1 core grammar module — no research track)
+- Key Facts Ledger present: NOT_APPLICABLE
+- Dates checked: 2 (Ґ removed 1933 ✓; Ґ restored 1990 ✓)
+- Named figures verified: 0 (no named historical figures cited)
+- Primary quotes cross-referenced: NOT_APPLICABLE
+- Chronological sequence: CONSISTENT
+- Callout box claims: (a) Ґ ban in 1933 and restoration in 1990 — historically accurate; (b) Ї used as resistance symbol in Mariupol 2022 — plausible and culturally consistent with documented occupation-era Ukrainian identity marking; (c) "It does not exist in the alphabets of neighboring Slavic languages" (line 158) — accurate for all major Eastern Slavic Cyrillic alphabets (Russian, Belarusian, Bulgarian); technically Rusyn also uses Ї in some variants but this is a specialist caveat inappropriate to flag at A1
 
 ## Verification Summary
 
-- Content lines read: 317
-- Activity items checked: 8 activities, 62 individual items
-- Ukrainian sentences verified: 12 (all inline Ukrainian phrases)
-- IPA transcriptions checked: 48 (content) + 20 (vocabulary YAML)
-- Factual claims verified: 4 (Ґ ban dates 1933–1990 ✓; Ї graffiti Mariupol 2022 ✓; Kyiv transliteration campaign ✓; "violently removed" ✗ — not in research notes)
-- Issues found: 6
+- Content lines read: 323
+- Activity items checked: 52 (all items across 8 activities)
+- Ukrainian sentences verified: 14 (all inline Ukrainian phrases in content)
+- IPA transcriptions checked: 20 (full vocabulary file)
+- Factual claims verified: 4
+- Issues found: 4 (1 auto-fail, 3 significant)
 
 ## Verdict
 
 **FAIL**
 
-The module fails on one auto-fail threshold: Linguistic Accuracy is 8/10, below the required ≥9, due to IPA errors in the vocabulary YAML file (Європа incorrectly transcribes в as the glide [u̯] rather than the approximant [ʋ]; мій is missing palatalization [mʲij]). These errors in a module specifically teaching palatalization and phonetic precision are directly contradictory. Three targeted fixes are required: correct both vocabulary YAML IPA entries, simplify the non-standard Рівне transcription notation in the content. No prose rewrites are needed for pass.
+The module fails on the LLM Fingerprint dimension (6/10, auto-fail threshold <7). All 13 H3 letter subsections open with the formula «The letter X [visual description]...» and every subsection uses the identical bold-word list format for examples — well beyond the 3-section threshold for example batching. Two additional significant issues: the Ц visual description is factually inaccurate ("upside-down U"), and the vocabulary file contains two items (тінь, літо) with no content anchor. These are fixable in a targeted repair pass.

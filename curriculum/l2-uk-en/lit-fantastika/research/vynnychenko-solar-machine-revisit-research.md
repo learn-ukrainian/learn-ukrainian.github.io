@@ -1,5 +1,29 @@
 # Дослідження: Vynnychenko Solar Machine Revisit
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Vynnychenko Solar Machine Revisit"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Щоденнику"
+    source: ""
+    attribution: ""
+  - text: "Коли б ще років три над нею попрацювати, могла б бути путньою річчю"
+    source: ""
+    attribution: ""
+  - text: "Дефектів багато, сам бачу, а виправити вже не сила мені"
+    source: ""
+    attribution: ""
+  - text: "...боюсь, що саме тому, що українське, сама річ втратить в очах Европи ті гарні якості"
+    source: ""
+    attribution: ""
+  - text: "Перший український утопічний роман! Перший за весь час існування"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 
 1. [Lektorium.in.ua — Ідейно-художній аналіз роману «Сонячна машина»](https://lektorium.in.ua/idejno-hudozhnij-analiz-romanu-sonyachna-mashina-v-vinnichenka/) — ідейно-художній аналіз, персонажі, проблематика

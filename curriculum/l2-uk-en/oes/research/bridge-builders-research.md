@@ -1,5 +1,31 @@
 # Дослідження: Bridge Builders (Мостники)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Bridge Builders (Мостники)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "А се урок мостникам: аще помостивше мост, взяти от дела ногата, а от городници ногата; аще ли ветхаго моста потворити несколько досок, или 3, или 4, или 5, то тое же взяти"
+    source: ""
+    attribution: ""
+  - text: "Мостник"
+    source: ""
+    attribution: ""
+  - text: "Городниця"
+    source: ""
+    attribution: ""
+  - text: "Ногата"
+    source: ""
+    attribution: ""
+  - text: "городнях"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Представлення Київської Русі як примітивної прото-держави без складної інфраструктури та правового регулювання праці. Акцент на «общині» і «повинностях»."
+```
+
 ## Використані джерела
 1. [Руська Правда (Коротка редакція)](http://litopys.org.ua/yushkov/yu02.htm) — текст статті 43 «Урок мостникам».
 2. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruska_Pravda) — аналіз правового контексту.

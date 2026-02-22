@@ -1,202 +1,160 @@
-<!-- content-hash: caa34339da3d -->
-# Рецензія: Questions & Negation
-
+<!-- content-hash: 9d4b222e900d -->
 **Reviewed-By:** claude-opus-4-6
-
-**Level:** A1 | **Module:** 7
-**Overall Score:** 8.2/10
-**Status:** FAIL
-**Reviewed:** 2026-02-21
-
-## Plan Verification
-
-```
-Plan-Content Alignment: PASS
-- Sections: 5/5 H2 sections from meta content_outline present (names match meta, not plan — acceptable)
-- Vocabulary: 8/8 required from plan, 7/7 recommended, 9 extra (total 24)
-- Grammar scope: CLEAN — yes/no with чи, question words, negation with не, frequency adverbs
-- Objectives: 4/4 addressed (чи questions, question words, negation, frequency adverbs)
-```
-
-**Note:** The plan defines a "Investigative Journalist" persona for roleplay, but the content only implicitly uses it in the "Social Curiosity" scenario (line 288). No explicit roleplay activity named as such. Minor gap.
 
 ## Scores
 
-| # | Dimension | Score | Auto-fail | Evidence |
-|---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Warm tone with creative ALF hook, but summary (lines 367-381) is entirely Ukrainian — could overwhelm at end of long lesson |
-| 2 | Coherence | 9/10 | <7 | Logical flow: intro → grammar → practice → application → culture. "Що vs Шо" and "Frequency words" subsections slightly tangential but justified |
-| 3 | Relevance | 9/10 | <7 | All content directly serves stated objectives; cultural hook is relevant |
-| 4 | Educational | 8/10 | <7 | "Do Trap" is excellent pedagogy; but activities undercut learning (see Activities dimension) |
-| 5 | Language | 8/10 | <8 | «освіжаюче проста» calque (line 369); "Шо = Surzhyk / lazy pronunciation" is linguistically inaccurate (line 160); «Це швидше і більш розмовно» slightly awkward (line 98) |
-| 6 | Pedagogy | 8/10 | <7 | Solid PPP structure; well-scaffolded English→Ukrainian; but activities don't challenge enough (repetitive fill-ins) |
-| 7 | Immersion | 9/10 | <6 | 31.5% Ukrainian; A1.1 target is 20-40% — squarely in range |
-| 8 | Activities | 7/10 | <7 | Anagram items not actually scrambled; 2 fill-in activities have zero discrimination (same answer for all items); see Critical Issues |
-| 9 | Richness | 8/10 | <6 | ALF cultural hook, Lviv café scenario, intonation visualization with arrows, animacy distinction with pets |
-| 10 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5; warm scaffolding throughout; minor concern with all-Ukrainian summary |
-| 11 | LLM Fingerprint | 7/10 | <7 | "Важливо знати:" used 7 times (lines 77,97,124,153,166,182,238); 6+ distinct metaphors; 3× "not just" pattern (lines 13,18,249) |
-| 12 | Linguistic Accuracy | 9/10 | <9 | IPA correct throughout; grammar correct; one calque «освіжаюче» |
-| 13 | Factual Accuracy | 8/10 | <8 | «Він сформував почуття гумору цілого покоління» (line 345) is unverifiable superlative; «Шо» mischaracterized as Surzhyk (line 160) |
+| Dimension | Score | Evidence Summary |
+|-----------|-------|-----------------|
+| Lesson Quality | 8/10 | Clear PPP structure with good scenarios, but Grammar section is dense (6+ concepts before formal practice) and opening lacks explicit warmth for A1 |
+| Factual Accuracy | 10/10 | All grammar rules correct, ALF cultural reference verified, double negation rule accurate |
+| Ukrainian Language Quality | 7/10 | IPA dual stress on «за́вжди́» (line 172) is incorrect; vocabulary IPA `[ˈsʲkʲilʲkɪ]` for скільки has erroneous palatalized с; characterizing «шо» as "lazy pronunciation" (line 160) is sociolinguistically loaded |
+| English Language Quality | 9/10 | Clear, accessible B1-level English throughout; warm tutoring voice in most sections; minor overuse of declarative motivational statements |
+| Activities | 6/10 | Activities #5 "Скажіть «ні»" and #8 "Ввічливі запитання" are mechanically identical (all items have same answer, same distractors, same explanation) — no real decision-making. Good variety in types otherwise |
+| Richness | 8/10 | Strong ALF cultural hook, practical café/social scenarios, good callout box variety (5 types). Missing "Investigative Journalist" roleplay from plan persona |
+| LLM Fingerprint | 8/10 | No structural monotony, varied section openings, no Ukrainian AI clichés. Both [!warning] "Пастка з 'Do'" and [!myth-buster] "Міф про 'Do'" address the same concept thematically |
+| Immersion Balance | 9/10 | 31.6% immersion is well within A1.1 target (20-40%). Good scaffolding with English explanations and Ukrainian examples |
+| Humanity & Warmth | 7/10 | Meets minimum thresholds (≥15 direct address, ≥2 "don't worry", ≥2 "you can now") but just barely. Opening starts with «Чому це важливо?» rather than a warm welcome. Limited encouragement phrases (3 borderline) |
 
-**Weighted Overall:**
-```
-(8×1.5 + 9×1.0 + 9×1.0 + 8×1.2 + 8×1.1 + 8×1.2 + 9×1.0 + 7×1.3 + 8×0.9 + 9×1.3 + 7×1.0 + 9×1.5 + 8×1.5) / 15.5
-= (12 + 9 + 9 + 9.6 + 8.8 + 9.6 + 9 + 9.1 + 7.2 + 11.7 + 7 + 13.5 + 12) / 15.5
-= 127.5 / 15.5
-= 8.2/10
-```
-
-## Auto-Fail Checklist Results
-
-- Russianisms: CLEAN
-- Calques: «освіжаюче проста» (line 369) — English calque "refreshingly simple"
-- Colonial framing: CLEAN — no Russian-as-baseline comparisons
-- Grammar scope: CLEAN — no grammar from later modules
-- Activity errors: Anagram items not scrambled (lines 219-238); repetitive fill-ins (lines 161-196, 240-275)
-- Beginner safety: 5/5
-- Factual accuracy: 2 issues — ALF superlative claim (line 345), "Шо = Surzhyk" mischaracterization (line 160)
+---
 
 ## Critical Issues Found
 
-### Issue 1: Anagram Activity Items Not Scrambled (ACTIVITIES — CRITICAL)
-- **Location**: Lines 219-238 / Activity "Розшифруйте слова"
-- **Original**: `scrambled: "т а м"` → `answer: "там"`, `scrambled: "х т о"` → `answer: "хто"`, etc. (all 8 items)
-- **Problem**: Every "scrambled" word has letters in the correct order with spaces between them. "т а м" is not an anagram of "там" — it IS "там" with spaces. There is zero scrambling, making the activity educationally worthless.
-- **Fix**: Actually scramble the letters, e.g., `scrambled: "м а т"` → `answer: "там"`, `scrambled: "о т х"` → `answer: "хто"`.
+### Issue 1: IPA Dual Stress on «завжди» [CRITICAL — IPA Error]
 
-### Issue 2: "Шо" Mischaracterized as Surzhyk (LANGUAGE + FACTUAL)
-- **Location**: Line 160
-- **Original**: «**Шо** = Very casual, spoken, sometimes considered "Surzhyk" (mixed language) or just lazy pronunciation.»
-- **Problem**: "Шо" is a dialectal/colloquial variant with deep roots in Ukrainian dialects, predating Russian contact. It is NOT Surzhyk. Labeling it "lazy pronunciation" is a value judgment and factually incorrect. This perpetuates a harmful misconception.
-- **Fix**: Replace with: «**Шо** = Very casual, spoken variant found across many Ukrainian dialects. Completely natural in informal conversation, but not standard written Ukrainian.»
+**Location:** Content line 172, Vocabulary file line 50-51
 
-### Issue 3: "Освіжаюче проста" — English Calque (LANGUAGE)
-- **Location**: Line 369
-- **Original**: «Ви дізналися: українська мова освіжаюче проста.»
-- **Problem**: «Освіжаюче» as an adverb modifying an adjective is a calque from English "refreshingly". This construction is not standard Ukrainian.
-- **Fix**: «Ви дізналися: українська мова приємно проста.» or «...вражаюче проста.»
+**Content file (line 172):** «за́вжди́» has stress diacritics on BOTH the first and last syllable. Ukrainian words have a single primary stress. The standard pronunciation is завжди́ [zɑˈʋʒdɪ] (stress on final syllable).
 
-### Issue 4: "Важливо знати:" Repeated 7 Times (LLM FINGERPRINT)
-- **Location**: Lines 77, 97, 124, 153, 166, 182, 238
-- **Problem**: The same heading «Важливо знати:» is used identically 7 times across 7 subsections. This is a clear LLM generation pattern — no real textbook repeats the same callout heading this many times.
-- **Fix**: Vary the headings: «Зверніть увагу:», «Порада:», «Пам'ятайте:», «Корисно знати:», «На замітку:», etc.
+**Vocabulary file (line 50):** `[ˈzɑˈʋʒdɪ]` — two primary stress marks in IPA. This is impossible transcription for a single word.
 
-### Issue 5: Repetitive Fill-In Activities (ACTIVITIES)
-- **Location**: Lines 161-196 ("Скажіть «ні»") and Lines 240-275 ("Ввічливі запитання")
-- **Problem**: In "Скажіть «ні»", all 8 items have the same answer ("не") with identical explanations copy-pasted. In "Ввічливі запитання", all 8 items have the same answer ("Чи") with identical explanations. Zero discrimination is required from the learner.
-- **Fix**: For "Скажіть «ні»": reduce to 4 items with "не" and add 4 items where "ні" is the correct answer (testing the не/ні distinction). For "Ввічливі запитання": mix in items where the correct start is a question word (Хто, Де, etc.) rather than always "Чи".
+Additionally, «ніколи» (line 175) is missing its stress mark entirely while adjacent words «ча́сто» and «і́ноді» have them. Standard: ніко́ли [nʲiˈkɔlɪ].
 
-### Issue 6: ALF Superlative Claim (FACTUAL)
-- **Location**: Line 345
-- **Original**: «Він сформував почуття гумору цілого покоління.»
-- **Problem**: While the ALF Ukrainian dub is culturally significant, claiming it "shaped the sense of humor of an entire generation" is an unverifiable superlative. Multiple media influenced 90s Ukrainian culture.
-- **Fix**: «Він залишив яскравий слід у поп-культурі 90-х.» (It left a vivid mark on 90s pop culture.)
+**Fix:** Content line 172: change «за́вжди́» to «завжди́». Vocabulary file: change `[ˈzɑˈʋʒdɪ]` to `[zɑˈʋʒdɪ]`. Content line 175: change «ніколи» to «ніко́ли».
 
-### Issue 7: Excessive Metaphor Density (LLM FINGERPRINT)
-- **Location**: Throughout the module
-- **Problem**: 6+ distinct metaphors: "flag" for чи (line 63), "guard" for не (line 40), "wall" for ні (line 58), "shield" for не (line 58), "tossing a ball" for intonation (line 254), "ping-pong" for conversation (line 301), "politeness dial" (line 328), "slamming a door" for ні (line 338). This exceeds the 4-metaphor threshold.
-- **Fix**: Remove or merge at least 3 metaphors. The wall/shield pair at line 58 and the guard at line 40 all describe the same concept — pick one. The door metaphor at line 338 is redundant with the wall metaphor.
+### Issue 2: Vocabulary IPA for скільки [IPA Error]
 
-## Ukrainian Language Issues
+**Location:** Vocabulary file line 42
 
-| Line | Current | Corrected | Type |
-|------|---------|-----------|------|
-| 369 | «освіжаюче проста» | «приємно проста» | Calque |
-| 98 | «Це швидше і більш розмовно» | «Це швидший і більш розмовний варіант» or «Так швидше й розмовніше» | Awkward phrasing |
-| 160 | «sometimes considered "Surzhyk" (mixed language) or just lazy pronunciation» | «a widespread colloquial variant found across Ukrainian dialects» | Factual inaccuracy |
-| 367 | «Ви робили заяви» | «Ви лише стверджували» | Stilted word choice — «заяви» implies official declarations |
+The vocabulary file has `[ˈsʲkʲilʲkɪ]` with palatalized с (sʲ). The «с» in «скільки» is not palatalized — it precedes «к», not a front vowel or soft sign. The content file correctly has `[ˈskʲilʲkɪ]` on line 140.
 
-## Beginner Safety Audit
+**Fix:** Vocabulary line 42: change `[ˈsʲkʲilʲkɪ]` to `[ˈskʲilʲkɪ]`.
 
-"Would I Continue?" Test: 5/5
-- Overwhelmed? **Pass** — Concepts introduced one at a time, English scaffolding consistent
-- Instructions clear? **Pass** — Always knew what was being taught; "Do Trap" addressed immediately
-- Quick wins? **Pass** — The revelation "you don't need 'do'" is an early win at line 23
-- Ukrainian scary? **Pass** — Gentle introduction with translations throughout
-- Come back tomorrow? **Pass** — ALF hook is memorable; conversational scenarios feel useful
+### Issue 3: Activities #5 and #8 Are Mechanical Single-Answer Drills [Activity Quality]
 
-**Note:** The summary section (lines 367-381) is entirely in Ukrainian with 7 self-check questions in Ukrainian. For an A1.1 module, this could feel overwhelming as a final impression. Consider adding English translations for the self-check questions.
+**Location:** Activities file lines 161-196 (Activity #5 "Скажіть «ні»") and lines 240-275 (Activity #8 "Ввічливі запитання")
 
-## Strengths
+**Activity #5:** All 8 items have the identical answer "не", identical distractors ["не", "ні", "так", "чи"], and nearly identical explanations (6 of 8 say «Заперечна частка «не» ставиться перед дієсловом.»). A learner can pattern-match "не" every time without engaging any understanding.
 
-- **"Do Trap" pedagogy** (lines 22-35): Excellent proactive error prevention. The warning box with the ridiculous "Робиш ти знати?" example is memorable and effective.
-- **Ні/Не distinction** (lines 49-58): The wall/shield metaphor, while contributing to metaphor density, is genuinely helpful for beginners who confuse these two words.
-- **ALF cultural hook** (lines 344-361): Creative and authentic Ukrainian cultural reference that doubles as grammar reinforcement. The breakdown at lines 357-359 is excellent applied analysis.
-- **Intonation visualization** (lines 248-265): The arrow notation (↘/↗) and the physical analogy of drawing lines with fingers is practical and kinesthetic.
-- **Register awareness** (lines 327-333): The "politeness dial" concept is age-appropriate and immediately actionable.
+**Activity #8:** All 8 items have the identical answer "Чи", identical distractors ["Чи", "Не", "Ні", "Так"], and identical explanations (all say «Ввічливе запитання часто починається з частки «Чи».»). Same mechanical problem.
 
-## Fix Plan to Reach 9/10 (REQUIRED — score < 9.0)
+The key learning point — distinguishing «не» from «ні» — is never actually tested. A better design would MIX «не» and «ні» answers within a single activity, requiring the learner to think about which is appropriate in each context.
 
-### Activities: 7/10 → 9/10
-**What to fix:**
-1. Lines 219-238: Actually scramble the anagram letters (e.g., "м а т" → "там", "т о х" → "хто")
-2. Lines 161-196: Replace 4 of 8 "не" items with items where "ні" is the correct answer, testing the не/ні distinction
-3. Lines 240-275: Replace 4 of 8 "Чи" items with items where question words (Хто, Де, Коли) are the correct answer
-4. Diversify explanations — don't copy-paste identical text for all items
+**Fix:** Redesign Activity #5 to mix «не» (negation particle) and «ні» (answer "no") items. Redesign Activity #8 to mix «чи» with question words or intonation-only questions, requiring actual decision-making.
 
-**Expected score after fix:** 9/10
+### Issue 4: "Шо" Characterized as "Lazy Pronunciation" [Language/Pedagogy]
 
-### LLM Fingerprint: 7/10 → 9/10
-**What to fix:**
-1. Lines 77,97,124,153,166,182,238: Replace 5 of 7 «Важливо знати:» with varied headings (Зверніть увагу, Порада, Пам'ятайте, Корисно знати, На замітку)
-2. Remove at least 3 metaphors: consolidate wall/shield/guard into one at lines 40,58; remove door metaphor at 338 (redundant with wall)
-3. Line 249: Rephrase "Intonation is not just decoration" — the "not just X; it is Y" pattern appears 3 times
+**Location:** Content line 160
 
-**Expected score after fix:** 9/10
+The text reads: **Шо** = Very casual, spoken, sometimes considered "Surzhyk" (mixed language) or just lazy pronunciation.
 
-### Language: 8/10 → 9/10
-**What to fix:**
-1. Line 369: Change «освіжаюче проста» → «приємно проста»
-2. Line 160: Remove "Surzhyk" and "lazy pronunciation" characterization; replace with accurate dialectal description
-3. Line 98: Rephrase «Це швидше і більш розмовно» → «Так швидше й розмовніше»
+Calling «шо» "lazy pronunciation" is sociolinguistically loaded and inaccurate. «Шо» is a well-established dialectal variant with deep roots in Ukrainian dialectology (particularly central/eastern dialects). While some prescriptivists frown upon it, framing it as "lazy" rather than "dialectal" perpetuates linguistic prejudice. At A1, introducing loaded sociolinguistic labels is pedagogically risky.
 
-**Expected score after fix:** 9/10
+**Fix:** Replace "or just lazy pronunciation" with "or a dialectal variant" or "or informal pronunciation." The learner should learn standard «що» as the target form without being taught to judge speakers who use «шо».
 
-### Experience Quality: 8/10 → 9/10
-**What to fix:**
-1. Lines 373-381: Add English translations for the 7 self-check questions (currently all Ukrainian for A1.1 learners)
-2. Add a brief English encouragement before the summary to frame it as a celebration
+---
 
-**Expected score after fix:** 9/10
+## Additional Issues
 
-### Factual Accuracy: 8/10 → 9/10
-**What to fix:**
-1. Line 345: Replace «Він сформував почуття гумору цілого покоління» with «Він залишив яскравий слід у поп-культурі 90-х»
-2. Line 160: Fix "Шо = Surzhyk" mischaracterization (same as Language fix)
+### Issue 5: Grammar Section Density [Pacing]
 
-**Expected score after fix:** 9/10
+**Location:** Section «Граматика: Як будувати питання» (lines 60-200)
 
-### Projected Overall After Fixes
-```
-(9×1.5 + 9×1.0 + 9×1.0 + 8×1.2 + 9×1.1 + 8×1.2 + 9×1.0 + 9×1.3 + 8×0.9 + 9×1.3 + 9×1.0 + 9×1.5 + 9×1.5) / 15.5
-= (13.5 + 9 + 9 + 9.6 + 9.9 + 9.6 + 9 + 11.7 + 7.2 + 11.7 + 9 + 13.5 + 13.5) / 15.5
-= 136.2 / 15.5
-= 8.8/10
-```
+This section introduces: (1) «чи» questions, (2) intonation questions, (3) answers «так»/«ні», (4) nine question words, (5) «що» vs «шо» distinction, (6) frequency adverbs. That's 6 distinct concepts spanning ~140 lines before the formal Practice section begins. The rubric flags >3 concepts before any exercise.
 
-To reach 9.0+, Educational (8→9) and Pedagogy (8→9) would also need improvement — likely through the activity fixes propagating quality improvements and adding the explicit "Investigative Journalist" roleplay activity from the plan.
+The section does include inline examples throughout, which partially mitigates the density. But for an A1.1 learner, this is a heavy block of new material.
+
+**Fix:** Consider splitting the frequency adverbs (section «Слова частоти: Відповіді на "Коли?"», lines 169-200) into the Practice section, or adding a mini-exercise after the question words list.
+
+### Issue 6: Opening Lacks Explicit Warmth [Warmth]
+
+**Location:** Content lines 11-18
+
+The module opens with «Чому це важливо?» followed by "Conversation requires questions, not just statements." This is functional but not warm. For an A1.1 beginner who may be nervous, a warm greeting ("Great job getting this far!") or encouragement before diving into content would improve the emotional arc.
+
+### Issue 7: Missing "Investigative Journalist" Roleplay [Plan Compliance]
+
+**Location:** Plan persona specifies `role: Investigative Journalist` and the plan's production section calls for "Roleplay: 'The Investigative Journalist' (Persona)." The content in section «Застосування: Розмова в реальному житті» has café and social scenarios but no explicit "Investigative Journalist" activity.
+
+### Issue 8: Thematic Duplication in Callout Boxes
+
+Both [!warning] «Пастка з "Do"» (line 27) and [!myth-buster] «Міф про "Do"» (line 185) address the same concept (English speakers trying to translate "do"). The myth-buster box adds the step-by-step breakdown which is genuinely useful, but the warning box's content is already covered in the preceding prose (lines 23-25). Consider whether the [!warning] box is necessary given the prose already covers the point.
+
+---
 
 ## Factual Verification
 
-- Research notes consulted: NOT_APPLICABLE (A1 core track — no research file exists)
-- Key Facts Ledger present: NO
-- Dates checked: 1 ("1990-х" for ALF dub — plausible)
-- Named figures verified: 1 (ALF/Oksana in scenarios — fictional/illustrative, acceptable)
-- Primary quotes cross-referenced: 1 («Ти не любиш котів? Ти просто не вмієш їх готувати!» — recognized cultural reference)
-- Chronological sequence: N/A
-- Claims without research grounding: 2 — ALF superlative (line 345), "Шо = Surzhyk" (line 160)
+| Claim | Source | Verdict |
+|-------|--------|---------|
+| No auxiliary "do/does" in Ukrainian questions | Standard Ukrainian grammar | **Correct** |
+| «Не» placement before the negated word | Standard Ukrainian grammar §4.3.1 | **Correct** |
+| Double negation with «ніколи»: «Я ніколи не читаю.» (line 183) | Standard Ukrainian grammar — required, not optional | **Correct** |
+| Animals use «хто» not «що»: «В українській граматиці тварини є "істотами".» (line 239) | Animacy category in Ukrainian grammar | **Correct** |
+| ALF Ukrainian dub from 1990s: «У 1990-х роках американський серіал "ALF" переклали українською.» (line 345) | Cultural reference — ALF US run 1986-1990, Ukrainian dub in 1990s | **Correct** |
+| «Цей дубляж — це шедевр перекладу! Він сформував почуття гумору цілого покоління.» (line 345-346) | Strong superlative claim, but widely attested in Ukrainian popular culture | **Plausible** (not fabricated, but "шедевр" and "ціле покоління" is hyperbolic; acceptable for cultural engagement) |
+| ALF quote: «Ти не любиш котів? Ти просто не вмієш їх готувати!» (line 349) | Confirmed in research notes | **Correct** |
+| «Так» can mean "so" in other contexts (line 125) | Standard Ukrainian — «так» as intensifier/connector | **Correct** |
+| Verb "to be" omitted in present tense: «Хто це?» literally "Who this?" (line 154) | Standard Ukrainian present-tense copula deletion | **Correct** |
+
+No factual errors found. All grammar explanations are accurate per Ukrainian State Standard §4.3.1.
+
+---
 
 ## Verification Summary
 
-- Content lines read: 381
-- Activity items checked: 68 (8+8+12+8+8+8+8+8)
-- Ukrainian sentences verified: 34
-- IPA transcriptions checked: 27 (3 inline + 24 vocabulary)
-- Factual claims verified: 4
-- Issues found: 7
+### Plan Compliance
+- **Sections:** All 5 content_outline sections present as H2 headers. Section «Вступ: Мистецтво ставити питання» matches meta (not the older plan.yaml section name). **PASS**
+- **Vocabulary scope:** All required items (чи, що, хто, де, коли, не, так, ні) present. All recommended items (куди, звідки, чому, як, скільки, завжди, ніколи) present plus extras. **PASS**
+- **Grammar scope:** No scope creep. Stays within yes/no questions, question words, negation with «не». Does not introduce genitive negation (a1-11) or complex questions (a1-14). **PASS**
+- **Objectives:** All 4 objectives addressed. **PASS**
+- **Persona:** "Patient Supportive Tutor" voice present. "Investigative Journalist" role MISSING. **PARTIAL**
+
+### Colonial Framing Check
+No Russian comparisons found. All L1 comparisons are with English (appropriate for L2 English→Ukrainian). **PASS**
+
+### LLM Fingerprint Check
+- Structural monotony: **PASS** — each H2 section opens differently
+- Example batching: **PASS** — mix of bullets, dialogues, drills, tables
+- "Це не просто" pattern: **PASS** — not found
+- Abstract noun stacking: **PASS** — not found
+- Generic AI clichés: **PASS** — none found
+- Callout monotony: **MINOR** — two callouts about "Do" trap, different box types but same theme
+
+### Section Coverage Verification
+- Section «Вступ: Мистецтво ставити питання» — reviewed for opening warmth, IPA issues, "Do" trap coverage
+- Section «Граматика: Як будувати питання» — reviewed for density/pacing, question word coverage, IPA accuracy
+- Section «Практика: Інтонація та конструктор» — reviewed for drill quality, animacy practice, visualization
+- Section «Застосування: Розмова в реальному житті» — reviewed for scenario quality, missing Investigative Journalist roleplay
+- Section «Культурний контекст: Ввічливість і гумор» — reviewed for register explanation, ALF cultural hook accuracy, softening «ні»
+
+### "Would I Continue?" Test (Beginner)
+| Question | Result |
+|----------|--------|
+| Did I feel overwhelmed? | Partial — Grammar section is dense (6+ concepts before practice) |
+| Were instructions clear? | **Pass** — always knew what to do |
+| Did I get quick wins? | **Pass** — early examples, manageable chunks |
+| Was Ukrainian scary? | **Pass** — introduced gently with translations |
+| Would I come back tomorrow? | **Pass** — ALF hook is engaging, overall encouraging |
+
+4/5 Pass → Lesson Quality baseline 9, adjusted to 8 due to density and warmth concerns.
+
+---
 
 ## Verdict
 
-**FAIL**
+**CONDITIONAL PASS** — The module delivers solid pedagogical content with accurate grammar explanations, a strong cultural hook (ALF), and appropriate immersion balance. However, three issues require repair before approval:
 
-Three blocking issues: (1) Anagram activity items are not scrambled — letters appear in correct order, rendering the activity educationally worthless. (2) "Шо" mischaracterized as "Surzhyk" and "lazy pronunciation" — factually inaccurate and potentially harmful framing of a legitimate dialectal form. (3) LLM fingerprint: "Важливо знати:" repeated 7 times identically plus excessive metaphor density exceeding the 4-metaphor threshold. All three require fixes before the module can pass.
+1. **IPA errors** (dual stress on завжди in content + vocabulary, incorrect palatalization on скільки in vocabulary, missing stress on ніколи) — these directly misinform learners about pronunciation
+2. **Two mechanical activities** (#5 and #8) with identical single-answer pattern — these fail to test the key learning distinction (не vs ні) and inflate activity count without adding pedagogical value
+3. **"Lazy pronunciation" characterization** of «шо» — should be reframed as dialectal/informal
+
+Secondary improvements (warmth, Grammar section pacing, missing Investigative Journalist roleplay) would elevate the module but are not blocking.

@@ -1,5 +1,28 @@
 # Дослідження: Phase 2 Checkpoint (Literary Tradition)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Phase 2 Checkpoint (Literary Tradition)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "И начаста княжити"
+    source: ""
+    attribution: ""
+  - text: "Живяху в мирѣ"
+    source: ""
+    attribution: ""
+  - text: "Боянъ бо вѣщій, аще кому хотяше пѣснь творити, то растѣкашется мыслію по древу..."
+    source: "Слово о полку Ігоревім"
+    attribution: ""
+  - text: "Се повѣсти времѧнных лѣт... Откуду єсть пошла Рускаꙗ землѧ..."
+    source: "Повість временних літ"
+    attribution: ""
+forbidden_claims:
+  - "Давньоруська мова як спільна колиска трьох мов (\"давньоросійська\")."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України](https://esu.com.ua) — статті про жанри давньої літератури, "Слово о полку Ігоревім", літописання.
 2. [Ізборник (Litopys.org.ua)](http://litopys.org.ua) — тексти "Повісті временних літ", "Слова о полку Ігоревім", граматичні нариси (аорист/імперфект).

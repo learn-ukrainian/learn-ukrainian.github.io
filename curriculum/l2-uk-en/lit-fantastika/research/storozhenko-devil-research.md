@@ -2,6 +2,30 @@
 
 # Дослідження: «Закоханий чорт» Олекси Стороженка
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "«Закоханий чорт» Олекси Стороженка"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Спогад"
+    source: ""
+    attribution: ""
+  - text: "може, самий дужий природний талант у українській літературі за остатні 20 років"
+    source: ""
+    attribution: ""
+  - text: "талановитим оповідачем"
+    source: ""
+    attribution: ""
+  - text: "добре володіє українською мовою"
+    source: ""
+    attribution: ""
+  - text: "Современнике"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Вікіпедія: Стороженко Олекса Петрович](https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D0%BE%D1%80%D0%BE%D0%B6%D0%B5%D0%BD%D0%BA%D0%BE_%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D0%B0_%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87) — Біографія, бібліографія, критичні оцінки.
 2. [UkrLit.net: Олекса Петрович Стороженко — біографія](https://ukrlit.net/biography/storozhenko.html) — Детальна біографія, періодизація творчості, критичні оцінки Франка, Драгоманова, Кримського.

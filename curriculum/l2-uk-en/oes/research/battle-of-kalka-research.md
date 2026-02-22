@@ -1,5 +1,32 @@
 # Дослідження: Battle Of Kalka (Битва на Калці)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Battle Of Kalka (Битва на Калці)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Землю нашу днесь отъяли, а вашу заутра пришедше возмуть"
+    source: ""
+    attribution: ""
+  - text: "Аще ся не поможемъ симъ, то имуть ся предати имъ"
+    source: ""
+    attribution: ""
+  - text: "Явишася языци, ихъже никтоже добрѣ ясно не вѣсть, кто суть і отколе изидоша"
+    source: ""
+    attribution: ""
+  - text: "І цѣлова хрест честный к Мьстиславу... а ты й-половци иссѣче, а князи я, и вдави я, положивше под доскы"
+    source: ""
+    attribution: ""
+  - text: "Данилъ же выѣха напередъ... бѣ бо дерзокъ и храборъ"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Зрада половців\". Радянська/російська історіографія часто звинувачувала половців у втечі, яка зламала стрій."
+  - "\"Братні народи проти ворога\"."
+```
+
 ## Використані джерела
 1.  [Енциклопедія історії України: Калка, битва на річці 1223](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kalka_b) — Академічний огляд подій, датування та наслідків.
 2.  [Ізборник: Літопис Руський (Іпатіївський список)](http://litopys.org.ua/ipatlet/ipat36.htm) — Першоджерело, текст "Повісті про битву на Калці".

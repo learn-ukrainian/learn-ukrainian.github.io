@@ -1,5 +1,25 @@
 # Дослідження: Greetings Invocations (OES)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Greetings Invocations (OES)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Господи, помози рабу своєму [Ім’я]"
+    source: ""
+    attribution: ""
+  - text: "Уклін від [Ім’я] до [Ім’я]"
+    source: ""
+    attribution: ""
+  - text: "Ти, княже..."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Російська імперська лінгвістика часто трактувала кличний відмінок як \"застарілий\" або суто церковний."
+```
+
 ## Використані джерела
 1. **Енциклопедія Сучасної України (esu.com.ua)** — статті про етикет та мовні норми.
 2. **Ізборник (litopys.org.ua)** — тексти графіті Софії Київської, "Слово о полку Ігоревім", берестяні грамоти.

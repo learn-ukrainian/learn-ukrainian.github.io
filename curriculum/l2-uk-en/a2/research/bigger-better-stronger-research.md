@@ -1,37 +1,30 @@
 # Дослідження: Bigger, Better, Stronger
 
 ## State Standard Reference
-§4.3.1: "Ступені порівняння якісних прикметників: проста форма вищого ступеня: солодший, важливіший; ... суплетивні форми: великий – більший, найбільший; малий – менший, найменший."
-Alignment: This module addresses the A2 requirement for forming and using simple comparative adjectives (synthetic forms) and the most common irregular (suppletive) forms.
+§4.3.1: "Ступені порівняння якісних прикметників: проста форма вищого ступеня (солодший, важливіший); складена форма вищого ступеня (більш солодкий, менш кислий); суплетивні форми (великий – більший, малий – менший)."
+Alignment: This module directly addresses the formation of simple and compound comparative adjectives, as well as suppletive forms, which are required competencies for the A2 level.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| більший | High / Corpus-based | більший розмір (larger size), більша кількість (larger quantity), більша частина (greater part) |
-| кращий | High / Corpus-based | кращий результат (better result), краща якість (better quality), кращий спосіб (better way) |
-| менший | High / Corpus-based | менший розмір (smaller size), менша кількість (smaller quantity) |
-| вищий | Medium-High | вищий на зріст (taller), вищий за мене (taller than me) |
-| дорожчий | Medium (Retail) | дорожчий товар (more expensive item), набагато дорожчий (much more expensive) |
-| дешевший | Medium (Retail) | дешевший варіант (cheaper option), трохи дешевший (a little cheaper) |
-| старший | High (Social) | старший брат (older brother), старший за віком (older by age) |
+| більший | High (Top 500) | більший розмір, більша частина |
+| кращий | High (Top 500) | краща якість, кращий спосіб |
+| дорожчий | Medium (Top 2000) | дорожчий товар, набагато дорожчий |
+| швидший | Medium (Top 2000) | швидший темп, значно швидший |
 
 ## Cultural Hooks
-1. **Tallest structures in Ukraine**: The Kyiv TV Tower (Київська телевежа) is 385 meters high, which is 60 meters taller (вищий) than the Eiffel Tower. The Motherland Monument (Батьківщина-Мати) is 102 meters high, one of the tallest in Europe. These provide excellent "Bigger/Taller" comparison points.
-2. **Ukrainian Proverbs**: 
-   - «Добре слово краще, ніж готові гроші» (A kind word is better than ready money) — highlights quality comparison.
-   - «Краще один раз побачити, ніж сто разів почути» (Better to see once than to hear a hundred times) — classic comparison structure.
-   - «Чим старіший, тим мудріший» (The older, the wiser) — dual comparative structure.
+1. The Kyiv TV Tower (385m) is significantly taller than the Eiffel Tower (330m) — "Київська телевежа вища за Ейфелеву вежу."
+2. The Mother Ukraine monument in Kyiv (102m) is taller than the Statue of Liberty (93m) — "Монумент «Батьківщина-Мати» вищий за Статую Свободи."
 
 ## Common Learner Errors
-1. **Case Confusion after "за"**: Learners often use Nominative after "за" (e.g., *за він*) instead of the required Accusative (*за нього*). Correct: *Він вищий за мене* (Accusative).
-2. **Stem Alternation Neglect**: Forgetting the mandatory consonant changes in the stem before *-ший*: *г → ж* (*дорогий → дорожчий*), *к → ч* (*близький → ближчий*), *х → ш* (*тихий → тихіший*).
-3. **Double Comparatives**: Influenced by English "more better," learners often say *більш кращий*. Correct: *більш хороший* (analytic) or *кращий* (synthetic).
+1. Double comparatives ("більш кращий") → Learners must choose either the synthetic or analytic form, not combine them.
+2. Case confusion after "за" ("за він") → "За" for comparison strictly requires the Accusative case ("за нього").
 
 ## Cross-References
-- Builds on: A1 adjective agreement, a2-17 (Possessive sviy)
+- Builds on: a2-17 (Possessive sviy), A1 adjective agreement
 - Prepares for: a2-19 (The Best, The Worst), a2-20 (Preferences and Choices), a2-24 (Smart Shopping)
 
 ## Notes for Content Writing
-- **Pedagogical Scaffolding**: Use clear tables to separate regular *-іший* forms from *-ший* forms that trigger consonant shifts. 
-- **Comparison Logic**: Explicitly contrast the `ніж + Nominative` vs `за + Accusative` structures, as this is a frequent source of A2 errors.
-- **Immersion**: Maintain 50-60% immersion. Ensure all grammar terms (вищий ступінь, прикметник) are introduced and reinforced.
+- **Immersion**: 50-60% (Band 1). English is REQUIRED for explaining the grammar theory (suffixes, stem alternations, ніж vs за case requirements). All examples, practice, and dialogues must be entirely in Ukrainian.
+- **Decolonized Framing**: Focus on the richness of Ukrainian synthetic comparatives and the specific phonetic beauty of its consonant shifts (г→ж, к→ч, х→ш). Explain these as natural, organic features of the Ukrainian language without framing them as deviations from Russian.
+- **Tone**: Adopt the "Ukrainian Teacher" persona acting as a "Sports Commentator". Use encouraging, high-energy setups for comparison drills.

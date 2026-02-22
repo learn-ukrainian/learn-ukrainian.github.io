@@ -1,5 +1,31 @@
 # Дослідження: Theft Property (Татьба в Руській Правді)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Theft Property (Татьба в Руській Правді)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Аще оубиють татя на своемъ дворѣ, любо оу клѣти, или оу хлѣва, то тъ оубитъ; аще ли до свѣта дѣржать, то вести его на княжь дворъ"
+    source: "Ст. 38, Простора ред."
+    attribution: ""
+  - text: "потокъ і разграбленіе"
+    source: ""
+    attribution: ""
+  - text: "Аже крадеть кто конь любо волы, або клеть, да аче будеть един крал, то гривну и 30 резан платити ему"
+    source: "Ст. 35"
+    attribution: ""
+  - text: "Іди на свод"
+    source: ""
+    attribution: ""
+  - text: "татьбу"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Руська Правда\" як джерело \"общерусского\" права, яке плавно перетекло в московські Судебники."
+```
+
 ## Використані джерела
 1. [Ізборник: Руська Правда (Простора редакція)](http://litopys.org.ua/yushkov/yu.htm) — Оригінальний текст та переклад основних статей про крадіжку (татьбу).
 2. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruska_Pravda) — Аналіз правових норм, соціальної структури та видів покарань.

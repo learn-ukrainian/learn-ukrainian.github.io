@@ -1,5 +1,28 @@
 # Дослідження: Death Of Monomakh
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Death Of Monomakh"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Лінощі — всьому [лихому] мати: що [людина] вміє — те забуде, а чого не вміє — того не вчиться"
+    source: "Про працю"
+    attribution: "1"
+  - text: "Ні правого, ні винуватого не вбивайте [і] не повелівайте вбити його"
+    source: "Про владу"
+    attribution: "2"
+  - text: "А всіх походів [було] вісімдесят і три великих, а остальних і не пам’ятаю менших"
+    source: "Автобіографічна"
+    attribution: "3"
+  - text: "Сидячи на санях..."
+    source: "Метафора старості"
+    attribution: "4"
+forbidden_claims:
+  - "The concept of \"Gathering of Russian Lands\" often starts with Monomakh as a proto-Muscovite tsar figure."
+```
+
 ## Використані джерела
 1. [Літопис Руський](http://litopys.org.ua/litop/lit12.htm) — першоджерело (Іпатський список), текст "Повчання" під 1096 роком, запис про смерть під 1125 роком.
 2. [Енциклопедія історії України: Володимир Мономах](http://resource.history.org.ua/) — академічна біографія, оцінка політичної діяльності.

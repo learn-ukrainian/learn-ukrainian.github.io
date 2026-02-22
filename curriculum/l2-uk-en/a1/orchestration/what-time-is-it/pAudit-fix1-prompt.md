@@ -1,4 +1,4 @@
-        # Fix Phase — full audit failures
+        # Fix Phase — content-only audit failures
 
         The following audit errors must be fixed for module `what-time-is-it`:
 
@@ -6,40 +6,37 @@
 
         ```
         ============================================================
-  HETMAN VERIFY: what-time-is-it
+  OTAMAN VERIFY: what-time-is-it
 ============================================================
 
-[1/4] Running full audit...
-[2/4] Checking sidecar files...
-[3/4] Reading status JSON...
-[4/4] Checking overall status...
+[1/3] Running audit with --skip-activities...
+[2/3] Reading status JSON...
+[3/3] Checking orchestration artifacts...
 
 ────────────────────────────────────────────────────────────
   VERDICT: FAIL
   Module:  what-time-is-it
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  overall status is 'fail' (must be 'pass')
-  failing gates:
-    lesson: 2153/2000 (raw: 2351) | pedagogy: 8 violations | immersion: 21.1% LOW (target 35-55% (M23))
+  2 Outline Compliance Errors
 
-  Hetman has NOT completed this module.
+  Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-
-
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 50/100)
-     → Revision recommended (severity 50/100)
-     → 8 violations (significant)
-     → Immersion 14% off target
-
+  Grammar      ℹ️ N/A (covered by naturalness)
+  Naturalness  ℹ️ PENDING — awaiting review
+  Activity_quality ⏳ Deferred (content-only audit)
+  Research     ✅ Content aligned with research
+  Immersion    🇺🇦 40.9% (target 35-55% (M23))
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/what-time-is-it-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/what-time-is-it.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
+
+  Critical Failures:
+    • 2 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/what-time-is-it-audit.log for details)
         ```
@@ -47,8 +44,8 @@
         ## Files to Fix
 
         - Content: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/what-time-is-it.md`
-        - Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/what-time-is-it.yaml`
-        - Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/what-time-is-it.yaml`
+
+
 
         ## Instructions
 

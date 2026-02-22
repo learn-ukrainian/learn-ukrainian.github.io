@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-21T23:26:56Z",
+      "ts": "2026-02-22T19:42:40Z",
       "task_id": "v3-ivanychuk-malvy-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

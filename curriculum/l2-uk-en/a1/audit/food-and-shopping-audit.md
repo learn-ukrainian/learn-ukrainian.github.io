@@ -1,7 +1,7 @@
 # Audit Report: M18 — food-and-shopping.md
 **Level:** A1 | **Module:** M18 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:34
+**Generated:** 2026-02-22 23:19:35
 
 ## Configuration
 **Type:** A1-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2677/2000 (raw: 2810)
+- **Words:** ✅ 2635/2000 (raw: 2768)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -46,11 +46,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 34/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 1 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.1% (target 25-40% (M18))
+- **Immersion:** 🇺🇦 25.4% (target 25-40% (M18))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -59,8 +59,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 63 | Included in Core |
-| **Вступ: Улюблена їжа та напої** | ✅ | 641 | Included in Core |
-| **Основні продукти та напої** | ✅ | 1015 | Included in Core |
-| **У магазині: діалоги та покупки** | ✅ | 515 | Included in Core |
+| **Вступ: Улюблена їжа та напої** | ✅ | 636 | Included in Core |
+| **Основні продукти та напої** | ✅ | 983 | Included in Core |
+| **У магазині: діалоги та покупки** | ✅ | 510 | Included in Core |
 | **Українські традиції: хліб і гостинність** | ✅ | 290 | Included in Core |
 | **Підсумок** | ✅ | 153 | Included in Core |

@@ -1,7 +1,7 @@
 # Audit Report: M15 — around-the-city.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:32
+**Generated:** 2026-02-22 23:19:32
 
 ## Configuration
 **Type:** A1
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2635/2000 (raw: 3016)
+- **Words:** ✅ 2616/2000 (raw: 2997)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.1% (target 25-40% (M15))
+- **Immersion:** 🇺🇦 25.3% (target 25-40% (M15))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,10 +61,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Around the City** | ✅ | 59 | Included in Core |
-| **Вступ: Місто та орієнтири** | ✅ | 410 | Included in Core |
-| **Лексика: Напрямки та місця** | ✅ | 553 | Included in Core |
-| **Граматика: Прийменники та рух** | ✅ | 557 | Included in Core |
-| **Практика: Маршрути та діалоги** | ✅ | 369 | Included in Core |
+| **Вступ: Місто та орієнтири** | ✅ | 406 | Included in Core |
+| **Лексика: Напрямки та місця** | ✅ | 545 | Included in Core |
+| **Граматика: Прийменники та рух** | ✅ | 553 | Included in Core |
+| **Практика: Маршрути та діалоги** | ✅ | 367 | Included in Core |
 | **Творче завдання: Ваш шлях** | ✅ | 200 | Included in Core |
-| **Культура: Українська навігація** | ✅ | 321 | Included in Core |
+| **Культура: Українська навігація** | ✅ | 320 | Included in Core |
 | **Підсумок** | ✅ | 166 | Included in Core |

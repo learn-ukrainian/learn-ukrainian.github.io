@@ -1,5 +1,31 @@
 # Дослідження: Epistle To Ostrozky
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Epistle To Ostrozky"
+dates:
+  key_events:
+primary_quotes:
+  - text: "...оплачте, православнії, нагле здохлий труп римської церкви, папської гордості й пихи!"
+    source: ""
+    attribution: "1"
+  - text: "...комедійскоє и машкарскоє набоженство"
+    source: ""
+    attribution: "2"
+  - text: "Чи не ліпше тобі в церкві благочестивій... безносому, безрукому, безногому й безхокому з ласки божої спастися, ніж у єретицькій — здоровому, в багряниці, в бісорі й золоті засудженому бути?"
+    source: ""
+    attribution: "3"
+  - text: "плачу"
+    source: ""
+    attribution: ""
+  - text: "стовп православ'я"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Іван Вишенський — предтеча комунізму, борець проти феодалів, мало не атеїст-революціонер."
+```
+
 ## Використані джерела
 1. [Litopys.org.ua: Іван Вишенський. Твори](http://litopys.org.ua/vishen/vish.htm) — Повний текст творів та аналітичні статті.
 2. [Ізборник: Послання до князя Василя Острозького](http://litopys.org.ua/old16/old16_06.htm) — Оригінальний текст та коментарі.

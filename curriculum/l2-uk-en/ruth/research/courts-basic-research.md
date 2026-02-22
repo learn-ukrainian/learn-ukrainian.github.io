@@ -1,5 +1,31 @@
 # Дослідження: Courts Basic (Суди: Основи)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Courts Basic (Суди: Основи)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "А писар земський має по-руськи літерами і словами руськими всі листи, виписи і позви писати, а не іншою мовою"
+    source: "Статут 1588, Розділ 4, Артикул 1"
+    attribution: ""
+  - text: "Суддя має бути обираний з шляхти осілої, в праві добрий відом, цнотливий і богобоязливий"
+    source: "Статут 1566"
+    attribution: ""
+  - text: "Возний"
+    source: ""
+    attribution: ""
+  - text: "позов"
+    source: ""
+    attribution: ""
+  - text: "виж"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Російська історіографія часто трактує Литовські Статути як \"чуже\" право або \"польський вплив\", ігноруючи їхнє коріння в \"Руській Правді\"."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Гродський суд](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Grodskyj_sud) — детальний опис компетенції та складу гродських судів.
 2. [Енциклопедія історії України: Земський суд](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Zemskyj_sud) — аналіз виборності та незалежності земських судів після реформи 1564-1566 рр.

@@ -1,5 +1,20 @@
 # Дослідження: Vynnychuk Lviv Tales
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Vynnychuk Lviv Tales"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Коли немає дракона, то нема й лицарів, бо лицарі з'являються тільки там, де є дракон..."
+    source: ""
+    attribution: ""
+  - text: "Львів — це місто, яке само себе вигадує..."
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Винничук Юрій Павлович](https://esu.com.ua/article-34015) — Біографічна довідка та огляд творчості автора, аналіз його ролі в сучасному літпроцесі.
 2. [Історія української літератури ХХ – поч. ХХІ ст. (history.org.ua / академічні видання)](http://history.org.ua) — Аналіз львівського міфу в літературі покоління 1980-х та постмодернізмі.

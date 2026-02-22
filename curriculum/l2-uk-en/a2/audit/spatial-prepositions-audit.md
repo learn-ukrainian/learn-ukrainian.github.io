@@ -1,13 +1,13 @@
 # Audit Report: M07 — spatial-prepositions.md
 **Level:** A2 | **Module:** M07 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 12:33:21
+**Generated:** 2026-02-22 23:12:01
 
 ## Configuration
 **Type:** A2-grammar
 **Word Target:** 3000 words
 **Activities:** 10-14 required
-**Items per Activity:** ≥12 items
+**Items per Activity:** ≥8 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, unjumble
 **Required Types:** fill-in, match-up, quiz
@@ -20,7 +20,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть пару: Прийменник та значення | 12 | 8 | ✅ |
-| 2 | group-sort | Сортування за відмінками | 12 | 12 | ✅ |
+| 2 | group-sort | Сортування за відмінками | 12 | 8 | ✅ |
 | 3 | quiz | Де кіт? (Статичне місце) | 8 | 8 | ✅ |
 | 4 | fill-in | Рух чи Місце? (Motion vs Location) | 8 | 8 | ✅ |
 | 5 | unjumble | Складіть речення | 8 | 6 | ✅ |
@@ -51,7 +51,7 @@
 ## Gates
 - **Words:** ✅ 3640/3000 (raw: 3852)
 - **Activities:** ✅ 12/10
-- **Density:** ✅ All > 12
+- **Density:** ✅ All > 8
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4

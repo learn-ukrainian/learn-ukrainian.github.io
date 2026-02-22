@@ -2,13 +2,13 @@
   "module": "checkpoint-first-contact",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:28.799810Z",
+  "last_audit": "2026-02-22T23:19:28.847021Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T22:24:02.331542Z",
+    "md": "2026-02-22T18:41:43.686984Z",
     "meta": "2026-02-19T16:56:24.620893Z",
-    "activities": "2026-02-20T22:23:30.926242Z",
-    "vocabulary": "2026-02-18T20:39:20.898443Z",
+    "activities": "2026-02-22T22:01:44.500090Z",
+    "vocabulary": "2026-02-22T18:40:37.937147Z",
     "plan": "2026-02-20T20:40:01.409500Z",
     "research": "2026-02-19T16:56:24.610494Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2459/1500 (raw: 2729)"
+      "message": "2431/1500 (raw: 2701)"
     },
     "activities": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
-    ],
-    "pass_count": 6,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

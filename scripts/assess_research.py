@@ -500,13 +500,15 @@ def _process_upgrade_queue(track_id: str, results: list[dict], min_score: int = 
 
         for attempt in range(1, max_attempts + 1):
             attempts_used = attempt
+            # Clear v3 Phase A state so research is regenerated (not skipped)
+            _clear_v3_phase_a(track_id, slug)
             cmd = [
                 str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
-                str(SCRIPTS_DIR / "build_module_v2.py"),
-                track_id, str(num), "--force-phase", "0", "--force-research",
+                str(SCRIPTS_DIR / "build_module_v3.py"),
+                track_id, str(num), "--research-only",
             ]
             try:
-                result = subprocess.run(cmd, timeout=300)
+                result = subprocess.run(cmd, timeout=600)
                 if result.returncode == 0:
                     # Re-assess to check new score
                     track_dir = CURRICULUM_ROOT / track_id
@@ -536,7 +538,7 @@ def _process_upgrade_queue(track_id: str, results: list[dict], min_score: int = 
                     print(f"  Attempt {attempt}: {BOLD}\033[31mFAIL (exit {result.returncode}){RESET}")
                     break
             except subprocess.TimeoutExpired:
-                print(f"  Attempt {attempt}: {BOLD}\033[31mTIMEOUT (5min){RESET}")
+                print(f"  Attempt {attempt}: {BOLD}\033[31mTIMEOUT (10min){RESET}")
                 break
             except KeyboardInterrupt:
                 print(f"\n\nInterrupted at M{num:02d} attempt {attempt}/{max_attempts}")

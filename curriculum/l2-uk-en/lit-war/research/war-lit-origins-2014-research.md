@@ -2,6 +2,30 @@
 
 # Дослідження: War Lit Origins 2014
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "War Lit Origins 2014"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ці книги — фіксація реальності, це сильні емоції й переживання, які навряд може вдасться описати чи вписати в текст через 5-10 років"
+    source: ""
+    attribution: ""
+  - text: "У книгах військових нема ура-патріотизму й пафосу"
+    source: ""
+    attribution: ""
+  - text: "лейтенантської прози"
+    source: ""
+    attribution: ""
+  - text: "першим фронтовим поетом незалежної України"
+    source: ""
+    attribution: ""
+  - text: "під свист ворожої артилерії в с. Піски"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 
 1. [Воєнна література — тепер це і є укрсучліт (Чітомо)](https://chytomo.com/voienna-literatura-teper-tse-i-ie-ukrsuchlit/) — Стаття-огляд розвитку української воєнної літератури з 2014 до сьогодні; інтерв'ю з дослідницею Ганною Скоріною; статистика видань

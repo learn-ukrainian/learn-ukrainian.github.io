@@ -1,5 +1,15 @@
 # Дослідження: Syntax Agreement (Рутенька мова)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Syntax Agreement (Рутенька мова)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Руська мова (Ruthenian) — це просто \"зіпсована польською російська\" або діалект без правил."
+```
+
 ## Використані джерела
 1. [litopys.org.ua](http://litopys.org.ua/) — Енциклопедія "Українська мова", розділи про історичний синтаксис та пам'ятки XVI-XVII ст.
 2. [esu.com.ua](https://esu.com.ua/) — Статті "Давальний самостійний", "Староукраїнська мова".

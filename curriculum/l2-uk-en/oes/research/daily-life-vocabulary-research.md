@@ -1,5 +1,31 @@
 # Дослідження: Daily Life Vocabulary (Побутова лексика)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Daily Life Vocabulary (Побутова лексика)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "От Говенової до Ніженця. Дай 60 кун лодієвих..."
+    source: ""
+    attribution: ""
+  - text: "А кто пакощами конь порежеть..."
+    source: ""
+    attribution: ""
+  - text: "Аже лодью украдеть, то платитии за лодью..."
+    source: ""
+    attribution: ""
+  - text: "жито"
+    source: ""
+    attribution: ""
+  - text: "Хліб"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Ствердження про єдину «давньоруську народність» з єдиною мовою."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://www.history.org.ua) — статті про харчування, транспорт та побут Київської Русі.
 2. [Ізборник (litopys.org.ua)](http://litopys.org.ua) — тексти «Руської Правди» та «Повісті минулих літ».

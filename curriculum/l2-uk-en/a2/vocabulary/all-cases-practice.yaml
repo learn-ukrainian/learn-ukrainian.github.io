@@ -1,0 +1,108 @@
+items:
+  - lemma: "хто"
+    ipa: '[xtɔ]'
+    translation: "who"
+    pos: "pronoun"
+  - lemma: "що"
+    ipa: '[ʃt͡ʃɔ]'
+    translation: "what"
+    pos: "pronoun"
+  - lemma: "кого"
+    ipa: '[kɔɦɔ]'
+    translation: "whom / of whom"
+    pos: "pronoun"
+  - lemma: "чого"
+    ipa: '[t͡ʃɔˈɦɔ]'
+    translation: "of what"
+    pos: "pronoun"
+  - lemma: "кому"
+    ipa: '[ˈkɔmu]'
+    translation: "to whom"
+    pos: "pronoun"
+  - lemma: "чому"
+    ipa: '[t͡ʃɔˈmu]'
+    translation: "to what / why"
+    pos: "pronoun"
+  - lemma: "ким"
+    ipa: '[kɪm]'
+    translation: "by whom / with whom"
+    pos: "pronoun"
+  - lemma: "чим"
+    ipa: '[t͡ʃɪm]'
+    translation: "by what / with what"
+    pos: "pronoun"
+  - lemma: "на кому"
+    ipa: '[nɑ ˈkɔmu]'
+    translation: "on whom"
+    pos: "phrase"
+  - lemma: "на чому"
+    ipa: '[nɑ t͡ʃɔˈmu]'
+    translation: "on what"
+    pos: "phrase"
+  - lemma: "відмінок"
+    ipa: '[ʋʲiˈdʲmʲinɔk]'
+    translation: "case"
+    pos: "noun"
+    gender: "m"
+  - lemma: "називний"
+    ipa: '[nɑzɪˈʋnɪj]'
+    translation: "nominative"
+    pos: "adjective"
+  - lemma: "родовий"
+    ipa: '[rɔˈdɔˈʋɪj]'
+    translation: "genitive"
+    pos: "adjective"
+  - lemma: "давальний"
+    ipa: '[dɑˈʋɑlʲnɪj]'
+    translation: "dative"
+    pos: "adjective"
+  - lemma: "знахідний"
+    ipa: '[znɑˈxʲidnɪj]'
+    translation: "accusative"
+    pos: "adjective"
+  - lemma: "орудний"
+    ipa: '[ɔˈrudnɪj]'
+    translation: "instrumental"
+    pos: "adjective"
+  - lemma: "місцевий"
+    ipa: '[mʲiˈst͡sɛʋɪj]'
+    translation: "locative"
+    pos: "adjective"
+  - lemma: "кличний"
+    ipa: '[ˈklɪt͡ʃnɪj]'
+    translation: "vocative"
+    pos: "adjective"
+  - lemma: "однина"
+    ipa: '[ɔdnɪˈnɑ]'
+    translation: "singular"
+    pos: "noun"
+    gender: "f"
+  - lemma: "множина"
+    ipa: '[mnɔʒɪˈnɑ]'
+    translation: "plural"
+    pos: "noun"
+    gender: "f"
+  - lemma: "закінчення"
+    ipa: '[zɑˈkʲint͡ʃɛnʲːɑ]'
+    translation: "ending"
+    pos: "noun"
+    gender: "n"
+  - lemma: "відмінювати"
+    ipa: '[ʋʲiˈdʲmʲinʲuʋɑtɪ]'
+    translation: "to decline"
+    pos: "verb"
+  - lemma: "прийменник"
+    ipa: '[prɪjˈmɛnːɪk]'
+    translation: "preposition"
+    pos: "noun"
+    gender: "m"
+  - lemma: "суддя"
+    ipa: '[suˈdʲːɑ]'
+    translation: "judge"
+    pos: "noun"
+    gender: "m"
+  - lemma: "свідок"
+    ipa: '[ˈsʲʋʲidɔk]'
+    translation: "witness"
+    pos: "noun"
+    gender: "m"

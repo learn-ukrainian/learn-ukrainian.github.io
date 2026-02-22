@@ -1,3 +1,50 @@
 slug: all-cases-practice
 title: All Cases Practice
 word_target: 3000
+content_outline:
+- section: 'Вступ: Важливість відмінкової системи'
+  words: 450
+  points:
+  - 'Introduce the ''Court Translator'' persona: precision in the 7-case system is
+    essential for clarity and accuracy.'
+  - 'Explain the English scaffolding approach for this module: grammar theory in English,
+    examples and practice in Ukrainian.'
+  - 'Cultural Hook: Explain how the 7-case system creates the rhythmic flow and emotional
+    nuance that makes Ukrainian a highly melodic language.'
+  - Provide a quick reference table comparing the 7 Ukrainian cases (State Standard
+    §4.2.2) to their syntactic functions.
+- section: 'Презентація: Система та логіка'
+  words: 750
+  points:
+  - 'Present the interrogative triggers logically: хто/що, кого/чого, кому/чому, ким/чим,
+    на кому/на чому, with a comparative table.'
+  - 'Review core functions (Standard §4.2.2): Nominative (Subject), Genitive (Negation/Quantity),
+    Dative (Addressee), Accusative (Direct Object), Instrumental (Means/Role), Locative
+    (Place).'
+  - Summarize gender forms for singular and plural nouns using the structural 'Declension
+    Group' approach.
+- section: 'Культурний аспект: Кличний відмінок'
+  words: 450
+  points:
+  - Deep dive into the Vocative Case (Кличний відмінок) as a unique Proto-Slavic preservation
+    that adds emotional depth.
+  - Provide examples of the Vocative in formal/professional contexts (Court Translator
+    scenario) vs. social contexts.
+- section: Практика та аналіз помилок
+  words: 850
+  points:
+  - 'Address Error 1: Locative without a preposition (e.g., ''у лікарні'', not just
+    ''лікарні''). Rule: Locative ALWAYS needs a preposition.'
+  - 'Address Error 2: Animate masculine nouns in Accusative taking Genitive endings
+    (e.g., ''бачу друга'').'
+  - 'Address Error 3: Expressing age using Dative (''Мені 20 років'') instead of Nominative
+    + ''to be''.'
+  - Include mixed case identification paradigms for key nouns ('друг', 'книга') across
+    all 7 cases in singular and plural.
+- section: Діалоги та реальне застосування
+  words: 500
+  points:
+  - Present a 'Courtroom' simulation dialogue demonstrating high-stakes precision
+    with mixed cases (evidence, participants, locations).
+  - Provide a summary checklist for A2 case mastery, confirming alignment with basic
+    syntactic roles.

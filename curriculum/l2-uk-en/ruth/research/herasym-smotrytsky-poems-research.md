@@ -1,5 +1,45 @@
 # Дослідження: Herasym Smotrytsky Poems
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Herasym Smotrytsky Poems"
+dates:
+  key_events:
+    - year: 1520
+      event: "Народження Герасима Смотрицького на Поділлі (с. Смотрич)."
+    - year: 1576
+      event: "Працює міським писарем (кам'янецьким підстаростою) у Кам'янці-Подільському."
+    - year: 1576
+      event: "Запрошений князем Василем-Костянтином Острозьким до Острога."
+    - year: 1580
+      event: "Стає першим ректором Острозької слов'яно-греко-латинської академії."
+    - year: 1581
+      event: "Видання Острозької Біблії, де вміщено віршовані передмови Смотрицького («Зри сія знаменія...», «До чительника»)."
+    - year: 1587
+      event: "Видання в Острозі полемічної праці «Ключ царства небесного» та трактату «Календар римський новий»."
+    - year: 1594
+      event: "Смерть Герасима Смотрицького в Острозі."
+primary_quotes:
+  - text: "першим руським богословом"
+    source: ""
+    attribution: ""
+  - text: "Зри сія знаменія княжате славнаго / В книзЂ сій списаннаго, умом високаго"
+    source: "з вірша на герб"
+    attribution: ""
+  - text: "простаком невченим"
+    source: "про освіту"
+    attribution: ""
+  - text: "Ключ царства небесного"
+    source: ""
+    attribution: ""
+  - text: "Wypis wiary kościoła rzymskiego"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Often labeled merely as a \"defender of Orthodoxy\" in a pan-Slavic/Russian context, or his \"vernacular\" minimized as a dialect. Soviet historiography downplayed his noble status."
+```
+
 ## Використані джерела
 1.  [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/article-10156) — Біографія та загальний огляд творчості першого ректора Острозької академії.
 2.  [Ізборник (Litopys.org.ua)](http://litopys.org.ua/ukrpoet/up1.htm) — Тексти віршів «Зри сія знаменія...», «До чительника», «Плютархус» та уривки з «Ключа царства небесного».

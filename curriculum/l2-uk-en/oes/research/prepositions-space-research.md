@@ -1,5 +1,25 @@
 # Дослідження: Prepositions Space (OES)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Prepositions Space (OES)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "А Дніпро впадає в Понтійське море трьома гирлами..."
+    source: ""
+    attribution: ""
+  - text: "І сів Олег, князюючи, в Києві..."
+    source: ""
+    attribution: ""
+  - text: "І послав Олег до радимичів, питаючи..."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Ствердження про єдність східнослов'янського синтаксису в період Київської Русі та ігнорування діалектних відмінностей."
+```
+
 ## Використані джерела
 1. [Літопис Руський (за Іпатським списком)](http://litopys.org.ua/ipatlet/ipat01.htm) — основне джерело для аналізу вживання прийменників у контексті оповідей XI-XII ст.
 2. [Енциклопедія Сучасної України: Прийменник](https://esu.com.ua/article-87971) — теоретична база щодо функцій та класифікації прийменників в українській мові, включно з історичним аспектом.

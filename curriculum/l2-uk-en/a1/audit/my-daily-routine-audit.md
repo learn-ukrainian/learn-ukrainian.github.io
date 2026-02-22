@@ -1,7 +1,7 @@
 # Audit Report: M25 — my-daily-routine.md
 **Level:** A1 | **Module:** M25 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:40
+**Generated:** 2026-02-22 23:37:19
 
 ## Configuration
 **Type:** A1
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_BALANCE_BLOATED]** Section 'Ранок, день та вечір' has 1605 words (55% of total). Bloated sections: 'Ранок, день та вечір' (55%)
+- **[SECTION_BALANCE_BLOATED]** Section 'Ранок, день та вечір' has 1570 words (54% of total). Bloated sections: 'Ранок, день та вечір' (54%)
   - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 
 ## Recommendation
@@ -46,7 +46,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2846/2000 (raw: 3080)
+- **Words:** ✅ 2802/2000 (raw: 3036)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -55,11 +55,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 24 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 40.3% (target 35-55% (M25))
+- **Immersion:** 🇺🇦 40.9% (target 35-55% (M25))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -69,7 +69,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **My Daily Routine** | ✅ | 72 | Included in Core |
-| **Вступ: Ваш розпорядок дня** | ✅ | 445 | Included in Core |
-| **Ранок, день та вечір** | ✅ | 1572 | Included in Core |
+| **Вступ: Ваш розпорядок дня** | ✅ | 436 | Included in Core |
+| **Ранок, день та вечір** | ✅ | 1537 | Included in Core |
 | **Практика: Робочий день і вихідні** | ✅ | 499 | Included in Core |
 | **Підсумок: Мій ідеальний день** | ✅ | 258 | Included in Core |

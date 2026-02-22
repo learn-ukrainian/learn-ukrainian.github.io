@@ -1,7 +1,7 @@
 # Audit Report: M14 — mine-and-yours.md
 **Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:31
+**Generated:** 2026-02-22 23:19:32
 
 ## Configuration
 **Type:** A1-grammar
@@ -47,7 +47,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 3021/2000 (raw: 3503)
+- **Words:** ✅ 3017/2000 (raw: 3499)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -71,8 +71,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Mine and Yours** | ✅ | 68 | Included in Core |
 | **Вступ: Бюро знахідок** | ✅ | 384 | Included in Core |
-| **Граматика: Мій, твій, наш** | ✅ | 502 | Included in Core |
-| **Граматика: Його, її, їхній** | ✅ | 552 | Included in Core |
+| **Граматика: Мій, твій, наш** | ✅ | 501 | Included in Core |
+| **Граматика: Його, її, їхній** | ✅ | 549 | Included in Core |
 | **Практика: Чия це річ?** | ✅ | 497 | Included in Core |
 | **Діалоги: Це мій телефон** | ✅ | 468 | Included in Core |
 | **Культура: Твій чи Ваш?** | ✅ | 503 | Included in Core |

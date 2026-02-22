@@ -1,5 +1,25 @@
 # Дослідження: Chronicle Lab
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Chronicle Lab"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Початок і причина войни Хмельницького єст єдино од ляхов на православіє гоненіє і козаком отягощеніє"
+    source: ""
+    attribution: ""
+  - text: "матір, розшарпану і знесилену"
+    source: ""
+    attribution: ""
+  - text: "все було знищене і перетворене на пустку"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Возз'єднання\" (Reunification) України з Росією як кульмінація історії. Радянська історіографія цензурувала антимосковські випади літописців."
+```
+
 ## Використані джерела
 1. [Litopys.org.ua](http://litopys.org.ua) — першоджерела (тексти літописів Самовидця, Граб'янки, Величка).
 2. [Енциклопедія Сучасної України](https://esu.com.ua) — статті про козацьке бароко та літописання.

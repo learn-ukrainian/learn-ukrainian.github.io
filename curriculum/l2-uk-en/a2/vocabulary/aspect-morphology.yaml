@@ -1,0 +1,119 @@
+items:
+  - lemma: "відпочивати / відпочити"
+    ipa: '[ʋʲidpɔt͡ʃɪˈʋɑtɪ / ʋʲidpɔˈt͡ʃɪtɪ]'
+    translation: "to rest"
+    pos: "verb"
+  - lemma: "вставати / встати"
+    ipa: '[ʍstɑˈʋɑtɪ / ˈʍstɑtɪ]'
+    translation: "to get up"
+    pos: "verb"
+  - lemma: "одягатися / одягнутися"
+    ipa: '[ɔdʲɑˈɦɑtɪsʲɑ / ɔdʲɑˈɦnutɪsʲɑ]'
+    translation: "to dress oneself"
+    pos: "verb"
+  - lemma: "відкривати / відкрити"
+    ipa: '[ʋʲidkrɪˈʋɑtɪ / ʋʲiˈdkrɪtɪ]'
+    translation: "to open"
+    pos: "verb"
+  - lemma: "починати / почати"
+    ipa: '[pɔt͡ʃɪˈnɑtɪ / pɔˈt͡ʃɑtɪ]'
+    translation: "to begin"
+    pos: "verb"
+  - lemma: "вирішувати / вирішити"
+    ipa: '[ʋɪˈrʲiʃuʋɑtɪ / ˈʋɪrʲiʃɪtɪ]'
+    translation: "to decide"
+    pos: "verb"
+  - lemma: "закривати / закрити"
+    ipa: '[zɑkrɪˈʋɑtɪ / zɑˈkrɪtɪ]'
+    translation: "to close"
+    pos: "verb"
+  - lemma: "вмикати / увімкнути"
+    ipa: '[ʋmɪˈkɑtɪ / uʋʲiˈmknutɪ]'
+    translation: "to turn on"
+    pos: "verb"
+  - lemma: "вимикати / вимкнути"
+    ipa: '[ʋɪmɪkɑtɪ / ˈʋɪmknutɪ]'
+    translation: "to turn off"
+    pos: "verb"
+  - lemma: "закінчувати / закінчити"
+    ipa: '[zɑˈkʲint͡ʃuʋɑtɪ / zɑˈkʲinˈt͡ʃɪtɪ]'
+    translation: "to finish"
+    pos: "verb"
+  - lemma: "отримувати / отримати"
+    ipa: '[ɔˈtrɪmuʋɑtɪ / ɔˈtrɪmɑtɪ]'
+    translation: "to receive"
+    pos: "verb"
+  - lemma: "вибирати / вибрати"
+    ipa: '[ʋɪbɪˈrɑtɪ / ˈʋɪbrɑtɪ]'
+    translation: "to choose"
+    pos: "verb"
+  - lemma: "сідати / сісти"
+    ipa: '[sʲiˈdɑtɪ / ˈsʲistɪ]'
+    translation: "to sit down"
+    pos: "verb"
+  - lemma: "лягати / лягти"
+    ipa: '[lʲɑˈɦɑtɪ / lʲɑˈɦtɪ]'
+    translation: "to lie down"
+    pos: "verb"
+  - lemma: "робити / зробити"
+    ipa: '[rɔˈbɪtɪ / zrɔˈbɪtɪ]'
+    translation: "to do, to make"
+    pos: "verb"
+  - lemma: "писати / написати"
+    ipa: '[pɪˈsɑtɪ / nɑpɪˈsɑtɪ]'
+    translation: "to write"
+    pos: "verb"
+  - lemma: "ділити / поділити"
+    ipa: '[dʲiˈlɪtɪ / pɔdʲiˈlɪtɪ]'
+    translation: "to divide, to share"
+    pos: "verb"
+  - lemma: "читати / прочитати"
+    ipa: '[t͡ʃɪˈtɑtɪ / prɔt͡ʃɪˈtɑtɪ]'
+    translation: "to read"
+    pos: "verb"
+  - lemma: "говорити / сказати"
+    ipa: '[ɦɔʋɔˈrɪtɪ / skɑˈzɑtɪ]'
+    translation: "to speak, to say"
+    pos: "verb"
+  - lemma: "шукати / знайти"
+    ipa: '[ʃuˈkɑtɪ / znɑjˈtɪ]'
+    translation: "to look for, to find"
+    pos: "verb"
+  - lemma: "префікс"
+    ipa: '[prɛfʲiks]'
+    translation: "prefix"
+    pos: "noun"
+    gender: "m"
+  - lemma: "суфікс"
+    ipa: '[ˈsufʲiks]'
+    translation: "suffix"
+    pos: "noun"
+    gender: "m"
+  - lemma: "корінь"
+    ipa: '[ˈkɔrʲinʲ]'
+    translation: "root"
+    pos: "noun"
+    gender: "m"
+  - lemma: "основа"
+    ipa: '[ɔˈsnɔʋɑ]'
+    translation: "stem"
+    pos: "noun"
+    gender: "f"
+  - lemma: "утворення"
+    ipa: '[uˈtʋɔrɛnʲːɑ]'
+    translation: "formation"
+    pos: "noun"
+    gender: "n"
+  - lemma: "доконаний"
+    ipa: '[dɔˈkɔnɑnɪj]'
+    translation: "perfective"
+    pos: "adjective"
+  - lemma: "недоконаний"
+    ipa: '[nɛdɔˈkɔnɑnɪj]'
+    translation: "imperfective"
+    pos: "adjective"
+  - lemma: "вид"
+    ipa: '[ʋɪd]'
+    translation: "aspect"
+    pos: "noun"
+    gender: "m"

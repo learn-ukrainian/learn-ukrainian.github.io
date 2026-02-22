@@ -1,0 +1,33 @@
+{
+  "track": "a2",
+  "slug": "possessive-sviy",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T21:51:37Z",
+      "task_id": "v3-possessive-sviy-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-22T21:53:49Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-22T21:57:32Z",
+      "task_id": "v3-possessive-sviy-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-22T22:36:12Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-22T22:39:46Z",
+      "attempts": 1,
+      "note": "d1-only"
+    }
+  }
+}

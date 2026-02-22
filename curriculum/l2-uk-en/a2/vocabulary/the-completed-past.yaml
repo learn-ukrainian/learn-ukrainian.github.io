@@ -1,0 +1,67 @@
+items:
+  - lemma: "зробив"
+    ipa: '[zrɔˈbɪu̯]'
+    translation: "did / made (masculine)"
+    pos: "verb"
+    aspect: "perfective"
+    example: "Він зробив помилку."
+  - lemma: "сказав"
+    ipa: '[skɑˈzɑu̯]'
+    translation: "said / told (masculine)"
+    pos: "verb"
+    aspect: "perfective"
+    example: "Архіваріус сказав правду."
+  - lemma: "написав"
+    ipa: '[nɑpɪˈsɑu̯]'
+    translation: "wrote (masculine)"
+    pos: "verb"
+    aspect: "perfective"
+    example: "Студент написав листа."
+  - lemma: "прочитав"
+    ipa: '[prɔt͡ʃɪˈtɑu̯]'
+    translation: "read completely (masculine)"
+    pos: "verb"
+    aspect: "perfective"
+    example: "Вчора я прочитав книгу."
+  - lemma: "пішов"
+    ipa: '[pʲiˈʃɔu̯]'
+    translation: "went / set off (masculine)"
+    pos: "verb"
+    aspect: "perfective"
+    example: "Мій брат пішов додому."
+  - lemma: "прийшов"
+    ipa: '[prɪjˈʃɔu̯]'
+    translation: "arrived / came (masculine)"
+    pos: "verb"
+    aspect: "perfective"
+    example: "Гість прийшов вчасно."
+  - lemma: "зрозумів"
+    ipa: '[zrɔzuˈmʲiu̯]'
+    translation: "understood / realized (masculine)"
+    pos: "verb"
+    aspect: "perfective"
+    example: "Він зрозумів ідею."
+  - lemma: "забув"
+    ipa: '[zɑˈbuu̯]'
+    translation: "forgot (masculine)"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "знайшов"
+    ipa: '[znɑjˈʃɔu̯]'
+    translation: "found (masculine)"
+    pos: "verb"
+    aspect: "perfective"
+    example: "Директор знайшов рішення."
+  - lemma: "доконаний"
+    ipa: '[dɔˈkɔnɑnɪj]'
+    translation: "perfective"
+    pos: "adjective"
+  - lemma: "недоконаний"
+    ipa: '[nɛdɔˈkɔnɑnɪj]'
+    translation: "imperfective"
+    pos: "adjective"
+  - lemma: "вид"
+    ipa: '[ʋɪd]'
+    translation: "aspect (grammar)"
+    pos: "noun"
+    gender: "masculine"

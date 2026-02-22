@@ -2,12 +2,5 @@
   "track": "lit-hist-fic",
   "slug": "kokotyukha-red",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-22T06:43:58Z",
-      "task_id": "v3-kokotyukha-red-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

@@ -1,5 +1,19 @@
 # Дослідження: Pvl Death Of Igor
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Pvl Death Of Igor"
+dates:
+  key_events:
+primary_quotes:
+  - text: "ліпші мужі"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Давньоруська держава\" як моноліт під владою Рюриковичів з центром у Києві."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Ігор](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ihor_kyivskyj) — Академічна стаття М.Ф. Котляра про правління та загибель Ігоря.
 2. [Літопис руський (за Іпатським списком)](http://litopys.org.ua/ipatlet/ipat02.htm) — Першоджерело тексту «Повісті временних літ» з перекладом Л. Махновця.

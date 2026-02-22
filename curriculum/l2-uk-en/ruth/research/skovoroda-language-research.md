@@ -1,5 +1,22 @@
 # Дослідження: Мова Сковороди (Skovoroda Language)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Мова Сковороди (Skovoroda Language)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "А панская морда як у перевертня, так і у всех ляхів — скрізь на \"щ\" та на \"ъ\" забиває, а наш брат все на \"г\" та на \"и\""
+    source: ""
+    attribution: "про мову"
+  - text: "мова, якої ніколи не було у вжитку"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Сковорода — \"перший російський філософ\", писав \"общерусским языком\"."
+```
+
 ## Використані джерела
 1. [Григорій Сковорода: семінарій](http://litopys.org.ua/skovoroda/skov.htm) — повне зібрання творів та дослідження (Чижевський, Багалій).
 2. [Енциклопедія Сучасної України: Сковорода Григорій Савич](https://esu.com.ua/article-855) — академічний огляд життя і творчості.

@@ -338,8 +338,8 @@ Notice how the client asks for specific features (color, item) and verifies the 
 
 ## Практика: Опис одягу
 
-Тепер ваша черга. Опишіть свій улюблений одяг.
-(Now it is your turn. Describe your favorite clothes.)
+Тепер ваша черга. Опишіть свій одяг.
+(Now it is your turn. Describe your clothes.)
 
 1.  **Item Name**: Is it masculine, feminine, neuter, or plural?
 2.  **Color**: Does the adjective match the gender?

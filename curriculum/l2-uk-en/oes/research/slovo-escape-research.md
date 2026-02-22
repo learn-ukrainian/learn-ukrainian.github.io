@@ -1,5 +1,13 @@
 # Дослідження: Slovo Escape (Втеча Ігоря)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Slovo Escape (Втеча Ігоря)"
+dates:
+  key_events:
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Академічний аналіз подій 1185 року та історичного контексту "Слова".
 2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/slovo67/slovo.htm) — Оригінальний текст "Слова о полку Ігоревім" (реконструкції та переклади).

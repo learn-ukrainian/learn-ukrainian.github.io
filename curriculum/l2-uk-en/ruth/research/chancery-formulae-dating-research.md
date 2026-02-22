@@ -1,5 +1,22 @@
 # Дослідження: Chancery Formulae Dating
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Chancery Formulae Dating"
+dates:
+  key_events:
+primary_quotes:
+  - text: "...И писан у Вовручомъ февраля девятогонадцят дня индикъта третегонадцять"
+    source: "Автентична"
+    attribution: "1"
+  - text: "Писан у Вільні, року Божого тисяча п’ятсот шістдесят шостого, місяця марца день другий"
+    source: "Реконструкція типової формули"
+    attribution: "2"
+forbidden_claims:
+  - "\"Західноросійська письмова мова\" (West Russian written language) — термін російської імперської науки для позначення руської мови."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Дипломатика](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Dyplomatyka) — фундаментальний огляд структури документів.
 2. [Ізборник: Грамоти XIV-XV ст.](http://litopys.org.ua/ukrmova/um45.htm) — тексти автентичних грамот.

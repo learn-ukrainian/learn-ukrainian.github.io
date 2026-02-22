@@ -3,6 +3,52 @@
   "track": "a2",
   "module_num": 15,
   "mode": "v3",
-  "phases": {},
-  "last_updated": "2026-02-20T11:26:26Z"
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-22T21:31:46Z",
+      "words": 4292,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-22T21:34:53Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-22T21:34:53Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-22T21:40:19Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-22T21:40:19Z",
+      "note": "v3-audit"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-22T21:45:51Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-22T21:45:51Z",
+      "note": "v3-phase-D"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-22T21:45:51Z",
+      "note": "v3-phase-D"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-22T21:45:52Z"
+    }
+  },
+  "last_updated": "2026-02-22T21:45:52Z"
 }

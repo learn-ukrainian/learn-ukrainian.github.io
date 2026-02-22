@@ -2,13 +2,13 @@
   "module": "description-adverbs",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:42.643506Z",
+  "last_audit": "2026-02-22T23:54:29.110452Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T07:54:27.761261Z",
+    "md": "2026-02-22T18:41:45.239008Z",
     "meta": "2026-02-19T23:03:16.908547Z",
     "activities": "2026-02-22T07:54:27.761584Z",
-    "vocabulary": "2026-02-19T23:25:57.863490Z",
+    "vocabulary": "2026-02-22T18:44:43.973969Z",
     "plan": "2026-02-20T20:42:08.431247Z",
     "research": "2026-02-19T23:03:16.903164Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2915/2000 (raw: 3386)"
+      "message": "2891/2000 (raw: 3362)"
     },
     "activities": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
-    ],
-    "pass_count": 6,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

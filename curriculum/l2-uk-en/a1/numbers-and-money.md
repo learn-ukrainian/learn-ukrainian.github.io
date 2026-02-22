@@ -30,8 +30,8 @@ In Ukraine, you will encounter numbers constantly:
 *   **Час** (time) — schedules and appointments. **Котра година?**
 
 > [!context]
-> **Культурний контекст**
-> Україна — дуже цифровізована країна (**digital country**). Ви часто побачите ціни, написані як «50 грн» або просто «50». But to say it, or to understand the cashier when they tell you the total, you need the spoken words. Касири говорять швидко (**fast**). Розпізнавати звук "п'ятдесят" проти "п'ятнадцять" — це суперсила (**superpower**).
+> **Why spoken numbers matter**
+> In shops and cafés, prices are written as digits — «50 грн» or just «50». Reading them is easy. But when the cashier tells you the total out loud, you need to catch the difference between **п'ятдеся́т** (50) and **п'ятна́дцять** (15). They sound similar, especially at Ukrainian cashier speed. Training your ear for these pairs is one of the most practical skills in this lesson.
 
 ### Наша мета сьогодні
 
@@ -390,7 +390,7 @@ It means that small savings add up to big wealth. It is the exact equivalent of 
 
 > [!culture]
 > **Готівка чи Картка?**
-> У сучасній Україні ви можете платити карткою або телефоном (Apple Pay/Google Pay) майже всюди. Проте, у менших містах або на традиційних базарах **готі́вка** (cash) досі головна. Завжди мудро мати дрібні купюри (20, 50, 100) для чайових.
+> У сучасній Україні ви можете платити карткою або телефоном (Apple Pay/Google Pay) майже всюди. Проте на базарах **готі́вка** (cash) досі головна. Це також типово для менших міст. Завжди мудро мати дрібні купюри (20, 50, 100) для чайових.
 
 ---
 

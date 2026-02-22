@@ -1,5 +1,25 @@
 # Дослідження: Diplomatic Language (Ruthenian Era)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Diplomatic Language (Ruthenian Era)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "руська мова"
+    source: ""
+    attribution: ""
+  - text: "гетьмана Війська Запорозького"
+    source: ""
+    attribution: ""
+  - text: "смпана (самодержця) Руської землі"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Козацька дипломатія була ситуативною і не мала ознак державної політики; Хмельницький прагнув лише \"під руку царя\"."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Дипломатична мова](https://esu.com.ua/article-24326) — аналіз розвитку дипломатичної термінології та впливу латини.
 2. [Ізборник: Конституція Пилипа Орлика](http://litopys.org.ua/old18/old18_07.htm) — староукраїнський текст пам'ятки правової та політичної думки 1710 року.

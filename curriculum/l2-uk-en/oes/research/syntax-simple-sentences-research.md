@@ -1,5 +1,25 @@
 # Дослідження: Синтаксис простого речення (Syntax: Simple Sentences)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Синтаксис простого речення (Syntax: Simple Sentences)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "світає"
+    source: ""
+    attribution: ""
+  - text: "мені хочеться"
+    source: ""
+    attribution: ""
+  - text: "Актуальне членування речення"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Давньоруська мова — це \"спільна колиска\" з єдиним \"давньоросійським\" синтаксисом, який еволюціонував прямо в російський."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України](https://esu.com.ua/article-23193) — Стаття «Давньоруська мова»: огляд граматичної системи та синтаксичних особливостей.
 2. [Ізборник (Litopys.org.ua)](http://litopys.org.ua/hrushev/hrushev.htm) — М. Грушевський «Історія української літератури»: аналіз мови літописів та світських текстів.

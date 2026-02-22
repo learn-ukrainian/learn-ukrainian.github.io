@@ -1,0 +1,33 @@
+{
+  "track": "a2",
+  "slug": "future-plans-and-promises",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T21:22:58Z",
+      "task_id": "v3-future-plans-and-promises-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-22T21:24:49Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-22T22:12:52Z",
+      "task_id": "v3-future-plans-and-promises-pC-vocab"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-22T22:18:31Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-22T22:24:22Z",
+      "attempts": 1,
+      "note": "d1-only"
+    }
+  }
+}

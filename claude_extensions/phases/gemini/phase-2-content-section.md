@@ -163,6 +163,10 @@ All items in a category: SAME format, SAME depth (±20%), SAME example count (±
 
 This is the #1 generation error from previous rebuilds. Scan EVERY sentence before submitting.
 
+### No Word Salad (HARD FAIL)
+
+**Every paragraph must have ONE clear point and logical flow between sentences.** Do NOT string together unrelated observations. Also forbidden: alternating sentence language randomly within a paragraph. Each paragraph should have a consistent language frame.
+
 ### Colonial Framing: Ukrainian Stands on Its Own (HARD FAIL if found)
 
 **NEVER define Ukrainian by contrast with Russian.** Ukrainian is an independent language — it does not need Russian as a reference point.

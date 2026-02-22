@@ -1,5 +1,29 @@
 # Дослідження: Nechuy-Levytsky Kaidash Humor
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Nechuy-Levytsky Kaidash Humor"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Еней був парубок моторний"
+    source: ""
+    attribution: ""
+  - text: "Широкі рукави закачались до ліктів; з-під рукавів було видно здорові загорілі жилаві руки"
+    source: ""
+    attribution: ""
+  - text: "гарна, як червона калина... В лиці було розлите щось гостре, палке"
+    source: ""
+    attribution: ""
+  - text: "серце з перцем"
+    source: ""
+    attribution: ""
+  - text: "вже не молода, але й не стара, висока, рівна, з довгастим лицем"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України — Нечуй-Левицький Іван Семенович](https://esu.com.ua/article-72009) — біографічна стаття, літературна оцінка, творчі періоди
 2. [Кайдашева сім'я — Вікіпедія](https://uk.wikipedia.org/wiki/%D0%9A%D0%B0%D0%B9%D0%B4%D0%B0%D1%88%D0%B5%D0%B2%D0%B0_%D1%81%D1%96%D0%BC%27%D1%8F) — жанр, історія публікації, цензура, структура

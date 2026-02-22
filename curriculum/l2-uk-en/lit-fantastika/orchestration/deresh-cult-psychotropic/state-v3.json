@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T15:20:13Z",
+      "ts": "2026-02-22T19:38:19Z",
       "task_id": "v3-deresh-cult-psychotropic-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

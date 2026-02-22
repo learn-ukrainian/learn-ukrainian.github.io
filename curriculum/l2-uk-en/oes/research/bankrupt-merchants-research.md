@@ -1,5 +1,15 @@
 # Дослідження: Банкрути-купці (Bankrupt Merchants)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Банкрути-купці (Bankrupt Merchants)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Росія привласнює \"Руську Правду\" як \"пам'ятку російського права\" (рос. \"Русская Правда\")."
+```
+
 ## Використані джерела
 1. [Ізборник](http://litopys.org.ua/yushkov/yu.htm) — текст "Руської Правди" (Пространна редакція), статті 54-55 (за академічним виданням С. Юшкова).
 2. [Енциклопедія історії України](http://history.org.ua) — статті "Руська Правда", "Володимир Мономах", "Повстання киян 1113".

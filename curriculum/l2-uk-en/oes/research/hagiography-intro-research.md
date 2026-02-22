@@ -1,5 +1,28 @@
 # Дослідження: Hagiography Intro
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Hagiography Intro"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Русь хрещена, але не просвіщена"
+    source: ""
+    attribution: ""
+  - text: "Не буде невинним лихий, а нащадок праведних захований буде"
+    source: "Борис і Гліб"
+    attribution: ""
+  - text: "Азъ, грѣшный Несторъ..."
+    source: "Феодосій"
+    attribution: ""
+  - text: "золотою книгою українського письменного люду"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Агіографія Київської Русі — це \"спільне надбання\" або \"давньоросійська література\". Російська церква монополізувала київських святих."
+```
+
 ## Використані джерела
 1. [Літопис Руський](http://litopys.org.ua/) — першоджерела (Повість минулих літ, Києво-Печерський патерик).
 2. [Енциклопедія Сучасної України](https://esu.com.ua/) — статті "Агіографія", "Житія святих", "Києво-Печерський патерик".

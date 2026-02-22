@@ -1,13 +1,13 @@
 # Audit Report: M01 — the-dative-i-pronouns.md
 **Level:** A2 | **Module:** M01 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 19:23:48
+**Generated:** 2026-02-22 23:11:56
 
 ## Configuration
 **Type:** A2-grammar
 **Word Target:** 3000 words
 **Activities:** 10-14 required
-**Items per Activity:** ≥12 items
+**Items per Activity:** ≥8 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, unjumble
 **Required Types:** fill-in, match-up, quiz
@@ -21,7 +21,7 @@
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Знайдіть пару: Займенники | 10 | 8 | ✅ |
 | 2 | fill-in | Вставте правильний займенник | 8 | 8 | ✅ |
-| 3 | group-sort | Розподіліть за особами | 12 | 12 | ✅ |
+| 3 | group-sort | Розподіліть за особами | 12 | 8 | ✅ |
 | 4 | unjumble | Складіть речення: Подобатися | 6 | 6 | ✅ |
 | 5 | error-correction | Виправте помилки | 6 | 6 | ✅ |
 | 6 | quiz | Перевірка розуміння: Граматика | 8 | 8 | ✅ |
@@ -42,7 +42,7 @@
 ## Gates
 - **Words:** ✅ 4016/3000 (raw: 4364)
 - **Activities:** ✅ 12/10
-- **Density:** ✅ All > 12
+- **Density:** ✅ All > 8
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4

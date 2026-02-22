@@ -32,7 +32,12 @@ CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 GEMINI_BIN = shutil.which("gemini") or "/opt/homebrew/bin/gemini"
 
 # Tracks that contain seminar research files
-SEMINAR_TRACKS = ["b2-hist", "c1-bio", "c1-hist"]
+SEMINAR_TRACKS = [
+    "b2-hist", "c1-bio", "c1-hist",
+    "lit", "lit-essay", "lit-fantastika", "lit-hist-fic",
+    "lit-humor", "lit-juvenile", "lit-war",
+    "oes", "ruth",
+]
 # Tracks where subjects are people (have birth/death dates)
 BIOGRAPHICAL_TRACKS = {"c1-bio"}
 

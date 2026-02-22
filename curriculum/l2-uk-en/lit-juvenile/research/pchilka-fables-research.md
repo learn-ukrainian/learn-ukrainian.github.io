@@ -1,5 +1,23 @@
 # Дослідження: Pchilka Fables (Байки Олени Пчілки)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Pchilka Fables (Байки Олени Пчілки)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Діти — се наш дорогий скарб, се наша надія, се — молода Україна"
+    source: ""
+    attribution: ""
+  - text: "Молода Україна"
+    source: ""
+    attribution: ""
+  - text: "Кожен розум має, тільки не кожен про нього дбає"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Косач-Драгоманова Ольга Петрівна](https://esu.com.ua/search_articles.php?id=3887) — Біографічна довідка про Олену Пчілку, її педагогічну, видавничу та літературну діяльність.
 2. [Інститут історії України НАН України: ПЧІЛКА Олена](http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Pchilka_O) — Аналіз ролі Олени Пчілки як громадської діячки та редакторки журналу «Молода Україна».

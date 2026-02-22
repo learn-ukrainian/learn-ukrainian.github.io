@@ -2,13 +2,13 @@
   "module": "weather-and-nature",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:43.416855Z",
+  "last_audit": "2026-02-23T00:03:09.135292Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T18:06:35.778899Z",
+    "md": "2026-02-22T23:57:48.177351Z",
     "meta": "2026-02-19T23:27:35.878760Z",
     "activities": "2026-02-21T01:01:24.143868Z",
-    "vocabulary": "2026-02-19T23:30:28.520843Z",
+    "vocabulary": "2026-02-22T18:40:49.471508Z",
     "plan": "2026-02-20T20:42:13.256407Z",
     "research": "2026-02-19T23:27:35.871821Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2991/2000 (raw: 3274)"
+      "message": "2879/2000 (raw: 3145)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "5 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -60,7 +60,7 @@
       "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module.",
       "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
     ],
-    "pass_count": 5,
+    "pass_count": 6,
     "fail_count": 1,
     "deferred_count": 0
   }

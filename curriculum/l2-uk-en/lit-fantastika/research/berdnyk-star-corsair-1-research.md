@@ -1,5 +1,29 @@
 # Дослідження: Berdnyk Star Corsair 1
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Berdnyk Star Corsair 1"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Зоряний корсар. Роман-феєрія"
+    source: ""
+    attribution: ""
+  - text: "Кільця змія"
+    source: ""
+    attribution: ""
+  - text: "Тій, котра вічно йде назустріч, з любов'ю присвячую"
+    source: ""
+    attribution: ""
+  - text: "Чорний папірус"
+    source: ""
+    attribution: ""
+  - text: "Зоряний Корсар"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Бердник Олесь Павлович — Вікіпедія](https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B4%D0%BD%D0%B8%D0%BA_%D0%9E%D0%BB%D0%B5%D1%81%D1%8C_%D0%9F%D0%B0%D0%B2%D0%BB%D0%BE%D0%B2%D0%B8%D1%87) — повна біографія, бібліографія, дисидентська діяльність
 2. [Зоряний корсар — Вікіпедія](https://uk.wikipedia.org/wiki/%D0%97%D0%BE%D1%80%D1%8F%D0%BD%D0%B8%D0%B9_%D0%BA%D0%BE%D1%80%D1%81%D0%B0%D1%80) — структура роману, жанр, теми

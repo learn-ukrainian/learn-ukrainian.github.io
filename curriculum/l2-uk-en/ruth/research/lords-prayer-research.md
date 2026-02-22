@@ -1,5 +1,31 @@
 # Дослідження: Lords Prayer (Отче наш)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Lords Prayer (Отче наш)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ѿче на́шъ, и҆́же є҆си́ на нб҃сѣ́хъ... Хлѣ́бъ на́шъ насꙋ́щный да́ждь на́мъ дне́сь..."
+    source: ""
+    attribution: ""
+  - text: "винуватець"
+    source: ""
+    attribution: ""
+  - text: "іскушеніє"
+    source: ""
+    attribution: ""
+  - text: "спроба, досвідчення"
+    source: ""
+    attribution: ""
+  - text: "спокуса"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Церковнослов'янська мова є спільною «російською» спадщиною, а українська вимова — це пізні полонізовані викривлення."
+```
+
 ## Використані джерела
 1. [Острозька Біблія (1581) — Скановане факсиміле](https://litopys.org.ua) — Оригінальний церковнослов'янський текст молитви.
 2. [Памво Беринда «Лексіконъ славенноросскій» (1627)](http://litopys.org.ua/berinda/ber.htm) — Тлумачення лексики (спокуса, провина) та фонетичні особливості київського ізводу.

@@ -1,5 +1,25 @@
 # Дослідження: Epistles Romans (Ruthenian Context)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Epistles Romans (Ruthenian Context)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "грішник"
+    source: ""
+    attribution: ""
+  - text: "винуватець"
+    source: ""
+    attribution: ""
+  - text: "Правда бо Божия в нем являеться от веры в веру, яко же есть писано: праведный же от веры жив будет"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Українська біблійна традиція є лише відгалуженням \"загальноросійської\" або церковнослов'янської без власного обличчя."
+```
+
 ## Використані джерела
 1. [Іван Огієнко. Історія української літературної мови. XVI століття](http://litopys.org.ua/ohienko/oh09.htm) — Аналіз перекладів Валентина Негалевського та Крехівського Апостола.
 2. [Німчук В. В. Історія української мови. Морфологія](http://litopys.org.ua/ukrmova/um.htm) — Особливості дієвідмінювання та лексики у пам'ятках XVI ст.

@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T13:08:50Z",
+      "ts": "2026-02-22T19:35:24Z",
       "task_id": "v3-babenko-witch-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

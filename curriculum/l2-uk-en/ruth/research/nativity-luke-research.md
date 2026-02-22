@@ -1,5 +1,15 @@
 # Дослідження: Різдво (Лука 2)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Різдво (Лука 2)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Українська культура XVII-XVIII ст. як \"провінційна\" або \"малоросійська\" копія російської."
+```
+
 ## Використані джерела
 1. [litopys.org.ua](http://litopys.org.ua/ukrpoez/ukrpoez.htm) — Українська поезія. Середина XVII ст. (Твори Памва Беринди).
 2. [esu.com.ua](https://esu.com.ua/article-87353) — Пересопницьке Євангеліє (мовні особливості, історія створення).

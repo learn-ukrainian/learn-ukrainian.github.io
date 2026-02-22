@@ -1,5 +1,20 @@
 # Дослідження: Zerov Ad Fontes
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Zerov Ad Fontes"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ми хочемо такої літературної обстановки, в якій би виростали міцні фаланги письменників, а не аматорів..."
+    source: ""
+    attribution: ""
+  - text: "Ad fontes!"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/article/16068) — стаття про Миколу Зерова, його участь у русі неокласиків та літературно-критичну діяльність.
 2. [Інститут історії України НАНУ](http://history.org.ua) — історичний контекст Літературної дискусії 1925–1928 років та доби Розстріляного відродження.

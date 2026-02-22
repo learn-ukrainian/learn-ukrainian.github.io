@@ -1,5 +1,31 @@
 # Дослідження: Wills Testaments (Заповіти)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Wills Testaments (Заповіти)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "В имя Отца и Сына и Святого Духа. Аминь. Я, [Ім'я], будучи на ciele chory, ale na umyśle zdrowy..."
+    source: "Стандартний початок"
+    attribution: ""
+  - text: "Бачачи, що нічого немає певнішого за смерть, а година її невідома... не хотів я лишати дім, мені від Бога доручений, у безладді"
+    source: "Петро Могила"
+    attribution: ""
+  - text: "Ђ"
+    source: ""
+    attribution: ""
+  - text: "е"
+    source: ""
+    attribution: ""
+  - text: "и"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Ствердження, що українська (руська) культура XVII ст. була \"зіпсована\" польським впливом або була просто діалектом \"общерусского\" языка."
+```
+
 ## Використані джерела
 1. [Ізборник: Українська мова в XVI-XVII ст.](http://litopys.org.ua/ukrmova/um17.htm) — Аналіз мовних особливостей ділового стилю та заповітів.
 2. [Наталія Білоус. Тестаменти киян середини XVI – першої половини XVII ст.](http://history.org.ua/JournALL/journal/2009/1/5.pdf) — Дослідження структури та змісту міщанських заповітів.

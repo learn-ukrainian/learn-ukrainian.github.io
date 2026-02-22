@@ -1,5 +1,28 @@
 # Дослідження: Comparative Lab Parallel (Сакральне Слово)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Comparative Lab Parallel (Сакральне Слово)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Блаженни нищии духом, яко техъ есть Царствїе Небесное"
+    source: ""
+    attribution: ""
+  - text: "Блаженї оубогіи доухом, яко тѣх ест царство небесное"
+    source: ""
+    attribution: ""
+  - text: "Блаженні вбогі духом, бо їхнєє Царство Небесне"
+    source: ""
+    attribution: ""
+  - text: "Блаженні вбогі духом, бо їхнє Царство Небесне"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Церковнослов'янська мова була \"спільною\" для всіх східних слов'ян, а українська — це \"зіпсована полонізмами\" говірка."
+```
+
 ## Використані джерела
 1. [Ізборник: Пересопницьке Євангеліє](http://litopys.org.ua/ukrmova/um45.htm) — текст, мовні особливості, історичний контекст створення.
 2. [Біблія Куліша (1871)](http://bible.net.ua) — перший повний переклад Біблії сучасною українською літературною мовою.

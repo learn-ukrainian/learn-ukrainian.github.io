@@ -1,5 +1,25 @@
 # Дослідження: Slovo Poetic Syntax Lab
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Slovo Poetic Syntax Lab"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Спáла кня́зю ýмь похóти"
+    source: ""
+    attribution: ""
+  - text: "похоть спала ум князю"
+    source: ""
+    attribution: ""
+  - text: "Комони ржуть за Сулою — звенить слава в Кыевѣ; трубы трубять в Новѣградѣ — стоять стязи в Путивлѣ"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Слово\" — пам'ятка \"російської\" літератури (\"общерусскоє наслєдіє\")."
+```
+
 ## Використані джерела
 1. [Ізборник: Слово о полку Ігоревім (Текст, переклади, дослідження)](http://litopys.org.ua/slovo/slovo.htm) — повний корпус текстів та академічних коментарів.
 2. [Енциклопедія Сучасної України: Слово о полку Ігоревім](https://esu.com.ua/article-10543) — сучасний огляд, питання авторства та поетики.

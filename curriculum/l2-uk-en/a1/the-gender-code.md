@@ -287,8 +287,8 @@ If you have ever played the Ukrainian game *S.T.A.L.K.E.R.*, you already know so
 ### Дім та ідентичність (Home and Identity)
 The words for the most important people in your life are gendered, but so are the spaces you inhabit.
 
-*   **Чолові́к** (Man/Husband) — Masculine.
-*   **Жі́нка** (Woman/Wife) — Feminine.
+*   **Чоловік** (Man/Husband) — Masculine.
+*   **Жінка** (Woman/Wife) — Feminine.
 *   **Дім** (Home/House) — Masculine. A house feels solid, built.
 *   **Кварти́ра** (Apartment) — Feminine.
 

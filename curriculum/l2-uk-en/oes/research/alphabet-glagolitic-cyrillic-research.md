@@ -1,5 +1,20 @@
 # Дослідження: Alphabet Glagolitic Cyrillic
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Alphabet Glagolitic Cyrillic"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Коли ж охрестилися, то мусили римськими і грецькими письменами писати слов'янську мову без упорядкування... А як можна писати добре грецькими письменами: б҃гъ, або животъ, або ѕѣло, або цр҃ковь, або чаАниѥ..."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Кирилицю створили для росіян\"."
+  - "\"Єдина давньоруська мова\"."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Кирилиця](https://esu.com.ua/article-6239) — ґрунтовний огляд походження та розвитку кирилиці.
 2. [Ізборник: Чорноризець Хоробр «Про письмена»](http://litopys.org.ua/ukrlets/uz03.htm) — першоджерело X ст. з українським перекладом.

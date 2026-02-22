@@ -1,5 +1,29 @@
 # Дослідження: Smolych Beautiful Catastrophes
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Smolych Beautiful Catastrophes"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Господарство доктора Гальванеску"
+    source: ""
+    attribution: ""
+  - text: "Ще одна прекрасна катастрофа"
+    source: ""
+    attribution: ""
+  - text: "Що було потім"
+    source: ""
+    attribution: ""
+  - text: "Господарство доктора Гальванеску"
+    source: ""
+    attribution: ""
+  - text: "передові методи ведення сільського господарства"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Смолич Юрій Корнійович — Вікіпедія](https://uk.wikipedia.org/wiki/%D0%A1%D0%BC%D0%BE%D0%BB%D0%B8%D1%87_%D0%AE%D1%80%D1%96%D0%B9_%D0%9A%D0%BE%D1%80%D0%BD%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87) — Full biography, bibliography, literary organizations
 2. [SFE: Ukraine — Science Fiction Encyclopedia](https://sf-encyclopedia.com/entry/ukraine) — Smolych as "father of Ukrainian SF", trilogy overview, political context

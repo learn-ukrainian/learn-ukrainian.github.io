@@ -1,7 +1,7 @@
 # Audit Report: M24 — can-must-want-modals.md
 **Level:** A1 | **Module:** M24 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:39
+**Generated:** 2026-02-22 23:32:46
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2470/2000 (raw: 2995)
+- **Words:** ✅ 2452/2000 (raw: 2965)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -45,11 +45,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 15/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 13 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 43.3% (target 35-55% (M24))
+- **Immersion:** 🇺🇦 43.6% (target 35-55% (M24))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,12 +60,12 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Can, Must, Want - Modals** | ✅ | 49 | Included in Core |
 | **Вступ: Модальність у житті** | ✅ | 160 | Included in Core |
-| **Могти та Вміти: Фізична можливість і Навичка** | ✅ | 275 | Included in Core |
-| **Обов'язок: Треба, Потрібно, Повинен** | ✅ | 334 | Included in Core |
-| **Дозвіл і Заборона: Можна та Не можна** | ✅ | 279 | Included in Core |
-| **Порада: Варто** | ✅ | 149 | Included in Core |
-| **Спроба: Пробувати, Намагатися** | ✅ | 201 | Included in Core |
-| **Характеристика: Необхідний, Обов'язковий, Можливий** | ✅ | 112 | Included in Core |
+| **Могти та Вміти: Фізична можливість і Навичка** | ✅ | 273 | Included in Core |
+| **Обов'язок: Треба, Потрібно, Повинен** | ✅ | 327 | Included in Core |
+| **Дозвіл і Заборона: Можна та Не можна** | ✅ | 276 | Included in Core |
+| **Порада: Варто** | ✅ | 148 | Included in Core |
+| **Спроба: Пробувати, Намагатися** | ✅ | 199 | Included in Core |
+| **Характеристика: Необхідний, Обов'язковий, Можливий** | ✅ | 109 | Included in Core |
 | **Контекст: Правила та Плани** | ✅ | 202 | Included in Core |
 | **Практика: Дозвіл та Етикет** | ✅ | 287 | Included in Core |
 | **Практика: Мої можливості та Обов'язки** | ✅ | 327 | Included in Core |

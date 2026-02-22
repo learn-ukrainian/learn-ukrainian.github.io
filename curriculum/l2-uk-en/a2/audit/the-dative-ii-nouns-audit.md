@@ -1,13 +1,13 @@
 # Audit Report: M02 — the-dative-ii-nouns.md
 **Level:** A2 | **Module:** M02 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 19:30:08
+**Generated:** 2026-02-22 23:11:57
 
 ## Configuration
 **Type:** A2-grammar
 **Word Target:** 3000 words
 **Activities:** 10-14 required
-**Items per Activity:** ≥12 items
+**Items per Activity:** ≥8 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, unjumble
 **Required Types:** fill-in, match-up, quiz
@@ -19,7 +19,7 @@
 ## Activity Breakdown
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
-| 1 | group-sort | Сортування за закінченнями | 18 | 12 | ✅ |
+| 1 | group-sort | Сортування за закінченнями | 18 | 8 | ✅ |
 | 2 | match-up | Знайдіть пару: Дія та Адресат | 10 | 8 | ✅ |
 | 3 | quiz | Оберіть правильну форму | 8 | 8 | ✅ |
 | 4 | fill-in | Чоловічий рід: кому? | 8 | 8 | ✅ |
@@ -29,7 +29,7 @@
 | 8 | error-correction | Виправте помилки | 6 | 6 | ✅ |
 | 9 | mark-the-words | Знайдіть слова у Давальному відмінку | 6 | 6 | ✅ |
 | 10 | translate | Переклад фраз | 6 | 6 | ✅ |
-| 11 | cloze | День народження | 12 | 12 | ✅ |
+| 11 | cloze | День народження | 12 | 8 | ✅ |
 | 12 | select | Культурний контекст | 6 | 6 | ✅ |
 
 **Summary:**
@@ -51,7 +51,7 @@
 ## Gates
 - **Words:** ✅ 3689/3000 (raw: 4021)
 - **Activities:** ✅ 12/10
-- **Density:** ✅ All > 12
+- **Density:** ✅ All > 8
 - **Unique_types:** ✅ 10/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4

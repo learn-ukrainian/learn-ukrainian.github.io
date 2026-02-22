@@ -1,5 +1,29 @@
 # Дослідження: Khvylovy Ukraine Or Little Russia
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Khvylovy Ukraine Or Little Russia"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Росія самостійна держава? Самостійна! Ну, так і ми самостійна."
+    source: ""
+    attribution: ""
+  - text: "Під російською літературою ми розуміємо літературу великоросійську, себто ту, що вийшла з-під пера тургенєвих, толстих..."
+    source: ""
+    attribution: ""
+  - text: "Справа в тому, що російська література тяжить над нами в віках як господар становища, що привчила нашу психіку до рабського наслідування."
+    source: ""
+    attribution: ""
+  - text: "Від російської літератури, від її стилів українська поезія мусить утікати якмога швидше."
+    source: ""
+    attribution: ""
+  - text: "Даєш психологічну Європу!"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Енциклопедія сучасної України: Хвильовий Микола](https://esu.com.ua/article-36528) — життєпис, аналіз ролі у ВАПЛІТЕ та Літературній дискусії 1920-х років.
 2. [Інститут історії України НАНУ: «Літературна дискусія 1925–1928»](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Literaturna_dyskusiia) — історичний та політичний контекст написання памфлетів.

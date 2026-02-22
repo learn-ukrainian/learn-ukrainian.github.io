@@ -1,5 +1,31 @@
 # Дослідження: Adjectives Agreement (Прикметники та узгодження)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Adjectives Agreement (Прикметники та узгодження)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Аже ладія ветха, то половница в ней; аже желЂза, то 3 куны, аже мрежа, то полъ 3 куны"
+    source: ""
+    attribution: "1"
+  - text: "О світлая і тресвітлая сонце! Всім тепло і красно єси!"
+    source: ""
+    attribution: "2"
+  - text: "Лодійні"
+    source: ""
+    attribution: ""
+  - text: "лодія"
+    source: ""
+    attribution: ""
+  - text: "куни"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Давньоруська мова була \"спільною колискою\" без діалектних відмінностей, і російська мова є її прямим спадкоємцем."
+```
+
 ## Використані джерела
 1.  **Літопис Руський (за Іпатським списком)** (litopys.org.ua) — Першоджерело для аналізу вживання прикметників у контексті.
 2.  **Руська Правда (Просторова редакція)** (history.org.ua) — Джерело юридичної термінології («куни лодійні»).

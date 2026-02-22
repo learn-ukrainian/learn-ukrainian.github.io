@@ -1,5 +1,31 @@
 # Дослідження: Women In Law (Жінки у праві Київської Русі)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Women In Law (Жінки у праві Київської Русі)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "придане"
+    source: ""
+    attribution: ""
+  - text: "виділ"
+    source: ""
+    attribution: ""
+  - text: "задниця"
+    source: ""
+    attribution: ""
+  - text: "Аже умрет муж, то вдовице приставнути часть"
+    source: "Руська Правда"
+    attribution: ""
+  - text: "АНА РЪИНА"
+    source: "Анна Ярославна"
+    attribution: ""
+forbidden_claims:
+  - "Російська історіографія часто маргіналізує роль жінки або приписує руські досягнення (Ольга, Анна) виключно «російській» історії."
+```
+
 ## Використані джерела
 1. [Історія українського права: статус жінки](http://history.org.ua) — аналіз правового становища жінки за Руською Правдою та церковними статутами.
 2. [Енциклопедія Сучасної України: Княгиня Ольга](http://esu.com.ua) — біографія та реформаторська діяльність княгині Ольги.

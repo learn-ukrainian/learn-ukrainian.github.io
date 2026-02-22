@@ -1,31 +1,30 @@
 # Дослідження: Possessive Sviy
 
 ## State Standard Reference
-§3 (Thematic Catalogue A2): "930: коротка інформація про свою сім’ю, свій дім, своє місто й рідну країну;"
-Alignment: Although formal morphological listing in §4.2.1.4 (A2) focusing on basic possessives (мій, твій, наш, ваш, їхній) omits *свій*, the State Standard explicitly requires the use of *свій* for thematic A2 communication regarding family, home, and identity. This module bridges the gap between basic possession and the reflexive possessive logic necessary for these A2 benchmarks.
+§1.3.2: "коротка інформація про свою сім’ю, свій дім, своє місто й рідну країну;"
+Alignment: The module explicitly teaches the reflexive possessive "свій" to enable learners to describe their immediate environment (family, home, city) as required by A2 competency benchmarks.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| свій | High (Top 100) | своя сім'я, свій дім, у свій час |
-| власний | Medium | власний будинок, власна думка, власні назви |
-| особистий | Medium | особисте життя, особистий блог, особисті речі |
-| чужий | Medium | чужа дитина, чужі гроші, за чужий рахунок |
+| свій | Top 100 frequency | свій час, свій шлях |
+| своя | High frequency | своя сім'я, своя справа |
+| своє | High frequency | своє життя, своє місто |
+| свої | High frequency | свої люди, свої речі |
 
 ## Cultural Hooks
-1. **Binary "Свій — Чужий"**: A fundamental concept in Ukrainian (and Slavic) culture, defining the boundary between "one's own" (family, friends, community) and "the stranger." Language reflects this deeply; using *свій* correctly signals integration into the "inner circle."
-2. **Idiom**: «У чужий монастир зі своїм статутом не ходять» (Don't go to someone else's monastery with your own rules). Demonstrates the contrast between *свій* (one's own) and *чужий* (someone else's).
+1. The binary worldview of "Свій — Чужий" (Own vs. Stranger). Identifying someone as "свій" (e.g., "свої люди") implies deep trust and inclusion in the inner circle, a key element of Ukrainian social capital.
+2. Idiomatic wisdom: «У чужий монастир зі своїм статутом не ходять» (Don't bring your rules to a stranger's monastery), illustrating the boundary between one's own domain and the external world.
 
 ## Common Learner Errors
-1. **Subject-Possessor Mismatch** → *«Він любить його маму»* (He loves his [someone else's] mother) vs *«Він любить свою маму»* (He loves his [own] mother). Learners often default to *його/її* regardless of the subject, creating ambiguity.
-2. **Redundancy (Tautology)** → *«Я мию свої руки»* (I wash my hands). In Ukrainian, if the possessor is the subject and the object is an inseparable part of the person (body parts, close family), the possessive is often omitted unless emphasis is needed.
-3. **1st/2nd Person Confusion** → Thinking *свій* is mandatory for 1st/2nd person. In *«Я люблю свою/мою маму»*, both are correct, but learners often struggle to decide which sounds more natural (hint: *свою* is more common in neutral speech).
+1. The "Scandalous" Mismatch → "Він обійняв його дружину" instead of "свою дружину" — Learners use "його" for the subject's possession, accidentally implying he hugged another man's wife.
+2. The Redundancy Trap (Tautology) → "Я мию свої руки" — English speakers overuse possessives; in Ukrainian, possessives for body parts and close family are often omitted when the subject is the possessor.
 
 ## Cross-References
-- Builds on: A1 possessive pronouns (мій, твій), a2-01 (Dative pronouns)
-- Prepares for: a2-18 (Bigger Better Stronger - comparisons), a2-20 (Preferences and Choices), a2-25 (Checkpoint)
+- Builds on: A1 possessive pronouns, a2-01 (Dative pronouns)
+- Prepares for: a2-18 (Bigger Better Stronger), a2-20 (Preferences and Choices), a2-25 (Checkpoint)
 
 ## Notes for Content Writing
-- **The "Subject=Possessor" Rule**: This is the heart of the module. Use a decision-tree approach (Mermaid flowchart) to show when *свій* is needed.
-- **Ambiguity Focus**: Use the "Petro and Ivan" example to show how *його* vs *свою* changes the entire meaning of a sentence.
-- **Declension Table**: Since *свій* declines like *мій*, reuse the pattern to build confidence.
+- Decolonized framing: Treat "свій" as a precise and elegant feature of Ukrainian that avoids ambiguity present in other languages (like the English "his"), highlighting Ukrainian's inherent structural clarity. Do not compare it to Russian.
+- Ensure the intro explicitly lists English scaffolding requirements since this is a Band 1 (50-60% immersion) module.
+- Remind learners that "свій" declines exactly like "мій" and "твій" to lower the affective filter.

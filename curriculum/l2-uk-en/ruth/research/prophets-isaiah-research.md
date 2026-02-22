@@ -1,5 +1,25 @@
 # Дослідження: Prophets Isaiah (Книга пророка Ісаї)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Prophets Isaiah (Книга пророка Ісаї)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Євангеліст Старого Завіту"
+    source: ""
+    attribution: ""
+  - text: "Горе вам, що долучаєте дім до дому і село до села, щоб ближнього погубити!"
+    source: "Вишенський"
+    attribution: ""
+  - text: "Оживуть степи, озера, / І не верстовії, / А скрізь шляхи святії / Простеляться..."
+    source: "Шевченко"
+    attribution: ""
+forbidden_claims:
+  - "Російська біблійна традиція є самостійною і давньою."
+```
+
 ## Використані джерела
 1. [Острозька Біблія](http://litopys.org.ua/ukr17/ukr17_02.htm) — аналіз текстологічних особливостей та джерельної бази (Септуагінта).
 2. [Іван Вишенський: Твори](http://litopys.org.ua/vyshen/vysh.htm) — дослідження цитування пророчих текстів у полемічній літературі.

@@ -1,7 +1,7 @@
 # Audit Report: M05 — my-world-objects.md
 **Level:** A1 | **Module:** M05 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:24
+**Generated:** 2026-02-22 23:19:24
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2255/2000 (raw: 2634)
+- **Words:** ✅ 2220/2000 (raw: 2599)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -46,11 +46,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 15 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 13.0% (target 10-25% (M05))
+- **Immersion:** 🇺🇦 13.2% (target 10-25% (M05))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,9 +60,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **My World: Objects** | ✅ | 71 | Included in Core |
-| **Вступ: Вказуємо на світ** | ✅ | 355 | Included in Core |
-| **Теорія: Вказівні займенники (Цей і Той)** | ✅ | 445 | Included in Core |
-| **Практика: Побут і речі** | ✅ | 555 | Included in Core |
-| **Культурний контекст: Український дім** | ✅ | 423 | Included in Core |
+| **Вступ: Вказуємо на світ** | ✅ | 352 | Included in Core |
+| **Теорія: Вказівні займенники (Цей і Той)** | ✅ | 439 | Included in Core |
+| **Практика: Побут і речі** | ✅ | 535 | Included in Core |
+| **Культурний контекст: Український дім** | ✅ | 417 | Included in Core |
 | **Використання: Описуємо кімнату** | ✅ | 208 | Included in Core |
 | **Підсумок** | ✅ | 198 | Included in Core |

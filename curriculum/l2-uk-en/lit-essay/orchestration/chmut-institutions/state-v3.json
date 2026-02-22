@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T14:34:22Z",
+      "ts": "2026-02-22T19:11:15Z",
       "task_id": "v3-chmut-institutions-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

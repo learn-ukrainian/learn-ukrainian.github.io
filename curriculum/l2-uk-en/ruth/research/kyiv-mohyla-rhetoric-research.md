@@ -1,5 +1,28 @@
 # Дослідження: Kyiv Mohyla Rhetoric
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Kyiv Mohyla Rhetoric"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ключ розуміння"
+    source: ""
+    attribution: ""
+  - text: "ключ, що відмикає двері до казання"
+    source: ""
+    attribution: ""
+  - text: "Молоді оратори! Поступивши до школи красномовства, знайте, що ви прагнете до такої почесної справи..."
+    source: ""
+    attribution: "Прокоповича"
+  - text: "Світ є море скляне... світ є море червоне... світ є море мертве"
+    source: ""
+    attribution: "Галятовського"
+forbidden_claims:
+  - "Російська риторика розвивалася самостійно або під прямим впливом Заходу."
+```
+
 ## Використані джерела
 1. [litopys.org.ua](http://litopys.org.ua/old17/old17_06.htm) — Іоаникій Галятовський, «Ключ розуміння» (тексти та аналіз).
 2. [esu.com.ua](https://esu.com.ua/article-12345) — Енциклопедія Сучасної України: стаття «Риторика в Києво-Могилянській академії».

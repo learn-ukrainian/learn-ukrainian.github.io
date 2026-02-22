@@ -46,11 +46,13 @@ The most powerful word for stepping back in time is **вчора** (yesterday). 
 
 > [!tip]
 > **Порада щодо вимови**
-> Слово **вчора** почина́ється зі зву́ка, схожого на англійське "w" у слові "wow". Це не різкий звук "v". Він звучить м'яко: [u̯t͡ʃɔrɑ].
+> Слово **вчора** почина́ється зі зву́ка. Цей звук схожий на англійське "w" у слові "wow". Це не різкий звук "v". Він звучить м'яко: [u̯t͡ʃɔrɑ].
 
 When you use these words, you do not need any prepositions like "in" or "on." You simply say the time phrase.
 *   **Вчора ввечері** я читав. (Yesterday evening I read.)
 *   **Вчора зранку** ми пили каву. (Yesterday morning we drank coffee.)
+
+Talking about the past is essential for building relationships. When you meet a friend, they will often ask about your weekend. They want to know your story. If you can only speak in the present tense, your world is very small. Your conversations are limited to what is happening right in front of you. But with the past tense, you open a door to your entire life. This allows you to share your memories, your experiences, and your culture. Suddenly, it becomes possible to tell people about the cities you visited, the books you read, and the food you ate. This is why mastering the past tense is one of the biggest leaps you will take in your Ukrainian journey. It moves you from being an observer to being a storyteller. In Ukrainian culture, storytelling is very important. When guests come to a house, the host will always tell stories about their family, their history, and their life. Now, you will be able to do the same. You will be able to share your world.
 
 ### Time Marker: Минулий (Last)
 To talk about longer periods of time, we use the adjective **мину́лий** (past/last). This word changes its ending to match the noun it describes, just like any other adjective.
@@ -293,6 +295,23 @@ To ask someone "What did you do?", you also need to choose the right gender!
 **Мама:** А ви **не їли** морозиво?
 **Син:** Ні, ми **не їли**. Ми **пили** чай.
 **Мама:** Молодці.
+
+**Dialogue 4 (At Work):**
+**Максим:** Добрий ранок. Ти **працювала** вчора?
+**Анна:** Так, я **працювала** весь день. Я **читала** документи і **писала** імейли. А ти? Ти **був** в офісі?
+**Максим:** Ні, я **не був** в офісі. Я **працював** удома. Я **робив** новий проект. Проект був складний, але цікавий.
+**Анна:** Ти **обідав** удома?
+**Максим:** Так, я **готував** обід. Я **робив** салат і **пив** сік. А потім я знову **працював**.
+**Анна:** Ти багато **працював**. Ти **ходив** гуляти ввечері?
+**Максим:** Ні, я **не ходив** гуляти. Я **дивився** новини і відпочивав.
+
+### Історія: Вчора в офісі (Yesterday at the Office)
+Let's look at another example of how we use these verbs in a professional context. When you talk about work, the past tense helps you report what you achieved. This is very useful when you have a meeting or when your boss asks about your progress.
+
+*Приклад розповіді (Менеджер):*
+Вчора був дуже активний день. Наш офіс **працював** з восьмої ранку. Спочатку ми **пили** каву і **говорили** про плани на день. Потім я **читав** важливі імейли. Імейли були від наших партнерів. Вони **писали** про новий проект. Я **думав** про це. Потім я **робив** презентацію. Презентація була довга, але цікава. Моя колега Ірина теж **працювала** багато. Вона **говорила** по телефону і **писала** звіт. Ми **не обідали** в ресторані. Ми **їли** піцу в офісі. Піца була смачна. Вдень ми **слухали** лекцію про маркетинг. Лектор **говорив** дуже швидко, але ми все розуміли. Ввечері ми **були** втомлені. Ми **не працювали** пізно. Ми **закрили** офіс о шостій годині і **пішли** додому. Вдома я **вечеряв** і **читав** книгу. Я **не дивився** телевізор. Я **хотів** спати. Я **лягав** спати рано. Це був продуктивний, але важкий день.
+
+Notice how the verbs keep changing depending on who is doing the action. The manager says я **читав**, але колега Ірина **працювала** (she worked), and ми **їли** (we ate). This constant shifting of verb endings becomes automatic with practice. When you listen to Ukrainians speak, try to catch these endings. They are the heartbeat of the past tense.
 
 > [!myth-buster]
 > **Ходити чи Йти?**

@@ -91,6 +91,7 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 | **TOO_MUCH_AT_ONCE** | >3 concepts before practice | 5 verb forms in one section | Split into smaller chunks |
 | **MISSING_PREVIEW** | No "today you'll learn" | Jumps into content | Add learning objectives |
 | **ABRUPT_END** | No celebration of progress | Module just stops | Add "You can now..." summary |
+| **WORD_SALAD** | Sentences randomly mix Ukrainian and English within the same clause, or a paragraph strings together unrelated ideas with no logical thread | "Україна — цифровізована країна (digital). Касири говорять швидко (fast). Це суперсила (superpower)." — three disconnected claims stitched together | Rewrite paragraph with one clear point; each sentence in one primary language |
 
 ### A+ Beginner Lesson Checklist
 

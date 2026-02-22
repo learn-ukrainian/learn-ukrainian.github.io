@@ -1,5 +1,19 @@
 # Дослідження: Szlachta Nobility
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Szlachta Nobility"
+dates:
+  key_events:
+primary_quotes:
+  - text: "А писар земський маєт по-руску литерами і слови рускими всі листи, виписи і позви писати, а не іншим єзиком і слови"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Російська історіографія зображувала шляхту виключно як \"зрадників\" або \"поляків\", заперечуючи існування української еліти."
+```
+
 ## Використані джерела
 1. [Історія України-Руси (М. Грушевський) — Том VI](http://m-hrushevsky.name/uk/History/Volume6/Chapter1.html) — Фундаментальне дослідження соціальної структури та еволюції шляхетського стану.
 2. [Ізборник: Литовські Статути](http://litopys.org.ua/statut2/st1588.htm) — Тексти Статутів 1529, 1566, 1588 років (першоджерела).

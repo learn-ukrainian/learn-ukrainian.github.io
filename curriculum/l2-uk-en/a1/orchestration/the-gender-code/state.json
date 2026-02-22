@@ -27,7 +27,7 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-22T09:04:35Z",
+      "timestamp": "2026-02-22T20:16:57Z",
       "note": "v3-audit"
     },
     "3b": {
@@ -42,22 +42,22 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-22T11:30:14Z",
+      "timestamp": "2026-02-22T20:22:12Z",
       "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-22T11:30:14Z",
+      "timestamp": "2026-02-22T20:22:12Z",
       "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-22T09:04:35Z",
+      "timestamp": "2026-02-22T20:16:57Z",
       "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-22T11:30:14Z",
+      "timestamp": "2026-02-22T20:22:12Z",
       "note": "v3-phase-D"
     },
     "9-final-review": {
@@ -67,8 +67,8 @@
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-21T22:02:40Z"
+      "timestamp": "2026-02-22T20:22:12Z"
     }
   },
-  "last_updated": "2026-02-22T11:30:14Z"
+  "last_updated": "2026-02-22T20:22:12Z"
 }

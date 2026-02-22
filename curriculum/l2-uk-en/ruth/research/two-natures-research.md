@@ -1,5 +1,19 @@
 # Дослідження: Two Natures (Skovoroda's Philosophy)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Two Natures (Skovoroda's Philosophy)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Весь світ складається з двох натур: одна видима, друга невидима. Видима — це тварь, а невидима — Бог"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Сковорода як предтеча російської філософії (В. Соловйова) або як атеїст-матеріаліст (радянська історіографія)."
+```
+
 ## Використані джерела
 1. [Григорій Сковорода. Повне зібрання творів](http://litopys.org.ua/skovoroda/skov.htm) — Першоджерела: трактати, діалоги, байки.
 2. [Енциклопедія Сучасної України: Сковорода Григорій Савич](https://esu.com.ua/article-8758) — Академічний огляд життя та філософської системи.

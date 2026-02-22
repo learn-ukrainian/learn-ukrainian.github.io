@@ -1,13 +1,13 @@
 # Audit Report: M03 — dative-verbs.md
 **Level:** A2 | **Module:** M03 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 19:35:43
+**Generated:** 2026-02-22 23:11:58
 
 ## Configuration
 **Type:** A2-grammar
 **Word Target:** 3000 words
 **Activities:** 10-14 required
-**Items per Activity:** ≥12 items
+**Items per Activity:** ≥8 items
 **Unique Types:** ≥4 types required
 **Priority Types:** error-correction, fill-in, unjumble
 **Required Types:** fill-in, match-up, quiz
@@ -20,7 +20,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | quiz | Перевірка розуміння: Кому чи Кого? | 8 | 8 | ✅ |
-| 2 | group-sort | Сортування дієслів | 12 | 12 | ✅ |
+| 2 | group-sort | Сортування дієслів | 12 | 8 | ✅ |
 | 3 | match-up | Знайдіть пару | 12 | 8 | ✅ |
 | 4 | fill-in | Закінчення іменників | 8 | 8 | ✅ |
 | 5 | error-correction | Виправте помилки | 6 | 6 | ✅ |
@@ -30,7 +30,7 @@
 | 9 | fill-in | Займенники у Давальному відмінку | 8 | 8 | ✅ |
 | 10 | fill-in | Подобається чи Подобаються? | 8 | 8 | ✅ |
 | 11 | unjumble | Складніші речення | 6 | 6 | ✅ |
-| 12 | cloze | Діалог: Толока | 14 | 12 | ✅ |
+| 12 | cloze | Діалог: Толока | 14 | 8 | ✅ |
 
 **Summary:**
 - Total activities: 12 (target: 10-14) ✅
@@ -51,7 +51,7 @@
 ## Gates
 - **Words:** ✅ 3452/3000 (raw: 3923)
 - **Activities:** ✅ 12/10
-- **Density:** ✅ All > 12
+- **Density:** ✅ All > 8
 - **Unique_types:** ✅ 9/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4

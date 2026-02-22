@@ -1,5 +1,31 @@
 # Дослідження: Stylistic Contrast Gospel (RUTH-008)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Stylistic Contrast Gospel (RUTH-008)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Понеже мнози почали суть списовати сказанїє о извѣстныхъ в насъ вещѣх..."
+    source: "Лк. 1:1-4"
+    attribution: ""
+  - text: "чресла"
+    source: ""
+    attribution: ""
+  - text: "стегна"
+    source: ""
+    attribution: ""
+  - text: "бдѣти"
+    source: ""
+    attribution: ""
+  - text: "не спати"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Концепція \"єдиної давньоруської мови\", яка розпалася пізніше. Ігнорування \"руської мови\" (староукраїнської) як повноцінної державної мови ВКЛ."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Пересопницьке Євангеліє](https://esu.com.ua/article-873495) — детальний опис пам'ятки, історії створення та мовних особливостей.
 2. [Ізборник: Пересопницьке Євангеліє](http://litopys.org.ua/ukrmova/um45.htm) — аналіз фонетичних та морфологічних рис, приклади глос.

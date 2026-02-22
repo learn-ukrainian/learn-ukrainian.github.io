@@ -1,5 +1,22 @@
 # Дослідження: Legal Language Debt
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Legal Language Debt"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Від Говенової до Нежинця. Дай 60 кун лодієвих. Скажи (це) Гораздаві. Якщо ж не даси, то я візьму у князя отрока... а то тобі буде більше (видатків), ніж 60 (кун)"
+    source: ""
+    attribution: ""
+  - text: "...оли нь водаси..."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Російська історіографія часто називає берестяні грамоти \"древнерусскими\" (у значенні \"староросійськими\") і монополізує їх як доказ грамотності саме \"російського\" народу (акцент на Новгороді)."
+```
+
 ## Використані джерела
 1. [Звенигородські берестяні грамоти — Local History](https://localhistory.org.ua/rubrics/history/zvenigorodski-berestiani-gramoti/) — детальний опис грамот та їх історичного контексту.
 2. [Грамоти № 1-3 (Звенигород Галицький) — Museum Ukraine](http://museum-ukraine.info/) — тексти та палеографічний опис.

@@ -1,5 +1,15 @@
 # Дослідження: Ruth 1 Capstone (Chancery & Legal)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Ruth 1 Capstone (Chancery & Legal)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Російська історіографія привласнює \"Литовські статути\" як частину \"общерусского права\" або ігнорує їхню українську сутність, називаючи мову \"западнорусской\"."
+```
+
 ## Використані джерела
 1. **Історія українського права (history.org.ua)** — аналіз Литовських статутів та судочинства ВКЛ.
 2. **Збірник документів "Львівське братство" (litopys.org.ua)** — текст скарги Львівського братства 1593 року.

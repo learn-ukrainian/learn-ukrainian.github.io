@@ -1,5 +1,22 @@
 # Дослідження: Murder Blood Revenge
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Murder Blood Revenge"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Аще убьетъ мужъ мужа, то мьстить брату брата, или сынови отца, любо отцю сына, или братучаду, любо сестрину сынови; аще не будеть кто мьстя, то 40 гривенъ за голову"
+    source: ""
+    attribution: ""
+  - text: "По Ярославѣ же паки совкупившеся сынове его: Изяславъ, Святославъ, Всеволодъ і сгадали... а кровьнаго мьщениа не рекли, нъ оже убьють, то выкупъ кунами"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Русская Правда» — пам'ятка російської історії."
+```
+
 ## Використані джерела
 1. [Руська Правда (Тексти на основі 7 списків та 5 редакцій)](http://litopys.org.ua/yushkov/yu.htm) — Академічне видання текстів Руської Правди (С. Юшков).
 2. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruska_Pravda) — Аналіз історії створення та редакцій.

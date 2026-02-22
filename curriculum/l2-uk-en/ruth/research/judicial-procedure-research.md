@@ -1,5 +1,22 @@
 # Дослідження: Judicial Procedure
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Judicial Procedure"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Справедливість громади"
+    source: ""
+    attribution: ""
+  - text: "Я, [Ім'я], подаю цю позовну заяву до Вашої милості... проти [Ім'я]... Прошу Вашу милість, панове судді, розглянути мою скаргу..."
+    source: "реконстр."
+    attribution: ""
+forbidden_claims:
+  - "Російська історіографія зображувала українське судочинство як хаотичне, \"польське\" (в негативному сенсі) або неіснуюче до приходу імперії."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Копний суд](http://www.history.org.ua/?termin=Kopnyj_sud) — детальний опис звичаєвого судочинства та ролі громади.
 2. [Літопис: Судочинство Гетьманщини](http://litopys.org.ua/) — аналіз судової системи XVII-XVIII ст., ролі Литовських статутів.

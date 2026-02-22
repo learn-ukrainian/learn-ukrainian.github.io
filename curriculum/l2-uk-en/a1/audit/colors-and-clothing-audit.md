@@ -1,7 +1,7 @@
 # Audit Report: M27 — colors-and-clothing.md
 **Level:** A1 | **Module:** M27 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:41
+**Generated:** 2026-02-22 23:48:40
 
 ## Configuration
 **Type:** A1-vocab
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2332/2000 (raw: 2579)
+- **Words:** ✅ 2302/2000 (raw: 2540)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -46,11 +46,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 31/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 18 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.9% (target 35-55% (M27))
+- **Immersion:** 🇺🇦 36.3% (target 35-55% (M27))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,11 +60,11 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Colors & Clothing** | ✅ | 59 | Included in Core |
-| **Кольори навколо нас** | ✅ | 507 | Included in Core |
+| **Кольори навколо нас** | ✅ | 501 | Included in Core |
 | **Основні кольори та узгодження** | ✅ | 346 | Included in Core |
-| **Одяг і дієслово «носити»** | ✅ | 378 | Included in Core |
-| **Множина: штани та окуляри** | ✅ | 175 | Included in Core |
-| **Опис зовнішності та вишиванка** | ✅ | 363 | Included in Core |
+| **Одяг і дієслово «носити»** | ✅ | 365 | Included in Core |
+| **Множина: штани та окуляри** | ✅ | 170 | Included in Core |
+| **Опис зовнішності та вишиванка** | ✅ | 359 | Included in Core |
 | **Діалог: У магазині одягу** | ✅ | 155 | Included in Core |
-| **Практика: Опис одягу** | ✅ | 183 | Included in Core |
+| **Практика: Опис одягу** | ✅ | 181 | Included in Core |
 | **Підсумок** | ✅ | 166 | Included in Core |

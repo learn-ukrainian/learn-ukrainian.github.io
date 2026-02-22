@@ -1,5 +1,31 @@
 # Дослідження: Khvylovy Thoughts Current
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Khvylovy Thoughts Current"
+dates:
+  key_events:
+primary_quotes:
+  - text: "масовізму"
+    source: ""
+    attribution: ""
+  - text: "червоної халтури"
+    source: ""
+    attribution: ""
+  - text: "Думок проти течії"
+    source: ""
+    attribution: ""
+  - text: "психологічну Європу"
+    source: ""
+    attribution: ""
+  - text: "фаустівську людину"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Хвильовий розглядався як \"націоналіст\", що намагався відірвати Україну від \"братнього російського народу\", а його погляди засуджувалися як \"хвильовізм\". Його твори були вилучені з обігу до кінця 1980-х років."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — детальний огляд Літературної дискусії 1925–1928 років та ролі М. Хвильового.
 2. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — біографічна та літературознавча стаття про Миколу Хвильового, аналіз його памфлетної спадщини.

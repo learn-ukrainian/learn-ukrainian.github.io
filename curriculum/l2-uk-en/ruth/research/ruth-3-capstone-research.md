@@ -1,5 +1,19 @@
 # Дослідження: Ruth 3 Capstone (Baroque Panegyric & Lament)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Ruth 3 Capstone (Baroque Panegyric & Lament)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Горе мені, бідній, горе мені, нещасній! Ой, леле, з усіх боків пограбованій! [...] Руки мої в оковах, на шиї моїй ярмо..."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Українська література XVII ст. — це лише \"спільна спадщина\" або \"релігійна схоластика\", що не має художньої вартості порівняно з російським класицизмом."
+```
+
 ## Використані джерела
 1. [ЛітОпис: Мелетій Смотрицький "Тренос"](http://litopys.org.ua/smotr/smotr.htm) — повний текст та аналіз ключового полемічного твору.
 2. [Ізборник: Українська поезія. Середина XVII ст.](http://litopys.org.ua/ukrpoez/ukrpoez.htm) — збірка барокових віршів, панегіриків та ляментів.

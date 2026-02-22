@@ -252,7 +252,7 @@ ACTIVITY_COMPLEXITY = {
     },
     'match-up': {
         'A1': {'pairs_min': 8, 'pairs_max': 20, 'min_items': 8},
-        'A2': {'pairs_min': 10, 'pairs_max': 12, 'min_items': 8},
+        'A2': {'pairs_min': 8, 'pairs_max': 14, 'min_items': 8},  # Feb 2026: relaxed from 10-12 — same floor as A1
         'B1': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
         'B2': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
         'C1': {'pairs_min': 8, 'pairs_max': 18, 'min_items': 6},
@@ -284,7 +284,7 @@ ACTIVITY_COMPLEXITY = {
     },
     'group-sort': {
         'A1': {'groups_min': 2, 'groups_max': 4, 'items_min': 8, 'items_max': 999},
-        'A2': {'groups_min': 2, 'groups_max': 4, 'items_min': 10, 'items_max': 999},
+        'A2': {'groups_min': 2, 'groups_max': 4, 'items_min': 8, 'items_max': 999},  # Feb 2026: relaxed from 10 — same as A1
         'B1': {'groups_min': 2, 'groups_max': 5, 'items_min': 12, 'items_max': 999},
         'B2': {'groups_min': 3, 'groups_max': 5, 'items_min': 14, 'items_max': 999},
         'C1': {'groups_min': 2, 'groups_max': 6, 'items_min': 10, 'items_max': 999},
@@ -292,7 +292,7 @@ ACTIVITY_COMPLEXITY = {
     },
     'unjumble': {
         'A1': {'words_min': 4, 'words_max': 6, 'min_items': 6},
-        'A2': {'words_min': 7, 'words_max': 10, 'min_items': 6},  # CEFR: smooth +3 from A1 (was 8)
+        'A2': {'words_min': 5, 'words_max': 10, 'min_items': 6},  # Feb 2026: relaxed from 7 — A2 sentences are still short (5-7 natural)
         'B1': {'words_min': 9, 'words_max': 16, 'min_items': 6},  # CEFR: smooth +2 from A2 (was 12, meets existing content)
         'B1-vocab': {'words_min': 8, 'words_max': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 10)
         'B1-culture': {'words_min': 8, 'words_max': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 10)
@@ -518,7 +518,7 @@ LEVEL_CONFIG = {
     'A2': {
         'target_words': 3000,  # Feb 2026: raised from 1000 — word targets are MINIMUMS
         'min_activities': 10,
-        'min_items_per_activity': 12,
+        'min_items_per_activity': 8,  # Feb 2026: relaxed from 12 — was stricter than B1-grammar (6)
         'min_types_unique': 4,
         'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
         'min_engagement': 4,

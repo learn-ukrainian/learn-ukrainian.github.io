@@ -1,5 +1,29 @@
 # Дослідження: Ostap Vyshnia Smiles 1
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Ostap Vyshnia Smiles 1"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ловіть, спостерігайте контрасти, — говорив Остап Вишня, — і буде сміх"
+    source: ""
+    attribution: ""
+  - text: "Щоб мати право глузувати з людей, навіть зі своїх… треба їх любити. Більше, ніж самого себе"
+    source: ""
+    attribution: ""
+  - text: "Критикувати О. Вишню — це писати рецензію на нашого читача"
+    source: ""
+    attribution: ""
+  - text: "…витягли з колодязя, коли напували корову Оришку"
+    source: ""
+    attribution: ""
+  - text: "Зробився Остапом Вишнею та й почав писати…"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Вишня Остап — Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/article-34331) — Академічна біографічна стаття
 2. [О. Гриценко. Остап Вишня в українській культурі пам'яті — historians.in.ua](https://www.historians.in.ua/index.php/en/doslidzhennya/2716-oleksandr-gritsenko-ostap-vishnya-v-ukrajinskij-kulturi-pam-yati-korol-tirazhiv-narodnij-gumorist-suspilna-institutsiya-znaryaddya-propagandi-natsionalnij-muchenik-chastina-1) — Наукова стаття про множинні культурні «інкарнації» Вишні

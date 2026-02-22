@@ -1,5 +1,28 @@
 # Дослідження: The Passion (Страсті)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "The Passion (Страсті)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "О старосто Люциперу, стражею затвори пекло, / Жеби жадної душі з нього не втекло... / І тисящу тисящ маю войська збройного, / Може, і Христос не ходить так гойно"
+    source: "Люципер до Ада"
+    attribution: ""
+  - text: "О душе моя, душе моя уязвленна, / Острим копієм болю сродзе прободенна"
+    source: ""
+    attribution: ""
+  - text: "інакше"
+    source: ""
+    attribution: ""
+  - text: "званий"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Українська література 17 ст. — це лише \"спільна руська спадщина\" або наслідування польських зразків без оригінальності."
+```
+
 ## Використані джерела
 1. [Litopys.org.ua](http://litopys.org.ua/old17/old17_07.htm) — Тексти української літератури XVII ст., зокрема драма «Слово о збуреню пекла».
 2. [Історія української культури](http://izbornyk.org.ua/istkult/ikult.htm) — Розділи про шкільну драму та барокову літературу.

@@ -1,7 +1,7 @@
 # Audit Report: M08 — the-living-verb-ii.md
 **Level:** A1 | **Module:** M08 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:27
+**Generated:** 2026-02-22 23:19:27
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_BALANCE_BLOATED]** Section 'Презентація: Друга дієвідміна' has 1162 words (45% of total). Bloated sections: 'Презентація: Друга дієвідміна' (45%)
+- **[SECTION_BALANCE_BLOATED]** Section 'Презентація: Друга дієвідміна' has 1127 words (44% of total). Bloated sections: 'Презентація: Друга дієвідміна' (44%)
   - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 
 ## Recommendation
@@ -47,7 +47,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2459/2000 (raw: 2686)
+- **Words:** ✅ 2419/2000 (raw: 2646)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -60,7 +60,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 26.1% (target 15-35% (M08))
+- **Immersion:** 🇺🇦 26.4% (target 15-35% (M08))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -70,8 +70,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Living Verb II** | ✅ | 34 | Included in Core |
-| **Вступ: Родина -ити** | ✅ | 307 | Included in Core |
-| **Презентація: Друга дієвідміна** | ✅ | 1051 | Included in Core |
+| **Вступ: Родина -ити** | ✅ | 302 | Included in Core |
+| **Презентація: Друга дієвідміна** | ✅ | 1016 | Included in Core |
 | **Практика: Тренування форм** | ✅ | 300 | Included in Core |
 | **Використання: Розповіді про дії** | ✅ | 293 | Included in Core |
 | **Культурний контекст: Глибина слова** | ✅ | 280 | Included in Core |

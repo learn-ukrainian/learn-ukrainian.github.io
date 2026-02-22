@@ -1,5 +1,25 @@
 # Дослідження: The Verb Conjugation (Руське дієслово)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "The Verb Conjugation (Руське дієслово)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Spero te pro labore meo **remuneraturum**"
+    source: "Ужевич"
+    attribution: ""
+  - text: "Сподѣваюся, ижъ ми за мою працу **нагородишъ**"
+    source: "Ужевич"
+    attribution: ""
+  - text: "Глаголъ єсть часть слова склоняємая, с покладанїємъ лицъ и временъ, дѣйствіє или страданїє знаменующіа"
+    source: "Смотрицький"
+    attribution: ""
+forbidden_claims:
+  - "Староукраїнська мова — це зіпсована полонізмами російська."
+```
+
 ## Використані джерела
 1. [Ізборник: Граматика Мелетія Смотрицького (1619)](http://litopys.org.ua/smotr/smotr.htm) — текст граматики, розділ про дієслово (глаголъ), класифікація дієвідмін.
 2. [Ізборник: Граматика слов'янська Івана Ужевича (1643)](http://litopys.org.ua/uzhev/uzh.htm) — перша граматика "руської мови" (lingua ruthena) латиною, опис специфічних українських форм.

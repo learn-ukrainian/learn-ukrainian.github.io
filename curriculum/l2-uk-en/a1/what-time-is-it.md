@@ -160,16 +160,23 @@ For feminine nouns (ending in -а/-я), the ending changes to **-у** or **-ю**
 > [!observe] **У or В?**
 > You will see both **у** and **в**. The choice depends on the sound *before* the preposition. Use **у** after a consonant or at the start of a sentence (**У понеділок я працюю**). Use **в** after a vowel (**Я працюю в понеділок**).
 
-### Weekly Context
+### Weekly Context and Planning
 
-Ми часто говоримо про планування тижня.
+Ми часто говоримо про планування тижня. Дуже важливо знати робочі дні. Також важливо знати вихідні дні.
 *   **ти́ждень** — week
+*   **робо́чий день** — workday (Monday through Friday)
+*   **вихідни́й** (or **вихідні́ дні**) — weekend (Saturday and Sunday)
 *   **сього́дні** — today
 *   **за́втра** — tomorrow
+*   **вчора** — yesterday
 
 Коли ми плануємо:
 *   **на цьому тижні** — on this week (Locative)
 *   **наступного тижня** — next week (Genitive)
+*   **минулого тижня** — last week (Genitive)
+
+> [!culture] **The Ukrainian Weekend**
+> The concept of a weekend (**вихідні**) is very important. Ukrainians usually work from Monday (**понеділок**) to Friday (**п'ятниця**). Saturday (**субота**) and Sunday (**неділя**) are traditionally days for family, resting, and visiting the dacha or countryside. When making plans, you might say: **Що ти робиш на вихідних?** (What are you doing on the weekend?).
 
 ---
 
@@ -216,8 +223,16 @@ Most months take the ending **-і**:
 *   **лютий** behaves like an adjective → **у лютому** (in February)
 *   **листопад** keeps the hard stem → **у листопаді** (in November)
 
+### Talking About Your Birthday
+
+To ask someone when their birthday is, you might say:
+*   **У якому місяці твій день народження?** (In which month is your birthday?)
+*   **Мій день народження у травні.** (My birthday is in May.)
+*   **Свято Миколая у грудні.** (St. Nicholas Day is in December.)
+*   **Різдво у січні або у грудні.** (Christmas is in January or in December.)
+
 > [!tip] **Memory Aid**
-> Grouping months by season helps you remember them. **Квітень** (April) has flowers. **Жовтень** (October) is yellow. **Січень** (January) cuts with cold. The names tell a story of the Ukrainian year.
+> Grouping months by season helps you remember them. **Квітень** (April) has flowers. **Жовтень** (October) is yellow. **Січень** (January) cuts with cold. **Листопад** (November) describes leaves falling. The names tell a story of the Ukrainian year. They are closely tied to the agricultural cycle and the changes in nature, which makes them very poetic and logical once you understand their root meanings.
 
 ---
 
@@ -252,15 +267,17 @@ Examples:
 
 ### After (Після)
 
-The preposition **після** indicates a time later than an event. It also requires the **Genitive case**.
+The preposition **після** indicates a time later than an event. It also requires the **Genitive case**. You can use it with hours, or with parts of the day or specific events.
 *   **пі́сля** — after
 
 Examples:
 *   **Після шостої я вдома.** (After six I am at home.)
 *   **Ми обідаємо після першої.** (We have lunch after one.)
+*   **Після роботи ми йдемо в кіно.** (After work we are going to the cinema.)
+*   **Після обіду я п'ю каву.** (After lunch I drink coffee.)
 
-> [!context] **Working Hours**
-> You will often see signs on shops: **Години роботи: з 9:00 до 18:00**. The preposition **з** (from) pairs with **до** (until). "From nine to six" is **з дев'ятої до шостої**.
+> [!context] **Working Hours and Breaks**
+> You will often see signs on shops: **Години роботи: з 9:00 до 18:00**. The preposition **з** (from) pairs with **до** (until). "From nine to six" is **з дев'ятої до шостої**. You might also see a sign for a lunch break: **Перерва: з 13:00 до 14:00**. This means the shop will be closed during that hour. Always check these signs when visiting smaller shops or government offices in Ukraine.
 
 ---
 
@@ -302,14 +319,18 @@ Let's look at a typical day for a conductor (**провідник**) on Ukrzaliz
 *   13:00 — Я обідаю о першій дня.
 *   22:00 — Я лягаю спати о десятій вечора.
 
-### Reading a Ticket
+### Reading a Ticket and Timetables
 
-Подивіться на квиток на поїзд "Київ-Львів".
+Подивіться на квиток на поїзд "Київ-Львів". Укрзалізниця використовує 24-годинний формат.
 *   **Відправлення** (Departure): **06:45** (шоста сорок п'ять)
 *   **Прибуття** (Arrival): **11:55** (одинадцята п'ятдесят п'ять)
 *   **Дата** (Date): **12.05** (дванадцяте травня)
+*   **Вагон** (Carriage) and **Місце** (Seat) are also important, but time is critical.
 
-Читайте ці три рядки уважно.
+Читайте ці три рядки уважно. Коли ви плануєте подорож, завжди перевіряйте час. You must arrive at the station at least twenty minutes before departure.
+
+> [!note] **Public Transport Schedules**
+> Beyond trains, you will also see schedules (**розклад**) for buses (**автобус**) and trams (**трамвай**). They also strictly use the 24-hour clock. If a bus schedule says it arrives at 14:15, you should read it as **чотирнадцята п'ятнадцять**. Being able to quickly process this format is a vital survival skill in any Ukrainian city.
 
 ---
 

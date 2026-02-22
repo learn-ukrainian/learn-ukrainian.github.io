@@ -1,7 +1,7 @@
 # Audit Report: M16 — the-genitive-i-absence.md
 **Level:** A1 | **Module:** M16 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:33
+**Generated:** 2026-02-22 23:19:33
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_BALANCE_BLOATED]** Section 'Граматика: Конструкція «Немає» та «Без»' has 1071 words (42% of total). Bloated sections: 'Граматика: Конструкція «Немає» та «Без»' (42%)
+- **[SECTION_BALANCE_BLOATED]** Section 'Граматика: Конструкція «Немає» та «Без»' has 1052 words (41% of total). Bloated sections: 'Граматика: Конструкція «Немає» та «Без»' (41%)
   - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 
 ## Recommendation
@@ -47,7 +47,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2248/2000 (raw: 2694)
+- **Words:** ✅ 2227/2000 (raw: 2673)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -56,11 +56,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 54 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 28.8% (target 25-40% (M16))
+- **Immersion:** 🇺🇦 29.2% (target 25-40% (M16))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -70,8 +70,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Genitive I: Absence** | ✅ | 55 | Included in Core |
-| **Вступ: Ситуація відсутності** | ✅ | 296 | Included in Core |
-| **Граматика: Конструкція «Немає» та «Без»** | ✅ | 907 | Included in Core |
+| **Вступ: Ситуація відсутності** | ✅ | 294 | Included in Core |
+| **Граматика: Конструкція «Немає» та «Без»** | ✅ | 888 | Included in Core |
 | **Практика: Родовий відмінок у дії** | ✅ | 477 | Included in Core |
 | **Культурний контекст: «Немає проблем»** | ✅ | 349 | Included in Core |
 | **Підсумок** | ✅ | 164 | Included in Core |

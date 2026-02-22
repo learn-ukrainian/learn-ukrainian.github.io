@@ -1,5 +1,19 @@
 # Дослідження: Roman Mstyslavych
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Roman Mstyslavych"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Самодержець всієї Русі"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Галицько-Волинське князівство як \"окраїна\" або \"відгалуження\" загальноруського дерева, де \"справжній\" стовбур пішов на північний схід."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Роман Мстиславич](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Roman_Mstyslavych) — ґрунтовна біографічна стаття М.Ф. Котляра.
 2. [Ізборник: Галицько-Волинський літопис](http://litopys.org.ua/ipatlet/ipat24.htm) — першоджерело (текст Іпатіївського списку).

@@ -1,5 +1,22 @@
 # Дослідження: Beatitudes Matthew (Заповіді блаженства)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Beatitudes Matthew (Заповіді блаженства)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Блаженї оубогіи доухом, яко тѣх ест царство небесное"
+    source: ""
+    attribution: ""
+  - text: "Блажени нищии духом..."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Російська історіографія привласнює Острозьку Біблію та київську барокову традицію як \"общеросійську\". Стверджується, що українська мова виникла лише у XIX ст. (Котляревський), ігноруючи староукраїнську писемність."
+```
+
 ## Використані джерела
 1. [Пересопницьке Євангеліє — НБУВ](http://irbis-nbuv.gov.ua/E_LIB/SHOW/262) — Оригінальний текст та дослідження пам'ятки староукраїнської мови.
 2. [Острозька Біблія — Litopys.org.ua](http://litopys.org.ua/old16_17/old16_04.htm) — Текст 1581 року, церковнослов'янський канон.

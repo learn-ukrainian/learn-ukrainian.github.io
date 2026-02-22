@@ -1,7 +1,7 @@
 # Audit Report: M02 — the-cyrillic-code-ii.md
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 19:39:18
+**Generated:** 2026-02-22 23:19:22
 
 ## Configuration
 **Type:** A1-grammar
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2951/2000 (raw: 3147)
+- **Words:** ✅ 3084/2000 (raw: 3323)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 5.0% (target 5-15% (M02))
+- **Immersion:** 🇺🇦 5.1% (target 5-15% (M02))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -58,10 +58,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Cyrillic Code II: The Final 14 Letters** | ✅ | 53 | Included in Core |
-| **Вступ** | ✅ | 319 | Included in Core |
-| **Унікальні приголосні** | ✅ | 886 | Included in Core |
-| **Йотовані голосні та М’який знак** | ✅ | 653 | Included in Core |
-| **Голосні та напівголосні** | ✅ | 398 | Included in Core |
-| **Практика та вимова** | ✅ | 457 | Included in Core |
+| **The Cyrillic Code II: The Final 15 Letters** | ✅ | 48 | Included in Core |
+| **Вступ** | ✅ | 310 | Included in Core |
+| **Унікальні приголосні** | ✅ | 921 | Included in Core |
+| **Йотовані голосні та М’який знак** | ✅ | 697 | Included in Core |
+| **Голосні та напівголосні** | ✅ | 472 | Included in Core |
+| **Практика та вимова** | ✅ | 451 | Included in Core |
 | **Підсумок** | ✅ | 185 | Included in Core |

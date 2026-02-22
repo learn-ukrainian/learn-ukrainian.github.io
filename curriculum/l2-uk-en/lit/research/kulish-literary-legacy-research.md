@@ -1,5 +1,25 @@
 # Дослідження: Kulish Literary Legacy
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Kulish Literary Legacy"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Лучче нам порубатись, аніж податись!"
+    source: ""
+    attribution: ""
+  - text: "Слово — то мудрості промінь, слово — то думка людська"
+    source: ""
+    attribution: ""
+  - text: "хуторянській філософії"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "П. Куліш — це непослідовний, консервативний реакціонер, який вороже ставився до \"народних мас\" (бо засуджував гайдамаччину і козацькі бунти) і зраджував ідеали революційної демократії (на противагу спрощеному образу Т. Шевченка). Пізні його російськомовні історичні праці намагалися використати як до"
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kulish_P_O) — Аналіз ролі Пантелеймона Куліша в українському національному відродженні XIX ст., еволюція його поглядів.
 2. [Енциклопедія сучасної України (esu.com.ua)](https://esu.com.ua/article-51404) — Огляд літературної, перекладацької, публіцистичної та видавничої спадщини Куліша.

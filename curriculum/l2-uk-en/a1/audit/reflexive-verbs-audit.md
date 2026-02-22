@@ -1,7 +1,7 @@
 # Audit Report: M09 — reflexive-verbs.md
 **Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:28
+**Generated:** 2026-02-22 23:19:28
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2701/2000 (raw: 3356)
+- **Words:** ✅ 2700/2000 (raw: 3355)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -47,7 +47,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 12 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
@@ -62,6 +62,6 @@
 | **Intro/Narrative** | ✅ | 290 | Included in Core |
 | **Reflexive Verbs (-ся)** | ✅ | 86 | Included in Core |
 | **Розминка: Що таке зворотні дієслова?** | ✅ | 422 | Included in Core |
-| **Теорія: Відмінювання та групи** | ✅ | 698 | Included in Core |
+| **Теорія: Відмінювання та групи** | ✅ | 697 | Included in Core |
 | **Практика: Дія на себе чи на іншого?** | ✅ | 795 | Included in Core |
 | **Культура: Секрети вимови** | ✅ | 410 | Included in Core |

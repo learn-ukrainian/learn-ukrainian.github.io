@@ -1,5 +1,15 @@
 # Дослідження: Crimes Abroad (Злочини за кордоном)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Crimes Abroad (Злочини за кордоном)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Трактування договорів як доказу «споконвічної єдності» східних слов'ян або применшення ролі скандинавського елементу (норманізм як табу)."
+```
+
 ## Використані джерела
 1. [Літопис руський (Іпатіївський список)](http://litopys.org.ua/ipatlet/ipat01.htm) — Першоджерело текстів договорів 911 та 944 років.
 2. [Енциклопедія історії України: Русько-візантійські договори](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Rusko_vizantijski_dohovory) — Академічний аналіз юридичного змісту угод.

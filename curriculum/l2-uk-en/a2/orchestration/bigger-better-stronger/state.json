@@ -3,6 +3,13 @@
   "track": "a2",
   "module_num": 18,
   "mode": "v3",
-  "phases": {},
-  "last_updated": "2026-02-20T11:26:26Z"
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-22T22:42:57Z",
+      "words": 3740,
+      "attempts": 1
+    }
+  },
+  "last_updated": "2026-02-22T22:42:57Z"
 }

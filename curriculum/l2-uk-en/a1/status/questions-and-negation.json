@@ -2,13 +2,13 @@
   "module": "questions-and-negation",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:26.524685Z",
+  "last_audit": "2026-02-22T23:19:26.490456Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T23:54:08.724315Z",
+    "md": "2026-02-22T18:41:48.024603Z",
     "meta": "2026-02-19T18:39:15.452435Z",
     "activities": "2026-02-21T23:54:08.725446Z",
-    "vocabulary": "2026-02-20T22:02:51.429909Z",
+    "vocabulary": "2026-02-22T18:44:49.946856Z",
     "plan": "2026-02-20T20:36:43.855202Z",
     "research": "2026-02-19T18:39:15.443200Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2723/2000 (raw: 2888)"
+      "message": "2711/2000 (raw: 2876)"
     },
     "activities": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
-    ],
-    "pass_count": 6,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

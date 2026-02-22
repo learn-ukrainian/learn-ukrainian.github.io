@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T14:56:21Z",
+      "ts": "2026-02-22T19:26:08Z",
       "task_id": "v3-grabowicz-myth-shevchenko-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

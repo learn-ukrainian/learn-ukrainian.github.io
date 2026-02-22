@@ -1,5 +1,15 @@
 # Дослідження: Legal Personhood (Правова особа в руській традиції)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Legal Personhood (Правова особа в руській традиції)"
+dates:
+  key_events:
+forbidden_claims:
+  - "\"Литовські статути — це польське/литовське право, чуже українцям\" або \"спільна східнослов'янська (російська) традиція\"."
+```
+
 ## Використані джерела
 1. [Литовські Статути 1529, 1566, 1588](http://litopys.org.ua/statut2/st1588.htm) — основні кодекси права.
 2. [Лев Сапєга. Передмова до Статуту 1588](http://litopys.org.ua/old16/old16_06.htm) — маніфест правової держави.

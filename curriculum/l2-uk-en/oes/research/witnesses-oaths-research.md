@@ -1,5 +1,22 @@
 # Дослідження: Witnesses Oaths
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Witnesses Oaths"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Оже придеть кровавъ мужь на дворъ, или синь, то видока ему не искати, но платити ему продажи 3 гривны; аще ли не будеть на немь знамения, то привести ему видокъ слово противу слова"
+    source: "Коротка Правда, ст. 2"
+    attribution: "1"
+  - text: "Оже ли будеть варягъ или колбягъ, то полная видока вывести, и идеть на роту"
+    source: "Розширена Правда, ст. 10"
+    attribution: "2"
+forbidden_claims:
+  - "Радянська історіографія зображала Руську Правду як інструмент \"класового гноблення феодалів над смердами\"."
+```
+
 ## Використані джерела
 1. [Руська Правда (Тексти)](http://litopys.org.ua/pravda/pravda.htm) — Основне джерело (Коротка, Розширена, Скорочена редакції).
 2. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruska_Pravda) — Академічний огляд правової системи.

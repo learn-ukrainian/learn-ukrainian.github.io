@@ -1,5 +1,32 @@
 # Дослідження: Verbs Perfect (Давньоруський Перфект)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Verbs Perfect (Давньоруський Перфект)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Глѣбъ князь мѣрилъ моръ по леду от Тмутороканя до Корчева 14000 саженъ"
+    source: ""
+    attribution: ""
+  - text: "Послалъ мя єсть отець"
+    source: ""
+    attribution: ""
+  - text: "Господи помози рабу своєму..."
+    source: ""
+    attribution: ""
+  - text: "Козьма писав"
+    source: ""
+    attribution: ""
+  - text: "Олекса писал"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Давньоруська мова була монолітною \"спільною колискою\" без діалектних відмінностей."
+  - "Втрата аориста/імперфекта — це \"спрощення\" (деградація)."
+```
+
 ## Використані джерела
 1. [Ізборник](http://litopys.org.ua/ukrmova/um45.htm) — Енциклопедія "Українська мова", стаття "Перфект".
 2. [Історія української мови. Історична фонетика і морфологія](http://litopys.org.ua/shevelov/shev06.htm) — Юрій Шевельов.

@@ -1,0 +1,33 @@
+{
+  "track": "a2",
+  "slug": "the-completed-past",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-22T21:18:04Z",
+      "task_id": "v3-the-completed-past-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-22T21:19:37Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-22T21:55:28Z",
+      "task_id": "v3-the-completed-past-pC-vocab"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-22T22:07:13Z",
+      "attempts": 5
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-22T22:11:53Z",
+      "attempts": 1,
+      "note": "d1-only"
+    }
+  }
+}

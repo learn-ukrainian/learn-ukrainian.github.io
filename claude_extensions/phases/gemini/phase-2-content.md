@@ -203,6 +203,24 @@ Prefer: «Ви можете використати...», «Ми застосов
 
 This is the #1 generation error from previous rebuilds. Scan EVERY sentence before submitting. If you find ANY English word that is not inside parentheses `()` as a translation, fix it immediately.
 
+### No Word Salad (HARD FAIL)
+
+**Every paragraph must have ONE clear point and logical flow between sentences.** Do NOT string together unrelated observations.
+
+```markdown
+❌ WRONG (three disconnected claims stitched together):
+"Ukraine is a very digital country. You'll often see prices written as «50 грн».
+Cashiers speak fast. Telling 50 from 15 by ear is a superpower."
+
+✅ RIGHT (one clear point with logical flow):
+"In shops, prices are written as digits — «50 грн». Reading them is easy.
+But when the cashier says the total out loud, you need to catch the difference
+between п'ятдесят (50) and п'ятнадцять (15). Training your ear for these
+pairs is one of the most practical skills in this lesson."
+```
+
+**Also forbidden:** Alternating sentence language randomly within a paragraph (Ukrainian sentence, then English sentence, then Ukrainian again with no pattern). Each paragraph should have a consistent language frame — either English prose with Ukrainian terms introduced, or Ukrainian prose with English glosses.
+
 ### Colonial Framing: Ukrainian Stands on Its Own (HARD FAIL if found)
 
 **NEVER define Ukrainian by contrast with Russian.** Ukrainian is an independent language with its own history — it does not need Russian as a reference point.

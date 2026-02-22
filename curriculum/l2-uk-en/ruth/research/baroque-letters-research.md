@@ -1,5 +1,31 @@
 # Дослідження: Baroque Letters (Барокові листи)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Baroque Letters (Барокові листи)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "...нестерпні кривди, нам, Війську Вашої Королівської Милості Запорозькому... чинені"
+    source: ""
+    attribution: ""
+  - text: "вірних підданих"
+    source: ""
+    attribution: ""
+  - text: "свавільні старости"
+    source: ""
+    attribution: ""
+  - text: "Моє серденько, мій квіте рожаний! Сердечно від того болію..."
+    source: ""
+    attribution: ""
+  - text: "квіт"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Козацька старшина як «груба воєнщина» або частина «общерусского» культурного простору. Листи Хмельницького як доказ «прагнення возз'єднання»."
+```
+
 ## Використані джерела
 1. [litopys.org.ua](http://litopys.org.ua/bhmel/bhm.htm) — *Богдан Хмельницький. Листи та універсали*. Першоджерела (тексти листів).
 2. [litopys.org.ua](http://litopys.org.ua/old18/old18_02.htm) — *Іван Мазепа. Листи до Мотрі Кочубеївни*. Тексти інтимної кореспонденції.

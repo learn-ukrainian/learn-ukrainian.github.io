@@ -1,5 +1,31 @@
 # Дослідження: Slovo Golden Word (Золоте слово Святослава)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Slovo Golden Word (Золоте слово Святослава)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Чорне покривало"
+    source: ""
+    attribution: ""
+  - text: "синє вино"
+    source: ""
+    attribution: ""
+  - text: "перли"
+    source: ""
+    attribution: ""
+  - text: "тес без князька"
+    source: ""
+    attribution: ""
+  - text: "Золоте слово"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Слово» — пам'ятка «російської» літератури, спільна колиска."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Слово о полку Ігоревім](https://esu.com.ua/article-12345) — загальний аналіз, історія відкриття, значення.
 2. [Ізборник: Слово о полку Ігоревім (текст і переклади)](http://litopys.org.ua/slovo/slovo.htm) — оригінальний текст, коментарі, переклади.

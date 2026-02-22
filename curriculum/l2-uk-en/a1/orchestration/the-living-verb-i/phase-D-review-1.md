@@ -1,194 +1,223 @@
-# Рецензія: The Living Verb I
-
 **Reviewed-By:** claude-opus-4-6
 
-**Level:** A1 | **Module:** 6
-**Overall Score:** 8.1/10
-**Status:** FAIL
-**Reviewed:** 2026-02-21
-
-## Plan Verification
-
-```
-Plan-Content Alignment: PASS (with scope violation)
-- Sections: 4/4 H2 sections present, matching plan outline
-- Vocabulary: 8/8 required verbs present, 4/4 recommended present, 7 pronouns + 5 nouns = 25 total
-- Grammar scope: VIOLATION — розуміти (-іти verb) introduced despite scope excluding Second Conjugation
-- Objectives: All 4 learning objectives addressed
-```
+---
 
 ## Scores
 
-| # | Dimension | Score | Auto-fail | Evidence |
-|---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | "Would I Continue?" 4/5. Theory section (lines 77-213, ~1000 words) is a long passive stretch before any practice. Engaging tone but delayed gratification. |
-| 2 | Coherence | 9/10 | <7 | Logical arc: Intro→Theory→Practice→Culture. Each subsection builds on the previous. Smooth transitions between persons in conjugation presentation. |
-| 3 | Relevance | 9/10 | <7 | All 8 core verbs are top-100 frequency. SVO drills use practical objects (журнал, лист, радіо). Daily-life applicability is immediate. |
-| 4 | Educational | 8/10 | <7 | "Master Key" concept is pedagogically powerful. However, розуміти (-іти) inclusion on line 191 violates the module's own scope comment (line 4: "Second conjugation (-ити) → a1-08"). Creates false expectations. |
-| 5 | Language | 8/10 | <8 | English is warm and clear. Ukrainian grammar examples are correct. Metaphor density impacts prose clarity — 19+ distinct metaphors in 2755 words is ~1 per 145 words. Some feel forced (line 146: "This ending is very melodious. **-ємо**. It is long and inclusive, just like a group of people.") |
-| 6 | Pedagogy | 8/10 | <7 | PPP structure followed. Theory section has 7 engagement boxes but zero embedded practice drills — learner is passive reader for ~1000 words before Practice section. For A1, practice should be interleaved after every 2-3 persons. |
-| 7 | Immersion | 7/10 | <6 | 18.1% actual vs 20-40% target for A1.1. Below lower bound by 2 percentage points. More Ukrainian headings and instructions would help. |
-| 8 | Activities | 8/10 | <7 | 10 activities, 84 items, 6 types (60% variety). Anagram activity (activity 2) is trivially easy — unscrambling space-separated letters (e.g., "ч и т а т и") offers no challenge post-Cyrillic modules. Word order quizzes mark natural Ukrainian orders as wrong (see Issue 3). |
-| 9 | Richness | 8/10 | <6 | Clean conjugation table (lines 177-184). Authentic proverb (line 346). Historical reference to Apostol 1574 (line 356). Mini-story with named characters Maksym and Olena (lines 272-296). Solid for A1. |
-| 10 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5. Tone is consistently warm and encouraging. Warning boxes preempt common errors (lines 106-112). But theory density (6 conjugation subsections + 2 special cases + aspect before first practice) risks cognitive overload. |
-| 11 | LLM Fingerprint | 7/10 | <7 | Metaphor density: 19+ distinct metaphors (living/sleeping verbs, surgery, Master Key, Captain/Uniform, engines, fuel, plumage, mechanic, shield, discount, whispering, pointing, melodious, cousins, honorary member, etc.). Threshold is >4. Example batching: 6 consecutive subsections each have exactly 3 examples in identical position (lines 102-172). |
-| 12 | Linguistic Accuracy | 8/10 | <9 | Conjugation patterns correct. IPA transcriptions verified. Писати stem alternation (с→ш) correctly explained. Працювати stem rule correct. ISSUE: розуміти characterized as "honorary member of the club" that "behaves just like the others" (line 192) — misleading. It's an -іти verb with I conjugation endings, not an -ати verb. |
-| 13 | Factual Accuracy | 9/10 | <8 | Apostol 1574 in Lviv — verified. Proverb «Птицю пізнати по пір'ю, а людину по мові» — authentic Ukrainian proverb. Literacy rate claim (line 354) is vague ("near 100% for a long time") but factually defensible. All grammar rules verified accurate. |
+| # | Dimension | Score | One-line Justification |
+|---|-----------|-------|----------------------|
+| 1 | Lesson Quality | 8/10 | Solid structure and engaging metaphors, but Sports Commentator persona entirely absent; theory section spans ~130 lines before first structured practice |
+| 2 | Language Quality | 8/10 | Ukrainian grammar explanations are accurate; IPA error on line 69 (`[ʋin]` missing palatalization); розуміти characterization imprecise |
+| 3 | Factual Accuracy | 9/10 | Apostol 1574 fact verified; grammar rules correct; minor imprecision on розуміти classification |
+| 4 | Activity Quality | 7/10 | Good type variety (6 types), but word order quizzes mark natural Ukrainian as "wrong"; two near-identical quiz activities; чекати tested but never conjugated in prose |
+| 5 | Immersion | 8/10 | 18.3% Ukrainian — slightly below A1.1 floor of 20%; H2/H3 headers in Ukrainian are good but body text is overwhelmingly English |
+| 6 | Richness | 9/10 | Named cultural references (Apostol, Ivan Fedorovych), proverb, mini-story with named characters (Максим, Олена), good visual tables |
+| 7 | Humanity & Warmth | 7/10 | No warm greeting ("Привіт!"), zero explicit encouragement markers ("Great!", "You've got this!"), no "Don't worry" moments; warmth exists in tone but lacks required explicit markers |
+| 8 | LLM Fingerprint | 8/10 | Six consecutive subsection headers in section «Теорія: Магія закінчень -ати» follow identical "X робить це (X...)" template; otherwise varied and engaging |
 
-**Weighted Overall:**
-```
-(8×1.5 + 9×1.0 + 9×1.0 + 8×1.2 + 8×1.1 + 8×1.2 + 7×1.0 + 8×1.3 + 8×0.9 + 8×1.3 + 7×1.0 + 8×1.5 + 9×1.5) / 15.5
-= (12 + 9 + 9 + 9.6 + 8.8 + 9.6 + 7 + 10.4 + 7.2 + 10.4 + 7 + 12 + 13.5) / 15.5
-= 125.5 / 15.5 = 8.1/10
-```
-
-## Auto-Fail Checklist Results
-
-- Russianisms: [CLEAN] — no Russianisms detected
-- Calques: [CLEAN] — no calques detected
-- Colonial framing: [CLEAN] — no "Unlike Russian" or comparison-to-Russian patterns found
-- Grammar scope: [VIOLATION] — розуміти (-іти verb) introduced in line 191 despite scope excluding -ити verbs
-- Activity errors: [ISSUE] — word order quiz marks natural Ukrainian word orders as incorrect (see Issue 3)
-- Beginner safety: 4/5
-- Factual accuracy: [CLEAN] — all claims verified
+---
 
 ## Critical Issues Found
 
-### Issue 1: Scope Violation — розуміти Introduction
-- **Location**: Line 191-192 / Section "Теорія: Магія закінчень -ати"
-- **Original**: «**розуміти** [rɔzuˈmʲitɪ] (to understand) → **Я розумію**, **Ви розумієте**» followed by «*(Note: This one ends in **-іти**, but it behaves just like the others. It is an honorary member of the club!)*»
-- **Problem**: The module's own SCOPE comment (line 4) explicitly states "Second conjugation (-ити) → a1-08" as NOT COVERED. Introducing розуміти here with a handwave ("honorary member") creates a false expectation that -іти verbs always behave like -ати verbs. When learners hit actual II conjugation verbs in Module 8 (e.g., робити → роблю, говорити → говорю), the "honorary member" framing will cause confusion.
-- **Fix**: Remove розуміти entirely from line 191-192. Replace with another regular -ати verb from the recommended list (e.g., відпочивати, which is already used in examples on line 251/278 but not formally introduced here). This keeps the "expanding horizons" subsection within scope.
+### Issue 1: Sports Commentator Persona Absent (Lesson Quality)
 
-### Issue 2: Excessive Metaphor Density (LLM Fingerprint)
-- **Location**: Throughout all sections
-- **Original**: 19+ distinct metaphors in 2755 words: "living verbs" (line 31), "sleeping" (line 60), "surgery" (line 80), "heart" (line 87), "Master Key" (line 92), "buy one, get five hundred free" (line 92), "Captain/Uniform" (line 71), "whispering" (line 119), "pointing" (line 139), "melodious...just like a group of people" (line 146), "cousins" (line 157), "mechanic" (line 307), "plumage" (line 349), "badge of honor" (line 351), "shield" (line 358), "fuel" (line 40), "engines of meaning" (line 37), "honorary member" (line 192), "frozen photograph" (line 19)
-- **Problem**: The density is ~1 metaphor per 145 words, well above the >4 threshold. While individually many serve pedagogy, the cumulative effect creates an LLM generation signature. Some metaphors feel forced — e.g., line 146: «This ending is very melodious. **-ємо**. It is long and inclusive, just like a group of people.» assigns personality to a morpheme without clear pedagogical benefit.
-- **Fix**: Keep the 3-4 strongest metaphors (Master Key, living/sleeping verbs, stem+ending surgery). Remove or flatten the rest. Target ≤6 distinct metaphors. Specifically cut: Captain/Uniform, pointing, melodious/group, cousins, honorary member, engines, fuel, shield.
+**Severity:** HIGH — Plan compliance failure
 
-### Issue 3: Word Order Quiz Marks Natural Ukrainian as Incorrect
-- **Location**: Activity 6 (line 178-267) and Activity 10 (line 434-525) in activities file
-- **Original**: In activity 6, item 4: «Вони все знають» is marked incorrect while «Вони знають все» is correct. In activity 10, item 2: «Ви все розумієте» is marked incorrect while «Ви розумієте все» is correct.
-- **Problem**: Both "incorrect" orders (SOV with pronoun object before verb) are extremely natural and common in standard Ukrainian. For short direct objects like «все», the SOV order is arguably more natural than SVO. The quiz instruction says "найбільш нейтральний порядок слів" which is defensible for teaching SVO, but the explanations don't acknowledge that the "wrong" answers are also grammatically correct. This risks teaching learners that natural Ukrainian word orders are "wrong."
-- **Fix**: Add clarifying text to the explanation: "Всі ці варіанти граматично правильні, але порядок SVO — найбільш нейтральний для початківця." (All these options are grammatically correct, but SVO order is the most neutral for a beginner.) This prevents learners from internalizing false prohibitions.
+The meta specifies `persona.role: Sports Commentator`, but the content contains zero sports commentary language. The entire module reads as a standard Patient Supportive Tutor voice with no sports framing whatsoever.
 
-### Issue 4: Trivially Easy Anagram Activity
-- **Location**: Activity 2 (lines 25-44) in activities file
-- **Original**: scrambled items like «ч и т а т и» → answer «читати»
-- **Problem**: By Module 6, learners have completed 4 Cyrillic modules. Simply concatenating space-separated letters (which are already in correct order!) is not a meaningful challenge. The scramble format "ч и т а т и" doesn't actually scramble the letter order — it just adds spaces. This is not an anagram; it's a trivial spacing exercise.
-- **Fix**: Either (a) actually scramble the letter order (e.g., "т а ч и и т" → "читати") or (b) replace this activity with a more challenging type, such as a fill-in where learners type the infinitive from an English prompt.
+**Evidence:** Grep for "Sports Commentator" in content returns 0 matches. The closest thing is the subsection title «Від статуй до бігунів» (line 18) — "From statues to runners" — which is a single passing metaphor, not a sustained persona.
 
-### Issue 5: Theory Front-Loading Without Embedded Practice
-- **Location**: Lines 77-213 (Theory section, ~1000 words)
-- **Problem**: The theory section covers all 6 persons, two special verb cases (писати, працювати), розуміти, and imperfective aspect before the learner encounters any practice activities. For A1 beginners, this is too much passive reading. The engagement boxes ([!context], [!warning], [!tip]) break up the text but are informational, not practice.
-- **Fix**: The content itself doesn't need restructuring (this is a structural issue for the builder to address), but recommend inserting callout boxes with micro-practice after the Ти and Ми subsections: "Quick check: How would you say 'We read'? (Answer: Ми читаємо)." This breaks the passive stretch without adding full activities.
+**Expected:** The persona should infuse the teaching with sports metaphors: "And the pronoun Я steps up to the plate... it's going to conjugate... and it's a perfect -ю ending!" This would make the module more distinctive and memorable.
 
-## Ukrainian Language Issues
+**Fix:** Rewrite section openings and key transition moments to adopt sports commentary framing. At minimum: section «Вступ: Від статичних описів до живих дій» opener, the conjugation walkthrough in section «Теорія: Магія закінчень -ати», and the mini-story in section «Практика: Використовуємо дієслова в житті».
 
-| Line | Current | Corrected | Type |
-|------|---------|-----------|------|
-| 191 | «розуміти [rɔzuˈmʲitɪ] (to understand) → Я розумію, Ви розумієте» | Remove entirely (scope violation) | Scope |
-| 192 | «This one ends in -іти, but it behaves just like the others. It is an honorary member of the club!» | Remove (misleading claim) | Scope |
-| 274 | «Він знає: це журнал.» | «Він знає — це журнал.» or «Він читає. Це журнал.» | Style (minor — colon usage is acceptable but dash or split reads more naturally in mini-story context) |
+---
 
-## Beginner Safety Audit
+### Issue 2: IPA Error — Missing Palatalization on «він» (Language Quality)
 
-"Would I Continue?" Test: 4/5
-- Overwhelmed? **Borderline PASS** — Theory section is dense (6 subsections + 2 special cases before practice), but each subsection is short and clear
-- Instructions clear? **PASS** — Always clear what's expected
-- Quick wins? **PASS** — Example sentences within theory give small wins; mini-story on line 269 provides narrative payoff
-- Ukrainian scary? **PASS** — Well-scaffolded with English throughout; Ukrainian introduced gently
-- Come back tomorrow? **PASS** — Engaging tone, "Master Key" concept is motivating
+**Severity:** MEDIUM — Incorrect pronunciation guidance
 
-## Strengths
+**Location:** Line 69 in content file.
 
-- **"Master Key" pedagogical concept** is genuinely powerful — the framing that one pattern unlocks hundreds of verbs gives learners confidence and a reusable mental model
-- **Conjugation table** (lines 177-184) is clean, visual, and immediately useful as a reference
-- **Common error warnings** (lines 106-112 for "Я читати", lines 322-338 for працювати stem) proactively address the exact mistakes A1 learners make
-- **Mini-story** (lines 269-296) with named characters Максим and Олена brings verbs to life in context — excellent narrative payoff after the theory section
-- **Cultural section** ties grammar to identity — the proverb «Птицю пізнати по пір'ю, а людину по мові» and the Apostol 1574 reference ground verb learning in cultural meaning
-- **Pro-drop tip** (lines 194-202) is a well-timed insight that makes learners sound more natural immediately
+The pronoun table shows: `**Він / Вона** [ʋin] / [ʋɔˈnɑ]`
 
-## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
+The vocabulary file correctly has `[ʋʲin]` for він (with palatalized ʋʲ). The content file omits the palatalization mark, giving `[ʋin]` — this is phonetically incorrect. The initial consonant in він is palatalized.
 
-### LLM Fingerprint: 7/10 → 9/10
-**What to fix:**
-1. Lines 71, 119, 139, 146, 157: Remove forced metaphors (Captain/Uniform, whispering, pointing, melodious/group, cousins). Replace with direct explanation or merge into the core metaphor system.
-2. Lines 87, 92, 307, 349, 351: Reduce to ≤6 total distinct metaphors across the module. Keep: living/sleeping, Master Key, stem surgery. Cut the rest.
+**Fix:** Line 69: Change `[ʋin]` → `[ʋʲin]`.
 
-**Expected score after fix:** 9/10
+---
 
-### Linguistic Accuracy: 8/10 → 9/10
-**What to fix:**
-1. Lines 191-192: Remove розуміти entirely. Replace with відпочивати (already used in practice, regular -ати verb, in recommended vocab list).
+### Issue 3: Word Order Quiz Distractors Mark Natural Ukrainian as Wrong (Activity Quality)
 
-**Expected score after fix:** 9/10
+**Severity:** HIGH — Pedagogically misleading
 
-### Pedagogy: 8/10 → 9/10
-**What to fix:**
-1. After lines 123 and 150: Insert micro-practice callout boxes (e.g., "Quick check: Як сказати 'You listen'? → Ти слухаєш"). This breaks the passive theory stretch.
-2. Lines 204-212: Move the imperfective aspect note to the end of the practice section (after the mini-story) — learners will absorb it better after seeing verbs in action.
+In activity "Побудуйте речення" (activity 6), several "incorrect" options are perfectly natural Ukrainian:
 
-**Expected score after fix:** 9/10
+1. **Item 4** (line 213-223): «Вони все знають» is marked incorrect vs «Вони знають все». In natural Ukrainian speech, «Вони все знають» (S-Adv-V) is at least equally common as «Вони знають все» (S-V-O). A learner who has exposure to real Ukrainian would rightfully choose the "wrong" answer.
 
-### Immersion: 7/10 → 8/10
-**What to fix:**
-1. Convert some English instructions/headers to Ukrainian with glosses: e.g., "Person | Singular | Plural" → "Особа | Однина | Множина" with English in parentheses.
-2. Add 2-3 more Ukrainian section headers or callout titles.
+2. **Item 7** (line 246-256): «Ви про це питаєте» is marked incorrect vs «Ви питаєте про це». The prepositional phrase preceding the verb is extremely common in Ukrainian.
 
-**Expected score after fix:** 8/10
+3. **Item 5** (line 224-234): «Він вдома працює» is marked incorrect vs «Він працює вдома». Adverb-before-verb is very natural in spoken Ukrainian.
 
-### Experience Quality: 8/10 → 9/10
-**What to fix:**
-1. The micro-practice insertions in the theory section (see Pedagogy fixes above) will also improve experience by creating quick wins within the theory section.
+The instruction says "найбільш нейтральний порядок слів для початківця" — this framing is defensible pedagogically (teaching SVO as default), but the distractor quality is poor because these are natural alternatives, not clear errors. A native speaker could legitimately disagree with the "correct" answer.
 
-**Expected score after fix:** 9/10
+**Fix:** Either (a) add explanations to each item clarifying that the other orders are also grammatically correct but SVO is the "safest default for beginners," or (b) replace the close-to-natural distractors with clearly unnatural word orders (e.g., V-O-S patterns like «Знають все вони»).
 
-### Activities: 8/10 → 9/10
-**What to fix:**
-1. Activity 2 (anagram): Replace with actual letter scrambles or a different activity type (e.g., translation fill-in).
-2. Activities 6 and 10 (word order quizzes): Add clarifying explanations noting that other word orders are also grammatically correct.
+---
 
-**Expected score after fix:** 9/10
+### Issue 4: Missing Explicit Warmth Markers (Humanity & Warmth)
 
-### Projected Overall After Fixes
-```
-(9×1.5 + 9×1.0 + 9×1.0 + 9×1.2 + 8×1.1 + 9×1.2 + 8×1.0 + 9×1.3 + 8×0.9 + 9×1.3 + 9×1.0 + 9×1.5 + 9×1.5) / 15.5
-= (13.5 + 9 + 9 + 10.8 + 8.8 + 10.8 + 8 + 11.7 + 7.2 + 11.7 + 9 + 13.5 + 13.5) / 15.5
-= 136.5 / 15.5 = 8.8/10
-```
+**Severity:** MEDIUM — Below beginner threshold
 
-Note: Language (8) and Richness (8) remain unchanged. Additional fixes (further metaphor cleanup for Language, additional cultural depth for Richness) would push overall to 9.0+.
+The rubric requires for A1:
+- ≥3 encouragement phrases → Found: ~2 implicit ones (line 298: "See how natural that feels?", line 371: "This is the confidence of a linguist")
+- ≥2 "Don't worry" moments → Found: 0 explicit
+- ≥2 "You can now..." validation → Found: 0 explicit (line 393 «Ви читаєте!» is close but not "you can now..." framing)
+- ≥15 direct address (you/ви) → PASS (extensive)
+- Warm greeting → ABSENT (no "Привіт!" or equivalent)
+
+The module's tone is warm and engaging, but it relies entirely on implicit warmth through metaphors and analogies. For A1 learners, explicit encouragement markers are needed — "Great job!", "Don't worry if this feels tricky at first," "Look at that — you can now describe actions!"
+
+**Fix:** Add (a) a warm greeting at the module opening, (b) at least 3 explicit encouragement phrases at key transition points (after first conjugation table, after mini-story, in summary), (c) at least 2 "Don't worry" moments (e.g., after introducing stem changes for писати and працювати).
+
+---
+
+### Issue 5: розуміти Mischaracterized as -ати Group (Language Quality)
+
+**Severity:** LOW — Imprecise but not wrong
+
+**Location:** Lines 191-192:
+
+«**розумі́ти** (to understand) → **Я розумію**, **Ви розумієте**» with note: «*(Note: This one ends in **-іти**, but it behaves just like the others. It is an honorary member of the club!)*»
+
+розуміти is indeed a first conjugation verb with E-type endings (розумію, розумієш, розуміє...), so saying it "behaves just like the others" is approximately correct. However, its stem is розумі- (not розумі*а*-), and it's an -іти verb, not an -ати verb. Calling it an "honorary member of the club" without explaining WHY it follows the same endings could confuse learners when they encounter actual second conjugation -ити verbs (like робити, говорити) that DON'T follow this pattern.
+
+**Fix:** Either (a) remove розуміти from this section entirely (it's in the "recommended" vocab, not required), or (b) add a brief note: "Not all -іти verbs follow this pattern — розуміти is a special case. We'll learn the other pattern in the next module."
+
+---
+
+### Issue 6: чекати Listed as Core Verb but Never Conjugated (Lesson Quality)
+
+**Severity:** LOW — Incomplete coverage of stated vocabulary
+
+**Location:** Line 53 lists «**чека́ти** — to wait» as one of 8 core verbs. However, чекати is never conjugated in the prose. Verbs like читати, знати, слухати, писати, працювати, грати, and питати all get at least partial conjugation examples, but чекати only appears in activities.
+
+**Fix:** Add at least one conjugated example of чекати in section «Практика: Використовуємо дієслова в житті» — e.g., in the contrast scenarios or mini-story.
+
+---
 
 ## Factual Verification
 
-- Research notes consulted: NOT_APPLICABLE (A1 core track — no seminar-track research verification required)
-- Key Facts Ledger present: NO
-- Dates checked: 1 (Apostol 1574 — correct)
-- Named figures verified: 1 (Ivan Fedorovych — acceptable Ukrainian rendering of Ivan Fedorov)
-- Primary quotes cross-referenced: 1 (proverb — authentic)
-- Chronological sequence: N/A
-- Claims without research grounding: 0
+### Callout Box Verification
 
-Callout box verification:
-- [!context] (line 33): Comparative claim about English vs Ukrainian pro-drop — accurate ✓
-- [!warning] (line 106): "Я читати" error example — correct pedagogical point ✓
-- [!tip] (line 194): Pro-drop explanation — accurate ✓
-- [!observe] (line 237): Masculine nouns don't change in accusative — accurate for inanimate masculine ✓
-- [!myth-buster] (line 300): "Ukrainian is hard" debunking — no factual claims, motivational only ✓
-- [!tip] (line 334): Працювати stem rule — accurate ✓
+| Callout | Claim | Verdict |
+|---------|-------|---------|
+| `[!context]` (line 33-37) | Pro-drop: verb ending carries person info, pronouns optional | **ACCURATE** — standard Ukrainian grammar |
+| `[!warning]` (line 106-112) | «Я читати» is wrong, must conjugate | **ACCURATE** — correct error correction |
+| `[!observe]` (line 237-242) | Inanimate masculine nouns don't change in accusative | **ACCURATE** — Nom=Acc for inanimate masculine |
+| `[!tip]` (line 194-202) | Pro-drop explanation, «Читаю журнал» is complete | **ACCURATE** |
+| `[!myth-buster]` (line 300-307) | «Українська мова — це складно!» debunking | **ACCURATE** — no factual claims, motivational |
+| `[!tip]` (line 334-338) | -ювати rule: remove -вати, not -ти | **ACCURATE** — correct morphological rule |
+
+### Historical Claim Verification
+
+**Line 356:** «In 1574, Ivan Fedorovych printed the **«Апостол»** (Apostle) in Lviv — one of the earliest books printed on Ukrainian territory.»
+
+- **Date 1574:** Correct — the Lviv Apostol was published in 1574.
+- **Ivan Fedorovych:** The standard English name is "Ivan Fedorov" (Ukrainian: Іван Федоров / Іван Федорович). "Fedorovych" is a patronymic form, not a surname — using it as if it were a surname is slightly unorthodox but not wrong per se.
+- **"One of the earliest books printed on Ukrainian territory":** Correct — this is a well-established historical fact.
+
+**Verdict:** No factual errors in callout boxes or historical claims.
+
+### Grammar Rule Verification
+
+| Rule | Location | Verdict |
+|------|----------|---------|
+| -ати → stem + endings (-ю, -єш, -є, -ємо, -єте, -ють) | Lines 177-184 | **ACCURATE** |
+| писати stem change с→ш | Lines 310-320 | **ACCURATE** |
+| працювати: remove -вати for stem | Lines 322-338 | **ACCURATE** |
+| Imperfective = process/habit/fact | Lines 207-212 | **ACCURATE** |
+| Pro-drop rule | Lines 195-202 | **ACCURATE** |
+| SVO as neutral word order | Lines 219-220 | **ACCURATE** (though flexible in practice) |
+
+---
+
+## Colonial Framing Check
+
+No colonial framing detected. The module does not define Ukrainian by contrast with Russian at any point. English is used as the comparison language throughout (e.g., "In English, verbs are often lazy" on line 23), which is appropriate for an L2-UK-EN course.
+
+**Verdict:** PASS
+
+---
+
+## LLM Fingerprint Analysis
+
+**Structural monotony test:** Section «Теорія: Магія закінчень -ати» has 6 consecutive subsection headers following the identical pattern:
+- Line 94: `### Я роблю це (Я...)`
+- Line 114: `### Ти робиш це (Ти...)`
+- Line 127: `### Він або Вона робить це (Він / Вона...)`
+- Line 141: `### Ми робимо це (Ми...)`
+- Line 152: `### Ви робите це (Ви...)`
+- Line 163: `### Вони роблять це (Вони...)`
+
+This is technically monotonous structure (6 identical templates), though it's pedagogically motivated — each pronoun gets its own subsection. Still, it reads like LLM-generated systematic output.
+
+**Section opening test:** H2 sections open differently — "Imagine a world" / "How do we wake up" / "Now that we have" / "There is a famous" — PASS, no repetition.
+
+**Example format test:** Examples use consistent `* **Ukrainian.** (English.)` bullet format across most sections. This is uniform but standard for grammar teaching. Borderline.
+
+**Generic AI rhetoric test:** No "це не просто" / "це не лише" patterns found. No stacked abstract nouns. No generic AI clichés. PASS.
+
+**Callout monotony test:** Callout types are varied: `[!context]`, `[!warning]`, `[!observe]`, `[!tip]` (×2), `[!myth-buster]`, `[!note]`. No repeated titles. PASS.
+
+**Score:** 8/10 — the 6-header repetition in the theory section is the main concern.
+
+---
 
 ## Verification Summary
 
-- Content lines read: 393
-- Activity items checked: 84 (across 10 activities)
-- Ukrainian sentences verified: 45+
-- IPA transcriptions checked: 12
-- Factual claims verified: 4 (Apostol 1574, proverb authenticity, literacy rate, conjugation rules)
-- Issues found: 5
+| Check | Result |
+|-------|--------|
+| Plan sections present as H2 | PASS — all 4 H2 sections from meta present |
+| Vocabulary scope | PASS — all 8 required verbs covered; recommended verbs partially included |
+| Grammar scope creep | PASS — no grammar from later modules introduced |
+| Learning objectives addressed | PASS — conjugation, action statements, daily activities, imperfective aspect all covered |
+| Colonial framing | PASS — none detected |
+| Russianisms | PASS — none detected |
+| Factual accuracy | PASS — all facts verified |
+| IPA accuracy | FAIL — `[ʋin]` missing palatalization (line 69) |
+| Activity correctness | FAIL — word order quiz distractors problematic |
+| Persona compliance | FAIL — Sports Commentator persona not implemented |
+| Warmth markers | FAIL — below threshold for A1 explicit encouragement |
+
+**"Would I Continue?" Test (Beginner):**
+
+| Question | Result |
+|----------|--------|
+| Did I feel overwhelmed? | PASS — pacing comfortable |
+| Were instructions clear? | PASS — always knew what to do |
+| Did I get quick wins? | PARTIAL — theory section very long before structured practice |
+| Was Ukrainian scary? | PASS — introduced gently with English |
+| Would I come back tomorrow? | PASS — engaging and encouraging |
+
+4/5 Pass → base Lesson Quality 9, adjusted to 8 for persona non-compliance.
+
+---
 
 ## Verdict
 
-**FAIL**
+**PASS WITH FIXES**
 
-Three blocking issues: (1) розуміти (-іти verb) introduced in violation of the module's own scope declaration, which will cause confusion when learners hit actual II conjugation in Module 8; (2) LLM fingerprint from 19+ metaphors exceeds the >4 threshold and creates an artificial texture; (3) trivially easy anagram activity provides no learning value. The theory front-loading and immersion shortfall are secondary concerns. Fixes are concrete and achievable in one revision pass.
+The module is pedagogically sound, factually accurate, and well-structured. The core grammar teaching of -ати conjugation is clear and correct. The cultural section with the Apostol reference and the proverb «Птицю пізнати по пір'ю, а людину по мові.» are effective hooks.
+
+**Required fixes before publication (4):**
+
+1. **IPA correction** (line 69): `[ʋin]` → `[ʋʲin]` — simple one-character fix
+2. **Word order quiz distractors** (activity 6 "Побудуйте речення"): Replace natural-Ukrainian distractors with clearly unnatural word orders, OR add explanations noting that alternatives are also grammatically acceptable
+3. **Warmth markers**: Add warm greeting, ≥3 explicit encouragement phrases, ≥2 "Don't worry" moments at key difficulty points
+4. **Sports Commentator persona**: Inject sports commentary framing at section transitions and key teaching moments to match the specified persona
+
+**Recommended but not blocking (2):**
+
+5. **розуміти** (line 191-192): Add caveat that not all -іти verbs follow this pattern
+6. **чекати**: Add at least one conjugated example in the practice section

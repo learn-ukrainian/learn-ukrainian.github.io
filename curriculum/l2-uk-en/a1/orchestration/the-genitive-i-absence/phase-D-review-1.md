@@ -1,201 +1,145 @@
-# Рецензія: The Genitive I: Absence
-
 **Reviewed-By:** claude-opus-4-6
 
-**Level:** A1 | **Module:** 16
-**Overall Score:** 8.1/10
-**Status:** FAIL
-**Reviewed:** 2026-02-22
-
-## Plan Verification
-
-```
-Plan-Content Alignment: PASS
-- Sections: All 4 plan sections present as H2 headers (Вступ, Граматика, Практика, Культурний контекст) — PASS
-- Vocabulary: 8/8 required present (немає, без, час, гроші, молоко, цукор, вода, хліб), 5/5 recommended present (проблема, квиток, ключ, телефон, газ) — PASS
-- Grammar scope: Genitive case for absence, без + genitive, немає + genitive all covered. No scope creep to later modules — PASS
-- Objectives: All 4 plan objectives addressed — PASS
-```
+---
 
 ## Scores
 
-| # | Dimension | Score | Auto-fail | Evidence |
-|---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Good structure with clear progression through 4 sections. Tables and callout boxes break density well. Missing warm greeting at opening (no "Привіт!" or "Today you'll learn...") and zero explicit encouragement phrases ("Great!", "Well done!"). "Would I Continue?" test: 4/5. |
-| 2 | Coherence | 8/10 | <7 | Logical flow from introduction → grammar → practice → culture. Minor redundancy: line 131 repeats the -а → -и rule already established at lines 118-123 ("Feminine nouns ending in -а after a hard consonant follow the same -а → -и rule"). |
-| 3 | Relevance | 9/10 | <7 | All plan vocabulary and objectives covered. Cultural hooks (Немає проблем, proverb, market culture, polite refusals) are practical and directly serve the grammar goal. |
-| 4 | Educational | 8/10 | <7 | Clear grammar explanations with the -а vs -у distinction well-handled. Excellent common mistakes table at lines 191-197. But "День" and "Батько" are listed under "### Genitive Endings: Masculine Hard Nouns (-а)" heading (line 71) despite being soft-stem and vowel-final respectively — could teach wrong categorization patterns. |
-| 5 | Language | 8/10 | <8 | Ukrainian grammar is correct throughout. English is mostly clear. One awkward English translation at line 47: "Here is no water" should be "There is no water here." Three untranslated complex Ukrainian paragraphs at A1 level (addressed under Beginner Safety). |
-| 6 | Pedagogy | 8/10 | <7 | PPP structure followed. Grammar section (lines 58-204, ~150 lines) is dense before the Practice section begins. No mini-exercise between Introduction and end of Grammar — long stretch of passive reading. Self-check game at line 272 is good but comes late. |
-| 7 | Immersion | 8/10 | <6 | 28.8% vs target 25-40% — within range. Ukrainian exposure is well-distributed through examples, dialogues, and cultural sections. Callout box titles appropriately in Ukrainian. |
-| 8 | Activities | 7/10 | <7 | 10 activities with good variety (group-sort, match-up, fill-in, unjumble, quiz). Three specific errors found: (1) distractor «води немає» is valid Ukrainian, (2) unjumble answers missing commas, (3) quiz grammar mismatch. Details in Critical Issues. |
-| 9 | Richness | 8/10 | <6 | Strong cultural content: proverb «Немає диму без вогню», hospitality culture «Чим багаті, тим і раді», market interaction patterns, polite refusal conventions. Three realistic dialogues (café, service, shop). No named Ukrainian cultural figures beyond generic cultural practices. |
-| 10 | Beginner Safety | 7/10 | <7 | "Would I Continue?" 4/5 (fails on quick wins — 150 lines of grammar before practice). Three paragraphs of complex untranslated Ukrainian at A1: lines 247, 302, 335-337 use vocabulary like «пряме», «різко», «фактична», «пом'якшує» without English support. Zero explicit encouragement phrases found. |
-| 11 | LLM Fingerprint | 9/10 | <7 | No structural monotony — all H2 sections open differently. No clichéd metaphors. No "це не просто" rhetoric. No AI opener patterns. Example sentences are natural and varied. Dialogues feel authentic. |
-| 12 | Linguistic Accuracy | 8/10 | <9 | IPA stress error on «мене»: transcribed as [ˈmɛne] (first-syllable stress) at lines 33 and 68, but standard Ukrainian is мене́ [meˈnɛ] (second-syllable stress). «День» (soft-stem) and «Батько» (-о ending) listed under hard-noun heading. IPA vowel quality issue in «інтернету» at line 67: [e] should be [ɛ]. |
-| 13 | Factual Accuracy | 9/10 | <8 | Grammar rules are correctly explained. Proverb «Немає диму без вогню» is authentic. Gen.Pl. «проблем» correctly identified. «Гроші» as plural-only noun is accurate. Cultural claims about polite refusals and «Немає проблем» usage are plausible and accurate. No fabricated facts in callout boxes. |
+| # | Dimension | Score | Justification |
+|---|-----------|-------|---------------|
+| 1 | **Lesson Quality** | 8 | Warm tutor voice, good use of tables and visual mapping, engaging dialogues. However, the grammar section (Section «Граматика: Конструкція «Немає» та «Без»») covers 9 sub-topics (~1200 words) before any learner practice. The NO_QUICK_WIN issue is real — no "try it yourself" moment until Section «Практика: Родовий відмінок у дії» (line 207+). No explicit encouragement phrases ("Great!", "You've got this!") anywhere in the content. Zero warm greeting/opening — no "Привіт!" or equivalent. Closing (line 360) is adequate but not celebratory. "Would I Continue?": 4/5 (fail: no quick wins). |
+| 2 | **Language** | 7 | Double stress mark error on line 122: «ма́ми́» — Ukrainian words have exactly one stress; correct form is «ма́ми». Genitive plural forms «круасанів» (line 251) and «Кексів» (line 253) appear in the dialogue despite being explicitly out of scope (line 4: "Full Genitive plural (except fixed phrase 'немає грошей') → A2"). IPA inconsistency: line 33 uses [kʋɪˈtka] with plain 'a', while line 229 uses [ˈxlʲibɑ] with 'ɑ' for the same vowel quality. No Russianisms or colonial framing found. |
+| 3 | **Immersion** | 8 | Pre-computed at 29.2% (target 25-40%). Within range. Section «Культурний контекст: «Немає проблем»» has good Ukrainian immersion in dialogues and proverbs. Section «Вступ: Ситуація відсутності» appropriately uses English for explanations. Good graduated immersion from English theory to Ukrainian examples to full Ukrainian dialogues. |
+| 4 | **Activities** | 7 | 10 activities with good type variety (2 group-sort, 2 match-up, 3 fill-in, 2 unjumble, 1 quiz). However: (1) Activity "Заповніть діалоги" item 3 (activity file line 292): «— Ви бажаєте чай з молоком? — Ні, я люблю ... (без молоко).» — the answer "без молока" creates «я люблю без молока» which is grammatically incomplete ("люблю" requires a direct object). (2) Same activity item 6 (activity file line 316): «— Це вода? — Тут ... (немає вода).» — pragmatic mismatch: "Це вода?" is an identity question, not an existence question; the absence response doesn't match. (3) Activity "Закінчення: -а чи -у?" groups "сир" under «Абстрактні/Речовини/Іншомовні» — calling cheese a "substance" is debatable (it's countable). |
+| 5 | **Vocabulary** | 8 | 20 items with IPA, POS, and grammatical notes. All required plan items present. Missing recommended items: ключ, газ (both appear in content but not in vocabulary YAML). "Газ" is used in Section «Граматика: Конструкція «Немає» та «Без»» line 144 «Вода без газу» but has no vocabulary entry. |
+| 6 | **Richness** | 8 | Good cultural hooks: «Немає проблем» phrase, proverb «Немає диму без вогню» (line 304), hospitality tradition «Чим багаті, тим і раді» (line 317), bazaar culture (line 323). 6-7 engagement boxes ([!observe], [!tip] ×2, [!warning], [!caution], [!context], [!myth-buster]). The sentence «This dynamic usage of **є/немає** is the heartbeat of daily commerce in Ukraine» (line 331) is a mild LLM-ism but isolated. |
+| 7 | **Humanity & Warmth** | 7 | 33 instances of "you/You" (adequate direct address). But ZERO explicit encouragement phrases — no "Great!", "Well done!", "You've got this!", or "Don't worry" directed at the learner. The only "Don't worry" (line 292) is explaining the phrase «Немає проблем», not encouraging the learner. No warm greeting at start. Closing (line 360) has «You are now ready to navigate the world» — adequate but formulaic. The lesson reads as informational rather than encouraging. Needs warmth injection. |
+| 8 | **LLM Fingerprint** | 8 | One mild LLM-ism: «heartbeat of daily commerce» (line 331). Section openings vary well — no structural monotony. Example formats vary between bullet lists, tables, and dialogues. No "це не просто" or stacked abstract nouns detected. Callout box types are varied (7 different types). No repetitive callout titles. |
+| 9 | **Factual Accuracy** | 9 | Grammar rules are correctly presented: -а/-я for concrete masculine, -у/-ю for abstract/substance, -и/-і for feminine. Proverb «Немає диму без вогню» is authentic. «Немає проблем» cultural explanation is accurate. «Чим багаті, тим і раді» is a genuine Ukrainian saying. One minor concern: line 85 groups «Батько → батька» under "Special Mentions" alongside fleeting vowel examples — батько → батька is regular -о declension, NOT a fleeting vowel, which could confuse learners (the tip on line 90 tries to clarify but the grouping is still misleading). |
 
-**Weighted Overall:** (8×1.5 + 8×1.0 + 9×1.0 + 8×1.2 + 8×1.1 + 8×1.2 + 8×1.0 + 7×1.3 + 8×0.9 + 7×1.3 + 9×1.0 + 8×1.5 + 9×1.5) / 15.5 = (12 + 8 + 9 + 9.6 + 8.8 + 9.6 + 8 + 9.1 + 7.2 + 9.1 + 9 + 12 + 13.5) / 15.5 = 124.9 / 15.5 = **8.1/10**
-
-## Auto-Fail Checklist Results
-
-- Russianisms: [CLEAN]
-- Calques: [CLEAN]
-- Colonial framing: [CLEAN] — no Russian comparisons found
-- Grammar scope: [CLEAN] — stays within genitive for absence/без
-- Activity errors: [3 ISSUES] — bad distractor, missing commas, grammar mismatch
-- Beginner safety: 4/5
-- Factual accuracy: [CLEAN]
-- LLM fingerprint: [CLEAN] — no monotony patterns detected
+---
 
 ## Critical Issues Found
 
-### Issue 1: IPA Stress Error on «мене» (Linguistic Accuracy)
-- **Location**: Lines 33, 68 / Section «Вступ: Ситуація відсутності» and Section «Граматика: Конструкція «Немає» та «Без»»
-- **Original**: «У мене немає квитка.» [u ˈmɛne neˈmɑje kʋɪˈtka] (line 33) and «У мене немає паспорта.» [u ˈmɛne neˈmɑje ˈpɑsporta] (line 68)
-- **Problem**: The IPA transcription [ˈmɛne] places stress on the first syllable. Standard Ukrainian pronunciation is мене́ [meˈnɛ] with stress on the second syllable. This error appears twice, teaching incorrect pronunciation to beginners.
-- **Fix**: Change [ˈmɛne] to [meˈnɛ] in both occurrences.
+### Issue 1: SCOPE VIOLATION — Genitive Plural in Dialogue (CRITICAL)
 
-### Issue 2: Activity Distractor «води немає» Is Valid Ukrainian (Activities)
-- **Location**: Activities file line 314 / Activity "Заповніть діалоги", item 6
-- **Original**: sentence: «— Це вода? — Тут ... (немає вода).» with distractor option «води немає»
-- **Problem**: «води немає» is perfectly valid Ukrainian with inverted word order. "Тут води немає" is a correct sentence. A learner selecting this would be marked wrong despite giving a correct answer.
-- **Fix**: Replace distractor «води немає» with «немає воду» (incorrect accusative form) to create a genuinely wrong option.
+**Location:** Content file, lines 251-253 (Section «Практика: Родовий відмінок у дії», subsection «Діалог: Ввічлива відмова»)
 
-### Issue 3: Untranslated Complex Ukrainian at A1 Level (Beginner Safety)
-- **Location**: Lines 247, 302, 335-337 / Sections «Практика: Родовий відмінок у дії» and «Культурний контекст: «Немає проблем»»
-- **Original**: «В українській культурі пряме «Ні» може звучати різко. Використовуйте **немає**. Це ввічливо. Це звучить як факт, а не відмова.» (line 247)
-- **Problem**: Three paragraphs use vocabulary far beyond A1 level (пряме, різко, використовуйте, фактична, пом'якшує, фольклор, структуру відсутності) with zero English translation. An A1 learner at module 16 cannot parse these sentences.
-- **Fix**: Add English translations after each untranslated paragraph, or rewrite these framing sentences in English with key Ukrainian phrases embedded.
+**Evidence:**
+- Line 251: «Вибачте, круасанів немає.»
+- Line 253: «Кексів теж немає.»
 
-### Issue 4: Unjumble Activity Missing Commas (Activities)
-- **Location**: Activities file lines 126-131, 143-149 / Activity "Складіть речення"
-- **Original**: «Кава без цукру будь ласка» (line 126) and «Вибачте у мене немає грошей» (line 143)
-- **Problem**: Expected answers are missing required commas. Correct Ukrainian punctuation: «Кава без цукру, будь ласка» and «Вибачте, у мене немає грошей». Teaching incorrect punctuation to A1 learners builds bad habits.
-- **Fix**: Add commas to expected answers.
+**Problem:** The scope block (lines 2-6) explicitly states: "Not covered: Full Genitive plural (except fixed phrase 'немає грошей') → A2". The forms «круасанів» and «кексів» are Genitive plural, which is out of scope for this A1 module. Learners will encounter forms they haven't been taught, creating confusion. The only plural exception allowed is the fixed phrase «немає грошей» (line 185).
 
-### Issue 5: Quiz Activity Grammar Mismatch (Activities)
-- **Location**: Activities file line 215 / Activity "Перевірка знань", item 6
-- **Original**: Question asks «це ввічливо чи грубо?» but correct answer option reads «Ввічливі (Polite)»
-- **Problem**: The question uses the predicative/adverb form "ввічливо" but the answer option uses the plural adjective form "Ввічливі" — grammatical inconsistency in the activity itself.
-- **Fix**: Change answer text from «Ввічливі (Polite)» to «Ввічливо (Polite)».
+**Fix:** Replace the dialogue items with singular Genitive forms. E.g., «Вибачте, круасана немає» → though "круасан" is unusual in Ukrainian. Better: rewrite the dialogue entirely using vocabulary from the module. E.g.:
+- Бариста: Вибачте, молока немає.
+- Клієнт: А цукор?
+- Бариста: Цукру теж немає.
 
-### Issue 6: Zero Encouragement Phrases (Beginner Safety / Experience Quality)
-- **Location**: Throughout all sections
-- **Problem**: No explicit encouragement phrases found ("Great!", "Well done!", "You've got this!", "Excellent!"). The module maintains an informative tone throughout but lacks the warmth markers critical for A1 learners. Minimum requirement is ≥3 encouragement phrases.
-- **Fix**: Add encouragement phrases after key examples and practice sections. E.g., after the Є vs Немає contrast (line 48): "Great — you can already see the pattern!" After the visual mapping table (line 223): "Well done getting this far!" Before the self-check game (line 272): "You've learned a lot — let's see it in action!"
+---
 
-## Ukrainian Language Issues
+### Issue 2: Double Stress Mark Error (SIGNIFICANT)
 
-| Line | Current | Corrected | Type |
-|------|---------|-----------|------|
-| 33 | «[u ˈmɛne neˈmɑje kʋɪˈtka]» | «[u meˈnɛ neˈmɑje kʋɪˈtka]» | IPA stress |
-| 47 | «(Here is no water.)» | «(There is no water here.)» | English grammar |
-| 67 | «[tut neˈmɑje interˈnetu]» | «[tut neˈmɑje intɛrˈnɛtu]» | IPA vowel quality |
-| 68 | «[u ˈmɛne neˈmɑje ˈpɑsporta]» | «[u meˈnɛ neˈmɑje ˈpɑsporta]» | IPA stress |
+**Location:** Content file, line 122 (Section «Граматика: Конструкція «Немає» та «Без»»)
 
-## Beginner Safety Audit
+**Evidence:** «**мама** (mom) → немає **ма́ми́**»
 
-"Would I Continue?" Test: 4/5
-- Overwhelmed? **Pass** — content is dense but well-organized with tables and callout boxes
-- Instructions clear? **Pass** — English explanations present for all grammar concepts
-- Quick wins? **Fail** — ~150 lines of grammar content (lines 58-204) before Practice section; no mini-exercise in the grammar section
-- Ukrainian scary? **Pass** — Ukrainian is introduced with translations in most places
-- Come back tomorrow? **Pass** — the cultural context section is engaging and the proverb gives a memorable takeaway
+**Problem:** Ukrainian words have exactly one stress per word. «Мами» is stressed on the first syllable: [ˈmɑmɪ], so the correct notation is «ма́ми» (stress on the first syllable only). Two stress marks imply two stressed syllables, which is phonologically impossible.
 
-**Warmth markers:**
-- Direct address (you/ви): ≥15 ✅
-- Encouragement phrases: 0 ❌ (minimum: ≥3)
-- "Don't worry" moments: 1 (line 189: "It is easy to mix up endings when you are learning")
-- "You can now" validation: 1 (line 360: "You are now ready to navigate...")
+**Fix:** Change «ма́ми́» to «ма́ми».
 
-## Strengths
+---
 
-- **Excellent common mistakes table** (lines 191-197): The side-by-side wrong/right/why format in section «Граматика: Конструкція «Немає» та «Без»» is exactly what beginners need — clear, visual, and preventative.
-- **Strong cultural integration**: Section «Культурний контекст: «Немає проблем»» naturally reinforces grammar through authentic cultural practices (polite refusals, market interactions, the proverb «Немає диму без вогню»). This makes abstract grammar feel purposeful.
-- **Well-designed dialogues**: Three distinct scenarios (café, key exchange, shop) in section «Практика: Родовий відмінок у дії» show the grammar in realistic contexts with natural Ukrainian phrasing like «Вибачте, круасанів немає» and «На жаль, хліба вже немає».
-- **Clear -а vs -у distinction**: The concrete/abstract categorization at lines 98-112 is well-explained with memorable examples, addressing one of the most common genitive case errors.
+### Issue 3: Unnatural Activity Sentence (MODERATE)
 
-## Fix Plan to Reach 9/10 (REQUIRED — score 8.1)
+**Location:** Activity file, line 292 (Activity "Заповніть діалоги", item 3)
 
-### Linguistic Accuracy: 8/10 → 9/10
-**What to fix:**
-1. Line 33: Change IPA «[u ˈmɛne neˈmɑje kʋɪˈtka]» → «[u meˈnɛ neˈmɑje kʋɪˈtka]» — correct stress on мене
-2. Line 68: Change IPA «[u ˈmɛne neˈmɑje ˈpɑsporta]» → «[u meˈnɛ neˈmɑje ˈpɑsporta]» — same fix
-3. Line 67: Change IPA «[tut neˈmɑje interˈnetu]» → «[tut neˈmɑje intɛrˈnɛtu]» — correct vowel quality
-4. Lines 83-85: Move "День" and "Батько" out of the "### Genitive Endings: Masculine Hard Nouns (-а)" subsection into a separate "### Special Cases" subsection, or add explicit note that these are exceptions to the hard-noun pattern.
+**Evidence:** «— Ви бажаєте чай з молоком? — Ні, я люблю ... (без молоко).»
 
-**Expected score after fix:** 9/10
+**Problem:** The correct answer «без молока» creates the sentence «Ні, я люблю без молока» — but «люблю» (love/like) requires a direct object. You can't say "I like without milk" in Ukrainian any more than in English. A natural response would be «Ні, я люблю чай без молока» (No, I like tea without milk) or «Ні, мені без молока» (No, without milk for me).
 
-### Activities: 7/10 → 9/10
-**What to fix:**
-1. Activities line 314: Replace distractor «води немає» with «немає воду» — eliminate valid-answer distractor
-2. Activities line 126: Change answer to «Кава без цукру, будь ласка» — add comma
-3. Activities line 143: Change answer to «Вибачте, у мене немає грошей» — add comma
-4. Activities line 215: Change «Ввічливі (Polite)» to «Ввічливо (Polite)» — fix grammar mismatch
+**Fix:** Rewrite the sentence to: «— Ви бажаєте чай з молоком? — Ні, я п'ю чай ... (без молоко).» — answer: «без молока». Or: «— Ні, мені каву ... (без молоко).»
 
-**Expected score after fix:** 9/10
+---
 
-### Beginner Safety: 7/10 → 9/10
-**What to fix:**
-1. Lines 247, 302, 335-337: Add English translations for all untranslated Ukrainian paragraphs
-2. Add ≥3 explicit encouragement phrases at key transition points (after line 48, before line 209, before line 272)
-3. Add warm opening to section «Вступ: Ситуація відсутності» — e.g., "You've made great progress! Today's lesson unlocks a powerful new tool."
+### Issue 4: Pragmatic Mismatch in Activity (MODERATE)
 
-**Expected score after fix:** 9/10
+**Location:** Activity file, line 316 (Activity "Заповніть діалоги", item 6)
 
-### Experience Quality: 8/10 → 9/10
-**What to fix:**
-1. Add warm greeting at module opening (before line 11 blockquote, or integrate into it)
-2. Add "Today you'll learn to..." preview list after the opening blockquote
-3. Add encouragement phrases (covered in Beginner Safety fixes above)
+**Evidence:** «— Це вода? — Тут ... (немає вода).»
 
-**Expected score after fix:** 9/10
+**Problem:** «Це вода?» (Is this water?) is an identity/identification question. The natural response to an identity question is «Так, це вода» or «Ні, це не вода, це сік.» Responding with absence «Тут немає води» (There is no water here) is a pragmatic non-sequitur. An existence question would be «Тут є вода?» or «У вас є вода?».
 
-### Language: 8/10 → 9/10
-**What to fix:**
-1. Line 47: Change «(Here is no water.)» to «(There is no water here.)» — fix English grammar
-2. Untranslated paragraphs (covered in Beginner Safety fixes)
+**Fix:** Change the prompt to: «— Тут є вода? — Тут ... (немає вода).» — This makes the absence response pragmatically coherent.
 
-**Expected score after fix:** 9/10
+---
 
-### Projected Overall After Fixes
-```
-(9×1.5 + 8×1.0 + 9×1.0 + 8×1.2 + 9×1.1 + 8×1.2 + 8×1.0 + 9×1.3 + 8×0.9 + 9×1.3 + 9×1.0 + 9×1.5 + 9×1.5) / 15.5
-= (13.5 + 8 + 9 + 9.6 + 9.9 + 9.6 + 8 + 11.7 + 7.2 + 11.7 + 9 + 13.5 + 13.5) / 15.5
-= 134.2 / 15.5
-= 8.7/10
-```
+### Issue 5: Misleading Grouping of «Батько» with Fleeting Vowels (MINOR)
 
-## Factual Verification
+**Location:** Content file, lines 83-90 (Section «Граматика: Конструкція «Немає» та «Без»»)
 
-- Research notes consulted: YES (A1 core track — research notes exist and were read)
-- Key Facts Ledger present: NO (not applicable for core grammar track)
-- Dates checked: 0 (no dates in content)
-- Named figures verified: 0 (no historical figures referenced)
-- Primary quotes cross-referenced: 1 (proverb «Немає диму без вогню» — confirmed in research notes line 20)
-- Chronological sequence: N/A
-- Claims without research grounding: 0
+**Evidence:**
+- Line 79: "Words often drop a vowel when you add the ending (the 'fleeting vowel' rule):"
+- Line 85: «**Батько** (father) → немає **батька** (The 'о' changes to 'а').»
 
-Grammar rules verified:
-- Genitive endings -а/-я for concrete masculine: CORRECT
-- Genitive endings -у/-ю for abstract/substance masculine: CORRECT
-- Feminine -а → -и, -я → -і: CORRECT
-- Neuter -о → -а, -е → -я: CORRECT
-- Гроші → грошей (Gen.Pl.): CORRECT
-- Проблема → проблем (Gen.Pl.): CORRECT
+**Problem:** Lines 79-81 correctly explain the fleeting vowel rule (квиток → квитка, кінець → кінця — the vowel disappears). But line 85 presents «батько → батька» under "Special Mentions" in the same subsection. Батько → батька is NOT a fleeting vowel — it's regular declension of a -ко ending noun. The tip box (line 90) tries to clarify: "(This one keeps the stem but changes -о to -а!)" — but the initial grouping under the fleeting vowel subsection is still misleading for learners.
+
+**Fix:** Move «батько → батька» to a separate mini-section or clearly label it: "This is NOT a fleeting vowel. The ending -о simply changes to -а."
+
+---
+
+### Issue 6: IPA Inconsistency — [a] vs [ɑ] (MINOR)
+
+**Location:** Content file, lines 33, 68, 229
+
+**Evidence:**
+- Line 33: «[u ˈmɛnɛ nɛˈmɑjɛ kʋɪˈtka]» — final vowel uses plain 'a'
+- Line 68: «[u ˈmɛnɛ nɛˈmɑjɛ ˈpɑspɔrta]» — final vowel uses plain 'a'
+- Line 229: «[ˈʋdɔmɑ nɛˈmɑjɛ ˈxlʲibɑ]» — final vowel uses 'ɑ'
+
+**Problem:** Ukrainian has the open back unrounded vowel [ɑ] in all positions. The transcription inconsistently uses [a] (lines 33, 68) and [ɑ] (line 229) for the same phoneme. This should be standardized.
+
+**Fix:** Normalize all instances of Ukrainian /а/ to [ɑ] in IPA transcriptions. Change [kʋɪˈtka] → [kʋɪˈtkɑ], [ˈpɑspɔrta] → [ˈpɑspɔrtɑ].
+
+---
+
+### Issue 7: Missing Warmth / Encouragement (STRUCTURAL)
+
+**Location:** Entire content file — affects all sections
+
+**Problem:** Zero explicit encouragement phrases directed at the learner. No "Great!", "Well done!", "You've got this!", or equivalent. No warm greeting at the opening. The "Would I Continue?" test reveals a cold start — Section «Вступ: Ситуація відсутності» begins with grammar explanation ("In English, when we want to say something is missing...") with no orientation or welcome. The required emotional beats for beginners (welcome → curiosity → small win → encouragement → progress visible) are missing the "welcome" and "encouragement" beats entirely.
+
+**Fix:** (1) Add warm opening before line 17: "Welcome back! Today's lesson is a big step..." (2) Add ≥3 encouragement phrases throughout: after the Є/Немає contrast table (line 54), after the endings summary (line 112), after the dialogue section (line 266). (3) Strengthen closing (line 360) with explicit celebration.
+
+---
 
 ## Verification Summary
 
-- Content lines read: 361
-- Activity items checked: 65 (across 10 activities)
-- Ukrainian sentences verified: 48
-- IPA transcriptions checked: 14
-- Factual claims verified: 8
-- Issues found: 6
+| Check | Result | Details |
+|-------|--------|---------|
+| **Colonial framing** | PASS | No Russian-comparison patterns found. Ukrainian grammar presented on its own terms throughout. |
+| **Russianisms** | PASS | No Russian calques or vocabulary detected (кушати, прекрасне, etc. absent). |
+| **Scope compliance** | FAIL | Genitive plural forms «круасанів», «кексів» in dialogue (lines 251, 253) violate the scope declaration (line 4). |
+| **Plan alignment** | PASS | All 4 content_outline sections present as H2. All learning objectives addressed. Vocabulary hints covered (required: 8/8; recommended: partial — missing ключ, газ in vocab YAML). |
+| **LLM fingerprint** | PASS | One isolated "heartbeat" metaphor. No structural monotony. No repeated patterns. |
+| **Factual accuracy** | PASS | Grammar rules accurate. Cultural claims verified. Proverb and sayings authentic. |
+| **Activity quality** | PARTIAL FAIL | 2 activities have pragmatic/grammatical issues (items at activity lines 292 and 316). Remaining 8+ activities are well-formed. |
+| **IPA accuracy** | PARTIAL FAIL | Stress placement correct throughout. Vowel notation inconsistent ([a] vs [ɑ]). Double stress on «ма́ми́» (line 122). |
+| **Beginner warmth** | FAIL | Zero encouragement phrases. No warm greeting. Functional but cold. |
+
+---
 
 ## Verdict
 
-**FAIL**
+**FAIL — Requires targeted fixes before approval.**
 
-The module fails on **Linguistic Accuracy** (8/10, auto-fail threshold <9). The IPA stress error on «мене» appears twice (lines 33, 68), teaching incorrect pronunciation of a high-frequency pronoun. Additionally, three activity errors (bad distractor, missing commas, grammar mismatch) and missing beginner warmth markers need fixing. The content quality, grammar explanations, and cultural integration are strong — the fixes are targeted and achievable in one revision pass.
+The module has strong grammar content, well-organized visual aids, and engaging cultural context. The grammar explanations in Section «Граматика: Конструкція «Немає» та «Без»» are thorough and accurate. The dialogues in Section «Практика: Родовий відмінок у дії» and cultural material in Section «Культурний контекст: «Немає проблем»» are pedagogically valuable.
+
+However, three issues require fixes before passing:
+
+1. **Scope violation** (Critical): Remove Genitive plural forms from the dialogue or replace with singular Genitive examples.
+2. **Double stress mark** (Significant): Fix «ма́ми́» → «ма́ми» on line 122.
+3. **Activity quality** (Moderate): Fix the two broken dialogue items (activity lines 292, 316).
+
+Additionally, warmth injection is needed to meet A1 beginner standards — the lesson is informational rather than encouraging.
+
+**Estimated fix effort:** D.2 targeted repair (30-45 minutes). No rebuild needed.

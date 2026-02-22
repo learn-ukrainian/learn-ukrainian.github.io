@@ -1,5 +1,31 @@
 # Дослідження: Inheritance Law (Спадкове право)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Inheritance Law (Спадкове право)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Задниця"
+    source: ""
+    attribution: ""
+  - text: "Аще смердь оумреть безажю то князю задница..."
+    source: ""
+    attribution: ""
+  - text: "...Аще в боярьстЂ и дружини то за князя задница не идеть..."
+    source: ""
+    attribution: ""
+  - text: "Аже жена сядеть по мужи то дати на ню часть аже что мужь..."
+    source: ""
+    attribution: ""
+  - text: "свобода имь c матерю"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Руська Правда» — початок «російського права»."
+```
+
 ## Використані джерела
 1. [Літопис Руський / Руська Правда (Просторова редакція)](http://litopys.org.ua/oldukr2/oldukr51.htm) — оригінальні тексти статей 90-99.
 2. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/) — аналіз правових норм та соціальної структури.

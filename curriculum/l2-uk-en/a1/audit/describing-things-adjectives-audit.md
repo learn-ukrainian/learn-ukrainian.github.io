@@ -1,7 +1,7 @@
 # Audit Report: M26 — describing-things-adjectives.md
 **Level:** A1 | **Module:** M26 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:41
+**Generated:** 2026-02-22 23:41:25
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2473/2000 (raw: 2724)
+- **Words:** ✅ 2431/2000 (raw: 2682)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -47,11 +47,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 26/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 20 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.8% (target 35-55% (M26))
+- **Immersion:** 🇺🇦 38.5% (target 35-55% (M26))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -62,11 +62,11 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Describing Things - Adjectives** | ✅ | 55 | Included in Core |
 | **Розминка: Що навколо?** | ✅ | 261 | Included in Core |
-| **Тверда група прикметників** | ✅ | 307 | Included in Core |
-| **М'яка група прикметників** | ✅ | 255 | Included in Core |
+| **Тверда група прикметників** | ✅ | 295 | Included in Core |
+| **М'яка група прикметників** | ✅ | 243 | Included in Core |
 | **Позиція прикметника** | ✅ | 240 | Included in Core |
-| **Антоніми та опис об'єктів** | ✅ | 378 | Included in Core |
-| **Опис простору та людей** | ✅ | 341 | Included in Core |
-| **Практика: Діалоги** | ✅ | 232 | Included in Core |
+| **Антоніми та опис об'єктів** | ✅ | 368 | Included in Core |
+| **Опис простору та людей** | ✅ | 338 | Included in Core |
+| **Практика: Діалоги** | ✅ | 227 | Included in Core |
 | **Практика: Мій дім** | ✅ | 236 | Included in Core |
 | **Підсумок** | ✅ | 168 | Included in Core |

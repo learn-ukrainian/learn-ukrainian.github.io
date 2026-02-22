@@ -1,7 +1,7 @@
 # Audit Report: M28 — description-adverbs.md
 **Level:** A1 | **Module:** M28 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:42
+**Generated:** 2026-02-22 23:54:29
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2915/2000 (raw: 3386)
+- **Words:** ✅ 2891/2000 (raw: 3362)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.2% (target 35-55% (M28))
+- **Immersion:** 🇺🇦 35.4% (target 35-55% (M28))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,9 +61,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Description: Adverbs** | ✅ | 60 | Included in Core |
-| **Розминка: Як чи Який?** | ✅ | 395 | Included in Core |
-| **Презентація: Утворення та Винятки** | ✅ | 411 | Included in Core |
-| **Презентація 2: Як часто?** | ✅ | 490 | Included in Core |
-| **Презентація 3: Ступені та Інтенсивність** | ✅ | 402 | Included in Core |
-| **Практика: Звички та Стиль Життя** | ✅ | 990 | Included in Core |
+| **Розминка: Як чи Який?** | ✅ | 389 | Included in Core |
+| **Презентація: Утворення та Винятки** | ✅ | 408 | Included in Core |
+| **Презентація 2: Як часто?** | ✅ | 484 | Included in Core |
+| **Презентація 3: Ступені та Інтенсивність** | ✅ | 398 | Included in Core |
+| **Практика: Звички та Стиль Життя** | ✅ | 985 | Included in Core |
 | **Підсумок** | ✅ | 167 | Included in Core |

@@ -1,5 +1,31 @@
 # Дослідження: Walls Speak Intro
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Walls Speak Intro"
+dates:
+  key_events:
+primary_quotes:
+  - text: "В літо 6562 місяця лютого 20 успеніє царя нашого..."
+    source: ""
+    attribution: ""
+  - text: "Господи поможи рабі своєй Олісаві Святополчі матері, руський княгині"
+    source: ""
+    attribution: ""
+  - text: "руський"
+    source: ""
+    attribution: ""
+  - text: "Кузьма тать"
+    source: ""
+    attribution: ""
+  - text: "О горе тобі, Андрониче..."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Давньоруська мова була спільною колискою для трьох народів, діалектні відмінності мінімальні. Українська мова виникла пізніше (XIV-XV ст.) під «польським впливом»."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Графіті](https://esu.com.ua/article-26868) — огляд поняття, історія дослідження та основні пам'ятки.
 2. [Радіо Свобода: Графіті Софії Київської](https://www.radiosvoboda.org/a/29759798.html) — інтерв'ю з В. Корнієнком про нові прочитання та мовні особливості.

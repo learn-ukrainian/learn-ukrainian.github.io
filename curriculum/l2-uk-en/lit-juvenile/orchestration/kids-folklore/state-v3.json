@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-20T23:13:45Z",
+      "ts": "2026-02-22T19:58:57Z",
       "task_id": "v3-kids-folklore-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

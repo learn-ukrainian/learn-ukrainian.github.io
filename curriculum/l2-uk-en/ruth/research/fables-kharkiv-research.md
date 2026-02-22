@@ -1,5 +1,22 @@
 # Дослідження: Fables Kharkiv (Байки Харківські)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Fables Kharkiv (Байки Харківські)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Нѣтъ сладчайшаго, какъ общая всѣмъ работа."
+    source: "Бджола та Шершень"
+    attribution: ""
+  - text: "Багато людей без природи починають великі справи, та погано кінчають. Добрий намір і кінець — всякій справі є вінець."
+    source: "Мораль"
+    attribution: ""
+forbidden_claims:
+  - "Сковорода — \"перший російський філософ\", писав російською мовою."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/search_articles.php?id=Skovoroda_Hryhorii) — Біографія та аналіз творчості Г. Сковороди.
 2. [Ізборник (Litopys.org.ua)](http://litopys.org.ua/skovoroda/skov.htm) — Оригінальні тексти творів Сковороди, зокрема "Байки Харківські".

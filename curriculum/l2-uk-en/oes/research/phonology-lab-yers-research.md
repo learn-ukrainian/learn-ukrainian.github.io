@@ -1,5 +1,31 @@
 # Дослідження: Phonology Lab Yers (Занепад редукованих)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Phonology Lab Yers (Занепад редукованих)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "найбільша фонетична катастрофа"
+    source: ""
+    attribution: ""
+  - text: "книгы"
+    source: ""
+    attribution: ""
+  - text: "кънигы"
+    source: ""
+    attribution: ""
+  - text: "сотьникъ"
+    source: ""
+    attribution: ""
+  - text: "сътъникъ"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Процес занепаду був одночасним і однаковим для всієї Русі."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Занепад редукованих](https://esu.com.ua/article-14859) — фундаментальний огляд процесу та його наслідків для української мови.
 2. [Ізборник: Півторак Г. П. Формування фонетичної системи української мови](http://litopys.org.ua/pivtorak/pivt09.htm) — детальний аналіз діалектних відмінностей та хронології.

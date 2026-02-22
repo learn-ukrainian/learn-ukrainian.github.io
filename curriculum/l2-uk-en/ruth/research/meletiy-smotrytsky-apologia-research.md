@@ -1,5 +1,31 @@
 # Дослідження: Мелетій Смотрицький і «Апологія»
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Мелетій Смотрицький і «Апологія»"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Апологія перегринації до східних країв"
+    source: ""
+    attribution: ""
+  - text: "Руського народу"
+    source: ""
+    attribution: ""
+  - text: "Не вірою, а любов'ю ми різнимося"
+    source: "про розкол"
+    attribution: ""
+  - text: "темряву"
+    source: ""
+    attribution: ""
+  - text: "світла"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Смотрицький — «зрадник» православ'я, який «продаўся» полякам/католикам. Його уніатський період замовчувався або таврувався."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/search_articles.php?id=Smotrytsky_M) — біографічні відомості та загальний огляд творчості.
 2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/ukrleit/lig10.htm) — тексти полемічних творів та аналіз «Апології».

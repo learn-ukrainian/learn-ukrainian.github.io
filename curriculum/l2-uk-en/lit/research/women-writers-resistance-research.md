@@ -1,5 +1,26 @@
 # Дослідження: Women Writers Resistance
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Women Writers Resistance"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Війна — це завжди перевірка на спроможність нації бути суб'єктом, а не об'єктом історії"
+    source: ""
+    attribution: ""
+  - text: "This is a war of a new Russian empire against all things Ukrainian... It is an 'execute culture'"
+    source: ""
+    attribution: ""
+  - text: "розстріляна культура"
+    source: ""
+    attribution: ""
+  - text: "Поезія після Бучі не може бути красивою, вона мусить бути точною, як постріл"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Жіноча література](https://esu.com.ua/search_articles.php?id=19253) — огляд розвитку та впливу жіночого письма в Україні.
 2. [PEN Ukraine: Жінки у війні](https://pen.org.ua/zhinky-u-vijni) — есеїстика та свідчення українських письменниць після 2014 та 2022 років.

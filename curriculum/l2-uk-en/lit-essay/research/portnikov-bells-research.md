@@ -1,5 +1,20 @@
 # Дослідження: Portnikov Bells
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Portnikov Bells"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Дзвони Майдану"
+    source: ""
+    attribution: ""
+  - text: "Майдан став тим рубіконом, після якого повернення до імперської матриці стало неможливим"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України](https://esu.com.ua/) — Віталій Портников, біографічний контекст та еволюція творчості.
 2. [Читомо](https://chytomo.com/) — Рецензії на книгу «Дзвони Майдану» та аналіз публіцистичної трилогії.

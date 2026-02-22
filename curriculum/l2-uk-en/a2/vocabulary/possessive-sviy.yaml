@@ -1,0 +1,176 @@
+items:
+  - lemma: свій
+    ipa: '[sʲʋʲij]'
+    translation: "one's own (masculine)"
+    pos: pronoun
+    gender: m
+    notes: "used when the subject is the possessor"
+    usage: "свій час, свій дім"
+  - lemma: своя
+    ipa: '[sʋɔˈjɑ]'
+    translation: "one's own (feminine)"
+    pos: pronoun
+    gender: f
+    usage: "своя сім'я, своя справа"
+  - lemma: своє
+    ipa: '[sʋɔˈjɛ]'
+    translation: "one's own (neuter)"
+    pos: pronoun
+    gender: n
+    usage: "своє життя, своє місто"
+  - lemma: свої
+    ipa: '[sʋɔˈji]'
+    translation: "one's own (plural)"
+    pos: pronoun
+    usage: "свої люди, свої речі"
+  - lemma: власний
+    ipa: '[ˈʋlɑsnɪj]'
+    translation: "own, private, exclusive"
+    pos: adjective
+    notes: "emphasizes exclusive ownership"
+    usage: "власний будинок, власна думка"
+  - lemma: особистий
+    ipa: '[ɔsɔˈbɪstɪj]'
+    translation: "personal, private"
+    pos: adjective
+    notes: "relates to private life or personal sphere"
+    usage: "особисте життя, особистий простір"
+  - lemma: чужий
+    ipa: '[t͡ʃuˈʒɪj]'
+    translation: "someone else's, stranger's"
+    pos: adjective
+    notes: "antonym to свій"
+    usage: "чужа країна, чужа дитина"
+  - lemma: його
+    ipa: '[ˈjɔɦɔ]'
+    translation: "his"
+    pos: pronoun
+    notes: "used when the possessor is not the subject"
+  - lemma: її
+    ipa: '[jiji]'
+    translation: "her"
+    pos: pronoun
+    notes: "used when the possessor is not the subject"
+  - lemma: їхній
+    ipa: '[ˈjixnʲij]'
+    translation: "their"
+    pos: pronoun
+    notes: "used when the possessor is not the subject"
+  - lemma: мій
+    ipa: '[mʲij]'
+    translation: "my"
+    pos: pronoun
+    notes: "declines exactly like свій"
+  - lemma: твій
+    ipa: '[tʲʋʲij]'
+    translation: "your (informal)"
+    pos: pronoun
+    notes: "declines exactly like свій"
+  - lemma: наш
+    ipa: '[nɑʃ]'
+    translation: "our"
+    pos: pronoun
+  - lemma: ваш
+    ipa: '[ʋɑʃ]'
+    translation: "your (formal/plural)"
+    pos: pronoun
+  - lemma: ділитися
+    ipa: '[dʲiˈlɪtɪsʲɑ]'
+    translation: "to share"
+    pos: verb
+    aspect: imperfective
+    usage: "ділитися своїми думками"
+  - lemma: власне
+    ipa: '[ˈʋlɑsnɛ]'
+    translation: "precisely, actually"
+    pos: adverb
+  - lemma: самостійно
+    ipa: '[sɑmɔˈsʲtʲijnɔ]'
+    translation: "independently, on one's own"
+    pos: adverb
+  - lemma: спільний
+    ipa: '[ˈsʲpʲilʲnɪj]'
+    translation: "shared, common"
+    pos: adjective
+    usage: "спільна мова, спільна власність"
+  - lemma: належати
+    ipa: '[nɑˈlɛʒɑtɪ]'
+    translation: "to belong"
+    pos: verb
+    aspect: imperfective
+    notes: "governs dative case (кому?)"
+  - lemma: володіти
+    ipa: '[ʋɔlɔˈdʲitɪ]'
+    translation: "to own, possess"
+    pos: verb
+    aspect: imperfective
+    notes: "governs instrumental case (чим?)"
+  - lemma: час
+    ipa: '[t͡ʃɑs]'
+    translation: "time"
+    pos: noun
+    gender: m
+    usage: "свій час"
+  - lemma: життя
+    ipa: '[ʒɪˈtʲːɑ]'
+    translation: "life"
+    pos: noun
+    gender: n
+    usage: "своє життя"
+  - lemma: сім'я
+    ipa: '[sʲiˈmjɑ]'
+    translation: "family"
+    pos: noun
+    gender: f
+    usage: "своя сім'я"
+  - lemma: думка
+    ipa: '[ˈdumkɑ]'
+    translation: "thought, opinion"
+    pos: noun
+    gender: f
+    usage: "власна думка"
+  - lemma: дім
+    ipa: '[dʲim]'
+    translation: "home, house"
+    pos: noun
+    gender: m
+    usage: "свій дім"
+  - lemma: займенник
+    ipa: '[zɑjˈmɛnːɪk]'
+    translation: "pronoun"
+    pos: noun
+    gender: m
+  - lemma: називний
+    ipa: '[nɑzɪˈʋnɪj]'
+    translation: "nominative"
+    pos: adjective
+  - lemma: родовий
+    ipa: '[rɔˈdɔˈʋɪj]'
+    translation: "genitive"
+    pos: adjective
+  - lemma: давальний
+    ipa: '[dɑˈʋɑlʲnɪj]'
+    translation: "dative"
+    pos: adjective
+  - lemma: знахідний
+    ipa: '[znɑˈxʲidnɪj]'
+    translation: "accusative"
+    pos: adjective
+  - lemma: орудний
+    ipa: '[ɔˈrudnɪj]'
+    translation: "instrumental"
+    pos: adjective
+  - lemma: місцевий
+    ipa: '[mʲiˈst͡sɛʋɪj]'
+    translation: "locative"
+    pos: adjective
+  - lemma: прикметник
+    ipa: '[prɪˈkmɛtnɪk]'
+    translation: "adjective"
+    pos: noun
+    gender: m
+  - lemma: множина
+    ipa: '[mnɔʒɪˈnɑ]'
+    translation: "plural"
+    pos: noun
+    gender: f

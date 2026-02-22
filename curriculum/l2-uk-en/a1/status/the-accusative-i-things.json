@@ -2,13 +2,13 @@
   "module": "the-accusative-i-things",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:29.574609Z",
+  "last_audit": "2026-02-22T23:19:29.649372Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T22:30:32.444384Z",
+    "md": "2026-02-22T18:41:49.057122Z",
     "meta": "2026-02-19T16:12:59.324392Z",
     "activities": "2026-02-19T15:38:12.312577Z",
-    "vocabulary": "2026-02-18T19:59:52.835120Z",
+    "vocabulary": "2026-02-22T18:44:52.662634Z",
     "plan": "2026-02-20T20:40:11.768939Z",
     "research": "2026-02-19T16:12:59.315653Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2804/2000 (raw: 3046)"
+      "message": "2748/2000 (raw: 2990)"
     },
     "activities": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
-    ],
-    "pass_count": 6,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

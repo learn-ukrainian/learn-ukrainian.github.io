@@ -1,3 +1,63 @@
 slug: aspect-introduction
 title: Aspect Introduction
 word_target: 3000
+content_outline:
+- section: Вступ
+  words: 500
+  points:
+  - 'Explicitly list English scaffolding requirements (A2 Band 1: 50-60% immersion).
+    State that theory is explained in English, while examples and dialogues are in
+    Ukrainian.'
+  - 'Define the core concept of verb aspect in its own H3: Process (imperfective)
+    vs. Result (perfective). Include the cultural proverb ''Без труда нема плода''
+    to anchor the distinction.'
+  - Provide an H3 section for 'The Borsch Ritual' cultural hook. Contrast the ongoing
+    process (варити) with the achievement (зварити) and mention the 2022 UNESCO recognition.
+  - Present a high-level summary table of the most common A2 aspect pairs based on
+    State Standard §4.3.2 (робити/зробити, писати/написати, ділити/поділити).
+- section: 'Презентація: Видові пари'
+  words: 800
+  points:
+  - Devote an H3 for Prefixation (робити/зробити, писати/написати). Explain the mechanism
+    in English and provide a Ukrainian example table with 5+ sentences.
+  - Devote an H3 for Suffixation and Stem Changes (купувати/купити, забувати/забути).
+    Explain the pattern in English with 3+ contextual Ukrainian examples.
+  - Devote an H3 for Suppletion (говорити/сказати, брати/взяти). Emphasize memorization
+    with 3+ clear contrasting sentence pairs.
+  - Devote an H3 for the Present Tense Constraint. Explain clearly in English that
+    perfective verbs DO NOT have a present tense. Explicitly drill the 'Я напишу'
+    error.
+  - Devote an H3 for Time Markers. Provide a table of adverbs triggering imperfective
+    (часто, щодня, довго) vs. perfective (уже, нарешті, раптом) with 5+ example sentences.
+- section: Нюанси та типові помилки
+  words: 700
+  points:
+  - Devote an H3 to the English '-ing' mapping error. Explain why continuous tenses
+    don't perfectly align with the imperfective aspect. Give 3+ contrasting examples.
+  - Devote an H3 to Negation Nuances. Provide minimal pairs comparing 'не робив' (habitual/ongoing
+    absence of action) and 'не зробив' (failed to complete an expected result).
+  - Provide a clear, actionable rule of thumb in English (as a tip callout) for learners
+    to decide which aspect to use when describing past events.
+  - 'Analyze the contextual shift in meaning: how choosing the perfective aspect changes
+    a sentence from a simple description of activity to a strong statement of achievement.'
+- section: Практика та вправи
+  words: 600
+  points:
+  - Pre-write content to support 5+ structured activities. Ensure all practice prompts
+    and instructions are in Ukrainian to meet the immersion target.
+  - Provide 10+ paired sentences for a transformation drill, changing sentences from
+    process to result (e.g., 'Я писав тест' -> 'Я написав тест').
+  - Provide a short, A2-level diary entry in Ukrainian containing deliberate 'Present
+    Tense Perfective' errors for an error correction activity.
+  - Provide 10+ sentences with missing verbs and time markers to support a fill-in-the-blank
+    contextual sorting activity.
+- section: Діалоги та підсумок
+  words: 400
+  points:
+  - Write a 10-line Ukrainian dialogue ('Перевірка на кухні' / The Kitchen Check-in)
+    using aspect pairs to ask about progress ('Ти ще робиш?') and completion ('Ти
+    вже зробив?').
+  - Provide a bulleted summary of aspect rules in simple Ukrainian with English translations,
+    reinforcing the Process vs. Result dichotomy.
+  - Conclude with a short reflection on the Borsch Ritual, showing how the Ukrainian
+    grammar of aspect serves to express cultural identity and accomplishment.

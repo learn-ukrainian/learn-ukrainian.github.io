@@ -1,38 +1,32 @@
 # Дослідження: The Instrumental II — Means and Tools
 
 ## State Standard Reference
-§4.2.2.5.1: "Без прийменника: знаряддя і засіб дії: Студент пише новою ручкою. Діти люблять малювати олівцями;"
-Alignment: This module focuses specifically on the "instrument and means of action" (знаряддя і засіб дії) usage of the Instrumental case without prepositions, as mandated for level A2.
+§4.2.2.5.1: "Без прийменника... знаряддя і засіб дії: Студент пише новою ручкою. Діти люблять малювати олівцями."
+Alignment: This module directly aligns with the requirement to teach the prepositionless use of the Instrumental case for expressing the instrument or means of an action.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| автобусом | High (Transport) | їхати автобусом, дістатися автобусом |
-| поїздом | High (Transport) | подорожувати поїздом, їхати нічним поїздом |
-| машиною | High (Transport) | їхати власною машиною, подорожувати машиною |
-| ручкою | High (School/Office) | писати синьою ручкою, підписати ручкою |
-| олівцем | High (School/Art) | малювати олівцем, креслити олівцем |
-| ножем | High (Kitchen) | різати ножем, чистити ножем |
-| виделкою | High (Kitchen) | їсти виделкою, тримати виделкою |
-| метро | High (Indeclinable) | їхати метро, дістатися метро |
+| машина | High | їхати власною машиною, подорожувати машиною |
+| поїзд | High | подорожувати поїздом, їхати нічним поїздом |
+| ручка | High | писати синьою ручкою |
+| олівець | Medium-High | малювати олівцем, креслити олівцем |
+| автобус | High | їхати автобусом, дістатися автобусом |
 
 ## Cultural Hooks
-2. **Залізниця (The Railway)**: Traveling by train (**поїздом**) is the cultural backbone of Ukrainian travel. The night train culture (нічні поїзди) is a unique experience where passengers interact, share food (often eaten **виделками** and **ножами** from home-packed meals), and travel across the country.
+1. **Укрзалізниця (Ukrainian Railways):** Train travel is deeply culturally embedded in Ukraine. Night trains (нічний поїзд) are a primary means of long-distance travel and socializing, making "подорожувати поїздом" highly relevant and culturally resonant.
+2. **Food Sharing:** Sharing food on long train journeys is customary, naturally contextualizing the use of utensils (різати ножем, їсти виделкою) in a travel setting.
 
 ## Common Learner Errors
-1. **Redundant Preposition**: English speakers often translate "with a pen" literally as *з ручкою*.
-   - *Error*: Я пишу з ручкою. → *Correct*: Я пишу ручкою. 
-   - *Why*: In Ukrainian, the instrument itself is put into the Instrumental case without "з" (which implies accompaniment).
-2. **Ending Confusion (-ом vs -ем)**: Confusing when to use -ом (hard stems) and -ем (soft/mixed stems).
-   - *Error*: Я пишу олівецом. → *Correct*: Я пишу олівцем.
-3. **Indeclinable Nouns**: Attempting to decline nouns like *метро* or *таксі*.
-   - *Error*: Я їду метром. → *Correct*: Я їду метро.
+1. **The Preposition Trap:** Using *з ручкою* (with a pen - accompaniment) instead of *ручкою* (by means of a pen - instrument). The Instrumental ending alone is sufficient.
+2. **Soft/Mixed Stem Confusion:** Applying the hard *-ом* ending to soft/mixed stems, resulting in errors like *олівецом* instead of the correct *олівцем*.
+3. **Declining Indeclinables:** Attempting to decline loanwords like *метро* or *таксі* (e.g., saying *метром* or *таксею*) instead of leaving them correctly unchanged.
 
 ## Cross-References
-- Builds on: **a2-04** (Instrumental endings - singular)
-- Prepares for: **a2-06** (Being and Becoming - Instrumental for professions), **a2-07** (Spatial Prepositions with Instrumental)
+- Builds on: a2-04 (Instrumental endings)
+- Prepares for: a2-06 (Being and Becoming), a2-07 (Spatial Prepositions)
 
 ## Notes for Content Writing
-- Emphasize the "No 'З' for Tools" rule early to prevent the most common learner mistake.
-- Include a table for transport modes, highlighting that *метро* and *таксі* do not change.
-- Create a "How do you...?" section focusing on question words **Як?** (How?) and **Чим?** (With what/by what means?).
+- **Immersion Target:** Module is Band 1 (50-60% Immersion). Grammar theory must be explained in English to provide safe scaffolding. All examples, dialogues, and practice prompts must be entirely in Ukrainian.
+- **Sentence Length:** Keep sentences under 15 words.
+- **Decolonized Framing:** Emphasize the self-sufficiency and grammatical efficiency of the Ukrainian Instrumental case in conveying the "means" without requiring prepositions, presenting it as a core elegant feature of the language rather than comparing it to external Russian norms.

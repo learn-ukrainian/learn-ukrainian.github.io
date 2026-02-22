@@ -1,5 +1,29 @@
 # Дослідження: Ostap Vyshnia Smiles 2 (Мисливські усмішки)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Ostap Vyshnia Smiles 2 (Мисливські усмішки)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Полювання, як бачите, не якась там легковажна дурничка, не дрібничка, а дуже й дуже поважна справа"
+    source: ""
+    attribution: ""
+  - text: "Любіть, дорогі друзі, охоту, а ще більше природу, бережіть її, охороняйте її"
+    source: ""
+    attribution: ""
+  - text: "лірична поезія в прозі"
+    source: ""
+    attribution: ""
+  - text: "увесь Вишня: любов до життя, любов до людини"
+    source: ""
+    attribution: ""
+  - text: "Сила Вишні-художника — у знанні секретів народного українського гумору"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Олександр Гриценко. Остап Вишня в українській культурі пам'яті](https://www.historians.in.ua/index.php/en/doslidzhennya/2716-oleksandr-gritsenko-ostap-vishnya-v-ukrajinskij-kulturi-pam-yati-korol-tirazhiv-narodnij-gumorist-suspilna-institutsiya-znaryaddya-propagandi-natsionalnij-muchenik-chastina-1) — академічне дослідження, НАНУ, Інститут історії. Аналіз конструкту «народного гумориста», пропагандистське використання, статистика тиражів, пострепресійний період.
 2. [Енциклопедія сучасної України (ЕСУ): Вишня Остап](https://esu.com.ua/article-34331) — енциклопедична стаття, біографія, перелік творів, характеристика літературного доробку.

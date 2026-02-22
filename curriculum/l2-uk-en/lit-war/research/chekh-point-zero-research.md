@@ -2,6 +2,30 @@
 
 # Дослідження: Chekh Point Zero
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Chekh Point Zero"
+dates:
+  key_events:
+primary_quotes:
+  - text: "точку нуль"
+    source: ""
+    attribution: ""
+  - text: "У психології є поняття «точка нуль"
+    source: ""
+    attribution: ""
+  - text: "обнулитися"
+    source: ""
+    attribution: ""
+  - text: "Іти на війну набагато легше, ніж тікати від неї"
+    source: ""
+    attribution: ""
+  - text: "авторську оптику"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 
 1. [«Точка нуль» Чеха: книжка, що розвертає обличчям до нас самих (Чітомо)](https://chytomo.com/tochka-nul-chekha-knyzhka-shcho-rozvertaie-oblychchiam-do-nas-samykh/) — Рецензія Завена Баблояна: детальний аналіз стилістики «суб'єктивного письма» та «авторської оптики» Чеха

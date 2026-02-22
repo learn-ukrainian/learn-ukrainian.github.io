@@ -1,5 +1,26 @@
 # Дослідження: Sovereignty 1588 (Третій Литовський Статут)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Sovereignty 1588 (Третій Литовський Статут)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Не обчим яким язиком, але своїм власним права списаніє маєм"
+    source: "Лев Сапіга, Передмова"
+    attribution: "1"
+  - text: "А писар земский маеть по-руску литерами и словы рускими вси листы выписывати"
+    source: "Розділ 4, Артикул 1"
+    attribution: "2"
+  - text: "старожитним вродженцям"
+    source: "Розділ 1, Артикул 4"
+    attribution: "3"
+forbidden_claims:
+  - "Литовський Статут — це виключно історія Литви або Білорусі."
+  - "Після 1569 року Україна втратила суб'єктність."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Статути Великого князівства Литовського](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Statuty_Velykoho) — академічний огляд історії створення та змісту.
 2. [Ізборник: Литовський Статут 1588 року](http://litopys.org.ua/statut/statut88.htm) — тексти статей та аналіз мови.

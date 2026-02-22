@@ -1,5 +1,22 @@
 # Дослідження: Treaty 911 Oleg
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Treaty 911 Oleg"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Мы от рода рускаго..."
+    source: ""
+    attribution: ""
+  - text: "На утверженіе і на неподвиженіе бывшаго межи хрестьяны і русью мира"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Росія» підписувала договори з греками."
+```
+
 ## Використані джерела
 1. [Літопис руський (за Іпатським списком)](http://litopys.org.ua/ipatlet/ipat02.htm) — текст «Повісті временних літ» з повним текстом договору.
 2. [Енциклопедія історії України: Договори Русі з Візантією](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Dogovory_Rusi_z_Vizantiieju) — академічний аналіз правового змісту.

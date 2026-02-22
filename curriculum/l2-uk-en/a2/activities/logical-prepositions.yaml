@@ -1,0 +1,497 @@
+- type: match-up
+  title: "Знайдіть пару: прийменник і значення"
+  instruction: "Match each Ukrainian preposition with its English equivalent."
+  pairs:
+    - left: "для"
+      right: "for (purpose)"
+    - left: "без"
+      right: "without"
+    - left: "через"
+      right: "because of (obstacle)"
+    - left: "про"
+      right: "about"
+    - left: "після"
+      right: "after"
+    - left: "завдяки"
+      right: "thanks to"
+    - left: "протягом"
+      right: "during"
+    - left: "крім"
+      right: "except"
+    - left: "замість"
+      right: "instead of"
+    - left: "від"
+      right: "from (person)"
+    - left: "з"
+      right: "from (place)"
+    - left: "о"
+      right: "at (time)"
+
+- type: group-sort
+  title: "Розподіліть прийменники за відмінком"
+  instruction: "Sort the prepositions based on the grammatical case they require."
+  groups:
+    - name: "Родовий відмінок (Genitive)"
+      items: ["для", "без", "від", "крім", "замість"]
+    - name: "Знахідний відмінок (Accusative)"
+      items: ["через", "про", "по"]
+
+- type: true-false
+  title: "Правда чи брехня?"
+  instruction: "Read the statements about logical prepositions and decide if they are true or false."
+  items:
+    - statement: "The preposition 'завдяки' is used for positive reasons or success."
+      correct: true
+      explanation: "'Завдяки' means 'thanks to' and is only used for positive outcomes."
+    - statement: "We use 'із-за' to say 'because of' in Ukrainian."
+      correct: false
+      explanation: "'Із-за' means 'from behind' (spatial). For 'because of', use 'через'."
+    - statement: "To say 'during the week', we say 'на протязі тижня'."
+      correct: false
+      explanation: "'На протязі' means 'in a draft'. Use 'протягом' or 'упродовж'."
+    - statement: "The preposition 'для' always takes the Genitive case."
+      correct: true
+      explanation: "'Для' requires the Genitive case."
+    - statement: "To express the exact clock time, we use the preposition 'в'."
+      correct: false
+      explanation: "For clock time, use 'о' or 'об' (e.g., о десятій)."
+    - statement: "The phrase 'піти по хліб' is the correct way to say 'to go get bread'."
+      correct: true
+      explanation: "'По' + Accusative expresses the target or purpose of movement."
+    - statement: "'Про' (about) requires the Accusative case."
+      correct: true
+      explanation: "Verbs like 'думати' or 'говорити' use 'про' + Accusative."
+    - statement: "We use 'з' to mean 'from a person' and 'від' for 'from a place'."
+      correct: false
+      explanation: "It is the opposite. 'Від' is for a person, 'з' is for a place."
+
+- type: quiz
+  title: "Оберіть правильний прийменник часу"
+  instruction: "Choose the correct preposition of time for each sentence."
+  items:
+    - question: "Урок української мови починається ... десятій годині."
+      explanation: "For exact clock time, use 'о' (or 'об' before vowels)."
+      options:
+        - text: "о"
+          correct: true
+        - text: "в"
+          correct: false
+        - text: "на"
+          correct: false
+        - text: "об"
+          correct: false
+    - question: "Наша наступна зустріч буде ... одинадцятій годині."
+      explanation: "Before a vowel (одинадцятій), use 'об'."
+      options:
+        - text: "об"
+          correct: true
+        - text: "о"
+          correct: false
+        - text: "в"
+          correct: false
+        - text: "через"
+          correct: false
+    - question: "Ми будемо говорити про це ... вечері."
+      explanation: "'Після' means 'after' and takes the Genitive case (вечері)."
+      options:
+        - text: "після"
+          correct: true
+        - text: "протягом"
+          correct: false
+        - text: "через"
+          correct: false
+        - text: "о"
+          correct: false
+    - question: "Я багато працював ... цілого тижня."
+      explanation: "To express duration ('during the week'), use 'протягом'."
+      options:
+        - text: "протягом"
+          correct: true
+        - text: "на протязі"
+          correct: false
+        - text: "завдяки"
+          correct: false
+        - text: "для"
+          correct: false
+    - question: "Наш швидкий поїзд прибуває ... першій годині."
+      explanation: "For exact clock time, use 'о'."
+      options:
+        - text: "о"
+          correct: true
+        - text: "в"
+          correct: false
+        - text: "об"
+          correct: false
+        - text: "від"
+          correct: false
+    - question: "Що ти будеш робити ... роботи?"
+      explanation: "'Після роботи' means 'after work'."
+      options:
+        - text: "після"
+          correct: true
+        - text: "о"
+          correct: false
+        - text: "для"
+          correct: false
+        - text: "без"
+          correct: false
+    - question: "Сильний осінній дощ буде йти ... місяця."
+      explanation: "For duration ('during the month'), use 'протягом'."
+      options:
+        - text: "протягом"
+          correct: true
+        - text: "після"
+          correct: false
+        - text: "о"
+          correct: false
+        - text: "від"
+          correct: false
+    - question: "Ми завжди обідаємо ... другій годині."
+      explanation: "For exact clock time, use 'о'."
+      options:
+        - text: "о"
+          correct: true
+        - text: "об"
+          correct: false
+        - text: "після"
+          correct: false
+        - text: "через"
+          correct: false
+
+- type: fill-in
+  title: "Вставте правильне слово"
+  instruction: "Complete the abstract context sentences with the correct preposition."
+  items:
+    - sentence: "Це подарунок ... мого брата."
+      answer: "для"
+      options: ["для", "без", "через", "від"]
+      explanation: "'Для' indicates purpose or the beneficiary."
+    - sentence: "Я п'ю каву ... цукру."
+      answer: "без"
+      options: ["без", "для", "про", "крім"]
+      explanation: "'Без' indicates absence ('without')."
+    - sentence: "Спорт дуже корисний ... здоров'я."
+      answer: "для"
+      options: ["для", "через", "завдяки", "про"]
+      explanation: "'Для здоров'я' means 'for health'."
+    - sentence: "Ми не можемо жити ... води."
+      answer: "без"
+      options: ["без", "протягом", "замість", "для"]
+      explanation: "'Без води' means 'without water'."
+    - sentence: "Ця кімната тільки ... гостей."
+      answer: "для"
+      options: ["для", "від", "через", "з"]
+      explanation: "'Для гостей' means 'for guests'."
+    - sentence: "Він може зробити це ... допомоги."
+      answer: "без"
+      options: ["без", "завдяки", "через", "від"]
+      explanation: "'Без допомоги' means 'without help'."
+    - sentence: "Ми вчимо українську мову ... роботи."
+      answer: "для"
+      options: ["для", "замість", "протягом", "без"]
+      explanation: "'Для роботи' expresses purpose ('for work')."
+    - sentence: "Це був день ... проблем."
+      answer: "без"
+      options: ["без", "через", "для", "про"]
+      explanation: "'Без проблем' means 'without problems'."
+
+- type: cloze
+  title: "Лист другові"
+  instruction: "Fill in the blanks with the correct prepositions or conjunctions."
+  passage: "Шановний Олександре! Я пишу цей лист, {{1}} пояснити ситуацію. {{2}} сильну бурю вчора, мій район залишився {{3}} електрики. Я не міг працювати {{4}} інтернету. Я працював над проєктом {{5}} цілого тижня. {{6}} моєму колезі, я зміг зберегти всі дані. {{7}} обіду я приїду в офіс. Я розкажу тобі {{8}} наші нові плани. Ми можемо зустрітися {{9}} третій годині. Ця інформація дуже важлива {{10}} нашого проєкту."
+  blanks:
+    - id: 1
+      answer: "щоб"
+      options: ["щоб", "тому що", "через", "для"]
+    - id: 2
+      answer: "через"
+      options: ["через", "завдяки", "для", "про"]
+    - id: 3
+      answer: "без"
+      options: ["без", "для", "з", "від"]
+    - id: 4
+      answer: "без"
+      options: ["без", "крім", "через", "замість"]
+    - id: 5
+      answer: "протягом"
+      options: ["протягом", "після", "о", "для"]
+    - id: 6
+      answer: "завдяки"
+      options: ["завдяки", "через", "для", "від"]
+    - id: 7
+      answer: "після"
+      options: ["після", "протягом", "для", "про"]
+    - id: 8
+      answer: "про"
+      options: ["про", "для", "від", "через"]
+    - id: 9
+      answer: "о"
+      options: ["о", "в", "на", "після"]
+    - id: 10
+      answer: "для"
+      options: ["для", "без", "через", "від"]
+
+- type: error-correction
+  title: "Виправте помилки: логічні пастки"
+  instruction: "Find and correct the incorrect preposition in each sentence."
+  items:
+    - sentence: "Поїзд запізнився із-за снігу."
+      error: "із-за"
+      answer: "через"
+      error_type: "word"
+      options: ["через", "завдяки", "для", "від"]
+      explanation: "'Із-за' is a Russianism when used for cause. Use 'через' for negative/neutral causes."
+    - sentence: "Ми працювали над проєктом на протязі місяця."
+      error: "на протязі"
+      answer: "протягом"
+      error_type: "phrase"
+      options: ["протягом", "після", "через", "о"]
+      explanation: "'На протязі' literally means 'in a draft'. To express duration, use 'протягом'."
+    - sentence: "Я вивчив мову через хорошого вчителя."
+      error: "через"
+      answer: "завдяки"
+      error_type: "word"
+      options: ["завдяки", "із-за", "від", "для"]
+      explanation: "For positive causes ('thanks to'), you must use 'завдяки'."
+    - sentence: "Урок починається в десятій годині."
+      error: "в"
+      answer: "о"
+      error_type: "word"
+      options: ["о", "на", "об", "після"]
+      explanation: "For exact clock time, use 'о' (or 'об'), not 'в'."
+    - sentence: "Діти пішли в магазин за хлібом."
+      error: "за хлібом"
+      answer: "по хліб"
+      error_type: "phrase"
+      options: ["по хліб", "для хліба", "без хліба", "через хліб"]
+      explanation: "To express the purpose of movement, the correct phrase is 'піти по' + Accusative."
+    - sentence: "Свято скасували завдяки сильному дощу."
+      error: "завдяки"
+      answer: "через"
+      error_type: "word"
+      options: ["через", "для", "без", "після"]
+      explanation: "'Завдяки' is only for positive outcomes. For a negative cause like rain cancelling a party, use 'через'."
+
+- type: unjumble
+  title: "Складіть речення: причина і мета"
+  instruction: "Unjumble the words to form correct Ukrainian sentences."
+  items:
+    - words: ["ми", "через", "дощ", "вдома", "залишилися"]
+      answer: "Ми залишилися вдома через дощ"
+    - words: ["вона", "квіти", "мами", "купила", "для"]
+      answer: "Вона купила квіти для мами"
+    - words: ["я", "без", "цукру", "п'ю", "каву"]
+      answer: "Я п'ю каву без цукру"
+    - words: ["багато", "про", "вони", "новий", "проєкт", "розмовляли"]
+      answer: "Вони багато розмовляли про новий проєкт"
+    - words: ["зустріч", "об", "одинадцятій", "буде", "годині"]
+      answer: "Зустріч буде об одинадцятій годині"
+    - words: ["ми", "день", "весь", "гарній", "гуляли", "завдяки", "погоді"]
+      answer: "Ми гуляли весь день завдяки гарній погоді"
+
+- type: mark-the-words
+  title: "Знайдіть прийменники"
+  instruction: "Find and mark all logical prepositions in the text."
+  text: "Ми не пішли гуляти через дощ. Після обіду ми читали книгу про історію. Замість чаю ми пили каву. Ця книга дуже цікава для студентів. Ми читали її протягом двох годин."
+  answers: ["через", "Після", "про", "Замість", "для", "протягом"]
+
+- type: translate
+  title: "Переклад: причина і мета"
+  instruction: "Choose the correct Ukrainian translation for the English sentence."
+  items:
+    - source: "We were late because of traffic."
+      explanation: "Traffic is a negative obstacle, so we use 'через'."
+      options:
+        - text: "Ми спізнилися через затори."
+          correct: true
+        - text: "Ми спізнилися завдяки заторам."
+          correct: false
+        - text: "Ми спізнилися для заторів."
+          correct: false
+        - text: "Ми спізнилися із-за заторів."
+          correct: false
+    - source: "I drink tea instead of coffee."
+      explanation: "'Замість' means 'instead of'."
+      options:
+        - text: "Я п'ю чай замість кави."
+          correct: true
+        - text: "Я п'ю чай крім кави."
+          correct: false
+        - text: "Я п'ю чай після кави."
+          correct: false
+        - text: "Я п'ю чай без кави."
+          correct: false
+    - source: "They are talking about work."
+      explanation: "'Про' + Accusative is used for the topic of conversation."
+      options:
+        - text: "Вони розмовляють про роботу."
+          correct: true
+        - text: "Вони розмовляють для роботи."
+          correct: false
+        - text: "Вони розмовляють від роботи."
+          correct: false
+        - text: "Вони розмовляють з роботою."
+          correct: false
+    - source: "Everyone came except Olena."
+      explanation: "'Крім' means 'except'."
+      options:
+        - text: "Усі прийшли крім Олени."
+          correct: true
+        - text: "Усі прийшли замість Олени."
+          correct: false
+        - text: "Усі прийшли без Олени."
+          correct: false
+        - text: "Усі прийшли про Олену."
+          correct: false
+    - source: "I passed the exam thanks to you."
+      explanation: "Positive cause uses 'завдяки'."
+      options:
+        - text: "Я здав іспит завдяки тобі."
+          correct: true
+        - text: "Я здав іспит через тебе."
+          correct: false
+        - text: "Я здав іспит для тебе."
+          correct: false
+        - text: "Я здав іспит після тебе."
+          correct: false
+    - source: "I got a letter from my friend."
+      explanation: "Receiving from a person uses 'від'."
+      options:
+        - text: "Я отримав лист від друга."
+          correct: true
+        - text: "Я отримав лист з друга."
+          correct: false
+        - text: "Я отримав лист для друга."
+          correct: false
+        - text: "Я отримав лист про друга."
+          correct: false
+
+- type: quiz
+  title: "Оберіть правильний відмінок"
+  instruction: "Choose the correct noun form to follow the preposition."
+  items:
+    - question: "Я купив цей подарунок для ..."
+      explanation: "'Для' requires the Genitive case."
+      options:
+        - text: "тебе"
+          correct: true
+        - text: "ти"
+          correct: false
+        - text: "тобі"
+          correct: false
+        - text: "тобою"
+          correct: false
+    - question: "Вона нічого не знає про цю ..."
+      explanation: "'Про' requires the Accusative case."
+      options:
+        - text: "ситуацію"
+          correct: true
+        - text: "ситуація"
+          correct: false
+        - text: "ситуації"
+          correct: false
+        - text: "ситуацією"
+          correct: false
+    - question: "Ми спізнилися на роботу через сильний ..."
+      explanation: "'Через' requires the Accusative case."
+      options:
+        - text: "дощ"
+          correct: true
+        - text: "дощу"
+          correct: false
+        - text: "дощем"
+          correct: false
+        - text: "дощі"
+          correct: false
+    - question: "Я п'ю чай без ..."
+      explanation: "'Без' requires the Genitive case."
+      options:
+        - text: "цукру"
+          correct: true
+        - text: "цукор"
+          correct: false
+        - text: "цукром"
+          correct: false
+        - text: "цукрі"
+          correct: false
+    - question: "Усі прийшли на лекцію, крім ..."
+      explanation: "'Крім' requires the Genitive case."
+      options:
+        - text: "Олени"
+          correct: true
+        - text: "Олена"
+          correct: false
+        - text: "Олену"
+          correct: false
+        - text: "Оленою"
+          correct: false
+    - question: "Я здав іспит завдяки твоїй ..."
+      explanation: "'Завдяки' requires the Dative case."
+      options:
+        - text: "допомозі"
+          correct: true
+        - text: "допомога"
+          correct: false
+        - text: "допомогу"
+          correct: false
+        - text: "допомогою"
+          correct: false
+    - question: "Ми будемо дуже багато працювати протягом ..."
+      explanation: "'Протягом' requires the Genitive case."
+      options:
+        - text: "року"
+          correct: true
+        - text: "рік"
+          correct: false
+        - text: "роком"
+          correct: false
+        - text: "році"
+          correct: false
+    - question: "Ми маємо новини від нашого ..."
+      explanation: "'Від' requires the Genitive case."
+      options:
+        - text: "директора"
+          correct: true
+        - text: "директор"
+          correct: false
+        - text: "директору"
+          correct: false
+        - text: "директором"
+          correct: false
+
+- type: fill-in
+  title: "Знайдіть відповідний прийменник"
+  instruction: "Fill in the blanks with the correct logical preposition."
+  items:
+    - sentence: "Усі студенти написали тест, ... Максима."
+      answer: "крім"
+      options: ["крім", "через", "завдяки", "про"]
+      explanation: "'Крім' means 'except'."
+    - sentence: "... кави я буду пити воду."
+      answer: "замість"
+      options: ["замість", "протягом", "для", "після"]
+      explanation: "'Замість' means 'instead of'."
+    - sentence: "Вони розмовляють ... історію України."
+      answer: "про"
+      options: ["про", "через", "від", "завдяки"]
+      explanation: "'Про' means 'about'."
+    - sentence: "Я отримав посилку ... моєї бабусі."
+      answer: "від"
+      options: ["від", "з", "для", "без"]
+      explanation: "'Від' means 'from' a person."
+    - sentence: "Ми не могли працювати ... відсутність інтернету."
+      answer: "через"
+      options: ["через", "завдяки", "для", "протягом"]
+      explanation: "'Через' implies a negative cause."
+    - sentence: "Цей словник дуже корисний ... перекладу текстів."
+      answer: "для"
+      options: ["для", "через", "від", "про"]
+      explanation: "'Для' implies purpose."
+    - sentence: "... твоєму плану ми закінчили роботу вчасно."
+      answer: "завдяки"
+      options: ["завдяки", "через", "замість", "протягом"]
+      explanation: "'Завдяки' implies a positive cause."
+    - sentence: "Ми чекали на автобус ... двох годин."
+      answer: "протягом"
+      options: ["протягом", "о", "після", "замість"]
+      explanation: "'Протягом' indicates duration."

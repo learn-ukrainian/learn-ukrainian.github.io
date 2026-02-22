@@ -1,200 +1,132 @@
 **Reviewed-By:** claude-opus-4-6
 
-# Рецензія: The Gender Code
-
-**Level:** A1 | **Module:** 3
-**Overall Score:** 8.2/10
-**Status:** FAIL
-**Reviewed:** 2026-02-22
-
-## Plan Verification
-
-```
-Plan-Content Alignment: PASS
-- Sections: ALL 5 meta content_outline sections present as H2 headers + Підсумок
-  - «Вступ: Таємний код української мови» ✓
-  - «Презентація: Три кити роду» ✓
-  - «Практика: Чотири сім'ї та винятки» ✓
-  - «Продукція: Колір і форма» ✓
-  - «Культурний контекст: Жива мова» ✓
-  - «Підсумок» ✓ (standard, not in outline)
-- Vocabulary: 8/8 required, 12/12 recommended — all present in content and vocab file
-- Grammar scope: CLEAN — no scope creep beyond gender/declension families
-  - Adjective agreement shown via examples (добрий день, велике місто) but full adjective module deferred to a1-26 per scope comment
-- Objectives: ALL 4 plan objectives addressed
-  - Gender by ending ✓ (Section «Презентація: Три кити роду»)
-  - 4 declension families ✓ (Section «Практика: Чотири сім'ї та винятки»)
-  - Pattern recognition ✓ (comparison table line 129)
-  - Common exceptions ✓ (тато, собака, ніч, ім'я)
-```
-
 ## Scores
 
-| # | Dimension | Score | Auto-fail | Evidence |
-|---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 8/10 | <7 | Warm arc (Привіт→Молодець) but Section «Практика: Чотири сім'ї та винятки» dumps 4 declension families (lines 142-213) with no embedded exercise break — 71 lines of new concepts before next activity section |
-| 2 | Coherence | 9/10 | <7 | Logical progression: intro→rules→exceptions→application→culture→summary; the "code" metaphor sustained throughout; mini-dialogue (lines 256-268) ties together possessive agreement |
-| 3 | Relevance | 9/10 | <7 | All content serves gender identification; S.T.A.L.K.E.R. hook (lines 274-279) and city names (line 289) extend relevance without tangents |
-| 4 | Educational | 8/10 | <7 | "Gender Algorithm" (line 217-224) is an effective tool; missing explicit adjective agreement collocations from plan (великий стіл, цікава книга, чисте вікно) — content uses different collocations (добре серце, велике місто, рідна земля) which cover the concept but miss plan-specified examples |
-| 5 | Language | 8/10 | <8 | IPA inconsistency: стіл is [stʲil] in content (line 69) but [sʲtʲil] in vocabulary file (line 12) — vocab file's regressive palatalization is more accurate. Ukrainian prose in mini-dialogue and examples is natural. English is warm and B1-readable |
-| 6 | Pedagogy | 8/10 | <7 | PPP structure followed; Section «Презентація: Три кити роду» has inline exercise (lines 135-140) — good quick win. But Section «Практика: Чотири сім'ї та винятки» presents 4 families before any practice opportunity, exceeding the ≤2 concepts guideline |
-| 7 | Immersion | 7/10 | <6 | 12.0% measured (target 10-25% per audit). Ukrainian embedded throughout via terms and examples, but explanatory English dominates. For an A1.1 grammar module this is functional but on the low end |
-| 8 | Activities | 8/10 | <7 | 9 activities, 115 items, 6 types (67% variety). Well-constructed. Redundancy: тато gender question appears identically in both Activity 3 (quiz "Теорія роду", item 4) and Activity 9 (quiz "Пастки та винятки", item 5) |
-| 9 | Richness | 8/10 | <6 | Cultural hooks: S.T.A.L.K.E.R. (lines 274-279), proverb «Рідна земля — мати, чужа — мачуха» (line 291), city gender examples (line 289). Mnemonics: Hard Stop / Open A / Round O. Comparison table (line 129). Plan-mentioned color-coding (Blue=M, Red=F, Yellow=N) mentioned in text (line 60) but not implemented as visual formatting |
-| 10 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5 — mild overwhelm in Section «Практика: Чотири сім'ї та винятки» (4 concepts without break). All other criteria pass. Warm opening, clear objectives, encouragement throughout |
-| 11 | LLM Fingerprint | 8/10 | <7 | Section openings follow a pattern: Ukrainian exclamation + English (Привіт!, Розглянемо правила!, Готові?, Чудово!, Молодець!) — pedagogically appropriate at A1 but formulaic. Section «Культурний контекст: Жива мова» breaks pattern with «Language does not exist in a vacuum» (line 272). No purple prose, no "не просто X, а Y", no cliché metaphors. Callout types varied: [!note], [!tip], [!context]×3, [!warning], [!myth-buster], [!culture] |
-| 12 | Linguistic Accuracy | 8/10 | <9 | **FAIL — тато declension family misassignment.** Line 160: «However, grammatically, they follow Family 1 patterns.» The "they" includes тато. But тато (ending -о) belongs to II відміна (Family 2), not I відміна (Family 1). Микола (-а ending) correctly belongs to Family 1. The instrumental case proves this: татом (II відміна pattern) vs мамою (I відміна pattern). This will create an incorrect mental model for future declension lessons |
-| 13 | Factual Accuracy | 9/10 | <8 | Proverb «Рідна земля — мати, чужа — мачуха» verified as authentic Ukrainian folk saying. S.T.A.L.K.E.R. is correctly identified as a Ukrainian game. Собака as masculine per SUM (Словник української мови) is accurate. Gender rules are correctly stated. No fabricated claims in callout boxes |
+| Dimension | Score | Evidence Summary |
+|-----------|-------|------------------|
+| **Language (Ukrainian)** | 9 | All Ukrainian examples grammatically correct, no Russianisms, no colonial framing. Minor: "doubled consonant" explanation for укриття/Запоріжжя is a workable simplification but linguistically imprecise. |
+| **Language (English)** | 9 | Warm, clear, B1-readable English throughout. Encouraging tutor voice consistently maintained. A few dense sentences in section «Практика: Чотири сім'ї та винятки» could be simpler. |
+| **Factual Accuracy** | 8 | Proverb «Рідна земля — мати, чужа — мачуха» is authentic. Gender rules accurately presented. Собака treatment is defensible but the optional feminine nuance (line 165) adds confusing optionality for A1. The "doubled consonant = neuter" heuristic (lines 285, 295) oversimplifies the suffix -тт(я) mechanism. |
+| **Lesson Quality** | 9 | Strong arc: WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE. Warm opening, clear objectives (line 15-19), encouraging close. Section «Практика: Чотири сім'ї та винятки» packs 4 declension families + 4 exceptions with limited practice breaks between them — slightly dense for A1.1 fragile learners. 4/5 on "Would I Continue?" test. |
+| **Immersion** | 9 | 12.6% within 10-25% target. Appropriate for A1.1 First Contact — heavy English scaffolding with Ukrainian introduced through key terms, examples, and engagement cues (Привіт!, Розглянемо!, Готові?, Чудово!, Молодець!). |
+| **Activity Quality** | 7 | 9 activities, 6 types. But "Пастки та винятки" quiz has 7/12 items using "Спільний" as 4th distractor — monotonous and auto-generated feel. Same quiz's last 7 items (мама, чоловік, жінка, брат, сестра, дім, серце) are regular nouns, not "traps/exceptions" as the title promises. Two group-sort activities near-duplicate each other. |
+| **Richness** | 8 | S.T.A.L.K.E.R. cultural hook is excellent, folk proverb is authentic, city name examples (Київ/Одеса/Запоріжжя) are clever. Missing the plan-specified adjective collocations (великий стіл, цікава книга, чисте вікно). Mini-dialogue well-executed. |
+| **LLM Fingerprint** | 8 | Section openings varied (6 different opening patterns). No generic AI rhetoric. Three [!context] "Usage Note" boxes share identical structure but pedagogically justified. The "Пастки та винятки" quiz's last 7 items with identical 4-option template (3 genders + "Спільний") reads as auto-generated filler. |
+| **Humanity / Warmth** | 9 | Direct address throughout (>15 instances). Encouragement: "Молодець!", "Чудово!", "you're reading the code like a pro!" (line 189). Reassurance: «The goal at this stage is not perfection but pattern recognition» (line 299). Progress celebration at close. |
 
-**Weighted Overall:**
-```
-(8×1.5 + 9×1.0 + 9×1.0 + 8×1.2 + 8×1.1 + 8×1.2 + 7×1.0 + 8×1.3 + 8×0.9 + 8×1.3 + 8×1.0 + 8×1.5 + 9×1.5) / 15.5
-= (12 + 9 + 9 + 9.6 + 8.8 + 9.6 + 7 + 10.4 + 7.2 + 10.4 + 8 + 12 + 13.5) / 15.5
-= 126.5 / 15.5
-= 8.2/10
-```
-
-## Auto-Fail Checklist Results
-
-- Russianisms: [CLEAN] — no кушати, приймати участь, or similar found
-- Calques: [CLEAN] — no робити сенс, брати місце, or similar found
-- Colonial framing: [CLEAN] — no "Unlike Russian" or Russian comparison baseline. French/Spanish/German comparisons at line 35-36 are typological, not colonial
-- Grammar scope: [CLEAN] — adjective agreement mentioned but not taught; deferred to a1-26 per scope comment
-- Activity errors: [MINOR] — duplicate тато question in activities 3 and 9
-- Beginner safety: 4/5
-- Factual accuracy: [CLEAN] — all verifiable claims checked
+---
 
 ## Critical Issues Found
 
-### Issue 1: Linguistic Accuracy — тато Declension Family Misassignment
-- **Location**: Line 160 / Section «Практика: Чотири сім'ї та винятки»
-- **Original**: «However, grammatically, they follow Family 1 patterns.»
-- **Problem**: The pronoun "they" refers to both тато and Микола (from preceding context). Микола (-а ending) correctly belongs to I відміна (Family 1). However, тато (-о ending) belongs to II відміна (Family 2). Evidence: instrumental case is **татом** (II відміна pattern, cf. містом), NOT **татою** (I відміна pattern, cf. мамою). Placing тато under the "Сім'я 1: Закінчення -А/-Я" header (line 148) is itself misleading since тато ends in -о.
-- **Fix**: Move тато discussion to Section «Сім'я 2: Приголосний та -О/-Е» (line 178). Keep тато under Family 2 as a masculine exception within that family (masculine despite -о ending). Only Микола should remain in Family 1 as the natural-gender-override example. Rewrite line 160 to apply only to words like Микола, суддя.
+### Issue 1: Quiz "Пастки та винятки" — Distractor Monotony and Misleading Title (Activity file, lines 494-630)
 
-### Issue 2: IPA Inconsistency — стіл Transcription
-- **Location**: Line 69 (content) vs vocabulary file line 12
-- **Original**: Content: «стіл [stʲil]» / Vocabulary: `[sʲtʲil]`
-- **Problem**: The vocabulary file correctly marks regressive palatalization of /s/ before /tʲ/ as [sʲtʲil]. The content file omits this, showing [stʲil]. Students consulting both files will see conflicting IPA.
-- **Fix**: Change line 69 to: `**стіл** [sʲtʲil] — table (ends in 'l' → Masculine)` to match the vocabulary file.
+**Severity: Moderate**
 
-### Issue 3: Pacing — Declension Families Cognitive Overload
-- **Location**: Lines 142-213 / Section «Практика: Чотири сім'ї та винятки»
-- **Original**: Four declension families presented consecutively with no embedded exercise break (71 lines of new material)
-- **Problem**: A1 guideline is ≤2 concepts before practice. Four families (each with exceptions: тато, день/ніч, ім'я) constitute 4+ concepts. The section includes explanations and examples but no "try this now" moment until Section «Продукція: Колір і форма» at line 215.
-- **Fix**: Insert a mini-exercise after Family 2 (around line 184), e.g., "Quick check: Is *дім* Family 1 or Family 2? What about *книга*?" This breaks the section into two digestible halves.
+The quiz "Пастки та винятки" (Traps and Exceptions) has two problems:
 
-### Issue 4: Activity Redundancy — Duplicate тато Question
-- **Location**: Activities file — Activity 3 "Теорія роду" item 4 (lines 97-108) and Activity 9 "Пастки та винятки" item 5 (lines 541-551)
-- **Original**: Both ask «Слово «тато» закінчується на -о. Якого воно роду?» / «Якого роду слово «тато»?»
-- **Problem**: Identical concept tested in the same way in two different activities. Activity 9 should test тато differently (e.g., "Which possessive pronoun goes with тато?" or a fill-in context).
-- **Fix**: Replace Activity 9 item 5 with a different question format, e.g.: question: «Яке слово правильне: "моє тато" чи "мій тато"?» with options: "мій тато" (correct) / "моє тато" / "моя тато" / "мої тато".
+1. **Distractor monotony**: Items 6-12 (questions about мама, чоловік, жінка, брат, сестра, дім, серце) ALL use "Спільний" as the 4th distractor option. That is 7 consecutive items with identical distractor structure (Чоловічий/Жіночий/Середній + Спільний). Learners will quickly learn to ignore the 4th option, reducing the quiz to a trivial 3-choice test.
 
-## Ukrainian Language Issues
+2. **Title mismatch**: The title promises «Пастки та винятки» but only the first 5 items (собака, ім'я, ніч, день, тато) are genuine exceptions. The remaining 7 (мама, чоловік, жінка, брат, сестра, дім, серце) are completely regular nouns with predictable genders — no traps involved.
 
-| Line | Current | Corrected | Type |
-|------|---------|-----------|------|
-| 160 | «However, grammatically, they follow Family 1 patterns.» | «However, grammatically, Микола follows Family 1 patterns — just like мама, with the -а ending.» (Move тато to Family 2 section.) | Grammar — declension error |
-| 69 | «стіл [stʲil]» | «стіл [sʲtʲil]» | IPA — missing palatalization |
+**Fix**: Replace items 6-12 with genuinely tricky items (e.g., любов, радість, кімната, хліб, дядько) and vary the 4th distractor across items.
 
-## Beginner Safety Audit
+### Issue 2: Duplicate Group-Sort Activities (Activity file, lines 1-28 and 371-392)
 
-"Would I Continue?" Test: 4/5
-- Overwhelmed? **Mild FAIL** — Section «Практика: Чотири сім'ї та винятки» presents 4 families (71 lines) without an embedded exercise. A nervous beginner might feel the rules are piling up.
-- Instructions clear? **PASS** — Learning objectives stated clearly at lines 15-19. Each section has clear signposting (Розглянемо правила!, Готові?, Чудово!).
-- Quick wins? **PASS** — Inline gender-guessing exercise at lines 135-140. Mini-dialogue at lines 256-268. Self-check at lines 319-326.
-- Ukrainian scary? **PASS** — Ukrainian introduced gently with English translations. Grammar terms presented bilingually in a callout box (lines 25-30).
-- Come back tomorrow? **PASS** — «Молодець!» closing (line 308), progress celebration, preview of next lesson ("Next, we will learn how to point at these things and say 'This is...'").
+**Severity: Minor**
 
-## Strengths
+Activity 1 «Сортування за родом» asks learners to sort words by gender (Він/Вона/Воно). Activity 7 «Сортування за закінченням» asks learners to sort words by ending (-consonant / -а/-я / -о/-е). For regular nouns, these are the same cognitive operation — knowing the ending IS knowing the gender. The activities use largely overlapping word sets with nearly identical answers.
 
-- **Memorable mnemonic system**: "Hard Stop" (М), "Open A" (F), "Round O" (N) is an effective visual-kinesthetic framework that gives beginners a physical intuition for gender. The comparison table (line 129) makes this visually scannable.
-- **Culturally authentic engagement hooks**: The S.T.A.L.K.E.R. vocabulary connection (lines 274-279) is genuinely motivating for the target demographic. The proverb «Рідна земля — мати, чужа — мачуха» (line 291) with its built-in gender agreement illustration is pedagogically elegant.
-- **Natural mini-dialogue**: The Андрій/Олена dialogue (lines 258-262) demonstrates мій/моя agreement in a realistic family introduction context. All Ukrainian sentences are natural.
-- **Strong exception coverage**: тато, собака, ніч, ім'я — all major "traps" for learners are explicitly called out with dedicated [!warning] and [!myth-buster] boxes.
-- **Comprehensive activities**: 115 items across 9 activities with 6 different types provide extensive practice opportunities.
+**Fix**: Replace the second group-sort with a different activity type that tests a distinct skill — e.g., a sentence-completion activity where learners identify gender from context, or a "find the exception" exercise.
 
-## Fix Plan to Reach 9/10 (REQUIRED — score < 9.0)
+### Issue 3: Potentially Confusing Собака Nuance for A1 (Content file, lines 163-167)
 
-### Linguistic Accuracy: 8/10 → 9/10
-**What to fix:**
-1. Line 148-176: Restructure Section «Практика: Чотири сім'ї та винятки» — move тато from «Сім'я 1» to «Сім'я 2: Приголосний та -О/-Е» (line 178). Present тато as a Family 2 masculine exception (masculine despite -о ending, declining like Family 2: татом, not татою). Keep only Микола in Family 1 as the natural-gender-override example.
-2. Line 160: Rewrite to: "However, grammatically, Микola follows Family 1 patterns, just like мама — with the -а ending." Remove тато from the "they."
-3. Line 69: Change IPA from [stʲil] to [sʲtʲil] to match vocabulary file.
+**Severity: Minor**
 
-**Expected score after fix:** 9/10
+The content states: «**собака** is **Masculine** by default in standard Ukrainian» (line 163), then immediately adds: «**моя собака** — Also acceptable when specifically referring to a female dog» (line 165). For A1.1 learners who are just learning that gender exists, presenting an "exception to the exception" creates unnecessary cognitive load. The learner has just been told the ending -а usually means feminine, then told собака is masculine despite -а, then told "but also feminine sometimes." This three-step reversal is likely to confuse rather than clarify.
 
-### Experience Quality: 8/10 → 9/10
-**What to fix:**
-1. After line 183 (end of «Сім'я 2»): Insert a 3-line mini-exercise: "Quick check! Which family does книга belong to? What about дім? (Answers: книга → Family 1 (-а ending), дім → Family 2 (consonant ending))" — breaks cognitive load in half.
-2. This also fixes Pedagogy (8→9) and Beginner Safety (8→9) simultaneously.
+**Fix**: Remove line 165 entirely. At A1, teach собака as masculine, period. The feminine usage nuance can be introduced at A2 or later.
 
-**Expected score after fix:** 9/10
+### Issue 4: Missing Vocabulary IPA Stress Mark (Vocabulary file, line 121-122)
 
-### Language: 8/10 → 9/10
-**What to fix:**
-1. Fix IPA inconsistency (same as Linguistic Accuracy #3 above).
+**Severity: Minor**
 
-**Expected score after fix:** 9/10
+The vocabulary entry for зона shows IPA as `[zɔnɑ]` without a stress mark. For a disyllabic word, the stress mark is necessary: should be `[ˈzɔnɑ]`. All other polysyllabic entries (мама, тато, сестра, etc.) correctly include stress marks.
 
-### Activities: 8/10 → 9/10
-**What to fix:**
-1. Activity 9 item 5 (line 541-551): Replace duplicate тато gender question with a different format testing the same exception, e.g., a "which is correct" question: «Яке словосполучення правильне?» with options: "мій тато" (correct), "моє тато", "моя тато", "мої тато".
+**Fix**: Change `[zɔnɑ]` to `[ˈzɔnɑ]` in vocabulary file.
 
-**Expected score after fix:** 9/10
+### Issue 5: Plan-Specified Adjective Collocations Missing from Section «Презентація: Три кити роду» (Content file, lines 58-140)
 
-### Immersion: 7/10 → 8/10
-**What to fix:**
-1. Section «Культурний контекст: Жива мова» opening (line 272): Replace English-only opening «Language does not exist in a vacuum» with a Ukrainian-leading variant: «Мова живе всюди.» (Language lives everywhere.) Then follow with English elaboration.
-2. Add 2-3 more Ukrainian mini-phrases in Section «Продукція: Колір і форма» — e.g., «Подивіться!» (Look!) before the word analysis.
+**Severity: Minor**
 
-**Expected score after fix:** 8/10
+The plan (plan file, line 27-29) specifies: "Syntactic Agreement: How gender dictates the form of adjectives and pronouns — examples with 'великий стіл' (M), 'цікава книга' (F), and 'чисте вікно' (N)." None of these three collocations appear in the content. The content uses other adjective-noun pairs in later sections (добрий день, велике місто, тиха ніч, рідна земля, добре серце) but the Презентація section focuses exclusively on мій/моя/моє agreement, omitting the adjective agreement dimension.
 
-### Projected Overall After Fixes
-```
-Experience: 9×1.5=13.5, Coherence: 9×1.0=9, Relevance: 9×1.0=9,
-Educational: 8×1.2=9.6, Language: 9×1.1=9.9, Pedagogy: 9×1.2=10.8,
-Immersion: 8×1.0=8, Activities: 9×1.3=11.7, Richness: 8×0.9=7.2,
-Beginner Safety: 9×1.3=11.7, LLM: 8×1.0=8, Linguistic Accuracy: 9×1.5=13.5,
-Factual Accuracy: 9×1.5=13.5
+**Fix**: Add one brief paragraph or callout in section «Презентація: Три кити роду» demonstrating adjective agreement with the plan-specified examples — even a simple table showing «великий стіл» / «цікава книга» / «чисте вікно» would satisfy the plan's intent.
 
-Total = 135.4 / 15.5 = 8.7/10
-```
-
-All auto-fail dimensions would clear thresholds after fixes (Linguistic Accuracy 9 ≥ 9, Language 9 ≥ 8).
+---
 
 ## Factual Verification
 
-- Research notes consulted: NOT_APPLICABLE (A1 core track)
-- Key Facts Ledger present: NO (core track)
-- Dates checked: 0 (no historical dates in content)
-- Named figures verified: 0 (no historical figures)
-- Primary quotes cross-referenced: 1 — proverb «Рідна земля — мати, чужа — мачуха» is a verified authentic Ukrainian folk saying
-- Chronological sequence: N/A
-- Claims without research grounding: 0
+### Grammar Rules Verified
 
-**Callout box verification:**
-- [!note] "Граматичні терміни" (line 25): Lists рід, чоловічий рід, жіночий рід, середній рід — correct terminology ✓
-- [!tip] "Don't Trust Your English Instincts" (line 48): стіл=M, книга=F, вікно=N — correct ✓
-- [!context] "Usage Note: Мій" (line 79): мій брат, мій дім, мій стіл — correct agreement ✓
-- [!context] "Usage Note: Моя" (line 102): моя мама, моя книга, моя земля — correct ✓
-- [!context] "Usage Note: Моє" (line 120): моє місто, моє серце, моє море — correct ✓
-- [!warning] "The Dad Trap" (line 173): мій тато — correct ✓
-- [!myth-buster] "Is Name Feminine?" (line 211): ім'я is Neuter — correct ✓
-- [!culture] "Приємно познайомитись!" (line 295): Моє ім'я — correct neuter agreement ✓
-- No fabricated claims detected in any callout box.
+| Rule | Status | Notes |
+|------|--------|-------|
+| Masculine = consonant ending | ✓ Correct | Standard rule, accurately presented |
+| Feminine = -а/-я ending | ✓ Correct | With appropriate "90%" qualifier (line 89) |
+| Neuter = -о/-е ending | ✓ Correct | Standard rule |
+| тато = Masculine despite -о | ✓ Correct | Natural gender override, well-explained |
+| собака = Masculine default | ✓ Defensible | Standard dictionaries list as masculine; the added feminine option creates unnecessary confusion |
+| ім'я = Neuter (Family 4) | ✓ Correct | Properly explained as ancient neuter form |
+| день = Masculine (soft sign) | ✓ Correct | |
+| ніч = Feminine (consonant) | ✓ Correct | Family 3 exception, well-flagged |
+| Запоріжжя = Neuter | ✓ Correct | Geographic name, neuter gender |
+
+### Callout Box Verification
+
+| Callout | Claim | Status |
+|---------|-------|--------|
+| Cultural Hook (line 35-37) | Sun is neuter in Ukrainian, masculine in French/Spanish, feminine in German | ✓ Correct (le soleil M, el sol M, die Sonne F, сонце N) |
+| Proverb (line 297) | «Рідна земля — мати, чужа — мачуха» | ✓ Authentic Ukrainian proverb |
+| S.T.A.L.K.E.R. (lines 281-286) | Артефакт (M), Зона (F), Укриття (N) | ✓ Correct genders; game is Ukrainian-made |
+| [!myth-buster] (lines 217-219) | ім'я commonly confused with feminine | ✓ Pedagogically sound, common learner error |
+| [!warning] (lines 183-186) | Don't say "моє тато" | ✓ Correct guidance |
+
+### Colonial Framing Check
+No Russian comparisons found. References are to French, Spanish, German, and English — legitimate cross-linguistic comparison. **Clean pass.**
+
+---
 
 ## Verification Summary
 
-- Content lines read: 326
-- Activity items checked: 115 across 9 activities
-- Ukrainian sentences verified: 28 (all examples, dialogue lines, callout Ukrainian)
-- IPA transcriptions checked: 31 (content + vocabulary)
-- Factual claims verified: 5 (proverb, S.T.A.L.K.E.R. origin, собака gender per SUM, declension rules, city gender assignments)
-- Issues found: 4 (1 linguistic accuracy, 1 IPA inconsistency, 1 pacing, 1 activity redundancy)
+| Check | Result |
+|-------|--------|
+| All H2 sections from plan present | ✓ All 6 sections present and match meta outline |
+| Vocabulary scope matches plan | ✓ All 8 required + 12 recommended items present |
+| Grammar scope — no creep | ✓ Stays within gender identification, мій/моя/моє, declension family overview |
+| Learning objectives addressed | ✓ All 4 objectives from line 16-19 covered |
+| Colonial framing | ✓ Clean — no Russian comparisons |
+| Russianisms | ✓ None detected |
+| LLM fingerprints | Minor — activity distractor monotony; content prose is clean |
+| Activity correctness | ✓ All answers verified correct across 9 activities |
+| IPA accuracy | 1 issue: зона missing stress mark |
+| "Would I Continue?" test | 4/5 — Practice section slightly dense |
+
+**Sections referenced**: Section «Вступ: Таємний код української мови» — strong warm opening with cultural hook. Section «Презентація: Три кити роду» — clear rule presentation with good visual table, but missing plan-specified adjective collocations. Section «Практика: Чотири сім'ї та винятки» — comprehensive exception coverage but dense pacing. Section «Продукція: Колір і форма» — effective "Gender Algorithm" and mini-dialogue. Section «Культурний контекст: Жива мова» — excellent S.T.A.L.K.E.R. hook and authentic proverb. Section «Підсумок» — warm close with progress celebration and self-check questions.
+
+---
 
 ## Verdict
 
-**FAIL**
+**PASS WITH FIXES**
 
-Blocking issue: **Linguistic Accuracy (8/10 < 9 auto-fail threshold)** — тато is incorrectly assigned to Family 1 (I відміна) in Section «Практика: Чотири сім'ї та винятки» at line 160. Тато belongs to Family 2 (II відміна) as evidenced by its instrumental case form (татом, not татою). This must be corrected to prevent students from building an incorrect declension mental model. All other issues are non-blocking improvements.
+This is a solid A1.1 module with warm pedagogy, accurate grammar, and engaging cultural hooks. The content prose is well-written, the emotional arc is appropriate for fragile beginners, and the lesson structure follows PPP faithfully.
+
+The main weakness is in activity quality: the "Пастки та винятки" quiz has monotonous distractors (7/12 items use "Спільний") and misleading title (regular nouns presented as "exceptions"), and the two group-sort activities near-duplicate each other. These should be fixed before the module ships.
+
+**Required fixes (3):**
+1. Diversify distractors and replace regular items in "Пастки та винятки" quiz
+2. Replace second group-sort with a distinct activity type
+3. Fix зона IPA stress mark: `[zɔnɑ]` → `[ˈzɔnɑ]`
+
+**Recommended fixes (2):**
+4. Remove собака feminine usage option (line 165) — simplify for A1
+5. Add plan-specified adjective collocations to section «Презентація: Три кити роду»

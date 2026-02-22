@@ -2,13 +2,13 @@
   "module": "yesterday-past-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:37.252880Z",
+  "last_audit": "2026-02-22T23:19:37.712347Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-20T23:49:18.004124Z",
+    "md": "2026-02-22T22:54:15.098372Z",
     "meta": "2026-02-19T22:27:20.045664Z",
     "activities": "2026-02-20T23:49:17.192912Z",
-    "vocabulary": "2026-02-19T10:35:11.486786Z",
+    "vocabulary": "2026-02-22T18:40:50.030307Z",
     "plan": "2026-02-20T20:41:12.306243Z",
     "research": "2026-02-19T22:27:20.036598Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2389/2000 (raw: 2725)"
+      "message": "2863/2000 (raw: 3208)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "5 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
-    ],
-    "pass_count": 5,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

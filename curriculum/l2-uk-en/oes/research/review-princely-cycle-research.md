@@ -1,5 +1,15 @@
 # Дослідження: Review Princely Cycle (Огляд: Княжий цикл)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Review Princely Cycle (Огляд: Княжий цикл)"
+dates:
+  key_events:
+forbidden_claims:
+  - "«Київська Русь» — колиска «трьох братніх народів» або перший етап російської державності."
+```
+
 ## Використані джерела
 1.  **Літопис Руський (за Іпатіївським списком)** [litopys.org.ua](http://litopys.org.ua/lipol/lip.htm) — Основне джерело текстів та хронології.
 2.  **Енциклопедія Сучасної України: Література Київської Русі** [esu.com.ua](https://esu.com.ua/article-12345) — Аналіз літературного процесу та жанрів.

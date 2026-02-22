@@ -1,36 +1,32 @@
-# Дослідження: The Completed Past (A2)
+# Дослідження: The Completed Past
 
 ## State Standard Reference
 §4.3.2: "Видові пари дієслів: робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути."
-§4.2.3.1: "Утворення форм минулого часу дієслів: мріяти (мріяв, мріяла, мріяло, мріяли)... Майбутній час дієслів доконаного виду: скажу, закричите, поборють."
-Alignment: This module focuses on the formation and usage of the past tense of perfective verbs, directly implementing the aspectual pairs and past tense patterns defined for the A2 level.
+Alignment: This module directly fulfills the requirement to recognize and apply perfective/imperfective aspectual pairs, specifically focusing on their use in the past tense to denote completed results.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **зробив** | Very High (Top 100 verbs) | зробив помилку, зробив висновок, зробив вибір |
-| **сказав** | Very High (Top 50 verbs) | сказав правду, сказав чесно, сказав «так» |
-| **написав** | High | написав листа, написав книгу, написав пост |
-| **прочитав** | High | прочитав до кінця, прочитав повідомлення |
-| **пішов** | Very High | пішов додому, пішов на прогулянку, пішов геть |
-| **прийшов** | High | прийшов вчасно, прийшов на допомогу |
-| **зрозумів** | High | зрозумів ідею, зрозумів ситуацію, нарешті зрозумів |
-| **забув** | Medium-High | забув пароль, забув ключі, забув про все |
-| **знайшов** | High | знайшов рішення, знайшов вихід, знайшов час |
+| зробив | Very High | зробив помилку, зробив висновок, зробив вибір |
+| сказав | Very High | сказав правду, сказав чесно, сказав «так» |
+| пішов | Very High | пішов додому, пішов на прогулянку, пішов геть |
+| знайшов | High | знайшов рішення, знайшов вихід, знайшов час |
+| написав | High | написав листа, написав книгу, написав пост |
 
 ## Cultural Hooks
-2. **Proverbial Wisdom**: "Діло майстра величає" (The deed glorifies the master). Ukrainian culture places high value on the *completion* of work and the tangible result left behind. Another fitting proverb: "Кінець — справі вінець" (The end is the crown of the work).
+1. Traditional Ukrainian proverbs explicitly value the completion of tasks and the resulting product over mere effort: «Діло майстра величає» (The deed glorifies the master) and «Кінець — справі вінець» (The end is the crown of the work).
+2. Historically, in Ukrainian craftsmanship (like Petrykivka painting or Kosiv ceramics), the mastery is judged by the finished, tangible object—mirroring the semantic function of the perfective aspect which highlights the result.
 
 ## Common Learner Errors
-1. **Process vs. Result (Aspect Drift)**: Using imperfective "я писав листа" when they mean they actually finished it ("I have written"). *Correction*: "я написав листа" (result) vs "я писав листа" (process).
-2. **Double Past (Tense Confusion)**: English speakers often try to use auxiliary words for "have done" or "was doing." *Correction*: Ukrainian uses aspect (префікс/суфікс) within the past tense form itself to distinguish these nuances.
-3. **Gender/Number Agreement**: Forgetting that even perfective past verbs must agree with the subject's gender (написав vs написала).
+1. **The Double Past**: Using auxiliary verbs from English (e.g., "was done", "had written") directly in Ukrainian (like «я був зробив»). → *Correct form*: «я зробив». Ukrainian perfective verbs independently carry both past tense and completion.
+2. **Aspect Drift**: Defaulting to the imperfective past (e.g., «я читав книгу») when aiming to report a finished action («я прочитав книгу»). → *Why it happens*: Over-reliance on the English simple past without differentiating process vs. result.
+3. **Gender/Number Disagreement**: Treating the masculine past suffix `-в` as a default for all subjects (e.g., «Марія написав»). → *Correct form*: «Марія написала».
 
 ## Cross-References
-- Builds on: **a1-past-tense** (basic formation), **a2-12** (aspect introduction/pairs logic).
-- Prepares for: **a2-14** (Future Plans - perfective future), **a2-15** (Aspect Morphology - deepening the "how"), **a2-26** (Telling Stories - narrative sequencing).
+- Builds on: a2-12 (Aspect introduction), A1 past tense formation
+- Prepares for: a2-14 (Future Plans and Promises), a2-15 (Aspect Morphology), a2-26 (Telling Stories)
 
 ## Notes for Content Writing
-- **Narrative Sequencing**: Emphasize the "Chain of Events" pattern (first I did A, then I did B). Use markers like «спочатку», «потім», «нарешті».
-- **Immersion**: Since this is A2 Band 1 (M13), keep grammar theory in English but use Ukrainian for all archival examples and the "Yesterday in the Museum" dialogue.
-- **Visual Aid**: A decision tree for "Did I finish it?" vs "Was I doing it?" would be highly effective for this group.
+- Immersion is Band 1 (50-60%). English scaffolding is required for abstract grammar explanations (aspect theory and the Zero Auxiliary rule), but use Ukrainian for all examples, dialogues, and contextual sentences.
+- Use decolonized framing: Do not compare Ukrainian verb pairs to Russian. Present the aspect system as an elegant, self-contained feature of Ukrainian that efficiently packages time and completion into a single word.
+- Ensure strict adherence to the target word count (3000 words). The sections need substantive, rich examples rather than brief lists to meet this floor.

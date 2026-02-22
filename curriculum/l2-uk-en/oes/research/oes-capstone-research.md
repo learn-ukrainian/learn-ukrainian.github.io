@@ -1,5 +1,28 @@
 # Дослідження: OES Capstone («Слово про погибель Руської землі»)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "OES Capstone («Слово про погибель Руської землі»)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Житія Олександра Невського"
+    source: ""
+    attribution: ""
+  - text: "О, світло світлая і красно украшена земля Руська! І многіми красотами удивлена єси..."
+    source: "Вступ"
+    attribution: "1"
+  - text: "То все покорено було богом хрестияцькому язику, поганьські страни..."
+    source: "Про владу"
+    attribution: "2"
+  - text: "діти своїм лякаша в колисці"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Russian historiography often treats this as \"Old Russian literature\" (Древнерусская литература) and emphasizes its connection to Alexander Nevsky (a key figure in the Russian state pantheon)."
+```
+
 ## Використані джерела
 1. [Ізборник (Litopys.org.ua)](http://litopys.org.ua/oldeast/pohyb.htm) — Оригінальний текст, переклад та коментарі.
 2. [Енциклопедія історії України (history.org.ua)](http://history.org.ua) — Стаття про пам'ятку, історичний контекст, датування.

@@ -1,5 +1,22 @@
 # Дослідження: Building Of Lavra
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Building Of Lavra"
+dates:
+  key_events:
+primary_quotes:
+  - text: "20 у ширину, 30 у довжину, 50 у висоту"
+    source: ""
+    attribution: ""
+  - text: "Хочу бо церкву собі спорудити на Русі, в Києві. І повеліла взяти золота на три роки майстрам..."
+    source: "Патерик"
+    attribution: ""
+forbidden_claims:
+  - "Твердження про Лавру як колиску \"російського православ'я\" або \"триєдиного народу\". Применшення ролі київських князів та варязького елементу на користь пізніших московських наративів."
+```
+
 ## Використані джерела
 1. [Ізборник (litopys.org.ua)](http://litopys.org.ua/paterik/paterik.htm) — Києво-Печерський патерик, основне джерело наративу про заснування та будівництво церкви.
 2. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/article-6950) — Стаття про Києво-Печерську Лавру, історія архітектурного ансамблю.

@@ -1,5 +1,20 @@
 # Дослідження: Koval Storinky
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Koval Storinky"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ми не кували залізо, ми виковували сенси на порожніх сторінках історії, де раніше були лише плями чужого чорнила"
+    source: ""
+    attribution: ""
+  - text: "Слово стало не просто інструментом, а ковадлом, на якому випробовувалась на міцність нова ідентичність"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Енциклопедія сучасної України](http://esu.com.ua/) — огляд літературного процесу 1990-х років та зміни парадигм.
 2. [Історична правда](https://www.istpravda.com.ua/) — контекст здобуття незалежності та культурного відродження.

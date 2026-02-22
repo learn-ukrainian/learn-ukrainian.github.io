@@ -2,30 +2,31 @@
 
 ## State Standard Reference
 §4.3.2: "Видові пари дієслів: робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути."
-Alignment: This module introduces the fundamental concept of aspectual pairs (imperfective/perfective) as required by the A2 standard for linguistic competence.
+Alignment: Introduces the fundamental pairs of perfective/imperfective verbs required for A2 aspect competence, covering basic prefixation, suffix shifts, and suppletion patterns.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| писати / написати | Top 100 verbs | писати лист, написати книгу, написати тест |
-| робити / зробити | Top 50 verbs | робити вправи, зробити домашнє завдання, робити помилку |
-| говорити / сказати | Top 50 (Suppletive) | говорити правду, сказати слово, сказати комплімент |
-| купувати / купити | High (A2 Shopping) | купувати продукти, купити подарунок |
-| пити / випити | High (A2 Daily Life) | пити каву, випити склянку води |
+| писати/написати | Top 100 verbs | писати лист, написати тест, написати повідомлення |
+| робити/зробити | Top 50 verbs | робити вправи, зробити домашнє завдання |
+| говорити/сказати | Top 50 verbs | говорити правду, сказати слово, сказати комплімент |
+| купувати/купити | High frequency (A2 Shopping) | купувати продукти, купити подарунок |
+| пити/випити | High frequency (A2 Daily Life) | пити каву, випити склянку води |
 
 ## Cultural Hooks
-1. **The Borsch Ritual**: In Ukrainian culture, cooking borsch is a symbolic process (imperfective - *варити*) that results in a masterpiece of national identity (perfective - *зварити*). UNESCO recognized the "Culture of Ukrainian borscht cooking" as intangible heritage in 2022.
-2. **Proverbial Wisdom**: "Без труда нема плода" (Without labor there is no fruit) - emphasizes that the result (fruit) is impossible without the process (labor).
+1. **The Borsch Ritual**: Cooking borsch is a deeply symbolic, time-consuming process (`варити` - imperfective), but finishing it yields a cultural masterpiece (`зварити` - perfective). UNESCO officially recognized Ukrainian borsch cooking culture as intangible cultural heritage in 2022.
+2. **Proverb**: "Без труда нема плода" (Without labor there is no fruit). This proverb anchors the aspectual concept: a result (the fruit / perfective) is completely impossible without the ongoing process (the labor / imperfective).
 
 ## Common Learner Errors
-1. **Present Tense Perfective**: Attempting to use a perfective verb to describe current ongoing action (e.g., *Я напишу листа зараз* meaning "I am writing a letter now"). In Ukrainian, perfective verbs in "present" forms actually indicate future result.
-2. **Mapping English "Ing"**: Learners often assume any English "-ing" form must be imperfective, missing cases where the focus is on the completion of the action rather than its duration.
-3. **Aspect Pair Negation**: Confusion between "didn't do" (process/habit - imperfective) and "failed to do/didn't finish" (result - perfective).
+1. **The Present Tense Perfective Illusion**: Learners saying «Я напишу» intending to mean "I am writing now" (mapping to English present continuous). They fail to realize perfective verbs inherently have no present tense; «Я напишу» strictly means "I will write/finish."
+2. **The "-ing" Trap**: Assuming all English "-ing" verbs translate directly to imperfective verbs, ignoring contexts where the focus is on a single completed action despite its duration.
+3. **Negation Nuance Failure**: Using «не зробив» when meaning "I wasn't doing it / I had no habit of doing it," rather than the correct «не робив». «Не зробив» implies a failed attempt or unfulfilled expectation of a result.
 
 ## Cross-References
-- Builds on: a2-11 (Checkpoint - Cases), A1 verb conjugation (basic), A1 past/future tense (basic).
+- Builds on: a2-11 (Checkpoint - Cases), A1 verb conjugation, A1 past/future tense basics.
 - Prepares for: a2-13 (The Completed Past), a2-14 (Future Plans and Promises), a2-15 (Aspect Morphology).
 
 ## Notes for Content Writing
-- Emphasize that perfective verbs DO NOT have a present tense form.
-- Clearly categorize pairs by formation: prefixation (*писати/написати*), suffix/stem change (*купувати/купити*), and suppletion (*говорити/сказати*, *брати/взяти*).
+- Word target is 3000 words. Since this is A2 Band 1, immersion is 50-60%. Provide all deep grammatical theory in English (scaffolding), but keep all dialogues, examples, and practice instructions strictly in Ukrainian.
+- Keep the tone as the "Encouraging Cultural Guide / Borsch Master Chef" to make the abstract grammar feel grounded in warm, practical traditions.
+- Decolonized framing: Present the aspect system as an elegant, highly precise feature of the Ukrainian language that elegantly separates process from achievement, rather than a "difficult irregularity." Do not compare to Russian.

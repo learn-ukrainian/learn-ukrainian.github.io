@@ -1,5 +1,29 @@
 # Дослідження: Zerov Sonnets
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Zerov Sonnets"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Класична пластика, і контур строгий, / І логіки залізна течія — / Оце твоя, поезіє, дорога"
+    source: ""
+    attribution: "1"
+  - text: "Pro domo"
+    source: ""
+    attribution: "1"
+  - text: "Ad fontes"
+    source: ""
+    attribution: "2"
+  - text: "До джерел"
+    source: ""
+    attribution: "2"
+  - text: "Засвоїти найвищу культуру людства, щоб на її ґрунті творити власну, національну"
+    source: ""
+    attribution: "3"
+```
+
 ## Використані джерела
 1. [Енциклопедія сучасної України: Зеров Микола Костянтинович](https://esu.com.ua/) — базові біографічні та літературознавчі факти щодо життя та творчості лідера неокласиків.
 2. [Енциклопедія історії України: Неокласики](http://www.history.org.ua/) — історичний контекст діяльності київського гуртка та Літературної дискусії 1925–1928 рр.

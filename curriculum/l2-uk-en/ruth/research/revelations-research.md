@@ -1,5 +1,22 @@
 # Дослідження: Revelations (Апокаліпсис в українській культурі XVI-XVII ст.)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Revelations (Апокаліпсис в українській культурі XVI-XVII ст.)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "...слід антихристів ухвалили ви..."
+    source: ""
+    attribution: ""
+  - text: "...тіла зійдуть з неба, в той святий Єрусалим..."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Російська історіографія часто привласнює спадщину Острозької Біблії та полемічної літератури як \"загальноросійську\"."
+```
+
 ## Використані джерела
 1. [Ізборник](http://litopys.org.ua/old17/old17_06.htm) — Іван Вишенський. Твори. Апокаліптичні мотиви в полеміці.
 2. [Енциклопедія Сучасної України](https://esu.com.ua/article-13645) — Стаття "Апокаліпсис".

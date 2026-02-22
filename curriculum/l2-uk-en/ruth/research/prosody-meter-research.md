@@ -1,5 +1,15 @@
 # Дослідження: Ruthenian Prosody (XIV-XVIII c.)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Ruthenian Prosody (XIV-XVIII c.)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Російська історіографія часто розглядає українське бароко як \"південноросійську школу\" або підготовчий етап до російського класицизму."
+```
+
 ## Використані джерела
 1. [Ізборник: Мелетій Смотрицький](http://litopys.org.ua/ukrmova/um49.htm) — Аналіз "Грамматіки" та просодії.
 2. [Ізборник: Касіян Сакович](http://litopys.org.ua/old17/old17_08.htm) — Текст "Віршів на жалісний погреб...".

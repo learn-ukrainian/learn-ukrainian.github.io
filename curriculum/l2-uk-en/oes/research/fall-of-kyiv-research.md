@@ -1,5 +1,28 @@
 # Дослідження: Fall Of Kyiv (Падіння Києва)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Fall Of Kyiv (Падіння Києва)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "мужності заради його"
+    source: ""
+    attribution: ""
+  - text: "от тягости повалишася"
+    source: ""
+    attribution: ""
+  - text: "І не було чути [нічого] од звуків скрипіння теліг його, ревіння безлічі верблюдів його, і од звуків іржання стад коней його, і сповнена була земля Руська ворогами"
+    source: "Іпатіївський"
+    attribution: ""
+  - text: "...знаходили в полі незліченну кількість голів і кісток мертвих людей, що лежали на землі"
+    source: "Карпіні"
+    attribution: ""
+forbidden_claims:
+  - "The \"Transfer of the Capital\" theory (Pogodin/Kluchevsky). The idea that with Kyiv's fall, the \"political center\" migrated to Vladimir-Suzdal and then Moscow, carrying the \"Rus'\" legitimacy with it."
+```
+
 ## Використані джерела
 1. **Іпатіївський літопис** (litopys.org.ua) — Основне джерело про облогу 1240 року, детальний опис дій воєводи Дмитра та падіння Десятинної церкви.
 2. **Джованні да Плано Карпіні**, «Історія монголів» (litopys.org.ua) — Свідчення про стан Києва у 1246 році, опис руйнувань та "голів мертвих людей".

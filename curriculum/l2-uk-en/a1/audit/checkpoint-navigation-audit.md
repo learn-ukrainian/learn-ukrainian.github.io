@@ -1,7 +1,7 @@
 # Audit Report: M20 — checkpoint-navigation.md
 **Level:** A1 | **Module:** M20 | **Phase:** A1.2 | **Pedagogy:** TTT | **Target:** 1500
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:36
+**Generated:** 2026-02-22 23:19:36
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2572/1500 (raw: 2773)
+- **Words:** ✅ 2557/1500 (raw: 2758)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 5/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 18.4% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 18.5% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -62,10 +62,10 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Checkpoint: Navigation** | ➖ | 68 | Excluded Type |
 | **Огляд: Навігація** | ✅ | 215 | Included in Core |
-| **Навичка 1: Знахідний відмінок** | ✅ | 303 | Included in Core |
-| **Навичка 2: Місцевий відмінок** | ✅ | 314 | Included in Core |
-| **Навичка 3: Родовий відмінок** | ✅ | 431 | Included in Core |
-| **Навичка 4: Присвійні займенники** | ✅ | 359 | Included in Core |
-| **Навичка 5: Орієнтування в місті** | ✅ | 367 | Included in Core |
+| **Навичка 1: Знахідний відмінок** | ✅ | 302 | Included in Core |
+| **Навичка 2: Місцевий відмінок** | ✅ | 312 | Included in Core |
+| **Навичка 3: Родовий відмінок** | ✅ | 426 | Included in Core |
+| **Навичка 4: Присвійні займенники** | ✅ | 356 | Included in Core |
+| **Навичка 5: Орієнтування в місті** | ✅ | 363 | Included in Core |
 | **Інтеграція: Практика в місті** | ✅ | 361 | Included in Core |
 | **Summary** | ✅ | 154 | Included in Core |

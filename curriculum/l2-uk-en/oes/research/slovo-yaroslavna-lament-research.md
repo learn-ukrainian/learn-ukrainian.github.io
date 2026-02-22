@@ -1,5 +1,28 @@
 # Дослідження: Slovo Yaroslavna Lament
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Slovo Yaroslavna Lament"
+dates:
+  key_events:
+primary_quotes:
+  - text: "На Дунаи Ярославнынъ гласъ слышитъ, зегзицею незнаема рано кычеть..."
+    source: ""
+    attribution: ""
+  - text: "О вѣтрѣ, вѣтрило! Чему, господине, насильно вѣеши?"
+    source: ""
+    attribution: ""
+  - text: "О Днепре Словутицю! Ты пробилъ еси каменныя горы сквозѣ землю Половецкую..."
+    source: ""
+    attribution: ""
+  - text: "Свѣтлое и тресвѣтлое слънце! Всѣмъ тепло и красно еси..."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Слово\" — пам'ятка \"російської\" літератури, бо знайдене в Росії і написане \"давньоросійською\" мовою."
+```
+
 ## Використані джерела
 1. [Ізборник — Слово о полку Ігоревім](http://litopys.org.ua/slovo67/slovo.htm) — Оригінальний текст та переклади.
 2. [Енциклопедія Сучасної України — Слово о полку Ігоревім](https://esu.com.ua/search_articles.php?id=Sl0v0) — Академічний огляд.

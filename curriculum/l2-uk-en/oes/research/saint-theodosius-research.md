@@ -1,5 +1,19 @@
 # Дослідження: Святий Феодосій Печерський
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Святий Феодосій Печерський"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Молю вас, братіє, майте страх Божий у серці своїм і пам'ятайте про смерть, і про судний день, і про муку вічну"
+    source: "Повчання про терпіння"
+    attribution: ""
+forbidden_claims:
+  - "Російська церква розглядає Феодосія як \"русского святого\", ігноруючи, що його традиція сформувалася в Києві до появи Москви."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Феодосій Печерський](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Feodosiy_Pechersky) — Академічна біографія, дати, політична діяльність.
 2. [Ізборник: Києво-Печерський Патерик](http://litopys.org.ua/paterik/paterik.htm) — Першоджерело («Житіє Феодосія» Нестора Літописця), тексти повчань.

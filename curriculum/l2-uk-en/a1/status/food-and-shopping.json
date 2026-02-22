@@ -2,13 +2,13 @@
   "module": "food-and-shopping",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:34.944202Z",
+  "last_audit": "2026-02-22T23:19:35.335548Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T00:16:24.974565Z",
+    "md": "2026-02-22T18:47:35.752372Z",
     "meta": "2026-02-19T23:43:25.857030Z",
     "activities": "2026-02-22T00:16:24.975137Z",
-    "vocabulary": "2026-02-18T22:00:31.178328Z",
+    "vocabulary": "2026-02-22T18:40:40.352732Z",
     "plan": "2026-02-20T20:40:42.006922Z",
     "research": "2026-02-19T23:43:25.852791Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2677/2000 (raw: 2810)"
+      "message": "2635/2000 (raw: 2768)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "1 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -57,7 +57,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 7,
     "fail_count": 0,
     "deferred_count": 0
   }

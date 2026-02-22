@@ -1,5 +1,28 @@
 # Дослідження: Полонізми у праві (Polonisms In Law)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Полонізми у праві (Polonisms In Law)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Напродъ мы, г[о]с[по]д[а]ръ, **обецуемъ** и **шлюбуемъ** под тою жъ присегою... **обывателемъ** всихъ земль паньства нашого... **шляхту**... **артыкулы**..."
+    source: "Статут 1588"
+    attribution: ""
+  - text: "за дозволом"
+    source: ""
+    attribution: ""
+  - text: "через руки"
+    source: ""
+    attribution: ""
+  - text: "бути"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Російська лінгвістика трактувала полонізми як \"порчу\" і \"забруднення\" спільноруської єдності, намагаючись очистити українську мову від них у XIX-XX ст."
+```
+
 ## Використані джерела
 1. [Litopys.org.ua](http://litopys.org.ua/statut2/st1588.htm) — Статут Великого князівства Литовського 1588 року (оригінальний текст).
 2. [History.org.ua](http://resource.history.org.ua/) — Дослідження ділової мови XVI-XVII ст. (Шевельов, Німчук).

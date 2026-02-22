@@ -2,12 +2,5 @@
   "track": "lit-essay",
   "slug": "lypynsky-letters-brothers",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T22:46:29Z",
-      "task_id": "v3-lypynsky-letters-brothers-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

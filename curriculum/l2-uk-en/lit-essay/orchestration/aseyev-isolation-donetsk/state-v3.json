@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T14:45:57Z",
+      "ts": "2026-02-22T19:23:19Z",
       "task_id": "v3-aseyev-isolation-donetsk-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

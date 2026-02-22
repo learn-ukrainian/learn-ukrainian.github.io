@@ -1,5 +1,15 @@
 # Дослідження: Народні глоси (Vernacular Glosses)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Народні глоси (Vernacular Glosses)"
+dates:
+  key_events:
+forbidden_claims:
+  - "Українська мова — це «зіпсований діалект» російської або полонізована говірка, що виникла пізно (XIX ст.). Старі тексти написані «спільною мовою»."
+```
+
 ## Використані джерела
 1. [litopys.org.ua](http://litopys.org.ua/ukrmova/um.htm) — Енциклопедія «Українська мова»: статті про глоси, Пересопницьке Євангеліє та староукраїнську лексикографію.
 2. [esu.com.ua](https://esu.com.ua/article-19823) — Енциклопедія Сучасної України: стаття про Пересопницьке Євангеліє та його мовні особливості.

@@ -1,5 +1,13 @@
 # Дослідження: Остап Вишня — Тюрма і ГУЛАГ
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Остап Вишня — Тюрма і ГУЛАГ"
+dates:
+  key_events:
+```
+
 ## Використані джерела
 1. [Остап Вишня — Вікіпедія](https://uk.wikipedia.org/wiki/%D0%9E%D1%81%D1%82%D0%B0%D0%BF_%D0%92%D0%B8%D1%88%D0%BD%D1%8F) — основна біографічна стаття з хронологією
 2. [Вишня Остап — Енциклопедія Сучасної України](https://esu.com.ua/article-34331) — академічна довідка ЕСУ

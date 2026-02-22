@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-20T23:03:58Z",
+      "ts": "2026-02-22T19:56:24Z",
       "task_id": "v3-bachynsky-140-decibels-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

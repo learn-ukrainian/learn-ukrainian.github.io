@@ -1,5 +1,22 @@
 # Дослідження: Trade Rights (Торговельні права)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Trade Rights (Торговельні права)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Місячне"
+    source: ""
+    attribution: ""
+  - text: "Закон Руський"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Радянська історіографія зображувала Русь як феодально-аграрну державу, де торгівля була маргінальною, а класова боротьба — примітивною. Імперська Росія привласнила «Руську Правду» як виток власного права."
+```
+
 ## Використані джерела
 1.  [Енциклопедія історії України: Руська Правда](http://www.history.org.ua/?termin=Ruska_Pravda) — фундаментальний аналіз правового кодексу, включаючи норми про кредитування та банкрутство.
 2.  [Ізборник: Руська Правда (Текст)](http://litopys.org.ua/oldukr2/oldukr01.htm) — першоджерело, статті про «різ» (відсотки) та купців.

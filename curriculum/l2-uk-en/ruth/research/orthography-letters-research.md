@@ -1,5 +1,31 @@
 # Дослідження: Orthography Letters (Літера Ґ та диграф КГ)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Orthography Letters (Літера Ґ та диграф КГ)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "г"
+    source: ""
+    attribution: ""
+  - text: "кг"
+    source: ""
+    attribution: ""
+  - text: "кгды"
+    source: ""
+    attribution: ""
+  - text: "кгрунт"
+    source: ""
+    attribution: ""
+  - text: "кгвалт"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Літера «ґ» непотрібна, бо це дублет або застаріле запозичення. Всі слова з «ґ» можна писати через «г», як у російській."
+```
+
 ## Використані джерела
 1. [Ізборник: Мелетій Смотрицький. Грамматіки славєнскиѧ правилноє Сѵнтаґма (1619)](http://litopys.org.ua/smotrgram/sm.htm) — текст граматики, де вперше кодифіковано літеру «ґ» (gamma).
 2. [Енциклопедія Сучасної України: Українська графіка](https://esu.com.ua/article-12345) — історія розвитку українського алфавіту, включаючи диграф «кг» та літеру «ґ».

@@ -1,5 +1,23 @@
 # Дослідження: Двоїна: Вступ (The Dual Number)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Двоїна: Вступ (The Dual Number)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Два солнца помѣркоста, оба багряная стлъпа погасоста"
+    source: "Слово о полку"
+    attribution: ""
+  - text: "два сонця"
+    source: "Слово о полку"
+    attribution: ""
+  - text: "И начаста очи єю темнѣти"
+    source: "Іпатіївський літопис"
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Ізборник: Руська Правда (litopys.org.ua)](http://litopys.org.ua/pravda/pravda.htm) — первинні тексти обох редакцій, де двоїна фіксується у правових контекстах (руцѣ, нозѣ, очи).
 2. [Літопис Руський (litopys.org.ua)](http://litopys.org.ua/litop/litop.htm) — корпус для пошуку прикладів двоїни в наративних текстах (очима, рукама, вушима).

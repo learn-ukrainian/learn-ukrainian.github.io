@@ -1,5 +1,31 @@
 # Дослідження: Zakup Indentured
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Zakup Indentured"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Аже закупъ бѣжить отъ господы, то обѣль; идеть ли искатъ кунъ, а явлено ходить, или ко князю или к судиямъ бѣжить обиды дѣля своего господина, то про то не работять его, но дати ему правду."
+    source: ""
+    attribution: ""
+  - text: "купу"
+    source: ""
+    attribution: ""
+  - text: "Купа"
+    source: ""
+    attribution: ""
+  - text: "сукупність"
+    source: ""
+    attribution: ""
+  - text: "обѣль"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Радянська історіографія зображала закупів виключно як жертв феодальної експлуатації, провісників кріпацтва, акцентуючи на «класовій ненависті»."
+```
+
 ## Використані джерела
 1. [Літопис Руський](http://litopys.org.ua/litop/lit01.htm) — Першоджерело (Іпатіївський список), контекст повстання 1113 року.
 2. [Руська Правда (Розширена редакція)](http://litopys.org.ua/oldukr2/oldukr01.htm) — Текст «Уставу Володимира Всеволодовича», зокрема статті про закупів.

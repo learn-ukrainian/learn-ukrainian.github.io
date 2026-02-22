@@ -1,5 +1,22 @@
 # Дослідження: Pvl Olga Revenge
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Pvl Olga Revenge"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Аще ся внадить вовк в вівці, то виносить все стадо, аще не вб'ють його"
+    source: "причина вбивства Ігоря"
+    attribution: ""
+  - text: "Мужа мойого не можу воскресити, а вас хочу почтити завтра перед людьми своїми"
+    source: "хитрість Ольги"
+    attribution: ""
+forbidden_claims:
+  - "Ольга як предтеча «триєдиної Русі» та православної єдності (російський наратив)."
+```
+
 ## Використані джерела
 1. [Літопис Руський (за Іпатським списком)](http://litopys.org.ua/ipatlet/ipat02.htm) — першоджерело, переклад Л. Махновця.
 2. [Енциклопедія історії України: Ольга](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Olga_kn) — академічна стаття про правління та реформи.

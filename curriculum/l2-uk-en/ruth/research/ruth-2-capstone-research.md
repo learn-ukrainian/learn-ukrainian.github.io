@@ -1,5 +1,20 @@
 # Дослідження: Ruth 2 Capstone (Сакральне Слово)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Ruth 2 Capstone (Сакральне Слово)"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Має багато глос — українських слів, що пояснюють церковнослов'янські лексеми (напр., 'чресла' — 'бедра', 'ковчег' — 'скриня')."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Українська культура XVI-XVII ст. була \"відсталою\" і \"сільською\", а \"висока культура\" прийшла з Польщі або пізніше з Росії."
+  - "\"Руська мова\" XVI ст. — це діалект російської."
+```
+
 ## Використані джерела
 1. [Пересопницьке Євангеліє — Енциклопедія Сучасної України](https://esu.com.ua/article-19266) — фундаментальний аналіз пам'ятки, мовні особливості, історія створення.
 2. [Острозька Біблія — Енциклопедія історії України](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ostrozka_Bibliia) — значення для культури, текстологічна робота, роль Острозької академії.

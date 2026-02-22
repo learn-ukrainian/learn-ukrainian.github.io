@@ -1,5 +1,13 @@
 # Дослідження: Святослав Всеволодович (Sviatoslav Vsevolodovych)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Святослав Всеволодович (Sviatoslav Vsevolodovych)"
+dates:
+  key_events:
+```
+
 ## Використані джерела
 1. **Енциклопедія історії України (history.org.ua)** — ґрунтовна стаття про політичну діяльність та дуумвірат.
 2. **Ізборник (litopys.org.ua)** — оригінальні тексти Іпатіївського літопису та "Слова о полку Ігоревім".

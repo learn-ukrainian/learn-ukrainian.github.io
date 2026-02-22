@@ -1,5 +1,26 @@
 # Дослідження: Prince Ostrozky
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Prince Ostrozky"
+dates:
+  key_events:
+primary_quotes:
+  - text: "некоронованим королем Русі"
+    source: ""
+    attribution: ""
+  - text: "Ми, Костянтин, з Божої ласки князь на Волині..."
+    source: "з листа"
+    attribution: ""
+  - text: "Це він врятував Україну як націю"
+    source: "Іван Огієнко"
+    attribution: ""
+  - text: "перше національне відродження України"
+    source: "Михайло Грушевський"
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України](http://resource.history.org.ua/) — Академічні статті про князів Острозьких та Берестейську унію.
 2. [Острозька академія](https://www.oa.edu.ua/) — Історичні довідки про заснування та діяльність академії.

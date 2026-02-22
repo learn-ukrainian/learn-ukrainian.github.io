@@ -1,5 +1,22 @@
 # Дослідження: Pvl Blinding Vasylko
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Pvl Blinding Vasylko"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Пощо ми губимо Руську землю, самі проти себе зваду маючи? А половці землю нашу розносять і раді є, що межи нами війна донині. Відтепер з’єднаймося в одне серце і обережімо Руську землю"
+    source: "Любеч"
+    attribution: ""
+  - text: "І, приступивши, торчин, на ймення Бередій, і гострий ніж узявши, хотів ударити його в око. Але схибив і перерізав йому лице... Потім же вгородив він ніж в око і вийняв зіницю..."
+    source: "Сцена жаху"
+    attribution: ""
+forbidden_claims:
+  - "Розпад Київської Русі як «трагедія» і «слабкість» перед монголами."
+```
+
 ## Використані джерела
 1. [Літопис руський (переклад Л. Махновця)](http://litopys.org.ua/litop/lit12.htm) — повний текст подій 1097 року.
 2. [Енциклопедія історії України: Любецький з'їзд 1097](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Liubetskyj_z_izd_1097) — історичний контекст.

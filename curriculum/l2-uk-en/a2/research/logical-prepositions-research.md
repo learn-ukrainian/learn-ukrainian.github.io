@@ -1,36 +1,36 @@
-# Дослідження: Logical Prepositions (A2 Core Track)
+# Дослідження: Logical Prepositions
 
 ## State Standard Reference
-§4.2.2.2.2: "Родовий відмінок із прийменниками: для (призначення предмета, мета діяльності): Заняття спортом корисні для здоров’я."
-§4.2.2.4.2: "Знахідний відмінок із прийменниками: про (для вираження об’єктних відношень): Думати про майбутнє."
-§4.4.2: "Складне речення: складнопідрядні речення зі сполучниками тому що, бо; складнопідрядні речення зі сполучником щоб для вираження мети певної дії суб’єкта."
-
-Alignment: This module covers the core A2 requirements for expressing purpose (`для`, `щоб`), cause (`через`, `тому що`), and topic (`про`), while expanding into relational prepositions (`без`, `крім`, `замість`) and time (`о`, `після`) as per the A2 lexical-grammatical minimum.
+§4.2.2.2.2: "для (призначення предмета, мета діяльності): Заняття спортом корисні для здоров’я"
+§4.4.2: "складнопідрядні речення зі сполучниками тому що, бо... складнопідрядні реченні зі сполучником щоб для вираження мети певної дії суб’єкта"
+§4.2.2.4.2: "про (для вираження об’єктних відношень): Думати про майбутнє."
+Alignment: This module covers exactly these prepositions of purpose (для), object relation (про), and causal/purpose conjunctions (тому що, бо, щоб) as required by A2.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **для** | High (Top 10) | для мене, для роботи, для здоров'я |
-| **через** | High | через дощ, через помилку, через затори |
-| **про** | Very High | думати про..., розмовляти про..., знати про... |
-| **без** | High | без цукру, без проблем, без допомоги |
-| **після** | High | після роботи, після обіду, після війни |
-| **завдяки** | Medium | завдяки підтримці, завдяки зусиллям |
+| для | High frequency | для мене, для роботи, для здоров'я |
+| без | High frequency | без цукру, без проблем, без допомоги |
+| через | High frequency | через дощ, через помилку, через затори |
+| про | Very High frequency | думати про..., розмовляти про... |
+| після | High frequency | після роботи, після обіду |
+| завдяки | Medium frequency | завдяки підтримці, завдяки зусиллям |
+| протягом | High frequency | протягом тижня, протягом року |
 
 ## Cultural Hooks
-1. **The "Bread" Distinction**: In Ukrainian, there is a strict logical difference between going *for* something and going *behind* something. "Піти по хліб" (to get bread) is the correct logical expression of purpose, while "Піти за хлібом" literally means walking behind a loaf of bread. This reflects the precision of Ukrainian prepositions.
-2. **"Через" vs. "Завдяки"**: Ukrainian logic distinguishes between cause as an obstacle (`через` - usually negative/neutral) and cause as a factor of success (`завдяки` - positive). For example, "через затори" (because of traffic) vs. "завдяки другу" (thanks to a friend). 
+1. The "Bread" Distinction: «піти по хліб» implies purpose (to go to get bread), whereas «піти за хлібом» literally means walking behind the bread. Ukrainian emphasizes prepositional precision.
+2. «Через» vs «завдяки»: Ukrainian explicitly distinguishes between negative/neutral causes («через дощ») and positive facilitators («завдяки другові»).
 
 ## Common Learner Errors
-1. **"Із-за" for cause** → **"Через"** — Learners often use the Russianism "із-за хвороби". In Ukrainian, "із-за" is strictly spatial (from behind). Cause must be expressed with "через": "через хворобу".
-2. **"В 10 годині" for time** → **"О 10 годині"** — Using "в" for specific time points is a common mistake. Ukrainian uses "о/об" + Locative for clock time.
-3. **"На протязі" for duration** → **"Протягом"** — "На протязі" literally means "in a draft" (of air). To express "during/throughout", one must use "протягом" or "упродовж".
+1. Using "із-за" for cause → Must use "через". "Із-за" is strictly for spatial movement from behind an object.
+2. Using "на протязі" for duration → Must use "протягом" or "упродовж". "На протязі" means "in a draft of air" (a common calque).
+3. Using "в 10 годині" for clock time → Must use Locative "о 10 годині" / "об 11 годині".
 
 ## Cross-References
-- Builds on: **a2-07** (Spatial prepositions - transition from physical to abstract), **A1 time expressions** (basic numbers for time).
-- Prepares for: **a2-09** (All Cases Practice - integrating these into complex syntax), **a2-10** (Post Office & Bank - practical application of logical relationships).
+- Builds on: a2-07 (Spatial prepositions), A1 time expressions
+- Prepares for: a2-09 (All Cases Practice), a2-10 (Post Office & Bank), a2-11 (Checkpoint - Cases)
 
 ## Notes for Content Writing
-- **Immersion Goal**: Aim for **50-60% Ukrainian**. Keep grammar explanations in English (Band 1 rules) but use Ukrainian for the "Story of the Letter" and Pharmacy dialogues.
-- **IPA Focus**: Ensure stress marks for all prepositions, especially `після` [ˈpʲisʲlʲa] and `завдяки` [zaʋˈdakɪ].
-- **Visuals**: A table comparing `через` (cause) vs `для` (purpose) vs `про` (topic) is essential for this level.
+- Decolonized framing: Present Ukrainian logical distinctions (like через/завдяки, or по хліб) as independent positive features. Do not compare them to Russian.
+- Immersion is 50-60%. Use English only for grammar theory (how logical prepositions govern cases). All dialogues, examples, and practice must be in Ukrainian.
+- Word target is 3000 minimum.

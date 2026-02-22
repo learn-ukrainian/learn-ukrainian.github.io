@@ -2,6 +2,30 @@
 
 # Дослідження: Сатира Павла Глазового
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Сатира Павла Глазового"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Перці"
+    source: ""
+    attribution: ""
+  - text: "Колюча пошта"
+    source: ""
+    attribution: ""
+  - text: "Наші вечори"
+    source: ""
+    attribution: ""
+  - text: "Сміхологія"
+    source: ""
+    attribution: ""
+  - text: "гострим гумором"
+    source: ""
+    attribution: ""
+```
+
 ## Використані джерела
 1. [Глазовий Павло Прокопович — Вікіпедія](https://uk.wikipedia.org/wiki/%D0%93%D0%BB%D0%B0%D0%B7%D0%BE%D0%B2%D0%B8%D0%B9_%D0%9F%D0%B0%D0%B2%D0%BB%D0%BE_%D0%9F%D1%80%D0%BE%D0%BA%D0%BE%D0%BF%D0%BE%D0%B2%D0%B8%D1%87) — біографічна стаття; основні дати, твори, нагороди
 2. [Сатира і гумор — Історія української літератури XX ст., кн. 2, ч. 2 (1960–1990)](https://litmisto.org.ua/?p=2104) — академічний нарис про Глазового як майстра співомовки; критична рецепція, збірки, фольклорні джерела

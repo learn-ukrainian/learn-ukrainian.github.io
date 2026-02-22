@@ -1,5 +1,20 @@
 # Дослідження: Psalms Liturgical
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Psalms Liturgical"
+dates:
+  key_events:
+primary_quotes:
+  - text: "во вѣки вѣковъ"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Існування єдиної «давньоруської» церковнослов'янської мови з московською вимовою."
+  - "Культурна відсталість українських земель."
+```
+
 ## Використані джерела
 1. [Litopys.org.ua: Історія української культури](http://litopys.org.ua/) — Загальний контекст розвитку книжної культури та церковнослов'янської мови.
 2. [Parafia.org.ua: Псалтир 1643 року](https://parafia.org.ua/) — Інформація про видання Петра Могили та особливості української вимови.

@@ -1,7 +1,7 @@
 # Audit Report: M11 — the-accusative-i-things.md
 **Level:** A1 | **Module:** M11 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:29
+**Generated:** 2026-02-22 23:19:29
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2804/2000 (raw: 3046)
+- **Words:** ✅ 2748/2000 (raw: 2990)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 27.0% (target 25-40% (M11))
+- **Immersion:** 🇺🇦 27.5% (target 25-40% (M11))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,9 +61,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 526 | Included in Core |
 | **The Accusative I: Things** | ✅ | 55 | Included in Core |
-| **Вступ: Предмети навколо нас** | ✅ | 290 | Included in Core |
-| **Теорія: Знахідний відмінок для неістот** | ✅ | 457 | Included in Core |
-| **Практика: Вчимося змінювати закінчення** | ✅ | 591 | Included in Core |
-| **Ситуація: У магазині та вдома** | ✅ | 368 | Included in Core |
-| **Культурний погляд: Базар чи супермаркет?** | ✅ | 310 | Included in Core |
+| **Вступ: Предмети навколо нас** | ✅ | 286 | Included in Core |
+| **Теорія: Знахідний відмінок для неістот** | ✅ | 434 | Included in Core |
+| **Практика: Вчимося змінювати закінчення** | ✅ | 583 | Included in Core |
+| **Ситуація: У магазині та вдома** | ✅ | 354 | Included in Core |
+| **Культурний погляд: Базар чи супермаркет?** | ✅ | 303 | Included in Core |
 | **Підсумок** | ✅ | 207 | Included in Core |

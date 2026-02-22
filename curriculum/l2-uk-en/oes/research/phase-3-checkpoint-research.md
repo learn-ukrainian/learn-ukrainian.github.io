@@ -1,5 +1,31 @@
 # Дослідження: Phase 3 Checkpoint — Правова Традиція
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Phase 3 Checkpoint — Правова Традиція"
+dates:
+  key_events:
+primary_quotes:
+  - text: "очі"
+    source: ""
+    attribution: ""
+  - text: "уші"
+    source: ""
+    attribution: ""
+  - text: "руці"
+    source: ""
+    attribution: ""
+  - text: "нозі"
+    source: ""
+    attribution: ""
+  - text: "два щита"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Руська Правда\" — це початок \"російського права\" (российского права)."
+```
+
 ## Використані джерела
 1. **Літопис руський** (за Іпатським списком) — *litopys.org.ua*. Основне джерело текстів договорів Русі з греками (911, 944 рр.).
 2. **Руська Правда** (Тексти короткої та розширеної редакцій) — *litopys.org.ua / izbornyk.org.ua*. Базовий кодекс феодального права.

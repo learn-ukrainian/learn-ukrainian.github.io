@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T07:04:00Z",
+      "ts": "2026-02-22T19:48:30Z",
       "task_id": "v3-modern-memes-as-folklore-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }
