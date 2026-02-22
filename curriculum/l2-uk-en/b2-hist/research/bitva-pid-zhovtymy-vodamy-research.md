@@ -1,5 +1,25 @@
 # Дослідження: Битва під Жовтими Водами
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Битва під Жовтими Водами"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Вода змішалась з кров'ю і стала жовтою"
+    source: ""
+    attribution: ""
+  - text: "Усе, що живо, піднялося в козацтво"
+    source: "Літопис Самовидця"
+    attribution: ""
+  - text: "Іди, і нехай історія напише тобі славу"
+    source: "Микола Потоцький сину"
+    attribution: ""
+forbidden_claims:
+  - "Хмельниччина як \"класова боротьба\" або \"шлях до возз'єднання з Росією\". Татари — ненадійні зрадники або мародери."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — академічний огляд ходу битви та стратегії сторін.
 2. [Літопис Самовидця (litopys.org.ua)](http://litopys.org.ua/samovyd/sam.htm) — першоджерело, опис подій очевидцем.

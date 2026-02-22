@@ -1,5 +1,23 @@
 # Дослідження: Іван Франко: Каменяр
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Іван Франко: Каменяр"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Мойсей"
+    source: "«Мойсей», Пролог"
+    attribution: "1"
+  - text: "Дещо про себе самого"
+    source: "«Дещо про себе самого»"
+    attribution: "2"
+forbidden_claims:
+  - "Франко — атеїст, матеріаліст, предтеча комунізму. Акцент лише на творах \"Борислав сміється\" та \"Каменярі\"."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua) — фундаментальна біографічна стаття, верифікація дат та бібліографії.
 2. [Інститут історії України (history.org.ua)](http://history.org.ua) — деталі громадсько-політичної діяльності та арештів.

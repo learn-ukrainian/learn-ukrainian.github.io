@@ -1,5 +1,22 @@
 # Дослідження: Петро Калнишевський: Останній кошовий
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Петро Калнишевський: Останній кошовий"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Не чиніть опору, бо погубите і себе, і Січ, і всю Україну потопите в крові"
+    source: ""
+    attribution: ""
+  - text: "Самое названіе Запорожскихъ Козаковъ отнынѣ и вѣчно да истребится"
+    source: ""
+    attribution: "з Маніфесту 1775"
+forbidden_claims:
+  - "Січ — це \"гніздо розбійників\", анархічна структура, що заважала цивілізації. Ліквідація була \"необхідністю\" для порядку."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Калнишевський Петро Іванович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kalnyshevskyj_P) — фундаментальна біографічна стаття.
 2. [Ліквідація Запорозької Січі (Litopys.org.ua)](http://litopys.org.ua/) — збірка документів та історичних нарисів про події 1775 року.

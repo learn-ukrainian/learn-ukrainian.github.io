@@ -1,5 +1,32 @@
 # Дослідження: Тарас Прохасько: Станіславівський феномен
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Тарас Прохасько: Станіславівський феномен"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Вежа"
+    source: ""
+    attribution: ""
+  - text: "рослинний"
+    source: ""
+    attribution: ""
+  - text: "Я впевнений, що література — це функція мови, а не життя. Тобто життя є тільки сировиною"
+    source: ""
+    attribution: "1"
+  - text: "Є речі набагато важливіші від того, що називається долею. Скажімо, інтонації, синтаксис. Коли хочеш залишитися самим собою — ніколи не відкидай власних інтонацій"
+    source: ""
+    attribution: "2"
+  - text: "НепрОсті"
+    source: ""
+    attribution: "2"
+forbidden_claims:
+  - "Карпати/Гуцульщина як екзотична периферія, «дикий» етнографічний регіон для розваги імперського центру."
+```
+
 ## Використані джерела
 1. [Encyclopedia of Modern Ukraine (ESU)](https://esu.com.ua/article-881248) — Академічна біографія та огляд творчості.
 2. [Zbruc.eu](https://zbruc.eu/node/30581) — Есеїстика та інтерв'ю Тараса Прохаська, аналіз «Станіславівського феномену».

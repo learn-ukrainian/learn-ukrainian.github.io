@@ -1,5 +1,29 @@
 # Дослідження: Наталя Яковенко: Матріарх критичної історії
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Наталя Яковенко: Матріарх критичної історії"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Кожна людина має характерні індикатори \"членства в групі\". Ці індикатори надзвичайно мінливі і ніколи не бувають остаточними й непорушними"
+    source: ""
+    attribution: ""
+  - text: "цілком у фантазії авторів"
+    source: ""
+    attribution: ""
+  - text: "Історик не суддя, а перекладач з мови минулого на мову сучасности"
+    source: ""
+    attribution: ""
+  - text: "Gente Ruthenus, natione Polonus"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Українська історія — це історія селянства та козацтва, що боролися проти «польського гніту». Шляхта — це завжди вороги, чужинці, експлуататори. «Полонізація» була насильницькою."
+```
+
 ## Використані джерела
 1. [Encyclopedia of Modern Ukraine (ESU)](https://esu.com.ua/article-12345) — Біографічні дані, основні дати та науковий доробок.
 2. [Institute of History of Ukraine](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Yakovenko_N) — Академічна біографія та перелік праць.

@@ -1,5 +1,26 @@
 # Дослідження: Євген Коновалець: Полковник і організатор
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Євген Коновалець: Полковник і організатор"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "У вогні перетоплюється залізо у сталь, у боротьбі перетворюється народ у націю."
+    source: ""
+    attribution: ""
+  - text: "Волю українського народу до самостійного життя не знищать ні ворожі тюрми, ні заслання, бо Україна є нездобутнім бастіоном героїв і борців."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Konovalets was a marginal radical whose primary goal was the use of indiscriminate terrorism against civilians."
+  - "The formation of the OUN was a German intelligence project directed by Konovalets as a foreign agent."
+  - "Konovalets was a collaborator who sought to subordinate Ukrainian interests to the imperial ambitions of neighboring powers."
+  - "His leadership was characterized by a narrow focus on military violence that ignored the broader political and diplomatic aspirations of the Ukrainian state."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України — Коновалець Євген Михайлович](https://esu.com.ua/search_articles.php?id=4928) — Академічний огляд його життя, військової кар'єри в УНР та ролі творця ОУН.
 2. [Інститут історії України НАН України — КОНОВАЛЕЦЬ ЄВГЕН МИХАЙЛОВИЧ](http://history.org.ua/?termin=Konovalets_Yevhen) — Детальний історичний аналіз його шляху від командира Січових Стрільців до лідера націоналістичного підпілля.

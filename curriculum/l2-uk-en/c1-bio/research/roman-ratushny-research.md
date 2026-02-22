@@ -1,5 +1,32 @@
 # Дослідження: Роман Ратушний: Громадянин, активіст, воїн
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Роман Ратушний: Громадянин, активіст, воїн"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Сенека"
+    source: ""
+    attribution: ""
+  - text: "Роби, що мусиш, і будь що буде"
+    source: ""
+    attribution: ""
+  - text: "Чим більше росіян ми вб'ємо зараз, тим менше доведеться вбивати нашим дітям"
+    source: ""
+    attribution: ""
+  - text: "Це не просто парк, це війна за право на місто, за право дихати"
+    source: ""
+    attribution: ""
+  - text: "Я не хочу вмирати, але я готовий померти за цю країну"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Активісти як деструктивний елемент, що заважає «господарникам» (радянський патерналізм)."
+```
+
 ## Використані джерела
 1. [Історична правда](https://www.istpravda.com.ua) — статті та інтерв'ю про активізм і Протасів Яр.
 2. [The Ukrainians](https://theukrainians.org/roman-ratushnyy/) — «Я робив усе, щоб мої вчинки та дії продовжили моє життя».

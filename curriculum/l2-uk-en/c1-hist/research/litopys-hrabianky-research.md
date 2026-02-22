@@ -1,5 +1,22 @@
 # Дослідження: Літопис Грабянки: Козацький патріотизм
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Літопис Грабянки: Козацький патріотизм"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Історія презельної брані..."
+    source: ""
+    attribution: "1"
+  - text: "Народ малоросійський, іменем козаки, від козар..."
+    source: ""
+    attribution: "2"
+forbidden_claims:
+  - "Козацькі літописи — це просто «місцева хроніка» або «фольклорна історія», возз'єднання з Росією як мета."
+```
+
 ## Використані джерела
 1. [Літопис гадяцького полковника Григорія Грабянки](http://litopys.org.ua/grab/hrab.htm) — Повний текст літопису, ключове першоджерело.
 2. [Енциклопедія історії України: Граб'янка Григорій Іванович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Grabianka_H) — Біографічні дані та академічний огляд діяльності.

@@ -1,5 +1,25 @@
 # Дослідження: Радянська українізація: Пастка 1920-х
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Радянська українізація: Пастка 1920-х"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Україна не потребує українізації, вона потребує дерусифікації"
+    source: ""
+    attribution: "Скрипника"
+  - text: "петлюрівщини"
+    source: "1933"
+    attribution: "Сталіна"
+  - text: "націоналістичного ухилу"
+    source: "1933"
+    attribution: "Сталіна"
+forbidden_claims:
+  - "Українізація була «ленінською національною політикою», яка «дала» українцям культуру."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Коренізація](https://esu.com.ua/article-3558) — ґрунтовний аналіз політики коренізації та її наслідків.
 2. [Енциклопедія історії України: Скрипник Микола Олексійович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21N01=1&S21N02=1&S21N03=1&S21STR=Skrypnyk_M_O) — біографічні дані та роль у процесах українізації.

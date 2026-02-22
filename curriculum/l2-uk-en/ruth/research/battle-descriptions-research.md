@@ -50,3 +50,21 @@
 | Козаки | Розбійники, селяни, чернь | Лицарі, політична нація, військо Запорозьке |
 | Берестечко | Тріумф польської зброї над хаосом | Трагедія зради, але й приклад стійкості (Богун) |
 | Кримські татари | Дикуни-зрадники (стереотип) | Складний геополітичний гравець, ситуативний союзник |
+
+
+## Section-Mapped Research Notes
+
+### Вступ
+<!-- TODO: Add section-specific research notes here -->
+
+### Основний матеріал: I — Самовидець
+<!-- TODO: Add section-specific research notes here -->
+
+### Основний матеріал: II — Грабянка
+<!-- TODO: Add section-specific research notes here -->
+
+### Основний матеріал: III — Величко
+<!-- TODO: Add section-specific research notes here -->
+
+### Основний матеріал: V — Мовний аспект
+<!-- TODO: Add section-specific research notes here -->

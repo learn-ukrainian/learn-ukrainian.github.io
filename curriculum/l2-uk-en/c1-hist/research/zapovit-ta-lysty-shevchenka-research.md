@@ -1,5 +1,31 @@
 # Дослідження: «Заповіт» і листи Шевченка
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "«Заповіт» і листи Шевченка"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Заповіту"
+    source: ""
+    attribution: ""
+  - text: "Три літа"
+    source: ""
+    attribution: ""
+  - text: "Пиши ж до мене, мій брате, хоч раз на тиждень, — це буде єдина мені втіха на сім безталаннім світі"
+    source: ""
+    attribution: ""
+  - text: "...і щоб чорт-зна по-якому не писав, а по-християнському"
+    source: ""
+    attribution: ""
+  - text: "Під найсуворіший нагляд із забороною писати й малювати"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Шевченко — «селянський поет», «демократ», друг російських революціонерів, атеїст. Його боротьба — виключно класова (проти панів)."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Шевченко Тарас Григорович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Shevchenko_T) — Фундаментальна біографія та історичний контекст.
 2. [Ізборник. Тарас Шевченко: Документи та матеріали](http://litopys.org.ua/shevchenko/shev.htm) — Першоджерела, тексти листів, щоденник.

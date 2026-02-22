@@ -1,5 +1,29 @@
 # Дослідження: Микола Лисенко: Батько української музики
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Микола Лисенко: Батько української музики"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Без неї [народної пісні] гріх починати свою працю й музикові, й філологові... Фольклор – це саме життя!"
+    source: ""
+    attribution: "1"
+  - text: "Ми – не \"малороси\", ми – народ європейський, і наша музика мусить стояти врівні з європейською"
+    source: ""
+    attribution: "2"
+  - text: "Тараса Бульбу"
+    source: ""
+    attribution: "2"
+  - text: "Тараса Бульбу"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Українська музика — це \"малоросійські пісні\", сентиментальні й прості, придатні лише для домашнього вжитку."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Лисенко Микола Віталійович](https://esu.com.ua/article-54941) — Академічна біографія, перелік творів та аналіз стилю.
 2. [Інститут історії України: Лисенко Микола Віталійович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Lysenko_M) — Детальна хронологія та громадська діяльність.

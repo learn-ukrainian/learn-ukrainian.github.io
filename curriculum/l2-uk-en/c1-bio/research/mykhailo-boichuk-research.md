@@ -1,5 +1,29 @@
 # Дослідження: Михайло Бойчук: Засновник монументальної школи
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Михайло Бойчук: Засновник монументальної школи"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "цеху"
+    source: ""
+    attribution: ""
+  - text: "Вони свідомо прагнули поєднати ідеали раннього Відродження з українською іконою та селянською картиною..."
+    source: ""
+    attribution: ""
+  - text: "Ми будуємо нове суспільство, і наше мистецтво має відповідати величі епохи, спираючись на найміцніше коріння минулого."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Mykhailo Boichuk and his followers were reactionary formalists whose art was detached from the proletarian reality."
+  - "The use of Byzantine iconography and folk traditions was a regressive attempt to return to religious art."
+  - "The liquidation of the Boichukist school was a justified legal action against counter-revolutionary subversives."
+  - "Boichukism was a provincial movement that lacked original value and sought to isolate Ukrainian art from Soviet progress."
+```
+
 ## Використані джерела
 1. [Енциклопедія сучасної України: Бойчук Михайло Львович](https://esu.com.ua/article-36224) — Академічна біографія, опис мистецького методу та обставин репресій.
 2. [Інститут історії України НАНУ: Бойчук Михайло Львович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Boychuk_M) — Історична довідка, етапи створення школи та хронологія переслідувань.

@@ -1,5 +1,27 @@
 # Дослідження: Михайло Грушевський: Історик і президент
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Михайло Грушевський: Історик і президент"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ми мусимо творити свою історію, щоб не бути гноєм для сусідів"
+    source: "про історію"
+    attribution: ""
+  - text: "Я не бажаю своїй нації панування над іншими, я бажаю їй лише свободи і можливості вільного розвитку"
+    source: "про мету"
+    attribution: ""
+  - text: "Історія України-Руси"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Київська Русь — колиска трьох братніх народів\"."
+  - "Українці — \"малороси\", відгалуження російського народу."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Грушевський Михайло Сергійович](https://esu.com.ua/article-32096) — детальна біографія та аналіз наукової спадщини.
 2. [Інститут історії України НАНУ: Грушевський М.С.](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Grushevsky_M_S) — академічна стаття про життя та діяльність.

@@ -1,5 +1,16 @@
 # Дослідження: Іван Мазепа: Меценат і трагічний герой
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Іван Мазепа: Меценат і трагічний герой"
+vital_status: "unknown"
+dates:
+  key_events:
+forbidden_claims:
+  - "Мазепа — \"Юда\", що зрадив царя заради особистої вигоди."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України](https://esu.com.ua/article-60312) — Біографія та оцінка діяльності.
 2. [Інститут історії України НАНУ](http://resource.history.org.ua/) — Політична діяльність та союзи.

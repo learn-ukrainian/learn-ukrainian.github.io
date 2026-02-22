@@ -1,5 +1,31 @@
 # Дослідження: 2014: Анексія без відповіді
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "2014: Анексія без відповіді"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Крим — це не територія, це люди. І коли ми говоримо про деокупацію, ми говоримо про порятунок людей"
+    source: "Рефат Чубаров"
+    attribution: ""
+  - text: "За повернення Криму"
+    source: ""
+    attribution: ""
+  - text: "спонтанну реакцію"
+    source: ""
+    attribution: ""
+  - text: "державний переворот"
+    source: ""
+    attribution: ""
+  - text: "українська криза"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Крим — ісконно руская зємля», «подарунок Хрущова»."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Анексія Криму](https://esu.com.ua/article-44338) — детальна хронологія та правовий аналіз окупації.
 2. [Інститут історії України: Хронологія 2014](http://resource.history.org.ua/) — академічний огляд подій Революції Гідності та початку війни.

@@ -1,5 +1,32 @@
 # Дослідження: Казимир Малевич: Революція в мистецтві
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Казимир Малевич: Революція в мистецтві"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Я наслідував у всьому селянське життя"
+    source: ""
+    attribution: ""
+  - text: "кольорову цеглу"
+    source: ""
+    attribution: ""
+  - text: "Селянин поміж хрестом і мечем"
+    source: ""
+    attribution: ""
+  - text: "Мене все міцніш тягнуло до Києва. Неповторним залишався у моїй пам'яті Київ... Селянки човниками перепливали Дніпро, везли масло, молоко, сметану, заповнюючи береги і вулиці Києва, надаючи містові особливого колориту"
+    source: ""
+    attribution: "1"
+  - text: "Де серп і молот, там смерть і голод"
+    source: ""
+    attribution: "2"
+forbidden_claims:
+  - "Малевич — виключно \"російський\" художник, народжений в імперії."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Малевич Казимир Северинович](https://esu.com.ua/article-61085) — академічна біографія, деталі київського періоду.
 2. [History.org.ua: Малевич Казимир Северинович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Malevych_K) — детальна хронологія та контекст репресій.

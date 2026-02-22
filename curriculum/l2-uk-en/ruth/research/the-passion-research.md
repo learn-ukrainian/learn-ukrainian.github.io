@@ -48,3 +48,21 @@
 ## Деколонізаційний контекст
 - **Imperial Myth:** Українська література 17 ст. — це лише "спільна руська спадщина" або наслідування польських зразків без оригінальності.
 - **Ukrainian Reality:** Українська шкільна драма (зокрема великодній цикл) — це самобутнє явище, що синтезувало західну форму (шкільний театр єзуїтів) з київською православною традицією та народним гумором. Руська (українська) мова функціонувала як повноцінна мова адміністрації та літератури.
+
+
+## Section-Mapped Research Notes
+
+### Вступ
+<!-- TODO: Add section-specific research notes here -->
+
+### Основний матеріал: I
+<!-- TODO: Add section-specific research notes here -->
+
+### Основний матеріал: II
+<!-- TODO: Add section-specific research notes here -->
+
+### Основний матеріал: III
+<!-- TODO: Add section-specific research notes here -->
+
+### Основний матеріал: IV
+<!-- TODO: Add section-specific research notes here -->

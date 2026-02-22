@@ -1,5 +1,22 @@
 # Дослідження: Голодомор I: Механізм
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Голодомор I: Механізм"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Найголовніше тепер Україна... Якщо не візьмемося нині за виправлення становища в Україні, Україну можемо втратити. [...] Поставити собі за мету перетворити Україну у найкоротший термін на справжню фортецю СРСР"
+    source: ""
+    attribution: "Сталіна"
+  - text: "громадську власність (державну, колгоспну, кооперативну) основою радянського ладу, вона є священною і недоторканною"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Голод був скрізь в СРСР через неврожай та перегини на місцях»."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Голодомор](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Holodomor_v_USRR_1932_1933) — академічний огляд хронології та механізмів.
 2. [Національний музей Голодомору-геноциду: Чорні дошки](https://holodomormuseum.org.ua/tematychni-vystavky/chorhi-doshky-ukrainy-chernihivska-oblast/) — списки сіл та механізм репресій.

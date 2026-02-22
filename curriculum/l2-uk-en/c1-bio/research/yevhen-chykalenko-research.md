@@ -1,5 +1,26 @@
 # Дослідження: Євген Чикаленко: Меценат і видавець
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Євген Чикаленко: Меценат і видавець"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Легко любити Україну до глибини душі, а ви спробуйте любити її до глибини кишені"
+    source: ""
+    attribution: "1"
+  - text: "Я з радістю віддав би своє життя, аби побачити Україну вільною та незалежною"
+    source: ""
+    attribution: "2"
+  - text: "Розмови про сільське хазяйство"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Українського капіталу та національної буржуазії не існувало, українці — це виключно неосвічена сільська маса."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України](http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Chykalenko_Ye) — Фундаментальна біографічна стаття, деталі економічної та меценатської діяльності.
 2. [Енциклопедія Сучасної України](https://esu.com.ua/) — Аналіз його ролі в українському національному відродженні початку XX ст.

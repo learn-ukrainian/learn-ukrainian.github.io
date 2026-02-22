@@ -1,5 +1,20 @@
 # Дослідження: Марко Кропивницький: Корифей театру
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Марко Кропивницький: Корифей театру"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "ансамблю"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Малоросійський театр» як розвага для панів, «гопак і шаровари»."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Марко Кропивницький](https://esu.com.ua/article-1959) — Академічна біографія, детальний огляд творчості.
 2. [Історія українського театру (History.org.ua)](http://history.org.ua) — Контекст Емського указу та створення професійного театру.

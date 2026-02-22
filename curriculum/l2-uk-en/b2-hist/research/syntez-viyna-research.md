@@ -1,5 +1,25 @@
 # Дослідження: Синтез: Війна за існування
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Синтез: Війна за існування"
+dates:
+  key_events:
+primary_quotes:
+  - text: "І жах, і кров, і смерть, і відчай, і клекіт хижої орди, маленьке сіре чоловіче накоїло чорної біди"
+    source: "Ліна Костенко"
+    attribution: ""
+  - text: "Ми не маємо права перекласти цю війну на наших дітей. Ворога потрібно знищити тут і зараз"
+    source: "Валерій Залужний"
+    attribution: ""
+forbidden_claims:
+  - "The false claim that Ukrainian statehood was an artificial creation of the 20th century or the Soviet Union."
+  - "The imperial myth that Ukrainians and Russians constitute 'one people' with a shared political culture."
+  - "The distortion that Ukraine lacks its own unique and continuous tradition of democratic governance."
+  - "The narrative that the war for Ukrainian existence is a localized conflict rather than an existential struggle for sovereignty."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua) — фундаментальні статті про російсько-українську війну та політичний контекст.
 2. [АрміяInform](https://armyinform.com.ua) — офіційні дані про реформи ЗСУ, сержантський корпус та хронологію бойових дій.

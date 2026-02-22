@@ -1,5 +1,25 @@
 # Дослідження: Механізми Голодомору II: Чорні дошки
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Механізми Голодомору II: Чорні дошки"
+dates:
+  key_events:
+primary_quotes:
+  - text: "контрреволюційних елементів"
+    source: ""
+    attribution: ""
+  - text: "Занести на чорну дошку села, які злісно саботують хлібозаготівлі... Негайно припинити підвоз товарів, припинити всяку торгівлю..."
+    source: "Постанова 6.12.1932"
+    attribution: ""
+  - text: "чорні дошки"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Голод був викликаний «неврожаєм» або «перегинами на місцях»."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Чорні дошки](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Chorni_doshky) — детальний опис репресивного режиму.
 2. [Голодомор 1932–1933 років в Україні: документи і матеріали](https://history.org.ua/LiberUA/978-966-02-5226-0/978-966-02-5226-0.pdf) — збірник документів, включаючи постанови ЦК КП(б)У.

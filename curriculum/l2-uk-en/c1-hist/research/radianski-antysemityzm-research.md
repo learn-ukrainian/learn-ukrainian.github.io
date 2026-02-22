@@ -1,5 +1,31 @@
 # Дослідження: Радянський антисемітизм
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Радянський антисемітизм"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Є речі, є трагедії, перед безмірністю яких будь-яке слово безсиле і про які більше скаже мовчання... Але мовчання буває різне"
+    source: "Іван Дзюба, 1966"
+    attribution: ""
+  - text: "Безрідний космополіт — це той, хто втратив почуття радянського патріотизму, хто плазує перед гнилою буржуазною культурою Заходу"
+    source: "офіційна радянська преса, 1949"
+    attribution: ""
+  - text: "П'ята графа"
+    source: ""
+    attribution: ""
+  - text: "єврей"
+    source: ""
+    attribution: ""
+  - text: "сіоніст"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Інтернаціоналізм», відсутність національних конфліктів, євреї як «буржуазні націоналісти» або «агенти імперіалізму»."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України (ЕСУ): Антисемітизм](https://esu.com.ua/article-42969) — огляд історії антисемітизму в Україні, зокрема радянського періоду.
 2. [Енциклопедія історії України: Єврейський антифашистський комітет](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Yevrejskyj_antyfashystskyj_komitet) — деталі справи ЄАК та репресій.

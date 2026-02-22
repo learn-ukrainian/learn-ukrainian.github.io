@@ -1,5 +1,25 @@
 # Дослідження: Синтез: Литовсько-польська доба
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Синтез: Литовсько-польська доба"
+dates:
+  key_events:
+primary_quotes:
+  - text: "А писар земський маєт по-руську літери і слова писати, а не іншим язиком і словами..."
+    source: ""
+    attribution: ""
+  - text: "Gente Ruthenus, natione Polonus"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "The Lithuanian-Polish era was a period of total cultural stagnation and a 'yoke' that suppressed all organic Ukrainian development."
+  - "The 1654 union with Moscow was a necessary 'rescue' from inevitable annihilation under Polish and Lithuanian rule."
+  - "Ruthenian elites were passive victims of foreign systems rather than powerful political actors and co-creators of the state."
+  - "Integration into the Polish-Lithuanian Commonwealth was a purely occupational process that lacked any positive civilizational or cultural impact."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (ЄІУ) - Велике князівство Литовське](http://resource.history.org.ua) — Академічний огляд політичного та соціального устрою доби ВКЛ.
 2. [Наталя Яковенко "Нарис історії середньовічної та ранньомодерної України"](https://shron1.chtyvo.org.ua) — Фундаментальна праця з деколонізаційним поглядом на українську шляхту та формування ранньомодерної ідентичності.

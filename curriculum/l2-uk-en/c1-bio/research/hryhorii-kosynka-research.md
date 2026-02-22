@@ -1,5 +1,29 @@
 # Дослідження: Григорій Косинка: <!-- Title -->
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Григорій Косинка: <!-- Title -->"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ми стаємо не інженерами, а міліціонерами людських душ"
+    source: ""
+    attribution: "про роль митця"
+  - text: "Пробач, що так багато горя приніс тобі за короткий вік. Прости, дорога дружино, а простивши — прощай. Не тужи, кажу: сльозами горя не залити... Я дужий, здоровий"
+    source: ""
+    attribution: "з останнього листа дружині"
+  - text: "куркульського агента"
+    source: ""
+    attribution: ""
+  - text: "бандитського співця"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Косинка — «співець куркульства», «ворог народу», який ідеалізував бандитів. Його творчість була заборонена, а ім'я викреслене."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України](https://esu.com.ua/article-3814) — академічна біографічна стаття, основні дати та оцінка творчості.
 2. [Історія України](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kosynka_H) — деталі про участь у літературних угрупованнях та репресії.

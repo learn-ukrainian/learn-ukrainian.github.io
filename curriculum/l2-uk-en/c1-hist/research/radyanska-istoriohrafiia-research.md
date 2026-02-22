@@ -1,5 +1,31 @@
 # Дослідження: Радянська історіографія: Деформації
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Радянська історіографія: Деформації"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Історія – це політика, перекинута в минуле"
+    source: ""
+    attribution: ""
+  - text: "возз'єднання України з Росією мало величезне прогресивне значення для подальшого політичного, економічного і культурного розвитку українського і російського народів"
+    source: ""
+    attribution: ""
+  - text: "ідеологічного фронту"
+    source: ""
+    attribution: ""
+  - text: "буржуазному націоналізмі"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "The 'Common Cradle' theory claiming that Kyivan Rus' was a shared, undifferentiated origin for three 'brotherly' nations with Russia as the primary successor."
+  - "The historical distortion that the 1654 Pereyaslav Agreement was a voluntary and permanent 'reunification' of the Ukrainian and Russian peoples."
+  - "The propaganda claim that Ukraine lacked a distinct state-building tradition or agency prior to its integration into the Russian Empire or the Soviet Union."
+  - "The myth that Soviet historical narratives were objective scientific accounts rather than ideological tools used to justify colonial exploitation and Russification."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Історіографія радянська](http://resource.history.org.ua/) — Академічний огляд інституціоналізації та ідеологізації історичної науки в СРСР, встановлення монополії марксизму-ленінізму.
 2. [Енциклопедія історії України: Тези ЦК КПРС про 300-річчя возз'єднання (1954)](http://resource.history.org.ua/) — Аналіз ключового ідеологічного документа, що на десятиліття визначив офіційний наратив української історії.

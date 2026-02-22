@@ -1,5 +1,28 @@
 # Дослідження: Валуєвський циркуляр та Емський указ
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Валуєвський циркуляр та Емський указ"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ніякої особливої малоросійської мови не було, немає і бути не може"
+    source: ""
+    attribution: ""
+  - text: "те ж російське наріччя, тільки зіпсоване впливом на нього Польщі"
+    source: ""
+    attribution: ""
+  - text: "сценічних вистав"
+    source: ""
+    attribution: ""
+  - text: "Юзефович-Іскаріот"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Українська мова — це «зіпсоване наріччя», «сільський діалект», а заборони були реакцією на «польський вплив»."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Академічні статті про Валуєвський циркуляр та Емський указ.
 2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — Тексти та аналіз документів, історія української мови.

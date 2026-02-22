@@ -1,5 +1,32 @@
 # Дослідження: Руська Правда: Перший законодавчий кодекс
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Руська Правда: Перший законодавчий кодекс"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Убьетъ муж(ъ) мужа, то мьстить брату брата, или сынови отца, любо отцю сына, или братучаду, любо сестрину сынови; аще не будеть кто мьстя, то 40 гривенъ за голову"
+    source: "Кровна помста"
+    attribution: ""
+  - text: "Аче ударить мечемъ, а не вынезъ его, или рукоятью, то 12 гривнѣ продажѣ"
+    source: "Захист честі"
+    attribution: ""
+  - text: "мука"
+    source: ""
+    attribution: ""
+  - text: "Віра"
+    source: ""
+    attribution: ""
+  - text: "Продажа"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Руська Правда\" — це початок \"общерусского права\", перший кодекс \"Російської держави\"."
+  - "Мова документа — \"давньоросійська\"."
+```
+
 ## Використані джерела
 1. [Літопис руський. Руська Правда (Текст)](http://litopys.org.ua/oldukr2/oldukr51.htm) — оригінальний текст Короткої та Просторової редакцій з перекладом.
 2. [Енциклопедія історії України: Руська Правда](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ruska_Pravda) — академічний огляд історії створення та структури кодексу.

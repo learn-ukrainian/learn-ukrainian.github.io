@@ -1,5 +1,26 @@
 # Дослідження: Максим Кривцов (Позивний «Далі»)
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Максим Кривцов (Позивний «Далі»)"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Далі"
+    source: ""
+    attribution: ""
+  - text: "пензлем"
+    source: ""
+    attribution: ""
+  - text: "Строкаті Єноти"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Російська пропаганда стверджує, що українська культура є «сільською» або «вторинною», а українці — «заблудлі росіяни». Також просувається наратив про «громадянську війну» або «випадкові жертви»."
+```
+
 ## Використані джерела
 1. [Memorial.ua](https://www.memorial.ua) — платформа пам'яті загиблих захисників (біографічні дані, спогади).
 2. [PEN Ukraine](https://pen.org.ua) — інформація про збірку «Вірші з бійниці» та визнання літературної спільноти.

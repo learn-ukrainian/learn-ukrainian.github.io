@@ -1,5 +1,28 @@
 # Дослідження: Помаранчева vs Гідності: Чому різні результати?
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Помаранчева vs Гідності: Чому різні результати?"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Зустрічаємось о 22:30 під монументом Незалежності. Вдягайтесь тепло, беріть парасольки, чай, каву, хороший настрій і друзів"
+    source: ""
+    attribution: ""
+  - text: "Ми не бидло, ми не козли, ми — громадяни України"
+    source: ""
+    attribution: ""
+  - text: "Це питання мого майбутнього... Я хочу жити у вільній країні"
+    source: ""
+    attribution: ""
+  - text: "Майдан-фестиваль"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Кольорові революції\" — це технології Заходу (США/Держдепу) для зміни режимів. Майдан — це \"державний переворот\" і \"хунта\"."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Помаранчева революція](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Pomarancheva_revolyutsiya) — академічний аналіз подій 2004 року.
 2. [Національний музей Революції Гідності: Хроніка подій](https://maidanmuseum.org/uk/node/1255) — детальна хронологія та матеріали про Євромайдан.

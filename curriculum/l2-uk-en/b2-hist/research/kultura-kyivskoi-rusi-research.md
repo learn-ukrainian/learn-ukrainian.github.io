@@ -1,5 +1,32 @@
 # Дослідження: Культура Київської Русі
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Культура Київської Русі"
+dates:
+  key_events:
+primary_quotes:
+  - text: "ц"
+    source: ""
+    attribution: ""
+  - text: "-ові"
+    source: ""
+    attribution: ""
+  - text: "єві"
+    source: ""
+    attribution: ""
+  - text: "Борису"
+    source: ""
+    attribution: ""
+  - text: "Петрові"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Культура Київської Русі є «спільною колискою» трьох народів, а російська культура є її прямим і головним спадкоємцем."
+  - "Давньоруська мова була єдиною для всіх східних слов'ян."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Київська Русь](http://resource.history.org.ua/) — Фундаментальний огляд культурного розвитку, архітектури та мистецтва.
 2. [Ізборник (Litopys.org.ua)](http://litopys.org.ua/) — Першоджерела: «Слово о полку Ігоревім», літописи, праці про писемність.

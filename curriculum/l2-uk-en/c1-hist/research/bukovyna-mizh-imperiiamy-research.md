@@ -1,5 +1,28 @@
 # Дослідження: Буковина між імперіями
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Буковина між імперіями"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Віче бажає прилучення австрійської часті української землі до України... Нехай живе демократична Україна!"
+    source: "Буковинське віче, 1918"
+    attribution: ""
+  - text: "Але ліси наші, і хто до них прийде, тому поламлю ноги, а то й голову розіб’ю"
+    source: "Лук'ян Кобилиця"
+    attribution: ""
+  - text: "Маленьким Віднем"
+    source: ""
+    attribution: ""
+  - text: "Єрусалимом на Пруті"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Визволення» 1940 року та «добровільне возз'єднання»."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Буковина](https://esu.com.ua/article-36657) — ґрунтовний огляд історії, географії та культури регіону.
 2. [Інститут історії України НАНУ: Буковинське віче](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Bukovynske_viche) — детальний аналіз подій листопада 1918 року.

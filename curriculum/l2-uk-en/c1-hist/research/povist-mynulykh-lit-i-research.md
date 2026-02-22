@@ -1,5 +1,20 @@
 # Дослідження: Повість минулих літ I: Структура та автори
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Повість минулих літ I: Структура та автори"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Се повісті врем’яних літ, звідки пішла Руська земля, хто в Києві почав спершу княжити і як Руська земля постала..."
+    source: "початок"
+    attribution: ""
+forbidden_claims:
+  - "ПМЛ — \"общерусскоє достояніє\", початок історії Росії."
+  - "\"Київська Русь\" як колиска трьох народів."
+```
+
 ## Використані джерела
 1. [litopys.org.ua](http://litopys.org.ua/pvlyar/yar.htm) — Повний текст та аналіз Лаврентіївського списку.
 2. [esu.com.ua](https://esu.com.ua/search_articles.php?id=3775) — Енциклопедія Сучасної України: стаття про Повість минулих літ.

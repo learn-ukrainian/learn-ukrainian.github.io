@@ -1,5 +1,20 @@
 # Дослідження: Іван Пулюй: Першовідкривач X-променів
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Іван Пулюй: Першовідкривач X-променів"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Нема більшої честі для інтелігентного чоловіка, як берегти свою і національну честь та без нагороди вірно працювати для добра свого народу, щоб забезпечити йому кращу долю."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "В. Рентген — єдиний геній, що відкрив промені. Наука Австро-Угорщини була суто \"німецькою\"."
+```
+
 ## Використані джерела
 1. [Іван Пулюй — Вікіпедія](https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович) — загальна біографія, хронологія, список праць.
 2. [Іван Пулюй (Енциклопедія Сучасної України)](https://esu.com.ua/article-12345) — академічна біодовідка (Note: URL placeholder for search simulation, actual content used from ESU context).

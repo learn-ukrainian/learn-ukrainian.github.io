@@ -1,5 +1,20 @@
 # Дослідження: Василь Симоненко: Ніжний бунтар
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Василь Симоненко: Ніжний бунтар"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "ось ми тобі зараз покажемо"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Симоненко — «комсомольський поет», «співець рідного краю», лояльний до системи, помер від природної хвороби."
+```
+
 ## Використані джерела
 1. [History.org.ua](http://resource.history.org.ua/) — Енциклопедія історії України: біографічні дані, контекст шістдесятництва.
 2. [Litopys.org.ua](http://litopys.org.ua/) — Тексти творів та щоденника «Окрайці думок».

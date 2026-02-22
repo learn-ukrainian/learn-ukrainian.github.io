@@ -1,5 +1,22 @@
 # Дослідження: Переяславська угода 1654: Міфи та реальність
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Переяславська угода 1654: Міфи та реальність"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Словесам бо царським твоєї ц. в-ті всіляко віримо..."
+    source: "з листа до царя"
+    attribution: "Хмельницького"
+  - text: "Цар підданим не присягає"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "\"Возз'єднання двох братніх народів\", \"споконвічне прагнення українців до Москви\"."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Березневі статті 1654](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Bereznevi_statti_1654) — фундаментальний аналіз юридичного змісту угоди.
 2. [Літопис: Березневі статті (текст)](http://litopys.org.ua/volosh/volosh60.htm) — тексти історичних документів, зокрема копії статей.

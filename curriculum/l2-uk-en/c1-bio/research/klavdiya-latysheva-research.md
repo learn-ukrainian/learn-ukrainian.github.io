@@ -1,5 +1,26 @@
 # Дослідження: Клавдія Латишева: Перша українська жінка-доктор математики
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Клавдія Латишева: Перша українська жінка-доктор математики"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "метод Фробеніуса-Латишевої"
+    source: ""
+    attribution: ""
+  - text: "Математичний задачник для хімічних інститутів"
+    source: ""
+    attribution: ""
+  - text: "Клавдія Яківна була не просто вченим, а й педагогом від Бога, яка виховала ціле покоління українських математиків у найважчі часи."
+    source: "про неї"
+    attribution: ""
+forbidden_claims:
+  - "Радянська влада \"дала\" жінкам освіту."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/article-53392) — академічна біографічна стаття.
 2. [Київський національний університет імені Тараса Шевченка](http://www.mechmat.univ.kiev.ua/kafedry/kafedra-dyferentsialnykh-ta-intehralnykh-rivnian/) — історія кафедри диференціальних рівнянь.

@@ -1,5 +1,29 @@
 # Дослідження: Олег та Ігор: Перші правителі
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Олег та Ігор: Перші правителі"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Се буде мати городам руським"
+    source: "882"
+    attribution: "Олега"
+  - text: "скотієм богом"
+    source: ""
+    attribution: ""
+  - text: "Ми від роду руського..."
+    source: ""
+    attribution: ""
+  - text: "Якщо внадиться вовк до овець, то виносить по одній все стадо, якщо не уб’ють його. Так і сей: якщо не вб’ємо його, то він усіх нас погубить"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Київська Русь — колиска трьох братніх народів»."
+  - "«Норманська теорія» як доказ нездатності слов’ян до державотворення."
+```
+
 ## Використані джерела
 1. [Літопис руський (за Іпатіївським списком)](http://litopys.org.ua/ipatlet/ipat01.htm) — першоджерело («Повість минулих літ»), що містить тексти договорів та опис походів.
 2. [Енциклопедія історії України: Олег](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Oleh_kyivskyj) — академічний огляд правління князя Олега.

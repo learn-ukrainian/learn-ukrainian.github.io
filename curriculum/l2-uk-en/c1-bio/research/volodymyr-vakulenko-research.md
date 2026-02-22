@@ -1,5 +1,29 @@
 # Дослідження: Володимир Вакуленко
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Володимир Вакуленко"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Татусева книга"
+    source: ""
+    attribution: ""
+  - text: "Усе буде Україна! Я вірю в перемогу!"
+    source: ""
+    attribution: "1"
+  - text: "Коли наші прийдуть — віддаси"
+    source: ""
+    attribution: "2"
+  - text: "Я бачу, як змінюється світ, і я змінююсь разом з ним"
+    source: ""
+    attribution: "3"
+forbidden_claims:
+  - "Українська культура на сході України \"відсутня\" або \"вторинна\". Міф про \"братні народи\", які \"визволяють\"."
+```
+
 ## Використані джерела
 1. [Pen Ukraine: Володимир Вакуленко](https://pen.org.ua/volodymyr-vakulenko) — Біографічні дані та деталі про загибель.
 2. [Chytomo: Щоденник окупації](https://chytomo.com) — Інформація про історію щоденника та його публікацію.

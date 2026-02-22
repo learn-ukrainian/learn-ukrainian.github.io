@@ -1,5 +1,29 @@
 # Дослідження: Вікторія Амеліна
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Вікторія Амеліна"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Коли одне покоління мовчить, наступне врешті буде вигадувати – а ті, що прийдуть пізніше, можуть уже й не побачити різниці між правдою та брехнею"
+    source: "Про мовчання"
+    attribution: "1"
+  - text: "Збувається мій найгірший страх: я всередині нового Розстріляного Відродження. Як у 1930-их, українських митців убивають, рукописи зникають, пам'ять стирається"
+    source: "Про Розстріляне Відродження"
+    attribution: "2"
+  - text: "Повітряна тривога по всій країні. Так наче щоразу ведуть на розстріл. Усіх. А цілять лише в одного..."
+    source: "Про тривогу"
+    attribution: "3"
+  - text: "Looking at Women Looking at War"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "«Російська культура — гуманістична», «війна не стосується культури»."
+```
+
 ## Використані джерела
 1. [PEN Ukraine](https://pen.org.ua/members/amelina-viktoriya) — офіційна біографія та список творів.
 2. [Suspilne Kultura](https://suspilne.media/culture/) — інтерв'ю та матеріали про "Нове Розстріляне Відродження" та знахідку щоденника Вакуленка.

@@ -1,5 +1,32 @@
 # Дослідження: Майк Йогансен: Геній гри та форми
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Майк Йогансен: Геній гри та форми"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "плаксивого українського письменника"
+    source: ""
+    attribution: ""
+  - text: "Я не християнин і не більшовик, я — марксіст, я — матеріаліст… Я — Майк Йогансен, я — поет, і я живу в Харкові, на Україні"
+    source: ""
+    attribution: "1"
+  - text: "Нудьга — це непевність у завтрашньому дні. А коли я певен, що завтра мене не буде, то яка може бути нудьга?"
+    source: ""
+    attribution: "2"
+  - text: "Доктора Леонардо"
+    source: ""
+    attribution: ""
+  - text: "романом-ландшафтом"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Українська література — це етнографія, село, сентименталізм. \"Малоросійство\"."
+```
+
 ## Використані джерела
 1.  [Енциклопедія Сучасної України: Йогансен Майк](https://esu.com.ua/article-12968) — Академічна біографія, основні дати та оцінка творчості.
 2.  [History.org.ua: Йогансен Михайло Гервасійович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Jogansen_M) — Детальна історіографія та бібліографія.

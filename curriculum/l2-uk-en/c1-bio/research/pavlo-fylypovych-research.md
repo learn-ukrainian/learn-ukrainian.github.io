@@ -1,5 +1,32 @@
 # Дослідження: Павло Филипович: П'ятий з грона неокласиків
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Павло Филипович: П'ятий з грона неокласиків"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Я — робітник в майстерні власних слів, / Що не минає жодної дрібниці..."
+    source: "Autopoetics"
+    attribution: ""
+  - text: "О Мономаше! Ти не навчай, / Що щастя наше — / Покора й рай. / Зійдуть на попіл / Бліді ченці, / А спис і сокіл / В твоїй руці!"
+    source: "Political stance"
+    attribution: ""
+  - text: "Мономах"
+    source: "Political stance"
+    attribution: ""
+  - text: "Неокласики — це гроно п'ятерне нездоланих співців"
+    source: ""
+    attribution: "про групу"
+  - text: "академічним"
+    source: ""
+    attribution: "про групу"
+forbidden_claims:
+  - "Филипович — «буржуазний націоналіст», «терорист», або в кращому випадку «естет, далекий від народу»."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Fylypovych_P) — академічна біографія, дати, факти.
 2. [Український інститут національної пам'яті (uinp.gov.ua)](https://uinp.gov.ua/istorychnyy-kalendar/zhovten/2/1891-narodyvsya-pavlo-fylypovych-poet-neoklasyk) — деталі про репресії та Сандармох.

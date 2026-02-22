@@ -1,5 +1,28 @@
 # Дослідження: Переяславські статті: Текст і контекст
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Переяславські статті: Текст і контекст"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Царська величність підданим не присягає..."
+    source: ""
+    attribution: ""
+  - text: "Щоб Військо Запорозьке само собою судилося і старшина щоб була вибрана з-поміж себе"
+    source: ""
+    attribution: ""
+  - text: "...з тими послами [окрім польських і турецьких] гетьману зустрічатися і відпускати"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "The Pereiaslav Council was a 'reunification' of two 'brotherly nations' (vossoyedineniye)."
+  - "The 1654 treaty represented the fulfillment of a centuries-old dream of Ukrainians to join the Russian state."
+  - "Ukraine lost its statehood and sovereignty immediately upon signing the Pereiaslav Articles."
+  - "Bohdan Khmelnytsky intended the alliance to be a permanent, unbreakable union rather than a pragmatic military protectorate."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://history.org.ua/?termin=Bereznevi_statti_1654) — стаття «БЕРЕЗНЕВІ СТАТТІ 1654», автор: Горобець В.М. Детальний розбір 23-х «Просительних статей» та 11-ти затверджених пунктів.
 2. [Енциклопедія сучасної України (esu.com.ua)](https://esu.com.ua/article-60950) — стаття «Переяславська рада 1654», фокус на перебігу церемонії та кризі присяги.

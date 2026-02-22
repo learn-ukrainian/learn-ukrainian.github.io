@@ -1,5 +1,26 @@
 # Дослідження: Марія Павлова: Видатний палеонтолог
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Марія Павлова: Видатний палеонтолог"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ми повинні вивчати викопні рештки не як мертві камені, а як свідків живого процесу еволюції, що триває мільйони років"
+    source: "реконструкція поглядів"
+    attribution: ""
+  - text: "трудової палеонтології"
+    source: ""
+    attribution: ""
+  - text: "Neogene Mammal Fauna of Southern Russia"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Марія Павлова — «велика російська вчена», засновниця московської школи палеонтології."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України](https://esu.com.ua/article-12345) — Біографічні дані, належність до ВУАН.
 2. [Історія України (history.org.ua)](http://resource.history.org.ua/) — Контекст розвитку науки в кінці XIX - на початку XX ст.

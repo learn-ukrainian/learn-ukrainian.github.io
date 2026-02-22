@@ -1,5 +1,26 @@
 # Дослідження: Лев Данилович: Будівничий Львова
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Лев Данилович: Будівничий Львова"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Лев князь думен і хоробрий на раті, немало бо показав мужність свою у багатьох ратях"
+    source: "ГВЛ"
+    attribution: ""
+  - text: "Лев, прибувши до нього в монастир, убив його, заздрячи тому, що він дав землю Литовську братові його Шварнові"
+    source: "ГВЛ про вбивство Войшелка"
+    attribution: ""
+  - text: "Король Русі"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Лев — \"безпринципний васал татар\", який розвалив державу Данила; період \"феодальної роздробленості\"."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Лев Данилович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Lev_Danylovych) — академічна біографія, датування.
 2. [Ізборник. Галицько-Волинський літопис](http://litopys.org.ua/ipatlet/ipat44.htm) — першоджерело, цитати.

@@ -1,5 +1,29 @@
 # Дослідження: Василь Сухомлинський: Педагог серця
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Василь Сухомлинський: Педагог серця"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Дві рідні мови — це так само безглуздо, якби ми намагалися уявити, що одну дитину народили дві матері. У дитини є одна мати. Рідна. До смерті. До останнього подиху."
+    source: ""
+    attribution: ""
+  - text: "Щоб любити – треба знати, а щоб проникнути в таку тонку й неосяжну, величну й багатогранну річ, як мова, треба її любити."
+    source: ""
+    attribution: ""
+  - text: "Слово – найтонший дотик до серця... Словом можна вбити й оживити, поранити і вилікувати..."
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Sukhomlynsky was a loyal ideological successor to Anton Makarenko who focused on training obedient 'builders of communism'."
+  - "His pedagogical system was a standard Soviet product fully aligned with and supported by Moscow’s centralized educational directives."
+  - "The 'pedagogy of the heart' was a generic Soviet humanist concept rather than a reflection of the Ukrainian philosophical tradition of cordocentrism."
+  - "He viewed the Ukrainian language and national identity as secondary tools for achieving broader Soviet socialist integration."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (Інститут історії України НАНУ)](http://resource.history.org.ua/) — історичний контекст життя, основні віхи біографії та діяльності Василя Сухомлинського як педагога і письменника.
 2. [Національна бібліотека України імені В. І. Вернадського (NBUV)](http://www.nbuv.gov.ua/) — академічний аналіз його наукової спадщини, публікацій, зокрема інформація про переклади його ключової праці «Серце віддаю дітям».

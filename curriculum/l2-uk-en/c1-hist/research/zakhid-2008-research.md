@@ -1,5 +1,28 @@
 # Дослідження: Бухарест 2008: NATO каже «ні»
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Бухарест 2008: NATO каже «ні»"
+dates:
+  key_events:
+primary_quotes:
+  - text: "НАТО вітає євроатлантичні прагнення України та Грузії до членства в НАТО. Сьогодні ми домовилися, що ці країни стануть членами НАТО"
+    source: "Пункт 23"
+    attribution: "саміту"
+  - text: "Ти ж розумієш, Джордже, що Україна — це навіть не держава!"
+    source: ""
+    attribution: ""
+  - text: "провокації"
+    source: ""
+    attribution: ""
+  - text: "спровокує"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Україна входить до «сфери привілейованих інтересів» Росії, і Захід повинен це поважати (realpolitik)."
+```
+
 ## Використані джерела
 1. [Бухарестський саміт НАТО 2008 (Вікіпедія)](https://uk.wikipedia.org/wiki/Бухарестський_саміт_НАТО_2008) — загальний огляд подій та рішень.
 2. [Декларація Бухарестського саміту (NATO.int)](https://www.nato.int/cps/uk/natohq/official_texts_8443.htm) — першоджерело, текст декларації (пункт 23).

@@ -1,5 +1,32 @@
 # Дослідження: Данило Апостол: Останній обраний гетьман
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Данило Апостол: Останній обраний гетьман"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "однооким гетьманом"
+    source: ""
+    attribution: ""
+  - text: "зрадника Мазепи"
+    source: ""
+    attribution: ""
+  - text: "Рішительні пункти"
+    source: ""
+    attribution: ""
+  - text: "указ"
+    source: ""
+    attribution: ""
+  - text: "Права, за якими судиться малоросійський народ"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Зображення періоду 1727-1734 як «дарованої милості» Петра II."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Академічна стаття В.В. Панашенко «Апостол Данило Павлович».
 2. [Національний університет «Києво-Могилянська академія» (ukma.edu.ua)](https://www.ukma.edu.ua/) — Матеріали про підтримку академії та універсал 1729 року.

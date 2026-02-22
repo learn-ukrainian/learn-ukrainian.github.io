@@ -1,5 +1,29 @@
 # Дослідження: Григорій Квітка-Основ'яненко: Батько української прози
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Григорій Квітка-Основ'яненко: Батько української прози"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Марусю"
+    source: ""
+    attribution: ""
+  - text: "малоросійським наріччям"
+    source: ""
+    attribution: ""
+  - text: "сміхотворця"
+    source: ""
+    attribution: ""
+  - text: "Слобожанських Афін"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Квітка як лояльний «малоросійський» письменник, що описує побут провінції для розваги імперської публіки."
+```
+
 ## Використані джерела
 1. [Григорій Квітка-Основ'яненко (Енциклопедія Сучасної України)](https://esu.com.ua/article-60900) — біографія та літературний огляд.
 2. [Історія української літератури: Квітка-Основ'яненко](http://litopys.org.ua/) — академічний огляд творчості.

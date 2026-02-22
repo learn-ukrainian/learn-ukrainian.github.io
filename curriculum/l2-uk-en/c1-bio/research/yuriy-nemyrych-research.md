@@ -1,5 +1,23 @@
 # Дослідження: Юрій Немирич: Дипломат і мислитель
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Юрій Немирич: Дипломат і мислитель"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Здолати Московію можна лишень на її території"
+    source: "Discursus de bello Moscovitico"
+    attribution: ""
+  - text: "Ми прийшли до вас не як невільники, а як вільні до вільних, рівні до рівних"
+    source: "Варшавська промова 1659, реконструкція"
+    attribution: ""
+forbidden_claims:
+  - "Немирич — \"польський агент\", \"єзуїт\" (хоча був протестантом!), \"зрадник переяславських угод\". Гадяцька унія — спроба \"поневолення\" українців шляхтою."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Nemyrych_Yu) — академічна біографічна довідка.
 2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/) — тексти Гадяцького договору та коментарі до доби Руїни.

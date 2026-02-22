@@ -1,5 +1,35 @@
 # Дослідження: Тарас Шевченко: Національний Пророк
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Тарас Шевченко: Національний Пророк"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Караюсь, мучуся... але не каюсь!"
+    source: ""
+    attribution: ""
+  - text: "І на оновленій землі / Врага не буде, супостата, / А буде син, і буде мати, / І будуть люде на землі."
+    source: ""
+    attribution: ""
+  - text: "І Архімед, і Галлей..."
+    source: ""
+    attribution: ""
+  - text: "Борітеся — поборете! / Вам Бог помагає! / За вас правда, за вас слава / І воля святая!"
+    source: ""
+    attribution: ""
+  - text: "Кавказ"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Taras Shevchenko was a secular atheist whose rebellion against the Tsar was rooted in socialist materialism rather than Christian ethics."
+  - "Shevchenko was a 'revolutionary democrat' whose primary goal was a social uprising in inseparable alliance with Russian radical thinkers."
+  - "His literary work is a provincial or 'peasant' phenomenon that lacks the intellectual complexity of the imperial Russian canon."
+  - "The poet's struggle was focused exclusively on class-based social justice, ignoring the broader vision of Ukrainian national independence from the Russian Empire."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (Інститут історії України НАНУ)](http://history.org.ua/?termin=Shevchenko_T_G) — Фундаментальна біографічна стаття, деталізація хронології та історичного контексту.
 2. [Ізборник (Історія України IX-XVIII ст.)](http://litopys.org.ua/) — Доступ до першоджерел, текстів листів, щоденників та повного зібрання творів Т. Шевченка.
@@ -17,9 +47,9 @@
 - 1861 (10 березня): Смерть у Петербурзі; у травні перепоховання на Чернечій горі поблизу Канева.
 
 ## Ключові факти та цитати
-- "Караюсь, мучуся... але не каюсь!" — (лист до А. Лизогуба, 1847 р. з Орської фортеці). Свідчення незламності під час заслання.
-- "І на оновленій землі / Врага не буде, супостата, / А буде син, і буде мати, / І будуть люде на землі." — («І Архімед, і Галлей...», 1860). Пророче бачення деколонізованої, вільної нації.
-- "Борітеся — поборете! / Вам Бог помагає! / За вас правда, за вас слава / І воля святая!" — («Кавказ», 1845). Звернення до поневолених імперією народів.
+- «Караюсь, мучуся... але не каюсь!» — (лист до А. Лизогуба, 1847 р. з Орської фортеці). Свідчення незламності під час заслання.
+- «І на оновленій землі / Врага не буде, супостата, / А буде син, і буде мати, / І будуть люде на землі.» — («І Архімед, і Галлей...», 1860). Пророче бачення деколонізованої, вільної нації.
+- «Борітеся — поборете! / Вам Бог помагає! / За вас правда, за вас слава / І воля святая!» — («Кавказ», 1845). Звернення до поневолених імперією народів.
 - 2500 рублів асигнаціями (сума викупу Шевченка) еквівалентні 45 кг чистого срібла. Величезна на той час сума, що підкреслює цінність його таланту для мистецької еліти.
 
 ## Engagement Hooks (mapped to sections)

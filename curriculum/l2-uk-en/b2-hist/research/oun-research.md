@@ -1,5 +1,31 @@
 # Дослідження: ОУН: Формування
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "ОУН: Формування"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Наш національний ідеал може здійснитися тільки в безкомпромісовій боротьбі з Росією…"
+    source: ""
+    attribution: "Дмитра Донцова"
+  - text: "Самостійність і державність нація зможе осягнути революційним шляхом, збірним зусиллям всіх своїх живих сил"
+    source: ""
+    attribution: "про Коновальця"
+  - text: "Здобудеш Українську Державу, або згинеш у боротьбі за Неї"
+    source: ""
+    attribution: ""
+  - text: "друга"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "The OUN was an artificial project created by foreign intelligence services to serve external interests."
+  - "The movement was a mere terrorist organization without a legitimate political program or social foundation."
+  - "OUN ideology was a direct clone of Western European fascism with no roots in the Ukrainian national experience."
+  - "The radicalization of the movement was caused by inherent extremism rather than being a reaction to the repressive policies of occupying regimes."
+```
+
 ## Використані джерела
 1. [history.org.ua](http://resource.history.org.ua/) — Енциклопедія історії України: Організація українських націоналістів.
 2. [uinp.gov.ua](https://uinp.gov.ua/) — Український інститут національної пам'яті: Матеріали до річниці створення ОУН.

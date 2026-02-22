@@ -1,5 +1,31 @@
 # Дослідження: Документи Січі: Козацьке самоврядування
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Документи Січі: Козацьке самоврядування"
+dates:
+  key_events:
+primary_quotes:
+  - text: "область, цілком незалежну, із своїм власним несамовитим управлінням"
+    source: ""
+    attribution: ""
+  - text: "розривало тим самим основу їх залежності від нашого престолу"
+    source: ""
+    attribution: ""
+  - text: "стародавніми звичаями, словесним правом і здоровим глуздом"
+    source: ""
+    attribution: ""
+  - text: "Архіву Коша Нової Запорозької Січі"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "The Zaporozhian Sich was a lawless, anarchic territory without any formal administrative structure or legal system."
+  - "Cossack society was an unorganized group of fugitives that lacked professional record-keeping and a functioning chancellery."
+  - "The political life of the Sich was primitive and devoid of the diplomatic and bureaucratic complexity found in early modern European states."
+  - "Sich documents and the 'Archive of the Kosh' are insignificant records that do not prove the existence of a developed political culture."
+```
+
 ## Використані джерела
 1. [Енциклопедія сучасної України (ЕСУ)](https://esu.com.ua/) — базові відомості про Запорозьку Січ, її територіальний устрій (курені, паланки) та систему влади.
 2. [Інститут історії України НАНУ](http://history.org.ua/) — детальний огляд «Архіву Коша Нової Запорозької Січі», складу документів (фонд 229 ЦДІАК) та історії їх збереження.

@@ -1,5 +1,23 @@
 # Дослідження: Петро Сагайдачний: Гетьман-Державник
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Петро Сагайдачний: Гетьман-Державник"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Року 1620 гетьман Петро Сагайдачний з усім Військом Запорозьким до Братства вписався"
+    source: ""
+    attribution: ""
+  - text: "Був це чоловік великого духу, що сам шукав небезпеки, легковажив життям, у битві був першим, у відвороті останнім"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Сагайдачний як провідник \"возз'єднання\" (радянський наратив про місію 1620 року до Москви)."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Сагайдачний Петро Конашевич](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sagajdachnyj_P) — фундаментальна академічна стаття.
 2. [Ізборник: Касіян Сакович "Вірші на жалісний погреб..."](http://litopys.org.ua/old17/old17_08.htm) — першоджерело, панегірик 1622 року.

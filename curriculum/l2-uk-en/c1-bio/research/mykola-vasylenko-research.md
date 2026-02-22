@@ -1,5 +1,20 @@
 # Дослідження: Микола Василенко: Юрист і державник
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Микола Василенко: Юрист і державник"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Я не політик, я вчений, якого обставини змусили займатися політикою заради науки"
+    source: "з листів/спогадів"
+    attribution: ""
+forbidden_claims:
+  - "Василенко — \"буржуазний націоналіст\", \"кадет\", \"контрреволюціонер\". Його науковий доробок ігнорувався або таврувався."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Василенко Микола Прокопович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Vasylenko_M_P) — фундаментальна біографічна стаття.
 2. [Енциклопедія Сучасної України: Василенко Микола Прокопович](https://esu.com.ua/article-32242) — огляд наукової та громадської діяльності.

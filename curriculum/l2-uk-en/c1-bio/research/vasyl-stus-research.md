@@ -1,5 +1,23 @@
 # Дослідження: Василь Стус: Вертикальне стояння духу
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Василь Стус: Вертикальне стояння духу"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "веселого цвинтаря"
+    source: ""
+    attribution: ""
+  - text: "Людина — це обов'язок, а не титул"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Стус — «кримінальний злочинець», «антирадянщик», маргінал."
+```
+
 ## Використані джерела
 1. [Енциклопедія сучасної України (esu.com.ua)](https://esu.com.ua/search_articles.php?id=Стус+Василь) — академічна біографія, дати, бібліографія.
 2. [Віртуальний музей дисидентського руху (archive.khpg.org)](https://archive.khpg.org/index.php?id=1113944115) — документи КДБ, хроніка арештів, спогади.

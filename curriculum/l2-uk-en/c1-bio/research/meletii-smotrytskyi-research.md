@@ -1,5 +1,23 @@
 # Дослідження: Мелетій Смотрицький: Творець граматики
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Мелетій Смотрицький: Творець граматики"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "ґ"
+    source: ""
+    attribution: ""
+  - text: "й"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Російська історіографія розглядала \"Граматику\" як етап розвитку *російської* (общерусской) мови, ігноруючи її українську фонетичну основу (літера \"ґ\", вимова \"и\" vs \"і\")."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Смотрицький Мелетій](http://resource.history.org.ua/) — академічна біографія.
 2. [Ізборник: Мелетій Смотрицький. Тренос](http://litopys.org.ua/smotr/sm.htm) — тексти творів та аналіз.

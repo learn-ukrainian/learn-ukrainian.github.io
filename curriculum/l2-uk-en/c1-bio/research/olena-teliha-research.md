@@ -1,5 +1,32 @@
 # Дослідження: Олена Теліга: Поетка-патріотка
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Олена Теліга: Поетка-патріотка"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Не треба слів! Хай буде тільки діло! Його роби — спокійний і суворий"
+    source: "поезія"
+    attribution: ""
+  - text: "Вітрами й сонцем Бог мій шлях намітив, Та там, де треба, — я тверда, як камінь"
+    source: "есеїстика"
+    attribution: ""
+  - text: "Тут сиділа і звідти йде на розстріл Олена Теліга"
+    source: ""
+    attribution: ""
+  - text: "Я з Києва вдруге не поїду"
+    source: ""
+    attribution: ""
+  - text: "Празькій школі"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Олена Теліга — «німецька прислужниця», націоналісти — колаборанти. Її ім'я було стерте з історії літератури УРСР."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/search_articles.php?id=...) — Академічна біографія, основні дати та оцінка творчості.
 2. [Інститут історії України (history.org.ua)](http://resource.history.org.ua/...) — Історичний контекст діяльності ОУН та репресій у Бабиному Яру.

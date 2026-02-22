@@ -1,5 +1,25 @@
 # Дослідження: Sürgünlik: Депортації кримських татар та інших народів
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Sürgünlik: Депортації кримських татар та інших народів"
+dates:
+  key_events:
+primary_quotes:
+  - text: "телятниках"
+    source: ""
+    attribution: ""
+  - text: "Нам заборонялося все, окрім смерті"
+    source: ""
+    attribution: "1"
+  - text: "Рано-вранці в будинок увірвалися радянські солдати: «Збирайтеся! Вас, зрадників, виселяють"
+    source: ""
+    attribution: "2"
+forbidden_claims:
+  - "Кримські татари масово зрадили СРСР, тому їх виселення було «обґрунтованим покаранням»."
+```
+
 ## Використані джерела
 1. [KrymSOS: Хронологія депортації](https://krymsos.com) — Детальна хронологія подій травня-червня 1944 року.
 2. [Radio Svoboda: Депортація кримських татар](https://radiosvoboda.org) — Аналіз причин, перебігу та наслідків геноциду.

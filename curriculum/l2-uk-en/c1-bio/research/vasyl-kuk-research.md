@@ -1,5 +1,32 @@
 # Дослідження: Василь Кук: Останній командир
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Василь Кук: Останній командир"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Пастка"
+    source: ""
+    attribution: ""
+  - text: "Юрка"
+    source: ""
+    attribution: ""
+  - text: "Нептун-47"
+    source: ""
+    attribution: ""
+  - text: "КДБ дописувало те, що вважало за потрібне"
+    source: ""
+    attribution: "про лист"
+  - text: "Я не вірю в те, що мене реабілітують. Я не винен перед Україною"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Василь Кук — \"зрадник\", який розкаявся і визнав радянську владу, довівши безперспективність націоналізму."
+```
+
 ## Використані джерела
 1. [Історична правда](https://www.istpravda.com.ua) — "Останній командир УПА. Життя і боротьба Василя Кука"
 2. [Архів визвольного руху](https://avr.org.ua) — Розсекречені документи справи "Борсук"

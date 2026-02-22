@@ -1,5 +1,32 @@
 # Дослідження: Петро Калнишевський: Останній кошовий
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Петро Калнишевський: Останній кошовий"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Січ Запорозька вкрай вже зруйнована, із винищенням на майбутній час і самої назви запорозьких козаків... за образу нашої імператорської величності"
+    source: ""
+    attribution: ""
+  - text: "віроломне буйство та розорення російських підданих"
+    source: ""
+    attribution: ""
+  - text: "домовинне існування"
+    source: ""
+    attribution: ""
+  - text: "залишилося в камері більше як на два аршини нечистот"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Claim that the Zaporozhian Sich was an obsolete, anarchic institution that had lost its socio-economic relevance by the late 18th century."
+  - "Myth that the liquidation of the Sich by Catherine II was a necessary 'civilizing' act to ensure regional stability and modernization."
+  - "False assertion that Petro Kalnyshevsky's decision to surrender the Sich without a battle was a sign of personal weakness or political failure."
+  - "Propaganda narrative that Kalnyshevsky's 25-year imprisonment in Solovki was a standard criminal punishment rather than a targeted act of imperial vengeance."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/cgi-bin/eiu/history.exe) — Академічна біографія, деталі щодо обрання, участі у війнах та обставин заслання на Соловки.
 2. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — Стаття про Петра Калнишевського: політична та військова діяльність, роль у розбудові Нової Січі, арешт і канонізація.

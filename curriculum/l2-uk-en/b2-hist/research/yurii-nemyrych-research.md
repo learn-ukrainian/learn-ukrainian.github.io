@@ -1,5 +1,28 @@
 # Дослідження: Юрій Немирич: Гадяцька угода
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Юрій Немирич: Гадяцька угода"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Discursus de bello Moscovitico"
+    source: ""
+    attribution: ""
+  - text: "Роздуми про війну з московитами"
+    source: ""
+    attribution: ""
+  - text: "Ми, як вільні до вільних і рівні до рівних, повертаємось"
+    source: "Немирич на сеймі"
+    attribution: ""
+  - text: "Не з інших мотивів прийняли ми протекторат великого князя московського, як тільки щоб... нашу свободу, кров'ю здобуту й освячену, могли заховати й по смерті передати потомкам нашим. Але [цар] почав сіяти усобицю... і наступати на Україну оружною рукою"
+    source: "про Москву"
+    attribution: ""
+forbidden_claims:
+  - "Гадяцька угода — це \"зрада\" інтересів народу, спроба шляхти поневолити селян. Немирич — \"єзуїтський прихвостень\" (хоча був протестантом)."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України: Юрій Немирич](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Nemyrych_Y) — академічна біографія та політичний шлях.
 2. [Ізборник: Гадяцький трактат 1658](http://litopys.org.ua/volyn/volyn52.htm) — текст угоди та аналіз умов.

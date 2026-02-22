@@ -1,5 +1,24 @@
 # Дослідження: Іван Нечуй-Левицький: Майстер українського реалізму
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Іван Нечуй-Левицький: Майстер українського реалізму"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Старосвітських батюшках"
+    source: ""
+    attribution: ""
+  - text: "ї"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Радянська влада малювала його як \"народника-атеїста\", борця проти церкви."
+  - "\"Побутописець\". Зведення його творчості до етнографії."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України](https://esu.com.ua/article-18753) — академічна біографія, деталі про родину та освіту.
 2. [Інститут історії України НАНУ](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Nechuj_Levytskyj_I) — фактаж про смерть 1918 року та громадську діяльність.

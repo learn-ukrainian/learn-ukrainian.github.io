@@ -1,5 +1,23 @@
 # Дослідження: Семен Гулак-Артемовський: Оперний співак
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Семен Гулак-Артемовський: Оперний співак"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Стоїть явір над водою"
+    source: ""
+    attribution: ""
+  - text: "Він так співав, що аж потилицю почухаєш"
+    source: ""
+    attribution: "Шевченка"
+forbidden_claims:
+  - "Гулак-Артемовський — \"русский певец малороссийского происхождения\", учень Глінки. Опера — просто кумедний водевіль про вареники та горілку."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України: Гулак-Артемовський Семен Степанович](https://esu.com.ua/article-24587) — академічна біографія, основні дати.
 2. [Історія України: Гулак-Артемовський Семен](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Gulak_Artemovskyj_S) — деталі про прем'єру та цензуру.

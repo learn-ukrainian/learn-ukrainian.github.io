@@ -1,5 +1,28 @@
 # Дослідження: Пацифікація: Поляки в Галичині
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Пацифікація: Поляки в Галичині"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Czemu, kurwo, nie mówisz po polsku? Już 10 lat Polska, był czas nauczyć się!!!"
+    source: "польський поліціянт"
+    attribution: ""
+  - text: "Бо ми ж такі самі, як поляки! Ми маєм такі самі права в тій державі!"
+    source: "Володимир Кохан, кандидат до Сейму"
+    attribution: ""
+  - text: "вилучення зброї"
+    source: ""
+    attribution: ""
+  - text: "Просвіти"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Польська пропаганда подавала пацифікацію як законну поліційну операцію проти «бандитів» та «терористів» (ОУН), необхідну для наведення порядку. Радянська історіографія також маргіналізувала ці події або використовувала їх лише для критики «буржуазної Польщі», ігноруючи національний аспект боротьби."
+```
+
 ## Використані джерела
 1. [Радіо Свобода: Пацифікація. Як у 1930 році польська влада «умиротворювала» українців](https://www.radiosvoboda.org/a/pacyfikacija-polshcha-ukrainci-oun-halychyna/30838384.html) — Детальний опис ходу пацифікації та спогади очевидців.
 2. [Локальна Історія: «Мали такі самі права». Спогади про Пацифікацію](https://localhistory.org.ua/rubrics/history/mali-taki-sami-prava-spogadi-pro-patsifikatsiiu/) — Усна історія, інтерв'ю з Ольгою Мадзьопою.

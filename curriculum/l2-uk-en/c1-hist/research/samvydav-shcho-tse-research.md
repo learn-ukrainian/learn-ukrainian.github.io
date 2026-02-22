@@ -1,5 +1,31 @@
 # Дослідження: Самвидав: Що це було?
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Самвидав: Що це було?"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Еріка"
+    source: ""
+    attribution: ""
+  - text: "Москва"
+    source: ""
+    attribution: ""
+  - text: "Колібрі"
+    source: ""
+    attribution: ""
+  - text: "папіросному"
+    source: ""
+    attribution: ""
+  - text: "Еріка"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Дисиденти — «буржуазні націоналісти», «наймити Заходу», «антирадятники», що займалися наклепами."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — фундаментальні статті про самвидав, дисидентський рух та персоналії.
 2. [Енциклопедія Сучасної України (esu.com.ua)](https://esu.com.ua/) — біографії Чорновола, Дзюби, Стуса, статті про "Український вісник".

@@ -1,5 +1,32 @@
 # Дослідження: Юрій Винничук: Львівський казкар
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Юрій Винничук: Львівський казкар"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "перекладів"
+    source: ""
+    attribution: ""
+  - text: "Житіє гаремноє"
+    source: ""
+    attribution: ""
+  - text: "легендарного Львова"
+    source: ""
+    attribution: ""
+  - text: "Легенди Львова"
+    source: ""
+    attribution: ""
+  - text: "Кнайпи Львова"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Радянський Львів як «сіре» індустріальне місто, «звільнене» від поляків та німців, де українці були лише пригніченим селянством."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/search_articles.php?id=34017) — академічна біографія, основні дати та твори.
 2. [ЛітАкцент: "Танґо смерті" Юрія Винничука](http://litakcent.com/2012/12/05/tanho-smerti-jurija-vynnychuka/) — літературознавчий аналіз ключового роману.

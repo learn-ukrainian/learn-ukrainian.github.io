@@ -1,5 +1,31 @@
 # Дослідження: Козацтво: витоки
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Козацтво: витоки"
+dates:
+  key_events:
+primary_quotes:
+  - text: "вільна людина"
+    source: ""
+    attribution: ""
+  - text: "той, хто відбився від орди"
+    source: ""
+    attribution: ""
+  - text: "найманець"
+    source: ""
+    attribution: ""
+  - text: "вартовий"
+    source: ""
+    attribution: ""
+  - text: "Нічиїй землі"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Козаки — це «втікачі-кріпаки», «розбійники», «анархічна маса», яка прагнула «возз'єднання з Росією». Радянська історіографія маргіналізувала державницький аспект, зводячи все до класової боротьби."
+```
+
 ## Використані джерела
 1. [Енциклопедія історії України (history.org.ua)](http://resource.history.org.ua/) — Академічні статті про виникнення козацтва, Дмитра Вишневецького та перші писемні згадки.
 2. [Ізборник (litopys.org.ua)](http://litopys.org.ua/boplan/bop.htm) — Гійом Левассер де Боплан «Опис України» (першоджерело XVII ст.).

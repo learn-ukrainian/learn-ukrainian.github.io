@@ -1,5 +1,29 @@
 # Дослідження: Микола Зеров: Лідер неокласиків
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Микола Зеров: Лідер неокласиків"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Ми – тугі бібліофаги, / І мудрість наша – шафа книжкова. / Ми надто різьбимо скупі слова, / Прихильники мистецтва рівноваги"
+    source: ""
+    attribution: ""
+  - text: "Класична пластика, і контур строгий, / І логіки залізна течія – / Оце твоя, поезіє, дорога"
+    source: ""
+    attribution: ""
+  - text: "Енеїда"
+    source: ""
+    attribution: ""
+  - text: "Ad Fontes"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Зеров — «відірваний від життя естет», «буржуазний націоналіст», «ворог народу», який готував замахи на керівників партії."
+```
+
 ## Використані джерела
 1. [Енциклопедія Сучасної України](https://esu.com.ua/article-16053) — академічна біографія, деталі творчості.
 2. [Історія України (history.org.ua)](http://resource.history.org.ua/) — контекст репресій та «Розстріляного відродження».

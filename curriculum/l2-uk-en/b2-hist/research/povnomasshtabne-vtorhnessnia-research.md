@@ -1,5 +1,30 @@
 # Дослідження: Повномасштабне вторгнення
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Повномасштабне вторгнення"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Лідер фракції тут, голова Офісу президента тут, прем'єр-міністр Шмигаль тут, Подоляк тут, президент тут. Всі ми тут. Наші військові тут. Громадяни, суспільство тут. Всі ми тут. Захищаємо нашу незалежність, нашу державу"
+    source: "25.02.2022"
+    attribution: "В. Зеленського"
+  - text: "Русский военный корабль, иди нахуй!"
+    source: ""
+    attribution: ""
+  - text: "бліцкригу"
+    source: ""
+    attribution: ""
+  - text: "Антонов"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "The invasion is a 'special military operation' aimed at demilitarization and denazification."
+  - "Ukraine is an artificial entity or 'non-state' that lacks its own independent history."
+  - "Ukrainian resilience is a byproduct of Western military aid rather than internal national agency."
+```
+
 ## Використані джерела
 1. [Віче](http://viche.ck.ua) — Хронологія початку повномасштабного вторгнення та ключові етапи оборони.
 2. [Вікіпедія](https://uk.wikipedia.org) — Детальний опис боїв за Гостомельський аеропорт та оборону Києва.

@@ -1,5 +1,28 @@
 # Дослідження: Злочини і стійкість
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Злочини і стійкість"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Променистий"
+    source: ""
+    attribution: ""
+  - text: "Росія веде війну проти України з геноцидною метою ліквідації українського суспільства як такого"
+    source: "Тімоті Снайдер"
+    attribution: ""
+  - text: "У мене померли дві собаки, бабуся Галя та улюблене місто"
+    source: "Щоденник з Маріуполя, 8-річний Єгор"
+    attribution: ""
+forbidden_claims:
+  - "The claim that the 2022 invasion was a 'denazification' mission to liberate the Ukrainian people."
+  - "The denial of the Ukrainian nation’s existence as a distinct and sovereign historical entity."
+  - "The framing of Russian war crimes as isolated accidents or excesses rather than a systematic policy of genocide."
+  - "The assertion that Ukrainian resistance is merely a result of external manipulation rather than genuine national agency."
+```
+
 ## Використані джерела
 1. [Радіо Свобода](https://www.radiosvoboda.org) — репортажі про воєнні злочини в Бучі та Ірпені, свідчення очевидців.
 2. [BBC News Україна](https://www.bbc.com/ukrainian) — хронологія звільнення Харківщини та Херсона, аналіз ордера МКС.

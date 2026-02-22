@@ -1,5 +1,32 @@
 # Дослідження: Микола Хвильовий: Геть від Москви!
 
+## Key Facts Ledger
+<!-- IMMUTABLE TRUTH ANCHOR — Phase D verifies prose against this -->
+```yaml
+subject: "Микола Хвильовий: Геть від Москви!"
+vital_status: "unknown"
+dates:
+  key_events:
+primary_quotes:
+  - text: "Перед нами стоїть таке питання: на яку із світових літератур взяти курс? В будь-якому випадку не на російську. Це рішуче і без всяких застережень... Від російської літератури, від її стихії українська поезія мусить тікати якомога швидше."
+    source: ""
+    attribution: "1"
+  - text: "Камо грядеши?"
+    source: ""
+    attribution: "1"
+  - text: "Арешт Ялового — це розстріл цілої генерації... За що? За те, що ми були найщирішими комуністами? Нічого не розумію."
+    source: ""
+    attribution: "2"
+  - text: "Хвильовий"
+    source: ""
+    attribution: ""
+  - text: "азійського ренесансу"
+    source: ""
+    attribution: ""
+forbidden_claims:
+  - "Хвильовий — «буржуазний націоналіст», який ненавидів Росію."
+```
+
 ## Використані джерела
 1.  [Енциклопедія Сучасної України: Хвильовий Микола](https://esu.com.ua/article-873529) — академічна біографія, аналіз творчості та політичної позиції.
 2.  [History.org.ua: Хвильовий Микола Григорович](http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Khvylovyj_M) — детальна стаття Інституту історії України НАНУ.
