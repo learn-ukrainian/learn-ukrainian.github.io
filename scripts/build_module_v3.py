@@ -651,6 +651,78 @@ _DIFFUSE_REVIEW_KEYWORDS = [
 ]
 
 
+def _run_deterministic_fixes(ctx: ModuleContext) -> int:
+    """Run all zero-cost deterministic fixes on a module's files.
+
+    Consolidates: euphony, IPA normalization, YAML schema fixes, forbidden
+    activity removal. Returns total number of fixes applied.
+
+    Called before the diffuse-vs-targeted triage so that cascading failures
+    from a single YAML error don't trick the triage into marking the module
+    as needing a full rebuild (#623).
+    """
+    total = 0
+    content_path = ctx.paths.get("md")
+
+    # 1. Euphony auto-fix (content .md)
+    if content_path and content_path.exists():
+        from audit.checks.euphony import auto_fix_euphony
+        text = content_path.read_text("utf-8")
+        fixed_text, n = auto_fix_euphony(text, str(content_path))
+        if n > 0:
+            content_path.write_text(fixed_text, "utf-8")
+            total += n
+            log(f"    Auto-fix: {n} euphony violation(s)")
+
+    # 2. IPA normalization (content, vocab, activities)
+    from lint_ipa import apply_fixes as ipa_apply_fixes
+    vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+    for target in [content_path, vocab_path, ctx.paths.get("activities")]:
+        if target and target.exists():
+            t = target.read_text("utf-8")
+            fixed_t, n = ipa_apply_fixes(t)
+            if n > 0:
+                target.write_text(fixed_t, "utf-8")
+                total += n
+                log(f"    Auto-fix: {n} IPA issue(s) in {target.name}")
+
+    # 3. YAML schema fixes (activities file)
+    act_path = ctx.paths.get("activities")
+    if act_path and act_path.exists():
+        try:
+            from audit.checks.yaml_schema_validation import fix_yaml_file
+            n, msgs = fix_yaml_file(act_path, dry_run=False)
+            if n > 0:
+                total += n
+                log(f"    Auto-fix: {n} YAML schema fix(es) in {act_path.name}")
+                for msg in msgs[:3]:
+                    log(f"      {msg[:120]}")
+        except Exception as e:
+            log(f"    Auto-fix: YAML fix failed: {e}")
+
+    # 4. Forbidden activity removal (level/focus-dependent)
+    if act_path and act_path.exists():
+        try:
+            from audit.checks.yaml_schema_validation import remove_forbidden_activities
+            from audit.core import detect_level, detect_focus, load_yaml_meta
+            meta_data = load_yaml_meta(str(content_path)) if content_path else {}
+            if content_path and content_path.exists():
+                content = content_path.read_text("utf-8")
+                import yaml as yaml_lib
+                fm_str = yaml_lib.dump(meta_data, sort_keys=False, allow_unicode=True) if meta_data else ""
+                level_code, module_num, _ = detect_level(str(content_path), fm_str)
+                module_focus = detect_focus(fm_str, level_code, module_num,
+                                            meta_data.get("title", "") if meta_data else "", str(content_path))
+                n_removed, _ = remove_forbidden_activities(act_path, level_code, module_focus, dry_run=False)
+                if n_removed > 0:
+                    total += n_removed
+                    log(f"    Auto-fix: removed {n_removed} forbidden activity(ies)")
+        except Exception as e:
+            log(f"    Auto-fix: forbidden activity check failed: {e}")
+
+    return total
+
+
 def _all_issues_diffuse(audit_output: str, review_text: str) -> bool:
     """Determine if ALL issues are diffuse (not fixable by FIND/REPLACE).
 
@@ -1727,12 +1799,29 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     # -----------------------------------------------------------------------
-    # Pre-D.2 triage (#623): skip D.2 if all issues are diffuse (not fixable
-    # by FIND/REPLACE). Deterministic classification based on audit failure
-    # codes — no LLM involved.
+    # Pre-D.2 deterministic fix pass (#623): try all zero-cost auto-fixes
+    # before deciding whether to send to LLM or rebuild. A single YAML error
+    # can cascade into 5-10 audit failures that look "diffuse" but are
+    # actually one deterministic fix away from passing.
     # -----------------------------------------------------------------------
+    auto_fix_count = _run_deterministic_fixes(ctx)
+    if auto_fix_count > 0:
+        log(f"  Phase D.2: Pre-triage auto-fix applied {auto_fix_count} fix(es) — re-auditing...")
+        passed_after_autofix, audit_out_after = run_verify(ctx.paths["md"], content_only=False)
+        if passed_after_autofix and not review_says_fail:
+            log("  Phase D: PASS (deterministic fixes resolved all issues — zero LLM cost)")
+            _mark_phase_v3(ctx, state, phase, "complete", attempts=1, note="d1-plus-autofix")
+            mark_phase_locked(ctx, "6", "complete", note="v3-phase-D")
+            mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
+            mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
+            return True
+        # Use the fresh audit output for triage decisions
+        audit_out = audit_out_after
+
+    # Pre-D.2 triage: skip D.2 if all REMAINING issues are diffuse (not fixable
+    # by FIND/REPLACE). Only runs AFTER deterministic fixes have been tried.
     if _all_issues_diffuse(audit_out, review_text):
-        log("  Phase D.2: SKIPPED — all issues are diffuse (needs rebuild, not repair)")
+        log("  Phase D.2: SKIPPED — all remaining issues are diffuse (needs rebuild, not repair)")
         _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
                        note="needs-rebuild-diffuse-issues")
         return False
