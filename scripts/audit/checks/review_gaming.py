@@ -234,6 +234,34 @@ def check_review_section_coverage(
     if len(content_headers) < 3:
         return []
 
+    # English equivalents for common Ukrainian section prefixes.
+    # Fallback matching when reviews are written in English.
+    _SECTION_EN_EQUIVALENTS: Dict[str, List[str]] = {
+        'вступ': ['introduction', 'intro'],
+        'теорія': ['theory'],
+        'практика': ['practice'],
+        'культурний контекст': ['cultural context', 'culture section'],
+        'граматика': ['grammar'],
+        'лексика': ['vocabulary', 'lexicon'],
+        'читання': ['reading'],
+        'підсумок': ['summary', 'conclusion'],
+        'фонетика': ['phonetics', 'pronunciation'],
+        'діалог': ['dialogue', 'dialog'],
+        'письмо': ['writing'],
+        'аудіювання': ['listening'],
+        'словник': ['glossary', 'word list'],
+        'вправи': ['exercises', 'drills'],
+        'повторення': ['review', 'revision'],
+        'хронологія': ['chronology', 'timeline'],
+        'аналіз': ['analysis'],
+        'розминка': ['warm-up', 'warmup', 'warm up'],
+        'презентація': ['presentation'],
+        'біографія': ['biography'],
+        'життєпис': ['biography'],
+        'діагностика': ['diagnostic'],
+        'основні': ['main', 'basic', 'core'],
+    }
+
     review_lower = review_content.lower()
     mentioned = 0
 
@@ -269,6 +297,21 @@ def check_review_section_coverage(
             )
             if matches >= len(words) * 0.6:
                 mentioned += 1
+                continue
+
+        # English-equivalent fallback: check if the pre-colon Ukrainian label
+        # has a known English equivalent that appears in the review
+        matched_en = False
+        for uk_key, en_list in _SECTION_EN_EQUIVALENTS.items():
+            if uk_key in pre_colon or pre_colon in uk_key:
+                for en_term in en_list:
+                    if en_term in review_lower:
+                        matched_en = True
+                        break
+            if matched_en:
+                break
+        if matched_en:
+            mentioned += 1
 
     total = len(content_headers)
     coverage = mentioned / total if total > 0 else 1.0
@@ -615,14 +658,12 @@ def check_cross_agent_review(
             pass
 
     if not reviewed_by:
-        # Missing metadata — soft warning
         violations.append({
             'type': 'MISSING_REVIEWER_ID',
-            'severity': 'warning',
+            'severity': 'critical',
             'message': (
                 "Review is missing 'Reviewed-By:' metadata. "
-                "Add '**Reviewed-By:** {model_id}' to the review header "
-                "to enable cross-agent verification."
+                "Re-run Phase D to generate a review with proper provenance."
             ),
         })
         return violations

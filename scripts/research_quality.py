@@ -111,11 +111,24 @@ def _count_urls(text: str) -> int:
 
 
 def _count_dated_entries(text: str) -> int:
-    """Count list entries with year references."""
-    return len(re.findall(
-        r"^[\s]*[-*]\s+.*\b\d{3,4}\s*(р\.|року|рр\.?|BC|AD|BCE|CE|до н\.)",
+    """Count list entries with year or century references.
+
+    Matches any bullet-point line containing either:
+    - A 3-4 digit year (e.g., 1654, 882)
+    - A Roman or Arabic century reference with 'ст.' (e.g., IX ст., 12 ст.)
+    In a chronology section, these are always dated entries.
+    """
+    # Year-based entries (3-4 digit number) — match full line to avoid dedup issues
+    year_entries = set(re.findall(
+        r"^[\s]*[-*]\s+.*\b\d{3,4}\b.*$",
         text, re.MULTILINE,
     ))
+    # Century-based entries (Roman numeral + ст. or Arabic + ст.)
+    century_entries = set(re.findall(
+        r"^[\s]*[-*]\s+.*(?:[IVXLC]+|[0-9]{1,2})\s*ст\..*$",
+        text, re.MULTILINE,
+    ))
+    return len(year_entries | century_entries)
 
 
 def _count_numbered_items(text: str) -> int:

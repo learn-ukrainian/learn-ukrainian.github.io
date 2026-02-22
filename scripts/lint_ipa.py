@@ -13,6 +13,8 @@ Errors detected:
   dz → d͡z    дз affricate needs tie-bar (context-aware)
   w → ʋ       В is labiodental approximant (inside IPA brackets)
   v → ʋ       Same (inside IPA brackets)
+  o → ɔ       Ukrainian о is open-mid back rounded [ɔ] (inside IPA brackets)
+  e → ɛ       Ukrainian е is open-mid front unrounded [ɛ] (inside IPA brackets)
 
 Usage:
   .venv/bin/python scripts/lint_ipa.py FILE              # lint one file
@@ -152,6 +154,20 @@ def lint_brackets(text: str) -> list[Issue]:
             if not is_ipa_bracket(content, after):
                 continue
 
+            # Check for /o/ (should be /ɔ/ in Ukrainian)
+            for m in re.finditer(r'o', content):
+                abs_col = bstart + 1 + m.start()
+                ctx = content[max(0, m.start()-10):m.end()+10]
+                issues.append(Issue(line_idx, abs_col, 'IPA-009',
+                                    'o', 'ɔ', f'[...{ctx}...]'))
+
+            # Check for /e/ (should be /ɛ/ in Ukrainian)
+            for m in re.finditer(r'e', content):
+                abs_col = bstart + 1 + m.start()
+                ctx = content[max(0, m.start()-10):m.end()+10]
+                issues.append(Issue(line_idx, abs_col, 'IPA-010',
+                                    'e', 'ɛ', f'[...{ctx}...]'))
+
             # Check for /w/ (should be /ʋ/)
             for m in re.finditer(r'w', content):
                 abs_col = bstart + 1 + m.start()
@@ -230,6 +246,10 @@ def _fix_brackets_in_line(line: str) -> str:
 
         if is_ipa_bracket(content, after):
             fixed = content
+            # Fix o → ɔ (Ukrainian о is open-mid [ɔ], not close-mid [o])
+            fixed = fixed.replace('o', 'ɔ')
+            # Fix e → ɛ (Ukrainian е is open-mid [ɛ], not close-mid [e])
+            fixed = fixed.replace('e', 'ɛ')
             # Fix w → ʋ
             fixed = fixed.replace('w', 'ʋ')
             # Fix v → ʋ (v is U+0076, ʋ is U+028B — no collision)

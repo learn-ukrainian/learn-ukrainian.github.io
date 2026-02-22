@@ -40,6 +40,7 @@ import argparse
 import logging
 import os
 import re
+import subprocess
 import textwrap
 import time
 import sys
@@ -381,6 +382,157 @@ CLAUDE_MODEL_RESEARCH   = "claude-sonnet-4-6"   # Phase A default
 CLAUDE_MODEL_REVIEW     = "claude-opus-4-6"     # Phase D default (cross-agent review needs best model)
 
 
+def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
+    """Apply FIND/REPLACE fix pairs from D.2 output to a file.
+
+    Parses the FIND:/REPLACE: pairs within ===SECTION_FIX_START=== blocks,
+    applies exact string replacements, and returns the count of successful
+    replacements. Falls back to normalized whitespace matching if exact match
+    fails.
+
+    This replaces _apply_section_fixes for Phase D.2, which uses FIND/REPLACE
+    pairs rather than whole-section replacement.
+    """
+    if not file_path.exists():
+        return 0
+
+    # Extract the fix block
+    fix_match = re.search(
+        r"===SECTION_FIX_START===\s*\n(.*?)===SECTION_FIX_END===",
+        raw_output, re.DOTALL,
+    )
+    if not fix_match:
+        return 0
+
+    fix_block = fix_match.group(1)
+
+    # Only process lines targeting this file
+    current_file_active = False
+    file_name = file_path.name
+    pairs: list[tuple[str, str]] = []
+    current_find: list[str] | None = None
+    current_replace: list[str] | None = None
+    mode = None  # "find" or "replace"
+
+    for line in fix_block.split("\n"):
+        stripped = line.strip()
+
+        # FILE: header — check if this section targets our file
+        if stripped.startswith("FILE:"):
+            file_ref = stripped[5:].strip()
+            current_file_active = (
+                file_name in file_ref
+                or str(file_path) in file_ref
+                or file_path.name == Path(file_ref).name
+            )
+            mode = None
+            current_find = None
+            current_replace = None
+            continue
+
+        if not current_file_active:
+            continue
+
+        # Separator between pairs
+        if stripped == "---":
+            # Save the completed pair
+            if current_find is not None and current_replace is not None:
+                pairs.append(("\n".join(current_find), "\n".join(current_replace)))
+            current_find = None
+            current_replace = None
+            mode = None
+            continue
+
+        if stripped == "FIND:":
+            current_find = []
+            mode = "find"
+            continue
+        if stripped == "REPLACE:":
+            current_replace = []
+            mode = "replace"
+            continue
+
+        # Accumulate content lines
+        if mode == "find" and current_find is not None:
+            current_find.append(line)
+        elif mode == "replace" and current_replace is not None:
+            current_replace.append(line)
+
+    # Don't forget the last pair (may not have trailing ---)
+    if current_find is not None and current_replace is not None:
+        pairs.append(("\n".join(current_find), "\n".join(current_replace)))
+
+    if not pairs:
+        return 0
+
+    content = file_path.read_text("utf-8")
+    applied = 0
+
+    for find_text, replace_text in pairs:
+        find_text = find_text.strip()
+        replace_text = replace_text.strip()
+        if not find_text or find_text == replace_text:
+            continue
+
+        # Strip «» quotes if present (some models wrap in guillemets)
+        if find_text.startswith("«") and find_text.endswith("»"):
+            find_text = find_text[1:-1]
+        if replace_text.startswith("«") and replace_text.endswith("»"):
+            replace_text = replace_text[1:-1]
+
+        # Try exact match first
+        if find_text in content:
+            content = content.replace(find_text, replace_text, 1)
+            applied += 1
+            continue
+
+        # Fallback: normalize whitespace and try again
+        normalized_find = re.sub(r'\s+', ' ', find_text).strip()
+        # Search for the normalized version in normalized content
+        normalized_content = re.sub(r'\s+', ' ', content)
+        if normalized_find in normalized_content:
+            # Find the position in normalized content, then map back
+            idx = normalized_content.index(normalized_find)
+            # Rebuild: find the corresponding range in original content
+            # by counting non-whitespace characters up to idx
+            char_count = 0
+            orig_start = 0
+            for i, ch in enumerate(content):
+                if char_count >= idx:
+                    orig_start = i
+                    break
+                if ch in (' ', '\t', '\n', '\r'):
+                    if i == 0 or content[i-1] not in (' ', '\t', '\n', '\r'):
+                        char_count += 1
+                else:
+                    char_count += 1
+            # Find the end by matching the normalized find length
+            end_count = 0
+            orig_end = orig_start
+            target_len = len(normalized_find)
+            for i in range(orig_start, len(content)):
+                ch = content[i]
+                if ch in (' ', '\t', '\n', '\r'):
+                    if i == orig_start or content[i-1] not in (' ', '\t', '\n', '\r'):
+                        end_count += 1
+                else:
+                    end_count += 1
+                if end_count >= target_len:
+                    orig_end = i + 1
+                    break
+
+            content = content[:orig_start] + replace_text + content[orig_end:]
+            applied += 1
+            log(f"    Fix applied (fuzzy match): {find_text[:60]}...")
+        else:
+            log(f"    Fix SKIPPED (no match): {find_text[:80]}...")
+
+    if applied > 0:
+        file_path.write_text(content, "utf-8")
+
+    return applied
+
+
 def _dispatch_claude_phase(
     prompt_file: Path,
     phase_label: str,
@@ -395,7 +547,7 @@ def _dispatch_claude_phase(
     """
     import shutil
     claude_bin = shutil.which("claude") or "claude"
-    env = __import__("os").environ.copy()
+    env = os.environ.copy()
     env.pop("CLAUDECODE", None)  # Prevent nested-session error
 
     prompt = prompt_file.read_text("utf-8")
@@ -516,7 +668,7 @@ def _compute_audit_metrics(ctx: ModuleContext) -> dict[str, str]:
         body = ""
         content = ""
 
-    word_target = ctx.word_target or 0
+    word_target = getattr(ctx, "word_target", 0) or 0
     word_pct = (word_count / word_target * 100) if word_target else 0
     metrics["COMPUTED_WORD_COUNT"] = str(word_count)
     metrics["COMPUTED_WORD_TARGET"] = str(word_target)
@@ -641,11 +793,17 @@ _DIFFUSE_FAILURE_CODES = {
     "LOW_IMMERSION",            # Fundamental language balance problem
 }
 
+_deterministic_fix_mtimes: dict[str, float] = {}  # slug → max mtime of last fix pass
+
+
 def _run_deterministic_fixes(ctx: ModuleContext) -> int:
     """Run all zero-cost deterministic fixes on a module's files.
 
     Consolidates: euphony, IPA normalization, YAML schema fixes, forbidden
     activity removal. Returns total number of fixes applied.
+
+    Uses mtime tracking to skip redundant runs when files haven't changed
+    since the last pass (#625).
 
     Called before the diffuse-vs-targeted triage so that cascading failures
     from a single YAML error don't trick the triage into marking the module
@@ -653,6 +811,20 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
     """
     total = 0
     content_path = ctx.paths.get("md")
+
+    # Dirty-flag: skip if no files changed since last fix pass
+    target_files = [
+        content_path,
+        ctx.paths.get("vocab") or ctx.paths.get("vocabulary"),
+        ctx.paths.get("activities"),
+    ]
+    current_max_mtime = max(
+        (p.stat().st_mtime for p in target_files if p and p.exists()),
+        default=0.0,
+    )
+    last_mtime = _deterministic_fix_mtimes.get(ctx.slug, 0.0)
+    if current_max_mtime > 0 and current_max_mtime <= last_mtime:
+        return 0  # Files unchanged since last pass
 
     # 1. Euphony auto-fix (content .md)
     if content_path and content_path.exists():
@@ -665,6 +837,7 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
                 total += n
                 log(f"    Auto-fix: {n} euphony violation(s)")
         except Exception as e:
+            logger.warning("Auto-fix: euphony failed", exc_info=True)
             log(f"    Auto-fix: euphony failed: {e}")
 
     # 2. IPA normalization (content, vocab, activities)
@@ -680,6 +853,7 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
                     total += n
                     log(f"    Auto-fix: {n} IPA issue(s) in {target.name}")
     except Exception as e:
+        logger.warning("Auto-fix: IPA normalization failed", exc_info=True)
         log(f"    Auto-fix: IPA normalization failed: {e}")
 
     # 3. YAML schema fixes (activities file)
@@ -694,6 +868,7 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
                 for msg in msgs[:3]:
                     log(f"      {msg[:120]}")
         except Exception as e:
+            logger.warning("Auto-fix: YAML fix failed", exc_info=True)
             log(f"    Auto-fix: YAML fix failed: {e}")
 
     # 4. Forbidden activity removal (level/focus-dependent)
@@ -714,7 +889,16 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
                     total += n_removed
                     log(f"    Auto-fix: removed {n_removed} forbidden activity(ies)")
         except Exception as e:
+            logger.warning("Auto-fix: forbidden activity check failed", exc_info=True)
             log(f"    Auto-fix: forbidden activity check failed: {e}")
+
+    # Update mtime tracker so subsequent calls within the same pipeline skip
+    # unless files are modified again (e.g. by an LLM fix dispatch).
+    new_max_mtime = max(
+        (p.stat().st_mtime for p in target_files if p and p.exists()),
+        default=0.0,
+    )
+    _deterministic_fix_mtimes[ctx.slug] = new_max_mtime
 
     return total
 
@@ -950,8 +1134,11 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
     meta_text = _extract_delimiter(raw_output, "===META_OUTLINE_START===", "===META_OUTLINE_END===")
     if meta_text:
         import yaml
+        # Strip markdown code fences that LLMs sometimes wrap around YAML
+        meta_text_clean = re.sub(r'^```(?:ya?ml)?\s*\n', '', meta_text.strip())
+        meta_text_clean = re.sub(r'\n```\s*$', '', meta_text_clean)
         try:
-            outline_data = yaml.safe_load(meta_text)
+            outline_data = yaml.safe_load(meta_text_clean)
         except yaml.YAMLError as e:
             log(f"  Phase A: WARNING — meta outline YAML parse error: {e}")
             outline_data = None
@@ -1159,6 +1346,10 @@ def phase_C_v3(ctx: ModuleContext, state: dict, use_track_context: bool = True) 
         else:
             log("  Phase C: Existing activities invalid — deleting and regenerating")
             act_path.unlink(missing_ok=True)
+            # Also delete stale vocabulary — it was paired with the invalid activities
+            if voc_path and voc_path.exists():
+                voc_path.unlink(missing_ok=True)
+                log("  Phase C: Also deleted stale vocabulary (paired with invalid activities)")
 
     # Inject track context
     if use_track_context:
@@ -1435,30 +1626,14 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
         log("  Audit: DRY-RUN — would run audit loop")
         return True
 
-    # Auto-fix pass: apply deterministic fixes (euphony, IPA, formatting) before
-    # calling any LLM. Zero API cost, instant.
     content_path = ctx.paths["md"]
-    auto_fix_total = 0
-    if content_path.exists():
-        from audit.checks.euphony import auto_fix_euphony
-        text = content_path.read_text("utf-8")
-        fixed_text, num_fixes = auto_fix_euphony(text, str(content_path))
-        if num_fixes > 0:
-            content_path.write_text(fixed_text, "utf-8")
-            auto_fix_total += num_fixes
-            log(f"  Audit: Auto-fixed {num_fixes} euphony violation(s)")
 
-        # IPA normalization (w→ʋ, v→ʋ, affricate tie-bars)
-        from lint_ipa import apply_fixes as ipa_apply_fixes
-        vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
-        for target in [content_path, vocab_path, ctx.paths.get("activities")]:
-            if target and target.exists():
-                t = target.read_text("utf-8")
-                fixed_t, n = ipa_apply_fixes(t)
-                if n > 0:
-                    target.write_text(fixed_t, "utf-8")
-                    auto_fix_total += n
-                    log(f"  Audit: Auto-fixed {n} IPA issue(s) in {target.name}")
+    # Auto-fix pass: apply deterministic fixes (euphony, IPA, YAML, forbidden
+    # activities) before calling any LLM. Zero API cost, instant.
+    # Note: _run_deterministic_fixes already handles IPA normalization.
+    auto_fix_total = _run_deterministic_fixes(ctx)
+    if auto_fix_total > 0:
+        log(f"  Audit: {auto_fix_total} deterministic fix(es) applied")
 
         if auto_fix_total > 0:
             # Re-audit after auto-fix — may already pass
@@ -1632,13 +1807,10 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     if not ctx.dry_run:
-        # Auto-fix euphony before pre-D validation — deterministic, zero API cost
-        from audit.checks.euphony import auto_fix_euphony
-        text = ctx.paths["md"].read_text("utf-8")
-        fixed_text, n_euphony = auto_fix_euphony(text, str(ctx.paths["md"]))
-        if n_euphony > 0:
-            ctx.paths["md"].write_text(fixed_text, "utf-8")
-            log(f"  Phase D: Auto-fixed {n_euphony} euphony violation(s) (pre-validation)")
+        # Deterministic fixes before pre-D validation — zero API cost
+        n_preD = _run_deterministic_fixes(ctx)
+        if n_preD > 0:
+            log(f"  Phase D: {n_preD} deterministic fix(es) applied (pre-validation)")
 
         log("  Phase D: Pre-D activity validation (--skip-review)...")
         pre_d_passed, pre_d_output = run_verify(ctx.paths["md"], skip_review=True)
@@ -1740,13 +1912,10 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     (ctx.orch_dir / "phase-D-review-1.md").write_text(review_text, "utf-8")
     log(f"  Phase D.1: Review saved → {ctx.paths['review'].name}")
 
-    # Auto-fix euphony before auditing — deterministic, zero API cost
-    from audit.checks.euphony import auto_fix_euphony
-    text = ctx.paths["md"].read_text("utf-8")
-    fixed_text, n_euphony = auto_fix_euphony(text, str(ctx.paths["md"]))
-    if n_euphony > 0:
-        ctx.paths["md"].write_text(fixed_text, "utf-8")
-        log(f"  Phase D.1: Auto-fixed {n_euphony} euphony violation(s)")
+    # Deterministic fixes before audit — zero API cost
+    n_postD1 = _run_deterministic_fixes(ctx)
+    if n_postD1 > 0:
+        log(f"  Phase D.1: {n_postD1} deterministic fix(es) applied")
 
     # Run full audit to check review quality + content
     log("  Phase D.1: Running audit after review...")
@@ -1822,101 +1991,166 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     # -----------------------------------------------------------------------
-    # Step 2: Targeted Repair (only if Step 1 didn't pass audit)
+    # Steps 2+3: Repair + Re-review loop (max 2 iterations)
+    # Each iteration: D.2 repairs content based on latest review, D.3 re-reviews.
+    # If D.3 finds new issues D.1 missed, a second iteration fixes them.
     # -----------------------------------------------------------------------
-    log("  Phase D.2: Audit failed after review — dispatching targeted repair...")
+    MAX_D2_ITERS = 2
+    current_review = review_text  # Start with D.1 review
+    current_audit_out = audit_out  # Start with D.1 audit
 
-    # Extract specific audit failures for the repair prompt
-    failures = _extract_audit_failures(audit_out)
+    for d2_iter in range(MAX_D2_ITERS):
+        iter_suffix = "" if d2_iter == 0 else f" (retry {d2_iter})"
+        d2_prompt_num = 2 + d2_iter * 2   # 2, 4
+        d3_prompt_num = 3 + d2_iter * 2   # 3, 5
+        review_file_num = 2 + d2_iter     # 2, 3
+        audit_log_num = 2 + d2_iter       # 2, 3
+        total_attempts = 2 + d2_iter      # 2, 3 (D.1 counts as 1)
 
-    prompt_file2 = ctx.orch_dir / "phase-D-prompt-2.md"
-    if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
-        return False
+        # --- D.2: Targeted Repair ---
+        log(f"  Phase D.2{iter_suffix}: Dispatching targeted repair based on review findings...")
+        failures = _extract_audit_failures(current_audit_out)
 
-    # Inject review text and audit failures into D2 prompt
-    prompt2_text = prompt_file2.read_text("utf-8")
-    prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", review_text)
-    prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
-    prompt_file2.write_text(prompt2_text, "utf-8")
-
-    ok2, raw_output2 = _dispatch_claude_phase(
-        prompt_file2, "Phase D.2",
-        model=claude_model_D, timeout=TIMEOUT_FIX,
-        allow_tools=["Read", "Grep", "Glob"],
-    )
-    if not ok2:
-        log("  Phase D.2: Dispatch FAILED")
-        _mark_phase_v3(ctx, state, phase, "failed", attempts=2, note="d2-dispatch-failed")
-        return False
-
-    # Apply fixes if present, with diff-size blocker (#623)
-    if "===SECTION_FIX_START===" in raw_output2:
-        # Snapshot content before fixes for diff-size check
-        content_before = ctx.paths["md"].read_text("utf-8")
-        act_before: str | None = None
-        if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-            act_before = ctx.paths["activities"].read_text("utf-8")
-
-        _apply_section_fixes(ctx.paths["md"], raw_output2)
-        if ctx.paths.get("activities"):
-            _apply_section_fixes(ctx.paths["activities"], raw_output2)
-
-        # Diff-size blocker: count FIND/REPLACE pairs vs actual changed lines.
-        # If changes exceed 2× the fix pair count, the repair went beyond scope.
-        fix_pair_count = raw_output2.count("FIND:") if "FIND:" in raw_output2 else 1
-        content_after = ctx.paths["md"].read_text("utf-8")
-        act_after: str | None = None
-        if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-            act_after = ctx.paths["activities"].read_text("utf-8")
-
-        changed_lines = _count_diff_lines(content_before, content_after)
-        if act_before is not None and act_after is not None:
-            changed_lines += _count_diff_lines(act_before, act_after)
-        # Each FIND/REPLACE pair can legitimately change a multi-line paragraph.
-        # Allow ~15 lines per pair (6-line find + 6-line replace + context).
-        max_allowed = max(fix_pair_count * 15, 30)  # At least 30 lines always OK
-
-        if changed_lines > max_allowed:
-            log(f"  Phase D.2: REJECTED — repair changed {changed_lines} lines "
-                f"(max {max_allowed} for {fix_pair_count} fix pairs)")
-            log(f"  Phase D.2: Reverting content to pre-fix state")
-            ctx.paths["md"].write_text(content_before, "utf-8")
-            if act_before is not None and ctx.paths.get("activities"):
-                ctx.paths["activities"].write_text(act_before, "utf-8")
-            _mark_phase_v3(ctx, state, phase, "failed", attempts=2,
-                           note="d2-diff-too-large")
+        prompt_file2 = ctx.orch_dir / f"phase-D-prompt-{d2_prompt_num}.md"
+        if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
             return False
 
-        log(f"  Phase D.2: Section fixes applied ({changed_lines} lines changed, "
-            f"{fix_pair_count} fix pairs)")
-    else:
-        log("  Phase D.2: WARNING — no SECTION_FIX delimiters in output")
-        (ctx.orch_dir / "phase-D2-raw-output.md").write_text(raw_output2, "utf-8")
+        prompt2_text = prompt_file2.read_text("utf-8")
+        prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", current_review)
+        prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
+        prompt_file2.write_text(prompt2_text, "utf-8")
 
-    # Auto-fix euphony before final audit
-    text2 = ctx.paths["md"].read_text("utf-8")
-    fixed_text2, n_euphony2 = auto_fix_euphony(text2, str(ctx.paths["md"]))
-    if n_euphony2 > 0:
-        ctx.paths["md"].write_text(fixed_text2, "utf-8")
-        log(f"  Phase D.2: Auto-fixed {n_euphony2} euphony violation(s)")
+        ok2, raw_output2 = _dispatch_claude_phase(
+            prompt_file2, f"Phase D.2{iter_suffix}",
+            model=claude_model_D, timeout=TIMEOUT_FIX,
+            allow_tools=["Read", "Grep", "Glob"],
+        )
+        if not ok2:
+            log(f"  Phase D.2{iter_suffix}: Dispatch FAILED")
+            _mark_phase_v3(ctx, state, phase, "failed", attempts=total_attempts,
+                           note="d2-dispatch-failed")
+            return False
 
-    # Final re-audit
-    log("  Phase D.2: Running final audit...")
-    passed, audit_out2 = run_verify(ctx.paths["md"], content_only=False)
-    audit_log2 = ctx.orch_dir / "pD-audit-2.log"
-    audit_log2.write_text(audit_out2, "utf-8")
+        # Apply fixes if present, with diff-size blocker (#623)
+        if "===SECTION_FIX_START===" in raw_output2:
+            content_before = ctx.paths["md"].read_text("utf-8")
+            act_before: str | None = None
+            if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+                act_before = ctx.paths["activities"].read_text("utf-8")
 
-    if passed:
-        log("  Phase D: PASS (after D.1 review + D.2 repair)")
-        _mark_phase_v3(ctx, state, phase, "complete", attempts=2)
-        mark_phase_locked(ctx, "6", "complete", note="v3-phase-D")
-        mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
-        mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
-        return True
+            n_md = _apply_find_replace_fixes(ctx.paths["md"], raw_output2)
+            n_act = 0
+            if ctx.paths.get("activities"):
+                n_act = _apply_find_replace_fixes(ctx.paths["activities"], raw_output2)
+            log(f"  Phase D.2{iter_suffix}: Applied {n_md} content fix(es), {n_act} activity fix(es)")
 
-    log("  Phase D: EXHAUSTED — D.1 review + D.2 repair both insufficient")
+            fix_pair_count = raw_output2.count("FIND:") if "FIND:" in raw_output2 else 1
+            content_after = ctx.paths["md"].read_text("utf-8")
+            act_after: str | None = None
+            if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+                act_after = ctx.paths["activities"].read_text("utf-8")
+
+            changed_lines = _count_diff_lines(content_before, content_after)
+            if act_before is not None and act_after is not None:
+                changed_lines += _count_diff_lines(act_before, act_after)
+            max_allowed = max(fix_pair_count * 15, 30)
+
+            if changed_lines > max_allowed:
+                log(f"  Phase D.2{iter_suffix}: REJECTED — repair changed {changed_lines} lines "
+                    f"(max {max_allowed} for {fix_pair_count} fix pairs)")
+                log(f"  Phase D.2{iter_suffix}: Reverting content to pre-fix state")
+                ctx.paths["md"].write_text(content_before, "utf-8")
+                if act_before is not None and ctx.paths.get("activities"):
+                    ctx.paths["activities"].write_text(act_before, "utf-8")
+                _mark_phase_v3(ctx, state, phase, "failed", attempts=total_attempts,
+                               note="d2-diff-too-large")
+                return False
+
+            log(f"  Phase D.2{iter_suffix}: Section fixes applied ({changed_lines} lines changed, "
+                f"{fix_pair_count} fix pairs)")
+        else:
+            log(f"  Phase D.2{iter_suffix}: WARNING — no SECTION_FIX delimiters in output")
+            (ctx.orch_dir / f"phase-D{d2_prompt_num}-raw-output.md").write_text(raw_output2, "utf-8")
+
+        # Deterministic fixes before re-review
+        n_postD2 = _run_deterministic_fixes(ctx)
+        if n_postD2 > 0:
+            log(f"  Phase D{iter_suffix}: {n_postD2} deterministic fix(es) applied (pre-re-review)")
+
+        # --- D.3: Re-review ---
+        log(f"  Phase D.3{iter_suffix}: Re-reviewing repaired content via Claude ({claude_model_D})...")
+
+        metrics_post = _compute_audit_metrics(ctx)
+        sections_post = _extract_h2_sections(ctx.paths["md"])
+
+        prompt_file3 = ctx.orch_dir / f"phase-D-prompt-{d3_prompt_num}.md"
+        if not fill_template(d1_template, ctx.orch_dir / "placeholders.yaml", prompt_file3):
+            log(f"  Phase D.3{iter_suffix}: Template fill failed")
+            _mark_phase_v3(ctx, state, phase, "failed", attempts=total_attempts + 1,
+                           note="d3-template-failed")
+            return False
+
+        prompt3_text = prompt_file3.read_text("utf-8")
+        prompt3_text = _inject_metrics_into_prompt(prompt3_text, metrics_post)
+        prompt3_text = prompt3_text.replace("{COMPUTED_H2_SECTIONS}", sections_post)
+        prompt_file3.write_text(prompt3_text, "utf-8")
+
+        ok3, raw_output3 = _dispatch_claude_phase(
+            prompt_file3, f"Phase D.3{iter_suffix} (re-review)",
+            model=claude_model_D, timeout=TIMEOUT_REVIEW,
+            allow_tools=["Read", "Grep", "Glob"],
+        )
+
+        review_text3 = None
+        if ok3:
+            review_text3 = _extract_delimiter(raw_output3, "===REVIEW_START===", "===REVIEW_END===")
+            if review_text3:
+                qg_ok3, qg_reason3 = _quick_review_quality_gate(review_text3, ctx.paths["md"])
+                if not qg_ok3:
+                    log(f"  Phase D.3{iter_suffix}: Re-review REJECTED — {qg_reason3}")
+                    (ctx.orch_dir / f"phase-D{d3_prompt_num}-rejected-review.md").write_text(
+                        review_text3, "utf-8")
+                    review_text3 = None  # Don't use rejected review
+                else:
+                    if "Reviewed-By:" not in review_text3:
+                        review_text3 = f"**Reviewed-By:** {claude_model_D}\n\n{review_text3}"
+                    write_review_with_hash(ctx.paths["review"], review_text3, ctx.paths["md"])
+                    (ctx.orch_dir / f"phase-D-review-{review_file_num}.md").write_text(
+                        review_text3, "utf-8")
+                    log(f"  Phase D.3{iter_suffix}: Fresh review saved → {ctx.paths['review'].name}")
+            else:
+                log(f"  Phase D.3{iter_suffix}: WARNING — no REVIEW delimiters in re-review output")
+                (ctx.orch_dir / f"phase-D{d3_prompt_num}-raw-output.md").write_text(
+                    raw_output3, "utf-8")
+        else:
+            log(f"  Phase D.3{iter_suffix}: Re-review dispatch FAILED — keeping old review")
+
+        # Audit after this D.2→D.3 cycle
+        log(f"  Phase D.3{iter_suffix}: Running audit...")
+        passed, loop_audit_out = run_verify(ctx.paths["md"], content_only=False)
+        audit_log = ctx.orch_dir / f"pD-audit-{audit_log_num}.log"
+        audit_log.write_text(loop_audit_out, "utf-8")
+
+        if passed:
+            log(f"  Phase D: PASS (after D.1 + {d2_iter + 1} repair/re-review cycle(s))")
+            _mark_phase_v3(ctx, state, phase, "complete", attempts=total_attempts + 1)
+            mark_phase_locked(ctx, "6", "complete", note="v3-phase-D")
+            mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
+            mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
+            return True
+
+        # Update review/audit for next iteration (if any)
+        if review_text3:
+            current_review = review_text3
+        current_audit_out = loop_audit_out
+
+        if d2_iter < MAX_D2_ITERS - 1:
+            log(f"  Phase D.3{iter_suffix}: Still FAIL — running another D.2→D.3 cycle...")
+
+    log("  Phase D: EXHAUSTED — D.1 + D.2/D.3 repair cycles all insufficient")
     log("  Phase D: Module marked as NEEDS-REBUILD (use --rebuild to regenerate)")
-    _mark_phase_v3(ctx, state, phase, "failed", attempts=2, note="needs-rebuild")
+    _mark_phase_v3(ctx, state, phase, "failed",
+                   attempts=1 + MAX_D2_ITERS * 2, note="needs-rebuild")
     return False
 
 
@@ -2137,13 +2371,10 @@ def _run_final_phases(ctx: ModuleContext, state: dict) -> bool:
         if phase_f_already_done:
             log("  Phase F: Skipped post-fix audit (Phase F was already complete)")
         else:
-            # Auto-fix euphony before checking — Phase F review may have introduced violations
-            from audit.checks.euphony import auto_fix_euphony
-            text = ctx.paths["md"].read_text("utf-8")
-            fixed_text, n_auto = auto_fix_euphony(text, str(ctx.paths["md"]))
-            if n_auto > 0:
-                ctx.paths["md"].write_text(fixed_text, "utf-8")
-                log(f"  Phase F: Auto-fixed {n_auto} euphony violation(s)")
+            # Deterministic fixes before checking — Phase F may have introduced violations
+            n_postF = _run_deterministic_fixes(ctx)
+            if n_postF > 0:
+                log(f"  Phase F: {n_postF} deterministic fix(es) applied")
 
             passed, output = run_verify(ctx.paths["md"], content_only=False)
             if not passed:
@@ -2400,17 +2631,37 @@ def main() -> int:
                         # Tier 1: Full audit pass — cheapest check
                         full_passed, _ = run_verify(paths["md"], content_only=False)
                         if full_passed:
-                            want_final_review = getattr(args, "final_review", False)
-                            if not want_final_review:
-                                # No --final-review → skip entirely
-                                print(f"  SKIP: already passing full audit", flush=True)
-                                skipped_list.append((n, slug))
-                                continue
-                            elif _is_final_review_done(paths):
-                                # --final-review requested but already done → skip
-                                print(f"  SKIP: passing audit + final review done", flush=True)
-                                skipped_list.append((n, slug))
-                                continue
+                            # Guard: don't skip if v3 Phase D is incomplete.
+                            # A module can pass audit but have a failed/pending D
+                            # (e.g. review saved from a prior failed attempt).
+                            _v3d_incomplete = False
+                            _orch_dir = paths["md"].parent / "orchestration" / slug
+                            _state_file = _orch_dir / "state-v3.json"
+                            if _state_file.exists():
+                                import json as _json_check
+                                _st = _json_check.loads(_state_file.read_text("utf-8"))
+                                _d_info = _st.get("phases", {}).get("v3-D", {})
+                                _d_status = _d_info.get("status")
+                                if _d_status and _d_status != "complete":
+                                    _v3d_incomplete = True
+                                    print(f"  PARTIAL: audit passes but v3-D is '{_d_status}' — needs pipeline", flush=True)
+
+                            if not _v3d_incomplete:
+                                want_final_review = getattr(args, "final_review", False)
+                                if not want_final_review:
+                                    # No --final-review → skip entirely
+                                    print(f"  SKIP: already passing full audit", flush=True)
+                                    skipped_list.append((n, slug))
+                                    continue
+                                elif _is_final_review_done(paths):
+                                    # --final-review requested but already done → skip
+                                    print(f"  SKIP: passing audit + final review done", flush=True)
+                                    skipped_list.append((n, slug))
+                                    continue
+                                else:
+                                    # --final-review requested, not done yet → fall through
+                                    # Layer 2 guards protect A/B/C; pipeline runs only F+E
+                                    print(f"  PARTIAL: audit passes, needs final review", flush=True)
                             else:
                                 # --final-review requested, not done yet → fall through
                                 # Layer 2 guards protect A/B/C; pipeline runs only F+E
@@ -2455,8 +2706,33 @@ def main() -> int:
             if rc == 0:
                 passed_list.append((n, slug))
             else:
-                failed_list.append((n, slug))
-                print("  FAILED — continuing to next module", flush=True)
+                # Auto-rebuild: if Phase D exhausted (needs-rebuild), attempt
+                # one rebuild automatically. Max 1 rebuild per module per --all run.
+                _rebuilt_ok = False
+                if not args.rebuild:
+                    try:
+                        _rb_paths = get_module_paths(args.track, slug)
+                        _rb_orch = _rb_paths["md"].parent / "orchestration" / slug
+                        _rb_state = _rb_orch / "state-v3.json"
+                        if _rb_state.exists():
+                            import json as _jrb
+                            _rb_st = _jrb.loads(_rb_state.read_text("utf-8"))
+                            _rb_d = _rb_st.get("phases", {}).get("v3-D", {})
+                            if _rb_d.get("note", "").startswith("needs-rebuild"):
+                                print(f"  AUTO-REBUILD: Phase D exhausted — attempting rebuild...", flush=True)
+                                rebuild_args = argparse.Namespace(**vars(single_args))
+                                rebuild_args.rebuild = True
+                                if _run_single_module(rebuild_args) == 0:
+                                    passed_list.append((n, slug))
+                                    print(f"  AUTO-REBUILD: SUCCESS", flush=True)
+                                    _rebuilt_ok = True
+                                else:
+                                    print(f"  AUTO-REBUILD: FAILED — module needs manual attention", flush=True)
+                    except Exception as _rbe:
+                        print(f"  AUTO-REBUILD: error checking state — {_rbe}", flush=True)
+                if not _rebuilt_ok:
+                    failed_list.append((n, slug))
+                    print("  FAILED — continuing to next module", flush=True)
 
         elapsed = time.time() - t0_batch
         elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"

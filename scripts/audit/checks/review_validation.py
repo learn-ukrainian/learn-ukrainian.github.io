@@ -354,6 +354,24 @@ def check_review_validity(file_path: str, level_code: str, module_slug: str) -> 
             })
             return violations  # No point checking structure of a stub
 
+        # 2b. Verdict Check: review's own PASS/FAIL conclusion
+        # A FAIL-verdict review means the reviewer found problems that haven't
+        # been fixed yet. The module should not pass audit with a FAIL review.
+        verdict_match = re.search(
+            r'\*\*Status:\*\*\s*(PASS|FAIL)',
+            content[:1000]  # Verdict is always near the top
+        )
+        if verdict_match and verdict_match.group(1) == 'FAIL':
+            violations.append({
+                'type': 'REVIEW_VERDICT_FAIL',
+                'severity': 'critical',
+                'message': (
+                    "Review concludes with **Status:** FAIL — the reviewer identified "
+                    "issues that need to be fixed before the module can pass. "
+                    "Run Phase D.2 repair or rebuild the module."
+                )
+            })
+
         # 3. Structure Check (tier-specific required headers)
         missing = [name for pattern, name in cfg['required_headers']
                    if not re.search(pattern, content)]
