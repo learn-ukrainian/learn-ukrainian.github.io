@@ -119,81 +119,17 @@ Bare list at root (NOT `activities:` wrapper). Full schema: [`vocabulary-activit
 
 ---
 
-## Quick Commands
+## Reference Docs
 
-```bash
-# Build (v3 — preferred)
-.venv/bin/python scripts/build_module_v3.py {track} {num}          # Full E2E
-.venv/bin/python scripts/build_module_v3.py {track} --all          # Batch (skips passing)
-.venv/bin/python scripts/build_module_v3.py {track} {num} --rebuild              # Nuke + restart
-.venv/bin/python scripts/build_module_v3.py {track} {num} --force-phase B        # Re-run single phase
-.venv/bin/python scripts/build_module_v3.py {track} {num} --final-review         # + Phase F QA gate
-
-# Audit
-scripts/audit_module.sh curriculum/l2-uk-en/{level}/{file}.md      # With log
-scripts/audit_module.sh --skip-activities {path}                   # Content-only
-
-# Verify track
-.venv/bin/python scripts/verify_track.py {track} --full
-
-# Deploy skill changes
-npm run claude:deploy
-```
-
-See `docs/SCRIPTS.md` for complete reference (v2 fallback, model overrides, batch dispatch, scoring).
-
----
-
-## Session Checklist
-
-**Start:** `curl -s http://localhost:8765/api/state/summary | python3 -m json.tool` → load memory (`mcp__memory__search_nodes`) → check Gemini inbox (`mcp__message-broker__check_inbox`)
-
-**End:** Save session to memory graph → optionally run `scripts/session_end.sh`
-
----
-
-## Project Structure
-
-```
-curriculum/l2-uk-en/
-├── plans/{level}/{slug}.yaml          # SOURCE OF TRUTH (what to build)
-└── {level}/
-    ├── meta/{slug}.yaml               # Build config (pedagogy, duration)
-    ├── {slug}.md                      # Content prose
-    ├── activities/{slug}.yaml         # Activities (bare list)
-    ├── vocabulary/{slug}.yaml         # Vocabulary
-    ├── review/{slug}-review.md        # Phase D review
-    ├── audit/{slug}-audit.md          # Audit report
-    └── status/{slug}.json             # Cached audit results
-```
-
-**Core levels**: A1 (44), A2 (71), B1 (94), B2 (95), C1 (109), C2 (101)
-**Tracks**: B2-HIST (140), C1-BIO (172), C1-HIST (136), B2-PRO (40), C1-PRO (50), LIT (218), OES (100), RUTH (100)
-
----
-
-## Monitoring API
-
-FastAPI at `http://localhost:8765`. Full reference: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
-
-```bash
-curl -s http://localhost:8765/api/state/summary | python3 -m json.tool    # Project overview
-curl -s http://localhost:8765/api/state/module/a1/9 | python3 -m json.tool # Module deep-dive
-curl -s http://localhost:8765/api/blue/live-status                         # Pass/fail all tracks
-```
+- **Commands & scripts**: [`docs/SCRIPTS.md`](docs/SCRIPTS.md)
+- **Project structure & tracks**: [`docs/best-practices/track-architecture.md`](docs/best-practices/track-architecture.md)
+- **Monitoring API**: [`docs/MONITOR-API.md`](docs/MONITOR-API.md)
 
 ---
 
 ## Inter-Agent Communication
 
-**Gemini is your colleague.** Full protocol: [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
-
-- Claude = architect, reviewer, quality gate | Gemini = content builder
-- GitHub issues are primary channel. Bridge messages < 200 chars.
-
-```bash
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "See #559." --task-id issue-559
-```
+**Gemini is your colleague.** Claude = architect/reviewer, Gemini = content builder. Full protocol: [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
 
 ---
 

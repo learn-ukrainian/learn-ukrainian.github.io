@@ -40,6 +40,10 @@ Research **{TOPIC_TITLE}** for the **{TRACK}** track. Produce structured researc
 5. **Decolonization Angle**: Identify how this topic has been distorted by imperial/Soviet historiography and what the Ukrainian-centric framing should be.
 6. **Section-Mapped Content**: Structure notes with headings that match the `content_outline` sections from the plan. This makes Phase B content writing mechanical.
 
+### Research Output Cap
+Keep research notes under **2500 words** (seminar tracks need depth for historiographical mapping).
+Focus on density: Key Facts Ledger, timeline, primary quotes, section-mapped notes.
+
 If this topic involves contested narratives (Ukrainian vs. Russian/Soviet/Polish historiography), include a Contested Terms Table:
 
 ```markdown

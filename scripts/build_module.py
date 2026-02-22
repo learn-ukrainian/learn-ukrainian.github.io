@@ -2846,6 +2846,14 @@ def get_tier_guidance(track: str) -> str:
     return f"(Tier guidance file not found: {tier_file})"
 
 
+def _read_phase_file(filename: str) -> str:
+    """Read a file from PHASES_DIR, returning its content or a fallback message."""
+    path = PHASES_DIR / filename
+    if path.exists():
+        return path.read_text(encoding="utf-8")
+    return f"(Phase file not found: {filename})"
+
+
 def write_placeholders(ctx: ModuleContext) -> None:
     """Write placeholders.yaml for template filling."""
     placeholders_path = ctx.orch_dir / "placeholders.yaml"
@@ -2881,6 +2889,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
         "IMMERSION_RULE": ctx.immersion_rule,
         "LEVEL_CONSTRAINTS": ctx.level_constraints,
         "TIER_GUIDANCE": get_tier_guidance(ctx.track),
+        "D1_OUTPUT_FORMAT": _read_phase_file("phase-D1-output-format.md"),
     }
 
     # Add activity config

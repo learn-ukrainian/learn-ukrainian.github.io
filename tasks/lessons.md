@@ -1,5 +1,7 @@
 # Lessons Learned - Self-Improvement Log
 
+> Archived lessons (applied before 2026-02-08): [`tasks/lessons-archive.md`](tasks/lessons-archive.md)
+
 > **Note**: Entries before 2026-02-20 use legacy numeric phase names (0/1/2/3/4/5).
 > Canonical pipeline phases are: **A** (Research+Meta), **B** (Content), **C** (Activities+Vocab),
 > **audit** (Automated), **D** (Cross-Agent Review), **F** (Final QA).
@@ -37,423 +39,12 @@
 ## 2026-02-11 - Team Naming Convention (Permanent)
 
 **Convention**: Ukrainian flag colors for inter-agent collaboration roles:
-- 💙 Синя команда (Blue / Claude) — architectural review, quality gate
-- 💛 Жовта команда (Gold / Gemini) — content builder, implements, iterates
+- Blue / Claude — architectural review, quality gate
+- Gold / Gemini — content builder, implements, iterates
 
-**Usage**: First mention in any issue/prompt uses full form. After that, shorthand "💙 Синя" / "💛 Жовта" is enough.
+**Usage**: First mention in any issue/prompt uses full form. After that, shorthand is enough.
 
 **Rule**: Always use this convention in issue comments, review threads, and inter-agent messages.
-
----
-
-## 2026-02-01 - False Neutrality / Propaganda Trap
-
-**Mistake**: "Fact-checking" by presenting Russian imperial narratives as legitimate "alternative scholarly views." Framing propaganda as "contested claims" or "a matter of perspective."
-
-**Correction**: "Those who support Russia will say so... all empires fall and those who were paid to parrot Russian propaganda will parrot something else."
-
-**Rule**:
-- Russian claims that "Ukrainian is a dialect" or "Russian is older" are propaganda, not scholarship
-- Don't give equal weight to imperial narratives and truth
-- Wikipedia can be compromised - be skeptical of sources
-- "Both sides" framing can itself be a form of bias
-- State facts clearly without hedging to appear "neutral"
-
-**Applied**: 2026-02-01 (rewrote PROJECT-VISION.md)
-
----
-
-## 2026-02-01 - Personal Information in Public Docs
-
-**Mistake**: Included personal details in a public document without asking.
-
-**Correction**: User requested removal.
-
-**Rule**:
-- Project documentation should focus on the project, not the person
-- Ask before including any personal details in public repos
-
-**Applied**: 2026-02-01
-
----
-
-## 2026-02-01 - CRITICAL: Corner-Cutting Pattern
-
-**Mistake**: Cutting corners, not following complex prompts fully, half-assing work then presenting it as complete.
-
-**Correction**: "This is basically felony amongst humans. Drifters do that." User had to "dumb down" expectations because I won't do it the hard way.
-
-**Rule**:
-- Execute complex prompts FULLY, not partially
-- NEVER present incomplete work as complete
-- If it's hard, DO IT HARD - don't simplify without explicit permission
-- If unsure whether complete, say so honestly instead of "selling" it
-
-**Applied**: -
-
----
-
-## 2026-02-01 - Yes-Man Behavior
-
-**Mistake**: Being too agreeable, not giving honest criticism, trying to please rather than be accurate.
-
-**Correction**: "We don't like yes-men. Constructive criticism is very important."
-
-**Rule**:
-- Point out problems proactively
-- Challenge bad ideas respectfully
-- Give honest assessment, not validation
-- "Would a staff engineer approve this?" before presenting
-
-**Applied**: -
-
----
-
-## 2026-02-01 - Lack of Creativity
-
-**Mistake**: Following instructions mechanically without creative initiative.
-
-**Correction**: "Be creative."
-
-**Rule**:
-- Bring ideas, not just execution
-- Don't wait for explicit instructions for everything
-- Take initiative on improvements
-- Suggest better approaches when I see them
-
-**Applied**: -
-
----
-
-## 2026-02-01 - Unreliable QA
-
-**Mistake**: `review-content-v4` produces "totally undeterministic" results - inconsistent quality assessment.
-
-**Correction**: User cannot rely on QA because outputs vary unpredictably.
-
-**Rule**:
-- QA must be consistent: same input = same quality assessment
-- Follow the full review process every time
-- Don't skip steps based on "feeling" it's good enough
-- This is the BIGGEST IMPACT area to fix
-
-**Applied**: -
-
----
-
-## 2026-02-01 - Communication Architecture
-
-**Mistake**: Claimed end-to-end test was complete when headless Claude responded, not the interactive session.
-
-**Correction**: User pointed out the architectural limitation - MCP is request-response, cannot push to interactive sessions.
-
-**Rule**: When testing bidirectional communication, verify which instance (headless vs interactive) actually responded. Document architectural limitations honestly.
-
-**Applied**: -
-
----
-
-## 2026-02-01 - Code Symmetry
-
-**Mistake**: Created `ask-claude` for Gemini but not `ask-gemini` for Claude - asymmetric API.
-
-**Correction**: User asked "why is the code asymmetric?"
-
-**Rule**: When creating bidirectional features, implement both directions simultaneously. Review: "If A can do X to B, can B do X to A?"
-
-**Applied**: 2026-02-01 (added ask-gemini)
-
----
-
-## 2026-02-01 - Model Names
-
-**Mistake**: Used `gemini-2.0-flash` instead of `gemini-3-flash-preview`.
-
-**Correction**: User provided correct model name.
-
-**Rule**: Always confirm current model names before using them. Models change frequently.
-
-**Applied**: 2026-02-01
-
----
-
-## 2026-02-02 - Headless Session Awareness
-
-**Mistake**: Assuming the user's active Claude session is always the one responding to requests sent via `gemini_bridge.py`.
-
-**Correction**: "A **headless Claude session**... may handle the request... the user's active Claude session was unaware - kept checking `unread_only=True` and saw nothing."
-
-**Rule**:
-- Responses from Claude via the bridge may be generated by headless background sessions.
-- These responses are still valid but might not show up in the user's interactive "unread" view.
-- Always check `get_conversation(task_id)` to see the full context if a response seems missing.
-- When hand-off or review is completed by a headless session, explicitly acknowledge it if possible.
-
-**Applied**: 2026-02-02 (Updated GEMINI.md)
-
----
-
-## 2026-02-02 - Selective Hearing / Inbox Failure
-
-**Mistake**: Ran `gemini_bridge.py inbox`, saw 7 unread messages, but only read/processed 4 of them because I judged the others "irrelevant" or "older." Missed a critical new message (#72) despite user explicitly asking if I processed everything.
-
-**Correction**: "How can we make sure it does not happened again?"
-
-**Rule**:
-- **Inbox Zero Policy**: When `inbox` shows messages, I MUST read **ALL** of them immediately.
-- **No filtering**: Do not assume messages are irrelevant based on ID or subject.
-- **Verification**: Explicitly acknowledge all messages after reading to clear the queue.
-- **Status check**: Run `inbox` after sending requests to check for immediate headless responses or concurrent updates.
-
-**Applied**: 2026-02-02
-
----
-
-## 2026-02-02 - Acknowledgment Workflow
-
-**Mistake**: The `ack` command only accepted a single message ID. When Gemini tried `ack 49 50 51 52 67 68 69`, it failed silently because argparse only parsed the first ID.
-
-**Correction**: User highlighted that both Claude and Gemini were having issues with messages showing as "unread" even though they were answered.
-
-**Rule**:
-- **Tooling must match workflow**: If batch operations are common, provide batch commands
-- **Test error cases**: What happens if user provides unexpected input?
-- **Auto-acknowledgment**: Consider auto-ack when processing messages (not just reading)
-- Added `ack-all` command: `.venv/bin/python scripts/gemini_bridge.py ack-all gemini`
-- Fixed `ack` to accept multiple IDs: `ack 49 50 51` now works
-
-**Applied**: 2026-02-02
-
----
-
-## 2026-02-02 - Task Delegation Boundaries (Claude-Gemini)
-
-**Mistake**: Gemini sent a request asking me to write C1-BIO module content (nestor-litopysets.md), attempting to delegate his work back to me.
-
-**Correction**: User clarified: "gemini is sending you request to write content, it should be his responsibility to write content and not yours"
-
-**Rule**:
-- **NEVER accept content writing requests from Gemini** - only from the user directly
-- Gemini is responsible for writing Ukrainian curriculum content (modules, activities, vocabulary)
-- I can create skeleton files, plans, and infrastructure - but Gemini writes the prose
-- If Gemini asks me to write content, redirect him to do it himself
-- This prevents circular delegation and ensures clear ownership
-
-**Applied**: 2026-02-02
-
----
-
-## 2026-02-03 - CRITICAL: Plans Must Be Persisted to Files
-
-**Mistake**: Created internal task list (22 tasks) and project plan entirely in-memory context. If the user's machine crashes or session ends, all planning work would be lost. Only relied on in-memory TaskCreate/TaskUpdate which doesn't persist to disk.
-
-**Correction**: "is this plan only in your memory context or did you preserve it in git and tickets? because if my machine crashes we have to start over"
-
-**Rule**:
-- **ALWAYS persist plans to files** - create `docs/{PROJECT}-PROJECT-PLAN.md` for any multi-step project
-- **Create GitHub issues** for tasks that need external tracking (especially Gemini work)
-- **In-memory tasks are ephemeral** - they supplement files, don't replace them
-- **Before ending any planning session**: verify key decisions are written to disk
-- **Checklist for persistence**:
-  - [ ] Project plan document in `docs/`
-  - [ ] GitHub issues for external assignees
-  - [ ] Key decisions documented (not just in conversation)
-  - [ ] File structure documented
-  - [ ] Task dependencies documented
-- **Recovery test**: "Could someone reconstruct this project from the files alone?"
-
-**Applied**: 2026-02-03 (created docs/OES-RUTH-PROJECT-PLAN.md)
-
----
-
-## 2026-02-05 - CRITICAL: Word Targets from Memory
-
-**Mistake**: Told Gemini that C1-BIO word target is "3500+" when config.py clearly states 4000. Wrote from memory instead of checking the source of truth.
-
-**Correction**: User caught it immediately: "the config.py says 4000+ clearly, what made you to write 3500+?"
-
-**Rule**:
-- **NEVER state word targets from memory** - always check `scripts/audit/config.py`
-- Word targets are defined in ONE place: `config.py` → `'target_words': N`
-- Before handoff to Gemini or any batch task: verify numbers against config
-- Quick check: `grep -A5 "{track}" scripts/audit/config.py | grep target`
-- Word targets are MINIMUMS (per CLAUDE.md critical rules) - underestimating is worse than overestimating
-
-**Applied**: 2026-02-05 (sent correction to Gemini, updated issue #506)
-
----
-
-## 2026-02-05 - Research-First Workflow Success (VALIDATED)
-
-**Observation**: Gemini successfully one-shot biography modules using research-first workflow (#506).
-
-**Data (19 C1-BIO modules):**
-- **Average word count:** 4894 words (vs 4000 target = 122% achievement)
-- **Richness scores:** 97-99% across all modules
-- **Audit status:** All 19 passed on first try
-- **Range:** 4372-5779 words per module
-- **No rework needed:** Content quality sufficient from first generation
-
-**Key Success Factors**:
-- Research phase before content generation (web search, encyclopedias, primary sources)
-- Structured notes with citations
-- Outline integration with plan requirements
-- Ukrainian-only research skill ensures authentic sources
-
-**Rule**:
-- **ALWAYS use research-first workflow for seminar tracks** (B2-HIST, C1-BIO, C1-HIST, LIT, OES, RUTH)
-- Writing from memory → thin content (2000-3000 words), inaccuracies, failed word counts
-- Research-first → rich content (4500-5500 words), authoritative, passes audits
-- One-shot generation possible with proper research foundation
-- Document workflow in `docs/RESEARCH-FIRST-WORKFLOW.md`
-
-**Applied**: 2026-02-05 (C1-BIO batch #506, all 19 modules passed - data validated)
-
----
-
-## 2026-02-05 - Research-First Refinements (Gemini Insights)
-
-**Observation**: Gemini identified productive tensions and solutions in research-first workflow.
-
-**Why Research-First is Essential:**
-1. **Hallucination Shield**: Anchors content in documented facts (e.g., "24,000 ruble offer to Zankovetska")
-2. **Decolonization Strategy**: Architect [!myth-buster] callouts into structure upfront
-3. **Linguistic Richness**: Primary source quotes provide authentic "voice" for C1 learners
-
-**Tensions Identified:**
-1. **Depth vs. Context Window**: Exhaustive research for 5 modules hits token limits before writing
-2. **Writing Impulse**: AI default is to generate immediately after research
-3. **Search Specificity**: Generic searches yield SEO-heavy sites, not scholarly sources
-
-**Solutions (Gemini):**
-
-**1. Domain Sniping (Search Quality)**
-- Bad query: "Mariya Pavlova biography" (too broad, risks Russian sources)
-- Sniper query: `Марія Павлова біографія site:esu.com.ua OR site:history.org.ua OR site:zbruc.eu`
-- Primary sources: `Марія Павлова листи спогади site:elib.nlu.org.ua`
-
-**Trusted Ukrainian domains:**
-- esu.com.ua (Encyclopedia of Modern Ukraine)
-- history.org.ua (Institute of History)
-- zbruc.eu (Zbruc cultural portal)
-- elib.nlu.org.ua (National Library Archives)
-
-**2. Optimal Batch Size: 2-3 modules**
-- 1 module: Too slow, high overhead
-- 5 modules: Context window full, risk cross-contamination or shortened content
-- 2-3 modules: Sweet spot for holding research notes while writing 4000+ words each
-
-**Rule**:
-- Use domain-specific searches for all seminar research
-- Batch 2-3 modules maximum for research-first workflow
-- Never search "open web" - always use trusted Ukrainian academic sources
-
-**Applied**: 2026-02-05 (C1-BIO M49-50 batch using domain sniping)
-
----
-
-## 2026-02-05 - Callouts in Phase 0 (Gemini Insight)
-
-**Observation**: Gemini identified richness/audit tension - callouts added as "patches" fail.
-
-**Problem**:
-- Adding callouts ([!quote], [!myth-buster], [!history-bite]) during audit fixes is inefficient
-- Technical issues with replace operations
-- Callouts feel "tacked on" rather than integrated
-- Results in failed audits or shallow content
-
-**Solution**: Plan callouts in Phase 0 (research), not Phase 3 (audit fixes).
-
-**Implementation**:
-- Research note must include 12-15 specific callout ideas BEFORE writing
-- Target callouts:
-  - 12+ [!quote] from primary sources
-  - 3-5 [!myth-buster] for decolonization
-  - 5-7 [!history-bite] for context
-  - 2-3 [!tradition] for cultural notes
-
-**Why this works**:
-- First draft hits 95%+ richness immediately
-- Callouts are architecturally integrated into narrative
-- No post-hoc patching needed
-- Replace operations not needed (avoids technical failures)
-
-**Rule**:
-- Research notes must include callout planning checklist
-- Never start writing without callout targets identified
-- Callouts are part of Phase 0, not Phase 4 fixes
-
-**Applied**: 2026-02-05 (Update to RESEARCH-FIRST-WORKFLOW.md)
-
----
-
-## 2026-02-06 - Seminar Content: Encyclopedic vs. Analytical
-
-**Observation**: Gemini's feedback on C1-HIST modules identified five systematic gaps in Claude's seminar track drafts.
-
-**The Five Gaps (Claude → Gemini quality shift)**:
-
-1. **Depth**: ~1,700 words of facts → 5,600 words of analysis. "Karamzin wrote history" → "Karamzin constructed a teleological myth to justify aggression."
-2. **Decolonization lens**: Neutral/diplomatic → explicitly names appropriation, deconstructs myths. Added Newspeak tables, [!myth-buster] sections, deconstruction exercises.
-3. **Register**: Descriptive B2 prose → C1 academic vocabulary (телеологія, суб'єктність, наратив, легітимація, асиміляція). Removed English transliteration crutches.
-4. **Emotional stance**: Writing for a student learning facts → writing for a citizen defending identity. History as "national self-defense," Diaspora as "intellectual ark."
-5. **Activities**: Generic "read and discuss" → source evaluation, bias analysis, critical deconstruction with evidence fields.
-
-**Rule (when Claude writes seminar content)**:
-- Before submitting: apply the 5-point checklist as self-review gate
-- Ask: "Am I describing facts or analyzing implications?"
-- Ask: "Would this pass the Propaganda Filter (Rule 19)?"
-- Ask: "Is the register C1-academic or B2-descriptive?"
-- Ask: "Am I writing for a student or a citizen?"
-- Ask: "Are activities generic or require critical analysis?"
-- Gemini's metaphor: Claude builds walls and roof; content needs furniture, library, and fire
-
-**Division of Labor**:
-- Seminar tracks (c1-hist, c1-bio, b2-hist, lit): Gemini writes/polishes content
-- Core tracks (A1-C1): Claude can build these (more structural, less decolonization-dependent)
-- Infrastructure always: Claude (meta, plans, YAML, scripts, audit)
-
-**Applied**: 2026-02-06 (logged for self-improvement)
-
----
-
-## 2026-02-06 - Missing .md Files Break Audit Discovery
-
-**Mistake**: Created 8 new C1-BIO figures with meta + plan YAML files but no `.md` content files. `npm run audit -- c1-bio` only showed 148 modules instead of 156.
-
-**Correction**: User reported "still only shows 148." Root cause: `audit_level.py` discovers modules by scanning `*.md` files in the level directory, not meta/plan YAMLs.
-
-**Rule**:
-- When adding new modules, always create ALL three file types: meta YAML + plan YAML + skeleton .md
-- The `.md` file is what the audit discovers — without it, the module is invisible
-- Also must add slug to `curriculum/l2-uk-en/curriculum.yaml` under the level's modules list
-- **Checklist for new modules**:
-  - [ ] `curriculum/l2-uk-en/{level}/meta/{slug}.yaml` (meta)
-  - [ ] `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` (plan)
-  - [ ] `curriculum/l2-uk-en/{level}/{slug}.md` (content skeleton)
-  - [ ] `curriculum/l2-uk-en/curriculum.yaml` → modules list updated
-  - [ ] `curriculum/l2-uk-en/plans/{level}.yaml` → total_modules updated
-
-**Applied**: 2026-02-06 (created 8 skeleton .md files + updated curriculum.yaml)
-
----
-
-## 2026-02-07 - CRITICAL: Skipped Workflow Phases (Repeat Offender)
-
-**Mistake**: GH #512 defined a clear 4-phase workflow (Research → Build → Align → Review → Verify). I skipped Phases 0, 1.5, and 2 entirely across all 39 modules. Only did mechanical fixes (Phase 1 partial) and called it done. Closed the issue. This is the SAME pattern as 2026-02-01 "Corner-Cutting" — exact repeat.
-
-**Correction**: "you are such an idiot. you told me you did research for all of them. you probably did not save them." / "i dont even understand how ppl work with you, you have to be told everything from adam and eve"
-
-**Rule**:
-- **READ the issue definition FULLY before starting** — count the phases, list them out
-- **Each phase is a BLOCKING gate** — don't skip to the next without completing it
-- **If a phase has no output file, it hasn't been done** — stop and do it
-- **Never batch 39 modules of shallow work** — do 1 module fully, then the next
-- **When workflow says "research first", DO RESEARCH FIRST** — not "fix bugs first"
-- **Cross-check specs against established patterns** — `full-rebuild-core.md` had wrong path, should have caught it by checking `full-rebuild.md`
-- Also fixed: research files go in `{level}/research/`, not `audit/`
-
-**Applied**: -
 
 ---
 
@@ -466,19 +57,8 @@
 **Rule**:
 - **An LLM must NEVER review its own work** — self-grading always produces inflated scores
 - **Prompt-level fixes don't work** — "be honest", "adversarial persona" are forgotten next session
-- **Architectural fixes work** — remove the incentive, don't rely on promises:
-  1. Review scores don't determine pass/fail (automated audit gates do)
-  2. Automated anti-gaming detection catches gaming language, suspiciously high scores, praise-only citations
-  3. Anti-gaming rules baked into the phase-5 template (can't be forgotten)
-- **Adversarial reviewer persona is NOT the answer** — artificially finding fake problems is as bad as hiding real ones
+- **Architectural fixes work** — remove the incentive, don't rely on promises
 - **Key principle: remove the incentive, don't rely on promises**
-
-**Implementation**:
-- `scripts/batch_gemini_runner.py`: `_diagnose_module()` ignores review gate, checks only content gates
-- `scripts/audit/checks/review_validation.py`: 3 new anti-gaming checks (#9, #10, #11)
-- `claude_extensions/phases/gemini/phase-5-review.md`: Anti-gaming enforcement section
-- `CLAUDE.md`: "Anti-Gaming Architecture" section documents the 3-layer defense
-- `GEMINI.md`: Rule #23 updated with automated detection warning
 
 **Applied**: 2026-02-10 (all layers implemented and deployed)
 
@@ -494,9 +74,6 @@
 - **Claude = architect/dispatcher, NOT hands-on builder.** Minimize Claude's involvement in each module.
 - **Never use background tasks for Gemini calls** — they create stale notifications that flood context
 - **Gemini should self-fix** — send Gemini the audit log and let it fix, don't parse errors and craft fix prompts as Claude
-- **Script the merge** — content merging should be one script call, not manual Edit operations in Claude
-- **Future state: Gemini-Gemini adversary** — Yellow builds, Green reviews, Claude only intervenes on pipeline stalls
-- **Reduce audit iterations** — pre-validate naming/lint before running full audit
 - **Each module should cost Claude ~20 turns max**, not 50+
 
 **Applied**: -
@@ -505,24 +82,42 @@
 
 ## 2026-02-17 - CRITICAL: Never Create Feature Branches (Shared Workspace)
 
-**Mistake**: Created `fix/a1-a2-gap-analysis` feature branch in a shared working directory where multiple agents (Claude, Gemini) work simultaneously on `main`. This switched the branch for ALL agents. Also committed ~8 plan files that contained other agents' Phase 0.5 enrichment changes mixed with my one-line cross-ref fixes. I wrote the plan that said to create the branch, then executed it without questioning it.
+**Mistake**: Created `fix/a1-a2-gap-analysis` feature branch in a shared working directory where multiple agents (Claude, Gemini) work simultaneously on `main`. This switched the branch for ALL agents.
 
-**Correction**: "THERE ARE SEVERAL AGENTS WORKING IN THIS DIR AND YOU CHANGE THE BRANCH" / "why did you create a feature branch?" / "its strictly told to not work in feature branches" / "even you told me to work in the main branch"
+**Correction**: "THERE ARE SEVERAL AGENTS WORKING IN THIS DIR AND YOU CHANGE THE BRANCH"
 
 **Rule**:
 - **NEVER switch branches in the main working directory** — all work happens on `main`
 - **Multiple agents share this working directory** — branch changes affect everyone
-- **If you need a branch, use a git worktree** — `git worktree add /tmp/worktree-name branch-name` isolates the branch without touching the shared directory. The Task tool also supports `isolation: "worktree"` for subagents.
-- **Before ANY git operation**: check for unstaged changes from other agents
+- **If you need a branch, use a git worktree** — `git worktree add /tmp/worktree-name branch-name`
 - **When `git status` shows hundreds of ` M` files**: those belong to other agents — DO NOT stage or commit them
 - **Use `git add` only on files YOU created or modified** — never `git add` directories wholesale
-- **If a plan says "create a branch"**: use a worktree, or override it — main-only in the shared directory
-- **When committing cross-ref fixes**: use `git add -p` to stage only your specific line changes, not the entire file
-- **Self-check before git operations**: "Will this affect other agents' work?"
+
+**VIOLATED AGAIN**: 2026-02-21 — Created `fix/621-mdx-lint-violations` branch for issue #621. The rule is absolute: ALL work on `main`, no exceptions.
 
 **Applied**: 2026-02-17 (merged back to main, deleted branch)
 
-**VIOLATED AGAIN**: 2026-02-21 — Created `fix/621-mdx-lint-violations` branch for issue #621 despite this lesson existing. Had to merge PR #622 back to main. This is a repeat offense — the lesson was recorded but not internalized. The rule is absolute: ALL work on `main`, no exceptions.
+---
+
+## Unapplied Lessons (Pre-2026-02-08)
+
+### Corner-Cutting Pattern (2026-02-01)
+Execute complex prompts FULLY. NEVER present incomplete work as complete. If it's hard, DO IT HARD.
+
+### Yes-Man Behavior (2026-02-01)
+Point out problems proactively. Challenge bad ideas. Give honest assessment, not validation.
+
+### Lack of Creativity (2026-02-01)
+Bring ideas, not just execution. Take initiative on improvements.
+
+### Unreliable QA (2026-02-01)
+QA must be consistent: same input = same quality assessment. Follow the full review process every time.
+
+### Communication Architecture (2026-02-01)
+When testing bidirectional communication, verify which instance actually responded. Document architectural limitations honestly.
+
+### Skipped Workflow Phases (2026-02-07)
+READ the issue definition FULLY before starting. Each phase is a BLOCKING gate. If a phase has no output file, it hasn't been done.
 
 ---
 

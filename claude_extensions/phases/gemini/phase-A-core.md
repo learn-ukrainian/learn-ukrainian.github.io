@@ -59,6 +59,9 @@ When researching, frame Ukrainian independently — **never as a derivative or v
 - If comparing language systems is useful, use non-Russian languages (Polish, Portuguese, etc.)
 - Note how topics have been historically misframed by Russian/Soviet sources and provide the Ukrainian-centric perspective
 
+### Research Output Cap
+Keep research notes under **1500 words**. Focus on density: facts, dates, quotes, tables — not prose.
+
 ### Additional for Core B (B1.6+, B2, C1, C2, PRO)
 
 - Domain-specific vocabulary collocations from professional glossaries (PRO tracks)
