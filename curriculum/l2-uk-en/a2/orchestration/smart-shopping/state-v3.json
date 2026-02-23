@@ -1,0 +1,33 @@
+{
+  "track": "a2",
+  "slug": "smart-shopping",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T00:30:53Z",
+      "task_id": "v3-smart-shopping-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T00:33:26Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T00:35:55Z",
+      "task_id": "v3-smart-shopping-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-23T00:37:52Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-23T00:44:44Z",
+      "attempts": 1,
+      "note": "d1-only"
+    }
+  }
+}

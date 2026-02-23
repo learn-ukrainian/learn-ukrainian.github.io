@@ -13,20 +13,21 @@
       "ts": "2026-02-20T22:28:05Z",
       "note": "migrated-from-v2"
     },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-20T22:28:05Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-20T22:28:05Z",
-      "note": "migrated-from-v2"
-    },
     "v3-A": {
       "status": "complete",
       "ts": "2026-02-20T22:28:07Z",
       "note": "adopted-existing-meta"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-23T00:08:15Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-23T00:14:41Z",
+      "attempts": 1,
+      "note": "d1-only"
     }
   }
 }

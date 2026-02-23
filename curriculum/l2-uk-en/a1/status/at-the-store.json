@@ -2,13 +2,13 @@
   "module": "at-the-store",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:50.312581Z",
+  "last_audit": "2026-02-23T01:14:44.900565Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T09:38:09.093392Z",
+    "md": "2026-02-22T18:47:35.705942Z",
     "meta": "2026-02-20T18:55:58.891929Z",
     "activities": "2026-02-22T09:38:09.093720Z",
-    "vocabulary": "2026-02-20T18:52:35.407699Z",
+    "vocabulary": "2026-02-22T18:44:37.953278Z",
     "plan": "2026-02-20T20:43:16.533855Z",
     "research": "2026-02-20T18:49:11.981462Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2665/2000 (raw: 2864)"
+      "message": "2622/2000 (raw: 2821)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "6 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -57,7 +57,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 7,
     "fail_count": 0,
     "deferred_count": 0
   }

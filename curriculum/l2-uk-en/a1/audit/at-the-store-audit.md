@@ -1,7 +1,7 @@
 # Audit Report: M38 — at-the-store.md
 **Level:** A1 | **Module:** M38 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:50
+**Generated:** 2026-02-23 01:14:44
 
 ## Configuration
 **Type:** A1
@@ -37,7 +37,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2665/2000 (raw: 2864)
+- **Words:** ✅ 2622/2000 (raw: 2821)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -46,11 +46,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 6 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 53.7% (target 35-55% (M38))
+- **Immersion:** 🇺🇦 54.5% (target 35-55% (M38))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,11 +60,11 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **At the Store** | ✅ | 59 | Included in Core |
-| **Український супермаркет: більше ніж просто покупки** | ✅ | 397 | Included in Core |
-| **Відділи та товари** | ✅ | 425 | Included in Core |
-| **Пошук і допомога: де знаходиться...?** | ✅ | 377 | Included in Core |
-| **На касі: пакет, картка і чек** | ✅ | 504 | Included in Core |
-| **Акції та знижки** | ✅ | 280 | Included in Core |
+| **Український супермаркет: більше ніж просто покупки** | ✅ | 386 | Included in Core |
+| **Відділи та товари** | ✅ | 404 | Included in Core |
+| **Пошук і допомога: де знаходиться...?** | ✅ | 374 | Included in Core |
+| **На касі: пакет, картка і чек** | ✅ | 501 | Included in Core |
+| **Акції та знижки** | ✅ | 275 | Included in Core |
 | **Практика: У супермаркеті** | ✅ | 140 | Included in Core |
 | **Читання: Андрій у магазині** | ✅ | 306 | Included in Core |
 | **Підсумок: ваш похід у магазин** | ✅ | 177 | Included in Core |

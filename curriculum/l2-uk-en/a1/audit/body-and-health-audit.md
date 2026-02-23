@@ -1,7 +1,7 @@
 # Audit Report: M31 — body-and-health.md
 **Level:** A1 | **Module:** M31 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:44
+**Generated:** 2026-02-23 00:20:10
 
 ## Configuration
 **Type:** A1-vocab
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2480/2000 (raw: 2648)
+- **Words:** ✅ 2436/2000 (raw: 2604)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.0% (target 35-55% (M31))
+- **Immersion:** 🇺🇦 35.6% (target 35-55% (M31))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -60,10 +60,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 49 | Included in Core |
-| **Розминка: Частини тіла** | ✅ | 332 | Included in Core |
-| **Граматика: Конструкція «У мене болить...»** | ✅ | 404 | Included in Core |
-| **Лексика: Здоров'я** | ✅ | 478 | Included in Core |
-| **Лексика: В аптеці** | ✅ | 365 | Included in Core |
-| **Ситуація: У лікаря** | ✅ | 386 | Included in Core |
+| **Розминка: Частини тіла** | ✅ | 314 | Included in Core |
+| **Граматика: Конструкція «У мене болить...»** | ✅ | 397 | Included in Core |
+| **Лексика: Здоров'я** | ✅ | 472 | Included in Core |
+| **Лексика: В аптеці** | ✅ | 354 | Included in Core |
+| **Ситуація: У лікаря** | ✅ | 384 | Included in Core |
 | **Практикум: Діалоги про здоров'я** | ✅ | 342 | Included in Core |
 | **Підсумок** | ✅ | 124 | Included in Core |

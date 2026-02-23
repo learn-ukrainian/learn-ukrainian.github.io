@@ -1,7 +1,7 @@
 # Audit Report: M37 — at-the-market.md
 **Level:** A1 | **Module:** M37 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:49
+**Generated:** 2026-02-23 01:14:43
 
 ## Configuration
 **Type:** A1
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2755/2000 (raw: 3059)
+- **Words:** ✅ 2736/2000 (raw: 3034)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -47,11 +47,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 21 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.2% (target 35-55% (M37))
+- **Immersion:** 🇺🇦 35.5% (target 35-55% (M37))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,8 +61,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **At the Market** | ✅ | 65 | Included in Core |
-| **Вступ: Культура українського ринку** | ✅ | 705 | Included in Core |
-| **Лексика та Граматика: Як купувати?** | ✅ | 681 | Included in Core |
-| **Практика: Діалоги на ринку** | ✅ | 691 | Included in Core |
+| **Вступ: Культура українського ринку** | ✅ | 702 | Included in Core |
+| **Лексика та Граматика: Як купувати?** | ✅ | 670 | Included in Core |
+| **Практика: Діалоги на ринку** | ✅ | 686 | Included in Core |
 | **Історія: Мій похід на Привоз** | ✅ | 402 | Included in Core |
 | **Підсумок** | ✅ | 211 | Included in Core |

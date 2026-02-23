@@ -1,7 +1,7 @@
 # Audit Report: M30 — prepositions-direction-origin.md
 **Level:** A1 | **Module:** M30 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:44
+**Generated:** 2026-02-23 00:13:44
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2218/2000 (raw: 2907)
+- **Words:** ✅ 2215/2000 (raw: 2904)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 44.3% (target 35-55% (M30))
+- **Immersion:** 🇺🇦 44.4% (target 35-55% (M30))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -62,8 +62,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Prepositions: Direction & Origin** | ✅ | 87 | Included in Core |
 | **Розминка: Де, Куди, Звідки** | ✅ | 333 | Included in Core |
-| **Презентація: Три питання — три відмінки** | ✅ | 240 | Included in Core |
-| **Місце: Де? (Локатив)** | ✅ | 257 | Included in Core |
+| **Презентація: Три питання — три відмінки** | ✅ | 238 | Included in Core |
+| **Місце: Де? (Локатив)** | ✅ | 256 | Included in Core |
 | **Напрямок: Куди? (Знахідний)** | ✅ | 302 | Included in Core |
 | **Походження: Звідки? (Родовий)** | ✅ | 286 | Included in Core |
 | **Систематизація: Школа і Робота** | ✅ | 209 | Included in Core |

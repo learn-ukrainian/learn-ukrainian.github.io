@@ -18,27 +18,26 @@
   Module:  my-family
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  2 Outline Compliance Errors
   failing gates:
-    lesson: 2500/2000 (raw: 2778) | pedagogy: 3 violations | immersion: 20.3% LOW (target 35-55% (M32))
+    lesson: 3278/2000 (raw: 3610) | pedagogy: 1 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+  📚 PEDAGOGICAL VIOLATIONS FOUND:
+    [GRAMMAR] Dative case used at A1: 'чолові'
+       → FIX: Dative case not allowed until A2 (M31+). Restructure sentence.
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
-     → 3 violations (minor)
-     → Immersion 15% off target
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
+     → 1 violations (minor)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/my-family-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/my-family.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
-
-  Critical Failures:
-    • 2 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/my-family-audit.log for details)
         ```

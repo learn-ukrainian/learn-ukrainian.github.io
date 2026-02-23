@@ -22,34 +22,38 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-22T07:54:57Z",
+      "timestamp": "2026-02-23T00:33:57Z",
       "note": "v3-audit"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-22T07:54:57Z",
+      "timestamp": "2026-02-23T00:33:57Z",
       "note": "v3-audit"
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-21T00:31:59Z",
-      "note": "v3-phase-D-escalation"
+      "timestamp": "2026-02-23T00:39:20Z",
+      "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-21T00:31:59Z",
-      "note": "v3-phase-D-escalation"
+      "timestamp": "2026-02-23T00:39:20Z",
+      "note": "v3-phase-D"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-21T00:31:59Z",
-      "note": "v3-phase-D-escalation"
+      "timestamp": "2026-02-23T00:39:20Z",
+      "note": "v3-phase-D"
     },
     "9-final-review": {
       "status": "complete",
       "timestamp": "2026-02-21T00:38:22Z",
       "verdict": "APPROVE"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-23T00:39:21Z"
     }
   },
-  "last_updated": "2026-02-22T07:54:57Z"
+  "last_updated": "2026-02-23T00:39:21Z"
 }

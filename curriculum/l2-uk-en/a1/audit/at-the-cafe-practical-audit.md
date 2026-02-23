@@ -1,7 +1,7 @@
 # Audit Report: M35 — at-the-cafe-practical.md
 **Level:** A1 | **Module:** M35 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:48
+**Generated:** 2026-02-23 01:03:03
 
 ## Configuration
 **Type:** A1
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2632/2000 (raw: 3156)
+- **Words:** ✅ 2605/2000 (raw: 3129)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.9% (target 35-55% (M35))
+- **Immersion:** 🇺🇦 36.2% (target 35-55% (M35))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,9 +61,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **At the Café** | ✅ | 60 | Included in Core |
-| **Розминка: Кавова культура** | ✅ | 383 | Included in Core |
-| **Презентація: Як зробити замовлення** | ✅ | 961 | Included in Core |
+| **Розминка: Кавова культура** | ✅ | 378 | Included in Core |
+| **Презентація: Як зробити замовлення** | ✅ | 943 | Included in Core |
 | **Практика читання: Меню та Вибір** | ✅ | 124 | Included in Core |
 | **Практика: Діалоги в кав'ярні** | ✅ | 549 | Included in Core |
-| **Культурний контекст: Львівська легенда** | ✅ | 399 | Included in Core |
+| **Культурний контекст: Львівська легенда** | ✅ | 395 | Included in Core |
 | **Підсумок** | ✅ | 156 | Included in Core |

@@ -1,0 +1,33 @@
+{
+  "track": "a2",
+  "slug": "telling-stories",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T01:19:13Z",
+      "task_id": "v3-telling-stories-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T01:23:14Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T01:25:41Z",
+      "task_id": "v3-telling-stories-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-23T01:29:53Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-23T01:35:48Z",
+      "attempts": 1,
+      "note": "d1-only"
+    }
+  }
+}

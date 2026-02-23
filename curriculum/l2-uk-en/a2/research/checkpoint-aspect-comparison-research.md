@@ -1,35 +1,33 @@
 # Дослідження: Checkpoint: Aspect, Comparison & Modality
 
 ## State Standard Reference
-§4.2.3.1: "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі... утворення форм минулого часу... утворення складеної форми майбутнього часу... майбутній час дієслів доконаного виду."
-§4.3.2: "Видові пари дієслів: робити – зробити, ділити – поділити, писати – написати..."
-§4.3.1: "Ступені порівняння якісних прикметників: проста форма... складена форма... суплетивні форми: великий – більший."
-§4.2.1.3: "Числівник: відмінково-родові форми порядкових числівників... кількісного числівника один."
-
-Alignment: This module consolidates the core A2 grammatical pillars: aspect pairs (process vs result), degrees of comparison (simple/compound), imperative/modal forms (including "хай/нехай"), and numeral-noun agreement. While the State Standard officially introduces formal "якщо" (real conditions) at B1 (§4.4.3), this module bridges the gap by reviewing the foundational usage within the A2 "Quality and Time" block.
+§4.2.3.1 & §4.3.2: "Видові пари дієслів: робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути."
+§4.3.1: "Ступені порівняння якісних прикметників: проста форма вищого ступеня... складена форма... суплетивні форми..."
+§4.2.1.3: "Числівник: відмінково-родові форми кількісного числівника один..."
+Alignment: This checkpoint integrates these distinct grammatical components into cohesive communication scenarios, ensuring learners meet the A2 requirements for aspectual pairs, adjective comparison, and basic numeral agreement.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Робити / зробити** | Top 10 Verbs (Corpus) | робити вибір, зробити роботу |
-| **Добрий / кращий** | Top 5 Adjectives | кращий друг, доброго ранку |
-| **Один / одна / одне** | High frequency | один раз, одна хвилина |
-| **Писати / написати** | High frequency | писати лист, написати книгу |
-| **Більший / менший** | Core comparatives | більший за розміром |
+| робити / зробити | Top 10 Verb | робити вибір, зробити роботу |
+| добрий / кращий | Top 5 Adjective | кращий друг, доброго ранку |
+| один / одна / одне | High frequency | один раз, одна хвилина |
+| писати / написати | High frequency | писати лист, написати книгу |
+| великий / більший | High frequency | більший за розміром |
 
 ## Cultural Hooks
-1. **Hospitality & Aspect**: In Ukrainian culture, invitations are often issued in the **imperfective aspect** (e.g., *Приходьте до нас!* — "Come visit us!") to emphasize an open-ended, warm welcome. Using the perfective can sound too specific or even blunt. (Source: *Ukrainian Lessons Podcast, Episode 22*).
-2. **The "Best" Proverb**: The common saying **"Краще пізно, ніж ніколи"** (Better late than never) is the most frequent use of a comparative adjective in daily speech, often used to soften apologies.
+1. **Hospitality Context**: Using Imperfective for warm, open invitations («Приходьте до нас!») vs the bluntness of Perfective in social contexts.
+2. **Social Friction Management**: Using comparatives in proverbs («Краще пізно, ніж ніколи») to soften apologies and navigate social expectations gracefully.
 
 ## Common Learner Errors
-1. **The "Double Comparative" Trap**: Learners often say *більш кращий (more better) instead of simply **кращий** or **більш добрий**. In Ukrainian, you must choose either the simple suffix form or the compound form with "більш", never both.
-2. **Numeral Collision**: Forgetting that 2, 3, and 4 require **Nominative Plural** (e.g., *два столи*), while 5+ requires **Genitive Plural** (e.g., *п'ять столів*). English speakers tend to use Genitive Plural for everything "plural".
-3. **Aspect in the Present**: Attempting to use a perfective verb in the present tense (e.g., *Я зроблю зараз* for "I am doing now"). In Ukrainian, the present tense is **exclusively imperfective**. Perfective forms in the same slot function as the future.
+1. **Double Comparative Trap** → *більш кращий* (Incorrect) vs *кращий* or *більш добрий* (Correct) — English speakers often overcompensate when learning both synthetic and analytic systems.
+2. **Present Tense Aspect** → *Я зроблю зараз* (Incorrect) vs *Я роблю* (Correct) — Misunderstanding that the present tense in Ukrainian is exclusively imperfective.
+3. **Numeral Collision** → *два столів* (Incorrect) vs *два столи* (Correct) — Learners often default to Genitive Plural for all numbers instead of applying the 1-2-5 rule.
 
 ## Cross-References
-- Builds on: `a2-11` (Aspect Intro), `a2-13` (Comparison), `a2-15` (Modality), `a2-18` (Numerals).
-- Prepares for: `a2-26` (Higher A2 narratives and complex syntactic integration).
+- Builds on: M11-M24
+- Prepares for: M26
 
 ## Notes for Content Writing
-- **Visuals**: Use a comparison table for irregular adjectives (великий, малий, добрий, поганий).
-- **TTT Pedagogy**: Start with a "Synthesis Dialogue" that uses all four skills, then "teach" by unpacking the choices made in the dialogue.
+- **Decolonized Framing**: Present Ukrainian aspect and comparison systems independently. Do not use Russian as a baseline; instead, explain the Ukrainian logic clearly on its own terms or contrast with English.
+- **Immersion**: Target 60-75% (Band 2). Use English for abstract concepts (comparative rules, aspect theory) but Ukrainian for all examples, dialogues, and practice instructions.

@@ -1,7 +1,7 @@
 # Audit Report: M44 — a1-final-exam.md
 **Level:** A1 | **Module:** M44 | **Phase:** A1.4 | **Pedagogy:** TTT | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:54
+**Generated:** 2026-02-23 01:44:47
 
 ## Configuration
 **Type:** A1
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3558/2000 (raw: 3697)
+- **Words:** ✅ 3548/2000 (raw: 3687)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -47,11 +47,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 1 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.8% (target 35-55% (M44))
+- **Immersion:** 🇺🇦 37.9% (target 35-55% (M44))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,8 +61,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **A1 Final Exam** | ✅ | 48 | Included in Core |
-| **Вступ та орієнтація** | ✅ | 539 | Included in Core |
+| **Вступ та орієнтація** | ✅ | 533 | Included in Core |
 | **Морфологічний та синтаксичний огляд** | ✅ | 1373 | Included in Core |
-| **Культурна подорож: Київ та Львів** | ✅ | 783 | Included in Core |
+| **Культурна подорож: Київ та Львів** | ✅ | 779 | Included in Core |
 | **Фінальне оцінювання та перехід до A2** | ✅ | 642 | Included in Core |
 | **Підсумок** | ✅ | 173 | Included in Core |

@@ -17,6 +17,17 @@
       "status": "complete",
       "ts": "2026-02-20T22:15:33Z",
       "note": "adopted-existing-meta"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-22T23:56:34Z",
+      "attempts": 1
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-23T00:03:02Z",
+      "attempts": 1,
+      "note": "d1-only"
     }
   }
 }

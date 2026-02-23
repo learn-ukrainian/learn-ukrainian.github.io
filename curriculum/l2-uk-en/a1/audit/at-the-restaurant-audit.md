@@ -1,7 +1,7 @@
 # Audit Report: M36 — at-the-restaurant.md
 **Level:** A1 | **Module:** M36 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:48
+**Generated:** 2026-02-23 01:08:11
 
 ## Configuration
 **Type:** A1
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_BALANCE_BLOATED]** Section 'Презентація: Як зробити замовлення' has 1214 words (41% of total). Bloated sections: 'Презентація: Як зробити замовлення' (41%)
+- **[SECTION_BALANCE_BLOATED]** Section 'Презентація: Як зробити замовлення' has 1203 words (41% of total). Bloated sections: 'Презентація: Як зробити замовлення' (41%)
   - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 
 ## Recommendation
@@ -47,7 +47,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2882/2000 (raw: 3094)
+- **Words:** ✅ 2865/2000 (raw: 3077)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -60,7 +60,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.2% (target 35-55% (M36))
+- **Immersion:** 🇺🇦 35.5% (target 35-55% (M36))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -70,8 +70,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **At the Restaurant** | ✅ | 62 | Included in Core |
-| **Розминка: Структура меню та етикет** | ✅ | 473 | Included in Core |
-| **Презентація: Як зробити замовлення** | ✅ | 1157 | Included in Core |
+| **Розминка: Структура меню та етикет** | ✅ | 467 | Included in Core |
+| **Презентація: Як зробити замовлення** | ✅ | 1146 | Included in Core |
 | **Практика: Діалоги у ресторані** | ✅ | 641 | Included in Core |
 | **Культурний контекст: Українська гостинність** | ✅ | 406 | Included in Core |
 | **Підсумок** | ✅ | 143 | Included in Core |

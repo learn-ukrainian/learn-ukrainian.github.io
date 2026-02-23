@@ -32,17 +32,17 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-19T22:46:36Z",
+      "timestamp": "2026-02-22T23:08:16Z",
       "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-19T22:46:36Z",
+      "timestamp": "2026-02-22T23:08:16Z",
       "note": "v3-phase-D"
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-19T22:46:36Z",
+      "timestamp": "2026-02-22T23:08:16Z",
       "note": "v3-phase-D"
     },
     "9-final-review": {
@@ -52,8 +52,8 @@
     },
     "8": {
       "status": "complete",
-      "timestamp": "2026-02-21T00:01:42Z"
+      "timestamp": "2026-02-22T23:08:16Z"
     }
   },
-  "last_updated": "2026-02-22T23:03:07Z"
+  "last_updated": "2026-02-22T23:08:16Z"
 }

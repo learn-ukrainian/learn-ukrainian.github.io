@@ -1,0 +1,124 @@
+items:
+  - lemma: "один"
+    ipa: '[ɔˈdɪn]'
+    translation: "one (masculine)"
+    pos: "numeral"
+  - lemma: "одна"
+    ipa: '[ɔˈdnɑ]'
+    translation: "one (feminine)"
+    pos: "numeral"
+  - lemma: "одне"
+    ipa: '[ɔˈdnɛ]'
+    translation: "one (neuter)"
+    pos: "numeral"
+  - lemma: "два"
+    ipa: '[dʋɑ]'
+    translation: "two (masculine/neuter)"
+    pos: "numeral"
+  - lemma: "дві"
+    ipa: '[dʲʋʲi]'
+    translation: "two (feminine)"
+    pos: "numeral"
+  - lemma: "три"
+    ipa: '[trɪ]'
+    translation: "three"
+    pos: "numeral"
+  - lemma: "чотири"
+    ipa: '[t͡ʃɔˈtɪrɪ]'
+    translation: "four"
+    pos: "numeral"
+  - lemma: "п'ять"
+    ipa: '[pjɑtʲ]'
+    translation: "five"
+    pos: "numeral"
+  - lemma: "десять"
+    ipa: '[ˈdɛsʲɑtʲ]'
+    translation: "ten"
+    pos: "numeral"
+  - lemma: "одинадцять"
+    ipa: '[ɔdɪˈnɑd͡zʲt͡sʲɑtʲ]'
+    translation: "eleven"
+    pos: "numeral"
+  - lemma: "дванадцять"
+    ipa: '[dʋɑˈnɑd͡zʲt͡sʲɑtʲ]'
+    translation: "twelve"
+    pos: "numeral"
+    notes: "Requires genitive plural, despite ending in two"
+  - lemma: "двадцять"
+    ipa: '[ˈdʋɑd͡zʲt͡sʲɑtʲ]'
+    translation: "twenty"
+    pos: "numeral"
+  - lemma: "п'ятдесят"
+    ipa: '[pjɑddɛˈsʲɑt]'
+    translation: "fifty"
+    pos: "numeral"
+  - lemma: "вісімдесят"
+    ipa: '[ʋʲisʲimdɛˈsʲɑt]'
+    translation: "eighty"
+    pos: "numeral"
+  - lemma: "сто"
+    ipa: '[stɔ]'
+    translation: "one hundred"
+    pos: "numeral"
+  - lemma: "гривня"
+    ipa: '[ˈɦrɪu̯nʲɑ]'
+    translation: "hryvnia (Ukrainian currency)"
+    pos: "noun"
+    gender: "f"
+  - lemma: "долар"
+    ipa: '[ˈdɔlɑr]'
+    translation: "dollar"
+    pos: "noun"
+    gender: "m"
+  - lemma: "євро"
+    ipa: '[ˈjɛu̯rɔ]'
+    translation: "euro"
+    pos: "noun"
+    gender: "n"
+    notes: "Indeclinable noun"
+  - lemma: "ринок"
+    ipa: '[ˈrɪnɔk]'
+    translation: "market"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кілограм"
+    ipa: '[kʲilɔˈɦrɑm]'
+    translation: "kilogram"
+    pos: "noun"
+    gender: "m"
+  - lemma: "пляшка"
+    ipa: '[ˈplʲɑʃkɑ]'
+    translation: "bottle"
+    pos: "noun"
+    gender: "f"
+  - lemma: "рік"
+    ipa: '[rʲik]'
+    translation: "year"
+    pos: "noun"
+    gender: "m"
+    notes: "Plural forms depend on number: 2-4 роки, 5+ років"
+  - lemma: "продавець"
+    ipa: '[prɔdɑˈʋɛt͡sʲ]'
+    translation: "seller / vendor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "покупець"
+    ipa: '[pɔkuˈpɛt͡sʲ]'
+    translation: "buyer / customer"
+    pos: "noun"
+    gender: "m"
+  - lemma: "решта"
+    ipa: '[ˈrɛʃtɑ]'
+    translation: "change (money returned)"
+    pos: "noun"
+    gender: "f"
+  - lemma: "множина"
+    ipa: '[mnɔʒɪˈnɑ]'
+    translation: "plural"
+    pos: "noun"
+    gender: "f"
+  - lemma: "іменник"
+    ipa: '[iˈmɛnːɪk]'
+    translation: "noun"
+    pos: "noun"
+    gender: "m"

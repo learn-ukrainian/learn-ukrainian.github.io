@@ -2,13 +2,13 @@
   "module": "phone-basics",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:52.568106Z",
+  "last_audit": "2026-02-23T01:29:54.166844Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T00:16:38.651586Z",
+    "md": "2026-02-22T18:47:35.790593Z",
     "meta": "2026-02-20T23:56:09.890669Z",
-    "activities": "2026-02-21T00:14:49.212343Z",
-    "vocabulary": "2026-02-20T23:59:44.087559Z",
+    "activities": "2026-02-23T01:25:19.461320Z",
+    "vocabulary": "2026-02-22T18:44:48.508376Z",
     "plan": "2026-02-20T20:43:32.788165Z",
     "research": "2026-02-20T23:56:09.877323Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2132/2000 (raw: 2317)"
+      "message": "2121/2000 (raw: 2306)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "8 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,19 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 2,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module.",
-      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
-    ],
-    "pass_count": 5,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

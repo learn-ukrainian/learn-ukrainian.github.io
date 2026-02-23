@@ -1,7 +1,7 @@
 # Audit Report: M33 — holidays-and-traditions.md
 **Level:** A1 | **Module:** M33 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:46
+**Generated:** 2026-02-23 00:51:17
 
 ## Configuration
 **Type:** A1-culture
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2601/2000 (raw: 2852)
+- **Words:** ✅ 2593/2000 (raw: 2844)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -63,7 +63,7 @@
 | **Holidays & Traditions** | ✅ | 43 | Included in Core |
 | **Warm-up** | ✅ | 312 | Included in Core |
 | **Presentation** | ✅ | 413 | Included in Core |
-| **Presentation 2** | ✅ | 337 | Included in Core |
+| **Presentation 2** | ✅ | 329 | Included in Core |
 | **Presentation 3** | ✅ | 367 | Included in Core |
 | **Practice** | ✅ | 314 | Included in Core |
 | **Practice 2** | ✅ | 405 | Included in Core |

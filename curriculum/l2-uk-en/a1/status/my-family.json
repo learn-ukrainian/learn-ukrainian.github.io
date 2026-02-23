@@ -2,10 +2,10 @@
   "module": "my-family",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T19:00:47.545818Z",
+  "last_audit": "2026-02-23T00:51:16.416949Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:47:35.773463Z",
+    "md": "2026-02-23T00:21:13.375767Z",
     "meta": "2026-02-20T01:17:21.681770Z",
     "activities": "2026-02-20T22:49:32.671335Z",
     "vocabulary": "2026-02-22T18:44:47.005817Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3278/2000 (raw: 3610) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3278/2000 (raw: 3610)"
     },
     "activities": {
       "status": "pass",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
-    "fail_count": 1,
+    "pass_count": 8,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

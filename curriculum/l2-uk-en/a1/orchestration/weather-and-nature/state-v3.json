@@ -22,6 +22,12 @@
       "status": "complete",
       "ts": "2026-02-22T23:03:07Z",
       "attempts": 3
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-22T23:08:16Z",
+      "attempts": 1,
+      "note": "d1-only"
     }
   }
 }

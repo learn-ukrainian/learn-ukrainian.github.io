@@ -8,6 +8,26 @@
       "ts": "2026-02-22T23:07:13Z",
       "task_id": "v3-preferences-and-choices-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-22T23:09:00Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-22T23:11:33Z",
+      "task_id": "v3-preferences-and-choices-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-22T23:16:02Z",
+      "attempts": 2
+    },
+    "v3-D": {
+      "status": "failed",
+      "ts": "2026-02-22T23:52:16Z",
+      "attempts": 1,
+      "note": "d1-no-review"
     }
   }
 }

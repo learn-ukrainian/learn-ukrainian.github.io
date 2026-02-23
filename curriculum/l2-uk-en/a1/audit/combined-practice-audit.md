@@ -1,7 +1,7 @@
 # Audit Report: M43 — combined-practice.md
 **Level:** A1 | **Module:** M43 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:54
+**Generated:** 2026-02-23 01:39:22
 
 ## Configuration
 **Type:** A1
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3149/2000 (raw: 3393)
+- **Words:** ✅ 3139/2000 (raw: 3383)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.0% (target 35-55% (M43))
+- **Immersion:** 🇺🇦 37.1% (target 35-55% (M43))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,8 +61,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Combined Practice: Building Your Ukrainian Story** | ✅ | 72 | Included in Core |
-| **Вступ: Культура планування** | ✅ | 631 | Included in Core |
-| **Презентація: Структура та Причини** | ✅ | 923 | Included in Core |
-| **Практика: Сценарії реального життя** | ✅ | 936 | Included in Core |
+| **Вступ: Культура планування** | ✅ | 628 | Included in Core |
+| **Презентація: Структура та Причини** | ✅ | 918 | Included in Core |
+| **Практика: Сценарії реального життя** | ✅ | 934 | Included in Core |
 | **Висновок: Мій наратив** | ✅ | 429 | Included in Core |
 | **Підсумок** | ✅ | 158 | Included in Core |

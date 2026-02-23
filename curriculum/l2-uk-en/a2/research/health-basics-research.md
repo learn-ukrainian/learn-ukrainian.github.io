@@ -1,37 +1,34 @@
-# Дослідження: At the Doctor
+# Дослідження: Health Basics
 
 ## State Standard Reference
-§3.12: "Здоров’я й особиста гігієна: частини тіла; особиста гігієна; самопочуття; хвороби й нездужання; візит до лікаря; аптека."
-§4.2.2.3: "Давальний відмінок: особа або предмет, для яких (на користь чи на шкоду) відбувається дія."
-§4.2.3.2: "Наказовий спосіб. Форми 2-ї і 3-ї особи однини і множини."
-
-Alignment: This module directly addresses the §3.12 thematic requirement by covering "візит до лікаря", "аптека", and "самопочуття". It implements §4.2.2.3 through advice structures (Вам треба...) and §4.2.3.2 through medical instructions (Відкрийте рот, Дихайте).
+§3.12: "Здоров’я й особиста гігієна: частини тіла, самопочуття, хвороби й нездужання, візит до лікаря, аптека."
+Alignment: This module directly fulfills the A2 thematic requirement by teaching anatomy, symptom vocabulary, and the vocabulary required for medical encounters and pharmacies.
+§4.2.2.3: "Давальний відмінок: ... безособові конструкції (мені холодно)."
+Alignment: The module introduces the Dative case for expressing physical states ("Мені погано", "Мені добре").
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| поліклініка | High / GRAC | районна поліклініка, йти в поліклініку |
-| аптека | High / GRAC | цілодобова аптека, купити в аптеці |
-| температура | High / GRAC | висока температура, міряти температуру |
-| кашель | Medium / GRAC | сильний кашель, сухий кашель |
-| нежить | Medium / GRAC | мати нежить, засоби від нежитю |
-| швидка допомога | High / GRAC | викликати швидку, приїхала швидка |
-| сімейний лікар | High (Modern) | підписати декларацію з лікарем |
+| поліклініка | High (daily life) | піти в поліклініку (outpatient visit) |
+| лікарня | High (emergency) | лежати в лікарні (inpatient hospitalization) |
+| сімейний лікар | Very High (modern) | підписати декларацію із сімейним лікарем |
+| хворіти | High | хворіти на грип, хворіти на застуду |
 
 ## Cultural Hooks
-1. **The Poliklinika vs. Likarnia distinction**: A "poliklinika" is an outpatient clinic where you go for checkups and specialists, while a "likarnia" (hospital) is typically for inpatient care or surgeries. You don't "go to the hospital" for a cold; you go to the poliklinika.
-2. **Traditional Remedies**: Raspberry tea (чай з малиною) is the universal first-line defense for colds. Mustard plasters (гірчичники) are a traditional remedy still fondly (or fearfully) remembered and used for coughs.
-3. **Home Visits**: While reforming, the concept of "викликати лікаря додому" (calling a doctor to home) remains culturally deeply rooted, especially for children or high fevers, unlike in many Western systems where you must go to the clinic.
+1. Modern Healthcare Reform: The concept of the "сімейний лікар" (family doctor) and the necessity to "підписати декларацію" (sign a declaration) is the foundational reality of modern Ukrainian healthcare.
+2. Home Visits vs. Clinics: A significant cultural difference is the common practice of calling a doctor to your home ("викликати лікаря додому") when experiencing a high fever, rather than traveling to a clinic.
+3. Traditional Remedies: "Чай з малиною" (raspberry tea) is the universally accepted first response to a cold.
 
 ## Common Learner Errors
-1. **Case Confusion with Pain**: Using Dative (*Мені болить голова) instead of the modern literary standard Genitive with Preposition (**У мене болить голова**). *Note: "Мені болить" is archaic or often used for emotional pain (Мені болить за Україну).*
-2. **"To be sick" vs "To hurt"**: Confusing **хворіти** (to be ill/sick with something) and **боліти** (to hurt/ache). *Error: Я болю грип. -> Correct: Я хворію на грип.*
-3. **Subject-Verb Agreement**: Failing to match "болить/болять" with the body part number. *Error: У мене болить ноги. -> Correct: У мене болять ноги.*
+1. *Я болю* або *Я болю грип* → **У мене болить...** / **Я хворію на грип** — English speakers directly translate "I hurt" or "I am sick with," confusing the impersonal construction and the specific prepositional requirement for illnesses.
+2. *У мене болить ноги* → **У мене болять ноги** — Failure to agree the verb "боліти" with a plural subject (body parts like eyes, legs, arms).
+3. *Я погано* → **Мені погано** — Using Nominative instead of the required Dative case for physical and emotional states.
 
 ## Cross-References
-- Builds on: **a1-body-parts** (basic anatomy), **a1-to-have** (У мене є... construction structure).
-- Prepares for: **b1-health** (advanced diseases, internal organs, navigating the healthcare bureaucracy).
+- Builds on: A1/A2 Nominative case rules and basic noun pluralization.
+- Prepares for: B1 modules involving complex Dative/Instrumental usage in medical contexts.
 
 ## Notes for Content Writing
-- **Grammar Focus**: Be very careful with "У мене болить". Ensure the distinction between Singular (болить голова) and Plural (болять очі) is the primary drill.
-- **Terminology**: Use "сімейний лікар" (family doctor) to reflect the modern medical reform in Ukraine, rather than just "терапевт".
+- Immersion Band 2 (60-75%): Use English ONLY to explain the grammatical mechanics of "У мене болить" and "Мені погано". All introductions, dialogues, and practice instructions MUST be in Ukrainian.
+- Decolonized framing: Treat "У мене болить" + Nom. as standard, elegant Ukrainian, distinguishing it from "Мені болить" (poetic/emotional). Avoid any comparisons to Russian constructs.
+- Ensure IPA is used only on the first occurrence of new vocabulary words.

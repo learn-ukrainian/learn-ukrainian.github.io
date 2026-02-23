@@ -1,40 +1,32 @@
 # Дослідження: She Said That...
 
 ## State Standard Reference
-§4.4.2: "складнопідрядні речення зі сполучником що: Викладач сказав, що я маю багато працювати... складнопідрядні реченні зі сполучником щоб для вираження мети певної дії суб’єкта... просте питальне загальне речення: Чи ви прочитали цей текст?"
-Alignment: Module teaches the core mechanisms (conjunctions *що*, *щоб*, *чи*) required to form these complex sentences defined in the A2 Syntax standard.
+§4.4.2: "складнопідрядні речення зі сполучником що: Викладач сказав, що я маю багато працювати. Я знаю, що ми зробили це правильно; ... складнопідренні зі сполучником щоб для вираження мети певної дії суб’єкта..."
+Alignment: This module addresses the A2 requirement for constructing complex sentences using subordinate clauses with conjunctions *що* (for statements), *щоб* (for commands/intent), and *чи* (for questions) in the context of reported speech.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **казати** | High (Top 100 verbs) | казати правду (tell the truth), він каже, що... (he says that...), так би мовити (so to speak) |
-| **говорити** | High (Top 100 verbs) | говорити українською (speak Ukrainian), говорити про... (talk about...), говорити з... (speak with...) |
-| **питати** | High | питати дозволу (ask permission), питати дорогу (ask for directions) |
-| **відповідати** | High | відповідати на питання (answer a question), відповідати за... (be responsible for...) |
+| казати | High (Top 100) | казати правду, він каже, що..., так би мовити |
+| говорити | High (Top 100) | говорити українською, говорити про..., говорити з... |
+| питати | High | питати дозволу, питати дорогу |
+| відповідати | High | відповідати на питання, відповідати за... |
 
 ## Cultural Hooks
-1. **Слово не горобець — вилетить не впіймаєш.** (A word is not a sparrow—you can't catch it once it has flown.) — Emphasizes the weight of spoken words and gossip.
-2. **Зіпсований телефон** (Broken telephone) — The Ukrainian name for the children's "whisper game," perfect for the "Practice" section to demonstrate how reported speech distorts information.
-3. **«На лавці» culture** — The stereotype of grandmothers (бабусі) sitting on benches discussing neighbors is a culturally recognizable trope for "reporting" information (gossip).
+1. **"На лавці" (On the bench) culture:** The iconic image of Ukrainian grandmothers (бабусі) sitting on benches outside apartment buildings, acting as the neighborhood watch and sharing local news/gossip. This is the perfect natural context for learning reported speech.
+2. **Proverb:** «Слово не горобець — вилетить не впіймаєш» (A word is not a sparrow—you can't catch it once it has flown). This highlights the weight and permanence of spoken words.
 
 ## Common Learner Errors
-1. **The "Backshift" Trap** → Learners apply English "past-to-past" rules (He said he *was* busy).
-   *Correct:* Він сказав, що він *зайнятий* (He said he *is* busy).
-   *Why:* Ukrainian retains the original tense of the direct speech.
-2. **Pronoun Persistence** → Forgetting to shift perspective.
-   *Error:* Він сказав: «Я хочу їсти» → Він сказав, що *я* хочу їсти.
-   *Correct:* Він сказав, що *він* хоче їсти.
-3. **Question Word Order** → Keeping the question intonation/inversion in reported questions.
-   *Error:* Я не знаю, *де є* вокзал?
-   *Correct:* Я не знаю, *де* вокзал. (Declarative word order).
-4. **"If" vs "Whether"** → Using *якщо* (conditional if) instead of *чи* (whether) for reported yes/no questions.
-   *Error:* Він питав, *якщо* я прийду.
-   *Correct:* Він питав, *чи* я прийду.
+1. **The "Backshift" Trap:** Learners apply English grammar rules (past-to-past) and change the tense when reporting (e.g., "Він сказав, що він був зайнятий" instead of the correct "Він сказав, що він зайнятий"). Ukrainian retains the original tense.
+2. **Pronoun Persistence:** Forgetting to shift the perspective from 1st person to 3rd person in the reported clause (e.g., direct: "Я хочу їсти" -> incorrect indirect: "Вона сказала, що я хочу їсти").
+3. **If vs. Whether:** Using the conditional *якщо* (if) instead of the interrogative *чи* (whether) for reporting yes/no questions.
+4. **Question Word Order:** Keeping inversion or question intonation in declarative reported sentences (e.g., writing "Я не знаю, де є вокзал?" instead of "Я не знаю, де вокзал.").
 
 ## Cross-References
-- Builds on: `a1-09-present-tense` (Verb conjugation), `a2-25-future-tense` (Tenses foundation)
-- Prepares for: `b1-reported-speech-advanced` (Nuanced reporting verbs), `b2-direct-indirect-speech` (Stylistic transformation)
+- Builds on: Basic tenses (A1), Question words (A1).
+- Prepares for: Advanced complex sentences (B1), Conditional mood (B1).
 
 ## Notes for Content Writing
-- **Tense Logic**: Explicitly frame the Ukrainian system as "Fair" or "Honest" — we report exactly what we heard, without changing the time.
-- **Differentiation**: Clearly distinguish *казати* (message content, introduces *що*) vs *говорити* (act of speaking).
+- **Decolonized Framing:** Do not compare the lack of backshifting to Russian. Instead, frame the Ukrainian system as "honest" and "transparent" because it preserves the exact time and perspective of the original speaker. Present it as a logical, straightforward advantage of Ukrainian grammar.
+- **Immersion Constraints:** This is module A2.28, falling into Band 2 (60-75% Ukrainian). English should only be used to explain abstract concepts (like the structure of reported speech and the no-backshift rule). Dialogues, examples, and practice instructions must be in Ukrainian.
+- **Word Target:** Ensure explanations are rich and contextualized with plenty of examples to meet the 3000-word target naturally. Use clear H3 headers for each distinct subtopic.

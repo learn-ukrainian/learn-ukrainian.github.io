@@ -1,0 +1,18 @@
+{
+  "track": "a2",
+  "slug": "complete-imperative",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T00:28:42Z",
+      "task_id": "v3-complete-imperative-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-23T00:29:59Z",
+      "note": "word-count-2240-below-80pct-3000"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Audit Report: M40 — taking-transport.md
 **Level:** A1 | **Module:** M40 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:51
+**Generated:** 2026-02-23 01:25:16
 
 ## Configuration
 **Type:** A1
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2272/2000 (raw: 2580)
+- **Words:** ✅ 2257/2000 (raw: 2565)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -51,7 +51,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.0% (target 35-55% (M40))
+- **Immersion:** 🇺🇦 38.3% (target 35-55% (M40))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,8 +61,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Taking Transport** | ✅ | 68 | Included in Core |
-| **Вступ: Транспорт у місті** | ✅ | 557 | Included in Core |
-| **Презентація: Види транспорту та оплата** | ✅ | 684 | Included in Core |
+| **Вступ: Транспорт у місті** | ✅ | 549 | Included in Core |
+| **Презентація: Види транспорту та оплата** | ✅ | 677 | Included in Core |
 | **Практика: Орієнтування в місті** | ✅ | 524 | Included in Core |
 | **Закріплення: Подорож метром** | ✅ | 274 | Included in Core |
 | **Підсумок** | ✅ | 165 | Included in Core |

@@ -47,16 +47,16 @@ Read ALL of these files before writing anything:
 
 ---
 
-## Pre-Computed Audit Metrics (from automated audit — DO NOT recalculate)
+## Pre-Computed Audit Metrics (verified by audit pipeline — compare your findings against these)
 
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Personal Trainer
-Word count:       3149 / 2000 (157.4%)
+Word count:       3139 / 2000 (156.9%)
 Activities:       10
 Vocabulary items: 20
 Engagement boxes: 4
-Immersion:        37.0% (target: 35-55%)
+Immersion:        37.1% (target: 35-55%)
 Audit status:     FAIL
 ```
 
@@ -319,9 +319,10 @@ Follow the full review protocol. In summary:
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms (кушать→їсти, приймати участь→брати участь, etc.)
+- Russianisms (кушать→їсти, приймати участь→брати участь, красивий→гарний, прекрасне→чудове, etc.)
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
 - **Colonial framing** — Ukrainian defined by contrast with Russian (see below)
+- **Word salad** — paragraphs that string together unrelated claims with no logical thread, or sentences that randomly alternate between Ukrainian and English within the same paragraph. Each paragraph must have one clear point. Score Language Quality ≤ 6 if found.
 - Grammar scope violations
 - Activity errors
 - Beginner safety ("Would I Continue?" test)
@@ -379,45 +380,24 @@ Follow the full review protocol. In summary:
 
 **Structural monotony test**: Read the first 2 lines of each H2 section. Do 3+ sections start the same way? If yes → LLM Fingerprint ≤ 7.
 
-**Example batching test**: Search for consecutive `_Приклад:_` lines. If 3+ sections all have exactly 3-4 consecutive examples in the same position → LLM Fingerprint ≤ 7.
+**Example batching test**: Look for uniform example blocks — 3+ sections each presenting examples in the exact same format (e.g., identical `**Ukrainian.** (English.)` bullet lists of 5+ items, or identical `_Приклад:_` blocks). The problem is *uniformity across sections*, not examples themselves. Varied formats (tables, inline, dialogues mixed with bullet lists) are fine. If 3+ sections use identical example formatting → LLM Fingerprint ≤ 7.
 
-**Metaphor density test**: Count distinct metaphors. If >4 per module → LLM Fingerprint ≤ 7. Flag cliches like "діамант", "двигун", "душа мови", "дзеркало", "музика", "архітектура".
+**Generic AI rhetoric test**: Flag these specific patterns that real Ukrainian tutors don't use:
+- "це не просто" / "це не лише" / "не просто X, а Y" used 2+ times → ≤ 7
+- Stacked abstract nouns: sentences with 3+ abstract nouns like "soul, history, and heartbeat" or "identity, resilience, and strength" — if 3+ such sentences found → ≤ 7
+- Generic AI clichés: "діамант", "двигун прогресу", "дзеркало культури", "архітектура мови" — these are LLM-typical, not natural Ukrainian
+- "It is important to note..." / "In this lesson, we will explore..." formality
 
-**Rhetoric pattern test**: Search for "це не просто" / "це не лише" / "не просто X, а Y". If used 2+ times → LLM Fingerprint ≤ 7.
-
-**Purple prose test**: Flag sentences with 3+ abstract nouns stacked. If 3+ found → LLM Fingerprint ≤ 7.
+**IMPORTANT — What is NOT an LLM fingerprint:**
+- Natural Ukrainian metaphors, proverbs, and phraseology — Ukrainian is a metaphor-rich language. Pedagogical analogies ("Smile vs Grin technique", "like a pitchfork") that help learners understand pronunciation are GOOD teaching, not AI artifacts
+- Rich, substantive content that exceeds the word target — word targets are MINIMUMS. More content is better if it's pedagogically useful. Do NOT penalize word count overshoot in any dimension. Only penalize obvious filler/padding (repetitive motivational prose, saying the same thing three ways)
+- Varied callout boxes, cultural hooks, and engagement elements
 
 **Callout monotony test**: Are 3+ callouts using the same title? If yes → flag as repetitive.
 
 **Example plausibility test**: Would a real Ukrainian speaker actually say each example sentence? Flag implausible examples. If 2+ implausible → LLM Fingerprint ≤ 8.
 
-### STEP 4: Score 13 Dimensions
-
-| # | Dimension | Auto-fail |
-|---|-----------|-----------|
-| 1 | Experience Quality | <7 |
-| 2 | Coherence | <7 |
-| 3 | Relevance | <7 |
-| 4 | Educational | <7 |
-| 5 | Language | <8 |
-| 6 | Pedagogy | <7 |
-| 7 | Immersion | <6 |
-| 8 | Activities | <7 |
-| 9 | Richness | <6 |
-| 10 | Beginner Safety | <7 |
-| 11 | LLM Fingerprint | <7 |
-| 12 | Linguistic Accuracy | <9 |
-| 13 | Factual Accuracy | <8 |
-
-**Weighted Overall:**
-```
-Overall = (Experience x 1.5 + Coherence x 1.0 + Relevance x 1.0 + Educational x 1.2 +
-          Language x 1.1 + Pedagogy x 1.2 + Immersion x 1.0 + Activities x 1.3 +
-          Richness x 0.9 + Beginner_Safety x 1.3 + LLM x 1.0 + Linguistic_Accuracy x 1.5 +
-          Factual_Accuracy x 1.5) / 15.5
-```
-
-**Factual Accuracy note:** ALL tracks — verify callout boxes (`[!did-you-know]`, `[!myth-buster]`, `[!culture-note]`, `[!fun-fact]`) for fabricated claims. Seminar tracks — additionally verify against research notes/Key Facts Ledger. Do NOT auto-score 9 for any track.
+{SCORING_SECTION}
 
 ---
 
@@ -473,148 +453,7 @@ Your review is checked by regex. Missing ANY of these H2 headers = AUTOMATIC REJ
 
 ---
 
-## Output Format
-
-> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
-> **NO FIX OUTPUT** — this step produces the review only. Fixes are handled in a separate step if needed.
-
-### Output Block 1: Review
-
-```
-===REVIEW_START===
-# Рецензія: Combined Practice
-
-**Level:** A1 | **Module:** 43
-**Overall Score:** {X.X}/10
-**Status:** PASS / FAIL
-**Reviewed:** {date}
-
-## Plan Verification
-
-```
-Plan-Content Alignment: [PASS/FAIL]
-- Sections: [status]
-- Vocabulary: [X/Y from plan, Z extra]
-- Grammar scope: [status]
-- Objectives: [status]
-```
-
-## Scores    <!-- REQUIRED — rejection if missing -->
-
-| # | Dimension | Score | Auto-fail | Evidence |
-|---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | X/10 | <7 | [specific finding] |
-| 2 | Coherence | X/10 | <7 | [specific finding] |
-| 3 | Relevance | X/10 | <7 | [specific finding] |
-| 4 | Educational | X/10 | <7 | [specific finding] |
-| 5 | Language | X/10 | <8 | [specific finding] |
-| 6 | Pedagogy | X/10 | <7 | [specific finding] |
-| 7 | Immersion | X/10 | <6 | [actual % vs target] |
-| 8 | Activities | X/10 | <7 | [specific finding] |
-| 9 | Richness | X/10 | <6 | [specific finding] |
-| 10 | Beginner Safety | X/10 | <7 | ["Would I Continue?" X/5] |
-| 11 | LLM Fingerprint | X/10 | <7 | [specific finding] |
-| 12 | Linguistic Accuracy | X/10 | <9 | [specific finding] |
-| 13 | Factual Accuracy | X/10 | <8 | [specific finding or "N/A — core track"] |
-
-**Weighted Overall:** {show calculation} = **X.X/10**
-
-## Auto-Fail Checklist Results
-
-- Russianisms: [CLEAN] or [list]
-- Calques: [CLEAN] or [list]
-- Grammar scope: [CLEAN] or [list]
-- Activity errors: [CLEAN] or [list]
-- Beginner safety: X/5
-- Factual accuracy: [CLEAN] or [list of discrepancies]
-
-## Critical Issues Found    <!-- REQUIRED — rejection if missing -->
-
-### Issue 1: {Category}
-- **Location**: Line {N} / Section "{name}"
-- **Original**: «{exact Ukrainian text verified via Grep}»
-- **Problem**: {why it's wrong}
-- **Fix**: {concrete replacement}
-
-[... more issues ...]
-
-## Ukrainian Language Issues
-
-| Line | Current | Corrected | Type |
-|------|---------|-----------|------|
-| {N} | «{original}» | «{fixed}» | Russianisms / Calque / Scope / Grammar |
-
-## Beginner Safety Audit
-
-"Would I Continue?" Test: X/5
-- Overwhelmed? [Pass/Fail]
-- Instructions clear? [Pass/Fail]
-- Quick wins? [Pass/Fail]
-- Ukrainian scary? [Pass/Fail]
-- Come back tomorrow? [Pass/Fail]
-
-## Strengths
-- [Specific strength with evidence]
-
-## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
-
-### {Dimension Name}: {current}/10 -> 9/10
-**What to fix:**
-1. Line {N}: Change «{current}» -> «{replacement}» — {why}
-2. Section "{name}": {action} — {impact}
-
-**Expected score after fix:** {X}/10
-
-### Projected Overall After Fixes
-```
-{Recalculate weighted overall with projected scores}
-```
-
-## Factual Verification    <!-- REQUIRED for seminar tracks — rejection if missing -->
-
-- Research notes consulted: {YES/NO/NOT_APPLICABLE}
-- Key Facts Ledger present: {YES/NO}
-- Dates checked: {X} ({all correct / N discrepancies listed below})
-- Named figures verified: {X}
-- Primary quotes cross-referenced: {X/Y matched}
-- Chronological sequence: {CONSISTENT / ISSUES}
-- Claims without research grounding: {N found — listed below if any}
-
-{If discrepancies found, list each one:}
-{- Line N: Prose says "X" but research says "Y" for [event/date/attribution]}
-
-## Verification Summary    <!-- REQUIRED — rejection if missing -->
-
-- Content lines read: {X}
-- Activity items checked: {X}
-- Ukrainian sentences verified: {X}
-- IPA transcriptions checked: {X}
-- Factual claims verified: {X}
-- Issues found: {X}
-
-## Verdict    <!-- REQUIRED — rejection if missing -->
-
-**PASS** or **FAIL**
-
-{1-3 sentences. If FAIL, list blocking issues.}
-
-===REVIEW_END===
-```
-
-### Output Block 2: Friction Report (MANDATORY)
-
-```
-===FRICTION_START===
-**Phase**: Phase D.1: Evidence Review
-**Step**: {what you were doing when friction occurred, or "Full Phase D.1"}
-**Friction Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...
-**Raw Error**: {actual error or "None"}
-**Self-Correction**: {what you changed, or "N/A"}
-**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
-===FRICTION_END===
-```
-
----
+{D1_OUTPUT_FORMAT}
 
 ## Boundaries
 
@@ -626,9 +465,3 @@ Plan-Content Alignment: [PASS/FAIL]
 - Do NOT cite Ukrainian text without first verifying it with Grep
 - Do NOT give vague feedback — say exactly what and where
 - Do NOT reference orchestration artifacts or prior build phases
-
----
-
-## CRITICAL: Output Format Reminder
-
-Your output MUST start with `===REVIEW_START===` and end with `===REVIEW_END===`. The extraction pipeline uses these exact delimiters. Any output without these delimiters is **automatically discarded** and the entire phase fails. Do not write a summary or conversational response — output the structured review inside the delimiters.

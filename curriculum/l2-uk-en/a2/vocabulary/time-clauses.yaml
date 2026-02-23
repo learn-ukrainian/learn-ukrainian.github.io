@@ -1,0 +1,134 @@
+items:
+  - lemma: "коли"
+    ipa: '[kɔˈlɪ]'
+    translation: "when"
+    pos: "conjunction"
+    notes: "High frequency. Indicates a specific point in time."
+    example: "Коли ти прийдеш додому?"
+  - lemma: "поки"
+    ipa: '[ˈpɔkɪ]'
+    translation: "while"
+    pos: "conjunction"
+    notes: "High frequency. Indicates a continuous process or simultaneous actions."
+    example: "Поки я читав книгу, брат слухав музику."
+  - lemma: "перед тим як"
+    ipa: '[ˈpɛrɛd tɪm jɑk]'
+    translation: "before [doing something]"
+    pos: "conjunction"
+    notes: "Requires a verb clause following it."
+    example: "Перед тим як вийти, я перевіряю погоду."
+  - lemma: "після того як"
+    ipa: '[ˈpʲisʲlʲɑ tɔˈɦɔ jɑk]'
+    translation: "after [doing something]"
+    pos: "conjunction"
+    notes: "Requires a verb clause following it."
+    example: "Після того як ми поїли, ми пішли гуляти."
+  - lemma: "щойно"
+    ipa: '[ˈʃt͡ʃɔjnɔ]'
+    translation: "just / as soon as"
+    pos: "adverb"
+    notes: "Used for immediate or very recent actions."
+    example: "Щойно я зайшов у квартиру."
+  - lemma: "як тільки"
+    ipa: '[jɑk ˈtʲilʲkɪ]'
+    translation: "as soon as"
+    pos: "conjunction"
+    notes: "Indicates an immediate sequence."
+    example: "Я зателефоную, як тільки зможу."
+  - lemma: "поки не"
+    ipa: '[ˈpɔkɪ nɛ]'
+    translation: "until"
+    pos: "conjunction"
+    notes: "Requires a double negative structure in Ukrainian to set the limit of an action."
+    example: "Я буду чекати, поки ти не прийдеш."
+  - lemma: "якщо"
+    ipa: '[jɑˈkʃt͡ʃɔ]'
+    translation: "if"
+    pos: "conjunction"
+    notes: "Essential for conditional statements. Distinct from 'коли' (when)."
+    example: "Я буду дуже радий, якщо ти зможеш приїхати."
+  - lemma: "кожного разу, коли"
+    ipa: '[ˈkɔʒnɔɦɔ ˈrɑzu, kɔˈlɪ]'
+    translation: "every time when"
+    pos: "phrase"
+    notes: "Used to describe recurring habits and frequencies."
+    example: "Кожного разу, коли йде дощ, він бере парасольку."
+  - lemma: "час"
+    ipa: '[t͡ʃɑs]'
+    translation: "time"
+    pos: "noun"
+    gender: "m"
+  - lemma: "подія"
+    ipa: '[pɔˈdʲijɑ]'
+    translation: "event"
+    pos: "noun"
+    gender: "f"
+  - lemma: "момент"
+    ipa: '[mɔˈmɛnt]'
+    translation: "moment"
+    pos: "noun"
+    gender: "m"
+  - lemma: "процес"
+    ipa: '[prɔˈt͡sɛs]'
+    translation: "process"
+    pos: "noun"
+    gender: "m"
+  - lemma: "одночасно"
+    ipa: '[ɔdnɔˈt͡ʃɑsnɔ]'
+    translation: "simultaneously"
+    pos: "adverb"
+  - lemma: "ранок"
+    ipa: '[ˈrɑnɔk]'
+    translation: "morning"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вечір"
+    ipa: '[ˈʋɛt͡ʃʲir]'
+    translation: "evening"
+    pos: "noun"
+    gender: "m"
+  - lemma: "сніданок"
+    ipa: '[sʲnʲiˈdɑnɔk]'
+    translation: "breakfast"
+    pos: "noun"
+    gender: "m"
+  - lemma: "подорож"
+    ipa: '[ˈpɔdɔrɔʒ]'
+    translation: "trip / journey"
+    pos: "noun"
+    gender: "f"
+  - lemma: "чекати"
+    ipa: '[t͡ʃɛˈkɑtɪ]'
+    translation: "to wait"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "починати"
+    ipa: '[pɔt͡ʃɪˈnɑtɪ]'
+    translation: "to start / to begin"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "почати"
+    ipa: '[pɔˈt͡ʃɑtɪ]'
+    translation: "to start / to begin"
+    pos: "verb"
+    aspect: "pf"
+  - lemma: "закінчувати"
+    ipa: '[zɑˈkʲint͡ʃuʋɑtɪ]'
+    translation: "to finish"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "закінчити"
+    ipa: '[zɑˈkʲinˈt͡ʃɪtɪ]'
+    translation: "to finish"
+    pos: "verb"
+    aspect: "pf"
+  - lemma: "приїхати"
+    ipa: '[prɪˈjixɑtɪ]'
+    translation: "to arrive"
+    pos: "verb"
+    aspect: "pf"
+  - lemma: "гуляти"
+    ipa: '[ɦuˈlʲɑtɪ]'
+    translation: "to walk"
+    pos: "verb"
+    aspect: "impf"

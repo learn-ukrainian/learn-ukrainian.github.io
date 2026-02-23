@@ -1,0 +1,117 @@
+items:
+  - lemma: "ціна"
+    ipa: '[t͡sʲiˈnɑ]'
+    translation: "price"
+    pos: "noun"
+    gender: "f"
+  - lemma: "знижка"
+    ipa: '[ˈznɪʒkɑ]'
+    translation: "discount"
+    pos: "noun"
+    gender: "f"
+  - lemma: "решта"
+    ipa: '[ˈrɛʃtɑ]'
+    translation: "change (money)"
+    pos: "noun"
+    gender: "f"
+  - lemma: "чек"
+    ipa: '[t͡ʃɛk]'
+    translation: "receipt"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кращий"
+    ipa: '[ˈkrɑʃt͡ʃɪj]'
+    translation: "better"
+    pos: "adjective"
+  - lemma: "дешевий"
+    ipa: '[dɛˈʃɛʋɪj]'
+    translation: "cheap"
+    pos: "adjective"
+  - lemma: "ринок"
+    ipa: '[ˈrɪnɔk]'
+    translation: "market"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кошик"
+    ipa: '[ˈkɔʃɪk]'
+    translation: "basket / cart"
+    pos: "noun"
+    gender: "m"
+  - lemma: "оформити"
+    ipa: '[ɔˈfɔrmɪtɪ]'
+    translation: "to checkout / process"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "доставка"
+    ipa: '[dɔˈstɑu̯kɑ]'
+    translation: "delivery"
+    pos: "noun"
+    gender: "f"
+  - lemma: "стакан"
+    ipa: '[stɑˈkɑn]'
+    translation: "glass (unit of measurement)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "пучок"
+    ipa: '[puˈt͡ʃɔk]'
+    translation: "bunch"
+    pos: "noun"
+    gender: "m"
+  - lemma: "супермаркет"
+    ipa: '[supɛrˈmɑrkɛt]'
+    translation: "supermarket"
+    pos: "noun"
+    gender: "m"
+  - lemma: "базар"
+    ipa: '[bɑˈzɑr]'
+    translation: "bazaar"
+    pos: "noun"
+    gender: "m"
+  - lemma: "продавець"
+    ipa: '[prɔdɑˈʋɛt͡sʲ]'
+    translation: "vendor / seller"
+    pos: "noun"
+    gender: "m"
+  - lemma: "готівка"
+    ipa: '[ɦɔˈtʲiu̯kɑ]'
+    translation: "cash"
+    pos: "noun"
+    gender: "f"
+  - lemma: "замовлення"
+    ipa: '[zɑˈmɔu̯lɛnʲːɑ]'
+    translation: "order"
+    pos: "noun"
+    gender: "n"
+  - lemma: "свіжий"
+    ipa: '[ˈsʲʋʲiʒɪj]'
+    translation: "fresh"
+    pos: "adjective"
+  - lemma: "домашній"
+    ipa: '[dɔˈmɑʃnʲij]'
+    translation: "homemade / homegrown"
+    pos: "adjective"
+  - lemma: "якість"
+    ipa: '[ˈjɑkʲisʲtʲ]'
+    translation: "quality"
+    pos: "noun"
+    gender: "f"
+  - lemma: "більший"
+    ipa: '[ˈbʲilʲʃɪj]'
+    translation: "bigger"
+    pos: "adjective"
+  - lemma: "менший"
+    ipa: '[ˈmɛnʃɪj]'
+    translation: "smaller"
+    pos: "adjective"
+  - lemma: "гірший"
+    ipa: '[ˈɦʲirʃɪj]'
+    translation: "worse"
+    pos: "adjective"
+  - lemma: "дорожчий"
+    ipa: '[dɔˈrɔʒt͡ʃɪj]'
+    translation: "more expensive"
+    pos: "adjective"
+  - lemma: "важливіший"
+    ipa: '[ʋɑˈʒlɪˈʋʲiʃɪj]'
+    translation: "more important"
+    pos: "adjective"

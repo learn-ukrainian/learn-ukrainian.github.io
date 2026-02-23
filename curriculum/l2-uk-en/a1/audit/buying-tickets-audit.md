@@ -1,7 +1,7 @@
 # Audit Report: M39 — buying-tickets.md
 **Level:** A1 | **Module:** M39 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 16:05:51
+**Generated:** 2026-02-23 01:20:45
 
 ## Configuration
 **Type:** A1
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2603/2000 (raw: 2849)
+- **Words:** ✅ 2571/2000 (raw: 2817)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -47,11 +47,11 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 2 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.9% (target 35-55% (M39))
+- **Immersion:** 🇺🇦 36.3% (target 35-55% (M39))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,9 +61,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Buying Tickets** | ✅ | 93 | Included in Core |
-| **Види транспорту та вокзали** | ✅ | 424 | Included in Core |
-| **Купівля квитка та напрямок** | ✅ | 491 | Included in Core |
-| **Деталі подорожі: Клас і Розклад** | ✅ | 547 | Included in Core |
+| **Види транспорту та вокзали** | ✅ | 414 | Included in Core |
+| **Купівля квитка та напрямок** | ✅ | 482 | Included in Core |
+| **Деталі подорожі: Клас і Розклад** | ✅ | 537 | Included in Core |
 | **Практика: Діалоги на вокзалі** | ✅ | 448 | Included in Core |
-| **Подорож поїздом: Традиції** | ✅ | 425 | Included in Core |
+| **Подорож поїздом: Традиції** | ✅ | 422 | Included in Core |
 | **Підсумок** | ✅ | 175 | Included in Core |

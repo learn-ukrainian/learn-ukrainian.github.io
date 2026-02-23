@@ -2,13 +2,13 @@
   "module": "at-the-cafe-practical",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:48.015219Z",
+  "last_audit": "2026-02-23T01:03:03.770562Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T18:06:35.703646Z",
+    "md": "2026-02-22T18:41:37.685915Z",
     "meta": "2026-02-20T15:30:11.471102Z",
     "activities": "2026-02-20T23:22:01.170177Z",
-    "vocabulary": "2026-02-20T16:00:42.848502Z",
+    "vocabulary": "2026-02-22T18:44:34.508218Z",
     "plan": "2026-02-20T20:42:45.209134Z",
     "research": "2026-02-20T15:30:11.468065Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2632/2000 (raw: 3156)"
+      "message": "2605/2000 (raw: 3129)"
     },
     "activities": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
-    ],
-    "pass_count": 6,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

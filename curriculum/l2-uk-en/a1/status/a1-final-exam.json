@@ -2,13 +2,13 @@
   "module": "a1-final-exam",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:54.894319Z",
+  "last_audit": "2026-02-23T01:44:47.881117Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T09:16:33.418760Z",
+    "md": "2026-02-22T18:41:36.864414Z",
     "meta": "2026-02-22T09:08:18.375105Z",
     "activities": "2026-02-22T09:13:58.737740Z",
-    "vocabulary": "2026-02-22T09:13:58.738068Z",
+    "vocabulary": "2026-02-22T18:44:32.866777Z",
     "plan": "2026-02-20T20:44:14.270426Z",
     "research": "2026-02-22T09:08:18.372301Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3558/2000 (raw: 3697)"
+      "message": "3548/2000 (raw: 3687)"
     },
     "activities": {
       "status": "pass",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "1 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
-    ],
-    "pass_count": 5,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

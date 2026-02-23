@@ -144,7 +144,7 @@ Notice the pattern? **Син/Донька**, **Онук/Онука**. The ending
 
 Finally, how do we talk about husbands and wives? This pair has a little secret that confuses beginners.
 
-A husband is **чолові́к**.
+A husband is **чоловік**.
 **Wait!** Doesn't "чоловік" also mean "man"? Yes, it does! The context tells you which meaning is intended.
 *   **Це чоловік.** (This is a man.)
 *   **Це мій чоловік.** (This is *my* husband.)

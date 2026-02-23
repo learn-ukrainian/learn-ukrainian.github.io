@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "because-and-although",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T01:36:28Z",
+      "task_id": "v3-because-and-although-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T01:37:49Z"
+    },
+    "v3-C": {
+      "status": "failed",
+      "ts": "2026-02-23T01:40:16Z",
+      "note": "activities-schema-invalid"
+    }
+  }
+}

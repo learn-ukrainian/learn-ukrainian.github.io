@@ -2,13 +2,13 @@
   "module": "combined-practice",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T16:05:54.104152Z",
+  "last_audit": "2026-02-23T01:39:22.641272Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T09:06:56.361051Z",
+    "md": "2026-02-22T18:41:44.503753Z",
     "meta": "2026-02-21T01:17:03.019971Z",
     "activities": "2026-02-22T09:06:56.361460Z",
-    "vocabulary": "2026-02-21T01:20:22.182234Z",
+    "vocabulary": "2026-02-22T18:44:42.324355Z",
     "plan": "2026-02-20T20:43:43.523004Z",
     "research": "2026-02-21T01:17:03.017361Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3149/2000 (raw: 3393)"
+      "message": "3139/2000 (raw: 3383)"
     },
     "activities": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
-    ],
-    "pass_count": 6,
-    "fail_count": 1,
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

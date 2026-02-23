@@ -1,34 +1,35 @@
 # Дослідження: Smart Shopping
 
 ## State Standard Reference
-§4.3.1: "Ступені порівняння якісних прикметників: проста форма вищого ступеня: солодший, важливіший; проста форма найвищого ступеня: найсолодший, найважливіший; складена форма вищого ступеня: більш солодкий, менш кислий... складена форма найвищого ступеня порівняння: найбільш солодкий, найменш кислий."
-§3.9: "Купівля (закупи): магазини і ринки; споживчі товари; одиниці ваги й об’єму; гроші."
-Alignment: This module introduces adjective comparisons (cheap/cheaper/cheapest) as per §4.3.1 and covers the thematic requirements for shopping contexts and currency handling specified in Catalogue B (§3.9).
+§4.3.1: "Ступені порівняння якісних прикметників: проста форма вищого ступеня: солодший, важливіший; проста форма найвищого ступеня: найсолодший, найважливіший; складена форма вищого ступеня: більш солодкий, менш кислий...; суплетивні форми: великий – більший, найбільший..."
+§3.9: "Купівля (закупи): магазини і ринки; споживчі товари...; одиниці ваги й об’єму; гроші."
+Alignment: The module teaches grammar for adjective degrees (§4.3.1) and applies it to the thematic context of shopping, negotiations, and product comparisons (§3.9).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| ціна | High (Thematic) | вигідна ціна, ціна зі знижкою, фіксована ціна |
-| знижка | High (Thematic) | сезонна знижка, акційна ціна, надати знижку |
-| решта | High (Practical) | дати решту, правильна решта, дрібна решта |
-| чек | High (Practical) | касовий чек, видати чек, зберігати чек |
-| кращий | High (Irregular) | набагато кращий, кращий варіант, найкраща якість |
-| дешевий | High (Grammar) | дешевший за..., найбільш дешевий товар |
+| ціна | High (shopping) | вигідна ціна, ціна зі знижкою |
+| знижка | High (shopping) | сезонна знижка, акційна ціна |
+| кращий | Very High (grammar) | кращий варіант, найкраща якість |
+| дешевий| High (grammar) | дешевший за, найбільш дешевий |
+| решта | Medium (transaction) | дати решту, правильна решта |
+| чек | High (shopping) | касовий чек, видати чек |
 
 ## Cultural Hooks
-1. **The Social Ritual of "Bazar"**: Bargaining in Ukrainian markets (базар/ринок) is less about aggressive haggling and more about building rapport. A polite conversation with a "regular" vendor (свій продавець) is the standard way to secure fresh products and "friendly" prices.
-2. **Freshness Hierarchy**: Buying from "grannies" (бабусі) who sell produce from their own gardens is culturally perceived as superior to supermarket organic brands. These small-scale transactions often involve units like "стакан" (glass) for berries or "пучок" (bunch) for herbs.
+1. Ukrainian markets (базар/ринок) involve building a relationship with "свій продавець" (your regular vendor) rather than aggressive haggling, leading to friendly pricing and better quality.
+2. Produce from local "бабусі" (grannies) is highly valued over supermarket organic items, introducing measurements like "стакан" (glass) and "пучок" (bunch).
 
 ## Common Learner Errors
-1. **Phonetic Stem Changes** (г+ш -> жч): Learners often produce "дорожший" instead of the correct "дорожчий" or "ближший" instead of "ближчий."
-2. **Double Comparison Contamination**: Using both "більш" and a comparative suffix (e.g., *більш дешевший* instead of *більш дешевий* or *дешевший*).
-3. **Comparative Particles**: Incorrectly using "як" (as) instead of "ніж" (than) or the preposition "за" + Accusative for direct comparisons.
+1. Double comparison (contamination) → *більш дешевший*. Correct form: більш дешевий or дешевший. — Happens because learners mix synthetic and analytic forms.
+2. Phonetic stem changes → *дорожший* instead of дорожчий, *ближший* instead of ближчий. — Happens due to missing the consonant mutation rules (г/ж/з + ш -> жч).
+3. Incorrect preposition for "than" → using *як* instead of *ніж* or *за* + Accusative. Correct: дешевший за цей.
 
 ## Cross-References
-- Builds on: A1 Modules for Nouns (Gender/Case basics), A1 Numbers (1-100 for prices), and A2 Food/Clothing (thematic items).
-- Prepares for: B1.7-8 (Consumerism and Modern Economy), B2.12 (Business and Negotiation Register).
+- Prepares for: Future modules involving complex descriptive language and negotiation.
+- Builds on: Basic adjectives and cases (A1/A2).
 
 ## Notes for Content Writing
-- Focus on the practical distinction between "магазин" (standard fixed prices) and "ринок" (dynamic negotiation).
-- Introduce Digital Shopping terms (кошик, оформити, доставка) as they are high-frequency in modern Ukraine.
-- Use comparative forms primarily for price and quality—the most common contexts for A2 learners.
+- Decolonized framing: Treat the synthetic forms (солодший, найсолодший) as the primary, highly productive Ukrainian mechanism. Avoid comparing it to Russian.
+- Use Band 2 Immersion (60-75%): English used ONLY to explain the abstract grammar of comparison and superlative forms. Ukrainian used for all dialogues, intros, and practice instructions.
+- Avoid Russianisms: use "їсти" not "кушати", "отримувати" not "получати".
+- Use IPA on first occurrence only, e.g., о = [ɔ], е = [ɛ], ч = [t͡ʃ].
