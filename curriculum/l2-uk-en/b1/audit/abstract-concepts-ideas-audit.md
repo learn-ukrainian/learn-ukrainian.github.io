@@ -1,7 +1,7 @@
 # Audit Report: M52 — abstract-concepts-ideas.md
 **Level:** B1 | **Module:** M52 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:50:12
+**Generated:** 2026-02-24 21:50:22
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,41 +16,20 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | match-up | Знайдіть пару: концепція та її значення | 12 | 8 | ✅ |
-| 2 | fill-in | Вставте пропущене слово | 8 | 8 | ✅ |
-| 3 | unjumble | Складіть речення | 6 | 6 | ✅ |
-| 4 | quiz | Перевірте свої знання | 8 | 8 | ✅ |
-| 5 | true-false | Правда чи неправда | 8 | 8 | ✅ |
-| 6 | group-sort | Розподіліть слова за категоріями | 12 | 12 | ✅ |
-| 7 | error-correction | Виправте помилки | 6 | 6 | ✅ |
-| 8 | mark-the-words | Знайдіть абстрактні іменники | 11 | 6 | ✅ |
-| 9 | select | Оберіть усі правильні відповіді | 6 | 6 | ✅ |
-| 10 | cloze | Заповніть пропуски | 14 | 12 | ✅ |
-
-**Summary:**
-- Total activities: 10 (target: 8-12) ✅
-- Unique types: 10 (minimum: 4) ✅
-- Priority types used: 3/4 (mark-the-words, match-up, quiz) ✅
-- Required types used: 3/3 (fill-in, match-up, quiz) ✅
-- Low density activities: 0
-
 ## Gates
 - **Words:** ✅ 4176/4000 (raw: 4760)
-- **Activities:** ✅ 10/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 10/4 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 30 < 35 (soft target)
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.3% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

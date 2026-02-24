@@ -2,40 +2,32 @@
 
 ## State Standard Reference
 §4.3.4: "Утворення іменників від дієслів: читати – читання, говорити – говоріння, бачити – бачення."
-Alignment: This module focuses on abstract nouns derived from verbs (e.g., *перетворення, зростання, бачення*), which is the core morphological competency for describing processes at B1+.
-
-Additional thematic alignment:
-- §3.6 (Суспільні відносини): суспільні проблеми, війна і мир (social changes).
-- §3.14 (Природне середовище): клімат, пори року (natural cycles/processes).
+Alignment: This module fulfills the B1 requirement for understanding and utilizing systematic word formation, specifically focusing on deverbal nouns (-ння/-ення suffixes) as a core tool to describe abstract processes, trends, and changes.
 
 ## Vocabulary Frequency
-| Word | Frequency / Notes | Key collocations |
+| Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **зміна** | High (Top 500) | *радикальна зміна, кліматичні зміни, вітер змін, внести зміни* |
-| **розвиток** | High (Top 500) | *сталий розвиток, розвиток подій, всебічний розвиток, зупинити розвиток* |
-| **зростання** | Med-High | *економічне зростання, особистісне зростання, темпи зростання* (NOT *ріст* for abstract) |
-| **перетворення** | Medium | *процес перетворення, чудесне перетворення, перетворення енергії* |
-| **занепад** | Low-Medium | *період занепаду, занепад культури, економічний занепад* |
-| **тенденція** | Medium | *позитивна тенденція, зберігається тенденція, модна тенденція* |
-| **еволюція** | Low-Medium | *еволюція поглядів, теорія еволюції* |
+| зміна | High (Top 500) | радикальна зміна, кліматичні зміни, внести зміни |
+| розвиток | High (Top 500) | сталий розвиток, розвиток подій, всебічний розвиток |
+| зростання | High abstract form | економічне зростання, особистісне зростання, темпи зростання |
+| тенденція | High business/news | позитивна тенденція, зберігається тенденція |
+| перетворення | Medium | процес перетворення, перетворення енергії |
+| занепад | Medium | період занепаду, занепад культури, економічний занепад |
 
 ## Cultural Hooks
-1. **Demographic Shift**: Since 1990, Ukraine's population has decreased by ~20% (a major *negative trend* / *занепад* in demographics), yet civil society trust has *grown* (*зростання*) to record highs (88% belief in victory).
-2. **Geopolitical Vector**: A historic *transformation* (*перетворення*) of public opinion: in 2003, 76% supported a union with Russia; by 2023, absolute majority support EU/NATO integration. This is a perfect example of *еволюція поглядів*.
+1. The remarkable evolution of civil society in Ukraine: contrasting the demographic decrease since 1990 with the record growth (88%) in civil society trust, volunteerism, and belief in victory, providing a real-world context for 'зростання' and 'спад'.
+2. The "еволюція поглядів" (evolution of views): The historic, systemic shift in public opinion toward EU and NATO integration from 2003 to 2023, showcasing 'перетворення' and 'розвиток подій'.
 
 ## Common Learner Errors
-1. **Ріст vs Зростання**: Using *ріст* for abstract concepts (e.g., *ріст економіки* - surzhyk/calque).
-   → Correct: *зростання економіки*. *Ріст* is primarily biological/physical (*ріст клітин*), *зріст* is height (*високий на зріст*).
-2. **Рости vs Зростати**: Using *рости* for abstract increases.
-   → Correct: *ціни зростають* (prices increase), *напруга зростає*. *Рости* is for children/trees (*дитина росте*).
-3. **Зміна vs Решта**: Asking for "change" (money) as *зміна*.
-   → Correct: *решта* (coins/change back). *Зміна* is alteration/shift (*зміна клімату*).
+1. Confusing "ріст" with "зростання" → "Ріст" is for physical/biological growth (children, trees), while "зростання" is for abstract/economic concepts (prices, tension, economy). This is a frequent calque.
+2. Confusing "рости" with "зростати" → Similar to the noun forms, learners use "рости" for prices instead of the abstract "зростати".
+3. Confusing "зміна" with "решта" → Learners often use "зміна" (alteration/change) when asking for their "решта" (monetary change) in a shop.
 
 ## Cross-References
-- **Builds on**: b1-52 (Abstract Concepts: Ideas) - moves from static ideas to dynamic processes.
-- **Prepares for**: b1-54 (Expressing Opinions) - need process vocab to argue *why* things are getting better/worse.
+- Builds on: b1-52 (Abstract Concepts Ideas)
+- Prepares for: b1-54 (Expressing Opinions)
 
 ## Notes for Content Writing
-- **Persona Application**: As a "Business Consultant", frame the *Вступ* and *Діалоги* around analysing trends (market trends, personal growth).
-- **Morphology Focus**: Explicitly teach the `-ння/-ення` suffix pattern as a tool for creating process nouns (e.g., *покращувати → покращення*).
-- **Agency Rule**: Ensure examples show Ukrainians *driving* the changes (*Ми змінили країну*), not just passive observers (*Країна змінилася*).
+- Decolonized Framing: Frame the morphological process of creating deverbal nouns (-ння suffix) as an elegant, intrinsic feature of Ukrainian, avoiding comparisons to Russian paradigms.
+- The "Agency Rule": Emphasize Ukrainians as active drivers of change ("Ми змінили країну", "Суспільство трансформується") rather than passive subjects. Ensure active voice and agency in examples.
+- Ensure 100% immersion. Use explicit, simple Ukrainian scaffolding. Check examples to eliminate any Russianisms (e.g., use 'отримувати' instead of 'получати', 'їсти' instead of 'кушати').
