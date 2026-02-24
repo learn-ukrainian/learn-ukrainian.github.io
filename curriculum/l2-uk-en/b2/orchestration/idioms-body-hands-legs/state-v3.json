@@ -1,0 +1,17 @@
+{
+  "track": "b2",
+  "slug": "idioms-body-hands-legs",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T21:29:19Z",
+      "task_id": "v3-idioms-body-hands-legs-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T21:31:38Z"
+    }
+  }
+}

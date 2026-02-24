@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "set-expressions-i-body-animals",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T21:04:39Z",
+      "task_id": "v3-set-expressions-i-body-animals-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T21:06:47Z",
+      "note": "word-count-3077-below-80pct-4000"
+    }
+  }
+}

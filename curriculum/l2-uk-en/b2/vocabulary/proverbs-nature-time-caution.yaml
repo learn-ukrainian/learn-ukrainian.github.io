@@ -1,0 +1,159 @@
+items:
+  - lemma: "верба"
+    ipa: '[ʋɛrˈbɑ]'
+    translation: "willow"
+    pos: "noun"
+    gender: "f"
+    notes: "сакральний символ; частотна у висловах про воду та Україну"
+  - lemma: "брід"
+    ipa: '[brʲid]'
+    translation: "ford"
+    pos: "noun"
+    gender: "m"
+    notes: "місце для переходу річки; ключовий образ у прислів'ях про ризик"
+  - lemma: "згаяний"
+    ipa: '[ˈzɦɑjɑnɪj]'
+    translation: "wasted / lost"
+    pos: "adjective"
+    notes: "вживається переважно з часом ('згаяний час')"
+  - lemma: "термін"
+    ipa: '[ˈtɛrmʲin]'
+    translation: "term"
+    pos: "noun"
+    gender: "m"
+    notes: "для обговорення лінгвістичних аспектів фразеології"
+  - lemma: "поняття"
+    ipa: '[pɔˈnʲɑtʲːɑ]'
+    translation: "concept"
+    pos: "noun"
+    gender: "n"
+    notes: "абстрактна одиниця мудрості"
+  - lemma: "процес"
+    ipa: '[prɔˈt͡sɛs]'
+    translation: "process"
+    pos: "noun"
+    gender: "m"
+    notes: "розвиток подій у часі"
+  - lemma: "метод"
+    ipa: '[ˈmɛtɔd]'
+    translation: "method"
+    pos: "noun"
+    gender: "m"
+    notes: "спосіб досягнення результату через планування"
+  - lemma: "бузина"
+    ipa: '[buzɪˈnɑ]'
+    translation: "elderberry"
+    pos: "noun"
+    gender: "f"
+    notes: "символ алогізму у відомій ідіомі"
+  - lemma: "калька"
+    ipa: '[ˈkɑlʲkɑ]'
+    translation: "calque / literal translation"
+    pos: "noun"
+    gender: "f"
+    notes: "мовна помилка, спричинена дослівним перекладом"
+  - lemma: "суржик"
+    ipa: '[ˈsurʒɪk]'
+    translation: "surzhyk"
+    pos: "noun"
+    gender: "m"
+    notes: "змішане мовлення, якого слід уникати"
+  - lemma: "аналіз"
+    ipa: '[ɑˈnɑlʲiz]'
+    translation: "analysis"
+    pos: "noun"
+    gender: "m"
+    notes: "розгляд структури прислів'я"
+  - lemma: "синтез"
+    ipa: '[ˈsɪntɛz]'
+    translation: "synthesis"
+    pos: "noun"
+    gender: "m"
+    notes: "поєднання знань у власному висловлюванні"
+  - lemma: "дослідження"
+    ipa: '[dɔˈsʲlʲid͡ʒɛnʲːɑ]'
+    translation: "research / study"
+    pos: "noun"
+    gender: "n"
+    notes: "пошук етимології народних висловів"
+  - lemma: "хліборобський"
+    ipa: '[xlʲibɔˈrɔbsʲkɪj]'
+    translation: "agricultural"
+    pos: "adjective"
+  - lemma: "прислів'я"
+    ipa: '[prɪˈsʲlʲiu̯jɑ]'
+    translation: "proverb"
+    pos: "noun"
+    gender: "n"
+  - lemma: "світогляд"
+    ipa: '[sʲʋʲiˈtɔɦlʲɑd]'
+    translation: "worldview"
+    pos: "noun"
+    gender: "m"
+  - lemma: "мачуха"
+    ipa: '[ˈmɑt͡ʃuxɑ]'
+    translation: "stepmother"
+    pos: "noun"
+    gender: "f"
+  - lemma: "закономірність"
+    ipa: '[zɑkɔnɔˈmʲirnʲisʲtʲ]'
+    translation: "regularity / pattern"
+    pos: "noun"
+    gender: "f"
+  - lemma: "неминучий"
+    ipa: '[nɛmɪˈnut͡ʃɪj]'
+    translation: "inevitable"
+    pos: "adjective"
+  - lemma: "непередбачуваний"
+    ipa: '[nɛpɛrɛˈdbɑt͡ʃuʋɑnɪj]'
+    translation: "unpredictable"
+    pos: "adjective"
+  - lemma: "наслідок"
+    ipa: '[ˈnɑsʲlʲidɔk]'
+    translation: "consequence"
+    pos: "noun"
+    gender: "m"
+  - lemma: "коваль"
+    ipa: '[kɔˈʋɑlʲ]'
+    translation: "blacksmith"
+    pos: "noun"
+    gender: "m"
+  - lemma: "втручання"
+    ipa: '[ʍtruˈt͡ʃɑnʲːɑ]'
+    translation: "intervention"
+    pos: "noun"
+    gender: "n"
+  - lemma: "ожеледиця"
+    ipa: '[ɔʒɛˈlɛdɪt͡sʲɑ]'
+    translation: "black ice"
+    pos: "noun"
+    gender: "f"
+  - lemma: "тріска"
+    ipa: '[tʲrʲiskɑ]'
+    translation: "splinter"
+    pos: "noun"
+    gender: "f"
+  - lemma: "синиця"
+    ipa: '[sɪˈnɪt͡sʲɑ]'
+    translation: "tit (bird)"
+    pos: "noun"
+    gender: "f"
+  - lemma: "журавель"
+    ipa: '[ʒurɑˈʋɛlʲ]'
+    translation: "crane (bird)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "нездоланний"
+    ipa: '[nɛzdɔˈlɑnːɪj]'
+    translation: "insurmountable"
+    pos: "adjective"
+  - lemma: "уособлення"
+    ipa: '[uɔˈsɔblɛnʲːɑ]'
+    translation: "personification"
+    pos: "noun"
+    gender: "n"
+  - lemma: "імплементація"
+    ipa: '[implɛmɛnˈtɑt͡sʲijɑ]'
+    translation: "implementation"
+    pos: "noun"
+    gender: "f"
