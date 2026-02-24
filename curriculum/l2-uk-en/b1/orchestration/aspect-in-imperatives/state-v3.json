@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "aspect-in-imperatives",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T20:54:57Z",
+      "task_id": "v3-aspect-in-imperatives-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T20:57:44Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T21:01:00Z",
+      "task_id": "v3-aspect-in-imperatives-pC"
+    }
+  }
+}

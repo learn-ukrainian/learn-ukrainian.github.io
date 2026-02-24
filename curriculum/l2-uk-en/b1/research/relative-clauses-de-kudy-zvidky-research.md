@@ -1,34 +1,30 @@
 # Дослідження: Підрядні означальні: де, куди, звідки
 
 ## State Standard Reference
-§4.4.3: "складнопідрядне речення зі з’ясувальною підрядною частиною (сполучні слова що, хто, де, куди, звідки): Люблю мріяти, що ми з друзями робитимемо під час канікул. ... Ви не підкажете, де мій словник? Наші батьки знають, куди ми поїхали"
-Alignment: Although the Standard lists these under "explanatory" clauses (з'ясувальні), this module expands their use to "attributive" clauses (означальні) modifying a noun (e.g., "місто, де я живу"), which is the functional equivalent at B1 level and essential for natural speech.
+§4.4.3: "складнопідрядне речення зі з’ясувальною підрядною частиною (сполучні слова що, хто, де, куди, звідки): ... Ви не підкажете, де мій словник? Наші батьки знають, куди ми поїхали;"
+Alignment: This module addresses the B1 requirement for complex sentences with spatial conjunctions. While the Standard categorizes some of these as object (з'ясувальні) clauses, this module specifically focuses on their attributive (означальні) use when modifying spatial nouns (місце, місто, країна) — functionally bridging §4.4.3 spatial connectors with attributive relative clause structures.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **де** | High (Top 100) | де саме (exactly where), там де (there where), місце де (the place where), місто де (the city where) |
-| **куди** | High (Top 200) | куди саме, туди куди (there [to] where), напрямок куди (direction where), не знати куди (not know where [to go]) |
-| **звідки** | Medium | звідки саме, звідти звідки (from there from where), країна звідки (country from where), джерело звідки (source from where) |
+| де | High (Top 100) | де саме, там де, місце де |
+| куди | High (Top 200) | куди саме, туди куди, напрямок куди |
+| звідки | Medium | звідки саме, звідти звідки, джерело звідки |
 
 ## Cultural Hooks
-1. **Arsenalna Metro Station**: "Станція Арсенальна — це місце, **де** починається найглибше метро у світі (105.5 м)." (Kyiv)
-2. **Geographical Center of Europe**: "Рахів — це місто, **поблизу якого** (або **де**) знаходиться географічний центр Європи." (Transcarpathia)
-3. **Optymistychna Cave**: "Печера Оптимістична — це місце, **куди** приїжджають спелеологи з усього світу (найдовша гіпсова печера)."
+1. Станція "Арсенальна" (Kyiv) — The deepest metro station in the world (105.5m), serving as a perfect context for "місце, де...".
+2. Рахів (Zakarpattia) — Near the geographical center of Europe, providing geographic anchors for direction and location clauses.
+3. Печера "Оптимістична" (Ternopil region) — The longest gypsum cave in the world, ideal for discussing destinations: "джерело пригод, куди...".
 
 ## Common Learner Errors
-1. **Motion vs. Static**: *Де ти йдеш?* (Wrong) → *Куди ти йдеш?* (Correct).
-   *   *Why*: English "where" covers both location and direction. Ukrainian strictly separates `де` (locative/static) and `куди` (accusative/dynamic).
-2. **Origin confusion**: *Де ти прийшов?* (Wrong) → *Звідки ти прийшов?* (Correct).
-   *   *Why*: Overgeneralization of "where".
-3. **Preposition doubling**: *Місце, в де я живу* (Wrong) → *Місце, де я живу* (Correct).
-   *   *Why*: Learners try to translate "in which" literally using "in + where", but `де` absorbs the preposition usage in this context.
+1. Confusion of location vs. direction (де vs. куди) → Using "де" for destination due to English L1 interference ("Where are you going?"). Ukrainian strictly distinguishes static location (де) and dynamic destination (куди).
+2. Double preposition error → Saying "місце, в де я живу" instead of "місце, де я живу". Prepositions of location/direction are already embedded in the semantics of "де/куди/звідки" in relative clauses.
 
 ## Cross-References
 - Builds on: b1-26 (Relative Clauses який)
 - Prepares for: b1-28 (Relative Clauses коли/що)
 
 ## Notes for Content Writing
-- **Visuals**: Use icons to distinguish Static (📍 Pin) vs Dynamic (➡️ Arrow) vs Source (⬅️ Origin).
-- **Register**: Note that in very formal/official texts, `в якому` (in which) is often preferred over `де`, but `де` is standard for neutral/conversational B1.
-- **Pedagogy**: Explicitly contrast `місто, де...` (place) vs `місто, яке...` (description).
+- Decolonized framing: Emphasize the precision of the Ukrainian spatial triad (де/куди/звідки) as an inherent feature of the language's logical structure. Do not use Russian as a baseline. Contrast with English to highlight Ukrainian's exactness regarding movement versus state.
+- Immersion is 100% (B1.3a phase). All explanations, grammar theory, and tips must be in Ukrainian without English translations in parentheses.
+- Ensure pronunciation tips highlight the Ukrainian vowels correctly (о = [ɔ], е = [ɛ]).

@@ -1,0 +1,25 @@
+{
+  "slug": "numeral-declension-time-dates",
+  "track": "b2",
+  "module_num": 31,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T08:32:59Z",
+      "words": 3982,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T08:36:44Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T08:36:44Z",
+      "note": "v3-phase-C"
+    }
+  },
+  "last_updated": "2026-02-24T08:36:44Z"
+}

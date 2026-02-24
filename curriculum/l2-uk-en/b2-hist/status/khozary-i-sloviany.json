@@ -1,0 +1,64 @@
+{
+  "module": "khozary-i-sloviany",
+  "level": "B2",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-24T11:23:02.347557Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T11:21:13.385372Z",
+    "meta": "2026-02-24T11:22:20.816563Z",
+    "activities": "2026-02-24T00:50:39.644118Z",
+    "vocabulary": "2026-02-24T11:17:59.155844Z",
+    "plan": "2026-02-18T19:03:36.247044Z",
+    "research": "2026-02-22T10:35:24.501406Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6589/5000 (raw: 6912)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

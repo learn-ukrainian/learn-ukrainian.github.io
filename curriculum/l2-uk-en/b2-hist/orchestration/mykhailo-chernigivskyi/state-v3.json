@@ -8,6 +8,15 @@
       "ts": "2026-02-19T12:59:41Z",
       "task_id": "v3-mykhailo-chernigivskyi-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T09:35:12Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T09:36:29Z",
+      "task_id": "v3-mykhailo-chernigivskyi-pC"
     }
   }
 }

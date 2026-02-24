@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "motion-full-prefix-integration",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T22:12:47Z",
+      "task_id": "v3-motion-full-prefix-integration-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T22:23:57Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T22:26:35Z",
+      "task_id": "v3-motion-full-prefix-integration-pC"
+    }
+  }
+}

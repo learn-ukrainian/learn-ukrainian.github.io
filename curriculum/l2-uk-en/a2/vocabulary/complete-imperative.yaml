@@ -1,0 +1,126 @@
+items:
+  - lemma: "хай"
+    ipa: '[xɑj]'
+    translation: "let (particle)"
+    pos: "particle"
+    notes: "interchangeable with нехай"
+  - lemma: "нехай"
+    ipa: '[nɛˈxɑj]'
+    translation: "let (particle)"
+    pos: "particle"
+    notes: "slightly more formal than хай"
+  - lemma: "будьмо"
+    ipa: '[ˈbudʲmɔ]'
+    translation: "cheers / let us be"
+    pos: "interjection"
+    notes: "standard drinking toast"
+  - lemma: "бажати"
+    ipa: '[bɑˈʒɑtɪ]'
+    translation: "to wish"
+    pos: "verb"
+    aspect: "impf"
+    notes: "requires the Genitive case"
+  - lemma: "ходімо"
+    ipa: '[xɔˈdʲimɔ]'
+    translation: "let's go"
+    pos: "verb"
+    notes: "imperative form of йти/ходити"
+  - lemma: "мріяти"
+    ipa: '[ˈmrʲijɑtɪ]'
+    translation: "to dream"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "казати"
+    ipa: '[kɑˈzɑtɪ]'
+    translation: "to say / to tell"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "пити"
+    ipa: '[ˈpɪtɪ]'
+    translation: "to drink"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "робімо"
+    ipa: '[rɔˈbʲimɔ]'
+    translation: "let's do"
+    pos: "verb"
+  - lemma: "щастити"
+    ipa: '[ʃt͡ʃɑˈstɪtɪ]'
+    translation: "to be lucky"
+    pos: "verb"
+    aspect: "impf"
+    usage: "хай щастить (good luck)"
+  - lemma: "готувати"
+    ipa: '[ɦɔtuˈʋɑtɪ]'
+    translation: "to cook"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "борщ"
+    ipa: '[bɔrʃt͡ʃ]'
+    translation: "borscht"
+    pos: "noun"
+    gender: "m"
+  - lemma: "намет"
+    ipa: '[nɑˈmɛt]'
+    translation: "tent"
+    pos: "noun"
+    gender: "m"
+  - lemma: "провідник"
+    ipa: '[prɔʋʲiˈdnɪk]'
+    translation: "guide"
+    pos: "noun"
+    gender: "m"
+  - lemma: "Карпати"
+    ipa: '[kɑrˈpɑtɪ]'
+    translation: "Carpathian mountains"
+    pos: "noun"
+    gender: "p"
+  - lemma: "успіх"
+    ipa: '[ˈusʲpʲix]'
+    translation: "success"
+    pos: "noun"
+    gender: "m"
+  - lemma: "щастя"
+    ipa: '[ˈʃt͡ʃɑsʲtʲɑ]'
+    translation: "happiness"
+    pos: "noun"
+    gender: "n"
+  - lemma: "здоров'я"
+    ipa: '[zdɔˈrɔu̯jɑ]'
+    translation: "health"
+    pos: "noun"
+    gender: "n"
+  - lemma: "вітер"
+    ipa: '[ˈʋʲitɛr]'
+    translation: "wind"
+    pos: "noun"
+    gender: "m"
+  - lemma: "дощ"
+    ipa: '[dɔʃt͡ʃ]'
+    translation: "rain"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кипіти"
+    ipa: '[kɪˈpʲitɪ]'
+    translation: "to boil"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "сонячний"
+    ipa: '[ˈsɔnʲɑt͡ʃnɪj]'
+    translation: "sunny"
+    pos: "adj"
+  - lemma: "погода"
+    ipa: '[pɔˈɦɔdɑ]'
+    translation: "weather"
+    pos: "noun"
+    gender: "f"
+  - lemma: "зустріч"
+    ipa: '[ˈzustʲrʲit͡ʃ]'
+    translation: "meeting"
+    pos: "noun"
+    gender: "f"
+  - lemma: "допомагати"
+    ipa: '[dɔpɔmɑˈɦɑtɪ]'
+    translation: "to help"
+    pos: "verb"
+    aspect: "impf"

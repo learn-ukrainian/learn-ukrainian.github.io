@@ -1,35 +1,43 @@
 # Дослідження: Демінутиви: майстер-клас
 
 ## State Standard Reference
-§4.4.1.2 (A2) / §4.5.1 (B1) / §4.4.1.2 (B2): "Стилістичні засоби лексики: ... зменшувально-пестливі форми: хлопець – хлопчик, дощ – дощик, донька – донечка"
-Alignment: This module bridges the A2 introduction of forms with B1/B2 pragmatic mastery, focusing on register distinction (B1 §4.5.1) and the unique Ukrainian feature of verbal/adverbial diminutives.
+§4.5.1: "Офіційне й неофіційне спілкування: Стилістичні засоби лексики... Стилістичні засоби синтаксису"
+Alignment: The term "зменшувально-пестливі форми" (diminutives) is not explicitly named in the B1 section of the Standard (it explicitly appears from B2 §4.4.1.2 at line 3466). However, the curriculum plan maps it to B1 §4.5.1 'Офіційне й неофіційне спілкування' (Register distinction — formal vs informal) as a stylistic tool. The alignment focuses on diminutives as primary lexical markers of informal register and emotional nuance.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **матуся / матусенька** | High (Everyday/Family) | рідна матуся, люба матуся |
-| **сонечко** | High (Term of endearment) | моє сонечко, ясне сонечко |
-| **гарненько** | High (Adverbial) | сядь гарненько, зроби гарненько |
-| **спатоньки / їстоньки** | Medium (Unique verb forms) | хотіти спатоньки, пора їстоньки |
-| **хлібчик** | High (Food/Hospitality) | свіжий хлібчик, шматочок хлібчика |
-| **ручка / ніжка** | High (Body parts/Objects) | (polite/medical context for patients), дверна ручка (desemanticized) |
-| **кава / кавуся** | Medium (Urban culture) | попити кавусі, смачна кавуся |
+| матуся / матусенька | Very High (Spoken/Folklore) | рідна матуся, люба матуся |
+| сонечко | Ubiquitous (Endearment) | моє сонечко, ясне сонечко |
+| гарненько | High (Adverbial) | сядь гарненько, зроби гарненько |
+| хлібчик | High (Service/Hospitality) | свіжий хлібчик, шматочок хлібчика |
+| ручка | Very High (Polysemous) | болить ручка, дати ручку |
+| кавуся | High (Modern Urban) | попити кавусі, смачна кавуся |
+| демінутив | Low (Academic/Linguistic) | український демінутив, утворити демінутив |
+| зменшувально-пестливий | Medium (Educational) | зменшувально-пестливий суфікс, зменшувально-пестлива форма |
+| ніжність | High (Abstract) | з ніжністю, материнська ніжність |
+| ввічливість | High (Abstract) | заради ввічливості, справжня ввічливість |
+| іронія | Medium (Abstract) | з іронією, тонка іронія |
+| суфікс | Medium (Educational) | додати суфікс, пестливий суфікс |
+| відтінок | High (Abstract/Stylistic) | емоційний відтінок, відтінок значення |
+| розумничок | Medium (Colloquial/Ironic) | ну ти й розумничок |
+| укольчик | Specific (Medical Register) | зробити укольчик, болючий укольчик |
 
 ## Cultural Hooks
-1.  **Verbal Diminutives**: Ukrainian is unique among Slavic languages for having diminutive forms of verbs (*спатоньки*, *їстоньки*, *ходитоньки*) and adverbs (*тихенько*, *швиденько*). This reflects the deep-seated "cordocentrism" (heart-centeredness) of Ukrainian culture.
-2.  **Irony & Sarcasm**: Contrary to the "sweetness" stereotype, diminutives are a primary tool for sarcasm in adult speech (e.g., "Ну ти й розумничок!" can mean "You idiot" depending on intonation).
-3.  **Professional "Softening"**: Medical staff often use diminutives (*ручка*, *ніжка*, *укольчик*) to reduce patient anxiety, known as "hospital register".
+1. **Cordocentrism (Кордоцентризм):** A key philosophical concept in Ukrainian culture (emphasized by thinkers like Hryhorii Skovoroda and Pamfil Yurkevych) viewing the heart as the center of human existence. This explains the extreme productivity of diminutives to express empathy, soulfulness, and connection.
+2. **The "Service Diminutive" Phenomenon:** In modern Ukrainian urban culture (especially coffee shops and restaurants), baristas and waiters extensively use diminutives (кавуся, десертик, рахуночок) to build a cozy, non-threatening, and hospitable atmosphere, contrasting with rigid formality.
 
 ## Common Learner Errors
-1.  **Register Mismatch**: Using diminutives in formal/official contexts (e.g., *документики*, *підписочок*) → Perceived as unprofessional or bribing/manipulative behavior.
-2.  **Tautology**: *Маленький килимок* (Small small-rug) → *Килимок* or *Маленький килим*.
-3.  **Over-sweetening**: Overusing forms like *смачненький борщик* in neutral contexts → Sounds infantilizing or obsequious.
-4.  **Desemanticization confusion**: Thinking *ручка* (pen) is always a small hand, or *ніжка* (table leg) is a small leg.
+1. **Tautology (Redundancy)** → Saying "маленький котик" instead of just "котик" or "малий кіт". — Learners map English syntax ("little cat") directly, ignoring that the suffix `-ик` already contains the meaning of "little", making the adjective redundant.
+2. **Register Mismatch** → Using "документики" or "грошенята" in a formal setting. — Learners assume diminutives are always polite, but in formal official settings, they sound unprofessional, infantilizing, or mocking.
+3. **Over-sweetening** → Combining multiple diminutives unnaturally. — Using too many diminutives in one sentence without native intuition sounds artificial or manipulative.
 
 ## Cross-References
-- Builds on: **A2** (Basic noun declension), **B1-47** (Passive - contrast in register)
-- Prepares for: **B1-49** (Numerals - collective forms often trigger diminutives: *двоє діток*), **B2** (Stylistics & Irony)
+- Builds on: b1-47 (Passive Constructions)
+- Prepares for: b1-49 (Numerals Collectives Fractions)
 
 ## Notes for Content Writing
-- **Focus Shift**: Move beyond simple Noun suffixes. Dedicate significant space to **Pragmatics** (when *not* to use them).
-- **Unique Feature**: Must teach *Adjective* (-еньк-) and *Adverb* (-енько) forms as they are highly productive in B1 speech.
+- **Decolonized Framing**: Position the extreme productivity of diminutives (including verbs and adverbs) as an independent, rich feature of Ukrainian emotional architecture (cordocentrism). Do not use Russian as a comparative baseline. Focus on the positive, unique qualities of Ukrainian expression.
+- **Immersion**: Ensure no English words appear in the prose or engagement boxes (100% immersion for B1). English is only for the vocabulary table's "Переклад" column.
+- **Structure**: Use explicit H3 subheadings for every sub-topic to maintain pedagogical clarity and structure, avoiding walls of text. Ensure all 4000 words are justified by deep, rich examples, dialogues, and cultural context.
+- **Agency Pass**: Represent Ukrainians as active subjects in all examples.

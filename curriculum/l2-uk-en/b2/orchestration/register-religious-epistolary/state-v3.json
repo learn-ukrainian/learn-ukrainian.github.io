@@ -1,0 +1,13 @@
+{
+  "track": "b2",
+  "slug": "register-religious-epistolary",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T10:12:21Z",
+      "task_id": "v3-register-religious-epistolary-pA",
+      "mode": "full"
+    }
+  }
+}

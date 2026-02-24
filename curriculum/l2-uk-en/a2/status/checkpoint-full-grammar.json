@@ -1,0 +1,67 @@
+{
+  "module": "checkpoint-full-grammar",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T09:24:05.554839Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-23T23:46:17.015668Z",
+    "meta": "2026-02-23T23:44:08.393328Z",
+    "activities": "2026-02-23T23:48:50.273011Z",
+    "vocabulary": "2026-02-23T23:48:50.273350Z",
+    "plan": "2026-02-20T21:05:41.331649Z",
+    "research": "2026-02-23T23:44:08.389792Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Valid Structure | Lint: 1 Format Errors"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2755/2500 (raw: 2956) | pedagogy: 9 violations"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors",
+      "Checkpoint Format Errors"
+    ],
+    "pass_count": 2,
+    "fail_count": 2,
+    "deferred_count": 3
+  }
+}

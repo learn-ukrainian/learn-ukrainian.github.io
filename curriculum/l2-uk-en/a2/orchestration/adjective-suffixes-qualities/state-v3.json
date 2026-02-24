@@ -1,0 +1,27 @@
+{
+  "track": "a2",
+  "slug": "adjective-suffixes-qualities",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T08:46:18Z",
+      "task_id": "v3-adjective-suffixes-qualities-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T08:51:40Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T20:42:36Z",
+      "task_id": "v3-adjective-suffixes-qualities-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T10:14:52Z",
+      "attempts": 2
+    }
+  }
+}

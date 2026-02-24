@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "education-learning",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T22:07:07Z",
+      "task_id": "v3-education-learning-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T22:10:57Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T22:14:00Z",
+      "task_id": "v3-education-learning-pC"
+    }
+  }
+}

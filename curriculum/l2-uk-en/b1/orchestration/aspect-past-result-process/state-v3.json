@@ -1,0 +1,27 @@
+{
+  "track": "b1",
+  "slug": "aspect-past-result-process",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T20:34:49Z",
+      "task_id": "v3-aspect-past-result-process-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T20:37:16Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T20:39:39Z",
+      "task_id": "v3-aspect-past-result-process-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T10:48:31Z",
+      "attempts": 3
+    }
+  }
+}

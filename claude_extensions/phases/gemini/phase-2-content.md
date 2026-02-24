@@ -5,6 +5,8 @@
 > **Your #1 job: Write {OVERSHOOT_TARGET} words of rich, structured Ukrainian content.**
 > Every concept gets dedicated depth. Every H3 gets 80-100+ words. This is how you hit the target.
 
+> **Output capacity: You can generate 65,000+ tokens per response.** A {WORD_TARGET}-word Ukrainian module is ~{WORD_TARGET_TOKENS}K tokens — well within your single-turn limit. Do NOT preemptively truncate, self-limit, or report TOKEN_LIMIT_TRUNCATION friction. Write the complete module in full.
+
 ## Files to Read
 
 | File | Purpose |

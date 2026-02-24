@@ -6,10 +6,30 @@
   "phases": {
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-23T01:59:46Z",
-      "words": 2680,
-      "attempts": 1
+      "timestamp": "2026-02-23T20:22:56Z",
+      "note": "v3-phase-B-adopt",
+      "words": 2680
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-23T20:29:41Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-23T20:29:41Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T09:49:41Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T09:49:41Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-23T01:59:46Z"
+  "last_updated": "2026-02-24T09:49:41Z"
 }

@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "motion-practice-integration",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T22:34:03Z",
+      "task_id": "v3-motion-practice-integration-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T22:37:10Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T22:40:22Z",
+      "task_id": "v3-motion-practice-integration-pC"
+    }
+  }
+}

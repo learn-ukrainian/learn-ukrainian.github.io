@@ -1,0 +1,22 @@
+{
+  "track": "b2",
+  "slug": "word-formation-adverbs-integration",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T09:51:43Z",
+      "task_id": "v3-word-formation-adverbs-integration-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T09:59:16Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T10:03:00Z",
+      "task_id": "v3-word-formation-adverbs-integration-pC"
+    }
+  }
+}

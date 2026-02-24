@@ -2,7 +2,7 @@
 **Level:** B1 | **Module:** M04 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
 **Naturalness:** 9.0/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 11:24:01
+**Generated:** 2026-02-24 11:16:35
 
 ## Configuration
 **Type:** B1-bridge
@@ -17,38 +17,20 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | match-up | Термінологія: Знайдіть пару | 12 | 8 | ✅ |
-| 2 | mark-the-words | Знайдіть граматичну основу | 10 | 6 | ✅ |
-| 3 | quiz | Аналіз речення | 8 | 8 | ✅ |
-| 4 | unjumble | Складіть речення | 6 | 6 | ✅ |
-| 5 | error-correction | Редактор пунктуації | 6 | 6 | ✅ |
-| 6 | fill-in | Оберіть правильний сполучник | 8 | 8 | ✅ |
-| 7 | true-false | Правда чи ні: Структура речення | 8 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 7 (target: 4-8) ✅
-- Unique types: 7 (minimum: 3) ✅
-- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
-- Required types used: 5/5 (fill-in, mark-the-words, match-up, quiz, true-false) ✅
-- Low density activities: 0
-
 ## Gates
 - **Words:** ✅ 4344/4000 (raw: 4574)
-- **Activities:** ✅ 7/4
-- **Density:** ✅ All > 6
-- **Unique_types:** ✅ 7/3 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/20
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 92.1% (target 60-100% (B1.0 Bridge))
 - **Richness:** ✅ 92% (bridge)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

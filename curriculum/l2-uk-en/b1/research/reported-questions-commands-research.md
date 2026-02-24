@@ -1,41 +1,33 @@
 # Дослідження: Непрямі питання та накази
 
 ## State Standard Reference
-§4.4.3 (Syntax: Complex Sentence): "складні речення з непрямою мовою: Викладач сказав, що ми повинні уважно прочитати граматичний матеріал на сторінці 157 підручника. Мама запитала Ігоря, чи він задоволений результатом конкурсу."
-Also relevant: "складнопідрядне речення зі з’ясувальною підрядною частиною (сполучники що, щоб...): Викладач сказав, щоб я багато працював."
-Alignment: Module directly addresses the formation of complex sentences with indirect speech, specifically focusing on interrogative (чи/wh-words) and imperative (щоб) transformations as defined in the B1 standard.
+§4.4.3: "Складні речення з непрямою мовою: Викладач сказав, що ми повинні уважно прочитати граматичний матеріал... Мама запитала Ігоря, чи він задоволений результатом конкурсу. ... Викладач сказав, щоб я багато працював"
+Alignment: Цей модуль безпосередньо покриває синтаксис складнопідрядних речень із непрямою мовою, навчаючи студентів правильного використання сполучників «що», «чи», «щоб» та питальних слів згідно з вимогами рівня B1.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| питання | High (General) | поставити питання, вирішити питання, спірне питання, риторичне питання |
-| наказ | Medium (Official) | віддати наказ, виконати наказ, видати наказ |
-| прохання | High (General) | звернутися з проханням, ввічливе прохання, настійливе прохання |
-| запитати | High (General) | запитати дозволу, запитати дорогу, запитати пораду |
-| наказати | Medium (Narrative) | наказати зробити, суворо наказати |
-| просити | High (General) | просити допомоги, просити пробачення, просити слова |
+| питання | High | поставити питання, вирішити питання, риторичне питання |
+| прохання | High | звернутися з проханням, ввічливе прохання |
+| наказ | Medium (Military/Official) | віддати наказ, виконати наказ |
+| чи | High (Conjunction) | запитати, чи... ; дізнатися, чи... |
+| щоб | High (Conjunction) | сказати, щоб... ; просити, щоб... |
 
 ## Cultural Hooks
-1. **Politeness Hierarchy**: Ukrainians prefer indirect requests ("Чи можна...?", "Чи не могли б ви...?") over direct imperatives in formal contexts. Even with imperatives, "будь ласка" is mandatory to avoid sounding rude.
-2. **"Ty" vs "Vy"**: The shift from direct to reported speech often highlights the relationship dynamic. Reporting a formal request ("Викладач попросив...") often implies a "Ви" relationship, whereas a friend's request might be "Ти".
+1. В українському етикеті уникають прямого імперативу ("наказу") у формальному чи незнайомому оточенні. Натомість домінує "ввічливе прохання" з використанням непрямих форм (напр., "Чи не могли б ви...?"), що відображає глибоку повагу до особистих кордонів співрозмовника.
+2. Дієслово "наказати" має сильний авторитарний відтінок (військовий, офіційний або суворий батьківський). Тому у щоденних побутових та робочих ситуаціях українці віддають перевагу дієсловам "просити", "попросити" або "запропонувати".
 
 ## Common Learner Errors
-1. **Conjunction Confusion**: Using *що* instead of *чи* for Yes/No questions.
-   *   *Error*: Він запитав, що я хочу кави.
-   *   *Correct*: Він запитав, **чи** я хочу кави.
-2. **Question Mark Retention**: Keeping the question mark at the end of an indirect question.
-   *   *Error*: Вона спитала, де я живу?
-   *   *Correct*: Вона спитала, де я живу.
-3. **"Ask to do" Translation**: Translating "ask" as *питати* instead of *просити* when requesting action.
-   *   *Error*: Він питав мене відкрити вікно.
-   *   *Correct*: Він **просив** мене відкрити вікно (або: Він сказав, щоб я відкрив вікно).
-4. **Pronoun/Person Shift**: Forgetting to shift persons (I -> he/she) which confuses the subject of the action.
+1. Використання «що» замість «чи» у загальних питаннях (Yes/No) → *Він запитав, чи я хочу кави* (НЕ *що я хочу кави*). Помилка часто виникає через інтерференцію з англійською мовою (плутанина between *if/whether* and *that*).
+2. Збереження знака питання (?) в кінці речення з непрямим питанням → *Вона спитала, де я живу.* (НЕ *де я живу?*). Студенти забувають про обов'язкову зміну інтонації з питальної на розповідну.
+3. Калькування англійського інфінітива для наказів (ask someone *to do* something) → *Він попросив, щоб я зробив* (НЕ *Він попросив мене зробити*). В українській мові використовується сполучник «щоб» + дієслово у формі минулого часу.
 
 ## Cross-References
-- Builds on: b1-39 (Reported Statements - basic *що* clauses)
-- Prepares for: b1-41 (Checkpoint Complex Sentences 2 - integration of all types)
+- Builds on: b1-39 (Reported Statements)
+- Prepares for: b1-41 (Checkpoint Complex Sentences 2)
 
 ## Notes for Content Writing
-- **Intonation**: Emphasize that indirect questions have falling (narrative) intonation, not rising (interrogative).
-- **"Щоб" + Past Tense**: Highlight the structure *сказав, щоб я зробив* (past tense in subordinate clause despite present/future meaning) as a key pattern for reported commands.
-- **Register**: Contrast "наказати" (strong, military, parental authority) with "просити/попросити" (standard, polite) and "вимагати" (demanding).
+- Уникати порівнянь із російською мовою при поясненні частки «чи». Подавати її як питому й природну ознаку української синтаксичної системи.
+- Чітко та багаторазово розмежувати дієслова «запитати» (мета — отримати інформацію) та «просити» (мета — спонукати до дії).
+- Для пояснення фонетики чи вимови використовувати лише символи IPA у Словнику (для «щоб» - [ʃt͡ʃɔb], «чи» - [t͡ʃɪ]). Жодних латинських транслітерацій у тексті модуля.
+- Підтримувати 100% україномовне занурення. Англійська мова дозволена ТІЛЬКИ в таблиці словника (колонка перекладу).

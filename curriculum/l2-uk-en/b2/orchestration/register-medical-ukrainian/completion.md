@@ -1,0 +1,10 @@
+FAIL: build_module_v2.py b2 20 — E2E
+
+  Module:   register-medical-ukrainian
+  Track:    b2
+  Mode:     e2e
+  Words:    3192 (target: 4000)
+  Sections: ?/?
+  Archive:  no
+  Verdict:  FAIL
+  Date:     2026-02-23T23:50:46Z

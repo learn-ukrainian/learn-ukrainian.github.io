@@ -1,43 +1,37 @@
 # Дослідження: Home and Furniture
 
 ## State Standard Reference
-§3.2: "Дім, помешкання: тип житла (квартира, приватний будинок); частини будинку і назви приміщень; меблі і предмети інтер’єру."
-§4.2.2.6: "Місцевий відмінок: у, в, на (місце перебування особи чи предмета): Друг працює в лікарні. Сумка лежить на столі."
-Alignment: Module introduces essential furniture vocabulary and drills the Locative case for describing item locations, directly fulfilling the communicative intention of describing one's dwelling (§3.2) and the grammatical requirement for Locative case usage (§4.2.2.6).
+§3.2: "Дім, помешкання: тип житла (квартира, приватний будинок); частини будинку і назви приміщень; меблі і предмети інтер’єру..."
+§4.2.2.6: "Місцевий відмінок: у, в, на (місце перебування особи чи предмета): Друг працює в лікарні. Сумка лежить на столі"
+Alignment: This module precisely fulfills the A2 thematic requirement for housing (types of dwellings, rooms, furniture) and the grammatical requirement of using the Locative case for static location with prepositions у/в and на.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| стіл (table) | High (Core A1/A2) | на столі (on the table), ставити стіл (to set the table), письмовий стіл (desk) |
-| стілець (chair) | High (Core A2) | на стільці (on the chair), сидіти на стільці (to sit on a chair) |
-| ліжко (bed) | High (Core A2) | у ліжку (in bed), двоспальне ліжко (double bed), стелити ліжко (to make the bed) |
-| шафа (wardrobe) | Medium (Core A2) | у шафі (in the wardrobe/closet), книжкова шафа (bookcase), шафа-купе (sliding wardrobe) |
-| диван (sofa) | High (Core A2) | на дивані (on the sofa), лежати на дивані (to lie on the sofa) |
-| підлога (floor) | High (Core A2) | на підлозі (on the floor), мити підлогу (to wash the floor) |
-| стіна (wall) | High (Core A2) | на стіні (on the wall), висіти на стіні (to hang on the wall) |
-| килим (carpet) | Medium (Core A2) | на килимі (on the carpet) |
+| стіл | High | на столі, за столом, письмовий стіл |
+| стілець | High | на стільці, сидіти на стільці |
+| ліжко | High | у ліжку, лягати в ліжко |
+| шафа | Medium-High | у шафі, книжкова шафа |
+| диван | Medium | на дивані, лежати на дивані |
+| підлога | High | на підлозі (consonant mutation г→з) |
+| стіна | High | на стіні |
+| кімната | Very High | у кімнаті, моя кімната |
 
 ## Cultural Hooks
-1. **The Threshold (Поріг)**: It is strictly taboo to shake hands or pass objects across the threshold (через поріг) in Ukraine. It is believed to block good luck or separate people. One must step fully inside or outside first.
-2. **Sitting at the Corner**: A common superstition warns unmarried people (especially young women) not to sit at the corner of a table (на розі столу), as it is said they will not marry for seven years ("сім років заміж не вийдеш").
-3. **Domovyk (Доровий)**: In folklore, the *Domovyk* is a household spirit living behind the stove or in a corner. He protects the home if treated well but plays pranks if the house is messy or family members quarrel.
+1. **The Threshold (Поріг)**: A significant boundary in Ukrainian culture. It is considered very bad luck to shake hands, pass items, or talk across the threshold. A guest must be invited inside before greeting properly.
+2. **Domovyk (Домовик)**: The protective household spirit in Ukrainian folklore. He traditionally lives behind the stove or in a corner, protecting the home but demanding respect.
+3. **Corner of the table (На розі столу)**: A common superstition dictates that unmarried people should not sit at the corner of a table, or they won't get married for seven years.
 
 ## Common Learner Errors
-1. **Location vs. Direction**: Confusing "Where?" (Locative) with "Where to?" (Accusative).
-   * *Error*: Я йду в кімнаті. (I go inside the room - static form used for motion)
-   * *Correction*: Я йду в кімнату. (Accusative for motion) / Я в кімнаті. (Locative for location)
-2. **Consonant Mutations**: Forgetting the [г] → [з], [к] → [ц], [х] → [с] shift in Locative.
-   * *Error*: на підлоги (Genitive ending used incorrectly) or на підлогі (No mutation)
-   * *Correction*: на підлозі (Correct mutation [г] → [з] + ending -і).
-3. **Preposition Confusion (У vs НА)**: Using *у* instead of *на* for surface objects.
-   * *Error*: Книжка у столі. (Technically "inside the table's drawer", but usually learners mean "on")
-   * *Correction*: Книжка на столі. (On the surface). Note: *на кухні* (in the kitchen) is a common exception where English uses "in" but Ukrainian uses "on".
+1. **Location vs Direction**: Learners confuse static location (Locative) with motion towards (Accusative). Example: Saying "Я йду в кімнаті" instead of the correct "Я йду в кімнату".
+2. **Kitchen Preposition**: Using "в кухні" instead of the idiomatic "на кухні".
+3. **Consonant Mutations**: Failing to mutate consonants before the Locative ending -і, resulting in errors like "на підлоги" instead of the correct "на підлозі" (г→з).
 
 ## Cross-References
-- **Builds on**: a2-45 (Food and Cooking - likely introduced 'кухня' and basic appliances like 'холодильник').
-- **Prepares for**: a2-61 (Hotel Accommodation - booking rooms, asking for amenities), a2-47 (Nature and Weather - Locative usage extends to 'на вулиці', 'у небі').
+- Builds on: a2-45 (Food and Cooking) — leverages kitchen context and appliances.
+- Prepares for: a2-47 (Nature and Weather), a2-61 (Hotel Accommodation) — expands locative usage.
 
 ## Notes for Content Writing
-- **Visuals**: Use a "Room Map" concept to group vocabulary logically (e.g., Living Room items vs. Kitchen items).
-- **Grammar Focus**: explicitly highlight the *mutations* (підлога -> на підлозі) as this is a high-friction point for A2 learners. Use a clear table for these shifts.
-- **Engagement**: Use the "Threshold" superstition for a "Culture Tip" box near the "Entrance/Hallway" vocabulary section.
+- **Decolonized Framing**: Emphasize Ukrainian home traditions (the threshold, the Domovyk) as distinct, independent cultural phenomena. Do not contrast Ukrainian locative rules with Russian. Highlight the euphony of the Ukrainian language (e.g., у/в alternations).
+- **Immersion Band 2 (60-75%)**: Use English for explaining abstract grammar rules (Locative case mechanics, consonant mutations). Use Ukrainian for all examples, dialogues, section introductions, and the cultural hooks.
+- **Tone**: Adopt the "Encouraging Cultural Guide" persona, connecting grammar concepts to the warmth of the Ukrainian home.

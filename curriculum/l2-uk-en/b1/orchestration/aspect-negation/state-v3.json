@@ -1,0 +1,27 @@
+{
+  "track": "b1",
+  "slug": "aspect-negation",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T20:47:48Z",
+      "task_id": "v3-aspect-negation-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T20:51:32Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T20:54:05Z",
+      "task_id": "v3-aspect-negation-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T11:08:43Z",
+      "attempts": 2
+    }
+  }
+}

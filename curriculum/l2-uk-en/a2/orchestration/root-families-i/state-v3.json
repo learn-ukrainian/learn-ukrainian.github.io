@@ -1,0 +1,27 @@
+{
+  "track": "a2",
+  "slug": "root-families-i",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T09:56:59Z",
+      "task_id": "v3-root-families-i-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T10:00:06Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T10:00:06Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T10:46:58Z",
+      "attempts": 2
+    }
+  }
+}

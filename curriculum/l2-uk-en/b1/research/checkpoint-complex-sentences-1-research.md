@@ -1,29 +1,31 @@
 # Дослідження: Контрольна точка: складні речення (частина 1)
 
 ## State Standard Reference
-§4.4.3: "Складнопідрядне речення зі з’ясувальною підрядною частиною (сполучні слова що, хто, де, куди, звідки)... Складнопідрядне речення з підрядною означальною частиною (сполучні слова який (яка, яке, які)... Складнопідрядні речення з підрядною частиною мети (сполучник щоб)... Складнопідрядні речення з підрядною частиною: реальної умови (сполучник якщо)... ірреальної умови (якби, коли б)."
-Alignment: Module directly targets the B1 requirement for complex sentences with relative clauses (adjectival & explanatory), purpose clauses (щоб), and conditionals (real/unreal), serving as a mastery checkpoint for these specific syntactic structures defined in lines 2380-2431 of the Standard.
+§4.4.3: "Складне речення: складнопідрядне речення з підрядною означальною частиною (сполучні слова який (яка, яке, які) у називному та непрямих відмінках) ... складнопідрядні речення з підрядною частиною: реальної умови (сполучник якщо) ... ірреальної умови (якби, коли б) ... складнопідрядні речення з підрядною частиною мети (сполучник щоб)".
+Alignment: This checkpoint module directly tests the B1 syntax requirements specified in §4.4.3, specifically focusing on relative clauses, purpose clauses, and the strict distinction between real and unreal conditionals.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **контрольна точка** | Medium (Education/Tech) | пройти контрольну точку, фінальна контрольна точка, ключова точка |
-| **повторення** | High (General) | інтервальне повторення, повторення вивченого, мати вигляд повторення |
-| **оцінювання** | High (Pedagogy) | критерії оцінювання, формувальне оцінювання, самооцінювання, система оцінювання |
-| **інтеграція** | Medium-High (Academic/Pol) | процес інтеграції, інтеграція знань, європейська інтеграція, повна інтеграція |
-| **речення** | High (Linguistic) | складне речення, просте речення, головне/підрядне речення, будувати речення |
+| результат | High / General | досягти результату, кінцевий результат, результат оцінювання |
+| оцінювання | Medium / Academic | критерії оцінювання, формувальне оцінювання, самооцінювання |
+| контрольна точка | Medium / Educational | пройти контрольну точку, фінальна контрольна точка |
+| інтеграція | Medium / Academic | процес інтеграції, європейська інтеграція |
 
 ## Cultural Hooks
-1. **The "Symphonic" Syntax**: Ukrainian literary tradition (e.g., Gogol, Lesya Ukrainka) values complex sentences as a way to create a "panoramic" view of reality, weaving multiple thoughts into a single "symphony," contrasting with the often shorter, punchier sentences of modern digital communication.
+1. **"Symphonic" Syntax in Literature**: Ukrainian literary tradition (from Panas Myrny to modern authors like Oksana Zabuzhko) heavily relies on complex, multi-clause sentences. This "symphonic" or panoramic syntax is a core feature of authentic Ukrainian expression, contrasting with the English preference for shorter, segmented sentences.
+2. **Pedagogical Autonomy**: The concept of "самооцінювання" (self-assessment) is deeply embedded in modern Ukrainian educational reforms (Nova Ukrainska Shkola), promoting learner agency rather than top-down testing.
 
 ## Common Learner Errors
-1. **Relative Pronoun Agreement**: *Дівчина, який я бачив* → *Дівчина, **яку** я бачив*. (Failure to agree `який` in gender/number/case with the antecedent).
-2. **The "Якби vs Якщо" Trap**: Using *якщо* for unreal situations (*Якщо я був би тобою...*) instead of *якби* (*Якби я був тобою...*). Real vs. Hypothetical distinction is strict.
-3. **Preposition Stranding**: *Дім, який я живу в* → *Дім, **у якому** я живу*. (English habit of putting prepositions at the end; in Ukrainian, they must precede the relative pronoun).
+1. **"Який" Agreement Failure** → "Дівчина, який я бачив" instead of "Дівчина, яку я бачив". *Why it happens*: Treating "який" as an invariant conjunction like English "that/which", ignoring gender/number/case agreement with the antecedent.
+2. **Preposition Stranding** → "Дім, який я живу в" instead of "Дім, у якому я живу". *Why it happens*: Direct structural translation from English where trailing prepositions are common. Ukrainian strictly requires the preposition before the relative pronoun.
+3. **The "Якщо/Якби" Confusion** → "Якщо я був би тобою..." instead of "Якби я був тобою...". *Why it happens*: Using the real conditional "якщо" paired with the conditional particle "би", rather than using the dedicated irrealis conjunction "якби".
 
 ## Cross-References
-- Builds on: b1-26 (Relative Clauses), b1-28 (Purpose Clauses), b1-31 (Real Conditionals), b1-33 (Mixed Conditionals)
-- Prepares for: b1-35 (Concessive Clauses), b1-41 (Checkpoint 2)
+- Builds on: b1-33 (Conditionals Mixed Complex) and previous grammar modules in the B1.3a phase.
+- Prepares for: b1-35 (Concessive Clauses) and the B1.3b phase.
 
 ## Notes for Content Writing
-- **Meta-Cognition**: Emphasize *self-assessment* terms (оцінювання, результат) as this is a checkpoint. The goal is learner autonomy.
+- **Decolonized Framing**: Emphasize that Ukrainian syntax possesses its own internal logic and literary elegance. Avoid any comparisons to Russian syntax. If comparing, contrast with English (e.g., preposition placement).
+- **Immersion**: 100% Ukrainian. The module must be written entirely in Ukrainian, using terms like "головне речення", "підрядне речення", "сполучник" without English scaffolding.
+- Ensure all example sentences avoid colonial stereotypes and use active voice representing Ukrainians.

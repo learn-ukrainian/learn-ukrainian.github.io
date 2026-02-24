@@ -1,36 +1,32 @@
 # Дослідження: Емфаза та інверсія
 
 ## State Standard Reference
-§4.3.1.1: "Стверджувальне речення: Люблю я присмерки пахучі квітневих вечорів..."
-Alignment: Module directly addresses the B2 requirement for mastery of declarative sentence structures, specifically "stylistic inversion" and "thematic/rhematic structure" (тема-рема) as defined in the standard's syntax section.
+§4.3.1.1: "стверджувальне речення: Люблю я присмерки пахучі квітневих вечорів;"
+Alignment: The standard explicitly references declarative sentences with stylistic word order variations (inversion of Subject/Verb and Adjective/Noun) to demonstrate syntactic flexibility and emphasis at the B2 level.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **порядок слів** | High (Grammar) | прямий/непрямий ~, вільний ~, порушення ~ |
-| **інверсія** | Medium (Stylistics) | поетична ~, стилістична ~, використовувати інверсію |
-| **емфаза** | Low (Academic) | засоби емфази, логічна ~, емоційна ~ |
-| **тема** (речення) | Medium (Linguistics) | ~ повідомлення, відома інформація |
-| **рема** (речення) | Medium (Linguistics) | ~ висловлювання, нова інформація, ядро речення |
-| **наголос** | High (General) | логічний ~, емфатичний ~, змістовий ~ |
-| **саме** | High (Particle) | саме той, саме зараз, саме це |
+| саме | High (Core lexicon) | саме той, саме тоді, саме тому, це саме те |
+| якраз | High (Conversational/Neutral) | якраз вчасно, якраз те, що треба |
+| парцеляція | Academic/Stylistic | стилістична парцеляція, ефект парцеляції |
+| емфаза | Academic/Stylistic | логічна емфаза, засоби емфази |
 
 ## Cultural Hooks
-1. **The Iconic Inversion**: Shevchenko's line *"Садок вишневий коло хати"* is a textbook example of poetic inversion (adjective after noun) that creates a specific melodic rhythm known to every Ukrainian.
-2. **Romantic Emphasis**: Volodymyr Sosyura's *"Так ніхто не кохав"* places the adverb "так" at the beginning for powerful emotional emphasis, defining the poem's passionate tone immediately.
+1. Taras Shevchenko's "Садок вишневий коло хати": The inversion of the adjective ("садок вишневий" instead of "вишневий садок") is not just for rhyme, but to rhythmically emphasize the core image of the orchard, a quintessential technique in classic Ukrainian poetry.
+2. Volodymyr Sosiura's poem "Так ніхто не кохав": Places the adverb of manner "так" at the very beginning of the sentence (instead of "Ніхто так не кохав"), creating powerful emphatic stress on the uniqueness and intensity of the feeling.
 
 ## Common Learner Errors
-1. **Lost Emphasis**: English speakers often keep SVO order even when they want to emphasize the object, resulting in flat, "unemotional" Ukrainian.
-   *   *Error*: "Я прочитав цю книгу вчора." (Neutral) vs "Цю книгу я прочитав вчора." (Emphatic: *This specific book*).
-2. **"Surzhyk" Syntax**: Copying Russian word order patterns, particularly in passive constructions or official style, which sounds unnatural in standard Ukrainian.
-3. **Misplaced "New" Info**: Placing the *rheme* (new info) at the beginning of a neutral sentence, which confuses the listener about what is being introduced.
-   *   *Correction*: Keep unknown info (Rheme) at the end for neutral statements.
+1. SVO-flatness → Over-reliance on strict Subject-Verb-Object order from English, stripping the language of its natural emotional rhythm and pragmatic focus.
+2. Incorrect focus (Rheme placement) → Placing the most important new information (rheme) at the beginning instead of the end of a neutral sentence, making the utterance sound unnatural.
+3. Surzhyk syntax → Copying Russian officialese syntax which often avoids natural Ukrainian inversions in formal contexts.
 
 ## Cross-References
-- **Builds on**: `b2-11` (Multi-clause Sentences), `b2-12` (Parenthetical Expressions), Basic SVO structure.
-- **Prepares for**: `b2-14` (Stylistic Connectors), `b2-22` (Register: Literary Ukrainian) - essential for understanding high-style texts.
+- Builds on: b2-11 (Multi-clause Sentences), b2-12 (Parenthetical Expressions)
+- Prepares for: b2-14 (Stylistic Connectors), b2-22 (Register: Literary Ukrainian), b2-25 (B2.1b Checkpoint)
 
 ## Notes for Content Writing
-- **The "Rheme-End" Rule**: Explicitly teach that in Ukrainian, the most important word usually goes *last* in a neutral sentence. This is counter-intuitive for English speakers who stress words vocally.
-- **Particle Power**: Devote space to "саме", "якраз", "навіть" as lexical emphasis tools, as they are easier for learners to master than pure syntactic inversion.
-- **Context matters**: Use examples showing the *same* sentence in 3-4 variations, explaining how the context (question asked) changes the word order.
+- Decolonized framing: Frame Ukrainian word order positively as "гнучкий" (flexible) and pragmatically driven, NOT "вільний" (chaotic). Do not use Russian as a baseline for comparison.
+- 100% Immersion: Zero English in prose. Use clear visual models (tables, mermaid diagrams) for Topic-Comment (Тема-Рема) progression.
+- Agency Pass: Use active constructions in examples and explanations.
+- Phonetics: Use IPA exclusively for phonetic transcriptions (no Latin).

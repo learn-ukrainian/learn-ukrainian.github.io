@@ -1,44 +1,34 @@
 # Дослідження: Майстерня слів: Велика гра
 
 ## State Standard Reference
-§4.3.1 (A2): "Ступені порівняння якісних прикметників: проста форма... складена форма..."
-§4.3.2 (A2): "Видові пари дієслів: робити – зробити, ділити – поділити..."
-Alignment: This module provides the *foundational "Mastery Matrix"* (logic of analysis/synthesis) required to master the specific State Standard goals of Aspectual Pairs (prefixation) and Comparisons (suffixation). It transitions learners from memorizing words to building them, directly enabling the "Competence in Word Formation" required for B1 (§4.3.3-4.3.8).
+§4.3.2: "Видові пари дієслів: робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути."
+Alignment: This module directly addresses the standard by teaching the underlying patterns of prefixation for aspectual pairs (e.g., робити -> зробити, писати -> написати) and root variation (-ход- in виходити/вийти), shifting learners from rote memorization to active word synthesis.
 
 ## Vocabulary Frequency
-**High-Yield "LEGO" Blocks (A2 Level):**
-
-| Type | Morpheme | Meaning/Function | Key Collocations/Examples |
-|---|---|---|---|
-| **Prefix** | `по-` | Start/Limit/Perf. | поїхати, подумати, погуляти |
-| **Prefix** | `з-/с-` | Together/Complete | зробити, сфотографувати, зустріч |
-| **Prefix** | `ви-` | Out/Exit | вихід, вивчити, виграти |
-| **Prefix** | `пере-` | Re-/Cross/Over | перехід, перекласти, перерва |
-| **Prefix** | `за-` | Start/Into/Behind | захід, закрити, записати |
-| **Suffix** | `-ник` | Person/Agent | працівник, керівник, словник |
-| **Suffix** | `-ння` | Process (Noun) | навчання, читання, знання |
-| **Root** | `-ход-` | Motion/Go | вихід, захід, перехід, вхід |
-| **Root** | `-пис-` | Write | писати, записати, підпис, розпис |
-| **Root** | `-роб-` | Work/Do | робота, робити, заробити, виробник |
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| робити | High (Core vocabulary) | робити роботу, що робити |
+| зробити | High (Core vocabulary) | зробити завдання, зробити помилку |
+| писати | High | писати лист, писати статтю |
+| переписати | Medium | переписати текст, переписати історію |
+| вихід | High | запасний вихід, вихід з ситуації |
+| перехід | High | пішохідний перехід |
+| працівник | Medium | медичний працівник, новий працівник |
 
 ## Cultural Hooks
-1.  **Linguistic LEGO**: Ukrainian is a *synthetic* language. Unlike English, which often adds small words (phrasal verbs: *get up, get out, get over*), Ukrainian modifies the word itself (*встати, вийти, пережити*). It’s like playing with LEGO blocks.
-2.  **The Longest Words**: While `дихлордифенілтрихлорметилметан` (30 letters) is the longest technical term, A2 learners can appreciate `гідроелектростанція` (19 letters) as a perfect example of synthesis: *гідро* (water) + *електро* (electric) + *станція* (station).
-3.  **Emotional Engineering**: Ukrainian is famous for its "diminutive" capacity. You can make almost any noun "cuter" or "smaller" with suffixes (`мама` -> `матуся`, `кіт` -> `котик`).
+1. **"Ukrainian as LEGO"**: Ukrainian utilizes a highly productive, synthetic system of prefixes and suffixes to alter meanings efficiently, unlike English which often uses separate helper words (phrasal verbs like "go out" vs "вийти"). This reflects a creative and modular linguistic architecture.
+2. **"Emotional Engineering"**: Ukrainian employs diminutive suffixes extensively not just for describing physical size, but for emotional nuance, warmth, and endearment (мама -> матуся, кіт -> котик). This reflects cultural values of closeness and emotional expressiveness.
 
 ## Common Learner Errors
-1.  **Prefix Generalization**: Using `ре-` (re-) instead of `пере-` for repetition.
-    *   *Error*: *ре-писати* (wrong) → *переписати* (correct).
-2.  **Euphony Violation**: Ignoring the `з-` vs `с-` rule (Cafe "Ptakh" rule: `с-` before `к, п, т, ф, х`).
-    *   *Error*: *зфотографувати* → *сфотографувати*.
-3.  **Root Rigidity**: Failing to recognize the root when it changes slightly (fleeting vowels or alternation).
-    *   *Confusion*: *кінець* vs *кінця* vs *закінчити* (learner thinks these are 3 unrelated words).
+1. Misapplying the "Cafe Ptakh" (Кафе "Птах") rule: Writing "зфотографувати" instead of "сфотографувати" (prefixes ending in -з become -с before к, п, т, ф, х).
+2. Using English-borrowed prefixes instead of Ukrainian ones: Writing "реписати" (re-write) instead of the correct productive prefix "переписати".
+3. Over-translating English phrasal verbs literally (e.g., "йти поза" for "go out") instead of utilizing the appropriate prefixed Ukrainian verb ("вийти").
 
 ## Cross-References
-- **Builds on**: `a2-42` (Word Formation V - likely introduced basic roots).
-- **Prepares for**: `a2-44` (Checkpoint), and B1 Modules on Verbal Nouns (§4.3.4) and Agent Nouns (§4.3.3).
+- Builds on: a2-42 (Word Formation V)
+- Prepares for: a2-44 (Checkpoint Word Formation)
 
 ## Notes for Content Writing
-- **Metaphor**: Use the "Word Architect" or "Lego" metaphor consistently.
-- **Visuals**: Use "Word Math" equations (e.g., `за` + `пис` + `ати` = `записати`).
-- **Scope**: Keep it productive. Don't list rare prefixes. Focus on the ones that create the most common A2 vocabulary (especially for motion verbs and aspect pairs).
+- Ensure the decolonized framing highlights Ukrainian's rich word-building capacity independently. Do not compare to Russian prefixation or use it as a baseline.
+- The immersion band is 60-75% (Band 2). Abstract grammar concepts (word formation logic) will have English scaffolding, but examples, practice, and dialogues must be in Ukrainian.
+- Follow the persona of "The Ukrainian Teacher / Cultural Guide" to keep the tone encouraging and grounded in practical, culturally relevant contexts.

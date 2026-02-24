@@ -2,15 +2,15 @@
   "module": "slavic-tribes",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-21T22:13:16.640498Z",
+  "last_audit": "2026-02-24T11:17:52.111451Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T22:13:13.744606Z",
+    "md": "2026-02-24T11:17:39.816680Z",
     "meta": "2026-02-19T10:43:10.754516Z",
     "activities": "2026-02-21T22:13:13.745378Z",
-    "vocabulary": "2026-02-18T23:27:44.325254Z",
+    "vocabulary": "2026-02-24T11:15:11.998311Z",
     "plan": "2026-02-18T19:03:37.260808Z",
-    "research": "2026-02-19T11:46:59.947251Z"
+    "research": "2026-02-22T10:35:24.514194Z"
   },
   "gates": {
     "meta": {
@@ -24,14 +24,14 @@
       "message": "5027/5000 (raw: 5291)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "7/3"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "25/20"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -49,16 +49,16 @@
       "message": "Refresh recommended: Research has 5+ sources but content cites 0"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 3,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

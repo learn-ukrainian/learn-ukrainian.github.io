@@ -2,13 +2,13 @@
   "module": "ready-for-immersion",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T01:37:34.254678Z",
+  "last_audit": "2026-02-24T11:16:38.865999Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-21T01:37:31.359185Z",
     "meta": "2026-02-20T17:12:00.120772Z",
     "activities": "2026-02-20T17:37:05.976377Z",
-    "vocabulary": "2026-02-21T01:37:31.359689Z",
+    "vocabulary": "2026-02-24T11:16:37.835264Z",
     "plan": "2026-02-20T21:18:33.754377Z",
     "research": "2026-02-20T17:12:00.107295Z"
   },
@@ -24,14 +24,14 @@
       "message": "4460/4000 (raw: 4930)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "6/4"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "27/20"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 4,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

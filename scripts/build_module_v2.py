@@ -701,7 +701,10 @@ def _validate_activities_yaml(path: Path) -> bool:
         valid, errors = validate_activity_yaml_file(path)
         if not valid:
             for e in errors[:3]:
-                log(f"    Schema error: {e[:120]}")
+                err_str = e.replace('\n', ' ')
+                if len(err_str) > 200:
+                    err_str = err_str[:197] + "..."
+                log(f"    Schema error: {err_str}")
         return valid
     except Exception as e:
         log(f"    Schema validation error: {e}")

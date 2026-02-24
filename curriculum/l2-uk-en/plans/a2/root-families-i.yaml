@@ -88,33 +88,6 @@ persona:
   role: Historical Linguist
 vocabulary_hints:
   required:
-  - хід (move/turn/progress) — base noun for motion family; cognate with Greek *hodos*
-    (way)
-  - вхід (entrance) — signage and physical entry; prefix *в-* (in/into)
-  - вихід (exit/solution) — physical exit or abstract 'way out' of a problem; prefix
-    *ви-* (out)
-  - перехід (crossing/transition) — pedestrian crossing or state transition; prefix
-    *пере-* (across)
-  - похід (hike/campaign) — military campaign or recreational hike; prefix *по-* (start/duration)
-  - писати (to write) — core verb; Proto-Slavic *pьsati* (to paint), linked to *писанка*
-  - написати (to finish writing) — perfective pair; explicitly required by State Standard
-    §4.3.2
-  - підпис (signature) — legal or personal mark; prefix *під-* (under)
-  - опис (description) — textual representation; prefix *о-* (around/about)
-  - 'запис (record/entry) — written note or audio/video recording; learner error:
-    often restricted to text only'
-  - письменник (writer) — professional author; agentive derivative from *письмо*
-  - читач (reader) — person reading; suffix *-ач* indicates an agent
-  - читання (reading) — the process or skill; process noun with *-ння* suffix
-  - прочитати (to read through) — perfective completion; prefix *про-* (through/for
-    a duration)
-  - побачення (date) — romantic meeting; literally 'seeing each other'
-  - передбачити (to foresee/predict) — seeing beforehand; prefix *перед-* (before)
+  - '{word} ({translation}) — {collocations or usage notes from research}'
   recommended:
-  - розклад (schedule) — conceptually related to writing/ordering (laying out information)
-  - вичитати (to proofread/scold) — reading intensively to find errors or scolding
-    someone
-  - обачний (cautious) — seeing around oneself; looking both ways
-  - сходити (to go and come back/climb) — key example for 'Kafka-Ptakh' euphony rule
-    (*с-* not *з-* before 'х')
-word_target: 3000
+  - '{word} ({translation}) — {collocations or usage notes from research}'

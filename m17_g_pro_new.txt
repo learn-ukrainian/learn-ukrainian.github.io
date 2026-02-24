@@ -1,0 +1,47 @@
+Proofread: a1 | 1 module(s) | agent=gemini | model=gemini-3.1-pro-preview
+Mode: DRY-RUN (print findings only)
+
+============================================================
+Proofreading: a1/numbers-and-money (module 17)
+  Agent: gemini | Model: gemini-3.1-pro-preview
+  Content: 17993 chars, 2961 words
+  FOUND: 7 issues (5 HIGH, 2 LOW)
+  !! [HIGH] LANGUAGE_BLENDER @ Символ: ₴
+       Text: Ви часто побачите символ **₴** на цінниках. Його офіційно прийняли у 2004 році. ...
+       Fix:  You will often see the symbol **₴** on price tags. It was officially adopted in ...
+  !! [HIGH] RUSSIANISM @ Діалог 1: У кав'ярні (At the café)
+       Text: > [!note]
+> **Vocabulary: Здача**
+> The word **зда́ча** means "change" (the mone...
+       Fix:  > [!note]
+> **Vocabulary: Решта**
+> The word **ре́шта** means "change" (the mone...
+  !! [HIGH] RUSSIANISM @ Діалог 2: На ринку (At the market)
+       Text: **Продавець**: Дякую. Ваша здача — десять гривень. (Thank you. Your change is 10...
+       Fix:  **Продавець**: Дякую. Ваша решта — десять гривень. (Thank you. Your change is 10...
+  !! [HIGH] RUSSIANISM @ Сценарій: Бухгалтерія на базарі
+       Text: Ви даєте 50 гривень.
+"З вас двадцять сім. Здача... двадцять три."
+(From you 27. ...
+       Fix:  Ви даєте 50 гривень.
+"З вас двадцять сім. Решта... двадцять три."
+(From you 27. ...
+  !! [HIGH] RUSSIANISM @ Підсумок
+       Text: 6.  Ви купуєте каву за 45 грн. Ви платите 50 грн. Яка ваша **здача**? Назвіть чи...
+       Fix:  6.  Ви купуєте каву за 45 грн. Ви платите 50 грн. Яка ваша **решта**? Назвіть чи...
+     [LOW] ANGLICISM @ Дорого чи дешево?
+       Text: Коли ціна вас влаштовує:
+— Добре. **Я візьму це.** (I'll take this.)
+...
+       Fix:  Коли ціна вас влаштовує:
+— Добре. **Я візьму.** (I'll take it.)
+...
+     [LOW] MOTIVATIONAL_FILLER @ Підсумок
+       Text: **Порахуйте речі у вашій кімнаті сьогодні.** Один стіл, дві лампи, п'ять книг. З...
+       Fix:  **Порахуйте речі у вашій кімнаті сьогодні.** Один стіл, дві лампи, п'ять книг....
+
+============================================================
+SUMMARY: 1 modules scanned
+  Modules with issues: 1
+  Total issues: 7
+  HIGH: 5 | LOW: 2

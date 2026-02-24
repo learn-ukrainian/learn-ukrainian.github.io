@@ -3,6 +3,23 @@
   "track": "a2",
   "module_num": 41,
   "mode": "v3",
-  "phases": {},
-  "last_updated": "2026-02-20T11:26:29Z"
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-23T10:00:06Z",
+      "words": 3023,
+      "attempts": 1
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T10:46:58Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T10:46:58Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T10:46:58Z"
 }

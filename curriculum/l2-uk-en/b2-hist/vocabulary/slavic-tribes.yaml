@@ -1,103 +1,128 @@
 items:
   - lemma: "поляни"
+    ipa: '[pɔˈlʲɑnɪ]'
     translation: "Polyany (tribe)"
     pos: "noun"
     notes: "Slovene tribe inhabiting the Kyiv region; known for agriculture and state-building"
   - lemma: "древляни"
+    ipa: '[drɛˈʋlʲɑnɪ]'
     translation: "Derevlyany (tribe)"
     pos: "noun"
     notes: "Forest dwellers north-west of Kyiv; known for the 945 rebellion"
   - lemma: "сіверяни"
+    ipa: '[sʲiʋɛˈrʲɑnɪ]'
     translation: "Siveryany (tribe)"
     pos: "noun"
     notes: "Inhabitants of the Left Bank (Desna basin); guarded the steppe frontier"
   - lemma: "уличі"
+    ipa: '[ˈulɪt͡ʃʲi]'
     translation: "Ulychi (tribe)"
     pos: "noun"
     notes: "Southern tribe between Dnipro and Bug; resisted assimilation"
   - lemma: "тиверці"
+    ipa: '[ˈtɪʋɛrt͡sʲi]'
     translation: "Tyvertsi (tribe)"
     pos: "noun"
     notes: "South-western tribe between Dniester and Prut rivers"
   - lemma: "волиняни"
+    ipa: '[ʋɔlɪˈnʲɑnɪ]'
     translation: "Volhynians (tribe)"
     pos: "noun"
     notes: "Inhabitants of Volhynia; successors of the Dulebe union"
   - lemma: "дуліби"
+    ipa: '[duˈlʲibɪ]'
     translation: "Duleby (tribe)"
     pos: "noun"
     notes: "Ancient tribal union in Volhynia, destroyed by Avars"
   - lemma: "білі хорвати"
+    ipa: '[ˈbʲilʲi xɔrˈʋɑtɪ]'
     translation: "White Croats (tribe)"
     pos: "noun"
     notes: "Inhabitants of the Carpathians; builders of the Stilsko megacity"
   - lemma: "племінний союз"
+    ipa: '[plɛmʲiˈnːɪj sɔˈjuz]'
     translation: "tribal union"
     pos: "noun"
     notes: "Political organization of several tribes; proto-state"
   - lemma: "данина"
+    ipa: '[dɑˈnɪnɑ]'
     translation: "tribute"
     pos: "noun"
     notes: "Tax paid to the ruler, originally in goods like fur or honey"
   - lemma: "святилище"
+    ipa: '[sʲʋʲɑˈtɪlɪʃt͡ʃɛ]'
     translation: "sanctuary / shrine"
     pos: "noun"
     notes: "Sacred place for pagan rituals"
   - lemma: "обряд"
+    ipa: '[ɔˈbrʲɑd]'
     translation: "ritual / ceremony"
     pos: "noun"
     gender: "m"
   - lemma: "городище"
+    ipa: '[ɦɔrɔˈdɪʃt͡ʃɛ]'
     translation: "fortified settlement"
     pos: "noun"
     gender: "n"
   - lemma: "літопис"
+    ipa: '[lʲiˈtɔpɪs]'
     translation: "chronicle"
     pos: "noun"
     gender: "m"
   - lemma: "Іскоростень"
+    ipa: '[iskɔrɔstɛnʲ]'
     translation: "Iskorosten (city)"
     pos: "noun"
     notes: "Capital of the Drevlyans (modern Korosten)"
   - lemma: "варяги"
+    ipa: '[ʋɑˈrʲɑɦɪ]'
     translation: "Varangians / Vikings"
     pos: "noun"
     notes: "Norsemen who travelled trade routes through Slavic lands"
   - lemma: "ковальство"
+    ipa: '[kɔˈʋɑlʲstʋɔ]'
     translation: "blacksmithing"
     pos: "noun"
     gender: "n"
   - lemma: "поховання"
+    ipa: '[pɔxɔˈʋɑnʲːɑ]'
     translation: "burial"
     pos: "noun"
     gender: "n"
   - lemma: "болотна руда"
+    ipa: '[bɔˈlɔtnɑ ruˈdɑ]'
     translation: "marsh ore"
     pos: "noun"
     notes: "Source of iron for early Slavs"
   - lemma: "скроневі кільця"
+    ipa: '[skrɔˈnɛʋʲi ˈkʲilʲt͡sʲɑ]'
     translation: "temporal rings"
     pos: "noun"
     notes: "Temple ornaments worn by Slavic women; key tribal identifier"
   - lemma: "підсічно-вогневе землеробство"
+    ipa: '[pʲid͡zʲsʲit͡ʃnɔ-ʋɔˈɦnɛʋɛ zɛmlɛˈrɔbstʋɔ]'
     translation: "slash-and-burn agriculture"
     pos: "noun"
     notes: "Method of clearing forest for farming"
   - lemma: "віче"
+    ipa: '[ˈʋʲit͡ʃɛ]'
     translation: "veche / assembly"
     pos: "noun"
     gender: "n"
     notes: "Popular assembly in medieval Slavic states"
   - lemma: "верв"
+    ipa: '[ʋɛrʋ]'
     translation: "verv / commune"
     pos: "noun"
     gender: "f"
     notes: "Peasant community with collective responsibility"
   - lemma: "князь"
+    ipa: '[knʲɑzʲ]'
     translation: "prince / duke"
     pos: "noun"
     gender: "m"
   - lemma: "дружина"
+    ipa: '[druˈʒɪnɑ]'
     translation: "retinue / squad"
     pos: "noun"
     gender: "f"

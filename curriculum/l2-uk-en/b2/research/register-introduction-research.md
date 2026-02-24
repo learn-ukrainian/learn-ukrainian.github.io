@@ -1,40 +1,36 @@
 # Дослідження: Функціональні стилі мови
 
 ## State Standard Reference
-§4.4.1.1 (C1 Level - Introduction): "Стилі української мови: розмовний; офіційний; науковий; публіцистичний; художній; релігійний; епістолярний."
-Alignment: This module introduces the fundamental classification of functional styles (C1 target) at the B2 level to build register awareness and sociolinguistic competence, focusing on the 5 main styles.
+§4.4.1.1 (Note: In the mapping, functional styles are explicitly listed under the C1 level at lines 4551-4559, while the B2 section §4.4.1 covers "Офіційне й неофіційне спілкування"):
+"Стилі української мови: розмовний; офіційний; науковий; публіцистичний; художній;"
+Alignment: Цей модуль знайомить з 5 базовими стилями мовлення, готуючи студентів рівня В2 до розпізнавання стильових маркерів та переходу від простого неофіційного/офіційного спілкування до повноцінної стилістичної системи, що вимагається на рівні С1.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Стиль** (Style) | High (General) | *функціональний стиль, індивідуальний стиль, високий стиль* |
-| **Офіційно-діловий** | Medium (Specialized) | *офіційно-діловий стиль, ділова мова, заява, документ, стандарт* |
-| **Науковий** | Medium (Specialized) | *науковий термін, наукова стаття, дослідження, теза, аргумент* |
-| **Публіцистичний** | Medium (Media) | *стаття в газеті, новини, репортаж, актуальна тема, вплив* |
-| **Художній** | High (Literature) | *художній твір, образність, метафора, епітет, письменник* |
-| **Розмовний** | High (Spoken) | *розмовна лексика, діалог, побут, невимушеність* |
+| функціональний стиль | High (academic/linguistic) | система засобів, класифікація мовлення |
+| розмовний стиль | Very High | розмовна лексика, побутове спілкування |
+| художній стиль | High | художній твір, образотворчі засоби, тропи |
+| науковий стиль | High | науковий термін, об'єктивність викладу, теза |
+| офіційно-діловий стиль| High | мова документів, ділові папери, кліше |
+| публіцистичний стиль | High | вплив на аудиторію, ЗМІ, актуальна тема |
+| канцелярит | Medium (stylistic critique) | уникати канцеляриту, бюрократична мова |
 
 ## Cultural Hooks
-1. **The Savior Style**: Historically, during periods of repression (e.g., Valuev Circular, Ems Ukaz), the **Conversational style** (and oral folklore) was the primary vessel that preserved the Ukrainian language's unique identity when high-register styles were banned or Russified.
-2. **Kancelyaryt**: There is a cultural stigma against "kancelyaryt" (bureaucratic language) seeping into everyday speech (e.g., saying «здійснити покупку» instead of «купити»), often associated with the legacy of Soviet bureaucracy.
+1. **«Стиль-рятівник» (The Savior Style)**: Під час дії Валуєвського циркуляра (1863) та Емського указу (1876), які забороняли використання української мови в науці, релігії та діловодстві, українська мова виживала і розвивалася переважно в розмовному та художньому стилях (через фольклор, поезію та театр). Це історично зумовило надзвичайну лексичну та емоційну багатність української художньої літератури.
+2. **Боротьба з «канцеляритом»**: Радянська спадщина залишила в українській мові значний пласт неприродних бюрократичних штампів (наприклад, «знаходитися в стані очікування» замість «чекати», «здійснити покупку» замість «купити»). Сучасна Україна активно деколонізує діловий стиль, роблячи його більш людяним та природним.
 
 ## Common Learner Errors
-1. **Register Mixing**: Using slang/colloquialisms in formal contexts (e.g., «Привіт» to a professor) or overly formal language in casual settings.
-   * *Correction*: Context-aware greeting selection («Доброго дня» vs «Привіт»).
-2. **"Vybachayus" (Вибачаюсь)**: Using the reflexive form «вибачаюсь» (I excuse myself) instead of the correct imperative «вибачте» (excuse me) or «перепрошую». This is often cited as a stylistic/normative error.
-3. **Calques from English/Russian**: Transferring stylistic norms from L1 (e.g., English academic writing is often less "dry" and more personal than Ukrainian scientific style, which favors impersonal constructions like «досліджено», «встановлено»).
+1. Калькування (Russianism/Literal Translation) у розмовному стилі: використання зворотної форми «я вибачаюсь» замість нормативних «вибачте» або «перепрошую».
+2. Змішування регістрів (Register Mixing): використання англомовних особових конструкцій («I found» -> «Я знайшов») у науковому стилі замість українських безособових («виявлено», «досліджено»).
+3. Недоречний тон в офіційному спілкуванні: використання розмовного «Привіт» замість «Вітаю» чи «Добрий день» у листуванні з викладачами або керівниками.
 
 ## Cross-References
-- **Builds on**: B2-01 through B2-14 (Grammar foundations)
-- **Prepares for**:
-    - B2-16 (Formal/Informal Register)
-    - B2-17 (Business Ukrainian)
-    - B2-18 (Academic Ukrainian)
-    - C1 Stylistics (Deep Dive)
+- Builds on: b2-01 through b2-14 (Grammar foundations)
+- Prepares for: b2-16 (Register: Formal/Informal), b2-17 (Register: Business Ukrainian), b2-18 (Register: Academic Ukrainian), b2-19 (Register: Official-Legal), b2-25 (B2.1b Checkpoint)
 
 ## Notes for Content Writing
-- **Show, Don't Just Tell**: Provide the *same* short message (e.g., "It started raining") transformed into all 5 styles to clearly illustrate the differences.
-    - *Colloquial*: "Ого, ллє як з відра!"
-    - *Scientific*: "Спостерігаються інтенсивні опади."
-    - *Artistic*: "Небо заплакало холодними сльозами."
-- **Visuals**: Use a table comparing the same concept across styles.
+- Уникайте слова "стиль" у кожному заголовку H2, щоб не спровокувати помилку аудиту `DUPLICATE_SYNONYMOUS_HEADERS`. Використовуйте синоніми (сфера, виклад, комунікація, регістр).
+- Деколонізаційний фокус: пояснюйте явища на базі української мовної системи, без порівнянь з російською.
+- Забезпечте 100% українськомовне занурення в тексті модуля (англійська лише у таблиці словника).
+- Рівень В2 вимагає розгорнутих пояснень, великої кількості прикладів та обсягу не менше 4000 слів.

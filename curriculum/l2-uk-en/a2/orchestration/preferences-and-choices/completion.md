@@ -1,4 +1,4 @@
-FAIL: build_module_v2.py a2 20 — E2E
+PASS: build_module_v2.py a2 20 — E2E
 
   Module:   preferences-and-choices
   Track:    a2
@@ -6,5 +6,5 @@ FAIL: build_module_v2.py a2 20 — E2E
   Words:    4222 (target: 3000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-22T23:52:16Z
+  Verdict:  PASS
+  Date:     2026-02-24T08:37:57Z

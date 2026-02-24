@@ -1,39 +1,33 @@
 # Дослідження: Online Services
 
 ## State Standard Reference
-§3.11: "Послуги: банк; пошта; бібліотека; спортзал, басейн; таксі."
-§3.9: "Купівля (закупи): ... гроші."
-§3.4: "Дозвілля... інтернет, соціальні мережі."
-Alignment: This module directly addresses the A2 requirement for communicative competence in service interactions (banking, taxi) and digital literacy (internet), specifically focusing on the modern "app-based" realization of these services in Ukraine.
+§3.11: "Послуги: банк, пошта, таксі."
+§3.4: "Дозвілля, відпочинок: преса, радіо, телебачення, інтернет, соціальні мережі."
+§3.9: "Купівля (закупи): гроші."
+Alignment: This module directly addresses the thematic requirements for online services, internet usage, and modern transactions, explicitly hitting §3.11 (bank, taxi), §3.9 (purchasing, money), and §3.4 (internet).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| замовлення (n) | High (E-commerce context) | оформити замовлення, номер замовлення, скасувати замовлення |
-| кошик (m) | High (Shopping UI) | додати в кошик, ваш кошик порожній |
-| доставка (f) | High (Logistics) | безкоштовна доставка, служба доставки, час доставки |
-| додаток (m) | High (Tech) | мобільний додаток, завантажити додаток, через додаток |
-| картка (f) | High (Banking) | банківська картка, оплата карткою, номер картки |
-| переказ (m) | Medium (Banking) | грошовий переказ, переказ на картку |
-| баланс (m) | High (Banking) | перевірити баланс, поповнити баланс |
+| замовлення | High (E-commerce UI) | оформити замовлення, номер замовлення |
+| кошик | High (E-commerce UI) | додати в кошик, у кошику |
+| додаток | High (Tech/Mobile) | мобільний додаток, завантажити додаток |
+| картка | High (Banking) | оплата карткою, номер картки |
 
 ## Cultural Hooks
-1. **Diia (Дія) & "State in a Smartphone"**: Ukraine is the first country to grant digital passports the same legal status as physical ones. The "Diia" app is central to daily life for documents and services, symbolizing Ukraine's rapid digitalization.
-2. **Cashless Everywhere**: Even small street vendors and markets often accept card/phone payments (Apple Pay/Google Pay). "Skinuty na kartu" (скинути на картку - send to card) is a standard way to pay friends or small merchants, often via Monobank or Privat24.
-3. **Monobank Culture**: The "Mono" cat mascot and the concept of "banka" (jar) for collective fundraising (especially for donations) are deeply embedded in modern Ukrainian social culture.
+1. **Diia (Дія) App**: On August 23, 2021, Ukraine became the first country in the world to grant digital passports the exact same legal status as physical passports.
+2. **Monobank "Banka" (Банка)**: A cultural phenomenon of digital philanthropy where users split bills or fundraise using a shared digital "jar", symbolized by the mono-cat (QR-cat) mascot.
 
 ## Common Learner Errors
-1. **Case Mismatch in "Add to Cart"**: Learners often say "додати в кошик" (correct - Accusative) but mix it with static location meanings.
-   *   *Error*: "Це в кошик" (Nom/Acc mix) vs "Це в кошику" (Locative - It is in the cart).
-2. **Gender Agreement with "Замовлення"**: Since it ends in -я, learners sometimes mistake it for feminine.
-   *   *Error*: "Моя замовлення" → *Correct*: "Моє замовлення" (Neuter).
-3. **"Number" vs "Quantity"**: Confusing "номер" (ID/phone) with "кількість" (amount).
-   *   *Context*: "Номер замовлення" (Order ID) vs "Кількість товарів" (Quantity of items).
+1. **Gender confusion with "-я"** → *замовлення* is neuter (моє замовлення), not feminine. Learners often assume words ending in vowel sounds are feminine.
+2. **Case usage with "кошик"** → Motion vs. Static: *додати в кошик* (Accusative for motion/action) vs. *товари у кошику* (Locative for state/location).
+3. **Number vs. Amount** → Confusing *номер* (ID/phone) with *кількість* (quantity of items).
 
 ## Cross-References
-- Builds on: a2-68 (Texting and Messaging - app interfaces), a2-53 (Shopping and Services - basic terms)
-- Prepares for: a2-70 (A2 Final Exam)
+- Builds on: a2-68 (Texting and Messaging)
+- Prepares for: a2-70 (Introduction to Participles), a2-53 (Shopping and Services)
 
 ## Notes for Content Writing
-- **Visuals**: Describe UI elements clearly (buttons like "Оплатити", icons for "Кошик").
-- **Grammar Focus**: Pay attention to the Imperative mood for app commands (Натисніть, Оберіть) and Genitive case for quantities/transactions.
+- Immersion is Band 3 (75-90%). Only vocabulary tables should contain English, along with very brief clarifications for abstract concepts. The rest must be in Ukrainian.
+- Frame Ukraine's digital infrastructure (Diia, Monobank) positively as a world-leading model, establishing Ukrainian modernity independently of Soviet/Russian legacy.
+- Ensure all app interface commands use the imperative mood properly (Натисніть, Оберіть).

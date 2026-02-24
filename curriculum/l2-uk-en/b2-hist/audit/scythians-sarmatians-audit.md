@@ -1,7 +1,7 @@
 # Audit Report: M02 — scythians-sarmatians.md
 **Level:** B2-HIST | **Module:** M02 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 21:45:09
+**Generated:** 2026-02-24 11:15:03
 
 ## Configuration
 **Type:** B2-history
@@ -16,41 +16,25 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Геродот про невловимість скіфів | 1 | 1 | ✅ |
-| 2 | essay-response | Стратегія асиметричної війни | 1 | 1 | ✅ |
-| 3 | comparative-study | Еволюція степового війська | 1 | 1 | ✅ |
-| 4 | critical-analysis | Символізм влади | 1 | 1 | ✅ |
-| 5 | true-false | Міфи та реальність | 10 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 5 (minimum: 2) ✅
-- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Low density activities: 0
-
 ## Gates
 - **Words:** ✅ 5047/5000 (raw: 5269)
-- **Activities:** ✅ 5/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/2 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 10 < 20 (soft target)
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)

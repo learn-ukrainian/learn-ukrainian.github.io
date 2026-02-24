@@ -1,0 +1,27 @@
+{
+  "track": "b2",
+  "slug": "passive-in-context",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T21:42:03Z",
+      "task_id": "v3-passive-in-context-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T21:44:45Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T10:43:41Z",
+      "task_id": "v3-passive-in-context-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T11:03:46Z",
+      "attempts": 3
+    }
+  }
+}

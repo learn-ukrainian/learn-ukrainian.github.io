@@ -57,8 +57,12 @@ Activities:       {COMPUTED_ACTIVITY_COUNT}
 Vocabulary items: {COMPUTED_VOCAB_COUNT}
 Engagement boxes: {COMPUTED_ENGAGEMENT_COUNT}
 Immersion:        {COMPUTED_IMMERSION_PERCENT}% (target: {COMPUTED_IMMERSION_TARGET})
+Richness:         {COMPUTED_RICHNESS_SCORE}% (threshold: {COMPUTED_RICHNESS_THRESHOLD}%)
+Richness gaps:    {COMPUTED_RICHNESS_GAPS}
 Audit status:     {COMPUTED_AUDIT_STATUS}
 ```
+
+**Richness gate**: If richness is below threshold, your Fix Plan MUST include concrete additions that close each gap dimension. For example, if `cultural: 2/3`, add one `[!culture]` callout; if `tables: 1/2`, add one comparison table. Each addition should be pedagogically useful, not filler.
 
 ## Content Sections (H2 headers in the content file)
 

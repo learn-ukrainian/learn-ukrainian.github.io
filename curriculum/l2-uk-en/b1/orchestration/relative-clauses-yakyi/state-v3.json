@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "relative-clauses-yakyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T22:49:29Z",
+      "task_id": "v3-relative-clauses-yakyi-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T22:54:54Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T22:57:53Z",
+      "task_id": "v3-relative-clauses-yakyi-pC"
+    }
+  }
+}

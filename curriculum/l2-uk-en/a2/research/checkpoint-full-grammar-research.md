@@ -1,33 +1,31 @@
 # Дослідження: Checkpoint — Full Grammar
 
 ## State Standard Reference
-§4.2.2: "Уживання відмінкових форм іменників в однині та множині: Називний, Родовий, Давальний, Знахідний, Орудний, Місцевий, Кличний"
-Alignment: This module serves as the summative assessment for the entire A2 morphological curriculum, specifically verifying the learner's ability to correctly select and form all 7 cases in context (Lines 1258-1337) and use aspectual verb pairs (Lines 1341-1359).
+§4.2.2 та §4.2.3.1: "утворення складеної форми майбутнього часу дієслів недоконаного виду... майбутній час дієслів доконаного виду." Також деталізовано вживання всіх 7 відмінків (Називний до Кличного).
+Alignment: Цей модуль є підсумковим для рівня A2, перевіряючи здатність студента розрізняти та утворювати всі відмінки та використовувати видові пари дієслів (доконаний/недоконаний вид) згідно з вимогами стандарту.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **помилка** (mistake) | High (Meta-language) | робити помилку, виправити помилку, груба помилка |
-| **правило** (rule) | High (Meta-language) | запам'ятати правило, за правилом, виняток з правила |
-| **вибирати** (to choose) | High (A2 General) | вибирати правильну відповідь, вибирати подарунок |
-| **перевіряти** (to check) | High (A2 General) | перевіряти себе, перевіряти вправу, перевіряти знання |
+| помилка | High A2 (Everyday/Academic) | робити помилку, виправити помилку, груба помилка |
+| правило | High A2 (Academic) | запам'ятати правило, виняток з правила, за правилом |
+| відмінок | Medium A2 (Meta-language) | Називний відмінок, який відмінок |
+| речення | High A2 (Meta-language) | скласти речення, прочитати речення |
 
 ## Cultural Hooks
-1. **Милозвучність (Euphony)**: Ukrainian is scientifically recognized as one of the most melodic languages (alongside Italian). Grammar rules like the alternation of **у/в** and **і/й** exist specifically to maintain this musical flow and avoid harsh consonant clusters.
-2. **The "Soul" of the Cases**: In Ukrainian folklore and worldview, the **Vocative case (Кличний)** is not just a grammar point but a sign of respect and personification—even nature (Zemle-matty, lisi, zori) is addressed directly, showing a deep animist connection to the world.
+1. **Милозвучність (Euphony)**: Ukrainian naturally avoids harsh consonant clusters, making it highly melodic. The alternations of у/в and і/й are not arbitrary rules but phonetic necessities to maintain the language's musical flow.
+2. **Кличний відмінок (Vocative)**: Unlike some neighboring languages where it is archaic or lost, the Vocative is a living, breathing part of Ukrainian culture, used to show respect to people and to personify nature in folklore.
 
 ## Common Learner Errors
-1. **Case Confusion (Genitive vs. Accusative)**: Learners often confuse direct objects (Accusative) with negation/quantity (Genitive).
-   *   *Error*: Я не маю *час* (Acc). -> *Correction*: Я не маю *часу* (Gen - negation).
-2. **Aspect Mismatch**: Using Imperfective for completed specific actions.
-   *   *Error*: Вчора я *писав* (Imperfective) лист і відправив його. -> *Correction*: Вчора я *написав* (Perfective) лист.
-3. **Motion Verb Transport**: Confusing "walking" (іти) with "going by vehicle" (їхати).
-   *   *Error*: Я *йду* до Львова поїздом. -> *Correction*: Я *їду* до Львова поїздом.
+1. **Aspect Mismatch** → Using imperfective for a completed single action ("Я писав лист" instead of "Я написав лист") — happens because learners equate past tense directly to the English simple past without considering the result.
+2. **Motion Verb Confusion** → Using "іти" (to walk) when traveling by vehicle ("Я йду в Київ" instead of "Я їду в Київ") — common because English uses "go" for both modes of transport.
+3. **Genitive vs. Accusative in Negation** → "Я не маю час" (Accusative) instead of "Я не маю часу" (Genitive) — influence from English/Russian where negation doesn't strictly force the Genitive case.
 
 ## Cross-References
-- **Builds on**: A2-01 through A2-55 (Entire A2 grammar core).
-- **Prepares for**: A2-57 (Practical Intro to B1) and the B1 Bridge (Metalanguage).
+- Builds on: a2-01 through a2-55 (specifically a2-54, a2-55)
+- Prepares for: a2-57 (Practical Intro) and the B1 Bridge
 
 ## Notes for Content Writing
-- **Euphony as Logic**: Explain that some "irregularities" are actually just the language trying to sound better (Euphony), which helps learners accept the rules more easily.
-- **Meta-language**: Since this connects to B1, start introducing simple Ukrainian grammar terms (іменник, дієслово) in the explanations/feedback, as per the "B1 Bridge" preparation strategy.
+- **Decolonized Framing**: Emphasize that Ukrainian retains the Vocative case fully and uses phonetic alternations (у/в, і/й) for inherent euphony, distinguishing its phonetic profile clearly from Russian.
+- **Immersion Band 3**: Target 75-90% Ukrainian. Explain grammar concepts mostly in simple Ukrainian. Limit English to translations in vocabulary tables and brief clarifications of abstract concepts.
+- **Tone**: Encouraging Cultural Guide / Literary Editor. Focus on self-correction ("виправити помилку") as an empowering skill.

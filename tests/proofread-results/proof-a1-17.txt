@@ -1,0 +1,79 @@
+Proofread: a1 | 1 module(s) | agent=gemini | model=gemini-3.1-pro-preview
+Mode: DRY-RUN (print findings only)
+
+============================================================
+Proofreading: a1/numbers-and-money (module 17)
+  Agent: gemini | Model: gemini-3.1-pro-preview
+  Content: 17993 chars, 2961 words
+  FOUND: 12 issues (5 HIGH, 7 LOW)
+  !! [HIGH] RUSSIANISM @ Діалог 1: У кав'ярні (At the café)
+       Text: > [!note]
+> **Vocabulary: Здача**
+> The word **зда́ча** means "change" (the mone...
+       Fix:  > [!note]
+> **Vocabulary: Решта**
+> The word **ре́шта** means "change" (the mone...
+  !! [HIGH] RUSSIANISM @ Діалог 2: На ринку (At the market)
+       Text: **Продавець**: Дякую. Ваша здача — десять гривень. (Thank you. Your change is 10...
+       Fix:  **Продавець**: Дякую. Ваша решта — десять гривень. (Thank you. Your change is 10...
+  !! [HIGH] RUSSIANISM @ Сценарій: Бухгалтерія на базарі
+       Text: Ви даєте 50 гривень.
+"З вас двадцять сім. Здача... двадцять три."
+(From you 27. ...
+       Fix:  Ви даєте 50 гривень.
+"З вас двадцять сім. Решта... двадцять три."
+(From you 27. ...
+  !! [HIGH] RUSSIANISM @ Підсумок
+       Text: 6.  Ви купуєте каву за 45 грн. Ви платите 50 грн. Яка ваша **здача**? Назвіть чи...
+       Fix:  6.  Ви купуєте каву за 45 грн. Ви платите 50 грн. Яка ваша **решта**? Назвіть чи...
+  !! [HIGH] RUSSIANISM @ Підсумок
+       Text: Давайте повторимо головне (**main points**):
+...
+       Fix:  Повторімо головне (**main points**):
+...
+     [LOW] LANGUAGE_BLENDER @ Правопис: Де м'який знак?
+       Text: Подивіться уважно на числа 50, 60, 70 та 80.
+У слові **п'ять** (5) є м'який знак...
+       Fix:  Look closely at the numbers 50, 60, 70, and 80.
+The standalone word **п'ять** (5...
+     [LOW] ORPHAN_SENTENCE @ Складені числа (Compound Numbers)
+       Text: It is very modular. Lego blocks.
+...
+       Fix:  It is a very modular system, much like putting Lego blocks together.
+...
+     [LOW] LANGUAGE_BLENDER @ Математика: Плюс і Мінус
+       Text: Давайте попрактикуємо.
+*   **плюс** (+)
+*   **мі́нус** (-)
+*   **дорі́внює** (=,...
+       Fix:  Let's practice some basic math:
+*   **плюс** (+)
+*   **мі́нус** (-)
+*   **дорі́в...
+     [LOW] LANGUAGE_BLENDER @ Етикет на ринку
+       Text: #### Етикет на ринку
+
+На ринку (**market**) або базарі спілкування більш особист...
+       Fix:  #### Етикет на ринку (Market Etiquette)
+
+At a market (**ри́нок** or **база́р**),...
+     [LOW] LANGUAGE_BLENDER @ Дорого чи дешево?
+       Text: #### Дорого чи дешево?
+
+Коли ви чуєте ціну, у вас є реакція.
+*   **До́рого** — E...
+       Fix:  #### Дорого чи дешево? (Expensive or Cheap?)
+
+When you hear a price, you will us...
+     [LOW] LANGUAGE_BLENDER @ Символ: ₴
+       Text: Ви часто побачите символ **₴** на цінниках. Його офіційно прийняли у 2004 році. ...
+       Fix:  You will often see the symbol **₴** on price tags. Officially adopted in 2004, i...
+     [LOW] ORPHAN_SENTENCE @ Походження назви
+       Text: The word comes from **гривна** (hryvna), which was a silver or gold neck ornamen...
+       Fix:  The word comes from **гривна** (hryvna), which was a silver or gold neck ornamen...
+
+============================================================
+SUMMARY: 1 modules scanned
+  Modules with issues: 1
+  Total issues: 12
+  HIGH: 5 | LOW: 7

@@ -1,7 +1,7 @@
 # Audit Report: M01 — trypillian-civilization.md
 **Level:** B2-HIST | **Module:** M01 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 21:13:41
+**Generated:** 2026-02-24 11:14:53
 
 ## Configuration
 **Type:** B2-history
@@ -46,7 +46,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 37 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (9 activities)
@@ -54,7 +54,7 @@
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

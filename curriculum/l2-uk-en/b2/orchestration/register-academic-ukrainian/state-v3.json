@@ -1,0 +1,22 @@
+{
+  "track": "b2",
+  "slug": "register-academic-ukrainian",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T23:30:31Z",
+      "task_id": "v3-register-academic-ukrainian-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T23:36:40Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T23:40:14Z",
+      "task_id": "v3-register-academic-ukrainian-pC"
+    }
+  }
+}

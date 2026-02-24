@@ -1,0 +1,101 @@
+items:
+  - lemma: князь
+    ipa: '[knʲɑzʲ]'
+    translation: prince
+    pos: noun
+  - lemma: варяги
+    ipa: '[ʋɑˈrʲɑɦɪ]'
+    translation: Varangians
+    pos: noun
+  - lemma: дружина
+    ipa: '[druˈʒɪnɑ]'
+    translation: retinue
+    pos: noun
+  - lemma: данина
+    ipa: '[dɑˈnɪnɑ]'
+    translation: tribute
+    pos: noun
+  - lemma: похід
+    ipa: '[pɔˈxʲid]'
+    translation: campaign
+    pos: noun
+  - lemma: договір
+    ipa: '[ˈdɔɦɔˈʋʲir]'
+    translation: treaty
+    pos: noun
+  - lemma: Візантія
+    ipa: '[ʋʲizɑnʲˈtʲijɑ]'
+    translation: Byzantium
+    pos: noun
+  - lemma: літопис
+    ipa: '[lʲiˈtɔpɪs]'
+    translation: chronicle
+    pos: noun
+  - lemma: об'єднання
+    ipa: '[ɔbjɛdnɑnʲːɑ]'
+    translation: unification
+    pos: noun
+  - lemma: підкорення
+    ipa: '[pʲiˈdkɔrɛnʲːɑ]'
+    translation: subjugation
+    pos: noun
+  - lemma: правитель
+    ipa: '[prɑˈʋɪtɛlʲ]'
+    translation: ruler
+    pos: noun
+  - lemma: династія
+    ipa: '[dɪˈnɑsʲtʲijɑ]'
+    translation: dynasty
+    pos: noun
+  - lemma: регент
+    ipa: '[ˈrɛɦɛnt]'
+    translation: regent
+    pos: noun
+  - lemma: волхв
+    ipa: '[ʋɔlxʋ]'
+    translation: pagan priest
+    pos: noun
+  - lemma: привілей
+    ipa: '[prɪʋʲiˈlɛj]'
+    translation: privilege
+    pos: noun
+  - lemma: легітимність
+    ipa: '[lɛɦʲiˈtɪmnʲisʲtʲ]'
+    translation: legitimacy
+    pos: noun
+  - lemma: Щекавиця
+    ipa: '[ʃt͡ʃɛkɑˈʋɪt͡sʲɑ]'
+    translation: Shchekavytsia
+    pos: noun
+  - lemma: полюддя
+    ipa: '[pɔˈlʲudʲːɑ]'
+    translation: tribute gathering
+    pos: noun
+  - lemma: мито
+    ipa: '[ˈmɪtɔ]'
+    translation: customs duty
+    pos: noun
+  - lemma: найманець
+    ipa: '[ˈnɑjmɑnɛt͡sʲ]'
+    translation: mercenary
+    pos: noun
+  - lemma: асиміляція
+    ipa: '[ɑsɪmʲiˈlʲɑt͡sʲijɑ]'
+    translation: assimilation
+    pos: noun
+  - lemma: повстання
+    ipa: '[pɔˈʋstɑnʲːɑ]'
+    translation: rebellion
+    pos: noun
+  - lemma: паритет
+    ipa: '[pɑrɪˈtɛt]'
+    translation: parity
+    pos: noun
+  - lemma: слов'янин
+    ipa: '[slɔu̯jɑˈnɪn]'
+    translation: Slav
+    pos: noun
+  - lemma: експансія
+    ipa: '[ɛˈkspɑnʲsʲijɑ]'
+    translation: expansion
+    pos: noun

@@ -1,0 +1,40 @@
+Proofread: a1 | 1 module(s) | agent=gemini | model=gemini-3.1-pro-preview
+Mode: DRY-RUN (print findings only)
+
+============================================================
+Proofreading: a1/checkpoint-first-contact (module 10)
+  Agent: gemini | Model: gemini-3.1-pro-preview
+  Content: 15699 chars, 2701 words
+  FOUND: 5 issues (4 HIGH, 1 LOW)
+     [LOW] ORPHAN_SENTENCE @ Практика: Літери-пастки (Г, Ґ, Е, Є)
+       Text: We use IPA for *new* words. Do you know the word? Read in Cyrillic.
+
+Let's break...
+       Fix:  When you see a new word, look at its IPA transcription if you are unsure how to ...
+  !! [HIGH] WORD_SALAD @ Модель: Алгоритм визначення роду
+       Text: 2.  **Чоловічий рід (Masculine)**: Ending in a **consonant**.
+    *   **ресторан...
+       Fix:  2.  **Чоловічий рід (Masculine)**: Ending in a **consonant** (including **-й**)....
+  !! [HIGH] WORD_SALAD @ Модель: Спеціальні питання (Wh-questions)
+       Text: 6.  **Чому?** (Why?) — reason.
+    *   **Чому ти тут?** — Why are you here?
+    ...
+       Fix:  6.  **Чому?** (Why?) — reason.
+    *   **Чому ти тут?** — Why are you here?
+    ...
+  !! [HIGH] LLM_FILLER @ Практика: Робота з меню та Рахунок
+       Text: > [!myth-buster]
+> **Should you tip?**
+> In Ukraine, tips are not always include...
+       Fix:  > [!myth-buster]
+> **The "Дякую" Trap**
+> Tipping (around 10%) is customary in U...
+  !! [HIGH] WORD_SALAD @ Підсумок
+       Text: 2.  Determine the gender of the words: **вікно**, **ніч**, **Андрій**, **кафе**,...
+       Fix:  2.  Determine the gender of the words: **вікно**, **борщ**, **Андрій**, **кафе**...
+
+============================================================
+SUMMARY: 1 modules scanned
+  Modules with issues: 1
+  Total issues: 5
+  HIGH: 4 | LOW: 1

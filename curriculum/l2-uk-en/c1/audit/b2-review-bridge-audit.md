@@ -1,7 +1,7 @@
 # Audit Report: M01 — b2-review-bridge.md
 **Level:** C1 | **Module:** M01 | **Phase:** C1.1 | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 18:57:46
+**Generated:** 2026-02-23 13:17:23
 
 ## Configuration
 **Type:** C1-grammar
@@ -42,6 +42,25 @@
 - Required types used: 6/6 (cloze, error-correction, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[EUPHONY]** Line 174: «в прикметник» — в перед збігом приголосних; має бути «у прикметник»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 199: «з часом» — з перед з/с/ш/ч; має бути «із часом»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 381: «з забезпечити» — з перед з/с/ш/ч; має бути «із забезпечити»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 387: «це і є» — і між голосними; має бути «й є»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 469: «з ся» — з перед з/с/ш/ч; має бути «із ся»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 501: «у яких» — у перед голосним; має бути «в яких»
+  - FIX: Replace «у» with «в» (before vowel)
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 6 violations (moderate)
+
 ## Gates
 - **Words:** ✅ 5064/4000 (raw: 5574)
 - **Activities:** ✅ 15/12
@@ -52,7 +71,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 3 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ⚠️ 33 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "participles-intro",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T00:26:16Z",
+      "task_id": "v3-participles-intro-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T00:28:10Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T00:30:43Z",
+      "task_id": "v3-participles-intro-pC"
+    }
+  }
+}

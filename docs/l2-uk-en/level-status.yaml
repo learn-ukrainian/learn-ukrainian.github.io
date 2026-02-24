@@ -77,7 +77,7 @@ b2:
 
     **Занурення:** 100% українською — англійська більше не потрібна!
 c1:
-  planned: 109
+  planned: 108
   status: auto
   description: "Advanced — Stylistics, literature, complex grammar"
   introduction: |
@@ -200,7 +200,7 @@ c1-pro:
     **Підхід:** ESP + CLIL — мова через професійні завдання
 # Literature Track (post-C1)
 lit:
-  planned: 218
+  planned: 217
   status: auto
   description: "Literature — Ukrainian classics and literary analysis"
   introduction: |

@@ -1,0 +1,35 @@
+{
+  "slug": "passive-in-context",
+  "track": "b2",
+  "module_num": 6,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-23T21:44:45Z",
+      "words": 3757,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T10:43:41Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T10:43:41Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T11:03:46Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T11:03:46Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T11:03:46Z"
+}

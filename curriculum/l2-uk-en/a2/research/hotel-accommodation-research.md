@@ -1,42 +1,37 @@
 # Дослідження: Hotel Accommodation
 
 ## State Standard Reference
-§3.2: "Дім, помешкання: ... резервування кімнати в готелі; винаймання квартири або будинку."
-Alignment: This module directly addresses the explicit State Standard requirement for "booking a hotel room" within the "Home and Accommodation" thematic area.
+§3: "резервування кімнати в готелі" (Thematic catalogue)
+§4.2.2.6: "у, в, на (місце перебування особи чи предмета): Друг працює в лікарні." (Locative vs Accusative context)
+§4.4.1.2: "Питальне речення... загальні запитання: Хто це? Що це?"
+Alignment: This module directly addresses the A2 requirement to navigate hotel reservations, use interrogative syntax for polite requests, and accurately apply the Locative case for locations.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| готель (ч) | High (General) | у готелі, п'ятизірковий готель, забронювати готель |
-| номер (ч) | High (Domain) | одномісний/двомісний номер, номер люкс, забронювати номер, ключ від номера |
-| бронювати (недок) | Medium (Domain) | бронювати номер, бронювати онлайн |
-| заселення (с) | Medium (Domain) | час заселення, пізнє заселення |
-| виселення (с) | Medium (Domain) | час виселення, до виселення |
-| адміністратор (ч) | Medium (General) | запитати адміністратора, на стійці адміністратора |
+| готель | High / Corpus | зупинитися в готелі, п'ятизірковий готель |
+| номер | High / Corpus | номер люкс, одномісний номер, двомісний номер |
+| бронювати / забронювати | High / Contextual | бронювати онлайн, забронювати номер |
+| заселення | Medium-High | час заселення, пізнє заселення |
+| виселення | Medium-High | час виселення, до виселення |
+| ключ | High / Corpus | ключ від номера, електронний ключ |
+| адміністратор | Medium-High | запитати адміністратора, на стійці адміністратора |
+| рахунок | High / Corpus | оплатити рахунок, туристичний збір |
 
 ## Cultural Hooks
-1. **Passport Control**: Unlike some Western countries where a credit card might suffice, Ukrainian hotels strictly require an original passport (internal or international) for *every* guest at check-in for registration, complying with state laws.
-2. **Tourist Tax (Туристичний збір)**: Guests should be aware that a municipal "tourist tax" is often added to the bill separately from the room rate, which can sometimes surprise travelers if not expected.
+1. **Passport Control at Check-in:** In Ukraine, the law strictly requires the presentation of an original passport (or its digital equivalent via the state "Diia" app) for every guest at check-in, not just a reservation or credit card. (Source: Ukrainian tourism regulations)
+2. **Tourist Tax (Туристичний збір):** Most Ukrainian municipalities charge a separate daily tourist tax per guest. This is often not included in the advertised room price and is paid upon check-in or check-out.
 
 ## Common Learner Errors
-1. **Lexical Confusion (Room)**: Using "кімната" instead of "номер" for a hotel room.
-   *   *Error*: Я хочу забронювати кімнату.
-   *   *Correction*: Я хочу забронювати **номер**.
-   *   *Why*: "Кімната" refers to a room in a house/apartment; "номер" is the specific term for a hotel unit.
-2. **Case Mismatch (Location)**: Using Accusative instead of Locative for "in the hotel".
-   *   *Error*: Я в готель. (Meaning "I am [going] into the hotel")
-   *   *Correction*: Я **у готелі**. (Meaning "I am [staying] in the hotel")
-   *   *Why*: Confusion between direction (Accusative) and location (Locative).
-3. **Gender Agreement (Номер)**: Treating "номер" as feminine or neuter.
-   *   *Error*: Це гарна номер.
-   *   *Correction*: Це **гарний** номер.
-   *   *Why*: "Номер" is masculine ending in a consonant, but learners often default to neuter or guess wrong.
+1. **Кімната vs. Номер:** Learners often use "кімната" (a room in a house/apartment) for a hotel room. → Correct form: "номер".
+2. **Gender Agreement with "Номер":** Because "кімната" is feminine, learners mistakenly apply feminine adjectives to "номер" (e.g., "гарна номер"). → Correct form: "гарний номер" (masculine).
+3. **Accusative of Direction vs. Locative of Location:** "Я в готель" (I [am going] to the hotel) vs. "Я у готелі" (I [am] in the hotel). Learners mix these up when stating where they are staying.
 
 ## Cross-References
-- Builds on: `a2-46` (Home and Furniture), `a2-60` (At the Pharmacy - transactional skills).
-- Prepares for: `a2-62` (Rental Accommodation - expands "номер" to "квартира").
+- Builds on: a2-60 (At the Pharmacy)
+- Prepares for: a2-62 (Rental Accommodation), a2-46 (Home and Furniture)
 
 ## Notes for Content Writing
-- Focus heavily on the **Interrogative Syntax** (§4.4.1.2) as checking in involves asking many questions (Is breakfast included? What time is check-out?).
-- Ensure distinction between "забронювати" (perfective, completed) and "бронювати" (imperfective, process) is clear in examples.
-- Use the formal "Ви" address consistently, as interactions with hotel staff are standard formal situations.
+- **Immersion:** This is a Band 3 module (75-90% Ukrainian immersion). Explanations of grammar must be almost entirely in Ukrainian. English is reserved for abstract comparisons (e.g., explaining why "кімната" differs from "номер") or for the translation columns of vocabulary tables.
+- **Decolonized Framing:** Do not compare Ukrainian vocabulary or grammar to Russian equivalents. Standardize Ukrainian terminology independently.
+- **Persona:** Use the "Encouraging Cultural Guide" / "Hotel Concierge" persona. Maintain the formal «Ви» address throughout all examples, highlighting standard etiquette.

@@ -1,0 +1,15 @@
+{
+  "slug": "register-medical-ukrainian",
+  "track": "b2",
+  "module_num": 20,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-23T23:50:46Z",
+      "words": 3192,
+      "attempts": 1
+    }
+  },
+  "last_updated": "2026-02-23T23:50:46Z"
+}

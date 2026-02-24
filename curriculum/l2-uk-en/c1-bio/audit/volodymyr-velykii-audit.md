@@ -1,8 +1,8 @@
 # Audit Report: M03 — volodymyr-velykii.md
 **Level:** C1-BIO | **Module:** M03 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-21 19:25:50
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-23 13:17:19
 
 ## Configuration
 **Type:** C1-biography
@@ -34,23 +34,6 @@
 - Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[EUPHONY]** Line 4: повторення і/й без «та» — «...аконних шлюбів і мали беззапере...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 5: повторення і/й без «та» — «...ю лють, образу й амбіції...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 8: повторення і/й без «та» — «...до брата мого і скажіть йому:...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 12: повторення і/й без «та» — «...ючи їх богами, і приводили сині...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-- **[EUPHONY]** Line 13: повторення і/й без «та» — «...н створив небо і землю...»; використайте «та» для другого сполучника
-  - FIX: Replace second «і»/«й» with «та» for conjunction variety
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 5 violations (moderate)
-
 ## Gates
 - **Words:** ✅ 5528/5000 (raw: 5773)
 - **Activities:** ✅ 6/3
@@ -61,15 +44,15 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/24
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
+- **Ipa:** ⚠️ 43 IPA issues (run lint_ipa.py --fix)
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 5 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.2% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-- **Research:** ⚠️ Refresh recommended: Research has 5+ sources but content cites 0
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)

@@ -27,8 +27,8 @@
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:43:29Z",
-      "attempts": 1
+      "timestamp": "2026-02-24T10:16:19Z",
+      "note": "v3-audit"
     },
     "3a": {
       "status": "complete",
@@ -54,8 +54,8 @@
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:49:31Z",
-      "attempts": 1
+      "timestamp": "2026-02-24T10:16:19Z",
+      "note": "v3-audit"
     },
     "7-final": {
       "status": "complete",
@@ -72,5 +72,5 @@
       "timestamp": "2026-02-21T00:02:11Z"
     }
   },
-  "last_updated": "2026-02-21T00:02:11Z"
+  "last_updated": "2026-02-24T10:16:19Z"
 }

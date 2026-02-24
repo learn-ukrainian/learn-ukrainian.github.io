@@ -1,33 +1,34 @@
 # Дослідження: Право та юстиція
 
 ## State Standard Reference
-§3.7: "Суспільні відносини: ... державний устрій країни; ... права й обов’язки; злочинність; правоохоронні органи; рівність і справедливість"
-Alignment: Цей модуль безпосередньо реалізує вимоги стандарту щодо тем "злочинність", "правоохоронні органи" та "справедливість", вводячи необхідну лексику та граматичні конструкції (пасивний стан) для обговорення судової системи.
+§3.7: "Суспільні відносини: права й обов’язки; правоохоронні органи; рівність і справедливість; злочинність"
+Alignment: This module directly addresses the B2 requirement to navigate societal relations regarding rights, duties, and law enforcement, utilizing the requisite official register and passive grammatical structures.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **суддя** | Висока (MOVA.info) | слідчий суддя, голова суду, вирок судді, упереджений суддя, "Ваша честь" (звертання) |
-| **прокурор** | Висока | Генеральний прокурор, державний обвинувач, санкція прокурора, подати до суду |
-| **адвокат** | Висока | найняти адвоката, послуги адвоката, адвокатський запит, захист у суді |
-| **позов** | Середня (юридична) | подати позов, цивільний позов, задовольнити позов, відхилити позов |
-| **вирок** | Середня | винести вирок, виправдувальний вирок, обвинувальний вирок, оскаржити вирок |
-| **свідок** | Висока | свідок захисту/обвинувачення, викликати свідка, лжесвідок, давати свідчення |
+| суддя | High (news/legal) | слідчий суддя, голова суду, звертання «Ваша честь» |
+| адвокат | High | надати правову допомогу, адвокатський запит, свідок захисту |
+| прокурор | High | державний обвинувач, санкція прокурора |
+| вирок | Medium-High | винести вирок, оскаржити вирок, виправдувальний вирок |
+| позов | Medium | подати позов, цивільний позов, задовольнити/відхилити позов |
+| свідок | High | давати свідчення, викликати свідка |
 
 ## Cultural Hooks
-1. **Руська Правда (XI ст.)**: Найдавніший збірник законів на українських землях (Ярослав Мудрий). Цікавий факт: вона замінила кровну помсту грошовими штрафами ("віра"), що свідчило про гуманізацію права. "Правда" тут означає саме "Закон/Справедливість".
-2. **Магдебурзьке право**: Київ отримав його у 1494-1499 роках. Це давало місту право на самоврядування і *власний суд*, незалежний від феодалів. Це символ європейської правової традиції України.
+1. **«Руська Правда» (Rus' Justice):** The 11th-century legal code compiled by Yaroslav the Wise. It is crucial for understanding the humanization of law in Kyivan Rus', transitioning from the practice of blood feuds to a system of monetary compensation called «віра» (vira).
+2. **Магдебурзьке право (Magdeburg Law):** Adopted in Kyiv between 1494 and 1499, this system of municipal self-government firmly embedded Ukrainian cities within the European legal and administrative tradition, granting them independent courts and breaking away from absolute feudal control.
 
 ## Common Learner Errors
-1. **Адвокат vs Юрист**: Учні часто плутають ці поняття. *Error*: "Мій юрист у суді сказав..." (коли йдеться про захисника). *Correction*: "Мій адвокат...". (Адвокат має спеціальне свідоцтво для захисту в суді).
-2. **Prepositions with "Закон"**: *Error*: "По закону". *Correction*: "Згідно із законом" (formal) або "За законом". "По закону" — це калька з російської або розмовний стиль.
-3. **Судити vs Судитися**: *Error*: "Він судить сусіда". *Correction*: "Він судиться з сусідом" (civil dispute) або "Він позивається до сусіда". "Судити" може тільки суддя.
+1. **«Юрист» vs «Адвокат»:** Learners often use «юрист» for anyone in court. «Юрист» is a general term (lawyer/legal professional), while «адвокат» specifically denotes a defense attorney admitted to the bar who represents clients in trials.
+2. **«По закону» (Calque):** Using the colloquial or Russian-influenced «по закону» instead of the correct official Ukrainian forms «згідно із законом», «відповідно до закону», or «за законом».
+3. **«Давати покази» (Calque):** Directly translating "to give evidence/shows" leading to the incorrect «давати покази». The correct normative phrase is «давати свідчення».
 
 ## Cross-References
-- **Builds on**: B1 "Суспільні відносини" (general society terms).
-- **Prepares for**: B2-HIST (M13 "Руська Правда", M52 "Гетьманщина"), C1 "Державний устрій".
-- *Note*: `connects_to` field was missing in the plan; connections inferred from curriculum structure.
+- Builds on: Abstract noun formation and introductory passive constructions from B1.
+- Prepares for: C1 legal/academic discourse, professional business communication (B2-PRO), and understanding historical legal documents in B2-HIST.
 
 ## Notes for Content Writing
-- **Passive Voice**: The plan explicitly requests "passive-constructions". Ensure strict differentiation between "Active Agency" (preferred generally in B2) and "Official Passive" (used *only* in legal contexts like "Вирок було винесено").
-- **Register**: Contrast "розмовна мова" (clients talking) vs "офіційно-діловий стиль" (court documents).
+- **Decolonized Framing:** Frame Ukraine's legal history (Rus' Pravda, Magdeburg Law) as a continuous integration with European legal norms of self-governance and codified justice, directly challenging the imperial narrative of an inherently autocratic past.
+- **Active Agency:** Use constructions that show Ukrainians actively adopting and enforcing laws (e.g., «Містяни отримали право...», «Суди захищають...»).
+- **Grammar Integration:** Weave passive voice (e.g., «позов задоволено», «вирок винесено») naturally into the explanation of the litigation process to demonstrate the objective tone of the official register.
+- **Visual Aid:** Include a Mermaid flowchart in the final section to visually map the stages of litigation.

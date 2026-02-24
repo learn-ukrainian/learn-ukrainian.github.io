@@ -2,14 +2,14 @@
   "module": "b2-review-bridge",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-19T18:57:46.884401Z",
+  "last_audit": "2026-02-23T13:17:23.960652Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-18T17:13:00.264325Z",
     "meta": "2026-02-19T13:52:52.934733Z",
     "activities": "2026-02-18T17:13:05.831345Z",
-    "vocabulary": "2026-02-18T16:24:57.985771Z",
-    "plan": "2026-02-18T19:03:38.423397Z",
+    "vocabulary": "2026-02-21T18:06:33.708168Z",
+    "plan": "2026-02-20T22:22:51.190829Z",
     "research": "2026-02-19T13:52:52.928347Z"
   },
   "gates": {
@@ -41,7 +41,7 @@
     "ipa": {
       "status": "warn",
       "violations": 0,
-      "message": "3 IPA issues (run lint_ipa.py --fix)"
+      "message": "33 IPA issues (run lint_ipa.py --fix)"
     },
     "research": {
       "status": "warn",
@@ -51,13 +51,13 @@
     "review": {
       "status": "fail",
       "violations": 1,
-      "message": "Only 9/23 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-4-advanced.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did This Stretch Me?' test from the tier-4 guide, (4) verify linguistic analysis is sophisticated (not B1/B2 level), (5) score each dimension honestly and list at least 1 real issue."
+      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "Only 9/23 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-4-advanced.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did This Stretch Me?' test from the tier-4 guide, (4) verify linguistic analysis is sophisticated (not B1/B2 level), (5) score each dimension honestly and list at least 1 real issue."
+      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
     ],
     "pass_count": 4,
     "fail_count": 1,

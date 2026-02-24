@@ -1,41 +1,32 @@
 # Дослідження: Підрядні речення мети: щоб + минула форма
 
 ## State Standard Reference
-§4.4.3: "складнопідрядні речення з підрядною частиною мети (сполучник щоб): Ми ходимо в музеї Львова, щоб краще знати історію цього старовинного міста"
-Also relevant (Indirect Command/Purpose with different subjects) §4.4.2: "Викладач сказав, щоб я багато працював"
-Alignment: This module directly addresses the B1 requirement for complex sentences with purpose clauses, specifically focusing on the "different subject" pattern (`щоб` + past tense), which is distinct from the same-subject infinitive pattern.
+§4.4.3: "складнопідрядне речення зі з’ясувальною підрядною частиною (сполучники що, щоб...): Викладач сказав, щоб я багато працював; складнопідрядні речення з підрядною частиною мети (сполучник щоб): Ми ходимо в музеї Львова, щоб краще знати історію..."
+Alignment: This module fulfills the B1 requirement to master complex sentences with subordinate clauses of purpose and object clauses using the conjunction «щоб», specifically focusing on the structural shift to the past tense (subjunctive) when the subject changes.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| бажання | High (Core B1) | велике бажання, мати бажання, придушити бажання, за власним бажанням |
-| прохання | High (Core B1) | на прохання, мати прохання, звертатися з проханням, виконати прохання |
-| наказ | Medium (Core B1) | віддати наказ, виконати наказ, за наказом |
-| необхідність | High (Core B1) | гостра необхідність, викликана необхідністю, у разі необхідності |
-| вимагати | High (Core B1) | вимагати уваги, вимагати грошей, вимагати, щоб... |
-| радити | High (Core B1) | радити другу, я раджу тобі, лікар радить |
+| щоб | Extremely high (Core Grammar) | хотіти, щоб; просити, щоб |
+| бажання | Frequent (Core B1) | велике бажання, мати бажання |
+| прохання | Frequent (Core B1) | звертатися з проханням, виконати прохання |
+| вимагати | High frequency | вимагати пояснень, вимагати, щоб |
+| радити | High frequency | радити другові, лікар радить |
 
 ## Cultural Hooks
-1. **Paternal Wisdom & Family Expectations**: Ukrainian culture places high value on intergenerational support. Parents often sacrifice "so that children have a better life" (`Батьки працюють, щоб діти мали краще майбутнє`). This is a perfect natural context for this grammar point.
-2. **Proverbs on Effort & Result**:
-   - "Щоб рибу їсти, треба у воду лізти" (To eat fish, one must climb into the water) — emphasizes purpose and necessary action.
-   - "Під лежачий камінь вода не тече" (Water doesn't flow under a lying stone) — action required for result.
+1. Generational expectations and support: The concept of "Батьки працюють, щоб діти мали краще майбутнє" (Parents work so that children have a better future) deeply reflects Ukrainian family values and intergenerational dedication.
+2. The proverb "Щоб рибу їсти, треба у воду лізти" serves as a cultural anchor emphasizing that achieving a goal (мета) requires active effort and initiative.
 
 ## Common Learner Errors
-1. **Infinitive instead of Past Tense**: Learners often try to mirror English "I want you to go" with `Я хочу тебе йти` or `Я хочу, щоб ти йти`.
-   → *Correct:* `Я хочу, щоб ти йшов/йшла`.
-   → *Why:* English uses infinitive for different subjects; Ukrainian strictly requires `щоб` + past tense (subjunctive).
-2. **Case Errors in Main Clause**: Using Nominative instead of Accusative/Genitive for the object of desire.
-   → *Correct:* `Я хочу (чого?) спокою` or `Я чекаю на (що?) результат`.
-3. **Gender/Number Disagreement**: Failing to match the past tense verb in the `щоб` clause with its subject (the person being told/wanted to do something).
-   → *Error:* `Він хоче, щоб я (female) написав...`
-   → *Correct:* `Він хоче, щоб я написала...`
+1. English Interference ("I want you to...") → Incorrect: "Я хочу тебе робити це". Correct: "Я хочу, щоб ти зробив це".
+2. Agreement Errors in Subordinate Clause → Incorrect: "Він хоче, щоб я (жін. рід) писав". Correct: "Він хоче, щоб я написала". The past tense verb must agree with the *subordinate* subject, not the main subject.
+3. Tense Confusion → Learners assume the past tense form implies a past action, failing to recognize it as the subjunctive mood triggered by "щоб".
 
 ## Cross-References
-- Builds on: `b1-29` (Purpose Clauses: щоб + infinitive — same subject pattern)
-- Prepares for: `b1-31` (Conditionals Real `якщо` — similar subordinate logic), `b1-36` (Subjunctive Mood — full treatment)
+- Builds on: b1-29 (Purpose Clauses щоб + infinitive)
+- Prepares for: b1-31 (Conditionals Real якщо), b1-36 (Умовний спосіб)
 
 ## Notes for Content Writing
-- **Contrast is Key**: Constantly contrast "Same Subject (`я хочу читати`)" vs "Different Subject (`я хочу, щоб ти читав`)". This is the conceptual hurdle.
-- **"Subjunctive" Terminology**: At B1, avoid heavy linguistic jargon like "subjunctive mood" (умовний спосіб) in the explanations if possible, or introduce it gently. Focus on the *form* being identical to the past tense.
-- **Contexts**: Use professional contexts (boss/employee) for "commands/requests" and family contexts for "wishes/advice".
+- **Decolonized Framing**: Present the "щоб + past form" construction as an elegant syntactic feature of Ukrainian. Avoid framing it as "unlike Russian"; instead, compare it to Romance language subjunctives (e.g., Spanish/French) to elevate its linguistic status, or contrast it strictly with English to highlight structural differences.
+- **Immersion Rule**: B1.3a strictly requires **100% Ukrainian immersion** for all explanations. English is only allowed in the vocabulary table translations. Do not use English in parentheses.
+- Ensure clear differentiation between perfective (доконаний) and imperfective (недоконаний) aspect within these clauses, as it changes the meaning from ongoing desire to a completed goal.

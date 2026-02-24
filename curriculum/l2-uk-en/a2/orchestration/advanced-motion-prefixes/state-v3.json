@@ -1,0 +1,27 @@
+{
+  "track": "a2",
+  "slug": "advanced-motion-prefixes",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T08:17:08Z",
+      "task_id": "v3-advanced-motion-prefixes-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T08:18:47Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T20:40:09Z",
+      "task_id": "v3-advanced-motion-prefixes-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T10:05:51Z",
+      "attempts": 2
+    }
+  }
+}

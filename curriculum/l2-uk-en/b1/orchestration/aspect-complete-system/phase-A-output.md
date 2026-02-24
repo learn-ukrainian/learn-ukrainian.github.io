@@ -1,17 +1,211 @@
-✅ Message sent to Gemini (ID: 13261) [auto-acked: self-addressed]
-✓ Message 13261 acknowledged
+✅ Message sent to Gemini (ID: 14890) [auto-acked: self-addressed]
+✓ Message 14890 acknowledged
    Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
 
-🚀 Invoking Gemini to process message #13261...
-📨 Message #13261
+🚀 Invoking Gemini to process message #14890...
+📨 Message #14890
    From: gemini → To: gemini
    Type: query
    Task: v3-aspect-complete-system-pA
-   Time: 2026-02-21T00:37:34.340339+00:00
+   Time: 2026-02-23T13:50:22.352968+00:00
 
 ============================================================
 
-Activate skill full-rebuild-core-b. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/orchestration/aspect-complete-system/phase-A-prompt.md
+Activate skill full-rebuild-core-b.
+
+# Phase A: Meta + Lightweight Research (Core Track)
+
+> **You are Gemini, executing Phase A of an optimised rebuild (build_module_v3).**
+> **This is a combined Phase 0 + Phase 1. Your ONLY task: Lightweight research AND meta outline in one pass.**
+
+---
+
+## Your Input
+
+Read the plan file (SOURCE OF TRUTH):
+
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/b1/aspect-complete-system.yaml
+```
+
+Read the meta file (for reference — you will replace the content_outline):
+
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/meta/aspect-complete-system.yaml
+```
+
+Read the level quick-ref for constraints:
+
+```
+/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/B1.md
+```
+
+Read the State Standard compliance mapping (small file — read this FIRST):
+
+```
+docs/l2-uk-en/state-standard-2024-mapping.yaml
+```
+
+The full State Standard 2024 is at `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt` (431KB, ~6000 lines). **Do NOT read the entire file.** Instead:
+1. Check the mapping file for the relevant `B1` section — find the grammar topic that matches your module
+2. Use the `lines: [start, end]` coordinates to read ONLY that section from the full Standard
+3. If no mapping entry exists for this topic, search by §number or keyword as fallback
+4. If still no match, say so honestly — do NOT fabricate a §reference
+
+---
+
+## PART 1: Lightweight Research
+
+Research **Вид дієслова: повна система** for the **B1** core track. Core tracks need lighter research than seminar tracks — focus on accuracy and State Standard alignment.
+
+### Research Requirements
+
+1. **State Standard Reference**: Look up the §section in `state-standard-2024-mapping.yaml`, then read ONLY that section from `UKRAINIAN-STATE-STANDARD-2024.txt`. Quote the relevant requirement.
+2. **Vocabulary Frequency**: For key vocabulary items in the plan, note frequency data and collocations. Use web search if available — do NOT rely on memory alone.
+3. **Cultural Hook**: Find 1-2 verified cultural facts to anchor the lesson.
+4. **Cross-References**: Note which modules this builds on and prepares for (check the plan's `connects_to` field).
+5. **Common Errors**: Identify 2-3 common learner mistakes for this grammar point/topic.
+
+### Decolonized Framing
+
+When researching, frame Ukrainian independently — **never as a derivative or variant of Russian:**
+- Describe Ukrainian features positively ("Ukrainian has...", "Ukrainian uses...")
+- Do NOT use Russian as the baseline for comparisons ("Unlike Russian...", "Different from Russian...")
+- If comparing language systems is useful, use non-Russian languages (Polish, Portuguese, etc.)
+- Note how topics have been historically misframed by Russian/Soviet sources and provide the Ukrainian-centric perspective
+
+### Research Output Cap
+Keep research notes under **1500 words**. Focus on density: facts, dates, quotes, tables — not prose.
+
+### Additional for Core B (B1.6+, B2, C1, C2, PRO)
+
+- Domain-specific vocabulary collocations from professional glossaries (PRO tracks)
+- Stylistic/dialectal features from academic sources (C2)
+- Register distinctions (formal vs. informal usage)
+
+## Downstream Audit Gates (Phase B content will be checked for)
+
+Plan your outline knowing that Phase B content must pass these gates:
+- **Word count**: minimum **4000** words — allocate outline sections accordingly
+- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
+- **Russianisms**: ensure vocabulary_hints and examples avoid banned words (кушати→їсти, получати→отримувати)
+- **IPA vowels**: Ukrainian о = [ɔ] always, е = [ɛ] always, ч = [t͡ʃ] with tie-bar
+- **Duplicate headers**: ensure outline section names don't share keywords
+
+---
+
+## PART 2: Meta Outline
+
+After completing research, rebuild the `content_outline` using:
+- The plan's section structure as skeleton
+- Research findings to inform depth and word allocation
+
+### Rules for Meta Outline
+
+- **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
+- Allocations must sum to approximately **4000** words (±10% acceptable)
+- Minimum section allocation: 200 words (merge smaller sections)
+- Each section must have `section`, `words`, and `points` fields
+- Section names must be in Ukrainian (these become H2 headings in the lesson)
+- **Section names must match plan exactly** — use exact names from plan's `content_outline` (or very close Ukrainian equivalents)
+- Points are specific and actionable — not vague ("cover grammar" → bad; "Each case form gets its own H3 with definition, 2+ examples, usage note" → good)
+- **Bridge modules (immersion < 90%):** Note the plan's `immersion` field. The intro section should explicitly list English scaffolding requirements.
+
+---
+
+## Output Format
+
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+
+### Output Block 1: Research Notes
+
+```
+===RESEARCH_START===
+
+# Дослідження: Вид дієслова: повна система
+
+## State Standard Reference
+§{section_number}: "{quoted requirement}"
+Alignment: {how this module addresses the standard}
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| ...  | ...               | ...              |
+
+## Cultural Hooks
+1. {Verified fact with source}
+2. {Verified fact with source}
+
+## Common Learner Errors
+1. {Error pattern} → {Correct form} — {Why it happens}
+2. ...
+
+## Cross-References
+- Builds on: {module slugs}
+- Prepares for: {module slugs}
+
+## Notes for Content Writing
+- {Any additional observations for Phase B}
+
+===RESEARCH_END===
+```
+
+### Output Block 2: Meta Outline
+
+```
+===META_OUTLINE_START===
+content_outline:
+  - section: "{Section 1 name in Ukrainian}"
+    words: {allocation}
+    points:
+      - "{key point 1}"
+      - "{key point 2}"
+  - section: "{Section 2 name}"
+    words: {allocation}
+    points:
+      - "..."
+  # ... all sections
+  # Total: ~4000 words
+===META_OUTLINE_END===
+```
+
+### Validation checklist (complete before outputting meta):
+
+- [ ] All section names are Ukrainian
+- [ ] Section names match plan structure
+- [ ] Each section has `words` and `points`
+- [ ] Sum of all `words` ≈ 4000
+- [ ] No section has fewer than 200 words
+- [ ] Points are actionable and specific
+
+---
+
+## Friction Report (MANDATORY)
+
+After both output blocks, include:
+
+```
+===FRICTION_START===
+**Phase**: Phase A: Meta + Research (Core)
+**Step**: {what you were doing when friction occurred, or "Full Phase A"}
+**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | STATE_STANDARD_NOT_FOUND | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
+===FRICTION_END===
+```
+
+---
+
+## Boundaries
+
+- Do NOT write lesson content — only research notes and meta outline
+- Do NOT generate activities or vocabulary
+- Do NOT fabricate State Standard references — if you can't find the exact §, say so
+- Do NOT reference persona names or voice instructions — persona is assigned at content generation time
+- Do NOT request skills, delegate to Claude, or skip this phase
+
 
 ============================================================
 📎 Attached Data:
@@ -23,38 +217,35 @@ Activate skill full-rebuild-core-b. Read and execute the instructions at /Users/
 # Дослідження: Вид дієслова: повна система
 
 ## State Standard Reference
-§4.2.3.1: "утворення форм роду і числа дієслів минулого часу недоконаного і доконаного виду... дієвідмінювання дієслів недоконаного виду в майбутньому часі – складена форма: буду боротися... синтетична форма: боротимуся... дієвідмінювання дієслів доконаного виду в майбутньому часі: скажу, закричите, поборють."
-Alignment: Цей модуль безпосередньо розкриває повну видову систему дієслів у всіх часах згідно зі стандартом, звертаючи особливу увагу на розрізнення аналітичної та синтетичної форм майбутнього часу недоконаного виду, а також синтетичної форми доконаного виду.
+§4.2.3.1: "дієвідмінювання дієслів недоконаного виду в майбутньому часі – складена форма: буду боротися, будеш пити... синтетична форма: боротимуся, питимеш... дієвідмінювання дієслів доконаного виду в майбутньому часі: скажу, закричите, поборють."
+Alignment: Цей модуль безпосередньо забезпечує виконання стандарту §4.2.3.1, розкриваючи правила вибору та утворення аналітичних і синтетичних форм недоконаного та доконаного виду в майбутньому та минулому часах.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| процес | Дуже висока (загальновживане) | у процесі, навчальний процес, тривалий процес, контролювати процес |
-| результат | Дуже висока (загальновживане) | досягти результату, кінцевий результат, позитивний результат, у результаті |
-| тривалість | Висока (формальний/науковий стиль) | тривалість дії, середня тривалість, тривалість життя |
-| завершення | Середня (офіційно-діловий) | після завершення, успішне завершення, стадія завершення |
-| намір | Висока (когнітивна сфера) | мати намір, серйозні наміри, з наміром |
+| процес (process) | High (General Corpus) | у процесі, навчальний процес, тривалий процес, контролювати процес |
+| результат (result) | High (General Corpus) | досягти результату, кінцевий результат, у результаті |
+| тривалість (duration) | Medium (Formal) | тривалість дії, середня тривалість |
+| завершення (completion) | Medium (Formal) | після завершення, стадія завершення |
+| намір (intention) | Medium (General) | мати намір, серйозні наміри |
 
 ## Cultural Hooks
-1. Візуальна мова Сергія Параджанова у культовому фільмі «Тіні забутих предків»: використання динамічної камери для передачі безперервного процесу (недоконаний вид) та статичних, майже живописних кадрів для фіксації результату і завершеності (доконаний вид).
-2. Українська пареміологія (народна мудрість): прислів'я «Зробив діло — гуляй сміло» (доконаний вид акцентує, що лише результат дає свободу) та «Вік живи — вік учись» (недоконаний вид ілюструє життя як безперервний процес).
+1. Метафора режисерського об'єктива: Візуальна мова Сергія Параджанова у фільмі «Тіні забутих предків». Динамічна камера символізує процес і занурення (недоконаний вид), тоді як статичні, живописні кадри фіксують ключові сюжетні події та результати (доконаний вид).
+2. Мовна мудрість: Контраст видів через приказки — «Зробив діло — гуляй сміло» (доконаний вид як завершеність, що дає свободу) та «Вік живи — вік учись» (недоконаний вид як постійний процес існування).
 
 ## Common Learner Errors
-1. Овергенералізація аналітичного майбутнього часу → "буду + доконаний вид" (неправильно: «Я буду написати»; правильно: «Я напишу» або «Я буду писати») — виникає через калькування англійської структури "will + infinitive".
-2. Використання недоконаного виду замість доконаного для вираження досвіду з акцентом на завершенні → неправильно: «Ти читав Кобзар?» (коли питають про повне ознайомлення), правильно: «Ти прочитав Кобзар?» — змішування загальнофактичного значення з результативним.
-3. Логіка заперечення факту дії → очікування доконаного виду для одноразових подій, але українська мова віддає перевагу недоконаному для повного заперечення події в минулому (правильно: «Я не бачив цей фільм», неправильно: «Я не побачив цей фільм»).
+1. Гіперкорекція складеного майбутнього: *«буду + доконаний інфінітив»* (наприклад, «Я буду написати»). Виникає через прямий переклад англійської аналітичної форми "will + verb". Правильно: «Я напишу» (ДВ) або «Я буду писати» (НДВ).
+2. Загальнофактичне значення та досвід: Використання доконаного виду для запитань про життєвий досвід замість недоконаного (наприклад, «Ти прочитав Кобзар?» замість «Ти читав Кобзар?»).
+3. Логіка заперечення: Використання доконаного виду при повному запереченні факту дії («Я не сказав це» замість природного українського «Я не казав цього»).
 
 ## Cross-References
 - Builds on: b1-05 (Metalanguage checkpoint), A2 aspect basics (impf/pf recognition)
 - Prepares for: b1-07 (Aspect in past - single vs repeated), b1-08 (Aspect in past - result vs process), b1-15 (Aspect mastery checkpoint)
 
 ## Notes for Content Writing
-- Модуль має бути на 100% україномовним (ніякого англійського скаффолдингу в тексті, поясненнях чи заголовках).
-- Уникати порівнянь видової системи української мови з російською. Для контрастивного аналізу (за потреби) залучати польську або португальську мови як нейтральний фон.
-- Використовувати модальне хеджування («ймовірно», «можливо», «як правило») для підкреслення семантичних нюансів вибору виду.
-- Кожен концепт має бути детально пояснений перед тим, як з'являтиметься в прикладах.
-- Усі елементи однієї категорії повинні бути представлені на однаковому рівні глибини (кожен отримує власний підзаголовок H3).
-- Використовувати TTT (Test-Teach-Test) педагогіку. Включити схеми вибору виду (алгоритми) та таблиці з розбором прикладів.
+- Decolonized Framing: Пояснюйте українську видову систему як унікальний спосіб сприйняття часу (результат проти безперервного потоку подій), не використовуючи жодних порівнянь з російською.
+- Забезпечте 100% занурення в українську мову без англійських підказок у тексті (згідно з правилами рівня B1.1).
+- Використовуйте чіткі порівняльні таблиці для презентації синтетичних та аналітичних форм майбутнього часу.
 
 ===RESEARCH_END===
 
@@ -63,29 +254,33 @@ content_outline:
   - section: "Розминка та Контекст"
     words: 600
     points:
-      - "Метафора режисерського об'єктива: вид як вибір кута зору. Візуальна мова Сергія Параджанова у фільмі «Тіні забутих предків» як ілюстрація — динамічна камера (НДВ) проти статичних живописних кадрів (ДВ)."
-      - "Тест на інтуїцію та філософська диференціація: порівняння «Ти пекла торт?» (участь у стані) та «Ти спекла торт?» (зміна реальності). Визначення концепту «Video mode» (процес) проти «Photo mode» (результат)."
+      - "Діагностичне завдання (Test-Teach-Test): інтуїтивний вибір між «Ти пекла торт?» (участь у процесі) та «Ти спекла торт?» (результат і зміна реальності)."
+      - "Визначення концептів: недоконаний вид як «Video mode» (безперервний процес) та доконаний вид як «Photo mode» (статичний результат)."
+      - "Культурний контекст: метафора режисерського об'єктива на прикладі візуальної мови Сергія Параджанова у фільмі «Тіні забутих предків» (динамічна камера проти статичних кадрів)."
   - section: "Граматична Система: Форми та Функції"
     words: 1000
     points:
-      - "Відповідність Державному стандарту §4.2.3.1: утворення видових пар у минулому та майбутньому часах. Детальний розбір дієвідмінювання майбутнього часу: синтетична форма ДВ (скажу, поборють) проти аналітичної та синтетичної форм НДВ (буду казати, казатиму)."
-      - "Інгресивний вид (початок дії): роль префікса «по-» як маркера початку стану або руху (любити → полюбити, бігти → побігти). Уточнення, що в цьому контексті «по-» не є просто загальним показником результативності."
+      - "Пояснення утворення видових пар у минулому та майбутньому часах згідно з §4.2.3.1 Державного стандарту."
+      - "Детальний розбір майбутнього часу у форматі порівняльної таблиці: аналітична/складена форма НДВ (буду казати), синтетична форма НДВ (казатиму) та проста форма ДВ (скажу)."
+      - "Розбір інгресивного виду: специфічна функція префікса «по-» як маркера початку стану або руху (любити → полюбити, бігти → побігти), а не просто завершеності."
   - section: "Глибинна Семантика: Процес та Результат"
     words: 800
     points:
-      - "Загальнофактичне значення НДВ: розбір складної для рівня B1 помилки — використання НДВ для позначення досвіду (напр., «Ти читав Кобзар?») проти ДВ для акценту на завершенні («Ти прочитав Кобзар?»)."
-      - "Народна мудрість як лінгвістичний якір: аналіз прислів'їв «Зробив діло — гуляй сміло» (ДВ: результат веде до свободи) та «Вік живи — вік учись» (НДВ: життя як безперервний процес)."
+      - "Пояснення загальнофактичного значення недоконаного виду для опису життєвого досвіду (наприклад, запитання «Ти читав Кобзар?»)."
+      - "Протиставлення простого факту дії (досвіду) та акценту на її повному завершенні («Ти прочитав Кобзар?»)."
+      - "Аналіз українських прислів'їв для концептуального закріплення семантики: «Зробив діло — гуляй сміло» (ДВ) та «Вік живи — вік учись» (НДВ)."
   - section: "Аналіз Помилок та Тонкощі"
     words: 800
     points:
-      - "Пастка аналітичного майбутнього часу: виправлення типової помилки овергенералізації «буду + ДВ» (неправильно: «Я буду написати»; правильно: «Я напишу» або «Я буду писати»)."
-      - "Логіка заперечення: пояснення, чому українська мова часто віддає перевагу НДВ для заперечення самого факту дії (напр., «Я не бачив цей фільм»), замість очікуваного учнями ДВ для одноразових подій."
-      - "Лексичні нюанси вибору: опозиція «спроба vs успіх» (здавати іспит vs здати іспит) та семельфактивні дії (стукати vs стукнути)."
+      - "Виявлення та виправлення помилки овергенералізації аналітичного майбутнього часу (пастка структури «буду + написати»)."
+      - "Особливості логіки заперечення: перевага недоконаного виду для глибокого заперечення самого факту дії (наприклад, «Я не бачив цей фільм»)."
+      - "Лексичні нюанси та опозиції: спроба проти успіху (здавати іспит vs здати іспит) та семельфактивні дії (стукати vs стукнути)."
   - section: "Практика та Мовленнєві Ситуації"
     words: 800
     points:
-      - "Нарративна архітектура: використання виду для структурування розповіді. НДВ для створення фону («Я йшов, думав...») проти ДВ для позначення ключових подій («побачив, зупинився, привітався»)."
-      - "Алгоритм вибору виду: застосування 4 ключових питань у реальних ситуаціях (домашнє завдання, зустрічі, читання). Мапування часових маркерів: тривалість (НДВ) проти стадії завершення (ДВ)."
+      - "Структурування розповіді за допомогою виду: використання НДВ для створення фону («Я йшов, думав...») та ДВ для ключових послідовних подій («побачив, привітався»)."
+      - "Покроковий алгоритм вибору виду за допомогою 4 ключових питань: тривалість, результат, повторення, намір."
+      - "Мапування часових маркерів (завжди, довго vs раптом, нарешті) та інтегровані завдання на застосування видової системи у реальних комунікативних ситуаціях."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -99,8 +294,8 @@ content_outline:
 
 
 ────────────────────────────────────────
-✅ Gemini finished (6497 chars)
-✅ Message sent to Claude (ID: 13263)
-✓ Message 13263 acknowledged
-   Auto-acknowledged reply #13263 (stdout delivery — no inbox accumulation)
-✓ Message 13261 acknowledged
+✅ Gemini finished (5786 chars)
+✅ Message sent to Claude (ID: 14894)
+✓ Message 14894 acknowledged
+   Auto-acknowledged reply #14894 (stdout delivery — no inbox accumulation)
+✓ Message 14890 acknowledged

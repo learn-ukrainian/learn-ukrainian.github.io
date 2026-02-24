@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b2-hist 23 — E2E
+FAIL: build_module_v2.py b2-hist 23 — E2E
 
   Module:   danylo-halytskyi
   Track:    b2-hist
   Mode:     e2e
-  Words:    0 (target: 5000)
+  Words:    3857 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-19T17:44:19Z
+  Verdict:  FAIL
+  Date:     2026-02-24T09:39:39Z

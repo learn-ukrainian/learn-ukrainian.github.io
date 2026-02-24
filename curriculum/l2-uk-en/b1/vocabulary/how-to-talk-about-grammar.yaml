@@ -12,7 +12,7 @@
   context: "Прикметник узгоджується з іменником."
 - word: займенник
   translation: pronoun
-  ipa: [zɐjˈmɛnːɪk]
+  ipa: [zɑjˈmɛnːɪk]
   context: "Займенник замінює іменник."
 - word: числівник
   translation: numeral
@@ -32,7 +32,7 @@
   context: "Прийменник стоїть перед іменником."
 - word: частка
   translation: particle
-  ipa: [ˈt͡ʃastkɐ]
+  ipa: [ˈt͡ʃastkɑ]
   context: "Частка додає відтінок значення."
 - word: вигук
   translation: interjection
@@ -64,9 +64,9 @@
   context: "Корінь — це спільна частина споріднених слів."
 - word: закінчення
   translation: ending
-  ipa: [zɐˈkint͡ʃɛnʲːɐ]
+  ipa: [zɑˈkint͡ʃɛnʲːɑ]
   context: "Закінчення змінюється при відмінюванні."
 - word: метамова
   translation: metalanguage
-  ipa: [mɛtɐˈmɔʋɐ]
+  ipa: [mɛtɑˈmɔʋɑ]
   context: "Метамова — це мова про мову."

@@ -1,31 +1,32 @@
 # Дослідження: Scheduling Interviews
 
 ## State Standard Reference
-§3.8: "Робота: найпоширеніші професії і види занять; місця роботи; час роботи, вихідні дні; заробітна плата." (Catalog B. Thematic Catalog, lines 1121-1125)
-Alignment: This module directly addresses the "Work" theme by covering job search, interview scheduling, and salary discussions, which are explicit requirements of the standard.
+§3.8: "Робота: найпоширеніші професії і види занять; місця роботи; час роботи, вихідні дні; заробітна плата."
+§4.2.2.5.1: "Орудний відмінок: характеристика особи за професією чи статусом: Олег буде програмувальником... Він працював менеджером."
+Alignment: This module directly addresses the A2 thematic requirements for discussing employment, vacancies, and salaries (§3.8), and applies the A2 morphological requirement for using the Instrumental case without a preposition to indicate a profession (§4.2.2.5.1).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **співбесіда** (interview) | High (Job sites) | пройти співбесіду, призначити співбесіду, запросити на співбесіду |
-| **резюме** (resume) | High (Job sites) | надіслати резюме, писати резюме, розглядати резюме |
-| **вакансія** (vacancy) | High (Job sites) | відкрита вакансія, шукати вакансію, опис вакансії |
-| **досвід** (experience) | High (General) | досвід роботи, мати досвід, без досвіду |
-| **зарплата** (salary) | High (General) | висока/низька зарплата, середня зарплата, виплачувати зарплату |
+| робота | High (everyday/prof.) | шукати роботу, досвід роботи |
+| співбесіда | High (HR/business) | пройти співбесіду, призначити співбесіду |
+| резюме | High (HR/business) | надіслати резюме, розглядати резюме |
+| вакансія | Medium-High | відкрита вакансія, опис вакансії |
+| досвід | High | мати досвід, без досвіду |
 
 ## Cultural Hooks
-1. **Formality is Key**: Unlike the increasingly casual West, Ukrainian interviews strictly use the formal "Ви" address. Using "ти" is a major faux pas. Address interviewers as "Пан/Пані + Surname" unless invited otherwise.
-2. **Academic Prestige**: Ukrainians place high value on formal education and degrees. It is culturally appropriate to highlight diplomas and academic titles on a resume/CV, more so than in some Anglophone cultures.
+1. **Academic Prestige**: Formal education and specific degrees (e.g., диплом магістра) carry significant cultural weight in Ukraine; they are prominently highlighted in a typical Ukrainian CV (резюме).
+2. **Strict Formality Boundary**: In professional settings and interviews, Ukrainians strictly adhere to the formal «Ви» and «Пан/Пані» + surname. The transition to informal «ти» must be explicitly invited by the senior party or recruiter.
 
 ## Common Learner Errors
-1. **Instrumental vs. "As"**: Learners often translate "I work as a manager" literally (`я працюю як менеджер`). Correct usage requires the Instrumental case without a preposition: `я працюю менеджером`.
-2. **Register Slip-ups**: Switching to informal "ти" too early. In a professional setting, stick to "Ви" until explicitly asked to switch (`можна на "ти"?`).
-3. **"Job" vs. "Work"**: Confusion between `робота` (general work/job) and `праця` (labor/effort). In the context of a job search, `робота` is almost always the correct term (`шукати роботу`, not `шукати працю`).
+1. **False Friends with Labor**: Using «шукати працю» instead of «шукати роботу». *Why it happens*: Direct translation from languages where 'labor' and 'job' share a single root.
+2. **Literal Translation of "As"**: Saying «Я працюю як менеджер» instead of «Я працюю менеджером». *Why it happens*: Failing to apply the Ukrainian Instrumental case for denoting acquired professional status.
 
 ## Cross-References
-- Builds on: `a2-63` (Scheduling Appointments) - reuses time/date structures; `a2-49` (Work) - reuses profession vocabulary.
-- Prepares for: `a2-65` (Giving Directions) - office location context.
+- Builds on: a2-63 (Scheduling Appointments), a2-49 (Work and Professions)
+- Prepares for: a2-65 (Giving Directions)
 
 ## Notes for Content Writing
-- **Practical Focus**: The dialogue should include the exact phrases for "When can you start?" (`Коли ви можете почати?`) and "What are your salary expectations?" (`Яка бажана зарплата?`).
-- **Scaffolding**: Ensure the Instrumental case for professions (`працювати + Instr`) is reinforced, as it's a persistent trouble spot.
+- **Decolonized Framing**: Present the Instrumental case as an elegant, intrinsic feature of Ukrainian for denoting temporary or acquired status, focusing positively on how it works rather than contrasting it with how other Slavic languages handle professions.
+- **Immersion**: This is Band 3 (Consolidation, 75-90% Ukrainian). The vast majority of the prose, including grammar explanations, should be in Ukrainian. English should be reserved primarily for abstract clarifications or the vocabulary translation column.
+- **Russianisms**: Ensure strict use of authentic Ukrainian business terminology (e.g., отримувати зарплату, not получати; співбесіда, not інтерв'ю if used as a direct borrowing without context).

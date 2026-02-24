@@ -1,0 +1,25 @@
+{
+  "slug": "register-formal-informal",
+  "track": "b2",
+  "module_num": 16,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-23T23:19:28Z",
+      "words": 5247,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-23T23:22:46Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-23T23:22:46Z",
+      "note": "v3-phase-C"
+    }
+  },
+  "last_updated": "2026-02-23T23:22:46Z"
+}

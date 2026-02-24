@@ -135,8 +135,20 @@ const config: Config = {
               to: '/docs/b2-hist/',
             },
             {
+              label: 'C1-HIST - Historiography',
+              to: '/docs/c1-hist/',
+            },
+            {
               label: 'C1-BIO - Biographies',
               to: '/docs/c1-bio/',
+            },
+            {
+              label: 'B2-PRO - Professional',
+              to: '/docs/b2-pro/',
+            },
+            {
+              label: 'C1-PRO - Professional Mastery',
+              to: '/docs/c1-pro/',
             },
             {
               label: 'LIT - Literature & Classics',
@@ -197,6 +209,23 @@ const config: Config = {
             {
               label: 'C2 - Mastery',
               to: '/docs/c2/',
+            },
+          ],
+        },
+        {
+          title: 'Tracks',
+          items: [
+            {
+              label: 'B2-HIST - History',
+              to: '/docs/b2-hist/',
+            },
+            {
+              label: 'C1-BIO - Biographies',
+              to: '/docs/c1-bio/',
+            },
+            {
+              label: 'LIT - Literature',
+              to: '/docs/lit/',
             },
           ],
         },

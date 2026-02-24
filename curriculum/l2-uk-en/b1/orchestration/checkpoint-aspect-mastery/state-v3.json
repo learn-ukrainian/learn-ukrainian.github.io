@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "checkpoint-aspect-mastery",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T21:23:22Z",
+      "task_id": "v3-checkpoint-aspect-mastery-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T21:27:21Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T21:29:17Z",
+      "task_id": "v3-checkpoint-aspect-mastery-pC"
+    }
+  }
+}

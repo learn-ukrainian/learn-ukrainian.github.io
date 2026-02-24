@@ -1,0 +1,22 @@
+{
+  "track": "b2",
+  "slug": "numeral-declension-compound-numbers",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T08:38:20Z",
+      "task_id": "v3-numeral-declension-compound-numbers-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T08:41:33Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T08:45:27Z",
+      "task_id": "v3-numeral-declension-compound-numbers-pC"
+    }
+  }
+}

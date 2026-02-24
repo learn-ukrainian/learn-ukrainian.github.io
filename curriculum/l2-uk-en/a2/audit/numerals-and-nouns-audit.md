@@ -1,7 +1,7 @@
 # Audit Report: M21 — numerals-and-nouns.md
 **Level:** A2 | **Module:** M21 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-23 01:20:30
+**Generated:** 2026-02-24 09:37:57
 
 ## Configuration
 **Type:** A2-grammar

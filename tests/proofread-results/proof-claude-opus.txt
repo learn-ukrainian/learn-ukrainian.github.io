@@ -1,0 +1,93 @@
+Proofread: a1 | 1 module(s) | agent=claude | model=claude-opus-4-6
+Mode: DRY-RUN (print findings only)
+
+============================================================
+Proofreading: a1/numbers-and-money (module 17)
+  Agent: claude | Model: claude-opus-4-6
+  Content: 17993 chars, 2961 words
+
+--- LLM OUTPUT ---
+===PROOFREAD_START===
+issues:
+  - type: RUSSIANISM
+    severity: HIGH
+    location: "Практика: Діалог 1 — Note"
+    text: |
+      > [!note]
+      > **Vocabulary: Здача**
+      > The word **зда́ча** means "change" (the money you get back). You will hear this constantly.
+    fix: |
+      > [!note]
+      > **Vocabulary: Решта**
+      > The word **ре́шта** means "change" (the money you get back). You will hear this constantly. You may also encounter **здача** in casual speech — it comes from Russian and is very widespread, but **решта** is the proper Ukrainian word.
+  - type: RUSSIANISM
+    severity: HIGH
+    location: "Діалог 2: На ринку"
+    text: |
+      **Продавець**: Дякую. Ваша здача — десять гривень. (Thank you. Your change is 10 hryvnias.)
+    fix: |
+      **Продавець**: Дякую. Ваша решта — десять гривень. (Thank you. Your change is 10 hryvnias.)
+  - type: RUSSIANISM
+    severity: HIGH
+    location: "Сценарій: Бухгалтерія на базарі"
+    text: |
+      "З вас двадцять сім. Здача... двадцять три."
+      (From you 27. Change... 23.)
+    fix: |
+      "З вас двадцять сім. Решта... двадцять три."
+      (From you 27. Change... 23.)
+  - type: RUSSIANISM
+    severity: HIGH
+    location: "Підсумок — Перевірте себе"
+    text: |
+      Ви купуєте каву за 45 грн. Ви платите 50 грн. Яка ваша **здача**? Назвіть число українською.
+    fix: |
+      Ви купуєте каву за 45 грн. Ви платите 50 грн. Яка ваша **решта**? Назвіть число українською.
+  - type: INCOHERENT_CALLOUT
+    severity: LOW
+    location: "Культурний контекст — Готівка чи Картка?"
+    text: |
+      > [!culture]
+      > **Готівка чи Картка?**
+      > У сучасній Україні ви можете платити карткою або телефоном (Apple Pay/Google Pay) майже всюди. Проте на базарах **готі́вка** (cash) досі головна. Це також типово для менших міст. Завжди мудро мати дрібні купюри (20, 50, 100) для чайових.
+    fix: |
+      > [!culture]
+      > **Готівка чи Картка?**
+      > У сучасній Україні ви можете платити карткою або телефоном (Apple Pay/Google Pay) майже всюди. Проте на базарах **готі́вка** (cash) досі головна. Це також типово для менших міст. Завжди мудро мати дрібні купюри (20, 50, 100) — на базарі продавцю буде легше дати решту, а в кафе зручно залишити чайові.
+===PROOFREAD_END===
+--- END OUTPUT ---
+
+  FOUND: 5 issues (4 HIGH, 1 LOW)
+  !! [HIGH] RUSSIANISM @ Практика: Діалог 1 — Note
+       Text: > [!note]
+> **Vocabulary: Здача**
+> The word **зда́ча** means "change" (the mone...
+       Fix:  > [!note]
+> **Vocabulary: Решта**
+> The word **ре́шта** means "change" (the mone...
+  !! [HIGH] RUSSIANISM @ Діалог 2: На ринку
+       Text: **Продавець**: Дякую. Ваша здача — десять гривень. (Thank you. Your change is 10...
+       Fix:  **Продавець**: Дякую. Ваша решта — десять гривень. (Thank you. Your change is 10...
+  !! [HIGH] RUSSIANISM @ Сценарій: Бухгалтерія на базарі
+       Text: "З вас двадцять сім. Здача... двадцять три."
+(From you 27. Change... 23.)
+...
+       Fix:  "З вас двадцять сім. Решта... двадцять три."
+(From you 27. Change... 23.)
+...
+  !! [HIGH] RUSSIANISM @ Підсумок — Перевірте себе
+       Text: Ви купуєте каву за 45 грн. Ви платите 50 грн. Яка ваша **здача**? Назвіть число ...
+       Fix:  Ви купуєте каву за 45 грн. Ви платите 50 грн. Яка ваша **решта**? Назвіть число ...
+     [LOW] INCOHERENT_CALLOUT @ Культурний контекст — Готівка чи Картка?
+       Text: > [!culture]
+> **Готівка чи Картка?**
+> У сучасній Україні ви можете платити кар...
+       Fix:  > [!culture]
+> **Готівка чи Картка?**
+> У сучасній Україні ви можете платити кар...
+
+============================================================
+SUMMARY: 1 modules scanned
+  Modules with issues: 1
+  Total issues: 5
+  HIGH: 4 | LOW: 1

@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "motion-patterns-other-verbs",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T22:27:29Z",
+      "task_id": "v3-motion-patterns-other-verbs-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T22:29:31Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T22:32:39Z",
+      "task_id": "v3-motion-patterns-other-verbs-pC"
+    }
+  }
+}

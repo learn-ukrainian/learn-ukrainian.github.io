@@ -1,0 +1,64 @@
+{
+  "module": "aspect-in-imperatives",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T12:25:04.441306Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T12:24:49.010788Z",
+    "meta": "2026-02-23T21:54:57.520732Z",
+    "activities": "2026-02-24T12:08:47.245492Z",
+    "vocabulary": "2026-02-24T12:08:47.212279Z",
+    "plan": "2026-02-20T21:19:08.428225Z",
+    "research": "2026-02-23T21:54:57.517203Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "5937/4000 (raw: 6423) | pedagogy: 13 violations | richness: 94% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/4"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "30/25"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 5,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

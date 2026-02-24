@@ -1,7 +1,7 @@
 # Audit Report: M06 — being-and-becoming.md
 **Level:** A2 | **Module:** M06 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:12:00
+**Generated:** 2026-02-24 09:37:45
 
 ## Configuration
 **Type:** A2-grammar
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина, орудний, називний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: орудний, множина, називний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

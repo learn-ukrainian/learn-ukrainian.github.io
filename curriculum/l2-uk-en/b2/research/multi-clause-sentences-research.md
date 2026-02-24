@@ -1,42 +1,35 @@
 # Дослідження: Багатоскладні речення
 
 ## State Standard Reference
-§4.3.4: "Складне речення: Складнопідрядні речення зі з’ясувальною підрядною частиною... з означальною частиною... із часовою підрядною частиною... з відношеннями причини... умови... допусту."
-Alignment: This module directly addresses the B2 requirement for mastering complex syntax (lines 3420-3445), specifically focusing on the variety of subordinate clauses and their logical organization, as well as the consolidation of compound structures (implied foundation).
+§4.3.4: "Складне речення: 4.3.4.1. Складнопідрядні речення зі з’ясувальною підрядною частиною... 4.3.4.2. Складнопідрядні речення з означальною частиною... 4.3.4.3. Складнопідрядні речення із часовою... 4.3.4.4. причини... 4.3.4.5. умови... 4.3.4.6. допусту..."
+Alignment: Цей модуль безпосередньо реалізує вимогу Держстандарту рівня B2 щодо розуміння та продукування складних речень з різними типами підрядних зв'язків (означальними, з'ясувальними, обставинними) та правильного використання відповідних сполучників.
 
 ## Vocabulary Frequency
-| Word/Phrase | Type | Frequency / Notes |
-|---|---|---|
-| і / та | сурядний | High. Basic additive. *Та* implies closer connection or "and also". |
-| а / але / проте | сурядний | High. *А* for mild contrast, *але* for strong contrast, *проте* for formal/literary contrast. |
-| або / чи | сурядний | Medium. Disjunctive. |
-| що / щоб / як | підрядний | Very High. Universal subordinators. *Щоб* indicates purpose/wish. |
-| який / котрий | сполучне слово | High. *Який* is dominant for attributive clauses. *Котрий* is used for selection or time. |
-| тому що / оскільки | підрядний | High. *Тому що* is neutral/standard. *Оскільки* is more formal/causal (since). |
-| якщо / якби | підрядний | High. *Якщо* for real condition, *якби* for unreal/hypothetical. |
-| хоча / дарма що | підрядний | Medium. Concessive. *Дарма що* is expressive/literary. |
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| оскільки | High (Academic/Formal) | оскільки це важливо, оскільки ми знаємо |
+| проте | Medium (Literary/Formal)| проте варто зазначити, проте ситуація |
+| який | Very High (Written) | людина, яка; книга, яку; процеси, які |
+| дарма що | Low (Expressive/Lit) | дарма що пізно, дарма що важко |
+| щоб | Very High | для того щоб, щоб зрозуміти |
 
 ## Cultural Hooks
-1. **Lesya Ukrainka's Dramatic Syntax**: Use examples from "У пущі" or "Лісова пісня" to show how complex sentences build emotional intensity and philosophical depth (e.g., "Покійний батько дуже помилився...").
-2. **Mykhailo Stelmakh's "Bread and Salt" Style**: Stelmakh is famous for "multi-storey" sentences that weave nature, emotion, and action into a single flow. Use a simplified example to show "flow" (плинність) in description.
-3. **The "Comma" Nuance**: In Ukrainian culture, punctuation is often seen as "intonation on paper." The placement of a comma in a complex sentence can completely change the tone (e.g., "Стратити не можна помилувати" classic example).
+1. Пунктуація як інструмент влади та семантики: класичний приклад "Стратити, не можна помилувати" проти "Стратити не можна, помилувати" ідеально демонструє, як одна кома у складному реченні докорінно змінює сенс.
+2. "Багатоповерхові речення" (multi-story sentences) Михайла Стельмаха та синтаксична напруга в драмах Лесі Українки демонструють, що багатоскладні речення в українській мові — це не штучне ускладнення, а інструмент для створення унікальної "плинності" (flow) та передачі складних емоційних станів, незалежних від імперських традицій.
 
 ## Common Learner Errors
-1. **The "Which" Trap**: Using *що* instead of *який* in attributive clauses.
-   *   *Error*: Книга, що я купив... (Acceptable but colloquial/passive influence)
-   *   *Better*: Книга, яку я купив...
-2. **The "Comma before And"**: Putting a comma before *і* when it connects two subordinate clauses relating to the same main clause (homogeneous subordination).
-   *   *Rule*: No comma if *і* connects two homogeneous subordinate clauses.
-3. **Calques from English/Russian**:
-   *   *Error*: *Так як* я був зайнятий... (Russian *так як*) → *Correction*: *Оскільки* я був зайнятий...
-   *   *Error*: *Дивлячись на* погоду... (English *depending on*) → *Correction*: *Залежно від* погоди...
-4. **Overloading**: Creating "train" sentences with too many *який* clauses nested inside each other.
-   *   *Fix*: Break into simpler complex sentences or use participles.
+1. Пропуск коми перед "що" або "який" → В українській мові пунктуація структурна, а не інтонаційна; підрядні частини завжди виділяються комами.
+2. Використання русизму "так як" замість нормативного "оскільки" для вираження причини.
+3. Калькування англійського "depending on" через "дивлячись на" замість нормативного "залежно від".
+4. "The Which Trap": надмірне використання розмовного "що" замість стилістично точного "який" в означальних підрядних реченнях.
+5. Зайва кома перед "і", коли сполучник з'єднує дві однорідні підрядні частини (shared element rule).
 
 ## Cross-References
-- Builds on: b2-01 (Passive Voice), simple conjunctions from A2/B1.
-- Prepares for: b2-12 (Parenthetical Expressions), b2-14 (Stylistic Connectors), C1 academic writing.
+- Builds on: b2-01 through b2-10 (Passive Voice phase), Simple sentence structure
+- Prepares for: b2-12 (Parenthetical Expressions), b2-14 (Stylistic Connectors)
 
 ## Notes for Content Writing
-- **Structure**: Ensure the distinction between "Compound" (рівноправні) and "Complex" (залежні) is crystal clear before mixing them.
-- **Punctuation Focus**: Dedicate specific attention to the "comma before *і*" rule in compound sentences (when they have a shared element) versus complex sentences.
+- Уникати будь-яких порівнянь з російським синтаксисом. Українські багатоскладні речення мають власну логіку розгортання думки.
+- 100% Ukrainian immersion (B2). No English scaffolding in the text. English only in the vocabulary table translations.
+- Кожен тип підрядного речення (з'ясувальне, означальне, обставинне) має бути проілюстрований таблицею та виділений в окремий H3.
+- Наголосити на тому, що українці — активні суб'єкти дій у всіх прикладах («Ми збудували», а не «Було збудовано»).

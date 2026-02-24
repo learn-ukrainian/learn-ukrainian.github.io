@@ -589,11 +589,22 @@ def _dispatch_claude_phase(
 # ---------------------------------------------------------------------------
 
 def _extract_delimiter(text: str, start_tag: str, end_tag: str) -> str | None:
-    """Extract content between ===TAG_START=== and ===TAG_END=== delimiters."""
-    if start_tag not in text or end_tag not in text:
+    """Extract content between delimiters. Anchors on LAST start tag (Gemini echoes templates).
+
+    If real content is truncated (no end tag after last start), returns None so
+    _extract_delimiter_tolerant() can recover partial content.
+
+    Why not rfind(end_tag)? If Gemini echoes format (with both START+END) then
+    truncates real content before its END tag, rfind(end_tag) finds the echo's
+    END tag — silently returns the short echo. Anchoring on last START avoids this.
+    """
+    s = text.rfind(start_tag)
+    if s == -1:
         return None
-    s = text.index(start_tag) + len(start_tag)
-    e = text.index(end_tag)
+    s += len(start_tag)
+    e = text.find(end_tag, s)
+    if e == -1:
+        return None  # Truncation — let tolerant fallback handle it
     return text[s:e].strip()
 
 
@@ -610,11 +621,13 @@ def _extract_delimiter_tolerant(text: str, start_tag: str, end_tag: str) -> str 
     if exact:
         return exact
 
-    # Tolerant: start tag present, end tag missing
-    if start_tag not in text:
+    # Tolerant: start tag present, end tag missing — use rfind so we
+    # recover truncated REAL block, not the echoed format example
+    s = text.rfind(start_tag)
+    if s == -1:
         return None
 
-    s = text.index(start_tag) + len(start_tag)
+    s += len(start_tag)
     raw = text[s:]
 
     # Strip non-YAML lines from the end (bridge footer, status messages)
@@ -790,6 +803,37 @@ def _compute_audit_metrics(ctx: ModuleContext) -> dict[str, str]:
     except Exception:
         min_imm, max_imm = 80, 95
     metrics["COMPUTED_IMMERSION_TARGET"] = f"{min_imm}-{max_imm}%"
+
+    # Richness breakdown (so Phase D knows what to fix)
+    if content_path and content_path.exists():
+        try:
+            sys.path.insert(0, str(Path(__file__).parent))
+            from calculate_richness import calculate_richness_score
+            act_types = []
+            if act_path and act_path.exists():
+                try:
+                    act_data_rich = yaml.safe_load(act_path.read_text("utf-8"))
+                    if isinstance(act_data_rich, list):
+                        act_types = [a.get("type", "") for a in act_data_rich if isinstance(a, dict)]
+                except Exception:
+                    pass
+            level_code_rich = ctx.track.split("-")[0].lower() if "-" not in ctx.track else ctx.track.lower()
+            richness = calculate_richness_score(content, level_code_rich, str(content_path), act_types)
+            metrics["COMPUTED_RICHNESS_SCORE"] = str(richness.get("score", 0))
+            metrics["COMPUTED_RICHNESS_THRESHOLD"] = str(richness.get("threshold", 95))
+            # Build actionable breakdown of below-target dimensions
+            raw = richness.get("raw", {})
+            targets = richness.get("targets", {})
+            gaps = []
+            for dim, target in targets.items():
+                actual = raw.get(dim, 0)
+                if actual < target:
+                    gaps.append(f"{dim}: {actual}/{target}")
+            metrics["COMPUTED_RICHNESS_GAPS"] = ", ".join(gaps) if gaps else "none"
+        except Exception:
+            metrics["COMPUTED_RICHNESS_SCORE"] = "?"
+            metrics["COMPUTED_RICHNESS_THRESHOLD"] = "?"
+            metrics["COMPUTED_RICHNESS_GAPS"] = "?"
 
     # Audit status (quick run)
     if content_path and content_path.exists():
@@ -1465,7 +1509,7 @@ Generate vocabulary YAML for the key terms taught in this lesson. Follow vocabul
 Each entry uses: `lemma` (Ukrainian), `translation` (English), `pos` (part of speech).
 Optional: `gender` (m/f/n for nouns), `aspect` (perfective/imperfective for verbs), `notes`, `usage`, `example`.
 
-Do NOT include `ipa` fields.
+Do NOT include `ipa` fields — IPA is generated deterministically by the pipeline after Phase C.
 
 ## Output
 
@@ -1607,6 +1651,20 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
             voc_path.write_text(vocab_text, "utf-8")
             wrote_vocab = True
             log(f"  Phase C: Vocabulary extracted → {voc_path.name}")
+
+    # Extract and log friction
+    friction = _extract_delimiter(raw_output, "===FRICTION_START===", "===FRICTION_END===")
+    if friction:
+        friction_file = ctx.orch_dir / "phase-C-friction.md"
+        friction_file.write_text(friction, encoding="utf-8")
+        log(f"  Phase C: Friction report saved → {friction_file.name}")
+        # Detect real truncation — ignore echoed template placeholders
+        is_real_truncation = (
+            "TOKEN_LIMIT_TRUNCATION" in friction
+            and "YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION" not in friction
+        )
+        if is_real_truncation:
+            log(f"  Phase C: ⚠ Gemini reported token limit truncation")
 
     # Vocabulary fallback: if activities extracted but vocabulary truncated (Gemini
     # hit output token limit), dispatch a lightweight vocabulary-only call.
@@ -2295,7 +2353,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
 
         ok2, raw_output2 = _dispatch_claude_phase(
             prompt_file2, f"Phase D.2{iter_suffix}",
-            model=claude_model_D, timeout=TIMEOUT_FIX,
+            model=claude_model_D, timeout=TIMEOUT_REVIEW,
             allow_tools=["Read", "Grep", "Glob"],
         )
         if not ok2:
@@ -2310,22 +2368,34 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             act_before: str | None = None
             if ctx.paths.get("activities") and ctx.paths["activities"].exists():
                 act_before = ctx.paths["activities"].read_text("utf-8")
+            vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+            vocab_before: str | None = None
+            if vocab_path and vocab_path.exists():
+                vocab_before = vocab_path.read_text("utf-8")
 
             n_md = _apply_find_replace_fixes(ctx.paths["md"], raw_output2)
             n_act = 0
             if ctx.paths.get("activities"):
                 n_act = _apply_find_replace_fixes(ctx.paths["activities"], raw_output2)
-            log(f"  Phase D.2{iter_suffix}: Applied {n_md} content fix(es), {n_act} activity fix(es)")
+            n_vocab = 0
+            if vocab_path and vocab_path.exists():
+                n_vocab = _apply_find_replace_fixes(vocab_path, raw_output2)
+            log(f"  Phase D.2{iter_suffix}: Applied {n_md} content fix(es), {n_act} activity fix(es), {n_vocab} vocab fix(es)")
 
             fix_pair_count = raw_output2.count("FIND:") if "FIND:" in raw_output2 else 1
             content_after = ctx.paths["md"].read_text("utf-8")
             act_after: str | None = None
             if ctx.paths.get("activities") and ctx.paths["activities"].exists():
                 act_after = ctx.paths["activities"].read_text("utf-8")
+            vocab_after: str | None = None
+            if vocab_path and vocab_path.exists():
+                vocab_after = vocab_path.read_text("utf-8")
 
             changed_lines = _count_diff_lines(content_before, content_after)
             if act_before is not None and act_after is not None:
                 changed_lines += _count_diff_lines(act_before, act_after)
+            if vocab_before is not None and vocab_after is not None:
+                changed_lines += _count_diff_lines(vocab_before, vocab_after)
             max_allowed = max(fix_pair_count * 15, 30)
 
             if changed_lines > max_allowed:
@@ -2335,6 +2405,8 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
                 ctx.paths["md"].write_text(content_before, "utf-8")
                 if act_before is not None and ctx.paths.get("activities"):
                     ctx.paths["activities"].write_text(act_before, "utf-8")
+                if vocab_before is not None and vocab_path:
+                    vocab_path.write_text(vocab_before, "utf-8")
                 _mark_phase_v3(ctx, state, phase, "failed", attempts=total_attempts,
                                note="d2-diff-too-large")
                 return False
@@ -2500,6 +2572,12 @@ def _phase_F_gemini(ctx: ModuleContext) -> bool:
     if not fill_template(template, ctx.orch_dir / "placeholders.yaml", prompt_file):
         return False
 
+    # Inject computed metrics (richness, immersion, etc.) into placeholders
+    metrics_f = _compute_audit_metrics(ctx)
+    pf_text = prompt_file.read_text("utf-8")
+    pf_text = _inject_metrics_into_prompt(pf_text, metrics_f)
+    prompt_file.write_text(pf_text, "utf-8")
+
     log(f"  Phase F (Gemini): Dispatching final review via Gemini...")
     output_file = _gemini_output_path(ctx.slug, "pF")
     ok, raw_output = dispatch_gemini(
@@ -2629,16 +2707,33 @@ def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False) -> bool:
 
     # Full pipeline
     # MDX (Phase E) is always deferred to after all other phases including F
+    stop_after = getattr(ctx, "stop_after", None)
+    stopped = False  # tracks whether we've passed the stop-after phase
+
+    phases_run = []
     for phase_id in PHASE_SEQUENCE_V3:
+        # --stop-before / --stop-after: don't start phases past the cutoff
+        if stopped:
+            log(f"\n  Stopping: skipping phase {phase_id} ({PHASE_LABELS_V3.get(phase_id, phase_id)})")
+            break
+
         func = PHASE_FUNCTIONS_V3[phase_id]
         if not _call_phase_func(func, phase_id, ctx, state):
             log(f"\n  PIPELINE STOPPED at phase {phase_id}")
             return False
+        phases_run.append(phase_id)
 
         # --research-only: stop after Phase A
         if research_only and phase_id == "A":
             log("\n  --research-only: Phase A complete, stopping")
             return True
+
+        if stop_after and phase_id == stop_after:
+            stopped = True
+
+    if stopped:
+        log(f"\n  Pipeline stopped: completed phases {' → '.join(phases_run)}")
+        return True
 
     return _run_final_phases(ctx, state)
 
@@ -2726,6 +2821,31 @@ def preflight_v3(args: argparse.Namespace) -> ModuleContext:
 
     # v3-specific flags
     ctx.research_only = getattr(args, "research_only", False)  # type: ignore[attr-defined]
+    # --stop-before D  → internally means "stop after audit" (the phase before D)
+    # --stop-after C   → deprecated alias, means "stop after C" (audit is skipped)
+    _sb = (getattr(args, "stop_before", None) or "").upper() or None
+    _sa = (getattr(args, "stop_after", None) or "").upper() or None
+    if _sb and _sa:
+        log("  ERROR: --stop-before and --stop-after are mutually exclusive")
+        raise SystemExit(1)
+    if _sb:
+        # Convert --stop-before X → stop after the phase preceding X
+        if _sb == "AUDIT":
+            _sb = "audit"
+        _all_phases = PHASE_SEQUENCE_V3 + ["E", "F"]
+        _all_upper = [p.upper() for p in _all_phases]
+        if _sb.upper() not in _all_upper:
+            log(f"  ERROR: Unknown phase '{_sb}'. Valid phases: {', '.join(_all_phases)}")
+            raise SystemExit(1)
+        idx = _all_upper.index(_sb.upper())
+        if idx == 0:
+            log(f"  ERROR: --stop-before {_sb} would skip all phases")
+            raise SystemExit(1)
+        _sa = _all_phases[idx - 1]  # phase before the specified one
+    elif _sa:
+        if _sa == "AUDIT":
+            _sa = "audit"
+    ctx.stop_after = _sa  # type: ignore[attr-defined]
 
     # --use-claude: set of phase IDs to dispatch via Claude CLI instead of Gemini
     use_claude_str = getattr(args, "use_claude", "") or ""
@@ -2851,6 +2971,10 @@ def main() -> int:
                         help="Just run audit, print PASS/FAIL, exit")
     parser.add_argument("--research-only", action="store_true", dest="research_only",
                         help="Run Phase A only (pre-seed research for all modules)")
+    parser.add_argument("--stop-before", type=str, default=None, dest="stop_before",
+                        help="Stop before this phase (e.g. --stop-before D runs A→B→C→audit then stops)")
+    parser.add_argument("--stop-after", type=str, default=None, dest="stop_after",
+                        help="(Deprecated: prefer --stop-before) Stop after this phase")
     parser.add_argument("--final-review", action="store_true", dest="final_review",
                         help="Run Phase F: final QA gate after Phase D (optional)")
     parser.add_argument("--final-review-agent", type=str, default="claude",
@@ -2984,6 +3108,8 @@ def main() -> int:
                 claude_model_D=getattr(args, "claude_model_D", None),
                 claude_model_F=getattr(args, "claude_model_F", None),
                 max_fix=getattr(args, "max_fix", None),
+                stop_before=getattr(args, "stop_before", None),
+                stop_after=getattr(args, "stop_after", None),
             )
             rc = _run_single_module(single_args)
             if rc == 0:
@@ -3101,6 +3227,9 @@ def _run_single_module(args: argparse.Namespace) -> int:
                 log(f"\nVERDICT: PASS — phase {ctx.force_phase} complete [{elapsed_str}]")
             elif getattr(ctx, "research_only", False):
                 log(f"\nVERDICT: PASS — research complete (v3) [{elapsed_str}]")
+            elif getattr(ctx, "stop_after", None):
+                _stop_label = PHASE_LABELS_V3.get(ctx.stop_after, ctx.stop_after)
+                log(f"\nVERDICT: PARTIAL — completed through {_stop_label} [{elapsed_str}]")
             else:
                 passed, output = run_verify(ctx.paths["md"], content_only=False)
                 if passed:

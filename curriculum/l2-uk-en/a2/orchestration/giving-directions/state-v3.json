@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "giving-directions",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T23:42:46Z",
+      "task_id": "v3-giving-directions-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T23:46:49Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T23:49:08Z",
+      "task_id": "v3-giving-directions-pC"
+    }
+  }
+}

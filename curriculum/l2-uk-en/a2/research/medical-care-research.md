@@ -1,38 +1,33 @@
-# Дослідження: At the Doctor
+# Дослідження: Medical Care
 
 ## State Standard Reference
 §3.12: "Здоров’я й особиста гігієна: частини тіла; особиста гігієна; самопочуття; хвороби й нездужання; візит до лікаря; аптека."
-Alignment: This module directly addresses the "візит до лікаря" (visit to the doctor), "самопочуття" (well-being), and "хвороби" (illnesses) topics mandated for A2. It also targets the communicative intention of expressing physical states, which aligns with the usage of the Dative case (§4.2.2.3) for experiencers (e.g., "Мені погано") and the Nominative (§4.2.2.1) for subjects of pain ("Голова болить").
+Alignment: This module directly addresses "візит до лікаря" (visit to the doctor), "хвороби й нездужання" (illnesses and ailments), and "самопочуття" (well-being) by teaching how to make an appointment, describe symptoms, and understand a diagnosis. It also practices the Dative case for states as mandated in §4.2.2.3 ("Мені погано").
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **лікар** (doctor) | High / General | сімейний лікар (family doctor), записатися до лікаря (make an appointment), викликати лікаря (call a doctor) |
-| **пацієнт** (patient) | High / Medical | огляд пацієнта (patient exam), скарги пацієнта (patient complaints) |
-| **боліти** (to hurt) | High / General | Що у вас болить? (What hurts?), У мене болить голова/горло (My head/throat hurts) |
-| **температура** (temp/fever)| High / General | міряти температуру (to take temp), висока температура (high fever/temp), у мене температура (I have a fever) |
-| **ліки** (medicines) | High / General | приймати ліки (take meds), виписати ліки (prescribe meds), ліки від грипу (flu meds) |
-| **рецепт** (prescription)| Medium / Medical | рецепт на ліки (prescription for meds), отримати рецепт (get a prescription) |
+| лікар | High | сімейний лікар, записатися до лікаря |
+| температура | High | міряти температуру, висока температура |
+| рецепт | Medium | виписати рецепт на ліки |
+| діагноз | Medium | поставити діагноз, підтвердити діагноз |
+| лікарняний | High (Work context) | взяти лікарняний, бути на лікарняному |
+| приймати | High | приймати ліки, приймати двічі на день |
 
 ## Cultural Hooks
-1. **Folk First**: Ukrainians often treat minor ailments (colds, coughs) at home first using "narodna medytsyna" (folk medicine) like tea with viburnum (калина), raspberry jam (малина), or honey before visiting a doctor.
-2. **Shoe Covers (Бахіли)**: It is culturally mandatory to wear blue plastic shoe covers ("бахіли") or change shoes when entering medical interaction zones in clinics to maintain hygiene. Entering a doctor's office in street shoes is considered very rude.
+1. **Бахіли (Shoe covers):** In Ukrainian clinics and hospitals, it is strictly mandatory to wear blue plastic shoe covers («бахіли») over street shoes before entering a doctor's office or treatment room. Entering without them is considered highly disrespectful to the staff's hygiene standards.
+2. **Декларація (Declaration):** Under the modern healthcare system, Ukrainians sign a «декларація» with a «сімейний лікар» (family doctor). This primary care physician issues electronic referrals («електронне направлення») to specialists, often managed through apps like Helsi.me.
 
 ## Common Learner Errors
-1. **"I hurt" vs "It hurts me"**: Learners often try to say `Я болю голову` (I hurt head).
-   → **Correct**: `У мене болить голова` (At me hurts head) or `Мені болить голова` (To me hurts head).
-   → *Why*: Confusion between English transitive "I hurt my..." and Ukrainian intransitive state.
-2. **False Friend "Angina"**: Learners see `ангіна` and think heart attack (Angina Pectoris).
-   → **Correct**: `Ангіна` = Tonsillitis / Strep throat. Heart attack = `серцевий напад` / `інфаркт`.
-   → *Why*: Internationalism with different specific meaning.
-3. **False Friend "Prescription"**: Learners confuse `рецепт` (prescription/recipe) with `чек` (receipt - proof of payment).
-   → **Correct**: `Лікар виписав рецепт` (Doctor wrote a prescription).
-   → *Why*: Phonetic similarity between "receipt" and "рецепт".
+1. **Literal Translation of "I have a headache":** English speakers often say "Я болю голову" (using the verb transitively). The correct idiomatic form is intransitive: «У мене болить голова» (By me aches the head).
+2. **False Friend "Ангіна":** In English, "angina" refers to chest pain or a heart condition. In Ukrainian, «ангіна» refers to tonsillitis or strep throat.
+3. **Рецепт vs Чек:** Confusing «рецепт» (a medical prescription or cooking recipe) with «чек» (a receipt or proof of payment).
 
 ## Cross-References
-- **Builds on**: `a2-58` (Practical Warm-up / Body parts) - essential for naming what hurts.
-- **Prepares for**: `a2-60` (At the Pharmacy) - `ліки` and `рецепт` flow directly into buying meds.
+- Builds on: a2-34 (body parts, боліти), a2-55 (wellness, healthcare system), a2-58 (Practical Warm-up)
+- Prepares for: a2-60 (At the Pharmacy)
 
 ## Notes for Content Writing
-- **Grammar Focus**: Prioritize the `У мене болить [Nominative]` construction as the primary A2 pattern. Mention `Мені погано` (Dative) for general states.
-- **Formal Address**: Doctor-patient interactions are strictly formal (`Ви`).
+- **Decolonized framing:** Emphasize the modern Ukrainian healthcare system (Helsi app, electronic declarations) to highlight Ukraine's digital integration in medical services, breaking away from outdated Soviet-era stereotypes.
+- **Band 3 Immersion (75-90%):** English should be strictly limited to the translation column in the vocabulary table and absolute necessities for abstract grammar clarification. All dialogues, instructions, and narrative prose MUST be in Ukrainian.
+- **Vowel IPA standard:** о = [ɔ], е = [ɛ], ч = [t͡ʃ] with tie-bar. Ensure IPA is only used on the first occurrence of new words.

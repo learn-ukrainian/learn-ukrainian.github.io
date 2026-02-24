@@ -1,0 +1,22 @@
+{
+  "track": "b2",
+  "slug": "b21-checkpoint",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T08:17:24Z",
+      "task_id": "v3-b21-checkpoint-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T08:21:40Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T08:28:45Z",
+      "task_id": "v3-b21-checkpoint-pC"
+    }
+  }
+}

@@ -2,13 +2,13 @@
   "module": "language-about-verbs",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T09:31:53.341019Z",
+  "last_audit": "2026-02-24T11:16:28.349447Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-21T01:09:55.309504Z",
     "meta": "2026-02-18T13:14:29.357463Z",
-    "activities": "2026-02-21T01:09:54.481800Z",
-    "vocabulary": "2026-02-21T01:09:54.482787Z",
+    "activities": "2026-02-24T11:16:27.353519Z",
+    "vocabulary": "2026-02-24T11:16:27.330085Z",
     "plan": "2026-02-20T21:18:24.239073Z",
     "research": "2026-02-17T11:34:50.185833Z"
   },
@@ -24,14 +24,14 @@
       "message": "4645/4000 (raw: 5039)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "7/4"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "25/20"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "3 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 4,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

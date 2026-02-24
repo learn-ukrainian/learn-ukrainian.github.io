@@ -1,0 +1,66 @@
+{
+  "module": "sports-fitness",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T09:24:01.076060Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-23T23:33:26.358984Z",
+    "meta": "2026-02-23T23:30:21.930871Z",
+    "activities": "2026-02-24T09:09:33.622872Z",
+    "vocabulary": "2026-02-24T09:09:33.623108Z",
+    "plan": "2026-02-20T21:04:54.038834Z",
+    "research": "2026-02-23T23:30:21.927664Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Summary'"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "4159/3000 (raw: 4565) | engagement: 0/4 | pedagogy: 9 violations | immersion: 97.1% HIGH (target 75-90% (A2.3))"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "warn",
+      "violations": 0,
+      "message": "8 IPA issues (run lint_ipa.py --fix)"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Structure: Missing '## Summary'"
+    ],
+    "pass_count": 0,
+    "fail_count": 2,
+    "deferred_count": 3
+  }
+}

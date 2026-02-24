@@ -1,3 +1,51 @@
 slug: motion-approaching-departing
 title: 'Рух: наближення і віддалення'
 word_target: 4000
+content_outline:
+- section: 'Діагностика: Вступний тест'
+  words: 600
+  points:
+  - Diagnostic quiz entirely in Ukrainian identifying the semantic mismatch between
+    'підйти' (approach) and 'прийти' (arrive).
+  - Intuition task challenging learners to differentiate 'дійти' (process of walking
+    to a limit/boundary) vs general arrival.
+  - Clear Ukrainian instructions with zero English scaffolding, establishing the 100%
+    immersion rule for B1.2.
+- section: 'Граматика: Простір та межі'
+  words: 1000
+  points:
+  - 'Explanation of mandatory preposition matching: ''підійти ДО'' (Genitive) and
+    ''відійти ВІД'' (Genitive), formatted in a clear comparison table.'
+  - 'Deep dive into State Standard §4.3.8: defining ''дійти'' as reaching a physical
+    boundary vs ''підійти'' as mere proximity.'
+  - 'Contrast section clarifying spatial logic: why ''вийшов з кімнати'' is used for
+    exiting enclosed spaces, but ''відійшов від столу'' is for stepping away.'
+  - Mermaid flowchart visualizing spatial decision logic for prefix selection (proximity
+    vs boundary vs stepping away).
+- section: 'Культурний контекст: Проводи та традиції'
+  words: 800
+  points:
+  - Narrative on the tradition of «присісти на дорогу», exploring its transition from
+    tricking the 'domovyk' to a modern mindful pause.
+  - Vocabulary-rich description of «проводи» (railway farewells), emphasizing verbs
+    like 'відійшов' and 'рушив'.
+  - Real-world engagement box highlighting the emotional significance of train station
+    farewells in modern Ukrainian society.
+- section: Переносне значення та фразеологія
+  words: 1000
+  points:
+  - 'Breakdown of abstract usages: ''дійти згоди'' (reach an agreement) and ''дійшли
+    чутки'' (rumors reached), with contextual examples.'
+  - Explanation of the phrase 'відійти в минуле' (fade into history) using the academic/formal
+    register.
+  - 'Collocation table for formal terms: ''час підійти'', ''міра наближення'', and
+    ''поступове віддалення'', each with 2+ illustrative sentences.'
+- section: 'Практика: Роль начальника станції'
+  words: 600
+  points:
+  - Immersive narrative practice from the perspective of a Station Master narrating
+    departures ('поїзд відходить о...') and approaching passengers.
+  - Consolidation exercises sequencing approach, reach, and depart actions in a coherent
+    journey timeline.
+  - Summary emphasizing target vocabulary 'відстань' (distance) and 'досягнення' (reaching/achievement)
+    within the context of a successful transit.

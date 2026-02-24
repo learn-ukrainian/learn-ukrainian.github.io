@@ -260,19 +260,22 @@ def call_gemini(prompt_path: Path, task_id: str, model: str) -> Path:
     """Send prompt to Gemini, return path to output file."""
     output = Path(tempfile.mktemp(suffix=".txt", prefix=f"gemini-{task_id}-"))
 
+    prompt_content = prompt_path.read_text("utf-8")
+    full_prompt = (
+        f"{prompt_content}\n\nIMPORTANT: Put fixed files between delimiter lines like "
+        f"===CONTENT_START=== and ===CONTENT_END=== on their own lines, NOT inside code blocks."
+    )
     result = subprocess.run(
         [
             sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
             "ask-gemini",
-            f"Read and execute the instructions at {prompt_path}. Return your output as text. "
-            f"IMPORTANT: Put fixed files between delimiter lines like ===CONTENT_START=== and ===CONTENT_END=== "
-            f"on their own lines, NOT inside code blocks.",
+            "-",  # read prompt from stdin
             "--task-id", task_id,
             "--stdout-only",
             "--model", model,
         ],
-        capture_output=True, text=True, timeout=GEMINI_TIMEOUT,
-        cwd=str(REPO),
+        capture_output=True, text=True, input=full_prompt,
+        timeout=GEMINI_TIMEOUT, cwd=str(REPO),
     )
 
     output.write_text(result.stdout + result.stderr)
@@ -283,18 +286,19 @@ def call_gemini_review(prompt_path: Path, task_id: str, model: str) -> Path:
     """Send review prompt to Gemini with delimiter instructions."""
     output = Path(tempfile.mktemp(suffix=".txt", prefix=f"gemini-{task_id}-"))
 
+    prompt_content = prompt_path.read_text("utf-8")
+    full_prompt = f"{prompt_content}\n\nWrap the ENTIRE review between ===REVIEW_START=== and ===REVIEW_END=== delimiters."
     result = subprocess.run(
         [
             sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
             "ask-gemini",
-            f"Read and execute the instructions at {prompt_path}. Return your output as text. "
-            f"Wrap the ENTIRE review between ===REVIEW_START=== and ===REVIEW_END=== delimiters.",
+            "-",  # read prompt from stdin
             "--task-id", task_id,
             "--stdout-only",
             "--model", model,
         ],
-        capture_output=True, text=True, timeout=GEMINI_TIMEOUT,
-        cwd=str(REPO),
+        capture_output=True, text=True, input=full_prompt,
+        timeout=GEMINI_TIMEOUT, cwd=str(REPO),
     )
 
     output.write_text(result.stdout + result.stderr)

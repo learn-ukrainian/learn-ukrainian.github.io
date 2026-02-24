@@ -2062,8 +2062,13 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # Check if naturalness already evaluated in meta.yaml
     if meta_data and 'naturalness' in meta_data:
-        nat_score = meta_data['naturalness'].get('score', 0) or 0
-        nat_status = meta_data['naturalness'].get('status', 'PENDING') or 'PENDING'
+        nat_val = meta_data['naturalness']
+        if isinstance(nat_val, dict):
+            nat_score = nat_val.get('score', 0) or 0
+            nat_status = nat_val.get('status', 'PENDING') or 'PENDING'
+        elif isinstance(nat_val, (int, float)):
+            nat_score = int(nat_val)
+            nat_status = 'PASS' if nat_score >= 7 else 'FAIL'
 
     # Auto-check naturalness logic REMOVED.
     # We no longer trigger external LLM calls for naturalness during the structural audit.

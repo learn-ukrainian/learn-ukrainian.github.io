@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "practical-warm-up",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T22:57:03Z",
+      "task_id": "v3-practical-warm-up-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T23:00:24Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T23:04:26Z",
+      "task_id": "v3-practical-warm-up-pC"
+    }
+  }
+}

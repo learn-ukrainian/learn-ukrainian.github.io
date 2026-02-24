@@ -19,13 +19,9 @@
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-21T20:00:30Z",
-      "attempts": 4
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-21T20:45:08Z",
-      "attempts": 2
+      "ts": "2026-02-24T10:15:03Z",
+      "attempts": 0,
+      "note": "auto-fix"
     }
   }
 }

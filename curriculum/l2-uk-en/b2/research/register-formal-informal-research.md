@@ -1,37 +1,32 @@
 # Дослідження: Формальне та неформальне спілкування
 
 ## State Standard Reference
-§4.4.1.3: "Стилістичні засоби синтаксису: звертання (Вікторе, прочитайте цю книжку); еліпсис (Смачного! – Дякую, і тобі); ... елементи структурування тексту (по-перше, по-друге...)"
-§4.5.1 (B1 review): "Офіційне й неофіційне спілкування: звертання (Олено Петрівно...); синоніми (друг, приятель, товариш)..."
-Alignment: Modul expands on B1 register basics by introducing complex syntactic devices (ellipsis, clarification) and nuanced address forms expected at B2 level.
+§4.4.1.3: "Синтаксичні [стилістичні засоби]: звертання: Вікторе, прочитайте цю книжку; еліпсис: Смачного! – Дякую, і тобі. [...] елементи структурування тексту (вставні слова): по-перше, по-друге, по-третє, отже та ін."
+Alignment: Цей модуль безпосередньо реалізує вимоги стандарту B2 щодо стилістичних засобів синтаксису. Він навчає свідомо використовувати вставні слова для структурування формального тексту та розпізнавати й генерувати еліпсис у неформальному мовленні, а також правильно застосовувати звертання у кличному відмінку.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **пан / пані** | High (Universal) | шановний пане, пані та панове, пане Президенте |
-| **звертання** | Medium (Meta) | форма звертання, офіційне звертання |
-| **шановний** | High (Formal) | шановна громадо, вельмишановний (very formal) |
-| **ви** (address) | High | переходити на "ви", звертатися на "ви" |
-| **спілкування** | High | ділове спілкування, невимушене спілкування |
+| пан / пані | Висока (сучасне публічне і ділове мовлення) | Шановний пане, пані та панове |
+| вельмишановний | Низька (лише найвищий рівень протоколу) | Вельмишановний пане Президенте |
+| товариш | Знижується (витісняється словами "колега", "приятель") | давній товариш, товариш по службі |
+| добродій | Низька, стилістично маркована (традиційна) | Шановний добродію |
 
 ## Cultural Hooks
-1. **The "Pan" Renaissance**: The return of "пан/пані" is not just a loan from Polish, but a restoration of authentic Ukrainian etiquette suppressed during the Soviet era (replaced by "товариш"). It emphasizes the dignity of a free person.
-2. **The "Vy" Verb Trap**: When addressing one person as "Ви", you MUST use the plural verb («Ви знали?» not «Ви знав?»), but adjectives can be singular if they are predicates in specific exclamations («Яка Ви красива!»).
-3. **Name vs. Patronymic**: While "Pan + First Name" (Пане Андрію) is the modern standard, "Name + Patronymic" (Андрію Петровичу) remains common in schools, hospitals, and conservative institutions, often *without* "Pan". Mixing "Pan + Name + Patronymic" (Пане Андрію Петровичу) is historically controversial/redundant but heard in practice; purists prefer one or the other.
+1. Слово «пан» фіксується в українських писемних пам'ятках ще з XIII століття (наприклад, графіті в церкві Св. Пантелеймона в Галичі, 1216-1221 рр.) і первісно було ознакою вільної людини (міщанина, козака), а не лише соціальним титулом поміщика. Відновлення цієї форми в сучасній Україні є деколонізаційним актом повернення власної гідності та мовних традицій.
+2. У радянську епоху використання «пан/пані» штучно викорінювалося і було замінене на уніфіковане «товариш» задля стирання національної та соціальної ідентичності. Сьогодні форма «товариш» має виразний радянський ідеологічний відтінок і в офіційних звертаннях вважається стилістично недоречною.
 
 ## Common Learner Errors
-1. **Capitalization Overkill**: Writing "Ви" with a capital letter in chats or comments.
-   *   *Correction*: Only capitalize "Ви" in formal individual correspondence (letters, emails to one person).
-2. **The "Pan" Mismatch**: Using "Pan" with a patronymic or alone without a name/title.
-   *   *Correction*: Use "Пане Іване" or "Пане Директоре". Avoid just "Пане!" to a stranger (better: "Перепрошую...").
-3. **Grammar Agreement**: Using singular verbs with polite "Ви".
-   *   *Correction*: «Ви вже прийшли?» (Plural verb) even when addressing one person.
+1. **«Ви знав?» → «Ви знали?»** — Помилка граматичного узгодження. З ввічливим «Ви» дієслово в минулому часі завжди стоїть у множині, навіть якщо звернення адресовано одній особі.
+2. **«Пане Іване Петровичу» → «Пане Іване» або «Іване Петровичу»** — Гіперкорекція («Pan mismatch»). Поєднання титулу «пан» із по батькові є стилістично надлишковим і вважається помилкою ділового протоколу.
+3. **Написання «Ви» з великої літери у коментарях чи групових чатах → «ви».** З великої літери займенник пишеться винятково в індивідуальному офіційному листуванні чи на вітальних листівках; у соцмережах це ознака гіперкорекції або зайвих лестощів.
 
 ## Cross-References
-- **Builds on**: B2.1b Phase (Participles), B1 Register basics.
-- **Prepares for**: B2-17 (Business), B2-18 (Academic), B2-19 (Legal) — this module provides the general sociolinguistic foundation for those specific domains.
+- Builds on: b2-15 (Register Introduction)
+- Prepares for: b2-17 (Register: Business Ukrainian), b2-18 (Register: Academic Ukrainian), b2-19 (Register: Official-Legal), b2-25 (B2.1b Checkpoint)
 
 ## Notes for Content Writing
-- **Tone**: The module itself should model the registers. The "Theory" section can be more academic/formal, while "Examples" should clearly contrast registers.
-- **Scenario**: Use a workplace setting (new employee vs. boss) or a university setting (student vs. professor) to demonstrate the "Vy -> Ty" transition naturally.
-- **Nuance**: Explicitly teach that "жіночко/чоловіче" is rude/outdated.
+- **Деколонізаційний фокус**: Уникайте порівняння форми "пан" із російським "господин". Пояснюйте форму "пан/пані" як глибоко органічну українську норму, що походить від давніх традицій рівноправності та поваги до вільної людини.
+- У розділі про граматичне узгодження чітко розмежуйте правила для дієслів (обов'язкова множина: "Ви сказали") та прикметників-предикатів у вигуках (можлива однина: "Яка Ви красива!").
+- Зверніть окрему увагу на кличний відмінок у звертаннях із зазначенням професії чи посади («пане Директоре», «пані лікарко»).
+- Модуль вимагає 100% українського занурення в теоретичних поясненнях і практиці.

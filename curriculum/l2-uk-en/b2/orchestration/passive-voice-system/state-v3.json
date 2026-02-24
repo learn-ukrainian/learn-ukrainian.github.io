@@ -2,5 +2,26 @@
   "track": "b2",
   "slug": "passive-voice-system",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T21:14:32Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T21:14:32Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T21:14:32Z",
+      "note": "migrated-from-v2"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T10:13:04Z",
+      "attempts": 1
+    }
+  }
 }

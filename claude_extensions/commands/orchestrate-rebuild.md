@@ -439,9 +439,9 @@ scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
 Gemini streams 10-100K chars of thinking tokens. Never read raw output.
 
 ```bash
-# 1. Send to Gemini, capture to temp file
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
-  "Read and execute the instructions at $(pwd)/curriculum/l2-uk-en/{track}/orchestration/{slug}/phase-{N}-prompt.md" \
+# 1. Send to Gemini via stdin pipe, capture to temp file
+cat curriculum/l2-uk-en/{track}/orchestration/{slug}/phase-{N}-prompt.md \
+  | .venv/bin/python scripts/ai_agent_bridge.py ask-gemini - \
   --task-id orchestrate-{slug} \
   --stdout-only \
   --model {model} \

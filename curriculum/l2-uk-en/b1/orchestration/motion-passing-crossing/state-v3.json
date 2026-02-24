@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "motion-passing-crossing",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T21:50:42Z",
+      "task_id": "v3-motion-passing-crossing-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-23T21:52:52Z",
+      "note": "word-count-2932-below-80pct-4000"
+    }
+  }
+}

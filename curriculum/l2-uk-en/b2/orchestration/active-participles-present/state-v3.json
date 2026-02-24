@@ -1,0 +1,22 @@
+{
+  "track": "b2",
+  "slug": "active-participles-present",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T21:49:57Z",
+      "task_id": "v3-active-participles-present-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T21:53:44Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T21:58:53Z",
+      "task_id": "v3-active-participles-present-pC"
+    }
+  }
+}

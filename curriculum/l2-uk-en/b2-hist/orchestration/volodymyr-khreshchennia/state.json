@@ -1,0 +1,35 @@
+{
+  "slug": "volodymyr-khreshchennia",
+  "track": "b2-hist",
+  "module_num": 11,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T08:07:55Z",
+      "note": "v3-phase-B-adopt",
+      "words": 4187
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T08:11:04Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T08:11:04Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T11:16:12Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T11:16:12Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T11:16:12Z"
+}

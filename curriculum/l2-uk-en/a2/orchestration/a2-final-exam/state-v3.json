@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "a2-final-exam",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T00:31:36Z",
+      "task_id": "v3-a2-final-exam-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T00:35:01Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T00:37:58Z",
+      "task_id": "v3-a2-final-exam-pC"
+    }
+  }
+}

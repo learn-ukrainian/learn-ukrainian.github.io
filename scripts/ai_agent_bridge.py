@@ -433,7 +433,7 @@ def check_inbox(for_llm: str = "gemini"):
         print(f"  [{msg_id}] From: {from_llm} | Type: {msg_type} | {timestamp}")
         print(f"      {preview}\n")
 
-def read_message(message_id: int):
+def read_message(message_id: int, quiet: bool = False):
     """Read a specific message."""
     conn = get_db()
     cursor = conn.cursor()
@@ -448,7 +448,8 @@ def read_message(message_id: int):
     conn.close()
 
     if not row:
-        print(f"❌ Message {message_id} not found")
+        if not quiet:
+            print(f"❌ Message {message_id} not found")
         return None
 
     msg = {
@@ -462,22 +463,23 @@ def read_message(message_id: int):
         "timestamp": row[7]
     }
 
-    print(f"📨 Message #{msg['id']}")
-    print(f"   From: {msg['from']} → To: {msg['to']}")
-    print(f"   Type: {msg['type']}")
-    print(f"   Task: {msg['task_id'] or 'N/A'}")
-    print(f"   Time: {msg['timestamp']}")
-    print(f"\n{'='*60}\n")
-    print(msg['content'])
+    if not quiet:
+        print(f"📨 Message #{msg['id']}")
+        print(f"   From: {msg['from']} → To: {msg['to']}")
+        print(f"   Type: {msg['type']}")
+        print(f"   Task: {msg['task_id'] or 'N/A'}")
+        print(f"   Time: {msg['timestamp']}")
+        print(f"\n{'='*60}\n")
+        print(msg['content'])
 
-    if msg['data']:
-        print(f"\n{'='*60}")
-        print("📎 Attached Data:")
-        print(msg['data'])
+        if msg['data']:
+            print(f"\n{'='*60}")
+            print("📎 Attached Data:")
+            print(msg['data'])
 
     return msg
 
-def send_message(content: str, task_id: str = None, msg_type: str = "response", data: str = None, from_llm: str = "gemini", to_llm: str = "claude", from_model: str = None, to_model: str = None):
+def send_message(content: str, task_id: str = None, msg_type: str = "response", data: str = None, from_llm: str = "gemini", to_llm: str = "claude", from_model: str = None, to_model: str = None, quiet: bool = False):
     """Send a message between agents.
 
     Args:
@@ -485,6 +487,7 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
         to_llm: Target agent family - for routing
         from_model: Exact model ID (e.g., 'claude-opus-4-5-20251101', 'gemini-3-flash-preview')
         to_model: Target model ID
+        quiet: If True, suppress printing to stdout
     """
     conn = get_db()
     cursor = conn.cursor()
@@ -519,7 +522,8 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
     conn.commit()
     conn.close()
 
-    print(f"✅ Message sent to {to_llm.title()} (ID: {msg_id}){' [auto-acked: self-addressed]' if from_llm == to_llm else ''}")
+    if not quiet:
+        print(f"✅ Message sent to {to_llm.title()} (ID: {msg_id}){' [auto-acked: self-addressed]' if from_llm == to_llm else ''}")
 
     # Trigger macOS notification to alert human
     try:
@@ -562,9 +566,9 @@ def detect_sender() -> str:
     return "claude"
 
 
-def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, from_model: str = None, to_model: str = None):
+def send_to_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, from_model: str = None, to_model: str = None, quiet: bool = False):
     """Send a message to Gemini with auto-detected sender."""
-    return send_message(content, task_id, msg_type, data, from_llm=detect_sender(), to_llm="gemini", from_model=from_model, to_model=to_model)
+    return send_message(content, task_id, msg_type, data, from_llm=detect_sender(), to_llm="gemini", from_model=from_model, to_model=to_model, quiet=quiet)
 
 
 # Model availability cache: {model: (available: bool, timestamp: float)}
@@ -685,19 +689,19 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
     # Step 1: Send the message (model param becomes to_model)
     # In output_path mode, skip broker entirely — batch script handles everything
     if output_path:
-        msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model)
-        acknowledge(msg_id)
-        print(f"   Pre-acknowledged (file output mode — no broker traffic)")
+        msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model, quiet=stdout_only)
+        acknowledge(msg_id, quiet=stdout_only)
+        if not stdout_only:
+            print(f"   Pre-acknowledged (file output mode — no broker traffic)")
     else:
-        msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model)
+        msg_id = send_to_gemini(content, task_id, msg_type, data, from_model=from_model, to_model=model, quiet=stdout_only)
 
         # Step 1.5: Pre-acknowledge for orchestration mode.
         # Prevents race condition: without this, the message sits unread in broker
         # while Gemini processes it. If a standalone Gemini session checks inbox
         # during that window, it picks up the message with no restrictions.
         if stdout_only:
-            acknowledge(msg_id)
-            print(f"   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)")
+            acknowledge(msg_id, quiet=stdout_only)
 
     # Step 2: Invoke Gemini to process it (unless async mode)
     if async_mode:
@@ -705,7 +709,8 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
         print(f"   Gemini will see this in his inbox when he starts a session.")
         print(f"   To trigger manually: .venv/bin/python scripts/ai_agent_bridge.py process {msg_id}")
     else:
-        print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
+        if not stdout_only:
+            print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
         response = process_and_respond(msg_id, model, stdout_only=stdout_only, output_path=output_path, allow_write=allow_write, delimiters=delimiters)
 
         # Post-process: extract delimited content if --extract was used
@@ -728,11 +733,12 @@ def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data:
     return msg_id
 
 
-def acknowledge(message_ids: list[int]):
+def acknowledge(message_ids: list[int], quiet: bool = False):
     """Mark message(s) as acknowledged.
 
     Args:
         message_ids: Single ID or list of message IDs to acknowledge
+        quiet: If True, suppress printing to stdout
     """
     if isinstance(message_ids, int):
         message_ids = [message_ids]
@@ -746,10 +752,11 @@ def acknowledge(message_ids: list[int]):
     conn.commit()
     conn.close()
 
-    if len(message_ids) == 1:
-        print(f"✓ Message {message_ids[0]} acknowledged")
-    else:
-        print(f"✓ {len(message_ids)} messages acknowledged: {', '.join(map(str, message_ids))}")
+    if not quiet:
+        if len(message_ids) == 1:
+            print(f"✓ Message {message_ids[0]} acknowledged")
+        else:
+            print(f"✓ {len(message_ids)} messages acknowledged: {', '.join(map(str, message_ids))}")
 
 
 def acknowledge_all(for_llm: str):
@@ -839,7 +846,7 @@ def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", 
         delimiters: Comma-separated delimiter names (e.g., "FINAL_REVIEW,FRICTION").
             Injected into system prompt so model knows exact output tags.
     """
-    msg = read_message(message_id)
+    msg = read_message(message_id, quiet=stdout_only)
     if not msg:
         return
 
@@ -895,7 +902,7 @@ TASK:
             output_instruction = f"""1. WRITE OUTPUT TO EXACTLY ONE FILE: {output_path}
    Write your COMPLETE output to this file. This is the ONLY file you may create or modify.
    Do NOT write to any other file. Do NOT edit any existing file."""
-            success_instruction = f"""- Read the files referenced in the task (using your file reading ability)
+            success_instruction = f"""- Read the task content provided below
 - Think about the content
 - Write your COMPLETE output to: {output_path}
 - That's it. Nothing else."""
@@ -903,7 +910,7 @@ TASK:
             # STDOUT MODE: Text output only, no file writing
             output_instruction = """1. OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters.
 2. DO NOT WRITE OR EDIT ANY FILES. You must not use any tool that creates, modifies, or deletes files."""
-            success_instruction = """- Read the files referenced in the task (using your file reading ability)
+            success_instruction = """- Read the task content provided below
 - Think about the content
 - Output your result as plain text between the delimiters specified in the task
 - That's it. Nothing else. Just text output."""
@@ -1014,8 +1021,9 @@ Format your response clearly.
             print(f"⏸️  Task '{task_key}' is already being processed by another Gemini bridge. Skipping.")
             return
 
-        print(f"\n🤖 Processing with Gemini ({model}) [{mode_label}]...")
-        sys.stdout.flush()
+        if not stdout_only:
+            print(f"\n🤖 Processing with Gemini ({model}) [{mode_label}]...")
+            sys.stdout.flush()
 
         # Write PID file for status tracking and locking
         _write_pid_file("gemini", task_key, {
@@ -1040,7 +1048,6 @@ Format your response clearly.
                     # NOT Gemini's tool permissions.
                     gemini_cmd = [GEMINI_CLI, "-m", model]
                     gemini_cmd += ["-y"]
-                    gemini_cmd += ["-p", prompt]
 
                     # Snapshot for post-validation when output_path is set
                     pre_snapshot = None
@@ -1049,12 +1056,17 @@ Format your response clearly.
 
                     proc = subprocess.Popen(
                         gemini_cmd,
+                        stdin=subprocess.PIPE,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
                         text=True,
                         cwd=str(Path(__file__).parent.parent),
                         env=_PARENT_ENV
                     )
+
+                    if proc.stdin:
+                        proc.stdin.write(prompt)
+                        proc.stdin.close()
 
                     # Watchdog: kill process if it exceeds timeout (#604)
                     _timed_out = False
@@ -1130,18 +1142,20 @@ Format your response clearly.
                                 print(f"   - {v}")
                             sys.stdout.flush()
 
-                    print(f"\n\n{'─' * 40}")
-                    if output_path:
-                        output_exists = Path(output_path).exists()
-                        output_size = Path(output_path).stat().st_size if output_exists else 0
-                        print(f"✅ Gemini finished → {output_path} ({output_size} bytes)")
-                    else:
-                        print(f"✅ Gemini finished ({len(response)} chars)")
-                    sys.stdout.flush()
+                    if not stdout_only:
+                        print(f"\n\n{'─' * 40}")
+                        if output_path:
+                            output_exists = Path(output_path).exists()
+                            output_size = Path(output_path).stat().st_size if output_exists else 0
+                            print(f"✅ Gemini finished → {output_path} ({output_size} bytes)")
+                        else:
+                            print(f"✅ Gemini finished ({len(response)} chars)")
+                        sys.stdout.flush()
 
                     if output_path:
                         # File output mode: NO broker message. Batch script reads the file directly.
-                        print(f"   (no broker message — file output mode)")
+                        if not stdout_only:
+                            print(f"   (no broker message — file output mode)")
                     elif stdout_only:
                         # Stdout-only mode: broker gets SHORT summary only
                         summary = f"[stdout-only] Gemini finished. {len(response)} chars output to stdout."
@@ -1152,11 +1166,13 @@ Format your response clearly.
                             from_llm="gemini",
                             to_llm="claude",
                             from_model=model,
-                            to_model=None
+                            to_model=None,
+                            quiet=stdout_only
                         )
                         # Claude is reading this from stdout right now — auto-ack to prevent accumulation
-                        acknowledge(reply_id)
-                        print(f"   Auto-acknowledged reply #{reply_id} (stdout delivery — no inbox accumulation)")
+                        acknowledge(reply_id, quiet=stdout_only)
+                        if not stdout_only:
+                            print(f"   Auto-acknowledged reply #{reply_id} (stdout delivery — no inbox accumulation)")
                     else:
                         # Standard mode: full response through broker
                         # Auto-ack immediately: Claude reads this from stdout, broker record is redundant
@@ -1174,7 +1190,7 @@ Format your response clearly.
                     _response_sent = True
 
                     # Acknowledge original message
-                    acknowledge(message_id)
+                    acknowledge(message_id, quiet=stdout_only)
                     return response  # Return for callers that need post-processing
 
                 except subprocess.TimeoutExpired:
@@ -1695,7 +1711,7 @@ def main():
 
     # ask-gemini (PREFERRED: send + invoke in one step) - for Claude's use
     ask_gemini_parser = subparsers.add_parser("ask-gemini", help="Send message AND invoke Gemini (one-step communication)")
-    ask_gemini_parser.add_argument("content", help="Message content")
+    ask_gemini_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_gemini_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
     ask_gemini_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_gemini_parser.add_argument("--data", help="Path to data file to attach")
@@ -1774,7 +1790,8 @@ def main():
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        ask_gemini(args.content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None), getattr(args, 'skip_model_check', False), getattr(args, 'allow_write', False), getattr(args, 'delimiters', None))
+        content = sys.stdin.read() if args.content == "-" else args.content
+        ask_gemini(content, args.task_id, args.type, data, args.model, getattr(args, 'from_model', None), getattr(args, 'async_mode', False), getattr(args, 'stdout_only', False), getattr(args, 'output_path', None), getattr(args, 'extract', None), getattr(args, 'skip_model_check', False), getattr(args, 'allow_write', False), getattr(args, 'delimiters', None))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":

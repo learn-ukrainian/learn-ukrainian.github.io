@@ -2,15 +2,15 @@
   "module": "scythians-sarmatians",
   "level": "B2",
   "plan_version": "1.0.0",
-  "last_audit": "2026-02-21T21:45:09.905028Z",
+  "last_audit": "2026-02-24T11:15:03.359547Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-21T21:45:07.371461Z",
     "meta": "2026-02-19T11:34:45.930536Z",
     "activities": "2026-02-21T21:45:07.372522Z",
-    "vocabulary": "2026-02-18T18:03:45.455668Z",
+    "vocabulary": "2026-02-24T11:15:02.391138Z",
     "plan": "2026-02-18T19:03:37.165489Z",
-    "research": "2026-02-19T12:14:07.466009Z"
+    "research": "2026-02-22T10:35:24.512751Z"
   },
   "gates": {
     "meta": {
@@ -24,14 +24,14 @@
       "message": "5047/5000 (raw: 5269)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "5/3"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "deferred",
       "violations": 0,
-      "message": "10 < 20 (soft target)"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,21 +44,21 @@
       "message": "Clean IPA"
     },
     "research": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Content aligned with research"
+      "message": "Refresh recommended: Content predates research (research file is newer)"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 3,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

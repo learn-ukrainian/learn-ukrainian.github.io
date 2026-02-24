@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "register-medical-ukrainian",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T23:47:22Z",
+      "task_id": "v3-register-medical-ukrainian-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-23T23:50:46Z",
+      "note": "word-count-2916-below-80pct-4000"
+    }
+  }
+}

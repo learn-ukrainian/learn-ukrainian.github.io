@@ -1,48 +1,33 @@
 # Дослідження: Introduction to Participles
 
 ## State Standard Reference
-**Note on Alignment**: The module plan cites §4.2.3.1 of the State Standard for A2, but the actual text of Standard 2024 introduces formal participial morphology and syntax at the **B1 level** (see §4.2.3.1 line 2269 for morphology and §4.4.2 line 2372 for syntax).
-However, **A2 learners** (§4.2.1.2) are required to master adjectival declension, which covers the *forms* of past passive participles (used as adjectives).
-
-**Standard Requirement (B1 Scaffolding for A2):**
-§4.2.3.1 (B1): "Дійсний спосіб... дієприкметник... дієприслівник"
-§4.4.2 (B1): "проста форма вищого ступеня... просте речення з дієприкметниковим зворотом"
-
-**Alignment Strategy**: Treat this module as **Lexical/Fixed Phrase Introduction** rather than deep generative grammar. Focus on high-frequency "adjectival" participles (open, closed, made) as per A2 §4.2.1.2 (Adjectives).
+§4.2.1.2: "прикметники у формі множини: високі, дешеві, домашні, осінні, сині, українські."
+Alignment: Scaffolding B1 morphological concepts (participles §4.2.3.1) through the lens of A2 adjectival declension (§4.2.1.2) for practical communication. The Standard formally introduces participial and gerundial phrases at B1 (§4.4.2: "просте речення з дієприкметниковим зворотом..."), but this A2 module introduces them functionally as adjectives and basic adverbs to prepare learners for real-life immersion and signage.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **зроблений** | High (Common) | *зроблено в Україні* (Made in Ukraine), *зроблена робота* (done work) |
-| **відкритий** | High (Common) | *відкриті двері* (open door), *відкритий урок* (open lesson), *відкрито* (open - on signs) |
-| **закритий** | High (Common) | *закрита зона* (closed zone), *зачинено на обід* (closed for lunch - note: *зачинено* for shops) |
-| **написаний** | Medium | *написаний лист* (written letter), *написано власноруч* (written by hand) |
-| **зайнятий** | High (Daily) | *місце зайняте* (seat taken), *я зайнятий* (I am busy), *телефон зайнятий* (line busy) |
-| **зламаний** | Medium | *зламаний ліфт* (broken elevator), *зламане життя* (broken life - metaphor) |
+| відкритий | High | відкриті двері, відкритий лист |
+| зачинений | High | магазин зачинено, двері зачинені |
+| зайнятий | High | місце зайнято, я зайнятий |
+| зроблений | High | зроблено в Україні, зроблена робота |
+| забутий | Medium | забутий пароль, забута історія |
 
 ## Cultural Hooks
-1. **"Зроблено в Україні" (Made in Ukraine)**: A major national branding initiative. The phrase is ubiquitous on goods and connects grammar to economic patriotism and national identity.
-2. **"Скінчивши діло — гуляй сміло"**: Equivalent to "Work hard, play hard" (lit. "Having finished the deed, walk/play boldly"). Perfect usage of a past gerund (-ши) in a fixed proverb.
-3. **"Дарованому коню в зуби не заглядають"**: "Don't look a gift horse in the mouth." Uses *дарованому* (given/gifted) — dative case of past passive participle.
+1. "Зроблено в Україні" (Made in Ukraine) is a massive state branding initiative supporting local businesses, making the -но impersonal form a daily sight for anyone in the country.
+2. The proverb "Скінчивши діло — гуляй сміло" (Having finished the deed, play boldly) highlights the cultural value of hard work before rest, functioning as a perfect template for the past gerund (-вши).
 
 ## Common Learner Errors
-1. **Active Participle Calques (-ючий)**:
-    *   *Error*: "читаючий хлопець" (the reading boy) — Calque from Russian/English.
-    *   *Correct*: "хлопець, який читає" (the boy who reads).
-    *   *Why*: Modern Ukrainian avoids active present participles in favor of relative clauses.
-2. **Dangling Gerunds (Дієприслівники)**:
-    *   *Error*: "Читаючи книгу, світло згасло." (Reading the book, the light went out.)
-    *   *Correct*: "Коли я читав книгу, світло згасло."
-    *   *Why*: The subject of the gerund must be the same as the subject of the main verb.
-3. **Agreement Mismatches**:
-    *   *Error*: "двері відкритий" (door [plural] is open [singular masculine]).
-    *   *Correct*: "двері відкриті" (plural).
-    *   *Why*: Learners forget participles behave exactly like adjectives.
+1. Agreement Mismatch: *двері відкритий* → «двері відкриті» — forgetting that participles behave exactly like adjectives and must agree in gender/number/case.
+2. Dangling Gerund: *Читаючи книгу, світло згасло* → «Коли я читав книгу, світло згасло» — the subject of the gerund must be the same as the main verb.
+3. Active Participle Calque: *читаючий хлопець* → «хлопець, який читає» — calquing the Russian/English active participle instead of using a relative clause.
 
 ## Cross-References
-- **Builds on**: A2-69 (Online Services - status updates often use short forms like "надіслано")
-- **Prepares for**: B1.6+ (Full Participial Grammar), C1 (Scientific style usage)
+- Builds on: a2-69 (Online Services)
+- Prepares for: a2-71 (A2 Final Exam)
 
 ## Notes for Content Writing
-- **Pedagogical Warning**: Do NOT teach *formation* of active present participles (-ючий) as standard productive grammar. Teach them only as fixed adjectives (e.g., *віруючий* - believer, *діючий* - incumbent/current). Focus heavily on **Past Passive (-ний/-тий)** as the productive set.
-- **Short Forms**: Emphasize *відкрито/зачинено* as fixed signs (predicatives) distinct from *відкритий/зачинений* (adjectives).
+- Decolonized framing: Present the lack of active participles (like -учий/-ачий as adjectives) as a feature of Ukrainian's preference for dynamic verb clauses ("який читає"), NOT as a "missing" feature compared to Russian.
+- Immersion: Band 3 (75-90%). The explanations must be almost entirely in Ukrainian. English is only permitted for brief clarifications if Ukrainian-only would cause absolute confusion.
+- IPA: Apply IPA only to the first occurrence of each new vocabulary word.
+- Use Ukrainian angular quotes «...» and ensure all vowels match standard pronunciation (о = [ɔ], е = [ɛ]).

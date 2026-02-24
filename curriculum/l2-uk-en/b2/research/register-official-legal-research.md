@@ -1,37 +1,36 @@
 # Дослідження: Офіційно-діловий стиль: документи, закони, заяви
 
 ## State Standard Reference
-**Primary**: §4.1.2.2 (Genitive Case Usage): "Додаток до заяви. Шукаємо партнерів для участі в новому проєкті." (Lines 3205-3206)
-**Structural**: §4.3.3.1 (One-Member Sentences): "Там усе правильно записано." (Line 3417) — foundation for impersonal official style (*-но/-то*).
-**Lexical**: §4.2.6 (Verbal Nouns): "читання, навантаження, додаток" (Lines 3359-3365) — nominalization focus.
-**Alignment**: The module operationalizes these B2 grammar points into the specific functional domain of official documentation, preparing for C1 mastery of functional styles (§4.4.1.1).
+§4.2.6: "Утворення іменників – назв діяльності (суфікси -нн-, -енн-, -інн-): читати – читання... навантажувати – навантаження..."
+§4.3.3.1: "Односкладні речення з головним членом – дієсловом: ... безособові речення: Було приємно дивитися на веселих дітей. Там усе правильно записано."
+(Note: §4.4.1.1 on functional styles is formally introduced in C1, but conceptually required here to distinguish 'офіційний' from 'розмовний'.)
+Alignment: This module operationalizes verbal nouns for nominalization, impersonal sentences for objective distance, and explicitly establishes the official-business register.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Заява** | High (Admin) | *написати/подати заяву*, *підписати заяву*, *розглянути заяву*, *додаток до заяви*, *заява про звільнення* |
-| **Наказ** | High (Admin) | *видати наказ*, *наказ набирає чинності*, *згідно з наказом*, *виконання наказу*, *скасувати наказ* |
-| **Протокол** | Med (Admin) | *вести протокол*, *скласти протокол*, *витяг з протоколу*, *порядок денний*, *слухали/виступили/ухвалили* |
-| **Кліше** | High (Style) | *брати участь* (NOT приймати), *відповідно до* (+Gen), *згідно з* (+Instr), *протягом* (NOT на протязі) |
-| **Чинний** | Med (Legal) | *чинне законодавство*, *набрати чинності*, *чинний закон* |
+| заява | High (admin) | подати заяву, написати заяву, додаток до заяви |
+| наказ | High (legal/admin) | видати наказ, скасувати наказ, наказ набирає чинності |
+| протокол | Medium (meetings) | вести протокол, витяг з протоколу, порядок денний |
+| згідно з | Very High | згідно з наказом, згідно з правилами (+ Instrumental) |
+| відповідно до | Very High | відповідно до закону, відповідно до статті (+ Genitive) |
+| брати участь | Very High | брати активну участь (avoids calque 'приймати участь') |
 
 ## Cultural Hooks
-1.  **Cossack Bureaucracy**: The **General Military Chancellery** (Генеральна військова канцелярія) of the Hetmanate was a sophisticated state institution that produced "Universals" (Універсали) — legal acts with distinctive baroque stylistic features.
-2.  **Language Rights**: In the 16th-17th centuries, Ukrainian (Ruthenian) was legally protected as the language of the courts and administration in the Volyn, Kyiv, and Bratslav voivodeships, distinct from Polish usage.
+1. **Козацька канцелярія (Cossack Chancellery)**: The General Military Chancellery (Генеральна військова канцелярія) was the highest administrative body of the Hetmanate. Hetmans issued "Універсали" (Universals) — high-level legislative acts characterized by complex, baroque official language.
+2. **Литовські статути та суди**: Ruthenian (староукраїнська мова) was the official legal language of courts and administration in the Volhynian, Kyiv, and Bratslav voivodeships during the 16th–17th centuries, codified in the Statutes of Lithuania.
 
 ## Common Learner Errors
-1.  **Preposition Governance**: *Згідно наказу* (Dative - Error) → **Згідно з наказом** (Instrumental - Correct). Influence of Russian *согласно приказу*.
-2.  **"Від" in Applications**: *Заява від Петренка І.В.* (Error) → **Заява Петренка І.В.** (Genitive only). "Від" is used only to disambiguate identical names.
-3.  **Calques**: *Приймати міри* / *Приймати участь* → **Вживати заходів** / **Брати участь**.
-4.  **Time Expressions**: *На протязі року* (Draft/Air current) → **Протягом/Упродовж року** (Duration).
+1. **Header format**: `Заява від Петренка` → `Заява Петренка`. Why: Ukrainian uses the pure Genitive case to show authorship in document headers, without the preposition 'від'.
+2. **Temporal duration**: `на протязі року` → `протягом року` / `упродовж року`. Why: 'на протязі' literally means 'in a draft/breeze'.
+3. **Calqued set phrases**: `приймати міри` / `приймати участь` → `вживати заходів` / `брати участь`. Why: Direct Russian influence replaced authentic Ukrainian collocations with literal translations.
+4. **Preposition governance**: `згідно закону` → `згідно із законом` / `відповідно до закону`. Why: Confusion between the Instrumental requirement for 'згідно з' and the Genitive for 'відповідно до'.
 
 ## Cross-References
-- **Builds on**: B2-15 (Register Intro), B2-03 (Impersonal *-но/-то*).
-- **Prepares for**: B2-20 (Medical), B2-81 (Professional Comm), C1-HIST (Hetmanate documents).
-- **History Link**: Connects to B2-HIST modules covering the Hetmanate era (Universals).
+- Builds on: b2-15 (Register Introduction), b2-03 (Impersonal -но/-то), b2-17 (Register: Business Ukrainian)
+- Prepares for: b2-20 (Register: Medical Ukrainian), b2-25 (B2.1b Checkpoint), b2-81 (Professional Communication II)
 
 ## Notes for Content Writing
-- **Tone**: Maintain strict neutrality. No emotions.
-- **Structure**: Emphasize the visual layout of a "Заява" (Header right-aligned, Title centered).
-- **Pedagogy**: Use "Bad vs Good" comparison tables for *канцеляризми* vs *суржик*.
-- **Grammar Focus**: Drill the "Instrumental vs Genitive" distinction in official prepositions (*згідно з* vs *відповідно до*).
+- **Decolonized Framing**: Emphasize that Ukrainian legal and official language has a continuous, centuries-old independent tradition (from Rus' Truth to Cossack Universals) that was later suppressed but never erased. Replacing Russian calques (канцеляризми) is about reclaiming the natural elegance of the Ukrainian official style, not just correcting grammar.
+- Use strict formatting for the `Заява` example: right-aligned addressee/sender block, centered title, pure Genitive for the sender.
+- Ensure all vowels in IPA use [ɔ] for 'о' and [ɛ] for 'е'. Use Cyrillic text exclusively in prose; English only in the vocabulary table.

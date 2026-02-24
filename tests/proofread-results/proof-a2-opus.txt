@@ -1,0 +1,143 @@
+Proofread: a2 | 1 module(s) | agent=claude | model=claude-opus-4-6
+Mode: DRY-RUN (print findings only)
+
+============================================================
+Proofreading: a2/the-instrumental-ii-means-and-tools (module 5)
+  Agent: claude | Model: claude-opus-4-6
+  Content: 25778 chars, 3883 words
+
+--- LLM OUTPUT ---
+===PROOFREAD_START===
+issues:
+  - type: WORD_SALAD
+    severity: HIGH
+    location: "Робочі інструменти (Канцелярія)"
+    text: |
+      Найбільш буквальне використання Instrumental case — це фізичні інструменти в руках. Будь-який об'єкт для нової роботи має форму Instrumental case. Ця форма завжди використовується без прийменника.
+    fix: |
+      Найбільш буквальне використання Instrumental case — це фізичні інструменти в руках. Коли ви тримаєте предмет і виконуєте ним дію, він стоїть в Instrumental case без прийменника.
+
+  - type: WORD_SALAD
+    severity: HIGH
+    location: "Робочі інструменти (Канцелярія) — Словник робочих знарядь"
+    text: |
+      *   **комп'ютер** (computer, masculine) → працювати потужним комп'ютером (to work with a powerful computer)
+    fix: |
+      *   **комп'ютер** (computer, masculine) → користуватися потужним комп'ютером (to use a powerful computer)
+
+  - type: WORD_SALAD
+    severity: HIGH
+    location: "Робочі інструменти — Приклади розгорнутих речень"
+    text: |
+      *   Мій старший брат цілий день ефективно працює новим комп'ютером. (My older brother works effectively all day with a new computer.)
+    fix: |
+      *   Мій старший брат цілий день активно користується новим комп'ютером. (My older brother actively uses a new computer all day.)
+
+  - type: WORD_SALAD
+    severity: HIGH
+    location: "М'яка група — Приклади використання"
+    text: |
+      *   Маленькі діти дуже люблять креслити кольоровим олівцем на білому папері. (Small children really love to draft with a colored pencil on white paper.)
+    fix: |
+      *   Маленькі діти дуже люблять малювати кольоровим олівцем на білому папері. (Small children really love to draw with a colored pencil on white paper.)
+
+  - type: LLM_FILLER
+    severity: HIGH
+    location: "Важливі дієслова — Приклад (користуватися)"
+    text: |
+      *   Я абсолютно щодня активно користуюся **робочим комп'ютером**. (I actively use a work computer absolutely every day.)
+    fix: |
+      *   Я щодня користуюся **робочим комп'ютером**. (I use a work computer every day.)
+
+  - type: WORD_SALAD
+    severity: HIGH
+    location: "Практика та підсумок — Мій інтенсивний робочий день"
+    text: |
+      Потім я довго працюю **комп'ютером** і роблю нові документи.
+    fix: |
+      Потім я довго користуюся **комп'ютером** і роблю нові документи.
+
+  - type: LLM_FILLER
+    severity: LOW
+    location: "Українська логіка: Інструмент як продовження руки"
+    text: |
+      Розуміння цього підходу допомагає зрозуміти, чому Instrumental case без прийменника є таким важливим.
+    fix: |
+      Цей підхід пояснює, чому додавати прийменник «з» до інструменту не просто зайве — це змінює значення.
+
+  - type: LLM_FILLER
+    severity: LOW
+    location: "Українська залізниця: Нічний поїзд"
+    text: |
+      To truly understand Ukrainian travel habits and the language that surrounds them, you must understand the deep cultural significance of the national railway system («Укрзалізниця»). For decades, the primary, most reliable, and most romanticized method of traversing the vast geographic distances of Ukraine has been the **нічний поїзд** (night train).
+    fix: |
+      Ukrainian travel culture is inseparable from the national railway, «Укрзалізниця». For decades, the most popular way to cross Ukraine's vast distances has been the **нічний поїзд** (night train).
+
+  - type: LLM_FILLER
+    severity: LOW
+    location: "М'яка група: Особлива увага до «олівець»"
+    text: |
+      This phonetic distinction is absolutely critical for the highly frequent word **олівець** (pencil). In the Ukrainian phonetic system, the letter **ц** functions as a soft/mixed consonant within this specific declension paradigm. Therefore, masculine nouns ending in **-ц** absolutely do not take the standard, default hard ending **-ом**. Instead, they must take the soft/mixed ending **-ем**. A very common and immediately noticeable learner error is trying to say *олівецом*. You must actively train your tongue and muscle memory to produce **олівцем**.
+    fix: |
+      This distinction matters most for the everyday word **олівець** (pencil). The letter **ц** behaves as a soft/mixed consonant in declension, so masculine nouns ending in **-ц** take the ending **-ем**, not **-ом**. A common learner mistake is saying *олівецом* — the correct form is **олівцем**.
+
+  - type: LLM_FILLER
+    severity: LOW
+    location: "Різниця між «Як?» та «Чим?»"
+    text: |
+      As you naturally progress to building significantly more complex sentences in Ukrainian, it becomes absolutely crucial to clearly understand which specific questions trigger which underlying grammatical structures. When describing an action to someone else, you might want to explain the qualitative *manner* in which it was done, or alternatively, the physical *tool* used to accomplish it. These require entirely different grammar.
+    fix: |
+      When describing an action, you might want to explain the *manner* (how well, how fast) or the *tool* used. These two meanings trigger different grammar.
+
+  - type: LLM_FILLER
+    severity: LOW
+    location: "Важливі дієслова: Користуватися та Дістатися"
+    text: |
+      While many standard action verbs *can* theoretically take an Instrumental object if a physical tool is incidentally involved in the scenario (like the verbs *писати* or *їсти*), certain highly frequent, core vocabulary verbs strictly and uncompromisingly *demand* the Instrumental case to complete their basic semantic meaning. Memorizing these specific verb collocations early on is a massive, highly effective shortcut to achieving natural fluency.
+    fix: |
+      Most action verbs *can* take an Instrumental object when a tool is involved (*писати*, *їсти*), but some verbs *require* the Instrumental case as part of their core meaning. Learning these verbs early gives you a practical advantage.
+===PROOFREAD_END===
+--- END OUTPUT ---
+
+  FOUND: 11 issues (6 HIGH, 5 LOW)
+  !! [HIGH] WORD_SALAD @ Робочі інструменти (Канцелярія)
+       Text: Найбільш буквальне використання Instrumental case — це фізичні інструменти в рук...
+       Fix:  Найбільш буквальне використання Instrumental case — це фізичні інструменти в рук...
+  !! [HIGH] WORD_SALAD @ Робочі інструменти (Канцелярія) — Словник робочих знарядь
+       Text: *   **комп'ютер** (computer, masculine) → працювати потужним комп'ютером (to wor...
+       Fix:  *   **комп'ютер** (computer, masculine) → користуватися потужним комп'ютером (to...
+  !! [HIGH] WORD_SALAD @ Робочі інструменти — Приклади розгорнутих речень
+       Text: *   Мій старший брат цілий день ефективно працює новим комп'ютером. (My older br...
+       Fix:  *   Мій старший брат цілий день активно користується новим комп'ютером. (My olde...
+  !! [HIGH] WORD_SALAD @ М'яка група — Приклади використання
+       Text: *   Маленькі діти дуже люблять креслити кольоровим олівцем на білому папері. (Sm...
+       Fix:  *   Маленькі діти дуже люблять малювати кольоровим олівцем на білому папері. (Sm...
+  !! [HIGH] LLM_FILLER @ Важливі дієслова — Приклад (користуватися)
+       Text: *   Я абсолютно щодня активно користуюся **робочим комп'ютером**. (I actively us...
+       Fix:  *   Я щодня користуюся **робочим комп'ютером**. (I use a work computer every day...
+  !! [HIGH] WORD_SALAD @ Практика та підсумок — Мій інтенсивний робочий день
+       Text: Потім я довго працюю **комп'ютером** і роблю нові документи.
+...
+       Fix:  Потім я довго користуюся **комп'ютером** і роблю нові документи.
+...
+     [LOW] LLM_FILLER @ Українська логіка: Інструмент як продовження руки
+       Text: Розуміння цього підходу допомагає зрозуміти, чому Instrumental case без прийменн...
+       Fix:  Цей підхід пояснює, чому додавати прийменник «з» до інструменту не просто зайве ...
+     [LOW] LLM_FILLER @ Українська залізниця: Нічний поїзд
+       Text: To truly understand Ukrainian travel habits and the language that surrounds them...
+       Fix:  Ukrainian travel culture is inseparable from the national railway, «Укрзалізниця...
+     [LOW] LLM_FILLER @ М'яка група: Особлива увага до «олівець»
+       Text: This phonetic distinction is absolutely critical for the highly frequent word **...
+       Fix:  This distinction matters most for the everyday word **олівець** (pencil). The le...
+     [LOW] LLM_FILLER @ Різниця між «Як?» та «Чим?»
+       Text: As you naturally progress to building significantly more complex sentences in Uk...
+       Fix:  When describing an action, you might want to explain the *manner* (how well, how...
+     [LOW] LLM_FILLER @ Важливі дієслова: Користуватися та Дістатися
+       Text: While many standard action verbs *can* theoretically take an Instrumental object...
+       Fix:  Most action verbs *can* take an Instrumental object when a tool is involved (*пи...
+
+============================================================
+SUMMARY: 1 modules scanned
+  Modules with issues: 1
+  Total issues: 11
+  HIGH: 6 | LOW: 5

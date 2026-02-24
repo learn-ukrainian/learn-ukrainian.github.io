@@ -8,6 +8,10 @@
       "ts": "2026-02-19T13:04:28Z",
       "task_id": "v3-krymske-khanstvo-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T10:14:26Z"
     }
   }
 }

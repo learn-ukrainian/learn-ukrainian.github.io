@@ -1,0 +1,15 @@
+Proofread: a1 | 1 module(s) | agent=claude | model=claude-sonnet-4.6
+Mode: DRY-RUN (print findings only)
+
+============================================================
+Proofreading: a1/numbers-and-money (module 17)
+  Agent: claude | Model: claude-sonnet-4.6
+  Content: 17993 chars, 2961 words
+  Claude CLI error (rc=1): 
+  ERROR: LLM dispatch failed for numbers-and-money
+
+============================================================
+SUMMARY: 1 modules scanned
+  Modules with issues: 0
+  Total issues: 0
+  HIGH: 0 | LOW: 0

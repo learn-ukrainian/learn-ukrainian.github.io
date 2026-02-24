@@ -5,9 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-21T00:38:25Z",
+      "ts": "2026-02-23T13:52:04Z",
       "task_id": "v3-aspect-complete-system-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T13:54:32Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T14:05:13Z",
+      "task_id": "v3-aspect-complete-system-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T10:16:42Z",
+      "attempts": 1
     }
   }
 }

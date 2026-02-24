@@ -1,0 +1,126 @@
+Proofread: a1 | 1 module(s) | agent=claude | model=claude-sonnet-4-6
+Mode: DRY-RUN (print findings only)
+
+============================================================
+Proofreading: a1/numbers-and-money (module 17)
+  Agent: claude | Model: claude-sonnet-4-6
+  Content: 17993 chars, 2961 words
+
+--- LLM OUTPUT ---
+===PROOFREAD_START===
+issues:
+  - type: RUSSIANISM
+    severity: HIGH
+    location: "Практика: Лічба та покупки — Діалог 1"
+    text: |
+      > [!note]
+      > **Vocabulary: Здача**
+      > The word **зда́ча** means "change" (the money you get back). You will hear this constantly.
+    fix: |
+      > [!note]
+      > **Vocabulary: Решта**
+      > The word **ре́шта** means "change" (the money you get back). You will hear it at every checkout and market stall.
+
+  - type: RUSSIANISM
+    severity: HIGH
+    location: "Практика: Лічба та покупки — Діалог 2"
+    text: |
+      **Продавець**: Дякую. Ваша здача — десять гривень. (Thank you. Your change is 10 hryvnias.)
+    fix: |
+      **Продавець**: Дякую. Ваша решта — десять гривень. (Thank you. Your change is 10 hryvnias.)
+
+  - type: RUSSIANISM
+    severity: HIGH
+    location: "Практика: Лічба та покупки — Сценарій"
+    text: |
+      "З вас двадцять сім. Здача... двадцять три."
+      (From you 27. Change... 23.)
+    fix: |
+      "З вас двадцять сім. Решта... двадцять три."
+      (From you 27. Change... 23.)
+
+  - type: LLM_FILLER
+    severity: LOW
+    location: "Наша мета сьогодні"
+    text: |
+      Let's start counting!
+    fix: |
+      Numbers 0–10 come first — they are the building blocks for everything that follows.
+
+  - type: DEAD_PARAGRAPH
+    severity: LOW
+    location: "Числа від 0 до 20"
+    text: |
+      These numbers are the foundation. Without them, it is impossible to build larger numbers.
+    fix: |
+      These ten words are the atoms of every larger number. You will spot **два** inside **дванадцять** (12) and **двадцять** (20), and **п'ять** inside **п'ятнадцять** (15) and **п'ятдесят** (50).
+
+  - type: ORPHAN_SENTENCE
+    severity: LOW
+    location: "Складені числа (Compound Numbers)"
+    text: |
+      It is very modular. Lego blocks.
+    fix: |
+      It is very modular — like snapping Lego blocks together, you simply combine a ten and a unit with no connecting word needed.
+
+  - type: ORPHAN_SENTENCE
+    severity: LOW
+    location: "Культурний контекст: Походження назви"
+    text: |
+      **Це стародавня історія.** (It is ancient history.)
+    fix: |
+      **Гривня — одна з найдавніших назв валюти в Східній Європі.** (Hryvnia is one of the oldest currency names in Eastern Europe.)
+
+  - type: ORPHAN_SENTENCE
+    severity: LOW
+    location: "Культурний контекст: Символ ₴"
+    text: |
+      **Символ означає стабільність.**
+    fix: |
+      **Дві горизонтальні риски символізують стабільність — як у знаках євро (€) та долара ($).** (The two horizontal strokes symbolise stability — just like the euro (€) and dollar ($) signs.)
+===PROOFREAD_END===
+--- END OUTPUT ---
+
+  FOUND: 8 issues (3 HIGH, 5 LOW)
+  !! [HIGH] RUSSIANISM @ Практика: Лічба та покупки — Діалог 1
+       Text: > [!note]
+> **Vocabulary: Здача**
+> The word **зда́ча** means "change" (the mone...
+       Fix:  > [!note]
+> **Vocabulary: Решта**
+> The word **ре́шта** means "change" (the mone...
+  !! [HIGH] RUSSIANISM @ Практика: Лічба та покупки — Діалог 2
+       Text: **Продавець**: Дякую. Ваша здача — десять гривень. (Thank you. Your change is 10...
+       Fix:  **Продавець**: Дякую. Ваша решта — десять гривень. (Thank you. Your change is 10...
+  !! [HIGH] RUSSIANISM @ Практика: Лічба та покупки — Сценарій
+       Text: "З вас двадцять сім. Здача... двадцять три."
+(From you 27. Change... 23.)
+...
+       Fix:  "З вас двадцять сім. Решта... двадцять три."
+(From you 27. Change... 23.)
+...
+     [LOW] LLM_FILLER @ Наша мета сьогодні
+       Text: Let's start counting!
+...
+       Fix:  Numbers 0–10 come first — they are the building blocks for everything that follo...
+     [LOW] DEAD_PARAGRAPH @ Числа від 0 до 20
+       Text: These numbers are the foundation. Without them, it is impossible to build larger...
+       Fix:  These ten words are the atoms of every larger number. You will spot **два** insi...
+     [LOW] ORPHAN_SENTENCE @ Складені числа (Compound Numbers)
+       Text: It is very modular. Lego blocks.
+...
+       Fix:  It is very modular — like snapping Lego blocks together, you simply combine a te...
+     [LOW] ORPHAN_SENTENCE @ Культурний контекст: Походження назви
+       Text: **Це стародавня історія.** (It is ancient history.)
+...
+       Fix:  **Гривня — одна з найдавніших назв валюти в Східній Європі.** (Hryvnia is one of...
+     [LOW] ORPHAN_SENTENCE @ Культурний контекст: Символ ₴
+       Text: **Символ означає стабільність.**
+...
+       Fix:  **Дві горизонтальні риски символізують стабільність — як у знаках євро (€) та до...
+
+============================================================
+SUMMARY: 1 modules scanned
+  Modules with issues: 1
+  Total issues: 8
+  HIGH: 3 | LOW: 5

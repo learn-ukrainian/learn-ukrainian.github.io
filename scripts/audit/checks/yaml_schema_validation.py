@@ -116,8 +116,17 @@ def load_base_schema() -> Dict:
 
 
 def get_activity_schema(activity_type: str, base_schema: Dict) -> Optional[Dict]:
-    """Get the schema definition for a specific activity type."""
+    """Get the schema definition for a specific activity type.
+
+    Checks for track-specific definitions first (e.g., reading-c1-hist),
+    then falls back to the base type name (e.g., reading).
+    """
     definitions = base_schema.get('definitions', {})
+    # Track-specific schemas name definitions as "type-track" (e.g., "reading-c1-hist")
+    # Try all keys that start with the activity type and pick the first match
+    for key in definitions:
+        if key.startswith(f"{activity_type}-"):
+            return definitions[key]
     return definitions.get(activity_type)
 
 
@@ -902,11 +911,27 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
     if not yaml_path.exists():
         return 0, []
 
-    # Load base schema
+    # Load schema — prefer track-specific (e.g., activities-c1-hist.schema.json)
+    # over base schema, so auto-fixes respect track-specific field rules.
     try:
         base_schema = load_base_schema()
     except FileNotFoundError as e:
         return 0, [f"Schema not found: {e}"]
+
+    # Detect track from path: .../c1-hist/activities/slug.yaml → "c1-hist"
+    track_schema = None
+    for parent in yaml_path.parents:
+        if parent.name in ('a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit',
+                           'b2-hist', 'c1-bio', 'c1-hist', 'oes', 'ruth',
+                           'b2-pro', 'c1-pro'):
+            track_path = get_schemas_dir() / f"activities-{parent.name}.schema.json"
+            if track_path.exists():
+                with open(track_path, 'r', encoding='utf-8') as f:
+                    track_schema = json.load(f)
+            break
+
+    # Use track schema if available (has track-specific definitions like reading-c1-hist)
+    fix_schema = track_schema if track_schema else base_schema
 
     # Pre-fix: Fix raw text issues that prevent YAML parsing
     with open(yaml_path, 'r', encoding='utf-8') as f:
@@ -952,7 +977,7 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
         if not isinstance(activity, dict):
             continue
 
-        modified, fixes = fix_activity_violations(activity, base_schema)
+        modified, fixes = fix_activity_violations(activity, fix_schema)
         if modified:
             total_fixes += len(fixes)
             activity_title = activity.get('title', f'Activity {i+1}')[:40]

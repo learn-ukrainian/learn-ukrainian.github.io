@@ -1,0 +1,26 @@
+Proofread: a1 | 1 module(s) | agent=gemini | model=gemini-3-flash-preview
+Mode: DRY-RUN (print findings only)
+
+============================================================
+Proofreading: a1/numbers-and-money (module 17)
+  Agent: gemini | Model: gemini-3-flash-preview
+  Content: 17993 chars, 2961 words
+  FOUND: 3 issues (0 HIGH, 3 LOW)
+     [LOW] MOTIVATIONAL_FILLER @ ### Наша мета сьогодні
+       Text: Second, we need to master the "magic spell" of Ukrainian grammar: how to match n...
+       Fix:  Second, we need to master a key rule of Ukrainian grammar: how to match numbers ...
+     [LOW] ORPHAN_SENTENCE @ #### Складені числа (Compound Numbers)
+       Text: It is very modular. Lego blocks.
+...
+       Fix:  It is very modular, like building with Lego blocks.
+...
+     [LOW] MOTIVATIONAL_FILLER @ Підсумок
+       Text: Це величезний крок до незалежності в Україні.
+...
+       Fix:  Це важливий крок до вашої впевненості у повсякденному спілкуванні в Україні....
+
+============================================================
+SUMMARY: 1 modules scanned
+  Modules with issues: 1
+  Total issues: 3
+  HIGH: 0 | LOW: 3

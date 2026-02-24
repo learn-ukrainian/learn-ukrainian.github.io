@@ -1,7 +1,7 @@
 # Audit Report: M26 — telling-stories.md
 **Level:** A2 | **Module:** M26 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-23 02:35:50
+**Generated:** 2026-02-24 09:49:45
 
 ## Configuration
 **Type:** A2-vocab

@@ -1,40 +1,30 @@
 # Дослідження: Односкладні речення
 
 ## State Standard Reference
-§4.3.3: "Просте односкладне речення... Односкладні речення з головним членом – дієсловом: означено-особові... неозначено-особові... безособові... Односкладні речення з головним членом – іменником (номінативні речення)..."
-Alignment: This module explicitly covers the four types of one-member sentences mandated by the standard for B2 level, moving beyond simple identification to stylistic usage and transformation.
+§4.3.3: "Просте односкладне речення... Односкладні речення з головним членом – дієсловом: означено-особові речення: Іду повз пам’ятник Богданові Хмельницькому; неозначено-особові речення: По радіо повідомили про погіршення погоди; безособові речення: Було приємно дивитися на веселих дітей... Односкладні речення з головним членом – іменником (номінативні речення): Вечір. Омріяна прохолода. Спокій…"
+Alignment: Цей модуль безпосередньо покриває вимогу Стандарту B2 (лінії 3409-3418) щодо розпізнавання, розуміння та використання всіх типів простих односкладних речень та їхніх стилістичних функцій.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| термін | High / Academic | науковий термін, вживати термін, визначення терміна, технічний термін |
-| поняття | High / General | ключове поняття, абстрактне поняття, розкрити поняття, підмінити поняття |
-| процес | High / General | навчальний процес, творчий процес, незворотний процес, прискорити процес |
-| метод | High / Academic | науковий метод, метод аналізу, ефективний метод, застосувати метод |
-| аналіз | High / Academic | глибокий аналіз, порівняльний аналіз, критичний аналіз, провести аналіз |
-| синтез | Medium / Academic | хімічний синтез, органічний синтез, синтез мистецтв, аналіз і синтез |
-| дослідження | High / Academic | наукове дослідження, польове дослідження, результати дослідження, проводити дослідження |
+| термін | Висока (академ.) | науковий термін, вживати термін |
+| поняття | Висока (абстракт.)| ключове поняття, абстрактне поняття |
+| процес | Висока (заг.) | творчий процес, навчальний процес |
+| дослідження | Дуже висока (В2+)| результати дослідження, проводити дослідження |
 
 ## Cultural Hooks
-1. **Taras Shevchenko's Poetry**: Shevchenko masterfully used one-member sentences to create intimacy and emotional tension. Example: "Смеркалося... Розвиднялось..." (Impersonal) or "Поїдеш далеко, побачиш багато..." (Definite-personal).
-2. **Folk Wisdom**: Generalized-personal sentences are the structural backbone of Ukrainian proverbs. Example: "Вік живи — вік учись" (Live a century — learn a century) or "Що посієш, те й пожнеш" (What you sow, you shall reap).
+1. Поетика простору і часу в літературі: блискуче використання Тарасом Шевченком односкладних речень для створення масштабних картин природи чи інтимних звернень (безособові: «Смеркалося... Розвиднялось...»; означено-особові: «Поїдеш далеко, побачиш багато...»). 
+2. Синтаксис народної мудрості: абсолютна більшість українських приказок та прислів'їв будується за моделлю узагальнено-особових речень («Вік живи — вік учись», «Що посієш, те й пожнеш»). Це демонструє їхню глибоку вкоріненість в українську ментальність.
 
 ## Common Learner Errors
-1. **Subject Redundancy** → "Я гуляю в парку" instead of "Гуляю в парку" (in contexts where the person is clear).
-   *   *Why*: Transfer from non-pro-drop languages (English/German) where the subject is mandatory.
-2. **Confusion with Incomplete Sentences** → Confusing a one-member sentence (structurally complete) with an elliptical two-member sentence (contextually incomplete).
-   *   *Correction*: Context check — does the missing subject exist in the previous sentence?
-3. **Impersonal Agency** → Attempting to add a nominative subject to impersonal predicates (e.g., "Я холодно" instead of "Мені холодно").
-   *   *Why*: Misunderstanding the dative experiencer role.
+1. Subject Redundancy (надмірність підмета) → «Я піду в магазин» замість «Піду в магазин». Англомовні студенти звикли до обов'язкового підмета, тоді як в українській мові дієслівне закінчення вже є достатнім маркером особи, тому займенник часто зайвий і обтяжує текст.
+2. Калькування психофізичних станів → «Я холодно» (I am cold) замість «Мені холодно». Студенти ігнорують безособову природу таких конструкцій та необхідність використання давального відмінка для особи-реципієнта.
 
 ## Cross-References
-- **Builds on**:
-    - B2 M01-10 (Passive Voice System — specifically impersonal forms ending in -но/-то)
-    - B2 M11-30 (Participles — distinct from verb forms in one-member sentences)
-- **Prepares for**:
-    - C1 Stylistics (where syntactic figures like ellipsis and parceling rely on understanding sentence completeness)
-    - C1 Text Creation (using nominal sentences for dynamic descriptions)
+- Builds on: B1.1 (Basic sentence structure SVO), B2.1a (Passive voice system, forms on -но, -то).
+- Prepares for: B2.2 (Phraseology and syntax dynamics), C1 (Academic reading and professional writing).
 
 ## Notes for Content Writing
-- **Stylistic Focus**: Emphasize that one-member sentences are not "missing" something; they are a choice for brevity and dynamism.
-- **Contrast**: Explicitly contrast "Ми зробили це" (Two-member, focus on actor) vs "Це зроблено" (Impersonal, focus on result) vs "Зробили" (Indefinite-personal, focus on action).
+- Деколонізаційний фокус: уникати порівнянь з російською граматикою. Українська мова органічно розвинула систему односкладних речень як первинний інструмент лаконічності, що варто протиставляти жорстким SVO-структурам германських мов.
+- Ретельно підкреслювати, що односкладні речення є повноцінними й самодостатніми конструкціями, а не «неповними» реченнями.
+- Обов'язкове 100% занурення (ніякої англійської мови в поясненнях чи інструкціях).

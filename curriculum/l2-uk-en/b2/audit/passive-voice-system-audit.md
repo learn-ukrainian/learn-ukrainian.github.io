@@ -1,7 +1,7 @@
 # Audit Report: M01 — passive-voice-system.md
 **Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-19 12:09:39
+**Generated:** 2026-02-24 11:13:04
 
 ## Configuration
 **Type:** B2-grammar
@@ -16,42 +16,20 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | quiz | Теорія пасиву: розуміння нюансів | 10 | 8 | ✅ |
-| 2 | group-sort | Класифікація пасивних конструкцій | 20 | 14 | ✅ |
-| 3 | match-up | Сфера вживання: стиль і форма | 14 | 8 | ✅ |
-| 4 | mark-the-words | Полювання на пасив | 10 | 6 | ✅ |
-| 5 | fill-in | Оберіть правильну форму | 10 | 8 | ✅ |
-| 6 | unjumble | Синтаксис пасивних конструкцій | 8 | 6 | ✅ |
-| 7 | error-correction | Редактор: виправлення помилок | 8 | 6 | ✅ |
-| 8 | cloze | Відновлення історичного звіту | 16 | 14 | ✅ |
-| 9 | translate | Перекладач: уникаємо кальок | 8 | 6 | ✅ |
-| 10 | select | Вибір стилю | 8 | 6 | ✅ |
-| 11 | essay-response | Анти-канцелярит: редагування тексту | 1 | 1 | ✅ |
-
-**Summary:**
-- Total activities: 11 (target: 10-14) ✅
-- Unique types: 11 (minimum: 4) ✅
-- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
-- Required types used: 5/5 (essay-response, fill-in, group-sort, match-up, quiz) ✅
-- Low density activities: 0
-
 ## Gates
-- **Words:** ✅ 4236/4000 (raw: 4681)
-- **Activities:** ✅ 11/10
-- **Density:** ✅ All > 14
-- **Unique_types:** ✅ 11/4 types
-- **Priority:** ✅ Priority types used
+- **Words:** ✅ 4236/4000 (raw: 4680)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "aspect-integration-practice",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T21:16:04Z",
+      "task_id": "v3-aspect-integration-practice-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T21:20:23Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T21:22:22Z",
+      "task_id": "v3-aspect-integration-practice-pC"
+    }
+  }
+}

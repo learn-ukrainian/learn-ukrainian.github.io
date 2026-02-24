@@ -8,6 +8,15 @@
       "ts": "2026-02-19T12:56:09Z",
       "task_id": "v3-ludy-rusi-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T08:22:11Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T08:24:23Z",
+      "task_id": "v3-ludy-rusi-pC"
     }
   }
 }

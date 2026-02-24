@@ -1,0 +1,64 @@
+{
+  "module": "emotions-personality",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T09:23:47.325562Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-23T22:36:26.034587Z",
+    "meta": "2026-02-23T22:30:21.693550Z",
+    "activities": "2026-02-23T22:39:05.596901Z",
+    "vocabulary": "2026-02-23T22:39:05.597121Z",
+    "plan": "2026-02-20T21:04:25.617471Z",
+    "research": "2026-02-23T22:30:21.689895Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "5528/3000 (raw: 6111) | engagement: 0/4 | pedagogy: 41 violations | immersion: 83.5% HIGH (target 60-75% (A2.3))"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 1,
+    "deferred_count": 3
+  }
+}

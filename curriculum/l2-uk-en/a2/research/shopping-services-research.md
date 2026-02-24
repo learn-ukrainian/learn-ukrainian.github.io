@@ -2,35 +2,32 @@
 
 ## State Standard Reference
 §3.9: "Купівля (закупи): магазини і ринки; споживчі товари (овочі, фрукти, м’ясо, молочні продукти, хліб, яйця); засоби гігієни (мило, шампунь, зубна паста); одиниці ваги й об’єму; гроші."
-§3.11: "Послуги: банк; пошта; бібліотека; спортзал, басейн; таксі."
-Alignment: This module directly addresses the "Shopping" and "Services" thematic requirements of the State Standard, specifically focusing on store types, payment methods (money), and basic service vocabulary.
+Alignment: This module directly addresses the vocabulary and transactional competencies required by §3.9 for A2 proficiency.
+*Note:* The plan references §3.11 for "hairdresser, repair". However, Standard A2 §3.11 actually specifies "банк; пошта; бібліотека; спортзал, басейн; таксі." The outline still covers the plan's target vocabulary (перукарня, хімчистка, ремонт), but this slight mismatch with the Standard text is noted.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| магазин | High (Core A1/A2) | йти в магазин, продуктовий магазин |
-| ціна | High (Core A1/A2) | висока ціна, яка ціна? |
-| купувати | High (Core A2) | купувати продукти, купувати одяг |
-| платити | High (Core A2) | платити карткою, платити готівкою |
-| картка | High (Core A2) | банківська картка, платити карткою |
-| готівка | Medium (Core A2) | платити готівкою, мати готівку |
-| чек | Medium (Daily Life) | потрібен чек, фіскальний чек |
-| знижка | Medium (Shopping) | знижка 50%, сезонні знижки |
+| магазин | High (Standard §3.9) | продуктовий магазин, йти в магазин |
+| купувати | High | купувати продукти, купувати одяг |
+| платити | High | платити карткою, платити готівкою |
+| ціна | High | висока ціна, ціна за кілограм |
+| готівка | Medium | платити готівкою, мати готівку |
+| картка | High | банківська картка, платити карткою |
 
 ## Cultural Hooks
-1. **Bessarabka Market (Бессарабський ринок)**: Kyiv's most famous and historic indoor market, built in 1912 with funds from sugar magnate Lazar Brodsky. It is an architectural monument (Art Nouveau).
-2. **"Expensive as in Bessarabka"**: A common Kyiv idiom implying very high prices, reflecting the market's reputation as a premium location.
-3. **Market Etiquette**: While supermarkets are fixed-price, traditional markets (ринки) often allow for some interaction, though bargaining is less aggressive than in some other cultures. "Do you have fresh...?" (Чи є у вас свіже...?) is a common starter.
+1. **Bessarabka Market (Бессарабський ринок):** Built between 1910 and 1912 in the Art Nouveau style. It was funded by the prominent Kyiv sugar magnate and philanthropist Lazar Brodsky (Лазар Бродський).
+2. **Kyiv Idiom:** "Дорого, як на Бессарабці" (Expensive as on Bessarabka) is a popular local phrase that reflects the market's long-standing reputation for premium, high-priced goods.
 
 ## Common Learner Errors
-1. **Wrong Payment Case**: *платити картою* (Incorrect) → *платити карткою* (Correct, Instrumental case of 'картка').
-2. **Locative for Direction**: *Я йду в магазині* (Incorrect) → *Я йду в магазин* (Correct, Accusative for motion).
-3. **Direct Translation "Do you have?"**: *Ти маєш хліб?* (Unnatural) → *Чи є у вас хліб?* (Natural, "Is there at you bread?").
+1. **Motion vs. Location:** "Я йду в магазині" → "Я йду в магазин" (Learners confuse Locative for state/location with Accusative for motion/direction).
+2. **Direct English Translation:** "Ти маєш хліб?" → "Чи є у вас хліб?" (Ukrainian strongly prefers the existential "Is there at you?" over the literal "Do you have?").
+3. **Card vs. Map:** "Платити картою" → "Платити карткою" ("Карта" means a geographic map; "картка" is a bank or payment card).
 
 ## Cross-References
-- Builds on: a2-52 (Education and Learning) - basic transactional language.
-- Prepares for: a2-54 (Sports and Fitness) - instrumental case usage; a2-63 (At the Bank) - financial vocabulary.
+- Builds on: a2-52 (Education and Learning)
+- Prepares for: a2-54 (Sports and Fitness), a2-63 (At the Bank)
 
 ## Notes for Content Writing
-- **Grammar Focus**: Ensure clear distinction between Accusative (buying *what*: хліб, молоко) and Instrumental (paying *how*: карткою, готівкою).
-- **Service Vocabulary**: Briefly introduce 'ремонт', 'перукарня', 'хімчистка' as planned, but keep the main focus on the shopping transaction flow (Store -> Selection -> Price -> Payment).
+- **Decolonized framing:** Treat Ukrainian transactional etiquette as an independent, culturally rich system. Do not compare it to Russian norms. Focus heavily on natural Ukrainian phrasing (e.g., "Чи є у вас" over literal translations).
+- **Immersion:** Module 53 is in the "Consolidation" band (M51-70). The target immersion is 75-90% Ukrainian. Grammar and the introduction can use brief English scaffolding, but dialogues and practice exercises must be fully in Ukrainian.

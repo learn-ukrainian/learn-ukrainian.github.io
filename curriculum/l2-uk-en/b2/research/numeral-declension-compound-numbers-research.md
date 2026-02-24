@@ -1,36 +1,32 @@
 # Дослідження: Відмінювання числівників ІІ: Складені числівники
 
 ## State Standard Reference
-§4.1.1.3: "відмінювання складених порядкових числівників: сто третій (сто третього, сто третьому...); відмінювання кількісних числівників... двадцяти (двадцятьох) восьми (вісьмох)... шістдесятьома (шістдесятьма) двома..."
-Alignment: Module directly addresses the standard's requirement for full mastery of compound numeral declension (both cardinal and ordinal) and case agreement.
+§4.1.1.3: "відмінювання складених порядкових числівників: сто третій ... відмінювання кількісних числівників ... від 5 до 20, 30, 50, 60, 70, 80, 40, 90, 100: двадцяти (двадцятьох) восьми (вісьмох), без сорока одного, шістдесятьома (шістдесятьма) двома"
+Alignment: This module precisely fulfills the B2 requirement to master the full numeral paradigm, focusing specifically on the comprehensive declension of compound cardinals (where every word changes) and compound ordinals (where only the last word changes), including variant instrumental forms like "шістдесятьома / шістдесятьма".
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **відсоток** | High (News/Academic) | п'ятдесят відсотків, сто відсотків, великий відсоток, відсоток жиру |
-| **населення** | High (Demographics) | кількість населення, перепис населення, 40 мільйонів населення |
-| **бюджет** | Medium (Econ/Gov) | державний бюджет, бюджет проєкту, мільйон гривень |
-| **гривня** | High (Daily) | двісті гривень, п'ять тисяч гривень, курс гривні |
-| **кілометр** | High (Geo/Travel) | сто кілометрів, тисяча кілометрів, квадратний кілометр |
+| відсоток | High (News/Academic) | п'ятдесят відсотків, сто відсотків |
+| населення | High (Demographics) | кількість населення, перепис населення |
+| бюджет | High (Economics) | державний бюджет, бюджет проєкту |
+| гривня | High (Daily/Finance) | двісті гривень, п'ять тисяч гривень |
+| кілометр | High (Geography) | сто кілометрів, квадратний кілометр |
 
 ## Cultural Hooks
-1. **Станція «Арсенальна»**: Найглибша станція метро у світі — **105,5** (сто п'ять цілих і п'ять десятих) метрів. Збудована в **1960** (тисяча дев'ятсот шістдесятому) році.
-2. **Літак «Мрія»**: Ан-225 встановив **462** (чотириста шістдесят два) авіаційні рекорди. Максимальна злітна маса — **640** (шістсот сорок) тонн.
-3. **Конституція Пилипа Орлика**: Написана у **1710** (тисяча сімсот десятому) році — одна з перших конституцій у світі.
+1. Ан-225 «Мрія» (An-225 "Mriya"): A masterpiece of aviation engineering, it set 462 aviation records and had a maximum takeoff weight of 640 tonnes. It serves as an excellent, authentic anchor for contextualizing large numbers.
+2. Конституція Пилипа Орлика 1710 року (The Constitution of Pylyp Orlyk, 1710): One of Europe's earliest state constitutions, providing a historical anchor for practicing ordinal numerals in dates (e.g., у тисяча сімсот десятому році).
 
 ## Common Learner Errors
-1. **Partial Declension (Cardinal)**: *на ста сорока п'яти* (correct) vs *на сто сорок п'яти* (incorrect).
-   *   *Cause*: Influence of English/Russian where only the last element might change or case marking is simpler. In Ukrainian cardinal compound numerals, **every** word changes.
-2. **Incorrect Declension of Hundreds (200-900)**: *двохсот* (correct) vs *двісот* (incorrect); *п'ятисот* (correct) vs *п'ятьсот* (genitive).
-   *   *Cause*: Failure to decline the first part of the compound word (e.g., *дві-* becomes *двох-*).
-3. **Ordinal vs Cardinal Confusion**: *у тисяча дев'ятсот дев'яносто першому році* (correct) vs *у тисячі дев'ятсот...* (incorrect).
-   *   *Rule*: In compound **ordinal** numerals (years), only the **last** word declines.
+1. Partial declension of compound cardinals: Learners often decline only the final word (e.g., "на сто сорок п'яти" instead of the correct "на ста сорока п'яти") due to conflating cardinal and ordinal rules.
+2. Over-regularization of hundreds: Using "двісот" instead of the correct "двісті" or "двохсот".
+3. Mixing rules for years: Erroneously declining the thousands/hundreds in dates (e.g., "у тисячі дев'ятсот..." instead of "у тисяча дев'ятсот...").
 
 ## Cross-References
-- **Builds on**: `numeral-declension-basics` (A2), `dates-and-time` (A2).
-- **Prepares for**: `professional-statistics` (C1), `historical-dates` (B2-HIST modules), `economic-geography` (B2).
+- Builds on: B1 numeral reviews (complex numerals 50-80, 200-900).
+- Prepares for: Advanced B2 modules dealing with historical narratives, statistics, and economics where precise dates and large figures are required.
 
 ## Notes for Content Writing
-- **Visuals**: Use a clear table contrasting "Cardinals (ALL change)" vs "Ordinals (LAST changes)".
-- **Immersion**: Ensure all large numbers are written out in words in the theory sections to force reading practice.
-- **Morphology**: Highlight the internal inflection of hundreds (*п'ят**и**сот*, *сем**и**сот*) as a key drill point.
+- Decolonized framing: Present the comprehensive declension of every component in compound cardinal numerals as a hallmark of Ukrainian structural precision and linguistic richness, rather than framing it as an unnecessary complication compared to other languages.
+- Highlight the variant instrumental endings (e.g., -ома / -ма) to demonstrate the natural flexibility of the language.
+- Maintain 100% Ukrainian immersion, as this is a B2 core module. All explanations must be in Ukrainian, using clear, professional terminology without relying on Russian-influenced constructions. Use IPA [ɔ] and [ɛ] correctly for vocabulary.

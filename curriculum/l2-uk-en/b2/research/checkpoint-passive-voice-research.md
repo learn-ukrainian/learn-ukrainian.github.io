@@ -1,33 +1,32 @@
 # Дослідження: Контрольний модуль B2.1a — Система пасивного стану
 
 ## State Standard Reference
-§4.3.3.1: "Безособові речення: Було приємно дивитися на веселих дітей. Там усе правильно записано."
-§4.1.1.2: "Прикметники... осінній, могутній" (covers participial adjectives like *пасивний*, *контрольний*)
-Alignment: Цей модуль систематизує використання безособових форм на -но/-то (офіційний стиль) та пасивних дієприкметників, забезпечуючи перехід до рівня B2, де ці форми вживаються усвідомлено для зміни регістру, а не хаотично.
+§4.3.3.1: "безособові речення: Було приємно дивитися на веселих дітей. Там усе правильно записано."
+Alignment: Цей модуль безпосередньо тестує вміння вживати безособові речення (зокрема з формами на -но, -то) та уникати штучних пасивних конструкцій, що відповідає вимогам B2 щодо синтаксису за Державним стандартом 2024.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **оцінювання** | High (Edu/Prof) | критерії оцінювання, система оцінювання, здійснювати оцінювання, незалежне оцінювання |
-| **діагностика** | Med (Tech/Edu) | провести діагностику, результати діагностики, діагностика знань, комп'ютерна діагностика |
-| **прогалина** | Med (General) | заповнити прогалину, прогалина в знаннях, законодавча прогалина, виявити прогалини |
-| **уміння** | High (General) | набувати умінь, практичні уміння, знання та уміння, формувати уміння |
-| **регістр** | Low (Ling/Tech) | високий/низький регістр, зміна регістру, офіційний регістр, стилістичний регістр |
+| оцінювання | Висока (освітній/офіційний контекст) | система оцінювання, критерії оцінювання |
+| діагностика | Середня (академічний контекст) | діагностика знань, результати діагностики |
+| прогалина | Висока (навчальний контекст) | заповнити прогалину, виявити прогалини |
+| регістр | Спеціальна (лінгвістичний термін) | зміна регістру, офіційно-діловий регістр |
+| трансформація | Академічна | граматична трансформація, трансформація речень |
 
 ## Cultural Hooks
-1. **The "Bureaucratic Objectivity"**: The `-но/-то` construction (e.g., *Закон прийнято*, *Наказ підписано*) is the hallmark of Ukrainian officialdom. It conveys absolute authority and finality, removing the human element to sound "objective." It is the voice of the State.
-2. **The "Agency" Principle**: Unlike Russian or English, natural Ukrainian strongly prefers ACTIVE constructions (*Ми вирішили* vs *Було вирішено*). Overusing passive in daily life is seen as "kantseliaryzm" (bureaucratese) or a lack of agency. Teaching B2 learners *when* to avoid passive is as important as how to form it.
+1. Використання безособових форм на -но/-то (напр., "закон прийнято", "зроблено") є візитною карткою українського офіційно-ділового стилю. Воно підкреслює об'єктивність та державний авторитет, дозволяючи уникати радянського канцеляриту, перевантаженого пасивними дієприкметниками.
+2. Сучасна українська мова активно очищується від активних дієприкметників теперішнього часу (на -учий/-ючий, як-от "бажаючі", "оточуючі"), розглядаючи їх як неприродні запозичення (русизми), і надає перевагу питомим іменникам ("охочі") або підрядним реченням.
 
 ## Common Learner Errors
-1. **Active Participles (Russisms)**: *Бажаючі* (incorrect) → *Охочі* (correct); *Виступаючий* (incorrect) → *Доповідач* (correct). Learners often import Russian *-учий/-ючий* forms.
-2. **"Self-Acting" Objects**: *Дім будується* (The house builds itself - technically valid but stylistically poor) → *Дім будують* (They build the house) or *Дім зводять*. Preferring reflexive *-ся* over indefinite personal structures is a common stylistic error.
-3. **Agent in Passive**: *Робота написана студентом* (Passive with Agent) → *Студент написав роботу* (Active). While grammatically possible, the Instrumental agent in passive structures often sounds clumsy and artificial in Ukrainian.
+1. Калькування російського чи англійського зворотного пасиву: використання "будинок будується" (house builds itself) замість природного українського "будинок будують" (неозначено-особове речення).
+2. Зловживання орудним відмінком для агенса дії: "книга написана автором" звучить штучно в українській мові; природніше сказати в активі — "книгу написав автор".
+3. Вживання непитомих дієприкметників: використання "працюючий" замість "той, що працює" або "працівник".
 
 ## Cross-References
-- Builds on: **b2-01** to **b2-09** (Component passive skills)
-- Prepares for: **b2-15** (Register awareness), **b2-25** (Next checkpoint)
+- Builds on: b2-01, b2-02, b2-03, b2-04, b2-05, b2-06, b2-07, b2-08, b2-09
+- Prepares for: b2-11 (Multi-clause Sentences), b2-15 (Register Introduction), b2-25 (B2.1b Checkpoint)
 
 ## Notes for Content Writing
-- **The "Active" Trap**: Dedicate a distinct section (or significant part of the "Analysis") to explicitly debunking "Active Participles" (*-учий/-ючий*). This is a critical B2 stylistic gate.
-- **Register sensitivity**: Explicitly map the forms to registers: `-но/-то` = Official/Legal; `-ний/-тий` = Neutral/Scientific; Active Voice = Conversational/Standard.
-- **Assessment Tone**: Since this is a checkpoint, the tone should be encouraging but rigorous ("Аудитор"). Use "checklists" and "rubrics" as framing devices.
+- Українська мова є "агентивною" — вона надає перевагу активному стану в повсякденному спілкуванні. Цю філософію слід підкреслювати протягом усього модуля.
+- Не використовуйте російську мову як базову лінію для порівняння. Пояснюйте уникнення форм на -учий/-ючий та орудного відмінка агенса як природну милозвучність та логіку української мови.
+- Усі граматичні терміни та заголовки розділів мають бути виключно українською (100% immersion).

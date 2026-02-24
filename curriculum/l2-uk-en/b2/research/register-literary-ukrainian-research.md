@@ -1,44 +1,33 @@
 # Дослідження: Регістр — Літературна українська
 
 ## State Standard Reference
-§4.4 (B2): "Стилістика. Офіційне й неофіційне спілкування. Стилістичні засоби фонетики, лексики, синтаксису."
-§4.1.2.7 (B2): "Кличний відмінок: адресат мовлення – потенційний суб’єкт дії; адресат ідентифікації; акцентований адресат мовлення."
+§4.4.1.2: "Стилістичні засоби лексики: [...] епітети: теплий день, смачний торт; метафори: ідуть дощі, сонце сідає..."
+§4.4.1.3: "Стилістичні засоби синтаксису: звертання: Вікторе, прочитайте цю книжку; еліпсис... повтор... порівняння..."
+Alignment: This module comprehensively addresses the B2 requirement to master stylistic devices in lexicon and syntax, focusing specifically on their application in the artistic register (художній стиль) and the use of tropes, figures, and vocative forms.
 
-**Alignment**: Цей модуль безпосередньо реалізує вимоги стандарту щодо оволодіння стилістичними засобами (тропи, фігури) та специфікою художнього стилю, а також поглиблює розуміння функцій кличного відмінка (звертання до абстрактних понять/явищ).
-
-## Vocabulary Frequency & Collocations
-*Note: Vocabulary items are meta-language for analyzing literature.*
-
-| Word | Frequency / Context | Key Collocations |
-|------|---------------------|------------------|
-| **термін** | High (Academic/Lit. Crit) | літературознавчий термін, вживати термін, визначення терміна |
-| **поняття** | High (General/Abstract) | абстрактне поняття, ключове поняття, підмінити поняття |
-| **процес** | Very High | творчий процес, літературний процес, процес написання |
-| **метод** | High | творчий метод, метод порівняння, художній метод |
-| **аналіз** | High (Academic) | глибокий аналіз, стилістичний аналіз, аналіз твору |
-| **синтез** | Medium (Academic) | синтез мистецтв, гармонійний синтез |
-| **дослідження** | High (Academic) | літературне дослідження, об'єкт дослідження, результати дослідження |
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| чоло | Low (Archaic/Poetic) | бити чолом, ясне чоло |
+| воістину | Low (Solemn/Religious) | воістину так, воістину великий |
+| обрій | Medium (Poetic/Literary) | сонце сіло за обрій, на обрії |
+| десниця | Very Low (Historicism) | караюча десниця |
 
 ## Cultural Hooks
-1.  **Іван Котляревський ("Енеїда", 1798)**: Вважається зачинателем сучасної української літературної мови. Він сміливо поєднав "високий" класичний сюжет із "низькою" народною мовою (бурлеск), показавши багатство та гнучкість живого українського слова.
-2.  **Тарас Шевченко ("Кобзар")**: Остаточно утвердив літературний стандарт. Його геній полягав у синтезі книжної мови, фольклору та живої народної говірки. Відомий майстерним використанням кличного відмінка для персоніфікації («Думи мої!», «Україно!»).
+1. **"Енеїда" (1798)**: Ivan Kotliarevsky’s epic poem was the first published literary work in modern Ukrainian. It cleverly used the burlesque genre (parodying Virgil's Aeneid) to elevate the living vernacular to the status of a literary language, proving its capacity for complex storytelling.
+2. **The Power of the Vocative**: Taras Shevchenko frequently utilized the vocative case not just for addressing people, but for profoundly personifying abstract concepts and natural phenomena (e.g., «Думи мої!», «Зоре моя вечірняя!»), embedding a deep emotional resonance into the Ukrainian literary standard.
 
 ## Common Learner Errors
-1.  **Стилістичний дисонанс (Stylistic Clash)**: Вживання канцеляризмів у художньому описі.
-    *   *Error*: "Сонце здійснило захід за горизонтом."
-    *   *Correct*: "Сонце сіло за обрій / Зайшло сонце."
-2.  **Калькування (Calques)**: Вживання невластивих конструкцій під впливом англійської/російської.
-    *   *Error*: "Приймати участь у виставі."
-    *   *Correct*: "Брати участь у виставі."
-3.  **Ігнорування кличного відмінка (Vocative Neglect)**: Звертання до неживих предметів у називному відмінку (втрата персоніфікації).
-    *   *Error*: "О, ніч, яка ти гарна!"
-    *   *Correct*: "О, ноче, яка ти гарна!"
+1. **Ignoring the vocative in personification**: Using the nominative case when addressing inanimate objects in a literary context (e.g., writing "О, ніч!" instead of the correct "О, ноче!").
+2. **Stylistic Dissonance (Канцелярит)**: Mixing bureaucratic or formal language into artistic prose, which destroys the aesthetic impact (e.g., using "сонце здійснило захід" instead of the natural "сонце сіло за обрій").
+3. **Foreign-influenced Calques**: Using non-authentic phrases borrowed from other languages, such as "приймати участь" (a calque from Russian) instead of the authentic Ukrainian "брати участь".
 
 ## Cross-References
-- **Builds on**: B1 Grammar (Cases, Aspects), B2.1 Passive Voice.
-- **Prepares for**: C1 Stylistics, C1 Literature modules, B2-HIST (Executed Renaissance).
-- **Related**: B2 Phraseology (Idioms), B2 Communication Skills.
+- Builds on: B1 modules on basic stylistic registers and case usage.
+- Prepares for: C1 literature (LIT) modules and advanced stylistic analysis.
 
 ## Notes for Content Writing
-- **Pedagogy**: Use the "required" vocabulary (`термін`, `аналіз`) not as the *content* of the literary text, but as the *tools* the student uses to dissect the text.
-- **Example Text**: Ensure text samples (Shevchenko, Franko) are short, glossy, and heavily annotated with the target stylistic devices (epithets, metaphors).
+- **Decolonized Framing**: Present the Ukrainian literary standard as an organic development from a rich, living vernacular and folklore, rather than a top-down institutional imposition. Do not use Russian literary norms as a point of comparison; emphasize the intrinsic aesthetic value of Ukrainian linguistic features.
+- Ensure the term "художній стиль" is clearly distinguished from bureaucratic or strictly academic registers early in the text.
+- Maintain 100% Ukrainian immersion in all prose. 
+- Use the target vocabulary (`термін`, `поняття`, `процес`, `метод`, `аналіз`, `синтез`) naturally in the theoretical explanations.

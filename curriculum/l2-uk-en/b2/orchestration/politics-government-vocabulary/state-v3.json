@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "politics-government-vocabulary",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T00:22:56Z",
+      "task_id": "v3-politics-government-vocabulary-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T00:25:15Z",
+      "note": "word-count-3199-below-80pct-4000"
+    }
+  }
+}

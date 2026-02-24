@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "adverbial-participles-perfective",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T08:05:32Z",
+      "task_id": "v3-adverbial-participles-perfective-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T08:07:50Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T08:10:46Z",
+      "task_id": "v3-adverbial-participles-perfective-pC"
+    }
+  }
+}

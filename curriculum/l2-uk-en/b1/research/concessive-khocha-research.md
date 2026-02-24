@@ -1,39 +1,32 @@
 # Дослідження: Допустові речення: хоча, незважаючи на
 
 ## State Standard Reference
-§4.4.3 (B1 Level): "складнопідрядні речення з допустовою підрядною частиною (сполучники хоч, дарма що, незважаючи на те що): Незважаючи на те що заняття закінчилися пізно, ми пішли провідати Марту;"
-Alignment: This module directly addresses the B1 requirement for complex sentences with concessive clauses, specifically teaching the mandated conjunctions *хоча/хоч* and *незважаючи на те що*.
+§4.4.3: "складнопідрядні речення з допустовою підрядною частиною (сполучники хоч, дарма що, незважаючи на те що): Незважаючи на те що заняття закінчилися пізно, ми пішли провідати Марту;"
+Alignment: This module directly addresses the B1 requirement to master complex sentences with concessive subordinate clauses, teaching the exact conjunctions specified in the standard to express outcomes that occur despite given conditions.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **хоча** | High (Top 300 conjunctions) | хоча б (at least), хоча й (even though), хоча... але/проте (although... but/however) |
-| **незважаючи на** | High (Common Prep.) | незважаючи на те що (despite the fact that), незважаючи на труднощі (despite difficulties), незважаючи ні на що (despite everything) |
-| **попри** | Medium (Literary/News) | попри все (despite everything), попри те що (despite the fact that), попри очікування (contrary to expectations) |
-| **проте** | High (Academic/Formal) | однак проте (however), хоча... проте (although... nevertheless) |
+| хоча / хоч | High (Top 300) | хоча б (at least), хоча й (even though) |
+| незважаючи на | High (Standard Prep) | незважаючи на те що, незважаючи ні на що |
+| попри | Medium-High (Media) | попри все, попри очікування |
+| проте | High (Academic) | однак проте, хоча... проте |
+| дарма що | Low (Literary/Archaic) | дарма що старий |
 
 ## Cultural Hooks
-1. **Proverb**: «Хоч бачить око, та зуб не йме» (The eye sees it, but the tooth can't get it — Tantalus-like situation).
-2. **Literature Quote**: «Не бійся правди, хоч яка гірка, не бійся смутків, хоч вони як ріки...» — Ліна Костенко (Don't fear the truth, however bitter it is...).
-3. **Folk Wisdom**: «Хоч не з красою, аби з головою» (Though not with beauty, provided [one is] with brains).
+1. **Folk Wisdom**: The proverb «Хоч бачить око, та зуб не йме» (The eye sees, but the tooth cannot catch) perfectly encapsulates the concessive structure — an outcome (inability) that persists despite a favorable condition (seeing).
+2. **Literature**: Lina Kostenko's poetry «Не бійся правди, хоч яка гірка...» showcases the poetic and emphatic use of the shortened "хоч" directly attached to an adjective.
 
 ## Common Learner Errors
-1. **Calque from Russian**: "Не дивлячись на" instead of "незважаючи на".
-   - *Error*: "Не дивлячись на дощ..." (Literally: "Not looking at the rain...").
-   - *Correction*: "Незважаючи на дощ..." or "Попри дощ...".
-   - *Reason*: Direct translation of Russian "несмотря на". In Ukrainian, "не дивлячись" is strictly a gerund meaning "without looking [with eyes]".
-
-2. **Spelling Confusion**: "Не зважаючи на" (gerund) vs "незважаючи на" (preposition).
-   - *Error*: "Ми пішли гуляти не зважаючи на погоду."
-   - *Correction*: "Ми пішли гуляти, незважаючи на погоду." (As a fixed prepositional phrase, it is written as one word "незважаючи").
-   - *Note*: "Не зважаючи" (two words) means literally "not paying attention to" (e.g., "Він йшов, не зважаючи на крики" - He walked on, ignoring the shouts).
-
-3. **Register Mismatch**: Overusing "попри" in very casual speech where "хоча" or simple "але" is more natural, or using "дарма що" (archaic/literary) in business contexts.
+1. **The Calque Trap**: *не дивлячись на* (literally "not looking at") is frequently and incorrectly used for concession due to Russian influence. Correct form: *незважаючи на* or *попри*.
+2. **Spelling Confusion**: Writing *не зважаючи* as two words when used as a preposition. It must be written together (*незважаючи*) when concessive, and separately only when used as a literal gerund ("ignoring/not paying attention").
+3. **Register Mismatch**: Using the archaic/literary *дарма що* in modern business correspondence instead of the neutral *хоча* or formal *незважаючи на*.
 
 ## Cross-References
-- **Builds on**: b1-34 (Checkpoint Complex Sentences 1), A2 conjunctions (але, бо).
-- **Prepares for**: b1-36 (Causal Result Clauses), B2 Concessive variants (хай там як, як би не).
+- Builds on: b1-34 (Checkpoint Complex Sentences 1)
+- Prepares for: b1-36 (Causal Result Clauses)
 
 ## Notes for Content Writing
-- **Contrastive Grammar**: Explicitly distinguish "хоча" (conjunction + clause) from "незважаючи на" (preposition + noun).
-- **Style Tip**: Introduce "попри" as a stylish, slightly more formal alternative to "незважаючи на" often used in media.
+- **Decolonized Framing**: Explicitly address the calque *не дивлячись на* as an error of literal translation that violates Ukrainian syntactic norms, without framing Ukrainian purely in opposition to Russian. Emphasize *попри* as an authentic, dynamic Ukrainian alternative.
+- **Immersion**: Strict 100% Ukrainian prose. English is only permitted in the vocabulary table.
+- **Pedagogy**: Ensure the distinction between simple adversative (але) and concessive (хоча) is clear through TTT logic (contrast expected vs. unexpected results).

@@ -10,9 +10,20 @@
       "mode": "full"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-23T01:59:46Z",
-      "note": "word-count-2325-below-80pct-3000"
+      "status": "complete",
+      "ts": "2026-02-23T20:22:56Z",
+      "note": "adopted-existing-content",
+      "words": 2680
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T20:29:41Z",
+      "task_id": "v3-i-think-that-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T09:49:41Z",
+      "attempts": 3
     }
   }
 }

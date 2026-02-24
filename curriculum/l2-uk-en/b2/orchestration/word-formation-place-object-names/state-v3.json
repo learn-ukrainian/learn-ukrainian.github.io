@@ -1,0 +1,22 @@
+{
+  "track": "b2",
+  "slug": "word-formation-place-object-names",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T09:36:31Z",
+      "task_id": "v3-word-formation-place-object-names-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T09:42:05Z"
+    },
+    "v3-C": {
+      "status": "failed",
+      "ts": "2026-02-24T09:47:39Z",
+      "note": "activities-schema-invalid"
+    }
+  }
+}

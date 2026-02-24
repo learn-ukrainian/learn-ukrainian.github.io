@@ -1,0 +1,614 @@
+- type: match-up
+  title: "Знайдіть пару: дієслово та його значення"
+  instruction: "Match the verb with its spatial meaning."
+  pairs:
+    - left: "Перейти"
+      right: "Перетнути вулицю або міст"
+    - left: "Пройти"
+      right: "Рухатися повз будівлю"
+    - left: "Обійти"
+      right: "Знайти шлях навколо перешкоди"
+    - left: "Підійти"
+      right: "Стати ближче до об'єкта"
+    - left: "Дійти"
+      right: "Досягти фінальної мети подорожі"
+    - left: "Прийти"
+      right: "З'явитися на місці (прибути)"
+    - left: "Зайти"
+      right: "Зробити короткий візит на кілька хвилин"
+    - left: "Піти"
+      right: "Почати рух, залишити місце"
+
+- type: group-sort
+  title: "Розподіліть дієслова за групами"
+  instruction: "Group the actions by their spatial logic."
+  groups:
+    - name: "Рух через або навколо"
+      items:
+        - "перейти вулицю"
+        - "пройти повз парк"
+        - "обійти будівлю"
+        - "переїхати міст"
+    - name: "Наближення або прибуття"
+      items:
+        - "підійти до карти"
+        - "дійти до мети"
+        - "прийти додому"
+        - "зайти в магазин"
+
+- type: fill-in
+  title: "Виберіть правильне дієслово"
+  instruction: "Choose the correct verb to complete the sentence."
+  items:
+    - sentence: "Нам потрібно ___ вулицю на зелене світло."
+      answer: "перейти"
+      options:
+        - "перейти"
+        - "пройти"
+        - "обійти"
+        - "зайти"
+    - sentence: "Туристи довго йшли і нарешті ___ до вершини гори."
+      answer: "дійшли"
+      options:
+        - "дійшли"
+        - "підійшли"
+        - "зайшли"
+        - "перейшли"
+    - sentence: "Будь ласка, ___ ближче до карти міста."
+      answer: "підійдіть"
+      options:
+        - "підійдіть"
+        - "прийдіть"
+        - "перейдіть"
+        - "обійдіть"
+    - sentence: "Я завжди намагаюся ___ на роботу вчасно."
+      answer: "прийти"
+      options:
+        - "прийти"
+        - "дійти"
+        - "підійти"
+        - "пройти"
+    - sentence: "Давай ___ в магазин за хлібом на п'ять хвилин."
+      answer: "зайдемо"
+      options:
+        - "зайдемо"
+        - "перейдемо"
+        - "прийдемо"
+        - "обійдемо"
+    - sentence: "Водій автомобіля обережно ___ яму на дорозі."
+      answer: "об'їхав"
+      options:
+        - "об'їхав"
+        - "переїхав"
+        - "проїхав"
+        - "приїхав"
+    - sentence: "Щоб знайти театр, вам треба ___ повз цей парк."
+      answer: "пройти"
+      options:
+        - "пройти"
+        - "зайти"
+        - "підійти"
+        - "дійти"
+    - sentence: "Іван уже ___ з дому, він зараз у дорозі."
+      answer: "пішов"
+      options:
+        - "пішов"
+        - "прийшов"
+        - "зайшов"
+        - "підійшов"
+
+- type: error-correction
+  title: "Виправте помилки з прийменниками"
+  instruction: "Correct the typical learner mistakes with prepositions."
+  items:
+    - sentence: "Я підійшов в університет, щоб подивитися розклад."
+      error: "в"
+      answer: "до"
+      error_type: "word"
+      options:
+        - "до"
+        - "на"
+        - "з"
+        - "за"
+      explanation: "Дієслово підійти (наближення) вимагає прийменника до."
+    - sentence: "Вона прийшла до магазин дуже пізно."
+      error: "до"
+      answer: "в"
+      error_type: "word"
+      options:
+        - "в"
+        - "на"
+        - "за"
+        - "біля"
+      explanation: "Коли ми прибуваємо всередину об'єкта (прийти), ми використовуємо в або у."
+    - sentence: "Студенти зайшли до аудиторію."
+      error: "до"
+      answer: "в"
+      error_type: "word"
+      options:
+        - "в"
+        - "на"
+        - "за"
+        - "біля"
+      explanation: "Для входу всередину використовуємо прийменник в (або у)."
+    - sentence: "Ми дійшли в готелю після довгої прогулянки."
+      error: "в"
+      answer: "до"
+      error_type: "word"
+      options:
+        - "до"
+        - "на"
+        - "з"
+        - "від"
+      explanation: "Дієслово дійти (досягнення мети) вимагає прийменника до та родового відмінка."
+    - sentence: "Мій брат підійшов в мій столик."
+      error: "в"
+      answer: "до"
+      error_type: "word"
+      options:
+        - "до"
+        - "на"
+        - "з"
+        - "за"
+      explanation: "Для наближення (підійти) завжди використовуємо до."
+    - sentence: "Олена вже приїхала до Україну."
+      error: "до"
+      answer: "в"
+      error_type: "word"
+      options:
+        - "в"
+        - "на"
+        - "за"
+        - "біля"
+      explanation: "Прибуття в країну (приїхати) вимагає прийменника в або у та знахідного відмінка."
+
+- type: unjumble
+  title: "Складіть речення в майбутньому часі"
+  instruction: "Put the words in the correct order to form perfective future sentences."
+  items:
+    - words:
+        - "Я"
+        - "прийду"
+        - "додому"
+        - "сьогодні"
+        - "о"
+        - "сьомій"
+      answer: "Я прийду додому сьогодні о сьомій"
+    - words:
+        - "Він"
+        - "обов'язково"
+        - "перейде"
+        - "цю"
+        - "вулицю"
+      answer: "Він обов'язково перейде цю вулицю"
+    - words:
+        - "Завтра"
+        - "ми"
+        - "зайдемо"
+        - "до"
+        - "вас"
+        - "у"
+        - "гості"
+      answer: "Завтра ми зайдемо до вас у гості"
+    - words:
+        - "Вони"
+        - "дійдуть"
+        - "до"
+        - "вершини"
+        - "до"
+        - "вечора"
+      answer: "Вони дійдуть до вершини до вечора"
+    - words:
+        - "Ви"
+        - "швидко"
+        - "пройдете"
+        - "повз"
+        - "той"
+        - "парк"
+      answer: "Ви швидко пройдете повз той парк"
+    - words:
+        - "Ти"
+        - "обережно"
+        - "обійдеш"
+        - "цю"
+        - "перешкоду"
+      answer: "Ти обережно обійдеш цю перешкоду"
+
+- type: true-false
+  title: "Правда чи неправда?"
+  instruction: "Determine if the statements about culture and idioms are true."
+  items:
+    - statement: "Якщо чорний кіт перейшов дорогу, за українськими традиціями це на щастя."
+      correct: false
+      explanation: "Це вважається поганою прикметою (приносить невдачу)."
+    - statement: "Якщо ви повернулися додому, бо щось забули, традиція радить подивитися у дзеркало."
+      correct: true
+      explanation: "Це роблять, щоб нейтралізувати негатив від повернення."
+    - statement: "Фраза 'мені це підходить' означає, що вам подобається або підходить пропозиція."
+      correct: true
+      explanation: "Це дуже популярна ідіома для вираження згоди."
+    - statement: "Ідіома 'руки не доходять' означає, що ви не маєте рук, щоб іти."
+      correct: false
+      explanation: "Це означає, що у вас постійно немає часу на якусь справу."
+    - statement: "Фраза 'сонце зайшло' означає, що сонце відвідало нас вдома."
+      correct: false
+      explanation: "Це означає, що сонце 'сховалося' за горизонт (the sun set)."
+    - statement: "Вираз 'час пройшов' показує час як об'єкт, що рухається повз нас."
+      correct: true
+      explanation: "Так, ми сприймаємо час просторово."
+    - statement: "Коли ви кажете 'я вже йду' по телефону, це означає, що ви вже на місці."
+      correct: false
+      explanation: "Це означає, що ви в дорозі. Коли ви на місці, ви кажете 'я прийшов'."
+    - statement: "Вираз 'дійти згоди' означає фізично досягти якогось місця під назвою згода."
+      correct: false
+      explanation: "Це абстрактна метафора, яка означає to reach an agreement."
+
+- type: select
+  title: "Оберіть правильні фрази"
+  instruction: "Select all grammatically correct sentences."
+  items:
+    - question: "Які з наведених фраз є граматично правильними?"
+      min_correct: 2
+      explanation: "Дієслова доконаного виду (з префіксами) утворюють майбутній час без слова буду."
+      options:
+        - text: "Я прийду вчасно."
+          correct: true
+        - text: "Я буду прийти вчасно."
+          correct: false
+        - text: "Він перейде міст."
+          correct: true
+        - text: "Він буде перейти міст."
+          correct: false
+    - question: "Які з цих фраз використовують правильний прийменник?"
+      min_correct: 2
+      explanation: "Підійти вимагає до, зайти вимагає в/у (або до особи)."
+      options:
+        - text: "Підійти до столу"
+          correct: true
+        - text: "Підійти в стіл"
+          correct: false
+        - text: "Зайти в магазин"
+          correct: true
+        - text: "Зайти на магазин"
+          correct: false
+    - question: "Які речення описують прибуття до кінцевої мети?"
+      min_correct: 2
+      explanation: "Префікси до- та при- означають фінал маршруту."
+      options:
+        - text: "Ми дійшли до готелю."
+          correct: true
+        - text: "Ми пройшли повз готель."
+          correct: false
+        - text: "Ми прийшли в готель."
+          correct: true
+        - text: "Ми обійшли готель."
+          correct: false
+    - question: "Які з цих речень описують рух повз об'єкта?"
+      min_correct: 2
+      explanation: "Префікси про- та об- описують рух повз та навколо перешкод."
+      options:
+        - text: "Водій об'їхав яму."
+          correct: true
+        - text: "Водій приїхав у яму."
+          correct: false
+        - text: "Туристи пройшли повз церкву."
+          correct: true
+        - text: "Туристи підійшли до церкви."
+          correct: false
+    - question: "Які з наведених виразів є правильними ідіомами?"
+      min_correct: 2
+      explanation: "Це популярні українські вирази на основі дієслів руху."
+      options:
+        - text: "Руки не доходять"
+          correct: true
+        - text: "Ноги не приходять"
+          correct: false
+        - text: "Дійти згоди"
+          correct: true
+        - text: "Підійти згоди"
+          correct: false
+    - question: "Як правильно сказати, що ви зайдете до друга додому?"
+      min_correct: 2
+      explanation: "Для візиту до особи використовуємо до та родовий відмінок."
+      options:
+        - text: "Зайти до друга"
+          correct: true
+        - text: "Зайти в друга"
+          correct: false
+        - text: "Зайти до подруги"
+          correct: true
+        - text: "Зайти на подругу"
+          correct: false
+
+- type: quiz
+  title: "Перевірте знання префіксів"
+  instruction: "Choose the correct answer for each question."
+  items:
+    - question: "Який префікс ви використаєте, щоб сказати про рух з одного боку вулиці на інший?"
+      explanation: "Префікс пере- означає перетин простору."
+      options:
+        - text: "пере-"
+          correct: true
+        - text: "про-"
+          correct: false
+        - text: "за-"
+          correct: false
+        - text: "до-"
+          correct: false
+    - question: "Що означає популярна українська ідіома 'руки не доходять'?"
+      explanation: "Це ідіома, яка означає відсутність часу на певну справу."
+      options:
+        - text: "У мене немає на це часу."
+          correct: true
+        - text: "У мене болять руки."
+          correct: false
+        - text: "Я не хочу туди йти."
+          correct: false
+        - text: "Я не можу це знайти."
+          correct: false
+    - question: "Яке слово означає точний обхід певної перешкоди?"
+      explanation: "Префікс об- означає обхід перешкоди."
+      options:
+        - text: "обійти"
+          correct: true
+        - text: "перейти"
+          correct: false
+        - text: "прийти"
+          correct: false
+        - text: "підійти"
+          correct: false
+    - question: "Який прийменник потрібен після дієслова підійти для наближення?"
+      explanation: "Для наближення завжди використовується прийменник до."
+      options:
+        - text: "до"
+          correct: true
+        - text: "в"
+          correct: false
+        - text: "на"
+          correct: false
+        - text: "з"
+          correct: false
+    - question: "Що ви скажете другові, якщо його ідея вам повністю підходить?"
+      explanation: "Фраза 'мені це підходить' означає згоду."
+      options:
+        - text: "Мені це підходить."
+          correct: true
+        - text: "Мені це приходить."
+          correct: false
+        - text: "Мені це доходить."
+          correct: false
+        - text: "Мені це переходить."
+          correct: false
+    - question: "Чим відрізняється слово пішов від слова прийшов у контексті?"
+      explanation: "Пішов — це рух від місця, а прийшов — прибуття на місце."
+      options:
+        - text: "Пішов означає залишив місце, прийшов — з'явився."
+          correct: true
+        - text: "Пішов означає прибув, прийшов — залишив."
+          correct: false
+        - text: "Це синоніми, різниці немає."
+          correct: false
+        - text: "Пішов це про авто, прийшов — про людей."
+          correct: false
+    - question: "Як правильно утворити майбутній час для дієслова прийти?"
+      explanation: "Дієслова з префіксами (доконаний вид) не використовують слово буду."
+      options:
+        - text: "я прийду"
+          correct: true
+        - text: "я буду прийти"
+          correct: false
+        - text: "я буду приходити"
+          correct: false
+        - text: "я прийшов"
+          correct: false
+    - question: "Який префікс ідеально підходить для короткого візиту на п'ять хвилин?"
+      explanation: "Префікс за- означає короткий візит."
+      options:
+        - text: "за-"
+          correct: true
+        - text: "пере-"
+          correct: false
+        - text: "об-"
+          correct: false
+        - text: "про-"
+          correct: false
+
+- type: translate
+  title: "Перекладіть фрази"
+  instruction: "Select the correct Ukrainian translation."
+  items:
+    - source: "to cross the street"
+      explanation: "Перейти — to cross."
+      options:
+        - text: "перейти вулицю"
+          correct: true
+        - text: "пройти вулицю"
+          correct: false
+        - text: "обійти вулицю"
+          correct: false
+        - text: "дійти вулицю"
+          correct: false
+    - source: "to pass by the park"
+      explanation: "Пройти повз — to pass by."
+      options:
+        - text: "пройти повз парк"
+          correct: true
+        - text: "перейти повз парк"
+          correct: false
+        - text: "прийти в парк"
+          correct: false
+        - text: "підійти до парку"
+          correct: false
+    - source: "to approach the map"
+      explanation: "Підійти до — to approach."
+      options:
+        - text: "підійти до карти"
+          correct: true
+        - text: "прийти в карту"
+          correct: false
+        - text: "зайти за карту"
+          correct: false
+        - text: "перейти карту"
+          correct: false
+    - source: "to arrive home"
+      explanation: "Прийти додому — to arrive home."
+      options:
+        - text: "прийти додому"
+          correct: true
+        - text: "зайти додому"
+          correct: false
+        - text: "піти додому"
+          correct: false
+        - text: "підійти додому"
+          correct: false
+    - source: "to stop by a friend's place"
+      explanation: "Зайти до друга — to pop in / stop by."
+      options:
+        - text: "зайти до друга"
+          correct: true
+        - text: "обійти друга"
+          correct: false
+        - text: "перейти друга"
+          correct: false
+        - text: "піти від друга"
+          correct: false
+    - source: "to go around the obstacle"
+      explanation: "Обійти перешкоду — to go around."
+      options:
+        - text: "обійти перешкоду"
+          correct: true
+        - text: "перейти перешкоду"
+          correct: false
+        - text: "знайти перешкоду"
+          correct: false
+        - text: "дійти до перешкоди"
+          correct: false
+
+- type: mark-the-words
+  title: "Знайдіть дієслова руху"
+  instruction: "Find and mark all motion verbs with prefixes in the text."
+  text: "Вчора ми вирішили погуляти в центрі. Спочатку ми пройшли повз старий театр. Потім ми перейшли велику площу. На шляху був ремонт, тому ми обійшли його. Нарешті ми дійшли до улюбленого кафе, підійшли до дверей і зайшли всередину."
+  answers:
+    - "пройшли"
+    - "перейшли"
+    - "обійшли"
+    - "дійшли"
+    - "підійшли"
+    - "зайшли"
+
+- type: error-correction
+  title: "Виправте граматичні помилки (Майбутній час)"
+  instruction: "Correct the mistakes with the future tense auxiliary verb."
+  items:
+    - sentence: "Завтра я буду прийти на роботу дуже рано."
+      error: "буду прийти"
+      answer: "прийду"
+      error_type: "construction"
+      options:
+        - "прийду"
+        - "прийшов"
+        - "прийшла"
+        - "буду приходити"
+      explanation: "Дієслова доконаного виду (з префіксами) не використовують буду."
+    - sentence: "Коли ти будеш перейти цей міст, ти побачиш парк."
+      error: "будеш перейти"
+      answer: "перейдеш"
+      error_type: "construction"
+      options:
+        - "перейдеш"
+        - "перейшов"
+        - "переходиш"
+        - "перейдете"
+      explanation: "Правильна форма майбутнього часу — перейдеш."
+    - sentence: "Ми будемо зайти до тебе ввечері."
+      error: "будемо зайти"
+      answer: "зайдемо"
+      error_type: "construction"
+      options:
+        - "зайдемо"
+        - "зайшли"
+        - "заходять"
+        - "зайдете"
+      explanation: "Замість будемо зайти треба сказати зайдемо."
+    - sentence: "Вони будуть дійти до готелю за п'ять хвилин."
+      error: "будуть дійти"
+      answer: "дійдуть"
+      error_type: "construction"
+      options:
+        - "дійдуть"
+        - "дійшли"
+        - "доходять"
+        - "дійдемо"
+      explanation: "Дієслово доконаного виду самостійно утворює майбутній час — дійдуть."
+    - sentence: "Ви будете підійти до мене пізніше?"
+      error: "будете підійти"
+      answer: "підійдете"
+      error_type: "construction"
+      options:
+        - "підійдете"
+        - "підійшли"
+        - "підходимо"
+        - "підійдеш"
+      explanation: "Форма майбутнього часу для ви — підійдете."
+    - sentence: "Вона буде обійти цю красиву будівлю."
+      error: "буде обійти"
+      answer: "обійде"
+      error_type: "construction"
+      options:
+        - "обійде"
+        - "обійшла"
+        - "обходить"
+        - "обійдуть"
+      explanation: "Правильно сказати вона обійде."
+
+- type: unjumble
+  title: "Інструкції для туриста"
+  instruction: "Reconstruct the directions for walking around the city."
+  items:
+    - words:
+        - "Вам"
+        - "потрібно"
+        - "перейти"
+        - "вулицю"
+        - "на"
+        - "світлофорі"
+      answer: "Вам потрібно перейти вулицю на світлофорі"
+    - words:
+        - "Будь"
+        - "ласка"
+        - "пройдіть"
+        - "повз"
+        - "великий"
+        - "собор"
+      answer: "Будь ласка пройдіть повз великий собор"
+    - words:
+        - "Там"
+        - "ремонт"
+        - "тому"
+        - "обійдіть"
+        - "цю"
+        - "ділянку"
+      answer: "Там ремонт тому обійдіть цю ділянку"
+    - words:
+        - "Потім"
+        - "ви"
+        - "підійдете"
+        - "до"
+        - "красивої"
+        - "площі"
+      answer: "Потім ви підійдете до красивої площі"
+    - words:
+        - "Ви"
+        - "дійшли"
+        - "до"
+        - "залізничного"
+        - "вокзалу"
+      answer: "Ви дійшли до залізничного вокзалу"
+    - words:
+        - "Тепер"
+        - "ви"
+        - "можете"
+        - "зайти"
+        - "в"
+        - "кафе"
+      answer: "Тепер ви можете зайти в кафе"

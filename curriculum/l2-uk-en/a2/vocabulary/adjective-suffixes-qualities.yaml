@@ -1,0 +1,101 @@
+items:
+  - lemma: "маленький"
+    ipa: '[mɑˈlɛnʲkɪj]'
+    translation: "small/little"
+    pos: "adjective"
+  - lemma: "гарненький"
+    ipa: '[ɦɑrˈnɛnʲkɪj]'
+    translation: "pretty/nice (diminutive)"
+    pos: "adjective"
+  - lemma: "тепленький"
+    ipa: '[tɛˈplɛnʲkɪj]'
+    translation: "warm (diminutive)"
+    pos: "adjective"
+  - lemma: "рідненький"
+    ipa: '[rʲiˈdnɛnʲkɪj]'
+    translation: "dear/kindred (diminutive)"
+    pos: "adjective"
+  - lemma: "тихенький"
+    ipa: '[tɪˈxɛnʲkɪj]'
+    translation: "quiet (diminutive)"
+    pos: "adjective"
+  - lemma: "малесенький"
+    ipa: '[mɑˈlɛsɛnʲkɪj]'
+    translation: "tiny (emphatic diminutive)"
+    pos: "adjective"
+  - lemma: "чистесенький"
+    ipa: '[t͡ʃɪˈstɛsɛnʲkɪj]'
+    translation: "pure/clean (emphatic diminutive)"
+    pos: "adjective"
+  - lemma: "страшенний"
+    ipa: '[strɑˈʃɛnːɪj]'
+    translation: "terrible/huge (expressive)"
+    pos: "adjective"
+  - lemma: "здоровенний"
+    ipa: '[zdɔrɔˈʋɛnːɪj]'
+    translation: "huge/enormous (expressive)"
+    pos: "adjective"
+  - lemma: "величезний"
+    ipa: '[ʋɛlɪˈt͡ʃɛznɪj]'
+    translation: "huge/gigantic"
+    pos: "adjective"
+  - lemma: "київський"
+    ipa: '[ˈkɪjiu̯sʲkɪj]'
+    translation: "Kyiv (adjective)"
+    pos: "adjective"
+  - lemma: "львівський"
+    ipa: '[lʲˈʋʲiu̯sʲkɪj]'
+    translation: "Lviv (adjective)"
+    pos: "adjective"
+  - lemma: "український"
+    ipa: '[ukrɑˈjinʲsʲkɪj]'
+    translation: "Ukrainian"
+    pos: "adjective"
+  - lemma: "студентський"
+    ipa: '[stuˈdɛnʲsʲkɪj]'
+    translation: "student (adjective)"
+    pos: "adjective"
+  - lemma: "білесенький"
+    ipa: '[bʲiˈlɛsɛnʲkɪj]'
+    translation: "white (emphatic diminutive)"
+    pos: "adjective"
+  - lemma: "тонесенький"
+    ipa: '[tɔˈnɛsɛnʲkɪj]'
+    translation: "thin (emphatic diminutive)"
+    pos: "adjective"
+  - lemma: "довжелезний"
+    ipa: '[dɔu̯ʒɛˈlɛznɪj]'
+    translation: "long (emphatic)"
+    pos: "adjective"
+  - lemma: "козацький"
+    ipa: '[kɔˈzɑt͡sʲkɪj]'
+    translation: "Cossack (adjective)"
+    pos: "adjective"
+  - lemma: "празький"
+    ipa: '[ˈprɑzʲkɪj]'
+    translation: "Prague (adjective)"
+    pos: "adjective"
+  - lemma: "малий"
+    ipa: '[mɑˈlɪj]'
+    translation: "small (neutral)"
+    pos: "adjective"
+  - lemma: "чистий"
+    ipa: '[ˈt͡ʃɪstɪj]'
+    translation: "clean (neutral)"
+    pos: "adjective"
+  - lemma: "довгий"
+    ipa: '[ˈdɔu̯ɦɪj]'
+    translation: "long (neutral)"
+    pos: "adjective"
+  - lemma: "паперовий"
+    ipa: '[pɑpɛˈrɔʋɪj]'
+    translation: "paper (adjective)"
+    pos: "adjective"
+  - lemma: "осінній"
+    ipa: '[ɔˈsʲinʲːij]'
+    translation: "autumnal"
+    pos: "adjective"
+  - lemma: "дерев'яний"
+    ipa: '[dɛrɛˈʋjɑnɪj]'
+    translation: "wooden"
+    pos: "adjective"

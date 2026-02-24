@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "relative-clauses-de-kudy-zvidky",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T22:59:00Z",
+      "task_id": "v3-relative-clauses-de-kudy-zvidky-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T23:04:00Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T23:06:16Z",
+      "task_id": "v3-relative-clauses-de-kudy-zvidky-pC"
+    }
+  }
+}

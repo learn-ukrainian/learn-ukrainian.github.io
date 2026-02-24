@@ -1,0 +1,25 @@
+{
+  "slug": "register-academic-ukrainian",
+  "track": "b2",
+  "module_num": 18,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-23T23:36:40Z",
+      "words": 6063,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-23T23:40:14Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-23T23:40:14Z",
+      "note": "v3-phase-C"
+    }
+  },
+  "last_updated": "2026-02-23T23:40:14Z"
+}

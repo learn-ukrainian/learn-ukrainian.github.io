@@ -2,42 +2,31 @@
 
 ## State Standard Reference
 §3.11: "Робота: ... ділові переговори; укладання ділових угод і контрактів."
-§4.4.1: "Офіційне й неофіційне спілкування... Стилістичні засоби лексики... Стилістичні засоби синтаксису."
-Alignment: Module directly addresses the B2 requirement for professional communication, specifically focusing on negotiations, contracts, and the stylistic distinction between official and unofficial registers as mandated by the standard.
+§4.4.1: "Офіційне й неофіційне спілкування:"
+Alignment: This module directly addresses the B2 requirement for professional communication, specifically focusing on the lexicon of negotiations, contracts, and distinguishing between formal and semi-formal business registers.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **ділове листування** | High (Educational/Pro) | вести ділове листування, правила ділового листування, культура листування |
-| **переговори** | High ("Word of 2025") | вести переговори, іти на переговори, мирні переговори, складні переговори |
-| **угода** | High (Legal/Biz) | укласти угоду, підписати угоду, досягти угоди, розірвати угоду |
-| **пропозиція** | High (Commercial) | комерційна пропозиція, вигідна пропозиція, розглянути пропозицію, пристати на пропозицію |
-| **співпраця** | High (General Biz) | плідна співпраця, взаємовигідна співпраця, домовитися про співпрацю |
+| переговори | High (Top 500 in news/business) | вести переговори, іти на переговори, складні переговори |
+| угода | High (Legal/Business corpus) | укласти угоду, підписати угоду, розірвати угоду |
+| співпраця | Medium-High | плідна співпраця, взаємовигідна співпраця |
+| пропозиція | High | комерційна пропозиція, пристати на пропозицію |
 
 ## Cultural Hooks
-1. **Hierarchy & Titles**: Unlike the instant casualness of US business culture, Ukrainians value hierarchy and formal address ("Пане/Пані" + Surname/Name) until explicitly invited to switch to "Ти".
-2. **Relationship-First**: Business decisions often follow personal rapport. "Small talk" and coffee meetings are not just delays but essential trust-building rituals.
-3. **Gift Etiquette**: Small, high-quality gifts (branded notebooks, chocolates) are common in initial partnership meetings, but must not look like bribes.
+1. **The "Coffee Factor" (Фактор кави)**: In modern Ukrainian business culture (especially IT), trust is established informally before formal negotiations begin. Moving straight to business without "small talk" or coffee is often perceived as too aggressive or cold.
+2. **Decolonizing Address Forms**: The transition from Soviet-era patronymics to the European standard of «Пане/Пані + прізвище/ім'я». Ukrainian business culture heavily relies on «Ви» until a mutual agreement to switch to «ти» is established.
 
 ## Common Learner Errors
-1. **Literal Translation ("Calques")**:
-   *   *Error*: "робити рішення" (from "make a decision")
-   *   *Correct*: "приймати/ухвалювати рішення"
-   *   *Why*: Direct translation of English collocations.
-2. **False Friends**:
-   *   *Error*: Using "актуальний" as "real/true" (from "actual").
-   *   *Correct*: "Актуальний" means "relevant/timely". "Actual" is "дійсний" or "справжній".
-   *   *Why*: Phonetic similarity with different meanings.
-3. **Register Confusion**:
-   *   *Error*: Using "привіт" or "ти" in first contact emails.
-   *   *Correct*: "Вітаю/Доброго дня" and "Ви".
-   *   *Why*: Underestimating the formality of Ukrainian written business culture.
+1. **«Робити рішення»** (calque of "make a decision") → **«Ухвалювати / приймати рішення»** — Ukrainian uses specific verbs for decisions.
+2. **«Актуальний»** (false friend of "actual") → Means "relevant" or "timely" (актуальне питання), not "real" (справжній/дійсний).
+3. **Register Confusion** → Using casual «привіт» in a formal first-contact email instead of «Вітаю» or «Доброго дня».
 
 ## Cross-References
-- **Builds on**: `b2-15` (Register Introduction), `b2-16` (Formal/Informal) — assumes knowledge of basic formal markers.
-- **Prepares for**: `b2-19` (Official-Legal), `b2-80` (Professional Communication I) — lays the lexical groundwork for specific domains.
+- Builds on: b2-15 (Register Introduction), b2-16 (Register: Formal/Informal)
+- Prepares for: b2-18 (Register: Academic Ukrainian), b2-19 (Register: Official-Legal), b2-25 (B2.1b Checkpoint), b2-80 (Professional Communication I)
 
 ## Notes for Content Writing
-- **Tone**: Maintain a "Professional Coach" voice. It shouldn't be dry academic theory, but a practical guide to "sounding pro".
-- **Visuals**: Use a "Bad vs. Good" email comparison table to visually demonstrate the difference between "Surzhyk/Calque" style and "Standard Business" style.
-- **The "Coffee" Factor**: Acknowledge that modern Ukrainian business (especially IT/Creative) is shifting towards semi-formal, but the *foundation* must be formal to avoid faux pas.
+- **Decolonized Framing**: Emphasize that Ukrainian business language naturally aligns with European corporate standards. Do not compare it to Russian. Highlight authentic Ukrainian verbs like *ухвалювати* over purely shared Slavic roots where possible.
+- **Agency Pass**: Use active constructions for business processes (Ми уклали угоду), avoiding passive bureaucratic voice where possible, reflecting modern dynamic business styles.
+- **Immersion**: 100% Ukrainian. Explain all concepts in clear B2 Ukrainian.

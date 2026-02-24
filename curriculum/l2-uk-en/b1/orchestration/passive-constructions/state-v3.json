@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "passive-constructions",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T08:39:31Z",
+      "task_id": "v3-passive-constructions-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T08:48:43Z"
+    },
+    "v3-C": {
+      "status": "failed",
+      "ts": "2026-02-24T09:24:36Z",
+      "note": "missing-files-act=False-voc=False"
+    }
+  }
+}

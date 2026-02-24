@@ -14,9 +14,14 @@
       "ts": "2026-02-23T01:37:49Z"
     },
     "v3-C": {
-      "status": "failed",
-      "ts": "2026-02-23T01:40:16Z",
-      "note": "activities-schema-invalid"
+      "status": "complete",
+      "ts": "2026-02-23T20:22:52Z",
+      "task_id": "v3-because-and-although-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T09:36:19Z",
+      "attempts": 3
     }
   }
 }

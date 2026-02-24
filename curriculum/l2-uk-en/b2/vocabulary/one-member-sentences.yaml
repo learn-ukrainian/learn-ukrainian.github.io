@@ -1,0 +1,128 @@
+items:
+  - lemma: термін
+    translation: term
+    pos: noun
+    gender: m
+    notes: 'науковий термін, вживати термін'
+  - lemma: поняття
+    translation: concept
+    pos: noun
+    gender: n
+    notes: 'ключове поняття, абстрактне поняття'
+  - lemma: процес
+    translation: process
+    pos: noun
+    gender: m
+    notes: 'навчальний процес, творчий процес'
+  - lemma: метод
+    translation: method
+    pos: noun
+    gender: m
+    notes: 'науковий метод, метод аналізу'
+  - lemma: аналіз
+    translation: analysis
+    pos: noun
+    gender: m
+    notes: 'глибокий аналіз, провести аналіз'
+  - lemma: синтез
+    translation: synthesis
+    pos: noun
+    gender: m
+    notes: 'аналіз і синтез'
+  - lemma: дослідження
+    translation: research
+    pos: noun
+    gender: n
+    notes: 'результати дослідження, проводити дослідження'
+  - lemma: лаконічність
+    translation: conciseness
+    pos: noun
+    gender: f
+  - lemma: динамізм
+    translation: dynamism
+    pos: noun
+    gender: m
+  - lemma: підмет
+    translation: grammatical subject
+    pos: noun
+    gender: m
+  - lemma: присудок
+    translation: predicate
+    pos: noun
+    gender: m
+  - lemma: займенник
+    translation: pronoun
+    pos: noun
+    gender: m
+  - lemma: закінчення
+    translation: ending
+    pos: noun
+    gender: n
+  - lemma: надмірність
+    translation: redundancy
+    pos: noun
+    gender: f
+  - lemma: інтимність
+    translation: intimacy
+    pos: noun
+    gender: f
+  - lemma: відвертість
+    translation: frankness
+    pos: noun
+    gender: f
+  - lemma: зведення
+    translation: summary / report
+    pos: noun
+    gender: n
+  - lemma: наслідок
+    translation: consequence
+    pos: noun
+    gender: m
+  - lemma: мудрість
+    translation: wisdom
+    pos: noun
+    gender: f
+  - lemma: спостереження
+    translation: observation
+    pos: noun
+    gender: n
+  - lemma: алгоритм
+    translation: algorithm
+    pos: noun
+    gender: m
+  - lemma: реципієнт
+    translation: recipient
+    pos: noun
+    gender: m
+  - lemma: середовище
+    translation: environment
+    pos: noun
+    gender: n
+  - lemma: явище
+    translation: phenomenon
+    pos: noun
+    gender: n
+  - lemma: простір
+    translation: space
+    pos: noun
+    gender: m
+  - lemma: напруга
+    translation: tension
+    pos: noun
+    gender: f
+  - lemma: еліпс
+    translation: ellipsis
+    pos: noun
+    gender: m
+  - lemma: трансформація
+    translation: transformation
+    pos: noun
+    gender: f
+  - lemma: об'єктивність
+    translation: objectivity
+    pos: noun
+    gender: f
+  - lemma: суб'єктивізм
+    translation: subjectivism
+    pos: noun
+    gender: m

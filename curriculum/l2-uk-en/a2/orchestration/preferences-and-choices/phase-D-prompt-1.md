@@ -57,8 +57,12 @@ Activities:       12
 Vocabulary items: 25
 Engagement boxes: 5
 Immersion:        51.4% (target: 50-60%)
-Audit status:     FAIL
+Richness:         74% (threshold: 95%)
+Richness gaps:    engagement: 3/5, dialogues: 0/4, tables: 0/2
+Audit status:     PASS
 ```
+
+**Richness gate**: If richness is below threshold, your Fix Plan MUST include concrete additions that close each gap dimension. For example, if `cultural: 2/3`, add one `[!culture]` callout; if `tables: 1/2`, add one comparison table. Each addition should be pedagogically useful, not filler.
 
 ## Content Sections (H2 headers in the content file)
 

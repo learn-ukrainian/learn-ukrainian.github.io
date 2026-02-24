@@ -1,37 +1,33 @@
 # Дослідження: Розмовний стиль
 
 ## State Standard Reference
-§4.4.1.3: "Стилістичні засоби синтаксису: ... еліпсис: Смачного! – Дякую, і тобі. Максим пішов до бібліотеки, Оксана – також збирається; ... елементи структурування тексту (вставні слова): по-перше, по-друге, по-третє, отже та ін."
-§4.4.1.2: "Стилістичні засоби лексики: ... скорочення (вибірково): год – година... зменшувально-пестливі форми... звуконаслідування: Няв!, Гав!, шурх-шурх..."
-Alignment: This module directly addresses the B2 requirement for mastering stylistic syntax (ellipsis, structural elements) and lexical means (shortenings, interjections) to differentiate between formal and informal registers.
+§4.4.1.2: "Стилістичні засоби лексики: [...] скорочення (вибірково): год – година, р. – рік, ст. – століття; зменшувально-пестливі форми: вулиця – вуличка, ріка – річенька, мама – матуся; [...] звуконаслідування: Няв!, Гав!, шурх-шурх..."
+§4.4.1.3: "Стилістичні засоби синтаксису: [...] еліпсис: Смачного! – Дякую, і тобі. [...] елементи структурування тексту (вставні слова): по-перше, по-друге, по-третє, отже та ін."
+Alignment: This module directly addresses the B2 requirement for stylistics, focusing on spoken abbreviations, emotional syntax (ellipsis), and conversational markers as defined by the standard.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **типу** | High (Spoken Corpus) | *ну типу*, *це типу як*, *типу того* |
-| **коротше** | High (Spoken Corpus) | *коротше кажучи*, *ну коротше* |
-| **власне** | Medium (Educated Spoken) | *власне кажучи*, *а власне* |
-| **жесть** | High (Youth Slang) | *повна жесть*, *це просто жесть* |
-| **крінж** | High (Youth/Internet) | *ловити крінж*, *крінжовий момент* |
-| **краш** | High (Youth/Internet) | *мій краш*, *крашиха* |
+| типу | High frequency (conversational) | ну типу; це типу як |
+| коротше | High frequency (discourse marker) | коротше кажучи; коротше |
+| власне | Medium/High (educated register) | власне кажучи; власне |
+| жесть | High frequency (youth slang) | повна жесть; це жесть |
+| бавовна | High frequency (war-time neologism) | свіжа бавовна |
 
 ## Cultural Hooks
-1. **Підпільний Стендап (Underground Standup)**: Founded in 2015 in Kyiv's basements and garages, this project birthed modern Ukrainian stand-up culture. Comedians like Vasyl Baidak (known for his absurdist style and character "Bubuduk") use colloquial language masterfully to create intimacy and humor.
-2. **War-time Neologisms & Humor**: The stand-up scene actively supports the ZSU, and language has evolved to include rapid-fire military slang and irony as a coping mechanism (e.g., usage of *бавовна*, *мопед* in daily casual speech).
+1. **Stand-up Comedy as Linguistic Mirror:** Modern Ukrainian stand-up comedy, particularly "Підпільний стендап" and comedians like Vasyl Baidak (Василь Байдак), explicitly uses natural conversational syntax and fillers to build intimacy, rejecting the artificial "SPO" (Subject-Predicate-Object) structure of textbooks.
+2. **Reclaiming Trauma through Slang:** The war-time neologism "бавовна" originated from a satirical mistranslation of the Russian word for "clap/explosion" (хлопок). Ukrainians rapidly reclaimed it as a highly productive slang term, showcasing linguistic resilience and in-group solidarity.
 
 ## Common Learner Errors
-1. **Surzhyk Fillers**: Using *тіпа*, *короче*, *да* instead of *типу*, *коротше*, *так*.
-   → *Correction*: Conscious switch to Ukrainian markers (*власне*, *гаразд*).
-2. **Particle Orthography**: Writing *ідіть бо* instead of *ідіть-бо* (hyphen required after verb) or *що ж* as *що-ж* (no hyphen).
-   → *Correction*: *Бо* adds a hyphen when following the verb it emphasizes; *ж/же* is separate.
-3. **Fear of Silence**: Overusing *е-е-е* or *м-м-м* to fill pauses.
-   → *Correction*: Using intonational pauses or "smart" fillers like *знаєш*, *слухай*, *бачиш*.
+1. Over-formalizing everyday speech → Attempting full sentence structures ("Дякую тебе/тобі дуже сильно") instead of natural ellipsis ("Дякую", "І тобі").
+2. Transferring Russian-origin fillers → Using "тіпа", "короче", "да" instead of the natural Ukrainian equivalents "типу", "коротше", "власне", "знаєш".
+3. Orthographic errors with particles → Writing emphatic particles together or incorrectly (e.g., "іди бо" instead of "іди-бо", "що-ж" instead of "що ж").
 
 ## Cross-References
-- **Builds on**: B1.6 (Discourse Markers), A2 (Basic Particles)
-- **Prepares for**: B2-PRO (Professional Jargon), C1 (Stylistic Nuance)
+- Builds on: B1 grammatical foundations (cases, aspect).
+- Prepares for: M30 (Register Checkpoint), B2.2 (Phraseology and Synonymy).
 
 ## Notes for Content Writing
-- **Stand-up Vibe**: Start the "Rozmynka" like a stand-up set opener ("Ви помічали, як ми говоримо в чатах?..").
-- **Contrast**: Explicitly contrast "Textbook Ukrainian" (Subject-Predicate-Object) with "Real Talk" (Ellipsis, Particles).
-- **Inclusivity**: Mention that slang isn't just "bad Ukrainian" — it's a tool for emotional connection when used correctly.
+- **Decolonized Framing:** Do not present Ukrainian slang or fillers as derivatives of Russian or as "deviations" from a strict standard. They are authentic, functional elements of modern urban Ukrainian speech.
+- **Tone:** Use the "Stand-up Comedian" (Storyteller/Urbanist blend) persona to keep the tone engaging, but maintain strict pedagogical focus on the linguistic mechanics of the colloquial register.
+- **Immersion:** 100% Ukrainian. No English scaffolding in the prose.

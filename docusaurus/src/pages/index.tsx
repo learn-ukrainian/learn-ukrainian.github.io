@@ -78,7 +78,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         From absolute beginner to native-level proficiency.
-        1,638 modules aligned with CEFR and Ukrainian State Standards.
+        1,468 modules aligned with CEFR and Ukrainian State Standards.
       </>
     ),
   },

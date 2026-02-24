@@ -1,7 +1,7 @@
 # Audit Report: M20 — preferences-and-choices.md
 **Level:** A2 | **Module:** M20 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-23 00:16:04
+**Generated:** 2026-02-24 09:37:57
 
 ## Configuration
 **Type:** A2-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: називний, прикметник, знахідний, давальний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: прикметник, давальний, називний, знахідний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

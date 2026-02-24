@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "motion-approaching-departing",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T22:03:22Z",
+      "task_id": "v3-motion-approaching-departing-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-23T22:05:17Z",
+      "note": "word-count-2785-below-80pct-4000"
+    }
+  }
+}

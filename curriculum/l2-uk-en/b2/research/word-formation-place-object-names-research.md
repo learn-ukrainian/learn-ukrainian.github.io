@@ -2,32 +2,32 @@
 
 ## State Standard Reference
 §4.2.8: "Утворення іменників – назв місць за виконуваною дією: спати – спальня, приймати – приймальня, читати – читальня, лікувати – лікарня."
-Alignment: This module directly addresses the B2 requirement for derivational morphology of place names, extending the basic -ня model to include -ище and -арня variants, and connecting them to agent nouns (§4.2.5).
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту B2 щодо дериваційної морфології іменників, які позначають місце через виконувану дію (за допомогою суфікса -ня та його варіантів), а також розширює цю тему на суміжні просторові суфікси (-ище, -арня).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **-ня** (suffix) | High productivity | читальня, їдальня, спальня, вітальня, вбиральня |
-| **-ище** (suffix) | Medium productivity | сховище, кладовище, родовище, горище, звалище |
-| **-арня** (suffix) | Medium productivity (agent-based) | лікарня, друкарня, пекарня, перукарня, кав'ярня, книгарня |
-| **читальня** | Historical/Cultural | хата-читальня, товариство "Просвіта" |
-| **кав'ярня** | High (Modern Urban) | затишна кав'ярня, львівська кав'ярня, сидіти в кав'ярні |
+| кав'ярня | High (Urban/Daily) | затишна кав'ярня, львівська кав'ярня, піти до кав'ярні |
+| читальня | Medium (Historical/Academic) | хата-читальня, публічна читальня, зал-читальня |
+| сховище | High (News/Military/Tech) | надійне сховище, бомбосховище, сховище даних |
+| книгарня | High (Urban/Cultural) | незалежна книгарня, мережа книгарень, книгарня-кав'ярня |
+| лікарня | High (Daily/Medical) | міська лікарня, дитяча лікарня, лягти в лікарню |
 
 ## Cultural Hooks
-1. **The "Prosvita" Movement**: In the late 19th/early 20th century, the "Prosvita" society established network of **«хати-читальні»** (reading houses) across Ukraine. These weren't just libraries but hubs of national rebirth, literacy, and community organization, often functioning as the village's cultural heart.
-2. **Lviv Coffee Culture**: The word **«кав'ярня»** is iconic to Lviv's identity (unlike the Russified «кафе»). Modern Lviv revives the "reading room" tradition with hybrid **«книгарні-кав'ярні»** (bookstore-cafes), blending intellectualism with leisure.
+1. **Феномен «Хати-читальні»:** Наприкінці XIX – на початку XX століття товариство «Просвіта» створило масштабну мережу «хат-читалень» по всій Україні. Це були не просто сільські бібліотеки, а справжні осередки громадянського суспільства, ліквідації неписьменності, аматорського театру та національного відродження, які дієво протистояли імперській асиміляції.
+2. **Європейська культура кавування:** Слово «кав'ярня» підкреслює європейський, урбаністичний вектор української культури. Воно нерозривно пов'язане зі Львовом та українцем Юрієм Кульчицьким, який у 1683 році відкрив першу кав'ярню у Відні. Цей питомий термін органічно закріпився в мові, на противагу запозиченому індустріалізованому «кафе».
 
 ## Common Learner Errors
-1. **Gender of -ище words**: Learners often treat all -ище words as neuter.
-   *   *Correction*: Place names (**сховище**, **кладовище**) are **neuter**. Augmentatives (**вітрище**, **вовчище**) retain the gender of the base word (masculine).
-2. **Confusion of -льня vs -альня**: Learners struggle with the vowel insertion.
-   *   *Rule*: Depends on the verb stem (чита-ти → чита-льня, but вбир-а-ти → вбир-а-льня).
-3. **Overgeneralization**: Applying -ня to every verb (e.g., "робільня" instead of "майстерня" or "цех").
+1. **Плутанина у граматичному роді (суфікс -ище):** Місця на -ище (сховище, пасовище) є неістотами й завжди належать до середнього роду (воно). Студенти B2 часто плутають їх з аугментативами (збільшувальними формами), які зберігають рід твірного слова (вітрище — він, бо вітер; бабище — вона, бо баба).
+2. **Гіпергенералізація суфікса -ня:** Спроба механічно додати -ня до будь-якої дієслівної основи, що призводить до неіснуючих слів (наприклад, творення «робільня» замість питомого «майстерня» або «вчитильня» замість «школа»/«аудиторія»).
+3. **Орфографія -льня vs -альня:** Помилки у виборі голосної перед суфіксом залежно від типу дієслівної основи (чита-ти → читальня, але вбир-а-ти → вбиральня).
 
 ## Cross-References
-- **Builds on**: A2 Verb stems (identifying the base for derivation), A2 Professions (agent nouns like лікар, пекар).
-- **Prepares for**: C1 Professional Terminology (institutional names), C1 Stylistics (augmentative/diminutive suffixes).
+- Builds on: Basic noun formation and urban vocabulary from A2/B1.
+- Prepares for: Advanced professional and architectural terminology, academic reading formats in C1.
 
 ## Notes for Content Writing
-- **Agency**: Emphasize that places are defined by *human activity* (reading, baking, healing).
-- **Nuance**: Highlight that **-ище** often implies a larger area or open space (кладовище, пасовище), whereas **-ня** implies an enclosed room or building.
+- **Decolonized Framing:** Акцентуйте увагу на самобутності українського міського простору (кав'ярня, книгарня) як інтегральної частини загальноєвропейського ландшафту, уникаючи будь-яких порівнянь із російськими або радянськими моделями містобудування.
+- **Agency Pass:** Українці в текстах — активні суб'єкти: «діячі Просвіти будували хати-читальні», а не «хати-читальні були збудовані».
+- **Чистота мови:** Жодних русизмів у прикладах: використовувати *їдальня* (не столова), *лікарня* (не больниця), *майстерня* (не мастєрская), *вбиральня* (не уборна).
+- **Phonetics:** Всі фонетичні транскрипції у словнику повинні суворо використовувати символи IPA (о = [ɔ], е = [ɛ], ч = [t͡ʃ]).

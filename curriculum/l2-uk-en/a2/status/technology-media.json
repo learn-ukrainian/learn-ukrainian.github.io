@@ -1,0 +1,64 @@
+{
+  "module": "technology-media",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T09:23:51.917908Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-23T22:53:20.937997Z",
+    "meta": "2026-02-23T22:49:51.344863Z",
+    "activities": "2026-02-23T22:55:26.007354Z",
+    "vocabulary": "2026-02-23T22:55:26.007676Z",
+    "plan": "2026-02-20T21:04:30.539936Z",
+    "research": "2026-02-23T22:49:51.341163Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Valid Structure | Lint: 1 Format Errors"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "4568/3000 (raw: 4886) | engagement: 0/4 | pedagogy: 14 violations | immersion: 77.7% HIGH (target 60-75% (A2.3))"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 2,
+    "fail_count": 2,
+    "deferred_count": 3
+  }
+}

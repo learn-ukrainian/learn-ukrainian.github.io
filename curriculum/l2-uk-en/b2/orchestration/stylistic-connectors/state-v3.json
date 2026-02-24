@@ -1,0 +1,22 @@
+{
+  "track": "b2",
+  "slug": "stylistic-connectors",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T22:57:06Z",
+      "task_id": "v3-stylistic-connectors-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T23:01:12Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T23:04:32Z",
+      "task_id": "v3-stylistic-connectors-pC"
+    }
+  }
+}

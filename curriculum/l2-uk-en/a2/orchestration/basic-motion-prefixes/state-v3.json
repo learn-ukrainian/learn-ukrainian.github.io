@@ -1,0 +1,27 @@
+{
+  "track": "a2",
+  "slug": "basic-motion-prefixes",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T06:50:38Z",
+      "task_id": "v3-basic-motion-prefixes-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T06:53:33Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T20:32:02Z",
+      "task_id": "v3-basic-motion-prefixes-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T09:59:50Z",
+      "attempts": 2
+    }
+  }
+}

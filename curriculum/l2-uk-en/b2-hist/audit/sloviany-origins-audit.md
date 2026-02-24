@@ -2,7 +2,7 @@
 **Level:** B2-HIST | **Module:** M04 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 23:09:46
+**Generated:** 2026-02-24 11:15:09
 
 ## Configuration
 **Type:** B2-history
@@ -17,41 +17,25 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Прокопій Кесарійський про устрій слов'ян | 1 | 1 | ✅ |
-| 2 | essay-response | Антське народоправство vs Імперська ієрархія | 1 | 1 | ✅ |
-| 3 | comparative-study | Склавіни та Анти: Два крила слов'янства | 1 | 1 | ✅ |
-| 4 | critical-analysis | Символізм числа 70 | 1 | 1 | ✅ |
-| 5 | true-false | Факти про антів | 10 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 5 (minimum: 2) ✅
-- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Low density activities: 0
-
 ## Gates
 - **Words:** ✅ 5120/5000 (raw: 5368)
-- **Activities:** ✅ 5/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/2 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/20
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

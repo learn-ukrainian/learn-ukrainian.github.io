@@ -1,0 +1,160 @@
+items:
+  - lemma: "не"
+    ipa: '[nɛ]'
+    translation: "not"
+    pos: "particle"
+    notes: "Basic negation particle, triggers Genitive case for direct objects"
+  - lemma: "ще не"
+    ipa: '[ʃt͡ʃɛ nɛ]'
+    translation: "not yet"
+    pos: "phrase"
+    notes: "Triggers Perfective aspect due to expected completion"
+  - lemma: "ніколи"
+    ipa: '[nʲikɔlɪ]'
+    translation: "never"
+    pos: "adverb"
+    notes: "Requires double negation with 'не'"
+  - lemma: "взагалі"
+    ipa: '[ʋzɑɦɑˈlʲi]'
+    translation: "in general / at all"
+    pos: "adverb"
+    usage: "взагалі не (not at all)"
+  - lemma: "заборона"
+    ipa: '[zɑbɔˈrɔnɑ]'
+    translation: "prohibition"
+    pos: "noun"
+    gender: "f"
+    notes: "Usually expressed with Imperfective aspect in imperatives"
+  - lemma: "попередження"
+    ipa: '[pɔpɛˈrɛd͡ʒɛnʲːɑ]'
+    translation: "warning"
+    pos: "noun"
+    gender: "n"
+    notes: "Can trigger Perfective aspect in negative imperatives"
+  - lemma: "заперечення"
+    ipa: '[zɑpɛˈrɛt͡ʃɛnʲːɑ]'
+    translation: "negation"
+    pos: "noun"
+    gender: "n"
+    notes: "Grammatical category of non-action"
+  - lemma: "відмова"
+    ipa: '[ʋʲiˈdmɔʋɑ]'
+    translation: "refusal"
+    pos: "noun"
+    gender: "f"
+    notes: "In Ukrainian culture, polite refusals require softening"
+  - lemma: "очікувана дія"
+    ipa: '[ɔˈt͡ʃʲikuʋɑnɑ ˈdʲijɑ]'
+    translation: "expected action"
+    pos: "phrase"
+    notes: "Concept explaining the use of Perfective aspect with 'ще не'"
+  - lemma: "загальне заперечення"
+    ipa: '[zɑˈɦɑlʲnɛ zɑpɛˈrɛt͡ʃɛnʲːɑ]'
+    translation: "general negation"
+    pos: "phrase"
+    notes: "Context for default Imperfective aspect usage"
+  - lemma: "нікуди"
+    ipa: '[nʲikudɪ]'
+    translation: "nowhere (direction)"
+    pos: "adverb"
+    notes: "Requires double negation"
+  - lemma: "ніяк"
+    ipa: '[nʲijɑk]'
+    translation: "in no way"
+    pos: "adverb"
+    notes: "Requires double negation"
+  - lemma: "ніщо"
+    ipa: '[nʲiˈʃt͡ʃɔ]'
+    translation: "nothing"
+    pos: "pronoun"
+    notes: "Requires double negation"
+  - lemma: "ніхто"
+    ipa: '[nʲiˈxtɔ]'
+    translation: "nobody"
+    pos: "pronoun"
+    notes: "Requires double negation"
+  - lemma: "випадково"
+    ipa: '[ʋɪpɑˈdkɔʋɔ]'
+    translation: "accidentally"
+    pos: "adverb"
+    notes: "Used to contrast unintentional negative actions"
+  - lemma: "навмисне"
+    ipa: '[nɑˈʋmɪsnɛ]'
+    translation: "on purpose"
+    pos: "adverb"
+    notes: "Used to clarify intent in negative contexts"
+  - lemma: "жаль"
+    ipa: '[ʒɑlʲ]'
+    translation: "pity / regret"
+    pos: "noun"
+    gender: "m"
+    usage: "На жаль, ні (Unfortunately, no)"
+  - lemma: "радість"
+    ipa: '[ˈrɑdʲisʲtʲ]'
+    translation: "joy"
+    pos: "noun"
+    gender: "f"
+    usage: "Я б з радістю, але... (I would with joy, but...)"
+  - lemma: "результат"
+    ipa: '[rɛzulʲˈtɑt]'
+    translation: "result"
+    pos: "noun"
+    gender: "m"
+    notes: "Perfective aspect focuses on this"
+  - lemma: "процес"
+    ipa: '[prɔˈt͡sɛs]'
+    translation: "process"
+    pos: "noun"
+    gender: "m"
+    notes: "Imperfective aspect focuses on this"
+  - lemma: "спроба"
+    ipa: '[ˈsprɔbɑ]'
+    translation: "attempt"
+    pos: "noun"
+    gender: "f"
+  - lemma: "невдалий"
+    ipa: '[nɛˈʋdɑlɪj]'
+    translation: "unsuccessful"
+    pos: "adjective"
+    notes: "Perfective aspect without 'ще' can imply an unsuccessful attempt"
+  - lemma: "очікування"
+    ipa: '[ɔˈt͡ʃʲikuʋɑnʲːɑ]'
+    translation: "expectation"
+    pos: "noun"
+    gender: "n"
+  - lemma: "скасовувати"
+    ipa: '[skɑˈsɔʋuʋɑtɪ]'
+    translation: "to cancel"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "скасувати"
+    ipa: '[skɑsuˈʋɑtɪ]'
+    translation: "to cancel"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "відмовлятися"
+    ipa: '[ʋʲidmɔˈʋlʲɑtɪsʲɑ]'
+    translation: "to refuse"
+    pos: "verb"
+    aspect: "imperfective"
+  - lemma: "відмовитися"
+    ipa: '[ʋʲiˈdmɔʋɪtɪsʲɑ]'
+    translation: "to refuse"
+    pos: "verb"
+    aspect: "perfective"
+  - lemma: "намір"
+    ipa: '[ˈnɑmʲir]'
+    translation: "intention"
+    pos: "noun"
+    gender: "m"
+  - lemma: "факт"
+    ipa: '[fɑkt]'
+    translation: "fact"
+    pos: "noun"
+    gender: "m"
+    notes: "General facts use Imperfective aspect in negation"
+  - lemma: "обережно"
+    ipa: '[ɔbɛˈrɛʒnɔ]'
+    translation: "carefully / cautiously"
+    pos: "adverb"
+    usage: "Обережно, не впади!"

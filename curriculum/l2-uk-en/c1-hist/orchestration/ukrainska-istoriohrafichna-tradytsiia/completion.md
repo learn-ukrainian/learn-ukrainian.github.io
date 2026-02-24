@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c1-hist 2 — E2E
+FAIL: build_module_v2.py c1-hist 2 — E2E
 
   Module:   ukrainska-istoriohrafichna-tradytsiia
   Track:    c1-hist
   Mode:     e2e
-  Words:    0 (target: 5000)
+  Words:    7005 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-20T00:10:03Z
+  Verdict:  FAIL
+  Date:     2026-02-23T16:46:32Z

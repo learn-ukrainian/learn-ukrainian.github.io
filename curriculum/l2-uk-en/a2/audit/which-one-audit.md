@@ -1,7 +1,7 @@
 # Audit Report: M32 — which-one.md
 **Level:** A2 | **Module:** M32 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-23 04:10:30
+**Generated:** 2026-02-24 10:49:43
 
 ## Configuration
 **Type:** A2-grammar

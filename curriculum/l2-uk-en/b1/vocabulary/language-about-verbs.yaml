@@ -3,22 +3,22 @@
   notes: Grammatical category indicating the flow of action
   pos: noun
   translation: aspect
-- ipa: '[dɔˈkɔnɐnɪj ʋɪd]'
+- ipa: '[dɔˈkɔnɑnɪj ʋɪd]'
   lemma: доконаний вид
   notes: Focuses on the result or completion of an action
   pos: noun phrase
   translation: perfective aspect
-- ipa: '[nɛdɔˈkɔnɐnɪj ʋɪd]'
+- ipa: '[nɛdɔˈkɔnɑnɪj ʋɪd]'
   lemma: недоконаний вид
   notes: Focuses on the process, duration, or repetition of an action
   pos: noun phrase
   translation: imperfective aspect
-- ipa: '[ʋɪdɔˈʋɑ ˈpɑrɐ]'
+- ipa: '[ʋɪdɔˈʋɑ ˈpɑrɑ]'
   lemma: видова пара
   notes: Two verbs with the same meaning but different aspect (e.g., читати/прочитати)
   pos: noun phrase
   translation: aspect pair
-- ipa: '[ˈdʲijɐ]'
+- ipa: '[ˈdʲijɑ]'
   lemma: дія
   notes: The fundamental concept expressed by a verb
   pos: noun
@@ -38,7 +38,7 @@
   notes: Answers 'how long?'; indicates imperfective aspect
   pos: noun
   translation: duration
-- ipa: '[pɔʋˈtɔrɛnʲːɐ]'
+- ipa: '[pɔˈʋtɔrɛnʲːɑ]'
   lemma: повторення
   notes: Answers 'how often?'; indicates imperfective aspect
   pos: noun
@@ -58,37 +58,37 @@
   notes: Changes by gender and number
   pos: noun phrase
   translation: past tense
-- ipa: '[mɐjˈbutnʲij t͡ʃɑs]'
+- ipa: '[mɑjˈbutʲnʲij t͡ʃɑs]'
   lemma: майбутній час
   notes: Has simple (perfective) and compound/synthetic (imperfective) forms
   pos: noun phrase
   translation: future tense
-- ipa: '[zɐpɛˈrɛt͡ʃɛnʲːɐ]'
+- ipa: '[zɑpɛˈrɛt͡ʃɛnʲːɑ]'
   lemma: заперечення
   notes: Expressing that something is not true or not happening
   pos: noun
   translation: negation
-- ipa: '[zɐˈɦɑlʲnɛ zɐpɛˈrɛt͡ʃɛnʲːɐ]'
+- ipa: '[zɑˈɦɑlʲnɛ zɑpɛˈrɛt͡ʃɛnʲːɑ]'
   lemma: загальне заперечення
   notes: Simple statement of fact (didn't happen); usually imperfective
   pos: noun phrase
   translation: general negation
-- ipa: '[zɐbɔˈrɔnɐ]'
+- ipa: '[zɑbɔˈrɔnɑ]'
   lemma: заборона
   notes: Command not to do something; uses imperfective aspect
   pos: noun
   translation: prohibition
-- ipa: '[pɔpɛˈrɛd͡ʒɛnʲːɐ]'
+- ipa: '[pɔpɛˈrɛd͡ʒɛnʲːɑ]'
   lemma: попередження
   notes: Caution against accidental result; uses perfective aspect
   pos: noun
   translation: warning
-- ipa: '[ˈspɔsib]'
+- ipa: '[ˈspɔsʲib]'
   lemma: спосіб
   notes: Grammatical category (indicative, conditional, imperative)
   pos: noun
   translation: mood
-- ipa: '[nɐkɐˈzɔʋɪj ˈspɔsib]'
+- ipa: '[nɑkɑˈzɔʋɪj ˈspɔsʲib]'
   lemma: наказовий спосіб
   notes: Used for commands and requests
   pos: noun phrase
@@ -98,27 +98,27 @@
   notes: Active or passive voice
   pos: noun
   translation: voice
-- ipa: '[ɔˈsɔbɐ]'
+- ipa: '[ɔˈsɔbɑ]'
   lemma: особа
   notes: Grammatical person (1st, 2nd, 3rd)
   pos: noun
   translation: person
-- ipa: '[pɔt͡ʃɐtˈkɔʋɐ ˈfɔrmɐ]'
+- ipa: '[pɔt͡ʃɑˈtkɔʋɑ ˈfɔrmɑ]'
   lemma: початкова форма
   notes: The infinitive form found in dictionaries (ending in -ти)
   pos: noun phrase
   translation: initial form
-- ipa: '[dʲijɛʋidˈmʲinʲuʋɐnʲːɐ]'
+- ipa: '[dʲijɛʋʲiˈdʲmʲinʲuʋɑnʲːɑ]'
   lemma: дієвідмінювання
   notes: Changing a verb by person and number
   pos: noun
   translation: conjugation
-- ipa: '[sklɐˈdɛnɐ ˈfɔrmɐ]'
+- ipa: '[ˈsklɑdɛnɑ ˈfɔrmɑ]'
   lemma: складена форма
   notes: Future tense with 'буду' + infinitive
   pos: noun phrase
   translation: compound form
-- ipa: '[sɪntɛˈtɪt͡ʃnɐ ˈfɔrmɐ]'
+- ipa: '[sɪntɛˈtɪt͡ʃnɑ ˈfɔrmɑ]'
   lemma: синтетична форма
   notes: Future tense formed by adding endings to infinitive (e.g., робитиму)
   pos: noun phrase

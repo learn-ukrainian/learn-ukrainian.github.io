@@ -1,3 +1,55 @@
 slug: wf-mastery
 title: 'Майстерня слів: Велика гра'
 word_target: 3000
+content_outline:
+- section: 'Вступ: Українська як LEGO'
+  words: 500
+  points:
+  - 'Explicitly state the English scaffolding policy: English used for abstract word
+    formation logic, Ukrainian for examples.'
+  - 'Cultural hook: Introduce Ukrainian as a ''LEGO'' language (synthetic vs analytic),
+    contrasting its efficiency with English phrasal verbs (e.g., встати, вийти instead
+    of get up, get out).'
+  - 'Introduce the concept of ''blocks'' (morphemes) and list high-yield prefixes:
+    по- (start), з-/с- (complete), ви- (out), пере- (re-/cross), за- (into/behind).'
+  - Transition learners from rote memorization to active pattern recognition.
+- section: 'Презентація: Архітектор слова'
+  words: 750
+  points:
+  - Introduce 'Word Math' equations (e.g., за + пис + ати = записати, праців + ник
+    = працівник) using visual tables.
+  - Review the 8 Super-Roots focusing on -ход- (motion), -пис- (write), and -роб-
+    (work/do), showcasing their common derivatives.
+  - 'Explain Aspectual Pairs (prefixation: робити -> зробити) aligning precisely with
+    State Standard §4.3.2.'
+  - Demonstrate the 'LEGO' efficiency of complex words with a fun, tangible example
+    like гідроелектростанція (19 letters).
+- section: 'Практика: Логіка синтезу'
+  words: 800
+  points:
+  - 'Reverse Engineering exercise: Guide learners to identify roots in complex words
+    despite vowel changes (e.g., кінець/кінця/закінчити).'
+  - 'Apply the ''Кафе Птах'' (Euphony) Rule: practice changing з- to с- before к,
+    п, т, ф, х (correcting learner error ''зфотографувати'' to ''сфотографувати'').'
+  - 'Address common learner errors: correct the tendency to use ''ре-'' instead of
+    ''пере-'' for repetition (e.g., переписати, not реписати).'
+  - 'Introduce the ''Suffix Factory'' for noun transformation: -ник (agent: керівник)
+    and -ння (process: читання).'
+- section: 'Діалоги: Емоційна інженерія'
+  words: 600
+  points:
+  - Present a dialogue at the 'Linguistic Club' discussing emotional nuance and diminutives
+    (мама -> матуся).
+  - Demonstrate word synthesis in action with a dialogue describing daily bureaucratic
+    and routine tasks using -ход- and -пис- derivatives.
+  - Ensure all dialogue text is 100% Ukrainian, emphasizing natural phrasing and practical
+    vocabulary.
+- section: 'Підсумок: Матриця майстерності'
+  words: 350
+  points:
+  - Summarize the 'Mastery Matrix' approach to building and deciphering vocabulary
+    confidently.
+  - 'De-colonize the dictionary: emphasize Ukrainian''s internal logic and creative
+    potential as a distinct, powerful synthetic language.'
+  - Encourage learners to apply these 'Word Architect' skills to independently decode
+    new words they encounter.

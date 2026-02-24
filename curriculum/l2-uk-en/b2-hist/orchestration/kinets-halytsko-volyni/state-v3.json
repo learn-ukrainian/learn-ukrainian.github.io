@@ -8,6 +8,15 @@
       "ts": "2026-02-19T13:03:45Z",
       "task_id": "v3-kinets-halytsko-volyni-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T10:05:39Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T10:07:27Z",
+      "task_id": "v3-kinets-halytsko-volyni-pC"
     }
   }
 }

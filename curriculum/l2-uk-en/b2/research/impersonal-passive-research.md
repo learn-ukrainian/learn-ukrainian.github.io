@@ -1,30 +1,32 @@
 # Дослідження: Безособові конструкції на -но/-то
 
 ## State Standard Reference
-§4.3.3.1: "безособові речення: Було приємно дивитися на веселих дітей. Там усе правильно записано."
-Alignment: This module directly addresses the B2 requirement for "One-member sentences with a verb as the main member (impersonal sentences)" specifically focusing on the invariant forms ending in -но/-то as cited in the standard's example.
+§4.3.3.1: "Односкладні речення з головним членом – дієсловом... безособові речення: Було приємно дивитися на веселих дітей. Там усе правильно записано."
+Alignment: Цей модуль безпосередньо відповідає вимогам стандарту щодо використання односкладних безособових речень із дієслівними формами (зокрема на -но/-то) для вираження об'єктивної інформації та результату дії.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Оголошено** | High (Official/Media) | оголошено перерву, оголошено повітряну тривогу, оголошено набір, засідання оголошено відкритим |
-| **Прийнято** | High (Official/Legal) | рішення прийнято, закон прийнято, постанову прийнято, до уваги прийнято |
-| **Встановлено** | High (Admin/Tech) | особу встановлено, факт встановлено, порушення встановлено, строк встановлено |
-| **Заборонено** | High (General/Public) | вхід заборонено, палити заборонено, рух заборонено, суворо заборонено |
-| **Зроблено** | High (General) | все зроблено, висновки зроблено, роботу зроблено, зроблено в Україні |
+| оголошено | Дуже висока (медіа) | оголошено повітряну тривогу, оголошено перерву |
+| прийнято | Висока (офіційна) | рішення прийнято, закон прийнято, постанову прийнято |
+| встановлено | Висока (юр./тех.) | особу встановлено, факт встановлено, порушення встановлено |
+| заборонено | Висока (публічна) | вхід заборонено, суворо заборонено, рух заборонено |
+| завершено | Середня (офіц.) | роботу завершено, будівництво завершено |
+| скасовано | Висока (медіа) | тривогу скасовано, наказ скасовано, рейс скасовано |
 
 ## Cultural Hooks
-2. **"Written in the Book of Life"**: The phrase "Так судилося" or "Так написано" (It is fated/written) is a deep cultural fatalistic trope in Ukrainian literature (Shevchenko, Franko), contrasting with the dry bureaucratic "Затверджено" (Approved).
+1. **Зведення та офіційна комунікація**: У сучасній Україні конструкції на -но/-то є основою державних зведень та медіа-повідомлень («Знищено 15 цілей», «Відбито атаку»), що створює максимальний фокус на результаті та факті події, а не на особі виконавця.
+2. **Літературний фаталізм**: У класичній українській літературі ці форми часто передавали невідворотність долі («Так написано», «Так судилося», як у текстах Тараса Шевченка та Івана Франка), що створює глибокий семантичний контраст із їхнім сучасним сухим адміністративним використанням.
 
 ## Common Learner Errors
-1. **Agent in Instrumental Case**: "Книгу написано *мною*." → **Книгу написав я.** — The -no/-to construction in Ukrainian does NOT accept an instrumental agent (unlike Polish or English passive). It emphasizes the *result*, not the doer.
-2. **Object Case Confusion**: "*Книга* (Nom) написано." → **Книгу (Acc) написано.** — These forms govern the Accusative case (like a verb), not the Nominative. The object is not the subject.
-3. **Agreement Errors**: "Вікно *розбито*." vs "Вікно *розбите*." — Confusing the impersonal form (invariant) with the neuter participle (agrees with subject). "Вікно розбито" = action focus (someone broke it). "Вікно розбите" = state focus (it is broken).
+1. **Називний відмінок замість знахідного**: *«Книга (Nom.) написано»* замість правильного «Книгу (Acc.) написано». Причина: англомовні студенти (і носії інших мов) підсвідомо сприймають об'єкт дії як підмет пасивного речення.
+2. **Додавання діяча в орудному відмінку**: *«Листа написано мною»* замість «Я написав листа». Причина: спроба скалькувати англійську конструкцію "by me". Українська мова категорично не приймає вказування діяча в реченнях на -но/-то.
 
 ## Cross-References
-- Builds on: **b2-02 (Past Passive Participles)** — Forms on -no/-to are derived from -nyi/-tyi participles.
-- Prepares for: **b2-19 (Register: Official/Legal)** — This grammar is the cornerstone of official documentation style.
+- Builds on: b2-01 (Passive Voice System), b2-02 (Past Passive Participles)
+- Prepares for: b2-04 (Reflexive Passive), b2-06 (Passive in Context), b2-19 (Register: Official/Legal)
 
 ## Notes for Content Writing
-- **Strict Distinction**: Be very clear about the difference between "Лист написаний" (The letter is written - Adjective/Participle describing state) and "Лист написано" (The letter has been written - Impersonal verb form emphasizing completion).
-- **No Agent**: Drill the rule: If you want to say *who* did it, use the active voice. If the doer is unknown or irrelevant, use -но/-то.
+- **Деколонізаційне обрамлення**: Описуйте українську конструкцію на -но/-то зі знахідним відмінком як самобутню та органічну рису синтаксису. Наголошуйте на внутрішній стрункості української граматичної логіки, яка уникає штучного перетворення об'єкта дії на підмет. Безсуб'єктність дозволяє зберегти прямий об'єкт у його природному знахідному відмінку. Вкажіть, що штучне додавання діяча в орудному відмінку є наслідком адміністративних впливів минулого, тому сучасна літературна норма це суворо відкидає.
+- Забезпечте 100% українськомовне середовище (Immersion 100%). Жодних англійських пояснень у тексті.
+- Використовуйте таблиці для порівняння активного та безособового станів.

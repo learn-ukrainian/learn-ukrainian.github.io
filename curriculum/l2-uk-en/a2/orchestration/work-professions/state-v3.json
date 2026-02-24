@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "work-professions",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T21:39:58Z",
+      "task_id": "v3-work-professions-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T21:45:53Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T21:48:51Z",
+      "task_id": "v3-work-professions-pC"
+    }
+  }
+}

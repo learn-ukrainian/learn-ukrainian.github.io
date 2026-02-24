@@ -1,4 +1,4 @@
-PASS: build_module_v2.py b2-hist 33 — E2E
+FAIL: build_module_v2.py b2-hist 33 — E2E
 
   Module:   beresteyska-uniia
   Track:    b2-hist
@@ -6,5 +6,5 @@ PASS: build_module_v2.py b2-hist 33 — E2E
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-19T17:44:19Z
+  Verdict:  FAIL
+  Date:     2026-02-24T10:14:30Z

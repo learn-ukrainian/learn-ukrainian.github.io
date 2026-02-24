@@ -712,7 +712,7 @@ def dispatch_gemini(
     """
     args = [
         str(SCRIPTS_DIR / "ai_agent_bridge.py"), "ask-gemini",
-        prompt,
+        "-",  # read prompt from stdin
         "--task-id", task_id,
         "--model", model,
     ]
@@ -727,6 +727,7 @@ def dispatch_gemini(
             label=f"Gemini {task_id}",
             timeout=timeout,
             cwd=str(PROJECT_ROOT), capture_output=True, text=True,
+            input=prompt,
         )
         output_text = result.stdout or ""
         if output_file:
@@ -824,10 +825,8 @@ def _gemini_output_path(slug: str, phase: str) -> Path:
 
 def _dispatch_prompt(ctx: ModuleContext, prompt_file: Path) -> str:
     """Build the standard dispatch prompt string."""
-    return (
-        f"Activate skill {ctx.skill_name}. "
-        f"Read and execute the instructions at {PROJECT_ROOT}/{prompt_file.relative_to(PROJECT_ROOT)}"
-    )
+    content = prompt_file.read_text("utf-8")
+    return f"Activate skill {ctx.skill_name}.\n\n{content}"
 
 
 def phase_0_research(ctx: ModuleContext) -> bool:
@@ -1129,11 +1128,15 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     placeholders_yaml = ctx.orch_dir / "placeholders.yaml"
     prompt_file = ctx.orch_dir / "phase-2-prompt.md"
 
+    # Estimate output tokens: Ukrainian text ≈ 2 tokens/word (Cyrillic penalty)
+    word_target_tokens = ctx.word_target * 2 // 1000
+
     overrides = {
         "OVERSHOOT_TARGET": str(overshoot),
         "ENGAGEMENT_MIN": str(engagement_min),
         "EXAMPLE_MIN": str(example_min),
         "SECTION_BUDGET_TABLE": _build_section_budget_table(sections, ctx.word_target),
+        "WORD_TARGET_TOKENS": str(word_target_tokens),
     }
 
     if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):
@@ -1147,6 +1150,8 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     content_path = ctx.paths["md"]
     content_path.parent.mkdir(parents=True, exist_ok=True)
 
+    last_friction = None
+
     for attempt in range(1, MAX_P2_ATTEMPTS + 1):
         attempt_suffix = "" if attempt == 1 else f"-r{attempt}"
         task_suffix = "" if attempt == 1 else f"-r{attempt}"
@@ -1156,8 +1161,11 @@ def phase_2_content(ctx: ModuleContext) -> bool:
             current_text = content_path.read_text(encoding="utf-8")
             current_words = len(current_text.split())
             deficit = ctx.word_target - current_words
+            had_truncation = last_friction and "TOKEN_LIMIT_TRUNCATION" in last_friction
+            if had_truncation:
+                log(f"  Phase 2: Adjusting expansion target to {ctx.word_target}w (1.0x) due to previous truncation")
             expand_prompt = _build_phase2_expansion_prompt(
-                ctx, current_text, current_words, deficit
+                ctx, current_text, current_words, deficit, had_truncation
             )
             expand_prompt_file = ctx.orch_dir / f"phase-2-expand-{attempt}.md"
             expand_prompt_file.write_text(expand_prompt, encoding="utf-8")
@@ -1181,6 +1189,23 @@ def phase_2_content(ctx: ModuleContext) -> bool:
         if output_file.exists():
             raw = output_file.read_text(encoding="utf-8")
             content_text = _extract_delimited_content(raw, "===CONTENT_START===", "===CONTENT_END===")
+            
+            # Extract and log friction
+            friction = _extract_delimited_content(raw, "===FRICTION_START===", "===FRICTION_END===")
+            if friction:
+                friction_file = ctx.orch_dir / f"phase-2-friction-{attempt}.md"
+                friction_file.write_text(friction, encoding="utf-8")
+                log(f"  Phase 2: Friction report saved → {friction_file.name}")
+                # Detect real truncation reports — ignore echoed template placeholders
+                # (Gemini sometimes echoes "YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ..."
+                # without filling in a value, triggering false positives)
+                is_real_truncation = (
+                    "TOKEN_LIMIT_TRUNCATION" in friction
+                    and "YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION" not in friction
+                )
+                if is_real_truncation:
+                    log(f"  Phase 2: ⚠ Gemini reported token limit truncation")
+                last_friction = friction if is_real_truncation else last_friction
 
         if not content_text:
             log(f"  Phase 2: No delimited content extracted (attempt {attempt})")
@@ -1203,7 +1228,7 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     return False
 
 
-def _build_phase2_expansion_prompt(ctx: "ModuleContext", current_text: str, current_words: int, deficit: int) -> str:
+def _build_phase2_expansion_prompt(ctx: "ModuleContext", current_text: str, current_words: int, deficit: int, had_truncation: bool = False) -> str:
     """Build a prompt telling Gemini to expand thin content to meet word target."""
     # Analyze which sections are thin
     import re
@@ -1228,7 +1253,7 @@ def _build_phase2_expansion_prompt(ctx: "ModuleContext", current_text: str, curr
     section_report = "\n".join(f"- **{name}**: {wc} words" for name, wc in sections)
 
     research_path = ctx.paths.get("research", "")
-    overshoot = int(ctx.word_target * 1.5)
+    overshoot = ctx.word_target if had_truncation else int(ctx.word_target * 1.5)
 
     return f"""# Phase 2: EXPAND — Content is {current_words} words, need {ctx.word_target}+
 
@@ -1741,6 +1766,69 @@ def _identify_affected_sections(audit_output: str, content_path: Path) -> list[s
     return []
 
 
+def _build_schema_hint(ctx: ModuleContext, audit_output: str) -> str:
+    """If audit output contains YAML_SCHEMA_VIOLATION, extract ALL failing
+    activity types and inject their correct schema definitions so the fixer
+    knows exactly which fields are required/forbidden."""
+    if "YAML_SCHEMA_VIOLATION" not in audit_output:
+        return ""
+
+    import json as _json
+    import re as _re
+
+    # Extract all failing activity types from the audit error.
+    # Pattern: "'type': 'reading'" or "'type': 'quiz'" etc.
+    failing_types = list(dict.fromkeys(
+        m.group(1) for m in _re.finditer(r"'type':\s*'([a-z_-]+)'", audit_output)
+    ))
+    if not failing_types:
+        return ""
+
+    # Determine schema file for this track
+    track = ctx.track if hasattr(ctx, "track") else ""
+    schemas_dir = Path(__file__).parent.parent / "schemas"
+    schema_path = schemas_dir / f"activities-{track}.schema.json"
+    if not schema_path.exists():
+        # Fallback: try base level code (e.g. "b1" from "b1")
+        level_code = track.split("-")[0] if "-" not in track else track
+        schema_path = schemas_dir / f"activities-{level_code}.schema.json"
+    if not schema_path.exists():
+        schema_path = schemas_dir / "activities-base.schema.json"
+    if not schema_path.exists():
+        return ""
+
+    try:
+        schema = _json.loads(schema_path.read_text("utf-8"))
+        defs = schema.get("definitions", {})
+
+        hints = []
+        for failing_type in failing_types:
+            # Exact match: prefer "reading-c1-hist" over prefix match
+            type_def = defs.get(f"{failing_type}-{track}") or defs.get(failing_type)
+            if not type_def:
+                continue
+
+            required = type_def.get("required", [])
+            props = list(type_def.get("properties", {}).keys())
+            additional = type_def.get("additionalProperties", True)
+            no_extra = additional is False
+
+            hints.append(
+                f"### `{failing_type}` (from {schema_path.name})\n"
+                f"**Required fields:** {', '.join(f'`{r}`' for r in required)}\n"
+                f"**Allowed fields:** {', '.join(f'`{p}`' for p in props)}\n"
+                f"**additionalProperties:** `{additional}`"
+                f"{' — ANY unlisted field = schema violation' if no_extra else ''}\n"
+            )
+
+        if not hints:
+            return ""
+
+        return "\n\n## Schema Reference (fix activities to match these)\n\n" + "\n".join(hints)
+    except Exception:
+        return ""
+
+
 def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool) -> str:
     """Build a fix prompt from audit output.
 
@@ -1748,7 +1836,12 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool)
     token truncation when asking Gemini to output the complete file.
     """
     lines = audit_output.strip().split("\n")
-    error_excerpt = "\n".join(lines[-60:])
+    # Include schema violation lines even if they're outside the last 60 lines
+    tail = lines[-60:]
+    schema_lines = [ln for ln in lines if "YAML_SCHEMA_VIOLATION" in ln and ln not in tail]
+    if schema_lines:
+        tail = schema_lines + ["", "--- (tail of audit output) ---", ""] + tail
+    error_excerpt = "\n".join(tail)
 
     fix_type = "content-only" if content_only else "full"
 
@@ -1780,6 +1873,10 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool)
                     Do NOT output the entire file. Only output the section(s) listed above.
                 """)
 
+    # Schema hint: when audit has YAML_SCHEMA_VIOLATION, inject the relevant
+    # schema definition so the fixer knows exactly which fields are required.
+    schema_hint = _build_schema_hint(ctx, audit_output)
+
     return textwrap.dedent(f"""\
         # Fix Phase — {fix_type} audit failures
 
@@ -1790,6 +1887,7 @@ def _build_fix_prompt(ctx: ModuleContext, audit_output: str, content_only: bool)
         ```
         {error_excerpt}
         ```
+        {schema_hint}
 
         ## Files to Fix
 
@@ -1948,8 +2046,7 @@ def phase_6_review(ctx: ModuleContext) -> bool:
         log(f"  Phase 6: Dispatching prose review (attempt {attempt})...")
         output_file = _gemini_output_path(ctx.slug, f"6-r{attempt}")
         ok, _ = dispatch_gemini(
-            f"Activate skill review-content-v4. Read and execute the instructions at "
-            f"{PROJECT_ROOT}/{prompt_file.relative_to(PROJECT_ROOT)}",
+            f"Activate skill review-content-v4.\n\n{prompt_file.read_text('utf-8')}",
             task_id=task_id,
             model=ctx.model, stdout_only=True, output_file=output_file,
         )
@@ -2406,7 +2503,11 @@ Do not rubber-stamp. A verdict of APPROVE on a module with real unfixed issues i
 
 
 def _extract_delimited_content(text: str, start_tag: str, end_tag: str) -> str | None:
-    """Extract content between delimiter tags, handling code block wrapping."""
+    """Extract content between delimiter tags, handling code block wrapping.
+
+    Uses the LONGEST match when multiple delimiter pairs exist, since Gemini
+    sometimes echoes the format example before writing the actual content.
+    """
     # Strip code block markers Gemini sometimes wraps around delimiters
     cleaned = re.sub(r'```\w*\n', '', text)
     cleaned = re.sub(r'\n```', '', cleaned)
@@ -2414,8 +2515,12 @@ def _extract_delimited_content(text: str, start_tag: str, end_tag: str) -> str |
         rf'{re.escape(start_tag)}\s*\n(.*?)\n\s*{re.escape(end_tag)}',
         re.DOTALL,
     )
-    m = pattern.search(cleaned)
-    return m.group(1).strip() if m else None
+    matches = pattern.findall(cleaned)
+    if not matches:
+        return None
+    # Return the longest match — the real content, not echoed format examples
+    best = max(matches, key=len)
+    return best.strip()
 
 
 MAX_6B_ATTEMPTS = 5

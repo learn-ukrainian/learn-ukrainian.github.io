@@ -1,0 +1,64 @@
+{
+  "module": "hobbies-leisure",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T09:23:54.213051Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-23T23:03:26.030232Z",
+    "meta": "2026-02-23T22:56:48.248923Z",
+    "activities": "2026-02-23T23:05:53.612855Z",
+    "vocabulary": "2026-02-23T23:05:53.613195Z",
+    "plan": "2026-02-20T21:04:50.750944Z",
+    "research": "2026-02-23T22:56:48.245133Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "5687/3000 (raw: 6133) | pedagogy: 93 violations | immersion: 94.4% HIGH (target 75-90% (A2.3))"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 1,
+    "deferred_count": 3
+  }
+}

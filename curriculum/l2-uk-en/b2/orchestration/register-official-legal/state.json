@@ -1,0 +1,25 @@
+{
+  "slug": "register-official-legal",
+  "track": "b2",
+  "module_num": 19,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-23T23:43:31Z",
+      "words": 3722,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-23T23:46:21Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-23T23:46:21Z",
+      "note": "v3-phase-C"
+    }
+  },
+  "last_updated": "2026-02-23T23:46:21Z"
+}

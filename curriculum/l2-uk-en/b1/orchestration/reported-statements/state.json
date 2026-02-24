@@ -3,6 +3,23 @@
   "track": "b1",
   "module_num": 39,
   "mode": "v3",
-  "phases": {},
-  "last_updated": "2026-02-20T11:26:45Z"
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T00:28:24Z",
+      "words": 4874,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T00:30:44Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T00:30:44Z",
+      "note": "v3-phase-C"
+    }
+  },
+  "last_updated": "2026-02-24T00:30:44Z"
 }

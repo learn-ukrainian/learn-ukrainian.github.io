@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "purpose-shchob-past-form",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T23:23:37Z",
+      "task_id": "v3-purpose-shchob-past-form-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T23:26:41Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T23:29:07Z",
+      "task_id": "v3-purpose-shchob-past-form-pC"
+    }
+  }
+}

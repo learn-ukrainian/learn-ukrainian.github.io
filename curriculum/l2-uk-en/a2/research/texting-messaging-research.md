@@ -1,40 +1,34 @@
 # Дослідження: Texting and Messaging
 
 ## State Standard Reference
-§3.4: "Дозвілля, відпочинок: ... преса, радіо, телебачення, інтернет, соціальні мережі."
-Alignment: Module teaches vocabulary and communicative competence for "internet" and "social networks" (texting, messaging apps), which are explicitly listed in the State Standard for A2 level.
+§4.2.2.6: "Кличний відмінок: адресат мовлення – потенційний суб’єкт дії: Пане Юрію, повторіть, будь ласка. Пані ректор, дозвольте зайти. Бабусю, сідайте, будь ласка"
+Alignment: This module practically applies the vocative case for direct address (адресат мовлення) in the modern context of digital messaging, ensuring learners correctly use forms like "Привіт, Андрію" instead of defaulting to the nominative in chats.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| повідомлення | High (Standard) | надіслати ~, отримати ~, голосове ~ |
-| надіслати | High (Standard) | ~ фото, ~ файл, ~ смайлик |
-| прив | High (Slang/Texting) | (Standalone greeting) |
-| дяк | High (Slang/Texting) | (Standalone thanks) |
-| норм | High (Slang/Texting) | Як ти? - Норм. |
-| чат | High (Tech) | груповий ~, створити ~ |
-| смайлик | Medium (Colloquial) | надіслати ~ |
-| стікер | High (Telegram/Viber) | набір стікерів, кинути ~ |
+| повідомлення | High / Telegram UI | надіслати повідомлення, голосове повідомлення |
+| надіслати | High / Digital standard | надіслати фото, надіслати файл |
+| прив | High / Informal chat | сказати прив, написати прив |
+| дяк | High / Colloquial | відповісти дяк, велике дяк |
+| бдлск | High / Text abbreviation | скинь бдлск, напиши бдлск |
+| голосове | Very High / Daily use | записати голосове, слухати голосове |
+| пересилати | Medium / Telegram UI | пересилати новини, пересилати в чат |
 
 ## Cultural Hooks
-1. **Telegram Supremacy**: Telegram is the absolute dominant messenger in Ukraine (used by 81% of the population for communication and 73% for news in 2024), replacing traditional SMS and often even email for work.
-2. **"Don't Call" Etiquette**: In modern Ukrainian digital culture, calling without a warning text first is often considered rude or intrusive ("telefonophobia"). "Краще напиши" (Better write) is the norm.
-3. **Sticker Culture**: Ukrainians have a massive sticker culture, especially in Telegram, often featuring political memes, historical figures (Shevchenko stickers), or "Patron the Dog".
+1. Telegram is the absolute dominant platform in Ukraine, with over 72% of Ukrainians using it as their primary source for both news and personal communication (sharply increased post-2022).
+2. The "Краще напиши" (Better text me) rule: Unannounced phone calls are widely considered intrusive or alarming in modern Ukrainian etiquette. Texting first is the polite standard.
 
 ## Common Learner Errors
-1. **Russianisms in Slang**: Using "спс" (from Russian "спасибо") instead of "дяк" (from Ukrainian "дякую").
-   * *Correction*: Encourage "дяк" or "дякую".
-2. **Vocative Case Omission**: Learners often drop the vocative case in chats (e.g., "Привіт, Андрій") because it feels "formal", but it is standard even in informal Ukrainian ("Привіт, Андрію").
-   * *Correction*: Reinforce that vocative is for *all* names, not just formal address.
-3. **"Писати" vs "Дзвонити"**: Confusion on when to use which verb for digital actions.
-   * *Usage*: "Напиши мені" (Text me) is the standard phrase for "send me a message".
+1. **Nominative instead of Vocative in chats**: "Привіт, Антон" → "Привіт, Антоне" — Learners often drop the vocative due to the perceived informality of texting, but it remains mandatory in Ukrainian.
+2. **Russian abbreviations**: Using "спс" (спасибо) → "дяк" (дякую) — Learners exposed to older internet slang use Russianisms, missing the shift to authentic Ukrainian digital slang.
+3. **Wrong verb for contact**: "Подзвони мені" (Call me) → "Напиши мені" (Text me) — Defaulting to calling when texting is culturally preferred.
 
 ## Cross-References
 - Builds on: a2-67 (Social Media Ukrainian)
 - Prepares for: a2-69 (Online Services)
 
 ## Notes for Content Writing
-- Focus on **Telegram** context (it's the de facto standard).
-- Introduce "бдлск" (будь ласка) as another common abbreviation if space permits.
-- Emphasize that "прив/дяк" are for *close friends only*.
-- Include "голосове" (voice message) as it's a huge part of Ukrainian messaging culture (often polarizing - some love, some hate).
+- Apply A2 Band 3 immersion rules (75-90% Ukrainian). Use English only for brief vocabulary translations; all prose, dialogue, and practice should be in Ukrainian.
+- Decolonized framing: Present "дяк", "прив", and "бдлск" as authentic, efficient developments of the Ukrainian language. Explicitly flag "спс" as a Russianism to avoid.
+- Keep sentences under 15 words. Keep grammar explanations (Vocative in chats) brief and practical.

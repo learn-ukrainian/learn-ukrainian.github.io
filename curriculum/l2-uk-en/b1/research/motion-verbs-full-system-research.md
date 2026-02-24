@@ -1,37 +1,35 @@
 # Дослідження: Дієслова руху: повна система
 
 ## State Standard Reference
-§4.2.3.1: "Дійсний спосіб: ... дієвідмінювання дієслів... (їхати/ходити)"
+§4.2.2.4: "Знахідний відмінок... із прийменниками: в, у, на, за (кінцевий пункт руху суб’єкта, кінцева мета руху): Степан їде в Харківський університет."
 §4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти... їхати – приїхати..."
-§4.2.2.4: "Знахідний відмінок... Із прийменниками: в, у, на, за (кінцевий пункт руху суб’єкта...)"
-
-Alignment: This module systematizes the core 14 motion verb pairs (unidirectional/multidirectional) required by §4.2.3.1 and reinforces the Accusative directionality rules from §4.2.2.4, laying the foundation for the prefix system (§4.3.8) covered in subsequent modules.
+Alignment: This module establishes the core 14 pairs of motion verbs, preparing learners for the prefix system (§4.3.8) and linking motion explicitly to destination using the Accusative case (§4.2.2.4).
 
 ## Vocabulary Frequency
-| Word Pair | Frequency Notes | Key Collocations |
-|-----------|-----------------|------------------|
-| **лізти / лазити** | High freq. in both literal and figurative senses. | *лізти вгору* (climb up), *лізти в кишеню* (pickpocket/reach in), *лазити по деревах* (climb trees), *лазити в інтернеті* (surf the net - slang). |
-| **повзти / повзати** | Medium freq. Often used for slow movement or rumors/fog. | *повзти на колінах* (crawl on knees), *туман повзе* (fog creeps), *чутки повзуть* (rumors spread), *дитина повзає* (baby crawls). |
-| **брести / бродити** | Medium-Low freq. Poetic or specific "wandering" context. | *бродити по лісу* (wander forest), *бродити вулицями* (roam streets), *брести по воді* (wade through water), *думки бродять* (thoughts wander). |
-| **тягти / тягати** | High freq. Logistic/physical effort context. | *тягти час* (stall/drag time), *тягати залізо* (lift weights - slang), *ледь ноги тягти* (barely drag feet). |
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| йти/ходити, їхати/їздити | Very High | йти пішки, їхати поїздом |
+| бігти/бігати, летіти/літати | High | час летить, бігати вранці |
+| нести/носити, вести/водити, везти/возити | High (Logistics) | фури везуть зерно, водити машину |
+| лізти/лазити, тягти/тягати | Medium (Figurative) | лазити в інтернеті, тягати залізо |
+| повзти/повзати, брести/бродити | Lower (Poetic/Specific)| туман повзе, думки бродять |
 
 ## Cultural Hooks
-1. **The Logistics of the "Breadbasket":** Ukraine moves massive amounts of grain to ports (Odesa, Danube). The verbs *везти/возити* (to transport) and *пливти* (ships sailing) are vital to the national economy. *Fact:* Ukraine has ~169,000 km of roads (all toll-free), making truck logistics (*фури*) a key part of the "circulatory system" of the country.
-2. **Nova Poshta & Ukrzaliznytsia:** These two entities are cultural icons of reliability and motion. "Iron Diplomacy" (*Залізна дипломатія*) relies on *їздити* (trains). Nova Poshta relies on *розносити/розвозити* (delivering).
-3. **Proverbial Wisdom:** "Під лежачий камінь вода не тече" (Water doesn't flow under a lying stone) – emphasizes the cultural value of action and movement (*рух*).
+1. **Залізна дипломатія (Iron Diplomacy)**: Укрзалізниця (Ukrzaliznytsia) became the lifeline of the nation, maintaining exactly on-time schedules (їхати/їздити) to transport global leaders and evacuate citizens during the war.
+2. **Nova Poshta's Network**: The hyper-efficient Ukrainian delivery culture, where packages are delivered (розвозити, розносити) even to front-line towns, acting as the country's circulatory system.
 
 ## Common Learner Errors
-1. **The "Round Trip" Trap:** Learners use unidirectional *йти* for a completed round trip (*Я йшов у банк вчора* instead of *Я ходив*).
-   *   *Correction:* Use multidirectional for "went and came back" (general fact in past).
-2. **The "Vehicle vs. Foot" Confusion:** Using *йти* for vehicles (like English "go").
-   *   *Correction:* Strict separation: *йти* (legs) vs. *їхати* (wheels/transport).
-3. **Adverbial Blindness:** Ignoring keywords like *часто* (often), *кожен день* (every day), *завжди* (always) which demand multidirectional verbs.
-   *   *Correction:* Highlight trigger words that force the *ходити/їздити* choice.
+1. **The "Round Trip" Trap** → Using "йшов" (unidirectional) for a completed round trip instead of "ходив" (multidirectional). *Why: Treating it as a simple past event instead of a completed cycle.*
+2. **The "Vehicle vs Foot" Stricture** → Using "йти" for going somewhere by car. *Why: Interference from English "to go". Ukrainian strictly separates legs from wheels.*
+3. **Adverbial Blindness** → Ignoring trigger words like "завжди", "часто", "щодня" which mathematically force the multidirectional verb.
 
 ## Cross-References
-- **Builds on:** A2 Motion Basics (simple *йти/їхати*), A2 Accusative Case (direction).
-- **Prepares for:** B1-17 (Prefixed Motion Verbs), B1-25 (Motion Checkpoint), B1-35 (Complex Sentences with "where to").
+- Builds on: b1-15 (Aspect mastery checkpoint), A2 motion verbs basics.
+- Prepares for: b1-17 (Motion - coming & going), b1-25 (Motion verbs checkpoint).
 
 ## Notes for Content Writing
-- **Visuals:** Use the "Vector vs. Circle" analogy. Unidirectional = Arrow (→). Multidirectional = Circle/Chaos (↺ or 〰️).
-- **Immersion:** Ensure all explanations of the "physics" of motion are in clear, simple Ukrainian.
+- **Decolonized Framing**: Emphasize the precision of the Ukrainian linguistic worldview (strict separation of foot/vehicle, physical dragging vs. carrying) without using Russian as a baseline or for comparison.
+- **Persona**: Maintain the "Logistics Director" tone. Ukraine is in constant motion; logistics is survival.
+- **Immersion**: 100% Ukrainian. Zero English scaffolding in the text. English only in the vocabulary YAML translations.
+- **Phonetics**: If phonetics are discussed, use strictly IPA (e.g., [ɔ], [ɛ], [t͡ʃ]).
+- Ensure all 14 pairs are presented but group them logically (core, logistics, figurative/specific).

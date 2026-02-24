@@ -55,8 +55,12 @@ Activities:       {ACTIVITY_COUNT}
 Vocabulary items: {VOCAB_COUNT}
 Engagement boxes: {ENGAGEMENT_COUNT}
 Immersion:        {IMMERSION_PERCENT}% (target: {IMMERSION_TARGET})
+Richness:         {COMPUTED_RICHNESS_SCORE}% (threshold: {COMPUTED_RICHNESS_THRESHOLD}%)
+Richness gaps:    {COMPUTED_RICHNESS_GAPS}
 Audit status:     {AUDIT_STATUS}
 ```
+
+**Richness gate**: If richness is below threshold, your Fix Plan MUST include concrete additions that close each gap dimension. For example, if `cultural: 2/3`, add one `[!culture]` callout; if `tables: 1/2`, add one comparison table. Each addition should be pedagogically useful, not filler.
 
 ---
 

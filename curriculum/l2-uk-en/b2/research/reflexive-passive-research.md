@@ -1,36 +1,33 @@
 # Дослідження: Зворотний пасив із -ся
 
 ## State Standard Reference
-§4.1.3.1: "Дійсний спосіб: дієвідмінювання дієслів недоконаного виду... зоставатися (зостаюся, зостаєшся...)"
-Alignment: The State Standard covers reflexive verbs (which form the morphological basis of the reflexive passive) within the Indicative Mood (§4.1.3.1). The specific usage of these forms for passive voice (process focus) is a key B2 competency, distinguishing it from the result-focused -но/-то forms covered in §4.3.3 (One-member sentences).
+§4.1.3.1: "дієвідмінювання дієслів недоконаного виду в теперішньому часі: ... зоставатися (зостаюся, зостаєшся, зостається, зостаємося, зостаєтеся, зостаються)". 
+Alignment: Цей модуль розширює базові знання про зворотні дієслова недоконаного виду (B1), трансформуючи їх у морфологічну базу для побудови пасивних конструкцій у науковому та офіційному стилях на рівні B2.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| проводиться (is conducted) | High (Academic/Official) | експеримент проводиться, дослідження проводиться, зустріч проводиться |
-| вивчається (is studied) | High (Academic) | проблема вивчається, мова вивчається, питання вивчається науковцями |
-| застосовується (is applied) | High (Tech/Legal) | закон застосовується, метод застосовується, технологія застосовується |
-| будується (is built) | Medium (General/News) | будинок будується, держава будується, система будується |
-| аналізується (is analyzed) | High (Academic) | ситуація аналізується, текст аналізується, дані аналізуються |
-| досліджується (is researched) | High (Academic) | явище досліджується, тема досліджується вченими |
+| проводиться | High (Academic/Official) | експеримент проводиться, реформа проводиться |
+| досліджується | High (Scientific) | явище досліджується, тема досліджується вченими |
+| застосовується | High (Tech/Legal) | метод застосовується, закон застосовується |
+| будується | High (News/General) | міст будується, система будується |
+| розробляється | Medium (Tech/Inventive) | проєкт розробляється, алгоритм розробляється |
 
 ## Cultural Hooks
-1. **Іван Пулюй (Ivan Puliui)**: While Röntgen is famous, the "X-rays" were deeply researched by Puliui (*промені досліджуються Пулюєм*). He made the first X-ray of a human skeleton. Perfect for "scientific discovery" context.
-2. **Катерина Ющенко (Kateryna Yushchenko)**: Created the first address programming language in 1955. Context: "Перша мова програмування створюється жінкою" (The first programming language is created by a woman).
-3. **Ігор Сікорський (Ihor Sikorsky)**: The helicopter (*гелікоптер*) was developed (*розробляється*) by a kyivan inventor.
+1. **Іван Пулюй (1845–1918)**: Видатний фізик, який досліджував X-промені ще до Вільгельма Рентгена (1895). Чудовий контекст для пасиву: «Промені досліджуються Пулюєм у лабораторії».
+2. **Катерина Ющенко (1919–2001)**: Творчиня однієї з перших у світі мов програмування високого рівня (Адресна мова, 1955). Контекст: «Алгоритм створюється програмісткою».
+3. **Ігор Сікорський (1889–1972)**: Авіаконструктор, який розробив перші прототипи гелікоптерів у Києві (1909). Контекст: «Нова техніка розробляється київським винахідником».
 
 ## Common Learner Errors
-1. **Instrumental Case Omission**: Learners often omit the agent or use "від" instead of the Instrumental case.
-   *Error*: *Книга читається студентів.* → *Correct*: *Книга читається студентами.* (The book is read by students).
-2. **Passive Overuse**: Using passive in casual speech where active is natural.
-   *Error*: *Піца їсться мною.* (The pizza is being eaten by me). → *Correct*: *Я їм піцу.* (I am eating pizza).
-3. **-ся vs -но/-то Confusion**: Confusing process (imperfective -ся) with result (perfective -но/-то).
-   *Error*: *Будинок будується вже рік.* (Correct - process) vs *Будинок збудується.* (Incorrect - mixture). → *Correct*: *Будинок збудовано.* (Result).
+1. **Калькування англійського "by" / німецького "von"**: Використання прийменника «від» + родовий відмінок («Дослідження проводиться від вченого»). → **Корекція**: Чистий орудний відмінок без прийменників («Дослідження проводиться вченим»).
+2. **Зловживання пасивом (Passive Overuse)**: Вживання пасивних конструкцій у розмовно-побутовому стилі («Піца їсться мною»). → **Корекція**: Українська мова тяжіє до активних конструкцій. Зворотний пасив є органічним переважно в науковому та офіційно-діловому дискурсі.
+3. **Конфлікт виду**: Спроба утворити зворотний пасив від дієслів доконаного виду («Дім збудується робітниками»). → **Корекція**: Зворотний пасив із -ся означає дію в процесі, тому вимагає недоконаного виду. Для завершеної дії використовують конструкції на -но/-то.
 
 ## Cross-References
-- **Builds on**: `b2-01` (Passive Voice System), `b2-03` (Impersonal -но/-то), Instrumental case.
-- **Prepares for**: `b2-05` (3rd Person Plural Passive), `b2-21` (Technical/Scientific Register).
+- Builds on: b2-01 (Passive Voice System), b2-02 (Past Passive Participles), b2-03 (Impersonal -но/-то).
+- Prepares for: b2-05 (3rd Person Plural Passive), b2-06 (Passive in Context), b2-21 (Register: Technical/Scientific).
 
 ## Notes for Content Writing
-- **Stylistic Restriction**: Explicitly teach that this structure is NOT for casual conversation ("I am dressing" is reflexive `я одягаюся`, but "The pizza is eaten" `піца їсться` is unnatural). Restrict examples to science, tech, law, and news.
-- **Agent Rule**: Emphasize that the agent (Instrumental) is optional but common in scientific texts ("досліджується вченими").
+- **Деколонізаційне обрамлення**: Український зворотний пасив не є «копією російського». Історично українська мова значно частіше віддає перевагу активним формам або безособовим на -но/-то. Зворотний пасив з -ся закріпився переважно під впливом канцелярського та академічного стилів, тому його вживання слід суворо обмежувати цими регістрами.
+- **IPA Rule**: Пам'ятати про вимову закінчень: -ться = [tʲ sʲ a], -шся = [sʲ a]. (Транскрипція лише в словнику або при прямому поясненні фонетики).
+- Всі приклади в таблицях повинні мати українських агентів (діячів) та стосуватися технічного чи наукового прогресу.

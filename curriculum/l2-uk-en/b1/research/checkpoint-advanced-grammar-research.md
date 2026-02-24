@@ -1,44 +1,33 @@
 # Дослідження: Контрольна точка: Просунута граматика
 
 ## State Standard Reference
-§4.4.2 (Синтаксис: Просте ускладнене речення): "просте речення з дієприкметниковим зворотом... просте речення з дієприслівниковим зворотом" (Lines 2372-2375).
-§4.2.3.1 (Морфологія: Дієслово): "дієприкметник, дієприслівник" (Line 2271).
-Alignment: Module explicitely teaches the formation and usage of these forms (дієприслівник/дієприкметник) which are required for the B1 syntax standard of "complicated simple sentences" (просте ускладнене речення).
+§4.4.2: "Просте ускладнене речення: просте речення з дієприкметниковим зворотом: Три години тому ми повернулися з екскурсії, організованої для учасників конференції; просте речення з дієприслівниковим зворотом: Повернувшись з екскурсії, ми смачно пообідали в ресторані."
+Alignment: Цей модуль прямо перевіряє здатність студентів рівня B1 правильно будувати та розуміти прості речення, ускладнені дієприкметниковими та дієприслівниковими зворотами, згідно з вимогами стандарту для цього рівня.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **дієприслівник** | Medium (Textbooks/Lit) | вживати дієприслівник, дієприслівниковий зворот, помилка у вживанні |
-| **пасивний стан** | Medium (Formal/Scientific) | пасивна конструкція, уникати пасиву, форми на -но/-то |
-| **збірний числівник** | High (Spoken/Lit) | двоє дітей, троє дверей, нас було п'ятеро, четверо друзів |
-| **демінутив** | Very High (Colloquial/Folk) | пестлива форма, зменшувальний суфікс, українська ментальність |
+| дієприслівник | Academic/Grammar | вживати дієприслівник, утворювати зворот |
+| дієприкметник | Academic/Grammar | узгодження дієприкметника |
+| демінутив | Academic/Linguistics | пестлива форма, демінутивний суфікс |
+| калька | Common/Media | уникати кальок, мовна калька |
+| кордоцентризм | Academic/Cultural | українська ментальність, філософія серця |
 
 ## Cultural Hooks
-1.  **Cordocentrism & Diminutives**: Ukrainian is often called a "language of the heart" (cordocentrism). Diminutives (`сонечко`, `матуся`, even verbs `спатоньки`) are not just about small size, but emotional connection. They encode the Ukrainian worldview of intimacy and connection with the environment.
-2.  **The "Active" Ukrainian**: Unlike Russian or English legalese, standard Ukrainian style strongly prefers **active** constructions over passive ones. "Закон прийнято депутатами" is considered poor style (Russian influence); "Депутати прийняли закон" is natural. Forms ending in `-но/-то` (`Зроблено в Україні`) are a unique impersonal feature that emphasizes the result without naming the agent.
+1. **Кордоцентризм (Cordocentrism):** The "philosophy of the heart" is deeply rooted in Ukrainian culture (promoted by thinkers like Hryhorii Skovoroda and Pamfil Yurkevych). This worldview explains the abundance of diminutives in Ukrainian, even for verbs (спатоньки, їстоньки), reflecting an emotional, personalized connection to the world rather than just size.
+2. **"Зроблено в Україні" (Made in Ukraine):** The impersonal forms ending in -но/-то are the natural Ukrainian way to express completed actions where the result matters more than the agent. They are widely seen on product labels and official announcements, actively resisting the bureaucratic passive voice heavily present in Russian administrative style.
 
 ## Common Learner Errors
-1.  **Dangling Participle (Diyepryslivnyk)**:
-    *   *Error*: "Йдучи додому, почався дощ." (Walking home, the rain started.)
-    *   *Correct*: "Коли я йшов додому, почався дощ."
-    *   *Reason*: The subject of the main verb (`дощ`) must be the doer of the adverbial participle (`йдучи`), which is impossible here.
-2.  **Active Present Participle Calques**:
-    *   *Error*: "сидячий студент", "читаюча дівчина".
-    *   *Correct*: "студент, який сидить", "дівчина, яка читає".
-    *   *Reason*: Calque from Russian (`сидящий`, `читающая`). Ukrainian avoids heavy participial forms in favor of relative clauses (`той, що...`).
-3.  **Collective Numerals with Females**:
-    *   *Error*: "троє дівчат", "двоє студенток".
-    *   *Correct*: "три дівчини", "дві студентки".
-    *   *Reason*: Collective numerals (`двоє`, `троє`) are strictly for male/mixed groups, children/animals, or plural-only nouns (`двері`). They are never used with feminine nouns.
-4.  **Passive Agent with -но/-то**:
-    *   *Error*: "Мною зроблено".
-    *   *Correct*: "Я зробив" or just "Зроблено" (without agent).
-    *   *Reason*: Forms ending in `-но/-то` are impersonal; adding an instrumental agent is a grammatical clash (bureaucratese).
+1. **Dangling Participle (Невідповідність підмета):** "Йдучи додому, почався дощ" → "Коли я йшов додому, почався дощ". The action of the adverbial participle must logically be performed by the main subject of the sentence.
+2. **Active Present Participles (Кальки з російської):** "Читаючий студент" → "Студент, який читає". Ukrainian systematically avoids active present participles, naturally preferring relative clauses with "який" or "що".
+3. **Clashed Agents in -но/-то:** "Закон прийнято депутатами" → "Депутати прийняли закон" or simply "Закон прийнято". One cannot attach an instrumental agent to a -но/-то form.
+4. **Collective Numerals with Feminine:** "Двоє жінок" → "Дві жінки". Collective numerals (двоє, троє) cannot be used with feminine nouns; they are reserved for masculine nouns, pluralia tantum, and young humans/animals.
 
 ## Cross-References
-- **Builds on**: `b1-50` (Integrated Grammar Lab), `b1-26` (Complex sentences intro).
-- **Prepares for**: `b1-52` (Abstract Concepts - requires complex syntax), `b2` (Academic/Professional writing where passive/participles are more common).
+- Builds on: b1-50 (Integrated Grammar Lab)
+- Prepares for: b1-52 (Abstract Concepts Ideas)
 
 ## Notes for Content Writing
-- **Structure**: Ensure the distinction between "Active Participles" (often bad style if present tense) and "Adverbial Participles" (good style for dynamism) is clear.
-- **Integration**: The "Integration Task" should focus on fixing "bad bureaucratic style" into "natural active Ukrainian" to test the passive/active skill.
+- Ensure 100% immersion (no English in prose, even for explanations).
+- Emphasize the decolonized framing: present Ukrainian active voice and -но/-то forms as the natural, dynamic standard, explicitly contrasting them with the bureaucratic passive voice often inherited from Soviet/Russian administrative styles.
+- Structure complex rules into clear, simple Mermaid charts (e.g., for choosing when to use "який + дієслово" vs a participle).

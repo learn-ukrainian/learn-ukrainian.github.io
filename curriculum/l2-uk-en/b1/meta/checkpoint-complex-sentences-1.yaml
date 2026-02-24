@@ -1,3 +1,51 @@
 slug: checkpoint-complex-sentences-1
 title: 'Контрольна точка: складні речення (частина 1)'
 word_target: 4000
+content_outline:
+- section: Вступ та огляд
+  words: 500
+  points:
+  - Establish the checkpoint context strictly in Ukrainian, defining «контрольна точка»
+    and «результат оцінювання».
+  - Introduce the concept of «самооцінювання» (self-assessment) as a tool for learner
+    autonomy, aligning with modern educational approaches.
+  - Set expectations for integrating complex syntactic structures (relative, purpose,
+    and conditional clauses) as per State Standard §4.4.3.
+- section: Відносні речення та «симфонічний» синтаксис
+  words: 1000
+  points:
+  - Explore the «symphonic» nature of Ukrainian syntax through a short literary context,
+    demonstrating how complex sentences build panoramic descriptions.
+  - 'Diagnostic and deep-dive on «який» agreement: Create an H3 section detailing
+    gender, number, and case agreement rules with clear contrasting examples.'
+  - Explicitly address and correct 'preposition stranding' (e.g., «у якому» vs. «який...
+    в»), providing a dedicated practice table for preposition + relative pronoun combinations.
+  - Review other relative adverbs (де, куди, звідки, коли, що) used in explanatory
+    subordinate clauses.
+- section: Підрядні речення мети
+  words: 800
+  points:
+  - 'Contrast the two core structures of purpose clauses: «щоб» + infinitive (identical
+    subjects) vs. «щоб» + past tense (different subjects).'
+  - Provide a clear Mermaid flowchart or logical decision tree for choosing between
+    the infinitive and past tense after «щоб».
+  - Include a sub-section explicitly verifying the correct gender/number agreement
+    in the past tense when subjects differ.
+- section: 'Умовні речення: реальні та ірреальні ситуації'
+  words: 900
+  points:
+  - Create a strict contrastive analysis between «якщо» (real possibility) and «якби»
+    (hypothetical/irrealis).
+  - Address the common «Якщо я був би...» error. Explain why «якби» absorbs the conditional
+    particle and requires the past tense.
+  - Provide mixed conditional scenarios in a narrative context, requiring the learner
+    to logically deduce which conditional type to apply.
+- section: Інтеграційний виклик та самоконтроль
+  words: 800
+  points:
+  - Present a comprehensive integration text (e.g., a formal email or a short review)
+    that combines relative, purpose, and conditional clauses.
+  - Provide a «формувальне оцінювання» checklist for learners to self-assess their
+    mastery of B1.3a syntax.
+  - Conclude with final error analysis focusing on preposition placement and conditional
+    mood, confirming readiness for the next phase.

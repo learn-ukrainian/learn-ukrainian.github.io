@@ -1,3 +1,52 @@
 slug: home-and-furniture
 title: Home and Furniture
 word_target: 3000
+content_outline:
+- section: 'Вступ: Типи житла та помешкання'
+  words: 500
+  points:
+  - Provide a brief English scaffolding introduction, noting the 60-75% immersion
+    band for this module.
+  - Explain the distinction between 'квартира' (apartment) and 'приватний будинок'
+    (private house), fulfilling State Standard §3.2.
+  - Introduce the 'Room Map' concept in Ukrainian, grouping rooms by function (життя,
+    сон, приготування їжі).
+  - Include a cultural hook about the 'Domovyk' (Домовик) who protects the Ukrainian
+    home.
+- section: 'Презентація: Кімнати та меблі'
+  words: 800
+  points:
+  - Create an H3 for each core furniture item (стіл, стілець, ліжко, шафа, диван),
+    providing IPA on first occurrence and 2+ example sentences in Ukrainian.
+  - Describe parts of the room (підлога, стіна, килим) with Ukrainian collocations.
+  - Present household appliances (холодильник, пральна машина), building on module
+    a2-45.
+  - Include a mini-dialogue in Ukrainian where a host shows a guest their new apartment,
+    utilizing the target vocabulary.
+- section: 'Граматика: Місцевий відмінок та прийменники'
+  words: 700
+  points:
+  - Explain Locative case usage for static location (State Standard §4.2.2.6) using
+    English for the abstract theory.
+  - Provide a comparison table contrasting 'у/в' (inside) vs 'на' (on surface), and
+    explicitly highlight 'на кухні' as a required exception in a dedicated callout.
+  - 'Explicitly drill consonant mutations in a dedicated H3: [г]→[з] (підлога -> на
+    підлозі), [к]→[ц] (полиця -> на полиці), [х]→[с] with multiple examples.'
+- section: 'Практика: Опис оселі та етикет'
+  words: 600
+  points:
+  - Contrast static Location (Locative) vs Direction of motion (Accusative) to address
+    the common 'в кімнаті' vs 'в кімнату' error.
+  - Include an engagement callout explaining the 'Поріг' (Threshold) taboo—why shaking
+    hands across it is forbidden in Ukrainian culture.
+  - Explain the social superstition of sitting 'на розі столу' (at the corner of the
+    table).
+  - Provide a descriptive practice text in Ukrainian about arranging furniture in
+    a living room.
+- section: 'Підсумок: Мій дім — моя фортеця'
+  words: 400
+  points:
+  - Synthesize the vocabulary by having the persona summarize how to describe a dwelling
+    and its contents.
+  - List practical Ukrainian phrases for inviting a guest inside and basic home etiquette.
+  - Preview upcoming modules (Hotel Accommodation, Nature) to conclude.

@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "register-media-journalistic",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T00:07:08Z",
+      "task_id": "v3-register-media-journalistic-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T00:10:06Z",
+      "note": "word-count-2939-below-80pct-4000"
+    }
+  }
+}

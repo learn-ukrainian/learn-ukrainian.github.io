@@ -1,3 +1,45 @@
 slug: motion-verbs-full-system
 title: 'Дієслова руху: повна система'
 word_target: 4000
+content_outline:
+- section: Вступ
+  words: 500
+  points:
+  - Establish the 'Logistics Director' persona, framing Ukraine's motion verb system
+    as the nation's circulatory system.
+  - 'Introduce the core concept of directionality: ''Vector vs Circle'' (односпрямований
+    → vs різноспрямований ↺).'
+  - Emphasize that the text must be 100% in Ukrainian with no English scaffolding.
+- section: Презентація 14 пар дієслів
+  words: 1200
+  points:
+  - Create an H3 section for the essential pairs (йти/ходити, їхати/їздити, бігти/бігати)
+    with paradigm tables.
+  - Create an H3 section for the logistics verbs (нести/носити, вести/водити, везти/возити)
+    with real-world examples.
+  - Create an H3 section for specific and figurative verbs (лазити в інтернеті, тягати
+    залізо, туман повзе, думки бродять).
+- section: Аналіз типових помилок
+  words: 800
+  points:
+  - 'Address the ''Round Trip'' trap: explain why a completed past trip requires the
+    multidirectional ''ходив/їздив''.'
+  - Detail the 'Vehicle vs Foot' stricture, eliminating the interference of the generic
+    'to go'.
+  - Provide a table of adverbial triggers (часто, завжди, щодня) that dictate multidirectional
+    choice.
+- section: 'Культурний код: Логістика та залізниця'
+  words: 800
+  points:
+  - Discuss 'Залізна дипломатія' and Укрзалізниця as the unbreakable transport backbone.
+  - Explore the movement of grain to Odesa ports (фури везуть, судна пливуть).
+  - Highlight Nova Poshta's role in daily life and its connection to verbs like 'розвозити'.
+- section: Синтез та практичне застосування
+  words: 700
+  points:
+  - Explain the Accusative case for destination (куди?) with prepositions 'в/у', 'на',
+    per State Standard §4.2.2.4.
+  - Integrate the proverb «Під лежачий камінь вода не тече» to symbolize the necessity
+    of motion.
+  - Summarize how this foundation prepares learners for prefixed motion verbs (State
+    Standard §4.3.8).

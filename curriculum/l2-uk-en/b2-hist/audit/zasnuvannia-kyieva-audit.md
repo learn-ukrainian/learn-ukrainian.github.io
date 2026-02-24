@@ -1,7 +1,7 @@
 # Audit Report: M06 — zasnuvannia-kyieva.md
 **Level:** B2-HIST | **Module:** M06 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 22:01:57
+**Generated:** 2026-02-24 11:17:55
 
 ## Configuration
 **Type:** B2-history
@@ -16,41 +16,25 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Джерело: Повість минулих літ про заснування Києва | 1 | 1 | ✅ |
-| 2 | critical-analysis | Критичний аналіз: Князь чи перевізник? | 1 | 1 | ✅ |
-| 3 | comparative-study | Порівняльне дослідження: Два погляди на Київ | 1 | 1 | ✅ |
-| 4 | true-false | Перевірка фактів: Міфи та реальність | 10 | 8 | ✅ |
-| 5 | essay-response | Есе: Геополітична вісь Східної Європи | 1 | 1 | ✅ |
-
-**Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 5 (minimum: 2) ✅
-- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
-- Low density activities: 0
-
 ## Gates
 - **Words:** ✅ 5319/5000 (raw: 5696)
-- **Activities:** ✅ 5/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/2 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/20
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.6% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)

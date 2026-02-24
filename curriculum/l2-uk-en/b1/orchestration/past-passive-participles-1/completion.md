@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 45 — E2E
+FAIL: build_module_v2.py b1 45 — E2E
 
   Module:   past-passive-participles-1
   Track:    b1
   Mode:     e2e
-  Words:    0 (target: 4000)
+  Words:    4182 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-20T11:26:45Z
+  Verdict:  FAIL
+  Date:     2026-02-24T08:29:12Z

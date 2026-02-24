@@ -2,15 +2,15 @@
   "module": "greeks-crimea-olbia",
   "level": "B2",
   "plan_version": "1.0",
-  "last_audit": "2026-02-21T22:28:13.031272Z",
+  "last_audit": "2026-02-24T11:15:06.412756Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-21T21:57:21.817905Z",
     "meta": "2026-02-19T11:52:10.740117Z",
     "activities": "2026-02-21T21:57:21.819549Z",
-    "vocabulary": "2026-02-18T16:38:10.944302Z",
+    "vocabulary": "2026-02-24T11:15:05.448614Z",
     "plan": "2026-02-18T19:03:35.964408Z",
-    "research": "2026-02-18T00:18:36.990745Z"
+    "research": "2026-02-22T10:35:24.496900Z"
   },
   "gates": {
     "meta": {
@@ -24,14 +24,14 @@
       "message": "5182/5000 (raw: 5424)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "5/3"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "deferred",
       "violations": 0,
-      "message": "14 < 20 (soft target)"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "pass",
@@ -46,19 +46,19 @@
     "research": {
       "status": "warn",
       "violations": 0,
-      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
+      "message": "Refresh recommended: Content predates research (research file is newer)"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 4,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

@@ -1,32 +1,32 @@
 # Дослідження: Активні дієприкметники та їхній стиль
 
 ## State Standard Reference
-§4.2.3.1: "Дійсний спосіб: ... дієвідмінювання дієслів ... дієприкметник (participles)" (Lines 2269-2291)
-§4.4.2: "Просте ускладнене речення: ... просте речення з дієприкметниковим зворотом" (Lines 2367-2378)
-Alignment: This module directly addresses the morphology of participles and their syntactic role in complex simple sentences, specifically focusing on the B1 requirement to distinguish between normative usage and stylistic errors (cancelyarit).
+§4.2.3.1: "дієвідмінювання дієслів у теперішньому часі: ... дієприкметник, дієприслівник" та §4.4.2: "просте речення з дієприкметниковим зворотом: Три години тому ми повернулися з екскурсії, організованої для учасників конференції;".
+Alignment: The module addresses the morphological formation of active participles (дієприкметники) and their syntactical role within complex simple sentences (дієприкметниковий зворот), ensuring compliance with B1 linguistic competence targets.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **працюючий** | Low (as participle) / High (as error) | *працюючий пенсіонер* (better: *пенсіонер, який працює*), *працюючий телефон* (better: *справний телефон*) |
-| **палаючий** | Medium (Poetic/Literary) | *палаючі очі*, *палаючий будинок* (normative in literary style) |
-| **родючий** | High (Adjectivized) | *родюча земля*, *родючий ґрунт* (fully normative adjective) |
-| **канцелярит** | Medium (Meta-topic) | *уникати канцеляриту*, *ознаки канцеляриту*, *боротьба з канцеляритом* |
-| **завідуючий** | Low (Deprecated) | *завідуючий кафедрою* (incorrect) -> *завідувач кафедри* (correct) |
+| родючий | High (adjectivized) | родюча земля, родючий ґрунт |
+| працюючий | High as error, Low as normative | працюючий пенсіонер (incorrect) → пенсіонер, який працює |
+| завідуючий | Low (deprecated) | завідуючий кафедрою (incorrect) → завідувач кафедри |
+| охочий | Medium (normative) | охочі допомогти (normative replacement for бажаючі) |
+| довкілля | High (natural) | захист довкілля (replacement for оточуюче середовище) |
 
 ## Cultural Hooks
-1. **The "Anti-Cancelyarit" Movement**: Modern Ukrainian linguistic culture actively rejects Soviet-era bureaucratic language. Using forms like *бажаючі* instead of *охочі* marks a speaker as "sovietized" or influenced by Russian syntax.
-2. **Folk Wisdom**: "Не бійся гостя сидячого, а бійся стоячого" — a proverb using active participles (*сидячий*, *стоячий*) which have become lexicalized adjectives. This shows the historical roots of these forms vs. their modern artificial use.
+1. Рух «Антиканцелярит»: A crucial decolonization and linguistic purity movement aimed at purging the Ukrainian language of Soviet-era bureaucratic Newspeak (канцелярит) and direct syntactical calques from Russian, particularly the unnatural overuse of active present participles (-учий/-ючий).
+2. Протиставлення у фольклорі: Прислів'я «Не бійся гостя сидячого, а бійся стоячого» demonstrates how specific historic active present participles naturally lexicalized into regular adjectives over centuries of use, contrasting with artificially imported bureaucratic forms.
 
 ## Common Learner Errors
-1. **The "Russian Calque" (-учий/-ючий)**: *Я бачу йдучого чоловіка* → *Я бачу чоловіка, який йде*. (Reason: Direct translation from English "-ing" or Russian "-ущий").
-2. **Professional Titles**: *Командуючий армією* → *Командувач армії*. (Reason: Confusion between participle and agent noun).
-3. **Passive Meaning Confusion**: *Оточуюче середовище* → *Довкілля* or *Навколишнє середовище*. (Reason: Using a participle where a specific noun or adjective exists).
+1. Calquing English "-ing" or Russian "-ущий/-ющий" → Using active present participles (працюючий інженер) instead of natural relative clauses (інженер, який працює).
+2. Agent Noun vs. Participle Confusion → Using participles for professions/roles (Командуючий, завідуючий) instead of normative Ukrainian agent nouns ending in -ач/-ник (Командувач, завідувач).
+3. Agreement Failure → Treating the participle as an invariable gerund rather than a verbal adjective, failing to match gender/number/case with the modified noun (*палаючий очі* instead of *палаючі очі*).
 
 ## Cross-References
-- Builds on: **b1-43** (Adverbial Participles Perfective) — contrasts adjectival vs. adverbial verbal forms.
-- Prepares for: **b1-45** (Past Passive Participles 1) — the passive counterpart, which is much more common and normative in Ukrainian.
+- Builds on: b1-43 (Adverbial Participles Perfective)
+- Prepares for: b1-45 (Past Passive Participles 1)
 
 ## Notes for Content Writing
-- **Stylistic Hard Line**: Be very strict about *active present participles*. Teach them primarily as forms to *recognize and avoid*, replacing them with "той, хто..." clauses or specific adjectives.
-- **Exceptions List**: Clearly list the "adjectivized" exceptions (співучий, квітучий, родючий) that are safe to use.
+- Persona ("The Poet"): Maintain a tone of protecting the natural, living flow of the language from artificial bureaucratic stiffness.
+- Decolonized Framing: Frame the avoidance of "-учий/-ючий" not as "unlike Russian," but as a celebration of Ukrainian's preference for dynamic verbs and clear relative clauses.
+- Ensure 100% immersion. Use zero English in the prose; use Mermaid flowcharts or clear tables to demonstrate the transformation from a bureaucratic participle into a natural relative clause.

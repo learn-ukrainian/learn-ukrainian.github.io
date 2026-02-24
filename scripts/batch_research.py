@@ -260,19 +260,18 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
     files["research"].parent.mkdir(parents=True, exist_ok=True)
 
     task_id = f"batch-research-{level}-{num:02d}"
-    msg = f"{prompt}"
 
     try:
         result = subprocess.run(
             [
                 sys.executable, str(REPO / "scripts/ai_agent_bridge.py"),
-                "ask-gemini", msg,
+                "ask-gemini", "-",
                 "--task-id", task_id,
                 "--output-path", output_path,
                 "--model", model,
             ],
-            capture_output=True, text=True, timeout=600,
-            cwd=str(REPO),
+            capture_output=True, text=True, input=prompt,
+            timeout=600, cwd=str(REPO),
         )
 
         if result.returncode != 0:

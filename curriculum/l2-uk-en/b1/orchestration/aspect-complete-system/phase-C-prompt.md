@@ -48,6 +48,18 @@ schemas/activities-b1.schema.json
 docs/ACTIVITY-YAML-REFERENCE.md
 ```
 
+## Downstream Audit Gates (your activities will be checked for)
+
+These are the top failure causes from previous rebuilds — write with them in mind:
+- **Schema violations**: `additionalProperties: false` means ANY unlisted field = instant fail. Read `schemas/activities-b1.schema.json` before writing.
+- **Item counts**: `true-false` often requires 12 items, `quiz` requires 8+. Check `minItems` in schema.
+- **Forbidden fields**: `id` only on `reading` type (seminar tracks). `tasks` forbidden in `reading` — use `instruction`.
+- **Russian characters**: ы, э, ё, ъ in any activity text = hard fail
+- **Ukrainian quotes**: do NOT use «» in YAML values — they break parsing with colons
+- **IPA in YAML**: NEVER include IPA symbols in YAML — pronunciation goes in markdown content only
+
+---
+
 ## Your Task
 
 Generate two YAML blocks: activities and vocabulary.
@@ -70,6 +82,29 @@ Generate two YAML blocks: activities and vocabulary.
 **FORBIDDEN types (audit will auto-FAIL if you use these):** anagram, essay-response, critical-analysis, comparative-study, authorial-intent
 
 Using a forbidden type wastes the entire activity generation phase. Check the allowed list BEFORE writing each activity.
+
+### Correct Quiz Schema (REFERENCE — read this FIRST)
+
+**This is the EXACT correct quiz structure. Anchor to this pattern before reading mistakes below.**
+
+```yaml
+- type: quiz
+  title: "Перевірте знання"
+  items:  # minItems: 8, question ≥5 words
+    - question: "Яка частина мови позначає дію або стан предмета?"  # ≥5 words!
+      explanation: "Дієслово позначає дію або стан."  # HERE at question level
+      options:  # exactly 4
+        - text: "дієслово"
+          correct: true
+        - text: "іменник"
+          correct: false
+        - text: "прикметник"
+          correct: false
+        - text: "прислівник"
+          correct: false
+```
+
+**Key rules**: `explanation` at QUESTION level (not inside options), `question` ≥5 words, exactly 4 options, exactly 1 `correct: true`.
 
 ### Common Schema Mistakes (FIX BEFORE OUTPUT)
 
@@ -94,7 +129,7 @@ options:
 
 3. **No extra fields** — The schema uses `additionalProperties: false`. ANY field not in the schema causes instant failure. Common mistakes: adding `id` to non-reading activities, adding `hint` where not allowed, adding `explanation` inside option objects.
 
-4. **Vocabulary YAML structure** — Use object with `items:` array wrapper. Each entry uses `lemma` (NOT `term`), `translation`, `pos`. Optional: `gender` (m/f/n for nouns), `aspect` (for verbs), `notes`, `usage`, `example`. Do NOT use bare list for vocabulary. Do NOT include `ipa` — IPA breaks YAML.
+4. **Vocabulary YAML structure** — Use object with `items:` array wrapper. Each entry uses `lemma` (NOT `term`), `translation`, `pos`. Optional: `gender` (m/f/n for nouns), `aspect` (for verbs), `notes`, `usage`, `example`. Do NOT use bare list for vocabulary. Do NOT include `ipa` — IPA is generated deterministically by the pipeline after Phase C.
 
 ### Activity Quality Standards (MANDATORY)
 
@@ -172,7 +207,7 @@ IPA symbols (`[ʒ]`, `[ˈʃkɔ.lɑ]`) belong in markdown content only. YAML expl
 2. **Follow plan's vocabulary_hints** — include all required items, optionally include recommended
 3. **Each entry needs**: `lemma` (NOT `term`), `translation`, `pos` (part of speech)
 4. **Optional fields**: `gender` (for nouns: m/f/n), `aspect` (for verbs), `notes`, `usage`, `example`
-5. **NO IPA in YAML** — IPA symbols (ˈ, ʃ, ʒ, t͡s, etc.) break YAML. Pronunciation goes in the markdown content ONLY. Do NOT include an `ipa` field.
+5. **NO IPA in YAML** — Do NOT include an `ipa` field. IPA is generated deterministically by the pipeline after Phase C (via the IPA generator script). If you include IPA, it will be overwritten.
 6. **Count target**: 30 items
 
 ## Output Format
@@ -302,24 +337,9 @@ Return TWO YAML blocks with clear delimiters:
           correct: false
 ```
 
-#### quiz (reminder — explanation goes at QUESTION level)
+#### quiz
 
-```yaml
-- type: quiz
-  title: "Перевірте знання"
-  items:  # minItems: 8, question ≥5 words
-    - question: "Яка частина мови позначає дію або стан предмета?"  # ≥5 words!
-      explanation: "Дієслово позначає дію або стан."  # HERE at question level
-      options:  # exactly 4
-        - text: "дієслово"
-          correct: true
-        - text: "іменник"
-          correct: false
-        - text: "прикметник"
-          correct: false
-        - text: "прислівник"
-          correct: false
-```
+See **"Correct Quiz Schema"** section above for the full reference pattern.
 
 ❌ WRONG: `explanation` inside an option object — it goes at the question level
 

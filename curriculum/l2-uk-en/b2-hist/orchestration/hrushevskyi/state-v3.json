@@ -8,6 +8,10 @@
       "ts": "2026-02-19T16:38:18Z",
       "task_id": "v3-hrushevskyi-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T10:14:35Z"
     }
   }
 }

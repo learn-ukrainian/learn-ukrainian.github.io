@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "at-the-pharmacy",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T23:13:43Z",
+      "task_id": "v3-at-the-pharmacy-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T23:15:46Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T23:18:31Z",
+      "task_id": "v3-at-the-pharmacy-pC"
+    }
+  }
+}

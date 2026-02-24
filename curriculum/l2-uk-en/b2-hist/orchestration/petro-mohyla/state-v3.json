@@ -8,6 +8,10 @@
       "ts": "2026-02-19T15:01:24Z",
       "task_id": "v3-petro-mohyla-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T10:14:30Z"
     }
   }
 }

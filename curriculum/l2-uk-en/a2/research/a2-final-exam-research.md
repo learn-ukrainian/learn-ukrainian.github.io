@@ -1,34 +1,31 @@
 # Дослідження: A2 Final Exam
 
 ## State Standard Reference
-§3.7: "Навчання: ... дії, пов’язані зі здобуттям знань (вчити, вивчати, вчитися); навчальні дисципліни."
-Alignment: This module serves as the capstone assessment ("Final Exam") for the A2 level, directly testing the communicative competence in the domain of learning and demonstrating mastery of the knowledge acquired throughout the course.
+§3.7: "Навчання: дії, пов’язані зі здобуттям знань (вчити, вивчати, вчитися)"
+Alignment: This module serves as the final practical assessment of A2 skills, focusing heavily on the "learning" domain, testing verbs related to studying and taking exams, alongside comprehensive case and aspect review.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **іспит** (exam) | High (Academic/General) | скласти іспит (pass), провалити іспит (fail), готуватися до іспиту (prepare for) |
-| **результат** (result) | High (General) | гарний результат, отримати результат, чекати на результат |
-| **відповідь** (answer) | High (General) | правильна відповідь, дати відповідь, шукати відповідь |
-| **оцінка** (grade) | Medium (Education) | висока оцінка, отримати оцінку, система оцінювання |
-| **рівень** (level) | High (General) | рівень знань, підвищити рівень, досягти рівня |
+| іспит | High (General/Academic) | скласти іспит (pass), провалити іспит (fail), готуватися до іспиту (prepare) |
+| результат | High (General) | гарний результат, отримати результат |
+| оцінка | Medium (Education) | висока оцінка, отримати оцінку |
+| завдання | High (General) | тестове завдання, виконати завдання |
 
 ## Cultural Hooks
-1. **"Скласти" vs "Здати"**: In proper Ukrainian, one "composes" (складає) an exam, implying an intellectual effort. The phrase "здати екзамен" (literally "hand over" an exam) is a common Russism (calque from "сдать экзамен"). Teaching the correct collocation "скласти іспит" is a badge of educated speech.
-2. **The 12-Point System**: Unlike the 5-point Soviet system (which many foreigners might expect), Ukrainian schools use a 12-point scale. A "12" is the equivalent of an A+, while a "10" is a solid A. Universities often use a 100-point scale (ECTS).
-3. **ZNO (ЗНО)**: The "External Independent Evaluation" (Зовнішнє незалежне оцінювання) is the hallmark of the modern Ukrainian education system, known for fighting corruption in admissions. Even A2 learners will hear about "ЗНО" (or currently "НМТ" due to the war).
+1. **Grading Systems:** Ukraine uses a modern 12-point grading system in schools (where 12 is excellent/A+), replacing the old Soviet 5-point scale. Universities use the 100-point ECTS scale.
+2. **ZNO/NMT:** The Зовнішнє незалежне оцінювання (ZNO) or Національний мультипредметний тест (NMT) are standardized tests essential for university admission in Ukraine, designed to ensure fairness and fight corruption.
 
 ## Common Learner Errors
-1. **Wrong Verb for "Pass"**: Using "здати іспит" instead of "скласти іспит".
-   *   *Correction*: "Я успішно склав іспит." (I successfully passed the exam.)
-2. **Aspect Confusion**: Using imperfective for completed results. "Я складав іспит вчора" (I was taking it) vs "Я склав іспит" (I passed it). Learners often default to the imperfective if they aren't sure.
-   *   *Fix*: Explicitly contrast process (процес) vs result (результат).
-3. **Case Government with "Відповідь"**: Learners often say "відповідь на питання" (answer to the question) correctly, but struggle with "відповідати на питання" (verb + Accusative) vs "відповідати студенту" (verb + Dative).
+1. **Aspect default:** Defaulting to the imperfective «Я складав іспит» (I was taking the exam) when trying to say "I passed the exam", which requires the perfective «Я склав іспит».
+2. **Prepositional confusion:** Using «відповідати на питання» (to answer a question - Accusative) interchangeably with «відповідати викладачу» (to answer the teacher - Dative).
+3. **The "Hand over" Russism:** Using the Russian-influenced «здавати іспит» instead of the correct Ukrainian «складати/скласти іспит».
 
 ## Cross-References
-- Builds on: `a2-69` (previous module), `a2-56` (Grammar Checkpoint).
-- Prepares for: `b1-01` (How to Talk About Grammar) - providing the vocabulary foundation (noun, verb, case names) needed for B1's metalanguage approach.
+- Builds on: a2-70, a2-69, a2-56
+- Prepares for: b1-01
 
 ## Notes for Content Writing
-- **Format**: Use the "Exam" theme to frame the exercises. "Task 1", "Task 2" instead of just "Exercise".
-- **Integration**: The "Navigation in the city" skill (Section 3) can be framed as "Finding your way to the exam center" to integrate it naturally with the exam theme.
+- Decolonized framing: Treat «скласти іспит» vs «здавати іспит» not just as a grammar rule but as a marker of educated, modern Ukrainian speech that rejects linguistic Russification.
+- Remember the immersion band for A2.71 is 75-90% Ukrainian. English should be used minimally, perhaps only for complex instructions or specific contrastive explanations.
+- Ensure all case terminology (називний, знахідний, давальний, etc.) is used in Ukrainian.

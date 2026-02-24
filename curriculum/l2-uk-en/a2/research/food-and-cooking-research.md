@@ -1,43 +1,34 @@
 # Дослідження: Food and Cooking
 
 ## State Standard Reference
-**§3.10 Їжа і напої**: "страви; напої; посуд і столові прибори; заклади харчування; способи приготування їжі."
-**§4.2.2.5 Орудний відмінок**: "знаряддя і засіб дії: Студент пише новою ручкою... із прийменниками: з, із, зі (ознака предмета): Люблю чай із лимоном."
-**§4.2.3.2 Наказовий спосіб**: "Форми 2-ї і 3-ї особи однини і множини... мрій, мрійте..." (Targeting 2nd person for recipes: наріж, додай).
-
-Alignment: The module directly addresses §3.10 by teaching cooking methods (*способи приготування*) and tools (*посуд*). It fulfills the A2 requirement for Instrumental case in its "instrument/tool" function (§4.2.2.5) and Imperative mood for instructions (§4.2.3.2).
+§4.2.2.5.1: "Орудний відмінок: Без прийменника: знаряддя і засіб дії: Студент пише новою ручкою. Діти люблять малювати олівцями."
+§4.2.3.2: "Наказовий спосіб. Форми 2-ї і 3-ї особи однини і множини наказового способу деяких дієслів: ... казати (кажи, кажіть), пити (пий, пийте)."
+§3.10: "Їжа і напої: страви; напої; посуд і столові прибори; заклади харчування; способи приготування їжі."
+Alignment: The module teaches cooking methods and kitchen vocabulary (§3.10) applied through the Instrumental case for tools (§4.2.2.5) and the Imperative mood for recipes (§4.2.3.2).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **варити** | High / Core Verb | варити борщ, варити суп, варити картоплю, варити каву |
-| **смажити** | High / Core Verb | смажити м'ясо, смажити рибу, смажити яйця, смажити картоплю |
-| **пекти** | Med-High / Core Verb | пекти пиріг, пекти хліб, пекти торт, пекти печиво |
-| **різати** | High / Core Verb | різати ножем, різати хліб, різати овочі, дрібно різати |
-| **каструля** | High / Household | велика каструля, у каструлі |
-| **сковорода** | High / Household | на сковороді, розігріта сковорода |
-| **духовка** | Med / Household | у духовці, гаряча духовка |
+| варити | High (Core verb) | варити борщ, варити каву, варити суп |
+| смажити | High | смажити м'ясо, смажити картоплю |
+| пекти | Medium-High | пекти хліб, пекти пиріг |
+| різати | High | різати ножем, дрібно різати, різати овочі |
+| каструля | High (Household) | велика каструля, у каструлі |
+| сковорода | High (Household) | на сковороді, розігріта сковорода |
 
 ## Cultural Hooks
-1.  **"Чим хата багата, тим і рада"** (What the house is rich in, it is glad to offer): The core principle of Ukrainian hospitality. Guests are offered everything available, often starting with bread and salt (хліб-сіль).
-2.  **Borshch Culture**: Listed as UNESCO Intangible Cultural Heritage. It's not just a soup but a process involving specific steps (зажарка) and ingredients (beets, cabbage). Every family has a unique recipe.
-3.  **Varenyky Versatility**: Can be a main dish (potato, cabbage, meat) or dessert (cherries, cottage cheese), illustrating the sweet/salty (*солодкий/солоний*) contrast perfectly.
+1. On July 1, 2022, UNESCO inscribed the culture of Ukrainian borshch cooking on the List of Intangible Cultural Heritage in Need of Urgent Safeguarding. The fast-tracked decision highlighted borshch as a fundamental marker of Ukrainian cultural identity and resilience.
+2. The technique of making "зажарка" (sautéing beets, carrots, and onions separately before adding them to the broth) is the defining culinary step that gives authentic borshch its deep color and rich flavor profile.
 
 ## Common Learner Errors
-1.  **Instrumental with Preposition**: Using *з* for tools.
-    *   *Error*: Я ріжу з ножем.
-    *   *Correct*: Я ріжу **ножем**.
-    *   *Reason*: L1 interference (English "with a knife"). "With" as accompaniment uses *з* (кава з молоком), but "with" as instrument uses pure Instrumental case.
-2.  **Case Endings Confusion**: Mixing up gender endings in Instrumental.
-    *   *Error*: ложком (masc. ending for fem. noun).
-    *   *Correct*: **ложкою**.
-3.  **Cooking Verbs Nuance**: Confusing *варити* (boil/cook liquid) with general *готувати* (prepare food).
-    *   *Context*: You don't "варити" a sandwich or salad; you "готувати" or "робити" them.
+1. Tool vs. Accompaniment confusion: Learners often literally translate "with a knife" as *різати з ножем. → Correct form: різати ножем (Instrumental case WITHOUT preposition for tools).
+2. Overgeneralizing `варити`: Using `варити` (to boil in liquid) for generic preparation (e.g., *я варю бутерброд). → Correct form: готувати (for general preparation).
 
 ## Cross-References
-- **Builds on**: `a1-18` (Food and Shopping - basic food items), `a2-44` (Word Formation - helps with understanding derived cooking terms).
-- **Prepares for**: `a2-46` (Home and Furniture - expanding on household items), B1 modules on recipes and traditions.
+- Builds on: a2-44 (Checkpoint Word Formation), a1-18 (Food and Shopping)
+- Prepares for: a2-46 (Home and Furniture)
 
 ## Notes for Content Writing
-- **Grammar Scaffolding**: Ensure the distinction between "Instrumental for tools" (NO preposition) and "Instrumental for ingredients" (WITH preposition *з*) is explicitly taught to prevent the common error.
-- **Visuals**: Use a clear table comparing `називний` vs `орудний` for the 3 genders (ніж -> ножем, ложка -> ложкою, масло -> маслом).
+- Immersion Band 2 (60-75%): Use Ukrainian for most of the cultural narrative and dialogues. Use English ONLY for the abstract grammar distinction between tool and accompaniment.
+- Decolonized framing: Explicitly celebrate borshch as an indigenous Ukrainian cultural practice, utilizing the UNESCO heritage fact. Avoid framing any traditional dishes through a Soviet or Russian lens.
+- Ensure the 3000-word target is met by expanding the cultural explanation of varenyky and borshch rituals, and by providing extensive conversational examples.

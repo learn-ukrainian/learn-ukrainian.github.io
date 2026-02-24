@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "rental-accommodation",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T23:27:40Z",
+      "task_id": "v3-rental-accommodation-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T23:30:26Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T23:33:08Z",
+      "task_id": "v3-rental-accommodation-pC"
+    }
+  }
+}

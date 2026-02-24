@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "nature-and-weather",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T21:22:31Z",
+      "task_id": "v3-nature-and-weather-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T21:25:12Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T21:28:38Z",
+      "task_id": "v3-nature-and-weather-pC"
+    }
+  }
+}

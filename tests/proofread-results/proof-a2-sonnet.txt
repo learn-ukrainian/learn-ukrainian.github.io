@@ -1,0 +1,157 @@
+Proofread: a2 | 1 module(s) | agent=claude | model=claude-sonnet-4-6
+Mode: DRY-RUN (print findings only)
+
+============================================================
+Proofreading: a2/the-instrumental-ii-means-and-tools (module 5)
+  Agent: claude | Model: claude-sonnet-4-6
+  Content: 25778 chars, 3883 words
+
+--- LLM OUTPUT ---
+===PROOFREAD_START===
+issues:
+  - type: LLM_FILLER
+    severity: LOW
+    location: "Чому це важливо?"
+    text: |
+      It removes the clunky, translated feel of using unnecessary prepositions and connects you directly to the logic of the native speaker's mind.
+    fix: |
+      Once you internalize it, your Ukrainian sounds natural and uncluttered — the word's ending does the work that English needs extra words to do.
+
+  - type: LANGUAGE_BLENDER
+    severity: HIGH
+    location: "Вступ: Без прийменника «з» / Що таке знаряддя і засіб дії?"
+    text: |
+      Notice how in every Ukrainian example, the tool (ручкою, олівцями, ключем) stands alone immediately after the verb. The grammatical relationship is internal to the word.
+    fix: |
+      Зверніть увагу: у кожному прикладі назва інструмента (ручкою, олівцями, ключем) стоїть одразу після дієслова без жодного прийменника. Граматичний зв'язок закодований у самому закінченні слова.
+
+  - type: LLM_FILLER
+    severity: HIGH
+    location: "Транспорт і рух / Українська залізниця: Нічний поїзд"
+    text: |
+      To truly understand Ukrainian travel habits and the language that surrounds them, you must understand the deep cultural significance of the national railway network («Укрзалізниця»). For decades, the primary, most reliable, and most romanticized method of traversing the vast geographic distances of Ukraine has been the **нічний поїзд** (night train).
+    fix: |
+      Ukraine is a large country, and the national railway («Укрзалізниця») is how most people cross it. The **нічний поїзд** (night train) has been the standard long-distance option for generations — affordable, reliable, and deeply embedded in everyday Ukrainian life.
+
+  - type: LLM_FILLER
+    severity: LOW
+    location: "Транспорт і рух / Діалог на вокзалі: Як ви подорожуєте?"
+    text: |
+      Let's analyze how native speakers naturally use these varied transportation forms in a realistic, everyday conversation. Imagine you are meeting a good friend at the bustling central railway station in Kyiv. Pay close attention to how the triggering question **Чим?** immediately prompts the prepositionless Instrumental case in the responses.
+    fix: |
+      Read the conversation below and notice how every answer to **Чим?** uses the Instrumental case with no preposition. The setting: two friends meet at Kyiv Central Station.
+
+  - type: LLM_FILLER
+    severity: HIGH
+    location: "Інструменти та знаряддя / М'яка група: Особлива увага до «олівець»"
+    text: |
+      This phonetic distinction is absolutely critical for the highly frequent word **олівець** (pencil). In the Ukrainian phonetic system, the letter **ц** functions as a soft/mixed consonant within this specific declension paradigm. Therefore, masculine nouns ending in **-ц** absolutely do not take the standard, default hard ending **-ом**. Instead, they must take the soft/mixed ending **-ем**. A very common and immediately noticeable learner error is trying to say *олівецом*. You must actively train your tongue and muscle memory to produce **олівцем**.
+    fix: |
+      The key word here is **олівець** (pencil). The letter **ц** is a mixed consonant, so this noun takes **-ем** rather than the standard hard **-ом**. The word also drops its fleeting vowel: **олівець → олівц- → олівцем**. Saying *олівецом* is a very common learner error — keep practicing until **олівцем** comes automatically.
+
+  - type: LLM_FILLER
+    severity: HIGH
+    location: "Інструменти та знаряддя / Кухонне приладдя та їжа в дорозі"
+    text: |
+      Let us return conceptually to our rich cultural context of traveling on the Ukrainian railway. When you embark on a long journey on a classic night train, sharing your food with your compartment neighbors is a deeply ingrained, almost mandatory social expectation. Travelers meticulously prepare and bring roasted chicken, hard-boiled eggs, fresh seasonal vegetables, and dark bread.
+    fix: |
+      On a long overnight train journey, sharing food from home is a time-honoured Ukrainian custom. Travelers pack roasted chicken, boiled eggs, fresh vegetables, and dark bread — and eating together means reaching for utensils.
+
+  - type: LLM_FILLER
+    severity: HIGH
+    location: "Інструменти та знаряддя / Творчість та мистецтво"
+    text: |
+      This specific category introduces some vital new vocabulary, notably including nouns that uniquely only exist in the plural form (known grammatically as pluralia tantum), such as the word for scissors. Plural nouns uniformly take the standardized endings **-ами** or **-ями** in the Instrumental case, regardless of their theoretical gender.
+    fix: |
+      This section introduces **ножиці** (scissors) — a noun used only in the plural. All plural nouns in the Instrumental case take **-ами** or **-ями**: **ножицями**, **руками**, **очима**. The same rule applies regardless of grammatical gender.
+
+  - type: LLM_FILLER
+    severity: HIGH
+    location: "Питання та відповіді / Різниця між «Як?» та «Чим?»"
+    text: |
+      As you naturally progress to building significantly more complex sentences in Ukrainian, it becomes absolutely crucial to clearly understand which specific questions trigger which underlying grammatical structures. When describing an action to someone else, you might want to explain the qualitative *manner* in which it was done, or alternatively, the physical *tool* used to accomplish it. These require entirely different grammar.
+    fix: |
+      When describing an action, Ukrainian distinguishes sharply between *how* it was done and *what tool was used*. These two questions trigger completely different grammar.
+
+  - type: LLM_FILLER
+    severity: HIGH
+    location: "Питання та відповіді / Частини тіла як інструменти"
+    text: |
+      One of the most poetic, structurally fascinating, and distinctly native-sounding uses of the Instrumental case of means occurs when we apply it directly to our own physical bodies. In the deep logic of Ukrainian grammar, body parts that are actively used to perceive the outside world or to perform basic physical actions are treated conceptually exactly as tools.
+    fix: |
+      Ukrainian also applies the Instrumental case to body parts used for perception or action. When you look, listen, or point, grammar treats your eyes, ears, and hands as instruments — because functionally, they are.
+
+  - type: LLM_FILLER
+    severity: HIGH
+    location: "Питання та відповіді / Важливі дієслова: Користуватися та Дістатися"
+    text: |
+      While many standard action verbs *can* theoretically take an Instrumental object if a physical tool is incidentally involved in the scenario (like the verbs *писати* or *їсти*), certain highly frequent, core vocabulary verbs strictly and uncompromisingly *demand* the Instrumental case to complete their basic semantic meaning. Memorizing these specific verb collocations early on is a massive, highly effective shortcut to achieving natural fluency.
+    fix: |
+      Some verbs always require the Instrumental case — not as an optional add-on but as their fixed grammatical partner. Two of the most common are **користуватися** (to use) and **дістатися** (to get to / to reach).
+
+  - type: LLM_FILLER
+    severity: LOW
+    location: "Практика та підсумок / Ваш звичайний день"
+    text: |
+      This conceptually simple, everyday story perfectly demonstrates just how foundational and ubiquitous the prepositionless Instrumental case is for accurately describing daily Ukrainian reality.
+    fix: DELETE
+
+  - type: WORD_SALAD
+    severity: HIGH
+    location: "Практика та підсумок / Погляд у майбутнє"
+    text: |
+      Ви вже успішно опанували найбільш практичне та буквальне використання Instrumental case. Тепер ви знаєте, як говорити про фізичні інструменти. Також ви знаєте, як говорити про транспорт. Але його велика граматична сила виходить далеко за межі цих простих прикладів.
+
+      У наступному модулі (a2-06) ми значно розширимо цю концепцію. Ми будемо досліджувати, як Instrumental case використовується для визначення того, *ким* ми є та *ким* ми стаємо. Зокрема, ми зосередимося на професіях та тимчасових станах. Ви часто говорите про свою роботу. Ви говорите, ким ви хочете бути. Тут ви знову будете використовувати цей відмінок.
+
+      Після цього абстрактного кроку, у модулі a2-07, ми дізнаємося, як багатогранний Instrumental case активно взаємодіє з новим набором просторових прийменників. Ви навчитеся дуже точно описувати об'єкти. Вони розташовані «під», «над» та «за» іншими об'єктами. Це дозволить вам вільно говорити про простір. Ви зможете описувати речі у кімнаті або на вулиці.
+    fix: |
+      Ви опанували найпрактичніше застосування орудного відмінка: фізичні інструменти та транспорт. Але його граматична сила виходить далеко за межі цих прикладів.
+
+      У модулі a2-06 ви дізнаєтеся, як орудний відмінок описує *ким* ми є або *ким* стаємо — тобто професії та тимчасові стани («Він був учителем», «Вона стала лікарем»). У модулі a2-07 він повернеться знову: цього разу з просторовими прийменниками «під», «над», «за», щоб точно описувати розташування предметів у просторі.
+===PROOFREAD_END===
+--- END OUTPUT ---
+
+  FOUND: 12 issues (9 HIGH, 3 LOW)
+     [LOW] LLM_FILLER @ Чому це важливо?
+       Text: It removes the clunky, translated feel of using unnecessary prepositions and con...
+       Fix:  Once you internalize it, your Ukrainian sounds natural and uncluttered — the wor...
+  !! [HIGH] LANGUAGE_BLENDER @ Вступ: Без прийменника «з» / Що таке знаряддя і засіб дії?
+       Text: Notice how in every Ukrainian example, the tool (ручкою, олівцями, ключем) stand...
+       Fix:  Зверніть увагу: у кожному прикладі назва інструмента (ручкою, олівцями, ключем) ...
+  !! [HIGH] LLM_FILLER @ Транспорт і рух / Українська залізниця: Нічний поїзд
+       Text: To truly understand Ukrainian travel habits and the language that surrounds them...
+       Fix:  Ukraine is a large country, and the national railway («Укрзалізниця») is how mos...
+     [LOW] LLM_FILLER @ Транспорт і рух / Діалог на вокзалі: Як ви подорожуєте?
+       Text: Let's analyze how native speakers naturally use these varied transportation form...
+       Fix:  Read the conversation below and notice how every answer to **Чим?** uses the Ins...
+  !! [HIGH] LLM_FILLER @ Інструменти та знаряддя / М'яка група: Особлива увага до «олівець»
+       Text: This phonetic distinction is absolutely critical for the highly frequent word **...
+       Fix:  The key word here is **олівець** (pencil). The letter **ц** is a mixed consonant...
+  !! [HIGH] LLM_FILLER @ Інструменти та знаряддя / Кухонне приладдя та їжа в дорозі
+       Text: Let us return conceptually to our rich cultural context of traveling on the Ukra...
+       Fix:  On a long overnight train journey, sharing food from home is a time-honoured Ukr...
+  !! [HIGH] LLM_FILLER @ Інструменти та знаряддя / Творчість та мистецтво
+       Text: This specific category introduces some vital new vocabulary, notably including n...
+       Fix:  This section introduces **ножиці** (scissors) — a noun used only in the plural. ...
+  !! [HIGH] LLM_FILLER @ Питання та відповіді / Різниця між «Як?» та «Чим?»
+       Text: As you naturally progress to building significantly more complex sentences in Uk...
+       Fix:  When describing an action, Ukrainian distinguishes sharply between *how* it was ...
+  !! [HIGH] LLM_FILLER @ Питання та відповіді / Частини тіла як інструменти
+       Text: One of the most poetic, structurally fascinating, and distinctly native-sounding...
+       Fix:  Ukrainian also applies the Instrumental case to body parts used for perception o...
+  !! [HIGH] LLM_FILLER @ Питання та відповіді / Важливі дієслова: Користуватися та Дістатися
+       Text: While many standard action verbs *can* theoretically take an Instrumental object...
+       Fix:  Some verbs always require the Instrumental case — not as an optional add-on but ...
+     [LOW] LLM_FILLER @ Практика та підсумок / Ваш звичайний день
+       Text: This conceptually simple, everyday story perfectly demonstrates just how foundat...
+       Fix:  DELETE...
+  !! [HIGH] WORD_SALAD @ Практика та підсумок / Погляд у майбутнє
+       Text: Ви вже успішно опанували найбільш практичне та буквальне використання Instrument...
+       Fix:  Ви опанували найпрактичніше застосування орудного відмінка: фізичні інструменти ...
+
+============================================================
+SUMMARY: 1 modules scanned
+  Modules with issues: 1
+  Total issues: 12
+  HIGH: 9 | LOW: 3

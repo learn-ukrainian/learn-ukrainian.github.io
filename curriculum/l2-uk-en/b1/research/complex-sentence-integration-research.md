@@ -1,43 +1,33 @@
 # Дослідження: Інтеграція складних речень
 
 ## State Standard Reference
-§4.4.3: "Складне речення: складносурядне речення з єднальними відношеннями між його частинами (сполучник і)... з протиставними відношеннями (сполучники а, але)... з приєднувальними відношеннями (сполучник і)... з розділовими відношеннями (сполучники або... або, чи... чи)... складнопідрядне речення зі з’ясувальною підрядною частиною (сполучні слова що, хто, де, куди, звідки)... з підрядною означальною частиною... із часовою підрядною частиною (коли)... з підрядною частиною причини (тому що, бо)... реальної умови (якщо)... мети (щоб)... допустовою (хоч, незважаючи на те що)."
-Alignment: This module directly targets the B1 requirement to master a wide range of complex sentence types (compound and complex) and their conjunctions, moving beyond simple structures to express nuanced relationships like cause, condition, and concession.
+§4.4.3: "Складне речення: складносурядне речення з єднальними, протиставними, приєднувальними, розділовими відношеннями; складнопідрядне речення зі з’ясувальною, означальною, часовою, причини, умови (реальної/ірреальної), мети, допустовою підрядною частиною."
+Alignment: This module comprehensively addresses the B1 requirement to master complex sentence structures, integrating coordination (сурядність) and various types of subordination (підрядність) into cohesive, multi-clause statements.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **а** | High (Top 10 conjunctions) | не ..., а ... (not ..., but ...); а також (and also) |
-| **але** | High (Top 10 conjunctions) | гарний, але дорогий; хотів, але не зміг |
-| **щоб** | High (Essential for purpose) | для того, щоб (in order to); хочу, щоб... (want that...) |
-| **бо** | High (Spoken/Casual) | не прийшов, бо захворів; це важливо, бо... |
-| **тому що** | Medium-High (Neutral/Formal) | тому що це закон; саме тому, що... |
-| **хоча** | Medium | хоча було пізно; хоча він знав |
-| **якщо** | High (Conditionals) | якщо буде час; якщо ти не проти |
+| тому що | High (Formal/Neutral) | сталося тому, що; саме тому, що |
+| бо | High (Colloquial) | не прийшов, бо; плаче, бо |
+| який | Very High | людина, яка; книга, яку; ті, які |
+| щоб | Very High | для того, щоб; сказав, щоб |
+| хоча / хоч | Medium | хоча й; незважаючи на те, хоча |
+| складний | High | складне речення, складний вибір |
 
 ## Cultural Hooks
-1. **The "Rule of Three" in Folk Tales**: Ukrainian *kazkas* (folk tales) often feature a triple repetition structure (three brothers, three trials). This narrative style naturally utilizes complex sentences with sequential and parallel structures (e.g., "First he went..., then he saw..., and finally he conquered...").
-2. **Melodic Syntax**: Ukrainian is often cited as a "singing" language. The rhythm of complex sentences, especially those with balanced clauses connected by *і* or *а*, contributes to this musicality. Writers often use long, flowing sentences to mimic the landscape or the pace of life.
+1. **The "Rule of Three" in Folk Tales (Правило трьох у казках):** Traditional Ukrainian narratives (like "Котигорошко") naturally build suspense and rhythm using multi-component, complex sentences to link sequential actions and conditions, showcasing organic syntax.
+2. **Melodic Syntax (Мелодійний синтаксис):** Ukrainian literature favors flowing, subordinate-heavy sentences to create "співоча мова" (sing-song language). Over-reliance on short, simple sentences (staccato) often marks translated or unnatural text, making complex integration a key marker of B1+ fluency.
 
 ## Common Learner Errors
-1. **Confusion of *і* vs. *а* vs. *але***:
-   *   *Error*: "Він студент, і я викладач" (when contrasting).
-   *   *Correction*: "Він студент, **а** я викладач."
-   *   *Reason*: English "and" covers both addition and mild contrast; Ukrainian distinguishes them strictly.
-2. **Comma Omission**:
-   *   *Error*: "Я знаю що ти робиш."
-   *   *Correction*: "Я знаю**,** що ти робиш."
-   *   *Reason*: Unlike English, Ukrainian strictly requires commas before subordinating conjunctions like *що*, *який*, *коли*.
-3. **Misuse of *що* vs. *який***:
-   *   *Error*: "Книга, що я читаю..." (stylistically poor or incorrect case).
-   *   *Correction*: "Книга, **яку** я читаю..."
-   *   *Reason*: Confusion between the invariant conjunction *що* and the declinable relative pronoun *який*.
+1. **The «і» vs. «а» confusion:** English speakers overuse «і» for "and" where Ukrainian requires «а» to indicate juxtaposition or mild contrast (e.g., "Я працюю, а він відпочиває").
+2. **Invariable "that":** Using the invariable conjunction «що» instead of the declinable relative pronoun «який/яка/яке/які» to modify nouns, leading to grammatical breakdown in subordinate clauses.
+3. **Punctuation blind spots:** Forgetting the mandatory structural comma before subordinate connectors like «що», «який», «щоб», «коли», «якщо», which is strictly enforced in Ukrainian orthography unlike in English.
 
 ## Cross-References
-- **Builds on**: b1-37 (Temporal Clauses) — students already know *коли* structures.
-- **Prepares for**: b1-39 (Reported Statements) — *що* clauses are the foundation for indirect speech.
+- Builds on: b1-37 (Temporal Clauses)
+- Prepares for: b1-39 (Reported Statements)
 
 ## Notes for Content Writing
-- **TTT Approach**: Start with a diagnostic that traps students into using simple sentences where a complex one is better/needed.
-- **Focus on punctuation**: The comma rule is a "hard" rule in Ukrainian (structural), unlike the "breath" rule in English. Make this a key teaching point.
-- **Register**: Distinguish between *бо* (casual) and *тому що* (neutral/formal).
+- **Decolonized Framing:** Do not compare the comma rules to Russian. Present Ukrainian structural punctuation as a logical, inherent feature of the language's rhythmic clarity. Emphasize that mastering «який» instead of defaulting to «що» elevates the speaker from basic to proficient.
+- **Agency Pass:** Ensure example sentences feature Ukrainians doing active, contemporary things (e.g., tech, volunteering, traveling) rather than passive states.
+- **Immersion:** 100% Ukrainian required for B1.3b. No English scaffolding in explanations. Use clear tables and Mermaid flowcharts for connector choices (e.g., cause: formal vs. informal).

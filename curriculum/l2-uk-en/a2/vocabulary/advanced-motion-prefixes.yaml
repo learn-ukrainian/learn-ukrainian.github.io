@@ -1,0 +1,13 @@
+items:
+  - lemma: "перейти"
+    ipa: '[pɛrɛjˈtɪ]'
+    translation: "to cross (perfective)"
+    pos: "verb"
+  - lemma: "знахідний"
+    ipa: '[znɐxʲiˈdnɪj]'
+    translation: "accusative"
+    pos: "adjective"
+  - lemma: "родовий"
+    ipa: '[rodoˈwɪj]'
+    translation: "genitive"
+    pos: "adjective"

@@ -92,12 +92,13 @@ def call_gemini(prompt: str, task_id: str) -> Tuple[str, Dict]:
                 sys.executable,
                 str(PROJECT_ROOT / "scripts" / "ai_agent_bridge.py"),
                 "ask-gemini",
-                prompt,
+                "-",  # read prompt from stdin
                 "--task-id", task_id,
                 "--from-model", "claude-opus-4-5-20251101"  # Track sender model
             ],
             capture_output=True,
             text=True,
+            input=prompt,
             timeout=120,
             cwd=str(PROJECT_ROOT)
         )

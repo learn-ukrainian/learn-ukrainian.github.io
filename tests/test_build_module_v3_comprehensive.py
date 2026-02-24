@@ -46,6 +46,7 @@ from scripts.build_module_v3 import (
     _run_deterministic_fixes,
     _deterministic_fix_mtimes,
     _extract_delimiter,
+    _extract_delimiter_tolerant,
     _inject_metrics_into_prompt,
     MAX_AUDIT_FIX_ITERS_CORE,
     MAX_AUDIT_FIX_ITERS_SEMINAR,
@@ -860,3 +861,95 @@ class TestApplyFindReplaceFixes:
         f.write_text("Content.\n", "utf-8")
         applied = _apply_find_replace_fixes(f, "No fix block here.")
         assert applied == 0
+
+
+# ---------------------------------------------------------------------------
+# _extract_delimiter / _extract_delimiter_tolerant — echo + truncation (#644)
+# ---------------------------------------------------------------------------
+
+START = "===VOCAB_START==="
+END = "===VOCAB_END==="
+
+
+class TestExtractDelimiterEchoTruncation:
+    """Regression tests for Gemini echo + truncation scenarios (#644).
+
+    Gemini often echoes prompt format examples (with both START+END tags),
+    then outputs real content. If real content is truncated before its END tag,
+    the old rfind(end_tag) approach would silently return the short echo.
+    """
+
+    def test_normal_single_block(self):
+        """Single delimited block — basic case."""
+        text = f"{START}\nitems:\n  - lemma: дім\n{END}"
+        assert _extract_delimiter(text, START, END) == "items:\n  - lemma: дім"
+
+    def test_echo_then_real_content(self):
+        """Gemini echoes format then outputs real content — should get the real one."""
+        text = (
+            "Here is the format:\n"
+            f"{START}\nexample placeholder\n{END}\n\n"
+            "Now here is the real output:\n"
+            f"{START}\nitems:\n  - lemma: дім\n    translation: house\n{END}"
+        )
+        result = _extract_delimiter(text, START, END)
+        assert result is not None
+        assert "lemma: дім" in result
+        assert "translation: house" in result
+        # Must NOT be the short echo
+        assert result != "example placeholder"
+
+    def test_echo_then_truncated_real_content(self):
+        """Echo with both tags + real content truncated before END tag.
+
+        This is the critical bug scenario: rfind(end_tag) would find the
+        echo's END tag and silently return the short echo. The fix anchors
+        on last START tag, so _extract_delimiter returns None (no END after
+        last START), and _extract_delimiter_tolerant recovers the truncated
+        real content.
+        """
+        text = (
+            "Format example:\n"
+            f"{START}\nexample placeholder\n{END}\n\n"
+            "Real output:\n"
+            f"{START}\nitems:\n  - lemma: дім\n    translation: house\n"
+            "  - lemma: кіт\n    translation: cat\n"
+            # NO END tag — Gemini truncated
+        )
+        # _extract_delimiter should return None (truncation detected)
+        exact = _extract_delimiter(text, START, END)
+        assert exact is None, (
+            "_extract_delimiter should return None when real content is truncated "
+            f"(no END after last START), got: {exact!r}"
+        )
+
+    def test_tolerant_recovers_truncated_real_content(self):
+        """_extract_delimiter_tolerant should recover truncated real YAML."""
+        text = (
+            "Format:\n"
+            f"{START}\nexample\n{END}\n\n"
+            "Real:\n"
+            f"{START}\n"
+            "items:\n"
+            "  - lemma: дім\n"
+            "    translation: house\n"
+            "  - lemma: кіт\n"
+            "    translation: cat\n"
+            # NO END tag — truncated
+        )
+        result = _extract_delimiter_tolerant(text, START, END)
+        assert result is not None
+        assert "lemma: дім" in result
+        assert "lemma: кіт" in result
+        # Must NOT be the short echo
+        assert "example" not in result
+
+    def test_no_tags_at_all(self):
+        """No start or end tags → None."""
+        assert _extract_delimiter("just some text", START, END) is None
+        assert _extract_delimiter_tolerant("just some text", START, END) is None
+
+    def test_only_start_tag_no_end(self):
+        """Start tag but no end tag — _extract_delimiter returns None."""
+        text = f"prefix\n{START}\nitems:\n  - lemma: дім\n"
+        assert _extract_delimiter(text, START, END) is None

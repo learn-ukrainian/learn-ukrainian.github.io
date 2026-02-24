@@ -1,0 +1,27 @@
+{
+  "track": "b2",
+  "slug": "impersonal-passive",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T21:19:29Z",
+      "task_id": "v3-impersonal-passive-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T21:21:34Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T21:24:24Z",
+      "task_id": "v3-impersonal-passive-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T10:17:54Z",
+      "attempts": 2
+    }
+  }
+}

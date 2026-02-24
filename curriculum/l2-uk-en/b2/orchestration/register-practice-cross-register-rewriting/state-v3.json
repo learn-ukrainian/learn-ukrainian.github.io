@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "register-practice-cross-register-rewriting",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T00:19:25Z",
+      "task_id": "v3-register-practice-cross-register-rewriting-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T00:21:43Z",
+      "note": "word-count-3092-below-80pct-4000"
+    }
+  }
+}

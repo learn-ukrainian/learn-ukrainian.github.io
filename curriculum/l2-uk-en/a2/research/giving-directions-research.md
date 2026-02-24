@@ -1,37 +1,34 @@
 # Дослідження: Giving Directions
 
 ## State Standard Reference
-§3.5: "Середовище перебування (місто чи село): ... туристичні принади (цікаві місця й культурні пам’ятки); напрямок руху (прямо, ліворуч, праворуч)."
-Alignment: Module directly teaches navigation vocabulary and giving instructions specified in the A2 thematic catalogue.
-
-Additional Grammar Support:
-- §4.2.2.4: Accusative case with prepositions (в/у, на) for destination ("кінцевий пункт руху суб’єкта").
-- §4.4.1.3: Imperative sentences ("Спонукальне речення") for giving advice/instructions.
+§3.5. Середовище перебування (місто чи село): "громадський транспорт; туристичні принади (цікаві місця й культурні пам’ятки); напрямок руху (прямо, ліворуч, праворуч)."
+§4.4.1.3. Спонукальне речення: "вираження розпорядження, прохання, поради, пропозиції (Дайте, будь ласка...)"
+Alignment: This module directly fulfills the A2 thematic requirement for navigating urban environments and direction of movement (§3.5), while introducing imperative structures for giving instructions (§4.4.1.3) and motion/location case government.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| йти / їхати | High (Core A1/A2) | йти прямо, їхати на метро, йти пішки |
-| повернути | High (A2) | повернути направо, повернути ліворуч, повернути за ріг |
-| вулиця | High (Core A1) | на вулиці, через вулицю, по вулиці |
-| перехрестя | Medium (A2) | на перехресті, до перехрестя |
-| зупинка | High (A2) | автобусна зупинка, наступна зупинка |
-| пройти | High (A2) | як пройти до...?, пройдіть два квартали |
+| іти / їхати | Core A2 verbs | іти пішки, їхати на метро |
+| прямо | High | йдіть прямо |
+| ліворуч / наліво | High | поверніть ліворуч |
+| праворуч / направо | High | поверніть праворуч |
+| перехрестя | Medium | на перехресті, до перехрестя |
+| пройти | High (navigation) | як пройти до...? |
 
 ## Cultural Hooks
-1. **Arsenalna Metro Station**: Validated as one of the deepest stations in the world (105.5m). Navigation involves a famously long escalator ride (approx. 5 minutes). A classic Kyiv meeting point ("зустрінемось на Арсенальній").
-2. **Lviv Rynok Square Fountains**: Four mythological fountains (Neptune, Diana, Amphitrite, Adonis) located at the four corners of the square. They serve as iconic meeting spots and navigation landmarks in Lviv's city center ("біля Нептуна", "біля Діани").
+1. **Метро «Арсенальна» (Kyiv)**: The deepest metro station in the world (105.5 meters). The escalator ride takes about 5 minutes, making it a common landmark and meeting point («зустрінемось на Арсенальній»).
+2. **Площа Ринок (Lviv)**: Navigation via the four mythological fountains (Neptune, Diana, Amphitrite, Adonis) located at the corners of the square, commonly used by locals for orientation («біля Нептуна», «біля Діани»).
 
 ## Common Learner Errors
-1. **Adjective vs. Adverb**: Confusing "лівий/правий" (left/right adjective) with "ліворуч/наліво" (to the left adverb). *Error: "Ідіть лівий." → Correct: "Ідіть наліво/ліворуч."* — Learners translate "Go left" word-for-word using the dictionary form.
-2. **Motion Verbs**: Confusing "іти" (on foot) and "їхати" (by vehicle). *Error: "Я йду на метро." → Correct: "Я їду на метро."* — English "go" covers both, Ukrainian strictly separates them.
-3. **Case after "до"**: Using Nominative instead of Genitive after "до". *Error: "Ідіть до парк." → Correct: "Ідіть до парку."* — Forgetting prepositional government.
+1. **Adjective vs. Adverb** → *Ідіть ліворуч*, not *Ідіть лівий*. English uses "left/right" as both adjectives and adverbs. Ukrainian strictly separates them; directions require the adverbs (ліворуч/наліво).
+2. **Motion Verb Conflation** → *Я їду на метро*, not *Я йду на метро*. English "to go" covers both. Ukrainian strictly requires `їхати` for vehicular transport and `іти` for foot travel.
+3. **Preposition Government** → *До парку*, not *До парк*. Forgetting that the preposition «до» demands the Genitive case.
 
 ## Cross-References
-- Builds on: a2-64 (Scheduling Interviews) — time/scheduling concepts.
-- Prepares for: a2-66 (Asking for Directions) — extends simple instructions to full dialogues.
-- Connects to: a2-13 (Locative case) — pre-taught "де?" (location), now adding "куди?" (motion).
+- Builds on: a2-64 (Scheduling Interviews)
+- Prepares for: a2-66 (Asking for Directions)
 
 ## Notes for Content Writing
-- **Perspective**: Focus on *giving* directions (imperatives: "ідіть", "поверніть") but include the *question* forms ("як пройти?") as triggers.
-- **Prepositions**: Clearly distinguish static location ("біля", "навпроти" + Genitive) from motion ("в/на" + Accusative, "до" + Genitive).
+- **Decolonized Framing**: Explain the `іти/їхати` distinction as a precise Ukrainian feature that describes physical reality, rather than comparing it to the Russian system. Emphasize the semantic logic of Ukrainian.
+- **Immersion Band 3**: English should be restricted primarily to the vocabulary translation columns. Explanations and prose must be near-full Ukrainian. Use clear, simple Ukrainian sentences for grammar rules.
+- **Vowels**: Ensure IPA markings use [ɔ] for 'о', [ɛ] for 'е'.

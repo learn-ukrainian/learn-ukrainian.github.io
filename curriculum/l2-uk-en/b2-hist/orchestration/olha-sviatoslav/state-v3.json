@@ -8,6 +8,21 @@
       "ts": "2026-02-19T12:47:47Z",
       "task_id": "v3-olha-sviatoslav-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T00:12:12Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T00:13:37Z",
+      "task_id": "v3-olha-sviatoslav-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T11:06:05Z",
+      "attempts": 0,
+      "note": "auto-fix"
     }
   }
 }

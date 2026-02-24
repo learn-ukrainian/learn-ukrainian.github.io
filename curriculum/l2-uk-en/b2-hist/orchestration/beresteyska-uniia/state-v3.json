@@ -8,6 +8,10 @@
       "ts": "2026-02-19T14:38:19Z",
       "task_id": "v3-beresteyska-uniia-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T10:14:30Z"
     }
   }
 }

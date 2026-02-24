@@ -2,36 +2,31 @@
 
 ## State Standard Reference
 §3.7: "Навчання: основні канцелярські товари; дії, пов’язані зі здобуттям знань (вчити, вивчати, вчитися); навчальні дисципліни."
-Alignment: Module directly addresses the required actions for acquiring knowledge (verbs *вчитися/вивчати*) and educational disciplines (*навчальні дисципліни*), as well as the general context of school/university life.
+Alignment: This module directly satisfies the thematic requirements of §3.7 by explicitly covering school subjects, educational supplies, and drilling the critical distinction between the verbs of learning (вчити, вивчати, вчитися).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **школа** | High (Core) | ходити до школи, закінчити школу, середня школа, у школі |
-| **університет** | High (Core) | вступати до університету, навчатися в університеті, державний університет |
-| **вчитися** | High (Common) | вчитися в школі/університеті, вчитися старанно, вчитися на відмінно, вчитися все життя |
-| **вивчати** | High (Common) | вивчати українську мову, вивчати історію, вивчати нові слова, детально вивчати |
-| **предмет** | Med-High | шкільний предмет, улюблений предмет, профільний предмет |
-| **іспит** | Medium | складати іспит (take), скласти іспит (pass), провалити іспит (fail), випускний іспит |
-| **оцінка** | Medium | гарна оцінка, висока оцінка, отримувати оцінки, 12 балів |
+| школа | High (Core A1/A2) | ходити до школи, закінчити школу |
+| університет | High (Core A2) | вступати до університету, навчатися в університеті |
+| вчитися | High (Core A2) | вчитися в школі, вчитися на відмінно |
+| вивчати | High (Core A2) | вивчати українську мову, вивчати історію |
+| іспит | Medium (Core A2) | складати іспит, скласти іспит, провалити іспит |
 
 ## Cultural Hooks
-1. **12-Point Grading System**: Unlike many Western 5-point or 100-point systems, Ukrainian schools use a 12-point scale. 10-12 is "High" (Excellent), 7-9 is "Sufficient" (Good), 4-6 is "Average" (Satisfactory), and 1-3 is "Initial" (Unsatisfactory). A "12" is often reserved for exceptional creativity or effort.
-2. **Knowledge Day (День знань)**: Celebrated on September 1st. It’s a major festive event ("Свято першого дзвоника"), not just a regular school day. Students dress up (often in vyshyvankas), bring flowers to teachers, and the "First Bell" ceremony involves a graduating senior carrying a first-grader ringing a bell.
+1. **День знань (Knowledge Day)**: Celebrated on September 1st, marking the start of the academic year. Features the "Перший дзвоник" (First Bell) ceremony where an 11th-grader carries a 1st-grader ringing a bell. Students traditionally wear vyshyvankas and bring flowers to teachers (Source: Ministry of Education and Science of Ukraine / Traditional practice).
+2. **12-Point Grading System**: Introduced in 2000, Ukraine uses a 12-point scale (1-3: початковий, 4-6: середній, 7-9: достатній, 10-12: високий). This was a decolonizing reform moving away from the Soviet 5-point system towards European standards.
 
 ## Common Learner Errors
-1. **Verb Confusion (вчитися vs. вивчати)**: Learners often use *вивчати* without an object (Wrong: *Я вивчаю в школі*) or *вчитися* with a direct object (Wrong: *Я вчуся математику*).
-   *   *Correction*: *Вчитися* is intransitive/reflexive (where/how/process); *Вивчати* is transitive (what + object).
-2. **Preposition Mismatch**: Using *на* vs *в/у*.
-   *   *Pattern*: *в школі*, *в університеті*, but *на уроці*, *на лекції*, *на факультеті*.
-3. **"To take" an exam**: Translating "take" literally as *брати*.
-   *   *Correction*: Use *складати іспит* (process/attempt) or *здавати* (colloquial). To pass successfully is *скласти*.
+1. **"To take an exam" literal translation**: Translating to «брати іспит» (Wrong). The correct Ukrainian phrasing is «складати іспит» (the process of taking) or «скласти іспит» (the result of passing).
+2. **"To study" transitivity confusion**: Using «вивчати» without a direct object (e.g., "Я вивчаю в школі" - Wrong) or «вчитися» with a direct object (e.g., "Я вчуся математику" - Wrong). Correct mapping is «Я вчуся в школі» vs «Я вивчаю математику».
 
 ## Cross-References
-- **Builds on**: `a2-51` (Hobbies and Leisure - potentially overlapping vocabulary like reading, interests).
-- **Prepares for**: `a2-53` (Shopping and Services - transactional interactions).
-- **Connects to**: `a2-09` (Dative Case - *мені подобається* for subjects), `a2-14` (Past Tense - talked about studies).
+- Builds on: a2-51 (Hobbies and Leisure)
+- Prepares for: a2-53 (Shopping and Services)
 
 ## Notes for Content Writing
-- **Distinguish Verbs**: dedicate a specific clear section (table/comparison) to `вчитися` (process/location) vs `вивчати` (specific subject). This is the highest value grammar point here.
-- **Grades**: Use the 12-point scale in examples/dialogues to reinforce cultural realism (e.g., "Wow, you got a 11 in Math!").
+- **Decolonized framing**: Frame the 12-point system as Ukraine's alignment with modern European educational standards.
+- **Language purity**: Ensure absolute absence of Russianisms in exams and grades (use «отримувати оцінку» not «получати оцінку», and «складати іспит» not «здавати іспит»).
+- **Immersion constraints**: This is Band 3 (75-90% Ukrainian immersion). All prose, explanations, and dialogues must be in Ukrainian. English is strictly limited to vocabulary table translation columns or brief, unavoidable clarifications.
+- **Tone**: Assume the persona of a patient School Principal, offering encouraging and culturally rich context.

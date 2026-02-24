@@ -1,0 +1,66 @@
+{
+  "module": "sofiya-kyivska",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T09:11:13.320766Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T01:32:18.677132Z",
+    "meta": "2026-02-19T13:52:01.908524Z",
+    "activities": "2026-02-24T01:34:04.268307Z",
+    "vocabulary": "2026-02-24T01:34:04.268590Z",
+    "plan": "2026-02-18T19:03:37.308489Z",
+    "research": "2026-02-22T10:35:24.514773Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "9565/5000 (raw: 9971) | pedagogy: 2 violations"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 3,
+    "fail_count": 1,
+    "deferred_count": 3
+  }
+}

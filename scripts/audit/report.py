@@ -363,8 +363,14 @@ def generate_report(
     
     # Add Naturalness Score to header if available
     if naturalness:
-        score = naturalness.get('score', 0)
-        status = naturalness.get('status', 'PENDING')
+        if isinstance(naturalness, dict):
+            score = naturalness.get('score', 0)
+            status = naturalness.get('status', 'PENDING')
+        elif isinstance(naturalness, (int, float)):
+            score = int(naturalness)
+            status = 'PASS' if score >= 7 else 'FAIL'
+        else:
+            score, status = 0, 'PENDING'
         report_lines.append(f"**Naturalness:** {score}/10 ({status})")
 
     report_lines.append(f"**Overall Status:** {'❌ FAIL' if has_critical_failure else '✅ PASS'}")

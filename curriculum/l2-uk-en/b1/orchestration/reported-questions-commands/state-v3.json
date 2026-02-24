@@ -1,0 +1,21 @@
+{
+  "track": "b1",
+  "slug": "reported-questions-commands",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T00:32:10Z",
+      "task_id": "v3-reported-questions-commands-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T00:36:19Z"
+    },
+    "v3-C": {
+      "status": "failed",
+      "ts": "2026-02-24T03:06:55Z"
+    }
+  }
+}

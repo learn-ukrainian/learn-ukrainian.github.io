@@ -1,0 +1,22 @@
+{
+  "track": "b2",
+  "slug": "law-justice-vocabulary",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T00:26:28Z",
+      "task_id": "v3-law-justice-vocabulary-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T00:30:08Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T00:33:56Z",
+      "task_id": "v3-law-justice-vocabulary-pC"
+    }
+  }
+}

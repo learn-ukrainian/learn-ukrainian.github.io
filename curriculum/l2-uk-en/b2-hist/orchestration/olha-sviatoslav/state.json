@@ -1,0 +1,35 @@
+{
+  "slug": "olha-sviatoslav",
+  "track": "b2-hist",
+  "module_num": 10,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T00:12:12Z",
+      "words": 6498,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T00:13:37Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T00:13:37Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T11:06:05Z",
+      "note": "v3-audit-autofix"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T11:06:05Z",
+      "note": "v3-audit-autofix"
+    }
+  },
+  "last_updated": "2026-02-24T11:06:05Z"
+}

@@ -8,6 +8,15 @@
       "ts": "2026-02-19T12:49:56Z",
       "task_id": "v3-yaroslav-wise-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T00:21:27Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T00:23:04Z",
+      "task_id": "v3-yaroslav-wise-pC"
     }
   }
 }

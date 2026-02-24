@@ -1,0 +1,64 @@
+{
+  "module": "online-services",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T09:25:39.628640Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T01:22:03.414479Z",
+    "meta": "2026-02-24T01:17:30.654318Z",
+    "activities": "2026-02-24T01:24:46.226267Z",
+    "vocabulary": "2026-02-24T01:24:46.226609Z",
+    "plan": "2026-02-20T21:06:38.043825Z",
+    "research": "2026-02-24T01:17:30.650782Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "4287/3000 (raw: 4657) | engagement: 0/4 | pedagogy: 24 violations | immersion: 97.0% HIGH (target 75-90% (A2.3))"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 1,
+    "deferred_count": 3
+  }
+}

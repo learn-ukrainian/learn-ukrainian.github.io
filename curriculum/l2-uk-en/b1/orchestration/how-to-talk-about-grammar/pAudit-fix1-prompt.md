@@ -17,9 +17,6 @@
   VERDICT: FAIL
   Module:  how-to-talk-about-grammar
 ────────────────────────────────────────────────────────────
-  audit script returned non-zero exit code
-  failing gates:
-    lesson: 5288/4000 (raw: 5591) | pedagogy: 9 violations
   missing orchestration artifacts:
     no Phase 2 artifacts (section files or prompt)
 
@@ -27,22 +24,23 @@
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Replace second «і»/«й» with «та» for conjunction variety
-    [EUPHONY] Line 98: повторення і/й без «та» — «...переходить в **і**, а в інших в...»; використайте «та» для другого сполучника
-       → FIX: Replace second «і»/«й» with «та» for conjunction variety
-
-
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 30/100)
-     → 9 violations (significant)
-
+  Pedagogy     ✅ Level-appropriate
+  Content_heavy ⏳ Deferred (content-only audit)
+  Grammar      ℹ️ N/A (covered by naturalness)
+  Naturalness  ℹ️ PENDING — awaiting review
+  Activity_quality ⏳ Deferred (content-only audit)
+  Research     ✅ Content aligned with research
+  Immersion    🇺🇦 91.9% (target 60-100% (B1.0 Bridge))
+  Richness     ✅ 99% (bridge)
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/how-to-talk-about-grammar-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/status/how-to-talk-about-grammar.json
 
-  ❌ AUDIT FAILED. Correct errors before proceeding.
+  ✅ AUDIT PASSED.
 
-  ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/how-to-talk-about-grammar-audit.log for details)
+  ✅ AUDIT PASSED
         ```
+
 
         ## Files to Fix
 
@@ -59,20 +57,4 @@
 
         **IMPORTANT:** Do NOT add or remove sections. Do NOT change the module structure.
         Fix only the specific violations listed above.
-
-## Section-Level Fix (IMPORTANT)
-
-This is a large module (5591 words). To avoid token truncation,
-fix ONLY the following section(s): "Частини мови: самостійні категорії"
-
-**Output format:** Output ONLY the fixed section(s) between delimiters:
-
-```
-===SECTION_FIX_START===
-## {section title}
-{fixed section content}
-===SECTION_FIX_END===
-```
-
-Do NOT output the entire file. Only output the section(s) listed above.
 

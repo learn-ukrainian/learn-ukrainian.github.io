@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "active-participles-phrases",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T08:12:00Z",
+      "task_id": "v3-active-participles-phrases-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T08:16:07Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T08:20:53Z",
+      "task_id": "v3-active-participles-phrases-pC"
+    }
+  }
+}

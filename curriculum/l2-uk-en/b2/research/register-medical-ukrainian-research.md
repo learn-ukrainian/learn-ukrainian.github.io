@@ -1,50 +1,34 @@
 # Дослідження: Медична українська: спілкування у сфері охорони здоров'я
 
 ## State Standard Reference
-§3.9. Здоров’я й особиста гігієна:
-"частини тіла; особиста гігієна; самопочуття; хвороби й нездужання; візит до лікаря; аптека; діагностика (аналізи й обстеження); невідкладна допомога; залежності (алкогольна, наркотична, тютюнова, від інтернету); медицина (народна і традиційна)."
-Alignment: Module covers all key points: parts of body (review), symptoms, doctor visit, diagnostics, and documentation.
+§3.9: "Здоров’я й особиста гігієна: частини тіла; особиста гігієна; самопочуття; хвороби й нездужання; візит до лікаря; аптека; діагностика (аналізи й обстеження); невідкладна допомога; медицина (народна і традиційна)."
+Alignment: Цей модуль безпосередньо покриває вимоги тематичного каталогу рівня B2 щодо здоров'я, опису самопочуття, візиту до лікаря та взаємодії в аптеці.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **лікар** | High / Standard | сімейний лікар, лікар-терапевт, викликати лікаря, консультація лікаря, рекомендації лікаря |
-| **пацієнт** | High / Standard | огляд пацієнта, скарги пацієнта, історія хвороби пацієнта, права пацієнта |
-| **біль** | High / Common | гострий біль, тупий біль, головний біль (masc!), відчувати біль, знімати біль |
-| **ліки** | High / Common | приймати ліки, виписати ліки, ліки від застуди, рецептурні ліки |
-| **обстеження** | Medium / Medical | медичне обстеження, пройти обстеження, результати обстеження |
-| **діагноз** | Medium / Medical | поставити діагноз, попередній діагноз, підтвердити діагноз |
+| біль (masc.) | High | гострий біль, сильний біль, відчувати біль |
+| симптом | High | перший симптом, опис симптомів |
+| ліки | Always plural | приймати ліки, виписати ліки, рецептурні ліки |
+| діагноз | Medical register | поставити діагноз, попередній діагноз |
+| рецепт | High (digital) | електронний рецепт (е-рецепт), виписати рецепт |
+| відділення | Medical register | хірургічне відділення, стаціонарне відділення |
 
 ## Cultural Hooks
-1. **Mykola Amosov (Микола Амосов)**: Famous Ukrainian heart surgeon and philosopher of health. Promoted the "System of Restrictions and Loads" (система обмежень і навантажень) and the "1000 movements" daily exercise routine. Quote: "Лікарі лікують хвороби, а здоров'я треба здобувати самому."
-2. **Helsi (Helsi.me)**: The dominant eHealth system in Ukraine. Almost every Ukrainian uses it to book appointments (записатися до лікаря), check electronic records, and find specialists. It represents the modern, digital face of Ukrainian healthcare.
-3. **Pharmacy Culture**: In Ukraine, pharmacists (фармацевти) often play a semi-diagnostic role. People frequently describe symptoms directly to the pharmacist to get advice ("Що у вас є від горла?") before seeing a doctor.
+1. **Helsi.me та цифровізація медицини:** Україна має одну з найзручніших електронних медичних систем. Запис до лікаря, електронні рецепти та направлення здійснюються онлайн, що формує новий цифровий медичний регістр.
+2. **Микола Амосов та "1000 рухів":** Видатний український кардіохірург та письменник, автор концепції "системи обмежень і навантажень". Його філософія превентивної медицини — чудовий контекст для обговорення здорового способу життя.
 
 ## Common Learner Errors
-1. **Gender of "біль"**: Learners often treat "біль" as feminine (like Russian "боль").
-   *   *Error*: сильна біль.
-   *   *Correct*: сильний біль (masculine).
-2. **Participial Confusion ("приймати участь")**: A classic russism/calque.
-   *   *Error*: приймати участь у лікуванні.
-   *   *Correct*: брати участь у лікуванні.
-3. **Medical Department Terminology**:
-   *   *Error*: хірургічний відділ.
-   *   *Correct*: хірургічне відділення (department in a hospital is "відділення").
-4. **"Лікувати" vs "Лікуватися"**:
-   *   *Error*: Я лікуюся пацієнтів.
-   *   *Correct*: Лікар лікує (transitive), пацієнт лікується (reflexive/intransitive).
+1. **Хибний рід іменника "біль":** Калькування з російської ("сильна біль" - fem.) → Правильно: чоловічий рід, "сильний біль", "гострий біль".
+2. **Суржик та русизми у дієсловах:** Використання "приймати участь" (замість "брати участь"), "осмотр" (замість "обстеження"), "відділ лікарні" (замість "відділення").
+3. **Плутанина суб'єкта дії:** Нерозуміння різниці між "лікувати" (дія лікаря над пацієнтом) та "лікуватися" (процес самого пацієнта).
 
 ## Cross-References
-- **Builds on**:
-    - `b2-15` (Register Introduction)
-    - `b2-16` (Register: Formal/Informal)
-    - B1 Body Parts vocabulary
-- **Prepares for**:
-    - `b2-21` (Register: IT/Tech) - continues the register series
-    - `b2-82` (Professional Communication III)
+- Builds on: b2-15 (Register Introduction), b2-16 (Register: Formal/Informal), Body parts vocabulary from B1
+- Prepares for: b2-21 (Register: IT/Tech), b2-25 (B2.1b Checkpoint), b2-82 (Professional Communication III)
 
 ## Notes for Content Writing
-- **Tone**: Balance between the formal/official register of the doctor/documents and the natural/anxious register of the patient.
-- **Amosov Context**: Use Amosov's philosophy in the "Reading" or "Cultural" section to add depth beyond just symptoms.
-- **Helsi Integration**: Mention "Helsi" in the dialogue or practical task (e.g., "Запишіться до лікаря через Helsi") to make it authentic to 2024 Ukraine.
-- **Pain Descriptions**: Ensure clear distinction between adjectives for pain (ниючий, ріжучий, тупий, гострий).
+- Український медичний регістр повинен подаватися як самостійна, повноцінна система термінів, без порівняння з російськими відповідниками.
+- Усі назви розділів повинні бути українською.
+- Звертаємо увагу на те, що слово "ліки" має тільки множину, а "біль" — завжди чоловічого роду (це треба підкреслити у поясненнях).
+- Інтегрувати лексику для опису болю (ниючий, ріжучий, пульсуючий) у реалістичні діалоги пацієнта з лікарем.

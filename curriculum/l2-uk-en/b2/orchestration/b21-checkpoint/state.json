@@ -1,0 +1,25 @@
+{
+  "slug": "b21-checkpoint",
+  "track": "b2",
+  "module_num": 30,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T08:21:40Z",
+      "words": 3967,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T08:28:45Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T08:28:45Z",
+      "note": "v3-phase-C"
+    }
+  },
+  "last_updated": "2026-02-24T08:28:45Z"
+}

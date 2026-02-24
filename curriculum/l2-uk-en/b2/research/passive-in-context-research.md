@@ -1,43 +1,33 @@
 # Дослідження: Пасив у контексті — вибір за регістром
 
 ## State Standard Reference
-§4.3.3.1: "Односкладні речення з головним членом – дієсловом... безособові речення: Було приємно дивитися на веселих дітей. Там усе правильно записано."
-§4.3.2: "Просте речення з дієприкметниковим зворотом: Озеро, оточене густими кущами, було не широке, а довге."
-Alignment: This module directly addresses the B2 requirement to master "one-member sentences" (impersonal passive) and "participial phrases" (attributive passive) across different functional styles (registers), distinguishing official usage from colloquial.
+§4.3.3.1: "Односкладні речення з головним членом – дієсловом: означено-особові речення: Іду повз пам’ятник Богданові Хмельницькому; неозначено-особові речення: По радіо повідомили про погіршення погоди; безособові речення: Було приємно дивитися на веселих дітей. Там усе правильно записано."
+Alignment: Українська мова реалізує пасивні значення в різних регістрах (B2) переважно через односкладні безособові (форми на -но/-то) та неозначено-особові речення (3-я особа множини). Модуль безпосередньо покриває ці синтаксичні вимоги Державного стандарту.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **регістр** (register) | Med (Academic/Ling) | офіційний/неофіційний регістр, високий регістр, зміна регістру |
-| **контекст** (context) | High (General) | у цьому контексті, широкий контекст, вирвати з контексту, соціальний контекст |
-| **доречний** (appropriate) | High (General) | доречне зауваження, цілком доречно, недоречний жарт, бути доречним |
-| **офіційний** (official) | High (General) | офіційний документ, офіційна заява, офіційний стиль, офіційна особа |
-| **юридичний** (legal) | Med (Professional) | юридична особа, юридичний термін, юридична сила, юридичний документ |
+| регістр | Висока (соціолінгвістика) | офіційний/неофіційний регістр, зміна регістру |
+| контекст | Дуже висока | широкий контекст, вирвати з контексту |
+| доречний | Висока | цілком доречно, доречне зауваження |
+| канцелярит | Середня (стилістика) | ознаки канцеляриту, уникати канцеляриту |
+| перепрошую | Висока (розмовна) | щиро перепрошую |
 
 ## Cultural Hooks
-1. **The "Kantseliaryt" Trap**: Overusing passive voice (especially heavy participle chains) is a hallmark of "kantseliaryt" (bureaucratese), often criticized as a legacy of Soviet administrative style. Modern Ukrainian stylistics advocates for the "Agency Pass" — preferring active verbs ("Ми вирішили") over passive ("Було вирішено") wherever possible to show responsibility and action.
-2. **The Unique "-NO/-TO" Form**: Ukrainian has a specific impersonal passive form ending in **-но/-то** (e.g., *зроблено, підписано*). Unlike English or Russian passive participles, these forms **cannot** syntactically take an instrumental agent (i.e., you cannot say "Завдання виконано *студентом*"). This creates a strict "Action Focus" unique to Ukrainian official style — the deed matters, the doer is irrelevant.
+1. Термін «канцелярит» та деколонізація: У радянські часи відбувалося штучне зближення українського синтаксису з російським через насаджування пасивних конструкцій. Сучасні українські мовознавці (напр., Олександр Пономарів) активно виступали за повернення до природного активного стану.
+2. The "Agency Pass" (Активна суб'єктність): Після здобуття незалежності, і особливо з 2014 року, в українських медіа та офіційних комунікаціях стався свідомий зсув до використання активних форм («Ми вирішили», «Парламент ухвалив») замість зняття відповідальності через пасив («Було вирішено»).
 
 ## Common Learner Errors
-1. **The "By-Agent" Mistake in Impersonal Constructions**:
-   - *Error*: "Закон прийнято *парламентом*." (Trying to add agent to -no/-to form).
-   - *Correct*: "Парламент прийняв закон." (Active) OR "Закон прийнято." (Impersonal, agent omitted).
-   - *Why*: Transfer from English "was adopted *by*...". In Ukrainian, -no/-to forms strictly exclude the agent.
-
-2. **Overuse of "Buty" + Participle**:
-   - *Error*: "Книга була написана у 1990 році." (Calque of "was written").
-   - *Correct*: "Книгу написали у 1990 році." (Active - indefinite personal) OR "Книгу написано у 1990 році." (Impersonal - result).
-   - *Why*: Ukrainian prefers active voice or specific impersonal forms over the compound "to be + participle" structure, which sounds clumsy.
-
-3. **Register Mismatch with Reflexive verbs**:
-   - *Error*: "Я вибачаюся." (Reflexive - "I excuse myself").
-   - *Correct*: "Вибачте" (Imperative) or "Перепрошую" (Active).
-   - *Why*: While not strictly passive, the misuse of "-sya" verbs often stems from a misunderstanding of voice and register. "Вибачаюся" is considered colloquial or illiterate in standard Ukrainian.
+1. **The "By-Agent" Mistake (Калька агенса):** Вживання орудного відмінка для дійової особи у формах на -но/-то (*Закон ухвалено парламентом* → Правильно: *Парламент ухвалив закон*).
+2. **Англійська калька "was written":** Надмірне копіювання англійського пасиву «бути + дієприкметник» (*Лист був написаний* → Правильно: *Лист написали* або *Лист написано*).
+3. **Хибний зворотний пасив:** Використання частки «-ся» як універсального пасиву за російським зразком (*Будинок будується робітниками* → Правильно: *Робітники будують будинок*).
+4. **Нерозуміння регістру у слові «вибачаюся»:** Використання зворотної форми (букв. "I excuse myself") замість доречного «Вибачте» або «Перепрошую».
 
 ## Cross-References
-- **Builds on**: `b2-01` (Passive Voice System), `b2-03` (Impersonal -но/-то)
-- **Prepares for**: `b2-15` (Register Introduction), `b2-pro` track (Legal/Academic modules)
+- Builds on: b2-01, b2-02, b2-03, b2-04, b2-05
+- Prepares for: b2-07, b2-15, b2-10
 
 ## Notes for Content Writing
-- **Agency Pass**: Ensure the module explicitly teaches *when* to avoid passive (to show agency) and when to use it (to show objectivity).
-- **Visuals**: A decision tree flowchart is essential: "Do you know the agent?" -> Yes -> "Is the agent important?" -> Yes -> ACTIVE VOICE.
+- Уникайте російських порівнянь. Пояснюйте, що українська мова за своєю природою тяжіє до активного стану. Пасив є радше винятком для об'єктивізації дії (результат).
+- Модуль має 100% занурення (zero English in prose).
+- Терміни повинні бути чітко визначені перед використанням у текстах чи таблицях.

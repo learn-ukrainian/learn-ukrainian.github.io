@@ -1,0 +1,29 @@
+{
+  "track": "a2",
+  "slug": "adjective-suffixes-types",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T09:01:07Z",
+      "task_id": "v3-adjective-suffixes-types-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T20:42:38Z",
+      "note": "adopted-existing-content",
+      "words": 2548
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T20:45:17Z",
+      "task_id": "v3-adjective-suffixes-types-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T10:44:40Z",
+      "attempts": 4
+    }
+  }
+}

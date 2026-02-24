@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "social-media-ukrainian",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T23:58:28Z",
+      "task_id": "v3-social-media-ukrainian-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T00:07:05Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T00:09:13Z",
+      "task_id": "v3-social-media-ukrainian-pC"
+    }
+  }
+}

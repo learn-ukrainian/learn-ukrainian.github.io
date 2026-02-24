@@ -1,0 +1,129 @@
+items:
+  - lemma: "корінь"
+    ipa: '[ˈkɔrʲinʲ]'
+    translation: "root"
+    pos: "noun"
+    gender: "m"
+  - lemma: "префікс"
+    ipa: '[prɛfʲiks]'
+    translation: "prefix"
+    pos: "noun"
+    gender: "m"
+  - lemma: "суфікс"
+    ipa: '[ˈsufʲiks]'
+    translation: "suffix"
+    pos: "noun"
+    gender: "m"
+  - lemma: "творення слів"
+    ipa: '[ˈtʋɔrɛnʲːɑ sʲlʲiu̯]'
+    translation: "word formation"
+    pos: "noun"
+    gender: "n"
+  - lemma: "будувати"
+    ipa: '[buduˈʋɑtɪ]'
+    translation: "to build"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "аналізувати"
+    ipa: '[ɑnɑlʲizuˈʋɑtɪ]'
+    translation: "to analyze"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "синтезувати"
+    ipa: '[sɪntɛzuˈʋɑtɪ]'
+    translation: "to synthesize"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "значення"
+    ipa: '[ˈznɑt͡ʃɛnʲːɑ]'
+    translation: "meaning"
+    pos: "noun"
+    gender: "n"
+  - lemma: "сфотографувати"
+    ipa: '[sfɔtɔɦrɑfuˈʋɑtɪ]'
+    translation: "to take a photo"
+    pos: "verb"
+    aspect: "perf"
+    notes: "Uses c- prefix per Cafe Ptakh rule"
+  - lemma: "переписати"
+    ipa: '[pɛrɛpɪˈsɑtɪ]'
+    translation: "to rewrite"
+    pos: "verb"
+    aspect: "perf"
+  - lemma: "вихід"
+    ipa: '[ˈʋɪxʲid]'
+    translation: "exit"
+    pos: "noun"
+    gender: "m"
+  - lemma: "захід"
+    ipa: '[zɑxʲid]'
+    translation: "sunset / west"
+    pos: "noun"
+    gender: "m"
+  - lemma: "перехід"
+    ipa: '[pɛrɛˈxʲid]'
+    translation: "crossing"
+    pos: "noun"
+    gender: "m"
+  - lemma: "записати"
+    ipa: '[zɑpɪˈsɑtɪ]'
+    translation: "to record / write down"
+    pos: "verb"
+    aspect: "perf"
+  - lemma: "підпис"
+    ipa: '[ˈpʲidpɪs]'
+    translation: "signature"
+    pos: "noun"
+    gender: "m"
+  - lemma: "розпис"
+    ipa: '[ˈrɔzpɪs]'
+    translation: "mural / painting"
+    pos: "noun"
+    gender: "m"
+  - lemma: "робота"
+    ipa: '[rɔˈbɔtɑ]'
+    translation: "work"
+    pos: "noun"
+    gender: "f"
+  - lemma: "зробити"
+    ipa: '[zrɔˈbɪtɪ]'
+    translation: "to do / complete"
+    pos: "verb"
+    aspect: "perf"
+  - lemma: "виробник"
+    ipa: '[ʋɪrɔˈbnɪk]'
+    translation: "producer / manufacturer"
+    pos: "noun"
+    gender: "m"
+  - lemma: "похідний"
+    ipa: '[pɔxʲidnɪj]'
+    translation: "derivative"
+    pos: "adjective"
+  - lemma: "первісний"
+    ipa: '[ˈpɛrˈʋʲisnɪj]'
+    translation: "original / primary"
+    pos: "adjective"
+  - lemma: "продуктивний"
+    ipa: '[prɔduˈktɪu̯nɪj]'
+    translation: "productive"
+    pos: "adjective"
+  - lemma: "закінчення"
+    ipa: '[zɑˈkʲint͡ʃɛnʲːɑ]'
+    translation: "ending"
+    pos: "noun"
+    gender: "n"
+  - lemma: "гідроелектростанція"
+    ipa: '[ɦʲidrɔɛlɛktrɔˈstɑnʲt͡sʲijɑ]'
+    translation: "hydroelectric station"
+    pos: "noun"
+    gender: "f"
+  - lemma: "матуся"
+    ipa: '[mɑˈtusʲɑ]'
+    translation: "mommy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "іменник"
+    ipa: '[iˈmɛnːɪk]'
+    translation: "noun"
+    pos: "noun"
+    gender: "m"

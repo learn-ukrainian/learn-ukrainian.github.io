@@ -1,37 +1,32 @@
-# Дослідження: Health and Body
+# Дослідження: Health & Wellness
 
 ## State Standard Reference
 §3.12: "Здоров’я й особиста гігієна: частини тіла; особиста гігієна; самопочуття; хвороби й нездужання; візит до лікаря; аптека."
-Alignment: This module directly addresses the "Health and personal hygiene" theme by introducing body parts, symptoms, and medical interactions.
-
-§4.2.2.3 (Давальний відмінок): "особа або предмет, для яких (на користь чи на шкоду) відбувається дія... суб’єкт кількісної вікової ознаки".
-Alignment: Supports the grammar of "medical advice" and "symptoms" (often expressed with Dative or Genitive + preposition structures like "Мені погано" or "У мене болить").
+§4.2.2.3: "Давальний відмінок: ... суб’єкт кількісної вікової ознаки / безособові конструкції."
+§4.3.1: "Ступені порівняння якісних прикметників: більш/менш."
+Alignment: This module comprehensively covers the §3.12 thematic requirements while integrating Dative impersonal states (мені погано) and comparative adjectives (більш корисний) as required by A2 syntax and morphology.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **голова** (head) | High / General Corpus | болить голова, крутиться голова |
-| **рука/нога** (arm/leg) | High / General Corpus | права/ліва рука, зламати ногу |
-| **боліти** (to hurt) | High / Medical & General | сильно болить, болить горло/живіт/зуб |
-| **температура** (fever) | High / Medical | висока температура, міряти температуру |
-| **лікар** (doctor) | High / General | йти до лікаря, викликати лікаря |
-| **ліки** (medicine) | Medium / Medical | пити ліки, ліки від грипу |
-| **горло** (throat) | High / Seasonal | червоне горло, болить горло |
+| здоров'я | High (Core A2) | міцне здоров'я, берегти здоров'я, спосіб життя |
+| боліти | High (Core A2) | у мене болить (Nom), що у вас болить? |
+| лікар | High (Core A2) | сімейний лікар, іти до лікаря, викликати лікаря |
+| аптека | Med-High (Daily) | цілодобова аптека, чергова аптека |
 
 ## Cultural Hooks
-1. **Tea as Medicine**: Ukrainians often treat colds primarily with hot tea containing raspberry jam ("чай з малиною"), viburnum ("калина"), or honey and lemon, rather than immediately using pharmaceuticals.
-2. **"Hirchychnyky" (Mustard Plasters)**: A traditional remedy often mentioned by older generations (and still used) for coughing/bronchitis, though less common in modern evidence-based medicine. Mentioning "чай з малиною" is a safer, universally recognized cultural touchpoint.
-3. **Proverb**: "Здоров'я — найбільше багатство" (Health is the greatest wealth) or "У здоровому тілі — здоровий дух" (A healthy mind in a healthy body).
+1. **Malyna and Kalyna as Active Medicine**: Raspberry jam (малинове варення) and viburnum tea (калина) are not historical artifacts, but are actively used as first-line treatments for colds in modern Ukrainian homes.
+2. **Вуличні тренажери**: Free outdoor gym equipment found in almost every public park reflects a communal, accessible approach to physical fitness in Ukraine, distinct from commercial gym culture.
 
 ## Common Learner Errors
-1. **"Я болить..."** → **"У мене болить..."** (or **"Мені болить..."**) — Learners often try to translate "I hurt" directly with Nominative "I", but Ukrainian uses an impersonal construction where the body part is the subject.
-2. **Subject-Verb Agreement**: **"У мене болить ноги"** → **"У мене болять ноги"** — Learners forget to change the verb to plural when the body part is plural.
-3. **Confusing "лікар" vs "лікарня"**: Using "лікарня" (hospital) when they mean "лікар" (doctor), e.g., "Я йду в лікарню" instead of "Я йду до лікаря" for a simple check-up.
+1. *Я болить голова* / *Моя голова болить* → Correct: *У мене болить голова*. Learners directly translate English possession; Ukrainian uses "У мене" (At me) + Genitive + "болить" + Nominative subject.
+2. *Я йду в лікарню* (I'm going to the hospital) → Correct: *Я йду до лікаря* (I'm going to the doctor). In Ukraine, a "лікарня" is primarily for serious inpatient admission, while routine checkups occur at a "поліклініка" or private clinic by a "лікар".
 
 ## Cross-References
-- Builds on: `a1-05-body` (Basic body parts), `a1-30-imperative` (Basic commands).
-- Prepares for: `b1-health-system` (More complex medical interactions), `b1-imperative-advanced`.
+- Builds on: A2-34 (symptoms and basic body parts)
+- Prepares for: B1 health, environment, and lifestyle modules; complex Dative structures
 
 ## Notes for Content Writing
-- Focus heavily on the **"У мене болить [X]"** construction as it is the core grammatical hurdle.
-- Keep medical advice simple: "Треба пити чай", "Не можна ходити на роботу".
+- **Immersion**: Band 3 (75-90%). Write explanations in Ukrainian. English is restricted strictly to vocabulary tables and very brief scaffolding for complex terms. 
+- **Decolonized Framing**: Frame traditional medicine positively as a living complement to modern healthcare, not as a Soviet or outdated stereotype. Emphasize proactive health culture (yoga, mental health awareness post-2022).
+- **Avoid Russianisms**: Ensure vocabulary avoids banned variants (e.g., use "лікарня" not "больниця", "ліки" not "лєкарства").

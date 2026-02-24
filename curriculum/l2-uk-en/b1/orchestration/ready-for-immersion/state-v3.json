@@ -8,15 +8,6 @@
       "ts": "2026-02-21T00:32:27Z",
       "note": "migrated-from-v2"
     },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-21T00:32:27Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-D": {
-      "status": "pending",
-      "note": "reset-section-coverage-english-review"
-    },
     "v3-A": {
       "status": "complete",
       "ts": "2026-02-21T00:32:28Z",
@@ -26,6 +17,12 @@
       "status": "complete",
       "ts": "2026-02-21T00:32:28Z",
       "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T10:16:38Z",
+      "attempts": 0,
+      "note": "auto-fix"
     }
   }
 }

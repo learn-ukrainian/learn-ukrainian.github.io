@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "asking-for-directions",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T23:50:14Z",
+      "task_id": "v3-asking-for-directions-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T23:54:06Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T23:57:18Z",
+      "task_id": "v3-asking-for-directions-pC"
+    }
+  }
+}

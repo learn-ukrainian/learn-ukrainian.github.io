@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "hotel-accommodation",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T23:20:08Z",
+      "task_id": "v3-hotel-accommodation-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T23:24:13Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T23:26:08Z",
+      "task_id": "v3-hotel-accommodation-pC"
+    }
+  }
+}

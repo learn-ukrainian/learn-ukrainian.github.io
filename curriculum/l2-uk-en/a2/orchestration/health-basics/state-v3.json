@@ -12,6 +12,22 @@
     "v3-B": {
       "status": "complete",
       "ts": "2026-02-23T06:10:49Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T06:13:45Z",
+      "task_id": "v3-health-basics-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-23T06:26:14Z",
+      "attempts": 3
+    },
+    "v3-D": {
+      "status": "complete",
+      "ts": "2026-02-23T06:32:12Z",
+      "attempts": 1,
+      "note": "d1-only"
     }
   }
 }

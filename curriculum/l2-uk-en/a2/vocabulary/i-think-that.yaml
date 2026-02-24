@@ -1,0 +1,110 @@
+items:
+  - lemma: "думати"
+    ipa: '[ˈdumɑtɪ]'
+    translation: "to think (process)"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "вважати"
+    ipa: '[ʋːɑˈʒɑtɪ]'
+    translation: "to consider, believe"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "здаватися"
+    ipa: '[zdɑˈʋɑtɪsʲɑ]'
+    translation: "to seem"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "згоден"
+    ipa: '[ˈzɦɔdɛn]'
+    translation: "agree (masculine)"
+    pos: "adjective"
+  - lemma: "згодна"
+    ipa: '[ˈzɦɔdnɑ]'
+    translation: "agree (feminine)"
+    pos: "adjective"
+  - lemma: "що"
+    ipa: '[ʃt͡ʃɔ]'
+    translation: "that"
+    pos: "conjunction"
+  - lemma: "впевнений"
+    ipa: '[ˈʍpɛu̯nɛnɪj]'
+    translation: "sure, confident (masculine)"
+    pos: "adjective"
+  - lemma: "впевнена"
+    ipa: '[ˈʍpɛu̯nɛnɑ]'
+    translation: "sure, confident (feminine)"
+    pos: "adjective"
+  - lemma: "думка"
+    ipa: '[ˈdumkɑ]'
+    translation: "opinion, thought"
+    pos: "noun"
+    gender: "f"
+  - lemma: "на думку"
+    ipa: '[nɑ ˈdumku]'
+    translation: "in the opinion of"
+    pos: "phrase"
+  - lemma: "можливо"
+    ipa: '[mɔˈʒlɪʋɔ]'
+    translation: "possibly, perhaps"
+    pos: "adverb"
+  - lemma: "напевно"
+    ipa: '[nɑˈpɛu̯nɔ]'
+    translation: "probably"
+    pos: "adverb"
+  - lemma: "сумніватися"
+    ipa: '[sumnʲiˈʋɑtɪsʲɑ]'
+    translation: "to doubt"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "вибачте, але"
+    ipa: '[ˈʋɪbɑt͡ʃtɛ, ɑˈlɛ]'
+    translation: "excuse me, but"
+    pos: "phrase"
+  - lemma: "на жаль"
+    ipa: '[nɑ ʒɑlʲ]'
+    translation: "unfortunately"
+    pos: "phrase"
+  - lemma: "особистий"
+    ipa: '[ɔsɔˈbɪstɪj]'
+    translation: "personal"
+    pos: "adjective"
+  - lemma: "експерт"
+    ipa: '[ɛˈkspɛrt]'
+    translation: "expert"
+    pos: "noun"
+    gender: "m"
+  - lemma: "з одного боку"
+    ipa: '[z ɔdnɔɦɔ ˈbɔku]'
+    translation: "on the one hand"
+    pos: "phrase"
+  - lemma: "з іншого боку"
+    ipa: '[z ˈinʃɔɦɔ ˈbɔku]'
+    translation: "on the other hand"
+    pos: "phrase"
+  - lemma: "тому що"
+    ipa: '[tɔˈmu ʃt͡ʃɔ]'
+    translation: "because"
+    pos: "conjunction"
+  - lemma: "рація"
+    ipa: '[ˈrɑt͡sʲijɑ]'
+    translation: "rightness, reason"
+    pos: "noun"
+    gender: "f"
+  - lemma: "безумовно"
+    ipa: '[bɛzuˈmɔu̯nɔ]'
+    translation: "unconditionally, absolutely"
+    pos: "adverb"
+  - lemma: "цілком"
+    ipa: '[t͡sʲilˈkɔm]'
+    translation: "entirely, fully"
+    pos: "adverb"
+  - lemma: "щирість"
+    ipa: '[ˈʃt͡ʃɪrʲisʲtʲ]'
+    translation: "sincerity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ввічливість"
+    ipa: '[ˈʋʲːit͡ʃlɪʋʲisʲtʲ]'
+    translation: "politeness"
+    pos: "noun"
+    gender: "f"

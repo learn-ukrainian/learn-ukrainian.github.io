@@ -1,0 +1,132 @@
+items:
+  - lemma: "автохтонність"
+    ipa: '[ɑu̯tɔˈxtɔnʲːisʲtʲ]'
+    translation: "autochthony"
+    pos: "noun"
+    gender: "f"
+    notes: "корінне походження, протиставлення міграційним теоріям"
+  - lemma: "тяглість"
+    ipa: '[ˈtʲɑɦlʲisʲtʲ]'
+    translation: "continuity"
+    pos: "noun"
+    gender: "f"
+    notes: "безперервність історичного процесу від Трипілля до сьогодення"
+  - lemma: "суб'єктність"
+    ipa: '[suˈbjɛktʲnʲisʲtʲ]'
+    translation: "subjectivity, agency"
+    pos: "noun"
+    gender: "f"
+    notes: "здатність творити власну історію, не бути об'єктом імперій"
+  - lemma: "синтез"
+    ipa: '[ˈsɪntɛz]'
+    translation: "synthesis"
+    pos: "noun"
+    gender: "m"
+    notes: "поєднання різних культурних елементів у нову якість"
+  - lemma: "народоправство"
+    ipa: '[nɑrɔdɔˈprɑu̯stʋɔ]'
+    translation: "democracy, folk-rule"
+    pos: "noun"
+    gender: "n"
+    notes: "давня назва демократії, вживана Прокопієм щодо антів"
+  - lemma: "цивілізація"
+    ipa: '[t͡sɪʋʲilʲiˈzɑt͡sʲijɑ]'
+    translation: "civilization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "деколонізація"
+    ipa: '[dɛkɔlɔnʲiˈzɑt͡sʲijɑ]'
+    translation: "decolonization"
+    pos: "noun"
+    gender: "f"
+    notes: "процес позбавлення від імперських наративів"
+  - lemma: "ідентичність"
+    ipa: '[idɛnˈtɪt͡ʃnʲisʲtʲ]'
+    translation: "identity"
+    pos: "noun"
+    gender: "f"
+    notes: "усвідомлення себе як частини окремої історичної спільноти"
+  - lemma: "віче"
+    ipa: '[ˈʋʲit͡ʃɛ]'
+    translation: "assembly, veche"
+    pos: "noun"
+    gender: "n"
+    notes: "народні збори, орган прямої демократії"
+  - lemma: "етногенез"
+    ipa: '[ɛtnɔɦɛˈnɛz]'
+    translation: "ethnogenesis"
+    pos: "noun"
+    gender: "m"
+    notes: "процес походження та формування народу"
+  - lemma: "плавильний котел"
+    ipa: '[plɑˈʋɪlʲnɪj kɔˈtɛl]'
+    translation: "melting pot"
+    pos: "noun"
+    gender: "m"
+    notes: "метафора змішування культур"
+  - lemma: "кочівник"
+    ipa: '[kɔt͡ʃʲiˈʋnɪk]'
+    translation: "nomad"
+    pos: "noun"
+    gender: "m"
+  - lemma: "чорнозем"
+    ipa: '[t͡ʃɔrˈnɔzɛm]'
+    translation: "black soil"
+    pos: "noun"
+    gender: "m"
+  - lemma: "хлібороб"
+    ipa: '[xlʲibɔˈrɔb]'
+    translation: "farmer"
+    pos: "noun"
+    gender: "m"
+  - lemma: "перехрестя"
+    ipa: '[pɛrɛˈxrɛsʲtʲɑ]'
+    translation: "crossroads"
+    pos: "noun"
+    gender: "n"
+  - lemma: "артерія"
+    ipa: '[ɑrˈtɛrʲijɑ]'
+    translation: "artery, waterway"
+    pos: "noun"
+    gender: "f"
+  - lemma: "магістраль"
+    ipa: '[mɑɦʲiˈstrɑlʲ]'
+    translation: "highway, main route"
+    pos: "noun"
+    gender: "f"
+  - lemma: "автократичний"
+    ipa: '[ɑu̯tɔkrɑˈtɪt͡ʃnɪj]'
+    translation: "autocratic"
+    pos: "adjective"
+  - lemma: "матриця"
+    ipa: '[ˈmɑtrɪt͡sʲɑ]'
+    translation: "matrix, foundation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "деспотичний"
+    ipa: '[dɛspɔˈtɪt͡ʃnɪj]'
+    translation: "despotic"
+    pos: "adjective"
+  - lemma: "волелюбність"
+    ipa: '[ʋɔlɛˈlʲubnʲisʲtʲ]'
+    translation: "love of freedom"
+    pos: "noun"
+    gender: "f"
+  - lemma: "самоорганізація"
+    ipa: '[sɑmɔɔrɦɑnʲiˈzɑt͡sʲijɑ]'
+    translation: "self-organization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "асиметричний"
+    ipa: '[ɑsɪmɛˈtrɪt͡ʃnɪj]'
+    translation: "asymmetric"
+    pos: "adjective"
+  - lemma: "хуторянство"
+    ipa: '[xutɔˈrʲɑnstʋɔ]'
+    translation: "individualism, farmstead mentality"
+    pos: "noun"
+    gender: "n"
+  - lemma: "горизонтальний"
+    ipa: '[ɦɔrɪzɔnˈtɑlʲnɪj]'
+    translation: "horizontal"
+    pos: "adjective"

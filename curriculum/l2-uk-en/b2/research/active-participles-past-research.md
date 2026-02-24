@@ -1,41 +1,34 @@
 # Дослідження: Активні дієприкметники минулого часу (-лий)
 
 ## State Standard Reference
-§4.1.3.1 (Implicitly): "Дійсний спосіб... дієвідмінювання дієслів недоконаного виду в майбутньому часі – синтетична форма: боротимуся, питимеш..."
-§4.3.2 (Contrast): "просте речення з дієприкметниковим зворотом: Озеро, **оточене** густими кущами..." (Only passive participles are cited in examples).
-Alignment: The module addresses the Standard by teaching the *normative* intransitive forms (пожовтілий, зів'ялий) while explicitly correcting the non-normative "russism" forms (читавший, робивший) which are absent from the Standard's morphology lists.
+§4.3.2: "просте речення з дієприкметниковим зворотом: Озеро, оточене густими кущами, було не широке, а довге;" 
+§4.1.3.1: "дієвідмінювання дієслів недоконаного виду в майбутньому часі: висловлювати (буду висловлювати / висловлюватиму, будеш висловлювати / висловлюватимеш...)"
+Alignment: Державний стандарт §4.3.2 ілюструє синтаксичну роль дієприкметникових зворотів, проте акцент природно падає на пасивні форми ("оточене"). Активні дієприкметники минулого часу (-лий) є синтаксично та стилістично обмеженими, що вимагає вивчення альтернативних структур (підрядних речень). Форми синтетичного майбутнього часу (-тиму) з §4.1.3.1 подаються як елегантна альтернатива аналітичним.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **минулий** | High (General) | минулий рік, минулий час, минулого тижня |
-| **колишній** | High (Media/Bio) | колишній президент, колишній чоловік, колишня слава |
-| **майбутній** | High (General) | майбутній час, майбутнє покоління |
-| **пожовтілий** | Medium (Literary) | пожовтіле листя, пожовтілий папір |
-| **зів'ялий** | Medium (Literary) | зів'ялі квіти, зів'яла краса |
-| *бувший* | Low (Surzhyk) | *бувший директор (use колишній instead) |
-| *читавший* | Low (Surzhyk) | *читавший книгу (use той, хто читав) |
+| минулий | Висока (корпусні дані) | минулий рік, минулий час |
+| майбутній | Висока (корпусні дані) | майбутній час, майбутнє покоління |
+| колишній | Висока (літературна норма) | колишній президент, колишній чоловік |
+| пожовтілий | Середня (художній стиль) | пожовтіле листя, пожовтілий папір |
+| зів'ялий | Середня (художній стиль) | зів'ялі квіти, зів'яла краса |
+| застарілий | Висока (офіційний/технічний) | застарілий метод, застаріле обладнання |
+| посивілий | Низька (художній стиль) | посивілий чоловік, посивіле волосся |
 
 ## Cultural Hooks
-1. **The "Anti-Surzhyk" Movement**: The active fight against clumsy participial forms like `роблячий` or `робивший` is a hallmark of modern Ukrainian striving for euphony. These forms are often ridiculed as "bureaucratic tongue-tie" (канцелярит) inherited from Soviet administrative Russian.
-2. **Literary Heritage**: Classical Ukrainian authors (Franko, Ukrainka) predominantly used relative clauses (`той, що...`, `той, хто...`) or normative intransitive forms (`посивілий`), avoiding the heavy "shch"-sound participles typical of Church Slavonic and Russian.
+1. **Рух «Антисуржик»**: Мовний опір радянському канцеляриту та русифікації, який активно висміює і витісняє штучні кальковані форми на -вший (напр., «співавший», «бувший»). Цей рух підкреслює, що такі форми є спадком імперської бюрократії, а не питомим розвитком української мови.
+2. **Милозвучність (Euphony)**: Уникання важких дієприкметникових суфіксів з нагромадженням приголосних зумовлене фундаментальним фонетичним принципом української мови — вокальністю та плавністю ритму, що досягається використанням підрядних речень («той, хто...»).
 
 ## Common Learner Errors
-1. **The "Who Did" Trap**: Using `читавший` instead of `який читав`.
-   - *Error*: Студент, читавший книгу...
-   - *Correct*: Студент, який читав книгу...
-   - *Reason*: Direct translation from Russian (читавший) or English (reading/who read).
-2. **"Former" Confusion**: Using `бувший` instead of `колишній`.
-   - *Error*: Мій бувший вчитель...
-   - *Correct*: Мій колишній вчитель...
-   - *Reason*: Calque from Russian `бывший`.
-3. **Synthetic Future Misplacement**: Overusing `-тиму` in purely conversational/slang contexts where `буду` feels more natural, or vice-versa (fearing `-тиму` as "too archaic" when it is actually standard and elegant).
+1. **Пастка калькування (Who Did)**: Вживання неіснуючих форм на -вший («читавший текст») замість підрядного речення («який читав текст») → Спричинено прямим перекладом з російської або англійської (the one having read).
+2. **Плутанина «минулий» vs «колишній»**: Використання «минулий президент» замість «колишній президент» → Спричинено відсутністю цього семантичного розмежування в англійському слові "past/former". 
 
 ## Cross-References
-- **Builds on**: b2-07 (Active Participles Present - normative vs non-normative), Past tense formation.
-- **Prepares for**: b2-09 (Participles vs Relative Clauses - deep dive into syntax), b2-22 (Literary Register).
+- Builds on: b2-07 (Active Participles Present), b2-02 (Past Passive Participles), Past tense formation, Future tense (compound)
+- Prepares for: b2-09 (Participles vs Relative Clauses), b2-10 (B2.1a Checkpoint), b2-22 (Register: Literary Ukrainian)
 
 ## Notes for Content Writing
-- **Crucial Distinction**: Clearly separate **normative** active past participles (intransitive verbs: *пожовтілий, зів'ялий, застарілий*) from **non-normative** ones (transitive/imperfective: *читавший, писавший*).
-- **Pedagogy**: Do not just ban them; explain *why* (euphony, naturalness).
-- **Synthetic Future**: Present `-тиму` forms not as "old" but as "compact and elegant" — a feature of good style.
+- **Деколонізаційний фокус**: Не називати форми на -вший «винятками» чи «архаїзмами». Чітко маркувати їх як русизми та канцелярит, нав'язані під час політики зближення мов. Подавати українські підрядні речення як прояв природної синтаксичної незалежності.
+- Форма на -тиму (синтетичний майбутній час) має подаватися не як архаїка, а як маркер високої літературної норми, лаконічності та мовної елегантності.
+- Зберігати 100% українську мову у всіх поясненнях, без жодних англійських містків.

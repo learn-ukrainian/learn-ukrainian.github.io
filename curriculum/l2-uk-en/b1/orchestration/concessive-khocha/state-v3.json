@@ -1,0 +1,22 @@
+{
+  "track": "b1",
+  "slug": "concessive-khocha",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T23:59:47Z",
+      "task_id": "v3-concessive-khocha-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T00:02:43Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T00:04:57Z",
+      "task_id": "v3-concessive-khocha-pC"
+    }
+  }
+}

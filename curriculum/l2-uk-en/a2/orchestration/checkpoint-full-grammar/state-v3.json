@@ -1,0 +1,22 @@
+{
+  "track": "a2",
+  "slug": "checkpoint-full-grammar",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T22:44:08Z",
+      "task_id": "v3-checkpoint-full-grammar-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T22:46:17Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T22:48:50Z",
+      "task_id": "v3-checkpoint-full-grammar-pC"
+    }
+  }
+}

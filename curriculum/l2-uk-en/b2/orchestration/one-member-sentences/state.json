@@ -1,0 +1,25 @@
+{
+  "slug": "one-member-sentences",
+  "track": "b2",
+  "module_num": 38,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T10:07:44Z",
+      "words": 3569,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T10:10:51Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T10:10:51Z",
+      "note": "v3-phase-C"
+    }
+  },
+  "last_updated": "2026-02-24T10:10:51Z"
+}

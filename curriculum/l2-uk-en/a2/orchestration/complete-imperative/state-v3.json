@@ -10,9 +10,20 @@
       "mode": "full"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-23T00:29:59Z",
-      "note": "word-count-2240-below-80pct-3000"
+      "status": "complete",
+      "ts": "2026-02-23T20:18:11Z",
+      "note": "adopted-existing-content",
+      "words": 2471
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T20:20:41Z",
+      "task_id": "v3-complete-imperative-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T08:49:43Z",
+      "attempts": 2
     }
   }
 }

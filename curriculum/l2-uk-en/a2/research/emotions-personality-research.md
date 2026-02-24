@@ -1,38 +1,31 @@
 # Дослідження: Emotions and Personality
 
 ## State Standard Reference
-§3.1: "Людина: ... основні риси характеру; ... статус інших людей з оточення"
-§4.2.2.3: "Давальний відмінок: особа або предмет, для яких (на користь чи на шкоду) відбувається дія" (Basis for impersonal constructions like *мені сумно/весело*).
-Alignment: This module directly addresses the requirement to describe character traits and emotional states, introducing the syntactic distinction between quality (*я веселий*) and state (*мені весело*).
+§4.2.2.3: "Давальний відмінок: ... суб’єкт певного стану: Мені не спиться. Вікторові здалося, що друзі не зрозуміли його. Нам весело;"
+Alignment: The module introduces the Dative case for emotional and physical states ("мені весело", "мені сумно"). Note: While the curriculum mapping targets this for A2, the explicit "суб'єкт певного стану" (subject of a state) examples in the State Standard are detailed in the B1 section (line 2187), serving as an early introduction in A2.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **добрий** | High (Top 500) | добра людина (good person), добре серце (kind heart), добрий день (good day), добра воля (goodwill) |
-| **злий** | Med-High | злий собака (angry dog), злий жарт (cruel joke), злі язики (gossips/evil tongues), на зло (out of spite) |
-| **щасливий** | High | щаслива дорога (bon voyage), щасливий випадок (lucky chance), щасливе дитинство (happy childhood) |
-| **сумний** | Medium | сумна пісня (sad song), сумний погляд (sad look), сумна звістка (sad news) |
-| **розумний** | High | розумна голова (smart head/person), розумна дитина (smart child), розумний вибір (smart choice) |
-| **веселий** | High | веселі свята (happy holidays), весела вдадача (cheerful nature), весела компанія (fun company) |
-| **спокійний** | Medium | спокійне життя (quiet life), спокійної ночі (good night), спокійний голос (calm voice) |
-| **нервовий** | Med-Low | нервова система (nervous system), нервовий тік (nervous tic), нервова робота (stressful job) |
+| добрий | Top 500 (High) | добра людина (kind person), добре серце (kind heart) |
+| злий | High | злий жарт (cruel joke), злі язики (gossips) |
+| щасливий | High | щасливий випадок (lucky chance), щасливе дитинство (happy childhood) |
+| розумний | High | розумний вибір (smart choice), розумна голова (smart person) |
+| щирий | Cultural Core | щира розмова (sincere conversation), щире серце (sincere heart) |
 
 ## Cultural Hooks
-1.  **Cordocentrism (Кордоцентризм)**: Ukrainian mentality is often described as "heart-centered" (*філософія серця*). Emotions are felt "on the soul" (*на душі*). It is common to ask "Що у тебе на душі?" (What is on your soul?) when asking how someone feels.
-2.  **Hospitality & Sincerity**: A key positive trait is *щирість* (sincerity/openness). A "closed" person (*замкнена людина*) is often viewed with suspicion. Hospitality (*гостинність*) is a defining national trait.
-3.  **Proverb**: "Не по одежині судять, а по розуму" (Judge not by clothes, but by mind) — emphasizes wisdom over appearance.
+1. **Кордоцентризм (Cordocentrism)**: The "Philosophy of the Heart" is central to Ukrainian intellectual tradition, championed by thinkers like Hryhorii Skovoroda and Pamfil Yurkevych. The heart is viewed as the holistic center of human existence (reason, emotion, and will), which is why Ukrainians often ask "Що у тебе на душі?" (What is on your soul/heart?) to inquire about one's true state.
+2. **Щирість (Sincerity)**: Ukrainian culture highly values emotional authenticity over superficial politeness. Being "щирий" is considered a top virtue, while being a "замкнена людина" (closed person) is often viewed with caution.
 
 ## Common Learner Errors
-1.  **State vs. Quality**: Using Nominative (*Я нудний* - I am a boring person) instead of Dative (*Мені нудно* - I am bored).
-    *   *Correction*: Teach *мені + прислівник* (adverb) for fleeting states.
-2.  **Gender Agreement**: Forgetting to change adjective endings when describing people of different genders (*Вона добрий* instead of *Вона добра*).
-    *   *Correction*: Drill gender agreement with specific focus on soft stems (якщо є) or common adjectives.
-3.  **False Friends**: Confusing *sympathetic* (English) with *симпатичний* (Ukrainian - nice/good-looking, not necessarily compassionate).
+1. **Nominative for States** → *Мені нудно.* (Correct) vs. *Я нудний.* (Incorrect/Changes meaning to "I am a boring person"). English speakers naturally try to use the Nominative + Adjective to express a temporary state.
+2. **False Friend: Симпатичний** → Means "nice-looking" or "pleasant", not "sympathetic / compassionate" (which is співчутливий).
+3. **Gender Agreement Defaulting** → Failing to change the adjective ending for female subjects (e.g., saying *Вона дуже добрий* instead of *Вона дуже добра*).
 
 ## Cross-References
-- **Builds on**: a1-26 (Describing Things - Adjectives), a2-47 (Nature and Weather)
-- **Prepares for**: a2-49 (Work and Professions) — character traits are essential for job interviews and professional descriptions.
+- Builds on: a1-26 (Describing Things - Adjectives), a2-47 (Nature and Weather)
+- Prepares for: a2-49 (Work and Professions) — bridges traits like "працьовитий" and "терплячий".
 
 ## Notes for Content Writing
-- **Dative Logic**: Explicitly contrast *Він веселий* (He is a cheerful person usually) vs. *Йому весело* (He is having fun right now).
-- **Visuals**: Use emoji or simple icons to map *радість, сум, злість* to their adjectives and dative constructions to reinforce the link.
+- **Decolonized Framing**: Frame the Dative impersonal construction simply as the natural, authentic Ukrainian way to express how the environment or feelings affect a person, reflecting the cultural focus on inner states (Cordocentrism). Do NOT contrast it with Russian structures.
+- **Immersion (Band 2: 60-75%)**: Use English *only* to explain the abstract concept of the Dative state and Cordocentrism. All examples, dialogues, and practice instructions must be in Ukrainian.

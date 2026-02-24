@@ -1,47 +1,37 @@
 # Дослідження: Root Families II
 
 ## State Standard Reference
-§4.5.1: "Стилістичні засоби лексики: антоніми (говорити – мовчати), синоніми (казати, говорити, розповідати)."
-§2 (Каталог А): "Виражати свої думки й переконання: Я думаю / вважаю..."
-Alignment: This module directly addresses the A2 requirement to distinguish synonyms (*говорити/казати*) and use basic cognitive verbs (*думати*), while expanding vocabulary through root families as a memory aid for the required lexical growth.
+§4.5.1: "Стилістичні засоби лексики: [...] синоніми: [...] казати, говорити, розповідати"
+Alignment: This module directly addresses stylistic synonyms for communication (казати, говорити, розповідати) and expands lexical competence through cognitive root families, perfectly aligning with A2 lexical expansion goals.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **думати** (to think) | High (Core A1/A2) | думати про (+ Acc), я думаю, що... |
-| **думка** (thought/opinion) | High | цікава думка, на мою думку, гарна думка |
-| **говорити** (to speak) | High | говорити українською, говорити про (+ Acc), говорити з (+ Instr) |
-| **розмовляти** (to converse) | High | розмовляти телефоном, ми розмовляли про... |
-| **мова** (language) | Very High | українська мова, рідна мова, іноземна мова |
-| **слухати** (to listen) | High | слухати музику, слухати маму, уважно слухати |
-| **слухняний** (obedient) | Medium (A2) | слухняна дитина, слухняний пес (Connect: "he who listens") |
-| **відмова** (refusal) | Medium (B1 bridge) | отримати відмову (Etymology: "speaking away/back") |
+| думати | High / Core | думати про (+ Acc), я думаю, що... |
+| думка | High / Core | цікава думка, на мою думку, гарна думка |
+| говорити | High / Core | говорити українською (no prep), говорити про (+ Acc) |
+| розмовляти | High / Core | розмовляти телефоном, ми розмовляли про... |
+| мова | High / Core | рідна мова, іноземна мова, українська мова |
+| слухати | High / Core | слухати музику, слухати маму, уважно слухати |
+| слухняний | Medium / B1-prep | слухняна дитина, бути слухняним |
+| відмова | Medium | отримати відмову, категорична відмова |
+| казати | High / Core | казати правду, я казав, що... |
 
 ## Cultural Hooks
-1. **Silence is Golden**: The proverb *"Слово – срібло, мовчання – золото"* parallels English but is very active in Ukrainian culture.
-2. **"Mova" vs "Yazyk"**: A critical cultural distinction. *Язик* is ONLY the physical organ (tongue). *Мова* is the language. Confusing them (e.g., "український язик") is a major error and sounds disrespectful or uneducated (surzhyk).
-3. **The Obedient Listener**: The etymological link between *слухати* (to listen) and *слухняний* (obedient) reflects a cultural value: to be good is to "hear" your elders.
+1. **The Etymology of Obedience**: The word for "obedient" (слухняний) is literally derived from the root for "hearing/listening" (слух-). This embeds the cultural logic that true obedience stems from active, attentive listening, rather than blind submission.
+2. **"Мова" vs "Язик"**: A critical identity marker. In Ukrainian, "язик" is strictly the anatomical tongue, while "мова" represents the concept of language. Referring to the Ukrainian language as "український язик" is a major error stemming from colonial/Russian linguistic transfer (where "язык" means both).
 
 ## Common Learner Errors
-1. **Говорити vs. Казати**:
-    *   Error: *Він казав по-українськи.* (He said in Ukrainian).
-    *   Correction: *Він говорив українською.*
-    *   Rule: *Говорити* = process/ability (speak/talk); *Казати* = content/message (say/tell).
-2. **Слухати vs. Чути**:
-    *   Error: *Я не слухав тебе.* (When meaning "I didn't hear you").
-    *   Correction: *Я не чув тебе.*
-    *   Rule: *Слухати* = active (listen); *Чути* = passive (hear).
-3. **Language Name**:
-    *   Error: *Я люблю український язик.*
-    *   Correction: *Я люблю українську мову.*
-    *   Why: *Язик* is the body part (beef tongue).
+1. **"Язик" instead of "мова"**: Negative transfer from Russian or other Slavic languages where the word for the physical tongue also means language. 
+2. **"Говорити" vs "казати"**: Using "казати" (to say/tell content) when referring to the physical ability or process of speaking (e.g., saying "Він казав українською" instead of "Він говорив українською").
+3. **"Слухати" vs "чути"**: Confusing active, intentional listening (слухати) with passive, physical hearing (чути). 
 
 ## Cross-References
-- **Builds on**: A1 basic verbs (*читати, писати*), A2 Cases (Instrumental for *з ким?*, Accusative for *про що?*).
-- **Prepares for**: B1 Word Formation (deverbal nouns *-ння*), B1 Communication topics.
-- **Connects to**: *B1.1-5 Metalanguage Bridge* (using *мова* roots to explain grammar terms like *іменник* vs *дієслово* is not relevant here, but general linguistic awareness is).
+- Builds on: Basic A1 verbs and cases (Accusative for direction/thought - "думати про").
+- Prepares for: Deeper B1 word-formation mechanics and complex communication scenarios.
 
 ## Notes for Content Writing
-- **The "Mo" Bridge**: Highlight the visual connection: *гово-ри-ти* vs *роз-мов-ля-ти*. They look different but share the "speech" function.
-- **Prefix Logic**: Keep it simple. *Роз-* = apart/exchange (conversation is exchanging words). *Від-* = away/back (refusal is speaking back/away).
-- **Listening/Obedience**: Use the *слухняний* example to show how "roots contain logic" – this is a huge "aha!" moment for learners.
+- **Decolonized Framing**: Emphasize the unique nature of Ukrainian root families. Do not use Russian as a baseline for comparison. Explain "мова" vs "язик" purely as an internal Ukrainian semantic distinction. 
+- **Anti-Russianisms**: Ensure all examples strictly avoid Russianisms (e.g., use "їсти" not "кушати", "отримувати" not "получати", "навчатися" not "учитися" where appropriate). 
+- **IPA Formatting**: Ensure correct IPA is used where applicable (о = [ɔ] always, е = [ɛ] always, ч = [t͡ʃ] with tie-bar).
+- **Immersion Constraints**: The module sits at Band 2 (60-75% immersion). English should only be used to explain abstract word-formation mechanics, but examples, practice, and dialogues must be in Ukrainian.

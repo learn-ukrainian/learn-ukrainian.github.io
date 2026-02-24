@@ -2,37 +2,34 @@
 
 ## State Standard Reference
 §4.3.8: "Утворення префіксальних дієслів руху: іти – прийти, перейти, дійти, відійти, зайти, вийти; їхати – приїхати, переїхати, доїхати, від’їхати, заїхати, поїхати, виїхати, об’їхати."
-§4.2.2.4: "Знахідний відмінок... Із прийменниками: в, у, на, за (кінцевий пункт руху суб’єкта, кінцева мета руху)... через (шлях руху)."
-Alignment: Module focuses on integrating these prefixed verbs with correct prepositions (в/на/до/через) in complex travel narratives (Theme §3.5 Подорожі).
+§4.2.2.4: "Знахідний відмінок: ... Із прийменниками: в, у, на, за (кінцевий пункт руху суб’єкта, кінцева мета руху): Степан їде в Харківський університет. Автобус повернув за будинок. Ми вийдемо на Говерлу..."
+Alignment: Модуль повністю відповідає стандарту B1, оскільки фокусується на морфологічному утворенні префіксальних дієслів руху (§4.3.8) та їхній синтаксичній інтеграції з прийменниками просторової семантики у Знахідному відмінку (§4.2.2.4).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| спочатку | High (Core) | спочатку... а потім; спочатку поверніть |
-| потім | High (Core) | і потім; а потім |
-| нарешті | High (Core) | ну нарешті; і нарешті ми прийшли |
-| напрямок | High | у напрямку до; змінити напрямок |
-| маршрут | Medium (Transport) | прокласти маршрут; туристичний маршрут |
-| повернути | High | повернути праворуч/ліворуч; повернути за ріг |
-| прямо | High | йдіть прямо; прямо і направо |
-| траєкторія | Medium (Scientific/Tech) | траєкторія руху; зміна траєкторії |
+| напрямок | High (General) | у напрямку до, змінити напрямок, рухатися в одному напрямку |
+| маршрут | Medium (Travel) | прокласти маршрут, туристичний маршрут, безпечний маршрут |
+| повернути | High (Action) | повернути праворуч/ліворуч, повернути за ріг, різко повернути |
+| траєкторія | Medium (Tech/Sci) | траєкторія руху, зміна траєкторії, розрахувати траєкторію |
+| перехрестя | High (Urban) | на перехресті, перехрестя вулиць, стояти на перехресті |
+| фунікулер | Low (Specific) | їхати на фунікулері, Київський фунікулер, верхня станція фунікулера |
 
 ## Cultural Hooks
-1. **Чумацький Шлях (The Milky Way / The Chumak Way)**: Verified historical duality. It is both the Galaxy and the historic trade route of Chumaks (salt traders) to Crimea. Legend: Chumaks spilled salt across the sky to guide their way. Perfect metaphor for "navigation" and "long journeys".
-2. **Kyiv's Vertical Geography**: The iconic route connecting **Podil** (Lower City, trade, river) to **Verkhnie Misto** (Upper City, history, churches). Key connectors: *Andriivskyi Uzviz* (walking) and the *Funicular* (transport). Navigating this requires understanding "up" (піднятися) and "down" (спуститися).
+1. **Київський фунікулер:** Відкритий у 1905 році (історична назва — «Михайлівський механічний підйом»), він з'єднує історичне Верхнє місто з комерційним Подолом. Це унікальний приклад того, як транспорт вирішує складну просторову проблему крутих київських пагорбів, що ідеально підходить для тренування дієслів «піднятися/спуститися».
+2. **Чумацький Шлях:** Українська назва галактики Чумацький Шлях походить від історичного торговельного маршруту. Чумаки (українські торговці) їздили на південь до Криму за сіллю, орієнтуючись вночі за зірками. Це глибока культурна метафора, яка поєднує земний шлях і небесну навігацію.
 
 ## Common Learner Errors
-1. **Wrong Preposition for Destination**: Using *на* instead of *в* or vice versa (e.g., *йти на парк* instead of *йти в парк*; *їхати в вокзал* instead of *їхати на вокзал*).
-   - *Fix:* Specific lexical drill (locations taking *на*: post office, station, square, street).
-2. **Case Confusion (Locative vs Accusative)**: Using Locative for destination (*Я йду в парку*) instead of Accusative (*Я йду в парк*).
-   - *Fix:* Contrastive examples: *Де? (в парку)* vs *Куди? (в парк)*.
-3. **Calques from English**: "Take a bus" (*брати автобус* - wrong) instead of *сісти на автобус* (sit on bus) or *їхати автобусом* (go by bus).
+1. Калька «Брати автобус» (to take a bus) → Правильно: «Сідати на автобус» або «Їхати автобусом». Українська мова використовує дієслова посадки або Орудний відмінок засобу пересування.
+2. Плутанина «в» / «на» для локацій: «Ми йдемо на парк» → Правильно: «Ми йдемо в парк» (закритий/окреслений простір). Водночас «Ми йдемо на пошту / на вокзал / на вулицю» (відкритий простір або специфічні установи).
+3. Статика vs Динаміка: «Я їду в Києві» (Місцевий) замість «Я їду в Київ» (Знахідний). Плутанина між питанням «де?» і «куди?».
 
 ## Cross-References
-- Builds on: b1-16 (Motion verbs full system), b1-22 (Motion full prefix integration)
-- Prepares for: b1-25 (Checkpoint), B2 narrative modules (travel stories)
+- Builds on: b1-16 (Motion verbs full system) до b1-23 (Motion patterns)
+- Prepares for: b1-25 (Checkpoint - motion verbs)
 
 ## Notes for Content Writing
-- **Odessey Concept**: Frame the "Kyiv Odyssey" text around the Podil-Upper City route. It's a real-world workout for motion verbs (up/down/across).
-- **Idioms**: Include *на роздоріжжі* (at a crossroads - life choice) and *глухий кут* (dead end - impasse).
-- **Maps**: Use text-based "mental maps" in exercises to force visualization of *праворуч/ліворуч*.
+- Оскільки це модуль B1 (імерсія 100%), використання англійської мови для пояснення граматики суворо заборонено. Всі правила, матриці прийменників та інструкції мають бути викладені українською мовою.
+- Англійський переклад дозволений виключно у YAML-файлі словника.
+- Використовувати чіткі порівняльні таблиці для контрасту між парами «в»/«на» та Знахідним/Місцевим відмінками.
+- Деколонізаційний фокус: Українська система префіксів руху є логічною, гнучкою та самостійною. Уникати будь-яких порівнянь з російськими граматичними структурами.

@@ -8,6 +8,20 @@
       "ts": "2026-02-19T12:46:56Z",
       "task_id": "v3-oleh-ihor-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T00:05:26Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T00:07:00Z",
+      "task_id": "v3-oleh-ihor-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T11:06:02Z",
+      "attempts": 3
     }
   }
 }

@@ -25,7 +25,7 @@
 **Detect**: Prompt starts with `ROLE: You are a TEXT GENERATOR` + `ABSOLUTE RULES` section.
 **Enforced**: Read-only mode (`--approval-mode plan`). You cannot write files or send broker messages.
 
-Rules: Read referenced files → produce text output between delimiters → STOP. Do NOT explore beyond task scope, delegate to Claude, or decide what to work on next.
+Rules: Read the task content provided in the prompt → produce text output between delimiters → STOP. Do NOT explore beyond task scope, delegate to Claude, or decide what to work on next.
 
 ### Interactive Mode (User-Directed)
 
