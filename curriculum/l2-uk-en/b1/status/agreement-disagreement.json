@@ -1,16 +1,16 @@
 {
-  "module": "abstract-concepts-processes",
+  "module": "agreement-disagreement",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T22:01:16.722013Z",
+  "last_audit": "2026-02-24T22:15:11.612635Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T21:59:49.206343Z",
-    "meta": "2026-02-24T21:51:05.409399Z",
-    "activities": "2026-02-24T21:57:09.965301Z",
-    "vocabulary": "2026-02-24T21:55:24.356494Z",
-    "plan": "2026-02-20T21:30:38.035101Z",
-    "research": "2026-02-24T21:51:05.405317Z"
+    "md": "2026-02-24T22:15:00.988680Z",
+    "meta": "2026-02-24T22:08:33.984267Z",
+    "activities": "2026-02-24T22:12:58.678200Z",
+    "vocabulary": "2026-02-24T22:12:59.348337Z",
+    "plan": "2026-02-20T21:31:00.526415Z",
+    "research": "2026-02-24T22:08:33.980113Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4324/4000 (raw: 4703)"
+      "message": "4409/4000 (raw: 4663)"
     },
     "activities": {
       "status": "deferred",

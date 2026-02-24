@@ -1,32 +1,33 @@
 # Дослідження: Вираження думок та поглядів
 
 ## State Standard Reference
-§Каталог А: "виражати свої думки й переконання: Я думаю / вважаю / переконаний, що...; обґрунтовувати твердження, аргументувати свою думку; висловлювати згоду / незгоду; виражати припущення / гіпотезу"
-Alignment: Цей модуль безпосередньо реалізує вимоги Каталогу А щодо вираження особистої позиції, аргументації та ведення дискусії, фокусуючись на лексичних засобах для різних регістрів.
+§2: "виражати свої думки й переконання: Я думаю / вважаю / переконаний, що...; обґрунтовувати твердження, аргументувати свою думку; виражати припущення / гіпотезу"
+Alignment: Directly implements the B1 communicative intentions from Catalog A by providing the lexical, syntactic, and stylistic tools necessary for expressing convictions, justifying statements, and formulating hypotheses.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| думка | High (General) | на мою думку, громадська думка, спільна думка, висловити думку, поділяти думку |
-| погляд | High (General) | на мій погляд, з точки зору, погляд на життя, широкий погляд, обмінятися поглядами |
-| вважати | High (General) | я вважаю що, вважатися найкращим, помилково вважати, вважати за потрібне |
-| переконаний | Medium (Opinion) | глибоко переконаний, твердо переконаний, я переконаний у тому що |
-| впевнений | High (General) | впевнений у собі, цілком впевнений, бути впевненим, впевнений погляд |
-| безсумнівно | Medium (Academic/Formal) | це безсумнівно, безсумнівно важливо, успіх безсумнівний |
+| думка | Very High | на мою думку, громадська думка, поділяти думку |
+| вважати | High | я вважаю що, вважати за потрібне |
+| погляд | Moderate-High | на мій погляд, з точки зору, обмінятися поглядами |
+| переконаний | Moderate (Formal) | глибоко переконаний, твердо переконаний |
+| здаватися | Very High | мені здається, здавалося б |
 
 ## Cultural Hooks
-1. **"Де два українці, там три гетьмани"**: Це відоме прислів'я ідеально ілюструє українську культуру дискусії та плюралізму думок. Українці цінують власну позицію і часто мають відмінні погляди навіть у малих групах. Це можна використати для пояснення того, чому вміння аргументувати є таким важливим.
-2. **Прямота vs Ввічливість**: Хоча українці можуть бути досить емоційними та прямими у суперечках (особливо з друзями), у формальному спілкуванні існує чітка тенденція до "пом'якшення" незгоди (hedging). Використання фраз типу "Я розумію вашу позицію, але..." або "Можливо, ви маєте рацію, проте..." є маркером вихованості, на відміну від категоричного "Ні".
+1. Просвітницька традиція та вільні ради: The concept of "свобода слова" (freedom of speech) is deeply ingrained in Ukrainian culture, tracing back to the Cossack councils (рада) and modern civic movements (Майдан). Debate and pluralism are historical norms.
+2. «Де два українці, там три гетьмани»: A famous proverb that humorously highlights the historical value of individualism and spirited debate in Ukrainian society, serving as a perfect anchor for discussing opinions.
 
 ## Common Learner Errors
-1. **"Я рахую, що..."** → **"Я вважаю, що..."** або **"Я думаю, що..."** — Калька з російської ("я считаю"). "Рахувати" в українській мові означає лише лічити (1, 2, 3) або проводити математичні обчислення.
-2. **Пунктуація з "На мою думку"** → **"На мою думку, ..."** — Студенти часто забувають виділяти вставні конструкції комами на письмі, що є обов'язковим в українській мові.
-3. **Плутанина "думка" vs "погляд"** → **"На мій погляд"** (а не "на мою думку" у значенні visual view, хоча як синоніми opinion вони близькі) — Варто розмежувати: "думка" (thought/opinion) та "погляд" (view/gaze/opinion).
+1. "Я рахую, що..." замість "Я вважаю, що..." → Direct calque from Russian "считать". Ukrainian strictly separates evaluating numbers (рахувати) from evaluating ideas (вважати).
+2. Missing commas after introductory phrases → Ukrainian punctuation mandates isolating phrases like "На мою думку," and "На мій погляд," with commas.
+3. Overusing categorical statements without hedging → Learners often sound too abrupt by missing softening markers like "Можливо, ви маєте рацію, але..."
 
 ## Cross-References
-- Builds on: b1-53 (Abstract Concepts Processes) — використання абстрактної лексики для формування думок.
-- Prepares for: b1-55 (Agreement Disagreement) — цей модуль дає базу (висловлення позиції), необхідну для наступного етапу (взаємодія з позицією іншого).
+- Builds on: b1-53 (Abstract Concepts Processes)
+- Prepares for: b1-55 (Agreement Disagreement)
 
 ## Notes for Content Writing
-- Варто включити градацію впевненості: від слабкого припущення (мабуть, здається) до твердого переконання (безсумнівно, я переконаний).
-- У секції діалогів важливо контрастувати "кухонну політичну розмову" (емоційну, пряму) та "робочу нараду" (стриману, з використанням пом'якшувальних конструкцій).
+- 100% Ukrainian immersion required for prose. English is only allowed in vocabulary table translations.
+- Decolonized framing: Emphasize that evaluating numbers and evaluating ideas are distinct concepts in Ukrainian, highlighting the precision of the language without referencing Russian as a baseline.
+- Structure the content to hit a minimum of 4000 words. Expand on nuances of formal vs. informal debate.
+- Ensure all H3 sections use clear, descriptive titles in Ukrainian.

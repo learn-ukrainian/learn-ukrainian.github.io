@@ -1,16 +1,16 @@
 {
-  "module": "abstract-concepts-processes",
+  "module": "discourse-markers-basic",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T22:01:16.722013Z",
+  "last_audit": "2026-02-24T22:23:37.476330Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T21:59:49.206343Z",
-    "meta": "2026-02-24T21:51:05.409399Z",
-    "activities": "2026-02-24T21:57:09.965301Z",
-    "vocabulary": "2026-02-24T21:55:24.356494Z",
-    "plan": "2026-02-20T21:30:38.035101Z",
-    "research": "2026-02-24T21:51:05.405317Z"
+    "md": "2026-02-24T22:23:36.259187Z",
+    "meta": "2026-02-24T22:16:09.062036Z",
+    "activities": "2026-02-24T22:22:58.721180Z",
+    "vocabulary": "2026-02-24T22:20:25.654923Z",
+    "plan": "2026-02-20T21:30:48.600664Z",
+    "research": "2026-02-24T22:16:09.057377Z"
   },
   "gates": {
     "meta": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4324/4000 (raw: 4703)"
+      "status": "fail",
+      "violations": 2,
+      "message": "4571/4000 (raw: 4943) | pedagogy: 1 violations | richness: 81% < 95% min (vocabulary)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "10/8"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "warn",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30 < 35 (soft target)"
     },
     "naturalness": {
       "status": "info",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

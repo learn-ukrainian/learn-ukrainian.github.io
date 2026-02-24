@@ -1,0 +1,149 @@
+items:
+  - lemma: "також"
+    ipa: '[ˈtɑˈkɔʒ]'
+    translation: "also, too"
+    pos: "adverb"
+    usage: "Standard addition; high frequency across all registers."
+  - lemma: "крім того"
+    ipa: '[krʲim tɔˈɦɔ]'
+    translation: "besides, in addition"
+    pos: "phrase"
+    usage: "Adds a new argument; collocation: 'крім того варто додати'."
+  - lemma: "але"
+    ipa: '[ɑˈlɛ]'
+    translation: "but"
+    pos: "conjunction"
+    usage: "Strong contrast."
+  - lemma: "однак"
+    ipa: '[ɔˈdnɑk]'
+    translation: "however"
+    pos: "conjunction"
+    usage: "Formal contrast."
+  - lemma: "тому що"
+    ipa: '[tɔˈmu ʃt͡ʃɔ]'
+    translation: "because"
+    pos: "conjunction"
+    usage: "High frequency causal."
+  - lemma: "отже"
+    ipa: '[ˈɔd͡ʒɛ]'
+    translation: "therefore, so"
+    pos: "conjunction"
+    usage: "Logical conclusion marker."
+  - lemma: "наприклад"
+    ipa: '[nɑˈprɪklɑd]'
+    translation: "for example"
+    pos: "adverb"
+    usage: "Standard exemplification."
+  - lemma: "тобто"
+    ipa: '[ˈtɔbtɔ]'
+    translation: "that is, meaning"
+    pos: "conjunction"
+    usage: "Clarification marker."
+  - lemma: "проте"
+    ipa: '[prɔˈtɛ]'
+    translation: "nevertheless, however"
+    pos: "conjunction"
+    usage: "Formal contrast synonym for 'однак'."
+  - lemma: "внаслідок"
+    ipa: '[ˈʋnɑsʲlʲidɔk]'
+    translation: "as a result of"
+    pos: "preposition"
+    usage: "Formal consequence."
+  - lemma: "зокрема"
+    ipa: '[zɔˈkrɛˈmɑ]'
+    translation: "in particular"
+    pos: "adverb"
+    usage: "Specific example."
+  - lemma: "іншими словами"
+    ipa: '[ˈinʃɪmɪ slɔˈʋɑmɪ]'
+    translation: "in other words"
+    pos: "phrase"
+    usage: "Standard rephrasing marker."
+  - lemma: "до речі"
+    ipa: '[dɔ ˈrɛt͡ʃʲi]'
+    translation: "by the way"
+    pos: "phrase"
+    usage: "High frequency spoken marker."
+  - lemma: "власне"
+    ipa: '[ˈʋlɑsnɛ]'
+    translation: "actually, strictly"
+    pos: "particle"
+    usage: "Correction/precision; often 'власне кажучи'."
+  - lemma: "безумовно"
+    ipa: '[bɛzuˈmɔu̯nɔ]'
+    translation: "certainly, unconditionally"
+    pos: "adverb"
+    usage: "Emphatic agreement."
+  - lemma: "по-перше"
+    ipa: '[pɔ-ˈpɛrʃɛ]'
+    translation: "firstly"
+    pos: "adverb"
+    usage: "Structuring arguments."
+  - lemma: "по-друге"
+    ipa: '[pɔ-ˈdruɦɛ]'
+    translation: "secondly"
+    pos: "adverb"
+    usage: "Structuring arguments."
+  - lemma: "дискурсивний"
+    ipa: '[dɪskurˈsɪu̯nɪj]'
+    translation: "discursive"
+    pos: "adjective"
+  - lemma: "маркер"
+    ipa: '[mɑrkɛr]'
+    translation: "marker"
+    pos: "noun"
+    gender: "m"
+  - lemma: "конектор"
+    ipa: '[kɔnɛktɔr]'
+    translation: "connector"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вставне слово"
+    ipa: '[ʍstɑˈʋnɛ ˈslɔʋɔ]'
+    translation: "introductory word"
+    pos: "phrase"
+  - lemma: "сполучник"
+    ipa: '[spɔˈlut͡ʃnɪk]'
+    translation: "conjunction"
+    pos: "noun"
+    gender: "m"
+  - lemma: "протиставлення"
+    ipa: '[prɔtɪˈstɑu̯lɛnʲːɑ]'
+    translation: "contrast, opposition"
+    pos: "noun"
+    gender: "n"
+  - lemma: "причина"
+    ipa: '[prɪˈt͡ʃɪnɑ]'
+    translation: "cause, reason"
+    pos: "noun"
+    gender: "f"
+  - lemma: "наслідок"
+    ipa: '[ˈnɑsʲlʲidɔk]'
+    translation: "effect, consequence"
+    pos: "noun"
+    gender: "m"
+  - lemma: "підсумок"
+    ipa: '[pʲid͡zsumɔk]'
+    translation: "summary, result"
+    pos: "noun"
+    gender: "m"
+  - lemma: "зв'язність"
+    ipa: '[ˈzʋjɑzʲnʲisʲtʲ]'
+    translation: "cohesion, connectivity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "емпатія"
+    ipa: '[ɛmˈpɑtʲijɑ]'
+    translation: "empathy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ввічливість"
+    ipa: '[ˈʋʲːit͡ʃlɪʋʲisʲtʲ]'
+    translation: "politeness"
+    pos: "noun"
+    gender: "f"
+  - lemma: "коротше"
+    ipa: '[kɔˈrɔt͡ʃʃɛ]'
+    translation: "in short, shorter"
+    pos: "adverb"
+    usage: "Informal summary, often 'коротше кажучи'."

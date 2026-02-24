@@ -1,32 +1,32 @@
 # Дослідження: Згода і незгода
 
 ## State Standard Reference
-§2.4.3.2 (Каталог А. Перелік комунікативних намірів): "запитувати про згоду й відмову: Ти (не)погоджуєшся зі мною? Ти (не)згоден / (не)згодна? Ти за чи проти?; подавати, приймати й відхиляти пропозиції: Пропоную піти на концерт. На жаль, не можу сьогодні. А я залюбки піду з вами"
-Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо вміння висловлювати згоду, незгоду та реагувати на пропозиції на рівні В1.
+§2.4.3.2: "увічливо висловлювати власні переконання, погляди, згоду чи незгоду з думками інших; запитувати про згоду й відмову: Ти (не)погоджуєшся зі мною? Ти (не)згоден / (не)згодна?"
+Alignment: This module directly addresses the B1 communicative intention to politely express, ask for, and negotiate agreement and disagreement in various contexts.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Згода** | High (General Vocabulary) | дати згоду, за згодою, дійти згоди, на знак згоди, мовчазна згода |
-| **Незгода** | High (General Vocabulary) | виникли незгоди, серйозні незгоди, яблуко незгоди (idiom) |
-| **Погоджуватися** | High (Verb) | цілком погоджуватися, погоджуватися з думкою, не можу не погодитися |
-| **Заперечувати** | Medium (Formal/Debate) | категорично заперечувати, не буду заперечувати, заперечувати факт |
-| **Безперечно** | High (Discourse Marker) | це безперечно так, безперечно правильний вибір |
+| згода | High | дати згоду, дійти згоди, мовчазна згода |
+| незгода | High | яблуко незгоди, виникли незгоди |
+| згоден/згодна | High (Spoken) | абсолютно згоден/згодна |
+| погоджуватися | High | цілком погоджуюся, не можу не погодитися |
+| заперечувати | Medium (Formal)| категорично заперечувати |
 
 ## Cultural Hooks
-1. **"Де два українці, там три гетьмани"**: Ця відома приказка ідеально ілюструє українську культуру дискусії та індивідуалізму. Вона жартівливо підкреслює, що українцям часто важко дійти повної згоди, оскільки кожен має власну лідерську позицію ("гетьман"). Походить з часів Руїни (XVII ст.), коли часта зміна гетьманів та політична роздробленість були нормою.
-2. **Культура "м'якої" незгоди**: В українській комунікативній культурі (особливо в західних регіонах та у ввічливому спілкуванні) пряме "Ні" може сприйматися як грубість. Часто використовують конструкції "Так, але...", "Можливо, ви маєте рацію, проте...", "Цікава думка, однак...".
+1. «Де два українці, там три гетьмани» — This proverb reflects the historical Ukrainian tendency toward pluralism and debate (stemming from the Cossack era and the "Ruin"), illustrating that disagreement is a natural part of the culture, not a breach of harmony.
+2. The concept of "soft refusal" in modern Ukrainian professional and social spheres: direct categorical "Ні" or "Я не згоден" can be seen as aggressive; softer, evasive structures are heavily preferred in B1+ interactions.
 
 ## Common Learner Errors
-1. **Калькування "I am agree"** → *Я є згоден* (помилка) → **Я згоден / Я погоджуюся** (правильно). Дієслово "to be" тут зайве.
-2. **Узгодження роду**: Чоловіки часто помилково кажуть "Я згодна", або жінки "Я згоден", плутаючи прикметникові форми. Потрібно чітко розрізняти: ♂ **Я згоден**, ♀ **Я згодна**.
-3. **Плутанина "Вірно" vs "Правильно"**: У значенні "correctly" слід вживати **правильно**. "Вірно" (loyally) є поширеною помилкою навіть серед носіїв (суржик/калька), але на рівні В1 варто вчити літературну норму: "Ви правильно сказали".
+1. Syntactic Calque: *«Я є згоден»* (from English "I am agree") → Correct: *«Я згоден»* or *«Я погоджуюся»*. The verb "to be" is dropped in present tense.
+2. Gender Mismatch: Female speakers using the masculine short adjective *«Я згоден»* → Correct: *«Я згодна»*.
+3. Semantic Calque (Russianism): Using *«вірно»* (loyally) to mean "correct" → Correct: *«правильно»* (correctly) or *«слушно»*.
 
 ## Cross-References
-- Builds on: `b1-54` (Expressing Opinions) — uses opinion structures to build agreement arguments.
-- Prepares for: `b1-56` (Discourse Markers Basic) — provides the foundation for more complex text structuring.
+- Builds on: b1-54 (Expressing Opinions)
+- Prepares for: b1-56 (Discourse Markers Basic)
 
 ## Notes for Content Writing
-- **Persona Flavor**: Use the "Diplomat" angle mentioned in the plan (`role: Diplomat`). The "Diplomat" fits perfectly with teaching *polite* disagreement and nuance.
-- **Register**: Balance formal (meeting) and informal (friends). Ensure "Categorical Disagreement" is marked as risky/strong.
-- **Structure**: Ensure the distinction between "Partial Agreement" (Так, але...) and "Full Agreement" (Авжеж!) is clear, as this is the key to B1 proficiency over A2.
+- Decolonized framing: Emphasize that *правильно* is the authentic Ukrainian standard for logical agreement, actively debunking the Soviet-era push toward *вірно* (which mirrors Russian *верно*).
+- Maintain 100% Ukrainian immersion in the text. Ensure all grammar explanations and cultural notes use intermediate-level vocabulary without English scaffolding.
+- The Diplomat persona should guide the learner through the nuances of softening disagreement using concessive clauses (*хоча*, *але*).
