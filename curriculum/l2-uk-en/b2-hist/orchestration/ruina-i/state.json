@@ -2,13 +2,39 @@
   "slug": "ruina-i",
   "track": "b2-hist",
   "module_num": 58,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
       "timestamp": "2026-02-19T11:49:50Z",
       "task_id": "yw-ruina-i-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:26:37Z",
+      "words": 5380,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:28:09Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:28:09Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:29:38Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:29:38Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-19T11:49:50Z"
+  "last_updated": "2026-02-24T21:29:38Z"
 }

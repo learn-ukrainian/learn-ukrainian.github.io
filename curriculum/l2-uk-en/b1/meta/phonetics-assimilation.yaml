@@ -1,3 +1,70 @@
 slug: phonetics-assimilation
 title: 'Фонетика: асиміляція та спрощення'
 word_target: 4000
+content_outline:
+  - section: 'Вступ: Принцип милозвучності (Introduction: The Principle of Euphony)'
+    words: 500
+    points:
+      - Align with State Standard §4.1.1 — introduction to consonant clusters, assimilation,
+        and simplification as structural design principles of Ukrainian.
+      - 'Discuss ''Милозвучність'' (Euphony) as a core cultural hook: explain how
+        Ukrainian maintains a ''singing'' rhythm (співоча мова) by balancing vowels
+        and consonants, differentiating it from the heavier clusters of West Slavic
+        languages.'
+      - Frame phonetic rules not as 'restrictions' but as 'tools for harmony' that
+        allow the language to flow melodically, a source of national pride reflected
+        in traditional folk songs.
+  - section: Асиміляція за дзвінкістю та глухістю (Voicing and Devoicing Assimilation)
+    words: 800
+    points:
+      - 'Explain regressive assimilation: when a voiceless consonant is followed by
+        a voiced one, it becomes voiced (вокзал: [вогзал], боротьба: [бород''ба])
+        — provide simple equations like т + б = [дб] for visual learners.'
+      - 'Address a critical learner error: Devoicing Final Consonants (Russian/German
+        interference) — emphasize that Ukrainian preserves final voiced sounds (хліб
+        is [хл''іб], not [хл''іп]; дід is [дід], not [діт]).'
+      - Discuss progressive assimilation and voicing pairs (з/с) before vowels vs
+        consonants (зберегти vs списати) to ensure proper articulation in connected
+        speech.
+  - section: Асиміляція за м'якістю та вимова -ться (Softness Assimilation and -ться)
+    words: 700
+    points:
+      - 'Present softness assimilation: consonants softening before other soft consonants
+        ([с''в''іт], [з''н''ім]) — focus on high-frequency vocabulary to internalize
+        the ''softness flow''.'
+      - Explicitly drill the pronunciation of -ться as [ц'ц'а] — this is the most
+        common assimilation in daily life; correct the common error of pronouncing
+        it as two separate sounds [т'-с'а] or hard [ца].
+      - Contrast Ukrainian soft pronunciation with regional interferences to ensure
+        a 'pure' native-like sound in reflexive verbs like 'сміється' or 'навчаються'.
+  - section: Спрощення в групах приголосних (Consonant Cluster Simplification)
+    words: 700
+    points:
+      - 'Detail Cluster Simplification according to §4.1.1: стн → сн (чесний), здн
+        → зн (пізно), стл → сл (щасливий) — provide clear ''before and after'' examples
+        like ''честь'' vs ''чесний''.'
+      - 'Identify common words where simplification is mandatory: серце, сонце, проїзний,
+        виїзний — ensure students avoid ''Cluster Literalism'' (pronouncing silent
+        letters).'
+      - 'Practical tip: frame simplification as the language''s way of ''cleaning
+        up'' for the sake of rhythm and ease of breath.'
+  - section: Чергування голосних та приголосних (Vowel and Consonant Alternations)
+    words: 800
+    points:
+      - Explain vowel alternations (о/і, е/і) in closed vs open syllables (стіл —
+        столи, ніч — ночі) as a mechanism to preserve phonetic balance.
+      - 'Cover consonant alternations fundamental for case endings and word formation:
+        г/ж/з, к/ч/ц, х/ш/с (рука → ручка, нога → ніжка) — explain these as historical
+        ''harmony tools''.'
+      - Connect alternations to the principle of avoiding difficult consonant clusters
+        at word boundaries (using у/в and і/й interchangeably based on phonetic context).
+  - section: Практика та запобігання помилкам (Practice and Error Prevention)
+    words: 500
+    points:
+      - Drill minimal pairs that differ only by assimilation/voicing at word ends
+        to sharpen auditory discrimination.
+      - 'Dictation practice: ''Write explicitly, pronounce smoothly'' — focus on words
+        where spelling and pronunciation mismatch (like -ться or simplified clusters)
+        to prevent phonetic-influenced spelling errors.'
+      - Include 'Скоромовки' (tongue twisters) targeting specific clusters to build
+        articulatory agility and celebrate the 'music' of Ukrainian speech.

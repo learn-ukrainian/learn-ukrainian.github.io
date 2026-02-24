@@ -1,0 +1,125 @@
+items:
+  - lemma: "гетьман"
+    ipa: '[ˈɦɛtʲmɑn]'
+    translation: "Hetman (leader of the Cossack state)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "державотворення"
+    ipa: '[dɛrʒɑʋɔˈtʋɔrɛnʲːɑ]'
+    translation: "state-building"
+    pos: "noun"
+    gender: "n"
+  - lemma: "дипломатія"
+    ipa: '[dɪplɔˈmɑtʲijɑ]'
+    translation: "diplomacy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "союз"
+    ipa: '[sɔˈjuz]'
+    translation: "alliance"
+    pos: "noun"
+    gender: "m"
+  - lemma: "універсал"
+    ipa: '[unʲiʋɛrˈsɑl]'
+    translation: "universal (official decree of the Hetman)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "полк"
+    ipa: '[pɔlk]'
+    translation: "regiment (administrative-territorial unit)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "сотня"
+    ipa: '[ˈsɔtʲnʲɑ]'
+    translation: "company (hundred)"
+    pos: "noun"
+    gender: "f"
+  - lemma: "булава"
+    ipa: '[bulɑˈʋɑ]'
+    translation: "mace (symbol of Hetman's power)"
+    pos: "noun"
+    gender: "f"
+  - lemma: "автономія"
+    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
+    translation: "autonomy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "суверенітет"
+    ipa: '[suʋɛrɛnʲiˈtɛt]'
+    translation: "sovereignty"
+    pos: "noun"
+    gender: "m"
+  - lemma: "шляхта"
+    ipa: '[ˈʃlʲɑxtɑ]'
+    translation: "nobility"
+    pos: "noun"
+    gender: "f"
+  - lemma: "реєстрове козацтво"
+    ipa: '[rɛjɛˈstrɔʋɛ kɔˈzɑt͡stʋɔ]'
+    translation: "Registered Cossacks"
+    pos: "phrase"
+  - lemma: "повстання"
+    ipa: '[pɔˈʋstɑnʲːɑ]'
+    translation: "uprising"
+    pos: "noun"
+    gender: "n"
+  - lemma: "протекторат"
+    ipa: '[prɔtɛktɔˈrɑt]'
+    translation: "protectorate"
+    pos: "noun"
+    gender: "m"
+  - lemma: "самодержець"
+    ipa: '[sɑmɔˈdɛrʒɛt͡sʲ]'
+    translation: "autocrat"
+    pos: "noun"
+    gender: "m"
+  - lemma: "багатовекторність"
+    ipa: '[bɑɦɑtɔˈʋɛktɔrnʲisʲtʲ]'
+    translation: "multivector nature"
+    pos: "noun"
+    gender: "f"
+  - lemma: "скарбниця"
+    ipa: '[skɑrˈbnɪt͡sʲɑ]'
+    translation: "treasury"
+    pos: "noun"
+    gender: "f"
+  - lemma: "легітимність"
+    ipa: '[lɛɦʲiˈtɪmnʲisʲtʲ]'
+    translation: "legitimacy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "покозачення"
+    ipa: '[pɔkɔˈzɑt͡ʃɛnʲːɑ]'
+    translation: "cossackization"
+    pos: "noun"
+    gender: "n"
+  - lemma: "маневрувати"
+    ipa: '[mɑnɛu̯ruˈʋɑtɪ]'
+    translation: "to maneuver"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "фронтир"
+    ipa: '[frɔnˈtɪr]'
+    translation: "frontier"
+    pos: "noun"
+    gender: "m"
+  - lemma: "присягати"
+    ipa: '[prɪsʲɑˈɦɑtɪ]'
+    translation: "to swear an oath"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "возз'єднання"
+    ipa: '[ʋɔˈzːjɛdnɑnʲːɑ]'
+    translation: "reunification"
+    pos: "noun"
+    gender: "n"
+  - lemma: "світогляд"
+    ipa: '[sʲʋʲiˈtɔɦlʲɑd]'
+    translation: "worldview"
+    pos: "noun"
+    gender: "m"
+  - lemma: "міжусобиця"
+    ipa: '[mʲiʒuˈsɔbɪt͡sʲɑ]'
+    translation: "internecine war"
+    pos: "noun"
+    gender: "f"

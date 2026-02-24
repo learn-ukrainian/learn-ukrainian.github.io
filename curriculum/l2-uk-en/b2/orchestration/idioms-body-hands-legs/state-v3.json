@@ -12,6 +12,16 @@
     "v3-B": {
       "status": "complete",
       "ts": "2026-02-24T21:31:38Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T21:34:54Z",
+      "task_id": "v3-idioms-body-hands-legs-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T21:36:34Z",
+      "attempts": 2
     }
   }
 }

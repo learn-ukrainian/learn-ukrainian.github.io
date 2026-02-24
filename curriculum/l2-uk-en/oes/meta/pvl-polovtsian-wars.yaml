@@ -1,3 +1,16 @@
 slug: pvl-polovtsian-wars
 title: Pvl Polovtsian Wars
 word_target: 5000
+content_outline:
+  - section: Вступ
+    description: 'Introduction to PVL: Polovtsian Wars'
+    words: 1250
+  - section: Основний матеріал
+    description: Primary source analysis and grammar focus
+    words: 1250
+  - section: Практика
+    description: Exercises and activities
+    words: 1250
+  - section: Підсумок
+    description: Summary and connection to next module
+    words: 1250

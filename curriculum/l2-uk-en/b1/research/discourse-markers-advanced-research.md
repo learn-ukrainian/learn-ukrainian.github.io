@@ -1,35 +1,35 @@
 # Дослідження: Дискурсивні маркери II: складна організація
 
 ## State Standard Reference
-§4.4.2 / §4.5.1: "просте речення зі вставними словами мабуть, можливо, здається" (lines 2377-2378); "Складне речення... складносурядне... складнопідрядне" (lines 2380-2431); "Офіційне й неофіційне спілкування" (lines 2435-2450).
-Alignment: This module systematically expands the "inserted words" (вставні слова) category from the basic B1 examples (мабуть) to advanced text organizers (по-перше, підсумовуючи) and aligns with the B1 requirement to distinguish between formal and informal registers.
+§4.4.2: "Просте ускладнене речення: ... просте речення зі вставними словами мабуть, можливо, здається: Мабуть, ніхто не зможе забути нашу зустріч."
+§4.4.3: "Складне речення: ... складносурядне речення з протиставними відношеннями між його частинами (сполучники а, але)... складносурядне речення з приєднувальними відношеннями (сполучник і)..."
+Alignment: Цей модуль відповідає вимогам стандарту щодо використання вставних слів (introductory words) та сполучників для побудови ускладнених і складних речень, необхідних для логічної організації тексту на рівні B1.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| по-перше / по-друге | High (GRAK/MOVA.info) | по-перше, хочу зазначити; по-друге, варто наголосити |
-| нарешті | High | нарешті ми дійшли згоди; і, нарешті, останній пункт |
-| підсумовуючи | Medium (Academic/Formal) | підсумовуючи вищесказане; підсумовуючи результати |
-| таким чином | High (Formal) | таким чином, ми бачимо; діяти таким чином |
-| з одного боку | High | з одного боку... з іншого боку (paired) |
-| передусім | Medium | передусім потрібно; це стосується передусім |
-| загалом | High | загалом кажучи; загалом це вірно |
+| по-перше / по-друге | High (Academic/Formal) | по-перше, хочу зазначити; по-друге, варто наголосити |
+| проте | High (Academic/Journalistic) | проте варто зауважити; проте ситуація змінилася |
+| з одного боку... з іншого боку | High (Analytical) | з одного боку, це перевага, з іншого боку... |
+| отже / таким чином | High (Concluding) | отже, ми бачимо; таким чином, результати свідчать |
+| нарешті | High (Temporal/Concluding)| нарешті ми дійшли згоди; і, нарешті, останній пункт |
+| словом | Medium (Conversational) | словом, все добре; словом, домовилися |
 
 ## Cultural Hooks
-1. **Kyiv-Mohyla Rhetoric Tradition**: Rhetoric (риторка) was a prestige subject at the Kyiv-Mohyla Academy (17th-18th c.). Students like Theophan Prokopovych and Hryhorii Skovoroda were trained to structure arguments with precise logic and transitional phrases, viewing clear speech as a sign of wisdom.
-2. **Modern Public Speaking**: Reference the Ukrainian tradition of "viche" (віче) and modern parliamentary debate, where formal markers (шановне товариство, дозвольте зауважити) are crucial for authority.
+1. **Києво-Могилянська традиція риторики:** У XVII-XVIII століттях риторика була одним із головних предметів у Києво-Могилянській академії. Видатні діячі, такі як Феофан Прокопович (автор "De Arte Rhetorica", 1705) та Григорій Сковорода, навчали, що структуроване мислення і переконлива аргументація є ознаками глибокої інтелектуальної мудрості, а не просто красномовства.
+2. **Традиція Віча та Ради:** Історична традиція публічних дебатів у часи Київської Русі (віче) та козацької доби (козацька рада) вимагала від промовців високого рівня володіння дискурсивними маркерами для переконання громади.
 
 ## Common Learner Errors
-1. **Register Mismatch**: Using "короче" (slang/surzhyk) instead of "словом" or "підсумовуючи" in formal contexts.
-2. **Punctuation Omission**: Forgetting commas after markers. *Error:* "По-перше я не знав." → *Correct:* "По-перше, я не знав."
-3. **Russian Interference**: Using calcques like "во-пєрвих" or confusing "накінець" (spatial end) with "нарешті" (finally/temporal).
-4. **Broken Pairs**: Using "з одного боку" without following up with "з іншого боку".
+1. **Кальки з російської (Surzhyk):** Використання "во-пєрвих" замість "по-перше", або "короче" замість "словом / загалом".
+2. **Пропущена пунктуація:** Студенти часто забувають ставити кому після вставних слів (наприклад, пишуть "По-перше я..." замість правильного "По-перше, я...").
+3. **Семантична плутанина:** Неправильне використання просторового "накінець" (at the end of a physical thing) замість часового/підсумкового "нарешті" (finally).
+4. **Розірвані пари:** Вживання "з одного боку", після якого забувають додати обов'язкову другу частину "з іншого боку", що руйнує логіку висловлювання.
 
 ## Cross-References
-- **Builds on**: b1-56 (Discourse Markers Basic - simple connectors like `тому що`, `але`).
-- **Prepares for**: b1-58 (Describing Changes - requires structured explanation); B2/C1 Academic Writing modules.
+- Builds on: b1-56 (Discourse Markers Basic)
+- Prepares for: b1-58 (Describing Changes)
 
 ## Notes for Content Writing
-- **Persona (Keynote Speaker)**: Use the "Keynote Speaker" voice to model these markers. The "Analysis" section can be framed as "How to win a debate" or "Structuring a winning presentation".
-- **Visuals**: Use a flowchart for choosing the right connector (Adding? → `крім того`; Contrasting? → `проте`; Concluding? → `отже`).
-- **Differentiation**: Clearly separate "Formal/Academic" (отже, таким чином) from "Conversational" (ну, знаєш, до речі).
+- **Decolonized Framing:** Подавати українську систему маркерів як самостійну логічну структуру. Кальки (росіянізми) розглядати виключно в рубриці "Антисуржик" без порівняння систем.
+- **Immersion:** 100% українська мова в поясненнях. Жодної англійської поза таблицею словника.
+- **Tone:** Використовувати персону "Keynote Speaker" (Доповідач), що звертається до "шановного товариства" та оперує академічним/публічним регістром.

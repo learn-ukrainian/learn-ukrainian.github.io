@@ -1,0 +1,111 @@
+items:
+  - lemma: "Голодомор"
+    ipa: '[ɦɔlɔdɔˈmɔr]'
+    translation: "Holodomor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "жертви Голодомору"
+    ipa: '[ˈʒɛrtʋɪ ɦɔlɔdɔˈmɔru]'
+    translation: "victims of Holodomor"
+    pos: "phrase"
+  - lemma: "штучний голод"
+    ipa: '[ˈʃtut͡ʃnɪj ˈɦɔlɔd]'
+    translation: "artificial famine"
+    pos: "phrase"
+  - lemma: "геноцид"
+    ipa: '[ɦɛnɔˈt͡sɪd]'
+    translation: "genocide"
+    pos: "noun"
+    gender: "m"
+  - lemma: "Конвенція ООН"
+    ipa: '[kɔnˈʋɛnʲt͡sʲijɑ ɔˈɔn]'
+    translation: "UN Convention"
+    pos: "phrase"
+  - lemma: "ознаки геноциду"
+    ipa: '[ˈɔznɑkɪ ɦɛnɔˈt͡sɪdu]'
+    translation: "signs of genocide"
+    pos: "phrase"
+  - lemma: "визнання"
+    ipa: '[ʋɪˈznɑnʲːɑ]'
+    translation: "recognition"
+    pos: "noun"
+    gender: "n"
+  - lemma: "міжнародне визнання"
+    ipa: '[mʲiʒnɑˈrɔdnɛ ʋɪˈznɑnʲːɑ]'
+    translation: "international recognition"
+    pos: "phrase"
+  - lemma: "боротьба за визнання"
+    ipa: '[bɔrɔˈdʲbɑ zɑ ʋɪˈznɑnʲːɑ]'
+    translation: "struggle for recognition"
+    pos: "phrase"
+  - lemma: "замовчування"
+    ipa: '[zɑˈmɔu̯t͡ʃuʋɑnʲːɑ]'
+    translation: "silencing"
+    pos: "noun"
+    gender: "n"
+  - lemma: "радянське замовчування"
+    ipa: '[rɑˈdʲɑnʲsʲkɛ zɑˈmɔu̯t͡ʃuʋɑnʲːɑ]'
+    translation: "Soviet silencing"
+    pos: "phrase"
+  - lemma: "стіна мовчання"
+    ipa: '[sʲtʲiˈnɑ mɔˈʋt͡ʃɑnʲːɑ]'
+    translation: "wall of silence"
+    pos: "phrase"
+  - lemma: "змова мовчання"
+    ipa: '[ˈzmɔʋɑ mɔˈʋt͡ʃɑnʲːɑ]'
+    translation: "conspiracy of silence"
+    pos: "phrase"
+  - lemma: "свідок"
+    ipa: '[ˈsʲʋʲidɔk]'
+    translation: "witness"
+    pos: "noun"
+    gender: "m"
+  - lemma: "свідчення очевидців"
+    ipa: '[ˈsʲʋʲid͡ʒt͡ʃɛnʲːɑ ɔt͡ʃɛˈʋɪd͡zʲt͡sʲiu̯]'
+    translation: "eyewitness accounts"
+    pos: "phrase"
+  - lemma: "збирати свідчення"
+    ipa: '[zbɪˈrɑtɪ ˈsʲʋʲid͡ʒt͡ʃɛnʲːɑ]'
+    translation: "to collect testimonies"
+    pos: "phrase"
+  - lemma: "пам'ять"
+    ipa: '[ˈpɑmjɑtʲ]'
+    translation: "memory"
+    pos: "noun"
+    gender: "f"
+  - lemma: "національна пам'ять"
+    ipa: '[nɑt͡sʲiɔˈnɑlʲnɑ ˈpɑmjɑtʲ]'
+    translation: "national memory"
+    pos: "phrase"
+  - lemma: "збереження пам'яті"
+    ipa: '[zbɛˈrɛʒɛnʲːɑ ˈpɑmjɑtʲi]'
+    translation: "preservation of memory"
+    pos: "phrase"
+  - lemma: "меморіал"
+    ipa: '[mɛmɔrʲiˈɑl]'
+    translation: "memorial"
+    pos: "noun"
+    gender: "m"
+  - lemma: "заперечення"
+    ipa: '[zɑpɛˈrɛt͡ʃɛnʲːɑ]'
+    translation: "denial"
+    pos: "noun"
+    gender: "n"
+  - lemma: "політика заперечення"
+    ipa: '[pɔˈlʲitɪkɑ zɑpɛˈrɛt͡ʃɛnʲːɑ]'
+    translation: "policy of denial"
+    pos: "phrase"
+  - lemma: "комісія"
+    ipa: '[kɔˈmʲisʲijɑ]'
+    translation: "commission"
+    pos: "noun"
+    gender: "f"
+  - lemma: "дезінформація"
+    ipa: '[dɛzʲinfɔrˈmɑt͡sʲijɑ]'
+    translation: "disinformation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "архівні документи"
+    ipa: '[ɑrˈxʲiu̯nʲi dɔkuˈmɛntɪ]'
+    translation: "archival documents"
+    pos: "phrase"

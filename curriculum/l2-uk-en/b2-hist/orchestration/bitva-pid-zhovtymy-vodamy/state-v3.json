@@ -8,6 +8,11 @@
       "ts": "2026-02-19T15:21:01Z",
       "task_id": "v3-bitva-pid-zhovtymy-vodamy-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T21:05:04Z",
+      "note": "word-count-3652-below-80pct-5000"
     }
   }
 }

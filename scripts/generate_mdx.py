@@ -1820,6 +1820,7 @@ def main():
         md_file = level_dir / f"{mod.slug}.md"
         
         if not md_file.exists():
+            print(f"DEBUG: Checked path {md_file.absolute()}")
             print(f"  ⚠️  Physical file not found for slug '{mod.slug}' in {mod.level}")
             continue
 

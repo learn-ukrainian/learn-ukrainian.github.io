@@ -8,6 +8,11 @@
       "ts": "2026-02-19T15:24:43Z",
       "task_id": "v3-yurii-nemyrych-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T21:22:04Z",
+      "note": "word-count-3778-below-80pct-5000"
     }
   }
 }

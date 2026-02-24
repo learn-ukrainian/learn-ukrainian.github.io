@@ -1,0 +1,64 @@
+{
+  "module": "pereyaslavska-uhoda",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T22:19:50.335344Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T22:19:49.002342Z",
+    "meta": "2026-02-19T16:23:51.287549Z",
+    "activities": "2026-02-24T22:19:48.979486Z",
+    "vocabulary": "2026-02-24T22:19:49.293036Z",
+    "plan": "2026-02-18T19:03:36.837743Z",
+    "research": "2026-02-22T10:35:24.508795Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5600/5000 (raw: 5911)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

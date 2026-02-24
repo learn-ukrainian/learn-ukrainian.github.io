@@ -8,6 +8,11 @@
       "ts": "2026-02-19T17:00:18Z",
       "task_id": "v3-holodomor-mekhanizm-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T21:16:27Z",
+      "note": "word-count-3729-below-80pct-5000"
     }
   }
 }

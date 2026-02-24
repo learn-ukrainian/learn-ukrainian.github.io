@@ -1,0 +1,35 @@
+{
+  "slug": "karpatska-ukraina",
+  "track": "b2-hist",
+  "module_num": 104,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:35:09Z",
+      "words": 5421,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:36:33Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:36:33Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:40:31Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:40:31Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T21:40:31Z"
+}

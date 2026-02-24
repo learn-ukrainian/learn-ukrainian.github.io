@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T21:20:25Z",
       "task_id": "v3-discourse-markers-basic-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T21:27:35Z",
+      "attempts": 3
     }
   }
 }

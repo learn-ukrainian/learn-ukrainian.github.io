@@ -8,6 +8,21 @@
       "ts": "2026-02-19T15:21:58Z",
       "task_id": "v3-zborivska-bila-tserkva-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T21:07:43Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T21:08:52Z",
+      "task_id": "v3-zborivska-bila-tserkva-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T21:08:54Z",
+      "attempts": 0,
+      "note": "auto-fix"
     }
   }
 }
