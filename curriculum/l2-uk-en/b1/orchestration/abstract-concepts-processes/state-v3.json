@@ -8,6 +8,15 @@
       "ts": "2026-02-24T20:51:05Z",
       "task_id": "v3-abstract-concepts-processes-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T20:53:11Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T20:55:24Z",
+      "task_id": "v3-abstract-concepts-processes-pC"
     }
   }
 }

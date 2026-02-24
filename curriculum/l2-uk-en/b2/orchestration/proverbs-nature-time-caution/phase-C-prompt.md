@@ -10,9 +10,9 @@ Before writing ANY YAML, confirm these targets:
 | Target | Value |
 |--------|-------|
 | Skill identity | Senior Ukrainian Language & Culture Specialist |
-| Module persona | Senior Language & Culture Specialist, acting as Business Consultant |
-| Activities required | 8–{ACTIVITY_MAX} |
-| Items per activity | ≥12 |
+| Module persona | Professional Language Coach, acting as Agronomist (Агроном) |
+| Activities required | 10–{ACTIVITY_MAX} |
+| Items per activity | ≥14 |
 | Required types |  |
 | Priority types | fill-in, unjumble, error-correction |
 | Vocabulary items | 30 |
@@ -25,22 +25,22 @@ Read these files from disk:
 
 **Lesson content** (generate activities that test/reinforce this content):
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/abstract-concepts-processes.md
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/proverbs-nature-time-caution.md
 ```
 
 **Plan file** (vocabulary_hints — vocabulary list to follow):
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/b1/abstract-concepts-processes.yaml
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/b2/proverbs-nature-time-caution.yaml
 ```
 
 **Meta file** (activity count targets, pedagogy):
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/meta/abstract-concepts-processes.yaml
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/meta/proverbs-nature-time-caution.yaml
 ```
 
 **Activity schema** (CRITICAL — defines allowed fields per activity type):
 ```
-schemas/activities-b1.schema.json
+schemas/activities-b2.schema.json
 ```
 
 **Activity reference guide**:
@@ -51,7 +51,7 @@ docs/ACTIVITY-YAML-REFERENCE.md
 ## Downstream Audit Gates (your activities will be checked for)
 
 These are the top failure causes from previous rebuilds — write with them in mind:
-- **Schema violations**: `additionalProperties: false` means ANY unlisted field = instant fail. Read `schemas/activities-b1.schema.json` before writing.
+- **Schema violations**: `additionalProperties: false` means ANY unlisted field = instant fail. Read `schemas/activities-b2.schema.json` before writing.
 - **Item counts**: `true-false` often requires 12 items, `quiz` requires 8+. Check `minItems` in schema.
 - **Forbidden fields**: `id` only on `reading` type (seminar tracks). Reading activities REQUIRE `text` (inline source) + `tasks` (comprehension questions). `instruction` is optional.
 - **Russian characters**: ы, э, ё, ъ in any activity text = hard fail
@@ -68,18 +68,18 @@ Generate two YAML blocks: activities and vocabulary.
 
 1. **BARE LIST at root** — no `activities:` wrapper, no `module:` or `level:` headers
 2. **Schema compliance** — only use fields defined in the schema. `additionalProperties: false` means unlisted fields cause audit failure.
-3. **Seminar style** (b1): Reading Input → Analytical Output. Focus on comprehension, analysis, and critical thinking — NOT drill exercises.
-4. **Activity count**: 10 activities (4-9 for seminar tracks)
+3. **Seminar style** (b2): Reading Input → Analytical Output. Focus on comprehension, analysis, and critical thinking — NOT drill exercises.
+4. **Activity count**: 12 activities (4-9 for seminar tracks)
 5. **Type variety**: Use at least 3 different activity types
 6. **Only `reading` type has `id` field** in seminar tracks — do NOT add `id` to other types
 7. **`essay-response` rubric fields**: `criteria` / `description` / `points` (NOT `criterion` / `weight`)
 8. **`mark-the-words` format**: Use `text` (no asterisks) + `answers` array
 
-### CRITICAL: Activity Type Constraints for b1
+### CRITICAL: Activity Type Constraints for b2
 
-**ALLOWED types (use ONLY these):** quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction
+**ALLOWED types (use ONLY these):** quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate
 
-**FORBIDDEN types (audit will auto-FAIL if you use these):** anagram, essay-response, critical-analysis, comparative-study, authorial-intent
+**FORBIDDEN types (audit will auto-FAIL if you use these):** anagram
 
 Using a forbidden type wastes the entire activity generation phase. Check the allowed list BEFORE writing each activity.
 
@@ -108,7 +108,7 @@ Using a forbidden type wastes the entire activity generation phase. Check the al
 
 ### Correct Reading Schema (REFERENCE)
 
-**Reading schema varies by track — always check `schemas/activities-b1.schema.json` for your track's required fields.**
+**Reading schema varies by track — always check `schemas/activities-b2.schema.json` for your track's required fields.**
 
 **Seminar tracks (C1-HIST, C1-BIO, LIT, B2-HIST):** Reading = passive input linked to analytical activities.
 ```yaml
@@ -398,7 +398,7 @@ After writing all activities, run these checks mentally. Any failure = fix befor
 
 ### Activity Count Check (MANDATORY)
 
-**Count your activities before outputting.** You MUST generate 10 activities. Previous rebuilds consistently underproduced (8 activities when 12-16 were needed). If under target, ADD MORE activities before submitting. Types to add when short: quiz (8+ items), fill-in (8+ items), match-up (8+ pairs).
+**Count your activities before outputting.** You MUST generate 12 activities. Previous rebuilds consistently underproduced (8 activities when 12-16 were needed). If under target, ADD MORE activities before submitting. Types to add when short: quiz (8+ items), fill-in (8+ items), match-up (8+ pairs).
 
 ### Output Delimiters
 
