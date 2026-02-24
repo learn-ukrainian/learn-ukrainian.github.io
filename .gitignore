@@ -118,3 +118,8 @@ _archive/
 
 # Test artifacts
 test_git_mtime/
+
+# Starlight
+starlight/dist
+starlight/node_modules
+starlight/.astro

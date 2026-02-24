@@ -1,39 +1,33 @@
 # Дослідження: Фразеологізми: Тварини II (Птахи, Риби, Комахи)
 
 ## State Standard Reference
-§4.4.1.2: "Стилістичні засоби лексики: ... метафори: ідуть дощі, сонце сідає..."
-Alignment: Module focuses on phraseology (metaphorical fixed expressions) which is a key component of lexical stylistics at B2 level, particularly for enriching expressiveness.
+§4.4.1.2: "Стилістичні засоби лексики: [...] метафори: ідуть дощі, сонце сідає"
+Alignment: This module addresses the B2 requirement for mastering lexical stylistic devices (metaphors, idioms) to achieve expressive enrichment and synonymy flexibility.
 
 ## Vocabulary Frequency
-| Word/Idiom | Frequency / Source | Key collocations |
-|------------|--------------------|------------------|
-| **Гарна пташка пір'ям, а людина знанням** | High (Proverb) | Гарна пташка; судити по пір'ю |
-| **Синиця в руках (краще, ніж журавель у небі)** | Very High | Тримати синицю; вибрати синицю |
-| **Стріляний горобець** | High | Старий стріляний горобець; він — стріляний горобець |
-| **Ворона в павичевому пір'ї** | Medium (Literary) | Прикидатися; бути вороною в павичевому пір'ї |
-| **Біла ворона** | High (Common) | Бути білою вороною; почуватися білою вороною; виглядати як біла ворона |
-| **Мовчати як риба** | Very High | Німий як риба; мовчати; води в рот набрати |
-| **Ні риба ні м'ясо** | High | Ні те ні се; ні риба ні м'ясо |
-| **Робити з мухи слона** | Very High | Не роби з мухи слона; перебільшувати |
-| **Працювати як бджола** | High | Трудитися як бджола; бджілка |
-| **Мурашки по спині бігають** | Very High | Від страху; від холоду; пробігли мурашки |
-
-*Note: "Мурашка б'є ногами" (from plan) appears to be a hallucination or extremely rare dialectism. Recommended replacement: "Лізти (пхатися) межи очі як муха" (annoying) or "Як бджола в колесі" (busy/dizzy).*
+| Word / Idiom | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| синиця в руках | High | "краще синиця в жмені...", "тримати синицю" |
+| стріляний горобець | High | "старий стріляний горобець" |
+| біла ворона | Medium-High | "бути білою вороною" (always feminine) |
+| мовчати як риба | Very High | "німий як риба" |
+| робити з мухи слона | Very High | "не роби з мухи слона" |
+| працювати як бджола | Medium-High | "трудівник", "бджілка" (diminutive) |
 
 ## Cultural Hooks
-1. **Stork (Лелека)**: A sacred bird in Ukraine, symbol of family happiness and loyalty. Nests on houses bring good luck. (Source: Ethnography of Ukraine)
-2. **Beekeeping (Бджільництво)**: Ukraine is a top global honey producer. Petro Prokopovych invented the first movable-frame beehive in 1814. Ukrainians often describe themselves as "pracʹovyti yak bdzholy" (hardworking as bees).
+1. **The Stork (Лелека)**: A highly revered and sacred bird in Ukrainian folklore, symbolizing family happiness, loyalty, and love for the homeland. A stork nesting on a house is historically considered a sign of good luck and prosperity.
+2. **Beekeeping (Бджільництво)**: Ukraine has a profound historical connection to beekeeping. Petro Prokopovych, a Ukrainian, invented the world's first commercial frame beehive in 1814, making "працювати як бджола" a culturally resonant metaphor for diligent labor.
 
 ## Common Learner Errors
-1. **Gender Mismatch**: Using "Білий ворон" (masc.) instead of "Біла ворона" (fem.). *Correction*: "Вона — справжня біла ворона."
-2. **Calques/Mixing**: "Грати значення" instead of "Мати значення" or "Відігравати роль" (often confused in idioms).
-3. **Literal Translation**: Translating "Cold turkey" or "Early bird" literally. Ukrainian equivalent for "Early bird" is "Рання пташка" (valid) or "Хто рано встає, тому Бог дає".
+1. **Gender Mismatch in Fixed Phrases**: "Він був білим вороном" (Incorrect) → "Він був білою вороною" (Correct). The noun "ворона" dictates the gender of the phrase, regardless of the subject's biological gender.
+2. **Russian Calques**: Using "грати значення" (from Russian "играть значение") instead of the correct Ukrainian "мати значення" or "відігравати роль". 
+3. **Literal English Translations**: Forcing "рання пташка" to mean someone who arrives early to an event, rather than someone who wakes up early (as in "Хто рано встає, тому Бог дає").
 
 ## Cross-References
-- Builds on: B2.1 Register System
-- Prepares for: B2.2 Synonymy (M54), C1 Stylistics
+- Builds on: B1 modules on basic animal vocabulary and early B2 register distinctions.
+- Prepares for: C1 stylistics and advanced literary metaphors.
 
 ## Notes for Content Writing
-- **Correction Required**: The plan lists "Мурашка б'є ногами" as "small person with big ambition". Research could NOT verify this. **Action**: Replace with **"Дрібний, а завзятий"** or focus on **"Мурашки по спині"** (physical sensation) to keep the insect theme authentic.
-- **Form Usage**: "Біла ворона" is the standard form, not "Білий ворон". Use the feminine form in examples.
-- **Stylistics**: Emphasize that these are metaphors. B2 students must understand *why* the metaphor exists (e.g., crow vs peacock).
+- **Decolonized Framing**: Present these idioms as independent Ukrainian cultural concepts. Avoid using Russian equivalents as a baseline for explanation. Emphasize the unique agricultural and natural connections in Ukrainian folklore.
+- **Immersion**: B2 modules require 100% Ukrainian immersion. All explanations, including the etymology of "біла ворона" or "стріляний горобець," must be entirely in Ukrainian. Use English only in the vocabulary YAML translations.
+- **IPA Adherence**: Ensure strict use of [ɔ] for 'о' and [ɛ] for 'е' in any phonetic transcriptions, avoiding Russian-style vowel reduction.

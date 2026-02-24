@@ -1,0 +1,156 @@
+items:
+  - lemma: "великий"
+    ipa: '[ʋɛˈlɪkɪj]'
+    translation: "big / large"
+    pos: "adj"
+    notes: "neutral foundation word for size"
+  - lemma: "величезний"
+    ipa: '[ʋɛlɪˈt͡ʃɛznɪj]'
+    translation: "enormous / huge"
+    pos: "adj"
+    notes: "emphatic variation of big"
+  - lemma: "велетенський"
+    ipa: '[ʋɛlɛˈtɛnʲsʲkɪj]'
+    translation: "gigantic / colossal"
+    pos: "adj"
+    notes: "physical hyper-scale, related to the word giant"
+  - lemma: "грандіозний"
+    ipa: '[ɦrɑnʲdʲiˈɔznɪj]'
+    translation: "grand / grandiose"
+    pos: "adj"
+    notes: "used in bookish/publicistic style for ambitious plans or events"
+  - lemma: "малий"
+    ipa: '[mɑˈlɪj]'
+    translation: "small"
+    pos: "adj"
+    notes: "neutral word for small size"
+  - lemma: "маленький"
+    ipa: '[mɑˈlɛnʲkɪj]'
+    translation: "little / small"
+    pos: "adj"
+    notes: "diminutive form of малий, adds affectionate tone"
+  - lemma: "крихітний"
+    ipa: '[ˈkrɪxʲitnɪj]'
+    translation: "tiny"
+    pos: "adj"
+    notes: "high expression, often used with social irony (e.g., tiny salary)"
+  - lemma: "мізерний"
+    ipa: '[mʲiˈzɛrnɪj]'
+    translation: "minuscule / negligible"
+    pos: "adj"
+    notes: "negative connotation, implies critical lack of resources"
+  - lemma: "здоровенний"
+    ipa: '[zdɔrɔˈʋɛnːɪj]'
+    translation: "huge / hulking"
+    pos: "adj"
+    notes: "colloquial, often describes massiveness or clumsiness"
+  - lemma: "мініатюрний"
+    ipa: '[mʲinʲiɑˈtʲurnɪj]'
+    translation: "miniature"
+    pos: "adj"
+    notes: "accentuates refinement, elegance, and careful craftsmanship"
+  - lemma: "значний"
+    ipa: '[znɑˈt͡ʃnɪj]'
+    translation: "significant / considerable"
+    pos: "adj"
+    notes: "formal replacement for 'huge' or 'big' in official contexts"
+  - lemma: "величний"
+    ipa: '[ʋɛˈlɪt͡ʃnɪj]'
+    translation: "majestic"
+    pos: "adj"
+    notes: "positive connotation, used for monumental architecture or historical figures"
+  - lemma: "масштабний"
+    ipa: '[mɑˈʃːtɑbnɪj]'
+    translation: "large-scale"
+    pos: "adj"
+    notes: "describes the scope of projects or plans"
+  - lemma: "монументальний"
+    ipa: '[mɔnumɛnˈtɑlʲnɪj]'
+    translation: "monumental"
+    pos: "adj"
+    notes: "describes something of lasting historical or aesthetic value"
+  - lemma: "масштаб"
+    ipa: '[mɑˈʃːtɑb]'
+    translation: "scale"
+    pos: "noun"
+    gender: "m"
+    notes: "abstract or physical scale"
+  - lemma: "габарити"
+    ipa: '[ɦɑbɑˈrɪtɪ]'
+    translation: "dimensions / size"
+    pos: "noun"
+    gender: "p"
+    notes: "usually used in plural to describe physical limits of an object"
+  - lemma: "розмах"
+    ipa: '[ˈrɔzmɑx]'
+    translation: "wingspan / scope"
+    pos: "noun"
+    gender: "m"
+    notes: "used metaphorically for ambition or literally for wings"
+  - lemma: "інтенсивність"
+    ipa: '[intɛnˈsɪu̯nʲisʲtʲ]'
+    translation: "intensity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "гіпербола"
+    ipa: '[ɦʲiˈpɛrbɔlɑ]'
+    translation: "hyperbole / exaggeration"
+    pos: "noun"
+    gender: "f"
+  - lemma: "масивність"
+    ipa: '[mɑˈsɪu̯nʲisʲtʲ]'
+    translation: "massiveness"
+    pos: "noun"
+    gender: "f"
+  - lemma: "мікросвіт"
+    ipa: '[mʲikrɔˈsʲʋʲit]'
+    translation: "microcosm / micro-world"
+    pos: "noun"
+    gender: "m"
+  - lemma: "пестливість"
+    ipa: '[pɛˈstlɪʋʲisʲtʲ]'
+    translation: "affectionateness / diminutiveness"
+    pos: "noun"
+    gender: "f"
+  - lemma: "витонченість"
+    ipa: '[ˈʋɪtɔnt͡ʃɛnʲisʲtʲ]'
+    translation: "refinement / elegance"
+    pos: "noun"
+    gender: "f"
+  - lemma: "філігранність"
+    ipa: '[fʲilʲiˈɦrɑnʲːisʲtʲ]'
+    translation: "intricacy / filigree precision"
+    pos: "noun"
+    gender: "f"
+  - lemma: "нікчемність"
+    ipa: '[nʲiˈkt͡ʃɛmnʲisʲtʲ]'
+    translation: "worthlessness / insignificance"
+    pos: "noun"
+    gender: "f"
+  - lemma: "підсилювач"
+    ipa: '[pʲiˈd͡zsɪlʲuʋɑt͡ʃ]'
+    translation: "intensifier"
+    pos: "noun"
+    gender: "m"
+    notes: "linguistic term for adverbs that intensify adjectives"
+  - lemma: "авторитет"
+    ipa: '[ɑu̯tɔrɪˈtɛt]'
+    translation: "authority / prestige"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вплив"
+    ipa: '[ʍplɪu̯]'
+    translation: "influence / impact"
+    pos: "noun"
+    gender: "m"
+  - lemma: "незграбний"
+    ipa: '[nɛˈzɦrɑbnɪj]'
+    translation: "clumsy / awkward"
+    pos: "adj"
+    notes: "often associated with the massiveness described by здоровенний"
+  - lemma: "міць"
+    ipa: '[mʲit͡sʲ]'
+    translation: "power / might"
+    pos: "noun"
+    gender: "f"
+    notes: "physical or abstract strength"

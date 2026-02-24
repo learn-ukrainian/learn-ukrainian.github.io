@@ -1,38 +1,37 @@
 # Дослідження: Емоції: глибоке занурення
 
 ## State Standard Reference
-§3 (Themes): "риси характеру; родинні стосунки; взаємини з іншими людьми; самопочуття" (Lines 1854-1913).
-§4.2.2 (Case Usage):
-- Genitive: "Стрибати з радості", "Почервоніти від сорому" (Cause of emotion).
-- Dative: "Мені не спиться", "Нам весело" (Experiencer of state).
-- Instrumental: "Ми захоплюємося сучасною музикою" (Object of emotion).
-Alignment: This module directly addresses the B1 requirement to discuss "feelings, character traits, and relationships" using complex case structures (Genitive of cause, Dative of state) rather than just simple "Я + verb" structures.
+§4.2.2.2: "від, з (причина): Почервоніти від сорому. Стрибати з радості;"
+§4.2.2.5: "об’єкт дії і стану: ... Ми захоплюємося сучасною музикою."
+§4.2.2.3: "суб’єкт певного стану: Мені не спиться. Вікторові здалося, що друзі не зрозуміли його. Нам весело;"
+§3.1: "Людина: риси характеру; взаємини з іншими людьми;"
+Alignment: The module directly addresses the B1 thematic requirements for describing human character and relationships, while systematically integrating the required case usages for expressing emotional states (Dative), causes of emotions (Genitive), and objects of emotional states (Instrumental).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Радість** | High / Corpora | *щира/непідробна радість*, *подарувати радість*, *стрибати з радості*, *сльози радості* |
-| **Смуток** | Med-High / Lit | *глибокий смуток*, *смуток охопив*, *розвіяти смуток*, *світлий смуток* |
-| **Тривога** | High / News | *відчувати тривогу*, *бити на сполох*, *тривога наростає*, *повітряна тривога* (modern context) |
-| **Гнів** | Med / Lit | *праведний гнів*, *приборкати гнів*, *спалах гніву*, *гнів палає* |
-| **Захоплення** | High / Spoken | *викликати захоплення*, *дивитися із захопленням*, *щире захоплення*, *не приховувати захоплення* |
-| **Відчувати** | Very High | *відчувати підтримку*, *відчувати страх*, *відчувати натхнення* |
-| **Розчарування**| Med / Spoken | *гірке розчарування*, *спіткало розчарування*, *глибоке розчарування* |
+| радість | High (spoken & lit) | щира радість, стрибати з радості, сльози радості |
+| тривога | Very High (modern) | повітряна тривога, бити на сполох, відчувати тривогу |
+| захоплення | High (spoken) | викликати захоплення, щире захоплення, не приховувати захоплення |
+| смуток | Medium (formal/lit) | глибокий смуток, світлий смуток, смуток охопив |
+| почуватися | Very High (core) | почуватися добре/кепсько/бадьоро |
+| відчувати | Very High (core) | відчувати страх/підтримку/натхнення |
 
 ## Cultural Hooks
-1. **Кордоцентризм (Cordocentrism)**: Verified philosophical concept (Skovoroda, Yurkevych). Ukrainians are described as "introverted to the heart." We perceive the world through *емоцію* та *серце*, not just *розум*. Key phrase: "Слухай своє серце" (Listen to your heart).
-2. **Зажура (Zazhura)**: A uniquely Ukrainian concept of "sweet sadness" or yearning, often found in folklore and songs. It is not clinical depression but a poetic state of soul, a connection to history and memory.
+1. **Кордоцентризм (Cordocentrism)**: A foundational concept in Ukrainian philosophy (H. Skovoroda, P. Yurkevych) where the heart (серце) is viewed as the core of human existence, cognition, and emotion, emphasizing emotional intelligence and deep feeling over pure rationalism.
+2. **Зажура (Zazhura)**: A culturally specific state of "sweet, pensive sadness" or deep lyrical yearning prevalent in Ukrainian folklore, music, and poetry. It is distinct from clinical depression or despair, carrying a sense of connection to heritage and memory.
 
 ## Common Learner Errors
-1. **"Я відчуваю себе добре"** → **"Я почуваюся добре"**. *Error*: Calque from English "I feel (myself) good" or Russian "чувствую себя". *Correction*: reflexive verb *почуватися* requires an adverb, never "себе".
-2. **"Я переживаю за тест"** → **"Я хвилююся через тест"**. *Error*: *Переживати* implies deep suffering or survival (*пережити війну*). For anxiety/nervousness, *хвилюватися* is more natural.
-3. **"Мені подобається" vs "Я люблю"**: Learners overuse "Я люблю" for mild preferences. *Correction*: Use *Мені подобається* for general likes, *Я в захваті від...* for strong positive emotion.
+1. **«Я відчуваю себе добре» → «Я почуваюся добре»**: Calque from English/Russian. In Ukrainian, "відчувати" takes a direct object (відчувати радість), while the reflexive state is expressed by "почуватися" + adverb.
+2. **Overusing «Я люблю» for everything**: Learners often lack the nuance to express mild affinity vs. strong admiration. They need to transition to «Мені подобається» and «Я в захваті від...».
+3. **«Хвилюватися» vs «Переживати»**: Confusing general nervousness (хвилюватися перед іспитом) with deep emotional suffering or enduring a hardship (переживати втрату).
 
 ## Cross-References
-- Builds on: **b1-63 (Health Wellness)** (Physical states -> Emotional states).
-- Prepares for: **b1-65 (Relationships)** (Using emotional vocab to describe interpersonal dynamics).
+- Builds on: b1-63 (Health Wellness - physical states)
+- Prepares for: b1-65 (Relationships - interpersonal dynamics)
 
 ## Notes for Content Writing
-- **Grammar connection**: Ensure the text explicitly models the **Dative Experiencer** structure (*Мені сумно*, *Тобі радісно*) vs **Nominative Agent** (*Я сумую*, *Ти радієш*).
-- **Nuance**: Distinguish *сум* (general sadness) vs *туга* (yearning/angst) vs *розпач* (despair).
-- **Persona**: The "Psychotherapist" persona allows for deep, analytical questions about feelings ("Чому ви це відчуваєте?", "Що приховує ваш гнів?").
+- Decolonized framing: Avoid comparing "почуватися" vs "відчувати" to Russian "чувствовать себя". Instead, explain the morphological logic of Ukrainian reflexive verbs natively.
+- Maintain the "Psychotherapist" persona: Guide the learner through introspection using appropriate clinical yet empathetic vocabulary.
+- Explicitly use IPA for phonetics in vocabulary, but NO inline transliteration in prose.
+- Model the shift from "Я сумую" (Nominative Agent) to "Мені сумно" (Dative Experiencer).

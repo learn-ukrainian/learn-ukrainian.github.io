@@ -1,0 +1,127 @@
+items:
+  - lemma: "відбудова"
+    ipa: '[ʋʲidbuˈdɔʋɑ]'
+    translation: "reconstruction"
+    pos: "noun"
+    gender: "f"
+    notes: "Contested term: героїчна відбудова vs експлуатація"
+  - lemma: "руйнування"
+    ipa: '[rujnuˈʋɑnʲːɑ]'
+    translation: "destruction"
+    pos: "noun"
+    gender: "n"
+  - lemma: "п'ятирічка"
+    ipa: '[pjɑtɪˈrʲit͡ʃkɑ]'
+    translation: "five-year plan"
+    pos: "noun"
+    gender: "f"
+  - lemma: "промисловість"
+    ipa: '[prɔmɪˈslɔʋʲisʲtʲ]'
+    translation: "industry"
+    pos: "noun"
+    gender: "f"
+  - lemma: "голод"
+    ipa: '[ˈɦɔlɔd]'
+    translation: "famine"
+    pos: "noun"
+    gender: "m"
+  - lemma: "втрати"
+    ipa: '[ˈʍtrɑtɪ]'
+    translation: "losses"
+    pos: "noun"
+    notes: "Plural form commonly used for casualties."
+  - lemma: "демографія"
+    ipa: '[dɛmɔˈɦrɑfʲijɑ]'
+    translation: "demography"
+    pos: "noun"
+    gender: "f"
+  - lemma: "експлуатація"
+    ipa: '[ɛkspluɑˈtɑt͡sʲijɑ]'
+    translation: "exploitation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "примусова праця"
+    ipa: '[prɪmuˈsɔʋɑ ˈprɑt͡sʲɑ]'
+    translation: "forced labor"
+    pos: "noun"
+    gender: "f"
+  - lemma: "репатріація"
+    ipa: '[rɛpɑtʲrʲiˈɑt͡sʲijɑ]'
+    translation: "repatriation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "пропаганда"
+    ipa: '[prɔpɑˈɦɑndɑ]'
+    translation: "propaganda"
+    pos: "noun"
+    gender: "f"
+  - lemma: "русифікація"
+    ipa: '[rusɪfʲiˈkɑt͡sʲijɑ]'
+    translation: "Russification"
+    pos: "noun"
+    gender: "f"
+  - lemma: "травма"
+    ipa: '[ˈtrɑu̯mɑ]'
+    translation: "trauma"
+    pos: "noun"
+    gender: "f"
+  - lemma: "донор"
+    ipa: '[ˈdɔnɔr]'
+    translation: "donor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "інфраструктура"
+    ipa: '[infrɑstruˈkturɑ]'
+    translation: "infrastructure"
+    pos: "noun"
+    gender: "f"
+  - lemma: "суверенітет"
+    ipa: '[suʋɛrɛnʲiˈtɛt]'
+    translation: "sovereignty"
+    pos: "noun"
+    gender: "m"
+  - lemma: "репарації"
+    ipa: '[rɛpɑˈrɑt͡sʲiji]'
+    translation: "reparations"
+    pos: "noun"
+    notes: "Usually used in plural."
+  - lemma: "дефіцит"
+    ipa: '[dɛfʲiˈt͡sɪt]'
+    translation: "deficit, shortage"
+    pos: "noun"
+    gender: "m"
+  - lemma: "мілітаризація"
+    ipa: '[mʲilʲitɑrɪˈzɑt͡sʲijɑ]'
+    translation: "militarization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ентузіазм"
+    ipa: '[ɛntuzʲiˈɑzm]'
+    translation: "enthusiasm"
+    pos: "noun"
+    gender: "m"
+  - lemma: "інвалід"
+    ipa: '[inʋɑˈlʲid]'
+    translation: "invalid, disabled person"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кріпацтво"
+    ipa: '[krʲiˈpɑt͡stʋɔ]'
+    translation: "serfdom"
+    pos: "noun"
+    gender: "n"
+  - lemma: "цензура"
+    ipa: '[t͡sɛnˈzurɑ]'
+    translation: "censorship"
+    pos: "noun"
+    gender: "f"
+  - lemma: "тоталітаризм"
+    ipa: '[tɔtɑlʲitɑˈrɪzm]'
+    translation: "totalitarianism"
+    pos: "noun"
+    gender: "m"
+  - lemma: "колабораціонізм"
+    ipa: '[kɔlɑbɔrɑt͡sʲiɔˈnʲizm]'
+    translation: "collaborationism"
+    pos: "noun"
+    gender: "m"

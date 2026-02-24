@@ -1,0 +1,128 @@
+items:
+  - lemma: "історія"
+    ipa: '[iˈstɔrʲijɑ]'
+    translation: "history"
+    pos: "noun"
+    gender: "f"
+    notes: "From the phrase творити історію."
+  - lemma: "держава"
+    ipa: '[ˈdɛrˈʒɑʋɑ]'
+    translation: "state"
+    pos: "noun"
+    gender: "f"
+    notes: "Refers to sovereign nations."
+  - lemma: "народ"
+    ipa: '[nɑˈrɔd]'
+    translation: "people, nation"
+    pos: "noun"
+    gender: "m"
+  - lemma: "влада"
+    ipa: '[ˈʋlɑdɑ]'
+    translation: "power, authority"
+    pos: "noun"
+    gender: "f"
+  - lemma: "період"
+    ipa: '[pɛˈrʲiɔd]'
+    translation: "period"
+    pos: "noun"
+    gender: "m"
+  - lemma: "подія"
+    ipa: '[pɔˈdʲijɑ]'
+    translation: "event"
+    pos: "noun"
+    gender: "f"
+  - lemma: "джерело"
+    ipa: '[d͡ʒɛrɛˈlɔ]'
+    translation: "source"
+    pos: "noun"
+    gender: "n"
+  - lemma: "спадщина"
+    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
+    translation: "heritage, legacy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "аналіз"
+    ipa: '[ɑˈnɑlʲiz]'
+    translation: "analysis"
+    pos: "noun"
+    gender: "m"
+  - lemma: "контекст"
+    ipa: '[kɔnˈtɛkst]'
+    translation: "context"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вплив"
+    ipa: '[ʍplɪu̯]'
+    translation: "influence, impact"
+    pos: "noun"
+    gender: "m"
+  - lemma: "наслідок"
+    ipa: '[ˈnɑsʲlʲidɔk]'
+    translation: "consequence"
+    pos: "noun"
+    gender: "m"
+  - lemma: "революція"
+    ipa: '[rɛʋɔˈlʲut͡sʲijɑ]'
+    translation: "revolution"
+    pos: "noun"
+    gender: "f"
+  - lemma: "гетьман"
+    ipa: '[ˈɦɛtʲmɑn]'
+    translation: "hetman"
+    pos: "noun"
+    gender: "m"
+  - lemma: "союз"
+    ipa: '[sɔˈjuz]'
+    translation: "alliance, union"
+    pos: "noun"
+    gender: "m"
+  - lemma: "незалежність"
+    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
+    translation: "independence"
+    pos: "noun"
+    gender: "f"
+  - lemma: "старшина"
+    ipa: '[stɑrˈʃɪnɑ]'
+    translation: "officers, leadership (Cossack)"
+    pos: "noun"
+    gender: "f"
+  - lemma: "договір"
+    ipa: '[ˈdɔɦɔˈʋʲir]'
+    translation: "treaty, agreement"
+    pos: "noun"
+    gender: "m"
+  - lemma: "автономія"
+    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
+    translation: "autonomy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "реєстр"
+    ipa: '[rɛˈjɛstr]'
+    translation: "register"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кріпацтво"
+    ipa: '[krʲiˈpɑt͡stʋɔ]'
+    translation: "serfdom"
+    pos: "noun"
+    gender: "n"
+  - lemma: "магнат"
+    ipa: '[mɑˈɦnɑt]'
+    translation: "magnate"
+    pos: "noun"
+    gender: "m"
+  - lemma: "шляхта"
+    ipa: '[ˈʃlʲɑxtɑ]'
+    translation: "nobility"
+    pos: "noun"
+    gender: "f"
+  - lemma: "амністія"
+    ipa: '[ɑˈmnʲisʲtʲijɑ]'
+    translation: "amnesty"
+    pos: "noun"
+    gender: "f"
+  - lemma: "покозачення"
+    ipa: '[pɔkɔˈzɑt͡ʃɛnʲːɑ]'
+    translation: "Cossackization (mass transition of peasants to Cossack estate)"
+    pos: "noun"
+    gender: "n"

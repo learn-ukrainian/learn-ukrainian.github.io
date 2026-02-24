@@ -1,41 +1,32 @@
 # Дослідження: Фразеологізми: Природа (Вода, Вогонь, Земля, Вітер)
 
 ## State Standard Reference
-§2.2 (Speech Interaction): "...доречно використовувати відомі фразеологізми та ідіоми, удаватися до офіційного або неофіційного регістру мовлення залежно від ситуації..."
-§4.4.1.2 (Stylistics): "Стилістичні засоби лексикології та фразеології: ...метафори (ідуть дощі, сонце сідає)..."
-Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо використання ідіоматичної мови для збагачення комунікації на рівні B2, фокусуючись на метафоричному переосмисленні природних явищ.
+§4.4.1.2: "Стилістичні засоби лексики: [...] метафори: ідуть дощі, сонце сідає"
+Alignment: The module builds upon these basic stylistic metaphors of nature, expanding them into full idiomatic expressions and analyzing their usage across conversational and publicistic registers, fulfilling the B2 requirement for understanding stylistic lexical devices. (Note: The plan's reference to §2.2 falls under Catalogue A — Communicative intentions, but §4.4.1.2 provides the core linguistic foundation).
 
 ## Vocabulary Frequency
-| Word/Phrase | Frequency / Source | Key collocations |
-|-------------|-------------------|------------------|
-| **Вода камінь точить** | High (Common proverb) | крапля камінь точить; терпіння і труд |
-| **Не знаючи броду...** | High (Warning) | не лізь у воду; спершу думай |
-| **Носити воду решетом** | Medium (Literary) | даремна праця; сізіфова праця |
-| **Пройти вогонь і воду** | High (Description of experience) | і мідні труби (often added); бувалий; досвідчений |
-| **Гратися з вогнем** | High (Warning) | небезпечно; ризикувати життям; жарти з вогнем |
-| **Підливати масла...** | High (Conflict) | у вогонь; у багаття; розпалювати ворожнечу |
-| **Провалитися крізь землю** | High (Emotion) | від сорому; хотіти зникнути; як крізь землю провалився |
-| **Вітер у голові** | High (Character trait) | свище/гуляє; легковажний; молодість |
-| **Кидати слова на вітер** | High (Responsibility) | не кидати; пусті обіцянки; відповідальність |
-
-**Note**: "Сидіти на своїй землі" та "Земля тримає" are less fixed as purely figurative idioms compared to the others. "Земля тримає" is often found in the context "поки земля носить" (while still alive/tolerated). "Сидіти на своїй землі" often retains literal meaning of historical ownership/roots.
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| Пройти вогонь і воду | High (Publicistic/Conversational) | людина пройшла вогонь і воду |
+| Вода камінь точить | Medium (Proverbial) | N/A |
+| Провалитися крізь землю | High (Conversational) | ладен провалитися крізь землю |
+| Кидати слова на вітер | High (Publicistic) | не кидати слова на вітер |
+| Звідки вітер віє | Medium (Conversational) | розуміти, звідки вітер віє |
 
 ## Cultural Hooks
-1. **Four Elements**: In Ukrainian folklore, the elements are not just physical matter but spiritual entities. **Water** cleanses but can be dangerous ("Don't spit in the well"). **Fire** is living ("Живий вогонь") and protects the home but requires respect. **Earth** is the "Mother" ("Земля-годувальниця") — swearing at the earth is considered a grave sin in traditional culture.
-2. **Wind Symbolism**: Wind represents the spirit/soul but also unpredictability and impermanence. In demonology, strong winds could carry evil spirits, hence the caution in idioms like "Звідки вітер віє" (determining the source of trouble/influence).
+1. In traditional Ukrainian worldview, elements were perceived as animate spiritual entities. The earth is deeply revered as "Земля-годувальниця" (Mother Earth, the provider), which makes expressions like "як земля носить" highly emotional and deeply rooted.
+2. Wells and water sources are sacred in Ukrainian culture. The phrase "Не плюй у криницю" is a reflection of a deeper spiritual taboo against defiling water, serving as a cultural anchor for respect.
 
 ## Common Learner Errors
-1. **Literal Translation**: Translating "To play with fire" is safe (direct equivalent), but "To beat the air" (Eng) vs "Носити воду решетом" (Ukr) requires learning the specific image.
-   *   *Error*: "Бити повітря" -> *Correct*: "Носити воду решетом" / "Товкти воду в ступі".
-2. **Case Usage**: "Гратися з вогнем" (Instrumental) vs "Підливати масла у вогонь" (Accusative with preposition). Learners often confuse cases after different verbs sharing the same noun.
-3. **Aspect**: Confusing "Провалитися" (Perfective - result, "I wish I disappeared") with "Провалюватися" (Imperfective - process). The idiom usually uses the perfective form for the wish/feeling "хотілося провалитися".
+1. Aspectual mismatch: Learners incorrectly use the imperfective "провалюватися крізь землю" instead of the perfective "провалитися крізь землю" to express a sudden, resultative wish to disappear out of shame.
+2. Case confusion after nature-related verbs: Incorrectly using the accusative instead of the instrumental in "гратися з вогнем" (requires з ким/чим), and confusing it with "підливати масла у вогонь" (which correctly takes the accusative: у що).
 
 ## Cross-References
-- **Builds on**: A1/A2 nature vocabulary (вода, вогонь, вітер, земля), B1 grammar (cases).
-- **Prepares for**: B2-HIST (historical metaphors), C1 Literature (symbolism of elements in poetry).
-- **Connects to**: M45-46 (Proverbs) — reinforces the connection between idioms and folk wisdom.
+- Builds on: M01-40 (Basic register distinctions and case usage)
+- Prepares for: M45-46 (Proverbs and folk wisdom)
 
 ## Notes for Content Writing
-- **Stylistic Register**: Most of these idioms are conversational or publicistic. Avoid using them in strictly official-business documents (except maybe "кидати слова на вітер" in political critique).
-- **Images**: Focus on the *action* in the idiom. "Carrying water in a sieve" is a vivid image of futility. "Water wearing away stone" is a tactile image of patience. Use these visuals in the "Storyteller" persona explanations.
-- **Alternative**: Consider mentioning "Як земля носить" alongside "Земля тримає" as it's a very common emotional expression for indignation.
+- Decolonized framing: Present these idioms as an independent Ukrainian linguistic system. Do not use Russian phrases for comparison; focus purely on the Ukrainian tactile and visual imagery.
+- Register distinctions: Explicitly note that these idioms fit conversational and publicistic styles but must be strictly avoided in the official-business register.
+- Ensure correct B2 phonetic markers in vocabulary hints: Ukrainian о = [ɔ], е = [ɛ], ч = [t͡ʃ].
+- Avoid Russianisms: use authentic vocabulary (e.g., "отримувати", "їсти", avoiding banned words).

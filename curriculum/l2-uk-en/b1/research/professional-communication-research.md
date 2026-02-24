@@ -1,39 +1,35 @@
 # Дослідження: Професійна комунікація
 
 ## State Standard Reference
-§3.9: "Робота: офіційне працевлаштування та робота за контрактом; робочий час...; відпустка; вихідні дні; оплата праці."
-§3.8: "Освіта: ...навчальні дисципліни; заклади освіти; ...організація освітнього процесу (лекція, семінар, консультація, курс, семестр, залік, іспит)."
-§4.5.1: "Офіційне й неофіційне спілкування: Стилістичні засоби лексики (антоніми, синоніми)... Стилістичні засоби синтаксису (звертання)."
-Alignment: This module directly covers the vocabulary and thematic requirements for "Work" and "Education" sections of the B1 standard, while specifically addressing the stylistic competence of formal vs. informal register required at this level.
+§3.8 Освіта: "організація освітнього процесу (лекція, семінар, консультація, курс, семестр, залік, іспит)."
+§3.9 Робота: "офіційне працевлаштування та робота за контрактом; робочий час (початок і кінець робочого дня, обідня перерва) і час на відпочинок; відпустка; вихідні дні; оплата праці (зарплатня)."
+§4.5.1.1 Стилістичні засоби синтаксису: "звертання: Олено Петрівно, ви успішно виступили на конференції..."
+Alignment: This module directly addresses the B1 thematic requirements for professional life (§3.9) and educational organization (§3.8), while integrating stylistic competence for formal and informal workplace boundaries (§4.5.1.1).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| колега | High (B1 Core) | шановний колега, звертатися до колеги, нарада з колегами |
-| керівник | High (B1 Core) | безпосередній керівник, звіт керівнику, зустріч з керівником |
-| нарада | Med-High (Professional) | проводити нараду, бути на нараді, планова нарада |
-| звіт | High (Professional) | річний звіт, писати звіт, здати звіт |
-| викладач | High (Academic) | звертатися до викладача, запитати викладача |
-| семінар | Med (Academic) | готуватися до семінару, виступати на семінарі |
-| брати участь | High (Correct phraseology) | брати участь у нараді/конференції (NOT приймати) |
+| колега | High (B1 Core) | шановний колега, нарада з колегами |
+| звіт | High | річний звіт, писати звіт |
+| брати участь | Essential phraseology | брати участь у нараді |
+| викладач | High academic | запитати викладача |
+| іспит / залік | State Standard §3.8 | складати іспит, отримати залік |
 
 ## Cultural Hooks
-1. **Address Etiquette**: In Ukrainian professional contexts, the use of "Ви" (capitalized in written correspondence to a specific person) is mandatory. The formula "Пане/Пані" + [Title/Profession/Surname] (e.g., "Пане Професоре", "Пані Колего") is the standard formal address, replacing Soviet-style Name+Patronymic in many modern western-oriented sectors, though Name+Patronymic remains common in traditional institutions (universities, state service).
-2. **Student Traditions**: Ukrainian students celebrate "Equator" (Екватор) – the midpoint of their studies (usually winter of the 3rd year). It is a major rite of passage, often celebrated more intensely than graduation.
+1. **«Екватор» (Equator)**: A major cultural rite of passage for Ukrainian university students. It celebrates the exact midpoint of their studies, usually occurring during the winter session of the third year.
+2. **Decolonized Address Etiquette**: The modern Ukrainian business and academic environments are shifting away from the Soviet-era reliance on patronymics (ім'я по батькові). The contemporary standard aligns with European norms, prioritizing «Пане/Пані» combined with a first name, surname, or professional title (e.g., «Пані Олено», «Пане Директоре»).
 
 ## Common Learner Errors
-1. **Calques from English/Russian**: "Приймати участь" (calque from "принимать участие") → Correct: **Брати участь**.
-2. **Register Confusion**: Switching to "Ти" too early. In Ukraine, the transition to "Ти" must be explicitly invited (usually by the senior person) or established by mutual agreement.
-3. **Verb Confusion**: "Вчитися" vs "Навчатися" vs "Вивчати".
-   - *Error*: "Я вивчаю в університеті."
-   - *Correct*: "Я **навчаюся** в університеті" (being a student) or "Я **вивчаю** економіку" (learning a subject).
-4. **Case Mismatch**: "Дякую Вас" (Incorrect) → Correct: **Дякую Вам** (Dative).
+1. **«Приймати участь»** → **«Брати участь»** — A persistent calque from Russian ("принимать участие"). Ukrainian exclusively uses the verb "брати" for this concept.
+2. **«Навчатися» vs «Вивчати»** — Learners often use these interchangeably. "Навчатися" is intransitive and indicates the process or location of studying (навчатися в університеті). "Вивчати" is transitive and requires a direct object (вивчати історію).
+3. **«Дякую Вас» (Accusative)** → **«Дякую Вам» (Dative)** — Another common calque from Russian ("благодарю вас"). The Ukrainian verb «дякувати» strictly governs the Dative case.
 
 ## Cross-References
-- Builds on: b1-60 (Society Politics) - utilizes social vocabulary.
-- Prepares for: b1-62 (Environment Ecology) - formal discussion skills; B2 Professional Track modules.
+- Builds on: b1-60 (Society Politics)
+- Prepares for: b1-62 (Environment Ecology)
 
 ## Notes for Content Writing
-- **Tone**: The "Corporate HR Manager" persona should be professional, encouraging, and structured.
-- **Immersion**: Ensure all "Real World" tips about email etiquette and addressing professors are in Ukrainian.
-- **Emphasis**: Highlight the "Пане/Пані" vocative forms as a marker of modern Ukrainian identity, distinct from the Russian naming convention.
+- Frame the transition from patronymics to «Пане/Пані» as an assertion of Ukrainian identity and integration into global professional standards, avoiding comparisons that center Russian as the default.
+- Maintain 100% Ukrainian immersion in the text (B1.5 requirement).
+- Use modal hedging («можливо», «ймовірно») to demonstrate appropriate B1+ professional register.
+- Ensure narrative agency: portray Ukrainians actively shaping their modern corporate and academic cultures.

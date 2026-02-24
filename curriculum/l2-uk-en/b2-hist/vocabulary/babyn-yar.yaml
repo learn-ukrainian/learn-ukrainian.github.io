@@ -1,0 +1,129 @@
+items:
+  - lemma: "Голокост"
+    ipa: '[ɦɔlɔˈkɔst]'
+    translation: "Holocaust"
+    pos: "noun"
+    gender: "m"
+    notes: "термін 'Голокост від куль' (Holocaust by Bullets)"
+  - lemma: "айнзацгрупа"
+    ipa: '[ɑjnzɑt͡zɦrupɑ]'
+    translation: "Einsatzgruppe"
+    pos: "noun"
+    gender: "f"
+    notes: "мобільні каральні підрозділи"
+  - lemma: "розстріл"
+    ipa: '[ˈrɔzstʲrʲil]'
+    translation: "execution by shooting"
+    pos: "noun"
+    gender: "m"
+  - lemma: "меморіал"
+    ipa: '[mɛmɔrʲiˈɑl]'
+    translation: "memorial"
+    pos: "noun"
+    gender: "m"
+  - lemma: "жертва"
+    ipa: '[ˈʒɛrtʋɑ]'
+    translation: "victim"
+    pos: "noun"
+    gender: "f"
+  - lemma: "окупація"
+    ipa: '[ɔkuˈpɑt͡sʲijɑ]'
+    translation: "occupation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "геноцид"
+    ipa: '[ɦɛnɔˈt͡sɪd]'
+    translation: "genocide"
+    pos: "noun"
+    gender: "m"
+  - lemma: "Праведник народів світу"
+    ipa: '[ˈprɑʋɛdnɪk nɑrɔdʲiu̯ ˈsʲʋʲitu]'
+    translation: "Righteous Among the Nations"
+    pos: "noun"
+    gender: "m"
+    notes: "звання, яке надає Яд Вашем"
+  - lemma: "гетто"
+    ipa: '[ˈɦɛtːɔ]'
+    translation: "ghetto"
+    pos: "noun"
+    gender: "n"
+  - lemma: "колабораціонізм"
+    ipa: '[kɔlɑbɔrɑt͡sʲiɔˈnʲizm]'
+    translation: "collaborationism"
+    pos: "noun"
+    gender: "m"
+  - lemma: "свідчення"
+    ipa: '[ˈsʲʋʲid͡ʒt͡ʃɛnʲːɑ]'
+    translation: "testimony"
+    pos: "noun"
+    gender: "n"
+  - lemma: "замовчування"
+    ipa: '[zɑˈmɔu̯t͡ʃuʋɑnʲːɑ]'
+    translation: "silencing"
+    pos: "noun"
+    gender: "n"
+  - lemma: "меморіалізація"
+    ipa: '[mɛmɔrʲiɑlʲizɑt͡sʲijɑ]'
+    translation: "memorialization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "урочище"
+    ipa: '[uˈrɔt͡ʃɪʃt͡ʃɛ]'
+    translation: "ravine, tract"
+    pos: "noun"
+    gender: "n"
+  - lemma: "екзекуція"
+    ipa: '[ɛɡzɛˈkut͡sʲijɑ]'
+    translation: "execution"
+    pos: "noun"
+    gender: "f"
+  - lemma: "колаборант"
+    ipa: '[kɔlɑbɔˈrɑnt]'
+    translation: "collaborator"
+    pos: "noun"
+    gender: "m"
+  - lemma: "антисемітизм"
+    ipa: '[ɑntɪsɛmʲiˈtɪzm]'
+    translation: "antisemitism"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ідеологія"
+    ipa: '[idɛɔˈlɔɦʲijɑ]'
+    translation: "ideology"
+    pos: "noun"
+    gender: "f"
+  - lemma: "пропаганда"
+    ipa: '[prɔpɑˈɦɑndɑ]'
+    translation: "propaganda"
+    pos: "noun"
+    gender: "f"
+  - lemma: "депортація"
+    ipa: '[dɛpɔrˈtɑt͡sʲijɑ]'
+    translation: "deportation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "тоталітаризм"
+    ipa: '[tɔtɑlʲitɑˈrɪzm]'
+    translation: "totalitarianism"
+    pos: "noun"
+    gender: "m"
+  - lemma: "дегуманізація"
+    ipa: '[dɛɦumɑnʲiˈzɑt͡sʲijɑ]'
+    translation: "dehumanization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "концтабір"
+    ipa: '[kɔnˈt͡stɑbʲir]'
+    translation: "concentration camp"
+    pos: "noun"
+    gender: "m"
+  - lemma: "співучасть"
+    ipa: '[sʲpʲiˈʋut͡ʃɑsʲtʲ]'
+    translation: "complicity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "вшанування"
+    ipa: '[ʍʃɑnuˈʋɑnʲːɑ]'
+    translation: "commemoration"
+    pos: "noun"
+    gender: "n"

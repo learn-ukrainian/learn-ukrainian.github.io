@@ -1,38 +1,35 @@
 # Дослідження: Синоніми: Розмір і Масштаб
 
 ## State Standard Reference
-§4.4.1.2: "Стилістичні засоби лексики: антоніми... синоніми... епітети... гіпербола (як засіб виразності, хоча в стандарті прямо не названа, але входить у 'тропи')."
-Alignment: Модуль розширює лексичну компетенцію учнів, навчаючи розрізняти стилістичні відтінки синонімів на позначення розміру (градація) та використовувати їх для досягнення експресивності в публіцистичному та художньому стилях, що відповідає вимогам до рівня В2 (використання стилістичних засобів лексики).
+§4.4.1.2: "Стилістичні засоби лексики: синоніми: говорити, розмовляти, спілкуватися; епітети: теплий день, смачний торт; метафори: ідуть дощі, сонце сідає..."
+Alignment: The module directly addresses the B2 requirement for understanding and applying stylistic lexical devices (synonyms, epithets, and metaphors) by exploring the semantic gradation of size and scale to achieve precise emotional and publicistic expressiveness.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| великий | High (General) | великий успіх, велика помилка, велика родина |
-| величезний | High (Expressive) | величезний вплив, величезне значення, величезна сума |
-| велетенський | Medium (Expressive) | велетенські кроки, велетенська сила, велетенський розмір |
-| грандіозний | Medium (Bookish) | грандіозний план, грандіозний скандал, грандіозна подія |
-| малий | High (General) | малий бізнес, малий внесок |
-| крихітний | Medium (Expressive) | крихітна деталь, крихітна зарплата (іронічно) |
-| мізерний | Low (Negative) | мізерний шанс, мізерні кошти, мізерний результат |
+| великий | Extremely high (Neutral) | великий успіх, велика помилка, велика родина |
+| величезний | High (Emphatic) | величезний вплив, величезне значення, величезна сума |
+| велетенський | Medium (Physical scale) | велетенські кроки, велетенський розмір, велетенський завод |
+| грандіозний | Lower (Formal/Grand) | грандіозний план, грандіозна подія, грандіозний проєкт |
+| малий | High (Neutral) | малий бізнес, малий внесок |
+| крихітний | Medium (Expressive) | крихітна деталь, крихітна кімната, крихітна зарплата |
+| мізерний | Medium (Negative) | мізерний шанс, мізерні кошти, мізерний результат |
+| здоровенний | High in Spoken (Colloquial) | здоровенний хлопець, здоровенна гора |
 
 ## Cultural Hooks
-1. **Ан-225 «Мрія»**: Найбільший у світі літак, спроектований в Україні (КБ Антонов). Символ української інженерної величі та масштабу («грандіозний», «велетенський»).
-2. **Батьківщина-Мати**: Монументальна скульптура в Києві (висота 102 м). Приклад використання слів «величний», «монументальний», «здоровенний» (у розмовному контексті про розмір).
+1. **Ан-225 «Мрія»**: Historically the world's largest cargo aircraft, built by Ukrainian engineers. Though destroyed during the 2022 Russian invasion, it remains a powerful cultural symbol of engineering ambition. Perfect context for words like «велетенський» and «грандіозний розмах».
+2. **Монумент «Батьківщина-Мати»**: The 102-meter monument in Kyiv is an ideal anchor for teaching concepts of monumentality and the adjectives «величний» and «монументальний».
 
 ## Common Learner Errors
-1. **Confusion of "Great" vs "Big"**: Using "великий" for abstract greatness without context, or missing emotional coloring of "величний" (majestic).
-    *   *Error*: "Він має великий авторитет" (Better: "величезний" or "значний").
-2. **Comparative Formation**: Double comparatives with size synonyms that are already absolute/superlative semantic.
-    *   *Error*: "Більш величезний" (Incorrect). → *Correction*: "Ще більший" або просто "величезний".
-3. **Register Mismatch**: Using colloquial "здоровенний" in formal writing or "мізерний" in neutral descriptions.
-    *   *Error*: "Компанія отримала здоровенний прибуток" (in a report). → *Correction*: "Величезний/значний прибуток".
+1. **"Big" vs "Great" overlap**: Using «великий» in all contexts (e.g., «великий авторитет» or «великий вплив») instead of employing appropriate, nuanced collocations like «значний авторитет» or «величезний вплив».
+2. **Double comparison of absolutes**: Attempting to form a comparative degree from an adjective that already has an absolute/extreme meaning (incorrect: «більш величезний»; correct: «ще більший» or «набагато більший»).
+3. **Register mismatch**: Using the colloquial and somewhat clumsy «здоровенний» in formal business or academic contexts (incorrect: «здоровенний прибуток»; correct: «значний прибуток» or «величезний дохід»).
 
 ## Cross-References
-- Builds on: **B2.1c (M31-40)** — Register System (Generic formal/informal distinction).
-- Prepares for: **C1 Stylistics** — Advanced literary descriptions and hyperbole.
+- Builds on: B1 basic adjective declensions, comparative forms, and foundational vocabulary.
+- Prepares for: C1 publicistic writing, literary analysis, and the conscious manipulation of reader emotions through stylistic choices.
 
 ## Notes for Content Writing
-- Focus on the **gradation** (scale): from neutral to absolute (big -> huge -> gigantic).
-- Use the "Mriya" story for the reading text to naturally introduce "giant", "colossal", "wingspan", "record".
-- Clearly distinguish between **physical size** and **abstract magnitude** (scale of a problem, size of a salary).
-- "Здоровенний" is a great word to introduce for colloquial "huge" (often implies clunky or awkwardly big).
+- **100% Immersion**: No English in the prose. Explain vocabulary through rich Ukrainian context and definitions.
+- **Agency Pass**: Frame Ukrainians as active creators (e.g., «Українські фахівці створили», not passive constructions).
+- **Decolonized Framing**: Teach the Ukrainian gradation of size strictly through internal stylistic logic, without drawing comparisons to Russian equivalents. Focus on the authentic flow of Ukrainian phraseology.

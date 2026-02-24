@@ -1,0 +1,150 @@
+items:
+  - lemma: новини
+    ipa: '[nɔˈʋɪnɪ]'
+    translation: news
+    pos: noun
+    notes: plural only in this meaning
+  - lemma: стаття
+    ipa: '[stɑˈtʲːɑ]'
+    translation: article
+    pos: noun
+  - lemma: журналіст
+    ipa: '[ʒurnɑˈlʲist]'
+    translation: journalist
+    pos: noun
+    gender: m
+  - lemma: ЗМІ
+    ipa: '[zʲmʲi]'
+    translation: mass media
+    pos: noun
+    notes: засоби масової інформації
+  - lemma: повідомляти
+    ipa: '[pɔʋʲidɔˈmlʲɑtɪ]'
+    translation: to report / to inform
+    pos: verb
+    aspect: impf
+  - lemma: висвітлювати
+    ipa: '[ʋɪˈsʲʋʲitʲlʲuʋɑtɪ]'
+    translation: to cover / to highlight
+    pos: verb
+    aspect: impf
+  - lemma: телебачення
+    ipa: '[tɛlɛˈbɑt͡ʃɛnʲːɑ]'
+    translation: television
+    pos: noun
+    gender: n
+  - lemma: газета
+    ipa: '[ɦɑˈzɛtɑ]'
+    translation: newspaper
+    pos: noun
+    gender: f
+  - lemma: репортаж
+    ipa: '[rɛpɔrˈtɑʒ]'
+    translation: report
+    pos: noun
+    gender: m
+  - lemma: редакція
+    ipa: '[rɛˈdɑkt͡sʲijɑ]'
+    translation: editorial office
+    pos: noun
+    gender: f
+  - lemma: трансляція
+    ipa: '[trɑnˈsʲlʲɑt͡sʲijɑ]'
+    translation: broadcast
+    pos: noun
+    gender: f
+  - lemma: подкаст
+    ipa: '[pɔdkɑst]'
+    translation: podcast
+    pos: noun
+    gender: m
+  - lemma: медіаграмотність
+    ipa: '[mɛdʲiɑɦrɑmɔtʲnʲisʲtʲ]'
+    translation: media literacy
+    pos: noun
+    gender: f
+  - lemma: оприлюднювати
+    ipa: '[ɔprɪˈlʲudʲnʲuʋɑtɪ]'
+    translation: to publish / to release
+    pos: verb
+    aspect: impf
+  - lemma: брати участь
+    ipa: '[ˈbrɑtɪ ˈut͡ʃɑsʲtʲ]'
+    translation: to participate
+    pos: phrase
+    notes: use instead of Russianism приймати участь
+  - lemma: порушувати питання
+    ipa: '[pɔˈruʃuʋɑtɪ pɪˈtɑnʲːɑ]'
+    translation: to raise an issue
+    pos: phrase
+    notes: use instead of Russianism піднімати питання
+  - lemma: дозвілля
+    ipa: '[dɔˈzʲʋʲilʲːɑ]'
+    translation: leisure
+    pos: noun
+    gender: n
+  - lemma: радіомовлення
+    ipa: '[rɑdʲiɔˈmɔu̯lɛnʲːɑ]'
+    translation: radio broadcasting
+    pos: noun
+    gender: n
+  - lemma: телевізор
+    ipa: '[tɛlɛˈʋʲizɔr]'
+    translation: television set
+    pos: noun
+    gender: m
+  - lemma: мережа
+    ipa: '[mɛˈrɛʒɑ]'
+    translation: network
+    pos: noun
+    gender: f
+  - lemma: інтернет
+    ipa: '[intɛrˈnɛt]'
+    translation: internet
+    pos: noun
+    gender: m
+  - lemma: преса
+    ipa: '[ˈprɛsɑ]'
+    translation: press
+    pos: noun
+    gender: f
+  - lemma: журнал
+    ipa: '[ʒurˈnɑl]'
+    translation: magazine
+    pos: noun
+    gender: m
+  - lemma: транслювати
+    ipa: '[trɑnsʲlʲuˈʋɑtɪ]'
+    translation: to broadcast
+    pos: verb
+    aspect: impf
+  - lemma: перекладати
+    ipa: '[pɛrɛklɑˈdɑtɪ]'
+    translation: to translate
+    pos: verb
+    aspect: impf
+  - lemma: джерело
+    ipa: '[d͡ʒɛrɛˈlɔ]'
+    translation: source
+    pos: noun
+    gender: n
+  - lemma: фактчекінг
+    ipa: '[fɑkt͡ʃːɛkʲinɦ]'
+    translation: fact-checking
+    pos: noun
+    gender: m
+  - lemma: фейк
+    ipa: '[fɛjk]'
+    translation: fake
+    pos: noun
+    gender: m
+  - lemma: дезінформація
+    ipa: '[dɛzʲinfɔrˈmɑt͡sʲijɑ]'
+    translation: disinformation
+    pos: noun
+    gender: f
+  - lemma: розслідування
+    ipa: '[rɔˈzsʲlʲiduʋɑnʲːɑ]'
+    translation: investigation
+    pos: noun
+    gender: n

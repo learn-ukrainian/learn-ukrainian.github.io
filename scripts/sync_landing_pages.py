@@ -3,7 +3,7 @@
 sync_landing_pages.py - Sync website landing pages with curriculum state.
 
 Updates:
-- docusaurus/docs/intro.mdx (main curriculum overview)
+- docusaurus/docs/index.mdx (main curriculum overview)
 - docusaurus/docs/{level}/index.mdx (level landing pages)
 
 Data sources:
@@ -66,7 +66,7 @@ LEVELS = load_config()
 
 def count_ready_modules(level: str) -> int:
     """Count MDX files for a level."""
-    mdx_dir = ROOT / 'docusaurus' / 'docs' / level
+    mdx_dir = ROOT / 'starlight' / 'src' / 'content' / 'docs' / level
     if not mdx_dir.exists():
         return 0
     return len(list(mdx_dir.glob('module-*.mdx')))
@@ -116,8 +116,8 @@ def collect_stats() -> dict:
 
 
 def update_intro_mdx(stats: dict, dry_run: bool) -> bool:
-    """Update the main intro.mdx curriculum table."""
-    intro_path = ROOT / 'docusaurus' / 'docs' / 'intro.mdx'
+    """Update the main index.mdx curriculum table."""
+    intro_path = ROOT / 'starlight' / 'src' / 'content' / 'docs' / 'index.mdx'
     if not intro_path.exists():
         print(f"  ! {intro_path} not found")
         return False
@@ -168,7 +168,7 @@ def update_intro_mdx(stats: dict, dry_run: bool) -> bool:
 
 def update_level_index(level: str, stats: dict, dry_run: bool) -> bool:
     """Update a level's index.mdx with current stats."""
-    index_path = ROOT / 'docusaurus' / 'docs' / level / 'index.mdx'
+    index_path = ROOT / 'starlight' / 'src' / 'content' / 'docs' / level / 'index.mdx'
     if not index_path.exists():
         print(f"  - {level}/index.mdx not found")
         return False
@@ -256,9 +256,9 @@ def main():
 
     updated = []
 
-    # Update main intro.mdx
+    # Update main index.mdx
     if update_intro_mdx(stats, args.dry_run):
-        updated.append('intro.mdx')
+        updated.append('index.mdx')
 
     # Update level index pages
     for level in LEVELS:

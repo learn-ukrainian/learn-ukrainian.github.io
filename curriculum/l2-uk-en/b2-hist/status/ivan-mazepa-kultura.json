@@ -1,0 +1,64 @@
+{
+  "module": "ivan-mazepa-kultura",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T23:21:40.859115Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T23:21:16.878889Z",
+    "meta": "2026-02-19T16:55:14.301821Z",
+    "activities": "2026-02-24T23:20:14.823632Z",
+    "vocabulary": "2026-02-24T23:20:15.182349Z",
+    "plan": "2026-02-18T19:03:36.121437Z",
+    "research": "2026-02-22T10:35:24.498978Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5118/5000 (raw: 5443)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

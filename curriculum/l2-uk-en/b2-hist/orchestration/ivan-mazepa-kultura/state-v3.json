@@ -8,6 +8,20 @@
       "ts": "2026-02-19T15:55:14Z",
       "task_id": "v3-ivan-mazepa-kultura-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T22:18:57Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T22:20:14Z",
+      "task_id": "v3-ivan-mazepa-kultura-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T22:21:40Z",
+      "attempts": 2
     }
   }
 }

@@ -1,0 +1,64 @@
+{
+  "module": "ivan-sirko",
+  "level": "B2",
+  "plan_version": "1",
+  "last_audit": "2026-02-24T22:55:00.924365Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T22:53:31.943367Z",
+    "meta": "2026-02-24T22:53:31.942810Z",
+    "activities": "2026-02-24T22:53:03.978431Z",
+    "vocabulary": "2026-02-24T22:50:27.728013Z",
+    "plan": "2026-02-18T19:03:36.154214Z",
+    "research": "2026-02-22T10:35:24.499405Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5063/5000 (raw: 5326)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

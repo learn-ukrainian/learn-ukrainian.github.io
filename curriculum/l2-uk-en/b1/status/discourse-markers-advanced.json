@@ -2,12 +2,12 @@
   "module": "discourse-markers-advanced",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T22:40:54.714315Z",
+  "last_audit": "2026-02-24T22:45:42.962077Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T22:40:52.000964Z",
+    "md": "2026-02-24T22:45:07.729116Z",
     "meta": "2026-02-24T22:36:35.190449Z",
-    "activities": "2026-02-24T22:40:51.890402Z",
+    "activities": "2026-02-24T22:43:01.307518Z",
     "vocabulary": "2026-02-24T22:40:52.879248Z",
     "plan": "2026-02-20T21:31:10.476206Z",
     "research": "2026-02-24T22:36:35.170171Z"
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4028/4000 (raw: 4434) | richness: 83% < 95% min (vocabulary)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4002/4000 (raw: 4836)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

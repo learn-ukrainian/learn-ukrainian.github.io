@@ -8,6 +8,11 @@
       "ts": "2026-02-19T17:10:46Z",
       "task_id": "v3-syntez-trahedii-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T22:26:04Z",
+      "note": "word-count-3953-below-80pct-5000"
     }
   }
 }

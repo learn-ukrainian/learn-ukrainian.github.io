@@ -8,6 +8,20 @@
       "ts": "2026-02-19T17:13:40Z",
       "task_id": "v3-surgunlik-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T22:44:47Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T22:45:50Z",
+      "task_id": "v3-surgunlik-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T22:47:50Z",
+      "attempts": 2
     }
   }
 }

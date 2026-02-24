@@ -2,13 +2,39 @@
   "slug": "deportatsii-ukraintsiv",
   "track": "b2-hist",
   "module_num": 110,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
       "timestamp": "2026-02-19T12:12:22Z",
       "task_id": "yw-deportatsii-ukraintsiv-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:35:05Z",
+      "words": 4600,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:36:49Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:36:49Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:40:55Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:40:55Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-19T12:12:22Z"
+  "last_updated": "2026-02-24T22:40:55Z"
 }

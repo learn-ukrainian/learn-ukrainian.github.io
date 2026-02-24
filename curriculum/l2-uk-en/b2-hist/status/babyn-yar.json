@@ -1,0 +1,64 @@
+{
+  "module": "babyn-yar",
+  "level": "B2",
+  "plan_version": "1",
+  "last_audit": "2026-02-24T23:00:43.162800Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T22:58:10.303989Z",
+    "meta": "2026-02-24T22:58:42.841252Z",
+    "activities": "2026-02-24T22:57:17.840571Z",
+    "vocabulary": "2026-02-24T22:57:17.829086Z",
+    "plan": "2026-02-18T19:03:35.606519Z",
+    "research": "2026-02-22T10:35:24.491700Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5225/5000 (raw: 5508)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has decolonization section but content lacks it"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

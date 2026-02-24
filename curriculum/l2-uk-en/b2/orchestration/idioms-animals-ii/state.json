@@ -1,0 +1,35 @@
+{
+  "slug": "idioms-animals-ii",
+  "track": "b2",
+  "module_num": 53,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:59:54Z",
+      "words": 4028,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:15:38Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:15:38Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:20:10Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:20:10Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T22:20:10Z"
+}

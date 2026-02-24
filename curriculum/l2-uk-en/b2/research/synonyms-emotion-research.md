@@ -1,47 +1,34 @@
 # Дослідження: Синоніми: Емоції та почуття
 
 ## State Standard Reference
-§4.4.1.2: "Лексичні засоби стилістики: синоніми (говорити, розмовляти, спілкуватися), антоніми, омоніми..."
-Alignment: Модуль безпосередньо реалізує вимогу стандарту щодо використання лексичних синонімів для збагачення мовлення та вираження нюансів емоційного стану на рівні B2.
+§4.4.1.2: "Стилістичні засоби лексики: [...] синоніми: говорити, розмовляти, спілкуватися; [...]"
+Alignment: This module addresses the B2 requirement for lexical stylistics by providing deep practice in differentiating synonyms related to emotions (e.g., сум vs журба, радість vs насолода), enabling learners to choose the correct word based on register and intensity.
 
-## Vocabulary Frequency & Collocations
-
-### Радість / Щастя / Втіха / Насолода
-| Word | Nuance | Key Collocations |
-|------|--------|------------------|
-| **Радість** | General joy, emotion | нестримна радість, сльози радості, світитися від радості, приносити радість |
-| **Щастя** | Deep, state of being | безмежне щастя, сімейне щастя, запорука щастя, "на сьомому небі від щастя" |
-| **Втіха** | Comfort, solace, relief | єдина втіха, шукати втіхи, слабка втіха, на втіху (комусь), "діти — втіха" |
-| **Насолода** | Pleasure (sensory/aesthetic) | отримувати насолоду, справжня насолода, естетична насолода, з насолодою |
-
-### Сум / Журба / Туга / Розпач / Горе
-| Word | Nuance | Key Collocations |
-|------|--------|------------------|
-| **Сум** | General sadness | легкий сум, навіювати сум, сум в очах, "сумно на душі" |
-| **Журба** | Poetic, deep, lingering | тяжка журба, журба за рідним краєм, розвіяти журбу, "журба гризе" |
-| **Туга** | Longing, yearning, nostalgia | нестерпна туга, туга за Батьківщиною, туга за минулим, "серце стискає туга" |
-| **Розпач** | Despair, hopelessness | впасти в розпач, доводити до розпачу, жест розпачу, у стані розпачу |
-| **Горе** | Grief, tragedy | велике горе, убитий горем, пережити горе, "горе лукове" (ironic) |
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| Радість | High (General vocabulary) | нестримна радість, світитися від радості |
+| Щастя | High (General vocabulary) | безмежне щастя, на сьомому небі від щастя |
+| Сум | High (Neutral sadness) | легкий сум, навіювати сум |
+| Журба | Low-Medium (Poetic/Literary) | тяжка журба, розвіяти журбу |
+| Туга | Medium (Intense/Nostalgic) | нестерпна туга, туга за Батьківщиною |
+| Розпач | Medium (High intensity) | впасти в розпач, доводити до розпачу |
+| Втіха | Medium (Abstract/Emotional) | єдина втіха, на втіху (комусь) |
+| Насолода| Medium (Sensory/Aesthetic) | отримувати насолоду, естетична насолода |
 
 ## Cultural Hooks
-1.  **Журба в українській душі**: Концепт "журба" в українській культурі — це не просто смуток, а глибокий, часто екзистенційний стан, оспіваний у фольклорі та літературі (Т. Шевченко: "Журба в шинку мед-горілку п'є"). Це почуття часто персоніфікується.
-2.  **Туга за краєм**: Історично обумовлене почуття (еміграція, заслання). В українській літературі "туга за Україною" є окремим потужним мотивом (діаспорна література, листи політв'язнів).
+1. Персоніфікація Журби: В українському фольклорі та літературі (зокрема у Т. Шевченка) "журба" — це не просто емоція, а жива істота чи глибокий екзистенційний стан, який "сушить" людину або з яким можна "розмовляти".
+2. Туга за краєм (Longing for the homeland): Ключовий концепт української діаспорної та засланської літератури. Це глибше, ніж ностальгія — це біль відриву від рідної землі, що формує цілий пласт культурної пам'яті.
 
 ## Common Learner Errors
-1.  **Втіха vs Fun**: Learners confuse *втіха* (solace/comfort/delight in a specific source) with *розвага* (entertainment).
-    *   *Wrong*: Ми пішли в парк для втіхи.
-    *   *Right*: Ми пішли в парк для розваги. / Музика була її єдиною втіхою.
-2.  **Радість vs Насолода**: Using *радість* for sensory pleasure.
-    *   *Wrong*: Я отримав радість від масажу.
-    *   *Right*: Я отримав насолоду від масажу.
-3.  **Physical vs Emotional Pain**: Using *біль* indiscriminately.
-    *   *Correction*: For emotional contexts, prefer *страждання*, *горе*, *мука*, or specifically *душевний біль*.
+1. Розвага vs Втіха → Учні часто використовують слово "розвага" (entertainment/fun), коли мають на увазі "втіху" (solace/comfort), що призводить до некоректних фраз на кшталт "мої діти — моя розвага" (замість "втіха").
+2. Фізичний біль vs Душевний біль → Англомовне "heartache" чи "pain" часто перекладають просто як "біль", тоді як українська вимагає уточнення ("душевний біль", "страждання") або використання слів "туга", "журба".
 
 ## Cross-References
-- **Builds on**: B1 M47-54 (Emotion idioms), A2 Emotions vocab.
-- **Prepares for**: C1 Stylistics (Nuanced emotional expression in literature), C1-BIO (Describing tragic biographies).
+- Builds on: M47-54 (Phraseology, idioms like "на сьомому небі від щастя")
+- Prepares for: Advanced C1 literary analysis where stylistic nuances of emotions are critical.
 
 ## Notes for Content Writing
-- **Persona Flavor**: Use the **Psychotherapist** persona mentioned in the plan (`role: Psychotherapist`) combined with the assigned **Ethnographer/Storyteller** flavor to analyze emotions deeply.
-- **Differentiation**: Clearly distinguish *журба* (poetic/folk) from *депресія* (medical/modern) to fit the "Synonyms" focus.
-- **Stylistics**: Emphasize that *журба* and *туга* belong to high/poetic style, while *сум* is neutral.
+- Уникайте порівнянь з російською. Пояснюйте стилістичну різницю через інтенсивність та український культурний контекст.
+- Слідкуйте за правильним використанням IPA для голосних у словнику (о = [ɔ], е = [ɛ]).
+- Застосуйте професійний тон інструктора (Психотерапевта), який аналізує емоції з погляду психологічної та лінгвістичної точності.

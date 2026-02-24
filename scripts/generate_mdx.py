@@ -33,7 +33,7 @@ from manifest_utils import get_module_by_slug
 # Paths
 PROJECT_ROOT = SCRIPT_DIR.parent
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
-DOCUSAURUS_DIR = PROJECT_ROOT / "docusaurus" / "docs"
+DOCUSAURUS_DIR = PROJECT_ROOT / "starlight" / "src" / "content" / "docs"
 
 def dump_json_for_jsx(data):
     """Dump JSON string escaped for use inside a JSX template literal."""
@@ -831,7 +831,7 @@ def highlight_morphemes_to_jsx(item: HighlightMorphemesItem, title: str, is_ukra
 
     return f'''### {title}
 
-<HighlightMorphemes isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}>
+<HighlightMorphemes client:load isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}}>
   <HighlightMorphemesActivity{instruction_jsx}
     text={{`{escape_jsx(item.text)}`}}
     morphemes={{[
@@ -844,7 +844,7 @@ def essay_response_to_jsx(data: EssayResponseData, title: str, is_ukrainian_forc
     """Convert essay-response data to JSX EssayResponse component."""
     return f'''### {title}
 
-<EssayResponse
+<EssayResponse client:load
   title="{escape_jsx(title)}"
   prompt={{`{escape_jsx(data.prompt)}`}}
   modelAnswer={{`{escape_jsx(data.modelAnswer)}`}}
@@ -856,7 +856,7 @@ def comparative_study_to_jsx(data: ComparativeStudyData, title: str, is_ukrainia
     """Convert comparative-study data to JSX ComparativeStudy component."""
     return f'''### {title}
 
-<ComparativeStudy
+<ComparativeStudy client:load
   title="{escape_jsx(title)}"
   content={{`{escape_jsx(data.content)}`}}
   task={{`{escape_jsx(data.task)}`}}
@@ -1392,10 +1392,11 @@ import ActivityHelp from '@site/src/components/ActivityHelp';"""
 
     # Frontmatter
     frontmatter = f'''---
-sidebar_position: {module_num}
-sidebar_label: "{str(module_num).zfill(2)}. {escape_jsx(fm.get('title', 'Untitled'))}"
 title: "{escape_jsx(fm.get('title', 'Untitled'))}"
 description: "{escape_jsx(fm.get('subtitle', ''))}"
+sidebar:
+  order: {module_num}
+  label: "{str(module_num).zfill(2)}. {escape_jsx(fm.get('title', 'Untitled'))}"
 ---
 '''
 
@@ -1452,6 +1453,9 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
 
     # Fix HTML for JSX compatibility (self-closing tags)
     processed = fix_html_for_jsx(processed)
+    
+    # Convert HTML comments to JSX comments for Astro MDX compatibility
+    processed = re.sub(r'<!--(.*?)-->', r'{/**/}', processed, flags=re.DOTALL)
 
     # Process story sections (add blank lines between narrative lines)
     processed = process_story_sections(processed)
@@ -1793,7 +1797,7 @@ def main():
         process_modules = get_modules_from_manifest()
 
     print(f'Source: curriculum/{lang_pair}/', flush=True)
-    print(f'Output: docusaurus/docs/\n', flush=True)
+    print(f'Output: starlight/src/content/docs/\n', flush=True)
 
     # Load EXTERNAL RESOURCES
     external_resources_file = PROJECT_ROOT / 'docs' / 'resources' / 'external_resources.yaml'

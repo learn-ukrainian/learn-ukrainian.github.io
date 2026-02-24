@@ -8,6 +8,20 @@
       "ts": "2026-02-19T15:28:18Z",
       "task_id": "v3-ivan-sirko-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T21:48:28Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T21:50:27Z",
+      "task_id": "v3-ivan-sirko-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T21:55:00Z",
+      "attempts": 2
     }
   }
 }

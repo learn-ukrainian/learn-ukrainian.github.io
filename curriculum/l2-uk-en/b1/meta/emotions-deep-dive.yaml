@@ -2,52 +2,51 @@ slug: emotions-deep-dive
 title: 'Емоції: глибоке занурення'
 word_target: 4000
 content_outline:
-  - section: Вступ (Introduction)
-    words: 400
-    points:
-      - Introduce the 'Psychotherapist' persona who guides the learner through the
-        inner landscape of emotions; introduce the cultural hook of Cordocentrism
-        (heart-centered worldview) based on Skovoroda and Yurkevych.
-      - 'Thematic framing: ''Listen to your heart'' (Слухай своє серце) as a gateway
-        to discussing feelings, character traits, and relationships as mandated by
-        State Standard §3.'
-  - section: Лексико-граматичні нюанси (Lexico-Grammatical Nuances)
-    words: 1000
-    points:
-      - Contrast the Dative Experiencer structure (Мені сумно, Тобі радісно) with
-        the Nominative Agent structure (Я сумую, Ти радієш); model the shift from
-        simple verb structures to complex state descriptions.
-      - 'Integrate State Standard §4.2.2 requirements: Genitive of cause (стрибати
-        з радості, почервоніти від сорому) and Instrumental of object (захоплюватися
-        музикою/мистецтвом).'
-      - 'Intensity and Nuance: Distinguish between the ''General Sadness'' (сум),
-        the ''Poetic Yearning'' (туга), and the ''Total Despair'' (розпач/відчай).'
-  - section: Тексти та культурний контекст (Texts and Cultural Context)
-    words: 1200
-    points:
-      - Reading analysis of high-frequency emotional states (радість, захоплення,
-        тривога); integrate modern context for 'тривога' (air raid sirens/anxiety)
-        vs historical 'бити на сполох'.
-      - Introduce 'Зажура' (Zazhura) as a uniquely Ukrainian poetic state of 'sweet
-        sadness' or connection to memory often found in folklore, contrasting it with
-        clinical states.
-      - Analyze authentic expressions of 'щира радість' and 'праведний гнів' in narrative
-        texts to build stylistic awareness.
-  - section: Комунікативна практика (Communicative Practice)
-    words: 1000
-    points:
-      - 'Focus on correcting common learner calques: drill the replacement of ''Я
-        відчуваю себе добре'' (Eng/Rus influence) with the correct ''Я почуваюся добре''
-        (reflexive verb + adverb).'
-      - 'Register and nuance drill: distinguish between ''хвилюватися'' (common anxiety/nervousness)
-        and ''переживати'' (deep suffering or survival contexts like ''пережити війну'').'
-      - 'Precision in preference: move learners beyond overusing ''Я люблю'' for everything
-        to using ''Мені подобається'' for mild affinity and ''Я в захваті від...''
-        for strong admiration.'
-  - section: Рефлексія та висновки (Reflection and Conclusions)
-    words: 400
-    points:
-      - 'Final production task in persona: respond to deep analytical questions such
-        as ''Чому ви це відчуваєте?'' and ''Що приховує ваш гнів?'' using new collocations.'
-      - 'Summary of emotional intelligence in Ukrainian: recap of collocations (світлий
-        смуток, не приховувати захоплення) and the Cordocentric perspective.'
+- section: Вступ
+  words: 400
+  points:
+  - Представити персону психотерапевта, який запрошує студента дослідити свій внутрішній
+    світ емоцій.
+  - Ввести концепт 'кордоцентризму' (філософія Сковороди та Юркевича), пояснивши метафору
+    'Слухай своє серце' як основу українського світосприйняття.
+  - Окреслити зв'язок теми з описом рис характеру та взаємин (відповідно до §3 Державного
+    стандарту).
+- section: Лексико-граматичні нюанси
+  words: 1000
+  points:
+  - Порівняти конструкції з давальним відмінком стану (Мені сумно, Тобі радісно) та
+    називним відмінком дії (Я сумую, Ти радієш).
+  - 'Пояснити використання родового відмінка причини (§4.2.2.2): ''стрибати з радості'',
+    ''почервоніти від сорому''.'
+  - 'Пояснити використання орудного відмінка об''єкта стану (§4.2.2.5): ''захоплюватися
+    музикою'', ''захоплюватися мистецтвом''.'
+  - 'Розмежувати інтенсивність станів на прикладах: загальний ''сум'', поетична ''туга''
+    та абсолютний ''розпач''/''відчай''.'
+- section: Тексти та культурний контекст
+  words: 1200
+  points:
+  - Проаналізувати високочастотні стани ('радість', 'захоплення', 'тривога') у форматі
+    коротких розповідей.
+  - Протиставити історичне значення 'бити на сполох' і сучасний контекст 'повітряна
+    тривога'.
+  - Дослідити 'зажуру' як унікальний український культурний концепт (світлий смуток,
+    зв'язок із пам'яттю), використовуючи фольклорні або літературні приклади.
+  - Розібрати стилістичні нюанси виразів 'щира радість' та 'праведний гнів' на автентичних
+    текстах.
+- section: Комунікативна практика
+  words: 1000
+  points:
+  - Чітко розмежувати дієслова 'відчувати' (щось) та 'почуватися' (як), виправивши
+    типову помилку 'я відчуваю себе добре'.
+  - Пояснити різницю між 'хвилюватися' (нервувати перед подією) та 'переживати' (глибоко
+    страждати або проходити через важкий досвід).
+  - 'Навчити градації вподобань: від ''Мені подобається'' (легка симпатія) до ''Я
+    в захваті від...'' (сильне захоплення), уникаючи надмірного вживання ''Я люблю''.'
+- section: Рефлексія та висновки
+  words: 400
+  points:
+  - Завершити модуль 'терапевтичним' завданням-рефлексією, де студент відповідає на
+    глибокі запитання (наприклад, 'Що приховує ваш гнів?', 'Коли ви відчуваєте щиру
+    радість?').
+  - Підбити підсумки ключових колокацій (світлий смуток, не приховувати захоплення).
+  - Зробити фінальний акцент на українському емоційному інтелекті та важливості кордоцентризму.

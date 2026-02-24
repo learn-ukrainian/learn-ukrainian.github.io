@@ -1,37 +1,34 @@
 # Дослідження: Медіа та новини
 
 ## State Standard Reference
-§3.4: "преса, радіо, телебачення, інтернет" (у розділі "Дозвілля, відпочинок")
-Alignment: Module covers all listed media types, focusing on vocabulary for consuming news and discussing media content as a leisure/informational activity.
+§3.4: "Дозвілля, відпочинок: способи проведення вільного часу... преса, радіо, телебачення, інтернет"
+Alignment: Модуль відповідає вимогам стандарту щодо лексики для обговорення інформаційного простору, традиційних та цифрових медіа як складової дозвілля та повсякденного життя рівня B1.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **новини** (news) | High (General/Media) | свіжі/останні/термінові новини, дивитися/читати новини, стрічка новин, випуск новин |
-| **стаття** (article) | High (General/Academic) | писати/публікувати статтю, аналітична/наукова стаття, автор статті |
-| **журналіст** (journalist) | High (Media) | військовий/спортивний журналіст, журналістське розслідування, працювати журналістом |
-| **ЗМІ** (media) | High (Formal/Media) | засоби масової інформації, роль ЗМІ, сучасні ЗМІ |
-| **редакція** (editorial office) | Medium (Professional) | працювати в редакції, редакційна політика |
-| **трансляція** (broadcast) | Medium (Media/Tech) | пряма трансляція, вести трансляцію |
+| новини | Висока частотність (щоденна лексика) | свіжі новини, термінові новини, стрічка новин, випуск новин |
+| стаття | Висока частотність (преса) | аналітична стаття, наукова стаття, публікувати статтю, автор статті |
+| журналіст | Середня частотність | військовий журналіст, спортивний журналіст, журналістське розслідування |
+| ЗМІ | Висока частотність (офіційно-діловий стиль) | засоби масової інформації |
+| повідомляти | Висока частотність (інформування) | повідомляти новину, повідомляти друзям, повідомляти про |
+| висвітлювати | Середня (професійна лексика) | висвітлювати події, висвітлювати проблему |
 
 ## Cultural Hooks
-1. **"Алло, алло, алло! Говорить Харків!"** (1924): The first words spoken on Ukrainian radio, marking the beginning of broadcasting in Ukraine. This phrase is iconic for the history of Ukrainian media.
-2. **Suspilne (Суспільне Мовлення)**: The creation of the National Public Broadcasting Company in 2017 was a major reform to establish independent, non-state, non-oligarchic media in Ukraine, merging TV and the historic Ukrainian Radio.
+1. Перший в Україні радіоефір відбувся у Харкові у 1924 році. Першими словами були: «Алло, алло, алло! Говорить Харків!» (історичний маркер зародження вітчизняного мовлення).
+2. Створення «Суспільного мовлення» у 2017 році стало ключовим етапом реформування медіапростору України та масштабним переходом до незалежної, неолігархічної журналістики.
 
 ## Common Learner Errors
-1. **Translating vs. Broadcasting**: Confusion between **перекладати** (to translate) and **транслювати** (to broadcast/transmit).
-   * *Error*: "Цей канал перекладає новини." (meaning broadcasts)
-   * *Correct*: "Цей канал транслює новини."
-2. **Russianisms in Media Terms**: Using calques like "приймати участь" instead of **брати участь** (to take part/participate in a program) or "піднімати питання" instead of **порушувати питання** (to raise a question/issue).
-3. **Case Government with "Повідомляти"**: Incorrect case usage for the recipient of information.
-   * *Error*: "Повідомити друзів" (Accusative - often confused with 'inform friends') vs "Повідомити друзям" (Dative - report TO friends). In Ukrainian, **повідомляти** often governs the Accusative for the *fact* (повідомити новину) and Dative for the *person* (повідомити глядачам), but usually "повідомити" + Accusative (person) implies "to notify someone".
-   * *Correction*: Focus on **повідомляти про** (report about) + Accusative, or **розповідати** + Dative.
+1. Плутанина між «транслювати» (to broadcast) та «перекладати» (to translate) через фонетичну та семантичну подібність до англійського "translate".
+2. Калькування з російської мови у сталих виразах: використання помилкового «приймати участь» замість питомо українського «брати участь».
+3. Калькування у професійній лексиці: вживання «піднімати питання» замість природного «порушувати питання».
+4. Неправильне керування дієслова «повідомляти»: використання знахідного відмінка (Accusative) для особи замість давального (Dative). Слід запам'ятати: *повідомити (що?) новину* (Acc), але *повідомити (кому?) друзям* (Dat).
 
 ## Cross-References
-- Builds on: **b1-58** (Describing Changes) - useful for describing trends in media.
-- Prepares for: **b1-60** (Society Politics) - media vocabulary is essential for political discourse.
+- Builds on: b1-58 (Describing Changes)
+- Prepares for: b1-60 (Society Politics)
 
 ## Notes for Content Writing
-- **Register**: Distinguish between the formal language of news reports (passive constructions, formal lexis) and the informal language of discussing news (blogs, social media comments).
-- **Modernity**: Include "Telegram-channels" and "podcasts" as modern news sources, reflecting current Ukrainian reality where traditional TV/newspapers are supplemented by digital formats.
-- **Fact-checking**: Introduce the concept of "медіаграмотність" (media literacy) as a relevant B1 topic.
+- Дотримуватися правила 100% занурення: вся теорія, пояснення та діалоги мають бути виключно українською мовою. Англійська допускається лише в колонці перекладу в підсумковому словнику.
+- Використовувати деколонізований підхід: підкреслювати природність українських висловів (брати участь, порушувати питання) не через порівняння з російською помилкою, а як повернення до автентичного слововжитку.
+- Інтегрувати лексику у контекст: замість списків подавати слова в міні-діалогах або стрічці новин.

@@ -8,6 +8,20 @@
       "ts": "2026-02-19T17:11:42Z",
       "task_id": "v3-povoienne-vidbudova-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T22:28:30Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T22:30:14Z",
+      "task_id": "v3-povoienne-vidbudova-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T22:32:29Z",
+      "attempts": 2
     }
   }
 }

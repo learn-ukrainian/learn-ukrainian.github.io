@@ -1,0 +1,66 @@
+{
+  "module": "emotions-deep-dive",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T23:57:52.156650Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T23:57:33.854055Z",
+    "meta": "2026-02-24T23:52:44.023259Z",
+    "activities": "2026-02-24T23:57:34.319639Z",
+    "vocabulary": "2026-02-24T23:57:34.288176Z",
+    "plan": "2026-02-20T21:31:55.452262Z",
+    "research": "2026-02-24T23:52:44.018101Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "3501/4000 (raw: 3715) | engagement: 0/5 | richness: 41% < 95% min (vocabulary) - REWRITE needed"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "30 < 35 (soft target)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 4,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

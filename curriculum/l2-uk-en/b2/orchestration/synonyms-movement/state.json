@@ -1,0 +1,35 @@
+{
+  "slug": "synonyms-movement",
+  "track": "b2",
+  "module_num": 57,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:40:46Z",
+      "words": 4997,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:50:10Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:50:10Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:57:25Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T22:57:25Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T22:57:25Z"
+}

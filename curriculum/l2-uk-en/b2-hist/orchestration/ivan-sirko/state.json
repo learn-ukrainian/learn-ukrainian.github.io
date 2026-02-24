@@ -1,0 +1,35 @@
+{
+  "slug": "ivan-sirko",
+  "track": "b2-hist",
+  "module_num": 61,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:48:28Z",
+      "words": 4735,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:50:27Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:50:27Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:55:00Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:55:00Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T21:55:00Z"
+}

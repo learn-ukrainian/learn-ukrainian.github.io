@@ -1,0 +1,149 @@
+items:
+  - lemma: "синиця в руках"
+    ipa: '[sɪˈnɪt͡sʲɑ ʋ ruˈkɑx]'
+    translation: "a small certainty (titmouse in hand)"
+    pos: "phrase"
+    notes: "better a small certainty than a big hope"
+  - lemma: "стріляний горобець"
+    ipa: '[ˈstʲrʲilʲɑnɪj ɦɔrɔˈbɛt͡sʲ]'
+    translation: "experienced person (shot sparrow)"
+    pos: "phrase"
+    notes: "collocation: старий стріляний горобець"
+  - lemma: "біла ворона"
+    ipa: '[ˈbʲilɑ ʋɔˈrɔnɑ]'
+    translation: "outcast or exception (white crow)"
+    pos: "phrase"
+    gender: "f"
+    notes: "always feminine gender regardless of subject"
+  - lemma: "мовчати як риба"
+    ipa: '[mɔˈʋt͡ʃɑtɪ jɑk ˈrɪbɑ]'
+    translation: "to be silent as a fish"
+    pos: "phrase"
+    notes: "collocation: німий як риба (mute as a fish)"
+  - lemma: "робити з мухи слона"
+    ipa: '[rɔˈbɪtɪ z ˈmuxɪ slɔˈnɑ]'
+    translation: "to make an elephant out of a fly"
+    pos: "phrase"
+    notes: "means to exaggerate greatly"
+  - lemma: "працювати як бджола"
+    ipa: '[prɑt͡sʲuˈʋɑtɪ jɑk bd͡ʒɔˈlɑ]'
+    translation: "to work like a bee"
+    pos: "phrase"
+    notes: "extreme diligence and hardworking"
+  - lemma: "лелека"
+    ipa: '[lɛˈlɛkɑ]'
+    translation: "stork"
+    pos: "noun"
+    gender: "m"
+    notes: "sacred bird; symbol of family and luck"
+  - lemma: "мурашки по спині"
+    ipa: '[muˈrɑʃkɪ pɔ ˈspɪnʲi]'
+    translation: "shivers down the back"
+    pos: "phrase"
+    notes: "physical sensation from fear or cold"
+  - lemma: "лізе межи очі як муха"
+    ipa: '[ˈlʲizɛ ˈmɛˈʒɪ ˈɔt͡ʃʲi jɑk ˈmuxɑ]'
+    translation: "gets into the eyes like a fly"
+    pos: "phrase"
+    notes: "describes an annoying or persistent person"
+  - lemma: "ворона в павичевому пір'ї"
+    ipa: '[ʋɔˈrɔnɑ ʋ pɑʋɪˈt͡ʃɛʋɔmu ˈpʲirji]'
+    translation: "crow in peacock feathers"
+    pos: "phrase"
+    notes: "someone pretending to be who they aren't"
+  - lemma: "переносне значення"
+    ipa: '[pɛrɛnɔsnɛ ˈznɑt͡ʃɛnʲːɑ]'
+    translation: "figurative meaning"
+    pos: "phrase"
+    notes: "essential metalanguage for discussing idioms"
+  - lemma: "ні риба ні м'ясо"
+    ipa: '[nʲi ˈrɪbɑ nʲi ˈmjɑsɔ]'
+    translation: "neither fish nor meat"
+    pos: "phrase"
+    notes: "indecisive or weak person"
+  - lemma: "німий як риба"
+    ipa: '[nʲiˈmɪj jɑk ˈrɪbɑ]'
+    translation: "mute as a fish"
+    pos: "phrase"
+  - lemma: "рання пташка"
+    ipa: '[ˈrɑnʲːɑ ˈptɑʃkɑ]'
+    translation: "early riser (early bird)"
+    pos: "phrase"
+    notes: "only for waking up early, not arriving first"
+  - lemma: "журавель у небі"
+    ipa: '[ʒurɑˈʋɛlʲ u ˈnɛbʲi]'
+    translation: "crane in the sky"
+    pos: "phrase"
+    notes: "distant, risky hope"
+  - lemma: "метафора"
+    ipa: '[mɛˈtɑfɔrɑ]'
+    translation: "metaphor"
+    pos: "noun"
+    gender: "f"
+  - lemma: "уособлювати"
+    ipa: '[uɔˈsɔblʲuʋɑtɪ]'
+    translation: "to personify"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "перебільшувати"
+    ipa: '[pɛrɛˈbʲilʲʃuʋɑtɪ]'
+    translation: "to exaggerate"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "працелюбність"
+    ipa: '[prɑt͡sɛˈlʲubnʲisʲtʲ]'
+    translation: "diligence"
+    pos: "noun"
+    gender: "f"
+  - lemma: "нав'язливий"
+    ipa: '[nɑˈʋjɑzlɪʋɪj]'
+    translation: "intrusive / annoying"
+    pos: "adj"
+  - lemma: "таємниця"
+    ipa: '[tɑjɛˈmnɪt͡sʲɑ]'
+    translation: "secret"
+    pos: "noun"
+    gender: "f"
+  - lemma: "оберіг"
+    ipa: '[ɔbɛˈrʲiɦ]'
+    translation: "amulet / talisman"
+    pos: "noun"
+    gender: "m"
+  - lemma: "злагода"
+    ipa: '[ˈzlɑɦɔdɑ]'
+    translation: "harmony / accord"
+    pos: "noun"
+    gender: "f"
+  - lemma: "дихотомія"
+    ipa: '[dɪxɔtɔˈmʲijɑ]'
+    translation: "dichotomy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "досвід"
+    ipa: '[ˈdɔsʲʋʲid]'
+    translation: "experience"
+    pos: "noun"
+    gender: "m"
+  - lemma: "роздратування"
+    ipa: '[rɔzdrɑtuˈʋɑnʲːɑ]'
+    translation: "irritation"
+    pos: "noun"
+    gender: "n"
+  - lemma: "сакральний"
+    ipa: '[sɑˈkrɑlʲnɪj]'
+    translation: "sacred"
+    pos: "adj"
+  - lemma: "невтомний"
+    ipa: '[nɛˈʋtɔmnɪj]'
+    translation: "tireless"
+    pos: "adj"
+  - lemma: "забарвлення"
+    ipa: '[zɑˈbɑrʋlɛnʲːɑ]'
+    translation: "coloring / nuance"
+    pos: "noun"
+    gender: "n"
+  - lemma: "спостереження"
+    ipa: '[spɔstɛˈrɛʒɛnʲːɑ]'
+    translation: "observation"
+    pos: "noun"
+    gender: "n"

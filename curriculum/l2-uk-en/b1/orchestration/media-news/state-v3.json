@@ -1,0 +1,27 @@
+{
+  "track": "b1",
+  "slug": "media-news",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T21:55:33Z",
+      "task_id": "v3-media-news-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T21:59:30Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T22:14:31Z",
+      "task_id": "v3-media-news-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T22:16:52Z",
+      "attempts": 2
+    }
+  }
+}

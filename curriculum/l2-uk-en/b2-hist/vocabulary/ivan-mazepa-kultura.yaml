@@ -1,0 +1,126 @@
+items:
+  - lemma: "меценат"
+    ipa: '[mɛt͡sɛˈnɑt]'
+    translation: "patron"
+    pos: "noun"
+    gender: "m"
+  - lemma: "бароко"
+    ipa: '[bɑˈrɔkɔ]'
+    translation: "baroque"
+    pos: "noun"
+    gender: "n"
+  - lemma: "гравюра"
+    ipa: '[ɦrɑˈʋʲurɑ]'
+    translation: "engraving"
+    pos: "noun"
+    gender: "f"
+  - lemma: "партесний спів"
+    ipa: '[pɑrˈtɛsnɪj sʲpʲiu̯]'
+    translation: "polyphonic chant"
+    pos: "noun"
+    gender: "m"
+  - lemma: "панегірик"
+    ipa: '[pɑnɛˈɦʲirɪk]'
+    translation: "panegyric"
+    pos: "noun"
+    gender: "m"
+  - lemma: "друкарня"
+    ipa: '[druˈkɑrnʲɑ]'
+    translation: "printing house"
+    pos: "noun"
+    gender: "f"
+  - lemma: "шкільна драма"
+    ipa: '[ʃkʲilʲˈnɑ ˈdrɑmɑ]'
+    translation: "school drama"
+    pos: "noun"
+    gender: "f"
+  - lemma: "багатоголосся"
+    ipa: '[bɑɦɑtɔɦɔˈlɔsʲːɑ]'
+    translation: "polyphony"
+    pos: "noun"
+    gender: "n"
+  - lemma: "іконостас"
+    ipa: '[ikɔnɔˈstɑs]'
+    translation: "iconostasis"
+    pos: "noun"
+    gender: "m"
+  - lemma: "культурне відродження"
+    ipa: '[kulʲˈturnɛ ʋʲiˈdrɔd͡ʒɛnʲːɑ]'
+    translation: "cultural renaissance"
+    pos: "noun"
+    gender: "n"
+  - lemma: "архітектурний стиль"
+    ipa: '[ɑrxʲitɛˈkturnɪj stɪlʲ]'
+    translation: "architectural style"
+    pos: "noun"
+    gender: "m"
+  - lemma: "літописець"
+    ipa: '[lʲitɔˈpɪsɛt͡sʲ]'
+    translation: "chronicler"
+    pos: "noun"
+    gender: "m"
+  - lemma: "спадщина"
+    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
+    translation: "legacy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "анафема"
+    ipa: '[ɑˈnɑfɛmɑ]'
+    translation: "anathema"
+    pos: "noun"
+    gender: "f"
+  - lemma: "фундатор"
+    ipa: '[funˈdɑtɔr]'
+    translation: "founder"
+    pos: "noun"
+    gender: "m"
+  - lemma: "диспут"
+    ipa: '[ˈdɪsput]'
+    translation: "dispute"
+    pos: "noun"
+    gender: "m"
+  - lemma: "спудей"
+    ipa: '[spuˈdɛj]'
+    translation: "student"
+    pos: "noun"
+    gender: "m"
+  - lemma: "колегіум"
+    ipa: '[kɔˈlɛɦʲium]'
+    translation: "collegium"
+    pos: "noun"
+    gender: "m"
+  - lemma: "деколонізація"
+    ipa: '[dɛkɔlɔnʲiˈzɑt͡sʲijɑ]'
+    translation: "decolonization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "пропаганда"
+    ipa: '[prɔpɑˈɦɑndɑ]'
+    translation: "propaganda"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ліпнина"
+    ipa: '[lʲiˈpnɪnɑ]'
+    translation: "stucco work"
+    pos: "noun"
+    gender: "f"
+  - lemma: "фасад"
+    ipa: '[fɑˈsɑd]'
+    translation: "facade"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ілюстрація"
+    ipa: '[ilʲuˈstrɑt͡sʲijɑ]'
+    translation: "illustration"
+    pos: "noun"
+    gender: "f"
+  - lemma: "інтермедія"
+    ipa: '[intɛrˈmɛdʲijɑ]'
+    translation: "interlude"
+    pos: "noun"
+    gender: "f"
+  - lemma: "суверенітет"
+    ipa: '[suʋɛrɛnʲiˈtɛt]'
+    translation: "sovereignty"
+    pos: "noun"
+    gender: "m"

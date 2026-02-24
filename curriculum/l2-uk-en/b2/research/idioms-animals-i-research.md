@@ -1,32 +1,36 @@
 # Дослідження: Фразеологізми: Тварини I (Вовк, Собака, Кінь)
 
 ## State Standard Reference
-§4.4.1.2: "Стилістичні засоби лексики: ... метафори... епітети..."
-Alignment: This module develops B2 lexical competence by introducing fixed metaphorical expressions (idioms) as a bridge to C1 phraseology mastery, aligning with the standard's requirement for understanding stylistic means.
+§4.4.1.2: "Стилістичні засоби лексики: ... метафори: ідуть дощі, сонце сідає; ... звуконаслідування: Няв!, Гав! ..."
+Alignment: The module addresses lexical stylistics and metaphor creation, fulfilling the B2 requirement for recognizing and actively employing advanced figurative language and stylistic devices based on cultural codes.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| Вовк | High (Core)       | голодний як вовк, вовчий апетит, дивитися вовком |
-| Собака | High (Core)     | вірний як собака, собаче життя, потрібний як собаці п'ята нога |
-| Кінь | High (Core)       | робоча конячка, бути на коні, хід конем |
-| Шкура | Medium            | в овечій шкурі, рятувати власну шкуру |
-| Гавкати | Medium          | собака гавкає, гавкати на когось (сваритися) |
+| Вовка ноги годують | High (spoken/folk) | Виживати працею, постійно рухатися |
+| Дивитися вовком | Medium (literary/spoken) | Похмуро дивитися, виявляти ворожість |
+| Собаку з'їсти | High (conversational) | Бути майстром, знатися на справі |
+| Собаче життя | Medium (colloquial) | Жити важко, терпіти злидні |
+| Як собака на сіні | High (literary/spoken) | Сам не користується і іншим не дає |
+| Кінь ще не валявся | High (colloquial) | Робота навіть не починалася |
+| Робоча конячка | High (everyday/work) | Працьовита людина, тягне все на собі |
+| Бути на коні | High (journalism/spoken) | Мати успіх, бути переможцем |
 
 ## Cultural Hooks
-1. **Wolf Duality**: In Polissia folklore, the wolf was believed to be created by the devil but tasked by God to destroy devils. This dual nature (danger vs. sacred function) explains why wolves were respected and their body parts used as amulets (wolf's tooth for teething children).
-2. **The Cossack's Soul**: The horse in Ukrainian culture is not just transport but a "sworn brother" (pobratym). In "Kozak Mamay" paintings, the horse is always present, symbolizing freedom and the connection between the warrior and the afterlife/destiny ("Долі й конем не об'їдеш").
+1. Вовк у поліському фольклорі: має дуалістичну природу. Легенди свідчать, що диявол зліпив вовка з глини, але оживив його Бог, наказавши йому полювати на чортів. Для козаків-характерників вовк був сакральним тотемом (перевертні-вовкулаки).
+2. Кінь як побратим: в українській лицарській традиції кінь ніколи не був просто "робочою худобою". На картинах "Козак Мамай" кінь є символом волі та рівноправним партнером, що різко відрізняє цей образ від імперського сприйняття тварин як ресурсу.
 
 ## Common Learner Errors
-1. **Literal Translation**: Using English "raining cats and dogs" -> *падають коти і собаки* (Incorrect) -> *ллє як з відра* (Correct).
-2. **Semantic Confusion**: Interpreting "Собаку з'їсти" literally or as "to be hungry" -> It means "to be an expert" (analogue: "cut one's teeth on something").
-3. **Register Mismatch**: Using "Кінь ще не валявся" in formal writing (it is colloquial).
+1. Literal Translation: Translating English idioms verbatim (e.g., "raining cats and dogs" -> "падають коти і собаки" instead of "ллє як з відра").
+2. Register Confusion: Using highly colloquial idioms like "кінь ще не валявся" or "собаче життя" in formal/academic essays where they sound inappropriately jarring.
+3. Verbs of Eating: Using the Russianism "кушати" instead of "їсти" when attempting to modify idioms or create related sentences (e.g., in "собаку з'їсти").
 
 ## Cross-References
-- Builds on: B1-Animal vocabulary (literal meanings)
-- Prepares for: C1-Phraseology (Animal idioms II), C1-Stylistics
+- Builds on: Basic animal vocabulary (A1/A2), introductory metaphors and emotional descriptors.
+- Prepares for: C1/C2 advanced literary analysis, stylistic nuance, and historical texts where such idioms are heavily embedded.
 
 ## Notes for Content Writing
-- **Idiom Alert**: The plan lists "Морити вовка голодом" with the definition "to make someone wait long". This is non-standard. The standard idiom for starvation is "морити голодом" (generic) or "голодний як вовк" (comparison). "Дивитися вовком" (to look hostile) is a better, more frequent alternative if "wait long" is not strictly required.
-- **Ethnography**: Emphasize the "Wolf" as a totem animal for *kharakternyky* (sorcerers) to fit the "Ethnographer" persona.
-- **Tone**: Keep it "Folklore Ethnographer" — use phrases like "У народній уяві...", "Як кажуть старі люди...".
+- Persona: The Ethnographer ("Етнограф"). Use phrases like "За народною традицією..." and "Як кажуть старі люди...".
+- Immersion: 100% Ukrainian. Do not use English scaffolding in the prose. English is only allowed in the vocabulary table.
+- Decolonized Framing: Avoid comparing idioms to Russian equivalents. Focus purely on the internal logic of the Ukrainian worldview and agrarian-Cossack heritage.
+- Formatting: Ensure IPA is only used in the vocabulary YAML file, not in the main Markdown prose. Use «angular quotes» consistently.

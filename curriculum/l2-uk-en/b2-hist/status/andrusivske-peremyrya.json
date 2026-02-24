@@ -1,0 +1,64 @@
+{
+  "module": "andrusivske-peremyrya",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T22:46:01.951322Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T22:45:53.114429Z",
+    "meta": "2026-02-19T16:27:28.648955Z",
+    "activities": "2026-02-24T22:44:06.359548Z",
+    "vocabulary": "2026-02-24T22:44:07.139538Z",
+    "plan": "2026-02-18T19:03:35.578180Z",
+    "research": "2026-02-22T10:35:24.491094Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5783/5000 (raw: 6098)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

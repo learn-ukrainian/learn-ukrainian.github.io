@@ -2,55 +2,49 @@ slug: health-wellness
 title: Здоров'я та самопочуття
 word_target: 4000
 content_outline:
-  - section: Вступ (Introduction)
-    words: 600
-    points:
-      - 'Introduction of the core concepts: ''здоров''я'' (health) vs. ''самопочуття''
-        (well-being/state). Connect to module b1-62 by discussing how environmental
-        factors like ecology impact one''s ''стан здоров''я''.'
-      - 'Establish the ''Active Patient'' persona: learners practice asking ''Як ваше
-        самопочуття?'' and ''На що ви скаржитеся?'' while taking an active role in
-        describing their condition rather than passively receiving advice.'
-  - section: Термінологія та симптоми (Terminology and Symptoms)
-    words: 1000
-    points:
-      - 'Linguistic accuracy focus: Correction of the common Russism ''хворіти грипом''
-        (Instrumental) to the correct Ukrainian construction ''хворіти на грип'' (на
-        + Accusative). Drill with various diseases (кір, ангіна, застуда).'
-      - 'Grammar of Sensation: Clarify the distinction between ''почуватися'' (to
-        feel as a state) and ''відчувати'' (to sense/perceive). Explicitly correct
-        the error ''Я відчуваю добре'' to ''Я почуваюся добре''.'
-      - 'Pain Construction: Detailed drill on the structure [У мене] (Genitive) +
-        [болить/болять] (Verb) + [частина тіла] (Nominative). Contrast with English
-        ''I have a...'' to ensure proper syntax.'
-  - section: 'Культурний контекст: Протяг та траволікування (Cultural Context: Drafts
-      and Herbal Wisdom)'
-    words: 800
-    points:
-      - 'The Cult of ''Protyah'': Explore the uniquely Ukrainian fear of drafts (''протяг'').
-        Discuss social scenarios like closing windows in public transport and the
-        belief that ''протяг'' is a primary cause of ''нездужання'' even in summer.'
-      - 'Herbalism and Home Remedies: Introduction to ''народна медицина''. Focus
-        on ''калина'' (viburnum) for colds, ''ромашка'' (chamomile) for inflammation,
-        and ''м''ята'' (mint) for digestion. Note the ubiquity of pharmacies (''аптеки'')
-        that sell these alongside modern drugs.'
-  - section: 'Практика: У лікаря та в аптеці (Practice: At the Doctor and Pharmacy)'
-    words: 1000
-    points:
-      - 'Medical Competencies (State Standard §3.7): Functional language for ''діагностика''
-        (diagnostics), including ''здавати аналізи'' (to take tests) and ''проходити
-        обстеження'' (to undergo examination).'
-      - 'Register Differentiation: Practice formal interaction with a doctor (describing
-        history, receiving a ''діагноз'') vs. informal registers (complaining to a
-        friend or asking for advice on ''лікування'' at the pharmacy).'
-      - 'Pharmacy Scenarios: Asking for ''ліки'' (medicine) and ''засоби профілактики''
-        (preventative measures), focusing on ''зміцнення імунітету'' (strengthening
-        immunity).'
-  - section: Підсумок та поради (Summary and Advice)
-    words: 600
-    points:
-      - 'Wellness Advice: Using ''варто/треба'' with health verbs. Focus on ''профілактика''
-        as ''краще ніж лікування''. Discuss ''здорове харчування'' and ''режим дня''
-        for ''міцне здоров''я''.'
-      - 'Social Etiquette and Wishes: Proper use of the toast/response ''На здоров''я!''
-        and the standard wish for a sick person ''Бажаю швидкого одужання!''.'
+- section: Вступ
+  words: 600
+  points:
+  - Define and contrast the core concepts of «здоров'я» (general health status) and
+    «самопочуття» (current physical/mental well-being) with contextual examples.
+  - Connect to ecology (module b1-62) by explaining how environmental factors impact
+    one's «стан здоров'я».
+  - Introduce the 'Active Patient' persona, presenting introductory diagnostic questions
+    («Як ваше самопочуття?», «На що ви скаржитеся?») and emphasizing active reporting.
+- section: Термінологія та симптоми
+  words: 1000
+  points:
+  - Provide a clear paradigm for «хворіти на...» (на + Accusative), actively highlighting
+    it as the correct Ukrainian construction vs. incorrect instrumental usage. Give
+    examples for кір, ангіна, застуда, грип.
+  - 'Explain the Grammar of Sensation: delineate the usage of «почуватися» (state,
+    paired with adverbs) and «відчувати» (perception, paired with nouns).'
+  - 'Drill the pain construction: [У мене] + [болить/болять] + [Nominative body part],
+    utilizing tables to show singular/plural verb agreement.'
+- section: 'Культурний контекст: Протяг та траволікування'
+  words: 800
+  points:
+  - Detail the cultural phenomenon of «протяг» (draft), its perceived role in causing
+    «нездужання», and related social etiquette (e.g., closing windows in transport).
+  - Explain the role of «народна медицина» (folk medicine), specifically detailing
+    the use of «калина», «ромашка», and «м'ята» for treating colds and inflammation.
+  - Discuss the integration of traditional herbal remedies within modern «аптеки»
+    (pharmacies) in Ukraine.
+- section: 'Практика: У лікаря та в аптеці'
+  words: 1000
+  points:
+  - Present functional language for medical «діагностика» (diagnostics) based on State
+    Standard §3.7, such as «здавати аналізи» and «проходити обстеження».
+  - Provide dialogue examples distinguishing formal register with a doctor (describing
+    medical history, receiving a «діагноз») and informal register with a friend.
+  - Outline pharmacy interactions, focusing on requesting «ліки» and «засоби профілактики»
+    for «зміцнення імунітету».
+- section: Підсумок та поради
+  words: 600
+  points:
+  - Summarize wellness advice using modal constructions «варто / треба» + infinitive
+    health verbs.
+  - Highlight the importance of «профілактика», «здорове харчування», and «режим дня»
+    for maintaining «міцне здоров'я».
+  - Present social etiquette phrases, including the toast «На здоров'я!» and the standard
+    recovery wish «Бажаю швидкого одужання!».

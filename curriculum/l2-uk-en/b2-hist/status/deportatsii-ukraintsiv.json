@@ -1,0 +1,64 @@
+{
+  "module": "deportatsii-ukraintsiv",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T23:40:55.316826Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T23:40:44.286386Z",
+    "meta": "2026-02-19T18:12:47.312418Z",
+    "activities": "2026-02-24T23:36:49.693764Z",
+    "vocabulary": "2026-02-24T23:36:50.021816Z",
+    "plan": "2026-02-18T19:03:35.808695Z",
+    "research": "2026-02-22T10:35:24.494109Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6278/5000 (raw: 6729)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

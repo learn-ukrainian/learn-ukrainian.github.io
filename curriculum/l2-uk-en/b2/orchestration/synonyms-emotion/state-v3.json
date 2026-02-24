@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "synonyms-emotion",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T22:24:11Z",
+      "task_id": "v3-synonyms-emotion-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T22:26:39Z",
+      "note": "word-count-2908-below-80pct-4000"
+    }
+  }
+}

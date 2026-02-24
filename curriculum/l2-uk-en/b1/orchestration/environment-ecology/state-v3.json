@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "environment-ecology",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T22:39:35Z",
+      "task_id": "v3-environment-ecology-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T22:42:08Z",
+      "note": "word-count-3124-below-80pct-4000"
+    }
+  }
+}
