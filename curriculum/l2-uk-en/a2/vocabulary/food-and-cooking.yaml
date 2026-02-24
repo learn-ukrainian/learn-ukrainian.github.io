@@ -1,101 +1,130 @@
 items:
   - lemma: "варити"
+    ipa: '[ʋɑˈrɪtɪ]'
     translation: "to boil / to cook in liquid"
     pos: "verb"
     aspect: "impf"
     notes: "specifically for cooking in liquids, unlike готувати"
   - lemma: "смажити"
+    ipa: '[ˈsmɑʒɪtɪ]'
     translation: "to fry"
     pos: "verb"
     aspect: "impf"
   - lemma: "пекти"
+    ipa: '[pɛˈktɪ]'
     translation: "to bake"
     pos: "verb"
     aspect: "impf"
   - lemma: "різати"
+    ipa: '[ˈrʲizɑtɪ]'
     translation: "to cut"
     pos: "verb"
     aspect: "impf"
   - lemma: "каструля"
+    ipa: '[kɑˈstrulʲɑ]'
     translation: "pot"
     pos: "noun"
     gender: "f"
   - lemma: "сковорода"
+    ipa: '[skɔʋɔrɔˈdɑ]'
     translation: "pan"
     pos: "noun"
     gender: "f"
   - lemma: "духовка"
+    ipa: '[duˈxɔu̯kɑ]'
     translation: "oven"
     pos: "noun"
     gender: "f"
   - lemma: "рецепт"
+    ipa: '[rɛˈt͡sɛpt]'
     translation: "recipe"
     pos: "noun"
     gender: "m"
   - lemma: "додавати"
+    ipa: '[dɔdɑˈʋɑtɪ]'
     translation: "to add"
     pos: "verb"
     aspect: "impf"
   - lemma: "змішувати"
+    ipa: '[ˈzʲmʲiʃuʋɑtɪ]'
     translation: "to mix"
     pos: "verb"
     aspect: "impf"
   - lemma: "солодкий"
+    ipa: '[sɔˈlɔdkɪj]'
     translation: "sweet"
     pos: "adj"
   - lemma: "солоний"
+    ipa: '[sɔˈlɔnɪj]'
     translation: "salty"
     pos: "adj"
   - lemma: "інгредієнт"
+    ipa: '[inɦrɛdʲiˈjɛnt]'
     translation: "ingredient"
     pos: "noun"
     gender: "m"
   - lemma: "страва"
+    ipa: '[ˈstrɑʋɑ]'
     translation: "dish (food)"
     pos: "noun"
     gender: "f"
   - lemma: "зажарка"
+    ipa: '[zɑʒɑrkɑ]'
     translation: "sauté / base for soup"
     pos: "noun"
     gender: "f"
     notes: "the crucial base of fried vegetables for borshch"
   - lemma: "борщ"
+    ipa: '[bɔrʃt͡ʃ]'
     translation: "borshch"
     pos: "noun"
     gender: "m"
   - lemma: "вареники"
+    ipa: '[ʋɑˈrɛnɪkɪ]'
     translation: "varenyky / dumplings"
     pos: "noun"
     gender: "pl"
   - lemma: "ложка"
+    ipa: '[ˈlɔʒkɑ]'
     translation: "spoon"
     pos: "noun"
     gender: "f"
   - lemma: "ніж"
+    ipa: '[nʲiʒ]'
     translation: "knife"
     pos: "noun"
     gender: "m"
   - lemma: "гість"
+    ipa: '[ɦʲisʲtʲ]'
     translation: "guest"
     pos: "noun"
     gender: "m"
   - lemma: "гостинність"
+    ipa: '[ɦɔˈstɪnʲːisʲtʲ]'
     translation: "hospitality"
     pos: "noun"
     gender: "f"
   - lemma: "сіль"
+    ipa: '[sʲilʲ]'
     translation: "salt"
     pos: "noun"
     gender: "f"
   - lemma: "перемішати"
+    ipa: '[pɛrɛmʲiˈʃɑtɪ]'
     translation: "to mix thoroughly"
     pos: "verb"
     aspect: "perf"
   - lemma: "нарізати"
+    ipa: '[nɑrʲizɑtɪ]'
     translation: "to chop / to slice"
     pos: "verb"
     aspect: "perf"
   - lemma: "смак"
+    ipa: '[smɑk]'
     translation: "taste / flavor"
     pos: "noun"
     gender: "m"
+  - lemma: "орудний"
+    ipa: '[ɔˈrudnɪj]'
+    translation: "instrumental"
+    pos: "adj"

@@ -1,91 +1,121 @@
 items:
   - lemma: "сполучник"
+    ipa: '[spɔˈlut͡ʃnɪk]'
     translation: "connector, conjunction"
     pos: "noun"
   - lemma: "проте"
+    ipa: '[prɔˈtɛ]'
     translation: "however, nevertheless"
     pos: "conjunction"
   - lemma: "зате"
+    ipa: '[zɑˈtɛ]'
     translation: "but on the other hand"
     pos: "conjunction"
   - lemma: "натомість"
+    ipa: '[nɑˈtɔmʲisʲtʲ]'
     translation: "instead"
     pos: "conjunction"
   - lemma: "відтак"
+    ipa: '[ʋʲiˈdtɑk]'
     translation: "consequently, therefore"
     pos: "conjunction"
   - lemma: "втім"
+    ipa: '[ʍtʲim]'
     translation: "nevertheless, however"
     pos: "conjunction"
   - lemma: "причому"
+    ipa: '[prɪˈt͡ʃɔmu]'
     translation: "moreover, and what is more"
     pos: "conjunction"
   - lemma: "отже"
+    ipa: '[ˈɔd͡ʒɛ]'
     translation: "thus, so"
     pos: "conjunction"
   - lemma: "незважаючи на"
+    ipa: '[nɛzʋɑˈʒɑjut͡ʃɪ nɑ]'
     translation: "despite, regardless of"
     pos: "preposition"
   - lemma: "зв'язність"
+    ipa: '[ˈzʋjɑzʲnʲisʲtʲ]'
     translation: "cohesion"
     pos: "noun"
   - lemma: "тавтологія"
+    ipa: '[tɑu̯tɔˈlɔɦʲijɑ]'
     translation: "tautology"
     pos: "noun"
   - lemma: "дисонанс"
+    ipa: '[dɪsɔˈnɑns]'
     translation: "dissonance"
     pos: "noun"
   - lemma: "дарма що"
+    ipa: '[dɑrˈmɑ ʃt͡ʃɔ]'
     translation: "even though"
     pos: "conjunction"
   - lemma: "попри те що"
+    ipa: '[ˈpɔprɪ tɛ ʃt͡ʃɔ]'
     translation: "despite the fact that"
     pos: "conjunction"
   - lemma: "внаслідок чого"
+    ipa: '[ˈʋnɑsʲlʲidɔk t͡ʃɔˈɦɔ]'
     translation: "as a result of which"
     pos: "conjunction"
   - lemma: "тим більше"
+    ipa: '[tɪm ˈbʲilʲʃɛ]'
     translation: "all the more so"
     pos: "conjunction"
   - lemma: "однак"
+    ipa: '[ɔˈdnɑk]'
     translation: "however"
     pos: "conjunction"
   - lemma: "бо"
+    ipa: '[bɔ]'
     translation: "because, for"
     pos: "conjunction"
   - lemma: "компенсація"
+    ipa: '[kɔmpɛnˈsɑt͡sʲijɑ]'
     translation: "compensation"
     pos: "noun"
   - lemma: "протиставлення"
+    ipa: '[prɔtɪˈstɑu̯lɛnʲːɑ]'
     translation: "contrast, opposition"
     pos: "noun"
   - lemma: "допустовий"
+    ipa: '[dɔpuˈstɔʋɪj]'
     translation: "concessive"
     pos: "adjective"
   - lemma: "наслідок"
+    ipa: '[ˈnɑsʲlʲidɔk]'
     translation: "consequence, result"
     pos: "noun"
   - lemma: "приєднання"
+    ipa: '[prɪjɛˈdnɑnʲːɑ]'
     translation: "addition, joining"
     pos: "noun"
   - lemma: "сурядність"
+    ipa: '[suˈrʲɑdʲnʲisʲtʲ]'
     translation: "coordination"
     pos: "noun"
   - lemma: "підрядність"
+    ipa: '[pʲiˈdʲrʲɑdʲnʲisʲtʲ]'
     translation: "subordination"
     pos: "noun"
   - lemma: "синтаксис"
+    ipa: '[ˈsɪntɑksɪs]'
     translation: "syntax"
     pos: "noun"
   - lemma: "монотонний"
+    ipa: '[mɔnɔˈtɔnːɪj]'
     translation: "monotonous"
     pos: "adjective"
   - lemma: "неминучий"
+    ipa: '[nɛmɪˈnut͡ʃɪj]'
     translation: "inevitable"
     pos: "adjective"
   - lemma: "категоричний"
+    ipa: '[kɑtɛɦɔˈrɪt͡ʃnɪj]'
     translation: "categorical, absolute"
     pos: "adjective"
   - lemma: "філігранно"
+    ipa: '[fʲilʲiˈɦrɑnːɔ]'
     translation: "exquisitely, delicately"
     pos: "adverb"

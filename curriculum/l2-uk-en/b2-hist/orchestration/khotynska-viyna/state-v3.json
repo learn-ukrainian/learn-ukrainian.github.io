@@ -8,6 +8,20 @@
       "ts": "2026-02-19T15:12:12Z",
       "task_id": "v3-khotynska-viyna-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T20:06:39Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T20:08:07Z",
+      "task_id": "v3-khotynska-viyna-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T20:09:29Z",
+      "attempts": 2
     }
   }
 }

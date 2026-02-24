@@ -1,7 +1,7 @@
 # Audit Report: M09 — aspect-future.md
 **Level:** B1 | **Module:** M09 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 11:58:37
+**Generated:** 2026-02-24 14:47:22
 
 ## Configuration
 **Type:** B1-grammar

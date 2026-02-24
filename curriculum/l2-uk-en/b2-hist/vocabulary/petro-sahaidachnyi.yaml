@@ -1,0 +1,138 @@
+items:
+  - lemma: "гетьман"
+    ipa: '[ˈɦɛtʲmɑn]'
+    translation: "hetman / military commander"
+    pos: "noun"
+    gender: "m"
+    notes: "collocations: кошовий отаман, булава гетьмана"
+  - lemma: "меценат"
+    ipa: '[mɛt͡sɛˈnɑt]'
+    translation: "patron"
+    pos: "noun"
+    gender: "m"
+    notes: "context: підтримка освіти, церков"
+  - lemma: "січ"
+    ipa: '[sʲit͡ʃ]'
+    translation: "Sich"
+    pos: "noun"
+    gender: "f"
+    notes: "context: Запорозька Січ, козацька республіка"
+  - lemma: "братство"
+    ipa: '[ˈbrɑt͡stʋɔ]'
+    translation: "brotherhood"
+    pos: "noun"
+    gender: "n"
+    notes: "context: Київське братство, вступ війська"
+  - lemma: "військо"
+    ipa: '[ˈʋʲijsʲkɔ]'
+    translation: "army / host"
+    pos: "noun"
+    gender: "n"
+    notes: "collocations: Військо Запорозьке, реєстрове козацтво"
+  - lemma: "кампанія"
+    ipa: '[kɑmˈpɑnʲijɑ]'
+    translation: "campaign"
+    pos: "noun"
+    gender: "f"
+    notes: "context: Московська кампанія, морські походи"
+  - lemma: "угода"
+    ipa: '[uˈɦɔdɑ]'
+    translation: "agreement / truce"
+    pos: "noun"
+    gender: "f"
+    notes: "context: Деулінське перемир'я, Хотинський мир"
+  - lemma: "ієрархія"
+    ipa: '[ijɛˈrɑrxʲijɑ]'
+    translation: "hierarchy"
+    pos: "noun"
+    gender: "f"
+    notes: "context: відновлення православної ієрархії"
+  - lemma: "лицар"
+    ipa: '[ˈlɪt͡sɑr]'
+    translation: "knight"
+    pos: "noun"
+    gender: "m"
+    notes: "context: лицарі православ'я"
+  - lemma: "чайка"
+    ipa: '[ˈt͡ʃɑjkɑ]'
+    translation: "chaika boat"
+    pos: "noun"
+    gender: "f"
+    notes: "context: козацький флот"
+  - lemma: "панегірик"
+    ipa: '[pɑnɛˈɦʲirɪk]'
+    translation: "panegyric"
+    pos: "noun"
+    gender: "m"
+    notes: "context: вірші на похвалу"
+  - lemma: "експансія"
+    ipa: '[ɛˈkspɑnʲsʲijɑ]'
+    translation: "expansion"
+    pos: "noun"
+    gender: "f"
+    notes: "context: османська експансія"
+  - lemma: "архітектор"
+    ipa: '[ɑrxʲiˈtɛktɔr]'
+    translation: "architect"
+    pos: "noun"
+    gender: "m"
+  - lemma: "дисципліна"
+    ipa: '[dɪst͡sɪˈplʲinɑ]'
+    translation: "discipline"
+    pos: "noun"
+    gender: "f"
+  - lemma: "реформа"
+    ipa: '[rɛˈfɔrmɑ]'
+    translation: "reform"
+    pos: "noun"
+    gender: "f"
+  - lemma: "шляхта"
+    ipa: '[ˈʃlʲɑxtɑ]'
+    translation: "nobility"
+    pos: "noun"
+    gender: "f"
+  - lemma: "академія"
+    ipa: '[ɑkɑˈdɛmʲijɑ]'
+    translation: "academy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "авторитет"
+    ipa: '[ɑu̯tɔrɪˈtɛt]'
+    translation: "authority"
+    pos: "noun"
+    gender: "m"
+  - lemma: "артилерія"
+    ipa: '[ɑrtɪˈlɛrʲijɑ]'
+    translation: "artillery"
+    pos: "noun"
+    gender: "f"
+  - lemma: "работоргівля"
+    ipa: '[rɑbɔtɔrˈɦʲiu̯lʲɑ]'
+    translation: "slave trade"
+    pos: "noun"
+    gender: "f"
+  - lemma: "абордаж"
+    ipa: '[ɑbɔrˈdɑʒ]'
+    translation: "boarding of a ship"
+    pos: "noun"
+    gender: "m"
+  - lemma: "перемир'я"
+    ipa: '[pɛrɛˈmɪrjɑ]'
+    translation: "truce"
+    pos: "noun"
+    gender: "n"
+  - lemma: "спадкоємець"
+    ipa: '[spɑdkɔˈjɛmɛt͡sʲ]'
+    translation: "heir / successor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "патронат"
+    ipa: '[pɑtrɔˈnɑt]'
+    translation: "patronage"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вагенбург"
+    ipa: '[ʋɑɦɛnburɦ]'
+    translation: "wagenburg / wagon fort"
+    pos: "noun"
+    gender: "m"

@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T08:33:59Z",
       "task_id": "v3-rus-ta-susidy-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:50:28Z",
+      "attempts": 1
     }
   }
 }

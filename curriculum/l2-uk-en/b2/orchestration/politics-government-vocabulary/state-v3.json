@@ -10,9 +10,15 @@
       "mode": "full"
     },
     "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T17:42:15Z",
+      "note": "adopted-existing-content",
+      "words": 3454
+    },
+    "v3-C": {
       "status": "failed",
-      "ts": "2026-02-24T00:25:15Z",
-      "note": "word-count-3199-below-80pct-4000"
+      "ts": "2026-02-24T17:45:52Z",
+      "note": "missing-files-act=False-voc=False"
     }
   }
 }

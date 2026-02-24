@@ -845,13 +845,6 @@ levels:
     - pidmohylny-city-1
     - pidmohylny-city-2
     - pidmohylny-small-prose
-    - kurbas-berezil-theater
-    - kurbas-philosophy
-    - kurbas-legacy
-    - kulish-myna-mazailo
-    - kulish-pathetique
-    - kulish-narodnyi-malahii
-    - kulish-dramaturgy
     - yohansen-doctor-leonardo
     - yohansen-experimental
     - domontovych-girl-bear
@@ -949,8 +942,6 @@ levels:
     - artem-chekh-who-are-you
     - deresh-cult
     - deresh-intention
-    - sentsov-numbers
-    - sentsov-stories
     - kateryna-kalytko-poetry
     - kateryna-kalytko-prose
     - sofia-andrukhovych-amados
@@ -1558,8 +1549,6 @@ levels:
     - kipiani-case-of-stus
     - kis-survival-as-victory
     - mokryk-rebellion-against-empire
-    - aseyev-isolation-donetsk
-    - aseyev-the-torture-camp
     - essay-synthesis-1
     - marynovych-universe-barbed-wire
     - chyzhevsky-baroque-history
@@ -1641,9 +1630,7 @@ levels:
     - kotsyubailo-legacy-lit
     - kalytko-borders-lit
     - yakimchuk-apricots-war
-    - vakulenko-occupation-diary
     - amelina-new-renaissance
-    - aseyev-camp-paradise
     - war-lit-synthesis
     - maksym-kryvtsov-poetry
     - yaryna-chornohuz-war
@@ -1666,7 +1653,7 @@ levels:
     - vynnychuk-hoaxes
     - modern-memes-as-folklore
     - humor-synthesis
-  lit-juvenile:
+  lit-youth:
     type: track
     modules:
     - franko-fox-mykyta
@@ -1699,3 +1686,35 @@ levels:
     - voronyna-agent-000
     - andrusyak-adventures
     - juvenile-synthesis
+  lit-doc:
+    type: track
+    modules:
+    - vakulenko-occupation-diary
+    - aseyev-the-torture-camp
+    - aseyev-camp-paradise
+    - aseyev-isolation-donetsk
+    - yermolenko-philosophical-narrative
+    - matviichuk-human-rights
+    - kipiani-case-of-stus
+    - amelina-women-looking-at-war
+  lit-drama:
+    type: track
+    modules:
+    - kurbas-philosophy
+    - kurbas-legacy
+    - kulish-pathetique
+    - kulish-narodnyi-malahii
+    - kulish-dramaturgy
+    - kurbas-berezil-theater
+    - kulish-myna-mazailo
+    - vorozhbyt-bad-roads
+    - arie-chornobyl
+    - tsilyk-cinematic-script
+  lit-crimea:
+    type: track
+    modules:
+    - sentsov-numbers
+    - sentsov-stories
+    - dzhelyal-letters-from-cell
+    - aliev-musayeva-dzhemilev
+    - krymskyi-historical-poetry

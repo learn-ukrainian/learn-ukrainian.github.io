@@ -8,6 +8,20 @@
       "ts": "2026-02-19T13:07:33Z",
       "task_id": "v3-ukrainski-zemli-u-vkl-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T16:50:53Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T16:52:52Z",
+      "task_id": "v3-ukrainski-zemli-u-vkl-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:51:20Z",
+      "attempts": 1
     }
   }
 }

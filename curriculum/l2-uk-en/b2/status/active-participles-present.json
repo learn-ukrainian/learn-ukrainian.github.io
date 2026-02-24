@@ -2,10 +2,10 @@
   "module": "active-participles-present",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T12:13:52.858174Z",
+  "last_audit": "2026-02-24T14:47:27.670521Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T12:06:52.601368Z",
+    "md": "2026-02-24T14:47:26.053921Z",
     "meta": "2026-02-23T22:49:57.719687Z",
     "activities": "2026-02-23T22:58:52.997911Z",
     "vocabulary": "2026-02-24T12:03:49.912836Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4074/4000 (raw: 4390) | richness: 88% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "4260/4000 (raw: 4668)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T21:20:44Z",
       "task_id": "v3-home-and-furniture-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T20:18:36Z",
+      "attempts": 1
     }
   }
 }

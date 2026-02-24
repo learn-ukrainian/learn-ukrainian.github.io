@@ -8,6 +8,20 @@
       "ts": "2026-02-19T15:16:55Z",
       "task_id": "v3-morski-pokhody-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T20:30:12Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T20:31:32Z",
+      "task_id": "v3-morski-pokhody-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T20:38:57Z",
+      "attempts": 2
     }
   }
 }

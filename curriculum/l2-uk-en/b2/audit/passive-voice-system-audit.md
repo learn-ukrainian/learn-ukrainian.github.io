@@ -1,7 +1,7 @@
 # Audit Report: M01 — passive-voice-system.md
 **Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 11:13:04
+**Generated:** 2026-02-24 14:46:49
 
 ## Configuration
 **Type:** B2-grammar

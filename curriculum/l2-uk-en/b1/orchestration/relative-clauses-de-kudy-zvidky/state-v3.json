@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T23:06:16Z",
       "task_id": "v3-relative-clauses-de-kudy-zvidky-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T18:26:27Z",
+      "attempts": 4
     }
   }
 }

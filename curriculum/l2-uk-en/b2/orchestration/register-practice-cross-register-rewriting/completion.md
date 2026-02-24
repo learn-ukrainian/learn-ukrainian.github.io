@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py b2 25 — E2E
+PASS: build_module_v2.py b2 25 — E2E
 
   Module:   register-practice-cross-register-rewriting
   Track:    b2
   Mode:     e2e
-  Words:    3437 (target: 4000)
+  Words:    4500 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-24T00:21:43Z
+  Verdict:  PASS
+  Date:     2026-02-24T17:42:13Z

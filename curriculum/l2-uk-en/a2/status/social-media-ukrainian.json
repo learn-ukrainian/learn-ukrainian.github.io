@@ -2,26 +2,26 @@
   "module": "social-media-ukrainian",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:25:35.007163Z",
+  "last_audit": "2026-02-24T21:19:38.191232Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T01:07:05.856898Z",
+    "md": "2026-02-24T20:12:07.302408Z",
     "meta": "2026-02-24T00:58:28.716251Z",
     "activities": "2026-02-24T01:09:13.491987Z",
-    "vocabulary": "2026-02-24T01:09:13.492313Z",
+    "vocabulary": "2026-02-24T20:10:08.959137Z",
     "plan": "2026-02-20T21:06:39.522911Z",
     "research": "2026-02-24T00:58:28.712681Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Summary'"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "4123/3000 (raw: 4397) | engagement: 0/4 | pedagogy: 4 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "4136/3000 (raw: 4410)"
     },
     "activities": {
       "status": "deferred",
@@ -55,12 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Structure: Missing '## Summary'"
-    ],
-    "pass_count": 2,
-    "fail_count": 2,
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

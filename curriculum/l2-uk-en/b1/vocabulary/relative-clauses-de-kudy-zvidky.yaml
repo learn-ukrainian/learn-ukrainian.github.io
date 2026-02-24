@@ -1,113 +1,143 @@
 items:
   - lemma: "де"
+    ipa: '[dɛ]'
     translation: "where (location)"
     pos: "adverb"
     notes: "used for static locations"
   - lemma: "куди"
+    ipa: '[kuˈdɪ]'
     translation: "where (direction to)"
     pos: "adverb"
     notes: "used for dynamic movement towards a goal"
   - lemma: "звідки"
+    ipa: '[ˈzʲʋʲidkɪ]'
     translation: "where (direction from)"
     pos: "adverb"
     notes: "used for source or origin"
   - lemma: "місце"
+    ipa: '[ˈmʲist͡sɛ]'
     translation: "place"
     pos: "noun"
     gender: "n"
   - lemma: "напрямок"
+    ipa: '[ˈnɑprʲɑmɔk]'
     translation: "direction"
     pos: "noun"
     gender: "m"
   - lemma: "розташування"
+    ipa: '[rɔztɑʃuˈʋɑnʲːɑ]'
     translation: "location"
     pos: "noun"
     gender: "n"
   - lemma: "походження"
+    ipa: '[pɔˈxɔd͡ʒɛnʲːɑ]'
     translation: "origin"
     pos: "noun"
     gender: "n"
   - lemma: "рух"
+    ipa: '[rux]'
     translation: "movement"
     pos: "noun"
     gender: "m"
   - lemma: "статичний"
+    ipa: '[stɑˈtɪt͡ʃnɪj]'
     translation: "static"
     pos: "adjective"
   - lemma: "динамічний"
+    ipa: '[dɪnɑˈmʲit͡ʃnɪj]'
     translation: "dynamic"
     pos: "adjective"
   - lemma: "призначення"
+    ipa: '[prɪˈznɑt͡ʃɛnʲːɑ]'
     translation: "destination"
     pos: "noun"
     gender: "n"
   - lemma: "джерело"
+    ipa: '[d͡ʒɛrɛˈlɔ]'
     translation: "source"
     pos: "noun"
     gender: "n"
   - lemma: "саме"
+    ipa: '[ˈsɑmɛ]'
     translation: "exactly / specifically"
     pos: "particle"
     usage: "used to emphasize location or direction, e.g., 'де саме', 'куди саме'"
   - lemma: "десь"
+    ipa: '[dɛsʲ]'
     translation: "somewhere (location)"
     pos: "adverb"
   - lemma: "кудись"
+    ipa: '[kuˈdɪsʲ]'
     translation: "somewhere (direction)"
     pos: "adverb"
   - lemma: "звідкись"
+    ipa: '[ˈzʲʋʲidkɪsʲ]'
     translation: "from somewhere"
     pos: "adverb"
   - lemma: "статика"
+    ipa: '[ˈstɑtɪkɑ]'
     translation: "statics / state of rest"
     pos: "noun"
     gender: "f"
   - lemma: "динаміка"
+    ipa: '[dɪˈnɑmʲikɑ]'
     translation: "dynamics / active movement"
     pos: "noun"
     gender: "f"
   - lemma: "там"
+    ipa: '[tɑm]'
     translation: "there (location)"
     pos: "adverb"
   - lemma: "туди"
+    ipa: '[tuˈdɪ]'
     translation: "there (direction)"
     pos: "adverb"
   - lemma: "звідти"
+    ipa: '[ˈzʲʋʲidtɪ]'
     translation: "from there"
     pos: "adverb"
   - lemma: "простір"
+    ipa: '[ˈprɔsʲtʲir]'
     translation: "space"
     pos: "noun"
     gender: "m"
   - lemma: "маршрут"
+    ipa: '[mɑrˈʃrut]'
     translation: "route"
     pos: "noun"
     gender: "m"
   - lemma: "локація"
+    ipa: '[lɔˈkɑt͡sʲijɑ]'
     translation: "location"
     pos: "noun"
     gender: "f"
   - lemma: "знаходитися"
+    ipa: '[znɑˈxɔdɪtɪsʲɑ]'
     translation: "to be located / situated"
     pos: "verb"
     aspect: "impf"
   - lemma: "повертатися"
+    ipa: '[pɔʋɛrˈtɑtɪsʲɑ]'
     translation: "to return"
     pos: "verb"
     aspect: "impf"
   - lemma: "вирушати"
+    ipa: '[ʋɪruˈʃɑtɪ]'
     translation: "to set off / depart"
     pos: "verb"
     aspect: "impf"
   - lemma: "лунати"
+    ipa: '[luˈnɑtɪ]'
     translation: "to resound / echo"
     pos: "verb"
     aspect: "impf"
   - lemma: "зупинятися"
+    ipa: '[zupɪˈnʲɑtɪsʲɑ]'
     translation: "to stop"
     pos: "verb"
     aspect: "impf"
   - lemma: "походити"
+    ipa: '[pɔxɔdɪtɪ]'
     translation: "to originate / come from"
     pos: "verb"
     aspect: "impf"

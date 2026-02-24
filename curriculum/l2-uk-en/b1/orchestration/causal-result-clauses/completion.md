@@ -3,8 +3,8 @@ PASS: build_module_v2.py b1 36 — E2E
   Module:   causal-result-clauses
   Track:    b1
   Mode:     e2e
-  Words:    4003 (target: 4000)
+  Words:    4733 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-24T00:11:59Z
+  Date:     2026-02-24T19:18:05Z

@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T08:10:46Z",
       "task_id": "v3-adverbial-participles-perfective-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T20:12:53Z",
+      "attempts": 2
     }
   }
 }

@@ -2,13 +2,13 @@
   "module": "scheduling-appointments",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:24:21.819239Z",
+  "last_audit": "2026-02-24T21:19:27.403735Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T00:37:48.634707Z",
+    "md": "2026-02-24T19:36:59.564647Z",
     "meta": "2026-02-24T00:34:16.503757Z",
-    "activities": "2026-02-24T00:40:42.320618Z",
-    "vocabulary": "2026-02-24T00:40:42.320925Z",
+    "activities": "2026-02-24T19:28:04.464846Z",
+    "vocabulary": "2026-02-24T19:28:04.428737Z",
     "plan": "2026-02-20T21:06:02.749253Z",
     "research": "2026-02-24T00:34:16.500271Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "4477/3000 (raw: 4663) | engagement: 0/4 | pedagogy: 7 violations | immersion: 92.3% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "4717/3000 (raw: 4918)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

@@ -2,13 +2,13 @@
   "module": "hotel-accommodation",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:24:17.199216Z",
+  "last_audit": "2026-02-24T21:19:20.070464Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T00:24:13.767194Z",
+    "md": "2026-02-24T19:23:10.233835Z",
     "meta": "2026-02-24T00:20:08.238319Z",
-    "activities": "2026-02-24T00:26:08.204896Z",
-    "vocabulary": "2026-02-24T00:26:08.205192Z",
+    "activities": "2026-02-24T19:11:37.782819Z",
+    "vocabulary": "2026-02-24T20:44:03.817778Z",
     "plan": "2026-02-20T21:05:51.193953Z",
     "research": "2026-02-24T00:20:08.234343Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "5262/3000 (raw: 5833) | engagement: 0/4 | pedagogy: 33 violations | immersion: 97.9% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "5274/3000 (raw: 5845)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

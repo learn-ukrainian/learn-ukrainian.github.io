@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T08:44:34Z",
       "task_id": "v3-syntez-kyivska-rus-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:50:33Z",
+      "attempts": 1
     }
   }
 }

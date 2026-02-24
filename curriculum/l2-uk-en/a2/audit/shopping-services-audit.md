@@ -1,7 +1,7 @@
 # Audit Report: M53 — shopping-services.md
 **Level:** A2 | **Module:** M53 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 3000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-24 09:23:58
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-24 21:18:54
 
 ## Configuration
 **Type:** A2-vocab
@@ -16,96 +16,44 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Not allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Participle used before B1: 'розташований'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[GRAMMAR]** Participle used before B1: 'обраний'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[GRAMMAR]** Participle used before B1: 'витончений'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[GRAMMAR]** Participle used before B1: 'закріплений'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[GRAMMAR]** Participle used before B1: 'знаменитий'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[GRAMMAR]** Participle used before B1: 'критий'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ви навчитеся правильно питати про...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Там ви можете швидко купити...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Люди часто масово приїжджають сюди...'
-- **[COMPLEXITY]** Sentence too long for A2: 23 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Місцеві фермери та працьовиті селяни...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'самому історичному та географічному центрі...'
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Величезні приватні гроші на це...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Вона постійно вражає численних туристів...'
-- **[COMPLEXITY]** Sentence too long for A2: 21 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Тут щодня успішно продають найкращі...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Іноземні гості та туристи завжди...'
-- **[COMPLEXITY]** Sentence too long for A2: 19 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Через свій закріплений статус елітного...'
-- **[COMPLEXITY]** Sentence too long for A2: 21 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ця дуже яскрава ідіома означає...'
-- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Якщо ви раптом випадково бачите...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Вона ідеально та гармонійно підходить...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Якщо конкретний товар фізично не...'
-- **[COMPLEXITY]** Sentence too long for A2: 19 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Знання та розуміння цих простих...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Просте але щире та ввічливе...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'сучасній українській мові форма знахідного...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ви вирішили піти на відомий...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Сюди ми традиційно приходимо коли...'
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Для успішної та швидкої комунікації...'
-- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Знання популярних слів перукарня хімчистка...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, називний, орудний, знахідний
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[EUPHONY]** Line 45: «в спеціальний» — в перед збігом приголосних; має бути «у спеціальний»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 45: «в дзеркалі» — в перед збігом приголосних; має бути «у дзеркалі»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 68: «в великий» — в перед в/ф; має бути «у великий»
-  - FIX: Replace «в» with «у» (before в or ф)
-- **[EUPHONY]** Line 224: «в звичайній» — в перед збігом приголосних; має бути «у звичайній»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (4 occurrences): (Accusative case), (Locative case), (Instrumental case) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: Базова лексика | 8 | 8 | ✅ |
+| 2 | match-up | Знайдіть пару: Послуги та оплата | 8 | 8 | ✅ |
+| 3 | quiz | Оберіть правильний варіант | 8 | 8 | ✅ |
+| 4 | true-false | Правда чи брехня: Покупки в Україні | 8 | 8 | ✅ |
+| 5 | fill-in | Вставте правильне слово: Відмінки та лексика | 8 | 8 | ✅ |
+| 6 | unjumble | Складіть речення: Покупки та послуги | 6 | 6 | ✅ |
+| 7 | error-correction | Виправте граматичні та лексичні помилки | 6 | 6 | ✅ |
+| 8 | group-sort | Розподіліть за групами: Магазини та Послуги | 12 | 8 | ✅ |
+| 9 | cloze | Заповніть пропуски: Розмова на ринку | 10 | 8 | ✅ |
+| 10 | fill-in | Вставте правильну форму дієслова | 8 | 8 | ✅ |
+| 11 | mark-the-words | Знайдіть слова: Продукти харчування та гігієна | 7 | 6 | ✅ |
+| 12 | cloze | Заповніть пропуски: На касі в супермаркеті | 10 | 8 | ✅ |
 
-## Recommendation
-**🔄 REWRITE** (severity 80/100)
-
-- 33 violations (severe - consider revision)
-- 6 grammar-level violations (fundamental)
-- Immersion 7% off target (minor)
+**Summary:**
+- Total activities: 12 (target: 10-14) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (cloze, fill-in, match-up) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3910/3000 (raw: 4127)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Words:** ✅ 4253/3000 (raw: 4461)
+- **Activities:** ✅ 12/10
+- **Density:** ✅ All > 8
+- **Unique_types:** ✅ 9/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 29/1
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 27 violations
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** ❌ 96.6% HIGH (target 75-90% (A2.3))
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 89.3% (target 75-90% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -114,10 +62,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Купівля та послуги** | ✅ | 106 | Included in Core |
-| **Вступ** | ✅ | 786 | Included in Core |
-| **Лексика та культурний контекст** | ✅ | 770 | Included in Core |
-| **Граматичні правила** | ✅ | 889 | Included in Core |
-| **Діалоги та тренування** | ✅ | 694 | Included in Core |
-| **Сфера послуг і підсумок** | ✅ | 417 | Included in Core |
-| **Підсумок** | ✅ | 248 | Included in Core |
+| **Купівля та послуги** | ✅ | 107 | Included in Core |
+| **Вступ** | ✅ | 759 | Included in Core |
+| **Лексика та культура** | ✅ | 880 | Included in Core |
+| **Граматика** | ✅ | 1032 | Included in Core |
+| **Діалоги та практика** | ✅ | 815 | Included in Core |
+| **Послуги та підсумок** | ✅ | 414 | Included in Core |
+| **Підсумок** | ✅ | 246 | Included in Core |

@@ -1,90 +1,140 @@
 items:
-  - lemma: "зроблений"
-    translation: "made / done"
-    pos: "adjective"
-    notes: "past passive participle"
-  - lemma: "відкритий"
-    translation: "open"
-    pos: "adjective"
-  - lemma: "зачинений"
-    translation: "closed / shut"
-    pos: "adjective"
-  - lemma: "написаний"
-    translation: "written"
-    pos: "adjective"
-  - lemma: "читаючи"
-    translation: "while reading"
-    pos: "adverb"
-    notes: "present gerund"
-  - lemma: "написавши"
-    translation: "having written"
-    pos: "adverb"
-    notes: "past gerund"
-  - lemma: "зайнятий"
-    translation: "occupied / busy"
-    pos: "adjective"
-  - lemma: "зламаний"
-    translation: "broken"
-    pos: "adjective"
-  - lemma: "підготовлений"
-    translation: "prepared"
-    pos: "adjective"
-  - lemma: "працюючи"
-    translation: "while working"
-    pos: "adverb"
-  - lemma: "повернувшись"
-    translation: "having returned"
-    pos: "adverb"
-  - lemma: "забутий"
-    translation: "forgotten"
-    pos: "adjective"
-  - lemma: "дієприкметник"
-    translation: "participle"
-    pos: "noun"
-    gender: "m"
-  - lemma: "дієприслівник"
-    translation: "gerund / verbal adverb"
-    pos: "noun"
-    gender: "m"
-  - lemma: "зроблено"
-    translation: "it is made / done"
-    pos: "verb"
-    notes: "impersonal form"
-  - lemma: "відкрито"
-    translation: "it is open"
-    pos: "verb"
-    notes: "impersonal form"
-  - lemma: "зачинено"
-    translation: "it is closed"
-    pos: "verb"
-    notes: "impersonal form"
-  - lemma: "результат"
-    translation: "result"
-    pos: "noun"
-    gender: "m"
-  - lemma: "стан"
-    translation: "state / condition"
-    pos: "noun"
-    gender: "m"
-  - lemma: "вивіска"
-    translation: "signboard"
-    pos: "noun"
-    gender: "f"
-  - lemma: "оголошення"
-    translation: "announcement"
-    pos: "noun"
-    gender: "n"
-  - lemma: "калька"
-    translation: "calque / loan translation"
-    pos: "noun"
-    gender: "f"
-  - lemma: "узгодження"
-    translation: "agreement"
-    pos: "noun"
-    gender: "n"
-  - lemma: "одночасний"
-    translation: "simultaneous"
-    pos: "adjective"
-  - lemma: "попередній"
-    translation: "prior / previous"
-    pos: "adjective"
+- lemma: зроблений
+  ipa: '[ˈzrɔblɛnɪj]'
+  translation: made / done
+  pos: adjective
+  notes: past passive participle
+- lemma: відкритий
+  ipa: '[ʋʲiˈdkrɪtɪj]'
+  translation: open
+  pos: adjective
+- lemma: зачинений
+  ipa: '[zɑˈt͡ʃɪnɛnɪj]'
+  translation: closed / shut
+  pos: adjective
+- lemma: написаний
+  ipa: '[nɑˈpɪsɑnɪj]'
+  translation: written
+  pos: adjective
+- lemma: читаючи
+  ipa: '[t͡ʃɪˈtɑjut͡ʃɪ]'
+  translation: while reading
+  pos: adverb
+  notes: present gerund
+- lemma: написавши
+  ipa: '[nɑpɪˈsɑu̯ʃɪ]'
+  translation: having written
+  pos: adverb
+  notes: past gerund
+- lemma: зайнятий
+  ipa: '[ˈzɑjnʲɑtɪj]'
+  translation: occupied / busy
+  pos: adjective
+- lemma: зламаний
+  ipa: '[ˈzlɑmɑnɪj]'
+  translation: broken
+  pos: adjective
+- lemma: підготовлений
+  ipa: '[pʲidɦɔˈtɔu̯lɛnɪj]'
+  translation: prepared
+  pos: adjective
+- lemma: працюючи
+  ipa: '[prɑˈt͡sʲujut͡ʃɪ]'
+  translation: while working
+  pos: adverb
+- lemma: повернувшись
+  ipa: '[pɔʋɛrˈnuu̯ʃɪsʲ]'
+  translation: having returned
+  pos: adverb
+- lemma: забутий
+  ipa: '[zɑˈbutɪj]'
+  translation: forgotten
+  pos: adjective
+- lemma: дієприкметник
+  ipa: '[dʲijɛprɪˈkmɛtnɪk]'
+  translation: participle
+  pos: noun
+  gender: m
+- lemma: дієприслівник
+  ipa: '[dʲijɛprɪˈsʲlʲiu̯nɪk]'
+  translation: gerund / verbal adverb
+  pos: noun
+  gender: m
+- lemma: зроблено
+  ipa: '[ˈzrɔblɛnɔ]'
+  translation: it is made / done
+  pos: verb
+  notes: impersonal form
+- lemma: відкрито
+  ipa: '[ʋʲiˈdkrɪtɔ]'
+  translation: it is open
+  pos: verb
+  notes: impersonal form
+- lemma: зачинено
+  ipa: '[zɑˈt͡ʃɪnɛnɔ]'
+  translation: it is closed
+  pos: verb
+  notes: impersonal form
+- lemma: результат
+  ipa: '[rɛzulʲˈtɑt]'
+  translation: result
+  pos: noun
+  gender: m
+- lemma: стан
+  ipa: '[stɑn]'
+  translation: state / condition
+  pos: noun
+  gender: m
+- lemma: вивіска
+  ipa: '[ˈʋɪʋʲiskɑ]'
+  translation: signboard
+  pos: noun
+  gender: f
+- lemma: оголошення
+  ipa: '[ɔɦɔˈlɔʃɛnʲːɑ]'
+  translation: announcement
+  pos: noun
+  gender: n
+- lemma: калька
+  ipa: '[ˈkɑlʲkɑ]'
+  translation: calque / loan translation
+  pos: noun
+  gender: f
+- lemma: узгодження
+  ipa: '[uˈzɦɔd͡ʒɛnʲːɑ]'
+  translation: agreement
+  pos: noun
+  gender: n
+- lemma: одночасний
+  ipa: '[ɔdnɔˈt͡ʃɑsnɪj]'
+  translation: simultaneous
+  pos: adjective
+- lemma: попередній
+  ipa: '[pɔpɛˈrɛdʲnʲij]'
+  translation: prior / previous
+  pos: adjective
+- lemma: вид
+  translation: aspect
+  ipa: '[ʋɪd]'
+  pos: noun
+  notes: grammar term
+- lemma: іменник
+  translation: noun
+  ipa: '[iˈmɛnːɪk]'
+  pos: noun
+  notes: grammar term
+- lemma: прикметник
+  translation: adjective
+  ipa: '[prɪˈkmɛtnɪk]'
+  pos: noun
+  notes: grammar term
+- lemma: доконаний
+  translation: perfective
+  ipa: '[dɔˈkɔnɑnɪj]'
+  pos: adjective
+  notes: grammar term
+- lemma: множина
+  translation: plural
+  ipa: '[mnɔʒɪˈnɑ]'
+  pos: noun
+  notes: grammar term

@@ -2,13 +2,13 @@
   "module": "checkpoint-word-formation",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T12:25:03.377217Z",
+  "last_audit": "2026-02-24T21:18:28.397877Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T12:24:11.879570Z",
+    "md": "2026-02-24T12:40:54.028729Z",
     "meta": "2026-02-23T21:57:08.141017Z",
     "activities": "2026-02-24T12:23:24.339635Z",
-    "vocabulary": "2026-02-24T12:16:41.124767Z",
+    "vocabulary": "2026-02-24T14:47:37.083576Z",
     "plan": "2026-02-20T21:04:01.567775Z",
     "research": "2026-02-23T21:57:08.137837Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5217/2500 (raw: 5635)"
+      "message": "5139/2500 (raw: 5557)"
     },
     "activities": {
       "status": "deferred",
@@ -55,7 +55,7 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
     "pass_count": 4,
     "fail_count": 0,

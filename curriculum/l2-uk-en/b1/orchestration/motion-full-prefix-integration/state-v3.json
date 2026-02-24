@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T22:26:35Z",
       "task_id": "v3-motion-full-prefix-integration-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T16:36:08Z",
+      "attempts": 4
     }
   }
 }

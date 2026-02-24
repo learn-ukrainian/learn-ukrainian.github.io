@@ -1,0 +1,64 @@
+{
+  "module": "abstract-concepts-ideas",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T21:50:12.760015Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T21:49:22.121411Z",
+    "meta": "2026-02-24T21:39:53.076591Z",
+    "activities": "2026-02-24T21:47:56.290809Z",
+    "vocabulary": "2026-02-24T21:46:54.210787Z",
+    "plan": "2026-02-20T21:30:26.986568Z",
+    "research": "2026-02-24T21:39:53.072373Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4176/4000 (raw: 4760)"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "10/8"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "30 < 35 (soft target)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 6,
+    "fail_count": 0,
+    "deferred_count": 0
+  }
+}

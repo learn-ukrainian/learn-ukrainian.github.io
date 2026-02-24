@@ -10,9 +10,20 @@
       "mode": "full"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-24T00:21:43Z",
-      "note": "word-count-3092-below-80pct-4000"
+      "status": "complete",
+      "ts": "2026-02-24T17:04:05Z",
+      "note": "adopted-existing-content",
+      "words": 3437
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T17:07:49Z",
+      "task_id": "v3-register-practice-cross-register-rewriting-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:42:13Z",
+      "attempts": 4
     }
   }
 }

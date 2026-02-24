@@ -1,7 +1,7 @@
 # Audit Report: M05 — third-person-plural-passive.md
 **Level:** B2 | **Module:** M05 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 11:25:57
+**Generated:** 2026-02-24 14:47:13
 
 ## Configuration
 **Type:** B2-grammar
@@ -17,19 +17,13 @@
 **Transliteration:** Not allowed
 
 ## PEDAGOGICAL VIOLATIONS
-- **[EUPHONY]** Line 222: «в стрічці» — в перед збігом приголосних; має бути «у стрічці»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 353: «в правильному» — в перед збігом приголосних; має бути «у правильному»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 358: «перше і останнє» — і між голосними; має бути «й останнє»
-  - FIX: Replace «і» with «й» (between vowels)
 - **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (7 total): 'не просто X, а Y' x4, 'не лише X, а й Y' x3 — robotic prose
   - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4214/4000 (raw: 4803)

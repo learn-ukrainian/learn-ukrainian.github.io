@@ -1,109 +1,139 @@
 items:
   - lemma: "якщо"
+    ipa: '[jɑˈkʃt͡ʃɔ]'
     translation: "if"
     pos: "conjunction"
   - lemma: "умова"
+    ipa: '[uˈmɔʋɑ]'
     translation: "condition"
     pos: "noun"
     gender: "f"
   - lemma: "результат"
+    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
     gender: "m"
   - lemma: "наслідок"
+    ipa: '[ˈnɑsʲlʲidɔk]'
     translation: "consequence"
     pos: "noun"
     gender: "m"
   - lemma: "умовний"
+    ipa: '[uˈmɔu̯nɪj]'
     translation: "conditional"
     pos: "adjective"
   - lemma: "реальний"
+    ipa: '[rɛˈɑlʲnɪj]'
     translation: "real"
     pos: "adjective"
   - lemma: "можливий"
+    ipa: '[mɔˈʒlɪʋɪj]'
     translation: "possible"
     pos: "adjective"
   - lemma: "ймовірний"
+    ipa: '[jmɔˈʋʲirnɪj]'
     translation: "probable"
     pos: "adjective"
   - lemma: "за умови що"
+    ipa: '[zɑ uˈmɔʋɪ ʃt͡ʃɔ]'
     translation: "on condition that"
     pos: "phrase"
   - lemma: "у разі якщо"
+    ipa: '[u ˈrɑzʲi jɑˈkʃt͡ʃɔ]'
     translation: "in case"
     pos: "phrase"
   - lemma: "припускаючи"
+    ipa: '[prɪpuˈskɑjut͡ʃɪ]'
     translation: "assuming"
     pos: "participle"
   - lemma: "через це"
+    ipa: '[ˈt͡ʃɛrɛz t͡sɛ]'
     translation: "because of this"
     pos: "phrase"
   - lemma: "спітніти"
+    ipa: '[sʲpʲiˈtʲnʲitɪ]'
     translation: "to sweat"
     pos: "verb"
     aspect: "perf"
   - lemma: "зігрітися"
+    ipa: '[zʲiˈɦrʲitɪsʲɑ]'
     translation: "to get warm"
     pos: "verb"
     aspect: "perf"
   - lemma: "досягти"
+    ipa: '[dɔsʲɑˈɦtɪ]'
     translation: "to achieve"
     pos: "verb"
     aspect: "perf"
   - lemma: "перешкода"
+    ipa: '[pɛrɛˈʃkɔdɑ]'
     translation: "obstacle"
     pos: "noun"
     gender: "f"
   - lemma: "сценарій"
+    ipa: '[st͡sɛˈnɑrʲij]'
     translation: "scenario"
     pos: "noun"
     gender: "m"
   - lemma: "впевненість"
+    ipa: '[ˈʍpɛu̯nɛnʲisʲtʲ]'
     translation: "certainty"
     pos: "noun"
     gender: "f"
   - lemma: "розвилка"
+    ipa: '[rɔˈzʋɪlkɑ]'
     translation: "fork"
     pos: "noun"
     gender: "f"
   - lemma: "неминучий"
+    ipa: '[nɛmɪˈnut͡ʃɪj]'
     translation: "inevitable"
     pos: "adjective"
   - lemma: "сумнів"
+    ipa: '[ˈsumnʲiu̯]'
     translation: "doubt"
     pos: "noun"
     gender: "m"
   - lemma: "припущення"
+    ipa: '[prɪˈpuʃt͡ʃɛnʲːɑ]'
     translation: "assumption"
     pos: "noun"
     gender: "n"
   - lemma: "скасувати"
+    ipa: '[skɑsuˈʋɑtɪ]'
     translation: "to cancel"
     pos: "verb"
     aspect: "perf"
   - lemma: "затримка"
+    ipa: '[ˈzɑˈtrɪmkɑ]'
     translation: "delay"
     pos: "noun"
     gender: "f"
   - lemma: "злагоджено"
+    ipa: '[ˈzlɑɦɔd͡ʒɛnɔ]'
     translation: "harmoniously"
     pos: "adverb"
   - lemma: "підтвердити"
+    ipa: '[pʲiˈdtʋɛrdɪtɪ]'
     translation: "to confirm"
     pos: "verb"
     aspect: "perf"
   - lemma: "занепокоєння"
+    ipa: '[zɑnɛpɔˈkɔjɛnʲːɑ]'
     translation: "concern"
     pos: "noun"
     gender: "n"
   - lemma: "невідворотність"
+    ipa: '[nɛʋʲidʋɔˈrɔtʲnʲisʲtʲ]'
     translation: "inevitability"
     pos: "noun"
     gender: "f"
   - lemma: "поступка"
+    ipa: '[ˈpɔstupkɑ]'
     translation: "concession"
     pos: "noun"
     gender: "f"
   - lemma: "канцелярський"
+    ipa: '[kɑnt͡sɛˈlʲɑrsʲkɪj]'
     translation: "bureaucratic"
     pos: "adjective"

@@ -1,93 +1,131 @@
 items:
-  - lemma: "йти"
-    translation: "to go on foot (one direction)"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "їхати"
-    translation: "to go by transport (one direction)"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "повертати"
-    translation: "to turn"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "зупинка"
-    translation: "stop"
-    pos: "noun"
-    gender: "f"
-  - lemma: "прямо"
-    translation: "straight"
-    pos: "adverb"
-  - lemma: "ліворуч"
-    translation: "to the left"
-    pos: "adverb"
-  - lemma: "праворуч"
-    translation: "to the right"
-    pos: "adverb"
-  - lemma: "маршрутка"
-    translation: "minibus"
-    pos: "noun"
-    gender: "f"
-  - lemma: "трамвай"
-    translation: "tram"
-    pos: "noun"
-    gender: "m"
-  - lemma: "автобус"
-    translation: "bus"
-    pos: "noun"
-    gender: "m"
-  - lemma: "метро"
-    translation: "metro, subway"
-    pos: "noun"
-    gender: "n"
-  - lemma: "пересадка"
-    translation: "transfer"
-    pos: "noun"
-    gender: "f"
-  - lemma: "вихід"
-    translation: "exit"
-    pos: "noun"
-    gender: "m"
-  - lemma: "платформа"
-    translation: "platform"
-    pos: "noun"
-    gender: "f"
-  - lemma: "квиток"
-    translation: "ticket"
-    pos: "noun"
-    gender: "m"
-  - lemma: "розклад"
-    translation: "schedule"
-    pos: "noun"
-    gender: "m"
-  - lemma: "біля"
-    translation: "near, by"
-    pos: "preposition"
-  - lemma: "перед"
-    translation: "in front of"
-    pos: "preposition"
-  - lemma: "повз"
-    translation: "past"
-    pos: "preposition"
-  - lemma: "через"
-    translation: "through, across"
-    pos: "preposition"
-  - lemma: "маршрут"
-    translation: "route"
-    pos: "noun"
-    gender: "m"
-  - lemma: "іти"
-    translation: "to go on foot (one direction, phonetic variant)"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "ходити"
-    translation: "to walk, go regularly"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "їздити"
-    translation: "to ride regularly"
-    pos: "verb"
-    aspect: "imperfective"
-  - lemma: "пішки"
-    translation: "on foot"
-    pos: "adverb"
+- lemma: йти
+  ipa: '[jtɪ]'
+  translation: to go on foot (one direction)
+  pos: verb
+  aspect: imperfective
+- lemma: їхати
+  ipa: '[ˈjixɑtɪ]'
+  translation: to go by transport (one direction)
+  pos: verb
+  aspect: imperfective
+- lemma: повертати
+  ipa: '[pɔʋɛrˈtɑtɪ]'
+  translation: to turn
+  pos: verb
+  aspect: imperfective
+- lemma: зупинка
+  ipa: '[zuˈpɪnkɑ]'
+  translation: stop
+  pos: noun
+  gender: f
+- lemma: прямо
+  ipa: '[ˈprʲɑmɔ]'
+  translation: straight
+  pos: adverb
+- lemma: ліворуч
+  ipa: '[lʲiˈʋɔrut͡ʃ]'
+  translation: to the left
+  pos: adverb
+- lemma: праворуч
+  ipa: '[prɑˈʋɔrut͡ʃ]'
+  translation: to the right
+  pos: adverb
+- lemma: маршрутка
+  ipa: '[mɑrˈʃrutkɑ]'
+  translation: minibus
+  pos: noun
+  gender: f
+- lemma: трамвай
+  ipa: '[trɑmˈʋɑj]'
+  translation: tram
+  pos: noun
+  gender: m
+- lemma: автобус
+  ipa: '[ɑˈʋtɔbus]'
+  translation: bus
+  pos: noun
+  gender: m
+- lemma: метро
+  ipa: '[mɛˈtrɔ]'
+  translation: metro, subway
+  pos: noun
+  gender: n
+- lemma: пересадка
+  ipa: '[pɛrɛˈsɑdkɑ]'
+  translation: transfer
+  pos: noun
+  gender: f
+- lemma: вихід
+  ipa: '[ˈʋɪxʲid]'
+  translation: exit
+  pos: noun
+  gender: m
+- lemma: платформа
+  ipa: '[plɑˈtfɔrmɑ]'
+  translation: platform
+  pos: noun
+  gender: f
+- lemma: квиток
+  ipa: '[kʋɪˈtɔk]'
+  translation: ticket
+  pos: noun
+  gender: m
+- lemma: розклад
+  ipa: '[ˈrɔzklɑd]'
+  translation: schedule
+  pos: noun
+  gender: m
+- lemma: біля
+  ipa: '[ˈbʲilʲɑ]'
+  translation: near, by
+  pos: preposition
+- lemma: перед
+  ipa: '[ˈpɛrɛd]'
+  translation: in front of
+  pos: preposition
+- lemma: повз
+  ipa: '[pɔu̯z]'
+  translation: past
+  pos: preposition
+- lemma: через
+  ipa: '[ˈt͡ʃɛrɛz]'
+  translation: through, across
+  pos: preposition
+- lemma: маршрут
+  ipa: '[mɑrˈʃrut]'
+  translation: route
+  pos: noun
+  gender: m
+- lemma: іти
+  ipa: '[iˈtɪ]'
+  translation: to go on foot (one direction, phonetic variant)
+  pos: verb
+  aspect: imperfective
+- lemma: ходити
+  ipa: '[xɔˈdɪtɪ]'
+  translation: to walk, go regularly
+  pos: verb
+  aspect: imperfective
+- lemma: їздити
+  ipa: '[ˈjizdɪtɪ]'
+  translation: to ride regularly
+  pos: verb
+  aspect: imperfective
+- lemma: пішки
+  ipa: '[ˈpʲiʃkɪ]'
+  translation: on foot
+  pos: adverb
+- lemma: орудний
+  translation: Instrumental (case)
+  ipa: '[ɔˈrudnɪj]'
+  pos: adjective
+- lemma: місцевий
+  translation: Locative (case)
+  ipa: '[mʲiˈst͡sɛʋɪj]'
+  pos: adjective
+- lemma: вид
+  translation: aspect (of a verb)
+  ipa: '[ʋɪd]'
+  pos: noun
+  gender: m

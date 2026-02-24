@@ -1,71 +1,86 @@
 items:
   - lemma: "прийти"
+    ipa: '[prɪjˈtɪ]'
     translation: "to arrive on foot"
     pos: "verb"
     aspect: "perfective"
     example: "Студенти повинні прийти вчасно."
   - lemma: "приїхати"
+    ipa: '[prɪˈjixɑtɪ]'
     translation: "to arrive by vehicle"
     pos: "verb"
     aspect: "perfective"
     example: "Він приїхав поїздом."
   - lemma: "вийти"
+    ipa: '[ˈʋɪjtɪ]'
     translation: "to exit on foot"
     pos: "verb"
     aspect: "perfective"
     example: "Олег вийшов на вулицю."
   - lemma: "виїхати"
+    ipa: '[ˈʋɪjixɑtɪ]'
     translation: "to exit by vehicle"
     pos: "verb"
     aspect: "perfective"
     example: "Ми виїхали з гаража."
   - lemma: "увійти"
+    ipa: '[uʋʲijˈtɪ]'
     translation: "to enter on foot"
     pos: "verb"
     aspect: "perfective"
     example: "Директор увійшов у кабінет."
   - lemma: "зайти"
+    ipa: '[zɑjˈtɪ]'
     translation: "to enter on foot / drop in"
     pos: "verb"
     aspect: "perfective"
     example: "Ви можете зайти в магазин?"
   - lemma: "в'їхати"
+    ipa: '[ˈʋjixɑtɪ]'
     translation: "to enter by vehicle"
     pos: "verb"
     aspect: "perfective"
     example: "Машина в'їхала в двір."
   - lemma: "прибуття"
+    ipa: '[prɪbuˈtʲːɑ]'
     translation: "arrival"
     pos: "noun"
     gender: "n"
     example: "Час прибуття — восьма година."
   - lemma: "вихід"
+    ipa: '[ˈʋɪxʲid]'
     translation: "exit / way out"
     pos: "noun"
     gender: "m"
     example: "Хтось шукає запасний вихід."
   - lemma: "вхід"
+    ipa: '[ʍxʲid]'
     translation: "entrance"
     pos: "noun"
     gender: "m"
     example: "Табличка над дверима каже 'Вхід'."
   - lemma: "прибігти"
+    ipa: '[prɪˈbʲiɦtɪ]'
     translation: "to arrive running"
     pos: "verb"
     aspect: "perfective"
   - lemma: "вилетіти"
+    ipa: '[ˈʋɪlɛtʲitɪ]'
     translation: "to fly out"
     pos: "verb"
     aspect: "perfective"
     example: "Пташка вилетіла через вікно."
   - lemma: "прилетіти"
+    ipa: '[prɪlɛˈtʲitɪ]'
     translation: "to arrive by air"
     pos: "verb"
     aspect: "perfective"
     example: "Літак прилетів без запізнень."
   - lemma: "напрямок"
+    ipa: '[ˈnɑprʲɑmɔk]'
     translation: "direction"
     pos: "noun"
     gender: "m"
   - lemma: "поїхати"
+    ipa: '[pɔˈjixɑtɪ]'
     translation:

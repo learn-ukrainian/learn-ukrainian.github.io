@@ -36,25 +36,28 @@ ALL_TRACKS = [
     "b2-hist", "b2-pro",
     "c1-bio", "c1-hist", "c1-pro",
     "lit", "oes", "ruth",
+    "lit-essay", "lit-hist-fic", "lit-fantastika",
+    "lit-war", "lit-humor", "lit-youth",
+    "lit-doc", "lit-drama", "lit-crimea",
 ]
 
 # Tracks that have content modules with links in their index.mdx.
 # Only include tracks where index.mdx has ./slug links that can be tested.
 TRACKS_WITH_MODULES = [
     "a1", "a2", "b1", "b2",
-    "b2-hist",
+    "b2-hist", "c1", "c1-bio", "c1-hist",
 ]
 
 # Tracks where ALL manifest modules should have MDX (fully built).
 # Empty until a track has 100% of its curriculum.yaml modules generated.
-COMPLETE_TRACKS: list[str] = []
+COMPLETE_TRACKS: list[str] = ["a1"]
 
 # Minimum expected module counts per track (regression floor).
 # These are ACTUAL current counts — update as modules are built.
 # Purpose: prevent accidental deletion of MDX files.
 MIN_MODULE_COUNTS = {
-    "a1": 43,
-    "a2": 6,
+    "a1": 44,
+    "a2": 31,
     "b1": 5,
     "b2": 2,
     "b2-hist": 6,

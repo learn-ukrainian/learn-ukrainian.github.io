@@ -1,106 +1,136 @@
 items:
   - lemma: "коротка форма"
+    ipa: '[kɔˈrɔtkɑ ˈfɔrmɑ]'
     translation: "short form"
     pos: "noun"
     notes: "grammar terminology for -но/-то forms"
   - lemma: "безособовий"
+    ipa: '[bɛzɔsɔˈbɔʋɪj]'
     translation: "impersonal"
     pos: "adjective"
     notes: "key category explaining the lack of a grammatical subject"
   - lemma: "написано"
+    ipa: '[nɑˈpɪsɑnɔ]'
     translation: "written (impersonal)"
     pos: "verb"
     notes: "як тут написано, чорним по білому написано"
   - lemma: "зроблено"
+    ipa: '[ˈzrɔblɛnɔ]'
     translation: "done (impersonal)"
     pos: "verb"
     notes: "роботу зроблено, вибір зроблено"
   - lemma: "заборонено"
+    ipa: '[zɑbɔˈrɔnɛnɔ]'
     translation: "forbidden"
     pos: "verb"
     notes: "вхід заборонено, палити заборонено"
   - lemma: "дозволено"
+    ipa: '[dɔˈzʋɔlɛnɔ]'
     translation: "permitted"
     pos: "verb"
     notes: "тут дозволено паркуватися"
   - lemma: "відчинено"
+    ipa: '[ʋʲiˈd͡ʒt͡ʃɪnɛnɔ]'
     translation: "opened"
     pos: "verb"
     notes: "ubiquitous for stores and pharmacies"
   - lemma: "зачинено"
+    ipa: '[zɑˈt͡ʃɪnɛnɔ]'
     translation: "closed"
     pos: "verb"
     notes: "ubiquitous for stores and pharmacies"
   - lemma: "завершено"
+    ipa: '[zɑˈʋɛrʃɛnɔ]'
     translation: "completed"
     pos: "verb"
     notes: "перерву завершено, будівництво завершено"
   - lemma: "наголос"
+    ipa: '[ˈnɑɦɔlɔs]'
     translation: "emphasis"
     pos: "noun"
     notes: "focusing on the result of the action"
   - lemma: "оголошення"
+    ipa: '[ɔɦɔˈlɔʃɛnʲːɑ]'
     translation: "announcement"
     pos: "noun"
     notes: "the primary communicative context for short forms"
   - lemma: "пофарбовано"
+    ipa: '[pɔfɑrˈbɔʋɑnɔ]'
     translation: "painted"
     pos: "verb"
     notes: "Обережно, пофарбовано! (iconic cultural warning)"
   - lemma: "проголошено"
+    ipa: '[prɔɦɔˈlɔʃɛnɔ]'
     translation: "proclaimed"
     pos: "verb"
     notes: "Акт проголошено (used in historical contexts)"
   - lemma: "прийнято"
+    ipa: '[prɪjˈnʲɑtɔ]'
     translation: "accepted/taken"
     pos: "verb"
     notes: "Рішення прийнято, закон прийнято"
   - lemma: "підписано"
+    ipa: '[pʲiˈdpɪsɑnɔ]'
     translation: "signed"
     pos: "verb"
     notes: "наказ підписано, універсал підписано"
   - lemma: "об'єктивний"
+    ipa: '[ɔbjɛˈktɪu̯nɪj]'
     translation: "objective"
     pos: "adjective"
   - lemma: "факт"
+    ipa: '[fɑkt]'
     translation: "fact"
     pos: "noun"
   - lemma: "результат"
+    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
   - lemma: "діяч"
+    ipa: '[dʲiˈjɑt͡ʃ]'
     translation: "agent/doer"
     pos: "noun"
   - lemma: "присудок"
+    ipa: '[ˈprɪsudɔk]'
     translation: "predicate"
     pos: "noun"
   - lemma: "доконаний вид"
+    ipa: '[dɔˈkɔnɑnɪj ʋɪd]'
     translation: "perfective aspect"
     pos: "noun"
   - lemma: "недоконаний вид"
+    ipa: '[nɛdɔˈkɔnɑnɪj ʋɪd]'
     translation: "imperfective aspect"
     pos: "noun"
   - lemma: "бюрократія"
+    ipa: '[bʲurɔˈkrɑtʲijɑ]'
     translation: "bureaucracy"
     pos: "noun"
   - lemma: "інституційний"
+    ipa: '[instɪtuˈt͡sʲijnɪj]'
     translation: "institutional"
     pos: "adjective"
   - lemma: "виставка"
+    ipa: '[ˈʋɪstɑu̯kɑ]'
     translation: "exhibition"
     pos: "noun"
   - lemma: "налаштовано"
+    ipa: '[nɑlɑˈʃtɔʋɑnɔ]'
     translation: "configured/set up"
     pos: "verb"
   - lemma: "невідворотність"
+    ipa: '[nɛʋʲidʋɔˈrɔtʲnʲisʲtʲ]'
     translation: "inevitability"
     pos: "noun"
   - lemma: "розвішано"
+    ipa: '[rɔˈzʲʋʲiʃɑnɔ]'
     translation: "hung up"
     pos: "verb"
   - lemma: "встановлено"
+    ipa: '[ʍstɑˈnɔu̯lɛnɔ]'
     translation: "installed"
     pos: "verb"
   - lemma: "перевірено"
+    ipa: '[pɛrɛˈʋʲirɛnɔ]'
     translation: "checked/verified"
     pos: "verb"

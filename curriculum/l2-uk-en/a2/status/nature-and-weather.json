@@ -2,13 +2,13 @@
   "module": "nature-and-weather",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:23:45.035068Z",
+  "last_audit": "2026-02-24T21:18:39.301045Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T22:25:12.760388Z",
+    "md": "2026-02-24T14:57:58.260484Z",
     "meta": "2026-02-23T22:22:31.560834Z",
     "activities": "2026-02-23T22:28:38.931176Z",
-    "vocabulary": "2026-02-23T22:28:38.931467Z",
+    "vocabulary": "2026-02-24T13:01:39.534423Z",
     "plan": "2026-02-20T21:04:32.952015Z",
     "research": "2026-02-23T22:22:31.557141Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "3836/3000 (raw: 4319) | engagement: 0/4 | pedagogy: 3 violations | immersion: 77.7% HIGH (target 60-75% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "3607/3000 (raw: 3985)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

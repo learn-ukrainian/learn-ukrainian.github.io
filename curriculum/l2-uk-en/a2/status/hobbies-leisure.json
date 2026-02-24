@@ -2,13 +2,13 @@
   "module": "hobbies-leisure",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:23:54.213051Z",
+  "last_audit": "2026-02-24T21:18:50.786530Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T23:03:26.030232Z",
+    "md": "2026-02-24T20:42:59.263653Z",
     "meta": "2026-02-23T22:56:48.248923Z",
-    "activities": "2026-02-23T23:05:53.612855Z",
-    "vocabulary": "2026-02-23T23:05:53.613195Z",
+    "activities": "2026-02-24T16:11:14.536183Z",
+    "vocabulary": "2026-02-24T20:42:49.591261Z",
     "plan": "2026-02-20T21:04:50.750944Z",
     "research": "2026-02-23T22:56:48.245133Z"
   },
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "5687/3000 (raw: 6133) | pedagogy: 93 violations | immersion: 94.4% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "5064/3000 (raw: 5529)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "28/1"
     },
     "naturalness": {
       "status": "info",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
-    "deferred_count": 3
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T22:12:07Z",
       "task_id": "v3-motion-figurative-uses-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T16:05:56Z",
+      "attempts": 2
     }
   }
 }

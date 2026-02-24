@@ -2,13 +2,13 @@
   "module": "health-wellness",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:24:03.398323Z",
+  "last_audit": "2026-02-24T21:19:01.775693Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T23:40:28.652507Z",
+    "md": "2026-02-24T17:43:49.274646Z",
     "meta": "2026-02-23T23:36:41.374487Z",
     "activities": "2026-02-23T23:43:03.195704Z",
-    "vocabulary": "2026-02-23T23:43:03.196029Z",
+    "vocabulary": "2026-02-24T17:38:42.884405Z",
     "plan": "2026-02-20T21:05:15.104211Z",
     "research": "2026-02-23T23:36:41.371316Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "4734/3000 (raw: 5066) | pedagogy: 13 violations | immersion: 95.1% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "5108/3000 (raw: 5434)"
     },
     "activities": {
       "status": "deferred",
@@ -55,12 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 1,
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

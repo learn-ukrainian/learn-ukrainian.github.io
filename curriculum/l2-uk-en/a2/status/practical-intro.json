@@ -2,13 +2,13 @@
   "module": "practical-intro",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:24:07.680794Z",
+  "last_audit": "2026-02-24T21:19:05.822632Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T23:53:28.986758Z",
+    "md": "2026-02-24T18:44:24.193915Z",
     "meta": "2026-02-23T23:50:21.005296Z",
-    "activities": "2026-02-23T23:55:34.356736Z",
-    "vocabulary": "2026-02-23T23:55:34.357026Z",
+    "activities": "2026-02-24T18:03:16.294601Z",
+    "vocabulary": "2026-02-24T20:43:49.096880Z",
     "plan": "2026-02-20T21:05:08.755347Z",
     "research": "2026-02-23T23:50:21.001878Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "3438/3000 (raw: 3625) | pedagogy: 3 violations | immersion: 90.9% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "3301/3000 (raw: 3487)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

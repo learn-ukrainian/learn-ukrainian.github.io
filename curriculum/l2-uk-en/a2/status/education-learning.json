@@ -2,13 +2,13 @@
   "module": "education-learning",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:23:56.560114Z",
+  "last_audit": "2026-02-24T21:18:54.153676Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T23:10:57.008867Z",
+    "md": "2026-02-24T16:44:41.870962Z",
     "meta": "2026-02-23T23:07:07.213514Z",
-    "activities": "2026-02-23T23:14:00.343842Z",
-    "vocabulary": "2026-02-23T23:14:00.344186Z",
+    "activities": "2026-02-24T16:42:42.622333Z",
+    "vocabulary": "2026-02-24T16:28:36.760616Z",
     "plan": "2026-02-20T21:05:06.504059Z",
     "research": "2026-02-23T23:07:07.209087Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "6267/3000 (raw: 6554) | pedagogy: 41 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5064/3000 (raw: 5305)"
     },
     "activities": {
       "status": "deferred",
@@ -55,12 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 1,
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

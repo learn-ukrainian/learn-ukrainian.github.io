@@ -1,0 +1,69 @@
+# Audit Report: M24 — register-colloquial-style.md
+**Level:** B2 | **Module:** M24 | **Phase:** B2.1b | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-24 18:04:02
+
+## Configuration
+**Type:** B2-grammar
+**Word Target:** 4000 words
+**Activities:** 10-14 required
+**Items per Activity:** ≥14 items
+**Unique Types:** ≥4 types required
+**Priority Types:** cloze, error-correction, fill-in, unjumble
+**Required Types:** essay-response, reading, true-false
+**Engagement:** ≥6 callouts
+**Immersion:** 90-100%
+**Vocab Target:** ≥25 words
+**Transliteration:** Not allowed
+
+## Gates
+- **Words:** ✅ 5744/4000 (raw: 5940)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
+- **Engagement:** ✅ 10/6
+- **Audio:** ℹ️ No audio
+- **Vocab:** ⏳ Deferred (content-only audit)
+- **Structure:** ✅ Valid Structure
+- **Ipa:** ✅ Clean IPA
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (grammar))
+- **Richness:** ✅ 97% (grammar)
+- **Grammar:** ℹ️ N/A (covered by naturalness)
+- **Naturalness:** ℹ️ PENDING — awaiting review
+- **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
+
+## Richness Details
+**Score:** 97% (minimum: 95%)
+**Module Type:** grammar
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 89 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 4 | 4 | 100% | 15% | 15.0% |
+| variety | 0.98 | - | 98% | 10% | 9.8% |
+| cultural | 3 | 3 | 100% | 10% | 10.0% |
+| realworld | 12 | 3 | 100% | 10% | 10.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
+| questions | 26 | 5 | 100% | 5% | 5.0% |
+| tables | 1 | 2 | 50% | 4% | 2.0% |
+| paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
+| proverbs | 10 | 1 | 100% | 3% | 3.0% |
+| **TOTAL** | | | | | **97.8%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **Розмовний стиль** | ✅ | 66 | Included in Core |
+| **Розминка: Світ стендапу та живого спілкування** | ✅ | 946 | Included in Core |
+| **Лексика: Від скорочень до сленгу воєнного часу** | ✅ | 1032 | Included in Core |
+| **Граматика: Частки, наповнювачі та правописні пастки** | ✅ | 1260 | Included in Core |
+| **Синтаксис: Еліпсис та структура живої мови** | ✅ | 1057 | Included in Core |
+| **Практикум: Від месенджера до мікрофона** | ✅ | 1126 | Included in Core |
+| **Підсумок** | ✅ | 257 | Included in Core |

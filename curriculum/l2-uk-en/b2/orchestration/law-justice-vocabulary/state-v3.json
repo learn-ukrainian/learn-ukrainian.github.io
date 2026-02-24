@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T00:33:56Z",
       "task_id": "v3-law-justice-vocabulary-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T18:03:53Z",
+      "attempts": 3
     }
   }
 }

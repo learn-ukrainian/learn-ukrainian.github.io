@@ -1,0 +1,126 @@
+items:
+  - lemma: "хан"
+    ipa: '[xɑn]'
+    translation: "khan"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ясир"
+    ipa: '[jɑˈsɪr]'
+    translation: "captives/slaves"
+    pos: "noun"
+    gender: "m"
+  - lemma: "курултай"
+    ipa: '[kurulˈtɑj]'
+    translation: "assembly"
+    pos: "noun"
+    gender: "m"
+  - lemma: "спадщина"
+    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
+    translation: "legacy/heritage"
+    pos: "noun"
+    gender: "f"
+  - lemma: "союз"
+    ipa: '[sɔˈjuz]'
+    translation: "alliance"
+    pos: "noun"
+    gender: "m"
+  - lemma: "анексія"
+    ipa: '[ɑˈnɛksʲijɑ]'
+    translation: "annexation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "депортація"
+    ipa: '[dɛpɔrˈtɑt͡sʲijɑ]'
+    translation: "deportation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "беї"
+    ipa: '[ˈbɛji]'
+    translation: "beys"
+    pos: "noun"
+    gender: "m"
+    notes: "plural form"
+  - lemma: "протекторат"
+    ipa: '[prɔtɛktɔˈrɑt]'
+    translation: "protectorate"
+    pos: "noun"
+    gender: "m"
+  - lemma: "династія"
+    ipa: '[dɪˈnɑsʲtʲijɑ]'
+    translation: "dynasty"
+    pos: "noun"
+    gender: "f"
+  - lemma: "корінний"
+    ipa: '[kɔrʲiˈnːɪj]'
+    translation: "indigenous"
+    pos: "adjective"
+  - lemma: "набіг"
+    ipa: '[nɑˈbʲiɦ]'
+    translation: "raid"
+    pos: "noun"
+    gender: "m"
+  - lemma: "степ"
+    ipa: '[stɛp]'
+    translation: "steppe"
+    pos: "noun"
+    gender: "m"
+  - lemma: "незалежність"
+    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
+    translation: "independence"
+    pos: "noun"
+    gender: "f"
+  - lemma: "держава"
+    ipa: '[ˈdɛrˈʒɑʋɑ]'
+    translation: "state"
+    pos: "noun"
+    gender: "f"
+  - lemma: "правитель"
+    ipa: '[prɑˈʋɪtɛlʲ]'
+    translation: "ruler"
+    pos: "noun"
+    gender: "m"
+  - lemma: "економіка"
+    ipa: '[ɛkɔˈnɔmʲikɑ]'
+    translation: "economy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "сіль"
+    ipa: '[sʲilʲ]'
+    translation: "salt"
+    pos: "noun"
+    gender: "f"
+  - lemma: "торгівля"
+    ipa: '[tɔrˈɦʲiu̯lʲɑ]'
+    translation: "trade"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ремесло"
+    ipa: '[rɛmɛˈslɔ]'
+    translation: "craft"
+    pos: "noun"
+    gender: "n"
+  - lemma: "зброя"
+    ipa: '[ˈzbrɔjɑ]'
+    translation: "weapon"
+    pos: "noun"
+    gender: "f"
+  - lemma: "воїн"
+    ipa: '[ˈʋɔjin]'
+    translation: "warrior"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кіннота"
+    ipa: '[kʲiˈnːɔtɑ]'
+    translation: "cavalry"
+    pos: "noun"
+    gender: "f"
+  - lemma: "опір"
+    ipa: '[ˈɔpʲir]'
+    translation: "resistance"
+    pos: "noun"
+    gender: "m"
+  - lemma: "відродження"
+    ipa: '[ʋʲiˈdrɔd͡ʒɛnʲːɑ]'
+    translation: "revival"
+    pos: "noun"
+    gender: "n"

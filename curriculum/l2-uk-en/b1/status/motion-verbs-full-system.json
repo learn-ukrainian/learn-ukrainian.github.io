@@ -1,0 +1,64 @@
+{
+  "module": "motion-verbs-full-system",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T16:12:45.930034Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T16:06:28.169505Z",
+    "meta": "2026-02-23T22:30:15.351346Z",
+    "activities": "2026-02-24T15:31:18.644363Z",
+    "vocabulary": "2026-02-24T15:28:49.721516Z",
+    "plan": "2026-02-20T21:19:56.151096Z",
+    "research": "2026-02-23T22:30:15.348250Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "5790/4000 (raw: 6128) | richness: 84% < 95% min (grammar)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 1,
+    "deferred_count": 3
+  }
+}

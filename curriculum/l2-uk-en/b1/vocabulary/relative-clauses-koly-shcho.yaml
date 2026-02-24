@@ -1,101 +1,131 @@
 items:
   - lemma: "коли"
+    ipa: '[kɔˈlɪ]'
     translation: "when"
     pos: "conjunction"
   - lemma: "що"
+    ipa: '[ʃt͡ʃɔ]'
     translation: "that (conjunction)"
     pos: "conjunction"
   - lemma: "що"
+    ipa: '[ʃt͡ʃɔ]'
     translation: "that / which"
     pos: "pronoun"
   - lemma: "час"
+    ipa: '[t͡ʃɑs]'
     translation: "time"
     pos: "noun"
     gender: "m"
   - lemma: "момент"
+    ipa: '[mɔˈmɛnt]'
     translation: "moment"
     pos: "noun"
     gender: "m"
   - lemma: "факт"
+    ipa: '[fɑkt]'
     translation: "fact"
     pos: "noun"
     gender: "m"
   - lemma: "те"
+    ipa: '[tɛ]'
     translation: "that (neuter)"
     pos: "pronoun"
   - lemma: "все"
+    ipa: '[ʍsɛ]'
     translation: "everything"
     pos: "pronoun"
   - lemma: "до того як"
+    ipa: '[dɔ tɔˈɦɔ jɑk]'
     translation: "before"
     pos: "conjunction"
   - lemma: "після того як"
+    ipa: '[ˈpʲisʲlʲɑ tɔˈɦɔ jɑk]'
     translation: "after"
     pos: "conjunction"
   - lemma: "поки"
+    ipa: '[ˈpɔkɪ]'
     translation: "while / until"
     pos: "conjunction"
   - lemma: "одночасно"
+    ipa: '[ɔdnɔˈt͡ʃɑsnɔ]'
     translation: "simultaneously"
     pos: "adverb"
   - lemma: "коли завгодно"
+    ipa: '[kɔlɪ zɑˈʋɦɔdnɔ]'
     translation: "whenever"
     pos: "phrase"
   - lemma: "вирішальний"
+    ipa: '[ʋɪrʲiˈʃɑlʲnɪj]'
     translation: "decisive"
     pos: "adjective"
   - lemma: "слушний"
+    ipa: '[ˈsluʃnɪj]'
     translation: "appropriate / right (moment)"
     pos: "adjective"
   - lemma: "невідворотний"
+    ipa: '[nɛʋʲidʋɔˈrɔtnɪj]'
     translation: "inevitable"
     pos: "adjective"
   - lemma: "історичний"
+    ipa: '[istɔˈrɪt͡ʃnɪj]'
     translation: "historical"
     pos: "adjective"
   - lemma: "плинність"
+    ipa: '[ˈplɪnʲːisʲtʲ]'
     translation: "fluidity"
     pos: "noun"
     gender: "f"
   - lemma: "стабілізувати"
+    ipa: '[stɑbʲilʲizuˈʋɑtɪ]'
     translation: "to stabilize"
     pos: "verb"
     aspect: "impf"
   - lemma: "констатація"
+    ipa: '[kɔnstɑˈtɑt͡sʲijɑ]'
     translation: "statement / acknowledgment"
     pos: "noun"
     gender: "f"
   - lemma: "дарма що"
+    ipa: '[dɑrˈmɑ ʃt͡ʃɔ]'
     translation: "even though / despite the fact that"
     pos: "phrase"
   - lemma: "узагальнення"
+    ipa: '[uzɑˈɦɑlʲnɛnʲːɑ]'
     translation: "generalization"
     pos: "noun"
     gender: "n"
   - lemma: "неминучий"
+    ipa: '[nɛmɪˈnut͡ʃɪj]'
     translation: "unavoidable"
     pos: "adjective"
   - lemma: "паралельно"
+    ipa: '[pɑrɑˈlɛlʲnɔ]'
     translation: "in parallel / simultaneously"
     pos: "adverb"
   - lemma: "послідовність"
+    ipa: '[pɔsʲlʲiˈdɔu̯nʲisʲtʲ]'
     translation: "sequence"
     pos: "noun"
     gender: "f"
   - lemma: "розуміти"
+    ipa: '[rɔzuˈmʲitɪ]'
     translation: "to understand"
     pos: "verb"
     aspect: "impf"
   - lemma: "з того часу"
+    ipa: '[z tɔɦɔ ˈt͡ʃɑsu]'
     translation: "since that time"
     pos: "phrase"
   - lemma: "на час"
+    ipa: '[nɑ t͡ʃɑs]'
     translation: "by the time"
     pos: "phrase"
   - lemma: "бачити"
+    ipa: '[ˈbɑt͡ʃɪtɪ]'
     translation: "to see"
     pos: "verb"
     aspect: "impf"
   - lemma: "який"
+    ipa: '[jɑˈkɪj]'
     translation: "which"
     pos: "pronoun"

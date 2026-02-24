@@ -4,8 +4,24 @@
   "mode": "v3",
   "phases": {
     "v3-A": {
-      "status": "failed",
-      "ts": "2026-02-24T09:50:11Z"
+      "status": "complete",
+      "ts": "2026-02-24T19:04:49Z",
+      "task_id": "v3-word-formation-adjective-formation-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T19:07:21Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T19:10:04Z",
+      "task_id": "v3-word-formation-adjective-formation-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T19:13:53Z",
+      "attempts": 2
     }
   }
 }

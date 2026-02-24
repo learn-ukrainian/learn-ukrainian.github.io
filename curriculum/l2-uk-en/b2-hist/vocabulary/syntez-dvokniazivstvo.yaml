@@ -1,0 +1,126 @@
+items:
+  - lemma: "монгольська навала"
+    ipa: '[mɔnˈɦɔlʲsʲkɑ nɑˈʋɑlɑ]'
+    translation: "Mongol invasion"
+    pos: "noun"
+    gender: "f"
+    notes: "avoid the term 'yoke' (іго)"
+  - lemma: "цивілізаційний злам"
+    ipa: '[t͡sɪʋʲilʲizɑˈt͡sʲijnɪj zlɑm]'
+    translation: "civilizational rupture"
+    pos: "noun"
+    gender: "m"
+  - lemma: "легітимність"
+    ipa: '[lɛɦʲiˈtɪmnʲisʲtʲ]'
+    translation: "legitimacy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "Магдебурзьке право"
+    ipa: '[mɑɦdɛˈburzʲkɛ ˈprɑʋɔ]'
+    translation: "Magdeburg rights"
+    pos: "noun"
+    gender: "n"
+  - lemma: "лицарський стан"
+    ipa: '[ˈlɪˈt͡sɑrsʲkɪj stɑn]'
+    translation: "knightly estate"
+    pos: "noun"
+    gender: "m"
+  - lemma: "інституційна тяглість"
+    ipa: '[instɪtuˈt͡sʲijnɑ ˈtʲɑɦlʲisʲtʲ]'
+    translation: "institutional continuity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "державність"
+    ipa: '[dɛrˈʒɑu̯nʲisʲtʲ]'
+    translation: "statehood"
+    pos: "noun"
+    gender: "f"
+  - lemma: "західний вектор"
+    ipa: '[zɑxʲidnɪj ˈʋɛktɔr]'
+    translation: "Western vector"
+    pos: "noun"
+    gender: "m"
+  - lemma: "королівська корона"
+    ipa: '[kɔrɔˈlʲiu̯sʲkɑ kɔˈrɔnɑ]'
+    translation: "royal crown"
+    pos: "noun"
+    gender: "f"
+  - lemma: "деколонізація"
+    ipa: '[dɛkɔlɔnʲiˈzɑt͡sʲijɑ]'
+    translation: "decolonization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "автономія"
+    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
+    translation: "autonomy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "культурна спадщина"
+    ipa: '[kulʲˈturnɑ ˈspɑdʃt͡ʃɪnɑ]'
+    translation: "cultural heritage"
+    pos: "noun"
+    gender: "f"
+  - lemma: "точка біфуркації"
+    ipa: '[ˈtɔt͡ʃkɑ bʲifurˈkɑt͡sʲiji]'
+    translation: "point of bifurcation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "фронтир"
+    ipa: '[frɔnˈtɪr]'
+    translation: "frontier"
+    pos: "noun"
+    gender: "m"
+  - lemma: "депопуляція"
+    ipa: '[dɛpɔpuˈlʲɑt͡sʲijɑ]'
+    translation: "depopulation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "сакральний"
+    ipa: '[sɑˈkrɑlʲnɪj]'
+    translation: "sacred"
+    pos: "adjective"
+  - lemma: "факторія"
+    ipa: '[fɑˈktɔrʲijɑ]'
+    translation: "trading post"
+    pos: "noun"
+    gender: "f"
+  - lemma: "інсигнії"
+    ipa: '[insɪɦnʲiji]'
+    translation: "insignia"
+    pos: "noun"
+    gender: "f"
+  - lemma: "суверен"
+    ipa: '[suʋɛˈrɛn]'
+    translation: "sovereign"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ярлик"
+    ipa: '[jɑrˈlɪk]'
+    translation: "patent of power (jarlyk)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "колаборація"
+    ipa: '[kɔlɑbɔˈrɑt͡sʲijɑ]'
+    translation: "collaboration"
+    pos: "noun"
+    gender: "f"
+  - lemma: "магістрат"
+    ipa: '[mɑɦʲiˈstrɑt]'
+    translation: "magistrate"
+    pos: "noun"
+    gender: "m"
+  - lemma: "холоп"
+    ipa: '[xɔˈlɔp]'
+    translation: "serf"
+    pos: "noun"
+    gender: "m"
+  - lemma: "деспотія"
+    ipa: '[dɛspɔˈtʲijɑ]'
+    translation: "despotism"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ординізація"
+    ipa: '[ɔrdɪnʲizɑt͡sʲijɑ]'
+    translation: "ordinization"
+    pos: "noun"
+    gender: "f"

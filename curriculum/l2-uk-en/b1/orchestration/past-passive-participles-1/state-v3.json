@@ -10,9 +10,20 @@
       "mode": "full"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-24T08:29:12Z",
-      "note": "word-count-2769-below-80pct-4000"
+      "status": "complete",
+      "ts": "2026-02-24T20:15:37Z",
+      "note": "adopted-existing-content",
+      "words": 4182
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T20:17:57Z",
+      "task_id": "v3-past-passive-participles-1-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T20:20:34Z",
+      "attempts": 2
     }
   }
 }

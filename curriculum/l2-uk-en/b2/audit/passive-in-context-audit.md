@@ -1,7 +1,7 @@
 # Audit Report: M06 — passive-in-context.md
 **Level:** B2 | **Module:** M06 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 12:03:50
+**Generated:** 2026-02-24 14:47:20
 
 ## Configuration
 **Type:** B2-grammar

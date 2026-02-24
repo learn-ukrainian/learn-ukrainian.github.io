@@ -1,0 +1,154 @@
+items:
+  - lemma: "процес"
+    ipa: '[prɔˈt͡sɛs]'
+    translation: "process"
+    pos: "noun"
+    gender: "m"
+    notes: "висока частотність в академічному стилі"
+  - lemma: "метод"
+    ipa: '[ˈmɛtɔd]'
+    translation: "method"
+    pos: "noun"
+    gender: "m"
+    notes: "вживається для опису способів дії"
+  - lemma: "поняття"
+    ipa: '[pɔˈnʲɑtʲːɑ]'
+    translation: "concept"
+    pos: "noun"
+    gender: "n"
+    notes: "базовий термін для теорії"
+  - lemma: "термін"
+    ipa: '[ˈtɛrmʲin]'
+    translation: "term"
+    pos: "noun"
+    gender: "m"
+    notes: "маркер професійного мовлення"
+  - lemma: "аналіз"
+    ipa: '[ɑˈnɑlʲiz]'
+    translation: "analysis"
+    pos: "noun"
+    gender: "m"
+  - lemma: "синтез"
+    ipa: '[ˈsɪntɛz]'
+    translation: "synthesis"
+    pos: "noun"
+    gender: "m"
+  - lemma: "дослідження"
+    ipa: '[dɔˈsʲlʲid͡ʒɛnʲːɑ]'
+    translation: "research"
+    pos: "noun"
+    gender: "n"
+  - lemma: "палімпсест"
+    ipa: '[pɑlʲimˈpsɛst]'
+    translation: "palimpsest"
+    pos: "noun"
+    gender: "m"
+    notes: "культурна метафора переписування"
+  - lemma: "перейменовування"
+    ipa: '[pɛrɛjmɛˈnɔʋuʋɑnʲːɑ]'
+    translation: "renaming"
+    pos: "noun"
+    gender: "n"
+  - lemma: "вторинний"
+    ipa: '[ʍtɔˈrɪnːɪj]'
+    translation: "secondary"
+    pos: "adj"
+  - lemma: "імперфективація"
+    ipa: '[impɛrfɛktɪˈʋɑt͡sʲijɑ]'
+    translation: "imperfectivization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ітеративність"
+    ipa: '[itɛrɑˈtɪu̯nʲisʲtʲ]'
+    translation: "iterativity"
+    pos: "noun"
+    gender: "f"
+    notes: "регулярне повторення дії"
+  - lemma: "дуративність"
+    ipa: '[durɑtɪu̯nʲisʲtʲ]'
+    translation: "durativity"
+    pos: "noun"
+    gender: "f"
+    notes: "тривалість та безперервність процесу"
+  - lemma: "доконаний"
+    ipa: '[dɔˈkɔnɑnɪj]'
+    translation: "perfective"
+    pos: "adj"
+  - lemma: "недоконаний"
+    ipa: '[nɛdɔˈkɔnɑnɪj]'
+    translation: "imperfective"
+    pos: "adj"
+  - lemma: "результативний"
+    ipa: '[rɛzulʲtɑˈtɪu̯nɪj]'
+    translation: "resultative"
+    pos: "adj"
+  - lemma: "чергування"
+    ipa: '[t͡ʃɛrɦuˈʋɑnʲːɑ]'
+    translation: "alternation"
+    pos: "noun"
+    gender: "n"
+  - lemma: "суфікс"
+    ipa: '[ˈsufʲiks]'
+    translation: "suffix"
+    pos: "noun"
+    gender: "m"
+  - lemma: "префікс"
+    ipa: '[prɛfʲiks]'
+    translation: "prefix"
+    pos: "noun"
+    gender: "m"
+  - lemma: "наголос"
+    ipa: '[ˈnɑɦɔlɔs]'
+    translation: "stress, accent"
+    pos: "noun"
+    gender: "m"
+  - lemma: "омографія"
+    ipa: '[ɔmɔˈɦrɑfʲijɑ]'
+    translation: "homography"
+    pos: "noun"
+    gender: "f"
+  - lemma: "гіперкорекція"
+    ipa: '[ɦʲipɛrkɔrɛkt͡sʲijɑ]'
+    translation: "hypercorrection"
+    pos: "noun"
+    gender: "f"
+    notes: "надуживання суфіксами, напр., переписовувати"
+  - lemma: "ненормативний"
+    ipa: '[nɛnɔrmɑˈtɪu̯nɪj]'
+    translation: "non-normative"
+    pos: "adj"
+  - lemma: "зафіксовувати"
+    ipa: '[zɑfʲiˈksɔʋuʋɑtɪ]'
+    translation: "to record regularly"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "обґрунтовувати"
+    ipa: '[ɔbɡrunˈtɔʋuʋɑtɪ]'
+    translation: "to justify regularly"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "розробляти"
+    ipa: '[rɔzrɔˈblʲɑtɪ]'
+    translation: "to develop over time"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "перечитувати"
+    ipa: '[pɛrɛˈt͡ʃɪtuʋɑtɪ]'
+    translation: "to reread often"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "диференціювати"
+    ipa: '[dɪfɛrɛnʲt͡sʲijuˈʋɑtɪ]'
+    translation: "to differentiate"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "розшифровувати"
+    ipa: '[rɔʒʃɪˈfrɔʋuʋɑtɪ]'
+    translation: "to decipher continuously"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "вибудовувати"
+    ipa: '[ʋɪbuˈdɔʋuʋɑtɪ]'
+    translation: "to build up gradually"
+    pos: "verb"
+    aspect: "impf"

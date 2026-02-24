@@ -1,75 +1,94 @@
 items:
   - lemma: "робити"
+    ipa: '[rɔˈbɪtɪ]'
     translation: "to do, to make (imperfective)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "зробити"
+    ipa: '[zrɔˈbɪtɪ]'
     translation: "to do, to make (perfective)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "говорити"
+    ipa: '[ɦɔʋɔˈrɪtɪ]'
     translation: "to speak, to talk (imperfective)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "сказати"
+    ipa: '[skɑˈzɑtɪ]'
     translation: "to say, to tell (perfective)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "брати"
+    ipa: '[ˈbrɑtɪ]'
     translation: "to take (imperfective)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "взяти"
+    ipa: '[ˈʋzʲɑtɪ]'
     translation: "to take (perfective)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "давати"
+    ipa: '[dɑˈʋɑtɪ]'
     translation: "to give (imperfective)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "дати"
+    ipa: '[ˈdɑtɪ]'
     translation: "to give (perfective)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "бачити"
+    ipa: '[ˈbɑt͡ʃɪtɪ]'
     translation: "to see (imperfective)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "побачити"
+    ipa: '[pɔˈbɑt͡ʃɪtɪ]'
     translation: "to see (perfective)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "їсти"
+    ipa: '[ˈjistɪ]'
     translation: "to eat (imperfective)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "з'їсти"
+    ipa: '[ˈzjistɪ]'
     translation: "to eat (perfective)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "пити"
+    ipa: '[ˈpɪtɪ]'
     translation: "to drink (imperfective)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "випити"
+    ipa: '[ˈʋɪpɪtɪ]'
     translation: "to drink (perfective)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "писати"
+    ipa: '[pɪˈsɑtɪ]'
     translation: "to write (imperfective)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "написати"
+    ipa: '[nɑpɪˈsɑtɪ]'
     translation: "to write (perfective)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "читати"
+    ipa: '[t͡ʃɪˈtɑtɪ]'
     translation: "to read (imperfective)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "прочитати"
+    ipa: '[prɔt͡ʃɪˈtɑtɪ]'
     translation: "to read (perfective)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "вчити"
+    ipa: '[ˈʍt͡ʃɪtɪ]'
     translation: "to study, to learn (imperfective)"

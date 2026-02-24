@@ -1,117 +1,147 @@
 items:
   - lemma: "термін"
+    ipa: '[ˈtɛrmʲin]'
     translation: "deadline, term"
     pos: "noun"
     gender: "m"
     notes: "Point in time or specialized word"
   - lemma: "поняття"
+    ipa: '[pɔˈnʲɑtʲːɑ]'
     translation: "concept"
     pos: "noun"
     gender: "n"
   - lemma: "процес"
+    ipa: '[prɔˈt͡sɛs]'
     translation: "process"
     pos: "noun"
     gender: "m"
   - lemma: "метод"
+    ipa: '[ˈmɛtɔd]'
     translation: "method"
     pos: "noun"
     gender: "m"
   - lemma: "аналіз"
+    ipa: '[ɑˈnɑlʲiz]'
     translation: "analysis"
     pos: "noun"
     gender: "m"
   - lemma: "синтез"
+    ipa: '[ˈsɪntɛz]'
     translation: "synthesis"
     pos: "noun"
     gender: "m"
   - lemma: "дослідження"
+    ipa: '[dɔˈsʲlʲid͡ʒɛnʲːɑ]'
     translation: "research"
     pos: "noun"
     gender: "n"
   - lemma: "строк"
+    ipa: '[strɔk]'
     translation: "period, duration"
     pos: "noun"
     gender: "m"
     notes: "A length of time"
   - lemma: "циферблат"
+    ipa: '[t͡sɪfɛrˈblɑt]'
     translation: "clock face"
     pos: "noun"
     gender: "m"
   - lemma: "прийменник"
+    ipa: '[prɪjˈmɛnːɪk]'
     translation: "preposition"
     pos: "noun"
     gender: "m"
   - lemma: "година"
+    ipa: '[ɦɔˈdɪnɑ]'
     translation: "hour"
     pos: "noun"
     gender: "f"
   - lemma: "хвилина"
+    ipa: '[xʋɪˈlɪnɑ]'
     translation: "minute"
     pos: "noun"
     gender: "f"
   - lemma: "розклад"
+    ipa: '[ˈrɔzklɑd]'
     translation: "schedule"
     pos: "noun"
     gender: "m"
   - lemma: "графік"
+    ipa: '[ˈɦrɑfʲik]'
     translation: "timetable, graph"
     pos: "noun"
     gender: "m"
   - lemma: "дата"
+    ipa: '[ˈdɑtɑ]'
     translation: "date"
     pos: "noun"
     gender: "f"
   - lemma: "відмінок"
+    ipa: '[ʋʲiˈdʲmʲinɔk]'
     translation: "grammatical case"
     pos: "noun"
     gender: "m"
   - lemma: "називний"
+    ipa: '[nɑzɪˈʋnɪj]'
     translation: "nominative"
     pos: "adjective"
   - lemma: "родовий"
+    ipa: '[rɔˈdɔˈʋɪj]'
     translation: "genitive"
     pos: "adjective"
   - lemma: "місцевий"
+    ipa: '[mʲiˈst͡sɛʋɪj]'
     translation: "locative"
     pos: "adjective"
   - lemma: "знахідний"
+    ipa: '[znɑˈxʲidnɪj]'
     translation: "accusative"
     pos: "adjective"
   - lemma: "числівник"
+    ipa: '[t͡ʃɪˈsʲlʲiu̯nɪk]'
     translation: "numeral"
     pos: "noun"
     gender: "m"
   - lemma: "порядковий"
+    ipa: '[pɔrʲɑˈdkɔʋɪj]'
     translation: "ordinal"
     pos: "adjective"
   - lemma: "кількісний"
+    ipa: '[ˈkʲilʲkʲisnɪj]'
     translation: "cardinal"
     pos: "adjective"
   - lemma: "логістика"
+    ipa: '[lɔˈɦʲistɪkɑ]'
     translation: "logistics"
     pos: "noun"
     gender: "f"
   - lemma: "склад"
+    ipa: '[sklɑd]'
     translation: "warehouse"
     pos: "noun"
     gender: "m"
   - lemma: "постачання"
+    ipa: '[pɔstɑˈt͡ʃɑnʲːɑ]'
     translation: "supply, delivery"
     pos: "noun"
     gender: "n"
   - lemma: "тривалість"
+    ipa: '[trɪˈʋɑlʲisʲtʲ]'
     translation: "duration"
     pos: "noun"
     gender: "f"
   - lemma: "мить"
+    ipa: '[mɪtʲ]'
     translation: "moment, instant"
     pos: "noun"
     gender: "f"
   - lemma: "етимологія"
+    ipa: '[ɛtɪmɔˈlɔɦʲijɑ]'
     translation: "etymology"
     pos: "noun"
     gender: "f"
   - lemma: "калька"
+    ipa: '[ˈkɑlʲkɑ]'
     translation: "calque, loan translation"
     pos: "noun"
     gender: "f"

@@ -1,98 +1,99 @@
-module: c1-bio-40
-level: C1-BIO
-sequence: 40
+module: panteleimon-kulish
+level: LIT
 slug: panteleimon-kulish
 version: '2.0'
-title: 'Пантелеймон Куліш: Будівничий української мови'
+title: 'Пантелеймон Куліш: Європеєць на Хуторі'
+subtitle: 'Panteleimon Kulish: The European on the Farmstead'
 content_outline:
-- section: Вступ — Архітектор української писемності
+- section: Вступ — Інтелектуал епохи романтизму
   points:
-  - Куліш як ключова постать у формуванні української літературної мови
-  - Створення «кулішівки» — основи сучасного правопису
-  - Багатогранність його діяльності
-- section: Ранні роки та освіта (1819-1840)
+  - Куліш у трійці Шевченко-Куліш-Костомаров
+  - Гарячий характер і суперечливість
+  - Чому його менше знають
+- section: Біографія — від села до Європи
   points:
-  - Народження на Чернігівщині
-  - Навчання в Київському університеті
-  - Перші літературні спроби
-  - Знайомство з українською інтелігенцією
-- section: Кирило-Мефодіївське братство (1845-1847)
+  - Дитинство на Чернігівщині
+  - Освіта і перші твори
+  - Подорожі Європою
+- section: Куліш і Шевченко
   points:
-  - Заснування братства разом із Шевченком та Костомаровим
-  - Ідеї слов'янської федерації
-  - Арешт та заслання
-  - Формування національної програми
-- section: Дружба та полеміка з Шевченком
+  - Дружба і конфлікти
+  - Різні погляди на Україну
+  - Куліш як видавець "Кобзаря"
+- section: Перекладач і мовознавець
   points:
-  - Перша зустріч та взаємне захоплення
-  - Спільна робота над українською справою
-  - Ідейні розходження та критика
-  - Значення цієї дружби для української культури
-- section: Мовотворча діяльність
+  - Переклади Шекспіра
+  - Переклад Біблії
+  - Кулішівка — система правопису
+- section: Хуторянство як філософія
   points:
-  - Створення фонетичного правопису («кулішівка»)
-  - Переклад Біблії українською мовою
-  - Літературна нормалізація української мови
-  - Боротьба з «язичієм»
-- section: Літературна спадщина та пізні роки (1860-1897)
+  - Ідеалізація сільського життя
+  - Критика міста і модернізації
+  - Європеїзм vs консерватизм
+- section: Підсумок — Найсуперечливіша постать
   points:
-  - Історичний роман «Чорна рада»
-  - Переклади Шекспіра та Байрона
-  - Еволюція поглядів у пізній період
-  - Смерть та оцінка спадщини
+  - Внесок Куліша в українську культуру
+  - Чому його переоцінюють і недооцінюють
+  - Перехід до "Чорної ради"
 vocabulary_hints:
   required:
+  - інтелектуал (intellectual)
+  - романтизм (romanticism)
+  - хуторянство (ruralism/khutorianstvo)
+  - перекладач (translator)
   - правопис (orthography)
-  - кулішівка (Kulish orthography)
-  - фонетичний принцип (phonetic principle)
-  - мовотворення (language creation)
-  - братство (brotherhood)
-  - заслання (exile)
-  - переклад (translation)
-  - Біблія (Bible)
-  - літературна мова (literary language)
-  - полеміка (polemic)
+  - суперечливий (controversial)
+  - європеїзм (Europeanism)
+  - консерватизм (conservatism)
+  - видавець (publisher)
+  - епістолярний (epistolary)
   recommended:
-  - Кирило-Мефодіївське братство (Cyril and Methodius Brotherhood)
-  - «язичіє» (macaronic language)
-  - слов'янська федерація (Slavic federation)
-  - «Чорна рада» (The Black Council)
-  - нормалізація (standardization)
+  - полеміка (polemics)
+  - ідеалізація (idealization)
+  - модернізація (modernization)
+  - конфлікт (conflict)
+  - спадщина (legacy)
 activity_hints:
 - type: reading
-  focus: Мовознавча та літературна спадщина
-  source: Уривки з перекладу Біблії та «Чорної ради»
-  items: 3 passages
+  focus: Біографічні матеріали про Куліша
+  source: UkrLib biography
+  items: 4+
 - type: essay-response
-  focus: Чому правопис важливий для національної ідентичності?
-  output: Аналітичне есе
+  focus: Дуалізм Куліша (європеїзм vs хуторянство)
+  output: Біографічне есе
 focus: biography
+pedagogy: Seminar
 prerequisites:
-- c1-bio-20 (Тарас Шевченко)
+- lit-11 to lit-20 (Shevchenko phase)
+- Understanding of Ukrainian Romanticism
 connects_to:
-- c1-bio-98 (Іван Огієнко)
-- c1-bio-96 (Микола Погрібний)
-- c1-bio-30 (Борис Грінченко)
+- lit-22 (Black Council History — історичний контекст)
+- lit-24 (Language Question — Кулішівка)
+- lit-25 (Cyrillo-Methodian Brotherhood)
+objectives:
+- Evaluate Kulish's role as the "architect" of modern Ukrainian culture alongside
+  Shevchenko.
+- Understand the "Khutor" philosophy as a path to Europeanization.
+- Analyze the impact of "Kulishivka" and his translations on Ukrainian identity.
+grammar:
+- Epistolary style
+- Intellectual lexicon
 module_type: biography
 sources:
-- name: Пантелеймон Куліш (Wikipedia UA)
-  url: https://uk.wikipedia.org/wiki/Куліш_Пантелеймон_Олександрович
+- name: Пантелеймон Куліш — біографія
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1701
   type: primary
-  notes: Біографія, творчість, мовознавча діяльність
-- name: Інститут української мови НАНУ
-  url: https://iulm.org.ua
+  notes: Офіційна біографія на UkrLib
+- name: Чорна рада — текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=263
+  type: secondary
+  notes: Головний роман для контексту
+- name: Куліш і українська орфографія
+  url: https://uk.wikipedia.org/wiki/Кулішівка
   type: reference
-  notes: Кулішівка та правопис
-- name: Кирило-Мефодіївське братство
-  url: https://www.history.org.ua
-  type: reference
-  notes: Політична діяльність
+  notes: Мовознавчий контекст
 immersion: 100% Ukrainian
-phase: C1-BIO
-objectives:
-- 'Analyze the life and legacy of пантелеймон куліш: будівничий української мови'
-- Evaluate the contributions of архітектор української писемності
-- Trace the career and influence of літературна спадщина та пізні роки (1860-1897)
+phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
 persona:
-  voice: Senior Biographer
-  role: Bible Translator
+  voice: Senior Philologist & Critic
+  role: Khutir Philosopher

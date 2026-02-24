@@ -1,119 +1,149 @@
 items:
   - lemma: "оцінювання"
+    ipa: '[ɔˈt͡sʲinʲuʋɑnʲːɑ]'
     translation: "assessment"
     pos: "noun"
     gender: "n"
   - lemma: "діагностика"
+    ipa: '[dʲiɑˈɦnɔstɪkɑ]'
     translation: "diagnostics"
     pos: "noun"
     gender: "f"
   - lemma: "прогалина"
+    ipa: '[prɔˈɦɑlɪnɑ]'
     translation: "gap"
     pos: "noun"
     gender: "f"
   - lemma: "уміння"
+    ipa: '[uˈmʲinʲːɑ]'
     translation: "skill"
     pos: "noun"
     gender: "n"
   - lemma: "регістр"
+    ipa: '[rɛˈɦʲistr]'
     translation: "register (linguistic)"
     pos: "noun"
     gender: "m"
   - lemma: "трансформація"
+    ipa: '[trɑnsfɔrˈmɑt͡sʲijɑ]'
     translation: "transformation"
     pos: "noun"
     gender: "f"
   - lemma: "ідентифікація"
+    ipa: '[idɛntɪfʲiˈkɑt͡sʲijɑ]'
     translation: "identification"
     pos: "noun"
     gender: "f"
   - lemma: "самооцінка"
+    ipa: '[sɑmɔɔˈt͡sʲinkɑ]'
     translation: "self-assessment"
     pos: "noun"
     gender: "f"
   - lemma: "критерій"
+    ipa: '[krɪˈtɛrʲij]'
     translation: "criterion"
     pos: "noun"
     gender: "m"
   - lemma: "контрольний модуль"
+    ipa: '[kɔnˈtrɔlʲnɪj ˈmɔdulʲ]'
     translation: "checkpoint module"
     pos: "noun"
     gender: "m"
   - lemma: "консолідація"
+    ipa: '[kɔnsɔlʲiˈdɑt͡sʲijɑ]'
     translation: "consolidation"
     pos: "noun"
     gender: "f"
   - lemma: "систематизація"
+    ipa: '[sɪstɛmɑtɪˈzɑt͡sʲijɑ]'
     translation: "systematization"
     pos: "noun"
     gender: "f"
   - lemma: "рефлексія"
+    ipa: '[rɛˈflɛksʲijɑ]'
     translation: "reflection"
     pos: "noun"
     gender: "f"
   - lemma: "компетенція"
+    ipa: '[kɔmpɛˈtɛnʲt͡sʲijɑ]'
     translation: "competence"
     pos: "noun"
     gender: "f"
   - lemma: "рівень володіння"
+    ipa: '[ˈrʲiʋɛnʲ ʋɔlɔˈdʲinʲːɑ]'
     translation: "proficiency level"
     pos: "noun"
     gender: "m"
   - lemma: "канцеляризм"
+    ipa: '[kɑnt͡sɛlʲɑˈrɪzm]'
     translation: "bureaucratese"
     pos: "noun"
     gender: "m"
   - lemma: "об'єктивність"
+    ipa: '[ɔbjɛˈktɪu̯nʲisʲtʲ]'
     translation: "objectivity"
     pos: "noun"
     gender: "f"
   - lemma: "безособовий"
+    ipa: '[bɛzɔsɔˈbɔʋɪj]'
     translation: "impersonal"
     pos: "adj"
   - lemma: "дієприкметник"
+    ipa: '[dʲijɛprɪˈkmɛtnɪk]'
     translation: "participle"
     pos: "noun"
     gender: "m"
   - lemma: "агентність"
+    ipa: '[ɑɦɛntʲnʲisʲtʲ]'
     translation: "agency (linguistic)"
     pos: "noun"
     gender: "f"
   - lemma: "виконавець"
+    ipa: '[ʋɪkɔˈnɑʋɛt͡sʲ]'
     translation: "performer / agent"
     pos: "noun"
     gender: "m"
   - lemma: "підмет"
+    ipa: '[pʲidmɛt]'
     translation: "subject (grammar)"
     pos: "noun"
     gender: "m"
   - lemma: "присудок"
+    ipa: '[ˈprɪsudɔk]'
     translation: "predicate (grammar)"
     pos: "noun"
     gender: "m"
   - lemma: "узгодження"
+    ipa: '[uˈzɦɔd͡ʒɛnʲːɑ]'
     translation: "agreement / concord"
     pos: "noun"
     gender: "n"
   - lemma: "калькування"
+    ipa: '[kɑlʲkuˈʋɑnʲːɑ]'
     translation: "calquing / loan translation"
     pos: "noun"
     gender: "n"
   - lemma: "русизм"
+    ipa: '[ruˈsɪzm]'
     translation: "Russism"
     pos: "noun"
     gender: "m"
   - lemma: "милозвучність"
+    ipa: '[mɪlɔˈzʋut͡ʃnʲisʲtʲ]'
     translation: "euphony"
     pos: "noun"
     gender: "f"
   - lemma: "незворотність"
+    ipa: '[nɛzʋɔˈrɔtʲnʲisʲtʲ]'
     translation: "irreversibility"
     pos: "noun"
     gender: "f"
   - lemma: "автентичний"
+    ipa: '[ɑu̯tɛnˈtɪt͡ʃnɪj]'
     translation: "authentic"
     pos: "adj"
   - lemma: "діловодство"
+    ipa: '[dʲilɔˈʋɔd͡zstʋɔ]'
     translation: "record keeping / paperwork"
     pos: "noun"
     gender: "n"

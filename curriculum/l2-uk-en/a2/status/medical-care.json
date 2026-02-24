@@ -2,13 +2,13 @@
   "module": "medical-care",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:24:12.450351Z",
+  "last_audit": "2026-02-24T21:19:12.713217Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T00:08:53.884022Z",
+    "md": "2026-02-24T19:08:25.288671Z",
     "meta": "2026-02-24T00:05:43.526308Z",
-    "activities": "2026-02-24T00:12:09.272519Z",
-    "vocabulary": "2026-02-24T00:12:09.272861Z",
+    "activities": "2026-02-24T19:04:15.332789Z",
+    "vocabulary": "2026-02-24T19:00:53.007229Z",
     "plan": "2026-02-20T21:05:31.208912Z",
     "research": "2026-02-24T00:05:43.522783Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "4324/3000 (raw: 4681) | engagement: 0/4 | pedagogy: 10 violations | immersion: 96.4% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "4701/3000 (raw: 5058)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

@@ -2,13 +2,13 @@
   "module": "shopping-services",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:23:58.775104Z",
+  "last_audit": "2026-02-24T21:18:54.941189Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T23:26:03.207192Z",
+    "md": "2026-02-24T16:56:56.820586Z",
     "meta": "2026-02-23T23:22:40.186556Z",
-    "activities": "2026-02-23T23:28:34.148205Z",
-    "vocabulary": "2026-02-23T23:28:34.148514Z",
+    "activities": "2026-02-24T16:48:43.883278Z",
+    "vocabulary": "2026-02-24T16:55:28.126899Z",
     "plan": "2026-02-20T21:04:55.845661Z",
     "research": "2026-02-23T23:22:40.183130Z"
   },
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "3910/3000 (raw: 4127) | pedagogy: 27 violations | immersion: 96.6% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "4253/3000 (raw: 4461)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "29/1"
     },
     "naturalness": {
       "status": "info",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "2 Outline Compliance Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 1,
-    "deferred_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

@@ -1,95 +1,120 @@
 items:
   - lemma: "записатися"
+    ipa: '[zɑpɪˈsɑtɪsʲɑ]'
     translation: "to book / to sign up"
     pos: "verb"
     aspect: "perfective"
   - lemma: "домовитися"
+    ipa: '[dɔˈmɔʋɪtɪsʲɑ]'
     translation: "to arrange / to agree"
     pos: "verb"
     aspect: "perfective"
   - lemma: "зустріч"
+    ipa: '[ˈzustʲrʲit͡ʃ]'
     translation: "meeting"
     pos: "noun"
     gender: "f"
   - lemma: "прийом"
+    ipa: '[prɪˈjɔm]'
     translation: "appointment / reception"
     pos: "noun"
     gender: "m"
   - lemma: "вільний"
+    ipa: '[ˈʋʲilʲnɪj]'
     translation: "free / available"
     pos: "adj"
   - lemma: "зайнятий"
+    ipa: '[ˈzɑjnʲɑtɪj]'
     translation: "busy / occupied"
     pos: "adj"
   - lemma: "перенести"
+    ipa: '[pɛrɛnɛˈstɪ]'
     translation: "to reschedule / to move"
     pos: "verb"
     aspect: "perfective"
   - lemma: "скасувати"
+    ipa: '[skɑsuˈʋɑtɪ]'
     translation: "to cancel"
     pos: "verb"
     aspect: "perfective"
   - lemma: "підтвердити"
+    ipa: '[pʲiˈdtʋɛrdɪtɪ]'
     translation: "to confirm"
     pos: "verb"
     aspect: "perfective"
   - lemma: "о котрій"
+    ipa: '[ɔ kɔˈtʲrʲij]'
     translation: "at what time"
     pos: "phrase"
     notes: "Requires locative case"
   - lemma: "на котру"
+    ipa: '[nɑ kɔˈtru]'
     translation: "for what time"
     pos: "phrase"
     notes: "Requires accusative case"
   - lemma: "пів на"
+    ipa: '[pʲiu̯ nɑ]'
     translation: "half past"
     pos: "phrase"
   - lemma: "нагадування"
+    ipa: '[nɑˈɦɑduʋɑnʲːɑ]'
     translation: "reminder"
     pos: "noun"
     gender: "n"
   - lemma: "запізнення"
+    ipa: '[zɑˈpʲiznɛnʲːɑ]'
     translation: "lateness / delay"
     pos: "noun"
     gender: "n"
   - lemma: "раніше"
+    ipa: '[rɑˈnʲiʃɛ]'
     translation: "earlier"
     pos: "adv"
   - lemma: "пізніше"
+    ipa: '[pʲiˈzʲnʲiʃɛ]'
     translation: "later"
     pos: "adv"
   - lemma: "месенджер"
+    ipa: '[mɛsɛnd͡ʒɛr]'
     translation: "messenger"
     pos: "noun"
     gender: "m"
   - lemma: "повідомлення"
+    ipa: '[pɔʋʲiˈdɔmlɛnʲːɑ]'
     translation: "message"
     pos: "noun"
     gender: "n"
   - lemma: "пунктуальність"
+    ipa: '[punktuˈɑlʲnʲisʲtʲ]'
     translation: "punctuality"
     pos: "noun"
     gender: "f"
   - lemma: "розклад"
+    ipa: '[ˈrɔzklɑd]'
     translation: "schedule"
     pos: "noun"
     gender: "m"
   - lemma: "графік"
+    ipa: '[ˈɦrɑfʲik]'
     translation: "timetable / schedule"
     pos: "noun"
     gender: "m"
   - lemma: "адміністратор"
+    ipa: '[ɑdʲmʲinʲiˈstrɑtɔr]'
     translation: "administrator"
     pos: "noun"
     gender: "m"
   - lemma: "стоматолог"
+    ipa: '[stɔmɑˈtɔlɔɦ]'
     translation: "dentist"
     pos: "noun"
     gender: "m"
   - lemma: "перукар"
+    ipa: '[pɛruˈkɑr]'
     translation: "hairdresser"
     pos: "noun"
     gender: "m"
   - lemma: "вчасно"
+    ipa: '[ˈʍt͡ʃɑsnɔ]'
     translation: "on time"
     pos: "adv"

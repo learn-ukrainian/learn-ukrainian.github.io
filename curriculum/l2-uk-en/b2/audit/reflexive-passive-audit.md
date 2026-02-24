@@ -1,7 +1,7 @@
 # Audit Report: M04 — reflexive-passive.md
 **Level:** B2 | **Module:** M04 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 11:23:02
+**Generated:** 2026-02-24 14:47:07
 
 ## Configuration
 **Type:** B2-grammar

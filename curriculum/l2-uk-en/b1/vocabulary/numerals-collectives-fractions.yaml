@@ -1,110 +1,140 @@
 items:
   - lemma: "двоє"
+    ipa: '[ˈdʋɔjɛ]'
     translation: "two (collective)"
     pos: "numeral"
   - lemma: "троє"
+    ipa: '[ˈtrɔjɛ]'
     translation: "three (collective)"
     pos: "numeral"
   - lemma: "четверо"
+    ipa: '[ˈt͡ʃɛtʋɛrɔ]'
     translation: "four (collective)"
     pos: "numeral"
   - lemma: "п'ятеро"
+    ipa: '[ˈpjɑtɛrɔ]'
     translation: "five (collective)"
     pos: "numeral"
   - lemma: "шестеро"
+    ipa: '[ˈʃɛstɛrɔ]'
     translation: "six (collective)"
     pos: "numeral"
   - lemma: "семеро"
+    ipa: '[ˈsɛmɛrɔ]'
     translation: "seven (collective)"
     pos: "numeral"
   - lemma: "десятеро"
+    ipa: '[ˈdɛsʲɑtɛrɔ]'
     translation: "ten (collective)"
     pos: "numeral"
   - lemma: "півтора"
+    ipa: '[pʲiu̯tɔˈrɑ]'
     translation: "one and a half"
     pos: "numeral"
     gender: "m/n"
   - lemma: "півтори"
+    ipa: '[pʲiu̯tɔˈrɪ]'
     translation: "one and a half"
     pos: "numeral"
     gender: "f"
   - lemma: "половина"
+    ipa: '[pɔlɔˈʋɪnɑ]'
     translation: "half"
     pos: "noun"
     gender: "f"
   - lemma: "третина"
+    ipa: '[trɛˈtɪnɑ]'
     translation: "third"
     pos: "noun"
     gender: "f"
   - lemma: "чверть"
+    ipa: '[t͡ʃʋɛrtʲ]'
     translation: "quarter"
     pos: "noun"
     gender: "f"
   - lemma: "відсоток"
+    ipa: '[ʋʲiˈd͡zsɔtɔk]'
     translation: "percent"
     pos: "noun"
     gender: "m"
   - lemma: "утрьох"
+    ipa: '[uˈtʲrʲɔx]'
     translation: "the three of us/them together"
     pos: "adverb"
   - lemma: "удвох"
+    ipa: '[uˈdʋɔx]'
     translation: "the two of us/them together"
     pos: "adverb"
   - lemma: "ножиці"
+    ipa: '[ˈnɔʒɪt͡sʲi]'
     translation: "scissors"
     pos: "noun"
     notes: "plurale tantum"
   - lemma: "окуляри"
+    ipa: '[ɔkuˈlʲɑrɪ]'
     translation: "glasses"
     pos: "noun"
     notes: "plurale tantum"
   - lemma: "двері"
+    ipa: '[ˈdʋɛrʲi]'
     translation: "door"
     pos: "noun"
     notes: "plurale tantum"
   - lemma: "сани"
+    ipa: '[ˈsɑnɪ]'
     translation: "sleigh"
     pos: "noun"
     notes: "plurale tantum"
   - lemma: "ворота"
+    ipa: '[ʋɔˈrɔtɑ]'
     translation: "gates"
     pos: "noun"
     notes: "plurale tantum"
   - lemma: "цуценя"
+    ipa: '[t͡sut͡sɛˈnʲɑ]'
     translation: "puppy"
     pos: "noun"
     gender: "n"
   - lemma: "кошеня"
+    ipa: '[kɔʃɛˈnʲɑ]'
     translation: "kitten"
     pos: "noun"
     gender: "n"
   - lemma: "теля"
+    ipa: '[tɛˈlʲɑ]'
     translation: "calf"
     pos: "noun"
     gender: "n"
   - lemma: "каченя"
+    ipa: '[kɑt͡ʃɛˈnʲɑ]'
     translation: "duckling"
     pos: "noun"
     gender: "n"
   - lemma: "левеня"
+    ipa: '[lɛʋɛˈnʲɑ]'
     translation: "lion cub"
     pos: "noun"
     gender: "n"
   - lemma: "кількісний числівник"
+    ipa: '[ˈkʲilʲkʲisnɪj t͡ʃɪˈsʲlʲiu̯nɪk]'
     translation: "cardinal numeral"
     pos: "noun"
   - lemma: "дробовий числівник"
+    ipa: '[drɔbɔˈʋɪj t͡ʃɪˈsʲlʲiu̯nɪk]'
     translation: "fractional numeral"
     pos: "noun"
   - lemma: "множина"
+    ipa: '[mnɔʒɪˈnɑ]'
     translation: "plural"
     pos: "noun"
     gender: "f"
   - lemma: "Святий Вечір"
+    ipa: '[sʲʋʲɑˈtɪj ˈʋɛt͡ʃʲir]'
     translation: "Christmas Eve"
     pos: "noun"
     gender: "m"
   - lemma: "кутя"
+    ipa: '[kuˈtʲɑ]'
     translation: "kutia (traditional sweet dish)"
     pos: "noun"
     gender: "f"

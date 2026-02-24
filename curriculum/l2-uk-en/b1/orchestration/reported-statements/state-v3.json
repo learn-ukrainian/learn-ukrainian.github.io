@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T00:30:44Z",
       "task_id": "v3-reported-statements-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T19:31:50Z",
+      "attempts": 2
     }
   }
 }

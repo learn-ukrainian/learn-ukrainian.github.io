@@ -17,6 +17,12 @@
       "status": "complete",
       "ts": "2026-02-23T21:39:48Z",
       "task_id": "v3-motion-verbs-full-system-pC"
+    },
+    "v3-audit": {
+      "status": "failed",
+      "ts": "2026-02-24T15:18:22Z",
+      "attempts": 6,
+      "note": "escalation-failed"
     }
   }
 }

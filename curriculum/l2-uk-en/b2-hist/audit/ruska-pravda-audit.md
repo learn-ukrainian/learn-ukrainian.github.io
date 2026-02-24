@@ -1,7 +1,7 @@
 # Audit Report: M13 — ruska-pravda.md
 **Level:** B2-HIST | **Module:** M13 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-24 09:11:09
+**Generated:** 2026-02-24 18:49:58
 
 ## Configuration
 **Type:** B2-history

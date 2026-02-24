@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T09:29:37Z",
       "task_id": "v3-mongolska-navala-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:50:37Z",
+      "attempts": 1
     }
   }
 }

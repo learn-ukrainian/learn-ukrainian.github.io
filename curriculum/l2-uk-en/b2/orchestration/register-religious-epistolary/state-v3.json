@@ -8,6 +8,20 @@
       "ts": "2026-02-24T10:12:21Z",
       "task_id": "v3-register-religious-epistolary-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T19:27:01Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T19:29:26Z",
+      "task_id": "v3-register-religious-epistolary-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T19:32:30Z",
+      "attempts": 2
     }
   }
 }

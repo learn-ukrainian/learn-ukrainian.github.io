@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T23:33:08Z",
       "task_id": "v3-rental-accommodation-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T20:19:24Z",
+      "attempts": 1
     }
   }
 }

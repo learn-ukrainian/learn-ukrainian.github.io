@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T08:15:09Z",
       "task_id": "v3-b21-integration-practice-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T18:11:43Z",
+      "attempts": 2
     }
   }
 }

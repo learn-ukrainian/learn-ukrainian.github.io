@@ -17,6 +17,12 @@
       "status": "complete",
       "ts": "2026-02-24T09:49:59Z",
       "task_id": "v3-galytsko-volynska-derzhava-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:50:50Z",
+      "attempts": 0,
+      "note": "auto-fix"
     }
   }
 }

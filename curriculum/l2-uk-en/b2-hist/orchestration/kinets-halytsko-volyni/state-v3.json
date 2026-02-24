@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T10:07:27Z",
       "task_id": "v3-kinets-halytsko-volyni-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:51:00Z",
+      "attempts": 1
     }
   }
 }

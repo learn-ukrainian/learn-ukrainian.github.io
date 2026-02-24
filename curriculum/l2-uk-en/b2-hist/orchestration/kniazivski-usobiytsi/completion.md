@@ -3,8 +3,8 @@ PASS: build_module_v2.py b2-hist 17 — E2E
   Module:   kniazivski-usobiytsi
   Track:    b2-hist
   Mode:     e2e
-  Words:    4522 (target: 5000)
+  Words:    5515 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-24T08:18:37Z
+  Date:     2026-02-24T17:50:18Z

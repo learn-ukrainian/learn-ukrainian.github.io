@@ -3,8 +3,8 @@ PASS: build_module_v2.py b2 38 — E2E
   Module:   one-member-sentences
   Track:    b2
   Mode:     e2e
-  Words:    3569 (target: 4000)
+  Words:    4393 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-24T10:10:51Z
+  Date:     2026-02-24T19:21:05Z

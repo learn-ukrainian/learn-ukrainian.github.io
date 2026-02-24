@@ -1,111 +1,141 @@
 items:
   - lemma: "контрольна точка"
+    ipa: '[kɔnˈtrɔlʲnɑ ˈtɔt͡ʃkɑ]'
     translation: "checkpoint"
     pos: "noun"
     notes: "фінальна контрольна точка, ключова точка"
   - lemma: "повторення"
+    ipa: '[pɔˈʋtɔrɛnʲːɑ]'
     translation: "review"
     pos: "noun"
     notes: "повторення вивченого"
   - lemma: "оцінювання"
+    ipa: '[ɔˈt͡sʲinʲuʋɑnʲːɑ]'
     translation: "assessment"
     pos: "noun"
     notes: "система оцінювання"
   - lemma: "формувальне оцінювання"
+    ipa: '[fɔrmuˈʋɑlʲnɛ ɔˈt͡sʲinʲuʋɑnʲːɑ]'
     translation: "formative assessment"
     pos: "noun"
   - lemma: "самооцінювання"
+    ipa: '[sɑmɔɔt͡sʲinʲuʋɑnʲːɑ]'
     translation: "self-assessment"
     pos: "noun"
     notes: "важливий елемент автономного навчання"
   - lemma: "критерій"
+    ipa: '[krɪˈtɛrʲij]'
     translation: "criterion"
     pos: "noun"
     notes: "критерії оцінювання"
   - lemma: "інтеграція"
+    ipa: '[intɛˈɦrɑt͡sʲijɑ]'
     translation: "integration"
     pos: "noun"
     notes: "процес інтеграції, інтеграція знань"
   - lemma: "прогрес"
+    ipa: '[prɔˈɦrɛs]'
     translation: "progress"
     pos: "noun"
     notes: "відстежувати прогрес"
   - lemma: "результат"
+    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
     notes: "досягти результату, кінцевий результат"
   - lemma: "речення"
+    ipa: '[rɛt͡ʃɛnʲːɑ]'
     translation: "sentence"
     pos: "noun"
     notes: "просте речення, будувати речення"
   - lemma: "складне речення"
+    ipa: '[sklɑdnɛ rɛt͡ʃɛnʲːɑ]'
     translation: "complex sentence"
     pos: "noun"
   - lemma: "підрядне речення"
+    ipa: '[pʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ]'
     translation: "subordinate clause"
     pos: "noun"
   - lemma: "головне речення"
+    ipa: '[ɦɔlɔˈʋnɛ rɛt͡ʃɛnʲːɑ]'
     translation: "main clause"
     pos: "noun"
   - lemma: "синтаксис"
+    ipa: '[ˈsɪntɑksɪs]'
     translation: "syntax"
     pos: "noun"
   - lemma: "сполучник"
+    ipa: '[spɔˈlut͡ʃnɪk]'
     translation: "conjunction"
     pos: "noun"
   - lemma: "відносний"
+    ipa: '[ʋʲiˈdnɔsnɪj]'
     translation: "relative"
     pos: "adj"
     notes: "відносне речення"
   - lemma: "узгодження"
+    ipa: '[uˈzɦɔd͡ʒɛnʲːɑ]'
     translation: "agreement"
     pos: "noun"
     notes: "узгодження сполучного слова"
   - lemma: "прийменник"
+    ipa: '[prɪjˈmɛnːɪk]'
     translation: "preposition"
     pos: "noun"
     notes: "відірваний прийменник"
   - lemma: "мета"
+    ipa: '[mɛˈtɑ]'
     translation: "purpose"
     pos: "noun"
     notes: "підрядні речення мети"
   - lemma: "наслідок"
+    ipa: '[ˈnɑsʲlʲidɔk]'
     translation: "consequence"
     pos: "noun"
     notes: "простий результат"
   - lemma: "намір"
+    ipa: '[ˈnɑmʲir]'
     translation: "intention"
     pos: "noun"
     notes: "усвідомлений намір"
   - lemma: "інфінітив"
+    ipa: '[inʲfʲinʲiˈtɪu̯]'
     translation: "infinitive"
     pos: "noun"
   - lemma: "умова"
+    ipa: '[uˈmɔʋɑ]'
     translation: "condition"
     pos: "noun"
     notes: "умовне речення"
   - lemma: "гіпотетичний"
+    ipa: '[ɦʲipɔtɛˈtɪt͡ʃnɪj]'
     translation: "hypothetical"
     pos: "adj"
     notes: "гіпотетична ситуація"
   - lemma: "реальний"
+    ipa: '[rɛˈɑlʲnɪj]'
     translation: "real"
     pos: "adj"
     notes: "реальна можливість"
   - lemma: "правильний"
+    ipa: '[prɑʋɪlʲnɪj]'
     translation: "correct"
     pos: "adj"
     notes: "правильна відповідь, правильна форма"
   - lemma: "помилка"
+    ipa: '[ˈpɔˈmɪlkɑ]'
     translation: "error"
     pos: "noun"
     notes: "граматична помилка, допустити помилку"
   - lemma: "автономність"
+    ipa: '[ɑu̯tɔˈnɔmnʲisʲtʲ]'
     translation: "autonomy"
     pos: "noun"
   - lemma: "минулий час"
+    ipa: '[mɪˈnulɪj t͡ʃɑs]'
     translation: "past tense"
     pos: "noun"
   - lemma: "майбутній час"
+    ipa: '[mɑjˈbutʲnʲij t͡ʃɑs]'
     translation: "future tense"
     pos: "noun"

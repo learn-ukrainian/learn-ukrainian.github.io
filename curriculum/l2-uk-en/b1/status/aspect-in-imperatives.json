@@ -2,10 +2,10 @@
   "module": "aspect-in-imperatives",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T12:25:04.441306Z",
+  "last_audit": "2026-02-24T14:47:36.998290Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T12:24:49.010788Z",
+    "md": "2026-02-24T12:33:24.113024Z",
     "meta": "2026-02-23T21:54:57.520732Z",
     "activities": "2026-02-24T12:08:47.245492Z",
     "vocabulary": "2026-02-24T12:08:47.212279Z",
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "5937/4000 (raw: 6423) | pedagogy: 13 violations | richness: 94% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "5938/4000 (raw: 6424)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/4"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "30/25"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 5,
-    "fail_count": 1,
-    "deferred_count": 0
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
   }
 }

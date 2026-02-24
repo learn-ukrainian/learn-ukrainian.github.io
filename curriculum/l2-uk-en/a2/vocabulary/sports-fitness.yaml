@@ -1,104 +1,129 @@
 items:
   - lemma: "спорт"
+    ipa: '[spɔrt]'
     translation: "sport"
     pos: "noun"
     gender: "m"
   - lemma: "грати"
+    ipa: '[ˈɦrɑtɪ]'
     translation: "to play"
     pos: "verb"
     aspect: "imperfective"
     notes: "Requires preposition в/у + Accusative for sports"
   - lemma: "займатися"
+    ipa: '[zɑjˈmɑtɪsʲɑ]'
     translation: "to practice, to do"
     pos: "verb"
     aspect: "imperfective"
     notes: "Requires Instrumental case without preposition"
   - lemma: "футбол"
+    ipa: '[fuˈdbɔl]'
     translation: "football, soccer"
     pos: "noun"
     gender: "m"
   - lemma: "команда"
+    ipa: '[kɔˈmɑndɑ]'
     translation: "team"
     pos: "noun"
     gender: "f"
   - lemma: "стадіон"
+    ipa: '[stɑdʲiˈɔn]'
     translation: "stadium"
     pos: "noun"
     gender: "m"
   - lemma: "басейн"
+    ipa: '[bɑˈsɛjn]'
     translation: "swimming pool"
     pos: "noun"
     gender: "m"
   - lemma: "спортзал"
+    ipa: '[spɔrˈd͡zɑl]'
     translation: "gym"
     pos: "noun"
     gender: "m"
   - lemma: "матч"
+    ipa: '[mɑt͡ʃː]'
     translation: "match"
     pos: "noun"
     gender: "m"
   - lemma: "вболівати"
+    ipa: '[ʋbɔlʲiˈʋɑtɪ]'
     translation: "to root, to cheer"
     pos: "verb"
     aspect: "imperfective"
     notes: "Used with preposition за + Accusative"
   - lemma: "баскетбол"
+    ipa: '[bɑskɛˈdbɔl]'
     translation: "basketball"
     pos: "noun"
     gender: "m"
   - lemma: "бокс"
+    ipa: '[bɔks]'
     translation: "boxing"
     pos: "noun"
     gender: "m"
   - lemma: "плавання"
+    ipa: '[ˈplɑʋɑnʲːɑ]'
     translation: "swimming"
     pos: "noun"
     gender: "n"
   - lemma: "біг"
+    ipa: '[bʲiɦ]'
     translation: "running"
     pos: "noun"
     gender: "m"
   - lemma: "йога"
+    ipa: '[ˈjɔɦɑ]'
     translation: "yoga"
     pos: "noun"
     gender: "f"
   - lemma: "ковзанка"
+    ipa: '[ˈkɔu̯zɑnkɑ]'
     translation: "skating rink"
     pos: "noun"
     gender: "f"
   - lemma: "змагання"
+    ipa: '[zmɑˈɦɑnʲːɑ]'
     translation: "competition"
     pos: "noun"
     gender: "n"
   - lemma: "тренер"
+    ipa: '[ˈtrɛnɛr]'
     translation: "coach"
     pos: "noun"
     gender: "m"
   - lemma: "вигравати"
+    ipa: '[ʋɪɦrɑˈʋɑtɪ]'
     translation: "to win"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "програвати"
+    ipa: '[prɔɦrɑˈʋɑtɪ]'
     translation: "to lose"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "фітнес"
+    ipa: '[ˈfʲitnɛs]'
     translation: "fitness"
     pos: "noun"
     gender: "m"
   - lemma: "теніс"
+    ipa: '[ˈtɛnʲis]'
     translation: "tennis"
     pos: "noun"
     gender: "m"
   - lemma: "гімнастика"
+    ipa: '[ɦʲiˈmnɑstɪkɑ]'
     translation: "gymnastics"
     pos: "noun"
     gender: "f"
   - lemma: "вболівальник"
+    ipa: '[ʋbɔlʲiˈʋɑlʲnɪk]'
     translation: "fan, supporter"
     pos: "noun"
     gender: "m"
   - lemma: "тренування"
+    ipa: '[trɛnuˈʋɑnʲːɑ]'
     translation: "training, workout"
     pos: "noun"
     gender: "n"

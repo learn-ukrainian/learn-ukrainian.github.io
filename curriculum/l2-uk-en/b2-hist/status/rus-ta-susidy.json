@@ -1,0 +1,64 @@
+{
+  "module": "rus-ta-susidy",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T18:50:28.473948Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T15:12:08.580750Z",
+    "meta": "2026-02-19T13:57:00.109126Z",
+    "activities": "2026-02-24T09:33:59.050981Z",
+    "vocabulary": "2026-02-24T15:07:01.922052Z",
+    "plan": "2026-02-18T19:03:37.127408Z",
+    "research": "2026-02-22T10:35:24.512260Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5154/5000 (raw: 5563)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

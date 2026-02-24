@@ -8,6 +8,11 @@
       "ts": "2026-02-24T00:34:55Z",
       "task_id": "v3-economics-business-vocabulary-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T18:08:33Z",
+      "note": "word-count-2913-below-80pct-4000"
     }
   }
 }

@@ -1,0 +1,64 @@
+{
+  "module": "syntez-dvokniazivstvo",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T18:51:10.593887Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T17:29:31.556050Z",
+    "meta": "2026-02-19T14:05:32.940320Z",
+    "activities": "2026-02-24T16:45:48.131858Z",
+    "vocabulary": "2026-02-24T16:45:48.121611Z",
+    "plan": "2026-02-18T19:03:37.359822Z",
+    "research": "2026-02-22T10:35:24.515320Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5347/5000 (raw: 5886)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

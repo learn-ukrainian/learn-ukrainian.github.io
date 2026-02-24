@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T00:09:13Z",
       "task_id": "v3-social-media-ukrainian-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T20:19:38Z",
+      "attempts": 1
     }
   }
 }

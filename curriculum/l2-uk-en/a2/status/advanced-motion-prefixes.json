@@ -2,7 +2,7 @@
   "module": "advanced-motion-prefixes",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T11:05:51.057426Z",
+  "last_audit": "2026-02-24T21:18:07.537736Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T11:03:55.804479Z",
@@ -24,14 +24,14 @@
       "message": "3004/3000 (raw: 3270)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "3/1"
     },
     "naturalness": {
       "status": "info",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 3,
+    "pass_count": 6,
     "fail_count": 0,
-    "deferred_count": 3
+    "deferred_count": 0
   }
 }

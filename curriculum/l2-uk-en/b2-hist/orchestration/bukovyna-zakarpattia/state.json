@@ -1,0 +1,35 @@
+{
+  "slug": "bukovyna-zakarpattia",
+  "track": "b2-hist",
+  "module_num": 37,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T18:38:22Z",
+      "words": 5633,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T18:40:08Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T18:40:08Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T18:40:10Z",
+      "note": "v3-audit-autofix"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T18:40:10Z",
+      "note": "v3-audit-autofix"
+    }
+  },
+  "last_updated": "2026-02-24T18:40:10Z"
+}

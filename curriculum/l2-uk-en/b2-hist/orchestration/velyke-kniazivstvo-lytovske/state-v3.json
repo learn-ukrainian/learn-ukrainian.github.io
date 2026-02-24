@@ -8,6 +8,20 @@
       "ts": "2026-02-19T13:06:39Z",
       "task_id": "v3-velyke-kniazivstvo-lytovske-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T16:44:07Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T16:45:35Z",
+      "task_id": "v3-velyke-kniazivstvo-lytovske-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:51:14Z",
+      "attempts": 1
     }
   }
 }

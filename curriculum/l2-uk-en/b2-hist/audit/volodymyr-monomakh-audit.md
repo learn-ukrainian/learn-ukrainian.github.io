@@ -1,7 +1,7 @@
 # Audit Report: M15 — volodymyr-monomakh.md
 **Level:** B2-HIST | **Module:** M15 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-24 09:11:16
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-24 18:50:08
 
 ## Configuration
 **Type:** B2-history
@@ -16,29 +16,8 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'id' is a required property
-  - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
-- **[EUPHONY]** Line 29: «в ньому» — в перед збігом приголосних; має бути «у ньому»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 51: «в критичні» — в перед збігом приголосних; має бути «у критичні»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 81: «в стані» — в перед збігом приголосних; має бути «у стані»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 201: «з самим» — з перед з/с/ш/ч; має бути «із самим»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (13 total): 'не просто X, а Y' x8, 'не лише X, а й Y' x5 — robotic prose
-  - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
-- **[SECTION_HEADER_PADDING]** 2 shallow section(s) (< 100 words): 'Підсумкове есе' (63w); 'Оцінювання есе' (77w)
-  - FIX: Expand shallow sections to at least 100 words with substantive content.
-
-## Recommendation
-**📝 UPDATE** (severity 30/100)
-
-- 7 violations (significant)
-
 ## Gates
-- **Words:** ✅ 5030/5000 (raw: 5460)
+- **Words:** ✅ 5829/5000 (raw: 6259)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -49,30 +28,30 @@
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 98.9% (target 90-100% (history))
-- **Richness:** ✅ 99% (history)
+- **Immersion:** 🇺🇦 99.1% (target 90-100% (history))
+- **Richness:** ✅ 100% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 99% (minimum: 95%)
+**Score:** 100% (minimum: 95%)
 **Module Type:** history
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| primary_sources | 11 | 3 | 100% | 24% | 23.8% |
+| primary_sources | 12 | 3 | 100% | 24% | 23.8% |
 | engagement | 8 | 6 | 100% | 14% | 14.3% |
 | timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
 | decolonization | 15 | 2 | 100% | 14% | 14.3% |
 | cultural | 4 | 4 | 100% | 10% | 9.5% |
-| visual | 10 | 4 | 100% | 10% | 9.5% |
+| visual | 11 | 4 | 100% | 10% | 9.5% |
 | variety | 1.00 | - | 100% | 5% | 4.8% |
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
-| questions | 10 | 3 | 100% | 5% | 4.8% |
+| questions | 11 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **100.0%** |
 
 ## Section Audit
@@ -80,20 +59,20 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Володимир Мономах** | ✅ | 43 | Included in Core |
-| **Вступ** | ✅ | 385 | Included in Core |
-| **Читання: Момент істини в Києві** | ✅ | 363 | Included in Core |
-| **Хронологія: Шлях до великого княжіння** | ✅ | 371 | Included in Core |
-| **Глибоке занурення: Династична криза 1093-1113 років: Шлях крізь темряву** | ✅ | 380 | Included in Core |
-| **Аналіз: Любецький з'їзд 1097 року: Мистецтво компромісу** | ✅ | 360 | Included in Core |
-| **Внутрішня політика: Великий реформатор та Законодавець** | ✅ | 361 | Included in Core |
-| **Культура: Культурний ренесанс епохи Мономаха** | ✅ | 306 | Included in Core |
-| **Глибоке занурення: «Повчання дітям»: Літературний шедевр епохи** | ✅ | 352 | Included in Core |
-| **Розмова: Родина Мономаха: Династія великих справ та європейські зв'язки** | ✅ | 332 | Included in Core |
-| **Сьогодення: Економічне життя та Побут Русі** | ✅ | 335 | Included in Core |
+| **Вступ** | ✅ | 386 | Included in Core |
+| **Читання: Момент істини в Києві** | ✅ | 424 | Included in Core |
+| **Хронологія: Шлях до великого княжіння** | ✅ | 370 | Included in Core |
+| **Глибоке занурення: Династична криза 1093-1113 років: Шлях крізь темряву** | ✅ | 508 | Included in Core |
+| **Аналіз: Любецький з'їзд 1097 року: Мистецтво компромісу** | ✅ | 468 | Included in Core |
+| **Внутрішня політика: Великий реформатор та Законодавець** | ✅ | 455 | Included in Core |
+| **Культура: Культурний ренесанс епохи Мономаха** | ✅ | 402 | Included in Core |
+| **Глибоке занурення: «Повчання дітям»: Літературний шедевр епохи** | ✅ | 518 | Included in Core |
+| **Розмова: Родина Мономаха: Династія великих справ та європейські зв'язки** | ✅ | 330 | Included in Core |
+| **Сьогодення: Економічне життя та Побут Русі** | ✅ | 333 | Included in Core |
 | **Погляд: Військове мистецтво та Озброєння** | ✅ | 355 | Included in Core |
-| **Первинні джерела: Голоси вічності** | ✅ | 340 | Included in Core |
+| **Первинні джерела: Голоси вічності** | ✅ | 334 | Included in Core |
 | **Деколонізаційний погляд: Мономах — наш, а не їхній** | ✅ | 374 | Included in Core |
-| **Підсумкове есе** | ✅ | 63 | Included in Core |
-| **Оцінювання есе** | ✅ | 77 | Included in Core |
+| **Підсумкове есе** | ✅ | 128 | Included in Core |
+| **Оцінювання есе** | ✅ | 170 | Included in Core |
 | **Погляд: Потрібно більше практики?** | ✅ | 75 | Included in Core |
-| **Підсумок** | ✅ | 158 | Included in Core |
+| **Підсумок** | ✅ | 156 | Included in Core |

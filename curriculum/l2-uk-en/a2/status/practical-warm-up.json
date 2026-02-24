@@ -2,13 +2,13 @@
   "module": "practical-warm-up",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:24:10.117553Z",
+  "last_audit": "2026-02-24T21:19:09.371130Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T00:00:24.209018Z",
+    "md": "2026-02-24T18:50:02.034833Z",
     "meta": "2026-02-23T23:57:03.893020Z",
     "activities": "2026-02-24T00:04:26.311645Z",
-    "vocabulary": "2026-02-24T00:04:26.312033Z",
+    "vocabulary": "2026-02-24T18:45:49.954865Z",
     "plan": "2026-02-20T21:05:27.344354Z",
     "research": "2026-02-23T23:57:03.889418Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "4421/3000 (raw: 4864) | engagement: 0/4 | pedagogy: 15 violations | immersion: 98.7% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "4510/3000 (raw: 4941)"
     },
     "activities": {
       "status": "deferred",
@@ -55,12 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 1,
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

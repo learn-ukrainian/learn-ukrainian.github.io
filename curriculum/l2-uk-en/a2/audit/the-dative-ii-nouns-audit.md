@@ -1,7 +1,7 @@
 # Audit Report: M02 — the-dative-ii-nouns.md
 **Level:** A2 | **Module:** M02 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 09:37:42
+**Generated:** 2026-02-24 21:17:17
 
 ## Configuration
 **Type:** A2-grammar

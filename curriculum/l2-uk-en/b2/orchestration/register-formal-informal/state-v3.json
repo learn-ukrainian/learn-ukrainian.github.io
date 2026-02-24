@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T23:22:46Z",
       "task_id": "v3-register-formal-informal-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T15:57:24Z",
+      "attempts": 2
     }
   }
 }

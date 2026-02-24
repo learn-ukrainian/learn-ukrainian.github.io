@@ -1,0 +1,27 @@
+{
+  "track": "b2",
+  "slug": "correlative-constructions",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T20:13:36Z",
+      "task_id": "v3-correlative-constructions-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T20:17:04Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T20:21:01Z",
+      "task_id": "v3-correlative-constructions-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T20:24:34Z",
+      "attempts": 2
+    }
+  }
+}

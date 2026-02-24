@@ -1,102 +1,127 @@
 items:
   - lemma: "текст"
+    ipa: '[tɛkst]'
     translation: "text"
     pos: "noun"
     gender: "m"
   - lemma: "питання"
+    ipa: '[pɪˈtɑnʲːɑ]'
     translation: "issue / topic / problem"
     pos: "noun"
     gender: "n"
     notes: "A topic or problem to be discussed or resolved, not a specific inquiry."
   - lemma: "запитання"
+    ipa: '[zɑpɪˈtɑnʲːɑ]'
     translation: "question / inquiry"
     pos: "noun"
     gender: "n"
     notes: "A direct question asked to someone, expecting an immediate verbal answer."
   - lemma: "відповідь"
+    ipa: '[ˈʋʲidpɔʋʲidʲ]'
     translation: "answer / response"
     pos: "noun"
     gender: "f"
   - lemma: "розуміти"
+    ipa: '[rɔzuˈmʲitɪ]'
     translation: "to understand"
     pos: "verb"
     aspect: "impf"
   - lemma: "читати"
+    ipa: '[t͡ʃɪˈtɑtɪ]'
     translation: "to read"
     pos: "verb"
     aspect: "impf"
   - lemma: "слухати"
+    ipa: '[ˈsluxɑtɪ]'
     translation: "to listen (actively)"
     pos: "verb"
     aspect: "impf"
     notes: "Active and intentional process of paying attention to sound."
   - lemma: "чути"
+    ipa: '[ˈt͡ʃutɪ]'
     translation: "to hear (passively)"
     pos: "verb"
     aspect: "impf"
     notes: "Passive physical ability to perceive sound, independent of intent."
   - lemma: "головний"
+    ipa: '[ɦɔlɔˈʋnɪj]'
     translation: "main / principal"
     pos: "adj"
   - lemma: "деталь"
+    ipa: '[dɛˈtɑlʲ]'
     translation: "detail"
     pos: "noun"
     gender: "f"
   - lemma: "ідея"
+    ipa: '[iˈdɛjɑ]'
     translation: "idea"
     pos: "noun"
     gender: "f"
   - lemma: "інформація"
+    ipa: '[infɔrˈmɑt͡sʲijɑ]'
     translation: "information"
     pos: "noun"
     gender: "f"
   - lemma: "ключовий"
+    ipa: '[klʲut͡ʃɔˈʋɪj]'
     translation: "key / crucial"
     pos: "adj"
   - lemma: "стратегія"
+    ipa: '[strɑˈtɛɦʲijɑ]'
     translation: "strategy"
     pos: "noun"
     gender: "f"
   - lemma: "оглядовий"
+    ipa: '[ɔɦlʲɑˈdɔʋɪj]'
     translation: "skimming / overview (adj)"
     pos: "adj"
     notes: "Used in the phrase 'оглядове читання' (skimming for the main idea)."
   - lemma: "пошуковий"
+    ipa: '[pɔʃuˈkɔʋɪj]'
     translation: "scanning / search (adj)"
     pos: "adj"
     notes: "Used in the phrase 'пошукове читання' (scanning for specific details)."
   - lemma: "конспект"
+    ipa: '[kɔnˈspɛkt]'
     translation: "notes / outline / summary"
     pos: "noun"
     gender: "m"
   - lemma: "форум"
+    ipa: '[ˈfɔrum]'
     translation: "forum / fair"
     pos: "noun"
     gender: "m"
   - lemma: "афіша"
+    ipa: '[ɑˈfʲiʃɑ]'
     translation: "poster / playbill"
     pos: "noun"
     gender: "f"
   - lemma: "абзац"
+    ipa: '[ɑˈbzɑt͡s]'
     translation: "paragraph"
     pos: "noun"
     gender: "m"
   - lemma: "розклад"
+    ipa: '[ˈrɔzklɑd]'
     translation: "schedule / timetable"
     pos: "noun"
     gender: "m"
   - lemma: "диктант"
+    ipa: '[dɪˈktɑnt]'
     translation: "dictation"
     pos: "noun"
     gender: "m"
   - lemma: "єдність"
+    ipa: '[ˈjɛdʲnʲisʲtʲ]'
     translation: "unity"
     pos: "noun"
     gender: "f"
   - lemma: "тема"
+    ipa: '[ˈtɛmɑ]'
     translation: "topic / theme"
     pos: "noun"
     gender: "f"
   - lemma: "уважно"
+    ipa: '[uˈʋɑʒnɔ]'
     translation: "carefully / attentively"
     pos: "adv"

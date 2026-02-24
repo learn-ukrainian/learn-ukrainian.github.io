@@ -2,13 +2,13 @@
   "module": "at-the-pharmacy",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:24:14.754500Z",
+  "last_audit": "2026-02-24T21:19:15.881620Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T00:15:46.900929Z",
+    "md": "2026-02-24T19:11:23.593733Z",
     "meta": "2026-02-24T00:13:43.245606Z",
     "activities": "2026-02-24T00:18:31.358189Z",
-    "vocabulary": "2026-02-24T00:18:31.358422Z",
+    "vocabulary": "2026-02-24T19:08:42.995324Z",
     "plan": "2026-02-20T21:05:41.019792Z",
     "research": "2026-02-24T00:13:43.241515Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3367/3000 (raw: 3636) | pedagogy: 17 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3324/3000 (raw: 3591)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

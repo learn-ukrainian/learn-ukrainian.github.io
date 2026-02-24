@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T00:06:03Z",
       "task_id": "v3-register-literary-ukrainian-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T16:53:53Z",
+      "attempts": 2
     }
   }
 }

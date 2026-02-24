@@ -2,13 +2,13 @@
   "module": "participles-intro",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:25:41.845049Z",
+  "last_audit": "2026-02-24T21:19:48.136681Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T01:28:10.210472Z",
+    "md": "2026-02-24T20:44:32.837313Z",
     "meta": "2026-02-24T01:26:16.151165Z",
-    "activities": "2026-02-24T01:30:43.337810Z",
-    "vocabulary": "2026-02-24T01:30:43.338150Z",
+    "activities": "2026-02-24T20:22:57.602300Z",
+    "vocabulary": "2026-02-24T20:44:32.835082Z",
     "plan": "2026-02-20T21:07:10.455825Z",
     "research": "2026-02-24T01:26:16.147531Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "3321/3000 (raw: 3565) | engagement: 0/4 | pedagogy: 18 violations | immersion: 93.3% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "3536/3000 (raw: 3848)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

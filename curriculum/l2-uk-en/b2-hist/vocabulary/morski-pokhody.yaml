@@ -1,0 +1,135 @@
+items:
+  - lemma: "чайка"
+    ipa: '[ˈt͡ʃɑjkɑ]'
+    translation: "seagull / boat"
+    pos: "noun"
+    gender: "f"
+    notes: "Maneuverable landing craft, 'special forces' of the sea"
+  - lemma: "галера"
+    ipa: '[ɦɑˈlɛrɑ]'
+    translation: "galley"
+    pos: "noun"
+    gender: "f"
+    notes: "Heavy Ottoman ships, vulnerable to swarm tactics"
+  - lemma: "весло"
+    ipa: '[ʋɛˈslɔ]'
+    translation: "oar"
+    pos: "noun"
+    gender: "n"
+    notes: "Dual-purpose for rowing and steering"
+  - lemma: "щогла"
+    ipa: '[ˈʃt͡ʃɔɦlɑ]'
+    translation: "mast"
+    pos: "noun"
+    gender: "f"
+    notes: "Collapsible for stealth"
+  - lemma: "якір"
+    ipa: '[ˈjɑkʲir]'
+    translation: "anchor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "десант"
+    ipa: '[dɛˈsɑnt]'
+    translation: "landing / descent"
+    pos: "noun"
+    gender: "m"
+    notes: "Surprise coastal attacks"
+  - lemma: "абордаж"
+    ipa: '[ɑbɔrˈdɑʒ]'
+    translation: "boarding"
+    pos: "noun"
+    gender: "m"
+    notes: "Primary combat tactic after musket volley"
+  - lemma: "Чорне море"
+    ipa: '[ˈt͡ʃɔrnɛ ˈmɔrɛ]'
+    translation: "Black Sea"
+    pos: "noun"
+    gender: "n"
+  - lemma: "Кафа"
+    ipa: '[kɑˈfɑ]'
+    translation: "Caffa / Feodosia"
+    pos: "noun"
+    gender: "f"
+  - lemma: "Стамбул"
+    ipa: '[stɑmˈbul]'
+    translation: "Istanbul"
+    pos: "noun"
+    gender: "m"
+  - lemma: "фашини"
+    ipa: '[fɑˈʃɪnɪ]'
+    translation: "fascines"
+    pos: "noun"
+    gender: "f"
+    notes: "Reed bundles for buoyancy and protection"
+  - lemma: "фальконет"
+    ipa: '[fɑlʲkɔˈnɛt]'
+    translation: "falconet"
+    pos: "noun"
+    gender: "m"
+    notes: "Light cannon mounted on chajkas"
+  - lemma: "бранці"
+    ipa: '[ˈbrɑnʲt͡sʲi]'
+    translation: "captives"
+    pos: "noun"
+    gender: "m"
+    notes: "Liberation of slaves as a legitimizing goal"
+  - lemma: "суднобудування"
+    ipa: '[sudnɔbuduˈʋɑnʲːɑ]'
+    translation: "shipbuilding"
+    pos: "noun"
+    gender: "n"
+  - lemma: "гегемонія"
+    ipa: '[ɦɛɦɛˈmɔnʲijɑ]'
+    translation: "hegemony"
+    pos: "noun"
+    gender: "f"
+  - lemma: "монополія"
+    ipa: '[mɔnɔˈpɔlʲijɑ]'
+    translation: "monopoly"
+    pos: "noun"
+    gender: "f"
+  - lemma: "логістика"
+    ipa: '[lɔˈɦʲistɪkɑ]'
+    translation: "logistics"
+    pos: "noun"
+    gender: "f"
+  - lemma: "продовольство"
+    ipa: '[prɔdɔˈʋɔlʲstʋɔ]'
+    translation: "provisions / food supply"
+    pos: "noun"
+    gender: "n"
+  - lemma: "порох"
+    ipa: '[ˈpɔrɔx]'
+    translation: "gunpowder"
+    pos: "noun"
+    gender: "m"
+  - lemma: "маневреність"
+    ipa: '[mɑˈnɛu̯rɛnʲisʲtʲ]'
+    translation: "maneuverability"
+    pos: "noun"
+    gender: "f"
+  - lemma: "флотилія"
+    ipa: '[flɔˈtɪlʲijɑ]'
+    translation: "flotilla"
+    pos: "noun"
+    gender: "f"
+  - lemma: "стерно"
+    ipa: '[stɛrˈnɔ]'
+    translation: "rudder / helm"
+    pos: "noun"
+    gender: "n"
+  - lemma: "гавань"
+    ipa: '[ˈɦɑʋɑnʲ]'
+    translation: "harbor"
+    pos: "noun"
+    gender: "f"
+  - lemma: "арсенал"
+    ipa: '[ɑrsɛˈnɑl]'
+    translation: "arsenal"
+    pos: "noun"
+    gender: "m"
+  - lemma: "таласократія"
+    ipa: '[tɑlɑsɔˈkrɑtʲijɑ]'
+    translation: "thalassocracy / sea power"
+    pos: "noun"
+    gender: "f"

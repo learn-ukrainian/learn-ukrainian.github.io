@@ -3,6 +3,33 @@
   "track": "a2",
   "module_num": 64,
   "mode": "v3",
-  "phases": {},
-  "last_updated": "2026-02-20T11:26:32Z"
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:36:39Z",
+      "words": 4749,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:38:45Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:38:45Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:43:26Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:43:26Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T20:43:26Z"
 }

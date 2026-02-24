@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T10:08:54Z",
       "task_id": "v3-integrated-grammar-lab-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T20:33:46Z",
+      "attempts": 2
     }
   }
 }

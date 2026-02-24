@@ -1,0 +1,148 @@
+items:
+  - lemma: "термін"
+    ipa: '[ˈtɛrmʲin]'
+    translation: "term"
+    pos: "noun"
+    gender: "m"
+  - lemma: "поняття"
+    ipa: '[pɔˈnʲɑtʲːɑ]'
+    translation: "concept"
+    pos: "noun"
+    gender: "n"
+  - lemma: "процес"
+    ipa: '[prɔˈt͡sɛs]'
+    translation: "process"
+    pos: "noun"
+    gender: "m"
+  - lemma: "метод"
+    ipa: '[ˈmɛtɔd]'
+    translation: "method"
+    pos: "noun"
+    gender: "m"
+  - lemma: "аналіз"
+    ipa: '[ɑˈnɑlʲiz]'
+    translation: "analysis"
+    pos: "noun"
+    gender: "m"
+  - lemma: "синтез"
+    ipa: '[ˈsɪntɛz]'
+    translation: "synthesis"
+    pos: "noun"
+    gender: "m"
+  - lemma: "дослідження"
+    ipa: '[dɔˈsʲlʲid͡ʒɛnʲːɑ]'
+    translation: "research"
+    pos: "noun"
+    gender: "n"
+  - lemma: "обчислення"
+    ipa: '[ɔˈbt͡ʃɪslɛnʲːɑ]'
+    translation: "calculation"
+    pos: "noun"
+    gender: "n"
+  - lemma: "доведення"
+    ipa: '[dɔˈʋɛdɛnʲːɑ]'
+    translation: "proof"
+    pos: "noun"
+    gender: "n"
+  - lemma: "числівник"
+    ipa: '[t͡ʃɪˈsʲlʲiu̯nɪk]'
+    translation: "numeral"
+    pos: "noun"
+    gender: "m"
+  - lemma: "математика"
+    ipa: '[mɑtɛˈmɑtɪkɑ]'
+    translation: "mathematics"
+    pos: "noun"
+    gender: "f"
+  - lemma: "словник"
+    ipa: '[slɔˈʋnɪk]'
+    translation: "dictionary"
+    pos: "noun"
+    gender: "m"
+  - lemma: "термінологія"
+    ipa: '[tɛrmʲinɔˈlɔɦʲijɑ]'
+    translation: "terminology"
+    pos: "noun"
+    gender: "f"
+  - lemma: "рівняння"
+    ipa: '[rʲiˈʋnʲɑnʲːɑ]'
+    translation: "equation"
+    pos: "noun"
+    gender: "n"
+  - lemma: "поліном"
+    ipa: '[pɔlʲinɔm]'
+    translation: "polynomial"
+    pos: "noun"
+    gender: "m"
+  - lemma: "матриця"
+    ipa: '[ˈmɑtrɪt͡sʲɑ]'
+    translation: "matrix"
+    pos: "noun"
+    gender: "f"
+  - lemma: "креслення"
+    ipa: '[ˈkrɛslɛnʲːɑ]'
+    translation: "technical drawing"
+    pos: "noun"
+    gender: "n"
+  - lemma: "теорема"
+    ipa: '[tɛɔˈrɛmɑ]'
+    translation: "theorem"
+    pos: "noun"
+    gender: "f"
+  - lemma: "розробляти"
+    ipa: '[rɔzrɔˈblʲɑtɪ]'
+    translation: "to develop (process)"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "розробити"
+    ipa: '[rɔzrɔˈbɪtɪ]'
+    translation: "to develop (result)"
+    pos: "verb"
+    aspect: "pf"
+  - lemma: "сполучання"
+    ipa: '[spɔluˈt͡ʃɑnʲːɑ]'
+    translation: "combination / combining"
+    pos: "noun"
+    gender: "n"
+  - lemma: "науковець"
+    ipa: '[nɑuˈkɔʋɛt͡sʲ]'
+    translation: "scientist"
+    pos: "noun"
+    gender: "m"
+  - lemma: "публікація"
+    ipa: '[publʲiˈkɑt͡sʲijɑ]'
+    translation: "publication"
+    pos: "noun"
+    gender: "f"
+  - lemma: "засідання"
+    ipa: '[zɑsʲidɑnʲːɑ]'
+    translation: "meeting / session"
+    pos: "noun"
+    gender: "n"
+  - lemma: "чверть"
+    ipa: '[t͡ʃʋɛrtʲ]'
+    translation: "quarter"
+    pos: "noun"
+    gender: "f"
+  - lemma: "п'ятдесят"
+    ipa: '[pjɑddɛˈsʲɑt]'
+    translation: "fifty"
+    pos: "numeral"
+  - lemma: "дев'яносто"
+    ipa: '[dɛu̯jɑˈnɔstɔ]'
+    translation: "ninety"
+    pos: "numeral"
+  - lemma: "вісімдесят"
+    ipa: '[ʋʲisʲimdɛˈsʲɑt]'
+    translation: "eighty"
+    pos: "numeral"
+  - lemma: "інструкція"
+    ipa: '[inˈstrukt͡sʲijɑ]'
+    translation: "instruction"
+    pos: "noun"
+    gender: "f"
+  - lemma: "об'єктивність"
+    ipa: '[ɔbjɛˈktɪu̯nʲisʲtʲ]'
+    translation: "objectivity"
+    pos: "noun"
+    gender: "f"

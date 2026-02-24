@@ -4,8 +4,24 @@
   "mode": "v3",
   "phases": {
     "v3-A": {
-      "status": "failed",
-      "ts": "2026-02-24T08:48:53Z"
+      "status": "complete",
+      "ts": "2026-02-24T18:36:45Z",
+      "task_id": "v3-word-formation-person-suffixes-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T18:41:20Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T18:45:07Z",
+      "task_id": "v3-word-formation-person-suffixes-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T18:55:53Z",
+      "attempts": 3
     }
   }
 }

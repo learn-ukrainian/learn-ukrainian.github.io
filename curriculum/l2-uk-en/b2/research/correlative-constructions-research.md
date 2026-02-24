@@ -2,42 +2,31 @@
 
 ## State Standard Reference
 §4.3.4.2: "Складнопідрядні речення з означальною частиною зі сполучними словами який, котрий, що в називному та непрямих відмінках: Як радію за ту я людину, що загублену радість знайшла."
-Also relevant: §4.3.4.5 (Real condition): "Якщо буде дощ, то не підемо до лісу."
-Alignment: This module directly teaches the syntactic structures required for B2 competence in complex sentences with correlative (demonstrative + relative) connectors.
+Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо побудови складнопідрядних речень із вказівними словами та сполучниками, фокусуючись на узгодженні відмінків та синтаксичних зв'язках.
 
 ## Vocabulary Frequency
-| Word/Phrase | Frequency / Source | Key collocations |
-|-------------|-------------------|------------------|
-| той... хто | High (Core Grammar) | той, хто знає; для тих, хто |
-| те... що | High (Core Grammar) | те, що треба; про те, що |
-| такий... який | Medium | такий самий, як; не такий, який |
-| там... де | Medium | там, де нас нема; саме там, де |
-| тоді... коли | Medium | тільки тоді, коли; саме тоді, коли |
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| той, хто | Висока (корпуси текстів) | той, хто знає; ті, хто працюють; для того, хто |
+| те, що | Дуже висока (наук. стиль) | полягає в тому, що; незважаючи на те, що |
+| там, де | Середня (простір) | саме там, де; сюди, куди |
+| тоді, коли | Середня (час) | лише тоді, коли; доти, поки |
+| стільки, скільки | Середня (кількість) | настільки, наскільки це можливо |
 
 ## Cultural Hooks
-1. **Folk Wisdom**: "Не все те золото, що блищить" (Not all that glitters is gold) — classic example of *те... що*.
-2. **Proverb**: "Хто рано підводиться, за тим і діло водиться" (Who rises early, business follows him) — example of *хто... за тим*.
-3. **Literature**: "Того, що було, не вернеш" (What has passed cannot be returned) — common literary trope regarding time and regret.
+1. Українські паремії (прислів'я) часто будуються на співвідносних конструкціях: «Не все те золото, що блищить», «Хто спішить, той людей смішить». Вони демонструють глибинну синтаксичну логіку мови.
+2. Літературне використання в поезії для підсилення агентності та фатальності (наприклад, у фольклорі та класиці: «Того, що було, не вернеш»).
 
 ## Common Learner Errors
-1. **Case mismatch in "те, що"**:
-   - Error: *Я дякую за то, що ти прийшов.* (Russian influence "за то")
-   - Correct: *Я дякую за **те**, що ти прийшов.* (Accusative for abstract object)
-   - Why: Confusion with Russian "то" or failure to decline "те" according to the main clause verb.
-2. **Number Agreement**:
-   - Error: *Ті, хто знає відповідь...* (Plural antecedent "ті" but singular verb "знає")
-   - Correct: *Ті, хто знають відповідь...* OR *Той, хто знає...*
-   - Why: "Хто" is grammatically singular, but when referring to "ті" (plural), usage often shifts or causes confusion.
-3. **Calque "The one who"**:
-   - Error: Overusing *Той, хто малює, це мій брат.*
-   - Natural: *Мій брат — художник.* or *Цей хлопець, що малює — мій брат.*
-   - Why: Direct translation of English structure where a simpler noun phrase exists.
+1. Калькування російського «за то, что» → неправильне «за то, що» (замість нормативного українського знахідного відмінка «за те, що»).
+2. Порушення узгодження в числі у підрядному реченні → «Ті, хто знає» (замість правильного «Ті, хто знають»).
+3. Буквальний переклад з англійської «The one who» → надмірне використання «той, хто» там, де природніше вжити іменник (наприклад, «переможець» замість «той, хто переміг»).
 
 ## Cross-References
-- Builds on: **B1 Pronouns** (Demonstrative & Relative), **B1 Syntax** (Basic Complex Sentences).
-- Prepares for: **C1 Academic Writing** (Abstract argumentation using *те, що...*), **C1 Stylistics** (Replacing explicit clauses with participles).
+- Builds on: complex sentences (B1).
+- Prepares for: phraseology, academic writing, advanced discourse markers (B2.3, C1).
 
 ## Notes for Content Writing
-- Focus heavily on **declension of the first part** (demonstrative pronoun). Students often freeze it in Nominative (*Я думаю про те, що...* vs *Я не згідний з тим, що...*).
-- Use the **"Pointer + Link"** analogy: The first word points to a missing piece, the second word links the explanation.
-- Ensure strict separation of "human" (*той, хто*) and "non-human/abstract" (*те, що*).
+- Уникати російських парадигм: пояснювати «те, що» як питому українську структуру, а не як відмінність від російського «то, что».
+- Наголосити на тому, що українська мова використовує ці конструкції для активізації суб'єкта (агентність: «ми — ті, хто створює»).
+- Не використовувати англійську мову у поясненнях (100% immersion). Усі назви розділів та терміни мають бути українською.

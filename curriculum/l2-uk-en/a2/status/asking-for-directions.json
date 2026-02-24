@@ -2,13 +2,13 @@
   "module": "asking-for-directions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:25:32.825184Z",
+  "last_audit": "2026-02-24T21:19:34.933972Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T00:54:06.046558Z",
+    "md": "2026-02-24T20:09:11.796916Z",
     "meta": "2026-02-24T00:50:14.126654Z",
     "activities": "2026-02-24T00:57:18.919248Z",
-    "vocabulary": "2026-02-24T00:57:18.919490Z",
+    "vocabulary": "2026-02-24T19:57:47.153051Z",
     "plan": "2026-02-20T21:06:34.653446Z",
     "research": "2026-02-24T00:50:14.123665Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "5251/3000 (raw: 5683) | pedagogy: 81 violations | immersion: 98.1% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "5613/3000 (raw: 6037)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

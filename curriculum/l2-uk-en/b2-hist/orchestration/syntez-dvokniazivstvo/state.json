@@ -2,13 +2,39 @@
   "slug": "syntez-dvokniazivstvo",
   "track": "b2-hist",
   "module_num": 28,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
       "timestamp": "2026-02-19T11:16:18Z",
       "task_id": "yw-syntez-dvokniazivstvo-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T15:43:18Z",
+      "words": 4845,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T15:45:47Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T15:45:47Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T17:51:10Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T17:51:10Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-19T11:16:18Z"
+  "last_updated": "2026-02-24T17:51:10Z"
 }

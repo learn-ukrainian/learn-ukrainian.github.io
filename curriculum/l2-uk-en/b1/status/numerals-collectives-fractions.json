@@ -1,0 +1,64 @@
+{
+  "module": "numerals-collectives-fractions",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T21:32:49.835081Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T21:32:39.309559Z",
+    "meta": "2026-02-24T10:39:16.050189Z",
+    "activities": "2026-02-24T21:30:54.971548Z",
+    "vocabulary": "2026-02-24T21:30:54.942878Z",
+    "plan": "2026-02-20T21:30:05.268519Z",
+    "research": "2026-02-24T10:39:16.046695Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "7917/4000 (raw: 8482)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

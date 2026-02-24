@@ -1,0 +1,149 @@
+items:
+  - lemma: "термін"
+    ipa: '[ˈtɛrmʲin]'
+    translation: "term"
+    pos: "noun"
+    gender: "m"
+    notes: "науковий термін"
+  - lemma: "поняття"
+    ipa: '[pɔˈnʲɑtʲːɑ]'
+    translation: "concept"
+    pos: "noun"
+    gender: "n"
+  - lemma: "процес"
+    ipa: '[prɔˈt͡sɛs]'
+    translation: "process"
+    pos: "noun"
+    gender: "m"
+  - lemma: "метод"
+    ipa: '[ˈmɛtɔd]'
+    translation: "method"
+    pos: "noun"
+    gender: "m"
+  - lemma: "еліпсис"
+    ipa: '[ˈɛlʲipsɪs]'
+    translation: "ellipsis"
+    pos: "noun"
+    gender: "m"
+  - lemma: "парцеляція"
+    ipa: '[pɑrt͡sɛˈlʲɑt͡sʲijɑ]'
+    translation: "parcelling"
+    pos: "noun"
+    gender: "f"
+  - lemma: "аналіз"
+    ipa: '[ɑˈnɑlʲiz]'
+    translation: "analysis"
+    pos: "noun"
+    gender: "m"
+  - lemma: "синтез"
+    ipa: '[ˈsɪntɛz]'
+    translation: "synthesis"
+    pos: "noun"
+    gender: "m"
+  - lemma: "нагнітання"
+    ipa: '[nɑɦnʲiˈtɑnʲːɑ]'
+    translation: "buildup"
+    pos: "noun"
+    gender: "n"
+  - lemma: "лаконічність"
+    ipa: '[lɑkɔˈnʲit͡ʃnʲisʲtʲ]'
+    translation: "conciseness"
+    pos: "noun"
+    gender: "f"
+  - lemma: "динаміка"
+    ipa: '[dɪˈnɑmʲikɑ]'
+    translation: "dynamics"
+    pos: "noun"
+    gender: "f"
+  - lemma: "синтаксис"
+    ipa: '[ˈsɪntɑksɪs]'
+    translation: "syntax"
+    pos: "noun"
+    gender: "m"
+  - lemma: "експресія"
+    ipa: '[ɛˈksprɛsʲijɑ]'
+    translation: "expression"
+    pos: "noun"
+    gender: "f"
+  - lemma: "стилістика"
+    ipa: '[stɪˈlʲistɪkɑ]'
+    translation: "stylistics"
+    pos: "noun"
+    gender: "f"
+  - lemma: "номінативний"
+    ipa: '[nɔmʲinɑˈtɪu̯nɪj]'
+    translation: "nominative"
+    pos: "adjective"
+  - lemma: "інтонація"
+    ipa: '[intɔˈnɑt͡sʲijɑ]'
+    translation: "intonation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "фрагментація"
+    ipa: '[frɑɦmɛnˈtɑt͡sʲijɑ]'
+    translation: "fragmentation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "зв'язка"
+    ipa: '[ˈzʋjɑzkɑ]'
+    translation: "copula"
+    pos: "noun"
+    gender: "f"
+  - lemma: "обставина"
+    ipa: '[ɔˈbstɑʋɪnɑ]'
+    translation: "adverbial modifier"
+    pos: "noun"
+    gender: "f"
+  - lemma: "додаток"
+    ipa: '[dɔˈdɑtɔk]'
+    translation: "object"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ефект"
+    ipa: '[ɛˈfɛkt]'
+    translation: "effect"
+    pos: "noun"
+    gender: "m"
+  - lemma: "штучний"
+    ipa: '[ˈʃtut͡ʃnɪj]'
+    translation: "artificial"
+    pos: "adjective"
+  - lemma: "свідомий"
+    ipa: '[sʲʋʲiˈdɔmɪj]'
+    translation: "conscious"
+    pos: "adjective"
+  - lemma: "напруга"
+    ipa: '[nɑˈpruɦɑ]'
+    translation: "tension"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ритм"
+    ipa: '[rɪtm]'
+    translation: "rhythm"
+    pos: "noun"
+    gender: "m"
+  - lemma: "пауза"
+    ipa: '[ˈpɑuzɑ]'
+    translation: "pause"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ізоляція"
+    ipa: '[izɔˈlʲɑt͡sʲijɑ]'
+    translation: "isolation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "цілісність"
+    ipa: '[ˈt͡sʲilʲisʲnʲisʲtʲ]'
+    translation: "integrity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "інтуїція"
+    ipa: '[intuˈjit͡sʲijɑ]'
+    translation: "intuition"
+    pos: "noun"
+    gender: "f"
+  - lemma: "пропуск"
+    ipa: '[ˈprɔpusk]'
+    translation: "omission"
+    pos: "noun"
+    gender: "m"

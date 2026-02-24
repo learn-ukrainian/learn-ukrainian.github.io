@@ -8,6 +8,20 @@
       "ts": "2026-02-19T15:09:37Z",
       "task_id": "v3-dmytro-vyshnevetskyi-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T19:43:47Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T19:45:32Z",
+      "task_id": "v3-dmytro-vyshnevetskyi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T19:49:43Z",
+      "attempts": 2
     }
   }
 }

@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T22:48:50Z",
       "task_id": "v3-checkpoint-full-grammar-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T16:52:29Z",
+      "attempts": 2
     }
   }
 }

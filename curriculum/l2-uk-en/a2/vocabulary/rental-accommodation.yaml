@@ -1,85 +1,110 @@
 items:
   - lemma: "оренда"
+    ipa: '[ɔˈrɛndɑ]'
     translation: "rent"
     pos: "noun"
     notes: "довгострокова оренда, подобова оренда"
   - lemma: "зняти"
+    ipa: '[ˈzʲnʲɑtɪ]'
     translation: "to rent (take)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "квартира"
+    ipa: '[kʋɑrˈtɪrɑ]'
     translation: "apartment"
     pos: "noun"
   - lemma: "власник"
+    ipa: '[ˈʋlɑsnɪk]'
     translation: "owner"
     pos: "noun"
   - lemma: "депозит"
+    ipa: '[dɛpɔˈzɪt]'
     translation: "deposit"
     pos: "noun"
     notes: "страховий депозит"
   - lemma: "комунальні"
+    ipa: '[kɔmuˈnɑlʲnʲi]'
     translation: "utilities"
     pos: "noun"
   - lemma: "договір"
+    ipa: '[ˈdɔɦɔˈʋʲir]'
     translation: "contract"
     pos: "noun"
   - lemma: "меблі"
+    ipa: '[ˈmɛblʲi]'
     translation: "furniture"
     pos: "noun plural"
   - lemma: "здається"
+    ipa: '[zdɑˈjɛt͡sʲːɑ]'
     translation: "is for rent"
     pos: "verb"
     notes: "commonly used in advertisements"
   - lemma: "кімната"
+    ipa: '[kʲiˈmnɑtɑ]'
     translation: "room"
     pos: "noun"
   - lemma: "євроремонт"
+    ipa: '[jɛu̯rɔrɛˈmɔnt]'
     translation: "Euro-renovation"
     pos: "noun"
     notes: "modern standard renovation"
   - lemma: "радянський"
+    ipa: '[rɑˈdʲɑnʲsʲkɪj]'
     translation: "Soviet"
     pos: "adjective"
     notes: "радянський стан (Soviet condition)"
   - lemma: "рієлтор"
+    ipa: '[rʲijɛltɔr]'
     translation: "realtor"
     pos: "noun"
   - lemma: "застава"
+    ipa: '[zɑˈstɑʋɑ]'
     translation: "security deposit"
     pos: "noun"
   - lemma: "посередник"
+    ipa: '[pɔsɛˈrɛdnɪk]'
     translation: "middleman"
     pos: "noun"
   - lemma: "техніка"
+    ipa: '[ˈtɛxnʲikɑ]'
     translation: "appliances"
     pos: "noun"
     notes: "побутова техніка (home appliances)"
   - lemma: "здавати"
+    ipa: '[zdɑˈʋɑtɪ]'
     translation: "to rent out (give)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "знімати"
+    ipa: '[zʲnʲiˈmɑtɪ]'
     translation: "to rent (take)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "площа"
+    ipa: '[ˈplɔʃt͡ʃɑ]'
     translation: "area"
     pos: "noun"
   - lemma: "поверх"
+    ipa: '[pɔˈʋɛrx]'
     translation: "floor"
     pos: "noun"
   - lemma: "лічильник"
+    ipa: '[lʲiˈt͡ʃɪlʲnɪk]'
     translation: "meter"
     pos: "noun"
   - lemma: "опалення"
+    ipa: '[ɔˈpɑlɛnʲːɑ]'
     translation: "heating"
     pos: "noun"
   - lemma: "довгостроковий"
+    ipa: '[dɔu̯ɦɔstrɔˈkɔʋɪj]'
     translation: "long-term"
     pos: "adjective"
   - lemma: "подобовий"
+    ipa: '[pɔdɔbɔʋɪj]'
     translation: "daily"
     pos: "adjective"
   - lemma: "огляд"
+    ipa: '[ˈɔɦlʲɑd]'
     translation: "viewing"
     pos: "noun"

@@ -10,9 +10,20 @@
       "mode": "meta-only"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-24T08:14:04Z",
-      "note": "word-count-3896-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-24T11:55:06Z",
+      "note": "adopted-existing-content",
+      "words": 4261
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T11:57:27Z",
+      "task_id": "v3-kultura-kyivskoi-rusi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:50:13Z",
+      "attempts": 1
     }
   }
 }

@@ -3,8 +3,8 @@ PASS: build_module_v2.py b1 39 — E2E
   Module:   reported-statements
   Track:    b1
   Mode:     e2e
-  Words:    4874 (target: 4000)
+  Words:    4848 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-24T00:30:44Z
+  Date:     2026-02-24T19:31:50Z

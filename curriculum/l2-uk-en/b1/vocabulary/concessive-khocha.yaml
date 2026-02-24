@@ -1,117 +1,148 @@
 items:
   - lemma: "хоча"
+    ipa: '[xɔˈt͡ʃɑ]'
     translation: "although"
     pos: "conjunction"
     notes: "High frequency. Collocations: хоча б, хоча й."
   - lemma: "хоч"
+    ipa: '[xɔt͡ʃ]'
     translation: "although / even"
     pos: "conjunction"
     notes: "Common short form of 'хоча'."
   - lemma: "незважаючи на"
+    ipa: '[nɛzʋɑˈʒɑjut͡ʃɪ nɑ]'
     translation: "despite"
     pos: "preposition"
     notes: "Requires accusative case. Written as one word."
   - lemma: "попри"
+    ipa: '[ˈpɔprɪ]'
     translation: "despite"
     pos: "preposition"
     notes: "Literary/media alternative to 'незважаючи на'."
   - lemma: "дарма що"
+    ipa: '[dɑrˈmɑ ʃt͡ʃɔ]'
     translation: "although"
     pos: "conjunction"
     notes: "Literary, somewhat archaic. Avoid in business contexts."
   - lemma: "проте"
+    ipa: '[prɔˈtɛ]'
     translation: "however"
     pos: "conjunction"
     notes: "High frequency academic/formal conjunction."
   - lemma: "однак"
+    ipa: '[ɔˈdnɑk]'
     translation: "however"
     pos: "conjunction"
     notes: "Formal adversative conjunction."
   - lemma: "але"
+    ipa: '[ɑˈlɛ]'
     translation: "but"
     pos: "conjunction"
   - lemma: "хоча б"
+    ipa: '[xɔˈt͡ʃɑ b]'
     translation: "at least"
     pos: "phrase"
     notes: "Used to express a minimal requirement."
   - lemma: "хоч би як"
+    ipa: '[xɔt͡ʃ bɪ jɑk]'
     translation: "no matter how"
     pos: "phrase"
     notes: "Used for emphatic concession."
   - lemma: "попри все"
+    ipa: '[ˈpɔprɪ ʍsɛ]'
     translation: "despite everything"
     pos: "phrase"
   - lemma: "попри те що"
+    ipa: '[ˈpɔprɪ tɛ ʃt͡ʃɔ]'
     translation: "despite the fact that"
     pos: "phrase"
   - lemma: "все одно"
+    ipa: '[ʍsɛ ɔˈdnɔ]'
     translation: "anyway"
     pos: "adverb"
     notes: "Conversational marker of outcome regardless of concession."
   - lemma: "тим не менш"
+    ipa: '[tɪm nɛ mɛnʃ]'
     translation: "nevertheless"
     pos: "adverb"
     notes: "Formal/academic connector for contrasting results."
   - lemma: "не дивлячись на"
+    ipa: '[nɛ ˈdɪu̯lʲɑt͡ʃɪsʲ nɑ]'
     translation: "despite (ERROR)"
     pos: "phrase"
     notes: "Russian calque. Avoid using it for 'despite', use only for 'not looking'."
   - lemma: "допустовий"
+    ipa: '[dɔpuˈstɔʋɪj]'
     translation: "concessive"
     pos: "adjective"
   - lemma: "протиставний"
+    ipa: '[prɔtɪˈstɑu̯nɪj]'
     translation: "adversative"
     pos: "adjective"
   - lemma: "результат"
+    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
     gender: "m"
   - lemma: "умова"
+    ipa: '[uˈmɔʋɑ]'
     translation: "condition"
     pos: "noun"
     gender: "f"
   - lemma: "обставина"
+    ipa: '[ɔˈbstɑʋɪnɑ]'
     translation: "circumstance"
     pos: "noun"
     gender: "f"
   - lemma: "перешкода"
+    ipa: '[pɛrɛˈʃkɔdɑ]'
     translation: "obstacle"
     pos: "noun"
     gender: "f"
   - lemma: "неочікуваний"
+    ipa: '[nɛɔˈt͡ʃʲikuʋɑnɪj]'
     translation: "unexpected"
     pos: "adjective"
   - lemma: "всупереч"
+    ipa: '[ˈʍsupɛrɛt͡ʃ]'
     translation: "contrary to"
     pos: "preposition"
   - lemma: "зважати"
+    ipa: '[zʋɑˈʒɑtɪ]'
     translation: "to pay attention / to consider"
     pos: "verb"
     aspect: "impf"
   - lemma: "ігнорувати"
+    ipa: '[iɦnɔruˈʋɑtɪ]'
     translation: "to ignore"
     pos: "verb"
     aspect: "impf"
   - lemma: "дебати"
+    ipa: '[dɛˈbɑtɪ]'
     translation: "debates"
     pos: "noun"
     gender: "pl"
   - lemma: "аргумент"
+    ipa: '[ɑrɦuˈmɛnt]'
     translation: "argument"
     pos: "noun"
     gender: "m"
   - lemma: "опонент"
+    ipa: '[ɔpɔˈnɛnt]'
     translation: "opponent"
     pos: "noun"
     gender: "m"
   - lemma: "переконливий"
+    ipa: '[pɛrɛˈkɔnlɪʋɪj]'
     translation: "convincing"
     pos: "adjective"
   - lemma: "компроміс"
+    ipa: '[kɔmprɔˈmʲis]'
     translation: "compromise"
     pos: "noun"
     gender: "m"
   - lemma: "продуктивність"
+    ipa: '[prɔduˈktɪu̯nʲisʲtʲ]'
     translation: "productivity"
     pos: "noun"
     gender: "f"

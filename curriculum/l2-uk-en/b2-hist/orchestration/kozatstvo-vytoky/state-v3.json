@@ -8,6 +8,20 @@
       "ts": "2026-02-19T15:07:27Z",
       "task_id": "v3-kozatstvo-vytoky-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T19:27:54Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T19:30:17Z",
+      "task_id": "v3-kozatstvo-vytoky-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T19:32:40Z",
+      "attempts": 2
     }
   }
 }

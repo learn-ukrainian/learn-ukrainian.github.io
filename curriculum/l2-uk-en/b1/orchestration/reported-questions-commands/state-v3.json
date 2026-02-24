@@ -14,8 +14,14 @@
       "ts": "2026-02-24T00:36:19Z"
     },
     "v3-C": {
-      "status": "failed",
-      "ts": "2026-02-24T03:06:55Z"
+      "status": "complete",
+      "ts": "2026-02-24T19:35:19Z",
+      "task_id": "v3-reported-questions-commands-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T19:41:49Z",
+      "attempts": 2
     }
   }
 }

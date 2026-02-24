@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-24T09:58:32Z",
       "task_id": "v3-boiare-i-shliakhta-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:50:55Z",
+      "attempts": 1
     }
   }
 }

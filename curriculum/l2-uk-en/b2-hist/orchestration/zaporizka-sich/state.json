@@ -2,13 +2,39 @@
   "slug": "zaporizka-sich",
   "track": "b2-hist",
   "module_num": 42,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
       "timestamp": "2026-02-19T11:32:26Z",
       "task_id": "yw-zaporizka-sich-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T19:37:03Z",
+      "words": 8091,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T19:38:42Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T19:38:42Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T19:41:11Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T19:41:11Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-19T11:32:26Z"
+  "last_updated": "2026-02-24T19:41:11Z"
 }

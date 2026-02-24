@@ -2,26 +2,26 @@
   "module": "sports-fitness",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:24:01.076060Z",
+  "last_audit": "2026-02-24T21:18:58.357555Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T23:33:26.358984Z",
+    "md": "2026-02-24T17:32:44.363946Z",
     "meta": "2026-02-23T23:30:21.930871Z",
     "activities": "2026-02-24T09:09:33.622872Z",
-    "vocabulary": "2026-02-24T09:09:33.623108Z",
+    "vocabulary": "2026-02-24T21:18:57.610310Z",
     "plan": "2026-02-20T21:04:54.038834Z",
     "research": "2026-02-23T23:30:21.927664Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Missing '## Summary'"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "4159/3000 (raw: 4565) | engagement: 0/4 | pedagogy: 9 violations | immersion: 97.1% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "4191/3000 (raw: 4600)"
     },
     "activities": {
       "status": "deferred",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "8 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "warn",
@@ -55,12 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Structure: Missing '## Summary'"
-    ],
-    "pass_count": 0,
-    "fail_count": 2,
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

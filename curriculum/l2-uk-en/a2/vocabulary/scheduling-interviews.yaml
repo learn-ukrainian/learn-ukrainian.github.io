@@ -1,0 +1,126 @@
+items:
+  - lemma: "співбесіда"
+    ipa: '[sʲpʲiˈʋbɛsʲidɑ]'
+    translation: "interview"
+    pos: "noun"
+    gender: "f"
+  - lemma: "резюме"
+    ipa: '[rɛzʲuˈmɛ]'
+    translation: "resume"
+    pos: "noun"
+    gender: "n"
+  - lemma: "вакансія"
+    ipa: '[ʋɑˈkɑnʲsʲijɑ]'
+    translation: "vacancy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "досвід"
+    ipa: '[ˈdɔsʲʋʲid]'
+    translation: "experience"
+    pos: "noun"
+    gender: "m"
+  - lemma: "зарплата"
+    ipa: '[zɑrˈplɑtɑ]'
+    translation: "salary"
+    pos: "noun"
+    gender: "f"
+  - lemma: "обов'язки"
+    ipa: '[ɔˈbɔu̯jɑzkɪ]'
+    translation: "duties"
+    pos: "noun"
+    notes: "plural form used most commonly"
+  - lemma: "навички"
+    ipa: '[ˈnɑʋɪt͡ʃkɪ]'
+    translation: "skills"
+    pos: "noun"
+    notes: "plural form used most commonly"
+  - lemma: "кандидат"
+    ipa: '[kɑndɪˈdɑt]'
+    translation: "candidate"
+    pos: "noun"
+    gender: "m"
+  - lemma: "робота"
+    ipa: '[rɔˈbɔtɑ]'
+    translation: "job, employment"
+    pos: "noun"
+    gender: "f"
+  - lemma: "праця"
+    ipa: '[ˈprɑt͡sʲɑ]'
+    translation: "labor, physical/mental effort"
+    pos: "noun"
+    gender: "f"
+  - lemma: "посада"
+    ipa: '[pɔˈsɑdɑ]'
+    translation: "position, post"
+    pos: "noun"
+    gender: "f"
+  - lemma: "HR-менеджер"
+    ipa: '[hr-ˈmɛnɛd͡ʒɛr]'
+    translation: "HR manager"
+    pos: "noun"
+    gender: "m"
+  - lemma: "графік"
+    ipa: '[ˈɦrɑfʲik]'
+    translation: "schedule"
+    pos: "noun"
+    gender: "m"
+  - lemma: "випробувальний термін"
+    ipa: '[ʋɪˈprɔbuʋɑlʲnɪj ˈtɛrmʲin]'
+    translation: "probation period"
+    pos: "noun"
+    gender: "m"
+  - lemma: "соціальний пакет"
+    ipa: '[sɔt͡sʲiˈɑlʲnɪj pɑˈkɛt]'
+    translation: "benefits package"
+    pos: "noun"
+    gender: "m"
+  - lemma: "відпустка"
+    ipa: '[ʋʲiˈdpustkɑ]'
+    translation: "vacation, annual leave"
+    pos: "noun"
+    gender: "f"
+  - lemma: "підвищення"
+    ipa: '[pʲiˈdʋɪʃt͡ʃɛnʲːɑ]'
+    translation: "promotion"
+    pos: "noun"
+    gender: "n"
+  - lemma: "пан"
+    ipa: '[pɑn]'
+    translation: "Mr."
+    pos: "noun"
+    gender: "m"
+  - lemma: "пані"
+    ipa: '[ˈpɑnʲi]'
+    translation: "Ms., Mrs."
+    pos: "noun"
+    gender: "f"
+  - lemma: "директор"
+    ipa: '[dɪˈrɛktɔr]'
+    translation: "director"
+    pos: "noun"
+    gender: "m"
+  - lemma: "співробітник"
+    ipa: '[sʲpʲiu̯rɔˈbʲitnɪk]'
+    translation: "employee"
+    pos: "noun"
+    gender: "m"
+  - lemma: "програміст"
+    ipa: '[prɔɦrɑˈmʲist]'
+    translation: "programmer"
+    pos: "noun"
+    gender: "m"
+  - lemma: "виплачувати"
+    ipa: '[ʋɪˈplɑt͡ʃuʋɑtɪ]'
+    translation: "to pay (salary)"
+    pos: "verb"
+    aspect: "impf"
+  - lemma: "призначити"
+    ipa: '[prɪˈznɑˈt͡ʃɪtɪ]'
+    translation: "to schedule, to appoint"
+    pos: "verb"
+    aspect: "perf"
+  - lemma: "розглядати"
+    ipa: '[rɔzɦlʲɑˈdɑtɪ]'
+    translation: "to review, to consider"
+    pos: "verb"
+    aspect: "impf"

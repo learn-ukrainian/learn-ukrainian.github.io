@@ -1,117 +1,147 @@
 items:
   - lemma: "інтеграція"
+    ipa: '[intɛˈɦrɑt͡sʲijɑ]'
     translation: "integration"
     pos: "noun"
     gender: "f"
   - lemma: "синтез"
+    ipa: '[ˈsɪntɛz]'
     translation: "synthesis"
     pos: "noun"
     gender: "m"
   - lemma: "стиль"
+    ipa: '[stɪlʲ]'
     translation: "style"
     pos: "noun"
     gender: "m"
   - lemma: "регістр"
+    ipa: '[rɛˈɦʲistr]'
     translation: "register"
     pos: "noun"
     gender: "m"
   - lemma: "редагування"
+    ipa: '[rɛdɑɦuˈʋɑnʲːɑ]'
     translation: "editing"
     pos: "noun"
     gender: "n"
   - lemma: "гнучкість"
+    ipa: '[ˈɦnut͡ʃkʲisʲtʲ]'
     translation: "flexibility"
     pos: "noun"
     gender: "f"
   - lemma: "перемикання"
+    ipa: '[pɛrɛmɪˈkɑnʲːɑ]'
     translation: "switching"
     pos: "noun"
     gender: "n"
   - lemma: "зв'язність"
+    ipa: '[ˈzʋjɑzʲnʲisʲtʲ]'
     translation: "coherence"
     pos: "noun"
     gender: "f"
   - lemma: "послідовність"
+    ipa: '[pɔsʲlʲiˈdɔu̯nʲisʲtʲ]'
     translation: "consistency"
     pos: "noun"
     gender: "f"
   - lemma: "доречність"
+    ipa: '[dɔˈrɛt͡ʃnʲisʲtʲ]'
     translation: "appropriateness"
     pos: "noun"
     gender: "f"
   - lemma: "текстотворення"
+    ipa: '[tɛkstɔˈtʋɔrɛnʲːɑ]'
     translation: "text production"
     pos: "noun"
     gender: "n"
   - lemma: "аудиторія"
+    ipa: '[ɑudɪˈtɔrʲijɑ]'
     translation: "audience"
     pos: "noun"
     gender: "f"
   - lemma: "канцелярит"
+    ipa: '[kɑnt͡sɛlʲɑrɪt]'
     translation: "bureaucratese"
     pos: "noun"
     gender: "m"
   - lemma: "актив"
+    ipa: '[ɑˈktɪu̯]'
     translation: "active voice"
     pos: "noun"
     gender: "m"
   - lemma: "пасив"
+    ipa: '[pɑˈsɪu̯]'
     translation: "passive voice"
     pos: "noun"
     gender: "m"
   - lemma: "синонім"
+    ipa: '[sɪˈnɔnʲim]'
     translation: "synonym"
     pos: "noun"
     gender: "m"
   - lemma: "демінутив"
+    ipa: '[dɛmʲinuˈtɪu̯]'
     translation: "diminutive"
     pos: "noun"
     gender: "m"
   - lemma: "затор"
+    ipa: '[zɑˈtɔr]'
     translation: "traffic jam"
     pos: "noun"
     gender: "m"
   - lemma: "постачання"
+    ipa: '[pɔstɑˈt͡ʃɑnʲːɑ]'
     translation: "supply, delivery"
     pos: "noun"
     gender: "n"
   - lemma: "компенсація"
+    ipa: '[kɔmpɛnˈsɑt͡sʲijɑ]'
     translation: "compensation"
     pos: "noun"
     gender: "f"
   - lemma: "субординація"
+    ipa: '[subɔrdɪˈnɑt͡sʲijɑ]'
     translation: "subordination"
     pos: "noun"
     gender: "f"
   - lemma: "горизонт"
+    ipa: '[ɦɔrɪˈzɔnt]'
     translation: "horizon (neutral)"
     pos: "noun"
     gender: "m"
   - lemma: "обрій"
+    ipa: '[ˈɔbrʲij]'
     translation: "horizon (poetic)"
     pos: "noun"
     gender: "m"
   - lemma: "небокрай"
+    ipa: '[nɛbɔˈkrɑj]'
     translation: "horizon (highly poetic)"
     pos: "noun"
     gender: "m"
   - lemma: "теревенити"
+    ipa: '[tɛrɛˈʋɛnɪtɪ]'
     translation: "to chatter"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "мовити"
+    ipa: '[ˈmɔʋɪtɪ]'
     translation: "to speak (poetic)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "збірний"
+    ipa: '[ˈzʲbʲirnɪj]'
     translation: "collective"
     pos: "adjective"
   - lemma: "дробовий"
+    ipa: '[drɔbɔˈʋɪj]'
     translation: "fractional"
     pos: "adjective"
   - lemma: "односкладний"
+    ipa: '[ɔdnɔˈsklɑdnɪj]'
     translation: "one-member"
     pos: "adjective"
   - lemma: "застарілий"
+    ipa: '[zɑstɑˈrʲilɪj]'
     translation: "outdated"
     pos: "adjective"

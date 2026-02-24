@@ -1,0 +1,64 @@
+{
+  "module": "adverbial-participles-perfective",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T21:12:53.067648Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T21:12:38.715017Z",
+    "meta": "2026-02-24T09:05:32.948931Z",
+    "activities": "2026-02-24T21:08:58.117099Z",
+    "vocabulary": "2026-02-24T21:08:58.089331Z",
+    "plan": "2026-02-20T21:29:22.573711Z",
+    "research": "2026-02-24T09:05:32.945137Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4626/4000 (raw: 5043)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

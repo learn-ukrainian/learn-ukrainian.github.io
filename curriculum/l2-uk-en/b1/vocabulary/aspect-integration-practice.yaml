@@ -1,101 +1,131 @@
 items:
   - lemma: "коли"
+    ipa: '[kɔˈlɪ]'
     translation: "when"
     pos: "conj"
   - lemma: "після того як"
+    ipa: '[ˈpʲisʲlʲɑ tɔˈɦɔ jɑk]'
     translation: "after"
     pos: "conj"
   - lemma: "перед тим як"
+    ipa: '[ˈpɛrɛd tɪm jɑk]'
     translation: "before"
     pos: "conj"
   - lemma: "доки"
+    ipa: '[ˈdɔkɪ]'
     translation: "while, until"
     pos: "conj"
   - lemma: "поки"
+    ipa: '[ˈpɔkɪ]'
     translation: "while"
     pos: "conj"
   - lemma: "як тільки"
+    ipa: '[jɑk ˈtʲilʲkɪ]'
     translation: "as soon as"
     pos: "conj"
   - lemma: "одночасно"
+    ipa: '[ɔdnɔˈt͡ʃɑsnɔ]'
     translation: "simultaneously"
     pos: "adv"
   - lemma: "послідовно"
+    ipa: '[pɔsʲlʲiˈdɔu̯nɔ]'
     translation: "sequentially"
     pos: "adv"
   - lemma: "спочатку"
+    ipa: '[spɔˈt͡ʃɑtku]'
     translation: "first"
     pos: "adv"
   - lemma: "потім"
+    ipa: '[ˈpɔtʲim]'
     translation: "then"
     pos: "adv"
   - lemma: "тим часом"
+    ipa: '[tɪm ˈt͡ʃɑsɔm]'
     translation: "meanwhile"
     pos: "adv"
   - lemma: "нарешті"
+    ipa: '[nɑˈrɛʃtʲi]'
     translation: "finally"
     pos: "adv"
   - lemma: "раптом"
+    ipa: '[ˈrɑptɔm]'
     translation: "suddenly"
     pos: "adv"
   - lemma: "врешті-решт"
+    ipa: '[ˈʋrɛʃtʲi-rɛʃt]'
     translation: "eventually"
     pos: "adv"
   - lemma: "зрештою"
+    ipa: '[ˈzrɛʃtɔju]'
     translation: "after all"
     pos: "adv"
   - lemma: "недоконаний вид"
+    ipa: '[nɛdɔˈkɔnɑnɪj ʋɪd]'
     translation: "imperfective aspect"
     pos: "noun"
     notes: "grammar term"
   - lemma: "доконаний вид"
+    ipa: '[dɔˈkɔnɑnɪj ʋɪd]'
     translation: "perfective aspect"
     pos: "noun"
     notes: "grammar term"
   - lemma: "тривалий"
+    ipa: '[trɪˈʋɑlɪj]'
     translation: "prolonged, continuous"
     pos: "adj"
   - lemma: "завершений"
+    ipa: '[zɑˈʋɛrʃɛnɪj]'
     translation: "completed"
     pos: "adj"
   - lemma: "одноразовий"
+    ipa: '[ɔdnɔrɑˈzɔʋɪj]'
     translation: "one-time"
     pos: "adj"
   - lemma: "регулярний"
+    ipa: '[rɛɦuˈlʲɑrnɪj]'
     translation: "regular"
     pos: "adj"
   - lemma: "переривати"
+    ipa: '[pɛrɛrɪˈʋɑtɪ]'
     translation: "to interrupt (process)"
     pos: "verb"
     aspect: "imp"
   - lemma: "перервати"
+    ipa: '[pɛrɛrˈʋɑtɪ]'
     translation: "to interrupt (result)"
     pos: "verb"
     aspect: "perf"
   - lemma: "звичка"
+    ipa: '[ˈzʋɪt͡ʃkɑ]'
     translation: "habit"
     pos: "noun"
     gender: "f"
   - lemma: "процес"
+    ipa: '[prɔˈt͡sɛs]'
     translation: "process"
     pos: "noun"
     gender: "m"
   - lemma: "результат"
+    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
     gender: "m"
   - lemma: "дія"
+    ipa: '[ˈdʲijɑ]'
     translation: "action"
     pos: "noun"
     gender: "f"
   - lemma: "послідовність"
+    ipa: '[pɔsʲlʲiˈdɔu̯nʲisʲtʲ]'
     translation: "sequence"
     pos: "noun"
     gender: "f"
   - lemma: "одночасність"
+    ipa: '[ɔdnɔˈt͡ʃɑsʲnʲisʲtʲ]'
     translation: "simultaneity"
     pos: "noun"
     gender: "f"
   - lemma: "несподівано"
+    ipa: '[nɛspɔˈdʲiʋɑnɔ]'
     translation: "unexpectedly"
     pos: "adv"

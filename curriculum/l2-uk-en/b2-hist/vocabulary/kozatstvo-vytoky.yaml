@@ -1,0 +1,128 @@
+items:
+  - lemma: "уходник"
+    ipa: '[uˈxɔdnɪk]'
+    translation: "frontier industrialist"
+    pos: "noun"
+    gender: "m"
+  - lemma: "здобичник"
+    ipa: '[zdɔˈbɪt͡ʃnɪk]'
+    translation: "booty seeker"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ясир"
+    ipa: '[jɑˈsɪr]'
+    translation: "captives"
+    pos: "noun"
+    gender: "m"
+    notes: "Slave trade raids by Tatars"
+  - lemma: "реєстр"
+    ipa: '[rɛˈjɛstr]'
+    translation: "register"
+    pos: "noun"
+    gender: "m"
+    notes: "List of Cossacks in royal service"
+  - lemma: "Дике поле"
+    ipa: '[ˈdɪkɛ ˈpɔlɛ]'
+    translation: "Wild Fields"
+    pos: "noun"
+    gender: "n"
+  - lemma: "побратимство"
+    ipa: '[pɔbrɑˈtɪmstʋɔ]'
+    translation: "brotherhood"
+    pos: "noun"
+    gender: "n"
+  - lemma: "етимологія"
+    ipa: '[ɛtɪmɔˈlɔɦʲijɑ]'
+    translation: "etymology"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кріпацтво"
+    ipa: '[krʲiˈpɑt͡stʋɔ]'
+    translation: "serfdom"
+    pos: "noun"
+    gender: "n"
+  - lemma: "промисел"
+    ipa: '[ˈprɔmɪsɛl]'
+    translation: "industry or trade"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ватага"
+    ipa: '[ʋɑˈtɑɦɑ]'
+    translation: "band or group"
+    pos: "noun"
+    gender: "f"
+  - lemma: "шабля"
+    ipa: '[ˈʃɑblʲɑ]'
+    translation: "sabre"
+    pos: "noun"
+    gender: "f"
+  - lemma: "чайка"
+    ipa: '[ˈt͡ʃɑjkɑ]'
+    translation: "cossack boat"
+    pos: "noun"
+    gender: "f"
+  - lemma: "розвідник"
+    ipa: '[rɔzʲʋʲidnɪk]'
+    translation: "scout"
+    pos: "noun"
+    gender: "m"
+  - lemma: "здобич"
+    ipa: '[ˈzdɔbɪt͡ʃ]'
+    translation: "booty or loot"
+    pos: "noun"
+    gender: "f"
+  - lemma: "втеча"
+    ipa: '[ˈʍtɛt͡ʃɑ]'
+    translation: "escape or flight"
+    pos: "noun"
+    gender: "f"
+  - lemma: "витривалість"
+    ipa: '[ʋɪtrɪˈʋɑlʲisʲtʲ]'
+    translation: "endurance"
+    pos: "noun"
+    gender: "f"
+  - lemma: "засідка"
+    ipa: '[ˈzɑsʲidkɑ]'
+    translation: "ambush"
+    pos: "noun"
+    gender: "f"
+  - lemma: "найманець"
+    ipa: '[ˈnɑjmɑnɛt͡sʲ]'
+    translation: "mercenary"
+    pos: "noun"
+    gender: "m"
+  - lemma: "галас"
+    ipa: '[ˈɦɑlɑs]'
+    translation: "noise or clamour"
+    pos: "noun"
+    gender: "m"
+  - lemma: "порох"
+    ipa: '[ˈpɔrɔx]'
+    translation: "gunpowder"
+    pos: "noun"
+    gender: "m"
+  - lemma: "табір"
+    ipa: '[ˈtɑbʲir]'
+    translation: "camp or wagon fort"
+    pos: "noun"
+    gender: "m"
+  - lemma: "воля"
+    ipa: '[ˈʋɔlʲɑ]'
+    translation: "freedom"
+    pos: "noun"
+    gender: "f"
+  - lemma: "рівність"
+    ipa: '[ˈrʲiu̯nʲisʲtʲ]'
+    translation: "equality"
+    pos: "noun"
+    gender: "f"
+  - lemma: "мушкет"
+    ipa: '[muˈʃkɛt]'
+    translation: "musket"
+    pos: "noun"
+    gender: "m"
+  - lemma: "курінь"
+    ipa: '[kuˈrʲinʲ]'
+    translation: "barracks"
+    pos: "noun"
+    gender: "m"

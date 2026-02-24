@@ -1,0 +1,85 @@
+===RESEARCH_START===
+
+# Дослідження: Контрольна точка B2.1c: Числівники, словотвір та синтаксис
+
+## State Standard Reference
+§4.1.1.3: "відмінювання числівників для позначення дати... відмінювання кількісних числівників один... від 5 до 20, 30, 50, 60, 70, 80, 40, 90, 100"
+§4.2.6: "читати – читання, сполучати – сполучання, креслити – креслення, навантажувати – навантаження..."
+§4.3.3: "Односкладні речення з головним членом – дієсловом... Односкладні речення з головним членом – іменником (номінативні речення)"
+Alignment: This checkpoint directly tests mastery of B2 numeral declension paradigms, deverbal noun formation for academic registers, and stylistic usage of one-member sentences as required by the standard.
+
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| термін | High (Academic) | науковий термін, визначення терміна |
+| поняття | High (Academic) | ключове поняття, розширити поняття |
+| процес | High (Academic) | навчальний процес, творчий процес |
+| метод | High (Academic) | науковий метод, застосувати метод |
+| дослідження | High (Academic) | проводити дослідження, об'єкт дослідження |
+
+## Cultural Hooks
+1. Mykhailo Kravchuk (1892–1942) co-authored the first three-volume dictionary of Ukrainian mathematical terminology. He insisted on teaching and publishing in Ukrainian, proving its capacity for complex abstract scientific thought.
+2. The "Ukrainization" period of the 1920s saw a massive boom in Ukrainian scientific terminology creation, which was later violently suppressed by the Soviet regime (Kravchuk himself died in the Gulag).
+
+## Common Learner Errors
+1. Declining decades (50-80) incorrectly → *п'ятидесяти instead of п'ятдесяти (only the second part declines). This is a common interference from Russian.
+2. Time telling prepositions → using Russian calques (*без десяти вісім) instead of proper Ukrainian structures (за десять восьма, о сьомій годині).
+3. Overuse of personal pronouns in scientific text → failing to use impersonal or generalized-personal one-member sentences (безособові речення) typical of Ukrainian academic register.
+
+## Cross-References
+- Builds on: M31-M39 (Syntax, Numerals, Word Formation)
+- Prepares for: B2.2 (Phraseology phase)
+
+## Notes for Content Writing
+- Decolonized framing: Present Kravchuk's work not as "translating from Russian" but as standardizing the inherent morphological potential of Ukrainian. Highlight that Ukrainian mathematical terminology developed independently and organically.
+- Ensure 100% Ukrainian immersion (no English scaffolding in the text).
+- Use strictly Ukrainian phonetic transcriptions/vowels in mind (о = [ɔ], е = [ɛ]).
+- Maintain academic but engaging tone, fitting the "Professional Language Coach / Inspector" persona.
+
+===RESEARCH_END===
+
+===META_OUTLINE_START===
+content_outline:
+  - section: "Вступ та огляд: Контрольна точка B2.1c"
+    words: 400
+    points:
+      - "Set the context: This is a 100% immersion checkpoint evaluating M31-M39 (numerals, word formation, one-member sentences)."
+      - "Introduce the thematic anchor: Mykhailo Kravchuk, the brilliant mathematician who fought for and standardized Ukrainian scientific terminology."
+      - "Outline the checkpoint structure: diagnostics, analysis of Kravchuk's legacy, and practical synthesis."
+  - section: "Числівники та математична спадщина"
+    words: 1000
+    points:
+      - "Provide a narrative text about Kravchuk's life (1892–1942) heavily utilizing complex numerals (dates, quantities, volumes of work)."
+      - "Review and test declension rules for 50-80, explicitly contrasting the correct Ukrainian form (п'ятдесяти) with common errors."
+      - "Demonstrate and test correct time-telling structures (о сьомій годині, за десять восьма) in the context of Kravchuk's university lectures."
+      - "Include a table or summary of ordinal numeral declension used for historical dates."
+  - section: "Словотвір та наукова термінологія"
+    words: 900
+    points:
+      - "Analyze how Kravchuk built mathematical terms using Ukrainian suffixes, emphasizing independent development, not borrowing."
+      - "Review deverbal nouns (-нн-, -енн-, -інн-): обчислення, доведення, дослідження."
+      - "Review adjective formation for terminology: матричний, термінологічний."
+      - "Provide practice sentences requiring learners to transform verbs into abstract scientific nouns."
+  - section: "Синтаксис односкладних речень"
+    words: 900
+    points:
+      - "Explain the stylistic necessity of one-member sentences in the scientific and biographical registers."
+      - "Contrast generalized-personal (означено/неозначено-особові) sentences for academic facts with impersonal (безособові) sentences for historical events (e.g., словник було видано)."
+      - "Use nominative sentences to describe the atmosphere of the 1920s scientific renaissance."
+      - "Include a task where learners rewrite standard SVO sentences into appropriate one-member scientific statements."
+  - section: "Практикум: Аналіз помилок та регістрів"
+    words: 800
+    points:
+      - "Conduct a rigorous error analysis workshop: test noun-numeral agreement ('2, 3, 4' vs '5+')."
+      - "Provide a register transformation task: rewrite an informal letter about Kravchuk into a formal academic encyclopedia entry."
+      - "Summarize learner readiness, congratulate them on mastering the B2.1 phase, and introduce the upcoming focus on B2.2 Phraseology."
+===META_OUTLINE_END===
+
+===FRICTION_START===
+**Phase**: Phase A: Meta + Research (Core)
+**Step**: Full Phase A
+**Friction Type**: NONE
+**Raw Error**: None
+**Self-Correction**: N/A
+**Proposed Tooling Fix**: N/A
+===FRICTION_END===

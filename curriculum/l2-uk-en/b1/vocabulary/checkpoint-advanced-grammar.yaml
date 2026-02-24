@@ -1,0 +1,121 @@
+items:
+  - lemma: "дієприслівник"
+    ipa: '[dʲijɛprɪˈsʲlʲiu̯nɪk]'
+    translation: "adverbial participle"
+    pos: "noun"
+  - lemma: "дієприкметник"
+    ipa: '[dʲijɛprɪˈkmɛtnɪk]'
+    translation: "participle"
+    pos: "noun"
+  - lemma: "пасивний стан"
+    ipa: '[pɑˈsɪu̯nɪj stɑn]'
+    translation: "passive voice"
+    pos: "phrase"
+  - lemma: "безособова форма"
+    ipa: '[bɛzɔsɔˈbɔʋɑ ˈfɔrmɑ]'
+    translation: "impersonal form"
+    pos: "phrase"
+  - lemma: "збірний числівник"
+    ipa: '[ˈzʲbʲirnɪj t͡ʃɪˈsʲlʲiu̯nɪk]'
+    translation: "collective numeral"
+    pos: "phrase"
+  - lemma: "демінутив"
+    ipa: '[dɛmʲinuˈtɪu̯]'
+    translation: "diminutive"
+    pos: "noun"
+  - lemma: "контрольна точка"
+    ipa: '[kɔnˈtrɔlʲnɑ ˈtɔt͡ʃkɑ]'
+    translation: "checkpoint"
+    pos: "phrase"
+  - lemma: "кордоцентризм"
+    ipa: '[kɔrdɔt͡sɛnˈtrɪzm]'
+    translation: "cordocentrism (philosophy of the heart)"
+    pos: "noun"
+  - lemma: "калька"
+    ipa: '[ˈkɑlʲkɑ]'
+    translation: "calque / loan translation"
+    pos: "noun"
+  - lemma: "пестливий"
+    ipa: '[pɛˈstlɪʋɪj]'
+    translation: "affectionate / tender"
+    pos: "adjective"
+  - lemma: "одночасність"
+    ipa: '[ɔdnɔˈt͡ʃɑsʲnʲisʲtʲ]'
+    translation: "simultaneity"
+    pos: "noun"
+  - lemma: "послідовність"
+    ipa: '[pɔsʲlʲiˈdɔu̯nʲisʲtʲ]'
+    translation: "sequence"
+    pos: "noun"
+  - lemma: "спатоньки"
+    ipa: '[ˈspɑtɔnʲkɪ]'
+    translation: "to sleep (affectionate diminutive)"
+    pos: "verb"
+  - lemma: "сонечко"
+    ipa: '[ˈsɔnɛt͡ʃkɔ]'
+    translation: "sun (diminutive) / sweetheart"
+    pos: "noun"
+  - lemma: "підмет"
+    ipa: '[pʲidmɛt]'
+    translation: "subject (grammar)"
+    pos: "noun"
+  - lemma: "присудок"
+    ipa: '[ˈprɪsudɔk]'
+    translation: "predicate (grammar)"
+    pos: "noun"
+  - lemma: "узгодження"
+    ipa: '[uˈzɦɔd͡ʒɛnʲːɑ]'
+    translation: "agreement / concord (grammar)"
+    pos: "noun"
+  - lemma: "орудний відмінок"
+    ipa: '[ɔˈrudnɪj ʋʲiˈdʲmʲinɔk]'
+    translation: "instrumental case"
+    pos: "phrase"
+  - lemma: "родовий відмінок"
+    ipa: '[rɔˈdɔˈʋɪj ʋʲiˈdʲmʲinɔk]'
+    translation: "genitive case"
+    pos: "phrase"
+  - lemma: "дробовий числівник"
+    ipa: '[drɔbɔˈʋɪj t͡ʃɪˈsʲlʲiu̯nɪk]'
+    translation: "fractional numeral"
+    pos: "phrase"
+  - lemma: "чисельник"
+    ipa: '[t͡ʃɪˈsɛlʲnɪk]'
+    translation: "numerator"
+    pos: "noun"
+  - lemma: "знаменник"
+    ipa: '[znɑˈmɛnːɪk]'
+    translation: "denominator"
+    pos: "noun"
+  - lemma: "канцеляризм"
+    ipa: '[kɑnt͡sɛlʲɑˈrɪzm]'
+    translation: "bureaucratese / officialese"
+    pos: "noun"
+  - lemma: "незмінний"
+    ipa: '[nɛˈzʲmʲinːɪj]'
+    translation: "immutable / unchangeable"
+    pos: "adjective"
+  - lemma: "відносний займенник"
+    ipa: '[ʋʲiˈdnɔsnɪj zɑjˈmɛnːɪk]'
+    translation: "relative pronoun"
+    pos: "phrase"
+  - lemma: "змарнілий"
+    ipa: '[zmɑrˈnʲilɪj]'
+    translation: "wasted / emaciated (active past participle)"
+    pos: "adjective"
+  - lemma: "пожовклий"
+    ipa: '[pɔˈʒɔu̯klɪj]'
+    translation: "yellowed (active past participle)"
+    pos: "adjective"
+  - lemma: "інфантильний"
+    ipa: '[infɑnˈtɪlʲnɪj]'
+    translation: "infantile / childish"
+    pos: "adjective"
+  - lemma: "відреставрований"
+    ipa: '[ʋʲidrɛstɑˈʋrɔʋɑnɪj]'
+    translation: "restored (passive participle)"
+    pos: "adjective"
+  - lemma: "зроблено"
+    ipa: '[ˈzrɔblɛnɔ]'
+    translation: "done (impersonal resultative form)"
+    pos: "verb"

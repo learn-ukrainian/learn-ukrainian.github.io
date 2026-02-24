@@ -1,38 +1,32 @@
 # Дослідження: Контрольна точка: складні речення (частина 2)
 
 ## State Standard Reference
-§4.4.3: "Складне речення: складнопідрядні речення з допустовою підрядною частиною (сполучники хоч, дарма що, незважаючи на те що)... із часовою підрядною частиною (сполучне слово коли)... з підрядною частиною причини (сполучники тому що, бо, через те що)... складні речення з непрямою мовою."
-Alignment: This module directly addresses the B1 requirements for complex sentences with concessive, temporal, and causal clauses, as well as the transformation of direct to indirect speech (§4.4.3), which are key syntactic competencies for the level.
+§4.4.3: "Складне речення: ... складнопідрядні речення із часовою підрядною частиною (сполучне слово коли): вираження значення одночасності... складнопідрядні речення з підрядною частиною причини (сполучники тому що, бо, через те що)... складнопідрядні речення з допустовою підрядною частиною (сполучники хоч, дарма що, незважаючи на те що)... складні речення з непрямою мовою: Викладач сказав, що ми повинні..."
+Alignment: This module comprehensively evaluates the B1 learner's mastery of the specific complex sentence types defined in §4.4.3, ensuring they can produce and transform causal, temporal, concessive clauses, and reported speech according to the Ukrainian State Standard requirements for B1.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **контрольна точка** | Medium (Technical/Edu) | проходити контрольну точку, визначення контрольних точок, ключова контрольна точка |
-| **інтеграція** | High (Political/Social) | європейська інтеграція, інтеграція в суспільство, процеси інтеграції, повна інтеграція |
-| **оцінювання** | High (Educational) | система оцінювання, критерії оцінювання, підсумкове оцінювання, самооцінювання |
-| **прогрес** | High (General) | значний прогрес, досягти прогресу, технічний прогрес, відстежувати прогрес |
-| **готовність** | Medium (General) | готовність до змін, повна готовність, перевірити готовність, висловити готовність |
+| оцінювання | High (Academic/Formal) | підсумкове оцінювання, система оцінювання |
+| непряма мова | High (Linguistic) | передача непрямою мовою, трансформація прямої мови |
+| допустовий | Medium (Grammar) | допустовий зв'язок, допустове речення |
+| інтеграція | High (General/Academic) | інтеграція знань, процес інтеграції |
 
 ## Cultural Hooks
-1. **Persistence & Resilience**: "Вода камінь точить, хоча й м’яка." (Water wears away stone, though it is soft.) — Illustrates the concessive "хоча" and a key Ukrainian cultural value of persistence.
-2. **Causality & Consequence**: "Не відкладай на завтра того, що можна зробити сьогодні, тому що завтра може бути пізно." (Do not put off until tomorrow what can be done today, because tomorrow might be too late.) — Classic wisdom using causal connections.
-3. **Reasoning**: "Треба багато працювати, бо під лежачий камінь вода не тече." (One must work hard, for water does not flow under a lying stone.) — Uses "бо" to explain the necessity of effort.
+1. **Proverbial Wisdom:** "Вода камінь точить, хоча й м’яка" (Water wears away the stone, even though it's soft) — illustrates concessive links while reflecting Ukrainian cultural values of persistence and quiet strength.
+2. **Temporal & Causal Logic in folklore:** "Не відкладай на завтра того, що можна зробити сьогодні, тому що завтра може бути пізно" — practical demonstration of causal conjunctions in everyday wisdom.
 
 ## Common Learner Errors
-1. **Incorrect Conjunction Choice**: Using *тому що* (causal) instead of *тому* (consequence) or vice versa.
-   * *Error*: Він не прийшов, тому що він захворів. (Correct) vs. Він захворів, тому що він не прийшов. (Incorrect logic/conjunction use).
-   * *Fix*: Clear distinction: *cause* → тому що, *result* → тому.
-2. **Word Order in Indirect Questions**: Retaining the direct question word order or intonation without proper connectors.
-   * *Error*: Він запитав, коли прийде поїзд? (Direct intonation/order).
-   * *Fix*: Він запитав, коли прийде поїзд. (Declarative word order, no question mark).
-3. **Tense Shift in Reported Speech**: Failing to adjust the tense or pronouns when shifting from direct to indirect speech (though Ukrainian is more flexible than English here, pronoun shifts are critical).
-   * *Error*: Він сказав, що я (referring to original speaker) хочу їсти.
-   * *Fix*: Він сказав, що він хоче їсти.
+1. **Pronoun and Tense Shift in Reported Speech** → Learner fails to shift pronouns ("Він сказав: 'Я хочу'" → "Він сказав, що я хочу" instead of "що він хоче"). Happens due to L1 interference where direct translation of thought is attempted without perspective shift.
+2. **Punctuation in Indirect Questions** → Learner adds a question mark at the end of an indirect question ("Він запитав, де вокзал?"). Must use a period, as the main clause is declarative.
+3. **Cause vs. Effect confusion** → Mixing "тому що" (because) and "тому" (therefore), disrupting logical flow.
 
 ## Cross-References
-- **Builds on**: B1.3a (Complex Sentences I - M26-34), M40 (Reported Questions/Commands)
-- **Prepares for**: B1.4 (Advanced Grammar), B1.5 (Vocabulary Expansion - deeper texts)
+- Builds on: b1-40 (Reported Questions Commands)
+- Prepares for: b1-42 (Adverbial Participles Imperfective)
 
 ## Notes for Content Writing
-- **Pedagogy**: Focus on *nuance* in causal connectors (бо vs. тому що vs. через те що) — "через те що" is more formal/official.
-- **Immersion**: Ensure all metalanguage instructions (e.g., "Change to indirect speech") are 100% in Ukrainian («Перетворіть на непряму мову»).
+- **Decolonized framing:** Treat Ukrainian complex sentence structures as an independent, fully realized system. Explain Ukrainian comma rules (always before що, щоб, тому що, коли) as an inherent syntactic rhythm, rather than comparing to Russian conventions.
+- **Avoid Surzhyk:** Strictly enforce authentic conjunctions (e.g., use "через те що" or "бо", never "потому що").
+- **100% Immersion:** As a B1.3b module, all meta-language and instruction must be in Ukrainian. English is only permitted in the vocabulary table.
+- **Word Target:** Although this is a checkpoint, the explicit word target is 4000 words. Thus, the text must contain extensive review examples, robust theoretical recaps, and deep analytical practice to meet this requirement naturally without padding.

@@ -1,7 +1,7 @@
 # Audit Report: M56 — checkpoint-full-grammar.md
 **Level:** A2 | **Module:** M56 | **Phase:** A2.5 | **Pedagogy:** TTT | **Target:** 2500
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-24 09:24:05
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-24 21:19:02
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -16,74 +16,44 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Not allowed
 
-## LINT ERRORS
-- ❌ Line 20: AI Contamination detected ('\bSelf-correction\b'). Remove thinking/self-correction artifacts.
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Милозвучність: оберіть У чи В | 8 | 8 | ✅ |
+| 2 | quiz | Милозвучність: оберіть І чи Й, З чи ЗІ | 8 | 8 | ✅ |
+| 3 | fill-in | Відмінки: оберіть правильну форму | 8 | 8 | ✅ |
+| 4 | error-correction | Виправте помилку: типові проблеми | 6 | 6 | ✅ |
+| 5 | group-sort | Вид дієслова: процес чи результат? | 10 | 10 | ✅ |
+| 6 | true-false | Метамова: правда чи брехня? | 8 | 8 | ✅ |
+| 7 | unjumble | Синтаксис: складіть речення | 6 | 6 | ✅ |
+| 8 | quiz | Дієслова руху: пішки чи транспортом? | 8 | 8 | ✅ |
+| 9 | mark-the-words | Метамова: знайдіть усі дієслова | 7 | 6 | ✅ |
+| 10 | cloze | Інтеграція: відновіть граматичний текст | 10 | 10 | ✅ |
+| 11 | match-up | Словник: знайдіть пару | 8 | 8 | ✅ |
+| 12 | select | Аналіз речень: множинний вибір | 6 | 6 | ✅ |
 
-## PEDAGOGICAL VIOLATIONS
-- **[GRAMMAR]** Participle used before B1: 'написаний'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[GRAMMAR]** Participle used before B1: 'Читаючи'
-  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
-- **[COMPLEXITY]** Sentence too long for A2: 23 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Тут ми перевіряємо ваші навички...'
-- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ми зупиняємося тут не для...'
-- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Англійське може означати писав лист...'
-- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ми використовуємо дієслова іти односпрямований...'
-- **[COMPLEXITY]** Sentence too long for A2: 19 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Ми використовуємо дієслова їхати односпрямований...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Знаючи ці слова ви можете...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'На жаль він не мав...'
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, родовий, орудний, місцевий, кличний
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'чи ви...'.
-  - FIX: Vary sentence structure.
-- **[EUPHONY]** Line 24: «в цьому» — в перед збігом приголосних; має бути «у цьому»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 27: «в цьому» — в перед збігом приголосних; має бути «у цьому»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 99: «з с» — з перед з/с/ш/ч; має бути «із с»
-  - FIX: Replace «з» with «із» (before sibilant)
-- **[EUPHONY]** Line 129: «в **місті**» — в перед збігом приголосних; має бути «у **місті**»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 158: «неприродно і є» — і між голосними; має бути «й є»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 230: «в цьому» — в перед збігом приголосних; має бути «у цьому»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 232: «в цьому» — в перед збігом приголосних; має бути «у цьому»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 252: «головне і який» — і між голосними; має бути «й який»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 280: «ногами і як» — і між голосними; має бути «й як»
-  - FIX: Replace «і» with «й» (between vowels)
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (3 occurrences): (Imperfective aspect), (Perfective aspect), (Verbs of motion) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-
-## Recommendation
-**📝 UPDATE** (severity 52/100)
-
-- Revision recommended (severity 52/100)
-- 21 violations (severe - consider revision)
+**Summary:**
+- Total activities: 12 (target: 10-14) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, quiz) ✅
+- Required types used: 3/3 (error-correction, fill-in, quiz) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2755/2500 (raw: 2956)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Words:** ✅ 3372/2500 (raw: 3623)
+- **Activities:** ✅ 12/10
+- **Density:** ✅ All > 10
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 32/1
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
-- **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ❌ 9 violations
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 95.5% (checkpoint - no gate)
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.3% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -93,9 +63,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Checkpoint — Full Grammar** | ➖ | 50 | Excluded Type |
-| **Вступ та огляд** | ✅ | 397 | Included in Core |
-| **Милозвучність: Секрет мелодійності** | ✅ | 426 | Included in Core |
-| **Система відмінків та Кличний** | ✅ | 518 | Included in Core |
-| **Дієслово: Вид та Рух** | ✅ | 549 | Included in Core |
-| **Сфери життя та Метамова** | ✅ | 430 | Included in Core |
-| **Підсумок та інтеграція** | ✅ | 385 | Included in Core |
+| **Вступ та огляд** | ✅ | 366 | Included in Core |
+| **Навичка 1: Милозвучність та мелодійність** | ✅ | 504 | Included in Core |
+| **Навичка 2: Система відмінків та Кличний** | ✅ | 765 | Included in Core |
+| **Навичка 3: Дієслово: Вид та Рух** | ✅ | 634 | Included in Core |
+| **Навичка 4: Сфери життя та Метамова** | ✅ | 682 | Included in Core |
+| **Підсумок та інтеграція** | ✅ | 371 | Included in Core |

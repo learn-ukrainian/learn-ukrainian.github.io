@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T23:46:21Z",
       "task_id": "v3-register-official-legal-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T16:39:23Z",
+      "attempts": 2
     }
   }
 }

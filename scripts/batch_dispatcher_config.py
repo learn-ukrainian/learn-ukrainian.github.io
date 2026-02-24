@@ -29,7 +29,7 @@ TRACKS = [
     (12, "lit-fantastika", 31,  "seminar", [("lit", 0.80)]),
     (13, "lit-war",        20,  "seminar", [("lit", 0.80)]),
     (14, "lit-humor",      13,  "seminar", [("lit", 0.80)]),
-    (15, "lit-juvenile",   30,  "seminar", [("lit", 0.80)]),
+    (15, "lit-youth",   30,  "seminar", [("lit", 0.80)]),
     (16, "oes",           102,  "seminar", [("c1", 0.80)]),
     (17, "ruth",           79,  "seminar", [("c1", 0.80)]),
     (18, "b2-pro",         15,  "core",    [("b1", 0.80)]),

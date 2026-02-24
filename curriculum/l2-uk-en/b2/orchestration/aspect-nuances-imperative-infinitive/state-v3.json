@@ -1,0 +1,27 @@
+{
+  "track": "b2",
+  "slug": "aspect-nuances-imperative-infinitive",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T20:01:38Z",
+      "task_id": "v3-aspect-nuances-imperative-infinitive-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T20:05:52Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T20:08:45Z",
+      "task_id": "v3-aspect-nuances-imperative-infinitive-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T20:12:11Z",
+      "attempts": 2
+    }
+  }
+}

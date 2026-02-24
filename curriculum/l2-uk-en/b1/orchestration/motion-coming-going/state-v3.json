@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T21:49:18Z",
       "task_id": "v3-motion-coming-going-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T15:28:29Z",
+      "attempts": 2
     }
   }
 }

@@ -95,10 +95,28 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
         "persona": "The Irony Analyst",
         "immersion_range": [1.0, 1.0],
     },
-    "lit-juvenile": {
+    "lit-youth": {
         "model": "gemini-3-pro-preview",
         "word_floor": 5000,
         "persona": "The Childhood Scholar",
+        "immersion_range": [1.0, 1.0],
+    },
+    "lit-doc": {
+        "model": "gemini-3-pro-preview",
+        "word_floor": 5000,
+        "persona": "The Witness Documentarian",
+        "immersion_range": [1.0, 1.0],
+    },
+    "lit-drama": {
+        "model": "gemini-3-pro-preview",
+        "word_floor": 5000,
+        "persona": "The Avant-Garde Playwright",
+        "immersion_range": [1.0, 1.0],
+    },
+    "lit-crimea": {
+        "model": "gemini-3-pro-preview",
+        "word_floor": 5000,
+        "persona": "The Crimean Narratologist",
         "immersion_range": [1.0, 1.0],
     },
     

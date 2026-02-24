@@ -1,0 +1,126 @@
+items:
+  - lemma: "історія"
+    ipa: '[iˈstɔrʲijɑ]'
+    translation: "history"
+    pos: "noun"
+    gender: "f"
+  - lemma: "держава"
+    ipa: '[ˈdɛrˈʒɑʋɑ]'
+    translation: "state"
+    pos: "noun"
+    gender: "f"
+  - lemma: "народ"
+    ipa: '[nɑˈrɔd]'
+    translation: "people"
+    pos: "noun"
+    gender: "m"
+  - lemma: "влада"
+    ipa: '[ˈʋlɑdɑ]'
+    translation: "power, authority"
+    pos: "noun"
+    gender: "f"
+  - lemma: "період"
+    ipa: '[pɛˈrʲiɔd]'
+    translation: "period"
+    pos: "noun"
+    gender: "m"
+  - lemma: "подія"
+    ipa: '[pɔˈdʲijɑ]'
+    translation: "event"
+    pos: "noun"
+    gender: "f"
+  - lemma: "джерело"
+    ipa: '[d͡ʒɛrɛˈlɔ]'
+    translation: "source"
+    pos: "noun"
+    gender: "n"
+  - lemma: "спадщина"
+    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
+    translation: "heritage, legacy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "аналіз"
+    ipa: '[ɑˈnɑlʲiz]'
+    translation: "analysis"
+    pos: "noun"
+    gender: "m"
+  - lemma: "контекст"
+    ipa: '[kɔnˈtɛkst]'
+    translation: "context"
+    pos: "noun"
+    gender: "m"
+  - lemma: "вплив"
+    ipa: '[ʍplɪu̯]'
+    translation: "influence, impact"
+    pos: "noun"
+    gender: "m"
+  - lemma: "наслідки"
+    ipa: '[ˈnɑsʲlʲidkɪ]'
+    translation: "consequences"
+    pos: "noun"
+    notes: "commonly used in plural"
+  - lemma: "фронтир"
+    ipa: '[frɔnˈtɪr]'
+    translation: "frontier"
+    pos: "noun"
+    gender: "m"
+  - lemma: "полк"
+    ipa: '[pɔlk]'
+    translation: "regiment"
+    pos: "noun"
+    gender: "m"
+  - lemma: "старшина"
+    ipa: '[stɑrˈʃɪnɑ]'
+    translation: "officer corps, leadership"
+    pos: "noun"
+    gender: "f"
+  - lemma: "осадчий"
+    ipa: '[ɔˈsɑd͡ʒt͡ʃɪj]'
+    translation: "founder, organizer of a settlement"
+    pos: "noun"
+    gender: "m"
+  - lemma: "слобода"
+    ipa: '[slɔbɔˈdɑ]'
+    translation: "tax-free settlement"
+    pos: "noun"
+    gender: "f"
+  - lemma: "займанщина"
+    ipa: '[zɑjmɑnˈʃt͡ʃɪnɑ]'
+    translation: "right of first occupation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "автономія"
+    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
+    translation: "autonomy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кріпацтво"
+    ipa: '[krʲiˈpɑt͡stʋɔ]'
+    translation: "serfdom"
+    pos: "noun"
+    gender: "n"
+  - lemma: "міграція"
+    ipa: '[mʲiˈɦrɑt͡sʲijɑ]'
+    translation: "migration"
+    pos: "noun"
+    gender: "f"
+  - lemma: "самоврядування"
+    ipa: '[sɑmɔu̯rʲɑduˈʋɑnʲːɑ]'
+    translation: "self-government"
+    pos: "noun"
+    gender: "n"
+  - lemma: "воєвода"
+    ipa: '[ʋɔjɛˈʋɔdɑ]'
+    translation: "governor, military commander"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ідентичність"
+    ipa: '[idɛnˈtɪt͡ʃnʲisʲtʲ]'
+    translation: "identity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "універсал"
+    ipa: '[unʲiʋɛrˈsɑl]'
+    translation: "decree, edict"
+    pos: "noun"
+    gender: "m"

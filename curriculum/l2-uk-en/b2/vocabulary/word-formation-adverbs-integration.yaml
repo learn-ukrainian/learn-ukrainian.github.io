@@ -1,122 +1,153 @@
 items:
   - lemma: "термін"
+    ipa: '[ˈtɛrmʲin]'
     translation: "term"
     pos: "noun"
     gender: "m"
     notes: "науковий термін"
   - lemma: "поняття"
+    ipa: '[pɔˈnʲɑtʲːɑ]'
     translation: "concept"
     pos: "noun"
     gender: "n"
     notes: "абстрактне поняття; мати зелене поняття"
   - lemma: "процес"
+    ipa: '[prɔˈt͡sɛs]'
     translation: "process"
     pos: "noun"
     gender: "m"
     notes: "творчий процес"
   - lemma: "метод"
+    ipa: '[ˈmɛtɔd]'
     translation: "method"
     pos: "noun"
     gender: "m"
     notes: "науковий метод"
   - lemma: "аналіз"
+    ipa: '[ɑˈnɑlʲiz]'
     translation: "analysis"
     pos: "noun"
     gender: "m"
     notes: "глибокий аналіз"
   - lemma: "синтез"
+    ipa: '[ˈsɪntɛz]'
     translation: "synthesis"
     pos: "noun"
     gender: "m"
   - lemma: "дослідження"
+    ipa: '[dɔˈsʲlʲid͡ʒɛnʲːɑ]'
     translation: "research"
     pos: "noun"
     gender: "n"
     notes: "проводити дослідження"
   - lemma: "обставина"
+    ipa: '[ɔˈbstɑʋɪnɑ]'
     translation: "circumstance / adverbial modifier"
     pos: "noun"
     gender: "f"
   - lemma: "ознака"
+    ipa: '[ɔˈznɑkɑ]'
     translation: "feature / characteristic"
     pos: "noun"
     gender: "f"
   - lemma: "милозвучність"
+    ipa: '[mɪlɔˈzʋut͡ʃnʲisʲtʲ]'
     translation: "euphony"
     pos: "noun"
     gender: "f"
   - lemma: "шиплячий"
+    ipa: '[ʃɪˈplʲɑt͡ʃɪj]'
     translation: "hissing (sound)"
     pos: "adjective"
   - lemma: "наголос"
+    ipa: '[ˈnɑɦɔlɔs]'
     translation: "stress (phonetic)"
     pos: "noun"
     gender: "m"
   - lemma: "виняток"
+    ipa: '[ˈʋɪnʲɑtɔk]'
     translation: "exception"
     pos: "noun"
     gender: "m"
   - lemma: "колокація"
+    ipa: '[kɔlɔˈkɑt͡sʲijɑ]'
     translation: "collocation"
     pos: "noun"
     gender: "f"
   - lemma: "ідіома"
+    ipa: '[idʲiˈɔmɑ]'
     translation: "idiom"
     pos: "noun"
     gender: "f"
   - lemma: "зменшувально-пестливий"
+    ipa: '[zmɛnʃuʋɑlʲnɔ-pɛˈstlɪʋɪj]'
     translation: "diminutive-hypocoristic"
     pos: "adjective"
   - lemma: "збільшувальний"
+    ipa: '[ˈzʲbʲilʲʃuʋɑlʲnɪj]'
     translation: "augmentative"
     pos: "adjective"
   - lemma: "суфікс"
+    ipa: '[ˈsufʲiks]'
     translation: "suffix"
     pos: "noun"
     gender: "m"
   - lemma: "префікс"
+    ipa: '[prɛfʲiks]'
     translation: "prefix"
     pos: "noun"
     gender: "m"
   - lemma: "корінь"
+    ipa: '[ˈkɔrʲinʲ]'
     translation: "root"
     pos: "noun"
     gender: "m"
   - lemma: "закінчення"
+    ipa: '[zɑˈkʲint͡ʃɛnʲːɑ]'
     translation: "ending"
     pos: "noun"
     gender: "n"
   - lemma: "основа"
+    ipa: '[ɔˈsnɔʋɑ]'
     translation: "stem (of a word)"
     pos: "noun"
     gender: "f"
   - lemma: "словотворення"
+    ipa: '[slɔʋɔˈtʋɔrɛnʲːɑ]'
     translation: "word formation"
     pos: "noun"
     gender: "n"
   - lemma: "інтеграція"
+    ipa: '[intɛˈɦrɑt͡sʲijɑ]'
     translation: "integration"
     pos: "noun"
     gender: "f"
   - lemma: "швидкий"
+    ipa: '[ʃʋɪˈdkɪj]'
     translation: "fast"
     pos: "adjective"
   - lemma: "швидко"
+    ipa: '[ˈʃʋɪdkɔ]'
     translation: "quickly"
     pos: "adverb"
   - lemma: "гаряче"
+    ipa: '[ɦɑˈrʲɑt͡ʃɛ]'
     translation: "hotly"
     pos: "adverb"
   - lemma: "весело"
+    ipa: '[ˈʋɛsɛlɔ]'
     translation: "merrily / cheerfully"
     pos: "adverb"
   - lemma: "по-українськи"
+    ipa: '[pɔ-ukrɑˈjinʲsʲkɪ]'
     translation: "in Ukrainian (style/language)"
     pos: "adverb"
   - lemma: "по-науковому"
+    ipa: '[pɔ-nɑuˈkɔʋɔmu]'
     translation: "scientifically"
     pos: "adverb"
   - lemma: "вітрище"
+    ipa: '[ʋʲiˈtrɪʃt͡ʃɛ]'
     translation: "huge wind / gale"
     pos: "noun"
     gender: "n"

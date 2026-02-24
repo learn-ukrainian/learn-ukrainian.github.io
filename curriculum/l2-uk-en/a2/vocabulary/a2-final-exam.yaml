@@ -1,118 +1,172 @@
 items:
-  - lemma: "іспит"
-    translation: "exam"
-    pos: "noun"
-    gender: "m"
-    usage: "скласти іспит, провалити іспит"
-    notes: "High frequency academic noun."
-  - lemma: "завдання"
-    translation: "task"
-    pos: "noun"
-    gender: "n"
-    usage: "тестове завдання, виконати завдання"
-  - lemma: "відповідь"
-    translation: "answer"
-    pos: "noun"
-    gender: "f"
-    usage: "правильна відповідь"
-    notes: "Requires 'на' + Accusative for objects."
-  - lemma: "результат"
-    translation: "result"
-    pos: "noun"
-    gender: "m"
-    usage: "гарний результат"
-  - lemma: "рівень"
-    translation: "level"
-    pos: "noun"
-    gender: "m"
-    usage: "високий рівень знань"
-  - lemma: "оцінка"
-    translation: "grade"
-    pos: "noun"
-    gender: "f"
-    usage: "отримати високу оцінку"
-  - lemma: "готовий"
-    translation: "ready"
-    pos: "adj"
-    usage: "бути готовим до тесту"
-  - lemma: "успішно"
-    translation: "successfully"
-    pos: "adv"
-    usage: "успішно скласти іспит"
-  - lemma: "розуміння"
-    translation: "comprehension"
-    pos: "noun"
-    gender: "n"
-    usage: "розуміння тексту"
-  - lemma: "навичка"
-    translation: "skill"
-    pos: "noun"
-    gender: "f"
-    usage: "практичні навички"
-  - lemma: "досягнення"
-    translation: "achievement"
-    pos: "noun"
-    gender: "n"
-    usage: "вагоме досягнення в навчанні"
-  - lemma: "сертифікат"
-    translation: "certificate"
-    pos: "noun"
-    gender: "m"
-    usage: "отримати сертифікат"
-  - lemma: "складати"
-    translation: "to take an exam"
-    pos: "verb"
-    aspect: "impf"
-    notes: "Describes the process of writing an exam."
-  - lemma: "скласти"
-    translation: "to pass an exam"
-    pos: "verb"
-    aspect: "pf"
-    notes: "Indicates successful completion. Use instead of Russism 'здати'."
-  - lemma: "провалити"
-    translation: "to fail"
-    pos: "verb"
-    aspect: "pf"
-    usage: "провалити іспит"
-  - lemma: "готуватися"
-    translation: "to prepare"
-    pos: "verb"
-    aspect: "impf"
-    notes: "Requires 'до' + Genitive."
-  - lemma: "виконувати"
-    translation: "to complete, to fulfill"
-    pos: "verb"
-    aspect: "impf"
-    usage: "виконувати завдання"
-  - lemma: "виконати"
-    translation: "to have completed"
-    pos: "verb"
-    aspect: "pf"
-    usage: "швидко виконати завдання"
-  - lemma: "відповідати"
-    translation: "to answer"
-    pos: "verb"
-    aspect: "impf"
-    notes: "Governs Dative for people, Accusative for things."
-  - lemma: "ліворуч"
-    translation: "to the left"
-    pos: "adv"
-  - lemma: "праворуч"
-    translation: "to the right"
-    pos: "adv"
-  - lemma: "прямо"
-    translation: "straight ahead"
-    pos: "adv"
-  - lemma: "прямувати"
-    translation: "to head towards"
-    pos: "verb"
-    aspect: "impf"
-    notes: "Requires 'до' + Genitive."
-  - lemma: "поверх"
-    translation: "floor, level (of a building)"
-    pos: "noun"
-    gender: "m"
-  - lemma: "вчити"
-    translation: "to memorize, to learn specific items"
-    pos: "verb"
-    aspect: "impf"
+- lemma: іспит
+  ipa: '[ˈispɪt]'
+  translation: exam
+  pos: noun
+  gender: m
+  usage: скласти іспит, провалити іспит
+  notes: High frequency academic noun.
+- lemma: завдання
+  ipa: '[zɑˈʋdɑnʲːɑ]'
+  translation: task
+  pos: noun
+  gender: n
+  usage: тестове завдання, виконати завдання
+- lemma: відповідь
+  ipa: '[ˈʋʲidpɔʋʲidʲ]'
+  translation: answer
+  pos: noun
+  gender: f
+  usage: правильна відповідь
+  notes: Requires 'на' + Accusative for objects.
+- lemma: результат
+  ipa: '[rɛzulʲˈtɑt]'
+  translation: result
+  pos: noun
+  gender: m
+  usage: гарний результат
+- lemma: рівень
+  ipa: '[ˈrʲiʋɛnʲ]'
+  translation: level
+  pos: noun
+  gender: m
+  usage: високий рівень знань
+- lemma: оцінка
+  ipa: '[ɔˈt͡sʲinkɑ]'
+  translation: grade
+  pos: noun
+  gender: f
+  usage: отримати високу оцінку
+- lemma: готовий
+  ipa: '[ɦɔˈtɔʋɪj]'
+  translation: ready
+  pos: adj
+  usage: бути готовим до тесту
+- lemma: успішно
+  ipa: '[uˈsʲpʲiʃnɔ]'
+  translation: successfully
+  pos: adv
+  usage: успішно скласти іспит
+- lemma: розуміння
+  ipa: '[rɔzuˈmʲinʲːɑ]'
+  translation: comprehension
+  pos: noun
+  gender: n
+  usage: розуміння тексту
+- lemma: навичка
+  ipa: '[ˈnɑʋɪt͡ʃkɑ]'
+  translation: skill
+  pos: noun
+  gender: f
+  usage: практичні навички
+- lemma: досягнення
+  ipa: '[dɔˈsʲɑɦnɛnʲːɑ]'
+  translation: achievement
+  pos: noun
+  gender: n
+  usage: вагоме досягнення в навчанні
+- lemma: сертифікат
+  ipa: '[sɛrtɪfʲiˈkɑt]'
+  translation: certificate
+  pos: noun
+  gender: m
+  usage: отримати сертифікат
+- lemma: складати
+  ipa: '[sklɑˈdɑtɪ]'
+  translation: to take an exam
+  pos: verb
+  aspect: impf
+  notes: Describes the process of writing an exam.
+- lemma: скласти
+  ipa: '[ˈsklɑstɪ]'
+  translation: to pass an exam
+  pos: verb
+  aspect: pf
+  notes: Indicates successful completion. Use instead of Russism 'здати'.
+- lemma: провалити
+  ipa: '[prɔʋɑˈlɪtɪ]'
+  translation: to fail
+  pos: verb
+  aspect: pf
+  usage: провалити іспит
+- lemma: готуватися
+  ipa: '[ɦɔtuˈʋɑtɪsʲɑ]'
+  translation: to prepare
+  pos: verb
+  aspect: impf
+  notes: Requires 'до' + Genitive.
+- lemma: виконувати
+  ipa: '[ʋɪˈkɔnuʋɑtɪ]'
+  translation: to complete, to fulfill
+  pos: verb
+  aspect: impf
+  usage: виконувати завдання
+- lemma: виконати
+  ipa: '[ˈʋɪkɔnɑtɪ]'
+  translation: to have completed
+  pos: verb
+  aspect: pf
+  usage: швидко виконати завдання
+- lemma: відповідати
+  ipa: '[ʋʲidpɔʋʲiˈdɑtɪ]'
+  translation: to answer
+  pos: verb
+  aspect: impf
+  notes: Governs Dative for people, Accusative for things.
+- lemma: ліворуч
+  ipa: '[lʲiˈʋɔrut͡ʃ]'
+  translation: to the left
+  pos: adv
+- lemma: праворуч
+  ipa: '[prɑˈʋɔrut͡ʃ]'
+  translation: to the right
+  pos: adv
+- lemma: прямо
+  ipa: '[ˈprʲɑmɔ]'
+  translation: straight ahead
+  pos: adv
+- lemma: прямувати
+  ipa: '[prʲɑmuˈʋɑtɪ]'
+  translation: to head towards
+  pos: verb
+  aspect: impf
+  notes: Requires 'до' + Genitive.
+- lemma: поверх
+  ipa: '[pɔˈʋɛrx]'
+  translation: floor, level (of a building)
+  pos: noun
+  gender: m
+- lemma: вчити
+  ipa: '[ˈʍt͡ʃɪtɪ]'
+  translation: to memorize, to learn specific items
+  pos: verb
+  aspect: impf
+- lemma: недоконаний
+  ipa: '[nɛdɔˈkɔnɑnɪj]'
+  translation: imperfective (aspect)
+  pos: adj
+- lemma: родовий
+  ipa: '[rɔdɔˈʋɪj]'
+  translation: genitive (case)
+  pos: adj
+- lemma: вид
+  ipa: '[ʋɪd]'
+  translation: aspect
+  pos: noun
+  gender: m
+- lemma: доконаний
+  ipa: '[dɔˈkɔnɑnɪj]'
+  translation: perfective (aspect)
+  pos: adj
+- lemma: орудний
+  ipa: '[ɔˈrudnɪj]'
+  translation: instrumental (case)
+  pos: adj
+- lemma: знахідний
+  ipa: '[znɑxʲiˈdnɪj]'
+  translation: accusative (case)
+  pos: adj
+- lemma: давальний
+  ipa: '[dɑˈʋɑlʲnɪj]'
+  translation: dative (case)
+  pos: adj

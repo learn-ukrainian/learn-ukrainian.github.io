@@ -1,106 +1,131 @@
 items:
   - lemma: "лікар"
+    ipa: '[ˈlʲikɑr]'
     translation: "doctor"
     pos: "noun"
     gender: "m"
   - lemma: "пацієнт"
+    ipa: '[pɑt͡sʲiˈjɛnt]'
     translation: "patient"
     pos: "noun"
     gender: "m"
   - lemma: "боліти"
+    ipa: '[bɔˈlʲitɪ]'
     translation: "to hurt"
     pos: "verb"
     aspect: "impf"
     notes: "intransitive, used as У мене болить"
   - lemma: "температура"
+    ipa: '[tɛmpɛrɑˈturɑ]'
     translation: "temperature / fever"
     pos: "noun"
     gender: "f"
   - lemma: "рецепт"
+    ipa: '[rɛˈt͡sɛpt]'
     translation: "prescription"
     pos: "noun"
     gender: "m"
     notes: "not a receipt (чек)"
   - lemma: "діагноз"
+    ipa: '[dʲiˈɑɦnɔz]'
     translation: "diagnosis"
     pos: "noun"
     gender: "m"
   - lemma: "лікарняний"
+    ipa: '[lʲikɑrˈnʲɑnɪj]'
     translation: "sick leave certificate"
     pos: "noun"
     gender: "m"
   - lemma: "приймати"
+    ipa: '[prɪjˈmɑtɪ]'
     translation: "to take (medicine)"
     pos: "verb"
     aspect: "impf"
   - lemma: "прийом"
+    ipa: '[prɪˈjɔm]'
     translation: "appointment / consultation"
     pos: "noun"
     gender: "m"
   - lemma: "бахіли"
+    ipa: '[bɑxʲilɪ]'
     translation: "shoe covers"
     pos: "noun"
     gender: "pl"
     notes: "mandatory in Ukrainian clinics"
   - lemma: "тиск"
+    ipa: '[tɪsk]'
     translation: "blood pressure"
     pos: "noun"
     gender: "m"
   - lemma: "аналіз"
+    ipa: '[ɑˈnɑlʲiz]'
     translation: "medical test / analysis"
     pos: "noun"
     gender: "m"
   - lemma: "направлення"
+    ipa: '[nɑˈprɑu̯lɛnʲːɑ]'
     translation: "referral"
     pos: "noun"
     gender: "n"
   - lemma: "застуда"
+    ipa: '[zɑˈstudɑ]'
     translation: "cold (illness)"
     pos: "noun"
     gender: "f"
   - lemma: "отруєння"
+    ipa: '[ɔˈtrujɛnʲːɑ]'
     translation: "poisoning"
     pos: "noun"
     gender: "n"
   - lemma: "алергія"
+    ipa: '[ɑlɛrˈɦʲijɑ]'
     translation: "allergy"
     pos: "noun"
     gender: "f"
   - lemma: "ангіна"
+    ipa: '[ɑnʲˈɦʲinɑ]'
     translation: "tonsillitis / strep throat"
     pos: "noun"
     gender: "f"
     notes: "false friend: does not mean heart attack"
   - lemma: "калина"
+    ipa: '[kɑˈlɪnɑ]'
     translation: "viburnum"
     pos: "noun"
     gender: "f"
     notes: "traditional folk remedy"
   - lemma: "здоров'я"
+    ipa: '[zdɔˈrɔu̯jɑ]'
     translation: "health"
     pos: "noun"
     gender: "n"
   - lemma: "поліклініка"
+    ipa: '[pɔlʲiˈklʲinʲikɑ]'
     translation: "polyclinic / clinic"
     pos: "noun"
     gender: "f"
   - lemma: "реєстратура"
+    ipa: '[rɛjɛstrɑˈturɑ]'
     translation: "reception / registry"
     pos: "noun"
     gender: "f"
   - lemma: "горло"
+    ipa: '[ˈɦɔrlɔ]'
     translation: "throat"
     pos: "noun"
     gender: "n"
   - lemma: "живіт"
+    ipa: '[ʒɪˈʋʲit]'
     translation: "stomach"
     pos: "noun"
     gender: "m"
   - lemma: "ліки"
+    ipa: '[ˈlʲikɪ]'
     translation: "medicine / medication"
     pos: "noun"
     gender: "pl"
   - lemma: "кашель"
+    ipa: '[ˈkɑʃɛlʲ]'
     translation: "cough"
     pos: "noun"
     gender: "m"

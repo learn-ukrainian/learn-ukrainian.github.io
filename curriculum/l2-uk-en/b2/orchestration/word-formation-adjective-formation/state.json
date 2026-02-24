@@ -1,0 +1,35 @@
+{
+  "slug": "word-formation-adjective-formation",
+  "track": "b2",
+  "module_num": 36,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T19:07:21Z",
+      "words": 3811,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T19:10:04Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T19:10:04Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T19:13:53Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T19:13:53Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T19:13:53Z"
+}

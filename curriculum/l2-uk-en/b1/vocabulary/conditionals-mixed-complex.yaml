@@ -1,111 +1,141 @@
 items:
   - lemma: "якщо не"
+    ipa: '[jɑˈkʃt͡ʃɔ nɛ]'
     translation: "if not / unless"
     pos: "phrase"
     notes: "High frequency; used for conditions that set strong limits."
   - lemma: "навіть якщо"
+    ipa: '[ˈnɑʋʲitʲ jɑˈkʃt͡ʃɔ]'
     translation: "even if (real)"
     pos: "phrase"
     notes: "Used to express determination or inevitability in real conditions."
   - lemma: "за умови"
+    ipa: '[zɑ uˈmɔʋɪ]'
     translation: "on the condition of / provided that"
     pos: "phrase"
     notes: "Requires the noun to be in the genitive case. Standard for formal and business registers."
   - lemma: "якби"
+    ipa: '[jɑˈɡbɪ]'
     translation: "if (unreal)"
     pos: "conjunction"
     notes: "Used exclusively for hypothetical, unreal, or past impossible conditions."
   - lemma: "змішаний"
+    ipa: '[ˈzʲmʲiʃɑnɪj]'
     translation: "mixed"
     pos: "adjective"
     usage: "змішаний тип умовних речень"
   - lemma: "складний"
+    ipa: '[sklɑdnɪj]'
     translation: "complex / difficult"
     pos: "adjective"
     usage: "складні умови"
   - lemma: "ланцюговий"
+    ipa: '[lɑnʲt͡sʲuˈɦɔʋɪj]'
     translation: "chained"
     pos: "adjective"
     usage: "ланцюгова реакція"
   - lemma: "навіть якби"
+    ipa: '[ˈnɑʋʲitʲ jɑˈɡbɪ]'
     translation: "even if (unreal)"
     pos: "phrase"
     notes: "Used for purely hypothetical scenarios combined with conditional mood."
   - lemma: "доки"
+    ipa: '[ˈdɔkɪ]'
     translation: "as long as / until"
     pos: "conjunction"
     usage: "доки не"
   - lemma: "в іншому випадку"
+    ipa: '[ʋ ˈinʃɔmu ˈʋɪpɑdku]'
     translation: "otherwise"
     pos: "phrase"
   - lemma: "інакше"
+    ipa: '[iˈnɑkʃɛ]'
     translation: "differently / otherwise"
     pos: "adverb"
   - lemma: "крім того"
+    ipa: '[krʲim tɔˈɦɔ]'
     translation: "besides / furthermore"
     pos: "phrase"
   - lemma: "до того ж"
+    ipa: '[dɔ tɔˈɦɔ ʒ]'
     translation: "moreover / besides"
     pos: "phrase"
   - lemma: "тим часом"
+    ipa: '[tɪm ˈt͡ʃɑsɔm]'
     translation: "meanwhile"
     pos: "phrase"
   - lemma: "проте"
+    ipa: '[prɔˈtɛ]'
     translation: "however"
     pos: "conjunction"
   - lemma: "однак"
+    ipa: '[ɔˈdnɑk]'
     translation: "however / though"
     pos: "conjunction"
   - lemma: "втім"
+    ipa: '[ʍtʲim]'
     translation: "however / though"
     pos: "conjunction"
   - lemma: "наслідок"
+    ipa: '[ˈnɑsʲlʲidɔk]'
     translation: "consequence / result"
     pos: "noun"
     gender: "m"
   - lemma: "припущення"
+    ipa: '[prɪˈpuʃt͡ʃɛnʲːɑ]'
     translation: "assumption"
     pos: "noun"
     gender: "n"
   - lemma: "ірреальний"
+    ipa: '[irːɛˈɑlʲnɪj]'
     translation: "unreal"
     pos: "adjective"
   - lemma: "логічний"
+    ipa: '[lɔˈɦʲit͡ʃnɪj]'
     translation: "logical"
     pos: "adjective"
   - lemma: "русизм"
+    ipa: '[ruˈsɪzm]'
     translation: "Russianism (borrowing from Russian)"
     pos: "noun"
     gender: "m"
   - lemma: "пунктуація"
+    ipa: '[punktuˈɑt͡sʲijɑ]'
     translation: "punctuation"
     pos: "noun"
     gender: "f"
   - lemma: "кома"
+    ipa: '[ˈkɔmɑ]'
     translation: "comma"
     pos: "noun"
     gender: "f"
   - lemma: "підрядний"
+    ipa: '[pʲiˈdʲrʲɑdnɪj]'
     translation: "subordinate"
     pos: "adjective"
     usage: "підрядна частина речення"
   - lemma: "милозвучність"
+    ipa: '[mɪlɔˈzʋut͡ʃnʲisʲtʲ]'
     translation: "euphony / pleasant sound"
     pos: "noun"
     gender: "f"
   - lemma: "офіційно-діловий"
+    ipa: '[ɔfʲiˈt͡sʲijnɔ-dʲilɔˈʋɪj]'
     translation: "formal / official-business"
     pos: "adjective"
     usage: "офіційно-діловий стиль"
   - lemma: "перешкода"
+    ipa: '[pɛrɛˈʃkɔdɑ]'
     translation: "obstacle / hindrance"
     pos: "noun"
     gender: "f"
   - lemma: "угода"
+    ipa: '[uˈɦɔdɑ]'
     translation: "agreement / contract"
     pos: "noun"
     gender: "f"
   - lemma: "ланцюжок"
+    ipa: '[lɑnʲt͡sʲuˈʒɔk]'
     translation: "chain"
     pos: "noun"
     gender: "m"

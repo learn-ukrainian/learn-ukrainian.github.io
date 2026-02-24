@@ -2,13 +2,13 @@
   "module": "work-professions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:23:49.663091Z",
+  "last_audit": "2026-02-24T21:18:46.745267Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T22:45:53.738752Z",
+    "md": "2026-02-24T15:22:18.034062Z",
     "meta": "2026-02-23T22:39:58.213391Z",
     "activities": "2026-02-23T22:48:51.670630Z",
-    "vocabulary": "2026-02-23T22:48:51.670930Z",
+    "vocabulary": "2026-02-24T20:35:49.808280Z",
     "plan": "2026-02-20T21:04:26.616507Z",
     "research": "2026-02-23T22:39:58.209406Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "5136/3000 (raw: 5597) | pedagogy: 111 violations | immersion: 77.5% HIGH (target 60-75% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "4723/3000 (raw: 5170)"
     },
     "activities": {
       "status": "deferred",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "ipa": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "5 IPA issues (run lint_ipa.py --fix)"
+      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

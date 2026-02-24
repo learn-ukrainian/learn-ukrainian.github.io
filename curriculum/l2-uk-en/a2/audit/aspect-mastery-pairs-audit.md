@@ -1,7 +1,7 @@
 # Audit Report: M16 — aspect-mastery-pairs.md
 **Level:** A2 | **Module:** M16 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 09:37:53
+**Generated:** 2026-02-24 21:17:28
 
 ## Configuration
 **Type:** A2-grammar

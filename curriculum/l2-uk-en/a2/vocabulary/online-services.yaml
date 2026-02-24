@@ -1,105 +1,130 @@
 items:
   - lemma: "замовлення"
+    ipa: '[zɑˈmɔu̯lɛnʲːɑ]'
     translation: "order"
     pos: "noun"
     gender: "n"
     notes: "neuter gender noun with -я ending"
   - lemma: "кошик"
+    ipa: '[ˈkɔʃɪk]'
     translation: "cart / basket"
     pos: "noun"
     gender: "m"
     notes: "used both for physical baskets and online shopping carts"
   - lemma: "доставка"
+    ipa: '[dɔˈstɑu̯kɑ]'
     translation: "delivery"
     pos: "noun"
     gender: "f"
   - lemma: "додаток"
+    ipa: '[dɔˈdɑtɔk]'
     translation: "app / application"
     pos: "noun"
     gender: "m"
     notes: "specifically refers to mobile software"
   - lemma: "картка"
+    ipa: '[ˈkɑrtkɑ]'
     translation: "card"
     pos: "noun"
     gender: "f"
     notes: "bank card, central to digital payments"
   - lemma: "переказ"
+    ipa: '[pɛˈrɛkɑz]'
     translation: "transfer"
     pos: "noun"
     gender: "m"
   - lemma: "баланс"
+    ipa: '[bɑˈlɑns]'
     translation: "balance"
     pos: "noun"
     gender: "m"
   - lemma: "оплата"
+    ipa: '[ɔˈplɑtɑ]'
     translation: "payment"
     pos: "noun"
     gender: "f"
   - lemma: "підтвердження"
+    ipa: '[pʲiˈdtʋɛrd͡ʒɛnʲːɑ]'
     translation: "confirmation"
     pos: "noun"
     gender: "n"
   - lemma: "відстеження"
+    ipa: '[ʋʲiˈd͡zstɛʒɛnʲːɑ]'
     translation: "tracking"
     pos: "noun"
     gender: "n"
   - lemma: "підтримка"
+    ipa: '[pʲiˈdtrɪmkɑ]'
     translation: "support"
     pos: "noun"
     gender: "f"
   - lemma: "скарга"
+    ipa: '[ˈskɑrɦɑ]'
     translation: "complaint"
     pos: "noun"
     gender: "f"
   - lemma: "повернення"
+    ipa: '[pɔˈʋɛrnɛnʲːɑ]'
     translation: "return / refund"
     pos: "noun"
     gender: "n"
   - lemma: "банка"
+    ipa: '[ˈbɑnkɑ]'
     translation: "jar / fundraising tool"
     pos: "noun"
     gender: "f"
     notes: "Monobank cultural term for collective fundraising"
   - lemma: "промокод"
+    ipa: '[prɔmɔkɔd]'
     translation: "promo code"
     pos: "noun"
     gender: "m"
   - lemma: "кількість"
+    ipa: '[ˈkʲilʲkʲisʲtʲ]'
     translation: "quantity / amount"
     pos: "noun"
     gender: "f"
   - lemma: "номер"
+    ipa: '[ˈnɔmɛr]'
     translation: "number / ID"
     pos: "noun"
     gender: "m"
   - lemma: "термінал"
+    ipa: '[tɛrmʲiˈnɑl]'
     translation: "payment terminal"
     pos: "noun"
     gender: "m"
   - lemma: "скасувати"
+    ipa: '[skɑsuˈʋɑtɪ]'
     translation: "to cancel"
     pos: "verb"
     aspect: "perf"
   - lemma: "оформити"
+    ipa: '[ɔˈfɔrmɪtɪ]'
     translation: "to process / place"
     pos: "verb"
     aspect: "perf"
   - lemma: "поповнити"
+    ipa: '[pɔˈpɔu̯nɪtɪ]'
     translation: "to top up"
     pos: "verb"
     aspect: "perf"
   - lemma: "натиснути"
+    ipa: '[nɑˈtɪsnutɪ]'
     translation: "to press"
     pos: "verb"
     aspect: "perf"
   - lemma: "обрати"
+    ipa: '[ɔˈbrɑtɪ]'
     translation: "to choose / select"
     pos: "verb"
     aspect: "perf"
   - lemma: "підтвердити"
+    ipa: '[pʲiˈdtʋɛrdɪtɪ]'
     translation: "to confirm"
     pos: "verb"
     aspect: "perf"
   - lemma: "безкоштовний"
+    ipa: '[bɛzkɔˈʃtɔu̯nɪj]'
     translation: "free of charge"
     pos: "adj"

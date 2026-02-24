@@ -1,7 +1,7 @@
 # Audit Report: M10 — aspect-negation.md
 **Level:** B1 | **Module:** M10 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 12:08:43
+**Generated:** 2026-02-24 14:47:28
 
 ## Configuration
 **Type:** B1-grammar

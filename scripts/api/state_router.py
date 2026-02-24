@@ -96,7 +96,9 @@ PROFILE_MAP = {
     "b2-hist": "seminar", "c1-hist": "seminar", "c1-bio": "seminar",
     "lit": "seminar", "lit-essay": "seminar", "lit-hist-fic": "seminar",
     "lit-fantastika": "seminar", "lit-war": "seminar",
-    "lit-humor": "seminar", "lit-juvenile": "seminar",
+    "lit-humor": "seminar", "lit-youth": "seminar",
+    "lit-doc": "seminar", "lit-drama": "seminar",
+    "lit-crimea": "seminar",
     "oes": "seminar", "ruth": "seminar",
 }
 

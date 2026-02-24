@@ -8,6 +8,20 @@
       "ts": "2026-02-19T13:05:32Z",
       "task_id": "v3-syntez-dvokniazivstvo-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T15:43:18Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T15:45:47Z",
+      "task_id": "v3-syntez-dvokniazivstvo-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T17:51:10Z",
+      "attempts": 1
     }
   }
 }

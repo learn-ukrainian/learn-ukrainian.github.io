@@ -8,6 +8,20 @@
       "ts": "2026-02-19T15:10:28Z",
       "task_id": "v3-kozatski-povstannia-16-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T19:53:46Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T19:55:08Z",
+      "task_id": "v3-kozatski-povstannia-16-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T19:56:46Z",
+      "attempts": 2
     }
   }
 }

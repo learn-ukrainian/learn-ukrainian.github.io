@@ -2,40 +2,35 @@
 
 ## State Standard Reference
 §4.1.3.2: "Наказовий спосіб. Утворення різних форм наказового способу: ходити (ходи, ходімо, ходіть, хай / нехай ходить(-ять)); літати (літай, літаймо, літайте, хай / нехай літає(-ють))."
-§4.3.1.3: "Спонукальне речення (вираження розпорядження, прохання, поради, пропозиції): Дайте, будь ласка, дві склянки молока. Обміркуйте нашу пропозицію!"
-Alignment: This module directly addresses the B2 requirement for "softened forms and aspect choice in commands" and the syntactic ability to express requests, advice, and prohibitions using the correct aspectual nuance.
+Alignment: This module directly addresses the §4.1.3.2 standard by teaching the morphology of the imperative and expands to aspectual selection (perfective vs imperfective), modal infinitive ("не можна"), and stylistic nuance for B2 communicative competence.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **термін** (term) | High (General/Academic) | технічний термін, термін виконання, у визначений термін, спливає термін |
-| **поняття** (concept) | High (Academic) | ключове поняття, мати поняття, підміняти поняття, абстрактне поняття |
-| **процес** (process) | High (General) | навчальний процес, творчий процес, у процесі, контролювати процес |
-| **метод** (method) | High (Academic/Scientific) | ефективний метод, науковий метод, метод спроб і помилок, застосовувати метод |
-| **аналіз** (analysis) | High (Academic) | глибокий аналіз, проводити аналіз, хімічний аналіз, критичний аналіз |
-| **дослідження** (research) | High (Academic) | наукове дослідження, результати дослідження, проводити дослідження |
-| **наказ** (order) | Medium (Official/Military) | віддати наказ, виконувати наказ, згідно з наказом |
-| **прохання** (request) | Medium (Formal) | велике прохання, на прохання, звертатися з проханням |
-| **заборона** (prohibition) | Medium (Legal/General) | сувора заборона, накласти заборону, порушити заборону |
+| термін | High (Academic/Official) | термін виконання, встановити термін, достроково |
+| поняття | High (Academic) | ключове поняття, підміняти поняття, базове поняття |
+| процес | High (Academic/General) | навчальний процес, творчий процес, зупинити процес |
+| метод | High (Academic) | науковий метод, ефективний метод, метод спроб і помилок |
+| аналіз | High (Academic) | глибокий аналіз, проводити аналіз, критичний аналіз |
+| наказ | Medium (Official/Military) | віддати наказ, виконувати наказ, згідно з наказом |
+| прохання | Medium (General/Official) | велике прохання, на прохання, звернутися з проханням |
+| заборона | Medium (Official) | сувора заборона, порушити заборону, накласти заборону |
 
 ## Cultural Hooks
-1.  **Hospitality Etiquette**: In Ukrainian culture, invitations to enter a home or sit at a table typically use the **Imperfective** aspect to sound polite and welcoming ("Заходьте, будь ласка", "Сідайте", "Беріть"). Using the Perfective ("Зайдіть", "Сядьте", "Візьміть") can sound like a strict military order or an urgent demand, creating distance or offense.
-2.  **Superstitions (Забобони)**: Cultural prohibitions often start with "Не можна" + Imperfective infinitive (forbidden/taboo). Examples: "Не можна передавати речі через поріг" (passing things over the threshold is forbidden), "Не можна сидіти на куті столу" (sitting at the table corner is forbidden). This is a perfect context to teach "Prohibition vs. Impossibility".
+1. Українська гостинність (Ukrainian hospitality code): The use of the imperfective aspect for invitations («Сідайте», «Беріть», «Пригощайтеся») is a core cultural marker of welcoming, contrasted with the abrupt perfective («Сядьте», «Візьміть»). (Source: О. Воропай, «Звичаї нашого народу»).
+2. Забобони (Superstitions): Ukrainian folk beliefs heavily utilize the «Не можна + Imperfective infinitive» structure for taboos (e.g., «Не можна передавати речі через поріг», «Не можна виносити сміття ввечері»). (Source: Енциклопедія українознавства).
 
 ## Common Learner Errors
-1.  **The "Rude Guest" Error**: Using Perfective for polite invitations (e.g., saying "Сядь!" instead of "Сідай(те)!").
-    *   *Correction*: Use Imperfective for open invitations. "Сядь" implies "Sit down right now!" (like to a dog or a naughty child).
-2.  **The "Accident" Warning**: Using Imperfective instead of Perfective when warning against an accidental result.
-    *   *Error*: "Не падай!" (Don't be in the process of falling - weird).
-    *   *Correction*: "Не впади!" (Watch out so you don't fall - warning).
-    *   *Rule*: Prohibitions of *actions* are Imperfective ("Не біжи"). Warnings against *results* are Perfective ("Не впади").
-3.  **The "Impossible" Ban**: Confusing "Не можна" + Imp vs Perf.
-    *   *Error*: "Не можна відчинити вікно" when meaning "It is forbidden to open the window".
-    *   *Correction*: "Не можна відчиняти вікно" (Forbidden/Rule). "Не можна відчинити вікно" means "It is physically impossible to open (it's stuck)".
+1. «Сядь!» vs «Сідай!» → English speakers often use perfective commands, thinking they are neutral, which sounds like a military order or talking to a pet. Correct form: Imperfective for polite invitations.
+2. «Не забудь!» vs «Не забувай!» → Confusion between warning about an accidental result (Perfective: «Не впади!») and a general prohibition (Imperfective: «Не бігай!»).
+3. «Не можна відчинити» замість «Не можна відчиняти» → Confusing physical impossibility (Perfective) with prohibition (Imperfective).
 
 ## Cross-References
-- **Builds on**: A2 Imperative basics, B1 Aspect introduction.
-- **Prepares for**: C1 Official-Business style (Regulations/Instructions), C1 Academic style (Hypothesis/Methodology descriptions).
+- Builds on: B1.6 modules on aspect pairs (доконаний/недоконаний вид) and basic imperatives.
+- Prepares for: B2-PRO/C1 official-business style and academic discourse.
 
 ## Notes for Content Writing
-- **Contrast**: Explicitly contrast "Не можна" + НДВ (Taboo/Law) vs "Не можна" + ДВ (Physical impossibility).
+- Decolonized framing: Avoid comparing to Russian "нельзя". Explain Ukrainian modal "не можна" as having a dual semantic split natively.
+- Remember the Persona: "Військовий інструктор" (Military Instructor) requires integrating military register (накази) to contrast with everyday politeness (прохання), maintaining an authoritative yet educational tone.
+- Ensure 100% immersion; do not use English to explain the aspectual nuances. Use clear Ukrainian contextual examples and Mermaid charts for aspect selection.
+- Ensure IPA is NOT used in prose, only in the vocabulary section. Ukrainian letters for pronunciation sounds (e.g. [ɔ], [ɛ], [t͡ʃ]) if phonetics are mentioned.

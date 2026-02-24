@@ -1,0 +1,64 @@
+{
+  "module": "parenthetical-expressions",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T16:20:24.360665Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T16:20:10.483017Z",
+    "meta": "2026-02-23T23:40:30.331051Z",
+    "activities": "2026-02-24T15:47:46.859492Z",
+    "vocabulary": "2026-02-24T15:47:46.815357Z",
+    "plan": "2026-02-20T21:38:47.085495Z",
+    "research": "2026-02-23T23:40:30.327096Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5292/4000 (raw: 5829)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

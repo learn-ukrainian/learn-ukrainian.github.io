@@ -42,7 +42,7 @@ CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS   # Phase F, all tracks
 # Seminar tracks get research (phase 0) + review (phase 5)
 SEMINAR_TRACKS = {
     "c1-bio", "b2-hist", "c1-hist", "lit", "oes", "ruth",
-    "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-juvenile",
+    "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-youth",
 }
 
 # Professional tracks: need external research (not covered by State Standard)
@@ -196,7 +196,7 @@ TRACK_CONFIGS = {
         "quick_ref": QUICK_REF_DIR / "LIT.md",
         "validation_phases": [2, 3],
     },
-    "lit-juvenile": {
+    "lit-youth": {
         "type": "seminar",
         "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],

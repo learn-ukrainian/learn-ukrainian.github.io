@@ -2,36 +2,36 @@
   "module": "checkpoint-full-grammar",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:24:05.554839Z",
+  "last_audit": "2026-02-24T21:19:02.577400Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T23:46:17.015668Z",
-    "meta": "2026-02-23T23:44:08.393328Z",
+    "md": "2026-02-24T17:51:38.529156Z",
+    "meta": "2026-02-24T17:47:09.767912Z",
     "activities": "2026-02-23T23:48:50.273011Z",
-    "vocabulary": "2026-02-23T23:48:50.273350Z",
+    "vocabulary": "2026-02-24T17:47:27.103024Z",
     "plan": "2026-02-20T21:05:41.331649Z",
     "research": "2026-02-23T23:44:08.389792Z"
   },
   "gates": {
     "meta": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Valid Structure | Lint: 1 Format Errors"
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2755/2500 (raw: 2956) | pedagogy: 9 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3372/2500 (raw: 3623)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "32/1"
     },
     "naturalness": {
       "status": "info",
@@ -49,19 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "1 Outline Compliance Errors",
-      "Checkpoint Format Errors"
-    ],
-    "pass_count": 2,
-    "fail_count": 2,
-    "deferred_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

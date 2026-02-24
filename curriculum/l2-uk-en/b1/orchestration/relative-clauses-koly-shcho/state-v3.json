@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T23:13:27Z",
       "task_id": "v3-relative-clauses-koly-shcho-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T18:37:47Z",
+      "attempts": 3
     }
   }
 }

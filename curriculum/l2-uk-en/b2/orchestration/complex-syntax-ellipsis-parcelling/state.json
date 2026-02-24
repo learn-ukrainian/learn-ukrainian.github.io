@@ -1,0 +1,35 @@
+{
+  "slug": "complex-syntax-ellipsis-parcelling",
+  "track": "b2",
+  "module_num": 44,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:31:07Z",
+      "words": 4301,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:33:19Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:33:19Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:35:25Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:35:25Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T20:35:25Z"
+}

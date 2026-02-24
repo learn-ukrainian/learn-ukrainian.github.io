@@ -8,6 +8,20 @@
       "ts": "2026-02-19T14:33:45Z",
       "task_id": "v3-rich-pospolyta-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T18:01:57Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T18:04:29Z",
+      "task_id": "v3-rich-pospolyta-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T18:06:08Z",
+      "attempts": 2
     }
   }
 }

@@ -6,10 +6,10 @@
   "phases": {
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-23T21:52:52Z",
-      "words": 3222,
-      "attempts": 1
+      "timestamp": "2026-02-24T15:28:33Z",
+      "note": "v3-phase-B-adopt",
+      "words": 3222
     }
   },
-  "last_updated": "2026-02-23T21:52:52Z"
+  "last_updated": "2026-02-24T15:28:33Z"
 }

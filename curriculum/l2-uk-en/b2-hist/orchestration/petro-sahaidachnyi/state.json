@@ -1,0 +1,35 @@
+{
+  "slug": "petro-sahaidachnyi",
+  "track": "b2-hist",
+  "module_num": 45,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:00:24Z",
+      "words": 5442,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:02:15Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:02:15Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:03:21Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-24T20:03:21Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-24T20:03:21Z"
+}

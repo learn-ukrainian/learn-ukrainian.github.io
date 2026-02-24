@@ -1105,9 +1105,57 @@ LEVEL_CONFIG = {
         'required_types': {'reading', 'essay-response'},
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
     },
-    'LIT-JUVENILE': {
+    'LIT-YOUTH': {
         # Children's/YA lit
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 0,
+        'min_engagement': 4,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
+    'LIT-DOC': {
+        # Fact & Testimony
+        'target_words': 5000,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 0,
+        'min_engagement': 4,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
+    'LIT-DRAMA': {
+        # Modern Stage
+        'target_words': 5000,
+        'min_activities': 3,
+        'max_activities': 9,
+        'min_items_per_activity': 1,
+        'min_types_unique': 2,
+        'min_vocab': 0,
+        'min_engagement': 4,
+        'min_immersion': 95,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
+        'required_types': {'reading', 'essay-response'},
+        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+    },
+    'LIT-CRIMEA': {
+        # Crimean Voices
+        'target_words': 5000,
         'min_activities': 3,
         'max_activities': 9,
         'min_items_per_activity': 1,

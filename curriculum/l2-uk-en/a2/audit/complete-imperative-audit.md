@@ -1,7 +1,7 @@
 # Audit Report: M23 — complete-imperative.md
 **Level:** A2 | **Module:** M23 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 09:49:43
+**Generated:** 2026-02-24 21:17:47
 
 ## Configuration
 **Type:** A2-grammar

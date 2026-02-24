@@ -1,38 +1,33 @@
 # Дослідження: Дієприслівники недоконаного виду
 
 ## State Standard Reference
-§4.4.2: "просте речення з дієприслівниковим зворотом: Повернувшись з екскурсії, ми смачно пообідали в ресторані"
-Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо вживання дієприслівникових зворотів у простих ускладнених реченнях, фокусуючись на недоконаному виді (одночасність дій).
+§4.4.2: "просте речення з дієприслівниковим зворотом: Повернувшись з екскурсії, ми смачно пообідали в ресторані;"
+Alignment: This module introduces simple complicated sentences (прості ускладнені речення) with adverbial participle phrases, specifically focusing on imperfective forms as a tool for expressing simultaneous actions.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| читаючи | High (General Corpus) | читаючи книгу, читаючи новини, читаючи вголос |
-| дивлячись | High (Spoken/Literary) | дивлячись у вікно, дивлячись в очі, не дивлячись на (prepositional usage distinction) |
-| йдучи | High (Motion verbs) | йдучи вулицею, йдучи додому, йдучи на роботу |
-| знаючи | Medium (Cognitive) | знаючи правду, не знаючи дороги |
-| кажучи | High (Discourse marker) | чесно кажучи, інакше кажучи, м'яко кажучи |
+| читаючи | High (Web/Corpus) | читаючи книгу, читаючи новини, читаючи вголос |
+| дивлячись | High (Web/Corpus) | дивлячись у вікно, не дивлячись на |
+| йдучи | High (Web/Corpus) | йдучи вулицею, йдучи додому, йдучи на роботу |
+| знаючи | Medium (Web/Corpus)| знаючи правду, не знаючи дороги |
+| кажучи | High (Discourse) | чесно кажучи, інакше кажучи, м'яко кажучи |
 
 ## Cultural Hooks
-1. **"За двома зайцями"**: Культова українська приказка (і п'єса/фільм) "За двома зайцями поженешся — жодного не спіймаєш". Ідеальна ілюстрація спроби робити дві дії одночасно (суть недоконаного дієприслівника), що часто призводить до кумедних ситуацій.
-2. **Юлій Цезар по-українськи**: В українській культурі про людину, яка робить багато справ одночасно, часто жартома кажуть "ти як Юлій Цезар". Це можна використати для позитивного контексту багатозадачності.
+1. Класична п'єса М. Старицького «За двома зайцями» (1883) — ідеальна метафора для неможливості гнатися за двома цілями одночасно.
+2. «Юлій Цезар по-українськи» — культурний концепт українського мультитаскінгу та здатності виконувати декілька дій водночас (сучасний контекст поєднання волонтерства, роботи та повсякденного життя).
 
 ## Common Learner Errors
-1. **Дисбаланс підметів (Dangling Participle)**: "Йдучи додому, почався дощ" (Rain cannot walk).
-   → *Correct*: "Коли я йшов додому, почався дощ" або "Йдучи додому, я потрапив під дощ".
-   — *Why*: Learners forget the subject of the main verb must also perform the participle action.
-2. **Суфіксальна плутанина**: Використання *-ачи* для дієслів І дієвідміни (писачи замість пишучи).
-   → *Correct*: пишучи (від пишуть - І дієв.), але бачачи (від бачать - ІІ дієв.).
-   — *Why*: Confusion between conjugation groups (I vs II).
-3. **Безособові речення**: "Читаючи цей текст, мені стало сумно".
-   → *Correct*: "Читаючи цей текст, я засмутився".
-   — *Why*: Impersonal constructions (мені + adverb) strictly forbid adverbial participles in standard Ukrainian syntax.
+1. Дисбаланс підметів (Dangling Participle) → «Йдучи додому, почався дощ» замість «Йдучи додому, я змок» — The subject of the main verb must perform the participle action.
+2. Використання в безособових реченнях → «Читаючи текст, мені стало сумно» замість «Читаючи текст, я засмутився» — Adverbial participles cannot be used in impersonal sentences that lack an active nominative subject.
+3. Плутанина суфіксів → «писачи» (неправильно) замість «пишучи» — Failure to derive from the 3rd person plural present tense (пишуть).
 
 ## Cross-References
-- Builds on: **b1-41** (Complex Sentences 2) — Participles are taught as a way to "compress" complex sentences (підрядні речення часу/причини).
-- Prepares for: **b1-43** (Perfective Participles) — Contrast between simultaneous action (doing) and prior action (having done).
+- Builds on: b1-41 (Checkpoint Complex Sentences 2)
+- Prepares for: b1-43 (Adverbial Participles Perfective)
 
 ## Notes for Content Writing
-- **Pedagogy**: Use the "Sentence Compression" technique. Show a complex sentence ("Коли я йшов...") transforming into a participle phrase ("Йдучи...").
-- **Register**: While participles are often literary/formal, emphasize high-frequency "fixed" forms (чесно кажучи, не вважаючи) that are common in conversation to keep it B1-appropriate.
-- **Visuals**: Use a timeline visualization showing the main action as a point/line and the participle action as a parallel line running alongside it (simultaneity).
+- Українська мова — глибоко суб'єктна, тому дієприслівники вимагають чітко визначеного активного підмета.
+- Не використовуйте російську мову (наприклад, «деепричастия») як базу для порівняння. Пояснюйте творення через логіку компресії підрядних речень («Коли я...» → «...ючи»).
+- Використовуйте українські кутові лапки «...» та переконайтесь, що всі приклади уникли суржику (уникати кальок типу «получати», «кушати»).
+- Наголосіть на різниці між прямою дією «не дивлячись» (not looking) та прийменниковим комплексом «не дивлячись на» (despite).

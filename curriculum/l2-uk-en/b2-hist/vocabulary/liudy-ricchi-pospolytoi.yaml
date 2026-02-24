@@ -1,0 +1,136 @@
+items:
+  - lemma: "шляхта"
+    ipa: '[ˈʃlʲɑxtɑ]'
+    translation: "nobility"
+    pos: "noun"
+    gender: "f"
+    notes: "The privileged land-owning class in the Polish-Lithuanian Commonwealth."
+  - lemma: "магнат"
+    ipa: '[mɑˈɦnɑt]'
+    translation: "magnate"
+    pos: "noun"
+    gender: "m"
+    notes: "A powerful and wealthy aristocrat."
+  - lemma: "міщанин"
+    ipa: '[mʲiʃt͡ʃɑˈnɪn]'
+    translation: "burgher / town dweller"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кріпак"
+    ipa: '[krʲiˈpɑk]'
+    translation: "serf"
+    pos: "noun"
+    gender: "m"
+    notes: "A peasant legally bound to the land and subject to the will of the landowner."
+  - lemma: "панщина"
+    ipa: '[ˈpɑnʃt͡ʃɪnɑ]'
+    translation: "corvée / serfdom labor"
+    pos: "noun"
+    gender: "f"
+    notes: "Unpaid forced labor that serfs were obliged to perform on the lord's estate."
+  - lemma: "фільварок"
+    ipa: '[fʲilʲˈʋɑrɔk]'
+    translation: "folwark / manor farm"
+    pos: "noun"
+    gender: "m"
+    notes: "A large agricultural enterprise focused on producing surplus for export."
+  - lemma: "магдебурзьке право"
+    ipa: '[mɑɦdɛˈburzʲkɛ ˈprɑʋɔ]'
+    translation: "Magdeburg rights"
+    pos: "noun"
+    gender: "n"
+    notes: "A set of town privileges providing self-government."
+  - lemma: "сейм"
+    ipa: '[sɛjm]'
+    translation: "Sejm / parliament"
+    pos: "noun"
+    gender: "m"
+  - lemma: "унія"
+    ipa: '[ˈunʲijɑ]'
+    translation: "union"
+    pos: "noun"
+    gender: "f"
+    example: "Люблінська унія об'єднала дві держави."
+  - lemma: "полонізація"
+    ipa: '[pɔlɔnʲiˈzɑt͡sʲijɑ]'
+    translation: "Polonization"
+    pos: "noun"
+    gender: "f"
+    notes: "The process of assimilation into Polish culture and language."
+  - lemma: "привілей"
+    ipa: '[prɪʋʲiˈlɛj]'
+    translation: "privilege"
+    pos: "noun"
+    gender: "m"
+  - lemma: "статут"
+    ipa: '[stɑˈtut]'
+    translation: "statute"
+    pos: "noun"
+    gender: "m"
+    example: "Третій Литовський статут закріпив кріпацтво."
+  - lemma: "еліта"
+    ipa: '[ɛˈlʲitɑ]'
+    translation: "elite"
+    pos: "noun"
+    gender: "f"
+  - lemma: "самоврядування"
+    ipa: '[sɑmɔu̯rʲɑduˈʋɑnʲːɑ]'
+    translation: "self-government / autonomy"
+    pos: "noun"
+    gender: "n"
+  - lemma: "ремісник"
+    ipa: '[rɛmʲiˈsnɪk]'
+    translation: "craftsman / artisan"
+    pos: "noun"
+    gender: "m"
+  - lemma: "спадщина"
+    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
+    translation: "heritage / legacy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "виборний"
+    ipa: '[ʋɪbɔrnɪj]'
+    translation: "elective / elected"
+    pos: "adjective"
+    example: "Королівська влада була виборною."
+  - lemma: "католицизм"
+    ipa: '[kɑtɔlɪˈt͡sɪzm]'
+    translation: "Catholicism"
+    pos: "noun"
+    gender: "m"
+  - lemma: "православ'я"
+    ipa: '[prɑʋɔˈslɑu̯jɑ]'
+    translation: "Orthodoxy"
+    pos: "noun"
+    gender: "n"
+  - lemma: "братство"
+    ipa: '[ˈbrɑt͡stʋɔ]'
+    translation: "brotherhood / confraternity"
+    pos: "noun"
+    gender: "n"
+    notes: "Orthodox religious and educational organizations of townspeople."
+  - lemma: "безправ'я"
+    ipa: '[bɛˈzprɑu̯jɑ]'
+    translation: "lack of rights / lawlessness"
+    pos: "noun"
+    gender: "n"
+  - lemma: "втікач"
+    ipa: '[ʍtʲiˈkɑt͡ʃ]'
+    translation: "fugitive / runaway"
+    pos: "noun"
+    gender: "m"
+  - lemma: "закріпачення"
+    ipa: '[zɑkrʲiˈpɑt͡ʃɛnʲːɑ]'
+    translation: "enserfment"
+    pos: "noun"
+    gender: "n"
+  - lemma: "рівноправність"
+    ipa: '[rʲiu̯nɔˈprɑu̯nʲisʲtʲ]'
+    translation: "equality of rights"
+    pos: "noun"
+    gender: "f"
+  - lemma: "повстання"
+    ipa: '[pɔˈʋstɑnʲːɑ]'
+    translation: "rebellion / uprising"
+    pos: "noun"
+    gender: "n"

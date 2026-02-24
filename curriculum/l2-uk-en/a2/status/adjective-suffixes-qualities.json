@@ -2,7 +2,7 @@
   "module": "adjective-suffixes-qualities",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T11:14:52.645036Z",
+  "last_audit": "2026-02-24T21:18:09.250342Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T11:12:55.183501Z",
@@ -24,14 +24,14 @@
       "message": "3053/3000 (raw: 3369)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "25/1"
     },
     "naturalness": {
       "status": "info",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 7,
     "fail_count": 0,
-    "deferred_count": 3
+    "deferred_count": 0
   }
 }

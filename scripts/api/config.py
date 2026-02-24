@@ -35,7 +35,10 @@ LEVELS = [
     {"id": "lit-fantastika", "name": "LIT-FANTASTIKA - Fantasy/Sci-Fi", "path": "lit-fantastika"},
     {"id": "lit-war", "name": "LIT-WAR - War Literature", "path": "lit-war"},
     {"id": "lit-humor", "name": "LIT-HUMOR - Humor", "path": "lit-humor"},
-    {"id": "lit-juvenile", "name": "LIT-JUVENILE - Juvenile", "path": "lit-juvenile"},
+    {"id": "lit-youth", "name": "LIT-YOUTH - Youth & YA", "path": "lit-youth"},
+    {"id": "lit-doc", "name": "LIT-DOC - Fact & Testimony", "path": "lit-doc"},
+    {"id": "lit-drama", "name": "LIT-DRAMA - Modern Stage", "path": "lit-drama"},
+    {"id": "lit-crimea", "name": "LIT-CRIMEA - Voices of Crimea", "path": "lit-crimea"},
     # Historical language tracks
     {"id": "oes", "name": "OES - Old East Slavic", "path": "oes"},
     {"id": "ruth", "name": "RUTH - Ruthenian", "path": "ruth"},
@@ -44,7 +47,8 @@ LEVELS = [
 # Seminar tracks (require Phase 0 research)
 SEMINAR_TRACK_IDS = {
     "b2-hist", "c1-hist", "c1-bio",
-    "lit", "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-juvenile",
+    "lit", "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-youth",
+    "lit-doc", "lit-drama", "lit-crimea",
     "oes", "ruth",
 }
 

@@ -2,13 +2,13 @@
   "module": "a2-final-exam",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:25:44.098439Z",
+  "last_audit": "2026-02-24T21:19:48.914014Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T01:35:01.185174Z",
+    "md": "2026-02-24T20:27:52.227907Z",
     "meta": "2026-02-24T01:31:36.563054Z",
-    "activities": "2026-02-24T01:37:58.509118Z",
-    "vocabulary": "2026-02-24T01:37:58.509414Z",
+    "activities": "2026-02-24T20:26:56.775943Z",
+    "vocabulary": "2026-02-24T20:26:30.666801Z",
     "plan": "2026-02-20T21:06:48.679848Z",
     "research": "2026-02-24T01:31:36.559820Z"
   },
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "2989/2500 (raw: 3399) | engagement: 0/3 | pedagogy: 3 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3051/2500 (raw: 3461)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "32/1"
     },
     "naturalness": {
       "status": "info",
@@ -49,18 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Checkpoint Format Errors"
-    ],
-    "pass_count": 3,
-    "fail_count": 1,
-    "deferred_count": 3
+    "status": "pass",
+    "blocking_issues": [],
+    "pass_count": 7,
+    "fail_count": 0,
+    "deferred_count": 0
   }
 }

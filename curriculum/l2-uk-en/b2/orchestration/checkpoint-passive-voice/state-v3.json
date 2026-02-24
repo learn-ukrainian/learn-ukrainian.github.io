@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T22:32:25Z",
       "task_id": "v3-checkpoint-passive-voice-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T14:27:35Z",
+      "attempts": 4
     }
   }
 }

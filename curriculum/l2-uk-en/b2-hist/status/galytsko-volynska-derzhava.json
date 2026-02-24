@@ -1,0 +1,64 @@
+{
+  "module": "galytsko-volynska-derzhava",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-24T18:50:50.786387Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-24T18:50:49.554577Z",
+    "meta": "2026-02-19T14:01:34.971495Z",
+    "activities": "2026-02-24T10:49:59.738013Z",
+    "vocabulary": "2026-02-24T15:46:27.523432Z",
+    "plan": "2026-02-18T19:03:35.943656Z",
+    "research": "2026-02-22T10:35:24.495821Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "warn",
+      "violations": 0,
+      "message": "4939/5000 (raw: 5282) (61 short)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

@@ -4,8 +4,24 @@
   "mode": "v3",
   "phases": {
     "v3-A": {
-      "status": "failed",
-      "ts": "2026-02-24T06:10:10Z"
+      "status": "complete",
+      "ts": "2026-02-24T19:42:58Z",
+      "task_id": "v3-checkpoint-complex-sentences-2-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T19:47:19Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T19:50:09Z",
+      "task_id": "v3-checkpoint-complex-sentences-2-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T19:54:37Z",
+      "attempts": 2
     }
   }
 }

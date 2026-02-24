@@ -1,7 +1,7 @@
 # Audit Report: M02 — past-passive-participles.md
 **Level:** B2 | **Module:** M02 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 11:13:07
+**Generated:** 2026-02-24 14:46:54
 
 ## Configuration
 **Type:** B2-grammar

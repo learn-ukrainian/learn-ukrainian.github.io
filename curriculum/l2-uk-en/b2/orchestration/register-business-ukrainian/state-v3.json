@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T23:29:33Z",
       "task_id": "v3-register-business-ukrainian-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T16:17:13Z",
+      "attempts": 3
     }
   }
 }

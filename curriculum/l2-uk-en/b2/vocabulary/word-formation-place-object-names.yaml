@@ -1,120 +1,125 @@
 items:
-  - lemma: "читальня"
-    translation: "reading room"
-    pos: "noun"
-    gender: "f"
-  - lemma: "пральня"
-    translation: "laundry room"
-    pos: "noun"
-    gender: "f"
-  - lemma: "кав'ярня"
-    translation: "cafe / coffee shop"
-    pos: "noun"
-    gender: "f"
-  - lemma: "сховище"
-    translation: "shelter / storage"
-    pos: "noun"
-    gender: "n"
-  - lemma: "родовище"
-    translation: "deposit / field (mining)"
-    pos: "noun"
-    gender: "n"
-  - lemma: "лісництво"
-    translation: "forestry"
-    pos: "noun"
-    gender: "n"
-  - lemma: "Київщина"
-    translation: "Kyiv region"
-    pos: "noun"
-    gender: "f"
-  - lemma: "автостоянка"
-    translation: "parking lot"
-    pos: "noun"
-    gender: "f"
-  - lemma: "пекарня"
-    translation: "bakery"
-    pos: "noun"
-    gender: "f"
-  - lemma: "книгарня"
-    translation: "bookstore"
-    pos: "noun"
-    gender: "f"
-  - lemma: "лікарня"
-    translation: "hospital"
-    pos: "noun"
-    gender: "f"
-  - lemma: "перукарня"
-    translation: "hair salon / barbershop"
-    pos: "noun"
-    gender: "f"
-  - lemma: "майстерня"
-    translation: "workshop"
-    pos: "noun"
-    gender: "f"
-  - lemma: "їдальня"
-    translation: "dining room / canteen"
-    pos: "noun"
-    gender: "f"
-  - lemma: "вимикач"
-    translation: "switch (light)"
-    pos: "noun"
-    gender: "m"
-  - lemma: "обігрівач"
-    translation: "heater"
-    pos: "noun"
-    gender: "m"
-  - lemma: "чайник"
-    translation: "kettle"
-    pos: "noun"
-    gender: "m"
-  - lemma: "кавник"
-    translation: "coffee pot"
-    pos: "noun"
-    gender: "m"
-  - lemma: "холодильник"
-    translation: "refrigerator"
-    pos: "noun"
-    gender: "m"
-  - lemma: "запальничка"
-    translation: "lighter"
-    pos: "noun"
-    gender: "f"
-  - lemma: "праска"
-    translation: "iron (for clothes)"
-    pos: "noun"
-    gender: "f"
-  - lemma: "пилосос"
-    translation: "vacuum cleaner"
-    pos: "noun"
-    gender: "m"
-  - lemma: "вогнегасник"
-    translation: "fire extinguisher"
-    pos: "noun"
-    gender: "m"
-  - lemma: "навушники"
-    translation: "headphones"
-    pos: "noun"
-  - lemma: "кип'ятильник"
-    translation: "immersion heater / boiler"
-    pos: "noun"
-    gender: "m"
-  - lemma: "паяльник"
-    translation: "soldering iron"
-    pos: "noun"
-    gender: "m"
-  - lemma: "змішувач"
-    translation: "faucet / mixer tap"
-    pos: "noun"
-    gender: "m"
-  - lemma: "лічильник"
-    translation: "meter / counter"
-    pos: "noun"
-    gender: "m"
-  - lemma: "двигун"
-    translation: "engine / motor"
-    pos: "noun"
-    gender: "m"
-  - lemma: "попільничка"
-    translation: "ashtray"
-    pos: "noun"
-    gender: "f"
+  - lemma: 'термін'
+    translation: 'term'
+    pos: 'noun'
+    gender: 'm'
+    notes: 'наукова назва поняття'
+  - lemma: 'поняття'
+    translation: 'concept'
+    pos: 'noun'
+    gender: 'n'
+    notes: 'абстрактна одиниця мислення'
+  - lemma: 'процес'
+    translation: 'process'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'метод'
+    translation: 'method'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'читальня'
+    translation: 'reading room'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'історичний заклад хата-читальня'
+  - lemma: 'кав''ярня'
+    translation: 'coffee house'
+    pos: 'noun'
+    gender: 'f'
+    notes: 'питомо українська назва закладу'
+  - lemma: 'аналіз'
+    translation: 'analysis'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'синтез'
+    translation: 'synthesis'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'дослідження'
+    translation: 'research'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'сховище'
+    translation: 'storage/shelter'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'книгарня-кав''ярня'
+    translation: 'bookstore-cafe'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'кладовище'
+    translation: 'cemetery'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'їдальня'
+    translation: 'dining room'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'лікарня'
+    translation: 'hospital'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'пекарня'
+    translation: 'bakery'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'вітальня'
+    translation: 'living room'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'вбиральня'
+    translation: 'restroom'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'пральня'
+    translation: 'laundry room'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'прасувальня'
+    translation: 'ironing room'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'голярня'
+    translation: 'barbershop'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'кузня'
+    translation: 'smithy'
+    pos: 'noun'
+    gender: 'f'
+  - lemma: 'пасовище'
+    translation: 'pasture'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'стернище'
+    translation: 'stubble field'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'родовище'
+    translation: 'deposit'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'звалище'
+    translation: 'dump'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'городище'
+    translation: 'ancient settlement'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'горище'
+    translation: 'attic'
+    pos: 'noun'
+    gender: 'n'
+  - lemma: 'вітрище'
+    translation: 'strong wind'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'дощище'
+    translation: 'heavy rain'
+    pos: 'noun'
+    gender: 'm'
+  - lemma: 'житлище'
+    translation: 'dwelling'
+    pos: 'noun'
+    gender: 'n'

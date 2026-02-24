@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-23T23:40:14Z",
       "task_id": "v3-register-academic-ukrainian-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T16:37:21Z",
+      "attempts": 3
     }
   }
 }

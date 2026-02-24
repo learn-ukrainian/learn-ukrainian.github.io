@@ -1,99 +1,124 @@
 items:
   - lemma: "аптека"
+    ipa: '[ɑˈptɛkɑ]'
     translation: "pharmacy"
     pos: "noun"
     gender: "f"
   - lemma: "ліки"
+    ipa: '[ˈlʲikɪ]'
     translation: "medicine"
     pos: "noun"
     notes: "pluralia tantum"
   - lemma: "таблетка"
+    ipa: '[tɑˈblɛtkɑ]'
     translation: "pill"
     pos: "noun"
     gender: "f"
   - lemma: "рецепт"
+    ipa: '[rɛˈt͡sɛpt]'
     translation: "prescription"
     pos: "noun"
     gender: "m"
   - lemma: "біль"
+    ipa: '[bʲilʲ]'
     translation: "pain"
     pos: "noun"
     gender: "m"
   - lemma: "кашель"
+    ipa: '[ˈkɑʃɛlʲ]'
     translation: "cough"
     pos: "noun"
     gender: "m"
   - lemma: "температура"
+    ipa: '[tɛmpɛrɑˈturɑ]'
     translation: "fever"
     pos: "noun"
     gender: "f"
   - lemma: "приймати"
+    ipa: '[prɪjˈmɑtɪ]'
     translation: "to take"
     pos: "verb"
     aspect: "impf"
   - lemma: "сироп"
+    ipa: '[sɪˈrɔp]'
     translation: "syrup"
     pos: "noun"
     gender: "m"
   - lemma: "мазь"
+    ipa: '[mɑzʲ]'
     translation: "ointment"
     pos: "noun"
     gender: "f"
   - lemma: "дозування"
+    ipa: '[dɔzuˈʋɑnʲːɑ]'
     translation: "dosage"
     pos: "noun"
     gender: "n"
   - lemma: "ефект"
+    ipa: '[ɛˈfɛkt]'
     translation: "effect"
     pos: "noun"
     gender: "m"
   - lemma: "протипоказання"
+    ipa: '[prɔtɪpɔkɑˈzɑnʲːɑ]'
     translation: "contraindication"
     pos: "noun"
     gender: "n"
   - lemma: "алергія"
+    ipa: '[ɑlɛrˈɦʲijɑ]'
     translation: "allergy"
     pos: "noun"
     gender: "f"
   - lemma: "фармацевт"
+    ipa: '[fɑrmɑˈt͡sɛu̯t]'
     translation: "pharmacist"
     pos: "noun"
     gender: "m"
   - lemma: "застосування"
+    ipa: '[zɑstɔsuˈʋɑnʲːɑ]'
     translation: "application"
     pos: "noun"
     gender: "n"
   - lemma: "застуда"
+    ipa: '[zɑˈstudɑ]'
     translation: "cold"
     pos: "noun"
     gender: "f"
   - lemma: "капсула"
+    ipa: '[ˈkɑpsulɑ]'
     translation: "capsule"
     pos: "noun"
     gender: "f"
   - lemma: "краплі"
+    ipa: '[ˈkrɑplʲi]'
     translation: "drops"
     pos: "noun"
     notes: "pluralia tantum"
   - lemma: "фітотерапія"
+    ipa: '[fʲitɔtɛrɑˈpʲijɑ]'
     translation: "herbal medicine"
     pos: "noun"
     gender: "f"
   - lemma: "доба"
+    ipa: '[dɔˈbɑ]'
     translation: "24 hours"
     pos: "noun"
     gender: "f"
   - lemma: "інструкція"
+    ipa: '[inˈstrukt͡sʲijɑ]'
     translation: "instruction"
     pos: "noun"
     gender: "f"
   - lemma: "жарознижувальний"
+    ipa: '[ʒɑrɔˈznɪʒuʋɑlʲnɪj]'
     translation: "antipyretic"
     pos: "adj"
   - lemma: "знеболювальний"
+    ipa: '[znɛˈbɔlʲuʋɑlʲnɪj]'
     translation: "painkiller"
     pos: "adj"
   - lemma: "зберігати"
+    ipa: '[zbɛrʲiˈɦɑtɪ]'
     translation: "to store"
     pos: "verb"
     aspect: "impf"

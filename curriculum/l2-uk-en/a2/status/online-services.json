@@ -2,13 +2,13 @@
   "module": "online-services",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T09:25:39.628640Z",
+  "last_audit": "2026-02-24T21:19:44.861395Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T01:22:03.414479Z",
+    "md": "2026-02-24T20:17:50.479172Z",
     "meta": "2026-02-24T01:17:30.654318Z",
-    "activities": "2026-02-24T01:24:46.226267Z",
-    "vocabulary": "2026-02-24T01:24:46.226609Z",
+    "activities": "2026-02-24T20:17:33.902906Z",
+    "vocabulary": "2026-02-24T20:14:45.216323Z",
     "plan": "2026-02-20T21:06:38.043825Z",
     "research": "2026-02-24T01:17:30.650782Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "4287/3000 (raw: 4657) | engagement: 0/4 | pedagogy: 24 violations | immersion: 97.0% HIGH (target 75-90% (A2.3))"
+      "status": "pass",
+      "violations": 0,
+      "message": "4257/3000 (raw: 4613)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

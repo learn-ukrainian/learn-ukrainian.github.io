@@ -33,7 +33,6 @@ const config: Config = {
   projectName: 'learn-ukrainian.github.io',
 
   onBrokenLinks: 'warn',
-  onBrokenMarkdownLinks: 'warn',
 
   i18n: {
     defaultLocale: 'en',
@@ -42,6 +41,9 @@ const config: Config = {
 
   markdown: {
     mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
   },
 
   themes: ['@docusaurus/theme-mermaid'],
@@ -70,6 +72,7 @@ const config: Config = {
               'resources',       // For further reading
               'solution',        // For exercise solutions (collapsible)
               'context',         // For contextual information
+              'analysis',        // For analytical deep dives
             ],
           },
         },
@@ -153,6 +156,42 @@ const config: Config = {
             {
               label: 'LIT - Literature & Classics',
               to: '/docs/lit/',
+            },
+            {
+              label: 'LIT-DOC - Fact & Testimony',
+              to: '/docs/lit-doc/',
+            },
+            {
+              label: 'LIT-DRAMA - Modern Stage',
+              to: '/docs/lit-drama/',
+            },
+            {
+              label: 'LIT-CRIMEA - Voices of Crimea',
+              to: '/docs/lit-crimea/',
+            },
+            {
+              label: 'LIT-ESSAY - Essays',
+              to: '/docs/lit-essay/',
+            },
+            {
+              label: 'LIT-HIST-FIC - Historical Fiction',
+              to: '/docs/lit-hist-fic/',
+            },
+            {
+              label: 'LIT-FANTASTIKA - Sci-Fi & Fantasy',
+              to: '/docs/lit-fantastika/',
+            },
+            {
+              label: 'LIT-WAR - War Literature',
+              to: '/docs/lit-war/',
+            },
+            {
+              label: 'LIT-HUMOR - Humor & Satire',
+              to: '/docs/lit-humor/',
+            },
+            {
+              label: 'LIT-YOUTH - Youth & YA',
+              to: '/docs/lit-youth/',
             },
             {
               type: 'html',

@@ -119,7 +119,7 @@ items:
     translation: "suffix for specific items or places"
     pos: "suffix"
   - lemma: "прикметник"
-    ipa: '[prɪkˈmɛtnɪk]'
+    ipa: '[prɪˈkmɛtnɪk]'
     translation: "adjective"
     pos: "noun"
     gender: "m"
