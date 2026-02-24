@@ -76,9 +76,13 @@ def get_module_files(level):
     """Get existing module files for a level (core levels with slug-based files)."""
     meta_dir = CURRICULUM_DIR / level / "meta"
     mdx_dir = DOCS_DIR / level
+    review_dir = CURRICULUM_DIR / level / "review"
+    audit_dir = CURRICULUM_DIR / level / "audit"
 
     meta_files = {}
     mdx_files = {}
+    review_files = {}
+    audit_files = {}
 
     # Use manifest for module lookup
     modules = get_modules_for_level(level)
@@ -90,8 +94,16 @@ def get_module_files(level):
         mdx_file = mdx_dir / f"{mod.slug}.mdx"
         if mdx_file.exists():
             mdx_files[mod.local_num] = mdx_file
+            
+        review_file = review_dir / f"{mod.slug}-review.md"
+        if review_file.exists():
+            review_files[mod.local_num] = review_file
+            
+        audit_file = audit_dir / f"{mod.slug}-audit.md"
+        if audit_file.exists():
+            audit_files[mod.local_num] = audit_file
 
-    return meta_files, mdx_files
+    return meta_files, mdx_files, review_files, audit_files
 
 
 def get_track_module_files(level):
@@ -100,9 +112,13 @@ def get_track_module_files(level):
     Uses manifest to get module list and checks for slug-based MDX files.
     """
     mdx_dir = DOCS_DIR / level
+    review_dir = CURRICULUM_DIR / level / "review"
+    audit_dir = CURRICULUM_DIR / level / "audit"
     modules = get_modules_for_level(level)
 
     mdx_files = {}  # {local_num: mdx_path}
+    review_files = {}
+    audit_files = {}
     meta_data = {}  # {local_num: (title, subtitle)}
 
     for mod in modules:
@@ -110,11 +126,19 @@ def get_track_module_files(level):
         mdx_path = mdx_dir / f"{mod.slug}.mdx"
         if mdx_path.exists():
             mdx_files[mod.local_num] = mdx_path
+            
+        review_file = review_dir / f"{mod.slug}-review.md"
+        if review_file.exists():
+            review_files[mod.local_num] = review_file
+            
+        audit_file = audit_dir / f"{mod.slug}-audit.md"
+        if audit_file.exists():
+            audit_files[mod.local_num] = audit_file
 
         # Store meta data from manifest
         meta_data[mod.local_num] = (mod.title, '')
 
-    return meta_data, mdx_files
+    return meta_data, mdx_files, review_files, audit_files
 
 
 def get_module_title(meta_file):
@@ -134,21 +158,23 @@ def build_level_landing(level, config, is_track=False):
     introduction = config.get('introduction', '').strip()
 
     if is_track:
-        meta_files, mdx_files = get_track_module_files(level)
+        meta_files, mdx_files, review_files, audit_files = get_track_module_files(level)
     else:
-        meta_files, mdx_files = get_module_files(level)
+        meta_files, mdx_files, review_files, audit_files = get_module_files(level)
 
     # Count stats
-    ready_count = len(mdx_files)
+    built_count = len(mdx_files)
+    ready_count = len(review_files)
+    qa_count = built_count - ready_count
     in_progress_count = len([n for n in meta_files if n not in mdx_files])
 
     # Determine status emoji for header
-    if ready_count == planned:
+    if ready_count == planned and planned > 0:
         status_emoji = "✅"
         status_text = "Завершено"
-    elif ready_count > 0:
+    elif built_count > 0:
         status_emoji = "🔍"
-        status_text = f"На перевірці — {ready_count}/{planned} модулів"
+        status_text = f"На перевірці — {ready_count}/{planned} готово, {qa_count} у QA"
     else:
         status_emoji = "📋"
         status_text = "Заплановано"
@@ -161,7 +187,12 @@ def build_level_landing(level, config, is_track=False):
     for mod in modules:
         num = mod.local_num
         if num in mdx_files:
-            status = "✅"
+            if num in review_files:
+                status = "✅"
+            elif num in audit_files:
+                status = "QA"
+            else:
+                status = "✅" # Fallback if no audit but MDX exists
             link = f"[{mod.title}](./{mod.slug})"
         elif num in meta_files:
             status = "🚧"
@@ -198,7 +229,8 @@ title: {LEVEL_NAMES_UK[level]}
 
 ## Прогрес
 
-- **Готові модулі:** {ready_count}
+- **Готові модулі (✅):** {ready_count}
+- **У черзі на перевірку (QA):** {qa_count}
 - **Заплановані модулі:** {planned}
 - **Завершення:** {round(ready_count / planned * 100) if planned > 0 else 0}%
 """
@@ -219,8 +251,10 @@ def build_intro_page(level_status):
         config = level_status.get(level, {})
         planned = config.get('planned', 0)
         description = config.get('description', '')
-        meta_files, mdx_files = get_module_files(level)
-        ready = len(mdx_files)
+        meta_files, mdx_files, review_files, audit_files = get_module_files(level)
+        ready = len(review_files)
+        built = len(mdx_files)
+        qa = built - ready
 
         total_lessons += ready
         total_planned += planned
@@ -229,10 +263,10 @@ def build_intro_page(level_status):
         status_override = config.get('status', 'auto')
         if status_override == 'complete':
             status = "✅ Complete"
-        elif ready == planned:
-            status = "🔍 In QA"
-        elif ready > 0:
-            status = "🚧 In Progress"
+        elif ready == planned and planned > 0:
+            status = "✅ Complete"
+        elif built > 0:
+            status = f"🔍 In QA ({ready}/{planned})"
         else:
             status = "📋 Planned"
 
@@ -244,8 +278,10 @@ def build_intro_page(level_status):
             continue
         planned = config.get('planned', 0)
         description = config.get('description', '')
-        meta_files, mdx_files = get_track_module_files(level)
-        ready = len(mdx_files)
+        meta_files, mdx_files, review_files, audit_files = get_track_module_files(level)
+        ready = len(review_files)
+        built = len(mdx_files)
+        qa = built - ready
 
         total_lessons += ready
         total_planned += planned
@@ -253,8 +289,8 @@ def build_intro_page(level_status):
         # Determine status
         if ready == planned and planned > 0:
             status = "✅ Complete"
-        elif ready > 0:
-            status = "🚧 In Progress"
+        elif built > 0:
+            status = f"🔍 In QA ({ready}/{planned})"
         else:
             status = "📋 Planned"
 
