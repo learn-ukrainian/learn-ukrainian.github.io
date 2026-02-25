@@ -39,6 +39,13 @@
   gap: 1.5rem;
 }
 
+/* Remove top padding from the first question/item in every activity type.
+ * Gap handles inter-item spacing; padding-top on the first item just creates
+ * unwanted extra space between the header and the first piece of content. */
+.activityContent > *:first-child {
+  padding-top: 0;
+}
+
 .instruction {
   font-size: 1rem;
   color: var(--ifm-color-emphasis-700);

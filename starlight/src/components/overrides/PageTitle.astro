@@ -1,0 +1,10 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+
+const { hasSidebar } = Astro.props;
+// On splash pages (hasSidebar=false) the custom Home component renders its
+// own full-featured hero with a title. Rendering Starlight's PageTitle as
+// well would produce a duplicate "Learn Ukrainian" heading.
+---
+{hasSidebar && <Default {...Astro.props}><slot /></Default>}

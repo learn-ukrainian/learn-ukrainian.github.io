@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
 import { shuffleNotCorrect } from './utils';
@@ -112,10 +112,12 @@ export function AnagramQuestion({ scrambled, answer, hint, isUkrainian }: Anagra
   const incorrectLabel = isUkrainian ? '✗ Неправильно. Відповідь:' : '✗ The answer is:';
 
   return (
-    <div className={styles.anagramQuestion}>
+    <div className={styles.anagramQuestion} data-activity="anagram-question">
+      {hint && <p className={styles.hint}>💡 {hint}</p>}
       {/* Answer Zone */}
       <div
         className={`${styles.answerZone} ${showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''}`}
+        data-activity="answer-zone"
         onDragOver={handleDragOver}
         onDrop={handleDropOnAnswer}
       >
@@ -145,6 +147,7 @@ export function AnagramQuestion({ scrambled, answer, hint, isUkrainian }: Anagra
       {/* Letter Bank */}
       <div
         className={styles.letterBank}
+        data-activity="letter-bank"
         onDragOver={handleDragOver}
         onDrop={handleDropOnBank}
       >
@@ -184,7 +187,11 @@ export function AnagramQuestion({ scrambled, answer, hint, isUkrainian }: Anagra
       </div>
 
       {showResult && (
-        <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
+        <div
+          className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+          data-activity="feedback"
+          data-correct={isCorrect ? 'true' : 'false'}
+        >
           {isCorrect ? correctLabel : `${incorrectLabel} ${answer}`}
         </div>
       )}

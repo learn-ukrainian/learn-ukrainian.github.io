@@ -139,10 +139,12 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
   const incorrectLabel = isUkrainian ? '✗ Правильне речення:' : '✗ The correct sentence is:';
 
   return (
-    <div className={styles.unjumbleQuestion}>
+    <div className={styles.unjumbleQuestion} data-activity="unjumble-question">
+      {hint && <p className={styles.hint}>💡 {hint}</p>}
       {/* Sentence Builder Zone */}
       <div
         className={`${styles.sentenceBuilder} ${showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''}`}
+        data-activity="sentence-builder"
         onDragOver={handleDragOver}
         onDrop={handleDropOnSentence}
       >
@@ -174,6 +176,7 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
       {/* Word Bank */}
       <div
         className={styles.wordBank}
+        data-activity="word-bank"
         onDragOver={handleDragOver}
         onDrop={handleDropOnBank}
       >
@@ -213,7 +216,11 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
       </div>
 
       {showResult && (
-        <div className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}>
+        <div
+          className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+          data-activity="feedback"
+          data-correct={isCorrect ? 'true' : 'false'}
+        >
           {isCorrect ? correctLabel : `${incorrectLabel} ${answer}`}
         </div>
       )}

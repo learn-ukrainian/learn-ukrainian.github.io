@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 import starlightDocSearch from '@astrojs/starlight-docsearch';
 import rehypeMermaid from 'rehype-mermaid';
 
@@ -11,13 +12,30 @@ export default defineConfig({
   site: 'https://learn-ukrainian.github.io',
   trailingSlash: 'always',
 
+  compressHTML: true,
+
   markdown: {
     rehypePlugins: [rehypeMermaid],
   },
+
+  // Prevent duplicate React instances (SSR + client hydration)
+  vite: {
+    resolve: {
+      dedupe: ['react', 'react-dom'],
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom'],
+    },
+  },
+
   integrations: [
     starlight({
       title: 'Learn Ukrainian',
       tagline: 'Мова – душа народу • Language is the soul of a nation',
+      logo: {
+        src: './src/assets/logo.svg',
+        alt: 'Learn Ukrainian logo',
+      },
       social: [
         {
           label: 'GitHub',
@@ -34,6 +52,12 @@ export default defineConfig({
           },
         },
       ],
+      credits: false,
+      components: {
+        // Suppress Starlight's auto-rendered PageTitle on splash pages — the
+        // custom Home component renders its own hero with a title.
+        PageTitle: './src/components/overrides/PageTitle.astro',
+      },
       customCss: [
         './src/css/custom.css',
       ],
@@ -43,9 +67,10 @@ export default defineConfig({
           apiKey: '4413bc11f7878cb2605766f6a050bdcc',
           indexName: 'https_learn_ukrainian_github_io_pages',
           searchParameters: {
+            // Note: removed 'docusaurus_tag' — that was a Docusaurus-specific facet
+            // that does not exist in Starlight and caused zero search results.
             facetFilters: [
               ['language:en', 'language:uk'],
-              ['docusaurus_tag:docs-default-current'],
             ],
           },
         }),
@@ -69,5 +94,6 @@ export default defineConfig({
       ],
     }),
     react(),
+    sitemap(),
   ],
 });

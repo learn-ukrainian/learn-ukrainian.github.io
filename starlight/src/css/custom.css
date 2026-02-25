@@ -31,6 +31,34 @@
   --co-warning: #FBBC04;
   --co-info: #4285F4;
   
+  /* ── Infima / Docusaurus compatibility shim ──────────────────────────────
+   * Starlight does not define --ifm-* variables. Activities.module.css and
+   * other migrated components depend on these. Define them here so the
+   * interactive activity components render correctly.
+   * ──────────────────────────────────────────────────────────────────────── */
+
+  /* Backgrounds */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f8f9fa;
+  --ifm-card-background-color: #ffffff;
+
+  /* Text */
+  --ifm-font-color-base: #1c1e21;
+  --ifm-heading-color: #1c1e21;
+
+  /* Neutral emphasis scale (light → dark) */
+  --ifm-color-emphasis-0:    #ffffff;
+  --ifm-color-emphasis-100:  #f5f6f7;
+  --ifm-color-emphasis-200:  #ebeced;
+  --ifm-color-emphasis-300:  #dadde1;
+  --ifm-color-emphasis-400:  #c8ccd0;
+  --ifm-color-emphasis-500:  #989898;
+  --ifm-color-emphasis-600:  #6b6b6b;
+  --ifm-color-emphasis-700:  #444950;
+  --ifm-color-emphasis-800:  #303846;
+  --ifm-color-emphasis-900:  #1c1e21;
+  --ifm-color-emphasis-1000: #000000;
+
   /* Docusaurus overrides */
   --ifm-color-primary: #0057B7;
   --ifm-color-primary-dark: #004da5;
@@ -60,6 +88,25 @@
 
 /* Dark mode */
 [data-theme='dark'] {
+  /* Infima shim – dark overrides */
+  --ifm-background-color: #1b1b1d;
+  --ifm-background-surface-color: #242526;
+  --ifm-card-background-color: #242526;
+  --ifm-font-color-base: #e3e3e3;
+  --ifm-heading-color: #e3e3e3;
+
+  --ifm-color-emphasis-0:    #000000;
+  --ifm-color-emphasis-100:  #1c1e21;
+  --ifm-color-emphasis-200:  #303846;
+  --ifm-color-emphasis-300:  #444950;
+  --ifm-color-emphasis-400:  #585f65;
+  --ifm-color-emphasis-500:  #6b6b6b;
+  --ifm-color-emphasis-600:  #989898;
+  --ifm-color-emphasis-700:  #c8ccd0;
+  --ifm-color-emphasis-800:  #dadde1;
+  --ifm-color-emphasis-900:  #ebeced;
+  --ifm-color-emphasis-1000: #ffffff;
+
   --co-gray-50: #1a1a2e;
   --co-gray-100: #16213e;
   --co-gray-200: #1f2937;
@@ -80,6 +127,49 @@
   --ifm-background-surface-color: #1a1a2e;
   
   --docusaurus-highlighted-code-line-bg: rgba(91, 155, 213, 0.2);
+}
+
+/* ============= HOME PAGE — FULL-WIDTH LAYOUT ============= */
+/*
+ * On the splash/home page the Home React component must render edge-to-edge.
+ * Starlight's .sl-container caps content at 1080px and .content-panel adds
+ * 24px of horizontal padding, creating a "framed" look for the hero.
+ * When the home-wrapper div is present we remove all those constraints.
+ */
+.sl-container:has(.home-wrapper) {
+  max-width: unset;
+}
+.content-panel:has(.home-wrapper) {
+  padding: 0;
+}
+/* Hide the empty first ContentPanel that held the (suppressed) PageTitle.
+ * It has no .sl-markdown-content child, so only the home page is targeted. */
+body:has(.home-wrapper) .content-panel:not(:has(.sl-markdown-content)) {
+  display: none;
+}
+/* Hide Starlight's doc footer (prev/next pagination) on the home page —
+ * the Home component renders its own full footer. */
+body:has(.home-wrapper) footer.sl-flex {
+  display: none;
+}
+
+/* ============= ACTIVITY COMPONENT ISOLATION ============= */
+/*
+ * Starlight's markdown.css applies `margin-top: var(--sl-content-gap-y)` to
+ * every block element inside .sl-markdown-content via a lobotomized-owl
+ * selector. This causes triple-stacked spacing inside activity components:
+ *   flex gap (1.5rem) + Starlight margin (1rem) + CSS Module padding (1.25rem)
+ *
+ * Activity components manage their own spacing via CSS Modules with hard-coded
+ * values. By zeroing --sl-content-gap-y inside astro-island elements, we
+ * neutralise Starlight's variable-driven margins without touching our own
+ * CSS Module margin-top rules (which use hard-coded values, not the variable).
+ *
+ * The astro-island element itself still receives Starlight's outer top margin
+ * (the rule that targets astro-island > :first-child after a block element).
+ */
+.sl-markdown-content astro-island {
+  --sl-content-gap-y: 0;
 }
 
 /* ============= GLOBAL STYLES ============= */

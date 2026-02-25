@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://learn-ukrainian.github.io/sitemap-index.xml

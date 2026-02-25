@@ -7,10 +7,15 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
+    "@astrojs/sitemap": "^3.7.0",
     "@astrojs/starlight": "^0.37.6",
     "@astrojs/starlight-docsearch": "^0.6.1",
     "@types/react": "^19.2.14",
@@ -21,5 +26,14 @@
     "react-dom": "^19.2.4",
     "rehype-mermaid": "^3.0.0",
     "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
+    "happy-dom": "^17.6.3",
+    "vitest": "^3.2.4"
   }
 }

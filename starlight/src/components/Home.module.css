@@ -380,6 +380,64 @@
   }
 }
 
+/* ============= SITE FOOTER ============= */
+.siteFooter {
+  background: linear-gradient(180deg, #16213e 0%, #0f0f1a 100%);
+  border-top: 4px solid;
+  border-image: linear-gradient(90deg, #0057B7, #FFD700) 1;
+  padding: 3rem 0 1.5rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footerCol {
+  flex: 1 1 140px;
+}
+
+.footerCol h4 {
+  color: #FFD700;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.75rem 0;
+}
+
+.footerCol ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footerCol ul li {
+  margin-bottom: 0.4rem;
+}
+
+.footerCol ul li a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.footerCol ul li a:hover {
+  color: #FFD700;
+}
+
+.footerCopyright {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.25rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
 /* ============= ACKNOWLEDGMENTS SECTION ============= */
 .acknowledgments {
   padding: 3rem 0;
