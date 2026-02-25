@@ -1,0 +1,78 @@
+sequence: 211
+module: lit-211
+level: LIT
+slug: baroque-poetry-velychkovsky
+version: '2.0'
+title: Baroque Poetry Velychkovsky
+subtitle: Baroque Poetry Velychkovsky
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Іван Величковський і Києво-Могилянська академія
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+- section: 'Аналіз твору: Сюжет та структура'
+  points:
+  - Ключові твори — фігурна поезія (carmina figurata), макаронічні вірші
+  - Впливи та джерела
+  - Бароковий синтез як рушійна сила
+- section: Герменевтика та ключові образи
+  points:
+  - Детальний розбір символіки
+  - Система образів і їхня еволюція
+  - Архетипи та релігійні підтексти
+- section: Мова, стиль та поетика
+  points:
+  - Стилістичні інновації барокового автора
+  - Церковнослов'янізми і проста мова в ліриці
+  - Особливості ритміки та синтаксису
+- section: Деколонізаційний вимір
+  points:
+  - Який імперський міф руйнує цей текст?
+  - КМА як центр незалежної культурної традиції
+  - Опір асиміляції та культурне самоствердження
+- section: Підсумок та рецепція
+  points:
+  - Вплив на розвиток барокової літератури
+  - Місце КМА в европейській традиції бароко
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових уривків baroque-poetry-velychkovsky
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Філософський або літературознавчий аспект твору
+  output: Аналітичне есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-210
+connects_to:
+- lit-212
+module_type: literature
+sources:
+- name: Baroque Poetry Velychkovsky — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+immersion: 100% Ukrainian
+phase: LIT.0 Baroque Heritage 1620-1798
+objectives:
+- Проаналізувати барокову поезію Величковського у контексті КМА
+- Дослідити стилістичні особливості фігурної поезії
+- Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Baroque Rhetorician
+word_target: 5000

@@ -1,0 +1,78 @@
+sequence: 198
+module: lit-198
+level: LIT
+slug: crimean-tatar-oral-tradition
+version: '2.0'
+title: Crimean Tatar Oral Tradition
+subtitle: Crimean Tatar Oral Tradition
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Кримськотатарська усна традиція — дестани, манелер і пам'ять у вигнанні
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+- section: 'Аналіз твору: Сюжет та структура'
+  points:
+  - Ключові жанри — дестан, мане, тюркю
+  - Впливи та джерела
+  - Усна традиція як фортеця ідентичності
+- section: Герменевтика та ключові образи
+  points:
+  - Детальний розбір символіки
+  - Жіноча пам'ять і мане депортації
+  - Архетипи та народні підтексти
+- section: Мова, стиль та поетика
+  points:
+  - Стилістичні інновації усної поезії
+  - Ритмічні принципи і паралелізм
+  - Особливості ритміки та синтаксису
+- section: Деколонізаційний вимір
+  points:
+  - Який імперський міф руйнує цей текст?
+  - Усна традиція проти музеєфікації
+  - Опір асиміляції та культурне самоствердження
+- section: Підсумок та рецепція
+  points:
+  - Вплив на сучасну кримськотатарську культуру
+  - Традиція після 2014 — вигнання 2.0
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових уривків crimean-tatar-oral-tradition
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Філософський або літературознавчий аспект твору
+  output: Аналітичне есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-197
+connects_to:
+- lit-199
+module_type: literature
+sources:
+- name: Crimean Tatar Oral Tradition — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+immersion: 100% Ukrainian
+phase: LIT.5 Independence Era 1991-Present
+objectives:
+- Проаналізувати кримськотатарську усну традицію у контексті вигнання
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення традиції
+persona:
+  voice: Senior Philologist & Critic
+  role: Keeper of Oral Memory
+word_target: 5000

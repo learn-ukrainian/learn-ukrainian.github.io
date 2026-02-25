@@ -1,0 +1,29 @@
+sequence: 88
+module: ruth-088
+module_number: 88
+slug: velychko-ruin-baroque-2
+title_uk: Самійло Величко II — Голоси Доби
+title_en: Samiilo Velychko II — Voices of the Era
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Close reading of key passages — Berestechko, Khmelnytsky speech, Lament
+content_outline:
+- section: Вступ
+  description: Introduction to Velychko — Close Reading
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- grammar-lab
+- parallel-text
+persona:
+  voice: Baroque Scholar
+  role: Cossack Lament Voice

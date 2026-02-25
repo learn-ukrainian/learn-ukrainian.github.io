@@ -1,0 +1,45 @@
+sequence: 51
+module: lit-essay-51
+level: LIT.ESSAY
+slug: istoriia-rusiv-romantics-reception
+version: '2.0'
+title: Istoriia Rusiv Romantics Reception
+subtitle: Istoriia Rusiv Romantics Reception
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати рецепцію «Історії Русів» серед романтиків у контексті ідентичності
+- Дослідити вплив тексту на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Romantic Reader
+word_target: 5000

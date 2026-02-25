@@ -1,0 +1,29 @@
+sequence: 86
+module: ruth-086
+module_number: 86
+slug: hrabianka-heroic-chronicle
+title_uk: Грабянка — Героїчна Хроніка
+title_en: Hrabianka — Heroic Chronicle
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Reading Hrabianka's chronicle as heroic epic and historical document
+content_outline:
+- section: Вступ
+  description: Introduction to Hrabianka — Heroic Chronicle
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- grammar-lab
+- comparative-style
+persona:
+  voice: Baroque Scholar
+  role: Cossack Heroic Chronicler

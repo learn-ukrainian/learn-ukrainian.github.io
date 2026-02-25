@@ -1,0 +1,102 @@
+---
+# Level Plan: LIT-DRAMA (Ukrainian Drama and Theatre Track)
+# Post-C1 specialization: Stage as Nation
+
+level: lit-drama
+track: literature-drama
+version: "1.0"
+status: planned
+
+overview:
+  total_modules: 16
+  description: "Ukrainian dramatic literature from Kotliarevsky's Natalka Poltavka (1819) to contemporary women's theatre — read as the theatre's role in constructing national identity, surviving censorship, and transforming political catastrophe into art."
+  prerequisites: "[c1]"
+  target_audience: "Advanced learners engaging with Ukrainian theatrical tradition and dramatic text"
+  decolonization_mission: "Ukrainian theatre was repeatedly closed, banned, and 'Ukrainized' under imperial pressure. This track recovers the stage as a site of national identity formation. Les Kurbas's Berezil was not a 'regional theatre' — it was one of the most innovative theatre laboratories in 20th-century Europe."
+
+sources:
+  primary: "Ukrainian dramatic texts (ukrlib.com.ua, Kurbas Center, Theatre Institute Kyiv)"
+  supplementary:
+    - "Les Kurbas Center publications"
+    - "Ukrainian theatre history scholarship"
+    - "Contemporary Ukrainian theatre (Dakh, Teatr.in.ua)"
+  note: "Soviet censorship history integrated throughout. Russian 'translation' of Ukrainian theatre erased."
+
+vocabulary:
+  cumulative_from: "[a1, a2, b1, b2, c1, lit]"
+  new_words: 500
+  focus_areas:
+    - "Theatrical terminology (дія, ремарка, монолог, сценографія)"
+    - "Dramatic analysis vocabulary (конфлікт, кульмінація, катарсис)"
+    - "Stage direction language in dramatic texts"
+    - "Contemporary theatre vocabulary (перформанс, вербатим, сайт-специфічний)"
+
+grammar:
+  - "Reading dramatic text vs prose: stage directions, dialogue formatting"
+  - "Subtext and ellipsis in dramatic dialogue"
+  - "Archaic forms in 19th-century scripts (Kotliarevsky, Shevchenko)"
+  - "Contemporary vernacular in Nezhdana and Vorozbyt"
+
+phases:
+  - id: DRAMA.1
+    name: "Витоки: Від Котляревського до Лесі"
+    name_en: "Origins: From Kotliarevsky to Lesia"
+    modules: "[1, 4]"
+    focus: "Foundation of Ukrainian theatre as national institution"
+    era: "1819-1913"
+    key_authors:
+      - "Котляревський — «Наталка Полтавка» (1819)"
+      - "Карпенко-Карий — соціальна драма"
+      - "Леся Українка — модерна драматургія (Лісова пісня, Камінний господар)"
+
+  - id: DRAMA.2
+    name: "Авангард: Курбас і Березіль"
+    name_en: "Avant-Garde: Kurbas and Berezil"
+    modules: "[5, 8]"
+    focus: "Expressionist Berezil theatre, Kulish dramatic masterpieces, Soviet repression"
+    era: "1917-1937"
+    key_authors:
+      - "Лесь Курбас — теорія і практика театру"
+      - "Куліш — «Народний Малахій», «Мина Мазайло», «Патетична соната»"
+
+  - id: DRAMA.3
+    name: "Радянська Сцена і Підпілля"
+    name_en: "Soviet Stage and Underground"
+    modules: "[9, 12]"
+    focus: "Soviet-era drama, Skovoroda theatrical dialogues, philosophical drama"
+    era: "1940-1991"
+    key_authors:
+      - "Сковорода — діалоги як театральна форма"
+      - "Сучасна реабілітація класики"
+
+  - id: DRAMA.4
+    name: "Сучасна Сцена"
+    name_en: "Contemporary Stage"
+    modules: "[13, 16]"
+    focus: "Post-independence drama, women's theatre, documentary theatre"
+    era: "1991-present"
+    key_authors:
+      - "Незгода (Неждана) — жіночий театр"
+      - "Вороб'ют — «Погані дороги»"
+      - "Цілик — кінематографічний сценарій"
+      - "Ар'є — документальний театр (Чорнобиль)"
+
+constraints:
+  min_engagement_boxes: 3
+  min_primary_sources: 2
+  immersion_target: 0.95
+  naturalness_threshold: 8
+
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Read dramatic text excerpts aloud — voice the stage directions"
+    - "Historical context: what was the political/social situation of the premiere?"
+    - "Theatrical analysis: staging, space, character, subtext"
+    - "Censorship history: what was cut, banned, or 'revised'?"
+    - "Contemporary production: has this play been staged recently and how?"
+  decolonization:
+    - "Kurbas's Berezil was destroyed by Stalin — not 'closed for artistic reasons'"
+    - "Kulish was executed for his plays — theatrical analysis is also historical justice"
+    - "Ukrainian theatre is not 'folk theatre' — it is a sophisticated European tradition"
+    - "Les Kurbas influenced Brecht. This connection matters."

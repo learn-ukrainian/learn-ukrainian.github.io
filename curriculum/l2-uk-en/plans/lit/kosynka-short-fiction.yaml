@@ -1,0 +1,78 @@
+sequence: 209
+module: lit-209
+level: LIT
+slug: kosynka-short-fiction
+version: '2.0'
+title: Kosynka Short Fiction
+subtitle: Kosynka Short Fiction
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Григорій Косинка — майстер короткої прози Розстріляного відродження
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+- section: 'Аналіз твору: Сюжет та структура'
+  points:
+  - Ключові новели та оповідання
+  - Впливи та джерела
+  - Конфлікт між індивідом і добою
+- section: Герменевтика та ключові образи
+  points:
+  - Детальний розбір символіки
+  - Система персонажів та їхня еволюція
+  - Архетипи та народні підтексти
+- section: Мова, стиль та поетика
+  points:
+  - Стилістичні інновації експресіоністичної прози
+  - Народна мова і діалектизми
+  - Особливості ритміки та синтаксису
+- section: Деколонізаційний вимір
+  points:
+  - Який імперський міф руйнує цей текст?
+  - Агентність українського селянина
+  - Опір асиміляції та культурне самоствердження
+- section: Підсумок та рецепція
+  points:
+  - Вплив на наступні покоління письменників
+  - Розстріл 1934 як знакова дата
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових уривків kosynka-short-fiction
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Філософський або літературознавчий аспект твору
+  output: Аналітичне есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-208
+connects_to:
+- lit-210
+module_type: literature
+sources:
+- name: Kosynka Short Fiction — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+immersion: 100% Ukrainian
+phase: LIT.3 Executed Renaissance 1917-1933
+objectives:
+- Проаналізувати коротку прозу Косинки у контексті експресіонізму
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Village Chronicler
+word_target: 5000

@@ -1,0 +1,78 @@
+sequence: 206
+module: lit-206
+level: LIT
+slug: dray-khmara-poetry
+version: '2.0'
+title: Dray-Khmara Poetry
+subtitle: Dray-Khmara Poetry
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Історичні умови появи твору/автора
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+- section: 'Аналіз твору: Сюжет та структура'
+  points:
+  - Ключові етапи поетичної творчості
+  - Впливи та джерела
+  - Конфлікт як рушійна сила
+- section: Герменевтика та ключові образи
+  points:
+  - Детальний розбір символіки
+  - Образ лебедя і мотив прощання
+  - Архетипи та класичні підтексти
+- section: Мова, стиль та поетика
+  points:
+  - Стилістичні інновації неокласика
+  - Робота з античною традицією
+  - Особливості ритміки та синтаксису
+- section: Деколонізаційний вимір
+  points:
+  - Який імперський міф руйнує цей текст?
+  - Агентність українського героя
+  - Опір асиміляції та культурне самоствердження
+- section: Підсумок та рецепція
+  points:
+  - Вплив на наступні покоління письменників
+  - Загибель в ГУЛАГу як трагедія національної культури
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових уривків dray-khmara-poetry
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Філософський або літературознавчий аспект твору
+  output: Аналітичне есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-205
+connects_to:
+- lit-207
+module_type: literature
+sources:
+- name: Dray-Khmara Poetry — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+immersion: 100% Ukrainian
+phase: LIT.3 Executed Renaissance 1917-1933
+objectives:
+- Проаналізувати поетику Драй-Хмари у контексті неокласицизму
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Neoclassical Prisoner
+word_target: 5000

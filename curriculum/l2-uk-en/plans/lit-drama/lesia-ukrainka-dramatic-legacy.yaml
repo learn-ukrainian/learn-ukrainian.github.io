@@ -1,0 +1,78 @@
+sequence: 213
+module: lit-213
+level: LIT
+slug: lesia-ukrainka-dramatic-legacy
+version: '2.0'
+title: Lesia Ukrainka Dramatic Legacy
+subtitle: Lesia Ukrainka Dramatic Legacy
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Леся Українка як драматург — огляд усього корпусу
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+- section: 'Аналіз твору: Сюжет та структура'
+  points:
+  - Ключові твори — «Лісова пісня», «Камінний господар», «Касандра»
+  - Впливи та джерела
+  - Конфлікт між бажаним і можливим
+- section: Герменевтика та ключові образи
+  points:
+  - Детальний розбір символіки
+  - Система персонажів та їхня еволюція
+  - Архетипи та античні підтексти
+- section: Мова, стиль та поетика
+  points:
+  - Стилістичні інновації автора
+  - Поетична проза і драматичний вірш
+  - Особливості ритміки та синтаксису
+- section: Деколонізаційний вимір
+  points:
+  - Який імперський міф руйнує цей текст?
+  - Жіноча агентність у драмі
+  - Опір асиміляції та культурне самоствердження
+- section: Підсумок та рецепція
+  points:
+  - Вплив на наступні покоління драматургів
+  - Світовий контекст творчості
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових уривків lesia-ukrainka-dramatic-legacy
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Філософський або літературознавчий аспект твору
+  output: Аналітичне есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-212
+connects_to:
+- lit-214
+module_type: literature
+sources:
+- name: Lesia Ukrainka Dramatic Legacy — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+immersion: 100% Ukrainian
+phase: LIT.2 The Long Nineteenth Century 1860-1917
+objectives:
+- Проаналізувати драматичний спадок Лесі Українки у контексті модернізму
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Dramatic Modernist
+word_target: 5000

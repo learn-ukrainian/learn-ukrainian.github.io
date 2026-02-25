@@ -1,0 +1,94 @@
+---
+# Level Plan: LIT-CRIMEA (Crimean Tatar Literature Track)
+# Post-C1 specialization: Voices Under Erasure
+
+level: lit-crimea
+track: literature-crimea
+version: "1.0"
+status: planned
+
+overview:
+  total_modules: 9
+  description: "Crimean Tatar literary and intellectual tradition — from the Jadidist press to contemporary exile writing — read as testimony of a people repeatedly dispossessed of their homeland"
+  prerequisites: "[c1]"
+  target_audience: "Advanced learners engaging with the literature of Ukraine's indigenous Crimean Tatar people"
+  decolonization_mission: "Crimean Tatar culture is not a footnote to Russian or Soviet literature — it is an independent European-Oriental literary tradition. Every module answers: how did these writers resist erasure?"
+
+sources:
+  primary: "Crimean Tatar texts (QHA, Milli Firqa archives, Ukrainian Institute, Avdet)"
+  supplementary:
+    - "Crimean Tatar scholarly editions (Ukraine, diaspora)"
+    - "Ukrainian Institute of National Remembrance — Crimea materials"
+    - "Human Rights Watch and Memorial International reports"
+  note: "All analysis from Crimean Tatar and Ukrainian perspective. Russian/Soviet interpretations used only as objects of critique."
+
+vocabulary:
+  cumulative_from: "[a1, a2, b1, b2, c1, lit]"
+  new_words: 400
+  focus_areas:
+    - "Crimean Tatar-Ukrainian lexical parallels"
+    - "Deportation and exile vocabulary (депортація, вигнання, повернення)"
+    - "Islamic cultural vocabulary in literary context"
+    - "Resistance and testimony register"
+
+grammar:
+  - "Reading Ukrainian translations of Crimean Tatar texts"
+  - "Bilingual registers in Gaspirali's journalism"
+  - "Contemporary testimony and documentary prose"
+
+phases:
+  - id: CRIMEA.1
+    name: "Відродження: Джадидизм та преса"
+    name_en: "Renaissance: Jadidism and Press"
+    modules: "[1, 3]"
+    focus: "Gaspirali's Terjiman, Jadidist modernization, first political poetry"
+    era: "1851-1918"
+    key_authors:
+      - "Гаспралі (Гаспринський) — «Терджіман» (1883-1914)"
+      - "Челебіджіхан — вірші, конституція, державотворення"
+      - "Чобан-заде — лінгвістика і поезія"
+
+  - id: CRIMEA.2
+    name: "Репресії та пам'ять"
+    name_en: "Repression and Memory"
+    modules: "[4, 6]"
+    focus: "Soviet-era persecution, deportation 1944, oral tradition as survival"
+    era: "1920-1989"
+    key_authors:
+      - "Усна традиція в умовах вигнання"
+      - "Алієв, Мусаєва, Джемілєв — покоління опору"
+      - "Кримська Група захисту прав людини"
+
+  - id: CRIMEA.3
+    name: "Анексія та свідчення"
+    name_en: "Annexation and Testimony"
+    modules: "[7, 9]"
+    focus: "2014 annexation, Sentsov, Dzheljal — literature of new occupation"
+    era: "2014-present"
+    key_authors:
+      - "Сенцов — «Числа» (п'єса), оповідання"
+      - "Джеляль — листи з камери"
+      - "Кримськотатарська преса у вигнанні (QHA, Avdet)"
+
+constraints:
+  min_engagement_boxes: 3
+  min_primary_sources: 2
+  immersion_target: 0.95
+  naturalness_threshold: 8
+
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Primary text excerpt with Ukrainian translation where needed"
+    - "Historical context: dispossession, deportation, occupation"
+    - "Literary analysis: form as resistance"
+    - "Biographical context — many authors are prisoners or exiles"
+    - "Connection to broader Ukrainian experience of Russian imperialism"
+  decolonization:
+    - "Crimean Tatar culture is indigenous to Crimea — Russia is the colonizer"
+    - "Never frame deportation as 'relocation' or occupation as 'reunification'"
+    - "Authors are agents, not victims — emphasize resistance and survival"
+    - "Connect Crimean Tatar and Ukrainian experiences of imperial erasure"
+  sensitivity:
+    - "Living prisoners and their families: use dignified, careful framing"
+    - "Oral tradition content may come from trauma survivors"

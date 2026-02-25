@@ -1,0 +1,78 @@
+sequence: 195
+module: lit-195
+level: LIT
+slug: gaspirali-crimean-modernizer
+version: '2.0'
+title: Gaspirali Crimean Modernizer
+subtitle: Gaspirali Crimean Modernizer
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Ісмаїл Гаспринський — реформатор і видавець «Терджімана»
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+- section: 'Аналіз твору: Сюжет та структура'
+  points:
+  - Ключові тексти — «Терджіман» і джадидистські ідеї
+  - Впливи та джерела
+  - Конфлікт між традицією і модернізацією
+- section: Герменевтика та ключові образи
+  points:
+  - Детальний розбір символіки
+  - Система образів і їхня еволюція
+  - Архетипи та реформаторські підтексти
+- section: Мова, стиль та поетика
+  points:
+  - Стилістичні інновації автора
+  - Двомовність і модерна журналістика
+  - Особливості ритміки та синтаксису
+- section: Деколонізаційний вимір
+  points:
+  - Який імперський міф руйнує цей текст?
+  - Кримськотатарська агентність
+  - Опір асиміляції та культурне самоствердження
+- section: Підсумок та рецепція
+  points:
+  - Вплив на наступні покоління письменників
+  - Джадидизм у контексті тюркської культури
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових уривків gaspirali-crimean-modernizer
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Філософський або літературознавчий аспект твору
+  output: Аналітичне есе
+focus: literature
+pedagogy: Seminar
+prerequisites:
+- lit-194
+connects_to:
+- lit-196
+module_type: literature
+sources:
+- name: Gaspirali Crimean Modernizer — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+immersion: 100% Ukrainian
+phase: LIT.2 The Long Nineteenth Century 1860-1917
+objectives:
+- Проаналізувати реформаторський проект Гаспринського у контексті модернізації
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+persona:
+  voice: Senior Philologist & Critic
+  role: Jadidist Reformer
+word_target: 5000

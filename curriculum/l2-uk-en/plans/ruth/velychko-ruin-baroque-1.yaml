@@ -1,0 +1,29 @@
+sequence: 87
+module: ruth-087
+module_number: 87
+slug: velychko-ruin-baroque-1
+title_uk: Самійло Величко I — Архіваріус Руїни
+title_en: Samiilo Velychko I — Archivist of the Ruin
+phase: 4
+phase_id: cossack-word
+phase_name: Cossack Word
+focus: Velychko's method, sources, and baroque architectural structure
+content_outline:
+- section: Вступ
+  description: Introduction to Velychko — Baroque Method
+- section: Основний матеріал
+  description: Primary source analysis and grammar focus
+- section: Практика
+  description: Exercises and activities
+- section: Підсумок
+  description: Summary and connection to next module
+vocabulary_hints: '[]'
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- grammar-lab
+- comparative-style
+persona:
+  voice: Baroque Scholar
+  role: Cossack Archivist

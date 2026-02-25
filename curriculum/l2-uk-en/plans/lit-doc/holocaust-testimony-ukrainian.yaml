@@ -1,0 +1,45 @@
+sequence: 10
+module: lit-doc-10
+level: LIT.DOC
+slug: holocaust-testimony-ukrainian
+version: '2.0'
+title: Holocaust Testimony Ukrainian
+subtitle: Holocaust Testimony Ukrainian
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Аналіз ключових творів
+  points: []
+- section: Стилістика та мова автора
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз першоджерела
+- type: essay-response
+  focus: Критичне есе
+- type: critical-analysis
+  focus: Деконструкція тексту
+focus: literature
+pedagogy: literature
+immersion: 100% Ukrainian
+phase: LIT Expansion
+objectives:
+- Проаналізувати українські свідчення Голокосту у контексті документальної прози
+- Дослідити вплив автора на формування національної ідентичності
+persona:
+  voice: Senior Specialist
+  role: Witness to the Ravine
+word_target: 5000

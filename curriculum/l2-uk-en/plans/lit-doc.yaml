@@ -1,0 +1,98 @@
+---
+# Level Plan: LIT-DOC (Ukrainian Documentary Literature Track)
+# Post-C1 specialization: Truth as Literature
+
+level: lit-doc
+track: literature-documentary
+version: "1.0"
+status: planned
+
+overview:
+  total_modules: 12
+  description: "Ukrainian documentary literature — diary, testimony, epistolary, and witness prose — read as both historical evidence and literary form. From prison letters to occupation diaries."
+  prerequisites: "[c1]"
+  target_audience: "Advanced learners engaging with the testimony tradition in Ukrainian letters"
+  decolonization_mission: "Ukrainian documentary literature is not a 'sub-genre' — it is the primary form through which Ukrainians preserved truth against imperial falsification. Every document is an act of resistance."
+
+sources:
+  primary: "Memorial International, Ukrainian Institute, Kharkiv Human Rights Group, Vidavnytstvo Staroho Leva"
+  supplementary:
+    - "Ukrainian PEN Club testimony publications"
+    - "Zaborona Media documentary journalism"
+    - "Harvard Ukrainian Research Institute — Holodomor archive"
+  note: "All analysis from Ukrainian perspective. Perpetrator narratives used only as objects of critical deconstruction."
+
+vocabulary:
+  cumulative_from: "[a1, a2, b1, b2, c1, lit]"
+  new_words: 600
+  focus_areas:
+    - "Testimony vocabulary (свідчення, показання, хроніка, очевидець)"
+    - "Archival and legal register"
+    - "Prison and camp vocabulary (табір, заборонений, камера, допит)"
+    - "Genocide and mass atrocity discourse"
+
+grammar:
+  - "First-person testimonial voice — epistolary syntax"
+  - "Broken and fragmented prose as trauma form"
+  - "Documentary prose rhythm vs literary essay"
+  - "Translation challenges: Holodomor-era Ukrainian"
+
+phases:
+  - id: DOC.1
+    name: "Геноцид і Свідчення"
+    name_en: "Genocide and Testimony"
+    modules: "[1, 4]"
+    focus: "Holodomor testimony, Holocaust at Babyn Yar, Ukrainian-Jewish experience"
+    era: "1932-1945"
+    key_authors:
+      - "Самчук — «Марія» (1934)"
+      - "Барка — «Жовтий князь» (1963)"
+      - "Кузнєцов — «Бабин Яр» (1966/1970)"
+
+  - id: DOC.2
+    name: "Листи з Ув'язнення"
+    name_en: "Letters from Captivity"
+    modules: "[5, 8]"
+    focus: "Dissident prison letters, samvydav, rights documentation"
+    era: "1960-1989"
+    key_authors:
+      - "Стус — листи до сина і дружини"
+      - "Світличний — табірна лірика і листи"
+      - "Шумук — мемуари"
+      - "Мариновіч — спогади про Хельсінську групу"
+
+  - id: DOC.3
+    name: "Сучасне Свідчення"
+    name_en: "Contemporary Testimony"
+    modules: "[9, 12]"
+    focus: "2014-present war documentary prose"
+    era: "2014-present"
+    key_authors:
+      - "Амеліна — жінки, що дивляться на війну"
+      - "Асєєв — «Табір» (2021)"
+      - "Вакуленко — щоденник окупації (посмертно)"
+      - "Кіпіані — справа Стуса"
+
+constraints:
+  min_engagement_boxes: 3
+  min_primary_sources: 2
+  immersion_target: 0.95
+  naturalness_threshold: 8
+
+pedagogy_notes:
+  approach: "seminar"
+  structure:
+    - "Primary text excerpt — diary entry, letter, testimony passage"
+    - "Historical context: what was being hidden that this document reveals?"
+    - "Genre analysis: how does the documentary form shape meaning?"
+    - "Ethics of reading: trauma, privacy, posthumous publication"
+    - "Contemporary relevance: what this document proves today"
+  decolonization:
+    - "Ukrainian documentary literature exists BECAUSE of imperial erasure"
+    - "The document is not merely evidence — it is literary form and resistance act"
+    - "Never frame genocide testimony as 'tragedy on all sides'"
+    - "Samvydav and underground publishing as acts of literary creation"
+  sensitivity:
+    - "Graphic descriptions of violence, torture, starvation — pedagogical framing required"
+    - "Trauma-informed approach for Holodomor and Holocaust content"
+    - "Living survivors and families: extra care with identification"
