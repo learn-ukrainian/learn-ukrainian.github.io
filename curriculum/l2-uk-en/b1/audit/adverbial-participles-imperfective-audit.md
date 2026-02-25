@@ -1,7 +1,7 @@
 # Audit Report: M42 — adverbial-participles-imperfective.md
 **Level:** B1 | **Module:** M42 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:08:55
+**Generated:** 2026-02-25 10:44:53
 
 ## Configuration
 **Type:** B1-grammar

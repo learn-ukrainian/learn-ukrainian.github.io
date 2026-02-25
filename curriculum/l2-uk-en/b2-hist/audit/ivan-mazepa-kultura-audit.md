@@ -1,7 +1,7 @@
 # Audit Report: M64 — ivan-mazepa-kultura.md
 **Level:** B2-HIST | **Module:** M64 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 23:21:40
+**Generated:** 2026-02-25 20:53:26
 
 ## Configuration
 **Type:** B2-history

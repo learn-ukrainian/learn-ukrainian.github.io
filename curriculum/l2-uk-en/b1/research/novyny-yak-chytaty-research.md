@@ -1,39 +1,34 @@
 # Дослідження: Новини: як читати
 
 ## State Standard Reference
-§3.4: "Дозвілля, відпочинок: ... преса, радіо, телебачення, інтернет"
-§3.6: "Суспільні відносини: ... суспільні проблеми; державний устрій країни; війна і мир; суспільно-політичні події"
-§4.5.1: "Офіційне й неофіційне спілкування... Стилістичні засоби лексики: антоніми, синоніми, епітети, метафори"
-Alignment: This module directly addresses the B1 requirement to navigate media sources (press, internet) and understand socio-political vocabulary through the lens of official/publicistic style.
+§3.4: "преса, радіо, телебачення, інтернет" та §3.6: "війна і мир; суспільно-політичні події"
+Alignment: Цей модуль прямо реалізує вимоги Стандарту для В1, надаючи інструменти та словниковий запас для навігації в українськомовному інформаційному просторі (преса, інтернет) та розуміння суспільно-політичного контексту.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Новини** (News) | High / General | *свіжі/останні новини* (breaking/latest), *головні новини* (top stories), *фейкові новини* (fake news), *стрічка новин* (news feed) |
-| **Стаття** (Article) | High / Media | *публіцистична стаття* (op-ed), *редакційна стаття* (editorial), *аналітична стаття*, *опублікувати статтю* |
-| **Джерело** (Source) | High / Media | *надійне/перевірене джерело* (reliable source), *офіційне джерело*, *анонімне джерело*, *посилатися на джерело* (cite a source) |
-| **Заголовок** (Headline) | Med / Media | *гучний заголовок* (loud/clickbait headline), *винести в заголовок*, *читати лише заголовки* |
-| **ЗМІ** (Media) | High / Abbr. | *засоби масової інформації*, *офіційні ЗМІ*, *незалежні ЗМІ* |
+| новини | High (News/Media) | свіжі новини, стрічка новин, останні новини |
+| стаття | High (Publishing) | публіцистична стаття, редакційна стаття |
+| заголовок | Medium-High | гучний заголовок (clickbait), винести в заголовок |
+| джерело | High (Journalism) | надійне джерело, перевірене джерело, посилатися на джерело |
+| джинса | Slang/Media specific | розпізнати джинсу, політична джинса |
 
 ## Cultural Hooks
-1. **Ukrainska Pravda & Gongadze**: Founded in 2000 by Georgiy Gongadze, whose murder sparked the "Ukraine without Kuchma" protests. It remains a symbol of independent journalism. The *Gongadze Prize* (est. 2019) honors journalistic integrity.
-2. **Suspilne (Public Broadcasting)**: Reformed in 2017 from state TV to independent public broadcaster (PBS style). In 2022, it became a trusted pillar of the "United News" telethon, with 87% trust rating.
-3. **The "Jeansa" Phenomenon**: A specifically Ukrainian term (*джинса*) for paid political advertising disguised as news. A critical media literacy concept for B1 learners.
+1. Інститут масової інформації (ІМІ) та феномен "джинси": "Джинса" — це унікальний сленговий термін в українському медіапросторі, що означає приховану рекламу або проплачений матеріал, поданий як об'єктивна новина. Громадянське суспільство активно з цим бореться.
+2. Суспільне Мовлення (Suspilne): Створене після Революції Гідності, воно стало еталоном журналістських стандартів в Україні, значно відрізняючись від олігархічних телеканалів.
+3. Національний телемарафон "Єдині новини": Запущений у лютому 2022 року для інформаційної консолідації на початку повномасштабного вторгнення.
 
 ## Common Learner Errors
-1. **Headline Grammar**: Learners confuse "Headlinese" (dropped verbs, nominal sentences) with standard grammar.
-   *   *Error*: Trying to find the verb in "Візит президента на фронт" (President's visit to front) and getting lost.
-2. **False Cognates in Media**:
-   *   *Error*: Confusing *актуальний* (current/relevant) with English "actual" (real).
-   *   *Error*: Confusing *оперативний* (rapid/prompt news) with medical "operative".
-3. **Getting Lost in Participles**: B1 learners struggle with long participial phrases common in news leads (*активний дієприкметник*).
-   *   *Fix*: Teach scanning for the main subject and predicate first.
+1. Хибний друг "актуальний" → Означає "current / timely" (напр., актуальні новини), а НЕ "actual" (фактичний).
+2. Хибний друг "оперативний" → Означає "prompt / rapid" (оперативна інформація, діяти оперативно), а НЕ медичний чи військовий термін (operative).
+3. Використання русизмів → "получати новини" замість правильного "отримувати новини" або "дізнаватися новини".
 
 ## Cross-References
-- **Builds on**: `b1-86` (Holidays - cultural context), `b1-35/41` (Complex sentences - essential for reading leads).
-- **Prepares for**: `b1-88` (Interviews/Podcasts - listening skills), `b1-91` (Debates - forming opinions based on news).
+- Builds on: b1-86 (Ukrainian Holidays and Festivals)
+- Prepares for: b1-88 (Interviews and Podcasts)
 
 ## Notes for Content Writing
-- **Tone**: The "News Analyst" persona should use professional yet accessible language.
-- **Visuals**: Describe the visual structure of a news site (Header, Feed, Sidebar) in Ukrainian (*шапка, стрічка, бічна панель*).
-- **Fact-Checking**: Emphasize the rule of "Three Sources" (*правило трьох джерел*) as a standard practice taught in Ukrainian media literacy courses.
+- Decolonized framing: Уникати порівнянь українського медіа-ринку з російським. Підкреслювати розвиток незалежної журналістики (від заснування "Української правди" до "Суспільного") як прояв української демократії та суб'єктності.
+- Immersion: Цей модуль має 100% занурення (B1.8). Жодного англійського тексту в поясненнях чи вступі. Англійська дозволена ТІЛЬКИ в перекладах у словникових таблицях. Усі заголовки та підзаголовки виключно українською.
+- Заголовки (H2) повинні точно збігатися з українськими назвами в мета-файлі, без дублювання ключових слів між різними H2.
+- Використовувати тільки українські кутові лапки «...» для цитат. Звернути увагу на правильне відображення транскрипції: о = [ɔ], е = [ɛ].

@@ -14,9 +14,14 @@
       "ts": "2026-02-24T09:42:05Z"
     },
     "v3-C": {
-      "status": "failed",
-      "ts": "2026-02-24T19:03:44Z",
-      "note": "activities-schema-invalid"
+      "status": "complete",
+      "ts": "2026-02-25T07:02:14Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T09:44:36Z",
+      "attempts": 1
     }
   }
 }

@@ -1,7 +1,7 @@
 # Audit Report: M43 — adverbial-participles-perfective.md
 **Level:** B1 | **Module:** M43 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:12:53
+**Generated:** 2026-02-25 10:44:57
 
 ## Configuration
 **Type:** B1-grammar

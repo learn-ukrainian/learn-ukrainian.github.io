@@ -2,15 +2,15 @@
   "module": "kniaz-sviatoslav",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T19:25:48.828988Z",
+  "last_audit": "2026-02-25T20:36:07.891563Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T19:25:47.976276Z",
+    "md": "2026-02-21T20:20:11.643938Z",
     "meta": "2026-02-19T11:02:01.128840Z",
     "activities": "2026-02-19T11:03:28.419784Z",
     "vocabulary": "2026-02-19T11:11:51.969739Z",
     "plan": "2026-02-18T17:23:50.690905Z",
-    "research": "2026-02-18T17:22:46.681697Z"
+    "research": "2026-02-22T10:35:24.534322Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5324/5000 (raw: 5741) | pedagogy: 3 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5324/5000 (raw: 5741)"
     },
     "activities": {
       "status": "pass",
@@ -44,21 +44,23 @@
       "message": "Clean IPA"
     },
     "research": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Content aligned with research"
+      "message": "Refresh recommended: Content predates research (research file is newer)"
     },
     "review": {
-      "status": "deferred",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
+    "blocking_issues": [
+      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+    ],
     "pass_count": 4,
     "fail_count": 1,
-    "deferred_count": 1
+    "deferred_count": 0
   }
 }

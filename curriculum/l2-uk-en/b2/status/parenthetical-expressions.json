@@ -2,13 +2,13 @@
   "module": "parenthetical-expressions",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T16:20:24.360665Z",
+  "last_audit": "2026-02-25T10:42:55.976364Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T16:20:10.483017Z",
+    "md": "2026-02-24T22:27:54.185286Z",
     "meta": "2026-02-23T23:40:30.331051Z",
     "activities": "2026-02-24T15:47:46.859492Z",
-    "vocabulary": "2026-02-24T15:47:46.815357Z",
+    "vocabulary": "2026-02-25T10:42:55.000586Z",
     "plan": "2026-02-20T21:38:47.085495Z",
     "research": "2026-02-23T23:40:30.327096Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5292/4000 (raw: 5829)"
+      "message": "5294/4000 (raw: 5831)"
     },
     "activities": {
       "status": "deferred",

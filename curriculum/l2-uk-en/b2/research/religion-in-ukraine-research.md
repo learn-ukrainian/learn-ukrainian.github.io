@@ -1,37 +1,36 @@
 # Дослідження: Релігія в Україні
 
 ## State Standard Reference
-§4.3.4: "Складнопідрядні речення зі з’ясувальною підрядною частиною... Складнопідрядні речення з означальною частиною зі сполучними словами який, котрий, що"
-Alignment: The module teaches complex sentences (declarative/attributive) in the context of describing religious traditions and history, fulfilling the B2 syntax requirement for complex structures.
+§4.3.4.1: "Складнопідрядні речення зі з’ясувальною підрядною частиною (сполучники що, щоб, сполучні слова куди, звідки, скільки, чому, навіщо, який): Батько радив мені, щоб я надрукував цю статтю. Треба вміти слухати, про що співає птах."
+§4.3.4.2: "Складнопідрядні речення з означальною частиною зі сполучними словами який, котрий, що в називному та непрямих відмінках: Як радію за ту я людину, що загублену радість знайшла."
+Alignment: This directly maps to the module's grammar focus on formulating complex sentences (explanatory and attributive) to discuss abstract concepts like church doctrines, historical decisions, and interfaith dialogue.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Віра** (Faith) | High (General/Religious) | *віра в Бога, мати віру, символ віри, прийняти на віру, втратити віру* |
-| **Релігія** (Religion) | High (Academic/Social) | *традиційна релігія, релігійне життя, релігійна громада, свобода релігії* |
-| **Церква** (Church) | High (General) | *ходити до церкви, православна церква, помісна церква, глава церкви, церковні свята* |
-| **Свято** (Holiday) | High (General) | *релігійне свято, велике свято, з нагоди свята, відзначати свято* |
-| **Святий** (Saint/Holy) | High (Religious) | *Святе Письмо, свята вода, святий вечір, святі отці, зарахувати до лику святих* |
+| віра | High (General & abstract) | віра в Бога, символ віри, прийняти на віру, віра в ЗСУ/перемогу |
+| релігія | High (Academic/Formal) | традиційна релігія, релігійне життя, релігійна громада, свобода релігії |
+| церква | High (General) | помісна церква, глава церкви, церковне свято, православна церква |
+| свято | High (General) | велике свято, з нагоди свята, відзначати свято, з прийдешнім святом |
+| конфесія | Medium (Academic/News) | міжконфесійний діалог, приналежність до конфесії, поліконфесійність |
+| святий | High (Attribute/Noun) | Святе Письмо, свята вода, Святий вечір, зарахувати до лику святих |
+| капелан | High (Current context) | військовий капелан, служба військового капеланства |
 
 ## Cultural Hooks
-1. **"Київ — Другий Єрусалим"**: A key Baroque-era concept (Peter Mohyla, Mazepa times) positioning Kyiv as a sacred center of Eastern Orthodoxy, mimicking Jerusalem's topography (Golden Gates, St. Sophia as Solomon's Temple).
-2. **Religious Density**: Ukraine has a uniquely high density of religious organizations (~34,600 in 2025) compared to most European neighbors, highlighting religion's active role in public life and the diverse "religious landscape" (Orthodox, Greek Catholic, Protestant, Muslim, Jewish communities coexisting).
+1. Концепція «Київ — Другий Єрусалим»: У добу митрополита Петра Могили та гетьмана Івана Мазепи Київ розбудовувався як сакральний центр, де Софія Київська символічно відтворювала храм Соломона, а Золоті ворота підкреслювали богообраність міста.
+2. Всеукраїнська рада церков і релігійних організацій (ВРЦіРО): Унікальний феномен українського громадянського суспільства, що об'єднує понад 90% вірян різних деномінацій та слугує платформою толерантності та опору під час війни.
 
 ## Common Learner Errors
-1. **Lexical Confusion**: `Свято` (holiday, noun) vs. `Святий` (holy/saint, adj/noun).
-   * *Error*: "Сьогодні святий день" (meaning holiday).
-   * *Correction*: "Сьогодні свято" or "Сьогодні святковий день".
-2. **Greeting Error**: `З наступаючим святом!` (Calque from Russian).
-   * *Correction*: `З прийдешнім святом!` or simply `Зі святом!`.
-3. **Preposition Mismatch**: `Вірити в` (Believe in - God/idea) vs. `Вірити` + Dat (Trust someone).
-   * *Context*: "Я вірю в Бога" (faith) vs. "Я вірю йому" (trust him).
+1. Калькування з російської "З наступаючим святом!" (С наступающим!) → Correct form: «З прийдешнім святом!» або «Зі святом!» — The calque uses an active present participle unnatural to Ukrainian syntax.
+2. Confusing the noun "Свято" with the adjective/noun "Святий" → Correct: «Сьогодні велике свято», «Настав Святий вечір» — Learners often map English "holiday" and "holy" improperly.
+3. Prepositional government of "вірити" → Correct form: «вірити в» + Зн.в. (віра в Бога, віра в перемогу) vs «вірити» + Дав.в. (довіряти комусь: вірити капеланові, вірити другові).
 
 ## Cross-References
-- Builds on: B1 Cultural modules (Traditions), B2.1 Participles (used in religious texts).
-- Prepares for: C1 History/Culture modules (Baroque era, Church history details).
-- *Note: `connects_to` field not explicitly present in plan YAML.*
+- Builds on: B1 sentence structures and abstract vocabulary foundations.
+- Prepares for: B2-HIST modules dealing with church history (e.g., Beresteiska Union, Kyiv-Mohyla Academy) and C1 level discussions on identity and society.
 
 ## Notes for Content Writing
-- **Tone**: Respectful and objective (Religious Scholar persona). Avoid proselytizing; focus on the *phenomenon* of religion in culture.
-- **Complexity**: Use complex sentences to mirror the "high style" of religious discourse, but keep the explanation accessible.
-- **Terminology**: Ensure distinction between `конфесія` (denomination) and `релігія` (religion) is clear.
+- Decolonized framing is MANDATORY. Do not frame the 2019 Tomos merely as a "split from Russia"; frame it as the restoration of historical canonical justice for the Orthodox Church of Ukraine (ПЦУ).
+- Emphasize Ukraine's deep-rooted pluralism. Unlike the Russian imperial narrative of a monolithically "Orthodox space", Ukraine has historically been a crossroads of Orthodoxy, Greek Catholicism, Protestantism, Islam (especially Crimean Tatars), and Judaism.
+- Ensure the agency of Ukrainians ("українці створили ВРЦіРО", "ми отримали Томос"), avoiding passive descriptions of historical developments.
+- When writing the grammar sections, incorporate syntactic role explanations naturally within the context of religious and historical discussions.

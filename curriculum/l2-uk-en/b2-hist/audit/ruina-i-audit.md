@@ -1,7 +1,7 @@
 # Audit Report: M58 — ruina-i.md
 **Level:** B2-HIST | **Module:** M58 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:29:38
+**Generated:** 2026-02-25 20:53:06
 
 ## Configuration
 **Type:** B2-history

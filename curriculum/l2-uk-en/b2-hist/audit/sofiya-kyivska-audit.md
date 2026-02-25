@@ -1,7 +1,7 @@
 # Audit Report: M14 — sofiya-kyivska.md
 **Level:** B2-HIST | **Module:** M14 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 18:50:03
+**Generated:** 2026-02-25 20:26:35
 
 ## Configuration
 **Type:** B2-history

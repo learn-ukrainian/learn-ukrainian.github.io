@@ -1,90 +1,91 @@
 # A2 Module Status
 
-**Generated:** 2026-02-16 19:49:25
-**Total Modules:** 70
-**Status:** 1 passing, 2 failing, 0 stubs, 67 errors
+**Generated:** 2026-02-25 20:35:47
+**Total Modules:** 71
+**Status:** 37 passing, 33 prose-only, 1 failing, 0 stubs
 
 ## Quick Summary
 
-- ✅ **Passing:** 1/70 (1%)
-- ❌ **Failing:** 2/70
-- 📝 **Stubs:** 0/70
-- ⚠️ **Errors:** 67/70
+- ✅ **Passing:** 37/71 (52%)
+- 🔄 **Prose-Only (awaiting enrichment):** 33/71
+- ❌ **Failing:** 1/71
+- 📝 **Stubs:** 0/71
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | the-dative-i-pronouns | ❌ FAIL | 2390/1000 | structure |
-| 002 | the-dative-ii-nouns | ⚠️ MISSING | 0/0 | no_file |
-| 003 | dative-verbs | ⚠️ MISSING | 0/0 | no_file |
-| 004 | the-instrumental-i-accompaniment | ⚠️ MISSING | 0/0 | no_file |
-| 005 | the-instrumental-ii-means-and-tools | ⚠️ MISSING | 0/0 | no_file |
-| 006 | being-and-becoming | ⚠️ MISSING | 0/0 | no_file |
-| 007 | spatial-prepositions | ⚠️ MISSING | 0/0 | no_file |
-| 008 | logical-prepositions | ⚠️ MISSING | 0/0 | no_file |
-| 009 | all-cases-practice | ⚠️ MISSING | 0/0 | no_file |
-| 010 | at-the-post-office-and-bank | ⚠️ MISSING | 0/0 | no_file |
-| 011 | checkpoint-cases | ⚠️ MISSING | 0/0 | no_file |
-| 012 | aspect-introduction | ⚠️ MISSING | 0/0 | no_file |
-| 013 | the-completed-past | ⚠️ MISSING | 0/0 | no_file |
-| 014 | future-plans-and-promises | ⚠️ MISSING | 0/0 | no_file |
-| 015 | aspect-morphology | ⚠️ MISSING | 0/0 | no_file |
-| 016 | aspect-mastery-pairs | ⚠️ MISSING | 0/0 | no_file |
-| 017 | possessive-sviy | ⚠️ MISSING | 0/0 | no_file |
-| 018 | bigger-better-stronger | ⚠️ MISSING | 0/0 | no_file |
-| 019 | the-best-the-worst | ⚠️ MISSING | 0/0 | no_file |
-| 020 | preferences-and-choices | ⚠️ MISSING | 0/0 | no_file |
-| 021 | numerals-and-nouns | ⚠️ MISSING | 0/0 | no_file |
-| 022 | if-i-were | ⚠️ MISSING | 0/0 | no_file |
-| 023 | complete-imperative | ⚠️ MISSING | 0/0 | no_file |
-| 024 | smart-shopping | ⚠️ MISSING | 0/0 | no_file |
-| 025 | checkpoint-aspect-comparison | ⚠️ MISSING | 0/0 | no_file |
-| 026 | telling-stories | ❌ FAIL | 1953/1000 | No Tier 1 (Beginner) review file at l2-uk-en/a2/review/telling-stories-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue. |
-| 027 | because-and-although | ⚠️ MISSING | 0/0 | no_file |
-| 028 | she-said-that | ⚠️ MISSING | 0/0 | no_file |
-| 029 | i-think-that | ⚠️ MISSING | 0/0 | no_file |
-| 030 | i-feel-like | ⚠️ MISSING | 0/0 | no_file |
-| 031 | in-order-to | ⚠️ MISSING | 0/0 | no_file |
-| 032 | which-one | ⚠️ MISSING | 0/0 | no_file |
-| 033 | time-clauses | ⚠️ MISSING | 0/0 | no_file |
-| 034 | at-the-doctor | ⚠️ MISSING | 0/0 | no_file |
-| 035 | checkpoint | ⚠️ MISSING | 0/0 | no_file |
-| 036 | basic-motion-prefixes | ⚠️ MISSING | 0/0 | no_file |
-| 037 | advanced-motion-prefixes | ⚠️ MISSING | 0/0 | no_file |
-| 038 | action-verb-prefixes | ⚠️ MISSING | 0/0 | no_file |
-| 039 | adjective-suffixes-qualities | ⚠️ MISSING | 0/0 | no_file |
-| 040 | adj-suffixes | ⚠️ MISSING | 0/0 | no_file |
-| 041 | root-families-i | ⚠️ MISSING | 0/0 | no_file |
-| 042 | root-families-ii | ⚠️ MISSING | 0/0 | no_file |
-| 043 | wf-mastery | ⚠️ MISSING | 0/0 | no_file |
-| 044 | checkpoint-word-formation | ⚠️ MISSING | 0/0 | no_file |
-| 045 | food-and-cooking | ⚠️ MISSING | 0/0 | no_file |
-| 046 | home-and-furniture | ⚠️ MISSING | 0/0 | no_file |
-| 047 | nature-and-weather | ⚠️ MISSING | 0/0 | no_file |
-| 048 | emotions-personality | ⚠️ MISSING | 0/0 | no_file |
-| 049 | work-professions | ⚠️ MISSING | 0/0 | no_file |
-| 050 | technology-media | ⚠️ MISSING | 0/0 | no_file |
-| 051 | hobbies-leisure | ⚠️ MISSING | 0/0 | no_file |
-| 052 | education-learning | ⚠️ MISSING | 0/0 | no_file |
-| 053 | shopping-services | ⚠️ MISSING | 0/0 | no_file |
-| 054 | sports-fitness | ⚠️ MISSING | 0/0 | no_file |
-| 055 | health-body | ✅ PASS | 2459/1000 | - |
-| 056 | checkpoint-full-grammar | ⚠️ MISSING | 0/0 | no_file |
-| 057 | practical-intro | ⚠️ MISSING | 0/0 | no_file |
-| 058 | practical-warm-up | ⚠️ MISSING | 0/0 | no_file |
-| 059 | doctor-visit | ⚠️ MISSING | 0/0 | no_file |
-| 060 | at-the-pharmacy | ⚠️ MISSING | 0/0 | no_file |
-| 061 | hotel-accommodation | ⚠️ MISSING | 0/0 | no_file |
-| 062 | rental-accommodation | ⚠️ MISSING | 0/0 | no_file |
-| 063 | scheduling-appointments | ⚠️ MISSING | 0/0 | no_file |
-| 064 | scheduling-interviews | ⚠️ MISSING | 0/0 | no_file |
-| 065 | giving-directions | ⚠️ MISSING | 0/0 | no_file |
-| 066 | asking-for-directions | ⚠️ MISSING | 0/0 | no_file |
-| 067 | social-media-ukrainian | ⚠️ MISSING | 0/0 | no_file |
-| 068 | texting-messaging | ⚠️ MISSING | 0/0 | no_file |
-| 069 | online-services | ⚠️ MISSING | 0/0 | no_file |
-| 070 | a2-final-exam | ⚠️ MISSING | 0/0 | no_file |
+| 001 | the-dative-i-pronouns | ✅ PASS | 4016/3000 | - |
+| 002 | the-dative-ii-nouns | ✅ PASS | 3689/3000 | - |
+| 003 | dative-verbs | ✅ PASS | 3452/3000 | - |
+| 004 | the-instrumental-i-accompaniment | ✅ PASS | 3575/3000 | - |
+| 005 | the-instrumental-ii-means-and-tools | ✅ PASS | 3567/3000 | - |
+| 006 | being-and-becoming | ✅ PASS | 3047/3000 | - |
+| 007 | spatial-prepositions | ✅ PASS | 3640/3000 | - |
+| 008 | logical-prepositions | ✅ PASS | 3128/3000 | - |
+| 009 | all-cases-practice | ✅ PASS | 3132/3000 | - |
+| 010 | at-the-post-office-and-bank | ✅ PASS | 3534/3000 | - |
+| 011 | checkpoint-cases | ❌ FAIL | 2573/2500 | structure |
+| 012 | aspect-introduction | ✅ PASS | 3258/3000 | - |
+| 013 | the-completed-past | ✅ PASS | 4798/3000 | - |
+| 014 | future-plans-and-promises | ✅ PASS | 3058/3000 | - |
+| 015 | aspect-morphology | ✅ PASS | 3737/3000 | - |
+| 016 | aspect-mastery-pairs | ✅ PASS | 3455/3000 | - |
+| 017 | possessive-sviy | ✅ PASS | 3100/3000 | - |
+| 018 | bigger-better-stronger | ✅ PASS | 3331/3000 | - |
+| 019 | the-best-the-worst | ✅ PASS | 3360/3000 | - |
+| 020 | preferences-and-choices | ✅ PASS | 4071/3000 | - |
+| 021 | numerals-and-nouns | ✅ PASS | 4633/3000 | - |
+| 022 | if-i-were | 🔄 PROSE | 4332/3000 | - |
+| 023 | complete-imperative | 🔄 PROSE | 3229/3000 | - |
+| 024 | smart-shopping | ✅ PASS | 3850/3000 | - |
+| 025 | checkpoint-aspect-comparison | ✅ PASS | 3234/2500 | structure |
+| 026 | telling-stories | ✅ PASS | 4701/3000 | - |
+| 027 | because-and-although | 🔄 PROSE | 4528/3000 | - |
+| 028 | she-said-that | ✅ PASS | 3506/3000 | - |
+| 029 | i-think-that | 🔄 PROSE | 3888/3000 | - |
+| 030 | i-feel-like | ✅ PASS | 3116/3000 | - |
+| 031 | in-order-to | ✅ PASS | 4001/3000 | - |
+| 032 | which-one | ✅ PASS | 3319/3000 | - |
+| 033 | time-clauses | ✅ PASS | 3637/3000 | - |
+| 034 | health-basics | ✅ PASS | 3315/3000 | - |
+| 035 | checkpoint | ✅ PASS | 3570/2500 | - |
+| 036 | basic-motion-prefixes | 🔄 PROSE | 3161/3000 | - |
+| 037 | advanced-motion-prefixes | ✅ PASS | 3004/3000 | - |
+| 038 | action-verb-prefixes | ✅ PASS | 3865/3000 | - |
+| 039 | adjective-suffixes-qualities | ✅ PASS | 3053/3000 | - |
+| 040 | adjective-suffixes-types | 🔄 PROSE | 3245/3000 | - |
+| 041 | root-families-i | 🔄 PROSE | 3136/3000 | - |
+| 042 | root-families-ii | 🔄 PROSE | 3425/3000 | - |
+| 043 | wf-mastery | 🔄 PROSE | 3783/3000 | - |
+| 044 | checkpoint-word-formation | 🔄 PROSE | 5139/2500 | - |
+| 045 | food-and-cooking | 🔄 PROSE | 4879/3000 | - |
+| 046 | home-and-furniture | 🔄 PROSE | 3848/3000 | - |
+| 047 | nature-and-weather | 🔄 PROSE | 3607/3000 | - |
+| 048 | emotions-personality | 🔄 PROSE | 5486/3000 | - |
+| 049 | work-professions | 🔄 PROSE | 4723/3000 | - |
+| 050 | technology-media | 🔄 PROSE | 4171/3000 | - |
+| 051 | hobbies-leisure | ✅ PASS | 5064/3000 | - |
+| 052 | education-learning | 🔄 PROSE | 5064/3000 | - |
+| 053 | shopping-services | ✅ PASS | 4253/3000 | - |
+| 054 | sports-fitness | 🔄 PROSE | 4191/3000 | - |
+| 055 | health-wellness | 🔄 PROSE | 5108/3000 | - |
+| 056 | checkpoint-full-grammar | ✅ PASS | 3372/2500 | - |
+| 057 | practical-intro | 🔄 PROSE | 3301/3000 | - |
+| 058 | practical-warm-up | 🔄 PROSE | 4510/3000 | - |
+| 059 | medical-care | 🔄 PROSE | 4701/3000 | - |
+| 060 | at-the-pharmacy | 🔄 PROSE | 3324/3000 | - |
+| 061 | hotel-accommodation | 🔄 PROSE | 5274/3000 | - |
+| 062 | rental-accommodation | 🔄 PROSE | 3626/3000 | - |
+| 063 | scheduling-appointments | 🔄 PROSE | 4717/3000 | - |
+| 064 | scheduling-interviews | 🔄 PROSE | 5019/3000 | - |
+| 065 | giving-directions | 🔄 PROSE | 3008/3000 | - |
+| 066 | asking-for-directions | 🔄 PROSE | 5613/3000 | - |
+| 067 | social-media-ukrainian | 🔄 PROSE | 4136/3000 | - |
+| 068 | texting-messaging | 🔄 PROSE | 4557/3000 | - |
+| 069 | online-services | 🔄 PROSE | 4257/3000 | - |
+| 070 | participles-intro | 🔄 PROSE | 3536/3000 | - |
+| 071 | a2-final-exam | ✅ PASS | 3051/2500 | - |
 
 ---
 

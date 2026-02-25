@@ -1,7 +1,7 @@
 # Audit Report: M22 — litopys-velychka.md
 **Level:** C1-HIST | **Module:** M22 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-20 01:10:04
+**Generated:** 2026-02-25 20:36:09
 
 ## Configuration
 **Type:** C1-history
@@ -22,6 +22,28 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'id' is a required property
   - FIX: Correct the YAML structure to match schemas/meta-module.schema.json
+- **[EUPHONY]** Line 33: «з законами» — з перед з/с/ш/ч; має бути «із законами»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 45: «з сюжетами» — з перед з/с/ш/ч; має бути «із сюжетами»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 57: «з шаблею» — з перед з/с/ш/ч; має бути «із шаблею»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 63: «з чуток» — з перед з/с/ш/ч; має бути «із чуток»
+  - FIX: Replace «з» with «із» (before sibilant)
+- **[EUPHONY]** Line 67: «в зраді» — в перед збігом приголосних; має бути «у зраді»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 111: «в тканину» — в перед збігом приголосних; має бути «у тканину»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 113: «втрачені і їхні» — і між голосними; має бути «й їхні»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 129: «сьогодні і який» — і між голосними; має бути «й який»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 131: «а і як» — і між голосними; має бути «й як»
+  - FIX: Replace «і» with «й» (between vowels)
+- **[EUPHONY]** Line 191: «в XIX» — в перед збігом приголосних; має бути «у XIX»
+  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[EUPHONY]** Line 205: «в структурі» — в перед збігом приголосних; має бути «у структурі»
+  - FIX: Replace «в» with «у» (before consonant cluster)
 - **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (11 total): 'не просто X, а Y' x8, 'не лише X, а й Y' x3 — robotic prose
   - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 - **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
@@ -30,10 +52,9 @@
   - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
-**📝 UPDATE** (severity 62/100)
+**🔄 REWRITE** (severity 97/100)
 
-- Revision recommended (severity 62/100)
-- 4 violations (moderate)
+- 15 violations (severe - consider revision)
 - Structure issue: Missing '## Activities' header OR activities sidecar
 - Activity count below minimum
 - Activity density below minimum
@@ -50,7 +71,7 @@
 - **Structure:** ❌ Missing '## Activities' header OR activities sidecar
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ❌ 4 violations
+- **Pedagogy:** ❌ 3 violations
 - **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
 - **Immersion:** 🇺🇦 97.0% (target 95-100% (history))
 - **Richness:** ❌ 92% < 95% min (history)

@@ -5,13 +5,13 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-24T22:24:11Z",
+      "ts": "2026-02-25T10:12:59Z",
       "task_id": "v3-synonyms-emotion-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "failed",
-      "ts": "2026-02-24T22:26:39Z",
+      "ts": "2026-02-25T10:12:59Z",
       "note": "word-count-2908-below-80pct-4000"
     }
   }

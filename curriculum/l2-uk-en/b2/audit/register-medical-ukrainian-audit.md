@@ -1,7 +1,7 @@
 # Audit Report: M20 — register-medical-ukrainian.md
 **Level:** B2 | **Module:** M20 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 4000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-24 17:39:26
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-25 22:22:19
 
 ## Configuration
 **Type:** B2-grammar
@@ -16,82 +16,87 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Лексика медичного регістру | 15 | 8 | ✅ |
+| 2 | fill-in | Заповніть пропуски у медичних діалогах | 12 | 8 | ✅ |
+| 3 | unjumble | Складіть медичні речення | 8 | 6 | ✅ |
+| 4 | error-correction | Виправте мовні помилки та русизми | 12 | 6 | ✅ |
+| 5 | true-false | Правда чи хиба: правила медичного спілкування | 10 | 8 | ✅ |
+| 6 | translate | Переклад медичних висловів | 8 | 6 | ✅ |
+| 7 | select | Оберіть усі правильні варіанти | 8 | 6 | ✅ |
+| 8 | match-up | Знайдіть відповідники: типи болю та їх опис | 16 | 8 | ✅ |
+| 9 | reading | Первинне джерело: Філософія здоров`я Миколи Амосова | 3 | 3 | ✅ |
+| 10 | reading | Інструкція до препарату: антибіотик широкого спектру дії | 3 | 3 | ✅ |
+| 11 | reading | Повідомлення з системи Helsi.me: запис на прийом | 3 | 3 | ✅ |
+| 12 | reading | Медична виписка зі стаціонару | 3 | 3 | ✅ |
+| 13 | essay-response | Опис симптомів для візиту до лікаря | 1 | 1 | ✅ |
+| 14 | group-sort | Розподіліть слова за значенням: Відділ чи Відділення | 15 | 14 | ✅ |
+| 15 | cloze | Заповніть пропуски: Від перших симптомів до лікування | 16 | 14 | ✅ |
+
+**Summary:**
+- Total activities: 15 (target: 10-14) ❌
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 6/6 (error-correction, essay-response, fill-in, match-up, quiz, reading) ✅
+- Low density activities: 0
+
 ## PEDAGOGICAL VIOLATIONS
-- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'приймати участь' → брати участь
-  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
-- **[EUPHONY]** Line 204: «у якому» — у перед голосним; має бути «в якому»
-  - FIX: Replace «у» with «в» (before vowel)
-- **[EUPHONY]** Line 235: «в словниках» — в перед збігом приголосних; має бути «у словниках»
-  - FIX: Replace «в» with «у» (before consonant cluster)
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'у мене...'.
+  - FIX: Vary sentence structure.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ❌ 2916/4000 (raw: 3192)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
-- **Engagement:** ❌ 0/6
+- **Words:** ✅ 6295/4000 (raw: 6589)
+- **Activities:** ✅ 15/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 11/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 98.3% (target 90-100% (grammar))
-- **Richness:** ❌ 69% < 95% min (style)
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.7% (target 90-100% (grammar))
+- **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
 
 ## Richness Details
-**Score:** 69% (minimum: 95%)
+**Score:** 99% (minimum: 95%)
 **Module Type:** style
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
-| model_answers | 80 | 3 | 100% | 20% | 20.0% |
-| engagement | 0 | 5 | 0% | 15% | 0.0% |
+| model_answers | 86 | 3 | 100% | 20% | 20.0% |
+| engagement | 9 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
-| visual | 0 | 4 | 0% | 10% | 0.0% |
+| visual | 15 | 4 | 100% | 10% | 10.0% |
 | variety | 0.98 | - | 98% | 5% | 4.9% |
-| cultural | 0 | - | 0% | 5% | 0.0% |
+| cultural | 5 | - | 100% | 5% | 5.0% |
 | paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **69.9%** |
-
-### Dryness Flags & Fixes
-- ❌ **NO_ENGAGEMENT**
-  - FIX:
-    Add 2+ engagement boxes. Use this exact format:
-    
-    > 💡 **Чи знали ви?**
-    >
-    > [Interesting fact about the grammar/vocabulary topic in Ukrainian]
-    
-    > 🇺🇦 **Культурний момент**
-    >
-    > [Cultural context connecting grammar to Ukrainian life/places]
-    
-    > 🌍 **У реальному житті**
-    >
-    > [Practical scenario where this grammar is used]
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Медична українська: спілкування у сфері охорони здоров'я** | ✅ | 72 | Included in Core |
-| **Вступ: Медичний регістр та культура аптеки** | ✅ | 460 | Included in Core |
-| **Опис симптомів та відчуттів** | ✅ | 558 | Included in Core |
-| **Консультація: Діалог лікар-пацієнт** | ✅ | 532 | Included in Core |
-| **Медичні інструкції та філософія Амосова** | ✅ | 409 | Included in Core |
-| **Медична документація та цифровізація** | ✅ | 399 | Included in Core |
-| **Культура мовлення та корекція русизмів** | ✅ | 291 | Included in Core |
-| **Підсумок** | ✅ | 195 | Included in Core |
+| **Медична українська: спілкування у сфері охорони здоров'я** | ✅ | 97 | Included in Core |
+| **Вступ: Медичний регістр та культура аптеки** | ✅ | 820 | Included in Core |
+| **Опис симптомів та відчуттів** | ✅ | 1497 | Included in Core |
+| **Консультація: Діалог лікар-пацієнт** | ✅ | 1033 | Included in Core |
+| **Медичні інструкції та філософія Амосова** | ✅ | 983 | Included in Core |
+| **Медична документація та цифровізація суспільства** | ✅ | 884 | Included in Core |
+| **Культура мовлення: корекція суржику та русизмів** | ✅ | 657 | Included in Core |
+| **Підсумок** | ✅ | 324 | Included in Core |

@@ -1,7 +1,7 @@
 # Audit Report: M47 — passive-constructions.md
 **Level:** B1 | **Module:** M47 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:28:26
+**Generated:** 2026-02-25 10:45:18
 
 ## Configuration
 **Type:** B1-grammar

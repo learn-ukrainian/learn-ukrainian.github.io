@@ -1,15 +1,15 @@
 # C2 Module Status
 
-**Generated:** 2026-02-08 00:03:59
-**Total Modules:** 100
-**Status:** 0 passing, 0 failing, 0 stubs, 100 errors
+**Generated:** 2026-02-25 20:35:54
+**Total Modules:** 101
+**Status:** 0 passing, 0 failing, 0 stubs, 101 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 0/100 (0%)
-- ❌ **Failing:** 0/100
-- 📝 **Stubs:** 0/100
-- ⚠️ **Errors:** 100/100
+- ✅ **Passing:** 0/101 (0%)
+- ❌ **Failing:** 0/101
+- 📝 **Stubs:** 0/101
+- ⚠️ **Errors:** 101/101
 
 ## Module Details
 
@@ -115,11 +115,13 @@
 | 098 | final-exam-integrated-skills | ⚠️ MISSING | 0/0 | no_file |
 | 099 | c2-certification-preparation | ⚠️ MISSING | 0/0 | no_file |
 | 100 | c2-riven-zaversheno | ⚠️ MISSING | 0/0 | no_file |
+| 101 | advanced-rhetoric | ⚠️ MISSING | 0/0 | no_file |
 
 ---
 
 **Legend:**
 - ✅ PASS: All audit gates pass
+- 🔄 PROSE: Content gates pass; activities deferred (awaiting /hetman enrichment)
 - ❌ FAIL: Some audit gates fail
 - 📝 STUB: Empty or < 100 words
 - ⚠️ ERROR/MISSING: File not found or audit error

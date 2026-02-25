@@ -1,7 +1,7 @@
 # Audit Report: M15 — register-introduction.md
 **Level:** B2 | **Module:** M15 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 16:55:01
+**Generated:** 2026-02-25 10:43:10
 
 ## Configuration
 **Type:** B2-grammar

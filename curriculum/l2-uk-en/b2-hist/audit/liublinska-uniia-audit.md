@@ -1,7 +1,7 @@
 # Audit Report: M31 — liublinska-uniia.md
 **Level:** B2-HIST | **Module:** M31 | **Phase:** B2.3b | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-24 18:51:23
+**Generated:** 2026-02-25 20:27:49
 
 ## Configuration
 **Type:** B2-history

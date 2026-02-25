@@ -1,7 +1,7 @@
 # Audit Report: M56 — pereyaslavska-uhoda.md
 **Level:** B2-HIST | **Module:** M56 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:19:50
+**Generated:** 2026-02-25 20:47:34
 
 ## Configuration
 **Type:** B2-history

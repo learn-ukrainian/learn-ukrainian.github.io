@@ -1,7 +1,7 @@
 # Audit Report: M35 — concessive-khocha.md
 **Level:** B1 | **Module:** M35 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 20:14:38
+**Generated:** 2026-02-25 10:44:22
 
 ## Configuration
 **Type:** B1-grammar

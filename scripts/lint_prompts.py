@@ -183,6 +183,9 @@ def check_file_level_rule(filepath: Path) -> list[dict]:
     content = filepath.read_text(encoding="utf-8")
 
     # Check: B1+ skills must have "no inline IPA" or "No inline IPA" somewhere
+    # Skip calibration files — they're not skill/phase prompts
+    if "/calibration/" in str(filepath):
+        return violations
     if "full-rebuild-core-b" in str(filepath) or any(
         track in str(filepath)
         for track in ["b2-hist", "c1-bio", "c1-hist", "oes", "ruth", "lit"]
@@ -355,7 +358,7 @@ def print_violations(violations: list[dict], header: str) -> None:
             print(f"  {filepath}:")
             for v in file_violations:
                 rule_short = v["rule"].replace("RESEARCH_", "")
-                print(f"    L{v['line']}: [{rule_short}] {v['content'][:80]}")
+                print(f"    L{v['line']}: [{rule_short}] {v.get('content', v.get('message', ''))[:80]}")
             print()
 
 

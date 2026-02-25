@@ -1,34 +1,32 @@
 # Дослідження: Синоніми: Час та Періоди
 
 ## State Standard Reference
-§4.4.1.2: "Стилістичні засоби лексики: синоніми... епітети... метафори..."
-Alignment: This module directly addresses the B2 requirement for lexical stylistics by distinguishing synonymous time adverbs (*зараз/тепер/нині*) and developing precision in temporal description as required in the "Daily Life" thematic section (§3.3 "окреслення часу і простору").
+§4.4.1.2: "Стилістичні засоби лексики: ... синоніми: говорити, розмовляти, спілкуватися;"
+Alignment: This module directly addresses B2 lexical stylistics by systematically analyzing synonymous temporal adverbs (зараз, тепер, наразі, нині, щойно, колись) and focusing on their exact stylistic and register differentiation.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| **зараз** | High (Spoken/General) | зараз роблю, прямо зараз, саме зараз |
-| **тепер** | High (General/Written) | тепер ми знаємо, а тепер, відтепер |
-| **нині** | Medium (Formal/Publicistic) | нині відомо, станом на нині, до нині |
-| **наразі** | Medium (Official/Business) | наразі невідомо, наразі триває, наразі все |
-| **колись** | High (Narrative) | колись давно, як колись, колись-то |
-| **щойно** | Medium (Spoken/News) | щойно повернувся, щойно отримали |
+| Word | Frequency / Context | Key collocations |
+|------|---------------------|------------------|
+| зараз | Very high / Colloquial | зараз роблю, саме зараз |
+| тепер | High / Neutral | тепер ми знаємо, відтепер |
+| наразі | Med-High / Official | наразі невідомо, наразі триває |
+| нині | Medium / Publicistic | нині відомо, станом на нині |
+| щойно | High / Immediate past | щойно повернувся, щойно отримали |
+| колись | High / Narrative past | колись давно, як колись |
 
 ## Cultural Hooks
-1. **Philosophical Depth**: Hryhorii Skovoroda's maxim "З усіх утрат утрата часу найтяжча" (Of all losses, loss of time is the heaviest). This anchors the concept of time not just as a resource but as a spiritual value.
-2. **Literary Resonance**: Lina Kostenko's line "Єдиний, хто не втомлюється, — час" (The only one who doesn't get tired is time). Use this to illustrate the personification of time in Ukrainian worldview.
-3. **Folk Wisdom**: "Всякому овочу свій час" (Every vegetable has its time) — equivalent to "Everything in its season," emphasizing patience and natural order.
+1. Hryhorii Skovoroda's philosophical valuation of time: «З усіх утрат утрата часу найтяжча» (Of all losses, the loss of time is the heaviest).
+2. The traditional Ukrainian agrarian worldview prioritizing patience and natural order: «Всякому овочу свій час» (Every vegetable has its time).
 
 ## Common Learner Errors
-1. **Зараз vs Тепер**: Learners often use *зараз* for general present states (Error: *Зараз я живу в Києві* vs Correct: *Тепер я живу в Києві*). *Зараз* = immediate moment; *Тепер* = current period/epoch.
-2. **Наразі usage**: Misusing *наразі* as a direct synonym for *зараз*. *Наразі* implies a temporary state ("for the time being", "as of now") rather than an action in progress. (Error: *Наразі йде дощ* vs Correct: *Зараз йде дощ*).
-3. **Calques**: Using *в даний момент* (clumsy calque from Russian/English) instead of the natural Ukrainian *зараз*, *тепер*, or *наразі*.
+1. Using "зараз" for extended periods (e.g., "зараз я живу в Києві" instead of "тепер я живу в Києві") — confusing immediate action with a current epoch/state.
+2. Calquing "в даний момент" from the Russian "в данный момент" — Ukrainian authentically uses "наразі" or simply "зараз" depending on the register.
 
 ## Cross-References
-- **Builds on**: A1/A2 basic time adverbs (*сьогодні, вчора, завтра*), B1 Aspect (imperfective usage for duration).
-- **Prepares for**: C1 Stylistics (archaic time terms like *древле*, *поки*, *допіру*).
+- Builds on: B1 temporal adverbs and verb aspect pairings.
+- Prepares for: C1 advanced stylistic register and publicistic phrasing.
 
 ## Notes for Content Writing
-- **Persona Flavor**: Use the **Archeologist** persona to contrast "deep time" (*колись давно*, *у давнину*) with the fleeting "now" (*щойно*, *зараз*).
-- **Stylistic Register**: Clearly distinguish *нині* (elevated/journalistic) from *сьогодні* (neutral).
-- **Nuance**: Emphasize that *щойно* is stricter than "just" — it's immediate past (moments ago).
+- **Decolonized Framing**: Emphasize how "наразі" and "нині" are authentically Ukrainian, resisting the Soviet-era bureaucratic tendency to flatten synonyms to match Russian equivalents. Contrast "наразі" (natural Ukrainian) with "в даний момент" (bureaucratic Russian calque).
+- **Agency Pass**: Frame all examples with Ukrainians as active subjects (e.g., "Ми щойно закінчили проєкт").
+- **Persona Context**: Assume the "Professional Language Coach / Archeologist" persona to explore "deep time" versus "immediate time" in Section 4.

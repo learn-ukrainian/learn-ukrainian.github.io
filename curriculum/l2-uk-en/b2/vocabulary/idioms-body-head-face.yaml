@@ -1,121 +1,121 @@
 items:
-  - lemma: "світла голова"
-    translation: "bright mind"
-    pos: "phrase"
-    notes: "про розумну, розсудливу людину"
-  - lemma: "впадати в око"
-    translation: "to catch the eye"
-    pos: "phrase"
-    notes: "правильний український відповідник"
-  - lemma: "водити за ніс"
-    translation: "to lead by the nose"
-    pos: "phrase"
-    notes: "обманювати, давати пусті обіцянки"
-  - lemma: "замилювати очі"
-    translation: "to pull the wool over someone's eyes"
-    pos: "phrase"
-    notes: "створювати хибне враження"
-  - lemma: "втратити обличчя"
-    translation: "to lose face"
-    pos: "phrase"
-    notes: "втратити авторитет, репутацію"
-  - lemma: "опростоволоситися"
-    translation: "to make a fool of oneself"
-    pos: "verb"
-    notes: "зробити грубу помилку, зганьбитися"
-  - lemma: "нашорошити вуха"
-    translation: "to prick up one's ears"
-    pos: "phrase"
-    notes: "уважно прислухатися"
-  - lemma: "морочити голову"
-    translation: "to mess with someone's head"
-    pos: "phrase"
-    notes: "дурити або набридати"
-  - lemma: "не в бров, а в око"
-    translation: "hit the nail on the head"
-    pos: "phrase"
-    notes: "сказати або зробити щось дуже влучно"
-  - lemma: "сміятися з когось"
-    translation: "to laugh at someone"
-    pos: "phrase"
-    notes: "правильне граматичне керування"
-  - lemma: "мати голову на плечах"
-    translation: "to have a good head on one's shoulders"
-    pos: "phrase"
-    notes: "керуватися здоровим глуздом"
-  - lemma: "як сніг на голову"
-    translation: "out of the blue"
-    pos: "phrase"
-    notes: "про раптову подію"
-  - lemma: "вішати голову"
-    translation: "to hang one's head (in despair)"
-    pos: "phrase"
-    notes: "впадати у відчай"
-  - lemma: "хоч око виколи"
-    translation: "pitch black"
-    pos: "phrase"
-    notes: "про абсолютну темряву"
-  - lemma: "ламати голову"
-    translation: "to rack one's brains"
-    pos: "phrase"
-    notes: "напружено думати"
-  - lemma: "задирати носа"
-    translation: "to turn up one's nose"
-    pos: "phrase"
-    notes: "демонструвати пихатість"
-  - lemma: "розвісити вуха"
-    translation: "to be gullible"
-    pos: "phrase"
-    notes: "бути занадто довірливим"
-  - lemma: "голова"
-    translation: "head"
-    pos: "noun"
-    gender: "f"
-  - lemma: "обличчя"
-    translation: "face"
-    pos: "noun"
-    gender: "n"
-  - lemma: "око"
-    translation: "eye"
-    pos: "noun"
-    gender: "n"
-  - lemma: "ніс"
-    translation: "nose"
-    pos: "noun"
-    gender: "m"
-  - lemma: "вухо"
-    translation: "ear"
-    pos: "noun"
-    gender: "n"
-  - lemma: "брова"
-    translation: "eyebrow"
-    pos: "noun"
-    gender: "f"
-  - lemma: "розум"
-    translation: "mind, intellect"
-    pos: "noun"
-    gender: "m"
-  - lemma: "ганьба"
-    translation: "shame, disgrace"
-    pos: "noun"
-    gender: "f"
-  - lemma: "маніпуляція"
-    translation: "manipulation"
-    pos: "noun"
-    gender: "f"
-  - lemma: "очіпок"
-    translation: "traditional women's headdress"
-    pos: "noun"
-    gender: "m"
-  - lemma: "ведмідь"
-    translation: "bear"
-    pos: "noun"
-    gender: "m"
-  - lemma: "пиха"
-    translation: "arrogance"
-    pos: "noun"
-    gender: "f"
-  - lemma: "глузувати"
-    translation: "to mock"
-    pos: "verb"
-    aspect: "impf"
+  - lemma: 'світла голова'
+    ipa: '[ˈsʲʋʲitlɑ ɦɔlɔˈʋɑ]'
+    translation: 'bright mind'
+    pos: 'phrase'
+  - lemma: 'гаряча голова'
+    ipa: '[ɦɑˈrʲɑt͡ʃɑ ɦɔlɔˈʋɑ]'
+    translation: 'hot head'
+    pos: 'phrase'
+  - lemma: 'мати голову на плечах'
+    ipa: '[ˈmɑtɪ ˈɦɔlɔʋu nɑ plɛˈt͡ʃɑx]'
+    translation: 'to have common sense'
+    pos: 'phrase'
+  - lemma: 'як сніг на голову'
+    ipa: '[jɑk sʲnʲiɦ nɑ ˈɦɔlɔʋu]'
+    translation: 'out of the blue'
+    pos: 'phrase'
+  - lemma: 'вішати голову'
+    ipa: '[ˈʋʲiʃɑtɪ ˈɦɔlɔʋu]'
+    translation: 'to hang one`s head, to give up'
+    pos: 'phrase'
+  - lemma: 'ламати голову'
+    ipa: '[lɑˈmɑtɪ ˈɦɔlɔʋu]'
+    translation: 'to rack one`s brains'
+    pos: 'phrase'
+  - lemma: 'морочити голову'
+    ipa: '[mɔˈrɔt͡ʃɪtɪ ˈɦɔlɔʋu]'
+    translation: 'to mess with someone`s head'
+    pos: 'phrase'
+  - lemma: 'впадати в око'
+    ipa: '[ʍpɑˈdɑtɪ ʋ ˈɔkɔ]'
+    translation: 'to catch the eye'
+    pos: 'phrase'
+  - lemma: 'замилювати очі'
+    ipa: '[zɑˈmɪlʲuʋɑtɪ ˈɔt͡ʃʲi]'
+    translation: 'to pull the wool over someone`s eyes'
+    pos: 'phrase'
+  - lemma: 'хоч око виколи'
+    ipa: '[xɔt͡ʃ ˈɔkɔ ˈʋɪkɔlɪ]'
+    translation: 'pitch dark'
+    pos: 'phrase'
+  - lemma: 'не в бров, а в око'
+    ipa: '[nɛ ʋ brɔu̯, ɑ ʋ ˈɔkɔ]'
+    translation: 'hit the nail on the head'
+    pos: 'phrase'
+  - lemma: 'водити за ніс'
+    ipa: '[ʋɔˈdɪtɪ zɑ nʲis]'
+    translation: 'to lead by the nose'
+    pos: 'phrase'
+  - lemma: 'задирати носа'
+    ipa: '[zɑdɪˈrɑtɪ ˈnɔsɑ]'
+    translation: 'to turn up one`s nose, to be arrogant'
+    pos: 'phrase'
+  - lemma: 'нашорошити вуха'
+    ipa: '[nɑʃɔˈrɔʃɪtɪ ˈʋuxɑ]'
+    translation: 'to prick up one`s ears'
+    pos: 'phrase'
+  - lemma: 'розвісити вуха'
+    ipa: '[rɔˈzʲʋʲisɪtɪ ˈʋuxɑ]'
+    translation: 'to listen gullibly'
+    pos: 'phrase'
+  - lemma: 'пропустити повз вуха'
+    ipa: '[prɔpuˈstɪtɪ pɔu̯z ˈʋuxɑ]'
+    translation: 'to ignore, let in one ear and out the other'
+    pos: 'phrase'
+  - lemma: 'втратити обличчя'
+    ipa: '[ˈʍtrɑtɪtɪ ɔˈblɪt͡ʃʲːɑ]'
+    translation: 'to lose face'
+    pos: 'phrase'
+  - lemma: 'опростоволоситися'
+    ipa: '[ɔprɔstɔʋɔlɔsɪtɪsʲɑ]'
+    translation: 'to make a fool of oneself, to disgrace oneself'
+    pos: 'verb'
+  - lemma: 'сміятися з когось'
+    ipa: '[sʲmʲiˈjɑtɪsʲɑ z kɔɦɔsʲ]'
+    translation: 'to laugh at someone'
+    pos: 'phrase'
+  - lemma: 'кепкувати з когось'
+    ipa: '[kɛpkuˈʋɑtɪ z kɔɦɔsʲ]'
+    translation: 'to mock someone'
+    pos: 'phrase'
+  - lemma: 'глузувати з когось'
+    ipa: '[ɦluzuˈʋɑtɪ z kɔɦɔsʲ]'
+    translation: 'to mock someone'
+    pos: 'phrase'
+  - lemma: 'очіпок'
+    ipa: '[ɔˈt͡ʃʲipɔk]'
+    translation: 'traditional Ukrainian married woman`s headdress'
+    pos: 'noun'
+  - lemma: 'простоволоса'
+    ipa: '[prɔstɔʋɔˈlɔsɑ]'
+    translation: 'bareheaded (of a woman)'
+    pos: 'adjective'
+  - lemma: 'маніпуляція'
+    ipa: '[mɑnʲipuˈlʲɑt͡sʲijɑ]'
+    translation: 'manipulation'
+    pos: 'noun'
+  - lemma: 'зганьбитися'
+    ipa: '[zɦɑˈnʲbɪtɪsʲɑ]'
+    translation: 'to disgrace oneself'
+    pos: 'verb'
+  - lemma: 'пихатий'
+    ipa: '[pɪˈxɑtɪj]'
+    translation: 'arrogant, conceited'
+    pos: 'adjective'
+  - lemma: 'невігластво'
+    ipa: '[nɛˈʋʲiɦlɑstʋɔ]'
+    translation: 'ignorance'
+    pos: 'noun'
+  - lemma: 'розсудливий'
+    ipa: '[rɔˈzsudlɪʋɪj]'
+    translation: 'reasonable, sensible'
+    pos: 'adjective'
+  - lemma: 'довірливий'
+    ipa: '[dɔˈʋʲirlɪʋɪj]'
+    translation: 'gullible, trusting'
+    pos: 'adjective'
+  - lemma: 'зненацька'
+    ipa: '[znɛˈnɑt͡sʲkɑ]'
+    translation: 'suddenly, unexpectedly'
+    pos: 'adverb'

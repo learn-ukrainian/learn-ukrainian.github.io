@@ -1,7 +1,7 @@
 # Audit Report: M22 — motion-full-prefix-integration.md
 **Level:** B1 | **Module:** M22 | **Phase:** B1.3 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 17:36:08
+**Generated:** 2026-02-25 10:43:17
 
 ## Configuration
 **Type:** B1-grammar

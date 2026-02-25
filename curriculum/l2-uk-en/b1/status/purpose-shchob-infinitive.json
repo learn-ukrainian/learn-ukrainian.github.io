@@ -2,10 +2,10 @@
   "module": "purpose-shchob-infinitive",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T19:39:34.634337Z",
+  "last_audit": "2026-02-25T10:43:53.447163Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T19:39:08.050012Z",
+    "md": "2026-02-24T22:22:53.832582Z",
     "meta": "2026-02-24T00:14:46.146021Z",
     "activities": "2026-02-24T00:22:28.732137Z",
     "vocabulary": "2026-02-24T19:37:51.079550Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4161/4000 (raw: 4534)"
+      "message": "4163/4000 (raw: 4536)"
     },
     "activities": {
       "status": "deferred",

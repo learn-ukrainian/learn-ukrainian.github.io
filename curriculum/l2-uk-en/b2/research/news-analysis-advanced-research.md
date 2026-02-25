@@ -1,35 +1,33 @@
 # Дослідження: Аналіз новин: Поглиблено
 
 ## State Standard Reference
-§3.18, §1.1.2.2.2: "Медіа й соціальні мережі: преса, радіо, телебачення, інтернет... обговорення новин і відгуки про них"
-Alignment: Цей модуль безпосередньо реалізує тематичну вимогу "Медіа" (каталог B) та комунікативну інтенцію "обговорення новин" (каталог A), фокусуючись на критичному аналізі та розпізнаванні маніпуляцій, що відповідає вимогам до рівня B2 щодо ведення дискусій.
+§1.1.2.2.2: "Діалоги: великі за обсягом неофіційні чи офіційні обговорення; дискусії та суперечки на відомі теми"
+§3.18: "Медіа й соціальні мережі: преса; радіо; телебачення; інтернет і соціальні мережі"
+Alignment: The module teaches learners to engage in in-depth official and unofficial discussions regarding media texts, specifically analyzing bias and manipulation in press and digital media.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Упередженість** (Bias) | Середня (публіцистика) | редакційна упередженість, політична упередженість, упереджене ставлення |
-| **Маніпуляція** | Висока (медіа) | маніпуляція свідомістю, емоційна маніпуляція, засоби маніпуляції |
-| **Пропаганда** | Висока (політика) | ворожа пропаганда, російська пропаганда, жертва пропаганди |
-| **Джерело** | Дуже висока | першоджерело, надійне джерело, перевірене джерело, посилатися на джерело |
-| **Верифікація** | Середня (спец.) | верифікація даних, методи верифікації, двоетапна верифікація |
-| **Шпальта** | Середня (преса) | на перших шпальтах, газетна шпальта |
-| **Оприлюднити** | Висока (офіц.) | оприлюднити документи, оприлюднити результати, офіційно оприлюднити |
+| упередженість | High (media/political discourse) | політична упередженість, упереджене ставлення |
+| маніпуляція | High (social sciences/news) | емоційна маніпуляція, піддаватися маніпуляціям |
+| джинса | Medium (specific to UA journalism) | політична джинса, замовляти джинсу |
+| оприлюднити | High (official reporting) | оприлюднити дані, оприлюднити результати |
 
 ## Cultural Hooks
-1. **Реформа Суспільного (2017)**: Створення НСТУ (Національної суспільної телерадіокомпанії України) на базі державного мовлення стало ключовим кроком до незалежної журналістики, де наглядова рада обирається без втручання влади.
-2. **Феномен StopFake (2014)**: Проєкт, заснований викладачами та студентами Могилянської школи журналістики у відповідь на російську дезінформацію в Криму. Став світовим піонером фактчекінгу та боротьби з фейками.
+1. Феномен «Джинса»: A uniquely Ukrainian journalistic term for hidden advertising or paid political articles disguised as news. The term allegedly originated because politicians paid for these articles with cash carried in their jeans pockets.
+2. StopFake (2014): Launched by students and alumni of the Mohyla School of Journalism, this fact-checking initiative became a globally recognized pioneer in systematically debunking Russian disinformation and exposing fake news mechanics.
 
 ## Common Learner Errors
-1. **Калькування**: "Гарячі новини" (Hot news) → Правильно: **Свіжі новини**, **Останні новини**. "Зробити інтерв'ю" (Make interview) → Правильно: **Взяти інтерв'ю** (у когось) або **Дати інтерв'ю**.
-2. **Прийменники**: "Він був на ефірі" → Правильно: **Він був в ефірі**. "Дивлюся на телевізорі" → Правильно: **Дивлюся по телевізору** (або "на каналі").
-3. **Лексична плутанина**: "Трансляція" (процес передачі сигналу) замість "Передача" (програма). "Опублікувати" (друковані ЗМІ) vs "Оприлюднити" (зробити публічним, наприклад, документи).
+1. "Гарячі новини" → "Свіжі/останні новини" — A literal calque from English ("hot news") or Russian. Ukrainian prefers "свіжі" (fresh) or "останні" (latest).
+2. "Зробити інтерв'ю" → "Взяти/дати інтерв'ю" — Incorrect verb choice due to English influence ("to do an interview").
+3. "На ефірі" → "В ефірі" — Preposition mismatch. "Ефір" (air/broadcast) requires the preposition "в" (in), not "на" (on).
 
 ## Cross-References
-- Builds on: **B2-89** (Структура новин), **B2-01..10** (Пасивний стан — для аналізу відповідальності).
-- Prepares for: **B2-94** (Фінальний іспит), **C1-Media** (Академічний аналіз медіа).
+- Builds on: M89 (Структура новин - implicit context for this advanced module)
+- Prepares for: Future professional communication or C1 analytical writing.
 
 ## Notes for Content Writing
-- Використовувати реальні приклади (без назв конкретних фейків, щоб не поширювати їх, але описувати *механіку*).
-- Чітко розмежовувати "факт" і "судження" (fact vs opinion).
-- Звернути увагу на емоційну лексику як маркер маніпуляції.
-- Ввести поняття "джинса" (прихована реклама в медіа) як специфічний український термін.
+- Frame the Ukrainian media landscape positively, focusing on post-2014 achievements like the 2017 Suspilne (Public Broadcasting) reform and independent fact-checking initiatives.
+- Do not use Russian media as a baseline for comparison. Explain disinformation techniques by dismantling them logically, without repeating the propaganda as facts.
+- Agency Pass: Focus on active Ukrainian initiatives in combating fake news.
+- Keep examples free of Russianisms (e.g., use «отримувати», not «получати»).

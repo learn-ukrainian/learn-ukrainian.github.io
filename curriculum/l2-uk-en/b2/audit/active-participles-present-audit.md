@@ -1,7 +1,7 @@
 # Audit Report: M07 — active-participles-present.md
 **Level:** B2 | **Module:** M07 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 14:47:27
+**Generated:** 2026-02-25 10:42:30
 
 ## Configuration
 **Type:** B2-grammar

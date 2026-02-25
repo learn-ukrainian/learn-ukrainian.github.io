@@ -99,3 +99,8 @@ forbidden_claims:
 
 ### Підсумок та рецепція
 Трагічна доля твору та автора після 1933 року. Знищення театральної школи Курбаса. Вплив "Мини Мазайла" на сучасну українську драматургію. Постійна актуальність питань, піднятих у комедії.
+### Decolonial Verification
+Focus on Soviet linguistic homogenization, Avant-Garde theatre, Executed Renaissance. Clearly separate Mykola Kulish from Panteleimon Kulish.
+
+## Лінгвістичний вимір
+- Цільові слова з IPA транскрипцією.

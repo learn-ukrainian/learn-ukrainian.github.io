@@ -1,39 +1,37 @@
 # Дослідження: Аналіз новин: Основи
 
 ## State Standard Reference
-§3.18: "Медіа й соціальні мережі: преса; радіо; телебачення; інтернет і соціальні мережі."
-§4.3.5: "Пряма і непряма мова (сполучники що, щоб, частка чи в разі заміни прямої мови непрямою): Студент відповів: «Я пропустив заняття через хворобу». – Студент відповів, що пропустив заняття через хворобу."
-
-Alignment: Module B2-89 focuses on critical reading of news media (§3.18) and the grammatical transformation of citations using direct/indirect speech (§4.3.5), which is essential for analyzing sources and reporting.
+§3.18: "Медіа й соціальні мережі: преса, радіо, телебачення, інтернет і соціальні мережі."
+§4.3.5: "Пряма і непряма мова (сполучники що, щоб, частка чи в разі заміни прямої мови непрямою)..."
+Alignment: Цей модуль безпосередньо розкриває тему §3.18 через аналіз сучасного інформаційного простору та соцмереж, а також реалізує вимогу §4.3.5 щодо граматичної трансформації прямої мови в непряму під час цитування джерел у новинах.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **джерело** (source) | High (MOVA.info Publicistic) | надійне джерело, офіційне джерело, посилатися на джерело, згідно з джерелами |
-| **заголовок** (headline) | Medium-High | гучний заголовок, кричущий заголовок, винести в заголовок |
-| **упередженість** (bias) | Medium (Academic/Media) | політична упередженість, явна упередженість, уникнути упередженості |
-| **спростування** (refutation/denial) | Medium | офіційне спростування, вимагати спростування, опублікувати спростування |
-| **фейк** (fake) | High (Modern Media) | поширювати фейки, розвінчувати фейки, діпфейк, фейкові новини |
-| **експерт** (expert) | High | на думку експертів, залучити експертів, військовий експерт |
-| **репортаж** (reportage) | Medium | вести репортаж, репортаж з місця подій, спеціальний репортаж |
+| джерело | High / General | надійне джерело, офіційне джерело, посилатися на джерело |
+| заголовок | High / Media | гучний заголовок, кричущий заголовок, винести в заголовок |
+| упередженість | Mid / Academic | політична упередженість, явна упередженість, уникнути упередженості |
+| спростування | Mid / Media | офіційне спростування, вимагати спростування, опублікувати спростування |
+| фейк | Very High / Modern | поширювати фейки, розвінчувати фейки, фейкові новини |
+| експерт | High / Media | на думку експертів, залучити експертів, військовий експерт |
+| репортаж | Mid / Media | вести репортаж, репортаж з місця подій, спеціальний репортаж |
 
 ## Cultural Hooks
-1. **Gazette de Leopol (1776)**: The first periodical on Ukrainian lands was published in Lviv in French. It marks the beginning of the press tradition, showing Ukraine's long-standing integration into European information space.
-2. **Georgiy Gongadze & Ukrayinska Pravda**: The tragic story of journalist Georgiy Gongadze (founder of "Ukrayinska Pravda" in 2000) is a pivotal moment in Ukrainian media history, symbolizing the fight for freedom of speech and the high cost of truth.
-3. **War Correspondence**: Since 2014, Ukrainian journalism has evolved significantly, with figures like Andriy Tsapliyenko or Mykhailo Tkach setting standards for reporting from conflict zones and investigative journalism under extreme conditions.
+1. Gazette de Leopol (1776): Перше періодичне видання на території України (вийшло у Львові французькою мовою), що підтверджує глибоку європейську традицію українського медіапростору, незалежну від російських впливів.
+2. Свобода слова: Заснування «Української правди» (2000) та діяльність Георгія Гонгадзе стали поворотним моментом в історії сучасної української журналістики та становленні демократичного суспільства.
+3. Воєнні кореспонденти: Робота українських журналістів (наприклад, Андрія Цаплієнка, Михайла Ткача) після 2014 року сформувала нові світові стандарти репортажу з гарячих точок.
 
 ## Common Learner Errors
-1. **Pronoun Retention in Indirect Speech**: *Він сказав: «Я не згоден»* → *Він сказав, що я не згоден* (Incorrect). Should be: *Він сказав, що **він** не згоден*.
-   *Why*: Learners forget to shift perspective from 1st/2nd person to 3rd person.
-2. **Punctuation with Quotes**: Placing punctuation inside vs. outside quotes. Ukrainian rule: Period goes *after* the closing quote (unlike US English). *Він сказав: «Це правда».*
-3. **Calquing Passive Voice**: Using *Було повідомлено* (It was reported) instead of active *Повідомили* or *ЗМІ повідомили*. Ukrainian publicistic style prefers active structures or generalized personal sentences.
+1. Збереження займенників 1-ї особи в непрямій мові: *Він сказав: «Я знаю»* → *Він сказав, що я знаю* (помилка) → *Він сказав, що він знає* (правильно). Виникає через буквальний переклад без синтаксичного зсуву.
+2. Пунктуація при цитуванні: Постановка крапки перед закритими лапками (*...слово."*) замість правильного українського варіанта після лапок (*...слово".*).
+3. Калькування пасивного стану: Використання *Було повідомлено* (від рос. *Было сообщено*) замість природних українських активних конструкцій *Повідомили* або *ЗМІ повідомляють*.
 
 ## Cross-References
-- **Builds on**: B2-87 (Professional Reports), B2-88 (Formal Writing).
-- **Prepares for**: B2-90 (Advanced Analysis/Rhetoric), C1 Media Modules.
+- Builds on: B1 знання складнопідрядних речень та базових сполучників.
+- Prepares for: B2-90 (аналіз риторичних стратегій та методів маніпуляції).
 
 ## Notes for Content Writing
-- **Tone**: The "Professional Language Coach" persona should emphasize critical thinking ("Don't just read, analyze").
-- **Stylistics**: Explicitly contrast "neutral reporting" (informative) with "opinion pieces" (publicistic/emotional) using lexical markers.
-- **Grammar in Context**: Use actual news headlines or snippets (adapted) to demonstrate direct $\to$ indirect speech transformations.
-- **Modern Context**: Mention Telegram channels as a modern (and often unverified) source of news, contrasting them with traditional editorial media.
+- Зберігати 100% занурення в українську мову (без англійських пояснень).
+- Деколонізаційний фокус: подавати українські медіа як самостійний європейський феномен (Gazette de Leopol), уникати порівнянь із радянською/російською пресою як "точкою відліку". 
+- Використовувати активний стан (Ми збудували, Журналісти повідомили) та уникати пасивних кальок.
+- Для вокабуляру: звертати увагу на фонетику (наприклад, чітка вимова голосних [о], [е], [т͡ʃ]).

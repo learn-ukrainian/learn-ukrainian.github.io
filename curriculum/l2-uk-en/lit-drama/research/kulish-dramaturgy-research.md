@@ -106,3 +106,8 @@ forbidden_claims:
 
 ### Підсумок та рецепція: I — Спадщина та світовий контекст
 Знищення Куліша та Курбаса в Сандармосі як спроба вбити український модерний театр. Тривала заборона творчості. Повернення в канон у 1990-х роках. Значення драматургії Куліша для сучасного переосмислення постколоніальної травми.
+### Decolonial Verification
+Focus on Soviet linguistic homogenization, Avant-Garde theatre, Executed Renaissance. Clearly separate Mykola Kulish from Panteleimon Kulish.
+
+## Лінгвістичний вимір
+- Цільові слова з IPA транскрипцією.

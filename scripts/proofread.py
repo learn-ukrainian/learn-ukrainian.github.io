@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 """Prose proofreading script for curriculum modules.
 
+DEPRECATION NOTICE (pipeline use):
+    As of 2026-02-25, proofreading's best features (track calibration, bilingual
+    exemptions, Russianism lookup tables, LLM filler detection) have been absorbed
+    into Phase D of build_module_v3.py. This script is no longer called as a pipeline
+    step. It remains available as a **standalone dev tool** for ad-hoc quality checks
+    and for calibration coverage testing (verifying Phase D catches everything
+    proofread.py catches, per track, before fully deprecating).
+
 Reads module content as a professional Ukrainian language editor would —
 naturally, for coherence and language quality. Flags incoherent passages,
 Russianisms, anglicisms, propaganda, and motivational filler.

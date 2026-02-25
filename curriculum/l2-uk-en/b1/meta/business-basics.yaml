@@ -2,60 +2,53 @@ slug: business-basics
 title: Основи бізнесу
 word_target: 4000
 content_outline:
-  - section: Вступ та історія (Introduction & History)
-    words: 600
-    points:
-      - 'Historical ethical entrepreneurship: The Simirenko family legacy as sugar
-        magnates who funded the 1860 edition of Taras Shevchenko''s ''Kobzar'' when
-        state support failed.'
-      - 'The Tereshchenko dynasty''s philanthropy: Establishing a model where 80%
-        of profits went to hospitals and universities (KPI) under the motto ''Striving
-        for public benefit''.'
-      - Introduction to State Standard B1 competencies (§3.9, §3.12) regarding work,
-        employment, and financial services as the foundation for modern professional
-        life.
-  - section: Структури та формати бізнесу (Business Structures & Formats)
-    words: 800
-    points:
-      - 'Distinguishing lexical nuances: ''компанія'' (general/IT context), ''фірма''
-        (smaller or more colloquial), and ''підприємство'' (formal industrial or state-owned
-        unit).'
-      - 'Modern Ukrainian business landscape: Introduction of ''ФОП'' (Фізична особа-підприємець)
-        as the standard legal format for small businesses and the thriving IT sector.'
-      - 'Core vocabulary presentation: ''заснувати компанію'', ''власний бізнес'',
-        ''державне підприємство'' with focus on correct register usage.'
-  - section: Професійна комунікація та етика (Professional Communication & Ethics)
-    words: 1000
-    points:
-      - 'Learner Error Correction (Lexical Calques): Drill the distinction between
-        ''скасувати зустріч'' (correct for cancelling) and ''відмінити'' (grammatical
-        declension only).'
-      - 'False Friend Alert: Correcting ''вірне рішення'' (faithful/loyal) to ''правильне
-        рішення'' (correct/accurate) in a business decision-making context.'
-      - 'Formal Correspondence Standards: Mandatory use of the Vocative case in address
-        (e.g., ''Шановний Іване'', ''Пане директоре'') to avoid the common error of
-        using the Nominative.'
-      - 'Professional Time Expressions: Correcting the common ''на протязі року''
-        (which means in a draft/breeze) to the professional ''протягом року'' (during
-        the year).'
-  - section: Офіційне працевлаштування та послуги (Official Employment & Services)
-    words: 800
-    points:
-      - 'State Standard §3.9 Application: Vocabulary for official employment, contracts
-        (''укласти угоду''), salary (''зарплатня''), and working hours (''обідня перерва'').'
-      - 'State Standard §3.12 Services: Navigating interactions with banks, insurance
-        companies (''страхова компанія''), and postal services in a business capacity.'
-      - 'Emphasis on Active Agency: Promoting the natural Ukrainian preference for
-        active constructions (''Ми підписали угоду'') over passive translations of
-        ''The agreement was signed''.'
-  - section: Інвестиції, прибуток та підсумок (Investment, Profit & Summary)
-    words: 800
-    points:
-      - 'Financial concepts: Discussion of ''чистий прибуток'' (net profit), ''податок
-        на прибуток'' (income tax), and strategies for ''залучати інвестиції'' (attracting
-        investment).'
-      - 'Risk Management: Discussing ''збитки'' (losses) and ''вигідна угода'' (profitable
-        deal) within the context of market strategy and ''маркетинг''.'
-      - 'Final synthesis: Review of professional register expressions and the cultural
-        values of ''ethical entrepreneurship'' as a bridge to B2 Professional Track
-        modules.'
+- section: Вступ та історія
+  words: 800
+  points:
+  - 'Історичний приклад етичного підприємництва: спадщина родини цукрозаводчиків Симиренків,
+    зокрема Платона Симиренка, який профінансував видання «Кобзаря» Тараса Шевченка
+    1860 року.'
+  - 'Меценатство родини Терещенків: фінансування будівництва лікарень (наприклад,
+    дитячої лікарні «Охматдит») та заснування Київського політехнічного інституту
+    під гаслом «Прагнення до суспільної користі».'
+  - Огляд компетенцій Державного стандарту (рівень B1, §3.9, §3.12) щодо сфери роботи,
+    працевлаштування та фінансових послуг як основи професійного життя.
+- section: Структури та формати бізнесу
+  words: 800
+  points:
+  - 'Лексичні відмінності: використання слова «компанія» (широкий контекст, ІТ), «фірма»
+    (менший масштаб) та «підприємство» (офіційна юридична особа, промисловий об''єкт).'
+  - 'Сучасний бізнес-ландшафт України: статус ФОП (Фізична особа-підприємець) як найпоширеніша
+    правова форма для малого бізнесу та ІТ-сектору.'
+  - 'Презентація ключової лексики: «заснувати компанію», «власний бізнес», «державне
+    підприємство» з акцентом на правильний регістр та контекст.'
+- section: Професійна комунікація та етика
+  words: 800
+  points:
+  - 'Виправлення типових помилок (лексичні кальки): різниця між «скасувати зустріч»
+    (правильно для скасування) та «відмінити» (стосується лише граматичного відмінювання).'
+  - 'Обережно, хибні друзі перекладача: заміна скалькованого «вірне рішення» (віддане)
+    на точне «правильне рішення» у контексті прийняття бізнес-рішень.'
+  - 'Стандарти офіційного листування: обов''язкове використання кличного відмінка
+    у звертаннях («Шановний Іване», «Пане директоре») замість називного.'
+  - 'Професійне вираження часу: виправлення русизму «на протязі року» (на протязí
+    — in a draft) на питомо українське «протягом року».'
+- section: Офіційне працевлаштування та послуги
+  words: 800
+  points:
+  - 'Впровадження лексики за §3.9 Державного стандарту: офіційне працевлаштування,
+    контракти («укласти угоду»), оплата праці («зарплатня») та робочий час («обідня
+    перерва»).'
+  - 'Застосування лексики за §3.12 Державного стандарту: взаємодія з банками, страховими
+    компаніями («страхова компанія») та поштовими послугами у бізнес-контексті.'
+  - 'Акцент на українській агентності: перевага активних конструкцій («Ми підписали
+    угоду») над пасивними перекладами (замість «Угода була підписана»).'
+- section: Інвестиції, прибуток та підсумок
+  words: 800
+  points:
+  - 'Базові фінансові поняття: обговорення термінів «чистий прибуток», «податок на
+    прибуток» та стратегій для того, щоб «залучати інвестиції».'
+  - 'Управління ризиками: обговорення понять «збитки» (зазнати збитків) та «вигідна
+    угода» в контексті ринкової стратегії та маркетингу.'
+  - 'Підсумковий синтез: закріплення лексики професійного регістру та повернення до
+    культурних цінностей етичного підприємництва як містка до модулів рівня B2.'

@@ -1,42 +1,31 @@
 # Дослідження: Спорт в Україні
 
 ## State Standard Reference
-§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; хобі та зацікавлення; види спорту і спортивних споруд (стадіон, басейн, корт, ковзанка)..."
-Alignment: Module covers popular sports (football, boxing), athletes, and sports facilities, directly addressing the "types of sport" and "leisure" requirements of B1.
+§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; хобі та зацікавлення; види спорту і спортивних споруд (стадіон, басейн, корт, ковзанка)"
+Alignment: Цей модуль безпосередньо покриває вимоги до тематичного каталогу рівня B1 щодо спорту, інфраструктури та проведення вільного часу.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Футбол** | High (Top sport) | грати у футбол, вболівати за команду, збірна України, забити гол, футбольний матч |
-| **Бокс** | High (Cultural icon) | чемпіон світу, важка вага, професійний ринг, боксерські рукавиці, нокаут |
-| **Перемога** | High (General & Sport) | здобути перемогу, святкувати перемогу, воля до перемоги, перемога у змаганнях |
-| **Змагання** | Medium-High | брати участь у змаганнях, міжнародні змагання, олімпійські ігри, спортивні змагання |
-| **Тренування** | Medium | іти на тренування, щоденні тренування, тренер, фізична підготовка |
-| **Вболівальник** | Medium | футбольний вболівальник, палкий вболівальник, сектор для вболівальників |
+| займатися | Very High (GRAC) | займатися спортом, професійно займатися (Орудний відм.) |
+| грати | High | грати у футбол, грати в теніс (у/в + Знахідний відм.) |
+| вболівати | High (Sports contexts) | вболівати за команду, вболівати за збірну (за + Знахідний відм.) |
+| перемога | High | здобути перемогу, воля до перемоги, святкувати перемогу |
 
 ## Cultural Hooks
-1. **The Klitschko Era**: Vitali and Wladimir Klitschko held all major world heavyweight belts simultaneously (WBA, WBC, IBF, WBO) in 2011, earning a Guinness World Record. They are symbols of Ukrainian strength globally.
-2. **The Tsar of the Pole Vault**: Serhiy Bubka broke the world record for men's pole vault 35 times (17 outdoor and 18 indoor). His dominance is legendary.
-3. **First Gold**: Oksana Baiul won the first-ever Olympic gold medal for independent Ukraine in 1994 (Figure Skating), putting the young nation on the sports map.
-4. **The Ballon d'Or**: Andriy Shevchenko won the Ballon d'Or in 2004, the third Ukrainian to do so (after Blokhin and Belanov), cementing football as a "second religion" in Ukraine.
+1. Брати Клички у 2011 році увійшли в історію, ставши першими братами, які одночасно володіли всіма престижними чемпіонськими поясами у важкій вазі.
+2. Ярослава Магучіх здобула «золото» у стрибках у висоту на Олімпіаді-2024 в Парижі та передала значну частину призових коштів на підтримку Збройних Сил України і лікування тварин, об’єднавши спорт і волонтерство.
 
 ## Common Learner Errors
-1. **"Do sports" vs "Make sports"**: Learners often translate literally.
-    *   Error: *Я роблю спорт.*
-    *   Correct: *Я займаюся спортом.* (Requires Instrumental case).
-2. **Prepositions with "Play"**: Confusion between instruments and games.
-    *   Error: *Я граю на футбол.* / *Я граю футбол.*
-    *   Correct: *Я граю у футбол.* (Games use `в/у` + Accusative).
-    *   Contrast: *Я граю на гітарі.* (Instruments use `на` + Locative).
-3. **"Cheer for" construction**:
-    *   Error: *Я вболіваю для Динамо.*
-    *   Correct: *Я вболіваю за Динамо.* (`за` + Accusative).
+1. *Робити спорт* (Literal translation of "do sports") → **Займатися спортом** (Instrumental case) — The verb "займатися" is used for engaging in processes or activities.
+2. *Вболівати для команди* (Literal translation of "cheer for") → **Вболівати за команду** (Accusative case) — Emotional support is directed using "за" + Accusative.
+3. *Грати на футболі* (Confusion with playing instruments) → **Грати у футбол** (Preposition у/в + Accusative is strictly used for games and sports).
 
 ## Cross-References
-- Builds on: **b1-78** (Technology - modern context of sports analytics/broadcasts)
-- Prepares for: **b1-80** (Active Lifestyle - personal fitness vs professional spectator sports)
+- Builds on: b1-78 (Technology and Startups) — leverages B1 reading comprehension of contemporary topics.
+- Prepares for: b1-80 (Active Lifestyle) — introduces foundational vocabulary for everyday fitness.
 
 ## Notes for Content Writing
-- **Persona Flavor**: Use the "Olympiad Commentator" persona (Senior Specialist) to inject excitement and pride.
-- **War Context**: Briefly mention how athletes (Usyk, Mahuchikh) use their platform for diplomacy and how sports continue despite the war (matches in empty stadiums).
-- **Immersion**: Ensure all sports terminology is in Ukrainian (e.g., "голкіпер" or "воротар", "форвард" or "нападник" - use standard Ukrainian terms preferred).
+- **Decolonized framing**: Describe Ukrainian sporting history with active agency («здобули», «вибороли», «підкорили»). Avoid framing independent Ukrainian achievements as mere continuation of the Soviet school.
+- **Immersion**: 100% Ukrainian. Do not use English to explain the grammatical differences (e.g. use context or diagrams instead of translating "Instrumental" or "Accusative" to English in the prose).
+- **Structure**: Every grammar concept (займатися, вболівати за, грати у) must have its own dedicated H3 section with a clear table of examples before showing up in the cultural texts.

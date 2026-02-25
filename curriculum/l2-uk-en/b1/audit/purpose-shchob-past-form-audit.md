@@ -1,7 +1,7 @@
 # Audit Report: M30 — purpose-shchob-past-form.md
 **Level:** B1 | **Module:** M30 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 19:44:47
+**Generated:** 2026-02-25 10:43:58
 
 ## Configuration
 **Type:** B1-grammar

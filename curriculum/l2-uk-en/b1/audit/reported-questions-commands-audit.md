@@ -1,7 +1,7 @@
 # Audit Report: M40 — reported-questions-commands.md
 **Level:** B1 | **Module:** M40 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 20:41:49
+**Generated:** 2026-02-25 10:44:46
 
 ## Configuration
 **Type:** B1-grammar

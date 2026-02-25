@@ -9,7 +9,7 @@ content_outline:
   points:
   - Відмова від пафосу та жертовності
   - Шістдесятники як молоді, стильні, живі люди
-  - 'Контекст "Відлиги"'
+  - Контекст "Відлиги"
 - section: Клуб Творчої Молоді (КТМ)
   points:
   - '"Сучасник" як центр тяжіння'
@@ -56,3 +56,4 @@ objectives:
 persona:
   voice: Literary Historian
   role: Cultural Critic
+word_target: 5000

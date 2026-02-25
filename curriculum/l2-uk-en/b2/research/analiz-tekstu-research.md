@@ -1,32 +1,33 @@
 # Дослідження: Аналіз тексту
 
 ## State Standard Reference
-§4.4.1.2, §4.4.1.3: "Стилістичні засоби лексики: антоніми, синоніми, омоніми, епітети, метафори... Стилістичні засоби синтаксису: звертання, еліпсис, повтор, порівняння, уточнення, елементи структурування тексту (вставні слова)."
-Alignment: This module directly teaches the identification and analysis of these stylistic devices (lexical and syntactic) to deconstruct authorial intent and text structure, as required for B2/C1 competence.
+§4.4.1.2: "Стилістичні засоби лексики: антоніми: тут – там, високий – низький... епітети: теплий день... метафори: ідуть дощі... скорочення... зменшувально-пестливі форми... складні слова..."
+§4.4.1.3: "Стилістичні засоби синтаксису: звертання... еліпсис: Смачного! – Дякую, і тобі... повтор... порівняння... уточнення... елементи структурування тексту (вставні слова)..."
+Alignment: The module directly fulfills these State Standard requirements by teaching students how to identify and analyze these exact lexical and syntactic stylistic tools to uncover authorial intent, argumentative structure, and subtext.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| термін (term) | High (Academic/Science) | науковий термін, технічний термін, визначення терміна, вживати термін |
-| поняття (concept) | High (Academic/Philosophy) | ключове поняття, підмінити поняття, сформувати поняття, розширити поняття |
-| процес (process) | Very High (General/Academic) | творчий процес, історичний процес, процес аналізу, прискорити процес |
-| метод (method) | High (Academic/Science) | метод дослідження, ефективний метод, науковий метод, метод дедукції |
-| аналіз (analysis) | Very High (Academic/Media) | глибокий аналіз, критичний аналіз, аналіз тексту, зробити аналіз |
+| термін | High (Academic) | науковий термін, вживати термін, медичний термін |
+| поняття | High (Abstract) | ключове поняття, філософське поняття, підмінити поняття |
+| аналіз | Very High (General/Academic) | глибокий аналіз, критичний аналіз, аналіз тексту |
+| дослідження | High (Academic) | об'єкт дослідження, проводити дослідження, наукове дослідження |
+| синтез | Medium (Academic) | логічний синтез, аналіз і синтез |
 
 ## Cultural Hooks
-1. **Post-Colonial Reading**: Ukrainian literary analysis has a strong tradition of "reading between the lines" (Езопова мова - Aesopian language) developed during censorship eras (Russian Empire, USSR). Critics look for subtextual resistance and national identity markers hidden in seemingly neutral texts.
-2. **Shevchenko vs. Franko**: The contrast between Taras Shevchenko's emotional, romantic, "prophetic" style and Ivan Franko's analytical, rational, European-integrated approach serves as the foundational archetype for discussing "Style" and "Authorial Position" in Ukrainian philology.
+1. **Шевченко vs. Франко (Archetypes)**: The contrast between Taras Shevchenko's emotional-prophetic, highly metaphorical style ("Кобзар") and Ivan Franko's analytical, rationalist, and socially grounded approach ("Каменяр"). This highlights two foundational pillars of Ukrainian literary discourse.
+2. **Езопова мова (Aesopian Language)**: During the periods of extreme Russian imperial censorship (Valuev Circular, Ems Ukaz), Ukrainian writers developed a sophisticated system of allegories and subtexts—"Aesopian language"—to discuss national identity and resistance without triggering bans.
 
 ## Common Learner Errors
-1. **Literal Translation of Idioms** → Misses the figurative meaning (e.g., translating "пекти раків" as "baking crayfish" instead of "blushing/feeling ashamed"). *Correction*: Identify the phrase as a fixed unit before analyzing.
-2. **Confusing Register** → Treating academic text as conversational or vice-versa. *Correction*: Analyze lexical markers (slang vs. terminology) to determine the target audience and tone.
-3. **Ignoring Word Order Emphasis** → Thinking word order is purely random. *Correction*: In Ukrainian, the most important information often comes at the end of the sentence (rheme). Ignoring this leads to misinterpreting the author's logical stress.
+1. **Confusing 'Тема' and 'Ідея'**: Learners often state what the text is about (the theme) when asked for the core message (the idea). → Correct by explicitly contrasting them: Theme is the subject; Idea is the author's conclusion.
+2. **Literal translation of idioms**: Analyzing texts word-for-word, missing idiomatic meanings (e.g., translating «пекти раків» as "baking crabs" instead of "blushing from shame"). → Correct by teaching phraseology identification strategies.
+3. **Register mismatch in analysis**: Using conversational register or slang when writing an analytical essay about a text. → Correct by providing academic templates and vocabulary (e.g., using "дослідження свідчить" instead of "автор каже").
 
 ## Cross-References
-- Builds on: B2-78 (Basic Analysis - likely "Розуміння прочитаного" or similar skill module mentioned in plan), B2-Grammar modules (Participles/Deepriepryslivnyky for syntax analysis).
-- Prepares for: B2-94 (Final Exam/Capstone), C1 Literature Track (LIT modules).
+- Builds on: M78 (Basic text analysis and summarization)
+- Prepares for: M85-M93 (Advanced communication skills), Capstone (M94)
 
 ## Notes for Content Writing
-- **Persona**: The "Philologist" persona should treat the student as a colleague-in-training, using precise terminology but explaining it clearly.
-- **Examples**: Use excerpts that clearly demonstrate *intent* (e.g., a news headline manipulating opinion vs. a neutral report) to make "Analysis" practical, not just theoretical.
-- **Terminology**: Ensure strict distinction between "тема" (topic) and "ідея" (main idea/message), as this is a classic stumbling block.
+- **Decolonized Framing**: When discussing "Aesopian language" and subtext, explicitly frame it as a tool of Ukrainian intellectual resistance against Russian/Soviet colonial censorship. Emphasize Ukrainian agency.
+- **Immersion**: B2 requires 100% Ukrainian immersion in the prose. No English scaffolding. English is only allowed in the `vocabulary.yaml` translations.
+- **Syntax**: Ensure the concept of "Actual division of the sentence" (Актуальне членування: тема/рема) is clearly explained with examples of how word order changes the logical stress.

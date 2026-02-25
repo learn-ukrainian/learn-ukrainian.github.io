@@ -43,6 +43,7 @@ import subprocess
 import textwrap
 import time
 import sys
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -551,12 +552,15 @@ def _dispatch_claude_phase(
     cmd = [claude_bin, "--model", model, "-p", "--output-format", "text"]
     if allow_tools:
         cmd.extend(["--allowedTools", ",".join(allow_tools)])
+    
     # Reinforce output format — Claude sometimes ignores delimiters in long prompts
+    expected_start = "===SECTION_FIX_START===" if "D.2" in phase_label else "===REVIEW_START==="
+    expected_end = "===SECTION_FIX_END===" if "D.2" in phase_label else "===REVIEW_END==="
+    
     cmd.extend(["--append-system-prompt",
-                 "CRITICAL: Your output MUST contain ===REVIEW_START=== and ===REVIEW_END=== "
-                 "delimiters wrapping the full structured review. Output without these delimiters "
-                 "is automatically discarded. Do NOT summarize — produce the FULL review with "
-                 "all dimensions scored, all required H2 sections, and all citations."])
+                 f"CRITICAL: Your output MUST contain {expected_start} and {expected_end} "
+                 "delimiters wrapping the full structured output. Output without these delimiters "
+                 "is automatically discarded. Do NOT summarize — produce the FULL output requested."])
 
     try:
         from build_module import _run_with_heartbeat
@@ -703,11 +707,15 @@ def _count_diff_lines(before: str, after: str) -> int:
 # Phase D helpers: pre-compute audit metrics + extract H2 sections
 # ---------------------------------------------------------------------------
 
-def _compute_audit_metrics(ctx: ModuleContext) -> dict[str, str]:
-    """Pre-compute audit metrics by running the audit programmatically.
+def _compute_metrics_direct(ctx: ModuleContext) -> dict[str, str]:
+    """Compute audit metrics WITHOUT running the audit subprocess.
 
-    Returns a dict of string values ready for template injection. This replaces
-    the old {AUDIT_WORD_COUNT} etc. placeholders that were never substituted.
+    Returns a dict of string values ready for template injection. Pure computation
+    only — no run_verify() call. Used by _deterministic_screen() (D.0) to avoid
+    redundant audit invocations.
+
+    Metrics computed: word count, immersion%, richness, engagement, activity count,
+    vocab count. Does NOT set COMPUTED_AUDIT_STATUS (caller handles that).
     """
     import yaml
     from audit.cleaners import clean_for_stats, clean_for_immersion, extract_core_content, calculate_immersion
@@ -835,13 +843,23 @@ def _compute_audit_metrics(ctx: ModuleContext) -> dict[str, str]:
             metrics["COMPUTED_RICHNESS_THRESHOLD"] = "?"
             metrics["COMPUTED_RICHNESS_GAPS"] = "?"
 
-    # Audit status (quick run)
+    return metrics
+
+
+def _compute_audit_metrics(ctx: ModuleContext) -> dict[str, str]:
+    """Pre-compute audit metrics including a full audit run.
+
+    Backward-compatible wrapper around _compute_metrics_direct() — adds
+    COMPUTED_AUDIT_STATUS by running run_verify(). Used by Phase F and
+    any caller that needs the audit status alongside metrics.
+    """
+    metrics = _compute_metrics_direct(ctx)
+    content_path = ctx.paths.get("md")
     if content_path and content_path.exists():
         passed, _ = run_verify(content_path, content_only=False)
         metrics["COMPUTED_AUDIT_STATUS"] = "PASS" if passed else "FAIL"
     else:
         metrics["COMPUTED_AUDIT_STATUS"] = "NO_CONTENT"
-
     return metrics
 
 
@@ -2059,20 +2077,387 @@ def _quick_review_quality_gate(review_text: str, content_path: Path) -> tuple[bo
 
 
 # ---------------------------------------------------------------------------
-# Phase D: Cross-Agent Review + Fix (Claude reviews Gemini's work)
-# Two-step: D.1 Evidence+Review → D.2 Targeted Repair (if needed)
+# Phase D dataclasses + helpers (D.0 screen, D.1 parser, LLM filler scanner)
 # ---------------------------------------------------------------------------
 
+@dataclass
+class DScreenResult:
+    """Result of D.0 deterministic screen — collects all pre-LLM findings."""
+    metrics: dict[str, str]                   # COMPUTED_* placeholders (no audit status)
+    deterministic_issues: list[dict] = field(default_factory=list)  # From regex checks
+    audit_passed: bool = False
+    audit_output: str = ""
+    h2_sections: str = ""
+
+
+@dataclass
+class D1Result:
+    """Parsed result of D.1 structured YAML review."""
+    ok: bool
+    issues: list[dict] = field(default_factory=list)
+    scores: dict[str, float] = field(default_factory=dict)
+    verdict: str = ""   # "PASS" or "FAIL"
+    raw_review: str = ""
+
+
+# LLM filler phrases — absorbed from proofread.py's telltale list.
+# Case-insensitive regex patterns for common AI-generated padding.
+_LLM_FILLER_PATTERNS: list[re.Pattern] = [
+    re.compile(p, re.IGNORECASE) for p in [
+        r"\bIt'?s worth noting that\b",
+        r"\bThis is particularly important because\b",
+        r"\binterestingly\b",
+        r"\bOne of the key aspects\b",
+        r"\bLet'?s explore\b",
+        r"\bLet'?s dive in\b",
+        r"\bLet'?s take a closer look\b",
+        r"\bIn this lesson,? we will\b",
+        r"\bIt is important to note\b",
+        r"\bNumbers are everywhere\b",
+        r"\bLanguage is not just about\b",
+        r"\bAs we'?ve seen\b",
+        r"\bAs you can see\b",
+        r"\bIn conclusion\b",
+        r"\bTo summarize\b",
+        r"\bThis brings us to\b",
+    ]
+]
+
+# Additional Ukrainian filler patterns (LLM-typical in Ukrainian content)
+_LLM_FILLER_PATTERNS_UK: list[re.Pattern] = [
+    re.compile(p, re.IGNORECASE) for p in [
+        r"\bце не просто\b.*\bа й\b",                # "це не просто X, а й Y"
+        r"\bдавайте розглянемо\b",                     # "let's consider"
+        r"\bдавайте дізнаємося\b",                     # "let's find out"
+        r"\bцікаво,?\s+що\b",                          # "interestingly, that"
+        r"\bварто зазначити,?\s+що\b",                 # "it's worth noting that"
+        r"\bдзеркало\s+культури\b",                    # LLM-typical metaphor
+        r"\bархітектура\s+мови\b",                     # LLM-typical metaphor
+        r"\bдвигун\s+прогресу\b",                      # LLM-typical metaphor
+    ]
+]
+
+
+def _scan_llm_filler(content: str) -> list[dict]:
+    """Scan content for LLM filler phrases.
+
+    Returns a list of issue dicts compatible with DScreenResult.deterministic_issues.
+    Only flags phrases found outside of blockquotes and callout boxes.
+    """
+    issues: list[dict] = []
+
+    # Split into lines for context, skip blockquotes and callout lines
+    lines = content.split("\n")
+    narrative_lines = []
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        # Skip blockquotes, callouts, code blocks, frontmatter
+        if stripped.startswith(">") or stripped.startswith("```") or stripped.startswith("---"):
+            continue
+        narrative_lines.append((i + 1, line))
+
+    narrative_text = "\n".join(line for _, line in narrative_lines)
+
+    for pattern in _LLM_FILLER_PATTERNS + _LLM_FILLER_PATTERNS_UK:
+        for m in pattern.finditer(narrative_text):
+            # Find approximate line number
+            char_pos = m.start()
+            line_num = narrative_text[:char_pos].count("\n") + 1
+            issues.append({
+                "type": "LLM_FILLER",
+                "severity": "MEDIUM",
+                "location": f"~line {line_num}",
+                "text": m.group()[:80],
+                "fix": "Rewrite into concrete, specific teaching content",
+            })
+
+    return issues
+
+
+def _parse_d1_yaml(raw_output: str) -> D1Result:
+    """Parse D.1 structured YAML review from ===REVIEW_START=== / ===REVIEW_END=== delimiters.
+
+    Extracts YAML-structured review data. Falls back to prose regex parsing
+    (degraded mode) if YAML extraction fails.
+
+    Returns a D1Result with parsed fields.
+    """
+    import yaml as _yaml
+
+    review_text = _extract_delimiter(raw_output, "===REVIEW_START===", "===REVIEW_END===")
+    if not review_text:
+        # Try tolerant extraction (missing end tag)
+        review_text = _extract_delimiter_tolerant(raw_output, "===REVIEW_START===", "===REVIEW_END===")
+
+    if not review_text:
+        return D1Result(ok=False, raw_review="", verdict="")
+
+    # Try YAML-structured parsing first
+    # Look for the YAML block inside the review (may be wrapped in markdown)
+    yaml_block = None
+    yaml_match = re.search(
+        r'```ya?ml\s*\n(.*?)\n```',
+        review_text,
+        re.DOTALL,
+    )
+    if yaml_match:
+        yaml_block = yaml_match.group(1).strip()
+
+    if yaml_block:
+        try:
+            parsed = _yaml.safe_load(yaml_block)
+            if isinstance(parsed, dict):
+                return D1Result(
+                    ok=True,
+                    issues=parsed.get("issues", []) or [],
+                    scores=parsed.get("scores", {}) or {},
+                    verdict=str(parsed.get("verdict", "")).upper(),
+                    raw_review=review_text,
+                )
+        except _yaml.YAMLError:
+            logger.warning("D.1 YAML parse failed — falling back to prose parsing")
+
+    # Fallback: prose regex parsing (degraded mode — existing behavior)
+    verdict = ""
+    status_m = re.search(r'\*\*Status:\*\*\s*(FAIL|PASS)', review_text)
+    if status_m:
+        verdict = status_m.group(1)
+
+    score = 0.0
+    score_m = re.search(r'\*\*Overall Score:\*\*\s*([\d.]+)/10', review_text)
+    if score_m:
+        score = float(score_m.group(1))
+
+    # Determine verdict from score if not explicit
+    if not verdict and score > 0:
+        verdict = "PASS" if score >= 9.0 else "FAIL"
+
+    # Extract issues from "Critical Issues Found" section (best-effort)
+    issues: list[dict] = []
+    issues_section = re.search(
+        r'## Critical Issues Found\s*\n(.*?)(?=\n## |\Z)',
+        review_text,
+        re.DOTALL,
+    )
+    if issues_section:
+        issue_blocks = re.findall(
+            r'### Issue \d+:\s*(.+?)(?=### Issue|\Z)',
+            issues_section.group(1),
+            re.DOTALL,
+        )
+        for block in issue_blocks:
+            issue: dict[str, str] = {"type": "REVIEW_ISSUE", "severity": "HIGH"}
+            loc_m = re.search(r'\*\*Location\*\*:\s*(.+)', block)
+            if loc_m:
+                issue["location"] = loc_m.group(1).strip()
+            prob_m = re.search(r'\*\*Problem\*\*:\s*(.+)', block)
+            if prob_m:
+                issue["text"] = prob_m.group(1).strip()
+            fix_m = re.search(r'\*\*Fix\*\*:\s*(.+)', block)
+            if fix_m:
+                issue["fix"] = fix_m.group(1).strip()
+            issues.append(issue)
+
+    return D1Result(
+        ok=True,
+        issues=issues,
+        scores={"overall": score} if score > 0 else {},
+        verdict=verdict,
+        raw_review=review_text,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Track calibration system — per-level calibration injected into D.1 prompt
+# ---------------------------------------------------------------------------
+
+_CALIBRATION_DIR = Path(__file__).resolve().parent.parent / "claude_extensions" / "phases" / "calibration"
+
+
+def _get_track_calibration(level: str, module_num: int) -> str:
+    """Read the appropriate calibration file for a track/level + module number.
+
+    Handles the B1 bridge vs immersed split (modules 1-5 use b1-bridge.md,
+    modules 6+ use b1-immersed.md). Falls back to empty string if no
+    calibration file exists for the track.
+    """
+    # Determine calibration file name
+    level_lower = level.lower()
+
+    if level_lower == "b1" and module_num <= 5:
+        cal_name = "b1-bridge.md"
+    elif level_lower == "b1":
+        cal_name = "b1-immersed.md"
+    elif level_lower.startswith("lit"):
+        cal_name = "lit.md"
+    else:
+        cal_name = f"{level_lower}.md"
+
+    cal_path = _CALIBRATION_DIR / cal_name
+    if cal_path.exists():
+        return cal_path.read_text("utf-8")
+
+    # Fallback: try base level (e.g., b2 for b2-pro)
+    base = level_lower.split("-")[0]
+    fallback = _CALIBRATION_DIR / f"{base}.md"
+    if fallback.exists():
+        return fallback.read_text("utf-8")
+
+    return ""
+
+
+def _get_russicism_table(level: str) -> str:
+    """Extract the Russicism Lookup section from a calibration file.
+
+    Used to seed D.0's regex scanner with track-specific Russicism patterns
+    and to inject the lookup table into the D.1 prompt.
+    """
+    cal_text = _get_track_calibration(level, 1)  # module_num=1 for table extraction
+    if not cal_text:
+        return ""
+
+    # Extract section between ## Russicism Lookup and the next ## heading
+    m = re.search(
+        r'## Russicism Lookup.*?\n(.*?)(?=\n## |\Z)',
+        cal_text,
+        re.DOTALL,
+    )
+    return m.group(1).strip() if m else ""
+
+
+# Seminar tracks that get longer timeouts and mandatory Phase F after D.2
+_SEMINAR_TIMEOUT_TRACKS = {"b2-hist", "c1-hist", "c1-bio", "lit", "oes", "ruth"}
+
+# Track-aware timeouts
+TIMEOUT_REVIEW_CORE = 600       # A1-B2 core tracks (10 min)
+TIMEOUT_REVIEW_SEMINAR = 750    # Seminar tracks (12.5 min)
+
+
+def _get_review_timeout(track: str) -> int:
+    """Return the appropriate D.1/D.2 timeout for a track."""
+    key = "lit" if track.startswith("lit-") else track
+    if key in _SEMINAR_TIMEOUT_TRACKS or key in SEMINAR_TRACKS:
+        return TIMEOUT_REVIEW_SEMINAR
+    return TIMEOUT_REVIEW_CORE
+
+
+# ---------------------------------------------------------------------------
+# D.0: Deterministic Screen
+# ---------------------------------------------------------------------------
+
+def _deterministic_screen(ctx: ModuleContext) -> DScreenResult:
+    """D.0: Run all deterministic checks before LLM review.
+
+    Orchestrates:
+    1. _run_deterministic_fixes(ctx) — euphony, IPA, YAML schema
+    2. _compute_metrics_direct(ctx) — word count, immersion, richness (no audit subprocess)
+    3. Single run_verify() — THE one audit call for D.0
+    4. Russicism regex scan — from russicism_detection.py
+    5. LLM filler regex scan — absorbed from proofread.py patterns
+
+    Returns DScreenResult with all findings for D.1 injection.
+    """
+    result = DScreenResult(metrics={})
+
+    # 1. Deterministic fixes (zero-cost)
+    n_fixes = _run_deterministic_fixes(ctx)
+    if n_fixes > 0:
+        log(f"  D.0: {n_fixes} deterministic fix(es) applied")
+
+    # 2. Compute metrics (no audit subprocess)
+    result.metrics = _compute_metrics_direct(ctx)
+
+    # 3. H2 sections
+    content_path = ctx.paths.get("md")
+    if content_path and content_path.exists():
+        result.h2_sections = _extract_h2_sections(content_path)
+    else:
+        result.h2_sections = "(content file not found)"
+
+    # 4. Single audit run
+    if content_path and content_path.exists():
+        result.audit_passed, result.audit_output = run_verify(content_path, content_only=False)
+        result.metrics["COMPUTED_AUDIT_STATUS"] = "PASS" if result.audit_passed else "FAIL"
+    else:
+        result.audit_passed = False
+        result.audit_output = "NO_CONTENT"
+        result.metrics["COMPUTED_AUDIT_STATUS"] = "NO_CONTENT"
+
+    # 5. Russicism regex scan
+    if content_path and content_path.exists():
+        try:
+            from audit.checks.russicism_detection import check_russicisms
+            content_text = content_path.read_text("utf-8")
+            russicism_issues = check_russicisms(content_text, str(content_path))
+            for r in russicism_issues:
+                result.deterministic_issues.append({
+                    "type": "RUSSIANISM",
+                    "severity": r.get("severity", "HIGH").upper(),
+                    "text": r.get("issue", ""),
+                    "fix": r.get("fix", ""),
+                })
+        except Exception as e:
+            logger.warning("D.0: Russicism scan failed: %s", e)
+
+    # 6. LLM filler scan
+    if content_path and content_path.exists():
+        try:
+            content_text = content_path.read_text("utf-8")
+            filler_issues = _scan_llm_filler(content_text)
+            result.deterministic_issues.extend(filler_issues)
+        except Exception as e:
+            logger.warning("D.0: LLM filler scan failed: %s", e)
+
+    det_count = len(result.deterministic_issues)
+    if det_count > 0:
+        log(f"  D.0: {det_count} deterministic issue(s) found "
+            f"({sum(1 for i in result.deterministic_issues if i['type'] == 'RUSSIANISM')} Russianisms, "
+            f"{sum(1 for i in result.deterministic_issues if i['type'] == 'LLM_FILLER')} filler)")
+
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Phase D: Cross-Agent Review + Fix (Claude reviews Gemini's work)
+# D.0 (deterministic screen) → D.1 (structured review) → D.2 (repair if needed)
+# ---------------------------------------------------------------------------
+
+def _format_deterministic_issues(issues: list[dict]) -> str:
+    """Format D.0 deterministic issues as text for prompt injection."""
+    if not issues:
+        return "(No deterministic issues found — D.0 pre-screen clean)"
+    lines = []
+    for i, iss in enumerate(issues, 1):
+        lines.append(f"{i}. **[{iss.get('type', 'UNKNOWN')}]** (severity: {iss.get('severity', '?')})")
+        if iss.get("location"):
+            lines.append(f"   Location: {iss['location']}")
+        if iss.get("text"):
+            lines.append(f"   Text: {iss['text'][:120]}")
+        if iss.get("fix"):
+            lines.append(f"   Fix: {iss['fix'][:120]}")
+    return "\n".join(lines)
+
+
+def _format_filler_phrases(issues: list[dict]) -> str:
+    """Format LLM filler findings for prompt injection."""
+    filler = [i for i in issues if i.get("type") == "LLM_FILLER"]
+    if not filler:
+        return "(No LLM filler phrases detected by D.0 scanner)"
+    lines = ["D.0 found these filler phrases — verify each one:"]
+    for f in filler[:10]:
+        lines.append(f"- \"{f.get('text', '')}\" at {f.get('location', '?')}")
+    return "\n".join(lines)
+
+
 def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
-    """Phase D: Two-step cross-agent adversarial review via Claude.
+    """Phase D: Cross-agent adversarial review via Claude (refactored).
 
-    Step 1 (D.1): Evidence collection + review — Claude reads files with tool
-        access, produces a structured review with verified citations.
-    Step 2 (D.2): Targeted repair — only if Step 1's review + re-audit show
-        failures. Claude gets the review + specific audit failures, produces
-        FIND/REPLACE fix pairs.
+    D.0: Deterministic screen — regex scans, metrics, single audit
+    D.1: Structured review — Claude with track calibration, pre-screen results
+    D.2: Targeted repair — only if D.1 FAIL, max 2 iterations, NO re-review
 
-    No blind retry loop — Step 2 gets targeted feedback from Step 1 + audit.
+    Eliminates D.3 (re-review) — the biggest time saving. D.2 modules get a
+    single post-repair audit. Seminar D.2 modules get mandatory Phase F.
     """
     phase = "D"
     if _is_phase_v3_complete(ctx, phase, state):
@@ -2080,8 +2465,6 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         return True
 
     # Pre-D activity validation gate (#606)
-    # Activities must exist AND pass audit before Phase D can proceed.
-    # Uses --skip-review since the review file doesn't exist yet.
     act_path = ctx.paths.get("activities")
     vocab_path = ctx.paths.get("vocabulary")
     missing = []
@@ -2094,67 +2477,73 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         log(f"  Phase D: Run Phase C first or create missing files")
         return False
 
+    # -----------------------------------------------------------------------
+    # D.0: Deterministic Screen
+    # -----------------------------------------------------------------------
     if not ctx.dry_run:
-        # Deterministic fixes before pre-D validation — zero API cost
-        n_preD = _run_deterministic_fixes(ctx)
-        if n_preD > 0:
-            log(f"  Phase D: {n_preD} deterministic fix(es) applied (pre-validation)")
+        log("  D.0: Running deterministic screen...")
+        screen = _deterministic_screen(ctx)
 
         # Pre-D activity validation with fix loop (#633)
-        # If activities/vocab fail audit, dispatch Gemini to fix before blocking.
-        MAX_PRE_D_FIXES = 2
-        log("  Phase D: Pre-D activity validation (--skip-review)...")
-        pre_d_passed, pre_d_output = run_verify(ctx.paths["md"], skip_review=True)
+        if not screen.audit_passed:
+            MAX_PRE_D_FIXES = 2
+            log("  D.0: Pre-D validation FAIL — attempting Gemini fixes...")
+            pre_d_output = screen.audit_output
 
-        for pre_d_fix in range(MAX_PRE_D_FIXES):
-            if pre_d_passed:
-                break
+            for pre_d_fix in range(MAX_PRE_D_FIXES):
+                fix_prompt = _build_fix_prompt(ctx, pre_d_output, content_only=False)
+                fix_prompt_file = ctx.orch_dir / f"pD-prevalidation-fix{pre_d_fix + 1}-prompt.md"
+                fix_prompt_file.write_text(fix_prompt, "utf-8")
 
-            log(f"  Phase D: Pre-D validation FAIL — dispatching Gemini fix {pre_d_fix + 1}/{MAX_PRE_D_FIXES}...")
-            fix_prompt = _build_fix_prompt(ctx, pre_d_output, content_only=False)
-            fix_prompt_file = ctx.orch_dir / f"pD-prevalidation-fix{pre_d_fix + 1}-prompt.md"
-            fix_prompt_file.write_text(fix_prompt, "utf-8")
+                fix_output = _gemini_output_path(ctx.slug, f"pD-prevalidation-fix{pre_d_fix + 1}")
+                ok, _ = dispatch_gemini(
+                    _dispatch_prompt(ctx, fix_prompt_file),
+                    task_id=f"v3-{ctx.slug}-pD-prevalidation-fix{pre_d_fix + 1}",
+                    model=ctx.model, allow_write=True, output_file=fix_output,
+                    timeout=TIMEOUT_FIX,
+                )
+                if not ok:
+                    log(f"  D.0: Pre-D fix dispatch {pre_d_fix + 1} failed")
+                    continue
 
-            fix_output = _gemini_output_path(ctx.slug, f"pD-prevalidation-fix{pre_d_fix + 1}")
-            ok, _ = dispatch_gemini(
-                _dispatch_prompt(ctx, fix_prompt_file),
-                task_id=f"v3-{ctx.slug}-pD-prevalidation-fix{pre_d_fix + 1}",
-                model=ctx.model, allow_write=True, output_file=fix_output,
-                timeout=TIMEOUT_FIX,
-            )
-            if not ok:
-                log(f"  Phase D: Pre-D fix dispatch failed")
-                continue
+                if fix_output.exists():
+                    fix_text = fix_output.read_text("utf-8")
+                    if "===SECTION_FIX_START===" in fix_text:
+                        _apply_section_fixes(ctx.paths["md"], fix_text)
+                        if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+                            _apply_find_replace_fixes(ctx.paths["activities"], fix_text)
+                    elif "FIND:" in fix_text and "REPLACE:" in fix_text:
+                        _apply_find_replace_fixes(ctx.paths["md"], fix_text)
+                        if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+                            _apply_find_replace_fixes(ctx.paths["activities"], fix_text)
 
-            if fix_output.exists():
-                fix_text = fix_output.read_text("utf-8")
-                if "===SECTION_FIX_START===" in fix_text:
-                    # Apply section-level fixes to content
-                    _apply_section_fixes(ctx.paths["md"], fix_text)
-                    # Apply FIND/REPLACE fixes to activities YAML (section-fix
-                    # format doesn't work on YAML; try find-replace instead)
-                    if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-                        _apply_find_replace_fixes(ctx.paths["activities"], fix_text)
-                elif "FIND:" in fix_text and "REPLACE:" in fix_text:
-                    # Pure FIND/REPLACE output — apply to both files
-                    _apply_find_replace_fixes(ctx.paths["md"], fix_text)
-                    if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-                        _apply_find_replace_fixes(ctx.paths["activities"], fix_text)
+                # Re-screen after fixes
+                screen = _deterministic_screen(ctx)
+                if screen.audit_passed:
+                    break
+                pre_d_output = screen.audit_output
 
-            # Re-run deterministic fixes + re-validate
-            _run_deterministic_fixes(ctx)
-            pre_d_passed, pre_d_output = run_verify(ctx.paths["md"], skip_review=True)
+            if not screen.audit_passed:
+                # Check if it's just skip-review issues vs hard failures
+                pre_d_passed_sr, _ = run_verify(ctx.paths["md"], skip_review=True)
+                if not pre_d_passed_sr:
+                    pre_d_log = ctx.orch_dir / "pD-pre-validation.log"
+                    pre_d_log.write_text(screen.audit_output, "utf-8")
+                    log("  D.0: BLOCKED — activity/vocab audit failed after fix attempts")
+                    for line in screen.audit_output.strip().split("\n")[-5:]:
+                        log(f"    {line}")
+                    return False
 
-        if not pre_d_passed:
-            pre_d_log = ctx.orch_dir / "pD-pre-validation.log"
-            pre_d_log.write_text(pre_d_output, "utf-8")
-            log("  Phase D: BLOCKED — activity/vocab audit failed after fix attempts (see pD-pre-validation.log)")
-            for line in pre_d_output.strip().split("\n")[-5:]:
-                log(f"    {line}")
-            return False
-        log("  Phase D: Pre-D validation PASS")
+        log(f"  D.0: Screen complete — audit {'PASS' if screen.audit_passed else 'FAIL'}, "
+            f"{len(screen.deterministic_issues)} deterministic issue(s)")
+    else:
+        screen = None  # type: ignore[assignment]
 
-    d1_template = PHASES_DIR / "phase-D1-evidence-review.md"
+    # Template selection — use structured review template
+    d1_template = PHASES_DIR / "phase-D1-structured-review.md"
+    if not d1_template.exists():
+        # Fallback to original template
+        d1_template = PHASES_DIR / "phase-D1-evidence-review.md"
     d2_template = PHASES_DIR / "phase-D2-repair.md"
     if not d1_template.exists():
         log(f"  Phase D: ERROR — D1 template not found: {d1_template}")
@@ -2164,74 +2553,85 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         return False
 
     if ctx.dry_run:
-        log("  Phase D: DRY-RUN — would dispatch D1 (evidence+review) + D2 (repair)")
+        log("  Phase D: DRY-RUN — would dispatch D.0 (screen) + D.1 (review) + D.2 (repair)")
         return True
 
     claude_model_D = getattr(ctx, "claude_model_D", CLAUDE_MODEL_REVIEW)
+    review_timeout = _get_review_timeout(ctx.track)
 
     # -----------------------------------------------------------------------
-    # Step 1: Evidence Collection + Review
+    # D.1: Structured Review (with track calibration + pre-screen results)
     # -----------------------------------------------------------------------
-    log(f"  Phase D.1: Computing audit metrics...")
-    metrics = _compute_audit_metrics(ctx)
-    sections = _extract_h2_sections(ctx.paths["md"])
+    log(f"  D.1: Preparing structured review prompt...")
+
+    # Get track calibration
+    module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
+    track_calibration = _get_track_calibration(ctx.track, module_num)
+    russicism_table = _get_russicism_table(ctx.track)
 
     prompt_file = ctx.orch_dir / "phase-D-prompt-1.md"
     if not fill_template(d1_template, ctx.orch_dir / "placeholders.yaml", prompt_file):
         return False
 
-    # Inject computed metrics and H2 sections into the prompt
+    # Inject all placeholders into prompt
     prompt_text = prompt_file.read_text("utf-8")
-    prompt_text = _inject_metrics_into_prompt(prompt_text, metrics)
-    prompt_text = prompt_text.replace("{COMPUTED_H2_SECTIONS}", sections)
+    prompt_text = _inject_metrics_into_prompt(prompt_text, screen.metrics)
+    prompt_text = prompt_text.replace("{COMPUTED_H2_SECTIONS}", screen.h2_sections)
+    prompt_text = prompt_text.replace("{TRACK_CALIBRATION}", track_calibration or "(No track calibration available)")
+    prompt_text = prompt_text.replace("{DETERMINISTIC_ISSUES}", _format_deterministic_issues(screen.deterministic_issues))
+    prompt_text = prompt_text.replace("{RUSSIANISM_TABLE}", russicism_table or "(No track-specific Russianism table available — use general checklist)")
+    prompt_text = prompt_text.replace("{FILLER_PHRASES}", _format_filler_phrases(screen.deterministic_issues))
     prompt_file.write_text(prompt_text, "utf-8")
 
-    log(f"  Phase D.1: Dispatching evidence+review via Claude ({claude_model_D})...")
-    log(f"    Metrics: {metrics.get('COMPUTED_WORD_COUNT', '?')}w / "
-        f"{metrics.get('COMPUTED_WORD_TARGET', '?')}w, "
-        f"{metrics.get('COMPUTED_ACTIVITY_COUNT', '?')} activities, "
-        f"immersion {metrics.get('COMPUTED_IMMERSION_PERCENT', '?')}%")
+    log(f"  D.1: Dispatching evidence+review via Claude ({claude_model_D}, {review_timeout}s)...")
+    log(f"    Metrics: {screen.metrics.get('COMPUTED_WORD_COUNT', '?')}w / "
+        f"{screen.metrics.get('COMPUTED_WORD_TARGET', '?')}w, "
+        f"{screen.metrics.get('COMPUTED_ACTIVITY_COUNT', '?')} activities, "
+        f"immersion {screen.metrics.get('COMPUTED_IMMERSION_PERCENT', '?')}%")
+    if track_calibration:
+        log(f"    Track calibration: injected ({len(track_calibration)} chars)")
 
     ok, raw_output = _dispatch_claude_phase(
         prompt_file, "Phase D.1",
-        model=claude_model_D, timeout=TIMEOUT_REVIEW,
+        model=claude_model_D, timeout=review_timeout,
         allow_tools=["Read", "Grep", "Glob"],
     )
     if not ok:
-        log("  Phase D.1: Dispatch FAILED")
+        log("  D.1: Dispatch FAILED")
         _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-dispatch-failed")
         return False
 
-    # Extract review
-    review_text = _extract_delimiter(raw_output, "===REVIEW_START===", "===REVIEW_END===")
-    if not review_text:
-        log("  Phase D.1: WARNING — no REVIEW delimiters in output (retrying full D.1)")
-        # Save raw output for debugging
+    # Parse review (supports both YAML structured and prose fallback)
+    d1 = _parse_d1_yaml(raw_output)
+
+    if not d1.ok or not d1.raw_review:
+        log("  D.1: WARNING — no REVIEW delimiters in output (retrying full D.1)")
         (ctx.orch_dir / "phase-D1-raw-output.md").write_text(raw_output, "utf-8")
 
-        # Retry once: re-run the full D.1 prompt (not just reformat)
+        # Retry once
         ok2, raw2 = _dispatch_claude_phase(
             prompt_file, "Phase D.1 (retry)",
-            model=claude_model_D, timeout=TIMEOUT_REVIEW,
+            model=claude_model_D, timeout=review_timeout,
             allow_tools=["Read", "Grep", "Glob"],
         )
         if ok2:
-            review_text = _extract_delimiter(raw2, "===REVIEW_START===", "===REVIEW_END===")
+            d1 = _parse_d1_yaml(raw2)
 
-        if not review_text:
-            log("  Phase D.1: Full retry also failed — no delimiters")
+        if not d1.ok or not d1.raw_review:
+            log("  D.1: Full retry also failed — no delimiters")
             _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-no-review")
             return False
 
-        log("  Phase D.1: Full retry succeeded — delimiters found")
+        log("  D.1: Full retry succeeded — delimiters found")
 
-    # Pre-save quality gate: reject obviously shallow/fake reviews
+    review_text = d1.raw_review
+
+    # Pre-save quality gate
     qg_ok, qg_reason = _quick_review_quality_gate(review_text, ctx.paths["md"])
     if not qg_ok:
-        log(f"  Phase D.1: REJECTED — {qg_reason}")
+        log(f"  D.1: REJECTED — {qg_reason}")
         (ctx.orch_dir / "phase-D1-rejected-review.md").write_text(review_text, "utf-8")
-        _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
-                       note=f"d1-shallow-review")
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-shallow-review")
         return False
 
     # Inject Reviewed-By metadata if Claude forgot it
@@ -2241,33 +2641,38 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     # Save review with content hash for staleness detection (#618)
     write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
     (ctx.orch_dir / "phase-D-review-1.md").write_text(review_text, "utf-8")
-    log(f"  Phase D.1: Review saved → {ctx.paths['review'].name}")
+    log(f"  D.1: Review saved → {ctx.paths['review'].name}")
 
-    # Deterministic fixes before audit — zero API cost
+    # Deterministic fixes after review save — zero API cost
     n_postD1 = _run_deterministic_fixes(ctx)
     if n_postD1 > 0:
-        log(f"  Phase D.1: {n_postD1} deterministic fix(es) applied")
+        log(f"  D.1: {n_postD1} deterministic fix(es) applied")
 
-    # Run full audit to check review quality + content
-    log("  Phase D.1: Running audit after review...")
+    # Post-D.1 audit (single run_verify)
+    log("  D.1: Running audit after review...")
     passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
     audit_log = ctx.orch_dir / "pD-audit-1.log"
     audit_log.write_text(audit_out, "utf-8")
 
-    # Check review verdict: even if audit passes, the review may flag issues
-    # that require D.2 repair (calques, LLM fingerprints, activity errors, etc.)
-    review_says_fail = False
-    if review_text:
-        import re as _re
-        _status_m = _re.search(r'\*\*Status:\*\*\s*(FAIL|PASS)', review_text)
-        _score_m = _re.search(r'\*\*Overall Score:\*\*\s*([\d.]+)/10', review_text)
+    # Check review verdict from parsed D1Result
+    review_says_fail = d1.verdict == "FAIL"
+    if not review_says_fail and d1.scores.get("overall", 10) < 9.0:
+        review_says_fail = True
+    # Fallback: check prose markers if D1Result didn't parse verdict
+    if not d1.verdict:
+        _status_m = re.search(r'\*\*Status:\*\*\s*(FAIL|PASS)', review_text)
+        _score_m = re.search(r'\*\*Overall Score:\*\*\s*([\d.]+)/10', review_text)
         if _status_m and _status_m.group(1) == "FAIL":
             review_says_fail = True
-            log(f"  Phase D.1: Review verdict: FAIL")
         elif _score_m and float(_score_m.group(1)) < 9.0:
             review_says_fail = True
-            log(f"  Phase D.1: Review score {_score_m.group(1)}/10 < 9.0 — needs repair")
 
+    if review_says_fail:
+        log(f"  D.1: Review verdict: FAIL")
+    else:
+        log(f"  D.1: Review verdict: PASS")
+
+    # Fast path: D.1 PASS + audit PASS → done
     if passed and not review_says_fail:
         log("  Phase D: PASS (D.1 review sufficient — no repair needed)")
         _mark_phase_v3(ctx, state, phase, "complete", attempts=1, note="d1-only")
@@ -2277,31 +2682,22 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         return True
 
     if passed and review_says_fail:
-        log("  Phase D.1: Audit PASSED but review flags issues — proceeding to D.2 for repair")
+        log("  D.1: Audit PASSED but review flags issues — proceeding to D.2 for repair")
 
-    # Citation failure detection (#615): if the review itself is bad (fabricated
-    # citations), don't proceed to D.2 content repair — that can't fix a bad review.
-    # Instead, delete the review and mark as failed for retry.
-    # Only match CRITICAL violations (❌ prefix) — warning-severity cases are inconclusive.
+    # Citation failure detection (#615)
     _CITATION_FAILURES = ("FABRICATED_CITATIONS", "UNVERIFIED_CITATIONS")
     if any(f"\u274c [{tag}]" in audit_out for tag in _CITATION_FAILURES):
-        log("  Phase D.1: REVIEW QUALITY FAILURE — fabricated/unverified citations detected")
-        log("  Phase D.1: Deleting bad review (D.2 cannot fix a bad review)")
+        log("  D.1: REVIEW QUALITY FAILURE — fabricated/unverified citations detected")
+        log("  D.1: Deleting bad review (D.2 cannot fix a bad review)")
         if ctx.paths["review"].exists():
             ctx.paths["review"].unlink()
-        _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
-                       note="d1-citation-failure")
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-citation-failure")
         return False
 
-    # -----------------------------------------------------------------------
-    # Pre-D.2 deterministic fix pass (#623): try all zero-cost auto-fixes
-    # before deciding whether to send to LLM or rebuild. A single YAML error
-    # can cascade into 5-10 audit failures that look "diffuse" but are
-    # actually one deterministic fix away from passing.
-    # -----------------------------------------------------------------------
+    # Pre-D.2 deterministic fix pass (#623)
     auto_fix_count = _run_deterministic_fixes(ctx)
     if auto_fix_count > 0:
-        log(f"  Phase D.2: Pre-triage auto-fix applied {auto_fix_count} fix(es) — re-auditing...")
+        log(f"  D.2: Pre-triage auto-fix applied {auto_fix_count} fix(es) — re-auditing...")
         passed_after_autofix, audit_out_after = run_verify(ctx.paths["md"], content_only=False)
         if passed_after_autofix and not review_says_fail:
             log("  Phase D: PASS (deterministic fixes resolved all issues — zero LLM cost)")
@@ -2310,77 +2706,75 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
             mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
             return True
-        # Use the fresh audit output for triage decisions
         audit_out = audit_out_after
 
-    # Pre-D.2 triage: skip D.2 if all REMAINING issues are diffuse (not fixable
-    # by FIND/REPLACE). Only runs AFTER deterministic fixes have been tried.
+    # Pre-D.2 triage: skip if all issues are diffuse
     if _all_issues_diffuse(audit_out):
-        log("  Phase D.2: SKIPPED — all remaining issues are diffuse (needs rebuild, not repair)")
-        _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
-                       note="needs-rebuild-diffuse-issues")
+        log("  D.2: SKIPPED — all remaining issues are diffuse (needs rebuild, not repair)")
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="needs-rebuild-diffuse-issues")
+        return False
+
+    # Merge deterministic issues + review issues for D.2
+    all_issues = screen.deterministic_issues + d1.issues
+    targeted = [i for i in all_issues if i.get("type", "") not in _DIFFUSE_FAILURE_CODES]
+    if not targeted and not review_says_fail:
+        log("  D.2: No targeted issues found — marking needs-rebuild")
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="needs-rebuild-diffuse")
         return False
 
     # -----------------------------------------------------------------------
-    # Steps 2+3: Repair + Re-review loop (max 2 iterations)
-    # Each iteration: D.2 repairs content based on latest review, D.3 re-reviews.
-    # If D.3 finds new issues D.1 missed, a second iteration fixes them.
+    # D.2: Targeted Repair (max 2 iterations, NO D.3 re-review)
     # -----------------------------------------------------------------------
     MAX_D2_ITERS = 2
-    current_review = review_text  # Start with D.1 review
-    current_audit_out = audit_out  # Start with D.1 audit
 
     for d2_iter in range(MAX_D2_ITERS):
-        iter_suffix = "" if d2_iter == 0 else f" (retry {d2_iter})"
-        d2_prompt_num = 2 + d2_iter * 2   # 2, 4
-        d3_prompt_num = 3 + d2_iter * 2   # 3, 5
-        review_file_num = 2 + d2_iter     # 2, 3
-        audit_log_num = 2 + d2_iter       # 2, 3
-        total_attempts = 2 + d2_iter      # 2, 3 (D.1 counts as 1)
+        iter_suffix = "" if d2_iter == 0 else f" (iter {d2_iter + 1})"
+        total_attempts = 2 + d2_iter
 
-        # --- D.2: Targeted Repair ---
-        log(f"  Phase D.2{iter_suffix}: Dispatching targeted repair based on review findings...")
-        failures = _extract_audit_failures(current_audit_out)
+        log(f"  D.2{iter_suffix}: Dispatching targeted repair...")
+        failures = _extract_audit_failures(audit_out)
 
-        prompt_file2 = ctx.orch_dir / f"phase-D-prompt-{d2_prompt_num}.md"
+        prompt_file2 = ctx.orch_dir / f"phase-D-prompt-{2 + d2_iter}.md"
         if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
             return False
 
         prompt2_text = prompt_file2.read_text("utf-8")
-        prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", current_review)
+        prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", review_text)
         prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
+        # Inject track calibration for voice-matched repairs
+        prompt2_text = prompt2_text.replace("{TRACK_CALIBRATION}", track_calibration or "")
         prompt_file2.write_text(prompt2_text, "utf-8")
 
         ok2, raw_output2 = _dispatch_claude_phase(
             prompt_file2, f"Phase D.2{iter_suffix}",
-            model=claude_model_D, timeout=TIMEOUT_REVIEW,
+            model=claude_model_D, timeout=review_timeout,
             allow_tools=["Read", "Grep", "Glob"],
         )
         if not ok2:
-            log(f"  Phase D.2{iter_suffix}: Dispatch FAILED")
+            log(f"  D.2{iter_suffix}: Dispatch FAILED")
             _mark_phase_v3(ctx, state, phase, "failed", attempts=total_attempts,
                            note="d2-dispatch-failed")
             return False
 
-        # Apply fixes if present, with diff-size blocker (#623)
+        # Apply fixes with diff-size blocker (#623)
         if "===SECTION_FIX_START===" in raw_output2:
             content_before = ctx.paths["md"].read_text("utf-8")
             act_before: str | None = None
             if ctx.paths.get("activities") and ctx.paths["activities"].exists():
                 act_before = ctx.paths["activities"].read_text("utf-8")
-            vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+            vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
             vocab_before: str | None = None
-            if vocab_path and vocab_path.exists():
-                vocab_before = vocab_path.read_text("utf-8")
+            if vp and vp.exists():
+                vocab_before = vp.read_text("utf-8")
 
             n_md = _apply_find_replace_fixes(ctx.paths["md"], raw_output2)
             n_act = 0
             if ctx.paths.get("activities"):
                 n_act = _apply_find_replace_fixes(ctx.paths["activities"], raw_output2)
             n_vocab = 0
-            if vocab_path and vocab_path.exists():
-                n_vocab = _apply_find_replace_fixes(vocab_path, raw_output2)
-            log(f"  Phase D.2{iter_suffix}: Applied {n_md} content fix(es), {n_act} activity fix(es), {n_vocab} vocab fix(es)")
+            if vp and vp.exists():
+                n_vocab = _apply_find_replace_fixes(vp, raw_output2)
+            log(f"  D.2{iter_suffix}: Applied {n_md} content, {n_act} activity, {n_vocab} vocab fix(es)")
 
             fix_pair_count = raw_output2.count("FIND:") if "FIND:" in raw_output2 else 1
             content_after = ctx.paths["md"].read_text("utf-8")
@@ -2388,8 +2782,8 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             if ctx.paths.get("activities") and ctx.paths["activities"].exists():
                 act_after = ctx.paths["activities"].read_text("utf-8")
             vocab_after: str | None = None
-            if vocab_path and vocab_path.exists():
-                vocab_after = vocab_path.read_text("utf-8")
+            if vp and vp.exists():
+                vocab_after = vp.read_text("utf-8")
 
             changed_lines = _count_diff_lines(content_before, content_after)
             if act_before is not None and act_after is not None:
@@ -2399,123 +2793,49 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             max_allowed = max(fix_pair_count * 15, 30)
 
             if changed_lines > max_allowed:
-                log(f"  Phase D.2{iter_suffix}: REJECTED — repair changed {changed_lines} lines "
+                log(f"  D.2{iter_suffix}: REJECTED — {changed_lines} lines changed "
                     f"(max {max_allowed} for {fix_pair_count} fix pairs)")
-                log(f"  Phase D.2{iter_suffix}: Reverting content to pre-fix state")
                 ctx.paths["md"].write_text(content_before, "utf-8")
                 if act_before is not None and ctx.paths.get("activities"):
                     ctx.paths["activities"].write_text(act_before, "utf-8")
-                if vocab_before is not None and vocab_path:
-                    vocab_path.write_text(vocab_before, "utf-8")
+                if vocab_before is not None and vp:
+                    vp.write_text(vocab_before, "utf-8")
                 _mark_phase_v3(ctx, state, phase, "failed", attempts=total_attempts,
                                note="d2-diff-too-large")
                 return False
 
-            log(f"  Phase D.2{iter_suffix}: Section fixes applied ({changed_lines} lines changed, "
-                f"{fix_pair_count} fix pairs)")
+            log(f"  D.2{iter_suffix}: Fixes applied ({changed_lines} lines, {fix_pair_count} pairs)")
         else:
-            log(f"  Phase D.2{iter_suffix}: WARNING — no SECTION_FIX delimiters in output")
-            (ctx.orch_dir / f"phase-D{d2_prompt_num}-raw-output.md").write_text(raw_output2, "utf-8")
+            log(f"  D.2{iter_suffix}: WARNING — no SECTION_FIX delimiters")
+            (ctx.orch_dir / f"phase-D2-iter{d2_iter + 1}-raw.md").write_text(raw_output2, "utf-8")
 
-        # Deterministic fixes before re-review
-        n_postD2 = _run_deterministic_fixes(ctx)
-        if n_postD2 > 0:
-            log(f"  Phase D{iter_suffix}: {n_postD2} deterministic fix(es) applied (pre-re-review)")
-
-        # --- D.3: Re-review ---
-        # D.3 uses same model as D.1 to prevent cross-model calibration drift (#633).
-        # Previously used Sonnet which scored differently from Opus on subjective
-        # dimensions (e.g., LLM Fingerprint), causing unnecessary extra cycles.
-        rereview_model = CLAUDE_MODEL_REREVIEW
-        log(f"  Phase D.3{iter_suffix}: Re-reviewing repaired content via Claude ({rereview_model})...")
-
-        metrics_post = _compute_audit_metrics(ctx)
-        sections_post = _extract_h2_sections(ctx.paths["md"])
-
-        prompt_file3 = ctx.orch_dir / f"phase-D-prompt-{d3_prompt_num}.md"
-        if not fill_template(d1_template, ctx.orch_dir / "placeholders.yaml", prompt_file3):
-            log(f"  Phase D.3{iter_suffix}: Template fill failed")
-            _mark_phase_v3(ctx, state, phase, "failed", attempts=total_attempts + 1,
-                           note="d3-template-failed")
-            return False
-
-        prompt3_text = prompt_file3.read_text("utf-8")
-        prompt3_text = _inject_metrics_into_prompt(prompt3_text, metrics_post)
-        prompt3_text = prompt3_text.replace("{COMPUTED_H2_SECTIONS}", sections_post)
-
-        # Inject D.1 context into D.3 so the re-reviewer has focus (#633).
-        # D.3 still does a full review (can find regressions from D.2 rewrites)
-        # but knows what D.1 found and what D.2 attempted to fix.
-        d3_context = _build_d3_context(current_review, d2_iter + 1)
-        # Insert after the "---" separator following the H2 sections block
-        insertion_marker = "## Tier-Specific Review Guidance"
-        if insertion_marker in prompt3_text:
-            prompt3_text = prompt3_text.replace(
-                insertion_marker,
-                d3_context + "\n\n" + insertion_marker,
-            )
-        else:
-            log(f"  Phase D.3{iter_suffix}: WARNING — D.3 context marker not found, appending to end")
-            prompt3_text += "\n\n" + d3_context
-
-        prompt_file3.write_text(prompt3_text, "utf-8")
-
-        ok3, raw_output3 = _dispatch_claude_phase(
-            prompt_file3, f"Phase D.3{iter_suffix} (re-review)",
-            model=rereview_model, timeout=TIMEOUT_REVIEW,
-            allow_tools=["Read", "Grep", "Glob"],
-        )
-
-        review_text3 = None
-        if ok3:
-            review_text3 = _extract_delimiter(raw_output3, "===REVIEW_START===", "===REVIEW_END===")
-            if review_text3:
-                qg_ok3, qg_reason3 = _quick_review_quality_gate(review_text3, ctx.paths["md"])
-                if not qg_ok3:
-                    log(f"  Phase D.3{iter_suffix}: Re-review REJECTED — {qg_reason3}")
-                    (ctx.orch_dir / f"phase-D{d3_prompt_num}-rejected-review.md").write_text(
-                        review_text3, "utf-8")
-                    review_text3 = None  # Don't use rejected review
-                else:
-                    if "Reviewed-By:" not in review_text3:
-                        review_text3 = f"**Reviewed-By:** {rereview_model}\n\n{review_text3}"
-                    write_review_with_hash(ctx.paths["review"], review_text3, ctx.paths["md"])
-                    (ctx.orch_dir / f"phase-D-review-{review_file_num}.md").write_text(
-                        review_text3, "utf-8")
-                    log(f"  Phase D.3{iter_suffix}: Fresh review saved → {ctx.paths['review'].name}")
-            else:
-                log(f"  Phase D.3{iter_suffix}: WARNING — no REVIEW delimiters in re-review output")
-                (ctx.orch_dir / f"phase-D{d3_prompt_num}-raw-output.md").write_text(
-                    raw_output3, "utf-8")
-        else:
-            log(f"  Phase D.3{iter_suffix}: Re-review dispatch FAILED — keeping old review")
-
-        # Audit after this D.2→D.3 cycle
-        log(f"  Phase D.3{iter_suffix}: Running audit...")
+        # Post-D.2 deterministic fixes + single audit (NO D.3 re-review)
+        _run_deterministic_fixes(ctx)
         passed, loop_audit_out = run_verify(ctx.paths["md"], content_only=False)
-        audit_log = ctx.orch_dir / f"pD-audit-{audit_log_num}.log"
+        audit_log = ctx.orch_dir / f"pD-audit-{2 + d2_iter}.log"
         audit_log.write_text(loop_audit_out, "utf-8")
 
         if passed:
-            log(f"  Phase D: PASS (after D.1 + {d2_iter + 1} repair/re-review cycle(s))")
-            _mark_phase_v3(ctx, state, phase, "complete", attempts=total_attempts + 1)
+            note = f"d2-iter{d2_iter + 1}"
+            # Tag D.2 modules for Phase F tracking
+            is_seminar = ctx.track in _SEMINAR_TIMEOUT_TRACKS or ctx.track in SEMINAR_TRACKS
+            if is_seminar:
+                note += "-seminar-needs-phaseF"
+            log(f"  Phase D: PASS (after D.1 + D.2 iter {d2_iter + 1})")
+            _mark_phase_v3(ctx, state, phase, "complete", attempts=total_attempts, note=note)
             mark_phase_locked(ctx, "6", "complete", note="v3-phase-D")
             mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
             mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
             return True
 
-        # Update review/audit for next iteration (if any)
-        if review_text3:
-            current_review = review_text3
-        current_audit_out = loop_audit_out
-
+        audit_out = loop_audit_out
         if d2_iter < MAX_D2_ITERS - 1:
-            log(f"  Phase D.3{iter_suffix}: Still FAIL — running another D.2→D.3 cycle...")
+            log(f"  D.2{iter_suffix}: Still FAIL — running another D.2 iteration...")
 
-    log("  Phase D: EXHAUSTED — D.1 + D.2/D.3 repair cycles all insufficient")
+    log("  Phase D: EXHAUSTED — D.1 + D.2 repair iterations all insufficient")
     log("  Phase D: Module marked as NEEDS-REBUILD (use --rebuild to regenerate)")
     _mark_phase_v3(ctx, state, phase, "failed",
-                   attempts=1 + MAX_D2_ITERS * 2, note="needs-rebuild")
+                   attempts=1 + MAX_D2_ITERS, note="needs-rebuild")
     return False
 
 

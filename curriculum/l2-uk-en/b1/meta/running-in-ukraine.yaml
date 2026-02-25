@@ -2,55 +2,66 @@ slug: running-in-ukraine
 title: Біг в Україні
 word_target: 4000
 content_outline:
-  - section: 'Вступ: Розквіт бігової культури (Introduction: The Rise of Running Culture)'
-    words: 600
-    points:
-      - Historical overview of running in Ukraine since 2010, aligning with State
-        Standard §3.4 (Leisure and Hobbies)
-      - Distinguishing between 'оздоровчий біг' (wellness running) and 'біг підтюпцем'
-        (jogging) as accessible lifestyle choices
-      - 'Hook: Running as a tool for mental health and resilience in contemporary
-        Ukrainian society'
-  - section: Головні події та соціальна місія (Main Events and Social Mission)
-    words: 1000
-    points:
-      - 'Kyiv City Marathon: Iconic route landmarks including Kyiv Pechersk Lavra
-        and the Motherland Monument'
-      - 'The Mile of the Unbroken (Миля Незламних): Analyzing its role as a symbol
-        of solidarity with veterans and military personnel'
-      - 'Running during war: Wartime formats like ''The Longest Marathon'' and essential
-        safety protocols (shelters, air raid rules)'
-      - The distinction between a generic 'забіг' (race) and a technical 'марафон'
-        (42.195 km) to avoid common terminology errors
-  - section: Організація та підготовка (Organization and Preparation)
-    words: 800
-    points:
-      - 'Registration process: Vocabulary for ''реєстраційний внесок'', ''пройти реєстрацію'',
-        and ''бігун-аматор'' (amateur runner)'
-      - 'Equipment and preparation: Tips on choosing ''бігові кросівки'' and the importance
-        of ''розминка'' (warm-up)'
-      - 'The Organizer''s perspective: Using the active voice to guide learners through
-        event logistics and ''лінія фінішу'' requirements'
-  - section: 'Мовний практикум: Типові помилки (Language Workshop: Common Errors)'
-    words: 800
-    points:
-      - 'Grammar Drill: ''Бігти'' (actual motion) vs ''Бігати'' (habitual ability)
-        — correcting the error ''Я люблю бігти вранці'''
-      - 'Case Governance: Mastering ''брати участь у марафоні'' using the Locative
-        case instead of Genitive'
-      - 'Time and Duration: Distinguishing ''пробігти за годину'' (result) from ''бігати
-        годину'' (process duration)'
-  - section: Спільнота та бігова дипломатія (Community and Running Diplomacy)
-    words: 600
-    points:
-      - 'Parkrun Ukraine and local running clubs like Run21 or Tribe 10: How they
-        foster ''бігова спільнота'' (runner community)'
-      - 'Running as diplomacy: Participation in international events to represent
-        Ukraine and raise awareness'
-      - 'Finding a club: Practical dialogues on joining local groups and ''тримати
-        темп'' (keeping the pace) with others'
-  - section: 'Підсумок: Ваш перший забіг (Summary: Your First Race)'
-    words: 200
-    points:
-      - Encouraging final thoughts on setting an 'особистий рекорд' (personal best)
-      - Preview of endurance concepts for the next module b1-82 (Mountains and Trail)
+- section: 'Вступ: Розквіт бігової культури'
+  words: 600
+  points:
+  - 'H3: Розвиток бігу в Україні. Provide a historical overview of running culture
+    growth since 2010. Address State Standard §3.4 (види спорту). Frame running as
+    a resilient lifestyle choice.'
+  - 'H3: Оздоровчий біг проти бігу підтюпцем. Define and contrast ''оздоровчий біг''
+    (wellness running) and ''біг підтюпцем'' (jogging) with usage examples and collocations
+    in context.'
+  - 'H3: Вплив війни на спорт. Discuss how running provides psychological resilience
+    during the war, setting an active, unconquerable tone for the module.'
+- section: Головні події та соціальна місія
+  words: 1000
+  points:
+  - 'H3: Київський марафон. Describe the Kyiv City Marathon route past major landmarks
+    (Києво-Печерська лавра, Батьківщина-Мати) using active voice verbs and dynamic
+    vocabulary.'
+  - 'H3: Благодійні та соціальні забіги. Highlight ''Миля Незламних'' (The Mile of
+    the Unbroken) as a solidarity event with veterans, introducing vocabulary of support
+    and community.'
+  - 'H3: Безпека під час забігів. Explain wartime running protocols (укриття, повітряна
+    тривога) referencing initiatives like ''Найдовший марафон''.'
+  - 'H3: Забіг чи марафон? Clarify the terminology difference between a general ''забіг''
+    (any race) and a strict 42.195 km ''марафон'' to prevent common learner errors.'
+- section: Організація та підготовка
+  words: 800
+  points:
+  - 'H3: Реєстрація на подію. Provide a step-by-step vocabulary guide on registration
+    using terms ''реєстраційний внесок'', ''пройти реєстрацію'', and ''бігун-аматор''.'
+  - 'H3: Бігове екіпірування. Offer practical advice on choosing ''бігові кросівки''
+    and preparing for a race, utilizing engagement boxes for tips.'
+  - 'H3: Важливість розминки. Detail the ''розминка'' (warm-up) process using the
+    imperative mood to provide direct, actionable instructions.'
+  - 'H3: День забігу та фініш. Present the event from an organizer''s perspective,
+    guiding learners through logistics up to crossing the ''лінія фінішу''.'
+- section: 'Мовний практикум: Типові помилки'
+  words: 800
+  points:
+  - 'H3: Дієслова руху: Бігти проти Бігати. Detail the difference between actual unidirectional
+    motion (''бігти'') and habitual ability (''бігати''). Include a paradigm table
+    and 4+ contrasting examples.'
+  - 'H3: Керування відмінками: Участь у марафоні. Explicitly teach the Locative case
+    requirement for ''брати участь у марафоні''. Provide a ''Common Mistake'' warning
+    box.'
+  - 'H3: Вираження часу: За годину проти Годину. Distinguish resultative ''пробігти
+    за годину'' from process duration ''бігати годину''. Use a comparison table with
+    clear contextual examples.'
+- section: Спільнота та бігова дипломатія
+  words: 600
+  points:
+  - 'H3: Бігові клуби України. Introduce Parkrun Ukraine and local clubs (e.g., Run21,
+    Tribe 10), highlighting how they foster a ''бігова спільнота'' (runner community).'
+  - 'H3: Спортивна дипломатія. Explain how Ukrainian runners participate in international
+    events to represent the country and raise awareness.'
+  - 'H3: Як приєднатися до клубу. Provide practical mini-dialogues (2-3 exchanges)
+    for joining a local group and discussing pace (''тримати темп'').'
+- section: 'Підсумок: Ваш перший забіг'
+  words: 200
+  points:
+  - 'H3: Наступні кроки. Provide an encouraging summary emphasizing setting an ''особистий
+    рекорд'' (personal best).'
+  - 'H3: Анонс. Preview endurance and trail running concepts for the upcoming module
+    b1-82 (Mountains and Trail).'

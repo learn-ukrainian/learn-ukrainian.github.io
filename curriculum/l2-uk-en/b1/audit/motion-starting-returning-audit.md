@@ -1,7 +1,7 @@
 # Audit Report: M19 — motion-starting-returning.md
 **Level:** B1 | **Module:** M19 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 16:55:46
+**Generated:** 2026-02-25 10:43:05
 
 ## Configuration
 **Type:** B1-grammar

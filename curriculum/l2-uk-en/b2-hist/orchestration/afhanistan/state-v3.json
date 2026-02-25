@@ -8,6 +8,11 @@
       "ts": "2026-02-19T17:18:55Z",
       "task_id": "v3-afhanistan-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T23:12:11Z",
+      "note": "word-count-3879-below-80pct-5000"
     }
   }
 }

@@ -1,7 +1,7 @@
 # Audit Report: M12 — aspect-pairs-essential-40.md
 **Level:** B1 | **Module:** M12 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 14:47:42
+**Generated:** 2026-02-25 10:42:31
 
 ## Configuration
 **Type:** B1-grammar

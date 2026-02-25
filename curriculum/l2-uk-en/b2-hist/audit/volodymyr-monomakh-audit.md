@@ -1,7 +1,7 @@
 # Audit Report: M15 — volodymyr-monomakh.md
 **Level:** B2-HIST | **Module:** M15 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 18:50:08
+**Generated:** 2026-02-25 20:26:39
 
 ## Configuration
 **Type:** B2-history

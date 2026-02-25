@@ -2,15 +2,15 @@
   "module": "knyahynia-olha",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-21T19:25:47.676914Z",
+  "last_audit": "2026-02-25T20:36:07.020092Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T19:19:26.413259Z",
+    "md": "2026-02-21T20:20:11.644449Z",
     "meta": "2026-02-19T10:56:42.416676Z",
     "activities": "2026-02-19T22:23:51.313803Z",
     "vocabulary": "2026-02-19T22:23:51.314823Z",
     "plan": "2026-02-18T15:59:52.245649Z",
-    "research": "2026-02-18T15:58:39.061032Z"
+    "research": "2026-02-22T10:35:24.534803Z"
   },
   "gates": {
     "meta": {
@@ -44,21 +44,23 @@
       "message": "Clean IPA"
     },
     "research": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Content aligned with research"
+      "message": "Refresh recommended: Content predates research (research file is newer)"
     },
     "review": {
-      "status": "pass",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 8,
-    "fail_count": 0,
+    "status": "fail",
+    "blocking_issues": [
+      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+    ],
+    "pass_count": 6,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

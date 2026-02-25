@@ -1,7 +1,7 @@
 # Audit Report: M26 — relative-clauses-yakyi.md
 **Level:** B1 | **Module:** M26 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 19:04:09
+**Generated:** 2026-02-25 10:43:36
 
 ## Configuration
 **Type:** B1-grammar

@@ -1,7 +1,7 @@
 # Audit Report: M57 — discourse-markers-advanced.md
 **Level:** B1 | **Module:** M57 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:45:42
+**Generated:** 2026-02-25 10:45:55
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,20 +16,41 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння дискурсивних маркерів | 8 | 8 | ✅ |
+| 2 | fill-in | Додайте правильний маркер | 12 | 8 | ✅ |
+| 3 | match-up | Знайдіть функцію маркера | 12 | 8 | ✅ |
+| 4 | true-false | Правила використання маркерів | 12 | 8 | ✅ |
+| 5 | unjumble | Складіть речення з маркерами | 8 | 6 | ✅ |
+| 6 | error-correction | Виправте пунктуаційні та лексичні помилки | 8 | 6 | ✅ |
+| 7 | select | Оберіть маркери за функцією | 8 | 6 | ✅ |
+| 8 | cloze | Відновіть текст виступу | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть дискурсивні маркери | 7 | 6 | ✅ |
+| 10 | translate | Перекладіть маркери | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Required types used: 2/2 (fill-in, true-false) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4002/4000 (raw: 4836)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ⚠️ 99% (vocabulary) - 1 flags
 - **Grammar:** ℹ️ N/A (covered by naturalness)

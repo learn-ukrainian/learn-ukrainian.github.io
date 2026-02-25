@@ -1,34 +1,32 @@
 # Дослідження: B2 Підсумковий іспит
 
 ## State Standard Reference
-§Середній рівень другого ступеня (В2): "засвідчує повне ознайомлення зі структурою української мови, докладне розуміння системних зв’язків та можливість тематично широкого, швидкого спілкування в повсякденних ситуаціях й у професійному середовищі."
-Alignment: This module acts as the comprehensive gatekeeper for the B2 level, testing the "detailed understanding of system connections" and "professional environment" readiness required by the standard.
+§IV: "Середній рівень другого ступеня (В2) засвідчує повне ознайомлення зі структурою української мови, докладне розуміння системних зв’язків та можливість тематично широкого, швидкого спілкування в повсякденних ситуаціях й у професійному середовищі."
+Alignment: Цей модуль є фінальним іспитом, який безпосередньо перевіряє зазначені в стандарті навички докладного розуміння системних зв'язків мови та готовність до професійного спілкування на рівні B2.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| термін | High (Academic/Sci) | науковий термін, вживати термін, визначення терміна |
-| поняття | High (Academic/Gen) | базове поняття, розширити поняття, підмінити поняття |
-| процес | Very High (All styles) | навчальний процес, процес розвитку, керувати процесом |
-| метод | High (Sci/Prof) | ефективний метод, метод дослідження, застосувати метод |
-| аналіз | High (Sci/Media) | глибокий аналіз, критичний аналіз, зробити аналіз |
-| синтез | Medium (Sci) | синтез мистецтв, хімічний синтез, аналіз і синтез |
-| дослідження | High (Sci/Acad) | наукове дослідження, результати дослідження, проводити дослідження |
+| термін | High (Academic) | науковий термін, вживати термін, визначення терміна |
+| поняття | High (Academic/General) | базове поняття, розширити поняття, підмінити поняття |
+| процес | Very High | навчальний процес, процес розвитку, керувати процесом |
+| метод | High (Professional) | ефективний метод, метод дослідження, застосувати метод |
 
 ## Cultural Hooks
-1. **Melodic Precision**: Ukrainian is cited as one of the most melodic languages (euphony/mylozvuchnist rules), but this musicality is paired with extreme lexical precision—e.g., "horizon" has 12 distinct synonyms in Ukrainian (обрій, небокрай, видноколо etc.), allowing for nuanced professional expression.
-2. **The "G" Factor**: The letter **Ґ** (g) was repressed in Soviet times to make Ukrainian closer to Russian, but restored in 1991. Mastering its correct usage (ґрунт, ґанок, ґудзик) is a shibboleth of distinct Ukrainian academic identity.
+1. **«Фактор Ґ»**: Літера «ґ» була репресована під час радянської реформи правопису у 1933 році з метою штучного зближення української та російської мов, і відновлена лише у 1990 році. Її правильне вживання (ґрунт, ґанок, ґудзик, обґрунтувати) є яскравим маркером української академічної та культурної ідентичності.
+2. **Милозвучність (Euphony)**: Українська мова пріоритезує плавність звучання (вокальність). Правила чергування у/в, і/й, з/із/зі є не просто орфографічними нормами, а відображенням внутрішньої фонетичної логіки мови, що вимагає балансу із суворою термінологічною точністю в офіційних текстах.
 
 ## Common Learner Errors
-1. **Calques (Surzhyk)**: *приймати участь* → *брати участь* (to take part). *Why:* Direct translation from Russian/English structure.
-2. **Lexical Precision**: *слідуюча зупинка* → *наступна зупинка* (next stop). *Why:* Confusion of active participles (rare in Ukr) with adjectives.
-3. **Register Mixing**: Using informal *привіт* or *ти* in professional settings (interview/exam) instead of *вітаю* and *ви*. *Why:* Lack of register awareness.
+1. **Змішування регістрів (Register mixing)** → Використання неформального «Привіт» замість нормативного «Вітаю» або «Шановний/а» в професійному діловому листуванні.
+2. **Лексичне калькування** → Вживання «приймати участь» (калька з російської) замість правильного питомого вислову «брати участь» (to take part).
+3. **Хибне використання активних дієприкметників** → Вживання «слідуюча» замість правильного прикметника «наступна» (наступна зупинка, наступне питання). Українська мова тяжіє до використання прикметників та описових конструкцій замість активних дієприкметників теперішнього часу.
 
 ## Cross-References
-- **Builds on**: All B2 modules (M01-M93), specifically **M85-93 (Communication Skills)** and **M84 (Integration Checkpoint)**.
-- **Prepares for**: **C1.1** (Academic/Professional Track start), specifically C1 vocabulary depth and stylistic nuance.
+- Builds on: Інтеграція навичок комунікації рівня B2 (M85-93)
+- Prepares for: Академічний та професійний треки рівня C1
 
 ## Notes for Content Writing
-- **Tone**: The persona is "Head of Commission" — supportive but strictly professional. Use "official" framing for the exam tasks.
-- **Differentiation**: Ensure the "Reading" texts clearly distinguish between *publicistic* (media) and *scientific* (popular science) styles.
-- **Assessment criteria**: Explicitly mention *lexical richness* (synonyms) and *grammatical accuracy* as passing criteria in the intro.
+- Цей модуль є фінальним зрізом (іспитом). Він має інтегрувати перевірку читання, письма, слухання та говоріння.
+- Зберігати підкреслено професійний та офіційний тон (Persona: Голова комісії / Professional Language Coach).
+- Наголосити на переході від «знання правил» до «стилістичної та лексичної точності», що є ключовим для переходу на рівень C1.
+- Суворо дотримуватися 100% занурення (Immersion: 100). Усі заголовки, інструкції та пояснення мають бути виключно українською мовою.

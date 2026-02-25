@@ -1,7 +1,7 @@
 # Audit Report: M06 — aspect-complete-system.md
 **Level:** B1 | **Module:** M06 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 14:47:02
+**Generated:** 2026-02-25 10:42:01
 
 ## Configuration
 **Type:** B1-grammar
@@ -17,7 +17,7 @@
 **Transliteration:** Not allowed
 
 ## Gates
-- **Words:** ✅ 4826/4000 (raw: 5217)
+- **Words:** ✅ 4824/4000 (raw: 5215)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -30,7 +30,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 99.5% (target 85-100% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 99.6% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -49,7 +49,7 @@
 | variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 4 | 3 | 100% | 10% | 10.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
-| visual | 19 | 3 | 100% | 5% | 5.0% |
+| visual | 20 | 3 | 100% | 5% | 5.0% |
 | questions | 49 | 5 | 100% | 5% | 5.0% |
 | tables | 2 | 2 | 100% | 4% | 4.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
@@ -62,7 +62,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вид дієслова: повна система** | ✅ | 79 | Included in Core |
 | **Розминка та Контекст** | ✅ | 638 | Included in Core |
-| **Граматична Система: Форми та Функції** | ✅ | 1291 | Included in Core |
+| **Граматична Система: Форми та Функції** | ✅ | 1289 | Included in Core |
 | **Глибинна Семантика: Процес та Результат** | ✅ | 967 | Included in Core |
 | **Аналіз Помилок та Тонкощі** | ✅ | 910 | Included in Core |
 | **Практика та Мовленнєві Ситуації** | ✅ | 738 | Included in Core |

@@ -1,7 +1,7 @@
 # Audit Report: M20 — motion-approaching-departing.md
 **Level:** B1 | **Module:** M20 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-24 16:55:48
+**Generated:** 2026-02-25 10:43:07
 
 ## Configuration
 **Type:** B1-grammar
@@ -26,9 +26,9 @@
   - FIX: Replace «в» with «у» (before consonant cluster)
 - **[EUPHONY]** Line 85: «в грі» — в перед збігом приголосних; має бути «у грі»
   - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 258: «досягнення і успішний» — і між голосними; має бути «й успішний»
+- **[EUPHONY]** Line 260: «досягнення і успішний» — і між голосними; має бути «й успішний»
   - FIX: Replace «і» with «й» (between vowels)
-- **[EUPHONY]** Line 264: «офісу і як» — і між голосними; має бути «й як»
+- **[EUPHONY]** Line 266: «офісу і як» — і між голосними; має бути «й як»
   - FIX: Replace «і» with «й» (between vowels)
 - **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (5 occurrences): (Genitive case), (Genitive case), (The train departed) — breaks immersion target
   - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
@@ -39,7 +39,7 @@
 - 7 violations (significant)
 
 ## Gates
-- **Words:** ❌ 2785/4000 (raw: 3160)
+- **Words:** ❌ 2787/4000 (raw: 3162)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -52,7 +52,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 96.5% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 96.4% (target 85-100% (B1.2 Motion))
 - **Richness:** ❌ 75% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -71,7 +71,7 @@
 | variety | 0.94 | - | 94% | 10% | 9.4% |
 | cultural | 0 | 3 | 0% | 10% | 0.0% |
 | realworld | 17 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
+| visual | 7 | 3 | 100% | 5% | 5.0% |
 | questions | 18 | 5 | 100% | 5% | 5.0% |
 | tables | 2 | 2 | 100% | 4% | 4.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
@@ -108,7 +108,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Рух: наближення і віддалення** | ✅ | 72 | Included in Core |
 | **Діагностика: Вступний тест** | ✅ | 442 | Included in Core |
-| **Граматика: Простір та межі** | ✅ | 722 | Included in Core |
+| **Граматика: Простір та межі** | ✅ | 724 | Included in Core |
 | **Культурний контекст: Проводи та традиції** | ✅ | 482 | Included in Core |
 | **Переносне значення та фразеологія** | ✅ | 494 | Included in Core |
 | **Практика: Роль начальника станції** | ✅ | 388 | Included in Core |

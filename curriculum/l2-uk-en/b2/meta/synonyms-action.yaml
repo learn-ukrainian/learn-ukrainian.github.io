@@ -2,52 +2,62 @@ slug: synonyms-action
 title: 'Синоніми: Дія та Перетворення'
 word_target: 4000
 content_outline:
-  - section: 'Вступ: Природа дії та синонімії (Introduction: The Nature of Action
-      and Synonymy)'
-    words: 500
-    points:
-      - Introduction to stylistic synonymy in verbs of action according to State Standard
-        §4.4.1.2, focusing on the semantic fields of 'doing' and 'taking'.
-      - 'Cultural hook: Discussion of the proverb «Під лежачий камінь вода не тече»
-        to illustrate the conceptual difference between passive state and active effort
-        (дія).'
-      - Mapping the movement from physical action (B1 M57) to abstract and stylistic
-        choices in the B2 register.
-  - section: Тонкощі «робити», «чинити» та «діяти» (Nuances of 'Do', 'Act', and 'Behave')
-    words: 900
-    points:
-      - Contrast between the general verb «робити» (conclusions, mistakes) and the
-        moral/legal register of «чинити» (resistance, pressure, evil/good).
-      - Functional usage of «діяти» for abstract or official contexts (the law is
-        in effect, medicine works) and technical agent noun formation (§4.2.5).
-      - 'Learner error: Generalizing ''do'' for specific collocations. Correction
-        of «робити на мене тиск» to the correct «чинити на мене тиск».'
-  - section: 'Офіційність та творчість: «виконувати» та «здійснювати» (Officialdom
-      and Creativity: ''Perform'' and ''Realize'')'
-    words: 900
-    points:
-      - 'Distinguishing «виконувати» (formal tasks or artistic performance: fulfill
-        a role, sing a song) from «здійснювати» (implementation of dreams or crimes).'
-      - 'Cultural concept analysis: «Здійснення мрій» (Realization of dreams) as a
-        poetic aspiration vs. bureaucratic «виконання плану».'
-      - 'Learner error: Performance confusion. Correcting the use of «здійснити пісню»
-        with the accurate «виконати пісню» for artistic contexts.'
-  - section: Багатогранність «брати», «хапати» та «здобувати» (Versatility of 'Take',
-      'Grab', and 'Acquire')
-    words: 900
-    points:
-      - 'Nuance gate: Distinguishing «отримувати» (passive receipt of education/salary)
-        from «здобувати» (active struggle/effort for victory/independence).'
-      - 'Expressive synonymy: Using «хапати» for quick actions and idiomatic expressions
-        like «хапати дрижаки» (to shiver) or «хапати за душу» (to touch the soul).'
-      - 'Idiomatic usage of «брати»: explaining collocations like «брати участь» (take
-        part) and «брати до уваги» (take into account) to avoid literal English translations.'
-  - section: 'Практика: Точність у контексті (Practice: Precision in Context)'
-    words: 800
-    points:
-      - 'Anti-calque drill: Correcting English ''take'' calques for bus/break/photo
-        (сідати на автобус, робити перерву, фотографувати) to ensure naturalness.'
-      - 'Production task: Rewriting a narrative to change the ''manner of action''
-        using intensive synonyms (sudden vs. gradual, official vs. expressive).'
-      - Synthesis through the proverb «Діло майстра величає», emphasizing how the
-        choice of action verb reflects the speaker's command of the language.
+- section: 'Вступ: Природа дії та синонімії'
+  words: 600
+  points:
+  - Створити H3 для зв'язку теми з Державним стандартом (§4.4.1.2), пояснивши перехід
+    від простих дієслів фізичної дії (з рівня B1) до стилістичних нюансів.
+  - Створити H3 для аналізу прислів'я «Під лежачий камінь вода не тече», демонструючи
+    різницю між пасивним станом і концептом активної «дії» в українській культурі.
+  - Забезпечити 100% українськомовне середовище, окресливши цілі модуля (розрізнення
+    відтінків значення та уникнення англомовних кальок).
+- section: Тонкощі «робити», «чинити» та «діяти»
+  words: 1000
+  points:
+  - 'Створити H3 для «робити» (нейтральний універсальний регістр: робити висновки,
+    робити помилки, робити ремонт).'
+  - 'Створити H3 для «чинити» (моральний або юридичний вимір дії: чинити опір, чинити
+    тиск, чинити зло). Окремо виділити типову помилку (кальку «робити тиск»).'
+  - 'Створити H3 для «діяти» (абстрактний або офіційний контекст: закон діє, ліки
+    діють). Пояснити також зв''язок зі словотворенням іменників-діячів (діяч, діяльність).'
+  - Включити порівняльну таблицю або діаграму для швидкого вибору між цими трьома
+    синонімами залежно від контексту.
+- section: 'Офіційність та творчість: «виконувати» та «здійснювати»'
+  words: 900
+  points:
+  - 'Створити H3 для «виконувати» (формальні завдання та артистичне виконання: виконувати
+    наказ, виконувати пісню, виконувати роль). Розглянути помилку «здійснити пісню».'
+  - 'Створити H3 для «здійснювати» (масштабна реалізація мрій або злочинів: здійснювати
+    мрію, здійснювати напад, здійснювати план).'
+  - Створити H3 для культурного концепту «Здійснення мрій» проти сухого бюрократичного
+    «виконання плану», підкреслюючи стилістичне забарвлення слів.
+- section: Багатогранність «брати», «хапати» та «здобувати»
+  words: 1000
+  points:
+  - 'Створити H3 для глибокого розрізнення «отримувати» (пасивне прийняття: отримувати
+    зарплату) та «здобувати» (активна боротьба, зусилля: здобувати незалежність, здобувати
+    перемогу, здобувати освіту). Це ключовий культурний концепт суб''єктності.'
+  - Створити H3 для експресивного «хапати» (хапати дрижаки, хапати за душу) з акцентом
+    на раптовість дії та ідіоматику.
+  - Створити H3 для ідіоматики «брати» (брати участь, брати до уваги), пояснюючи,
+    що дослівний переклад з англійської тут не працює.
+- section: 'Практика: Точність у контексті'
+  words: 800
+  points:
+  - 'Створити H3 «Анти-калька» для виправлення дослівних перекладів з англійського
+    дієслова ''take'' (наприклад: сідати на автобус, робити перерву, фотографувати).'
+  - 'Створити H3 з продуктивним завданням-прикладом: як переписати нейтральний текст,
+    використовуючи експресивні синоніми (наприклад, замінити «взяти» на «хапати» для
+    динаміки).'
+  - Створити H3 для підсумку через прислів'я «Діло майстра величає», наголошуючи,
+    що правильний вибір дієслова дії — це ознака мовної майстерності.
+activity_hints:
+- type: reading
+  focus: Контекстне використання
+  items: 4
+- type: fill-in
+  focus: Практичне застосування
+  items: 10
+- type: true-false
+  focus: Розуміння значень
+  items: 8

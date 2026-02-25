@@ -2,13 +2,13 @@
   "module": "register-colloquial-style",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T18:04:02.954026Z",
+  "last_audit": "2026-02-25T10:43:47.529325Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T18:01:59.699482Z",
     "meta": "2026-02-24T01:11:30.717491Z",
     "activities": "2026-02-24T18:01:59.700712Z",
-    "vocabulary": "2026-02-24T17:53:59.773300Z",
+    "vocabulary": "2026-02-25T10:43:46.517518Z",
     "plan": "2026-02-20T21:40:00.680230Z",
     "research": "2026-02-24T01:11:30.714217Z"
   },

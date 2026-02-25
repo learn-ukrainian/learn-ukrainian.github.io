@@ -1,39 +1,36 @@
-# Дослідження: Презентації: Поглиблено
+# Дослідження: Презентації: Поглиблено (B2.4)
 
 ## State Standard Reference
-§1.1.2.1.3: "довгі презентації, виступи на конференціях; промови, виступи на нарадах, семінарах, зборах, засіданнях"
-Alignment: This module directly addresses the B2 requirement for understanding and producing long, structured presentations in professional contexts (conferences, meetings).
-
-§4.4.1.3: "Стилістичні засоби синтаксису: ... риторичні фігури ... елементи структурування тексту (вставні слова): по-перше, по-друге, по-третє, отже та ін."
-Alignment: The module teaches the specific linguistic tools (rhetorical devices, discourse markers) required to structure these complex monologues effectively.
+§1.1.2.1.3: "Публіцистичні тексти: [...] довгі презентації, виступи на конференціях;" (Лінії 2503-2511).
+§4.4.1.3: "Стилістичні засоби синтаксису: звертання, еліпсис, повтор, порівняння, уточнення, елементи структурування тексту (вставні слова)." (Лінії 3470-3479).
+Alignment: Цей модуль відповідає вимогам B2 щодо створення публіцистичних текстів (виступів) та активного використання стилістичних фігур для посилення риторичного впливу.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **презентувати** | High / Corpora | презентувати проєкт, ідею, результати, команду |
-| **переконувати** | Med-High / Corpora | переконувати аудиторію, інвесторів; переконувати у доцільності |
-| **впливати** | High / Corpora | впливати на рішення, на думку, на емоції; інструмент впливу |
-| **аудиторія** | High / Business | цільова аудиторія, залучення аудиторії, аналіз аудиторії, "тримати" аудиторію |
-| **візуалізація** | Med / Tech | якісна візуалізація, засоби візуалізації, візуалізація даних |
-| **аргумент** | High / General | вагомий аргумент, наводити аргументи, контраргумент |
-| **виступ** | High / General | публічний виступ, готувати виступ, блискучий виступ |
-| **питання** | Very High / General | каверзні питання, сесія питань та відповідей, передбачати питання |
+| переконувати | Висока (професійний дискурс) | переконувати аудиторію, переконувати інвесторів |
+| презентувати | Висока (бізнес/ІТ) | презентувати результати, презентувати стартап |
+| аудиторія | Висока (публічні виступи) | цільова аудиторія, тримати аудиторію, залучення |
+| аргумент | Висока (аналітика) | вагомий аргумент, наводити аргументи |
+| брати участь | Обов'язкова норма | брати участь у конференції (не "приймати") |
 
 ## Cultural Hooks
-1. **TEDxKyiv Legacy**: The platform has hosted iconic speeches defining modern Ukrainian intellectual discourse, such as Yaroslav Hrytsak & Yevhen Hlibovytskyi's "Про цінності українців" (Values of Ukrainians), which serves as a prime example of ethos/logos in action.
-2. **Modern Tech Pitch Culture**: Kyiv is a hub for global startups (Grammarly, MacPaw, Ajax). The "pitch" culture is distinct: less "salesy" than American style, more focused on technical excellence and "value" (цінність), but increasingly adopting storytelling techniques.
+1. **TEDxKyiv як стандарт:** Виступи українських інтелектуалів (Ярослав Грицак, Євген Глібовицький) є еталоном сучасного українського публіцистичного стилю, де глибокий сенс поєднується з відкритою, неагресивною подачею.
+2. **Українська IT-риторика:** Культура пітчингу в українських компаніях глобального рівня (MacPaw, Grammarly) відрізняється від агресивного "продажу" (hard sell) — вона базується на доведенні технічної досконалості та практичної цінності.
 
 ## Common Learner Errors
-1. **Calques from English/Russian**: "Приймати участь" (Incorrect) → **Брати участь** (Correct); "Слідуючий слайд" (Incorrect) → **Наступний слайд** (Correct). *Cause: Direct translation.*
-2. **Overuse of Passive Voice**: "Було зроблено аналіз" (Weak) → **Ми проаналізували** (Strong). *Cause: Bureaucratic habit or Russian influence. Ukrainian favors active agency.*
-3. **Weak Structuring**: Starting with "Я хочу розповісти про..." without a hook. *Correction: Use the "Situation-Complication-Resolution" framework or a rhetorical question to start.*
-4. **Anglicisms in Morphology**: "Залончити продукт" instead of "Запустити продукт"; "Запітчити ідею" instead of "Презентувати ідею". *Note: While common in IT, B2 standard requires knowing the literary equivalents.*
+1. **Зловживання пасивним станом (Russianism/Бюрократизм):** «Нами було проаналізовано...» → **Правильно:** «Ми проаналізували...». Українська мова віддає перевагу активній суб'єктності.
+2. **Суржик та кальки в презентаціях:** 
+   - «Слідуючий слайд» → **Правильно:** «Наступний слайд».
+   - «Приймати участь» → **Правильно:** «Брати участь».
+3. **Надмірні англіцизми в ІТ:** «Залончити продукт» → **Правильно:** «Запустити продукт».
 
 ## Cross-References
-- **Builds on**: B2.1c (Register System - M31-40), M91 (Presentations: Basics)
-- **Prepares for**: M93 (Debates & Discussions), C1 Academic Writing/Speaking
+- Builds on: M91 (Базові навички презентації та структура)
+- Prepares for: M93 (Дебати та аргументація — перехід від монологу до динамічної дискусії)
 
 ## Notes for Content Writing
-- **Persona Alignment**: The "Startup Founder" persona should use examples related to pitching a product or vision, but keep the language standard literary/professional, not slang-heavy.
-- **Rhetorical Devices**: Explicitly teach *anaphora* (repetition at start), *antithesis* (contrast), and *rhetorical questions* as tools for the "Persuasion" section.
-- **Q&A Strategy**: Focus on the *linguistic* formulas for bridging: "Це чудове питання, яке підводить нас до..." (That's a great question which brings us to...).
+- **Decolonized Framing:** Чітко протиставляти активну, суб'єктну українську риторику пасивному "канцеляриту" радянсько-російського зразка.
+- **Tone:** Професійний, впевнений, аналітичний (публіцистичний регістр).
+- Всі терміни мають бути введені та пояснені до їх використання в прикладах.
+- Уникати англійської мови у тексті модуля; англійська дозволена лише у словнику (vocabulary.yaml).

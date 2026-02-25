@@ -16,9 +16,14 @@
       "words": 3222
     },
     "v3-C": {
-      "status": "failed",
-      "ts": "2026-02-24T15:33:20Z",
-      "note": "activities-schema-invalid"
+      "status": "complete",
+      "ts": "2026-02-25T06:34:18Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T09:43:00Z",
+      "attempts": 1
     }
   }
 }

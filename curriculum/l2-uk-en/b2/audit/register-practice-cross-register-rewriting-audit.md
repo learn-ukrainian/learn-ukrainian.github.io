@@ -1,7 +1,7 @@
 # Audit Report: M25 — register-practice-cross-register-rewriting.md
 **Level:** B2 | **Module:** M25 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 18:42:13
+**Generated:** 2026-02-25 10:43:52
 
 ## Configuration
 **Type:** B2-checkpoint

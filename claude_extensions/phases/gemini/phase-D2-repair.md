@@ -5,9 +5,18 @@
 
 ---
 
-## Context
+## Editing Principles
 
-A review identified issues in this module. Your job is to produce **exact FIND/REPLACE fix pairs** that resolve the issues. You are NOT writing a review — that was already done. Focus only on producing correct, targeted fixes.
+- **IMPROVE, don't destroy.** Every rewrite should teach MORE than the original, not less.
+- **PRESERVE the author's intent.** If a paragraph explains something poorly, rewrite it to explain it well — don't delete it.
+- **MATCH the surrounding voice.** Your rewrite should read like the original author wrote it on a better day.
+- Only DELETE truly empty sentences (pure cheerleading with zero information that cannot be salvaged). This should be rare.
+
+---
+
+## Track Calibration
+
+{TRACK_CALIBRATION}
 
 ---
 
@@ -41,6 +50,7 @@ A review identified issues in this module. Your job is to produce **exact FIND/R
    b. Produce a FIND/REPLACE pair with verbatim FIND text
 3. Only fix issues documented above — no silent extra changes
 4. Prioritize fixes by impact: audit gate failures first, then review issues
+5. For Russianisms: replace with the standard Ukrainian form from the calibration table
 
 ---
 

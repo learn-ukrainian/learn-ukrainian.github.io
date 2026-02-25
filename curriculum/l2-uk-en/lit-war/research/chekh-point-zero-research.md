@@ -259,3 +259,9 @@ content_outline:
 **Self-Correction**: Used alternative sources (PEN Ukraine, Ukrainian Institute, The Ukrainians, Lossi 36, LB.ua) which provided richer literary analysis than Wikipedia would have. Relied on web search result summaries where direct page fetches failed.
 **Proposed Tooling Fix**: N/A — Wikipedia 403 is a known issue with WebFetch; alternative sources proved adequate.
 ===FRICTION_END===
+
+## Використані джерела
+- [ЕСУ](https://esu.com.ua/) 
+- [Літопис](http://litopys.org.ua/)
+## Лінгвістичний вимір
+- Цільові слова з IPA транскрипцією.

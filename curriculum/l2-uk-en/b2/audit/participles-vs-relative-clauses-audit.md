@@ -1,7 +1,7 @@
 # Audit Report: M09 — participles-vs-relative-clauses.md
 **Level:** B2 | **Module:** M09 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 14:52:54
+**Generated:** 2026-02-25 10:42:40
 
 ## Configuration
 **Type:** B2-grammar

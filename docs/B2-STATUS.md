@@ -1,118 +1,122 @@
 # B2 Module Status
 
-**Generated:** 2026-02-08 00:03:59
-**Total Modules:** 94
-**Status:** 93 passing, 1 failing, 0 stubs, 0 errors
+**Generated:** 2026-02-25 20:35:54
+**Total Modules:** 95
+**Status:** 4 passing, 77 prose-only, 11 failing, 0 stubs, 3 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 93/94 (98%)
-- ❌ **Failing:** 1/94
-- 📝 **Stubs:** 0/94
+- ✅ **Passing:** 4/95 (4%)
+- 🔄 **Prose-Only (awaiting enrichment):** 77/95
+- ❌ **Failing:** 11/95
+- 📝 **Stubs:** 0/95
+- ⚠️ **Errors:** 3/95
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | 01-passive-voice-system | ❌ FAIL | 3811/4100 | - |
-| 002 | 02-past-passive-participles | ✅ PASS | 5177/3800 | - |
-| 003 | 03-impersonal-passive | ✅ PASS | 3733/3800 | - |
-| 004 | 04-reflexive-passive | ✅ PASS | 3824/3800 | - |
-| 005 | 05-third-person-plural-passive | ✅ PASS | 3976/3800 | - |
-| 006 | 06-passive-in-context | ✅ PASS | 5781/3800 | - |
-| 007 | 07-active-participles-present | ✅ PASS | 3873/3800 | - |
-| 008 | 08-active-participles-past | ✅ PASS | 3809/3800 | - |
-| 009 | 09-participles-vs-relative-clauses | ✅ PASS | 3724/3800 | - |
-| 010 | 10-checkpoint-passive-voice | ✅ PASS | 5656/3500 | - |
-| 011 | 11-multi-clause-sentences | ✅ PASS | 5315/3800 | - |
-| 012 | 12-parenthetical-expressions | ✅ PASS | 3994/3800 | - |
-| 013 | 13-emphasis-and-inversion | ✅ PASS | 3969/3800 | - |
-| 014 | 14-stylistic-connectors | ✅ PASS | 3781/3800 | - |
-| 015 | 15-register-introduction | ✅ PASS | 4025/3800 | - |
-| 016 | 16-register-formal-informal | ✅ PASS | 3723/3800 | - |
-| 017 | 17-register-business-ukrainian | ✅ PASS | 3738/3800 | - |
-| 018 | 18-register-academic-ukrainian | ✅ PASS | 4074/3800 | - |
-| 019 | 19-register-official-legal | ✅ PASS | 4336/3800 | - |
-| 020 | 20-register-medical-ukrainian | ✅ PASS | 4117/3800 | - |
-| 021 | 21-register-technical-scientific | ✅ PASS | 2073/2000 | - |
-| 022 | 22-register-literary-ukrainian | ✅ PASS | 2211/2000 | - |
-| 023 | 23-register-media-journalistic | ✅ PASS | 2175/2000 | - |
-| 024 | 24-register-colloquial-style | ✅ PASS | 1964/2000 | - |
-| 025 | 25-register-practice-cross-register-rewriting | ✅ PASS | 2836/2000 | - |
-| 026 | 26-politics-government-vocabulary | ✅ PASS | 2192/2000 | - |
-| 027 | 27-law-justice-vocabulary | ✅ PASS | 2448/2000 | - |
-| 028 | 28-economics-business-vocabulary | ✅ PASS | 2239/2000 | - |
-| 029 | 29-b21-integration-practice | ✅ PASS | 2194/2000 | - |
-| 030 | 30-b21-checkpoint | ✅ PASS | 2454/2000 | - |
-| 031 | 31-numeral-declension-time-dates | ✅ PASS | 2271/2000 | - |
-| 032 | 32-numeral-declension-compound-numbers | ✅ PASS | 2213/2000 | - |
-| 033 | 33-word-formation-person-suffixes | ✅ PASS | 2505/2000 | - |
-| 034 | 34-word-formation-abstract-nouns | ✅ PASS | 2702/2000 | - |
-| 035 | 35-word-formation-place-object-names | ✅ PASS | 2890/2000 | - |
-| 036 | 36-word-formation-adjective-formation | ✅ PASS | 3049/2000 | - |
-| 037 | 37-word-formation-adverbs-integration | ✅ PASS | 2059/2000 | - |
-| 038 | 38-one-member-sentences | ✅ PASS | 2320/2000 | - |
-| 039 | 39-register-religious-epistolary | ✅ PASS | 2149/2000 | - |
-| 040 | 40-b21c-checkpoint | ✅ PASS | 2393/2000 | - |
-| 041 | 41-aspect-nuances-secondary-imperfectivization | ✅ PASS | 2054/2000 | - |
-| 042 | 42-aspect-nuances-imperative-infinitive | ✅ PASS | 2321/2000 | - |
-| 043 | 43-correlative-constructions | ✅ PASS | 1914/2000 | - |
-| 044 | 44-complex-syntax-ellipsis-parcelling | ✅ PASS | 2169/2000 | - |
-| 045 | 45-proverbs-work-wisdom-character | ✅ PASS | 2103/2000 | - |
-| 046 | 46-proverbs-nature-time-caution | ✅ PASS | 2887/2000 | - |
-| 047 | 47-set-expressions-i-body-animals | ✅ PASS | 2133/2000 | - |
-| 048 | 48-set-expressions-ii-objects-abstract | ✅ PASS | 2071/2000 | - |
-| 049 | 49-idioms-body-head-face | ✅ PASS | 2163/2000 | - |
-| 050 | 50-idioms-body-hands-legs | ✅ PASS | 1979/2000 | - |
-| 051 | 51-idioms-body | ✅ PASS | 1989/2000 | - |
-| 052 | 52-idioms-animals-i | ✅ PASS | 1962/2000 | - |
-| 053 | 53-idioms-animals-ii | ✅ PASS | 1997/2000 | - |
-| 054 | 54-idioms-nature | ✅ PASS | 2044/2000 | - |
-| 055 | 55-synonyms-emotion | ✅ PASS | 2075/2000 | - |
-| 056 | 56-synonyms-size | ✅ PASS | 2343/2000 | - |
-| 057 | 57-synonyms-movement | ✅ PASS | 2281/2000 | - |
-| 058 | 58-synonyms-quality | ✅ PASS | 2055/2000 | - |
-| 059 | 59-synonyms-communication | ✅ PASS | 2124/2000 | - |
-| 060 | 60-synonyms-character | ✅ PASS | 2686/2000 | - |
-| 061 | 61-synonyms-time | ✅ PASS | 2191/2000 | - |
-| 062 | 62-synonyms-place | ✅ PASS | 2119/2000 | - |
-| 063 | 63-synonyms-quantity | ✅ PASS | 2166/2000 | - |
-| 064 | 64-synonyms-action | ✅ PASS | 2192/2000 | - |
-| 065 | 65-synonyms-state | ✅ PASS | 2119/2000 | - |
-| 066 | 66-synonyms-abstract | ✅ PASS | 2945/2000 | - |
-| 067 | 67-advanced-conjunctions-i | ✅ PASS | 2274/2000 | - |
-| 068 | 68-advanced-conjunctions-ii | ✅ PASS | 2177/2000 | - |
-| 069 | 69-integration-practice | ✅ PASS | 2027/2000 | - |
-| 070 | 70-b2-checkpoint | ✅ PASS | 1965/2000 | - |
-| 071 | 71-medytsyna-pohlybleno | ✅ PASS | 2486/2000 | - |
-| 072 | 72-tekhnolohii-ta-shi | ✅ PASS | 2041/2000 | - |
-| 073 | 73-nauka-i-doslidzhennia | ✅ PASS | 2260/2000 | - |
-| 074 | 74-mystetstvo-i-literatura | ✅ PASS | 2432/2000 | - |
-| 075 | 75-modern-diaspora | ✅ PASS | 2915/2000 | - |
-| 076 | 76-religion-in-ukraine | ✅ PASS | 3030/2000 | - |
-| 077 | 77-academic-writing | ✅ PASS | 2841/2000 | - |
-| 078 | 78-text-analysis | ✅ PASS | 2437/2000 | - |
-| 079 | 79-capstone-research | ✅ PASS | 2175/2000 | - |
-| 080 | 80-analiz-tekstu | ✅ PASS | 2257/2000 | - |
-| 081 | 81-capstone-doslidzhennya | ✅ PASS | 2159/2000 | - |
-| 082 | 82-capstone-prezentatsiya | ✅ PASS | 2147/2000 | - |
-| 083 | 83-b2-pidsumkovyy-ohlyad | ✅ PASS | 2211/2000 | - |
-| 084 | 84-checkpoint-register-synthesis | ✅ PASS | 2159/2000 | - |
-| 085 | 85-professional-email-basics | ✅ PASS | 2174/2000 | - |
-| 086 | 86-professional-email-advanced | ✅ PASS | 4272/1750 | - |
-| 087 | 87-professional-reports-basics | ✅ PASS | 4554/1750 | - |
-| 088 | 88-professional-reports-advanced | ✅ PASS | 3793/1750 | - |
-| 089 | 89-news-analysis-basics | ✅ PASS | 4258/1750 | - |
-| 090 | 90-news-analysis-advanced | ✅ PASS | 4088/2000 | - |
-| 091 | 91-presentation-skills-basics | ✅ PASS | 2294/2000 | - |
-| 092 | 92-presentation-skills-advanced | ✅ PASS | 3951/2000 | - |
-| 093 | 93-discussion-debate | ✅ PASS | 4237/2000 | - |
-| 094 | 94-b2-final-exam | ✅ PASS | 2605/2000 | - |
+| 001 | passive-voice-system | 🔄 PROSE | 4236/4000 | - |
+| 002 | past-passive-participles | 🔄 PROSE | 4596/4000 | - |
+| 003 | impersonal-passive | 🔄 PROSE | 4003/4000 | - |
+| 004 | reflexive-passive | 🔄 PROSE | 4397/4000 | - |
+| 005 | third-person-plural-passive | 🔄 PROSE | 4214/4000 | - |
+| 006 | passive-in-context | 🔄 PROSE | 4124/4000 | - |
+| 007 | active-participles-present | 🔄 PROSE | 4260/4000 | - |
+| 008 | active-participles-past | 🔄 PROSE | 4327/4000 | - |
+| 009 | participles-vs-relative-clauses | 🔄 PROSE | 7013/4000 | - |
+| 010 | checkpoint-passive-voice | 🔄 PROSE | 4349/4000 | - |
+| 011 | multi-clause-sentences | 🔄 PROSE | 4957/4000 | - |
+| 012 | parenthetical-expressions | 🔄 PROSE | 5294/4000 | - |
+| 013 | emphasis-and-inversion | 🔄 PROSE | 4935/4000 | - |
+| 014 | stylistic-connectors | 🔄 PROSE | 4882/4000 | - |
+| 015 | register-introduction | 🔄 PROSE | 4002/4000 | - |
+| 016 | register-formal-informal | 🔄 PROSE | 4910/4000 | - |
+| 017 | register-business-ukrainian | 🔄 PROSE | 4272/4000 | - |
+| 018 | register-academic-ukrainian | 🔄 PROSE | 5610/4000 | - |
+| 019 | register-official-legal | 🔄 PROSE | 4251/4000 | - |
+| 020 | register-medical-ukrainian | ❌ FAIL | 5956/4000 | Review concludes with **Status:** FAIL — the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module. |
+| 021 | register-technical-scientific | 🔄 PROSE | 4537/4000 | - |
+| 022 | register-literary-ukrainian | 🔄 PROSE | 4404/4000 | - |
+| 023 | register-media-journalistic | ❌ FAIL | 2939/4000 | 5 Outline Compliance Errors |
+| 024 | register-colloquial-style | 🔄 PROSE | 5744/4000 | - |
+| 025 | register-practice-cross-register-rewriting | 🔄 PROSE | 4114/4000 | - |
+| 026 | politics-government-vocabulary | 🔄 PROSE | 4361/4000 | - |
+| 027 | law-justice-vocabulary | 🔄 PROSE | 4678/4000 | - |
+| 028 | economics-business-vocabulary | ❌ FAIL | 2913/4000 | 5 Outline Compliance Errors |
+| 029 | b21-integration-practice | ❌ FAIL | 4413/4000 | No Tier 2 (Core) review file at l2-uk-en/b2/review/b21-integration-practice-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with «»), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly — justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect). |
+| 030 | b21-checkpoint | 🔄 PROSE | 4422/4000 | - |
+| 031 | numeral-declension-time-dates | 🔄 PROSE | 4360/4000 | - |
+| 032 | numeral-declension-compound-numbers | 🔄 PROSE | 4139/4000 | - |
+| 033 | word-formation-person-suffixes | 🔄 PROSE | 4808/4000 | - |
+| 034 | word-formation-abstract-nouns | 🔄 PROSE | 4343/4000 | - |
+| 035 | word-formation-place-object-names | 🔄 PROSE | 4998/4000 | - |
+| 036 | word-formation-adjective-formation | 🔄 PROSE | 4721/4000 | - |
+| 037 | word-formation-adverbs-integration | 🔄 PROSE | 6326/4000 | - |
+| 038 | one-member-sentences | 🔄 PROSE | 4076/4000 | - |
+| 039 | register-religious-epistolary | 🔄 PROSE | 4825/4000 | - |
+| 040 | b21c-checkpoint | 🔄 PROSE | 4364/4000 | - |
+| 041 | aspect-nuances-secondary-imperfectivization | 🔄 PROSE | 5091/4000 | - |
+| 042 | aspect-nuances-imperative-infinitive | 🔄 PROSE | 5825/4000 | - |
+| 043 | correlative-constructions | 🔄 PROSE | 4752/4000 | - |
+| 044 | complex-syntax-ellipsis-parcelling | 🔄 PROSE | 4089/4000 | - |
+| 045 | proverbs-work-wisdom-character | ✅ PASS | 4148/4000 | - |
+| 046 | proverbs-nature-time-caution | 🔄 PROSE | 7538/4000 | - |
+| 047 | set-expressions-i-body-animals | 🔄 PROSE | 3923/4000 | - |
+| 048 | set-expressions-ii-objects-abstract | 🔄 PROSE | 6094/4000 | - |
+| 049 | idioms-body-head-face | 🔄 PROSE | 4598/4000 | - |
+| 050 | idioms-body-hands-legs | 🔄 PROSE | 4365/4000 | - |
+| 051 | idioms-body | 🔄 PROSE | 6161/4000 | - |
+| 052 | idioms-animals-i | 🔄 PROSE | 7169/4000 | - |
+| 053 | idioms-animals-ii | 🔄 PROSE | 4200/4000 | - |
+| 054 | idioms-nature | 🔄 PROSE | 4685/4000 | - |
+| 055 | synonyms-emotion | ❌ FAIL | 2908/4000 | word_count, activities, structure |
+| 056 | synonyms-size | 🔄 PROSE | 4373/4000 | - |
+| 057 | synonyms-movement | 🔄 PROSE | 4780/4000 | - |
+| 058 | synonyms-quality | 🔄 PROSE | 6054/4000 | - |
+| 059 | synonyms-communication | ❌ FAIL | 3021/4000 | 5 Outline Compliance Errors |
+| 060 | synonyms-character | 🔄 PROSE | 4448/4000 | - |
+| 061 | synonyms-time | 🔄 PROSE | 3984/4000 | - |
+| 062 | synonyms-place | 🔄 PROSE | 5191/4000 | - |
+| 063 | synonyms-quantity | 🔄 PROSE | 4425/4000 | - |
+| 064 | synonyms-action | 🔄 PROSE | 4630/4000 | - |
+| 065 | synonyms-state | 🔄 PROSE | 4156/4000 | - |
+| 066 | synonyms-abstract | 🔄 PROSE | 3991/4000 | - |
+| 067 | advanced-conjunctions-i | 🔄 PROSE | 5301/4000 | - |
+| 068 | advanced-conjunctions-ii | 🔄 PROSE | 4913/4000 | - |
+| 069 | integration-practice | ✅ PASS | 4311/4000 | - |
+| 070 | b2-checkpoint | ✅ PASS | 5865/4000 | - |
+| 071 | medytsyna-pohlybleno | ⚠️ MISSING | 0/0 | no_file |
+| 072 | tekhnolohii-ta-shi | ⚠️ MISSING | 0/0 | no_file |
+| 073 | nauka-i-doslidzhennia | 🔄 PROSE | 5198/5000 | - |
+| 074 | mystetstvo-i-literatura | 🔄 PROSE | 5527/5000 | - |
+| 075 | modern-diaspora | 🔄 PROSE | 5093/4000 | - |
+| 076 | religion-in-ukraine | ❌ FAIL | 4057/4000 | - |
+| 077 | academic-writing | ⚠️ MISSING | 0/0 | no_file |
+| 078 | text-analysis | 🔄 PROSE | 4528/4000 | - |
+| 079 | capstone-research | ✅ PASS | 2946/2714 | - |
+| 080 | analiz-tekstu | ❌ FAIL | 3549/4000 | word_count, activities, structure |
+| 081 | capstone-doslidzhennya | 🔄 PROSE | 5815/5000 | - |
+| 082 | capstone-prezentatsiya | 🔄 PROSE | 5092/5000 | - |
+| 083 | b2-pidsumkovyy-ohlyad | 🔄 PROSE | 5074/4000 | - |
+| 084 | checkpoint-register-synthesis | 🔄 PROSE | 4371/4000 | - |
+| 085 | professional-email-basics | 🔄 PROSE | 4708/4000 | - |
+| 086 | professional-email-advanced | 🔄 PROSE | 5432/5000 | - |
+| 087 | professional-reports-basics | 🔄 PROSE | 6271/4000 | - |
+| 088 | professional-reports-advanced | 🔄 PROSE | 4121/4000 | - |
+| 089 | news-analysis-basics | 🔄 PROSE | 4948/4000 | - |
+| 090 | news-analysis-advanced | ❌ FAIL | 2802/5000 | 4 Outline Compliance Errors |
+| 091 | presentation-skills-basics | 🔄 PROSE | 5110/4000 | - |
+| 092 | presentation-skills-advanced | 🔄 PROSE | 5506/4000 | - |
+| 093 | discussion-debate | 🔄 PROSE | 4717/4000 | - |
+| 094 | pluperfect-tense | ❌ FAIL | 3782/4000 | word_count, activities, structure |
+| 095 | b2-final-exam | ❌ FAIL | 3419/4000 | word_count, activities, structure |
 
 ---
 
 **Legend:**
 - ✅ PASS: All audit gates pass
+- 🔄 PROSE: Content gates pass; activities deferred (awaiting /hetman enrichment)
 - ❌ FAIL: Some audit gates fail
 - 📝 STUB: Empty or < 100 words
 - ⚠️ ERROR/MISSING: File not found or audit error

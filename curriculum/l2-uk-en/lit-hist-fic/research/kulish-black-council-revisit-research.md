@@ -104,3 +104,10 @@ forbidden_claims:
 
 ### Підсумок та спадщина: Значення для літературного канону
 "Чорна рада" заклала фундамент для всієї подальшої української історичної прози (від М. Старицького до П. Загребельного). Твір залишається болісно актуальним попередженням про небезпеку популізму та внутрішніх розбратів під час боротьби за незалежність.
+### Decolonial Verification
+Focus purely on 19th-century decolonial framing, separating Panteleimon Kulish from Mykola Kulish. Reclaim his translations and historical narratives from imperial integration.
+
+## Поетика
+- Аналіз стилю, поетика твору.
+## Лінгвістичний вимір
+- Цільові слова з IPA транскрипцією.

@@ -1,7 +1,7 @@
 # Audit Report: M66 — ivan-mazepa-poltava.md
 **Level:** B2-HIST | **Module:** M66 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 23:41:04
+**Generated:** 2026-02-25 20:53:28
 
 ## Configuration
 **Type:** B2-history
@@ -16,20 +16,36 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Універсал Івана Мазепи (1708) | 1 | 1 | ✅ |
+| 2 | true-false | Перевірте факти: Міфи та реальність | 10 | 8 | ✅ |
+| 3 | critical-analysis | Аналіз політичної аргументації | 1 | 1 | ✅ |
+| 4 | comparative-study | Порівняння історичних міфів | 1 | 1 | ✅ |
+| 5 | essay-response | Чому Мазепа програв? | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 5272/5000 (raw: 5674)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.0% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

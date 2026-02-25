@@ -2,51 +2,65 @@ slug: regions-center
 title: 'Українські регіони: Центр'
 word_target: 4000
 content_outline:
-  - section: 'Вступ: Центр — Серце та Колиска України (Introduction: The Center as
-      the Heart and Cradle of Ukraine)'
-    words: 400
-    points:
-      - 'Central Ukraine as a historical and cultural concept: exploring the lands
-        of the former Hetmanate and their role in national formation.'
-      - 'Overview of the three pillars of identity: Kyiv (the capital), Poltava (the
-        language), and Cherkasy (the Cossack spirit).'
-  - section: 'Полтавщина: Колиска літературної мови (Poltava Region: Cradle of the
-      Literary Language)'
-    words: 1000
-    points:
-      - 'Poltava as the ''spiritual capital'' and birthplace of modern Ukrainian:
-        the legacy of Ivan Kotlyarevsky and the vernacular impact of ''Eneida'' (State
-        Standard §3.15).'
-      - The role of the Poltava dialect as the foundational standard for the national
-        language; connecting the region's literary tradition to modern identity.
-  - section: 'Черкащина: Козацьке серце та гетьманська слава (Cherkasy Region: Cossack
-      Heart and Hetman Glory)'
-    words: 1100
-    points:
-      - 'Cherkasy as the center of the Cossack state: exploring Chyhyryn as the strategic
-        capital under Bohdan Khmelnytsky and the ''Hetmanate'' concept.'
-      - The spiritual resting place of Taras Shevchenko in Kaniv (Tarasova Hora);
-        defining the region as the 'Land of Bohdan and Taras' and its historical significance.
-  - section: 'Київ: Від княжої столиці до європейського центру (Kyiv: From Princely
-      Capital to European Center)'
-    words: 900
-    points:
-      - 'Kyiv''s monuments and cultural heritage according to State Standard §3.13:
-        the continuity from Kyivan Rus through Saint Sophia and the Golden Gate.'
-      - 'Modern Kyiv: the symbol of resistance and democratic tradition (Maidan) and
-        its evolution into a leading European metropolis.'
-  - section: 'Практика: Робота над типовими помилками (Practice: Working on Common
-      Learner Errors)'
-    words: 400
-    points:
-      - 'Correcting Russianisms in toponyms: drill the pronunciation and spelling
-        of ''Черкаси'' (not Черкасси) and the suffix ''-щина'' in ''Полтавщина'' (not
-        Полтавщіна).'
-      - 'Mastering prepositional patterns: drill ''їхати до Черкас'' (Genitive) versus
-        ''бути в Черкасах'' (Locative) to prevent case-mismatch errors.'
-  - section: 'Підсумок: Джерело української ідентичності (Summary: The Source of Ukrainian
-      Identity)'
-    words: 200
-    points:
-      - Synthesis of how Central Ukraine connects the Cossack past with the linguistic
-        and political present of the nation.
+- section: 'Вступ: Центр — Серце та Колиска України'
+  words: 400
+  points:
+  - 'H3: Географічний та культурний простір. Define Central Ukraine (Poltava, Cherkasy,
+    Kyiv regions) and its role as the historical core of the Hetmanate and national
+    formation.'
+  - 'H3: Три стовпи ідентичності. Introduce the three core pillars: Kyiv (statehood
+    and capital), Poltava (literary language), and Cherkasy (Cossack military spirit).'
+  - 'H3: Інструкція для студентів. Explicitly note that this module is 100% Ukrainian
+    immersion (B1.7 level) and focuses on advanced cultural vocabulary.'
+- section: 'Полтавщина: Колиска літературної мови'
+  words: 1000
+  points:
+  - 'H3: Духовна столиця України. Discuss Poltava''s historical significance and why
+    it is universally considered the cultural heartland of Ukraine.'
+  - 'H3: Феномен Івана Котляревського. Analyze ''Eneida'' (1798) as the ethnographic
+    encyclopedia of Ukrainian traditions (§3.15) and the birth of the modern literary
+    language.'
+  - 'H3: Полтавський діалект як стандарт. Explain how the local dialect became the
+    unshakeable foundation of modern standard Ukrainian, resisting imperial suppression.'
+  - 'H3: Лексика в контексті. Provide a short excerpt or descriptive text about Poltava''s
+    cultural impact, heavily utilizing active vocabulary (спадщина, літературний).'
+- section: 'Черкащина: Козацьке серце та гетьманська слава'
+  words: 1100
+  points:
+  - 'H3: Земля Богдана Хмельницького. Explore Chyhyryn as the strategic capital of
+    the Cossack state (Hetmanate) and the concept of ''козацька вольниця''.'
+  - 'H3: Історична пам''ять та опір. Detail how Cherkasy lands formed the core of
+    Cossack resistance, from early fortifications to the Khmelnytsky Uprising.'
+  - 'H3: Тарасова Гора. Discuss Kaniv as the spiritual resting place of Taras Shevchenko,
+    connecting the Cossack era to the 19th-century national awakening.'
+  - 'H3: Сучасна спадщина. Examine how Cossack heritage shapes modern Ukrainian identity
+    and resilience in the Cherkasy region today.'
+- section: 'Київ: Від княжої столиці до європейського центру'
+  words: 900
+  points:
+  - 'H3: Тисячолітня спадщина. Explore Kyiv''s monuments (§3.13) — Sophia of Kyiv
+    and the Golden Gate — as symbols of continuous statehood since Kyivan Rus.'
+  - 'H3: Деколонізація історії Києва. Explicitly debunk the ''brotherly nations''
+    myth. Frame Kyivan Rus as the direct and sole ancestor of modern Ukraine.'
+  - 'H3: Місто вільних людей. Discuss modern Kyiv''s role: the Maidan, the Revolution
+    of Dignity, and its evolution into a European metropolis resisting modern imperialism.'
+  - 'H3: Життя в столиці. Present modern vocabulary for navigating the capital, blending
+    historical gravity with contemporary urban dynamics.'
+- section: 'Практика: Робота над типовими помилками'
+  words: 400
+  points:
+  - 'H3: Викорінення русизмів у топонімах. Provide rules and drill the correct Ukrainian
+    spelling and pronunciation: ''Черкаси'' (no double ''с''), suffix ''-щина'' (Полтавщина,
+    не Полтавщіна).'
+  - 'H3: Прийменники руху та місця. Contrast ''їхати до Черкас / Києва'' (Genitive
+    for destination) with ''бути в Черкасах / Києві'' (Locative for location). Provide
+    a clear rule table.'
+  - 'H3: Вправи на закріплення. Include 3-4 mini-dialogues applying the corrected
+    forms and prepositions in authentic contexts.'
+- section: 'Підсумок: Джерело української ідентичності'
+  words: 200
+  points:
+  - 'H3: Синтез матеріалу. Summarize how Central Ukraine inextricably unites the Cossack
+    past, the linguistic foundation, and the political center.'
+  - 'H3: Перехід до наступної теми. Briefly connect this regional understanding to
+    the upcoming module on modern Ukrainian music and culture.'

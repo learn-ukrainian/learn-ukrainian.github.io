@@ -1,7 +1,7 @@
 # Audit Report: M53 — abstract-concepts-processes.md
 **Level:** B1 | **Module:** M53 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:01:16
+**Generated:** 2026-02-25 10:45:40
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,20 +16,41 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть відповідність: термін та його англійський переклад | 12 | 8 | ✅ |
+| 2 | match-up | Утворіть абстрактний іменник від дієслова | 12 | 8 | ✅ |
+| 3 | group-sort | Розподіліть слова за векторами динаміки | 12 | 12 | ✅ |
+| 4 | quiz | Перевірте знання: абстрактні концепції та їх значення | 8 | 8 | ✅ |
+| 5 | fill-in | Заповніть пропуски: лексика в контексті | 8 | 8 | ✅ |
+| 6 | unjumble | Складіть речення: правильний порядок слів | 6 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки: русизми та кальки | 6 | 6 | ✅ |
+| 8 | select | Оберіть правильні варіанти: категорії процесів | 6 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть абстрактні іменники в тексті | 6 | 6 | ✅ |
+| 10 | cloze | Заповніть пропуски: аналітичний текст | 14 | 12 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/4 (mark-the-words, match-up, quiz) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4324/4000 (raw: 4703)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 9/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

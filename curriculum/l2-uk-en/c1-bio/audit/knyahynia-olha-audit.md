@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M01 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-21 19:25:47
+**Generated:** 2026-02-25 20:36:07
 
 ## Configuration
 **Type:** C1-biography
@@ -51,7 +51,7 @@
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Richness Details
 **Score:** 95% (minimum: 95%)

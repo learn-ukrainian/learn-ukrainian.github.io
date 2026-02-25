@@ -27,7 +27,8 @@ RUBRIC_REGISTRY = {
     "history": {
         "tracks": {"b2-hist", "c1-bio", "c1-hist", "oes", "ruth",
                     "lit", "lit-essay", "lit-fantastika", "lit-hist-fic",
-                    "lit-humor", "lit-juvenile", "lit-war"},
+                    "lit-humor", "lit-youth", "lit-war", "lit-doc",
+                    "lit-drama", "lit-crimea"},
         "max_score": 10,
         "dimensions": ["sources", "chronology", "primary_quotes",
                         "engagement_hooks", "decolonization", "section_notes"],

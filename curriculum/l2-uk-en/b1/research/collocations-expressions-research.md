@@ -1,39 +1,33 @@
 # Дослідження: Колокації та вирази
 
 ## State Standard Reference
-§4.5.1.1: "Стилістичні засоби лексики: антоніми, синоніми, епітети, метафори"
-Alignment: Цей модуль розвиває лексичну компетенцію через вивчення сталевих сполучень слів (колокацій), що є основою природного мовлення та стилістичної точності, визначеної у стандарті. Також спирається на §4.2.2 (Вживання відмінків) для граматичної правильності керування дієслів.
+§4.5.1.1: "Стилістичні засоби лексики: антоніми... синоніми: друг, приятель, товариш; епітети: веселі птахи, сонячна усмішка; метафори: прийшла осінь, місто спить."
+Alignment: This module directly addresses stylistic precision (Стилістика) by teaching natural collocations and synonymy, enabling learners to select the culturally and stylistically appropriate word combinations rather than relying on calques from other languages.
 
 ## Vocabulary Frequency
-| Word/Phrase | Frequency / Source | Key collocations |
-|-------------|-------------------|------------------|
-| **Рішення** | High (General) | приймати рішення (not *робити*), важливе рішення, остаточне рішення, скасувати рішення |
-| **Участь** | High (General) | брати участь (not *приймати*), активна участь, відмовитися від участі |
-| **Увага** | High (General) | звертати увагу (pay attention), приділяти увагу (devote attention), заслуговувати на увагу, центр уваги |
-| **Досвід** | High (Business/Edu) | набувати досвіду (gain), мати досвід, обмін досвідом, життєвий досвід, гіркий досвід |
-| **Думка** | High (General) | на мою думку, висловити думку, поділяти думку, громадська думка, змінити думку |
-| **Враження** | Medium (Descriptive) | справляти враження (make an impression), ділитися враженнями, незабутнє враження |
-| **Слово** | High (General) | дотримувати слова (keep word), дати слово, чесне слово, вільне слово |
-| **Час** | Very High | проводити час (spend time - enjoy), витрачати час (waste/spend), гаяти час (waste), вільний час |
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| брати (участь) | High (academic/general) | брати участь, активна участь |
+| ухвалювати (рішення) | Medium-High (official) | ухвалювати закон, ухвалювати рішення |
+| розплющувати (очі) | Medium (literary/general) | розплющувати очі (physical action) |
+| набувати (досвіду) | High (professional) | набувати досвіду, набувати знань (+ Genitive) |
 
 ## Cultural Hooks
-1. **Багатство синонімів**: Українська мова славиться своєю синонімією (наприклад, слово "горизонт" має понад 10 синонімів: *обрій, небокрай, видноколо, небосхил* тощо). Вибір правильного слова у колокації є ознакою високої культури мовлення.
-2. **"Суржик" як проблема колокацій**: Багато помилок виникають через прямий переклад (калькування) з російської або англійської, що створює неприродні конструкції (наприклад, *приймати участь* замість *брати участь*). Чиста мова — це правильні колокації.
+1. **Linguistic Decolonization**: In contemporary Ukraine, speaking without calques (specifically avoiding Russian structures like "приймати участь" or "вірна відповідь") is a strong, conscious marker of cultural identity and linguistic independence.
+2. **Wealth of Synonymy**: Ukrainian is historically known for its rich synonymic rows (e.g., горизонт, обрій, небокрай, видноколо). Utilizing these precise terms in collocations allows for highly poetic and accurate expression.
 
 ## Common Learner Errors
-1. **Приймати участь** → **Брати участь** (To participate) — калькування з рос. *принимать участие*.
-2. **Робити рішення** → **Приймати / Ухвалювати рішення** (To make a decision) — калькування з англ. *make a decision*.
-3. **Вірна відповідь** → **Правильна відповідь** (Correct answer) — *вірний* означає "loyal" (вірний друг, вірний пес), а не "correct".
-4. **Відкривати очі** → **Розплющувати очі** (To open eyes) — *відкривати* можна двері, Америку або пляшку; очі ми *розплющуємо* (фізично).
-5. **Рахувати, що...** → **Вважати, що...** (To think/consider) — *рахувати* означає лічити гроші або предмети (1, 2, 3); думку ми *вважаємо*.
-6. **Тратити час** → **Проводити час** (To spend time) — *тратити* має відтінок "витрачати даремно" або "використовувати ресурс"; коли йдеться про дозвілля, краще *проводити час*.
+1. "приймати участь" → **брати участь** — Literal translation from Russian ("принимать участие"); "приймати" is used for guests or medicine.
+2. "відкривати очі" → **розплющувати очі** — Over-generalizing the verb "to open" (English/Russian influence); "відкривати" is used for doors, businesses, or new lands.
+3. "вірна відповідь" → **правильна відповідь** — Semantic confusion: "Вірний" means loyal/faithful (like a friend or a dog) in Ukrainian, not "correct".
+4. "рахувати, що..." → **вважати, що...** — "Рахувати" is strictly used for counting numbers or money, whereas "вважати" means to hold an opinion or believe.
 
 ## Cross-References
-- **Builds on**: b1-69 (Synonymy Speaking Verbs) — розуміння нюансів дієслів.
-- **Prepares for**: b1-71 (Emotional Intelligence) — точне вираження емоцій через сталі вирази; b1-89 (Communication Channels) — офіційні колокації.
+- Builds on: b1-69 (Synonymy Speaking Verbs)
+- Prepares for: b1-71 (Emotional Intelligence)
 
 ## Notes for Content Writing
-- Focus on the distinction between **Literal** translation vs. **Natural** collocation.
-- Use the "Correct/Incorrect" (Правильно/Неправильно) table format extensively to fight calques.
-- Emphasize that *vocabulary is not just words, but how they connect*.
-- Include a specific section on "False Friends of Translator" regarding collocations (make vs do vs have).
+- **100% Ukrainian Immersion**: Do not use English scaffolding in prose. Use English only in vocabulary tables.
+- **Positive Framing**: When correcting calques, frame the correct Ukrainian form as the "natural, elegant expression" rather than just dictating a dry rule. Explain *why* certain words pair together semantically.
+- **Decolonized Approach**: Do NOT use Russian forms as the baseline comparison. Contrast the meanings of Ukrainian words (e.g., explain what "відкривати" actually means to show why it doesn't pair with "очі").
+- **Clear Structures**: Use H3 headers for each conceptual group (Рішення, Участь, Увага, Досвід) and use tables to contrast correct and incorrect usage visually.

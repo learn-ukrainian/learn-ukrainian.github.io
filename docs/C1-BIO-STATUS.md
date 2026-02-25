@@ -1,180 +1,198 @@
 # C1-BIO Module Status
 
-**Generated:** 2026-02-09 07:47:49
-**Total Modules:** 156
-**Status:** 44 passing, 84 failing, 28 stubs, 0 errors
+**Generated:** 2026-02-25 20:36:08
+**Total Modules:** 172
+**Status:** 0 passing, 4 failing, 0 stubs, 168 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 44/156 (28%)
-- ❌ **Failing:** 84/156
-- 📝 **Stubs:** 28/156
+- ✅ **Passing:** 0/172 (0%)
+- ❌ **Failing:** 4/172
+- 📝 **Stubs:** 0/172
+- ⚠️ **Errors:** 168/172
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | knyahynia-olha | ✅ PASS | 6941/5000 | - |
-| 002 | kniaz-sviatoslav | ✅ PASS | 6717/5500 | - |
-| 003 | volodymyr-velykii | ✅ PASS | 5609/5000 | - |
-| 004 | kniaz-yaroslav-mudryi | ✅ PASS | 5669/5000 | - |
-| 005 | knyazhna-anna-yaroslavna | ✅ PASS | 5453/5200 | - |
-| 006 | volodymyr-monomakh | ✅ PASS | 5173/5000 | - |
-| 007 | nestor-litopysets | ✅ PASS | 4616/4700 | - |
-| 008 | roman-mstyslavych | ✅ PASS | 5681/4400 | - |
-| 009 | mykhailo-chernihivskyi | ✅ PASS | 5865/4800 | - |
-| 010 | danylo-halytskyi | ✅ PASS | 4524/4300 | - |
-| 011 | lev-danylovych | ✅ PASS | 4138/4000 | - |
-| 012 | yuriy-lvovych | ✅ PASS | 4103/4000 | - |
-| 013 | kostiantyn-ostrozky-elder | ✅ PASS | 4964/4000 | - |
-| 014 | roksolana | ✅ PASS | 4208/4000 | - |
-| 015 | dmytro-vyshnevetsky | ✅ PASS | 4634/4300 | - |
-| 016 | kostiantyn-vasyl-ostrozky | ✅ PASS | 5114/4000 | - |
-| 017 | iov-boretskyi | ✅ PASS | 4937/4000 | - |
-| 018 | severyn-nalyvaiko | ✅ PASS | 4481/4000 | - |
-| 019 | petro-sahaidachny | ✅ PASS | 4802/4000 | - |
-| 020 | meletii-smotrytskyi | ✅ PASS | 5009/4300 | - |
-| 021 | sylvestr-kosiv | ✅ PASS | 4499/4300 | - |
-| 022 | bohdan-khmelnytskyy | ✅ PASS | 4826/4300 | - |
-| 023 | petro-mohyla | ✅ PASS | 4514/4300 | - |
-| 024 | ivan-vyhovskyi | ✅ PASS | 4479/4300 | - |
-| 025 | ivan-sirko | ✅ PASS | 4978/4300 | - |
-| 026 | yuriy-nemyrych | ✅ PASS | 4390/4300 | - |
-| 027 | ivan-mazepa | ✅ PASS | 4533/4000 | - |
-| 028 | kost-hordiyenko | ✅ PASS | 4674/4300 | - |
-| 029 | danylo-apostol | ❌ FAIL | 4327/4300 | - |
-| 030 | pavlo-polubotok | ❌ FAIL | 4371/4300 | - |
-| 031 | pylyp-orlyk | ❌ FAIL | 4805/4000 | - |
-| 032 | petro-kalnyshevskyy | ❌ FAIL | 4585/4000 | - |
-| 033 | hryhoriy-skovoroda | ❌ FAIL | 4803/4300 | - |
-| 034 | maksym-berezovskyy | ❌ FAIL | 4748/4000 | - |
-| 035 | dmytro-bortnyanskyy | ❌ FAIL | 4798/4000 | - |
-| 036 | ivan-kotliarevskyi | ❌ FAIL | 5528/4000 | - |
-| 037 | hryhoriy-kvitka-osnovianenko | ❌ FAIL | 5325/4000 | - |
-| 038 | semen-hulak-artemovskyy | ❌ FAIL | 5340/4000 | - |
-| 039 | taras-shevchenko | ❌ FAIL | 4833/4000 | - |
-| 040 | panteleimon-kulish | ❌ FAIL | 4958/4000 | - |
-| 041 | hanna-barvinok | ❌ FAIL | 4626/4000 | - |
-| 042 | marko-vovchok | ❌ FAIL | 4514/4000 | - |
-| 043 | ivan-nechuy-levytskyi | ❌ FAIL | 4220/4000 | - |
-| 044 | marko-kropyvnytskyi | ❌ FAIL | 3959/4000 | - |
-| 045 | mykhailo-drahomanov | ✅ PASS | 4326/4000 | - |
-| 046 | mykola-lysenko | ✅ PASS | 6385/4300 | - |
-| 047 | ivan-puliui | ✅ PASS | 5218/5000 | - |
-| 048 | olena-pchilka | ✅ PASS | 4858/4000 | - |
-| 049 | mariya-pavlova | ✅ PASS | 4666/4000 | - |
-| 050 | mariya-zankovetska | ✅ PASS | 4548/4000 | - |
-| 051 | nataliya-kobrynska | ✅ PASS | 5050/4000 | - |
-| 052 | ivan-franko | ✅ PASS | 4630/4300 | - |
-| 053 | yevhen-chykalenko | ✅ PASS | 5291/4000 | - |
-| 054 | oleksander-potebnya | ✅ PASS | 4642/4000 | - |
-| 055 | borys-hrinchenko | ✅ PASS | 5236/4800 | - |
-| 056 | olha-kobylianska | ❌ FAIL | 1429/4500 | 7 Outline Compliance Errors |
-| 057 | volodymyr-vernadskyi | ❌ FAIL | 5374/4300 | - |
-| 058 | kyrylo-trylovskyi | ✅ PASS | 5209/4000 | - |
-| 059 | mykhailo-kotsiubynsky | ❌ FAIL | 4356/4300 | - |
-| 060 | andrey-sheptytsky | ✅ PASS | 5494/4000 | - |
-| 061 | ivan-lypa | ✅ PASS | 4919/4000 | - |
-| 062 | sofiya-okunevska | ❌ FAIL | 4624/4000 | - |
-| 063 | mykhailo-hrushevskyi | ❌ FAIL | 4546/4450 | - |
-| 064 | mykola-vasylenko | ❌ FAIL | 4019/4000 | - |
-| 065 | liudmyla-starytska | ❌ FAIL | 5077/5000 | - |
-| 066 | mariia-voiakovska | ✅ PASS | 4840/4550 | - |
-| 067 | yevhen-paton | ✅ PASS | 4456/4000 | - |
-| 068 | yulian-bachynskyi | ❌ FAIL | 3574/4000 | 3 Outline Compliance Errors |
-| 069 | ahatanhel-krymskyi | ❌ FAIL | 2137/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 070 | lesya-ukrainka | ❌ FAIL | 2154/4000 | 6 Outline Compliance Errors |
-| 071 | vasyl-stefanyk | ❌ FAIL | 5502/4500 | - |
-| 072 | solomiya-krushelnytska | ❌ FAIL | 2081/4000 | 6 Outline Compliance Errors |
-| 073 | mykola-mikhnovskyi | ❌ FAIL | 2160/4000 | 6 Outline Compliance Errors |
-| 074 | oleksandr-hrekiv | ❌ FAIL | 2144/4000 | 6 Outline Compliance Errors |
-| 075 | mykola-leontovych | ❌ FAIL | 1937/4000 | 6 Outline Compliance Errors |
-| 076 | kazimir-malevich | ❌ FAIL | 2006/4000 | 6 Outline Compliance Errors |
-| 077 | symon-petliura | ❌ FAIL | 2037/4000 | 7 Outline Compliance Errors |
-| 078 | oleksandr-bohomazov | ❌ FAIL | 2398/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 079 | ivan-ohienko | ❌ FAIL | 2248/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 080 | mykhailo-boichuk | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 081 | viacheslav-lypynskyi | ❌ FAIL | 2153/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 082 | dmytro-dontsov | ❌ FAIL | 1985/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 083 | petro-bolbochan | ❌ FAIL | 2136/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 084 | nataliia-polonska-vasylenko | ❌ FAIL | 2027/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 085 | valentyna-radzymovska | ❌ FAIL | 2734/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 086 | les-kurbas | ❌ FAIL | 2050/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 087 | oleksandr-arkhypenko | ❌ FAIL | 2124/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 088 | klavdiya-latysheva | ❌ FAIL | 2041/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 089 | olha-basarab | ❌ FAIL | 2206/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 090 | mykola-zerov | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 091 | oleksa-slisarenko | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 092 | pavlo-fylypovych | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 093 | yevhen-konovalets | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 094 | josyf-slipyj | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 095 | milena-rudnytska | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 096 | mykola-kulish | 📝 STUB | 9/4000 | 7 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 097 | olena-stepaniv | ❌ FAIL | 2533/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 098 | mykola-khvylovyi | ❌ FAIL | 2236/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 099 | vira-kholodna | ❌ FAIL | 2246/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 100 | oleksandr-dovzhenko | 📝 STUB | 9/4000 | 7 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 101 | anatol-petrytskyi | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 102 | borys-liatoshynskyi | ❌ FAIL | 2008/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 103 | maik-yohansen | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 104 | vasyl-vyshyvanyi | ❌ FAIL | 2091/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 105 | berta-rapoport | ❌ FAIL | 2060/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 106 | yuriy-kondratiuk | ❌ FAIL | 5033/4300 | - |
-| 107 | dmytro-falkivskyi | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 108 | yevhen-pluzhnyk | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 109 | hryhorii-kosynka | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 110 | kateryna-bilokur | ❌ FAIL | 2401/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 111 | yurii-lypa | ❌ FAIL | 1819/4100 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: essay-response, reading |
-| 112 | valerian-pidmohylnyi | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 113 | heo-shkurupii | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: critical-analysis, essay-response, reading |
-| 114 | serge-lifar | ❌ FAIL | 2530/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 115 | olena-teliha | ❌ FAIL | 2009/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 116 | roman-shukhevych | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 117 | serhiy-korolyov | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 118 | george-shevelov | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 119 | bohdan-ihor-antonych | 📝 STUB | 0/3500 | 6 Outline Compliance Errors, Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: essay-response, reading |
-| 120 | mariia-prymachenko | ❌ FAIL | 2576/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 121 | mykola-amosov | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 122 | borys-paton | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 123 | oles-honchar | 📝 STUB | 0/3600 | 6 Outline Compliance Errors, Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: essay-response, reading |
-| 124 | vasyl-sukhomlynskyi | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 125 | kateryna-yushchenko | ❌ FAIL | 4574/4650 | - |
-| 126 | mykola-pohribnyi | ❌ FAIL | 2473/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 127 | levko-lukyanenko | ❌ FAIL | 2209/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 128 | yevhen-sverstiuk | 📝 STUB | 0/3600 | 6 Outline Compliance Errors, Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: essay-response, reading |
-| 129 | alla-horska | ❌ FAIL | 2316/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 130 | dmytro-pavlychko | ❌ FAIL | 2155/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 131 | lina-kostenko | ❌ FAIL | 2647/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 132 | ivan-dziuba | 📝 STUB | 0/3700 | 6 Outline Compliance Errors, Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: essay-response, reading |
-| 133 | vasyl-symonenko | ❌ FAIL | 2191/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 134 | viacheslav-chornovil | ❌ FAIL | 1984/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 135 | vasyl-stus | ❌ FAIL | 2250/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 136 | myroslav-marynovych | ❌ FAIL | 2102/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 137 | volodymyr-ivasyuk | ❌ FAIL | 2010/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 138 | leonid-kadenyuk | ❌ FAIL | 1971/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 139 | vasyl-shkliar | ❌ FAIL | 2018/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 140 | yuriy-vynnychuk | ❌ FAIL | 2112/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 141 | kvitka-tsisyk | ❌ FAIL | 2182/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 142 | serhii-plokhy | 📝 STUB | 9/4000 | 6 Outline Compliance Errors, Missing required activity types: essay-response, reading |
-| 143 | halyna-pahutyak | ❌ FAIL | 2112/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 144 | mariya-matios | ❌ FAIL | 2109/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 145 | oksana-zabuzhko | ❌ FAIL | 2041/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 146 | yaroslav-hrytsak | ❌ FAIL | 2063/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 147 | yuri-andrukhovych | 📝 STUB | 0/3600 | 6 Outline Compliance Errors, Structure: Missing '## Activities' header OR activities sidecar, Missing required activity types: essay-response, reading |
-| 148 | vitaly-portnikov | ❌ FAIL | 2038/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 149 | taras-prokhasko | ❌ FAIL | 2049/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 150 | tamara-horikha-zernya | ❌ FAIL | 1996/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 151 | serhiy-zhadan | ❌ FAIL | 1954/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 152 | oleg-sentsov | ❌ FAIL | 1973/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 153 | kateryna-kalytko | ❌ FAIL | 1917/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 154 | sofia-andrukhovych | ❌ FAIL | 2014/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 155 | oleksandra-matviichuk | ❌ FAIL | 2213/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: reading |
-| 156 | oleksandr-usyk | ❌ FAIL | 3803/5500 | 9 Outline Compliance Errors |
+| 001 | knyahynia-olha | ❌ FAIL | 5239/5000 | structure |
+| 002 | kniaz-sviatoslav | ❌ FAIL | 5324/5000 | structure |
+| 003 | volodymyr-velykii | ❌ FAIL | 5528/5000 | Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance. |
+| 004 | kniaz-yaroslav-mudryi | ❌ FAIL | 5316/5000 | structure |
+| 005 | knyazhna-anna-yaroslavna | ⚠️ MISSING | 0/0 | no_file |
+| 006 | volodymyr-monomakh | ⚠️ MISSING | 0/0 | no_file |
+| 007 | nestor-litopysets | ⚠️ MISSING | 0/0 | no_file |
+| 008 | roman-mstyslavych | ⚠️ MISSING | 0/0 | no_file |
+| 009 | mykhailo-chernihivskyi | ⚠️ MISSING | 0/0 | no_file |
+| 010 | danylo-halytskyi | ⚠️ MISSING | 0/0 | no_file |
+| 011 | lev-danylovych | ⚠️ MISSING | 0/0 | no_file |
+| 012 | yuriy-lvovych | ⚠️ MISSING | 0/0 | no_file |
+| 013 | kostiantyn-ostrozky-elder | ⚠️ MISSING | 0/0 | no_file |
+| 014 | roksolana | ⚠️ MISSING | 0/0 | no_file |
+| 015 | dmytro-vyshnevetsky | ⚠️ MISSING | 0/0 | no_file |
+| 016 | kostiantyn-vasyl-ostrozky | ⚠️ MISSING | 0/0 | no_file |
+| 017 | iov-boretskyi | ⚠️ MISSING | 0/0 | no_file |
+| 018 | severyn-nalyvaiko | ⚠️ MISSING | 0/0 | no_file |
+| 019 | meletii-smotrytskyi | ⚠️ MISSING | 0/0 | no_file |
+| 020 | petro-sahaidachny | ⚠️ MISSING | 0/0 | no_file |
+| 021 | bohdan-khmelnytskyy | ⚠️ MISSING | 0/0 | no_file |
+| 022 | petro-mohyla | ⚠️ MISSING | 0/0 | no_file |
+| 023 | sylvestr-kosiv | ⚠️ MISSING | 0/0 | no_file |
+| 024 | ivan-vyhovskyi | ⚠️ MISSING | 0/0 | no_file |
+| 025 | ivan-sirko | ⚠️ MISSING | 0/0 | no_file |
+| 026 | yuriy-nemyrych | ⚠️ MISSING | 0/0 | no_file |
+| 027 | ivan-mazepa | ⚠️ MISSING | 0/0 | no_file |
+| 028 | danylo-apostol | ⚠️ MISSING | 0/0 | no_file |
+| 029 | kost-hordiyenko | ⚠️ MISSING | 0/0 | no_file |
+| 030 | pavlo-polubotok | ⚠️ MISSING | 0/0 | no_file |
+| 031 | pylyp-orlyk | ⚠️ MISSING | 0/0 | no_file |
+| 032 | petro-kalnyshevskyy | ⚠️ MISSING | 0/0 | no_file |
+| 033 | hryhoriy-skovoroda | ⚠️ MISSING | 0/0 | no_file |
+| 034 | maksym-berezovskyy | ⚠️ MISSING | 0/0 | no_file |
+| 035 | dmytro-bortnyanskyy | ⚠️ MISSING | 0/0 | no_file |
+| 036 | ivan-kotliarevskyi | ⚠️ MISSING | 0/0 | no_file |
+| 037 | hryhoriy-kvitka-osnovianenko | ⚠️ MISSING | 0/0 | no_file |
+| 038 | semen-hulak-artemovskyy | ⚠️ MISSING | 0/0 | no_file |
+| 039 | taras-shevchenko | ⚠️ MISSING | 0/0 | no_file |
+| 040 | panteleimon-kulish | ⚠️ MISSING | 0/0 | no_file |
+| 041 | hanna-barvinok | ⚠️ MISSING | 0/0 | no_file |
+| 042 | marko-vovchok | ⚠️ MISSING | 0/0 | no_file |
+| 043 | oleksander-potebnya | ⚠️ MISSING | 0/0 | no_file |
+| 044 | ivan-nechuy-levytskyi | ⚠️ MISSING | 0/0 | no_file |
+| 045 | marko-kropyvnytskyi | ⚠️ MISSING | 0/0 | no_file |
+| 046 | mykhailo-drahomanov | ⚠️ MISSING | 0/0 | no_file |
+| 047 | mykola-lysenko | ⚠️ MISSING | 0/0 | no_file |
+| 048 | ivan-puliui | ⚠️ MISSING | 0/0 | no_file |
+| 049 | olena-pchilka | ⚠️ MISSING | 0/0 | no_file |
+| 050 | mariya-pavlova | ⚠️ MISSING | 0/0 | no_file |
+| 051 | mariya-zankovetska | ⚠️ MISSING | 0/0 | no_file |
+| 052 | nataliya-kobrynska | ⚠️ MISSING | 0/0 | no_file |
+| 053 | ivan-franko | ⚠️ MISSING | 0/0 | no_file |
+| 054 | yevhen-chykalenko | ⚠️ MISSING | 0/0 | no_file |
+| 055 | borys-hrinchenko | ⚠️ MISSING | 0/0 | no_file |
+| 056 | olha-kobylianska | ⚠️ MISSING | 0/0 | no_file |
+| 057 | volodymyr-vernadskyi | ⚠️ MISSING | 0/0 | no_file |
+| 058 | kyrylo-trylovskyi | ⚠️ MISSING | 0/0 | no_file |
+| 059 | mykhailo-kotsiubynsky | ⚠️ MISSING | 0/0 | no_file |
+| 060 | andrey-sheptytsky | ⚠️ MISSING | 0/0 | no_file |
+| 061 | ivan-lypa | ⚠️ MISSING | 0/0 | no_file |
+| 062 | sofiya-okunevska | ⚠️ MISSING | 0/0 | no_file |
+| 063 | mykhailo-hrushevskyi | ⚠️ MISSING | 0/0 | no_file |
+| 064 | mykola-vasylenko | ⚠️ MISSING | 0/0 | no_file |
+| 065 | liudmyla-starytska | ⚠️ MISSING | 0/0 | no_file |
+| 066 | mariia-voiakovska | ⚠️ MISSING | 0/0 | no_file |
+| 067 | yevhen-paton | ⚠️ MISSING | 0/0 | no_file |
+| 068 | yulian-bachynskyi | ⚠️ MISSING | 0/0 | no_file |
+| 069 | ahatanhel-krymskyi | ⚠️ MISSING | 0/0 | no_file |
+| 070 | lesya-ukrainka | ⚠️ MISSING | 0/0 | no_file |
+| 071 | vasyl-stefanyk | ⚠️ MISSING | 0/0 | no_file |
+| 072 | solomiya-krushelnytska | ⚠️ MISSING | 0/0 | no_file |
+| 073 | mykola-mikhnovskyi | ⚠️ MISSING | 0/0 | no_file |
+| 074 | oleksandr-hrekiv | ⚠️ MISSING | 0/0 | no_file |
+| 075 | mykola-leontovych | ⚠️ MISSING | 0/0 | no_file |
+| 076 | kazimir-malevich | ⚠️ MISSING | 0/0 | no_file |
+| 077 | symon-petliura | ⚠️ MISSING | 0/0 | no_file |
+| 078 | oleksandr-bohomazov | ⚠️ MISSING | 0/0 | no_file |
+| 079 | ivan-ohienko | ⚠️ MISSING | 0/0 | no_file |
+| 080 | mykhailo-boichuk | ⚠️ MISSING | 0/0 | no_file |
+| 081 | viacheslav-lypynskyi | ⚠️ MISSING | 0/0 | no_file |
+| 082 | dmytro-dontsov | ⚠️ MISSING | 0/0 | no_file |
+| 083 | petro-bolbochan | ⚠️ MISSING | 0/0 | no_file |
+| 084 | nataliia-polonska-vasylenko | ⚠️ MISSING | 0/0 | no_file |
+| 085 | valentyna-radzymovska | ⚠️ MISSING | 0/0 | no_file |
+| 086 | les-kurbas | ⚠️ MISSING | 0/0 | no_file |
+| 087 | oleksandr-arkhypenko | ⚠️ MISSING | 0/0 | no_file |
+| 088 | olha-basarab | ⚠️ MISSING | 0/0 | no_file |
+| 089 | mykola-zerov | ⚠️ MISSING | 0/0 | no_file |
+| 090 | oleksa-slisarenko | ⚠️ MISSING | 0/0 | no_file |
+| 091 | pavlo-fylypovych | ⚠️ MISSING | 0/0 | no_file |
+| 092 | yevhen-konovalets | ⚠️ MISSING | 0/0 | no_file |
+| 093 | josyf-slipyj | ⚠️ MISSING | 0/0 | no_file |
+| 094 | milena-rudnytska | ⚠️ MISSING | 0/0 | no_file |
+| 095 | mykola-kulish | ⚠️ MISSING | 0/0 | no_file |
+| 096 | olena-stepaniv | ⚠️ MISSING | 0/0 | no_file |
+| 097 | mykola-khvylovyi | ⚠️ MISSING | 0/0 | no_file |
+| 098 | vira-kholodna | ⚠️ MISSING | 0/0 | no_file |
+| 099 | oleksandr-dovzhenko | ⚠️ MISSING | 0/0 | no_file |
+| 100 | anatol-petrytskyi | ⚠️ MISSING | 0/0 | no_file |
+| 101 | borys-liatoshynskyi | ⚠️ MISSING | 0/0 | no_file |
+| 102 | maik-yohansen | ⚠️ MISSING | 0/0 | no_file |
+| 103 | vasyl-vyshyvanyi | ⚠️ MISSING | 0/0 | no_file |
+| 104 | berta-rapoport | ⚠️ MISSING | 0/0 | no_file |
+| 105 | klavdiya-latysheva | ⚠️ MISSING | 0/0 | no_file |
+| 106 | yuriy-kondratiuk | ⚠️ MISSING | 0/0 | no_file |
+| 107 | dmytro-falkivskyi | ⚠️ MISSING | 0/0 | no_file |
+| 108 | yevhen-pluzhnyk | ⚠️ MISSING | 0/0 | no_file |
+| 109 | hryhorii-kosynka | ⚠️ MISSING | 0/0 | no_file |
+| 110 | kateryna-bilokur | ⚠️ MISSING | 0/0 | no_file |
+| 111 | yurii-lypa | ⚠️ MISSING | 0/0 | no_file |
+| 112 | valerian-pidmohylnyi | ⚠️ MISSING | 0/0 | no_file |
+| 113 | heo-shkurupii | ⚠️ MISSING | 0/0 | no_file |
+| 114 | serge-lifar | ⚠️ MISSING | 0/0 | no_file |
+| 115 | olena-teliha | ⚠️ MISSING | 0/0 | no_file |
+| 116 | oleg-antonov | ⚠️ MISSING | 0/0 | no_file |
+| 117 | roman-shukhevych | ⚠️ MISSING | 0/0 | no_file |
+| 118 | serhiy-korolyov | ⚠️ MISSING | 0/0 | no_file |
+| 119 | george-shevelov | ⚠️ MISSING | 0/0 | no_file |
+| 120 | bohdan-ihor-antonych | ⚠️ MISSING | 0/0 | no_file |
+| 121 | mariia-prymachenko | ⚠️ MISSING | 0/0 | no_file |
+| 122 | mykhailo-yangel | ⚠️ MISSING | 0/0 | no_file |
+| 123 | petro-veskliaov | ⚠️ MISSING | 0/0 | no_file |
+| 124 | mykola-amosov | ⚠️ MISSING | 0/0 | no_file |
+| 125 | vasyl-kuk | ⚠️ MISSING | 0/0 | no_file |
+| 126 | borys-paton | ⚠️ MISSING | 0/0 | no_file |
+| 127 | oles-honchar | ⚠️ MISSING | 0/0 | no_file |
+| 128 | vasyl-sukhomlynskyi | ⚠️ MISSING | 0/0 | no_file |
+| 129 | kateryna-yushchenko | ⚠️ MISSING | 0/0 | no_file |
+| 130 | mykola-pohribnyi | ⚠️ MISSING | 0/0 | no_file |
+| 131 | levko-lukyanenko | ⚠️ MISSING | 0/0 | no_file |
+| 132 | yevhen-sverstiuk | ⚠️ MISSING | 0/0 | no_file |
+| 133 | alla-horska | ⚠️ MISSING | 0/0 | no_file |
+| 134 | dmytro-pavlychko | ⚠️ MISSING | 0/0 | no_file |
+| 135 | lina-kostenko | ⚠️ MISSING | 0/0 | no_file |
+| 136 | ivan-dziuba | ⚠️ MISSING | 0/0 | no_file |
+| 137 | liubomyr-huzar | ⚠️ MISSING | 0/0 | no_file |
+| 138 | vasyl-symonenko | ⚠️ MISSING | 0/0 | no_file |
+| 139 | viacheslav-chornovil | ⚠️ MISSING | 0/0 | no_file |
+| 140 | vasyl-stus | ⚠️ MISSING | 0/0 | no_file |
+| 141 | ivan-mykolaichuk | ⚠️ MISSING | 0/0 | no_file |
+| 142 | bohdan-stupka | ⚠️ MISSING | 0/0 | no_file |
+| 143 | natalia-yakovenko | ⚠️ MISSING | 0/0 | no_file |
+| 144 | nina-matviyenko | ⚠️ MISSING | 0/0 | no_file |
+| 145 | myroslav-marynovych | ⚠️ MISSING | 0/0 | no_file |
+| 146 | volodymyr-ivasyuk | ⚠️ MISSING | 0/0 | no_file |
+| 147 | leonid-kadenyuk | ⚠️ MISSING | 0/0 | no_file |
+| 148 | vasyl-shkliar | ⚠️ MISSING | 0/0 | no_file |
+| 149 | yuriy-vynnychuk | ⚠️ MISSING | 0/0 | no_file |
+| 150 | kvitka-tsisyk | ⚠️ MISSING | 0/0 | no_file |
+| 151 | serhii-plokhy | ⚠️ MISSING | 0/0 | no_file |
+| 152 | halyna-pahutyak | ⚠️ MISSING | 0/0 | no_file |
+| 153 | mariya-matios | ⚠️ MISSING | 0/0 | no_file |
+| 154 | oksana-zabuzhko | ⚠️ MISSING | 0/0 | no_file |
+| 155 | yaroslav-hrytsak | ⚠️ MISSING | 0/0 | no_file |
+| 156 | yuri-andrukhovych | ⚠️ MISSING | 0/0 | no_file |
+| 157 | vitaly-portnikov | ⚠️ MISSING | 0/0 | no_file |
+| 158 | taras-prokhasko | ⚠️ MISSING | 0/0 | no_file |
+| 159 | kuzma-skryabin | ⚠️ MISSING | 0/0 | no_file |
+| 160 | pavlo-sheremet | ⚠️ MISSING | 0/0 | no_file |
+| 161 | serhiy-zhadan | ⚠️ MISSING | 0/0 | no_file |
+| 162 | volodymyr-vakulenko | ⚠️ MISSING | 0/0 | no_file |
+| 163 | oleg-sentsov | ⚠️ MISSING | 0/0 | no_file |
+| 164 | yuriy-ruf | ⚠️ MISSING | 0/0 | no_file |
+| 165 | oleksandra-matviichuk | ⚠️ MISSING | 0/0 | no_file |
+| 166 | kateryna-handziuk | ⚠️ MISSING | 0/0 | no_file |
+| 167 | victoria-amelina | ⚠️ MISSING | 0/0 | no_file |
+| 168 | maksym-kryvtsov | ⚠️ MISSING | 0/0 | no_file |
+| 169 | illia-chernilevskyi | ⚠️ MISSING | 0/0 | no_file |
+| 170 | andriy-pilshchykov | ⚠️ MISSING | 0/0 | no_file |
+| 171 | dmytro-kotsyubailo | ⚠️ MISSING | 0/0 | no_file |
+| 172 | roman-ratushny | ⚠️ MISSING | 0/0 | no_file |
 
 ---
 
 **Legend:**
 - ✅ PASS: All audit gates pass
+- 🔄 PROSE: Content gates pass; activities deferred (awaiting /hetman enrichment)
 - ❌ FAIL: Some audit gates fail
 - 📝 STUB: Empty or < 100 words
 - ⚠️ ERROR/MISSING: File not found or audit error

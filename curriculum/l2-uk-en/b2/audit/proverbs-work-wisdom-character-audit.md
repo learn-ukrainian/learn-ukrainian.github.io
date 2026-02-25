@@ -2,7 +2,7 @@
 **Level:** B2 | **Module:** M45 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 4000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:50:03
+**Generated:** 2026-02-25 10:45:23
 
 ## Configuration
 **Type:** B2-vocab
@@ -17,20 +17,43 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Первинне джерело: Сила слова та праці | 4 | 3 | ✅ |
+| 2 | true-false | Перевірка розуміння концепцій | 10 | 8 | ✅ |
+| 3 | quiz | Значення народної мудрості | 10 | 8 | ✅ |
+| 4 | error-correction | Виправте русизми та кальки | 8 | 6 | ✅ |
+| 5 | unjumble | Відновіть порядок слів | 8 | 6 | ✅ |
+| 6 | fill-in | Заповніть пропуски у прислів'ях | 10 | 8 | ✅ |
+| 7 | select | Оберіть правильні характеристики | 8 | 6 | ✅ |
+| 8 | translate | Переклад англійських ідіом та понять | 8 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть ключові поняття у тексті | 6 | 6 | ✅ |
+| 10 | cloze | Заповніть пропуски у тексті про народну мудрість | 16 | 14 | ✅ |
+| 11 | match-up | Знайдіть пару: початок і кінець українських прислів'їв | 12 | 8 | ✅ |
+| 12 | essay-response | Аналітичне есе: Сродна праця | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (mark-the-words, match-up, quiz, translate) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4148/4000 (raw: 4453)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 12/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 97.5% (target 90-100% (vocab))
 - **Richness:** ✅ 99% (phraseology)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

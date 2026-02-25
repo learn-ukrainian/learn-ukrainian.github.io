@@ -1,7 +1,7 @@
 # Audit Report: M44 — active-participles-phrases.md
 **Level:** B1 | **Module:** M44 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:15:35
+**Generated:** 2026-02-25 10:45:03
 
 ## Configuration
 **Type:** B1-grammar

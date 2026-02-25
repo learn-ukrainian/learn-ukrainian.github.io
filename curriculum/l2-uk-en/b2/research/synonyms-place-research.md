@@ -1,37 +1,33 @@
 # Дослідження: Синоніми: Місце та Простір
 
 ## State Standard Reference
-§4.4.1.2: "синоніми; зменшувально-пестливі форми: вулиця – вуличка..."
-§3.15: "Місця: тип місцевості та розташування на ній об’єктів; інституції та громадські місця..."
-§4.1.2.6: "Місцевий відмінок... місце перебування особи чи розташування предмета"
-Alignment: Module expands lexical stylistics (diminutives/synonyms) for spatial description and refines Locative usage.
+§3.15. Місця: "тип місцевості та розташування на ній об’єктів; інституції та громадські місця"
+§4.4.1.2. Стилістичні засоби лексики: "зменшувально-пестливі форми: вулиця – вуличка, ріка – річенька, мама – матуся"
+Alignment: Цей модуль відповідає вимогам стандарту щодо вміння описувати типи місцевостей та орієнтуватися в просторі за допомогою точних прислівників (тут, сюди, там, туди), а також реалізує стилістичну вимогу використання зменшувально-пестливих форм (тутечки, тамтечки) для емоційного забарвлення.
 
-## Vocabulary Frequency & Usage
-| Word | Nuance/Usage | Key Collocations |
-|------|--------------|------------------|
-| **Тут** | Neutral, static location (Where?) | Я тут; тут і там; саме тут |
-| **Сюди** | Dynamic direction (Where to?) | Йди сюди; давай сюди; переїхати сюди |
-| **Тутечки** | Colloquial, affectionate, cozy | Ми тутечки сидимо; ой, як гарно тутечки |
-| **Ось тут** | Emphatic, pointing (Right here) | Підпишіть ось тут; стійте ось тут |
-| **Там** | Neutral, static location (There) | Він там живе; десь там |
-| **Туди** | Dynamic direction (There/Thither) | Не йди туди; подивись туди |
-| **Тамтечки** | Colloquial, distant but specific | А ми тамтечки гуляли |
-| **Онде / Он там** | Visual pointing (Over there) | Дивись, онде ліс; он там далеко |
+## Vocabulary Frequency
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| тут / там | Висока (Top 100) | розташований тут, бути там, жити тут |
+| сюди / туди | Висока (з дієсловами руху) | йди сюди, дивись туди, переїхати сюди |
+| тутешній | Середня (публіцистика/розмовна) | тутешній житель, тутешні звичаї |
+| онде / ось тут | Середня (висока в усному) | дивіться онде, підпишіть ось тут |
+| поріг | Середня (висока в культурології)| стати на порозі, передавати через поріг |
 
 ## Cultural Hooks
-1.  **Магія порогу (The Threshold Magic)**: In Ukrainian culture, the threshold (*поріг*) is the sacred boundary between the safe "inner" world (home) and the dangerous "outer" world. It is strictly forbidden to greet, say goodbye, or pass objects across the threshold («не вітатися через поріг»), as it severs connections and invites bad luck.
-2.  **Тутешній (The Local)**: The concept of being *тутешній* (from here) implies deep belonging and connection to the land/community, contrasting with *приїжджій* (newcomer). In villages, families are remembered as *тутешні* for generations.
+1. **Магія порогу**: В українській традиційній культурі поріг є сакральною межею між "своїм", безпечним простором (дім) та "чужим", небезпечним світом. Саме тому існує суворе табу вітатися або передавати речі через поріг.
+2. **Концепт «тутешній»**: На відміну від кальки "локальний", слово "тутешній" несе глибокий сенс укоріненості та приналежності до певної громади чи місця, що є важливим маркером ідентичності як у селах, так і в сучасних міських районах (наприклад, на київському Подолі).
 
 ## Common Learner Errors
-1.  **Static vs. Dynamic Confusion**: Using *тут* instead of *сюди* (e.g., *"Come here"* -> *"Йди тут"* ❌ instead of *"Йди сюди"* ✅).
-2.  **Register Mismatch**: Using *тутечки* in formal contexts (e.g., in a business document) or *на цьому місці* in casual conversation.
-3.  **Pointing vs. Location**: Using *тут* when pointing visually requires *ось тут* (right here) or *он там* (over there, visible).
+1. **Статика замість динаміки**: Використання "Йди тут" замість правильного "Йди сюди". Англомовні студенти часто перекладають "here" як "тут" у всіх контекстах, забуваючи, що дієслова руху вимагають напрямку ("сюди", "туди").
+2. **"Локальний" замість "тутешній"**: Зловживання запозиченням "локальний" для опису місцевих жителів, тоді як природною українською є "тутешні жителі" або "місцеві".
 
 ## Cross-References
-- Builds on: M35 (Names of Places), A1/A2 Locative Case basics.
-- Prepares for: C1 Stylistics (Spatial metaphors), C1-BIO (Descriptions of historical sites).
+- Builds on: B1 дієслова руху (базове розуміння напрямку).
+- Prepares for: C1/C2 просторові метафори та складні описи ландшафту/архітектури.
 
 ## Notes for Content Writing
-- **Critical Addition**: The plan focuses on "Here/There", but the research confirms that differentiating **Static (*Тут/Там*)** vs **Dynamic (*Сюди/Туди*)** is the #1 learner hurdle. Ensure *Сюди* is explicitly taught alongside *Тут*, even if not in the original brief.
-- **Stylistic Contrast**: Juxtapose "Official Urban Planner" language (*розташований на цій ділянці*) with "Cozy Neighbor" language (*ми тутечки живемо*).
-- **Agency**: Ensure examples show people *interacting* with space (we built, we walked), not just static existence.
+- Підтримуйте персону Урбаніста (Urban Planner): пояснюйте граматику через призму міського планування, архітектури та організації громадських просторів.
+- Уникайте порівнянь з російською; натомість акцентуйте на логічності українського розділення статики і динаміки (як у німецькій: hier/her).
+- Інтегруйте таблиці або блок-схеми для візуалізації різниці між тут/сюди та там/туди.
+- Забезпечте 100% українськомовне занурення (без англійських пояснень у тексті).

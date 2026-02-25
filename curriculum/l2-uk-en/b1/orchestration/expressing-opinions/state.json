@@ -9,7 +9,27 @@
       "timestamp": "2026-02-24T21:05:10Z",
       "words": 4883,
       "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-25T06:43:33Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-25T06:43:33Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T09:45:45Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T09:45:45Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-24T21:05:10Z"
+  "last_updated": "2026-02-25T09:45:45Z"
 }

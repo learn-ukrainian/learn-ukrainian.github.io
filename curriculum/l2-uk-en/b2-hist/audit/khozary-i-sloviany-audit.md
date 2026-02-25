@@ -1,7 +1,7 @@
 # Audit Report: M07 — khozary-i-sloviany.md
 **Level:** B2-HIST | **Module:** M07 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 18:49:32
+**Generated:** 2026-02-25 20:26:05
 
 ## Configuration
 **Type:** B2-history

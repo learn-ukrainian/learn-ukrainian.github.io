@@ -1,7 +1,7 @@
 # Audit Report: M23 — register-media-journalistic.md
 **Level:** B2 | **Module:** M23 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-24 17:53:56
+**Generated:** 2026-02-25 10:43:43
 
 ## Configuration
 **Type:** B2-grammar

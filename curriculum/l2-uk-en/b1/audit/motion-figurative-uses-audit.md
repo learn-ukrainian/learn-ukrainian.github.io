@@ -1,7 +1,7 @@
 # Audit Report: M21 — motion-figurative-uses.md
 **Level:** B1 | **Module:** M21 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 17:05:56
+**Generated:** 2026-02-25 10:43:11
 
 ## Configuration
 **Type:** B1-grammar

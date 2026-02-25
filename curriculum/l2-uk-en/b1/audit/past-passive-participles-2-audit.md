@@ -1,7 +1,7 @@
 # Audit Report: M46 — past-passive-participles-2.md
 **Level:** B1 | **Module:** M46 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:22:53
+**Generated:** 2026-02-25 10:45:13
 
 ## Configuration
 **Type:** B1-grammar

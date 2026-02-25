@@ -1,36 +1,33 @@
 # Дослідження: Наука і дослідження
 
 ## State Standard Reference
-§3.17: "Наука і та техніка: розвиток науки і техніки (комп’ютеризація, телекомунікація); наукові відкриття; винаходи, що змінили світ."
-Alignment: Module focuses on the "Science & Research" domain, covering the structure of research, terminology, and key figures, directly addressing the thematic requirement. It also supports §3.10 (Education) regarding "scientific degrees, academic titles".
+§3.17: "розвиток науки і техніки (комп’ютеризація, телекомунікація); наукові відкриття; винаходи, що змінили світ."
+§3.10: "наукові ступені, вчені звання; посади наукових і науково-педагогічних працівників"
+Alignment: The module addresses §3.17 by focusing on the structure of scientific research and discussing transformative inventions (Vernadsky, Paton, Sikorsky). It integrates §3.10 by incorporating academic titles and the presentation of research outcomes into the practical production tasks.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **дослідження** (research) | High (Academic/Publicistic) | проводити дослідження, ґрунтовне дослідження, результати дослідження, об'єкт дослідження |
-| **гіпотеза** (hypothesis) | Medium (Scientific) | висунути гіпотезу, підтвердити/спростувати гіпотезу, робоча гіпотеза |
-| **експеримент** (experiment) | Medium (Scientific) | ставити експеримент, невдалий експеримент, у ході експерименту |
-| **аналіз** (analysis) | High (General/Academic) | глибокий аналіз, порівняльний аналіз, піддавати аналізу, на основі аналізу |
-| **висновок** (conclusion) | High (General/Academic) | дійти висновку, зробити висновки, головний висновок, попередні висновки |
-| **рецензування** (peer review) | Low (Specific Academic) | процес рецензування, сліпе рецензування, пройти рецензування |
+| дослідження | High academic | проводити ґрунтовне дослідження, результати дослідження |
+| гіпотеза | Core scientific | висунути гіпотезу, підтвердити/спростувати гіпотезу |
+| науковець | Preferred over 'вчений' | молодий науковець, провідний науковець |
+| доброчесність | Modern academic standard | академічна доброчесність, порушення доброчесності |
+| рецензування | Publishing | пройти рецензування, сліпе рецензування |
 
 ## Cultural Hooks
-1. **Volodymyr Vernadsky (1863–1945)**: Founder of the Ukrainian Academy of Sciences and creator of the **Noosphere** concept (human reason as a geological force). Notably refused Russian citizenship during the Ukrainian National Republic era to support Ukrainian independence.
-2. **Borys Paton (1918–2020)**: Pioneered **electric welding in space** (first used by cosmonauts) and developed method for **welding soft live tissues** (bloodless surgery). First Hero of Ukraine.
-3. **Ihor Sikorsky (1889–1972)**: Built the **first helicopter in Kyiv** (1910) before emigrating. Creator of the "Ilya Muromets" plane and founder of the US helicopter industry.
+1. **Володимир Вернадський (1863–1945)**: A foundational figure who helped establish the Ukrainian Academy of Sciences in 1918 under the Ukrainian State. His concept of the Noosphere (Ноосфера) remains globally influential. 
+2. **Борис Патон (1918–2020)**: Headed the National Academy of Sciences of Ukraine for decades. His institute pioneered both space welding and the revolutionary method of bloodless soft tissue welding (зварювання м'яких тканин).
+3. **Ігор Сікорський (1889–1972)**: Designed and flew his first helicopter prototypes in Kyiv in 1910 while studying at the Kyiv Polytechnic Institute, long before his international fame.
 
 ## Common Learner Errors
-1. **Calques ("Russianisms")**: "В якості науковця..." (Wrong) → "Як науковець..." (Correct). *Cause: Calque from Russian "в качестве".*
-2. **Passive Voice Overuse**: "Нами було проведено аналіз..." (Clunky) → "Ми проаналізували..." (Natural). *Cause: Misconception that passive = academic. Ukrainian prefers active structures.*
-3. **Wrong Collocations**: "Зустрічаються помилки" (Wrong) → "Трапляються помилки" (Correct). *Cause: "Зустрічатися" is for people meeting.*
-4. **Pleonasm**: "Дисертаційне дослідження" (Redundant) → "Дисертація" or "Дослідження". *Cause: Trying to sound more formal.*
+1. **Calqued Roles**: Russianism "В якості науковця" (в качестве) → Idiomatic Ukrainian "Як науковець".
+2. **Incorrect Collocations**: "Зустрічаються помилки" (literally: errors meet each other) → Correct: "Трапляються помилки" (errors occur).
+3. **Passive Calques**: "Нами було проведено аналіз" (clunky passive) → Correct Active Voice: "Ми проаналізували" або "Ми провели аналіз". Ukrainian academic register strongly prefers the active voice over artificial passive constructions.
 
 ## Cross-References
-- **Builds on**: B2.3 (Integration), B2.1 (Passive Voice - knowing when NOT to use it).
-- **Prepares for**: B2-PRO (Professional tracks), C1 Academic Track (full mastery of scientific style), C1-BIO (biographies of scientists).
+- Builds on: Previous B2 modules on register distinctions (formal vs. informal) and complex syntactic structures (participial phrases).
+- Prepares for: B2 Capstone Project (independent research presentation).
 
 ## Notes for Content Writing
-- **Stylistics Gap**: The B2 standard implies scientific style but doesn't explicitly define it like C1 does. Use this module to *bridge* that gap: introduce the concept of "Academic Register" explicitly vs. Conversational.
-- **Agency**: Ensure the "Passive Voice" section emphasizes that while passive exists, active voice ("Ми виявили") is often stronger and more Ukrainian, even in science.
-- **Terminology**: Clarify the difference between "вчений" (scientist - generic) and "науковець" (researcher/scientist - more active/modern term).
-- **Structure**: Use the "IMRAD" structure (Introduction, Methods, Results, And Discussion) as a teaching point for reading scientific texts.
+- **Decolonized Framing**: When discussing Vernadsky or Sikorsky, focus firmly on their Kyiv roots, education, and contributions to Ukrainian institutions, countering the imperial narrative that attempts to claim all regional scientists as purely "Russian."
+- **Agency**: Ensure researchers are described as active subjects ("Дослідники розробили...", not "Було розроблено дослідниками...").

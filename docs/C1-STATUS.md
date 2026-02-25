@@ -1,130 +1,134 @@
 # C1 Module Status
 
-**Generated:** 2026-02-08 00:03:59
-**Total Modules:** 106
-**Status:** 0 passing, 106 failing, 0 stubs, 0 errors
+**Generated:** 2026-02-25 20:35:54
+**Total Modules:** 108
+**Status:** 0 passing, 1 failing, 0 stubs, 107 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 0/106 (0%)
-- ❌ **Failing:** 106/106
-- 📝 **Stubs:** 0/106
+- ✅ **Passing:** 0/108 (0%)
+- ❌ **Failing:** 1/108
+- 📝 **Stubs:** 0/108
+- ⚠️ **Errors:** 107/108
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | 01-b2-review-bridge | ❌ FAIL | 2607/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 002 | 02-academic-style-markers | ❌ FAIL | 2487/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze, error-correction |
-| 003 | 03-research-verbs | ❌ FAIL | 1929/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze |
-| 004 | 04-analysis-vocabulary | ❌ FAIL | 2546/4000 | 5 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze |
-| 005 | 05-logical-connectors | ❌ FAIL | 2394/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze |
-| 006 | 06-hedging-modality | ❌ FAIL | 2435/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 007 | 07-citation-reference | ❌ FAIL | 2414/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze, error-correction |
-| 008 | 08-essay-structure | ❌ FAIL | 2017/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze, group-sort |
-| 009 | 09-thesis-development | ❌ FAIL | 2070/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: error-correction, group-sort |
-| 010 | 10-counterarguments | ❌ FAIL | 2360/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze, group-sort |
-| 011 | 11-summary-paraphrase | ❌ FAIL | 2026/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 012 | 12-research-article | ❌ FAIL | 2056/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze, group-sort |
-| 013 | 13-abstract-writing | ❌ FAIL | 2230/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze |
-| 014 | 14-literature-review | ❌ FAIL | 1909/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze |
-| 015 | 15-oral-presentations | ❌ FAIL | 2079/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze |
-| 016 | 16-advanced-punctuation | ❌ FAIL | 2053/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze |
-| 017 | 17-irregular-verbs-complete | ❌ FAIL | 2124/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 018 | 18-essay-writing-practice | ❌ FAIL | 1907/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 019 | 19-practice-ii-article-critique | ❌ FAIL | 2015/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 020 | c1-1-checkpoint | ❌ FAIL | 2012/3000 | 1 Critical Template Violations, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 021 | 21-cv-resume-writing | ❌ FAIL | 2613/4000 | 7 Outline Compliance Errors |
-| 022 | 22-job-interview | ❌ FAIL | 2026/4000 | 7 Outline Compliance Errors, Missing required activity types: error-correction |
-| 023 | 23-business-etiquette | ❌ FAIL | 2128/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze |
-| 024 | 24-digital-communication | ❌ FAIL | 1928/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 025 | 25-political-system | ❌ FAIL | 2070/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 026 | 26-media-landscape | ❌ FAIL | 2030/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze, true-false |
-| 027 | 27-global-context | ❌ FAIL | 1902/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze |
-| 028 | 28-dialects-of-ukrainian | ❌ FAIL | 2237/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze, true-false |
-| 029 | 29-surzhyk | ❌ FAIL | 2328/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze, error-correction |
-| 030 | 30-history-of-language | ❌ FAIL | 2004/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, 7 forbidden activity types (use --fix to remove), Missing required activity types: cloze, true-false |
-| 031 | 31-diaspora-ukrainian | ❌ FAIL | 2267/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: cloze |
-| 032 | 32-professional-scenarios | ❌ FAIL | 2756/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 033 | 33-case-studies | ❌ FAIL | 2241/4000 | 6 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 034 | 34-review | ❌ FAIL | 2128/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 035 | 35-speaking-practice | ❌ FAIL | 2341/4000 | 7 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, Missing required activity types: fill-in |
-| 036 | 36-metaphor-simile | ❌ FAIL | 1993/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 037 | 37-irony-sarcasm | ❌ FAIL | 1917/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 038 | 38-hyperbole-litotes | ❌ FAIL | 2210/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 039 | 39-euphemism-taboo | ❌ FAIL | 1999/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 040 | 40-rhetorical-questions | ❌ FAIL | 2011/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 041 | 41-degrees-of-certainty | ❌ FAIL | 1970/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 042 | 42-politeness-strategies | ❌ FAIL | 2370/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 043 | high-formal-register | ❌ FAIL | 2004/3000 | Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 044 | intimate-register | ❌ FAIL | 2041/3000 | Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 045 | slang-youth | ❌ FAIL | 2013/3000 | Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 046 | review-c1-4 | ❌ FAIL | 2004/3000 | Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 047 | checkpoint-c1-4 | ❌ FAIL | 1668/3000 | 1 Critical Template Violations, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 048 | kobzari-bandura | ❌ FAIL | 1970/3000 | Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 049 | ritual-songs | ❌ FAIL | 2034/3000 | Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 050 | 50-kolyskovi-ta-dumy | ❌ FAIL | 2086/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, 4 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 051 | 51-hopak-i-kozachok | ❌ FAIL | 1993/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, 4 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 052 | 52-rehionalni-tantsi | ❌ FAIL | 1903/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, 4 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 053 | 53-pysanky | ❌ FAIL | 1902/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, 4 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 054 | 54-vyshyvanka | ❌ FAIL | 1956/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar, 4 forbidden activity types (use --fix to remove), Missing required activity types: reading |
-| 055 | 55-honcharstvo-ta-rizbyarstvo | ❌ FAIL | 2390/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 056 | 56-narodna-mifolohiia | ❌ FAIL | 2088/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 057 | 57-narodna-medytsyna | ❌ FAIL | 2380/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 058 | 58-kozatski-lehendy | ❌ FAIL | 2033/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 059 | 59-kazky-ta-prytchi | ❌ FAIL | 2202/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 060 | 60-zymovi-obriady | ❌ FAIL | 2066/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 061 | 61-vesna-ta-lito | ❌ FAIL | 1919/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 062 | 62-khrestyny-ta-vesillia | ❌ FAIL | 2023/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 063 | 63-pomynalni-obriady | ❌ FAIL | 2397/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 064 | 64-halychyna | ❌ FAIL | 2119/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 065 | 65-ukrainian-avant-garde | ❌ FAIL | 3731/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 066 | 66-traditional-clothing | ❌ FAIL | 2421/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 067 | 67-ukrainian-cuisine-traditions | ❌ FAIL | 2236/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 068 | 68-ukrainian-house | ❌ FAIL | 2599/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 069 | 69-winter-holidays | ❌ FAIL | 2063/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 070 | 70-spring-holidays | ❌ FAIL | 2072/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 071 | 71-summer-holidays | ❌ FAIL | 2221/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 072 | 72-wedding-rituals | ❌ FAIL | 2100/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 073 | 73-birth-rituals | ❌ FAIL | 2072/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 074 | 74-funeral-rituals | ❌ FAIL | 2076/3000 | 4 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 075 | 75-podillia-ta-volyn | ❌ FAIL | 2999/3000 | 2 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 076 | 76-klasychna-muzyka-1-vytoky | ❌ FAIL | 2501/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 077 | 77-klasychna-muzyka-2-natsionalna-shkola | ❌ FAIL | 2656/3000 | - |
-| 078 | 78-klasychna-muzyka-3-modernizm-i-suchasnist | ❌ FAIL | 2704/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 079 | 79-operne-mystetstvo | ❌ FAIL | 2562/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 080 | 80-vokalne-mystetstvo | ❌ FAIL | 2134/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 081 | 81-obrazotvorche-mystetstvo-1 | ❌ FAIL | 2000/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 082 | 82-obrazotvorche-mystetstvo-2 | ❌ FAIL | 1987/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 083 | 83-balet-i-tanets | ❌ FAIL | 1926/3000 | 3 Outline Compliance Errors, Tone Error. Found 'Kiev'. Use 'Kyiv' (Ukrainian transliteration)., Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 084 | 84-teatralne-mystetstvo-1 | ❌ FAIL | 1945/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 085 | 85-teatralne-mystetstvo-2 | ❌ FAIL | 1462/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 086 | 86-ukrainska-arkhitektura | ❌ FAIL | 1373/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 087 | 87-suchasna-muzyka | ❌ FAIL | 1138/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 088 | 88-ukrainske-kino | ❌ FAIL | 1148/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 089 | 89-praktyka-1-narodna-kultura | ❌ FAIL | 2139/3000 | 3 Outline Compliance Errors |
-| 090 | 90-praktyka-2-vysoke-mystetstvo | ❌ FAIL | 2057/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 091 | 91-c1-5-checkpoint | ❌ FAIL | 1891/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 092 | 92-istoriia-ukrainskoi-literatury | ❌ FAIL | 1997/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 093 | 93-kotliarevskyi-eneida | ❌ FAIL | 2067/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 094 | 94-shevchenko-shchodennyk-lysty | ❌ FAIL | 2003/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 095 | 95-shevchenko-poeziia | ❌ FAIL | 2073/3000 | 1 Critical Template Violations, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 096 | 96-shevchenko-spadshchyna | ❌ FAIL | 2513/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 097 | 97-franko-liryka | ❌ FAIL | 2090/3000 | 1 Critical Template Violations, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 098 | 98-franko-proza | ❌ FAIL | 2024/3000 | 1 Critical Template Violations, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 099 | 99-lesya-ukrainka-liryka | ❌ FAIL | 2332/3000 | 1 Critical Template Violations, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 100 | 100-lesya-ukrainka-drama | ❌ FAIL | 2015/3000 | 1 Critical Template Violations, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 101 | 101-vovchok-myrnyi | ❌ FAIL | 2007/3000 | 1 Critical Template Violations, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 102 | 102-kotsiubynskyi | ❌ FAIL | 1917/3000 | 1 Critical Template Violations, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 103 | 103-literaturoznavcha-terminolohiia | ❌ FAIL | 2378/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 104 | 104-analiz-poezii | ❌ FAIL | 2023/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 105 | 105-c1-6-review | ❌ FAIL | 1935/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
-| 106 | 106-c1-6-checkpoint | ❌ FAIL | 2523/3000 | 3 Outline Compliance Errors, Structure: Missing '## Vocabulary' header OR vocabulary sidecar |
+| 001 | b2-review-bridge | ❌ FAIL | 5064/4000 | Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance. |
+| 002 | academic-style-markers | ⚠️ MISSING | 0/0 | no_file |
+| 003 | research-verbs | ⚠️ MISSING | 0/0 | no_file |
+| 004 | analysis-vocabulary | ⚠️ MISSING | 0/0 | no_file |
+| 005 | logical-connectors | ⚠️ MISSING | 0/0 | no_file |
+| 006 | hedging-modality | ⚠️ MISSING | 0/0 | no_file |
+| 007 | citation-reference | ⚠️ MISSING | 0/0 | no_file |
+| 008 | essay-structure | ⚠️ MISSING | 0/0 | no_file |
+| 009 | thesis-development | ⚠️ MISSING | 0/0 | no_file |
+| 010 | counterarguments | ⚠️ MISSING | 0/0 | no_file |
+| 011 | summary-paraphrase | ⚠️ MISSING | 0/0 | no_file |
+| 012 | research-article | ⚠️ MISSING | 0/0 | no_file |
+| 013 | abstract-writing | ⚠️ MISSING | 0/0 | no_file |
+| 014 | literature-review | ⚠️ MISSING | 0/0 | no_file |
+| 015 | oral-presentations | ⚠️ MISSING | 0/0 | no_file |
+| 016 | advanced-punctuation | ⚠️ MISSING | 0/0 | no_file |
+| 017 | irregular-verbs-complete | ⚠️ MISSING | 0/0 | no_file |
+| 018 | essay-writing-practice | ⚠️ MISSING | 0/0 | no_file |
+| 019 | practice-ii-article-critique | ⚠️ MISSING | 0/0 | no_file |
+| 020 | c1-1-checkpoint | ⚠️ MISSING | 0/0 | no_file |
+| 021 | cv-resume-writing | ⚠️ MISSING | 0/0 | no_file |
+| 022 | job-interview | ⚠️ MISSING | 0/0 | no_file |
+| 023 | business-etiquette | ⚠️ MISSING | 0/0 | no_file |
+| 024 | digital-communication | ⚠️ MISSING | 0/0 | no_file |
+| 025 | political-system | ⚠️ MISSING | 0/0 | no_file |
+| 026 | media-landscape | ⚠️ MISSING | 0/0 | no_file |
+| 027 | global-context | ⚠️ MISSING | 0/0 | no_file |
+| 028 | dialects-of-ukrainian | ⚠️ MISSING | 0/0 | no_file |
+| 029 | surzhyk | ⚠️ MISSING | 0/0 | no_file |
+| 030 | history-of-language | ⚠️ MISSING | 0/0 | no_file |
+| 031 | diaspora-ukrainian | ⚠️ MISSING | 0/0 | no_file |
+| 032 | professional-scenarios | ⚠️ MISSING | 0/0 | no_file |
+| 033 | case-studies | ⚠️ MISSING | 0/0 | no_file |
+| 034 | review | ⚠️ MISSING | 0/0 | no_file |
+| 035 | speaking-practice | ⚠️ MISSING | 0/0 | no_file |
+| 036 | metaphor-simile | ⚠️ MISSING | 0/0 | no_file |
+| 037 | irony-sarcasm | ⚠️ MISSING | 0/0 | no_file |
+| 038 | hyperbole-litotes | ⚠️ MISSING | 0/0 | no_file |
+| 039 | euphemism-taboo | ⚠️ MISSING | 0/0 | no_file |
+| 040 | rhetorical-questions | ⚠️ MISSING | 0/0 | no_file |
+| 041 | degrees-of-certainty | ⚠️ MISSING | 0/0 | no_file |
+| 042 | politeness-strategies | ⚠️ MISSING | 0/0 | no_file |
+| 043 | high-formal-register | ⚠️ MISSING | 0/0 | no_file |
+| 044 | intimate-register | ⚠️ MISSING | 0/0 | no_file |
+| 045 | slang-youth | ⚠️ MISSING | 0/0 | no_file |
+| 046 | review-c1-4 | ⚠️ MISSING | 0/0 | no_file |
+| 047 | checkpoint-c1-4 | ⚠️ MISSING | 0/0 | no_file |
+| 048 | kobzari-bandura | ⚠️ MISSING | 0/0 | no_file |
+| 049 | ritual-songs | ⚠️ MISSING | 0/0 | no_file |
+| 050 | kolyskovi-ta-dumy | ⚠️ MISSING | 0/0 | no_file |
+| 051 | hopak-i-kozachok | ⚠️ MISSING | 0/0 | no_file |
+| 052 | rehionalni-tantsi | ⚠️ MISSING | 0/0 | no_file |
+| 053 | pysanky | ⚠️ MISSING | 0/0 | no_file |
+| 054 | vyshyvanka | ⚠️ MISSING | 0/0 | no_file |
+| 055 | honcharstvo-ta-rizbyarstvo | ⚠️ MISSING | 0/0 | no_file |
+| 056 | narodna-mifolohiia | ⚠️ MISSING | 0/0 | no_file |
+| 057 | narodna-medytsyna | ⚠️ MISSING | 0/0 | no_file |
+| 058 | kozatski-lehendy | ⚠️ MISSING | 0/0 | no_file |
+| 059 | kazky-ta-prytchi | ⚠️ MISSING | 0/0 | no_file |
+| 060 | zymovi-obriady | ⚠️ MISSING | 0/0 | no_file |
+| 061 | vesna-ta-lito | ⚠️ MISSING | 0/0 | no_file |
+| 062 | khrestyny-ta-vesillia | ⚠️ MISSING | 0/0 | no_file |
+| 063 | pomynalni-obriady | ⚠️ MISSING | 0/0 | no_file |
+| 064 | halychyna | ⚠️ MISSING | 0/0 | no_file |
+| 065 | ukrainian-avant-garde | ⚠️ MISSING | 0/0 | no_file |
+| 066 | traditional-clothing | ⚠️ MISSING | 0/0 | no_file |
+| 067 | ukrainian-cuisine-traditions | ⚠️ MISSING | 0/0 | no_file |
+| 068 | ukrainian-house | ⚠️ MISSING | 0/0 | no_file |
+| 069 | winter-holidays | ⚠️ MISSING | 0/0 | no_file |
+| 070 | spring-holidays | ⚠️ MISSING | 0/0 | no_file |
+| 071 | summer-holidays | ⚠️ MISSING | 0/0 | no_file |
+| 072 | wedding-rituals | ⚠️ MISSING | 0/0 | no_file |
+| 073 | birth-rituals | ⚠️ MISSING | 0/0 | no_file |
+| 074 | funeral-rituals | ⚠️ MISSING | 0/0 | no_file |
+| 075 | podillia-ta-volyn | ⚠️ MISSING | 0/0 | no_file |
+| 076 | klasychna-muzyka-1-vytoky | ⚠️ MISSING | 0/0 | no_file |
+| 077 | klasychna-muzyka-2-natsionalna-shkola | ⚠️ MISSING | 0/0 | no_file |
+| 078 | klasychna-muzyka-3-modernizm-i-suchasnist | ⚠️ MISSING | 0/0 | no_file |
+| 079 | operne-mystetstvo | ⚠️ MISSING | 0/0 | no_file |
+| 080 | vokalne-mystetstvo | ⚠️ MISSING | 0/0 | no_file |
+| 081 | obrazotvorche-mystetstvo-1 | ⚠️ MISSING | 0/0 | no_file |
+| 082 | obrazotvorche-mystetstvo-2 | ⚠️ MISSING | 0/0 | no_file |
+| 083 | balet-i-tanets | ⚠️ MISSING | 0/0 | no_file |
+| 084 | teatralne-mystetstvo-1 | ⚠️ MISSING | 0/0 | no_file |
+| 085 | teatralne-mystetstvo-2 | ⚠️ MISSING | 0/0 | no_file |
+| 086 | ukrainska-arkhitektura | ⚠️ MISSING | 0/0 | no_file |
+| 087 | suchasna-muzyka | ⚠️ MISSING | 0/0 | no_file |
+| 088 | ukrainske-kino | ⚠️ MISSING | 0/0 | no_file |
+| 089 | praktyka-1-narodna-kultura | ⚠️ MISSING | 0/0 | no_file |
+| 090 | praktyka-2-vysoke-mystetstvo | ⚠️ MISSING | 0/0 | no_file |
+| 091 | c1-5-checkpoint | ⚠️ MISSING | 0/0 | no_file |
+| 092 | istoriia-ukrainskoi-literatury | ⚠️ MISSING | 0/0 | no_file |
+| 093 | kotliarevskyi-eneida | ⚠️ MISSING | 0/0 | no_file |
+| 094 | shevchenko-shchodennyk-lysty | ⚠️ MISSING | 0/0 | no_file |
+| 095 | shevchenko-poeziia | ⚠️ MISSING | 0/0 | no_file |
+| 096 | shevchenko-spadshchyna | ⚠️ MISSING | 0/0 | no_file |
+| 097 | franko-liryka | ⚠️ MISSING | 0/0 | no_file |
+| 098 | franko-proza | ⚠️ MISSING | 0/0 | no_file |
+| 099 | lesya-ukrainka-liryka | ⚠️ MISSING | 0/0 | no_file |
+| 100 | lesya-ukrainka-drama | ⚠️ MISSING | 0/0 | no_file |
+| 101 | vovchok-myrnyi | ⚠️ MISSING | 0/0 | no_file |
+| 102 | kotsiubynskyi | ⚠️ MISSING | 0/0 | no_file |
+| 103 | literaturoznavcha-terminolohiia | ⚠️ MISSING | 0/0 | no_file |
+| 104 | analiz-poezii | ⚠️ MISSING | 0/0 | no_file |
+| 105 | c1-6-review | ⚠️ MISSING | 0/0 | no_file |
+| 106 | c1-6-checkpoint | ⚠️ MISSING | 0/0 | no_file |
+| 107 | asyndetic-semantics | ⚠️ MISSING | 0/0 | no_file |
+| 108 | persuasive-speech | ⚠️ MISSING | 0/0 | no_file |
 
 ---
 
 **Legend:**
 - ✅ PASS: All audit gates pass
+- 🔄 PROSE: Content gates pass; activities deferred (awaiting /hetman enrichment)
 - ❌ FAIL: Some audit gates fail
 - 📝 STUB: Empty or < 100 words
 - ⚠️ ERROR/MISSING: File not found or audit error

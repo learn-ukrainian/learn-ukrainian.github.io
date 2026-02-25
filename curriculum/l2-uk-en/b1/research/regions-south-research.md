@@ -2,48 +2,29 @@
 
 ## State Standard Reference
 §3.13: "Місця: тип і розташування місцевості; інституції та громадські місця; пам’ятки культури і пам’ятники; туристичні принади."
-§3.14: "Природне середовище: ... природні об’єкти (ліс, озеро, річка, гори, море)."
-§3.15: "Традиції, звичаї, свята: ... українські звичаї і традиції."
-
-Alignment: This module directly addresses the requirement to describe "locations", "tourist attractions" (Odesa, Crimea, resorts), and "natural objects" (Black Sea, steppe, Oleshky Sands) specific to Southern Ukraine, while integrating cultural traditions (Crimean Tatar heritage, Odesa humor).
+§3.14: "Природне середовище: погода, пори року, клімат; рослини; деякі види свійських тварин, дикі тварини; природні об’єкти (ліс, озеро, річка, гори, море)."
+Alignment: Цей модуль безпосередньо розкриває лексику природних об'єктів (море, степ, лиман) та туристичних принад Півдня України, що відповідає вимогам стандарту B1 для тематичних блоків «Місця» та «Природне середовище».
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Узбережжя** (Coast) | High / Web & Corpus | *чорноморське узбережжя, відпочинок на узбережжі, південне узбережжя, вздовж узбережжя* |
-| **Степ** (Steppe) | High / Cultural | *широкий степ, козацький степ, Дике Поле, запах степу, вільний як вітер у полі* |
-| **Суднобудування** (Shipbuilding) | Medium / Professional | *центр суднобудування, верф, спустити на воду, миколаївські корабели* |
-| **Курорт** (Resort) | High / Tourism | *морський курорт, лікувальний курорт, курортний сезон, їхати на курорт* |
-| **Лиман** (Estuary) | Medium / Geographic | *Дніпровський лиман, солений лиман, берег лиману* |
-| **Депортація** (Deportation) | Medium / Historical | *депортація кримських татар, трагедія депортації, жертви депортації* |
+| узбережжя | High / News, Tourism | чорноморське узбережжя, відпочинок на узбережжі |
+| степ | High / History, Literature | широкий степ, український степ, Дике Поле |
+| лиман | Medium / Geography | Дніпровський лиман, Куяльницький лиман |
+| корабел | Medium / Professional | миколаївські корабели, місто корабелів |
 
 ## Cultural Hooks
-1.  **Oleshky Sands (Олешківські піски)**: Often called the "Ukrainian Sahara," this is the largest sand mass in Europe (approx. 1600 km²), located in the Kherson region. It features 5-meter dunes and unique flora/fauna, surrounded by artificially planted forests to stop the sand from spreading.
-2.  **Mykolaiv - City of Shipbuilders**: Founded in 1789 explicitly for shipbuilding. The first ship, the frigate *Saint Nicholas*, was launched in 1790. The city's layout and life historically revolved around the shipyards (Admiralty).
-3.  **Odesa Humor**: A unique cultural phenomenon born from the city's multicultural melting pot (Ukrainian, Jewish, Greek, Italian). Key feature: self-irony and paradoxical phrasing (e.g., "Вода — не фонтан" originally meant literally that water was not from the fresh "Fontan" springs).
-4.  **Crimean Tatar Ornament (Ornek)**: A UNESCO intangible heritage. It uses symbols like the rose (woman), tulip (man), and carnation (elder) to tell family stories in embroidery and pottery.
+1. Фразеологізм «Вода — не фонтан» походить з Одеси ХІХ століття. Якісну питну воду постачали з міських фонтанів (джерел). Коли недобросовісні продавці продавали гіршу воду з інших місць, місцеві жителі куштували її і казали: «Це не фонтан!», що згодом стало означати «не дуже добре» або «поганої якості».
+2. Олешківські піски на Херсонщині — найбільший піщаний масив у Європі. У сучасному вигляді ця "українська Сахара" утворилася порівняно недавно (у ХІХ столітті) через масову вирубку лісів та надмірний випас овець, що знищило трав'яний покрив. Сьогодні піски стримуються найбільшими у світі штучними насадженнями лісу.
 
 ## Common Learner Errors
-1.  **Preposition Confusion (В vs НА)**:
-    *   *Error*: "Я живу в півдні." (Incorrect)
-    *   *Correct*: "Я живу **на** півдні." (Cardinal directions use "на").
-    *   *Contrast*: "В Одесі" (City = в) vs "На Одещині" (Region = на).
-2.  **Transliteration & Spelling**:
-    *   *Error*: "Odessa" (Russian spelling with double 's').
-    *   *Correct*: "Odesa" (Ukrainian spelling with single 's').
-    *   *Error*: "Nikolaev".
-    *   *Correct*: "Mykolaiv".
-3.  **Case Usage with Directions**:
-    *   *Error*: "Я їду на море." (Locative idea) vs "Я на морі." (Accusative idea) - *Reverse is common error*.
-    *   *Correct*: "Я їду на море" (Accusative - Destination), "Я на морі" (Locative - Location).
+1. *в півдні* → **на півдні** — Іноземці часто калькують використання прийменника "in" для сторін світу. В українській мові сторони світу вимагають прийменника "на" (на півдні, на сході).
+2. *Одесса* → **Одеса** — Помилка, спричинена російською транслітерацією. Українська назва міста пишеться з однією літерою «с».
+3. Плутанина напрямку та місця: *Я на море* (коли їдуть) замість *Я їду на море* (Знахідний відмінок для напрямку) та *Я на морі* (Місцевий відмінок для розташування).
 
 ## Cross-References
-- **Builds on**: `b1-73` (Regions East) - continues the regional exploration series.
-- **Prepares for**: `b1-75` (Regions Center) - completes the geographical survey.
-- **Connects to**: `b2-hist` (Crimean history modules), `c1-bio` (Crimean Tatar figures like Mustafa Dzhemilev).
+- Builds on: b1-73 (Regions East)
+- Prepares for: b1-75 (Regions Center)
 
 ## Notes for Content Writing
-- **Tone**: The persona is an "Odesa Tour Guide" / "Senior Specialist". Use a warm, slightly ironic but proud tone when discussing Odesa. Switch to respectful and solemn when discussing the Crimean Tatar deportation (1944).
-- **Immersion**: Ensure descriptions of Odesa humor explain *why* it's funny in Ukrainian (linguistic play), not just translating jokes.
-- **Geography**: Clearly distinguish between the *Black Sea* (Chorne more) and *Sea of Azov* (Azovske more) coasts.
-- **State Standard**: Explicitly mention "tourist attractions" (tourism lexicon) to satisfy §3.5/3.13.
+- **Деколонізаційний фокус**: Південь України історично є багатокультурним регіоном, який був активним перехрестям торговельних шляхів ще з античних часів. Уникайте будь-яких згадок імперського концепту «Новоросії». Одеса повинна розглядатися як місто українського, єврейського, грецького та італійського синтезу. Крим необхідно подавати виключно через призму його корінного народу — кримських татар, а Миколаїв — як місто майстрів та корабелів, а не радянську мілітарну базу.

@@ -2,7 +2,7 @@
   "module": "checkpoint-complex-sentences-2",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T20:54:37.897448Z",
+  "last_audit": "2026-02-25T10:44:47.846430Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T20:53:42.237454Z",
@@ -24,14 +24,14 @@
       "message": "5509/4000 (raw: 6113)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "10/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/10"
     },
     "naturalness": {
       "status": "info",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 7,
     "fail_count": 0,
-    "deferred_count": 3
+    "deferred_count": 0
   }
 }

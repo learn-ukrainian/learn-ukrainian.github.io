@@ -22,6 +22,15 @@ LEVELS = [
     {"id": "b2-hist", "name": "B2-HIST - History Track", "path": "b2-hist"},
     {"id": "c1-bio", "name": "C1-BIO - Biography Track", "path": "c1-bio"},
     {"id": "lit", "name": "LIT - Literature Track", "path": "lit"},
+    {"id": "lit-essay", "name": "LIT-ESSAY", "path": "lit-essay"},
+    {"id": "lit-fantastika", "name": "LIT-FANTASTIKA", "path": "lit-fantastika"},
+    {"id": "lit-hist-fic", "name": "LIT-HIST-FIC", "path": "lit-hist-fic"},
+    {"id": "lit-humor", "name": "LIT-HUMOR", "path": "lit-humor"},
+    {"id": "lit-youth", "name": "LIT-YOUTH", "path": "lit-youth"},
+    {"id": "lit-doc", "name": "LIT-DOC", "path": "lit-doc"},
+    {"id": "lit-drama", "name": "LIT-DRAMA", "path": "lit-drama"},
+    {"id": "lit-crimea", "name": "LIT-CRIMEA", "path": "lit-crimea"},
+    {"id": "lit-war", "name": "LIT-WAR", "path": "lit-war"},
 ]
 
 

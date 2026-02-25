@@ -2,10 +2,10 @@
   "module": "law-justice-vocabulary",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T19:03:53.467021Z",
+  "last_audit": "2026-02-25T10:44:01.839084Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T19:02:28.978747Z",
+    "md": "2026-02-24T22:27:54.191034Z",
     "meta": "2026-02-24T01:26:28.096518Z",
     "activities": "2026-02-24T18:59:46.289860Z",
     "vocabulary": "2026-02-24T18:45:56.264367Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4676/4000 (raw: 4996)"
+      "message": "4678/4000 (raw: 4998)"
     },
     "activities": {
       "status": "deferred",

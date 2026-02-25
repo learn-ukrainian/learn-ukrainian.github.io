@@ -1,7 +1,7 @@
 # Audit Report: M42 — aspect-nuances-imperative-infinitive.md
 **Level:** B2 | **Module:** M42 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:12:11
+**Generated:** 2026-02-25 10:45:12
 
 ## Configuration
 **Type:** B2-grammar

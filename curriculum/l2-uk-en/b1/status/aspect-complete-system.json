@@ -2,10 +2,10 @@
   "module": "aspect-complete-system",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T14:47:02.000681Z",
+  "last_audit": "2026-02-25T10:42:01.703350Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T17:25:18.667115Z",
+    "md": "2026-02-24T21:12:48.779421Z",
     "meta": "2026-02-23T14:52:04.829737Z",
     "activities": "2026-02-23T17:17:29.538118Z",
     "vocabulary": "2026-02-23T17:25:19.024400Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4826/4000 (raw: 5217)"
+      "message": "4824/4000 (raw: 5215)"
     },
     "activities": {
       "status": "deferred",

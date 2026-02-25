@@ -1,7 +1,7 @@
 # Audit Report: M67 — pylyp-orlyk-konstytutsiia.md
 **Level:** B2-HIST | **Module:** M67 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 23:49:42
+**Generated:** 2026-02-25 20:53:29
 
 ## Configuration
 **Type:** B2-history
@@ -16,20 +16,36 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Джерело: Пакти й Конституції прав і вольностей | 3 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз: Причини повстання | 1 | 1 | ✅ |
+| 3 | essay-response | Есе: Україна як європейська держава | 1 | 1 | ✅ |
+| 4 | comparative-study | Порівняння: Моделі влади | 1 | 1 | ✅ |
+| 5 | true-false | Перевірка фактів: Конституція Пилипа Орлика | 10 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 5296/5000 (raw: 5700)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.5% (target 90-100% (history))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

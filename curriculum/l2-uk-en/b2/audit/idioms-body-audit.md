@@ -1,7 +1,7 @@
 # Audit Report: M51 — idioms-body.md
 **Level:** B2 | **Module:** M51 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:49:05
+**Generated:** 2026-02-25 10:50:55
 
 ## Configuration
 **Type:** B2-vocab

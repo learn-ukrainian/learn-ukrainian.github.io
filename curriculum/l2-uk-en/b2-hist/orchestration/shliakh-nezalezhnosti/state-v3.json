@@ -8,6 +8,11 @@
       "ts": "2026-02-19T17:22:03Z",
       "task_id": "v3-shliakh-nezalezhnosti-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-24T23:46:49Z",
+      "note": "word-count-3477-below-80pct-5000"
     }
   }
 }

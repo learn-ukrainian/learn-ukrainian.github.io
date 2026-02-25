@@ -1,7 +1,7 @@
 # Audit Report: M29 — purpose-shchob-infinitive.md
 **Level:** B1 | **Module:** M29 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 19:39:34
+**Generated:** 2026-02-25 10:43:53
 
 ## Configuration
 **Type:** B1-grammar
@@ -17,7 +17,7 @@
 **Transliteration:** Not allowed
 
 ## Gates
-- **Words:** ✅ 4161/4000 (raw: 4534)
+- **Words:** ✅ 4163/4000 (raw: 4536)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -30,7 +30,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -49,7 +49,7 @@
 | variety | 0.99 | - | 99% | 10% | 9.9% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 16 | 3 | 100% | 10% | 10.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
+| visual | 9 | 3 | 100% | 5% | 5.0% |
 | questions | 18 | 5 | 100% | 5% | 5.0% |
 | tables | 2 | 2 | 100% | 4% | 4.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
@@ -62,7 +62,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Підрядні речення мети: щоб + інфінітив** | ✅ | 79 | Included in Core |
 | **Вступ та діагностичний тест** | ✅ | 727 | Included in Core |
-| **Граматика: Конструкція «щоб + інфінітив»** | ✅ | 1152 | Included in Core |
+| **Граматика: Конструкція «щоб + інфінітив»** | ✅ | 1154 | Included in Core |
 | **Культурний контекст та стійкість** | ✅ | 709 | Included in Core |
 | **Аналіз помилок та Практика** | ✅ | 990 | Included in Core |
 | **Підсумок та застосування** | ✅ | 504 | Included in Core |

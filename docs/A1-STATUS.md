@@ -1,64 +1,63 @@
 # A1 Module Status
 
-**Generated:** 2026-02-17 11:44:04
+**Generated:** 2026-02-25 20:35:45
 **Total Modules:** 44
-**Status:** 38 passing, 1 failing, 0 stubs, 5 errors
+**Status:** 44 passing, 0 failing, 0 stubs
 
 ## Quick Summary
 
-- ✅ **Passing:** 38/44 (86%)
-- ❌ **Failing:** 1/44
+- ✅ **Passing:** 44/44 (100%)
+- ❌ **Failing:** 0/44
 - 📝 **Stubs:** 0/44
-- ⚠️ **Errors:** 5/44
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | the-cyrillic-code-i | ✅ PASS | 2202/1019 | - |
-| 002 | the-cyrillic-code-ii | ✅ PASS | 1888/1531 | - |
-| 003 | the-gender-code | ✅ PASS | 3265/934 | - |
-| 004 | this-is-i-am | ✅ PASS | 1776/1448 | - |
-| 005 | my-world-objects | ✅ PASS | 3266/1412 | - |
-| 006 | the-living-verb-i | ✅ PASS | 1849/1210 | - |
-| 007 | questions-and-negation | ✅ PASS | 2976/1131 | - |
-| 008 | the-living-verb-ii | ✅ PASS | 1661/972 | - |
-| 009 | reflexive-verbs | ✅ PASS | 1723/830 | - |
-| 010 | checkpoint-first-contact | ✅ PASS | 1744/875 | - |
-| 011 | the-accusative-i-things | ✅ PASS | 2253/855 | - |
-| 012 | the-accusative-ii-people | ✅ PASS | 3691/1374 | - |
-| 013 | the-locative-where-things-are | ✅ PASS | 2090/1331 | - |
-| 014 | mine-and-yours | ✅ PASS | 2468/1307 | - |
-| 015 | around-the-city | ✅ PASS | 3528/1602 | - |
-| 016 | the-genitive-i-absence | ✅ PASS | 3127/1038 | - |
-| 017 | numbers-and-money | ✅ PASS | 3194/1091 | - |
-| 018 | food-and-shopping | ✅ PASS | 2860/750 | - |
-| 019 | at-the-cafe | ✅ PASS | 2768/1075 | - |
-| 020 | checkpoint-navigation | ✅ PASS | 3187/1073 | - |
-| 021 | yesterday-past-tense | ✅ PASS | 1889/1092 | - |
-| 022 | tomorrow-future-tense | ✅ PASS | 1624/1082 | - |
-| 023 | what-time-is-it | ✅ PASS | 2287/1064 | - |
-| 024 | can-must-want-modals | ✅ PASS | 1296/1049 | - |
-| 025 | my-daily-routine | ✅ PASS | 1189/750 | - |
-| 026 | describing-things-adjectives | ✅ PASS | 1141/853 | - |
-| 027 | colors-and-clothing | ✅ PASS | 1950/750 | - |
-| 028 | description-adverbs | ✅ PASS | 1112/750 | - |
-| 029 | weather-and-nature | ✅ PASS | 1929/869 | - |
-| 030 | prepositions-iii | ✅ PASS | 3237/936 | - |
-| 031 | body-and-health | ✅ PASS | 2175/820 | - |
-| 032 | my-family | ✅ PASS | 1166/916 | - |
-| 033 | holidays-and-traditions | ✅ PASS | 1498/750 | - |
-| 034 | checkpoint-core-grammar | ✅ PASS | 1435/962 | - |
-| 035 | at-the-cafe-practical | ✅ PASS | 2110/825 | - |
-| 036 | at-the-restaurant | ✅ PASS | 1459/750 | - |
-| 037 | at-the-market | ✅ PASS | 1993/793 | - |
-| 038 | at-the-store | ✅ PASS | 1821/750 | - |
-| 039 | buying-tickets | ❌ FAIL | 1375/750 | No Tier 1 (Beginner) review file at l2-uk-en/a1/review/buying-tickets-review.md. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review — start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue. |
-| 040 | taking-transport | ⚠️ MISSING | 0/0 | no_file |
-| 041 | phone-basics | ⚠️ MISSING | 0/0 | no_file |
-| 042 | emergencies | ⚠️ MISSING | 0/0 | no_file |
-| 043 | combined-practice | ⚠️ MISSING | 0/0 | no_file |
-| 044 | a1-final-exam | ⚠️ MISSING | 0/0 | no_file |
+| 001 | the-cyrillic-code-i | ✅ PASS | 2607/2000 | - |
+| 002 | the-cyrillic-code-ii | ✅ PASS | 3084/2000 | - |
+| 003 | the-gender-code | ✅ PASS | 2803/2000 | - |
+| 004 | this-is-i-am | ✅ PASS | 2521/2000 | - |
+| 005 | my-world-objects | ✅ PASS | 2220/2000 | - |
+| 006 | the-living-verb-i | ✅ PASS | 2732/2000 | - |
+| 007 | questions-and-negation | ✅ PASS | 2711/2000 | - |
+| 008 | the-living-verb-ii | ✅ PASS | 2419/2000 | - |
+| 009 | reflexive-verbs | ✅ PASS | 2700/2000 | - |
+| 010 | checkpoint-first-contact | ✅ PASS | 2431/1500 | - |
+| 011 | the-accusative-i-things | ✅ PASS | 2748/2000 | - |
+| 012 | the-accusative-ii-people | ✅ PASS | 2341/2000 | - |
+| 013 | the-locative-where-things-are | ✅ PASS | 2752/2000 | - |
+| 014 | mine-and-yours | ✅ PASS | 3017/2000 | - |
+| 015 | around-the-city | ✅ PASS | 2616/2000 | - |
+| 016 | the-genitive-i-absence | ✅ PASS | 2227/2000 | - |
+| 017 | numbers-and-money | ✅ PASS | 2622/2000 | - |
+| 018 | food-and-shopping | ✅ PASS | 2635/2000 | - |
+| 019 | at-the-cafe | ✅ PASS | 2609/2000 | - |
+| 020 | checkpoint-navigation | ✅ PASS | 2557/1500 | - |
+| 021 | yesterday-past-tense | ✅ PASS | 2863/2000 | - |
+| 022 | tomorrow-future-tense | ✅ PASS | 2186/2000 | - |
+| 023 | what-time-is-it | ✅ PASS | 2625/2000 | - |
+| 024 | can-must-want-modals | ✅ PASS | 2452/2000 | - |
+| 025 | my-daily-routine | ✅ PASS | 2802/2000 | - |
+| 026 | describing-things-adjectives | ✅ PASS | 2431/2000 | - |
+| 027 | colors-and-clothing | ✅ PASS | 2302/2000 | - |
+| 028 | description-adverbs | ✅ PASS | 2891/2000 | - |
+| 029 | weather-and-nature | ✅ PASS | 2879/2000 | - |
+| 030 | prepositions-direction-origin | ✅ PASS | 2215/2000 | - |
+| 031 | body-and-health | ✅ PASS | 2436/2000 | - |
+| 032 | my-family | ✅ PASS | 3278/2000 | - |
+| 033 | holidays-and-traditions | ✅ PASS | 2593/2000 | - |
+| 034 | checkpoint-core-grammar | ✅ PASS | 2436/1500 | - |
+| 035 | at-the-cafe-practical | ✅ PASS | 2605/2000 | - |
+| 036 | at-the-restaurant | ✅ PASS | 2865/2000 | - |
+| 037 | at-the-market | ✅ PASS | 2736/2000 | - |
+| 038 | at-the-store | ✅ PASS | 2622/2000 | - |
+| 039 | buying-tickets | ✅ PASS | 2571/2000 | - |
+| 040 | taking-transport | ✅ PASS | 2257/2000 | - |
+| 041 | phone-basics | ✅ PASS | 2121/2000 | - |
+| 042 | emergencies | ✅ PASS | 2769/2000 | - |
+| 043 | combined-practice | ✅ PASS | 3139/2000 | - |
+| 044 | a1-final-exam | ✅ PASS | 3548/2000 | - |
 
 ---
 

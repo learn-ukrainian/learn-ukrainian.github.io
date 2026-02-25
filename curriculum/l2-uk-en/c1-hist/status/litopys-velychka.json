@@ -2,15 +2,15 @@
   "module": "litopys-velychka",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-20T01:10:04.682047Z",
+  "last_audit": "2026-02-25T20:36:09.860519Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-19T13:39:02.179958Z",
-    "meta": "2026-02-19T22:09:16.086031Z",
+    "meta": "2026-02-21T01:04:23.087798Z",
     "activities": null,
     "vocabulary": null,
     "plan": "2026-02-17T13:37:38.130411Z",
-    "research": "2026-02-19T22:09:16.077950Z"
+    "research": "2026-02-22T10:35:24.570809Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "fail",
       "violations": 4,
-      "message": "3138/5000 (raw: 3426) | engagement: 3/6 | pedagogy: 4 violations | richness: 92% < 95% min (history)"
+      "message": "3138/5000 (raw: 3426) | engagement: 3/6 | pedagogy: 3 violations | richness: 92% < 95% min (history)"
     },
     "activities": {
       "status": "fail",
@@ -57,7 +57,6 @@
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Outline Compliance Errors",
       "Structure: Missing '## Activities' header OR activities sidecar",
       "Missing required activity types: essay-response, reading, true-false"
     ],

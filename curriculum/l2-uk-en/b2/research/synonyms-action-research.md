@@ -1,38 +1,36 @@
 # Дослідження: Синоніми: Дія та Перетворення
 
 ## State Standard Reference
-§4.4.1.2: "Стилістичні засоби лексики: синоніми: говорити, розмовляти, спілкуватися..." (lines 3459-3469 in `UKRAINIAN-STATE-STANDARD-2024.txt`).
-Alignment: This module explicitly targets the B2 requirement to master lexical synonyms and stylistic nuances, specifically extending the standard's example to the semantic fields of "action" (*робити, чинити, діяти*) and "acquisition" (*брати, отримувати, здобувати*), as well as covering aspectual pair formation (§4.2.3) and agent noun formation (§4.2.5).
+§4.4.1.2: "Стилістичні засоби лексики: ... синоніми: говорити, розмовляти, спілкуватися;"
+Alignment: Цей модуль розширює вимогу Державного стандарту щодо лексичної синонімії. На рівні B2 учні переходять від базових дієслів комунікації до концептуально складніших дієслів дії та реалізації (робити, чинити, діяти, виконувати, здійснювати), які є критично важливими для публіцистичного та професійного регістрів і точного вираження відтінків наміру.
 
 ## Vocabulary Frequency
-
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Робити** | High (General) | робити висновки, робити помилки, робити домашнє завдання |
-| **Чинити** | Medium (Moral/Legal) | чинити опір, чинити тиск, чинити справедливо, чинити зло/добро |
-| **Діяти** | Medium (Abstract/Official) | закон діє, ліки діють, діяти рішуче, діяти на нерви |
-| **Виконувати** | High (Formal/Artistic) | виконувати роль, виконувати завдання, виконувати пісню, виконувати наказ |
-| **Здійснювати** | Medium (Implementation) | здійснювати мрію, здійснювати контроль, здійснювати злочин (legal), здійснювати наміри |
-| **Брати** | High (General) | брати участь (take part), брати до уваги, брати приклад |
-| **Хапати** | Medium (Expressive) | хапати дрижаки (shiver), хапати за душу, хапати вершки (skimming) |
-| **Отримувати** | High (Passive) | отримувати освіту, отримувати насолоду, отримувати зарплату |
-| **Здобувати** | Medium (Effort) | здобувати перемогу, здобувати незалежність, здобувати визнання |
+| робити | High (Neutral) | робити висновки, робити помилки, робити перерву |
+| чинити | Medium (Moral/Legal) | чинити опір, чинити тиск, чинити правосуддя |
+| діяти | High (Abstract/System) | закон діє, ліки діють, діяти рішуче |
+| виконувати | High (Task/Art) | виконувати роль, виконувати пісню, виконувати обов'язки |
+| здійснювати | Medium (High Register) | здійснювати мрію, здійснювати напад, здійснювати план |
+| здобувати | Medium (Active Effort) | здобувати перемогу, здобувати незалежність, здобувати освіту |
+| хапати | Medium (Expressive) | хапати дрижаки, хапати за душу |
+| отримувати | High (Passive) | отримувати зарплату, отримувати листа, отримувати задоволення |
 
 ## Cultural Hooks
-1. **Proverb**: "Під лежачий камінь вода не тече" (Water doesn't flow under a lying stone) — emphasizes that results (*здійснення*) require active effort (*дія*).
-2. **Proverb**: "Діло майстра величає" (The deed/work praises the master) — connects *виконувати* (perform) with quality and reputation.
-3. **Concept**: "Здійснення мрій" (Realization of dreams) is a deeply poetic concept in Ukrainian culture, distinct from bureaucratic "виконання плану".
+1. Прислів'я «Під лежачий камінь вода не тече» (Water doesn't flow under a lying stone): Ілюструє глибокий український концепт суб'єктності (agency). Пасивне існування не дає результатів; для перетворення реальності необхідні активні зусилля (дія).
+2. Концепт «здобуття» (acquisition through struggle): В українській історіографії та культурі свобода, незалежність і навіть освіта ніколи не "отримуються" (passive receipt), вони завжди "здобуваються" (won/acquired with effort). Це фундаментальна світоглядна різниця, закладена в мову.
 
 ## Common Learner Errors
-1. **Calque "To take"**: English "take a bus/break/photo" → Incorrect *брати автобус/перерву/фото*. Correct: *сідати на автобус*, *робити перерву*, *фотографувати*.
-2. **"Do" Generalization**: Using *робити* for specific contexts. Error: *Він робить на мене тиск*. Correct: *Він **чинить** на мене тиск*.
-3. **Performance Confusion**: Using *здійснювати* for artistic performance. Error: *Вона здійснила пісню*. Correct: *Вона **виконала** пісню*.
+1. Калькування англійського "make/do" → українське «робити»: Учні часто кажуть «робити тиск» замість правильного «чинити тиск», ігноруючи моральний/абстрактний регістр дієслова «чинити».
+2. Калькування англійського "take" → українське «брати»: Учні використовують дослівні переклади, кажучи «брати автобус» замість «сідати на автобус» або «брати фото» замість «робити фото / фотографувати».
+3. Плутанина у творчому та бюрократичному контекстах: Використання «здійснити пісню» (implement a song) замість стилістично точного «виконати пісню» (perform a song).
 
 ## Cross-References
-- **Builds on**: B1 Motion Verbs (M57) — expanding physical movement to abstract action.
-- **Prepares for**: C1 Stylistics — advanced synonymy and register manipulation.
+- Builds on: B1 M57 (Physical action verbs).
+- Prepares for: B2-HIST (де потрібні точні слова на кшталт "чинити опір", "здобувати свободу") та C1-PRO (професійна комунікація, юридичні тексти).
 
 ## Notes for Content Writing
-- **Persona Flavor**: Use "Professional Language Coach" voice to explain *чинити* vs *діяти* (legal/moral nuance).
-- **Nuance Alert**: Explicitly distinguish *отримувати* (passive receipt) vs *здобувати* (active struggle/effort) — crucial for B2 historical narratives (e.g., *здобути волю*).
-- **Agency**: Ensure examples show Ukrainians *acting* (*діяти/чинити*), not just *receiving* (*отримувати*).
+- Decolonized framing: Наголошуйте на унікальній українській суб'єктності в дієсловах. Уникайте порівнянь з російськими відповідниками. Підкреслюйте, що українська мова має чітке лексичне розмежування між пасивним сприйняттям (отримувати) та активним досягненням (здобувати).
+- Agency Pass: Усі приклади повинні мати активних суб'єктів («Українці чинять опір», а не пасивні конструкції).
+- B2 Immersion: 100% українська мова в поясненнях. Жодного англійського scaffolding у тексті — переклад лише у словнику (YAML).
+- Розділяйте кожен концепт або групу синонімів окремим заголовком H3 для чіткості структури.

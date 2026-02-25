@@ -1,7 +1,7 @@
 # Audit Report: M16 — register-formal-informal.md
 **Level:** B2 | **Module:** M16 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 16:57:24
+**Generated:** 2026-02-25 10:43:15
 
 ## Configuration
 **Type:** B2-grammar

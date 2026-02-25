@@ -1,7 +1,7 @@
 # Audit Report: M65 — kost-hordiyenko-sich.md
 **Level:** B2-HIST | **Module:** M65 | **Phase:** HIST.7 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 23:30:39
+**Generated:** 2026-02-25 20:53:27
 
 ## Configuration
 **Type:** B2-history
@@ -16,20 +16,36 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Документи епохи: Вітчизна-мати | 1 | 1 | ✅ |
+| 2 | critical-analysis | Аналіз риторики спротиву | 1 | 1 | ✅ |
+| 3 | true-false | Історичні факти: міфи та реальність | 10 | 8 | ✅ |
+| 4 | comparative-study | Порівняльний аналіз політичних систем | 1 | 1 | ✅ |
+| 5 | essay-response | Аналітичне есе: Право на повстання | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 5000/5000 (raw: 5203)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

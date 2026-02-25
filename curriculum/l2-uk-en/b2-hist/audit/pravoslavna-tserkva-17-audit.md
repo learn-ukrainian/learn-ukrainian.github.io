@@ -1,7 +1,7 @@
 # Audit Report: M34 — pravoslavna-tserkva-17.md
 **Level:** B2-HIST | **Module:** M34 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 19:15:19
+**Generated:** 2026-02-25 20:30:16
 
 ## Configuration
 **Type:** B2-history
@@ -17,15 +17,13 @@
 **Transliteration:** Not allowed
 
 ## PEDAGOGICAL VIOLATIONS
-- **[EUPHONY]** Line 340: «ієрархії і у» — і між голосними; має бути «й у»
-  - FIX: Replace «і» with «й» (between vowels)
 - **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (11 total): 'не просто X, а Y' x3, 'не лише X, а й Y' x8 — robotic prose
   - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 6532/5000 (raw: 6865)

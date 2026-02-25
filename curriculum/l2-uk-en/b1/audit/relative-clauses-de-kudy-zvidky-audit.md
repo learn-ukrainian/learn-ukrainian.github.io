@@ -1,7 +1,7 @@
 # Audit Report: M27 — relative-clauses-de-kudy-zvidky.md
 **Level:** B1 | **Module:** M27 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 19:26:27
+**Generated:** 2026-02-25 10:43:42
 
 ## Configuration
 **Type:** B1-grammar

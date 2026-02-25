@@ -1,7 +1,7 @@
 # Audit Report: M53 — idioms-animals-ii.md
 **Level:** B2 | **Module:** M53 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 23:20:10
+**Generated:** 2026-02-25 11:01:26
 
 ## Configuration
 **Type:** B2-vocab

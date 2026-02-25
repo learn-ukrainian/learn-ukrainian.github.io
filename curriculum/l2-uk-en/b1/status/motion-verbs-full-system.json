@@ -2,10 +2,10 @@
   "module": "motion-verbs-full-system",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T16:12:45.930034Z",
+  "last_audit": "2026-02-25T10:42:51.030219Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T16:06:28.169505Z",
+    "md": "2026-02-25T07:33:23.173920Z",
     "meta": "2026-02-23T22:30:15.351346Z",
     "activities": "2026-02-24T15:31:18.644363Z",
     "vocabulary": "2026-02-24T15:28:49.721516Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5790/4000 (raw: 6128) | richness: 84% < 95% min (grammar)"
+      "status": "pass",
+      "violations": 0,
+      "message": "5981/4000 (raw: 6354)"
     },
     "activities": {
       "status": "deferred",
@@ -55,10 +55,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 1,
+    "pass_count": 4,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

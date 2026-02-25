@@ -2,61 +2,54 @@ slug: indefinite-negative-pronouns
 title: Невизначені та заперечні займенники
 word_target: 4000
 content_outline:
-  - section: 'Вступ: Логіка невизначеності (Introduction: The Logic of Uncertainty)'
-    words: 600
-    points:
-      - 'State Standard alignment (§4.2.1.4): Expanding interrogative pronouns (хто,
-        що) into the complex B1 systems of indefinite and negative pronouns.'
-      - 'Cultural hook: The ''Precision of Uncertainty'' — explaining how Ukrainian
-        semantic logic differs from English rule-based switching (someone vs. anyone).'
-      - 'Persona introduction: The Logic Puzzle Host frames the choice between pronoun
-        series as a strategic semantic game based on knowledge and certainty.'
-  - section: 'Реальна невизначеність: Займенники з часткою -сь (Real Uncertainty:
-      Pronouns with the Particle -сь)'
-    words: 850
-    points:
-      - 'Usage of the -сь series (хтось, щось, якийсь): Expressing agents or objects
-        known to exist but remaining unspecified or unnamed by the speaker.'
-      - 'High-frequency collocations from research: ''хтось дзвонив'' (someone called),
-        ''щось трапилось'' (something happened), ''хтось постукав'' (someone knocked).'
-      - 'Morphology and declension: The base interrogative pronoun declines (когось,
-        комусь) while the particle ''-сь'' remains invariable.'
-      - 'Pedagogical rule: Why ''-сь'' is mandatory for past tense factual events
-        where an agent clearly existed, contrasting with the ''-небудь'' error.'
-  - section: 'Гіпотетична та парціальна невизначеність: -небудь та де- (Hypothetical
-      and Partial Uncertainty: -небудь and де-)'
-    words: 850
-    points:
-      - 'The -небудь series: Expressing truly random, hypothetical, or unknown agents
-        in questions, future tense, and conditional statements.'
-      - 'Spelling mastery: The mandatory hyphenation rule for all -небудь forms (хто-небудь,
-        що-небудь) as a non-negotiable B1 literacy competency.'
-      - 'The ''де-'' series (дехто, дещо, деякий): Semantic nuance of partial quantity
-        (''some of many'') compared to the individual ''someone'' (хтось).'
-      - 'Academic/Formal register: Using ''дехто вважає'' (some people think) as a
-        standard rhetorical opener to introduce differing viewpoints.'
-  - section: 'Абсолютне заперечення: Займенники з ні- (Absolute Negation: Pronouns
-      with ні-)'
-    words: 900
-    points:
-      - 'The Mandatory Double Negation Rule: Internalizing the ''ніхто + не + verb''
-        structure to prevent English-transfer errors like ''*Ніхто прийшов''.'
-      - 'The ''Splitting the Atom'' visual: Morphological rule where prepositions
-        insert between ''ні-'' and the pronoun root (ні з ким, ні до кого, ні про
-        що).'
-      - 'Cultural resonance: Personification of ''Ніхто'' in proverbs and riddles
-        (''Ніхто не знає, що нас чекає''), highlighting the concept of absolute absence.'
-      - 'Declension patterns for negative pronouns: Mastering case changes (нікого,
-        нікому) while maintaining the negative prefix.'
-  - section: 'Практикум: Контрасти та розв''язання помилок (Workshop: Contrasts and
-      Error Resolution)'
-    words: 800
-    points:
-      - 'Contrastive analysis drills: Choosing between хтось, хто-небудь, and дехто
-        in nuanced narrative contexts to develop native-like semantic intuition.'
-      - 'Preposition split clinic: Intensive practice with ''ні з ким'' and ''ні про
-        що'' to ensure correct spelling and morphological placement.'
-      - 'The Logic Puzzle Flowchart: A definitive learner guide for selecting the
-        correct pronoun series based on timeframe, certainty, and negation.'
-      - 'Summary table: Comprehensive reference mapping of all indefinite and negative
-        series with their corresponding usage constraints and case forms.'
+- section: 'Вступ: Логіка невизначеності'
+  words: 600
+  points:
+  - 'Розкрити мету уроку: перехід від простих питальних займенників до складних логічних
+    систем невизначеності.'
+  - 'Ввести концепцію «точності невизначеності»: в українській мові вибір займенника
+    залежить від рівня обізнаності мовця та реальності події.'
+  - 'Представити персону (Ведучий логічних головоломок): вибір між частками — це стратегічна
+    гра на знання та факти.'
+- section: 'Реальна невизначеність: Займенники з часткою -сь'
+  words: 850
+  points:
+  - 'Пояснити функцію серії на -сь (хтось, щось): агент або об''єкт реально існує,
+    але є невідомим або спеціально не названим.'
+  - 'Надати високочастотні приклади та словосполучення: «хтось дзвонив», «щось трапилось».'
+  - 'Продемонструвати морфологію у таблицях: відмінюється лише корінь (когось, комусь),
+    а частка -сь залишається незмінною.'
+  - 'Сформулювати ключове правило: обов''язковість -сь для тверджень у минулому часі
+    про фактичні події.'
+- section: 'Гіпотетична та парціальна невизначеність: -небудь та де-'
+  words: 850
+  points:
+  - 'Пояснити серію на -небудь: абсолютно невідомий, випадковий або гіпотетичний об''єкт
+    (типово для запитань, майбутнього часу та умов).'
+  - 'Наголосити на орфографії: обов''язкове написання через дефіс (хто-небудь).'
+  - Ввести серію з де- (дехто, дещо, деякий) для позначення часткової кількості («певна
+    частина з багатьох»).
+  - 'Показати вжиток де- у формальному та академічному регістрах: конструкції на кшталт
+    «дехто вважає, що...».'
+- section: 'Абсолютне заперечення: Займенники з ні-'
+  words: 900
+  points:
+  - 'Закріпити фундаментальне правило подвійного заперечення: конструкція «ніхто +
+    не + дієслово» є обов''язковою.'
+  - 'Візуалізувати морфологічне правило «розщеплення атома»: прийменник вклинюється
+    між часткою ні- та займенником (ні з ким, ні до кого).'
+  - 'Інтегрувати культурний контекст: використання слова «Ніхто» в українських прислів''ях
+    як вираження абсолютної відсутності.'
+  - Навести повну парадигму відмінювання заперечних займенників із фокусом на непрямі
+    відмінки.
+- section: 'Практикум: Контрасти та розв''язання помилок'
+  words: 800
+  points:
+  - Запропонувати контрастивні ситуації для вибору між хтось, хто-небудь та дехто
+    з детальним аналізом логіки.
+  - Провести клініку «розщеплення прейменником» для відпрацювання правильної побудови
+    фраз типу «ні про що».
+  - Надати алгоритм (Logic Puzzle Flowchart) у вигляді тексту та пунктів для прийняття
+    рішення щодо вибору правильної серії займенників.
+  - Зробити підсумкову комплексну таблицю всіх серій займенників із їхніми семантичними
+    обмеженнями.

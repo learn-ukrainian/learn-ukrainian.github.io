@@ -2,13 +2,13 @@
   "module": "register-medical-ukrainian",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T17:39:26.413815Z",
+  "last_audit": "2026-02-25T22:22:19.954526Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T00:50:46.066405Z",
+    "md": "2026-02-25T22:22:17.786842Z",
     "meta": "2026-02-24T00:47:22.530698Z",
-    "activities": null,
-    "vocabulary": null,
+    "activities": "2026-02-25T22:22:17.789503Z",
+    "vocabulary": "2026-02-25T22:22:18.764525Z",
     "plan": "2026-02-20T21:39:37.632872Z",
     "research": "2026-02-24T00:47:22.527135Z"
   },
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 3,
-      "message": "2916/4000 (raw: 3192) | engagement: 0/6 | richness: 69% < 95% min (style)"
+      "status": "pass",
+      "violations": 0,
+      "message": "6295/4000 (raw: 6589)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "15/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/25"
     },
     "naturalness": {
       "status": "info",
@@ -49,18 +49,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "5 Outline Compliance Errors"
+      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
     ],
-    "pass_count": 3,
+    "pass_count": 6,
     "fail_count": 1,
-    "deferred_count": 3
+    "deferred_count": 0
   }
 }

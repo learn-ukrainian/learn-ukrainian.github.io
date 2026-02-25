@@ -8,6 +8,15 @@
       "ts": "2026-02-19T17:17:57Z",
       "task_id": "v3-ukrainska-helsinska-hrupa-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T23:10:00Z"
+    },
+    "v3-C": {
+      "status": "failed",
+      "ts": "2026-02-24T23:10:03Z",
+      "note": "missing-files-act=False-voc=False"
     }
   }
 }

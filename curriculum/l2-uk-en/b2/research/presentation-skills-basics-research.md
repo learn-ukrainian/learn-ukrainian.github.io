@@ -1,33 +1,34 @@
 # Дослідження: Презентації: Основи
 
 ## State Standard Reference
-§1.4.1.1.1: "Особа вміє... виступати перед авдиторією на тему, що входить до сфери її зацікавлень, навчання або професійної діяльності; публічно висловлюватися на загальні теми з таким ступенем точності, швидкістю та спонтанності, що не спричиняє слухачам ускладнень або незручностей."
-Alignment: Цей модуль безпосередньо розвиває вміння структурувати та виголошувати монологічне мовлення (презентацію) у професійному контексті, що відповідає вимогам стандарту для рівня B2.
+§None: No explicit mapping entry exists for presentation skills or public speaking in the B2 section of the provided `state-standard-2024-mapping.yaml`. 
+Alignment: The module aligns with B2 Themes (§3, lines 2874-3064), specifically the thematic domains of "робота", "освіта", and "медіа", focusing on professional communication, presenting structured information, and formal register discourse.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **презентація** | High (Business/Academic) | ефективна презентація, структура презентації, робити презентацію, слайди презентації |
-| **виступ** | High (General/Professional) | публічний виступ, готувати виступ, виступ перед аудиторією, впевнений виступ |
-| **слайд** | High (Tech/Edu) | наступний слайд, текст на слайді, перемикати слайди, титульний слайд |
-| **аудиторія** | Medium (Professional) | увага аудиторії, контакт з аудиторією, запитання від аудиторії, цільова аудиторія |
-| **теза** | Medium (Academic) | основна теза, аргументувати тезу, формулювати тези, захист тези |
-| **висновок** | High (General) | зробити висновок, у висновку, короткий висновок, підсумовуючи |
+| презентація | High (professional/academic) | ефективна презентація, робити презентацію, слайди презентації, візуальна презентація |
+| виступ | High (media/professional) | публічний виступ, готувати виступ, впевнений виступ, успішний виступ |
+| аудиторія | Medium (academic/general) | увага аудиторії, контакт з аудиторією, цільова аудиторія, залучити аудиторію |
+| теза | Medium (academic/debate) | основна теза, аргументувати тезу, формулювати тези, захищати тезу |
+| висновок | High (general/academic) | зробити висновок, у висновку, підсумовуючи, логічний висновок |
+| слайд | High (modern professional) | наступний слайд, текст на слайді, перемикати слайди, дизайн слайда |
 
 ## Cultural Hooks
-1. **Києво-Могилянська риторика**: Курс риторики у Києво-Могилянській академії (зокрема, курс Феофана Прокоповича 1706 року "De arte rhetorica") був легендарним. Студенти вчилися не просто "говорити", а "переконувати й прикрашати істину". Це коріння української культури публічного слова, яке варто згадати як противагу радянському "читанню з папірця".
-2. **Сучасний контекст**: В Україні зараз відбувається перехід від формальних, "сухих" доповідей (спадщина бюрократії) до інтерактивних, візуальних презентацій (вплив IT-сектору та західної бізнес-культури). Вміння робити "пітч" (коротку презентацію) є критичною навичкою для українських стартапів.
+1. **Риторична спадщина Києво-Могилянської академії**: In the 17th-18th centuries, the Kyiv-Mohyla Academy was a leading center for European rhetorical arts (e.g., Feofan Prokopovych's courses). Emphasize that dynamic public speaking in Ukraine has deep historical roots, contrasting directly with the later Soviet bureaucratic tradition of monotonously reading from pre-approved papers.
+2. **Українська типографія як ідентичність**: Modern Ukrainian professional identity is strongly expressed through visual design. Using contemporary Ukrainian typefaces like *Mariupol*, *e-Ukraine*, or *AlfaBravo* in presentation slides is not just an aesthetic choice, but an assertion of modern, decolonized corporate culture.
 
 ## Common Learner Errors
-1. **Калькування англійських вставних слів**: *Actually* → "Актуально" (помилка) замість "Власне / Насправді"; *So* → "Так" (помилка) замість "Отже / Тож".
-2. **Надуживання пасивом**: "Було розглянуто питання" замість "Ми розглянули питання". В українській мові, особливо в презентаціях, краще звучить активний стан (Agency Pass).
-3. **Слова-паразити**: "Ну...", "Еее...", "Короче...", "Як би..." (калька з рос. "как бы"). Це знижує професійний рівень виступу.
+1. **False Friends (Actual/Actually)**: English speakers frequently translate "actually" as *актуально* (which means "currently relevant"). → Correct form: *власне* or *насправді*. — Why it happens: Phonetic similarity/false cognates.
+2. **Literal Translation of "So"**: Starting a transition with *Так* because of the English "So, moving on to...". → Correct form: *Отже* or *Тож*. — Why it happens: L1 interference in signposting.
+3. **Passive Voice Overuse**: Using formal passive constructs like *було розглянуто* instead of *ми розглянули*. → Correct form: Active voice (Agency Pass). — Why it happens: Influence of both formal English and Soviet-era bureaucratic styling.
 
 ## Cross-References
-- Builds on: B1 modules focus on general communication and basic argumentation.
-- Prepares for: M92 (Презентації: Просунуті техніки), де будуть розглядатися складніші аспекти (storytelling, робота зі складною аудиторією).
+- Builds on: B1 modules covering formal vs. informal register and complex sentence conjunctions.
+- Prepares for: Advanced negotiation skills, professional correspondence, and B2-PRO specific corporate communication tracks.
 
 ## Notes for Content Writing
-- **Signposting**: Обов'язково дати чіткий список фраз-маркерів (Signposting language) для кожної частини презентації (Вступ, Основна частина, Висновки). Це "каркас" модуля.
-- **Visuals**: У розділі про візуальні матеріали варто згадати про українські шрифти (наприклад, розробки студії "AlfaBravo" або шрифт "Mariupol") як елемент культурної ідентичності в дизайні.
-- **Tone**: Тримати баланс між професійним та живим. Уникати канцелярщини ("Здійснення показу слайдів"), натомість вживати природні фрази ("Показати слайди").
+- **Decolonized Framing**: Frame active, engaging presentation styles as the Ukrainian standard. Explicitly reject bureaucratic nominalization and passive voice as relics of a colonial past.
+- **Agency Pass**: Teach learners to take ownership of their presentation using the active voice (*Я пропоную*, *Ми бачимо*).
+- **Phonetics**: Do NOT use inline IPA in the markdown content. Keep IPA strictly within the vocabulary YAML.
+- **Russianisms**: Strictly avoid and warn against words like *міроприємство* (use *захід*) or *виступаючий* (use *доповідач*).

@@ -1,7 +1,7 @@
 # Audit Report: M27 — law-justice-vocabulary.md
 **Level:** B2 | **Module:** M27 | **Phase:** B2 | **Pedagogy:** CLIL | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 19:03:53
+**Generated:** 2026-02-25 10:44:01
 
 ## Configuration
 **Type:** B2-grammar
@@ -17,7 +17,7 @@
 **Transliteration:** Not allowed
 
 ## Gates
-- **Words:** ✅ 4676/4000 (raw: 4996)
+- **Words:** ✅ 4678/4000 (raw: 4998)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -49,7 +49,7 @@
 | variety | 0.92 | - | 92% | 10% | 9.2% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 9 | 3 | 100% | 10% | 10.0% |
-| visual | 14 | 3 | 100% | 5% | 5.0% |
+| visual | 15 | 3 | 100% | 5% | 5.0% |
 | questions | 13 | 5 | 100% | 5% | 5.0% |
 | tables | 2 | 2 | 100% | 4% | 4.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
@@ -65,5 +65,5 @@
 | **Судова система та європейська традиція** | ✅ | 825 | Included in Core |
 | **Учасники процесу та мовленнєва культура** | ✅ | 958 | Included in Core |
 | **Класифікація справ та офіційний регістр** | ✅ | 796 | Included in Core |
-| **Судочинство: від позову до вироку** | ✅ | 1022 | Included in Core |
+| **Судочинство: від позову до вироку** | ✅ | 1024 | Included in Core |
 | **Підсумок** | ✅ | 189 | Included in Core |

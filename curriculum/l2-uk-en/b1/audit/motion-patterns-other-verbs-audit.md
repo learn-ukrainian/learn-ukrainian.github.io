@@ -1,7 +1,7 @@
 # Audit Report: M23 — motion-patterns-other-verbs.md
 **Level:** B1 | **Module:** M23 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 17:55:49
+**Generated:** 2026-02-25 10:43:21
 
 ## Configuration
 **Type:** B1-grammar

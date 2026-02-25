@@ -1,7 +1,7 @@
 # Audit Report: M48 — kozatske-viisko.md
 **Level:** B2-HIST | **Module:** M48 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:26:08
+**Generated:** 2026-02-25 20:47:01
 
 ## Configuration
 **Type:** B2-history
@@ -16,20 +16,36 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Первинне джерело: Свідчення Гійома де Боплана | 1 | 1 | ✅ |
+| 2 | critical-analysis | Критичний аналіз: Ефективність козацької армії | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняльне дослідження: Козацька та західноєвропейська армії | 1 | 1 | ✅ |
+| 4 | true-false | Верифікація фактів: Зброя та клейноди | 10 | 8 | ✅ |
+| 5 | essay-response | Есе: Етика та дисципліна лицарського люду | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 5694/5000 (raw: 6177)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (history))
 - **Richness:** ✅ 97% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

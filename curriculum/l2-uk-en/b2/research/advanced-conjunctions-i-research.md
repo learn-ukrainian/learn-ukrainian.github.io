@@ -3,35 +3,32 @@
 ## State Standard Reference
 §4.3.4.4: "Складнопідрядні речення з відношеннями причини: Хлопці боялися поворухнутися, щоб не злякати пташки."
 §4.3.4.6: "Складнопідрядні речення з відношеннями допусту: Хоч не одного там калічили ті скали, ми далі йшли."
-Alignment: This module directly addresses the B2 requirement for complex sentences with causal (reason) and concessive (contrast) relationships, moving beyond basic "тому що" to stylistically varied conjunctions.
+Alignment: This module directly fulfills the B2 syntax requirements for complex sentences with causal and concessive clauses, focusing on appropriate register and structural nuance.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **тому що** | High / General | основна причина тому що, саме тому що |
-| **оскільки** | High / Formal | оскільки закон вимагає, оскільки ми розглядаємо |
-| **бо** | High / Conversational | ти ж знаєш, бо..., не прийшов, бо захворів |
-| **незважаючи на** | Medium / General | незважаючи на обставини, незважаючи на закон |
-| **попри** | Medium / Modern | попри все, попри заборону, попри очікування |
-| **дарма що** | Low / Literary | дарма що молодий, дарма що пізно |
-| **термін** | High / Academic | юридичний термін, термін дії, визначення терміна |
-| **поняття** | High / Academic | базове поняття, підміняти поняття, розширити поняття |
+| тому що | High (Neutral/Written) | саме тому що, основна причина тому що |
+| бо | Very High (Spoken/Conversational) | бо так треба, бо інакше |
+| оскільки | Medium (Formal/Analytical) | оскільки закон вимагає, оскільки це важливо |
+| незважаючи на | Medium (Formal/Written) | незважаючи на обставини, незважаючи на закон |
+| попри | High (Modern/Energetic) | попри все, попри заборону, попри війну |
+| дарма що | Low (Literary/Stylistic) | дарма що молодий, дарма що пізно |
 
 ## Cultural Hooks
-1. **Ivan Franko's "Kamenyari"**: The line "Хоч не одного там калічили ті скали, ми далі йшли" is a perfect literary anchor for concessive conjunctions ("хоч"), symbolizing Ukrainian perseverance and civic duty.
-2. **Legal Formalism**: The distinction between "оскільки" (preamble/justification style) and "бо" (oral argument) mirrors the difference between written legal opinions and courtroom speech.
+1. Поема «Каменярі» Івана Франка («Хоч не одного там калічили ті скали...») є хрестоматійним прикладом допустової конструкції та потужним символом української витривалості й поступу.
+2. Сучасний публіцистичний дискурс надає перевагу прийменнику та сполучнику «попри» замість класичного «незважаючи на». «Попри» звучить динамічніше та є маркером активної, незламної позиції (напр., «попри обстріли», «попри відключення світла»).
 
 ## Common Learner Errors
-1. **Spelling**: Writing "томущо" or "черезтещо" as one word (Russian influence). → Must be "тому що", "через те що".
-2. **"Due to" Mistranslation**: Using "дякуючи" (thanks to) for negative causes ("дякуючи хворобі"). → Must use "через" ("через хворобу").
-3. **"Because of" Mistranslation**: Using "із-за" (Russian calque). → Must use "через" (causal) or "з-за" (spatial, from behind).
-4. **Punctuation**: Placing the comma after "тому" instead of before "тому що" in neutral contexts. → "..., тому що..." (standard) vs "..., тому, що..." (emphasis on *that* reason).
+1. Вживання кальки «дякуючи» (thanks to) для негативних причин → «через». (Калька: «Дякуючи хворобі» → Правильно: «Через хворобу»).
+2. Вживання русизму «із-за» у значенні причини → «через». (Калька: «Із-за дощу» → Правильно: «Через дощ». «З-за» використовується лише для просторового відношення: «з-за хмар»).
+3. Неправильний правопис: «томущо», «через тещо» (написання разом) → Правильно: завжди окремо («тому що», «через те що»).
 
 ## Cross-References
-- **Builds on**: A2/B1 basic complex sentences (M50-60 range).
-- **Prepares for**: B2.2 Phraseology (M41+), C1 Academic Writing (argumentation).
+- Builds on: B1 complex sentence foundations (basic clause joining).
+- Prepares for: Advanced B2 syntax, legal/professional discourse, and C1 rhetorical structures.
 
 ## Notes for Content Writing
-- **Persona Voice**: As a Legal Analyst, use "оскільки" and "незважаючи на те, що" to explain legal principles or logical deductions. Use "бо" only when simulating witness testimony or informal dialogue.
-- **Stylistics**: Clearly distinguish "попри" (modern, energetic, often no comma needed if preposition) vs "незважаючи на" (classic, heavier).
-- **Grammar Nuance**: Highlight that "оскільки" often starts a sentence (Since X, then Y), while "тому що" usually follows the main clause.
+- Decolonized framing: Present "попри" and "через" as natural, robust features of Ukrainian syntax. Highlight the semantic distinction between "з-за" (spatial) and "через" (causal) as a hallmark of native fluency, without using Russian as the baseline.
+- Maintain 100% Ukrainian immersion (no English in prose).
+- Word count target is 4000 words. Expand the legal analyst context and literary analysis (Franko) to ensure deep, engaging content.

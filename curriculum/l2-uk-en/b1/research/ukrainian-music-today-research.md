@@ -1,34 +1,32 @@
 # Дослідження: Українська музика сьогодні
 
 ## State Standard Reference
-§3.4. Дозвілля, відпочинок: "способи проведення вільного часу; ... театр, кінотеатр, філармонія; фестиваль."
-§4.3.3. Утворення назв осіб за видом діяльності: "співати – співак".
-Alignment: Модуль розвиває тему дозвілля через музику та закріплює словотвір іменників-діячів (співак, виконавець).
+§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; ... театр, кінотеатр, філармонія; фестиваль."
+§4.2.2.6: "Місцевий відмінок: у, в, на (місце перебування особи чи предмета)."
+Alignment: The module aligns perfectly with the B1 thematic catalogue (§3.4) for discussing cultural leisure (concerts, festivals) and addresses the grammatical nuance of prepositional governance (грати на інструменті).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **Гурт** | High (News/Media) | рок-гурт, легендарний гурт, лідер гурту, склад гурту |
-| **Співак / Співачка** | High (Everyday) | відомий співак, оперна співачка, талант співака |
-| **Виконавець** | Medium (Formal/Media) | українські виконавці, молодий виконавець, топ виконавців |
-| **Пісня** | Very High | народна пісня, авторська пісня, слова пісні, хітова пісня |
-| **Хіт** | High (Slang/Media) | світовий хіт, очолити хіт-парад |
+| гурт | High (Media) | музичний гурт, лідер гурту, відомий гурт |
+| альбом | High (Everyday) | новий альбом, записати альбом |
+| пісня | Very High | народна пісня, заспівати пісню |
+| слухати | Very High | слухати музику, слухати подкаст |
 
 ## Cultural Hooks
-1. **"Ой у лузі червона калина"**: Гімн Січових Стрільців (1914), який став символом незламності у 2022 році після виконання Андрієм Хливнюком (Бумбокс) на Софійській площі.
-2. **Квітка Ціси** (Kvitka Cisyk): Американська співачка українського походження, чиї альбоми "Квітка" та "Два кольори" (1980-ті) зберегли українську пісню для поколінь і стали еталоном виконання ("білий голос").
-3. **Kalush Orchestra**: Переможці Євробачення-2022 з піснею "Stefania", що поєднала реп із фольклорними мотивами (сопілка) та стала присвятою всім українським матерям.
+1. **Етно-хаос та Електро-фолк**: Bands like DakhaBrakha (ДахаБраха) and ONUKA have created unique, globally recognized genres that blend deep Ukrainian folklore with modern electronic and chaotic instrumental sounds.
+2. **"Червона калина"**: The 1914 Sich Riflemen anthem gained global viral status in 2022 when Boombox frontman Andriy Khlyvnyuk sang it a cappella in empty Kyiv, later remixed by Pink Floyd.
 
 ## Common Learner Errors
-1. **Інструменти vs Ігри**: *Грати гітару* (Wrong) → **Грати на гітарі** (Correct, Locative). Але: *Грати в футбол* (Accusative).
-2. **Слухати vs Чути**: *Я люблю чути музику* (Wrong context) → **Я люблю слухати музику** (Active listening).
-3. **Рід іменників**: *Мій улюблений пісня* (Wrong) → **Моя улюблена пісня** (Feminine). *Ця альбом* (Wrong) → **Цей альбом** (Masculine).
+1. **Група vs Гурт**: Learners often say "музична група" (Russianism/Anglicism). Correct: "музичний гурт".
+2. **Грати на vs Грати в**: Direct translation of "play guitar" leads to omitted prepositions. Must use "грати на + Locative" (на гітарі) for instruments, but "грати в + Accusative" (в теніс) for sports.
+3. **Gender Agreement**: Misgendering common nouns. "Мій пісня" instead of "моя пісня" (feminine) and "ця альбом" instead of "цей альбом" (masculine).
 
 ## Cross-References
-- Builds on: B1-75 (Regions Center — cultural context of Lviv/Kyiv/Carpathians)
-- Prepares for: B1-77 (Ukrainian Cinema and TV — arts vocabulary continuity)
+- Builds on: b1-75 (Regions Center)
+- Prepares for: b1-77 (Ukrainian Cinema and TV)
 
 ## Notes for Content Writing
-- Використовувати "гурт" замість "група" (росіянізм у контексті музики).
-- Підкреслити роль музики як "м'якої сили" (культурна дипломатія).
-- Згадати про різноманіття жанрів: від етно-хаосу (ДахаБраха) до електро-фолку (ONUKA).
+- **Decolonized Framing**: Present Ukrainian music not as a subset of the post-Soviet space, but as an independent, globally resonant cultural force. Contrast the authentic folklore revival (Kvitka Cisyk) against Soviet erasure.
+- Ensure 100% immersion. Use "Переклад" only in the vocab table.
+- Use explicit visual tables for the "грати на" vs "грати в" preposition rules.

@@ -104,6 +104,62 @@ _RUSSICISMS: List[Dict] = [
         "fix": "кумедний / класний / файний",
         "note": "Russian slang 'прикольный'",
     },
+    # Imperative calques: давайте + future perfective → Ukrainian -мо form
+    {
+        "pattern": r"\bдавайте\s+попрактикуємо\b",
+        "term": "давайте попрактикуємо",
+        "fix": "попрактикуймо",
+        "note": "Russian imperative calque 'давайте попрактикуем'",
+    },
+    {
+        "pattern": r"\bдавайте\s+повторимо\b",
+        "term": "давайте повторимо",
+        "fix": "повторімо",
+        "note": "Russian imperative calque 'давайте повторим'",
+    },
+    {
+        "pattern": r"\bдавайте\s+подивимося\b",
+        "term": "давайте подивимося",
+        "fix": "подивімося",
+        "note": "Russian imperative calque 'давайте посмотрим'",
+    },
+    # Lexical Russicisms from A1 proofreading scan
+    {
+        "pattern": r"\bздач[аіу]\b",
+        "term": "здача (change/money)",
+        "fix": "решта",
+        "note": "Russian 'сдача' — Ukrainian uses 'решта'",
+    },
+    {
+        "pattern": r"\bтапочк[иі]\b",
+        "term": "тапочки",
+        "fix": "капці",
+        "note": "Russian 'тапочки' — Ukrainian uses 'капці'",
+    },
+    {
+        "pattern": r"\bнадіятися\b",
+        "term": "надіятися",
+        "fix": "сподіватися",
+        "note": "Russian 'надеяться' — Ukrainian prefers 'сподіватися'",
+    },
+    {
+        "pattern": r"\bдобавити\b",
+        "term": "добавити",
+        "fix": "додати",
+        "note": "Russian 'добавить'",
+    },
+    {
+        "pattern": r"\bхватить\b",
+        "term": "хватить",
+        "fix": "вистачить",
+        "note": "Russian 'хватить'",
+    },
+    {
+        "pattern": r"\bобязательно\b",
+        "term": "обязательно",
+        "fix": "обов'язково",
+        "note": "Direct Russian borrowing",
+    },
 ]
 
 # Pre-compile patterns

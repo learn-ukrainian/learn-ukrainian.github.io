@@ -1,33 +1,33 @@
 # Дослідження: Презентації та візуалізація
 
 ## State Standard Reference
-§3.9; §4.5.1: "Робота: офіційне працевлаштування... організація освітнього процесу (лекція, семінар)... Офіційне й неофіційне спілкування: стилістичні засоби лексики та синтаксису."
-Alignment: Модуль розвиває компетенції для професійної та освітньої сфер (презентація проєктів, звітів), використовуючи офіційно-діловий стиль та засоби візуалізації даних, що відповідає тематичним вимогам стандарту (B1).
+§3.8 (Освіта) та §3.9 (Робота): Організація комунікації в академічних та професійних сферах ("організація освітнього процесу", "офіційне працевлаштування").
+§4.5.1 (Офіційне й неофіційне спілкування): Стилістичні засоби синтаксису, зокрема використання офіційних звертань ("звертання: Олено Петрівно...").
+Alignment: This module bridges vocabulary and syntax for formal presentations, fulfilling B1 requirements for academic and workplace communication.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **презентація** | High / Web Corpus | робити/проводити презентацію, готувати слайди, мультимедійна презентація, успішна презентація |
-| **графік** | Med / Business | графік показує, на графіку видно, лінійний графік, графік зростання |
-| **діаграма** | Med / Academic | кругова діаграма, стовпчаста діаграма, частка на діаграмі, сектор діаграми |
-| **зростати** | High / General | стрімко зростати, поступово зростати, зрости на X відсотків, зростання показників |
-| **падати** | High / General | різко падати, знижуватися до мінімуму, падіння попиту, тенденція до спадання |
-| **тенденція** | Med / Professional | позитивна/негативна тенденція, спостерігати тенденцію, тенденція до зростання |
+| презентація | High | проводити презентацію, мультимедійна презентація |
+| графік | High | лінійний графік, графік показує |
+| діаграма | Medium | кругова діаграма, стовпчаста діаграма |
+| зростати / падати | High | стрімко зростати, різко падати |
+| згідно з | High | згідно з даними, згідно з графіком |
 
 ## Cultural Hooks
-1. **Культура публічних виступів**: В Україні активно розвивається культура публічних виступів (TEDxKyiv, бізнес-форуми), де цінується лаконічність та якісний візуальний супровід, на відміну від старих "паперових" доповідей.
-2. **Академічна вимогливість**: Попри модернізацію, в офіційних та наукових колах України (університети, держустанови) зберігається висока вимога до дотримання літературних норм та офіційного звертання (шановні колеги, панство) під час презентацій.
+1. **Modern Format vs. Legacy:** Contemporary Ukrainian business culture (especially in IT and events like TEDxKyiv) heavily favors dynamic, visually supported pitches, actively moving away from the Soviet-legacy format of monotonous reading ("доповідь з папірця").
+2. **Formal Address:** Ukrainian business etiquette preserves distinct formal addresses like «пані та панове» or «шановне товариство», which set a professional tone immediately.
 
 ## Common Learner Errors
-1. **Калькування прийменників**: *Згідно графіку* (помилка) → *Згідно з графіком* або *Відповідно до графіка* (правильно). Вплив російської мови ("согласно графику").
-2. **Дієприслівникові звороти**: *Аналізуючи діаграму, стає зрозуміло* (помилка: діаграма не аналізує) → *Аналізуючи діаграму, ми бачимо* (правильно: суб'єкт дії — ми).
-3. **Плутанина термінів**: *Графік* (лінії, динаміка) vs *Діаграма* (співвідношення часток) vs *Розклад* (schedule, теж "графік" у побуті). Студенти часто кажуть "графік" на все підряд.
+1. **Russian Calque in Prepositions:** *згідно графіку* (Russian «согласно графику») → Correct: **згідно з графіком** (Instrumental) or **відповідно до графіка** (Genitive).
+2. **Dangling Participles (Дієприслівниковий зворот):** *Аналізуючи графік, стає зрозуміло...* (Incorrect because the action isn't performed by the subject) → Correct: **Аналізуючи графік, ми бачимо...** (The speaker is the subject).
+3. **Prepositions of Change:** Confusing *зрости на 10%* (change by 10%) with *зрости до 10%* (change to a final value of 10%).
 
 ## Cross-References
-- Builds on: **b1-89 (Communication Channels)** — uses basic channel vocabulary; **A2 Numerals** — relies on cardinal numbers.
-- Prepares for: **b1-91 (Feedback & Negotiation)** — presentation leads to Q&A; **B2-PRO** — essential foundation for business tracks.
+- Builds on: b1-89 (Communication Channels)
+- Prepares for: b1-91 (Feedback & Negotiation)
 
 ## Notes for Content Writing
-- **Stylistic Balance**: Maintain a "semi-formal" (напівформальний) register. Accessible but professional. Use forms like "Дозвольте представити", "Зверніть увагу".
-- **Visual Description**: Distinguish clearly between *зрости на 10%* (by 10%) and *зрости до 10%* (to 10%). This is a crucial distinction for the "Describing trends" section.
-- **Narrative Approach**: Use a persona of a "Creative Director" or "Analyst" who teaches *how* to present, not just *what* words to say. Make the "mini-presentation" practice feel like a rehearsal for a real event.
+- **Decolonized Framing:** Frame the transition to dynamic visual presentations as Ukraine integrating into global business practices, shedding rigid post-Soviet academic habits. Ensure "згідно з" is explicitly taught as the authentic Ukrainian form versus the Russianism.
+- **Immersion:** 100% Ukrainian. Do not use English explanations for grammar points (e.g., dangling participles).
+- **Format:** Use tables for opening/closing phrases and clear examples for the grammatical mechanics of describing visual data.

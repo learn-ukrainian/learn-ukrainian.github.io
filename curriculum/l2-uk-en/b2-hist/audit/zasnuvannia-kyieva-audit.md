@@ -1,7 +1,7 @@
 # Audit Report: M06 — zasnuvannia-kyieva.md
 **Level:** B2-HIST | **Module:** M06 | **Phase:** B2 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 18:49:27
+**Generated:** 2026-02-25 20:26:01
 
 ## Configuration
 **Type:** B2-history

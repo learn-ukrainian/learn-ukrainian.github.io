@@ -1,7 +1,7 @@
 # Audit Report: M46 — khotynska-viyna.md
 **Level:** B2-HIST | **Module:** M46 | **Phase:** HIST.5 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:09:29
+**Generated:** 2026-02-25 20:46:56
 
 ## Configuration
 **Type:** B2-history

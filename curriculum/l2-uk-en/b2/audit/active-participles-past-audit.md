@@ -1,7 +1,7 @@
 # Audit Report: M08 — active-participles-past.md
 **Level:** B2 | **Module:** M08 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 14:47:35
+**Generated:** 2026-02-25 10:42:36
 
 ## Configuration
 **Type:** B2-grammar

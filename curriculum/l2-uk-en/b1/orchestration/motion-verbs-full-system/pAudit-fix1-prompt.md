@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 5875/4000 (raw: 6213) | engagement: 0/5 | pedagogy: 8 violations | richness: 63% < 95% min (grammar) - REWRITE needed
+    lesson: 5790/4000 (raw: 6128) | richness: 84% < 95% min (grammar)
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+  📚 PEDAGOGICAL VIOLATIONS FOUND:
+    [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'особові форми:...'.
        → FIX: Vary sentence structure.
-    [LLM_FINGERPRINT_REPETITION] Repetitive LLM rhetorical patterns (4 total): 'не просто X, а Y' x4 — robotic prose
-       → FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 30/100)
-     → 10 violations (significant)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
+     → 1 violations (minor)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/motion-verbs-full-system-audit.md

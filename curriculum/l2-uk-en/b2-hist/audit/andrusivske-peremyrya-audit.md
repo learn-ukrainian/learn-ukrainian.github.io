@@ -1,7 +1,7 @@
 # Audit Report: M60 — andrusivske-peremyrya.md
 **Level:** B2-HIST | **Module:** M60 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:46:01
+**Generated:** 2026-02-25 20:53:14
 
 ## Configuration
 **Type:** B2-history

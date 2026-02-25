@@ -1,7 +1,7 @@
 # Audit Report: M50 — idioms-body-hands-legs.md
 **Level:** B2 | **Module:** M50 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:36:34
+**Generated:** 2026-02-25 10:50:50
 
 ## Configuration
 **Type:** B2-vocab

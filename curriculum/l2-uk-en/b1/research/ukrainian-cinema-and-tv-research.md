@@ -1,36 +1,34 @@
 # Дослідження: Українське кіно та серіали
 
 ## State Standard Reference
-§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; хобі та зацікавлення... театр, кінотеатр, філармонія; фестиваль."
-Alignment: Module covers "кінотеатр" and "фестиваль" (Odesa International Film Festival, Molodist), addressing the leisure topic through the lens of national cinema.
+§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; хобі та зацікавлення... телебачення, інтернет... театр, кінотеатр... фестиваль."
+Alignment: Цей модуль безпосередньо відповідає вимогам стандарту В1 щодо обговорення дозвілля, культурних інтересів, телебачення та відвідування кінотеатрів чи кінофестивалів.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| фільм | High (General) | дивитися фільм, цікавий фільм, документальний фільм, художній фільм |
-| кіно | High (Spoken/General) | йти в кіно, українське кіно, любити кіно, кінотеатр |
-| серіал | High (Media) | новий серіал, сезон серіалу, дивитися серіали на Netflix |
-| знімати | High (Action) | знімати фільм (shoot a film), зніматися в кіно (act in movies) |
-| стрічка | Medium (Journalistic) | нова стрічка, кінострічка (synonym for film) |
-| режисер | Medium (Professional) | відомий режисер, український режисер |
-| дубляж | Medium (Specific) | український дубляж, дивитися в дубляжі |
+| фільм | Висока (конкретний твір) | художній фільм, дивитися фільм, новий фільм |
+| кіно | Висока (мистецтво/місце) | йти в кіно, українське кіно, зніматися в кіно |
+| стрічка | Середня (публіцистика) | документальна стрічка, кінострічка |
+| серіал | Висока (ТБ/стрімінги) | новий серіал, дивитися серіали |
+| серія | Висока (епізод) | перша серія, наступна серія |
+| дубляж | Середня (культурний маркер)| український дубляж, дивитися в дубляжі |
 
 ## Cultural Hooks
-1. **"Тіні забутих предків" (Shadows of Forgotten Ancestors)**: Directed by Serhiy Parajanov (1965). A masterpiece of "Poetic Cinema" that defied Soviet socialist realism by celebrating Hutsul culture and mythology. It is visually stunning and crucial for understanding Ukrainian artistic identity.
-2. **Ukrainian Dubbing Culture**: Since the 2006/2019 language laws, Ukrainian dubbing has become a cultural phenomenon known for its high quality and wit (e.g., "Alf", "The Simpsons", "Cars"). It is a point of national pride.
-3. **"20 днів у Маріуполі" (20 Days in Mariupol)**: Mstyslav Chernov's documentary won Ukraine's first Oscar in 2024. It represents the vital role of documentary cinema in documenting the war and Russian crimes.
+1. **Феномен українського дубляжу**: Популярність українського перекладу почалася в 90-х із телесеріалу «Альф» (блискуча адаптація Олекси Негребецького, який наповнив текст українським гумором та реаліями). Згодом (після 2006 року) якісний дубляж голлівудських фільмів став точкою національної гордості та потужним інструментом популяризації мови.
+2. **Перший Оскар України**: У 2024 році документальна стрічка «20 днів у Маріуполі» режисера Мстислава Чернова здобула премію «Оскар», підкресливши надважливу роль української документалістики у світовому контексті.
 
 ## Common Learner Errors
-1. **Case Mismatch with "Подобатися"**: *Я подобаю цей фільм* (I like this film - incorrect) → **Мені подобається цей фільм** (To me appeals this film). Source: Dative subject structure difficulty.
-2. **False Friend "Series/Episode"**: Confusing *серіал* (TV series) with *серія* (episode). *Я дивлюся нову серію* (I am watching a new episode) vs *Я дивлюся новий серіал* (I am watching a new series).
-3. **Preposition "In the movie"**: *На фільмі* (On the film - incorrect) → **У фільмі** (In the film).
-4. **Passive Voice Overuse**: *Фільм був знятий режисером...* (The film was shot by...) → **Режисер зняв фільм...** (The director shot the film...). Violation of "Agency Pass".
+1. **"Я подобаю"** → **Мені подобається цей фільм**. (Англомовні студенти переносять структуру "I like", забуваючи про давальний відмінок).
+2. **"На фільмі"** → **У фільмі**. (Помилковий вибір прийменника місця під впливом "on TV/on screen").
+3. **Серіал vs Серія** → Студенти часто кажуть "Я дивлюся нову серію" маючи на увазі нове шоу (series), тоді як "серія" – це лише один епізод (episode).
+4. **Пасивний стан** → "Фільм був знятий режисером" замість природного активного: **"Режисер зняв фільм"**.
 
 ## Cross-References
-- **Builds on**: b1-76 (Ukrainian Music Today) — expands cultural vocabulary (genre, style).
-- **Prepares for**: b1-78 (Technology and Startups) — media technology; C1-LIT/HIST modules — deep cultural analysis.
+- Builds on: b1-76 (Ukrainian Music Today)
+- Prepares for: b1-78 (Technology and Startups)
 
 ## Notes for Content Writing
-- **Agency Pass**: Ensure directors and actors "do" things (win awards, create art), rather than things "happening" to them.
-- **Modern Context**: Balance the classic "Poetic Cinema" (Dovzhenko/Parajanov) with the "New Wave" (Lukich, Tsilyk, Nariman Aliev) to show cinema is alive, not just a museum artifact.
-- **Dubbing**: Mention "український дубляж" as a specific selling point for watching movies in Ukrainian learners.
+- **Деколонізація**: Описуючи поетичне кіно (Довженко, Параджанов), акцентуйте, що це був свідомий мистецький спротив уніфікації та радянському соцреалізму, спосіб зберегти українську міфологію та ідентичність.
+- Підкреслюйте суб'єктність (agency): українські режисери творять, фіксують правду, перемагають на фестивалях.
+- Жодного англійського тексту в поясненнях (Immersion 100%).

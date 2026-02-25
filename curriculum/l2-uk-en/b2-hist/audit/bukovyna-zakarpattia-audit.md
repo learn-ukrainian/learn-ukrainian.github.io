@@ -1,7 +1,7 @@
 # Audit Report: M37 — bukovyna-zakarpattia.md
 **Level:** B2-HIST | **Module:** M37 | **Phase:** B2.3a | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 19:40:10
+**Generated:** 2026-02-25 20:46:20
 
 ## Configuration
 **Type:** B2-history

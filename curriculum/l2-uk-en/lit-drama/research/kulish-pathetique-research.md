@@ -95,3 +95,9 @@ forbidden_claims:
 
 ## Seminar-Specific Analysis
 > [!context] Historical Foundation: This work was written during the 'Ukrainization' period of the 1920s. See [LIT: Berezil Theater](slug:kurbas-berezil-theater) for the broader political context.
+
+### Decolonial Verification
+Focus on Soviet linguistic homogenization, Avant-Garde theatre, Executed Renaissance. Clearly separate Mykola Kulish from Panteleimon Kulish.
+
+## Лінгвістичний вимір
+- Цільові слова з IPA транскрипцією.

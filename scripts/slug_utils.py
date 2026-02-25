@@ -66,7 +66,7 @@ def status_path(track_dir: Path, slug: str) -> Path:
     # Fallback: try numeric-prefixed (e.g., "01-the-cyrillic-code-i.json")
     status_dir = track_dir / "status"
     if status_dir.exists():
-        matches = list(status_dir.glob(f"*-{bare}.json"))
+        matches = list(status_dir.glob(f"[0-9]*-{bare}.json"))
         if matches:
             return matches[0]
     return canonical  # Return canonical even if missing (for creation)

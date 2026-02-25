@@ -1,36 +1,34 @@
 # Дослідження: Основи бізнесу
 
 ## State Standard Reference
-§3.9: "Робота: офіційне працевлаштування та робота за контрактом; робочий час (початок і кінець робочого дня, обідня перерва) і час на відпочинок; відпустка; вихідні дні; оплата праці (зарплатня)."
-§3.12: "Послуги: банк; пошта; бібліотека; спортзал, басейн; перукарня; страхова компанія."
-Alignment: This module covers the vocabulary and communicative intentions related to official employment, financial services (profit, investment, banks), and business structures (company, enterprise), directly addressing §3.9 and §3.12 of the B1 standard.
+§3.9. Робота: "офіційне працевлаштування та робота за контрактом; робочий час (початок і кінець робочого дня, обідня перерва); оплата праці (зарплатня)."
+§3.12. Послуги: "банк; страхова компанія."
+Alignment: Цей модуль безпосередньо розкриває лексику для офіційного працевлаштування, ведення контрактів та взаємодії зі страховими компаніями та банками, що повністю відповідає тематичному каталогу рівня B1.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| бізнес | High (General/Media) | малий бізнес, власний бізнес, вести бізнес, бізнес-план |
-| компанія | High | IT-компанія, страхова компанія, міжнародна компанія, заснувати компанію |
-| прибуток | Medium-High | чистий прибуток, отримувати прибуток, податок на прибуток |
-| угода | Medium-High | укласти угоду, підписати угоду, вигідна угода |
-| клієнт | High | постійний клієнт, обслуговування клієнтів, залучати клієнтів |
-| інвестиція | Medium | залучати інвестиції, іноземні інвестиції, повернення інвестицій |
-| підприємець | Medium | приватний підприємець, успішний підприємець |
+| компанія | Висока частотність (сучасний бізнес, ІТ) | заснувати компанію, ІТ-компанія, страхова компанія |
+| підприємство | Висока (офіційний, юридичний контекст) | державне підприємство, промислове підприємство |
+| фірма | Середня (часто як синонім компанії) | юридична фірма, заснувати фірму |
+| прибуток | Висока | чистий прибуток, отримувати прибуток, податок на прибуток |
+| угода | Середня-Висока | укласти угоду, підписати угоду, вигідна угода |
 
 ## Cultural Hooks
-1. **The Simirenko Legacy**: The Simirenko family (19th century) were not only successful sugar magnates and industrial innovators but also the primary financiers of Ukrainian literature, famously funding the 1860 edition of Taras Shevchenko's "Kobzar" when state support was non-existent.
-2. **The Tereshchenko Philanthropy**: The Tereshchenko dynasty used their immense sugar wealth to build hospitals, universities (like KPI in Kyiv), and museums, establishing a model of "ethical entrepreneurship" where 80% of profits often went to charity. Their motto was "Striving for public benefit."
+1. Видання «Кобзаря» 1860 року: Видатний український підприємець і меценат Платон Симиренко профінансував третє видання «Кобзаря» Тараса Шевченка, виділивши 1100 рублів на друк. Наклад склав понад 6000 примірників.
+2. Меценатство Терещенків: Родина Терещенків віддавала до 80% своїх прибутків на благодійність під гаслом «Прагнення до суспільної користі», фінансуючи лікарні (зокрема дитячу лікарню «Охматдит») та Київський політехнічний інститут.
 
 ## Common Learner Errors
-1. **Lexical Calques (Surzhyk)**: "відмінити зустріч" (calque from cancel/otmenit') → **скасувати зустріч** (correct). *Note: "відмінити" refers to grammatical declension.*
-2. **False Friends**: "вірне рішення" (faithful decision) → **правильне рішення** (correct decision). *Note: "вірний" primarily means loyal/faithful in Ukrainian.*
-3. **Time Expressions**: "на протязі року" (in a draft/breeze) → **протягом року** (during the year).
-4. **Vocative Case Neglect**: Addressing partners as "Шановний Іван" → **Шановний Іване** (mandatory vocative in formal correspondence).
+1. Калька «відмінити» замість «скасувати» → правильно: «скасувати зустріч». («Відмінити» стосується лише граматичного відмінювання).
+2. Калька «вірне рішення» замість «правильне рішення» → правильно: «правильне рішення» (в українській мові «вірний» означає відданий, надійний).
+3. Русизм «на протязі року» замість «протягом року» → правильно: «протягом року» (слово «протяг» означає рух повітря, сквозняк).
+4. Звертання у називному відмінку замість кличного → правильно: «Пане директоре», «Шановний Іване» (обов’язково для офіційного ділового листування).
 
 ## Cross-References
-- **Builds on**: b1-65 (Relationships - formal vs informal address), A2 Work vocabulary.
-- **Prepares for**: b1-67 (Travel Geography - business trips), B2 Professional Track modules.
+- Builds on: b1-65 (Relationships)
+- Prepares for: b1-67 (Travel Geography)
 
 ## Notes for Content Writing
-- Focus on the distinction between *компанія*, *фірма* (often colloquial or smaller), and *підприємство* (formal, industrial, or official unit).
-- Emphasize the "agency" of Ukrainian business: "Ми підписали угоду" instead of "Угода була підписана".
-- Introduce "ФОП" (Фізична особа-підприємець) as a key cultural/legal concept for modern Ukrainian business, as it's the standard for small business/IT.
+- Український бізнес-ландшафт має унікальне поняття ФОП (Фізична особа-підприємець), що є стандартом для ІТ-сфери та малого бізнесу. Варто пояснити це як культурну та лексичну особливість.
+- Забезпечити активну агентність: фокусуватися на "Ми підписали договір", уникаючи пасивного стану.
+- Звертати увагу на фонетику: пояснювати чергування та наголос, але не використовувати латинську транслітерацію (IPA лише у словнику).

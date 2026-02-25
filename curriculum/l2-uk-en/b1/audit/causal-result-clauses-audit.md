@@ -1,7 +1,7 @@
 # Audit Report: M36 — causal-result-clauses.md
 **Level:** B1 | **Module:** M36 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 20:18:05
+**Generated:** 2026-02-25 10:44:27
 
 ## Configuration
 **Type:** B1-grammar

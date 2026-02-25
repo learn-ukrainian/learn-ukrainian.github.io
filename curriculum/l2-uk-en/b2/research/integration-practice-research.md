@@ -1,34 +1,37 @@
 # Дослідження: Практика інтеграції B2.2
 
 ## State Standard Reference
-§4.4.1.2: "Стилістичні засоби лексики: антоніми, синоніми... епітети, метафори... скорочення... зменшувально-пестливі форми... складні слова"
-§4.3.4: "Складне речення: Складнопідрядні речення зі з’ясувальною, означальною, часовою, причини, умови, допусту частинами"
-Alignment: Module focuses on integrating phraseology (lexical stylistics) into complex syntactic structures (complex sentences), directly addressing the synthesis of §4.4.1.2 and §4.3.4 required for B2 mastery.
+§4.4.1.2: "Стилістичні засоби лексики: антоніми, синоніми, омоніми, епітети, метафори, скорочення, зменшувально-пестливі форми, складні слова, звуконаслідування."
+§4.3.4: "Складне речення: Складнопідрядні речення зі з’ясувальною підрядною частиною... з означальною частиною... із часовою підрядною частиною... з відношеннями причини... умови... допусту."
+Alignment: Цей модуль інтегрує лексичну стилістику та синтаксис складного речення, дозволяючи учням рівня B2 будувати складні, стилістично багаті конструкції з підрядними частинами різних типів та доречними синонімами, епітетами й метафорами.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| термін | High (Academic/General) | термін дії (validity period), термін придатності (shelf life), у визначений термін (within the specified period), науковий термін (scientific term) |
-| поняття | High (Abstract) | основні поняття (basic concepts), поняття про (concept of), розширити поняття (expand the concept), підмінити поняття (substitute concepts) |
-| процес | High (General) | навчальний процес (educational process), виробничий процес (production process), творчий процес (creative process), у процесі обговорення (in the process of discussion) |
-| метод | High (Scientific) | науковий метод (scientific method), ефективний метод (effective method), метод спроб і помилок (trial and error method), дедуктивний метод (deductive method) |
-| аналіз | High (Academic) | глибокий аналіз (deep analysis), системний аналіз (systems analysis), порівняльний аналіз (comparative analysis), зробити аналіз (to conduct an analysis) |
+| термін | Висока (наук./офіц.) | науковий термін, ввести термін, термін дії |
+| поняття | Висока (абстрактна) | базове поняття, підміняти поняття, оперувати поняттям |
+| процес | Дуже висока | творчий процес, незворотний процес, у процесі |
+| метод | Висока | дедуктивний метод, метод спроб і помилок |
+| аналіз | Висока (проф.) | системний аналіз, глибокий аналіз, зробити аналіз |
+| синтез | Середня | синтез мистецтв, аналіз і синтез, здійснити синтез |
+| дослідження | Висока (акад.) | наукове дослідження, об'єкт дослідження, проводити дослідження |
+| брати участь | Дуже висока (сталий вираз) | брати активну участь, брати безпосередню участь |
 
 ## Cultural Hooks
-1. **"Слово до слова — зложиться мова"** (Word by word, a language is formed): A perfect proverb for an integration module, emphasizing how individual elements (lexis, syntax) build the whole system.
-2. **"Птицю пізнати по пір'ю, а людину по мові"** (A bird is known by its feathers, and a person by their language): Connects language mastery to identity and reputation, relevant for B2 professional contexts.
+1. Прислів'я «Слово до слова — зложиться мова»: відображає концепцію акумулятивного навчання та системності мови як живої структури.
+2. Приказка «Птицю пізнати по пір'ю, а людину по мові»: ілюструє соціальне та ідентифікаційне значення мовлення, що ідеально підходить для розуміння стилістичних регістрів (відповідно до §4.4.1).
 
 ## Common Learner Errors
-1. **Dangling Participle (Неправильний дієприслівниковий зворот)** → *Wrong*: "Читаючи книгу, мені стало цікаво." (Reading the book, it became interesting to me.) → *Correct*: "Читаючи книгу, я зацікавився." (Reading the book, I became interested.) — *Why*: The subject of the main clause must perform the action in the participial phrase.
-2. **Russian Calques (Калькування)** → *Wrong*: "Приймати участь" → *Correct*: "Брати участь" (To participate); *Wrong*: "В кінці кінців" → *Correct*: "Зрештою" (Eventually). — *Why*: Direct translation from Russian idioms.
-3. **Pleonasm (Тавтологія)** → *Wrong*: "У квітні місяці", "головний пріоритет" → *Correct*: "У квітні", "пріоритет". — *Why*: Redundant qualifiers used for "emphasis" but stylistically poor.
+1. Калька з російської: використання «приймати участь» замість нормативного «брати участь» (дієслово «приймати» в українській має іншу семантику: приймати ліки, приймати гостей).
+2. Синтаксична помилка: неправильна побудова дієприслівникового звороту («Читаючи книгу, мені стало цікаво» замість «Коли я читав книгу, мені стало цікаво»). Зворот має узгоджуватися з підметом (тим, хто виконує дію).
+3. Плеоназми та тавтологія: «головний пріоритет» (пріоритет і так є головним), «у квітні місяці» (квітень — це вже місяць).
+4. Лексична калька: використання «в кінці кінців» замість питомих «врешті-решт» або «зрештою».
 
 ## Cross-References
-- Builds on: M45-46 (Proverbs), M47-54 (Idioms), M55-66 (Synonyms), M67-68 (Conjunctions)
-- Prepares for: M70 (Checkpoint B2.2), B2.3 Phase (Domain Vocabulary)
+- Builds on: M45-46 (прислів'я), M47-54 (ідіоми), M55-66 (синоніми), M67-68 (складні сполучники).
+- Prepares for: M70 (контрольна точка фази B2.2) та модулі фази B2.3 (професійна й доменна лексика).
 
 ## Notes for Content Writing
-- The focus is **Synthesis**. Do not just reteach grammar; force the user to *use* grammar to explain phraseology.
-- Use the "Systems Analyst" persona to frame language as a "system" where components (idioms, syntax) must be "integrated" for efficiency.
-- Include a "Debugging" section for the common errors (Dangling Participles and Calques) — fits the Analyst persona perfectly.
-- Use the proverb "Слово до слова..." as the epigraph or concluding thought.
+- Уникати порівнянь з російською. Українську мову слід представляти як самостійну, логічну й багату систему. Замість "На відміну від російської, ми не кажемо 'приймати участь'", використовувати формулювання: "Питомо українським нормативним висловом є 'брати участь', що відображає активну дію суб'єкта".
+- Весь модуль пишеться виключно українською мовою (Immersion: 100%).
+- Особа викладача: System Analyst. Використовувати логічний, структурний підхід ("баг", "відлагодження", "алгоритм перевірки", "синтез").

@@ -1,7 +1,7 @@
 # Audit Report: M41 — aspect-nuances-secondary-imperfectivization.md
 **Level:** B2 | **Module:** M41 | **Phase:** B2.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:00:32
+**Generated:** 2026-02-25 10:45:06
 
 ## Configuration
 **Type:** B2-grammar

@@ -1,7 +1,7 @@
 # Audit Report: M55 — kozatska-derzhava.md
 **Level:** B2-HIST | **Module:** M55 | **Phase:** HIST.6 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:14:13
+**Generated:** 2026-02-25 20:47:30
 
 ## Configuration
 **Type:** B2-history
@@ -17,15 +17,13 @@
 **Transliteration:** Not allowed
 
 ## PEDAGOGICAL VIOLATIONS
-- **[EUPHONY]** Line 92: «праці і у» — і між голосними; має бути «й у»
-  - FIX: Replace «і» with «й» (between vowels)
 - **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (5 total): 'не просто X, а Y' x5 — robotic prose
   - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 5107/5000 (raw: 5468)

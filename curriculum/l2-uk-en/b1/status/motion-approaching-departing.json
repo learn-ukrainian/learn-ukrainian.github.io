@@ -2,10 +2,10 @@
   "module": "motion-approaching-departing",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T16:55:48.849259Z",
+  "last_audit": "2026-02-25T10:43:07.509257Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-23T23:05:17.771987Z",
+    "md": "2026-02-24T22:22:53.758221Z",
     "meta": "2026-02-23T23:03:22.600632Z",
     "activities": null,
     "vocabulary": null,
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "fail",
       "violations": 2,
-      "message": "2785/4000 (raw: 3160) | richness: 75% < 95% min (grammar) - REWRITE needed"
+      "message": "2787/4000 (raw: 3162) | richness: 75% < 95% min (grammar) - REWRITE needed"
     },
     "activities": {
       "status": "deferred",

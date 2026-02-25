@@ -1,7 +1,7 @@
 # Audit Report: M12 — parenthetical-expressions.md
 **Level:** B2 | **Module:** M12 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 16:20:24
+**Generated:** 2026-02-25 10:42:55
 
 ## Configuration
 **Type:** B2-grammar
@@ -17,7 +17,7 @@
 **Transliteration:** Not allowed
 
 ## Gates
-- **Words:** ✅ 5292/4000 (raw: 5829)
+- **Words:** ✅ 5294/4000 (raw: 5831)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -49,7 +49,7 @@
 | variety | 0.97 | - | 97% | 10% | 9.7% |
 | cultural | 2 | 3 | 67% | 10% | 6.7% |
 | realworld | 15 | 3 | 100% | 10% | 10.0% |
-| visual | 7 | 3 | 100% | 5% | 5.0% |
+| visual | 8 | 3 | 100% | 5% | 5.0% |
 | questions | 23 | 5 | 100% | 5% | 5.0% |
 | tables | 2 | 2 | 100% | 4% | 4.0% |
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
@@ -61,7 +61,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вставні слова та вирази** | ✅ | 84 | Included in Core |
-| **Вступ: Природа вставних конструкцій** | ✅ | 776 | Included in Core |
+| **Вступ: Природа вставних конструкцій** | ✅ | 778 | Included in Core |
 | **Впевненість та емоційне ставлення** | ✅ | 1077 | Included in Core |
 | **Джерела інформації та логіка викладу** | ✅ | 1079 | Included in Core |
 | **Пунктуація та пастки гомонімії** | ✅ | 1099 | Included in Core |

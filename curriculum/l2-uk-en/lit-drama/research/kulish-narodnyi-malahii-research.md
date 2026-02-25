@@ -107,3 +107,8 @@ forbidden_claims:
 
 ### Підсумок: Рецепція та вплив на нащадків
 Заборона і знищення твору в СРСР. Повернення в український простір у 1990-ті роки (постановка Леся Танюка). Вплив Куліша на сучасну українську драматургію. Відкриті питання: як розпізнати руйнівну ідеологію сьогодні?
+### Decolonial Verification
+Focus on Soviet linguistic homogenization, Avant-Garde theatre, Executed Renaissance. Clearly separate Mykola Kulish from Panteleimon Kulish.
+
+## Лінгвістичний вимір
+- Цільові слова з IPA транскрипцією.

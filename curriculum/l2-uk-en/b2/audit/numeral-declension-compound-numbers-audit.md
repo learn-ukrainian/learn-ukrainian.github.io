@@ -1,7 +1,7 @@
 # Audit Report: M32 — numeral-declension-compound-numbers.md
 **Level:** B2 | **Module:** M32 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 19:35:02
+**Generated:** 2026-02-25 10:44:22
 
 ## Configuration
 **Type:** B2-grammar

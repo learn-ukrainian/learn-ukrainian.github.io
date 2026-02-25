@@ -2,7 +2,7 @@
   "module": "kozatske-viisko",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:26:08.130325Z",
+  "last_audit": "2026-02-25T20:47:01.453249Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T21:24:04.716082Z",
@@ -24,14 +24,14 @@
       "message": "5694/5000 (raw: 6177)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "5/3"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "25/20"
     },
     "naturalness": {
       "status": "info",
@@ -49,16 +49,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 7,
     "fail_count": 0,
-    "deferred_count": 3
+    "deferred_count": 0
   }
 }

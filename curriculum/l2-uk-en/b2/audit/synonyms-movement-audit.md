@@ -1,7 +1,7 @@
 # Audit Report: M57 — synonyms-movement.md
 **Level:** B2 | **Module:** M57 | **Phase:** B2.2 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 23:57:25
+**Generated:** 2026-02-25 11:13:07
 
 ## Configuration
 **Type:** B2-vocab

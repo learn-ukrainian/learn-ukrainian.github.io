@@ -1,7 +1,7 @@
 # Audit Report: M22 — register-literary-ukrainian.md
 **Level:** B2 | **Module:** M22 | **Phase:** B2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 17:53:53
+**Generated:** 2026-02-25 10:43:40
 
 ## Configuration
 **Type:** B2-grammar

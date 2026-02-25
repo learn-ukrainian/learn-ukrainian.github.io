@@ -1,7 +1,7 @@
 # Audit Report: M25 — checkpoint-aspect-comparison.md
 **Level:** A2 | **Module:** M25 | **Phase:** A2.2 | **Pedagogy:** TTT | **Target:** 2500
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:48
+**Generated:** 2026-02-25 20:35:47
 
 ## Configuration
 **Type:** A2-checkpoint

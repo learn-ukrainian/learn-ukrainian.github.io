@@ -1,35 +1,34 @@
 # Дослідження: Професійні звіти: Основи
 
 ## State Standard Reference
-§3.11: "Робота: ...ділові переговори; укладання ділових угод і контрактів."
-§4.3.3.1: "Односкладні речення з головним членом – дієсловом: ...безособові речення: Було приємно дивитися... Там усе правильно записано."
-§4.2.6: "Утворення іменників – назв дії (суфікси -ння, -ення): читання, сполучання, креслення..."
-Alignment: Module teaches the "Official-Business Style" (Офіційно-діловий стиль) required for the "Work" theme, focusing on impersonal constructions (State Standard §4.3.3.1) and verbal nouns (§4.2.6) to achieve the necessary formal register.
+§4.2.6: "Утворення іменників – назв діяльності (суфікси -нн-, -енн-, -інн-): читати – читання... навантажувати – навантаження..."
+§4.3.3.1: "Односкладні речення з головним членом – дієсловом... безособові речення: Було приємно дивитися на веселих дітей. Там усе правильно записано."
+*Примітка: §3.11 у Стандарті стосується тематики (напр., Робота, Послуги), а не стилістики.*
+Alignment: Цей модуль безпосередньо реалізує вимоги B2 щодо використання віддієслівних іменників (§4.2.6) та безособових конструкцій (§4.3.3.1) у професійному мовленні.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **звіт** | High (Business/Academic) | складати звіт, річний звіт, фінансовий звіт, схвалити звіт, звіт про виконану роботу |
-| **висновок** | High (General/Academic) | дійти висновку, зробити висновки, головний висновок, попередні висновки |
-| **аналіз** | High (Academic/Pro) | проводити аналіз, глибокий аналіз, порівняльний аналіз, на основі аналізу |
-| **підсумок** | Medium (General) | підбивати підсумки (NOT підводити!), у підсумку, загальний підсумок |
-| **дослідження** | High (Academic) | об'єкт дослідження, методи дослідження, результати дослідження |
+| звіт | High (Professional) | складати звіт (не "робити звіт"), фінансовий звіт |
+| аналіз | High (Academic/Pro) | проводити аналіз, на основі аналізу |
+| підсумок | High (Professional) | підбивати підсумки, у підсумку |
+| згідно з | High (Formal Register)| згідно з інструкцією, згідно з даними |
 
 ## Cultural Hooks
-1. **Historical Roots**: Unlike the stereotype of Ukrainian being a "peasant language", Ukraine has a deep tradition of administrative language dating back to the **General Military Chancellery** (Генеральна військова канцелярія) of the Cossack Hetmanate (17th century). They developed unique record-keeping practices distinct from Polish or Muscovite models, proving that Ukrainian has been a language of statecraft for centuries.
-2. **Modern Shift**: Contemporary Ukrainian business reporting is shifting away from Soviet-style "kantseliaryzm" (wordy, passive, bureaucratic) towards "Western/Global" standards (concise, analytical, action-oriented), yet maintaining the specific grammar of the official style (like *згідно з* + Instr).
+1. **Історичне коріння**: Український діловий стиль має глибокі традиції, які сягають часів Генеральної військової канцелярії Гетьманщини (17-18 ст.). Це спростовує міф про те, що ділова українська є лише "перекладом з російської".
+2. **Дерадянізація мови**: Сучасний український корпоративний сектор активно відмовляється від радянського "канцеляризму" (штучної ускладненості), переходячи до лаконічних глобальних стандартів із збереженням природної української граматики.
 
 ## Common Learner Errors
-1. **Calques from English/Russian**: *Приймати участь* (Incorrect) → **Брати участь** (Correct) — "To take part".
-2. **Preposition Errors**: *Згідно інструкції* (Incorrect) → **Згідно з інструкцією** (Correct) — "According to".
-3. **Wrong Verb for "Summarize"**: *Підводити підсумки* (Calque from Russian "подводить итоги") → **Підбивати підсумки** (Correct).
-4. **Pleonasms**: *Пам'ятний сувенір*, *Вільна вакансія*, *Своя автобіографія* — using redundant adjectives is a marker of poor style in reports.
+1. *приймати участь* замість *брати участь* — Калька з російської мови.
+2. *підводити підсумки* замість *підбивати підсумки* — Поширена калька у діловому мовленні.
+3. *згідно інструкції* замість *згідно з інструкцією* — Пропуск прийменника "з" та помилка у відмінку (потрібен орудний).
+4. Зловживання активним станом ("Ми виявили") там, де офіційний стиль вимагає безособовості ("Було виявлено").
 
 ## Cross-References
-- Builds on: **M85-86** (Professional Email) — moves from short messages to long-form documents.
-- Prepares for: **M88** (Advanced Reports) and **M94** (Final Exam).
+- Builds on: M85-86 (Professional Emails)
+- Prepares for: M88 (Advanced Reports), M94 (Final Exam)
 
 ## Notes for Content Writing
-- **Tone**: Formal but modern. Avoid "dry" Soviet bureaucracy, but maintain distance (impersonal).
-- **Structure**: Emphasize the "Executive Summary" (Резюме) concept — distinct from a CV (also "резюме" in Ukrainian, context matters).
-- **Grammar focus**: Push heavy on **verbal nouns** (-ння/-ення) as they are the hallmark of this style (*виконання* замість *ми виконали*, *забезпечення* замість *ми забезпечили*).
+- Уникайте російських порівнянь; акцентуйте на тому, що безособовість та віддієслівні іменники є природною ознакою високого стилю української мови.
+- Забезпечте 100% українськомовне занурення; жодних англійських пояснень у тексті.
+- Використовуйте модульні дієслова (можливо, варто зазначити) для згладжування категоричності у рекомендаціях звіту.

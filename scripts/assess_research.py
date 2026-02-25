@@ -85,8 +85,11 @@ TRACKS = [
     {"id": "lit-fantastika", "name": "LIT-FANTASTIKA", "path": "lit-fantastika"},
     {"id": "lit-hist-fic", "name": "LIT-HIST-FIC", "path": "lit-hist-fic"},
     {"id": "lit-humor", "name": "LIT-HUMOR", "path": "lit-humor"},
-    {"id": "lit-juvenile", "name": "LIT-JUVENILE", "path": "lit-juvenile"},
+    {"id": "lit-youth", "name": "LIT-YOUTH", "path": "lit-youth"},
     {"id": "lit-war", "name": "LIT-WAR", "path": "lit-war"},
+    {"id": "lit-doc", "name": "LIT-DOC", "path": "lit-doc"},
+    {"id": "lit-drama", "name": "LIT-DRAMA", "path": "lit-drama"},
+    {"id": "lit-crimea", "name": "LIT-CRIMEA", "path": "lit-crimea"},
     {"id": "oes", "name": "OES", "path": "oes"},
     {"id": "ruth", "name": "RUTH", "path": "ruth"},
 ]

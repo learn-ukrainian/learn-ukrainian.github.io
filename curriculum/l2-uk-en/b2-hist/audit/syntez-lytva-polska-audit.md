@@ -1,7 +1,7 @@
 # Audit Report: M40 — syntez-lytva-polska.md
 **Level:** B2-HIST | **Module:** M40 | **Phase:** HIST.4 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 20:24:04
+**Generated:** 2026-02-25 20:46:30
 
 ## Configuration
 **Type:** B2-history

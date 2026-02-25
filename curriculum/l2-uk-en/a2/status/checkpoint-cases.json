@@ -2,11 +2,11 @@
   "module": "checkpoint-cases",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:17:24.905423Z",
+  "last_audit": "2026-02-25T20:35:46.624196Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-22T21:56:51.633467Z",
-    "meta": "2026-02-22T21:56:07.725233Z",
+    "meta": "2026-02-24T22:37:07.221274Z",
     "activities": "2026-02-22T21:53:16.679496Z",
     "vocabulary": "2026-02-22T21:53:17.085151Z",
     "plan": "2026-02-20T21:00:15.023721Z",
@@ -49,15 +49,17 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
-    "blocking_issues": [],
-    "pass_count": 7,
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors"
+    ],
+    "pass_count": 6,
     "fail_count": 0,
     "deferred_count": 0
   }

@@ -1,39 +1,34 @@
 # Дослідження: Фінальний іспит B1
 
 ## State Standard Reference
-§1: "Середній рівень першого ступеня (В1) засвідчує основне ознайомлення зі структурою української мови... здатність до тематично широкого спілкування в повсякденних ситуаціях... в умовах комунікації з елементами непередбачуваності."
-Alignment: This final exam module assesses the cumulative B1 competencies: reading, listening, writing, speaking, and linguistic competence (aspect, motion verbs, complex sentences) as defined in the standard.
+§В1 (Загальна характеристика): "Середній рівень першого ступеня (В1) засвідчує основне ознайомлення зі структурою української мови, переважне розуміння системних зв’язків та здатність до тематично широкого спілкування в повсякденних ситуаціях і в межах тем за вибором в умовах комунікації з елементами непередбачуваності."
+Alignment: Цей підсумковий модуль перевіряє здатність студента спілкуватися в академічному та повсякденному контекстах, розуміти культурні нюанси (забобони, 12-бальну систему) та правильно використовувати складні граматичні конструкції (види дієслів, дієслова руху, підрядні речення), що безпосередньо відповідає вимогам стандарту B1.
 
 ## Vocabulary Frequency
-| Word | Frequency | Key collocations |
-|------|-----------|------------------|
-| іспит | High | складати/скласти іспит, провалити іспит, готуватися до іспиту, вступний іспит |
-| оцінка | High | отримати оцінку, висока/низька оцінка, 12-бальна шкала, оцінювання знань |
-| результат | High | чекати на результат, оголосити результати, результат тесту, позитивний результат |
-| бал | Medium | прохідний бал, набрати бали, середній бал |
-| вступ | Medium | вступ до університету, умови вступу, вступна кампанія |
+| Word | Frequency / Source | Key collocations |
+|------|-------------------|------------------|
+| іспит | High (Academic) | складати іспит, скласти іспит, вступний іспит, провалити іспит |
+| оцінка | High | отримати оцінку, висока оцінка, 12-бальна шкала оцінювання |
+| результат | High | позитивний результат, оголосити результати, результат тесту |
+| бал | Medium (Testing) | прохідний бал, набрати бали, середній бал |
+| вступ | Medium | вступна кампанія, вступ до університету, умови вступу |
+| НМТ / ЗНО | High (Edu/News) | готуватися до НМТ, формат тестування |
 
 ## Cultural Hooks
-1. **12-point Grading System**: Ukraine uses a 12-point scale in schools. 1-3 is failing (Initial), 4-6 is passing (Sufficient), 7-9 is good (Average), and 10-12 is excellent (High). This differs from the 5-point system used in many post-Soviet countries.
-2. **NMT (National Multi-Subject Test)**: Since 2022, the ZNO (External Independent Evaluation) has been replaced by the NMT for university admission due to the war. It's a computer-based test covering Ukrainian language, math, and history + optional subject.
-3. **Student Superstitions**: Common beliefs include "calling Freebie" (кликати Шару) out the window before an exam, or putting a textbook under the pillow to absorb knowledge by osmosis.
+1. **Закликання шари (Catching a Freebie):** Найвідоміша студентська традиція. Опівночі перед іспитом студенти висуваються у вікно, відкривають залікову книжку і кричать: «Шара, прийди!», після чого миттєво її закривають, щоб «спіймати» удачу і здати іспит без зусиль.
+2. **12-бальна шкала оцінювання:** Наприкінці 1990-х – на початку 2000-х років Україна відмовилася від радянської 5-бальної системи, запровадивши сучасну 12-бальну шкалу. Вона дозволяє більш гнучко та об'єктивно оцінювати знання (1-3 бали — початковий рівень, 4-6 — середній, 7-9 — достатній, 10-12 — високий).
+3. **Знання через сон:** Популярний забобон — класти підручник або конспект під подушку в ніч перед іспитом, сподіваючись, що інформація «перетече» в голову під час сну.
 
 ## Common Learner Errors
-1. **Aspect Confusion**: Using imperfective (`читав`) instead of perfective (`прочитав`) when reporting exam results (process vs. completion).
-   *   *Error*: "Я здавав екзамен і отримав 10." (implies incomplete action)
-   *   *Correct*: "Я склав екзамен і отримав 10." (implies success)
-2. **Motion Verbs**: Confusing unidirectional (`йти`) and multidirectional (`ходити`) in the context of attending school/university.
-   *   *Error*: "Я йду в університет щодня."
-   *   *Correct*: "Я ходжу в університет щодня."
-3. **False Friends**: Using `здавати іспит` (to take an exam/hand it in) vs `скласти іспит` (to pass an exam).
-   *   *Note*: In strict standard Ukrainian, `скласти іспит` is preferred for "to pass", while `здавати` often implies the process of taking it or handing in papers.
+1. **«Здавати іспит» → «Складати іспит»:** Поширена помилка-суржик. Українською «здавати» можна документи, папери або здаватися в полон. Процес проходження тестування — це виключно «складати іспит» (недоконаний вид), а успішний результат — «скласти іспит» (доконаний вид).
+2. **«Получати оцінку» → «Отримувати оцінку»:** Слово «получати» є калькою. Правильне дієслово для набуття балів, сертифікатів або оцінок — «отримувати» / «отримати».
+3. **Плутанина дієслів руху:** Використання односпрямованого «йти» (дія відбувається зараз: *я йду на іспит*) замість різноспрямованого «ходити» (регулярна дія: *я ходжу в університет щодня*).
 
 ## Cross-References
-- Builds on: B1.1 (Aspect), B1.2 (Motion), B1.3 (Complex Sentences), B1-91 (Communication)
-- Prepares for: B2-01 (Start of B2 Level - Academic/Professional focus)
+- Builds on: b1-06 (Види дієслів), b1-16 (Дієслова руху), b1-26 (Складні речення), b1-52..b1-86 (Лексика та Культура)
+- Prepares for: b2-01 (Початок рівня B2), де акцент зміщується на академічне мовлення, складні дієприкметникові звороти та пасивний стан.
 
 ## Notes for Content Writing
-- **Tone**: Formal yet supportive. The persona is a "Certification Examiner".
-- **Structure**: The module acts as a "Final Exam" simulation. It should feel like a real test environment but with educational scaffolding.
-- **Pedagogy**: Use the "Analysis" section to explain *why* certain answers are correct in the mock exam, reinforcing B1 grammar points (aspect, motion, syntax).
-- **Immersion**: 100% Ukrainian. Explain exam rubrics and feedback in Ukrainian.
+- **Decolonized framing:** Пояснюйте 12-бальну систему як усвідомлений крок незалежної України геть від жорсткої та каральної радянської системи оцінювання. Категорично виправляйте лексику («сдавать» -> складати), пояснюючи автентичну українську норму без посилань на російську мову як на базу.
+- **Immersion:** 100% українська мова. Використовуйте зрозумілі українські інструкції для завдань.
+- **Tone:** Персона екзаменатора має бути професійною, але дружньою, яка розуміє стрес студентів і використовує фольклор (забобони) як цікавий інструмент для тестування читання та аудіювання.

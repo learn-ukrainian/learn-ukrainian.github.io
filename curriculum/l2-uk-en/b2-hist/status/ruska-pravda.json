@@ -2,11 +2,11 @@
   "module": "ruska-pravda",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T18:49:58.072589Z",
+  "last_audit": "2026-02-25T20:26:30.336891Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T01:25:53.868172Z",
-    "meta": "2026-02-19T13:51:04.049850Z",
+    "meta": "2026-02-24T22:37:07.790112Z",
     "activities": null,
     "vocabulary": null,
     "plan": "2026-02-18T19:03:37.148232Z",

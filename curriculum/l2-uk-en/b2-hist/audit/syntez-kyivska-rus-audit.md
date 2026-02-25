@@ -1,7 +1,7 @@
 # Audit Report: M20 — syntez-kyivska-rus.md
 **Level:** B2-HIST | **Module:** M20 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 18:50:33
+**Generated:** 2026-02-25 20:27:02
 
 ## Configuration
 **Type:** B2-history

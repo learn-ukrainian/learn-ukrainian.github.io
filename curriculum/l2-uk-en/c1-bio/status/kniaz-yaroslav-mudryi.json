@@ -2,15 +2,15 @@
   "module": "kniaz-yaroslav-mudryi",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-21T19:25:51.241921Z",
+  "last_audit": "2026-02-25T20:36:08.749348Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T19:25:50.425139Z",
+    "md": "2026-02-21T20:20:11.644182Z",
     "meta": "2026-02-19T11:24:48.095251Z",
     "activities": "2026-02-19T11:35:54.271496Z",
     "vocabulary": "2026-02-18T18:39:32.355371Z",
     "plan": "2026-02-17T13:37:38.095912Z",
-    "research": "2026-02-18T18:24:41.019637Z"
+    "research": "2026-02-22T10:35:24.534547Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5316/5000 (raw: 5561) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "5316/5000 (raw: 5561)"
     },
     "activities": {
       "status": "pass",
@@ -46,19 +46,23 @@
     "research": {
       "status": "warn",
       "violations": 0,
-      "message": "Refresh recommended: Research has decolonization section but content lacks it"
+      "message": "Refresh recommended: Content predates research (research file is newer)"
     },
     "review": {
-      "status": "deferred",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 3,
+      "message": "Review has only 7 Ukrainian citation(s) for 5561-word content (need at least 9). A proper review must cite specific Ukrainian sentences from the content to support its assessment. Quote the actual text with \u00ab\u00bb or \"\"."
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [],
-    "pass_count": 3,
+    "blocking_issues": [
+      "Review has only 7 Ukrainian citation(s) for 5561-word content (need at least 9). A proper review must cite specific Ukrainian sentences from the content to support its assessment. Quote the actual text with \u00ab\u00bb or \"\".",
+      "Review only covers 1/8 (12%) content sections. Missed: \u0412\u0441\u0442\u0443\u043f \u2014 \u0411\u0443\u0434\u0456\u0432\u043d\u0438\u0447\u0438\u0439 \u0434\u0435\u0440\u0436\u0430\u0432\u0438, \u0416\u0438\u0442\u0442\u0454\u043f\u0438\u0441, \u0428\u043b\u044f\u0445 \u0434\u043e \u0432\u043b\u0430\u0434\u0438, \u0420\u0443\u0441\u044c\u043a\u0430 \u043f\u0440\u0430\u0432\u0434\u0430, \u041a\u0443\u043b\u044c\u0442\u0443\u0440\u043d\u0438\u0439 \u0440\u043e\u0437\u043a\u0432\u0456\u0442. A thorough review must address each major section of the content.",
+      "Review is missing 'Reviewed-By:' metadata. Re-run Phase D to generate a review with proper provenance."
+    ],
+    "pass_count": 4,
     "fail_count": 1,
-    "deferred_count": 1
+    "deferred_count": 0
   }
 }

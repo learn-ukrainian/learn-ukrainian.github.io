@@ -1,25 +1,25 @@
 # C1-HIST Module Status
 
-**Generated:** 2026-02-08 00:05:19
-**Total Modules:** 135
-**Status:** 5 passing, 0 failing, 0 stubs, 130 errors
+**Generated:** 2026-02-25 20:36:09
+**Total Modules:** 136
+**Status:** 0 passing, 3 failing, 0 stubs, 133 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 5/135 (3%)
-- ❌ **Failing:** 0/135
-- 📝 **Stubs:** 0/135
-- ⚠️ **Errors:** 130/135
+- ✅ **Passing:** 0/136 (0%)
+- ❌ **Failing:** 3/136
+- 📝 **Stubs:** 0/136
+- ⚠️ **Errors:** 133/136
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | shcho-take-istoriohrafiia | ✅ PASS | 5198/4000 | - |
-| 002 | ukrainska-istoriohrafichna-tradytsiia | ✅ PASS | 5493/4000 | - |
-| 003 | rosiiska-imperialna-istoriohrafiia | ✅ PASS | 5639/4000 | - |
-| 004 | radyanska-istoriohrafiia | ✅ PASS | 4778/4000 | - |
-| 005 | polskyi-pohliad | ✅ PASS | 9359/4000 | - |
+| 001 | shcho-take-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
+| 002 | ukrainska-istoriohrafichna-tradytsiia | ❌ FAIL | 6522/5000 | Review concludes with **Status:** FAIL — the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module. |
+| 003 | rosiiska-imperialna-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
+| 004 | radyanska-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
+| 005 | polskyi-pohliad | ⚠️ MISSING | 0/0 | no_file |
 | 006 | diaspora-ta-zakhidni-istoriky | ⚠️ MISSING | 0/0 | no_file |
 | 007 | nova-ukrainska-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
 | 008 | metodolohiia-dekolonizatsii | ⚠️ MISSING | 0/0 | no_file |
@@ -36,7 +36,7 @@
 | 019 | kozatski-litopysy-ohliad | ⚠️ MISSING | 0/0 | no_file |
 | 020 | litopys-samovidtsia | ⚠️ MISSING | 0/0 | no_file |
 | 021 | litopys-hrabianky | ⚠️ MISSING | 0/0 | no_file |
-| 022 | litopys-velychka | ⚠️ MISSING | 0/0 | no_file |
+| 022 | litopys-velychka | ❌ FAIL | 3138/5000 | word_count, activities, structure |
 | 023 | universaly-khmelnytkoho | ⚠️ MISSING | 0/0 | no_file |
 | 024 | pereyaslavski-statti | ⚠️ MISSING | 0/0 | no_file |
 | 025 | konstytutsiia-orlyka | ⚠️ MISSING | 0/0 | no_file |
@@ -63,7 +63,7 @@
 | 046 | holodomor-mekhanizmy-i | ⚠️ MISSING | 0/0 | no_file |
 | 047 | holodomor-mekhanizmy-ii | ⚠️ MISSING | 0/0 | no_file |
 | 048 | holodomor-heohrafiia | ⚠️ MISSING | 0/0 | no_file |
-| 049 | holodomor-svidky | ⚠️ MISSING | 0/0 | no_file |
+| 049 | holodomor-svidky | ❌ FAIL | 3379/5000 | 6 Outline Compliance Errors |
 | 050 | holodomor-vyznannia | ⚠️ MISSING | 0/0 | no_file |
 | 051 | syntez-holodomor-studiyi | ⚠️ MISSING | 0/0 | no_file |
 | 052 | rozstriliane-kontekst | ⚠️ MISSING | 0/0 | no_file |
@@ -149,12 +149,14 @@
 | 132 | ukrainska-m-iaka-syla | ⚠️ MISSING | 0/0 | no_file |
 | 133 | syntez-ahentsnist | ⚠️ MISSING | 0/0 | no_file |
 | 134 | ukrainske-pytannia-xxi | ⚠️ MISSING | 0/0 | no_file |
-| 135 | finalnyi-syntez | ⚠️ MISSING | 0/0 | no_file |
+| 135 | continuity-of-cultural-genocide | ⚠️ MISSING | 0/0 | no_file |
+| 136 | finalnyi-syntez | ⚠️ MISSING | 0/0 | no_file |
 
 ---
 
 **Legend:**
 - ✅ PASS: All audit gates pass
+- 🔄 PROSE: Content gates pass; activities deferred (awaiting /hetman enrichment)
 - ❌ FAIL: Some audit gates fail
 - 📝 STUB: Empty or < 100 words
 - ⚠️ ERROR/MISSING: File not found or audit error

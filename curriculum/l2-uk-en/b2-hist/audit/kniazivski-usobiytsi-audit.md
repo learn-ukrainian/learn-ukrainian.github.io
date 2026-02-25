@@ -1,7 +1,7 @@
 # Audit Report: M17 — kniazivski-usobiytsi.md
 **Level:** B2-HIST | **Module:** M17 | **Phase:** B2 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 18:50:18
+**Generated:** 2026-02-25 20:26:49
 
 ## Configuration
 **Type:** B2-history

@@ -1,54 +1,64 @@
 slug: capstone-doslidzhennya
 title: 'Capstone: Дослідження'
-word_target: 4000
+word_target: 5000
 content_outline:
-  - section: 'Огляд: Етап написання (Overview: The Writing Phase)'
-    words: 600
-    points:
-      - 'Перехід від плану-проспекту (М79) до повного тексту: стратегії розгортання
-        аргументації згідно з вимогами Держстандарту §1.3.1.1.'
-      - 'Історичний контекст: Іван Пулюй (Ivan Puluj) та важливість публікації результатів
-        — як конструктор катодної трубки втратив пріоритет у відкритті рентгенівських
-        променів через зволікання.'
-      - 'Управління часом та етапність: від чернетки до фінального редагування.'
-  - section: Написання вступу (Writing the Introduction)
-    words: 600
-    points:
-      - 'Формулювання проблеми та актуальності: як обґрунтувати вибір теми науковим
-        стилем.'
-      - 'Чітка теза (thesis) та визначення ключових термінів: сучасний приклад Марини
-        В''язовської (Fields Medal 2022) та її прориву в математичних дослідженнях.'
-      - 'Огляд структури роботи: логічна карта майбутнього дослідження.'
-  - section: Основна частина (The Main Body)
-    words: 1000
-    points:
-      - 'Інтеграція джерел: використання вставних конструкцій для цитування та парафразу
-        («За словами...», «Як зазначає...», «На думку...»).'
-      - 'Спадщина дослідника: Агапіт Печерський як перший лікар-дослідник Київської
-        Русі — поєднання спостереження та ранньої емпіричної медицини.'
-      - 'Мовна агентивність: перевага активних конструкцій («Ми проаналізували») або
-        безособових форм на -но/-то над пасивними («Було зроблено аналіз»).'
-  - section: Висновки (Conclusions)
-    words: 600
-    points:
-      - Узагальнення основних тверджень та відповідь на дослідницьке питання.
-      - 'Культура мовлення: типова помилка «прийти до висновку» (калька) та вживання
-        нормативного «дійти висновку».'
-      - 'Ширші імплікації: як висновки впливають на подальші перспективи дослідження.'
-  - section: Редагування та оформлення (Editing and Formatting)
-    words: 800
-    points:
-      - 'Академічна точність: усунення плеоназмів (напр. «головний пріоритет», «перша
-        прем''єра») та канцеляриту.'
-      - 'Синтаксична норма: виправлення помилок із дієприслівниковими зворотами (неправильно:
-        «Читаючи статтю, виникло питання»).'
-      - 'Оформлення списку використаних джерел та посилань: точність бібліографічного
-        опису.'
-  - section: Підготовка до здачі (Preparation for Submission)
-    words: 400
-    points:
-      - 'Контрольний список готовності тексту: логіка, повнота та відповідність тезі.'
-      - 'Практичний дриль: заміна кальки «в якості прикладу» на правильні форми «як
-        приклад» або «наприклад».'
-      - 'Зв''язок із майбутнім: підготовка написаного звіту до усної презентації проєкту
-        (М82).'
+- section: 'Огляд: Етап написання'
+  words: 700
+  points:
+  - Explain the transition from the research proposal (план-проспект) to the full
+    text, focusing on strategies for developing argumentation (Держстандарт §1.3.1.1).
+  - 'Tell the story of Ivan Puluj (Іван Пулюй) as a cultural hook: how he lost priority
+    in the discovery of X-rays due to delayed academic publication, emphasizing the
+    importance of finalizing research.'
+  - 'Outline time management strategies for the writing phase: moving systematically
+    from a rough draft to final editing.'
+- section: Написання вступу
+  words: 800
+  points:
+  - Provide templates for formulating the research problem and justifying its relevance
+    (актуальність) using appropriate academic register.
+  - Demonstrate how to write a clear thesis (теза) and define key terms, using the
+    modern example of Maryna Viazovska's (Марина В'язовська) Fields Medal-winning
+    mathematical breakthrough.
+  - Explain how to map the structure of the paper at the end of the introduction to
+    guide the reader.
+- section: Основна частина
+  words: 1200
+  points:
+  - 'Detail the integration of sources: provide tables of introductory phrases for
+    citing and paraphrasing (e.g., «За словами...», «Як зазначає...», «На думку...»).'
+  - Include a short reading passage about Agapetus of Pechersk (Агапіт Печерський),
+    the 11th-century physician-researcher, to demonstrate combining empirical observation
+    with historical narrative.
+  - 'Teach ''Language Agency'' (decolonization focus): explain the preference for
+    active constructions («Ми проаналізували») or impersonal forms (-но/-то) over
+    Soviet-style passive voice («Було зроблено аналіз»).'
+- section: Висновки
+  words: 700
+  points:
+  - Show how to summarize main arguments and directly answer the primary research
+    question.
+  - 'Address speech culture (культура мовлення): explicitly correct the common Russian
+    calque «прийти до висновку», contrasting it with the normative Ukrainian «дійти
+    висновку» або «зробити висновок».'
+  - Provide phrases for discussing the broader implications of the findings and suggesting
+    avenues for future research.
+- section: Редагування та оформлення
+  words: 1000
+  points:
+  - 'Focus on academic precision: provide examples of eliminating pleonasms (e.g.,
+    «головний пріоритет», «перша прем''єра») and bureaucratic jargon (канцелярит).'
+  - 'Review syntactic norms: teach the rule for adverbial participles (дієприслівникові
+    звороти) and correct the dangling participle error (e.g., «Читаючи статтю, виникло
+    питання» → «Коли я читав статтю...»).'
+  - Provide a brief guide on formatting the bibliography and in-text citations (список
+    використаних джерел та посилань) for academic accuracy.
+- section: Підготовка до здачі
+  words: 600
+  points:
+  - 'Present a final pre-submission checklist: logical flow, completeness, and alignment
+    with the thesis.'
+  - 'Include a practical drill section: replacing the Russian calque «в якості прикладу»
+    with the correct forms «як приклад» або «наприклад».'
+  - 'Link to the future: briefly discuss how to transition from the written report
+    to preparing the oral presentation for Module 82.'

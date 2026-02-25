@@ -2,5 +2,5 @@
 **Step**: Full YAML generation
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Double-checked JSON schema constraints, ensured `mark-the-words` used exact verbatim answers, expanded all `quiz` questions to be at least 5 words long, and verified strict adherence to required item counts (e.g. 8 for fill-in, 6 for unjumble, 6 for error-correction). Excluded `group-sort` as it was not explicitly listed in the 'allowed list' of the prompt rules, replacing it with another `fill-in` to guarantee schema compliance. Replaced all possible YAML-breaking guillemets with standard single/double quotes.
+**Self-Correction**: Carefully replaced all Ukrainian angular quotes («...») in YAML text with standard straight single quotes ('...') to ensure perfect YAML parser compatibility according to the strict instruction block. Ensured exact compliance with B1 JSON schema item counts and correct semantic placement.
 **Proposed Tooling Fix**: N/A

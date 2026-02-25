@@ -1,7 +1,7 @@
 # Audit Report: M61 — ivan-sirko.md
 **Level:** B2-HIST | **Module:** M61 | **Phase:** HIST.6 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:55:00
+**Generated:** 2026-02-25 20:53:15
 
 ## Configuration
 **Type:** B2-history
@@ -16,20 +16,37 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Історичний аналіз: Феномен характерництва | 2 | 1 | ✅ |
+| 2 | critical-analysis | Критичний аналіз: Міфологізація Івана Сірка | 1 | 1 | ✅ |
+| 3 | true-false | Правда чи вигадка: Факти та міфи про Івана Сірка | 10 | 8 | ✅ |
+| 4 | reading | Історичний документ: Оцінка постаті Івана Сірка | 2 | 1 | ✅ |
+| 5 | essay-response | Есе: Державницька позиція та лояльність Сірка | 1 | 1 | ✅ |
+| 6 | comparative-study | Порівняльне дослідження: Сірко та європейські полководці | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 2) ✅
+- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 5063/5000 (raw: 5326)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 6/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/2 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.4% (target 90-100% (history))
 - **Richness:** ✅ 99% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

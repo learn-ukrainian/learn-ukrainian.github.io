@@ -2,5 +2,28 @@
   "track": "b2",
   "slug": "capstone-research",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T13:35:53Z",
+      "task_id": "v3-capstone-research-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T13:41:39Z",
+      "note": "adopted-existing-content",
+      "words": 3247
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T13:44:48Z",
+      "task_id": "v3-capstone-research-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T13:54:51Z",
+      "attempts": 2
+    }
+  }
 }

@@ -1,7 +1,7 @@
 # Audit Report: M29 — b21-integration-practice.md
 **Level:** B2 | **Module:** M29 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 19:11:43
+**Generated:** 2026-02-25 11:02:52
 
 ## Configuration
 **Type:** B2-grammar
@@ -16,20 +16,43 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Аналіз публіцистичного стилю | 4 | 3 | ✅ |
+| 2 | true-false | Перевірка розуміння стилістики | 10 | 8 | ✅ |
+| 3 | quiz | Термінологія та стилістичні правила | 10 | 8 | ✅ |
+| 4 | error-correction | Корекція стилістичних помилок | 8 | 6 | ✅ |
+| 5 | unjumble | Конструювання граматично правильних речень | 8 | 6 | ✅ |
+| 6 | match-up | Поєднання термінів та їхніх значень | 12 | 8 | ✅ |
+| 7 | group-sort | Розподіл доменної лексики | 15 | 14 | ✅ |
+| 8 | fill-in | Точність наукового викладу | 10 | 8 | ✅ |
+| 9 | select | Стилістичний вибір | 8 | 6 | ✅ |
+| 10 | translate | Переклад та уникнення кальок | 8 | 6 | ✅ |
+| 11 | cloze | Стилістика та лексика сучасної мови | 16 | 14 | ✅ |
+| 12 | essay-response | Творче завдання: Написання новини | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 12 (target: 10-14) ✅
+- Unique types: 12 (minimum: 4) ✅
+- Priority types used: 4/4 (cloze, error-correction, fill-in, unjumble) ✅
+- Required types used: 3/3 (essay-response, reading, true-false) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4413/4000 (raw: 4675)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 12/10
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 90-100% (grammar))
 - **Richness:** ✅ 97% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

@@ -16,9 +16,14 @@
       "words": 3306
     },
     "v3-C": {
-      "status": "failed",
-      "ts": "2026-02-24T16:45:10Z",
-      "note": "missing-files-act=False-voc=False"
+      "status": "complete",
+      "ts": "2026-02-25T06:35:21Z",
+      "task_id": "v3-register-technical-scientific-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T09:43:36Z",
+      "attempts": 1
     }
   }
 }

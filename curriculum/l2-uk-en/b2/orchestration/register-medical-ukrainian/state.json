@@ -6,10 +6,20 @@
   "phases": {
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-23T23:50:46Z",
-      "words": 3192,
-      "attempts": 1
+      "timestamp": "2026-02-25T19:43:50Z",
+      "note": "v3-phase-B-adopt",
+      "words": 6134
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:54:56Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:54:56Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-23T23:50:46Z"
+  "last_updated": "2026-02-25T19:54:56Z"
 }

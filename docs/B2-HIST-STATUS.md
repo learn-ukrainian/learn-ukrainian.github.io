@@ -1,164 +1,167 @@
 # B2-HIST Module Status
 
-**Generated:** 2026-02-10 16:09:01
+**Generated:** 2026-02-25 20:36:06
 **Total Modules:** 140
-**Status:** 13 passing, 127 failing, 0 stubs, 0 errors
+**Status:** 1 passing, 83 prose-only, 17 failing, 0 stubs, 39 errors
 
 ## Quick Summary
 
-- ✅ **Passing:** 13/140 (9%)
-- ❌ **Failing:** 127/140
+- ✅ **Passing:** 1/140 (0%)
+- 🔄 **Prose-Only (awaiting enrichment):** 83/140
+- ❌ **Failing:** 17/140
 - 📝 **Stubs:** 0/140
+- ⚠️ **Errors:** 39/140
 
 ## Module Details
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | trypillian-civilization | ✅ PASS | 6369/6133 | - |
-| 002 | scythians-sarmatians | ✅ PASS | 4504/4000 | - |
-| 003 | greeks-crimea-olbia | ✅ PASS | 4371/4000 | - |
-| 004 | sloviany-origins | ✅ PASS | 5563/4000 | - |
-| 005 | slavic-tribes | ✅ PASS | 4583/4000 | - |
-| 006 | zasnuvannia-kyieva | ✅ PASS | 4136/4000 | - |
-| 007 | khozary-i-sloviany | ✅ PASS | 4348/4000 | - |
-| 008 | syntez-vytoky-1 | ✅ PASS | 4610/4000 | - |
-| 009 | oleh-ihor | ✅ PASS | 4102/4000 | - |
-| 010 | olha-sviatoslav | ✅ PASS | 4660/4000 | - |
-| 011 | volodymyr-khreshchennia | ✅ PASS | 4048/4000 | - |
-| 012 | yaroslav-wise | ❌ FAIL | 4055/4000 | - |
-| 013 | ruska-pravda | ✅ PASS | 4274/4000 | - |
-| 014 | sofiya-kyivska | ❌ FAIL | 4038/4000 | 3 Outline Compliance Errors |
-| 015 | volodymyr-monomakh | ❌ FAIL | 4751/4000 | - |
-| 016 | kultura-kyivskoi-rusi | ❌ FAIL | 5992/4000 | - |
-| 017 | kniazivski-usobiytsi | ✅ PASS | 4007/4000 | - |
-| 018 | ludy-rusi | ❌ FAIL | 4224/4000 | - |
-| 019 | rus-ta-susidy | ❌ FAIL | 4285/4000 | - |
-| 020 | syntez-kyivska-rus | ❌ FAIL | 4748/4000 | - |
-| 021 | mongolska-navala | ❌ FAIL | 4264/4024 | - |
-| 022 | mykhailo-chernigivskyi | ❌ FAIL | 4682/4000 | - |
-| 023 | danylo-halytskyi | ❌ FAIL | 4408/4019 | - |
-| 024 | galytsko-volynska-derzhava | ❌ FAIL | 3919/4000 | - |
-| 025 | boiare-i-shliakhta | ❌ FAIL | 4454/4322 | - |
-| 026 | kinets-halytsko-volyni | ❌ FAIL | 4684/4568 | - |
-| 027 | krymske-khanstvo | ❌ FAIL | 4539/4421 | - |
-| 028 | syntez-dvokniazivstvo | ❌ FAIL | 4034/4000 | - |
-| 029 | velyke-kniazivstvo-lytovske | ❌ FAIL | 4676/4542 | - |
-| 030 | ukrainski-zemli-u-vkl | ❌ FAIL | 4472/4323 | - |
-| 031 | liublinska-uniia | ❌ FAIL | 4550/4000 | - |
-| 032 | rich-pospolyta | ❌ FAIL | 4283/4000 | - |
-| 033 | beresteyska-uniia | ❌ FAIL | 4534/4000 | - |
-| 034 | pravoslavna-tserkva-17 | ❌ FAIL | 5023/4000 | - |
-| 035 | petro-mohyla | ❌ FAIL | 4347/4000 | - |
-| 036 | bratstva-i-osvita | ❌ FAIL | 5504/4000 | - |
-| 037 | bukovyna-zakarpattia | ❌ FAIL | 4224/4000 | - |
-| 038 | slobozhanshchyna | ❌ FAIL | 4425/4000 | - |
-| 039 | liudy-ricchi-pospolytoi | ❌ FAIL | 4260/4000 | - |
-| 040 | syntez-lytva-polska | ❌ FAIL | 4730/4500 | - |
-| 041 | kozatstvo-vytoky | ❌ FAIL | 4303/4000 | - |
-| 042 | zaporizka-sich | ❌ FAIL | 4745/4000 | - |
-| 043 | dmytro-vyshnevetskyi | ❌ FAIL | 4070/4000 | - |
-| 044 | kozatski-povstannia-16 | ❌ FAIL | 4862/4800 | - |
-| 045 | petro-sahaidachnyi | ❌ FAIL | 5431/5200 | - |
-| 046 | khotynska-viyna | ❌ FAIL | 4976/4000 | - |
-| 047 | kozatska-kultura | ❌ FAIL | 4492/4000 | - |
-| 048 | kozatske-viisko | ❌ FAIL | 4468/4000 | - |
-| 049 | morski-pokhody | ❌ FAIL | 4080/4000 | - |
-| 050 | syntez-kozatstvo-vytoky | ❌ FAIL | 4348/4000 | - |
-| 051 | khmelnychchyna-prychyny | ❌ FAIL | 4852/4000 | - |
-| 052 | bohdan-khmelnytskyi | ❌ FAIL | 4266/4000 | - |
-| 053 | bitva-pid-zhovtymy-vodamy | ❌ FAIL | 4146/4000 | - |
-| 054 | zborivska-bila-tserkva | ❌ FAIL | 4465/4000 | - |
-| 055 | kozatska-derzhava | ❌ FAIL | 4263/4000 | - |
-| 056 | pereyaslavska-uhoda | ❌ FAIL | 5029/4000 | - |
-| 057 | yurii-nemyrych | ❌ FAIL | 4642/4000 | - |
-| 058 | ruina-i | ❌ FAIL | 4890/4000 | - |
-| 059 | ruina-ii | ❌ FAIL | 5502/4000 | - |
-| 060 | andrusivske-peremyrya | ❌ FAIL | 4883/4000 | - |
-| 061 | ivan-sirko | ❌ FAIL | 4635/4000 | - |
-| 062 | syntez-khmelnychchyna | ❌ FAIL | 4493/4000 | - |
-| 063 | ivan-mazepa-derzhavnyk | ❌ FAIL | 4050/4000 | - |
-| 064 | ivan-mazepa-kultura | ❌ FAIL | 4662/4000 | - |
-| 065 | kost-hordiyenko-sich | ❌ FAIL | 4301/4000 | - |
-| 066 | ivan-mazepa-poltava | ❌ FAIL | 4687/4000 | - |
-| 067 | pylyp-orlyk-konstytutsiia | ❌ FAIL | 4754/4000 | - |
-| 068 | hryhorii-skovoroda | ❌ FAIL | 4572/4000 | - |
-| 069 | pavlo-polubotok | ❌ FAIL | 4091/4000 | - |
-| 070 | danylo-apostol | ❌ FAIL | 4124/4000 | - |
-| 071 | koliivshchyna | ❌ FAIL | 4137/4000 | - |
-| 072 | opryshky | ❌ FAIL | 4000/4000 | - |
-| 073 | petro-kalnyshevskyi | ❌ FAIL | 4643/4000 | - |
-| 074 | kinets-hetmanshchyny | ❌ FAIL | 4819/4000 | - |
-| 075 | rosiiska-imperiia-ukraina | ❌ FAIL | 4119/4000 | - |
-| 076 | habsburzka-halichyna | ❌ FAIL | 4470/4000 | - |
-| 077 | pivden-novorosiia | ❌ FAIL | 4720/4000 | - |
-| 078 | nova-serbiya | ❌ FAIL | 4396/4000 | - |
-| 079 | krypatsvo-selo | ❌ FAIL | 4367/4000 | - |
-| 080 | kyrylo-mefodiivtsi | ❌ FAIL | 4002/4000 | - |
-| 081 | shevchenko-awakening | ❌ FAIL | 4265/4000 | - |
-| 082 | valuevskyi-emskyi | ❌ FAIL | 4632/4000 | - |
-| 083 | hromady | ❌ FAIL | 4438/4000 | - |
-| 084 | drahomanov | ❌ FAIL | 4315/4000 | - |
-| 085 | franko-lesia-hrinchenko | ❌ FAIL | 4292/4000 | - |
-| 086 | syntez-imperska-doba | ❌ FAIL | 4231/4000 | - |
-| 087 | hrushevskyi | ❌ FAIL | 4264/4000 | - |
-| 088 | persha-svitova | ❌ FAIL | 5076/4000 | - |
-| 089 | sichovi-striltsi | ❌ FAIL | 4651/4000 | - |
-| 090 | tsentralna-rada | ❌ FAIL | 4272/4000 | - |
-| 091 | skoropadskyi | ❌ FAIL | 4371/4000 | - |
-| 092 | zunr | ❌ FAIL | 4732/4000 | - |
-| 093 | dyrektoriia | ❌ FAIL | 4474/4000 | - |
-| 094 | symon-petliura-revolution | ❌ FAIL | 5052/4000 | - |
-| 095 | bilshovytsko-ukrainska-viyna | ❌ FAIL | 4496/4000 | - |
-| 096 | kholodnyi-yar | ❌ FAIL | 4849/4000 | - |
-| 097 | syntez-revoliutsiia | ❌ FAIL | 4315/4000 | - |
-| 098 | rozstriliane-vidrodzennia | ❌ FAIL | 4198/4000 | - |
-| 099 | pacyfikatsiia | ❌ FAIL | 5143/4000 | - |
-| 100 | oun | ❌ FAIL | 4878/4000 | - |
-| 101 | holodomor-mekhanizm | ❌ FAIL | 4602/4000 | - |
-| 102 | holodomor-pamiat | ❌ FAIL | 4876/4000 | - |
-| 103 | mekhanizm-teroru | ❌ FAIL | 4074/4000 | - |
-| 104 | karpatska-ukraina | ❌ FAIL | 4482/4000 | - |
-| 105 | druha-svitova-pochatok | ❌ FAIL | 5411/4000 | - |
-| 106 | babyn-yar | ❌ FAIL | 4370/4000 | - |
-| 107 | upa | ❌ FAIL | 5505/4000 | - |
-| 108 | syntez-trahedii | ❌ FAIL | 4552/4000 | - |
-| 109 | povoienne-vidbudova | ❌ FAIL | 4419/4000 | - |
-| 110 | deportatsii-ukraintsiv | ❌ FAIL | 4632/4000 | - |
-| 111 | surgunlik | ❌ FAIL | 4319/4000 | - |
-| 112 | krym-1954 | ❌ FAIL | 3989/4000 | - |
-| 113 | destalinizatsiia | ❌ FAIL | 3945/4000 | - |
-| 114 | shistdesiatnyky | ❌ FAIL | 5046/4000 | - |
-| 115 | ukrainska-helsinska-hrupa | ❌ FAIL | 4680/4000 | - |
-| 116 | afhanistan | ❌ FAIL | 4237/4000 | - |
-| 117 | chornobyl | ❌ FAIL | 4320/4000 | - |
-| 118 | diaspora | ❌ FAIL | 4230/4000 | - |
-| 119 | shliakh-nezalezhnosti | ❌ FAIL | 4345/4000 | - |
-| 120 | rukh | ❌ FAIL | 4659/4000 | - |
-| 121 | nezalezhnist-1991 | ❌ FAIL | 4921/4000 | - |
-| 122 | ukraine-90s | ❌ FAIL | 4946/4000 | - |
-| 123 | pomarancheva-revoliutsiia | ❌ FAIL | 4355/4000 | - |
-| 124 | yanukovych | ❌ FAIL | 4629/4000 | - |
-| 125 | movna-polityka | ❌ FAIL | 4421/4000 | - |
-| 126 | revoliutsiia-hidnosti | ❌ FAIL | 4688/4000 | - |
-| 127 | aneksiia-krymu | ❌ FAIL | 4144/4202 | - |
-| 128 | krymski-tatary-pislia-2014 | ❌ FAIL | 5020/4000 | - |
-| 129 | tomos | ❌ FAIL | 4422/4000 | - |
-| 130 | syntez-nezalezhnist | ❌ FAIL | 4368/4000 | - |
-| 131 | viyna-donbas | ❌ FAIL | 4183/4000 | - |
-| 132 | povnomasshtabne-vtorhnessnia | ❌ FAIL | 4112/4000 | - |
-| 133 | mariupol-azovstal | ❌ FAIL | 4446/4000 | - |
-| 134 | bucha-irpin | ❌ FAIL | 4934/4000 | - |
-| 135 | kakhovska-hes | ❌ FAIL | 5197/4000 | - |
-| 136 | voienna-ekonomika | ❌ FAIL | 4861/4000 | - |
-| 137 | hromadske-suspilstvo | ❌ FAIL | 4824/4000 | - |
-| 138 | mizhnarodna-pidtrymka | ❌ FAIL | 4763/4000 | - |
-| 139 | zlochyny-stiikist | ❌ FAIL | 4163/4000 | - |
-| 140 | syntez-viyna | ❌ FAIL | 4259/4000 | - |
+| 001 | trypillian-civilization | ✅ PASS | 5231/5000 | - |
+| 002 | scythians-sarmatians | 🔄 PROSE | 5047/5000 | - |
+| 003 | greeks-crimea-olbia | 🔄 PROSE | 5182/5000 | - |
+| 004 | sloviany-origins | 🔄 PROSE | 5120/5000 | - |
+| 005 | slavic-tribes | 🔄 PROSE | 5027/5000 | - |
+| 006 | zasnuvannia-kyieva | 🔄 PROSE | 5319/5000 | - |
+| 007 | khozary-i-sloviany | 🔄 PROSE | 6589/5000 | - |
+| 008 | syntez-vytoky-1 | 🔄 PROSE | 5058/5000 | - |
+| 009 | oleh-ihor | 🔄 PROSE | 5162/5000 | - |
+| 010 | olha-sviatoslav | 🔄 PROSE | 6000/5000 | - |
+| 011 | volodymyr-khreshchennia | 🔄 PROSE | 6060/5000 | - |
+| 012 | yaroslav-wise | 🔄 PROSE | 6070/5000 | - |
+| 013 | ruska-pravda | ❌ FAIL | 3559/5000 | 9 Outline Compliance Errors |
+| 014 | sofiya-kyivska | 🔄 PROSE | 9576/5000 | - |
+| 015 | volodymyr-monomakh | 🔄 PROSE | 5829/5000 | - |
+| 016 | kultura-kyivskoi-rusi | 🔄 PROSE | 5317/5000 | - |
+| 017 | kniazivski-usobiytsi | 🔄 PROSE | 5200/5000 | - |
+| 018 | ludy-rusi | 🔄 PROSE | 5444/5000 | - |
+| 019 | rus-ta-susidy | 🔄 PROSE | 5154/5000 | - |
+| 020 | syntez-kyivska-rus | 🔄 PROSE | 5704/5000 | - |
+| 021 | mongolska-navala | 🔄 PROSE | 6375/5000 | - |
+| 022 | mykhailo-chernigivskyi | 🔄 PROSE | 5754/5000 | - |
+| 023 | danylo-halytskyi | ❌ FAIL | 3470/5000 | 5 Outline Compliance Errors |
+| 024 | galytsko-volynska-derzhava | 🔄 PROSE | 4939/5000 | - |
+| 025 | boiare-i-shliakhta | 🔄 PROSE | 5316/5000 | - |
+| 026 | kinets-halytsko-volyni | 🔄 PROSE | 5843/5000 | - |
+| 027 | krymske-khanstvo | 🔄 PROSE | 6178/5000 | - |
+| 028 | syntez-dvokniazivstvo | 🔄 PROSE | 5347/5000 | - |
+| 029 | velyke-kniazivstvo-lytovske | 🔄 PROSE | 5220/5000 | - |
+| 030 | ukrainski-zemli-u-vkl | 🔄 PROSE | 5923/5000 | - |
+| 031 | liublinska-uniia | ❌ FAIL | 3422/5000 | 11 Outline Compliance Errors |
+| 032 | rich-pospolyta | 🔄 PROSE | 5362/5000 | - |
+| 033 | beresteyska-uniia | ❌ FAIL | 3667/5000 | word_count, activities, structure |
+| 034 | pravoslavna-tserkva-17 | 🔄 PROSE | 6532/5000 | - |
+| 035 | petro-mohyla | ❌ FAIL | 4256/5000 | word_count, activities, structure |
+| 036 | bratstva-i-osvita | 🔄 PROSE | 5589/5000 | - |
+| 037 | bukovyna-zakarpattia | 🔄 PROSE | 5360/5000 | - |
+| 038 | slobozhanshchyna | 🔄 PROSE | 5202/5000 | - |
+| 039 | liudy-ricchi-pospolytoi | 🔄 PROSE | 6712/5000 | - |
+| 040 | syntez-lytva-polska | 🔄 PROSE | 5726/5000 | - |
+| 041 | kozatstvo-vytoky | 🔄 PROSE | 6385/5000 | - |
+| 042 | zaporizka-sich | 🔄 PROSE | 7242/5000 | - |
+| 043 | dmytro-vyshnevetskyi | 🔄 PROSE | 5660/5000 | - |
+| 044 | kozatski-povstannia-16 | 🔄 PROSE | 6586/5000 | - |
+| 045 | petro-sahaidachnyi | 🔄 PROSE | 5006/5000 | - |
+| 046 | khotynska-viyna | 🔄 PROSE | 5137/5000 | - |
+| 047 | kozatska-kultura | 🔄 PROSE | 6489/5000 | - |
+| 048 | kozatske-viisko | 🔄 PROSE | 5694/5000 | - |
+| 049 | morski-pokhody | 🔄 PROSE | 7798/5000 | - |
+| 050 | syntez-kozatstvo-vytoky | 🔄 PROSE | 5733/5000 | - |
+| 051 | khmelnychchyna-prychyny | 🔄 PROSE | 9212/5000 | - |
+| 052 | bohdan-khmelnytskyi | 🔄 PROSE | 5069/5000 | - |
+| 053 | bitva-pid-zhovtymy-vodamy | ❌ FAIL | 3652/5000 | word_count, activities, structure |
+| 054 | zborivska-bila-tserkva | 🔄 PROSE | 5982/5000 | - |
+| 055 | kozatska-derzhava | 🔄 PROSE | 5107/5000 | - |
+| 056 | pereyaslavska-uhoda | 🔄 PROSE | 5600/5000 | - |
+| 057 | yurii-nemyrych | ❌ FAIL | 3778/5000 | word_count, activities, structure |
+| 058 | ruina-i | 🔄 PROSE | 5065/5000 | - |
+| 059 | ruina-ii | 🔄 PROSE | 5226/5000 | - |
+| 060 | andrusivske-peremyrya | 🔄 PROSE | 5783/5000 | - |
+| 061 | ivan-sirko | 🔄 PROSE | 5063/5000 | - |
+| 062 | syntez-khmelnychchyna | 🔄 PROSE | 5947/5000 | - |
+| 063 | ivan-mazepa-derzhavnyk | ❌ FAIL | 3414/5000 | word_count, activities, structure |
+| 064 | ivan-mazepa-kultura | 🔄 PROSE | 5118/5000 | - |
+| 065 | kost-hordiyenko-sich | 🔄 PROSE | 5000/5000 | - |
+| 066 | ivan-mazepa-poltava | 🔄 PROSE | 5272/5000 | - |
+| 067 | pylyp-orlyk-konstytutsiia | 🔄 PROSE | 5296/5000 | - |
+| 068 | hryhorii-skovoroda | 🔄 PROSE | 5465/5000 | - |
+| 069 | pavlo-polubotok | ❌ FAIL | 3290/5000 | word_count, activities, structure |
+| 070 | danylo-apostol | ❌ FAIL | 3569/5000 | word_count, activities, structure |
+| 071 | koliivshchyna | 🔄 PROSE | 5160/5000 | - |
+| 072 | opryshky | ❌ FAIL | 4144/5000 | word_count, activities, structure |
+| 073 | petro-kalnyshevskyi | 🔄 PROSE | 5179/5000 | - |
+| 074 | kinets-hetmanshchyny | 🔄 PROSE | 5532/5000 | - |
+| 075 | rosiiska-imperiia-ukraina | 🔄 PROSE | 5409/5000 | - |
+| 076 | habsburzka-halichyna | 🔄 PROSE | 5894/5000 | - |
+| 077 | pivden-novorosiia | ⚠️ MISSING | 0/0 | no_file |
+| 078 | nova-serbiya | ⚠️ MISSING | 0/0 | no_file |
+| 079 | krypatsvo-selo | ⚠️ MISSING | 0/0 | no_file |
+| 080 | kyrylo-mefodiivtsi | ⚠️ MISSING | 0/0 | no_file |
+| 081 | shevchenko-awakening | ⚠️ MISSING | 0/0 | no_file |
+| 082 | valuevskyi-emskyi | ⚠️ MISSING | 0/0 | no_file |
+| 083 | hromady | ⚠️ MISSING | 0/0 | no_file |
+| 084 | drahomanov | ⚠️ MISSING | 0/0 | no_file |
+| 085 | franko-lesia-hrinchenko | ⚠️ MISSING | 0/0 | no_file |
+| 086 | syntez-imperska-doba | ⚠️ MISSING | 0/0 | no_file |
+| 087 | hrushevskyi | ⚠️ MISSING | 0/0 | no_file |
+| 088 | persha-svitova | ⚠️ MISSING | 0/0 | no_file |
+| 089 | sichovi-striltsi | ⚠️ MISSING | 0/0 | no_file |
+| 090 | tsentralna-rada | ⚠️ MISSING | 0/0 | no_file |
+| 091 | skoropadskyi | ⚠️ MISSING | 0/0 | no_file |
+| 092 | zunr | ⚠️ MISSING | 0/0 | no_file |
+| 093 | dyrektoriia | ⚠️ MISSING | 0/0 | no_file |
+| 094 | symon-petliura-revolution | ⚠️ MISSING | 0/0 | no_file |
+| 095 | bilshovytsko-ukrainska-viyna | ⚠️ MISSING | 0/0 | no_file |
+| 096 | kholodnyi-yar | ⚠️ MISSING | 0/0 | no_file |
+| 097 | syntez-revoliutsiia | ⚠️ MISSING | 0/0 | no_file |
+| 098 | rozstriliane-vidrodzennia | ⚠️ MISSING | 0/0 | no_file |
+| 099 | pacyfikatsiia | ⚠️ MISSING | 0/0 | no_file |
+| 100 | oun | 🔄 PROSE | 6040/5000 | - |
+| 101 | holodomor-mekhanizm | ❌ FAIL | 3729/5000 | word_count, activities, structure |
+| 102 | holodomor-pamiat | 🔄 PROSE | 5632/5000 | - |
+| 103 | mekhanizm-teroru | 🔄 PROSE | 6900/5000 | - |
+| 104 | karpatska-ukraina | 🔄 PROSE | 5861/5000 | - |
+| 105 | druha-svitova-pochatok | 🔄 PROSE | 5240/5000 | - |
+| 106 | babyn-yar | 🔄 PROSE | 5225/5000 | - |
+| 107 | upa | 🔄 PROSE | 5809/5000 | - |
+| 108 | syntez-trahedii | ❌ FAIL | 3953/5000 | word_count, activities, structure |
+| 109 | povoienne-vidbudova | 🔄 PROSE | 5018/5000 | - |
+| 110 | deportatsii-ukraintsiv | 🔄 PROSE | 6278/5000 | - |
+| 111 | surgunlik | 🔄 PROSE | 5191/5000 | - |
+| 112 | krym-1954 | 🔄 PROSE | 5415/5000 | - |
+| 113 | destalinizatsiia | ❌ FAIL | 3378/5000 | word_count, activities, structure |
+| 114 | shistdesiatnyky | 🔄 PROSE | 6346/5000 | - |
+| 115 | ukrainska-helsinska-hrupa | ❌ FAIL | 4605/5000 | word_count, activities, structure |
+| 116 | afhanistan | ❌ FAIL | 3879/5000 | word_count, activities, structure |
+| 117 | chornobyl | 🔄 PROSE | 8010/5000 | - |
+| 118 | diaspora | 🔄 PROSE | 5945/5000 | - |
+| 119 | shliakh-nezalezhnosti | ❌ FAIL | 3477/5000 | word_count, activities, structure |
+| 120 | rukh | 🔄 PROSE | 5109/5000 | - |
+| 121 | nezalezhnist-1991 | 🔄 PROSE | 5251/5000 | - |
+| 122 | ukraine-90s | 🔄 PROSE | 6004/5000 | - |
+| 123 | pomarancheva-revoliutsiia | 🔄 PROSE | 6295/5000 | - |
+| 124 | yanukovych | 🔄 PROSE | 5415/5000 | - |
+| 125 | movna-polityka | ⚠️ MISSING | 0/0 | no_file |
+| 126 | revoliutsiia-hidnosti | ⚠️ MISSING | 0/0 | no_file |
+| 127 | aneksiia-krymu | ⚠️ MISSING | 0/0 | no_file |
+| 128 | krymski-tatary-pislia-2014 | ⚠️ MISSING | 0/0 | no_file |
+| 129 | tomos | ⚠️ MISSING | 0/0 | no_file |
+| 130 | syntez-nezalezhnist | ⚠️ MISSING | 0/0 | no_file |
+| 131 | viyna-donbas | ⚠️ MISSING | 0/0 | no_file |
+| 132 | povnomasshtabne-vtorhnessnia | ⚠️ MISSING | 0/0 | no_file |
+| 133 | mariupol-azovstal | ⚠️ MISSING | 0/0 | no_file |
+| 134 | bucha-irpin | ⚠️ MISSING | 0/0 | no_file |
+| 135 | kakhovska-hes | ⚠️ MISSING | 0/0 | no_file |
+| 136 | voienna-ekonomika | ⚠️ MISSING | 0/0 | no_file |
+| 137 | hromadske-suspilstvo | ⚠️ MISSING | 0/0 | no_file |
+| 138 | mizhnarodna-pidtrymka | ⚠️ MISSING | 0/0 | no_file |
+| 139 | zlochyny-stiikist | ⚠️ MISSING | 0/0 | no_file |
+| 140 | syntez-viyna | ⚠️ MISSING | 0/0 | no_file |
 
 ---
 
 **Legend:**
 - ✅ PASS: All audit gates pass
+- 🔄 PROSE: Content gates pass; activities deferred (awaiting /hetman enrichment)
 - ❌ FAIL: Some audit gates fail
 - 📝 STUB: Empty or < 100 words
 - ⚠️ ERROR/MISSING: File not found or audit error

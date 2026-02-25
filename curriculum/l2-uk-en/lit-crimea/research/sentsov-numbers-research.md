@@ -89,3 +89,12 @@ forbidden_claims:
 
 ## Seminar-Specific Analysis
 > [!context] Historical Foundation: This work is tied to the author's imprisonment and the broader literary landscape of modern Ukraine. See [LIT: Sentsov Stories](slug:sentsov-stories) for his literary context.
+
+## Використані джерела
+- [ЕСУ](https://esu.com.ua/) 
+- [Літопис](http://litopys.org.ua/)
+## Contested Terms
+| Поняття | Imperial framing | Ukrainian (decolonized) framing |
+|---|---|---|
+## Лінгвістичний вимір
+- Цільові слова з IPA транскрипцією.

@@ -1,3 +1,0 @@
-===TAG_START===
-Fixed all issues. The module now passes the audit.
-===TAG_END===

@@ -1,40 +1,33 @@
 # Дослідження: Велосипед та водні види
 
 ## State Standard Reference
-§3.4, §3.5, §3.12, §3.14: "види спорту і спортивних споруд (стадіон, басейн...); засоби пересування; спортзал, басейн; природні об’єкти (...річка... море)."
-Alignment: Module directly addresses the thematic requirements for "Leisure, rest" (§3.4), "Travel" (§3.5), and "Nature" (§3.14) by covering cycling as a means of transport/leisure and water sports in natural and artificial environments.
+§3.4: "Дозвілля, відпочинок: способи проведення вільного часу; хобі та зацікавлення; види спорту і спортивних споруд (стадіон, басейн, корт, ковзанка)."
+§3.14: "Природне середовище: природні об’єкти (ліс, озеро, річка, гори, море)."
+Alignment: Цей модуль безпосередньо реалізує вимоги Держстандарту щодо лексики вільного часу, спортивних споруд та природних об'єктів для рівня B1.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **велосипед** | High (Primary term) | їхати на велосипеді, кататися на велосипеді, гірський велосипед, велосипедна доріжка, прокат велосипедів |
-| **плавання** | High | займатися плаванням, спортивне плавання, уроки плавання, синхронне плавання |
-| **каяк** | Medium (Specific interest) | орендувати каяк, сплав на каяках, надувний каяк, прогулянка на каяку |
-| **пляж** | High | піщаний пляж, міський пляж, відпочивати на пляжі, засмагати на пляжі |
-| **оренда** | High | пункт оренди, оренда спорядження, взяти в оренду, погодинна оренда |
+| велосипед | High (top 2000) | їхати на велосипеді, кататися на велосипеді, гірський велосипед, міський велосипед |
+| плавати | High (top 1500) | плавати в басейні, вміти плавати, плавати кролем |
+| оренда | High (top 3000) | взяти в оренду, пункт оренди, погодинна оренда |
+| каяк | Medium | орендувати каяк, сплав на каяках, двомісний каяк |
+| рятівний жилет | Medium | одягнути рятівний жилет, безпека на воді |
 
 ## Cultural Hooks
-1. **Kyiv Cycling Culture**: Kyiv has a growing cycling community with events like "Veloden" (All-Ukrainian Cycling Day) and an expanding network of rental stations (Bikenow/Nextbike) and cycling lanes (Velotrek, Trukhaniv Island).
-2. **Dnipro Kayaking**: Kayaking on the Dnipro river in Kyiv (e.g., Hydropark, Obolon) is a massive summer trend. It offers a unique perspective of the city (Motherland Monument from the water).
-3. **Carpathian Rafting**: Rafting on the Cheremosh or Black Tysa rivers is a popular adrenaline activity for Ukrainians, often combined with traditional camping.
+1. **Київський велотрек**: Один з найстаріших у Європі (збудований у 1913 році). Після тривалого занепаду та боротьби громади проти забудови, був повністю реконструйований і відкритий у 2017 році як потужний символ урбаністичного активізму.
+2. **Всеукраїнський Велодень**: Щорічна масова акція (з 2006 року), яка збирає тисячі велосипедистів у різних містах України наприкінці травня для популяризації екологічного транспорту.
 
 ## Common Learner Errors
-1. **Motion Verbs (Swimming)**: Confusing *плавати* (multidirectional/ability/habitual) and *плисти* (unidirectional/current process).
-   - *Error*: "Я пливу в басейні щосуботи." → *Correct*: "Я **плаваю** в басейні щосуботи." (Habitual)
-   - *Error*: "Дивись, качка плаває до берега." → *Correct*: "Дивись, качка **пливе** до берега." (Unidirectional)
-2. **Case Usage with Vehicles**: Using incorrect cases for "riding a bike".
-   - *Error*: "Я їду велосипедом." (Grammatically possible instrumental, but locative *на велосипеді* is more common for "riding on").
-   - *Correct*: "Я їду **на велосипеді**."
-3. **Prepositions with Water**: Confusing *у/в* and *на*.
-   - *Error*: "Ми їдемо в море." (Direction vs destination area).
-   - *Correct*: "Ми їдемо **на море**." (To the seaside).
-   - *Correct*: "Ми купаємося **в морі**." (In the water).
+1. **Інструментальний vs Місцевий відмінок транспорту**: Використання орудного відмінка «їду велосипедом» (вплив інших слов'янських мов) → правильно українською: «їду **на** велосипеді» (місцевий відмінок з прийменником «на»).
+2. **Напрямок vs Місце дії**: Плутанина між напрямком руху «їдемо **на** море» (Знахідний) та місцем відпочинку «купаємося **в** морі» (Місцевий).
+3. **Плавати vs Плисти**: Використання односпрямованого «плисти» для регулярних дій («Я пливу в басейні щосуботи») → правильно «Я **плаваю** в басейні щосуботи» (багатоспрямована/регулярна дія).
 
 ## Cross-References
-- **Builds on**: b1-82 (Mountains and Trail - outdoor vocabulary)
-- **Prepares for**: b1-84 (Winter Sports - contrast in seasonal activities)
+- Builds on: b1-82 (Mountains and Trail) - лексика природи та активного відпочинку.
+- Prepares for: b1-84 (Winter Sports) - лексика сезонів, спортивного спорядження та оренди.
 
 ## Notes for Content Writing
-- Focus on the distinction between *плавати* and *плисти* as a key grammar point in the "Practice" section.
-- Use the "Dnipro Kayak Guide" persona to frame the rental and safety instructions naturally (e.g., "Don't stand up in the kayak!").
-- Include a specific tip about "Bikenow" or app-based rentals as a cultural reality of modern Ukrainian cities.
+- **Decolonized Framing**: Подавати українську інфраструктуру (Bikenow, Труханів острів, Велотрек) як сучасну європейську урбаністику без прив'язки до радянського контексту.
+- **Immersion**: 100% українська мова в тексті (правило для B1). Жодних англійських пояснень.
+- **Persona**: Dnipro Kayak Guide (The Urbanist flavor) – фокус на сучасних сервісах, безпеці на воді та активному стилі життя великого міста.

@@ -1,7 +1,7 @@
 # Audit Report: M17 — register-business-ukrainian.md
 **Level:** B2 | **Module:** M17 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 17:17:13
+**Generated:** 2026-02-25 10:43:19
 
 ## Configuration
 **Type:** B2-grammar

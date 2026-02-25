@@ -1,36 +1,35 @@
 # Дослідження: Контрольна точка B2.2
 
 ## State Standard Reference
-§4.4.3: "Стилістичні засоби лексики: антоніми, синоніми... епітети, метафори... скорочення й абревіатури... складні слова... нейтральна і стилістично забарвлена лексика."
-§4.3.4: "Складне речення... складнопідрядні речення з різними типами обставинних відношень... зі з’ясувальними відношеннями... з означальними відношеннями."
-§3.9 / §3.17 / §3.4: "Здоров’я... Наука і техніка... Культурне дозвілля" (Тематичний каталог).
-Alignment: Модуль перевіряє засвоєння синонімічного багатства (M41-M69), вміння будувати складні синтаксичні конструкції (сполучники) та володіння лексикою доменів (медицина, наука, мистецтво).
+§4.3.4 (B2): "Складне речення: Складнопідрядні речення зі з’ясувальною підрядною частиною... з означальною частиною... з відношеннями причини, умови, допусту".
+§4.4.1.2 (B2): "Стилістичні засоби лексики: антоніми, синоніми...". 
+*(Note: The plan refers to §4.4.3, which does not exist in the B2 standard; it is likely a typo for B2 §4.4.1.2 "Стилістичні засоби лексики" or B1 §4.4.3 "Складне речення". I am aligning with B2 §4.3.4 and §4.4.1.2).*
+Alignment: This checkpoint directly tests complex sentence construction and lexical/stylistic precision (synonyms, antonyms, paronyms) as mandated by the B2 standard.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **діагноз** | Висока (медицина) | *ставити/встановити діагноз* (НЕ визначати), *помилковий діагноз*, *клінічний діагноз* |
-| **гіпотеза** | Середня (наука) | *висунути гіпотезу*, *підтвердити/спростувати гіпотезу*, *робоча гіпотеза* |
-| **експеримент** | Висока (наука) | *проводити експеримент*, *чистота експерименту*, *невдалий експеримент* |
-| **симптом** | Висока (медицина) | *тривожний симптом*, *знімати симптоми*, *виявляти симптоми* |
-| **жанр** | Середня (мистецтво)| *літературний жанр*, *жанр кіно*, *у жанрі фентезі* |
+| брати участь | High (academic/news) | брати активну участь у заході (not приймати) |
+| відігравати роль | High (formal) | відігравати важливу роль у процесі |
+| ефективний | Very High (business) | ефективний метод, ефективна комунікація |
+| ефектний | Medium (media/arts) | ефектний виступ, ефектна сукня |
+| громадський | High (civic/news) | громадський транспорт, громадська організація |
+| громадянський | High (legal/civic) | громадянський обов'язок, громадянське суспільство |
 
 ## Cultural Hooks
-1.  **Іван Пулюй (Ivan Puliui):** Український фізик, який відкрив X-промені за 14 років до Рентгена. Сконструював "лампу Пулюя" (прообраз рентгенівської трубки) і зробив перший у світі знімок людського скелета. Також переклав Біблію українською мовою разом з П. Кулішем та І. Нечуєм-Левицьким.
-2.  **Українська Діаспора:** Налічує 15-20 млн осіб. Найбільші громади в Польщі, Канаді, США. Зберегла унікальні традиції (вишивка, писанкарство) та мову в часи радянських репресій в Україні.
+1. **Ivan Puliui**: Co-discoverer of X-rays (known originally as "лампи Пулюя") and a key figure in the translation of the Bible into Ukrainian (alongside Panteleimon Kulish and Ivan Nechuy-Levytsky), uniting the scientific and cultural spheres.
+2. **Ukrainian Diaspora**: Has historically played a massive role in preserving Ukrainian identity, language, and culture during the Soviet era when they were suppressed in Ukraine itself, showcasing linguistic resilience.
 
 ## Common Learner Errors
-1.  **Калькування фразеологізмів:** *відігравати значення* (помилка) → *відігравати роль* або *мати значення* (правильно).
-2.  **Плутанина дієслів:** *приймати участь* (калька) → *брати участь* (правильно); *відкривати двері* (помилка) → *відчиняти двері* (правильно для фізичних об'єктів).
-3.  **Пароніми:** *ефектний* (вражаючий) vs *ефективний* (дієвий); *громадський* (транспорт, думка) vs *громадянський* (обов'язок, війна).
-4.  **Сполучники:** Неправильне вживання *так як* (калька з рос. "так как") замість *оскільки* або *тому що*.
+1. **Calques from Russian**: Using "Приймати участь" (принимать участие) instead of the correct "брати участь". Mixing phrases to create "відігравати значення" instead of separating "відігравати роль" and "мати значення".
+2. **Paronym Confusion**: Using "ефективний" (effective/producing result) when meaning "ефектний" (spectacular/impressive), or confusing "громадський" (public/community) with "громадянський" (civil/citizen).
+3. **Complex Syntax Conjunctions**: Using "так як" (Russian calque "так как") instead of the stylistically correct "оскільки" (since) or "тому що" (because).
 
 ## Cross-References
--   Builds on: M41-M69 (Phraseology & Synonymy phase).
--   Prepares for: B2.3 Integration phase (M71+) and B2.4 Communication Skills.
+- Builds on: M41-M69 (Phraseology, Synonymy, Complex Syntax)
+- Prepares for: M71-M84 (B2.3 Integration, Domain Vocabulary, Academic Writing)
 
 ## Notes for Content Writing
--   **Tone:** Academic and professional (Invigilator persona).
--   **Style:** Use the "Puliui" story for the Science/Medicine reading text to verify complex syntax and domain vocabulary simultaneously.
--   **Complexity:** Ensure "true-false" and "reading" texts use complex conjunctions (*незважаючи на те, що*; *завдяки тому, що*) to test syntax mastery.
--   **Assessment:** The checkpoint should rigidly test the distinction between *ефектний/ефективний* and *лікувати/лічити*.
+- Immersion is 100%. No English scaffolding is permitted in the prose.
+- Maintain an academic, professional exam-invigilator tone (екзаменатор).
+- Decolonized framing: Emphasize Puliui's independent scientific achievements and the diaspora's role in preserving authentic culture away from imperial/Soviet censorship.
