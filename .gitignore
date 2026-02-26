@@ -90,6 +90,7 @@ issue_*_body.md
 /*.js
 !start-claude.sh
 /*.yaml
+!docker-compose.qdrant.yaml
 /*.csv
 /*.json
 !package.json
@@ -118,6 +119,14 @@ _archive/
 
 # Test artifacts
 test_git_mtime/
+
+# Downloaded textbook PDFs (561 MB+, not for version control)
+data/textbooks/
+
+# RAG pipeline artifacts (generated at runtime)
+data/qdrant/
+data/textbook_images/
+data/textbook_chunks/
 
 # Starlight
 starlight/dist
