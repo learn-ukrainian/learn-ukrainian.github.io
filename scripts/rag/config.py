@@ -1,4 +1,13 @@
-"""RAG pipeline configuration — model paths, collection names, trust tiers."""
+"""RAG pipeline configuration — model paths, collection names, trust tiers.
+
+NOTE (Colima): If using Colima with VZ framework, port forwarding may not work
+automatically. Set up an SSH tunnel before using Qdrant:
+
+    ssh -i ~/.colima/_lima/_config/user -o StrictHostKeyChecking=no \\
+        -p $(colima ssh-config 2>/dev/null | grep Port | awk '{print $2}') \\
+        -N -L 6333:localhost:6333 -L 6334:localhost:6334 \\
+        $(whoami)@127.0.0.1 &
+"""
 
 from pathlib import Path
 
@@ -21,7 +30,7 @@ IMAGE_COLLECTION = "textbook_images"
 BGE_M3_MODEL = "BAAI/bge-m3"
 BGE_M3_DENSE_DIM = 1024
 
-SIGLIP_MODEL = "ViT-SO400M-14-SigLIP2-384"
+SIGLIP_MODEL = "ViT-SO400M-14-SigLIP2"
 SIGLIP_PRETRAINED = "webli"
 SIGLIP_DIM = 1152
 

@@ -11,6 +11,11 @@
       "env": {
         "MEMORY_FILE_PATH": "/Users/krisztiankoos/projects/learn-ukrainian/tasks/memory.json"
       }
+    },
+    "rag": {
+      "command": ".venv/bin/python",
+      "args": [".mcp/servers/rag/server.py"],
+      "env": {}
     }
   }
 }
