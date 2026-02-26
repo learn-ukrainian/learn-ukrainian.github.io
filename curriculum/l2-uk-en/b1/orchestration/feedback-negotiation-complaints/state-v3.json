@@ -1,0 +1,27 @@
+{
+  "track": "b1",
+  "slug": "feedback-negotiation-complaints",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T17:13:49Z",
+      "task_id": "v3-feedback-negotiation-complaints-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T17:19:28Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T17:22:47Z",
+      "task_id": "v3-feedback-negotiation-complaints-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T17:48:20Z",
+      "attempts": 4
+    }
+  }
+}

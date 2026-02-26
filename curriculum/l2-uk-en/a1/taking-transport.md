@@ -118,7 +118,7 @@ In English, we often use "station" for everything. In Ukrainian, there is a stri
 
 If you travel by Kyiv metro, you will memorize certain phrases forever. They are played at every station.
 
-**«Обережно, двері зачиняються»** [ɔbɛˈrɛʒnɔ dʋɛˈri zɑt͡ʃɪˈɲɑjutʲsʲɑ] — Caution, the doors are closing.
+**«Обережно, двері зачиняються»** — Caution, the doors are closing.
 This is the signal to step back. The doors in older trains close with considerable force!
 
 **«Наступна станція...»** — Next station is...
@@ -163,7 +163,7 @@ Often, one train is not enough. You need to switch lines.
 *   **Станція пересадки** — Transfer station.
 *   **Ми робимо пересадку** — We are making a transfer.
 
-**Пересісти на...** [pɛrɛˈsʲistɪ nɑ] — To change to... / To transfer to...
+**Пересісти на...** — To change to... / To transfer to...
 This verb requires the Accusative case because it involves motion/direction.
 *   Я хочу **пересісти на** метро. — I want to transfer to the metro.
 *   Тут можна **пересісти на** автобус номер 5. — Here you can transfer to bus number 5.
@@ -208,7 +208,7 @@ Now let's use this vocabulary in real situations. You are lost, you need a ticke
 
 The universal formula for asking "How do I get to...?" is:
 
-**Як доїхати до...?** [jɑk dɔˈjixɑtɪ dɔ] — How to get (drive) to...?
+**Як доїхати до...?** — How to get (drive) to...?
 Use the Genitive case after **до**.
 
 *   **Вибачте, як доїхати до центру?** — Excuse me, how do I get to the center?

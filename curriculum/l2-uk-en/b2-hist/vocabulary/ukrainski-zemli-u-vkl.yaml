@@ -1,127 +1,102 @@
 items:
   - lemma: "історія"
-    ipa: '[iˈstɔrʲijɑ]'
     translation: "history"
     pos: "noun"
     gender: "f"
   - lemma: "держава"
-    ipa: '[ˈdɛrˈʒɑʋɑ]'
     translation: "state"
     pos: "noun"
     gender: "f"
   - lemma: "народ"
-    ipa: '[nɑˈrɔd]'
     translation: "people"
     pos: "noun"
     gender: "m"
   - lemma: "влада"
-    ipa: '[ˈʋlɑdɑ]'
     translation: "power"
     pos: "noun"
     gender: "f"
   - lemma: "період"
-    ipa: '[pɛˈrʲiɔd]'
     translation: "period"
     pos: "noun"
     gender: "m"
   - lemma: "подія"
-    ipa: '[pɔˈdʲijɑ]'
     translation: "event"
     pos: "noun"
     gender: "f"
   - lemma: "джерело"
-    ipa: '[d͡ʒɛrɛˈlɔ]'
     translation: "source"
     pos: "noun"
     gender: "n"
   - lemma: "спадщина"
-    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
     translation: "heritage"
     pos: "noun"
     gender: "f"
   - lemma: "аналіз"
-    ipa: '[ɑˈnɑlʲiz]'
     translation: "analysis"
     pos: "noun"
     gender: "m"
   - lemma: "контекст"
-    ipa: '[kɔnˈtɛkst]'
     translation: "context"
     pos: "noun"
     gender: "m"
   - lemma: "вплив"
-    ipa: '[ʍplɪu̯]'
     translation: "influence"
     pos: "noun"
     gender: "m"
   - lemma: "наслідок"
-    ipa: '[ˈnɑsʲlʲidɔk]'
     translation: "consequence"
     pos: "noun"
     gender: "m"
   - lemma: "суспільство"
-    ipa: '[suˈsʲpʲilʲstʋɔ]'
     translation: "society"
     pos: "noun"
     gender: "n"
   - lemma: "самоврядування"
-    ipa: '[sɑmɔu̯rʲɑduˈʋɑnʲːɑ]'
     translation: "self-government"
     pos: "noun"
     gender: "n"
   - lemma: "незалежність"
-    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
     translation: "independence"
     pos: "noun"
     gender: "f"
   - lemma: "управління"
-    ipa: '[uprɑˈʋlʲinʲːɑ]'
     translation: "administration"
     pos: "noun"
     gender: "n"
   - lemma: "завойовник"
-    ipa: '[zɑʋɔˈjɔu̯nɪk]'
     translation: "conqueror"
     pos: "noun"
     gender: "m"
   - lemma: "компроміс"
-    ipa: '[kɔmprɔˈmʲis]'
     translation: "compromise"
     pos: "noun"
     gender: "m"
   - lemma: "суб'єктність"
-    ipa: '[suˈbjɛktʲnʲisʲtʲ]'
     translation: "subjectivity"
     pos: "noun"
     gender: "f"
     notes: "often translated as political agency in this context"
   - lemma: "ідентичність"
-    ipa: '[idɛnˈtɪt͡ʃnʲisʲtʲ]'
     translation: "identity"
     pos: "noun"
     gender: "f"
   - lemma: "меценат"
-    ipa: '[mɛt͡sɛˈnɑt]'
     translation: "patron of arts"
     pos: "noun"
     gender: "m"
   - lemma: "еліта"
-    ipa: '[ɛˈlʲitɑ]'
     translation: "elite"
     pos: "noun"
     gender: "f"
   - lemma: "магнат"
-    ipa: '[mɑˈɦnɑt]'
     translation: "magnate"
     pos: "noun"
     gender: "m"
   - lemma: "привілей"
-    ipa: '[prɪʋʲiˈlɛj]'
     translation: "privilege"
     pos: "noun"
     gender: "m"
   - lemma: "інкорпорація"
-    ipa: '[inkɔrpɔˈrɑt͡sʲijɑ]'
     translation: "incorporation"
     pos: "noun"
     gender: "f"

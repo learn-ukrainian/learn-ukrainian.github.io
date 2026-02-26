@@ -14,7 +14,7 @@
 | 5 | Humanity & Warmth | 8/10 | Direct address count is adequate (~29 "you/your/ви/вам" matches). However: no warm greeting ("Привіт!" appears only in a dialogue at line 241, not as a module opening). No explicit encouragement phrases like "Great job!" or "Don't worry" in the instructional prose. No "You can now..." celebration at the end. The summary (line 255) lists what was learned but in a flat, report-like tone rather than celebratory. |
 | 6 | LLM Fingerprint | 7/10 | Three LLM clichés found: (1) «архітектурний каркас складного мислення» (line 257) — classic "architecture of language" AI rhetoric; (2) "the Genitive case is the powerful engine that drives these logical substitutions" (line 220) — LLM-typical abstract metaphor; (3) «Вони діють як дуже надійний клей. Цей важливий клей міцно тримає складні довгі речення разом» (line 19) — overwrought metaphor with redundant adjective stacking. Additionally, "дуже" appears 15 times across the content, creating a padding effect — many instances are unnecessary filler (e.g., «дуже фундаментальною», «дуже надійний клей», «дуже багатшою та точнішою»). |
 | 7 | Factual Accuracy | 9/10 | All grammar rules verified correct: через + Accusative, завдяки + Dative, для/без + Genitive, про + Accusative, від/з + Genitive, о/об + Locative. Callout box claims are accurate. The "піти по хліб" vs "піти за хлібом" distinction is prescriptivist but pedagogically appropriate for this curriculum's standards. One minor concern: «прийменник «по» + Accusative» claim at line 125 is correct for purpose-of-movement sense but oversimplifies «по»'s complex case governance. |
-| 8 | Activity Quality | 7/10 | 12 activities total — good variety (match-up, group-sort, true-false, quiz x2, fill-in x2, cloze, error-correction, unjumble, mark-the-words, translate). **Critical gap**: group-sort activity (line 30-37) only has Genitive and Accusative groups but the module teaches Dative (завдяки, всупереч) and Locative (о/об) — these cases are completely absent from the sorting exercise. **IPA error**: vocabulary file has «всупереч» as [ˈʍsupɛrɛt͡ʃ] (line 71 of vocab) — stress should be on the last syllable [u̯supɛˈrɛt͡ʃ], and [ʍ] is not a Ukrainian phoneme. Activity item counts fall below plan minimums for time quiz (8 vs 10+), case quiz (8 vs 12+), and translate (6 vs 10+). |
+| 8 | Activity Quality | 7/10 | 12 activities total — good variety (match-up, group-sort, true-false, quiz x2, fill-in x2, cloze, error-correction, unjumble, mark-the-words, translate). **Critical gap**: group-sort activity (line 30-37) only has Genitive and Accusative groups but the module teaches Dative (завдяки, всупереч) and Locative (о/об) — these cases are completely absent from the sorting exercise. **IPA error**: vocabulary file has «всупереч» as (line 71 of vocab) — stress should be on the last syllable, and [ʍ] is not a Ukrainian phoneme. Activity item counts fall below plan minimums for time quiz (8 vs 10+), case quiz (8 vs 12+), and translate (6 vs 10+). |
 | 9 | Immersion | 9/10 | Measured at 50.4%, within the 50-60% target for A2 M01-20. English appropriately used for grammar theory and explanations. Ukrainian used for all examples, dialogues, and practice. The balance is at the low end but acceptable. |
 
 ---
@@ -73,9 +73,9 @@ And add missing Genitive prepositions: "протягом", "щодо", "стос
 
 **Location:** Vocabulary file, line 71
 
-**Evidence:** IPA listed as `[ˈʍsupɛrɛt͡ʃ]`. Two errors: (1) Stress is on the first syllable but should be on the last syllable (всупере́ч); (2) [ʍ] (voiceless labial-velar fricative, as in English "which") is not a Ukrainian phoneme — the initial cluster should be transcribed as [u̯s] or [fs].
+**Evidence:** IPA listed as ``. Two errors: (1) Stress is on the first syllable but should be on the last syllable (всупере́ч); (2) [ʍ] (voiceless labial-velar fricative, as in English "which") is not a Ukrainian phoneme — the initial cluster should be transcribed as [u̯s] or [fs].
 
-**Fix:** Correct IPA to `[u̯supɛˈrɛt͡ʃ]`.
+**Fix:** Correct IPA to ``.
 
 ---
 

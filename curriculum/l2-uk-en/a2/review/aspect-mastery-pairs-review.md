@@ -40,7 +40,7 @@ This is **wrong**. «Я напишу зараз» is perfectly valid Ukrainian m
 **Evidence:** The last vocabulary entry is:
 ```yaml
 - lemma: "платити"
-  ipa: '[plɑˈtɪtɪ]'
+  ipa: ''
 ```
 Missing fields: `translation`, `pos`, `aspect`. The perfective pair «заплатити» is completely absent. The file has 19 lemmas but the 10th pair is broken.
 
@@ -52,11 +52,11 @@ Missing fields: `translation`, `pos`, `aspect`. The perfective pair «запла
 
 **Location:** Vocabulary file line 88
 
-**Evidence:** IPA is `'[ʋʲidpɔˈʋʲiˈstɪ]'` with two primary stress marks (ˈ). Ukrainian words have exactly one primary stress. The correct IPA is `[ʋʲidpɔʋʲiˈstɪ]` with stress on the final syllable.
+**Evidence:** IPA is `''` with two primary stress marks (ˈ). Ukrainian words have exactly one primary stress. The correct IPA is `` with stress on the final syllable.
 
 **Impact:** Incorrect pronunciation guidance. An A2 learner following this IPA would stress two syllables.
 
-**Fix:** Change to `'[ʋʲidpɔʋʲiˈstɪ]'`.
+**Fix:** Change to `''`.
 
 ### Issue 4: Section «Підсумок» Uses H1 Instead of H2
 

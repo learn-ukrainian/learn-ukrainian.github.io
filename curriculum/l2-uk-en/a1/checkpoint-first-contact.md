@@ -298,11 +298,11 @@ This is your "superpower". Ordering food is the first step to communication. Eve
 
 Politeness opens all doors. Here is your set:
 
-1.  **Можна...?** [ˈmɔʒnɑ] — Can I have...? (Literally: Is it possible?)
+1.  **Можна...?** — Can I have...? (Literally: Is it possible?)
     *   *Можна каву?*
     *   *Можна меню?*
     *   *Можна рахунок?*
-2.  **Я буду...** [jɑ ˈbudu] — I will have... (Literally: I will be...)
+2.  **Я буду...** — I will have... (Literally: I will be...)
     *   *Я буду салат.*
     *   *Я буду чай.*
 3.  **Будь ла́ска** — Please / You are welcome.
@@ -322,7 +322,7 @@ No need to know all the words. Look for familiar roots.
 *   **Десе́рти** — Desserts (Cake, Ice cream)
 *   **Супи́** — Soups (Borscht!)
 
-The waiter will say: **«Смачного!»** [smɑt͡ʃˈnɔɦɔ]. This is "Bon appétit" or "Enjoy your meal".
+The waiter will say: **«Смачного!»**. This is "Bon appétit" or "Enjoy your meal".
 Your answer: **«Дякую!»**.
 
 ### The Bill

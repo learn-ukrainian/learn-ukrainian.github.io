@@ -1,132 +1,107 @@
 items:
   - lemma: "квартира"
-    ipa: '[kʋɑrˈtɪrɑ]'
     translation: "apartment"
     pos: "noun"
     gender: "f"
   - lemma: "будинок"
-    ipa: '[buˈdɪnɔk]'
     translation: "house"
     pos: "noun"
     gender: "m"
     notes: "often associated with a private yard and Domovyk lore"
   - lemma: "кімната"
-    ipa: '[kʲiˈmnɑtɑ]'
     translation: "room"
     pos: "noun"
     gender: "f"
   - lemma: "вітальня"
-    ipa: '[ʋʲiˈtɑlʲnʲɑ]'
     translation: "living room"
     pos: "noun"
     gender: "f"
   - lemma: "спальня"
-    ipa: '[ˈspɑlʲnʲɑ]'
     translation: "bedroom"
     pos: "noun"
     gender: "f"
   - lemma: "кухня"
-    ipa: '[ˈkuxnʲɑ]'
     translation: "kitchen"
     pos: "noun"
     gender: "f"
     notes: "requires preposition 'на' (на кухні)"
   - lemma: "ванна"
-    ipa: '[ˈʋɑnːɑ]'
     translation: "bathroom"
     pos: "noun"
     gender: "f"
   - lemma: "меблі"
-    ipa: '[ˈmɛblʲi]'
     translation: "furniture"
     pos: "noun"
     gender: "pl"
     notes: "plural only noun"
   - lemma: "стіл"
-    ipa: '[sʲtʲil]'
     translation: "table"
     pos: "noun"
     gender: "m"
   - lemma: "стілець"
-    ipa: '[sʲtʲiˈlɛt͡sʲ]'
     translation: "chair"
     pos: "noun"
     gender: "m"
   - lemma: "ліжко"
-    ipa: '[ˈlʲiʒkɔ]'
     translation: "bed"
     pos: "noun"
     gender: "n"
   - lemma: "диван"
-    ipa: '[dɪˈʋɑn]'
     translation: "sofa"
     pos: "noun"
     gender: "m"
   - lemma: "шафа"
-    ipa: '[ˈʃɑfɑ]'
     translation: "wardrobe"
     pos: "noun"
     gender: "f"
   - lemma: "підлога"
-    ipa: '[pʲiˈdlɔɦɑ]'
     translation: "floor"
     pos: "noun"
     gender: "f"
     notes: "mutates [г]->[з]: на підлозі"
   - lemma: "стіна"
-    ipa: '[sʲtʲiˈnɑ]'
     translation: "wall"
     pos: "noun"
     gender: "f"
   - lemma: "килим"
-    ipa: '[ˈkɪlɪm]'
     translation: "carpet"
     pos: "noun"
     gender: "m"
   - lemma: "холодильник"
-    ipa: '[xɔlɔˈdɪlʲnɪk]'
     translation: "refrigerator"
     pos: "noun"
     gender: "m"
   - lemma: "пральна машина"
-    ipa: '[ˈprɑlʲnɑ mɑˈʃɪnɑ]'
     translation: "washing machine"
     pos: "noun"
     gender: "f"
   - lemma: "поріг"
-    ipa: '[pɔˈrʲiɦ]'
     translation: "threshold"
     pos: "noun"
     gender: "m"
     notes: "significant in Ukrainian etiquette; never greet across it"
   - lemma: "кут"
-    ipa: '[kut]'
     translation: "corner"
     pos: "noun"
     gender: "m"
     usage: "на розі (at the corner)"
   - lemma: "Домовик"
-    ipa: '[dɔmɔˈʋɪk]'
     translation: "Domovyk (household spirit)"
     pos: "noun"
     gender: "m"
   - lemma: "ремонт"
-    ipa: '[rɛˈmɔnt]'
     translation: "renovation"
     pos: "noun"
     gender: "m"
   - lemma: "обідній стіл"
-    ipa: '[ɔˈbʲidʲnʲij sʲtʲil]'
     translation: "dining table"
     pos: "noun"
     gender: "m"
   - lemma: "письмовий стіл"
-    ipa: '[pɪˈsʲmɔʋɪj sʲtʲil]'
     translation: "desk"
     pos: "noun"
     gender: "m"
   - lemma: "шафа-купе"
-    ipa: '[ˈʃɑfɑ-kuˈpɛ]'
     translation: "sliding wardrobe"
     pos: "noun"
     gender: "f"

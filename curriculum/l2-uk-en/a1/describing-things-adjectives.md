@@ -28,25 +28,25 @@ Now, we add color and detail to these objects. But because Ukrainian nouns have 
 To ask "What kind is it?" or "Which one?", we use a special question word. Just like the answer changes based on gender, the question word changes too.
 
 #### Який? (Masculine)
-We use **Який?** [jɑˈkɪj] for masculine nouns (words ending in a consonant).
+We use **Який?** for masculine nouns (words ending in a consonant).
 *   **Стіл** (table) → **Він**.
 *   Question: **Який це стіл?**
 *   Answer: **Новий**.
 
 #### Яка? (Feminine)
-We use **Яка?** [jɑˈkɑ] for feminine nouns (words ending in -а/-я).
+We use **Яка?** for feminine nouns (words ending in -а/-я).
 *   **Ручка** (pen) → **Вона**.
 *   Question: **Яка це ручка?**
 *   Answer: **Нова**.
 
 #### Яке? (Neuter)
-We use **Яке?** [jɑˈkɛ] for neuter nouns (words ending in -о/-е).
+We use **Яке?** for neuter nouns (words ending in -о/-е).
 *   **Вікно** (window) → **Воно**.
 *   Question: **Яке це вікно?**
 *   Answer: **Нове**.
 
 #### Які? (Plural)
-We use **Які?** [jɑˈki] for plural nouns of *any* gender. This is used when we ask about multiple things.
+We use **Які?** for plural nouns of *any* gender. This is used when we ask about multiple things.
 *   **Книги** (books) → **Вони**.
 *   Question: **Які це книги?**
 *   Answer: **Нові**.

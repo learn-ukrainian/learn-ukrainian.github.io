@@ -1,3 +1,7 @@
+---
+argument-hint: "{level} {module_num}"
+---
+
 # /module-status
 
 View status of a single module from the audit cache.
@@ -14,7 +18,7 @@ Reads the status cache JSON file and displays a formatted status report for a si
 
 ## Instructions
 
-Parse arguments: $ARGUMENTS
+Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 ### Step 1: Resolve Module Path
 

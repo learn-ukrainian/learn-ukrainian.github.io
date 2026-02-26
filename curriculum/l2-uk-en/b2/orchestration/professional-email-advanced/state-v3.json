@@ -1,0 +1,27 @@
+{
+  "track": "b2",
+  "slug": "professional-email-advanced",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T14:40:23Z",
+      "task_id": "v3-professional-email-advanced-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T14:44:01Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T14:48:12Z",
+      "task_id": "v3-professional-email-advanced-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T16:28:52Z",
+      "attempts": 6
+    }
+  }
+}

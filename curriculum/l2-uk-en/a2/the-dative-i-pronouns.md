@@ -98,11 +98,11 @@ This shift in perspective is crucial. It changes how you talk about your age, yo
 
 | Nominative (Хто? / Subject) | Dative (Кому? / Recipient) | English Equivalent |
 | :--- | :--- | :--- |
-| **Я** (I) | **Мені** [mɛˈnʲi] | To me |
-| **Ти** (You) | **Тобі** [tɔˈbʲi] | To you (informal) |
-| **Він** (He) | **Йому** [jɔˈmu] | To him |
+| **Я** (I) | **Мені** | To me |
+| **Ти** (You) | **Тобі** | To you (informal) |
+| **Він** (He) | **Йому** | To him |
 | **Вона** (She) | **Їй** [jij] | To her |
-| **Воно** (It) | **Йому** [jɔˈmu] | To it |
+| **Воно** (It) | **Йому** | To it |
 | **Ми** (We) | **Нам** [nɑm] | To us |
 | **Ви** (You) | **Вам** [ʋɑm] | To you (formal/plural) |
 | **Вони** (They) | **Їм** [jim] | To them |
@@ -241,7 +241,7 @@ Structure: **Dative Person** + **Adverb (State)**.
 *   **Холодно** (cold) → **Мені холодно** (I am cold / literally: *To me is cold*).
 *   **Жарко** (hot) → **Тобі жарко?** (Are you hot? / To you is hot?).
 *   **Тепло** (warm) → **Нам тепло** — "we are warm".
-*   **Боляче** [ˈbɔlʲɑt͡ʃɛ] (painful/hurt) → **Йому боляче** — "he is in pain" / "it hurts him".
+*   **Боляче** (painful/hurt) → **Йому боляче** — "he is in pain" / "it hurts him".
 
 Note: if you translate literally from English and say "Я холодний", it would mean your body has a low temperature (like a corpse!) or that you are an emotionally cold person. Therefore, using the Dative case here is critical for correct meaning.
 

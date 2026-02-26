@@ -2,6 +2,7 @@
 name: architect
 description: Generates a detailed 'content_outline' for a module based on its template and focus. Use this to "hydrate" skeleton modules before content generation.
 allowed-tools: Read, Write, Grep
+context: fork
 ---
 
 # Architect Skill

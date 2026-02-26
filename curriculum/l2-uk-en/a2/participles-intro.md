@@ -280,8 +280,8 @@ It is very important to avoid translating directly from other languages when usi
 
 | Word | IPA | English | POS | Gender | Note |
 |---|---|---|---|---|---|
-| вид | /vɪd/ | aspect | Noun | Masc | Grammar term |
-| іменник | /iˈmɛnːɪk/ | noun | Noun | Masc | Grammar term |
-| прикметник | /prɪˈkmɛtnɪk/ | adjective | Noun | Masc | Grammar term |
-| доконаний | /doˈkɔnɑnɪj/ | perfective | Adj | Masc | Grammar term |
-| множина | /mnoʒɪˈnɑ/ | plural | Noun | Fem | Grammar term |
+| вид | | aspect | Noun | Masc | Grammar term |
+| іменник | | noun | Noun | Masc | Grammar term |
+| прикметник | | adjective | Noun | Masc | Grammar term |
+| доконаний | | perfective | Adj | Masc | Grammar term |
+| множина | | plural | Noun | Fem | Grammar term |

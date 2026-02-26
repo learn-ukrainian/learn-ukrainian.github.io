@@ -1,124 +1,99 @@
 items:
   - lemma: "повстання"
-    ipa: '[pɔˈʋstɑnʲːɑ]'
     translation: "uprising / rebellion"
     pos: "noun"
     gender: "n"
   - lemma: "реєстр"
-    ipa: '[rɛˈjɛstr]'
     translation: "registry / register"
     pos: "noun"
     gender: "m"
   - lemma: "шляхта"
-    ipa: '[ˈʃlʲɑxtɑ]'
     translation: "nobility"
     pos: "noun"
     gender: "f"
   - lemma: "унія"
-    ipa: '[ˈunʲijɑ]'
     translation: "union"
     pos: "noun"
     gender: "f"
   - lemma: "свавілля"
-    ipa: '[sʋɑˈʋʲilʲːɑ]'
     translation: "arbitrariness / unruliness"
     pos: "noun"
     gender: "n"
   - lemma: "облога"
-    ipa: '[ɔˈblɔɦɑ]'
     translation: "siege"
     pos: "noun"
     gender: "f"
   - lemma: "зрада"
-    ipa: '[ˈzrɑdɑ]'
     translation: "betrayal / treason"
     pos: "noun"
     gender: "f"
   - lemma: "угода"
-    ipa: '[uˈɦɔdɑ]'
     translation: "agreement / treaty"
     pos: "noun"
     gender: "f"
   - lemma: "артилерія"
-    ipa: '[ɑrtɪˈlɛrʲijɑ]'
     translation: "artillery"
     pos: "noun"
     gender: "f"
   - lemma: "автономія"
-    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
     translation: "autonomy"
     pos: "noun"
     gender: "f"
   - lemma: "амністія"
-    ipa: '[ɑˈmnʲisʲtʲijɑ]'
     translation: "amnesty"
     pos: "noun"
     gender: "f"
   - lemma: "вимога"
-    ipa: '[ʋɪˈmɔɦɑ]'
     translation: "demand"
     pos: "noun"
     gender: "f"
   - lemma: "магнат"
-    ipa: '[mɑˈɦnɑt]'
     translation: "magnate"
     pos: "noun"
     gender: "m"
   - lemma: "маєток"
-    ipa: '[mɑˈjɛtɔk]'
     translation: "estate"
     pos: "noun"
     gender: "m"
   - lemma: "старшина"
-    ipa: '[stɑrˈʃɪnɑ]'
     translation: "cossack leadership / officer corps"
     pos: "noun"
     gender: "f"
   - lemma: "вольності"
-    ipa: '[ˈʋɔlʲnɔsʲtʲi]'
     translation: "freedoms / liberties"
     pos: "noun"
     notes: "often used in plural in historical context"
   - lemma: "конфіскація"
-    ipa: '[kɔnʲfʲiˈskɑt͡sʲijɑ]'
     translation: "confiscation"
     pos: "noun"
     gender: "f"
   - lemma: "привілей"
-    ipa: '[prɪʋʲiˈlɛj]'
     translation: "privilege"
     pos: "noun"
     gender: "m"
   - lemma: "розкол"
-    ipa: '[rɔˈzkɔl]'
     translation: "split / schism"
     pos: "noun"
     gender: "m"
   - lemma: "найманець"
-    ipa: '[ˈnɑjmɑnɛt͡sʲ]'
     translation: "mercenary"
     pos: "noun"
     gender: "m"
   - lemma: "табір"
-    ipa: '[ˈtɑbʲir]'
     translation: "camp"
     pos: "noun"
     gender: "m"
   - lemma: "розправа"
-    ipa: '[rɔˈzprɑʋɑ]'
     translation: "reprisal / massacre"
     pos: "noun"
     gender: "f"
   - lemma: "республіканський"
-    ipa: '[rɛspublʲiˈkɑnʲsʲkɪj]'
     translation: "republican"
     pos: "adjective"
   - lemma: "православний"
-    ipa: '[prɑʋɔˈslɑu̯nɪj]'
     translation: "Orthodox"
     pos: "adjective"
   - lemma: "захисник"
-    ipa: '[zɑˈxɪˈsnɪk]'
     translation: "defender"
     pos: "noun"
     gender: "m"

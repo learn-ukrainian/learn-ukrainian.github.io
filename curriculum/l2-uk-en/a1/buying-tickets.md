@@ -302,7 +302,7 @@ Example:
 > Some foreigners worry about safety in **плацкарт** or **купе**. In reality, Ukrainian trains are generally very safe. People often share food, play cards, and talk for hours. If you are invited to share a meal (usually roasted chicken, boiled eggs, or sandwiches), accept a small piece politely. It is a gesture of hospitality.
 
 ### Щасливої дороги!
-When you buy a ticket or board a train, you will hear this phrase: **Щасливої дороги!** [ʃt͡ʃɑˈslɪʋɔji dɔˈrɔɦɪ]. It means "Have a happy journey" or "Bon voyage". It is the perfect way to say goodbye to a friend leaving the station.
+When you buy a ticket or board a train, you will hear this phrase: **Щасливої дороги!**. It means "Have a happy journey" or "Bon voyage". It is the perfect way to say goodbye to a friend leaving the station.
 
 Example:
 *   **Щасливої дороги до Києва!** (Have a safe trip to Kyiv!)

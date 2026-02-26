@@ -54,9 +54,9 @@ The Green Team review claims IPA is missing for диню, грушу, капус
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-accusative-i-things.md
 ---OLD---
-*   **Я маю можливість** [mɔʒˈlɪʋʲisʲtʲ]. (I have an opportunity.)
+*   **Я маю можливість**. (I have an opportunity.)
 ---NEW---
-*   **Я маю можливість** [mɔʒˈlɪʋʲisʲtʲ]. (I have an opportunity.) — *можливість → можливість* (Feminine, but ends in a consonant, not -а/-я — no change!)
+*   **Я маю можливість**. (I have an opportunity.) — *можливість → можливість* (Feminine, but ends in a consonant, not -а/-я — no change!)
 ---
 ===FIX_END===
 

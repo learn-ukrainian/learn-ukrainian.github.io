@@ -70,8 +70,8 @@ graph TD
 
 **File:** `vocabulary/possessive-sviy.yaml`
 
-- **Line 50:** `ipa: '[jiji]'` for **її** — Missing stress mark. Should be `[jɪˈji]`.
-- **Line 148:** `ipa: '[rɔˈdɔˈʋɪj]'` for **родовий** — Contains two stress marks, which is phonetically impossible. Should be `[rɔdɔˈʋɪj]`.
+- **Line 50:** `ipa: '[jiji]'` for **її** — Missing stress mark. Should be ``.
+- **Line 148:** `ipa: ''` for **родовий** — Contains two stress marks, which is phonetically impossible. Should be ``.
 
 ### ISSUE 6: Filler Section — "Advanced Considerations for Possessive Pronouns"
 

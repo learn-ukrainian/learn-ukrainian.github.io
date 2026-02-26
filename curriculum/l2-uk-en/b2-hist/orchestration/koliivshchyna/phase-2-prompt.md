@@ -308,7 +308,7 @@ Key: й can ONLY follow a vowel. After a consonant, always use і — even befor
 ### Pronunciation (HARD FAIL if Latin transliteration found)
 
 **Level-gated pronunciation rules:**
-- **A1–A2**: Use **stress marks** (мі́сто, not [ˈmʲistɔ]) for pronunciation hints on the first occurrence of new vocabulary words. Do NOT use inline IPA `[...]` in prose content — IPA is generated deterministically in vocabulary YAML by our tooling.
+- **A1–A2**: Use **stress marks** (мі́сто, not) for pronunciation hints on the first occurrence of new vocabulary words. Do NOT use inline IPA `[...]` in prose content — IPA is generated deterministically in vocabulary YAML by our tooling.
 - **B1+**: No pronunciation annotations in content. IPA lives in vocabulary YAML only.
 
 **Latin transliterations are BANNED at ALL levels.** Never use kh, sh, ch, zh, ts, ya, yu, ye, shch.

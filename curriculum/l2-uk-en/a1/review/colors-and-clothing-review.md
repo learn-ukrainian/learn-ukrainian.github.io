@@ -28,9 +28,9 @@
 Ukrainian words have exactly ONE primary stress. Three items have invalid double stress marks:
 
 1. **Content line 261:** «виши́ва́нка» — has two acute accents. Correct: «вишива́нка».
-2. **Vocabulary `вишиванка`:** IPA `[ʋɪˈʃɪˈʋɑnkɑ]` — has two stress marks. Correct: `[ʋɪʃɪˈʋɑnkɑ]`.
-3. **Vocabulary `коштувати`:** IPA `[ˈkɔʃtuˈʋɑtɪ]` — has two stress marks. Correct: `[kɔʃtuˈʋɑtɪ]`.
-4. **Vocabulary `розмір`:** IPA `[rɔzʲmʲir]` — MISSING stress mark entirely. Correct: `[ˈrɔzʲmʲir]`.
+2. **Vocabulary `вишиванка`:** IPA `` — has two stress marks. Correct: ``.
+3. **Vocabulary `коштувати`:** IPA `` — has two stress marks. Correct: ``.
+4. **Vocabulary `розмір`:** IPA `[rɔzʲmʲir]` — MISSING stress mark entirely. Correct: ``.
 
 **Fix:** Remove the spurious stress mark from each item, keeping only the correct primary stress position. Add missing stress to розмір.
 
@@ -106,7 +106,7 @@ The plan specifies this section as "Практика: Мій улюблений 
 | Box | Location | Claim | Verdict |
 |-----|----------|-------|---------|
 | [!culture] "Два кольори" | Lines 29-36 | References Ukrainian song «Два кольори» with lyric «Червоне — то любов, а чорне — то журба» | **VERIFIED** — Song by Дмитро Павличко, lyrics accurate. The cultural note correctly states that in older tradition, black symbolized earth/life rather than sorrow. |
-| [!tip] Pronunciation | Lines 73-75 | Claims soft «ль» in «колір» is palatalized | **VERIFIED** — «колір» [ˈkɔlʲir] contains palatalized lateral. Pedagogical explanation is accurate. |
+| [!tip] Pronunciation | Lines 73-75 | Claims soft «ль» in «колір» is palatalized | **VERIFIED** — «колір» contains palatalized lateral. Pedagogical explanation is accurate. |
 | [!warning] Common Mistake | Lines 119-121 | Says "червоний ручка" confuses listeners due to clashing gender signals | **VERIFIED** — Correct. «Ручка» is feminine, requires «червона ручка». |
 | [!observe] Case Comparison | Lines 206-211 | Contrasts nominative «синя сукня» with accusative «синю сукню» | **VERIFIED** — Correct case forms. The "I wear she" analogy (line 211) is pedagogically creative if slightly imprecise. |
 | [!warning] "Don't count" | Lines 251-254 | Claims you cannot say "один штани", must use «одні́» | **VERIFIED** — Correct. «Одні» is the standard collective numeral for pluralia tantum. |

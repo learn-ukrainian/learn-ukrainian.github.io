@@ -1,138 +1,109 @@
 items:
 - lemma: робота
-  ipa: '[rɔˈbɔtɑ]'
   translation: work / job
   pos: noun
   gender: f
 - lemma: професія
-  ipa: '[prɔˈfɛsʲijɑ]'
   translation: profession
   pos: noun
   gender: f
 - lemma: лікар
-  ipa: '[ˈlʲikɑr]'
   translation: doctor
   pos: noun
   gender: m
 - lemma: вчитель
-  ipa: '[ˈʍt͡ʃɪtɛlʲ]'
   translation: teacher
   pos: noun
   gender: m
 - lemma: інженер
-  ipa: '[inʒɛˈnɛr]'
   translation: engineer
   pos: noun
   gender: m
 - lemma: офіс
-  ipa: '[ˈɔfʲis]'
   translation: office
   pos: noun
   gender: m
 - lemma: зарплата
-  ipa: '[zɑrˈplɑtɑ]'
   translation: salary
   pos: noun
   gender: f
 - lemma: колега
-  ipa: '[kɔˈlɛɦɑ]'
   translation: colleague
   pos: noun
 - lemma: програміст
-  ipa: '[prɔɦrɑˈmʲist]'
   translation: programmer
   pos: noun
   gender: m
 - lemma: бухгалтер
-  ipa: '[buˈɦɦɑltɛr]'
   translation: accountant
   pos: noun
   gender: m
 - lemma: резюме
-  ipa: '[rɛzʲuˈmɛ]'
   translation: resume / CV
   pos: noun
   gender: n
 - lemma: співбесіда
-  ipa: '[sʲpʲiˈʋbɛsʲidɑ]'
   translation: interview
   pos: noun
   gender: f
 - lemma: керівник
-  ipa: '[kɛrʲiˈʋnɪk]'
   translation: manager / head
   pos: noun
   gender: m
 - lemma: підлеглий
-  ipa: '[pʲiˈdlɛɦlɪj]'
   translation: subordinate
   pos: noun
   gender: m
 - lemma: лікарка
-  ipa: '[ˈlʲikɑrkɑ]'
   translation: female doctor
   pos: noun
   gender: f
 - lemma: вчителька
-  ipa: '[ˈʍt͡ʃɪtɛlʲkɑ]'
   translation: female teacher
   pos: noun
   gender: f
 - lemma: працювати
-  ipa: '[prɑt͡sʲuˈʋɑtɪ]'
   translation: to work
   pos: verb
 - lemma: стати
-  ipa: '[ˈstɑtɪ]'
   translation: to become
   pos: verb
 - lemma: віддалено
-  ipa: '[ʋʲiˈdːɑlɛnɔ]'
   translation: remotely
   pos: adverb
 - lemma: графік
-  ipa: '[ˈɦrɑfʲik]'
   translation: schedule
   pos: noun
   gender: m
 - lemma: директор
-  ipa: '[dɪˈrɛktɔr]'
   translation: director
   pos: noun
   gender: m
 - lemma: водій
-  ipa: '[ʋɔˈdʲij]'
   translation: driver
   pos: noun
   gender: m
 - lemma: професор
-  ipa: '[prɔˈfɛsɔr]'
   translation: professor
   pos: noun
   gender: m
 - lemma: доцент
-  ipa: '[dɔˈt͡sɛnt]'
   translation: associate professor
   pos: noun
   gender: m
 - lemma: няня
-  ipa: '[ˈnʲɑnʲɑ]'
   translation: nanny
   pos: noun
   gender: f
 - lemma: називний відмінок
-  ipa: '[nɑzɪˈʋnɪj ʋʲiˈdʲmʲinɔk]'
   translation: Nominative case
   pos: noun phrase
 - lemma: орудний відмінок
-  ipa: '[ɔˈrudnɪj ʋʲiˈdʲmʲinɔk]'
   translation: Instrumental case
   pos: noun phrase
 - lemma: називний
-  ipa: '[nɑzɪˈʋnɪj]'
   translation: Nominative
   pos: adjective
 - lemma: орудний
-  ipa: '[ɔˈrudnɪj]'
   translation: Instrumental
   pos: adjective

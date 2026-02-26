@@ -1,101 +1,76 @@
 items:
   - lemma: "для"
-    ipa: '[dʲlʲɑ]'
     translation: "for"
     pos: "preposition"
   - lemma: "без"
-    ipa: '[bɛz]'
     translation: "without"
     pos: "preposition"
   - lemma: "через"
-    ipa: '[ˈt͡ʃɛrɛz]'
     translation: "because of, through"
     pos: "preposition"
   - lemma: "про"
-    ipa: '[prɔ]'
     translation: "about"
     pos: "preposition"
   - lemma: "після"
-    ipa: '[ˈpʲisʲlʲɑ]'
     translation: "after"
     pos: "preposition"
   - lemma: "о"
-    ipa: '[ɔ]'
     translation: "at (time)"
     pos: "preposition"
   - lemma: "об"
-    ipa: '[ɔb]'
     translation: "at (time, before vowels)"
     pos: "preposition"
   - lemma: "завдяки"
-    ipa: '[zɑu̯dʲɑˈkɪ]'
     translation: "thanks to"
     pos: "preposition"
   - lemma: "протягом"
-    ipa: '[ˈprɔtʲɑɦɔm]'
     translation: "during, over the course of"
     pos: "preposition"
   - lemma: "крім"
-    ipa: '[krʲim]'
     translation: "except, besides"
     pos: "preposition"
   - lemma: "замість"
-    ipa: '[ˈzɑmʲisʲtʲ]'
     translation: "instead of"
     pos: "preposition"
   - lemma: "від"
-    ipa: '[ʋʲid]'
     translation: "from (a person or entity)"
     pos: "preposition"
   - lemma: "з"
-    ipa: '[z]'
     translation: "from (a physical location)"
     pos: "preposition"
   - lemma: "щодо"
-    ipa: '[ˈʃt͡ʃɔdɔ]'
     translation: "regarding"
     pos: "preposition"
   - lemma: "стосовно"
-    ipa: '[stɔˈsɔu̯nɔ]'
     translation: "concerning"
     pos: "preposition"
   - lemma: "внаслідок"
-    ipa: '[ˈʋnɑsʲlʲidɔk]'
     translation: "as a result of"
     pos: "preposition"
   - lemma: "заради"
-    ipa: '[zɑˈrɑdɪ]'
     translation: "for the sake of"
     pos: "preposition"
   - lemma: "всупереч"
-    ipa: '[ˈʍsupɛrɛt͡ʃ]'
     translation: "despite"
     pos: "preposition"
   - lemma: "по"
-    ipa: '[pɔ]'
     translation: "for (purpose of movement)"
     pos: "preposition"
   - lemma: "причина"
-    ipa: '[prɪˈt͡ʃɪnɑ]'
     translation: "cause, reason"
     pos: "noun"
   - lemma: "мета"
-    ipa: '[mɛˈtɑ]'
     translation: "purpose, goal"
     pos: "noun"
   - lemma: "тому що"
-    ipa: '[tɔˈmu ʃt͡ʃɔ]'
     translation: "because"
     pos: "conjunction"
   - lemma: "бо"
-    ipa: '[bɔ]'
     translation: "because (short form)"
     pos: "conjunction"
   - lemma: "щоб"
-    ipa: '[ʃt͡ʃɔb]'
     translation: "in order to"
     pos: "conjunction"
   - lemma: "здоров'я"
-    ipa: '[zdɔˈrɔu̯jɑ]'
     translation: "health"
     pos: "noun"

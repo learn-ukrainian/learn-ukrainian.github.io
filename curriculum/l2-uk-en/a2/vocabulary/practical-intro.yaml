@@ -1,156 +1,123 @@
 items:
   - lemma: речення
-    ipa: '[rɛt͡ʃɛnʲːɑ]'
     translation: sentence
     pos: noun
     gender: n
   - lemma: слово
-    ipa: '[ˈslɔʋɔ]'
     translation: word
     pos: noun
     gender: n
   - lemma: граматика
-    ipa: '[ɦrɑˈmɑtɪkɑ]'
     translation: grammar
     pos: noun
     gender: f
   - lemma: правило
-    ipa: '[prɑʋɪlɔ]'
     translation: rule
     pos: noun
     gender: n
   - lemma: помилка
-    ipa: '[ˈpɔˈmɪlkɑ]'
     translation: mistake
     pos: noun
     gender: f
   - lemma: правильно
-    ipa: '[ˈprɑʋɪlʲnɔ]'
     translation: correctly
     pos: adverb
   - lemma: неправильно
-    ipa: '[nɛˈprɑʋɪlʲnɔ]'
     translation: incorrectly
     pos: adverb
   - lemma: контекст
-    ipa: '[kɔnˈtɛkst]'
     translation: context
     pos: noun
     gender: m
   - lemma: відмінок
-    ipa: '[ʋʲiˈdʲmʲinɔk]'
     translation: case
     pos: noun
     gender: m
   - lemma: вид
-    ipa: '[ʋɪd]'
     translation: aspect
     pos: noun
     gender: m
   - lemma: сполучник
-    ipa: '[spɔˈlut͡ʃnɪk]'
     translation: conjunction
     pos: noun
     gender: m
   - lemma: порядок
-    ipa: '[pɔˈrʲɑdɔk]'
     translation: order
     pos: noun
     gender: m
   - lemma: дієслово
-    ipa: '[dʲijɛˈslɔʋɔ]'
     translation: verb
     pos: noun
     gender: n
   - lemma: іменник
-    ipa: '[iˈmɛnːɪk]'
     translation: noun
     pos: noun
     gender: m
   - lemma: причина
-    ipa: '[prɪˈt͡ʃɪnɑ]'
     translation: reason
     pos: noun
     gender: f
   - lemma: умова
-    ipa: '[uˈmɔʋɑ]'
     translation: condition
     pos: noun
     gender: f
   - lemma: мета
-    ipa: '[mɛˈtɑ]'
     translation: purpose
     pos: noun
     gender: f
   - lemma: результат
-    ipa: '[rɛzulʲˈtɑt]'
     translation: result
     pos: noun
     gender: m
   - lemma: процес
-    ipa: '[prɔˈt͡sɛs]'
     translation: process
     pos: noun
     gender: m
   - lemma: звичка
-    ipa: '[ˈzʋɪt͡ʃkɑ]'
     translation: habit
     pos: noun
     gender: f
   - lemma: суржик
-    ipa: '[ˈsurʒɪk]'
     translation: surzhyk (mixed language)
     pos: noun
     gender: m
   - lemma: спілкування
-    ipa: '[sʲpʲilkuˈʋɑnʲːɑ]'
     translation: communication
     pos: noun
     gender: n
   - lemma: суб'єкт
-    ipa: '[suˈbjɛkt]'
     translation: subject
     pos: noun
     gender: m
   - lemma: об'єкт
-    ipa: '[ɔˈbjɛkt]'
     translation: object
     pos: noun
     gender: m
   - lemma: інструмент
-    ipa: '[instruˈmɛnt]'
     translation: tool
     pos: noun
     gender: m
   - lemma: доконаний
-    ipa: '[dɔˈkɔnɑnɪj]'
     translation: perfective (aspect)
     pos: adjective
   - lemma: недоконаний
-    ipa: '[nɛdɔˈkɔnɑnɪj]'
     translation: imperfective (aspect)
     pos: adjective
   - lemma: кличний
-    ipa: '[ˈklɪt͡ʃnɪj]'
     translation: vocative (case)
     pos: adjective
   - lemma: орудний
-    ipa: '[ɔˈrudnɪj]'
     translation: instrumental (case)
     pos: adjective
   - lemma: знахідний
-    ipa: '[znɑˈxʲidnɪj]'
     translation: accusative (case)
     pos: adjective
   - lemma: називний
-    ipa: '[nɑzɪˈʋnɪj]'
     translation: nominative (case)
     pos: adjective
   - lemma: родовий
-    ipa: '[rɔˈdɔˈʋɪj]'
     translation: genitive (case)
     pos: adjective
   - lemma: місцевий
-    ipa: '[mʲiˈst͡sɛʋɪj]'
     translation: locative (case)
     pos: adjective

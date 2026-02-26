@@ -1,125 +1,100 @@
 items:
   - lemma: "гетьманат"
-    ipa: '[ɦɛtʲmɑˈnɑt]'
     translation: "Hetmanate"
     pos: "noun"
     gender: "m"
   - lemma: "булава"
-    ipa: '[bulɑˈʋɑ]'
     translation: "mace"
     pos: "noun"
     gender: "f"
   - lemma: "канцелярський"
-    ipa: '[kɑnt͡sɛˈlʲɑrsʲkɪj]'
     translation: "chancellery"
     pos: "adjective"
   - lemma: "полковник"
-    ipa: '[pɔlˈkɔu̯nɪk]'
     translation: "colonel"
     pos: "noun"
     gender: "m"
   - lemma: "сотник"
-    ipa: '[ˈsɔtnɪk]'
     translation: "centurion"
     pos: "noun"
     gender: "m"
   - lemma: "скарбниця"
-    ipa: '[skɑrˈbnɪt͡sʲɑ]'
     translation: "treasury"
     pos: "noun"
     gender: "f"
   - lemma: "універсал"
-    ipa: '[unʲiʋɛrˈsɑl]'
     translation: "universal (decree)"
     pos: "noun"
     gender: "m"
   - lemma: "клейнод"
-    ipa: '[klɛjˈnɔd]'
     translation: "regalia"
     pos: "noun"
     gender: "m"
   - lemma: "підскарбій"
-    ipa: '[pʲiˈd͡zskɑrbʲij]'
     translation: "treasurer"
     pos: "noun"
     gender: "m"
   - lemma: "обозний"
-    ipa: '[ɔˈbɔznɪj]'
     translation: "quartermaster"
     pos: "noun"
     gender: "m"
   - lemma: "автономія"
-    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
     translation: "autonomy"
     pos: "noun"
     gender: "f"
   - lemma: "дипломатія"
-    ipa: '[dɪplɔˈmɑtʲijɑ]'
     translation: "diplomacy"
     pos: "noun"
     gender: "f"
   - lemma: "суверенітет"
-    ipa: '[suʋɛrɛnʲiˈtɛt]'
     translation: "sovereignty"
     pos: "noun"
     gender: "m"
   - lemma: "старшина"
-    ipa: '[stɑrˈʃɪnɑ]'
     translation: "officers staff"
     pos: "noun"
     gender: "f"
   - lemma: "суддя"
-    ipa: '[suˈdʲːɑ]'
     translation: "judge"
     pos: "noun"
     gender: "m"
   - lemma: "воєводство"
-    ipa: '[ʋɔjɛˈʋɔd͡zstʋɔ]'
     translation: "voivodeship"
     pos: "noun"
     gender: "n"
   - lemma: "індукта"
-    ipa: '[induktɑ]'
     translation: "import duty"
     pos: "noun"
     gender: "f"
   - lemma: "евекта"
-    ipa: '[ɛʋɛktɑ]'
     translation: "export duty"
     pos: "noun"
     gender: "f"
   - lemma: "пропінація"
-    ipa: '[prɔpʲiˈnɑt͡sʲijɑ]'
     translation: "propination (alcohol tax)"
     pos: "noun"
     gender: "f"
   - lemma: "отаман"
-    ipa: '[ɔˈtɑmɑn]'
     translation: "chieftain"
     pos: "noun"
     gender: "m"
   - lemma: "реляція"
-    ipa: '[rɛˈlʲɑt͡sʲijɑ]'
     translation: "report"
     pos: "noun"
     gender: "f"
   - lemma: "самоврядування"
-    ipa: '[sɑmɔu̯rʲɑduˈʋɑnʲːɑ]'
     translation: "self-government"
     pos: "noun"
     gender: "n"
   - lemma: "суб'єктність"
-    ipa: '[suˈbjɛktʲnʲisʲtʲ]'
     translation: "agency"
     pos: "noun"
     gender: "f"
   - lemma: "республіка"
-    ipa: '[rɛˈspublʲikɑ]'
     translation: "republic"
     pos: "noun"
     gender: "f"
   - lemma: "союз"
-    ipa: '[sɔˈjuz]'
     translation: "alliance"
     pos: "noun"
     gender: "m"

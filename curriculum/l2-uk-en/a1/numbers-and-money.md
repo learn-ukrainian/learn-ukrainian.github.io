@@ -52,16 +52,16 @@ Here are the basic cardinals. Read them aloud, paying attention to the stress (m
 #### Числа 0-10
 
 *   **0 — нуль** [nulʲ]. Це нуль.
-*   **1 — один** [ɔˈdɪn]. Це один.
+*   **1 — один**. Це один.
 *   **2 — два** [dʋɑ]. Це два.
 *   **3 — три** [trɪ]. Це три.
-*   **4 — чотири** [t͡ʃɔˈtɪrɪ]. Це чотири.
+*   **4 — чотири**. Це чотири.
 *   **5 — п'ять** [pjɑtʲ]. Це п'ять.
 *   **6 — шість** [ʃisʲtʲ]. Це шість.
 *   **7 — сім** [sim]. Це сім.
-*   **8 — вісім** [ˈʋisim]. Це вісім.
-*   **9 — дев'ять** [ˈdɛʋjɑtʲ]. Це дев'ять.
-*   **10 — десять** [ˈdɛsʲɑtʲ]. Це десять.
+*   **8 — вісім**. Це вісім.
+*   **9 — дев'ять**. Це дев'ять.
+*   **10 — десять**. Це десять.
 
 These numbers are the foundation. Without them, it is impossible to build larger numbers.
 
@@ -77,15 +77,15 @@ The "teens" in Ukrainian are very logical. In English, you have "eleven" and "tw
 
 Think of it as "one on ten," "two on ten," etc. This is an ancient way of counting, imagining the extra fingers placed "on top of" the ten fingers you already counted.
 
-*   **11 — одинадцять** [ɔdɪˈnɑdt͡sʲɑtʲ] (один + на + дцять)
-*   **12 — дванадцять** [dʋɑˈnɑdt͡sʲɑtʲ]
-*   **13 — тринадцять** [trɪˈnɑdt͡sʲɑtʲ]
-*   **14 — чотирнадцять** [t͡ʃɔtɪrˈnɑdt͡sʲɑtʲ]
-*   **15 — п'ятнадцять** [pjɑtˈnɑdt͡sʲɑtʲ]
-*   **16 — шістнадцять** [ʃisˈnɑdt͡sʲɑtʲ] (Notice: the soft sign 'ь' from 'шість' drops in spelling; the 'т' is written but often silent in speech)
-*   **17 — сімнадцять** [simˈnɑdt͡sʲɑtʲ]
-*   **18 — вісімнадцять** [ʋisimˈnɑdt͡sʲɑtʲ]
-*   **19 — дев'ятнадцять** [dɛʋjɑtˈnɑdt͡sʲɑtʲ]
+*   **11 — одинадцять** (один + на + дцять)
+*   **12 — дванадцять**
+*   **13 — тринадцять**
+*   **14 — чотирнадцять**
+*   **15 — п'ятнадцять**
+*   **16 — шістнадцять** (Notice: the soft sign 'ь' from 'шість' drops in spelling; the 'т' is written but often silent in speech)
+*   **17 — сімнадцять**
+*   **18 — вісімнадцять**
+*   **19 — дев'ятнадцять**
 
 #### Stress Shift Warning
 
@@ -111,14 +111,14 @@ Now let's move to the "tens" — 20, 30, 40, and so on. Understanding these will
 
 The logic here is also simple: **Root** + **дцять** (for 20/30) or **десят** (for 50-80).
 
-*   **20 — двадцять** [ˈdʋɑdt͡sʲɑtʲ]
-*   **30 — тридцять** [ˈtrɪdt͡sʲɑtʲ]
-*   **40 — сорок** [ˈsɔrɔk] (The odd one out — some linguists trace it to ancient fur trade counting, but just remember it as a special case)
-*   **50 — п'ятдесят** [pjɑtdɛˈsʲɑt]
-*   **60 — шістдесят** [ʃisʲtdɛˈsʲɑt]
-*   **70 — сімдесят** [simdɛˈsʲɑt]
-*   **80 — вісімдесят** [ʋisimdɛˈsʲɑt]
-*   **90 — дев'яносто** [dɛʋjɑˈnɔstɔ] (Another unique form — just memorize it!)
+*   **20 — двадцять**
+*   **30 — тридцять**
+*   **40 — сорок** (The odd one out — some linguists trace it to ancient fur trade counting, but just remember it as a special case)
+*   **50 — п'ятдесят**
+*   **60 — шістдесят**
+*   **70 — сімдесят**
+*   **80 — вісімдесят**
+*   **90 — дев'яносто** (Another unique form — just memorize it!)
 
 #### Правопис: Де м'який знак?
 
@@ -256,7 +256,7 @@ Now that you understand the grammar, let's use it to buy something. You are in a
 ### В магазині: Як запитати ціну
 
 The most universal phrase is:
-**Скільки коштує...?** [ˈskilʲkɪ ˈkɔʃtujɛ] (How much does ... cost?)
+**Скільки коштує...?** (How much does ... cost?)
 
 *   **Скільки** = How much / How many
 *   **Коштує** = Costs (verb)
@@ -268,7 +268,7 @@ You can add the object after it:
 #### Яка ціна?
 
 Another common option is asking about the "price" (**ціна**).
-**Яка ціна?** [jaˈkɑ t͡siˈnɑ] (What is the price?)
+**Яка ціна?** (What is the price?)
 
 This is very direct and common in supermarkets or when pointing at a price tag.
 
@@ -276,20 +276,20 @@ This is very direct and common in supermarkets or when pointing at a price tag.
 
 When you are ready to pay, the conversation follows a predictable pattern. Knowing these phrases makes the interaction smooth.
 
-**Скільки з мене?** [ˈskilʲkɪ z ˈmɛnɛ] (Literally: How much from me?)
+**Скільки з мене?** (Literally: How much from me?)
 This means "How much do I owe you?" or "What is the total?" It is a very natural way to ask for the bill in any context, from a taxi to a market stall.
 
-**Можна карткою?** [ˈmɔʒnɑ ˈkɑrtkɔju] (Can I pay by card?)
+**Можна карткою?** (Can I pay by card?)
 This is probably the most useful phrase in modern Ukraine.
 *   **Так, прикладайте.** (Yes, tap it.)
 *   **Тільки готівка.** (Cash only.)
 
-**Пакет потрібен?** [pɑˈkɛt pɔˈtribɛn] (Do you need a bag?)
+**Пакет потрібен?** (Do you need a bag?)
 Every cashier will ask you this. It's polite to answer.
 *   **Так, будь ласка.** (Yes, please.)
 *   **Ні, дякую, я зі своїм.** (No thanks, I have mine.)
 
-**У вас є дрібні?** [u ʋɑs jɛ dribˈni] (Do you have small bills?)
+**У вас є дрібні?** (Do you have small bills?)
 Often, if you pay with a 500 or 1000 note, they might ask this because they are low on change.
 *   **На жаль, ні.** (Unfortunately, no.)
 

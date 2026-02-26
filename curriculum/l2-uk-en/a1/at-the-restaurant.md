@@ -57,7 +57,7 @@ A **рестора́н** implies a more formal atmosphere, often with evening se
 
 When dining with friends, you will inevitably raise a glass. The most universal, all-purpose Ukrainian toast is just one word.
 
-**Будьмо!** [ˈbudʲmɔ]
+**Будьмо!**
 This literally means "Let us be!" or "May we be!". It acts as the equivalent of "Cheers!", "Santé!", or "Prosit!".
 
 *   **Usage:** You say it when clinking glasses with alcohol, water, or juice.
@@ -408,7 +408,7 @@ Ukrainian meals almost always include bread.
 Це дуже важлива фраза. (This is a very important phrase.)
 
 This is the most essential phrase for dining.
-*   **Смачного!** [smɑt͡ʃˈnɔɦɔ] — Bon appétit / Enjoy your meal.
+*   **Смачного!** — Bon appétit / Enjoy your meal.
 
 **When to use it:**
 1.  **Waiter to Guest:** When the waiter puts the plate on the table, they will say «Смачного!». You should answer «Дякую!».

@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "l2-uk-direct vocabulary entry",
+  "description": "L1-agnostic vocabulary. No translation field in core. IPA is required and first.",
+  "type": "object",
+  "required": ["word", "pronunciation_video", "category", "examples"],
+  "additionalProperties": false,
+  "properties": {
+    "word": {
+      "type": "string",
+      "description": "Ukrainian word"
+    },
+    "pronunciation_video": {
+      "type": ["string", "null"],
+      "description": "YouTube URL for native speaker pronunciation — primary pronunciation anchor, replaces IPA"
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Semantic anchor emoji — fallback when image_url is null"
+    },
+    "image_url": {
+      "type": ["string", "null"],
+      "description": "Cloudinary URL. Null until image is sourced via Pixabay and uploaded."
+    },
+    "image_alt": {
+      "type": ["string", "null"],
+      "description": "Ukrainian alt text for the image"
+    },
+    "category": {
+      "type": "string",
+      "description": "Semantic category in Ukrainian e.g. тварини, їжа, дія"
+    },
+    "question": {
+      "type": "string",
+      "enum": ["ХТО?", "ЩО?", "ЩО РОБИТЬ?", "ЯКИЙ?", "ДЕ?", "КОЛИ?", "СКІЛЬКИ?"],
+      "description": "Grammar category expressed as question word — never use grammatical terms"
+    },
+    "examples": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "type": "string" },
+      "description": "Simple Ukrainian sentences using this word. No English."
+    },
+    "context_video": {
+      "type": ["string", "null"],
+      "description": "YouTube URL showing the word in real Ukrainian context — pure Ukrainian content only"
+    }
+  }
+}

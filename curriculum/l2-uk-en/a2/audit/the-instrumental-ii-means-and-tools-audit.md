@@ -1,7 +1,7 @@
 # Audit Report: M05 — the-instrumental-ii-means-and-tools.md
 **Level:** A2 | **Module:** M05 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:20
+**Generated:** 2026-02-26 14:22:18
 
 ## Configuration
 **Type:** A2-grammar
@@ -40,7 +40,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3567/3000 (raw: 3883)
+- **Words:** ✅ 3258/3000 (raw: 3574)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 8
 - **Unique_types:** ✅ 10/4 types
@@ -49,11 +49,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 50.6% (target 50-60% (A2.1))
+- **Immersion:** 🇺🇦 52.0% (target 50-60% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -63,9 +62,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Instrumental II — Means and Tools** | ✅ | 73 | Included in Core |
-| **Вступ: Без прийменника «з»** | ✅ | 461 | Included in Core |
-| **Транспорт і рух** | ✅ | 657 | Included in Core |
-| **Інструменти та знаряддя** | ✅ | 879 | Included in Core |
-| **Питання та відповіді** | ✅ | 878 | Included in Core |
-| **Практика та підсумок** | ✅ | 394 | Included in Core |
+| **Вступ: Без прийменника «з»** | ✅ | 436 | Included in Core |
+| **Транспорт і рух** | ✅ | 623 | Included in Core |
+| **Інструменти та знаряддя** | ✅ | 775 | Included in Core |
+| **Питання та відповіді** | ✅ | 808 | Included in Core |
+| **Практика та підсумок** | ✅ | 318 | Included in Core |
 | **Підсумок** | ✅ | 225 | Included in Core |

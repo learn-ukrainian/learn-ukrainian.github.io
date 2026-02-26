@@ -1,126 +1,101 @@
 items:
   - lemma: "входити"
-    ipa: '[ʍxɔdɪtɪ]'
     translation: "to enter (on foot)"
     pos: "verb"
     aspect: "imperfective"
     notes: "requires preposition в/на + Accusative"
   - lemma: "увійти"
-    ipa: '[uʋʲijˈtɪ]'
     translation: "to enter (on foot) [completed]"
     pos: "verb"
     aspect: "perfective"
   - lemma: "виходити"
-    ipa: '[ʋɪxɔdɪtɪ]'
     translation: "to exit (on foot)"
     pos: "verb"
     aspect: "imperfective"
     notes: "requires preposition з/із + Genitive"
   - lemma: "вийти"
-    ipa: '[ˈʋɪjtɪ]'
     translation: "to exit (on foot) [completed]"
     pos: "verb"
     aspect: "perfective"
   - lemma: "в'їжджати"
-    ipa: '[ʋjiˈʒd͡ʒɑtɪ]'
     translation: "to drive in, to enter (by vehicle)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "в'їхати"
-    ipa: '[ˈʋjixɑtɪ]'
     translation: "to drive in, to enter (by vehicle) [completed]"
     pos: "verb"
     aspect: "perfective"
   - lemma: "виїжджати"
-    ipa: '[ʋɪjiˈʒd͡ʒɑtɪ]'
     translation: "to drive out, to exit (by vehicle)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "виїхати"
-    ipa: '[ˈʋɪjixɑtɪ]'
     translation: "to drive out, to exit (by vehicle) [completed]"
     pos: "verb"
     aspect: "perfective"
   - lemma: "вхід"
-    ipa: '[ʍxʲid]'
     translation: "entrance"
     pos: "noun"
     gender: "m"
   - lemma: "вихід"
-    ipa: '[ˈʋɪxʲid]'
     translation: "exit"
     pos: "noun"
     gender: "m"
   - lemma: "поріг"
-    ipa: '[pɔˈrʲiɦ]'
     translation: "threshold"
     pos: "noun"
     gender: "m"
     notes: "cultural boundary in Ukrainian homes"
   - lemma: "іти"
-    ipa: '[iˈtɪ]'
     translation: "to go (on foot, one direction)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "ходити"
-    ipa: '[xɔˈdɪtɪ]'
     translation: "to walk (regularly, multidirectional)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "їхати"
-    ipa: '[ˈjixɑtɪ]'
     translation: "to go (by vehicle, one direction)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "їздити"
-    ipa: '[ˈjizdɪtɪ]'
     translation: "to drive (regularly, multidirectional)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "прийменник"
-    ipa: '[prɪjˈmɛnːɪk]'
     translation: "preposition"
     pos: "noun"
     gender: "m"
   - lemma: "напрямок"
-    ipa: '[ˈnɑprʲɑmɔk]'
     translation: "direction"
     pos: "noun"
     gender: "m"
   - lemma: "вектор"
-    ipa: '[ˈʋɛktɔr]'
     translation: "vector"
     pos: "noun"
     gender: "m"
   - lemma: "всередину"
-    ipa: '[ʍsɛˈrɛdɪnu]'
     translation: "inside, inward"
     pos: "adverb"
   - lemma: "назовні"
-    ipa: '[nɑˈzɔu̯nʲi]'
     translation: "outside, outward"
     pos: "adverb"
   - lemma: "пішки"
-    ipa: '[ˈpʲiʃkɪ]'
     translation: "on foot"
     pos: "adverb"
   - lemma: "гараж"
-    ipa: '[ɦɑˈrɑʒ]'
     translation: "garage"
     pos: "noun"
     gender: "m"
   - lemma: "парковка"
-    ipa: '[pɑrkɔu̯kɑ]'
     translation: "parking lot"
     pos: "noun"
     gender: "f"
   - lemma: "офіс"
-    ipa: '[ˈɔfʲis]'
     translation: "office"
     pos: "noun"
     gender: "m"
   - lemma: "будівля"
-    ipa: '[buˈdʲiu̯lʲɑ]'
     translation: "building"
     pos: "noun"
     gender: "f"

@@ -1,7 +1,7 @@
 # Audit Report: M39 — buying-tickets.md
 **Level:** A1 | **Module:** M39 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:29
+**Generated:** 2026-02-26 13:23:50
 
 ## Configuration
 **Type:** A1
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2571/2000 (raw: 2817)
+- **Words:** ✅ 2569/2000 (raw: 2815)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -47,11 +47,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.3% (target 35-55% (M39))
+- **Immersion:** 🇺🇦 36.4% (target 35-55% (M39))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -65,5 +64,5 @@
 | **Купівля квитка та напрямок** | ✅ | 482 | Included in Core |
 | **Деталі подорожі: Клас і Розклад** | ✅ | 537 | Included in Core |
 | **Практика: Діалоги на вокзалі** | ✅ | 448 | Included in Core |
-| **Подорож поїздом: Традиції** | ✅ | 422 | Included in Core |
+| **Подорож поїздом: Традиції** | ✅ | 420 | Included in Core |
 | **Підсумок** | ✅ | 175 | Included in Core |

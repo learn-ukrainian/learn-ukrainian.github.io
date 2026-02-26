@@ -1,0 +1,369 @@
+# Textbook Selection for RAG Database
+# Selected: 2026-02-26
+# Total: 42 books from pidruchnyk.com.ua + Google Drive
+# Strategy: 2 мова per grade, 1 literature (5-11), 1-2 history (5-11)
+#
+# PDF URL pattern: https://pidruchnyk.com.ua/uploads/book/{filename}.pdf
+# Page URL pattern: https://pidruchnyk.com.ua/{slug}.html
+
+# Selection criteria:
+# 1. Newest NUS editions (2024-2025 State Standard aligned)
+# 2. Author diversity: Большакова (1-2), mixed (3-4), Авраменко+Голуб/Караман (5-11)
+# 3. Decolonized history: Щупак (5-8), Гісем+Хлібовська (9-11)
+# 4. Two language books per grade for RAG diversity
+
+books:
+  # ── GRADE 1 ──────────────────────────────────────────
+  - id: g1-mova-bolshakova
+    grade: 1
+    subject: ukrainska_mova
+    author: Большакова
+    year: 2025
+    slug: 3029-ukr-mova-bukvar-1-klas-bolshakova
+    note: "Primary reference, already read Parts 1-2"
+
+  - id: g1-mova-zakhariichuk
+    grade: 1
+    subject: ukrainska_mova
+    author: Захарійчук
+    year: 2025
+    slug: 3028-bukvar-1-klas-zakhariichuk
+    note: "Second opinion, different letter sequence"
+
+  # ── GRADE 2 ──────────────────────────────────────────
+  - id: g2-mova-bolshakova
+    grade: 2
+    subject: ukrainska_mova
+    author: Большакова
+    year: 2019
+    slug: 3037-ukrmova-bolshakova-2-klas
+    note: "Continuity from Grade 1"
+
+  - id: g2-mova-vashulenko
+    grade: 2
+    subject: ukrainska_mova
+    author: Вашуленко
+    year: 2019
+    slug: 57-ukrayinska-mova-vashulenko-dubovyk-2-klas
+    note: "Classic widely-adopted author"
+
+  # ── GRADE 3 ──────────────────────────────────────────
+  - id: g3-mova-vashulenko
+    grade: 3
+    subject: ukrainska_mova
+    author: Вашуленко
+    year: 2020
+    slug: 1524-ukrmova-ta-chytannya-vashulenko-3klas-nush
+    note: "Replaces Большакова (site had wrong PDFs)"
+
+  - id: g3-mova-savchenko
+    grade: 3
+    subject: ukrainska_mova
+    author: Савченко
+    year: 2020
+    slug: 1504-ukrmova-ta-chytannja-sachenko-3-klas-nush
+    note: "Leading reading pedagogy expert"
+
+  # NUS Grade 3 has no separate reading book — reading is integrated into мова та читання
+
+  # ── GRADE 4 ──────────────────────────────────────────
+  - id: g4-mova-varzatska
+    grade: 4
+    subject: ukrainska_mova
+    author: Варзацька
+    year: 2021
+    slug: 650-ukrayinska-mova-varzacka-4-klas
+    note: "NUS 2021 edition"
+
+  - id: g4-mova-zakhariichuk
+    grade: 4
+    subject: ukrainska_mova
+    author: Захарійчук
+    year: 2021
+    slug: 652-ukrayinska-mova-zaharychuk-4-klas
+    note: "NUS 2021 edition"
+
+  # NUS Grade 4 has no separate reading book — reading is integrated into мова та читання
+
+  # ── GRADE 5 ──────────────────────────────────────────
+  - id: g5-mova-avramenko
+    grade: 5
+    subject: ukrainska_mova
+    author: Авраменко
+    year: 2022
+    slug: 1643-ukrainska-mova-avramenko-5-klas-2022
+    note: "#1 author for grades 5-11"
+
+  - id: g5-mova-golub
+    grade: 5
+    subject: ukrainska_mova
+    author: Голуб
+    year: 2022
+    slug: 1649-ukrmova-5-klas-golub
+    note: "Replaces Заболотний"
+
+  - id: g5-lit-avramenko
+    grade: 5
+    subject: ukrainska_literatura
+    author: Авраменко
+    year: 2022
+    slug: 1685-5_ukrlit_avramenko
+    note: "Dominant literature textbook"
+
+  - id: g5-hist-shchupak
+    grade: 5
+    subject: istoriia
+    author: Щупак
+    year: 2022
+    slug: 1668-vstup-do-istorii-5-klas-shchupak-2022
+    note: "Strongest decolonization perspective"
+
+  # ── GRADE 6 ──────────────────────────────────────────
+  - id: g6-mova-avramenko
+    grade: 6
+    subject: ukrainska_mova
+    author: Авраменко
+    year: 2023
+    slug: 2592-ukrmova-6-klas-avramenko
+    note: "Continuity"
+
+  - id: g6-mova-golub
+    grade: 6
+    subject: ukrainska_mova
+    author: Голуб
+    year: 2023
+    slug: 2595-ukrmova-6-klas-golub
+    note: "Replaces Заболотний (SSL error)"
+
+  - id: g6-lit-avramenko
+    grade: 6
+    subject: ukrainska_literatura
+    author: Авраменко
+    year: 2023
+    slug: 2618-ukralit-6-klas-avramenko-2023
+    note: "Continuity"
+
+  - id: g6-hist-shchupak
+    grade: 6
+    subject: istoriia
+    author: Щупак
+    year: 2023
+    slug: 2610-istoriia-6-klas-shchupak-2023
+    override_pdfs:
+      - "https://drive.google.com/uc?export=download&id=1r8zyc80xFu0SGCLiuprOIVNFHv2yohZW"
+    note: "PDF from Google Drive (user found)"
+
+  - id: g6-hist-gisem
+    grade: 6
+    subject: istoriia
+    author: Гісем
+    year: 2023
+    slug: 2606-istoriia-6-klas-gisem-2023
+    note: "Fallback with PDF available"
+
+  # ── GRADE 7 ──────────────────────────────────────────
+  - id: g7-mova-avramenko
+    grade: 7
+    subject: ukrainska_mova
+    author: Авраменко
+    year: 2024
+    slug: 2876-ukrainska-mova-avramenko-7-klas-2024
+    note: "Latest NUS"
+
+  - id: g7-mova-zabolotnyi
+    grade: 7
+    subject: ukrainska_mova
+    author: Заболотний
+    year: 2024
+    slug: 2873-ukrainska-mova-zabolotnyi-7-klas-2024
+    note: "Second reference"
+
+  - id: g7-lit-avramenko
+    grade: 7
+    subject: ukrainska_literatura
+    author: Авраменко
+    year: 2024
+    slug: 2863-ukrainska-literatura-avramenko-7-klas-2024
+    note: "Continuity"
+
+  - id: g7-hist-pometun
+    grade: 7
+    subject: istoriia
+    author: Пометун
+    year: 2024
+    slug: 2850-istoriia-ukrainy-pometun-7-klas-2024
+    note: "Replaces Щупак (no PDF available)"
+
+  - id: g7-hist-galimov
+    grade: 7
+    subject: istoriia
+    author: Галімов
+    year: 2024
+    slug: 2847-istoriia-ukrainy-galimov-7-klas-2024
+    note: "Major figure in Ukrainian history pedagogy"
+
+  # ── GRADE 8 ──────────────────────────────────────────
+  - id: g8-mova-avramenko
+    grade: 8
+    subject: ukrainska_mova
+    author: Авраменко
+    year: 2025
+    slug: 2899-ukrainska-mova-avramenko-8-klas-2025
+    note: "Brand new 2025 edition"
+
+  - id: g8-mova-zabolotnyi
+    grade: 8
+    subject: ukrainska_mova
+    author: Заболотний
+    year: 2025
+    slug: 2902-ukrainska-mova-zabolotnyi-8-klas-2025
+    note: "Brand new 2025 edition"
+
+  - id: g8-lit-avramenko
+    grade: 8
+    subject: ukrainska_literatura
+    author: Авраменко
+    year: 2025
+    slug: 2962-ukrainska-literatura-avramenko-8-klas-2025
+    note: "Brand new 2025 edition"
+
+  - id: g8-hist-shchupak
+    grade: 8
+    subject: istoriia
+    author: Щупак
+    year: 2025
+    slug: 3020-istoriia-ukrainy-shchupak-8-klas-2025
+    note: "Brand new"
+
+  - id: g8-hist-gisem
+    grade: 8
+    subject: istoriia
+    author: Гісем
+    year: 2025
+    slug: 3014-istoriia-ukrainy-gisem-8-klas-2025
+    override_pdfs:
+      - https://pidruchnyk.com.ua/uploads/book/8-klas-istoriya-ukr-gisem-2021.pdf
+    note: "Page is 404 but PDF exists directly. User found the link."
+
+  - id: g8-hist-galimov
+    grade: 8
+    subject: istoriia
+    author: Галімов
+    year: 2025
+    slug: 3018-istoriia-ukrainy-galimov-8-klas-2025
+    note: "Major figure in Ukrainian history pedagogy"
+
+  # ── GRADE 9 ──────────────────────────────────────────
+  - id: g9-mova-avramenko
+    grade: 9
+    subject: ukrainska_mova
+    author: Авраменко
+    year: 2017
+    slug: 970-ukrmova-9klas-avramenko
+    note: "Continuity"
+
+  - id: g9-mova-zabolotnyi
+    grade: 9
+    subject: ukrainska_mova
+    author: Заболотний
+    year: 2017
+    slug: 1000-ukrmova-zabolotniy-9-klas-2017
+    note: "Continuity"
+
+  - id: g9-lit-avramenko
+    grade: 9
+    subject: ukrainska_literatura
+    author: Авраменко
+    year: 2017
+    slug: 967-ukrliteratura-9-klas-avramenko-2017
+    note: "Continuity"
+
+  - id: g9-hist-gisem
+    grade: 9
+    subject: istoriia
+    author: Гісем
+    year: 2022
+    slug: 3127-istoriia-ukrainy-9-klas-gisem
+    note: "Newest available"
+
+  # ── GRADE 10 ─────────────────────────────────────────
+  - id: g10-mova-karaman
+    grade: 10
+    subject: ukrainska_mova
+    author: Караман
+    year: 2018
+    slug: 3082-ukrmova-10-klas-karaman
+    note: "Replaces Авраменко (site had wrong PDFs)"
+
+  - id: g10-mova-glazova
+    grade: 10
+    subject: ukrainska_mova
+    author: Глазова
+    year: 2018
+    slug: 3081-ukrmova-10-klas-glazova
+    note: "Excellent grammar depth for upper levels"
+
+  - id: g10-lit-avramenko
+    grade: 10
+    subject: ukrainska_literatura
+    author: Авраменко
+    year: 2018
+    slug: 392-ukrayinska-lteratura-avramenko-paharenko-10-klas
+    note: "Continuity"
+
+  - id: g10-hist-khlibovska
+    grade: 10
+    subject: istoriia
+    author: Хлібовська
+    year: 2023
+    slug: 3092-istoriia-ukrainy-10-klas-khlibovska
+    note: "Newest, post-2022 perspective"
+
+  # ── GRADE 11 ─────────────────────────────────────────
+  - id: g11-mova-avramenko
+    grade: 11
+    subject: ukrainska_mova
+    author: Авраменко
+    year: 2019
+    slug: 1239-ukrainska-mova-11-klas-avramenko
+    note: "Continuity"
+
+  - id: g11-mova-glazova
+    grade: 11
+    subject: ukrainska_mova
+    author: Глазова
+    year: 2019
+    slug: 1238-ukrmova-11-klas-glazova
+    note: "Deep grammar reference"
+
+  - id: g11-lit-avramenko
+    grade: 11
+    subject: ukrainska_literatura
+    author: Авраменко
+    year: 2019
+    slug: 1237-ukrliteratura-avramenko-11klas
+    note: "Continuity"
+
+  - id: g11-hist-gisem
+    grade: 11
+    subject: istoriia
+    author: Гісем
+    year: 2024
+    slug: 3024-istoriia-ukrainy-gisem-11-klas-2024
+    note: "Newest, comprehensive"
+
+  - id: g11-hist-khlibovska
+    grade: 11
+    subject: istoriia
+    author: Хлібовська
+    year: 2024
+    slug: 3023-istoriia-ukrainy-khlibovska-11-klas-2024
+    note: "Post-2022 decolonized perspective"
+
+  - id: g11-hist-galimov
+    grade: 11
+    subject: istoriia
+    author: Галімов
+    year: 2024
+    slug: 3021-istoriia-ukrainy-galimov-11-klas
+    note: "Major figure in Ukrainian history pedagogy"

@@ -63,8 +63,8 @@ In a *kaviarnia*, the focus is on beverages and desserts—**ті́стечка*
 
 Politeness is your most important tool. In English, you might walk up to a counter and simply say "A latte, please." In Ukrainian, this can sound abrupt. The interaction *always* begins with a proper greeting. Before you order, you must establish contact.
 
-*   **Добрий день!** [ˈdɔbrɪj dɛnʲ] — Good day! (Formal)
-*   **Привіт!** [prɪˈʋʲit] — Hi! (Informal)
+*   **Добрий день!** — Good day! (Formal)
+*   **Привіт!** — Hi! (Informal)
 
 > [!tip]
 > **Smile and Greet**
@@ -204,7 +204,7 @@ The waiter will ask how you want to pay. This uses the **Instrumental Case**, bu
 
 Never leave silently! Acknowledge the service.
 
-*   **Дякую!** [ˈdʲɑkuju] — Thank you!
+*   **Дякую!** — Thank you!
 *   **Дуже дякую!** — Thank you very much!
 *   **До побачення!** — Goodbye!
 *   **Гарного дня!** — Have a nice day!

@@ -1,0 +1,259 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "l2-uk-direct activity types",
+  "description": "Activities for the direct method track. No translation activities ever. Meaning anchored through images, video, emoji, and Ukrainian context only.",
+  "definitions": {
+
+    "watch_and_repeat": {
+      "description": "Watch a video, repeat the sound/word aloud. Pre-literacy safe.",
+      "required": ["type", "items"],
+      "properties": {
+        "type": { "const": "watch_and_repeat" },
+        "title": { "type": "string" },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["video"],
+            "properties": {
+              "letter":  { "type": "string", "description": "Optional: letter being demonstrated" },
+              "word":    { "type": "string", "description": "Optional: word being demonstrated" },
+              "video":   { "type": "string", "description": "YouTube URL" },
+              "note":    { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "classify": {
+      "description": "Sort words/images/letters into Ukrainian-labelled bins. Pre-literacy safe when using • and — symbols or image bins.",
+      "required": ["type", "categories"],
+      "properties": {
+        "type": { "const": "classify" },
+        "title": { "type": "string" },
+        "instruction": { "type": "string" },
+        "categories": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["label", "items"],
+            "properties": {
+              "label":       { "type": "string", "description": "e.g. ХТО?, ЩО?, •, —, Голосні, Приголосні" },
+              "symbol_hint": { "type": "string", "description": "e.g. vowel, consonant — for renderer" },
+              "items":       { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+
+    "image_to_letter": {
+      "description": "See an emoji/image — tap which letter the word starts with. Pre-literacy safe.",
+      "required": ["type", "items"],
+      "properties": {
+        "type": { "const": "image_to_letter" },
+        "title": { "type": "string" },
+        "items": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["emoji", "answer", "distractors"],
+            "properties": {
+              "emoji":       { "type": "string" },
+              "answer":      { "type": "string", "description": "The correct letter" },
+              "distractors": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+              "note":        { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "true_false": {
+      "description": "Правда чи неправда? — from Буквар pedagogy. Read a statement, decide true or false.",
+      "required": ["type", "title", "items"],
+      "properties": {
+        "type": { "const": "true_false" },
+        "title": { "type": "string" },
+        "items": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["statement", "answer"],
+            "properties": {
+              "statement": { "type": "string", "description": "Ukrainian statement to evaluate" },
+              "answer":    { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+
+    "build_sentence": {
+      "description": "Arrange word tiles into a correct Ukrainian sentence.",
+      "required": ["type", "title", "sentences"],
+      "properties": {
+        "type": { "const": "build_sentence" },
+        "title": { "type": "string" },
+        "sentences": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["words", "correct"],
+            "properties": {
+              "words":   { "type": "array", "minItems": 2, "items": { "type": "string" } },
+              "correct": { "type": "string", "description": "The correct assembled sentence" }
+            }
+          }
+        }
+      }
+    },
+
+    "match_sound": {
+      "description": "Match a letter or sound to its description/IPA. Used in abetka and sklad.",
+      "required": ["type", "title", "pairs"],
+      "properties": {
+        "type": { "const": "match_sound" },
+        "title": { "type": "string" },
+        "pairs": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["letter", "ipa"],
+            "properties": {
+              "letter": { "type": "string" },
+              "ipa":    { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "pattern_drill": {
+      "description": "Complete a pattern — syllable reading, verb conjugation, noun declension. Given → expected answer.",
+      "required": ["type", "title", "prompt", "items"],
+      "properties": {
+        "type": { "const": "pattern_drill" },
+        "title": { "type": "string" },
+        "prompt": { "type": "string", "description": "e.g. 'Яка форма?', 'Відмінюй дієслово'" },
+        "items": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["given", "answer"],
+            "properties": {
+              "given":  { "type": "string" },
+              "answer": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "riddle": {
+      "description": "Загадка — riddle. Read clues, guess the Ukrainian word. Sourced from school textbooks.",
+      "required": ["type", "clues", "answer"],
+      "properties": {
+        "type":        { "const": "riddle" },
+        "title":       { "type": "string" },
+        "clues": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "description": "Clue line in Ukrainian" }
+        },
+        "answer":      { "type": "string",  "description": "The answer word in Ukrainian, uppercase" },
+        "answer_emoji": { "type": "string", "description": "Emoji for the answer — shown after correct guess" },
+        "source":      { "type": "string",  "description": "e.g. Grade 3 p.76" }
+      }
+    },
+
+    "tongue_twister": {
+      "description": "Скоромовка — tongue twister for pronunciation practice. Say it slowly, then faster.",
+      "required": ["type", "text"],
+      "properties": {
+        "type":  { "const": "tongue_twister" },
+        "title": { "type": "string" },
+        "text":  { "type": "string", "description": "The tongue twister text in Ukrainian" },
+        "focus": { "type": "string", "description": "Which sound(s) this drills: e.g. Ш/Щ, Р, Г/Ґ" },
+        "video": { "type": ["string", "null"], "description": "Optional YouTube pronunciation model" },
+        "source": { "type": "string", "description": "e.g. Grade 3 p.81" }
+      }
+    },
+
+    "reading": {
+      "description": "Short Ukrainian reading passage with comprehension activities. Texts sourced from school textbooks or original compositions at level.",
+      "required": ["type", "title", "text"],
+      "properties": {
+        "type":   { "const": "reading" },
+        "title":  { "type": "string" },
+        "text":   { "type": "string", "description": "Ukrainian-only passage text" },
+        "source": { "type": "string", "description": "Source of the text if from a textbook" },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["question", "answer"],
+            "properties": {
+              "question": { "type": "string" },
+              "answer":   { "type": "string" }
+            }
+          }
+        },
+        "true_false_items": {
+          "type": "array",
+          "description": "Optional Правда чи неправда? items about the text",
+          "items": {
+            "type": "object",
+            "required": ["statement", "answer"],
+            "properties": {
+              "statement": { "type": "string" },
+              "answer":    { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+
+    "proverb_drill": {
+      "description": "Прислів'я — proverb activity. Can be fill-in-the-gap, match meaning, or Правда чи неправда? about the proverb's meaning.",
+      "required": ["type", "proverb"],
+      "properties": {
+        "type":    { "const": "proverb_drill" },
+        "title":   { "type": "string" },
+        "proverb": { "type": "string", "description": "The proverb in Ukrainian" },
+        "source":  { "type": "string", "description": "Textbook source if applicable" },
+        "activity": {
+          "type": "object",
+          "description": "The learning activity around the proverb",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["fill_gap", "match_meaning", "true_false"],
+              "description": "fill_gap: complete missing word; match_meaning: choose correct interpretation; true_false: is this statement about the proverb true?"
+            },
+            "gap_word":    { "type": "string", "description": "For fill_gap: the missing word" },
+            "options":     { "type": "array", "items": { "type": "string" } },
+            "answer":      {},
+            "meaning":     { "type": "string", "description": "Ukrainian paraphrase of the proverb's meaning" }
+          }
+        }
+      }
+    }
+
+  },
+
+  "notes": {
+    "pre_literacy_gate": "Modules abetka and sklad MUST only use: watch_and_repeat, classify, image_to_letter. These three types require no reading ability.",
+    "post_literacy_types": "All other types (true_false, build_sentence, match_sound, pattern_drill, riddle, tongue_twister, reading, proverb_drill) require reading ability. First available in module 3 (naholos).",
+    "language_rule": "All text content in ALL activity types must be Ukrainian only. No translations. No Latin script in learner-facing text.",
+    "sourcing": "Riddles, tongue twisters, and proverbs should be sourced from school textbooks where possible. See docs/l2-uk-direct/textbook-map.yaml for page references."
+  }
+}

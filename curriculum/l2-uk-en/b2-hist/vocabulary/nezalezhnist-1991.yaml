@@ -1,126 +1,101 @@
 items:
   - lemma: "незалежність"
-    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
     translation: "independence"
     pos: "noun"
     gender: "f"
   - lemma: "референдум"
-    ipa: '[rɛfɛˈrɛndum]'
     translation: "referendum"
     pos: "noun"
     gender: "m"
   - lemma: "конституція"
-    ipa: '[kɔnstɪˈtut͡sʲijɑ]'
     translation: "constitution"
     pos: "noun"
     gender: "f"
   - lemma: "президент"
-    ipa: '[prɛzɪˈdɛnt]'
     translation: "president"
     pos: "noun"
     gender: "m"
   - lemma: "олігарх"
-    ipa: '[ɔlʲiˈɦɑrx]'
     translation: "oligarch"
     pos: "noun"
     gender: "m"
   - lemma: "приватизація"
-    ipa: '[prɪʋɑtɪˈzɑt͡sʲijɑ]'
     translation: "privatization"
     pos: "noun"
     gender: "f"
   - lemma: "гіперінфляція"
-    ipa: '[ɦʲipɛrʲinˈflʲɑt͡sʲijɑ]'
     translation: "hyperinflation"
     pos: "noun"
     gender: "f"
   - lemma: "реформа"
-    ipa: '[rɛˈfɔrmɑ]'
     translation: "reform"
     pos: "noun"
     gender: "f"
   - lemma: "меморандум"
-    ipa: '[mɛmɔˈrɑndum]'
     translation: "memorandum"
     pos: "noun"
     gender: "m"
   - lemma: "роззброєння"
-    ipa: '[rɔˈzːbrɔjɛnʲːɑ]'
     translation: "disarmament"
     pos: "noun"
     gender: "n"
   - lemma: "корупція"
-    ipa: '[kɔˈrupt͡sʲijɑ]'
     translation: "corruption"
     pos: "noun"
     gender: "f"
   - lemma: "авторитаризм"
-    ipa: '[ɑu̯tɔrɪtɑˈrɪzm]'
     translation: "authoritarianism"
     pos: "noun"
     gender: "m"
   - lemma: "опозиція"
-    ipa: '[ɔpɔˈzɪt͡sʲijɑ]'
     translation: "opposition"
     pos: "noun"
     gender: "f"
   - lemma: "суспільство"
-    ipa: '[suˈsʲpʲilʲstʋɔ]'
     translation: "society"
     pos: "noun"
     gender: "n"
   - lemma: "багатовекторність"
-    ipa: '[bɑɦɑtɔˈʋɛktɔrnʲisʲtʲ]'
     translation: "multi-vector policy"
     pos: "noun"
     gender: "f"
   - lemma: "кравчучка"
-    ipa: '[krɑˈʋt͡ʃut͡ʃkɑ]'
     translation: "kravchuchka (handcart)"
     pos: "noun"
     gender: "f"
   - lemma: "легітимність"
-    ipa: '[lɛɦʲiˈtɪmnʲisʲtʲ]'
     translation: "legitimacy"
     pos: "noun"
     gender: "f"
   - lemma: "суверенітет"
-    ipa: '[suʋɛrɛnʲiˈtɛt]'
     translation: "sovereignty"
     pos: "noun"
     gender: "m"
   - lemma: "номенклатура"
-    ipa: '[nɔmɛnklɑˈturɑ]'
     translation: "nomenklatura"
     pos: "noun"
     gender: "f"
   - lemma: "фальсифікація"
-    ipa: '[fɑlʲsɪfʲiˈkɑt͡sʲijɑ]'
     translation: "falsification"
     pos: "noun"
     gender: "f"
   - lemma: "люстрація"
-    ipa: '[lʲuˈstrɑt͡sʲijɑ]'
     translation: "lustration"
     pos: "noun"
     gender: "f"
   - lemma: "інтеграція"
-    ipa: '[intɛˈɦrɑt͡sʲijɑ]'
     translation: "integration"
     pos: "noun"
     gender: "f"
   - lemma: "маневрування"
-    ipa: '[mɑnɛu̯ruˈʋɑnʲːɑ]'
     translation: "maneuvering"
     pos: "noun"
     gender: "n"
   - lemma: "протест"
-    ipa: '[prɔˈtɛst]'
     translation: "protest"
     pos: "noun"
     gender: "m"
   - lemma: "страйк"
-    ipa: '[strɑjk]'
     translation: "strike"
     pos: "noun"
     gender: "m"

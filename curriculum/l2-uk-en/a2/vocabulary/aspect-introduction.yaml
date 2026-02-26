@@ -1,107 +1,82 @@
 items:
   - lemma: "робити / зробити"
-    ipa: '[rɔˈbɪtɪ / zrɔˈbɪtɪ]'
     translation: "to do, to make"
     pos: "verb"
   - lemma: "писати / написати"
-    ipa: '[pɪˈsɑtɪ / nɑpɪˈsɑtɪ]'
     translation: "to write"
     pos: "verb"
   - lemma: "читати / прочитати"
-    ipa: '[t͡ʃɪˈtɑtɪ / prɔt͡ʃɪˈtɑtɪ]'
     translation: "to read"
     pos: "verb"
   - lemma: "купувати / купити"
-    ipa: '[kupuˈʋɑtɪ / kuˈpɪtɪ]'
     translation: "to buy"
     pos: "verb"
   - lemma: "пити / випити"
-    ipa: '[ˈpɪtɪ / ˈʋɪpɪtɪ]'
     translation: "to drink"
     pos: "verb"
   - lemma: "їсти / з'їсти"
-    ipa: '[ˈjistɪ / ˈzjistɪ]'
     translation: "to eat"
     pos: "verb"
   - lemma: "ділити / поділити"
-    ipa: '[dʲiˈlɪtɪ / pɔdʲiˈlɪtɪ]'
     translation: "to divide"
     pos: "verb"
   - lemma: "говорити / сказати"
-    ipa: '[ɦɔʋɔˈrɪtɪ / skɑˈzɑtɪ]'
     translation: "to say, to speak"
     pos: "verb"
   - lemma: "брати / взяти"
-    ipa: '[ˈbrɑtɪ / ˈʋzʲɑtɪ]'
     translation: "to take"
     pos: "verb"
   - lemma: "бачити / побачити"
-    ipa: '[ˈbɑt͡ʃɪtɪ / pɔˈbɑt͡ʃɪtɪ]'
     translation: "to see"
     pos: "verb"
   - lemma: "давати / дати"
-    ipa: '[dɑˈʋɑtɪ / ˈdɑtɪ]'
     translation: "to give"
     pos: "verb"
   - lemma: "вчити / вивчити"
-    ipa: '[ˈʍt͡ʃɪtɪ / ˈʋɪu̯t͡ʃɪtɪ]'
     translation: "to learn"
     pos: "verb"
   - lemma: "продавати / продати"
-    ipa: '[prɔdɑˈʋɑtɪ / prɔˈdɑtɪ]'
     translation: "to sell"
     pos: "verb"
   - lemma: "виходити / вийти"
-    ipa: '[ʋɪxɔdɪtɪ / ˈʋɪjtɪ]'
     translation: "to go out"
     pos: "verb"
   - lemma: "забувати / забути"
-    ipa: '[zɑbuˈʋɑtɪ / zɑˈbutɪ]'
     translation: "to forget"
     pos: "verb"
   - lemma: "вид"
-    ipa: '[ʋɪd]'
     translation: "aspect"
     pos: "noun"
     gender: "m"
   - lemma: "недоконаний"
-    ipa: '[nɛdɔˈkɔnɑnɪj]'
     translation: "imperfective"
     pos: "adjective"
   - lemma: "доконаний"
-    ipa: '[dɔˈkɔnɑnɪj]'
     translation: "perfective"
     pos: "adjective"
   - lemma: "процес"
-    ipa: '[prɔˈt͡sɛs]'
     translation: "process"
     pos: "noun"
     gender: "m"
   - lemma: "результат"
-    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
     gender: "m"
   - lemma: "тривалість"
-    ipa: '[trɪˈʋɑlʲisʲtʲ]'
     translation: "duration"
     pos: "noun"
     gender: "f"
   - lemma: "завершення"
-    ipa: '[zɑˈʋɛrʃɛnʲːɑ]'
     translation: "completion"
     pos: "noun"
     gender: "n"
   - lemma: "повторення"
-    ipa: '[pɔˈʋtɔrɛnʲːɑ]'
     translation: "repetition"
     pos: "noun"
     gender: "n"
   - lemma: "раптом"
-    ipa: '[ˈrɑptɔm]'
     translation: "suddenly"
     pos: "adverb"
   - lemma: "щодня"
-    ipa: '[ʃt͡ʃɔˈdʲnʲɑ]'
     translation: "every day"
     pos: "adverb"

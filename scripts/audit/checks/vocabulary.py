@@ -29,7 +29,7 @@ def sync_vocab_to_db(level: str, module_num: int, vocab_items: list[dict], db_pa
     Args:
         level: Level code (A1, A2, etc.)
         module_num: Module number within the level
-        vocab_items: List of vocabulary items from the module, each with 'uk', 'ipa', 'en' keys
+        vocab_items: List of vocabulary items from the module, each with 'uk', 'en' keys
         db_path: Optional path to database
     """
     if db_path is None:
@@ -48,7 +48,6 @@ def sync_vocab_to_db(level: str, module_num: int, vocab_items: list[dict], db_pa
             if not uk:
                 continue
 
-            ipa = item.get('ipa', '')
             en = item.get('en', '')
             note = item.get('note', '')
 
@@ -58,15 +57,15 @@ def sync_vocab_to_db(level: str, module_num: int, vocab_items: list[dict], db_pa
             if is_expression:
                 # Try to insert into expressions table
                 cursor.execute("""
-                    INSERT OR IGNORE INTO expressions (id, uk, ipa, en, notes, level, first_module)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (f"e-{level}-{module_num}-{uk[:20]}", uk, ipa, en, note, level.upper(), module_num))
+                    INSERT OR IGNORE INTO expressions (id, uk, en, notes, level, first_module)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """, (f"e-{level}-{module_num}-{uk[:20]}", uk, en, note, level.upper(), module_num))
             else:
                 # Try to insert into lemmas table
                 cursor.execute("""
-                    INSERT OR IGNORE INTO lemmas (id, uk, ipa, en, notes, level, first_module)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (f"v-{level}-{module_num}-{uk}", uk, ipa, en, note, level.upper(), module_num))
+                    INSERT OR IGNORE INTO lemmas (id, uk, en, notes, level, first_module)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """, (f"v-{level}-{module_num}-{uk}", uk, en, note, level.upper(), module_num))
 
             if cursor.rowcount > 0:
                 added += 1
@@ -212,7 +211,7 @@ def extract_vocab_items(content: str) -> list[dict]:
 
     Note: Must match level-2 headings (## Vocabulary) not subsections (### Vocabulary Groups).
 
-    Returns list of dicts with keys: uk, ipa, en, note
+    Returns list of dicts with keys: uk, en, note
     """
     items = []
     # Match both # Vocabulary and ## Vocabulary (plus Ukrainian variants)
@@ -251,33 +250,20 @@ def extract_vocab_items(content: str) -> list[dict]:
 
                     # Parse other columns based on count
                     # Common formats:
-                    # A1: Word | IPA | English | POS | Gender | Note (6 cols)
+                    # A1: Word | English | POS | Gender | Note (5 cols)
                     # B2: Слово | Переклад | Примітки (3 cols)
-                    ipa = ''
                     en = ''
                     note = ''
 
-                    if len(parts) >= 6:  # Full A1 format
-                        ipa = parts[1] if '/' in parts[1] else ''
-                        en = parts[2]
-                        note = parts[5] if len(parts) > 5 else ''
-                    elif len(parts) == 5:  # Tier 3 / B1 format
-                        ipa = parts[1] if '/' in parts[1] else ''
-                        en = parts[2]
-                        note = parts[4]
+                    if len(parts) >= 5:  # Full A1 format (without IPA)
+                        en = parts[1]
+                        note = parts[4] if len(parts) > 4 else ''
                     elif len(parts) >= 3:  # Generic/Short format
-                        # If 2nd col has slashes, it's likely IPA
-                        if '/' in parts[1]:
-                            ipa = parts[1]
-                            en = parts[2]
-                            note = parts[3] if len(parts) > 3 else ''
-                        else:
-                            en = parts[1]
-                            note = parts[2] if len(parts) > 2 else ''
+                        en = parts[1]
+                        note = parts[2] if len(parts) > 2 else ''
 
                     items.append({
                         'uk': uk,
-                        'ipa': ipa,
                         'en': en,
                         'note': note
                     })
@@ -628,11 +614,11 @@ def check_vocab_table_format(content: str, level: str) -> list[dict]:
 
     A1/A2 (Tier 1/2):
     - Header: # Vocabulary
-    - Columns: | Word | IPA | English | POS | Gender | Note | (6 columns)
+    - Columns: | Word | English | POS | Gender | Note | (5 columns)
 
     B1 (Tier 3):
     - Header: # Словник
-    - Columns: | Слово | Вимова | Переклад | ЧМ | Примітка | (5 columns)
+    - Columns: | Слово | Переклад | ЧМ | Примітка | (4 columns)
     """
     violations = []
     level_upper = level.upper()
@@ -675,25 +661,23 @@ def check_vocab_table_format(content: str, level: str) -> list[dict]:
             num_cols = len(parts)
 
             if level_upper in ('A1', 'A2', 'A2.1', 'A2.2', 'A2.3'):
-                if num_cols != 6:
+                if num_cols != 5:
                     violations.append({
                         'type': 'VOCAB_FORMAT',
-                        'issue': f"A1/A2 vocabulary requires 6 columns, found {num_cols}: {header_row}",
-                        'fix': "Format: | Word | IPA | English | POS | Gender | Note |"
+                        'issue': f"A1/A2 vocabulary requires 5 columns, found {num_cols}: {header_row}",
+                        'fix': "Format: | Word | English | POS | Gender | Note |"
                     })
             elif level_upper in ('B1', 'B2', 'C1', 'C2'):
-                # B1+ accepts 3-column (minimal), 5-column (legacy), or 6-column (new standard) formats
-                # 6-column is the new standard as of issue #341
-                if num_cols not in (3, 5, 6):
+                # B1+ accepts 3-column (minimal), 4-column, or 5-column formats
+                if num_cols not in (3, 4, 5):
                     violations.append({
                         'type': 'VOCAB_FORMAT',
-                        'issue': f"{level_upper} vocabulary requires 3, 5, or 6 columns, found {num_cols}: {header_row}",
-                        'fix': "Format: | Слово | Вимова | Переклад | ЧМ | Рід | Примітка | (6-col, preferred)",
+                        'issue': f"{level_upper} vocabulary requires 3, 4, or 5 columns, found {num_cols}: {header_row}",
+                        'fix': "Format: | Слово | Переклад | ЧМ | Рід | Примітка | (5-col, preferred)",
                         'blocking': False
                     })
-                elif num_cols == 5:
-                    # Check column names for 5-column format
-                    expected = ['слово', 'вимова', 'переклад', 'чм', 'примітка']
+                elif num_cols == 4:
+                    # Check column names for 4-column format
                     actual = [p.lower() for p in parts]
 
                     # Accept "Слово / Вираз" or similar for first column
@@ -702,14 +686,14 @@ def check_vocab_table_format(content: str, level: str) -> list[dict]:
                          violations.append({
                             'type': 'VOCAB_FORMAT',
                             'issue': f"{level_upper} vocabulary headers mismatch. Expected 'Слово' in first column, found '{parts[0]}'",
-                            'fix': "Standardize headers to: | Слово | Вимова | Переклад | ЧМ | Примітка |",
+                            'fix': "Standardize headers to: | Слово | Переклад | ЧМ | Примітка |",
                             'blocking': False
                         })
-                    if 'приміт' not in actual[4]:
+                    if 'приміт' not in actual[3]:
                          violations.append({
                             'type': 'VOCAB_FORMAT',
-                            'issue': f"{level_upper} vocabulary headers mismatch. Expected 'Примітка' in fifth column, found '{parts[4]}'",
-                            'fix': "Standardize headers to: | Слово | Вимова | Переклад | ЧМ | Примітка |",
+                            'issue': f"{level_upper} vocabulary headers mismatch. Expected 'Примітка' in fourth column, found '{parts[3]}'",
+                            'fix': "Standardize headers to: | Слово | Переклад | ЧМ | Примітка |",
                             'blocking': False
                         })
                 # 3-column format: | Слово | Переклад | Примітки | - no header check needed

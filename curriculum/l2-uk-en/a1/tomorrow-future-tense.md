@@ -39,7 +39,7 @@ Here is the formula:
 
 **Verb "to be" (in future tense) + Infinitive (dictionary form of the verb)**
 
-That is all! You take the verb "бути" [ˈbutɪ] (to be), change it for the person (I, you, we...), and add the main verb. The main verb **does not change**.
+That is all! You take the verb "бути" (to be), change it for the person (I, you, we...), and add the main verb. The main verb **does not change**.
 
 For example, the verb **чита́ти** (to read):
 *   Я **буду** читати — I will read

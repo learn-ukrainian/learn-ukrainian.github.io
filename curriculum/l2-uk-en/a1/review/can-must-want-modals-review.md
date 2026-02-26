@@ -83,7 +83,7 @@ The plan's `vocabulary_hints.required` lists хотіти as a required vocabula
 
 The vocabulary YAML file contains IPA for all 15 terms, but the content prose itself has zero IPA transcriptions. For an A1 module where pronunciation guidance is critical, at least the key terms (могти, вміти, треба, потрібно, повинен) should have inline IPA on first occurrence in the prose.
 
-**Fix:** Add IPA in brackets after each key term's first occurrence (e.g., **могти́** /mɔˈɦtɪ/).
+**Fix:** Add IPA in brackets after each key term's first occurrence (e.g., **могти́**).
 
 ---
 

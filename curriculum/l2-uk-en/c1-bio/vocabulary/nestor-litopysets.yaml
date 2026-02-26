@@ -1,152 +1,122 @@
 items:
   - lemma: "історіографія"
-    ipa: '[istɔrʲiɔˈɦrɑfʲijɑ]'
     translation: "historiography"
     pos: "noun"
     gender: "f"
     notes: "наука про розвиток історичних знань"
   - lemma: "літопис"
-    ipa: '[lʲiˈtɔpɪs]'
     translation: "chronicle"
     pos: "noun"
     gender: "m"
   - lemma: "провіденціалізм"
-    ipa: '[prɔʋʲidɛnʲt͡sʲiɑˈlʲizm]'
     translation: "providentialism"
     pos: "noun"
     gender: "m"
     notes: "теологічна концепція історії"
   - lemma: "агіографія"
-    ipa: '[ɑɦʲiɔˈɦrɑfʲijɑ]'
     translation: "hagiography"
     pos: "noun"
     gender: "f"
     notes: "житійна література"
   - lemma: "страстотерпство"
-    ipa: '[strɑstɔtɛrpstʋɔ]'
     translation: "passion-bearing"
     pos: "noun"
     gender: "n"
     notes: "відмова від збройного опору заради миру"
   - lemma: "міжусобиця"
-    ipa: '[mʲiʒuˈsɔbɪt͡sʲɑ]'
     translation: "internecine war / feud"
     pos: "noun"
     gender: "f"
   - lemma: "скрипторій"
-    ipa: '[skrɪˈptɔrʲij]'
     translation: "scriptorium"
     pos: "noun"
     gender: "m"
   - lemma: "пергамент"
-    ipa: '[pɛrˈɦɑmɛnt]'
     translation: "parchment"
     pos: "noun"
     gender: "m"
   - lemma: "чорнило"
-    ipa: '[t͡ʃɔrˈnɪlɔ]'
     translation: "ink"
     pos: "noun"
     gender: "n"
   - lemma: "фоліант"
-    ipa: '[fɔlʲiˈɑnt]'
     translation: "folio / tome"
     pos: "noun"
     gender: "m"
   - lemma: "послушництво"
-    ipa: '[pɔsluʃnɪt͡stʋɔ]'
     translation: "novitiate (obedience)"
     pos: "noun"
     gender: "n"
   - lemma: "аскетизм"
-    ipa: '[ɑskɛˈtɪzm]'
     translation: "asceticism"
     pos: "noun"
     gender: "m"
   - lemma: "нетлінний"
-    ipa: '[nɛˈtʲlʲinːɪj]'
     translation: "incorruptible"
     pos: "adjective"
   - lemma: "мощі"
-    ipa: '[ˈmɔʃt͡ʃʲi]'
     translation: "relics"
     pos: "noun"
     notes: "завжди у множині (plural only)"
   - lemma: "диякон"
-    ipa: '[dɪˈjɑkɔn]'
     translation: "deacon"
     pos: "noun"
     gender: "m"
   - lemma: "тисяцький"
-    ipa: '[ˈtɪsʲɑt͡sʲkɪj]'
     translation: "tysyatsky (military commander)"
     pos: "noun"
     gender: "m"
   - lemma: "хронографія"
-    ipa: '[xrɔnɔˈɦrɑfʲijɑ]'
     translation: "chronography"
     pos: "noun"
     gender: "f"
   - lemma: "легітимність"
-    ipa: '[lɛɦʲiˈtɪmnʲisʲtʲ]'
     translation: "legitimacy"
     pos: "noun"
     gender: "f"
   - lemma: "автохтонність"
-    ipa: '[ɑu̯tɔˈxtɔnʲːisʲtʲ]'
     translation: "autochthony / indigeneity"
     pos: "noun"
     gender: "f"
   - lemma: "космографічний"
-    ipa: '[kɔsmɔɦrɑˈfʲit͡ʃnɪj]'
     translation: "cosmographic"
     pos: "adjective"
   - lemma: "сакралізація"
-    ipa: '[sɑkrɑlʲiˈzɑt͡sʲijɑ]'
     translation: "sacralization"
     pos: "noun"
     gender: "f"
   - lemma: "консолідація"
-    ipa: '[kɔnsɔlʲiˈdɑt͡sʲijɑ]'
     translation: "consolidation"
     pos: "noun"
     gender: "f"
   - lemma: "інкорпорація"
-    ipa: '[inkɔrpɔˈrɑt͡sʲijɑ]'
     translation: "incorporation"
     pos: "noun"
     gender: "f"
   - lemma: "фольклор"
-    ipa: '[fɔlʲˈklɔr]'
     translation: "folklore"
     pos: "noun"
     gender: "m"
   - lemma: "деколонізація"
-    ipa: '[dɛkɔlɔnʲiˈzɑt͡sʲijɑ]'
     translation: "decolonization"
     pos: "noun"
     gender: "f"
   - lemma: "етнонім"
-    ipa: '[ɛˈtnɔnʲim]'
     translation: "ethnonym"
     pos: "noun"
     gender: "m"
   - lemma: "протоукраїнський"
-    ipa: '[prɔtɔukrɑˈjinʲsʲkɪj]'
     translation: "proto-Ukrainian"
     pos: "adjective"
   - lemma: "метрополія"
-    ipa: '[mɛtrɔˈpɔlʲijɑ]'
     translation: "metropolis / imperial center"
     pos: "noun"
     gender: "f"
   - lemma: "інтелектуал"
-    ipa: '[intɛlɛktuˈɑl]'
     translation: "intellectual"
     pos: "noun"
     gender: "m"
   - lemma: "парадигма"
-    ipa: '[pɑrɑˈdɪɦmɑ]'
     translation: "paradigm"
     pos: "noun"
     gender: "f"

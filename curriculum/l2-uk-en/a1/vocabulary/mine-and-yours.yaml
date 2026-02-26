@@ -1,84 +1,63 @@
-- ipa: '[mʲij]'
   lemma: мій
   pos: pronoun
   translation: my (masc.)
-- ipa: '[mɔˈjɑ]'
   lemma: моя
   pos: pronoun
   translation: my (fem.)
-- ipa: '[mɔˈjɛ]'
   lemma: моє
   pos: pronoun
   translation: my (neut.)
-- ipa: '[tʲʋʲij]'
   lemma: твій
   pos: pronoun
   translation: your (masc. informal)
-- ipa: '[tʋɔˈjɑ]'
   lemma: твоя
   pos: pronoun
   translation: your (fem. informal)
-- ipa: '[tʋɔˈjɛ]'
   lemma: твоє
   pos: pronoun
   translation: your (neut. informal)
-- ipa: '[nɑʃ]'
   lemma: наш
   pos: pronoun
   translation: our (masc.)
-- ipa: '[ˈnɑʃɑ]'
   lemma: наша
   pos: pronoun
   translation: our (fem.)
-- ipa: '[ʋɑʃ]'
   lemma: ваш
   pos: pronoun
   translation: your (masc. formal/plural)
-- ipa: '[ˈʋɑʃɑ]'
   lemma: ваша
   pos: pronoun
   translation: your (fem. formal/plural)
-- ipa: '[ˈjɔɦɔ]'
   lemma: його
   pos: pronoun
   translation: his
-- ipa: '[jiji]'
   lemma: її
   pos: pronoun
   translation: her
-- ipa: '[ˈjixnʲij]'
   lemma: їхній
   pos: pronoun
   translation: their
-- ipa: '[t͡ʃɪj]'
   lemma: чий
   pos: pronoun
   translation: whose (masc.)?
-- ipa: '[t͡ʃɪˈjɑ]'
   lemma: чия
   pos: pronoun
   translation: whose (fem.)?
-- ipa: '[t͡ʃɪˈjɛ]'
   lemma: чиє
   pos: pronoun
   translation: whose (neut.)?
-- ipa: '[t͡ʃɪji]'
   lemma: чиї
   pos: pronoun
   translation: whose (plur.)?
-- ipa: '[sʲʋʲij]'
   lemma: свій
   pos: pronoun
   translation: one's own
-- ipa: '[rʲit͡ʃ]'
   lemma: річ
   pos: noun
   translation: thing
-- ipa: '[zɑjˈmɛnːɪk]'
   lemma: займенник
   pos: noun
   translation: pronoun
-- ipa: '[prɪˈkmɛtnɪk]'
   lemma: прикметник
   pos: noun
   translation: adjective

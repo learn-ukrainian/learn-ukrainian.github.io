@@ -1,134 +1,104 @@
 items:
   - lemma: "виходить, що"
-    ipa: '[ʋɪxɔdɪtʲ, ʃt͡ʃɔ]'
     translation: "it turns out that"
     pos: "phrase"
   - lemma: "дійти до висновку"
-    ipa: '[dʲijˈtɪ dɔ ˈʋɪsnɔu̯ku]'
     translation: "reach a conclusion"
     pos: "phrase"
   - lemma: "зайти занадто далеко"
-    ipa: '[zɑjˈtɪ zɑˈnɑdtɔ dɑˈlɛkɔ]'
     translation: "go too far"
     pos: "phrase"
   - lemma: "відійти від теми"
-    ipa: '[ʋʲidʲijˈtɪ ʋʲid ˈtɛmɪ]'
     translation: "digress"
     pos: "phrase"
   - lemma: "підійти до питання"
-    ipa: '[pʲidʲijˈtɪ dɔ pɪˈtɑnʲːɑ]'
     translation: "approach a question"
     pos: "phrase"
   - lemma: "обійтися без"
-    ipa: '[ɔbʲijˈtɪsʲɑ bɛz]'
     translation: "do without"
     pos: "phrase"
   - lemma: "перейти до справи"
-    ipa: '[pɛrɛjˈtɪ dɔ ˈsprɑʋɪ]'
     translation: "get down to business"
     pos: "phrase"
   - lemma: "пройти через"
-    ipa: '[prɔjˈtɪ ˈt͡ʃɛrɛz]'
     translation: "go through, experience"
     pos: "phrase"
   - lemma: "вийти з ситуації"
-    ipa: '[ˈʋɪjtɪ z sɪtuˈɑt͡sʲiji]'
     translation: "get out of a situation"
     pos: "phrase"
   - lemma: "зайти в глухий кут"
-    ipa: '[zɑjˈtɪ ʋ ɦluˈxɪj kut]'
     translation: "reach a dead end"
     pos: "phrase"
   - lemma: "до мене дійшло"
-    ipa: '[dɔ mɛˈnɛ dʲijˈʃlɔ]'
     translation: "it dawned on me"
     pos: "phrase"
   - lemma: "вийти на новий рівень"
-    ipa: '[ˈʋɪjtɪ nɑ nɔˈʋɪj ˈrʲiʋɛnʲ]'
     translation: "reach a new level"
     pos: "phrase"
   - lemma: "переносне значення"
-    ipa: '[pɛrɛnɔsnɛ ˈznɑt͡ʃɛnʲːɑ]'
     translation: "figurative meaning"
     pos: "noun"
     gender: "n"
   - lemma: "буквальний зміст"
-    ipa: '[buˈkʋɑlʲnɪj zʲmʲist]'
     translation: "literal meaning"
     pos: "noun"
     gender: "m"
   - lemma: "фразеологізм"
-    ipa: '[frɑzɛɔlɔˈɦʲizm]'
     translation: "phraseological unit, idiom"
     pos: "noun"
     gender: "m"
   - lemma: "зійти з розуму"
-    ipa: '[zʲijˈtɪ z ˈrɔzumu]'
     translation: "go crazy"
     pos: "phrase"
   - lemma: "збожеволіти"
-    ipa: '[zbɔʒɛˈʋɔlʲitɪ]'
     translation: "go crazy"
     pos: "verb"
     aspect: "pf"
   - lemma: "сухим із води вийти"
-    ipa: '[suˈxɪm iz ʋɔˈdɪ ˈʋɪjtɪ]'
     translation: "get away with something"
     pos: "phrase"
   - lemma: "виникати"
-    ipa: '[ʋɪnɪkɑtɪ]'
     translation: "emerge, arise"
     pos: "verb"
     aspect: "impf"
   - lemma: "спливати"
-    ipa: '[splɪˈʋɑtɪ]'
     translation: "pass (about time)"
     pos: "verb"
     aspect: "impf"
   - lemma: "минати"
-    ipa: '[mɪˈnɑtɪ]'
     translation: "pass (about time)"
     pos: "verb"
     aspect: "impf"
   - lemma: "завершуватися"
-    ipa: '[zɑˈʋɛrʃuʋɑtɪsʲɑ]'
     translation: "come to an end"
     pos: "verb"
     aspect: "impf"
   - lemma: "гоголем ходити"
-    ipa: '[ˈɦɔɦɔlɛm xɔˈdɪtɪ]'
     translation: "walk proudly, strut"
     pos: "phrase"
   - lemma: "п'ятами накивати"
-    ipa: '[ˈpjɑtɑmɪ nɑkɪˈʋɑtɪ]'
     translation: "run away quickly, take to one's heels"
     pos: "phrase"
   - lemma: "вискочити як Пилип з конопель"
-    ipa: '[ˈʋɪskɔt͡ʃɪtɪ jɑk pɪˈlɪp z kɔnɔˈpɛlʲ]'
     translation: "jump in inappropriately"
     pos: "phrase"
   - lemma: "глухий кут"
-    ipa: '[ɦluˈxɪj kut]'
     translation: "dead end"
     pos: "noun"
     gender: "m"
   - lemma: "підсумок"
-    ipa: '[pʲid͡zsumɔk]'
     translation: "conclusion, summary"
     pos: "noun"
     gender: "m"
   - lemma: "долати"
-    ipa: '[dɔˈlɑtɪ]'
     translation: "overcome"
     pos: "verb"
     aspect: "impf"
   - lemma: "межа"
-    ipa: '[mɛˈʒɑ]'
     translation: "limit, border"
     pos: "noun"
     gender: "f"
   - lemma: "перешкода"
-    ipa: '[pɛrɛˈʃkɔdɑ]'
     translation: "obstacle"
     pos: "noun"
     gender: "f"

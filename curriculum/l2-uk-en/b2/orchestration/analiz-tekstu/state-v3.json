@@ -1,0 +1,22 @@
+{
+  "track": "b2",
+  "slug": "analiz-tekstu",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T13:39:02Z",
+      "task_id": "v3-analiz-tekstu-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T13:42:35Z"
+    },
+    "v3-C": {
+      "status": "failed",
+      "ts": "2026-02-25T13:58:37Z",
+      "note": "activities-schema-invalid"
+    }
+  }
+}

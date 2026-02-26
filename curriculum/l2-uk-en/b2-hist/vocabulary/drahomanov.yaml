@@ -1,124 +1,99 @@
 items:
   - lemma: "громадівство"
-    ipa: '[ɦrɔmɑdʲiu̯stʋɔ]'
     translation: "community-ism"
     pos: "noun"
     gender: "n"
   - lemma: "федералізм"
-    ipa: '[fɛdɛrɑˈlʲizm]'
     translation: "federalism"
     pos: "noun"
     gender: "m"
   - lemma: "еміграція"
-    ipa: '[ɛmʲiˈɦrɑt͡sʲijɑ]'
     translation: "emigration"
     pos: "noun"
     gender: "f"
   - lemma: "політична думка"
-    ipa: '[pɔlʲiˈtɪt͡ʃnɑ ˈdumkɑ]'
     translation: "political thought"
     pos: "phrase"
   - lemma: "автономія"
-    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
     translation: "autonomy"
     pos: "noun"
     gender: "f"
   - lemma: "централізм"
-    ipa: '[t͡sɛntrɑˈlʲizm]'
     translation: "centralism"
     pos: "noun"
     gender: "m"
   - lemma: "соціалізм"
-    ipa: '[sɔt͡sʲiɑˈlʲizm]'
     translation: "socialism"
     pos: "noun"
     gender: "m"
   - lemma: "памфлет"
-    ipa: '[pɑmˈflɛt]'
     translation: "pamphlet"
     pos: "noun"
     gender: "m"
   - lemma: "ліберал"
-    ipa: '[lʲibɛˈrɑl]'
     translation: "liberal"
     pos: "noun"
     gender: "m"
   - lemma: "радикал"
-    ipa: '[rɑdɪˈkɑl]'
     translation: "radical"
     pos: "noun"
     gender: "m"
   - lemma: "конституція"
-    ipa: '[kɔnstɪˈtut͡sʲijɑ]'
     translation: "constitution"
     pos: "noun"
     gender: "f"
   - lemma: "самоврядування"
-    ipa: '[sɑmɔu̯rʲɑduˈʋɑnʲːɑ]'
     translation: "self-governance"
     pos: "noun"
     gender: "n"
   - lemma: "поступ"
-    ipa: '[ˈpɔstup]'
     translation: "progress"
     pos: "noun"
     gender: "m"
   - lemma: "громадянське суспільство"
-    ipa: '[ɦrɔmɑˈdʲɑnʲsʲkɛ suˈsʲpʲilʲstʋɔ]'
     translation: "civil society"
     pos: "phrase"
   - lemma: "малоросійство"
-    ipa: '[mɑlɔrɔˈsʲijstʋɔ]'
     translation: "Little Russianism"
     pos: "noun"
     gender: "n"
     notes: "A complex of inferiority and voluntary servitude to the empire."
   - lemma: "хуторянство"
-    ipa: '[xutɔˈrʲɑnstʋɔ]'
     translation: "isolationism"
     pos: "noun"
     gender: "n"
   - lemma: "інтелігенція"
-    ipa: '[intɛlʲiˈɦɛnʲt͡sʲijɑ]'
     translation: "intelligentsia"
     pos: "noun"
     gender: "f"
   - lemma: "децентралізація"
-    ipa: '[dɛt͡sɛntrɑlʲiˈzɑt͡sʲijɑ]'
     translation: "decentralization"
     pos: "noun"
     gender: "f"
   - lemma: "еволюційний"
-    ipa: '[ɛʋɔlʲuˈt͡sʲijnɪj]'
     translation: "evolutionary"
     pos: "adjective"
   - lemma: "суб'єктність"
-    ipa: '[suˈbjɛktʲnʲisʲtʲ]'
     translation: "agency"
     pos: "noun"
     gender: "f"
   - lemma: "шовінізм"
-    ipa: '[ʃɔʋʲiˈnʲizm]'
     translation: "chauvinism"
     pos: "noun"
     gender: "m"
   - lemma: "самодержавство"
-    ipa: '[sɑmɔdɛrˈʒɑu̯stʋɔ]'
     translation: "autocracy"
     pos: "noun"
     gender: "n"
   - lemma: "цензура"
-    ipa: '[t͡sɛnˈzurɑ]'
     translation: "censorship"
     pos: "noun"
     gender: "f"
   - lemma: "провінціалізм"
-    ipa: '[prɔʋʲinʲt͡sʲiɑˈlʲizm]'
     translation: "provincialism"
     pos: "noun"
     gender: "m"
   - lemma: "меншовартість"
-    ipa: '[mɛnʃɔˈʋɑrtʲisʲtʲ]'
     translation: "inferiority"
     pos: "noun"
     gender: "f"

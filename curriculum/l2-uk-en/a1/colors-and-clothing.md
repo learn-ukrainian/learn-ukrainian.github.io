@@ -61,7 +61,7 @@ Identifying colors is your first step in description. It anchors your vocabulary
 
 ### Який колір ви любите?
 One of the first things friends ask each other is about preferences.
-**«Який колір ви любите?»** [jaˈkɪj ˈkɔlʲir ʋɪ ˈlʲubɪtɛ] — "What color do you love?"
+**«Який колір ви любите?»** — "What color do you love?"
 
 To answer this, you use the verb **любити** (to love/like):
 **«Я люблю...»** (I love...).
@@ -175,7 +175,7 @@ To say you wear something generally (as a habit or style), we use the verb **н�
 Let's conjugate it:
 *   **Я но́шу** — note the sound change **с** → **ш**!
 *   **Ти но́сиш**
-*   **Він/Вона носить** [ˈnɔsɪtʲ]
+*   **Він/Вона носить**
 *   **Ми но́симо**
 *   **Ви но́сите**
 *   **Вони́ но́сять**
@@ -331,10 +331,10 @@ To ask the price, we use the verb **коштувати** (to cost).
 Notice how the client asks for specific features (color, item) and verifies the details (size, price).
 
 ### Key Phrases to Remember
-*   **Я шукаю...** [ja ʃuˈkɑju] — I am looking for... (+ Accusative)
-*   **Можна поміряти?** [ˈmɔʒnɑ pɔˈmʲirʲɑtɪ] — Can I try (it) on?
-*   **Це гарно виглядає.** [t͡sɛ ˈɦɑrnɔ ʋɪɦlʲɑˈdɑjɛ] — This looks good.
-*   **Я беру це.** [ja bɛˈru t͡sɛ] — I'll take it.
+*   **Я шукаю...** — I am looking for... (+ Accusative)
+*   **Можна поміряти?** — Can I try (it) on?
+*   **Це гарно виглядає.** — This looks good.
+*   **Я беру це.** — I'll take it.
 
 ## Практика: Опис одягу
 

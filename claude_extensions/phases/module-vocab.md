@@ -47,7 +47,6 @@ Generate vocabulary YAML table from locked lesson content.
 > version: '2.0'
 > items:
 >   - lemma: { word }
->     ipa: /{pronunciation}/
 >     translation: { English translation }
 >     pos: { part of speech }
 >     gender: { m|f|n } # for nouns only
@@ -114,59 +113,22 @@ Generate entries:
 
 ```yaml
 - lemma: вікентій
-  ipa: /wʲikɛnˈtʲij/
   translation: Vikentiy (name)
   pos: propn
   gender: m
 
 - lemma: вікентія
-  ipa: /wʲikɛnˈtʲijɑ/
   translation: Vikentiy (genitive)
   pos: propn
   gender: m
 
 - lemma: вікентієм
-  ipa: /wʲikɛnˈtʲijɛm/
   translation: Vikentiy (instrumental)
   pos: propn
   gender: m
 ```
 
-### Step 3: Generate IPA Pronunciations
-
-For each lemma, generate IPA transcription:
-
-**Ukrainian IPA rules:**
-
-- Use scholarly IPA (not simplified)
-- Mark stress with ˈ before stressed syllable
-- Common patterns:
-  - а → /ɑ/
-  - е → /ɛ/
-  - и → /ɪ/
-  - і → /i/
-  - о → /ɔ/
-  - у → /u/
-  - г → /ɦ/ (not /ɡ/)
-  - в → /w/ or /ʋ/ depending on position
-  - ь → /ʲ/ (palatalization)
-
-**Examples:**
-
-```yaml
-- lemma: трипільська культура
-  ipa: /trɪˈpʲilʲsʲkɑ kulʲˈturɑ/
-
-- lemma: археологія
-  ipa: /ɑrxɛoˈlɔɦʲijɑ/
-
-- lemma: енеоліт
-  ipa: /ɛnɛoˈlʲit/
-```
-
-**For complex pronunciations:** Use Ukrainian IPA reference or consult linguistic resources.
-
-### Step 4: Classify Part of Speech
+### Step 3: Classify Part of Speech
 
 Use standard linguistic tags:
 
@@ -265,13 +227,6 @@ Provide accurate, contextual translations:
 
 ### Accuracy
 
-**IPA transcriptions:**
-
-- Must be linguistically accurate
-- Use scholarly IPA notation
-- Mark stress correctly
-- Distinguish Ukrainian phonemes (г=/ɦ/, not /ɡ/)
-
 **Translations:**
 
 - Contextually appropriate
@@ -296,11 +251,6 @@ Provide accurate, contextual translations:
 - No punctuation (unless part of term)
 - Phrases separated by space (not hyphen)
 
-**IPA format:**
-
-- Enclosed in /slashes/
-- Stress marked before syllable: /trɪˈpʲilʲɑ/
-- Use ʲ for soft sign, not '
 
 **Translation format:**
 
@@ -370,13 +320,11 @@ level: { LEVEL }
 version: '2.0'
 items:
   - lemma: { term1 }
-    ipa: /{ipa1}/
     translation: { translation1 }
     pos: { pos1 }
     gender: { gender1 }
 
   - lemma: { term2 }
-    ipa: /{ipa2}/
     translation: { translation2 }
     pos: { pos2 }
     gender: { gender2 }
@@ -388,7 +336,7 @@ items:
 
 - Root structure: 3 metadata fields + items array
 - Items is array of objects (NOT bare list)
-- Each item has 4-5 fields (gender only for nouns)
+- Each item has 3-4 fields (gender only for nouns)
 - Alphabetically sorted by Ukrainian alphabet
 
 ---
@@ -401,7 +349,6 @@ Before outputting, verify:
 - [ ] All specialized terminology from lesson included
 - [ ] All proper nouns and inflected forms present
 - [ ] No vocabulary added that doesn't appear in lesson
-- [ ] IPA transcriptions linguistically accurate
 - [ ] All nouns have gender specified
 - [ ] Non-nouns do NOT have gender field
 - [ ] Translations accurate and contextual
@@ -422,13 +369,11 @@ Example (aspect module):
 
 ```yaml
 - lemma: доконаний вид
-  ipa: /doˈkonɑnɪj wɪd/
   translation: perfective aspect
   pos: noun
   gender: m
 
 - lemma: недоконаний вид
-  ipa: /nɛdoˈkonɑnɪj wɪd/
   translation: imperfective aspect
   pos: noun
   gender: m
@@ -442,13 +387,11 @@ Example:
 
 ```yaml
 - lemma: хвойка
-  ipa: /ˈxwojkɑ/
   translation: Khvoika (archaeologist)
   pos: propn
   gender: m
 
 - lemma: хвойки
-  ipa: /ˈxwojkɪ/
   translation: Khvoika (genitive)
   pos: propn
   gender: m
@@ -462,13 +405,11 @@ Example:
 
 ```yaml
 - lemma: поет
-  ipa: /poˈɛt/
   translation: poet
   pos: noun
   gender: m
 
 - lemma: поетеса
-  ipa: /poɛˈtɛsɑ/
   translation: poetess
   pos: noun
   gender: f
@@ -482,13 +423,11 @@ Example:
 
 ```yaml
 - lemma: роман
-  ipa: /roˈmɑn/
   translation: novel
   pos: noun
   gender: m
 
 - lemma: реалізм
-  ipa: /rɛɑˈlʲizm/
   translation: realism
   pos: noun
   gender: m
@@ -514,7 +453,6 @@ Vocabulary statistics:
 
 ✓ All required vocabulary present
 ✓ All specialized terms from lesson included
-✓ IPA transcriptions complete
 ✓ Alphabetically sorted
 ✓ YAML syntax valid
 
@@ -535,32 +473,26 @@ level: B2
 version: '2.0'
 items:
   - lemma: археологія
-    ipa: /ɑrxɛoˈlɔɦʲijɑ/
     translation: archaeology
     pos: noun
     gender: f
   - lemma: енеоліт
-    ipa: /ɛnɛoˈlʲit/
     translation: Eneolithic, Chalcolithic period
     pos: noun
     gender: m
   - lemma: протомісто
-    ipa: /proˈtɔmʲisto/
     translation: protocity
     pos: noun
     gender: n
   - lemma: хвойка
-    ipa: /ˈxwojkɑ/
     translation: Khvoika (archaeologist)
     pos: propn
     gender: m
   - lemma: трипільська культура
-    ipa: /trɪˈpʲilʲsʲkɑ kulʲˈturɑ/
     translation: Trypillian culture
     pos: noun
     gender: f
   - lemma: чорнозем
-    ipa: /t͡ʃornoˈzɛm/
     translation: chernozem, black soil
     pos: noun
     gender: m

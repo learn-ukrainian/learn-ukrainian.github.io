@@ -996,7 +996,7 @@ _deterministic_fix_mtimes: dict[str, float] = {}  # slug → max mtime of last f
 def _run_deterministic_fixes(ctx: ModuleContext) -> int:
     """Run all zero-cost deterministic fixes on a module's files.
 
-    Consolidates: euphony, IPA normalization, YAML schema fixes, forbidden
+    Consolidates: euphony, YAML schema fixes, forbidden
     activity removal. Returns total number of fixes applied.
 
     Uses mtime tracking to skip redundant runs when files haven't changed
@@ -1037,37 +1037,7 @@ def _run_deterministic_fixes(ctx: ModuleContext) -> int:
             logger.warning("Auto-fix: euphony failed", exc_info=True)
             log(f"    Auto-fix: euphony failed: {e}")
 
-    # 1.5 IPA generation (vocabulary YAML)
-    vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
-    if vocab_path and vocab_path.exists():
-        try:
-            from generate_ipa import regenerate_vocab_ipa
-            n = regenerate_vocab_ipa(vocab_path)
-            if n > 0:
-                total += n
-                log(f"    Auto-fix: {n} IPA field(s) generated in {vocab_path.name}")
-        except Exception as e:
-            logger.warning("Auto-fix: IPA generation failed", exc_info=True)
-            log(f"    Auto-fix: IPA generation failed: {e}")
-
-    # 2. IPA normalization (content, vocab, activities)
-    try:
-        from lint_ipa import apply_fixes as ipa_apply_fixes
-        if not vocab_path:
-            vocab_path = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
-        for target in [content_path, vocab_path, ctx.paths.get("activities")]:
-            if target and target.exists():
-                t = target.read_text("utf-8")
-                fixed_t, n = ipa_apply_fixes(t)
-                if n > 0:
-                    target.write_text(fixed_t, "utf-8")
-                    total += n
-                    log(f"    Auto-fix: {n} IPA issue(s) in {target.name}")
-    except Exception as e:
-        logger.warning("Auto-fix: IPA normalization failed", exc_info=True)
-        log(f"    Auto-fix: IPA normalization failed: {e}")
-
-    # 3. YAML schema fixes (activities file)
+    # 2. YAML schema fixes (activities file)
     act_path = ctx.paths.get("activities")
     if act_path and act_path.exists():
         try:
@@ -1527,7 +1497,7 @@ Generate vocabulary YAML for the key terms taught in this lesson. Follow vocabul
 Each entry uses: `lemma` (Ukrainian), `translation` (English), `pos` (part of speech).
 Optional: `gender` (m/f/n for nouns), `aspect` (perfective/imperfective for verbs), `notes`, `usage`, `example`.
 
-Do NOT include `ipa` fields — IPA is generated deterministically by the pipeline after Phase C.
+Do NOT include `ipa` fields.
 
 ## Output
 
@@ -1934,9 +1904,8 @@ def phase_audit_v3(ctx: ModuleContext, state: dict) -> bool:
 
     content_path = ctx.paths["md"]
 
-    # Auto-fix pass: apply deterministic fixes (euphony, IPA, YAML, forbidden
+    # Auto-fix pass: apply deterministic fixes (euphony, YAML, forbidden
     # activities) before calling any LLM. Zero API cost, instant.
-    # Note: _run_deterministic_fixes already handles IPA normalization.
     auto_fix_total = _run_deterministic_fixes(ctx)
     if auto_fix_total > 0:
         log(f"  Audit: {auto_fix_total} deterministic fix(es) applied")
@@ -2349,7 +2318,7 @@ def _deterministic_screen(ctx: ModuleContext) -> DScreenResult:
     """D.0: Run all deterministic checks before LLM review.
 
     Orchestrates:
-    1. _run_deterministic_fixes(ctx) — euphony, IPA, YAML schema
+    1. _run_deterministic_fixes(ctx) — euphony, YAML schema
     2. _compute_metrics_direct(ctx) — word count, immersion, richness (no audit subprocess)
     3. Single run_verify() — THE one audit call for D.0
     4. Russicism regex scan — from russicism_detection.py
@@ -2719,16 +2688,47 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
         return True
 
-    # Audit fails but review passes — module has structural issues Phase D can't fix
+    # Audit fails but review passes — check if failures are truly structural
+    _STRUCTURAL_GATES = {"meta", "structure", "activities", "vocab"}
+    _audit_only_d2 = False  # When True, D.2 fixes audit failures only (review said PASS)
     if not passed and not review_says_fail:
-        log("  D.1: Audit FAIL but review PASS — module needs rebuild (structural issues)")
-        fail_lines = [l.strip() for l in audit_out.split("\n")
-                      if l.strip().startswith(("\u274c", "[GRAMMAR]", "[COMPLEXITY]"))]
-        for line in fail_lines[:5]:
-            log(f"    {line}")
-        _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
-                       note="needs-rebuild-structural")
-        return False
+        # Parse which gates actually failed from raw audit format:
+        # "GateName     ❌ message" (gate name at start of line, ❌ after whitespace)
+        failing_gates = set()
+        for line in audit_out.split("\n"):
+            stripped = line.strip()
+            # Match: "Pedagogy     ❌ 2 violations" or "Meta         ❌ Missing..."
+            gate_match = re.match(r'^(\w[\w_]*)\s+❌', stripped)
+            if gate_match:
+                failing_gates.add(gate_match.group(1).lower())
+            # Also match Hetman "failing gates:" block: "    lesson: 2700/2000..."
+            elif stripped.startswith("lesson:") or stripped.startswith("activities:") \
+                    or stripped.startswith("meta:") or stripped.startswith("vocab:"):
+                failing_gates.add(stripped.split(":")[0].strip().lower())
+
+        structural_failures = failing_gates & _STRUCTURAL_GATES
+        fixable_failures = failing_gates - _STRUCTURAL_GATES
+
+        if structural_failures and not fixable_failures:
+            # ONLY structural failures (missing sections, bad meta, no activities) → rebuild
+            log("  D.1: Audit FAIL but review PASS — structural issues only, needs rebuild")
+            for gate in sorted(structural_failures):
+                log(f"    ❌ {gate}")
+            _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
+                           note="needs-rebuild-structural")
+            return False
+        elif not failing_gates:
+            # Could not parse any gate names — fall back to needs-rebuild
+            log("  D.1: Audit FAIL but review PASS — could not parse failing gates, needs rebuild")
+            _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
+                           note="needs-rebuild-unparseable")
+            return False
+        else:
+            # Fixable failures (pedagogy, engagement, immersion, lesson, etc.) → let D.2 try
+            log(f"  D.1: Audit FAIL but review PASS — {len(fixable_failures)} fixable gate(s): "
+                f"{', '.join(sorted(fixable_failures))} — proceeding to D.2")
+            review_says_fail = True  # Force D.2 entry
+            _audit_only_d2 = True  # Flag: D.2 should fix audit failures only, not review issues
 
     if passed and review_says_fail:
         log("  D.1: Audit PASSED but review flags issues — proceeding to D.2 for repair")
@@ -2788,7 +2788,17 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             return False
 
         prompt2_text = prompt_file2.read_text("utf-8")
-        prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", review_text)
+        if _audit_only_d2:
+            # Review said PASS — only inject audit failures, not review issues
+            audit_only_notice = (
+                "**IMPORTANT: The D.1 review verdict was PASS. "
+                "Fix ONLY the audit failures listed below. "
+                "Do NOT fix review suggestions — they are informational only.**\n\n"
+                "(Review omitted — verdict was PASS)\n"
+            )
+            prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", audit_only_notice)
+        else:
+            prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", review_text)
         prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
         # Inject track calibration for voice-matched repairs
         prompt2_text = prompt2_text.replace("{TRACK_CALIBRATION}", track_calibration or "")

@@ -60,7 +60,7 @@ Lines 14 and 18 are nearly identical (same sentence structure within 4 lines). T
 
 **Location**: Section «Презентація» L112
 
-The text reads: «Зверніть увагу на м'якість у вимові — [нʲ]». The symbol inside brackets is Cyrillic "н" rather than Latin IPA "n". Correct IPA should be [nʲ]. Additionally, the comparison to English "nice" is misleading — English /n/ before /aɪ/ is not palatalized the way Ukrainian /nʲ/ is.
+The text reads: «Зверніть увагу на м'якість у вимові — [нʲ]». The symbol inside brackets is Cyrillic "н" rather than Latin IPA "n". Correct IPA should be [nʲ]. Additionally, the comparison to English "nice" is misleading — English /n/ before is not palatalized the way Ukrainian is.
 
 **Fix**: Change `[нʲ]` to `[nʲ]`. Replace the "nice" comparison with a more accurate description (e.g., "The tip of your tongue touches your palate softly, producing a [nʲ] sound — softer than English 'n'").
 

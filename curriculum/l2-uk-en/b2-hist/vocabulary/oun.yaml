@@ -1,122 +1,97 @@
 items:
   - lemma: "націоналізм"
-    ipa: '[nɑt͡sʲiɔnɑˈlʲizm]'
     translation: "nationalism"
     pos: "noun"
     gender: "m"
   - lemma: "підпілля"
-    ipa: '[pʲiˈdʲpʲilʲːɑ]'
     translation: "underground"
     pos: "noun"
     gender: "n"
   - lemma: "ідеологія"
-    ipa: '[idɛɔˈlɔɦʲijɑ]'
     translation: "ideology"
     pos: "noun"
     gender: "f"
   - lemma: "організація"
-    ipa: '[ɔrɦɑnʲiˈzɑt͡sʲijɑ]'
     translation: "organization"
     pos: "noun"
     gender: "f"
   - lemma: "визвольний рух"
-    ipa: '[ʋɪˈzʋɔlʲnɪj rux]'
     translation: "liberation movement"
     pos: "noun"
     gender: "m"
   - lemma: "терор"
-    ipa: '[tɛˈrɔr]'
     translation: "terror"
     pos: "noun"
     gender: "m"
   - lemma: "розкол"
-    ipa: '[rɔˈzkɔl]'
     translation: "split"
     pos: "noun"
     gender: "m"
   - lemma: "провідник"
-    ipa: '[prɔʋʲiˈdnɪk]'
     translation: "leader"
     pos: "noun"
     gender: "m"
   - lemma: "радикальний"
-    ipa: '[rɑdɪˈkɑlʲnɪj]'
     translation: "radical"
     pos: "adjective"
   - lemma: "інтегральний"
-    ipa: '[intɛˈɦrɑlʲnɪj]'
     translation: "integral"
     pos: "adjective"
   - lemma: "атентат"
-    ipa: '[ɑtɛntɑt]'
     translation: "assassination (political)"
     pos: "noun"
     gender: "m"
   - lemma: "конспірація"
-    ipa: '[kɔnsʲpʲiˈrɑt͡sʲijɑ]'
     translation: "conspiracy, secrecy"
     pos: "noun"
     gender: "f"
   - lemma: "еміграція"
-    ipa: '[ɛmʲiˈɦrɑt͡sʲijɑ]'
     translation: "emigration"
     pos: "noun"
     gender: "f"
   - lemma: "маніфест"
-    ipa: '[mɑnʲiˈfɛst]'
     translation: "manifesto"
     pos: "noun"
     gender: "m"
   - lemma: "пацифікація"
-    ipa: '[pɑt͡sɪfʲiˈkɑt͡sʲijɑ]'
     translation: "pacification"
     pos: "noun"
     gender: "f"
   - lemma: "бездержавність"
-    ipa: '[bɛzdɛrˈʒɑu̯nʲisʲtʲ]'
     translation: "statelessness"
     pos: "noun"
     gender: "f"
   - lemma: "окупація"
-    ipa: '[ɔkuˈpɑt͡sʲijɑ]'
     translation: "occupation"
     pos: "noun"
     gender: "f"
   - lemma: "відплата"
-    ipa: '[ʋʲiˈdplɑtɑ]'
     translation: "retribution, revenge"
     pos: "noun"
     gender: "f"
   - lemma: "соборний"
-    ipa: '[sɔˈbɔrnɪj]'
     translation: "united, undivided"
     pos: "adjective"
   - lemma: "самостійний"
-    ipa: '[sɑmɔˈsʲtʲijnɪj]'
     translation: "independent"
     pos: "adjective"
   - lemma: "репресії"
-    ipa: '[rɛˈprɛsʲiji]'
     translation: "repressions"
     pos: "noun"
     gender: "f"
   - lemma: "волюнтаризм"
-    ipa: '[ʋɔlʲuntɑˈrɪzm]'
     translation: "voluntarism"
     pos: "noun"
     gender: "m"
   - lemma: "саботаж"
-    ipa: '[sɑbɔˈtɑʒ]'
     translation: "sabotage"
     pos: "noun"
     gender: "m"
   - lemma: "суверенітет"
-    ipa: '[suʋɛrɛnʲiˈtɛt]'
     translation: "sovereignty"
     pos: "noun"
     gender: "m"
   - lemma: "компроміс"
-    ipa: '[kɔmprɔˈmʲis]'
     translation: "compromise"
     pos: "noun"
     gender: "m"

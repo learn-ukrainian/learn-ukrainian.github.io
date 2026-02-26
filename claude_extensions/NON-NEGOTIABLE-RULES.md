@@ -310,7 +310,7 @@ review/{slug}-review.md
 - Meta violations (activity types, word targets)
 - Lesson violations (word count, sections, immersion)
 - Activity violations (schema, counts, mirroring)
-- Vocab violations (IPA, POS, duplicates)
+- Vocab violations (POS, duplicates)
 - Naturalness violations (score < 8)
 ```
 

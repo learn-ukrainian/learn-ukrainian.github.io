@@ -1,0 +1,27 @@
+{
+  "track": "b2",
+  "slug": "professional-reports-basics",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T14:47:47Z",
+      "task_id": "v3-professional-reports-basics-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T14:53:15Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T15:03:02Z",
+      "task_id": "v3-professional-reports-basics-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T16:28:58Z",
+      "attempts": 1
+    }
+  }
+}

@@ -40,18 +40,18 @@
 
 **Location:** Vocabulary file, lines 79, 97, 103
 
-**(a) відправлення** — IPA given: `[ʋʲiˈdprɑu̯lɛnʲːɑ]`
+**(a) відправлення** — IPA given: ``
 - Stress misplaced: відпра́влення has stress on "прав" syllable, not on "і"
 - Spurious `u̯`: the /ʋ/ in "прав" occurs before /l/ (a sonorant), not before a voiceless consonant, so it should remain [ʋ] not [u̯]
-- Correct: `[ʋʲidˈprɑʋlɛnʲːɑ]`
+- Correct: ``
 
-**(b) постіль** — IPA given: `[ˈpɔˈsʲtʲilʲ]`
+**(b) постіль** — IPA given: ``
 - Double primary stress mark (ˈ appears twice). A word can only have one primary stress.
-- Correct: `[pɔˈsʲtʲilʲ]` (stress on second syllable)
+- Correct: `` (stress on second syllable)
 
-**(c) підстаканник** — IPA given: `[pʲid͡zstɑˈkɑnːɪk]`
+**(c) підстаканник** — IPA given: ``
 - Incorrect `d͡z` affricate: "підстаканник" is під+стаканник. The /д/ before /с/ is a plain plosive at a morpheme boundary, not the Ukrainian affricate phoneme /d͡z/ (дз).
-- Correct: `[pʲidstɑˈkɑnːɪk]`
+- Correct: ``
 
 ### Issue 4: Plan Scope Gap — електронний квиток Missing (SIGNIFICANT)
 
@@ -92,7 +92,7 @@
 | Genitive pattern: cities ending in consonant add -а/-я | Content L82-86 | **Correct** — Київ→Києва, Львів→Львова |
 | Genitive pattern: cities ending in -а → -и | Content L87-89 | **Correct** — Полтава→Полтави, Одеса→Одеси |
 | Myth-buster: Ukrainian trains are generally safe | Content L300-302 | **Plausible** — consistent with travel guidance; framed appropriately |
-| Щасливої дороги IPA: [ʃt͡ʃɑˈslɪʋɔji dɔˈrɔɦɪ] | Content L305 | **Acceptable** — reasonable phonetic transcription |
+| Щасливої дороги IPA: | Content L305 | **Acceptable** — reasonable phonetic transcription |
 
 **Callout box check:** 6 callout boxes reviewed. No fabricated claims found. The `[!myth-buster]` "Is it safe?" block (L300-302) is appropriately hedged with "generally very safe" rather than an absolute claim. No superlative claims detected.
 

@@ -1,151 +1,121 @@
 items:
   - lemma: "функціональний стиль"
-    ipa: '[funkt͡sʲiɔˈnɑlʲnɪj stɪlʲ]'
     translation: "functional style"
     pos: "noun"
     gender: "m"
   - lemma: "розмовний стиль"
-    ipa: '[rɔˈzmɔu̯nɪj stɪlʲ]'
     translation: "colloquial style"
     pos: "noun"
     gender: "m"
   - lemma: "художній стиль"
-    ipa: '[xuˈdɔʒnʲij stɪlʲ]'
     translation: "artistic/literary style"
     pos: "noun"
     gender: "m"
   - lemma: "науковий стиль"
-    ipa: '[nɑuˈkɔʋɪj stɪlʲ]'
     translation: "scientific style"
     pos: "noun"
     gender: "m"
   - lemma: "офіційно-діловий стиль"
-    ipa: '[ɔfʲiˈt͡sʲijnɔ-dʲilɔˈʋɪj stɪlʲ]'
     translation: "official-business style"
     pos: "noun"
     gender: "m"
   - lemma: "публіцистичний стиль"
-    ipa: '[publʲit͡sɪˈstɪt͡ʃnɪj stɪlʲ]'
     translation: "journalistic style"
     pos: "noun"
     gender: "m"
   - lemma: "мовна ситуація"
-    ipa: '[ˈmɔu̯nɑ sɪtuˈɑt͡sʲijɑ]'
     translation: "speech situation"
     pos: "noun"
     gender: "f"
   - lemma: "стильові маркери"
-    ipa: '[stɪlʲɔˈʋʲi mɑrkɛrɪ]'
     translation: "style markers"
     pos: "noun"
     gender: "p"
   - lemma: "регістр"
-    ipa: '[rɛˈɦʲistr]'
     translation: "register"
     pos: "noun"
     gender: "m"
   - lemma: "комунікативна мета"
-    ipa: '[kɔmunʲikɑˈtɪu̯nɑ mɛˈtɑ]'
     translation: "communicative purpose"
     pos: "noun"
     gender: "f"
   - lemma: "образність"
-    ipa: '[ˈɔbrɑzʲnʲisʲtʲ]'
     translation: "imagery"
     pos: "noun"
     gender: "f"
   - lemma: "точність"
-    ipa: '[ˈtɔt͡ʃnʲisʲtʲ]'
     translation: "precision"
     pos: "noun"
     gender: "f"
   - lemma: "стандартизованість"
-    ipa: '[stɑndɑrtɪˈzɔʋɑnʲisʲtʲ]'
     translation: "standardization"
     pos: "noun"
     gender: "f"
   - lemma: "актуальність"
-    ipa: '[ɑktuˈɑlʲnʲisʲtʲ]'
     translation: "relevance/topicality"
     pos: "noun"
     gender: "f"
   - lemma: "емоційність"
-    ipa: '[ɛmɔˈt͡sʲijnʲisʲtʲ]'
     translation: "emotionality"
     pos: "noun"
     gender: "f"
   - lemma: "еліпсис"
-    ipa: '[ˈɛlʲipsɪs]'
     translation: "ellipsis"
     pos: "noun"
     gender: "m"
   - lemma: "канцелярит"
-    ipa: '[kɑnt͡sɛlʲɑrɪt]'
     translation: "bureaucratese"
     pos: "noun"
     gender: "m"
   - lemma: "кліше"
-    ipa: '[klʲiˈʃɛ]'
     translation: "cliché"
     pos: "noun"
     gender: "n"
   - lemma: "термін"
-    ipa: '[ˈtɛrmʲin]'
     translation: "term"
     pos: "noun"
     gender: "m"
   - lemma: "троп"
-    ipa: '[trɔp]'
     translation: "trope / figure of speech"
     pos: "noun"
     gender: "m"
   - lemma: "метафора"
-    ipa: '[mɛˈtɑfɔrɑ]'
     translation: "metaphor"
     pos: "noun"
     gender: "f"
   - lemma: "епітет"
-    ipa: '[ɛˈpʲitɛt]'
     translation: "epithet"
     pos: "noun"
     gender: "m"
   - lemma: "порівняння"
-    ipa: '[pɔrʲiu̯nʲɑnʲːɑ]'
     translation: "simile / comparison"
     pos: "noun"
     gender: "n"
   - lemma: "неологізм"
-    ipa: '[nɛɔlɔˈɦʲizm]'
     translation: "neologism"
     pos: "noun"
     gender: "m"
   - lemma: "оцінність"
-    ipa: '[ɔˈt͡sʲinʲːisʲtʲ]'
     translation: "evaluativeness"
     pos: "noun"
     gender: "f"
   - lemma: "фамільярність"
-    ipa: '[fɑmʲiˈlʲjɑrnʲisʲtʲ]'
     translation: "familiarity"
     pos: "noun"
     gender: "f"
   - lemma: "об'єктивність"
-    ipa: '[ɔbjɛˈktɪu̯nʲisʲtʲ]'
     translation: "objectivity"
     pos: "noun"
     gender: "f"
   - lemma: "регламентація"
-    ipa: '[rɛɦlɑmɛnˈtɑt͡sʲijɑ]'
     translation: "regulation"
     pos: "noun"
     gender: "f"
   - lemma: "інформувати"
-    ipa: '[infɔrmuˈʋɑtɪ]'
     translation: "to inform"
     pos: "verb"
     aspect: "impf"
   - lemma: "переконувати"
-    ipa: '[pɛrɛˈkɔnuʋɑtɪ]'
     translation: "to persuade"
     pos: "verb"
     aspect: "impf"

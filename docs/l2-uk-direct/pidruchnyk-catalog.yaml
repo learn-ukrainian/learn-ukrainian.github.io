@@ -1,0 +1,1605 @@
+# pidruchnyk.com.ua — Complete Catalog of Ukrainian Language, Reading, Literature & History Textbooks
+# Scraped: 2026-02-26
+# Source: https://pidruchnyk.com.ua
+# Scope: Grades 1-11 — Українська мова, Літературне читання / Українська література, Історія України
+# Note: includes ALL editions (old + NUS/НУШ). Duplicates across pages removed.
+
+# ============================================================
+# GRADE 1 — Українська мова. Буквар
+# Category URL: /1klas/bukvar/
+# ============================================================
+grade_1:
+  ukrainska_mova_bukvar:
+    category_url: /1klas/bukvar/
+    books:
+      # --- 2025 editions (NUS 3rd cycle) ---
+      - title: "Українська мова. Буквар (Большакова) 1 клас 2025"
+        authors: [Большакова, Пристінська]
+        year: 2025
+        slug: 3029-ukr-mova-bukvar-1-klas-bolshakova
+      - title: "Українська мова. Буквар (Захарійчук) 1 клас 2025"
+        authors: [Захарійчук]
+        year: 2025
+        slug: 3028-bukvar-1-klas-zakhariichuk
+      # --- 2023 editions (NUS 2nd cycle) ---
+      - title: "Українська мова. Буквар (Пономарьова) 1 клас 2023"
+        authors: [Пономарьова]
+        year: 2023
+        slug: 2767-ukrmova-1-klas-ponomarova-2023
+      - title: "Українська мова. Буквар (Вашуленко) 1 клас 2023"
+        authors: [Вашуленко, Прищепа]
+        year: 2023
+        slug: 2766-ukrmova-1-klas-vashulenko-2023
+      - title: "Українська мова. Буквар (Кравцова) 1 клас 2023"
+        authors: [Кравцова, Придаток]
+        year: 2023
+        slug: 2765-ukrmova-1-klas-kravtsova-2023
+      - title: "Українська мова. Буквар (Большакова) 1 клас 2023"
+        authors: [Большакова, Пристінська]
+        year: 2023
+        slug: 2764-ukrmova-1-klas-bolshakova-2023
+      - title: "Українська мова. Буквар (Богданець-Білоскаленко) 1 клас 2023"
+        authors: [Богданець-Білоскаленко, Шумейко, Клименко]
+        year: 2023
+        slug: 2763-ukrmova-1-klas-bogdanec-biloskalenko-2023
+      - title: "Українська мова. Буквар (Тарнавська) 1 клас 2023"
+        authors: [Тарнавська]
+        year: 2023
+        slug: 2762-ukrmova-1-klas-tarnavska-2023
+      - title: "Українська мова. Буквар (Наумчук) 1 клас 2023"
+        authors: [Наумчук]
+        year: 2023
+        slug: 2761-ukrmova-1-klas-naumchuk-2023
+      - title: "Українська мова. Буквар (Остапенко) 1 клас"
+        authors: [Остапенко, Мовчун]
+        year: 2023
+        slug: 2760-ukrmova-1-klas-ostapenko-2023
+      - title: "Українська мова. Буквар (Чумарна) 1 клас 2023"
+        authors: [Чумарна]
+        year: 2023
+        slug: 2759-ukrmova-1-klas-chumarna-2023
+      - title: "Українська мова. Буквар (Чабайовська) 1 клас 2023"
+        authors: [Чабайовська, Омельченко, Кожушко]
+        year: 2023
+        slug: 2758-ukrmova-1-klas-chabaiovska-2023
+      - title: "Українська мова. Буквар (Іщенко) 1 клас 2023"
+        authors: [Іщенко, Логачевська]
+        year: 2023
+        slug: 2757-ukrmova-1-klas-ishchenko-2023
+      - title: "Українська мова. Буквар (Цепова) 1 клас 2023, 2025"
+        authors: [Цепова]
+        year: 2023
+        slug: 2756-ukrmova-1-klas-tsepova
+      # --- 2018 editions (NUS 1st cycle) ---
+      - title: "Українська мова. Буквар (Вашуленко) 1 клас 2018, 2025"
+        authors: [Вашуленко]
+        year: 2018
+        slug: 35-bukvar-vashulenko-1-klas
+      - title: "Українська мова. Буквар (Чумарна) 1 клас 2018, 2025"
+        authors: [Чумарна]
+        year: 2018
+        slug: 1197-bukvar-1-klas-chumarna
+      - title: "Українська мова. Буквар (Тарнавська, Науменко) 1 клас 2018"
+        authors: [Тарнавська, Науменко]
+        year: 2018
+        slug: 1196-bukvar-1-klas-tarnavska
+      - title: "Українська мова. Буквар (Пономарьова) 1 клас 2018, 2025"
+        authors: [Пономарьова]
+        year: 2018
+        slug: 1195-bukvar-1-klas-ponomarova
+      - title: "Українська мова. Буквар (Наумчук) 1 клас 2018, 2025"
+        authors: [Наумчук]
+        year: 2018
+        slug: 1194-bukvar-1-klas-naumchuk
+      - title: "Українська мова. Буквар (Кравцова, Придаток) 1 клас 2018, 2025"
+        authors: [Кравцова, Придаток]
+        year: 2018
+        slug: 1193-bukvar-1-klas-kravcova
+      - title: "Українська мова. Буквар (Іщенко, Логачевська) 1 клас 2018, 2025"
+        authors: [Іщенко, Логачевська]
+        year: 2018
+        slug: 1192-bukvar-1-klas-ischenko
+      # --- Pre-NUS editions ---
+      - title: "Українська мова (Захарійчук) 1 клас 2012"
+        authors: [Захарійчук]
+        year: 2012
+        slug: 29-ukrayinska-mova-zaharychuk-1-klas
+      - title: "Буквар (Захарійчук, Науменко) 1 клас 2012"
+        authors: [Захарійчук, Науменко]
+        year: 2012
+        slug: 11-bukvar-zaharychuk-naumenko-1-klas
+
+# ============================================================
+# GRADE 2 — Українська мова (та читання)
+# Category URL: /2klas/ukrainska/
+# ============================================================
+grade_2:
+  ukrainska_mova:
+    category_url: /2klas/ukrainska/
+    books:
+      # --- 2025 editions ---
+      - title: "Українська мова та читання (Цепова) 2 клас 2025"
+        authors: [Цепова]
+        year: 2025
+        slug: 3041-ukrmova-2-klas-cepova
+      - title: "Українська мова та читання (Чумарна) 2 клас 2025"
+        authors: [Чумарна]
+        year: 2025
+        slug: 3040-ukrmova-2-klas-chumarna
+      - title: "Українська мова та читання (Савчук) 2 клас 2025"
+        authors: [Савчук]
+        year: 2025
+        slug: 3039-ukrmova-2-klas-savchuk
+      # --- 2019 editions ---
+      - title: "Українська мова та читання (Савченко) 2 клас 2019, 2025"
+        authors: [Савченко]
+        year: 2019
+        slug: 3038-ukrmova-2-klas-savchenko
+      - title: "Українська мова та читання (Большакова) 2 клас 2019, 2025"
+        authors: [Большакова]
+        year: 2019
+        slug: 3037-ukrmova-bolshakova-2-klas
+      - title: "Українська мова та читання (Варзацька, Чипурко) 2 клас 2019, 2025"
+        authors: [Варзацька, Чипурко]
+        year: 2019
+        slug: 1302-ukrmova-chytannya-varzacka-chipurko-2-klas
+      - title: "Українська мова та читання (Пономарьова) 2 клас 2019, 2025"
+        authors: [Пономарьова]
+        year: 2019
+        slug: 1301-ukrmova-chytannya-ponomarova-2-klas
+      - title: "Українська мова та читання (Кравцова) 2 клас 2019, 2025"
+        authors: [Кравцова]
+        year: 2019
+        slug: 1297-ukrmova-ta-chitannya-kravcova-2-klas
+      - title: "Українська мова (Іщенко, Логачевська) 2 клас 2019, 2025"
+        authors: [Іщенко, Логачевська]
+        year: 2019
+        slug: 1296-ukramova-chitannya-ischenko-2-klas
+      - title: "Українська мова (Захарійчук, Богданець) 2 клас 2019, 2025"
+        authors: [Захарійчук, Богданець]
+        year: 2019
+        slug: 63-ukrayinska-mova-zaharychuk-2-klas
+      - title: "Українська мова (Богданець-Білоскаленко) 2 клас 2019"
+        authors: [Богданець-Білоскаленко]
+        year: 2019
+        slug: 3057-ukrmova-2-klas-bogdanec-biloskalenko
+      - title: "Українська мова (Вашуленко, Дубовик) 2 клас 2019, 2025"
+        authors: [Вашуленко, Дубовик]
+        year: 2019
+        slug: 57-ukrayinska-mova-vashulenko-dubovyk-2-klas
+      # --- Pre-NUS ---
+      - title: "Українська мова (Гавриш, Маркотенко) 2 клас 2012"
+        authors: [Гавриш, Маркотенко]
+        year: 2012
+        slug: 610-ukrayinska-mova-gavrish-markotenko-2-klas
+
+  literaturne_chytannia:
+    category_url: /2klas/chytannja2/
+    books:
+      - title: "Літературне читання (Савченко) 2 клас 2012"
+        authors: [Савченко]
+        year: 2012
+        slug: 53-lteraturne-chitannya-savchenko-2-klas
+      - title: "Зошит з літературного читання (Науменко) 2 клас"
+        authors: [Науменко]
+        year: null
+        slug: 59-zoshit-z-lteraturnogo-chitannya-naumenko-2-klas
+
+# ============================================================
+# GRADE 3 — Українська мова та читання
+# Category URL: /3klas/ukrainska3/
+# ============================================================
+grade_3:
+  ukrainska_mova:
+    category_url: /3klas/ukrainska3/
+    books:
+      # --- 2020 NUS editions ---
+      - title: "Українська мова та читання (Савченко) 3 клас 2020, 2025"
+        authors: [Савченко]
+        year: 2020
+        slug: 1504-ukrmova-ta-chytannja-sachenko-3-klas-nush
+      - title: "Українська мова та читання (Пономарьова, Гайова) 3 клас 2020, 2025"
+        authors: [Пономарьова, Гайова]
+        year: 2020
+        slug: 1503-ukrmova-ta-chytannja-3-klas-nush-ponomarova
+      - title: "Українська мова та читання (Большакова, Пристінська) 3 клас 2020, 2025"
+        authors: [Большакова, Пристінська]
+        year: 2020
+        slug: 1502-ukrmova-ta-chytannja-3-klas-nush-bolshakova
+      - title: "Українська мова та читання (Кравцова) 3 клас 2020"
+        authors: [Кравцова]
+        year: 2020
+        slug: 1501-ukrmova-ta-chytannja-3-klas-kravcova
+      - title: "Українська мова та читання (Вашуленко) 3 клас НУШ"
+        authors: [Вашуленко]
+        year: 2020
+        slug: 1524-ukrmova-ta-chytannya-vashulenko-3klas-nush
+      - title: "Українська мова та читання (Захарійчук) 3 клас НУШ"
+        authors: [Захарійчук]
+        year: 2020
+        slug: 1525-ukrmova-ta-chytannya-zahariychuk-3klas-nush
+      - title: "Українська мова та читання (Остапенко) 3 клас"
+        authors: [Остапенко]
+        year: 2020
+        slug: 1515-ukrmova-ta-chytannya-ostapenko-3-klas
+      - title: "Українська мова та читання (Чабайовська, Омельченко, Синільник) 3 клас"
+        authors: [Чабайовська, Омельченко, Синільник]
+        year: 2020
+        slug: 1532-ukrainska-mova-ta-chytannya-chabayovska-3kl
+      - title: "Українська мова та читання (Сапун) 3 клас"
+        authors: [Сапун]
+        year: 2020
+        slug: 1529-ukrmova-ta-chytannya-sapun-3-klas-nush
+      - title: "Українська мова та читання (Варзацька, Трохименко) 3 клас"
+        authors: [Варзацька, Трохименко]
+        year: 2020
+        slug: 1527-ukrmova-ta-chytannya-varzacka-3-klas-nush
+      - title: "Українська мова та читання (Богданець-Білоскаленко, Шумейко) 3 клас"
+        authors: [Богданець-Білоскаленко, Шумейко]
+        year: 2020
+        slug: 1526-ukrmova-ta-chytannya-bogdanec
+      - title: "Українська мова та читання (Волкотруб, Науменко) 3 клас"
+        authors: [Волкотруб, Науменко]
+        year: 2020
+        slug: 1521-ukrmova-ta-chytannya-3-klas-volkotrub
+      - title: "Українська мова та читання (Тимченко, Кочергіна) 3 клас"
+        authors: [Тимченко, Кочергіна]
+        year: 2020
+        slug: 1520-ukrmova-ta-chytannya-tymchenko-3-klas
+      - title: "Українська мова та читання (Іваниця) 3 клас"
+        authors: [Іваниця]
+        year: 2020
+        slug: 1519-ukrmova-ta-chytannya-ivanycya-3klas
+      - title: "Українська мова та читання (Большакова, Пристінська) 3 клас"
+        authors: [Большакова, Пристінська]
+        year: 2020
+        slug: 1518-ukrmova-ta-chytannya-bolshakova-3-klas
+      # --- Pre-NUS ---
+      - title: "Українська мова (Гавриш, Маркотенко) 3 клас 2014"
+        authors: [Гавриш, Маркотенко]
+        year: 2014
+        slug: 84-ukrayinska-mova-gavrish-markotenko-3-klass
+
+  literaturne_chytannia:
+    category_url: /3klas/chytannja3/
+    books:
+      - title: "Літературне читання (Савченко) 3 клас 2013"
+        authors: [Савченко]
+        year: 2013
+        slug: 770-literaturne-chitannya-savchenko-3-klas
+      - title: "Літературне читання (Хорошковська, Охота) 3 клас"
+        authors: [Хорошковська, Охота]
+        year: null
+        slug: 90-lteraturne-chitannya-horoshkovska-ohota-3-klas
+      - title: "Літературне читання (Науменко) 3 клас"
+        authors: [Науменко]
+        year: null
+        slug: 78-lteraturne-chitannya-naumenko-3-klas
+
+# ============================================================
+# GRADE 4 — Українська мова та читання
+# Category URL: /4klas/ridna_mova4/
+# ============================================================
+grade_4:
+  ukrainska_mova:
+    category_url: /4klas/ridna_mova4/
+    books:
+      # --- 2021 NUS editions ---
+      - title: "Українська мова та читання (Пономарьова) 4 клас НУШ"
+        authors: [Пономарьова]
+        year: 2021
+        slug: 1576-ukrmova-4-klas-ponomarova
+      - title: "Українська мова та читання (Савченко) 4 клас 2021"
+        authors: [Савченко]
+        year: 2021
+        slug: 1575-ukrmova-4-klas-savchenko
+      - title: "Українська мова та читання (Большакова) 4 клас 2021"
+        authors: [Большакова]
+        year: 2021
+        slug: 1574-ukrmova-4-klas-bolshakova
+      - title: "Українська мова та читання (Чумарна) 4 клас"
+        authors: [Чумарна]
+        year: 2021
+        slug: 1588-ukrmova-4-klas-chumarna
+      - title: "Українська мова та читання (Чабайовська) 4 клас"
+        authors: [Чабайовська]
+        year: 2021
+        slug: 1587-ukrmova-4-klas-chabayovska
+      - title: "Українська мова та читання (Богданець-Білоскаленко) 4 клас"
+        authors: [Богданець-Білоскаленко]
+        year: 2021
+        slug: 1586-ukr-4-klas-bogdanec
+      - title: "Українська мова та читання (Іщенко) 4 клас"
+        authors: [Іщенко]
+        year: 2021
+        slug: 1583-ukrmova-4-klas-schenko
+      - title: "Українська мова та читання (Іваниця) 4 клас"
+        authors: [Іваниця]
+        year: 2021
+        slug: 1582-ukrmova-4-klas-ivanycya
+      - title: "Українська мова та читання (Коваленко) 4 клас"
+        authors: [Коваленко]
+        year: 2021
+        slug: 1581-ukrmova-4-klas-kovalenko
+      - title: "Українська мова та читання (Криган) 4 клас"
+        authors: [Криган]
+        year: 2021
+        slug: 1580-ukrmova-4-klas-krigan
+      - title: "Українська мова та читання (Остапенко) 4 клас"
+        authors: [Остапенко]
+        year: 2021
+        slug: 1579-ukrmova-4-klas-ostapenko
+      - title: "Українська мова та читання (Оксана Петрук) 4 клас"
+        authors: [Петрук]
+        year: 2021
+        slug: 1578-ukrmova-4-klas-petruk
+      - title: "Українська мова та читання (Сапун) 4 клас"
+        authors: [Сапун]
+        year: 2021
+        slug: 1577-ukrmova-4-klas-sapun
+      # --- Pre-NUS ---
+      - title: "Українська мова та читання (Варзацька) 4 клас"
+        authors: [Варзацька]
+        year: null
+        slug: 650-ukrayinska-mova-varzacka-4-klas
+      - title: "Українська мова та читання (Захарійчук) 4 клас"
+        authors: [Захарійчук]
+        year: null
+        slug: 652-ukrayinska-mova-zaharychuk-4-klas
+      - title: "Українська мова та читання (Вашуленко) 4 клас"
+        authors: [Вашуленко]
+        year: null
+        slug: 654-ukrayinska-mova-vashulenko-dubovik-4-klas
+      - title: "Українська мова (Хорошковська) Мова і мовлення. Правопис 4 клас"
+        authors: [Хорошковська]
+        year: null
+        slug: 99-ukrayinska-mova-horoshkovska-mova-movlennya-pravopis-4-klas
+      - title: "Українська мова (Хорошковська) Художнє слово читання 4 клас"
+        authors: [Хорошковська]
+        year: null
+        slug: 98-ukrayinska-mova-horoshkovska-hudozhnye-slovo-chitannya-4-klas
+      - title: "Рідна мова (Вашуленко) 4 клас (частина 1)"
+        authors: [Вашуленко]
+        year: 2004
+        slug: 106-rdna-mova-vashulenko-4-klas-chastina-1
+      - title: "Рідна мова (Вашуленко) 4 клас 2004 (2 частина)"
+        authors: [Вашуленко]
+        year: 2004
+        slug: 105-rdna-mova-vashulenko-2-chastina-4-klas
+
+  literaturne_chytannia:
+    category_url: /4klas/chytanka4/
+    books:
+      - title: "Літературне читання (Науменко) 4 клас"
+        authors: [Науменко]
+        year: 2015
+        slug: 771-literaturne-chitannya-4-klas-naumenko-2015
+      - title: "Літературне читання (Зоряна, Богданець-Білоскаленко) 4 клас"
+        authors: [Зоряна, Богданець-Білоскаленко]
+        year: null
+        slug: 686-lteraturne-chitannya-zoryana-bogdanec-bloskalenko-4-klas
+      - title: "Літературне читання (Савченко) 4 клас"
+        authors: [Савченко]
+        year: null
+        slug: 685-lteraturne-chitannya-savchenko-4-klas
+      - title: "Літературне читання (Чумарна) 4 клас"
+        authors: [Чумарна]
+        year: null
+        slug: 684-lteraturne-chitannya-chumarna-4-klas
+      - title: "Читанка (Савченко) 4 клас частина 1"
+        authors: [Савченко]
+        year: null
+        slug: 107-chitanka-savchenko-4-klas-chastina-1
+      - title: "Читанка (Савченко) 4 клас"
+        authors: [Савченко]
+        year: null
+        slug: 100-chitanka-savchenko-4-klas
+
+# ============================================================
+# GRADE 5
+# ============================================================
+grade_5:
+  ukrainska_mova:
+    category_url: /5klas/ukrainska5/
+    books:
+      # --- 2022 NUS ---
+      - title: "Українська мова (Авраменко) 5 клас 2022"
+        authors: [Авраменко]
+        year: 2022
+        slug: 1643-ukrainska-mova-avramenko-5-klas-2022
+      - title: "Українська мова (Заболотний) 5 клас 2022"
+        authors: [Заболотний]
+        year: 2022
+        slug: 1640-ukrainska-mova-zabolotnyi-5-klas-2022
+      - title: "Українська мова (Ворон) 5 клас 2022"
+        authors: [Ворон]
+        year: 2022
+        slug: 1642-ukrainska-mova-voron-5-klas-2022
+      - title: "Українська мова (Глазова) 5 клас 2022"
+        authors: [Глазова]
+        year: 2022
+        slug: 1641-ukrainska-mova-glazova-5-klas-2022
+      - title: "Українська мова (Голуб) 5 клас"
+        authors: [Голуб]
+        year: 2022
+        slug: 1649-ukrmova-5-klas-golub
+      - title: "Українська мова (Свінтковська) 5 клас"
+        authors: [Свінтковська]
+        year: 2022
+        slug: 1732-ukrainska-mova-svintkovska-5-klas
+      - title: "Українська мова (Петрук) 5 клас"
+        authors: [Петрук]
+        year: 2022
+        slug: 1731-ukrainska-mova-petruk-5-klas
+      - title: "Українська мова (Беца) 5 клас"
+        authors: [Беца]
+        year: 2022
+        slug: 1730-ukrainska-mova-beca-5-klas
+      - title: "Українська мова (Шумицька) 5 клас"
+        authors: [Шумицька]
+        year: 2022
+        slug: 1729-ukrainska-mova-shumycka-5-klas
+      - title: "Українська мова (Літвінова) 5 клас"
+        authors: [Літвінова]
+        year: 2022
+        slug: 1648-ukrmova-5-klas-litvinova
+      - title: "Українська мова (Онатій) 5 клас"
+        authors: [Онатій]
+        year: 2022
+        slug: 1647-ukrmova-5-klas-onatii
+      - title: "Українська мова (Панчук) 5 клас"
+        authors: [Панчук]
+        year: 2022
+        slug: 1646-ukrainska-mova-panchuk-5-klas
+      - title: "Українська мова (Семеног) 5 клас"
+        authors: [Семеног]
+        year: 2022
+        slug: 1645-ukrmova-5-klas-semenog
+      - title: "Українська мова (Ющук) 5 клас"
+        authors: [Ющук]
+        year: 2022
+        slug: 1644-ukrmova-5-klas-yushchuk
+      # --- Pre-NUS ---
+      - title: "Українська мова (Заболотний) 5 клас 2013, 2018"
+        authors: [Заболотний]
+        year: 2013
+        slug: 123-ukrayinska-mova-zabolotniy-5-klas
+      - title: "Українська мова (Глазова) 5 клас 2013, 2018"
+        authors: [Глазова]
+        year: 2013
+        slug: 121-ukrayinska-mova-glazova-kuznyecov-5-klas
+      - title: "Українська мова (Єрмоленко, Сичова) 5 клас 2013, 2018"
+        authors: [Єрмоленко, Сичова]
+        year: 2013
+        slug: 136-ukrayinska-mova-yermolenko-sichova-5-klas
+      - title: "Українська мова (Ворон, Солопенко) 5 клас 2013"
+        authors: [Ворон, Солопенко]
+        year: 2013
+        slug: 135-ukrayinska-mova-voron-solopenko-5-klas
+
+  ukrainska_literatura:
+    category_url: /5klas/ukr_literatura5/
+    books:
+      - title: "Українська література (Авраменко) 5 клас 2022"
+        authors: [Авраменко]
+        year: 2022
+        slug: 1685-5_ukrlit_avramenko
+      - title: "Українська література (Заболотний) 5 клас"
+        authors: [Заболотний]
+        year: 2022
+        slug: 1684-5_ukrlit_zabolotnyi
+      - title: "Українська література (Коваленко) 5 клас 2022"
+        authors: [Коваленко]
+        year: 2022
+        slug: 1683-5_ukrlit_kovalenko
+      - title: "Українська література (Архипова) 5 клас"
+        authors: [Архипова]
+        year: 2022
+        slug: 1682-5_ukrlit_arhupova
+      - title: "Українська література (Калинич) 5 клас"
+        authors: [Калинич]
+        year: 2022
+        slug: 1681-5_ukrlit_kalynych
+      - title: "Українська література (Качак) 5 клас"
+        authors: [Качак]
+        year: 2022
+        slug: 1680-5_ukrlit_kachak
+      - title: "Українська література (Яценко) 5 клас"
+        authors: [Яценко]
+        year: 2022
+        slug: 1679-5_ukrlit_iacenko
+      - title: "Українська література (Борзенко) 5 клас"
+        authors: [Борзенко]
+        year: 2022
+        slug: 1678-5_ukrlit_borzenko
+      - title: "Українська література (Чумарна) 5 клас"
+        authors: [Чумарна]
+        year: 2022
+        slug: 1677-5_ukrlit_chumarna
+      - title: "Українська література (Авраменко) 5 клас 2018, 2013"
+        authors: [Авраменко]
+        year: 2013
+        slug: 138-ukrayinska-lteratura-avramenko-5-klas
+      - title: "Українська література (Коваленко) 5 клас 2013, 2018"
+        authors: [Коваленко]
+        year: 2013
+        slug: 126-ukrayinska-lteratura-kovalenko-5-klas
+      - title: "Українська література (Шабельникова) 5 клас"
+        authors: [Шабельникова]
+        year: null
+        slug: 114-ukrayinska-lteratura-shabelnikova-5-klas
+
+  istoriia:
+    category_url: /5klas/istoria_ukrainy5/
+    books:
+      # --- 2022 NUS ---
+      - title: "Вступ до історії України та громадянської освіти (Щупак) 5 клас 2022"
+        authors: [Щупак]
+        year: 2022
+        slug: 1668-vstup-do-istorii-5-klas-shchupak-2022
+      - title: "Україна і світ: вступ до історії та громадянської освіти (Щупак) 5 клас"
+        authors: [Щупак]
+        year: 2022
+        slug: 1671-5_ukraina_i_svit_schupak
+      - title: "Україна і світ: вступ до історії та громадянської освіти (Кафтан) 5 клас"
+        authors: [Кафтан]
+        year: 2022
+        slug: 1670-5_ukraina_i_svit_kaftan
+      - title: "Україна і світ: вступ до історії та громадянської освіти (Панарін) 5 клас"
+        authors: [Панарін]
+        year: 2022
+        slug: 1669-5_ukraina_i_svit_panarin
+      - title: "Вступ до історії України та громадянської освіти (Сорочинська) 5 клас"
+        authors: [Сорочинська]
+        year: 2022
+        slug: 1667-vstup-do-istorii-5-klas-sorochynska
+      - title: "Вступ до історії України та громадянської освіти (Пометун) 5 клас"
+        authors: [Пометун]
+        year: 2022
+        slug: 1666-vstup-do-istorii-5-klas-pometun
+      - title: "Вступ до історії України та громадянської освіти (Хлібовська) 5 клас"
+        authors: [Хлібовська]
+        year: 2022
+        slug: 1662-vstup-do-istorii-5-klas-khlibovska
+      - title: "Вступ до історії України та громадянської освіти (Власов) 5 клас 2022"
+        authors: [Власов]
+        year: 2022
+        slug: 1665-vstup-do-istorii-5-klas-vlasov-2022
+      - title: "Вступ до історії України та громадянської освіти (Могорита) 5 клас"
+        authors: [Могорита]
+        year: 2022
+        slug: 1664-vstup-do-istorii-5-klas-mogoryta
+      - title: "Вступ до історії України та громадянської освіти (Мокрогуз) 5 клас"
+        authors: [Мокрогуз]
+        year: 2022
+        slug: 1663-vstup-do-istorii-5-klas-mokroguz
+      - title: "Вступ до історії України та громадянської освіти (Гісем) 5 клас"
+        authors: [Гісем]
+        year: 2022
+        slug: 1661-vstup-do-istorii-5-klas-gisem
+      # --- 2018 ---
+      - title: "Вступ до історії (Мороз) 5 клас 2018"
+        authors: [Мороз]
+        year: 2018
+        slug: 1466-vstup-do-istori-moroz-5-klas
+      - title: "Вступ до історії (Щупак, Піскарьова, Бурлака) 5 клас 2018"
+        authors: [Щупак, Піскарьова, Бурлака]
+        year: 2018
+        slug: 1181-vstup-do-istorii-5-klas-schupak-2018
+      - title: "Вступ до історії (Пометун) 5 клас 2018"
+        authors: [Пометун]
+        year: 2018
+        slug: 1180-vstup-do-istorii-5-klas-pometun-2018
+      - title: "Вступ до історії (Власов) 5 клас 2018"
+        authors: [Власов]
+        year: 2018
+        slug: 1179-vstup-do-istorii-5-klas-vlasov-2018
+      # --- Pre-NUS ---
+      - title: "Історія України (Пометун, Костюк, Малієнко) 5 клас 2013"
+        authors: [Пометун, Костюк, Малієнко]
+        year: 2013
+        slug: 131-storya-ukrayini-pometun-kostyuk-malyenko-5-klas
+      - title: "Вступ до історії України (Мисан) 5 клас"
+        authors: [Мисан]
+        year: null
+        slug: 117-vstup-do-storyi-ukrayini-misan-5-klas
+      - title: "Вступ до історії України (Власов, Данилевська) 5 клас 2002"
+        authors: [Власов, Данилевська]
+        year: 2002
+        slug: 116-vstup-do-storyi-ukrayini-vlasov-danilevska-5-klas
+
+# ============================================================
+# GRADE 6
+# ============================================================
+grade_6:
+  ukrainska_mova:
+    category_url: /6klas/ukrainska6/
+    books:
+      - title: "Українська мова (Літвінова) 6 клас 2023"
+        authors: [Літвінова]
+        year: 2023
+        slug: 2596-ukrmova-6-klas-litvinova
+      - title: "Українська мова (Голуб) 6 клас 2023"
+        authors: [Голуб]
+        year: 2023
+        slug: 2595-ukrmova-6-klas-golub
+      - title: "Українська мова (Семеног) 6 клас 2023"
+        authors: [Семеног]
+        year: 2023
+        slug: 2594-ukrmova-6-klas-semenog
+      - title: "Українська мова (Онатій) 6 клас 2023"
+        authors: [Онатій]
+        year: 2023
+        slug: 2593-ukrmova-6-klas-onatii
+      - title: "Українська мова (Авраменко) 6 клас 2023"
+        authors: [Авраменко]
+        year: 2023
+        slug: 2592-ukrmova-6-klas-avramenko
+      - title: "Українська мова (Заболотний) 6 клас 2023"
+        authors: [Заболотний]
+        year: 2023
+        slug: 2591-ukrmova-6-klas-zabolotnyi-2023
+      - title: "Українська мова (Ворон, Солопенко) 6 клас 2014"
+        authors: [Ворон, Солопенко]
+        year: 2014
+        slug: 529-ukrayinska-mova-voron-solopenko-6-klas-2014
+      - title: "Українська мова (Глазова) 6 клас 2014"
+        authors: [Глазова]
+        year: 2014
+        slug: 522-ukrayinska-mova-glazova-6-klas-2014
+      - title: "Українська мова (Єрмоленко, Сичова) 6 клас 2014"
+        authors: [Єрмоленко, Сичова]
+        year: 2014
+        slug: 523-ukrayinska-mova-yermolenko-sichova-6-klas-2014
+      - title: "Українська мова (Заболотний) 6 клас 2014"
+        authors: [Заболотний]
+        year: 2014
+        slug: 528-ukrayinska-mova-zabolotniy-6-klas-2014
+      - title: "Українська мова (Ворон, Солопенко) 6 клас 2006"
+        authors: [Ворон, Солопенко]
+        year: 2006
+        slug: 170-ukrayinska-mova-voron-solopenko-6-klas
+      - title: "Українська мова (Бондаренко, Ярмолюк) 6 клас"
+        authors: [Бондаренко, Ярмолюк]
+        year: null
+        slug: 169-ukrayinska-mova-bondarenko-yarmolyuk-6-klas
+      - title: "Українська мова (Горошкина, Нікітіна, Попова) 6 клас"
+        authors: [Горошкина, Нікітіна, Попова]
+        year: null
+        slug: 168-ukrayinska-mova-goroshkina-nktna-popova-6-klas
+
+  ukrainska_literatura:
+    category_url: /6klas/ukr_literatura6/
+    books:
+      - title: "Українська література (Авраменко) 6 клас 2023"
+        authors: [Авраменко]
+        year: 2023
+        slug: 2618-ukralit-6-klas-avramenko-2023
+      - title: "Українська література (Заболотний) 6 клас"
+        authors: [Заболотний]
+        year: 2023
+        slug: 2617-ukralit-6-klas-zabolotnyi
+      - title: "Українська література (Калинич) 6 клас 2023"
+        authors: [Калинич]
+        year: 2023
+        slug: 2616-ukralit-6-klas-kalynych
+      - title: "Українська література (Архипова) 6 клас"
+        authors: [Архипова]
+        year: 2023
+        slug: 2615-ukralit-6-klas-arkhypova
+      - title: "Українська література (Коваленко) 6 клас 2023"
+        authors: [Коваленко]
+        year: 2023
+        slug: 2614-ukralit-6-klas-kovalenko-2023
+      - title: "Українська література (Борзенко) 6 клас"
+        authors: [Борзенко]
+        year: 2023
+        slug: 2613-ukralit-6-klas-borzenko
+      - title: "Українська література (Чумарна) 6 клас"
+        authors: [Чумарна]
+        year: 2023
+        slug: 2612-ukralit-6-klas-chumarna
+      - title: "Українська література (Яценко) 6 клас"
+        authors: [Яценко]
+        year: 2023
+        slug: 2611-ukralit-6-klas-iacenko
+      - title: "Українська література (Качак) 6 клас"
+        authors: [Качак]
+        year: 2023
+        slug: 2610-ukralit-6-klas-kachak
+      - title: "Українська література (Авраменко) 6 клас 2014"
+        authors: [Авраменко]
+        year: 2014
+        slug: 506-ukrayinska-lteratura-avramenko-6-klas-2014
+      - title: "Українська література (Дудіна, Панченков) 6 клас"
+        authors: [Дудіна, Панченков]
+        year: null
+        slug: 202-ukrayinska-lteratura-dudna-panchenkov-6-klas
+      - title: "Українська література (Мовчан) 6 клас"
+        authors: [Мовчан]
+        year: null
+        slug: 180-ukrayinska-lteratura-movchan-6-klas
+      - title: "Українська література (Авраменко, Шабельникова) 6 клас 2006"
+        authors: [Авраменко, Шабельникова]
+        year: 2006
+        slug: 179-ukrayinska-lteratura-avramenko-shabelnikova-6-klas
+      - title: "Українська література (Гуйванюк, Бузинська, Тодорюк) 6 клас"
+        authors: [Гуйванюк, Бузинська, Тодорюк]
+        year: null
+        slug: 174-ukrayinska-lteratura-guyvanyuk-buzinska-todoryuk-6-klas
+
+  istoriia:
+    category_url: /6klas/istorija_starodav6/
+    note: "Grade 6 combines Всесвітня історія + Історія України in integrated course"
+    books:
+      - title: "Історія (Щупак) 6 клас 2023"
+        authors: [Щупак]
+        year: 2023
+        slug: 2610-istoriia-6-klas-shchupak-2023
+      - title: "Історія України. Всесвітня історія (Бандровський) 6 клас 2023"
+        authors: [Бандровський]
+        year: 2023
+        slug: 2609-istoriia-6-klas-bandrovskyi-2023
+      - title: "Досліджуємо історію і суспільство (Пометун) 6 клас 2023"
+        authors: [Пометун]
+        year: 2023
+        slug: 2608-istoriia-6-klas-pometun-2023
+      - title: "Досліджуємо історію і суспільство (Васильків) 6 клас 2023"
+        authors: [Васильків]
+        year: 2023
+        slug: 2607-doslidzhuiemo-istoriiu-6-klas-vasylkiv
+      - title: "Історія України. Всесвітня історія (Гісем) 6 клас 2023"
+        authors: [Гісем]
+        year: 2023
+        slug: 2606-istoriia-6-klas-gisem-2023
+      - title: "Історія (Могорита) 6 клас 2023"
+        authors: [Могорита]
+        year: 2023
+        slug: 2603-istoriia-6-klas-mogoryta
+      - title: "Історія (Хлібовська) 6 клас 2023"
+        authors: [Хлібовська]
+        year: 2023
+        slug: 2602-istoriia-6-klas-khlibovska
+      - title: "Історія (Панарін) 6 клас 2023"
+        authors: [Панарін]
+        year: 2023
+        slug: 2604-istoriia-6-klas-panarin
+      - title: "Всесвітня історія. Історія України (Щупак) 6 клас 2019"
+        authors: [Щупак]
+        year: 2019
+        slug: 1460-istoriya-6-klas-schupak
+      - title: "Всесвітня історія. Історія України (Мороз) 6 клас"
+        authors: [Мороз]
+        year: 2019
+        slug: 1459-istoriya-6-klas-moroz
+      - title: "Всесвітня історія. Історія України (Бандровський) 6 клас 2019"
+        authors: [Бандровський]
+        year: 2019
+        slug: 1458-istoriya-6-klas-bandrovskiy-2019
+      - title: "Всесвітня історія. Історія України (Голованов) 6 клас"
+        authors: [Голованов]
+        year: 2019
+        slug: 1457-vsesvitnya-istoriya-istoriya-ukrainy-golovanov-6-klas
+      - title: "Всесвітня історія. Історія України (Пометун, Мороз, Малієнко) 6 клас 2014"
+        authors: [Пометун, Мороз, Малієнко]
+        year: 2014
+        slug: 524-vsesvtnya-storya-storya-ukrayini-pometun-moroz-malyenko-6-klas
+      - title: "Всесвітня історія. Історія України (Бандровський) 6 клас 2014"
+        authors: [Бандровський]
+        year: 2014
+        slug: 518-vsesvtnya-storya-storya-ukrayini-bandrovskiy-vlasov-6-klas
+      - title: "Історія Стародавнього Свiту (Голованов, Костирко) 6 клас 2006"
+        authors: [Голованов, Костирко]
+        year: 2006
+        slug: 159-storya-starodavnogo-svtu-golovanov-kostirko-6-klas
+      - title: "Історія Стародавнього Світу (Шалагінова) 6 клас"
+        authors: [Шалагінова]
+        year: null
+        slug: 160-storya-starodavnogo-svtu-shalagnova-6-klas
+
+# ============================================================
+# GRADE 7
+# ============================================================
+grade_7:
+  ukrainska_mova:
+    category_url: /7klas/ukrainska7/
+    books:
+      - title: "Українська мова (Авраменко) 7 клас 2024"
+        authors: [Авраменко]
+        year: 2024
+        slug: 2876-ukrainska-mova-avramenko-7-klas-2024
+      - title: "Українська мова (Голуб) 7 клас 2024"
+        authors: [Голуб]
+        year: 2024
+        slug: 2875-ukrainska-mova-golub-7-klas-2024
+      - title: "Українська мова (Ворон) 7 клас 2024"
+        authors: [Ворон]
+        year: 2024
+        slug: 2874-ukrainska-mova-voron-7-klas-2024
+      - title: "Українська мова (Заболотний) 7 клас 2024"
+        authors: [Заболотний]
+        year: 2024
+        slug: 2873-ukrainska-mova-zabolotnyi-7-klas-2024
+      - title: "Українська мова (Літвінова) 7 клас 2024"
+        authors: [Літвінова]
+        year: 2024
+        slug: 2872-ukrainska-mova-litvinova-7-klas-2024
+      - title: "Українська мова (Онатій) 7 клас 2024"
+        authors: [Онатій]
+        year: 2024
+        slug: 2871-ukrainska-mova-onatii-7-klas-2024
+      - title: "Українська мова (Семеног) 7 клас 2024"
+        authors: [Семеног]
+        year: 2024
+        slug: 2870-ukrainska-mova-semenog-7-klas-2024
+      - title: "Українська мова (Глазова) 7 клас 2015"
+        authors: [Глазова]
+        year: 2015
+        slug: 761-ukrmova-7-klas-glazova-2015
+      - title: "Українська мова (Горошкіна, Попова) 7 клас 2015"
+        authors: [Горошкіна, Попова]
+        year: 2015
+        slug: 759-ukrmova-7klas-goroshkina-2015
+      - title: "Українська мова (Єрмоленко, Сичова, Жук) 7 клас 2015"
+        authors: [Єрмоленко, Сичова, Жук]
+        year: 2015
+        slug: 760-ukrmova-7-klas-yermolenko-2015
+      - title: "Українська мова (Ющук) 7 клас 2015"
+        authors: [Ющук]
+        year: 2015
+        slug: 758-ukrainska-mova-7-klas-yuschuk-2015
+      - title: "Українська мова (Ворон) 7 клас 2015"
+        authors: [Ворон]
+        year: 2015
+        slug: 757-ukrainska-mova-7-klas-voron-2015
+      - title: "Українська мова (Ворон, Солопенко) 7 клас 2007"
+        authors: [Ворон, Солопенко]
+        year: 2007
+        slug: 213-ukrayinska-mova-voron-solopenko-7-klas
+      - title: "Українська мова (Бондаренко, Ярмолюк) 7 клас 2007"
+        authors: [Бондаренко, Ярмолюк]
+        year: 2007
+        slug: 212-ukrayinska-mova-bondarenko-yarmolyuk-7-klas
+
+  ukrainska_literatura:
+    category_url: /7klas/ukr_literatura7/
+    books:
+      - title: "Українська література (Авраменко) 7 клас 2024"
+        authors: [Авраменко]
+        year: 2024
+        slug: 2863-ukrainska-literatura-avramenko-7-klas-2024
+      - title: "Українська література (Заболотний) 7 клас 2024"
+        authors: [Заболотний]
+        year: 2024
+        slug: 2864-ukrainska-literatura-zabolotnyi-7-klas-2024
+      - title: "Українська література (Калинич) 7 клас 2024"
+        authors: [Калинич]
+        year: 2024
+        slug: 2865-ukrainska-literatura-kalynych-7-klas-2024
+      - title: "Українська література (Коваленко) 7 клас 2024"
+        authors: [Коваленко]
+        year: 2024
+        slug: 2866-ukrainska-literatura-kovalenko-7-klas-2024
+      - title: "Українська література (Чумарна) 7 клас 2024"
+        authors: [Чумарна]
+        year: 2024
+        slug: 2867-ukrainska-literatura-chumarna-7-klas-2024
+      - title: "Українська література (Яценко) 7 клас 2024"
+        authors: [Яценко]
+        year: 2024
+        slug: 2868-ukrainska-literatura-iacenko-7-klas-2024
+      - title: "Українська література (Авраменко) 7 клас 2015"
+        authors: [Авраменко]
+        year: 2015
+        slug: 717-ukrliteratura-7-klas-avramenko-2015
+      - title: "Українська література (Коваленко) 7 клас 2015"
+        authors: [Коваленко]
+        year: 2015
+        slug: 716-ukrliteratura-7-klas-kovalenko-2015
+      - title: "Українська література (Слоньовська) 7 клас 2015"
+        authors: [Слоньовська]
+        year: 2015
+        slug: 715-ukrliteratura-7-klas-slonovska-2015
+      - title: "Українська література (Міщенко) 7 клас 2015"
+        authors: [Міщенко]
+        year: 2015
+        slug: 714-ukrliteratura-7-klas-mischenko-2015
+      - title: "Українська література (Авраменко) 7 клас 2007"
+        authors: [Авраменко]
+        year: 2007
+        slug: 241-ukrayinska-lteratura-avramenko-7-klas
+      - title: "Українська література (Слоньовська) 7 клас 2007"
+        authors: [Слоньовська]
+        year: 2007
+        slug: 214-ukrayinska-lteratura-slonovska-7-klas
+
+  istoriia_ukrainy:
+    category_url: /7klas/istorija_ukrainy7/
+    books:
+      - title: "Історія України (Щупак) 7 клас 2024"
+        authors: [Щупак]
+        year: 2024
+        slug: 2852-istoriia-ukrainy-shchupak-7-klas-2024
+      - title: "Історія України (Пометун) 7 клас 2024"
+        authors: [Пометун]
+        year: 2024
+        slug: 2850-istoriia-ukrainy-pometun-7-klas-2024
+      - title: "Історія України (Хлібовська) 7 клас 2024"
+        authors: [Хлібовська]
+        year: 2024
+        slug: 2849-istoriia-ukrainy-khlibovska-7-klas-2024
+      - title: "Історія України (Галімов) 7 клас 2024"
+        authors: [Галімов]
+        year: 2024
+        slug: 2847-istoriia-ukrainy-galimov-7-klas-2024
+      - title: "Історія: Україна і світ (Щупак) 7 клас"
+        authors: [Щупак]
+        year: 2024
+        slug: 2845-istoriia-ukraina-i-svit-shchupak-7-klas
+      - title: "Історія: Україна і світ (Васильків) 7 клас"
+        authors: [Васильків]
+        year: 2024
+        slug: 2844-istoriia-ukraina-i-svit-vasylkiv-7-klas
+      - title: "Історія України (Свідерський, Романишин) 7 клас 2020"
+        authors: [Свідерський, Романишин]
+        year: 2020
+        slug: 1498-istoriya-ukrainy-7-klas-sviderskyy-2020
+      - title: "Історія України (Власов, Панарін, Топольницька) 7 клас 2020"
+        authors: [Власов, Панарін, Топольницька]
+        year: 2020
+        slug: 1497-istoriya-ukrainy-7-klas-vlasov-2020
+      - title: "Історія України (Дрібниця, Щупак) 7 клас 2020"
+        authors: [Дрібниця, Щупак]
+        year: 2020
+        slug: 1496-istoriya-ukrayiny-7-klas-schupak
+      - title: "Історія України (Сорочинська, Гісем) 7 клас 2020"
+        authors: [Сорочинська, Гісем]
+        year: 2020
+        slug: 1492-istoriya-ukraini-7-klas-sorochynska
+      - title: "Історія України (Гісем) 7 клас 2020"
+        authors: [Гісем]
+        year: 2020
+        slug: 1491-istoriya-ukrainy-7-klas-gisem-2020
+      - title: "Історія України (Смолій, Степанков) 7 клас 2020"
+        authors: [Смолій, Степанков]
+        year: 2020
+        slug: 1488-istorya-ukrayiny-smoly-stepankov-7-klas-2020
+      - title: "Історія України (Власов) 7 клас 2015"
+        authors: [Власов]
+        year: 2015
+        slug: 645-storya-ukrayini-vlasov-7-klas
+      - title: "Історія України (Смолій, Степанков) 7 клас 2015"
+        authors: [Смолій, Степанков]
+        year: 2015
+        slug: 646-storya-ukrayini-smoly-stepankov-7-klas
+      - title: "Історія України (Свідерський, Ладиченко, Романишин) 7 клас 2007"
+        authors: [Свідерський, Ладиченко, Романишин]
+        year: 2007
+        slug: 245-storya-ukrayini-svderskiy-ladichenko-romanishin-7-klas
+      - title: "Історія України (Смолій, Степанков) 7 клас 2007"
+        authors: [Смолій, Степанков]
+        year: 2007
+        slug: 227-storya-ukrayini-smoly-stepankov-7-klas
+
+# ============================================================
+# GRADE 8
+# ============================================================
+grade_8:
+  ukrainska_mova:
+    category_url: /8klas/ukrainska8/
+    books:
+      - title: "Українська мова (Авраменко) 8 клас 2025"
+        authors: [Авраменко]
+        year: 2025
+        slug: 2899-ukrainska-mova-avramenko-8-klas-2025
+      - title: "Українська мова (Голуб) 8 клас 2025"
+        authors: [Голуб]
+        year: 2025
+        slug: 2900-ukrainska-mova-golub-8-klas-2025
+      - title: "Українська мова (Літвінова) 8 клас 2025"
+        authors: [Літвінова]
+        year: 2025
+        slug: 2901-ukrainska-mova-litvinova-8-klas-2025
+      - title: "Українська мова (Заболотний) 8 клас 2025"
+        authors: [Заболотний]
+        year: 2025
+        slug: 2902-ukrainska-mova-zabolotnyi-8-klas-2025
+      - title: "Українська мова (Онатій) 8 клас 2025"
+        authors: [Онатій]
+        year: 2025
+        slug: 2903-ukrainska-mova-onatii-8-klas
+      - title: "Українська мова (Авраменко, Борисюк, Почтаренко) 8 клас 2021, 2016"
+        authors: [Авраменко, Борисюк, Почтаренко]
+        year: 2016
+        slug: 854-ukrainska-mova-8-klas-avramenko-2016
+      - title: "Українська мова (Глазова) 8 клас 2016, 2021"
+        authors: [Глазова]
+        year: 2016
+        slug: 856-ukrainska-mova-8-klas-glazova-2016
+      - title: "Українська мова (Заболотний) 8 клас 2016"
+        authors: [Заболотний]
+        year: 2016
+        slug: 857-ukrainska-mova-8-klas-zabolotnyi-2016
+      - title: "Українська мова (Ворон) 8 клас 2016"
+        authors: [Ворон]
+        year: 2016
+        slug: 882-ukmova-8-voron-2016-nova-programa
+      - title: "Українська мова (Єрмоленко, Сичова, Жук) 8 клас 2016"
+        authors: [Єрмоленко, Сичова, Жук]
+        year: 2016
+        slug: 855-ukrainska-mova-8-klas-ermolenko-2016
+      - title: "Українська мова (Ющук) 8 клас 2016"
+        authors: [Ющук]
+        year: 2016
+        slug: 853-ukrainska-mova-8-klas-yuschuk-2016
+      - title: "Українська мова (Ворон, Солопенко) 8 клас 2008"
+        authors: [Ворон, Солопенко]
+        year: 2008
+        slug: 309-ukrayinska-mova-voron-solopenko-8-klas
+      - title: "Українська мова (Бондаренко, Ярмолюк) 8 клас 2008"
+        authors: [Бондаренко, Ярмолюк]
+        year: 2008
+        slug: 296-ukrayinska-mova-bondarenko-yarmolyuk-8-klas
+      - title: "Українська мова (Заболотний) 8 клас 2008"
+        authors: [Заболотний]
+        year: 2008
+        slug: 256-ukrayinska-mova-zabolotniy-8-klas
+
+  ukrainska_literatura:
+    category_url: /8klas/ukr_literatura8/
+    books:
+      - title: "Українська література (Авраменко) 8 клас 2025"
+        authors: [Авраменко]
+        year: 2025
+        slug: 2962-ukrainska-literatura-avramenko-8-klas-2025
+      - title: "Українська література (Яценко) 8 клас 2025"
+        authors: [Яценко]
+        year: 2025
+        slug: 2963-ukrainska-literatura-iacenko-8-klas-2025
+      - title: "Українська література (Заболотний) 8 клас 2025"
+        authors: [Заболотний]
+        year: 2025
+        slug: 2964-ukrainska-literatura-zabolotnyi-8-klas-2025
+      - title: "Українська література (Архипова) 8 клас 2025"
+        authors: [Архипова]
+        year: 2025
+        slug: 2965-ukrainska-literatura-arkhypova-8-klas-2025
+      - title: "Українська література (Калинич) 8 клас 2025"
+        authors: [Калинич]
+        year: 2025
+        slug: 2966-ukrainska-literatura-kalynych-8-klas-2025
+      - title: "Українська література (Коваленко) 8 клас 2021, 2016"
+        authors: [Коваленко]
+        year: 2016
+        slug: 851-ukrainska-literatura-8-klas-kovalenko-2016
+      - title: "Українська література (Слоньовська) 8 клас 2016"
+        authors: [Слоньовська]
+        year: 2016
+        slug: 852-ukrainska-literatura-8-klas-slonovska-2016
+      - title: "Українська література (Пахаренко, Коваль) 8 клас 2016"
+        authors: [Пахаренко, Коваль]
+        year: 2016
+        slug: 850-ukrainska-literatura-8-klas-paharenko-2016
+      - title: "Українська література (Авраменко) 8 клас 2016"
+        authors: [Авраменко]
+        year: 2016
+        slug: 849-ukrainska-literatura-8-klas-avramenko-2016
+      - title: "Українська література (Борзенко, Лобусова) 8 клас 2016"
+        authors: [Борзенко, Лобусова]
+        year: 2016
+        slug: 848-ukrainska-literatura-8-klas-borzenko-2016
+      - title: "Українська Література (Цимбалюк) 8 клас 2008"
+        authors: [Цимбалюк]
+        year: 2008
+        slug: 541-ukrayinska-lteratura-cimbalyuk-8-klas
+      - title: "Українська література (Слоньовська) 8 клас 2008"
+        authors: [Слоньовська]
+        year: 2008
+        slug: 302-ukrayinska-lteratura-slonovska-8-klas
+      - title: "Українська література (Міщенко) 8 клас 2008"
+        authors: [Міщенко]
+        year: 2008
+        slug: 287-ukrayinska-lteratura-mschenko-8-klas
+      - title: "Українська література (Авраменко, Дмитренко) 8 клас 2008"
+        authors: [Авраменко, Дмитренко]
+        year: 2008
+        slug: 285-ukrayinska-lteratura-avramenko-dmitrenko-8-klas
+      - title: "Українська література (Сулима, Баліна, Тригуб) 8 клас 2008"
+        authors: [Сулима, Баліна, Тригуб]
+        year: 2008
+        slug: 257-ukrayinska-lteratura-sulima-balna-trigub-8-klas
+
+  istoriia_ukrainy:
+    category_url: /8klas/istorija_ukrainy8/
+    books:
+      - title: "Історія України (Щупак) 8 клас 2025"
+        authors: [Щупак]
+        year: 2025
+        slug: 3020-istoriia-ukrainy-shchupak-8-klas-2025
+      - title: "Історія України (Хлібовська) 8 клас 2025"
+        authors: [Хлібовська]
+        year: 2025
+        slug: 3019-istoriia-ukrainy-khlibovska-8-klas-2025
+      - title: "Історія України (Галімов) 8 клас 2025"
+        authors: [Галімов]
+        year: 2025
+        slug: 3018-istoriia-ukrainy-galimov-8-klas-2025
+      - title: "Історія України (Панарін) 8 клас 2025"
+        authors: [Панарін]
+        year: 2025
+        slug: 3017-istoriia-ukrainy-panarin-8-klas-2025
+      - title: "Історія України (Пометун) 8 клас 2025"
+        authors: [Пометун]
+        year: 2025
+        slug: 3016-istoriia-ukrainy-pometun-8-klas-2025
+      - title: "Історія України (Власов) 8 клас 2025"
+        authors: [Власов]
+        year: 2025
+        slug: 3015-istoriia-ukrainy-vlasov-8-klas-2025
+      - title: "Історія України (Гісем) 8 клас 2025"
+        authors: [Гісем]
+        year: 2025
+        slug: 3014-istoriia-ukrainy-gisem-8-klas-2025
+      - title: "Історія України (Власов) 8 клас 2021"
+        authors: [Власов]
+        year: 2021
+        slug: 1617-istoriya-ukry-8-klas-vlasov-2021
+      - title: "Історія України (Гісем) 8 клас Поглиблене 2021"
+        authors: [Гісем]
+        year: 2021
+        slug: 1429-storya-ukrayini-gsem-8-klas-pogliblene
+      - title: "Історія України (Гісем) 8 клас 2021"
+        authors: [Гісем]
+        year: 2021
+        slug: 1428-storya-ukrayini-gsem-8-klas
+      - title: "Історія України (Бурнейко) 8 клас 2016"
+        authors: [Бурнейко]
+        year: 2016
+        slug: 898-istoriya-ukrainy-8-klas-burneyko
+      - title: "Історія України (Швидько, Чорнобай) 8 клас 2016"
+        authors: [Швидько, Чорнобай]
+        year: 2016
+        slug: 806-8_klas_istorija_ukrajini_shvidko_2016
+      - title: "Історія України (Власов В.С.) 8 клас 2016"
+        authors: [Власов]
+        year: 2016
+        slug: 807-istoriya-ukrainy-8-klas-vlasov-2016
+      - title: "Історія України (Гупан) 8 клас 2016"
+        authors: [Гупан]
+        year: 2016
+        slug: 875-istoriya-ukrainy-8-klas-gupan
+      - title: "Історія України (Швидько) 8 клас 2008"
+        authors: [Швидько]
+        year: 2008
+        slug: 272-storya-ukrayini-shvidko-8-klas
+      - title: "Історія України (Власов) 8 клас 2008"
+        authors: [Власов]
+        year: 2008
+        slug: 271-storya-ukrayini-vlasov-8-klas
+
+# ============================================================
+# GRADE 9
+# ============================================================
+grade_9:
+  ukrainska_mova:
+    category_url: /9klas/ukrainska9/
+    books:
+      - title: "Українська мова (Караман) 9 клас"
+        authors: [Караман]
+        year: 2017
+        slug: 3118-ukrmova-9-klas-karaman
+      - title: "Українська мова (Глазов) 9 клас"
+        authors: [Глазова]
+        year: 2017
+        slug: 3117-ukrmova-9-klas-glazova
+      - title: "Українська мова (Авраменко) 9 клас"
+        authors: [Авраменко]
+        year: 2017
+        slug: 970-ukrmova-9klas-avramenko
+      - title: "Українська мова (Заболотний) 9 клас 2017"
+        authors: [Заболотний]
+        year: 2017
+        slug: 1000-ukrmova-zabolotniy-9-klas-2017
+      - title: "Українська мова (Єрмоленко, Сичова, Жук) 9 клас 2017"
+        authors: [Єрмоленко, Сичова, Жук]
+        year: 2017
+        slug: 971-ukrmova-9-klas-yermolenko-2017
+      - title: "Українська мова (Данилевська) 9 клас"
+        authors: [Данилевська]
+        year: 2017
+        slug: 969-ukrmova-9-klas-danylevska
+      - title: "Українська мова (Ворон, Солопенко) 9 клас"
+        authors: [Ворон, Солопенко]
+        year: 2017
+        slug: 1027-ukrmova-voron-9klas
+      - title: "Українська мова (Голуб, Ярмолюк) 9 клас"
+        authors: [Голуб, Ярмолюк]
+        year: 2017
+        slug: 999-ukrmova-9-golub
+      - title: "Українська мова (Ющук) 9 клас"
+        authors: [Ющук]
+        year: 2017
+        slug: 968-ukrmova-9-klas-yuschuk
+      - title: "Українська мова (Горошкіна) 9 клас"
+        authors: [Горошкіна]
+        year: 2017
+        slug: 998-ukrmova-9-goroshkina
+      - title: "Українська мова (Єрмоленко, Сичова) 9 клас 2009"
+        authors: [Єрмоленко, Сичова]
+        year: 2009
+        slug: 350-ukrayinska-mova-yermolenko-sichova-9-klas
+      - title: "Українська мова (Глазова, Кузнєцов) 9 клас"
+        authors: [Глазова, Кузнєцов]
+        year: 2009
+        slug: 349-ukrayinska-mova-glazova-kuznyecov-9-klas
+
+  ukrainska_literatura:
+    category_url: /9klas/ukr_literatura9/
+    books:
+      - title: "Українська література (Борзенко) 9 клас"
+        authors: [Борзенко]
+        year: 2017
+        slug: 3119-ukrainska-literatura-9-klas-borzenko
+      - title: "Українська література (Олена Міщенко) 9 клас 2017"
+        authors: [Міщенко]
+        year: 2017
+        slug: 1030-ukrliteratura-mischenko-9klas
+      - title: "Українська література (Коваленко, Бернадська) 9 клас"
+        authors: [Коваленко, Бернадська]
+        year: 2017
+        slug: 968-ukrainska-literatura-9-klas-kovalenko
+      - title: "Українська література (Авраменко) 9 клас 2017"
+        authors: [Авраменко]
+        year: 2017
+        slug: 967-ukrliteratura-9-klas-avramenko-2017
+      - title: "Українська література (Слоньовська) 9 клас"
+        authors: [Слоньовська]
+        year: 2017
+        slug: 949-ukrayinska-lteratura-9-klas-slonovska
+      - title: "Українська література (Пахаренко) 9 клас"
+        authors: [Пахаренко]
+        year: null
+        slug: 372-ukrayinska-lteratura-paharenko-9-klas
+      - title: "Українська література (Ткачук, Сулима, Смілянська) 9 клас"
+        authors: [Ткачук, Сулима, Смілянська]
+        year: null
+        slug: 357-ukrayinska-lteratura-tkachuk-sulima-smlyanska-9-klas
+      - title: "Українська література (Авраменко) 9 клас 2009"
+        authors: [Авраменко]
+        year: 2009
+        slug: 356-ukrayinska-lteratura-avramenko-9-klas
+      - title: "Українська література (Міщенко) 9 клас 2009"
+        authors: [Міщенко]
+        year: 2009
+        slug: 355-ukrayinska-lteratura-mschenko-9-klas
+      - title: "Українська література (Мовчан, Пахаренко) 9 клас"
+        authors: [Мовчан, Пахаренко]
+        year: null
+        slug: 348-ukrayinska-lteratura-movchan-paharenko-9-klas
+
+  istoriia_ukrainy:
+    category_url: /9klas/istorija_ukrainy9/
+    books:
+      - title: "Історія України (Гісем) 9 клас"
+        authors: [Гісем]
+        year: 2022
+        slug: 3127-istoriia-ukrainy-9-klas-gisem
+      - title: "Історія України (Гісем) 9 клас (поглиблене)"
+        authors: [Гісем]
+        year: 2022
+        slug: 3126-istoriia-ukrainy-9-klas-gisem-poglyb
+      - title: "Історія України (Струкевич) 9 клас 2017"
+        authors: [Струкевич]
+        year: 2017
+        slug: 1047-istoriya-ukrainy-9-klas-strukevych-2017
+      - title: "Історія України (Сорочинська, Гісем) 9 клас"
+        authors: [Сорочинська, Гісем]
+        year: 2017
+        slug: 1008-istoriya-ukrainy-sorochinska-9-klas
+      - title: "Історія України (Бурнейко) 9 клас"
+        authors: [Бурнейко]
+        year: 2017
+        slug: 1007-ukr-istoriya-9-burneyko
+      - title: "Історія України (Реєнт) 9 клас 2017"
+        authors: [Реєнт]
+        year: 2017
+        slug: 1006-istoriya-ukriny-9-reent-2017
+      - title: "Історія України (Турченко) 9 клас 2017"
+        authors: [Турченко]
+        year: 2017
+        slug: 1005-istoriya-ukrainy-9-klas-turchenko-2017
+      - title: "Історія України (Пометун, Гупан) 9 клас 2017"
+        authors: [Пометун, Гупан]
+        year: 2017
+        slug: 1004-istoriya-ukrainy-9-klas-pometun-gupan-2017
+      - title: "Історія України (Власов) 9 клас 2017"
+        authors: [Власов]
+        year: 2017
+        slug: 1003-istoriya-ukry-9-klas-vlasov-2017
+      - title: "Історія України (Гісем) 9 клас 2017"
+        authors: [Гісем]
+        year: 2017
+        slug: 1002-istoriya-ukrainy-9-klas-gisem-2017
+      - title: "Історія України (Турченко, Мороко) 9 клас 2009"
+        authors: [Турченко, Мороко]
+        year: 2009
+        slug: 336-storya-ukrayini-turchenko-moroko-9-klas
+      - title: "Історія України (Струкевич) 9 клас 2009"
+        authors: [Струкевич]
+        year: 2009
+        slug: 335-storya-ukrayini-strukevich-9-klas
+
+# ============================================================
+# GRADE 10
+# ============================================================
+grade_10:
+  ukrainska_mova:
+    category_url: /10klas/ukrainska10/
+    books:
+      - title: "Українська мова (Караман) 10 клас"
+        authors: [Караман]
+        year: 2018
+        slug: 3082-ukrmova-10-klas-karaman
+      - title: "Українська мова (Глазова) 10 клас"
+        authors: [Глазова]
+        year: 2018
+        slug: 3081-ukrmova-10-klas-glazova
+      - title: "Українська мова (Авраменко) 10 клас"
+        authors: [Авраменко]
+        year: 2018
+        slug: 1229-ukrmova-10-klas-avramenko
+      - title: "Українська мова (Заболотний) 10 клас"
+        authors: [Заболотний]
+        year: 2018
+        slug: 1044-ukrmova-10-klas-zabolotnyi
+      - title: "Українська мова (Ющук) 10 клас"
+        authors: [Ющук]
+        year: 2018
+        slug: 1234-ukrainska-mova-10-klas-yuschuk
+      - title: "Українська мова (Шевчук) 10 клас"
+        authors: [Шевчук]
+        year: 2018
+        slug: 1233-ukrainska-mova-10-klas-shevchuk
+      - title: "Українська мова (Голуб, Новосьолова) 10 клас"
+        authors: [Голуб, Новосьолова]
+        year: 2018
+        slug: 1232-ukrainska-mova-10-klas-golub
+      - title: "Українська мова (Тушніцка, Пилип) 10 клас (Пол)"
+        authors: [Тушніцка, Пилип]
+        year: 2018
+        slug: 1231-ukrmova-10-klas-tushnicka
+      - title: "Українська мова (Бондаренко) 10 клас"
+        authors: [Бондаренко]
+        year: 2018
+        slug: 790-ukrayinska-mova-bondarenko-10-klas
+      - title: "Українська мова (Плющ, Тихоша, Караман) 10 клас"
+        authors: [Плющ, Тихоша, Караман]
+        year: null
+        slug: 393-ukrayinska-mova-plyusch-tihosha-karaman-10-klas
+
+  ukrainska_literatura:
+    category_url: /10klas/ukr_literatura10/
+    books:
+      - title: "Українська література (Борзенко) 10 клас 2018 (стандарт)"
+        authors: [Борзенко]
+        year: 2018
+        slug: 3084-ukrlit-10-klas-borzenko-stand
+      - title: "Українська література (Борзенко) 10 клас 2018 (проф)"
+        authors: [Борзенко]
+        year: 2018
+        slug: 3083-ukrlit-10-klas-borzenko-prof
+      - title: "Українська література (Авраменко, Пахаренко) 10 клас 2018"
+        authors: [Авраменко, Пахаренко]
+        year: 2018
+        slug: 392-ukrayinska-lteratura-avramenko-paharenko-10-klas
+      - title: "Українська література (Коваленко, Бернадська) 10 клас 2018"
+        authors: [Коваленко, Бернадська]
+        year: 2018
+        slug: 1165-ukrliteratura-10-klas-kovalenko
+      - title: "Українська література (Пахаренко) 10 клас"
+        authors: [Пахаренко]
+        year: 2018
+        slug: 1386-ukrliteratura-paharenko-10-klas
+      - title: "Українська література (Фасоля) 10 клас"
+        authors: [Фасоля]
+        year: 2018
+        slug: 1230-ukr-literatura-10-klas-fasolya
+      - title: "Українська література (Семенюк) 10 клас"
+        authors: [Семенюк]
+        year: null
+        slug: 391-ukrayinska-lteratura-semenyuk-10-klas
+      - title: "Українська література (Міщенко) 10 клас"
+        authors: [Міщенко]
+        year: null
+        slug: 390-ukrayinska-lteratura-mschenko-10-klas
+
+  istoriia_ukrainy:
+    category_url: /10klas/istorija_ukrainy10/
+    books:
+      - title: "Історія України (Хлібовська) 10 клас 2023"
+        authors: [Хлібовська]
+        year: 2023
+        slug: 3092-istoriia-ukrainy-10-klas-khlibovska
+      - title: "Історія України (Гісем) 10 клас 2018"
+        authors: [Гісем]
+        year: 2018
+        slug: 3096-istoriia-ukrainy-10-klas-gisem
+      - title: "Історія: Україна і світ (Гісем) 10 клас 2018"
+        authors: [Гісем]
+        year: 2018
+        slug: 3095-istoriia-ukraina-i-svit-10-klas-gisem
+      - title: "Історія України (Бурнейко) 10 клас 2018"
+        authors: [Бурнейко]
+        year: 2018
+        slug: 3094-istoriia-ukrainy-10-klas-burneiko
+      - title: "Історія України (Сорочинська) 10 клас 2018"
+        authors: [Сорочинська]
+        year: 2018
+        slug: 3093-istoriia-ukrainy-10-klas-sorochynska
+      - title: "Історія України (Власов, Кульчицький) 10 клас (Стандарт, Проф)"
+        authors: [Власов, Кульчицький]
+        year: 2018
+        slug: 1228-istoriya-ukrainy-10-klas-vlasov-kulchytskyi
+      - title: "Історія України (Пометун) 10 клас 2018"
+        authors: [Пометун]
+        year: 2018
+        slug: 1227-istoriya-ukrainy-10-klas-pometun
+      - title: "Історія України (Турченко) 10 клас 2018"
+        authors: [Турченко]
+        year: 2018
+        slug: 1164-istoriya-ukrainy-10-klas-turchenko
+      - title: "Історія України (Реєнт, Малій) 10 клас"
+        authors: [Реєнт, Малій]
+        year: null
+        slug: 431-storya-ukrayini-reyent-maly-10-klas
+
+# ============================================================
+# GRADE 11
+# ============================================================
+grade_11:
+  ukrainska_mova:
+    category_url: /11klas/ukrainska11/
+    books:
+      - title: "Українська мова (Глазова) 11 клас"
+        authors: [Глазова]
+        year: 2019
+        slug: 1238-ukrmova-11-klas-glazova
+      - title: "Українська мова (Голуб) 11 клас"
+        authors: [Голуб]
+        year: 2019
+        slug: 1317-ukrainska-mova-golub-11-klas
+      - title: "Українська мова (Ворон, Солопенко) 11 клас"
+        authors: [Ворон, Солопенко]
+        year: 2019
+        slug: 1316-ukrmova-voron-11-klas
+      - title: "Українська мова (Авраменко) 11 клас"
+        authors: [Авраменко]
+        year: 2019
+        slug: 1239-ukrainska-mova-11-klas-avramenko
+      - title: "Українська мова (Заболотний) 11 клас 2012"
+        authors: [Заболотний]
+        year: 2012
+        slug: 555-ukrayinska-mova-11-klas-zabolotniy-2012
+      - title: "Українська мова (Єрмоленко, Сичова) 11 клас"
+        authors: [Єрмоленко, Сичова]
+        year: null
+        slug: 485-ukrayinska-mova-yermolenko-sichova-11-klas
+      - title: "Українська мова (Пентилюк, Горошкіна, Попова) 11 клас"
+        authors: [Пентилюк, Горошкіна, Попова]
+        year: null
+        slug: 472-ukrayinska-mova-pentilyuk-goroshkna-popova-11-klas
+      - title: "Українська мова (Караман) 11 клас"
+        authors: [Караман]
+        year: null
+        slug: 471-ukrayinska-mova-karaman-11-klas
+      - title: "Українська мова (Плющ) 11 клас"
+        authors: [Плющ]
+        year: null
+        slug: 447-ukrayinska-mova-plyusch-11-klas
+      - title: "Українська мова (Бондаренко) 11 клас"
+        authors: [Бондаренко]
+        year: null
+        slug: 789-ukrayinska-mova-bondarenko-11-klas
+
+  ukrainska_literatura:
+    category_url: /11klas/ukr_literatura11/
+    books:
+      - title: "Українська література (Авраменко) 11 клас"
+        authors: [Авраменко]
+        year: 2019
+        slug: 1237-ukrliteratura-avramenko-11klas
+      - title: "Українська література (Борзенко) 11 клас"
+        authors: [Борзенко]
+        year: 2019
+        slug: 3062-ukrlit-11-klas-borzenko
+      - title: "Українська література (Коваленко) 11 клас"
+        authors: [Коваленко]
+        year: 2019
+        slug: 1280-ukrlit-kovalenko-11-klas
+      - title: "Українська література (Фасоля, Яценко, Уліщенко, Тименко, Бійчук) 11 клас"
+        authors: [Фасоля, Яценко, Уліщенко, Тименко, Бійчук]
+        year: 2019
+        slug: 1275-ukrainska-literatura-11-klas-fasolya
+      - title: "Українська література (Слоньовська, Мафтин, Вівчарик) 11 клас"
+        authors: [Слоньовська, Мафтин, Вівчарик]
+        year: 2019
+        slug: 1274-ukrliteratura-11-klas-slonovska
+      - title: "Українська література (Мовчан, Авраменко, Макаренко) 11 клас"
+        authors: [Мовчан, Авраменко, Макаренко]
+        year: null
+        slug: 463-ukrayinska-lteratura-movchan-avramenko-makarenko-11-klas
+      - title: "Українська література (Семенюк, Ткачук, Слоньовська) 11 клас"
+        authors: [Семенюк, Ткачук, Слоньовська]
+        year: null
+        slug: 462-ukrayinska-lteratura-semenyuk-tkachuk-slonovska-11-klas
+
+  istoriia_ukrainy:
+    category_url: /11klas/istorija_ukrainy11/
+    books:
+      - title: "Історія України (Гісем) 11 клас 2024"
+        authors: [Гісем]
+        year: 2024
+        slug: 3024-istoriia-ukrainy-gisem-11-klas-2024
+      - title: "Історія України (Хлібовська) 11 клас 2024"
+        authors: [Хлібовська]
+        year: 2024
+        slug: 3023-istoriia-ukrainy-khlibovska-11-klas-2024
+      - title: "Історія України (Власов) 11 клас 2024"
+        authors: [Власов]
+        year: 2024
+        slug: 3022-istoriia-ukr-vlasov-11-klas-2024
+      - title: "Історія України (Галімов) 11 клас 2024"
+        authors: [Галімов]
+        year: 2024
+        slug: 3021-istoriia-ukrainy-galimov-11-klas
+      - title: "Історія: Україна і світ (Мудрий, Аркуша) 11 клас 2019"
+        authors: [Мудрий, Аркуша]
+        year: 2019
+        slug: 1265-storya-ukrayina-svt-mudriy-arkusha-11-klas
+      - title: "Історія України (Сорочинська, Гісем) 11 клас 2019"
+        authors: [Сорочинська, Гісем]
+        year: 2019
+        slug: 1262-istoriya-ukrainy-11-klas-sorochynska
+      - title: "Історія України (Пометун, Гупан) 11 клас 2019"
+        authors: [Пометун, Гупан]
+        year: 2019
+        slug: 1261-istoriya-ukr-11-klas-pometun-2019
+      - title: "Історія України (Струкевич) 11 клас 2018"
+        authors: [Струкевич]
+        year: 2018
+        slug: 1376-istoriya-ukrainy-strukevich-11-klas
+      - title: "Історія України (Власов) 11 клас 2019"
+        authors: [Власов]
+        year: 2019
+        slug: 1260-istoriya-ukrainy-vlasov-11-klas-2019
+      - title: "Історія України (Турченко) 11 клас 2011"
+        authors: [Турченко]
+        year: 2011
+        slug: 484-storya-ukrayini-turchenko-11-klas
+      - title: "Історія України (Струкевич, Дровозюк) 11 клас 2019, 2011"
+        authors: [Струкевич, Дровозюк]
+        year: 2011
+        slug: 451-storya-ukrayini-strukevich-romanyuk-drovozyuk-11-klas
+      - title: "Історія України (Пометун, Гупан) 11 клас 2011"
+        authors: [Пометун, Гупан]
+        year: 2011
+        slug: 440-storya-ukrayini-pometun-gupan-11-klas
+
+# ============================================================
+# SUMMARY STATISTICS
+# ============================================================
+# Grade  | Ukr Mova | Reading/Lit | History | Total
+# -------|----------|-------------|---------|------
+# 1      |   23     |      -      |    -    |   23
+# 2      |   13     |      2      |    -    |   15
+# 3      |   16     |      3      |    -    |   19
+# 4      |   20     |      6      |    -    |   26
+# 5      |   18     |     12      |   18    |   48
+# 6      |   13     |     14      |   16    |   43
+# 7      |   14     |     12      |   16    |   42
+# 8      |   14     |     15      |   16    |   45
+# 9      |   12     |     10      |   12    |   34
+# 10     |   10     |      8      |    9    |   27
+# 11     |   10     |      7      |   12    |   29
+# -------|----------|-------------|---------|------
+# TOTAL  |  163     |     89      |   99    |  351

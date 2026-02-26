@@ -1,133 +1,108 @@
 items:
   - lemma: "олігарх"
-    ipa: '[ɔlʲiˈɦɑrx]'
     translation: "oligarch"
     pos: "noun"
     gender: "m"
     notes: "Learner error: often confused with just a wealthy businessperson."
   - lemma: "приватизація"
-    ipa: '[prɪʋɑtɪˈzɑt͡sʲijɑ]'
     translation: "privatization"
     pos: "noun"
     gender: "f"
     notes: "Used to describe the transfer of state property to private owners."
   - lemma: "інфляція"
-    ipa: '[inˈflʲɑt͡sʲijɑ]'
     translation: "inflation"
     pos: "noun"
     gender: "f"
     notes: "Ukraine experienced hyperinflation in the early 1990s."
   - lemma: "корупція"
-    ipa: '[kɔˈrupt͡sʲijɑ]'
     translation: "corruption"
     pos: "noun"
     gender: "f"
   - lemma: "демократія"
-    ipa: '[dɛmɔˈkrɑtʲijɑ]'
     translation: "democracy"
     pos: "noun"
     gender: "f"
   - lemma: "клан"
-    ipa: '[klɑn]'
     translation: "clan"
     pos: "noun"
     gender: "m"
     notes: "Often used to refer to regional oligarchic groups like the Donetsk clan."
   - lemma: "скандал"
-    ipa: '[skɑnˈdɑl]'
     translation: "scandal"
     pos: "noun"
     gender: "m"
     notes: "A prominent example is the Cassette Scandal."
   - lemma: "журналіст"
-    ipa: '[ʒurnɑˈlʲist]'
     translation: "journalist"
     pos: "noun"
     gender: "m"
   - lemma: "авторитаризм"
-    ipa: '[ɑu̯tɔrɪtɑˈrɪzm]'
     translation: "authoritarianism"
     pos: "noun"
     gender: "m"
   - lemma: "бізнес"
-    ipa: '[ˈbʲiznɛs]'
     translation: "business"
     pos: "noun"
     gender: "m"
   - lemma: "опозиція"
-    ipa: '[ɔpɔˈzɪt͡sʲijɑ]'
     translation: "opposition"
     pos: "noun"
     gender: "f"
   - lemma: "вибори"
-    ipa: '[ˈʋɪbɔrɪ]'
     translation: "elections"
     pos: "noun"
     notes: "Always plural in Ukrainian."
   - lemma: "референдум"
-    ipa: '[rɛfɛˈrɛndum]'
     translation: "referendum"
     pos: "noun"
     gender: "m"
   - lemma: "медіа"
-    ipa: '[ˈmɛdʲiɑ]'
     translation: "media"
     pos: "noun"
     notes: "Indeclinable, often plural."
   - lemma: "еліта"
-    ipa: '[ɛˈlʲitɑ]'
     translation: "elite"
     pos: "noun"
     gender: "f"
   - lemma: "номенклатура"
-    ipa: '[nɔmɛnklɑˈturɑ]'
     translation: "nomenklatura"
     pos: "noun"
     gender: "f"
     notes: "Refers to the former Soviet administrative elite."
   - lemma: "економіка"
-    ipa: '[ɛkɔˈnɔmʲikɑ]'
     translation: "economy"
     pos: "noun"
     gender: "f"
   - lemma: "банкрутство"
-    ipa: '[bɑnˈkrut͡stʋɔ]'
     translation: "bankruptcy"
     pos: "noun"
     gender: "n"
   - lemma: "роззброєння"
-    ipa: '[rɔˈzːbrɔjɛnʲːɑ]'
     translation: "disarmament"
     pos: "noun"
     gender: "n"
     notes: "Related to the surrender of nuclear weapons."
   - lemma: "протест"
-    ipa: '[prɔˈtɛst]'
     translation: "protest"
     pos: "noun"
     gender: "m"
   - lemma: "незалежність"
-    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
     translation: "independence"
     pos: "noun"
     gender: "f"
   - lemma: "конституція"
-    ipa: '[kɔnstɪˈtut͡sʲijɑ]'
     translation: "constitution"
     pos: "noun"
     gender: "f"
   - lemma: "цензура"
-    ipa: '[t͡sɛnˈzurɑ]'
     translation: "censorship"
     pos: "noun"
     gender: "f"
   - lemma: "реформа"
-    ipa: '[rɛˈfɔrmɑ]'
     translation: "reform"
     pos: "noun"
     gender: "f"
   - lemma: "люстрація"
-    ipa: '[lʲuˈstrɑt͡sʲijɑ]'
     translation: "lustration"
     pos: "noun"
     gender: "f"

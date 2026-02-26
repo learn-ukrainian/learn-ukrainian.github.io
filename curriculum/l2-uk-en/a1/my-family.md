@@ -172,7 +172,7 @@ Some learners try to use **жі́нка** (woman) for "wife". While this is comm
 
 ### Конструкція "У мене є..." (I have...)
 
-Now, how do you say "I have a brother"? In English, we use the verb "to have". In Ukrainian, we use a different structure: **"У мене є..."** [u ˈmɛnɛ jɛ].
+Now, how do you say "I have a brother"? In English, we use the verb "to have". In Ukrainian, we use a different structure: **"У мене є..."**.
 
 Literally, this translates to "At me there is...".
 *   **У мене є мама.** (I have a mom.)
@@ -257,20 +257,20 @@ Describe your family using these adjectives. Repeat after the examples:
 
 Talking about exact age in Ukrainian requires a specific grammar case (Dative) that we will study deeply later. For now, let's use adjectives to describe age.
 
-**Молодий / Молода** [mɔlɔˈdɪj / mɔlɔˈdɑ] (Young)
+**Молодий mɔlɔˈdɑ] (Young)
 *   **Він молодий.** (He is young.)
 *   **Вона молода.** (She is young.)
 *   **Мої батьки молоді.** (My parents are young.)
 
-**Старий / Стара** [stɑˈrɪj / stɑˈrɑ] (Old)
+**Старий stɑˈrɑ] (Old)
 *   **Мій дідусь старий.** (My grandfather is old.)
 *   **Моя бабуся стара.** (My grandmother is old.)
 
-**Дорослий / Доросла** [dɔˈrɔslɪj / dɔˈrɔslɑ] (Adult/Grown-up)
+**Дорослий dɔˈrɔslɑ] (Adult/Grown-up)
 *   **Мій син вже дорослий.** (My son is already an adult.)
 *   **Моя донька вже доросла.** (My daughter is already an adult.)
 
-**Маленький / Маленька** [mɑˈlɛnʲkɪj / mɑˈlɛnʲkɑ] (Small/Little)
+**Маленький mɑˈlɛnʲkɑ] (Small/Little)
 *   **Мій брат ще маленький.** (My brother is still small.)
 *   **Це маленька дитина.** (This is a small child.)
 

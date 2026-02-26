@@ -24,7 +24,7 @@
 - The ONLY text you produce is the final structured output between `===FINAL_REVIEW_START===` / `===FINAL_REVIEW_END===` and `===FRICTION_START===` / `===FRICTION_END===`
 - **NO SIMULATION**: You MUST `run_shell_command` for every check. Never "remember" file contents. If you skip a bash command and guess the result, the review is INVALID.
 
-**Private scratchpad (allowed):** If you need to reason through complex logic (case endings, historical dates, IPA), use `<!-- thinking: ... -->`. This is your private workspace — it doesn't count as narration. Keep it brief.
+**Private scratchpad (allowed):** If you need to reason through complex logic (case endings, historical dates, phonetics), use `<!-- thinking: ... -->`. This is your private workspace — it doesn't count as narration. Keep it brief.
 
 ## Files to Read (ALL REQUIRED)
 
@@ -96,42 +96,7 @@ grep -nP '[ыэёъ]' {CONTENT_PATH}
 grep -nP '[ыэёъ]' {ACTIVITIES_PATH}
 ```
 
-### 3c: IPA errors (AUTOMATED — mandatory)
-
-**Run the IPA linter. Do NOT use manual grep for IPA checks.**
-
-```bash
-.venv/bin/python scripts/lint_ipa.py {CONTENT_PATH}
-```
-
-If issues found, auto-fix:
-```bash
-.venv/bin/python scripts/lint_ipa.py {CONTENT_PATH} --fix
-```
-
-**What it catches (8 rules):**
-- IPA-001: /ʊ/ → /u/ (Ukrainian has no lax vowel)
-- IPA-002: /ɫ/ → /l/ (no dark L)
-- IPA-003: tʃ → t͡ʃ (ч needs tie-bar)
-- IPA-004: dʒ → d͡ʒ (дж needs tie-bar)
-- IPA-005: /w/ → /ʋ/ (В is labiodental, inside IPA brackets)
-- IPA-006: /v/ → /ʋ/ (same, inside IPA brackets)
-- IPA-007: ts → t͡s (ц needs tie-bar, context-aware)
-- IPA-008: dz → d͡z (дз needs tie-bar, context-aware)
-
-**After fixing, re-lint to confirm clean:**
-```bash
-.venv/bin/python scripts/lint_ipa.py {CONTENT_PATH}
-```
-
-### 3d: Inline IPA (B1+ only)
-For B1 and above: IPA belongs ONLY in vocabulary YAML, not inline in content.
-```bash
-grep -nP '\[/[^]]+/\]|(?<!\[)/[а-яіїєґА-ЯІЇЄҐ][^/]*/(?!\])' {CONTENT_PATH}
-```
-If found and track is B1+: move to vocabulary, remove from content.
-
-### 3e: English leakage
+### 3c: English leakage
 ```bash
 grep -inP '\b(the|is|are|was|were|has|have|this|that|with|from|for|and|but|not|can|will)\b' {CONTENT_PATH}
 ```
@@ -262,8 +227,6 @@ Confirm all gates pass after fixes. Max 2 fix-audit loops.
 |-------|--------|---------|
 | Russianisms | CLEAN/FOUND | {details} |
 | Russian characters | CLEAN/FOUND | {details} |
-| IPA lint (8 rules) | CLEAN/FIXED | {lint_ipa.py output: X issues, Y fixed} |
-| Inline IPA (B1+) | CLEAN/FOUND/N/A | {count} |
 | English leakage | CLEAN/FOUND | {details} |
 | LLM artifacts | CLEAN/FOUND | {count, list} |
 | Factual errors | CLEAN/FOUND/N/A | {details} |

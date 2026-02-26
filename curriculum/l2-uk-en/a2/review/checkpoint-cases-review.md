@@ -75,7 +75,7 @@
 
 **Problem:** Research notes (line 32) explicitly state: "Use IPA only on the first occurrence of each new vocabulary word." The content file contains zero IPA transcriptions. The vocabulary file has IPA, but learners need it inline in the prose on first encounter of key terms.
 
-**Fix:** Add IPA for at least the high-frequency vocabulary on first occurrence: відмінок /ʋʲidˈmʲinɔk/, прийменник /prɪjˈmɛnːɪk/, допомагати /dɔpɔmɑˈɦɑtɪ/, подобатися /pɔˈdɔbɑtɪsʲɑ/, etc.
+**Fix:** Add IPA for at least the high-frequency vocabulary on first occurrence: відмінок, прийменник, допомагати, подобатися, etc.
 
 ---
 
@@ -84,12 +84,12 @@
 **Location:** Vocabulary file lines 12 and 95
 
 **Text:**
-- Line 12: «родовий» → `[rɔˈdɔˈʋɪj]` (two stress marks)
-- Line 95: «помилка» → `[ˈpɔˈmɪlkɑ]` (two stress marks)
+- Line 12: «родовий» → `` (two stress marks)
+- Line 95: «помилка» → `` (two stress marks)
 
-**Problem:** Ukrainian words have exactly one primary stress. "Родовий" should be /rɔdɔˈʋɪj/ (stress on final syllable). "Помилка" should be /pɔˈmɪlkɑ/ (stress on мі).
+**Problem:** Ukrainian words have exactly one primary stress. "Родовий" should be (stress on final syllable). "Помилка" should be (stress on мі).
 
-**Fix:** Remove the spurious stress marks: `[rɔdɔˈʋɪj]` and `[pɔˈmɪlkɑ]`.
+**Fix:** Remove the spurious stress marks: `` and ``.
 
 ---
 

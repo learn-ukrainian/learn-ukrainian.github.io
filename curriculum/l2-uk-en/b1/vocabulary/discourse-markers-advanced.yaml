@@ -1,121 +1,91 @@
 items:
   - lemma: по-перше
-    ipa: '[pɔ-ˈpɛrʃɛ]'
     translation: firstly
     pos: adverb
   - lemma: по-друге
-    ipa: '[pɔ-ˈdruɦɛ]'
     translation: secondly
     pos: adverb
   - lemma: нарешті
-    ipa: '[nɑˈrɛʃtʲi]'
     translation: finally / at last
     pos: adverb
   - lemma: підсумовуючи
-    ipa: '[pʲid͡zsuˈmɔʋujut͡ʃɪ]'
     translation: summarizing
     pos: adverb
   - lemma: таким чином
-    ipa: '[tɑˈkɪm ˈt͡ʃɪnɔm]'
     translation: thus / in this way
     pos: phrase
   - lemma: особливо
-    ipa: '[ɔsɔˈblɪʋɔ]'
     translation: especially
     pos: adverb
   - lemma: передусім
-    ipa: '[pɛrɛduˈsʲim]'
     translation: above all / primarily
     pos: adverb
   - lemma: загалом
-    ipa: '[zɑɦɑˈlɔm]'
     translation: in general / overall
     pos: adverb
   - lemma: насамкінець
-    ipa: '[nɑˈsɑmkʲinɛt͡sʲ]'
     translation: in conclusion
     pos: adverb
   - lemma: головне
-    ipa: '[ɦɔlɔˈʋnɛ]'
     translation: the main thing
     pos: noun
   - lemma: з одного боку
-    ipa: '[z ɔdnɔɦɔ ˈbɔku]'
     translation: on one hand
     pos: phrase
   - lemma: з іншого боку
-    ipa: '[z ˈinʃɔɦɔ ˈbɔku]'
     translation: on the other hand
     pos: phrase
   - lemma: проте
-    ipa: '[prɔˈtɛ]'
     translation: however
     pos: conjunction
   - lemma: отже
-    ipa: '[ˈɔd͡ʒɛ]'
     translation: so / therefore
     pos: conjunction
   - lemma: крім того
-    ipa: '[krʲim tɔˈɦɔ]'
     translation: besides / furthermore
     pos: phrase
   - lemma: словом
-    ipa: '[ˈslɔʋɔm]'
     translation: in a word / in short
     pos: adverb
   - lemma: дискурсивний
-    ipa: '[dɪskurˈsɪu̯nɪj]'
     translation: discursive
     pos: adjective
   - lemma: маркер
-    ipa: '[mɑrkɛr]'
     translation: marker
     pos: noun
   - lemma: послідовність
-    ipa: '[pɔsʲlʲiˈdɔu̯nʲisʲtʲ]'
     translation: sequence
     pos: noun
   - lemma: додавання
-    ipa: '[dɔdɑˈʋɑnʲːɑ]'
     translation: addition
     pos: noun
   - lemma: контраст
-    ipa: '[kɔnˈtrɑst]'
     translation: contrast
     pos: noun
   - lemma: уточнення
-    ipa: '[uˈtɔt͡ʃnɛnʲːɑ]'
     translation: clarification
     pos: noun
   - lemma: результат
-    ipa: '[rɛzulʲˈtɑt]'
     translation: result
     pos: noun
   - lemma: підсумок
-    ipa: '[pʲid͡zsumɔk]'
     translation: summary / conclusion
     pos: noun
   - lemma: аргумент
-    ipa: '[ɑrɦuˈmɛnt]'
     translation: argument
     pos: noun
   - lemma: переконання
-    ipa: '[pɛrɛkɔˈnɑnʲːɑ]'
     translation: persuasion
     pos: noun
   - lemma: висновок
-    ipa: '[ˈʋɪsnɔʋɔk]'
     translation: conclusion
     pos: noun
   - lemma: відповідно
-    ipa: '[ʋʲidpɔˈʋʲidnɔ]'
     translation: accordingly
     pos: adverb
   - lemma: натомість
-    ipa: '[nɑˈtɔmʲisʲtʲ]'
     translation: instead / whereas
     pos: adverb
   - lemma: безсумнівно
-    ipa: '[bɛzsuˈmnʲiu̯nɔ]'
     translation: undoubtedly
     pos: adverb

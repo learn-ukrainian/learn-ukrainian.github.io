@@ -1,92 +1,69 @@
-- ipa: '[ˈʋulɪt͡sʲɑ]'
   lemma: вулиця
   pos: noun
   translation: street
-- ipa: '[ˈplɔʃt͡ʃɑ]'
   lemma: площа
   pos: noun
   translation: square
-- ipa: '[mɑjˈdɑn]'
   lemma: майдан
   pos: noun
   translation: square, plaza
-- ipa: '[zuˈpɪnkɑ]'
   lemma: зупинка
   pos: noun
   translation: stop (bus/tram)
-- ipa: '[ɑˈptɛkɑ]'
   lemma: аптека
   pos: noun
   translation: pharmacy
-- ipa: '[ˈpɔʃtɑ]'
   lemma: пошта
   pos: noun
   translation: post office
-- ipa: '[ˈstɑnʲt͡sʲijɑ]'
   lemma: станція
   pos: noun
   translation: station
-- ipa: '[pɑrk]'
   lemma: парк
   pos: noun
   translation: park
-- ipa: '[t͡sɛntr]'
   lemma: центр
   pos: noun
   translation: center
-- ipa: '[ˈprʲɑmɔ]'
   lemma: прямо
   pos: adverb
   translation: straight
-- ipa: '[nɑˈlʲiʋɔ]'
   lemma: наліво
   pos: adverb
   translation: to the left
-- ipa: '[nɑˈprɑʋɔ]'
   lemma: направо
   pos: adverb
   translation: to the right
-- ipa: '[lʲiˈʋɔrut͡ʃ]'
   lemma: ліворуч
   pos: adverb
   translation: on the left
-- ipa: '[prɑˈʋɔrut͡ʃ]'
   lemma: праворуч
   pos: adverb
   translation: on the right
-- ipa: '[ˈbʲilʲɑ]'
   lemma: біля
   pos: preposition
   translation: near, by
-- ipa: '[nɑˈʋprɔtɪ]'
   lemma: навпроти
   pos: preposition
   translation: opposite
-- ipa: '[dɛ]'
   lemma: де
   pos: adverb
   translation: where (location)
-- ipa: '[kuˈdɪ]'
   lemma: куди
   pos: adverb
   translation: where to (direction)
-- ipa: '[spɔˈt͡ʃɑtku]'
   lemma: спочатку
   pos: adverb
   translation: at first, first
-- ipa: '[ˈpɔtʲim]'
   lemma: потім
   pos: adverb
   translation: then, later
-- ipa: '[nɑˈzɑd]'
   lemma: назад
   pos: adverb
   translation: back, backwards
-- ipa: '[sʲʋʲitlɔˈfɔr]'
   lemma: світлофор
   pos: noun
   translation: traffic light
-- ipa: '[mɑrˈʃrutkɑ]'
   lemma: маршрутка
   pos: noun
   translation: minibus

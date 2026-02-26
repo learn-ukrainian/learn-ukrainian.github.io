@@ -1,156 +1,126 @@
 items:
   - lemma: "офіційно-діловий стиль"
-    ipa: '[ɔfʲiˈt͡sʲijnɔ-dʲilɔˈʋɪj stɪlʲ]'
     translation: "official-business style"
     pos: "noun"
     gender: "m"
     notes: "Strict neutrality, absence of emotion."
   - lemma: "заява"
-    ipa: '[zɑˈjɑʋɑ]'
     translation: "application/statement"
     pos: "noun"
     gender: "f"
     notes: "Requires Genitive only in header."
   - lemma: "наказ"
-    ipa: '[nɑˈkɑz]'
     translation: "order/decree"
     pos: "noun"
     gender: "m"
   - lemma: "протокол"
-    ipa: '[prɔtɔˈkɔl]'
     translation: "minutes/protocol"
     pos: "noun"
     gender: "m"
   - lemma: "згідно з"
-    ipa: '[ˈzʲɦʲidnɔ z]'
     translation: "according to"
     pos: "preposition"
     notes: "Requires Instrumental case."
   - lemma: "відповідно до"
-    ipa: '[ʋʲidpɔˈʋʲidnɔ dɔ]'
     translation: "in accordance with"
     pos: "preposition"
     notes: "Requires Genitive case."
   - lemma: "брати участь"
-    ipa: '[ˈbrɑtɪ ˈut͡ʃɑsʲtʲ]'
     translation: "to participate"
     pos: "verb"
     aspect: "impf"
     notes: "Avoid incorrect 'приймати участь'."
   - lemma: "вживати заходів"
-    ipa: '[ʋʒɪˈʋɑtɪ ˈzɑxɔdʲiu̯]'
     translation: "to take measures"
     pos: "verb"
     aspect: "impf"
     notes: "Avoid incorrect 'приймати міри'."
   - lemma: "протягом"
-    ipa: '[ˈprɔtʲɑɦɔm]'
     translation: "during/throughout"
     pos: "preposition"
     notes: "Used for duration; avoid 'на протязі'."
   - lemma: "чинний"
-    ipa: '[ˈt͡ʃɪnːɪj]'
     translation: "valid/effective"
     pos: "adjective"
   - lemma: "універсал"
-    ipa: '[unʲiʋɛrˈsɑl]'
     translation: "universal (historical act)"
     pos: "noun"
     gender: "m"
     notes: "Historical legal act of the Hetmanate era."
   - lemma: "канцеляризм"
-    ipa: '[kɑnt͡sɛlʲɑˈrɪzm]'
     translation: "bureaucratese"
     pos: "noun"
     gender: "m"
   - lemma: "реквізит"
-    ipa: '[rɛkʋʲiˈzɪt]'
     translation: "requisite/detail"
     pos: "noun"
     gender: "m"
     notes: "Mandatory part of a document."
   - lemma: "постанова"
-    ipa: '[pɔstɑˈnɔʋɑ]'
     translation: "resolution"
     pos: "noun"
     gender: "f"
   - lemma: "віддієслівний іменник"
-    ipa: '[ʋʲidʲːijɛˈsʲlʲiu̯nɪj iˈmɛnːɪk]'
     translation: "verbal noun"
     pos: "noun"
     gender: "m"
   - lemma: "законодавство"
-    ipa: '[zɑkɔnɔˈdɑu̯stʋɔ]'
     translation: "legislation"
     pos: "noun"
     gender: "n"
   - lemma: "договір"
-    ipa: '[ˈdɔɦɔˈʋʲir]'
     translation: "contract/agreement"
     pos: "noun"
     gender: "m"
   - lemma: "юрисдикція"
-    ipa: '[jurɪˈzdɪkt͡sʲijɑ]'
     translation: "jurisdiction"
     pos: "noun"
     gender: "f"
   - lemma: "преамбула"
-    ipa: '[prɛˈɑmbulɑ]'
     translation: "preamble"
     pos: "noun"
     gender: "f"
   - lemma: "укладати"
-    ipa: '[uklɑˈdɑtɪ]'
     translation: "to conclude/sign (a contract)"
     pos: "verb"
     aspect: "impf"
   - lemma: "скасувати"
-    ipa: '[skɑsuˈʋɑtɪ]'
     translation: "to cancel/annul"
     pos: "verb"
     aspect: "perf"
   - lemma: "порядок денний"
-    ipa: '[pɔˈrʲɑdɔk ˈdɛnːɪj]'
     translation: "agenda"
     pos: "noun"
     gender: "m"
   - lemma: "витяг"
-    ipa: '[ˈʋɪtʲɑɦ]'
     translation: "extract/excerpt"
     pos: "noun"
     gender: "m"
   - lemma: "підпис"
-    ipa: '[ˈpʲidpɪs]'
     translation: "signature"
     pos: "noun"
     gender: "m"
   - lemma: "печатка"
-    ipa: '[pɛˈt͡ʃɑtkɑ]'
     translation: "stamp/seal"
     pos: "noun"
     gender: "f"
   - lemma: "адресат"
-    ipa: '[ɑdrɛˈsɑt]'
     translation: "addressee"
     pos: "noun"
     gender: "m"
   - lemma: "адресант"
-    ipa: '[ɑdrɛˈsɑnt]'
     translation: "sender"
     pos: "noun"
     gender: "m"
   - lemma: "ухвалити"
-    ipa: '[uxʋɑˈlɪtɪ]'
     translation: "to resolve/decide"
     pos: "verb"
     aspect: "perf"
   - lemma: "розпорядження"
-    ipa: '[rɔzpɔˈrʲɑd͡ʒɛnʲːɑ]'
     translation: "directive/order"
     pos: "noun"
     gender: "n"
   - lemma: "акт"
-    ipa: '[ɑkt]'
     translation: "act/document"
     pos: "noun"
     gender: "m"

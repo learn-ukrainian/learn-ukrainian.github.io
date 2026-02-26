@@ -1,126 +1,101 @@
 items:
   - lemma: "модернізм"
-    ipa: '[mɔdɛrˈnʲizm]'
     translation: "modernism"
     pos: "noun"
     gender: "m"
   - lemma: "драматургія"
-    ipa: '[drɑmɑturˈɦʲijɑ]'
     translation: "dramaturgy"
     pos: "noun"
     gender: "f"
   - lemma: "лексикограф"
-    ipa: '[lɛksɪˈkɔɦrɑf]'
     translation: "lexicographer"
     pos: "noun"
     gender: "m"
   - lemma: "просвітництво"
-    ipa: '[prɔˈsʲʋʲitnɪt͡stʋɔ]'
     translation: "enlightenment"
     pos: "noun"
     gender: "n"
   - lemma: "поет"
-    ipa: '[pɔˈɛt]'
     translation: "poet"
     pos: "noun"
     gender: "m"
   - lemma: "прозаїк"
-    ipa: '[prɔˈzɑjik]'
     translation: "prose writer"
     pos: "noun"
     gender: "m"
   - lemma: "канон"
-    ipa: '[kɑˈnɔn]'
     translation: "canon"
     pos: "noun"
     gender: "m"
   - lemma: "шедевр"
-    ipa: '[ʃɛˈdɛu̯r]'
     translation: "masterpiece"
     pos: "noun"
     gender: "m"
   - lemma: "соборність"
-    ipa: '[sɔˈbɔrnʲisʲtʲ]'
     translation: "unity, sobornist"
     pos: "noun"
     gender: "f"
   - lemma: "словник"
-    ipa: '[slɔˈʋnɪk]'
     translation: "dictionary"
     pos: "noun"
     gender: "m"
   - lemma: "символізм"
-    ipa: '[sɪmʋɔˈlʲizm]'
     translation: "symbolism"
     pos: "noun"
     gender: "m"
   - lemma: "неоромантизм"
-    ipa: '[nɛɔrɔmɑnˈtɪzm]'
     translation: "neo-romanticism"
     pos: "noun"
     gender: "m"
   - lemma: "антологія"
-    ipa: '[ɑntɔˈlɔɦʲijɑ]'
     translation: "anthology"
     pos: "noun"
     gender: "f"
   - lemma: "класик"
-    ipa: '[ˈklɑsɪk]'
     translation: "classic author"
     pos: "noun"
     gender: "m"
   - lemma: "спадщина"
-    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
     translation: "legacy"
     pos: "noun"
     gender: "f"
   - lemma: "асиміляція"
-    ipa: '[ɑsɪmʲiˈlʲɑt͡sʲijɑ]'
     translation: "assimilation"
     pos: "noun"
     gender: "f"
   - lemma: "суб'єктність"
-    ipa: '[suˈbjɛktʲnʲisʲtʲ]'
     translation: "agency, subjectivity"
     pos: "noun"
     gender: "f"
   - lemma: "інтелігенція"
-    ipa: '[intɛlʲiˈɦɛnʲt͡sʲijɑ]'
     translation: "intelligentsia"
     pos: "noun"
     gender: "f"
   - lemma: "деколонізація"
-    ipa: '[dɛkɔlɔnʲiˈzɑt͡sʲijɑ]'
     translation: "decolonization"
     pos: "noun"
     gender: "f"
   - lemma: "самостійність"
-    ipa: '[sɑmɔˈsʲtʲijnʲisʲtʲ]'
     translation: "independence"
     pos: "noun"
     gender: "f"
   - lemma: "федералізм"
-    ipa: '[fɛdɛrɑˈlʲizm]'
     translation: "federalism"
     pos: "noun"
     gender: "m"
   - lemma: "цензура"
-    ipa: '[t͡sɛnˈzurɑ]'
     translation: "censorship"
     pos: "noun"
     gender: "f"
   - lemma: "свідомість"
-    ipa: '[sʲʋʲiˈdɔmʲisʲtʲ]'
     translation: "consciousness"
     pos: "noun"
     gender: "f"
   - lemma: "відродження"
-    ipa: '[ʋʲiˈdrɔd͡ʒɛnʲːɑ]'
     translation: "revival, renaissance"
     pos: "noun"
     gender: "n"
   - lemma: "інтелектуал"
-    ipa: '[intɛlɛktuˈɑl]'
     translation: "intellectual"
     pos: "noun"
     gender: "m"

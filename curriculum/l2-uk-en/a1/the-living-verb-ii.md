@@ -253,16 +253,13 @@ You now have the tools to describe your life. Описуйте своє житт
 Ми описуємо регулярні дії.
 
 *   **Я щодня ходжу в парк.**
-    [ja ʃt͡ʃɔˈdnʲɑ xɔˈd͡ʒu ʋ park]
     (I walk to the park every day.)
 
 *   **Він часто робить помилки.**
-    [ʋin ˈt͡ʃɑstɔ rɔˈbɪtʲ pɔˈmɪlkɪ]
     (He often makes mistakes.)
     *Note: "To make mistakes" is a set phrase: **робити помилки**.*
 
 *   **Ми завжди говоримо правду.**
-    [mɪ zɑʋˈʒdɪ ɦɔʋɔˈrɪmɔ ˈprɑʋdu]
     (We always speak the truth.)
 
 ### Стійкі фрази

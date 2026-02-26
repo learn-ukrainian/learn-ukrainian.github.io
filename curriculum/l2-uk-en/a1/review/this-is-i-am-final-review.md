@@ -31,7 +31,7 @@ Meta section 5 point 4 requires: "Proverb/Saying: A simple phrase about respect 
 All IPA transcriptions checked:
 - ʋ used for В throughout (not w) ✅
 - t͡s with tie bar for Ц (це = [t͡sɛ]) ✅
-- t͡ʃ with tie bar for Ч (вчитель = [ˈut͡ʃɪtɛlʲ]) ✅
+- t͡ʃ with tie bar for Ч (вчитель =) ✅
 - є = [je] ✅
 - Що = [ʃt͡ʃɔ] ✅
 - Palatalization consistently simplified (e.g., стіл = [stil] not [stʲil]) — systematic A1 simplification, acceptable
@@ -95,14 +95,14 @@ FILE: curriculum/l2-uk-en/a1/this-is-i-am.md
 ---OLD---
 **1. Identifying People:**
 *   **Я — студент.** (I [am] a student.)
-*   **Він — вчитель.** [ˈut͡ʃɪtɛlʲ] (He [is] a teacher.)
-*   **Вона — українка.** [ukrɑˈjinkɑ] (She [is] a Ukrainian.)
+*   **Він — вчитель.** (He [is] a teacher.)
+*   **Вона — українка.** (She [is] a Ukrainian.)
 ---NEW---
 **1. Identifying People:**
 *   **Я — студент.** (I [am] a student.)
-*   **Він — вчитель.** [ˈut͡ʃɪtɛlʲ] (He [is] a teacher.)
-*   **Він — українець.** [ukrɑˈjinɛt͡sʲ] (He [is] a Ukrainian.)
-*   **Вона — українка.** [ukrɑˈjinkɑ] (She [is] a Ukrainian.)
+*   **Він — вчитель.** (He [is] a teacher.)
+*   **Він — українець.** (He [is] a Ukrainian.)
+*   **Вона — українка.** (She [is] a Ukrainian.)
 
 Notice the pair: **українець** (male) / **українка** (female). Ukrainian uses different word endings for men and women. You will see this pattern again with professions: **студент** / **студентка**, **вчитель** / **вчителька**.
 ---END---
@@ -131,7 +131,7 @@ Here is a template for a perfect A1 introduction:
 > [!tip]
 > **Two ways to say your name:**
 > *   **Я — Том.** (I [am] Tom.) — Direct and simple.
-> *   **Мене звати Том.** [mɛˈnɛ ˈzʋɑtɪ] (My name is Tom.) — The standard Ukrainian introduction. Learn this as a fixed phrase for now; the grammar behind it comes later.
+> *   **Мене звати Том.** (My name is Tom.) — The standard Ukrainian introduction. Learn this as a fixed phrase for now; the grammar behind it comes later.
 
 **Example:**
 *   **Привіт. Мене звати Том. Я — студент. Я тут.**

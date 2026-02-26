@@ -8,13 +8,13 @@ Now let me carefully compile my adversarial review.
 
 **1. IPA Inconsistency: тато — content vs vocab file**
 - **File:** the-gender-code.md, line 137
-- **Current:** `[ˈta.to]`
-- **Problem:** Ukrainian 'а' is [ɑ] (open back unrounded) and 'о' is [ɔ] (open-mid back rounded). The vocabulary file correctly has `[ˈtɑ.tɔ]`. Content uses [a] and [o], which are different phonemes.
+- **Current:** ``
+- **Problem:** Ukrainian 'а' is [ɑ] (open back unrounded) and 'о' is [ɔ] (open-mid back rounded). The vocabulary file correctly has ``. Content uses [a] and [o], which are different phonemes.
 
 **2. IPA Inconsistency: собака**
 - **File:** the-gender-code.md, line 151
-- **Current:** `[soˈba.ka]`
-- **Problem:** Same vowel quality error. Vocab file has `[soˈbɑ.kɑ]`. Both should be [ɔ] for first 'о' too: `[sɔˈbɑ.kɑ]`.
+- **Current:** ``
+- **Problem:** Same vowel quality error. Vocab file has ``. Both should be [ɔ] for first 'о' too: ``.
 
 **3. IPA Inconsistency: брат**
 - **File:** the-gender-code.md, line 64
@@ -23,40 +23,40 @@ Now let me carefully compile my adversarial review.
 
 **4. IPA Inconsistency: Жінка**
 - **File:** the-gender-code.md, line 272
-- **Current:** `[ˈʒin.ka]`
-- **Problem:** Vocab file has `[ˈʒin.kɑ]`. Final 'а' should be [ɑ].
+- **Current:** ``
+- **Problem:** Vocab file has ``. Final 'а' should be [ɑ].
 
 **5. IPA Inconsistency: Квартира**
 - **File:** the-gender-code.md, line 274
-- **Current:** `[kʋarˈtɪ.ra]`
-- **Problem:** Both 'а' vowels should be [ɑ], giving `[kʋɑrˈtɪ.rɑ]`.
+- **Current:** ``
+- **Problem:** Both 'а' vowels should be [ɑ], giving ``.
 
 **6. IPA Inconsistency: Артефакт**
 - **File:** the-gender-code.md, line 264
-- **Current:** `[ar.teˈfɑkt]`
-- **Problem:** First 'а' uses [a] while the second correctly uses [ɑ]. Internally inconsistent within the same transcription. Should be `[ɑr.teˈfɑkt]`.
+- **Current:** ``
+- **Problem:** First 'а' uses [a] while the second correctly uses [ɑ]. Internally inconsistent within the same transcription. Should be ``.
 
 **7. IPA Inconsistency: радість**
 - **File:** the-gender-code.md, line 172
-- **Current:** `[ˈra.dʲisʲtʲ]`
-- **Problem:** 'а' should be [ɑ]: `[ˈrɑ.dʲisʲtʲ]`.
+- **Current:** ``
+- **Problem:** 'а' should be [ɑ]: ``.
 
 **8. IPA Inconsistency: теля**
 - **File:** the-gender-code.md, line 189
-- **Current:** `[teˈlʲa]`
-- **Problem:** Final 'а' should be [ɑ]: `[teˈlʲɑ]`.
+- **Current:** ``
+- **Problem:** Final 'а' should be [ɑ]: ``.
 
 **9. IPA Inconsistency: цуценя**
 - **File:** the-gender-code.md, line 190
-- **Current:** `[t͡su.t͡seˈnʲa]`
-- **Problem:** Final 'а' should be [ɑ]: `[t͡su.t͡seˈnʲɑ]`.
+- **Current:** ``
+- **Problem:** Final 'а' should be [ɑ]: ``.
 
 **10. Missing vocabulary entries**
 - **File:** vocabulary/the-gender-code.yaml
 - **Problem:** Plan's recommended vocabulary includes артефакт, зона, укриття (S.T.A.L.K.E.R. hooks). These appear in the content with IPA but are missing from the vocabulary file.
 
 **11. Green Team review error (NOT an issue in content)**
-- The Green Team review claimed ім'я IPA was wrong, suggesting stress on the last syllable `[imˈjɑ]`. This is **incorrect**. The content has `[ˈimjɑ]` (stress on first syllable), which is **correct** per Ukrainian dictionaries. The Green Team review was wrong here — no fix needed.
+- The Green Team review claimed ім'я IPA was wrong, suggesting stress on the last syllable ``. This is **incorrect**. The content has `` (stress on first syllable), which is **correct** per Ukrainian dictionaries. The Green Team review was wrong here — no fix needed.
 
 **12. LLM artifact: Invented percentage (noted, not blocking)**
 - **File:** the-gender-code.md, line 82
@@ -87,88 +87,88 @@ FILE: curriculum/l2-uk-en/a1/the-gender-code.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-gender-code.md
 ---OLD---
-Look at the word **тато** [ˈta.to] (dad).
+Look at the word **тато** (dad).
 ---NEW---
-Look at the word **тато** [ˈtɑ.tɔ] (dad).
+Look at the word **тато** (dad).
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-gender-code.md
 ---OLD---
-Consider the word **собака** [soˈba.ka] (dog).
+Consider the word **собака** (dog).
 ---NEW---
-Consider the word **собака** [sɔˈbɑ.kɑ] (dog).
+Consider the word **собака** (dog).
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-gender-code.md
 ---OLD---
-*   **любов** [lʲuˈbɔu̯] (love) — Feminine → **моя любов**
-*   **радість** [ˈra.dʲisʲtʲ] (joy) — Feminine → **моя радість**
+*   **любов** (love) — Feminine → **моя любов**
+*   **радість** (joy) — Feminine → **моя радість**
 ---NEW---
-*   **любов** [lʲuˈbɔu̯] (love) — Feminine → **моя любов**
-*   **радість** [ˈrɑ.dʲisʲtʲ] (joy) — Feminine → **моя радість**
+*   **любов** (love) — Feminine → **моя любов**
+*   **радість** (joy) — Feminine → **моя радість**
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-gender-code.md
 ---OLD---
-*   **теля** [teˈlʲa] (calf) — Neuter
-*   **цуценя** [t͡su.t͡seˈnʲa] (puppy) — Neuter
+*   **теля** (calf) — Neuter
+*   **цуценя** (puppy) — Neuter
 ---NEW---
-*   **теля** [teˈlʲɑ] (calf) — Neuter
-*   **цуценя** [t͡su.t͡seˈnʲɑ] (puppy) — Neuter
+*   **теля** (calf) — Neuter
+*   **цуценя** (puppy) — Neuter
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-gender-code.md
 ---OLD---
-*   **Артефакт** [ar.teˈfɑkt] (Artifact) — Ends in 't' (Consonant). It's **Masculine**. You find *him*.
+*   **Артефакт** (Artifact) — Ends in 't' (Consonant). It's **Masculine**. You find *him*.
 ---NEW---
-*   **Артефакт** [ɑr.teˈfɑkt] (Artifact) — Ends in 't' (Consonant). It's **Masculine**. You find *him*.
+*   **Артефакт** (Artifact) — Ends in 't' (Consonant). It's **Masculine**. You find *him*.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-gender-code.md
 ---OLD---
-*   **Жінка** [ˈʒin.ka] (Woman/Wife) — Feminine.
+*   **Жінка** (Woman/Wife) — Feminine.
 ---NEW---
-*   **Жінка** [ˈʒin.kɑ] (Woman/Wife) — Feminine.
+*   **Жінка** (Woman/Wife) — Feminine.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-gender-code.md
 ---OLD---
-*   **Квартира** [kʋarˈtɪ.ra] (Apartment) — Feminine.
+*   **Квартира** (Apartment) — Feminine.
 ---NEW---
-*   **Квартира** [kʋɑrˈtɪ.rɑ] (Apartment) — Feminine.
+*   **Квартира** (Apartment) — Feminine.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/vocabulary/the-gender-code.yaml
 ---OLD---
-- ipa: '[seˈrɛd.nʲij]'
+- ipa: ''
   lemma: середній
   notes: Adjective used for grammatical gender
   pos: adj
   translation: neuter; middle; average
 ---NEW---
-- ipa: '[seˈrɛd.nʲij]'
+- ipa: ''
   lemma: середній
   notes: Adjective used for grammatical gender
   pos: adj
   translation: neuter; middle; average
-- ipa: '[ɑr.teˈfɑkt]'
+- ipa: ''
   lemma: артефакт
   notes: S.T.A.L.K.E.R. hook; masculine consonant ending
   pos: noun
   translation: artifact
-- ipa: '[ˈzɔ.nɑ]'
+- ipa: ''
   lemma: зона
   notes: S.T.A.L.K.E.R. hook; feminine -a ending
   pos: noun
   translation: zone
-- ipa: '[uˈkrɪtːʲɑ]'
+- ipa: ''
   lemma: укриття
   notes: S.T.A.L.K.E.R. hook; neuter -я ending after doubled consonant
   pos: noun

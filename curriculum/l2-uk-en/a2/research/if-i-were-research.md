@@ -28,4 +28,4 @@ Alignment: This module introduces the conditional mood (б/би) as formally spe
 ## Notes for Content Writing
 - Decolonized Framing: Present the Ukrainian "б/би" conditional system as a clean, elegant structure relying strictly on the past tense form, framing it independently.
 - Immersion Band 2 (60-75%): Use English ONLY for the abstract distinction between Real (якщо) and Unreal (якби) conditions and formation mechanics. All dialogues and examples must be strictly Ukrainian.
-- IPA needed only for first occurrences of new vocabulary like "мрія" [ˈmrʲijɐ].
+- IPA needed only for first occurrences of new vocabulary like "мрія".

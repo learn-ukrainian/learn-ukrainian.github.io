@@ -1,0 +1,27 @@
+{
+  "track": "b2",
+  "slug": "capstone-doslidzhennya",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T13:46:42Z",
+      "task_id": "v3-capstone-doslidzhennya-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T13:51:03Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T13:56:57Z",
+      "task_id": "v3-capstone-doslidzhennya-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T14:05:22Z",
+      "attempts": 2
+    }
+  }
+}

@@ -37,13 +37,13 @@
 - **Location:** Content line 401
 - **Evidence:** Line 401: «This sound instantly distinguishes a native Ukrainian speaker. In Russian, the reflexive ending is hard and short. In Ukrainian, it is **soft** and **long**.»
 - **Problem:** Defines Ukrainian phonetics by what Russian does first, treating Russian as the baseline. Ukrainian learners should learn the Ukrainian sound on its own terms. This is not a `[!myth-buster]` or `[!decolonization]` block — it's in the regular teaching prose.
-- **Fix:** Rewrite to present the Ukrainian feature independently: "This sound instantly distinguishes a native Ukrainian speaker. The Ukrainian reflexive ending is **soft** and **long** — hold that gentle [t͡sʲː] and smile." Remove the Russian comparison entirely.
+- **Fix:** Rewrite to present the Ukrainian feature independently: "This sound instantly distinguishes a native Ukrainian speaker. The Ukrainian reflexive ending is **soft** and **long** — hold that gentle and smile." Remove the Russian comparison entirely.
 
 ### Issue 4: IPA stress errors in vocabulary YAML [HIGH — IPA]
 - **Location:** Vocabulary lines 65, 77
-- **Evidence (a):** Line 65: `прокидатися` IPA is `[prɔkɪdɑtɪsʲɑ]` — **missing stress marker** entirely. Correct: `[prɔkɪˈdɑtɪsʲɑ]` (stress on third syllable: проки**да**тися).
-- **Evidence (b):** Line 77: `втомлюватися` IPA is `[ˈʍtɔmlʲuʋɑtɪsʲɑ]` — **wrong stress placement** on initial syllable. Correct: `[ʋtɔmlʲuˈʋɑtɪsʲɑ]` (stress on fourth syllable: втомлю**ва**тися). The symbol `ʍ` (voiceless labial-velar approximant) is also a non-standard IPA choice for Ukrainian `в` before voiceless consonants.
-- **Fix:** (a) `[prɔkɪˈdɑtɪsʲɑ]`, (b) `[ʋtɔmlʲuˈʋɑtɪsʲɑ]`
+- **Evidence (a):** Line 65: `прокидатися` IPA is `[prɔkɪdɑtɪsʲɑ]` — **missing stress marker** entirely. Correct: `` (stress on third syllable: проки**да**тися).
+- **Evidence (b):** Line 77: `втомлюватися` IPA is `` — **wrong stress placement** on initial syllable. Correct: `` (stress on fourth syllable: втомлю**ва**тися). The symbol `ʍ` (voiceless labial-velar approximant) is also a non-standard IPA choice for Ukrainian `в` before voiceless consonants.
+- **Fix:** (a) ``, (b) ``
 
 ### Issue 5: Richness below threshold — missing dialogues and cultural content [MEDIUM — Richness]
 - **Location:** Entire module
@@ -67,7 +67,7 @@
 |-------|----------|---------|
 | -ся after consonants, -сь after vowels | Lines 125-130 | **Correct** — with accurate caveat that -ся is also allowed after vowels |
 | -ся from Old Slavic `себе` | Lines 83-89 | **Correct** — well-established etymology |
-| -ться pronounced as [t͡sʲːɑ] | Lines 393-398 | **Correct** — standard Ukrainian phonetics |
+| -ться pronounced as | Lines 393-398 | **Correct** — standard Ukrainian phonetics |
 | `дивитися` is second conjugation | Line 149 | **Correct** |
 | `сміятися з` is standard (not `над`) | Lines 212-216 | **Correct** — `з` is standard Ukrainian; `над` is a Russianism calque |
 | `Вибачте` preferred over `Вибачаюсь` | Lines 407-416 | **Correct** — widely accepted prescriptive norm |

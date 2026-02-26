@@ -1,118 +1,93 @@
 items:
   - lemma: "йти"
-    ipa: '[jtɪ]'
     translation: "to go on foot"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "їхати"
-    ipa: '[ˈjixɑtɪ]'
     translation: "to go by vehicle"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "пройти"
-    ipa: '[prɔjˈtɪ]'
     translation: "to go through, to get to"
     pos: "verb"
     aspect: "perfective"
   - lemma: "напрямок"
-    ipa: '[ˈnɑprʲɑmɔk]'
     translation: "direction"
     pos: "noun"
     gender: "m"
   - lemma: "прямо"
-    ipa: '[ˈprʲɑmɔ]'
     translation: "straight"
     pos: "adverb"
   - lemma: "направо"
-    ipa: '[nɑˈprɑʋɔ]'
     translation: "to the right"
     pos: "adverb"
   - lemma: "наліво"
-    ipa: '[nɑˈlʲiʋɔ]'
     translation: "to the left"
     pos: "adverb"
   - lemma: "праворуч"
-    ipa: '[prɑˈʋɔrut͡ʃ]'
     translation: "to the right (synonym)"
     pos: "adverb"
   - lemma: "ліворуч"
-    ipa: '[lʲiˈʋɔrut͡ʃ]'
     translation: "to the left (synonym)"
     pos: "adverb"
   - lemma: "повернути"
-    ipa: '[pɔʋɛrˈnutɪ]'
     translation: "to turn"
     pos: "verb"
     aspect: "perfective"
   - lemma: "вулиця"
-    ipa: '[ˈʋulɪt͡sʲɑ]'
     translation: "street"
     pos: "noun"
     gender: "f"
   - lemma: "площа"
-    ipa: '[ˈplɔʃt͡ʃɑ]'
     translation: "square"
     pos: "noun"
     gender: "f"
   - lemma: "перехрестя"
-    ipa: '[pɛrɛˈxrɛsʲtʲɑ]'
     translation: "intersection"
     pos: "noun"
     gender: "n"
   - lemma: "світлофор"
-    ipa: '[sʲʋʲitlɔˈfɔr]'
     translation: "traffic light"
     pos: "noun"
     gender: "m"
   - lemma: "зупинка"
-    ipa: '[zuˈpɪnkɑ]'
     translation: "stop"
     pos: "noun"
     gender: "f"
   - lemma: "квартал"
-    ipa: '[kʋɑrˈtɑl]'
     translation: "block"
     pos: "noun"
     gender: "m"
   - lemma: "міст"
-    ipa: '[mʲist]'
     translation: "bridge"
     pos: "noun"
     gender: "m"
   - lemma: "орієнтир"
-    ipa: '[ɔrʲijɛnˈtɪr]'
     translation: "landmark"
     pos: "noun"
     gender: "m"
   - lemma: "навпроти"
-    ipa: '[nɑˈʋprɔtɪ]'
     translation: "opposite"
     pos: "preposition"
   - lemma: "поруч"
-    ipa: '[ˈpɔrut͡ʃ]'
     translation: "nearby"
     pos: "adverb"
   - lemma: "маршрут"
-    ipa: '[mɑrˈʃrut]'
     translation: "route"
     pos: "noun"
     gender: "m"
   - lemma: "метро"
-    ipa: '[mɛˈtrɔ]'
     translation: "metro, subway"
     pos: "noun"
     gender: "n"
   - lemma: "пішки"
-    ipa: '[ˈpʲiʃkɪ]'
     translation: "on foot"
     pos: "adverb"
   - lemma: "перехід"
-    ipa: '[pɛrɛˈxʲid]'
     translation: "crossing"
     pos: "noun"
     gender: "m"
   - lemma: "будівля"
-    ipa: '[buˈdʲiu̯lʲɑ]'
     translation: "building"
     pos: "noun"
     gender: "f"

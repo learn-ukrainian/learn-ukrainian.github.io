@@ -244,7 +244,7 @@ In English, we often use "house" and "home" almost interchangeably. In Ukrainian
 *   **Кварти́ра** — This is an apartment or flat. Most urban Ukrainians live in a **квартира**.
 *   **Дім** — This is the general word for "home" or "house" (the building). It represents the concept of home as a sanctuary.
 
-There is a famous proverb: **«В гостях добре, а вдома краще»** [u ɦɔsʲˈtʲɑx ˈdɔbrɛ̞ ɑ ˈʋdɔmɑ ˈkrɑʃt͡ʃɛ̞]. It translates literally as "It is good as a guest, but better at home." It is the Ukrainian equivalent of "East or West, home is best."
+There is a famous proverb: **«В гостях добре, а вдома краще»**. It translates literally as "It is good as a guest, but better at home." It is the Ukrainian equivalent of "East or West, home is best."
 
 ### Покуття: The Honored Corner
 

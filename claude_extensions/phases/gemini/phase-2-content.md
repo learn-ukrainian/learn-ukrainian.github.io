@@ -35,7 +35,6 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 - **Colonial framing**: NEVER define Ukrainian by contrast with Russian (hard fail)
 - **Russianisms**: banned words — кушати, приймати участь, получати, самий кращий, слідуючий (hard fail)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear (hard fail)
-- **IPA vowels**: Ukrainian о = [ɔ] always, е = [ɛ] always, ч = [t͡ʃ] with tie-bar
 - **Euphony**: і/й, у/в, з/із alternation (auto-fixable but better to write correctly)
 - **Engagement callouts**: {ENGAGEMENT_MIN}+ using counted types ([!tip], [!warning], [!quote], [!myth-buster], [!culture], [!fact], [!context], [!reflection], [!note])
 - **Duplicate headers**: no two H2s sharing the same keyword (e.g., two headers containing «спадщина»)
@@ -286,9 +285,9 @@ Key: й can ONLY follow a vowel. After a consonant, always use і — even befor
 
 ### Pronunciation (HARD FAIL if Latin transliteration found)
 
-**Level-gated pronunciation rules:**
-- **A1–A2**: Use **stress marks** (мі́сто, not [ˈmʲistɔ]) for pronunciation hints on the first occurrence of new vocabulary words. Do NOT use inline IPA `[...]` in prose content — IPA is generated deterministically in vocabulary YAML by our tooling.
-- **B1+**: No pronunciation annotations in content. IPA lives in vocabulary YAML only.
+**Pronunciation rules:**
+- **A1–A2**: Use **stress marks** (мі́сто) for pronunciation hints on the first occurrence of new vocabulary words.
+- **B1+**: No pronunciation annotations in content.
 
 **Latin transliterations are BANNED at ALL levels.** Never use kh, sh, ch, zh, ts, ya, yu, ye, shch.
 
@@ -296,9 +295,6 @@ Key: й can ONLY follow a vowel. After a consonant, always use і — even befor
 ❌ WRONG (Latin transliteration):
 "Х sounds like 'kh' in Scottish 'loch'"
 "хліб (khlib)"
-
-❌ WRONG (inline IPA in A1/A2 prose):
-"**хліб** — [xlʲib]"
 
 ✅ RIGHT (stress mark + English approximation):
 "**Х**, like the «ch» in Scottish «loch»"

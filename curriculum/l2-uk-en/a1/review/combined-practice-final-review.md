@@ -12,9 +12,9 @@ Throughout the content, an em-dash (`—`) is systematically inserted after `т�
 
 ### HIGH: IPA Errors (3 instances)
 
-1. **Line 19**: `[pʲiˈtɪ nɑ ˈkɑʋu]` for "каву" — the `в` is intervocalic (а-в-у), onset of the second syllable before a vowel, so it is [v], not [w]. Correct: `[ˈkɑʋu]`.
-2. **Line 86**: `[spɔˈt͡ʃɑtku]` — affricate `ч` missing tie bar. Correct: `[spɔˈt͡ʃɑtku]`.
-3. **Line 240**: `[jɑkˈʃt͡ʃɔ]` — affricate in `щ` missing tie bar. Correct: `[jɑkˈʃt͡ʃɔ]`. (Status JSON confirms: "5 IPA issues".)
+1. **Line 19**: `` for "каву" — the `в` is intervocalic (а-в-у), onset of the second syllable before a vowel, so it is [v], not [w]. Correct: ``.
+2. **Line 86**: `` — affricate `ч` missing tie bar. Correct: ``.
+3. **Line 240**: `` — affricate in `щ` missing tie bar. Correct: ``. (Status JSON confirms: "5 IPA issues".)
 
 ### HIGH: Incorrect Euphony Rule (Line 53-54)
 
@@ -59,9 +59,9 @@ The "Додаткова практика читання" (~500 words, lines 265-
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/combined-practice.md
 ---OLD---
-**піти на каву** [pʲiˈtɪ nɑ ˈkɑʋu] (to go for coffee)
+**піти на каву** (to go for coffee)
 ---NEW---
-**піти на каву** [pʲiˈtɪ nɑ ˈkɑʋu] (to go for coffee)
+**піти на каву** (to go for coffee)
 ===FIX_END===
 
 ===FIX_START===
@@ -85,9 +85,9 @@ FILE: curriculum/l2-uk-en/a1/combined-practice.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/combined-practice.md
 ---OLD---
-**Спочатку** [spɔˈt͡ʃɑtku] is used to introduce the very first action in your sequence.
+**Спочатку** is used to introduce the very first action in your sequence.
 ---NEW---
-**Спочатку** [spɔˈt͡ʃɑtku] is used to introduce the very first action in your sequence.
+**Спочатку** is used to introduce the very first action in your sequence.
 ===FIX_END===
 
 ===FIX_START===
@@ -137,9 +137,9 @@ FILE: curriculum/l2-uk-en/a1/combined-practice.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/combined-practice.md
 ---OLD---
-we use the conditional word **якщо** [jɑkˈʃt͡ʃɔ] (if).
+we use the conditional word **якщо** (if).
 ---NEW---
-we use the conditional word **якщо** [jɑkˈʃt͡ʃɔ] (if).
+we use the conditional word **якщо** (if).
 ===FIX_END===
 
 ===FIX_START===

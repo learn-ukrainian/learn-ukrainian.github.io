@@ -1,128 +1,103 @@
 items:
   - lemma: "подобатися"
-    ipa: '[pɔˈdɔbɑtɪsʲɑ]'
     translation: "to like, to be pleasing"
     pos: "verb"
     aspect: "impf"
     notes: "Requires the Dative experiencer (Мені подобається)."
   - lemma: "вибирати"
-    ipa: '[ʋɪbɪˈrɑtɪ]'
     translation: "to choose"
     pos: "verb"
     aspect: "impf"
   - lemma: "краще"
-    ipa: '[ˈkrɑʃt͡ʃɛ]'
     translation: "better"
     pos: "adverb"
     notes: "Used as an adverb or neuter adjective. 'Краще ніж' = 'better than'."
   - lemma: "хотів би"
-    ipa: '[xɔˈtʲiu̯ bɪ]'
     translation: "would like"
     pos: "verb"
     notes: "Polite request form (male speaker). Female: хотіла би."
   - lemma: "перевага"
-    ipa: '[pɛrɛˈʋɑɦɑ]'
     translation: "preference, advantage"
     pos: "noun"
     gender: "f"
     notes: "Used in the formal phrase 'віддавати перевагу' (to prefer)."
   - lemma: "філіжанка"
-    ipa: '[fʲilʲiˈʒɑnkɑ]'
     translation: "small cup, demitasse"
     pos: "noun"
     gender: "f"
     notes: "Traditional Lviv word for a coffee cup."
   - lemma: "смак"
-    ipa: '[smɑk]'
     translation: "taste"
     pos: "noun"
     gender: "m"
   - lemma: "колір"
-    ipa: '[ˈkɔlʲir]'
     translation: "color"
     pos: "noun"
     gender: "m"
   - lemma: "товариш"
-    ipa: '[tɔˈʋɑrɪʃ]'
     translation: "friend, comrade"
     pos: "noun"
     gender: "m"
     notes: "Part of the proverb 'На колір і смак товариш не всяк'."
   - lemma: "замовити"
-    ipa: '[zɑˈmɔʋɪtɪ]'
     translation: "to order"
     pos: "verb"
     aspect: "pf"
   - lemma: "десерт"
-    ipa: '[dɛˈsɛrt]'
     translation: "dessert"
     pos: "noun"
     gender: "m"
   - lemma: "кава"
-    ipa: '[ˈkɑʋɑ]'
     translation: "coffee"
     pos: "noun"
     gender: "f"
   - lemma: "чай"
-    ipa: '[t͡ʃɑj]'
     translation: "tea"
     pos: "noun"
     gender: "m"
   - lemma: "ніж"
-    ipa: '[nʲiʒ]'
     translation: "than"
     pos: "conjunction"
     notes: "Used for comparisons (краще ніж)."
   - lemma: "більш"
-    ipa: '[bʲilʲʃ]'
     translation: "more"
     pos: "adverb"
     notes: "Used to form analytical comparatives (більш солодкий)."
   - lemma: "менш"
-    ipa: '[mɛnʃ]'
     translation: "less"
     pos: "adverb"
   - lemma: "чорний"
-    ipa: '[ˈt͡ʃɔrnɪj]'
     translation: "black"
     pos: "adjective"
   - lemma: "сірий"
-    ipa: '[ˈsʲirɪj]'
     translation: "grey"
     pos: "adjective"
   - lemma: "пальто"
-    ipa: '[pɑlʲˈtɔ]'
     translation: "coat"
     pos: "noun"
     gender: "n"
   - lemma: "куртка"
-    ipa: '[ˈkurtkɑ]'
     translation: "jacket"
     pos: "noun"
     gender: "f"
   - lemma: "книжка"
-    ipa: '[ˈknɪʒkɑ]'
     translation: "book"
     pos: "noun"
     gender: "f"
   - lemma: "місто"
-    ipa: '[ˈmʲistɔ]'
     translation: "city"
     pos: "noun"
     gender: "n"
   - lemma: "пісня"
-    ipa: '[ˈpʲisʲnʲɑ]'
     translation: "song"
     pos: "noun"
     gender: "f"
   - lemma: "любити"
-    ipa: '[lʲuˈbɪtɪ]'
     translation: "to love, to like deeply"
     pos: "verb"
     aspect: "impf"
     notes: "Uses standard Nominative-Accusative grammar, unlike подобатися."
   - lemma: "віддавати"
-    ipa: '[ʋʲidːɑˈʋɑtɪ]'
     translation: "to give, to yield"
     pos: "verb"
     aspect: "impf"

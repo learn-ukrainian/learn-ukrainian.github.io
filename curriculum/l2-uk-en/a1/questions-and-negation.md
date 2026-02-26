@@ -66,8 +66,8 @@ OR
 **Чи** + Verb + Subject?
 
 **Приклади:**
-*   **Чи ти читаєш?** [t͡ʃɪ tɪ t͡ʃɪˈtɑjɛʃ] — Do you read?
-*   **Чи це правда?** [t͡ʃɪ t͡sɛ ˈprɑu̯dɑ] — Is this true?
+*   **Чи ти читаєш?** — Do you read?
+*   **Чи це правда?** — Is this true?
 *   **Чи ви тут?** [t͡ʃɪ ʋɪ tut] — Are you here?
 *   **Чи він знає?** — Does he know?
 *   **Чи ми йдемо?** — Are we going?
@@ -130,12 +130,12 @@ Here are the essential ones you need to know now:
 1.  **Хто?** [xtɔ] — Who? (People / Animates)
 2.  **Що?** [ʃt͡ʃɔ] — What? (Things / Actions)
 3.  **Де?** [dɛ] — Where? (Location)
-4.  **Куди?** [kuˈdɪ] — Where to? (Direction)
-5.  **Звідки?** [ˈzʋʲidkɪ] — Where from? (Origin)
-6.  **Коли?** [kɔˈlɪ] — When? (Time)
+4.  **Куди?** — Where to? (Direction)
+5.  **Звідки?** — Where from? (Origin)
+6.  **Коли?** — When? (Time)
 7.  **Як?** [jɑk] — How? (Manner)
-8.  **Чому?** [t͡ʃɔˈmu] — Why? (Reason)
-9.  **Скільки?** [ˈskʲilʲkɪ] — How much/many? (Quantity)
+8.  **Чому?** — Why? (Reason)
+9.  **Скільки?** — How much/many? (Quantity)
 
 **Приклади:**
 *   **Хто це?** — Who is this?

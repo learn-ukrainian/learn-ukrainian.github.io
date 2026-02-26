@@ -100,7 +100,6 @@ Plan your research and outline knowing that Phase B content must pass these gate
 - **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
 - **Engagement callouts**: map 6+ hooks to specific sections during research (not as afterthought patches)
 - **Duplicate headers**: ensure outline section names don't share keywords
-- **IPA vowels**: if research includes pronunciation, use correct IPA: о = [ɔ], е = [ɛ], ч = [t͡ʃ]
 
 ---
 

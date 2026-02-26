@@ -190,7 +190,7 @@ When the weather is nice, we talk about the sun and clouds.
 *   **Ві́тер** — Wind
 
 **Active Verbs:**
-*   **Світить сонце.** [ˈsʋʲitɪtʲ] — The sun is shining.
+*   **Світить сонце.** — The sun is shining.
 *   **Дме вітер.** [dmɛ] — The wind is blowing.
 
 **Static Descriptions (Adverbs):**
@@ -288,25 +288,25 @@ The cycle of the year defines the rhythm of life. Let's learn the four seasons a
 
 Unlike English, where "winter" is a noun that needs a preposition "in" to become an adverbial phrase, Ukrainian has specific single words for "in winter", "in summer", etc. These are fossilized forms that you must memorize.
 
-**1. Зима** [zɪˈmɑ] — Winter
+**1. Зима** — Winter
 *   **Коли?** (When?): **Взи́мку** — In winter
 *   *Association:* Cold, snow, holidays.
 *   *Example:* **Взимку холодно і йде сніг.**
 *   *Description:* Взимку ми святкуємо Різдво. Усі дерева білі. Ми носимо шапки і шарфи.
 
-**2. Весна** [ʋɛsˈnɑ] — Spring
+**2. Весна** — Spring
 *   **Коли?** (When?): **Навесні́** — In spring
 *   *Association:* Flowers, green grass, warming up.
 *   *Example:* **Навесні тепло і світить сонце.**
 *   *Description:* Навесні природа прокидається. З'являються перші квіти. Птахи співають пісні.
 
-**3. Літо** [ˈlʲitɔ] — Summer
+**3. Літо** — Summer
 *   **Коли?** (When?): **Влі́тку** — In summer
 *   *Association:* Holidays, sea, sun, heat.
 *   *Example:* **Влітку спекотно.**
 *   *Description:* Влітку у школі канікули. Люди їдуть на море або в гори. Дні дуже довгі, а ночі короткі.
 
-**4. Осінь** [ˈɔsʲinʲ] — Autumn
+**4. Осінь** — Autumn
 *   **Коли?** (When?): **Восени́** — In autumn
 *   *Association:* Yellow leaves, rain, school starts.
 *   *Example:* **Восени хмарно і йде дощ.**

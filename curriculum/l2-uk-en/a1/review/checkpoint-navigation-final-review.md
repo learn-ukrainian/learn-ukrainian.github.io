@@ -18,28 +18,28 @@ Good. Status confirms 2529 words (above 2000 target) and an IPA warning flagged 
 
 **Issue 3: IPA wrong for "її" (MODERATE)**
 - **File:** `checkpoint-navigation.md`, line 212
-- **Text:** `**її** [jiˈji]`
-- **Problem:** "Її" is і + ї = [iˈji]. The transcription [jiˈji] adds a spurious [j] before the initial "і", making it sound like "її" (two ї letters). Standard citation form is [iˈji].
+- **Text:** `**її**`
+- **Problem:** "Її" is і + ї =. The transcription adds a spurious [j] before the initial "і", making it sound like "її" (two ї letters). Standard citation form is.
 
 **Issue 4: IPA garbled for "гривні" (MODERATE)**
 - **File:** `checkpoint-navigation.md`, line 156
 - **Text:** `**Три гривні** [ɦrɪu̯n⁽ʲ⁾i]`
-- **Problem:** Missing stress mark. Palatalization of н before і is mandatory, not optional (⁽ʲ⁾). Should be [ˈɦrɪu̯nʲi].
+- **Problem:** Missing stress mark. Palatalization of н before і is mandatory, not optional (⁽ʲ⁾). Should be.
 
 **Issue 5: IPA wrong vowel + missing stress for "прямо" (MINOR)**
 - **File:** `checkpoint-navigation.md`, line 260
 - **Text:** `**Прямо** [prʲɑmɔ]`
-- **Problem:** After palatalized р, the vowel represented by "я" is [a] not [ɑ]. Also missing stress mark. Should be [ˈprʲamɔ].
+- **Problem:** After palatalized р, the vowel represented by "я" is [a] not [ɑ]. Also missing stress mark. Should be.
 
 **Issue 6: IPA missing stress for "часу" (MINOR)**
 - **File:** `checkpoint-navigation.md`, line 140
 - **Text:** `**Немає часу** [t͡ʃɑsu]`
-- **Problem:** Missing stress mark. Should be [t͡ʃɑˈsu].
+- **Problem:** Missing stress mark. Should be.
 
 **Issue 7: IPA optional palatalization on mandatory contexts (MINOR)**
 - **File:** `checkpoint-navigation.md`, lines 121-122
 - **Text:** `**у школі** [ʃkɔl⁽ʲ⁾i]` and `**у місті** [m⁽ʲ⁾isʲt⁽ʲ⁾i]`
-- **Problem:** л before і and м before і are mandatory palatalizations in Ukrainian, not optional. Also missing stress marks. Should be [ʃkɔˈlʲi] and [ˈmʲistʲi].
+- **Problem:** л before і and м before і are mandatory palatalizations in Ukrainian, not optional. Also missing stress marks. Should be and.
 
 **Issue 8: Quiz explanation contradicts itself (MODERATE)**
 - **File:** `checkpoint-navigation.yaml`, line 68
@@ -90,9 +90,9 @@ When speaking to strangers or in polite situations (which is most of navigation!
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
 ---OLD---
-**його** [jɔˈɦɔ] (his) and **її** [jiˈji] (her) **do not change**.
+**його** (his) and **її** (her) **do not change**.
 ---NEW---
-**його** [jɔˈɦɔ] (his) and **її** [iˈji] (her) **do not change**.
+**його** (his) and **її** (her) **do not change**.
 ===FIX_END===
 
 ===FIX_START===
@@ -100,7 +100,7 @@ FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
 ---OLD---
 *   **Три гривні** [ɦrɪu̯n⁽ʲ⁾i].
 ---NEW---
-*   **Три гривні** [ˈɦrɪu̯nʲi].
+*   **Три гривні**.
 ===FIX_END===
 
 ===FIX_START===
@@ -108,7 +108,7 @@ FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
 ---OLD---
 *   **Прямо** [prʲɑmɔ] — Straight. Go straight ahead.
 ---NEW---
-*   **Прямо** [ˈprʲamɔ] — Straight. Go straight ahead.
+*   **Прямо** — Straight. Go straight ahead.
 ===FIX_END===
 
 ===FIX_START===
@@ -116,7 +116,7 @@ FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
 ---OLD---
 **Немає часу** [t͡ʃɑsu]. (There is no time.)
 ---NEW---
-**Немає часу** [t͡ʃɑˈsu]. (There is no time.)
+**Немає часу**. (There is no time.)
 ===FIX_END===
 
 ===FIX_START===
@@ -125,8 +125,8 @@ FILE: curriculum/l2-uk-en/a1/checkpoint-navigation.md
 *   школа → **у школі** [ʃkɔl⁽ʲ⁾i].
 *   місто → **у місті** [m⁽ʲ⁾isʲt⁽ʲ⁾i].
 ---NEW---
-*   школа → **у школі** [ʃkɔˈlʲi].
-*   місто → **у місті** [ˈmʲistʲi].
+*   школа → **у школі**.
+*   місто → **у місті**.
 ===FIX_END===
 
 ===FIX_START===

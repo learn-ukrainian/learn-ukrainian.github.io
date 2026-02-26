@@ -14,7 +14,7 @@ Related: a2-04, a2-07
 ## Вступ: Без прийменника «з»
 
 ### Що таке знаряддя і засіб дії?
-Ми постійно робимо фізичні або інтелектуальні дії в житті. При цьому ми майже завжди вказуємо об'єкт, метод або систему. В англійській граматиці ми часто використовуємо прийменники. Вони показують цей зв'язок між дієсловом і об'єктом. Ми природно кажемо "I am writing *with* a new pen" або "We are traveling *by* a fast train". Прийменники "with", "by" роблять граматичну роботу.
+When we do something, we often use a tool or a mode of transport. In English, we use prepositions to show this connection. We naturally say "I am writing *with* a new pen" or "We are traveling *by* a fast train". The prepositions "with" and "by" do the grammatical work.
 
 Українська граматика працює зовсім інакше. Вона використовує систему відмінків. Instrumental case — це головний граматичний маркер для «знаряддя і засобу дії». Це означає, що саме закінчення слова містить значення "за допомогою" або "використовуючи". Вам абсолютно не потрібен додатковий прийменник між дієсловом та інструментом. Слово просто змінює своє закінчення залежно від роду, і значення стає зрозумілим для носія мови.
 
@@ -41,7 +41,7 @@ Notice how in every Ukrainian example, the tool (ручкою, олівцями,
 ### Українська логіка: Інструмент як продовження руки
 Щоб ваш мозок перестав автоматично шукати слово "with", корисно прийняти українську концепцію. Коли українець бере інструмент, граматично він ставиться до нього як до органічного продовження свого тіла.
 
-Оскільки інструмент стає частиною дії, прийменник **з** між дієсловом та інструментом звучить неприродно. Він створює штучну дистанцію. Закінчення Instrumental case плавно поєднує об'єкт із дією. Коли ви кажете «Я пишу ручкою», ручка граматично стає частиною вашої руки. Розуміння цього підходу допомагає зрозуміти, чому Instrumental case без прийменника є таким важливим.
+Оскільки інструмент стає частиною дії, прийменник **з** між дієсловом та інструментом звучить неприродно. Закінчення Instrumental case плавно поєднує об'єкт із дією. Коли ви кажете «Я пишу ручкою», ручка граматично стає частиною вашої руки.
 
 ## Транспорт і рух
 
@@ -63,7 +63,7 @@ Notice how in every Ukrainian example, the tool (ручкою, олівцями,
 *   Вони дісталися до історичного центру міста своєю машиною. (They reached the historical city center by their car.)
 
 ### Українська залізниця: Нічний поїзд
-To truly understand Ukrainian travel habits and the language that surrounds them, you must understand the deep cultural significance of the national railway system («Укрзалізниця»). For decades, the primary, most reliable, and most romanticized method of traversing the vast geographic distances of Ukraine has been the **нічний поїзд** (night train).
+Trains are a huge part of Ukrainian culture. Because the country is large, the **нічний поїзд** (night train) is a classic, practical, and romantic way to travel.
 
 Подорож поїздом в Україні — це не просто рух, це культурна традиція. Люди ділять купе з незнайомцями, п'ють гарячий чорний чай, діляться їжею та довго розмовляють вночі. Граматично ми використовуємо Instrumental case, щоб описати цю подорож.
 
@@ -92,7 +92,7 @@ To truly understand Ukrainian travel habits and the language that surrounds them
 > When navigating a busy metropolis like Kyiv, Kharkiv, or Dnipro, simply say «Я їду метро». It is grammatically flawless, perfectly natural, and significantly easier for your brain than trying to remember and apply a complex ending! Embrace the indeclinable words as a grammatical break.
 
 ### Діалог на вокзалі: Як ви подорожуєте?
-Let's analyze how native speakers naturally use these varied transportation forms in a realistic, everyday conversation. Imagine you are meeting a good friend at the bustling central railway station in Kyiv. Pay close attention to how the triggering question **Чим?** immediately prompts the prepositionless Instrumental case in the responses.
+Let's see how native speakers use this in a real conversation. Imagine meeting a friend at the Kyiv railway station. Notice how the question **Чим?** (With what? / How?) is answered using the Instrumental case without any prepositions.
 
 **Діалог:**
 — Привіт, Олено! Радий тебе бачити. Як ти дісталася до Києва? Чим ти подорожувала?
@@ -123,7 +123,7 @@ Let's analyze how native speakers naturally use these varied transportation form
 ### М'яка група: Особлива увага до «олівець»
 Коли ви використовуєте Instrumental case, ви повинні пам'ятати правила про тверді та м'які групи. Instrumental case має різні закінчення для слів, які закінчуються на твердий або м'який приголосний.
 
-This phonetic distinction is absolutely critical for the highly frequent word **олівець** (pencil). In the Ukrainian phonetic system, the letter **ц** functions as a soft/mixed consonant within this specific declension paradigm. Therefore, masculine nouns ending in **-ц** absolutely do not take the standard, default hard ending **-ом**. Instead, they must take the soft/mixed ending **-ем**. A very common and immediately noticeable learner error is trying to say *олівецом*. You must actively train your tongue and muscle memory to produce **олівцем**.
+Pay special attention to the word **олівець** (pencil). Because it ends in **-ц**, it takes the soft/mixed ending **-ем**, not the hard ending *-ом*. A common mistake is saying *олівецом*, but the correct form is **олівцем**.
 
 **Аналіз утворення форми:**
 1.  Base dictionary word: **олівець**
@@ -140,9 +140,9 @@ This phonetic distinction is absolutely critical for the highly frequent word **
 > Many English-speaking learners assume that because the letter "ц" looks structurally like a hard letter, it should automatically take hard endings. This is false. In the intricate Ukrainian declension system, words ending in the suffix "-ець" almost universally take soft-type endings in the Instrumental case. Always confidently use "-ем" for these nouns.
 
 ### Кухонне приладдя та їжа в дорозі
-Let us return conceptually to our rich cultural context of traveling on the Ukrainian railway. When you embark on a long journey on a classic night train, sharing your food with your compartment neighbors is a deeply ingrained, almost mandatory social expectation. Travelers meticulously prepare and bring roasted chicken, hard-boiled eggs, fresh seasonal vegetables, and dark bread.
+Let's go back to the night train. People often share food on long trips — roasted chicken, boiled eggs, fresh vegetables, and dark bread.
 
-To properly eat and share this communal food, you naturally need utensils. Kitchen implements (кухонне приладдя) are classic, foundational examples of daily tools, and thus they perfectly demonstrate the mechanics of the Instrumental case in a highly practical, conversational setting. Notice carefully how the feminine nouns seamlessly take the **-ою** ending, while the masculine noun takes **-ем** (because the letter **ж** is classified as a mixed consonant, triggering the same rule as "ц").
+To eat this food, you need utensils (кухонне приладдя). Kitchen tools are perfect examples for the Instrumental case. Notice how feminine nouns take the **-ою** ending, while the masculine noun «ніж» takes **-ем** (because the letter **ж** is classified as a mixed consonant, just like "ц").
 
 **Словник кухонних знарядь:**
 *   **ніж** (knife, mixed masc.) → різати свіжий хліб ножем (to cut fresh bread with a knife)
@@ -190,7 +190,7 @@ However, if you specifically want to know the *physical means*, the *vehicle*, o
 > By pausing for a moment to consciously ask yourself "Am I describing the abstract quality of the action, or the physical tool used?", you will always instinctively know whether to deploy an adverb or to decline a noun into the Instrumental case.
 
 ### Частини тіла як інструменти
-One of the most poetic, structurally fascinating, and distinctly native-sounding uses of the Instrumental case of means occurs when we apply it directly to our own physical bodies. In the deep logic of Ukrainian grammar, body parts that are actively used to perceive the outside world or to perform basic physical actions are treated conceptually exactly as tools.
+In Ukrainian, we even treat our own body parts as tools. When you look, listen, or point, you are grammatically using your eyes, ears, and hands as instruments.
 
 When you look at a painting, listen to music, or point at a map, you are linguistically using your eyes, ears, and hands as literal instruments. Since humans usually utilize both eyes and both ears simultaneously, these specific forms frequently and naturally appear in the plural Instrumental case, uniformly ending in **-ами**.
 
@@ -209,7 +209,7 @@ When you look at a painting, listen to music, or point at a map, you are linguis
 > Classic Ukrainian literature heavily utilizes this grammatical structure to emphasize deep, visceral sensory experiences. Reading a sentence like "Вона довго дивилася на нього сумними очима" (She looked at him for a long time with sad eyes) feels infinitely more organic and emotionally resonant in Ukrainian than using a clumsy preposition. The eyes themselves grammatically become the pure instrument of the expressed emotion.
 
 ### Важливі дієслова: Користуватися та Дістатися
-While many standard action verbs *can* theoretically take an Instrumental object if a physical tool is incidentally involved in the scenario (like the verbs *писати* or *їсти*), certain highly frequent, core vocabulary verbs strictly and uncompromisingly *demand* the Instrumental case to complete their basic semantic meaning. Memorizing these specific verb collocations early on is a massive, highly effective shortcut to achieving natural fluency.
+Some verbs don't just *allow* the Instrumental case — they *require* it. Memorizing these common verbs is a great shortcut to sounding natural.
 
 The two absolute most important and frequently used verbs for this specific grammatical module are **користуватися** (to actively use) and **дістатися** (to successfully reach / to get to a final destination).
 
@@ -243,11 +243,11 @@ This conceptually simple, everyday story perfectly demonstrates just how foundat
 Прийменник «з» використовується тільки для компанії (робити щось *разом* з іншими людьми). Чисте закінчення Instrumental case чудово показує механізм дії. Інструмент стає інтегрованою частиною дії.
 
 ### Погляд у майбутнє
-Ви вже успішно опанували найбільш практичне та буквальне використання Instrumental case. Тепер ви знаєте, як говорити про фізичні інструменти. Також ви знаєте, як говорити про транспорт. Але його велика граматична сила виходить далеко за межі цих простих прикладів.
+Ви вже знаєте, як говорити про інструменти та транспорт. Але це ще не все!
 
-У наступному модулі (a2-06) ми значно розширимо цю концепцію. Ми будемо досліджувати, як Instrumental case використовується для визначення того, *ким* ми є та *ким* ми стаємо. Зокрема, ми зосередимося на професіях та тимчасових станах. Ви часто говорите про свою роботу. Ви говорите, ким ви хочете бути. Тут ви знову будете використовувати цей відмінок. 
+У наступному модулі (a2-06) ми дізнаємося, як Instrumental case використовується для професій. Ви говорите про свою роботу або про те, ким хочете бути? Тоді ви знову будете використовувати цей відмінок. 
 
-Після цього абстрактного кроку, у модулі a2-07, ми дізнаємося, як багатогранний Instrumental case активно взаємодіє з новим набором просторових прийменників. Ви навчитеся дуже точно описувати об'єкти. Вони розташовані «під», «над» та «за» іншими об'єктами. Це дозволить вам вільно говорити про простір. Ви зможете описувати речі у кімнаті або на вулиці.
+А в модулі a2-07 ми побачимо, як Instrumental case працює з просторовими прийменниками («під», «над», «за»), щоб описувати, де знаходяться речі.
 
 ---
 

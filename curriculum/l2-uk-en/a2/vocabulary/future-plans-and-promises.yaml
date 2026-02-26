@@ -1,85 +1,70 @@
 items:
   - lemma: "обіцянка"
-    ipa: '[ɔbʲiˈt͡sʲɑnkɑ]'
     translation: "promise"
     pos: "noun"
     gender: "f"
   - lemma: "слово"
-    ipa: '[ˈslɔʋɔ]'
     translation: "word"
     pos: "noun"
     gender: "n"
     notes: "Part of the phrase 'тримати слово' (to keep one's word)"
   - lemma: "буду"
-    ipa: '[ˈbudu]'
     translation: "I will be"
     pos: "verb"
     aspect: "imperfective"
     notes: "Auxiliary verb for compound future tense"
   - lemma: "зроблю"
-    ipa: '[zrɔˈblʲu]'
     translation: "I will do, I will make"
     pos: "verb"
     aspect: "perfective"
     usage: "Simple future form of зробити"
   - lemma: "напишу"
-    ipa: '[nɑpɪˈʃu]'
     translation: "I will write"
     pos: "verb"
     aspect: "perfective"
     usage: "Simple future form of написати"
   - lemma: "скажу"
-    ipa: '[skɑˈʒu]'
     translation: "I will say, I will tell"
     pos: "verb"
     aspect: "perfective"
     usage: "Simple future form of сказати"
   - lemma: "піду"
-    ipa: '[pʲiˈdu]'
     translation: "I will go"
     pos: "verb"
     aspect: "perfective"
     usage: "Simple future form of піти"
   - lemma: "прочитаю"
-    ipa: '[prɔt͡ʃɪˈtɑju]'
     translation: "I will read (to the end)"
     pos: "verb"
     aspect: "perfective"
     usage: "Simple future form of прочитати"
   - lemma: "побачу"
-    ipa: '[pɔˈbɑt͡ʃu]'
     translation: "I will see"
     pos: "verb"
     aspect: "perfective"
     usage: "Simple future form of побачити"
   - lemma: "почую"
-    ipa: '[pɔˈt͡ʃuju]'
     translation: "I will hear"
     pos: "verb"
     aspect: "perfective"
     usage: "Simple future form of почути"
   - lemma: "візьму"
-    ipa: '[ʋʲiˈzʲmu]'
     translation: "I will take"
     pos: "verb"
     aspect: "perfective"
     usage: "Simple future form of взяти"
   - lemma: "дам"
-    ipa: '[dɑm]'
     translation: "I will give"
     pos: "verb"
     aspect: "perfective"
     usage: "Simple future form of дати"
   - lemma: "вид"
-    ipa: '[ʋɪd]'
     translation: "aspect (grammar)"
     pos: "noun"
     gender: "m"
   - lemma: "доконаний"
-    ipa: '[dɔˈkɔnɑnɪj]'
     translation: "perfective"
     pos: "adjective"
   - lemma: "недоконаний"
-    ipa: '[nɛdɔˈkɔnɑnɪj]'
     translation: "imperfective"
     pos: "adjective"

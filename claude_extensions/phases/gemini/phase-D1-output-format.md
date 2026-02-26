@@ -99,7 +99,6 @@ Plan-Content Alignment: [PASS/FAIL]
 - Content lines read: {X}
 - Activity items checked: {X}
 - Ukrainian sentences verified: {X}
-- IPA transcriptions checked: {X}
 - Factual claims verified: {X}
 - Issues found: {X}
 

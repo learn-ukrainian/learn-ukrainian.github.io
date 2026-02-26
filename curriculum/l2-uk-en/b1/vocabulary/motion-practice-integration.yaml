@@ -1,140 +1,110 @@
 items:
   - lemma: "спочатку"
-    ipa: '[spɔˈt͡ʃɑtku]'
     translation: "at first"
     pos: "adverb"
   - lemma: "потім"
-    ipa: '[ˈpɔtʲim]'
     translation: "then"
     pos: "adverb"
   - lemma: "нарешті"
-    ipa: '[nɑˈrɛʃtʲi]'
     translation: "finally"
     pos: "adverb"
   - lemma: "напрямок"
-    ipa: '[ˈnɑprʲɑmɔk]'
     translation: "direction"
     pos: "noun"
     gender: "m"
   - lemma: "маршрут"
-    ipa: '[mɑrˈʃrut]'
     translation: "route"
     pos: "noun"
     gender: "m"
   - lemma: "повернути"
-    ipa: '[pɔʋɛrˈnutɪ]'
     translation: "to turn"
     pos: "verb"
     aspect: "perfective"
   - lemma: "траєкторія"
-    ipa: '[trɑjɛˈktɔrʲijɑ]'
     translation: "trajectory"
     pos: "noun"
     gender: "f"
   - lemma: "прямо"
-    ipa: '[ˈprʲɑmɔ]'
     translation: "straight"
     pos: "adverb"
   - lemma: "на розі"
-    ipa: '[nɑ ˈrɔzʲi]'
     translation: "at the corner"
     pos: "phrase"
   - lemma: "на перехресті"
-    ipa: '[nɑ pɛˈrɛxrɛsʲtʲi]'
     translation: "at the intersection"
     pos: "phrase"
   - lemma: "піднятися"
-    ipa: '[pʲiˈdʲnʲɑtɪsʲɑ]'
     translation: "to go up, ascend"
     pos: "verb"
     aspect: "perfective"
   - lemma: "спуститися"
-    ipa: '[spuˈstɪtɪsʲɑ]'
     translation: "to go down, descend"
     pos: "verb"
     aspect: "perfective"
   - lemma: "на роздоріжжі"
-    ipa: '[nɑ rɔzdɔˈrʲiʒʲːi]'
     translation: "at a crossroads"
     pos: "idiom"
   - lemma: "глухий кут"
-    ipa: '[ɦluˈxɪj kut]'
     translation: "dead end"
     pos: "idiom"
   - lemma: "фунікулер"
-    ipa: '[funʲikuˈlɛr]'
     translation: "funicular"
     pos: "noun"
     gender: "m"
   - lemma: "ліворуч"
-    ipa: '[lʲiˈʋɔrut͡ʃ]'
     translation: "to the left"
     pos: "adverb"
   - lemma: "праворуч"
-    ipa: '[prɑˈʋɔrut͡ʃ]'
     translation: "to the right"
     pos: "adverb"
   - lemma: "переходити"
-    ipa: '[pɛrɛxɔdɪtɪ]'
     translation: "to cross"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "заїхати"
-    ipa: '[zɑˈjixɑtɪ]'
     translation: "to drive in, drop by"
     pos: "verb"
     aspect: "perfective"
   - lemma: "виїхати"
-    ipa: '[ˈʋɪjixɑtɪ]'
     translation: "to drive out, depart"
     pos: "verb"
     aspect: "perfective"
   - lemma: "сісти на"
-    ipa: '[ˈsʲistɪ nɑ]'
     translation: "to get on (transport)"
     pos: "phrase"
   - lemma: "їхати"
-    ipa: '[ˈjixɑtɪ]'
     translation: "to go by vehicle"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "іти"
-    ipa: '[iˈtɪ]'
     translation: "to go by foot"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "Чумацький Шлях"
-    ipa: '[t͡ʃuˈmɑt͡sʲkɪj ʃlʲɑx]'
     translation: "Milky Way"
     pos: "proper noun"
     gender: "m"
   - lemma: "статика"
-    ipa: '[ˈstɑtɪkɑ]'
     translation: "statics, state of rest"
     pos: "noun"
     gender: "f"
   - lemma: "динаміка"
-    ipa: '[dɪˈnɑmʲikɑ]'
     translation: "dynamics, motion"
     pos: "noun"
     gender: "f"
   - lemma: "Знахідний відмінок"
-    ipa: '[znɑˈxʲidnɪj ʋʲiˈdʲmʲinɔk]'
     translation: "Accusative case"
     pos: "noun"
     gender: "m"
   - lemma: "Місцевий відмінок"
-    ipa: '[mʲiˈst͡sɛʋɪj ʋʲiˈdʲmʲinɔk]'
     translation: "Locative case"
     pos: "noun"
     gender: "m"
   - lemma: "Родовий відмінок"
-    ipa: '[rɔˈdɔˈʋɪj ʋʲiˈdʲmʲinɔk]'
     translation: "Genitive case"
     pos: "noun"
     gender: "m"
   - lemma: "Орудний відмінок"
-    ipa: '[ɔˈrudnɪj ʋʲiˈdʲmʲinɔk]'
     translation: "Instrumental case"
     pos: "noun"
     gender: "m"

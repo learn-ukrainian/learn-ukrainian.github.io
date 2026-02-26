@@ -1,0 +1,27 @@
+{
+  "track": "b2",
+  "slug": "b2-checkpoint",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T10:05:15Z",
+      "task_id": "v3-b2-checkpoint-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T10:15:08Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T10:19:16Z",
+      "task_id": "v3-b2-checkpoint-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T10:23:27Z",
+      "attempts": 2
+    }
+  }
+}

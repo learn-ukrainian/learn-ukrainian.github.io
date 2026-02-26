@@ -1,114 +1,89 @@
 items:
   - lemma: "перемир'я"
-    ipa: '[pɛrɛˈmɪrjɑ]'
     translation: "truce"
     pos: "noun"
     notes: "often framed by Ukrainians as Андрусівська змова (Andrusovo Conspiracy)"
   - lemma: "демаркація"
-    ipa: '[dɛmɑrˈkɑt͡sʲijɑ]'
     translation: "demarcation"
     pos: "noun"
     notes: "establishing the Dnipro border"
   - lemma: "кондомініум"
-    ipa: '[kɔndɔˈmʲinʲium]'
     translation: "condominium"
     pos: "noun"
     notes: "joint control over Zaporizhzhia"
   - lemma: "розкол"
-    ipa: '[rɔˈzkɔl]'
     translation: "split / schism"
     pos: "noun"
     notes: "political and social division of the Hetmanate"
   - lemma: "сепаратний"
-    ipa: '[sɛpɑˈrɑtnɪj]'
     translation: "separate"
     pos: "adjective"
     notes: "as in сепаратний мир (separate peace) concluded behind ally's back"
   - lemma: "статус-кво"
-    ipa: '[ˈstɑtus-kʋɔ]'
     translation: "status quo"
     pos: "noun"
     notes: "attempt to freeze the conflict"
   - lemma: "депортація"
-    ipa: '[dɛpɔrˈtɑt͡sʲijɑ]'
     translation: "deportation"
     pos: "noun"
     notes: "forced movement of populations"
   - lemma: "біженець"
-    ipa: '[ˈbʲiʒɛnɛt͡sʲ]'
     translation: "refugee"
     pos: "noun"
     notes: "fleeing the Ruin"
   - lemma: "змова"
-    ipa: '[ˈzmɔʋɑ]'
     translation: "conspiracy"
     pos: "noun"
     notes: "secret agreement against Ukraine"
   - lemma: "руйнація"
-    ipa: '[rujˈnɑt͡sʲijɑ]'
     translation: "ruin / destruction"
     pos: "noun"
     notes: "the period triggered by this treaty"
   - lemma: "тогобочний"
-    ipa: '[tɔɦɔbɔt͡ʃnɪj]'
     translation: "from the other side"
     pos: "adjective"
     notes: "term for Ukrainians across the river"
   - lemma: "свавільний"
-    ipa: '[sʋɑˈʋʲilʲnɪj]'
     translation: "unruly / arbitrary"
     pos: "adjective"
     notes: "imperial label for Cossacks in the treaty"
   - lemma: "ампутація"
-    ipa: '[ɑmpuˈtɑt͡sʲijɑ]'
     translation: "amputation"
     pos: "noun"
     notes: "metaphor for the territorial loss"
   - lemma: "виснаження"
-    ipa: '[ˈʋɪsnɑʒɛnʲːɑ]'
     translation: "exhaustion"
     pos: "noun"
   - lemma: "прозріння"
-    ipa: '[prɔˈzʲrʲinʲːɑ]'
     translation: "epiphany / realization"
     pos: "noun"
   - lemma: "суб'єктність"
-    ipa: '[suˈbjɛktʲnʲisʲtʲ]'
     translation: "agency / subjectivity"
     pos: "noun"
   - lemma: "окупація"
-    ipa: '[ɔkuˈpɑt͡sʲijɑ]'
     translation: "occupation"
     pos: "noun"
   - lemma: "буферний"
-    ipa: '[ˈbufɛrnɪj]'
     translation: "buffer"
     pos: "adjective"
   - lemma: "експансія"
-    ipa: '[ɛˈkspɑnʲsʲijɑ]'
     translation: "expansion"
     pos: "noun"
   - lemma: "асиміляція"
-    ipa: '[ɑsɪmʲiˈlʲɑt͡sʲijɑ]'
     translation: "assimilation"
     pos: "noun"
   - lemma: "універсал"
-    ipa: '[unʲiʋɛrˈsɑl]'
     translation: "decree / manifesto"
     pos: "noun"
   - lemma: "повстання"
-    ipa: '[pɔˈʋstɑnʲːɑ]'
     translation: "rebellion / uprising"
     pos: "noun"
   - lemma: "автокефалія"
-    ipa: '[ɑu̯tɔkɛˈfɑlʲijɑ]'
     translation: "autocephaly"
     pos: "noun"
   - lemma: "легітимність"
-    ipa: '[lɛɦʲiˈtɪmnʲisʲtʲ]'
     translation: "legitimacy"
     pos: "noun"
   - lemma: "суверенітет"
-    ipa: '[suʋɛrɛnʲiˈtɛt]'
     translation: "sovereignty"
     pos: "noun"

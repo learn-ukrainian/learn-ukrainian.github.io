@@ -66,6 +66,7 @@ Rules: **WAIT for user instructions.** Do NOT auto-start work, check inbox, or p
 
 *   **Word Count** (from `config.py` v2026-02-15): A1: 2000, A2: 3000, B1+: 4000, Seminars (B2-HIST/C1-BIO/C1-HIST/LIT/C2/OES/RUTH): 5000. If this date is older than config.py's latest change, re-read config.py.
 *   **Activity Density**: A1-B1: ~8-10 activities/12 items; Seminar tracks: 3-9 activities/1+ items for deep analysis.
+*   **Activities Test LANGUAGE, Not Content**: Can the learner answer without reading the Ukrainian text? If YES → it tests content recall, not language. REWRITE. No "У якому році..." / "Хто був..." / "Скільки..." quiz questions. Use "Згідно з текстом..." / "У тексті автор характеризує..." instead.
 *   **Audit Compliance**: Pass `audit_module.py` and `pipeline.py` gates.
 *   **Word Targets are MINIMUMS**: NEVER reduce `word_target` to match short content. Expand content to meet targets.
 

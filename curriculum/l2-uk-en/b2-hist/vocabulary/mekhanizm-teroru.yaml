@@ -1,126 +1,101 @@
 items:
   - lemma: "терор"
-    ipa: '[tɛˈrɔr]'
     translation: "terror"
     pos: "noun"
     gender: "m"
   - lemma: "репресії"
-    ipa: '[rɛˈprɛsʲiji]'
     translation: "repressions"
     pos: "noun"
   - lemma: "НКВС"
-    ipa: '[nkʍs]'
     translation: "NKVD"
     pos: "noun"
     notes: "People's Commissariat for Internal Affairs"
   - lemma: "розстріл"
-    ipa: '[ˈrɔzstʲrʲil]'
     translation: "execution by shooting"
     pos: "noun"
     gender: "m"
   - lemma: "табір"
-    ipa: '[ˈtɑbʲir]'
     translation: "camp"
     pos: "noun"
     gender: "m"
   - lemma: "засуджений"
-    ipa: '[zɑˈsud͡ʒɛnɪj]'
     translation: "condemned"
     pos: "noun"
     gender: "m"
   - lemma: "архів"
-    ipa: '[ɑrˈxʲiu̯]'
     translation: "archive"
     pos: "noun"
     gender: "m"
   - lemma: "геноцид"
-    ipa: '[ɦɛnɔˈt͡sɪd]'
     translation: "genocide"
     pos: "noun"
     gender: "m"
   - lemma: "трійка"
-    ipa: '[ˈtʲrʲijkɑ]'
     translation: "troika"
     pos: "noun"
     gender: "f"
     notes: "extrajudicial organ of three officials"
   - lemma: "катування"
-    ipa: '[kɑtuˈʋɑnʲːɑ]'
     translation: "torture"
     pos: "noun"
     gender: "n"
   - lemma: "зізнання"
-    ipa: '[zʲiˈznɑnʲːɑ]'
     translation: "confession"
     pos: "noun"
     gender: "n"
   - lemma: "справа"
-    ipa: '[ˈsprɑʋɑ]'
     translation: "case / file"
     pos: "noun"
     gender: "f"
   - lemma: "реабілітація"
-    ipa: '[rɛɑbʲilʲiˈtɑt͡sʲijɑ]'
     translation: "rehabilitation"
     pos: "noun"
     gender: "f"
   - lemma: "меморіал"
-    ipa: '[mɛmɔrʲiˈɑl]'
     translation: "memorial"
     pos: "noun"
     gender: "m"
   - lemma: "конвеєр"
-    ipa: '[kɔnˈʋɛjɛr]'
     translation: "conveyor"
     pos: "noun"
     gender: "m"
     notes: "continuous interrogation method"
   - lemma: "ліміт"
-    ipa: '[lʲiˈmʲit]'
     translation: "limit / quota"
     pos: "noun"
     gender: "m"
   - lemma: "куркуль"
-    ipa: '[kurˈkulʲ]'
     translation: "kulak"
     pos: "noun"
     gender: "m"
   - lemma: "слідчий"
-    ipa: '[ˈsʲlʲid͡ʒt͡ʃɪj]'
     translation: "investigator"
     pos: "noun"
     gender: "m"
   - lemma: "тортури"
-    ipa: '[tɔrˈturɪ]'
     translation: "tortures"
     pos: "noun"
   - lemma: "вирок"
-    ipa: '[ʋɪrɔk]'
     translation: "sentence / verdict"
     pos: "noun"
     gender: "m"
   - lemma: "кат"
-    ipa: '[kɑt]'
     translation: "executioner"
     pos: "noun"
     gender: "m"
   - lemma: "інтелігенція"
-    ipa: '[intɛlʲiˈɦɛnʲt͡sʲijɑ]'
     translation: "intelligentsia"
     pos: "noun"
     gender: "f"
   - lemma: "в'язень"
-    ipa: '[ˈʋjɑzɛnʲ]'
     translation: "prisoner"
     pos: "noun"
     gender: "m"
   - lemma: "допит"
-    ipa: '[ˈdɔpɪt]'
     translation: "interrogation"
     pos: "noun"
     gender: "m"
   - lemma: "знищення"
-    ipa: '[ˈznɪʃt͡ʃɛnʲːɑ]'
     translation: "destruction / annihilation"
     pos: "noun"
     gender: "n"

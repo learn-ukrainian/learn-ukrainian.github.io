@@ -51,7 +51,7 @@ File: `holidays-and-traditions.md`, line 116
 
 ### Checks Passed (No Issues)
 
-- **IPA accuracy**: Tie bars present on affricates ([ˈʃt͡ʃɑstʲɐ]), ʋ used for В ([lʲuˈbɔʋʲi]), all IPA correct
+- **IPA accuracy**: Tie bars present on affricates (), ʋ used for В (), all IPA correct
 - **No Russian characters** (ы, э, ё, ъ): clean scan
 - **No other Russianisms**: "дивляться телевізор" ✓, "святкувати" ✓, "дарувати" ✓
 - **Gender/case agreement**: all checked, correct (including "твоїй родині" Dat.fem ✓)

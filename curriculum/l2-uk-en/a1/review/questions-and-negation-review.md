@@ -42,11 +42,11 @@ Additionally, the explanation text is copied verbatim 7 times: «Запереч�
 
 **Location:** Content line 170, Vocabulary line 50
 
-Content: «**за́вжди́**» — two accent marks on one word. Ukrainian words carry a single primary stress. Standard pronunciation: завжди́ [zɑˈʋʒdɪ] (stress on final syllable).
+Content: «**за́вжди́**» — two accent marks on one word. Ukrainian words carry a single primary stress. Standard pronunciation: завжди́ (stress on final syllable).
 
-Vocabulary: `[ˈzɑˈʋʒdɪ]` — two primary stress markers, which is phonologically impossible. Should be `[zɑˈʋʒdɪ]`.
+Vocabulary: `` — two primary stress markers, which is phonologically impossible. Should be ``.
 
-**Fix:** Content: change `за́вжди́` to `завжди́`. Vocabulary: change `[ˈzɑˈʋʒdɪ]` to `[zɑˈʋʒdɪ]`.
+**Fix:** Content: change `за́вжди́` to `завжди́`. Vocabulary: change `` to ``.
 
 ### Issue 3 (MEDIUM) — "шо" mislabeled as "lazy pronunciation"
 
@@ -91,12 +91,12 @@ Section «Граматика: Як будувати питання» introduces 
 
 **Location:** Content line 134 vs Vocabulary line 86; Content line 138 vs Vocabulary line 42
 
-- **звідки**: Content `[ˈzʋʲidkɪ]` vs Vocabulary `[ˈzʲʋʲidkɪ]` — the з palatalization differs
-- **скільки**: Content `[ˈskʲilʲkɪ]` vs Vocabulary `[ˈsʲkʲilʲkɪ]` — the с palatalization differs
+- **звідки**: Content `` vs Vocabulary `` — the з palatalization differs
+- **скільки**: Content `` vs Vocabulary `` — the с palatalization differs
 
 Content and vocabulary should be consistent. The content versions (without regressive palatalization on the initial consonant) are more standard.
 
-**Fix:** Align vocabulary IPA to match content: `[ˈzʋʲidkɪ]` for звідки, `[ˈskʲilʲkɪ]` for скільки.
+**Fix:** Align vocabulary IPA to match content: `` for звідки, `` for скільки.
 
 ### Issue 8 (LOW) — Frequency adverbs taught but not practiced in activities
 

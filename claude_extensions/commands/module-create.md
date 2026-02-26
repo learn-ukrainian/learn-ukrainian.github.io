@@ -1,3 +1,7 @@
+---
+argument-hint: "{level} {module_num}"
+---
+
 # Module Create (Full Pipeline)
 
 > **🤝 COLLABORATION RULE:** Write content yourself. Ask the other agent for help (research, facts, validation) when stuck. Never guess or hallucinate - collaboration is faster than guessing wrong.
@@ -20,7 +24,7 @@ Create a new module OR migrate an existing module to YAML format.
 
 ## Arguments
 
-- `$ARGUMENTS` - Level and module number (e.g., `a1 15` or `b2 45`)
+- level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]` (e.g., `a1 15` or `b2 45`)
 - Batch ranges supported: `b1 2-5` creates modules 2, 3, 4, 5
 
 ---
@@ -63,7 +67,7 @@ Summary: 3/4 passed, 1 failed (b1/4)
 
 ## Single Module Mode
 
-Parse arguments: $ARGUMENTS
+Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 ### Step 0: Check if Module Exists
 

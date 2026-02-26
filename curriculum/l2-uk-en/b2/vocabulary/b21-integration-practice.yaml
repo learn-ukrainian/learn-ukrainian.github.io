@@ -1,147 +1,117 @@
 items:
   - lemma: "термін"
-    ipa: '[ˈtɛrmʲin]'
     translation: "term"
     pos: "noun"
     gender: "m"
   - lemma: "поняття"
-    ipa: '[pɔˈnʲɑtʲːɑ]'
     translation: "concept"
     pos: "noun"
     gender: "n"
   - lemma: "процес"
-    ipa: '[prɔˈt͡sɛs]'
     translation: "process"
     pos: "noun"
     gender: "m"
   - lemma: "метод"
-    ipa: '[ˈmɛtɔd]'
     translation: "method"
     pos: "noun"
     gender: "m"
   - lemma: "аналіз"
-    ipa: '[ɑˈnɑlʲiz]'
     translation: "analysis"
     pos: "noun"
     gender: "m"
   - lemma: "синтез"
-    ipa: '[ˈsɪntɛz]'
     translation: "synthesis"
     pos: "noun"
     gender: "m"
   - lemma: "дослідження"
-    ipa: '[dɔˈsʲlʲid͡ʒɛnʲːɑ]'
     translation: "research"
     pos: "noun"
     gender: "n"
   - lemma: "лінгвоцид"
-    ipa: '[lʲinɦʋɔˈt͡sɪd]'
     translation: "linguicide"
     pos: "noun"
     gender: "m"
   - lemma: "канцеляризм"
-    ipa: '[kɑnt͡sɛlʲɑˈrɪzm]'
     translation: "bureaucratic cliché"
     pos: "noun"
     gender: "m"
   - lemma: "еліпсис"
-    ipa: '[ˈɛlʲipsɪs]'
     translation: "ellipsis"
     pos: "noun"
     gender: "m"
   - lemma: "дієприкметник"
-    ipa: '[dʲijɛprɪˈkmɛtnɪk]'
     translation: "participle"
     pos: "noun"
     gender: "m"
   - lemma: "орудний"
-    ipa: '[ɔˈrudnɪj]'
     translation: "instrumental"
     pos: "adjective"
   - lemma: "безособовий"
-    ipa: '[bɛzɔsɔˈbɔʋɪj]'
     translation: "impersonal"
     pos: "adjective"
   - lemma: "агенс"
-    ipa: '[ɑɦɛns]'
     translation: "agent"
     pos: "noun"
     gender: "m"
   - lemma: "номіналізація"
-    ipa: '[nɔmʲinɑlʲizɑt͡sʲijɑ]'
     translation: "nominalization"
     pos: "noun"
     gender: "f"
   - lemma: "демістифікація"
-    ipa: '[dɛmʲistɪfʲiˈkɑt͡sʲijɑ]'
     translation: "demystification"
     pos: "noun"
     gender: "f"
   - lemma: "автентичний"
-    ipa: '[ɑu̯tɛnˈtɪt͡ʃnɪj]'
     translation: "authentic"
     pos: "adjective"
   - lemma: "органічний"
-    ipa: '[ɔrɦɑˈnʲit͡ʃnɪj]'
     translation: "organic"
     pos: "adjective"
   - lemma: "калькування"
-    ipa: '[kɑlʲkuˈʋɑnʲːɑ]'
     translation: "calquing"
     pos: "noun"
     gender: "n"
   - lemma: "ухвалення"
-    ipa: '[uˈxʋɑlɛnʲːɑ]'
     translation: "adoption"
     pos: "noun"
     gender: "n"
   - lemma: "відповідач"
-    ipa: '[ʋʲidpɔʋʲiˈdɑt͡ʃ]'
     translation: "defendant"
     pos: "noun"
     gender: "m"
   - lemma: "позивач"
-    ipa: '[pɔˈzɪˈʋɑt͡ʃ]'
     translation: "plaintiff"
     pos: "noun"
     gender: "m"
   - lemma: "інвестиція"
-    ipa: '[inʋɛˈstɪt͡sʲijɑ]'
     translation: "investment"
     pos: "noun"
     gender: "f"
   - lemma: "інфляція"
-    ipa: '[inˈflʲɑt͡sʲijɑ]'
     translation: "inflation"
     pos: "noun"
     gender: "f"
   - lemma: "попит"
-    ipa: '[ˈpɔpɪt]'
     translation: "demand"
     pos: "noun"
     gender: "m"
   - lemma: "пропозиція"
-    ipa: '[prɔpɔˈzɪt͡sʲijɑ]'
     translation: "supply"
     pos: "noun"
     gender: "f"
   - lemma: "коаліція"
-    ipa: '[kɔɑˈlʲit͡sʲijɑ]'
     translation: "coalition"
     pos: "noun"
     gender: "f"
   - lemma: "вето"
-    ipa: '[ˈʋɛtɔ]'
     translation: "veto"
     pos: "noun"
     gender: "n"
   - lemma: "посадовець"
-    ipa: '[pɔsɑˈdɔʋɛt͡sʲ]'
     translation: "official"
     pos: "noun"
     gender: "m"
   - lemma: "вирок"
-    ipa: '[ʋɪrɔk]'
     translation: "verdict"
     pos: "noun"
     gender: "m"

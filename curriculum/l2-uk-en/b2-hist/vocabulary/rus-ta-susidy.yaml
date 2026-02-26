@@ -1,119 +1,94 @@
 items:
   - lemma: "дипломатія"
-    ipa: '[dɪplɔˈmɑtʲijɑ]'
     translation: "diplomacy"
     pos: "noun"
     gender: "f"
   - lemma: "договір"
-    ipa: '[ˈdɔɦɔˈʋʲir]'
     translation: "treaty"
     pos: "noun"
     gender: "m"
   - lemma: "династичний шлюб"
-    ipa: '[dɪnɑˈstɪt͡ʃnɪj ʃlʲub]'
     translation: "dynastic marriage"
     pos: "phrase"
   - lemma: "сусід"
-    ipa: '[suˈsʲid]'
     translation: "neighbor"
     pos: "noun"
     gender: "m"
   - lemma: "союз"
-    ipa: '[sɔˈjuz]'
     translation: "alliance"
     pos: "noun"
     gender: "m"
   - lemma: "Візантія"
-    ipa: '[ʋʲizɑnʲˈtʲijɑ]'
     translation: "Byzantium"
     pos: "noun"
     gender: "f"
   - lemma: "Польща"
-    ipa: '[ˈpɔlʲʃt͡ʃɑ]'
     translation: "Poland"
     pos: "noun"
     gender: "f"
   - lemma: "Угорщина"
-    ipa: '[uˈɦɔrʃt͡ʃɪnɑ]'
     translation: "Hungary"
     pos: "noun"
     gender: "f"
   - lemma: "печеніги"
-    ipa: '[pɛt͡ʃɛˈnʲiɦɪ]'
     translation: "Pechenegs"
     pos: "noun"
   - lemma: "половці"
-    ipa: '[ˈpɔlɔu̯t͡sʲi]'
     translation: "Polovtsians"
     pos: "noun"
   - lemma: "торгівля"
-    ipa: '[tɔrˈɦʲiu̯lʲɑ]'
     translation: "trade"
     pos: "noun"
     gender: "f"
   - lemma: "посольство"
-    ipa: '[pɔˈsɔlʲstʋɔ]'
     translation: "embassy"
     pos: "noun"
     gender: "n"
   - lemma: "Червенські гради"
-    ipa: '[ˈt͡ʃɛrʋɛnsʲkʲi ˈɦrɑdɪ]'
     translation: "Cherven towns"
     pos: "phrase"
   - lemma: "чорні клобуки"
-    ipa: '[ˈt͡ʃɔrnʲi klɔbuˈkɪ]'
     translation: "black hoods"
     pos: "phrase"
   - lemma: "варяги"
-    ipa: '[ʋɑˈrʲɑɦɪ]'
     translation: "Varangians"
     pos: "noun"
   - lemma: "степовий кордон"
-    ipa: '[stɛpɔˈʋɪj kɔrˈdɔn]'
     translation: "steppe frontier"
     pos: "phrase"
   - lemma: "імперія"
-    ipa: '[imˈpɛrʲijɑ]'
     translation: "empire"
     pos: "noun"
     gender: "f"
   - lemma: "кочівник"
-    ipa: '[kɔt͡ʃʲiˈʋnɪk]'
     translation: "nomad"
     pos: "noun"
     gender: "m"
   - lemma: "князь"
-    ipa: '[knʲɑzʲ]'
     translation: "prince"
     pos: "noun"
     gender: "m"
   - lemma: "літопис"
-    ipa: '[lʲiˈtɔpɪs]'
     translation: "chronicle"
     pos: "noun"
     gender: "m"
   - lemma: "православ'я"
-    ipa: '[prɑʋɔˈslɑu̯jɑ]'
     translation: "Orthodoxy"
     pos: "noun"
     gender: "n"
   - lemma: "притулок"
-    ipa: '[prɪˈtulɔk]'
     translation: "asylum"
     pos: "noun"
     gender: "m"
   - lemma: "васал"
-    ipa: '[ʋɑˈsɑl]'
     translation: "vassal"
     pos: "noun"
     gender: "m"
   - lemma: "регентка"
-    ipa: '[ˈrɛɦɛntkɑ]'
     translation: "regent (female)"
     pos: "noun"
     gender: "f"
   - lemma: "міжусобиця"
-    ipa: '[mʲiʒuˈsɔbɪt͡sʲɑ]'
     translation: "internecine war"
     pos: "noun"
     gender: "f"

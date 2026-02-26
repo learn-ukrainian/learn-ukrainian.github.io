@@ -1,100 +1,80 @@
 items:
   - lemma: "допомога"
-    ipa: '[dɔpɔˈmɔɦɑ]'
     translation: "help"
     pos: "noun"
     gender: "f"
   - lemma: "швидка"
-    ipa: '[ʃʋɪˈdkɑ]'
     translation: "ambulance"
     pos: "noun"
     gender: "f"
   - lemma: "поліція"
-    ipa: '[pɔˈlʲit͡sʲijɑ]'
     translation: "police"
     pos: "noun"
     gender: "f"
   - lemma: "пожежна"
-    ipa: '[pɔˈʒɛʒnɑ]'
     translation: "fire service"
     pos: "noun"
     gender: "f"
   - lemma: "небезпека"
-    ipa: '[nɛbɛˈzpɛkɑ]'
     translation: "danger"
     pos: "noun"
     gender: "f"
   - lemma: "аварія"
-    ipa: '[ɑˈʋɑrʲijɑ]'
     translation: "accident"
     pos: "noun"
     gender: "f"
   - lemma: "лікарня"
-    ipa: '[lʲiˈkɑrnʲɑ]'
     translation: "hospital"
     pos: "noun"
     gender: "f"
   - lemma: "документи"
-    ipa: '[dɔkuˈmɛntɪ]'
     translation: "documents"
     pos: "noun"
   - lemma: "загубити"
-    ipa: '[zɑɦuˈbɪtɪ]'
     translation: "to lose"
     pos: "verb"
     aspect: "perfective"
   - lemma: "вкрасти"
-    ipa: '[ˈʍkrɑstɪ]'
     translation: "to steal"
     pos: "verb"
     aspect: "perfective"
   - lemma: "травма"
-    ipa: '[ˈtrɑu̯mɑ]'
     translation: "injury"
     pos: "noun"
     gender: "f"
   - lemma: "адреса"
-    ipa: '[ɑˈdrɛsɑ]'
     translation: "address"
     pos: "noun"
     gender: "f"
   - lemma: "свідок"
-    ipa: '[ˈsʲʋʲidɔk]'
     translation: "witness"
     pos: "noun"
     gender: "m"
   - lemma: "заява"
-    ipa: '[zɑˈjɑʋɑ]'
     translation: "statement / application"
     pos: "noun"
     gender: "f"
   - lemma: "дзвонити"
-    ipa: '[d͡zʋɔˈnɪtɪ]'
     translation: "to call (on the phone)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "викликати"
-    ipa: '[ʋɪklɪkɑtɪ]'
     translation: "to summon (emergency services)"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "лікар"
-    ipa: '[ˈlʲikɑr]'
     translation: "doctor"
     pos: "noun"
     gender: "m"
   - lemma: "офіцер"
-    ipa: '[ɔfʲiˈt͡sɛr]'
     translation: "officer"
     pos: "noun"
     gender: "m"
   - lemma: "гаманець"
-    ipa: '[ɦɑmɑˈnɛt͡sʲ]'
     translation: "wallet"
     pos: "noun"
     gender: "m"
   - lemma: "метро"
-    ipa: '[mɛˈtrɔ]'
     translation: "subway"
     pos: "noun"
     gender: "n"

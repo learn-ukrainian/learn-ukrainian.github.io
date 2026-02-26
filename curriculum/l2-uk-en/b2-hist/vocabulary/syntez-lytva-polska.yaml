@@ -1,126 +1,101 @@
 items:
   - lemma: "історія"
-    ipa: '[iˈstɔrʲijɑ]'
     translation: "history"
     pos: "noun"
     gender: "f"
   - lemma: "держава"
-    ipa: '[ˈdɛrˈʒɑʋɑ]'
     translation: "state"
     pos: "noun"
     gender: "f"
   - lemma: "народ"
-    ipa: '[nɑˈrɔd]'
     translation: "people"
     pos: "noun"
     gender: "m"
   - lemma: "влада"
-    ipa: '[ˈʋlɑdɑ]'
     translation: "power"
     pos: "noun"
     gender: "f"
   - lemma: "період"
-    ipa: '[pɛˈrʲiɔd]'
     translation: "period"
     pos: "noun"
     gender: "m"
   - lemma: "подія"
-    ipa: '[pɔˈdʲijɑ]'
     translation: "event"
     pos: "noun"
     gender: "f"
   - lemma: "джерело"
-    ipa: '[d͡ʒɛrɛˈlɔ]'
     translation: "source"
     pos: "noun"
     gender: "n"
   - lemma: "спадщина"
-    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
     translation: "heritage"
     pos: "noun"
     gender: "f"
   - lemma: "аналіз"
-    ipa: '[ɑˈnɑlʲiz]'
     translation: "analysis"
     pos: "noun"
     gender: "m"
   - lemma: "контекст"
-    ipa: '[kɔnˈtɛkst]'
     translation: "context"
     pos: "noun"
     gender: "m"
   - lemma: "вплив"
-    ipa: '[ʍplɪu̯]'
     translation: "influence"
     pos: "noun"
     gender: "m"
   - lemma: "наслідок"
-    ipa: '[ˈnɑsʲlʲidɔk]'
     translation: "consequence"
     pos: "noun"
     gender: "m"
   - lemma: "шляхта"
-    ipa: '[ˈʃlʲɑxtɑ]'
     translation: "nobility"
     pos: "noun"
     gender: "f"
   - lemma: "статут"
-    ipa: '[stɑˈtut]'
     translation: "statute"
     pos: "noun"
     gender: "m"
   - lemma: "сейм"
-    ipa: '[sɛjm]'
     translation: "parliament"
     pos: "noun"
     gender: "m"
   - lemma: "унія"
-    ipa: '[ˈunʲijɑ]'
     translation: "union"
     pos: "noun"
     gender: "f"
   - lemma: "фільварок"
-    ipa: '[fʲilʲˈʋɑrɔk]'
     translation: "manorial estate"
     pos: "noun"
     gender: "m"
   - lemma: "кріпацтво"
-    ipa: '[krʲiˈpɑt͡stʋɔ]'
     translation: "serfdom"
     pos: "noun"
     gender: "n"
   - lemma: "братство"
-    ipa: '[ˈbrɑt͡stʋɔ]'
     translation: "brotherhood"
     pos: "noun"
     gender: "n"
   - lemma: "магнат"
-    ipa: '[mɑˈɦnɑt]'
     translation: "magnate"
     pos: "noun"
     gender: "m"
   - lemma: "воєводство"
-    ipa: '[ʋɔjɛˈʋɔd͡zstʋɔ]'
     translation: "voivodeship"
     pos: "noun"
     gender: "n"
   - lemma: "самоврядування"
-    ipa: '[sɑmɔu̯rʲɑduˈʋɑnʲːɑ]'
     translation: "self-government"
     pos: "noun"
     gender: "n"
   - lemma: "демократія"
-    ipa: '[dɛmɔˈkrɑtʲijɑ]'
     translation: "democracy"
     pos: "noun"
     gender: "f"
   - lemma: "республіка"
-    ipa: '[rɛˈspublʲikɑ]'
     translation: "republic"
     pos: "noun"
     gender: "f"
   - lemma: "повстання"
-    ipa: '[pɔˈʋstɑnʲːɑ]'
     translation: "uprising"
     pos: "noun"
     gender: "n"

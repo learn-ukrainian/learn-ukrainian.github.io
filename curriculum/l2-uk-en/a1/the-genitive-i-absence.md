@@ -30,7 +30,7 @@ A common mistake is using the dictionary form after **немає**. For example,
 
 To a Ukrainian ear, this is confusing. The correct way to say it is:
 
-*   ✅ **У мене немає квитка.** [u ˈmɛnɛ nɛˈmɑjɛ kʋɪˈtka]
+*   ✅ **У мене немає квитка.**
 
 Notice how **квиток** became **квитка**? That small change at the end is the signal of absence. It tells the listener, "This object is not here."
 
@@ -64,9 +64,9 @@ The word **нема́є** is the negative counterpart of **є** (there is / ther
 Whenever you use this word to say "there is no X" or "I don't have X," the "X" **must** be in the Genitive case.
 
 **Examples in context:**
-*   **Тут немає інтернету.** [tut nɛˈmɑjɛ intɛrˈnɛtu] (There is no internet here.)
-*   **У мене немає паспорта.** [u ˈmɛnɛ nɛˈmɑjɛ ˈpɑspɔrta] (I don't have a passport.)
-*   **Сьогодні немає концерту.** [sʲɔˈɦɔdnʲi nɛˈmɑjɛ kɔnˈt͡sɛrtu] (There is no concert today.)
+*   **Тут немає інтернету.** (There is no internet here.)
+*   **У мене немає паспорта.** (I don't have a passport.)
+*   **Сьогодні немає концерту.** (There is no concert today.)
 
 ### Genitive Endings: Masculine Hard Nouns (-а)
 
@@ -226,14 +226,14 @@ Review how words transform from "Presence" (Nominative) to "Absence" (Genitive).
 Here are full sentences. Notice how the grammar changes slightly depending on what we are saying is missing.
 
 **Модель 1: Відсутність (Location)**
-*   **Вдома немає хліба.** [ˈʋdɔmɑ nɛˈmɑjɛ ˈxlʲibɑ] (There is no bread at home.)
-*   **У місті немає парку.** [u ˈmʲistʲi nɛˈmɑjɛ ˈpɑrku] (There is no park in the city.)
-*   **Тут немає сигналу.** [tut nɛˈmɑjɛ sɪɦˈnɑlu] (There is no signal here.)
+*   **Вдома немає хліба.** (There is no bread at home.)
+*   **У місті немає парку.** (There is no park in the city.)
+*   **Тут немає сигналу.** (There is no signal here.)
 
 **Модель 2: Особиста власність (Person)**
-*   **У мене немає ключа.** [u ˈmɛnɛ nɛˈmɑjɛ klʲuˈt͡ʃɑ] (I don't have a key.)
-*   **У тебе немає часу.** [u ˈtɛbɛ nɛˈmɑjɛ ˈt͡ʃɑsu] (You don't have time.)
-*   **У нас немає молока.** [u nɑs nɛˈmɑjɛ mɔlɔˈkɑ] (We don't have milk.)
+*   **У мене немає ключа.** (I don't have a key.)
+*   **У тебе немає часу.** (You don't have time.)
+*   **У нас немає молока.** (We don't have milk.)
 
 > [!context] **Контекст: «Я маю» vs «У мене є»**
 > **Possession Structure Recall**
@@ -287,7 +287,7 @@ Speaking these sentences aloud reinforces the connection between the object and 
 
 ### Фраза «Немає проблем»
 
-In Ukraine, you hear this phrase constantly: **Немає проблем!** [nɛˈmɑjɛ prɔˈblɛm].
+In Ukraine, you hear this phrase constantly: **Немає проблем!**.
 
 It means "There are no problems". It is the Ukrainian equivalent of "No problem", "Don't worry about it" or "It's all good".
 
@@ -302,7 +302,6 @@ It means "There are no problems". It is the Ukrainian equivalent of "No problem"
 Український фольклор часто використовує структуру відсутності. Ось відоме прислів'я:
 
 **«Немає диму без вогню.»**
-[nɛˈmɑjɛ ˈdɪmu bɛz ʋɔˈɦnʲu]
 *(There is no smoke without fire.)*
 
 Давайте розберемо (Let's break it down):

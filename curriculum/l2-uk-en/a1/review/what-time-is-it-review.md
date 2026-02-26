@@ -59,9 +59,9 @@ Additionally, the boundary between «вечора» and «ночі» is inconsis
 
 **Severity:** Low
 **Location:** vocabulary/what-time-is-it.yaml, line 98
-**Description:** The IPA for «вчасно» is given as `[ˈʍt͡ʃɑsnɔ]`. The voiceless labial-velar fricative [ʍ] is unusual here. Standard Ukrainian pronunciation of «вчасно» would be [u̯ˈt͡ʃɑsnɔ] or [ʋˈt͡ʃɑsnɔ] (with the /v/ assimilating before the voiceless /t͡ʃ/). The [ʍ] symbol typically represents the voiceless counterpart of [w], which is not a standard Ukrainian phone.
+**Description:** The IPA for «вчасно» is given as ``. The voiceless labial-velar fricative [ʍ] is unusual here. Standard Ukrainian pronunciation of «вчасно» would be or (with the /v/ assimilating before the voiceless). The [ʍ] symbol typically represents the voiceless counterpart of [w], which is not a standard Ukrainian phone.
 
-**Fix:** Update IPA to `[u̯ˈt͡ʃɑsnɔ]` or consult the IPA generation pipeline for the correct transcription.
+**Fix:** Update IPA to `` or consult the IPA generation pipeline for the correct transcription.
 
 ## Section-by-Section Analysis
 
@@ -146,7 +146,7 @@ All follow the pattern: Ukrainian imperative/declarative → English explanation
 
 ### Priority 2 (Should Fix)
 4. **Content lines 185-209**: Add a brief inline exercise after the first 6 months (Winter + Spring) to break up the cognitive load
-5. **Vocabulary line 98**: Fix IPA for «вчасно» from `[ˈʍt͡ʃɑsnɔ]` to `[u̯ˈt͡ʃɑsnɔ]`
+5. **Vocabulary line 98**: Fix IPA for «вчасно» from `` to ``
 6. **Content line 201**: Change "cochineal insects" to "scale insects (червці)" for accuracy
 7. **Content line 330**: Smooth the English/Ukrainian transition — either make the entire sentence English or provide a Ukrainian version with translation
 

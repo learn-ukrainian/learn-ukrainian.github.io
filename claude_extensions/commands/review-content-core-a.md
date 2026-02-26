@@ -24,8 +24,7 @@ Before you write ANY report or score, you MUST:
 2. **Read every activity item** in the activities file (`.yaml`)
 3. **Verify every Ukrainian sentence** is grammatically correct and natural
 4. **Verify every English sentence** is B1-readable and encouraging
-5. **Check every IPA transcription** for correct stress and segments
-6. **Verify grammar claims** against State Standard 2024 §reference
+5. **Verify grammar claims** against State Standard 2024 §reference
 7. **Identify real issues** — not template categories
 
 **If you skip this, the review is worthless.**
@@ -77,15 +76,6 @@ For each English sentence:
 - Does it over-explain simple concepts?
 - Does it under-explain complex concepts?
 
-### IPA Transcriptions
-
-**Every phonetic transcription must be checked:**
-
-- Stress placement correct? (Ukrainian stress is unpredictable)
-- All segments accurate? (no English approximations)
-- Consistent format across module?
-- Common errors to watch: теорія → /teoˈr⁠ija/ (not /ˈteor⁠ija/)
-
 ### State Standard Compliance
 
 If the module teaches grammar:
@@ -117,11 +107,6 @@ As you read, note every issue you find. Be specific:
 
 ```markdown
 ## Issues Found
-
-### Line 45: IPA stress error
-**Original:** /ˈdjatel/ for "дятел"
-**Problem:** Stress should be on second syllable
-**Fix:** /djaˈtel/
 
 ### Line 78: Missing English support
 **Original:** Complex grammar point explained only in Ukrainian
@@ -161,13 +146,6 @@ As you read, note every issue you find. Be specific:
 | брати місце | відбуватися |
 | це є | це (usually) |
 | мати місце | відбуватися |
-
-### IPA Errors (Auto-fail for vocabulary)
-
-- Wrong stress placement
-- English approximations instead of Ukrainian phonemes
-- Missing or incorrect palatalization markers
-- Inconsistent transcription format
 
 ### L1/L2 Balance Errors (Auto-fail)
 
@@ -234,7 +212,6 @@ Required emotional beats:
 ### Fix Immediately:
 - Grammar errors (Ukrainian and English)
 - Russianisms and calques
-- IPA transcription errors
 - Activity errors
 - Typos
 - Missing emotional beats (add encouragement)
@@ -266,7 +243,7 @@ Required emotional beats:
 | 9 | **Richness** | Cultural hooks, visual aids, memorable moments | <6 |
 | 10 | **Beginner Safety** | Emotional beats, encouragement, "Would I Continue?" | <7 |
 | 11 | **LLM Fingerprint** | Authentic tutor voice vs AI patterns/cliches | <7 |
-| 12 | **Linguistic Accuracy** | State Standard compliance, grammar correctness, IPA accuracy | <9 |
+| 12 | **Linguistic Accuracy** | State Standard compliance, grammar correctness | <9 |
 
 ### Scoring Rules
 
@@ -341,12 +318,6 @@ curriculum/l2-uk-en/{level}/review/{slug}-review.md
 - **Actual immersion:** ~{Z%} Ukrainian
 - **Assessment:** {on target / too much English / too much Ukrainian}
 
-## IPA Verification
-
-- Transcriptions checked: {X}
-- Errors found: {X}
-- All corrected: {yes/no}
-
 ## State Standard Check
 
 - Grammar point: {description}
@@ -387,7 +358,6 @@ Emotional beats found: {count}
 - Activity items checked: {X}
 - Ukrainian sentences verified: {X}
 - English sentences verified: {X}
-- IPA transcriptions verified: {X}
 - Issues found: {X}
 - Issues fixed: {X}
 
@@ -454,7 +424,6 @@ This includes the "Would I Continue?" test, emotional safety mapping, pacing che
 | **Dimensions** | 12 (no Propaganda, no Semantic Nuance) | 14 (all dimensions) |
 | **Added: L1/L2 Balance** | Checks graduated immersion ratio | "Immersion" (binary) |
 | **Added: Beginner Safety** | "Would I Continue?" + emotional beats | Not present |
-| **Added: IPA Verification** | Every transcription checked | Vocabulary IPA only |
 | **Added: State Standard** | Grammar compliance §reference | Added (grammar modules) |
 | **Dropped: Propaganda Filter** | Not relevant at A1-A2 | Required for HIST/BIO |
 | **Dropped: Semantic Nuance** | Not relevant at beginner level | Required at C1+ |
@@ -468,6 +437,5 @@ This includes the "Would I Continue?" test, emotional safety mapping, pacing che
 
 > Embody the Ukrainian linguist & teacher. See `claude_extensions/skills/_shared/persona.md`
 
-**IPA RULE:** All phonetics MUST use IPA (no Latin transliteration).
 **PYTHON:** Use `.venv/bin/python` only.
 **WORKFLOW:** This is for manual review AFTER audit_module.py passes.

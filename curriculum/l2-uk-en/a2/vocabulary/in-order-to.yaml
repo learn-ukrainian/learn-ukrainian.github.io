@@ -1,125 +1,100 @@
 items:
   - lemma: "щоб"
-    ipa: '[ʃt͡ʃɔb]'
     translation: "in order to / so that"
     pos: "conjunction"
     notes: "Used to express purpose with an infinitive (same subject) or past tense (different subjects)."
   - lemma: "для"
-    ipa: '[dʲlʲɑ]'
     translation: "for"
     pos: "preposition"
     notes: "Used strictly with nouns or pronouns in the Genitive case to indicate a beneficiary or purpose."
   - lemma: "аби"
-    ipa: '[ɑˈbɪ]'
     translation: "so that / if only"
     pos: "conjunction"
     notes: "Informal, spoken register synonym for щоб."
   - lemma: "мета"
-    ipa: '[mɛˈtɑ]'
     translation: "goal / purpose"
     pos: "noun"
     gender: "f"
   - lemma: "намір"
-    ipa: '[ˈnɑmʲir]'
     translation: "intention"
     pos: "noun"
     gender: "m"
   - lemma: "дія"
-    ipa: '[ˈdʲijɑ]'
     translation: "action"
     pos: "noun"
     gender: "f"
   - lemma: "результат"
-    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
     gender: "m"
   - lemma: "обговорювати"
-    ipa: '[ɔbɦɔˈʋɔrʲuʋɑtɪ]'
     translation: "to discuss"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "обговорити"
-    ipa: '[ɔbɦɔʋɔˈrɪtɪ]'
     translation: "to discuss"
     pos: "verb"
     aspect: "perfective"
   - lemma: "пояснювати"
-    ipa: '[pɔˈjɑsʲnʲuʋɑtɪ]'
     translation: "to explain"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "пояснити"
-    ipa: '[pɔjɑˈsnɪtɪ]'
     translation: "to explain"
     pos: "verb"
     aspect: "perfective"
   - lemma: "досягати"
-    ipa: '[dɔsʲɑˈɦɑtɪ]'
     translation: "to achieve"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "досягти"
-    ipa: '[dɔsʲɑˈɦtɪ]'
     translation: "to achieve"
     pos: "verb"
     aspect: "perfective"
   - lemma: "інфінітив"
-    ipa: '[inʲfʲinʲiˈtɪu̯]'
     translation: "infinitive"
     pos: "noun"
     gender: "m"
   - lemma: "суб'єкт"
-    ipa: '[suˈbjɛkt]'
     translation: "subject / doer"
     pos: "noun"
     gender: "m"
   - lemma: "заробляти"
-    ipa: '[zɑrɔˈblʲɑtɪ]'
     translation: "to earn"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "заробити"
-    ipa: '[zɑrɔˈbɪtɪ]'
     translation: "to earn"
     pos: "verb"
     aspect: "perfective"
   - lemma: "успіх"
-    ipa: '[ˈusʲpʲix]'
     translation: "success"
     pos: "noun"
     gender: "m"
   - lemma: "надійний"
-    ipa: '[nɑˈdʲijnɪj]'
     translation: "reliable"
     pos: "adjective"
   - lemma: "спотикатися"
-    ipa: '[spɔtɪˈkɑtɪsʲɑ]'
     translation: "to stumble"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "правило"
-    ipa: '[prɑʋɪlɔ]'
     translation: "rule"
     pos: "noun"
     gender: "n"
   - lemma: "відпустка"
-    ipa: '[ʋʲiˈdpustkɑ]'
     translation: "vacation"
     pos: "noun"
     gender: "f"
   - lemma: "дохід"
-    ipa: '[dɔˈxʲid]'
     translation: "income"
     pos: "noun"
     gender: "m"
   - lemma: "кувати"
-    ipa: '[kuˈʋɑtɪ]'
     translation: "to shoe (a horse) / to forge"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "минулий час"
-    ipa: '[mɪˈnulɪj t͡ʃɑs]'
     translation: "past tense"
     pos: "noun"
     gender: "m"

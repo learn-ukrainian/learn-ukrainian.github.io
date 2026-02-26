@@ -1,147 +1,117 @@
 items:
   - lemma: "щоб"
-    ipa: '[ʃt͡ʃɔb]'
     translation: "in order to, so that"
     pos: "conjunction"
     notes: "Main purpose conjunction used with past tense"
   - lemma: "бажання"
-    ipa: '[bɑˈʒɑnʲːɑ]'
     translation: "wish, desire"
     pos: "noun"
     gender: "n"
   - lemma: "прохання"
-    ipa: '[prɔˈxɑnʲːɑ]'
     translation: "request"
     pos: "noun"
     gender: "n"
   - lemma: "вимагати"
-    ipa: '[ʋɪmɑˈɦɑtɪ]'
     translation: "to demand, to require"
     pos: "verb"
     aspect: "impf"
   - lemma: "радити"
-    ipa: '[ˈrɑdɪtɪ]'
     translation: "to advise"
     pos: "verb"
     aspect: "impf"
   - lemma: "узгодження"
-    ipa: '[uˈzɦɔd͡ʒɛnʲːɑ]'
     translation: "agreement"
     pos: "noun"
     gender: "n"
   - lemma: "наказ"
-    ipa: '[nɑˈkɑz]'
     translation: "command, order"
     pos: "noun"
     gender: "m"
   - lemma: "необхідність"
-    ipa: '[nɛɔˈbxʲidʲnʲisʲtʲ]'
     translation: "necessity"
     pos: "noun"
     gender: "f"
   - lemma: "майбутнє"
-    ipa: '[mɑjˈbutʲnʲɛ]'
     translation: "future"
     pos: "noun"
     gender: "n"
   - lemma: "зусилля"
-    ipa: '[zuˈsɪlʲːɑ]'
     translation: "effort"
     pos: "noun"
     gender: "n"
   - lemma: "підрядне речення"
-    ipa: '[pʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ]'
     translation: "subordinate clause"
     pos: "noun"
     gender: "n"
   - lemma: "різнойменний"
-    ipa: '[rʲiznɔjˈmɛnːɪj]'
     translation: "different-named (having different subjects)"
     pos: "adjective"
   - lemma: "суб'єкт"
-    ipa: '[suˈbjɛkt]'
     translation: "subject"
     pos: "noun"
     gender: "m"
   - lemma: "ініціатор"
-    ipa: '[inʲit͡sʲiˈɑtɔr]'
     translation: "initiator"
     pos: "noun"
     gender: "m"
   - lemma: "виконавець"
-    ipa: '[ʋɪkɔˈnɑʋɛt͡sʲ]'
     translation: "executor, performer"
     pos: "noun"
     gender: "m"
   - lemma: "волевиявлення"
-    ipa: '[ʋɔlɛˈʋɪjɑu̯lɛnʲːɑ]'
     translation: "expression of will"
     pos: "noun"
     gender: "n"
   - lemma: "докладати"
-    ipa: '[dɔklɑˈdɑtɪ]'
     translation: "to apply (efforts)"
     pos: "verb"
     aspect: "impf"
   - lemma: "делегування"
-    ipa: '[dɛlɛɦuˈʋɑnʲːɑ]'
     translation: "delegation"
     pos: "noun"
     gender: "n"
   - lemma: "субординація"
-    ipa: '[subɔrdɪˈnɑt͡sʲijɑ]'
     translation: "subordination"
     pos: "noun"
     gender: "f"
   - lemma: "ввічливість"
-    ipa: '[ˈʋʲːit͡ʃlɪʋʲisʲtʲ]'
     translation: "politeness"
     pos: "noun"
     gender: "f"
   - lemma: "очікування"
-    ipa: '[ɔˈt͡ʃʲikuʋɑnʲːɑ]'
     translation: "expectation"
     pos: "noun"
     gender: "n"
   - lemma: "підлеглий"
-    ipa: '[pʲiˈdlɛɦlɪj]'
     translation: "subordinate"
     pos: "noun"
     gender: "m"
   - lemma: "задоволений"
-    ipa: '[zɑdɔˈʋɔlɛnɪj]'
     translation: "satisfied"
     pos: "adjective"
   - lemma: "вчасно"
-    ipa: '[ˈʍt͡ʃɑsnɔ]'
     translation: "on time"
     pos: "adverb"
   - lemma: "заздалегідь"
-    ipa: '[zɑzdɑlɛˈɦʲidʲ]'
     translation: "in advance"
     pos: "adverb"
   - lemma: "наполягати"
-    ipa: '[nɑpɔlʲɑˈɦɑtɪ]'
     translation: "to insist"
     pos: "verb"
     aspect: "impf"
   - lemma: "впливати"
-    ipa: '[ʍplɪˈʋɑtɪ]'
     translation: "to influence"
     pos: "verb"
     aspect: "impf"
   - lemma: "інтерференція"
-    ipa: '[intɛrfɛˈrɛnʲt͡sʲijɑ]'
     translation: "interference"
     pos: "noun"
     gender: "f"
   - lemma: "відмінок"
-    ipa: '[ʋʲiˈdʲmʲinɔk]'
     translation: "case (grammar)"
     pos: "noun"
     gender: "m"
   - lemma: "сполучник"
-    ipa: '[spɔˈlut͡ʃnɪk]'
     translation: "conjunction"
     pos: "noun"
     gender: "m"

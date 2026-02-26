@@ -1,3 +1,7 @@
+---
+argument-hint: "{level} {module_num}"
+---
+
 # /module-meta
 
 Initialize module metadata from existing plan.
@@ -21,7 +25,7 @@ Initialize module metadata from existing plan.
 
 ## Instructions
 
-Parse arguments: $ARGUMENTS
+Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 ### Step 1: Read Phase Instructions
 

@@ -1,6 +1,6 @@
 # CLAUDE.md - Project Instructions
 
-> **READ FIRST: `claude_extensions/NON-NEGOTIABLE-RULES.md`** — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
+> **NON-NEGOTIABLE RULES** auto-loaded via `.claude/rules/non-negotiable-rules.md` — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | View: `/module-status {level} {num}` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 

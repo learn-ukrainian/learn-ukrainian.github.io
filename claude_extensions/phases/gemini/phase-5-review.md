@@ -87,11 +87,6 @@ Go through the file section by section. For EACH Ukrainian sentence:
 - Warm tutor voice or cold textbook?
 - Over-explaining simple things? Under-explaining complex ones?
 
-### IPA Transcriptions (if present)
-- Every transcription must be checked for correct stress placement
-- Ukrainian stress is unpredictable — verify each one
-- Watch for English approximations instead of Ukrainian phonemes
-
 ### Activities (EVERY ITEM)
 
 **CRITICAL: Read the actual YAML file line by line.** Do NOT assume what the file contains — read it. If a previous review said "add English cues" but the file already has them, acknowledge the fix is present. Never cite an issue that doesn't exist in the CURRENT file.
@@ -328,7 +323,6 @@ For EACH dimension scoring below 9, provide a concrete action plan:
 - Content lines read: {X}
 - Activity items checked: {X}
 - Ukrainian sentences verified: {X}
-- IPA transcriptions checked: {X}
 - Issues found: {X}
 - Naturalness score recommendation: {X}/10
 

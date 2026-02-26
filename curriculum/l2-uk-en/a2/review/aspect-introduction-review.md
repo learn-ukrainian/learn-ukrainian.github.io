@@ -47,11 +47,11 @@
 
 **Location:** Vocabulary file, line 47
 
-**Cited text:** `ipa: '[ˈʍt͡ʃɪtɪ / ˈʋɪu̯t͡ʃɪtɪ]'` (for вчити/вивчити)
+**Cited text:** `ipa: '[ˈʍt͡ʃɪtɪвивчити)
 
 **Problem:** The symbol ʍ represents a voiceless labial-velar fricative (as in some English dialects' pronunciation of "wh-" words). This phoneme does not exist in Ukrainian. The initial cluster "вч" in "вчити" should be transcribed as [u̯t͡ʃ] or [ʋt͡ʃ], not [ʍt͡ʃ].
 
-**Fix:** Replace with `'[u̯ˈt͡ʃɪtɪ / ˈʋɪu̯t͡ʃɪtɪ]'` or `'[ʋˈt͡ʃɪtɪ / ˈʋɪu̯t͡ʃɪtɪ]'`.
+**Fix:** Replace with `''`.
 
 ---
 
@@ -61,7 +61,7 @@
 
 **Location:** Vocabulary file, line 55
 
-`ipa: '[ʋɪxɔdɪtɪ / ˈʋɪjtɪ]'` — виходити is missing its stress mark. Should be `[ʋɪxɔˈdɪtɪ / ˈʋɪjtɪ]`.
+`ipa: '`.
 
 **Issue 5: Misleading English Translation**
 

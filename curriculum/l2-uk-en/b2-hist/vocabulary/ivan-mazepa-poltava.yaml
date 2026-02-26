@@ -1,129 +1,104 @@
 items:
   - lemma: "зрада"
-    ipa: '[ˈzrɑdɑ]'
     translation: "betrayal, treason"
     pos: "noun"
     gender: "f"
     notes: "Used in the context of the Russian myth about Mazepa."
   - lemma: "анафема"
-    ipa: '[ɑˈnɑfɛmɑ]'
     translation: "anathema, excommunication"
     pos: "noun"
     gender: "f"
     notes: "A political curse imposed by the Russian church."
   - lemma: "вигнання"
-    ipa: '[ʋɪˈɦnɑnʲːɑ]'
     translation: "exile"
     pos: "noun"
     gender: "n"
     example: "Гетьман помер у політичному вигнанні."
   - lemma: "конституція"
-    ipa: '[kɔnstɪˈtut͡sʲijɑ]'
     translation: "constitution"
     pos: "noun"
     gender: "f"
   - lemma: "трагедія"
-    ipa: '[trɑˈɦɛdʲijɑ]'
     translation: "tragedy"
     pos: "noun"
     gender: "f"
   - lemma: "альянс"
-    ipa: '[ɑˈlʲjɑns]'
     translation: "alliance"
     pos: "noun"
     gender: "m"
   - lemma: "битва"
-    ipa: '[ˈbɪtʋɑ]'
     translation: "battle"
     pos: "noun"
     gender: "f"
   - lemma: "терор"
-    ipa: '[tɛˈrɔr]'
     translation: "terror"
     pos: "noun"
     gender: "m"
   - lemma: "маніфест"
-    ipa: '[mɑnʲiˈfɛst]'
     translation: "manifesto"
     pos: "noun"
     gender: "m"
   - lemma: "гарнізон"
-    ipa: '[ɦɑrnʲiˈzɔn]'
     translation: "garrison"
     pos: "noun"
     gender: "m"
   - lemma: "облога"
-    ipa: '[ɔˈblɔɦɑ]'
     translation: "siege"
     pos: "noun"
     gender: "f"
   - lemma: "капітуляція"
-    ipa: '[kɑpʲituˈlʲɑt͡sʲijɑ]'
     translation: "capitulation, surrender"
     pos: "noun"
     gender: "f"
   - lemma: "еміграція"
-    ipa: '[ɛmʲiˈɦrɑt͡sʲijɑ]'
     translation: "emigration"
     pos: "noun"
     gender: "f"
   - lemma: "прокляття"
-    ipa: '[prɔˈklʲɑtʲːɑ]'
     translation: "curse"
     pos: "noun"
     gender: "n"
   - lemma: "ліквідація"
-    ipa: '[lʲikʋʲiˈdɑt͡sʲijɑ]'
     translation: "liquidation, elimination"
     pos: "noun"
     gender: "f"
   - lemma: "автономія"
-    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
     translation: "autonomy"
     pos: "noun"
     gender: "f"
   - lemma: "протекторат"
-    ipa: '[prɔtɛktɔˈrɑt]'
     translation: "protectorate"
     pos: "noun"
     gender: "m"
   - lemma: "сюзерен"
-    ipa: '[sʲuzɛˈrɛn]'
     translation: "suzerain"
     pos: "noun"
     gender: "m"
   - lemma: "васал"
-    ipa: '[ʋɑˈsɑl]'
     translation: "vassal"
     pos: "noun"
     gender: "m"
   - lemma: "перемовини"
-    ipa: '[pɛrɛˈmɔʋɪnɪ]'
     translation: "negotiations"
     pos: "noun"
     notes: "Used exclusively in plural."
   - lemma: "посередниця"
-    ipa: '[pɔsɛˈrɛdnɪt͡sʲɑ]'
     translation: "mediator (female)"
     pos: "noun"
     gender: "f"
   - lemma: "наклеп"
-    ipa: '[ˈnɑklɛp]'
     translation: "slander, libel"
     pos: "noun"
     gender: "m"
   - lemma: "артилерія"
-    ipa: '[ɑrtɪˈlɛrʲijɑ]'
     translation: "artillery"
     pos: "noun"
     gender: "f"
   - lemma: "розгром"
-    ipa: '[rɔˈzɦrɔm]'
     translation: "rout, devastating defeat"
     pos: "noun"
     gender: "m"
   - lemma: "екзил"
-    ipa: '[ɛˈɡzɪl]'
     translation: "exile (academic/literary)"
     pos: "noun"
     gender: "m"

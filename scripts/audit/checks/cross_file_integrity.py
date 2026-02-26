@@ -464,7 +464,6 @@ def check_vocabulary_integrity(
             message += f"  Add to: curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml\n"
             message += f"  Example:\n"
             message += f"  - lemma: {word}\n"
-            message += f"    ipa: ''\n"
             message += f"    translation: ''\n"
             message += f"    pos: noun  # or verb, adj, adv"
 

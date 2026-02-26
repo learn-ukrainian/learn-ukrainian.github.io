@@ -208,7 +208,6 @@ while true:
        - Item count below minimum → how many needed?
 
      Vocab violations:
-       - Missing IPA → how many items?
        - Count below target → how many needed?
 
   # ========================================

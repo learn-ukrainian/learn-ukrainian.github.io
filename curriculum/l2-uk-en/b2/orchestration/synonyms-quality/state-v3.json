@@ -1,0 +1,29 @@
+{
+  "track": "b2",
+  "slug": "synonyms-quality",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T22:58:40Z",
+      "task_id": "v3-synonyms-quality-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T07:59:55Z",
+      "note": "adopted-existing-content",
+      "words": 3443
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T08:04:38Z",
+      "task_id": "v3-synonyms-quality-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T10:13:12Z",
+      "attempts": 1
+    }
+  }
+}

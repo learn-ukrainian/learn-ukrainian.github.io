@@ -8,8 +8,8 @@ Good. I've now read all the actual files. Let me compile my adversarial review.
 
 **Issue 1: IPA error — Ukrainian "е" transcribed as [e] instead of [ɛ]**
 - **File:** `checkpoint-first-contact.md`, line 46
-- **Text:** `**Ресторан** [restɔˈrɑn]`
-- **Problem:** Ukrainian letter "е" represents /ɛ/, not /e/. The module itself correctly teaches this three lines later in the Е vs Є section: "**Е** — is [ɛ]." The IPA for "Ресторан" contradicts the module's own teaching. Should be [rɛstɔˈrɑn].
+- **Text:** `**Ресторан**`
+- **Problem:** Ukrainian letter "е" represents /ɛ/, not /e/. The module itself correctly teaches this three lines later in the Е vs Є section: "**Е** — is [ɛ]." The IPA for "Ресторан" contradicts the module's own teaching. Should be.
 
 **Issue 2: Incomplete писати paradigm — missing Він/Вона form**
 - **File:** `checkpoint-first-contact.md`, lines 213-217
@@ -68,21 +68,21 @@ Good. I've now read all the actual files. Let me compile my adversarial review.
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/checkpoint-first-contact.md
 ---OLD---
-    *   *Приклад:* **Ресторан** [restɔˈrɑn] — Restaurant, **Парк** [pɑrk] — Park.
+    *   *Приклад:* **Ресторан** — Restaurant, **Парк** [pɑrk] — Park.
 ---NEW---
-    *   *Приклад:* **Ресторан** [rɛstɔˈrɑn] — Restaurant, **Парк** [pɑrk] — Park.
+    *   *Приклад:* **Ресторан** — Restaurant, **Парк** [pɑrk] — Park.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/checkpoint-first-contact.md
 ---OLD---
-*   **Писати** [pɪˈsɑtɪ] — to write. Ending -ати. But attention! There is a sound change.
+*   **Писати** — to write. Ending -ати. But attention! There is a sound change.
     *   Я **пишу** (s → sh)
     *   Ти **пишеш**
     *   Вони **пишуть**
     This is a first group verb. Endings are standard: **-еш**, **-уть**.
 ---NEW---
-*   **Писати** [pɪˈsɑtɪ] — to write. Ending -ати. But attention! There is a sound change.
+*   **Писати** — to write. Ending -ати. But attention! There is a sound change.
     *   Я **пишу** (с → ш)
     *   Ти **пишеш**
     *   Він/Вона **пише**
@@ -107,7 +107,7 @@ FILE: curriculum/l2-uk-en/a1/checkpoint-first-contact.md
 ---OLD---
 2.  **Я буду...** — I will have... (Literally: I will be...)
 ---NEW---
-2.  **Я буду...** [jɑ ˈbudu] — I will have... (Literally: I will be...)
+2.  **Я буду...** — I will have... (Literally: I will be...)
 ===FIX_END===
 
 ===FIX_START===

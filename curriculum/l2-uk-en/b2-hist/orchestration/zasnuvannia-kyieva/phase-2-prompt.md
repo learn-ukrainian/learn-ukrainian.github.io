@@ -256,7 +256,7 @@ Key: й can ONLY follow a vowel. After a consonant, always use і — even befor
 
 **Level-gated IPA rules:**
 - **A1–A2**: IPA allowed ONLY on the **first occurrence** of each new vocabulary word when it is introduced. NEVER transcribe full sentences, example phrases, or words the student has already seen in earlier modules. The goal is a pronunciation hint on unfamiliar words, not a phonetics textbook.
-- **B1+**: Do NOT include inline IPA `[...]` transcriptions in the content markdown. IPA belongs ONLY in the vocabulary YAML file. Students at B1+ can read Cyrillic — cluttering prose with `[tʃɪˈtɑu̯]` breaks immersion and readability.
+- **B1+**: Do NOT include inline IPA `[...]` transcriptions in the content markdown. IPA belongs ONLY in the vocabulary YAML file. Students at B1+ can read Cyrillic — cluttering prose with `` breaks immersion and readability.
 
 **When IPA IS used (A1–A2 content, or any vocabulary file):**
 - ALL pronunciation MUST use IPA symbols. Latin transliterations are BANNED.

@@ -14,9 +14,9 @@ Good. Confirmed: all other vocabulary files use bare lists at root. The colors-a
 
 **2. LINGUISTIC — IPA error: оберіг**
 - **File**: `colors-and-clothing.md`, line 261
-- **Text**: `**оберіг** [ɔbeˈrʲih]`
+- **Text**: `**оберіг**`
 - **Problem**: Ukrainian г is always [ɦ] (voiced glottal fricative), never [h] (voiceless). Standard Ukrainian does not have final consonant devoicing. Writing [h] teaches the wrong sound.
-- **Fix**: Change to `[ɔbeˈrʲiɦ]`
+- **Fix**: Change to ``
 
 **3. COMPLETENESS — Missing одягати in vocabulary YAML**
 - **File**: `vocabulary/colors-and-clothing.yaml`
@@ -69,9 +69,9 @@ Good. Confirmed: all other vocabulary files use bare lists at root. The colors-a
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/colors-and-clothing.md
 ---OLD---
-**оберіг** [ɔbeˈrʲih]
+**оберіг**
 ---NEW---
-**оберіг** [ɔbeˈrʲiɦ]
+**оберіг**
 ===FIX_END===
 
 ===FIX_START===

@@ -371,9 +371,9 @@ You are going on vacation! **Валіза велика.** (The suitcase is big.)
 In Ukraine, the **база́р** (market) is a vital institution. It is not just a place to buy food; it is a place to talk, to smell, and to taste. Even with modern supermarkets everywhere, many people prefer the bazaar for fresh meat, dairy, and vegetables.
 
 At the bazaar, you don't just take things; you ask to see them.
-*   **Покажіть, будь ласка, цю диню** [ˈdɪnʲu]. (Please show me this melon.)
-*   **Дайте, будь ласка, грушу** [ˈɦruʃu]. (Give me the pear, please.)
-*   **Зважте, будь ласка, капусту** [kɑˈpustu]. (Please weigh the cabbage.)
+*   **Покажіть, будь ласка, цю диню**. (Please show me this melon.)
+*   **Дайте, будь ласка, грушу**. (Give me the pear, please.)
+*   **Зважте, будь ласка, капусту**. (Please weigh the cabbage.)
 *   **Я хо́чу спро́бувати смета́ну**. (I want to taste the sour cream.)
 
 The words *диня*, *груша*, *капуста*, and *сметана* are all feminine, so they change to *диню*, *грушу*, *капусту*, and *сметану*.
@@ -381,7 +381,7 @@ The words *диня*, *груша*, *капуста*, and *сметана* are a
 ### Пакет потрібен?
 If you go to a supermarket in Ukraine, you will hear one phrase more than any other. Every cashier, every time, will ask:
 
-**— Пакет потрібен?** [pɑˈkɛt pɔˈtrʲibɛn] (Is a bag needed?)
+**— Пакет потрібен?** (Is a bag needed?)
 
 Or they might ask if you want to *buy* a bag:
 **— Пакет берете?** (Are you taking a bag?)

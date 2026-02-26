@@ -128,11 +128,11 @@ Because we want to remain polite, we use the formal, plural form of the imperati
 
 Here are the two most important polite commands you will need:
 
-*   **Зачекайте, будь ласка.** [zɑt͡ʃɛˈkɑjtɛ]
+*   **Зачекайте, будь ласка.**
     *   Wait, please. (Use this when you need a moment to check something.)
 *   **Повторіть, будь ласка.**
     *   Repeat, please. (Use this when you did not hear or understand.)
-*   **Зачекайте одну хвилинку.** [xʋɪˈlɪnkɑ]
+*   **Зачекайте одну хвилинку.**
     *   Wait one moment.
 
 Using the formal imperative ending (usually **-іть** or **-йте**) ensures that your request is respectful. It turns a harsh command into a cooperative instruction. 
@@ -146,7 +146,7 @@ Using the formal imperative ending (usually **-іть** or **-йте**) ensures 
 
 Ви вже знаєте формальне прощання: **До побачення**. Ви також знаєте неформальний варіант: **Бувай**. Але є ще одна ідеальна фраза.
 
-The phrase is **До зв'язку!** [dɔ zʋjɑzˈku]. This translates literally as "Until the connection!" and means "Talk soon!" or "Keep in touch!". It is incredibly popular right now, especially for ending phone calls or signing off on messaging apps. It is friendly, modern, and implies that your relationship or communication will continue.
+The phrase is **До зв'язку!**. This translates literally as "Until the connection!" and means "Talk soon!" or "Keep in touch!". It is incredibly popular right now, especially for ending phone calls or signing off on messaging apps. It is friendly, modern, and implies that your relationship or communication will continue.
 
 *   **Добре, дякую. До зв'язку!**
     *   Good, thank you. Talk soon!

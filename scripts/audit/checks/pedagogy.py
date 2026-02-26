@@ -91,39 +91,6 @@ def check_duplicate_content(content: str) -> list[dict]:
     return violations
 
 
-def check_ipa_validation(content: str) -> list[dict]:
-    """Check for invalid IPA symbols in vocabulary table."""
-    violations = []
-
-    vocab_match = re.search(
-        r'^##\s*(Vocabulary|Словник)\s*\n(.*?)(?=\n##\s|\Z)',
-        content, re.MULTILINE | re.DOTALL
-    )
-    if not vocab_match:
-        return violations
-
-    vocab_section = vocab_match.group(2)
-
-    valid_ipa = set('ɑɛɪɔuəɐeioaɨʲʃʒʧʤŋɲɾrljwmnbdɡkptfvszhxɦʋʔˈˌːˑ.̪̟̠̹̜̩̯̃̈͡ ')
-
-    ipa_matches = re.findall(r'/([^/\n]+)/', vocab_section)
-
-    for ipa in ipa_matches:
-        if len(ipa) > 20 or '(' in ipa or ')' in ipa:
-            continue
-        invalid_chars = [c for c in ipa if c not in valid_ipa and not c.isspace()]
-        if invalid_chars:
-            violations.append({
-                'type': 'IPA',
-                'issue': f"Invalid IPA symbols in /{ipa}/: {invalid_chars}",
-                'fix': "Use valid IPA symbols. Check https://en.wikipedia.org/wiki/IPA_for_Ukrainian"
-            })
-            if len(violations) >= 3:
-                break
-
-    return violations
-
-
 def check_topic_consistency(content: str, frontmatter_str: str) -> list[dict]:
     """Check if content stays on topic based on title/objectives."""
     violations = []
@@ -203,34 +170,31 @@ def run_pedagogical_checks(
     # 7. Activity variety
     all_violations.extend(check_activity_variety(content))
 
-    # 8. IPA validation
-    all_violations.extend(check_ipa_validation(content))
-
-    # 9. Gender agreement
+    # 8. Gender agreement
     all_violations.extend(check_gender_agreement(content, level_code))
 
-    # 10. Case government
+    # 9. Case government
     all_violations.extend(check_case_government(content, level_code))
 
-    # 11. Topic consistency
+    # 10. Topic consistency
     all_violations.extend(check_topic_consistency(content, frontmatter_str))
 
-    # 12. Match-up misuse
+    # 11. Match-up misuse
     all_violations.extend(check_matchup_misuse(content))
 
-    # 13. Activity level restrictions
+    # 12. Activity level restrictions
     all_violations.extend(check_activity_level_restrictions(content, level_code, module_num, yaml_activities=yaml_activities))
 
-    # 14. Activity focus alignment (B1/B2)
+    # 13. Activity focus alignment (B1/B2)
     all_violations.extend(check_activity_focus_alignment(content, level_code, module_num, frontmatter_str))
 
-    # 15. Anagram validation (format, letter match, min length)
+    # 14. Anagram validation (format, letter match, min length)
     all_violations.extend(check_anagram_min_letters(content, yaml_activities=yaml_activities))
 
-    # 16. Content quality (LLM-based evaluation - optional, enabled via env var)
+    # 15. Content quality (LLM-based evaluation - optional, enabled via env var)
     all_violations.extend(check_content_quality(content, level_code, module_num))
-    
-    # 17. Activity Complexity (Strict - with context-specific targets)
+
+    # 16. Activity Complexity (Strict - with context-specific targets)
     all_violations.extend(check_activity_complexity(content, level_code, module_num, yaml_activities, module_focus))
 
     return all_violations

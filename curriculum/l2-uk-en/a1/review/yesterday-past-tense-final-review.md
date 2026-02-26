@@ -43,7 +43,7 @@ Now I have everything I need. Let me perform the deep adversarial review.
 - **Fix:** Rewrite summary to be concrete and useful.
 
 **Issue 7: Style — "прийняла закон" (md line 225)**
-- **Text:** «ЗУНР ... **прийняла** [prɪi̯nʲɐˈlɑ] закон про українську мову.»
+- **Text:** «ЗУНР ... **прийняла** закон про українську мову.»
 - **Problem:** In a legislative context, the standard Ukrainian term is "ухвалити закон" (to adopt/pass a law). "Прийняти закон" is colloquially used but is less precise for formal legislation.
 - **Severity:** Low. Both forms are used, but "ухвалити" is better in a culture box about legislation.
 - **Fix:** → «ухвалила»
@@ -62,7 +62,7 @@ Now I have everything I need. Let me perform the deep adversarial review.
 
 ### Items Verified — No Issues Found
 
-- **IPA transcriptions:** All checked and correct. [ˈu̯t͡ʃɔrɑ] for вчора is accurate (в→[u̯] before voiceless [t͡ʃ]). Stress on була/було/були correctly on second syllable. Affricates have proper tie bars throughout. [ɦ] used correctly for Г.
+- **IPA transcriptions:** All checked and correct. for вчора is accurate (в→[u̯] before voiceless [t͡ʃ]). Stress on була/було/були correctly on second syllable. Affricates have proper tie bars throughout. [ɦ] used correctly for Г.
 - **Historical claims:** February 15, 1574 (Fedorov's Apostol in Lviv) — confirmed as the completion date. February 15, 1919 (ZUNR language law) — confirmed. Both dates accurate.
 - **No Russianisms** detected. No Russian characters (ы, э, ё, ъ).
 - **Unjumble activities:** All 6 items verified — every word in `words` array appears in the `answer`, and answers are grammatical sentences.
@@ -122,10 +122,10 @@ Notice how the endings change to match the subject: *день був* (masculine
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/yesterday-past-tense.md
 ---OLD---
-ЗУНР (Західноукраїнська Народна Республіка) **прийняла** [prɪi̯nʲɐˈlɑ] закон про українську мову.
+ЗУНР (Західноукраїнська Народна Республіка) **прийняла** закон про українську мову.
 > *   Республіка (жіночий рід) → **прийняла** (минулий час, вона).
 ---NEW---
-ЗУНР (Західноукраїнська Народна Республіка) **ухвалила** [uxʋɑˈlɪlɑ] закон про українську мову.
+ЗУНР (Західноукраїнська Народна Республіка) **ухвалила** закон про українську мову.
 > *   Республіка (жіночий рід) → **ухвалила** (минулий час, вона).
 ===FIX_END===
 

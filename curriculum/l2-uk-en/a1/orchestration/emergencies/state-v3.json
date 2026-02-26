@@ -5,29 +5,29 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-26T00:38:54Z",
+      "ts": "2026-02-26T11:39:15Z",
       "task_id": "v3-emergencies-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-26T00:41:59Z"
+      "ts": "2026-02-26T11:44:13Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-26T00:41:59Z",
+      "ts": "2026-02-26T11:44:13Z",
       "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-26T00:49:34Z",
+      "ts": "2026-02-26T11:54:15Z",
       "attempts": 2
     },
     "v3-D": {
-      "status": "failed",
-      "ts": "2026-02-26T03:50:42Z",
+      "status": "complete",
+      "ts": "2026-02-26T12:07:05Z",
       "attempts": 3,
-      "note": "d2-dispatch-failed"
+      "note": "d2-iter2"
     }
   }
 }

@@ -1,3 +1,7 @@
+---
+argument-hint: "{level} {module_num}"
+---
+
 # /module-lesson-qa
 
 Validate lesson content before locking.
@@ -12,7 +16,7 @@ Validate lesson content before locking.
 
 ## Instructions
 
-Parse arguments: $ARGUMENTS
+Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 ### Step 1: Read Phase Instructions
 

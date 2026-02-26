@@ -1,17 +1,17 @@
 ---
 name: vocab-enrichment
-description: Use this skill when enriching vocabulary sections in curriculum modules. Adds IPA pronunciation, part of speech, grammatical info, and usage notes. Triggers when working on vocabulary tables, word lists, or running vocab enrichment tasks.
+description: Use this skill when enriching vocabulary sections in curriculum modules. Adds part of speech, grammatical info, and usage notes. Triggers when working on vocabulary tables, word lists, or running vocab enrichment tasks.
 allowed-tools: Read, Glob, Grep, Edit, Write, Bash
+context: fork
 ---
 
 # Vocabulary Enrichment Skill
 
-You are a vocabulary enrichment specialist for language learning curriculum. Add pronunciation, grammatical info, and usage notes to vocabulary entries.
+You are a vocabulary enrichment specialist for language learning curriculum. Add grammatical info and usage notes to vocabulary entries.
 
 ## When This Skill Activates
 
 - Enriching vocabulary sections in modules
-- Adding IPA pronunciation to word lists
 - Completing vocabulary table columns
 - Running vocab enrichment scripts
 
@@ -28,7 +28,6 @@ When new languages are added, their vocabulary files will follow the same patter
 1. **Identify target language** from file path
 2. **Read module vocabulary section**
 3. **For each word, add**:
-   - IPA pronunciation (with stress) - A1-A2 only
    - Part of speech
    - Grammatical info (gender, case requirements, etc.)
    - Usage notes if relevant
@@ -71,14 +70,14 @@ When new languages are added, their vocabulary files will follow the same patter
 
 ### Vocabulary Table Formats by Level
 
-#### A1-A2 (English header, 6 columns)
+#### A1-A2 (English header, 5 columns)
 
 ```markdown
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| слово | /ˈslɔwɔ/ | word | n | n | - |
+| Word | English | POS | Gender | Note |
+|------|---------|-----|--------|------|
+| слово | word | n | n | - |
 ```
 
 #### B1+ (Ukrainian header, 3 columns)
@@ -90,8 +89,6 @@ When new languages are added, their vocabulary files will follow the same patter
 |-------|----------|----------|
 | слово | word | ім.с., н. |
 ```
-
-**Note:** B1+ uses simplified 3-column format. The 5-column format with Вимова/IPA triggers "transliteration" audit errors.
 
 ### Part of Speech Abbreviations
 
@@ -117,34 +114,6 @@ When new languages are added, their vocabulary files will follow the same patter
 | f | ж. | feminine (жіночий) |
 | n | н. | neuter (середній) |
 | pl | мн. | plural only (множина) |
-
-### IPA Guidelines for Ukrainian (A1-A2 only)
-
-#### Vowels
-| Letter | IPA | Notes |
-|--------|-----|-------|
-| а | /ɑ/ | open back |
-| е | /ɛ/ | open-mid front |
-| и | /ɪ/ | near-close near-front |
-| і | /i/ | close front |
-| о | /ɔ/ | open-mid back |
-| у | /u/ | close back |
-| я | /jɑ/ | or /ʲɑ/ after consonant |
-| є | /jɛ/ | or /ʲɛ/ after consonant |
-| ї | /ji/ | always two sounds |
-| ю | /ju/ | or /ʲu/ after consonant |
-
-#### Consonants (key distinctions)
-| Letter | IPA | Notes |
-|--------|-----|-------|
-| г | /ɦ/ | voiced glottal fricative |
-| ґ | /ɡ/ | voiced velar stop (rare) |
-| щ | /ʃtʃ/ | two sounds |
-| ь | /ʲ/ | palatalization marker |
-
-#### Stress
-- Mark stressed syllable with /ˈ/ before it
-- Example: слово → /ˈslɔwɔ/
 
 ### Ukrainian Case Notes
 
@@ -205,13 +174,6 @@ CREATE TABLE vocabulary (
 | C2    | ~12,280          | 2,500          |
 
 ## Common Issues
-
-### Missing IPA
-**Cause**: espeak-ng not installed or Ukrainian voice missing
-**Fix**:
-```bash
-brew install espeak-ng
-```
 
 ### Duplicate Lemmas
 **Cause**: Same word added in multiple modules

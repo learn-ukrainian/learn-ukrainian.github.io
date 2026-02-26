@@ -1,7 +1,7 @@
 # Audit Report: M42 — emergencies.md
 **Level:** A1 | **Module:** M42 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 02:01:26
+**Generated:** 2026-02-26 13:07:06
 
 ## Configuration
 **Type:** A1
@@ -38,16 +38,15 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3020/2000 (raw: 3267)
+- **Words:** ✅ 3045/2000 (raw: 3298)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/3
+- **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
@@ -61,7 +60,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Emergencies** | ✅ | 27 | Included in Core |
-| **Вступ** | ✅ | 505 | Included in Core |
-| **Презентація** | ✅ | 1045 | Included in Core |
-| **Практика** | ✅ | 832 | Included in Core |
-| **Виробництво та підсумок** | ✅ | 611 | Included in Core |
+| **Вступ** | ✅ | 506 | Included in Core |
+| **Презентація** | ✅ | 1067 | Included in Core |
+| **Практика** | ✅ | 828 | Included in Core |
+| **Виробництво та підсумок** | ✅ | 617 | Included in Core |

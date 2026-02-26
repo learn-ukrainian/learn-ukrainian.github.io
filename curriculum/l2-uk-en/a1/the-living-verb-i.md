@@ -66,7 +66,7 @@ Because Ukrainian verbs change based on the actor, we must revisit our "actors"�
 | :--- | :--- | :--- |
 | **1st** | **Я** (I) | **Ми** (We) |
 | **2nd** | **Ти** (You - informal) | **Ви** (You - formal/plural) |
-| **3rd** | **Він / Вона** [ʋin] / [ʋɔˈnɑ] (He / She) | **Вони́** (They) |
+| **3rd** | **Він (He / She) | **Вони́** (They) |
 
 Every time you want to build a sentence, you must match the Captain (Pronoun) with the correct Uniform (Verb Ending). You cannot mix them up. You cannot say "I reads" or "They working." Harmony is everything in Ukrainian grammar.
 

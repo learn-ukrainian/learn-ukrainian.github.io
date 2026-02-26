@@ -150,10 +150,10 @@ Score: 3/5 → Lesson Quality 8, reduced to 7 for zero warmth markers.
 
 | Word | Current IPA | Correct IPA | File Line |
 |------|-------------|-------------|-----------|
-| дякувати | `[dʲɑkuʋɑtɪ]` | `[dʲɑˈkuʋɑtɪ]` | vocabulary/dative-verbs.yaml:9 |
-| толока | `[tɔlɔkɑ]` | `[tɔˈlɔkɑ]` | vocabulary/dative-verbs.yaml:60 |
+| дякувати | `[dʲɑkuʋɑtɪ]` | `` | vocabulary/dative-verbs.yaml:9 |
+| толока | `[tɔlɔkɑ]` | `` | vocabulary/dative-verbs.yaml:60 |
 
-**Inconsistent quoting:** Some IPA entries have surrounding quotes (`'[...]'`), others don't (`[...]`). Compare line 6 (`'[dɔpɔmɑˈɦɑtɪ]'`) with line 18 (`[dɔʋʲiˈrʲɑtɪ]`). Should be consistent.
+**Inconsistent quoting:** Some IPA entries have surrounding quotes (`'[...]'`), others don't (`[...]`). Compare line 6 (`''`) with line 18 (``). Should be consistent.
 
 ---
 

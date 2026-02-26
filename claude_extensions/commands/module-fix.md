@@ -1,3 +1,7 @@
+---
+argument-hint: "{level} {module_num}"
+---
+
 # /module-fix
 
 Check and fix a complete module until all audit gates pass.
@@ -31,7 +35,7 @@ Orchestrates all QA checks and fixes issues in a loop until COMPLETE:
 
 ## Instructions
 
-Parse arguments: $ARGUMENTS
+Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 ### Step 1: Resolve Module Path
 
@@ -102,7 +106,7 @@ Group violations by component:
 | **Meta**        | MISSING_META_YAML, INVALID_META_YAML, INVALID_ACTIVITY_TYPE, word target mismatch | Fix meta.yaml directly            |
 | **Lesson**      | OUTLINE_MISMATCH, word count, engagement boxes, immersion                         | Fix markdown directly             |
 | **Activities**  | Schema errors, item counts, mirroring, activity_hints coverage                    | Fix activities.yaml or regenerate |
-| **Vocab**       | Missing IPA, wrong POS, duplicates                                                | Fix vocabulary.yaml               |
+| **Vocab**       | Wrong POS, duplicates                                                             | Fix vocabulary.yaml               |
 | **Naturalness** | Score < 8, robotic text, template repetition                                      | Fix affected content              |
 
 ### Step 4: Smart Batching Fix Loop
@@ -133,7 +137,6 @@ while violations_exist:
       - Activity_hints coverage → missing types?
 
     Vocab violations (V):
-      - Missing IPA → how many items?
       - Wrong POS → which entries?
       - Duplicates → which words?
       - Count below target → how many needed?

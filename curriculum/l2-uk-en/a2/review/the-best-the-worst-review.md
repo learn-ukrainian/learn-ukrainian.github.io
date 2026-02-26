@@ -80,13 +80,13 @@ The correct Ukrainian spelling requires an apostrophe: **кав'ярню** and *
 **Location:** Vocabulary file
 
 **5a — Double stress on найважливіший (line 27):**
-`[nɑjʋɑˈʒlɪˈʋʲiʃɪj]` — Contains two stress marks (ˈʒ and ˈʋʲ). Ukrainian words have one primary stress. Correct: `[nɑjʋɑʒlɪˈʋʲiʃɪj]`
+`` — Contains two stress marks (ˈʒ and ˈʋʲ). Ukrainian words have one primary stress. Correct: ``
 
 **5b — Misplaced stress on найвищий (line 31):**
-`[nɑˈjʋɪʃt͡ʃɪj]` — Stress mark before `j` implies stress on "на́й-", but the stress is on "ви́щий": correct `[nɑjˈʋɪʃt͡ʃɪj]`
+`` — Stress mark before `j` implies stress on "на́й-", but the stress is on "ви́щий": correct ``
 
 **5c — Spurious diphthong in найдовший (line 59):**
-`[nɑjˈdɔu̯ʃɪj]` — The vowel in "дов" is monophthong /ɔ/, not diphthong /ɔu̯/. Correct: `[nɑjˈdɔʋʃɪj]`
+`` — The vowel in "дов" is monophthong /ɔ/, not diphthong /ɔu̯/. Correct: ``
 
 **Fix:** Correct all three IPA transcriptions.
 

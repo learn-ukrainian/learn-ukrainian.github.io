@@ -126,7 +126,7 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 **Ukrainian must be:**
 - Simple vocabulary (high-frequency words)
 - Short sentences
-- Clear pronunciation guidance (IPA)
+- Clear pronunciation guidance (stress marks)
 - Consistent grammar patterns (no exceptions early)
 
 **English must be:**

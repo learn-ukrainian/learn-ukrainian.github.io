@@ -70,7 +70,6 @@ Follow the full review protocol from Phase 5 (Deep Review). In summary:
 ### STEP 2: Deep Verification (Line by Line)
 - Every Ukrainian sentence: grammar, naturalness, Russianisms
 - English: clarity, warm tutor voice
-- IPA: correct stress placement
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
@@ -268,7 +267,6 @@ Plan-Content Alignment: [PASS/FAIL]
 - Content lines read: {X}
 - Activity items checked: {X}
 - Ukrainian sentences verified: {X}
-- IPA transcriptions checked: {X}
 - Issues found: {X}
 
 ## Verdict    <!-- REQUIRED — rejection if missing -->

@@ -2,13 +2,13 @@
   "module": "at-the-market",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:40:27.424966Z",
+  "last_audit": "2026-02-26T14:03:27.904846Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:47:35.694038Z",
+    "md": "2026-02-26T13:57:56.930295Z",
     "meta": "2026-02-20T18:14:03.323678Z",
-    "activities": "2026-02-20T18:44:00.856788Z",
-    "vocabulary": "2026-02-22T18:44:35.974740Z",
+    "activities": "2026-02-26T13:38:03.228117Z",
+    "vocabulary": "2026-02-26T13:38:03.228492Z",
     "plan": "2026-02-20T20:42:56.816952Z",
     "research": "2026-02-20T18:14:03.292403Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2736/2000 (raw: 3034)"
+      "message": "2685/2000 (raw: 2983)"
     },
     "activities": {
       "status": "pass",
@@ -29,19 +29,14 @@
       "message": "10/8"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "23/1"
+      "message": "0 < 1 (soft target)"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -57,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 0
   }

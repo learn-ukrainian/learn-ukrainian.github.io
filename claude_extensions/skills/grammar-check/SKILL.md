@@ -2,6 +2,7 @@
 name: grammar-check
 description: Use this skill when checking target language text for grammar correctness based on CEFR level constraints and Ukrainian State Standard 2024. Validates morphology, syntax, complexity, and standard compliance. Triggers when reviewing sentences, examples, or activities in curriculum content.
 allowed-tools: Read, Glob, Grep
+context: fork
 ---
 
 # Grammar Check Skill

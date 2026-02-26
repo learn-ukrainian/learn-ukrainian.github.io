@@ -1,3 +1,7 @@
+---
+argument-hint: "{level} {module_num}"
+---
+
 # /module-meta-qa
 
 Validate module metadata before locking.
@@ -12,7 +16,7 @@ Validate module metadata before locking.
 
 ## Instructions
 
-Parse arguments: $ARGUMENTS
+Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 ### Step 1: Read Phase Instructions
 

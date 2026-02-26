@@ -327,90 +327,9 @@ def check_section_balance(content: str, file_path: str = '') -> List[Dict]:
     return violations
 
 
-# =============================================================================
-# CHECK 7: IPA DENSITY CAP
-# =============================================================================
-
-# IPA transcription patterns:
-# /slashes/ — broad transcription. Must contain IPA-characteristic characters
-#   (ˈˌːɛɔɪʲ etc.) to avoid matching prose slashes like "він/вона".
-#   Also restricted to single-line and max 80 chars to prevent runaway matches.
-# [brackets with IPA markers] — narrow transcription (must contain ˈˌː)
-_IPA_CHARS = r'ˈˌːɛɔɪʲʋɑɾʃʒɲɟɡŋǀǁǃ'
-_IPA_SLASH_PATTERN = re.compile(
-    r'/[^/\n]{1,80}[' + _IPA_CHARS + r'][^/\n]{0,80}/'
-)
-_IPA_BRACKET_PATTERN = re.compile(r'\[[^\]\n]{0,80}[ˈˌː][^\]\n]{0,80}\]')
-
-
 def check_ipa_density(content: str, file_path: str = '') -> List[Dict]:
-    """
-    Flag excessive inline IPA transcriptions that pad word count.
-
-    Counts IPA tokens (space-delimited words within IPA brackets/slashes)
-    in narrative zones. Vocabulary tables are already stripped by
-    _split_narrative_zones.
-
-    Threshold: >5% of word count = warning; >10% = critical.
-    """
-    violations = []
-
-    # Get narrative zones only
-    narrative_zones = _split_narrative_zones(content)
-    narrative_text = '\n'.join(narrative_zones)
-
-    # Find all IPA spans
-    ipa_spans = []
-    for pattern in (_IPA_SLASH_PATTERN, _IPA_BRACKET_PATTERN):
-        ipa_spans.extend(m.group() for m in pattern.finditer(narrative_text))
-
-    if not ipa_spans:
-        return []
-
-    # Count IPA "words" (space-delimited tokens inside the brackets)
-    ipa_word_count = 0
-    for span in ipa_spans:
-        # Strip delimiters (/ or [])
-        inner = span.strip('/').strip('[]')
-        ipa_word_count += len(inner.split())
-
-    # Total word count from narrative text
-    total_words = len(narrative_text.split())
-    if total_words == 0:
-        return []
-
-    ipa_ratio = ipa_word_count / total_words
-
-    if ipa_ratio > 0.10:
-        violations.append({
-            'type': 'IPA_DENSITY_EXCESSIVE',
-            'severity': 'critical',
-            'issue': (
-                f"IPA transcriptions contain ~{ipa_word_count} tokens "
-                f"({ipa_ratio:.1%} of {total_words} words). "
-                f"Found {len(ipa_spans)} IPA spans in prose."
-            ),
-            'fix': (
-                "Reduce inline IPA. Move detailed transcriptions to a pronunciation "
-                "sidebar or vocabulary table. Keep only key pronunciation notes inline."
-            ),
-        })
-    elif ipa_ratio > 0.05:
-        violations.append({
-            'type': 'IPA_DENSITY_EXCESSIVE',
-            'severity': 'warning',
-            'issue': (
-                f"IPA transcriptions contain ~{ipa_word_count} tokens "
-                f"({ipa_ratio:.1%} of {total_words} words). "
-                f"Found {len(ipa_spans)} IPA spans in prose."
-            ),
-            'fix': (
-                "Consider reducing inline IPA. Use vocabulary tables for "
-                "systematic pronunciation data instead of inline transcriptions."
-            ),
-        })
-
-    return violations
+    """IPA removed from curriculum. This check is now a no-op."""
+    return []
 
 
 # =============================================================================

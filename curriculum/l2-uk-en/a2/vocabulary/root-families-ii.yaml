@@ -1,138 +1,113 @@
 items:
   - lemma: "думати"
-    ipa: '[ˈdumɑtɪ]'
     translation: "to think"
     pos: "verb"
     aspect: "imperfective"
     notes: "active process of thinking; collocations: думати про (+ Acc)"
   - lemma: "думка"
-    ipa: '[ˈdumkɑ]'
     translation: "thought, opinion"
     pos: "noun"
     gender: "f"
     notes: "collocations: цікава думка, на мою думку"
   - lemma: "говорити"
-    ipa: '[ɦɔʋɔˈrɪtɪ]'
     translation: "to speak"
     pos: "verb"
     aspect: "imperfective"
     notes: "focus on ability or process; usage: говорити українською"
   - lemma: "розмовляти"
-    ipa: '[rɔzmɔˈʋlʲɑtɪ]'
     translation: "to converse"
     pos: "verb"
     aspect: "imperfective"
     notes: "implies reciprocal exchange; collocations: розмовляти телефоном"
   - lemma: "мова"
-    ipa: '[ˈmɔʋɑ]'
     translation: "language"
     pos: "noun"
     gender: "f"
     notes: "never use 'язик' for language; collocations: рідна мова, іноземна мова"
   - lemma: "слухати"
-    ipa: '[ˈsluxɑtɪ]'
     translation: "to listen"
     pos: "verb"
     aspect: "imperfective"
     notes: "active process; collocations: слухати музику, уважно слухати"
   - lemma: "слухняний"
-    ipa: '[sluˈxnʲɑnɪj]'
     translation: "obedient"
     pos: "adjective"
     notes: "mnemonic: 'he who listens'"
   - lemma: "відмова"
-    ipa: '[ʋʲiˈdmɔʋɑ]'
     translation: "refusal"
     pos: "noun"
     gender: "f"
     notes: "etymology: 'speaking back/away'; collocation: отримати відмову"
   - lemma: "казати"
-    ipa: '[kɑˈzɑtɪ]'
     translation: "to say, to tell"
     pos: "verb"
     aspect: "imperfective"
     notes: "focus on content/message; used for reporting speech"
   - lemma: "мовчання"
-    ipa: '[mɔˈʋt͡ʃɑnʲːɑ]'
     translation: "silence"
     pos: "noun"
     gender: "n"
     notes: "derivative of 'мов-'; proverb: Слово – срібло, мовчання – золото"
   - lemma: "вважати"
-    ipa: '[ʋːɑˈʒɑtɪ]'
     translation: "to consider, to believe"
     pos: "verb"
     aspect: "imperfective"
     notes: "high frequency for expressing formal opinions"
   - lemma: "чути"
-    ipa: '[ˈt͡ʃutɪ]'
     translation: "to hear"
     pos: "verb"
     aspect: "imperfective"
     notes: "passive counterpart to 'слухати'"
   - lemma: "розмова"
-    ipa: '[rɔˈzmɔʋɑ]'
     translation: "conversation"
     pos: "noun"
     gender: "f"
     notes: "noun derived from 'розмовляти'; focus on 'роз-' prefix logic"
   - lemma: "відмовляти"
-    ipa: '[ʋʲidmɔˈʋlʲɑtɪ]'
     translation: "to refuse"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "розум"
-    ipa: '[ˈrɔzum]'
     translation: "mind, intellect"
     pos: "noun"
     gender: "m"
   - lemma: "слух"
-    ipa: '[slux]'
     translation: "hearing"
     pos: "noun"
     gender: "m"
   - lemma: "слово"
-    ipa: '[ˈslɔʋɔ]'
     translation: "word"
     pos: "noun"
     gender: "n"
   - lemma: "звук"
-    ipa: '[zʋuk]'
     translation: "sound"
     pos: "noun"
     gender: "m"
   - lemma: "спілкування"
-    ipa: '[sʲpʲilkuˈʋɑnʲːɑ]'
     translation: "communication"
     pos: "noun"
     gender: "n"
   - lemma: "рішення"
-    ipa: '[ˈrʲiʃɛnʲːɑ]'
     translation: "decision"
     pos: "noun"
     gender: "n"
   - lemma: "обмін"
-    ipa: '[ˈɔbmʲin]'
     translation: "exchange"
     pos: "noun"
     gender: "m"
   - lemma: "діалог"
-    ipa: '[dʲiɑˈlɔɦ]'
     translation: "dialogue"
     pos: "noun"
     gender: "m"
   - lemma: "увага"
-    ipa: '[uˈʋɑɦɑ]'
     translation: "attention"
     pos: "noun"
     gender: "f"
   - lemma: "розуміти"
-    ipa: '[rɔzuˈmʲitɪ]'
     translation: "to understand"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "язик"
-    ipa: '[jɑˈzɪk]'
     translation: "tongue"
     pos: "noun"
     gender: "m"

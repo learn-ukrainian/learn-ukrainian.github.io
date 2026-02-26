@@ -1,0 +1,27 @@
+{
+  "track": "b1",
+  "slug": "regions-east",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T01:35:56Z",
+      "task_id": "v3-regions-east-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T01:40:17Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T07:30:13Z",
+      "task_id": "v3-regions-east-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T10:18:24Z",
+      "attempts": 1
+    }
+  }
+}

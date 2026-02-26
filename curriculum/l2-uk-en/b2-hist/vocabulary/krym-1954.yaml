@@ -1,123 +1,98 @@
 items:
   - lemma: "передача"
-    ipa: '[pɛrɛˈdɑt͡ʃɑ]'
     translation: "transfer"
     pos: "noun"
     gender: "f"
   - lemma: "указ"
-    ipa: '[uˈkɑz]'
     translation: "decree"
     pos: "noun"
     gender: "m"
   - lemma: "президія"
-    ipa: '[prɛˈzɪdʲijɑ]'
     translation: "presidium"
     pos: "noun"
     gender: "f"
   - lemma: "автономія"
-    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
     translation: "autonomy"
     pos: "noun"
     gender: "f"
   - lemma: "депортація"
-    ipa: '[dɛpɔrˈtɑt͡sʲijɑ]'
     translation: "deportation"
     pos: "noun"
     gender: "f"
   - lemma: "анексія"
-    ipa: '[ɑˈnɛksʲijɑ]'
     translation: "annexation"
     pos: "noun"
     gender: "f"
   - lemma: "юридичний"
-    ipa: '[jurɪˈdɪt͡ʃnɪj]'
     translation: "legal"
     pos: "adjective"
   - lemma: "законодавство"
-    ipa: '[zɑkɔnɔˈdɑu̯stʋɔ]'
     translation: "legislation"
     pos: "noun"
     gender: "n"
   - lemma: "доцільність"
-    ipa: '[dɔˈt͡sʲilʲnʲisʲtʲ]'
     translation: "expediency"
     pos: "noun"
     gender: "f"
   - lemma: "легітимність"
-    ipa: '[lɛɦʲiˈtɪmnʲisʲtʲ]'
     translation: "legitimacy"
     pos: "noun"
     gender: "f"
   - lemma: "референдум"
-    ipa: '[rɛfɛˈrɛndum]'
     translation: "referendum"
     pos: "noun"
     gender: "m"
   - lemma: "суверенітет"
-    ipa: '[suʋɛrɛnʲiˈtɛt]'
     translation: "sovereignty"
     pos: "noun"
     gender: "m"
   - lemma: "територія"
-    ipa: '[tɛrɪˈtɔrʲijɑ]'
     translation: "territory"
     pos: "noun"
     gender: "f"
   - lemma: "пропаганда"
-    ipa: '[prɔpɑˈɦɑndɑ]'
     translation: "propaganda"
     pos: "noun"
     gender: "f"
   - lemma: "міф"
-    ipa: '[mʲif]'
     translation: "myth"
     pos: "noun"
     gender: "m"
   - lemma: "корінний"
-    ipa: '[kɔrʲiˈnːɪj]'
     translation: "indigenous"
     pos: "adjective"
   - lemma: "переселенець"
-    ipa: '[pɛrɛsɛˈlɛnɛt͡sʲ]'
     translation: "settler"
     pos: "noun"
     gender: "m"
   - lemma: "іригація"
-    ipa: '[irɪˈɦɑt͡sʲijɑ]'
     translation: "irrigation"
     pos: "noun"
     gender: "f"
   - lemma: "посушливий"
-    ipa: '[pɔˈsuʃlɪʋɪj]'
     translation: "arid"
     pos: "adjective"
   - lemma: "відбудова"
-    ipa: '[ʋʲidbuˈdɔʋɑ]'
     translation: "reconstruction"
     pos: "noun"
     gender: "f"
   - lemma: "окупація"
-    ipa: '[ɔkuˈpɑt͡sʲijɑ]'
     translation: "occupation"
     pos: "noun"
     gender: "f"
   - lemma: "катастрофа"
-    ipa: '[kɑtɑˈstrɔfɑ]'
     translation: "catastrophe"
     pos: "noun"
     gender: "f"
   - lemma: "інтеграція"
-    ipa: '[intɛˈɦrɑt͡sʲijɑ]'
     translation: "integration"
     pos: "noun"
     gender: "f"
   - lemma: "колонізація"
-    ipa: '[kɔlɔnʲiˈzɑt͡sʲijɑ]'
     translation: "colonization"
     pos: "noun"
     gender: "f"
   - lemma: "справедливість"
-    ipa: '[sprɑʋɛˈdlɪʋʲisʲtʲ]'
     translation: "justice"
     pos: "noun"
     gender: "f"

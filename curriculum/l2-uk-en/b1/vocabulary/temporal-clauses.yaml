@@ -1,136 +1,106 @@
 items:
   - lemma: "коли"
-    ipa: '[kɔˈlɪ]'
     translation: "when"
     pos: "conjunction"
   - lemma: "поки"
-    ipa: '[ˈpɔkɪ]'
     translation: "while, until"
     pos: "conjunction"
   - lemma: "перш ніж"
-    ipa: '[pɛrʃ nʲiʒ]'
     translation: "before"
     pos: "conjunction"
   - lemma: "після того як"
-    ipa: '[ˈpʲisʲlʲɑ tɔˈɦɔ jɑk]'
     translation: "after"
     pos: "conjunction"
   - lemma: "як тільки"
-    ipa: '[jɑk ˈtʲilʲkɪ]'
     translation: "as soon as"
     pos: "conjunction"
   - lemma: "доки"
-    ipa: '[ˈdɔkɪ]'
     translation: "while, as long as"
     pos: "conjunction"
   - lemma: "під час"
-    ipa: '[pʲid t͡ʃɑs]'
     translation: "during"
     pos: "preposition"
   - lemma: "одночасно"
-    ipa: '[ɔdnɔˈt͡ʃɑsnɔ]'
     translation: "simultaneously"
     pos: "adverb"
   - lemma: "щойно"
-    ipa: '[ˈʃt͡ʃɔjnɔ]'
     translation: "just, as soon as"
     pos: "adverb"
   - lemma: "відтоді як"
-    ipa: '[ʋʲiˈdtɔˈdʲi jɑk]'
     translation: "since the time when"
     pos: "conjunction"
   - lemma: "до того як"
-    ipa: '[dɔ tɔˈɦɔ jɑk]'
     translation: "before"
     pos: "conjunction"
   - lemma: "тим часом як"
-    ipa: '[tɪm ˈt͡ʃɑsɔm jɑk]'
     translation: "meanwhile, whereas"
     pos: "conjunction"
   - lemma: "одночасність"
-    ipa: '[ɔdnɔˈt͡ʃɑsʲnʲisʲtʲ]'
     translation: "simultaneity"
     pos: "noun"
     gender: "f"
   - lemma: "послідовність"
-    ipa: '[pɔsʲlʲiˈdɔu̯nʲisʲtʲ]'
     translation: "sequence"
     pos: "noun"
     gender: "f"
   - lemma: "тривалість"
-    ipa: '[trɪˈʋɑlʲisʲtʲ]'
     translation: "duration"
     pos: "noun"
     gender: "f"
   - lemma: "мить"
-    ipa: '[mɪtʲ]'
     translation: "moment, instant"
     pos: "noun"
     gender: "f"
   - lemma: "передувати"
-    ipa: '[pɛrɛduˈʋɑtɪ]'
     translation: "to precede"
     pos: "verb"
     aspect: "impf"
   - lemma: "розгортатися"
-    ipa: '[rɔzɦɔrˈtɑtɪsʲɑ]'
     translation: "to unfold"
     pos: "verb"
     aspect: "impf"
   - lemma: "фіксувати"
-    ipa: '[fʲiksuˈʋɑtɪ]'
     translation: "to fix, record"
     pos: "verb"
     aspect: "impf"
   - lemma: "раптовий"
-    ipa: '[rɑˈptɔʋɪj]'
     translation: "sudden"
     pos: "adjective"
   - lemma: "паралельний"
-    ipa: '[pɑrɑˈlɛlʲnɪj]'
     translation: "parallel"
     pos: "adjective"
   - lemma: "фоновий"
-    ipa: '[ˈfɔnɔʋɪj]'
     translation: "background"
     pos: "adjective"
   - lemma: "заперечення"
-    ipa: '[zɑpɛˈrɛt͡ʃɛnʲːɑ]'
     translation: "negation"
     pos: "noun"
     gender: "n"
   - lemma: "очікування"
-    ipa: '[ɔˈt͡ʃʲikuʋɑnʲːɑ]'
     translation: "expectation, waiting"
     pos: "noun"
     gender: "n"
   - lemma: "межа"
-    ipa: '[mɛˈʒɑ]'
     translation: "boundary, limit"
     pos: "noun"
     gender: "f"
   - lemma: "встигнути"
-    ipa: '[ˈʍstɪɦnutɪ]'
     translation: "to manage (in time)"
     pos: "verb"
     aspect: "perf"
   - lemma: "зупинятися"
-    ipa: '[zupɪˈnʲɑtɪsʲɑ]'
     translation: "to stop"
     pos: "verb"
     aspect: "impf"
   - lemma: "настати"
-    ipa: '[nɑˈstɑtɪ]'
     translation: "to arrive, come (about time)"
     pos: "verb"
     aspect: "perf"
   - lemma: "тривати"
-    ipa: '[trɪˈʋɑtɪ]'
     translation: "to last, continue"
     pos: "verb"
     aspect: "impf"
   - lemma: "сполучник"
-    ipa: '[spɔˈlut͡ʃnɪk]'
     translation: "conjunction"
     pos: "noun"
     gender: "m"

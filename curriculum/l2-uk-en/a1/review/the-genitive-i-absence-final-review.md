@@ -37,8 +37,8 @@ Good — the vocabulary file exists. Now I've found a critical error in it. Let 
 
 **MINOR — Vocabulary file: wrong IPA for квиток**
 - **File:** `vocabulary/the-genitive-i-absence.yaml`, line 24
-- **Current:** `'[kʋeˈtɔk]'`
-- **Problem:** Ukrainian "и" is [ɪ], not [e]. Content file correctly uses [kʋɪˈtɔk] (line 27). The vocab file contradicts.
+- **Current:** `''`
+- **Problem:** Ukrainian "и" is [ɪ], not [e]. Content file correctly uses (line 27). The vocab file contradicts.
 
 **MINOR — Activities: Quiz explanation for "немає проблем" is misleading**
 - **File:** `activities/the-genitive-i-absence.yaml`, line 234
@@ -54,11 +54,11 @@ FILE: curriculum/l2-uk-en/a1/the-genitive-i-absence.md
 ---OLD---
 *   **паспорт** → немає **паспорта**
 *   **брат** → немає **брата**
-*   **телефон** → немає **телефону** [teleˈfɔnu]
+*   **телефон** → немає **телефону**
 ---NEW---
 *   **паспорт** → немає **паспорта**
 *   **брат** → немає **брата**
-*   **хліб** → немає **хліба** [ˈxlʲibɑ]
+*   **хліб** → немає **хліба**
 ===FIX_END===
 
 ===FIX_START===
@@ -78,17 +78,17 @@ FILE: curriculum/l2-uk-en/a1/the-genitive-i-absence.md
 FILE: curriculum/l2-uk-en/a1/the-genitive-i-absence.md
 ---OLD---
 **Memorize these key A1 words that take -у:**
-*   **час** (time) → немає **часу** [ˈt͡ʃɑsu]
-*   **цукор** (sugar) → без **цукру** [ˈt͡sukru] (Notice the fleeting 'o'!)
-*   **чай** (tea) → немає **чаю** [ˈt͡ʃɑju]
-*   **обід** (lunch) → немає **обіду** [oˈbʲidu]
+*   **час** (time) → немає **часу**
+*   **цукор** (sugar) → без **цукру** (Notice the fleeting 'o'!)
+*   **чай** (tea) → немає **чаю**
+*   **обід** (lunch) → немає **обіду**
 ---NEW---
 **Memorize these key A1 words that take -у:**
-*   **час** (time) → немає **часу** [ˈt͡ʃɑsu]
-*   **цукор** (sugar) → без **цукру** [ˈt͡sukru] (Notice the fleeting 'o'!)
-*   **чай** (tea) → немає **чаю** [ˈt͡ʃɑju]
-*   **обід** (lunch) → немає **обіду** [oˈbʲidu]
-*   **телефон** (phone) → немає **телефону** [tɛlɛˈfɔnu]
+*   **час** (time) → немає **часу**
+*   **цукор** (sugar) → без **цукру** (Notice the fleeting 'o'!)
+*   **чай** (tea) → немає **чаю**
+*   **обід** (lunch) → немає **обіду**
+*   **телефон** (phone) → немає **телефону**
 *   **сон** (dream/sleep) → немає **сну** (The 'о' disappears, like цукор → цукру!)
 ===FIX_END===
 
@@ -148,13 +148,13 @@ FILE: curriculum/l2-uk-en/a1/activities/the-genitive-i-absence.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/vocabulary/the-genitive-i-absence.yaml
 ---OLD---
-- ipa: '[teleˈfɔn]'
+- ipa: ''
   lemma: телефон
   notes: Concrete object → Genitive ending -а (телефона)
   pos: noun (masc.)
   translation: phone
 ---NEW---
-- ipa: '[tɛlɛˈfɔn]'
+- ipa: ''
   lemma: телефон
   notes: Device/technology → Genitive ending -у (телефону)
   pos: noun (masc.)
@@ -164,10 +164,10 @@ FILE: curriculum/l2-uk-en/a1/vocabulary/the-genitive-i-absence.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/vocabulary/the-genitive-i-absence.yaml
 ---OLD---
-- ipa: '[kʋeˈtɔk]'
+- ipa: ''
   lemma: квиток
 ---NEW---
-- ipa: '[kʋɪˈtɔk]'
+- ipa: ''
   lemma: квиток
 ===FIX_END===
 

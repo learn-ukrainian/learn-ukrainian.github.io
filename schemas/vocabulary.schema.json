@@ -31,10 +31,6 @@
             "minLength": 1,
             "description": "Ukrainian word form (dictionary form)"
           },
-          "ipa": {
-            "type": "string",
-            "description": "IPA pronunciation (e.g., /prɪʋˈit/)"
-          },
           "translation": {
             "type": "string",
             "minLength": 1,

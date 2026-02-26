@@ -1,134 +1,104 @@
 items:
   - lemma: "минулий"
-    ipa: '[mɪˈnulɪj]'
     translation: "past (chronological)"
     pos: "adjective"
   - lemma: "колишній"
-    ipa: '[kɔˈlɪʃnʲij]'
     translation: "former (status/role)"
     pos: "adjective"
   - lemma: "майбутній"
-    ipa: '[mɑjˈbutʲnʲij]'
     translation: "future"
     pos: "adjective"
   - lemma: "пожовтілий"
-    ipa: '[pɔʒɔˈʋtʲilɪj]'
     translation: "yellowed"
     pos: "adjective"
   - lemma: "зів'ялий"
-    ipa: '[zʲiˈʋjɑlɪj]'
     translation: "withered"
     pos: "adjective"
   - lemma: "русизм"
-    ipa: '[ruˈsɪzm]'
     translation: "russism"
     pos: "noun"
     gender: "m"
   - lemma: "нормативний"
-    ipa: '[nɔrmɑˈtɪu̯nɪj]'
     translation: "normative"
     pos: "adjective"
   - lemma: "синтетичний"
-    ipa: '[sɪntɛˈtɪt͡ʃnɪj]'
     translation: "synthetic"
     pos: "adjective"
   - lemma: "антисуржик"
-    ipa: '[ɑntɪsurʒɪk]'
     translation: "anti-surzhyk"
     pos: "noun"
     gender: "m"
   - lemma: "канцелярит"
-    ipa: '[kɑnt͡sɛlʲɑrɪt]'
     translation: "bureaucratic jargon"
     pos: "noun"
     gender: "m"
   - lemma: "милозвучність"
-    ipa: '[mɪlɔˈzʋut͡ʃnʲisʲtʲ]'
     translation: "euphony"
     pos: "noun"
     gender: "f"
   - lemma: "застарілий"
-    ipa: '[zɑstɑˈrʲilɪj]'
     translation: "outdated"
     pos: "adjective"
   - lemma: "посивілий"
-    ipa: '[pɔˈsɪˈʋʲilɪj]'
     translation: "gray-haired"
     pos: "adjective"
   - lemma: "вживаний"
-    ipa: '[ˈʋʒɪʋɑnɪj]'
     translation: "used / second-hand"
     pos: "adjective"
   - lemma: "дієприкметник"
-    ipa: '[dʲijɛprɪˈkmɛtnɪk]'
     translation: "participle"
     pos: "noun"
     gender: "m"
   - lemma: "маргінальний"
-    ipa: '[mɑrɦʲiˈnɑlʲnɪj]'
     translation: "marginal"
     pos: "adjective"
   - lemma: "неперехідний"
-    ipa: '[nɛpɛrɛxʲidnɪj]'
     translation: "intransitive"
     pos: "adjective"
   - lemma: "доконаний"
-    ipa: '[dɔˈkɔnɑnɪj]'
     translation: "perfective"
     pos: "adjective"
   - lemma: "калькування"
-    ipa: '[kɑlʲkuˈʋɑnʲːɑ]'
     translation: "calquing / literal translation"
     pos: "noun"
     gender: "n"
   - lemma: "знеособлення"
-    ipa: '[znɛɔˈsɔblɛnʲːɑ]'
     translation: "depersonalization"
     pos: "noun"
     gender: "n"
   - lemma: "підрядний"
-    ipa: '[pʲiˈdʲrʲɑdnɪj]'
     translation: "subordinate"
     pos: "adjective"
   - lemma: "лексикалізація"
-    ipa: '[lɛksɪkɑlʲiˈzɑt͡sʲijɑ]'
     translation: "lexicalization"
     pos: "noun"
     gender: "f"
   - lemma: "інфінітив"
-    ipa: '[inʲfʲinʲiˈtɪu̯]'
     translation: "infinitive"
     pos: "noun"
     gender: "m"
   - lemma: "аналітичний"
-    ipa: '[ɑnɑlʲiˈtɪt͡ʃnɪj]'
     translation: "analytic"
     pos: "adjective"
   - lemma: "ущільнення"
-    ipa: '[uˈʃt͡ʃʲilʲnɛnʲːɑ]'
     translation: "condensation"
     pos: "noun"
     gender: "n"
   - lemma: "прийдешнє"
-    ipa: '[prɪjˈdɛʃnʲɛ]'
     translation: "the future"
     pos: "noun"
     gender: "n"
   - lemma: "спізнілий"
-    ipa: '[sʲpʲiˈzʲnʲilɪj]'
     translation: "late / belated"
     pos: "adjective"
   - lemma: "абсурд"
-    ipa: '[ɑˈbsurd]'
     translation: "absurdity"
     pos: "noun"
     gender: "m"
   - lemma: "дієвідмінювання"
-    ipa: '[dʲijɛʋʲiˈdʲmʲinʲuʋɑnʲːɑ]'
     translation: "conjugation"
     pos: "noun"
     gender: "n"
   - lemma: "той, хто"
-    ipa: '[tɔj, xtɔ]'
     translation: "the one who"
     pos: "pronoun"

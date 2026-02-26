@@ -1,121 +1,91 @@
-- ipa: '[reˈɦʲis.tr]'
   lemma: регістр
   pos: noun
   translation: register (linguistic)
-- ipa: '[doˈrɛt͡ʃ.nʲisʲtʲ]'
   lemma: доречність
   pos: noun
   translation: appropriateness, relevance
-- ipa: '[pɑˈsɪu̯.nɪj stɑn]'
   lemma: пасивний стан
   pos: phrase
   translation: passive voice
-- ipa: '[dʲi.je.prɪˈkmɛt.nɪk]'
   lemma: дієприкметник
   pos: noun
   translation: participle
-- ipa: '[sklɑd.no.pidˈrʲɑd.ne ˈrɛ.t͡ʃe.nʲːɑ]'
   lemma: складнопідрядне речення
   pos: phrase
   translation: complex sentence (with subordination)
-- ipa: '[fuŋk.t͡sʲi.oˈnɑlʲ.nɪj stɪlʲ]'
   lemma: функціональний стиль
   pos: phrase
   translation: functional style
-- ipa: '[nɑ.uˈkɔ.ʋɪj stɪlʲ]'
   lemma: науковий стиль
   pos: phrase
   translation: academic/scientific style
-- ipa: '[o.fʲiˈt͡sʲij.no dʲi.loˈʋɪj stɪlʲ]'
   lemma: офіційно-діловий стиль
   pos: phrase
   translation: official-business style
-- ipa: '[pu.blʲi.t͡sɪˈstɪt͡ʃ.nɪj stɪlʲ]'
   lemma: публіцистичний стиль
   pos: phrase
   translation: journalistic/publicist style
-- ipa: '[xuˈdɔʒ.nʲij stɪlʲ]'
   lemma: художній стиль
   pos: phrase
   translation: artistic/literary style
-- ipa: '[rozˈmɔu̯.nɪj stɪlʲ]'
   lemma: розмовний стиль
   pos: phrase
   translation: colloquial style
-- ipa: '[frɑ.ze.o.loˈɦʲizm]'
   lemma: фразеологізм
   pos: noun
   translation: phraseological unit, idiom
-- ipa: '[ˈstɑ.lɪj ˈʋɪ.rɑz]'
   lemma: сталий вираз
   pos: phrase
   translation: set expression
-- ipa: '[kom.peˈtɛn.t͡sʲi.jɑ]'
   lemma: компетенція
   pos: noun
   translation: competence, competency
-- ipa: '[kon.so.lʲiˈdɑ.t͡sʲi.jɑ]'
   lemma: консолідація
   pos: noun
   translation: consolidation
-- ipa: '[sɑ.mo.oˈt͡sʲin.kɑ]'
   lemma: самооцінка
   pos: noun
   translation: self-assessment
-- ipa: '[in.teˈɦrɑ.t͡sʲi.jɑ]'
   lemma: інтеграція
   pos: noun
   translation: integration
-- ipa: '[pe.re.xidˈnɪj]'
   lemma: перехідний
   pos: adj
   translation: transitional
-- ipa: '[bez.o.soˈbɔ.ʋɪj]'
   lemma: безособовий
   pos: adj
   translation: impersonal
-- ipa: '[ˈkɑlʲ.kɑ]'
   lemma: калька
   pos: noun
   translation: calque, loan translation
-- ipa: '[kɑn.t͡se.lʲɑˈrɪzm]'
   lemma: канцеляризм
   pos: noun
   translation: officialese, bureaucratese
-- ipa: '[zʋoˈrɔt]'
   lemma: зворот
   pos: noun
   translation: turn of phrase, construction
-- ipa: '[u.sʋiˈdɔm.le.nɪj]'
   lemma: усвідомлений
   pos: adj
   translation: conscious, deliberate
-- ipa: '[obˈrʲɑd]'
   lemma: обряд
   pos: noun
   translation: rite, ritual
-- ipa: '[sɑˈkrɑlʲ.nɪj]'
   lemma: сакральний
   pos: adj
   translation: sacred
-- ipa: '[zɦuˈʃt͡ʃu.ʋɑ.tɪ ˈfɑr.bɪ]'
   lemma: згущувати фарби
   pos: phrase
   translation: to exaggerate, to dramatize (lit. to thicken paints)
-- ipa: '[roˈbɪ.tɪ z ˈmu.xɪ sloˈnɑ]'
   lemma: робити з мухи слона
   pos: phrase
   translation: to make a mountain out of a molehill (lit. to make an elephant out
     of a fly)
-- ipa: '[ˈbɪ.tɪ ˈbɑj.dɪ.kɪ]'
   lemma: бити байдики
   pos: phrase
   translation: to loiter, to idle (lit. to beat thumbs)
-- ipa: '[zɑ.suˈkɑu̯.ʃɪ ru.kɑˈʋɪ]'
   lemma: засукавши рукави
   pos: phrase
   translation: hard at work (lit. with sleeves rolled up)
-- ipa: '[trɪˈmɑ.tɪ nʲis zɑ ˈʋi.trom]'
   lemma: тримати ніс за вітром
   pos: phrase
   translation: to keep one's ear to the ground, to follow trends (lit. to keep nose

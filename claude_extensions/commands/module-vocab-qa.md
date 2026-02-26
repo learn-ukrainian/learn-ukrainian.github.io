@@ -1,3 +1,7 @@
+---
+argument-hint: "{level} {module_num}"
+---
+
 # /module-vocab-qa
 
 Validate vocabulary against plan requirements.
@@ -12,7 +16,7 @@ Validate vocabulary against plan requirements.
 
 ## Instructions
 
-Parse arguments: $ARGUMENTS
+Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 ### Step 1: Read Phase Instructions
 
@@ -53,10 +57,9 @@ Validate against plan's `vocabulary_hints` and level requirements:
 
 1. **Word count** - Meets minimum for level (20+ for B1+)
 2. **Required vocab present** - All plan-specified words included
-3. **IPA transcription** - All entries have pronunciation
-4. **Part of speech** - Valid POS tags
-5. **No duplicates** - Each word unique
-6. **Translations** - English translations present
+3. **Part of speech** - Valid POS tags
+4. **No duplicates** - Each word unique
+5. **Translations** - English translations present
 
 ### Step 4: Update Status Cache
 
@@ -74,7 +77,6 @@ VOCAB-QA: PASS
 
 ✓ Word count: {count} (minimum: {min})
 ✓ Required vocabulary: All present
-✓ IPA transcription: Complete
 ✓ Part of speech: Valid tags
 ✓ No duplicates
 

@@ -33,7 +33,7 @@ Related: a1-37 (At the Market), a1-39 (Buying Tickets)
 > **Usage Note:** While **магазин** is universal, use **супермаркет** when you specifically mean a large grocery store with carts and aisles. If you say "Я йду в маркет" (colloquial), everyone understands you mean the grocery store.
 
 ### Феномен «Сільпо»
-Дизайн мережі **«Сільпо»** [sʲilʲˈpɔ] часто дивує туристів. Вони створюють "тематичні" супермаркети.
+Дизайн мережі **«Сільпо»** часто дивує туристів. Вони створюють "тематичні" супермаркети.
 
 У Львові є Сільпо у стилі відеогри *Grand Theft Auto*. У Києві є магазини у стилі Стімпанк. Є магазин у стилі *Аліса у Країні Чудес*.
 
@@ -115,7 +115,7 @@ Imagine you are going to the store. Here is your list in Ukrainian.
 > 7. **Вода** (без газу)
 
 ### Grammar: У якому відділі?
-To ask "In which department...?", we use the phrase **У якому відділі...?** [u jɑˈkɔmu ʋidˈdʲilʲi]. Notice that the word *відділ* changes to *відділі*. This is the Locative case, which tells us *where* something is.
+To ask "In which department...?", we use the phrase **У якому відділі...?**. Notice that the word *відділ* changes to *відділі*. This is the Locative case, which tells us *where* something is.
 
 *   **У якому відділі молоко?** — In which department is the milk?
 *   **У якому відділі цукерки?** — In which department are the sweets?
@@ -142,14 +142,14 @@ To ask "In which department...?", we use the phrase **У якому відділ
 > **Fact:** No! **Знаходити** means "to find" (active), but **знаходити** + **ся** (reflexive) means "to find itself" or "to be located." If you say "Я знаходжу хліб," you mean "I am finding bread" (like a treasure hunter). If you ask "Де знаходиться хліб?", you mean "Where is the bread located?"
 
 ### Скажіть, будь ласка...
-Ввічливість відкриває двері. Перед питанням використовуйте магічну фразу: **Скажіть, будь ласка...** [skɑˈʒitʲ budʲ ˈlɑskɑ] (Tell me, please...).
+Ввічливість відкриває двері. Перед питанням використовуйте магічну фразу: **Скажіть, будь ласка...** (Tell me, please...).
 
 *   **Скажіть, будь ласка, де цукор?** — Tell me please, where is the sugar?
 *   **Вибачте, скажіть, будь ласка, де вода?** — Excuse me, tell me please, where is the water?
 
 **Ви́бачте** — "Excuse me" — це чудове слово. Воно привертає увагу працівника.
 
-Ви також можете сказати: **Підкажіть, будь ласка...** [pidkɑˈʒitʲ budʲ ˈlɑskɑ] (Could you tell me, please...). Це теж дуже ввічливо.
+Ви також можете сказати: **Підкажіть, будь ласка...** (Could you tell me, please...). Це теж дуже ввічливо.
 *   **Підкажіть, будь ласка, де кава?** — Could you tell me, please, where is the coffee?
 
 ### Тут vs Там
@@ -182,7 +182,7 @@ To ask "In which department...?", we use the phrase **У якому відділ
 Ви маєте продукти. Тепер фінальна битва: **ка́са**. Ця взаємодія має сценарій. Ви знаєте сценарій. Все буде легко.
 
 ### The "Bag Ritual"
-Ви підходите до каси. Касир запитує: **Пакет потрібен?** [pɑˈkɛt pɔˈtribɛn] — Do you need a bag?
+Ви підходите до каси. Касир запитує: **Пакет потрібен?** — Do you need a bag?
 
 Ваші варіанти:
 1.  **Так, будь ласка.** — Yes, please.
@@ -284,10 +284,10 @@ Examples:
 ### Asking about Price
 Іноді ціни немає. Треба запитати: "Скільки це коштує?".
 
-*   **Скільки коштує?** [ˈskilʲkɪ kɔʃˈtujɛ] — How much does it cost?
+*   **Скільки коштує?** — How much does it cost?
     *   *Usage:* **Скільки коштує молоко?** (How much does milk cost?)
 
-*   **Яка ціна?** [jɑˈkɑ t͡sʲiˈnɑ] — What is the price?
+*   **Яка ціна?** — What is the price?
     *   *Usage:* **Вибачте! Яка ціна?** (Excuse me! What is the price?)
 
 **Ціна́** — це слово "price." It is feminine (ends in -a), so we ask **Яка** ціна?.

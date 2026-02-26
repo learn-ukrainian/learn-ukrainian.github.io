@@ -1,7 +1,7 @@
 # Audit Report: M11 — checkpoint-cases.md
 **Level:** A2 | **Module:** M11 | **Phase:** A2.1 | **Pedagogy:** TTT | **Target:** 2500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-25 20:35:46
+**Generated:** 2026-02-26 14:14:59
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -49,7 +49,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

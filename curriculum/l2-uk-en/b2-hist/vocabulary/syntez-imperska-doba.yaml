@@ -1,129 +1,104 @@
 items:
   - lemma: "синтез"
-    ipa: '[ˈsɪntɛz]'
     translation: "synthesis"
     pos: "noun"
     gender: "m"
     notes: "Історичний процес об'єднання різних елементів."
   - lemma: "імперія"
-    ipa: '[imˈpɛrʲijɑ]'
     translation: "empire"
     pos: "noun"
     gender: "f"
   - lemma: "колоніалізм"
-    ipa: '[kɔlɔnʲiɑˈlʲizm]'
     translation: "colonialism"
     pos: "noun"
     gender: "m"
   - lemma: "спротив"
-    ipa: '[ˈsprɔtɪu̯]'
     translation: "resistance"
     pos: "noun"
     gender: "m"
     notes: "Дії, спрямовані на протидію гнобленню."
   - lemma: "пробудження"
-    ipa: '[prɔˈbud͡ʒɛnʲːɑ]'
     translation: "awakening"
     pos: "noun"
     gender: "n"
   - lemma: "заборона"
-    ipa: '[zɑbɔˈrɔnɑ]'
     translation: "ban"
     pos: "noun"
     gender: "f"
   - lemma: "експлуатація"
-    ipa: '[ɛkspluɑˈtɑt͡sʲijɑ]'
     translation: "exploitation"
     pos: "noun"
     gender: "f"
   - lemma: "ідентичність"
-    ipa: '[idɛnˈtɪt͡ʃnʲisʲtʲ]'
     translation: "identity"
     pos: "noun"
     gender: "f"
   - lemma: "кріпацтво"
-    ipa: '[krʲiˈpɑt͡stʋɔ]'
     translation: "serfdom"
     pos: "noun"
     gender: "n"
   - lemma: "русифікація"
-    ipa: '[rusɪfʲiˈkɑt͡sʲijɑ]'
     translation: "Russification"
     pos: "noun"
     gender: "f"
   - lemma: "автономія"
-    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
     translation: "autonomy"
     pos: "noun"
     gender: "f"
   - lemma: "інтелігенція"
-    ipa: '[intɛlʲiˈɦɛnʲt͡sʲijɑ]'
     translation: "intelligentsia"
     pos: "noun"
     gender: "f"
   - lemma: "нація"
-    ipa: '[ˈnɑt͡sʲijɑ]'
     translation: "nation"
     pos: "noun"
     gender: "f"
   - lemma: "революція"
-    ipa: '[rɛʋɔˈlʲut͡sʲijɑ]'
     translation: "revolution"
     pos: "noun"
     gender: "f"
   - lemma: "інкорпорація"
-    ipa: '[inkɔrpɔˈrɑt͡sʲijɑ]'
     translation: "incorporation"
     pos: "noun"
     gender: "f"
   - lemma: "губернія"
-    ipa: '[ɦuˈbɛrnʲijɑ]'
     translation: "governorate"
     pos: "noun"
     gender: "f"
   - lemma: "лінгвоцид"
-    ipa: '[lʲinɦʋɔˈt͡sɪd]'
     translation: "linguicide"
     pos: "noun"
     gender: "m"
     notes: "Свідоме знищення мови етнічної групи."
   - lemma: "меншовартість"
-    ipa: '[mɛnʃɔˈʋɑrtʲisʲtʲ]'
     translation: "inferiority"
     pos: "noun"
     gender: "f"
     notes: "Комплекс, що нав'язувався імперією місцевому населенню."
   - lemma: "експансія"
-    ipa: '[ɛˈkspɑnʲsʲijɑ]'
     translation: "expansion"
     pos: "noun"
     gender: "f"
   - lemma: "уніфікація"
-    ipa: '[unʲifʲiˈkɑt͡sʲijɑ]'
     translation: "unification"
     pos: "noun"
     gender: "f"
   - lemma: "самоврядування"
-    ipa: '[sɑmɔu̯rʲɑduˈʋɑnʲːɑ]'
     translation: "self-government"
     pos: "noun"
     gender: "n"
   - lemma: "радикальний"
-    ipa: '[rɑdɪˈkɑlʲnɪj]'
     translation: "radical"
     pos: "adjective"
   - lemma: "самостійність"
-    ipa: '[sɑmɔˈsʲtʲijnʲisʲtʲ]'
     translation: "independence"
     pos: "noun"
     gender: "f"
   - lemma: "федералізм"
-    ipa: '[fɛdɛrɑˈlʲizm]'
     translation: "federalism"
     pos: "noun"
     gender: "m"
   - lemma: "край"
-    ipa: '[krɑj]'
     translation: "land / region"
     pos: "noun"
     gender: "m"

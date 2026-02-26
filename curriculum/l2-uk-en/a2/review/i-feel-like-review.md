@@ -110,8 +110,8 @@ IPA exists in the vocabulary YAML but not in the lesson prose where learners enc
 
 **Location:** Vocabulary file, lines 12 and 86
 
-- «йому» has IPA `[jɔmu]` — should be `[jɔˈmu]` (stress on second syllable)
-- «метеозалежність» has IPA `[mɛtɛɔzɑlɛʒnʲisʲtʲ]` — missing primary stress mark, should be `[mɛtɛɔzɑˈlɛʒnʲisʲtʲ]`
+- «йому» has IPA `[jɔmu]` — should be `` (stress on second syllable)
+- «метеозалежність» has IPA `[mɛtɛɔzɑlɛʒnʲisʲtʲ]` — missing primary stress mark, should be ``
 
 **Fix:** Add stress marks to both entries.
 

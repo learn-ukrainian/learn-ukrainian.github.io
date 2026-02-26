@@ -1,129 +1,99 @@
 items:
   - lemma: "доконаний вид"
-    ipa: '[dɔˈkɔnɑnɪj ʋɪd]'
     translation: "perfective aspect"
     pos: "noun"
     notes: "Focuses on the result and the completion of an action."
   - lemma: "недоконаний вид"
-    ipa: '[nɛdɔˈkɔnɑnɪj ʋɪd]'
     translation: "imperfective aspect"
     pos: "noun"
     notes: "Focuses on the process, duration, and repetition of an action."
   - lemma: "процес"
-    ipa: '[prɔˈt͡sɛs]'
     translation: "process"
     pos: "noun"
   - lemma: "результат"
-    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
   - lemma: "тривалість"
-    ipa: '[trɪˈʋɑlʲisʲtʲ]'
     translation: "duration"
     pos: "noun"
   - lemma: "завершення"
-    ipa: '[zɑˈʋɛrʃɛnʲːɑ]'
     translation: "completion"
     pos: "noun"
   - lemma: "намір"
-    ipa: '[ˈnɑmʲir]'
     translation: "intention"
     pos: "noun"
   - lemma: "одноразова дія"
-    ipa: '[ɔdnɔrɑˈzɔʋɑ ˈdʲijɑ]'
     translation: "single action"
     pos: "noun"
   - lemma: "повторення"
-    ipa: '[pɔˈʋtɔrɛnʲːɑ]'
     translation: "repetition"
     pos: "noun"
   - lemma: "фокус"
-    ipa: '[ˈfɔkus]'
     translation: "focus"
     pos: "noun"
   - lemma: "послідовність"
-    ipa: '[pɔsʲlʲiˈdɔu̯nʲisʲtʲ]'
     translation: "sequence"
     pos: "noun"
   - lemma: "загальне твердження"
-    ipa: '[zɑˈɦɑlʲnɛ ˈtʋɛrd͡ʒɛnʲːɑ]'
     translation: "general statement"
     pos: "noun"
   - lemma: "обмежений час"
-    ipa: '[ɔˈbmɛʒɛnɪj t͡ʃɑs]'
     translation: "bounded time"
     pos: "noun"
   - lemma: "маркер"
-    ipa: '[mɑrkɛr]'
     translation: "marker"
     pos: "noun"
   - lemma: "тривати"
-    ipa: '[trɪˈʋɑtɪ]'
     translation: "to last"
     pos: "verb"
     aspect: "impf"
   - lemma: "завершувати"
-    ipa: '[zɑˈʋɛrʃuʋɑtɪ]'
     translation: "to complete"
     pos: "verb"
     aspect: "impf"
   - lemma: "завершити"
-    ipa: '[zɑʋɛrˈʃɪtɪ]'
     translation: "to complete"
     pos: "verb"
     aspect: "pf"
   - lemma: "досягати"
-    ipa: '[dɔsʲɑˈɦɑtɪ]'
     translation: "to achieve"
     pos: "verb"
     aspect: "impf"
   - lemma: "досягти"
-    ipa: '[dɔsʲɑˈɦtɪ]'
     translation: "to achieve"
     pos: "verb"
     aspect: "pf"
   - lemma: "регулярно"
-    ipa: '[rɛɦuˈlʲɑrnɔ]'
     translation: "regularly"
     pos: "adverb"
   - lemma: "постійно"
-    ipa: '[pɔˈsʲtʲijnɔ]'
     translation: "constantly"
     pos: "adverb"
   - lemma: "миттєво"
-    ipa: '[mɪˈtʲːɛʋɔ]'
     translation: "instantly"
     pos: "adverb"
   - lemma: "унікальний"
-    ipa: '[unʲiˈkɑlʲnɪj]'
     translation: "unique"
     pos: "adjective"
   - lemma: "рутина"
-    ipa: '[ruˈtɪnɑ]'
     translation: "routine"
     pos: "noun"
   - lemma: "зміна"
-    ipa: '[ˈzʲmʲinɑ]'
     translation: "change"
     pos: "noun"
   - lemma: "режисер"
-    ipa: '[rɛʒɪˈsɛr]'
     translation: "director"
     pos: "noun"
   - lemma: "об'єктив"
-    ipa: '[ɔbjɛˈktɪu̯]'
     translation: "lens"
     pos: "noun"
   - lemma: "фіксувати"
-    ipa: '[fʲiksuˈʋɑtɪ]'
     translation: "to capture, to record"
     pos: "verb"
     aspect: "impf"
   - lemma: "статика"
-    ipa: '[ˈstɑtɪkɑ]'
     translation: "statics"
     pos: "noun"
   - lemma: "динаміка"
-    ipa: '[dɪˈnɑmʲikɑ]'
     translation: "dynamics"
     pos: "noun"

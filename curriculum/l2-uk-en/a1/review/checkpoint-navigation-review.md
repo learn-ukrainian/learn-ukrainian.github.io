@@ -52,11 +52,11 @@
 
 **Location:** Vocabulary file, line 95-96
 
-**Content:** `ipa: '[ˈkɔʃtuˈʋɑtɪ]'` for коштувати
+**Content:** `ipa: ''` for коштувати
 
-**Problem:** Two primary stress marks (ˈkɔʃtu and ˈʋɑtɪ). Ukrainian words have exactly one primary stress. The correct stress is коштува́ти, so the IPA should be `[kɔʃtuˈʋɑtɪ]`.
+**Problem:** Two primary stress marks (ˈkɔʃtu and ˈʋɑtɪ). Ukrainian words have exactly one primary stress. The correct stress is коштува́ти, so the IPA should be ``.
 
-**Fix:** Change to `ipa: '[kɔʃtuˈʋɑtɪ]'` (remove the first stress mark).
+**Fix:** Change to `ipa: ''` (remove the first stress mark).
 
 ---
 
@@ -111,7 +111,7 @@
 
 ### Callout Box Verification
 
-1. **[!culture] "Kyiv Underground"** (section «Навичка 2: Місцевий відмінок», lines 112-116): Claims Arsenalna station is "the deepest in the world (105.5 meters)." This is a widely cited and accepted fact. The IPA `[ɑrsɛˈnɑlʲnɑ]` is plausible. **PASS.**
+1. **[!culture] "Kyiv Underground"** (section «Навичка 2: Місцевий відмінок», lines 112-116): Claims Arsenalna station is "the deepest in the world (105.5 meters)." This is a widely cited and accepted fact. The IPA `` is plausible. **PASS.**
 
 2. **[!culture] "Golden Gate"** (section «Навичка 5: Орієнтування в місті», lines 270-272): Claims Zoloti Vorota is "famous for its mosaics and looks like an underground palace" and mentions meeting "by the monument to Yaroslav the Wise." The station IS known for its ornate interior with mosaics depicting scenes from Kyivan Rus. The Yaroslav the Wise monument is near the station exit. **PASS.**
 

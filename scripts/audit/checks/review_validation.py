@@ -161,7 +161,7 @@ def _build_fix_prompt(tier_num: int) -> str:
         return base + (
             "You MUST: (1) read every line of the .md and activities .yaml, "
             "(2) check every English explanation is B1-readable and encouraging, "
-            "(3) verify every Ukrainian sentence + IPA transcription, "
+            "(3) verify every Ukrainian sentence and stress mark, "
             "(4) apply the 'Would I Continue?' test from the tier-1 guide, "
             "(5) score each dimension honestly and list at least 1 real issue."
         )

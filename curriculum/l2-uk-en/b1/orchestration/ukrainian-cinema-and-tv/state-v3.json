@@ -1,0 +1,27 @@
+{
+  "track": "b1",
+  "slug": "ukrainian-cinema-and-tv",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T10:44:30Z",
+      "task_id": "v3-ukrainian-cinema-and-tv-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T10:48:03Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T10:50:47Z",
+      "task_id": "v3-ukrainian-cinema-and-tv-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T10:56:42Z",
+      "attempts": 2
+    }
+  }
+}

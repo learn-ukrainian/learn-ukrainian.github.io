@@ -8,7 +8,7 @@
 | # | Dimension | Score | Justification |
 |---|-----------|-------|---------------|
 | 1 | **Lesson Quality** | 8 | Warm tutor voice, good use of tables and visual mapping, engaging dialogues. However, the grammar section (Section «Граматика: Конструкція «Немає» та «Без»») covers 9 sub-topics (~1200 words) before any learner practice. The NO_QUICK_WIN issue is real — no "try it yourself" moment until Section «Практика: Родовий відмінок у дії» (line 207+). No explicit encouragement phrases ("Great!", "You've got this!") anywhere in the content. Zero warm greeting/opening — no "Привіт!" or equivalent. Closing (line 360) is adequate but not celebratory. "Would I Continue?": 4/5 (fail: no quick wins). |
-| 2 | **Language** | 7 | Double stress mark error on line 122: «ма́ми́» — Ukrainian words have exactly one stress; correct form is «ма́ми». Genitive plural forms «круасанів» (line 251) and «Кексів» (line 253) appear in the dialogue despite being explicitly out of scope (line 4: "Full Genitive plural (except fixed phrase 'немає грошей') → A2"). IPA inconsistency: line 33 uses [kʋɪˈtka] with plain 'a', while line 229 uses [ˈxlʲibɑ] with 'ɑ' for the same vowel quality. No Russianisms or colonial framing found. |
+| 2 | **Language** | 7 | Double stress mark error on line 122: «ма́ми́» — Ukrainian words have exactly one stress; correct form is «ма́ми». Genitive plural forms «круасанів» (line 251) and «Кексів» (line 253) appear in the dialogue despite being explicitly out of scope (line 4: "Full Genitive plural (except fixed phrase 'немає грошей') → A2"). IPA inconsistency: line 33 uses with plain 'a', while line 229 uses with 'ɑ' for the same vowel quality. No Russianisms or colonial framing found. |
 | 3 | **Immersion** | 8 | Pre-computed at 29.2% (target 25-40%). Within range. Section «Культурний контекст: «Немає проблем»» has good Ukrainian immersion in dialogues and proverbs. Section «Вступ: Ситуація відсутності» appropriately uses English for explanations. Good graduated immersion from English theory to Ukrainian examples to full Ukrainian dialogues. |
 | 4 | **Activities** | 7 | 10 activities with good type variety (2 group-sort, 2 match-up, 3 fill-in, 2 unjumble, 1 quiz). However: (1) Activity "Заповніть діалоги" item 3 (activity file line 292): «— Ви бажаєте чай з молоком? — Ні, я люблю ... (без молоко).» — the answer "без молока" creates «я люблю без молока» which is grammatically incomplete ("люблю" requires a direct object). (2) Same activity item 6 (activity file line 316): «— Це вода? — Тут ... (немає вода).» — pragmatic mismatch: "Це вода?" is an identity question, not an existence question; the absence response doesn't match. (3) Activity "Закінчення: -а чи -у?" groups "сир" under «Абстрактні/Речовини/Іншомовні» — calling cheese a "substance" is debatable (it's countable). |
 | 5 | **Vocabulary** | 8 | 20 items with IPA, POS, and grammatical notes. All required plan items present. Missing recommended items: ключ, газ (both appear in content but not in vocabulary YAML). "Газ" is used in Section «Граматика: Конструкція «Немає» та «Без»» line 144 «Вода без газу» but has no vocabulary entry. |
@@ -44,7 +44,7 @@
 
 **Evidence:** «**мама** (mom) → немає **ма́ми́**»
 
-**Problem:** Ukrainian words have exactly one stress per word. «Мами» is stressed on the first syllable: [ˈmɑmɪ], so the correct notation is «ма́ми» (stress on the first syllable only). Two stress marks imply two stressed syllables, which is phonologically impossible.
+**Problem:** Ukrainian words have exactly one stress per word. «Мами» is stressed on the first syllable:, so the correct notation is «ма́ми» (stress on the first syllable only). Two stress marks imply two stressed syllables, which is phonologically impossible.
 
 **Fix:** Change «ма́ми́» to «ма́ми».
 
@@ -93,13 +93,13 @@
 **Location:** Content file, lines 33, 68, 229
 
 **Evidence:**
-- Line 33: «[u ˈmɛnɛ nɛˈmɑjɛ kʋɪˈtka]» — final vowel uses plain 'a'
-- Line 68: «[u ˈmɛnɛ nɛˈmɑjɛ ˈpɑspɔrta]» — final vowel uses plain 'a'
-- Line 229: «[ˈʋdɔmɑ nɛˈmɑjɛ ˈxlʲibɑ]» — final vowel uses 'ɑ'
+- Line 33: «» — final vowel uses plain 'a'
+- Line 68: «» — final vowel uses plain 'a'
+- Line 229: «» — final vowel uses 'ɑ'
 
 **Problem:** Ukrainian has the open back unrounded vowel [ɑ] in all positions. The transcription inconsistently uses [a] (lines 33, 68) and [ɑ] (line 229) for the same phoneme. This should be standardized.
 
-**Fix:** Normalize all instances of Ukrainian /а/ to [ɑ] in IPA transcriptions. Change [kʋɪˈtka] → [kʋɪˈtkɑ], [ˈpɑspɔrta] → [ˈpɑspɔrtɑ].
+**Fix:** Normalize all instances of Ukrainian /а/ to [ɑ] in IPA transcriptions. Change →, →.
 
 ---
 

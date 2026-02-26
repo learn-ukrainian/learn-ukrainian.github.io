@@ -1,220 +1,198 @@
-<!-- content-hash: 7b7285f9b054 -->
+<!-- content-hash: d77575c7509d -->
 **Reviewed-By:** claude-opus-4-6
 
 ---
 
 ## Scores
 
-| # | Dimension | Score | Evidence Summary |
-|---|-----------|-------|-----------------|
-| 1 | **Language Quality** | 7/10 | Ukrainian grammar largely correct; colonial framing on line 31 ("Russian Empire" reference defines market achievement within imperial context); factual imprecision in same sentence. |
-| 2 | **Content Richness** | 8/10 | Strong cultural hooks (Bessarabskyi, Pryvoz, tasting culture), good dialogues, named references. Missing planned elephant Murza legend. Word count 136.8% of target. |
-| 3 | **LLM Fingerprint** | 8/10 | "Це для X" repeated 5x consecutively in vocabulary section (lines 60-75); "Я люблю" stacked 4x at story conclusion (line 296). No generic AI clichés. Section openings are varied. |
-| 4 | **Lesson Quality** | 8/10 | "Would I Continue?" test: 4/5 pass — no explicit "Today you'll learn..." preview; long cultural section before first practice. Warm tone and good scaffolding overall. |
-| 5 | **Activities** | 8/10 | 10 activities, excellent type variety. Some items test untaught genitive forms (капусти, груш not in content tables). Quiz question phrasing awkward in one case. |
-| 6 | **Factual Accuracy** | 8/10 | Bessarabskyi date imprecise (content: "1912" vs research: "1910-1912"); claim downgraded ("one of the first" vs research: "THE first covered market with refrigeration"). Plan-required Murza legend absent. |
-| 7 | **Immersion Balance** | 9/10 | 35.5% Ukrainian within target range (35-55%). Good scaffolding with translations throughout. Could push slightly higher for A1.4 phase module. |
-
-**Weighted Average: ~8.0/10**
+| # | Dimension | Score | Evidence |
+|---|-----------|-------|----------|
+| 1 | **Plan Compliance** | 7/10 | Content sections match meta outline but diverge from plan file. Plan (plans/a1/) specifies a dedicated «Мовні помилки та практика» section (450w) which does not exist as a standalone H2. Plan point «легенда про слона Мурзу» for Pryvoz (plans file line 14) is absent from content. Objectives are met: learner can buy produce, ask prices, negotiate politely, describe wants. |
+| 2 | **Language Quality** | 8/10 | Ukrainian in the content file is grammatically clean. Genitive forms correct: «кілограм картоплі», «кілограм яблук», «кілограм помідорів». Adjective agreement tables accurate (lines 154-158). Dialogues sound natural — «Як мед! Спробуйте!» (line 217), «Беріть більше, завтра не буде!» (line 223). **Docked for:** Russicism «здача» in vocabulary YAML (line 46) and two activities (lines 176, 276) directly contradicting the lesson which correctly teaches «решта» (lines 241, 258). |
+| 3 | **Factual Accuracy** | 8/10 | Bessarabskyi rynok: Content says "Built in 1912" (line 31); research says "1910-1912 рр." — acceptable (completion year). Content says "one of the first indoor refrigeration systems in Eastern Europe" (line 31); research says "Перший критий ринок з холодильними камерами" — content is more cautious, which is fine. Pryvoz "Established in 1827" (line 34) matches research. Name etymology «привозити» confirmed. **Docked for:** Missing architect attribution (Генрик Гай) and the elephant Murza legend mentioned in the plan. |
+| 4 | **Lesson Quality** | 8/10 | Warm tutor voice throughout. Strong opening hook: «Для студента ринок — це школа.» (line 17). Clear "today you'll learn" preview via the opening blockquote (line 11-13). Multiple quick wins: vocabulary tables, simple dialogues. Good "would I continue?" — pacing comfortable, instructions clear, Ukrainian introduced gently. **Docked for:** Section «Лексика та Граматика: Як купувати?» introduces ~12 new vocabulary items + genitive patterns + number agreement + price phrases + quality adjectives before any practice. Cognitive overload risk for A1 (>3 concepts before practice). |
+| 5 | **Immersion** | 9/10 | 35.2% Ukrainian is within the 35-55% target band for module 37 (A1.4 phase). Ukrainian sentences always paired with English translations in parentheses. Good scaffolding pattern: Ukrainian bolded → (English translation). Dialogues use full Ukrainian with line-by-line translation. |
+| 6 | **Activity Quality** | 7/10 | 10 activities with 6 types (match-up, group-sort, quiz, fill-in, unjumble, true-false) — good variety. Fill-in activities (Genitive drill, dialogue completion) are pedagogically excellent. **Docked for:** (a) Russicism «здача» in 2 unjumble items; (b) 4+ quiz questions test content recall not language (lines 57, 79, 90, 101); (c) unjumble answers lack punctuation — «Дайте будь ласка кілограм яблук» missing commas (line 166). |
+| 7 | **LLM Fingerprint** | 8/10 | Section openings varied: «Для студента ринок — це школа.» / "To buy something..." / "Now, let's put it all together." / «Ось моя історія.» — no monotony. No «це не просто» / «це не лише» patterns. No generic AI clichés. Callouts use 5 different types. **Docked for:** Opening blockquote (line 13) uses "beating heart of the community" — mildly purple prose, and «Ринок — це життя, це серце міста.» (line 17) echoes the same "heart" metaphor two lines later. |
+| 8 | **Richness** | 7/10 | 6 callout boxes (culture ×1, myth-buster ×1, tip ×1, warning ×2, observe ×1). 2 grammar tables (lines 89-97, 105-110). 1 adjective declension table (lines 154-158). 3 embedded dialogues. Audit reports richness 81% with gaps: cultural 2/3 (need +1 cultural/did-you-know), dialogues 0/4 (detection issue — dialogues exist but may not be in recognized format). |
+| 9 | **Humanity & Warmth** | 8/10 | Direct address frequent: «Ви», "you" throughout. Encouragement: «Не бійтеся» (line 26), «Це легко» (line 78), «Спробуйте самі» (line 78), «Це просто, так?» (line 270). "Would I continue?" test: 4/5 pass. Progress celebration at end: «Тепер ви знаєте:» (line 306) with summary. **Docked for:** Could use one more "don't worry" moment in the grammar-heavy section 2. |
+| 10 | **Vocabulary Coverage** | 5/10 | **CRITICAL**: Vocabulary YAML is malformed — all 23 entries use `  lemma:` (2-space indent) without list dashes (`- lemma:`). Audit reads 0 parseable items. Additionally, 5 words taught in content are missing from vocab: «літр» (line 69), «пляшка» (line 72), «пакет» (line 75), «картка» (line 238), «базар» (line 20). And «здача» (line 46) should be «решта». |
 
 ---
 
 ## Critical Issues Found
 
-### Issue 1: Colonial Framing — "Russian Empire" Reference (CRITICAL)
+### Issue 1: CRITICAL — Vocabulary YAML malformed (0 parseable items)
 
-**Location:** Line 31 (Section «Вступ: Культура українського ринку», subsection ### Бессарабський ринок)
+**File:** `vocabulary/at-the-market.yaml`
+**Lines:** 1-98 (entire file)
 
-**Text:** "Built in 1912, it was one of the first markets in the Russian Empire to have refrigeration."
+The vocabulary file contains 23 entries but uses bare `  lemma:` keys without YAML list dashes (`-`). The parser reads this as a single mapping with duplicate keys, resulting in **0 vocabulary items** registered in the audit.
 
-**Problem:** This frames Bessarabskyi Market's achievement within the Russian Empire rather than presenting it on its own terms. The market's innovation stands independently — there is no need to position it within an imperial political entity. Per colonial framing rules, this defines Ukrainian culture through a Russian/imperial lens.
+**Current format (broken):**
+```yaml
+  lemma: ринок
+  pos: noun
+  gender: m
+  ...
+  lemma: кілограм
+```
 
-**Fix:** Replace with: "Built between 1910 and 1912, it was one of the first covered markets with refrigeration chambers." This removes colonial framing while also correcting the factual imprecision (see Issue 2).
+**Required format:**
+```yaml
+- lemma: ринок
+  pos: noun
+  gender: m
+  ...
+- lemma: кілограм
+```
 
----
+**Impact:** Audit shows `Vocabulary items: 0`. All vocabulary tracking broken. This must be fixed by adding `- ` prefix to every `lemma:` line.
 
-### Issue 2: Factual Inaccuracy — Bessarabskyi Market Dates and Claim (CRITICAL)
+### Issue 2: HIGH — Russicism «здача» in activities and vocabulary
 
-**Location:** Line 31 (Section «Вступ: Культура українського ринку»)
+**Files:** `vocabulary/at-the-market.yaml` line 46, `activities/at-the-market.yaml` lines 176 and 276
 
-**Text:** "Built in 1912" and "one of the first markets"
+The track calibration explicitly lists `здача → решта` as a Russicism. The content file correctly teaches «решта»:
+- Line 240: «**ре́шта** — change (money returned)»
+- Line 258: «Ваша решта — шістдесят.»
 
-**Research says:** "Побудований у 1910-1912 рр." (built 1910-1912) and "Перший критий ринок з холодильними камерами" (THE first covered market with refrigeration chambers, not "one of the first"). The architect Henryk Hai is also not credited.
+But the supporting files contradict this:
+- Vocabulary line 46: `lemma: здача` with example «Ваша здача.»
+- Activity line 176: answer `"Ваша здача шістдесят гривень"`
+- Activity line 276: answer `"Ось ваша здача"`
 
-**Fix:** Correct to "Побудований у 1910-1912 роках" / "Built between 1910 and 1912, it was the first covered market with refrigeration chambers." Optionally credit architect Henryk Hai.
+This means activities actively drill a Russicism the lesson explicitly avoids. All instances must be replaced with «решта».
 
----
+### Issue 3: MEDIUM — Quiz questions test content recall, not language
 
-### Issue 3: Plan Compliance Gap — Missing Elephant Murza Legend (MODERATE)
+**File:** `activities/at-the-market.yaml`
 
-**Location:** Plan line 14 specifies "легенда про слона Мурзу" for the Pryvoz section. Section «Вступ: Культура українського ринку», subsection ### Привоз: The Soul of Odesa (lines 33-36) covers Pryvoz but omits this entirely.
+Several quiz items in the "Культура українського ринку" quiz (lines 32-122) are answerable from general knowledge without reading any Ukrainian text:
 
-**Problem:** The plan explicitly requires this cultural hook as part of the Pryvoz coverage. The content covers Pryvoz's humor and origins but skips the Murza legend.
+- Line 57: «Що таке знаменитий історичний «Привоз»?» — tests geography knowledge
+- Line 79: «Де саме знаходиться знаменитий Бессарабський ринок?» — tests geography knowledge
+- Line 90: «Що краще купувати на ринку, а не в супермаркеті?» — tests opinion/culture knowledge
+- Line 101: «Чому українці люблять ходити на базар?» — tests culture knowledge
 
-**Fix:** Add 2-3 sentences about the Murza legend in the Pryvoz subsection or in an engagement callout box. This is a colorful, learner-friendly detail that fits the module's tone.
+These should reference the module text or test language comprehension. For A1 this is less severe than in content-heavy tracks, but at least 2-3 should be reformulated to test Ukrainian reading (e.g., "Згідно з модулем, чому кияни кажуть «дорого, як на Бессарабці»?").
 
----
+### Issue 4: MEDIUM — Vocabulary YAML missing 5 taught items
 
-### Issue 4: Structural — H1 for Підсумок (MODERATE)
+**File:** `vocabulary/at-the-market.yaml`
 
-**Location:** Line 302
+Words explicitly taught in the content with definitions and examples but absent from vocab YAML:
+- «літр» — taught line 69 with definition and example
+- «пляшка» — taught line 72 with definition and example
+- «пакет» — taught line 75 with definition and example
+- «картка» — taught line 238 with definition and example
+- «базар» — taught line 20, distinguished from «ринок»
 
-**Text:** `# Підсумок` — uses H1 heading level.
+### Issue 5: LOW — Unjumble answers missing commas
 
-**Problem:** All content sections use H2 (`## Вступ: Культура українського ринку`, `## Лексика та Граматика: Як купувати?`, etc.). The summary section breaks this by using H1. This is a structural inconsistency that affects parsing and navigation.
+**File:** `activities/at-the-market.yaml`
 
-**Fix:** Change `# Підсумок` to `## Підсумок` on line 302.
+- Line 166: answer «Дайте будь ласка кілограм яблук» — should have commas: «Дайте, будь ласка, кілограм яблук»
+- Line 174: answer «Зважте будь ласка триста грам» — should have commas: «Зважте, будь ласка, триста грам»
 
----
+For unjumble activities the word list doesn't include comma tokens, so the answer strings should reflect the expected output. If commas are intentionally omitted from the activity format, this is acceptable but teaches incorrect punctuation.
 
-### Issue 5: Activities Test Untaught Material (MODERATE)
+### Issue 6: LOW — Plan cultural hook missing (elephant Murza)
 
-**Location:** Activities file, fill-in "Кілограм чого?" — lines 152-158
+**File:** `at-the-market.md`, Section «Привоз: The Soul of Odesa» (line 33)
 
-**Problem:** The fill-in activity tests genitive forms for «капусти» (line 153) and «груш» (line 157), but neither "капуста" nor "груша" appears in the content's genitive pattern table (lines 89-96). The table teaches only: картопля, морква, цибуля, яблука, помідори, огірки. Learners are tested on forms they weren't explicitly taught.
-
-**Fix:** Either (a) add капуста and груша to the genitive pattern table in Section «Лексика та Граматика: Як купувати?», or (b) replace these fill-in items with items using words from the table (e.g., цибулі).
-
----
-
-### Issue 6: Missing Learning Preview for Beginners (MINOR)
-
-**Location:** Module opening, lines 11-17 (Section «Вступ: Культура українського ринку»)
-
-**Problem:** The module opens with a motivational quote box ("Чому це важливо?") and immediately dives into cultural content. There is no "Today you'll learn..." preview that sets expectations for the beginner. The tier guidance specifically requires a WELCOME → PREVIEW → PRESENT flow, with "Today you'll learn to..." as a recommended element.
-
-**Fix:** Add a brief learning objectives preview after the quote box, before line 15. Example: "In this lesson, you'll learn to: buy fresh produce, ask about prices, use polite requests, and navigate a Ukrainian market like a local."
-
----
-
-### Issue 7: Vocabulary Section Syntactic Monotony (MINOR)
-
-**Location:** Lines 60-75 (Section «Лексика та Граматика: Як купувати?», subsection ### Одиниці виміру)
-
-**Text:** Five consecutive vocabulary items follow the identical «Це для X» pattern:
-- Line 60: «Це для сиру або масла.»
-- Line 63: «Це для зелені: петрушка, кріп.»
-- Line 66: «Це для яєць або фруктів.»
-- Line 69: «Це для молока, соку, олії.»
-- Line 75: «Це для соку або покупок.»
-
-**Problem:** While each sentence is grammatically correct, the uniform structure across 5 items creates robotic repetition. A tutor would naturally vary how they explain different items.
-
-**Fix:** Vary at least 2-3 of these. Examples: «Зелень ми купуємо пучками.» (Greens we buy in bunches.) or «Молоко? Тут потрібен літр.» (Milk? Here you need a liter.)
-
----
-
-### Issue 8: English-Only H3 Heading Inconsistency (MINOR)
-
-**Location:** Line 38
-
-**Text:** `### Why Ukrainians Love Markets`
-
-**Problem:** All other H3 headings are in Ukrainian or Ukrainian/English mixed: «### Ринок чи Базар?», «### Бессарабський ринок: The "Aristocrat"», «### Привоз: The Soul of Odesa». This one is fully English, breaking the pattern.
-
-**Fix:** Change to bilingual format: `### Чому ми любимо ринок? (Why Ukrainians Love Markets)` — consistent with the mixed pattern used elsewhere.
+Plan file (plans/a1/at-the-market.yaml, line 14) specifies: «легенда про слона Мурзу». This anecdote about Pryvoz is absent from the content. While the Pryvoz section is engaging, this specific plan point is undelivered.
 
 ---
 
 ## Factual Verification
 
-| Claim | Source | Verdict |
-|-------|--------|---------|
-| Bessarabskyi built in 1912 | Research: "1910-1912 рр." | **IMPRECISE** — omits construction start date |
-| "one of the first markets in the Russian Empire to have refrigeration" | Research: "Перший критий ринок з холодильними камерами" | **INACCURATE** — was THE first, not "one of the first"; colonial framing |
-| Pryvoz established in 1827 | Research: "1827 р." | **CORRECT** |
-| Pryvoz name from "привозити" (to bring) | Research: "Назва від 'привозити' (продаж з возів)" | **CORRECT** |
-| "Дорого, як на Бессарабці" | Research: 'Відомий як "найдорожчий" ринок ("дорого, як на Бессарабці")' | **CORRECT** |
-| Tasting culture ("Спробуйте!") | Research: "нормально і навіть бажано куштувати товар перед покупкою" | **CORRECT** |
-| Elephant Murza legend | Plan requires it; absent from content | **MISSING** |
+### Callout Box Check
 
-**Factual Accuracy Score: 8/10** — Two imprecisions in the Bessarabskyi section and one missing planned cultural fact.
+| Callout | Location | Claim | Verdict |
+|---------|----------|-------|---------|
+| `[!culture]` "The Try It! Culture" | Line 24-26 | Sellers offer tastings of cheese, berries, grapes; refusing can be seen as doubting quality | ✅ PLAUSIBLE — Consistent with research note: «На українському базарі нормально і навіть бажано куштувати товар» |
+| `[!myth-buster]` "Markets only for older people" | Line 43-45 | Farm-to-table movement popular among youth; Saturday market ritual | ✅ PLAUSIBLE — General cultural knowledge confirms this trend |
+| `[!tip]` "Memorize the Chunk" | Line 98-100 | Memorize «кілограм картоплі» as one unit | ✅ CORRECT — Sound pedagogical advice for A1 |
+| `[!warning]` "Common Error" | Line 112-116 | «Два кілограм» is wrong, «Два кілограми» is correct | ✅ CORRECT — Matches research: "2, 3, 4 + Nominative Plural" |
+| `[!warning]` "Don't Translate I want" | Line 181-183 | «Я хочу...» sounds demanding; use «Дайте, будь ласка...» or «Можна...?» | ✅ CORRECT — Matches plan vocabulary_hints and cultural register |
+| `[!observe]` "Haggling" | Line 261-268 | Supermarket: never; market with tags: usually no; without tags: yes | ✅ PLAUSIBLE — Reasonable cultural guidance |
 
----
+### Grammar Rule Check
 
-## Lesson Experience Audit
+| Rule | Location | Verdict |
+|------|----------|---------|
+| Genitive after кілограм: картопля → картоплі | Line 83, 91 | ✅ CORRECT |
+| Genitive after кілограм: яблука → яблук | Line 84, 94 | ✅ CORRECT |
+| Genitive after кілограм: сало → сала | Line 85 | ✅ CORRECT |
+| Numbers: 2-4 + кілограми (Nom.Pl) | Line 108 | ✅ CORRECT |
+| Numbers: 5+ кілограмів (Gen.Pl) | Line 109 | ✅ CORRECT |
+| Numbers: пів + кілограма (Gen.Sg) | Line 110 | ✅ CORRECT |
+| Adjective agreement: свіжий/свіжа/свіже/свіжі | Lines 154-158 | ✅ CORRECT |
 
-### "Would I Continue?" Test
+### Factual Claims Check
 
-| Question | Result | Notes |
-|----------|--------|-------|
-| Did I feel overwhelmed? | **Pass** | Pacing comfortable, short Ukrainian sentences with translations |
-| Were instructions clear? | **Pass** | Always knew what to do, good signposting |
-| Did I get quick wins? | **Partial Fail** | Long cultural section (lines 15-45) before any grammar/practice |
-| Was Ukrainian scary? | **Pass** | Well-scaffolded, every sentence translated |
-| Would I come back tomorrow? | **Pass** | Engaging content, fun Pryvoz story |
-
-**Result: 4/5 → Lesson Quality 8/10** (per tier rubric: 4/5 = 9, but deducting 1 for missing preview)
-
-### Warmth & Humanity Check
-
-| Marker | Count | Threshold | Status |
-|--------|-------|-----------|--------|
-| Direct address (ви/you) | ~20+ | ≥15 | **PASS** |
-| Encouragement phrases | 4 ("Будьте сміливі!", "Не бійтеся", "Спробуйте самі", "Це легко") | ≥3 | **PASS** |
-| "Don't worry" moments | 2 ("Не бійтеся", "don't panic") | ≥2 | **PASS** |
-| "You can now..." validation | 1 ("Тепер ви знаєте:") | ≥2 | **MARGINAL** |
-
-**Warmth threshold met.** Module is warm overall but the closing validation section (Підсумок) could use an additional "You can now..." moment before the self-check questions.
-
-### Lesson Arc Assessment
-
-| Element | Status | Notes |
-|---------|--------|-------|
-| WELCOME | Present | Motivational quote box, cultural context |
-| PREVIEW | **Missing** | No "Today you'll learn..." |
-| PRESENT | Strong | Clear grammar tables, vocabulary with examples |
-| PRACTICE | Strong | 3 dialogues with increasing complexity, good roleplay |
-| CELEBRATE | Present but weak | «Тепер ви знаєте:» list exists; "Смачного!" is a nice touch |
-
----
-
-## Section Coverage
-
-- Section «Вступ: Культура українського ринку» — Cultural foundation is strong but contains the colonial framing issue (line 31) and missing Murza legend. "Це для X" monotony in the vocabulary presentation adjacent area.
-- Section «Лексика та Граматика: Як купувати?» — Solid grammar presentation with clear tables. The genitive pattern table is well-structured. Number + кілограм table is excellent. Quality adjective table clear.
-- Section «Практика: Діалоги на ринку» — Three well-structured dialogues with increasing complexity. Polite request forms well-taught. The "Don't Translate 'I want'" warning box is a strong pedagogical moment. Payment/haggling section is practical and engaging.
-- Section «Історія: Мій похід на Привоз» — Vivid narrative with good atmosphere (line 278: «Ринок гуде, як вулик.», «Тут пахне рибою і кропом.»). Dialogue with the vendor is charming. The "Я люблю" repetition at line 296 is slightly mechanical but serves as A1 pattern reinforcement.
+| Claim | Location | Research Cross-Ref | Verdict |
+|-------|----------|-------------------|---------|
+| Bessarabskyi built in 1912 | Line 31 | Research: "1910-1912 рр." | ⚠️ IMPRECISE — Completion year OK, but "1910-1912" would be more accurate |
+| "one of the first indoor refrigeration systems in Eastern Europe" | Line 31 | Research: "Перший критий ринок з холодильними камерами" | ⚠️ MINOR — Content says "one of the first in Eastern Europe", research says "first covered market with refrigeration". Content version is more cautious but shifts the claim slightly |
+| Pryvoz established 1827 | Line 34 | Research: "1827 р." | ✅ CORRECT |
+| Pryvoz name from «привозити» (to bring) | Line 34 | Research: "Назва від 'привозити'" | ✅ CORRECT |
+| «Дорого, як на Бессарабці» | Line 31 | Research: "дорого, як на Бессарабці" | ✅ CORRECT |
 
 ---
 
 ## Verification Summary
 
-| Check | Result |
-|-------|--------|
-| All H2 sections from outline present | **PASS** — 4/4 sections present |
-| All required vocabulary covered | **PASS** — all 8 required + 6 recommended items present |
-| Grammar scope appropriate | **PASS** — Genitive introduced as chunks, not full theory |
-| No Russianisms | **PASS** — no кушати, красивий, прекрасне etc. found |
-| No calques | **PASS** — no "робити сенс" etc. found |
-| Colonial framing | **FAIL** — Line 31: "Russian Empire" reference |
-| LLM fingerprint ("це не просто" etc.) | **PASS** — no generic AI clichés found |
-| Structural monotony at section starts | **PASS** — section openings are varied |
-| Example batching | **MARGINAL** — "Це для X" × 5 within vocab subsection |
-| Factual accuracy vs research | **PARTIAL FAIL** — Bessarabskyi dates imprecise, claim downgraded, Murza missing |
-| Activity coverage | **MARGINAL** — 2 items test untaught genitive forms |
-| Engagement boxes | **PASS** — 6 boxes with varied types |
-| Immersion range | **PASS** — 35.5% within 35-55% target |
-| H1/H2 structure | **FAIL** — Line 302 uses H1 for Підсумок |
+| Check | Status | Notes |
+|-------|--------|-------|
+| All H2 sections present from meta | ✅ PASS | All 4 sections match meta content_outline |
+| Plan compliance | ⚠️ PARTIAL | Meta sections differ from plan sections; elephant Murza missing; no dedicated error-correction section |
+| Vocabulary scope (plan required) | ⚠️ PARTIAL | All required words covered in content; vocab YAML malformed (0 items parsed) and missing 5 entries |
+| Grammar scope | ✅ PASS | Genitive for quantities, numbers + nouns, adjective agreement — all within plan scope, no scope creep |
+| Russianisms scanned | ⚠️ FOUND | «здача» in vocab YAML (line 46) and activities (lines 176, 276). Lesson correctly uses «решта». No «давайте» calques. No «кушати», «получати», «вообще» |
+| Colonial framing | ✅ CLEAN | No "unlike Russian" patterns. Ukrainian features presented on own terms |
+| LLM fingerprints | ✅ CLEAN | No structural monotony, no generic AI rhetoric, no «це не просто» patterns |
+| Callout box accuracy | ✅ PASS | All 6 callout claims verified as plausible/correct |
+| Grammar rules accuracy | ✅ PASS | All genitive, number agreement, and adjective rules are correct |
+| Factual accuracy | ⚠️ MINOR | Bessarabskyi date imprecise (1912 vs 1910-1912); refrigeration claim slightly shifted from research |
+| Activity errors | ⚠️ FOUND | Russicism «здача» in 2 unjumble activities; 4 quiz questions test content recall; missing commas in 2 unjumble answers |
+| Beginner safety ("Would I Continue?") | ✅ PASS | 4/5 — warm, encouraging, clear instructions. Minor concern: grammar section packs many concepts before practice |
+
+---
+
+## Fix Plan
+
+### Priority 1: Vocabulary YAML reformat (CRITICAL)
+**File:** `vocabulary/at-the-market.yaml`
+- Add `- ` prefix to every `lemma:` line (23 entries)
+- Replace `lemma: здача` → `lemma: решта` with updated example: `"Ваша решта."`
+- Add 5 missing entries: «літр», «пляшка», «пакет», «картка», «базар»
+
+### Priority 2: Replace «здача» with «решта» in activities (HIGH)
+**File:** `activities/at-the-market.yaml`
+- Line 175-176: Change `["Ваша", "здача", "шістдесят", "гривень"]` → `["Ваша", "решта", "шістдесят", "гривень"]` and answer to `"Ваша решта шістдесят гривень"`
+- Line 275-276: Change `["Ось", "ваша", "здача"]` → `["Ось", "ваша", "решта"]` and answer to `"Ось ваша решта"`
+
+### Priority 3: Add 1 cultural callout to close richness gap (MEDIUM)
+**File:** `at-the-market.md`
+- Add a `[!culture]` or `[!did-you-know]` callout in Section «Лексика та Граматика: Як купувати?» or Section «Історія: Мій похід на Привоз» — e.g., about the elephant Murza legend at Pryvoz, which would also close the plan compliance gap.
+
+### Priority 4: Reformulate 2-3 quiz questions for language testing (LOW)
+**File:** `activities/at-the-market.yaml`
+- Lines 57-67: Reformulate to reference module text, e.g., "Згідно з модулем, чим відомий «Привоз» в Одесі?"
+- Lines 79-89: Reformulate, e.g., "Як кияни описують ціни на Бессарабському ринку?" (tests whether learner understood «Дорого, як на Бессарабці»)
 
 ---
 
 ## Verdict
 
-**NEEDS REVISION** — Module has a strong foundation with engaging content, warm tutoring tone, excellent dialogues, and good activity variety. However, it requires targeted fixes before passing:
+**FAIL — Requires D.2 repair cycle.**
 
-**Must-fix (blocking):**
-1. Remove colonial framing on line 31 (Russian Empire reference) and correct factual inaccuracies (dates, claim strength)
-2. Fix `# Підсумок` → `## Підсумок` (line 302)
+The content prose is solid: warm tutoring voice, accurate Ukrainian grammar, good cultural hooks, appropriate immersion level. However, three infrastructure issues prevent a pass:
 
-**Should-fix (quality):**
-3. Add missing Murza legend per plan requirements
-4. Add learning preview ("Today you'll learn...") after the opening quote box
-5. Either teach капуста/груша in the genitive table or replace those activity items
-6. Vary the "Це для X" pattern in vocabulary section (lines 60-75)
+1. **Vocabulary YAML is unparseable** (0/23 items — CRITICAL formatting error)
+2. **Russicism «здача» in activities** directly contradicts the lesson's correct use of «решта»
+3. **Richness below 95% threshold** (81%) with closable gaps
 
-**Nice-to-fix (polish):**
-7. Standardize line 38 heading to bilingual format
-8. Add one more "You can now..." validation moment
-
-**Estimated fix effort:** D.2 targeted repair (no full rebuild needed). Core content and pedagogy are solid.
+Estimated D.2 effort: LOW — all fixes are mechanical (YAML formatting, word replacement, add 1 callout). No prose rewrite needed.

@@ -1,157 +1,127 @@
 items:
   - lemma: "який"
-    ipa: '[jɑˈkɪj]'
     translation: "which / that"
     pos: "pronoun"
     notes: "сполучне слово; дуже висока частотність; вимагає узгодження у відмінку"
   - lemma: "що"
-    ipa: '[ʃt͡ʃɔ]'
     translation: "that"
     pos: "pronoun"
     notes: "сполучний засіб для підрядних означальних речень; часто взаємозамінний з «який» у Н. та З. відмінках"
   - lemma: "котрий"
-    ipa: '[kɔˈtrɪj]'
     translation: "which / who"
     pos: "pronoun"
     notes: "книжний варіант; середня частотність; використовується при виборі або в часових конструкціях («о котрій годині»)"
   - lemma: "чинний закон"
-    ipa: '[ˈt͡ʃɪnːɪj zɑˈkɔn]'
     translation: "effective law"
     pos: "noun"
     notes: "стійке словосполучення; протиставляється помилковому «діючий закон»"
   - lemma: "діючий вулкан"
-    ipa: '[ˈdʲijut͡ʃɪj ʋulˈkɑn]'
     translation: "active volcano"
     pos: "noun"
     notes: "приклад прийнятної термінологічної форми активного дієприкметника"
   - lemma: "охочий"
-    ipa: '[ɔˈxɔt͡ʃɪj]'
     translation: "willing / eager"
     pos: "adjective"
     notes: "частотний прикметниковий замінник дієприкметника («охочі вчитися»)"
   - lemma: "канцелярит"
-    ipa: '[kɑnt͡sɛlʲɑrɪt]'
     translation: "officialese / bureaucratese"
     pos: "noun"
     gender: "m"
     notes: "термін для опису «мертвої» бюрократичної мови, перенасиченої дієприкметниками"
   - lemma: "агентність"
-    ipa: '[ɑɦɛntʲnʲisʲtʲ]'
     translation: "agency"
     pos: "noun"
     gender: "f"
     notes: "мовна категорія, що підкреслює суб'єктність дії в українському синтаксисі"
   - lemma: "природність"
-    ipa: '[prɪˈrɔdʲnʲisʲtʲ]'
     translation: "naturalness"
     pos: "noun"
     gender: "f"
     notes: "головний критерій вибору підрядного речення в розмовному стилі"
   - lemma: "стилістична норма"
-    ipa: '[stɪlʲiˈstɪt͡ʃnɑ ˈnɔrmɑ]'
     translation: "stylistic norm"
     pos: "noun"
     notes: "правила вибору синтаксичних конструкцій залежно від регістра"
   - lemma: "еквівалентний"
-    ipa: '[ɛkʋʲiʋɑˈlɛntnɪj]'
     translation: "equivalent"
     pos: "adjective"
     notes: "такий, що має те саме значення при зміні форми"
   - lemma: "суржик"
-    ipa: '[ˈsurʒɪk]'
     translation: "surzhyk"
     pos: "noun"
     gender: "m"
     notes: "змішана мова; калькування дієприкметників на -уч/-юч часто є його ознакою"
   - lemma: "підрядне речення"
-    ipa: '[pʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ]'
     translation: "subordinate clause"
     pos: "noun"
     notes: "розгорнута синтаксична конструкція з власним граматичним центром"
   - lemma: "літературний редактор"
-    ipa: '[lʲitɛrɑˈturnɪj rɛˈdɑktɔr]'
     translation: "literary editor"
     pos: "noun"
     notes: "фахівець, який покращує стиль і виправляє мовні помилки в тексті"
   - lemma: "дієприкметник"
-    ipa: '[dʲijɛprɪˈkmɛtnɪk]'
     translation: "participle"
     pos: "noun"
     gender: "m"
   - lemma: "дієслово"
-    ipa: '[dʲijɛˈslɔʋɔ]'
     translation: "verb"
     pos: "noun"
     gender: "n"
   - lemma: "прикметник"
-    ipa: '[prɪˈkmɛtnɪk]'
     translation: "adjective"
     pos: "noun"
     gender: "m"
   - lemma: "милозвучність"
-    ipa: '[mɪlɔˈzʋut͡ʃnʲisʲtʲ]'
     translation: "euphony"
     pos: "noun"
     gender: "f"
     notes: "приємне для слуху звучання мови, яке досягається чергуванням звуків"
   - lemma: "калькування"
-    ipa: '[kɑlʲkuˈʋɑnʲːɑ]'
     translation: "calquing"
     pos: "noun"
     gender: "n"
     notes: "механічний переклад структур з іншої мови"
   - lemma: "регістр"
-    ipa: '[rɛˈɦʲistr]'
     translation: "register"
     pos: "noun"
     gender: "m"
     notes: "стилістичний різновид мовлення"
   - lemma: "довкілля"
-    ipa: '[dɔˈʋkʲilʲːɑ]'
     translation: "environment"
     pos: "noun"
     gender: "n"
     notes: "природний замінник для «оточуюче середовище»"
   - lemma: "прийдешній"
-    ipa: '[prɪjˈdɛʃnʲij]'
     translation: "upcoming / future"
     pos: "adjective"
     notes: "правильний замінник для слова «наступаючий»"
   - lemma: "захопливий"
-    ipa: '[zɑˈxɔplɪʋɪj]'
     translation: "exciting / captivating"
     pos: "adjective"
     notes: "правильний замінник для слова «захоплюючий»"
   - lemma: "зворушливий"
-    ipa: '[zʋɔˈruʃlɪʋɪj]'
     translation: "touching / moving"
     pos: "adjective"
     notes: "правильний замінник для слова «хвилюючий»"
   - lemma: "мандрівник"
-    ipa: '[mɑnˈdʲrʲiˈʋnɪk]'
     translation: "traveler"
     pos: "noun"
     gender: "m"
   - lemma: "монотонність"
-    ipa: '[mɔnɔˈtɔnʲːisʲtʲ]'
     translation: "monotony"
     pos: "noun"
     gender: "f"
   - lemma: "узгодження"
-    ipa: '[uˈzɦɔd͡ʒɛnʲːɑ]'
     translation: "agreement / concord"
     pos: "noun"
     gender: "n"
   - lemma: "непрямий відмінок"
-    ipa: '[nɛprʲɑˈmɪj ʋʲiˈdʲmʲinɔk]'
     translation: "oblique case"
     pos: "noun"
   - lemma: "суб'єкт дії"
-    ipa: '[suˈbjɛkt ˈdʲiji]'
     translation: "subject of action"
     pos: "noun"
   - lemma: "обставина"
-    ipa: '[ɔˈbstɑʋɪnɑ]'
     translation: "adverbial modifier"
     pos: "noun"
     gender: "f"

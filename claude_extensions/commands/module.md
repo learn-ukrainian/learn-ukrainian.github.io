@@ -1,3 +1,7 @@
+---
+argument-hint: "{level} {module_num}"
+---
+
 # /module
 
 Unified entry point for building modules using the 7-phase workflow (content + skeleton deploy).
@@ -87,7 +91,7 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 
 ## Instructions
 
-Parse arguments: $ARGUMENTS
+Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 > **📄 Seminar Tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth):**
 >
@@ -502,7 +506,6 @@ WHILE true:
        - Mirroring → which activities copy lesson?
 
      Vocab violations:
-       - Missing IPA → how many items?
        - Wrong POS → which entries?
        - Count below target → how many needed?
 

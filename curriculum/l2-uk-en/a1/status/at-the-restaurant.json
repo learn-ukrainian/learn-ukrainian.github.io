@@ -2,13 +2,13 @@
   "module": "at-the-restaurant",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:40:26.309187Z",
+  "last_audit": "2026-02-26T14:13:15.676150Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:47:35.700100Z",
+    "md": "2026-02-26T11:21:02.781221Z",
     "meta": "2026-02-20T16:55:41.401016Z",
     "activities": "2026-02-20T23:27:47.014370Z",
-    "vocabulary": "2026-02-22T18:40:36.381461Z",
+    "vocabulary": "2026-02-26T10:56:38.069387Z",
     "plan": "2026-02-20T20:42:58.800704Z",
     "research": "2026-02-20T16:55:41.393592Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2865/2000 (raw: 3077)"
+      "message": "2863/2000 (raw: 3075)"
     },
     "activities": {
       "status": "pass",
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 6,
     "fail_count": 0,
     "deferred_count": 0
   }

@@ -1,121 +1,91 @@
 items:
   - lemma: "написаний"
-    ipa: '[nɑˈpɪsɑnɪj]'
     translation: "written"
     pos: "participle"
   - lemma: "прочитаний"
-    ipa: '[prɔˈt͡ʃɪtɑnɪj]'
     translation: "read"
     pos: "participle"
   - lemma: "зроблений"
-    ipa: '[ˈzrɔblɛnɪj]'
     translation: "done/made"
     pos: "participle"
   - lemma: "відкритий"
-    ipa: '[ʋʲiˈdkrɪtɪj]'
     translation: "opened"
     pos: "participle"
   - lemma: "закритий"
-    ipa: '[zɑˈkrɪtɪj]'
     translation: "closed"
     pos: "participle"
   - lemma: "пасивний"
-    ipa: '[pɑˈsɪu̯nɪj]'
     translation: "passive"
     pos: "adjective"
   - lemma: "дієприкметник"
-    ipa: '[dʲijɛprɪˈkmɛtnɪk]'
     translation: "participle"
     pos: "noun"
   - lemma: "узгодження"
-    ipa: '[uˈzɦɔd͡ʒɛnʲːɑ]'
     translation: "agreement"
     pos: "noun"
   - lemma: "виконаний"
-    ipa: '[ˈʋɪkɔnɑnɪj]'
     translation: "executed/fulfilled"
     pos: "participle"
   - lemma: "улюблений"
-    ipa: '[uˈlʲublɛnɪj]'
     translation: "favorite"
     pos: "participle"
   - lemma: "саджений"
-    ipa: '[ˈsɑd͡ʒɛnɪj]'
     translation: "planted"
     pos: "participle"
   - lemma: "ношений"
-    ipa: '[ˈnɔʃɛnɪj]'
     translation: "worn"
     pos: "participle"
   - lemma: "перехідне дієслово"
-    ipa: '[pɛrɛxʲiˈdnɛ dʲijɛˈslɔʋɔ]'
     translation: "transitive verb"
     pos: "noun"
   - lemma: "дієприкметниковий зворот"
-    ipa: '[dʲijɛprɪkmɛtnɪˈkɔʋɪj zʋɔˈrɔt]'
     translation: "participle phrase"
     pos: "noun"
   - lemma: "збудований"
-    ipa: '[zbuˈdɔʋɑnɪj]'
     translation: "built"
     pos: "participle"
   - lemma: "схований"
-    ipa: '[ˈsxɔʋɑnɪj]'
     translation: "hidden"
     pos: "participle"
   - lemma: "намальований"
-    ipa: '[nɑmɑˈlʲɔʋɑnɪj]'
     translation: "drawn"
     pos: "participle"
   - lemma: "зіграний"
-    ipa: '[ˈzʲiɦrɑnɪj]'
     translation: "played"
     pos: "participle"
   - lemma: "сказаний"
-    ipa: '[ˈskɑzɑnɪj]'
     translation: "said"
     pos: "participle"
   - lemma: "принесений"
-    ipa: '[prɪˈnɛsɛnɪj]'
     translation: "brought"
     pos: "participle"
   - lemma: "спечений"
-    ipa: '[ˈspɛt͡ʃɛnɪj]'
     translation: "baked"
     pos: "participle"
   - lemma: "знайдений"
-    ipa: '[ˈznɑjdɛnɪj]'
     translation: "found"
     pos: "participle"
   - lemma: "звільнений"
-    ipa: '[ˈzʲʋʲilʲnɛnɪj]'
     translation: "freed/fired"
     pos: "participle"
   - lemma: "вирішений"
-    ipa: '[ˈʋɪrʲiʃɛnɪj]'
     translation: "solved/decided"
     pos: "participle"
   - lemma: "митий"
-    ipa: '[ˈmɪtɪj]'
     translation: "washed"
     pos: "participle"
   - lemma: "битий"
-    ipa: '[ˈbɪtɪj]'
     translation: "beaten/broken"
     pos: "participle"
   - lemma: "забутий"
-    ipa: '[zɑˈbutɪj]'
     translation: "forgotten"
     pos: "participle"
   - lemma: "збуджений"
-    ipa: '[ˈzbud͡ʒɛnɪj]'
     translation: "woken/excited"
     pos: "participle"
   - lemma: "попереджений"
-    ipa: '[pɔpɛˈrɛd͡ʒɛnɪj]'
     translation: "warned"
     pos: "participle"
   - lemma: "прикрашений"
-    ipa: '[prɪˈkrɑʃɛnɪj]'
     translation: "decorated"
     pos: "participle"

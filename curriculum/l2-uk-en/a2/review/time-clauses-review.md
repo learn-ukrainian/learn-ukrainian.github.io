@@ -14,7 +14,7 @@
 | 7 | Richness | 8/10 | Good cultural hooks (Свята Вечеря, proverb «Всьому свій час»), 6 distinct callout types, dialogues + narratives in production section. Carpathians trip narrative adds geographic specificity. Missing: no music/film/media references; could have a contemporary cultural hook alongside the traditional one. |
 | 8 | LLM Fingerprint | 7/10 | Pattern «це не просто» appears exactly 2 times (lines 12, 140) → threshold trigger. Example sentences across sections are uniformly over-decorated with adjectives (every noun gets an adjective, every verb gets an adverb), giving a "generated" rather than natural feel. |
 | 9 | Humanity & Warmth | 8/10 | Direct address (ви/ти): very frequent (>20 instances) ✅. Encouragement phrases: ~4 ✅. "Don't worry" moments: 2 (lines 132, 232) ✅. "You can now..." validation: 1 clear instance (line 287) ⚠️ — minimum is 2. Not COLD_PEDAGOGY but could be warmer at the close. |
-| 10 | Vocabulary Quality | 8/10 | 25 items well-organized with IPA, examples, and notes. One IPA error: "закінчити" has double stress mark `[zɑˈkʲinˈt͡ʃɪtɪ]` (vocabulary/time-clauses.yaml:121). |
+| 10 | Vocabulary Quality | 8/10 | 25 items well-organized with IPA, examples, and notes. One IPA error: "закінчити" has double stress mark `` (vocabulary/time-clauses.yaml:121). |
 
 **Weighted Average: ~7.9/10**
 
@@ -46,8 +46,8 @@
 ### Issue 4 (IPA): Double stress mark in vocabulary
 - **Location:** vocabulary/time-clauses.yaml:121
 - **Severity:** Minor
-- **Citation:** `'[zɑˈkʲinˈt͡ʃɪtɪ]'` — The word "закінчити" has two primary stress marks. Ukrainian words have exactly one primary stress.
-- **Fix:** Correct to `[zɑˈkʲint͡ʃɪtɪ]` (single stress on second syllable).
+- **Citation:** `''` — The word "закінчити" has two primary stress marks. Ukrainian words have exactly one primary stress.
+- **Fix:** Correct to `` (single stress on second syllable).
 
 ### Issue 5 (Language): Over-ornamented examples for A2
 - **Location:** time-clauses.md:241-242 (and throughout)

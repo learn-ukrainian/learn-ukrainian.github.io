@@ -30,5 +30,5 @@ Alignment: This module directly fulfills the B2 stylistic requirement to master 
 
 ## Notes for Content Writing
 - **Decolonized Framing**: When explaining «кілька» vs «пара», do not frame it as "unlike Russian." Instead, explain the strict semantic boundaries of Ukrainian «пара» (twins/pairs) as a feature of precise Ukrainian categorization. 
-- Ensure the tone remains professional but engaging. Use exact IPA `/ˈslɔwɔ/` in vocabulary files, not in prose.
+- Ensure the tone remains professional but engaging. Use exact IPA `` in vocabulary files, not in prose.
 - Provide clear, tabular comparisons between neutral, emphatic, and colloquial registers.

@@ -1,0 +1,27 @@
+{
+  "track": "b2",
+  "slug": "synonyms-quantity",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T23:47:32Z",
+      "task_id": "v3-synonyms-quantity-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T23:50:01Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T23:53:02Z",
+      "task_id": "v3-synonyms-quantity-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T10:13:34Z",
+      "attempts": 1
+    }
+  }
+}

@@ -1,156 +1,127 @@
 items:
   - lemma: "магазин"
-    ipa: '[mɑɦɑˈzɪn]'
     translation: "store"
     pos: "noun"
     gender: "m"
     usage: "йти в магазин, продуктовий магазин"
   - lemma: "ціна"
-    ipa: '[t͡sʲiˈnɑ]'
     translation: "price"
     pos: "noun"
     gender: "f"
     usage: "висока ціна, яка ціна?"
   - lemma: "купувати"
-    ipa: '[kupuˈʋɑtɪ]'
     translation: "to buy"
     pos: "verb"
     aspect: "imperfective"
     usage: "купувати продукти"
   - lemma: "платити"
-    ipa: '[plɑˈtɪtɪ]'
     translation: "to pay"
     pos: "verb"
     aspect: "imperfective"
     usage: "платити карткою, платити готівкою"
   - lemma: "гроші"
-    ipa: '[ɦrɔʃʲi]'
     translation: "money"
     pos: "noun"
     usage: "паперові гроші"
   - lemma: "картка"
-    ipa: '[ˈkɑrtkɑ]'
     translation: "card"
     pos: "noun"
     gender: "f"
     usage: "банківська картка"
   - lemma: "готівка"
-    ipa: '[ɦɔˈtʲiu̯kɑ]'
     translation: "cash"
     pos: "noun"
     gender: "f"
     usage: "платити готівкою"
   - lemma: "чек"
-    ipa: '[t͡ʃɛk]'
     translation: "receipt"
     pos: "noun"
     gender: "m"
     usage: "фіскальний чек"
   - lemma: "знижка"
-    ipa: '[ˈznɪʒkɑ]'
     translation: "discount"
     pos: "noun"
     gender: "f"
     usage: "сезонні знижки"
   - lemma: "каса"
-    ipa: '[ˈkɑsɑ]'
     translation: "checkout"
     pos: "noun"
     gender: "f"
     usage: "де каса?, на касі"
   - lemma: "здача"
-    ipa: '[ˈzdɑt͡ʃɑ]'
     translation: "change"
     pos: "noun"
     gender: "f"
     usage: "ваша здача"
   - lemma: "пакет"
-    ipa: '[pɑˈkɛt]'
     translation: "bag"
     pos: "noun"
     gender: "m"
     usage: "великий пакет"
   - lemma: "примірка"
-    ipa: '[prɪˈmʲirkɑ]'
     translation: "fitting room"
     pos: "noun"
     gender: "f"
     usage: "де примірка?"
   - lemma: "розмір"
-    ipa: '[rɔzʲmʲir]'
     translation: "size"
     pos: "noun"
     gender: "m"
     usage: "мій розмір"
   - lemma: "перукарня"
-    ipa: '[pɛruˈkɑrnʲɑ]'
     translation: "hairdresser"
     pos: "noun"
     gender: "f"
     usage: "йти в перукарню"
   - lemma: "хімчистка"
-    ipa: '[xʲiˈmt͡ʃɪstkɑ]'
     translation: "dry cleaning"
     pos: "noun"
     gender: "f"
     usage: "віддати в хімчистку"
   - lemma: "ремонт"
-    ipa: '[rɛˈmɔnt]'
     translation: "repair"
     pos: "noun"
     gender: "m"
     usage: "ремонт взуття"
   - lemma: "овочі"
-    ipa: '[ˈɔʋɔt͡ʃʲi]'
     translation: "vegetables"
     pos: "noun"
   - lemma: "фрукти"
-    ipa: '[ˈfruktɪ]'
     translation: "fruits"
     pos: "noun"
   - lemma: "м'ясо"
-    ipa: '[ˈmjɑsɔ]'
     translation: "meat"
     pos: "noun"
     gender: "n"
   - lemma: "хліб"
-    ipa: '[xlʲib]'
     translation: "bread"
     pos: "noun"
     gender: "m"
   - lemma: "продавати"
-    ipa: '[prɔdɑˈʋɑtɪ]'
     translation: "to sell"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "супермаркет"
-    ipa: '[supɛrˈmɑrkɛt]'
     translation: "supermarket"
     pos: "noun"
     gender: "m"
   - lemma: "ринок"
-    ipa: '[ˈrɪnɔk]'
     translation: "market"
     pos: "noun"
     gender: "m"
   - lemma: "кілограм"
-    ipa: '[kʲilɔˈɦrɑm]'
     translation: "kilogram"
     pos: "noun"
     gender: "m"
   - lemma: "місцевий"
-    ipa: '[mʲiˈst͡sɛʋɪj]'
     translation: "locative"
     pos: "adjective"
   - lemma: "знахідний"
-    ipa: '[znɑxʲidˈnɪj]'
     translation: "accusative"
     pos: "adjective"
   - lemma: "орудний"
-    ipa: '[ɔˈrudnɪj]'
     translation: "instrumental"
     pos: "adjective"
   - lemma: "називний"
-    ipa: '[nɑzɪu̯ˈnɪj]'
     translation: "nominative"
     pos: "adjective"

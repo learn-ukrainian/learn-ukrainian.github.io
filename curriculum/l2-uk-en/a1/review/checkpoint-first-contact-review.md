@@ -128,9 +128,9 @@
 
 | Word | Given IPA | Verdict |
 |------|-----------|---------|
-| Можна | [ˈmɔʒnɑ] (line 301) | Correct |
-| Я буду | [jɑ ˈbudu] (line 305) | Correct |
-| Смачного | [smɑt͡ʃˈnɔɦɔ] (line 325) | Correct |
+| Можна | (line 301) | Correct |
+| Я буду | (line 305) | Correct |
+| Смачного | (line 325) | Correct |
 | Суп | [sup] (line 50) | Acceptable simplified IPA for A1 |
 
 ---

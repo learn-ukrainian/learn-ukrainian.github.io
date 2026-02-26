@@ -1,145 +1,114 @@
 items:
 - lemma: робити
-  ipa: '[rɔˈbɪtɪ]'
   translation: to do, to make (process)
   pos: verb
   aspect: imperfective
   example: Щодня я роблю ранкову гімнастику.
 - lemma: зробити
-  ipa: '[zrɔˈbɪtɪ]'
   translation: to get done, to make (result)
   pos: verb
   aspect: perfective
   example: Вчора він успішно зробив проєкт.
 - lemma: добрий
-  ipa: '[ˈdɔbrɪj]'
   translation: good
   pos: adjective
 - lemma: кращий
-  ipa: '[ˈkrɑʃt͡ʃɪj]'
   translation: better
   pos: adjective
   notes: Irregular comparative form of добрий.
 - lemma: один
-  ipa: '[ɔˈdɪn]'
   translation: one
   pos: numeral
   notes: Agrees with noun in gender, case, and number.
 - lemma: одна
-  ipa: '[ɔˈdnɑ]'
   translation: one (feminine)
   pos: numeral
 - lemma: одне
-  ipa: '[ɔˈdnɛ]'
   translation: one (neuter)
   pos: numeral
 - lemma: писати
-  ipa: '[pɪˈsɑtɪ]'
   translation: to write (process)
   pos: verb
   aspect: imperfective
 - lemma: написати
-  ipa: '[nɑpɪˈsɑtɪ]'
   translation: to write, to finish writing (result)
   pos: verb
   aspect: perfective
 - lemma: великий
-  ipa: '[ʋɛˈlɪkɪj]'
   translation: big, large
   pos: adjective
 - lemma: більший
-  ipa: '[ˈbʲilʲʃɪj]'
   translation: bigger, larger
   pos: adjective
   notes: Irregular comparative form of великий.
 - lemma: вчасно
-  ipa: '[ˈʍt͡ʃɑsnɔ]'
   translation: on time
   pos: adverb
   notes: Crucial marker for perfective aspect (result/completion).
 - lemma: пізно
-  ipa: '[ˈpʲiznɔ]'
   translation: late
   pos: adverb
   example: Краще пізно, ніж ніколи.
 - lemma: вибір
-  ipa: '[ˈʋɪbʲir]'
   translation: choice
   pos: noun
   gender: m
 - lemma: більш
-  ipa: '[bʲilʲʃ]'
   translation: more
   pos: adverb
   notes: Used for compound comparative forms.
 - lemma: менш
-  ipa: '[mɛnʃ]'
   translation: less
   pos: adverb
   notes: Used for compound comparative forms.
 - lemma: малий
-  ipa: '[mɑˈlɪj]'
   translation: small
   pos: adjective
 - lemma: менший
-  ipa: '[ˈmɛnʃɪj]'
   translation: smaller
   pos: adjective
   notes: Irregular comparative form of малий.
 - lemma: поганий
-  ipa: '[pɔˈɦɑnɪj]'
   translation: bad
   pos: adjective
 - lemma: гірший
-  ipa: '[ˈɦʲirʃɪj]'
   translation: worse
   pos: adjective
   notes: Irregular comparative form of поганий.
 - lemma: приходити
-  ipa: '[prɪˈxɔdɪtɪ]'
   translation: to come, to arrive (process)
   pos: verb
   aspect: imperfective
 - lemma: прийти
-  ipa: '[prɪjˈtɪ]'
   translation: to come, to arrive (result)
   pos: verb
   aspect: perfective
 - lemma: результат
-  ipa: '[rɛzulʲˈtɑt]'
   translation: result
   pos: noun
   gender: m
 - lemma: процес
-  ipa: '[prɔˈt͡sɛs]'
   translation: process
   pos: noun
   gender: m
 - lemma: сучасний
-  ipa: '[suˈt͡ʃɑsnɪj]'
   translation: modern
   pos: adjective
 - lemma: прикметник
   translation: adjective
-  ipa: '[prɪˈkmɛtnɪk]'
   pos: noun
 - lemma: недоконаний
   translation: imperfective
-  ipa: '[nɛdɔˈkɔnɑnɪj]'
   pos: adjective
 - lemma: називний
   translation: nominative
-  ipa: '[nɑzɪˈʋnɪj]'
   pos: adjective
 - lemma: доконаний
   translation: perfective
-  ipa: '[dɔˈkɔnɑnɪj]'
   pos: adjective
 - lemma: родовий
   translation: genitive
-  ipa: '[rɔˈdɔˈʋɪj]'
   pos: adjective
 - lemma: вид
   translation: aspect
-  ipa: '[ʋɪd]'
   pos: noun

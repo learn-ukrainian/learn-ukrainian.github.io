@@ -2,13 +2,13 @@
   "module": "at-the-store",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:40:28.486480Z",
+  "last_audit": "2026-02-26T13:23:49.546336Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:47:35.705942Z",
+    "md": "2026-02-26T11:21:02.782334Z",
     "meta": "2026-02-20T18:55:58.891929Z",
     "activities": "2026-02-22T09:38:09.093720Z",
-    "vocabulary": "2026-02-22T18:44:37.953278Z",
+    "vocabulary": "2026-02-26T10:56:38.069669Z",
     "plan": "2026-02-20T20:43:16.533855Z",
     "research": "2026-02-20T18:49:11.981462Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2622/2000 (raw: 2821)"
+      "message": "2606/2000 (raw: 2805)"
     },
     "activities": {
       "status": "pass",
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 6,
     "fail_count": 0,
     "deferred_count": 0
   }

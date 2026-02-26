@@ -44,9 +44,9 @@ We will do this step by step. Calmly and confidently.
 Before we say **«Це моє!»** (It's mine!), we must learn to ask. The question "Whose?" has four forms. Why? Because the question hints at the gender.
 
 *   If we see a passport (masculine), we ask: **Чий це паспорт?** [t͡ʃɪj].
-*   If we see a bag (feminine), we ask: **Чия це сумка?** [t͡ʃɪˈja].
-*   If we see a photo (neuter), we ask: **Чиє це фото?** [t͡ʃɪˈjɛ].
-*   If we see keys (plural), we ask: **Чиї це ключі?** [t͡ʃɪˈji].
+*   If we see a bag (feminine), we ask: **Чия це сумка?**.
+*   If we see a photo (neuter), we ask: **Чиє це фото?**.
+*   If we see keys (plural), we ask: **Чиї це ключі?**.
 
 Remember this melody: **Чий? Чия? Чиє? Чиї?** This question guides you. If you know the question, you know the answer. The ending often rhymes.
 
@@ -427,18 +427,18 @@ But true, organic Ukrainian loves declension. It loves flexibility and nuance. S
 | Word | IPA | English | POS | Gender | Note |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **мій** | [mʲij] | my | pronoun | masc. | |
-| **моя** | [mɔˈja] | my | pronoun | fem. | |
-| **моє** | [mɔˈjɛ] | my | pronoun | neut. | |
-| **мої** | [mɔˈji] | my | pronoun | plur. | |
+| **моя** | | my | pronoun | fem. | |
+| **моє** | | my | pronoun | neut. | |
+| **мої** | | my | pronoun | plur. | |
 | **твій** | [tʲʋʲij] | your | pronoun | masc. | informal |
-| **твоя** | [tʋɔˈja] | your | pronoun | fem. | informal |
+| **твоя** | | your | pronoun | fem. | informal |
 | **наш** | [naʃ] | our | pronoun | masc. | |
-| **наша** | [ˈnaʃa] | our | pronoun | fem. | |
+| **наша** | | our | pronoun | fem. | |
 | **ваш** | [ʋaʃ] | your | pronoun | masc. | formal/plural |
-| **ваша** | [ˈʋaʃa] | your | pronoun | fem. | formal/plural |
-| **його** | [jɔˈɦɔ] | his | pronoun | - | unchangeable |
-| **її** | [jiˈji] | her | pronoun | - | unchangeable |
-| **їхній** | [ˈjixnʲij] | their | pronoun | masc. | |
+| **ваша** | | your | pronoun | fem. | formal/plural |
+| **його** | | his | pronoun | - | unchangeable |
+| **її** | | her | pronoun | - | unchangeable |
+| **їхній** | | their | pronoun | masc. | |
 | **чий?** | [t͡ʃɪj] | whose? | pronoun | masc. | |
-| **займенник** | [zɑjˈmɛnːɪk] | pronoun | noun | masc. | grammar term |
-| **прикметник** | [prɪkˈmɛtnɪk] | adjective | noun | masc. | grammar term |
+| **займенник** | | pronoun | noun | masc. | grammar term |
+| **прикметник** | | adjective | noun | masc. | grammar term |

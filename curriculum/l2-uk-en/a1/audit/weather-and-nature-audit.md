@@ -1,7 +1,7 @@
 # Audit Report: M29 — weather-and-nature.md
 **Level:** A1 | **Module:** M29 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:18
+**Generated:** 2026-02-26 13:23:46
 
 ## Configuration
 **Type:** A1-vocab
@@ -36,7 +36,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2879/2000 (raw: 3145)
+- **Words:** ✅ 2874/2000 (raw: 3140)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -45,11 +45,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.5% (target 35-55% (M29))
+- **Immersion:** 🇺🇦 35.6% (target 35-55% (M29))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,9 +60,9 @@
 | **Weather & Nature** | ✅ | 51 | Included in Core |
 | **Вступ: Погода як тема для розмови** | ✅ | 328 | Included in Core |
 | **Презентація 1: Опис погоди (Прислівники)** | ✅ | 493 | Included in Core |
-| **Презентація 2: Природні явища (Дієслова)** | ✅ | 393 | Included in Core |
+| **Презентація 2: Природні явища (Дієслова)** | ✅ | 392 | Included in Core |
 | **Презентація 3: Запитання про погоду** | ✅ | 272 | Included in Core |
-| **Презентація 4: Пори року та час** | ✅ | 403 | Included in Core |
+| **Презентація 4: Пори року та час** | ✅ | 399 | Included in Core |
 | **Презентація 5: Прогноз та планування** | ✅ | 349 | Included in Core |
 | **Практика: Розмови про природу** | ✅ | 415 | Included in Core |
 | **Підсумок** | ✅ | 175 | Included in Core |

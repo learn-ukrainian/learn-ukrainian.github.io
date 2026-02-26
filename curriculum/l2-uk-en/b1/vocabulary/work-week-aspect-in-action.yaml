@@ -1,155 +1,125 @@
 items:
   - lemma: "завдання"
-    ipa: '[zɑˈʋdɑnʲːɑ]'
     translation: "task"
     pos: "noun"
     gender: "n"
     notes: "often used with виконувати (to perform/do)"
   - lemma: "звіт"
-    ipa: '[zʲʋʲit]'
     translation: "report"
     pos: "noun"
     gender: "m"
   - lemma: "дедлайн"
-    ipa: '[dɛdlɑjn]'
     translation: "deadline"
     pos: "noun"
     gender: "m"
     notes: "High-frequency loanword; always masculine."
   - lemma: "кінцевий термін"
-    ipa: '[kʲinˈt͡sɛʋɪj ˈtɛrmʲin]'
     translation: "final deadline"
     pos: "noun"
     gender: "m"
   - lemma: "зустріч"
-    ipa: '[ˈzustʲrʲit͡ʃ]'
     translation: "meeting"
     pos: "noun"
     gender: "f"
   - lemma: "нарада"
-    ipa: '[nɑˈrɑdɑ]'
     translation: "meeting, conference"
     pos: "noun"
     gender: "f"
     notes: "Formal register."
   - lemma: "результат"
-    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
     gender: "m"
   - lemma: "процес"
-    ipa: '[prɔˈt͡sɛs]'
     translation: "process"
     pos: "noun"
     gender: "m"
   - lemma: "колега"
-    ipa: '[kɔˈlɛɦɑ]'
     translation: "colleague"
     pos: "noun"
     gender: "m/f"
   - lemma: "начальник"
-    ipa: '[nɑˈt͡ʃɑlʲnɪk]'
     translation: "boss, manager"
     pos: "noun"
     gender: "m"
   - lemma: "реченець"
-    ipa: '[rɛt͡ʃɛˈnɛt͡sʲ]'
     translation: "deadline"
     pos: "noun"
     gender: "m"
     notes: "Purist/archaic synonym for deadline."
   - lemma: "гнучкий графік"
-    ipa: '[ɦnuˈt͡ʃkɪj ˈɦrɑfʲik]'
     translation: "flexible schedule"
     pos: "noun"
     gender: "m"
   - lemma: "віддалена робота"
-    ipa: '[ʋʲiˈdːɑlɛnɑ rɔˈbɔtɑ]'
     translation: "remote work"
     pos: "noun"
     gender: "f"
   - lemma: "презентація"
-    ipa: '[prɛzɛnˈtɑt͡sʲijɑ]'
     translation: "presentation"
     pos: "noun"
     gender: "f"
   - lemma: "відпустка"
-    ipa: '[ʋʲiˈdpustkɑ]'
     translation: "vacation, leave"
     pos: "noun"
     gender: "f"
   - lemma: "план"
-    ipa: '[plɑn]'
     translation: "plan"
     pos: "noun"
     gender: "m"
   - lemma: "виконувати"
-    ipa: '[ʋɪˈkɔnuʋɑtɪ]'
     translation: "to execute, perform (impf)"
     pos: "verb"
     aspect: "impf"
   - lemma: "виконати"
-    ipa: '[ˈʋɪkɔnɑtɪ]'
     translation: "to execute, perform (pf)"
     pos: "verb"
     aspect: "pf"
   - lemma: "складати"
-    ipa: '[sklɑˈdɑtɪ]'
     translation: "to compile, put together (impf)"
     pos: "verb"
     aspect: "impf"
   - lemma: "скласти"
-    ipa: '[ˈsklɑstɪ]'
     translation: "to compile, put together (pf)"
     pos: "verb"
     aspect: "pf"
   - lemma: "подавати"
-    ipa: '[pɔdɑˈʋɑtɪ]'
     translation: "to submit (impf)"
     pos: "verb"
     aspect: "impf"
   - lemma: "подати"
-    ipa: '[pɔˈdɑtɪ]'
     translation: "to submit (pf)"
     pos: "verb"
     aspect: "pf"
   - lemma: "призначати"
-    ipa: '[prɪznɑˈt͡ʃɑtɪ]'
     translation: "to schedule, appoint (impf)"
     pos: "verb"
     aspect: "impf"
   - lemma: "призначити"
-    ipa: '[prɪˈznɑˈt͡ʃɪtɪ]'
     translation: "to schedule, appoint (pf)"
     pos: "verb"
     aspect: "pf"
   - lemma: "скасовувати"
-    ipa: '[skɑˈsɔʋuʋɑtɪ]'
     translation: "to cancel (impf)"
     pos: "verb"
     aspect: "impf"
   - lemma: "скасувати"
-    ipa: '[skɑsuˈʋɑtɪ]'
     translation: "to cancel (pf)"
     pos: "verb"
     aspect: "pf"
   - lemma: "переносити"
-    ipa: '[pɛrɛnɔsɪtɪ]'
     translation: "to reschedule, move (impf)"
     pos: "verb"
     aspect: "impf"
   - lemma: "перенести"
-    ipa: '[pɛrɛnɛˈstɪ]'
     translation: "to reschedule, move (pf)"
     pos: "verb"
     aspect: "pf"
   - lemma: "готувати"
-    ipa: '[ɦɔtuˈʋɑtɪ]'
     translation: "to prepare (impf)"
     pos: "verb"
     aspect: "impf"
   - lemma: "підготувати"
-    ipa: '[pʲidɦɔtuˈʋɑtɪ]'
     translation: "to prepare (pf)"
     pos: "verb"
     aspect: "pf"

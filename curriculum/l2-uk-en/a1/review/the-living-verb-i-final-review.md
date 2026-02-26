@@ -31,8 +31,8 @@ Good — the vocabulary file exists and is well-populated (the prompt's "(file n
 
 **Issue 4 — INFO: відпочивати IPA voicing assimilation**
 - **File:** `vocabulary/the-living-verb-i.yaml`, line 36
-- **Text:** `ipa: '[ʋʲidpɔt͡ʃɪˈʋɑtɪ]'`
-- **Problem:** In natural speech, the д before voiceless п undergoes regressive devoicing: [ʋʲitpɔt͡ʃɪˈʋɑtɪ]. The current transcription shows broad/phonemic [d], which is standard for dictionary entries but phonetically imprecise.
+- **Text:** `ipa: ''`
+- **Problem:** In natural speech, the д before voiceless п undergoes regressive devoicing:. The current transcription shows broad/phonemic [d], which is standard for dictionary entries but phonetically imprecise.
 - **Severity:** Informational only. Broad transcription is acceptable for A1 vocabulary files. Not fixing.
 
 **Issue 5 — INFO: працювати vocab note formatting**
@@ -47,7 +47,7 @@ Good — the vocabulary file exists and is well-populated (the prompt's "(file n
 - All 23+ IPA transcriptions in the content verified correct
 - Tie bars on affricates: t͡ʃ (Ч) ✓, t͡s (Ц in працювати) ✓
 - В consistently rendered as ʋ (not w) ✓
-- Ɦ for Ukrainian Г ✓ (книга [ˈknɪɦɑ], грати [ˈɦrɑtɪ])
+- Ɦ for Ukrainian Г ✓ (книга, грати)
 
 **Russianisms:** CLEAN — no кушати, получати, приймати участь, слідуючий, or Russian characters (ы, э, ё, ъ) found.
 

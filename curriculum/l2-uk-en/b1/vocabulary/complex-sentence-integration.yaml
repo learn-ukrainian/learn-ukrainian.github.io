@@ -1,136 +1,106 @@
 items:
   - lemma: "інтеграція"
-    ipa: '[intɛˈɦrɑt͡sʲijɑ]'
     translation: "integration"
     pos: "noun"
     gender: "f"
   - lemma: "складний"
-    ipa: '[sklɑdnɪj]'
     translation: "complex"
     pos: "adjective"
   - lemma: "сурядний"
-    ipa: '[suˈrʲɑdnɪj]'
     translation: "coordinating"
     pos: "adjective"
   - lemma: "підрядний"
-    ipa: '[pʲiˈdʲrʲɑdnɪj]'
     translation: "subordinating"
     pos: "adjective"
   - lemma: "багатокомпонентний"
-    ipa: '[bɑɦɑtɔkɔmpɔˈnɛntnɪj]'
     translation: "multi-component"
     pos: "adjective"
   - lemma: "структура"
-    ipa: '[struˈkturɑ]'
     translation: "structure"
     pos: "noun"
     gender: "f"
   - lemma: "кома"
-    ipa: '[ˈkɔmɑ]'
     translation: "comma"
     pos: "noun"
     gender: "f"
   - lemma: "розділовий знак"
-    ipa: '[rɔzʲdʲiˈlɔʋɪj znɑk]'
     translation: "punctuation mark"
     pos: "noun"
     gender: "m"
   - lemma: "а"
-    ipa: '[ɑ]'
     translation: "and/but"
     pos: "conjunction"
   - lemma: "але"
-    ipa: '[ɑˈlɛ]'
     translation: "but"
     pos: "conjunction"
   - lemma: "щоб"
-    ipa: '[ʃt͡ʃɔb]'
     translation: "in order to/that"
     pos: "conjunction"
   - lemma: "бо"
-    ipa: '[bɔ]'
     translation: "because (informal)"
     pos: "conjunction"
   - lemma: "тому що"
-    ipa: '[tɔˈmu ʃt͡ʃɔ]'
     translation: "because (neutral)"
     pos: "conjunction"
   - lemma: "вкладений"
-    ipa: '[ˈʍklɑdɛnɪj]'
     translation: "nested"
     pos: "adjective"
   - lemma: "паралельний"
-    ipa: '[pɑrɑˈlɛlʲnɪj]'
     translation: "parallel"
     pos: "adjective"
   - lemma: "зрозумілість"
-    ipa: '[zrɔzuˈmʲilʲisʲtʲ]'
     translation: "clarity"
     pos: "noun"
     gender: "f"
   - lemma: "стиль"
-    ipa: '[stɪlʲ]'
     translation: "style"
     pos: "noun"
     gender: "m"
   - lemma: "хоча"
-    ipa: '[xɔˈt͡ʃɑ]'
     translation: "although"
     pos: "conjunction"
   - lemma: "якщо"
-    ipa: '[jɑˈkʃt͡ʃɔ]'
     translation: "if"
     pos: "conjunction"
   - lemma: "який"
-    ipa: '[jɑˈkɪj]'
     translation: "which/who"
     pos: "pronoun"
   - lemma: "що"
-    ipa: '[ʃt͡ʃɔ]'
     translation: "that"
     pos: "conjunction"
   - lemma: "крапка"
-    ipa: '[ˈkrɑpkɑ]'
     translation: "dot/period"
     pos: "noun"
     gender: "f"
   - lemma: "сполучник"
-    ipa: '[spɔˈlut͡ʃnɪk]'
     translation: "conjunction"
     pos: "noun"
     gender: "m"
   - lemma: "речення"
-    ipa: '[rɛt͡ʃɛnʲːɑ]'
     translation: "sentence"
     pos: "noun"
     gender: "n"
   - lemma: "абзац"
-    ipa: '[ɑˈbzɑt͡s]'
     translation: "paragraph"
     pos: "noun"
     gender: "m"
   - lemma: "текст"
-    ipa: '[tɛkst]'
     translation: "text"
     pos: "noun"
     gender: "m"
   - lemma: "причина"
-    ipa: '[prɪˈt͡ʃɪnɑ]'
     translation: "cause/reason"
     pos: "noun"
     gender: "f"
   - lemma: "умова"
-    ipa: '[uˈmɔʋɑ]'
     translation: "condition"
     pos: "noun"
     gender: "f"
   - lemma: "мета"
-    ipa: '[mɛˈtɑ]'
     translation: "purpose/goal"
     pos: "noun"
     gender: "f"
   - lemma: "наслідок"
-    ipa: '[ˈnɑsʲlʲidɔk]'
     translation: "consequence/result"
     pos: "noun"
     gender: "m"

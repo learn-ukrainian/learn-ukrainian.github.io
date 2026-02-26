@@ -1,140 +1,106 @@
-- ipa: '[ˈjistɪ]'
   lemma: їсти
   pos: verb
   translation: to eat
-- ipa: '[ˈpɪtɪ]'
   lemma: пити
   pos: verb
   translation: to drink
-- ipa: '[kupuˈʋɑtɪ]'
   lemma: купувати
   pos: verb
   translation: to buy
-- ipa: '[xlʲib]'
   lemma: хліб
   notes: Sacred symbol in Ukrainian culture
   pos: noun
   translation: bread
-- ipa: '[mɔlɔˈkɔ]'
   lemma: молоко
   pos: noun
   translation: milk
-- ipa: '[ˈjɑblukɔ]'
   lemma: яблуко
   pos: noun
   translation: apple
-- ipa: '[ˈmjɑsɔ]'
   lemma: м'ясо
   pos: noun
   translation: meat
-- ipa: '[ˈkɑʋɑ]'
   lemma: кава
   pos: noun
   translation: coffee
-- ipa: '[ʋɔˈdɑ]'
   lemma: вода
   pos: noun
   translation: water
-- ipa: '[kɑrˈtɔplʲɑ]'
   lemma: картопля
   notes: Usually used in singular form
   pos: noun
   translation: potato
-- ipa: '[sɪr]'
   lemma: сир
   notes: Can mean yellow cheese or cottage cheese
   pos: noun
   translation: cheese
-- ipa: '[ˈkurkɑ]'
   lemma: курка
   pos: noun
   translation: chicken
-- ipa: '[t͡ʃɑj]'
   lemma: чай
   pos: noun
   translation: tea
-- ipa: '[sʲik]'
   lemma: сік
   pos: noun
   translation: juice
-- ipa: '[jɑjˈt͡sɛ]'
   lemma: яйце
   pos: noun
   translation: egg
-- ipa: '[ˈmɑslɔ]'
   lemma: масло
   pos: noun
   translation: butter
-- ipa: '[smɛˈtɑnɑ]'
   lemma: сметана
   notes: Essential for borsch and dumplings
   pos: noun
   translation: sour cream
-- ipa: '[kʲilɔˈɦrɑm]'
   lemma: кілограм
   pos: noun
   translation: kilogram
-- ipa: '[ˈplʲɑʃkɑ]'
   lemma: пляшка
   pos: noun
   translation: bottle
-- ipa: '[t͡sʲiˈnɑ]'
   lemma: ціна
   pos: noun
   translation: price
-- ipa: '[t͡sɪˈbulʲɑ]'
   lemma: цибуля
   pos: noun
   translation: onion
-- ipa: '[ˈmɔrkʋɑ]'
   lemma: морква
   pos: noun
   translation: carrot
-- ipa: '[sʋɪˈnɪnɑ]'
   lemma: свинина
   pos: noun
   translation: pork
-- ipa: '[ˈjɔɦurt]'
   lemma: йогурт
   pos: noun
   translation: yogurt
-- ipa: '[ˈbulkɑ]'
   lemma: булка
   pos: noun
   translation: roll/bun
-- ipa: '[bɑˈtɔn]'
   lemma: батон
   pos: noun
   translation: long white loaf
-- ipa: '[pɑˈkɛt]'
   lemma: пакет
   pos: noun
   translation: carton/bag
-- ipa: '[ˈsklʲɑnkɑ]'
   lemma: склянка
   pos: noun
   translation: glass
-- ipa: '[ˈt͡ʃɑʃkɑ]'
   lemma: чашка
   pos: noun
   translation: cup
-- ipa: '[ˈpɑt͡ʃkɑ]'
   lemma: пачка
   pos: noun
   translation: pack/packet
-- ipa: '[lʲitr]'
   lemma: літр
   pos: noun
   translation: liter
-- ipa: '[bɑˈnɑn]'
   lemma: банан
   pos: noun
   translation: banana
-- ipa: '[lɪˈmɔn]'
   lemma: лимон
   pos: noun
   translation: lemon
-- ipa: '[pɔmʲiˈdɔr]'
   lemma: помідор
   pos: noun
   translation: tomato

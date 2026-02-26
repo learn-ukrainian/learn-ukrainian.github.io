@@ -127,9 +127,9 @@ Here are some examples of how to identify people and things.
 
 **1. Identifying People:**
 *   **Я — студент.** (I [am] a student.)
-*   **Він — вчитель.** [ˈut͡ʃɪtɛlʲ] (He [is] a teacher.)
-*   **Він — українець.** [ukrɑˈjinɛt͡sʲ] (He [is] a Ukrainian.)
-*   **Вона — українка.** [ukrɑˈjinkɑ] (She [is] a Ukrainian.)
+*   **Він — вчитель.** (He [is] a teacher.)
+*   **Він — українець.** (He [is] a Ukrainian.)
+*   **Вона — українка.** (She [is] a Ukrainian.)
 
 Notice the pair: **українець** (male) / **українка** (female). Ukrainian uses different word endings for men and women. You will see this pattern again with professions: **студент** / **студентка**, **вчитель** / **вчителька**.
 
@@ -139,7 +139,7 @@ Notice the pair: **українець** (male) / **українка** (female). 
 *   **Де ви?** [dɛ] (Where [are] you?) — *"Ви де?" also works in casual speech.*
 
 **3. More Identification Patterns:**
-*   **Він вдома.** [ˈʋdɔmɑ] (He [is] at home.)
+*   **Він вдома.** (He [is] at home.)
 *   **Україна — це дім.** (Ukraine [is] home.)
 *   **Київ — це місто.** (Kyiv [is] a city.)
 
@@ -169,7 +169,7 @@ It translates to "this is", "that is", "it is", or simply "this". You use it to 
 
 *   **Це Іван.** (This is Ivan.)
 *   **Це я.** (It is me / This is me.)
-*   **Це мама.** [ˈmɑmɑ] (This is mom.)
+*   **Це мама.** (This is mom.)
 
 **The Pattern:**
 1.  **Point and Identify:** **Це** стіл. (This is a table.)
@@ -201,12 +201,12 @@ Let's see them in action with our new friend **це**.
 
 **Asking about People:**
 *   **Хто це?** (Who is this?)
-*   **Це Андрій.** [ɑnˈdrij] (This is Andriy.)
+*   **Це Андрій.** (This is Andriy.)
 *   **Він — студент.** (He is a student.)
 
 **Asking about Things:**
 *   **Що це?** (What is this?)
-*   **Це телефон.** [tɛlɛˈfɔn] (This is a phone.)
+*   **Це телефон.** (This is a phone.)
 *   **Він тут.** (It is here.)
 
 > [!tip]
@@ -267,7 +267,7 @@ Here is a template for a perfect A1 introduction:
 > [!tip]
 > **Two ways to say your name:**
 > *   **Я — Том.** (I [am] Tom.) — Direct and simple.
-> *   **Мене звати Том.** [mɛˈnɛ ˈzʋɑtɪ] (My name is Tom.) — The standard Ukrainian introduction. Learn this as a fixed phrase for now; the grammar behind it comes later.
+> *   **Мене звати Том.** (My name is Tom.) — The standard Ukrainian introduction. Learn this as a fixed phrase for now; the grammar behind it comes later.
 
 **Example:**
 *   **Привіт. Мене звати Том. Я — студент. Я тут.**

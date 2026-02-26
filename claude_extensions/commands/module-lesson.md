@@ -1,3 +1,7 @@
+---
+argument-hint: "{level} {module_num}"
+---
+
 # /module-lesson
 
 Generate main lesson content from locked meta.yaml.
@@ -12,7 +16,7 @@ Generate main lesson content from locked meta.yaml.
 
 ## Instructions
 
-Parse arguments: $ARGUMENTS
+Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 ### Step 1: Read Phase Instructions
 

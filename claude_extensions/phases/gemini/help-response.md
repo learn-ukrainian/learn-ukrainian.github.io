@@ -45,7 +45,6 @@ Gemini needs vocabulary format clarification.
 
 Claude appends:
 - An example vocabulary entry from an existing module
-- IPA formatting rules
 - Part-of-speech conventions used in this project
 
 ### `research`

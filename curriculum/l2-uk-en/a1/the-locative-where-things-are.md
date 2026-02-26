@@ -22,7 +22,7 @@ This word is your key. It is short, simple, and exactly like the English "Where"
 
 You have already met the Nominative case (the dictionary form) and the Accusative case (for direct objects). Today, we meet the **Locative case** (Місцевий відмінок). As the name suggests, it is used exclusively for location.
 
-One important distinction: Ukrainian has two location questions. **Де?** [dɛ] means "Where is it?" — static location. **Куди?** [kuˈdɪ] means "Where to?" — direction of motion. Today, we focus only on **Де?** — where things ARE right now, not where they are going.
+One important distinction: Ukrainian has two location questions. **Де?** [dɛ] means "Where is it?" — static location. **Куди?** means "Where to?" — direction of motion. Today, we focus only on **Де?** — where things ARE right now, not where they are going.
 
 > [!observe]
 > **Look at these changes:**

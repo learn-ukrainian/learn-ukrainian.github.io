@@ -1,0 +1,10 @@
+{
+  "module": "abetka",
+  "track": "l2-uk-direct",
+  "level": "a1",
+  "status": "draft",
+  "images_sourced": 0,
+  "images_total": 33,
+  "last_updated": "2026-02-25",
+  "notes": "All image_url fields are null — needs Pixabay sourcing pass."
+}

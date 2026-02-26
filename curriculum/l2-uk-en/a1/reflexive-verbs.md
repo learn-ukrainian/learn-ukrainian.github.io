@@ -395,12 +395,12 @@ The **-ть** and **-ся** fuse together into a single **long, soft [ts']** sou
 Think of the sharp "ts" in "ca**ts**", but hold it longer and smile to make it soft.
 
 *   Written: **дивиться**
-*   Pronounced: [dɪˈʋɪ**t͡sʲːɑ**] (dee-VY-tssya)
+*   Pronounced: (dee-VY-tssya)
 
 ### Accent Reduction: The Shibboleth
 This sound instantly distinguishes a native Ukrainian speaker. In Russian, the reflexive ending is hard and short. In Ukrainian, it is **soft** and **long**.
 To practice, smile when you say it. The smile raises your tongue and makes the sound soft.
-*   **Він сміється.** [ʋin smɪˈjɛ-**t͡sʲːɑ**]
+*   **Він сміється.**
 
 Try saying it five times: *Сміється, сміється, сміється...* Make that *ts* sound long and gentle.
 
@@ -424,7 +424,7 @@ Reflexive verbs are a beautiful part of Ukrainian. They reflect the mindset that
 
 1.  The suffix **-ся** acts like a **mirror**, turning the action back to the subject.
 2.  Use **-ся** after consonants, **-сь** after vowels to keep the rhythm.
-3.  Pronounce **-ться** as a long, soft **[t͡sʲːa]**.
+3.  Pronounce **-ться** as a long, soft ****.
 4.  Use these verbs for your daily routine (**вмиватися**), feelings (**хвилюватися**), and shared actions (**цілуватися**).
 
 **Перевірте себе:**

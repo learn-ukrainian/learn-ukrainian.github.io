@@ -354,7 +354,7 @@ wc -w < curriculum/l2-uk-en/{track}/{slug}.md
    - Minimum requirements: ≥3 real issues, ≥2 dimensions below 9, specific «» quotes
    - The 14-dimension scoring protocol from `review-content-v4.md`
    - Tier-specific guidance from `review-tiers/tier-{N}-{tier}.md`
-   - Specific areas to scrutinize (historical claims, etymologies, IPA stress)
+   - Specific areas to scrutinize (historical claims, etymologies)
    - References to content files at their canonical paths (NOT orchestration/)
 3. Send to Gemini with a **NEW task-id** (e.g., `green-review-{slug}`, NOT `orchestrate-{slug}`):
 

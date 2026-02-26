@@ -1,141 +1,111 @@
 items:
   - lemma: "думка"
-    ipa: '[ˈdumkɑ]'
     translation: "opinion, thought"
     pos: "noun"
     gender: "f"
   - lemma: "погляд"
-    ipa: '[ˈpɔɦlʲɑd]'
     translation: "view, perspective"
     pos: "noun"
     gender: "m"
   - lemma: "вважати"
-    ipa: '[ʋːɑˈʒɑtɪ]'
     translation: "to consider, to opine"
     pos: "verb"
     aspect: "impf"
   - lemma: "рахувати"
-    ipa: '[rɑxuˈʋɑtɪ]'
     translation: "to count, to calculate"
     pos: "verb"
     aspect: "impf"
   - lemma: "впевнений"
-    ipa: '[ˈʍpɛu̯nɛnɪj]'
     translation: "sure, certain"
     pos: "adj"
   - lemma: "переконаний"
-    ipa: '[pɛrɛˈkɔnɑnɪj]'
     translation: "convinced"
     pos: "adj"
   - lemma: "безсумнівно"
-    ipa: '[bɛzsuˈmnʲiu̯nɔ]'
     translation: "undoubtedly"
     pos: "adv"
   - lemma: "можливо"
-    ipa: '[mɔˈʒlɪʋɔ]'
     translation: "possibly"
     pos: "adv"
   - lemma: "гадати"
-    ipa: '[ɦɑˈdɑtɪ]'
     translation: "to think, to suppose"
     pos: "verb"
     aspect: "impf"
   - lemma: "мабуть"
-    ipa: '[ˈmɑˈbutʲ]'
     translation: "probably"
     pos: "adv"
   - lemma: "очевидно"
-    ipa: '[ɔt͡ʃɛˈʋɪdnɔ]'
     translation: "obviously"
     pos: "adv"
   - lemma: "здаватися"
-    ipa: '[zdɑˈʋɑtɪsʲɑ]'
     translation: "to seem"
     pos: "verb"
     aspect: "impf"
   - lemma: "стверджувати"
-    ipa: '[ˈstʋɛrd͡ʒuʋɑtɪ]'
     translation: "to claim, to assert"
     pos: "verb"
     aspect: "impf"
   - lemma: "припускати"
-    ipa: '[prɪpuˈskɑtɪ]'
     translation: "to assume, to hypothesize"
     pos: "verb"
     aspect: "impf"
   - lemma: "навряд чи"
-    ipa: '[nɑˈʋrʲɑd t͡ʃɪ]'
     translation: "hardly, unlikely"
     pos: "adv"
   - lemma: "поділяти"
-    ipa: '[pɔdʲiˈlʲɑtɪ]'
     translation: "to share (an opinion)"
     pos: "verb"
     aspect: "impf"
   - lemma: "висловити"
-    ipa: '[ˈʋɪslɔʋɪtɪ]'
     translation: "to express"
     pos: "verb"
     aspect: "perf"
   - lemma: "дискусія"
-    ipa: '[dɪˈskusʲijɑ]'
     translation: "discussion, debate"
     pos: "noun"
     gender: "f"
   - lemma: "переконання"
-    ipa: '[pɛrɛkɔˈnɑnʲːɑ]'
     translation: "conviction, belief"
     pos: "noun"
     gender: "n"
   - lemma: "припущення"
-    ipa: '[prɪˈpuʃt͡ʃɛnʲːɑ]'
     translation: "assumption, hypothesis"
     pos: "noun"
     gender: "n"
   - lemma: "обґрунтовувати"
-    ipa: '[ɔbɡrunˈtɔʋuʋɑtɪ]'
     translation: "to justify, to substantiate"
     pos: "verb"
     aspect: "impf"
   - lemma: "аргумент"
-    ipa: '[ɑrɦuˈmɛnt]'
     translation: "argument, reason"
     pos: "noun"
     gender: "m"
   - lemma: "гіпотеза"
-    ipa: '[ɦʲiˈpɔtɛzɑ]'
     translation: "hypothesis"
     pos: "noun"
     gender: "f"
   - lemma: "незгода"
-    ipa: '[nɛˈzɦɔdɑ]'
     translation: "disagreement"
     pos: "noun"
     gender: "f"
   - lemma: "суперечка"
-    ipa: '[supɛˈrɛt͡ʃkɑ]'
     translation: "argument, dispute"
     pos: "noun"
     gender: "f"
   - lemma: "цілком"
-    ipa: '[t͡sʲilˈkɔm]'
     translation: "completely, entirely"
     pos: "adv"
   - lemma: "твердо"
-    ipa: '[ˈtʋɛrdɔ]'
     translation: "firmly"
     pos: "adv"
   - lemma: "глибоко"
-    ipa: '[ˈɦlɪˈbɔkɔ]'
     translation: "deeply"
     pos: "adv"
   - lemma: "обмінятися"
-    ipa: '[ɔbmʲiˈnʲɑtɪsʲɑ]'
     translation: "to exchange"
     pos: "verb"
     aspect: "perf"
   - lemma: "згода"
-    ipa: '[ˈzɦɔdɑ]'
     translation: "agreement, consent"
     pos: "noun"
     gender: "f"

@@ -2,13 +2,13 @@
   "module": "checkpoint-cases",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T20:35:46.624196Z",
+  "last_audit": "2026-02-26T14:14:59.656182Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-22T21:56:51.633467Z",
     "meta": "2026-02-24T22:37:07.221274Z",
     "activities": "2026-02-22T21:53:16.679496Z",
-    "vocabulary": "2026-02-22T21:53:17.085151Z",
+    "vocabulary": "2026-02-26T10:56:38.085752Z",
     "plan": "2026-02-20T21:00:15.023721Z",
     "research": "2026-02-22T20:43:45.229629Z"
   },
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -59,7 +54,7 @@
     "blocking_issues": [
       "2 Outline Compliance Errors"
     ],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 0
   }

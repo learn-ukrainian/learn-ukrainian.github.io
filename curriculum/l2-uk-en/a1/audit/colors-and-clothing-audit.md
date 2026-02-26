@@ -1,7 +1,7 @@
 # Audit Report: M27 — colors-and-clothing.md
 **Level:** A1 | **Module:** M27 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:16
+**Generated:** 2026-02-26 13:23:45
 
 ## Configuration
 **Type:** A1-vocab
@@ -46,7 +46,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2302/2000 (raw: 2540)
+- **Words:** ✅ 2287/2000 (raw: 2525)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -55,11 +55,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 31/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.3% (target 35-55% (M27))
+- **Immersion:** 🇺🇦 36.4% (target 35-55% (M27))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -69,11 +68,11 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Colors & Clothing** | ✅ | 59 | Included in Core |
-| **Кольори навколо нас** | ✅ | 501 | Included in Core |
+| **Кольори навколо нас** | ✅ | 497 | Included in Core |
 | **Основні кольори та узгодження** | ✅ | 346 | Included in Core |
-| **Одяг і дієслово «носити»** | ✅ | 365 | Included in Core |
+| **Одяг і дієслово «носити»** | ✅ | 364 | Included in Core |
 | **Множина: штани та окуляри** | ✅ | 170 | Included in Core |
 | **Опис зовнішності та вишиванка** | ✅ | 359 | Included in Core |
-| **Діалог: У магазині одягу** | ✅ | 155 | Included in Core |
+| **Діалог: У магазині одягу** | ✅ | 145 | Included in Core |
 | **Практика: Опис одягу** | ✅ | 181 | Included in Core |
 | **Підсумок** | ✅ | 166 | Included in Core |

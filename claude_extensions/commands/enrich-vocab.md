@@ -8,10 +8,9 @@ if [ -z "$1" ] || [ -z "$2" ]; then
   echo "  /enrich-vocab b2 75"
   echo ""
   echo "What this does:"
-  echo "  1. Runs espeak-ng to add IPA pronunciation"
-  echo "  2. Adds grammatical metadata (gender, aspect)"
-  echo "  3. Validates enriched entries"
-  echo "  4. Optionally rebuilds vocabulary database"
+  echo "  1. Adds grammatical metadata (gender, aspect)"
+  echo "  2. Validates enriched entries"
+  echo "  3. Optionally rebuilds vocabulary database"
   exit 1
 fi
 

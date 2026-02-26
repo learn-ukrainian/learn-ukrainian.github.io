@@ -1,130 +1,100 @@
 items:
   - lemma: "йти пішки"
-    ipa: '[jtɪ ˈpʲiʃkɪ]'
     translation: "to walk"
     pos: "verb phrase"
     notes: "вживається для пересування власними ногами, не транспортом"
   - lemma: "їхати автобусом"
-    ipa: '[ˈjixɑtɪ ɑˈʋtɔbusɔm]'
     translation: "to go by bus"
     pos: "verb phrase"
     notes: "вимагає орудного відмінка для виду транспорту"
   - lemma: "їхати поїздом"
-    ipa: '[ˈjixɑtɪ ˈpɔjizdɔm]'
     translation: "to go by train"
     pos: "verb phrase"
   - lemma: "приходити вчасно"
-    ipa: '[prɪˈxɔdɪtɪ ˈʍt͡ʃɑsnɔ]'
     translation: "to arrive on time"
     pos: "verb phrase"
     notes: "ключова професійна колокація"
   - lemma: "переходити вулицю"
-    ipa: '[pɛrɛxɔdɪtɪ ˈʋulɪt͡sʲu]'
     translation: "to cross the street"
     pos: "verb phrase"
     notes: "прямий додаток у знахідному відмінку"
   - lemma: "виходити з дому"
-    ipa: '[ʋɪxɔdɪtɪ z ˈdɔmu]'
     translation: "to leave the house"
     pos: "verb phrase"
     notes: "використання прийменника з + родовий відмінок"
   - lemma: "дощ іде"
-    ipa: '[dɔʃt͡ʃ iˈdɛ]'
     translation: "it is raining"
     pos: "phrase"
     notes: "безособове вживання дієслова руху"
   - lemma: "час іде"
-    ipa: '[t͡ʃɑs iˈdɛ]'
     translation: "time passes"
     pos: "phrase"
   - lemma: "час біжить"
-    ipa: '[t͡ʃɑs bʲiˈʒɪtʲ]'
     translation: "time flies"
     pos: "phrase"
   - lemma: "виходити на зв'язок"
-    ipa: '[ʋɪxɔdɪtɪ nɑ zʋjɑzɔk]'
     translation: "to get in touch"
     pos: "verb phrase"
   - lemma: "приходити на думку"
-    ipa: '[prɪˈxɔdɪtɪ nɑ ˈdumku]'
     translation: "to occur to someone"
     pos: "verb phrase"
   - lemma: "далеко піти"
-    ipa: '[dɑˈlɛkɔ pʲitɪ]'
     translation: "to go far / achieve success"
     pos: "verb phrase"
     notes: "ідіома для опису кар'єрного росту"
   - lemma: "сходити вниз"
-    ipa: '[sxɔdɪtɪ ʋnɪz]'
     translation: "to go down"
     pos: "verb phrase"
     notes: "контекст метро (ескалатор)"
   - lemma: "переходити на українську"
-    ipa: '[pɛrɛxɔdɪtɪ nɑ ukrɑˈjinʲsʲku]'
     translation: "to switch to Ukrainian"
     pos: "verb phrase"
     notes: "важливий соціолінгвістичний контекст"
   - lemma: "підніматися"
-    ipa: '[pʲidʲnʲiˈmɑtɪsʲɑ]'
     translation: "to go up"
     pos: "verb"
   - lemma: "заходити"
-    ipa: '[zɑxɔdɪtɪ]'
     translation: "to enter / go in"
     pos: "verb"
   - lemma: "переходити"
-    ipa: '[pɛrɛxɔdɪtɪ]'
     translation: "to cross / transfer"
     pos: "verb"
   - lemma: "виходити"
-    ipa: '[ʋɪxɔdɪtɪ]'
     translation: "to exit / go out"
     pos: "verb"
   - lemma: "виїжджати"
-    ipa: '[ʋɪjiˈʒd͡ʒɑtɪ]'
     translation: "to drive out / leave"
     pos: "verb"
   - lemma: "покидати"
-    ipa: '[pɔkɪdɑtɪ]'
     translation: "to leave / abandon"
     pos: "verb"
   - lemma: "рятуватися"
-    ipa: '[rʲɑtuˈʋɑtɪsʲɑ]'
     translation: "to escape / save oneself"
     pos: "verb"
   - lemma: "приїжджати"
-    ipa: '[prɪjiˈʒd͡ʒɑtɪ]'
     translation: "to arrive by vehicle"
     pos: "verb"
   - lemma: "відходити"
-    ipa: '[ʋʲidxɔdɪtɪ]'
     translation: "to walk away / step back"
     pos: "verb"
   - lemma: "від'їжджати"
-    ipa: '[ʋʲidjiˈʒd͡ʒɑtɪ]'
     translation: "to drive away / depart"
     pos: "verb"
   - lemma: "переїжджати"
-    ipa: '[pɛrɛjiˈʒd͡ʒɑtɪ]'
     translation: "to drive across / move"
     pos: "verb"
   - lemma: "об'їжджати"
-    ipa: '[ɔbjiˈʒd͡ʒɑtɪ]'
     translation: "to drive around / bypass"
     pos: "verb"
   - lemma: "обходити"
-    ipa: '[ɔbxɔdɪtɪ]'
     translation: "to walk around / bypass"
     pos: "verb"
   - lemma: "підходити"
-    ipa: '[pʲiˈdxɔdɪtɪ]'
     translation: "to approach on foot"
     pos: "verb"
   - lemma: "під'їжджати"
-    ipa: '[pʲidjiˈʒd͡ʒɑtɪ]'
     translation: "to approach by vehicle"
     pos: "verb"
   - lemma: "ходити по руках"
-    ipa: '[xɔˈdɪtɪ pɔ ruˈkɑx]'
     translation: "to pass from hand to hand"
     pos: "phrase"

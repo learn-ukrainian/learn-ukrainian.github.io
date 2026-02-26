@@ -1,0 +1,28 @@
+{
+  "track": "b2",
+  "slug": "professional-email-basics",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T14:32:15Z",
+      "task_id": "v3-professional-email-basics-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T14:36:02Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T14:38:54Z",
+      "task_id": "v3-professional-email-basics-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T14:38:55Z",
+      "attempts": 0,
+      "note": "auto-fix"
+    }
+  }
+}

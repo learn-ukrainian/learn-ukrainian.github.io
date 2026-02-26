@@ -1,133 +1,103 @@
 items:
   - lemma: "київський"
-    ipa: '[ˈkɪjiu̯sʲkɪj]'
     translation: "Kyivan"
     pos: "adjective"
     notes: "Київська Русь, Київський торт; символ столиці"
   - lemma: "студентський"
-    ipa: '[stuˈdɛnʲsʲkɪj]'
     translation: "student's"
     pos: "adjective"
     notes: "студентський квиток, студентський гуртожиток"
   - lemma: "національний"
-    ipa: '[nɑt͡sʲiɔˈnɑlʲnɪj]'
     translation: "national"
     pos: "adjective"
     notes: "офіційний регістр"
   - lemma: "синьо-жовтий"
-    ipa: '[ˈsɪnʲɔ-ˈʒɔu̯tɪj]'
     translation: "blue-yellow"
     pos: "adjective"
     notes: "пишеться через дефіс, рівноправні кольори"
   - lemma: "білолиций"
-    ipa: '[bʲilɔˈlɪt͡sɪj]'
     translation: "white-faced"
     pos: "adjective"
     notes: "фольклорний епітет, особлива парадигма відмінювання"
   - lemma: "термін"
-    ipa: '[ˈtɛrmʲin]'
     translation: "term"
     pos: "noun"
     gender: "m"
   - lemma: "батьківський"
-    ipa: '[ˈbɑtʲkʲiu̯sʲkɪj]'
     translation: "parental / father's"
     pos: "adjective"
     notes: "батьківський комітет"
   - lemma: "жовтогарячий"
-    ipa: '[ʒɔu̯tɔɦɑˈrʲɑt͡ʃɪj]'
     translation: "bright orange"
     pos: "adjective"
     notes: "пишеться разом, єдиний колір"
   - lemma: "двоярусний"
-    ipa: '[dʋɔˈjɑrusnɪj]'
     translation: "two-tiered"
     pos: "adjective"
   - lemma: "музичний"
-    ipa: '[muˈzɪt͡ʃnɪj]'
     translation: "musical (related to music)"
     pos: "adjective"
     notes: "стосується індустрії чи інструментів"
   - lemma: "музикальний"
-    ipa: '[muzɪˈkɑlʲnɪj]'
     translation: "musical (talented / melodic)"
     pos: "adjective"
     notes: "про людину або здібності"
   - lemma: "міський"
-    ipa: '[mʲiˈsʲkɪj]'
     translation: "urban / city"
     pos: "adjective"
   - lemma: "сільський"
-    ipa: '[sʲilʲˈsʲkɪj]'
     translation: "rural"
     pos: "adjective"
   - lemma: "львівський"
-    ipa: '[lʲˈʋʲiu̯sʲkɪj]'
     translation: "of Lviv"
     pos: "adjective"
   - lemma: "волинський"
-    ipa: '[ʋɔˈlɪnʲsʲkɪj]'
     translation: "of Volyn"
     pos: "adjective"
   - lemma: "козацький"
-    ipa: '[kɔˈzɑt͡sʲkɪj]'
     translation: "Cossack's"
     pos: "adjective"
   - lemma: "кравецький"
-    ipa: '[krɑˈʋɛt͡sʲkɪj]'
     translation: "tailor's"
     pos: "adjective"
   - lemma: "осінній"
-    ipa: '[ɔˈsʲinʲːij]'
     translation: "autumnal"
     pos: "adjective"
     notes: "подвоєння приголосних"
   - lemma: "законний"
-    ipa: '[zɑˈkɔnːɪj]'
     translation: "legal / lawful"
     pos: "adjective"
   - lemma: "туманний"
-    ipa: '[tuˈmɑnːɪj]'
     translation: "foggy"
     pos: "adjective"
   - lemma: "професійний"
-    ipa: '[prɔfɛˈsʲijnɪj]'
     translation: "professional"
     pos: "adjective"
   - lemma: "фаховий"
-    ipa: '[fɑxɔˈʋɪj]'
     translation: "expert / specialized"
     pos: "adjective"
   - lemma: "центральний"
-    ipa: '[t͡sɛnˈtrɑlʲnɪj]'
     translation: "central"
     pos: "adjective"
   - lemma: "персональний"
-    ipa: '[pɛrsɔˈnɑlʲnɪj]'
     translation: "personal"
     pos: "adjective"
   - lemma: "структурний"
-    ipa: '[struˈkturnɪj]'
     translation: "structural"
     pos: "adjective"
   - lemma: "процесуальний"
-    ipa: '[prɔt͡sɛsuˈɑlʲnɪj]'
     translation: "procedural"
     pos: "adjective"
   - lemma: "чорно-білий"
-    ipa: '[ˈt͡ʃɔrnɔ-ˈbʲilɪj]'
     translation: "black-and-white"
     pos: "adjective"
   - lemma: "круглолиций"
-    ipa: '[kruɦlɔˈlɪt͡sɪj]'
     translation: "round-faced"
     pos: "adjective"
   - lemma: "трикутний"
-    ipa: '[trɪˈkutnɪj]'
     translation: "triangular"
     pos: "adjective"
   - lemma: "діловий"
-    ipa: '[dʲilɔˈʋɪj]'
     translation: "business (adjective)"
     pos: "adjective"
     notes: "використовується для уникнення кальки 'бізнес центр'"

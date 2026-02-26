@@ -82,7 +82,7 @@ content_outline:
     words: 350
     points:
       - "Explain the formula: Бажаю + [Abstract Noun in Genitive]."
-      - "Key vocabulary with IPA: щастя /ˈʃtʃɑstʲɐ/, здоров'я /zdɔˈrɔu̯jɐ/, успіху, любові."
+      - "Key vocabulary with IPA: щастя, здоров'я, успіху, любові."
       - "Common Error Alert: usage of Genitive (of happiness/of health) vs Accusative."
       - "Briefly cover responses to wishes: 'Дякую!', 'Взаємно!'."
   - section: "Тема: День народження"

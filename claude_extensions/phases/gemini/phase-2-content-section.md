@@ -194,36 +194,21 @@ Before submitting, scan your ENTIRE output for these. They cause automatic audit
 
 Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian text.
 
-### Pronunciation: IPA Only (HARD FAIL if Latin transliteration found)
+### Pronunciation (HARD FAIL if Latin transliteration found)
 
-**Level-gated IPA rules:**
-- **A1–A2**: IPA allowed ONLY on the **first occurrence** of each new vocabulary word when it is introduced. NEVER transcribe full sentences, example phrases, or words the student has already seen in earlier modules. The goal is a pronunciation hint on unfamiliar words, not a phonetics textbook.
-- **B1+**: Do NOT include inline IPA `[...]` transcriptions in the content markdown. IPA belongs ONLY in the vocabulary YAML file.
+**Pronunciation rules:**
+- **A1–A2**: Use **stress marks** (мі́сто) for pronunciation hints on the first occurrence of new vocabulary words.
+- **B1+**: No pronunciation annotations in content.
 
-**ALL pronunciation guides MUST use IPA symbols.** Latin transliterations are BANNED.
-Maximum ~15-25 IPA annotations per module (one per new word). If you have more, you are over-annotating.
+**Latin transliterations are BANNED at ALL levels.** Never use kh, sh, ch, zh, ts, ya, yu, ye, shch.
 
 ```markdown
-❌ WRONG (full sentence IPA):
-"**Котра година?** [kɔˈtra ɦɔˈdɪna] (What time is it?)"
-"**Ви на вокзалі.** [ʋɪ na ʋɔkˈzalʲi] (You are at the station.)"
-
 ❌ WRONG (Latin transliteration):
 "хліб (khlib)"
 
-✅ RIGHT (IPA on new vocabulary only):
-"The key phrase is **котра** [kɔˈtra] (which). Use it to ask about time."
-"**хліб** — [xlʲib]"
+✅ RIGHT (stress mark + English approximation):
+"**хлі́б** — like English «hleeb» but with a «ch» sound"
 ```
-
-**Rules:**
-- Use IPA symbols in square brackets: `[x]`, `[ʃ]`, `[t͡ʃ]`, `[ʒ]`, `[t͡s]`, `[d͡ʒ]`
-- Affricates MUST have tie-bars: `[t͡ʃ]` (ч), `[d͡ʒ]` (дж), `[t͡s]` (ц), `[d͡z]` (дз)
-- Add English approximation for accessibility: `[ʃ] — like «sh» in «shoe»`
-- Mark palatalization: `[lʲ]`, `[dʲ]`, `[nʲ]`, `[tʲ]` (NOT just `[l]`, `[d]`)
-- Mark the soft Л correctly: `[lʲ]` vs hard `[l]`
-- Use `[ʋ]` for Ukrainian В (NOT `[v]` or `[w]` — it's a labiodental approximant)
-- NEVER use Latin shortcuts: kh, sh, ch, zh, ts, ya, yu, ye, shch
 
 ### Typography
 

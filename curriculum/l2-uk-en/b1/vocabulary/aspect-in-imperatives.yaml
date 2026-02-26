@@ -1,140 +1,110 @@
 items:
   - lemma: "наказовий спосіб"
-    ipa: '[nɑkɑˈzɔʋɪj ˈspɔsʲib]'
     translation: "imperative mood"
     pos: "noun"
     notes: "High frequency in grammatical context"
   - lemma: "будь ласка"
-    ipa: '[budʲ ˈlɑskɑ]'
     translation: "please"
     pos: "particle"
     notes: "Key for softening commands"
   - lemma: "негайно"
-    ipa: '[nɛˈɦɑjnɔ]'
     translation: "immediately"
     pos: "adverb"
     notes: "High frequency for urgent tactical commands"
   - lemma: "обов'язково"
-    ipa: '[ɔbɔu̯jɑˈzkɔʋɔ]'
     translation: "definitely, must"
     pos: "adverb"
     notes: "High frequency for emphasis"
   - lemma: "пам'ятай"
-    ipa: '[pɑmjɑˈtɑj]'
     translation: "remember"
     pos: "verb"
     aspect: "impf"
     notes: "Generic advice or ongoing state"
   - lemma: "запам'ятай"
-    ipa: '[zɑpɑmjɑˈtɑj]'
     translation: "memorize"
     pos: "verb"
     aspect: "pf"
     notes: "Specific act of committing to memory"
   - lemma: "перестань"
-    ipa: '[pɛrɛˈstɑnʲ]'
     translation: "stop"
     pos: "verb"
     aspect: "pf"
     notes: "High frequency in spoken language/parenting"
   - lemma: "давай"
-    ipa: '[dɑˈʋɑj]'
     translation: "let's"
     pos: "verb"
     aspect: "impf"
     notes: "High frequency colloquial usage"
   - lemma: "припини"
-    ipa: '[prɪpɪˈnɪ]'
     translation: "stop, cease"
     pos: "verb"
     aspect: "pf"
     notes: "Formal synonym for 'перестань'"
   - lemma: "продовжуй"
-    ipa: '[prɔˈdɔu̯ʒuj]'
     translation: "continue"
     pos: "verb"
     aspect: "impf"
   - lemma: "зачекай"
-    ipa: '[zɑt͡ʃɛˈkɑj]'
     translation: "wait"
     pos: "verb"
     aspect: "pf"
     notes: "Wait for a specific result or moment"
   - lemma: "чекай"
-    ipa: '[t͡ʃɛˈkɑj]'
     translation: "wait"
     pos: "verb"
     aspect: "impf"
     notes: "Process of waiting"
   - lemma: "дієслово"
-    ipa: '[dʲijɛˈslɔʋɔ]'
     translation: "verb"
     pos: "noun"
   - lemma: "вид"
-    ipa: '[ʋɪd]'
     translation: "aspect"
     pos: "noun"
   - lemma: "недоконаний"
-    ipa: '[nɛdɔˈkɔnɑnɪj]'
     translation: "imperfective"
     pos: "adjective"
   - lemma: "доконаний"
-    ipa: '[dɔˈkɔnɑnɪj]'
     translation: "perfective"
     pos: "adjective"
   - lemma: "запрошення"
-    ipa: '[zɑˈprɔʃɛnʲːɑ]'
     translation: "invitation"
     pos: "noun"
   - lemma: "наказ"
-    ipa: '[nɑˈkɑz]'
     translation: "order, command"
     pos: "noun"
   - lemma: "дія"
-    ipa: '[ˈdʲijɑ]'
     translation: "action"
     pos: "noun"
   - lemma: "результат"
-    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
   - lemma: "процес"
-    ipa: '[prɔˈt͡sɛs]'
     translation: "process"
     pos: "noun"
   - lemma: "заборона"
-    ipa: '[zɑbɔˈrɔnɑ]'
     translation: "prohibition"
     pos: "noun"
   - lemma: "застереження"
-    ipa: '[zɑstɛˈrɛʒɛnʲːɑ]'
     translation: "warning"
     pos: "noun"
   - lemma: "ввічливий"
-    ipa: '[ˈʋʲːit͡ʃlɪʋɪj]'
     translation: "polite"
     pos: "adjective"
   - lemma: "гостинність"
-    ipa: '[ɦɔˈstɪnʲːisʲtʲ]'
     translation: "hospitality"
     pos: "noun"
   - lemma: "прохання"
-    ipa: '[prɔˈxɑnʲːɑ]'
     translation: "request"
     pos: "noun"
   - lemma: "правило"
-    ipa: '[prɑʋɪlɔ]'
     translation: "rule"
     pos: "noun"
   - lemma: "помилка"
-    ipa: '[ˈpɔˈmɪlkɑ]'
     translation: "mistake, error"
     pos: "noun"
   - lemma: "порада"
-    ipa: '[pɔˈrɑdɑ]'
     translation: "advice"
     pos: "noun"
   - lemma: "обережно"
-    ipa: '[ɔbɛˈrɛʒnɔ]'
     translation: "carefully, watch out"
     pos: "adverb"

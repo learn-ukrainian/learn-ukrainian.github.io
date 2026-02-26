@@ -1,153 +1,122 @@
 items:
 - lemma: готель
-  ipa: '[ɦɔˈtɛlʲ]'
   translation: hotel
   pos: noun
   gender: m
   notes: Requires Locative for location (у готелі) and Accusative for direction (в
     готель)
 - lemma: номер
-  ipa: '[ˈnɔmɛr]'
   translation: hotel room
   pos: noun
   gender: m
   notes: Used specifically for hotel rooms, not private house rooms
 - lemma: бронювати
-  ipa: '[brɔnʲuˈʋɑtɪ]'
   translation: to book (process)
   pos: verb
   aspect: imperfective
 - lemma: забронювати
-  ipa: '[zɑbrɔnʲuˈʋɑtɪ]'
   translation: to book (result)
   pos: verb
   aspect: perfective
 - lemma: заселення
-  ipa: '[zɑˈsɛlɛnʲːɑ]'
   translation: check-in
   pos: noun
   gender: n
 - lemma: виселення
-  ipa: '[ˈʋɪsɛlɛnʲːɑ]'
   translation: check-out
   pos: noun
   gender: n
 - lemma: ключ
-  ipa: '[klʲut͡ʃ]'
   translation: key
   pos: noun
   gender: m
 - lemma: адміністратор
-  ipa: '[ɑdʲmʲinʲiˈstrɑtɔr]'
   translation: receptionist
   pos: noun
   gender: m
 - lemma: рахунок
-  ipa: '[rɑˈxunɔk]'
   translation: bill
   pos: noun
   gender: m
 - lemma: одномісний
-  ipa: '[ɔdnɔˈmʲisnɪj]'
   translation: single (room)
   pos: adjective
 - lemma: двомісний
-  ipa: '[dʋɔˈmʲisnɪj]'
   translation: double (room)
   pos: adjective
 - lemma: сніданок
-  ipa: '[sʲnʲiˈdɑnɔk]'
   translation: breakfast
   pos: noun
   gender: m
 - lemma: рушник
-  ipa: '[ruˈʃnɪk]'
   translation: towel
   pos: noun
   gender: m
 - lemma: прибирання
-  ipa: '[prɪbɪˈrɑnʲːɑ]'
   translation: cleaning service
   pos: noun
   gender: n
 - lemma: кондиціонер
-  ipa: '[kɔndɪt͡sʲiɔˈnɛr]'
   translation: air conditioner
   pos: noun
   gender: m
 - lemma: туристичний збір
-  ipa: '[turɪˈstɪt͡ʃnɪj zʲbʲir]'
   translation: tourist tax
   pos: noun
   gender: m
 - lemma: рецепція
-  ipa: '[rɛˈt͡sɛpt͡sʲijɑ]'
   translation: reception desk
   pos: noun
   gender: f
 - lemma: мило
-  ipa: '[ˈmɪlɔ]'
   translation: soap
   pos: noun
   gender: n
 - lemma: шампунь
-  ipa: '[ʃɑmˈpunʲ]'
   translation: shampoo
   pos: noun
   gender: m
 - lemma: ліфт
-  ipa: '[lʲift]'
   translation: elevator
   pos: noun
   gender: m
 - lemma: багаж
-  ipa: '[bɑˈɦɑʒ]'
   translation: luggage
   pos: noun
   gender: m
 - lemma: реєстрація
-  ipa: '[rɛjɛˈstrɑt͡sʲijɑ]'
   translation: registration
   pos: noun
   gender: f
 - lemma: паспорт
-  ipa: '[ˈpɑspɔrt]'
   translation: passport
   pos: noun
   gender: m
 - lemma: поверх
-  ipa: '[pɔˈʋɛrx]'
   translation: floor (level of a building)
   pos: noun
   gender: m
 - lemma: люкс
-  ipa: '[lʲuks]'
   translation: suite (luxury room)
   pos: noun
   gender: m
 - lemma: прикметник
-  ipa: '[prɪˈkmɛtnɪk]'
   translation: adjective
   pos: noun
   gender: m
 - lemma: місцевий
-  ipa: '[mʲiˈst͡sɛʋɪj]'
   translation: locative (case)
   pos: adjective
 - lemma: недоконаний
-  ipa: '[nɛdɔˈkɔnɑnɪj]'
   translation: imperfective (aspect)
   pos: adjective
 - lemma: доконаний
-  ipa: '[dɔˈkɔnɑnɪj]'
   translation: perfective (aspect)
   pos: adjective
 - lemma: вид
-  ipa: '[ʋɪd]'
   translation: aspect
   pos: noun
   gender: m
 - lemma: знахідний
-  ipa: '[znɑˈxʲidnɪj]'
   translation: accusative
   pos: adjective

@@ -19,7 +19,7 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 3955/2000 (raw: 4099) | pedagogy: 10 violations | immersion: 15.2% LOW (target 35-55% (M42))
+    lesson: 3344/2000 (raw: 3555) | pedagogy: 3 violations | immersion: 14.3% LOW (target 35-55% (M42))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
@@ -27,11 +27,11 @@
 ─── Audit output (last 15 lines) ───
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
-     → Revision recommended (severity 70/100)
-     → 10 violations (significant)
-     → 9 grammar-level violations (fundamental)
-     → Immersion 20% off target
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 65/100)
+     → Revision recommended (severity 65/100)
+     → 3 violations (minor)
+     → 3 grammar-level violations (fundamental)
+     → Immersion 21% off target (major rebalancing needed)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/emergencies-audit.md

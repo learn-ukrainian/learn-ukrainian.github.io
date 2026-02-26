@@ -1,119 +1,94 @@
 items:
   - lemma: "казати"
-    ipa: '[kɑˈzɑtɪ]'
     translation: "to say / to tell"
     pos: "verb"
     aspect: "impf"
   - lemma: "говорити"
-    ipa: '[ɦɔʋɔˈrɪtɪ]'
     translation: "to speak / to talk"
     pos: "verb"
     aspect: "impf"
   - lemma: "питати"
-    ipa: '[pɪˈtɑtɪ]'
     translation: "to ask"
     pos: "verb"
     aspect: "impf"
   - lemma: "відповідати"
-    ipa: '[ʋʲidpɔʋʲiˈdɑtɪ]'
     translation: "to answer"
     pos: "verb"
     aspect: "impf"
   - lemma: "плітки"
-    ipa: '[plʲitkɪ]'
     translation: "gossip"
     pos: "noun"
     gender: "f"
   - lemma: "зіпсований телефон"
-    ipa: '[zʲiˈpsɔʋɑnɪj tɛlɛˈfɔn]'
     translation: "broken telephone (game)"
     pos: "noun"
     gender: "m"
   - lemma: "чи"
-    ipa: '[t͡ʃɪ]'
     translation: "whether / if"
     pos: "conjunction"
   - lemma: "щоб"
-    ipa: '[ʃt͡ʃɔb]'
     translation: "in order to / that (for commands)"
     pos: "conjunction"
   - lemma: "правда"
-    ipa: '[ˈprɑu̯dɑ]'
     translation: "truth"
     pos: "noun"
     gender: "f"
   - lemma: "сусід"
-    ipa: '[suˈsʲid]'
     translation: "neighbor (male)"
     pos: "noun"
     gender: "m"
   - lemma: "сусідка"
-    ipa: '[suˈsʲidkɑ]'
     translation: "neighbor (female)"
     pos: "noun"
     gender: "f"
   - lemma: "новина"
-    ipa: '[nɔʋɪˈnɑ]'
     translation: "news"
     pos: "noun"
     gender: "f"
   - lemma: "розмова"
-    ipa: '[rɔˈzmɔʋɑ]'
     translation: "conversation"
     pos: "noun"
     gender: "f"
   - lemma: "питання"
-    ipa: '[pɪˈtɑnʲːɑ]'
     translation: "question"
     pos: "noun"
     gender: "n"
   - lemma: "відповідь"
-    ipa: '[ˈʋʲidpɔʋʲidʲ]'
     translation: "answer"
     pos: "noun"
     gender: "f"
   - lemma: "дозвіл"
-    ipa: '[ˈdɔzʲʋʲil]'
     translation: "permission"
     pos: "noun"
     gender: "m"
   - lemma: "дорога"
-    ipa: '[dɔˈrɔɦɑ]'
     translation: "road / way"
     pos: "noun"
     gender: "f"
   - lemma: "якщо"
-    ipa: '[jɑˈkʃt͡ʃɔ]'
     translation: "if (conditional)"
     pos: "conjunction"
   - lemma: "що"
-    ipa: '[ʃt͡ʃɔ]'
     translation: "that (statement)"
     pos: "conjunction"
   - lemma: "вдома"
-    ipa: '[ˈʋdɔmɑ]'
     translation: "at home"
     pos: "adverb"
   - lemma: "директор"
-    ipa: '[dɪˈrɛktɔr]'
     translation: "director"
     pos: "noun"
     gender: "m"
   - lemma: "колега"
-    ipa: '[kɔˈlɛɦɑ]'
     translation: "colleague"
     pos: "noun"
     gender: "m"
   - lemma: "офіс"
-    ipa: '[ˈɔfʲis]'
     translation: "office"
     pos: "noun"
     gender: "m"
   - lemma: "швидко"
-    ipa: '[ˈʃʋɪdkɔ]'
     translation: "quickly"
     pos: "adverb"
   - lemma: "вчора"
-    ipa: '[ˈʍt͡ʃɔrɑ]'
     translation: "yesterday"
     pos: "adverb"

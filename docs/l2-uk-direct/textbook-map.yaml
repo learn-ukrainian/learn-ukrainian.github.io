@@ -1,0 +1,488 @@
+# Ukrainian School Textbook Index
+# Purpose: Quick reference for l2-uk-direct module building
+# Each entry maps topic → book → page range so we can jump directly
+# Last updated: 2026-02-26
+
+# ============================================================
+# BOOKS INVENTORY
+# ============================================================
+books:
+  bukvar_grade1_p1:
+    file: "1-klas-bukvar-bolshakova-2025-1.pdf"
+    grade: 1
+    part: 1
+    author: "Bolshakova"
+    year: 2025
+    status: read  # fully read in prior session
+
+  bukvar_grade1_p2:
+    file: "1-klas-bukvar-bolshakova-2025-2.pdf"
+    grade: 1
+    part: 2
+    author: "Bolshakova"
+    year: 2025
+    status: read
+
+  grade2_p1:
+    file: "2-klas-ukrmova-tsepova-2025-1.pdf"
+    grade: 2
+    part: 1
+    author: "Tsepova"
+    year: 2025
+    status: read
+
+  grade2_p2:
+    file: "2-klas-ukrmova-tsepova-2025-2.pdf"
+    grade: 2
+    part: 2
+    author: "Tsepova"
+    year: 2025
+    status: read
+
+  grade3_p1:
+    file: "3-klas-ukrainska-mova-vashulenko-2020-1.pdf"
+    grade: 3
+    part: 1
+    author: "Vashulenko"
+    year: 2020
+    pages_total: 160
+    status: read  # fully read 2026-02-26
+
+  grade3_p2:
+    file: "3-klas-ukrainska-mova-vashulenko-2020-2.pdf"
+    grade: 3
+    part: 2
+    author: "Vashulenko"
+    year: 2020
+    status: unread
+
+  grade4_p1:
+    file: "4-klas-ukrayinska-mova-varzatska-2021-1.pdf"
+    grade: 4
+    part: 1
+    status: unread
+
+  grade5_p1:
+    file: "5_ukrmova_litvinova_2022.pdf"
+    grade: 5
+    status: unread
+
+  grade6:
+    file: "6-klas-ukrmova-litvinova-2023.pdf"
+    grade: 6
+    status: unread
+
+  grade7:
+    file: "7-klas-ukrmova-litvinova-2024.pdf"
+    grade: 7
+    status: unread
+
+  ulp_1:
+    file: "ULP 1-00 Lesson Notes (all in one file) (2023).pdf"
+    note: "Ukrainian Lessons Podcast — PREMIUM CONTENT. Cannot use lesson material. Reference structure only."
+    status: blocked
+
+  vocab_1000:
+    file: "1000-Ukrainian-Words-2.0-Ukrainian-Lessons-PDF-4mwsom.pdf"
+    note: "Ukrainian Lessons vocabulary reference — check license before using"
+    status: unread
+
+  verbs_500:
+    file: "500+ Ukrainian Verbs - Ukrainian Lessons - PDF.pdf"
+    note: "Check license before using"
+    status: unread
+
+# ============================================================
+# TOPIC INDEX — where to find each topic in the books
+# ============================================================
+
+topic_index:
+
+  # --- ALPHABET & SCRIPT ---
+  alphabet:
+    primary: {book: bukvar_grade1_p1, pages: [1, 80]}
+    notes: "All 33 letters with vowel/consonant groups. Pre-literacy: • = vowel, — = consonant. Letters in pedagogical order (not alphabetical). Anna Ohоiko videos in abetka.yaml."
+
+  apostrophe:
+    primary: {book: grade3_p1, pages: [90, 93]}
+    also: {book: bukvar_grade1_p1, pages: [1, 80]}
+    rule: "After б/п/в/м/ф/р before я/ю/є/ї. After hard-ending prefixes before я/ю/є/ї."
+
+  soft_sign:
+    primary: {book: bukvar_grade1_p1, pages: [1, 80]}
+    notes: "Softens preceding consonant. Soft syllables: НЬ, ЛЬ, ТЬ."
+
+  doubled_consonants:
+    primary: {book: grade3_p1, pages: [98, 99]}
+    rule: "Prolonged soft consonant = two identical letters: жи**тт**я, зна**нн**я, гал**узз**я. Sound model uses двокрапка."
+
+  digraphs_dzh_dz:
+    primary: {book: grade3_p1, pages: [80, 81]}
+    rule: "[дж]/[дз]/[дз'] written as digraphs дж/дз: джерело, дзвін, дзьоб"
+
+  g_vs_g_hard:
+    primary: {book: grade3_p1, pages: [80, 81]}
+    notes: "Г vs Ґ distinction. Tongue twister by Юрій Кругляк — words with both."
+
+  # --- STRESS ---
+  stress_free:
+    primary: {book: grade3_p1, pages: [68, 69]}
+    rule: "Наголос вільний — can fall on any syllable. Stress changes meaning: óбрази/обрáзи/образú. Double stress: зáвжді/завждú."
+    vocabulary_list: "p68: Дрóва, вирáзно, сантимéтр, листопáд, предмéт, читáння, кілóметр, ходжý, беремó, донестú, булá, живемó, нóвий, óлень, пóдруга, посерéдині"
+
+  unstressed_e_y:
+    primary: {book: grade3_p1, pages: [72, 76]}
+    rule: "Unstressed [е]→[и] and [и]→[е]. Verify by finding stressed related form. Non-verifiable words: тривóга, секýнда, кишéня, президéнт — check орфографічний словник."
+
+  # --- PHONETICS RULES ---
+  voiced_consonants_preserved:
+    primary: {book: grade3_p1, pages: [82, 83]}
+    rule: "Ukrainian voiced consonants at word/syllable end are ALWAYS PRESERVED. гри[б] not гри[п], ме[д] not ме[т], ка[з]ка."
+    importance: "Explicitly teach with listening drills — devoicing at word-end is a common learner error across many L1 backgrounds."
+
+  prefix_s_z_rule:
+    primary: {book: grade3_p1, pages: [87, 89]}
+    rule: "с- before к/п/т/ф/х (mnemonic: кафе «Птах»). з- all other cases. зі- for ease of pronunciation: зігни (not згни)."
+    examples: "с-: сказати/сфотографувати/спитати/схитрити. з-: злетіти/збити/знести."
+
+  prefix_roz_bez:
+    primary: {book: grade3_p1, pages: [85, 87]}
+    rule: "роз-/без- always written with з: розмова, безхмарний."
+
+  euphony:
+    primary: {book: grade3_p1, pages: [77, 80]}
+    also: {book: grade2_p1, note: "introduced Grade 2"}
+    rule: "у/в, і/й, з/із/зі alternation for phonetic smoothness. Module: eufoniia (module 24)."
+
+  # --- GRAMMAR: QUESTION-WORD SYSTEM ---
+  question_words_grammar:
+    primary: {book: bukvar_grade1_p1, pages: [1, 80]}
+    also: {book: grade3_p1, pages: [42, 46]}
+    note: "ALL Ukrainian school grammar taught as question words, NEVER case names. ХТО?/ЩО? = subject; ЩО РОБИТЬ? = verb; ЯКИЙ?/ЯКА?/ЯКЕ? = adjective; ДЕ? = location; КОЛИ? = time; СКІЛЬКИ? = numeral."
+
+  sentence_members:
+    primary: {book: grade3_p1, pages: [42, 46]}
+    rule: "Підмет (ХТО?/ЩО?) = single underline. Присудок (ЩО РОБИТЬ?) = double underline. Prepositions з/на/в/у/про are NOT members — they connect but can't answer questions."
+
+  sentence_structure:
+    primary: {book: grade3_p1, pages: [44, 46]}
+    notes: "Підмет+присудок = ОСНОВА РЕЧЕННЯ. двосторонній зв'язок (subject↔verb). односторонній (head→dependent)."
+
+  # --- GRAMMAR: WORD STRUCTURE ---
+  word_structure:
+    primary: {book: grade3_p1, pages: [59, 100]}
+    sections:
+      endings: {pages: [60, 63], rule: "Змінна частина = закінчення. Нульове закінчення: сад□. Function: links words in sentence."}
+      stem: {pages: [64, 65], rule: "Частина без закінчення = основа. Root = mandatory part."}
+      related_words: {pages: [66, 67], rule: "Спільнокореневі слова share root. Distinguish from forms of same word."}
+      false_cognates: {pages: [66, 67], examples: "Лис/лисий, Гора/горе, Рана/ранок, Вода/водій — same form, different roots!"}
+      prefix: {pages: [84, 89], rule: "Stands before root. роз-/без-/с-/з-/зі- spelling rules. Multiple prefixes possible: що-най-вищий."}
+      suffix: {pages: [94, 97], rule: "Between root and ending. Diminutive: -ок/-ик/-ечок. Augmentative: -ище/-ущ. Profession: -ар/-яр."}
+
+  word_analysis_procedure:
+    primary: {book: grade3_p1, pages: [100, 100]}
+    steps:
+      1: "Inflect the word → identify ending"
+      2: "Identify stem (основа = word minus ending)"
+      3: "Find related words → identify root (корінь)"
+      4: "Identify prefix (if present)"
+      5: "Identify suffix (if present)"
+    example: "безмежний: ending=-ий, stem=безмежн-, root=-меж- (межа/межувати), prefix=без-, suffix=-н-"
+
+  # --- VOCABULARY CLUSTERS ---
+  vocabulary_school:
+    primary: {book: grade3_p1, pages: [63, 63]}
+    words: [крейда, урок, парта, ручка, дошка, зошит, клас]
+    note: "Grade 3 school vocabulary. All confirmed Ukrainian words."
+
+  vocabulary_family:
+    primary: {book: bukvar_grade1_p1, pages: [1, 80]}
+    words: [мама, тато, баба, дід, сестра, брат, дитина, дружина, чоловік]
+    diminutives:
+      мама: [матуся, мамочка, мамусю]
+      тато: [татусь, татку]
+      баба: [бабуся, бабцю]
+      дід: [дідусь, дідуню]
+    address_forms_p41: "мати/матінко/матусю/мамо/мамочко/мамусю — all звертання for мама"
+
+  vocabulary_professions_suffixes:
+    primary: {book: grade3_p1, pages: [95, 96]}
+    pattern: "аптека→аптекар / бібліотека→бібліотекар / човни→чов'няр / кухня→кухар / пекти→пекар / малювати→маляр / лікувати→лікар"
+    suffix: "-ар/-яр"
+
+  vocabulary_name_diminutives:
+    primary: {book: grade3_p1, pages: [95, 95]}
+    examples:
+      Юрій: [Юрко, Юрась, Юрасик]
+      Ольга: [Олечка, Олюся, Олюня]
+
+  vocabulary_synonyms:
+    primary: {book: grade3_p1, pages: [52, 55]}
+    key_insight: "Synonyms serve TWO functions: (1) avoid word repetition, (2) create textual cohesion — Grade 3 teaches this explicitly"
+    example: "дятел/птах/лісовий лікар/незвичайний хірург — all in one text to avoid repetition AND connect sentences"
+    batbkivschyna_synonyms: [Рідний край, Вітчизна, Україна, наша країна]
+    phraseological: "бити байдики=ледарювати; ламати голову=думати; обвести навколо пальця=обдурити"
+
+  vocabulary_antonyms:
+    primary: {book: grade3_p1, pages: [56, 57]}
+    riddle: "Чорна корова/Білий віл → НІЧ і ДЕНЬ"
+
+  vocabulary_polysemy:
+    primary: {book: grade3_p1, pages: [48, 51]}
+    examples:
+      іти: [іти дорогою, іти дощ, іти час, іти п'єса]
+      земля: [планета, країна, ґрунт, поле]
+      ніжка: [дитяча, стільця, грибна]
+
+  vocabulary_literal_figurative:
+    primary: {book: grade3_p1, pages: [50, 51]}
+    examples: "танцює дитина (literal) vs танцює листя (figurative); залізне здоров'я (figurative) vs залізні двері (literal)"
+
+  # --- SEMANTIC FALSE FRIENDS ---
+  false_friends:
+    krasny:
+      primary: {book: grade3_p1, pages: [96, 97]}
+      note: "КРАСНИЙ = гарний/вродливий (beautiful). NOT = червоний (red). Important false friend."
+
+  alphabet_synonyms:
+    primary: {book: grade3_p1, pages: [77, 79]}
+    note: "абетка/азбука/алфавіт = confirmed synonyms. Etymology: алфавіт←Greek alpha+vita; азбука←Old Slavic аз+буки; абетка = youngest Ukrainian term."
+
+  # --- ACTIVITY TYPES IN TEXTBOOKS ---
+  activity_types_observed:
+    pravda_nepravda:
+      first_seen: {book: bukvar_grade1_p1}
+      description: "Правда чи неправда? (True/False) — validated in Grade 1 Буквар. Maps to true_false activity type."
+
+    riddles_zahаdky:
+      first_seen: {book: bukvar_grade1_p1}
+      note: "Core pedagogy every grade. Excellent for Ukrainian-only instruction. Rich source for module activities."
+      examples:
+        - {answer: ЗИМА, text: "Срібні дзвоники лунають... На гринджолах гарна пані їде в білому жупані.", page: 81}
+        - {answer: ДЕНЬ_НІЧ, text: "Чорна корова / Білий віл", page: 57}
+        - {answer: ЗНАННЯ, text: "На базарі їх не купиш, на дорозі не знайдеш...", page: 98}
+        - {answer: ВЕДМІДЬ, text: "Влітку медом ласував... А як впав глибокий сніг, позіхнув і спати ліг.", page: 76}
+        - {answer: ЖИРАФ, text: "Довга шия, як драбина, в чорних плямах жовта спина", page: 76}
+        - {answer: ХЛІБ, text: "Хоч не солодкий, та дуже смачний...", page: 63}
+
+    tongue_twisters_skoromovky:
+      note: "Used for pronunciation practice, especially tricky sounds: Г/Ґ, dz/dzh sounds."
+      example: {page: 81, text: "Юрій Кругляк — Г/Ґ distinction скоромовка with гуска/гусак/горобець"}
+
+    proverbs_pryslivya:
+      note: "Used in every lesson — vocabulary in authentic context, cultural value."
+      key_examples:
+        - "Без роботи день роком стає."
+        - "Вчення — світ, а невчення — тьма."
+        - "Без сім'ї нема щастя на землі."
+        - "Яке дерево, такі й віти, які батьки, такі й діти."
+        - "Не бійся помилок, бійся незнання."
+
+    movna_matematika:
+      note: "Word arithmetic: білий − ий + ізн + а = білізна. Engaging morphology activity."
+      primary: {book: grade3_p1, pages: [97, 97]}
+
+  # --- CULTURAL NOTES ---
+  cultural_notes:
+    cossacks:
+      primary: {book: grade3_p1, pages: [84, 85]}
+      note: "Козацькі чайки (boats). Підводні човни (alleged submarines). From «Гетьмани України»."
+
+    kryshtaleva_pechera:
+      primary: {book: grade3_p1, pages: [71, 71]}
+      note: "Crystal Cave in Krivche, Ternopil region. 23km long. Second longest karst cave in Ukraine."
+
+    sviatyi_mykolai:
+      primary: {book: grade3_p1, pages: [94, 95]}
+      note: "Saint Nicholas context text. White horse, silver sled, white beard."
+
+  # --- PARTS OF SPEECH (pp.100–157, read 2026-02-26) ---
+
+  imennik_noun:
+    primary: {book: grade3_p1, pages: [100, 121]}
+    sections:
+      definition: {pages: [100, 102], rule: "Іменник = частина мови, називає предмети, відповідає на ХТО? ЩО?. First part of speech children acquire."}
+      istoty_neistoty: {pages: [103, 105], rule: "Істоти (ХТО? людина, тварина) vs Неістоти (ЩО? предмет). Істоти: хто? кого? кому? ким? на кому?. Неістоти: що? чого? чому? чим? на чому?. NOTE: These ARE the Ukrainian cases taught as questions, NEVER named as відмінки!"}
+      vlastni_zahalni: {pages: [105, 108], rule: "Загальні (lowercase, general) vs Власні (uppercase, specific: people/cities/countries/rivers/mountains). City demonyms: Полтава→полтавчанин/полтавчанка, Харків→харків'янин, Львів→львів'янин."}
+      nouns_from_adj_verb: {pages: [108, 109], rule: "Nouns can derive from adjectives (сміливий→сміливість) and verbs (читати→читання). Proverbs: Людяність прикрашає людину / Мудрість дорожча за багатство."}
+      rid_gender: {pages: [109, 113], rule: "Ч.р. (мій/він, закінч. -о/нульове), Ж.р. (моя/вона, закінч. -а/-я/нульове), С.р. (моє/воно, закінч. -о/-е/-а/-я). CRITICAL: іменники БУВАЮТЬ певного роду (NOT 'змінюються за родами')."}
+      chyslo_number: {pages: [113, 117], rule: "Однина/Множина. Only-singular: дитинство, листя, молодь, дружба, птаство, борошно, золото, вірність. Only-plural: радощі, іменини, ворота, сани, окуляри, ножиці, граблі, двері, гроші."}
+      prymennyky_endings: {pages: [117, 121], rule: "Прийменники і закінчення = засоби зв'язку слів у реченні. Prepositions + endings link nouns to other words."}
+    analysis_procedure:
+      steps: ["Слово. Що називає?", "На яке питання відповідає?", "Яка це частина мови?", "Назва істоти чи неістоти?", "Назва власна чи загальна?", "Яке число має?", "Якого роду (в однині)?", "Яким є членом речення?"]
+
+  prykmetnyk_adjective:
+    primary: {book: grade3_p1, pages: [122, 137]}
+    sections:
+      definition: {pages: [122, 123], rule: "Прикметник = частина мови, називає ознаки предметів, відповідає на ЯКИЙ? ЯКА? ЯКЕ? ЯКІ?"}
+      link_to_noun: {pages: [124, 125], rule: "Прикметник зв'язаний з іменником. Питання від іменника до прикметника: обличчя (яке?) кругле."}
+      number: {pages: [126, 127], rule: "Changes by number: singular varies, plural ALWAYS -і for all genders."}
+      agreement: {pages: [128, 129], rule: "Прикметник узгоджується з іменником у різних формах. Adjective always matches noun's form."}
+      gender: {pages: [130, 133], rule: "Ч.р. = -ий/-ій, Ж.р. = -а/-я, С.р. = -о/-є. У множині прикметники НЕ змінюються за родами — всі мають -і."}
+      role: {pages: [134, 137], rule: "Другорядний член речення. Makes descriptions vivid and imagery possible."}
+    analysis_procedure:
+      steps: ["Слово", "Від якого слова в реченні залежить?", "Що називає?", "На яке питання відповідає?", "Яка це частина мови?", "Яке число має?", "Якого роду (в однині)?", "Яким є членом речення?"]
+
+  chyslivnyk_numeral:
+    primary: {book: grade3_p1, pages: [138, 143]}
+    sections:
+      definition: {pages: [138, 139], rule: "Числівник = називає кількість (скільки?) або порядок (котрий?). Cardinal and ordinal numerals."}
+      pronunciation_spelling: {pages: [140, 143], rule: "Stress: одинáдцять, дванáдцять... Compound: п'ятдесят, шістдесят, сімдесят, вісімдесят. Forms: сімдесяти, вісімдесяти."}
+    proverbs:
+      - "Хто мовчить, той дев'ятьох навчить"
+      - "Одне літо краще, як сто зим"
+      - "Одне слово скажеш — почуєш десять"
+      - "Краще на п'ять хвилин раніше, ніж на одну пізніше"
+
+  diyeslovo_verb:
+    primary: {book: grade3_p1, pages: [144, 157]}
+    sections:
+      definition: {pages: [144, 145], rule: "Дієслово = називає дії предметів. Questions: що робити? що робить? що роблять? що робив? що зробив? що буде робити? що зробить?"}
+      link_to_noun: {pages: [146, 147], rule: "Дієслова зв'язані з іменниками в реченні. Role = присудок (predicate/головний член речення)."}
+      tenses: {pages: [150, 153], rule: "THREE tenses: теперішній (що робить?), минулий (що робив?/зробив?), майбутній (що буде робити?/робитиме?/зробить?). Past changes by gender: летів/летіла/летіло/летіли. Future has TWO forms: analytical (буду+inf) and synthetic (-тиму/-тимеш/-тиме)."}
+      ne_with_verbs: {pages: [154, 157], rule: "НЕ з дієсловами ЗАВЖДИ окремо: не забудь, не кричи, не заважай."}
+      pronunciation: {pages: [144, 145], rule: "Вимовляємо [ц':а]/[с':а], пишемо -ться/-шся: поведеться, вчишся."}
+      synonyms_antonyms: {pages: [148, 149], rule: "Дієслова-синоніми (іти/рухатися/прямувати/пересуватися), дієслова-антоніми (загубити/знайти, говорила/мовчала)."}
+      direct_figurative: {pages: [148, 149], rule: "Пряме/переносне значення: сміються діти (literal) vs сміються зорі (figurative)."}
+    analysis_procedure:
+      steps: ["Слово. Що називає?", "На яке питання відповідає?", "Яка це частина мови?", "Який час?", "Яке число?", "З яким словом зв'язане?", "Яким є членом речення?"]
+    tense_conjugation_table:
+      present: "лечу/летиш/летить/летять; пишу/пишеш/пише/пишуть"
+      past: "летів/летіла/летіло/летіли; полетів/полетіла/полетіло/полетіли"
+      future_analytical: "буду летіти/будеш летіти/будете летіти/будуть летіти"
+      future_synthetic: "летітиму/летітимеш/летітиме/летітимуть"
+
+  # --- NEW VOCABULARY from pp.101-160 ---
+  vocabulary_city_demonyms:
+    primary: {book: grade3_p1, pages: [106, 107]}
+    pattern: "city → masc(-чанин/-ець/-ит/-янин) / fem(-чанка/-ка/-итка/-янка)"
+    examples:
+      Полтава: [полтавчанин, полтавець, полтавчанка, полтавка]
+      Одеса: [одесит, одеситка]
+      Вінниця: [вінничанин, вінничанка]
+      Тернопіль: [тернополянин, тернополянка]
+      Харків: ["харків'янин", "харків'янка"]
+      Львів: ["львів'янин", "львів'янка"]
+      Луганськ: [луганчанин, луганчанка]
+
+  vocabulary_european_countries:
+    primary: {book: grade3_p1, pages: [107, 108]}
+    words: [Англія, Австрія, Бельгія, Данія, Нідерланди, Португалія, Швейцарія, Іспанія, Болгарія, Китай, Італія, Румунія, Австралія, Литва, Японія]
+    black_sea: [Україна, Румунія, Болгарія, Росія, Туреччина, Грузія]
+
+  vocabulary_interior:
+    primary: {book: grade3_p1, pages: [130, 131]}
+    words: [стіл, шафа, ліжко, диван, крісло, скатертина, тумбочка, стілець, підлога, стеля, коридор, балкон]
+    adjectives: [дерев'яний, синій, зручний, просторий, затишний]
+
+  vocabulary_birds_extended:
+    primary: {book: grade3_p1, pages: [102, 135]}
+    words: [снігур, синиця, лелека, чапля, колібрі, дятел, журавлі, рябчик, горобець, галка, ластівка]
+    cultural: "Прилетів лелека — весну приніс здалека"
+
+  vocabulary_marine:
+    primary: {book: grade3_p1, pages: [119, 121]}
+    words: [медуза, дельфін, кит, косатка, риба, плавні]
+    note: "Delphin text used for istoty/neistoty distinction"
+
+  vocabulary_numerals:
+    primary: {book: grade3_p1, pages: [138, 143]}
+    words_1_20: [один, два, три, чотири, "п'ять", шість, сім, вісім, "дев'ять", десять, одинадцять, дванадцять, тринадцять, чотирнадцять, "п'ятнадцять", шістнадцять, сімнадцять, вісімнадцять, "дев'ятнадцять", двадцять]
+    words_tens: [тридцять, "п'ятдесят", шістдесят, сімдесят, вісімдесят]
+
+  vocabulary_only_plural:
+    primary: {book: grade3_p1, pages: [115, 117]}
+    words: [радощі, іменини, ворота, сани, окуляри, ножиці, граблі, двері, гроші, ковзани, лижі]
+    note: "These nouns have NO singular form — important for A1"
+
+  vocabulary_only_singular:
+    primary: {book: grade3_p1, pages: [115, 117]}
+    words: [дружба, птаство, дітвора, дитинство, листя, молодь, борошно, золото, вірність, павутиння, жіноцтво, бадилля]
+
+  # --- NEW RIDDLES from pp.101-160 ---
+  riddles_parts_of_speech:
+    primary: {book: grade3_p1, pages: [110, 141]}
+    examples:
+      - {answer: РІД, text: "Є в людини на прикметі сотні, тисячі предметів. Та щоб їх розмежувати, що й кому належить знати, поділив усіх як слід, добре всім відомий ?.", page: 110}
+      - {answer: ВІТЕР, text: "Без крил і двигуна летить, він може лиха наробити. А може й порятунком стати, хмаринки дощові пригнати.", page: 112}
+      - {answer: ГРАД, text: "Із хмари вилітає, падає, не тане.", page: 112}
+      - {answer: ГРАД, text: "Що за диво? Із хмаринки вниз спадають горошинки.", page: 112}
+      - {answer: ОБЛИЧЧЯ, text: "Густий ліс, чисте поле, дві стежини, два озера.", page: 141}
+      - {answer: ОЧІ, text: "Два брати через доріжку живуть, та один одного не бачать.", page: 141}
+      - {answer: ПАЛЬЦІ, text: "У двох матерів по п'ять синків, і всім одне ім'я.", page: 141}
+      - {answer: КАШТАН, text: "Товстий стовбур, пишні віти, наче свічки, білі квіти. А плоди, як їжачки, в них колючі піджачки.", page: 136}
+
+  # --- NEW TONGUE TWISTERS from pp.101-160 ---
+  tongue_twisters_extended:
+    primary: {book: grade3_p1, pages: [131, 132]}
+    examples:
+      - "Понад водами ідуть білокорі берізоньки хороводами."
+      - "Бродить березень між березами, білим поясом підперезаний."
+
+  # --- NEW PROVERBS from pp.101-160 ---
+  proverbs_extended:
+    primary: {book: grade3_p1, pages: [103, 157]}
+    examples:
+      - "Тільки в ріднім краї солов'ї співають."
+      - "Кожному мила своя сторона."
+      - "За морем тепліше, а дома миліше."
+      - "Годинник не підведе того, хто час цінує."
+      - "За гроші розуму не купиш."
+      - "Чим темніша ніч, тим ясніші зорі."
+      - "Прилетів лелека — весну приніс здалека."
+      - "Менше говори — більше почуєш."
+      - "Добрій пораді ціни немає."
+      - "Хто працює — не бідує."
+      - "Хто мовчить, той дев'ятьох навчить."
+      - "Одне літо краще, як сто зим."
+      - "Краще на п'ять хвилин раніше, ніж на одну пізніше."
+      - "Сила перед розумом поступається."
+      - "Ну й висока Говерла, аж небо підперла."
+
+  # --- KEY PEDAGOGICAL PATTERNS from pp.101-160 ---
+  pedagogy_parts_of_speech:
+    note: "Grade 3 teaches 4 parts of speech with formal analysis procedures"
+    parts:
+      - "Іменник (§33-36): ХТО?/ЩО? → рід, число, істота/неістота, власна/загальна"
+      - "Прикметник (§37-42): ЯКИЙ?/ЯКА?/ЯКЕ?/ЯКІ? → рід, число, зв'язок з іменником"
+      - "Числівник (§43-44): СКІЛЬКИ?/КОТРИЙ? → кількісний/порядковий"
+      - "Дієслово (§45-48): ЩО РОБИТЬ?/РОБИВ?/БУДЕ РОБИТИ? → час, число, не окремо"
+    key_insight: "Cases are introduced as question sequences (хто?/кого?/кому?/ким?/на кому?) but NEVER named as відмінки. This perfectly validates our question-word grammar approach."
+
+  activity_types_extended:
+    alfavit_profesiy:
+      primary: {book: grade3_p1, pages: [104, 105]}
+      description: "Alphabet game — name professions A through Я: актор, банкір, водій, гончар..."
+    perestav_ryadky:
+      primary: {book: grade3_p1, pages: [119, 137]}
+      description: "Reorder scrambled lines to reconstruct a poem or text — maps to build_sentence"
+    stvoryt_reklamu:
+      primary: {book: grade3_p1, pages: [125, 125]}
+      description: "Create an advertisement/poster — creative production task"
+    slovesnyi_portret:
+      primary: {book: grade3_p1, pages: [125, 125]}
+      description: "Verbal portrait — describe a person using adjectives for face parts"
+    chyslovyi_vyraz:
+      primary: {book: grade3_p1, pages: [141, 143]}
+      description: "Read number expressions in multiple ways — numerical literacy"
+
+  # ============================================================
+  # WHAT STILL NEEDS TO BE READ (for A1 build)
+  # ============================================================
+  pending_reading:
+    grade3_p1_remaining:
+      pages: [101, 160]
+      status: read  # completed 2026-02-26
+      content_found: "4 parts of speech (іменник, прикметник, числівник, дієслово) with formal analysis. Cases taught as questions. Verb tenses (past/present/future) with both analytical and synthetic future forms."
+
+    grade3_p2:
+      file: "3-klas-ukrainska-mova-vashulenko-2020-2.pdf"
+      priority: medium
+      reason: "Grade 3 second semester content — more advanced vocabulary/grammar"
+
+    grade4_p1:
+      priority: low_for_a1
+      reason: "Grade 4 introduces concepts above A1 level"
+
+    grade5_plus:
+      priority: "relevant for B1+ content, not A1"

@@ -1,7 +1,7 @@
 # Audit Report: M36 — at-the-restaurant.md
 **Level:** A1 | **Module:** M36 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:26
+**Generated:** 2026-02-26 14:13:15
 
 ## Configuration
 **Type:** A1
@@ -47,7 +47,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2865/2000 (raw: 3077)
+- **Words:** ✅ 2863/2000 (raw: 3075)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -56,7 +56,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
@@ -70,8 +69,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **At the Restaurant** | ✅ | 62 | Included in Core |
-| **Розминка: Структура меню та етикет** | ✅ | 467 | Included in Core |
+| **Розминка: Структура меню та етикет** | ✅ | 466 | Included in Core |
 | **Презентація: Як зробити замовлення** | ✅ | 1146 | Included in Core |
 | **Практика: Діалоги у ресторані** | ✅ | 641 | Included in Core |
-| **Культурний контекст: Українська гостинність** | ✅ | 406 | Included in Core |
+| **Культурний контекст: Українська гостинність** | ✅ | 405 | Included in Core |
 | **Підсумок** | ✅ | 143 | Included in Core |

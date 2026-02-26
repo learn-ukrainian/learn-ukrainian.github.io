@@ -1,129 +1,103 @@
-- ipa: '[rʲid]'
   lemma: рід
   notes: Grammatical gender (masculine, feminine, neuter)
   pos: noun
   translation: gender; kind; lineage
-- ipa: '[ˈsɔnt͡sɛ]'
   lemma: сонце
   notes: Neuter gender (ends in -e)
   pos: noun
   translation: sun
-- ipa: '[sʲtʲil]'
   lemma: стіл
   notes: Masculine gender (consonant ending)
   pos: noun
   translation: table
-- ipa: '[ˈknɪɦɑ]'
   lemma: книга
   notes: Feminine gender (ends in -a)
   pos: noun
   translation: book
-- ipa: '[ʋʲiˈknɔ]'
   lemma: вікно
   notes: Neuter gender (ends in -o)
   pos: noun
   translation: window
-- ipa: '[dʲim]'
   lemma: дім
   notes: Masculine gender
   pos: noun
   translation: house; home
-- ipa: '[ˈmɑmɑ]'
   lemma: мама
   notes: Feminine gender
   pos: noun
   translation: mom
-- ipa: '[ˈtɑtɔ]'
   lemma: тато
   notes: Masculine gender despite -o ending (biological gender rules)
   pos: noun
   translation: dad
-- ipa: '[brɑt]'
   lemma: брат
   notes: Masculine gender
   pos: noun
   translation: brother
-- ipa: '[sɛˈstrɑ]'
   lemma: сестра
   notes: Feminine gender
   pos: noun
   translation: sister
-- ipa: '[ˈmʲistɔ]'
   lemma: місто
   notes: Neuter gender
   pos: noun
   translation: city
-- ipa: '[ˈmɔrɛ]'
   lemma: море
   notes: Neuter gender
   pos: noun
   translation: sea
-- ipa: '[ˈsɛrt͡sɛ]'
   lemma: серце
   notes: Neuter gender
   pos: noun
   translation: heart
-- ipa: '[zɛˈmlʲɑ]'
   lemma: земля
   notes: Feminine gender
   pos: noun
   translation: earth; land; ground
-- ipa: '[dɛnʲ]'
   lemma: день
   notes: Masculine gender (soft sign exception)
   pos: noun
   translation: day
-- ipa: '[nʲit͡ʃ]'
   lemma: ніч
   notes: Feminine gender (consonant ending exception)
   pos: noun
   translation: night
-- ipa: '[iˈmjɑ]'
   lemma: ім'я
   notes: Neuter gender (ends in -я but is neuter)
   pos: noun
   translation: name
-- ipa: '[sɔˈbɑkɑ]'
   lemma: собака
   notes: Masculine gender despite -a ending
   pos: noun
   translation: dog
-- ipa: '[t͡ʃɔlɔˈʋʲik]'
   lemma: чоловік
   notes: Masculine gender
   pos: noun
   translation: man; husband
-- ipa: '[ˈʒʲinkɑ]'
   lemma: жінка
   notes: Feminine gender
   pos: noun
   translation: woman; wife; feminine (gender)
-- ipa: '[t͡ʃɔlɔˈʋʲit͡ʃɪj]'
   lemma: чоловічий
   notes: Adjective used for grammatical gender
   pos: adj
   translation: masculine
-- ipa: '[ʒʲiˈnɔt͡ʃɪj]'
   lemma: жіночий
   notes: Adjective used for grammatical gender
   pos: adj
   translation: feminine
-- ipa: '[sɛˈrɛdʲnʲij]'
   lemma: середній
   notes: Adjective used for grammatical gender
   pos: adj
   translation: neuter; middle; average
-- ipa: '[ɑrtɛˈfɑkt]'
   lemma: артефакт
   notes: S.T.A.L.K.E.R. hook; masculine consonant ending
   pos: noun
   translation: artifact
-- ipa: '[zɔnɑ]'
   lemma: зона
   notes: S.T.A.L.K.E.R. hook; feminine -a ending
   pos: noun
   translation: zone
-- ipa: '[ukrɪˈtʲːɑ]'
   lemma: укриття
   notes: S.T.A.L.K.E.R. hook; neuter -я ending after doubled consonant
   pos: noun

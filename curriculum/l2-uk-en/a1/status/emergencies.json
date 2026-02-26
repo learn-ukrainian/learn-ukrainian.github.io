@@ -2,15 +2,15 @@
   "module": "emergencies",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-26T02:01:26.703421Z",
+  "last_audit": "2026-02-26T13:07:06.354940Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T02:01:25.445303Z",
-    "meta": "2026-02-26T01:38:54.580522Z",
-    "activities": "2026-02-26T02:01:25.446666Z",
-    "vocabulary": "2026-02-26T02:01:25.784191Z",
+    "md": "2026-02-26T13:07:04.226908Z",
+    "meta": "2026-02-26T12:39:15.710860Z",
+    "activities": "2026-02-26T12:56:43.873165Z",
+    "vocabulary": "2026-02-26T10:56:38.073950Z",
     "plan": "2026-02-20T20:43:29.249159Z",
-    "research": "2026-02-26T01:38:54.576729Z"
+    "research": "2026-02-26T12:39:15.706512Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3020/2000 (raw: 3267)"
+      "message": "3045/2000 (raw: 3298)"
     },
     "activities": {
       "status": "pass",
@@ -38,30 +38,22 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 2,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "pass",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module.",
-      "Review contains audit-gaming language: 'accurately reflect'. Reviews must HONESTLY evaluate content, not be written to 'ensure a high score'. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-core-a using claude_extensions/commands/review-tiers/tier-1-beginner.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) check every English explanation is B1-readable and encouraging, (3) verify every Ukrainian sentence + IPA transcription, (4) apply the 'Would I Continue?' test from the tier-1 guide, (5) score each dimension honestly and list at least 1 real issue."
-    ],
+    "status": "pass",
+    "blocking_issues": [],
     "pass_count": 6,
-    "fail_count": 1,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

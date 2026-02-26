@@ -1,123 +1,93 @@
 items:
   - lemma: "ділове листування"
-    ipa: '[dʲilɔˈʋɛ lɪstuˈʋɑnʲːɑ]'
     translation: "business correspondence"
     pos: "noun"
   - lemma: "переговори"
-    ipa: '[pɛrɛɦɔʋɔrɪ]'
     translation: "negotiations"
     pos: "noun"
   - lemma: "угода"
-    ipa: '[uˈɦɔdɑ]'
     translation: "contract, agreement"
     pos: "noun"
   - lemma: "пропозиція"
-    ipa: '[prɔpɔˈzɪt͡sʲijɑ]'
     translation: "proposal, offer"
     pos: "noun"
   - lemma: "співпраця"
-    ipa: '[sʲpʲiˈʋprɑt͡sʲɑ]'
     translation: "cooperation"
     pos: "noun"
   - lemma: "домовленість"
-    ipa: '[dɔˈmɔu̯lɛnʲisʲtʲ]'
     translation: "agreement"
     pos: "noun"
   - lemma: "компроміс"
-    ipa: '[kɔmprɔˈmʲis]'
     translation: "compromise"
     pos: "noun"
   - lemma: "звіт"
-    ipa: '[zʲʋʲit]'
     translation: "report"
     pos: "noun"
   - lemma: "презентація"
-    ipa: '[prɛzɛnˈtɑt͡sʲijɑ]'
     translation: "presentation"
     pos: "noun"
   - lemma: "корпоративний"
-    ipa: '[kɔrpɔrɑˈtɪu̯nɪj]'
     translation: "corporate"
     pos: "adjective"
   - lemma: "партнерство"
-    ipa: '[pɑrˈtnɛrstʋɔ]'
     translation: "partnership"
     pos: "noun"
   - lemma: "укласти"
-    ipa: '[uˈklɑstɪ]'
     translation: "to conclude (an agreement)"
     pos: "verb"
     notes: "used with угода or договір"
   - lemma: "умова"
-    ipa: '[uˈmɔʋɑ]'
     translation: "condition, term"
     pos: "noun"
   - lemma: "дедлайн"
-    ipa: '[dɛdlɑjn]'
     translation: "deadline"
     pos: "noun"
   - lemma: "бюджет"
-    ipa: '[bʲuˈd͡ʒɛt]'
     translation: "budget"
     pos: "noun"
   - lemma: "результат"
-    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
   - lemma: "актуальний"
-    ipa: '[ɑktuˈɑlʲnɪj]'
     translation: "relevant, timely"
     pos: "adjective"
   - lemma: "спілкування"
-    ipa: '[sʲpʲilkuˈʋɑnʲːɑ]'
     translation: "communication"
     pos: "noun"
   - lemma: "контракт"
-    ipa: '[kɔnˈtrɑkt]'
     translation: "contract"
     pos: "noun"
   - lemma: "довіра"
-    ipa: '[dɔˈʋʲirɑ]'
     translation: "trust"
     pos: "noun"
   - lemma: "підпис"
-    ipa: '[ˈpʲidpɪs]'
     translation: "signature"
     pos: "noun"
   - lemma: "зустріч"
-    ipa: '[ˈzustʲrʲit͡ʃ]'
     translation: "meeting"
     pos: "noun"
   - lemma: "звертання"
-    ipa: '[zʋɛrˈtɑnʲːɑ]'
     translation: "form of address"
     pos: "noun"
   - lemma: "розірвати"
-    ipa: '[rɔzʲirˈʋɑtɪ]'
     translation: "to terminate, break"
     pos: "verb"
   - lemma: "ухвалювати"
-    ipa: '[uˈxʋɑlʲuʋɑtɪ]'
     translation: "to adopt, to make (a decision)"
     pos: "verb"
     notes: "used with рішення"
   - lemma: "посада"
-    ipa: '[pɔˈsɑdɑ]'
     translation: "position, job title"
     pos: "noun"
   - lemma: "колега"
-    ipa: '[kɔˈlɛɦɑ]'
     translation: "colleague"
     pos: "noun"
   - lemma: "фінансовий"
-    ipa: '[fʲiˈnɑnsɔʋɪj]'
     translation: "financial"
     pos: "adjective"
   - lemma: "вигідний"
-    ipa: '[ʋɪɦʲidnɪj]'
     translation: "profitable, advantageous"
     pos: "adjective"
   - lemma: "рішення"
-    ipa: '[ˈrʲiʃɛnʲːɑ]'
     translation: "decision"
     pos: "noun"

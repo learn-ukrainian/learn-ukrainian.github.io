@@ -1,0 +1,27 @@
+{
+  "track": "b2",
+  "slug": "nauka-i-doslidzhennia",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T10:34:40Z",
+      "task_id": "v3-nauka-i-doslidzhennia-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T10:40:33Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T10:43:35Z",
+      "task_id": "v3-nauka-i-doslidzhennia-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T10:49:24Z",
+      "attempts": 2
+    }
+  }
+}

@@ -1,123 +1,96 @@
 items:
   - lemma: "дерев'яний"
-    ipa: '[dɛrɛˈʋjɑnɪj]'
     translation: "wooden"
     pos: "adjective"
   - lemma: "скляний"
-    ipa: '[sklʲɑˈnɪj]'
     translation: "made of glass"
     pos: "adjective"
   - lemma: "залізний"
-    ipa: '[zɑˈlʲiznɪj]'
     translation: "made of iron"
     pos: "adjective"
   - lemma: "київський"
-    ipa: '[ˈkɪjiu̯sʲkɪj]'
     translation: "from Kyiv (adj.)"
     pos: "adjective"
   - lemma: "львівський"
-    ipa: '[lʲˈʋʲiu̯sʲkɪj]'
     translation: "from Lviv (adj.)"
     pos: "adjective"
   - lemma: "домашній"
-    ipa: '[dɔˈmɑʃnʲij]'
     translation: "home / domestic"
     pos: "adjective"
   - lemma: "вовняний"
-    ipa: '[ˈʋɔˈʋnʲɑnɪj]'
     translation: "woolen"
     pos: "adjective"
   - lemma: "металевий"
-    ipa: '[mɛtɑˈlɛʋɪj]'
     translation: "metallic"
     pos: "adjective"
   - lemma: "пластиковий"
-    ipa: '[ˈplɑstɪkɔʋɪj]'
     translation: "plastic (adj.)"
     pos: "adjective"
   - lemma: "дубовий"
-    ipa: '[duˈbɔʋɪj]'
     translation: "made of oak"
     pos: "adjective"
   - lemma: "празький"
-    ipa: '[ˈprɑzʲkɪj]'
     translation: "from Prague (adj.)"
     pos: "adjective"
   - lemma: "одеський"
-    ipa: '[ɔˈdɛsʲkɪj]'
     translation: "from Odesa (adj.)"
     pos: "adjective"
   - lemma: "галицький"
-    ipa: '[ˈɦɑlɪt͡sʲkɪj]'
     translation: "from Halych (adj.)"
     pos: "adjective"
   - lemma: "осика"
-    ipa: '[ɔˈsɪkɑ]'
     translation: "aspen (wood)"
     pos: "noun"
     gender: "f"
   - lemma: "ліжник"
-    ipa: '[ˈlʲiʒnɪk]'
     translation: "Hutsul woven blanket"
     pos: "noun"
     gender: "m"
   - lemma: "вовна"
-    ipa: '[ˈʋɔu̯nɑ]'
     translation: "wool"
     pos: "noun"
     gender: "f"
   - lemma: "забавка"
-    ipa: '[ˈzɑbɑu̯kɑ]'
     translation: "toy / plaything"
     pos: "noun"
     gender: "f"
   - lemma: "орнамент"
-    ipa: '[ɔrˈnɑmɛnt]'
     translation: "ornament / pattern"
     pos: "noun"
     gender: "m"
   - lemma: "вербівка"
-    ipa: '[ʋɛrbʲiu̯kɑ]'
     translation: "willow branch pattern"
     pos: "noun"
     gender: "f"
   - lemma: "посуд"
-    ipa: '[ˈpɔsud]'
     translation: "tableware / dishes"
     pos: "noun"
     gender: "m"
   - lemma: "затишок"
-    ipa: '[ˈzɑˈtɪʃɔk]'
     translation: "comfort / coziness"
     pos: "noun"
     gender: "m"
   - lemma: "скло"
-    ipa: '[sklɔ]'
     translation: "glass (material)"
     pos: "noun"
     gender: "n"
   - lemma: "дерево"
-    ipa: '[ˈdɛrɛʋɔ]'
     translation: "wood / tree"
     pos: "noun"
     gender: "n"
   - lemma: "залізо"
-    ipa: '[zɑˈlʲizɔ]'
     translation: "iron (material)"
     pos: "noun"
     gender: "n"
   - lemma: "глина"
-    ipa: '[ˈɦlɪnɑ]'
     translation: "clay"
     pos: "noun"
     gender: "f"
   - lemma: "прикметник"
-    ipa: '[prɪˈkmɛtnɪk]'
     translation: "adjective"
     pos: "noun"
     gender: "m"
   - lemma: "іменник"
-    ipa: '[iˈmɛnːɪk]'
     translation: "noun"
     pos: "noun"
     gender: "m"

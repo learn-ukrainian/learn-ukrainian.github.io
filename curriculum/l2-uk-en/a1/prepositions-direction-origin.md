@@ -21,9 +21,9 @@ In Ukrainian, there is a clear division between **location**, **direction**, and
 
 1.  **Де?** [dɛ] (Where? — location). This is static. You are at point A.
     *   *Example:* **Де** ти? (Where are you?)
-2.  **Куди?** [kuˈdɪ] (Where to? — direction). This is dynamic. You are moving to point B.
+2.  **Куди?** (Where to? — direction). This is dynamic. You are moving to point B.
     *   *Example:* **Куди** ти йдеш? (Where are you going?)
-3.  **Звідки?** [ˈzʋʲidkɪ] (Where from? — origin). This is dynamic (reverse). You are moving from point B.
+3.  **Звідки?** (Where from? — origin). This is dynamic (reverse). You are moving from point B.
     *   *Example:* **Звідки** ти? (Where are you from?)
 
 If you confuse these words, it will sound like "Where to are you?" instead of "Where are you?".

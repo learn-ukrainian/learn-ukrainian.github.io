@@ -1,93 +1,74 @@
 items:
   - lemma: "піти"
-    ipa: '[pʲitɪ]'
     translation: "to leave on foot / to set off"
     pos: "verb"
     aspect: "perfective"
   - lemma: "виходити"
-    ipa: '[ʋɪxɔdɪtɪ]'
     translation: "to exit"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "поїхати"
-    ipa: '[pɔˈjixɑtɪ]'
     translation: "to leave by vehicle / to set off"
     pos: "verb"
     aspect: "perfective"
   - lemma: "виїжджати"
-    ipa: '[ʋɪjiˈʒd͡ʒɑtɪ]'
     translation: "to exit by vehicle / to depart"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "зайти"
-    ipa: '[zɑjˈtɪ]'
     translation: "to stop by on foot"
     pos: "verb"
     aspect: "perfective"
   - lemma: "заходити"
-    ipa: '[zɑxɔdɪtɪ]'
     translation: "to enter / to stop by on foot"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "заїхати"
-    ipa: '[zɑˈjixɑtɪ]'
     translation: "to stop by in a vehicle"
     pos: "verb"
     aspect: "perfective"
   - lemma: "заїжджати"
-    ipa: '[zɑjiˈʒd͡ʒɑtɪ]'
     translation: "to stop by in a vehicle"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "розійтися"
-    ipa: '[rɔzʲijˈtɪsʲɑ]'
     translation: "to disperse on foot"
     pos: "verb"
     aspect: "perfective"
   - lemma: "розходитися"
-    ipa: '[rɔzxɔdɪtɪsʲɑ]'
     translation: "to disperse on foot"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "роз'їхатися"
-    ipa: '[rɔˈzjixɑtɪsʲɑ]'
     translation: "to disperse by vehicle"
     pos: "verb"
     aspect: "perfective"
   - lemma: "роз'їжджатися"
-    ipa: '[rɔzjiˈʒd͡ʒɑtɪsʲɑ]'
     translation: "to disperse by vehicle"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "початок"
-    ipa: '[pɔˈt͡ʃɑtɔk]'
     translation: "beginning"
     pos: "noun"
     gender: "m"
   - lemma: "зупинка"
-    ipa: '[zuˈpɪnkɑ]'
     translation: "stop / bus stop"
     pos: "noun"
     gender: "f"
   - lemma: "розходження"
-    ipa: '[rɔˈzxɔd͡ʒɛnʲːɑ]'
     translation: "dispersal / diverging"
     pos: "noun"
     gender: "n"
   - lemma: "напрямок"
-    ipa: '[ˈnɑprʲɑmɔk]'
     translation: "direction"
     pos: "noun"
     gender: "m"
   - lemma: "побігти"
-    ipa: '[pɔˈbʲiɦtɪ]'
     translation: "to start running"
     pos: "verb"
     aspect: "perfective"
   - lemma: "забігти"
-    ipa: '[zɑˈbʲiɦtɪ]'
     translation: "to run in briefly"
     pos: "verb"
     aspect: "perfective"
   - lemma: "розбігтися"
-    ipa: '[rɔˈzʲbʲiɦtɪsʲɑ]'

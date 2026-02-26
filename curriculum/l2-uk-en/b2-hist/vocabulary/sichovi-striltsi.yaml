@@ -1,126 +1,101 @@
 items:
   - lemma: "січові стрільці"
-    ipa: '[sʲit͡ʃɔˈʋʲi stʲrʲilʲˈt͡sʲi]'
     translation: "Sich Riflemen"
     pos: "noun"
     notes: "often abbreviated as УСС"
   - lemma: "легіон"
-    ipa: '[lɛɦʲiˈɔn]'
     translation: "legion"
     pos: "noun"
     gender: "m"
   - lemma: "фронт"
-    ipa: '[frɔnt]'
     translation: "front"
     pos: "noun"
     gender: "m"
   - lemma: "битва"
-    ipa: '[ˈbɪtʋɑ]'
     translation: "battle"
     pos: "noun"
     gender: "f"
   - lemma: "присяга"
-    ipa: '[prɪˈsʲɑɦɑ]'
     translation: "oath"
     pos: "noun"
     gender: "f"
   - lemma: "воїн"
-    ipa: '[ˈʋɔjin]'
     translation: "warrior"
     pos: "noun"
     gender: "m"
   - lemma: "патріот"
-    ipa: '[pɑtʲrʲiˈɔt]'
     translation: "patriot"
     pos: "noun"
     gender: "m"
   - lemma: "командир"
-    ipa: '[kɔmɑnˈdɪr]'
     translation: "commander"
     pos: "noun"
     gender: "m"
   - lemma: "окоп"
-    ipa: '[ɔˈkɔp]'
     translation: "trench"
     pos: "noun"
     gender: "m"
   - lemma: "артилерія"
-    ipa: '[ɑrtɪˈlɛrʲijɑ]'
     translation: "artillery"
     pos: "noun"
     gender: "f"
   - lemma: "кулемет"
-    ipa: '[kulɛˈmɛt]'
     translation: "machine gun"
     pos: "noun"
     gender: "m"
   - lemma: "наступ"
-    ipa: '[ˈnɑstup]'
     translation: "offensive"
     pos: "noun"
     gender: "m"
   - lemma: "полон"
-    ipa: '[pɔˈlɔn]'
     translation: "captivity"
     pos: "noun"
     gender: "m"
   - lemma: "героїзм"
-    ipa: '[ɦɛrɔˈjizm]'
     translation: "heroism"
     pos: "noun"
     gender: "m"
   - lemma: "доброволець"
-    ipa: '[dɔbrɔˈʋɔlɛt͡sʲ]'
     translation: "volunteer"
     pos: "noun"
     gender: "m"
   - lemma: "сотня"
-    ipa: '[ˈsɔtʲnʲɑ]'
     translation: "company"
     pos: "noun"
     gender: "f"
   - lemma: "вишкіл"
-    ipa: '[ˈʋɪʃkʲil]'
     translation: "military training"
     pos: "noun"
     gender: "m"
   - lemma: "просвітництво"
-    ipa: '[prɔˈsʲʋʲitnɪt͡stʋɔ]'
     translation: "enlightenment"
     pos: "noun"
     gender: "n"
   - lemma: "спадщина"
-    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
     translation: "legacy"
     pos: "noun"
     gender: "f"
   - lemma: "нація"
-    ipa: '[ˈnɑt͡sʲijɑ]'
     translation: "nation"
     pos: "noun"
     gender: "f"
   - lemma: "міф"
-    ipa: '[mʲif]'
     translation: "myth"
     pos: "noun"
     gender: "m"
   - lemma: "незалежність"
-    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
     translation: "independence"
     pos: "noun"
     gender: "f"
   - lemma: "мемуари"
-    ipa: '[mɛmuˈɑrɪ]'
     translation: "memoirs"
     pos: "noun"
     notes: "always plural"
   - lemma: "пісня"
-    ipa: '[ˈpʲisʲnʲɑ]'
     translation: "song"
     pos: "noun"
     gender: "f"
   - lemma: "інтелігенція"
-    ipa: '[intɛlʲiˈɦɛnʲt͡sʲijɑ]'
     translation: "intelligentsia"
     pos: "noun"
     gender: "f"

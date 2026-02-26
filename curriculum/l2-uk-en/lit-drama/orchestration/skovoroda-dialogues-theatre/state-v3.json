@@ -1,0 +1,13 @@
+{
+  "track": "lit-drama",
+  "slug": "skovoroda-dialogues-theatre",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T13:57:02Z",
+      "task_id": "v3-skovoroda-dialogues-theatre-pA",
+      "mode": "full"
+    }
+  }
+}

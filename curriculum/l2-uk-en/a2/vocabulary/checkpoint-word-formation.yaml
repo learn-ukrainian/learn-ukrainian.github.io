@@ -1,139 +1,110 @@
 items:
   - lemma: "корінь"
-    ipa: '[ˈkɔrʲinʲ]'
     translation: "root"
     pos: "noun"
     gender: "m"
   - lemma: "префікс"
-    ipa: '[prɛfʲiks]'
     translation: "prefix"
     pos: "noun"
     gender: "m"
   - lemma: "суфікс"
-    ipa: '[ˈsufʲiks]'
     translation: "suffix"
     pos: "noun"
     gender: "m"
   - lemma: "значення"
-    ipa: '[ˈznɑt͡ʃɛnʲːɑ]'
     translation: "meaning"
     pos: "noun"
     gender: "n"
   - lemma: "утворення"
-    ipa: '[uˈtʋɔrɛnʲːɑ]'
     translation: "formation"
     pos: "noun"
     gender: "n"
   - lemma: "помилка"
-    ipa: '[ˈpɔˈmɪlkɑ]'
     translation: "error"
     pos: "noun"
     gender: "f"
   - lemma: "слово"
-    ipa: '[ˈslɔʋɔ]'
     translation: "word"
     pos: "noun"
     gender: "n"
   - lemma: "правильний"
-    ipa: '[prɑʋɪlʲnɪj]'
     translation: "correct"
     pos: "adjective"
   - lemma: "морфема"
-    ipa: '[mɔrˈfɛmɑ]'
     translation: "morpheme"
     pos: "noun"
     gender: "f"
   - lemma: "аналіз"
-    ipa: '[ɑˈnɑlʲiz]'
     translation: "analysis"
     pos: "noun"
     gender: "m"
   - lemma: "синтез"
-    ipa: '[ˈsɪntɛz]'
     translation: "synthesis"
     pos: "noun"
     gender: "m"
   - lemma: "похідний"
-    ipa: '[pɔxʲidnɪj]'
     translation: "derivative"
     pos: "adjective"
   - lemma: "радість"
-    ipa: '[ˈrɑdʲisʲtʲ]'
     translation: "joy"
     pos: "noun"
     gender: "f"
   - lemma: "незалежність"
-    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
     translation: "independence"
     pos: "noun"
     gender: "f"
   - lemma: "навчання"
-    ipa: '[nɑˈʋt͡ʃɑnʲːɑ]'
     translation: "studying"
     pos: "noun"
     gender: "n"
   - lemma: "читання"
-    ipa: '[t͡ʃɪˈtɑnʲːɑ]'
     translation: "reading"
     pos: "noun"
     gender: "n"
   - lemma: "викладач"
-    ipa: '[ʋɪklɑˈdɑt͡ʃ]'
     translation: "lecturer"
     pos: "noun"
     gender: "m"
   - lemma: "слухач"
-    ipa: '[sluˈxɑt͡ʃ]'
     translation: "listener"
     pos: "noun"
     gender: "m"
   - lemma: "читач"
-    ipa: '[t͡ʃɪˈtɑt͡ʃ]'
     translation: "reader"
     pos: "noun"
     gender: "m"
   - lemma: "паляниця"
-    ipa: '[pɑlʲɑˈnɪt͡sʲɑ]'
     translation: "palianytsia (traditional bread)"
     pos: "noun"
     gender: "f"
   - lemma: "співробітник"
-    ipa: '[sʲpʲiu̯rɔˈbʲitnɪk]'
     translation: "coworker"
     pos: "noun"
     gender: "m"
   - lemma: "-ння"
-    ipa: '[-nʲːɑ]'
     translation: "suffix for verbal nouns (processes)"
     pos: "suffix"
   - lemma: "-ість"
-    ipa: '[-isʲtʲ]'
     translation: "suffix for abstract nouns (qualities)"
     pos: "suffix"
   - lemma: "-ач"
-    ipa: '[-ɑt͡ʃ]'
     translation: "suffix for agent nouns (people)"
     pos: "suffix"
   - lemma: "-иця"
-    ipa: '[-ɪt͡sʲɑ]'
     translation: "suffix for specific items or places"
     pos: "suffix"
   - lemma: "прикметник"
-    ipa: '[prɪˈkmɛtnɪk]'
     translation: "adjective"
     pos: "noun"
     gender: "m"
   - lemma: "іменник"
-    ipa: '[iˈmɛnːɪk]'
     translation: "noun"
     pos: "noun"
     gender: "m"
   - lemma: "доконаний"
-    ipa: '[dɔˈkɔnɑnɪj]'
     translation: "perfective"
     pos: "adjective"
   - lemma: "вид"
-    ipa: '[ʋɪd]'
     translation: "aspect"
     pos: "noun"
     gender: "m"

@@ -58,9 +58,9 @@ For A1 learners, commas around "будь ласка" and after "Вибачте" 
 
 Three vocabulary items have IPA transcriptions with no stress mark at all:
 
-1. Line 47: `помилитися` — IPA: `[pɔmɪlɪtɪsʲɑ]`. Should be `[pɔmɪˈlɪtɪsʲɑ]` (stress on third syllable: помили́тися)
-2. Line 63: `до зв'язку` — IPA: `[dɔ zʋjɑzku]`. Should be `[dɔ zʋjɑzˈku]` (stress on last syllable: до зв'язку́). Note: the content file (line 149) correctly uses `[dɔ zʋjɑzˈku]` with the stress mark, so the vocabulary file is inconsistent.
-3. Line 85: `зв'язок` — IPA: `[zʋjɑzɔk]`. Should be `[ˈzʋjɑzɔk]` (stress on first syllable: зв'я́зок)
+1. Line 47: `помилитися` — IPA: `[pɔmɪlɪtɪsʲɑ]`. Should be `` (stress on third syllable: помили́тися)
+2. Line 63: `до зв'язку` — IPA: `[dɔ zʋjɑzku]`. Should be `` (stress on last syllable: до зв'язку́). Note: the content file (line 149) correctly uses `` with the stress mark, so the vocabulary file is inconsistent.
+3. Line 85: `зв'язок` — IPA: `[zʋjɑzɔk]`. Should be `` (stress on first syllable: зв'я́зок)
 
 Stress marks in IPA are critical for A1 learners who cannot yet infer stress from orthography.
 

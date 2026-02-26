@@ -122,7 +122,6 @@ from .gates import (
     evaluate_audio,
     evaluate_vocab,
     evaluate_structure,
-    evaluate_ipa,
     evaluate_lint,
     evaluate_pedagogy,
     evaluate_immersion,
@@ -2077,27 +2076,6 @@ def audit_module(file_path: str, skip_activities: bool = False,
     results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
     if results['naturalness'].status == 'FAIL':
         has_critical_failure = True
-
-    # IPA transcription quality (auto-fixable, WARN level)
-    # Scan both the lesson .md AND the vocabulary YAML (B1+ stores IPA there)
-    import subprocess
-    ipa_count = 0
-    try:
-        ipa_files = [str(file_path)]
-        vocab_yaml = Path(file_path).parent / 'vocabulary' / (Path(file_path).stem + '.yaml')
-        if vocab_yaml.exists():
-            ipa_files.append(str(vocab_yaml))
-        ipa_result = subprocess.run(
-            ['.venv/bin/python', 'scripts/lint_ipa.py', *ipa_files, '-q'],
-            capture_output=True, text=True, timeout=30
-        )
-        if ipa_result.returncode != 0:
-            m = re.search(r'(\d+) issues', ipa_result.stdout)
-            if m:
-                ipa_count = int(m.group(1))
-    except Exception:
-        pass  # Non-critical — don't break audit if lint_ipa fails
-    results['ipa'] = evaluate_ipa(ipa_count)
 
     # Activity quality validation check - look for -quality.md in audit folder
     if skip_activities:

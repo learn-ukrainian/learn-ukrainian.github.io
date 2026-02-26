@@ -223,7 +223,7 @@ yq '.content_outline' curriculum/l2-uk-en/{track}/meta/{slug}.yaml
 >
 > Do NOT add `module:`, `level:`, `id:` (except on `reading`), or any wrapper keys.
 
-- **Enriched Vocabulary**: Create `vocabulary/{slug}.yaml` matching the count target defined in the plan/meta. Include IPA and English translations.
+- **Enriched Vocabulary**: Create `vocabulary/{slug}.yaml` matching the count target defined in the plan/meta. Include English translations.
 - **Pedagogical Activities**: Create `activities/{slug}.yaml` following track-specific schemas (Seminar style: **Reading Input -> Analytical Output**).
 
 > **ACTIVITY TYPE CONSTRAINTS: Check allowed/forbidden types BEFORE writing activities.**
@@ -266,7 +266,6 @@ scripts/audit_module.sh curriculum/l2-uk-en/{track}/{slug}.md
 > **BE BRUTALLY HONEST AND CRITICAL.** Do not sugarcoat. If it's trash, say it's trash and fix it.
 
 - **Linguistic Sophistication**: Verify the Ukrainian register (e.g., Academic for C1). Check for high-level connectors and specialized terminology.
-- **IPA Stress Verification**: Check every IPA transcription in vocabulary for correct stress placement.
 - **Narrative Logic**: Ensure the decolonized argument is coherent and builds toward the production task.
 - **Scoring**: Perform a granular 0-10 scoring on the following 14 dimensions:
 - **Re-audit after fixes**: Run audit again to confirm PASS after applying review fixes.

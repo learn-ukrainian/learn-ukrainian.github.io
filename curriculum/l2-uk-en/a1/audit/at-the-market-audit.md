@@ -1,7 +1,7 @@
 # Audit Report: M37 — at-the-market.md
 **Level:** A1 | **Module:** M37 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:27
+**Generated:** 2026-02-26 14:03:27
 
 ## Configuration
 **Type:** A1
@@ -37,30 +37,20 @@
 - Required types used: 2/2 (fill-in, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'здача (change/money)' → решта
-  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2736/2000 (raw: 3034)
+- **Words:** ✅ 2685/2000 (raw: 2983)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ⚠️ 0 < 1 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.5% (target 35-55% (M37))
+- **Immersion:** 🇺🇦 35.2% (target 35-55% (M37))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -70,8 +60,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **At the Market** | ✅ | 65 | Included in Core |
-| **Вступ: Культура українського ринку** | ✅ | 702 | Included in Core |
-| **Лексика та Граматика: Як купувати?** | ✅ | 670 | Included in Core |
-| **Практика: Діалоги на ринку** | ✅ | 686 | Included in Core |
+| **Вступ: Культура українського ринку** | ✅ | 687 | Included in Core |
+| **Лексика та Граматика: Як купувати?** | ✅ | 663 | Included in Core |
+| **Практика: Діалоги на ринку** | ✅ | 669 | Included in Core |
 | **Історія: Мій похід на Привоз** | ✅ | 402 | Included in Core |
-| **Підсумок** | ✅ | 211 | Included in Core |
+| **Підсумок** | ✅ | 199 | Included in Core |

@@ -1,7 +1,7 @@
 # Audit Report: M26 — describing-things-adjectives.md
 **Level:** A1 | **Module:** M26 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:15
+**Generated:** 2026-02-26 13:23:45
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2431/2000 (raw: 2682)
+- **Words:** ✅ 2427/2000 (raw: 2678)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -47,7 +47,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 26/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
@@ -61,7 +60,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Describing Things - Adjectives** | ✅ | 55 | Included in Core |
-| **Розминка: Що навколо?** | ✅ | 261 | Included in Core |
+| **Розминка: Що навколо?** | ✅ | 257 | Included in Core |
 | **Тверда група прикметників** | ✅ | 295 | Included in Core |
 | **М'яка група прикметників** | ✅ | 243 | Included in Core |
 | **Позиція прикметника** | ✅ | 240 | Included in Core |

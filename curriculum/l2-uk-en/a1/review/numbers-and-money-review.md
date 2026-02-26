@@ -36,15 +36,15 @@
 
 ### Issue 3: Vocabulary IPA — Double Stress Mark (MEDIUM)
 **Location:** Vocabulary file `vocabulary/numbers-and-money.yaml`, line 49
-**Text:** `ipa: '[ˈkɔʃtuˈʋɑtɪ]'`
-**Problem:** Two primary stress marks (ˈ) in a single word. Ukrainian words have only one primary stress. The correct form is `[kɔʃtuˈʋɑtɪ]` with stress on the third syllable only.
-**Fix:** Change to `'[kɔʃtuˈʋɑtɪ]'`.
+**Text:** `ipa: ''`
+**Problem:** Two primary stress marks (ˈ) in a single word. Ukrainian words have only one primary stress. The correct form is `` with stress on the third syllable only.
+**Fix:** Change to `''`.
 
 ### Issue 4: Content IPA — Missing Palatalization on «скільки» (LOW)
 **Location:** Lines 259, 279, section «Практика: У магазині»
-**Text:** `[ˈskilʲkɪ]` (content) vs `[ˈsʲkʲilʲkɪ]` (vocabulary file)
-**Problem:** The content file omits palatalization of /s/ and /k/ before /i/ in «скільки». The vocabulary file correctly has `[ˈsʲkʲilʲkɪ]`. These should be consistent, and the vocabulary file is more accurate.
-**Fix:** Update content IPA at lines 259 and 279 to match the vocabulary file: `[ˈsʲkʲilʲkɪ]`.
+**Text:** `` (content) vs `` (vocabulary file)
+**Problem:** The content file omits palatalization of /s/ and /k/ before /i/ in «скільки». The vocabulary file correctly has ``. These should be consistent, and the vocabulary file is more accurate.
+**Fix:** Update content IPA at lines 259 and 279 to match the vocabulary file: ``.
 
 ### Issue 5: Richness Below Threshold (HIGH)
 **Location:** Module-wide

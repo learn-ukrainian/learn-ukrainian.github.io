@@ -1,65 +1,53 @@
 items:
   - lemma: "відчинити"
-    ipa: '[ʋʲid͡ʒt͡ʃɪˈnɪtɪ]'
     translation: "to open (physical)"
     pos: "verb"
     aspect: "perfective"
     usage: "used for physical objects with hinges like doors and windows"
   - lemma: "відкрити"
-    ipa: '[ʋʲiˈdkrɪtɪ]'
     translation: "to open (abstract/general)"
     pos: "verb"
     aspect: "perfective"
     usage: "used for abstract processes like businesses, accounts, seasons"
   - lemma: "зачинити"
-    ipa: '[zɑt͡ʃɪˈnɪtɪ]'
     translation: "to close (physical)"
     pos: "verb"
     aspect: "perfective"
     usage: "used for physical objects with hinges"
   - lemma: "закрити"
-    ipa: '[zɑˈkrɪtɪ]'
     translation: "to close (abstract/general)"
     pos: "verb"
     aspect: "perfective"
     usage: "used for ending abstract processes"
   - lemma: "переписати"
-    ipa: '[pɛrɛpɪˈsɑtɪ]'
     translation: "to rewrite, to copy"
     pos: "verb"
     aspect: "perfective"
   - lemma: "дописати"
-    ipa: '[dɔpɪˈsɑtɪ]'
     translation: "to finish writing"
     pos: "verb"
     aspect: "perfective"
   - lemma: "доїсти"
-    ipa: '[dɔˈjistɪ]'
     translation: "to finish eating"
     pos: "verb"
     aspect: "perfective"
   - lemma: "почитати"
-    ipa: '[pɔt͡ʃɪˈtɑtɪ]'
     translation: "to read for a while"
     pos: "verb"
     aspect: "perfective"
   - lemma: "здати"
-    ipa: '[ˈzdɑtɪ]'
     translation: "to hand in, to submit, to rent out"
     pos: "verb"
     aspect: "perfective"
   - lemma: "віддати"
-    ipa: '[ʋʲiˈdːɑtɪ]'
     translation: "to give back, to return"
     pos: "verb"
     aspect: "perfective"
   - lemma: "передати"
-    ipa: '[pɛrɛˈdɑtɪ]'
     translation: "to pass, to hand over"
     pos: "verb"
     aspect: "perfective"
   - lemma: "переробити"
-    ipa: '[pɛrɛrɔˈbɪtɪ]'
     translation: "to redo"
     pos: "verb"
     aspect: "perfective"

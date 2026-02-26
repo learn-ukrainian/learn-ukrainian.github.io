@@ -58,7 +58,7 @@ For each module:
 2. Read activities: activities/{slug}.yaml
 3. Load cumulative vocabulary from previous modules
 4. Extract NEW vocabulary (not in cumulative set)
-5. Generate IPA and translations
+5. Generate translations
 6. Write to: vocabulary/{slug}.yaml
 7. Update cumulative vocabulary set
 8. Regenerate MDX with populated vocabulary table
@@ -71,10 +71,9 @@ Run vocab-qa checks:
 ```bash
 For each module:
   1. Schema validation (module, level, version, items)
-  2. IPA format check (/slashes/, stress markers)
-  3. Alphabetical sorting (Ukrainian alphabet)
-  4. No duplicates within module
-  5. All items appear in lesson or activities
+  2. Alphabetical sorting (Ukrainian alphabet)
+  3. No duplicates within module
+  4. All items appear in lesson or activities
 ```
 
 ### Step 4: Regenerate MDX Files

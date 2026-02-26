@@ -76,7 +76,6 @@ The system will re-run for any remaining fixes in the next iteration.
 
 - Do NOT rewrite the entire file — only change what the Fix Plan says
 - Do NOT add engagement boxes unless the Fix Plan says to
-- Do NOT change IPA unless the Fix Plan flags specific IPA errors
 - Do NOT remove content unless the Fix Plan says to remove it
 - Do NOT request skills, delegate to Claude, or skip fixes
 - Do NOT add commentary — just output the fixed files

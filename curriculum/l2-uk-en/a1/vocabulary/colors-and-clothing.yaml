@@ -1,161 +1,130 @@
 - lemma: "білий"
-  ipa: '[ˈbʲilɪj]'
   translation: "white"
   pos: "adj"
   example: "біла сорочка"
 - lemma: "чорний"
-  ipa: '[ˈt͡ʃɔrnɪj]'
   translation: "black"
   pos: "adj"
   example: "чорна кава"
 - lemma: "червоний"
-  ipa: '[t͡ʃɛˈrʋɔnɪj]'
   translation: "red"
   pos: "adj"
   example: "червона сукня"
 - lemma: "синій"
-  ipa: '[ˈsɪnʲij]'
   translation: "blue"
   pos: "adj"
   example: "сині джинси"
 - lemma: "зелений"
-  ipa: '[zɛˈlɛnɪj]'
   translation: "green"
   pos: "adj"
   example: "зелена трава"
 - lemma: "жовтий"
-  ipa: '[ˈʒɔu̯tɪj]'
   translation: "yellow"
   pos: "adj"
   example: "жовте сонце"
 - lemma: "сорочка"
-  ipa: '[sɔˈrɔt͡ʃkɑ]'
   translation: "shirt"
   pos: "noun"
   gender: "f"
   example: "Я ношу сорочку."
 - lemma: "штани"
-  ipa: '[ʃtɑˈnɪ]'
   translation: "pants/trousers"
   pos: "noun"
   gender: "pl"
   notes: "Plural only (pluralia tantum)"
 - lemma: "плаття"
-  ipa: '[ˈplɑtʲːɑ]'
   translation: "dress"
   pos: "noun"
   gender: "n"
 - lemma: "сукня"
-  ipa: '[ˈsuknʲɑ]'
   translation: "dress"
   pos: "noun"
   gender: "f"
   example: "гарна сукня"
 - lemma: "куртка"
-  ipa: '[ˈkurtkɑ]'
   translation: "jacket"
   pos: "noun"
   gender: "f"
 - lemma: "светр"
-  ipa: '[sʋɛtr]'
   translation: "sweater"
   pos: "noun"
   gender: "m"
 - lemma: "взуття"
-  ipa: '[ʋzuˈtʲːɑ]'
   translation: "footwear/shoes"
   pos: "noun"
   gender: "n"
   notes: "Collective noun"
 - lemma: "носити"
-  ipa: '[nɔˈsɪtɪ]'
   translation: "to wear (habitually)"
   pos: "verb"
   aspect: "imp"
   usage: "Use with Accusative case."
 - lemma: "одягати"
-  ipa: '[ɔdʲɑˈɦɑtɪ]'
   translation: "to put on (clothing)"
   pos: "verb"
   aspect: "imp"
   usage: "Action of dressing, vs носити for habitual wearing."
 - lemma: "вишиванка"
-  ipa: '[ʋɪˈʃɪˈʋɑnkɑ]'
   translation: "embroidered shirt"
   pos: "noun"
   gender: "f"
   notes: "Traditional Ukrainian garment; considered an оберіг (talisman)"
 - lemma: "окуляри"
-  ipa: '[ɔkuˈlʲɑrɪ]'
   translation: "glasses"
   pos: "noun"
   gender: "pl"
   notes: "Plural only"
 - lemma: "джинси"
-  ipa: '[ˈd͡ʒɪnsɪ]'
   translation: "jeans"
   pos: "noun"
   gender: "pl"
   notes: "Plural only"
 - lemma: "колір"
-  ipa: '[ˈkɔlʲir]'
   translation: "color"
   pos: "noun"
   gender: "m"
 - lemma: "розмір"
-  ipa: '[rɔzʲmʲir]'
   translation: "size"
   pos: "noun"
   gender: "m"
 - lemma: "ціна"
-  ipa: '[t͡sʲiˈnɑ]'
   translation: "price"
   pos: "noun"
   gender: "f"
 - lemma: "коштувати"
-  ipa: '[ˈkɔʃtuˈʋɑtɪ]'
   translation: "to cost"
   pos: "verb"
   aspect: "imp"
 - lemma: "улюблений"
-  ipa: '[uˈlʲublɛnɪj]'
   translation: "favorite"
   pos: "adj"
 - lemma: "гарний"
-  ipa: '[ˈɦɑrnɪj]'
   translation: "beautiful/good"
   pos: "adj"
 - lemma: "дієслово"
-  ipa: '[dʲijɛˈslɔʋɔ]'
   translation: "verb"
   pos: "noun"
   gender: "n"
 - lemma: "множина"
-  ipa: '[mnɔʒɪˈnɑ]'
   translation: "plural"
   pos: "noun"
   gender: "f"
 - lemma: "займенник"
-  ipa: '[zɑjˈmɛnːɪk]'
   translation: "pronoun"
   pos: "noun"
   gender: "m"
 - lemma: "відмінок"
-  ipa: '[ʋʲiˈdʲmʲinɔk]'
   translation: "case (grammar)"
   pos: "noun"
   gender: "m"
 - lemma: "знахідний"
-  ipa: '[znɑˈxʲidnɪj]'
   translation: "accusative"
   pos: "adj"
 - lemma: "рід"
-  ipa: '[rʲid]'
   translation: "gender"
   pos: "noun"
   gender: "m"
 - lemma: "узгодження"
-  ipa: '[uˈzɦɔd͡ʒɛnʲːɑ]'
   translation: "agreement"
   pos: "noun"
   gender: "n"

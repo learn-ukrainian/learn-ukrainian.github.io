@@ -1,120 +1,90 @@
-- ipa: '[pɑˈsɪu̯nɪj stɑn]'
   lemma: пасивний стан
   pos: phrase
   translation: passive voice
-- ipa: '[ɑˈktɪu̯nɪj stɑn]'
   lemma: активний стан
   pos: phrase
   translation: active voice
-- ipa: '[dʲijɛprɪˈkmɛtnɪk]'
   lemma: дієприкметник
   pos: noun
   translation: participle
-- ipa: '[bɛzɔsɔˈbɔʋɪj]'
   lemma: безособовий
   pos: adj
   translation: impersonal
-- ipa: '[zʋɔˈrɔtnɪj]'
   lemma: зворотний
   pos: adj
   translation: reflexive
-- ipa: '[ɑˈɦɛnt]'
   lemma: агент
   pos: noun
   translation: agent
-- ipa: '[ʋɪkɔˈnɑʋɛt͡sʲ]'
   lemma: виконавець
   pos: noun
   translation: performer / executor
-- ipa: '[rɛˈɦʲistr]'
   lemma: регістр
   pos: noun
   translation: register
-- ipa: '[ɔfʲiˈt͡sʲijnɔ-dʲilɔˈʋɪj]'
   lemma: офіційно-діловий
   pos: adj
   translation: official-business (style)
-- ipa: '[nɑuˈkɔʋɪj]'
   lemma: науковий
   pos: adj
   translation: scientific
-- ipa: '[rɔˈzmɔu̯nɪj]'
   lemma: розмовний
   pos: adj
   translation: colloquial / conversational
-- ipa: '[lʲitɛrɑˈturnɪj]'
   lemma: літературний
   pos: adj
   translation: literary
-- ipa: '[kɑnt͡sɛlʲɑrɪt]'
   lemma: канцелярит
   pos: noun
   translation: bureaucratese
-- ipa: '[uˈzɦɔd͡ʒɛnʲːɑ]'
   lemma: узгодження
   pos: noun
   translation: agreement
-- ipa: '[kɔnˈstrukt͡sʲijɑ]'
   lemma: конструкція
   pos: noun
   translation: construction
-- ipa: '[trɑnsfɔrˈmɑt͡sʲijɑ]'
   lemma: трансформація
   pos: noun
   translation: transformation
-- ipa: '[kɔnˈtɛkst]'
   lemma: контекст
   pos: noun
   translation: context
-- ipa: '[stɪlʲ]'
   lemma: стиль
   pos: noun
   translation: style
-- ipa: '[ˈsufʲiks]'
   lemma: суфікс
   pos: noun
   translation: suffix
-- ipa: '[dɔˈkɔnɑnɪj ʋɪd]'
   lemma: доконаний вид
   pos: phrase
   translation: perfective aspect
-- ipa: '[nɛdɔˈkɔnɑnɪj ʋɪd]'
   lemma: недоконаний вид
   pos: phrase
   translation: imperfective aspect
-- ipa: '[pʲidmɛt]'
   lemma: підмет
   pos: noun
   translation: subject
-- ipa: '[dɔˈdɑtɔk]'
   lemma: додаток
   pos: noun
   translation: object / addition
-- ipa: '[ʋʲiˈdʲmʲinɔk]'
   lemma: відмінок
   pos: noun
   translation: case
-- ipa: '[dʲijɛˈslɔʋɔ-ˈzʋjɑzkɑ]'
   lemma: дієслово-зв'язка
   pos: noun
   translation: copula verb / linking verb
-- ipa: '[stɑn]'
   lemma: стан
   pos: noun
   translation: state / condition
-- ipa: '[prɔˈt͡sɛs]'
   lemma: процес
   pos: noun
   translation: process
-- ipa: '[rɛzulʲˈtɑt]'
   lemma: результат
   pos: noun
   translation: result
-- ipa: '[suˈbjɛktʲnʲisʲtʲ]'
   lemma: суб'єктність
   pos: noun
   translation: subjectivity / agency
-- ipa: '[ˈkɑlʲkɑ]'
   lemma: калька
   pos: noun
   translation: calque / loan translation

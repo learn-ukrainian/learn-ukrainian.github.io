@@ -166,8 +166,6 @@ def save_status_cache(
     
     gates['naturalness'] = serialize_gate(results.get('naturalness'))
 
-    gates['ipa'] = serialize_gate(results.get('ipa'))
-
     gates['research'] = serialize_gate(results.get('research'))
 
     # Review gate (final gate — only checked when content gates pass)
@@ -504,7 +502,7 @@ def generate_report(
 
     report_lines.append("## Gates")
     keys_order = ['words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'ipa', 'lint', 'pedagogy', 'content_heavy', 'immersion', 'richness', 'grammar', 'naturalness', 'research']
+                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'content_heavy', 'immersion', 'richness', 'grammar', 'naturalness', 'research']
     for k in keys_order:
         r = results.get(k)
         if r:
@@ -756,7 +754,7 @@ def print_gates(results: dict, level_code: str) -> None:
     """Print gate results to console."""
     print(f"\n--- STRICT GATES (Level {level_code}) ---")
     keys_order = ['persona', 'words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'ipa', 'lint', 'pedagogy', 'content_heavy', 'grammar', 'naturalness', 'activity_quality', 'research']
+                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'content_heavy', 'grammar', 'naturalness', 'activity_quality', 'research']
     for k in keys_order:
         r = results.get(k)
         if r:

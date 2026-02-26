@@ -1,126 +1,101 @@
 items:
   - lemma: "кріпак"
-    ipa: '[krʲiˈpɑk]'
     translation: "serf"
     pos: "noun"
     gender: "m"
   - lemma: "поет"
-    ipa: '[pɔˈɛt]'
     translation: "poet"
     pos: "noun"
     gender: "m"
   - lemma: "пробудження"
-    ipa: '[prɔˈbud͡ʒɛnʲːɑ]'
     translation: "awakening"
     pos: "noun"
     gender: "n"
   - lemma: "Кобзар"
-    ipa: '[kɔˈbzɑr]'
     translation: "Kobzar (minstrel, collection of poems)"
     pos: "noun"
     gender: "m"
   - lemma: "заслання"
-    ipa: '[zɑˈslɑnʲːɑ]'
     translation: "exile"
     pos: "noun"
     gender: "n"
   - lemma: "пророк"
-    ipa: '[prɔˈrɔk]'
     translation: "prophet"
     pos: "noun"
     gender: "m"
   - lemma: "нація"
-    ipa: '[ˈnɑt͡sʲijɑ]'
     translation: "nation"
     pos: "noun"
     gender: "f"
   - lemma: "творчість"
-    ipa: '[ˈtʋɔrt͡ʃʲisʲtʲ]'
     translation: "creative work"
     pos: "noun"
     gender: "f"
   - lemma: "викуп"
-    ipa: '[ˈʋɪkup]'
     translation: "ransom"
     pos: "noun"
     gender: "m"
   - lemma: "братство"
-    ipa: '[ˈbrɑt͡stʋɔ]'
     translation: "brotherhood"
     pos: "noun"
     gender: "n"
   - lemma: "імперія"
-    ipa: '[imˈpɛrʲijɑ]'
     translation: "empire"
     pos: "noun"
     gender: "f"
   - lemma: "воля"
-    ipa: '[ˈʋɔlʲɑ]'
     translation: "freedom, will"
     pos: "noun"
     gender: "f"
   - lemma: "поема"
-    ipa: '[pɔˈɛmɑ]'
     translation: "poem"
     pos: "noun"
     gender: "f"
   - lemma: "могила"
-    ipa: '[mɔˈɦɪlɑ]'
     translation: "grave, tomb"
     pos: "noun"
     gender: "f"
   - lemma: "спадщина"
-    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
     translation: "legacy, heritage"
     pos: "noun"
     gender: "f"
   - lemma: "маніфест"
-    ipa: '[mɑnʲiˈfɛst]'
     translation: "manifesto"
     pos: "noun"
     gender: "m"
   - lemma: "ідентичність"
-    ipa: '[idɛnˈtɪt͡ʃnʲisʲtʲ]'
     translation: "identity"
     pos: "noun"
     gender: "f"
   - lemma: "самодержавство"
-    ipa: '[sɑmɔdɛrˈʒɑu̯stʋɔ]'
     translation: "autocracy"
     pos: "noun"
     gender: "n"
   - lemma: "кріпацтво"
-    ipa: '[krʲiˈpɑt͡stʋɔ]'
     translation: "serfdom"
     pos: "noun"
     gender: "n"
   - lemma: "гідність"
-    ipa: '[ˈɦʲidʲnʲisʲtʲ]'
     translation: "dignity"
     pos: "noun"
     gender: "f"
   - lemma: "гноблення"
-    ipa: '[ˈɦnɔblɛnʲːɑ]'
     translation: "oppression"
     pos: "noun"
     gender: "n"
   - lemma: "сатира"
-    ipa: '[sɑˈtɪrɑ]'
     translation: "satire"
     pos: "noun"
     gender: "f"
   - lemma: "солідарність"
-    ipa: '[sɔlʲiˈdɑrnʲisʲtʲ]'
     translation: "solidarity"
     pos: "noun"
     gender: "f"
   - lemma: "колонізатор"
-    ipa: '[kɔlɔnʲiˈzɑtɔr]'
     translation: "colonizer"
     pos: "noun"
     gender: "m"
   - lemma: "пропаганда"
-    ipa: '[prɔpɑˈɦɑndɑ]'
     translation: "propaganda"
     pos: "noun"
     gender: "f"

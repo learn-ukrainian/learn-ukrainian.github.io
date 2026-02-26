@@ -42,7 +42,6 @@ from .activities import (
 from .pedagogy import (
     run_pedagogical_checks,
     check_duplicate_content,
-    check_ipa_validation,
     check_topic_consistency,
 )
 from .markdown_format import (
@@ -139,7 +138,6 @@ __all__ = [
     # Pedagogy
     'run_pedagogical_checks',
     'check_duplicate_content',
-    'check_ipa_validation',
     'check_topic_consistency',
     # Markdown Format
     'check_markdown_format',

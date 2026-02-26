@@ -1,100 +1,80 @@
 items:
   - lemma: "знати"
-    ipa: '[ˈznɑtɪ]'
     translation: "to know"
     pos: "verb"
     aspect: "impf"
   - lemma: "говорити"
-    ipa: '[ɦɔʋɔˈrɪtɪ]'
     translation: "to speak"
     pos: "verb"
     aspect: "impf"
   - lemma: "слухати"
-    ipa: '[ˈsluxɑtɪ]'
     translation: "to listen"
     pos: "verb"
     aspect: "impf"
   - lemma: "розуміти"
-    ipa: '[rɔzuˈmʲitɪ]'
     translation: "to understand"
     pos: "verb"
     aspect: "impf"
   - lemma: "читати"
-    ipa: '[t͡ʃɪˈtɑtɪ]'
     translation: "to read"
     pos: "verb"
     aspect: "impf"
   - lemma: "писати"
-    ipa: '[pɪˈsɑtɪ]'
     translation: "to write"
     pos: "verb"
     aspect: "impf"
   - lemma: "відповідати"
-    ipa: '[ʋʲidpɔʋʲiˈdɑtɪ]'
     translation: "to answer"
     pos: "verb"
     aspect: "impf"
   - lemma: "питати"
-    ipa: '[pɪˈtɑtɪ]'
     translation: "to ask"
     pos: "verb"
     aspect: "impf"
   - lemma: "правильно"
-    ipa: '[ˈprɑʋɪlʲnɔ]'
     translation: "correctly"
     pos: "adverb"
   - lemma: "помилка"
-    ipa: '[ˈpɔˈmɪlkɑ]'
     translation: "mistake"
     pos: "noun"
     gender: "f"
   - lemma: "завдання"
-    ipa: '[zɑˈʋdɑnʲːɑ]'
     translation: "task"
     pos: "noun"
     gender: "n"
   - lemma: "оцінка"
-    ipa: '[ɔˈt͡sʲinkɑ]'
     translation: "grade"
     pos: "noun"
     gender: "f"
   - lemma: "каштан"
-    ipa: '[kɑˈʃtɑn]'
     translation: "chestnut tree"
     pos: "noun"
     gender: "m"
   - lemma: "кава"
-    ipa: '[ˈkɑʋɑ]'
     translation: "coffee"
     pos: "noun"
     gender: "f"
   - lemma: "вокзал"
-    ipa: '[ʋɔˈɡzɑl]'
     translation: "train station"
     pos: "noun"
     gender: "m"
   - lemma: "квиток"
-    ipa: '[kʋɪˈtɔk]'
     translation: "ticket"
     pos: "noun"
     gender: "m"
   - lemma: "місто"
-    ipa: '[ˈmʲistɔ]'
     translation: "city"
     pos: "noun"
     gender: "n"
   - lemma: "річка"
-    ipa: '[ˈrʲit͡ʃkɑ]'
     translation: "river"
     pos: "noun"
     gender: "f"
   - lemma: "столиця"
-    ipa: '[stɔˈlɪt͡sʲɑ]'
     translation: "capital"
     pos: "noun"
     gender: "f"
   - lemma: "правило"
-    ipa: '[prɑʋɪlɔ]'
     translation: "rule"
     pos: "noun"
     gender: "n"

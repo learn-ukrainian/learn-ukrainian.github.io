@@ -34,9 +34,9 @@ Activity 2 ("Я і моя дія", line 24-47) and Activity 5 ("Знайди п�
 
 **Location:** Vocabulary file, lines 66 and 37
 
-1. **помилка** (line 66): IPA is `[ˈpɔˈmɪlkɑ]` — contains TWO primary stress marks, which is phonetically impossible for a single word. Should be `[pɔˈmɪlkɑ]` (stress on the second syllable only).
+1. **помилка** (line 66): IPA is `` — contains TWO primary stress marks, which is phonetically impossible for a single word. Should be `` (stress on the second syllable only).
 
-2. **вчити** (line 37): IPA is `[ˈʍt͡ʃɪtɪ]` — the symbol **ʍ** represents a voiceless labial-velar fricative (the "wh" in some English dialects of "whistle"), which does not exist in Ukrainian phonology. Ukrainian **в** before a voiceless consonant is realized as a non-syllabic [u̯]. The correct IPA should be `[u̯ˈt͡ʃɪtɪ]`.
+2. **вчити** (line 37): IPA is `` — the symbol **ʍ** represents a voiceless labial-velar fricative (the "wh" in some English dialects of "whistle"), which does not exist in Ukrainian phonology. Ukrainian **в** before a voiceless consonant is realized as a non-syllabic [u̯]. The correct IPA should be ``.
 
 **Fix:** Correct both IPA transcriptions in the vocabulary file.
 

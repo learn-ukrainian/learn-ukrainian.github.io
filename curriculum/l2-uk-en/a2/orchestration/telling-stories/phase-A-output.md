@@ -54,7 +54,7 @@ Alignment: This module directly addresses the A2 requirement to create narrative
 ## Notes for Content Writing
 - **Decolonized Framing:** Highlight the rich, vibrant nature of Ukrainian oral traditions without referencing Russian literature. Frame the syntactic preference for front-loaded time markers as a natural rhythm of the Ukrainian language.
 - **Immersion (Band 2):** Since this is A2 M26 (60-75% immersion), use English *only* to explain the abstract concepts of narrative cohesion and word order rules. All examples, dialogues, and practice instructions must be in Ukrainian.
-- **IPA Rule:** Apply IPA only to the first occurrence of new vocabulary words (e.g., /ˈspɔt͡ʃatku/).
+- **IPA Rule:** Apply IPA only to the first occurrence of new vocabulary words (e.g.,).
 
 ===RESEARCH_END===
 

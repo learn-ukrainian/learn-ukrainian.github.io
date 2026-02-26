@@ -36,13 +36,13 @@ The research notes (research file line 19) mention ZUNR (1918-1919) and "зак�
 
 **Location:** Vocabulary file line 1; Content file line 49, Section «Розминка: Вчора і сьогодні»
 
-**Evidence — Vocabulary file:** `ipa: '[ˈʍt͡ʃɔrɑ]'` — The symbol `ʍ` represents a voiceless labial-velar fricative (as in Scottish English "which"). This is not a Ukrainian phoneme. Ukrainian в before voiceless consonants is realized as [u̯] (non-syllabic close back rounded vowel). Furthermore, stress is marked on `ʍ` when it should be on `ɔ` (вчо́ра).
+**Evidence — Vocabulary file:** `ipa: ''` — The symbol `ʍ` represents a voiceless labial-velar fricative (as in Scottish English "which"). This is not a Ukrainian phoneme. Ukrainian в before voiceless consonants is realized as [u̯] (non-syllabic close back rounded vowel). Furthermore, stress is marked on `ʍ` when it should be on `ɔ` (вчо́ра).
 
-**Evidence — Content file line 49:** «Він звучить м'яко: [u̯t͡ʃɔrɑ].» — Uses the correct `u̯` symbol but is **missing the stress mark**. Should be `[u̯ˈt͡ʃɔrɑ]`.
+**Evidence — Content file line 49:** «Він звучить м'яко: [u̯t͡ʃɔrɑ].» — Uses the correct `u̯` symbol but is **missing the stress mark**. Should be ``.
 
 The vocabulary file and content file are also **inconsistent with each other** — one uses `ʍ`, the other uses `u̯`.
 
-**Fix:** Vocabulary: change to `[u̯ˈt͡ʃɔrɑ]`. Content line 49: change to `[u̯ˈt͡ʃɔrɑ]`. Both must match.
+**Fix:** Vocabulary: change to ``. Content line 49: change to ``. Both must match.
 
 ---
 

@@ -1,121 +1,96 @@
 items:
   - lemma: "якщо"
-    ipa: '[jɑˈkʃt͡ʃɔ]'
     translation: "if (real)"
     pos: "conjunction"
   - lemma: "якби"
-    ipa: '[jɑˈɡbɪ]'
     translation: "if (unreal)"
     pos: "conjunction"
   - lemma: "хотіти"
-    ipa: '[xɔˈtʲitɪ]'
     translation: "to want"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "мрія"
-    ipa: '[ˈmrʲijɑ]'
     translation: "dream"
     pos: "noun"
     gender: "f"
   - lemma: "виграти"
-    ipa: '[ˈʋɪɦrɑtɪ]'
     translation: "to win"
     pos: "verb"
     aspect: "perfective"
   - lemma: "подорож"
-    ipa: '[ˈpɔdɔrɔʒ]'
     translation: "trip / journey"
     pos: "noun"
     gender: "f"
   - lemma: "мріяти"
-    ipa: '[ˈmrʲijɑtɪ]'
     translation: "to dream"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "уявляти"
-    ipa: '[ujɑˈʋlʲɑtɪ]'
     translation: "to imagine"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "фантазія"
-    ipa: '[fɑnˈtɑzʲijɑ]'
     translation: "fantasy"
     pos: "noun"
     gender: "f"
   - lemma: "реальність"
-    ipa: '[rɛˈɑlʲnʲisʲtʲ]'
     translation: "reality"
     pos: "noun"
     gender: "f"
   - lemma: "лотерея"
-    ipa: '[lɔtɛˈrɛjɑ]'
     translation: "lottery"
     pos: "noun"
     gender: "f"
   - lemma: "планувати"
-    ipa: '[plɑnuˈʋɑtɪ]'
     translation: "to plan"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "здійснити"
-    ipa: '[zʲdʲijˈsnɪtɪ]'
     translation: "to fulfill / realize"
     pos: "verb"
     aspect: "perfective"
   - lemma: "умова"
-    ipa: '[uˈmɔʋɑ]'
     translation: "condition"
     pos: "noun"
     gender: "f"
   - lemma: "можливо"
-    ipa: '[mɔˈʒlɪʋɔ]'
     translation: "possibly"
     pos: "adverb"
   - lemma: "бажання"
-    ipa: '[bɑˈʒɑnʲːɑ]'
     translation: "wish / desire"
     pos: "noun"
     gender: "n"
   - lemma: "задоволення"
-    ipa: '[zɑdɔˈʋɔlɛnʲːɑ]'
     translation: "pleasure"
     pos: "noun"
     gender: "n"
   - lemma: "відпустка"
-    ipa: '[ʋʲiˈdpustkɑ]'
     translation: "vacation"
     pos: "noun"
     gender: "f"
   - lemma: "гроші"
-    ipa: '[ɦrɔʃʲi]'
     translation: "money"
     pos: "noun"
   - lemma: "майбутнє"
-    ipa: '[mɑjˈbutʲnʲɛ]'
     translation: "future"
     pos: "noun"
     gender: "n"
   - lemma: "ввічливий"
-    ipa: '[ˈʋʲːit͡ʃlɪʋɪj]'
     translation: "polite"
     pos: "adjective"
   - lemma: "прохання"
-    ipa: '[prɔˈxɑnʲːɑ]'
     translation: "request"
     pos: "noun"
     gender: "n"
   - lemma: "ситуація"
-    ipa: '[sɪtuˈɑt͡sʲijɑ]'
     translation: "situation"
     pos: "noun"
     gender: "f"
   - lemma: "змінити"
-    ipa: '[zʲmʲiˈnɪtɪ]'
     translation: "to change"
     pos: "verb"
     aspect: "perfective"
   - lemma: "кав'ярня"
-    ipa: '[kɑˈʋjɑrnʲɑ]'
     translation: "coffeehouse"
     pos: "noun"
     gender: "f"

@@ -1,130 +1,105 @@
 items:
   - lemma: "повстання"
-    ipa: '[pɔˈʋstɑnʲːɑ]'
     translation: "uprising"
     pos: "noun"
     gender: "n"
     usage: "збройне повстання"
   - lemma: "повстанці"
-    ipa: '[pɔˈʋstɑnʲt͡sʲi]'
     translation: "insurgents"
     pos: "noun"
     gender: "m"
   - lemma: "опір"
-    ipa: '[ˈɔpʲir]'
     translation: "resistance"
     pos: "noun"
     gender: "m"
     usage: "чинити опір"
   - lemma: "партизани"
-    ipa: '[pɑrtɪˈzɑnɪ]'
     translation: "partisans"
     pos: "noun"
     gender: "m"
   - lemma: "командир"
-    ipa: '[kɔmɑnˈdɪr]'
     translation: "commander"
     pos: "noun"
     gender: "m"
   - lemma: "загін"
-    ipa: '[zɑˈɦʲin]'
     translation: "detachment"
     pos: "noun"
     gender: "m"
   - lemma: "окупація"
-    ipa: '[ɔkuˈpɑt͡sʲijɑ]'
     translation: "occupation"
     pos: "noun"
     gender: "f"
   - lemma: "придушення"
-    ipa: '[prɪˈduʃɛnʲːɑ]'
     translation: "suppression"
     pos: "noun"
     gender: "n"
   - lemma: "засідка"
-    ipa: '[ˈzɑsʲidkɑ]'
     translation: "ambush"
     pos: "noun"
     gender: "f"
     usage: "влаштувати засідку"
   - lemma: "рейд"
-    ipa: '[rɛjd]'
     translation: "raid"
     pos: "noun"
     gender: "m"
   - lemma: "підпілля"
-    ipa: '[pʲiˈdʲpʲilʲːɑ]'
     translation: "underground"
     pos: "noun"
     gender: "n"
     usage: "діяти в підпіллі"
   - lemma: "отаман"
-    ipa: '[ɔˈtɑmɑn]'
     translation: "otaman / leader"
     pos: "noun"
     gender: "m"
   - lemma: "терор"
-    ipa: '[tɛˈrɔr]'
     translation: "terror"
     pos: "noun"
     gender: "m"
   - lemma: "легенда"
-    ipa: '[lɛˈɦɛndɑ]'
     translation: "legend"
     pos: "noun"
     gender: "f"
   - lemma: "гайдамаки"
-    ipa: '[ɦɑjdɑˈmɑkɪ]'
     translation: "haidamaky"
     pos: "noun"
     gender: "m"
   - lemma: "монастир"
-    ipa: '[mɔnɑˈstɪr]'
     translation: "monastery"
     pos: "noun"
     gender: "m"
   - lemma: "яр"
-    ipa: '[jɑr]'
     translation: "ravine"
     pos: "noun"
     gender: "m"
   - lemma: "чекісти"
-    ipa: '[t͡ʃɛˈkʲistɪ]'
     translation: "chekists"
     pos: "noun"
     gender: "m"
   - lemma: "незалежність"
-    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
     translation: "independence"
     pos: "noun"
     gender: "f"
   - lemma: "держава"
-    ipa: '[ˈdɛrˈʒɑʋɑ]'
     translation: "state"
     pos: "noun"
     gender: "f"
   - lemma: "зброя"
-    ipa: '[ˈzbrɔjɑ]'
     translation: "weapon"
     pos: "noun"
     gender: "f"
   - lemma: "мобілізація"
-    ipa: '[mɔbʲilʲiˈzɑt͡sʲijɑ]'
     translation: "mobilization"
     pos: "noun"
     gender: "f"
   - lemma: "дисципліна"
-    ipa: '[dɪst͡sɪˈplʲinɑ]'
     translation: "discipline"
     pos: "noun"
     gender: "f"
   - lemma: "міф"
-    ipa: '[mʲif]'
     translation: "myth"
     pos: "noun"
     gender: "m"
   - lemma: "спадкоємність"
-    ipa: '[spɑdkɔˈjɛmnʲisʲtʲ]'
     translation: "continuity"
     pos: "noun"
     gender: "f"

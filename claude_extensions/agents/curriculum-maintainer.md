@@ -188,7 +188,6 @@ Before ANY content generation, verify research is clean:
 
 Known contamination patterns (caught by `lint_prompts.py`):
 - Persona names in research files (Ukrainian Teacher, Cultural Guide, etc.)
-- IPA flooding instructions ("every word")
 - Colleague tone ("колего")
 - Helpful Neighbor persona (deprecated)
 
@@ -292,10 +291,8 @@ Check these FIRST on every module — they recur across the entire curriculum:
 |---------|-----------------|-----|
 | Persona contamination | Research referencing specific persona names | Run `lint_prompts.py --fix` |
 | YAML wrapper | `activities:` dict wrapper + frontmatter in activities YAML | Remove frontmatter + wrapper, make bare list |
-| IPA /w/ vs /ʋ/ | Ukrainian В transcribed as /w/ instead of /ʋ/ (labiodental approximant) | Replace all /w/ with /ʋ/ in IPA for В |
 | Proper name capitalization | Names like `таня`, `іван` uncapitalized in vocabulary | Capitalize: `Таня`, `Іван` |
 | Vocabulary POS errors | Adjectives tagged as `pos: noun`, nouns tagged as `pos: conj` | Fix POS to match actual word class |
-| IPA missing stress | Polysyllabic words without stress mark in IPA | Add ˈ before stressed syllable |
 | Latin in Cyrillic fields | Anagram scrambled letters using Latin instead of Cyrillic | Replace with Cyrillic equivalents |
 | Russianisms | кушать, приймати участь, самий кращий, слідуючий | Use Ukrainian: їсти, брати участь, найкращий, наступний |
 

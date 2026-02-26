@@ -1,128 +1,103 @@
 items:
   - lemma: "спочатку"
-    ipa: '[spɔˈt͡ʃɑtku]'
     translation: "at first"
     pos: "adverb"
     notes: "indicates the first action in a sequence; do not confuse with 'з початку' (from the start)"
   - lemma: "потім"
-    ipa: '[ˈpɔtʲim]'
     translation: "then / afterwards"
     pos: "adverb"
     notes: "typically placed at the beginning of a sentence in natural narration"
   - lemma: "нарешті"
-    ipa: '[nɑˈrɛʃtʲi]'
     translation: "finally"
     pos: "adverb"
     notes: "signals the successful conclusion of a long or difficult process"
   - lemma: "раптом"
-    ipa: '[ˈrɑptɔm]'
     translation: "suddenly"
     pos: "adverb"
     notes: "the 'plot twist' marker that creates unexpected drama"
   - lemma: "одного разу"
-    ipa: '[ɔdnɔɦɔ ˈrɑzu]'
     translation: "once / one day"
     pos: "phrase"
     notes: "a standard phrase to begin a personal story or narrative"
   - lemma: "несподівано"
-    ipa: '[nɛspɔˈdʲiʋɑnɔ]'
     translation: "unexpectedly"
     pos: "adverb"
     notes: "used to add narrative tension or describe a surprise"
   - lemma: "казка"
-    ipa: '[ˈkɑzkɑ]'
     translation: "fairytale"
     pos: "noun"
     gender: "f"
     notes: "often starts with the classic formula 'Жили-були...'"
   - lemma: "анекдот"
-    ipa: '[ɑnɛˈɡdɔt]'
     translation: "joke / short anecdote"
     pos: "noun"
     gender: "m"
     notes: "a short funny story that requires precise timing of connectors"
   - lemma: "казкар"
-    ipa: '[kɑˈzkɑr]'
     translation: "storyteller"
     pos: "noun"
     gender: "m"
     notes: "the traditional respected figure in Ukrainian oral tradition"
   - lemma: "несподіванка"
-    ipa: '[nɛspɔˈdʲiʋɑnkɑ]'
     translation: "a surprise"
     pos: "noun"
     gender: "f"
     notes: "a noun form related to 'несподівано'"
   - lemma: "раніше"
-    ipa: '[rɑˈnʲiʃɛ]'
     translation: "earlier / before"
     pos: "adverb"
     notes: "used to provide background context from the past"
   - lemma: "давно"
-    ipa: '[dɑˈʋnɔ]'
     translation: "long ago"
     pos: "adverb"
     notes: "indicates the distant past in storytelling"
   - lemma: "з початку"
-    ipa: '[z pɔˈt͡ʃɑtku]'
     translation: "from the start / from the beginning"
     pos: "phrase"
     notes: "used with physical objects or specific events, written as two words"
   - lemma: "розповідь"
-    ipa: '[ˈrɔzpɔʋʲidʲ]'
     translation: "story / narrative"
     pos: "noun"
     gender: "f"
   - lemma: "історія"
-    ipa: '[iˈstɔrʲijɑ]'
     translation: "history / story"
     pos: "noun"
     gender: "f"
   - lemma: "подія"
-    ipa: '[pɔˈdʲijɑ]'
     translation: "event"
     pos: "noun"
     gender: "f"
   - lemma: "розповідати"
-    ipa: '[rɔzpɔʋʲiˈdɑtɪ]'
     translation: "to tell / to narrate"
     pos: "verb"
     aspect: "impf"
   - lemma: "слухати"
-    ipa: '[ˈsluxɑtɪ]'
     translation: "to listen"
     pos: "verb"
     aspect: "impf"
   - lemma: "увага"
-    ipa: '[uˈʋɑɦɑ]'
     translation: "attention"
     pos: "noun"
     gender: "f"
   - lemma: "недавно"
-    ipa: '[nɛˈdɑu̯nɔ]'
     translation: "recently"
     pos: "adverb"
     notes: "shows fresh events close to the present time"
   - lemma: "кінець"
-    ipa: '[kʲiˈnɛt͡sʲ]'
     translation: "end"
     pos: "noun"
     gender: "m"
   - lemma: "початок"
-    ipa: '[pɔˈt͡ʃɑtɔk]'
     translation: "start / beginning"
     pos: "noun"
     gender: "m"
   - lemma: "несподіваний"
-    ipa: '[nɛspɔˈdʲiʋɑnɪj]'
     translation: "unexpected"
     pos: "adjective"
   - lemma: "смішний"
-    ipa: '[sʲmʲiˈʃnɪj]'
     translation: "funny"
     pos: "adjective"
   - lemma: "минуле"
-    ipa: '[mɪˈnulɛ]'
     translation: "the past"
     pos: "noun"
     gender: "n"

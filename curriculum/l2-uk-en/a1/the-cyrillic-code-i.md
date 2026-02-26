@@ -177,8 +177,8 @@ Now that we have our decoding tools, let's apply them to words you will definite
 | Ukrainian | IPA | English | Context/Collocation |
 | :--- | :--- | :--- | :--- |
 | **банк** | [bɑnk] | bank | **національний банк** (national bank) |
-| **метро** | [mɛˈtrɔ] | metro | **станція метро** (metro station) |
-| **кафе** | [kɑˈfɛ] | café | **ідемо в кафе** (let's go to a cafe) |
+| **метро** | | metro | **станція метро** (metro station) |
+| **кафе** | | café | **ідемо в кафе** (let's go to a cafe) |
 | **факт** | [fɑkt] | fact | **це факт** (it's a fact) |
 | **план** | [plɑn] | plan | **бізнес-план** (business plan) |
 | **парк** | [pɑrk] | park | **великий парк** (big park) |
@@ -211,8 +211,8 @@ This might seem simple, but you are speaking Ukrainian! You are using the nomina
 The word **так** is small but mighty. It is your primary tool for agreement.
 
 -   **Так** — Yes.
--   **Так, будь ласка** [tɑk budʲ ˈlɑskɑ] — Yes, please. *Use this for polite acceptance.*
--   **Так, звісно** [tɑk ˈzʋʲisnɔ] — Yes, of course. *Use this for enthusiastic agreement.*
+-   **Так, будь ласка** — Yes, please. *Use this for polite acceptance.*
+-   **Так, звісно** — Yes, of course. *Use this for enthusiastic agreement.*
 
 ### Coffee Culture Check
 A small but important distinction:

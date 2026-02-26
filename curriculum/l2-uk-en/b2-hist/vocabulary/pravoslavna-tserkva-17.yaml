@@ -1,126 +1,101 @@
 items:
   - lemma: "ієрархія"
-    ipa: '[ijɛˈrɑrxʲijɑ]'
     translation: "hierarchy"
     pos: "noun"
     gender: "f"
   - lemma: "митрополит"
-    ipa: '[mɪtrɔpɔˈlɪt]'
     translation: "metropolitan"
     pos: "noun"
     gender: "m"
   - lemma: "висвячення"
-    ipa: '[ˈʋɪsʲʋʲɑt͡ʃɛnʲːɑ]'
     translation: "ordination"
     pos: "noun"
     gender: "n"
   - lemma: "братство"
-    ipa: '[ˈbrɑt͡stʋɔ]'
     translation: "brotherhood"
     pos: "noun"
     gender: "n"
   - lemma: "унія"
-    ipa: '[ˈunʲijɑ]'
     translation: "union"
     pos: "noun"
     gender: "f"
   - lemma: "полеміка"
-    ipa: '[pɔˈlɛmʲikɑ]'
     translation: "polemics"
     pos: "noun"
     gender: "f"
   - lemma: "патріарх"
-    ipa: '[pɑtʲrʲiˈɑrx]'
     translation: "patriarch"
     pos: "noun"
     gender: "m"
   - lemma: "легалізація"
-    ipa: '[lɛɦɑlʲiˈzɑt͡sʲijɑ]'
     translation: "legalization"
     pos: "noun"
     gender: "f"
   - lemma: "богослов'я"
-    ipa: '[bɔɦɔˈslɔu̯jɑ]'
     translation: "theology"
     pos: "noun"
     gender: "n"
   - lemma: "апологетика"
-    ipa: '[ɑpɔlɔˈɦɛtɪkɑ]'
     translation: "apologetics"
     pos: "noun"
     gender: "f"
   - lemma: "єпископ"
-    ipa: '[jɛˈpɪskɔp]'
     translation: "bishop"
     pos: "noun"
     gender: "m"
   - lemma: "автокефалія"
-    ipa: '[ɑu̯tɔkɛˈfɑlʲijɑ]'
     translation: "autocephaly"
     pos: "noun"
     gender: "f"
   - lemma: "конфесія"
-    ipa: '[kɔnˈfɛsʲijɑ]'
     translation: "confession / denomination"
     pos: "noun"
     gender: "f"
   - lemma: "ідентичність"
-    ipa: '[idɛnˈtɪt͡ʃnʲisʲtʲ]'
     translation: "identity"
     pos: "noun"
     gender: "f"
   - lemma: "ставропігія"
-    ipa: '[stɑu̯rɔˈpʲiɦʲijɑ]'
     translation: "stauropegion (direct subordination)"
     pos: "noun"
     gender: "f"
   - lemma: "ктитор"
-    ipa: '[ˈktɪtɔr]'
     translation: "church founder / patron"
     pos: "noun"
     gender: "m"
   - lemma: "хіротонія"
-    ipa: '[xʲirɔˈtɔnʲijɑ]'
     translation: "chirotony / ordination"
     pos: "noun"
     gender: "f"
   - lemma: "дизуніт"
-    ipa: '[dɪzunʲit]'
     translation: "disuniate (orthodox resister of union)"
     pos: "noun"
     gender: "m"
   - lemma: "парафія"
-    ipa: '[pɑˈrɑfʲijɑ]'
     translation: "parish"
     pos: "noun"
     gender: "f"
   - lemma: "єпархія"
-    ipa: '[jɛˈpɑrxʲijɑ]'
     translation: "eparchy / diocese"
     pos: "noun"
     gender: "f"
   - lemma: "універсал"
-    ipa: '[unʲiʋɛrˈsɑl]'
     translation: "universal (royal decree)"
     pos: "noun"
     gender: "m"
   - lemma: "безкоролів'я"
-    ipa: '[bɛzkɔrɔˈlʲiu̯jɑ]'
     translation: "interregnum"
     pos: "noun"
     gender: "n"
   - lemma: "полеміст"
-    ipa: '[pɔlɛˈmʲist]'
     translation: "polemicist"
     pos: "noun"
     gender: "m"
   - lemma: "суб'єктність"
-    ipa: '[suˈbjɛktʲnʲisʲtʲ]'
     translation: "agency / subjectivity"
     pos: "noun"
     gender: "f"
   - lemma: "компроміс"
-    ipa: '[kɔmprɔˈmʲis]'
     translation: "compromise"
     pos: "noun"
     gender: "m"

@@ -1,129 +1,104 @@
 items:
   - lemma: "директорія"
-    ipa: '[dɪrɛˈktɔrʲijɑ]'
     translation: "directorate"
     pos: "noun"
     gender: "f"
     notes: "тимчасовий революційний орган, згодом верховна влада"
   - lemma: "універсал"
-    ipa: '[unʲiʋɛrˈsɑl]'
     translation: "universal / decree"
     pos: "noun"
     gender: "m"
     notes: "законодавчий акт, декларація"
   - lemma: "отаман"
-    ipa: '[ɔˈtɑmɑn]'
     translation: "otaman / chieftain"
     pos: "noun"
     gender: "m"
     notes: "військовий ватажок; плутати з козацькими гетьманами тут недоречно"
   - lemma: "повстання"
-    ipa: '[pɔˈʋstɑnʲːɑ]'
     translation: "uprising / rebellion"
     pos: "noun"
     gender: "n"
   - lemma: "інтервенція"
-    ipa: '[intɛrˈʋɛnʲt͡sʲijɑ]'
     translation: "intervention"
     pos: "noun"
     gender: "f"
   - lemma: "еміграція"
-    ipa: '[ɛmʲiˈɦrɑt͡sʲijɑ]'
     translation: "emigration"
     pos: "noun"
     gender: "f"
   - lemma: "уряд"
-    ipa: '[urʲɑd]'
     translation: "government"
     pos: "noun"
     gender: "m"
   - lemma: "армія"
-    ipa: '[ˈɑrmʲijɑ]'
     translation: "army"
     pos: "noun"
     gender: "f"
   - lemma: "соціалізм"
-    ipa: '[sɔt͡sʲiɑˈlʲizm]'
     translation: "socialism"
     pos: "noun"
     gender: "m"
   - lemma: "республіка"
-    ipa: '[rɛˈspublʲikɑ]'
     translation: "republic"
     pos: "noun"
     gender: "f"
   - lemma: "коаліція"
-    ipa: '[kɔɑˈlʲit͡sʲijɑ]'
     translation: "coalition"
     pos: "noun"
     gender: "f"
   - lemma: "фронт"
-    ipa: '[frɔnt]'
     translation: "front"
     pos: "noun"
     gender: "m"
   - lemma: "відступ"
-    ipa: '[ˈʋʲid͡zstup]'
     translation: "retreat"
     pos: "noun"
     gender: "m"
   - lemma: "перемир'я"
-    ipa: '[pɛrɛˈmɪrjɑ]'
     translation: "armistice"
     pos: "noun"
     gender: "n"
   - lemma: "зимовий похід"
-    ipa: '[zɪˈmɔˈʋɪj pɔˈxʲid]'
     translation: "winter campaign"
     pos: "noun"
     gender: "m"
   - lemma: "трикутник смерті"
-    ipa: '[trɪˈkutnɪk ˈsmɛrtʲi]'
     translation: "triangle of death"
     pos: "noun"
     gender: "m"
   - lemma: "акт злуки"
-    ipa: '[ɑkt ˈzlukɪ]'
     translation: "act of unification"
     pos: "noun"
     gender: "m"
   - lemma: "соборність"
-    ipa: '[sɔˈbɔrnʲisʲtʲ]'
     translation: "unity / conciliarism"
     pos: "noun"
     gender: "f"
   - lemma: "клейноди"
-    ipa: '[klɛjˈnɔdɪ]'
     translation: "state insignia / jewels"
     pos: "noun"
     notes: "plural noun, historical symbols of state power"
   - lemma: "екзил"
-    ipa: '[ɛˈɡzɪl]'
     translation: "exile"
     pos: "noun"
     gender: "m"
   - lemma: "погром"
-    ipa: '[pɔˈɦrɔm]'
     translation: "pogrom"
     pos: "noun"
     gender: "m"
   - lemma: "компроміс"
-    ipa: '[kɔmprɔˈmʲis]'
     translation: "compromise"
     pos: "noun"
     gender: "m"
   - lemma: "незалежність"
-    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
     translation: "independence"
     pos: "noun"
     gender: "f"
   - lemma: "маніфест"
-    ipa: '[mɑnʲiˈfɛst]'
     translation: "manifesto"
     pos: "noun"
     gender: "m"
   - lemma: "доктринер"
-    ipa: '[dɔktrɪˈnɛr]'
     translation: "dogmatist / doctrinaire"
     pos: "noun"
     gender: "m"

@@ -38,7 +38,7 @@ The text teaches Genitive patterns for Feminine (-а→-и), Neuter (-о→-а),
 
 **Location:** Line 170: "The combination of soft **л** and hard **ц** followed by soft **я** is extremely difficult..."
 
-The text's own IPA transcription shows `[pɑlʲɑˈnɪt͡sʲɑ]` — the **ц** is soft/palatalized [t͡sʲ], not hard. In Russian, ц is always hard; in Ukrainian, it can be palatalized (as in -ця). The text contradicts its own IPA and inverts the actual reason this word is a shibboleth.
+The text's own IPA transcription shows `` — the **ц** is soft/palatalized [t͡sʲ], not hard. In Russian, ц is always hard; in Ukrainian, it can be palatalized (as in -ця). The text contradicts its own IPA and inverts the actual reason this word is a shibboleth.
 
 ### MINOR: Misleading Literal Translation — "Я буду каву"
 
@@ -83,23 +83,23 @@ FILE: curriculum/l2-uk-en/a1/food-and-shopping.md
 FILE: curriculum/l2-uk-en/a1/food-and-shopping.md
 ---OLD---
 **The Vocabulary:**
-*   **Кілограм** [kilɔˈɦrɑm] (Kilogram)
+*   **Кілограм** (Kilogram)
 *   **Літр** [lʲitr] (Liter)
-*   **Пляшка** [ˈplʲɑʃkɑ] (Bottle)
-*   **Пачка** [ˈpɑt͡ʃkɑ] (Pack/Packet)
-*   **Пакет** [pɑˈkɛt] (Carton/Bag)
-*   **Склянка** [ˈsklʲɑnkɑ] (Glass)
-*   **Чашка** [ˈt͡ʃɑʃkɑ] (Cup)
+*   **Пляшка** (Bottle)
+*   **Пачка** (Pack/Packet)
+*   **Пакет** (Carton/Bag)
+*   **Склянка** (Glass)
+*   **Чашка** (Cup)
 ---NEW---
 **The Vocabulary:**
-*   **Кілограм** [kilɔˈɦrɑm] (Kilogram)
+*   **Кілограм** (Kilogram)
 *   **Літр** [lʲitr] (Liter)
-*   **Пляшка** [ˈplʲɑʃkɑ] (Bottle)
-*   **Пачка** [ˈpɑt͡ʃkɑ] (Pack/Packet)
-*   **Пакет** [pɑˈkɛt] (Carton/Bag)
-*   **Склянка** [ˈsklʲɑnkɑ] (Glass)
-*   **Чашка** [ˈt͡ʃɑʃkɑ] (Cup)
-*   **Шматок** [ʃmɑˈtɔk] (Piece/Slice)
+*   **Пляшка** (Bottle)
+*   **Пачка** (Pack/Packet)
+*   **Пакет** (Carton/Bag)
+*   **Склянка** (Glass)
+*   **Чашка** (Cup)
+*   **Шматок** (Piece/Slice)
 ===FIX_END===
 
 ===FIX_START===

@@ -1,10 +1,8 @@
 items:
   - lemma: "іменник"
-    ipa: '[iˈmɛnːɪk]'
     translation: "noun"
     pos: "noun"
   - lemma: "дієслово"
-    ipa: '[dʲijɛˈslɔʋɔ]'
     translation: "verb"
     pos: "noun"
     notes: "describes the concept of a verb as a part of speech"

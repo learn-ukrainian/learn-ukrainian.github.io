@@ -1,0 +1,18 @@
+{
+  "track": "b2",
+  "slug": "news-analysis-advanced",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T16:46:20Z",
+      "task_id": "v3-news-analysis-advanced-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-25T16:51:50Z",
+      "note": "word-count-2802-below-80pct-4000"
+    }
+  }
+}

@@ -142,14 +142,6 @@ As you read, note every issue you find. Be specific:
 | це є | це (usually) |
 | мати місце | відбуватися |
 
-### IPA Stress Errors (Auto-fail for vocabulary)
-
-Ukrainian stress is unpredictable. Verify EVERY IPA transcription:
-- Check stress placement matches actual Ukrainian pronunciation
-- Common errors: stress on wrong syllable in multi-syllable academic terms
-- Examples of frequent mistakes: те**о**рія (not **те**орія), спадко**є**мність (not спад**ко**ємність)
-- When uncertain about stress, flag for verification rather than guessing
-
 ### Propaganda Filter (Auto-fail for HIST/BIO tracks)
 
 Check if any phrasing echoes Russian dezinformatsiia framing:
@@ -375,6 +367,5 @@ For level-specific expectations, read the appropriate tier file:
 
 > Embody the Ukrainian linguist & historian. See `claude_extensions/skills/_shared/persona.md`
 
-**IPA RULE:** All phonetics MUST use IPA (no Latin transliteration).
 **PYTHON:** Use `.venv/bin/python` only.
 **WORKFLOW:** This is for manual review AFTER audit_module.py passes.

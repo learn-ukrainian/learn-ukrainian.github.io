@@ -1,126 +1,101 @@
 items:
   - lemma: "комп'ютер"
-    ipa: '[kɔmˈpjutɛr]'
     translation: "computer"
     pos: "noun"
     gender: "m"
   - lemma: "телефон"
-    ipa: '[tɛlɛˈfɔn]'
     translation: "phone"
     pos: "noun"
     gender: "m"
   - lemma: "смартфон"
-    ipa: '[smɑrˈtfɔn]'
     translation: "smartphone"
     pos: "noun"
     gender: "m"
   - lemma: "ноутбук"
-    ipa: '[nɔuˈdbuk]'
     translation: "laptop"
     pos: "noun"
     gender: "m"
   - lemma: "планшет"
-    ipa: '[plɑnˈʃɛt]'
     translation: "tablet"
     pos: "noun"
     gender: "m"
   - lemma: "інтернет"
-    ipa: '[intɛrˈnɛt]'
     translation: "internet"
     pos: "noun"
     gender: "m"
   - lemma: "сайт"
-    ipa: '[sɑjt]'
     translation: "site"
     pos: "noun"
     gender: "m"
   - lemma: "вебсайт"
-    ipa: '[ʋɛˈbsɑjt]'
     translation: "website"
     pos: "noun"
     gender: "m"
   - lemma: "пошта"
-    ipa: '[ˈpɔʃtɑ]'
     translation: "email / mail"
     pos: "noun"
     gender: "f"
   - lemma: "додаток"
-    ipa: '[dɔˈdɑtɔk]'
     translation: "app / application"
     pos: "noun"
     gender: "m"
   - lemma: "пароль"
-    ipa: '[pɑˈrɔlʲ]'
     translation: "password"
     pos: "noun"
     gender: "m"
   - lemma: "акаунт"
-    ipa: '[ɑkɑunt]'
     translation: "account"
     pos: "noun"
     gender: "m"
   - lemma: "оновлення"
-    ipa: '[ɔˈnɔu̯lɛnʲːɑ]'
     translation: "update"
     pos: "noun"
     gender: "n"
   - lemma: "підписка"
-    ipa: '[pʲiˈdpɪskɑ]'
     translation: "subscription"
     pos: "noun"
     gender: "f"
   - lemma: "мережа"
-    ipa: '[mɛˈrɛʒɑ]'
     translation: "network"
     pos: "noun"
     gender: "f"
   - lemma: "посилання"
-    ipa: '[pɔsɪˈlɑnʲːɑ]'
     translation: "link"
     pos: "noun"
     gender: "n"
   - lemma: "екран"
-    ipa: '[ɛˈkrɑn]'
     translation: "screen"
     pos: "noun"
     gender: "m"
   - lemma: "завантажити"
-    ipa: '[zɑʋɑnˈtɑʒɪtɪ]'
     translation: "to download"
     pos: "verb"
     aspect: "perfective"
   - lemma: "відправити"
-    ipa: '[ʋʲiˈdprɑʋɪtɪ]'
     translation: "to send"
     pos: "verb"
     aspect: "perfective"
   - lemma: "шукати"
-    ipa: '[ʃuˈkɑtɪ]'
     translation: "to search"
     pos: "verb"
     aspect: "imperfective"
   - lemma: "викласти"
-    ipa: '[ˈʋɪklɑstɪ]'
     translation: "to upload / to post"
     pos: "verb"
     aspect: "perfective"
   - lemma: "опублікувати"
-    ipa: '[ɔpublʲikuˈʋɑtɪ]'
     translation: "to publish"
     pos: "verb"
     aspect: "perfective"
   - lemma: "встановити"
-    ipa: '[ʍstɑnɔˈʋɪtɪ]'
     translation: "to install"
     pos: "verb"
     aspect: "perfective"
   - lemma: "ввести"
-    ipa: '[ʋːɛˈstɪ]'
     translation: "to enter (data)"
     pos: "verb"
     aspect: "perfective"
   - lemma: "створити"
-    ipa: '[stʋɔˈrɪtɪ]'
     translation: "to create"
     pos: "verb"
     aspect: "perfective"

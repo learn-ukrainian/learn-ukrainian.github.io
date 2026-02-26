@@ -1,151 +1,121 @@
 items:
   - lemma: "зростати"
-    ipa: '[zrɔˈstɑtɪ]'
     translation: "to grow / increase (abstract)"
     pos: "verb"
     aspect: "impf"
     notes: "used for abstract or statistical growth like economy, demand, prices"
   - lemma: "рости"
-    ipa: '[rɔˈstɪ]'
     translation: "to grow (physical)"
     pos: "verb"
     aspect: "impf"
     notes: "used only for physical growth of living things (plants, children)"
   - lemma: "зменшуватися"
-    ipa: '[ˈzmɛnʃuʋɑtɪsʲɑ]'
     translation: "to decrease gradually"
     pos: "verb"
     aspect: "impf"
   - lemma: "змінюватися"
-    ipa: '[ˈzʲmʲinʲuʋɑtɪsʲɑ]'
     translation: "to change itself"
     pos: "verb"
     aspect: "impf"
     notes: "intransitive and reflexive; describes a state changing independently"
   - lemma: "змінювати"
-    ipa: '[ˈzʲmʲinʲuʋɑtɪ]'
     translation: "to change something"
     pos: "verb"
     aspect: "impf"
     notes: "transitive; requires a direct object in the Accusative case"
   - lemma: "перетворюватися"
-    ipa: '[pɛrɛˈtʋɔrʲuʋɑtɪsʲɑ]'
     translation: "to transform into"
     pos: "verb"
     aspect: "impf"
     notes: "always requires the preposition 'на' + Accusative case"
   - lemma: "підвищуватися"
-    ipa: '[pʲiˈdʋɪʃt͡ʃuʋɑtɪsʲɑ]'
     translation: "to rise / increase (levels)"
     pos: "verb"
     aspect: "impf"
     notes: "specific to measurements, temperatures, and scales"
   - lemma: "знижуватися"
-    ipa: '[ˈznɪʒuʋɑtɪsʲɑ]'
     translation: "to lower / decline"
     pos: "verb"
     aspect: "impf"
   - lemma: "падати"
-    ipa: '[ˈpɑdɑtɪ]'
     translation: "to fall"
     pos: "verb"
     aspect: "impf"
     notes: "often used metaphorically for a sharp decline in prices or rates"
   - lemma: "ставати"
-    ipa: '[stɑˈʋɑtɪ]'
     translation: "to become"
     pos: "verb"
     aspect: "impf"
   - lemma: "покращуватися"
-    ipa: '[pɔˈkrɑʃt͡ʃuʋɑtɪsʲɑ]'
     translation: "to improve"
     pos: "verb"
     aspect: "impf"
   - lemma: "погіршуватися"
-    ipa: '[pɔˈɦʲirʃuʋɑtɪsʲɑ]'
     translation: "to worsen"
     pos: "verb"
     aspect: "impf"
   - lemma: "розвиватися"
-    ipa: '[rɔzʋɪˈʋɑtɪsʲɑ]'
     translation: "to develop"
     pos: "verb"
     aspect: "impf"
   - lemma: "поступово"
-    ipa: '[pɔstuˈpɔʋɔ]'
     translation: "gradually"
     pos: "adverb"
   - lemma: "різко"
-    ipa: '[ˈrʲizkɔ]'
     translation: "sharply / suddenly"
     pos: "adverb"
   - lemma: "стрімко"
-    ipa: '[ˈstʲrʲimkɔ]'
     translation: "rapidly"
     pos: "adverb"
     notes: "indicates high speed of growth, often in a positive or neutral context"
   - lemma: "значно"
-    ipa: '[ˈznɑt͡ʃnɔ]'
     translation: "significantly"
     pos: "adverb"
   - lemma: "більш"
-    ipa: '[bʲilʲʃ]'
     translation: "more"
     pos: "adverb"
   - lemma: "менш"
-    ipa: '[mɛnʃ]'
     translation: "less"
     pos: "adverb"
   - lemma: "краще"
-    ipa: '[ˈkrɑʃt͡ʃɛ]'
     translation: "better"
     pos: "adverb"
     notes: "suppletive comparative form of 'гарно'"
   - lemma: "гірше"
-    ipa: '[ˈɦʲirʃɛ]'
     translation: "worse"
     pos: "adverb"
     notes: "suppletive comparative form of 'погано'"
   - lemma: "гарно"
-    ipa: '[ˈɦɑrnɔ]'
     translation: "well / nicely"
     pos: "adverb"
   - lemma: "погано"
-    ipa: '[pɔˈɦɑnɔ]'
     translation: "badly / poorly"
     pos: "adverb"
   - lemma: "процес"
-    ipa: '[prɔˈt͡sɛs]'
     translation: "process"
     pos: "noun"
     gender: "m"
   - lemma: "результат"
-    ipa: '[rɛzulʲˈtɑt]'
     translation: "result"
     pos: "noun"
     gender: "m"
   - lemma: "кліматолог"
-    ipa: '[klʲimɑˈtɔlɔɦ]'
     translation: "climatologist"
     pos: "noun"
     gender: "m"
   - lemma: "еволюція"
-    ipa: '[ɛʋɔˈlʲut͡sʲijɑ]'
     translation: "evolution"
     pos: "noun"
     gender: "f"
   - lemma: "трансформація"
-    ipa: '[trɑnsfɔrˈmɑt͡sʲijɑ]'
     translation: "transformation"
     pos: "noun"
     gender: "f"
   - lemma: "швидкість"
-    ipa: '[ˈʃʋɪdʲkʲisʲtʲ]'
     translation: "speed"
     pos: "noun"
     gender: "f"
   - lemma: "напрямок"
-    ipa: '[ˈnɑprʲɑmɔk]'
     translation: "direction"
     pos: "noun"
     gender: "m"

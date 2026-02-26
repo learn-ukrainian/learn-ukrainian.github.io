@@ -1,80 +1,60 @@
-- ipa: '[ɔˈdɪn]'
   lemma: один
   pos: num
   translation: one
-- ipa: '[dʋɑ]'
   lemma: два
   pos: num
   translation: two
-- ipa: '[trɪ]'
   lemma: три
   pos: num
   translation: three
-- ipa: '[t͡ʃɔˈtɪrɪ]'
   lemma: чотири
   pos: num
   translation: four
-- ipa: '[pjɑtʲ]'
   lemma: п'ять
   pos: num
   translation: five
-- ipa: '[ˈdɛsʲɑtʲ]'
   lemma: десять
   pos: num
   translation: ten
-- ipa: '[ɔdɪˈnɑd͡zʲt͡sʲɑtʲ]'
   lemma: одинадцять
   pos: num
   translation: eleven
-- ipa: '[ˈdʋɑd͡zʲt͡sʲɑtʲ]'
   lemma: двадцять
   pos: num
   translation: twenty
-- ipa: '[stɔ]'
   lemma: сто
   pos: num
   translation: one hundred
-- ipa: '[ˈɦrɪu̯nʲɑ]'
   lemma: гривня
   pos: noun
   translation: hryvnia
-- ipa: '[kɔˈpʲijkɑ]'
   lemma: копійка
   pos: noun
   translation: kopeck
-- ipa: '[ˈsʲkʲilʲkɪ]'
   lemma: скільки
   pos: adv
   translation: how much
-- ipa: '[ˈkɔʃtuˈʋɑtɪ]'
   lemma: коштувати
   pos: verb
   translation: to cost
-- ipa: '[t͡sʲiˈnɑ]'
   lemma: ціна
   pos: noun
   translation: price
-- ipa: '[ˈdɔrɔɦɔ]'
   lemma: дорого
   pos: adv
   translation: expensive
-- ipa: '[ˈdɛʃɛʋɔ]'
   lemma: дешево
   pos: adv
   translation: cheap
-- ipa: '[ˈrɛʃtɑ]'
   lemma: решта
   pos: noun
   translation: change (money)
-- ipa: '[ɦɔˈtʲiu̯kɑ]'
   lemma: готівка
   pos: noun
   translation: cash
-- ipa: '[ˈkɑrtkɑ]'
   lemma: картка
   pos: noun
   translation: card (payment)
-- ipa: '[pɑˈkɛt]'
   lemma: пакет
   pos: noun
   translation: bag (shopping)

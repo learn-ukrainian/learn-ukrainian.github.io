@@ -2,13 +2,13 @@
   "module": "taking-transport",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:40:30.682459Z",
+  "last_audit": "2026-02-26T13:23:51.044934Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:41:48.251513Z",
+    "md": "2026-02-26T11:21:03.239714Z",
     "meta": "2026-02-20T20:07:52.716269Z",
     "activities": "2026-02-20T23:55:18.570181Z",
-    "vocabulary": "2026-02-22T18:44:52.078473Z",
+    "vocabulary": "2026-02-26T10:56:38.077025Z",
     "plan": "2026-02-20T20:43:19.990129Z",
     "research": "2026-02-20T20:07:52.698651Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2257/2000 (raw: 2565)"
+      "message": "2249/2000 (raw: 2557)"
     },
     "activities": {
       "status": "pass",
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 6,
     "fail_count": 0,
     "deferred_count": 0
   }

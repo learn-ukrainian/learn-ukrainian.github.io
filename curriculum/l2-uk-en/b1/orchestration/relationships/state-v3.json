@@ -1,0 +1,27 @@
+{
+  "track": "b1",
+  "slug": "relationships",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T23:06:33Z",
+      "task_id": "v3-relationships-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T23:10:30Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T23:13:02Z",
+      "task_id": "v3-relationships-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T09:46:27Z",
+      "attempts": 1
+    }
+  }
+}

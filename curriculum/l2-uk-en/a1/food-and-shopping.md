@@ -87,7 +87,7 @@ Now that we have the grammar tools, let's fill your virtual shopping basket with
 ### Овочі та Фрукти (Vegetables and Fruits)
 Свіжі продукти — це основа української кухні. Ринки часто популярніші за супермаркети.
 
-**Овочі [ˈɔʋɔt͡ʃi] (Vegetables)**
+**Овочі (Vegetables)**
 *   **Карто́пля** (Potato) — The queen of the kitchen. Note that in Ukrainian, it is singular (potato), whereas in English we often say "potatoes". It ends in **-я** (feminine).
 *   **Мо́рква** (Carrot) — Feminine, ends in **-а**.
 *   **Цибу́ля** (Onion) — Feminine, ends in **-я**.
@@ -101,7 +101,7 @@ Now that we have the grammar tools, let's fill your virtual shopping basket with
 >
 > Remember: **-я** goes to **-ю** in the Accusative!
 
-**Фрукти [ˈfruktɪ] (Fruits)**
+**Фрукти (Fruits)**
 *   **Я́блуко** (Apple) — Neuter. Easy! No change.
 *   **Бана́н** (Banana) — Masculine. No change.
 *   **Лимо́н** (Lemon) — Masculine. No change.
@@ -116,13 +116,13 @@ Now that we have the grammar tools, let's fill your virtual shopping basket with
 
 Ukrainians are generally meat-eaters, though fish is also very popular, especially for holidays.
 
-**М'ясо [ˈmjɑsɔ] (Meat)**
+**М'ясо (Meat)**
 This is a neuter word (ends in **-о**), so it does not change in the Accusative.
 *   **Свини́на** (Pork) — Feminine. Common in Ukraine.
 *   **Ку́рка** (Chicken) — Feminine. Very versatile.
 *   **Я́ловичина** (Beef) — Feminine.
 
-**Риба [ˈrɪbɑ] (Fish)**
+**Риба (Fish)**
 This is a feminine word.
 *   *Я готую рибу.* (I am cooking fish.)
 *   *Він не їсть свинину.* (He does not eat pork.)
@@ -248,11 +248,11 @@ Notice that on the list, we often use the Nominative case (dictionary form). We 
 
 There are two main ways to ask "How much is it?":
 
-1.  **Скільки коштує...?** [ˈskilʲkɪ ˈkɔʃtujɛ] (How much does ... cost?)
+1.  **Скільки коштує...?** (How much does ... cost?)
     *   *Скільки коштує хліб?* (How much does bread cost?)
     *   *Скільки коштує ця пляшка води?* (How much does this bottle of water cost?)
 
-2.  **Яка ціна...?** [jɑˈkɑ t͡sʲiˈnɑ] (What is the price...?)
+2.  **Яка ціна...?** (What is the price...?)
     *   *Яка ціна на молоко?* (What is the price for milk?)
 
 **Ціна́** means "price". It is a feminine word.

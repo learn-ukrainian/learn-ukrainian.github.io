@@ -1,129 +1,104 @@
 items:
   - lemma: "братство"
-    ipa: '[ˈbrɑt͡stʋɔ]'
     translation: "brotherhood / fraternity"
     pos: "noun"
     gender: "n"
     notes: "A religious and cultural organization of Orthodox townspeople."
   - lemma: "освіта"
-    ipa: '[ɔˈsʲʋʲitɑ]'
     translation: "education"
     pos: "noun"
     gender: "f"
   - lemma: "академія"
-    ipa: '[ɑkɑˈdɛmʲijɑ]'
     translation: "academy"
     pos: "noun"
     gender: "f"
   - lemma: "друкарня"
-    ipa: '[druˈkɑrnʲɑ]'
     translation: "printing house / press"
     pos: "noun"
     gender: "f"
   - lemma: "підручник"
-    ipa: '[pʲiˈdrut͡ʃnɪk]'
     translation: "textbook"
     pos: "noun"
     gender: "m"
   - lemma: "духовенство"
-    ipa: '[duxɔˈʋɛnstʋɔ]'
     translation: "clergy"
     pos: "noun"
     gender: "n"
   - lemma: "статут"
-    ipa: '[stɑˈtut]'
     translation: "statute / charter"
     pos: "noun"
     gender: "m"
   - lemma: "відродження"
-    ipa: '[ʋʲiˈdrɔd͡ʒɛnʲːɑ]'
     translation: "revival / renaissance"
     pos: "noun"
     gender: "n"
   - lemma: "Реформація"
-    ipa: '[rɛfɔrˈmɑt͡sʲijɑ]'
     translation: "Reformation"
     pos: "noun"
     gender: "f"
   - lemma: "Контрреформація"
-    ipa: '[kɔntrːɛfɔrˈmɑt͡sʲijɑ]'
     translation: "Counter-Reformation"
     pos: "noun"
     gender: "f"
   - lemma: "єзуїт"
-    ipa: '[jɛzuˈjit]'
     translation: "Jesuit"
     pos: "noun"
     gender: "m"
   - lemma: "полонізація"
-    ipa: '[pɔlɔnʲiˈzɑt͡sʲijɑ]'
     translation: "Polonization"
     pos: "noun"
     gender: "f"
   - lemma: "ставропігія"
-    ipa: '[stɑu̯rɔˈpʲiɦʲijɑ]'
     translation: "stavropegion"
     pos: "noun"
     gender: "f"
     notes: "Direct subordination to the patriarch, bypassing the local bishop."
   - lemma: "спудей"
-    ipa: '[spuˈdɛj]'
     translation: "student / scholar"
     pos: "noun"
     gender: "m"
     notes: "Archaic term for a student in brotherhood schools or academies."
   - lemma: "вільні мистецтва"
-    ipa: '[ˈʋʲilʲnʲi mɪˈstɛt͡stʋɑ]'
     translation: "liberal arts"
     pos: "noun"
     notes: "The traditional academic program comprising the trivium and quadrivium."
   - lemma: "міщанство"
-    ipa: '[mʲiˈʃt͡ʃɑnstʋɔ]'
     translation: "burghers / townspeople"
     pos: "noun"
     gender: "n"
   - lemma: "ідентичність"
-    ipa: '[idɛnˈtɪt͡ʃnʲisʲtʲ]'
     translation: "identity"
     pos: "noun"
     gender: "f"
   - lemma: "полеміка"
-    ipa: '[pɔˈlɛmʲikɑ]'
     translation: "polemics / debate"
     pos: "noun"
     gender: "f"
   - lemma: "ректор"
-    ipa: '[ˈrɛktɔr]'
     translation: "rector"
     pos: "noun"
     gender: "m"
   - lemma: "диспут"
-    ipa: '[ˈdɪsput]'
     translation: "disputation / debate"
     pos: "noun"
     gender: "m"
   - lemma: "парафія"
-    ipa: '[pɑˈrɑfʲijɑ]'
     translation: "parish"
     pos: "noun"
     gender: "f"
   - lemma: "єпископ"
-    ipa: '[jɛˈpɪskɔp]'
     translation: "bishop"
     pos: "noun"
     gender: "m"
   - lemma: "меценат"
-    ipa: '[mɛt͡sɛˈnɑt]'
     translation: "patron of arts"
     pos: "noun"
     gender: "m"
   - lemma: "богослов'я"
-    ipa: '[bɔɦɔˈslɔu̯jɑ]'
     translation: "theology"
     pos: "noun"
     gender: "n"
   - lemma: "асиміляція"
-    ipa: '[ɑsɪmʲiˈlʲɑt͡sʲijɑ]'
     translation: "assimilation"
     pos: "noun"
     gender: "f"

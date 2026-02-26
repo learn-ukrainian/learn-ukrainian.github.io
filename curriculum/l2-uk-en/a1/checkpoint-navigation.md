@@ -111,7 +111,7 @@ Sometimes, the final sound changes before the **-і** ending to make pronunciati
 
 > [!culture]
 > **Kyiv Underground**
-> The metro station **«Арсенальна»** [ɑrsɛˈnɑlʲnɑ] in Kyiv is the deepest in the world (105.5 meters). When you are riding the long escalators down, you can practice your cases:
+> The metro station **«Арсенальна»** in Kyiv is the deepest in the world (105.5 meters). When you are riding the long escalators down, you can practice your cases:
 > *   **Ми на станції.** (We are at the station.)
 > *   **Ми в метро.** (We are in the metro.)
 
@@ -269,7 +269,7 @@ You will hear adverbs. They do not change. Listen for these key words:
 
 > [!culture]
 > **Golden Gate**
-> The metro station **«Золоті Ворота»** [zɔlɔˈtʲi ʋɔˈrɔtɑ] (Golden Gate) is your landmark in the center of Kyiv. It is famous for its mosaics and looks like an underground palace. If someone says "Let's meet at Zoloti Vorota," they usually mean near the exit upstairs, by the monument to Yaroslav the Wise. It is the perfect meeting point because everyone knows it.
+> The metro station **«Золоті Ворота»** (Golden Gate) is your landmark in the center of Kyiv. It is famous for its mosaics and looks like an underground palace. If someone says "Let's meet at Zoloti Vorota," they usually mean near the exit upstairs, by the monument to Yaroslav the Wise. It is the perfect meeting point because everyone knows it.
 
 ### Transport Vocabulary
 If you are tired of walking, you might need transport.

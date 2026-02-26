@@ -1,129 +1,104 @@
 items:
   - lemma: "президент"
-    ipa: '[prɛzɪˈdɛnt]'
     translation: "president"
     pos: "noun"
     gender: "m"
   - lemma: "авторитаризм"
-    ipa: '[ɑu̯tɔrɪtɑˈrɪzm]'
     translation: "authoritarianism"
     pos: "noun"
     gender: "m"
   - lemma: "корупція"
-    ipa: '[kɔˈrupt͡sʲijɑ]'
     translation: "corruption"
     pos: "noun"
     gender: "f"
   - lemma: "режим"
-    ipa: '[rɛˈʒɪm]'
     translation: "regime"
     pos: "noun"
     gender: "m"
   - lemma: "сім'я"
-    ipa: '[sʲiˈmjɑ]'
     translation: "family"
     pos: "noun"
     gender: "f"
     notes: "Capitalized as Сім'я, refers to Yanukovych's inner circle"
   - lemma: "євроінтеграція"
-    ipa: '[jɛu̯rɔintɛˈɦrɑt͡sʲijɑ]'
     translation: "European integration"
     pos: "noun"
     gender: "f"
   - lemma: "ув'язнення"
-    ipa: '[uˈʋjɑznɛnʲːɑ]'
     translation: "imprisonment"
     pos: "noun"
     gender: "n"
   - lemma: "угода"
-    ipa: '[uˈɦɔdɑ]'
     translation: "agreement"
     pos: "noun"
     gender: "f"
   - lemma: "олігарх"
-    ipa: '[ɔlʲiˈɦɑrx]'
     translation: "oligarch"
     pos: "noun"
     gender: "m"
   - lemma: "Межигір'я"
-    ipa: '[mɛʒɪˈɦʲirjɑ]'
     translation: "Mezhyhirya"
     pos: "noun"
     gender: "n"
     notes: "The former private residence of Viktor Yanukovych"
   - lemma: "медіа"
-    ipa: '[ˈmɛdʲiɑ]'
     translation: "media"
     pos: "noun"
     gender: "n"
   - lemma: "суд"
-    ipa: '[sud]'
     translation: "court"
     pos: "noun"
     gender: "m"
   - lemma: "опозиція"
-    ipa: '[ɔpɔˈzɪt͡sʲijɑ]'
     translation: "opposition"
     pos: "noun"
     gender: "f"
   - lemma: "протест"
-    ipa: '[prɔˈtɛst]'
     translation: "protest"
     pos: "noun"
     gender: "m"
   - lemma: "реванш"
-    ipa: '[rɛˈʋɑnʃ]'
     translation: "revanche, revenge"
     pos: "noun"
     gender: "m"
   - lemma: "узурпація"
-    ipa: '[uzurˈpɑt͡sʲijɑ]'
     translation: "usurpation"
     pos: "noun"
     gender: "f"
   - lemma: "суверенітет"
-    ipa: '[suʋɛrɛnʲiˈtɛt]'
     translation: "sovereignty"
     pos: "noun"
     gender: "m"
   - lemma: "русифікація"
-    ipa: '[rusɪfʲiˈkɑt͡sʲijɑ]'
     translation: "Russification"
     pos: "noun"
     gender: "f"
   - lemma: "ідентичність"
-    ipa: '[idɛnˈtɪt͡ʃnʲisʲtʲ]'
     translation: "identity"
     pos: "noun"
     gender: "f"
   - lemma: "репресії"
-    ipa: '[rɛˈprɛsʲiji]'
     translation: "repressions"
     pos: "noun"
     gender: "f"
     notes: "Usually used in plural"
   - lemma: "інфільтрація"
-    ipa: '[inʲfʲilʲˈtrɑt͡sʲijɑ]'
     translation: "infiltration"
     pos: "noun"
     gender: "f"
   - lemma: "шантаж"
-    ipa: '[ʃɑnˈtɑʒ]'
     translation: "blackmail"
     pos: "noun"
     gender: "m"
   - lemma: "хабарництво"
-    ipa: '[xɑˈbɑrnɪt͡stʋɔ]'
     translation: "bribery"
     pos: "noun"
     gender: "n"
   - lemma: "розслідування"
-    ipa: '[rɔˈzsʲlʲiduʋɑnʲːɑ]'
     translation: "investigation"
     pos: "noun"
     gender: "n"
   - lemma: "доказ"
-    ipa: '[ˈdɔkɑz]'
     translation: "evidence, proof"
     pos: "noun"
     gender: "m"

@@ -72,11 +72,11 @@
 
 **Location:** Vocabulary file, lines 62 and 102
 
-**Cited text:** «давно» [dɑˈʋnɔ] vs «недавно» [nɛˈdɑu̯nɔ]
+**Cited text:** «давно» vs «недавно»
 
 **Problem:** In both words, the в occurs in the same phonetic environment (after vowel а, before consonant н). Standard Ukrainian phonology requires /v/ → [u̯] in syllable coda position. «недавно» correctly shows [u̯], but «давно» shows [ʋ]. This inconsistency within the same vocabulary file will confuse learners who compare the two entries.
 
-**Fix:** Normalize «давно» IPA to [dɑu̯ˈnɔ] to match the treatment of the same cluster in «недавно».
+**Fix:** Normalize «давно» IPA to to match the treatment of the same cluster in «недавно».
 
 ---
 
@@ -167,7 +167,7 @@ No instances of colonial framing found. Ukrainian narrative tradition is present
 
 4. **Line 166:** Restructure dangling reference. Merge: «Воно фокусується саме на тому факті, що абсолютно ніхто не чекав цієї конкретної події.»
 
-5. **Vocabulary file, line 62:** Fix IPA for «давно»: [dɑˈʋnɔ] → [dɑu̯ˈnɔ] to match «недавно» treatment.
+5. **Vocabulary file, line 62:** Fix IPA for «давно»: → to match «недавно» treatment.
 
 ### Priority 3 (Minor — improve quality)
 

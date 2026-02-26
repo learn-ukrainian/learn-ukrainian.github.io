@@ -1,118 +1,93 @@
 items:
   - lemma: "опришок"
-    ipa: '[ɔˈprɪʃɔk]'
     translation: "opryshok (Carpathian rebel)"
     pos: "noun"
     usage: "піти в опришки"
   - lemma: "ватага"
-    ipa: '[ʋɑˈtɑɦɑ]'
     translation: "band, group"
     pos: "noun"
     usage: "опришківська ватага"
   - lemma: "бартка"
-    ipa: '[ˈbɑrtkɑ]'
     translation: "Carpathian axe"
     pos: "noun"
     notes: "символ влади і честі"
   - lemma: "легінь"
-    ipa: '[ˈlɛɦʲinʲ]'
     translation: "young man (dialect)"
     pos: "noun"
     notes: "гуцульський хлопець"
   - lemma: "полонина"
-    ipa: '[pɔlɔˈnɪnɑ]'
     translation: "mountain pasture"
     pos: "noun"
     notes: "місце випасу та база повстанців"
   - lemma: "гуцул"
-    ipa: '[ɦuˈt͡sul]'
     translation: "Hutsul"
     pos: "noun"
     notes: "етнографічна група українців Карпат"
   - lemma: "Карпати"
-    ipa: '[kɑrˈpɑtɪ]'
     translation: "Carpathian mountains"
     pos: "noun"
     notes: "природна фортеця"
   - lemma: "зрада"
-    ipa: '[ˈzrɑdɑ]'
     translation: "betrayal"
     pos: "noun"
   - lemma: "скарб"
-    ipa: '[skɑrb]'
     translation: "treasure"
     pos: "noun"
     usage: "шукати скарб"
   - lemma: "ватажок"
-    ipa: '[ʋɑtɑˈʒɔk]'
     translation: "leader, chieftain"
     pos: "noun"
   - lemma: "месник"
-    ipa: '[ˈmɛsnɪk]'
     translation: "avenger"
     pos: "noun"
     usage: "народний месник"
   - lemma: "кріпак"
-    ipa: '[krʲiˈpɑk]'
     translation: "serf"
     pos: "noun"
   - lemma: "шляхта"
-    ipa: '[ˈʃlʲɑxtɑ]'
     translation: "nobility"
     pos: "noun"
   - lemma: "мольфар"
-    ipa: '[mɔlʲˈfɑr]'
     translation: "shaman, sorcerer"
     pos: "noun"
     notes: "карпатський чаклун"
   - lemma: "спротив"
-    ipa: '[ˈsprɔtɪu̯]'
     translation: "resistance"
     pos: "noun"
     usage: "збройний спротив"
   - lemma: "розбійництво"
-    ipa: '[rɔˈzʲbʲijnɪt͡stʋɔ]'
     translation: "banditry, robbery"
     pos: "noun"
     notes: "соціальне розбійництво"
   - lemma: "гніт"
-    ipa: '[ɦnʲit]'
     translation: "oppression"
     pos: "noun"
     usage: "соціальний гніт"
   - lemma: "панщина"
-    ipa: '[ˈpɑnʃt͡ʃɪnɑ]'
     translation: "corvée, serfdom labor"
     pos: "noun"
   - lemma: "гідність"
-    ipa: '[ˈɦʲidʲnʲisʲtʲ]'
     translation: "dignity"
     pos: "noun"
     usage: "людська гідність"
   - lemma: "витривалість"
-    ipa: '[ʋɪtrɪˈʋɑlʲisʲtʲ]'
     translation: "endurance, stamina"
     pos: "noun"
     usage: "фізична витривалість"
   - lemma: "синкретизм"
-    ipa: '[sɪnkrɛˈtɪzm]'
     translation: "syncretism"
     pos: "noun"
     notes: "релігійний синкретизм"
   - lemma: "знахар"
-    ipa: '[ˈznɑxɑr]'
     translation: "healer, herb doctor"
     pos: "noun"
   - lemma: "живиця"
-    ipa: '[ʒɪˈʋɪt͡sʲɑ]'
     translation: "resin"
     pos: "noun"
     notes: "природний антисептик"
   - lemma: "розвідниця"
-    ipa: '[rɔzʲʋʲidnɪt͡sʲɑ]'
     translation: "female scout"
     pos: "noun"
   - lemma: "четвертування"
-    ipa: '[t͡ʃɛtʋɛrtuˈʋɑnʲːɑ]'
     translation: "quartering (execution method)"
     pos: "noun"

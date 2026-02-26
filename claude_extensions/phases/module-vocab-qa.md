@@ -86,7 +86,6 @@ Each item must have 4-5 fields:
 **Required for all:**
 
 - `lemma`: string (the Ukrainian word/phrase)
-- `ipa`: string (IPA pronunciation in /slashes/)
 - `translation`: string (English translation)
 - `pos`: string (part of speech tag)
 
@@ -101,8 +100,6 @@ for i, item in enumerate(data['items']):
     # Check required fields
     if 'lemma' not in item:
         FAIL: Item {i+1} missing 'lemma'
-    if 'ipa' not in item:
-        FAIL: Item {i+1} missing 'ipa'
     if 'translation' not in item:
         FAIL: Item {i+1} missing 'translation'
     if 'pos' not in item:
@@ -143,38 +140,7 @@ for item in data['items']:
         FAIL: Invalid POS tag '{item['pos']}' for lemma '{item['lemma']}'
 ```
 
-### 5. IPA Format Validation
-
-IPA must be enclosed in /slashes/ with stress marked:
-
-**Check:**
-
-```python
-import re
-for item in data['items']:
-    ipa = item['ipa']
-
-    # Must start and end with /
-    if not ipa.startswith('/') or not ipa.endswith('/'):
-        FAIL: IPA for '{item['lemma']}' must be in /slashes/: {ipa}
-
-    # Must contain stress marker ˈ (unless monosyllabic)
-    # This is a soft check - warn if missing
-    if 'ˈ' not in ipa and len(ipa) > 5:
-        WARN: IPA for '{item['lemma']}' may be missing stress: {ipa}
-
-    # Check for common Ukrainian phoneme errors
-    if '/g/' in ipa or '/ɡ/' in ipa:
-        WARN: Use /ɦ/ not /ɡ/ for Ukrainian г: '{item['lemma']}'
-```
-
-**Common IPA issues:**
-
-- Missing /slashes/: `trɪˈpʲilʲɑ` → `/trɪˈpʲilʲɑ/`
-- Using /g/ instead of /ɦ/: `/ɡrɑd/` → `/ɦrɑd/`
-- Missing stress: `/tripillia/` → `/trɪˈpʲilʲɑ/`
-
-### 6. Required Vocabulary Coverage
+### 5. Required Vocabulary Coverage
 
 From **plan file**, check `vocabulary_hints.required`:
 
@@ -457,7 +423,6 @@ VOCAB-QA: PASS
   - Proper nouns: {propn_count}
   - Other: {other_count}
 ✓ POS tags: all valid
-✓ IPA format: all valid ({warn_count} warnings)
 ✓ Required vocabulary: {req_count}/{req_total} terms present
 ✓ Vocabulary source: 100% from lesson
 ✓ Item count: {count} items (min: {level_min}, typical: {level_range})
@@ -513,7 +478,6 @@ items:
 
 ```yaml
 - lemma: археологія
-  ipa: /ɑrxɛoˈlɔɦʲijɑ/
   translation: archaeology
   pos: noun
   # Missing gender
@@ -523,7 +487,6 @@ items:
 
 ```yaml
 - lemma: археологія
-  ipa: /ɑrxɛoˈlɔɦʲijɑ/
   translation: archaeology
   pos: noun
   gender: f # Added
@@ -547,22 +510,6 @@ items:
   # Remove gender field
 ```
 
-### Failure: IPA missing slashes
-
-**Error:**
-
-```yaml
-- lemma: трипілля
-  ipa: trɪˈpʲilʲːɑ # ← Missing /slashes/
-```
-
-**Fix:**
-
-```yaml
-- lemma: трипілля
-  ipa: /trɪˈpʲilʲːɑ/ # ← Added /slashes/
-```
-
 ### Failure: Required term not in vocabulary
 
 **Error:**
@@ -575,7 +522,6 @@ Required term 'автохтонний' not in vocabulary
 
 ```yaml
 - lemma: автохтонний
-  ipa: /ɑwˈtoxtonnɪj/
   translation: autochthonous, indigenous
   pos: adj
 ```
@@ -642,7 +588,6 @@ VOCAB-QA: PASS
   - Proper nouns: 50
   - Other: 10
 ✓ POS tags: all valid
-✓ IPA format: all valid (2 warnings)
 ✓ Required vocabulary: 15/15 terms present
 ✓ Vocabulary source: 100% from lesson
 ✓ Item count: 250 items (min: 150 for B2-HIST, typical: 150-300)

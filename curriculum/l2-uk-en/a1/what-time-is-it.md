@@ -26,10 +26,10 @@ Related: a1-17 (Numbers), a1-22 (Future Tense), a1-25 (Daily Routine)
 Ми розрізняємо "стан" і "розклад".
 
 To ask "What time is it?", use:
-**Котра година?** [kɔˈtrɑ ɦɔˈdɪ.nɑ] — literally "Which hour?"
+**Котра година?** — literally "Which hour?"
 
 To ask "At what time?", use:
-**О котрій годині?** [ɔ kɔˈtrij ɦɔˈdɪ.nʲi] — or simply **О котрій?**
+**О котрій годині?** — or simply **О котрій?**
 
 Understanding this difference is the key to this entire module. The first question asks for a noun phrase (It is five o'clock). The second question asks for a prepositional phrase (At five o'clock).
 

@@ -1,0 +1,18 @@
+{
+  "track": "b1",
+  "slug": "running-in-ukraine",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-25T14:05:38Z",
+      "task_id": "v3-running-in-ukraine-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-25T14:08:41Z",
+      "note": "word-count-2948-below-80pct-4000"
+    }
+  }
+}

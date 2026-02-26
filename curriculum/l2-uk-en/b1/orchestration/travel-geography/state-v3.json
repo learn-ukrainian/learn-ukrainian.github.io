@@ -1,0 +1,29 @@
+{
+  "track": "b1",
+  "slug": "travel-geography",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-24T23:44:38Z",
+      "task_id": "v3-travel-geography-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T07:02:17Z",
+      "note": "adopted-existing-content",
+      "words": 3282
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T07:05:07Z",
+      "task_id": "v3-travel-geography-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T09:46:37Z",
+      "attempts": 1
+    }
+  }
+}

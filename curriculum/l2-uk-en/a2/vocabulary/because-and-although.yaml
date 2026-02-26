@@ -1,134 +1,107 @@
 items:
   - lemma: "тому що"
-    ipa: '[tɔˈmu ʃt͡ʃɔ]'
     translation: "because"
     pos: "conjunction"
     notes: "neutral register, must follow the main clause"
   - lemma: "бо"
-    ipa: '[bɔ]'
     translation: "because, for"
     pos: "conjunction"
     notes: "casual/spoken register"
   - lemma: "оскільки"
-    ipa: '[ɔˈsʲkʲilʲkɪ]'
     translation: "since, as"
     pos: "conjunction"
     notes: "formal/written register, often starts the sentence"
   - lemma: "але"
-    ipa: '[ɑˈlɛ]'
     translation: "but"
     pos: "conjunction"
     notes: "expresses direct contrast"
   - lemma: "хоча"
-    ipa: '[xɔˈt͡ʃɑ]'
     translation: "although, even though"
     pos: "conjunction"
     notes: "expresses concession or action despite an obstacle"
   - lemma: "через"
-    ipa: '[ˈt͡ʃɛrɛz]'
     translation: "because of, due to"
     pos: "preposition"
     notes: "used for negative or neutral causes, requires Accusative case"
   - lemma: "завдяки"
-    ipa: '[zɑu̯dʲɑˈkɪ]'
     translation: "thanks to"
     pos: "preposition"
     notes: "used strictly for positive causes or help, requires Dative case"
   - lemma: "причина"
-    ipa: '[prɪˈt͡ʃɪnɑ]'
     translation: "reason, cause"
     pos: "noun"
     gender: "f"
   - lemma: "наслідок"
-    ipa: '[ˈnɑsʲlʲidɔk]'
     translation: "consequence, result"
     pos: "noun"
     gender: "m"
   - lemma: "обставина"
-    ipa: '[ɔˈbstɑʋɪnɑ]'
     translation: "circumstance"
     pos: "noun"
     gender: "f"
   - lemma: "перешкода"
-    ipa: '[pɛrɛˈʃkɔdɑ]'
     translation: "obstacle"
     pos: "noun"
     gender: "f"
   - lemma: "допустовість"
-    ipa: '[dɔpuˈstɔʋʲisʲtʲ]'
     translation: "concession"
     pos: "noun"
     gender: "f"
   - lemma: "протиставлення"
-    ipa: '[prɔtɪˈstɑu̯lɛnʲːɑ]'
     translation: "contrast, opposition"
     pos: "noun"
     gender: "n"
   - lemma: "затор"
-    ipa: '[zɑˈtɔr]'
     translation: "traffic jam"
     pos: "noun"
     gender: "m"
   - lemma: "зусилля"
-    ipa: '[zuˈsɪlʲːɑ]'
     translation: "effort"
     pos: "noun"
     gender: "n"
   - lemma: "досягнення"
-    ipa: '[dɔˈsʲɑɦnɛnʲːɑ]'
     translation: "achievement"
     pos: "noun"
     gender: "n"
   - lemma: "скасовувати"
-    ipa: '[skɑˈsɔʋuʋɑtɪ]'
     translation: "to cancel"
     pos: "verb"
     aspect: "impf"
   - lemma: "переносити"
-    ipa: '[pɛrɛnɔsɪtɪ]'
     translation: "to postpone, to reschedule"
     pos: "verb"
     aspect: "impf"
   - lemma: "одужувати"
-    ipa: '[ɔˈduʒuʋɑtɪ]'
     translation: "to recover, to get well"
     pos: "verb"
     aspect: "impf"
   - lemma: "запізнюватися"
-    ipa: '[zɑˈpʲizʲnʲuʋɑtɪsʲɑ]'
     translation: "to be late"
     pos: "verb"
     aspect: "impf"
   - lemma: "впливати"
-    ipa: '[ʍplɪˈʋɑtɪ]'
     translation: "to influence, to affect"
     pos: "verb"
     aspect: "impf"
   - lemma: "пояснювати"
-    ipa: '[pɔˈjɑsʲnʲuʋɑtɪ]'
     translation: "to explain"
     pos: "verb"
     aspect: "impf"
   - lemma: "аргументувати"
-    ipa: '[ɑrɦumɛntuˈʋɑtɪ]'
     translation: "to argue, to justify"
     pos: "verb"
     aspect: "impf"
   - lemma: "успішний"
-    ipa: '[uˈsʲpʲiʃnɪj]'
     translation: "successful"
     pos: "adjective"
   - lemma: "трясця"
-    ipa: '[ˈtʲrʲɑsʲt͡sʲɑ]'
     translation: "fever, shaking"
     pos: "noun"
     gender: "f"
     notes: "cultural word used in folk sayings"
   - lemma: "давальний"
-    ipa: '[dɑˈʋɑlʲnɪj]'
     translation: "dative (case)"
     pos: "adjective"
   - lemma: "знахідний"
-    ipa: '[znɑˈxʲidnɪj]'
     translation: "accusative (case)"
     pos: "adjective"

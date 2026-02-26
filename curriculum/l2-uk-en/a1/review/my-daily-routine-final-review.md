@@ -4,15 +4,15 @@ Now let me do a thorough, adversarial review.
 
 ### Issue 1: IPA Error — обідати stress placement
 **File:** `my-daily-routine.md`, line 94
-**Current:** `[oˈbʲidɑtɪ]`
+**Current:** ``
 **Problem:** Stress placed on the second syllable (бі), but обідати is stressed on the third syllable: обіДАти.
-**Correct:** `[obʲiˈdɑtɪ]`
+**Correct:** ``
 
 ### Issue 2: IPA Error — зазвичай vowel
 **File:** `my-daily-routine.md`, line 194
-**Current:** `[zɑzʋiˈt͡ʃɑj]`
+**Current:** ``
 **Problem:** Ukrainian "и" is [ɪ], not [i]. The [i] symbol represents "і" in Ukrainian IPA. Using [i] here implies the sound of "і" which is incorrect for "зазвичай".
-**Correct:** `[zɑzʋɪˈt͡ʃɑj]`
+**Correct:** ``
 
 ### Issue 3: Missing Plan Requirement — "жайворонки і сови" hook
 **File:** `my-daily-routine.md`, intro section
@@ -63,15 +63,15 @@ FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
 In this lesson, we will learn how to narrate your day step by step. We will start with the morning, move to the busy afternoon, and finish with the evening relaxation. Ми почнемо з ранку, продовжимо днем і закінчимо вечором. We will also learn special "sequence words" like "first", "then", and "finally" to make your speech flow naturally. Ми вивчимо слова «спочатку», «потім» та «нарешті».
 ---NEW---
-By the way — are you a **жайворонок** [ʒɑjˈʋɔronok] (lark — a morning person) or a **сова** [soˈʋɑ] (owl — a night person)? Ви жайворонок чи сова? In Ukrainian, we divide people into these two types when talking about daily habits. No matter which one you are, this lesson will give you the words to describe your day — from the first alarm to the last yawn. Ми вивчимо слова «спочатку», «потім» та «нарешті», щоб розповісти вашу історію.
+By the way — are you a **жайворонок** (lark — a morning person) or a **сова** (owl — a night person)? Ви жайворонок чи сова? In Ukrainian, we divide people into these two types when talking about daily habits. No matter which one you are, this lesson will give you the words to describe your day — from the first alarm to the last yawn. Ми вивчимо слова «спочатку», «потім» та «нарешті», щоб розповісти вашу історію.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
-**Обідати** [oˈbʲidɑtɪ] (to have lunch)
+**Обідати** (to have lunch)
 ---NEW---
-**Обідати** [obʲiˈdɑtɪ] (to have lunch)
+**Обідати** (to have lunch)
 ===FIX_END===
 
 ===FIX_START===
@@ -81,7 +81,7 @@ Like *снідати*, this is a dedicated verb. Як і *снідати*, це 
 *   Я **обідаю** о першій годині. (I have lunch at one o'clock.)
 *   Де ти **обідаєш**? (Where do you have lunch?)
 ---NEW---
-Like *снідати*, this is a dedicated verb. Як і *снідати*, це окреме дієслово. In the working world, lunch is protected time: **обідня перерва** [oˈbʲidnʲɐ peˈrɛrʋɐ] (lunch break), usually one hour. На роботі є **обідня перерва** — зазвичай одна година.
+Like *снідати*, this is a dedicated verb. Як і *снідати*, це окреме дієслово. In the working world, lunch is protected time: **обідня перерва** (lunch break), usually one hour. На роботі є **обідня перерва** — зазвичай одна година.
 *   Я **обідаю** о першій годині. (I have lunch at one o'clock.)
 *   Де ти **обідаєш**? (Where do you have lunch?)
 ===FIX_END===
@@ -89,27 +89,27 @@ Like *снідати*, this is a dedicated verb. Як і *снідати*, це 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
-**Повертатися** [poʋerˈtɑtɪsʲɐ] (to return / come back)
+**Повертатися** (to return / come back)
 A reflexive verb meaning to turn yourself back to where you started. Це зворотне дієслово: ви повертаєте себе туди, де були.
 *   Я **повертаюся** додому о шостій. (I return home at six.)
 *   Коли ти **повертаєшся**? (When do you come back?)
 ---NEW---
-**Повертатися** [poʋerˈtɑtɪsʲɐ] (to return / come back)
+**Повертатися** (to return / come back)
 A reflexive verb meaning to turn yourself back to where you started. Це зворотне дієслово: ви повертаєте себе туди, де були.
 *   Я **повертаюся** додому о шостій. (I return home at six.)
 *   Коли ти **повертаєшся**? (When do you come back?)
 
 > [!culture]
 > **Домашній одяг (Home Clothes)**
-> When Ukrainians come home, one of the first things they do is change into **домашній одяг** [doˈmɑʃnʲij oˈdʲɐɦ] (home clothes). Коли українці приходять додому, вони переодягаються. This is a deeply ingrained habit: street clothes stay at the door, and comfortable clothes go on. Вуличний одяг — це для вулиці. Домашній одяг — це для дому. It marks the boundary between the public and private sphere. Це межа між роботою і відпочинком.
+> When Ukrainians come home, one of the first things they do is change into **домашній одяг** (home clothes). Коли українці приходять додому, вони переодягаються. This is a deeply ingrained habit: street clothes stay at the door, and comfortable clothes go on. Вуличний одяг — це для вулиці. Домашній одяг — це для дому. It marks the boundary between the public and private sphere. Це межа між роботою і відпочинком.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/my-daily-routine.md
 ---OLD---
-**Зазвичай** [zɑzʋiˈt͡ʃɑj] (Usually)
+**Зазвичай** (Usually)
 ---NEW---
-**Зазвичай** [zɑzʋɪˈt͡ʃɑj] (Usually)
+**Зазвичай** (Usually)
 ===FIX_END===
 
 ===FIX_START===

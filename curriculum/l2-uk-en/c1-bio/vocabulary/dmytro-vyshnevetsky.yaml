@@ -1,150 +1,120 @@
 items:
   - lemma: "січ"
-    ipa: '[sʲit͡ʃ]'
     translation: "Sich (Cossack military center)"
     pos: "noun"
     gender: "f"
   - lemma: "байда"
-    ipa: '[ˈbɑjdɑ]'
     translation: "carefree person, hero"
     pos: "noun"
     gender: "m"
   - lemma: "гак"
-    ipa: '[ɦɑk]'
     translation: "hook"
     pos: "noun"
     gender: "m"
   - lemma: "фронтир"
-    ipa: '[frɔnˈtɪr]'
     translation: "frontier"
     pos: "noun"
     gender: "m"
   - lemma: "фортеця"
-    ipa: '[fɔrˈtɛt͡sʲɑ]'
     translation: "fortress"
     pos: "noun"
     gender: "f"
   - lemma: "ватажок"
-    ipa: '[ʋɑtɑˈʒɔk]'
     translation: "leader, chieftain"
     pos: "noun"
     gender: "m"
   - lemma: "дума"
-    ipa: '[ˈdumɑ]'
     translation: "duma, epic song"
     pos: "noun"
     gender: "f"
   - lemma: "зрада"
-    ipa: '[ˈzrɑdɑ]'
     translation: "betrayal, treason"
     pos: "noun"
     gender: "f"
   - lemma: "страта"
-    ipa: '[ˈstrɑtɑ]'
     translation: "execution"
     pos: "noun"
     gender: "f"
   - lemma: "аристократ"
-    ipa: '[ɑrɪstɔˈkrɑt]'
     translation: "aristocrat"
     pos: "noun"
     gender: "m"
   - lemma: "козацтво"
-    ipa: '[kɔˈzɑt͡stʋɔ]'
     translation: "Cossackdom"
     pos: "noun"
     gender: "n"
   - lemma: "походження"
-    ipa: '[pɔˈxɔd͡ʒɛnʲːɑ]'
     translation: "origin, descent"
     pos: "noun"
     gender: "n"
   - lemma: "магнат"
-    ipa: '[mɑˈɦnɑt]'
     translation: "magnate"
     pos: "noun"
     gender: "m"
   - lemma: "здобич"
-    ipa: '[ˈzdɔbɪt͡ʃ]'
     translation: "booty, loot, prey"
     pos: "noun"
     gender: "f"
   - lemma: "набіг"
-    ipa: '[nɑˈbʲiɦ]'
     translation: "raid, incursion"
     pos: "noun"
     gender: "m"
   - lemma: "уходник"
-    ipa: '[uˈxɔdnɪk]'
     translation: "frontiersman, seasonal hunter"
     pos: "noun"
     gender: "m"
   - lemma: "партизанський"
-    ipa: '[pɑrtɪˈzɑnʲsʲkɪj]'
     translation: "partisan, guerilla"
     pos: "adjective"
   - lemma: "загін"
-    ipa: '[zɑˈɦʲin]'
     translation: "detachment, unit"
     pos: "noun"
     gender: "m"
   - lemma: "десант"
-    ipa: '[dɛˈsɑnt]'
     translation: "landing, assault"
     pos: "noun"
     gender: "m"
   - lemma: "артилерія"
-    ipa: '[ɑrtɪˈlɛrʲijɑ]'
     translation: "artillery"
     pos: "noun"
     gender: "f"
   - lemma: "облога"
-    ipa: '[ɔˈblɔɦɑ]'
     translation: "siege"
     pos: "noun"
     gender: "f"
   - lemma: "гарнізон"
-    ipa: '[ɦɑrnʲiˈzɔn]'
     translation: "garrison"
     pos: "noun"
     gender: "m"
   - lemma: "відступ"
-    ipa: '[ˈʋʲid͡zstup]'
     translation: "retreat"
     pos: "noun"
     gender: "m"
   - lemma: "підданство"
-    ipa: '[pʲiˈdːɑnstʋɔ]'
     translation: "citizenship, subjecthood"
     pos: "noun"
     gender: "n"
   - lemma: "альянс"
-    ipa: '[ɑˈlʲjɑns]'
     translation: "alliance"
     pos: "noun"
     gender: "m"
   - lemma: "престол"
-    ipa: '[prɛˈstɔl]'
     translation: "throne"
     pos: "noun"
     gender: "m"
   - lemma: "незламність"
-    ipa: '[nɛˈzlɑmnʲisʲtʲ]'
     translation: "invincibility, resilience"
     pos: "noun"
     gender: "f"
   - lemma: "геополітика"
-    ipa: '[ɦɛɔpɔˈlʲitɪkɑ]'
     translation: "geopolitics"
     pos: "noun"
     gender: "f"
   - lemma: "ясир"
-    ipa: '[jɑˈsɪr]'
     translation: "captives, slaves (historical)"
     pos: "noun"
     gender: "m"
   - lemma: "сюзерен"
-    ipa: '[sʲuzɛˈrɛn]'
     translation: "suzerain"
     pos: "noun"
     gender: "m"

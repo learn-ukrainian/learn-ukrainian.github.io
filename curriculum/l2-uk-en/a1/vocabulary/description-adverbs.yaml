@@ -1,88 +1,68 @@
-- ipa: '[ˈdɔbrɛ]'
   lemma: добре
   pos: adverb
   translation: well
   notes: "Irregular adverb from 'добрий' (good)"
-- ipa: '[pɔˈɦɑnɔ]'
   lemma: погано
   pos: adverb
   translation: badly/poorly
   example: "Я погано чую. (I hear poorly.)"
-- ipa: '[ˈʃʋɪdkɔ]'
   lemma: швидко
   pos: adverb
   translation: quickly/fast
   example: "Він бігає швидко."
-- ipa: '[pɔˈʋʲilʲnɔ]'
   lemma: повільно
   pos: adverb
   translation: slowly
   example: "Говоріть повільно, будь ласка."
-- ipa: '[ˈzɑˈʋʒdɪ]'
   lemma: завжди
   pos: adverb
   translation: always
   notes: "Stress on the second syllable"
-- ipa: '[ˈt͡ʃɑstɔ]'
   lemma: часто
   pos: adverb
   translation: often
-- ipa: '[ˈinɔdʲi]'
   lemma: іноді
   pos: adverb
   translation: sometimes
-- ipa: '[nʲikɔlɪ]'
   lemma: ніколи
   pos: adverb
   translation: never
   notes: "Requires 'не' before the verb"
-- ipa: '[ˈɦɔlɔsnɔ]'
   lemma: голосно
   pos: adverb
   translation: loudly
-- ipa: '[ˈtɪxɔ]'
   lemma: тихо
   pos: adverb
   translation: quietly
-- ipa: '[ˈrʲidkɔ]'
   lemma: рідко
   pos: adverb
   translation: rarely
-- ipa: '[zɑzʋɪˈt͡ʃɑj]'
   lemma: зазвичай
   pos: adverb
   translation: usually
-- ipa: '[ˈlɛɦkɔ]'
   lemma: легко
   pos: adverb
   translation: easily
-- ipa: '[ˈʋɑʒkɔ]'
   lemma: важко
   pos: adverb
   translation: hard/with difficulty
   example: "Мені важко це робити."
-- ipa: '[ˈduʒɛ]'
   lemma: дуже
   pos: adverb
   translation: very/really
   notes: "Always placed BEFORE the word it modifies"
-- ipa: '[ɑˈktɪu̯nɔ]'
   lemma: активно
   pos: adverb
   translation: actively
-- ipa: '[ˈrɑnɔ]'
   lemma: рано
   pos: adverb
   translation: early
-- ipa: '[ˈpʲiznɔ]'
   lemma: пізно
   pos: adverb
   translation: late
-- ipa: '[spɔˈkʲijnɔ]'
   lemma: спокійно
   pos: adverb
   translation: calmly
-- ipa: '[uˈʋɑʒnɔ]'
   lemma: уважно
   pos: adverb
   translation: attentively/carefully

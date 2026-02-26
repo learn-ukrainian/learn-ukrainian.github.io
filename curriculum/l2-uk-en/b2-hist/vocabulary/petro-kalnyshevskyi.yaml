@@ -1,129 +1,104 @@
 items:
   - lemma: "кошовий отаман"
-    ipa: '[kɔʃɔˈʋɪj ɔˈtɑmɑn]'
     translation: "Koshovyi Otaman (elected leader)"
     pos: "noun"
     notes: "common collocation: останній кошовий"
   - lemma: "Запорозька Січ"
-    ipa: '[zɑpɔˈrɔzʲkɑ sʲit͡ʃ]'
     translation: "Zaporozhian Sich"
     pos: "noun"
     notes: "collocation: ліквідація Січі"
   - lemma: "Соловецький монастир"
-    ipa: '[sɔlɔˈʋɛt͡sʲkɪj mɔnɑˈstɪr]'
     translation: "Solovetsky Monastery"
     pos: "noun"
     notes: "context: Solovki as a prison for political opponents"
   - lemma: "Катерина II"
-    ipa: '[kɑtɛˈrɪnɑ ii]'
     translation: "Catherine II"
     pos: "noun"
     notes: "Russian empress who destroyed the Sich"
   - lemma: "ліквідація"
-    ipa: '[lʲikʋʲiˈdɑt͡sʲijɑ]'
     translation: "liquidation / destruction"
     pos: "noun"
     gender: "f"
     notes: "collocation: ліквідація автономії"
   - lemma: "канонізація"
-    ipa: '[kɑnɔnʲiˈzɑt͡sʲijɑ]'
     translation: "canonization"
     pos: "noun"
     gender: "f"
     notes: "title: Петро Багатостраждальний"
   - lemma: "незламність"
-    ipa: '[nɛˈzlɑmnʲisʲtʲ]'
     translation: "indomitability / unbreakability"
     pos: "noun"
     gender: "f"
   - lemma: "в'язниця"
-    ipa: '[ʋjɑˈznɪt͡sʲɑ]'
     translation: "prison"
     pos: "noun"
     gender: "f"
     notes: "context: 25 років у в'язниці"
   - lemma: "Нова Січ"
-    ipa: '[nɔˈʋɑ sʲit͡ʃ]'
     translation: "New Sich"
     pos: "noun"
     notes: "period 1734-1775"
   - lemma: "генерал Текелій"
-    ipa: '[ɦɛnɛˈrɑl tɛkɛlʲij]'
     translation: "General Tekeli"
     pos: "noun"
     notes: "executor of the order to destroy the republic"
   - lemma: "релігійність"
-    ipa: '[rɛlʲiˈɦʲijnʲisʲtʲ]'
     translation: "religiosity"
     pos: "noun"
     gender: "f"
   - lemma: "витривалість"
-    ipa: '[ʋɪtrɪˈʋɑlʲisʲtʲ]'
     translation: "endurance"
     pos: "noun"
     gender: "f"
   - lemma: "булава"
-    ipa: '[bulɑˈʋɑ]'
     translation: "mace (symbol of power)"
     pos: "noun"
     gender: "f"
   - lemma: "суддя"
-    ipa: '[suˈdʲːɑ]'
     translation: "judge"
     pos: "noun"
     gender: "m"
   - lemma: "зимівник"
-    ipa: '[zɪmʲiu̯nɪk]'
     translation: "wintering ground (farmstead)"
     pos: "noun"
     gender: "m"
   - lemma: "скарбниця"
-    ipa: '[skɑrˈbnɪt͡sʲɑ]'
     translation: "treasury"
     pos: "noun"
     gender: "f"
   - lemma: "маніфест"
-    ipa: '[mɑnʲiˈfɛst]'
     translation: "manifesto"
     pos: "noun"
     gender: "m"
   - lemma: "каземат"
-    ipa: '[kɑzɛˈmɑt]'
     translation: "casemate (prison cell)"
     pos: "noun"
     gender: "m"
   - lemma: "архімандрит"
-    ipa: '[ɑrxʲimɑnˈdrɪt]'
     translation: "archimandrite (head of monastery)"
     pos: "noun"
     gender: "m"
   - lemma: "лінгвоцид"
-    ipa: '[lʲinɦʋɔˈt͡sɪd]'
     translation: "linguicide"
     pos: "noun"
     gender: "m"
   - lemma: "амністія"
-    ipa: '[ɑˈmnʲisʲtʲijɑ]'
     translation: "amnesty"
     pos: "noun"
     gender: "f"
   - lemma: "Євангеліє"
-    ipa: '[jɛˈʋɑnɦɛlʲijɛ]'
     translation: "Gospel"
     pos: "noun"
     gender: "n"
   - lemma: "протекторат"
-    ipa: '[prɔtɛktɔˈrɑt]'
     translation: "protectorate"
     pos: "noun"
     gender: "m"
   - lemma: "ієрархія"
-    ipa: '[ijɛˈrɑrxʲijɑ]'
     translation: "hierarchy"
     pos: "noun"
     gender: "f"
   - lemma: "меценат"
-    ipa: '[mɛt͡sɛˈnɑt]'
     translation: "patron"
     pos: "noun"
     gender: "m"

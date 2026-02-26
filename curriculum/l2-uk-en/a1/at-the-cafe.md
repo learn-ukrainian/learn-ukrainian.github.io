@@ -56,8 +56,8 @@ When you enter a café, you become a guest. The relationship between a guest and
 
 The absolute first rule: Say hello. Walking up to the counter and just saying "Latte, please" is considered rude.
 
-- **Добрий день!** [ˈdɔ.brɪj dɛnʲ] — Good day! (Standard, polite)
-- **Вітаю!** [ʋʲiˈtɑ.ju] — Greetings! (Friendly, slightly less formal but very common)
+- **Добрий день!** — Good day! (Standard, polite)
+- **Вітаю!** — Greetings! (Friendly, slightly less formal but very common)
 
 ### The Golden Rule: «Ви» vs «Ти»
 In a café, you are always on **Ви** terms with the staff, regardless of their age. Even if the barista looks like a teenager, you use **Ви**. This creates a professional distance and shows respect.
@@ -69,8 +69,8 @@ In a café, you are always on **Ви** terms with the staff, regardless of their
 ### What You Will Hear
 After you greet them, the waiter will likely ask:
 
-- **Що бажаєте?** [ʃt͡ʃɔ bɑˈʒɑ.jɛ.tɛ] — What do you desire/wish?
-- **Що будете замовляти?** [ʃt͡ʃɔ ˈbu.dɛ.tɛ zɑ.mɔu̯ˈlʲɑ.tɪ] — What will you order?
+- **Що бажаєте?** — What do you desire/wish?
+- **Що будете замовляти?** — What will you order?
 
 **Замовля́ти** means "to order." It is a key verb for this module.
 
@@ -79,11 +79,11 @@ You need to ask for things. In English, we use "Can I get...". In Ukrainian, we 
 
 Here are the two most useful verbs:
 
-**1. Дайте** [ˈdɑj.tɛ] — Give (polite plural/formal)
+**1. Дайте** — Give (polite plural/formal)
 Use this for simple transactions, like asking for a menu.
 - **Дайте, будь ласка, меню.** (Give [me], please, the menu.)
 
-**2. Принесіть** [prɪ.nɛˈsʲitʲ] — Bring (polite plural/formal)
+**2. Принесіть** — Bring (polite plural/formal)
 Use this when you are sitting at a table and the waiter needs to carry something to you.
 - **Принесіть, будь ласка, рахунок.** (Bring, please, the bill.)
 
@@ -158,7 +158,7 @@ These words are easy. You don't have to do anything.
 ### How to Say "I Will Have..."
 You cannot just shout "Coffee!" politely. You need a phrase to introduce your order.
 
-**1. Я буду...** [jɑ ˈbu.du]
+**1. Я буду...**
 Literally: "I will be..." (Meaning: I will have...)
 This is very common and polite.
 - **Я буду воду.** (I will have water.)
@@ -166,7 +166,7 @@ This is very common and polite.
 - **Я буду борщ.** (I will have borsch.)
 - **Я буду салат.** (I will have salad.)
 
-**2. Я візьму...** [jɑ ʋʲizʲˈmu]
+**2. Я візьму...**
 Literally: "I will take..."
 - **Я візьму еспресо.** (I will take an espresso.)
 - **Я візьму піцу.** (I will take pizza.)
@@ -286,7 +286,7 @@ Try ordering these delicious things:
 You have finished your delicious **каву з молоком**. Now it is time to pay.
 
 To get the bill, catch the waiter's eye and say:
-- **Можна рахунок?** [ˈmɔʒ.nɑ rɑˈxunɔk] — May [I have] the bill?
+- **Можна рахунок?** — May [I have] the bill?
 - **Принесіть, будь ласка, рахунок.** — Bring, please, the bill.
 
 **Рахунок** is the total sum you have to pay.
@@ -299,7 +299,7 @@ To get the bill, catch the waiter's eye and say:
 
 ### Payment Methods
 The waiter will ask:
-- **Готівкою чи карткою?** [ɦɔˈtʲiu̯.kɔ.ju t͡ʃɪ ˈkɑrt.kɔ.ju]
+- **Готівкою чи карткою?**
 
 Your answers:
 - **Карткою, будь ласка.** (By card, please.)
@@ -328,8 +328,8 @@ In Ukraine, it is polite to leave about 10% if you liked the service.
 ### Saying Goodbye
 Never just walk out silently.
 - **Дякую!** (Thank you!)
-- **На все добре!** [nɑ ʋsɛ ˈdɔ.brɛ] — All the best!
-- **До побачення!** [dɔ pɔˈbɑ.t͡ʃɛ.nʲːɑ] — Goodbye!
+- **На все добре!** — All the best!
+- **До побачення!** — Goodbye!
 - **Гарного дня!** (Have a nice day!)
 
 ## Практика: У кав'ярні

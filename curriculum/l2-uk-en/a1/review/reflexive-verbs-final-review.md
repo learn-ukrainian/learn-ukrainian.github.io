@@ -8,15 +8,15 @@ Now I have everything I need. Let me perform the deep adversarial review.
 
 **Issue 1: IPA Stress Placement Error (CRITICAL)**
 - **File:** `reflexive-verbs.md`, line 393
-- **Text:** `[ˈdɪʋɪt͡sʲːa]` (dee-vy-tsss-ya)
+- **Text:** `` (dee-vy-tsss-ya)
 - **Problem:** Stress mark `ˈ` is placed at the start, implying stress on the first syllable. "Дивиться" is stressed on the second syllable (ди-**ВИ**-ться). Also, the final vowel `[a]` should be `[ɐ]` for unstressed position. The lay-pronunciation "(dee-vy-tsss-ya)" also falsely suggests 4 syllables when дивиться has 3.
-- **Correct:** `[dɪˈʋɪt͡sʲːɐ]` (dee-VY-tssya)
+- **Correct:** `` (dee-VY-tssya)
 
 **Issue 2: IPA Vowel Error (MODERATE)**
 - **File:** `reflexive-verbs.md`, line 398
-- **Text:** `[ʋin smi-je-t͡sʲːa]`
-- **Problem:** Final `[a]` should be `[ɐ]` for unstressed position. The mixed notation also lacks a stress mark. Він сміється = [ʋin smɪˈjɛt͡sʲːɐ].
-- **Correct:** `[ʋin smɪˈjɛ-t͡sʲːɐ]`
+- **Text:** ``
+- **Problem:** Final `[a]` should be `[ɐ]` for unstressed position. The mixed notation also lacks a stress mark. Він сміється =.
+- **Correct:** ``
 
 **Issue 3: Case Error in Activity (MODERATE)**
 - **File:** `activities/reflexive-verbs.yaml`, line 15
@@ -52,17 +52,17 @@ Now I have everything I need. Let me perform the deep adversarial review.
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/reflexive-verbs.md
 ---OLD---
-*   Pronounced: [ˈdɪʋɪ**t͡sʲːa**] (dee-vy-tsss-ya)
+*   Pronounced: (dee-vy-tsss-ya)
 ---NEW---
-*   Pronounced: [dɪˈʋɪ**t͡sʲːɐ**] (dee-VY-tssya)
+*   Pronounced: (dee-VY-tssya)
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/reflexive-verbs.md
 ---OLD---
-*   **Він сміється.** [ʋin smi-je-**t͡sʲːa**]
+*   **Він сміється.**
 ---NEW---
-*   **Він сміється.** [ʋin smɪˈjɛ-**t͡sʲːɐ**]
+*   **Він сміється.**
 ===FIX_END===
 
 ===FIX_START===

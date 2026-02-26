@@ -1,109 +1,84 @@
 items:
   - lemma: "війна"
-    ipa: '[ʋʲijˈnɑ]'
     translation: "war"
     pos: "noun"
     gender: "f"
   - lemma: "Перша світова війна"
-    ipa: '[ˈpɛrʃɑ sʲʋʲitɔˈʋɑ ʋʲijˈnɑ]'
     translation: "World War I"
     pos: "phrase"
   - lemma: "окопна війна"
-    ipa: '[ɔˈkɔpnɑ ʋʲijˈnɑ]'
     translation: "trench warfare"
     pos: "phrase"
   - lemma: "армія"
-    ipa: '[ˈɑrmʲijɑ]'
     translation: "army"
     pos: "noun"
     gender: "f"
   - lemma: "служити в армії"
-    ipa: '[sluˈʒɪtɪ ʋ ˈɑrmʲiji]'
     translation: "to serve in the army"
     pos: "phrase"
   - lemma: "регулярна армія"
-    ipa: '[rɛɦuˈlʲɑrnɑ ˈɑrmʲijɑ]'
     translation: "regular army"
     pos: "phrase"
   - lemma: "фронт"
-    ipa: '[frɔnt]'
     translation: "front"
     pos: "noun"
     gender: "m"
   - lemma: "Східний фронт"
-    ipa: '[ˈsʲxʲidnɪj frɔnt]'
     translation: "Eastern Front"
     pos: "phrase"
   - lemma: "лінія фронту"
-    ipa: '[ˈlʲinʲijɑ ˈfrɔntu]'
     translation: "front line"
     pos: "phrase"
   - lemma: "піти на фронт"
-    ipa: '[pʲitɪ nɑ frɔnt]'
     translation: "to go to the front"
     pos: "phrase"
   - lemma: "мобілізація"
-    ipa: '[mɔbʲilʲiˈzɑt͡sʲijɑ]'
     translation: "mobilization"
     pos: "noun"
     gender: "f"
   - lemma: "загальна мобілізація"
-    ipa: '[zɑˈɦɑlʲnɑ mɔbʲilʲiˈzɑt͡sʲijɑ]'
     translation: "general mobilization"
     pos: "phrase"
   - lemma: "уникнути мобілізації"
-    ipa: '[uˈnɪknutɪ mɔbʲilʲiˈzɑt͡sʲiji]'
     translation: "to avoid mobilization"
     pos: "phrase"
   - lemma: "січові стрільці"
-    ipa: '[sʲit͡ʃɔˈʋʲi stʲrʲilʲˈt͡sʲi]'
     translation: "Sich Riflemen"
     pos: "phrase"
   - lemma: "Легіон Українських Січових Стрільців"
-    ipa: '[lɛɦʲiˈɔn ukrɑˈjinʲsʲkɪx sʲit͡ʃɔˈʋɪx stʲrʲilʲˈt͡sʲiu̯]'
     translation: "Legion of Ukrainian Sich Riflemen"
     pos: "phrase"
   - lemma: "усуси"
-    ipa: '[ususɪ]'
     translation: "colloquial for USS members"
     pos: "noun"
     gender: "m"
   - lemma: "битва"
-    ipa: '[ˈbɪtʋɑ]'
     translation: "battle"
     pos: "noun"
     gender: "f"
   - lemma: "кривава битва"
-    ipa: '[krɪˈʋɑʋɑ ˈbɪtʋɑ]'
     translation: "bloody battle"
     pos: "phrase"
   - lemma: "імперія"
-    ipa: '[imˈpɛrʲijɑ]'
     translation: "empire"
     pos: "noun"
     gender: "f"
   - lemma: "Російська імперія"
-    ipa: '[rɔˈsʲijsʲkɑ imˈpɛrʲijɑ]'
     translation: "Russian Empire"
     pos: "phrase"
   - lemma: "Австро-Угорська імперія"
-    ipa: '[ɑu̯strɔ-uˈɦɔrsʲkɑ imˈpɛrʲijɑ]'
     translation: "Austro-Hungarian Empire"
     pos: "phrase"
   - lemma: "розпад імперії"
-    ipa: '[ˈrɔzpɑd imˈpɛrʲiji]'
     translation: "collapse of the empire"
     pos: "phrase"
   - lemma: "крах імперій"
-    ipa: '[krɑx imˈpɛrʲij]'
     translation: "collapse of empires"
     pos: "phrase"
   - lemma: "артилерія"
-    ipa: '[ɑrtɪˈlɛrʲijɑ]'
     translation: "artillery"
     pos: "noun"
     gender: "f"
   - lemma: "артилерійський обстріл"
-    ipa: '[ɑrtɪlɛˈrʲijsʲkɪj ˈɔbstʲrʲil]'
     translation: "artillery shelling"
     pos: "phrase"

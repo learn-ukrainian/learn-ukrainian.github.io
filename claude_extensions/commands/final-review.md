@@ -97,7 +97,7 @@ Read `curriculum/l2-uk-en/{track}/{slug}.md` in full. You are looking for:
 - Sentences that don't make grammatical sense
 - Examples using vocabulary not yet taught at this level
 - Grammar constructions beyond the module's level
-- Factual errors (wrong dates, wrong translations, wrong IPA)
+- Factual errors (wrong dates, wrong translations)
 - Cultural claims that are inaccurate or misleading
 
 **Pedagogical traps:**
@@ -195,7 +195,7 @@ Confirm all gates still pass after your fixes.
 ### Quality Check
 - [ ] Content structure follows plan outline
 - [ ] Word count meets target ({actual} / {target})
-- [ ] Ukrainian quality verified (no Russianisms, correct IPA)
+- [ ] Ukrainian quality verified (no Russianisms)
 - [ ] Activities are semantically correct (not just valid YAML)
 - [ ] Review is genuine (not rubber-stamped)
 - [ ] Phase 6b fixes verified via grep (not trusted at face value)

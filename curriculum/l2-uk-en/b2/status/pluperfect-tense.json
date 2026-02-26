@@ -1,0 +1,67 @@
+{
+  "module": "pluperfect-tense",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-25T20:35:53.682014Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-25T18:24:05.840188Z",
+    "meta": "2026-02-25T18:14:17.290539Z",
+    "activities": "2026-02-25T18:28:43.065723Z",
+    "vocabulary": "2026-02-25T18:28:43.068329Z",
+    "plan": "2026-02-20T21:47:37.668445Z",
+    "research": "2026-02-25T18:14:17.281573Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 4,
+      "message": "3782/4000 (raw: 4108) | engagement: 0/6 | pedagogy: 2 violations | richness: 59% < 95% min (grammar) - REWRITE needed"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "12/10"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "30/25"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "1 Outline Compliance Errors",
+      "Missing required activity types: match-up"
+    ],
+    "pass_count": 5,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

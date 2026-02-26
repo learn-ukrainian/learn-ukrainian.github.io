@@ -1,158 +1,128 @@
 items:
 - lemma: який
-  ipa: '[jɑˈkɪj]'
   translation: which / that / who (masc)
   pos: pronoun
   gender: m
   notes: relative pronoun for masculine nouns; changes case based on clause role
 - lemma: яка
-  ipa: '[jɑkɑ]'
   translation: which / that / who (fem)
   pos: pronoun
   gender: f
   usage: Дівчина, яка читає.
 - lemma: яке
-  ipa: '[jɑˈkɛ]'
   translation: which / that / who (neut)
   pos: pronoun
   gender: n
   usage: Місто, яке ніколи не спить.
 - lemma: які
-  ipa: '[jɑˈkʲi]'
   translation: which / that / who (pl)
   pos: pronoun
   usage: Люди, які люблять подорожувати.
 - lemma: той
-  ipa: '[tɔj]'
   translation: that one (masc)
   pos: pronoun
   gender: m
   notes: demonstrative pronoun often paired with який
 - lemma: чоловік
-  ipa: '[t͡ʃɔlɔˈʋʲik]'
   translation: man / husband
   pos: noun
   gender: m
   notes: refers to an adult male or a married partner
 - lemma: жінка
-  ipa: '[ˈʒʲinkɑ]'
   translation: woman / wife
   pos: noun
   gender: f
   notes: refers to an adult female or a married partner
 - lemma: ринок
-  ipa: '[ˈrɪnɔk]'
   translation: market
   pos: noun
   gender: m
   usage: Піти на ринок за продуктами.
 - lemma: зважити
-  ipa: '[ˈzʋɑʒɪtɪ]'
   translation: to weigh
   pos: verb
   aspect: perfective
   usage: Який вам зважити?
 - lemma: різниця
-  ipa: '[rʲiˈznɪt͡sʲɑ]'
   translation: difference
   pos: noun
   gender: f
   usage: Яка різниця?
 - lemma: відмінок
-  ipa: '[ʋʲiˈdʲmʲinɔk]'
   translation: grammatical case
   pos: noun
   gender: m
 - lemma: істота
-  ipa: '[iˈstɔtɑ]'
   translation: animate noun / creature
   pos: noun
   gender: f
   notes: affects the accusative case form for masculine and plural nouns
 - lemma: неістота
-  ipa: '[nɛiˈstɔtɑ]'
   translation: inanimate noun / thing
   pos: noun
   gender: f
 - lemma: хамелеон
-  ipa: '[xɑmɛlɛˈɔn]'
   translation: chameleon
   pos: noun
   gender: m
   notes: used metaphorically to describe how words adapt their case
 - lemma: свідок
-  ipa: '[ˈsʲʋʲidɔk]'
   translation: witness
   pos: noun
   gender: m
 - lemma: підозрюваний
-  ipa: '[pʲiˈdɔzʲrʲuʋɑnɪj]'
   translation: suspect
   pos: noun
   gender: m
 - lemma: рюкзак
-  ipa: '[rʲuˈɡzɑk]'
   translation: backpack
   pos: noun
   gender: m
 - lemma: окуляри
-  ipa: '[ɔkuˈlʲɑrɪ]'
   translation: glasses
   pos: noun
   notes: always plural in Ukrainian
 - lemma: вітрина
-  ipa: '[ʋʲiˈtrɪnɑ]'
   translation: shop window
   pos: noun
   gender: f
 - lemma: полиця
-  ipa: '[pɔˈlɪt͡sʲɑ]'
   translation: shelf
   pos: noun
   gender: f
 - lemma: сукня
-  ipa: '[ˈsuknʲɑ]'
   translation: dress
   pos: noun
   gender: f
 - lemma: приналежність
-  ipa: '[prɪnɑˈlɛʒnʲisʲtʲ]'
   translation: belonging / possession
   pos: noun
   gender: f
 - lemma: точність
-  ipa: '[ˈtɔt͡ʃnʲisʲtʲ]'
   translation: accuracy / precision
   pos: noun
   gender: f
 - lemma: жупан
-  ipa: '[ʒuˈpɑn]'
   translation: traditional coat
   pos: noun
   gender: m
   notes: historically a symbol of status (Який пан, такий жупан)
 - lemma: дзеркало
-  ipa: '[ˈd͡zɛrkɑlɔ]'
   translation: mirror
   pos: noun
   gender: n
 - lemma: називний
   translation: nominative
   pos: adj
-  ipa: '[nɑzɪˈʋnɪj]'
 - lemma: родовий
   translation: genitive
   pos: adj
-  ipa: '[rɔˈdɔˈʋɪj]'
 - lemma: знахідний
   translation: accusative
   pos: adj
-  ipa: '[znɑˈxʲidnɪj]'
 - lemma: іменник
   translation: noun
   pos: noun
-  ipa: '[iˈmɛnːɪk]'
 - lemma: множина
   translation: plural
   pos: noun
-  ipa: '[mnɔʒɪˈnɑ]'

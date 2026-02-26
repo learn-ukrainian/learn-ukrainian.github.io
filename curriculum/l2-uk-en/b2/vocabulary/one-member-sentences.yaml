@@ -1,158 +1,128 @@
 items:
   - lemma: термін
-    ipa: '[ˈtɛrmʲin]'
     translation: term
     pos: noun
     gender: m
     notes: 'науковий термін, вживати термін'
   - lemma: поняття
-    ipa: '[pɔˈnʲɑtʲːɑ]'
     translation: concept
     pos: noun
     gender: n
     notes: 'ключове поняття, абстрактне поняття'
   - lemma: процес
-    ipa: '[prɔˈt͡sɛs]'
     translation: process
     pos: noun
     gender: m
     notes: 'навчальний процес, творчий процес'
   - lemma: метод
-    ipa: '[ˈmɛtɔd]'
     translation: method
     pos: noun
     gender: m
     notes: 'науковий метод, метод аналізу'
   - lemma: аналіз
-    ipa: '[ɑˈnɑlʲiz]'
     translation: analysis
     pos: noun
     gender: m
     notes: 'глибокий аналіз, провести аналіз'
   - lemma: синтез
-    ipa: '[ˈsɪntɛz]'
     translation: synthesis
     pos: noun
     gender: m
     notes: 'аналіз і синтез'
   - lemma: дослідження
-    ipa: '[dɔˈsʲlʲid͡ʒɛnʲːɑ]'
     translation: research
     pos: noun
     gender: n
     notes: 'результати дослідження, проводити дослідження'
   - lemma: лаконічність
-    ipa: '[lɑkɔˈnʲit͡ʃnʲisʲtʲ]'
     translation: conciseness
     pos: noun
     gender: f
   - lemma: динамізм
-    ipa: '[dɪnɑˈmʲizm]'
     translation: dynamism
     pos: noun
     gender: m
   - lemma: підмет
-    ipa: '[pʲidmɛt]'
     translation: grammatical subject
     pos: noun
     gender: m
   - lemma: присудок
-    ipa: '[ˈprɪsudɔk]'
     translation: predicate
     pos: noun
     gender: m
   - lemma: займенник
-    ipa: '[zɑjˈmɛnːɪk]'
     translation: pronoun
     pos: noun
     gender: m
   - lemma: закінчення
-    ipa: '[zɑˈkʲint͡ʃɛnʲːɑ]'
     translation: ending
     pos: noun
     gender: n
   - lemma: надмірність
-    ipa: '[nɑˈdʲmʲirnʲisʲtʲ]'
     translation: redundancy
     pos: noun
     gender: f
   - lemma: інтимність
-    ipa: '[inˈtɪmnʲisʲtʲ]'
     translation: intimacy
     pos: noun
     gender: f
   - lemma: відвертість
-    ipa: '[ʋʲiˈdʋɛrtʲisʲtʲ]'
     translation: frankness
     pos: noun
     gender: f
   - lemma: зведення
-    ipa: '[ˈzʋɛdɛnʲːɑ]'
     translation: summary / report
     pos: noun
     gender: n
   - lemma: наслідок
-    ipa: '[ˈnɑsʲlʲidɔk]'
     translation: consequence
     pos: noun
     gender: m
   - lemma: мудрість
-    ipa: '[ˈmudʲrʲisʲtʲ]'
     translation: wisdom
     pos: noun
     gender: f
   - lemma: спостереження
-    ipa: '[spɔstɛˈrɛʒɛnʲːɑ]'
     translation: observation
     pos: noun
     gender: n
   - lemma: алгоритм
-    ipa: '[ɑlɦɔˈrɪtm]'
     translation: algorithm
     pos: noun
     gender: m
   - lemma: реципієнт
-    ipa: '[rɛt͡sɪpʲiˈjɛnt]'
     translation: recipient
     pos: noun
     gender: m
   - lemma: середовище
-    ipa: '[sɛrɛˈdɔʋɪʃt͡ʃɛ]'
     translation: environment
     pos: noun
     gender: n
   - lemma: явище
-    ipa: '[ˈjɑʋɪʃt͡ʃɛ]'
     translation: phenomenon
     pos: noun
     gender: n
   - lemma: простір
-    ipa: '[ˈprɔsʲtʲir]'
     translation: space
     pos: noun
     gender: m
   - lemma: напруга
-    ipa: '[nɑˈpruɦɑ]'
     translation: tension
     pos: noun
     gender: f
   - lemma: еліпс
-    ipa: '[ˈɛlʲips]'
     translation: ellipsis
     pos: noun
     gender: m
   - lemma: трансформація
-    ipa: '[trɑnsfɔrˈmɑt͡sʲijɑ]'
     translation: transformation
     pos: noun
     gender: f
   - lemma: об'єктивність
-    ipa: '[ɔbjɛˈktɪu̯nʲisʲtʲ]'
     translation: objectivity
     pos: noun
     gender: f
   - lemma: суб'єктивізм
-    ipa: '[subjɛktɪˈʋʲizm]'
     translation: subjectivism
     pos: noun
     gender: m

@@ -1,151 +1,121 @@
 items:
   - lemma: "митрополит"
-    ipa: '[mɪtrɔpɔˈlɪt]'
     translation: "metropolitan"
     pos: "noun"
     gender: "m"
   - lemma: "єпископ"
-    ipa: '[jɛˈpɪskɔp]'
     translation: "bishop"
     pos: "noun"
     gender: "m"
   - lemma: "ієрархія"
-    ipa: '[ijɛˈrɑrxʲijɑ]'
     translation: "hierarchy"
     pos: "noun"
     gender: "f"
   - lemma: "унія"
-    ipa: '[ˈunʲijɑ]'
     translation: "union"
     pos: "noun"
     gender: "f"
   - lemma: "православ'я"
-    ipa: '[prɑʋɔˈslɑu̯jɑ]'
     translation: "Orthodoxy"
     pos: "noun"
     gender: "n"
   - lemma: "братство"
-    ipa: '[ˈbrɑt͡stʋɔ]'
     translation: "brotherhood/confraternity"
     pos: "noun"
     gender: "n"
   - lemma: "висвячення"
-    ipa: '[ˈʋɪsʲʋʲɑt͡ʃɛnʲːɑ]'
     translation: "ordination"
     pos: "noun"
     gender: "n"
   - lemma: "полеміка"
-    ipa: '[pɔˈlɛmʲikɑ]'
     translation: "polemics"
     pos: "noun"
     gender: "f"
   - lemma: "чернецтво"
-    ipa: '[t͡ʃɛrˈnɛt͡stʋɔ]'
     translation: "monasticism"
     pos: "noun"
     gender: "n"
   - lemma: "патріарх"
-    ipa: '[pɑtʲrʲiˈɑrx]'
     translation: "patriarch"
     pos: "noun"
     gender: "m"
   - lemma: "ректор"
-    ipa: '[ˈrɛktɔr]'
     translation: "rector"
     pos: "noun"
     gender: "m"
   - lemma: "собор"
-    ipa: '[sɔˈbɔr]'
     translation: "council/cathedral"
     pos: "noun"
     gender: "m"
   - lemma: "єпархія"
-    ipa: '[jɛˈpɑrxʲijɑ]'
     translation: "eparchy/diocese"
     pos: "noun"
     gender: "f"
   - lemma: "канон"
-    ipa: '[kɑˈnɔn]'
     translation: "canon"
     pos: "noun"
     gender: "m"
   - lemma: "схима"
-    ipa: '[ˈsxɪmɑ]'
     translation: "schema/monastic vow"
     pos: "noun"
     gender: "f"
   - lemma: "сирітство"
-    ipa: '[sɪˈrʲit͡stʋɔ]'
     translation: "orphanhood"
     pos: "noun"
     gender: "n"
   - lemma: "архітектор"
-    ipa: '[ɑrxʲiˈtɛktɔr]'
     translation: "architect"
     pos: "noun"
     gender: "m"
   - lemma: "легітимізація"
-    ipa: '[lɛɦʲitɪmʲiˈzɑt͡sʲijɑ]'
     translation: "legitimization"
     pos: "noun"
     gender: "f"
   - lemma: "пастир"
-    ipa: '[ˈpɑstɪr]'
     translation: "shepherd/pastor"
     pos: "noun"
     gender: "m"
   - lemma: "альянс"
-    ipa: '[ɑˈlʲjɑns]'
     translation: "alliance"
     pos: "noun"
     gender: "m"
   - lemma: "гарант"
-    ipa: '[ɦɑˈrɑnt]'
     translation: "guarantor"
     pos: "noun"
     gender: "m"
   - lemma: "компроміс"
-    ipa: '[kɔmprɔˈmʲis]'
     translation: "compromise"
     pos: "noun"
     gender: "m"
   - lemma: "шляхта"
-    ipa: '[ˈʃlʲɑxtɑ]'
     translation: "nobility"
     pos: "noun"
     gender: "f"
   - lemma: "ерудиція"
-    ipa: '[ɛruˈdɪt͡sʲijɑ]'
     translation: "erudition"
     pos: "noun"
     gender: "f"
   - lemma: "диспут"
-    ipa: '[ˈdɪsput]'
     translation: "dispute/debate"
     pos: "noun"
     gender: "m"
   - lemma: "ігумен"
-    ipa: '[iˈɦumɛn]'
     translation: "hegumen/abbot"
     pos: "noun"
     gender: "m"
   - lemma: "юрисдикція"
-    ipa: '[jurɪˈzdɪkt͡sʲijɑ]'
     translation: "jurisdiction"
     pos: "noun"
     gender: "f"
   - lemma: "магістрат"
-    ipa: '[mɑɦʲiˈstrɑt]'
     translation: "magistrate"
     pos: "noun"
     gender: "m"
   - lemma: "хіротонія"
-    ipa: '[xʲirɔˈtɔnʲijɑ]'
     translation: "chirotonia/ordination"
     pos: "noun"
     gender: "f"
   - lemma: "генеалогія"
-    ipa: '[ɦɛnɛɑˈlɔɦʲijɑ]'
     translation: "genealogy"
     pos: "noun"
     gender: "f"

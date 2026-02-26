@@ -2,13 +2,13 @@
   "module": "the-instrumental-ii-means-and-tools",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:17:20.055641Z",
+  "last_audit": "2026-02-26T14:22:18.131244Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T19:53:25.368555Z",
+    "md": "2026-02-26T14:22:17.356778Z",
     "meta": "2026-02-22T19:42:37.834337Z",
     "activities": "2026-02-22T20:49:57.241994Z",
-    "vocabulary": "2026-02-22T19:48:38.569470Z",
+    "vocabulary": "2026-02-26T10:56:38.104834Z",
     "plan": "2026-02-20T20:59:37.816499Z",
     "research": "2026-02-22T19:42:37.829580Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3567/3000 (raw: 3883)"
+      "message": "3258/3000 (raw: 3574)"
     },
     "activities": {
       "status": "pass",
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 6,
     "fail_count": 0,
     "deferred_count": 0
   }

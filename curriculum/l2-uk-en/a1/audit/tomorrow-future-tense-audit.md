@@ -1,7 +1,7 @@
 # Audit Report: M22 — tomorrow-future-tense.md
 **Level:** A1 | **Module:** M22 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:11
+**Generated:** 2026-02-26 13:23:44
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2186/2000 (raw: 2508)
+- **Words:** ✅ 2185/2000 (raw: 2507)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -47,7 +47,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
@@ -62,7 +61,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Tomorrow - Future Tense** | ✅ | 64 | Included in Core |
 | **Розминка: Час летить (Time Flies)** | ✅ | 208 | Included in Core |
-| **Граматика: Майбутній час (Я буду...)** | ✅ | 320 | Included in Core |
+| **Граматика: Майбутній час (Я буду...)** | ✅ | 319 | Included in Core |
 | **Плани та наміри: Що ми будемо робити?** | ✅ | 272 | Included in Core |
 | **Коли це буде? (Частина 1: Конкретний час)** | ✅ | 273 | Included in Core |
 | **Коли це буде? (Частина 2: Абстрактний час)** | ✅ | 249 | Included in Core |

@@ -1,123 +1,98 @@
 items:
   - lemma: "автономія"
-    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
     translation: "autonomy"
     pos: "noun"
     gender: "f"
   - lemma: "проголошення"
-    ipa: '[prɔɦɔˈlɔʃɛnʲːɑ]'
     translation: "proclamation"
     pos: "noun"
     gender: "n"
   - lemma: "незалежність"
-    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
     translation: "independence"
     pos: "noun"
     gender: "f"
   - lemma: "окупація"
-    ipa: '[ɔkuˈpɑt͡sʲijɑ]'
     translation: "occupation"
     pos: "noun"
     gender: "f"
   - lemma: "оборона"
-    ipa: '[ɔbɔˈrɔnɑ]'
     translation: "defense"
     pos: "noun"
     gender: "f"
   - lemma: "січовик"
-    ipa: '[sʲit͡ʃɔˈʋɪk]'
     translation: "Sich member"
     pos: "noun"
     gender: "m"
   - lemma: "агресія"
-    ipa: '[ɑˈɦrɛsʲijɑ]'
     translation: "aggression"
     pos: "noun"
     gender: "f"
   - lemma: "уряд"
-    ipa: '[urʲɑd]'
     translation: "government"
     pos: "noun"
     gender: "m"
   - lemma: "доброволець"
-    ipa: '[dɔbrɔˈʋɔlɛt͡sʲ]'
     translation: "volunteer"
     pos: "noun"
     gender: "m"
   - lemma: "геополітика"
-    ipa: '[ɦɛɔpɔˈlʲitɪkɑ]'
     translation: "geopolitics"
     pos: "noun"
     gender: "f"
   - lemma: "інтервенція"
-    ipa: '[intɛrˈʋɛnʲt͡sʲijɑ]'
     translation: "intervention"
     pos: "noun"
     gender: "f"
   - lemma: "анексія"
-    ipa: '[ɑˈnɛksʲijɑ]'
     translation: "annexation"
     pos: "noun"
     gender: "f"
   - lemma: "спротив"
-    ipa: '[ˈsprɔtɪu̯]'
     translation: "resistance"
     pos: "noun"
     gender: "m"
   - lemma: "символ"
-    ipa: '[ˈsɪmʋɔl]'
     translation: "symbol"
     pos: "noun"
     gender: "m"
   - lemma: "республіка"
-    ipa: '[rɛˈspublʲikɑ]'
     translation: "republic"
     pos: "noun"
     gender: "f"
   - lemma: "парламент"
-    ipa: '[pɑrˈlɑmɛnt]'
     translation: "parliament"
     pos: "noun"
     gender: "m"
   - lemma: "суверенітет"
-    ipa: '[suʋɛrɛnʲiˈtɛt]'
     translation: "sovereignty"
     pos: "noun"
     gender: "m"
   - lemma: "самоврядування"
-    ipa: '[sɑmɔu̯rʲɑduˈʋɑnʲːɑ]'
     translation: "self-government"
     pos: "noun"
     gender: "n"
   - lemma: "ополчення"
-    ipa: '[ɔpɔlˈt͡ʃɛnʲːɑ]'
     translation: "militia"
     pos: "noun"
     gender: "n"
   - lemma: "збройний"
-    ipa: '[ˈzbrɔjnɪj]'
     translation: "armed"
     pos: "adjective"
   - lemma: "капітулювати"
-    ipa: '[kɑpʲitulʲuˈʋɑtɪ]'
     translation: "to capitulate"
     pos: "verb"
   - lemma: "патріот"
-    ipa: '[pɑtʲrʲiˈɔt]'
     translation: "patriot"
     pos: "noun"
     gender: "m"
   - lemma: "легітимність"
-    ipa: '[lɛɦʲiˈtɪmnʲisʲtʲ]'
     translation: "legitimacy"
     pos: "noun"
     gender: "f"
   - lemma: "інтелігенція"
-    ipa: '[intɛlʲiˈɦɛnʲt͡sʲijɑ]'
     translation: "intelligentsia"
     pos: "noun"
     gender: "f"
   - lemma: "законодавчий"
-    ipa: '[zɑkɔnɔˈdɑu̯t͡ʃɪj]'
     translation: "legislative"
     pos: "adjective"

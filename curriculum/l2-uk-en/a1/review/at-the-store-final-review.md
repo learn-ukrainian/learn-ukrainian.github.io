@@ -10,22 +10,22 @@ Now I have everything I need. Here's my deep adversarial review.
 
 **Issue 1: "відділ" stress on wrong syllable (4 occurrences)**
 
-Ukrainian dictionaries (SUM) confirm: від-ДІ́Л — stress on second syllable [ʋidˈdʲil]. The module places stress on the first syllable throughout.
+Ukrainian dictionaries (SUM) confirm: від-ДІ́Л — stress on second syllable. The module places stress on the first syllable throughout.
 
-- Line 61: `[ˈʋidʲːil]` — should be `[ʋidˈdʲil]`
-- Line 86: `[mɔˈlɔt͡ʃnɪi̯ ˈʋidʲːil]` — should be `[mɔˈlɔt͡ʃnɪi̯ ʋidˈdʲil]`
-- Line 91: `[mjɑsˈnɪi̯ ˈʋidʲːil]` — should be `[mjɑsˈnɪi̯ ʋidˈdʲil]`
-- Line 118: `[u jɑˈkɔmu ˈʋidʲːili]` — should be `[u jɑˈkɔmu ʋidˈdʲilʲi]` (also: locative лі = [lʲi])
+- Line 61: `` — should be ``
+- Line 86: `` — should be ``
+- Line 91: `` — should be ``
+- Line 118: `` — should be `` (also: locative лі = [lʲi])
 
 This is critical because "відділ" is a core vocabulary word used ~20 times in the module. Wrong stress = wrong pronunciation drilled into the learner.
 
 **Issue 2: "коштує" stress on wrong syllable (line 281)**
 
-"Коштувати" → "коштує" — stress: кош-ТУ́-є [kɔʃˈtujɛ]. The transcription `[ˈkɔʃtuje]` puts stress on the first syllable and uses [e] instead of [ɛ].
+"Коштувати" → "коштує" — stress: кош-ТУ́-є. The transcription `` puts stress on the first syllable and uses [e] instead of [ɛ].
 
 **Issue 3: "закупи" stress on wrong syllable (line 52)**
 
-SUM gives: заку́пи [zɑˈkupɪ] (stress on second syllable). The transcription `[ˈzɑkupɪ]` puts stress on the first syllable.
+SUM gives: заку́пи (stress on second syllable). The transcription `` puts stress on the first syllable.
 
 ### CRITICAL: Factual Error
 
@@ -83,49 +83,49 @@ FILE: curriculum/l2-uk-en/a1/at-the-store.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-store.md
 ---OLD---
-Knowing these words will help you navigate signs and ask staff for help. Слово "department" — це **відділ** [ˈʋidʲːil].
+Knowing these words will help you navigate signs and ask staff for help. Слово "department" — це **відділ**.
 ---NEW---
-Knowing these words will help you navigate signs and ask staff for help. Слово "department" — це **відділ** [ʋidˈdʲil].
+Knowing these words will help you navigate signs and ask staff for help. Слово "department" — це **відділ**.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-store.md
 ---OLD---
-**Молочний відділ** [mɔˈlɔt͡ʃnɪi̯ ˈʋidʲːil] — Dairy department.
+**Молочний відділ** — Dairy department.
 ---NEW---
-**Молочний відділ** [mɔˈlɔt͡ʃnɪi̯ ʋidˈdʲil] — Dairy department.
+**Молочний відділ** — Dairy department.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-store.md
 ---OLD---
-**М'ясний відділ** [mjɑsˈnɪi̯ ˈʋidʲːil] — Meat department.
+**М'ясний відділ** — Meat department.
 ---NEW---
-**М'ясний відділ** [mjɑsˈnɪi̯ ʋidˈdʲil] — Meat department.
+**М'ясний відділ** — Meat department.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-store.md
 ---OLD---
-To ask "In which department...?", we use the phrase **У якому відділі...?** [u jɑˈkɔmu ˈʋidʲːili]. Notice that the word *відділ* changes to *відділі*.
+To ask "In which department...?", we use the phrase **У якому відділі...?**. Notice that the word *відділ* changes to *відділі*.
 ---NEW---
-To ask "In which department...?", we use the phrase **У якому відділі...?** [u jɑˈkɔmu ʋidˈdʲilʲi]. Notice that the word *відділ* changes to *відділі*.
+To ask "In which department...?", we use the phrase **У якому відділі...?**. Notice that the word *відділ* changes to *відділі*.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-store.md
 ---OLD---
-2.  **Робити закупи** [rɔˈbɪtɪ ˈzɑkupɪ] — To do the shopping.
+2.  **Робити закупи** — To do the shopping.
 ---NEW---
-2.  **Робити закупи** [rɔˈbɪtɪ zɑˈkupɪ] — To do the shopping.
+2.  **Робити закупи** — To do the shopping.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-store.md
 ---OLD---
-*   **Скільки коштує?** [ˈskilʲkɪ ˈkɔʃtuje] — How much does it cost?
+*   **Скільки коштує?** — How much does it cost?
 ---NEW---
-*   **Скільки коштує?** [ˈskilʲkɪ kɔʃˈtujɛ] — How much does it cost?
+*   **Скільки коштує?** — How much does it cost?
 ===FIX_END===
 
 ===FIX_START===
@@ -142,11 +142,11 @@ Rule for feminine nouns ending in **-а** or **-я**:
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-store.md
 ---OLD---
-**Вибачте** [ʋɪˈbɑt͡ʃtɛ] — "Excuse me" — це чудове слово. Воно привертає увагу працівника.
+**Вибачте** — "Excuse me" — це чудове слово. Воно привертає увагу працівника.
 ---NEW---
-**Вибачте** [ʋɪˈbɑt͡ʃtɛ] — "Excuse me" — це чудове слово. Воно привертає увагу працівника.
+**Вибачте** — "Excuse me" — це чудове слово. Воно привертає увагу працівника.
 
-Ви також можете сказати: **Підкажіть, будь ласка...** [pidkɑˈʒitʲ budʲ ˈlɑskɑ] (Could you tell me, please...). Це теж дуже ввічливо.
+Ви також можете сказати: **Підкажіть, будь ласка...** (Could you tell me, please...). Це теж дуже ввічливо.
 *   **Підкажіть, будь ласка, де кава?** — Could you tell me, please, where is the coffee?
 ===FIX_END===
 

@@ -1,151 +1,121 @@
 items:
   - lemma: "архетип"
-    ipa: '[ɑrxɛˈtɪp]'
     translation: "archetype"
     pos: "noun"
     gender: "m"
     notes: "первісний образ, універсальна модель поведінки"
   - lemma: "колаборація"
-    ipa: '[kɔlɑbɔˈrɑt͡sʲijɑ]'
     translation: "collaboration"
     pos: "noun"
     gender: "f"
     notes: "свідома співпраця з окупаційною владою"
   - lemma: "екзистенційний"
-    ipa: '[ɛɡzɪstɛnʲˈt͡sʲijnɪj]'
     translation: "existential"
     pos: "adjective"
     notes: "такий, що стосується самої сутності існування, життя і смерті"
   - lemma: "імператив"
-    ipa: '[impɛrɑˈtɪu̯]'
     translation: "imperative"
     pos: "noun"
     gender: "m"
     notes: "безумовна вимога, наказ, моральний закон"
   - lemma: "міжусобиця"
-    ipa: '[mʲiʒuˈsɔbɪt͡sʲɑ]'
     translation: "internecine war"
     pos: "noun"
     gender: "f"
   - lemma: "гегемонія"
-    ipa: '[ɦɛɦɛˈmɔnʲijɑ]'
     translation: "hegemony"
     pos: "noun"
     gender: "f"
   - lemma: "експансіонізм"
-    ipa: '[ɛkspɑnʲsʲiɔˈnʲizm]'
     translation: "expansionism"
     pos: "noun"
     gender: "m"
   - lemma: "авангард"
-    ipa: '[ɑʋɑnˈɦɑrd]'
     translation: "vanguard"
     pos: "noun"
     gender: "m"
   - lemma: "провидіння"
-    ipa: '[prɔʋɪdʲinʲːɑ]'
     translation: "providence"
     pos: "noun"
     gender: "n"
   - lemma: "консолідація"
-    ipa: '[kɔnsɔlʲiˈdɑt͡sʲijɑ]'
     translation: "consolidation"
     pos: "noun"
     gender: "f"
   - lemma: "експансія"
-    ipa: '[ɛˈkspɑnʲsʲijɑ]'
     translation: "expansion"
     pos: "noun"
     gender: "f"
   - lemma: "великокнязівський"
-    ipa: '[ʋɛlɪkɔknʲɑˈzʲiu̯sʲkɪj]'
     translation: "grand ducal"
     pos: "adjective"
   - lemma: "престол"
-    ipa: '[prɛˈstɔl]'
     translation: "throne"
     pos: "noun"
     gender: "m"
   - lemma: "коаліція"
-    ipa: '[kɔɑˈlʲit͡sʲijɑ]'
     translation: "coalition"
     pos: "noun"
     gender: "f"
   - lemma: "апатія"
-    ipa: '[ɑˈpɑtʲijɑ]'
     translation: "apathy"
     pos: "noun"
     gender: "f"
   - lemma: "згарище"
-    ipa: '[ˈzɦɑrɪʃt͡ʃɛ]'
     translation: "ashes, burnt ruins"
     pos: "noun"
     gender: "n"
   - lemma: "васалітет"
-    ipa: '[ʋɑsɑlʲiˈtɛt]'
     translation: "vassalage"
     pos: "noun"
     gender: "m"
   - lemma: "самопожертва"
-    ipa: '[sɑmɔpɔˈʒɛrtʋɑ]'
     translation: "self-sacrifice"
     pos: "noun"
     gender: "f"
   - lemma: "солідарність"
-    ipa: '[sɔlʲiˈdɑrnʲisʲtʲ]'
     translation: "solidarity"
     pos: "noun"
     gender: "f"
   - lemma: "приниження"
-    ipa: '[prɪˈnɪʒɛnʲːɑ]'
     translation: "humiliation"
     pos: "noun"
     gender: "n"
   - lemma: "ідолопоклонство"
-    ipa: '[idɔlɔpɔˈklɔnstʋɔ]'
     translation: "idolatry"
     pos: "noun"
     gender: "n"
   - lemma: "деспотичний"
-    ipa: '[dɛspɔˈtɪt͡ʃnɪj]'
     translation: "despotic"
     pos: "adjective"
   - lemma: "капітуляція"
-    ipa: '[kɑpʲituˈlʲɑt͡sʲijɑ]'
     translation: "capitulation"
     pos: "noun"
     gender: "f"
   - lemma: "агіографічний"
-    ipa: '[ɑɦʲiɔɦrɑˈfʲit͡ʃnɪj]'
     translation: "hagiographic"
     pos: "adjective"
   - lemma: "ренегат"
-    ipa: '[rɛnɛˈɦɑt]'
     translation: "renegade"
     pos: "noun"
     gender: "m"
   - lemma: "сюзерен"
-    ipa: '[sʲuzɛˈrɛn]'
     translation: "suzerain"
     pos: "noun"
     gender: "m"
   - lemma: "домінування"
-    ipa: '[dɔmʲinuˈʋɑnʲːɑ]'
     translation: "domination"
     pos: "noun"
     gender: "n"
   - lemma: "нетлінність"
-    ipa: '[nɛˈtʲlʲinʲːisʲtʲ]'
     translation: "incorruptibility"
     pos: "noun"
     gender: "f"
   - lemma: "верифікувати"
-    ipa: '[ʋɛrɪfʲikuˈʋɑtɪ]'
     translation: "to verify"
     pos: "verb"
     aspect: "impf/pf"
   - lemma: "рецепція"
-    ipa: '[rɛˈt͡sɛpt͡sʲijɑ]'
     translation: "reception"
     pos: "noun"
     gender: "f"

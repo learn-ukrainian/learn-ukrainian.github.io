@@ -1,80 +1,60 @@
 - term: називний відмінок
-  ipa: "[nɑzɪˈʋnɪj ʋʲiˈdʲmʲinɔk]"
   translation: "Nominative case"
   pos: noun phrase
 - term: називний
-  ipa: "[nɑzɪˈʋnɪj]"
   translation: "Nominative"
   pos: adjective
 - term: орудний відмінок
-  ipa: "[ɔˈrudnɪj ʋʲiˈdʲmʲinɔk]"
   translation: "Instrumental case"
   pos: noun phrase
 - term: орудний
-  ipa: "[ɔˈrudnɪj]"
   translation: "Instrumental"
   pos: adjective
 - term: множина
-  ipa: "[mnɔʒɪˈnɑ]"
   translation: "plural"
   pos: noun
 - term: фемінітив
-  ipa: "[fɛmʲinʲitɪu̯]"
   translation: "feminitive (feminine form of a profession)"
   pos: noun
 - term: айтішник
-  ipa: "[ɑjtʲiʃnɪk]"
   translation: "IT specialist (colloquial)"
   pos: noun
 - term: фахівець
-  ipa: "[fɑxʲiˈʋɛt͡sʲ]"
   translation: "specialist, expert"
   pos: noun
 - term: розробник
-  ipa: "[rɔˈzrɔbnɪk]"
   translation: "developer"
   pos: noun
 - term: тестувальник
-  ipa: "[tɛstuʋɑlʲnɪk]"
   translation: "tester (QA)"
   pos: noun
 - term: копірайтер
-  ipa: "[kɔpʲirɑjtɛr]"
   translation: "copywriter"
   pos: noun
 - term: аналітик
-  ipa: "[ɑnɑˈlʲitɪk]"
   translation: "analyst"
   pos: noun
 - term: гетьман
-  ipa: "[ˈɦɛtʲmɑn]"
   translation: "Hetman (Cossack leader)"
   pos: noun
 - term: князь
-  ipa: "[knʲɑzʲ]"
   translation: "prince"
   pos: noun
 - term: мрія
-  ipa: "[ˈmrʲijɑ]"
   translation: "dream"
   pos: noun
 - term: стати
-  ipa: "[ˈstɑtɪ]"
   translation: "to become"
   pos: verb
 - term: працювати
-  ipa: "[prɑt͡sʲuˈʋɑtɪ]"
   translation: "to work"
   pos: verb
 - term: дизайнерка
-  ipa: "[dɪˈzɑjnɛrkɑ]"
   translation: "designer (female)"
   pos: noun
 - term: інженер
-  ipa: "[inʒɛˈnɛr]"
   translation: "engineer"
   pos: noun
 - term: волонтер
-  ipa: "[ʋɔlɔnˈtɛr]"
   translation: "volunteer"
   pos: noun

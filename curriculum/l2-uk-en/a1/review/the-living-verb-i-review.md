@@ -40,7 +40,7 @@ The meta specifies `persona.role: Sports Commentator`, but the content contains 
 
 **Location:** Line 69 in content file.
 
-The pronoun table shows: `**Він / Вона** [ʋin] / [ʋɔˈnɑ]`
+The pronoun table shows: `**Він`
 
 The vocabulary file correctly has `[ʋʲin]` for він (with palatalized ʋʲ). The content file omits the palatalization mark, giving `[ʋin]` — this is phonetically incorrect. The initial consonant in він is palatalized.
 

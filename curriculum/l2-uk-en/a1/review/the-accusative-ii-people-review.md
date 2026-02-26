@@ -7,7 +7,7 @@
 
 | # | Dimension | Score | Justification |
 |---|-----------|-------|---------------|
-| 1 | Language Quality | 8/10 | IPA error for вчитель in vocabulary YAML (`[ˈʍt͡ʃɪtɛlʲ]` uses invalid phoneme ʍ and misplaces stress). Content line 74 incorrectly calls р in лікар a "soft consonant" — it is phonetically hard but lexically classified in the soft declension group. Lines 86 and 88 offer contradictory explanations (phonetic vs. lexical) for the same phenomenon. English prose is clear and accessible throughout. No Russianisms detected. No colonial framing. |
+| 1 | Language Quality | 8/10 | IPA error for вчитель in vocabulary YAML (`` uses invalid phoneme ʍ and misplaces stress). Content line 74 incorrectly calls р in лікар a "soft consonant" — it is phonetically hard but lexically classified in the soft declension group. Lines 86 and 88 offer contradictory explanations (phonetic vs. lexical) for the same phenomenon. English prose is clear and accessible throughout. No Russianisms detected. No colonial framing. |
 | 2 | Lesson Quality | 8/10 | Strong metaphors ("Heart Box," "Stone Box," "Greedy Masculine Rule") aid memorability. Good pacing with tables and visual aids. However: no warm greeting to the learner at the start (module opens with a blockquote, not "Привіт!"); no "Today you'll learn..." learning objectives preview; no "You can now..." celebration at the end (just «Дякую за увагу! До побачення!» at line 448). Scoring 4/5 on the "Would I Continue?" test — pacing comfortable, instructions clear, quick wins present, Ukrainian not scary, but warmth could be better. |
 | 3 | Immersion | 8/10 | Measured at 27.3% against 25-40% target — within range but at the low end. For A1.2 phase, the tier guidance suggests 40-60%; the grammar-heavy content justifies more English for explanations, but Section «Культурний контекст: Друзі та імена» could carry more Ukrainian naturally. Dialogues in Section «Використання: Моя сім'я та друзі» are good immersion anchors. |
 | 4 | Activity Quality | 6/10 | **Critical flaw**: Activity 8 ("Ситуації: Кого чи Що?", quiz, 12 items) has questions that give away answers — e.g., «Ви чекаєте друга. Як це сказати?» presents the correct accusative form "друга" in the question, and the student just matches it in the options. All 12 items follow this broken pattern. Unjumble activities (6 and 9) use 3-word sentences (e.g., "Я / бачу / брата") where only one arrangement is possible — zero challenge. Additionally, собака appears in Activity 5 fill-in but is never formally taught in the lesson content (only in a Common Mistakes table). |
@@ -49,11 +49,11 @@
 
 **Location:** Vocabulary YAML, line 29
 
-**Description:** The IPA transcription `[ˈʍt͡ʃɪtɛlʲ]` contains two errors:
+**Description:** The IPA transcription `` contains two errors:
 1. The phoneme ʍ (voiceless labial-velar fricative) does not exist in Ukrainian. The correct representation of Ukrainian в before a consonant is [u̯] or [ʋ].
 2. Stress is placed on the first syllable (ˈʍ), but вчи́тель has stress on the second syllable.
 
-**Fix:** Correct IPA to `[u̯t͡ʃɪˈtɛlʲ]`.
+**Fix:** Correct IPA to ``.
 
 ### Issue 4: Misleading "Soft Consonant" Explanation for лікар (MAJOR — Grammar Accuracy)
 

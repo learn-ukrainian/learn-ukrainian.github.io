@@ -85,9 +85,9 @@ Correct answers should be:
 ### Issue 6: IPA Errors in Vocabulary (Vocab lines 56, 140)
 **Severity:** Moderate — incorrect phonetic transcription
 
-1. **вчасно** (vocab:56): IPA `[ˈʍt͡ʃɑsnɔ]` — The symbol ʍ (voiceless labial-velar fricative) is not a Ukrainian phoneme. Before voiceless /t͡ʃ/, Ukrainian /ʋ/ is realized as [u̯] (non-syllabic vowel) or [f] in rapid speech. Correct: `[ˈu̯t͡ʃɑsnɔ]` or `[ˈft͡ʃɑsnɔ]`.
+1. **вчасно** (vocab:56): IPA `` — The symbol ʍ (voiceless labial-velar fricative) is not a Ukrainian phoneme. Before voiceless, Ukrainian /ʋ/ is realized as [u̯] (non-syllabic vowel) or [f] in rapid speech. Correct: `` or ``.
 
-2. **родовий** (vocab:140): IPA `[rɔˈdɔˈʋɪj]` has two primary stress marks. Ukrainian words have only one primary stress. Correct: `[rɔdɔˈʋɪj]`.
+2. **родовий** (vocab:140): IPA `` has two primary stress marks. Ukrainian words have only one primary stress. Correct: ``.
 
 ## Factual Verification
 
@@ -154,8 +154,8 @@ Correct answers should be:
 | 4 | Activity explanation | activities | Line 125 | Rewrite to explain aspect choice in context, not claim "always perfective" |
 | 5 | Unjumble comma | activities | Line 259 | Fix answer to «Якби ми мали час, ми зробили б це.» |
 | 6 | Unjumble commas | activities | Line 267 | Fix answer to «Краще пізно, ніж ніколи, але краще вчасно.» |
-| 7 | IPA вчасно | vocabulary | Line 56 | Change `[ˈʍt͡ʃɑsnɔ]` → `[ˈu̯t͡ʃɑsnɔ]` |
-| 8 | IPA родовий | vocabulary | Line 140 | Change `[rɔˈdɔˈʋɪj]` → `[rɔdɔˈʋɪj]` |
+| 7 | IPA вчасно | vocabulary | Line 56 | Change `` → `` |
+| 8 | IPA родовий | vocabulary | Line 140 | Change `` → `` |
 | 9 | Warmth markers | content | Sections 2-3 | Add 1-2 encouraging phrases in Sections «Навичка 2» and «Навичка 3» to improve mid-lesson warmth |
 | 10 | Immersion boost | content | Global | Convert ~10 words of English scaffolding to Ukrainian where possible to cross 60% threshold |
 

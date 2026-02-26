@@ -1,154 +1,124 @@
 items:
   - lemma: "султанша"
-    ipa: '[sulˈtɑnʃɑ]'
     translation: "sultana"
     pos: "noun"
     gender: "f"
   - lemma: "хасекі"
-    ipa: '[xɑsɛkʲi]'
     translation: "haseki (favorite consort)"
     pos: "noun"
     gender: "f"
     notes: "indeclinable"
   - lemma: "гарем"
-    ipa: '[ɦɑˈrɛm]'
     translation: "harem"
     pos: "noun"
     gender: "m"
   - lemma: "рабиня"
-    ipa: '[rɑˈbɪnʲɑ]'
     translation: "slave woman"
     pos: "noun"
     gender: "f"
   - lemma: "полон"
-    ipa: '[pɔˈlɔn]'
     translation: "captivity"
     pos: "noun"
     gender: "m"
   - lemma: "набіг"
-    ipa: '[nɑˈbʲiɦ]'
     translation: "raid"
     pos: "noun"
     gender: "m"
   - lemma: "спадкоємець"
-    ipa: '[spɑdkɔˈjɛmɛt͡sʲ]'
     translation: "heir"
     pos: "noun"
     gender: "m"
   - lemma: "інтрига"
-    ipa: '[inˈtrɪɦɑ]'
     translation: "intrigue"
     pos: "noun"
     gender: "f"
   - lemma: "благодійність"
-    ipa: '[blɑɦɔˈdʲijnʲisʲtʲ]'
     translation: "charity"
     pos: "noun"
     gender: "f"
   - lemma: "меценатство"
-    ipa: '[mɛt͡sɛˈnɑt͡stʋɔ]'
     translation: "patronage"
     pos: "noun"
     gender: "n"
   - lemma: "візир"
-    ipa: '[ʋʲiˈzɪr]'
     translation: "vizier"
     pos: "noun"
     gender: "m"
   - lemma: "євнух"
-    ipa: '[ˈjɛu̯nux]'
     translation: "eunuch"
     pos: "noun"
     gender: "m"
   - lemma: "фаворитка"
-    ipa: '[fɑʋɔˈrɪtkɑ]'
     translation: "favorite (female)"
     pos: "noun"
     gender: "f"
   - lemma: "мечеть"
-    ipa: '[mɛt͡ʃɛtʲ]'
     translation: "mosque"
     pos: "noun"
     gender: "f"
   - lemma: "вакф"
-    ipa: '[ʋɑkf]'
     translation: "waqf (charitable endowment)"
     pos: "noun"
     gender: "m"
   - lemma: "невільниця"
-    ipa: '[nɛˈʋʲilʲnɪt͡sʲɑ]'
     translation: "female slave"
     pos: "noun"
     gender: "f"
   - lemma: "падишах"
-    ipa: '[pɑdɪˈʃɑx]'
     translation: "padishah (sultan)"
     pos: "noun"
     gender: "m"
   - lemma: "ясир"
-    ipa: '[jɑˈsɪr]'
     translation: "captives (human tribute)"
     pos: "noun"
     gender: "m"
   - lemma: "наложниця"
-    ipa: '[nɑˈlɔʒnɪt͡sʲɑ]'
     translation: "concubine"
     pos: "noun"
     gender: "f"
   - lemma: "нікях"
-    ipa: '[nʲikʲɑx]'
     translation: "Islamic marriage"
     pos: "noun"
     gender: "m"
   - lemma: "шехзаде"
-    ipa: '[ʃɛɦzɑdɛ]'
     translation: "prince"
     pos: "noun"
     gender: "m"
     notes: "indeclinable"
   - lemma: "тюрбе"
-    ipa: '[tʲurbɛ]'
     translation: "mausoleum"
     pos: "noun"
     gender: "n"
     notes: "indeclinable"
   - lemma: "медресе"
-    ipa: '[mɛdrɛˈsɛ]'
     translation: "theological school"
     pos: "noun"
     gender: "n"
     notes: "indeclinable"
   - lemma: "імарет"
-    ipa: '[imɑrɛt]'
     translation: "soup kitchen"
     pos: "noun"
     gender: "m"
   - lemma: "дарушшифа"
-    ipa: '[dɑruʃːɪfɑ]'
     translation: "hospital"
     pos: "noun"
     gender: "f"
   - lemma: "кулуарний"
-    ipa: '[kuluˈɑrnɪj]'
     translation: "behind-the-scenes"
     pos: "adjective"
   - lemma: "агентність"
-    ipa: '[ɑɦɛntʲnʲisʲtʲ]'
     translation: "agency"
     pos: "noun"
     gender: "f"
   - lemma: "суб'єктність"
-    ipa: '[suˈbjɛktʲnʲisʲtʲ]'
     translation: "subjectivity, political agency"
     pos: "noun"
     gender: "f"
   - lemma: "депеша"
-    ipa: '[dɛˈpɛʃɑ]'
     translation: "dispatch, official message"
     pos: "noun"
     gender: "f"
   - lemma: "бранка"
-    ipa: '[ˈbrɑnkɑ]'
     translation: "female captive"
     pos: "noun"
     gender: "f"

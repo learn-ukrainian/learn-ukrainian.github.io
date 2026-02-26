@@ -1,121 +1,91 @@
 items:
   - lemma: "фразеологізм"
-    ipa: '[frɑzɛɔlɔˈɦʲizm]'
     translation: "idiom"
     pos: "noun"
   - lemma: "переносне значення"
-    ipa: '[pɛrɛnɔsnɛ ˈznɑt͡ʃɛnʲːɑ]'
     translation: "figurative meaning"
     pos: "phrase"
   - lemma: "стилістичне забарвлення"
-    ipa: '[stɪlʲiˈstɪt͡ʃnɛ zɑˈbɑrʋlɛnʲːɑ]'
     translation: "stylistic coloring"
     pos: "phrase"
   - lemma: "вовчий апетит"
-    ipa: '[ˈʋɔu̯t͡ʃɪj ɑpɛˈtɪt]'
     translation: "wolfish appetite"
     pos: "phrase"
   - lemma: "дивитися вовком"
-    ipa: '[dɪˈʋɪtɪsʲɑ ˈʋɔu̯kɔm]'
     translation: "to look hostile"
     pos: "verb"
   - lemma: "побратим"
-    ipa: '[pɔbrɑˈtɪm]'
     translation: "brother-in-arms"
     pos: "noun"
   - lemma: "лицемірство"
-    ipa: '[lɪt͡sɛˈmʲirstʋɔ]'
     translation: "hypocrisy"
     pos: "noun"
   - lemma: "вірний як собака"
-    ipa: '[ˈʋʲirnɪj jɑk sɔˈbɑkɑ]'
     translation: "loyal as a dog"
     pos: "phrase"
   - lemma: "робоча конячка"
-    ipa: '[rɔˈbɔt͡ʃɑ kɔˈnʲɑt͡ʃkɑ]'
     translation: "workhorse"
     pos: "phrase"
   - lemma: "вовка ноги годують"
-    ipa: '[ˈʋɔu̯kɑ ˈnɔɦɪ ɦɔˈdujutʲ]'
     translation: "the wolf is fed by its feet"
     pos: "phrase"
   - lemma: "вовк в овечій шкурі"
-    ipa: '[ʋɔu̯k ʋ ɔˈʋɛt͡ʃʲij ˈʃkurʲi]'
     translation: "wolf in sheep's clothing"
     pos: "phrase"
   - lemma: "собаку з'їсти"
-    ipa: '[sɔˈbɑku ˈzjistɪ]'
     translation: "to be a great expert in something"
     pos: "verb"
   - lemma: "як собака на сіні"
-    ipa: '[jɑk sɔˈbɑkɑ nɑ ˈsʲinʲi]'
     translation: "like a dog in the manger"
     pos: "phrase"
   - lemma: "собаче життя"
-    ipa: '[sɔˈbɑt͡ʃɛ ʒɪˈtʲːɑ]'
     translation: "a dog's life"
     pos: "phrase"
   - lemma: "бути на коні"
-    ipa: '[butɪ nɑ kɔˈnʲi]'
     translation: "to be successful"
     pos: "verb"
   - lemma: "кінь ще не валявся"
-    ipa: '[kʲinʲ ʃt͡ʃɛ nɛ ʋɑˈlʲɑu̯sʲɑ]'
     translation: "the work hasn't even started"
     pos: "phrase"
   - lemma: "долі й конем не об'їдеш"
-    ipa: '[ˈdɔlʲi j kɔˈnɛm nɛ ɔˈbjidɛʃ]'
     translation: "you cannot escape your fate"
     pos: "phrase"
   - lemma: "тваринний код"
-    ipa: '[tʋɑˈrɪnːɪj kɔd]'
     translation: "animal code"
     pos: "phrase"
   - lemma: "колоквіалізм"
-    ipa: '[kɔlɔkʋʲiɑlʲizm]'
     translation: "colloquialism"
     pos: "noun"
   - lemma: "відданість"
-    ipa: '[ˈʋʲidːɑnʲisʲtʲ]'
     translation: "loyalty"
     pos: "noun"
   - lemma: "злидні"
-    ipa: '[ˈzlɪdʲnʲi]'
     translation: "extreme poverty"
     pos: "noun"
   - lemma: "недоброзичливець"
-    ipa: '[nɛdɔbrɔˈzɪˈt͡ʃlɪʋɛt͡sʲ]'
     translation: "ill-wisher"
     pos: "noun"
   - lemma: "лицемірний"
-    ipa: '[lɪt͡sɛˈmʲirnɪj]'
     translation: "hypocritical"
     pos: "adjective"
   - lemma: "незламність"
-    ipa: '[nɛˈzlɑmnʲisʲtʲ]'
     translation: "invincibility"
     pos: "noun"
   - lemma: "фатум"
-    ipa: '[ˈfɑtum]'
     translation: "fate"
     pos: "noun"
   - lemma: "анімалістичний"
-    ipa: '[ɑnʲimɑlʲiˈstɪt͡ʃnɪj]'
     translation: "animalistic"
     pos: "adjective"
   - lemma: "вовкулацтво"
-    ipa: '[ʋɔu̯kuˈlɑt͡stʋɔ]'
     translation: "lycanthropy"
     pos: "noun"
   - lemma: "розсудливий"
-    ipa: '[rɔˈzsudlɪʋɪj]'
     translation: "sensible"
     pos: "adjective"
   - lemma: "русизм"
-    ipa: '[ruˈsɪzm]'
     translation: "Russism"
     pos: "noun"
   - lemma: "калька"
-    ipa: '[ˈkɑlʲkɑ]'
     translation: "calque"
     pos: "noun"

@@ -1,0 +1,64 @@
+{
+  "module": "interviu-ta-podkasty",
+  "level": "B1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-25T17:42:25.943710Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-25T17:41:58.985583Z",
+    "meta": "2026-02-25T17:30:43.940122Z",
+    "activities": "2026-02-25T17:37:38.929052Z",
+    "vocabulary": "2026-02-25T17:37:38.898776Z",
+    "plan": "2026-02-20T21:34:23.916410Z",
+    "research": "2026-02-25T17:30:43.934415Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4101/4000 (raw: 4600)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

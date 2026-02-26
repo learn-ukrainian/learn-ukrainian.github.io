@@ -101,11 +101,11 @@ The sentence «Ви часто питаєте нові слова?» is semantic
 
 ### MAJOR 5: IPA Error — Double Stress Mark (Vocabulary file line 47)
 
-The vocabulary entry for «помилка» has IPA: `[ˈpɔˈmɪlkɑ]`
+The vocabulary entry for «помилка» has IPA: ``
 
-This contains **two primary stress marks** (ˈpɔ and ˈmɪ), which is impossible — a word can only have one primary stress. The correct IPA is **[pɔˈmɪlkɑ]** with stress on the second syllable.
+This contains **two primary stress marks** (ˈpɔ and ˈmɪ), which is impossible — a word can only have one primary stress. The correct IPA is **** with stress on the second syllable.
 
-**Fix:** Change `'[ˈpɔˈmɪlkɑ]'` → `'[pɔˈmɪlkɑ]'`
+**Fix:** Change `''` → `''`
 
 ---
 

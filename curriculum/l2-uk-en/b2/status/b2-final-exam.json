@@ -1,0 +1,68 @@
+{
+  "module": "b2-final-exam",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-25T20:35:54.498678Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-25T18:31:33.365619Z",
+    "meta": "2026-02-25T18:26:27.164486Z",
+    "activities": "2026-02-25T18:34:43.364344Z",
+    "vocabulary": "2026-02-25T18:34:43.365005Z",
+    "plan": "2026-02-20T21:47:48.317707Z",
+    "research": "2026-02-25T18:26:27.151124Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 4,
+      "message": "3419/4000 (raw: 3799) | engagement: 0/4 | pedagogy: 1 violations | richness: 69% < 85% min (checkpoint)"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 4,
+      "message": "0/15 | density: 0 < 14 | unique_types: 0/4 types | priority: No priority types"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "30/10"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "2 Outline Compliance Errors",
+      "Checkpoint Format Errors",
+      "Missing required activity types: essay-response, reading, true-false"
+    ],
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

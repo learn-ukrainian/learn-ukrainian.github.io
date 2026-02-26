@@ -28,7 +28,7 @@ There are two fundamental questions you will ask in a new city. They look simila
 
 1.  **Де?** [dɛ] (Where?) — This asks about **location**. It is static. You are looking for a place that stays still.
     *   Example: «Де аптека?» (Where is the pharmacy?)
-2.  **Куди?** [kuˈdɪ] (Where to?) — This asks about **direction** or **motion**. It implies movement from point A to point B.
+2.  **Куди?** (Where to?) — This asks about **direction** or **motion**. It implies movement from point A to point B.
     *   Example: «Куди ми йдемо?» (Where are we going?)
 
 > [!warning]
@@ -215,9 +215,9 @@ Notice: *в центр* (motion) vs. *в центрі* (location).
 Imagine you are standing at the central square. A stranger asks you for directions. You need to combine your verbs of motion (from Module 12) with your new directional adverbs.
 
 Key phrases for giving directions:
-1.  **Ідіть прямо.** [iˈdʲitʲ] (Go straight.)
-2.  **Поверніть наліво.** [pɔʋɛrˈnʲitʲ] (Turn left.)
-3.  **Поверніть направо.** [pɔʋɛrˈnʲitʲ] (Turn right.)
+1.  **Ідіть прямо.** (Go straight.)
+2.  **Поверніть наліво.** (Turn left.)
+3.  **Поверніть направо.** (Turn right.)
 4.  **Це там.** [t͡sɛ tɑm] (It is there.)
 
 **Example Route:**

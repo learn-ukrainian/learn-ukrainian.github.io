@@ -136,11 +136,11 @@ The lesson has a warm opening («Ласкаво просимо!» line 17) and a
 | Stress: О́сінь → Восени́ (jumps to end) | Line 332 | **CORRECT** |
 | Stress: Зима́ → Взи́мку (jumps to beginning) | Line 333 | **CORRECT** |
 | Stress: Лі́то → Влі́тку (stays at beginning) | Line 334 | **CORRECT** |
-| IPA: Зима [zɪˈmɑ] | Line 291 | **CORRECT** |
-| IPA: Весна [ʋɛsˈnɑ] | Line 297 | **CORRECT** |
-| IPA: Літо [ˈlʲitɔ] | Line 303 | **CORRECT** |
-| IPA: Осінь [ˈɔsʲinʲ] | Line 309 | **CORRECT** |
-| IPA: спекотно [spɛkɔtnɔ] (vocab file line 93) | Vocab line 93 | **MISSING STRESS** — should be [spɛˈkɔtnɔ] |
+| IPA: Зима | Line 291 | **CORRECT** |
+| IPA: Весна | Line 297 | **CORRECT** |
+| IPA: Літо | Line 303 | **CORRECT** |
+| IPA: Осінь | Line 309 | **CORRECT** |
+| IPA: спекотно [spɛkɔtnɔ] (vocab file line 93) | Vocab line 93 | **MISSING STRESS** — should be |
 | Різдво celebrated in winter | Line 295, 481 | **CORRECT** |
 
 ### Callout Box Verification
@@ -235,4 +235,4 @@ The module has solid pedagogical structure, correct Ukrainian grammar, good vari
 | P2 | Missing озеро, річка | `weather-and-nature.md` section «Презентація 4: Пори року та час» or «Вступ» | Add nature vocabulary with weather context |
 | P2 | Warmth gaps in middle sections | `weather-and-nature.md` lines 68-408 | Add 3+ encouragement moments |
 | P2 | Awkward text at line 322 | `weather-and-nature.md` line 322 | Replace «це слово» with «іменник»/«прислівник» |
-| P3 | IPA missing stress: спекотно | `vocabulary/weather-and-nature.yaml` line 93 | Change `[spɛkɔtnɔ]` → `[spɛˈkɔtnɔ]` |
+| P3 | IPA missing stress: спекотно | `vocabulary/weather-and-nature.yaml` line 93 | Change `[spɛkɔtnɔ]` → `` |

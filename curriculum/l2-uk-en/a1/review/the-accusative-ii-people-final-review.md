@@ -14,8 +14,8 @@ Confirmed: two instances of Latin "a" (U+0061) mixed into Cyrillic "брат". N
 
 **Issue 2: IPA Stress Error — дочка (MEDIUM)**
 - **File**: vocabulary/the-accusative-ii-people.yaml, line 57
-- **Text**: `ipa: '[dɔt͡ʃˈkɑ]'` — stress on second syllable
-- **Correct**: `[ˈdɔt͡ʃkɑ]` — stress is on the first syllable (дóчка)
+- **Text**: `ipa: ''` — stress on second syllable
+- **Correct**: `` — stress is on the first syllable (дóчка)
 - **Impact**: Student learns wrong pronunciation for a high-frequency word.
 
 **Issue 3: Misleading Hard Consonant Generalization (MEDIUM)**
@@ -34,7 +34,7 @@ Confirmed: two instances of Latin "a" (U+0061) mixed into Cyrillic "брат". N
 - **Problem**: Собака appears in activity titled "Кого я люблю? (Жіночий рід)" (Feminine gender). In standard Ukrainian, собака is grammatically **masculine** (чоловічий рід), though it declines following the I declension pattern (-а ending) like feminine nouns. The accusative form собаку is correct, but grouping it under "Feminine" misleads about its gender. The explanation should note the gender discrepancy.
 
 **Non-issues verified:**
-- IPA in content file: `[ˈbɑt͡ʃɪtɪ]`, `[ˈznɑtɪ]`, `[lʲuˈbɪtɪ]`, `[t͡ʃɛˈkɑtɪ]` — all correct with proper tie bars on affricates
+- IPA in content file: ``, ``, ``, `` — all correct with proper tie bars on affricates
 - Vocabulary IPA: uses `[ʋ]` for В (correct), `[ɦ]` for Г (correct), tie bars on `[t͡ʃ]` and `[t͡s]` — all good
 - No Russianisms, no Russian characters (ы, э, ё, ъ)
 - All unjumble word arrays match their answers
@@ -86,10 +86,10 @@ Do you know the famous song "Червона Рута" (Red Rue) by Volodymyr Iva
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/vocabulary/the-accusative-ii-people.yaml
 ---OLD---
-- ipa: '[dɔt͡ʃˈkɑ]'
+- ipa: ''
   lemma: дочка
 ---NEW---
-- ipa: '[ˈdɔt͡ʃkɑ]'
+- ipa: ''
   lemma: дочка
 ===FIX_END===
 

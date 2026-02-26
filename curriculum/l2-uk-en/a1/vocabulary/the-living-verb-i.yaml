@@ -1,124 +1,99 @@
-- ipa: '[t͡ʃɪˈtɑtɪ]'
   lemma: читати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to read
-- ipa: '[pɪˈsɑtɪ]'
   lemma: писати
   notes: 'type 1 (irregular stem: пиш-); imperfective'
   pos: verb
   translation: to write
-- ipa: '[prɑt͡sʲuˈʋɑtɪ]'
   lemma: працювати
   notes: type 1 (-ювати → -юю); imperfective
   pos: verb
   translation: to work
-- ipa: '[ˈznɑtɪ]'
   lemma: знати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to know
-- ipa: '[ˈsluxɑtɪ]'
   lemma: слухати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to listen
-- ipa: '[pɪˈtɑtɪ]'
   lemma: питати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to ask
-- ipa: '[ˈɦrɑtɪ]'
   lemma: грати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to play
-- ipa: '[ʋʲidpɔt͡ʃɪˈʋɑtɪ]'
   lemma: відпочивати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to rest
-- ipa: '[sʲpʲiˈʋɑtɪ]'
   lemma: співати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to sing
-- ipa: '[t͡ʃɛˈkɑtɪ]'
   lemma: чекати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to wait
-- ipa: '[ˈdumɑtɪ]'
   lemma: думати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to think
-- ipa: '[ʋɪˈʋt͡ʃɑtɪ]'
   lemma: вивчати
   notes: type 1 (-ати); imperfective
   pos: verb
   translation: to study
-- ipa: '[rɔzuˈmʲitɪ]'
   lemma: розуміти
   notes: type 1 (-іти, I conjugation endings); imperfective
   pos: verb
   translation: to understand
-- ipa: '[jɑ]'
   lemma: я
   notes: 1st person singular
   pos: pronoun
   translation: I
-- ipa: '[tɪ]'
   lemma: ти
   notes: 2nd person singular
   pos: pronoun
   translation: you (informal)
-- ipa: '[ʋʲin]'
   lemma: він
   notes: 3rd person singular (masculine)
   pos: pronoun
   translation: he
-- ipa: '[ʋɔˈnɑ]'
   lemma: вона
   notes: 3rd person singular (feminine)
   pos: pronoun
   translation: she
-- ipa: '[mɪ]'
   lemma: ми
   notes: 1st person plural
   pos: pronoun
   translation: we
-- ipa: '[ʋɪ]'
   lemma: ви
   notes: 2nd person plural/formal
   pos: pronoun
   translation: you (formal/plural)
-- ipa: '[ʋɔˈnɪ]'
   lemma: вони
   notes: 3rd person plural
   pos: pronoun
   translation: they
-- ipa: '[ʒurˈnɑl]'
   lemma: журнал
   notes: masculine
   pos: noun
   translation: magazine
-- ipa: '[tɛkst]'
   lemma: текст
   notes: masculine
   pos: noun
   translation: text
-- ipa: '[lɪst]'
   lemma: лист
   notes: masculine
   pos: noun
   translation: letter
-- ipa: '[ˈrɑdʲiɔ]'
   lemma: радіо
   notes: neuter; indeclinable
   pos: noun
   translation: radio
-- ipa: '[dʲijɛˈslɔʋɔ]'
   lemma: дієслово
   notes: neuter; grammar term
   pos: noun

@@ -1,3 +1,7 @@
+---
+argument-hint: "{level}"
+---
+
 # /level-status
 
 View status of an entire level from cache files.
@@ -14,7 +18,7 @@ Aggregates all status cache JSON files for a level and displays a summary report
 
 ## Instructions
 
-Parse arguments: $ARGUMENTS
+Parse arguments — level: `$ARGUMENTS[0]`
 
 ### Step 1: Generate Fresh Status
 

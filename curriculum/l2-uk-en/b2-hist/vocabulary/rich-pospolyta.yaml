@@ -1,135 +1,110 @@
 items:
   - lemma: Люблінська унія
-    ipa: '[ˈlʲublʲinʲsʲkɑ ˈunʲijɑ]'
     translation: Union of Lublin
     pos: noun
     gender: f
     notes: 1569 рік, утворення Речі Посполитої
   - lemma: Річ Посполита
-    ipa: '[rʲit͡ʃ pɔspɔˈlɪtɑ]'
     translation: Polish-Lithuanian Commonwealth
     pos: noun
     gender: f
     notes: literally Common Thing (Res Publica)
   - lemma: полонізація
-    ipa: '[pɔlɔnʲiˈzɑt͡sʲijɑ]'
     translation: Polonization
     pos: noun
     gender: f
   - lemma: ополячення
-    ipa: '[ɔpɔˈlʲɑt͡ʃɛnʲːɑ]'
     translation: becoming Polish
     pos: noun
     gender: n
     notes: процес зміни ідентичності
   - lemma: кріпацтво
-    ipa: '[krʲiˈpɑt͡stʋɔ]'
     translation: serfdom
     pos: noun
     gender: n
   - lemma: шляхта
-    ipa: '[ˈʃlʲɑxtɑ]'
     translation: nobility
     pos: noun
     gender: f
     notes: szlachta, політичний народ
   - lemma: воєводство
-    ipa: '[ʋɔjɛˈʋɔd͡zstʋɔ]'
     translation: voivodeship
     pos: noun
     gender: n
   - lemma: Брестська унія
-    ipa: '[ˈbrɛsʲkɑ ˈunʲijɑ]'
     translation: Union of Brest
     pos: noun
     gender: f
     notes: 1596 рік, церковний розкол
   - lemma: латинізація
-    ipa: '[lɑtɪnʲiˈzɑt͡sʲijɑ]'
     translation: Latinization
     pos: noun
     gender: f
   - lemma: братство
-    ipa: '[ˈbrɑt͡stʋɔ]'
     translation: brotherhood
     pos: noun
     gender: n
     notes: confraternity
   - lemma: привілей
-    ipa: '[prɪʋʲiˈlɛj]'
     translation: privilege
     pos: noun
     gender: m
   - lemma: селянство
-    ipa: '[sɛˈlʲɑnstʋɔ]'
     translation: peasantry
     pos: noun
     gender: n
   - lemma: фільварок
-    ipa: '[fʲilʲˈʋɑrɔk]'
     translation: folwark
     pos: noun
     gender: m
     notes: панське господарство, орієнтоване на ринок
   - lemma: схизматик
-    ipa: '[sxɪˈzmɑtɪk]'
     translation: schismatic
     pos: noun
     gender: m
   - lemma: сейм
-    ipa: '[sɛjm]'
     translation: Sejm
     pos: noun
     gender: m
     notes: парламент
   - lemma: інкорпорація
-    ipa: '[inkɔrpɔˈrɑt͡sʲijɑ]'
     translation: incorporation
     pos: noun
     gender: f
   - lemma: магнат
-    ipa: '[mɑˈɦnɑt]'
     translation: magnate
     pos: noun
     gender: m
   - lemma: панщина
-    ipa: '[ˈpɑnʃt͡ʃɪnɑ]'
     translation: corvée
     pos: noun
     gender: f
     notes: безкоштовна фізична праця на землі пана
   - lemma: уніат
-    ipa: '[unʲiˈɑt]'
     translation: Uniate
     pos: noun
     gender: m
   - lemma: полеміст
-    ipa: '[pɔlɛˈmʲist]'
     translation: polemicist
     pos: noun
     gender: m
   - lemma: православ'я
-    ipa: '[prɑʋɔˈslɑu̯jɑ]'
     translation: Orthodoxy
     pos: noun
     gender: n
   - lemma: католицизм
-    ipa: '[kɑtɔlɪˈt͡sɪzm]'
     translation: Catholicism
     pos: noun
     gender: m
   - lemma: еліта
-    ipa: '[ɛˈlʲitɑ]'
     translation: elite
     pos: noun
     gender: f
   - lemma: асиміляція
-    ipa: '[ɑsɪmʲiˈlʲɑt͡sʲijɑ]'
     translation: assimilation
     pos: noun
     gender: f
   - lemma: Запорозька Січ
-    ipa: '[zɑpɔˈrɔzʲkɑ sʲit͡ʃ]'
     translation: Zaporozhian Sich
     pos: noun
     gender: f
