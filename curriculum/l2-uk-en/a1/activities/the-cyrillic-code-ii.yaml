@@ -35,7 +35,6 @@
     - Щ
     - Ч
     - Ц
-    - Й
     name: Consonants (Приголосні)
   - items:
     - Є
@@ -45,8 +44,11 @@
     - И
     - І
     name: Vowels (Голосні)
-  instruction: 'Sort the new letters into the correct category: Consonants or Vowels.'
-  title: Consonants vs. Vowels
+  - items:
+    - Й
+    name: Semivowels (Напівголосні)
+  instruction: 'Sort the new letters into the correct category: Consonants, Vowels, or Semivowels.'
+  title: Consonants, Vowels & Semivowels
   type: group-sort
 - instruction: Choose the correct answer for each question about the unique Ukrainian
     letters.

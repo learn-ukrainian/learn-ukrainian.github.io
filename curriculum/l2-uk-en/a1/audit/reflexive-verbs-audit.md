@@ -1,7 +1,7 @@
 # Audit Report: M09 — reflexive-verbs.md
 **Level:** A1 | **Module:** M09 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:19:28
+**Generated:** 2026-02-26 01:06:31
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,13 +37,22 @@
 - Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'надіятися' → сподіватися
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
-- **Words:** ✅ 2700/2000 (raw: 3355)
+- **Words:** ✅ 2767/2000 (raw: 3423)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
@@ -51,7 +60,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 22.1% (target 15-35% (M09))
+- **Immersion:** 🇺🇦 22.4% (target 15-35% (M09))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -62,6 +71,6 @@
 | **Intro/Narrative** | ✅ | 290 | Included in Core |
 | **Reflexive Verbs (-ся)** | ✅ | 86 | Included in Core |
 | **Розминка: Що таке зворотні дієслова?** | ✅ | 422 | Included in Core |
-| **Теорія: Відмінювання та групи** | ✅ | 697 | Included in Core |
-| **Практика: Дія на себе чи на іншого?** | ✅ | 795 | Included in Core |
-| **Культура: Секрети вимови** | ✅ | 410 | Included in Core |
+| **Теорія: Відмінювання та групи** | ✅ | 722 | Included in Core |
+| **Практика: Дія на себе чи на іншого?** | ✅ | 832 | Included in Core |
+| **Культура: Секрети вимови** | ✅ | 415 | Included in Core |

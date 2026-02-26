@@ -1,0 +1,126 @@
+items:
+  - lemma: "циркуляр"
+    ipa: '[t͡sɪrkuˈlʲɑr]'
+    translation: "circular"
+    pos: "noun"
+    gender: "m"
+  - lemma: "указ"
+    ipa: '[uˈkɑz]'
+    translation: "decree"
+    pos: "noun"
+    gender: "m"
+  - lemma: "заборона"
+    ipa: '[zɑbɔˈrɔnɑ]'
+    translation: "ban"
+    pos: "noun"
+    gender: "f"
+  - lemma: "мова"
+    ipa: '[ˈmɔʋɑ]'
+    translation: "language"
+    pos: "noun"
+    gender: "f"
+  - lemma: "друк"
+    ipa: '[druk]'
+    translation: "print"
+    pos: "noun"
+    gender: "m"
+  - lemma: "цензура"
+    ipa: '[t͡sɛnˈzurɑ]'
+    translation: "censorship"
+    pos: "noun"
+    gender: "f"
+  - lemma: "імперія"
+    ipa: '[imˈpɛrʲijɑ]'
+    translation: "empire"
+    pos: "noun"
+    gender: "f"
+  - lemma: "репресія"
+    ipa: '[rɛˈprɛsʲijɑ]'
+    translation: "repression"
+    pos: "noun"
+    gender: "f"
+  - lemma: "театр"
+    ipa: '[tɛˈɑtr]'
+    translation: "theater"
+    pos: "noun"
+    gender: "m"
+  - lemma: "освіта"
+    ipa: '[ɔˈsʲʋʲitɑ]'
+    translation: "education"
+    pos: "noun"
+    gender: "f"
+  - lemma: "література"
+    ipa: '[lʲitɛrɑˈturɑ]'
+    translation: "literature"
+    pos: "noun"
+    gender: "f"
+  - lemma: "культура"
+    ipa: '[kulʲˈturɑ]'
+    translation: "culture"
+    pos: "noun"
+    gender: "f"
+  - lemma: "лінгвоцид"
+    ipa: '[lʲinɦʋɔˈt͡sɪd]'
+    translation: "linguicide"
+    pos: "noun"
+    gender: "m"
+  - lemma: "спротив"
+    ipa: '[ˈsprɔtɪu̯]'
+    translation: "resistance"
+    pos: "noun"
+    gender: "m"
+  - lemma: "переклад"
+    ipa: '[pɛrɛklɑd]'
+    translation: "translation"
+    pos: "noun"
+    gender: "m"
+  - lemma: "говірка"
+    ipa: '[ɦɔˈʋʲirkɑ]'
+    translation: "dialect / vernacular"
+    pos: "noun"
+    gender: "f"
+  - lemma: "наріччя"
+    ipa: '[nɑˈrʲit͡ʃʲːɑ]'
+    translation: "dialect"
+    pos: "noun"
+    gender: "n"
+  - lemma: "сепаратизм"
+    ipa: '[sɛpɑrɑˈtɪzm]'
+    translation: "separatism"
+    pos: "noun"
+    gender: "m"
+  - lemma: "самодержавство"
+    ipa: '[sɑmɔdɛrˈʒɑu̯stʋɔ]'
+    translation: "autocracy"
+    pos: "noun"
+    gender: "n"
+  - lemma: "вистава"
+    ipa: '[ʋɪˈstɑʋɑ]'
+    translation: "performance"
+    pos: "noun"
+    gender: "f"
+  - lemma: "підручник"
+    ipa: '[pʲiˈdrut͡ʃnɪk]'
+    translation: "textbook"
+    pos: "noun"
+    gender: "m"
+  - lemma: "правопис"
+    ipa: '[prɑˈʋɔpɪs]'
+    translation: "orthography"
+    pos: "noun"
+    gender: "m"
+  - lemma: "спадщина"
+    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
+    translation: "heritage"
+    pos: "noun"
+    gender: "f"
+  - lemma: "підпілля"
+    ipa: '[pʲiˈdʲpʲilʲːɑ]'
+    translation: "underground"
+    pos: "noun"
+    gender: "n"
+  - lemma: "меншовартість"
+    ipa: '[mɛnʃɔˈʋɑrtʲisʲtʲ]'
+    translation: "inferiority"
+    pos: "noun"
+    gender: "f"

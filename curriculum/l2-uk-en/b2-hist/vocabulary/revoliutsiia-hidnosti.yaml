@@ -1,0 +1,127 @@
+items:
+  - lemma: "гідність"
+    ipa: '[ˈɦʲidʲnʲisʲtʲ]'
+    translation: "dignity"
+    pos: "noun"
+    gender: "f"
+    example: "Революція Гідності змінила хід історії."
+  - lemma: "Майдан"
+    ipa: '[mɑjˈdɑn]'
+    translation: "Maidan (independence square / protest movement)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "революція"
+    ipa: '[rɛʋɔˈlʲut͡sʲijɑ]'
+    translation: "revolution"
+    pos: "noun"
+    gender: "f"
+  - lemma: "протест"
+    ipa: '[prɔˈtɛst]'
+    translation: "protest"
+    pos: "noun"
+    gender: "m"
+  - lemma: "Небесна Сотня"
+    ipa: '[nɛˈbɛsnɑ ˈsɔtʲnʲɑ]'
+    translation: "Heavenly Hundred"
+    pos: "phrase"
+    notes: "Heroes who died during the revolution"
+  - lemma: "свобода"
+    ipa: '[sʋɔˈbɔdɑ]'
+    translation: "freedom"
+    pos: "noun"
+    gender: "f"
+  - lemma: "демократія"
+    ipa: '[dɛmɔˈkrɑtʲijɑ]'
+    translation: "democracy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "євроінтеграція"
+    ipa: '[jɛu̯rɔintɛˈɦrɑt͡sʲijɑ]'
+    translation: "European integration"
+    pos: "noun"
+    gender: "f"
+  - lemma: "беркут"
+    ipa: '[ˈbɛrkut]'
+    translation: "Berkut (riot police)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "барикада"
+    ipa: '[bɑrɪˈkɑdɑ]'
+    translation: "barricade"
+    pos: "noun"
+    gender: "f"
+  - lemma: "автомайдан"
+    ipa: '[ɑu̯tɔmɑjdɑn]'
+    translation: "Automaidan"
+    pos: "noun"
+    gender: "m"
+  - lemma: "тітушка"
+    ipa: '[tʲituʃkɑ]'
+    translation: "titushka (hired thug)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "самооборона"
+    ipa: '[sɑmɔɔbɔˈrɔnɑ]'
+    translation: "self-defense"
+    pos: "noun"
+    gender: "f"
+  - lemma: "люстрація"
+    ipa: '[lʲuˈstrɑt͡sʲijɑ]'
+    translation: "lustration"
+    pos: "noun"
+    gender: "f"
+  - lemma: "каталізатор"
+    ipa: '[kɑtɑlʲiˈzɑtɔr]'
+    translation: "catalyst"
+    pos: "noun"
+    gender: "m"
+  - lemma: "розгін"
+    ipa: '[rɔˈzʲɦʲin]'
+    translation: "dispersal"
+    pos: "noun"
+    gender: "m"
+  - lemma: "побиття"
+    ipa: '[pɔbɪˈtʲːɑ]'
+    translation: "beating"
+    pos: "noun"
+    gender: "n"
+  - lemma: "набат"
+    ipa: '[nɑˈbɑt]'
+    translation: "alarm bell"
+    pos: "noun"
+    gender: "m"
+  - lemma: "самоорганізація"
+    ipa: '[sɑmɔɔrɦɑnʲiˈzɑt͡sʲijɑ]'
+    translation: "self-organization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ескалація"
+    ipa: '[ɛskɑˈlɑt͡sʲijɑ]'
+    translation: "escalation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "снайпер"
+    ipa: '[ˈsnɑjpɛr]'
+    translation: "sniper"
+    pos: "noun"
+    gender: "m"
+  - lemma: "втеча"
+    ipa: '[ˈʍtɛt͡ʃɑ]'
+    translation: "escape / flight"
+    pos: "noun"
+    gender: "f"
+  - lemma: "агентність"
+    ipa: '[ɑɦɛntʲnʲisʲtʲ]'
+    translation: "agency"
+    pos: "noun"
+    gender: "f"
+  - lemma: "деколонізація"
+    ipa: '[dɛkɔlɔnʲiˈzɑt͡sʲijɑ]'
+    translation: "decolonization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "суспільство"
+    ipa: '[suˈsʲpʲilʲstʋɔ]'
+    translation: "society"
+    pos: "noun"
+    gender: "n"

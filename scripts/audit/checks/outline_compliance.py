@@ -204,7 +204,7 @@ def normalize_section_name(name: str) -> str:
     name = name.lower().strip()
 
     # Remove em-dash subtitles (keep colons for distinct sections)
-    name = re.sub(r"\s*[—–\-\/]\s*.*$", "", name)
+    name = re.sub(r"\s+[—–\-]\s+.*$", "", name)
 
     # Remove punctuation
     name = re.sub(r"[^\wа-яіїєґ\s]", " ", name)

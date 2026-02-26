@@ -1,7 +1,7 @@
 # Audit Report: M12 — the-accusative-ii-people.md
 **Level:** A1 | **Module:** M12 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:19:30
+**Generated:** 2026-02-25 22:40:00
 
 ## Configuration
 **Type:** A1-grammar

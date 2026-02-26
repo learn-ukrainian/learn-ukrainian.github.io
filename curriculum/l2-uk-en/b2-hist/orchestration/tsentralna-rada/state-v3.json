@@ -8,6 +8,21 @@
       "ts": "2026-02-19T16:41:04Z",
       "task_id": "v3-tsentralna-rada-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T22:10:14Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T22:11:35Z",
+      "task_id": "v3-tsentralna-rada-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T22:11:36Z",
+      "attempts": 0,
+      "note": "auto-fix"
     }
   }
 }

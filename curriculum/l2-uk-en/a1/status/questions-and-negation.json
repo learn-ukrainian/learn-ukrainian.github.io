@@ -2,10 +2,10 @@
   "module": "questions-and-negation",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-22T23:19:26.490456Z",
+  "last_audit": "2026-02-26T00:51:31.129334Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:41:48.024603Z",
+    "md": "2026-02-26T00:46:48.799547Z",
     "meta": "2026-02-19T18:39:15.452435Z",
     "activities": "2026-02-21T23:54:08.725446Z",
     "vocabulary": "2026-02-22T18:44:49.946856Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2711/2000 (raw: 2876)"
+      "message": "2741/2000 (raw: 2906)"
     },
     "activities": {
       "status": "pass",

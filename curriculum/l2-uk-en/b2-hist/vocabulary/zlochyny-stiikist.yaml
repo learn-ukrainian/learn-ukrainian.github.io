@@ -1,0 +1,126 @@
+items:
+  - lemma: "злочин"
+    ipa: '[ˈzlɔt͡ʃɪn]'
+    translation: "crime"
+    pos: "noun"
+    gender: "m"
+  - lemma: "стійкість"
+    ipa: '[ˈsʲtʲijkʲisʲtʲ]'
+    translation: "resilience"
+    pos: "noun"
+    gender: "f"
+  - lemma: "звільнення"
+    ipa: '[ˈzʲʋʲilʲnɛnʲːɑ]'
+    translation: "liberation"
+    pos: "noun"
+    gender: "n"
+  - lemma: "жертва"
+    ipa: '[ˈʒɛrtʋɑ]'
+    translation: "victim"
+    pos: "noun"
+    gender: "f"
+  - lemma: "доказ"
+    ipa: '[ˈdɔkɑz]'
+    translation: "evidence"
+    pos: "noun"
+    gender: "m"
+  - lemma: "правосуддя"
+    ipa: '[prɑʋɔˈsudʲːɑ]'
+    translation: "justice"
+    pos: "noun"
+    gender: "n"
+  - lemma: "депортація"
+    ipa: '[dɛpɔrˈtɑt͡sʲijɑ]'
+    translation: "deportation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "окупація"
+    ipa: '[ɔkuˈpɑt͡sʲijɑ]'
+    translation: "occupation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "Міжнародний кримінальний суд"
+    ipa: '[mʲiʒnɑˈrɔdnɪj krɪmʲiˈnɑlʲnɪj sud]'
+    translation: "International Criminal Court (ICC)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "трибунал"
+    ipa: '[trɪbuˈnɑl]'
+    translation: "tribunal"
+    pos: "noun"
+    gender: "m"
+  - lemma: "блекаут"
+    ipa: '[blɛˈkɑut]'
+    translation: "blackout"
+    pos: "noun"
+    gender: "m"
+  - lemma: "волонтер"
+    ipa: '[ʋɔlɔnˈtɛr]'
+    translation: "volunteer"
+    pos: "noun"
+    gender: "m"
+  - lemma: "свідчення"
+    ipa: '[ˈsʲʋʲid͡ʒt͡ʃɛnʲːɑ]'
+    translation: "testimony"
+    pos: "noun"
+    gender: "n"
+  - lemma: "відновлення"
+    ipa: '[ʋʲiˈdnɔu̯lɛnʲːɑ]'
+    translation: "recovery"
+    pos: "noun"
+    gender: "n"
+  - lemma: "геноцид"
+    ipa: '[ɦɛnɔˈt͡sɪd]'
+    translation: "genocide"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ексгумація"
+    ipa: '[ɛɡzɦuˈmɑt͡sʲijɑ]'
+    translation: "exhumation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "катівня"
+    ipa: '[kɑˈtʲiu̯nʲɑ]'
+    translation: "torture chamber"
+    pos: "noun"
+    gender: "f"
+  - lemma: "облога"
+    ipa: '[ɔˈblɔɦɑ]'
+    translation: "siege"
+    pos: "noun"
+    gender: "f"
+  - lemma: "мародерство"
+    ipa: '[mɑrɔˈdɛrstʋɔ]'
+    translation: "looting"
+    pos: "noun"
+    gender: "n"
+  - lemma: "деокупація"
+    ipa: '[dɛɔkupɑt͡sʲijɑ]'
+    translation: "de-occupation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "самоорганізація"
+    ipa: '[sɑmɔɔrɦɑnʲiˈzɑt͡sʲijɑ]'
+    translation: "self-organization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "безкарність"
+    ipa: '[bɛˈzkɑrnʲisʲtʲ]'
+    translation: "impunity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "фіксація"
+    ipa: '[fʲiˈksɑt͡sʲijɑ]'
+    translation: "documentation, recording"
+    pos: "noun"
+    gender: "f"
+  - lemma: "спротив"
+    ipa: '[ˈsprɔtɪu̯]'
+    translation: "resistance"
+    pos: "noun"
+    gender: "m"
+  - lemma: "відплата"
+    ipa: '[ʋʲiˈdplɑtɑ]'
+    translation: "retribution"
+    pos: "noun"
+    gender: "f"

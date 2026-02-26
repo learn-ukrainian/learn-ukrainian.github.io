@@ -8,6 +8,20 @@
       "ts": "2026-02-19T11:49:12Z",
       "task_id": "v3-nestor-litopysets-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T23:51:06Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T23:53:28Z",
+      "task_id": "v3-nestor-litopysets-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T23:55:36Z",
+      "attempts": 2
     }
   }
 }

@@ -1,7 +1,7 @@
 # Audit Report: M02 — kniaz-sviatoslav.md
 **Level:** C1-BIO | **Module:** M02 | **Phase:** C1.3 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 20:36:07
+**Generated:** 2026-02-26 00:41:57
 
 ## Configuration
 **Type:** C1-biography
@@ -16,35 +16,20 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Лев Диякон: Портрет Завойовника | 1 | 1 | ✅ |
-| 2 | essay-response | Есе: Сила Слова проти Сили Меча | 1 | 1 | ✅ |
-| 3 | comparative-study | Порівняльний аналіз: Стіна Щитів vs Катафракти | 1 | 1 | ✅ |
-| 4 | true-false | Перевірка фактів | 10 | 5 | ✅ |
-
-**Summary:**
-- Total activities: 4 (target: 3-9) ✅
-- Unique types: 4 (minimum: 3) ✅
-- Priority types used: 3/6 (comparative-study, essay-response, reading) ✅
-- Required types used: 2/2 (essay-response, reading) ✅
-- Low density activities: 0
-
 ## Gates
 - **Words:** ✅ 5324/5000 (raw: 5741)
-- **Activities:** ✅ 4/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 4/3 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 15 < 24 (soft target)
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (4 activities)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.7% (target 95-100% (biography))
 - **Richness:** ✅ 99% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

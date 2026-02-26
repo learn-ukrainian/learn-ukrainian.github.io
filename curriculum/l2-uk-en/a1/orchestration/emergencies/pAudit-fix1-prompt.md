@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2783/2000 (raw: 2913) | pedagogy: 1 violations
+    lesson: 3955/2000 (raw: 4099) | pedagogy: 10 violations | immersion: 15.2% LOW (target 35-55% (M42))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📚 PEDAGOGICAL VIOLATIONS FOUND:
-    [GRAMMAR] Dative case used at A1: 'Вам'
-       → FIX: Dative case not allowed until A2 (M31+). Restructure sentence.
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 1 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 10 violations (significant)
+     → 9 grammar-level violations (fundamental)
+     → Immersion 20% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/emergencies-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/emergencies-audit.log for details)
         ```
+
 
         ## Files to Fix
 

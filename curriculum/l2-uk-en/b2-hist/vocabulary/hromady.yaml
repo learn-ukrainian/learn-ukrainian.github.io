@@ -1,0 +1,122 @@
+items:
+  - lemma: "громада"
+    ipa: '[ɦrɔˈmɑdɑ]'
+    translation: "community / hromada"
+    pos: "noun"
+    gender: "f"
+  - lemma: "просвітництво"
+    ipa: '[prɔˈsʲʋʲitnɪt͡stʋɔ]'
+    translation: "enlightenment"
+    pos: "noun"
+    gender: "n"
+  - lemma: "культурна робота"
+    ipa: '[kulʲˈturnɑ rɔˈbɔtɑ]'
+    translation: "cultural work"
+    pos: "phrase"
+  - lemma: "підпілля"
+    ipa: '[pʲiˈdʲpʲilʲːɑ]'
+    translation: "underground"
+    pos: "noun"
+    gender: "n"
+  - lemma: "заборона"
+    ipa: '[zɑbɔˈrɔnɑ]'
+    translation: "prohibition / ban"
+    pos: "noun"
+    gender: "f"
+  - lemma: "видавництво"
+    ipa: '[ʋɪdɑˈʋnɪt͡stʋɔ]'
+    translation: "publishing / publishing house"
+    pos: "noun"
+    gender: "n"
+  - lemma: "етнографія"
+    ipa: '[ɛtnɔˈɦrɑfʲijɑ]'
+    translation: "ethnography"
+    pos: "noun"
+    gender: "f"
+  - lemma: "фольклор"
+    ipa: '[fɔlʲˈklɔr]'
+    translation: "folklore"
+    pos: "noun"
+    gender: "m"
+  - lemma: "інтелігенція"
+    ipa: '[intɛlʲiˈɦɛnʲt͡sʲijɑ]'
+    translation: "intelligentsia"
+    pos: "noun"
+    gender: "f"
+  - lemma: "національна свідомість"
+    ipa: '[nɑt͡sʲiɔˈnɑlʲnɑ sʲʋʲiˈdɔmʲisʲtʲ]'
+    translation: "national consciousness"
+    pos: "phrase"
+  - lemma: "недільна школа"
+    ipa: '[nɛˈdʲilʲnɑ ˈʃkɔlɑ]'
+    translation: "Sunday school"
+    pos: "phrase"
+  - lemma: "цензура"
+    ipa: '[t͡sɛnˈzurɑ]'
+    translation: "censorship"
+    pos: "noun"
+    gender: "f"
+  - lemma: "еміграція"
+    ipa: '[ɛmʲiˈɦrɑt͡sʲijɑ]'
+    translation: "emigration"
+    pos: "noun"
+    gender: "f"
+  - lemma: "нелегальний"
+    ipa: '[nɛlɛˈɦɑlʲnɪj]'
+    translation: "illegal"
+    pos: "adjective"
+  - lemma: "асиміляція"
+    ipa: '[ɑsɪmʲiˈlʲɑt͡sʲijɑ]'
+    translation: "assimilation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "відлига"
+    ipa: '[ʋʲiˈdlɪɦɑ]'
+    translation: "thaw (political)"
+    pos: "noun"
+    gender: "f"
+  - lemma: "хлопоманство"
+    ipa: '[xlɔpɔˈmɑnstʋɔ]'
+    translation: "khlopomanstvo (populism)"
+    pos: "noun"
+    gender: "n"
+  - lemma: "маніфест"
+    ipa: '[mɑnʲiˈfɛst]'
+    translation: "manifesto"
+    pos: "noun"
+    gender: "m"
+  - lemma: "меценат"
+    ipa: '[mɛt͡sɛˈnɑt]'
+    translation: "patron of arts / philanthropist"
+    pos: "noun"
+    gender: "m"
+  - lemma: "циркуляр"
+    ipa: '[t͡sɪrkuˈlʲɑr]'
+    translation: "circular / decree"
+    pos: "noun"
+    gender: "m"
+  - lemma: "самооборона"
+    ipa: '[sɑmɔɔbɔˈrɔnɑ]'
+    translation: "self-defense"
+    pos: "noun"
+    gender: "f"
+  - lemma: "меншовартість"
+    ipa: '[mɛnʃɔˈʋɑrtʲisʲtʲ]'
+    translation: "inferiority"
+    pos: "noun"
+    gender: "f"
+  - lemma: "лояльність"
+    ipa: '[lɔˈjɑlʲnʲisʲtʲ]'
+    translation: "loyalty"
+    pos: "noun"
+    gender: "f"
+  - lemma: "радикалізація"
+    ipa: '[rɑdɪkɑlʲiˈzɑt͡sʲijɑ]'
+    translation: "radicalization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "самостійність"
+    ipa: '[sɑmɔˈsʲtʲijnʲisʲtʲ]'
+    translation: "independence"
+    pos: "noun"
+    gender: "f"

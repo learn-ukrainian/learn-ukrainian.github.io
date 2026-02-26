@@ -1,7 +1,7 @@
 # Audit Report: M18 — food-and-shopping.md
 **Level:** A1 | **Module:** M18 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:19:35
+**Generated:** 2026-02-25 22:40:07
 
 ## Configuration
 **Type:** A1-vocab

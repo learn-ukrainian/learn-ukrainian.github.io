@@ -1,0 +1,124 @@
+items:
+  - lemma: "Галичина"
+    ipa: '[ɦɑlɪt͡ʃɪˈnɑ]'
+    translation: "Galicia"
+    pos: "noun"
+    gender: "f"
+  - lemma: "автономія"
+    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
+    translation: "autonomy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "П'ємонт"
+    ipa: '[pjɛˈmɔnt]'
+    translation: "Piedmont"
+    pos: "noun"
+    gender: "m"
+  - lemma: "національний рух"
+    ipa: '[nɑt͡sʲiɔˈnɑlʲnɪj rux]'
+    translation: "national movement"
+    pos: "phrase"
+  - lemma: "відродження"
+    ipa: '[ʋʲiˈdrɔd͡ʒɛnʲːɑ]'
+    translation: "revival"
+    pos: "noun"
+    gender: "n"
+  - lemma: "греко-католицький"
+    ipa: '[ˈɦrɛkɔ-kɑtɔˈlɪt͡sʲkɪj]'
+    translation: "Greek-Catholic"
+    pos: "adjective"
+  - lemma: "москвофіл"
+    ipa: '[mɔskʋɔˈfʲil]'
+    translation: "Russophile"
+    pos: "noun"
+    gender: "m"
+  - lemma: "народовець"
+    ipa: '[nɑrɔˈdɔʋɛt͡sʲ]'
+    translation: "populist / Ukrainophile"
+    pos: "noun"
+    gender: "m"
+  - lemma: "реформа"
+    ipa: '[rɛˈfɔrmɑ]'
+    translation: "reform"
+    pos: "noun"
+    gender: "f"
+  - lemma: "сейм"
+    ipa: '[sɛjm]'
+    translation: "sejm / parliament"
+    pos: "noun"
+    gender: "m"
+  - lemma: "намісник"
+    ipa: '[nɑˈmʲisnɪk]'
+    translation: "viceroy / governor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "консерватор"
+    ipa: '[kɔnsɛrˈʋɑtɔr]'
+    translation: "conservative"
+    pos: "noun"
+    gender: "m"
+  - lemma: "товариство"
+    ipa: '[tɔʋɑˈrɪstʋɔ]'
+    translation: "society / association"
+    pos: "noun"
+    gender: "n"
+  - lemma: "конституція"
+    ipa: '[kɔnstɪˈtut͡sʲijɑ]'
+    translation: "constitution"
+    pos: "noun"
+    gender: "f"
+  - lemma: "імперія"
+    ipa: '[imˈpɛrʲijɑ]'
+    translation: "empire"
+    pos: "noun"
+    gender: "f"
+  - lemma: "абсолютизм"
+    ipa: '[ɑbsɔlʲuˈtɪzm]'
+    translation: "absolutism"
+    pos: "noun"
+    gender: "m"
+  - lemma: "асиміляція"
+    ipa: '[ɑsɪmʲiˈlʲɑt͡sʲijɑ]'
+    translation: "assimilation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "лояльність"
+    ipa: '[lɔˈjɑlʲnʲisʲtʲ]'
+    translation: "loyalty"
+    pos: "noun"
+    gender: "f"
+  - lemma: "емансипація"
+    ipa: '[ɛmɑnsɪˈpɑt͡sʲijɑ]'
+    translation: "emancipation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "духовенство"
+    ipa: '[duxɔˈʋɛnstʋɔ]'
+    translation: "clergy"
+    pos: "noun"
+    gender: "n"
+  - lemma: "семінарія"
+    ipa: '[sɛmʲiˈnɑrʲijɑ]'
+    translation: "seminary"
+    pos: "noun"
+    gender: "f"
+  - lemma: "маніфест"
+    ipa: '[mɑnʲiˈfɛst]'
+    translation: "manifesto"
+    pos: "noun"
+    gender: "m"
+  - lemma: "цензура"
+    ipa: '[t͡sɛnˈzurɑ]'
+    translation: "censorship"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кооператив"
+    ipa: '[kɔɔpɛrɑˈtɪu̯]'
+    translation: "cooperative"
+    pos: "noun"
+    gender: "m"
+  - lemma: "мілітаризація"
+    ipa: '[mʲilʲitɑrɪˈzɑt͡sʲijɑ]'
+    translation: "militarization"
+    pos: "noun"
+    gender: "f"

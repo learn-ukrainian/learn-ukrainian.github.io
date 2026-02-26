@@ -1,0 +1,133 @@
+items:
+  - lemma: "гребля"
+    ipa: '[ˈɦrɛblʲɑ]'
+    translation: "dam"
+    pos: "noun"
+    gender: "f"
+    usage: "підрив греблі"
+  - lemma: "екоцид"
+    ipa: '[ɛkɔˈt͡sɪd]'
+    translation: "ecocide"
+    pos: "noun"
+    gender: "m"
+    usage: "вчинити екоцид"
+  - lemma: "затоплення"
+    ipa: '[zɑˈtɔplɛnʲːɑ]'
+    translation: "flooding"
+    pos: "noun"
+    gender: "n"
+    usage: "зона затоплення"
+  - lemma: "водосховище"
+    ipa: '[ʋɔdɔˈsxɔʋɪʃt͡ʃɛ]'
+    translation: "reservoir"
+    pos: "noun"
+    gender: "n"
+    usage: "дно водосховища"
+  - lemma: "екологічна катастрофа"
+    ipa: '[ɛkɔlɔˈɦʲit͡ʃnɑ kɑtɑˈstrɔfɑ]'
+    translation: "ecological disaster"
+    pos: "phrase"
+    usage: "масштаби катастрофи"
+  - lemma: "інфраструктура"
+    ipa: '[infrɑstruˈkturɑ]'
+    translation: "infrastructure"
+    pos: "noun"
+    gender: "f"
+    usage: "критична інфраструктура"
+  - lemma: "евакуація"
+    ipa: '[ɛʋɑkuˈɑt͡sʲijɑ]'
+    translation: "evacuation"
+    pos: "noun"
+    gender: "f"
+    usage: "примусова евакуація"
+  - lemma: "відбудова"
+    ipa: '[ʋʲidbuˈdɔʋɑ]'
+    translation: "reconstruction"
+    pos: "noun"
+    gender: "f"
+    usage: "плани відбудови"
+  - lemma: "гідроелектростанція"
+    ipa: '[ɦʲidrɔɛlɛktrɔˈstɑnʲt͡sʲijɑ]'
+    translation: "hydroelectric power plant"
+    pos: "noun"
+    gender: "f"
+  - lemma: "зрошення"
+    ipa: '[ˈzrɔʃɛnʲːɑ]'
+    translation: "irrigation"
+    pos: "noun"
+    gender: "n"
+    usage: "втрата зрошення"
+  - lemma: "біорізноманіття"
+    ipa: '[bʲiɔrʲiznɔmɑˈnʲitʲːɑ]'
+    translation: "biodiversity"
+    pos: "noun"
+    gender: "n"
+  - lemma: "забруднення"
+    ipa: '[zɑˈbrudnɛnʲːɑ]'
+    translation: "pollution"
+    pos: "noun"
+    gender: "n"
+    usage: "хімічне забруднення"
+  - lemma: "ґрунтові води"
+    ipa: '[ɡruntɔˈʋʲi ˈʋɔdɪ]'
+    translation: "groundwater"
+    pos: "phrase"
+  - lemma: "екосистема"
+    ipa: '[ɛkɔsɪˈstɛmɑ]'
+    translation: "ecosystem"
+    pos: "noun"
+    gender: "f"
+  - lemma: "Великий Луг"
+    ipa: '[ʋɛˈlɪkɪj luɦ]'
+    translation: "Velykyi Luh (historical area)"
+    pos: "proper noun"
+    gender: "m"
+  - lemma: "сукцесія"
+    ipa: '[suˈkt͡sɛsʲijɑ]'
+    translation: "succession"
+    pos: "noun"
+    gender: "f"
+    usage: "екологічна сукцесія"
+  - lemma: "машинна зала"
+    ipa: '[mɑˈʃɪnːɑ ˈzɑlɑ]'
+    translation: "machine room"
+    pos: "phrase"
+  - lemma: "вибухівка"
+    ipa: '[ʋɪbuˈxʲiu̯kɑ]'
+    translation: "explosives"
+    pos: "noun"
+    gender: "f"
+  - lemma: "довкілля"
+    ipa: '[dɔˈʋkʲilʲːɑ]'
+    translation: "environment"
+    pos: "noun"
+    gender: "n"
+  - lemma: "мул"
+    ipa: '[mul]'
+    translation: "silt, mud"
+    pos: "noun"
+    gender: "m"
+  - lemma: "мастило"
+    ipa: '[mɑˈstɪlɔ]'
+    translation: "lubricating oil"
+    pos: "noun"
+    gender: "n"
+  - lemma: "посухостійкий"
+    ipa: '[pɔsuxɔsʲtʲijˈkɪj]'
+    translation: "drought-resistant"
+    pos: "adjective"
+  - lemma: "спадщина"
+    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
+    translation: "heritage"
+    pos: "noun"
+    gender: "f"
+  - lemma: "заповідник"
+    ipa: '[zɑpɔˈʋʲidnɪk]'
+    translation: "nature reserve"
+    pos: "noun"
+    gender: "m"
+  - lemma: "течія"
+    ipa: '[tɛt͡ʃʲiˈjɑ]'
+    translation: "current, stream"
+    pos: "noun"
+    gender: "f"

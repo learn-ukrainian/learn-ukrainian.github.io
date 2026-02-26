@@ -1,3 +1,5 @@
+version: '1'
+id: holodomor-mekhanizm
 slug: holodomor-mekhanizm
 title: 'Голодомор I: Механізм'
 word_target: 5000

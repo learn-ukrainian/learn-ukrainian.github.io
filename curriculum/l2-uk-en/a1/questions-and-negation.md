@@ -15,7 +15,7 @@ Related: a1-06-living-verb-1, a1-19-at-the-cafe
 ## Вступ: Мистецтво ставити питання
 
 ### Сила запитання
-Language is not just about labeling things. It is about connection. When you meet someone new, you want to ask them about their life, their home, and their feelings. Up until now, you have been building statements: "I am a student," "This is a book." Now, we turn the tables. We transform these facts into inquiries.
+Up until now, you have been building statements like "Я студент" (I am a student) or "Це книга" (This is a book). To have a real conversation, you need to be able to ask questions. Today, we will learn how to transform these basic statements into inquiries.
 
 In English, asking a question often requires a "helper" verb like "do" or "does." You have to rearrange the whole sentence: "You know" becomes "Do you know?". In Ukrainian, the process is much simpler and more direct. You do not need to perform mental gymnastics or hunt for auxiliary verbs. You often just change your voice or add a single small word. This simplicity is one of the joys of Ukrainian syntax.
 
@@ -35,9 +35,7 @@ If you want to ask "Do you read?", you never translate the word "do". You simply
 > Забудьте про допоміжні дієслова. Довіряйте головному дієслову.
 
 ### Базове заперечення: Сила "Не"
-Just as we need to ask, we also need to be able to deny. The world isn't always "yes." Sometimes it is "no."
-
-To make a sentence negative in Ukrainian, we use the particle **не**. This tiny word is incredibly powerful. It stands like a guard directly *before* the word it negates, usually the verb.
+To make a sentence negative in Ukrainian, we use the particle **не**. You simply place it directly *before* the word you want to negate, which is usually the main verb.
 
 *   **Я розумію.** (I understand.)
 *   **Я не розумію.** (I do not understand.)
@@ -55,7 +53,7 @@ There is a common stumbling block for beginners: confusing the *answer* "No" wit
 *   Q: **Ти читаєш?** (Do you read?)
 *   A: **Ні, я не читаю.** (No, I do not read.)
 
-Think of **Ні** as a wall that stops the conversation, and **не** as a shield that protects the verb.
+Remember: **Ні** is the independent answer "No", while **не** is the grammatical particle "not" that attaches to the action.
 
 ## Граматика: Як будувати питання
 
@@ -95,7 +93,7 @@ To turn a statement into a question without words, you must raise your pitch sha
 *   **Ти розумієш?** (Do you understand?)
 
 **Важливо знати:**
-Ця форма дуже поширена серед друзів та родини. Це швидше і більш розмовно. Проте ваша інтонація може бути рівною. Тоді люди подумають: це просто факт. Ви повинні перебільшити підйом голосу!
+This casual form is extremely common among friends and family because it is faster. However, if your intonation stays flat, people will think you are just stating a fact. You must exaggerate the rise in your voice!
 
 > [!culture]
 > **Рівень ввічливості**
@@ -164,7 +162,7 @@ You will learn **що** in textbooks. It is the literary, correct standard form.
 *   **Шо ти робиш?** — Це просто розмовний варіант.
 
 **Важливо знати:**
-As a learner, you should always aim to say **що**. It makes you sound educated and respectful of the language. But you must train your ear to understand **шо**. Ви будете чути це скрізь. Не плутайтеся — це просто те саме слово.
+As a learner, you should always aim to say **що**. It makes you sound educated and respectful of the language. But you must train your ear to understand **шо**. You will hear it everywhere. Don't be confused — it is exactly the same word.
 
 ### Слова частоти: Відповіді на "Коли?"
 When someone asks **Коли?**, you often answer with a frequency word. Here are the four most useful ones:
@@ -236,7 +234,7 @@ Choosing between **Хто** and **Що** seems easy, but it requires paying atte
 *   **____ це? — Це цікаво.** (Concept) → **Що це?**
 
 **Важливо знати:**
-В українській граматиці тварини є "істотами". Тому ми питаємо **Хто**, а не **Що**, про собаку чи кота.
+In Ukrainian grammar, animals are considered "animate" (істоти). Therefore, we use **Хто** (Who), not **Що** (What), when asking about a dog or a cat.
 
 **Practice Grid:**
 Look at these answers and choose the correct question word.
@@ -342,9 +340,9 @@ A bare **Ні** can sound blunt, even rude. In Ukrainian culture, softening your
 When declining, add a little context. Ваша відмова буде м'якшою і приємнішою.
 
 ### Культурний гачок: Легендарний АЛЬФ
-У 1990-х роках американський серіал "ALF" переклали українською. Цей дубляж — це шедевр перекладу! Він сформував почуття гумору цілого покоління.
+In the 1990s, the American sitcom "ALF" was dubbed into Ukrainian. The translation was a masterpiece that shaped the humor of an entire generation.
 
-Є відома фраза. Вона ідеально ілюструє наш урок сьогодні. АЛЬФ захищає свої кулінарні смаки (поїдання котів) перед родиною Таннерів.
+There is a famous catchphrase that perfectly illustrates today's lesson. ALF is defending his culinary tastes (eating cats) to the Tanner family:
 
 **«Ти не любиш котів? Ти просто не вмієш їх готувати!»**
 (You don't like cats? You simply don't know how to cook them!)
@@ -354,21 +352,25 @@ When declining, add a little context. Ваша відмова буде м'якш
 >
 > Don't worry about the form 'котів' (cats) yet. Just enjoy the phrase!
 
-Розберімо це:
-1.  **Ти не любиш котів?** — Питання. Ми бачимо заперечення **не**. Ми чуємо інтонацію. Але тут немає **чи**. Це показує шок: "Ти не любиш їх? Справді?"
-2.  **Ти просто не вмієш...** — Це ствердження. Ми використовуємо **не**. Ми пояснюємо причину.
+Let's break this down:
+1.  **Ти не любиш котів?** — A question. We see the negation **не** and hear the rising intonation, but there is no **чи**. This expresses shock: "You don't like them? Really?"
+2.  **Ти просто не вмієш...** — A statement. We use **не** to explain the reason.
 
-Ця фраза — культова класика. Використовуйте її жартома. Ви миттєво знайдете спільну мову з будь-яким українцем старше 30 років.
+This phrase is a cult classic. Use it jokingly, and you will instantly find common ground with any Ukrainian over 30!
 
 ---
 
 # Підсумок
 
-Сьогодні ви отримали силу розпитувати світ. Раніше ви були пасивним спостерігачем. Ви робили заяви. Тепер ви — активний учасник. Ви запитуєте "Хто?", "Де?" і "Чи це правда?".
+Today, you learned how to actively ask about the world around you in Ukrainian:
 
-Ви дізналися: українська мова освіжаюче проста. Жодних "do/does", про які варто турбуватися. Ви вивчили ввічливу частку **чи**. Ви знаєте силу піднятої брови (інтонацію). Ви відкрили: **не** — це ваш щит від небажаних речей. А **ні** — це ваша стіна. Вона зупиняє їх.
+*   **No "Do/Does":** You don't need auxiliary verbs to ask a question.
+*   **The Formal Question:** Add the particle **чи** to the beginning of a sentence for polite, clear Yes/No questions.
+*   **The Casual Question:** Keep the statement structure but sharply raise your intonation at the end.
+*   **Question Words:** Words like **Хто** (Who), **Що** (What), and **Де** (Where) go at the beginning of the sentence.
+*   **Negation:** Use **не** right before the verb to make it negative, and use **Ні** as the standalone answer "No".
 
-Пам'ятайте правило "АЛЬФа": Питання перетворюють вас на активного учасника. Без них розмова прісна. А тепер йдіть і запитуйте!
+You now have the tools to initiate conversations, ask for information, and express when you don't do something!
 
 **Перевірте себе:**
 

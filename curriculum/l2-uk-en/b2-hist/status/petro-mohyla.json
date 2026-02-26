@@ -1,0 +1,64 @@
+{
+  "module": "petro-mohyla",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-25T20:46:09.771117Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-25T20:45:49.001257Z",
+    "meta": "2026-02-24T22:37:44.523609Z",
+    "activities": "2026-02-25T20:36:43.746081Z",
+    "vocabulary": "2026-02-25T20:36:44.161631Z",
+    "plan": "2026-02-18T19:03:36.887942Z",
+    "research": "2026-02-22T10:35:24.509399Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5053/5000 (raw: 5434)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

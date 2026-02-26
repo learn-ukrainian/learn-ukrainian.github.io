@@ -1,195 +1,185 @@
-<!-- content-hash: aaafa5af61d7 -->
+<!-- content-hash: a0cccb7b29d6 -->
+# Рецензія: Emergencies
+
+**Level:** A1 | **Module:** 42
+**Overall Score:** 7.6/10
+**Status:** FAIL
+**Reviewed:** 2026-02-26
 **Reviewed-By:** claude-opus-4-6
 
----
+## Plan Verification
+
+```
+Plan-Content Alignment: PASS (with gaps)
+- Sections: PASS — all 4 H2 sections present (Вступ, Презентація, Практика, Виробництво та підсумок)
+- Vocabulary: 14/14 from plan (8 required + 6 recommended), plus 6 extra (лікар, офіцер, гаманець, метро, дзвонити, викликати)
+- Grammar scope: PASS — Vocative, imperative, location expressions all within scope
+- Objectives: PASS — all 4 objectives addressed (call for help, describe problems, give location, understand instructions)
+- Activity plan divergence: Plan hints suggested 4 activities (match-up/20, fill-in/8, quiz/10, fill-in/5); actual has 10 activities across 5 types. More activities is fine but types diverge from plan.
+```
 
 ## Scores
 
-| # | Dimension | Score | Evidence Summary |
-|---|-----------|-------|------------------|
-| 1 | **Language Quality** | 6/10 | Critical typo on line 135 ("називаate"); semantically wrong verb tense on line 113 «Хтось бере мою чорну сумку»; confusing paragraph with unclear referents (lines 17–22); redundant sentences ("Диспетчер добре розуміє ситуацію. Він знає ситуацію." line 76) |
-| 2 | **Lesson Quality** | 6/10 | No warm greeting (no "Привіт!"); no "Today you'll learn..." preview; no "You can now..." celebration at end; overwhelming English prose walls; fails "Would I Continue?" test (2/5) |
-| 3 | **Factual Accuracy** | 8/10 | Emergency numbers correct; Vocative forms grammatically valid; Дія/єДопомога references accurate; but «Поліціє!» as vocative is grammatically correct yet pragmatically unusual (institutions aren't normally addressed in vocative) |
-| 4 | **Richness** | 7/10 | Five callout boxes with varied types; real-world Khreshchatyk reference; Дія digital culture hook; but culture box (line 146–147) is bloated English padding rather than useful cultural content |
-| 5 | **Warmth / Humanity** | 5/10 | Zero "Привіт!" or warm greeting; zero "Don't worry" moments; zero "You can now..." progress markers; zero encouragement phrases ("Great!", "You've got this!"); the module reads like a legal briefing, not a supportive tutor |
-| 6 | **Immersion Balance** | 8/10 | 37.3% Ukrainian per audit — within A1 target (20–40% for A1.1, 40–60% for A1.2); English scaffolding present for grammar explanations; Ukrainian sentences appropriately short |
-| 7 | **Activity Quality** | 8/10 | 10 activities with good variety (match-up, fill-in, quiz, unjumble, group-sort × 2); appropriate A1 difficulty; distractors reasonable; minor issue with activity unjumble answer "Скажіть будь ласка вашу адресу" missing comma after "ласка" |
-| 8 | **LLM Fingerprint** | 4/10 | Extreme adverb stuffing: "highly", "profoundly", "remarkably", "infinitely", "desperately", "systematically", "beautifully", "tragically" appear across nearly every English paragraph; "It is important to remember" (line 106); "Let us now systematically" (line 90); "Notice carefully how remarkably short and profoundly direct" (line 103) |
-| 9 | **Plan Compliance** | 7/10 | Missing required vocative drill «Рятувальники!»; missing required collocation «пред'явити документи»; missing «довідку» from polite request drill |
-| 10 | **Vocabulary Coverage** | 9/10 | All 20 required/recommended vocabulary items present in vocabulary YAML and introduced in content; IPA present for each; two IPA errors (see Critical Issues) |
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 8/10 | <7 | Solid WELCOME→PRESENT→PRACTICE→PRODUCE arc; dialogues are engaging. Section «Виробництво та підсумок» Дія subsection is thin/vague. Excessive English intensifiers create purple-prose feeling rather than warm tutor voice. |
+| 2 | Language | 8/10 | <8 | Ukrainian prose is generally correct and natural. Culture callout (line 82) makes factually incorrect claim about Slavic languages. Line 68 overstatement about nominative sounding "дуже неприродно." No Russianisms detected in Ukrainian. |
+| 3 | Pedagogy | 7/10 | <7 | Testing before teaching: "Офіцере!" tested twice in activities but never taught in content. Vocative case presented as bullets instead of a table — critical miss for beginner grammar. No comparison table for дзвонити/викликати. |
+| 4 | Activities | 7/10 | <7 | Testing untaught content (Офіцере!). Unjumble answers omit commas around "будь ласка." Good variety (5 types). Quiz items are well-constructed. |
+| 5 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5. Warm opening, clear learning path, good quick wins via vocabulary matching. Some English paragraphs dense with superlatives. |
+| 6 | LLM Fingerprint | 7/10 | <7 | "highly" ×7, "extremely" ×3, "perfectly" ×2, "elegantly" ×1. Line 236 pure AI prose. Example format mostly uniform (bold Ukrainian + English in parentheses). |
+| 7 | Linguistic Accuracy | 8/10 | <9 | **AUTO-FAIL.** False claim "р" is soft consonant (line 79). IPA error: ʍ in вкрасти (vocab). Missing stress in викликати IPA. False claim about vocative in Slavic languages (line 82). |
 
----
+**Weighted Overall:** (8×1.5 + 8×1.1 + 7×1.2 + 7×1.3 + 8×1.3 + 7×1.0 + 8×1.5) / 8.9 = (12.0 + 8.8 + 8.4 + 9.1 + 10.4 + 7.0 + 12.0) / 8.9 = 67.7 / 8.9 = **7.6/10**
+
+## Auto-Fail Checklist Results
+
+- Russianisms: **CLEAN** — No Russianisms in content Ukrainian. Content correctly identifies and corrects «визивати» → «викликати».
+- Calques: **CLEAN**
+- Grammar scope: **CLEAN** — Vocative case and imperative mood appropriate for A1.4
+- Activity errors: **ISSUES** — Офіцере! tested but never taught; unjumble answers missing commas
+- Beginner safety: 4/5
+- Factual accuracy: **ISSUES** — єДопомога mischaracterized; Slavic vocative claim incorrect; "soft consonant р" claim wrong
 
 ## Critical Issues Found
 
-### Issue 1: CRITICAL — Broken Ukrainian/Latin Hybrid on Line 135
+### Issue 1: Linguistic Accuracy — False claim about soft consonant "р"
+- **Location**: Line 79 / Section «Презентація»
+- **Original**: «Masculine nouns ending in a soft consonant like "р" often take the **-ю** ending in the Vocative.»
+- **Problem**: The consonant р in лікар is HARD, not soft. The vocative ending -ю for лікар comes from the declension pattern of masculine nouns ending in -ар (лікар→лікарю, кобзар→кобзарю, аптекар→аптекарю), not from consonant softness. Meanwhile, the quiz tests офіцер→офіцере with the explanation "Чоловічі іменники на приголосний у кличному відмінку мають закінчення -е" — directly contradicting the content. A beginner following the content's rule would expect офіцер→офіцерю (wrong).
+- **Fix**: Replace with accurate rule: "Masculine nouns ending in **-ар** take **-ю** in the Vocative (лікар → лікарю, кобзар → кобзарю). Most other masculine nouns ending in a hard consonant take **-е** (офіцер → офіцере, друг → друже)." Present this in a comparison TABLE.
 
-**Location:** Section «Виробництво та підсумок», line 135
+### Issue 2: Factual Error — Vocative in Slavic languages
+- **Location**: Line 82 / Section «Презентація» / `[!culture]` callout
+- **Original**: «Using the Vocative case is a beautiful hallmark of the Ukrainian language, distinguishing it clearly from other Slavic languages that have lost this feature.»
+- **Problem**: This is factually incorrect. Polish, Czech, Croatian, Serbian, and Bulgarian all retain productive vocative cases. Only Russian has largely lost the vocative. The statement implicitly defines Ukrainian against Russian without naming it, which also borders on colonial framing.
+- **Fix**: Rewrite to: "The Vocative case is a proud grammatical feature shared across several Slavic languages including Polish and Czech. In Ukrainian, it remains highly productive and is expected in everyday speech — using «Лікарю!» instead of «Лікар!» immediately signals respect and natural fluency."
 
-**Evidence:** «Ви називаate ваше місце:»
+### Issue 3: IPA Error — вкрасти
+- **Location**: Vocabulary YAML, line 47
+- **Original**: `ipa: '[ˈʍkrɑstɪ]'`
+- **Problem**: The symbol ʍ represents a voiceless labial-velar approximant (English "wh" in some dialects). This phoneme does not exist in Ukrainian. The initial в before к in вкрасти is realized as [u̯] (non-syllabic u) or is simply assimilated.
+- **Fix**: Change to `'[ˈu̯krɑstɪ]'`
 
-This is a code-switch corruption — the Ukrainian verb "називаєте" has been mangled into a Ukrainian-Latin hybrid "називаate". This is a showstopper rendering error visible to learners.
+### Issue 4: IPA Error — викликати missing stress
+- **Location**: Vocabulary YAML, line 77
+- **Original**: `ipa: '[ʋɪklɪkɑtɪ]'`
+- **Problem**: No stress mark present. The stress falls on the penultimate syllable: викликáти.
+- **Fix**: Change to `'[ʋɪklɪˈkɑtɪ]'`
 
-**Fix:** Replace "називаate" with "називаєте".
+### Issue 5: Testing Before Teaching — Офіцере!
+- **Location**: Activities YAML, lines 329-339 and 408-419 / Content section «Презентація»
+- **Problem**: The quiz tests "Офіцере!" as the correct vocative of "офіцер" twice (two separate quiz activities). However, the content (lines 70-78) only teaches three vocative forms: Лікарю!, Поліціє!, Рятувальнику! The word "офіцер" and its vocative "офіцере" appear nowhere in the lesson text. This violates beginner safety — testing content that was never presented.
+- **Fix**: Either (a) add офіцер→офіцере to the vocative presentation table in section «Презентація», or (b) replace quiz items testing Офіцере! with items testing taught forms (Лікарю!, Поліціє!, Рятувальнику!).
 
----
+### Issue 6: Factual Error — єДопомога mischaracterized
+- **Location**: Lines 244-245 / Section «Виробництво та підсумок»
+- **Original**: «Також існує платформа **«єДопомога»**. Це платформа для соціальної солідарності. Люди можуть знайти волонтерів для допомоги.»
+- **Problem**: єДопомога was a state cash assistance program distributing financial aid to internally displaced persons and war-affected citizens through the Дія app. It was NOT a volunteering platform for "social solidarity." This is a fabricated characterization.
+- **Fix**: Rewrite to accurately describe єДопомога as a government cash assistance program, or replace with a genuine digital safety tool like the "Повітряна тривога" (Air Alert) app if the goal is to showcase digital resilience.
 
-### Issue 2: CRITICAL — Semantically Wrong Verb in Theft Report (Line 113)
+### Issue 7: Unjumble Missing Commas
+- **Location**: Activities YAML, lines 222, 430, 437
+- **Original**: «Скажіть будь ласка вашу адресу», «Дайте будь ласка цей документ», «Допоможіть будь ласка написати заяву»
+- **Problem**: Standard Ukrainian orthography requires commas around the parenthetical "будь ласка": "Скажіть, будь ласка, вашу адресу." While unjumble activities sometimes omit punctuation, these particular sentences teach a key polite pattern where comma placement is integral to the structure. Beginners may internalize the missing commas.
+- **Fix**: Add commas to answers: "Скажіть, будь ласка, вашу адресу" etc. Also add commas as separate "words" in the word lists.
 
-**Location:** Section «Практика», line 113
+## Ukrainian Language Issues
 
-**Evidence:** «Хтось бере мою чорну сумку.» (Someone takes my black bag.)
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 79 | «soft consonant like "р"» | р is a hard consonant; -ю ending is the -ар noun pattern | Grammar explanation error |
+| 82 | «from other Slavic languages that have lost this feature» | Polish, Czech, Croatian etc. retain vocative; only Russian largely lost it | Factual error |
+| 68 | «Це звучить дуже неприродно» | Overstatement — nominative shout is colloquial but functional | Register overstatement |
+| 242 | «це приклад революції» | Vague; specify "цифрової трансформації державних послуг" | Vague claim |
+| 244 | «єДопомога... Люди можуть знайти волонтерів» | єДопомога is a cash aid program, not a volunteering platform | Factual error |
+| Vocab:47 | `[ˈʍkrɑstɪ]` | `[ˈu̯krɑstɪ]` | IPA error |
+| Vocab:77 | `[ʋɪklɪkɑtɪ]` | `[ʋɪklɪˈkɑtɪ]` | Missing IPA stress |
 
-In a police station scenario (Scenario 2), the learner is reporting a theft that already happened. The present-tense "бере" (takes) implies the action is happening right now. Furthermore, "брати" (to take) is far too weak for theft — a real speaker would say "вкрав" (stole) or "забрав" (took away). The correct phrasing should be past-tense: «Хтось вкрав мою чорну сумку.» or «У мене вкрали чорну сумку.» (the passive construction explicitly listed in the plan vocabulary hints for "вкрасти").
+## Beginner Safety Audit
 
-**Fix:** Replace with «У мене вкрали чорну сумку.» to match the plan's recommended passive construction and use correct tense.
+"Would I Continue?" Test: 4/5
+- Overwhelmed? **Pass** — Pacing is reasonable, Ukrainian introduced gradually with English scaffolding.
+- Instructions clear? **Pass** — Each section has clear purpose and examples.
+- Quick wins? **Pass** — Vocabulary matching and basic phrases provide early success.
+- Ukrainian scary? **Pass** — Gentle introduction with extensive English support at 37.2% immersion.
+- Come back tomorrow? **Soft Fail** — The English prose is dense with superlatives and adverbs ("remarkably natural, deeply respectful, and commands immediate attention") that feel more like marketing copy than a warm tutor. A nervous beginner might feel the instructor is performing rather than teaching.
 
----
+## Strengths
+- **Decolonization**: The Russicism correction (визивати → викликати) section is excellent — direct, clear, with a well-placed myth-buster callout.
+- **Practical dialogues**: The three scenarios (112 call, police interaction, embassy) form a coherent progression from emergency → follow-up → resolution.
+- **Verb pair distinction**: The дзвонити/викликати differentiation with the learner error warning is pedagogically strong and addresses a genuine A1 error.
+- **Activity variety**: 5 different activity types (match-up, fill-in, quiz, unjumble, group-sort) keep practice engaging.
+- **Comprehensive scope**: Content covers all plan objectives and provides realistic emergency vocabulary.
 
-### Issue 3: SIGNIFICANT — IPA Error for "вкрасти" in Vocabulary
+## Fix Plan to Reach 9/10 (REQUIRED)
 
-**Location:** Vocabulary YAML, line 47
+### Linguistic Accuracy: 8/10 → 9/10
+**What to fix:**
+1. Line 79: Replace "soft consonant like 'р'" with correct rule: -ар nouns take -ю (лікар→лікарю), hard-consonant nouns take -е (офіцер→офіцере). Present as a TABLE.
+2. Line 82: Rewrite culture callout to remove false claim about Slavic languages. State vocative is shared with Polish, Czech, etc.
+3. Vocab line 47: Fix `вкрасти` IPA from `[ˈʍkrɑstɪ]` to `[ˈu̯krɑstɪ]`.
+4. Vocab line 77: Fix `викликати` IPA from `[ʋɪklɪkɑtɪ]` to `[ʋɪklɪˈkɑtɪ]`.
 
-**Evidence:** `ipa: '[ˈʍkrɑstɪ]'`
+**Expected score after fix:** 9/10
 
-The symbol ʍ (voiceless labial-velar fricative) does not exist in Ukrainian phonology. In the cluster "вк-", the "в" before a voiceless consonant devoices to [u̯] or is omitted. The correct IPA should be approximately `[u̯ˈkrɑstɪ]`.
+### Pedagogy: 7/10 → 9/10
+**What to fix:**
+1. Section «Презентація»: Add a markdown TABLE for vocative case forms (Nominative → Vocative, with pattern explanation). Include офіцер→офіцере alongside existing examples.
+2. Section «Презентація» subsection «Дієслово «Викликати» та «Дзвонити»»: Add a 2-column comparison TABLE (дзвонити: process/phone vs викликати: summon/dispatch) with example sentences.
+3. Lines 240-246 in section «Виробництво та підсумок»: Fix єДопомога description to accurately reflect the cash aid program, or replace with a more relevant digital safety tool.
 
-**Fix:** Replace `[ˈʍkrɑstɪ]` with `[u̯ˈkrɑstɪ]`.
+**Expected score after fix:** 9/10
 
----
+### Activities: 7/10 → 9/10
+**What to fix:**
+1. Either add офіцер→офіцере to section «Презентація» content, OR replace quiz items testing Офіцере! with taught forms.
+2. Fix unjumble answers to include commas: "Скажіть, будь ласка, вашу адресу" etc.
 
-### Issue 4: SIGNIFICANT — Missing Stress in IPA for "викликати"
+**Expected score after fix:** 9/10
 
-**Location:** Vocabulary YAML, line 77
+### LLM Fingerprint: 7/10 → 8/10
+**What to fix:**
+1. Line 236: Rewrite «This comprehensive role-play elegantly demonstrates how all the disparate elements...come perfectly together» — replace with a direct statement like "This role-play brings together everything from the module: reporting, location, and documentation."
+2. Reduce intensifiers throughout English prose: cut ~50% of "highly", "extremely", "remarkably", "immense" instances. Replace with specific, concrete descriptions.
+3. Line 134: «brings immense peace of mind» → cut or replace with a teaching point.
+4. Line 191: «This dialogue perfectly highlights the crucial, legal difference between two extremely important verbs» → "This dialogue shows the difference between two key verbs:"
 
-**Evidence:** `ipa: '[ʋɪklɪkɑtɪ]'`
+**Expected score after fix:** 8/10
 
-The transcription lacks a stress marker entirely. Standard Ukrainian "викликати" (imperfective) carries stress on the third syllable: [ʋɪklɪˈkɑtɪ].
+### Projected Overall After Fixes
+```
+Experience: 8→8, Language: 8→9, Pedagogy: 7→9, Activities: 7→9,
+Beginner Safety: 8→8, LLM: 7→8, Linguistic Accuracy: 8→9
 
-**Fix:** Add stress marker: `[ʋɪklɪˈkɑtɪ]`.
-
----
-
-### Issue 5: SIGNIFICANT — Extreme LLM Fingerprint in English Prose
-
-**Location:** Throughout all sections, most densely in sections «Практика» and «Виробництво та підсумок»
-
-**Evidence (sampled):**
-- Line 90: "Let us now systematically put all these individual linguistic pieces together into a highly realistic, practical scenario."
-- Line 103: "Notice carefully how remarkably short and profoundly direct the Ukrainian sentences are in this dialogue. In a genuine emergency scenario, absolute clarity is infinitely more important than demonstrating complex grammatical fluency."
-- Line 106: "It is important to remember that not all intense emergencies involve immediate physical danger to your body."
-- Line 127: "Imagine yourself vividly in a frustrating scenario"
-- Line 147: "These remarkable technological tools beautifully highlight the deep, enduring solidarity and the impressive technological resilience of modern, everyday Ukrainian society."
-
-Nearly every English paragraph is stuffed with unnecessary intensifiers ("highly", "profoundly", "remarkably", "infinitely", "systematically", "beautifully", "tragically", "desperately"). This is textbook LLM verbosity. A real tutor would say "Here's a realistic scenario" not "Let us now systematically put all these individual linguistic pieces together into a highly realistic, practical scenario."
-
-**Fix:** Strip all unnecessary adverbs and intensifiers from English prose. Replace formal constructions ("It is important to remember", "Let us now systematically") with tutor-voice equivalents ("Remember that...", "Let's put this together...").
-
----
-
-### Issue 6: SIGNIFICANT — Missing Plan-Required Content
-
-**Location:** Section «Презентація» (lines 39–85)
-
-The plan (both plan.yaml and meta.yaml) explicitly requires:
-1. Vocative drill for **«Рятувальники!»** — completely absent from the content
-2. The collocation **«пред'явити документи»** — listed in plan vocabulary_hints under "документи" required collocations — completely absent
-3. The polite request **«Дайте, будь ласка, довідку»** — from plan practice section — replaced with «Дайте, будь ласка, цей офіційний документ.»
-
-**Fix:** Add "Рятувальники!" vocative example alongside Лікарю! and Офіцере!; add "пред'явити документи" phrase in Scenario 2; restore "довідку" in polite request examples.
-
----
-
-### Issue 7: MODERATE — Confusing Paragraph with Unclear Referents (Lines 17–22)
-
-**Location:** Section «Вступ», lines 17–22
-
-**Evidence:** Lines 21–22: «Формально це слово означає "ви". Але в екстреній ситуації це не має значення. Ви кричите так одному чоловіку. Ви кричите так групі людей.»
-
-The text says "Formally this word means 'you'" but it's completely unclear what "this word" refers to. The preceding content discusses "Допоможіть, будь ласка!" — the -іть ending implies ви-form address, but this connection is never made explicit. A beginner learner would be lost. Additionally, lines 17–19 contain a disconnected chain: «Ви шукаєте вулицю. Потрібен лікар. Потрібна поліція. Усюди допомагає це слово. Вони рятують життя.» — The referent of "Вони" (They) is ambiguous — the words? the services?
-
-**Fix:** Rewrite the paragraph to explicitly connect the -іть ending to the ви-form. Remove or clarify the vague sentence chain.
-
----
-
-### Issue 8: MODERATE — Redundant Sentence (Line 76)
-
-**Location:** Section «Презентація», line 76
-
-**Evidence:** «Диспетчер добре розуміє ситуацію. Він знає ситуацію.»
-
-Two consecutive sentences say the same thing ("The dispatcher understands the situation well. He knows the situation."). This is empty filler.
-
-**Fix:** Remove «Він знає ситуацію.»
-
----
-
-### Issue 9: MODERATE — No Warm Opening, No Progress Celebration
-
-**Location:** Section «Вступ» (lines 10–36) and section «Виробництво та підсумок» (lines 124–177)
-
-The module opens with a formal English blockquote "Чому це важливо?" followed by dense academic English. There is no "Привіт!" or warm welcome. There is no "Today you'll learn to call for help, describe problems, and give your location" preview. The module ends with a formal English paragraph summary and check-yourself questions — no "You can now call 112 and explain your emergency!" celebration, no encouragement.
-
-For a beginner module, this is a serious warmth failure. The emotional arc should be: Welcomed → Curious → Quick win → Encouraged → Progress visible. Instead it's: Formal intro → Dense content → Formal summary.
-
-**Fix:** Add warm opening with "Привіт!" and clear learning objectives in simple English. Add closing celebration that validates what the learner can now do.
-
----
+(8×1.5 + 9×1.1 + 9×1.2 + 9×1.3 + 8×1.3 + 8×1.0 + 9×1.5) / 8.9
+= (12.0 + 9.9 + 10.8 + 11.7 + 10.4 + 8.0 + 13.5) / 8.9
+= 76.3 / 8.9 = 8.6/10
+```
 
 ## Factual Verification
 
-| Claim | Verified? | Notes |
-|-------|-----------|-------|
-| 112 is unified European emergency number | Yes | Standard EU number, being implemented in Ukraine |
-| 101 = fire, 102 = police, 103 = ambulance | Yes | Correct Ukrainian emergency numbers |
-| «Допоможіть!» as fundamental A1 concept (§1.3.2) | Yes | Matches research notes: "Допоможіть!" listed in State Standard |
-| Vocative: Лікар → Лікарю | Yes | Correct vocative for masculine -р ending |
-| Vocative: Офіцер → Офіцере | Yes | Correct vocative for masculine -р ending |
-| Vocative: Поліція → Поліціє | Partially | Grammatically correct but pragmatically unusual for an institution |
-| «визивати» is a Russism | Yes | Confirmed in research notes as common learner error |
-| «Дія» allows digital documents | Yes | Well-documented government app |
-| «єДопомога» connects people with aid | Yes | Real platform, accurate description |
-| "сталася аварія" — feminine agreement | Yes | Correct grammatical observation |
-| Line 35: "implementation of the unified 112 emergency number... aligning... with standard European Union protocols" | Plausible | 112 adoption is part of EU integration, claim is reasonable |
-
-**No fabricated facts detected.** Factual content is accurate.
-
----
+- Research notes consulted: YES
+- Key Facts Ledger present: NO (not applicable — A1 core track)
+- Dates checked: 1 — "У 2023 році" for 112 launch matches research ("July 2023") ✓
+- Named figures verified: N/A
+- Primary quotes cross-referenced: N/A
+- Chronological sequence: CONSISTENT
+- Claims without research grounding: 2 found:
+  - Line 39: «Оператори 112 також говорять англійською мовою» — not in research notes. Plausible for some operators but broad claim is unverifiable.
+  - Lines 244-245: єДопомога characterization as "volunteering platform" — contradicts public knowledge of the program as cash assistance.
 
 ## Verification Summary
 
-| Check | Result |
-|-------|--------|
-| Russianisms | "визивати" is correctly flagged as a Russism — no undetected Russianisms in the Ukrainian content |
-| Colonial framing | The [!warning] box on line 61–62 references Russian linguistic influence but does so in a legitimate decolonization context (flagging a Russism). No colonial framing detected. |
-| Grammar scope violations | Vocative case and imperative are within A1 scope per plan. No scope creep. |
-| Word salad | No word salad in Ukrainian text. English text is verbose but coherent. |
-| Calques | None detected |
-| Structural monotony | Sections «Вступ», «Презентація», «Практика», «Виробництво та підсумок» all open differently — no structural monotony in H2 openers |
-| Callout monotony | Five callouts with five different types (fact, warning, observe, tip, culture) — no monotony |
-| Example plausibility | Most examples are plausible except «Хтось бере мою чорну сумку» (Issue 2) and the ambiguous paragraph in «Вступ» (Issue 7) |
-| "Would I Continue?" test | 2/5 Pass (Ukrainian not scary: Pass; Instructions mostly clear: Pass; Overwhelmed: Fail; Quick wins: Fail; Would return: Fail) |
-| Beginner emotional safety | FAIL — zero encouragement phrases, zero "don't worry" moments, zero progress markers |
-
----
+- Content lines read: 278
+- Activity items checked: 67 (across 10 activities)
+- Ukrainian sentences verified: 42
+- IPA transcriptions checked: 20 (all vocabulary items)
+- Factual claims verified: 6
+- Issues found: 7
 
 ## Verdict
 
-**FAIL — Requires D.2 Targeted Repair**
+**FAIL**
 
-The module has solid factual content and appropriate topical coverage, but suffers from three categories of serious problems:
-
-1. **Content errors**: Line 135 typo "називаate" is a showstopper; line 113 uses wrong verb tense/semantics for a theft report; two IPA transcription errors in vocabulary.
-
-2. **LLM fingerprint / voice**: The English prose is saturated with unnecessary intensifiers and formal AI constructions. Nearly every paragraph reads like it was generated without editing. Score 4/10 — the worst dimension.
-
-3. **Beginner warmth failure**: No warm greeting, no learning preview, no encouragement, no progress celebration. The module reads like an academic reference document, not a supportive beginner lesson. A nervous A1 learner would feel overwhelmed and under-supported.
-
-**Priority fixes for D.2:**
-1. Fix line 135 typo ("називаate" → "називаєте")
-2. Fix line 113 verb ("бере" → past tense "вкрали" construction)
-3. Fix IPA errors in vocabulary (вкрасти, викликати)
-4. Add missing plan content (Рятувальники!, пред'явити документи)
-5. Strip LLM verbosity from English prose (remove unnecessary intensifiers)
-6. Add warm opening (Привіт! + learning objectives) and closing celebration
-7. Fix confusing paragraph on lines 17–22 (unclear referents)
+The module fails on **Linguistic Accuracy** (8/10, auto-fail threshold <9). Three blocking issues must be resolved: (1) the false grammar explanation claiming р is a "soft consonant" in лікар, which directly contradicts quiz items; (2) the fabricated claim about vocative in Slavic languages; (3) two IPA errors in the vocabulary sidecar. Secondary issues include testing Офіцере! without teaching it, and mischaracterizing єДопомога. The module's core content structure and emergency vocabulary are strong — targeted fixes to the linguistic claims, IPA, and activity alignment would bring it to passing threshold.

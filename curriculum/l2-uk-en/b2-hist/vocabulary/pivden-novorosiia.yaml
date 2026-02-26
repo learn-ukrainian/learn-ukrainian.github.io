@@ -1,0 +1,127 @@
+items:
+  - lemma: "Новоросія"
+    ipa: '[nɔʋɔrɔsʲijɑ]'
+    translation: "Novorossiya"
+    pos: "noun"
+    gender: "f"
+    notes: "an artificial imperial construct"
+  - lemma: "колонізація"
+    ipa: '[kɔlɔnʲiˈzɑt͡sʲijɑ]'
+    translation: "colonization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "Дике Поле"
+    ipa: '[ˈdɪkɛ ˈpɔlɛ]'
+    translation: "Wild Field"
+    pos: "noun"
+    gender: "n"
+  - lemma: "імперія"
+    ipa: '[imˈpɛrʲijɑ]'
+    translation: "empire"
+    pos: "noun"
+    gender: "f"
+  - lemma: "пропаганда"
+    ipa: '[prɔpɑˈɦɑndɑ]'
+    translation: "propaganda"
+    pos: "noun"
+    gender: "f"
+  - lemma: "експансія"
+    ipa: '[ɛˈkspɑnʲsʲijɑ]'
+    translation: "expansion"
+    pos: "noun"
+    gender: "f"
+  - lemma: "міф"
+    ipa: '[mʲif]'
+    translation: "myth"
+    pos: "noun"
+    gender: "m"
+  - lemma: "ідентичність"
+    ipa: '[idɛnˈtɪt͡ʃnʲisʲtʲ]'
+    translation: "identity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "топонім"
+    ipa: '[tɔˈpɔnʲim]'
+    translation: "toponym"
+    pos: "noun"
+    gender: "m"
+  - lemma: "заснування"
+    ipa: '[zɑsnuˈʋɑnʲːɑ]'
+    translation: "founding"
+    pos: "noun"
+    gender: "n"
+  - lemma: "мультиетнічний"
+    ipa: '[mulʲtɪɛˈtʲnʲit͡ʃnɪj]'
+    translation: "multi-ethnic"
+    pos: "adjective"
+  - lemma: "анексія"
+    ipa: '[ɑˈnɛksʲijɑ]'
+    translation: "annexation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "окупація"
+    ipa: '[ɔkuˈpɑt͡sʲijɑ]'
+    translation: "occupation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "деколонізація"
+    ipa: '[dɛkɔlɔnʲiˈzɑt͡sʲijɑ]'
+    translation: "decolonization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "зимівник"
+    ipa: '[zɪmʲiu̯nɪk]'
+    translation: "winter quarter"
+    pos: "noun"
+    gender: "m"
+    notes: "a Cossack farmstead"
+  - lemma: "паланка"
+    ipa: '[pɑˈlɑnkɑ]'
+    translation: "palanka"
+    pos: "noun"
+    gender: "f"
+    notes: "an administrative unit of the Zaporozhian Host"
+  - lemma: "Хаджибей"
+    ipa: '[xɑd͡ʒɪbɛj]'
+    translation: "Hadzhibey"
+    pos: "noun"
+    gender: "m"
+  - lemma: "Чумацький шлях"
+    ipa: '[t͡ʃuˈmɑt͡sʲkɪj ʃlʲɑx]'
+    translation: "Chumak Way"
+    pos: "noun"
+    gender: "m"
+  - lemma: "конструкт"
+    ipa: '[kɔnˈstrukt]'
+    translation: "construct"
+    pos: "noun"
+    gender: "m"
+  - lemma: "русифікація"
+    ipa: '[rusɪfʲiˈkɑt͡sʲijɑ]'
+    translation: "Russification"
+    pos: "noun"
+    gender: "f"
+  - lemma: "автохтонний"
+    ipa: '[ɑu̯tɔˈxtɔnːɪj]'
+    translation: "autochthonous"
+    pos: "adjective"
+  - lemma: "перейменування"
+    ipa: '[pɛrɛjmɛnuˈʋɑnʲːɑ]'
+    translation: "renaming"
+    pos: "noun"
+    gender: "n"
+  - lemma: "асиміляція"
+    ipa: '[ɑsɪmʲiˈlʲɑt͡sʲijɑ]'
+    translation: "assimilation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "кріпацтво"
+    ipa: '[krʲiˈpɑt͡stʋɔ]'
+    translation: "serfdom"
+    pos: "noun"
+    gender: "n"
+  - lemma: "суб'єктність"
+    ipa: '[suˈbjɛktʲnʲisʲtʲ]'
+    translation: "agency"
+    pos: "noun"
+    gender: "f"

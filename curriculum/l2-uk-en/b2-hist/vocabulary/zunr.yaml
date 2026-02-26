@@ -1,0 +1,101 @@
+items:
+  - lemma: "ЗУНР"
+    ipa: '[zunr]'
+    translation: "ZUNR (Western Ukrainian People's Republic)"
+    pos: "noun"
+  - lemma: "злука"
+    ipa: '[ˈzlukɑ]'
+    translation: "unification"
+    pos: "noun"
+  - lemma: "соборність"
+    ipa: '[sɔˈbɔrnʲisʲtʲ]'
+    translation: "unity"
+    pos: "noun"
+  - lemma: "Галичина"
+    ipa: '[ɦɑlɪt͡ʃɪˈnɑ]'
+    translation: "Galicia"
+    pos: "noun"
+  - lemma: "проголошення"
+    ipa: '[prɔɦɔˈlɔʃɛnʲːɑ]'
+    translation: "proclamation"
+    pos: "noun"
+  - lemma: "армія"
+    ipa: '[ˈɑrmʲijɑ]'
+    translation: "army"
+    pos: "noun"
+  - lemma: "війна"
+    ipa: '[ʋʲijˈnɑ]'
+    translation: "war"
+    pos: "noun"
+  - lemma: "незалежність"
+    ipa: '[nɛzɑˈlɛʒnʲisʲtʲ]'
+    translation: "independence"
+    pos: "noun"
+  - lemma: "Листопадовий зрив"
+    ipa: '[lɪstɔˈpɑdɔʋɪj zrɪu̯]'
+    translation: "November Uprising"
+    pos: "noun"
+  - lemma: "Національна Рада"
+    ipa: '[nɑt͡sʲiɔˈnɑlʲnɑ ˈrɑdɑ]'
+    translation: "National Council"
+    pos: "noun"
+  - lemma: "УГА"
+    ipa: '[uˈɦɑ]'
+    translation: "Ukrainian Galician Army"
+    pos: "noun"
+  - lemma: "фронт"
+    ipa: '[frɔnt]'
+    translation: "front"
+    pos: "noun"
+  - lemma: "еміграція"
+    ipa: '[ɛmʲiˈɦrɑt͡sʲijɑ]'
+    translation: "emigration"
+    pos: "noun"
+  - lemma: "діаспора"
+    ipa: '[dʲiɑspɔrɑ]'
+    translation: "diaspora"
+    pos: "noun"
+  - lemma: "Антанта"
+    ipa: '[ɑnˈtɑntɑ]'
+    translation: "Entente"
+    pos: "noun"
+  - lemma: "пацифікація"
+    ipa: '[pɑt͡sɪfʲiˈkɑt͡sʲijɑ]'
+    translation: "pacification"
+    pos: "noun"
+  - lemma: "окупація"
+    ipa: '[ɔkuˈpɑt͡sʲijɑ]'
+    translation: "occupation"
+    pos: "noun"
+  - lemma: "самовизначення"
+    ipa: '[sɑmɔˈʋɪznɑt͡ʃɛnʲːɑ]'
+    translation: "self-determination"
+    pos: "noun"
+  - lemma: "повстання"
+    ipa: '[pɔˈʋstɑnʲːɑ]'
+    translation: "uprising"
+    pos: "noun"
+  - lemma: "республіка"
+    ipa: '[rɛˈspublʲikɑ]'
+    translation: "republic"
+    pos: "noun"
+  - lemma: "автономія"
+    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
+    translation: "autonomy"
+    pos: "noun"
+  - lemma: "уряд"
+    ipa: '[urʲɑd]'
+    translation: "government"
+    pos: "noun"
+  - lemma: "легітимність"
+    ipa: '[lɛɦʲiˈtɪmnʲisʲtʲ]'
+    translation: "legitimacy"
+    pos: "noun"
+  - lemma: "територія"
+    ipa: '[tɛrɪˈtɔrʲijɑ]'
+    translation: "territory"
+    pos: "noun"
+  - lemma: "універсал"
+    ipa: '[unʲiʋɛrˈsɑl]'
+    translation: "universal (decree)"
+    pos: "noun"

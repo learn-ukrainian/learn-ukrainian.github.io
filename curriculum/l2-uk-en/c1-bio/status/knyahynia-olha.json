@@ -2,13 +2,13 @@
   "module": "knyahynia-olha",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T20:36:07.020092Z",
+  "last_audit": "2026-02-26T00:41:53.879620Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-21T20:20:11.644449Z",
     "meta": "2026-02-19T10:56:42.416676Z",
     "activities": "2026-02-19T22:23:51.313803Z",
-    "vocabulary": "2026-02-19T22:23:51.314823Z",
+    "vocabulary": "2026-02-26T00:41:52.814393Z",
     "plan": "2026-02-18T15:59:52.245649Z",
     "research": "2026-02-22T10:35:24.534803Z"
   },
@@ -24,14 +24,14 @@
       "message": "5239/5000 (raw: 5465)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "5/3"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "38/24"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "pass",
@@ -49,18 +49,16 @@
       "message": "Refresh recommended: Content predates research (research file is newer)"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
-    "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
-    ],
-    "pass_count": 6,
-    "fail_count": 1,
-    "deferred_count": 0
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
   }
 }

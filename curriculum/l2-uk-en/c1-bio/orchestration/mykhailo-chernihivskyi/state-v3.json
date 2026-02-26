@@ -8,6 +8,20 @@
       "ts": "2026-02-19T11:51:15Z",
       "task_id": "v3-mykhailo-chernihivskyi-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-26T00:07:50Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-26T00:09:59Z",
+      "task_id": "v3-mykhailo-chernihivskyi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-26T00:11:48Z",
+      "attempts": 2
     }
   }
 }

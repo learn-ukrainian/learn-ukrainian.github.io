@@ -2,7 +2,14 @@
   "slug": "knyazhna-anna-yaroslavna",
   "track": "c1-bio",
   "module_num": 5,
-  "mode": "e2e",
-  "phases": {},
-  "last_updated": "2026-02-20T23:26:14Z"
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-25T23:43:48Z",
+      "words": 4243,
+      "attempts": 1
+    }
+  },
+  "last_updated": "2026-02-25T23:43:48Z"
 }

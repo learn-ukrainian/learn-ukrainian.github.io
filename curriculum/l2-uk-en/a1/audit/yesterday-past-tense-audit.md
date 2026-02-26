@@ -1,7 +1,7 @@
 # Audit Report: M21 — yesterday-past-tense.md
 **Level:** A1 | **Module:** M21 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:19:37
+**Generated:** 2026-02-25 22:40:10
 
 ## Configuration
 **Type:** A1-grammar

@@ -1,0 +1,64 @@
+{
+  "module": "syntez-viyna",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-26T00:54:50.961424Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-25T23:42:39.960135Z",
+    "meta": "2026-02-19T18:43:04.730147Z",
+    "activities": "2026-02-25T23:40:53.406502Z",
+    "vocabulary": "2026-02-25T23:40:53.721299Z",
+    "plan": "2026-02-18T19:03:37.497226Z",
+    "research": "2026-02-22T10:39:16.136258Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5416/5000 (raw: 5841)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

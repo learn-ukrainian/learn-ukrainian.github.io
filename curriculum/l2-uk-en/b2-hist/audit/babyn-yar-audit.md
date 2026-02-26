@@ -1,7 +1,7 @@
 # Audit Report: M106 — babyn-yar.md
 **Level:** B2-HIST | **Module:** M106 | **Phase:** HIST.10 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 23:00:43
+**Generated:** 2026-02-26 00:27:29
 
 ## Configuration
 **Type:** B2-history
@@ -17,7 +17,7 @@
 **Transliteration:** Not allowed
 
 ## Gates
-- **Words:** ✅ 5225/5000 (raw: 5508)
+- **Words:** ✅ 5225/5000 (raw: 5510)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -60,7 +60,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Бабин Яр та Голокост в Україні** | ✅ | 46 | Included in Core |
 | **Вступ: Україна напередодні трагедії** | ✅ | 1036 | Included in Core |
-| **Бабин Яр: 29-30 вересня 1941** | ✅ | 1369 | Included in Core |
+| **Бабин Яр: 29 і 30 вересня 1941** | ✅ | 1369 | Included in Core |
 | **Голокост на території України** | ✅ | 812 | Included in Core |
 | **Первинні джерела: Документи та література** | ✅ | 346 | Included in Core |
 | **Праведники народів світу** | ✅ | 639 | Included in Core |

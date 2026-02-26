@@ -8,6 +8,20 @@
       "ts": "2026-02-19T17:41:49Z",
       "task_id": "v3-zlochyny-stiikist-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T22:32:48Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T22:34:32Z",
+      "task_id": "v3-zlochyny-stiikist-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T23:54:46Z",
+      "attempts": 1
     }
   }
 }

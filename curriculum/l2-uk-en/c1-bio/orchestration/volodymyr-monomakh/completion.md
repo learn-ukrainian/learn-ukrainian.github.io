@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c1-bio 6 — E2E
+FAIL: build_module_v2.py c1-bio 6 — E2E
 
   Module:   volodymyr-monomakh
   Track:    c1-bio
   Mode:     e2e
-  Words:    0 (target: 5000)
+  Words:    4272 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-19T20:47:19Z
+  Verdict:  FAIL
+  Date:     2026-02-25T23:47:14Z

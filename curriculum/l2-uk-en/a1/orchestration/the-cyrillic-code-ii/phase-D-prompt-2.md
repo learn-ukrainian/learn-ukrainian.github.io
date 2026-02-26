@@ -5,9 +5,63 @@
 
 ---
 
-## Context
+## Editing Principles
 
-A review identified issues in this module. Your job is to produce **exact FIND/REPLACE fix pairs** that resolve the issues. You are NOT writing a review — that was already done. Focus only on producing correct, targeted fixes.
+- **IMPROVE, don't destroy.** Every rewrite should teach MORE than the original, not less.
+- **PRESERVE the author's intent.** If a paragraph explains something poorly, rewrite it to explain it well — don't delete it.
+- **MATCH the surrounding voice.** Your rewrite should read like the original author wrote it on a better day.
+- Only DELETE truly empty sentences (pure cheerleading with zero information that cannot be salvaged). This should be rare.
+
+---
+
+## Track Calibration
+
+# Track Calibration: A1
+
+## Bilingual Scope
+A1 uses PROGRESSIVE immersion — targets increase per module:
+- Modules 1-2: 5-15% Ukrainian (Cyrillic intro, mostly English)
+- Modules 3-5: 10-25% Ukrainian (early vocab building)
+- Modules 6-10: 15-35% Ukrainian (growing immersion)
+- Modules 11-20: 25-40% Ukrainian (foundation established)
+- Modules 21+: 35-55% Ukrainian (consolidation)
+
+Mixing English explanations with Ukrainian examples is CORRECT pedagogy.
+Do NOT flag bilingual content as LANGUAGE_BLENDER.
+Flag: Full Ukrainian paragraphs that exceed the module's immersion band.
+Flag: Modules that are below their minimum immersion target.
+
+## Russicism Lookup (A1-specific)
+These appear frequently in A1 content. Flag as HIGH:
+- здача → решта (change/money)
+- тапочки → капці (slippers)
+- кушати → їсти (to eat)
+- давайте попрактикуємо → попрактикуймо (let's practice — Russian imperative calque)
+- давайте повторимо → повторімо (let's repeat — Russian imperative calque)
+- давайте подивимося → подивімося (let's look — Russian imperative calque)
+- чоловіче → пане (sir — register mismatch in service contexts)
+- надіятися → сподіватися (to hope)
+- піднімається → підводиться (gets up)
+- получати → отримувати (to receive)
+- вообще → взагалі (in general)
+
+## Anglicism Lookup (A1-specific)
+- "Що ви хочете?" → "Що бажаєте?" (register in service/hospitality contexts)
+- "роблять каву" → "готують каву" (make coffee — English calque)
+- "робити добру каву" → "готувати смачну каву" (make good coffee)
+
+## LLM Filler Sensitivity
+At A1, some motivational content is ACCEPTABLE when woven into teaching.
+Flag ONLY: pure cheerleading with zero educational content, generic padding
+("Numbers are everywhere", "Language is not just about labeling things",
+"As you continue your Ukrainian journey").
+Do NOT flag: warm encouragement that includes a teaching point.
+
+## Content Focus
+Simple sentences are expected. Don't flag short paragraphs.
+Focus on: Russianisms, factual errors in callouts, and fluff replacing actual teaching.
+Do NOT penalize: friendly tone, bilingual explanations, basic vocabulary presentation.
+
 
 ---
 
@@ -26,202 +80,183 @@ A review identified issues in this module. Your job is to produce **exact FIND/R
 **Reviewed-By:** claude-opus-4-6
 
 **Level:** A1 | **Module:** 02
-**Overall Score:** 8.2/10
-**Status:** FAIL
-**Reviewed:** 2026-02-22
+**Overall Score:** 8.4/10
+**Status:** PASS
+**Reviewed:** 2026-02-25
 
 ## Plan Verification
 
 ```
-Plan-Content Alignment: PASS (with minor discrepancies)
-- Sections: All 5 H2 sections present and match plan (Вступ, Унікальні приголосні, Йотовані голосні та М'який знак, Голосні та напівголосні, Практика та вимова)
-- Vocabulary: 8/8 required from plan (центр, чай, школа, гарний, жити, день, Європа, яблуко); recommended words also present (ще, ґанок, їжа, юнак, сіль, сім'я in vocab file). Note: сім'я appears in vocabulary YAML and activities but is NEVER introduced in the lesson content.
-- Grammar scope: CLEAN — stays within alphabet/phonetics scope
-- Objectives: All 4 objectives addressed (unique consonants, iotated vowels, soft sign, И/І distinction)
+Plan-Content Alignment: PARTIAL FAIL
+- Sections: PASS — all 5 H2 sections from content_outline present
+- Vocabulary: 8/8 required present, 5/6 recommended present (ніч in content but missing from vocab YAML; тінь in vocab YAML but missing from content)
+- Grammar scope: PASS — no grammar scope violations
+- Objectives: PASS — all 4 objectives addressed
+- Letter count: MISMATCH — plan subtitle says "The Final 14 Letters", content title says "The Final 15 Letters"
+  (Module 1 SCOPE says "19 letters" with "remaining 14 for module 2"; 19+15=34 > 33 alphabet letters)
+- Activity items: BELOW PLAN — plan specifies 20-item quizzes and 15-20 item match-ups; actual items per activity are 8-12
 ```
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 9/10 | <7 | Strong lesson arc with welcome, preview, practice, celebration. "Would I Continue?" 5/5. Slightly flowery abstract language in intro reduces accessibility for nervous beginners. |
-| 2 | Language | 8/10 | <8 | Two English grammar errors: sentence fragment at line 143, broken predicate at line 71. Ukrainian sentences embedded in text are all correct. No Russianisms or calques detected. |
-| 3 | Pedagogy | 8/10 | <7 | Strong PPP structure. Two misplaced example words (хлопець in Ч section, читати in Й section) undermine the "one letter at a time" presentation. Word сім'я quizzed but never taught. |
-| 4 | Activities | 8/10 | <7 | 8 activities with good variety (match-up, group-sort, quiz, fill-in, anagram, true-false). Г/Ґ and И/І fill-in drills are pedagogically excellent. сім'я tested in quiz but absent from lesson body. |
-| 5 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5 — strong English scaffolding, predictable structure, regular encouragement. One-letter-at-a-time pacing is ideal. Minor: some abstract language in section «Вступ» could be simplified. |
-| 6 | LLM Fingerprint | 7/10 | <7 | 3+ instances of abstract noun stacking across sections (lines 12, 18, 139). "In this lesson, we will" pattern at line 18. Content is substantive and pedagogically sound underneath — the fingerprint is rhetorical, not structural. |
-| 7 | Linguistic Accuracy | 8/10 | <9 | є́нот (line 149) has wrong stress — standard is єно́т. я́сь glossed as "clear - root word" (line 277) but is a proper name, not "clear." хлопець placed in Ч section despite containing no Ч. читати placed in Й section despite containing no Й. |
+| 1 | Experience Quality | 8/10 | <7 | Warm structure with welcome/preview/celebrate arc, but 47% richness (0 dialogues, 1/2 tables, 0 proverbs) significantly limits engagement variety |
+| 2 | Language | 9/10 | <8 | Ukrainian grammatically correct throughout; no Russianisms; no colonial framing; minor forced injections on lines 41, 229 |
+| 3 | Pedagogy | 8/10 | <7 | Excellent "Smile vs Grin" technique and contrast drills; however, 7 consonants presented in section «Унікальні приголосні» without interleaved mini-exercises before section «Практика та вимова» |
+| 4 | Activities | 8/10 | <7 | Good variety (8 types, 74 total items); Й classified as "Consonant" in group-sort contradicts content's "semivowel" teaching; item counts below plan targets |
+| 5 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5; warm opening, scaffolded English support, diagnostic checkpoint, celebration ending |
+| 6 | LLM Fingerprint | 8/10 | <7 | Repetitive "You will find/hear/use this letter..." formula across 7 subsections (lines 41, 68, 107, 120, 157, 163, 229); section openings otherwise varied |
+| 7 | Linguistic Accuracy | 9/10 | <9 | All pronunciation descriptions accurate; IPA correct in vocabulary; Ґ history verified; vocab sidecar mismatch (тінь in YAML but not content) |
 
-**Weighted Overall:** (9×1.5 + 8×1.1 + 8×1.2 + 8×1.3 + 9×1.3 + 7×1.0 + 8×1.5) / 8.9
-= (13.5 + 8.8 + 9.6 + 10.4 + 11.7 + 7.0 + 12.0) / 8.9
-= 73.0 / 8.9 = **8.2/10**
+**Weighted Overall:** (8×1.5 + 9×1.1 + 8×1.2 + 8×1.3 + 9×1.3 + 8×1.0 + 9×1.5) / 8.9 = (12 + 9.9 + 9.6 + 10.4 + 11.7 + 8 + 13.5) / 8.9 = 75.1 / 8.9 = **8.4/10**
 
 ## Auto-Fail Checklist Results
 
-- Russianisms: [CLEAN]
-- Calques: [CLEAN]
-- Grammar scope: [CLEAN] — stays within alphabet/phonetics
-- Activity errors: [1 found — сім'я quizzed but never taught in lesson]
+- Russianisms: CLEAN — no instances of давайте + perfective, кушати, получати, etc.
+- Calques: CLEAN — no English or Russian calques detected
+- Colonial framing: CLEAN — no "Unlike Russian" or comparative framing; `[!decolonization]` block is legitimate
+- Grammar scope: CLEAN — module stays within phonetics/alphabet scope
+- Activity errors: Й classified as consonant contradicts content (see Issue 2)
 - Beginner safety: 5/5
-- Factual accuracy: [2 discrepancies — letter count 14 vs 15, є́нот stress]
-- Colonial framing: [CLEAN] — no "Unlike Russian" patterns; Ї identity claim at line 158 is factual, not comparative
-- LLM Fingerprint: [BORDERLINE] — abstract noun stacking triggers ≤7
+- Factual accuracy: Letter count inconsistency (15 vs 14); Ґ history and Ї Mariupol claims verified correct
+- LLM filler: «Це дуже важливо.» (line 41) and «Запам'ятайте це правило.» (line 229) are forced injections
 
 ## Critical Issues Found
 
-### Issue 1: Misplaced Example — хлопець in Ч Section
-- **Location**: Line 120 / Section «Унікальні приголосні» (subsection Ч)
-- **Original**: «**хло́пець** (boy/guy)»
-- **Problem**: The word хлопець (х-л-о-п-е-ц-ь) does NOT contain the letter Ч. It contains Ц and Х but not Ч. Placing it in the Ч section implicitly teaches a false phonological claim.
-- **Fix**: Replace with a word that actually contains Ч, e.g., **чо́рний** (black), **чоловік** (man), or **чотири** (four).
+### Issue 1: Letter Count Inconsistency (Factual)
+- **Location**: Line 8 (title), Line 2 (SCOPE), Line 16, Line 18 / Section «Вступ»
+- **Original**: «The Cyrillic Code II: The Final 15 Letters» (line 8) and «you have already conquered the first nineteen letters» (line 16)
+- **Problem**: The plan subtitle says "The Final 14 Letters." Module 1's SCOPE says it covers 19 letters with "the remaining 14" for module 2. But this module claims 15 letters. 19 + 15 = 34, exceeding the 33-letter Ukrainian alphabet. Either this module covers 14 (plan) or module 1 covers 18 (not 19). The content and plan are inconsistent.
+- **Fix**: Change title to "The Final 14 Letters" and line 16 to "the first nineteen letters" if Й was already in module 1 (verify against a1-01 content). Alternatively, if this module genuinely adds Й, change line 16 to "the first eighteen letters" and update module 1's SCOPE to "18 letters."
 
-### Issue 2: Misplaced Example — читати in Й Section
-- **Location**: Line 248 / Section «Голосні та напівголосні» (subsection Й)
-- **Original**: «**чита́ти** (to read)»
-- **Problem**: The word читати (ч-и-т-а-т-и) does NOT contain the letter Й. It only contains И, which is a different letter. This directly undermines the lesson's core objective of distinguishing letters.
-- **Fix**: Replace with a word containing Й, e.g., **гайда** (let's go), **дайте** (give), or **край** (land/edge).
+### Issue 2: Й Classification Contradiction Between Content and Activity
+- **Location**: Activity "Consonants vs. Vowels" (activities YAML line 29-49) vs Content line 219, Section «Голосні та напівголосні»
+- **Original**: Content line 219: «This hat transforms the letter from a full vowel into a "semivowel."» — Activity YAML places Й under group `Consonants (Приголосні)` at line 38.
+- **Problem**: The content explicitly teaches Й as a "semivowel" in the section «Голосні та напівголосні» (Vowels and Semivowels). The group-sort activity then asks learners to classify it as a "Consonant." A learner who paid attention to the lesson would get this "wrong" by placing Й under Vowels. This directly undermines the lesson.
+- **Fix**: Either (a) add a third group "Semivowels (Напівголосні)" containing only Й, or (b) move Й to the Vowels group with a note, or (c) change the activity instruction to "Sort into Consonants, Vowels, or Semivowels."
 
-### Issue 3: Incorrect Stress on єнот
-- **Location**: Line 149 / Section «Йотовані голосні та М'який знак» (subsection Є)
-- **Original**: «**є́нот** (raccoon)»
-- **Problem**: Standard Ukrainian stress is єно́т (second syllable), not є́нот (first syllable). This teaches incorrect pronunciation.
-- **Fix**: Change to «**єно́т** (raccoon)» or replace with a more common A1-appropriate word like **єдність** (unity).
+### Issue 3: Vocabulary Sidecar Mismatch
+- **Location**: Vocabulary YAML line 70 (тінь) vs Content line 210 (ні́ч)
+- **Original**: Vocabulary YAML includes `тінь` (shadow) with IPA `[tʲinʲ]` (line 69-72). Content line 210 uses «ні́ч» (night) as an example under І but never mentions тінь.
+- **Problem**: The vocabulary sidecar should reflect words actually taught in the content. тінь never appears in the lesson; ні́ч appears on line 210 but has no vocabulary entry. This breaks the content-vocabulary alignment that learners (and downstream tools) rely on.
+- **Fix**: Replace тінь with ніч in the vocabulary YAML: `lemma: ніч`, `translation: night`, `ipa: [nʲit͡ʃ]`, `pos: noun`.
 
-### Issue 4: Incorrect Gloss for ясь
-- **Location**: Line 277 / Section «Практика та вимова»
-- **Original**: «**я́сь** (clear - root word)»
-- **Problem**: "Ясь" is a proper name (traditional diminutive of Ярослав), not a standalone word meaning "clear." The adjective root is "ясний." Using a fabricated meaning in a pronunciation drill teaches false vocabulary.
-- **Fix**: Replace with a real soft-С word: «**о́сінь** (autumn)» or «**гу́сь** (goose)» — both clearly demonstrate the palatalized С.
+### Issue 4: Forced Ukrainian Injections Without Pedagogical Purpose
+- **Location**: Line 41 / Section «Унікальні приголосні» and Line 229 / Section «Голосні та напівголосні»
+- **Original**: Line 41: «Це дуже важливо. (This is very important.)» tacked onto end of a paragraph listing Г example words. Line 229: «Запам'ятайте це правило. (Remember this rule.)» appended to a paragraph about Й usage contexts.
+- **Problem**: «Це дуже важливо» on line 41 doesn't relate to the example words — it just says "this is very important" without specifying what. «Запам'ятайте це правило» on line 229 says "remember this rule" but no specific rule was stated — the paragraph describes usage contexts, not a rule. These feel like token Ukrainian injections to boost immersion percentage without serving any teaching purpose.
+- **Fix**: Line 41: Remove the injection or replace with something meaningful tied to the content, e.g., «Буква Г — дуже часта.» (The letter Г is very common.) Line 229: Remove or replace with a concrete rule statement before the Ukrainian, e.g., explain that Й never starts a syllable alone, then use «Запам'ятайте: Й не починає склад.»
 
-### Issue 5: English Sentence Fragment
-- **Location**: Line 143 / Section «Йотовані голосні та М'який знак» (subsection Є)
-- **Original**: «As an "iotated" vowel, meaning it starts with a "y" sound.»
-- **Problem**: This is a sentence fragment — no main clause. The subject ("it") is missing and "as" creates a dangling modifier.
-- **Fix**: «It is an "iotated" vowel, meaning it starts with a "y" sound.»
-
-### Issue 6: Broken English Predicate
-- **Location**: Line 71 / Section «Унікальні приголосні» (subsection Ж)
-- **Original**: «The resulting sound is rich and warm that appears in some of the most fundamental Ukrainian words.»
-- **Problem**: "is rich and warm that appears" is grammatically broken — "that appears" has no valid antecedent in this construction.
-- **Fix**: «The resulting sound is rich and warm, appearing in some of the most fundamental Ukrainian words.»
-
-### Issue 7: Letter Count Discrepancy (14 vs 15)
-- **Location**: Lines 8, 12, 18 / Section «Вступ» and H1 title
-- **Original**: «The Final 14 Letters» / «final fourteen letters»
-- **Problem**: The lesson actually covers 15 letters: Г, Ґ, Ж, Ш, Щ, Ч, Ц (7) + Є, Ї, Ю, Я, Ь (5) + И, І, Й (3) = 15. The "14" count is incorrect.
-- **Fix**: Change to "The Final 15 Letters" throughout, or verify with Module 1 scope whether one letter was already covered.
+### Issue 5: Richness Severely Below Threshold
+- **Location**: Entire module / All sections
+- **Original**: Richness audit: 47% (threshold: 95%). Gaps: engagement 2/5, cultural 1/3, examples 4/24, dialogues 0/4, proverbs 0/1, tables 1/2
+- **Problem**: The module is primarily expository prose with individual vocabulary examples. It lacks dialogues, has only one comparison table (Ш vs Щ in section «Унікальні приголосні»), zero proverbs, and insufficient structured example blocks and cultural callouts.
+- **Fix**: See Fix Plan below for specific additions per gap dimension.
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 149 | «є́нот» | «єно́т» | Stress error |
-| 277 | «я́сь (clear - root word)» | «о́сінь (autumn)» or «гу́сь (goose)» | Fabricated gloss |
+| 41 | «Це дуже важливо.» | «Буква Г — дуже часта.» or remove | Forced injection |
+| 229 | «Запам'ятайте це правило.» | Remove or precede with actual rule | Forced injection |
 
 ## Beginner Safety Audit
 
 "Would I Continue?" Test: 5/5
-- Overwhelmed? **Pass** — one letter at a time, clear pacing, English scaffolding throughout
-- Instructions clear? **Pass** — each section explains what to do, physical pronunciation mechanics are precise
-- Quick wins? **Pass** — opening diagnostic with familiar words (мама, тато, брат, кіт) provides immediate confidence; each letter section is a small win
-- Ukrainian scary? **Pass** — Ukrainian introduced gently within English explanations; «Зверніть увагу:» and «Давайте практикувати!» are scaffolded with translations
-- Come back tomorrow? **Pass** — encouraging tone throughout, «Чудова робота!» at line 279, celebratory ending with «Сла́ва Украї́ні!»
+- Overwhelmed? **Pass** — Letters introduced one at a time with H3 subsections; clear English scaffolding declared upfront
+- Instructions clear? **Pass** — Learner always knows what to do; diagnostic check at start, reading practice at end
+- Quick wins? **Pass** — Familiar words from module 1 used as diagnostic; example words build incrementally
+- Ukrainian scary? **Pass** — Heavy English scaffolding with Ukrainian examples translated inline
+- Come back tomorrow? **Pass** — Encouraging tone throughout; celebration at end ("You have officially unlocked the entire Cyrillic code")
 
 ## Strengths
 
-- **Excellent Г/Ґ treatment**: The cultural hook about the repressed letter Ґ (section «Унікальні приголосні», lines 64-65) is historically accurate, emotionally resonant, and pedagogically sound — it gives learners a memorable reason to distinguish the two sounds.
-- **"Smile vs Grin" technique** (section «Голосні та напівголосні»): Naming the И/І distinction with body-based mnemonics is genuinely clever pedagogy that learners will remember. The minimal pair кіт/кит reinforces it perfectly.
-- **Contrast drills** (section «Практика та вимова»): The И/І, Г/Ґ, and С/СЬ contrast drills at lines 264-278 directly address documented learner errors from the research notes. This is evidence-based curriculum design.
-- **Activity variety and quality**: The Г/Ґ fill-in activity is particularly well-designed — 8 items with a 6:2 Г:Ґ ratio reflecting real frequency, natural sentence frames, and clear explanations. The И/І fill-in is equally strong.
-- **Cultural hooks are authentic**: The Ї/Mariupol resistance story (line 165-166) and Ґ restoration (line 64-65) both come from documented sources in the research notes.
+- **"Smile vs Grin" technique** (Section «Голосні та напівголосні», lines 196-215): Brilliant pedagogical metaphor for the И/І distinction. Physiologically grounded (jaw tension mapping), memorable naming, and immediately applied via minimal pairs (кі́т/ки́т, Ри́м/Рі́вне). This is A+ teaching.
+- **Decolonization hook for Ґ** (Section «Унікальні приголосні», lines 54-55): Historically accurate, emotionally resonant, and immediately relevant to letter recognition. Learner understands *why* the distinction matters, not just *how* to pronounce it.
+- **Ї as resistance symbol** (Section «Йотовані голосні та М'який знак», lines 150-151): Powerful cultural hook that gives the letter emotional weight beyond its phonetic value. Well-sourced and pedagogically appropriate for A1 (simple narrative, clear significance).
+- **Contrast drills** (Section «Практика та вимова», lines 237-255): Well-designed pairs covering the three most common learner errors (І/И, Г/Ґ, С/СЬ). Clear instructions, exaggeration guidance, and progressive difficulty.
+- **Activity variety**: 8 distinct activity types (match-up, group-sort, quiz, fill-in ×2, anagram, true-false, quiz) with good explanations for each item. The Г/Ґ fill-in (activity 4) is particularly well-designed.
 
-## Fix Plan to Reach 9.0/10 (REQUIRED — score 8.2)
+## Fix Plan to Reach 9/10 (REQUIRED — score 8.4 < 9.0)
 
-### Linguistic Accuracy: 8/10 → 9/10
+### Experience Quality: 8/10 → 9/10
 **What to fix:**
-1. Line 120: Replace «**хло́пець** (boy/guy)» with a Ч-containing word like «**чо́рний** (black)» — fixes misplaced example
-2. Line 248: Replace «**чита́ти** (to read)» with a Й-containing word like «**край** (land/edge)» — fixes misplaced example
-3. Line 149: Change «**є́нот**» to «**єно́т**» — fixes stress error
-4. Line 277: Replace «**я́сь** (clear - root word)» with «**о́сінь** (autumn)» — fixes fabricated gloss
+1. Section «Унікальні приголосні»: Add 1 comparison table for Г vs Ґ (parallel to existing Ш/Щ table on lines 91-94) showing shape, sound, example words, and frequency.
+2. Section «Практика та вимова»: Add 2 short dialogues (3-4 lines each) using the new letters. E.g., a café dialogue using Ч (чай), Ц (цукор), and a city navigation dialogue using Ш (школа), Ц (центр).
+3. Section «Вступ» or «Практика та вимова»: Add 1 Ukrainian proverb using the new letters — e.g., «Що маєш — бережи» (What you have — treasure it) which uses Щ and Ж.
+4. Add 2 `[!engagement]` or `[!did-you-know]` callouts — e.g., one about the frequency of Ч in hospitality language, one about how Ukrainian children learn И/І.
+5. Add 1 `[!culture]` callout — e.g., about Lviv (Львів uses Ь) or about the tradition of offering tea (чай).
 
 **Expected score after fix:** 9/10
-
-### Language: 8/10 → 9/10
-**What to fix:**
-1. Line 143: Change «As an "iotated" vowel, meaning it starts with a "y" sound.» to «It is an "iotated" vowel, meaning it starts with a "y" sound.»
-2. Line 71: Change «The resulting sound is rich and warm that appears» to «The resulting sound is rich and warm, appearing in some of the most fundamental Ukrainian words.»
-
-**Expected score after fix:** 9/10
-
-### LLM Fingerprint: 7/10 → 8/10
-**What to fix:**
-1. Line 12: Simplify «your key to unlocking the true sound and soul of the language» — reduce abstract noun stacking. E.g., «your key to reading and speaking Ukrainian naturally»
-2. Line 18: Simplify «They are the phonetic fingerprint of the culture» and «the unique acoustic heritage of Ukraine» — e.g., «These letters give Ukrainian its distinctive sound» and «the way Ukrainian really sounds»
-3. Line 139: Simplify «the secret to Ukrainian euphony—the natural musicality and smoothness of the language» — e.g., «what makes Ukrainian sound so smooth and musical»
-
-**Expected score after fix:** 8/10
 
 ### Pedagogy: 8/10 → 9/10
 **What to fix:**
-1. Add сім'я to the lesson content (section «Йотовані голосні та М'який знак», subsection Я) — the word is quizzed in activities but never taught
-2. Fix or verify the "14 vs 15 letters" count — either correct the title or confirm one letter belongs in Module 1
+1. Section «Унікальні приголосні»: After the first 3-4 consonants (around line 70), insert a brief "Quick Check" mini-exercise (similar to the one on line 188) asking learners to read aloud 3-4 words using only the consonants covered so far. This breaks up the 90-line block.
+2. Section «Практика та вимова»: Add 1-2 guided mini-dialogues where the learner reads both parts, applying multiple letter groups together.
 
 **Expected score after fix:** 9/10
 
+### Activities: 8/10 → 9/10
+**What to fix:**
+1. Fix Й classification in group-sort activity (YAML lines 29-49): Add a third group "Semivowels (Напівголосні)" or move Й to Vowels group with explanatory note.
+2. Consider increasing quiz item counts closer to plan targets (8 → 12-15 items) if richness gap demands more practice.
+
+**Expected score after fix:** 9/10
+
+### LLM Fingerprint: 8/10 → 9/10
+**What to fix:**
+1. Vary the "You will find/hear/use this letter..." formula across subsections in «Унікальні приголосні» and «Йотовані голосні та М'який знак». Use different transitions: rhetorical questions, example sentences, cultural context, or frequency statistics instead of the same connector pattern.
+
+**Expected score after fix:** 9/10
+
+### Linguistic Accuracy: 9/10 → 9/10 (maintain)
+**What to fix:**
+1. Resolve letter count: verify against a1-01 whether 14 or 15 is correct, then update title (line 8) and prose (line 16) accordingly.
+2. Replace тінь with ніч in vocabulary YAML.
+
+**Expected score after fix:** 9/10 (already at threshold)
+
 ### Projected Overall After Fixes
 ```
-Experience: 9 × 1.5 = 13.5
-Language: 9 × 1.1 = 9.9
-Pedagogy: 9 × 1.2 = 10.8
-Activities: 9 × 1.3 = 11.7  (fixes сім'я gap)
-Beginner Safety: 9 × 1.3 = 11.7
-LLM Fingerprint: 8 × 1.0 = 8.0
-Linguistic Accuracy: 9 × 1.5 = 13.5
-Total: 79.1 / 8.9 = 8.9/10
+(9×1.5 + 9×1.1 + 9×1.2 + 9×1.3 + 9×1.3 + 9×1.0 + 9×1.5) / 8.9
+= (13.5 + 9.9 + 10.8 + 11.7 + 11.7 + 9 + 13.5) / 8.9
+= 80.1 / 8.9
+= 9.0/10
 ```
 
 ## Factual Verification
 
-- Research notes consulted: YES
-- Key Facts Ledger present: NO (not applicable — A1 core)
-- Dates checked: 2 (Ґ banned 1933, restored 1990 — matches research notes)
-- Named figures verified: 0 (no named historical figures in content)
-- Primary quotes cross-referenced: NOT_APPLICABLE
+- Research notes consulted: NOT_APPLICABLE (A1 core level — no research file)
+- Key Facts Ledger present: NO
+- Dates checked: 2 (Ґ ban 1933: correct; Ґ restoration 1990: correct)
+- Named figures verified: 0 (no named historical figures)
+- Primary quotes cross-referenced: N/A
 - Chronological sequence: CONSISTENT
-- Claims without research grounding: 1 (Mariupol 2022 Ї graffiti — confirmed in research notes)
-- Stress/pronunciation claims verified: 1 error found (є́нот should be єно́т)
-- Letter count claim: DISCREPANCY (title says 14, content covers 15)
+- Claims without research grounding: 1 — Mariupol Ї graffiti 2022 (well-documented cultural phenomenon, no research file needed at A1)
+- Callout factual accuracy: All 5 callouts verified correct
 
 ## Verification Summary
 
-- Content lines read: 322
-- Activity items checked: 76 (across 8 activities)
-- Ukrainian sentences verified: 12 embedded Ukrainian phrases
-- IPA transcriptions checked: 20 (vocabulary file)
-- Factual claims verified: 5 (Ґ history, Ї Mariupol, letter count, єнот stress, ясь gloss)
-- Issues found: 7
+- Content lines read: 299
+- Activity items checked: 74 (across 8 activities)
+- Ukrainian sentences verified: 12
+- IPA transcriptions checked: 20 (all vocabulary items)
+- Factual claims verified: 5 (Ґ ban/restoration, Ї uniqueness, Ї Mariupol, Ь palatalization mechanics)
+- Issues found: 5 (1 letter count inconsistency, 1 Й classification conflict, 1 vocab mismatch, 1 forced injections, 1 richness gap)
 
 ## Verdict
 
-**FAIL**
+**PASS**
 
-Linguistic Accuracy scores 8/10, below the <9 auto-fail threshold. Four errors drive this: хлопець placed as a Ч example despite containing no Ч (line 120), читати placed as a Й example despite containing no Й (line 248), incorrect stress on є́нот (line 149), and fabricated gloss for я́сь (line 277). All four are straightforward fixes requiring word replacements. After repair, the module should comfortably pass — the pedagogical design, activity quality, and cultural content are genuinely strong.
+The module delivers solid phonetics instruction with excellent pedagogical techniques ("Smile vs Grin," decolonization hooks, contrast drills) and passes all auto-fail thresholds. The five issues identified are fixable in D.2: the letter count inconsistency needs alignment with module 1, the Й group-sort classification must match the "semivowel" teaching, the тінь/ніч vocab mismatch needs correction, and richness additions (dialogues, tables, proverbs) will close the 47% → 95% gap. No blocking issues prevent a targeted repair pass.
 
 ---
 
 ## Audit Failures (from automated re-audit)
 
 ```
-VERDICT: FAIL
-overall status is 'fail' (must be 'pass')
-Review concludes with **Status:** FAIL — the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module.
-failing gates:
-review: Review concludes with **Status:** FAIL — the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module.
-❌ [REVIEW_VERDICT_FAIL] Review concludes with **Status:** FAIL — the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module.
-❌ AUDIT FAILED. Correct errors before proceeding.
-Critical Failures:
-• Review concludes with **Status:** FAIL — the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module.
-❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-cyrillic-code-ii-audit.log for details)
+Gates:   7 pass, 1 info
 ```
 
 ---
@@ -234,6 +269,7 @@ Critical Failures:
    b. Produce a FIND/REPLACE pair with verbatim FIND text
 3. Only fix issues documented above — no silent extra changes
 4. Prioritize fixes by impact: audit gate failures first, then review issues
+5. For Russianisms: replace with the standard Ukrainian form from the calibration table
 
 ---
 

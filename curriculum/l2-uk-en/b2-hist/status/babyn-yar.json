@@ -2,10 +2,10 @@
   "module": "babyn-yar",
   "level": "B2",
   "plan_version": "1",
-  "last_audit": "2026-02-24T23:00:43.162800Z",
+  "last_audit": "2026-02-26T00:27:29.044990Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T22:58:10.303989Z",
+    "md": "2026-02-26T00:27:17.696164Z",
     "meta": "2026-02-24T22:58:42.841252Z",
     "activities": "2026-02-24T22:57:17.840571Z",
     "vocabulary": "2026-02-24T22:57:17.829086Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5225/5000 (raw: 5508)"
+      "message": "5225/5000 (raw: 5510)"
     },
     "activities": {
       "status": "deferred",

@@ -153,7 +153,7 @@ It is short, sharp, and easy to remember.
 
 #### Математика: Плюс і Мінус
 
-Давайте попрактикуємо.
+Попрактикуймо.
 *   **плюс** (+)
 *   **мі́нус** (-)
 *   **дорі́внює** (=, equals)
@@ -330,8 +330,8 @@ Let's see these phrases in action with some mini-dialogues. Read them aloud to p
 **Клієнт**: Дякую. (Thank you.)
 
 > [!note]
-> **Vocabulary: Здача**
-> The word **зда́ча** means "change" (the money you get back). You will hear this constantly.
+> **Vocabulary: Решта**
+> The word **ре́шта** means "change" (the money you get back). You will hear this constantly.
 
 #### Діалог 2: На ринку (At the market)
 
@@ -341,7 +341,7 @@ Let's see these phrases in action with some mini-dialogues. Read them aloud to p
 **Покупець**: Це дешево! Дайте два кілограми. (That is cheap! Give me 2 kilograms.)
 **Продавець**: Добре. З вас **сорок** гривень. (Good. From you 40 hryvnias.)
 **Покупець**: Ось п'ятдесят. (Here is fifty.)
-**Продавець**: Дякую. Ваша здача — десять гривень. (Thank you. Your change is 10 hryvnias.)
+**Продавець**: Дякую. Ваша решта — десять гривень. (Thank you. Your change is 10 hryvnias.)
 
 #### Діалог 3: Сувеніри (Souvenirs)
 
@@ -359,7 +359,7 @@ Let's see these phrases in action with some mini-dialogues. Read them aloud to p
 (So... potatoes — 15... carrots — 12... together — 27.)
 
 Ви даєте 50 гривень.
-"З вас двадцять сім. Здача... двадцять три."
+"З вас двадцять сім. Решта... двадцять три."
 (From you 27. Change... 23.)
 
 Спробуйте рахувати подумки українською. Це чудове тренування мозку!
@@ -402,7 +402,7 @@ It means that small savings add up to big wealth. It is the exact equivalent of 
 Ви розумієте ціни.
 Це величезний крок до незалежності в Україні.
 
-Давайте повторимо головне (**main points**):
+Повторімо головне (**main points**):
 1.  **Числа 0-10** унікальні. Запам'ятайте їх.
 2.  **Числа 11-19** формуються за допомогою `-надцять`.
 3.  **Десятки (20-90)** закінчуються на `-дцять` або `-десят`.
@@ -418,6 +418,6 @@ It means that small savings add up to big wealth. It is the exact equivalent of 
 3.  У вас є **12** гривень. Яка це зона правила 1-2-5? (Підказка: це виняток!)
 4.  Як запитати "Скільки це коштує?" українською?
 5.  Яка різниця між **дорого** і **дешево**?
-6.  Ви купуєте каву за 45 грн. Ви платите 50 грн. Яка ваша **здача**? Назвіть число українською.
+6.  Ви купуєте каву за 45 грн. Ви платите 50 грн. Яка ваша **решта**? Назвіть число українською.
 
 **Порахуйте речі у вашій кімнаті сьогодні.** Один стіл, дві лампи, п'ять книг. Зробіть це реальністю!

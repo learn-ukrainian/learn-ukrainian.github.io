@@ -1,4 +1,4 @@
-# Phase D.1: Evidence Collection + Adversarial Review
+# Phase D.1: Evidence Collection + Adversarial Review (Structured Output)
 
 > **You are an independent Senior Editor reviewing Ukrainian language curriculum.**
 > **You have NO prior relationship with this content — you are seeing it for the first time.**
@@ -52,13 +52,17 @@ Read ALL of these files before writing anything:
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Bazaar Accountant
-Word count:       2622 / 2000 (131.1%)
+Word count:       2636 / 2000 (131.8%)
 Activities:       10
 Vocabulary items: 20
 Engagement boxes: 6
-Immersion:        39.3% (target: 25-40%)
+Immersion:        37.8% (target: 25-40%)
+Richness:         79% (threshold: 95%)
+Richness gaps:    cultural: 0/3, dialogues: 2/4, tables: 1/2
 Audit status:     PASS
 ```
+
+**Richness gate**: If richness is below threshold, your Fix Plan MUST include concrete additions that close each gap dimension. For example, if `cultural: 2/3`, add one `[!culture]` callout; if `tables: 1/2`, add one comparison table. Each addition should be pedagogically useful, not filler.
 
 ## Content Sections (H2 headers in the content file)
 
@@ -68,6 +72,69 @@ Audit status:     PASS
 4. Культурний контекст: Історія гривні
 
 **IMPORTANT — Section Reference Rule:** When discussing any content section in your review (dimension evidence, issue locations, fix plans), always reference it by its **exact Ukrainian H2 header name** — e.g., write `Section «Теорія: Магія закінчень -ати»` not "Theory section". This enables automated section coverage verification. Every H2 section listed above must be mentioned by its Ukrainian name at least once in your review.
+
+---
+
+## Pre-Screen Results (D.0 Deterministic Findings)
+
+The following issues were detected by automated regex-based scanners BEFORE your review.
+**You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
+
+1. **[LLM_FILLER]** (severity: MEDIUM)
+   Location: ~line 21
+   Text: Numbers are everywhere
+   Fix: Rewrite into concrete, specific teaching content
+
+---
+
+## Track Calibration
+
+# Track Calibration: A1
+
+## Bilingual Scope
+A1 uses PROGRESSIVE immersion — targets increase per module:
+- Modules 1-2: 5-15% Ukrainian (Cyrillic intro, mostly English)
+- Modules 3-5: 10-25% Ukrainian (early vocab building)
+- Modules 6-10: 15-35% Ukrainian (growing immersion)
+- Modules 11-20: 25-40% Ukrainian (foundation established)
+- Modules 21+: 35-55% Ukrainian (consolidation)
+
+Mixing English explanations with Ukrainian examples is CORRECT pedagogy.
+Do NOT flag bilingual content as LANGUAGE_BLENDER.
+Flag: Full Ukrainian paragraphs that exceed the module's immersion band.
+Flag: Modules that are below their minimum immersion target.
+
+## Russicism Lookup (A1-specific)
+These appear frequently in A1 content. Flag as HIGH:
+- здача → решта (change/money)
+- тапочки → капці (slippers)
+- кушати → їсти (to eat)
+- давайте попрактикуємо → попрактикуймо (let's practice — Russian imperative calque)
+- давайте повторимо → повторімо (let's repeat — Russian imperative calque)
+- давайте подивимося → подивімося (let's look — Russian imperative calque)
+- чоловіче → пане (sir — register mismatch in service contexts)
+- надіятися → сподіватися (to hope)
+- піднімається → підводиться (gets up)
+- получати → отримувати (to receive)
+- вообще → взагалі (in general)
+
+## Anglicism Lookup (A1-specific)
+- "Що ви хочете?" → "Що бажаєте?" (register in service/hospitality contexts)
+- "роблять каву" → "готують каву" (make coffee — English calque)
+- "робити добру каву" → "готувати смачну каву" (make good coffee)
+
+## LLM Filler Sensitivity
+At A1, some motivational content is ACCEPTABLE when woven into teaching.
+Flag ONLY: pure cheerleading with zero educational content, generic padding
+("Numbers are everywhere", "Language is not just about labeling things",
+"As you continue your Ukrainian journey").
+Do NOT flag: warm encouragement that includes a teaching point.
+
+## Content Focus
+Simple sentences are expected. Don't flag short paragraphs.
+Focus on: Russianisms, factual errors in callouts, and fluff replacing actual teaching.
+Do NOT penalize: friendly tone, bilingual explanations, basic vocabulary presentation.
+
 
 ---
 
@@ -319,9 +386,26 @@ Follow the full review protocol. In summary:
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms (кушать→їсти, приймати участь→брати участь, красивий→гарний, прекрасне→чудове, etc.)
+
+**Russianisms** — check content against these known patterns:
+
+These appear frequently in A1 content. Flag as HIGH:
+- здача → решта (change/money)
+- тапочки → капці (slippers)
+- кушати → їсти (to eat)
+- давайте попрактикуємо → попрактикуймо (let's practice — Russian imperative calque)
+- давайте повторимо → повторімо (let's repeat — Russian imperative calque)
+- давайте подивимося → подивімося (let's look — Russian imperative calque)
+- чоловіче → пане (sir — register mismatch in service contexts)
+- надіятися → сподіватися (to hope)
+- піднімається → підводиться (gets up)
+- получати → отримувати (to receive)
+- вообще → взагалі (in general)
+
+Also check for:
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
 - **Colonial framing** — Ukrainian defined by contrast with Russian (see below)
+- **Word salad** — paragraphs that string together unrelated claims with no logical thread, or sentences that randomly alternate between Ukrainian and English within the same paragraph. Each paragraph must have one clear point. Score Language Quality ≤ 6 if found.
 - Grammar scope violations
 - Activity errors
 - Beginner safety ("Would I Continue?" test)
@@ -386,6 +470,11 @@ Follow the full review protocol. In summary:
 - Stacked abstract nouns: sentences with 3+ abstract nouns like "soul, history, and heartbeat" or "identity, resilience, and strength" — if 3+ such sentences found → ≤ 7
 - Generic AI clichés: "діамант", "двигун прогресу", "дзеркало культури", "архітектура мови" — these are LLM-typical, not natural Ukrainian
 - "It is important to note..." / "In this lesson, we will explore..." formality
+
+**LLM filler phrases** (pre-scanned by D.0, verify any flagged):
+
+D.0 found these filler phrases — verify each one:
+- "Numbers are everywhere" at ~line 21
 
 **IMPORTANT — What is NOT an LLM fingerprint:**
 - Natural Ukrainian metaphors, proverbs, and phraseology — Ukrainian is a metaphor-rich language. Pedagogical analogies ("Smile vs Grin technique", "like a pitchfork") that help learners understand pronunciation are GOOD teaching, not AI artifacts

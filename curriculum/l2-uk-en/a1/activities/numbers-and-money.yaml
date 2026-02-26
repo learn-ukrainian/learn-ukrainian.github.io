@@ -318,8 +318,8 @@
       answer: "З вас сорок гривень"
     - words: ["Ні", "дякую", "я", "зі", "своїм"]
       answer: "Ні дякую я зі своїм"
-    - words: ["Ваша", "здача", "десять", "гривень"]
-      answer: "Ваша здача десять гривень"
+    - words: ["Ваша", "решта", "десять", "гривень"]
+      answer: "Ваша решта десять гривень"
 
 - type: match-up
   title: "Корисні фрази"
@@ -493,9 +493,9 @@
         - text: "мало"
           correct: false
     - question: "Як сказати 'change' (money) українською?"
-      explanation: "Change — це здача."
+      explanation: "Change — це решта."
       options:
-        - text: "здача"
+        - text: "решта"
           correct: true
         - text: "готівка"
           correct: false
@@ -510,7 +510,7 @@
           correct: true
         - text: "картка"
           correct: false
-        - text: "здача"
+        - text: "решта"
           correct: false
         - text: "рахунок"
           correct: false

@@ -18,26 +18,25 @@
   Module:  babyn-yar
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  failing gates:
-    lesson: 5230/5000 (raw: 5513) | pedagogy: 1 violations
+  2 Outline Compliance Errors
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Correct the YAML structure to match schemas/meta-module.schema.json
-    [LLM_FINGERPRINT_REPETITION] Repetitive LLM rhetorical patterns (9 total): 'не лише X, а й Y' x9 — robotic prose
-       → FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 
   📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 2 violations (minor)
+     → 1 violations (minor)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/audit/babyn-yar-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2-hist/status/babyn-yar.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
+
+  Critical Failures:
+    • 2 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/babyn-yar-audit.log for details)
         ```

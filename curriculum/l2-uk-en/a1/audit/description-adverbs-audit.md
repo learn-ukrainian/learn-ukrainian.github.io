@@ -1,7 +1,7 @@
 # Audit Report: M28 — description-adverbs.md
 **Level:** A1 | **Module:** M28 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:54:29
+**Generated:** 2026-02-25 22:40:17
 
 ## Configuration
 **Type:** A1-grammar

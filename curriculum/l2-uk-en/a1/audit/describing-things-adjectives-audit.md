@@ -1,7 +1,7 @@
 # Audit Report: M26 — describing-things-adjectives.md
 **Level:** A1 | **Module:** M26 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:41:25
+**Generated:** 2026-02-25 22:40:15
 
 ## Configuration
 **Type:** A1-grammar

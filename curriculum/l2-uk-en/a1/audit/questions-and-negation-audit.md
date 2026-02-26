@@ -1,7 +1,7 @@
 # Audit Report: M07 — questions-and-negation.md
 **Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:19:26
+**Generated:** 2026-02-26 00:51:31
 
 ## Configuration
 **Type:** A1-grammar
@@ -45,7 +45,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2711/2000 (raw: 2876)
+- **Words:** ✅ 2741/2000 (raw: 2906)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -58,7 +58,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 31.6% (target 15-35% (M07))
+- **Immersion:** 🇺🇦 21.2% (target 15-35% (M07))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -68,9 +68,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Questions & Negation** | ✅ | 50 | Included in Core |
-| **Вступ: Мистецтво ставити питання** | ✅ | 455 | Included in Core |
-| **Граматика: Як будувати питання** | ✅ | 995 | Included in Core |
-| **Практика: Інтонація та конструктор** | ✅ | 462 | Included in Core |
+| **Вступ: Мистецтво ставити питання** | ✅ | 421 | Included in Core |
+| **Граматика: Як будувати питання** | ✅ | 1004 | Included in Core |
+| **Практика: Інтонація та конструктор** | ✅ | 469 | Included in Core |
 | **Застосування: Розмова в реальному житті** | ✅ | 315 | Included in Core |
-| **Культурний контекст: Ввічливість і гумор** | ✅ | 269 | Included in Core |
-| **Підсумок** | ✅ | 165 | Included in Core |
+| **Культурний контекст: Ввічливість і гумор** | ✅ | 286 | Included in Core |
+| **Підсумок** | ✅ | 196 | Included in Core |

@@ -1,4 +1,4 @@
-# Phase D.1: Evidence Collection + Adversarial Review
+# Phase D.1: Evidence Collection + Adversarial Review (Structured Output)
 
 > **You are an independent Senior Editor reviewing Ukrainian language curriculum.**
 > **You have NO prior relationship with this content — you are seeing it for the first time.**
@@ -52,13 +52,17 @@ Read ALL of these files before writing anything:
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Emergency Dispatcher
-Word count:       2769 / 2000 (138.5%)
+Word count:       3064 / 2000 (153.2%)
 Activities:       10
 Vocabulary items: 20
-Engagement boxes: 4
-Immersion:        37.3% (target: 35-55%)
-Audit status:     FAIL
+Engagement boxes: 5
+Immersion:        37.2% (target: 35-55%)
+Richness:         70% (threshold: 95%)
+Richness gaps:    engagement: 4/5, cultural: 1/3, dialogues: 0/4, tables: 0/2
+Audit status:     PASS
 ```
+
+**Richness gate**: If richness is below threshold, your Fix Plan MUST include concrete additions that close each gap dimension. For example, if `cultural: 2/3`, add one `[!culture]` callout; if `tables: 1/2`, add one comparison table. Each addition should be pedagogically useful, not filler.
 
 ## Content Sections (H2 headers in the content file)
 
@@ -68,6 +72,66 @@ Audit status:     FAIL
 4. Виробництво та підсумок
 
 **IMPORTANT — Section Reference Rule:** When discussing any content section in your review (dimension evidence, issue locations, fix plans), always reference it by its **exact Ukrainian H2 header name** — e.g., write `Section «Теорія: Магія закінчень -ати»` not "Theory section". This enables automated section coverage verification. Every H2 section listed above must be mentioned by its Ukrainian name at least once in your review.
+
+---
+
+## Pre-Screen Results (D.0 Deterministic Findings)
+
+The following issues were detected by automated regex-based scanners BEFORE your review.
+**You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
+
+(No deterministic issues found — D.0 pre-screen clean)
+
+---
+
+## Track Calibration
+
+# Track Calibration: A1
+
+## Bilingual Scope
+A1 uses PROGRESSIVE immersion — targets increase per module:
+- Modules 1-2: 5-15% Ukrainian (Cyrillic intro, mostly English)
+- Modules 3-5: 10-25% Ukrainian (early vocab building)
+- Modules 6-10: 15-35% Ukrainian (growing immersion)
+- Modules 11-20: 25-40% Ukrainian (foundation established)
+- Modules 21+: 35-55% Ukrainian (consolidation)
+
+Mixing English explanations with Ukrainian examples is CORRECT pedagogy.
+Do NOT flag bilingual content as LANGUAGE_BLENDER.
+Flag: Full Ukrainian paragraphs that exceed the module's immersion band.
+Flag: Modules that are below their minimum immersion target.
+
+## Russicism Lookup (A1-specific)
+These appear frequently in A1 content. Flag as HIGH:
+- здача → решта (change/money)
+- тапочки → капці (slippers)
+- кушати → їсти (to eat)
+- давайте попрактикуємо → попрактикуймо (let's practice — Russian imperative calque)
+- давайте повторимо → повторімо (let's repeat — Russian imperative calque)
+- давайте подивимося → подивімося (let's look — Russian imperative calque)
+- чоловіче → пане (sir — register mismatch in service contexts)
+- надіятися → сподіватися (to hope)
+- піднімається → підводиться (gets up)
+- получати → отримувати (to receive)
+- вообще → взагалі (in general)
+
+## Anglicism Lookup (A1-specific)
+- "Що ви хочете?" → "Що бажаєте?" (register in service/hospitality contexts)
+- "роблять каву" → "готують каву" (make coffee — English calque)
+- "робити добру каву" → "готувати смачну каву" (make good coffee)
+
+## LLM Filler Sensitivity
+At A1, some motivational content is ACCEPTABLE when woven into teaching.
+Flag ONLY: pure cheerleading with zero educational content, generic padding
+("Numbers are everywhere", "Language is not just about labeling things",
+"As you continue your Ukrainian journey").
+Do NOT flag: warm encouragement that includes a teaching point.
+
+## Content Focus
+Simple sentences are expected. Don't flag short paragraphs.
+Focus on: Russianisms, factual errors in callouts, and fluff replacing actual teaching.
+Do NOT penalize: friendly tone, bilingual explanations, basic vocabulary presentation.
+
 
 ---
 
@@ -166,6 +230,7 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 | **TOO_MUCH_AT_ONCE** | >3 concepts before practice | 5 verb forms in one section | Split into smaller chunks |
 | **MISSING_PREVIEW** | No "today you'll learn" | Jumps into content | Add learning objectives |
 | **ABRUPT_END** | No celebration of progress | Module just stops | Add "You can now..." summary |
+| **WORD_SALAD** | Sentences randomly mix Ukrainian and English within the same clause, or a paragraph strings together unrelated ideas with no logical thread | "Україна — цифровізована країна (digital). Касири говорять швидко (fast). Це суперсила (superpower)." — three disconnected claims stitched together | Rewrite paragraph with one clear point; each sentence in one primary language |
 
 ### A+ Beginner Lesson Checklist
 
@@ -319,7 +384,23 @@ Follow the full review protocol. In summary:
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms (кушать→їсти, приймати участь→брати участь, красивий→гарний, прекрасне→чудове, etc.)
+
+**Russianisms** — check content against these known patterns:
+
+These appear frequently in A1 content. Flag as HIGH:
+- здача → решта (change/money)
+- тапочки → капці (slippers)
+- кушати → їсти (to eat)
+- давайте попрактикуємо → попрактикуймо (let's practice — Russian imperative calque)
+- давайте повторимо → повторімо (let's repeat — Russian imperative calque)
+- давайте подивимося → подивімося (let's look — Russian imperative calque)
+- чоловіче → пане (sir — register mismatch in service contexts)
+- надіятися → сподіватися (to hope)
+- піднімається → підводиться (gets up)
+- получати → отримувати (to receive)
+- вообще → взагалі (in general)
+
+Also check for:
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
 - **Colonial framing** — Ukrainian defined by contrast with Russian (see below)
 - **Word salad** — paragraphs that string together unrelated claims with no logical thread, or sentences that randomly alternate between Ukrainian and English within the same paragraph. Each paragraph must have one clear point. Score Language Quality ≤ 6 if found.
@@ -388,6 +469,10 @@ Follow the full review protocol. In summary:
 - Generic AI clichés: "діамант", "двигун прогресу", "дзеркало культури", "архітектура мови" — these are LLM-typical, not natural Ukrainian
 - "It is important to note..." / "In this lesson, we will explore..." formality
 
+**LLM filler phrases** (pre-scanned by D.0, verify any flagged):
+
+(No LLM filler phrases detected by D.0 scanner)
+
 **IMPORTANT — What is NOT an LLM fingerprint:**
 - Natural Ukrainian metaphors, proverbs, and phraseology — Ukrainian is a metaphor-rich language. Pedagogical analogies ("Smile vs Grin technique", "like a pitchfork") that help learners understand pronunciation are GOOD teaching, not AI artifacts
 - Rich, substantive content that exceeds the word target — word targets are MINIMUMS. More content is better if it's pedagogically useful. Do NOT penalize word count overshoot in any dimension. Only penalize obvious filler/padding (repetitive motivational prose, saying the same thing three ways)
@@ -397,7 +482,26 @@ Follow the full review protocol. In summary:
 
 **Example plausibility test**: Would a real Ukrainian speaker actually say each example sentence? Flag implausible examples. If 2+ implausible → LLM Fingerprint ≤ 8.
 
-{SCORING_SECTION}
+### STEP 4: Score 7 Dimensions
+
+| # | Dimension | Weight | Auto-fail |
+|---|-----------|--------|-----------|
+| 1 | Experience Quality | 1.5 | <7 |
+| 2 | Language | 1.1 | <8 |
+| 3 | Pedagogy | 1.2 | <7 |
+| 4 | Activities | 1.3 | <7 |
+| 5 | Beginner Safety | 1.3 | <7 |
+| 6 | LLM Fingerprint | 1.0 | <7 |
+| 7 | Linguistic Accuracy | 1.5 | <9 |
+
+**Weighted Overall:**
+```
+Overall = (Experience x 1.5 + Language x 1.1 + Pedagogy x 1.2 +
+          Activities x 1.3 + Beginner_Safety x 1.3 + LLM x 1.0 +
+          Linguistic_Accuracy x 1.5) / 8.9
+```
+
+**Why 7 dimensions?** A1/A2 modules are short and topic-constrained, so Coherence, Relevance, Educational, Immersion, Richness, and Factual Accuracy are noise at this level — they auto-pass trivially and waste reviewer attention. Focus scoring on what actually differentiates good beginner modules.
 
 ---
 
@@ -453,7 +557,147 @@ Your review is checked by regex. Missing ANY of these H2 headers = AUTOMATIC REJ
 
 ---
 
-{D1_OUTPUT_FORMAT}
+## Output Format
+
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+> **NO FIX OUTPUT** — this step produces the review only. Fixes are handled in a separate step if needed.
+
+### Output Block 1: Review
+
+```
+===REVIEW_START===
+# Рецензія: {TOPIC_TITLE}
+
+**Level:** {LEVEL} | **Module:** {MODULE_NUM}
+**Overall Score:** {X.X}/10
+**Status:** PASS / FAIL
+**Reviewed:** {date}
+
+## Plan Verification
+
+```
+Plan-Content Alignment: [PASS/FAIL]
+- Sections: [status]
+- Vocabulary: [X/Y from plan, Z extra]
+- Grammar scope: [status]
+- Objectives: [status]
+```
+
+## Scores    <!-- REQUIRED — rejection if missing -->
+
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | X/10 | <7 | [specific finding] |
+| 2 | Language | X/10 | <8 | [specific finding] |
+| 3 | Pedagogy | X/10 | <7 | [specific finding] |
+| 4 | Activities | X/10 | <7 | [specific finding] |
+| 5 | Beginner Safety | X/10 | <7 | ["Would I Continue?" X/5] |
+| 6 | LLM Fingerprint | X/10 | <7 | [specific finding] |
+| 7 | Linguistic Accuracy | X/10 | <9 | [specific finding] |
+
+**Weighted Overall:** {show calculation} = **X.X/10**
+
+## Auto-Fail Checklist Results
+
+- Russianisms: [CLEAN] or [list]
+- Calques: [CLEAN] or [list]
+- Grammar scope: [CLEAN] or [list]
+- Activity errors: [CLEAN] or [list]
+- Beginner safety: X/5
+- Factual accuracy: [CLEAN] or [list of discrepancies]
+
+## Critical Issues Found    <!-- REQUIRED — rejection if missing -->
+
+### Issue 1: {Category}
+- **Location**: Line {N} / Section "{name}"
+- **Original**: «{exact Ukrainian text verified via Grep}»
+- **Problem**: {why it's wrong}
+- **Fix**: {concrete replacement}
+
+[... more issues ...]
+
+## Ukrainian Language Issues
+
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| {N} | «{original}» | «{fixed}» | Russianisms / Calque / Scope / Grammar |
+
+## Beginner Safety Audit
+
+"Would I Continue?" Test: X/5
+- Overwhelmed? [Pass/Fail]
+- Instructions clear? [Pass/Fail]
+- Quick wins? [Pass/Fail]
+- Ukrainian scary? [Pass/Fail]
+- Come back tomorrow? [Pass/Fail]
+
+## Strengths
+- [Specific strength with evidence]
+
+## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
+
+### {Dimension Name}: {current}/10 -> 9/10
+**What to fix:**
+1. Line {N}: Change «{current}» -> «{replacement}» — {why}
+2. Section "{name}": {action} — {impact}
+
+**Expected score after fix:** {X}/10
+
+### Projected Overall After Fixes
+```
+{Recalculate weighted overall with projected scores}
+```
+
+## Factual Verification    <!-- REQUIRED for seminar tracks — rejection if missing -->
+
+- Research notes consulted: {YES/NO/NOT_APPLICABLE}
+- Key Facts Ledger present: {YES/NO}
+- Dates checked: {X} ({all correct / N discrepancies listed below})
+- Named figures verified: {X}
+- Primary quotes cross-referenced: {X/Y matched}
+- Chronological sequence: {CONSISTENT / ISSUES}
+- Claims without research grounding: {N found — listed below if any}
+
+{If discrepancies found, list each one:}
+{- Line N: Prose says "X" but research says "Y" for [event/date/attribution]}
+
+## Verification Summary    <!-- REQUIRED — rejection if missing -->
+
+- Content lines read: {X}
+- Activity items checked: {X}
+- Ukrainian sentences verified: {X}
+- IPA transcriptions checked: {X}
+- Factual claims verified: {X}
+- Issues found: {X}
+
+## Verdict    <!-- REQUIRED — rejection if missing -->
+
+**PASS** or **FAIL**
+
+{1-3 sentences. If FAIL, list blocking issues.}
+
+===REVIEW_END===
+```
+
+### Output Block 2: Friction Report (MANDATORY)
+
+```
+===FRICTION_START===
+**Phase**: Phase D.1: Evidence Review
+**Step**: {what you were doing when friction occurred, or "Full Phase D.1"}
+**Friction Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
+===FRICTION_END===
+```
+
+---
+
+## CRITICAL: Output Format Reminder
+
+Your output MUST start with `===REVIEW_START===` and end with `===REVIEW_END===`. The extraction pipeline uses these exact delimiters. Any output without these delimiters is **automatically discarded** and the entire phase fails. Do not write a summary or conversational response — output the structured review inside the delimiters.
+
 
 ## Boundaries
 

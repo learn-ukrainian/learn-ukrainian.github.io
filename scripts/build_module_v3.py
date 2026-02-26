@@ -2536,6 +2536,44 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
 
         log(f"  D.0: Screen complete — audit {'PASS' if screen.audit_passed else 'FAIL'}, "
             f"{len(screen.deterministic_issues)} deterministic issue(s)")
+
+        # -------------------------------------------------------------------
+        # D.0.5: Gemini Proofread + Fix (editorial polish before Claude review)
+        # Uses proofread.py --fix --no-mdx (Gemini Pro, tested best per #640)
+        # Only runs when D.0 found issues — clean modules skip straight to D.1
+        # -------------------------------------------------------------------
+        if screen.deterministic_issues or not screen.audit_passed:
+            module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
+            log(f"  D.0.5: Dispatching Gemini proofread+fix on {ctx.slug}...")
+            proofread_cmd = [
+                sys.executable, str(SCRIPTS_DIR / "proofread.py"),
+                ctx.track, str(module_num), "--fix", "--no-mdx",
+            ]
+            try:
+                proofread_result = subprocess.run(
+                    proofread_cmd, capture_output=True, text=True, timeout=300,
+                )
+                # Extract summary from proofread output
+                pf_lines = (proofread_result.stdout or "").strip().split("\n")
+                pf_found = [l for l in pf_lines if "FOUND:" in l or "CLEAN:" in l or "Applied" in l]
+                for line in pf_found[-3:]:
+                    log(f"    {line.strip()}")
+                if proofread_result.returncode != 0 and not pf_found:
+                    log(f"  D.0.5: proofread.py exited with code {proofread_result.returncode}")
+                    # Non-fatal — continue to D.1 even if proofread had issues
+            except subprocess.TimeoutExpired:
+                log("  D.0.5: proofread.py timed out (300s) — continuing without proofread fixes")
+            except Exception as e:
+                log(f"  D.0.5: proofread.py error: {e} — continuing without proofread fixes")
+
+            # Re-run D.0 screen after proofread fixes to update metrics
+            log("  D.0.5: Re-screening after proofread fixes...")
+            screen = _deterministic_screen(ctx)
+            log(f"  D.0.5: Post-proofread — audit {'PASS' if screen.audit_passed else 'FAIL'}, "
+                f"{len(screen.deterministic_issues)} deterministic issue(s)")
+        else:
+            log("  D.0.5: Skipped — D.0 found no issues, proceeding to D.1")
+
     else:
         screen = None  # type: ignore[assignment]
 
@@ -2680,6 +2718,17 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         mark_phase_locked(ctx, "6b", "complete", note="v3-phase-D")
         mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
         return True
+
+    # Audit fails but review passes — module has structural issues Phase D can't fix
+    if not passed and not review_says_fail:
+        log("  D.1: Audit FAIL but review PASS — module needs rebuild (structural issues)")
+        fail_lines = [l.strip() for l in audit_out.split("\n")
+                      if l.strip().startswith(("\u274c", "[GRAMMAR]", "[COMPLEXITY]"))]
+        for line in fail_lines[:5]:
+            log(f"    {line}")
+        _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
+                       note="needs-rebuild-structural")
+        return False
 
     if passed and review_says_fail:
         log("  D.1: Audit PASSED but review flags issues — proceeding to D.2 for repair")
@@ -2836,6 +2885,82 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     log("  Phase D: Module marked as NEEDS-REBUILD (use --rebuild to regenerate)")
     _mark_phase_v3(ctx, state, phase, "failed",
                    attempts=1 + MAX_D2_ITERS, note="needs-rebuild")
+    return False
+
+
+def phase_D_rescreen(ctx: ModuleContext, state: dict) -> bool:
+    """Rescreen mode: D.0 screen → proofread.py --fix (Gemini Pro) → re-audit.
+
+    For modules that already passed Phase D but need fixes for newly-added
+    deterministic checks (e.g., new Russicism patterns, LLM filler detection).
+    Uses Gemini Pro for repairs (tested best for proofreading, see #640).
+    """
+    log(f"  RESCREEN: Running D.0 deterministic screen on {ctx.slug}...")
+
+    screen = _deterministic_screen(ctx)
+
+    if screen.audit_passed and not screen.deterministic_issues:
+        log("  RESCREEN: CLEAN — no issues found, audit passes")
+        return True
+
+    if not screen.deterministic_issues:
+        if not screen.audit_passed:
+            log("  RESCREEN: No deterministic issues but audit FAIL — needs full Phase D")
+            return False
+        log("  RESCREEN: CLEAN — no deterministic issues")
+        return True
+
+    # Report findings
+    issue_summary: dict[str, int] = {}
+    for iss in screen.deterministic_issues:
+        t = iss.get("type", "UNKNOWN")
+        issue_summary[t] = issue_summary.get(t, 0) + 1
+    summary_str = ", ".join(f"{k}:{v}" for k, v in issue_summary.items())
+    log(f"  RESCREEN: Found {len(screen.deterministic_issues)} issue(s): {summary_str}")
+
+    if ctx.dry_run:
+        log("  RESCREEN: DRY-RUN — would dispatch proofread.py --fix (Gemini Pro)")
+        for iss in screen.deterministic_issues[:10]:
+            log(f"    - [{iss.get('type')}] {iss.get('text', '')[:60]}")
+        return True
+
+    # Dispatch proofread.py --fix (Gemini Pro) for the actual repair
+    module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
+    log(f"  RESCREEN: Dispatching proofread.py --fix on {ctx.track} {module_num}...")
+
+    proofread_cmd = [
+        sys.executable, str(SCRIPTS_DIR / "proofread.py"),
+        ctx.track, str(module_num), "--fix", "--no-mdx",
+    ]
+    try:
+        result = subprocess.run(
+            proofread_cmd, capture_output=True, text=True, timeout=300,
+        )
+        log(f"  RESCREEN: proofread.py exited with code {result.returncode}")
+        if result.stdout:
+            for line in result.stdout.strip().split("\n")[-10:]:
+                log(f"    {line}")
+    except subprocess.TimeoutExpired:
+        log("  RESCREEN: proofread.py timed out (300s)")
+        return False
+    except Exception as e:
+        log(f"  RESCREEN: proofread.py error: {e}")
+        return False
+
+    # Post-fix: run deterministic fixes + full audit
+    _run_deterministic_fixes(ctx)
+    passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+    audit_log = ctx.orch_dir / "rescreen-audit.log"
+    audit_log.write_text(audit_out, "utf-8")
+
+    if passed:
+        log("  RESCREEN: PASS (after proofread fix + audit)")
+        return True
+
+    log("  RESCREEN: FAIL — proofread fixes applied but audit still fails")
+    log("  RESCREEN: Module may need full --force-phase D")
+    for line in audit_out.strip().split("\n")[-5:]:
+        log(f"    {line}")
     return False
 
 
@@ -3315,6 +3440,9 @@ def main() -> int:
                         help="Claude model for Phase F/final-review (default: claude-opus-4-6)")
     parser.add_argument("--max-fix", type=int, default=None, dest="max_fix",
                         help="Override max audit fix iterations (default: 3 core, 5 seminar)")
+    parser.add_argument("--rescreen", action="store_true",
+                        help="Run D.0 screen + D.2 repair only (skip D.1 review). "
+                             "For applying newly-added deterministic checks to already-passed modules.")
 
     args = parser.parse_args()
 
@@ -3349,10 +3477,23 @@ def main() -> int:
             print(f"[{i}/{len(nums)}] {args.track} #{n} — {slug}", flush=True)
             print(f"{'='*70}", flush=True)
 
+            # --rescreen batch: skip modules that don't have content yet
+            if getattr(args, "rescreen", False):
+                try:
+                    paths = get_module_paths(args.track, slug)
+                    if not paths["md"].exists():
+                        print(f"  SKIP: no content file", flush=True)
+                        skipped_list.append((n, slug))
+                        continue
+                except Exception:
+                    print(f"  SKIP: could not resolve paths", flush=True)
+                    skipped_list.append((n, slug))
+                    continue
+
             # Layer 1: Tiered batch skip — avoid running full audit on v2-built modules
             # that already pass. Even if they fall through, Layer 2 guards prevent
             # Phase A/B/C from overwriting existing artifacts.
-            if not args.rebuild and not args.force_phase:
+            if not args.rebuild and not args.force_phase and not getattr(args, "rescreen", False):
                 try:
                     paths = get_module_paths(args.track, slug)
                     if paths["md"].exists():
@@ -3430,6 +3571,7 @@ def main() -> int:
                 max_fix=getattr(args, "max_fix", None),
                 stop_before=getattr(args, "stop_before", None),
                 stop_after=getattr(args, "stop_after", None),
+                rescreen=getattr(args, "rescreen", False),
             )
             rc = _run_single_module(single_args)
             if rc == 0:
@@ -3529,6 +3671,19 @@ def _run_single_module(args: argparse.Namespace) -> int:
         ctx = preflight_v3(args)
         _init_log(ctx.slug)
         write_placeholders(ctx)
+
+        # --rescreen: D.0 screen + D.2 repair only (skip D.1 review)
+        if getattr(args, "rescreen", False):
+            t0 = time.time()
+            state = _load_state_v3(ctx)
+            ok = phase_D_rescreen(ctx, state)
+            elapsed = time.time() - t0
+            elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"
+            if ok:
+                log(f"\nRESCREEN: PASS — {ctx.slug} [{elapsed_str}]")
+            else:
+                log(f"\nRESCREEN: FAIL — {ctx.slug} [{elapsed_str}]")
+            return 0 if ok else 1
 
         t0 = time.time()
         ok = run_pipeline_v3(

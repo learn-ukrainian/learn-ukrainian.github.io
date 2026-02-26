@@ -1,0 +1,131 @@
+items:
+  - lemma: "воєнний злочин"
+    ipa: '[ʋɔˈjɛnːɪj ˈzlɔt͡ʃɪn]'
+    translation: "war crime"
+    pos: "noun"
+    gender: "m"
+  - lemma: "окупація"
+    ipa: '[ɔkuˈpɑt͡sʲijɑ]'
+    translation: "occupation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "страта"
+    ipa: '[ˈstrɑtɑ]'
+    translation: "execution"
+    pos: "noun"
+    gender: "f"
+  - lemma: "жертва"
+    ipa: '[ˈʒɛrtʋɑ]'
+    translation: "victim"
+    pos: "noun"
+    gender: "f"
+  - lemma: "свідчення"
+    ipa: '[ˈsʲʋʲid͡ʒt͡ʃɛnʲːɑ]'
+    translation: "testimony"
+    pos: "noun"
+    gender: "n"
+  - lemma: "розслідування"
+    ipa: '[rɔˈzsʲlʲiduʋɑnʲːɑ]'
+    translation: "investigation"
+    pos: "noun"
+    gender: "n"
+  - lemma: "ексгумація"
+    ipa: '[ɛɡzɦuˈmɑt͡sʲijɑ]'
+    translation: "exhumation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "геноцид"
+    ipa: '[ɦɛnɔˈt͡sɪd]'
+    translation: "genocide"
+    pos: "noun"
+    gender: "m"
+  - lemma: "масове поховання"
+    ipa: '[ˈmɑsɔʋɛ pɔxɔˈʋɑnʲːɑ]'
+    translation: "mass grave"
+    pos: "noun"
+    gender: "n"
+  - lemma: "катування"
+    ipa: '[kɑtuˈʋɑnʲːɑ]'
+    translation: "torture"
+    pos: "noun"
+    gender: "n"
+  - lemma: "мародерство"
+    ipa: '[mɑrɔˈdɛrstʋɔ]'
+    translation: "looting"
+    pos: "noun"
+    gender: "n"
+  - lemma: "депортація"
+    ipa: '[dɛpɔrˈtɑt͡sʲijɑ]'
+    translation: "deportation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "трибунал"
+    ipa: '[trɪbuˈnɑl]'
+    translation: "tribunal"
+    pos: "noun"
+    gender: "m"
+  - lemma: "репарації"
+    ipa: '[rɛpɑˈrɑt͡sʲiji]'
+    translation: "reparations"
+    pos: "noun"
+    gender: "f"
+  - lemma: "вторгнення"
+    ipa: '[ˈʍtɔrɦnɛnʲːɑ]'
+    translation: "invasion"
+    pos: "noun"
+    gender: "n"
+  - lemma: "бліцкриг"
+    ipa: '[blʲiˈt͡skrɪɦ]'
+    translation: "blitzkrieg"
+    pos: "noun"
+    gender: "m"
+  - lemma: "передмістя"
+    ipa: '[pɛrɛˈdʲmʲisʲtʲɑ]'
+    translation: "suburb"
+    pos: "noun"
+    gender: "n"
+  - lemma: "наступ"
+    ipa: '[ˈnɑstup]'
+    translation: "offensive"
+    pos: "noun"
+    gender: "m"
+  - lemma: "евакуація"
+    ipa: '[ɛʋɑkuˈɑt͡sʲijɑ]'
+    translation: "evacuation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "виживання"
+    ipa: '[ʋɪʒɪˈʋɑnʲːɑ]'
+    translation: "survival"
+    pos: "noun"
+    gender: "n"
+  - lemma: "інфраструктура"
+    ipa: '[infrɑstruˈkturɑ]'
+    translation: "infrastructure"
+    pos: "noun"
+    gender: "f"
+  - lemma: "правосуддя"
+    ipa: '[prɑʋɔˈsudʲːɑ]'
+    translation: "justice"
+    pos: "noun"
+    gender: "n"
+  - lemma: "меморіал"
+    ipa: '[mɛmɔrʲiˈɑl]'
+    translation: "memorial"
+    pos: "noun"
+    gender: "m"
+  - lemma: "відбудова"
+    ipa: '[ʋʲidbuˈdɔʋɑ]'
+    translation: "reconstruction"
+    pos: "noun"
+    gender: "f"
+  - lemma: "стійкість"
+    ipa: '[ˈsʲtʲijkʲisʲtʲ]'
+    translation: "resilience"
+    pos: "noun"
+    gender: "f"
+  - lemma: "безкарність"
+    ipa: '[bɛˈzkɑrnʲisʲtʲ]'
+    translation: "impunity"
+    pos: "noun"
+    gender: "f"

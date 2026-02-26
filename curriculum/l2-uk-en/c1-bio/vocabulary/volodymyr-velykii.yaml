@@ -1,20 +1,20 @@
-- ipa: '[ˈxrɛʃt͡ʃenʲːɐ]'
+- ipa: '[ˈxrɛˈʃt͡ʃɛnʲːɑ]'
   lemma: хрещення
   pos: noun
   translation: baptism / Christianization
-- ipa: '[jɐˈzɪt͡ʃnɪt͡stʋɔ]'
+- ipa: '[jɑˈzɪt͡ʃnɪt͡stʋɔ]'
   lemma: язичництво
   pos: noun
   translation: paganism
-- ipa: '[xresˈtɪtelʲ]'
+- ipa: '[xrɛˈstɪtɛlʲ]'
   lemma: хреститель
   pos: noun
   translation: baptizer
-- ipa: '[rʲiu̯noɐˈpɔstolʲnɪi̯]'
+- ipa: '[rʲiu̯nɔɑˈpɔstɔlʲnɪj]'
   lemma: рівноапостольний
   pos: adj
   translation: equal-to-the-apostles
-- ipa: '[pɐnteˈɔn]'
+- ipa: '[pɑntɛˈɔn]'
   lemma: пантеон
   pos: noun
   translation: pantheon
@@ -22,15 +22,15 @@
   lemma: ідол
   pos: noun
   translation: idol
-- ipa: '[desʲɐˈtɪnɐ]'
+- ipa: '[dɛsʲɑˈtɪnɑ]'
   lemma: десятина
   pos: noun
   translation: tithe
-- ipa: '[uˈsɔbɪt͡sʲɐ]'
+- ipa: '[uˈsɔbɪt͡sʲɑ]'
   lemma: усобиця
   pos: noun
   translation: internecine war / feud
-- ipa: '[porfʲiroˈrɔdnɪi̯]'
+- ipa: '[pɔrfʲirɔˈrɔdnɪj]'
   lemma: порфірородний
   pos: adj
   translation: born in the purple (Porphyrogenitus)
@@ -38,47 +38,47 @@
   lemma: Корсунь
   pos: noun
   translation: Chersonesus
-- ipa: '[ˈklʲɑtʋɐ]'
+- ipa: '[ˈklʲɑtʋɑ]'
   lemma: клятва
   pos: noun
   translation: oath
-- ipa: '[sʲʋʲɐˈtɪnʲɐ]'
+- ipa: '[sʲʋʲɑˈtɪnʲɑ]'
   lemma: святиня
   pos: noun
   translation: shrine / sacred object
-- ipa: '[monɐsˈtɪr]'
+- ipa: '[mɔnɑˈstɪr]'
   lemma: монастир
   pos: noun
   translation: monastery
-- ipa: '[jeˈpɪskɔp]'
+- ipa: '[jɛˈpɪskɔp]'
   lemma: єпископ
   pos: noun
   translation: bishop
-- ipa: '[ˈɦrɑmotɐ]'
+- ipa: '[ˈɦrɑmɔtɑ]'
   lemma: грамота
   pos: noun
   translation: literacy / charter
-- ipa: '[rɔˈbɪt͡ʃɪt͡ʃ]'
+- ipa: '[rɔbɪt͡ʃɪt͡ʃ]'
   lemma: робичич
   pos: noun
   translation: son of a slave (historical term)
-- ipa: '[ʋɐˈrʲɑɦ]'
+- ipa: '[ʋɑˈrʲɑɦ]'
   lemma: варяг
   pos: noun
   translation: Varangian
-- ipa: '[ˈkɑpɪʃt͡ʃe]'
+- ipa: '[ˈkɑpɪʃt͡ʃɛ]'
   lemma: капище
   pos: noun
   translation: pagan shrine / temple
-- ipa: '[ˈzlɑtnɪk]'
+- ipa: '[zlɑtnɪk]'
   lemma: златник
   pos: noun
   translation: zlatnyk (gold coin)
-- ipa: '[ˈsrʲibnɪk]'
+- ipa: '[ˈsʲrʲibnɪk]'
   lemma: срібник
   pos: noun
   translation: sribnyk (silver coin)
-- ipa: '[ˈtrɪzub]'
+- ipa: '[trɪˈzub]'
   lemma: тризуб
   pos: noun
   translation: trident
@@ -86,35 +86,35 @@
   lemma: літопис
   pos: noun
   translation: chronicle
-- ipa: '[ˈsmɛrtnɐ ˈkɑrɐ]'
+- ipa: '[ˈsmɛrtnɑ ˈkɑrɑ]'
   lemma: смертна кара
   pos: phrase
   translation: capital punishment
-- ipa: '[ˈʋʲirɐ]'
+- ipa: '[ˈʋʲirɑ]'
   lemma: віра
   pos: noun
   translation: wergild (historical fine)
-- ipa: '[pet͡ʃeˈnʲiɦ]'
+- ipa: '[pɛt͡ʃɛˈnʲiɦ]'
   lemma: печеніг
   pos: noun
   translation: Pecheneg
-- ipa: '[druˈʒɪnɐ]'
+- ipa: '[druˈʒɪnɑ]'
   lemma: дружина
   pos: noun
   translation: retinue / squad
-- ipa: '[ˈʋʲit͡ʃe]'
+- ipa: '[ˈʋʲit͡ʃɛ]'
   lemma: віче
   pos: noun
   translation: veche (popular assembly)
-- ipa: '[mɪtropolˈɪt]'
+- ipa: '[mɪtrɔpɔˈlɪt]'
   lemma: митрополит
   pos: noun
   translation: metropolitan
-- ipa: '[kɐnonʲiˈzɑt͡sʲijɐ]'
+- ipa: '[kɑnɔnʲiˈzɑt͡sʲijɑ]'
   lemma: канонізація
   pos: noun
   translation: canonization
-- ipa: '[ʒɛrtʋoprɪˈnɔʃenʲːɐ]'
+- ipa: '[ʒɛrtʋɔprɪˈnɔʃɛnʲːɑ]'
   lemma: жертвоприношення
   pos: noun
   translation: sacrifice

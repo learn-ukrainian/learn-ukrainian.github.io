@@ -1,7 +1,7 @@
 # Audit Report: M104 — karpatska-ukraina.md
 **Level:** B2-HIST | **Module:** M104 | **Phase:** HIST.9 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:40:31
+**Generated:** 2026-02-26 00:23:53
 
 ## Configuration
 **Type:** B2-history

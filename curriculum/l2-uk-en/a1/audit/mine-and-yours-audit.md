@@ -1,7 +1,7 @@
 # Audit Report: M14 — mine-and-yours.md
 **Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:19:32
+**Generated:** 2026-02-25 22:40:02
 
 ## Configuration
 **Type:** A1-grammar

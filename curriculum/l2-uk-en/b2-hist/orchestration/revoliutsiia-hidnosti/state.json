@@ -1,0 +1,35 @@
+{
+  "slug": "revoliutsiia-hidnosti",
+  "track": "b2-hist",
+  "module_num": 126,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-25T21:00:05Z",
+      "words": 5173,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-25T21:01:32Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-25T21:01:32Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T23:51:49Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T23:51:49Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-25T23:51:49Z"
+}

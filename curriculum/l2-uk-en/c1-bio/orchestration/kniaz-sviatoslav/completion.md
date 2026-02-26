@@ -1,4 +1,4 @@
-FAIL: build_module_v2.py c1-bio 2 — E2E
+PASS: build_module_v2.py c1-bio 2 — E2E
 
   Module:   kniaz-sviatoslav
   Track:    c1-bio
@@ -6,5 +6,5 @@ FAIL: build_module_v2.py c1-bio 2 — E2E
   Words:    5741 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-21T18:25:48Z
+  Verdict:  PASS
+  Date:     2026-02-25T23:41:57Z

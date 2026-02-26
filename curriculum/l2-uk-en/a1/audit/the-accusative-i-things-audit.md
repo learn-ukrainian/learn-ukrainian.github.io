@@ -1,7 +1,7 @@
 # Audit Report: M11 — the-accusative-i-things.md
 **Level:** A1 | **Module:** M11 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:19:29
+**Generated:** 2026-02-25 22:39:59
 
 ## Configuration
 **Type:** A1-grammar

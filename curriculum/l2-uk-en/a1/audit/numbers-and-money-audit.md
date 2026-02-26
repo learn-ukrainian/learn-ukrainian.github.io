@@ -1,7 +1,7 @@
 # Audit Report: M17 — numbers-and-money.md
 **Level:** A1 | **Module:** M17 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:53:15
+**Generated:** 2026-02-25 22:57:57
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_BALANCE_BLOATED]** Section 'Теорія: Числа та гроші' has 1394 words (49% of total). Bloated sections: 'Теорія: Числа та гроші' (49%)
+- **[SECTION_BALANCE_BLOATED]** Section 'Теорія: Числа та гроші' has 1393 words (49% of total). Bloated sections: 'Теорія: Числа та гроші' (49%)
   - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 
 ## Recommendation
@@ -47,7 +47,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2622/2000 (raw: 2945)
+- **Words:** ✅ 2636/2000 (raw: 2959)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -60,7 +60,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 39.3% (target 25-40% (M17))
+- **Immersion:** 🇺🇦 37.8% (target 25-40% (M17))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -70,8 +70,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Numbers & Money** | ✅ | 53 | Included in Core |
-| **Розминка: Числа в житті** | ✅ | 301 | Included in Core |
-| **Теорія: Числа та гроші** | ✅ | 1219 | Included in Core |
+| **Розминка: Числа в житті** | ✅ | 317 | Included in Core |
+| **Теорія: Числа та гроші** | ✅ | 1218 | Included in Core |
 | **Практика: У магазині** | ✅ | 682 | Included in Core |
 | **Культурний контекст: Історія гривні** | ✅ | 211 | Included in Core |
-| **Підсумок** | ✅ | 156 | Included in Core |
+| **Підсумок** | ✅ | 155 | Included in Core |

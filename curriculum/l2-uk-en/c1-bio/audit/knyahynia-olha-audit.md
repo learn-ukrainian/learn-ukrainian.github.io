@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M01 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 20:36:07
+**Generated:** 2026-02-26 00:41:53
 
 ## Configuration
 **Type:** C1-biography
@@ -17,36 +17,20 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Уривок з «Повісті минулих літ»: Помста Ольги | 1 | 1 | ✅ |
-| 2 | critical-analysis | Аналіз ритуального символізму | 1 | 1 | ✅ |
-| 3 | essay-response | Есе: Дипломатія Ольги | 1 | 1 | ✅ |
-| 4 | comparative-study | Порівняльний аналіз: Полюддя vs Уроки | 1 | 1 | ✅ |
-| 5 | true-false | Перевірка фактів | 12 | 5 | ✅ |
-
-**Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 2/2 (critical-analysis, reading) ✅
-- Low density activities: 0
-
 ## Gates
 - **Words:** ✅ 5239/5000 (raw: 5465)
-- **Activities:** ✅ 5/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 5/3 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 38/24
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.5% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

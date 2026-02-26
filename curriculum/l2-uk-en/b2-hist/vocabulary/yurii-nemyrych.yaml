@@ -1,0 +1,126 @@
+items:
+  - lemma: "федерація"
+    ipa: '[fɛdɛˈrɑt͡sʲijɑ]'
+    translation: "federation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "канцлер"
+    ipa: '[ˈkɑnt͡slɛr]'
+    translation: "chancellor"
+    pos: "noun"
+    gender: "m"
+  - lemma: "шляхта"
+    ipa: '[ˈʃlʲɑxtɑ]'
+    translation: "nobility"
+    pos: "noun"
+    gender: "f"
+  - lemma: "сенат"
+    ipa: '[sɛˈnɑt]'
+    translation: "senate"
+    pos: "noun"
+    gender: "m"
+  - lemma: "академія"
+    ipa: '[ɑkɑˈdɛmʲijɑ]'
+    translation: "academy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "триєдина держава"
+    ipa: '[trɪjɛˈdɪnɑ ˈdɛrˈʒɑʋɑ]'
+    translation: "triune state"
+    pos: "noun"
+    gender: "f"
+  - lemma: "аріанин"
+    ipa: '[ɑrʲiˈɑnɪn]'
+    translation: "Arian"
+    pos: "noun"
+    gender: "m"
+  - lemma: "унія"
+    ipa: '[ˈunʲijɑ]'
+    translation: "union"
+    pos: "noun"
+    gender: "f"
+  - lemma: "розкол"
+    ipa: '[rɔˈzkɔl]'
+    translation: "schism"
+    pos: "noun"
+    gender: "m"
+  - lemma: "Руїна"
+    ipa: '[ruˈjinɑ]'
+    translation: "The Ruin"
+    pos: "noun"
+    gender: "f"
+  - lemma: "протекторат"
+    ipa: '[prɔtɛktɔˈrɑt]'
+    translation: "protectorate"
+    pos: "noun"
+    gender: "m"
+  - lemma: "маніфестація"
+    ipa: '[mɑnʲifɛˈstɑt͡sʲijɑ]'
+    translation: "manifestation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "ратифікація"
+    ipa: '[rɑtɪfʲiˈkɑt͡sʲijɑ]'
+    translation: "ratification"
+    pos: "noun"
+    gender: "f"
+  - lemma: "деспотія"
+    ipa: '[dɛspɔˈtʲijɑ]'
+    translation: "despotism"
+    pos: "noun"
+    gender: "f"
+  - lemma: "інтелектуал"
+    ipa: '[intɛlɛktuˈɑl]'
+    translation: "intellectual"
+    pos: "noun"
+    gender: "m"
+  - lemma: "толерантність"
+    ipa: '[tɔlɛˈrɑntʲnʲisʲtʲ]'
+    translation: "tolerance"
+    pos: "noun"
+    gender: "f"
+  - lemma: "гуманіст"
+    ipa: '[ɦumɑˈnʲist]'
+    translation: "humanist"
+    pos: "noun"
+    gender: "m"
+  - lemma: "суверенітет"
+    ipa: '[suʋɛrɛnʲiˈtɛt]'
+    translation: "sovereignty"
+    pos: "noun"
+    gender: "m"
+  - lemma: "скарбниця"
+    ipa: '[skɑrˈbnɪt͡sʲɑ]'
+    translation: "treasury"
+    pos: "noun"
+    gender: "f"
+  - lemma: "монета"
+    ipa: '[mɔˈnɛtɑ]'
+    translation: "coin"
+    pos: "noun"
+    gender: "f"
+  - lemma: "трибунал"
+    ipa: '[trɪbuˈnɑl]'
+    translation: "tribunal"
+    pos: "noun"
+    gender: "m"
+  - lemma: "реєстр"
+    ipa: '[rɛˈjɛstr]'
+    translation: "register"
+    pos: "noun"
+    gender: "m"
+  - lemma: "нобілітація"
+    ipa: '[nɔbʲilʲiˈtɑt͡sʲijɑ]'
+    translation: "ennoblement"
+    pos: "noun"
+    gender: "f"
+  - lemma: "друкарня"
+    ipa: '[druˈkɑrnʲɑ]'
+    translation: "printing press"
+    pos: "noun"
+    gender: "f"
+  - lemma: "автономія"
+    ipa: '[ɑu̯tɔˈnɔmʲijɑ]'
+    translation: "autonomy"
+    pos: "noun"
+    gender: "f"

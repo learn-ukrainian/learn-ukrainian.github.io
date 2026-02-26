@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M03 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-23 13:17:19
+**Generated:** 2026-02-26 00:42:02
 
 ## Configuration
 **Type:** C1-biography
@@ -17,37 +17,20 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Літописна легенда про вибір віри | 1 | 1 | ✅ |
-| 2 | critical-analysis | Аналіз літописної риторики | 1 | 1 | ✅ |
-| 3 | essay-response | Есе: Геополітика хрещення | 1 | 1 | ✅ |
-| 4 | quiz | Реформи та державотворення | 5 | 5 | ✅ |
-| 5 | true-false | Міфи та реальність | 10 | 5 | ✅ |
-| 6 | comparative-study | Еволюція державного міфу: Від Перуна до Христа | 1 | 1 | ✅ |
-
-**Summary:**
-- Total activities: 6 (target: 3-9) ✅
-- Unique types: 6 (minimum: 3) ✅
-- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
-- Required types used: 3/3 (critical-analysis, essay-response, reading) ✅
-- Low density activities: 0
-
 ## Gates
 - **Words:** ✅ 5528/5000 (raw: 5773)
-- **Activities:** ✅ 6/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/3 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/24
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ⚠️ 43 IPA issues (run lint_ipa.py --fix)
+- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.2% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

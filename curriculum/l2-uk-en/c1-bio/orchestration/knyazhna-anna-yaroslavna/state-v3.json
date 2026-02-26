@@ -8,6 +8,11 @@
       "ts": "2026-02-21T00:00:29Z",
       "task_id": "v3-knyazhna-anna-yaroslavna-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-25T23:43:48Z",
+      "note": "word-count-3894-below-80pct-5000"
     }
   }
 }

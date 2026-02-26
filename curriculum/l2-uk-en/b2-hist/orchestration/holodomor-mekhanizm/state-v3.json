@@ -10,9 +10,20 @@
       "mode": "meta-only"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-24T21:16:27Z",
-      "note": "word-count-3729-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-25T23:19:28Z",
+      "note": "adopted-existing-content",
+      "words": 4225
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T23:21:04Z",
+      "task_id": "v3-holodomor-mekhanizm-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T23:23:42Z",
+      "attempts": 2
     }
   }
 }

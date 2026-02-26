@@ -8,6 +8,11 @@
       "ts": "2026-02-19T11:52:31Z",
       "task_id": "v3-danylo-halytskyi-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-26T00:13:51Z",
+      "note": "word-count-3917-below-80pct-5000"
     }
   }
 }

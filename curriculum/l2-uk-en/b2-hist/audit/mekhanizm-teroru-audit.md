@@ -1,7 +1,7 @@
 # Audit Report: M103 — mekhanizm-teroru.md
 **Level:** B2-HIST | **Module:** M103 | **Phase:** HIST.10 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 22:32:32
+**Generated:** 2026-02-26 00:23:49
 
 ## Configuration
 **Type:** B2-history

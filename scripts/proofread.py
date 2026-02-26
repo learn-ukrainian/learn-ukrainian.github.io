@@ -418,6 +418,7 @@ def proofread_module(
     level: str, num: int, slug: str,
     agent: str, model: str,
     fix: bool, verbose: bool,
+    no_mdx: bool = False,
 ) -> tuple[list[dict], str]:
     """Proofread a single module. Returns tuple of (list of issues, stripped content)."""
     paths = get_module_paths(level, slug)
@@ -515,9 +516,12 @@ def proofread_module(
             audit_ok = run_audit(md_path)
             log(f"  Audit: {'PASS' if audit_ok else 'FAIL'}")
 
-            log("  Regenerating MDX...")
-            mdx_ok = regenerate_mdx(level, num)
-            log(f"  MDX: {'OK' if mdx_ok else 'FAIL'}")
+            if not no_mdx:
+                log("  Regenerating MDX...")
+                mdx_ok = regenerate_mdx(level, num)
+                log(f"  MDX: {'OK' if mdx_ok else 'FAIL'}")
+            else:
+                log("  Skipping MDX regeneration (--no-mdx)")
 
     return issues, content
 
@@ -733,6 +737,8 @@ examples:
                         help="Show full LLM output, not just summary")
     parser.add_argument("--evaluate", action="store_true",
                         help="Run independent quality evaluation by Gemini and Claude")
+    parser.add_argument("--no-mdx", action="store_true", dest="no_mdx",
+                        help="Skip MDX regeneration after fixes (for pipeline integration)")
 
     args = parser.parse_args()
 
@@ -771,6 +777,7 @@ examples:
             model=model,
             fix=args.fix,
             verbose=args.verbose,
+            no_mdx=getattr(args, "no_mdx", False),
         )
         total_issues.extend(issues)
         if issues:

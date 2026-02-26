@@ -1,0 +1,125 @@
+items:
+  - lemma: "історіографія"
+    ipa: '[istɔrʲiɔˈɦrɑfʲijɑ]'
+    translation: "historiography"
+    pos: "noun"
+    gender: "f"
+    notes: "наука про розвиток історичних знань"
+  - lemma: "історик"
+    ipa: '[iˈstɔrɪk]'
+    translation: "historian"
+    pos: "noun"
+    gender: "m"
+  - lemma: "наукова школа"
+    ipa: '[nɑuˈkɔʋɑ ˈʃkɔlɑ]'
+    translation: "academic school"
+    pos: "noun"
+    gender: "f"
+  - lemma: "концепція"
+    ipa: '[kɔnˈt͡sɛpt͡sʲijɑ]'
+    translation: "concept"
+    pos: "noun"
+    gender: "f"
+  - lemma: "деконструкція"
+    ipa: '[dɛkɔnˈstrukt͡sʲijɑ]'
+    translation: "deconstruction"
+    pos: "noun"
+    gender: "f"
+  - lemma: "Центральна Рада"
+    ipa: '[t͡sɛnˈtrɑlʲnɑ ˈrɑdɑ]'
+    translation: "Central Rada"
+    pos: "noun"
+    gender: "f"
+  - lemma: "голова"
+    ipa: '[ɦɔlɔˈʋɑ]'
+    translation: "chairman"
+    pos: "noun"
+    gender: "m"
+  - lemma: "праця"
+    ipa: '[ˈprɑt͡sʲɑ]'
+    translation: "work, opus"
+    pos: "noun"
+    gender: "f"
+  - lemma: "методологія"
+    ipa: '[mɛtɔdɔˈlɔɦʲijɑ]'
+    translation: "methodology"
+    pos: "noun"
+    gender: "f"
+  - lemma: "джерело"
+    ipa: '[d͡ʒɛrɛˈlɔ]'
+    translation: "source"
+    pos: "noun"
+    gender: "n"
+  - lemma: "архів"
+    ipa: '[ɑrˈxʲiu̯]'
+    translation: "archive"
+    pos: "noun"
+    gender: "m"
+  - lemma: "репресії"
+    ipa: '[rɛˈprɛsʲiji]'
+    translation: "repressions"
+    pos: "noun"
+  - lemma: "реабілітація"
+    ipa: '[rɛɑbʲilʲiˈtɑt͡sʲijɑ]'
+    translation: "rehabilitation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "спадщина"
+    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
+    translation: "legacy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "бездержавність"
+    ipa: '[bɛzdɛrˈʒɑu̯nʲisʲtʲ]'
+    translation: "statelessness"
+    pos: "noun"
+    gender: "f"
+  - lemma: "асиміляція"
+    ipa: '[ɑsɪmʲiˈlʲɑt͡sʲijɑ]'
+    translation: "assimilation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "манускрипт"
+    ipa: '[mɑnuˈskrɪpt]'
+    translation: "manuscript"
+    pos: "noun"
+    gender: "m"
+  - lemma: "соборність"
+    ipa: '[sɔˈbɔrnʲisʲtʲ]'
+    translation: "sobornist, unity"
+    pos: "noun"
+    gender: "f"
+  - lemma: "еволюція"
+    ipa: '[ɛʋɔˈlʲut͡sʲijɑ]'
+    translation: "evolution"
+    pos: "noun"
+    gender: "f"
+  - lemma: "автономіст"
+    ipa: '[ɑu̯tɔnɔˈmʲist]'
+    translation: "autonomist"
+    pos: "noun"
+    gender: "m"
+  - lemma: "федераліст"
+    ipa: '[fɛdɛrɑˈlʲist]'
+    translation: "federalist"
+    pos: "noun"
+    gender: "m"
+  - lemma: "легітимізація"
+    ipa: '[lɛɦʲitɪmʲiˈzɑt͡sʲijɑ]'
+    translation: "legitimization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "автохтонний"
+    ipa: '[ɑu̯tɔˈxtɔnːɪj]'
+    translation: "autochthonous"
+    pos: "adjective"
+  - lemma: "універсал"
+    ipa: '[unʲiʋɛrˈsɑl]'
+    translation: "universal (decree)"
+    pos: "noun"
+    gender: "m"
+  - lemma: "рушій"
+    ipa: '[ruˈʃʲij]'
+    translation: "driving force"
+    pos: "noun"
+    gender: "m"

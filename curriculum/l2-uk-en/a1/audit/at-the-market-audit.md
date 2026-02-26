@@ -1,7 +1,7 @@
 # Audit Report: M37 — at-the-market.md
 **Level:** A1 | **Module:** M37 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-23 01:14:43
+**Generated:** 2026-02-25 22:40:27
 
 ## Configuration
 **Type:** A1
@@ -36,6 +36,15 @@
 - Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
 - Required types used: 2/2 (fill-in, quiz) ✅
 - Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'здача (change/money)' → решта
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2736/2000 (raw: 3034)

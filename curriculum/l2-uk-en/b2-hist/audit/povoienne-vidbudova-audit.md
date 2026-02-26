@@ -1,7 +1,7 @@
 # Audit Report: M109 — povoienne-vidbudova.md
 **Level:** B2-HIST | **Module:** M109 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 23:32:29
+**Generated:** 2026-02-26 00:36:25
 
 ## Configuration
 **Type:** B2-history
@@ -15,6 +15,15 @@
 **Immersion:** 90-100%
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
+
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'здача (change/money)' → решта
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 5018/5000 (raw: 5610)

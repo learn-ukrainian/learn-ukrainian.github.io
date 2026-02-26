@@ -1,0 +1,15 @@
+{
+  "slug": "pacyfikatsiia",
+  "track": "b2-hist",
+  "module_num": 99,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-25T23:17:53Z",
+      "words": 7558,
+      "attempts": 1
+    }
+  },
+  "last_updated": "2026-02-25T23:17:53Z"
+}

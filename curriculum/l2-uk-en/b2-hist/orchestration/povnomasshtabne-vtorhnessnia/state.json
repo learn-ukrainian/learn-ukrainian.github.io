@@ -1,0 +1,35 @@
+{
+  "slug": "povnomasshtabne-vtorhnessnia",
+  "track": "b2-hist",
+  "module_num": 132,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-25T21:44:37Z",
+      "words": 5052,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-25T21:46:20Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-25T21:46:20Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T23:52:14Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T23:52:14Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-25T23:52:14Z"
+}

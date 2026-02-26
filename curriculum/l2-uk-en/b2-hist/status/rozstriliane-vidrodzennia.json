@@ -1,0 +1,64 @@
+{
+  "module": "rozstriliane-vidrodzennia",
+  "level": "B2",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-26T00:14:51.716555Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-26T00:14:50.225168Z",
+    "meta": "2026-02-19T17:48:15.981787Z",
+    "activities": "2026-02-26T00:14:50.202449Z",
+    "vocabulary": "2026-02-26T00:14:50.668847Z",
+    "plan": "2026-02-18T19:03:37.062695Z",
+    "research": "2026-02-22T10:35:24.511482Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5157/5000 (raw: 5584)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "ipa": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Clean IPA"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

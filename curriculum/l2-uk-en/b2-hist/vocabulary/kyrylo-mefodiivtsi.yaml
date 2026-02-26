@@ -1,0 +1,128 @@
+items:
+  - lemma: "братство"
+    ipa: '[ˈbrɑt͡stʋɔ]'
+    translation: "brotherhood"
+    pos: "noun"
+    gender: "n"
+    notes: "Кирило-Мефодіївське братство"
+  - lemma: "таємне товариство"
+    ipa: '[tɑˈjɛmnɛ tɔʋɑˈrɪstʋɔ]'
+    translation: "secret society"
+    pos: "noun"
+    gender: "n"
+  - lemma: "ідеологія"
+    ipa: '[idɛɔˈlɔɦʲijɑ]'
+    translation: "ideology"
+    pos: "noun"
+    gender: "f"
+  - lemma: "панславізм"
+    ipa: '[pɑnslɑˈʋʲizm]'
+    translation: "Pan-Slavism"
+    pos: "noun"
+    gender: "m"
+    notes: "learner error: плутати український демократичний панславізм з імперським"
+  - lemma: "федерація"
+    ipa: '[fɛdɛˈrɑt͡sʲijɑ]'
+    translation: "federation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "просвітництво"
+    ipa: '[prɔˈsʲʋʲitnɪt͡stʋɔ]'
+    translation: "enlightenment"
+    pos: "noun"
+    gender: "n"
+  - lemma: "арешт"
+    ipa: '[ɑˈrɛʃt]'
+    translation: "arrest"
+    pos: "noun"
+    gender: "m"
+  - lemma: "заслання"
+    ipa: '[zɑˈslɑnʲːɑ]'
+    translation: "exile"
+    pos: "noun"
+    gender: "n"
+  - lemma: "маніфест"
+    ipa: '[mɑnʲiˈfɛst]'
+    translation: "manifesto"
+    pos: "noun"
+    gender: "m"
+  - lemma: "рівність"
+    ipa: '[ˈrʲiu̯nʲisʲtʲ]'
+    translation: "equality"
+    pos: "noun"
+    gender: "f"
+  - lemma: "свобода"
+    ipa: '[sʋɔˈbɔdɑ]'
+    translation: "freedom"
+    pos: "noun"
+    gender: "f"
+  - lemma: "донос"
+    ipa: '[dɔˈnɔs]'
+    translation: "denunciation"
+    pos: "noun"
+    gender: "m"
+  - lemma: "репресії"
+    ipa: '[rɛˈprɛsʲiji]'
+    translation: "repressions"
+    pos: "noun"
+    gender: "f"
+  - lemma: "пророк"
+    ipa: '[prɔˈrɔk]'
+    translation: "prophet"
+    pos: "noun"
+    gender: "m"
+  - lemma: "самодержавство"
+    ipa: '[sɑmɔdɛrˈʒɑu̯stʋɔ]'
+    translation: "autocracy"
+    pos: "noun"
+    gender: "n"
+  - lemma: "жандарм"
+    ipa: '[ʒɑnˈdɑrm]'
+    translation: "gendarme"
+    pos: "noun"
+    gender: "m"
+  - lemma: "конспірація"
+    ipa: '[kɔnsʲpʲiˈrɑt͡sʲijɑ]'
+    translation: "conspiracy"
+    pos: "noun"
+    gender: "f"
+  - lemma: "воскресіння"
+    ipa: '[ʋɔskrɛˈsʲinʲːɑ]'
+    translation: "resurrection"
+    pos: "noun"
+    gender: "n"
+  - lemma: "розгром"
+    ipa: '[rɔˈzɦrɔm]'
+    translation: "defeat / destruction"
+    pos: "noun"
+    gender: "m"
+  - lemma: "кріпацтво"
+    ipa: '[krʲiˈpɑt͡stʋɔ]'
+    translation: "serfdom"
+    pos: "noun"
+    gender: "n"
+  - lemma: "республіка"
+    ipa: '[rɛˈspublʲikɑ]'
+    translation: "republic"
+    pos: "noun"
+    gender: "f"
+  - lemma: "цензура"
+    ipa: '[t͡sɛnˈzurɑ]'
+    translation: "censorship"
+    pos: "noun"
+    gender: "f"
+  - lemma: "товариство"
+    ipa: '[tɔʋɑˈrɪstʋɔ]'
+    translation: "society / association"
+    pos: "noun"
+    gender: "n"
+  - lemma: "слідчий"
+    ipa: '[ˈsʲlʲid͡ʒt͡ʃɪj]'
+    translation: "investigator"
+    pos: "noun"
+    gender: "m"
+  - lemma: "скасування"
+    ipa: '[skɑsuˈʋɑnʲːɑ]'
+    translation: "abolition"
+    pos: "noun"
+    gender: "n"

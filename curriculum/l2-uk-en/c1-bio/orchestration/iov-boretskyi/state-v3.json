@@ -8,6 +8,20 @@
       "ts": "2026-02-19T11:58:21Z",
       "task_id": "v3-iov-boretskyi-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-26T01:00:25Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-26T01:02:28Z",
+      "task_id": "v3-iov-boretskyi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-26T01:52:46Z",
+      "attempts": 2
     }
   }
 }

@@ -1,0 +1,138 @@
+items:
+  - lemma: "економіка"
+    ipa: '[ɛkɔˈnɔmʲikɑ]'
+    translation: "economy"
+    pos: "noun"
+    gender: "f"
+    usage: "воєнна економіка, тіньова економіка"
+  - lemma: "війна"
+    ipa: '[ʋʲijˈnɑ]'
+    translation: "war"
+    pos: "noun"
+    gender: "f"
+    usage: "повномасштабна війна, економічний фронт"
+  - lemma: "волонтер"
+    ipa: '[ʋɔlɔnˈtɛr]'
+    translation: "volunteer"
+    pos: "noun"
+    gender: "m"
+    usage: "волонтерський рух, збір коштів (донати)"
+  - lemma: "інфраструктура"
+    ipa: '[infrɑstruˈkturɑ]'
+    translation: "infrastructure"
+    pos: "noun"
+    gender: "f"
+    usage: "критична інфраструктура, енергетична інфраструктура"
+  - lemma: "виробництво"
+    ipa: '[ʋɪrɔˈbnɪt͡stʋɔ]'
+    translation: "production"
+    pos: "noun"
+    gender: "n"
+    usage: "релокація виробництва, оборонне виробництво"
+  - lemma: "допомога"
+    ipa: '[dɔpɔˈmɔɦɑ]'
+    translation: "aid"
+    pos: "noun"
+    gender: "f"
+    usage: "міжнародна фінансова допомога, макрофінансова стабілізація"
+  - lemma: "відбудова"
+    ipa: '[ʋʲidbuˈdɔʋɑ]'
+    translation: "reconstruction"
+    pos: "noun"
+    gender: "f"
+    usage: "повоєнна відбудова, план відновлення"
+  - lemma: "стійкість"
+    ipa: '[ˈsʲtʲijkʲisʲtʲ]'
+    translation: "resilience"
+    pos: "noun"
+    gender: "f"
+    usage: "економічна стійкість, фінансова стабільність"
+  - lemma: "енергетика"
+    ipa: '[ɛnɛrˈɦɛtɪkɑ]'
+    translation: "energy"
+    pos: "noun"
+    gender: "f"
+    usage: "енергетична система, блекаут"
+  - lemma: "експорт"
+    ipa: '[ˈɛkspɔrt]'
+    translation: "export"
+    pos: "noun"
+    gender: "m"
+    usage: "зерновий коридор, експортна виручка"
+  - lemma: "санкції"
+    ipa: '[ˈsɑnkt͡sʲiji]'
+    translation: "sanctions"
+    pos: "noun"
+    usage: "санкційний тиск, обхід санкцій"
+  - lemma: "інвестиції"
+    ipa: '[inʋɛˈstɪt͡sʲiji]'
+    translation: "investments"
+    pos: "noun"
+    usage: "залучення інвестицій, інвестиційний клімат"
+  - lemma: "підприємство"
+    ipa: '[pʲidprɪˈjɛmstʋɔ]'
+    translation: "enterprise"
+    pos: "noun"
+    gender: "n"
+    usage: "малі та середні підприємства, релоковане підприємство"
+  - lemma: "ВВП"
+    ipa: '[ʋːp]'
+    translation: "GDP"
+    pos: "noun"
+    gender: "m"
+    usage: "падіння ВВП, реальний ВВП"
+  - lemma: "податок"
+    ipa: '[pɔˈdɑtɔk]'
+    translation: "tax"
+    pos: "noun"
+    gender: "m"
+  - lemma: "мобілізація"
+    ipa: '[mɔbʲilʲiˈzɑt͡sʲijɑ]'
+    translation: "mobilization"
+    pos: "noun"
+    gender: "f"
+  - lemma: "попит"
+    ipa: '[ˈpɔpɪt]'
+    translation: "demand"
+    pos: "noun"
+    gender: "m"
+  - lemma: "інфляція"
+    ipa: '[inˈflʲɑt͡sʲijɑ]'
+    translation: "inflation"
+    pos: "noun"
+    gender: "f"
+  - lemma: "бюджет"
+    ipa: '[bʲuˈd͡ʒɛt]'
+    translation: "budget"
+    pos: "noun"
+    gender: "m"
+  - lemma: "капітал"
+    ipa: '[kɑpʲiˈtɑl]'
+    translation: "capital"
+    pos: "noun"
+    gender: "m"
+  - lemma: "донат"
+    ipa: '[dɔˈnɑt]'
+    translation: "donation"
+    pos: "noun"
+    gender: "m"
+  - lemma: "імпорт"
+    ipa: '[ˈimpɔrt]'
+    translation: "import"
+    pos: "noun"
+    gender: "m"
+  - lemma: "генератор"
+    ipa: '[ɦɛnɛˈrɑtɔr]'
+    translation: "generator"
+    pos: "noun"
+    gender: "m"
+  - lemma: "резерв"
+    ipa: '[rɛˈzɛrʋ]'
+    translation: "reserve"
+    pos: "noun"
+    gender: "m"
+  - lemma: "релокація"
+    ipa: '[rɛlɔkɑt͡sʲijɑ]'
+    translation: "relocation"
+    pos: "noun"
+    gender: "f"

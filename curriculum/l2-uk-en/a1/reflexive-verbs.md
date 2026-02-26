@@ -146,7 +146,7 @@ When you look up a new word, the dictionary form (the infinitive) will always en
 *   **одягати** (to dress) + **ся** = **одягатися** (to get dressed)
 
 ### Conjugation Table (Present Tense)
-Let's conjugate a very common reflexive verb: **дивитися** (to look / to watch). Note that the base verb **дивити** belongs to the second conjugation group (like *говорити*), so it takes **-и-** endings.
+Let's conjugate a very common reflexive verb: **дивитися** (to look / to watch). This verb belongs to the second conjugation group (like *говорити*), so it uses **-и-** in its endings. You conjugate the core verb first, and then attach the mirror (**-ся** or **-сь**) at the very end.
 
 **Диви́тися** — to look / to watch
 
@@ -213,7 +213,7 @@ In English, we say "laugh **at**." In Ukrainian, we say "laugh **from**" (**з**
 *   ✅ **Ми сміємося з жарту.** (We laugh at the joke.) — The natural Ukrainian expression.
 *   ✅ **Ми сміємося з тебе.** (We are laughing at you.) — Use **з** for laughing at people or things.
 
-> **Note**: Ukrainian also uses **над** (over) in more literary contexts, but **з** is the everyday default. Stick with **з** at this level.
+> **Note**: You might sometimes hear people use **над** (over), like *сміятися над*, but this is a Russian influence (*смеяться над*). In standard Ukrainian, always use **з** (laugh "from"): **сміятися з когось/чогось**.
 
 ---
 
@@ -331,7 +331,10 @@ This is general schooling.
 This is used for hobbies, sports, or specific activities.
 *   **Чим ти займаєшся?** (What do you do? / What are your hobbies?)
 *   **Я займаюся спортом.** (I do sports.)
-*   **Я займаюся українською мовою.** (I am engaged in Ukrainian language.)
+*   **Я займаюся музикою.** (I practice music.)
+
+> [!tip]
+> While you can use **займатися** for hobbies, avoid using it for learning languages! Saying *Я займаюся українською мовою* is a common mistake influenced by Russian. To say you study a language, always use **вивчати**: **Я вивчаю українську мову**.
 
 ### Dialogue: At the Gym (У спортзалі)
 Listen to this conversation between Igor and Olena. They use many reflexive verbs because they are focusing on their bodies and states.
@@ -381,15 +384,15 @@ Listen to this conversation between Igor and Olena. They use many reflexive verb
 
 ## Культура: Секрети вимови
 
-### Pronunciation Hook: The "Bee" Sound
+### Pronunciation Hook: The Soft "Ts" Sound
 This is one of the most important pronunciation tips in the Ukrainian language.
 When you conjugate a reflexive verb for "He/She" or "They," you get the ending **-ться**.
 *   Він сміє**ться**.
 *   Вони смію**ться**.
 
-**Here is the secret:** It is NOT pronounced as separate letters "t-s-y-a".
-It fuses together into a special sound: a **long, soft [ts']**.
-It sounds like water hitting a hot pan: *tsss*. Or like a bee buzzing softly.
+**Here is the secret:** It is NOT pronounced as separate letters "t-s-y-a" (т-с-я).
+The **-ть** and **-ся** fuse together into a single **long, soft [ts']** sound.
+Think of the sharp "ts" in "ca**ts**", but hold it longer and smile to make it soft.
 
 *   Written: **дивиться**
 *   Pronounced: [dɪˈʋɪ**t͡sʲːɑ**] (dee-VY-tssya)

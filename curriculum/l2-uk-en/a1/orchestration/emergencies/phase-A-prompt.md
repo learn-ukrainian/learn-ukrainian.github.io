@@ -59,11 +59,23 @@ When researching, frame Ukrainian independently — **never as a derivative or v
 - If comparing language systems is useful, use non-Russian languages (Polish, Portuguese, etc.)
 - Note how topics have been historically misframed by Russian/Soviet sources and provide the Ukrainian-centric perspective
 
+### Research Output Cap
+Keep research notes under **1500 words**. Focus on density: facts, dates, quotes, tables — not prose.
+
 ### Additional for Core B (B1.6+, B2, C1, C2, PRO)
 
 - Domain-specific vocabulary collocations from professional glossaries (PRO tracks)
 - Stylistic/dialectal features from academic sources (C2)
 - Register distinctions (formal vs. informal usage)
+
+## Downstream Audit Gates (Phase B content will be checked for)
+
+Plan your outline knowing that Phase B content must pass these gates:
+- **Word count**: minimum **2000** words — allocate outline sections accordingly
+- **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
+- **Russianisms**: ensure vocabulary_hints and examples avoid banned words (кушати→їсти, получати→отримувати)
+- **IPA vowels**: Ukrainian о = [ɔ] always, е = [ɛ] always, ч = [t͡ʃ] with tie-bar
+- **Duplicate headers**: ensure outline section names don't share keywords
 
 ---
 

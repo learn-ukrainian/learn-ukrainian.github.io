@@ -1,7 +1,7 @@
 # Audit Report: M38 — at-the-store.md
 **Level:** A1 | **Module:** M38 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-23 01:14:44
+**Generated:** 2026-02-25 22:40:28
 
 ## Configuration
 **Type:** A1

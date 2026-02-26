@@ -8,6 +8,20 @@
       "ts": "2026-02-19T17:37:16Z",
       "task_id": "v3-bucha-irpin-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T21:55:41Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T21:56:53Z",
+      "task_id": "v3-bucha-irpin-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T23:52:21Z",
+      "attempts": 1
     }
   }
 }

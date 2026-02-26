@@ -6,49 +6,20 @@
   "phases": {
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-20T23:20:46Z",
-      "words": 3510,
+      "timestamp": "2026-02-26T00:41:59Z",
+      "words": 4099,
       "attempts": 1
-    },
-    "3a": {
-      "status": "complete",
-      "timestamp": "2026-02-20T23:22:15Z",
-      "note": "v3-phase-C"
-    },
-    "3b": {
-      "status": "complete",
-      "timestamp": "2026-02-20T23:22:15Z",
-      "note": "v3-phase-C"
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-23T00:29:57Z",
-      "note": "v3-audit-autofix"
+      "timestamp": "2026-02-26T00:49:34Z",
+      "note": "v3-audit"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-23T00:29:57Z",
-      "note": "v3-audit-autofix"
-    },
-    "6": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:33:52Z",
-      "note": "v3-phase-D"
-    },
-    "6b": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:33:52Z",
-      "note": "v3-phase-D"
-    },
-    "7-final": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:33:52Z",
-      "note": "v3-phase-D"
-    },
-    "8": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:33:53Z"
+      "timestamp": "2026-02-26T00:49:34Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-23T00:33:53Z"
+  "last_updated": "2026-02-26T00:49:34Z"
 }

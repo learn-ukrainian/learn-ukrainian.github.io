@@ -1,7 +1,7 @@
 # Audit Report: M36 — at-the-restaurant.md
 **Level:** A1 | **Module:** M36 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-23 01:08:11
+**Generated:** 2026-02-25 22:40:26
 
 ## Configuration
 **Type:** A1

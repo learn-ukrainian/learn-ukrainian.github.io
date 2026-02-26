@@ -1,0 +1,35 @@
+{
+  "slug": "hromadske-suspilstvo",
+  "track": "b2-hist",
+  "module_num": 137,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-25T22:18:45Z",
+      "words": 5801,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-25T22:20:23Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-25T22:20:23Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T23:52:36Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T23:52:36Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-25T23:52:36Z"
+}

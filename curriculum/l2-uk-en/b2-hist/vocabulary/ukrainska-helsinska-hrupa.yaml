@@ -1,0 +1,101 @@
+items:
+  - lemma: "правозахисний"
+    ipa: '[prɑʋɔzɑxɪˈsnɪj]'
+    translation: "human rights (adj)"
+    pos: "adjective"
+  - lemma: "група"
+    ipa: '[ˈɦrupɑ]'
+    translation: "group"
+    pos: "noun"
+  - lemma: "дисидент"
+    ipa: '[dɪsɪˈdɛnt]'
+    translation: "dissident"
+    pos: "noun"
+  - lemma: "репресії"
+    ipa: '[rɛˈprɛsʲiji]'
+    translation: "repressions"
+    pos: "noun"
+  - lemma: "табір"
+    ipa: '[ˈtɑbʲir]'
+    translation: "camp"
+    pos: "noun"
+  - lemma: "арешт"
+    ipa: '[ɑˈrɛʃt]'
+    translation: "arrest"
+    pos: "noun"
+  - lemma: "меморандум"
+    ipa: '[mɛmɔˈrɑndum]'
+    translation: "memorandum"
+    pos: "noun"
+  - lemma: "права людини"
+    ipa: '[prɑˈʋɑ lʲuˈdɪnɪ]'
+    translation: "human rights"
+    pos: "noun"
+  - lemma: "політв'язень"
+    ipa: '[pɔlʲiˈtʋjɑzɛnʲ]'
+    translation: "political prisoner"
+    pos: "noun"
+  - lemma: "Гельсінкі"
+    ipa: '[ˈɦɛlʲsʲinʲkʲi]'
+    translation: "Helsinki"
+    pos: "noun"
+  - lemma: "документування"
+    ipa: '[dɔkumɛntuˈʋɑnʲːɑ]'
+    translation: "documentation"
+    pos: "noun"
+  - lemma: "еміграція"
+    ipa: '[ɛmʲiˈɦrɑt͡sʲijɑ]'
+    translation: "emigration"
+    pos: "noun"
+  - lemma: "реабілітація"
+    ipa: '[rɛɑbʲilʲiˈtɑt͡sʲijɑ]'
+    translation: "rehabilitation"
+    pos: "noun"
+  - lemma: "спадщина"
+    ipa: '[ˈspɑdʃt͡ʃɪnɑ]'
+    translation: "legacy"
+    pos: "noun"
+  - lemma: "гласність"
+    ipa: '[ˈɦlɑsʲnʲisʲtʲ]'
+    translation: "publicity, openness"
+    pos: "noun"
+  - lemma: "мартиролог"
+    ipa: '[mɑrtɪrɔˈlɔɦ]'
+    translation: "martyrology"
+    pos: "noun"
+  - lemma: "заслання"
+    ipa: '[zɑˈslɑnʲːɑ]'
+    translation: "exile"
+    pos: "noun"
+  - lemma: "етноцид"
+    ipa: '[ɛtnɔˈt͡sɪd]'
+    translation: "ethnocide"
+    pos: "noun"
+  - lemma: "русифікація"
+    ipa: '[rusɪfʲiˈkɑt͡sʲijɑ]'
+    translation: "Russification"
+    pos: "noun"
+  - lemma: "солідарність"
+    ipa: '[sɔlʲiˈdɑrnʲisʲtʲ]'
+    translation: "solidarity"
+    pos: "noun"
+  - lemma: "суб'єктність"
+    ipa: '[suˈbjɛktʲnʲisʲtʲ]'
+    translation: "subjectivity, agency"
+    pos: "noun"
+  - lemma: "інакомислення"
+    ipa: '[inɑkɔˈmɪslɛnʲːɑ]'
+    translation: "dissent, heterodoxy"
+    pos: "noun"
+  - lemma: "цензура"
+    ipa: '[t͡sɛnˈzurɑ]'
+    translation: "censorship"
+    pos: "noun"
+  - lemma: "опозиція"
+    ipa: '[ɔpɔˈzɪt͡sʲijɑ]'
+    translation: "opposition"
+    pos: "noun"
+  - lemma: "тоталітарний"
+    ipa: '[tɔtɑlʲiˈtɑrnɪj]'
+    translation: "totalitarian"
+    pos: "adjective"

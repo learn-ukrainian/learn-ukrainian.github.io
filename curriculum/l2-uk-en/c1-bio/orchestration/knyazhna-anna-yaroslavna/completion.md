@@ -1,10 +1,10 @@
-PASS: build_module_v2.py c1-bio 5 — E2E
+FAIL: build_module_v2.py c1-bio 5 — E2E
 
   Module:   knyazhna-anna-yaroslavna
   Track:    c1-bio
   Mode:     e2e
-  Words:    0 (target: 5000)
+  Words:    4243 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-21T00:00:29Z
+  Verdict:  FAIL
+  Date:     2026-02-25T23:43:48Z

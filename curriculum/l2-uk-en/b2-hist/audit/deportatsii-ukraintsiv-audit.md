@@ -1,7 +1,7 @@
 # Audit Report: M110 — deportatsii-ukraintsiv.md
 **Level:** B2-HIST | **Module:** M110 | **Phase:** HIST.11 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 23:40:55
+**Generated:** 2026-02-26 00:36:30
 
 ## Configuration
 **Type:** B2-history

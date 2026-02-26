@@ -8,6 +8,21 @@
       "ts": "2026-02-19T16:48:15Z",
       "task_id": "v3-rozstriliane-vidrodzennia-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T23:13:22Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T23:14:50Z",
+      "task_id": "v3-rozstriliane-vidrodzennia-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T23:14:51Z",
+      "attempts": 0,
+      "note": "auto-fix"
     }
   }
 }

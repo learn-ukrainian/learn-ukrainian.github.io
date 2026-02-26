@@ -1,7 +1,7 @@
 # Audit Report: M02 — the-cyrillic-code-ii.md
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-22 23:19:22
+**Generated:** 2026-02-25 23:38:21
 
 ## Configuration
 **Type:** A1-grammar
@@ -20,7 +20,7 @@
 | # | Type | Title | Items | Min | Status |
 |---|------|-------|-------|-----|--------|
 | 1 | match-up | Letter to Sound Match | 12 | 8 | ✅ |
-| 2 | group-sort | Consonants vs. Vowels | 14 | 12 | ✅ |
+| 2 | group-sort | Consonants, Vowels & Semivowels | 14 | 12 | ✅ |
 | 3 | quiz | Identity Letters Challenge | 8 | 8 | ✅ |
 | 4 | fill-in | Г or Ґ? | 8 | 8 | ✅ |
 | 5 | fill-in | И or І? | 8 | 8 | ✅ |
@@ -36,12 +36,12 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3084/2000 (raw: 3323)
+- **Words:** ✅ 3408/2000 (raw: 3721)
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 5.1% (target 5-15% (M02))
+- **Immersion:** 🇺🇦 6.2% (target 5-15% (M02))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -58,10 +58,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Cyrillic Code II: The Final 15 Letters** | ✅ | 48 | Included in Core |
+| **The Cyrillic Code II: The Final 14 Letters** | ✅ | 48 | Included in Core |
 | **Вступ** | ✅ | 310 | Included in Core |
-| **Унікальні приголосні** | ✅ | 921 | Included in Core |
-| **Йотовані голосні та М’який знак** | ✅ | 697 | Included in Core |
-| **Голосні та напівголосні** | ✅ | 472 | Included in Core |
-| **Практика та вимова** | ✅ | 451 | Included in Core |
-| **Підсумок** | ✅ | 185 | Included in Core |
+| **Унікальні приголосні** | ✅ | 1059 | Included in Core |
+| **Йотовані голосні та М’який знак** | ✅ | 675 | Included in Core |
+| **Голосні та напівголосні** | ✅ | 537 | Included in Core |
+| **Практика та вимова** | ✅ | 582 | Included in Core |
+| **Підсумок** | ✅ | 197 | Included in Core |
