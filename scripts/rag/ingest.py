@@ -296,8 +296,8 @@ def find_jsonl_files(base_dir: Path, grades: list[int] | None = None, suffix: st
 
 def main():
     parser = argparse.ArgumentParser(description="Ingest text/images into Qdrant")
-    parser.add_argument("--text", type=str, help="Path to text chunks JSONL file")
-    parser.add_argument("--images", type=str, help="Path to image metadata JSONL file")
+    parser.add_argument("--text", type=str, action="append", help="Path to text chunks JSONL (repeatable)")
+    parser.add_argument("--images", type=str, action="append", help="Path to image metadata JSONL (repeatable)")
     parser.add_argument("--all", action="store_true", help="Ingest all extracted data")
     parser.add_argument("--grade", type=int, nargs="+", help="Filter by grades")
     parser.add_argument("--reset", action="store_true", help="Delete and recreate collections")
@@ -321,10 +321,12 @@ def main():
     total_images = 0
 
     if args.text:
-        total_chunks += ingest_text_chunks(client, Path(args.text), batch_size=args.batch_size)
+        for text_path in args.text:
+            total_chunks += ingest_text_chunks(client, Path(text_path), batch_size=args.batch_size)
 
     if args.images:
-        total_images += ingest_images(client, Path(args.images), batch_size=min(args.batch_size, 16))
+        for img_path in args.images:
+            total_images += ingest_images(client, Path(img_path), batch_size=min(args.batch_size, 16))
 
     if args.all:
         # Ingest all text chunks

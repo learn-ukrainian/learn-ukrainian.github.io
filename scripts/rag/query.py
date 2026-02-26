@@ -32,13 +32,37 @@ from rag.config import (
     TEXT_COLLECTION,
 )
 
+# Module-level singletons (lazy-loaded)
+_qdrant_client = None
+_text_encoder = None
+_image_encoder = None
+
 
 def get_client():
-    from qdrant_client import QdrantClient
-    return QdrantClient(
-        host=QDRANT_HOST, grpc_port=QDRANT_GRPC_PORT,
-        prefer_grpc=True, check_compatibility=False,
-    )
+    global _qdrant_client
+    if _qdrant_client is None:
+        from qdrant_client import QdrantClient
+        _qdrant_client = QdrantClient(
+            host=QDRANT_HOST, grpc_port=QDRANT_GRPC_PORT,
+            prefer_grpc=True, check_compatibility=False,
+        )
+    return _qdrant_client
+
+
+def get_text_encoder():
+    global _text_encoder
+    if _text_encoder is None:
+        from rag.embed import TextEncoder
+        _text_encoder = TextEncoder()
+    return _text_encoder
+
+
+def get_image_encoder():
+    global _image_encoder
+    if _image_encoder is None:
+        from rag.embed import ImageEncoder
+        _image_encoder = ImageEncoder()
+    return _image_encoder
 
 
 def build_filter(grade: int | None = None, subject: str | None = None,
@@ -69,10 +93,8 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
         SparseVector,
     )
 
-    from rag.embed import TextEncoder
-
     client = get_client()
-    encoder = TextEncoder()
+    encoder = get_text_encoder()
 
     # Encode query
     result = encoder.encode([query])
@@ -127,10 +149,8 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
 
 def search_images(query: str, grade: int | None = None, limit: int = 5) -> list[dict]:
     """Image search via Ukrainian text query (SigLIP text-to-image)."""
-    from rag.embed import ImageEncoder
-
     client = get_client()
-    encoder = ImageEncoder()
+    encoder = get_image_encoder()
 
     query_vec = encoder.encode_text([query])[0].tolist()
     qfilter = build_filter(grade)

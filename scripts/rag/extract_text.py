@@ -1,12 +1,16 @@
 """Extract text from PDF textbooks into structured chunks.
 
-Uses marker-pdf for section-aware markdown conversion,
-then splits into chunks respecting section boundaries.
+Two extraction modes:
+- Fast (pymupdf): For digital PDFs with selectable text. Extracts text per page.
+- OCR (marker): For scanned PDFs. Uses Surya OCR (slow, ~4 min/page).
+
+Auto-detects mode by sampling 5 pages for text content.
 
 Usage:
-    .venv/bin/python scripts/rag/extract_text.py data/textbooks/grade-01/1-klas-bukvar-bolshakova-2025-1.pdf
-    .venv/bin/python scripts/rag/extract_text.py --all          # Process all PDFs
-    .venv/bin/python scripts/rag/extract_text.py --grade 1 3    # Process grades 1 and 3
+    .venv/bin/python scripts/rag/extract_text.py data/textbooks/grade-03/3-klas-ukrainska-mova-vashulenko-2020-1.pdf
+    .venv/bin/python scripts/rag/extract_text.py --all
+    .venv/bin/python scripts/rag/extract_text.py --grade 1 3
+    .venv/bin/python scripts/rag/extract_text.py --force-ocr data/textbooks/grade-01/1-klas-bukvar-bolshakova-2025-1.pdf
 """
 
 import argparse
@@ -30,8 +34,46 @@ from rag.config import (
 )
 
 
-def extract_markdown(pdf_path: Path) -> str:
-    """Convert PDF to structured markdown using marker."""
+def is_digital_pdf(pdf_path: Path, sample_pages: int = 5) -> bool:
+    """Check if a PDF has selectable text (vs scanned images).
+
+    Samples up to `sample_pages` pages and checks if any have text.
+    """
+    import pymupdf
+
+    doc = pymupdf.open(str(pdf_path))
+    pages_with_text = 0
+    sample_indices = list(range(min(sample_pages, len(doc))))
+    # Also sample some middle/end pages
+    if len(doc) > 10:
+        sample_indices.extend([len(doc) // 4, len(doc) // 2, 3 * len(doc) // 4])
+
+    for i in set(sample_indices):
+        if i < len(doc):
+            text = doc[i].get_text().strip()
+            if len(text) > 50:  # More than just page numbers
+                pages_with_text += 1
+
+    doc.close()
+    return pages_with_text >= 2  # At least 2 pages with real text
+
+
+def extract_text_fast(pdf_path: Path) -> str:
+    """Extract text from digital PDF using pymupdf (fast, no OCR)."""
+    import pymupdf
+
+    doc = pymupdf.open(str(pdf_path))
+    pages = []
+    for i in range(len(doc)):
+        text = doc[i].get_text()
+        if text.strip():
+            pages.append(f"## Сторінка {i + 1}\n\n{text.strip()}")
+    doc.close()
+    return "\n\n".join(pages)
+
+
+def extract_markdown_ocr(pdf_path: Path) -> str:
+    """Convert scanned PDF to markdown using marker OCR (slow)."""
     from marker.converters.pdf import PdfConverter
     from marker.models import create_model_dict
 
@@ -202,7 +244,8 @@ def check_quality(text: str) -> tuple[bool, float]:
     return ratio >= MIN_CLEAN_CHAR_RATIO, ratio
 
 
-def process_pdf(pdf_path: Path, output_dir: Path | None = None) -> dict:
+def process_pdf(pdf_path: Path, output_dir: Path | None = None,
+                force_ocr: bool = False) -> dict:
     """Process a single PDF into chunks.
 
     Returns summary dict with counts and quality stats.
@@ -218,10 +261,17 @@ def process_pdf(pdf_path: Path, output_dir: Path | None = None) -> dict:
     print(f"  Metadata: grade={meta['grade']}, author={meta['author']}, "
           f"year={meta['year']}, trust_tier={meta['trust_tier']}")
 
-    # Step 1: PDF → markdown
-    print("  Converting PDF → markdown...")
-    markdown = extract_markdown(pdf_path)
-    print(f"  Markdown length: {len(markdown)} chars")
+    # Step 1: Detect PDF type and extract text
+    if force_ocr:
+        print("  Mode: OCR (forced) — this will be slow (~4 min/page)...")
+        markdown = extract_markdown_ocr(pdf_path)
+    elif is_digital_pdf(pdf_path):
+        print("  Mode: FAST (digital PDF with selectable text)")
+        markdown = extract_text_fast(pdf_path)
+    else:
+        print("  Mode: OCR (scanned PDF) — this will be slow (~4 min/page)...")
+        markdown = extract_markdown_ocr(pdf_path)
+    print(f"  Extracted text: {len(markdown)} chars")
 
     # Step 2: Split into sections
     sections = split_into_sections(markdown)
@@ -296,6 +346,8 @@ def main():
     parser.add_argument("pdf", nargs="?", help="Path to a single PDF file")
     parser.add_argument("--all", action="store_true", help="Process all PDFs")
     parser.add_argument("--grade", type=int, nargs="+", help="Process specific grades")
+    parser.add_argument("--force-ocr", action="store_true",
+                        help="Force OCR mode even for digital PDFs (slow)")
     args = parser.parse_args()
 
     if args.pdf:
@@ -303,7 +355,7 @@ def main():
         if not pdf_path.exists():
             print(f"Error: {pdf_path} not found", file=sys.stderr)
             sys.exit(1)
-        summary = process_pdf(pdf_path)
+        summary = process_pdf(pdf_path, force_ocr=args.force_ocr)
         print(f"\nDone: {json.dumps(summary, indent=2)}")
 
     elif args.all or args.grade:
@@ -314,7 +366,7 @@ def main():
         print(f"Found {len(pdfs)} PDFs to process\n")
         summaries = []
         for pdf in pdfs:
-            summary = process_pdf(pdf)
+            summary = process_pdf(pdf, force_ocr=args.force_ocr)
             summaries.append(summary)
             print()
         total_chunks = sum(s["total_chunks"] for s in summaries)

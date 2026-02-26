@@ -55,9 +55,15 @@ def extract_images_from_pdf(pdf_path: Path, output_dir: Path | None = None) -> d
             try:
                 pix = pymupdf.Pixmap(doc, xref)
 
-                # Convert CMYK to RGB if needed
-                if pix.n > 4:
+                # Convert non-RGB colorspaces (CMYK, DeviceN, etc.) to RGB
+                if pix.colorspace and pix.colorspace.n >= 4:
                     pix = pymupdf.Pixmap(pymupdf.csRGB, pix)
+                elif pix.colorspace is None or pix.colorspace.name not in ("DeviceRGB", "DeviceGray"):
+                    pix = pymupdf.Pixmap(pymupdf.csRGB, pix)
+
+                # Remove alpha channel if present (PNG doesn't need it for our use)
+                if pix.alpha:
+                    pix = pymupdf.Pixmap(pix, 0)
 
                 # Size filter
                 if pix.width < MIN_IMAGE_WIDTH or pix.height < MIN_IMAGE_HEIGHT:
