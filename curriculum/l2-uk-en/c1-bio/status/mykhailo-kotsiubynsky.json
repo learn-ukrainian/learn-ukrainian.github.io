@@ -1,0 +1,59 @@
+{
+  "module": "mykhailo-kotsiubynsky",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-27T08:24:22.148244Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-27T08:24:10.410688Z",
+    "meta": "2026-02-19T21:50:15.539496Z",
+    "activities": "2026-02-27T08:19:00.410976Z",
+    "vocabulary": "2026-02-27T08:19:00.420094Z",
+    "plan": "2026-02-17T13:37:38.101175Z",
+    "research": "2026-02-22T10:35:24.541450Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "4814/5000 (raw: 5316)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 1,
+    "fail_count": 1,
+    "deferred_count": 3
+  }
+}
