@@ -18,6 +18,7 @@ Usage:
 """
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -31,17 +32,18 @@ from rag.config import (
     IMAGE_COLLECTION,
     QDRANT_GRPC_PORT,
     QDRANT_HOST,
+    QDRANT_REST_PORT,
     SIGLIP_DIM,
     TEXT_COLLECTION,
 )
 
 
 def get_client():
-    """Get Qdrant client (gRPC for speed)."""
+    """Get Qdrant client (REST for reliability — encoding is the bottleneck, not upload)."""
     from qdrant_client import QdrantClient
     return QdrantClient(
-        host=QDRANT_HOST, grpc_port=QDRANT_GRPC_PORT,
-        prefer_grpc=True, check_compatibility=False,
+        host=QDRANT_HOST, port=QDRANT_REST_PORT,
+        prefer_grpc=False, timeout=300,
     )
 
 
@@ -132,11 +134,29 @@ def create_image_collection(client, recreate: bool = False):
     print(f"[ingest] Collection '{IMAGE_COLLECTION}' created with indexes.")
 
 
+_text_encoder = None
+_image_encoder = None
+
+
+def get_text_encoder():
+    global _text_encoder
+    if _text_encoder is None:
+        from rag.embed import TextEncoder
+        _text_encoder = TextEncoder()
+    return _text_encoder
+
+
+def get_image_encoder():
+    global _image_encoder
+    if _image_encoder is None:
+        from rag.embed import ImageEncoder
+        _image_encoder = ImageEncoder()
+    return _image_encoder
+
+
 def ingest_text_chunks(client, jsonl_path: Path, batch_size: int = 64):
     """Embed and ingest text chunks from a JSONL file."""
     from qdrant_client.models import NamedSparseVector, NamedVector, PointStruct, SparseVector
-
-    from rag.embed import TextEncoder
 
     jsonl_path = Path(jsonl_path)
     print(f"\n[ingest] Loading chunks from {jsonl_path.name}...")
@@ -155,7 +175,7 @@ def ingest_text_chunks(client, jsonl_path: Path, batch_size: int = 64):
 
     print(f"  {len(chunks)} clean chunks to embed...")
 
-    encoder = TextEncoder()
+    encoder = get_text_encoder()
     texts = [c["text"] for c in chunks]
     embeddings = encoder.encode(texts, batch_size=batch_size)
 
@@ -188,7 +208,7 @@ def ingest_text_chunks(client, jsonl_path: Path, batch_size: int = 64):
         }
 
         point = PointStruct(
-            id=abs(hash(chunk["chunk_id"])) % (2**63),
+            id=int(hashlib.sha256(chunk["chunk_id"].encode()).hexdigest()[:15], 16),
             vector={
                 "dense": dense_vecs[i].tolist(),
                 "sparse": SparseVector(indices=indices, values=values),
@@ -208,10 +228,12 @@ def ingest_text_chunks(client, jsonl_path: Path, batch_size: int = 64):
 
 
 def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
-    """Embed and ingest images from an image metadata JSONL file."""
-    from qdrant_client.models import PointStruct
+    """Embed and ingest images from an image metadata JSONL file.
 
-    from rag.embed import ImageEncoder
+    Streams in batches: encode batch_size images → upload → free memory → next batch.
+    This avoids OOM on large JSONL files (300+ images).
+    """
+    from qdrant_client.models import PointStruct
 
     jsonl_path = Path(jsonl_path)
     print(f"\n[ingest] Loading image metadata from {jsonl_path.name}...")
@@ -227,13 +249,13 @@ def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
 
     # Resolve image paths relative to project root
     project_root = Path(__file__).resolve().parents[2]
-    image_paths = []
     valid_records = []
+    valid_paths = []
     for rec in records:
         img_path = project_root / rec["image_path"]
         if img_path.exists():
-            image_paths.append(img_path)
             valid_records.append(rec)
+            valid_paths.append(img_path)
         else:
             print(f"  Warning: image not found: {img_path}")
 
@@ -241,43 +263,50 @@ def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
         print("  No valid images found, skipping.")
         return 0
 
-    print(f"  {len(valid_records)} images to embed...")
+    total = len(valid_records)
+    print(f"  {total} images to embed+upload (streaming, batch={batch_size})...")
 
-    encoder = ImageEncoder()
-    vecs = encoder.encode_images(image_paths, batch_size=batch_size)
+    encoder = get_image_encoder()
+    uploaded = 0
 
-    print(f"  Uploading {len(valid_records)} image points to Qdrant...")
+    # Stream: encode batch → build points → upload → free memory
+    for start in range(0, total, batch_size):
+        end = min(start + batch_size, total)
+        batch_paths = valid_paths[start:end]
+        batch_records = valid_records[start:end]
 
-    points = []
-    for i, rec in enumerate(valid_records):
-        payload = {
-            "image_id": rec["image_id"],
-            "image_path": rec["image_path"],
-            "filename": rec["filename"],
-            "page": rec.get("page", 0),
-            "grade": rec.get("grade", 0),
-            "subject": rec.get("subject", ""),
-            "author": rec.get("author", ""),
-            "year": rec.get("year", 0),
-            "width": rec.get("width", 0),
-            "height": rec.get("height", 0),
-            "pdf_stem": rec.get("pdf_stem", ""),
-        }
+        vecs = encoder.encode_images(batch_paths, batch_size=batch_size)
 
-        point = PointStruct(
-            id=abs(hash(rec["image_id"])) % (2**63),
-            vector=vecs[i].tolist(),
-            payload=payload,
-        )
-        points.append(point)
+        points = []
+        for i, rec in enumerate(batch_records):
+            payload = {
+                "image_id": rec["image_id"],
+                "image_path": rec["image_path"],
+                "filename": rec["filename"],
+                "page": rec.get("page", 0),
+                "grade": rec.get("grade", 0),
+                "subject": rec.get("subject", ""),
+                "author": rec.get("author", ""),
+                "year": rec.get("year", 0),
+                "width": rec.get("width", 0),
+                "height": rec.get("height", 0),
+                "pdf_stem": rec.get("pdf_stem", ""),
+            }
+            point = PointStruct(
+                id=int(hashlib.sha256(rec["image_id"].encode()).hexdigest()[:15], 16),
+                vector=vecs[i].tolist(),
+                payload=payload,
+            )
+            points.append(point)
 
-    for i in range(0, len(points), batch_size):
-        batch = points[i : i + batch_size]
-        client.upsert(collection_name=IMAGE_COLLECTION, points=batch)
-        print(f"  Uploaded {min(i + batch_size, len(points))}/{len(points)}")
+        client.upsert(collection_name=IMAGE_COLLECTION, points=points)
+        uploaded += len(points)
+        print(f"  Uploaded {uploaded}/{total}")
 
-    print(f"  Done: {len(points)} images ingested.")
-    return len(points)
+        del vecs, points  # Free memory immediately
+
+    print(f"  Done: {uploaded} images ingested.")
+    return uploaded
 
 
 def find_jsonl_files(base_dir: Path, grades: list[int] | None = None, suffix: str = ".jsonl") -> list[Path]:

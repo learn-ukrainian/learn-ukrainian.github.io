@@ -107,12 +107,8 @@ class ImageEncoder:
         )
         self._tokenizer = open_clip.get_tokenizer(SIGLIP_MODEL)
         self._model.eval()
-
-        if self._device == "cpu" and torch.backends.mps.is_available():
-            self._device = "mps"
-            self._model = self._model.to("mps")
-            print("[embed] SigLIP 2 moved to MPS (Apple Silicon).")
-        print("[embed] SigLIP 2 loaded.")
+        self._model = self._model.half()  # fp16 — halves memory footprint
+        print(f"[embed] SigLIP 2 loaded on {self._device} (fp16).")
 
     def encode_images(self, image_paths: list[str | Path], batch_size: int = 16) -> np.ndarray:
         """Encode images into vectors.
@@ -136,7 +132,7 @@ class ImageEncoder:
                     # Use zero vector as placeholder
                     images.append(torch.zeros(3, 224, 224))
 
-            batch_tensor = torch.stack(images).to(self._device)
+            batch_tensor = torch.stack(images).to(self._device).half()
             with torch.no_grad():
                 vecs = self._model.encode_image(batch_tensor)
                 vecs = vecs / vecs.norm(dim=-1, keepdim=True)
