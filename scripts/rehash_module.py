@@ -80,7 +80,7 @@ def update_review_file(md_file_path, new_hash):
 def main():
     if len(sys.argv) < 2:
         print("Usage: python3 scripts/rehash_module.py <file1.md> [dir1 ...]")
-        print("Example: python3 scripts/rehash_module.py curriculum/l2-uk-en/b2-hist/")
+        print("Example: python3 scripts/rehash_module.py curriculum/l2-uk-en/hist/")
         sys.exit(1)
     
     for arg in sys.argv[1:]:

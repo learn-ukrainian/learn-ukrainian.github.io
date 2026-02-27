@@ -759,7 +759,7 @@ items:
 
 - **Base template:** `docs/l2-uk-en/templates/c1-module-template.md`
 - **C1 Curriculum Plan:** `docs/l2-uk-en/C1-CURRICULUM-PLAN.md` (M36-100 specifications)
-- **B2 History Template:** `docs/l2-uk-en/templates/b2-history-module-template.md`
+- **B2 History Template:** `docs/l2-uk-en/templates/history-module-template.md`
 
 ---
 

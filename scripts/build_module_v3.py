@@ -21,10 +21,10 @@ Typical: 4-6 calls. v2: 8-9+.
 
 Usage:
     .venv/bin/python scripts/build_module_v3.py a1 12
-    .venv/bin/python scripts/build_module_v3.py b2-hist 5
+    .venv/bin/python scripts/build_module_v3.py hist 5
     .venv/bin/python scripts/build_module_v3.py a1 --all
     .venv/bin/python scripts/build_module_v3.py a1 --range 1-20
-    .venv/bin/python scripts/build_module_v3.py b2-hist --all --research-only
+    .venv/bin/python scripts/build_module_v3.py hist --all --research-only
     .venv/bin/python scripts/build_module_v3.py a1 12 --rebuild
     .venv/bin/python scripts/build_module_v3.py a1 12 --dry-run
     .venv/bin/python scripts/build_module_v3.py a1 12 --verify
@@ -800,7 +800,7 @@ def _compute_metrics_direct(ctx: ModuleContext) -> dict[str, str]:
     # Immersion target (level-dependent)
     from audit.config import get_a1_immersion_range, get_a2_immersion_range, get_b1_immersion_range
     level = ctx.track.split("-")[0].upper() if "-" not in ctx.track else ctx.track.upper()
-    # Normalize: a1 -> A1, b2-hist -> B2-HIST
+    # Normalize: a1 -> A1, hist -> HIST
     level_code = level[:2] if len(level) >= 2 else level
     module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
     try:
@@ -2295,7 +2295,87 @@ def _get_russicism_table(level: str) -> str:
 
 
 # Seminar tracks that get longer timeouts and mandatory Phase F after D.2
-_SEMINAR_TIMEOUT_TRACKS = {"b2-hist", "c1-hist", "c1-bio", "lit", "oes", "ruth"}
+_SEMINAR_TIMEOUT_TRACKS = {"hist", "c1-hist", "c1-bio", "lit", "oes", "ruth"}
+
+# ---------------------------------------------------------------------------
+# RAG: Pre-fetch literary primary source matches for D.1 quote verification
+# ---------------------------------------------------------------------------
+
+def _extract_quotes_from_content(content_path: Path) -> list[str]:
+    """Extract quoted passages from module content for RAG verification.
+
+    Looks for:
+    - Text in «» (Ukrainian guillemets)
+    - Blockquote lines starting with >
+    """
+    if not content_path.exists():
+        return []
+
+    text = content_path.read_text("utf-8")
+    quotes = []
+
+    # Ukrainian guillemets «...»
+    for match in re.finditer(r"«([^»]{10,200})»", text):
+        quotes.append(match.group(1).strip())
+
+    # Blockquote lines (> text) — skip metadata/callout markers
+    for match in re.finditer(r"^>\s+(.{10,200})", text, re.MULTILINE):
+        line = match.group(1).strip()
+        # Skip callout markers like [!did-you-know], [!culture-note], etc.
+        if line.startswith("[!") or line.startswith("**"):
+            continue
+        quotes.append(line)
+
+    return quotes
+
+
+def _prefetch_rag_context(ctx: ModuleContext) -> str:
+    """Pre-fetch RAG results for quotes found in module content.
+
+    Returns formatted string for injection into D.1 prompt as {RAG_PRIMARY_SOURCES}.
+    Only runs for seminar tracks with literary primary sources.
+    """
+    track_key = "lit" if ctx.track.startswith("lit-") else ctx.track
+    if track_key not in SEMINAR_TRACKS:
+        return "(Not a seminar track — no RAG verification needed)"
+
+    content_path = ctx.paths.get("md")
+    if not content_path or not content_path.exists():
+        return "(Content file not found — cannot extract quotes)"
+
+    quotes = _extract_quotes_from_content(content_path)
+    if not quotes:
+        return "(No quoted passages found in module content)"
+
+    # Try to import RAG query module — gracefully degrade if Qdrant is down
+    try:
+        sys.path.insert(0, str(SCRIPTS_DIR))
+        from rag.query import search_literary
+    except ImportError:
+        return "(RAG module not available — install qdrant-client and rag dependencies)"
+
+    results = []
+    for quote in quotes[:10]:  # Cap at 10 quotes to avoid prompt bloat
+        try:
+            hits = search_literary(quote, limit=2)
+        except Exception as e:
+            results.append(f"### Quote: «{quote[:80]}...»\n- RAG error: {e}\n")
+            continue
+
+        if not hits:
+            results.append(f"### Quote: «{quote[:80]}...»\n- **No match found** in primary sources\n")
+        else:
+            lines = [f"### Quote: «{quote[:80]}...»"]
+            for hit in hits:
+                lines.append(
+                    f"- **Match** (score {hit['score']:.3f}): "
+                    f"{hit['work']} ({hit['year']}) — "
+                    f"`{hit['text'][:150]}...`"
+                )
+            results.append("\n".join(lines) + "\n")
+
+    return "\n".join(results) if results else "(No quotes extracted for verification)"
+
 
 # Track-aware timeouts
 TIMEOUT_REVIEW_CORE = 600       # A1-B2 core tracks (10 min)
@@ -2541,6 +2621,11 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     prompt_text = prompt_text.replace("{DETERMINISTIC_ISSUES}", _format_deterministic_issues(screen.deterministic_issues))
     prompt_text = prompt_text.replace("{RUSSIANISM_TABLE}", russicism_table or "(No track-specific Russianism table available — use general checklist)")
     prompt_text = prompt_text.replace("{FILLER_PHRASES}", _format_filler_phrases(screen.deterministic_issues))
+
+    # RAG primary source verification (seminar tracks only)
+    rag_context = _prefetch_rag_context(ctx)
+    prompt_text = prompt_text.replace("{RAG_PRIMARY_SOURCES}", rag_context)
+
     prompt_file.write_text(prompt_text, "utf-8")
 
     log(f"  D.1: Dispatching evidence+review via Claude ({claude_model_D}, {review_timeout}s)...")
@@ -2550,6 +2635,9 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         f"immersion {screen.metrics.get('COMPUTED_IMMERSION_PERCENT', '?')}%")
     if track_calibration:
         log(f"    Track calibration: injected ({len(track_calibration)} chars)")
+    if "(Not a seminar" not in rag_context and "(No quoted" not in rag_context:
+        n_quotes = rag_context.count("### Quote:")
+        log(f"    RAG verification: {n_quotes} quote(s) checked against primary sources")
 
     ok, raw_output = _dispatch_claude_phase(
         prompt_file, "Phase D.1",
@@ -3314,10 +3402,10 @@ def main() -> int:
         epilog=textwrap.dedent("""\
             Examples:
               %(prog)s a1 12                           # Full E2E (4 calls)
-              %(prog)s b2-hist 5                       # Seminar track
+              %(prog)s hist 5                       # Seminar track
               %(prog)s a1 --all                        # Build entire track
               %(prog)s a1 --range 1-20                 # Build range
-              %(prog)s b2-hist --all --research-only   # Pre-seed all research
+              %(prog)s hist --all --research-only   # Pre-seed all research
               %(prog)s a1 12 --rebuild                 # Nuke v3 state, restart
               %(prog)s a1 12 --dry-run                 # Show plan, no dispatches
               %(prog)s a1 12 --verify                  # Just audit
@@ -3328,7 +3416,7 @@ def main() -> int:
               %(prog)s a1 12 --final-review            # + Claude QA gate (Phase F)
         """),
     )
-    parser.add_argument("track", help="Track identifier (a1, a2, b1, ..., c1-bio, b2-hist, ...)")
+    parser.add_argument("track", help="Track identifier (a1, a2, b1, ..., c1-bio, hist, ...)")
     parser.add_argument("num", type=int, nargs="?", default=None,
                         help="1-indexed module number (optional with --all or --range)")
 

@@ -56,9 +56,9 @@ def save_status_cache(
     vocab_path = base_path / 'vocabulary' / f"{module_slug}.yaml"
     
     # Derive track directory from file path for plan lookup
-    # base_path is e.g. curriculum/l2-uk-en/b2-hist — use its name directly
-    # so seminar tracks (b2-hist, c1-bio, etc.) resolve correctly
-    track_dir_name = base_path.name  # e.g., "b2-hist", "a1", "b1"
+    # base_path is e.g. curriculum/l2-uk-en/hist — use its name directly
+    # so seminar tracks (hist, c1-bio, etc.) resolve correctly
+    track_dir_name = base_path.name  # e.g., "hist", "a1", "b1"
     plan_path = base_path.parent / 'plans' / track_dir_name / f"{module_slug}.yaml"
     if not plan_path.exists():
         # Try bare slug (strip numeric prefix) for seminar tracks
@@ -242,7 +242,7 @@ def _sync_batch_state(base_path: Path, module_slug: str, status: str):
     Keeps the batch manager dashboard in sync when audits run outside batch.
     """
     try:
-        track = base_path.name  # e.g., "a1", "b2-hist"
+        track = base_path.name  # e.g., "a1", "hist"
         batch_state_file = base_path.parent.parent.parent / "batch_state" / f"state_{track}.json"
         if not batch_state_file.exists():
             return

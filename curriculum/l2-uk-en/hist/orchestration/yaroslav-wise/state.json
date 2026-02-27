@@ -1,0 +1,35 @@
+{
+  "slug": "yaroslav-wise",
+  "track": "hist",
+  "module_num": 12,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T00:21:27Z",
+      "words": 6316,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T00:23:04Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T00:23:04Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:26:27Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:26:27Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-25T19:26:27Z"
+}

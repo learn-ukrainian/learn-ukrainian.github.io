@@ -45,9 +45,9 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 ## Examples
 
 ```bash
-/module b2-hist 5               # Build module 5 (content + skeleton deploy)
-/module b2-hist 1-5             # Build modules 1-5
-/module b2-hist 5 --from=lesson # Resume from phase 3 (lesson)
+/module hist 5               # Build module 5 (content + skeleton deploy)
+/module hist 1-5             # Build modules 1-5
+/module hist 5 --from=lesson # Resume from phase 3 (lesson)
 /module c1-bio 12 --check       # Show which phases are complete
 ```
 
@@ -93,7 +93,7 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 
 Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
-> **📄 Seminar Tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth):**
+> **📄 Seminar Tracks (hist, c1-bio, c1-hist, lit, oes, ruth):**
 >
 > Before generating content, read `docs/RESEARCH-FIRST-WORKFLOW.md`
 >
@@ -124,7 +124,7 @@ Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 | Level Type                    | Example              | File Path                                         |
 | ----------------------------- | -------------------- | ------------------------------------------------- |
 | Core (a1, a2, b1, b2, c1, c2) | `/module a1 5`       | `curriculum/l2-uk-en/a1/05-daily-routine.md`      |
-| Track (b2-hist, c1-bio, etc.) | `/module b2-hist 41` | `curriculum/l2-uk-en/b2-hist/kozatstvo-vytoky.md` |
+| Track (hist, c1-bio, etc.) | `/module hist 41` | `curriculum/l2-uk-en/hist/kozatstvo-vytoky.md` |
 
 **Tracks use slug-only filenames (no number prefix). Always resolve via curriculum.yaml.**
 
@@ -136,7 +136,7 @@ Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 Extract:
 
-- `level`: a1, a2, b1, b2, c1, c2, b2-hist, c1-bio, c1-hist, lit
+- `level`: a1, a2, b1, b2, c1, c2, hist, c1-bio, c1-hist, lit
 - `num`: Module number or range (e.g., `5` or `1-5`)
 - `flags`: --from=PHASE, --check, --refresh (optional)
 
@@ -162,7 +162,7 @@ Extract:
 
 ### Step 1.6: Research Gate (Seminar Tracks Only)
 
-**For seminar tracks ONLY (b2-hist, c1-bio, c1-hist, lit, oes, ruth):**
+**For seminar tracks ONLY (hist, c1-bio, c1-hist, lit, oes, ruth):**
 
 **SMART ENFORCEMENT**: Research is required only for:
 
@@ -174,7 +174,7 @@ Extract:
 
 ```bash
 # Define seminar tracks
-SEMINAR_TRACKS="b2-hist c1-bio c1-hist lit oes ruth"
+SEMINAR_TRACKS="hist c1-bio c1-hist lit oes ruth"
 
 # Check if current level is a seminar track
 if echo "$SEMINAR_TRACKS" | grep -qw "$level"; then
@@ -285,17 +285,17 @@ fi
 > **⚠️ CRITICAL: Track files have NO numbered prefix!**
 >
 > - Core levels: `01-slug.md`, `02-slug.md` (numbered)
-> - Tracks (b2-hist, c1-bio, etc.): `slug.md` (NO number prefix)
+> - Tracks (hist, c1-bio, etc.): `slug.md` (NO number prefix)
 >
 > **NEVER construct paths manually. ALWAYS use curriculum.yaml lookup.**
 
-**For tracks (b2-hist, c1-bio, c1-hist, lit):**
+**For tracks (hist, c1-bio, c1-hist, lit):**
 
 ```bash
 # Get slug from curriculum.yaml (module numbers are 1-indexed, array is 0-indexed)
 slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curriculum.yaml)
 # Example: module 41 → slug="kozatstvo-vytoky"
-# File path: curriculum/l2-uk-en/b2-hist/kozatstvo-vytoky.md (NO "41-" prefix!)
+# File path: curriculum/l2-uk-en/hist/kozatstvo-vytoky.md (NO "41-" prefix!)
 ```
 
 **For core levels (a1, a2, b1, b2, c1, c2):**
@@ -614,7 +614,7 @@ after all modules are content-complete.
 
 ## Batch Mode
 
-When input is a range (e.g., `/module b2-hist 1-5`):
+When input is a range (e.g., `/module hist 1-5`):
 
 ### Step 0: Pre-Batch Checks
 
@@ -635,12 +635,12 @@ This categorizes modules into:
 
 ### Step 0.5: Research Gate (Seminar Tracks - Smart Enforcement)
 
-**For seminar tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth):**
+**For seminar tracks (hist, c1-bio, c1-hist, lit, oes, ruth):**
 
 Before building, categorize modules by research need:
 
 ```bash
-SEMINAR_TRACKS="b2-hist c1-bio c1-hist lit oes ruth"
+SEMINAR_TRACKS="hist c1-bio c1-hist lit oes ruth"
 
 if echo "$SEMINAR_TRACKS" | grep -qw "$level"; then
   echo "📚 Analyzing research needs for batch..."
@@ -769,7 +769,7 @@ For each module_num in range:
 **Batch summary (all should be DEPLOYED with MDX):**
 
 ```
-Batch: b2-hist 1-5
+Batch: hist 1-5
 Results:
   - 1: ✅ DEPLOYED + MDX (4235/4000 words, audit PASS)
   - 2: ✅ DEPLOYED + MDX (4102/4000 words, audit PASS)
@@ -779,7 +779,7 @@ Results:
 
 Summary: 5/5 deployed with MDX
 
-Next: Run /module-vocab-enrich b2-hist
+Next: Run /module-vocab-enrich hist
 ```
 
 ---
@@ -808,21 +808,21 @@ Next: Run /module-vocab-enrich b2-hist
 
 ```bash
 # Fresh build
-/module b2-hist 5
+/module hist 5
 
 # Regenerate lesson content (for incomplete modules)
-/module b2-hist 5 --from=lesson
+/module hist 5 --from=lesson
 
 # Rebuild artifacts ONLY (when lesson already complete)
 # WARNING: This keeps existing .md - don't use for incomplete content!
-/module b2-hist 5 --refresh
+/module hist 5 --refresh
 
 # Check what's done
-/module b2-hist 5 --check
+/module hist 5 --check
 
 # Build batch
 /module c1-bio 1-10
 
 # After track complete: enrich vocabulary
-/module-vocab-enrich b2-hist
+/module-vocab-enrich hist
 ```

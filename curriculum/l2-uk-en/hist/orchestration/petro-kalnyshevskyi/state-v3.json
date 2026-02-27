@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "petro-kalnyshevskyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:09:15Z",
+      "task_id": "v3-petro-kalnyshevskyi-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T23:43:07Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T23:44:58Z",
+      "task_id": "v3-petro-kalnyshevskyi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T20:05:03Z",
+      "attempts": 1
+    }
+  }
+}

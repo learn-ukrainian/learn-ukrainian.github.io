@@ -16,7 +16,7 @@
 #
 # Examples:
 #   scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
-#   scripts/audit_module.sh curriculum/l2-uk-en/b2-hist/15-holodomor-timeline.md
+#   scripts/audit_module.sh curriculum/l2-uk-en/hist/15-holodomor-timeline.md
 #   scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/a1/this-is-i-am.md
 
 set -euo pipefail

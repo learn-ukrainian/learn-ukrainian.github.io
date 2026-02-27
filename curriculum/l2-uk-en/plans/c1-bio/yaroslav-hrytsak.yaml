@@ -67,7 +67,7 @@ activity_hints:
   output: Аргументований есей
 focus: biography
 prerequisites:
-- b2-hist-independence
+- hist-independence
 connects_to:
 - c1-bio-35-mykhailo-hrushevskyi
 - c1-bio-88-vitaly-portnikov

@@ -100,6 +100,64 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="search_literary",
+            description=(
+                "Search Ukrainian literary primary sources (chronicles, poetry, legal texts). "
+                "Covers Old East Slavic (X-XIII c.), Middle Ukrainian (XIV-XVIII c.), and more. "
+                "Returns text chunks with work, author, year, genre, and language period metadata."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Search query in Ukrainian (e.g., 'хрещення Русі', 'повстання козаків')"
+                    },
+                    "work": {
+                        "type": "string",
+                        "description": "Filter by work title. Optional."
+                    },
+                    "genre": {
+                        "type": "string",
+                        "description": "Filter by genre (chronicle, poetry, prose, legal, grammar, etc.). Optional."
+                    },
+                    "period": {
+                        "type": "string",
+                        "description": "Filter by language period (old_east_slavic, middle_ukrainian, early_modern, modern). Optional."
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Max results to return (default 5, max 20)",
+                        "default": 5
+                    }
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
+            name="get_full_text",
+            description=(
+                "Load the full text of a short literary work from the RAG database. "
+                "Returns all chunks concatenated in order. Best for works under ~20 pages. "
+                "Caps at 50,000 characters."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "work": {
+                        "type": "string",
+                        "description": "Work title (e.g., 'Слово о полку Ігоревім', 'Літопис Самовидця')"
+                    },
+                    "max_chars": {
+                        "type": "integer",
+                        "description": "Max characters to return (default 50000)",
+                        "default": 50000
+                    }
+                },
+                "required": ["work"]
+            },
+        ),
+        Tool(
             name="get_chunk_context",
             description=(
                 "Get surrounding text chunks for context. "
@@ -141,6 +199,10 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             return await handle_search_text(arguments)
         elif name == "search_images":
             return await handle_search_images(arguments)
+        elif name == "search_literary":
+            return await handle_search_literary(arguments)
+        elif name == "get_full_text":
+            return await handle_get_full_text(arguments)
         elif name == "get_chunk_context":
             return await handle_get_chunk_context(arguments)
         elif name == "collection_stats":
@@ -174,6 +236,57 @@ async def handle_search_text(args: dict) -> list[TextContent]:
         lines.append(f"- **Text**:\n{hit['text']}")
         lines.append("")
 
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_search_literary(args: dict) -> list[TextContent]:
+    query = args["query"]
+    work = args.get("work")
+    genre = args.get("genre")
+    period = args.get("period")
+    limit = min(args.get("limit", 5), 20)
+
+    from rag.query import search_literary
+    hits = await asyncio.to_thread(search_literary, query, work, genre, period, limit)
+
+    if not hits:
+        return [TextContent(type="text", text="No literary results found.")]
+
+    lines = [f"Found {len(hits)} results for: \"{query}\"\n"]
+    for i, hit in enumerate(hits, 1):
+        lines.append(f"### Result {i} (score: {hit['score']:.4f})")
+        lines.append(f"- **Work**: {hit['work']} ({hit['year']})")
+        lines.append(f"- **Author**: {hit['author']}")
+        lines.append(f"- **Genre/Period**: {hit['genre']} / {hit['language_period']}")
+        lines.append(f"- **Chunk ID**: `{hit['chunk_id']}`")
+        lines.append(f"- **Text**:\n{hit['text']}")
+        if hit.get("original_text"):
+            lines.append(f"- **Original text**:\n{hit['original_text']}")
+        lines.append("")
+
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_get_full_text(args: dict) -> list[TextContent]:
+    work = args["work"]
+    max_chars = args.get("max_chars", 50000)
+
+    from rag.query import get_full_text
+    result = await asyncio.to_thread(get_full_text, work, max_chars)
+
+    if "error" in result:
+        return [TextContent(type="text", text=result["error"])]
+
+    lines = [
+        f"# {result['work']} ({result['year']})",
+        f"**Author**: {result['author']}",
+        f"**Genre/Period**: {result['genre']} / {result['language_period']}",
+        f"**Chunks**: {result['chunk_count']}, **Truncated**: {result['truncated']}",
+        "",
+        "---",
+        "",
+        result["text"],
+    ]
     return [TextContent(type="text", text="\n".join(lines))]
 
 

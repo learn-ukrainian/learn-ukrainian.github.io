@@ -6,7 +6,7 @@ This script calculates objective 10/10 scores for curriculum tracks
 using automated metric extraction. No LLM calls required.
 
 Usage:
-    python scripts/score_track.py b2-hist
+    python scripts/score_track.py hist
     python scripts/score_track.py c1-bio --format markdown
     python scripts/score_track.py --all
 """
@@ -75,12 +75,12 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-    python scripts/score_track.py b2-hist
+    python scripts/score_track.py hist
     python scripts/score_track.py c1-bio --format markdown > c1-bio-score.md
     python scripts/score_track.py --all --summary
 
 Valid track IDs:
-    Specialized tracks: b2-hist, c1-hist, c1-bio, lit
+    Specialized tracks: hist, c1-hist, c1-bio, lit
     Standard tracks: a1, a2, b1, b2, c1, c2
         """
     )
@@ -88,7 +88,7 @@ Valid track IDs:
     parser.add_argument(
         'track',
         nargs='?',
-        help='Track ID to score (e.g., b2-hist, c1-bio, lit, a1)'
+        help='Track ID to score (e.g., hist, c1-bio, lit, a1)'
     )
 
     parser.add_argument(
@@ -126,7 +126,7 @@ Valid track IDs:
     # Get tracks to process
     if args.all:
         # Process specialized tracks first, then standard
-        specialized = ['b2-hist', 'c1-bio', 'c1-hist', 'lit']
+        specialized = ['hist', 'c1-bio', 'c1-hist', 'lit']
         standard = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
         tracks = specialized + standard
     else:

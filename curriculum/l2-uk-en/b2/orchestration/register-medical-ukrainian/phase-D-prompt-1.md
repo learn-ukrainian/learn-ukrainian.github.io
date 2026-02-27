@@ -1,4 +1,4 @@
-# Phase D.1: Evidence Collection + Adversarial Review
+# Phase D.1: Evidence Collection + Adversarial Review (Structured Output)
 
 > **You are an independent Senior Editor reviewing Ukrainian language curriculum.**
 > **You have NO prior relationship with this content — you are seeing it for the first time.**
@@ -16,17 +16,19 @@ Do not assume you wrote this content. Do not be generous.**
 
 **CRITICAL — VERBATIM CITATION RULE:**
 
-Every Ukrainian sentence you put inside «» quotes MUST be **copy-pasted verbatim** from the Read tool output. Do NOT paraphrase, do NOT reconstruct from memory, do NOT change a single word.
+Use `「...」` (CJK corner brackets) for ALL Ukrainian citations in your review — NOT `«»` (Ukrainian quotes appear inside the content and cause nesting collisions).
+
+Every Ukrainian sentence you put inside `「」` MUST be **copy-pasted verbatim** from the Read tool output. Do NOT paraphrase, do NOT reconstruct from memory, do NOT change a single word.
+
+**If you cannot find a sentence in the file to cite, do NOT report the issue — you may be hallucinating.**
 
 1. Use the Read tool to read the actual content file
-2. When you find a sentence to cite, **copy the exact text** from the Read output into your review
-3. After writing a citation, verify it with Grep:
-   ```
-   Grep pattern="first 5-6 words of your citation" path="/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/register-medical-ukrainian.md"
-   ```
-4. If Grep returns no matches — you paraphrased instead of copying. **Delete the citation and re-copy from Read output.**
+2. When you find a sentence to cite, **copy the exact text** from the Read output
+3. Verify with Grep: `Grep pattern="first 5-6 words" path="/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/register-medical-ukrainian.md"`
+4. If Grep returns no matches — you paraphrased. **Delete and re-copy from Read output.**
+5. Add verified citations to your **Citation Bank** (see Output Format) BEFORE writing the review body
 
-**Why this matters**: An automated verifier checks that your «»-quoted text appears verbatim in the source. Even minor rewording (e.g., "була не миттєвим" vs "становила не миттєвий") fails verification. 47%+ match rate = your review gets rejected and regenerated. Copy-paste, don't reconstruct.
+**Why this matters**: An automated verifier checks that your `「」`-quoted text appears verbatim in the source. Even minor rewording fails verification. Reviews with <53% match rate are **rejected and regenerated**. Copy-paste, don't reconstruct.
 
 ---
 
@@ -43,7 +45,7 @@ Read ALL of these files before writing anything:
 
 **Do not proceed until you have read every line of the content and every activity item.**
 
-**For seminar tracks** (b2-hist, c1-bio, c1-hist, lit, oes, ruth): you MUST also read the research notes. If they contain a Key Facts Ledger, use it as the ground truth for verifying dates, events, attributions, and quotes in the prose.
+**For seminar tracks** (hist, c1-bio, c1-hist, lit, oes, ruth): you MUST also read the research notes. If they contain a Key Facts Ledger, use it as the ground truth for verifying dates, events, attributions, and quotes in the prose.
 
 ---
 
@@ -52,8 +54,8 @@ Read ALL of these files before writing anything:
 ```
 Skill identity:   Senior Ukrainian Language & Culture Specialist
 Module persona:   Professional Language Coach, acting as Family Doctor (Сімейний лікар)
-Word count:       6142 / 4000 (153.6%)
-Activities:       14
+Word count:       6118 / 4000 (153.0%)
+Activities:       15
 Vocabulary items: 30
 Engagement boxes: 11
 Immersion:        98.7% (target: 85-95%)
@@ -73,7 +75,45 @@ Audit status:     FAIL
 5. Медична документація та цифровізація суспільства
 6. Культура мовлення: корекція суржику та русизмів
 
-**IMPORTANT — Section Reference Rule:** When discussing any content section in your review (dimension evidence, issue locations, fix plans), always reference it by its **exact Ukrainian H2 header name** — e.g., write `Section «Теорія: Магія закінчень -ати»` not "Theory section". This enables automated section coverage verification. Every H2 section listed above must be mentioned by its Ukrainian name at least once in your review.
+**IMPORTANT — Section Reference Rule:** When discussing any content section in your review (dimension evidence, issue locations, fix plans), always reference it by its **exact Ukrainian H2 header name** — e.g., write `Section "Теорія: Магія закінчень -ати"` not "Theory section". This enables automated section coverage verification. Every H2 section listed above must be mentioned by its Ukrainian name at least once in your review. (Use plain quotes for section names — reserve `「」` for verbatim content citations.)
+
+---
+
+## Pre-Screen Results (D.0 Deterministic Findings)
+
+The following issues were detected by automated regex-based scanners BEFORE your review.
+**You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
+
+(No deterministic issues found — D.0 pre-screen clean)
+
+---
+
+## Track Calibration
+
+# Track Calibration: B2
+
+## Bilingual Scope
+B2 is fully immersed (100% Ukrainian). Flag ANY English in prose as
+LANGUAGE_BLENDER. Only vocabulary tables and frontmatter may contain English.
+
+## Russicism Lookup (B2)
+Zero tolerance. All previous Russicisms plus:
+- якщо → коли (when 'if' is better expressed with 'when' — context-dependent, don't over-flag)
+- обов'язково → конче (insistently — register choice, both acceptable)
+- любий (meaning "будь-який") — flag as Russian "любой"
+- приходити до висновку → доходити висновку (to come to a conclusion)
+
+## LLM Filler Sensitivity
+Very strict. Flag ALL generic AI patterns in Ukrainian. No tolerance for:
+- Meta-commentary about the lesson structure
+- Generic transitions between sections
+- Stacked abstract nouns or AI-typical metaphors
+
+## Content Focus
+Advanced grammar, cultural content, professional communication.
+Focus on: register accuracy, coherent argumentation, natural flow between
+paragraphs, absence of AI artifacts.
+
 
 ---
 
@@ -81,7 +121,7 @@ Audit status:     FAIL
 
 # Tier 2: Core Levels (B1/B2 Core/B2-PRO)
 
-> **Target:** B1, B2 Core, and B2-PRO modules (NOT B2-HIST, NOT seminar tracks)
+> **Target:** B1, B2 Core, and B2-PRO modules (NOT HIST, NOT seminar tracks)
 > **Pedagogy:** TTT (Test-Teach-Test) for grammar; ESP for B2-PRO
 > **Immersion:** 85-100% Ukrainian
 > **Experience Goal:** Serious teaching — learner is challenged and grows
@@ -353,11 +393,19 @@ Follow the full review protocol. In summary:
 ### STEP 2: Deep Verification (Line by Line)
 - Every Ukrainian sentence: grammar, naturalness, Russianisms
 - English: clarity, warm tutor voice
-- IPA: correct stress placement
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms (кушать→їсти, приймати участь→брати участь, красивий→гарний, прекрасне→чудове, etc.)
+
+**Russianisms** — check content against these known patterns:
+
+Zero tolerance. All previous Russicisms plus:
+- якщо → коли (when 'if' is better expressed with 'when' — context-dependent, don't over-flag)
+- обов'язково → конче (insistently — register choice, both acceptable)
+- любий (meaning "будь-який") — flag as Russian "любой"
+- приходити до висновку → доходити висновку (to come to a conclusion)
+
+Also check for:
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
 - **Colonial framing** — Ukrainian defined by contrast with Russian (see below)
 - **Word salad** — paragraphs that string together unrelated claims with no logical thread, or sentences that randomly alternate between Ukrainian and English within the same paragraph. Each paragraph must have one clear point. Score Language Quality ≤ 6 if found.
@@ -383,7 +431,7 @@ Follow the full review protocol. In summary:
 
 1. **Grammar explanations**: Verify every rule statement is accurate. Flag overgeneralizations (e.g., claiming a rule applies universally when it has exceptions).
 
-#### Part 3: Research Cross-Reference (seminar tracks only — b2-hist, c1-bio, c1-hist, lit, oes, ruth)
+#### Part 3: Research Cross-Reference (seminar tracks only — hist, c1-bio, c1-hist, lit, oes, ruth)
 
 **Additionally verify factual claims against the research notes.**
 
@@ -425,6 +473,10 @@ Follow the full review protocol. In summary:
 - Stacked abstract nouns: sentences with 3+ abstract nouns like "soul, history, and heartbeat" or "identity, resilience, and strength" — if 3+ such sentences found → ≤ 7
 - Generic AI clichés: "діамант", "двигун прогресу", "дзеркало культури", "архітектура мови" — these are LLM-typical, not natural Ukrainian
 - "It is important to note..." / "In this lesson, we will explore..." formality
+
+**LLM filler phrases** (pre-scanned by D.0, verify any flagged):
+
+(No LLM filler phrases detected by D.0 scanner)
 
 **IMPORTANT — What is NOT an LLM fingerprint:**
 - Natural Ukrainian metaphors, proverbs, and phraseology — Ukrainian is a metaphor-rich language. Pedagogical analogies ("Smile vs Grin technique", "like a pitchfork") that help learners understand pronunciation are GOOD teaching, not AI artifacts
@@ -522,6 +574,28 @@ Your review is checked by regex. Missing ANY of these H2 headers = AUTOMATIC REJ
 > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
 > **NO FIX OUTPUT** — this step produces the review only. Fixes are handled in a separate step if needed.
 
+### Output Block 0: Citation Bank (BEFORE the review)
+
+**MANDATORY** — Build this FIRST by reading files with Read tool and copy-pasting exact quotes.
+Each citation must be verified with Grep before adding to the bank.
+Use `「...」` (CJK corner brackets) for ALL Ukrainian citations — NOT `«»` (those appear inside Ukrainian text and cause parsing collisions).
+
+```
+===CITATION_BANK_START===
+1. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+2. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+3. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+...
+===CITATION_BANK_END===
+```
+
+**Rules:**
+- Every entry MUST be copy-pasted verbatim from Read tool output — zero rewording
+- Verify each with Grep before adding: `Grep pattern="first 5 words" path="{CONTENT_PATH}"`
+- If Grep returns no match, you paraphrased — delete and re-copy
+- Minimum 8 citations for modules >2000 words
+- In the review body below, you may ONLY use `「」` citations that appear in this bank
+
 ### Output Block 1: Review
 
 ```
@@ -576,7 +650,7 @@ Plan-Content Alignment: [PASS/FAIL]
 
 ### Issue 1: {Category}
 - **Location**: Line {N} / Section "{name}"
-- **Original**: «{exact Ukrainian text verified via Grep}»
+- **Original**: 「{exact Ukrainian text from Citation Bank}」
 - **Problem**: {why it's wrong}
 - **Fix**: {concrete replacement}
 
@@ -586,7 +660,7 @@ Plan-Content Alignment: [PASS/FAIL]
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| {N} | «{original}» | «{fixed}» | Russianisms / Calque / Scope / Grammar |
+| {N} | 「{original}」 | 「{fixed}」 | Russianisms / Calque / Scope / Grammar |
 
 ## Beginner Safety Audit
 
@@ -604,7 +678,7 @@ Plan-Content Alignment: [PASS/FAIL]
 
 ### {Dimension Name}: {current}/10 -> 9/10
 **What to fix:**
-1. Line {N}: Change «{current}» -> «{replacement}» — {why}
+1. Line {N}: Change 「{current}」 -> 「{replacement}」 — {why}
 2. Section "{name}": {action} — {impact}
 
 **Expected score after fix:** {X}/10
@@ -632,8 +706,7 @@ Plan-Content Alignment: [PASS/FAIL]
 - Content lines read: {X}
 - Activity items checked: {X}
 - Ukrainian sentences verified: {X}
-- IPA transcriptions checked: {X}
-- Factual claims verified: {X}
+- Citations in bank: {X}
 - Issues found: {X}
 
 ## Verdict    <!-- REQUIRED — rejection if missing -->
@@ -662,7 +735,9 @@ Plan-Content Alignment: [PASS/FAIL]
 
 ## CRITICAL: Output Format Reminder
 
-Your output MUST start with `===REVIEW_START===` and end with `===REVIEW_END===`. The extraction pipeline uses these exact delimiters. Any output without these delimiters is **automatically discarded** and the entire phase fails. Do not write a summary or conversational response — output the structured review inside the delimiters.
+**CITATION RULE (LAST REMINDER):** Every `「」`-quoted Ukrainian text in your review MUST appear verbatim in the source files. If you cannot find it with Grep, do NOT cite it — you are hallucinating. Use your Citation Bank as the single source of verified quotes.
+
+Your output MUST contain `===CITATION_BANK_START===` / `===CITATION_BANK_END===` BEFORE `===REVIEW_START===` / `===REVIEW_END===`. The extraction pipeline uses these exact delimiters. Any output without these delimiters is **automatically discarded** and the entire phase fails. Do not write a summary or conversational response — output the citation bank, then the structured review inside the delimiters.
 
 
 ## Boundaries
@@ -672,6 +747,6 @@ Your output MUST start with `===REVIEW_START===` and end with `===REVIEW_END===`
 - Do NOT score generously — honesty prevents bad curriculum
 - Do NOT skip any step or dimension
 - Do NOT fabricate issues — every critique must cite a specific line number
-- Do NOT cite Ukrainian text without first verifying it with Grep
+- Do NOT cite Ukrainian text without first verifying it with Grep — use 「」 not «»
 - Do NOT give vague feedback — say exactly what and where
 - Do NOT reference orchestration artifacts or prior build phases

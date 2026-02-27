@@ -1,0 +1,34 @@
+sequence: 107
+module: ruth-107
+slug: berynda-leksykon
+title_uk: "Лексикон словенороський Памва Беринди (1627)"
+title_en: "Berynda's Slaveno-Ruthenian Lexicon (1627)"
+phase: 5
+phase_id: linguistic-identity
+phase_name: "Мовна ідентичність"
+focus: "The most comprehensive pre-modern Ukrainian dictionary — 7000+ entries mapping Church Slavonic to living Ukrainian"
+content_outline:
+- section: Вступ
+  description: "Pamvo Berynda: monk, scholar, printer at Kyiv-Pechersk Lavra. Context: why a 7000-entry dictionary was needed — the gap between liturgical and spoken language."
+- section: Основний матеріал
+  description: "Structure and methodology of the Lexicon. Sample entries showing multiple Ukrainian synonyms for single CS terms. Evidence of dialectal variation. Botanical, medical, everyday vocabulary."
+- section: Практика
+  description: "Working with actual Lexicon entries. Tracing words from Berynda through to modern Ukrainian dictionaries. Identifying lost words and surviving ones."
+- section: Підсумок
+  description: "Berynda's legacy: establishing Ukrainian lexicographic tradition. The Lexicon as a snapshot of living Ukrainian in the 1620s."
+vocabulary_hints:
+- лексикон
+- словник
+- славенороський
+- тлумачний
+- гасло
+- реєстрове слово
+activity_types:
+- transcription
+- etymology-trace
+- parallel-text
+- loanword-trace
+persona:
+  voice: "Lexicographer"
+  role: "Lavra Scholar"
+source_url: "http://litopys.org.ua/berlex/be.htm"

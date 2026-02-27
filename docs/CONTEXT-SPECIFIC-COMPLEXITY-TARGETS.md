@@ -103,13 +103,13 @@ Uniform complexity targets across all module types create unnecessary friction:
 
 The audit script (`scripts/audit/config.py`) now supports context-specific complexity lookup:
 
-1. **Primary lookup:** `{level}-{focus}` (e.g., `B2-history`, `B1-cultural`)
+1. **Primary lookup:** `{level}-{focus}` (e.g., `history`, `B1-cultural`)
 2. **Fallback:** `{level}` (e.g., `B2`, `B1`)
 
 ### Module Detection
 
 Module focus is detected from YAML frontmatter or LEVEL_CONFIG keys:
-- `B2-history` (M71-131)
+- `history` (M71-131)
 - `B2-biography` (M71-131)
 - `B1-vocab` (M52-71)
 - `B1-cultural` (M72-81)

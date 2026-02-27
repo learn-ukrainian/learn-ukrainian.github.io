@@ -3,18 +3,18 @@
 CLI tool for research quality assessment.
 
 Usage:
-  .venv/bin/python scripts/assess_research.py b2-hist                # quality table (has rubric)
-  .venv/bin/python scripts/assess_research.py b2-hist 5              # single module
-  .venv/bin/python scripts/assess_research.py b2-hist --gaps         # only modules with gaps
+  .venv/bin/python scripts/assess_research.py hist                # quality table (has rubric)
+  .venv/bin/python scripts/assess_research.py hist 5              # single module
+  .venv/bin/python scripts/assess_research.py hist --gaps         # only modules with gaps
   .venv/bin/python scripts/assess_research.py a1                     # quality table (has rubric)
   .venv/bin/python scripts/assess_research.py b1                     # coverage only (no rubric)
   .venv/bin/python scripts/assess_research.py --all                  # all tracks overview
-  .venv/bin/python scripts/assess_research.py b2-hist --json         # JSON output
+  .venv/bin/python scripts/assess_research.py hist --json         # JSON output
   .venv/bin/python scripts/assess_research.py a1 --refresh-queue     # modules needing content refresh
   .venv/bin/python scripts/assess_research.py a1 --process          # rebuild all stale modules
-  .venv/bin/python scripts/assess_research.py b2-hist --upgrade     # research below 9/10
-  .venv/bin/python scripts/assess_research.py b2-hist --upgrade-process  # regenerate weak research (retries up to 3x)
-  .venv/bin/python scripts/assess_research.py b2-hist --upgrade --min-score 8  # custom threshold
+  .venv/bin/python scripts/assess_research.py hist --upgrade     # research below 9/10
+  .venv/bin/python scripts/assess_research.py hist --upgrade-process  # regenerate weak research (retries up to 3x)
+  .venv/bin/python scripts/assess_research.py hist --upgrade --min-score 8  # custom threshold
   .venv/bin/python scripts/assess_research.py a1 --enrich-plans    # enrich plans from 9+ research
 
 --upgrade-process retries each module up to MAX_RESEARCH_UPGRADE_RETRIES (3) times.
@@ -77,7 +77,7 @@ TRACKS = [
     {"id": "c1", "name": "C1", "path": "c1"},
     {"id": "c1-pro", "name": "C1-PRO", "path": "c1-pro"},
     {"id": "c2", "name": "C2", "path": "c2"},
-    {"id": "b2-hist", "name": "B2-HIST", "path": "b2-hist"},
+    {"id": "hist", "name": "HIST", "path": "hist"},
     {"id": "c1-hist", "name": "C1-HIST", "path": "c1-hist"},
     {"id": "c1-bio", "name": "C1-BIO", "path": "c1-bio"},
     {"id": "lit", "name": "LIT", "path": "lit"},
@@ -685,7 +685,7 @@ def _process_enrich_plans(track_id: str, results: list[dict], min_score: int = 9
 
 def main():
     parser = argparse.ArgumentParser(description="Research quality assessment")
-    parser.add_argument("track", nargs="?", help="Track ID (e.g. b2-hist, a1)")
+    parser.add_argument("track", nargs="?", help="Track ID (e.g. hist, a1)")
     parser.add_argument("num", nargs="?", type=int, help="Module number")
     parser.add_argument("--gaps", action="store_true", help="Only show modules with gaps")
     parser.add_argument("--refresh-queue", action="store_true", help="List modules where content refresh is recommended")

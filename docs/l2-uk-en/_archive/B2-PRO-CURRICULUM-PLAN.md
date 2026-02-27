@@ -153,14 +153,14 @@ The B2-PRO track develops professional communication skills in Ukrainian for lea
 ## Connection to Other Tracks
 
 ```
-B2 Core (M01-70) ─┬─► B2-HIST (History)
+B2 Core (M01-70) ─┬─► HIST (History)
                   │
                   └─► B2-PRO (Professional) ──► C1-PRO (Advanced Professional)
 ```
 
 **Prerequisites:**
 - B2 Core completion required
-- B2-HIST NOT required (parallel track option)
+- HIST NOT required (parallel track option)
 
 **Leads to:**
 - C1-PRO (Professional Mastery) for advanced career focus

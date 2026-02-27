@@ -138,7 +138,7 @@ def _save_stuck_report(task_id: str, turn_count: int, last_msg: dict):
     try:
         # Try to extract track and slug from task_id (e.g., "c1-bio-knyahynia-olha-rebuild")
         report_dir = None
-        for track in ("c1-bio", "b2-hist", "c1-hist", "lit", "oes", "ruth"):
+        for track in ("c1-bio", "hist", "c1-hist", "lit", "oes", "ruth"):
             if track in task_id:
                 report_dir = Path(__file__).parent.parent / f"curriculum/l2-uk-en/{track}/stuck"
                 report_dir.mkdir(parents=True, exist_ok=True)

@@ -20,10 +20,10 @@ PERSONA_ROLE: Burlesque Narrator
 IMMERSION_RULE: Full Ukrainian immersion. No English except technical terminology.
   Sentences max 35 words.
 LEVEL_CONSTRAINTS: No grammar restrictions. Full literary Ukrainian.
-TIER_GUIDANCE: '# Tier 3: Seminar Modules (B2-HIST, C1-HIST, C1-BIO, LIT)
+TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, C1-HIST, C1-BIO, LIT)
 
 
-  > **Target:** B2-HIST (History), C1-HIST (History), C1-BIO (Biography), LIT (Literature)
+  > **Target:** HIST (History), C1-HIST (History), C1-BIO (Biography), LIT (Literature)
   tracks
 
   > **Pedagogy:** CBI (Content-Based Instruction)
@@ -410,7 +410,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (B2-HIST, C1-HIST, C1-BIO, LIT)
 
   |-------|--------------|-------|
 
-  | B2-HIST | 98-100% | Full historical immersion |
+  | HIST | 98-100% | Full historical immersion |
 
   | C1-HIST | 98-100% | Full historical immersion (C1 complexity) |
 
@@ -469,7 +469,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (B2-HIST, C1-HIST, C1-BIO, LIT)
 
   **Richness score minimums:**
 
-  - B2-HIST: 95%
+  - HIST: 95%
 
   - C1-HIST: 95%
 
@@ -519,7 +519,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (B2-HIST, C1-HIST, C1-BIO, LIT)
   ## Track-Specific Checks
 
 
-  ### B2-HIST (History — Foundational)
+  ### HIST (History — Foundational)
 
 
   **Required elements:**
@@ -540,7 +540,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (B2-HIST, C1-HIST, C1-BIO, LIT)
 
   **Required elements:**
 
-  - All B2-HIST requirements, plus:
+  - All HIST requirements, plus:
 
   - More sophisticated historiographical analysis
 

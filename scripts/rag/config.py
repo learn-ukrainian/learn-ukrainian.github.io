@@ -25,6 +25,10 @@ QDRANT_GRPC_PORT = 6334
 
 TEXT_COLLECTION = "textbook_chunks"
 IMAGE_COLLECTION = "textbook_images"
+LITERARY_COLLECTION = "literary_texts"
+
+# ── Literary text paths ───────────────────────────────────────────
+LITERARY_DIR = DATA_DIR / "literary_texts"
 
 # ── Embedding models ───────────────────────────────────────────────
 BGE_M3_MODEL = "BAAI/bge-m3"

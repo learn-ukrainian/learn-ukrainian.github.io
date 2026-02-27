@@ -100,8 +100,8 @@ def main():
     parser.add_argument("--dry-run", action="store_true", default=True,
                         help="Preview changes without writing (default)")
     parser.add_argument("--apply", action="store_true", help="Apply changes")
-    parser.add_argument("--tracks", nargs="+", default=["b2-hist", "c1-hist", "c1-bio"],
-                        help="Tracks to process (default: b2-hist c1-hist c1-bio)")
+    parser.add_argument("--tracks", nargs="+", default=["hist", "c1-hist", "c1-bio"],
+                        help="Tracks to process (default: hist c1-hist c1-bio)")
     args = parser.parse_args()
 
     dry_run = not args.apply

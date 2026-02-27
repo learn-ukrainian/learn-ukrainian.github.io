@@ -10,9 +10,10 @@
       "mode": "full"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-25T14:08:41Z",
-      "note": "word-count-2948-below-80pct-4000"
+      "status": "complete",
+      "ts": "2026-02-27T09:57:12Z",
+      "note": "adopted-existing-content",
+      "words": 3213
     }
   }
 }

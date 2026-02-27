@@ -190,7 +190,7 @@ No phase modifies outputs of previous phases.
 
 ### Recommendation
 
-**DO IT** for content-heavy modules (B2-HIST, C1-BIO, LIT).
+**DO IT** for content-heavy modules (HIST, C1-BIO, LIT).
 
 For simple A1-A2 modules, current workflow may be fine since those are mostly done.
 
@@ -206,5 +206,5 @@ For simple A1-A2 modules, current workflow may be fine since those are mostly do
 6. [ ] Issue: Update audit_module.py to support --phase flag
 7. [ ] Issue: Create orchestrator command
 8. [ ] Issue: Update documentation
-9. [ ] Issue: Test on 3 b2-hist modules
+9. [ ] Issue: Test on 3 hist modules
 10. [ ] Issue: Migrate remaining modules

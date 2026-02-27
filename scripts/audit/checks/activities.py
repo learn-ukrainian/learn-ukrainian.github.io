@@ -22,7 +22,7 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
     Strictly enforces rules from MODULE-RICHNESS-GUIDELINES-v2.md.
 
     A1 M01-M05 Exception: Less strict rules for very early modules (alphabet phase).
-    Context-specific complexity: B2-history, B2-biography, B1-vocab, B1-cultural.
+    Context-specific complexity: history, B2-biography, B1-vocab, B1-cultural.
     """
     violations = []
 
@@ -56,11 +56,11 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
         if act_type not in ACTIVITY_COMPLEXITY:
             continue
 
-        # Context-specific complexity lookup (e.g., B2-history, B1-vocab)
+        # Context-specific complexity lookup (e.g., history, B1-vocab)
         context_key = f"{level_code}-{module_focus}" if module_focus else None
         rules = None
 
-        # Try context-specific rules first (B2-history, B1-vocab, etc.)
+        # Try context-specific rules first (history, B1-vocab, etc.)
         if context_key and context_key in ACTIVITY_COMPLEXITY[act_type]:
             rules = ACTIVITY_COMPLEXITY[act_type][context_key].copy()
         # Fall back to standard level rules
@@ -1426,7 +1426,7 @@ def check_yaml_activity_types(activities: list) -> list[dict]:
 def check_forbidden_activity_types(activities: list, level_code: str, module_focus: str = None) -> list[dict]:
     """Check if activities contain types forbidden for this level/track.
 
-    Seminar tracks (B2-HIST, C1-HIST, C1-BIO, LIT) have strict activity type requirements.
+    Seminar tracks (HIST, C1-HIST, C1-BIO, LIT) have strict activity type requirements.
     Grammar drills are forbidden in favor of seminar-style activities.
 
     Args:

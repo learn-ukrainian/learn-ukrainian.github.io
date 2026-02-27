@@ -2,15 +2,15 @@
   "module": "mykhailo-kotsiubynsky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T08:24:22.148244Z",
+  "last_audit": "2026-02-27T19:07:14.816702Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T08:24:10.410688Z",
+    "md": "2026-02-27T19:06:56.329973Z",
     "meta": "2026-02-19T21:50:15.539496Z",
     "activities": "2026-02-27T08:19:00.410976Z",
     "vocabulary": "2026-02-27T08:19:00.420094Z",
     "plan": "2026-02-17T13:37:38.101175Z",
-    "research": "2026-02-22T10:35:24.541450Z"
+    "research": "2026-02-27T11:40:58.653984Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "4814/5000 (raw: 5316)"
+      "status": "pass",
+      "violations": 0,
+      "message": "5125/5000 (raw: 5627)"
     },
     "activities": {
       "status": "deferred",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "research": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
+      "message": "Content aligned with research"
     },
     "review": {
       "status": "deferred",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 1,
-    "fail_count": 1,
+    "pass_count": 3,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

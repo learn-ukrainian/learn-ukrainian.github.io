@@ -20,7 +20,7 @@ print(f"{ 'Module':<35} | {'Status':<10} | {'Reason'}")
 print("-" * 80)
 
 for slug in modules:
-    path = f"curriculum/l2-uk-en/b2-hist/{slug}.md"
+    path = f"curriculum/l2-uk-en/hist/{slug}.md"
     if not os.path.exists(path):
         results.append((slug, "FAIL", "Missing .md file"))
         print(f"{slug:<35} | FAIL       | Missing .md file")

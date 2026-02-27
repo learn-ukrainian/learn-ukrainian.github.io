@@ -24,7 +24,7 @@ Alignment: Модуль фокусується на спадщині (Шевче
 3. **Шаблонність ("Бронзовий дід")**: Сприйняття Шевченка виключно як старого діда в шапці (радянський конструкт), ігноруючи його молодий, модерний образ.
 
 ## Cross-References
-- Builds on: `b2-hist-116-hrytsak` (Грицак про Шевченка), `lit-shevchenko-bio` (Біографія).
+- Builds on: `hist-116-hrytsak` (Грицак про Шевченка), `lit-shevchenko-bio` (Біографія).
 - Prepares for: `c1-106-final-exam` (Есе на літературну тему).
 
 ## Notes for Content Writing

@@ -3,7 +3,7 @@
 > **Track Type:** Linguistics (Historical)
 > **Period:** XIV–XVIII century (Grand Duchy of Lithuania → Cossack Era)
 > **Modules:** 100
-> **Prerequisite:** B2 Core completion, B2-HIST Phase 2-3, OES completion (recommended)
+> **Prerequisite:** B2 Core completion, HIST Phase 2-3, OES completion (recommended)
 > **Immersion:** 100% Ukrainian
 
 ---

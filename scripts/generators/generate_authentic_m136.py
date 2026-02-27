@@ -438,7 +438,7 @@ full_text = (
     outro_resources
 )
 
-with open("curriculum/l2-uk-en/b2-hist/voienna-ekonomika.md", "w") as f:
+with open("curriculum/l2-uk-en/hist/voienna-ekonomika.md", "w") as f:
     f.write(full_text)
 
 print("Generated structured authentic content.")

@@ -6,11 +6,11 @@ def check_status():
     with open(manifest_path, 'r') as f:
         manifest = yaml.safe_load(f)
     
-    b2_hist_modules = manifest['levels']['b2-hist']['modules']
-    base_dir = "curriculum/l2-uk-en/b2-hist"
+    hist_modules = manifest['levels']['hist']['modules']
+    base_dir = "curriculum/l2-uk-en/hist"
     
     stats = {
-        'total': len(b2_hist_modules),
+        'total': len(hist_modules),
         'md_exists': 0,
         'meta_exists': 0,
         'vocab_exists': 0,
@@ -23,7 +23,7 @@ def check_status():
     missing_vocab = []
     missing_activities = []
     
-    for slug in b2_hist_modules:
+    for slug in hist_modules:
         md_path = os.path.join(base_dir, f"{slug}.md")
         meta_path = os.path.join(base_dir, "meta", f"{slug}.yaml")
         vocab_path = os.path.join(base_dir, "vocabulary", f"{slug}.yaml")
@@ -49,7 +49,7 @@ def check_status():
         if md_ok and meta_ok and vocab_ok and activities_ok:
             stats['fully_migrated'] += 1
             
-    print(f"B2-HIST Status Report")
+    print(f"HIST Status Report")
     print(f"=====================")
     print(f"Total Modules in Manifest: {stats['total']}")
     print(f"Markdown Files (.md):      {stats['md_exists']} / {stats['total']}")

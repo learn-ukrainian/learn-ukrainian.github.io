@@ -57,7 +57,7 @@ This script verifies:
 - **B1 M82-86 (Integration):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
 - **B1 Checkpoints:** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
 - **B2 core:** `docs/l2-uk-en/templates/b2-grammar-module-template.md` (or cultural/vocab based on focus)
-- **B2-HIST:** `docs/l2-uk-en/templates/ai/b2-history-module-template.md`
+- **HIST:** `docs/l2-uk-en/templates/ai/history-module-template.md`
 - **B2-PRO:** `docs/l2-uk-en/templates/ai/b2-pro-module-template.md`
 - **C1-BIO:** `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
 - **C1-HIST:** `docs/l2-uk-en/templates/ai/c1-history-module-template.md`
@@ -293,7 +293,7 @@ For each word in plan.vocabulary_hints.required:
    - For A1: Only A1 vocabulary allowed
    - For A2: A1 + A2 vocabulary allowed
    - For B1: A1 + A2 + B1 vocabulary allowed
-   - For B2-HIST: A1 + A2 + B1 + B2 core + B2-HIST vocabulary allowed
+   - For HIST: A1 + A2 + B1 + B2 core + HIST vocabulary allowed
    - etc.
 
 4. **Flag out-of-scope words:**
@@ -1137,7 +1137,7 @@ On PASS, output is LOCKED. User proceeds to Phase 5 (module-act).
 
 ## Examples
 
-### Example 1: PASS - B2-HIST Lesson QA
+### Example 1: PASS - HIST Lesson QA
 
 **Input:** `trypillian-civilization.md` and `meta/trypillian-civilization.yaml`
 
@@ -1167,9 +1167,9 @@ LESSON-QA: PASS
   ✓ Naturalness: 9/10 - PASS (meta updated)
 
 META UPDATED: naturalness.score = 9, naturalness.status = PASS
-VALIDATION LOG: curriculum/l2-uk-en/b2-hist/review/trypillian-civilization-llm-review.md
+VALIDATION LOG: curriculum/l2-uk-en/hist/review/trypillian-civilization-llm-review.md
 
-LESSON LOCKED. Proceed to: /module-act b2-hist 1
+LESSON LOCKED. Proceed to: /module-act hist 1
 
 ```
 

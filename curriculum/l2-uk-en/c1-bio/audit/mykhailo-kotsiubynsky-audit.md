@@ -1,7 +1,7 @@
-# Audit Report: M59 — mykhailo-kotsiubynsky.md
-**Level:** C1-BIO | **Module:** M59 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 5000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-27 08:24:22
+# Audit Report: M61 — mykhailo-kotsiubynsky.md
+**Level:** C1-BIO | **Module:** M61 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 5000
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-27 19:07:14
 
 ## Configuration
 **Type:** C1-biography
@@ -16,19 +16,8 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[EUPHONY]** Line 61: «в ньому» — в перед збігом приголосних; має бути «у ньому»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-- **[EUPHONY]** Line 161: «в глибоких» — в перед збігом приголосних; має бути «у глибоких»
-  - FIX: Replace «в» with «у» (before consonant cluster)
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ❌ 4814/5000 (raw: 5316)
+- **Words:** ✅ 5125/5000 (raw: 5627)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -40,11 +29,11 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 99.1% (target 95-100% (biography))
+- **Immersion:** 🇺🇦 99.0% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ⚠️ Refresh recommended: Research has 5+ sources but content cites 0
+- **Research:** ✅ Content aligned with research
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)
@@ -70,12 +59,12 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Михайло Коцюбинський: Імпресіоніст українського слова** | ✅ | 57 | Included in Core |
-| **Вступ: Чарівник настрою** | ✅ | 465 | Included in Core |
-| **Вінниччина та Поділля: Формування естетики (1864-1882)** | ✅ | 575 | Included in Core |
-| **Учитель і народник: Від етнографії до психологізму (1882-1897)** | ✅ | 590 | Included in Core |
-| **Чернігівський період: Літературна зрілість і «Fata Morgana» (1898-1913)** | ✅ | 705 | Included in Core |
-| **Тіні забутих предків: Гуцульська симфонія** | ✅ | 751 | Included in Core |
-| **Європейські горизонти: Крим, Капрі та діалог культур** | ✅ | 547 | Included in Core |
+| **Вступ: Чарівник настрою** | ✅ | 551 | Included in Core |
+| **Вінниччина та Поділля: Формування естетики (1864-1882)** | ✅ | 613 | Included in Core |
+| **Учитель і народник: Від етнографії до психологізму (1882-1897)** | ✅ | 648 | Included in Core |
+| **Чернігівський період: Літературна зрілість і «Fata Morgana» (1898-1913)** | ✅ | 729 | Included in Core |
+| **Тіні забутих предків: Гуцульська симфонія** | ✅ | 754 | Included in Core |
+| **Європейські горизонти: Крим, Капрі та діалог культур** | ✅ | 644 | Included in Core |
 | **Імпресіоністична поетика: Архітектура кольору і звуку** | ✅ | 536 | Included in Core |
-| **Спадщина: Сонцепоклонник у пам'яті поколінь** | ✅ | 431 | Included in Core |
+| **Спадщина: Сонцепоклонник у пам'яті поколінь** | ✅ | 436 | Included in Core |
 | **Підсумок** | ✅ | 157 | Included in Core |

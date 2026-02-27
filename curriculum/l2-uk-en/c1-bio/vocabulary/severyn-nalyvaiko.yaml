@@ -1,121 +1,91 @@
 items:
-  - lemma: 'повстання'
-    translation: 'uprising'
-    pos: 'noun'
-    gender: 'n'
-  - lemma: 'бунт'
-    translation: 'rebellion'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'ватажок'
-    translation: 'leader'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'табір'
-    translation: 'camp'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'облога'
-    translation: 'siege'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'страта'
-    translation: 'execution'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'зрада'
-    translation: 'betrayal'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'найманець'
-    translation: 'mercenary'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'поразка'
-    translation: 'defeat'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'шляхта'
-    translation: 'nobility'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'магнат'
-    translation: 'magnate'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'сотник'
-    translation: 'centurion'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'хоругва'
-    translation: 'cavalry unit'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'піхота'
-    translation: 'infantry'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'кіннота'
-    translation: 'cavalry'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'розкол'
-    translation: 'schism'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'унія'
-    translation: 'union'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'автономія'
-    translation: 'autonomy'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'спадщина'
-    translation: 'legacy'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'прообраз'
-    translation: 'prototype'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'свавілля'
-    translation: 'arbitrariness'
-    pos: 'noun'
-    gender: 'n'
-  - lemma: 'мученик'
-    translation: 'martyr'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'помста'
-    translation: 'revenge'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'наслідок'
-    translation: 'consequence'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'загроза'
-    translation: 'threat'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'рушій'
-    translation: 'driving force'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'артилерія'
-    translation: 'artillery'
-    pos: 'noun'
-    gender: 'f'
-  - lemma: 'покозачення'
-    translation: 'cossackization'
-    pos: 'noun'
-    gender: 'n'
-  - lemma: 'деспотизм'
-    translation: 'despotism'
-    pos: 'noun'
-    gender: 'm'
-  - lemma: 'гасло'
-    translation: 'slogan'
-    pos: 'noun'
-    gender: 'n'
+  - lemma: "повстання"
+    translation: "uprising"
+    pos: "noun"
+  - lemma: "бунт"
+    translation: "rebellion"
+    pos: "noun"
+  - lemma: "ватажок"
+    translation: "leader"
+    pos: "noun"
+  - lemma: "табір"
+    translation: "camp"
+    pos: "noun"
+  - lemma: "облога"
+    translation: "siege"
+    pos: "noun"
+  - lemma: "страта"
+    translation: "execution"
+    pos: "noun"
+  - lemma: "зрада"
+    translation: "betrayal"
+    pos: "noun"
+  - lemma: "найманець"
+    translation: "mercenary"
+    pos: "noun"
+  - lemma: "поразка"
+    translation: "defeat"
+    pos: "noun"
+  - lemma: "шляхтич"
+    translation: "nobleman"
+    pos: "noun"
+  - lemma: "магнат"
+    translation: "magnate"
+    pos: "noun"
+  - lemma: "свавілля"
+    translation: "lawlessness"
+    pos: "noun"
+  - lemma: "помста"
+    translation: "revenge"
+    pos: "noun"
+  - lemma: "рейд"
+    translation: "raid"
+    pos: "noun"
+  - lemma: "суб'єктність"
+    translation: "agency"
+    pos: "noun"
+  - lemma: "автономія"
+    translation: "autonomy"
+    pos: "noun"
+  - lemma: "монополія"
+    translation: "monopoly"
+    pos: "noun"
+  - lemma: "артилерія"
+    translation: "artillery"
+    pos: "noun"
+  - lemma: "кавалерія"
+    translation: "cavalry"
+    pos: "noun"
+  - lemma: "піхота"
+    translation: "infantry"
+    pos: "noun"
+  - lemma: "відступ"
+    translation: "retreat"
+    pos: "noun"
+  - lemma: "пастка"
+    translation: "trap"
+    pos: "noun"
+  - lemma: "реєстровець"
+    translation: "registered Cossack"
+    pos: "noun"
+  - lemma: "чернь"
+    translation: "commoners"
+    pos: "noun"
+  - lemma: "унія"
+    translation: "union"
+    pos: "noun"
+  - lemma: "спадщина"
+    translation: "legacy"
+    pos: "noun"
+  - lemma: "міф"
+    translation: "myth"
+    pos: "noun"
+  - lemma: "маневрений"
+    translation: "maneuverable"
+    pos: "adjective"
+  - lemma: "четвертувати"
+    translation: "to quarter"
+    pos: "verb"
+  - lemma: "деколонізація"
+    translation: "decolonization"
+    pos: "noun"

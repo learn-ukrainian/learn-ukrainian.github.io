@@ -1,7 +1,7 @@
-# Test Scenario: B2-HIST M41 Full Pipeline
+# Test Scenario: HIST M41 Full Pipeline
 
-**Test ID:** b2-hist-m41-full-pipeline
-**Track:** B2-HIST (Ukrainian History)
+**Test ID:** hist-m41-full-pipeline
+**Track:** HIST (Ukrainian History)
 **Module:** 41 - Козацтво: Витоки (Cossack Origins)
 **Issue:** #461
 
@@ -32,10 +32,10 @@ Before running, ensure:
 
 **Command:**
 ```
-/module-meta b2-hist 41
+/module-meta hist 41
 ```
 
-**Expected output:** `curriculum/l2-uk-en/b2-hist/meta/kozatstvo-vytoky.yaml`
+**Expected output:** `curriculum/l2-uk-en/hist/meta/kozatstvo-vytoky.yaml`
 
 **Check:**
 - [ ] word_target is ~4000
@@ -49,7 +49,7 @@ Before running, ensure:
 
 **Command:**
 ```
-/module-meta-qa b2-hist 41
+/module-meta-qa hist 41
 ```
 
 **Expected:** PASS or list of violations
@@ -65,10 +65,10 @@ Before running, ensure:
 
 **Command:**
 ```
-/module-lesson b2-hist 41
+/module-lesson hist 41
 ```
 
-**Expected output:** `curriculum/l2-uk-en/b2-hist/kozatstvo-vytoky.md`
+**Expected output:** `curriculum/l2-uk-en/hist/kozatstvo-vytoky.md`
 
 **Check:**
 - [ ] Sections match content_outline from meta
@@ -82,7 +82,7 @@ Before running, ensure:
 
 **Command:**
 ```
-/module-lesson-qa b2-hist 41
+/module-lesson-qa hist 41
 ```
 
 **Expected:** PASS or list of violations
@@ -99,10 +99,10 @@ Before running, ensure:
 
 **Command:**
 ```
-/module-act b2-hist 41
+/module-act hist 41
 ```
 
-**Expected output:** `curriculum/l2-uk-en/b2-hist/activities/kozatstvo-vytoky.yaml`
+**Expected output:** `curriculum/l2-uk-en/hist/activities/kozatstvo-vytoky.yaml`
 
 **Check:**
 - [ ] 3-10 activities
@@ -116,7 +116,7 @@ Before running, ensure:
 
 **Command:**
 ```
-/module-act-qa b2-hist 41
+/module-act-qa hist 41
 ```
 
 **Expected:** PASS or list of violations
@@ -132,10 +132,10 @@ Before running, ensure:
 
 **Command:**
 ```
-/module-integrate b2-hist 41
+/module-integrate hist 41
 ```
 
-**Expected output:** `docusaurus/docs/b2-hist/kozatstvo-vytoky.mdx`
+**Expected output:** `docusaurus/docs/hist/kozatstvo-vytoky.mdx`
 
 **Check:**
 - [ ] MDX generated successfully
@@ -148,10 +148,10 @@ Before running, ensure:
 
 **Command:**
 ```
-/module-vocab b2-hist 41
+/module-vocab hist 41
 ```
 
-**Expected output:** `curriculum/l2-uk-en/b2-hist/vocabulary/kozatstvo-vytoky.yaml`
+**Expected output:** `curriculum/l2-uk-en/hist/vocabulary/kozatstvo-vytoky.yaml`
 
 **Check:**
 - [ ] 20-25 vocabulary items
@@ -164,7 +164,7 @@ Before running, ensure:
 
 **Command:**
 ```
-/module-vocab-qa b2-hist 41
+/module-vocab-qa hist 41
 ```
 
 **Expected:** PASS or list of violations
@@ -222,7 +222,7 @@ Before running, ensure:
 
 After test completion, copy results to:
 ```
-tests/workflow/results/{claude|gemini}/b2-hist-m41/
+tests/workflow/results/{claude|gemini}/hist-m41/
 ├── meta.yaml
 ├── lesson.md
 ├── activities.yaml

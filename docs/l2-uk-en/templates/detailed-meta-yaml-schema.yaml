@@ -25,7 +25,7 @@
 # # A1 Module 01: The Cyrillic Code I
 # # Status: SPEC (ready for content development)
 
-id: string                    # Format: {level}-{number:02d} e.g., "a1-01", "b2-hist-15"
+id: string                    # Format: {level}-{number:02d} e.g., "a1-01", "hist-15"
 title: string                 # Ukrainian title (for display)
 slug: string                  # URL-safe identifier, matches filename without extension
 module_type: string           # One of: grammar, vocabulary, culture, history, biography,

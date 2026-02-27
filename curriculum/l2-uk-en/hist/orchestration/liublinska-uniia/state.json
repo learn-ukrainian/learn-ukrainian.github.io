@@ -1,0 +1,20 @@
+{
+  "slug": "liublinska-uniia",
+  "track": "hist",
+  "module_num": 31,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-19T11:18:17Z",
+      "task_id": "yw-liublinska-uniia-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T17:02:01Z",
+      "words": 3877,
+      "attempts": 1
+    }
+  },
+  "last_updated": "2026-02-24T17:02:01Z"
+}

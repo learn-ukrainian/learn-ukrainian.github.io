@@ -39,10 +39,10 @@ focus: biography
 pedagogy: seminar
 prerequisites:
 - c1-bio-08 (Роман Мстиславич)
-- b2-hist mongolska-navala module
+- hist mongolska-navala module
 connects_to:
 - c1-bio-10 (Данило Галицький)
-- b2-hist hrystyianstvo module
+- hist hrystyianstvo module
 objectives:
 - Проаналізувати мотиви Михайла Чернігівського у протистоянні з Ордою
 - Оцінити вплив його вчинку на формування національної свідомості

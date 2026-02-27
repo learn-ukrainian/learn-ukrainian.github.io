@@ -74,8 +74,8 @@ activity_hints:
   focus: Порівняння долі Куліша та Курбаса
 focus: biography
 prerequisites:
-- b2-hist/rozstriliane-vidrodzennia
-- b2-hist/mekhanizm-teroru
+- hist/rozstriliane-vidrodzennia
+- hist/mekhanizm-teroru
 connects_to:
 - c1-bio/les-kurbas
 - c1-bio/mykola-khvylovyi

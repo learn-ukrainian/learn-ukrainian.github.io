@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "habsburzka-halichyna",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:12:16Z",
+      "task_id": "v3-habsburzka-halichyna-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T01:38:53Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T01:40:47Z",
+      "task_id": "v3-habsburzka-halichyna-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T20:05:17Z",
+      "attempts": 1
+    }
+  }
+}

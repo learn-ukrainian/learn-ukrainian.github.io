@@ -1,0 +1,59 @@
+{
+  "module": "kost-hordiyenko",
+  "level": "C1",
+  "plan_version": "1.0.0",
+  "last_audit": "2026-02-27T13:22:11.475873Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-27T13:20:10.661852Z",
+    "meta": "2026-02-27T13:20:10.662557Z",
+    "activities": "2026-02-27T13:17:51.515433Z",
+    "vocabulary": "2026-02-27T13:17:51.516029Z",
+    "plan": "2026-02-17T13:33:56.599984Z",
+    "research": "2026-02-22T10:35:24.535262Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5082/5000 (raw: 5414)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has decolonization section but content lacks it"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 2,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

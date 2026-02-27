@@ -55,7 +55,7 @@ Not just "what to do" but "why it's done this way."
 
 **Examples:**
 - `/explain-decision module b1 9` - Why is M9 structured this way?
-- `/explain-decision module b2-hist 15` - Pedagogical rationale for M15
+- `/explain-decision module hist 15` - Pedagogical rationale for M15
 
 ### Decision Comparison
 

@@ -10,7 +10,7 @@ status: planned
 overview:
   total_modules: 20
   description: "Epic Ukrainian historical fiction — novels that shaped how Ukrainians understand their own history, from Kozak glory to insurgent resistance"
-  prerequisites: "[c1, b2-hist recommended]"
+  prerequisites: "[c1, hist recommended]"
   target_audience: "Advanced learners interested in how fiction preserves and constructs national memory"
   decolonization_mission: "Ukrainian historical fiction was often the ONLY way to tell Ukrainian history when academic history was banned or distorted"
 
@@ -18,7 +18,7 @@ sources:
   primary: "Ukrainian novels (ukrlib.com.ua, original editions)"
   supplementary:
     - "Ukrainian literary criticism on historical prose"
-    - "Historical context from B2-HIST track"
+    - "Historical context from HIST track"
   note: "Historical accuracy verified against Ukrainian scholarship, not Soviet/Russian narratives"
 
 vocabulary:
@@ -87,7 +87,7 @@ pedagogy_notes:
   structure:
     - "Novel excerpt with glossary and historical context"
     - "Literary analysis: how does fiction shape historical understanding?"
-    - "Comparison with actual historical events (cross-reference B2-HIST)"
+    - "Comparison with actual historical events (cross-reference HIST)"
     - "Discussion: fiction as national memory tool"
   decolonization:
     - "Historical fiction was resistance — writing Ukrainian history in Ukrainian when it was forbidden"

@@ -1,4 +1,4 @@
-# B2-HIST Curriculum Plan: Ukrainian History Track
+# HIST Curriculum Plan: Ukrainian History Track
 
 **Status:** ACTIVE (Expanded January 2026)
 **Modules:** 01-140 (140 modules)
@@ -325,8 +325,8 @@ Synthesis modules consolidate learning at the end of each phase:
 - Primary source excerpts where available
 
 **Templates:**
-- `b2-history-module-template.md` - content modules
-- `b2-history-synthesis-module-template.md` - synthesis modules
+- `history-module-template.md` - content modules
+- `history-synthesis-module-template.md` - synthesis modules
 
 ---
 

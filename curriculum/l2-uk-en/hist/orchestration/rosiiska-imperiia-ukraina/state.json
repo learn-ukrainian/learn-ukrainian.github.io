@@ -1,0 +1,40 @@
+{
+  "slug": "rosiiska-imperiia-ukraina",
+  "track": "hist",
+  "module_num": 75,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-20T22:27:04Z",
+      "task_id": "yw-rosiiska-imperiia-ukraina-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-25T01:32:32Z",
+      "words": 5678,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-25T01:33:37Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-25T01:33:37Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T20:05:13Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T20:05:13Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-25T20:05:13Z"
+}

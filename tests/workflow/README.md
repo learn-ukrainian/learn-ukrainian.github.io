@@ -44,7 +44,7 @@ tests/workflow/
 
 | Test ID | Track | Module | Focus |
 |---------|-------|--------|-------|
-| b2-hist-m41-full-pipeline | B2-HIST | 41 | Full 9-phase validation |
+| hist-m41-full-pipeline | HIST | 41 | Full 9-phase validation |
 
 ---
 

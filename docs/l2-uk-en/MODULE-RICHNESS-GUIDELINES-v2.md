@@ -536,7 +536,7 @@ Each module should include review items from previous module(s) to reinforce ret
 | ---------------- | ----------------------- | ----- | ----- | ----- | --------------------------------------------------------- |
 | `B2-grammar`     | 01-09, 11-24, 26-39     | 1750+ | 10    | 25+   | Passive voice, participles, register system, domain vocab |
 | `B2-vocab`       | 41-69                   | 1750+ | 10    | 35+   | Phraseology: proverbs, idioms, synonyms                   |
-| `B2-history`     | 71-94                   | 4000+ | 3-10  | 20+   | Ukrainian history narratives (Seminar Style)              |
+| `history`     | 71-94                   | 4000+ | 3-10  | 20+   | Ukrainian history narratives (Seminar Style)              |
 | `B2-biography`   | 96-109                  | 3000+ | 10    | 20+   | Biographies of key figures                                |
 | `B2-skills`      | 85-94                   | 1750+ | 14    | 20+   | Communication skills & practical scenarios                |
 | `B2-synthesis`   | 83, 107, 119, 125, 131  | 3000+ | 10    | 20+   | Cross-era analysis and historical argumentation           |

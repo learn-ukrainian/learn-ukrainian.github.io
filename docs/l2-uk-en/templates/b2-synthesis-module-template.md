@@ -2,7 +2,7 @@
 
 **Purpose:** Reference template for B2.3 History Synthesis modules (M83, M107, M119, M125, M131)
 
-**Based on:** `b2-history-module-template.md` — inherits history-specific requirements
+**Based on:** `history-module-template.md` — inherits history-specific requirements
 
 **Related Issue:** [#332](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/332)
 
@@ -355,7 +355,7 @@ The lesson content teaches cross-era analysis. Activities practice Ukrainian rea
 
 **DO NOT include essay sections with model answers in markdown.** This causes content redundancy and word count inflation.
 
-**Per config.py, B2-history essay-response requirements:**
+**Per config.py, history essay-response requirements:**
 - **Word count:** 150-250 words (student response length)
 - **Required:** Every module must have an essay-response activity
 
@@ -457,7 +457,7 @@ items:
 
 ## Related Documentation
 
-- **History template:** `docs/l2-uk-en/templates/b2-history-module-template.md`
+- **History template:** `docs/l2-uk-en/templates/history-module-template.md`
 - **B2 Curriculum Plan:** `docs/l2-uk-en/B2-CURRICULUM-PLAN.md` (M71-131 history progression)
 - **Checkpoint design:** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md` (contrast with grammar checkpoints)
 - **Decolonization guidelines:** Referenced in B2 curriculum plan

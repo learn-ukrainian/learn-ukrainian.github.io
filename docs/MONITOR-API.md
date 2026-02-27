@@ -76,7 +76,7 @@ Sample response:
       "research_done": 26, "content_done": 0,
       "audit_passing": 0, "final_review_done": 0
     },
-    "b2-hist": {
+    "hist": {
       "total": 140, "profile": "seminar",
       "research_done": 140, "content_done": 5,
       "audit_passing": 4, "final_review_done": 4
@@ -94,13 +94,13 @@ Per-module v3 phase state for one track. Shows each module's phase progress.
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline/c1-hist | python3 -m json.tool
-curl -s http://localhost:8765/api/state/pipeline/b2-hist | python3 -m json.tool
+curl -s http://localhost:8765/api/state/pipeline/hist | python3 -m json.tool
 ```
 
 Returns:
 ```json
 {
-  "track": "b2-hist",
+  "track": "hist",
   "total": 140,
   "modules": [
     {
@@ -252,7 +252,7 @@ Modules where Phase A is complete but Phase B hasn't started. **The build queue.
 curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
 
 # Specific track
-curl -s "http://localhost:8765/api/state/ready-to-build?track=b2-hist" | python3 -m json.tool
+curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
 ```
 
 Returns list sorted by track then num. Use before running `build_module_v3.py --all`.
@@ -336,7 +336,7 @@ Aggregated outstanding issues from review files + audit failures.
 
 ```bash
 curl -s "http://localhost:8765/api/state/issues?severity=critical" | python3 -m json.tool
-curl -s "http://localhost:8765/api/state/issues?track=b2-hist" | python3 -m json.tool
+curl -s "http://localhost:8765/api/state/issues?track=hist" | python3 -m json.tool
 ```
 
 Two sources:
@@ -362,10 +362,10 @@ curl -s http://localhost:8765/api/batch/dispatcher
 curl -s http://localhost:8765/api/blue/live-status
 
 # Per-module detail for a track
-curl -s http://localhost:8765/api/dashboard/track/b2-hist
+curl -s http://localhost:8765/api/dashboard/track/hist
 
 # Deep module inspection (plan + meta + gates + orchestration)
-curl -s http://localhost:8765/api/gold/inspect/b2-hist/trypillian-civilization
+curl -s http://localhost:8765/api/gold/inspect/hist/trypillian-civilization
 
 # Research coverage (detailed per-module scores)
 curl -s http://localhost:8765/api/dashboard/research

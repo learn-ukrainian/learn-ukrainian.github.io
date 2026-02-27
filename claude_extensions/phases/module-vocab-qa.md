@@ -229,7 +229,7 @@ Check that item count meets level minimums:
 | C1    | 80        | 80-150        |
 | C2    | 100       | 100-200       |
 
-**For tracks (B2-HIST, C1-BIO, LIT):** 150-300 items expected
+**For tracks (HIST, C1-BIO, LIT):** 150-300 items expected
 
 **Check:**
 
@@ -569,7 +569,7 @@ Rewind to Phase 3 (module-lesson)
 
 ## Examples
 
-### Example 1: PASS - B2-HIST Vocabulary QA
+### Example 1: PASS - HIST Vocabulary QA
 
 **Input:** `vocabulary/trypillian-civilization.yaml` and meta/lesson files
 
@@ -590,7 +590,7 @@ VOCAB-QA: PASS
 ✓ POS tags: all valid
 ✓ Required vocabulary: 15/15 terms present
 ✓ Vocabulary source: 100% from lesson
-✓ Item count: 250 items (min: 150 for B2-HIST, typical: 150-300)
+✓ Item count: 250 items (min: 150 for HIST, typical: 150-300)
 ✓ Alphabetical sorting: correct (Ukrainian alphabet)
 ✓ Translation quality: sample check passed
 ✓ Gender accuracy: spot check passed
@@ -599,7 +599,7 @@ VOCAB-QA: PASS
 
 VOCABULARY LOCKED.
 
-Next: Run /module-integrate b2-hist 1
+Next: Run /module-integrate hist 1
 ```
 
 ### Example 2: FAIL - Missing Required Vocabulary

@@ -16,7 +16,7 @@
 3. **`b1-cultural-module-template.md`** - 8-10 activities, 12+ items/activity
 4. **`b1-integration-module-template.md`** - 8-10 activities (M81-84), 5-8 + 5 tasks (M85 capstone)
 5. **`b2-module-template.md`** - 10-12 activities, 14+ items/activity
-6. **`b2-history-synthesis-module-template.md`** - 10-12 activities, 14+ items/activity
+6. **`history-synthesis-module-template.md`** - 10-12 activities, 14+ items/activity
 
 **Key Changes:**
 - Ukrainian practice section alternative accepted: `Потрібно більше практики?`

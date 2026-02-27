@@ -10,9 +10,20 @@
       "mode": "full"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-27T00:14:24Z",
-      "note": "word-count-3995-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-27T17:42:58Z",
+      "note": "adopted-existing-content",
+      "words": 4432
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T17:45:57Z",
+      "task_id": "v3-ivan-franko-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T17:50:58Z",
+      "attempts": 2
     }
   }
 }

@@ -62,8 +62,8 @@ def determine_module_type(level: str, module_num: int) -> str:
         if module_num in (15, 30, 45, 60, 75, 90, 110):
             return 'b2-checkpoint'
         return 'b2-grammar'
-    elif level == 'B2-HIST':
-        return 'b2-history'
+    elif level == 'HIST':
+        return 'history'
     elif level == 'C1-BIO':
         return 'c1-bio'
     elif level == 'C1':
@@ -90,7 +90,7 @@ def get_template_path(level: str, module_type: str) -> Path:
         'b1-integration': 'b1-integration-module-template.md',
         'b2-grammar': 'b2-grammar-module-template.md',
         'b2-checkpoint': 'b2-checkpoint-module-template.md',
-        'b2-history': 'b2-history-module-template.md',
+        'history': 'history-module-template.md',
         'c1-bio': 'ai/c1-biography-module-template.md',
         'c1': 'c1-module-template.md',
         'c2': 'c2-module-template.md',

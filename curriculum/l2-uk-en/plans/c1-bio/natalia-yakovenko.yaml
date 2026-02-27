@@ -67,7 +67,7 @@ activity_hints:
   output: Аналітичний есей
 focus: biography
 prerequisites:
-- b2-hist-commonwealth
+- hist-commonwealth
 connects_to:
 - c1-bio-148-yaroslav-hrytsak
 - c1-bio-35-mykhailo-hrushevskyi

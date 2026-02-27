@@ -40,10 +40,10 @@ focus: biography
 pedagogy: seminar
 prerequisites:
 - c1-bio-01 (Ярослав Мудрий)
-- b2-hist anna-yaroslavna module
+- hist anna-yaroslavna module
 connects_to:
 - c1-bio-05 (Всеволод Ярославич)
-- b2-hist kyivan-rus-europe module
+- hist kyivan-rus-europe module
 objectives:
 - Оцінити роль Анни Ярославни у зміцненні міжнародного авторитету Русі
 - Проаналізувати культурні відмінності між Києвом та Парижем XI ст.

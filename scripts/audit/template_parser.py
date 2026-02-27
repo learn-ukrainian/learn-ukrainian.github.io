@@ -60,7 +60,7 @@ def resolve_template(module_id: str, meta: Dict) -> str:
 
     mappings = config.get('mappings', [])
 
-    # Extract level from module_id - handle track levels like b2-hist, c1-bio
+    # Extract level from module_id - handle track levels like hist, c1-bio
     # Pattern: level-slug or track-level-slug
     parts = module_id.lower().split('-')
     if len(parts) >= 2 and parts[0] in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']:

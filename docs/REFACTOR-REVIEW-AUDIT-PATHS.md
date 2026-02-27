@@ -21,7 +21,7 @@ Reviews (`*-review.md`) appear in BOTH `audit/` and `review/` directories depend
 | a2 | 72 files: audit-report + review mixed | 71 review files |
 | b1 | 6 files: audit-report + review mixed | 95 review files |
 | b2 | 1 review file | 99 review files |
-| b2-hist | 134 review files | 140 review files |
+| hist | 134 review files | 140 review files |
 | c1 | 2 files: audit-report + review | 108 review files |
 | c1-bio | 11 files: audit-report + review | (in review/) |
 | c1-hist | 1 audit-report | 6 review files |
@@ -34,7 +34,7 @@ Numbered tracks (a1, a2, b1, b2, c1, c2) have `.md` files like `01-the-cyrillic-
 - `audit/the-cyrillic-code-i-review.md` (bare — batch_gemini_runner strips numbers)
 - `status/01-the-cyrillic-code-i.json` (numbered — audit/report.py uses stem)
 
-Seminar tracks (c1-bio, b2-hist, etc.) have bare slugs naturally: `knyahynia-olha.md`.
+Seminar tracks (c1-bio, hist, etc.) have bare slugs naturally: `knyahynia-olha.md`.
 
 ## Target State
 

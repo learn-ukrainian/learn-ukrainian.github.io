@@ -358,7 +358,7 @@ For level-specific expectations, read the appropriate tier file:
 |-------|-----------|
 | A1, A2 | `claude_extensions/commands/review-tiers/tier-1-beginner.md` |
 | B1, B2 Core | `claude_extensions/commands/review-tiers/tier-2-core.md` |
-| B2-HIST, C1-BIO, LIT | `claude_extensions/commands/review-tiers/tier-3-seminar.md` |
+| HIST, C1-BIO, LIT | `claude_extensions/commands/review-tiers/tier-3-seminar.md` |
 | C1, C2 | `claude_extensions/commands/review-tiers/tier-4-advanced.md` |
 
 ---

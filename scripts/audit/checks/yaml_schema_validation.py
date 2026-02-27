@@ -344,10 +344,10 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
         return True, []  # No YAML file is OK (module might use embedded activities)
 
     # Detect level from path to load correct schema
-    # Includes track levels: lit, b2-hist, c1-bio, b2-pro, c1-pro
+    # Includes track levels: lit, hist, c1-bio, b2-pro, c1-pro
     level_match = None
     for parent in yaml_path.parents:
-        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'b2-hist', 'c1-bio', 'c1-hist', 'oes', 'ruth', 'b2-pro', 'c1-pro']:
+        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'c1-bio', 'c1-hist', 'oes', 'ruth', 'b2-pro', 'c1-pro']:
             level_match = parent.name
             break
 
@@ -814,7 +814,7 @@ def remove_forbidden_activities(yaml_path: Path, level_code: str, module_focus: 
     """
     Remove forbidden activity types from a YAML activity file.
 
-    For seminar tracks (B2-HIST, C1-HIST, C1-BIO, LIT), grammar drill activities
+    For seminar tracks (HIST, C1-HIST, C1-BIO, LIT), grammar drill activities
     are forbidden and should be removed.
 
     Args:
@@ -922,7 +922,7 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
     track_schema = None
     for parent in yaml_path.parents:
         if parent.name in ('a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit',
-                           'b2-hist', 'c1-bio', 'c1-hist', 'oes', 'ruth',
+                           'hist', 'c1-bio', 'c1-hist', 'oes', 'ruth',
                            'b2-pro', 'c1-pro'):
             track_path = get_schemas_dir() / f"activities-{parent.name}.schema.json"
             if track_path.exists():

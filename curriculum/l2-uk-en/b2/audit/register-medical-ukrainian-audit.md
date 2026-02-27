@@ -1,7 +1,7 @@
 # Audit Report: M20 — register-medical-ukrainian.md
 **Level:** B2 | **Module:** M20 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-27 08:17:57
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-27 10:47:41
 
 ## Configuration
 **Type:** B2-grammar
@@ -26,7 +26,7 @@
 | 5 | true-false | Правда чи хиба: правила медичного спілкування | 10 | 8 | ✅ |
 | 6 | translate | Переклад медичних висловів | 8 | 6 | ✅ |
 | 7 | select | Оберіть усі правильні варіанти | 8 | 6 | ✅ |
-| 8 | match-up | Знайдіть відповідники: типи болю та їх опис | 16 | 8 | ✅ |
+| 8 | match-up | Знайдіть відповідники: типи болю та їх опис | 17 | 8 | ✅ |
 | 9 | reading | Первинне джерело: Філософія здоров`я Миколи Амосова | 3 | 3 | ✅ |
 | 10 | reading | Інструкція до препарату: антибіотик широкого спектру дії | 3 | 3 | ✅ |
 | 11 | reading | Повідомлення з системи Helsi.me: запис на прийом | 3 | 3 | ✅ |
@@ -43,8 +43,8 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'у мене...'.
-  - FIX: Vary sentence structure.
+- **[COMPLEXITY]** match-up 'Знайдіть відповідники: типи болю та їх опис' has 17 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -52,7 +52,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 6295/4000 (raw: 6589)
+- **Words:** ✅ 6012/4000 (raw: 6382)
 - **Activities:** ✅ 15/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -62,9 +62,9 @@
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.7% (target 90-100% (grammar))
+- **Immersion:** 🇺🇦 99.7% (target 90-100% (grammar))
 - **Richness:** ✅ 99% (style)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -78,7 +78,7 @@
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
 | exemplar_texts | 15 | 2 | 100% | 25% | 25.0% |
-| model_answers | 86 | 3 | 100% | 20% | 20.0% |
+| model_answers | 90 | 3 | 100% | 20% | 20.0% |
 | engagement | 9 | 5 | 100% | 15% | 15.0% |
 | register_analysis | 15 | 5 | 100% | 15% | 15.0% |
 | visual | 15 | 4 | 100% | 10% | 10.0% |
@@ -92,10 +92,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Медична українська: спілкування у сфері охорони здоров'я** | ✅ | 97 | Included in Core |
-| **Вступ: Медичний регістр та культура аптеки** | ✅ | 820 | Included in Core |
-| **Опис симптомів та відчуттів** | ✅ | 1497 | Included in Core |
-| **Консультація: Діалог лікар-пацієнт** | ✅ | 1033 | Included in Core |
-| **Медичні інструкції та філософія Амосова** | ✅ | 983 | Included in Core |
-| **Медична документація та цифровізація суспільства** | ✅ | 884 | Included in Core |
-| **Культура мовлення: корекція суржику та русизмів** | ✅ | 657 | Included in Core |
-| **Підсумок** | ✅ | 324 | Included in Core |
+| **Вступ: Медичний регістр та культура аптеки** | ✅ | 785 | Included in Core |
+| **Опис симптомів та відчуттів** | ✅ | 1459 | Included in Core |
+| **Консультація: Діалог лікар-пацієнт** | ✅ | 991 | Included in Core |
+| **Медичні інструкції та філософія Амосова** | ✅ | 942 | Included in Core |
+| **Медична документація та цифровізація суспільства** | ✅ | 866 | Included in Core |
+| **Культура мовлення: корекція суржику та русизмів** | ✅ | 590 | Included in Core |
+| **Підсумок** | ✅ | 282 | Included in Core |

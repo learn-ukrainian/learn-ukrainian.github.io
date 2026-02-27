@@ -3,6 +3,33 @@
   "track": "c1-bio",
   "module_num": 42,
   "mode": "v3",
-  "phases": {},
-  "last_updated": "2026-02-18T23:19:07Z"
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-27T15:19:27Z",
+      "words": 4537,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-27T15:24:58Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-27T15:24:58Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-27T15:35:00Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-27T15:35:00Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-27T15:35:00Z"
 }

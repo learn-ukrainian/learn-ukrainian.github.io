@@ -1,0 +1,35 @@
+sequence: 110
+module: ruth-110
+slug: hramoty-xiv
+title_uk: "Українські грамоти XIV століття"
+title_en: "Ukrainian Charters of the 14th Century"
+phase: 5
+phase_id: linguistic-identity
+phase_name: "Мовна ідентичність"
+focus: "Oldest surviving Ukrainian administrative documents — legal language predating the Lithuanian Statutes"
+content_outline:
+- section: Вступ
+  description: "Context: the 14th century as the transition from OES to Ruthenian. These charters are the earliest evidence of Ukrainian as a functional legal-administrative language distinct from Church Slavonic."
+- section: Основний матеріал
+  description: "Reading actual 14th-century charters. Legal formulae, property transfers, oaths. Identifying Ukrainian vernacular elements breaking through the scribal conventions. Comparison with OES legal texts (Ruska Pravda)."
+- section: Практика
+  description: "Paleography basics: reading 14th-century handwriting. Legal vocabulary that survives in modern Ukrainian law. Document structure analysis."
+- section: Підсумок
+  description: "These charters prove Ukrainian existed as a written administrative language centuries before the 'official' start of modern Ukrainian literature (1798). Continuity, not invention."
+vocabulary_hints:
+- грамота
+- акт
+- дарча
+- свідок
+- присяга
+- маєтність
+- канцелярія
+activity_types:
+- transcription
+- paleography-analysis
+- grammar-identify
+- etymology-trace
+persona:
+  voice: "Legal Historian"
+  role: "Archivist"
+source_url: "http://litopys.org.ua/gramxiv/grb.htm"

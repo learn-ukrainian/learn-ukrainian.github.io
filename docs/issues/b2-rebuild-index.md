@@ -23,7 +23,7 @@
 | Resource | Purpose |
 |----------|---------|
 | [B2 Module Template](../../l2-uk-en/templates/b2-module-template.md) | Standard module structure |
-| [B2 History Template](../../l2-uk-en/templates/b2-history-module-template.md) | History module requirements |
+| [B2 History Template](../../l2-uk-en/templates/history-module-template.md) | History module requirements |
 | [Module Richness Guidelines](../../l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md) | Quality standards |
 | [M102 (Passing)](../../../curriculum/l2-uk-en/b2/102-franko-lesia-hrinchenko.md) | Reference example |
 | [M105 (Passing)](../../../curriculum/l2-uk-en/b2/105-unr-zunr.md) | Reference example |
@@ -78,10 +78,10 @@
 
 | Task | Script | Impact | Status | Notes |
 |------|--------|--------|--------|-------|
-| Add Читання sections | `fix_b2_history_reading.py` | 80 modules | ⏳ Pending | M71-M131 history modules |
-| Add Первинні джерела | `fix_b2_history_callouts.py` | 32 modules | ⏳ Pending | History modules |
-| Add Деколонізаційний погляд | `fix_b2_history_callouts.py` | 8 modules | ⏳ Pending | History modules |
-| Add [!myth-buster] callouts | `fix_b2_history_callouts.py` | 47 modules | ⏳ Pending | History modules |
+| Add Читання sections | `fix_history_reading.py` | 80 modules | ⏳ Pending | M71-M131 history modules |
+| Add Первинні джерела | `fix_history_callouts.py` | 32 modules | ⏳ Pending | History modules |
+| Add Деколонізаційний погляд | `fix_history_callouts.py` | 8 modules | ⏳ Pending | History modules |
+| Add [!myth-buster] callouts | `fix_history_callouts.py` | 47 modules | ⏳ Pending | History modules |
 | Populate TODO markers | Manual + LLM | 120 sections | ⏳ Pending | Content creation |
 
 **Completion:** 0/5 tasks ⬜⬜⬜⬜⬜
@@ -167,7 +167,7 @@
 ### ✅ M105: UNR and ZUNR
 
 **Why it passes:**
-- Full compliance with `b2-history-module-template.md`
+- Full compliance with `history-module-template.md`
 - All history-specific sections complete
 - Clean YAML schema
 - Enriched activities (no complexity violations)

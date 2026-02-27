@@ -1,13 +1,13 @@
-# Test Case: B2-HIST M41 Full Pipeline
+# Test Case: HIST M41 Full Pipeline
 # Purpose: Validate 9-phase workflow with AI-optimized templates
 
-test_id: b2-hist-m41-full-pipeline
+test_id: hist-m41-full-pipeline
 created: 2026-01-24
 issue: "#461"
 
 # Input specification
 input:
-  track: b2-hist
+  track: hist
   module_number: 41
   slug: kozatstvo-vytoky
   title: "Козацтво: Витоки"
@@ -41,7 +41,7 @@ phases:
 
   - phase: 7
     command: /module-integrate
-    output: docusaurus/docs/b2-hist/kozatstvo-vytoky.mdx
+    output: docusaurus/docs/hist/kozatstvo-vytoky.mdx
 
   - phase: 8
     command: /module-vocab

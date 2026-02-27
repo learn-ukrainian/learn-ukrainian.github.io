@@ -18,6 +18,14 @@
 
 Read ALL four files before writing anything.
 
+## Primary Source Excerpts (Cite These — Don't Invent Quotes)
+
+These passages were retrieved from indexed primary sources (litopys.org.ua). When you need to cite a primary source, prefer these verified passages over inventing quotes from memory. You may paraphrase or excerpt, but attribute correctly.
+
+{PRIMARY_SOURCE_EXCERPTS}
+
+---
+
 ## Your Task
 
 Write the full lesson prose for **{TOPIC_TITLE}** ({TRACK} track).

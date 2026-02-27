@@ -3,11 +3,11 @@
 ## Track Overview
 
 **Modules:** 135 (M01-135)
-**Prerequisite:** B2-HIST Track (required for factual foundation)
+**Prerequisite:** HIST Track (required for factual foundation)
 **Pedagogy:** CBI (Content-Based Instruction) with historiographical analysis
 **Immersion:** 95-100% Ukrainian
 
-> **C1-HIST is NOT about historical facts (that's B2-HIST). It's about HOW we know history** — sources, methods, interpretations, contested narratives.
+> **C1-HIST is NOT about historical facts (that's HIST). It's about HOW we know history** — sources, methods, interpretations, contested narratives.
 
 ---
 
@@ -209,9 +209,9 @@ Before writing any C1-HIST module:
 
 ---
 
-## Key Differences from B2-HIST
+## Key Differences from HIST
 
-| Aspect | B2-HIST | C1-HIST |
+| Aspect | HIST | C1-HIST |
 |--------|---------|---------|
 | Focus | What happened | How we know |
 | Content | Historical events | Historiographical debates |

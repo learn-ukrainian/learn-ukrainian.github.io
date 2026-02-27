@@ -29,7 +29,7 @@ Alignment: This module directly addresses B2 thematic requirements by teaching t
 
 ## Cross-References
 - Builds on: B1 abstract vocabulary and basic opinion-forming language.
-- Prepares for: C1 academic/publicistic reading, B2-HIST modules, and professional political discourse.
+- Prepares for: C1 academic/publicistic reading, HIST modules, and professional political discourse.
 
 ## Notes for Content Writing
 - Decolonized Framing: Frame Ukraine’s democratic structures as deeply rooted historically (Cossack councils, Magdeburg rights), explicitly contrasting them with the autocratic traditions of its neighbors. Democracy here is native, not an imported Western concept.

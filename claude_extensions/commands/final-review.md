@@ -23,7 +23,7 @@ model: claude-opus-4-6
 ```
 /final-review b1 5
 /final-review c1-bio 12
-/final-review b2-hist 43
+/final-review hist 43
 ```
 
 ---

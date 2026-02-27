@@ -52,7 +52,7 @@ sources: ✓ # Required for tracks, optional for core
 | A2        | 1000 | 1500 | Core curriculum                              |
 | B1        | 1500 | 2000 | Core curriculum                              |
 | B2 (core) | 1750 | 2500 | Grammar/vocab                                |
-| B2-HIST   | 3000 | 5000 | History track                                |
+| HIST   | 3000 | 5000 | History track                                |
 | B2-PRO    | 2000 | 3000 | Professional track                           |
 | C1 (core) | 2000 | 3000 | Advanced                                     |
 | C1-BIO    | 4000 | 6000 | Biography track                              |
@@ -101,7 +101,7 @@ Sum of all section word counts MUST equal ±10% of `word_target`.
 
 ### 6. Sources Credibility
 
-**Track modules (B2-HIST, C1-BIO, C1-HIST, LIT):** Minimum 2 sources REQUIRED
+**Track modules (HIST, C1-BIO, C1-HIST, LIT):** Minimum 2 sources REQUIRED
 
 **Core modules (A1-C2 core):** Sources OPTIONAL (but recommended for B2+)
 
@@ -188,7 +188,7 @@ Cannot proceed. Curriculum plan needs adjustment.
 
 ## Examples
 
-### Example 1: PASS - B2-HIST Module 1
+### Example 1: PASS - HIST Module 1
 
 **Input:** Valid `meta/trypillian-civilization.yaml` (see module-meta examples)
 
@@ -198,7 +198,7 @@ Cannot proceed. Curriculum plan needs adjustment.
 META-QA: PASS
 
 ✓ Required fields present
-✓ Word target: 4000 (within range for B2-HIST)
+✓ Word target: 4000 (within range for HIST)
 ✓ Objectives: 3 measurable Ukrainian items
 ✓ Content outline: 6 sections, 4000 words total
 ✓ Activity hints: 7 types (seminar pedagogy match)
@@ -206,7 +206,7 @@ META-QA: PASS
 ✓ YAML syntax valid
 ✓ Script validation passed
 
-META LOCKED. Proceed to: /module-lesson b2-hist 1
+META LOCKED. Proceed to: /module-lesson hist 1
 ```
 
 ### Example 2: FAIL - Missing Sources
@@ -219,10 +219,10 @@ META LOCKED. Proceed to: /module-lesson b2-hist 1
 META-QA: FAIL
 
 Violations:
-1. Sources: 0 sources found (minimum 2 required for B2-HIST track)
+1. Sources: 0 sources found (minimum 2 required for HIST track)
 2. Content outline: Word sum 3800 != target 4000 (±10% = 3600-4400)
 
-Fix meta.yaml and re-run /module-meta-qa b2-hist 1
+Fix meta.yaml and re-run /module-meta-qa hist 1
 ```
 
 ### Example 3: FAIL - Invalid Pedagogy Match

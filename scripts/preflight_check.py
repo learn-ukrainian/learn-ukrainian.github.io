@@ -6,8 +6,8 @@ Validates alignment between plan, meta, and stub files BEFORE content generation
 Catches issues early to prevent wasted work.
 
 Usage:
-    .venv/bin/python scripts/preflight_check.py curriculum/l2-uk-en/b2-hist/krym-1954.md
-    .venv/bin/python scripts/preflight_check.py b2-hist 112
+    .venv/bin/python scripts/preflight_check.py curriculum/l2-uk-en/hist/krym-1954.md
+    .venv/bin/python scripts/preflight_check.py hist 112
 """
 
 import sys

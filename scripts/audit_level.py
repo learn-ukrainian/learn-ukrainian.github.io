@@ -2,7 +2,7 @@
 """
 Audit curriculum modules at level, module, or range granularity.
 
-Supports both numbered modules (A1, B1, etc.) and slug-only modules (B2-HIST, C1-BIO, LIT).
+Supports both numbered modules (A1, B1, etc.) and slug-only modules (HIST, C1-BIO, LIT).
 
 Usage:
     npm run audit -- {level}                    # Audit entire level
@@ -17,8 +17,8 @@ Examples:
     npm run audit -- a1 1-10                    # Audit A1 modules 1-10
     npm run audit -- b1 1,3,5,7                 # Audit B1 modules 1, 3, 5, 7
     npm run audit -- c1 1-5,10,15-20            # Audit C1 modules 1-5, 10, 15-20
-    npm run audit -- b2-hist                    # Audit all B2-HIST modules
-    npm run audit -- b2-hist afhanistan         # Audit single B2-HIST module
+    npm run audit -- hist                    # Audit all HIST modules
+    npm run audit -- hist afhanistan         # Audit single HIST module
     npm run audit -- c1-bio shevchenko,franko   # Audit specific C1-BIO modules
 
 Options:
@@ -308,7 +308,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__
     )
-    parser.add_argument("level", help="Level to audit (a1, a2, b1, b2, c1, c2, b2-hist, c1-bio, etc.)")
+    parser.add_argument("level", help="Level to audit (a1, a2, b1, b2, c1, c2, hist, c1-bio, etc.)")
     parser.add_argument("modules", nargs="?", help="Module number(s): 5, 1-10, or 1,3,5,7-9")
     parser.add_argument("--fix", action="store_true", help="Automatically fix YAML schema violations")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed output for each module")

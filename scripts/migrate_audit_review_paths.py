@@ -228,7 +228,7 @@ def main():
     parser = argparse.ArgumentParser(description="Migrate audit/review/status file paths")
     parser.add_argument("--apply", action="store_true", help="Actually move/rename files (default is dry-run)")
     parser.add_argument("--dry-run", action="store_true", help="Show what would be done (default)")
-    parser.add_argument("--track", help="Only process this track (e.g., 'a1', 'b2-hist')")
+    parser.add_argument("--track", help="Only process this track (e.g., 'a1', 'hist')")
     args = parser.parse_args()
 
     dry_run = not args.apply

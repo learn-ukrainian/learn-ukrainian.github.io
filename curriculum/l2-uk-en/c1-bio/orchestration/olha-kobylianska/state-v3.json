@@ -10,9 +10,20 @@
       "mode": "full"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-27T00:44:14Z",
-      "note": "word-count-3676-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-27T17:51:28Z",
+      "note": "adopted-existing-content",
+      "words": 4152
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T17:54:04Z",
+      "task_id": "v3-olha-kobylianska-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T17:58:28Z",
+      "attempts": 2
     }
   }
 }

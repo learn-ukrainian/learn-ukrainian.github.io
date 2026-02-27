@@ -1,4 +1,4 @@
-# Gemini Test: B2-HIST M41
+# Gemini Test: HIST M41
 
 **Status: COMPLETE** - No action needed.
 

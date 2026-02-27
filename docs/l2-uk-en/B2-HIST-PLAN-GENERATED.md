@@ -1,4 +1,4 @@
-# B2-HIST Curriculum Plan: History Track
+# HIST Curriculum Plan: History Track
 
 **Generated from YAML plans**
 **Modules:** 140 module meta files found
@@ -10,7 +10,7 @@
 
 ## Track Overview
 
-B2-HIST is a content-based instruction track covering Ukrainian
+HIST is a content-based instruction track covering Ukrainian
 history from prehistory to present. Expanded to 140 modules to
 align with Ukrainian school curriculum (Issue #423).
 

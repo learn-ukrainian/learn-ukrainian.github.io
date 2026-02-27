@@ -1769,12 +1769,12 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-# B2-HIST (29 callouts)
+# HIST (29 callouts)
 
-## b2-hist/greeks-crimea-olbia (audit: fail)
+## hist/greeks-crimea-olbia (audit: fail)
 
 ### Claim #134 — `[!history-bite]` at line 40
-**File:** `curriculum/l2-uk-en/b2-hist/greeks-crimea-olbia.md:40`
+**File:** `curriculum/l2-uk-en/hist/greeks-crimea-olbia.md:40`
 
 > [!history-bite]
 > **Понт Аксейн vs Понт Евксейн**
@@ -1786,7 +1786,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #135 — `[!quote]` at line 122
-**File:** `curriculum/l2-uk-en/b2-hist/greeks-crimea-olbia.md:122`
+**File:** `curriculum/l2-uk-en/hist/greeks-crimea-olbia.md:122`
 
 > [!quote]
 > **Голос епохи: Фрагмент Присяги**
@@ -1798,7 +1798,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #136 — `[!culture]` at line 156
-**File:** `curriculum/l2-uk-en/b2-hist/greeks-crimea-olbia.md:156`
+**File:** `curriculum/l2-uk-en/hist/greeks-crimea-olbia.md:156`
 
 > [!culture]
 > **Імена як дзеркало історії**
@@ -1810,7 +1810,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #137 — `[!myth-buster]` at line 185
-**File:** `curriculum/l2-uk-en/b2-hist/greeks-crimea-olbia.md:185`
+**File:** `curriculum/l2-uk-en/hist/greeks-crimea-olbia.md:185`
 
 > [!myth-buster]
 > **Цивілізатори чи партнери?**
@@ -1822,7 +1822,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #138 — `[!decolonization]` at line 247
-**File:** `curriculum/l2-uk-en/b2-hist/greeks-crimea-olbia.md:247`
+**File:** `curriculum/l2-uk-en/hist/greeks-crimea-olbia.md:247`
 
 > [!decolonization]
 > **Чия це спадщина?**
@@ -1833,10 +1833,10 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-## b2-hist/scythians-sarmatians (audit: fail)
+## hist/scythians-sarmatians (audit: fail)
 
 ### Claim #139 — `[!history-bite]` at line 61
-**File:** `curriculum/l2-uk-en/b2-hist/scythians-sarmatians.md:61`
+**File:** `curriculum/l2-uk-en/hist/scythians-sarmatians.md:61`
 
 > [!history-bite]
 > Ця війна стала першим в історії зафіксованим випадком стратегічного відступу. Скіфи довели, що для перемоги не обов'язково бути сильнішим — треба бути розумнішим і використовувати свою землю як зброю.
@@ -1846,7 +1846,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #140 — `[!myth-buster]` at line 99
-**File:** `curriculum/l2-uk-en/b2-hist/scythians-sarmatians.md:99`
+**File:** `curriculum/l2-uk-en/hist/scythians-sarmatians.md:99`
 
 > [!myth-buster]
 > **Амазонки — це не казка.** Це реальні жінки, які жили в наших степах. Вони захищали свої родини, брали участь у набігах і були повноправними членами суспільства. Образ вільної, сильної жінки, який так цінується в українській культурі (згадайте княгиню Ольгу чи жінок у козацьких родинах), має глибоке коріння саме в цій степовій матриархальній традиції.
@@ -1856,7 +1856,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #141 — `[!quote]` at line 164
-**File:** `curriculum/l2-uk-en/b2-hist/scythians-sarmatians.md:164`
+**File:** `curriculum/l2-uk-en/hist/scythians-sarmatians.md:164`
 
 > [!quote]
 > **Геродот («Історія», книга 4):**
@@ -1867,7 +1867,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #142 — `[!perspective]` at line 202
-**File:** `curriculum/l2-uk-en/b2-hist/scythians-sarmatians.md:202`
+**File:** `curriculum/l2-uk-en/hist/scythians-sarmatians.md:202`
 
 > [!perspective]
 > **Деколонізаційний погляд:** Російська література (відомий вірш Олександра Блока: «Так, скіфи ми! Так, азіати ми з розкосими і жадібними очима!») використовувала образ скіфів, щоб лякати Європу «дикою азійською силою», підкреслюючи свою варварську, руйнівну сутність. Україна ж має зовсім інший, європейський підхід. Для нас скіфська спадщина — це не про загрозу цивілізації, а про діалог з нею. Ми — спадкоємці не «диких орд», а великої степової культури, яка вміла і воювати за свою свободу, і торгувати, і творити красу.
@@ -1876,10 +1876,10 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-## b2-hist/slavic-tribes (audit: fail)
+## hist/slavic-tribes (audit: fail)
 
 ### Claim #143 — `[!history-bite]` at line 62
-**File:** `curriculum/l2-uk-en/b2-hist/slavic-tribes.md:62`
+**File:** `curriculum/l2-uk-en/hist/slavic-tribes.md:62`
 
 > [!history-bite]
 > **«Погибоша аки обри»**
@@ -1890,7 +1890,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #144 — `[!myth-buster]` at line 92
-**File:** `curriculum/l2-uk-en/b2-hist/slavic-tribes.md:92`
+**File:** `curriculum/l2-uk-en/hist/slavic-tribes.md:92`
 
 > [!myth-buster]
 > **Міф:** Жінка в давнину була власністю чоловіка і не мала жодних прав.
@@ -1901,7 +1901,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #145 — `[!history-bite]` at line 121
-**File:** `curriculum/l2-uk-en/b2-hist/slavic-tribes.md:121`
+**File:** `curriculum/l2-uk-en/hist/slavic-tribes.md:121`
 
 > [!history-bite]
 > **Що їли наші предки?**
@@ -1912,7 +1912,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #146 — `[!culture]` at line 140
-**File:** `curriculum/l2-uk-en/b2-hist/slavic-tribes.md:140`
+**File:** `curriculum/l2-uk-en/hist/slavic-tribes.md:140`
 
 > [!culture]
 > **Легенда про Кожум'яку**
@@ -1923,7 +1923,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #147 — `[!decolonization]` at line 166
-**File:** `curriculum/l2-uk-en/b2-hist/slavic-tribes.md:166`
+**File:** `curriculum/l2-uk-en/hist/slavic-tribes.md:166`
 
 > [!decolonization]
 > **Не «племена», а «княжіння»**
@@ -1934,7 +1934,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #148 — `[!quote]` at line 180
-**File:** `curriculum/l2-uk-en/b2-hist/slavic-tribes.md:180`
+**File:** `curriculum/l2-uk-en/hist/slavic-tribes.md:180`
 
 > [!quote]
 > **Маврикій Стратег про слов'ян (VI ст.):**
@@ -1944,10 +1944,10 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-## b2-hist/sloviany-origins (audit: fail)
+## hist/sloviany-origins (audit: fail)
 
 ### Claim #149 — `[!history-bite]` at line 27
-**File:** `curriculum/l2-uk-en/b2-hist/sloviany-origins.md:27`
+**File:** `curriculum/l2-uk-en/hist/sloviany-origins.md:27`
 
 > [!history-bite]
 > **Парадокс самоназви**
@@ -1958,7 +1958,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #150 — `[!culture]` at line 149
-**File:** `curriculum/l2-uk-en/b2-hist/sloviany-origins.md:149`
+**File:** `curriculum/l2-uk-en/hist/sloviany-origins.md:149`
 
 > [!culture]
 > **Тризна: Більше ніж похорон**
@@ -1969,7 +1969,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #151 — `[!quote]` at line 165
-**File:** `curriculum/l2-uk-en/b2-hist/sloviany-origins.md:165`
+**File:** `curriculum/l2-uk-en/hist/sloviany-origins.md:165`
 
 > [!quote]
 > **Голос джерела**
@@ -1980,7 +1980,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #152 — `[!quote]` at line 177
-**File:** `curriculum/l2-uk-en/b2-hist/sloviany-origins.md:177`
+**File:** `curriculum/l2-uk-en/hist/sloviany-origins.md:177`
 
 > [!quote]
 > **Голос стратега**
@@ -1991,7 +1991,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #153 — `[!quote]` at line 189
-**File:** `curriculum/l2-uk-en/b2-hist/sloviany-origins.md:189`
+**File:** `curriculum/l2-uk-en/hist/sloviany-origins.md:189`
 
 > [!quote]
 > **Свідчення про розп'яття**
@@ -2003,7 +2003,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #154 — `[!myth-buster]` at line 208
-**File:** `curriculum/l2-uk-en/b2-hist/sloviany-origins.md:208`
+**File:** `curriculum/l2-uk-en/hist/sloviany-origins.md:208`
 
 > [!myth-buster]
 > **Не було «спільної історії»**
@@ -2014,7 +2014,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #155 — `[!source]` at line 232
-**File:** `curriculum/l2-uk-en/b2-hist/sloviany-origins.md:232`
+**File:** `curriculum/l2-uk-en/hist/sloviany-origins.md:232`
 
 > [!source]
 > **Рекомендовані джерела для поглиблення знань:**
@@ -2028,7 +2028,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #156 — `[!decolonization]` at line 255
-**File:** `curriculum/l2-uk-en/b2-hist/sloviany-origins.md:255`
+**File:** `curriculum/l2-uk-en/hist/sloviany-origins.md:255`
 
 > [!decolonization]
 > **Від Віча до Майдану**
@@ -2038,10 +2038,10 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-## b2-hist/trypillian-civilization (audit: fail)
+## hist/trypillian-civilization (audit: fail)
 
 ### Claim #157 — `[!quote]` at line 49
-**File:** `curriculum/l2-uk-en/b2-hist/trypillian-civilization.md:49`
+**File:** `curriculum/l2-uk-en/hist/trypillian-civilization.md:49`
 
 > [!quote]
 > **Зі звіту Вікентія Хвойки:**
@@ -2052,7 +2052,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #158 — `[!biography]` at line 78
-**File:** `curriculum/l2-uk-en/b2-hist/trypillian-civilization.md:78`
+**File:** `curriculum/l2-uk-en/hist/trypillian-civilization.md:78`
 
 > [!biography]
 > **Вікентій Хвойка (1850–1914)**
@@ -2063,7 +2063,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #159 — `[!history-bite]` at line 113
-**File:** `curriculum/l2-uk-en/b2-hist/trypillian-civilization.md:113`
+**File:** `curriculum/l2-uk-en/hist/trypillian-civilization.md:113`
 
 > [!history-bite]
 > **«Спалена» історія**
@@ -2074,7 +2074,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #160 — `[!culture]` at line 146
-**File:** `curriculum/l2-uk-en/b2-hist/trypillian-civilization.md:146`
+**File:** `curriculum/l2-uk-en/hist/trypillian-civilization.md:146`
 
 > [!culture]
 > **«Бінокль» — погляд у вічність**
@@ -2085,7 +2085,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #161 — `[!myth-buster]` at line 166
-**File:** `curriculum/l2-uk-en/b2-hist/trypillian-civilization.md:166`
+**File:** `curriculum/l2-uk-en/hist/trypillian-civilization.md:166`
 
 > [!myth-buster]
 > **Міф про матріархат**
@@ -2096,7 +2096,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #162 — `[!decolonization]` at line 189
-**File:** `curriculum/l2-uk-en/b2-hist/trypillian-civilization.md:189`
+**File:** `curriculum/l2-uk-en/hist/trypillian-civilization.md:189`
 
 > [!decolonization]
 > **Чиї предки?**

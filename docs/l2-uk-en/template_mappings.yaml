@@ -84,13 +84,13 @@ mappings:
   - meta_field: focus
     value: history
     level: b2
-    template: b2-history-module-template.md
+    template: history-module-template.md
     description: 'B2 history modules (M71-131 when focus=history)'
 
   # History synthesis modules (specific IDs)
   - pattern: '^b2-(83|107|119|125|131)(-.*)?$'
     level: b2
-    template: b2-history-synthesis-module-template.md
+    template: history-synthesis-module-template.md
     description: 'B2 history synthesis modules'
 
   # Phraseology modules (M41-70) - requires meta.focus: phraseology
@@ -231,19 +231,19 @@ mappings:
     description: 'C2 default template'
 
   # =============================================================================
-  # B2-HIST: History Track (relocated from B2 M71-131)
+  # HIST: History Track (relocated from B2 M71-131)
   # =============================================================================
   # Synthesis modules (by meta.focus: synthesis)
   - meta_field: focus
     value: synthesis
-    level: b2-hist
-    template: b2-history-synthesis-module-template.md
-    description: 'B2-HIST synthesis modules (via focus field)'
+    level: hist
+    template: history-synthesis-module-template.md
+    description: 'HIST synthesis modules (via focus field)'
 
-  - pattern: '^b2-hist-'
-    level: b2-hist
-    template: b2-history-module-template.md
-    description: 'B2-HIST history track modules'
+  - pattern: '^hist-'
+    level: hist
+    template: history-module-template.md
+    description: 'HIST history track modules'
 
   # =============================================================================
   # C1-BIO: Biography Track (relocated from C1 M36-131)

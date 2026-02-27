@@ -1,7 +1,7 @@
 import re
 import sys
 
-file_path = 'curriculum/l2-uk-en/b2-hist/olha-sviatoslav.md'
+file_path = 'curriculum/l2-uk-en/hist/olha-sviatoslav.md'
 
 with open(file_path, 'r', encoding='utf-8') as f:
     content = f.read()

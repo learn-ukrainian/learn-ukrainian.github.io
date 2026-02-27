@@ -145,4 +145,4 @@ def process_file(file_path):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(text)
 
-process_file('curriculum/l2-uk-en/b2-hist/oun.md')
+process_file('curriculum/l2-uk-en/hist/oun.md')

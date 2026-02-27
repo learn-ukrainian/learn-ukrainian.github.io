@@ -1,0 +1,35 @@
+{
+  "slug": "galytsko-volynska-derzhava",
+  "track": "hist",
+  "module_num": 24,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T09:47:44Z",
+      "words": 4808,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T09:49:59Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T09:49:59Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:27:18Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:27:18Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-25T19:27:18Z"
+}

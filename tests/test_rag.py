@@ -39,6 +39,7 @@ from qdrant_client.models import (
 from scripts.rag.config import (
     BGE_M3_DENSE_DIM,
     IMAGE_COLLECTION,
+    LITERARY_COLLECTION,
     QDRANT_HOST,
     QDRANT_REST_PORT,
     SIGLIP_DIM,
@@ -980,3 +981,489 @@ class TestMCPSearchFunctions:
         hits = search_images("букви", grade=1, limit=5)
         for hit in hits:
             assert hit["grade"] == 1
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Literary RAG: Scraper Tests
+# ══════════════════════════════════════════════════════════════════════
+
+
+class TestHTMLTextExtractor:
+    """Test the litopys.org.ua HTML text extractor."""
+
+    def test_extracts_only_dop3_content(self):
+        """Text outside dop3 divs should be filtered out."""
+        from scripts.rag.scrape_litopys import HTMLTextExtractor
+
+        html = """
+        <div class="shapka_strichka">Navigation text here</div>
+        <div class="shapka_izb2">ІЗБОРНИК</div>
+        <div class="dop3">
+            <p>This is actual content.</p>
+        </div>
+        """
+        ext = HTMLTextExtractor(parallel=False)
+        ext.feed(html)
+        text = ext.get_text()
+
+        assert "Navigation text here" not in text
+        assert "ІЗБОРНИК" not in text
+        assert "This is actual content." in text
+
+    def test_skips_nav_link_text(self):
+        """Nav links like Попередня/Наступна/Головна inside dop3 should be skipped."""
+        from scripts.rag.scrape_litopys import HTMLTextExtractor
+
+        html = """
+        <div class="dop3">
+            <p><a href="prev.htm">Попередня</a> <a href="main.htm">Головна</a>
+               <a href="next.htm">Наступна</a></p>
+            <p>Actual literary content here.</p>
+        </div>
+        """
+        ext = HTMLTextExtractor(parallel=False)
+        ext.feed(html)
+        text = ext.get_text()
+
+        assert "Попередня" not in text
+        assert "Головна" not in text
+        assert "Наступна" not in text
+        assert "Actual literary content here." in text
+
+    def test_strips_copyright_lines(self):
+        """Copyright and scanning notices should be removed."""
+        from scripts.rag.scrape_litopys import HTMLTextExtractor
+
+        html = """
+        <div class="dop3">
+            <p>Literary content paragraph.</p>
+            <p>© Сканування та обробка: Максим, «Ізборник»</p>
+        </div>
+        """
+        ext = HTMLTextExtractor(parallel=False)
+        ext.feed(html)
+        text = ext.get_text()
+
+        assert "Literary content paragraph." in text
+        assert "Сканування та обробка" not in text
+
+    def test_parallel_text_extraction(self):
+        """Parallel text tables should extract both columns."""
+        from scripts.rag.scrape_litopys import HTMLTextExtractor
+
+        html = """
+        <div class="dop3">
+            <table>
+                <tr><td>Original OES text</td><td>Modern Ukrainian translation</td></tr>
+                <tr><td>Другий рядок</td><td>Second row modern</td></tr>
+            </table>
+        </div>
+        """
+        ext = HTMLTextExtractor(parallel=True)
+        ext.feed(html)
+
+        modern = ext.get_parallel_text()
+        original = ext.get_original_text()
+
+        assert "Modern Ukrainian translation" in modern
+        assert "Second row modern" in modern
+        assert "Original OES text" in original
+        assert "Другий рядок" in original
+
+    def test_parallel_fallback_to_text(self):
+        """If no table found in parallel mode, fall back to regular text."""
+        from scripts.rag.scrape_litopys import HTMLTextExtractor
+
+        html = """
+        <div class="dop3">
+            <p>Plain text with no table.</p>
+        </div>
+        """
+        ext = HTMLTextExtractor(parallel=True)
+        ext.feed(html)
+
+        assert ext.get_parallel_text() == "Plain text with no table."
+        assert ext.get_original_text() == ""
+
+    def test_skips_script_and_style(self):
+        """Script and style content should never appear in output."""
+        from scripts.rag.scrape_litopys import HTMLTextExtractor
+
+        html = """
+        <div class="dop3">
+            <script>var x = 'should not appear';</script>
+            <style>.class { color: red; }</style>
+            <p>Visible content only.</p>
+        </div>
+        """
+        ext = HTMLTextExtractor(parallel=False)
+        ext.feed(html)
+        text = ext.get_text()
+
+        assert "should not appear" not in text
+        assert "color: red" not in text
+        assert "Visible content only." in text
+
+    def test_heading_extraction(self):
+        """Headings should be preserved with paragraph breaks."""
+        from scripts.rag.scrape_litopys import HTMLTextExtractor
+
+        html = """
+        <div class="dop3">
+            <h1>Chapter Title</h1>
+            <p>First paragraph.</p>
+            <h2>Section Two</h2>
+            <p>Second paragraph.</p>
+        </div>
+        """
+        ext = HTMLTextExtractor(parallel=False)
+        ext.feed(html)
+        text = ext.get_text()
+
+        assert "Chapter Title" in text
+        assert "Section Two" in text
+        assert "First paragraph." in text
+
+    def test_nested_dop3_divs(self):
+        """Nested dop3 divs should still work correctly."""
+        from scripts.rag.scrape_litopys import HTMLTextExtractor
+
+        html = """
+        <div class="outer">Nav stuff</div>
+        <div class="dop3">
+            <div>Inner content here.</div>
+        </div>
+        """
+        ext = HTMLTextExtractor(parallel=False)
+        ext.feed(html)
+        text = ext.get_text()
+
+        assert "Nav stuff" not in text
+        assert "Inner content here." in text
+
+    def test_non_nav_links_preserved(self):
+        """Regular links (not nav) inside dop3 should have their text preserved."""
+        from scripts.rag.scrape_litopys import HTMLTextExtractor
+
+        html = """
+        <div class="dop3">
+            <p>Read about <a href="other.htm">important topic</a> here.</p>
+        </div>
+        """
+        ext = HTMLTextExtractor(parallel=False)
+        ext.feed(html)
+        text = ext.get_text()
+
+        assert "important topic" in text
+
+
+class TestChunkText:
+    """Test the paragraph-boundary chunking logic."""
+
+    def test_basic_chunking(self):
+        from scripts.rag.scrape_litopys import chunk_text
+
+        # Create text with multiple paragraphs (word content, not spaces)
+        paragraphs = ["Це тестовий параграф номер " + str(i) + ". " + "Слово " * 100 for i in range(10)]
+        text = "\n\n".join(paragraphs)
+
+        chunks = chunk_text(text, "Test Work", "http://example.com",
+                           min_tokens=10, max_tokens=200)
+
+        assert len(chunks) > 1
+        for chunk in chunks:
+            assert "chunk_id" in chunk
+            assert "text" in chunk
+            assert "source_url" in chunk
+            assert chunk["source_url"] == "http://example.com"
+
+    def test_chunk_ids_are_unique(self):
+        from scripts.rag.scrape_litopys import chunk_text
+
+        paragraphs = ["Content block " + str(i) + " " * 500 for i in range(10)]
+        text = "\n\n".join(paragraphs)
+
+        chunks = chunk_text(text, "Test Work", "http://example.com",
+                           min_tokens=50, max_tokens=200)
+
+        chunk_ids = [c["chunk_id"] for c in chunks]
+        assert len(chunk_ids) == len(set(chunk_ids)), "Chunk IDs must be unique"
+
+    def test_parallel_text_alignment(self):
+        from scripts.rag.scrape_litopys import chunk_text
+
+        modern = "Modern paragraph 1\n\nModern paragraph 2\n\nModern paragraph 3"
+        original = "Original paragraph 1\n\nOriginal paragraph 2\n\nOriginal paragraph 3"
+
+        chunks = chunk_text(modern, "Parallel Work", "http://example.com",
+                           min_tokens=1, max_tokens=10000, original_text=original)
+
+        assert len(chunks) >= 1
+        assert "original_text" in chunks[0]
+        assert "Original paragraph" in chunks[0]["original_text"]
+
+    def test_empty_text_returns_empty(self):
+        from scripts.rag.scrape_litopys import chunk_text
+
+        chunks = chunk_text("", "Empty Work", "http://example.com")
+        assert chunks == []
+
+    def test_short_text_below_min_tokens(self):
+        from scripts.rag.scrape_litopys import chunk_text
+
+        chunks = chunk_text("Short.", "Work", "http://example.com",
+                           min_tokens=100)
+        assert chunks == []  # Too short to form a chunk
+
+
+class TestFindNextLink:
+    """Test the 'Наступна' link finder."""
+
+    def test_finds_next_link(self):
+        from scripts.rag.scrape_litopys import find_next_link
+
+        html = '<a href="page02.htm">Наступна</a>'
+        result = find_next_link(html, "http://litopys.org.ua/book/page01.htm")
+        assert result == "http://litopys.org.ua/book/page02.htm"
+
+    def test_returns_none_when_no_next(self):
+        from scripts.rag.scrape_litopys import find_next_link
+
+        html = '<a href="page01.htm">Попередня</a>'
+        result = find_next_link(html, "http://litopys.org.ua/book/page02.htm")
+        assert result is None
+
+    def test_resolves_relative_urls(self):
+        from scripts.rag.scrape_litopys import find_next_link
+
+        html = '<a href="../other/page.htm">Наступна</a>'
+        result = find_next_link(html, "http://litopys.org.ua/book/page01.htm")
+        assert result == "http://litopys.org.ua/other/page.htm"
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Literary RAG: Qdrant Collection Tests
+# ══════════════════════════════════════════════════════════════════════
+
+TEST_LITERARY_COLLECTION = "test_literary_texts"
+
+
+@pytest.fixture(scope="session")
+def test_literary_collection(qdrant_client):
+    """Create a test literary collection with sample data."""
+    if qdrant_client.collection_exists(TEST_LITERARY_COLLECTION):
+        qdrant_client.delete_collection(TEST_LITERARY_COLLECTION)
+
+    qdrant_client.create_collection(
+        collection_name=TEST_LITERARY_COLLECTION,
+        vectors_config={
+            "dense": VectorParams(size=BGE_M3_DENSE_DIM, distance=Distance.COSINE),
+        },
+        sparse_vectors_config={
+            "sparse": SparseVectorParams(
+                index=SparseIndexParams(on_disk=False),
+            ),
+        },
+    )
+
+    for field, schema_type in [
+        ("work", PayloadSchemaType.KEYWORD),
+        ("author", PayloadSchemaType.KEYWORD),
+        ("year", PayloadSchemaType.INTEGER),
+        ("genre", PayloadSchemaType.KEYWORD),
+        ("language_period", PayloadSchemaType.KEYWORD),
+    ]:
+        qdrant_client.create_payload_index(
+            collection_name=TEST_LITERARY_COLLECTION,
+            field_name=field,
+            field_schema=schema_type,
+        )
+
+    # Insert sample data
+    rng = np.random.default_rng(42)
+    points = [
+        PointStruct(
+            id=1,
+            vector={"dense": rng.random(BGE_M3_DENSE_DIM).tolist(),
+                     "sparse": SparseVector(indices=[1, 2, 3], values=[0.5, 0.3, 0.2])},
+            payload={
+                "chunk_id": "slovo_c0001",
+                "text": "Не лЂпо ли ны бяшетъ, братїє",
+                "work": "Слово о полку Ігоревім",
+                "author": "Невідомий",
+                "year": 1187,
+                "genre": "poetry",
+                "language_period": "old_east_slavic",
+                "source_url": "http://litopys.org.ua/slovo/slovo.htm",
+            },
+        ),
+        PointStruct(
+            id=2,
+            vector={"dense": rng.random(BGE_M3_DENSE_DIM).tolist(),
+                     "sparse": SparseVector(indices=[4, 5, 6], values=[0.4, 0.3, 0.3])},
+            payload={
+                "chunk_id": "pvl_c0001",
+                "text": "Повість врем'яних літ чорноризця",
+                "work": "Повість временних літ",
+                "author": "Нестор",
+                "year": 1113,
+                "genre": "chronicle",
+                "language_period": "old_east_slavic",
+                "source_url": "http://litopys.org.ua/pvlyar/yar01.htm",
+                "original_text": "ПовЂсть временныхъ лЂтъ черноризца",
+            },
+        ),
+        PointStruct(
+            id=3,
+            vector={"dense": rng.random(BGE_M3_DENSE_DIM).tolist(),
+                     "sparse": SparseVector(indices=[7, 8, 9], values=[0.6, 0.2, 0.2])},
+            payload={
+                "chunk_id": "samovydets_c0001",
+                "text": "Початок и причина войни Хмелницкого",
+                "work": "Літопис Самовидця",
+                "author": "Невідомий",
+                "year": 1702,
+                "genre": "chronicle",
+                "language_period": "middle_ukrainian",
+                "source_url": "http://litopys.org.ua/samovyd/sam01.htm",
+            },
+        ),
+    ]
+    qdrant_client.upsert(collection_name=TEST_LITERARY_COLLECTION, points=points)
+
+    yield TEST_LITERARY_COLLECTION
+
+    # Cleanup
+    qdrant_client.delete_collection(TEST_LITERARY_COLLECTION)
+
+
+class TestLiteraryCollection(object):
+    """Test literary collection creation and data integrity."""
+
+    def test_collection_has_correct_vector_config(self, qdrant_client, test_literary_collection):
+        info = qdrant_client.get_collection(test_literary_collection)
+        assert info.config.params.vectors["dense"].size == BGE_M3_DENSE_DIM
+        assert info.config.params.vectors["dense"].distance == Distance.COSINE
+
+    def test_collection_has_points(self, qdrant_client, test_literary_collection):
+        info = qdrant_client.get_collection(test_literary_collection)
+        assert info.points_count == 3
+
+    def test_payload_fields_present(self, qdrant_client, test_literary_collection):
+        results = qdrant_client.scroll(
+            collection_name=test_literary_collection, limit=3, with_payload=True
+        )
+        for point in results[0]:
+            payload = point.payload
+            assert "chunk_id" in payload
+            assert "text" in payload
+            assert "work" in payload
+            assert "author" in payload
+            assert "year" in payload
+            assert "genre" in payload
+            assert "language_period" in payload
+
+    def test_parallel_text_stored(self, qdrant_client, test_literary_collection):
+        """PVL entry should have original_text metadata."""
+        results = qdrant_client.scroll(
+            collection_name=test_literary_collection,
+            scroll_filter=Filter(must=[
+                FieldCondition(key="work", match=MatchValue(value="Повість временних літ"))
+            ]),
+            limit=1,
+            with_payload=True,
+        )
+        assert len(results[0]) == 1
+        assert "original_text" in results[0][0].payload
+
+    def test_genre_filter(self, qdrant_client, test_literary_collection):
+        results = qdrant_client.scroll(
+            collection_name=test_literary_collection,
+            scroll_filter=Filter(must=[
+                FieldCondition(key="genre", match=MatchValue(value="poetry"))
+            ]),
+            limit=10,
+            with_payload=True,
+        )
+        for point in results[0]:
+            assert point.payload["genre"] == "poetry"
+
+    def test_period_filter(self, qdrant_client, test_literary_collection):
+        results = qdrant_client.scroll(
+            collection_name=test_literary_collection,
+            scroll_filter=Filter(must=[
+                FieldCondition(key="language_period", match=MatchValue(value="middle_ukrainian"))
+            ]),
+            limit=10,
+            with_payload=True,
+        )
+        assert len(results[0]) == 1
+        assert results[0][0].payload["work"] == "Літопис Самовидця"
+
+    def test_dense_vector_search(self, qdrant_client, test_literary_collection):
+        """Dense vector search should return ranked results."""
+        rng = np.random.default_rng(99)
+        query_vec = rng.random(BGE_M3_DENSE_DIM).tolist()
+
+        results = qdrant_client.query_points(
+            collection_name=test_literary_collection,
+            query=query_vec,
+            using="dense",
+            limit=3,
+            with_payload=True,
+        )
+        assert len(results.points) == 3
+        # Scores should be in descending order
+        scores = [p.score for p in results.points]
+        assert scores == sorted(scores, reverse=True)
+
+
+# ══════════════════════════════════════════════════════════════════════
+# Literary RAG: Production Data Tests (require live data)
+# ══════════════════════════════════════════════════════════════════════
+
+
+@pytest.mark.slow
+class TestLiteraryProductionData(object):
+    """Tests against live literary_texts collection (Wave 0 data must be ingested)."""
+
+    def test_collection_exists(self, qdrant_client):
+        assert qdrant_client.collection_exists(LITERARY_COLLECTION)
+
+    def test_collection_has_wave0_data(self, qdrant_client):
+        info = qdrant_client.get_collection(LITERARY_COLLECTION)
+        # Wave 0: 11 (Slovo) + 55 (PVL) + 111 (Samovydets) = 177
+        assert info.points_count >= 177
+
+    def test_search_literary_returns_results(self):
+        from scripts.rag.query import search_literary
+        hits = search_literary("хрещення Русі Володимир", limit=3)
+        assert len(hits) > 0
+        assert "text" in hits[0]
+        assert "work" in hits[0]
+        assert "score" in hits[0]
+
+    def test_search_literary_genre_filter(self):
+        from scripts.rag.query import search_literary
+        hits = search_literary("козацьке повстання", genre="chronicle", limit=5)
+        for hit in hits:
+            assert hit["genre"] == "chronicle"
+
+    def test_search_literary_period_filter(self):
+        from scripts.rag.query import search_literary
+        hits = search_literary("битва", period="middle_ukrainian", limit=5)
+        for hit in hits:
+            assert hit["language_period"] == "middle_ukrainian"
+
+    def test_pvl_has_original_text(self):
+        from scripts.rag.query import search_literary
+        hits = search_literary("Повість врем'яних літ",
+                              work="Повість временних літ (переклад Яременка)", limit=1)
+        assert len(hits) > 0
+        assert hits[0].get("original_text"), "PVL parallel text should include original_text"
+
+    def test_collection_stats_includes_literary(self):
+        from scripts.rag.query import collection_stats
+        stats = collection_stats()
+        assert "literary_texts" in stats
+        assert stats["literary_texts"]["points_count"] >= 177

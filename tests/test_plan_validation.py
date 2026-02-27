@@ -27,8 +27,8 @@ class TestGetConfigTarget:
         assert isinstance(target, int)
         assert target > 0
 
-    def test_b2_hist_target(self):
-        target = get_config_target('b2-hist')
+    def test_hist_target(self):
+        target = get_config_target('hist')
         assert isinstance(target, int)
         assert target >= 2000
 

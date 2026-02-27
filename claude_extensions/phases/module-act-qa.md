@@ -137,7 +137,7 @@ From MODULE-RICHNESS-GUIDELINES-v2.md:
 - Count fill-in items (sum of all items[] in fill-in activities)
 - Verify counts meet minimums for level
 
-**Note for tracks (B2-HIST, C1-BIO, LIT):** May have fewer gamified drills if balanced with reading/essay activities.
+**Note for tracks (HIST, C1-BIO, LIT):** May have fewer gamified drills if balanced with reading/essay activities.
 
 ### 4. Schema Compliance
 
@@ -358,7 +358,7 @@ For essay-response activities:
 **Required elements:**
 
 - [ ] Prompt is clear and specific
-- [ ] min_words specified (400+ for B2-HIST)
+- [ ] min_words specified (400+ for HIST)
 - [ ] Rubric with 3-4 criteria
 - [ ] Rubric weights sum to 100%
 - [ ] Model answer meets min_words
@@ -372,7 +372,7 @@ For essay-response activities:
 - [ ] Model answer cites primary sources from lesson
 - [ ] Model answer avoids content interpretation (focuses on language)
 
-### 11. Reading Activities (B2-HIST, C1+)
+### 11. Reading Activities (HIST, C1+)
 
 For reading activities:
 
@@ -665,7 +665,7 @@ Rewind to Phase 3 (module-lesson)
 
 ## Examples
 
-### Example 1: PASS - B2-HIST Activities QA
+### Example 1: PASS - HIST Activities QA
 
 **Input:** `activities/trypillian-civilization.yaml`
 
@@ -695,7 +695,7 @@ ACT-QA: PASS
 
 ACTIVITIES LOCKED.
 
-Next: Run /module-vocab b2-hist 1
+Next: Run /module-vocab hist 1
 ```
 
 ### Example 2: FAIL - Vocabulary Not in Lesson

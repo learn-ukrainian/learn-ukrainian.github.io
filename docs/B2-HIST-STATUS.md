@@ -1,4 +1,4 @@
-# B2-HIST Module Status
+# HIST Module Status
 
 **Generated:** 2026-02-25 20:36:06
 **Total Modules:** 140

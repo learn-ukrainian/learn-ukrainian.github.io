@@ -428,7 +428,7 @@ levels:
       - c1-6-checkpoint
       - asyndetic-semantics
       - persuasive-speech
-  b2-hist:
+  hist:
     type: track
     modules:
       - trypillian-civilization
@@ -619,6 +619,7 @@ levels:
       - oleksander-potebnya
       - ivan-nechuy-levytskyi
       - marko-kropyvnytskyi
+      - mykhailo-starytsky
       - mykhailo-drahomanov
       - mykola-lysenko
       - ivan-puliui
@@ -631,6 +632,7 @@ levels:
       - borys-hrinchenko
       - olha-kobylianska
       - volodymyr-vernadskyi
+      - volodymyr-samiilenko
       - kyrylo-trylovskyi
       - mykhailo-kotsiubynsky
       - andrey-sheptytsky
@@ -649,6 +651,7 @@ levels:
       - mykola-mikhnovskyi
       - oleksandr-hrekiv
       - mykola-leontovych
+      - hnat-khotkevych
       - kazimir-malevich
       - symon-petliura
       - oleksandr-bohomazov
@@ -1336,7 +1339,6 @@ levels:
       - family-kinship
       - lab-death-of-tsar
       - daily-life-vocabulary
-      - phase-1-checkpoint
       - pvl-intro-geography
       - pvl-varangians
       - pvl-oleg-campaign
@@ -1361,7 +1363,6 @@ levels:
       - battle-of-kalka
       - fall-of-kyiv
       - review-princely-cycle
-      - phase-2-checkpoint
       - law-intro
       - murder-blood-revenge
       - assault-battery
@@ -1386,7 +1387,6 @@ levels:
       - trade-rights
       - crimes-abroad
       - treaty-944-igor
-      - phase-3-checkpoint
       - slovo-bard-intro
       - slovo-solar-eclipse
       - slovo-mustering
@@ -1411,6 +1411,10 @@ levels:
       - rus-panegyric
       - daniel-the-exile
       - phonology-lab-yers
+      # Post-Phase-4 additions
+      - galytsko-volynskyi-literary-art
+      - pateryk-literary-form
+      - davni-teksty-zbirka
       - oes-capstone
   ruth:
     type: track
@@ -1439,7 +1443,6 @@ levels:
       - legal-profession
       - document-types
       - paleography-lab-skoropys
-      - ruth-1-capstone
       - translators-dedication
       - vernacular-glosses
       - nativity-luke
@@ -1464,7 +1467,6 @@ levels:
       - vyshensky-epistles
       - meletiy-smotrytsky-apologia
       - comparative-lab-parallel
-      - ruth-2-capstone
       - need-for-norms
       - orthography-letters
       - parts-of-speech
@@ -1489,7 +1491,6 @@ levels:
       - kyiv-mohyla-rhetoric
       - panegyric-style
       - baroque-poetry
-      - ruth-3-capstone
       - eyewitness-samovydets
       - the-ruin
       - glorifying-host
@@ -1517,8 +1518,20 @@ levels:
       - skovoroda-language
       - transition-to-modern
       - philosophical-lab
+      # Phase 5: Мовна ідентичність — Linguistic Identity
+      - fedorovych-bukvar
+      - zyzaniy-leksys
+      - berynda-leksykon
+      - uzhevych-hramatyka
+      - synonima-slaveno-roska
+      - hramoty-xiv
+      - hramoty-xvi-volyn
+      - intermedii-xvii-xviii
+      - poeziia-baroko
+      - bajky-xvii-xviii
+      - pysovnyk-lystuvannia
+      - likarski-poradnyky
       - ruth-capstone
-      - dashvar-village
   lit-essay:
     type: track
     modules:

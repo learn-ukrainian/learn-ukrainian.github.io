@@ -154,7 +154,7 @@ status/
 ├── b2.yaml
 ├── c1.yaml
 ├── c2.yaml
-├── b2-hist.yaml
+├── hist.yaml
 ├── c1-bio.yaml
 ├── c1-hist.yaml
 └── lit.yaml
@@ -225,9 +225,9 @@ Status is tracked per-module in JSON cache files at `{level}/status/{slug}.json`
 
 ```bash
 # Generate human-readable status report from cache
-.venv/bin/python scripts/generate_level_status.py b2-hist
+.venv/bin/python scripts/generate_level_status.py hist
 # Or use npm shortcut:
-npm run status:b2-hist
+npm run status:hist
 
 # Generate for all levels
 npm run status:all

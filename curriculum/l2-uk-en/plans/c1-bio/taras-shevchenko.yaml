@@ -67,7 +67,7 @@ activity_hints:
   output: Аргументований есей
 focus: biography
 prerequisites:
-- b2-hist-national-awakening
+- hist-national-awakening
 connects_to:
 - c1-bio-97-panteleimon-kulish
 - c1-bio-28-ivan-franko

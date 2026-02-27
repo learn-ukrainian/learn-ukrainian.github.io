@@ -40,10 +40,10 @@ focus: biography
 pedagogy: seminar
 prerequisites:
 - c1-bio-10 (Данило Галицький)
-- b2-hist hmelnychyna module
+- hist hmelnychyna module
 connects_to:
 - c1-bio-24 (Іван Виговський)
-- b2-hist ruina-i module
+- hist ruina-i module
 objectives:
 - Аналізувати стратегію державотворення Хмельницького
 - Оцінити дипломатичні маневри між великими державами

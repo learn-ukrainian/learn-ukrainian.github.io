@@ -1,8 +1,10 @@
 # l2-uk-direct Curriculum Plan
 
-> Last updated: 2026-02-26
+> Last updated: 2026-02-27
 > State standard reference: `docs/l2-uk-en/state-standard-2024-mapping.yaml`
 > Gap analysis: `docs/l2-uk-direct/A1-GAP-ANALYSIS.md`
+> Research notes: `docs/l2-uk-direct/textbook-reading-notes/` (6 textbooks + cross-reference synthesis)
+> Companion plans: [A2-CURRICULUM.md](A2-CURRICULUM.md) (38 modules) | [B1-CURRICULUM.md](B1-CURRICULUM.md) (42 modules)
 > GH Issues: Infrastructure [#661](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/661) | Content [#662](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/662) | Textbooks [#663](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/663) | Scripts [#664](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/664)
 
 ---
@@ -25,18 +27,19 @@
 
 ## Textbook Reading Schedule
 
-*When to read each book before building the corresponding modules.*
+*All textbooks read. Research notes in `docs/l2-uk-direct/textbook-reading-notes/`.*
 
-| Book | Status | Read before building... |
-|------|--------|------------------------|
-| Grade 1 Буквар Part 1 (Bolshakova 2025) | ✅ read | Module 1–3 (done) |
-| Grade 1 Буквар Part 2 (Bolshakova 2025) | ✅ read | Module 1–3 (done) |
-| Grade 2 Part 1 (Tsepova 2025) | ✅ read | Modules 4–15 (done) |
-| Grade 2 Part 2 (Tsepova 2025) | ✅ read | Modules 4–15 (done) |
-| Grade 3 Part 1 (Vashulenko 2020) | ✅ read | Modules 1–15 (done) |
-| **Grade 3 Part 2** | 🔲 **read before module 27** | Daily life vocabulary → Modules 27–33 |
-| Grade 4 Part 1 (Varzatska 2021) | 🔲 read before A2 | A2 planning only |
-| Grades 5–7 (Litvinova) | 🔲 low priority | B1+ content |
+| Book | Status | Notes file | Feeds into |
+|------|--------|-----------|------------|
+| Grade 1 Буквар Parts 1+2 (Bolshakova 2025) | ✅ read | `bolshakova-bukvar-mapping.md` | A1 Modules 1–3 |
+| Grade 2 Parts 1+2 (Tsepova 2025) | ✅ read | (in cross-reference) | A1 Modules 4–16 |
+| Grade 3 Part 1 (Vashulenko 2020) | ✅ read | (in cross-reference) | A1 Modules 1–16 |
+| Grade 3 Part 2 (Vashulenko 2020) | ✅ read | `grade-3-part-2-vashulenko-2020.md` | A1 Modules 27–33, A2 planning |
+| Grade 4 (Kravtsova + Savchenko 2021) | ✅ read | `grade-4-kravtsova-savchenko-2021.md` | A2 (all 7 cases, tenses, pronouns) |
+| Grade 5 (Avramenko 2022) | ✅ read | `grade-5-avramenko-2022.md` | B1 (euphony tables, stress, syntax) |
+| Grade 6 (Avramenko + Тищенко 2023) | ✅ read | `grade-6-avramenko-2023.md` | B1 (full morphology, declensions) |
+| Cross-reference synthesis | ✅ done | `cross-reference-synthesis.md` | All levels — CEFR mapping, pedagogy |
+| State Standard 2024 | ✅ extracted | `state-standard-2024-notes.md` | All levels — compliance checklist |
 
 ---
 
@@ -82,7 +85,10 @@ Tricky pairs to emphasize:
 4. `classify` — sort letters into vowels (•) vs consonants (—)
 5. `classify` — soft vs hard consonants (using • = soft, ─ = hard symbols)
 
-**Images**: 0/33 sourced — one per letter key_word (Pixabay candidates needed; see issue [#664](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/664))
+**Textbook images**: Each letter has a dedicated page in Bolshakova Букvar 2025 (Part 1) with illustrations.
+See `textbook-reading-notes/bolshakova-bukvar-mapping.md` for PDF page offsets (content page N = PDF page N + 5).
+Key image pages: А=p.20, О=p.22, У=p.24, М=p.26, С=p.30, Н=p.33, Л=p.36 ... Ф=p.123.
+Part 2 re-teaches all 33 letters in different order (spiral learning) — additional image sources available.
 
 ---
 
@@ -91,6 +97,7 @@ Tricky pairs to emphasize:
 **Type**: `script_foundation`
 **Status**: 🔲 Not built
 **State standard**: §4.1.5 (stress), §4.1.4 (vowel–consonant combinations), §4.1.6 (syllable)
+**Textbook source**: Bolshakova Букvar Part 1 p.17 (Склад), p.18 (Наголос)
 
 **Content**:
 - Rule: every syllable has **exactly one vowel**. Syllable = minimal unit of pronunciation.
@@ -117,6 +124,7 @@ Tricky pairs to emphasize:
 **Type**: `script_foundation`
 **Status**: 🔲 Not built
 **State standard**: §4.1.5 (stress), §4.1.8 (basic intonation)
+**Textbook source**: Bolshakova Букvar Part 1 p.18 (Наголос); Grade 3 p.68 (double stress: завжді/завжді); Grade 5 §38–39 (explicit stress rules and word lists)
 
 **Content**:
 - Stress can fall on any syllable: дру`г, дру`зі, дру`жба (all differ)
@@ -191,6 +199,7 @@ Tricky pairs to emphasize:
 **Status**: 🔲 Not built
 **Grammar**: Nominative (ХТО? ЩО?)
 **State standard**: §4.2.3.1 (nominative), §4.3.1 (simple sentences)
+**Textbook source**: Bolshakova Букvar Part 1 pp.8–9 (Слова — назви предметів: ХТО?/ЩО?)
 
 **Vocabulary** (20 words across three categories):
 
@@ -275,6 +284,7 @@ Professions: студент, лікар, вчитель/вчителька, ін
 **Status**: 🔲 Not built
 **Grammar**: ЩО РОБИТЬ? (3rd person sg. present)
 **State standard**: §4.2.4.1 (indicative present), §4.3.1
+**Textbook source**: Bolshakova Букvar Part 1 pp.10–11 (Слова — назви дій: ЩО РОБИТЬ?)
 
 **Vocabulary** (15 core verbs):
 
@@ -326,6 +336,7 @@ Conjugation note (teach as patterns, not rules):
 **Status**: 🔲 Not built
 **Grammar**: Adjective gender agreement (nominative only)
 **State standard**: §4.2.1.2 (adjective nominative), §4.2.2 (gender)
+**Textbook source**: Grade 3 pp.96–97 (КРАСНИЙ = гарний, not червоний); Grade 4 (gender system formalized)
 
 **Core principle**: In Ukrainian every noun has grammatical gender. Adjectives must match.
 - Masculine nouns → ЯКИЙ? → adjective ends in -ий/-ій: великий стіл
@@ -369,6 +380,7 @@ Conjugation note (teach as patterns, not rules):
 **Status**: 🔲 Not built
 **Grammar**: Nominative plural formation, vowel alternation
 **State standard**: §4.2.1.1 (plural formation: -и/-і/-ї, vowel alternation), §4.2.1.2 (adjective plural)
+**Textbook source**: Grade 3 p.105 (vowel alternation: чергування голосних), p.112 (riddle ВІТЕР), p.117 (only-plural/only-singular nouns)
 
 **Noun plural patterns**:
 
@@ -748,6 +760,7 @@ Fixed phrases (memorize as chunks):
 **Status**: 🔲 Not built
 **Grammar**: Accusative inanimate
 **State standard**: §4.2.3.2 (accusative)
+**Textbook source**: Grade 4 (accusative case — first case formally named with questions КОГО? ЩО?)
 
 **The key question**: When something IS the object of an action (verb acts ON it), the noun changes form.
 Taught as: ЩО? (asking about a subject) → ЩО БАЧИТЬ? / ЩО ЧИТАЄ? (asking about object)
@@ -865,6 +878,7 @@ Taught as: ЩО? (asking about a subject) → ЩО БАЧИТЬ? / ЩО ЧИТА
 **Status**: 🔲 Not built
 **Grammar**: Locative singular with в/у, на
 **State standard**: §4.2.3.3 (locative)
+**Textbook source**: Grade 4 (locative formally taught as Місцевий відмінок: на кому? на/у чому?); Grade 6 §46 (full case table with prepositions)
 
 **The locative** answers ДЕ? after prepositions в/у (inside) and на (on/at).
 
@@ -1215,6 +1229,7 @@ Housing types: квартира, будинок (приватний будино
 **Status**: 🔲 Not built
 **Grammar**: Past tense formation (-в/-ла/-ло/-ли), gender agreement in past tense
 **State standard**: §4.2.4.1 (past tense)
+**Textbook source**: Grade 4 (past tense explicitly taught with signal words учора/вчора); Grade 5 §38–39 (tense signal words: учора/сьогодні/завтра)
 
 **Content**:
 
@@ -1757,6 +1772,7 @@ Greeting expressions:
 **Status**: 🔲 Not built
 **Grammar**: Phonetic alternation rules
 **State standard**: §4.1.7 (euphony devices)
+**Textbook source**: Grade 3 pp.77–80 (basic rules); Grade 5 §51–52 (full formal euphony tables); Grade 6 §1 (review — euphony as foundational property of Ukrainian)
 
 **Content** (rules + patterns — Grade 3 pp.77–80):
 
@@ -1956,24 +1972,47 @@ Greeting expressions:
 
 ---
 
-## A2 — Outline (to be detailed)
+## A2 — 38 Modules (1–38)
 
-A2 introduces:
-- Dative case — §4.2.2.3
-- Instrumental case — §4.2.2.5
-- Genitive case full paradigm — §4.2.2.2
-- Aspect pairs (доконаний/недоконаний) — §4.2.3.1
-- Motion verbs (їхати/ходити) — §4.2.3.1
-- Past tense expanded (aspect pairs: читав vs прочитав) — §4.2.4.1
-- Future tense expanded (perfective future: прочитаю) — §4.2.4.1
-- Expanded phonetics (consonant assimilation)
-- Complex sentences expanded
+**Full plan**: [A2-CURRICULUM.md](A2-CURRICULUM.md)
+**Textbook sources**: Grade 3 (Vashulenko 2020) + Grade 4 (Kravtsova/Savchenko 2021)
 
-A2 modules (~30): aspect-pairs, motion, genitive, dative, instrumental, city-life, travel-expanded, media, culture, relationships, work, health-expanded, environment, checkpoint-a2.
+A2 covers:
+- **All 7 cases** (Genitive, Dative, Instrumental added) — the Grade 4 case system year
+- **Aspect pairs** (доконаний/недоконаний) — Grade 3–4 content
+- **Motion verb pairs** (іти/ходити, їхати/їздити) + prefixed motion
+- **Full imperative** (хай/нехай for 3rd person)
+- **Pronoun full declension** (all persons, all cases)
+- **Adjective comparison** (вищий/найвищий)
+- **Numeral declension** (два→двох, п'ять→п'яти)
+- **Complex sentences** (що, щоб, де, куди, бо, коли)
+- **Phonetics** (vowel/consonant alternations)
+- **14 thematic areas** (expanded from A1's 12)
+
+Vocabulary target: 1800 cumulative (+1050 new from A1).
+
+## B1 — 42 Modules (1–42)
+
+**Full plan**: [B1-CURRICULUM.md](B1-CURRICULUM.md)
+**Textbook sources**: Grade 5 (Avramenko 2022) + Grade 6 (Avramenko/Тищенко 2023)
+
+B1 covers:
+- **Full declension paradigms** (4 відміни × 3 групи — the Grade 6 morphology year)
+- **Genitive -а/-я vs -у/-ю** semantic rule (concrete vs abstract)
+- **Full adjective declension** (all cases, hard/soft/mixed groups)
+- **Full numeral declension** (cardinal + ordinal + collective)
+- **Conditional mood** (real якщо + irreal якби)
+- **Synthetic future** (-тиму/-тимеш forms)
+- **Complex syntax** (temporal, causal, conditional, attributive, direct/indirect speech)
+- **Phraseology** (фразеологізми, anti-суржик "Культура слова")
+- **Register awareness** (official vs informal)
+- **Writing** (заява, autobiography, retelling, reviews)
+
+Vocabulary target: 3300 cumulative (+1500 new from A2).
 
 ---
 
-## Notes on Bükvар Influence
+## Notes on Букvar Influence
 
 The Ukrainian Буквар (Bolshakova, 2025) influenced:
 - Pre-literacy concept sequence (3 modules before any reading activities)
@@ -1981,18 +2020,27 @@ The Ukrainian Буквар (Bolshakova, 2025) influenced:
 - Symbol-based activities (• = vowel, — = consonant) before letter recognition
 - Image-first meaning (every word has a visual anchor)
 - Правда чи неправда? activity type (directly borrowed)
+- Letter teaching order (A→O→U vowels first, then sonant M, etc. — see `bolshakova-bukvar-mapping.md`)
+- Hard/soft consonant pairs shown via dual key words (сумка/сітка, дуб/дім, etc.)
+- Two-sound letters (Я=[йа], Ю=[йу], Є=[йе], Ї=[йі]) taught as unified pattern
 
-The Bükvар is designed for 6-year-old L1 Ukrainian speakers learning to read. Adaptation for adult L2 learners:
+The Буквар is designed for 6-year-old L1 Ukrainian speakers learning to read. Adaptation for adult L2 learners:
 - Skip L1 phonological awareness (adults already have it)
 - Accelerate syllable reading (adults learn faster)
 - Add vocabulary categories adults need (not children's topics)
 - Maintain the image-anchored, question-word approach
 
+**Research confirms spiral curriculum**: Every concept is introduced simply in Grade 1, revisited with increasing depth through Grade 6. Our A1→A2→B1 mirrors this: experience at A1, name and practice at A2, formalize at B1. (See `cross-reference-synthesis.md` §1 for evidence.)
+
 ## Textbook Activity Sources
 
 All riddles, tongue twisters, and proverbs embedded in modules are sourced from:
-- Болшакова (2025) Grade 1 Буквар — riddles and скоромовки
-- Цепова (2025) Grade 2 — прислів'я
-- Вашуленко (2020) Grade 3 Parts 1–2 — riddles (pp.76, 81), tongue twisters (p.81), прислів'я
+- Болшакова (2025) Grade 1 Буквар — letter page illustrations, syllable tables, riddles, скоромовки
+- Цепова (2025) Grade 2 — прислів'я, question-word exercises
+- Вашуленко (2020) Grade 3 Parts 1–2 — riddles (pp.57, 76, 81, 98, 112, 136, 141), tongue twisters (p.81), прислів'я, word structure (p.105 vowel alternation), euphony (pp.77–80), prefix с-/з- (pp.154–157)
+- Кравцова/Савченко (2021) Grade 4 — case system (all 7 cases with questions), verb tense system, pronoun tables
+- Авраменко (2022) Grade 5 — stress word lists (§38–39), euphony full tables (§51–52), essay format (§53), "Культура слова" anti-суржик boxes
+- Авраменко/Тищенко (2023) Grade 6 — full declension paradigms (§40–103), genitive -а/-я vs -у/-ю semantic rule (§51 p.100), phraseology (§24–27)
 
 Full index: `docs/l2-uk-direct/textbook-map.yaml`
+Research notes: `docs/l2-uk-direct/textbook-reading-notes/`

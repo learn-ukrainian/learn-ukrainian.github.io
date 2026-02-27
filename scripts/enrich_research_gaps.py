@@ -34,7 +34,7 @@ from pathlib import Path
 MODULES = [
     # (track, slug, gaps)
     # gaps: list of dimension names that need improvement
-    ("b2-hist", "rosiiska-imperiia-ukraina",    ["sources", "primary_quotes"]),
+    ("hist", "rosiiska-imperiia-ukraina",    ["sources", "primary_quotes"]),
     ("c1-hist", "istorychna-pamiat-i-polityka", ["sources", "chronology"]),
     ("c1-hist", "povist-mynulykh-lit-i",        ["sources", "chronology"]),
     ("c1-hist", "litopys-samovidtsia",          ["sources", "section_notes"]),

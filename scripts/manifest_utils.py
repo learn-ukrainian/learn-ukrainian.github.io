@@ -18,7 +18,7 @@ Manifest format (RFC #410):
         modules:
           - 01-the-cyrillic-code-i    # Numbered slugs for core
           - 02-the-cyrillic-code-ii
-      b2-hist:
+      hist:
         type: track
         modules:
           - trypillian-civilization   # Slug-only for tracks
@@ -38,7 +38,7 @@ CURRICULUM_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
 CORE_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
 LEVELS = CORE_LEVELS  # Backward compatibility
-TRACKS = ['b2-hist', 'c1-hist', 'c1-bio', 'lit', 'oes', 'ruth']
+TRACKS = ['hist', 'c1-hist', 'c1-bio', 'lit', 'oes', 'ruth']
 
 
 @dataclass

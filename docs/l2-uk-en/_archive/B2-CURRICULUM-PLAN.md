@@ -7,10 +7,10 @@
 **Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
 > **RFC #409 Changes (January 2026):**
-> - History modules (formerly M71-131) → relocated to **B2-HIST** optional track (61 modules)
+> - History modules (formerly M71-131) → relocated to **HIST** optional track (61 modules)
 > - Skills modules (formerly M132-145) → renumbered to M71-84
 > - New communication skills modules → M85-94 (10 new modules)
-> - See `B2-HIST-CURRICULUM-PLAN.md` for history track details
+> - See `HIST-CURRICULUM-PLAN.md` for history track details
 
 ---
 
@@ -54,7 +54,7 @@ B2 — це рівень справжньої мовної свободи. Ви 
 
 ### Додаткові треки (Optional Tracks)
 
-- **B2-HIST:** 61 модуль з історії України (окремий трек)
+- **HIST:** 61 модуль з історії України (окремий трек)
 - **B2-PRO:** 40 модулів професійної української (окремий трек)
 
 ---
@@ -63,8 +63,8 @@ B2 — це рівень справжньої мовної свободи. Ви 
 
 **RFC #409 Reorganization (January 2026):**
 
-1. **History Track Relocation:** B2 M71-131 (61 history modules) → relocated to **B2-HIST** optional track
-   - See `B2-HIST-CURRICULUM-PLAN.md` for complete history track details
+1. **History Track Relocation:** B2 M71-131 (61 history modules) → relocated to **HIST** optional track
+   - See `HIST-CURRICULUM-PLAN.md` for complete history track details
    - History is now optional content, not required for B2 completion
 2. **Skills Renumbering:** Former M132-145 (14 skills modules) → renumbered to M71-84
 3. **New Communication Skills (M85-94):** 10 new practical modules added:
@@ -2747,7 +2747,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ## Phase B2.3: Skills & Checkpoint (Modules 71-84)
 
-> **Note:** These are the former M132-145 modules, renumbered after history relocation to B2-HIST track.
+> **Note:** These are the former M132-145 modules, renumbered after history relocation to HIST track.
 
 > **Pedagogical Structure:**
 > - M71-76: Domain vocabulary (Medicine, Tech, Science, Arts, Culture)
@@ -2920,7 +2920,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | B2.4 | 85-94 | 10 | **NEW** Communication Skills | **M94** |
 | **TOTAL** | **01-94** | **94** | | **3 checkpoints** |
 
-> **RFC #409 Note (January 2026):** History modules (formerly B2.3 M71-131, 61 modules) relocated to **B2-HIST** optional track. See `B2-HIST-CURRICULUM-PLAN.md` for history curriculum.
+> **RFC #409 Note (January 2026):** History modules (formerly B2.3 M71-131, 61 modules) relocated to **HIST** optional track. See `HIST-CURRICULUM-PLAN.md` for history curriculum.
 
 ### Vocabulary Summary
 
@@ -2934,13 +2934,13 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | B2.4 | M85-94 | 10 | ~24 | ~240 | 2,232 |
 | **Total B2** | **94** | | | **~2,256** | **~5,556 cumulative** |
 
-> **Note:** B2 cumulative assumes ~3,300 from A1-B1. History modules (~1,464 words) now in B2-HIST track.
+> **Note:** B2 cumulative assumes ~3,300 from A1-B1. History modules (~1,464 words) now in HIST track.
 
 ---
 
 ## Decolonization Content
 
-> **Note:** Decolonization and myth-busting modules have been relocated to the **B2-HIST** optional track. See `B2-HIST-CURRICULUM-PLAN.md` for details on history curriculum including:
+> **Note:** Decolonization and myth-busting modules have been relocated to the **HIST** optional track. See `HIST-CURRICULUM-PLAN.md` for details on history curriculum including:
 > - Pereiaslav Treaty (myth deconstruction)
 > - Russian Myths Synthesis
 > - Executed Renaissance (cultural genocide)
@@ -3072,7 +3072,7 @@ Before generating any B2 module:
 - C1-CURRICULUM-PLAN.md (complete)
 - B2-GEMINI-EXPANSION-PROPOSAL.md (source for M71-131 specs)
 - B2-COUNTER-PROPOSAL.md (source for Hrushevsky + Executed Renaissance split)
-- B2-HISTORY-RESTRUCTURE-PROPOSAL.md (original history expansion proposal)
+- HISTORY-RESTRUCTURE-PROPOSAL.md (original history expansion proposal)
 
 ---
 

@@ -12,8 +12,8 @@ New workflow:
   markdown source → pymorphy3 lemmatization → clean YAMLs → clean DB
 
 Usage:
-    .venv/bin/python scripts/vocab_extract_proper.py curriculum/l2-uk-en/b2-hist/*.md
-    .venv/bin/python scripts/vocab_extract_proper.py curriculum/l2-uk-en/b2-hist/trypillian-civilization.md
+    .venv/bin/python scripts/vocab_extract_proper.py curriculum/l2-uk-en/hist/*.md
+    .venv/bin/python scripts/vocab_extract_proper.py curriculum/l2-uk-en/hist/trypillian-civilization.md
 """
 
 import argparse
@@ -359,7 +359,7 @@ def process_module(md_path: Path, output_dir: Optional[Path] = None,
     # Try to detect level from path
     level = "UNKNOWN"
     for part in md_path.parts:
-        if part.lower() in ['a1', 'a2', 'b1', 'b2', 'b2-hist', 'b2-pro', 'c1', 'c1-bio', 'c1-pro', 'lit']:
+        if part.lower() in ['a1', 'a2', 'b1', 'b2', 'hist', 'b2-pro', 'c1', 'c1-bio', 'c1-pro', 'lit']:
             level = part.upper()
             break
 

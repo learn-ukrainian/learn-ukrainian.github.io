@@ -70,9 +70,9 @@ class TestDetectLevel:
         assert level == 'C1'
         assert 'BIO' in track.upper()
 
-    def test_b2_hist_from_path(self):
+    def test_hist_from_path(self):
         level, num, track = detect_level(
-            '/curriculum/l2-uk-en/b2-hist/01-trypilska.md', 'level: B2'
+            '/curriculum/l2-uk-en/hist/01-trypilska.md', 'level: B2'
         )
         assert level == 'B2'
         assert 'HIST' in track.upper()

@@ -39,7 +39,7 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
     },
     
     # --- Seminar Tracks (Advanced/Scholar) ---
-    "b2-hist": {
+    "hist": {
         "model": "gemini-3-pro-preview",
         "word_floor": 4000,
         "persona": "The Decolonizer",

@@ -182,7 +182,7 @@ For each `activity_hints` entry, generate corresponding YAML activity following 
 
 #### Common Activity Types by Pedagogy
 
-**Seminar (B2-HIST, C1-BIO, C1-HIST, LIT):**
+**Seminar (HIST, C1-BIO, C1-HIST, LIT):**
 
 - reading (2-3): External texts with linguistic analysis
 - quiz (12+): Comprehension questions
@@ -382,7 +382,7 @@ For `essay-response` or `critical-analysis` types:
 - **No Surzhyk:** Zero tolerance
 - **Use guillemets:** Use «» for quoted text, NOT ""
 - **Natural language:** No robotic or template-like Ukrainian
-- **Academic register:** Match lesson register (especially for B2-HIST)
+- **Academic register:** Match lesson register (especially for HIST)
 
 ### Activity Counts
 
@@ -400,7 +400,7 @@ Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 | C2    | 15-25            | 20+ quiz items | 15+ fill-in   | 6-12 other |
 
 **Seminar Tracks (Analysis-Focused):**
-*Applies to: B2-HIST, C1-BIO, C1-HIST, LIT*
+*Applies to: HIST, C1-BIO, C1-HIST, LIT*
 
 | Level      | Total Activities | Reading | Essay | Quiz/Fill-in |
 | ---------- | ---------------- | ------- | ----- | ------------ |
@@ -442,7 +442,7 @@ Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 
 **Immersion:** 100% Ukrainian (all instructions, explanations)
 
-### B2-HIST / C1-BIO / C1-HIST / LIT Tracks
+### HIST / C1-BIO / C1-HIST / LIT Tracks
 
 **Activity focus:**
 
@@ -595,7 +595,7 @@ Next: Run /module-act-qa {level} {module_num}
 
 ## Examples
 
-### Example 1: B2-HIST Activities Generation
+### Example 1: HIST Activities Generation
 
 **Input:** Locked `trypillian-civilization.md` and `meta/trypillian-civilization.yaml`
 
@@ -627,7 +627,7 @@ Next: Run /module-act-qa {level} {module_num}
         - фортеці
 
 - type: reading
-  id: b2-hist-1-reading-01
+  id: hist-1-reading-01
   title: Аналіз первинного джерела
   resource:
     type: primary_source
@@ -639,7 +639,7 @@ Next: Run /module-act-qa {level} {module_num}
     - Порівняйте термінологію цього джерела з термінологією модуля.
 
 - type: essay-response
-  id: b2-hist-1-essay-01
+  id: hist-1-essay-01
   title: Есе
   prompt: Напишіть есе (400+ слів) на тему «Чому Трипільська культура важлива для сучасної української ідентичності?»
   min_words: 400

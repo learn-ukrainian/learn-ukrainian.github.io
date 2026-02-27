@@ -3,8 +3,8 @@ PASS: build_module_v2.py c1-bio 22 — E2E
   Module:   petro-mohyla
   Track:    c1-bio
   Mode:     e2e
-  Words:    0 (target: 5000)
+  Words:    5321 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-19T20:47:19Z
+  Date:     2026-02-27T10:55:29Z

@@ -30,13 +30,13 @@ Single file: `curriculum/l2-uk-en/{level}/meta/{slug}.yaml`
 
 ```yaml
 # Required fields
-module: {level}-{num}           # e.g., b2-hist-01
+module: {level}-{num}           # e.g., hist-01
 id: {level}-{num}
 title: "Назва українською"      # Ukrainian title
 subtitle: "English subtitle"
 slug: {slug}                    # kebab-case, no numbers for tracks
 version: '2.0'
-phase: {phase from plan}        # e.g., B2-HIST.1 [Витоки]
+phase: {phase from plan}        # e.g., HIST.1 [Витоки]
 focus: history|grammar|vocabulary|cultural|biography|integration
 pedagogy: seminar|TTT|PPP|CLIL
 register: публіцистичний|науковий|розмовний
@@ -138,20 +138,20 @@ This file will be validated by `module-meta-qa`. Validation checks:
 
 ## Examples
 
-### Example 1: B2-HIST Module 1 (Trypillian Civilization)
+### Example 1: HIST Module 1 (Trypillian Civilization)
 
-**Input:** `/module-meta b2-hist 1`
+**Input:** `/module-meta hist 1`
 
 **Output:** `meta/trypillian-civilization.yaml`
 
 ```yaml
-module: b2-hist-01
-id: b2-hist-01
+module: hist-01
+id: hist-01
 title: 'Трипільська цивілізація'
 subtitle: 'Trypillian Civilization — Origins of Ukrainian Land'
 slug: trypillian-civilization
 version: '2.0'
-phase: 'B2-HIST.1 [Витоки]'
+phase: 'HIST.1 [Витоки]'
 focus: history
 pedagogy: seminar
 register: публіцистичний
@@ -213,10 +213,10 @@ immersion_target: 0.85
 ## Example Command
 
 ```bash
-# For B2-HIST module 5
-/module-meta b2-hist 5
+# For HIST module 5
+/module-meta hist 5
 # Then immediately:
-/architect b2-hist 5
+/architect hist 5
 ```
 
 ---

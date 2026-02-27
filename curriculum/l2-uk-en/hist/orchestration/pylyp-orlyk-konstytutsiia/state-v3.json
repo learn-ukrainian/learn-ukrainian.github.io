@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "pylyp-orlyk-konstytutsiia",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:58:29Z",
+      "task_id": "v3-pylyp-orlyk-konstytutsiia-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T22:44:27Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T22:46:01Z",
+      "task_id": "v3-pylyp-orlyk-konstytutsiia-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T22:49:42Z",
+      "attempts": 2
+    }
+  }
+}

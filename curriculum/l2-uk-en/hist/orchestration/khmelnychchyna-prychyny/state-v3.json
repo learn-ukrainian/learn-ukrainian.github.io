@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "khmelnychchyna-prychyny",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:18:59Z",
+      "task_id": "v3-khmelnychchyna-prychyny-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T20:53:05Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T20:54:49Z",
+      "task_id": "v3-khmelnychchyna-prychyny-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T19:47:15Z",
+      "attempts": 1
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "slug": "pravoslavna-tserkva-17",
+  "track": "hist",
+  "module_num": 34,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-19T11:20:24Z",
+      "task_id": "yw-pravoslavna-tserkva-17-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T18:12:59Z",
+      "words": 6865,
+      "attempts": 2
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T18:15:18Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T18:15:18Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:30:17Z",
+      "note": "v3-audit-autofix"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:30:17Z",
+      "note": "v3-audit-autofix"
+    }
+  },
+  "last_updated": "2026-02-25T19:30:17Z"
+}

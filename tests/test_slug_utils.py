@@ -27,7 +27,7 @@ class TestToBareSlag:
         assert to_bare_slug("44-a1-final-exam") == "a1-final-exam"
 
     def test_three_digit_prefix(self):
-        """B2-HIST has 140 modules — must handle 3-digit prefixes."""
+        """HIST has 140 modules — must handle 3-digit prefixes."""
         assert to_bare_slug("140-syntez-viyna") == "syntez-viyna"
 
     def test_bare_slug_noop(self):

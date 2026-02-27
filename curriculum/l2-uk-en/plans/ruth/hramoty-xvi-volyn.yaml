@@ -1,0 +1,34 @@
+sequence: 111
+module: ruth-111
+slug: hramoty-xvi-volyn
+title_uk: "Волинські грамоти XVI століття"
+title_en: "Volhynian Charters of the 16th Century"
+phase: 5
+phase_id: linguistic-identity
+phase_name: "Мовна ідентичність"
+focus: "Regional Ukrainian legal documents — Volhynian administrative register showing local linguistic identity"
+content_outline:
+- section: Вступ
+  description: "Volhynia in the 16th century: between the Grand Duchy of Lithuania and the Polish Crown. Regional identity expressed through legal language."
+- section: Основний матеріал
+  description: "Reading Volhynian charters. Comparison with Galician and Kyivan documents — regional variation in Ruthenian. Polish influences vs preserved Ukrainian forms. Land disputes, family law, trade agreements."
+- section: Практика
+  description: "Identifying Volhynian dialectal features. Legal terminology comparison across regions. Document authentication methods."
+- section: Підсумок
+  description: "Regional charters as evidence of Ukrainian linguistic diversity within unity. Not one Ruthenian but many local variants — all recognizably Ukrainian."
+vocabulary_hints:
+- волинський
+- регіональний
+- грамота
+- земельний акт
+- судовий
+- воєвода
+activity_types:
+- transcription
+- paleography-analysis
+- grammar-identify
+- comparative-style
+persona:
+  voice: "Regional Historian"
+  role: "Volhynian Archivist"
+source_url: "http://litopys.org.ua/djvu/gramoty_volyn_xvi.htm"

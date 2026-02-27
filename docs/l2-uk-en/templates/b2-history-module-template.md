@@ -332,7 +332,7 @@ History modules should include **2-3 external reading tasks** for deeper engagem
 - Word count inflation (~700 words added to content)
 - QA confusion (auditing both locations)
 
-**Per config.py, B2-history essay-response requirements:**
+**Per config.py, history essay-response requirements:**
 - **Word count:** 150-250 words (student response length)
 - **Required:** Every module must have an essay-response activity
 
@@ -373,7 +373,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ### Seminar-Style Activities (Required)
 
-*Note: B2-HIST is a seminar track. All activities must be implemented in YAML using seminar-style types only.*
+*Note: HIST is a seminar track. All activities must be implemented in YAML using seminar-style types only.*
 
 **Required activity types:**
 1. **Reading (`reading`):** External reading assignments with linguistic analysis questions — analyze primary sources, academic articles
@@ -385,7 +385,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 5. **Authorial Intent (`authorial-intent`):** Analyze author's purpose, bias, and rhetorical strategies in primary sources
 6. **True/False (`true-false`):** LIMITED use — only for verifying reading comprehension, not grammar drills
 
-**❌ NOT PERMITTED in B2-HIST:**
+**❌ NOT PERMITTED in HIST:**
 - Grammar drills: quiz, fill-in, cloze, match-up, error-correction, unjumble, mark-the-words, group-sort, select, translate
 - These activity types are for language-focused modules, not history seminars
 
@@ -516,7 +516,7 @@ The build system will inject these sections at build time.
 - **Base template:** `docs/l2-uk-en/templates/b2-module-template.md`
 - **Synthesis template:** `docs/l2-uk-en/templates/b2-synthesis-module-template.md` (for M83, M107, M119, M125, M131)
 - **B2 Curriculum Plan:** `docs/l2-uk-en/B2-CURRICULUM-PLAN.md` (M71-131 history progression)
-- **Restructure proposal:** `docs/l2-uk-en/B2-HISTORY-RESTRUCTURE-PROPOSAL.md`
+- **Restructure proposal:** `docs/l2-uk-en/HISTORY-RESTRUCTURE-PROPOSAL.md`
 - **Gemini expansion:** `docs/l2-uk-en/B2-GEMINI-EXPANSION-PROPOSAL.md` (detailed module specs)
 - **Decolonization guidelines:** Referenced in curriculum plan
 

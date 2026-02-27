@@ -7,7 +7,7 @@ Usage:
 
 Examples:
     .venv/bin/python scripts/validate_plans.py          # All levels
-    .venv/bin/python scripts/validate_plans.py b2-hist  # Single level
+    .venv/bin/python scripts/validate_plans.py hist  # Single level
 """
 
 import sys

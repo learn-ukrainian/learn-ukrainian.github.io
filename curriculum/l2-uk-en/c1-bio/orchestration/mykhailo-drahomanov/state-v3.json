@@ -8,6 +8,20 @@
       "ts": "2026-02-19T15:08:43Z",
       "task_id": "v3-mykhailo-drahomanov-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T16:15:30Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T16:20:14Z",
+      "task_id": "v3-mykhailo-drahomanov-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T16:24:54Z",
+      "attempts": 2
     }
   }
 }

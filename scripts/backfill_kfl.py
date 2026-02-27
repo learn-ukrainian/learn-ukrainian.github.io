@@ -9,7 +9,7 @@ Deterministic extraction for ~80% of fields; Gemini CLI for the rest
 (forbidden_claims, ambiguous date normalization).
 
 Usage:
-    .venv/bin/python scripts/backfill_kfl.py --track b2-hist
+    .venv/bin/python scripts/backfill_kfl.py --track hist
     .venv/bin/python scripts/backfill_kfl.py --track c1-bio --dry-run
     .venv/bin/python scripts/backfill_kfl.py --all
     .venv/bin/python scripts/backfill_kfl.py --all --skip-llm
@@ -33,7 +33,7 @@ GEMINI_BIN = shutil.which("gemini") or "/opt/homebrew/bin/gemini"
 
 # Tracks that contain seminar research files
 SEMINAR_TRACKS = [
-    "b2-hist", "c1-bio", "c1-hist",
+    "hist", "c1-bio", "c1-hist",
     "lit", "lit-essay", "lit-fantastika", "lit-hist-fic",
     "lit-humor", "lit-juvenile", "lit-war",
     "oes", "ruth",
@@ -486,7 +486,7 @@ def main():
         description="Backfill Key Facts Ledger (KFL) into seminar research files.",
     )
     parser.add_argument("--track", type=str, default=None,
-                        help="Process a single track (b2-hist, c1-bio, c1-hist)")
+                        help="Process a single track (hist, c1-bio, c1-hist)")
     parser.add_argument("--all", action="store_true", dest="process_all",
                         help="Process all seminar tracks")
     parser.add_argument("--dry-run", action="store_true",

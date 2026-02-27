@@ -1,0 +1,59 @@
+{
+  "module": "meletii-smotrytskyi",
+  "level": "C1",
+  "plan_version": "1.0",
+  "last_audit": "2026-02-27T11:23:55.958911Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-27T11:23:42.606239Z",
+    "meta": "2026-02-27T11:22:59.479873Z",
+    "activities": "2026-02-27T11:19:29.147992Z",
+    "vocabulary": "2026-02-27T11:19:29.070439Z",
+    "plan": "2026-02-17T13:33:56.605297Z",
+    "research": "2026-02-22T10:35:24.539883Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5004/5000 (raw: 5310)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has decolonization section but content lacks it"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 2,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

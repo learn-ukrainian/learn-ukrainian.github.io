@@ -36,7 +36,7 @@ Plans are NOT created from thin air. They must be grounded in authoritative sour
 
 | Track | Source of Truth | Status |
 |-------|-----------------|--------|
-| **b2-hist** (Cossack Era) | `docs/references/textbooks/`, Ukrainian Wikipedia, Claude corpus | 🟡 50% - modules in progress |
+| **hist** (Cossack Era) | `docs/references/textbooks/`, Ukrainian Wikipedia, Claude corpus | 🟡 50% - modules in progress |
 | **c1-hist** (Historiography) | Ukrainian university history programs (TBD), Ukrainian Wikipedia | ⚠️ Needs planning - specific sources to be identified |
 | **c1-bio** (Biographies) | Claude's training data + Ukrainian internet verification (each person researched individually) | ✅ Almost done |
 | **lit** (Literature) | **ukrlib** (Ukrainian digital library) | ✅ Done |
@@ -74,7 +74,7 @@ Managed in `docs/resources/external_resources.yaml`.
 
 | Folder | Content | Usage |
 |--------|---------|-------|
-| `textbooks/` | Ukrainian high school history textbooks | Source of truth for b2-hist |
+| `textbooks/` | Ukrainian high school history textbooks | Source of truth for hist |
 | `textbooks-txt/` | Text versions for searching | Same as above |
 | `dobra-forma/` | Language learning resource | Reference material |
 | `private/` | **Purchased materials** (gitignored) | ⚠️ Learn from, **NEVER copy** |
@@ -132,8 +132,8 @@ The previous architecture conflated planning and building:
 │  │   ├── 01-how-to-talk-about-grammar.yaml   # Module plan (outline, targets)│
 │  │   ├── 02-language-about-verbs.yaml                                        │
 │  │   └── ...                                                                 │
-│  ├── b2-hist.yaml                                                            │
-│  ├── b2-hist/                                                                │
+│  ├── hist.yaml                                                            │
+│  ├── hist/                                                                │
 │  │   ├── kozatstvo-vytoky.yaml                                               │
 │  │   └── ...                                                                 │
 │  └── ...                                                                     │

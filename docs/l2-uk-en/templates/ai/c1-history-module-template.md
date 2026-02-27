@@ -10,10 +10,10 @@
 ### Step 1.1: Confirm Track
 
 ```
-⛔ STOP: C1-HIST is NOT about historical facts (that's B2-HIST).
+⛔ STOP: C1-HIST is NOT about historical facts (that's HIST).
 C1-HIST is about HOW we know history — sources, methods, historiography.
 
-IF you need factual narrative → USE b2-history-module-template.md
+IF you need factual narrative → USE history-module-template.md
 IF you need source analysis, methodology, competing narratives → CONTINUE
 ```
 
@@ -131,7 +131,7 @@ CREATE 3 files:
 DO NOT include:
 - ## Vocabulary header (injected from YAML)
 - ## Activities header (injected from YAML)
-- Factual drills (this is NOT B2-HIST)
+- Factual drills (this is NOT HIST)
 - Quiz on dates/events
 - Dialogs (historiography is analytical)
 ```
@@ -300,9 +300,9 @@ SOURCES:
 | Never attribute views | Check actual arguments first |
 | When in doubt | Mark [NEEDS VERIFICATION] |
 
-### C1-HIST vs B2-HIST
+### C1-HIST vs HIST
 
-| Aspect | B2-HIST | C1-HIST |
+| Aspect | HIST | C1-HIST |
 |--------|---------|---------|
 | Focus | Historical facts | Historiographical analysis |
 | Questions | What happened? | How do we know? |

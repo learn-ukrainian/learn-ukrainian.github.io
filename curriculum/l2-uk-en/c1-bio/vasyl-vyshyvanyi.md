@@ -1,7 +1,7 @@
 <!-- SCOPE
 Covers: Біографія та спадщина Василя Вишиваного (Вільгельма Габсбурга), його політична, військова та культурна діяльність.
 Not covered:
-  - Детальна історія династії Габсбургів → b2-hist-wwi-ukraine
+  - Детальна історія династії Габсбургів → hist-wwi-ukraine
 Related: c1-bio-44-symon-petliura, c1-bio-61-olena-stepaniv, c1-bio-41-solomiya-krushelnytska
 -->
 

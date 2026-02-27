@@ -3,7 +3,7 @@
 ## Track Overview
 
 **Modules:** 101 (M01-101)
-**Prerequisite:** B2-HIST Track (recommended) or B2 Core minimum
+**Prerequisite:** HIST Track (recommended) or B2 Core minimum
 **Pedagogy:** CBI (Content-Based Instruction) with biographical narrative
 **Immersion:** 95-100% Ukrainian
 

@@ -2,10 +2,10 @@
   "module": "nataliya-kobrynska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T01:10:44.231494Z",
+  "last_audit": "2026-02-27T18:42:54.054906Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T01:01:01.323594Z",
+    "md": "2026-02-27T01:10:47.155936Z",
     "meta": "2026-02-19T16:26:17.807759Z",
     "activities": "2026-02-27T00:50:40.332330Z",
     "vocabulary": "2026-02-27T00:50:40.299435Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "5094/5000 (raw: 5492)"
+      "message": "5094/5000 (raw: 5494)"
     },
     "activities": {
       "status": "deferred",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "research": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "Refresh recommended: Research has decolonization section but content lacks it"
+      "message": "Content aligned with research"
     },
     "review": {
       "status": "deferred",
@@ -52,7 +52,7 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 2,
+    "pass_count": 3,
     "fail_count": 0,
     "deferred_count": 3
   }

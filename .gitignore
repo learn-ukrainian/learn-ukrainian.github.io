@@ -125,8 +125,11 @@ data/textbooks/
 
 # RAG pipeline artifacts (generated at runtime)
 data/qdrant/
+data/qdrant_db/
 data/textbook_images/
 data/textbook_chunks/
+data/literary_texts/*.bin
+data/literary_texts/*.npy
 
 # Starlight
 starlight/dist

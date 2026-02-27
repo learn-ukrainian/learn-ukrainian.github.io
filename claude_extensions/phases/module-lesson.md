@@ -112,7 +112,7 @@ fi
    - **A2**: `docs/l2-uk-en/templates/a2-module-template.md`
    - **B1**: `docs/l2-uk-en/templates/b1-grammar-module-template.md` (or cultural/vocabulary based on focus)
    - **B2 core**: `docs/l2-uk-en/templates/b2-grammar-module-template.md` (or others)
-   - **B2-HIST**: `docs/l2-uk-en/templates/ai/b2-history-module-template.md`
+   - **HIST**: `docs/l2-uk-en/templates/ai/history-module-template.md`
    - **B2-PRO**: `docs/l2-uk-en/templates/ai/b2-pro-module-template.md`
    - **C1-BIO**: `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
    - **C1-HIST**: `docs/l2-uk-en/templates/ai/c1-history-module-template.md`
@@ -317,7 +317,7 @@ If outside range: Adjust largest section(s) to compensate.
 
 ### Seminar (Content-Based)
 
-**Used in:** B2-HIST, C1-BIO, C1-HIST, LIT
+**Used in:** HIST, C1-BIO, C1-HIST, LIT
 
 > **⚠️ REQUIRED: Read Research-First Workflow before generating seminar content!**
 >
@@ -329,7 +329,7 @@ If outside range: Adjust largest section(s) to compensate.
 > 3. Create structured outline with word targets per section
 > 4. THEN write with research notes open
 >
-> **This is mandatory for C1-BIO and B2-HIST. Do not skip.**
+> **This is mandatory for C1-BIO and HIST. Do not skip.**
 
 **Content structure:**
 
@@ -558,7 +558,7 @@ Next: Run /module-lesson-qa {level} {module_num}
 
 ## Examples
 
-### Example 1: B2-HIST Lesson Generation
+### Example 1: HIST Lesson Generation
 
 **Input:** Locked `meta/trypillian-civilization.yaml` (see module-meta examples)
 

@@ -86,8 +86,8 @@ def extract_markdown_sections(md_path: Path) -> Dict[str, Dict[str, any]]:
 
             # Start new section
             current_section = header_match.group(1).strip()
-            # Remove markdown formatting and emojis
-            current_section = re.sub(r"\s*[—–-]\s*.*$", "", current_section)  # Remove "— Subtitle" (keep colons for distinct sections)
+            # Do not truncate subtitles, it breaks headers like "Військова служба (1789-1808) — Part 1" vs "Part 2"
+            # current_section = re.sub(r"\s+[—–-]\s+.*$", "", current_section)
             current_section = re.sub(r"[📚🎯💡🔍]", "", current_section).strip()
             current_words = 0
             current_line = idx + 1
@@ -148,7 +148,7 @@ def load_content_outline(md_path: Path) -> Optional[List[Dict]]:
     try:
         # Determine level from path or parent name
         level = md_path.parent.name
-        if level not in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'b2-hist', 'c1-bio', 'c1-hist']:
+        if level not in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'c1-bio', 'c1-hist']:
              # Fallback logic if needed, but standard structure is reliable
              pass
         
@@ -203,8 +203,8 @@ def normalize_section_name(name: str) -> str:
     """
     name = name.lower().strip()
 
-    # Remove em-dash subtitles (keep colons for distinct sections)
-    name = re.sub(r"\s+[—–\-]\s+.*$", "", name)
+    # Remove em-dash subtitles (disabled because it breaks sections with common prefixes)
+    # name = re.sub(r"\s+[—–\-]\s+.*$", "", name)
 
     # Remove punctuation
     name = re.sub(r"[^\wа-яіїєґ\s]", " ", name)

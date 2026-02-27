@@ -8,6 +8,20 @@
       "ts": "2026-02-21T00:01:28Z",
       "task_id": "v3-ivan-vyhovskyi-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T11:13:35Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T11:15:52Z",
+      "task_id": "v3-ivan-vyhovskyi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T11:21:50Z",
+      "attempts": 2
     }
   }
 }

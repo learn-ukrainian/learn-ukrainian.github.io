@@ -8,6 +8,20 @@
       "ts": "2026-02-19T12:01:37Z",
       "task_id": "v3-bohdan-khmelnytskyy-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T10:40:10Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T10:43:16Z",
+      "task_id": "v3-bohdan-khmelnytskyy-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T10:46:13Z",
+      "attempts": 2
     }
   }
 }

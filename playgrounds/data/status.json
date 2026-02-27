@@ -6412,9 +6412,9 @@
       "fail_count": 0,
       "pending_count": 0
     },
-    "b2-hist": {
-      "id": "b2-hist",
-      "name": "B2-HIST - History Track",
+    "hist": {
+      "id": "hist",
+      "name": "HIST - History Track",
       "modules": [
         {
           "id": "afhanistan",

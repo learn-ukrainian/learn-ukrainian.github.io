@@ -71,10 +71,10 @@ def check_research_file(file_path: str) -> list[dict]:
     Returns:
         List of violation dictionaries (warning level).
     """
-    seminar_tracks = {'b2-hist', 'c1-hist', 'c1-bio', 'lit', 'oes', 'ruth'}
+    seminar_tracks = {'hist', 'c1-hist', 'c1-bio', 'lit', 'oes', 'ruth'}
 
     md_path = Path(file_path)
-    # Track is the parent directory name (e.g., c1-bio, b2-hist)
+    # Track is the parent directory name (e.g., c1-bio, hist)
     track = md_path.parent.name
     if track.lower() not in seminar_tracks:
         return []
@@ -104,7 +104,7 @@ def check_research_file(file_path: str) -> list[dict]:
 
 def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, pedagogy: str) -> list[dict]:
     """
-    Validate that seminar-style modules (B2-HIST, C1, LIT) have proper Meta YAML
+    Validate that seminar-style modules (HIST, C1, LIT) have proper Meta YAML
     and adhere to the strict schema.
 
     Args:
@@ -119,7 +119,7 @@ def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, ped
 
     # Determine if this is a seminar module
     is_seminar = pedagogy and pedagogy.lower() == 'seminar'
-    is_seminar_track = level_code.lower() in ['b2-hist', 'c1-hist', 'c1-bio', 'lit']
+    is_seminar_track = level_code.lower() in ['hist', 'c1-hist', 'c1-bio', 'lit']
 
     # If not a seminar module, we skip strict validation
     if not (is_seminar or is_seminar_track):

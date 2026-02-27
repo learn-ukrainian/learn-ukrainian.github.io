@@ -6,7 +6,7 @@ client = TestClient(app)
 response = client.get("/api/dashboard/overview")
 data = response.json()
 for t in data["tracks"]:
-    if t["id"] in ["b1", "b2", "b2-hist", "a1", "a2"]:
+    if t["id"] in ["b1", "b2", "hist", "a1", "a2"]:
         print(f"Track: {t['id']}")
         print(f"  API Stats: {t['stats']}")
         

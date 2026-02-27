@@ -17,6 +17,12 @@
       "status": "complete",
       "ts": "2026-02-23T21:14:32Z",
       "note": "migrated-from-v2"
+    },
+    "v3-D": {
+      "status": "failed",
+      "ts": "2026-02-27T09:46:54Z",
+      "attempts": 3,
+      "note": "needs-rebuild"
     }
   }
 }

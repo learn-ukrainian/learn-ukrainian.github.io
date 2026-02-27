@@ -41,10 +41,10 @@ focus: biography
 pedagogy: seminar
 prerequisites:
 - c1-bio-24 (Іван Мазепа)
-- b2-hist mazepa-war module
+- hist mazepa-war module
 connects_to:
 - c1-bio-28 (Пилип Орлик)
-- b2-hist ruina-ii module
+- hist ruina-ii module
 objectives:
 - Проаналізувати політичну опозицію Гордієнка до Петра I
 - Оцінити значення союзу Січі та Гетьманщини

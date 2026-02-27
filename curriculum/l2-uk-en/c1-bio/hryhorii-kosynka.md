@@ -2,7 +2,7 @@
 Covers: Життя, творчість та трагічна загибель Григорія Косинки, аналіз його імпресіоністичної новелістики, роль у літературних угрупованнях 1920-х років, протистояння тоталітарній системі.
 Not covered:
   - Детальний аналіз п'єс Миколи Куліша → mykola-kulish
-Related: b2-hist/rozstriliane-vidrodzennia, c1-bio/les-kurbas, c1-bio/mykola-khvylovyi
+Related: hist/rozstriliane-vidrodzennia, c1-bio/les-kurbas, c1-bio/mykola-khvylovyi
 -->
 
 # Григорій Косинка: Майстер української новели та жертва терору

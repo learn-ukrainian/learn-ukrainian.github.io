@@ -7,7 +7,7 @@ track: biography
 version: "1.0"
 
 overview:
-  total_modules: 156
+  total_modules: 175
   description: "Comprehensive biographies of significant Ukrainians across all fields and eras"
   prerequisites: "[c1]"
   target_audience: "Advanced learners seeking deep knowledge of Ukrainian historical figures"
@@ -87,3 +87,4 @@ pedagogy_notes:
     - "Highlight resistance to imperial oppression"
     - "Correct Soviet-era distortions of biography"
     - "Emphasize Ukrainian agency and contribution"
+    - "Reject Soviet ideological framing of figures, not necessarily Soviet-era textual/archival scholarship which may contain reliable primary data"

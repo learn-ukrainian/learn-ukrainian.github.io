@@ -921,7 +921,7 @@ def resolve_slug_links(content: str) -> str:
 
     Transforms:
         [slug:my-world-objects] → [My World Objects](/a1/module-05)
-        [slug:trypillian-civilization] → [Трипільська цивілізація](/b2-hist/trypillian-civilization)
+        [slug:trypillian-civilization] → [Трипільська цивілізація](/hist/trypillian-civilization)
 
     RFC #410 Phase 1: Allows stable cross-module links that don't break when modules are renumbered.
     """
@@ -1738,7 +1738,7 @@ def get_modules_from_manifest(target_level: Optional[str] = None) -> list[Module
             continue
         all_modules.extend(get_modules_for_level(level))
 
-    # Process tracks (b2-hist, c1-bio, lit)
+    # Process tracks (hist, c1-bio, lit)
     for track_name in TRACKS:
         if target_level and track_name != target_level:
             continue

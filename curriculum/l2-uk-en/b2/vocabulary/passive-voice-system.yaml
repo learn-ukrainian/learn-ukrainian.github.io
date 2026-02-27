@@ -1,91 +1,91 @@
-  lemma: пасивний стан
+  - lemma: пасивний стан
   pos: phrase
   translation: passive voice
-  lemma: активний стан
+- lemma: активний стан
   pos: phrase
   translation: active voice
-  lemma: дієприкметник
+- lemma: дієприкметник
   pos: noun
   translation: participle
-  lemma: безособовий
+- lemma: безособовий
   pos: adj
   translation: impersonal
-  lemma: зворотний
+- lemma: зворотний
   pos: adj
   translation: reflexive
-  lemma: агент
+- lemma: агент
   pos: noun
   translation: agent
-  lemma: виконавець
+- lemma: виконавець
   pos: noun
   translation: performer / executor
-  lemma: регістр
+- lemma: регістр
   pos: noun
   translation: register
-  lemma: офіційно-діловий
+- lemma: офіційно-діловий
   pos: adj
   translation: official-business (style)
-  lemma: науковий
+- lemma: науковий
   pos: adj
   translation: scientific
-  lemma: розмовний
+- lemma: розмовний
   pos: adj
   translation: colloquial / conversational
-  lemma: літературний
+- lemma: літературний
   pos: adj
   translation: literary
-  lemma: канцелярит
+- lemma: канцелярит
   pos: noun
   translation: bureaucratese
-  lemma: узгодження
+- lemma: узгодження
   pos: noun
   translation: agreement
-  lemma: конструкція
+- lemma: конструкція
   pos: noun
   translation: construction
-  lemma: трансформація
+- lemma: трансформація
   pos: noun
   translation: transformation
-  lemma: контекст
+- lemma: контекст
   pos: noun
   translation: context
-  lemma: стиль
+- lemma: стиль
   pos: noun
   translation: style
-  lemma: суфікс
+- lemma: суфікс
   pos: noun
   translation: suffix
-  lemma: доконаний вид
+- lemma: доконаний вид
   pos: phrase
   translation: perfective aspect
-  lemma: недоконаний вид
+- lemma: недоконаний вид
   pos: phrase
   translation: imperfective aspect
-  lemma: підмет
+- lemma: підмет
   pos: noun
   translation: subject
-  lemma: додаток
+- lemma: додаток
   pos: noun
   translation: object / addition
-  lemma: відмінок
+- lemma: відмінок
   pos: noun
   translation: case
-  lemma: дієслово-зв'язка
+- lemma: дієслово-зв'язка
   pos: noun
   translation: copula verb / linking verb
-  lemma: стан
+- lemma: стан
   pos: noun
   translation: state / condition
-  lemma: процес
+- lemma: процес
   pos: noun
   translation: process
-  lemma: результат
+- lemma: результат
   pos: noun
   translation: result
-  lemma: суб'єктність
+- lemma: суб'єктність
   pos: noun
   translation: subjectivity / agency
-  lemma: калька
+- lemma: калька
   pos: noun
   translation: calque / loan translation
 

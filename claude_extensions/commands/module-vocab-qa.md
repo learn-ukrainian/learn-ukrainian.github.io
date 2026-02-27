@@ -26,7 +26,7 @@ Read: `claude_extensions/phases/module-vocab-qa.md`
 
 > **Architecture v2.0:** Read vocabulary scope from plan.
 
-**For tracks (b2-hist, c1-bio, lit, c1-hist, b2-pro):**
+**For tracks (hist, c1-bio, lit, c1-hist, b2-pro):**
 
 1. Look up slug from manifest:
    ```bash

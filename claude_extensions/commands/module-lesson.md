@@ -26,7 +26,7 @@ Read: `claude_extensions/phases/module-lesson.md`
 
 > **Architecture v2.0:** Plans are immutable source of truth. Meta is mutable build config.
 
-**For tracks (b2-hist, c1-bio, lit, c1-hist, b2-pro):**
+**For tracks (hist, c1-bio, lit, c1-hist, b2-pro):**
 
 1. Look up slug from manifest:
    ```bash

@@ -67,7 +67,7 @@ activity_hints:
   output: Есе-роздум
 focus: biography
 prerequisites:
-- b2-hist-upa
+- hist-upa
 connects_to:
 - c1-bio-145-roman-shukhevych
 - c1-bio-135-vasyl-stus

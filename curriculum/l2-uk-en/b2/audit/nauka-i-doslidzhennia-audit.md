@@ -4,7 +4,7 @@
 **Generated:** 2026-02-25 11:49:24
 
 ## Configuration
-**Type:** B2-history
+**Type:** history
 **Word Target:** 5000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items

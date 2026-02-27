@@ -26,7 +26,7 @@ Usage:
     .venv/bin/python scripts/batch_dispatcher.py dispatch-one --track c1-bio
 
     # Filter tracks
-    --include-tracks b2-hist c1-bio lit
+    --include-tracks hist c1-bio lit
     --exclude-tracks a1 b1 b2
 
     # Safety timeout
@@ -102,7 +102,7 @@ def scan_track(track_name: str, trust_cache: bool = False) -> dict:
     oscillation, but are flagged for cheap re-audit before Gemini dispatch.
 
     Args:
-        track_name: Track identifier (e.g., 'a1', 'b2-hist')
+        track_name: Track identifier (e.g., 'a1', 'hist')
         trust_cache: If True, skip freshness checks (treat all caches as fresh)
     """
     try:

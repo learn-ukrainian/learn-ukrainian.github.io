@@ -34,7 +34,7 @@ Module plans are stored in `curriculum/l2-uk-en/plans/{level}/{slug}.yaml`.
 | Field | Description |
 |-------|-------------|
 | `module` | Slug (matches filename) |
-| `level` | CEFR level (a1, b2-hist, etc.) |
+| `level` | CEFR level (a1, hist, etc.) |
 | `sequence` | Module number |
 | `version` | Plan version |
 | `title` | Ukrainian title |
@@ -58,7 +58,7 @@ Module plans are stored in `curriculum/l2-uk-en/plans/{level}/{slug}.yaml`.
 
 ```yaml
 module: kozatstvo-vytoky
-level: b2-hist
+level: hist
 sequence: 15
 version: '1.0'
 title: Виникнення козацтва
@@ -123,7 +123,7 @@ constraints:
 | `grammar` | Grammar-focused lessons | A1-B2 |
 | `vocabulary` | Vocabulary expansion | A1-B2 |
 | `cultural` | Cultural content | B1-C1 |
-| `history` | Historical narratives | B2-HIST |
+| `history` | Historical narratives | HIST |
 | `biography` | Famous Ukrainians | C1-BIO |
 | `literature` | Literary analysis | LIT |
 | `integration` | Review/consolidation | All |

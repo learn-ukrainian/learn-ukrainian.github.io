@@ -3,11 +3,11 @@
 **Status:** DRAFT v3 (January 2026)
 **Modules:** 01-135 (135 modules)
 **Word Count:** ~3500 words/module (472,500 total)
-**Prerequisite:** B2-HIST Track (M01-140)
+**Prerequisite:** HIST Track (M01-140)
 **Vocabulary Target:** Academic/analytical (~30/module)
 **Immersion:** 100% Ukrainian
 
-> **Note:** This track builds on B2-HIST's narrative foundation with academic-level analysis: primary sources, historiography, interethnic relations, imperial mechanisms, information warfare, and Ukrainian agency. The key shift is from "what happened" to "how do we know, who says, and what's contested."
+> **Note:** This track builds on HIST's narrative foundation with academic-level analysis: primary sources, historiography, interethnic relations, imperial mechanisms, information warfare, and Ukrainian agency. The key shift is from "what happened" to "how do we know, who says, and what's contested."
 
 ---
 
@@ -34,7 +34,7 @@
 
 ### Попередні вимоги
 
-- **Обов'язково:** B2-HIST Track (для фактологічної бази)
+- **Обов'язково:** HIST Track (для фактологічної бази)
 - Завершення B2 Core мінімум
 - Словниковий запас ~6,000 слів
 - Розуміння основних подій української історії
@@ -43,7 +43,7 @@
 
 ## Track Overview
 
-The C1-HIST track transforms learners from history consumers to history analysts. Building on B2-HIST's narrative foundation, this track develops critical thinking through:
+The C1-HIST track transforms learners from history consumers to history analysts. Building on HIST's narrative foundation, this track develops critical thinking through:
 
 1. **Historiographical awareness** — understanding how history is written and contested
 2. **Primary source literacy** — reading original documents in context
@@ -421,7 +421,7 @@ The C1-HIST track transforms learners from history consumers to history analysts
 
 | Level | Words/Module | Total Track | Approach |
 |-------|--------------|-------------|----------|
-| B2-HIST | ~3000 | ~420,000 | Narrative (what happened) |
+| HIST | ~3000 | ~420,000 | Narrative (what happened) |
 | **C1-HIST** | **~3500** | **~472,500** | Analytical (how we know) |
 
 **Combined B2+C1:** ~892,500 words of historical content
@@ -512,9 +512,9 @@ Each source-based module includes:
 
 ---
 
-## Differentiation from B2-HIST
+## Differentiation from HIST
 
-| Aspect | B2-HIST | C1-HIST |
+| Aspect | HIST | C1-HIST |
 |--------|---------|---------|
 | **Question** | What happened? | How do we know? Who says? What's contested? |
 | **Sources** | Narrative summaries | Original documents with analysis |
@@ -550,10 +550,10 @@ Each source-based module includes:
 
 | Prerequisite | This Track | Complements |
 |--------------|------------|-------------|
-| B2-HIST (140 modules) | **C1-HIST** (135 modules) | C1-BIO (100 modules) |
+| HIST (140 modules) | **C1-HIST** (135 modules) | C1-BIO (100 modules) |
 
 **Recommended path:**
-1. B2-HIST → factual foundation (what happened)
+1. HIST → factual foundation (what happened)
 2. C1-HIST → analytical skills (how we know, patterns)
 3. C1-BIO → biographical depth (parallel or after)
 

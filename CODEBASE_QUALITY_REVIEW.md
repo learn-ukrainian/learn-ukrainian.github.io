@@ -53,7 +53,7 @@ The `scripts/fix_*.py` pattern contains 47 scripts created to patch data during 
 **Examples:**
 - `fix_activity_ids.py`, `fix_activity_ids_a1_a2_c1.py` — IDs already assigned
 - `fix_cloze_blank_lines.py`, `fix_cloze_structure.py` — Cloze format stabilized
-- `fix_b2hist_plans.py`, `fix_b2_yaml.py` — B2-HIST plans finalized
+- `fix_b2hist_plans.py`, `fix_b2_yaml.py` — HIST plans finalized
 - `fix_anagrams.py`, `fix_ascii_quotes.py`, `fix_md_quotes.py` — formatting passes done
 
 **Recommendation:** Audit each, archive ones with no future use into `scripts/archive/` or delete. The `analyze_dead_code.py` script categorizes most as "medium risk" — verify via its report before mass-deleting.

@@ -1,7 +1,7 @@
 <!-- SCOPE
 Covers: environmental vocabulary, grammar of causal clauses, ecological issues in Ukraine
 Not covered:
-  - advanced passive voice constructions for academic papers -> b2-history
+  - advanced passive voice constructions for academic papers -> history
 Related: b1-61 (Professional Communication), b1-63 (Health Wellness)
 -->
 

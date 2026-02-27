@@ -67,7 +67,7 @@ activity_hints:
   output: Культурологічний есей
 focus: biography
 prerequisites:
-- b2-hist-early-20th-century
+- hist-early-20th-century
 connects_to:
 - c1-bio-57-les-kurbas
 - c1-bio-67-serge-lifar

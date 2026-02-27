@@ -67,7 +67,7 @@ activity_hints:
   output: Рефлексивний есей
 focus: biography
 prerequisites:
-- b2-hist-euromaidan
+- hist-euromaidan
 connects_to:
 - c1-bio-87-yaroslav-hrytsak
 - c1-bio-91-oleg-sentsov

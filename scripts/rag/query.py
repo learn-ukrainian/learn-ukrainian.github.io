@@ -26,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from rag.config import (
     BGE_M3_DENSE_DIM,
     IMAGE_COLLECTION,
+    LITERARY_COLLECTION,
     QDRANT_GRPC_PORT,
     QDRANT_HOST,
     SIGLIP_DIM,
@@ -147,6 +148,116 @@ def search_text(query: str, grade: int | None = None, subject: str | None = None
     return hits
 
 
+def search_literary(query: str, work: str | None = None, genre: str | None = None,
+                    period: str | None = None, limit: int = 5) -> list[dict]:
+    """Search literary texts (Slovo, PVL, chronicles, etc.) via dense vectors."""
+    from qdrant_client.models import FieldCondition, Filter, MatchValue
+
+    client = get_client()
+    encoder = get_text_encoder()
+
+    result = encoder.encode([query])
+    dense_vec = result["dense_vecs"][0].tolist()
+
+    conditions = []
+    if work:
+        conditions.append(FieldCondition(key="work", match=MatchValue(value=work)))
+    if genre:
+        conditions.append(FieldCondition(key="genre", match=MatchValue(value=genre)))
+    if period:
+        conditions.append(FieldCondition(key="language_period", match=MatchValue(value=period)))
+    qfilter = Filter(must=conditions) if conditions else None
+
+    results = client.query_points(
+        collection_name=LITERARY_COLLECTION,
+        query=dense_vec,
+        using="dense",
+        limit=limit,
+        query_filter=qfilter,
+        with_payload=True,
+    )
+
+    hits = []
+    for point in results.points:
+        payload = point.payload or {}
+        hit = {
+            "score": point.score if hasattr(point, "score") else 0,
+            "chunk_id": payload.get("chunk_id", ""),
+            "text": payload.get("text", "")[:500],
+            "work": payload.get("work", ""),
+            "author": payload.get("author", ""),
+            "year": payload.get("year", 0),
+            "genre": payload.get("genre", ""),
+            "language_period": payload.get("language_period", ""),
+            "source_url": payload.get("source_url", ""),
+        }
+        if payload.get("original_text"):
+            hit["original_text"] = payload["original_text"][:300]
+        hits.append(hit)
+    return hits
+
+
+def get_full_text(work: str, max_chars: int = 50_000) -> dict:
+    """Load all chunks for a literary work, concatenated into full text.
+
+    For short works (<20 pages / ~8000 tokens), returns the complete text.
+    Caps at max_chars for safety.
+
+    Returns dict with keys: work, author, year, genre, language_period, text, chunk_count, truncated.
+    """
+    from qdrant_client.models import FieldCondition, Filter, MatchValue
+
+    client = get_client()
+
+    # Scroll all chunks for this work
+    all_points = []
+    offset = None
+    while True:
+        points, next_offset = client.scroll(
+            collection_name=LITERARY_COLLECTION,
+            scroll_filter=Filter(
+                must=[FieldCondition(key="work", match=MatchValue(value=work))]
+            ),
+            limit=100,
+            offset=offset,
+            with_payload=True,
+            with_vectors=False,
+        )
+        all_points.extend(points)
+        if next_offset is None:
+            break
+        offset = next_offset
+
+    if not all_points:
+        return {"error": f"No chunks found for work: {work}"}
+
+    # Sort by chunk_id for correct ordering
+    all_points.sort(key=lambda p: p.payload.get("chunk_id", ""))
+
+    # Extract metadata from first chunk
+    first = all_points[0].payload
+    metadata = {
+        "work": first.get("work", ""),
+        "author": first.get("author", ""),
+        "year": first.get("year", 0),
+        "genre": first.get("genre", ""),
+        "language_period": first.get("language_period", ""),
+        "chunk_count": len(all_points),
+    }
+
+    # Concatenate text
+    texts = [p.payload.get("text", "") for p in all_points]
+    full_text = "\n\n".join(texts)
+
+    truncated = len(full_text) > max_chars
+    if truncated:
+        full_text = full_text[:max_chars] + "\n\n[... truncated at character limit ...]"
+
+    metadata["text"] = full_text
+    metadata["truncated"] = truncated
+    return metadata
+
+
 def search_images(query: str, grade: int | None = None, limit: int = 5) -> list[dict]:
     """Image search via Ukrainian text query (SigLIP text-to-image)."""
     client = get_client()
@@ -241,7 +352,7 @@ def collection_stats() -> dict:
     """Get stats for all RAG collections."""
     client = get_client()
     stats = {}
-    for coll_name in [TEXT_COLLECTION, IMAGE_COLLECTION]:
+    for coll_name in [TEXT_COLLECTION, IMAGE_COLLECTION, LITERARY_COLLECTION]:
         try:
             info = client.get_collection(coll_name)
             stats[coll_name] = {
@@ -266,11 +377,24 @@ def main():
     text_parser.add_argument("--trust-tier", type=int, help="Filter by trust tier (1 or 2)")
     text_parser.add_argument("--limit", type=int, default=5, help="Number of results")
 
+    # Literary text search
+    lit_parser = subparsers.add_parser("literary", help="Literary text search (Slovo, PVL, chronicles)")
+    lit_parser.add_argument("query", help="Search query in Ukrainian")
+    lit_parser.add_argument("--work", type=str, help="Filter by work title")
+    lit_parser.add_argument("--genre", type=str, help="Filter by genre")
+    lit_parser.add_argument("--period", type=str, help="Filter by language period")
+    lit_parser.add_argument("--limit", type=int, default=5, help="Number of results")
+
     # Image search
     img_parser = subparsers.add_parser("images", help="Text-to-image search")
     img_parser.add_argument("query", help="Search query in Ukrainian")
     img_parser.add_argument("--grade", type=int, help="Filter by grade")
     img_parser.add_argument("--limit", type=int, default=5, help="Number of results")
+
+    # Full text
+    full_parser = subparsers.add_parser("full-text", help="Get full text of a literary work")
+    full_parser.add_argument("work", help="Work title (e.g., 'Слово о полку Ігоревім')")
+    full_parser.add_argument("--max-chars", type=int, default=50000, help="Max characters")
 
     # Context
     ctx_parser = subparsers.add_parser("context", help="Get surrounding chunks")
@@ -296,6 +420,35 @@ def main():
             print(f"  Grade {hit['grade']}, {hit['author']}, tier {hit['trust_tier']}")
             print(f"  Chunk: {hit['chunk_id']}")
             print(f"  Text: {hit['text'][:300]}...")
+
+    elif args.command == "literary":
+        hits = search_literary(
+            args.query,
+            work=args.work,
+            genre=args.genre,
+            period=args.period,
+            limit=args.limit,
+        )
+        for i, hit in enumerate(hits, 1):
+            print(f"\n--- Result {i} (score: {hit['score']:.4f}) ---")
+            print(f"  Work: {hit['work']} ({hit['year']})")
+            print(f"  Genre: {hit['genre']}, Period: {hit['language_period']}")
+            print(f"  Chunk: {hit['chunk_id']}")
+            print(f"  Text: {hit['text'][:300]}...")
+            if hit.get("original_text"):
+                print(f"  Original: {hit['original_text'][:200]}...")
+
+    elif args.command == "full-text":
+        result = get_full_text(args.work, max_chars=args.max_chars)
+        if "error" in result:
+            print(f"Error: {result['error']}")
+        else:
+            print(f"Work: {result['work']} ({result['year']})")
+            print(f"Author: {result['author']}")
+            print(f"Genre: {result['genre']}, Period: {result['language_period']}")
+            print(f"Chunks: {result['chunk_count']}, Truncated: {result['truncated']}")
+            print(f"\n{'─' * 60}\n")
+            print(result["text"])
 
     elif args.command == "images":
         hits = search_images(args.query, grade=args.grade, limit=args.limit)

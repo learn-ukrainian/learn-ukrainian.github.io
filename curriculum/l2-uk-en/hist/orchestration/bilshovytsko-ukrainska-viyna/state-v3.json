@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "bilshovytsko-ukrainska-viyna",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:45:39Z",
+      "task_id": "v3-bilshovytsko-ukrainska-viyna-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T22:41:38Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T22:42:58Z",
+      "task_id": "v3-bilshovytsko-ukrainska-viyna-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T22:45:11Z",
+      "attempts": 2
+    }
+  }
+}

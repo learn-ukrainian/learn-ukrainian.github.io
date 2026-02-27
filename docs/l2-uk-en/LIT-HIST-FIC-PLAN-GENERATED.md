@@ -2,7 +2,7 @@
 
 **Generated from YAML plans**
 **Modules:** 20
-**Prerequisite:** C1 (B2-HIST recommended)
+**Prerequisite:** C1 (HIST recommended)
 **Vocabulary Target:** 600 new words
 **Immersion:** 95%
 **Word Target per Module:** 4,500
@@ -34,7 +34,7 @@ Epic Ukrainian historical fiction — novels that shaped how Ukrainians understa
 **Structure:**
 - Novel excerpt with glossary and historical context
 - Literary analysis: how does fiction shape historical understanding?
-- Comparison with actual historical events (cross-reference B2-HIST)
+- Comparison with actual historical events (cross-reference HIST)
 - Discussion: fiction as national memory tool
 
 **Decolonization:**

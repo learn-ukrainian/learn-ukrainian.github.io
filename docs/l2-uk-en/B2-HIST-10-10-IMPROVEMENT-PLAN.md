@@ -1,4 +1,4 @@
-# B2-HIST Track: Path to 10/10
+# HIST Track: Path to 10/10
 
 **Created:** 2026-01-31
 **Current Score:** 7.2/10
@@ -234,6 +234,6 @@ Priority by chronological importance:
 
 ## References
 
-- `docs/B2-HIST-STATUS.md` - Current audit status
-- `claude_extensions/quick-ref/b2-hist.md` - HIST workflow
-- `curriculum/l2-uk-en/plans/b2-hist/` - All 140 plans
+- `docs/HIST-STATUS.md` - Current audit status
+- `claude_extensions/quick-ref/hist.md` - HIST workflow
+- `curriculum/l2-uk-en/plans/hist/` - All 140 plans

@@ -3,7 +3,7 @@
 Generate level status index files showing module completion overview.
 
 Usage:
-    python scripts/generate_level_status.py b2-hist          # Full level
+    python scripts/generate_level_status.py hist          # Full level
     python scripts/generate_level_status.py a2 5             # Single module
     python scripts/generate_level_status.py a2 1-4,6-10      # Module ranges
     python scripts/generate_level_status.py all              # All levels
@@ -26,7 +26,7 @@ from audit.status_cache import read_status, get_source_paths
 ROOT = Path(__file__).parent.parent
 
 # All levels
-LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2", "b2-hist", "c1-bio", "c1-hist", "ruth", "oes", "lit", "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-youth", "lit-doc", "lit-drama", "lit-crimea"]
+LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2", "hist", "c1-bio", "c1-hist", "ruth", "oes", "lit", "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-youth", "lit-doc", "lit-drama", "lit-crimea"]
 
 
 def parse_module_filter(filter_str: str) -> set[int]:

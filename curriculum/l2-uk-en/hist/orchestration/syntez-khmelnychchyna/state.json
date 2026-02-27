@@ -1,0 +1,40 @@
+{
+  "slug": "syntez-khmelnychchyna",
+  "track": "hist",
+  "module_num": 62,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-19T11:53:56Z",
+      "task_id": "yw-syntez-khmelnychchyna-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:57:26Z",
+      "words": 5365,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:58:50Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:58:50Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:53:19Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:53:19Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-25T19:53:19Z"
+}

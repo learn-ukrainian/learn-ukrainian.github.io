@@ -1,0 +1,34 @@
+sequence: 103
+module: oes-103
+slug: davni-teksty-zbirka
+title_uk: "Збірка давніх текстів XI-XIII ст."
+title_en: "Anthology of Early Texts (11th-13th c.)"
+phase: 4
+phase_id: high-poetry
+phase_name: "Висока поезія"
+focus: "Miscellaneous XI-XIII century texts — epistles, funeral orations, didactic prose — showing the breadth of early Ukrainian writing"
+content_outline:
+- section: Вступ
+  description: "Beyond the 'big three' (PVL, Slovo, Ruska Pravda): what else was written in Kyivan Rus? The diversity of literary production — not just chronicles and law codes."
+- section: Основний матеріал
+  description: "Reading lesser-known texts: funeral orations, didactic epistles, travel accounts, polemical letters. Each text shows a different facet of Old East Slavic literary culture. Texts from the izbornyk.org.ua XI-XIII collection."
+- section: Практика
+  description: "Comparative analysis of register across text types. Legal vs literary vs epistolary vs homiletic language. Building a picture of the full linguistic ecosystem."
+- section: Підсумок
+  description: "Kyivan Rus had a rich, diverse literary culture — not just a few famous texts but an entire ecosystem of writing. This diversity is the foundation that Ukrainian inherited."
+vocabulary_hints:
+- збірка
+- антологія
+- промова
+- повчання
+- послання
+- паломництво
+activity_types:
+- transcription
+- grammar-identify
+- register-identify
+- etymology-trace
+persona:
+  voice: "Philologist"
+  role: "Text Collector"
+source_url: "http://litopys.org.ua/oldukr2/oldukr2.htm"

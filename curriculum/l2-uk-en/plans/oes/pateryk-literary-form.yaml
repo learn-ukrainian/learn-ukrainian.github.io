@@ -1,0 +1,35 @@
+sequence: 102
+module: oes-102
+slug: pateryk-literary-form
+title_uk: "Патерик Києво-Печерський: літературна форма"
+title_en: "The Kyiv-Pechersk Paterikon: Literary Form"
+phase: 4
+phase_id: high-poetry
+phase_name: "Висока поезія"
+focus: "The Paterikon as a complete literary genre — narrative techniques, miracle stories, the art of monastic storytelling"
+content_outline:
+- section: Вступ
+  description: "Beyond individual saints: the Paterikon as a COLLECTION. Genre conventions: how monastic tales are structured. The II Kasiyanivska Redaction (1462) as the definitive version."
+- section: Основний матеріал
+  description: "Narrative analysis: miracle story structure, temptation scenes, demon encounters, divine intervention patterns. The Paterikon's humor (yes, medieval monks had jokes). Literary archetypes: the humble saint, the proud sinner, the wise elder."
+- section: Практика
+  description: "Comparing Paterikon narratives across different redactions. Identifying formulaic elements vs creative innovation. The Paterikon's influence on later Ukrainian literature."
+- section: Підсумок
+  description: "The Paterikon as a foundational Ukrainian narrative text — the oldest collection of short stories in Ukrainian literary tradition."
+vocabulary_hints:
+- патерик
+- житіє
+- чудо
+- спокуса
+- аскет
+- редакція
+- оповідь
+activity_types:
+- transcription
+- grammar-identify
+- parallel-text
+- comparative-style
+persona:
+  voice: "Hagiography Scholar"
+  role: "Monastery Librarian"
+source_url: "http://litopys.org.ua/paterikon/paterikon.htm"

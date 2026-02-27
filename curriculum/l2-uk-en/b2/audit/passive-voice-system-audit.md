@@ -1,7 +1,7 @@
 # Audit Report: M01 — passive-voice-system.md
 **Level:** B2 | **Module:** M01 | **Phase:** B2.1a | **Pedagogy:** Not Specified | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-27 08:24:57
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-27 10:46:54
 
 ## Configuration
 **Type:** B2-grammar
@@ -38,8 +38,13 @@
 - Required types used: 5/5 (essay-response, fill-in, group-sort, match-up, quiz) ✅
 - Low density activities: 0
 
+## Recommendation
+**📝 UPDATE** (severity 20/100)
+
+- Structure issue: Missing '## Vocabulary' header OR vocabulary sidecar
+
 ## Gates
-- **Words:** ✅ 4208/4000 (raw: 4652)
+- **Words:** ✅ 4549/4000 (raw: 5014)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 11/4 types
@@ -47,7 +52,7 @@
 - **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 0 < 25 (soft target)
-- **Structure:** ✅ Valid Structure
+- **Structure:** ❌ Missing '## Vocabulary' header OR vocabulary sidecar
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
@@ -70,22 +75,22 @@
 | variety | 0.98 | - | 98% | 10% | 9.8% |
 | cultural | 11 | 3 | 100% | 10% | 10.0% |
 | realworld | 20 | 3 | 100% | 10% | 10.0% |
-| visual | 9 | 3 | 100% | 5% | 5.0% |
-| questions | 31 | 5 | 100% | 5% | 5.0% |
+| visual | 11 | 3 | 100% | 5% | 5.0% |
+| questions | 37 | 5 | 100% | 5% | 5.0% |
 | tables | 2 | 2 | 100% | 4% | 4.0% |
-| paragraph_var | 0.83 | - | 83% | 3% | 2.5% |
+| paragraph_var | 0.86 | - | 86% | 3% | 2.6% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
-| **TOTAL** | | | | | **99.3%** |
+| **TOTAL** | | | | | **99.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Пасивний стан: повна система** | ✅ | 75 | Included in Core |
-| **Вступ — Що таке пасивний стан?** | ✅ | 480 | Included in Core |
-| **Форма 1 — Дієприкметники на -ний/-тий** | ✅ | 670 | Included in Core |
-| **Форма 2 — Безособові конструкції на -но/-то** | ✅ | 738 | Included in Core |
+| **Пасивний стан: повна система** | ✅ | 72 | Included in Core |
+| **Вступ — Що таке пасивний стан?** | ✅ | 545 | Included in Core |
+| **Форма 1 — Дієприкметники на -ний/-тий** | ✅ | 722 | Included in Core |
+| **Форма 2 — Безособові конструкції на -но/-то** | ✅ | 886 | Included in Core |
 | **Форма 3 — Зворотний пасив із -ся** | ✅ | 550 | Included in Core |
-| **Форма 4 — Третя особа множини** | ✅ | 492 | Included in Core |
-| **Вибір форми пасиву за контекстом** | ✅ | 644 | Included in Core |
-| **Підсумок і практика** | ✅ | 559 | Included in Core |
+| **Форма 4 — Третя особа множини** | ✅ | 570 | Included in Core |
+| **Вибір форми пасиву за контекстом** | ✅ | 640 | Included in Core |
+| **Підсумок і практика** | ✅ | 564 | Included in Core |

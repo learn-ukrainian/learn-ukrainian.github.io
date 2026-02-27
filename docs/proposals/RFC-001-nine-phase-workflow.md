@@ -3,7 +3,7 @@
 **Status:** Implemented
 **Author:** Claude (with user direction)
 **Created:** 2026-01-21
-**Target:** Tracks (b2-hist, c1-bio, lit) + C2 levels
+**Target:** Tracks (hist, c1-bio, lit) + C2 levels
 
 ---
 
@@ -296,7 +296,7 @@ sources:
 - Follow schema: lemma, ipa, translation, pos, gender (if applicable)
 
 **Cumulative dependency:**
-- Tracks (b2-hist, c1-bio, lit): A1 → B2 core vocabulary
+- Tracks (hist, c1-bio, lit): A1 → B2 core vocabulary
 - C2: A1 → C1 core vocabulary
 
 **Note:** Vocabulary extraction can be done in batch across multiple modules since it happens after deployment. This allows working on modules out of sequence.
@@ -409,7 +409,7 @@ scripts/
 | Create 9 command wrappers | S | All prompts |
 | Add --phase flag to audit_module.py | M | - |
 | Extract check modules | L | --phase flag |
-| Test on 3 b2-hist modules | L | All above |
+| Test on 3 hist modules | L | All above |
 | Document new workflow | M | Testing complete |
 | Update CLAUDE.md | S | Documentation |
 
@@ -424,7 +424,7 @@ scripts/
 **ALL LEVELS** - New workflow applies everywhere, but in phases:
 
 **Rollout Phase 1 - New Content:**
-- b2-hist (new modules)
+- hist (new modules)
 - c1-bio (new modules)
 - lit (new modules)
 - C2 (new modules)
@@ -442,7 +442,7 @@ scripts/
 ### Rollout Strategy
 
 1. **Phase 1: Pilot**
-   - Test new workflow on 3 b2-hist modules (existing, not new)
+   - Test new workflow on 3 hist modules (existing, not new)
    - Compare results with current workflow
    - Refine prompts based on findings
 

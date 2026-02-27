@@ -1,0 +1,29 @@
+{
+  "track": "hist",
+  "slug": "yurii-nemyrych",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:24:43Z",
+      "task_id": "v3-yurii-nemyrych-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T19:47:36Z",
+      "note": "adopted-existing-content",
+      "words": 4190
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T19:48:52Z",
+      "task_id": "v3-yurii-nemyrych-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T19:53:02Z",
+      "attempts": 2
+    }
+  }
+}

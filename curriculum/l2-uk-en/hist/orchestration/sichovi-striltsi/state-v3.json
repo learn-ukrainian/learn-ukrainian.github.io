@@ -1,0 +1,28 @@
+{
+  "track": "hist",
+  "slug": "sichovi-striltsi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:40:09Z",
+      "task_id": "v3-sichovi-striltsi-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T22:04:02Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T22:05:52Z",
+      "task_id": "v3-sichovi-striltsi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T22:05:53Z",
+      "attempts": 0,
+      "note": "auto-fix"
+    }
+  }
+}

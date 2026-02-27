@@ -73,7 +73,7 @@ activity_hints:
   focus: Порівняння долі Довженка та інших митців Розстріляного відродження
 focus: biography
 prerequisites:
-- b2-hist/rozstriliane-vidrodzennia
+- hist/rozstriliane-vidrodzennia
 connects_to:
 - c1-bio/les-kurbas
 - c1-bio/mykola-khvylovyi

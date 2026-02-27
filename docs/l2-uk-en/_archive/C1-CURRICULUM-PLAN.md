@@ -276,7 +276,7 @@ Before starting C1, learners have completed:
 - ~6,050 cumulative vocabulary words
 
 **Optional prerequisite tracks:**
-- B2-HIST: Ukrainian History (61 modules) - recommended but not required
+- HIST: Ukrainian History (61 modules) - recommended but not required
 - B2-PRO: Professional Ukrainian (40 modules) - for career focus
 
 ---

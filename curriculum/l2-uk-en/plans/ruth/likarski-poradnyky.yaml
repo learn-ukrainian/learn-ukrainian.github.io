@@ -1,0 +1,35 @@
+sequence: 116
+module: ruth-116
+slug: likarski-poradnyky
+title_uk: "Лікарські та господарські порадники XVIII ст."
+title_en: "Medical and Household Manuals (18th c.)"
+phase: 5
+phase_id: linguistic-identity
+phase_name: "Мовна ідентичність"
+focus: "Ukrainian in the domestic register — herbs, remedies, farming advice in the language people used at home"
+content_outline:
+- section: Вступ
+  description: "Context: practical knowledge transmitted in Ukrainian, not Latin or Church Slavonic. These manuals prove Ukrainian was a fully functional language for science, medicine, and agriculture."
+- section: Основний матеріал
+  description: "Reading medical recipes and household advice. Botanical vocabulary: herb names, preparation methods, dosages. Agricultural calendar. Folk medicine vocabulary that survives in modern Ukrainian."
+- section: Практика
+  description: "Identifying botanical and medical terms. Tracing them to modern Ukrainian. Analyzing the imperative mood and instructional register."
+- section: Підсумок
+  description: "These manuals demolish the myth that Ukrainian was only a 'peasant' or 'literary' language. It was a language of practical knowledge — science, medicine, domestic economy."
+vocabulary_hints:
+- порадник
+- лікарський
+- зілля
+- господарський
+- рецепт
+- ліки
+- настій
+activity_types:
+- transcription
+- etymology-trace
+- grammar-identify
+- register-identify
+persona:
+  voice: "Ethnobotanist"
+  role: "Folk Healer"
+source_url: "http://litopys.org.ua/porad/por.htm"

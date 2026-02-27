@@ -41,10 +41,10 @@ focus: biography
 pedagogy: seminar
 prerequisites:
 - c1-bio-05 (Всеволод Ярославич)
-- b2-hist monomakh module
+- hist monomakh module
 connects_to:
 - c1-bio-07 (Мстислав Великий)
-- b2-hist rozdroblenist module
+- hist rozdroblenist module
 objectives:
 - Проаналізувати політичну стратегію Мономаха щодо єдності Русі
 - Дослідити етичні засади "Повчання дітям"

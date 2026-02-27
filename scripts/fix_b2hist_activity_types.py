@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Fix invalid activity types in B2-HIST plans with proper content transformation.
+Fix invalid activity types in HIST plans with proper content transformation.
 
-B2-HIST allowed types: reading, essay-response, critical-analysis, comparative-study
-B2-HIST required types: reading, essay-response
-B2-HIST forbidden types: quiz, fill-in, cloze, match-up, error-correction, unjumble,
+HIST allowed types: reading, essay-response, critical-analysis, comparative-study
+HIST required types: reading, essay-response
+HIST forbidden types: quiz, fill-in, cloze, match-up, error-correction, unjumble,
                           mark-the-words, group-sort, select, translate, anagram, true-false
 
 Transformation strategy:
@@ -29,7 +29,7 @@ ALLOWED_TYPES = {'reading', 'essay-response', 'critical-analysis', 'comparative-
 
 
 def transform_activity(activity: dict) -> dict | None:
-    """Transform an invalid activity to a valid B2-HIST activity type.
+    """Transform an invalid activity to a valid HIST activity type.
 
     Returns the transformed activity dict, or None if it should be removed.
     """
@@ -183,12 +183,12 @@ def fix_file(file_path: Path, dry_run: bool = True) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Fix invalid activity types in B2-HIST plans")
+    parser = argparse.ArgumentParser(description="Fix invalid activity types in HIST plans")
     parser.add_argument('--apply', action='store_true', help="Apply changes (default is dry-run)")
     parser.add_argument('--verbose', '-v', action='store_true', help="Show detailed output")
     args = parser.parse_args()
 
-    plans_dir = Path("curriculum/l2-uk-en/plans/b2-hist")
+    plans_dir = Path("curriculum/l2-uk-en/plans/hist")
 
     if not plans_dir.exists():
         print(f"Error: Directory not found: {plans_dir}")
@@ -201,7 +201,7 @@ def main():
         return 1
 
     print("═" * 70)
-    print(f"  B2-HIST Plan Activity Type Fixer (with content transformation)")
+    print(f"  HIST Plan Activity Type Fixer (with content transformation)")
     print(f"  Mode: {'APPLY' if args.apply else 'DRY-RUN'}")
     print("═" * 70)
     print()

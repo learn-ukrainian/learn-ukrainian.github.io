@@ -756,7 +756,7 @@
 ### Phase B2.3a: Origins to Rus' Collapse (M71-83)
 
 > **Production Specs:**
-> - **Template:** `docs/l2-uk-en/templates/b2-history-module-template.md`
+> - **Template:** `docs/l2-uk-en/templates/history-module-template.md`
 > - **Pedagogy:** CBI (Historical Narrative).
 > - **Key Requirement:** 100% Ukrainian Immersion. At least 2 PRIMARY SOURCE excerpts per module.
 > - **Decolonization:** Mandatory "Myth vs Reality" section in every module.
@@ -939,7 +939,7 @@
 ### Phase B2.3b: Cossack Era (M84-106)
 
 > **Production Specs:**
-> - **Template:** `docs/l2-uk-en/templates/b2-history-module-template.md`
+> - **Template:** `docs/l2-uk-en/templates/history-module-template.md`
 > - **Pedagogy:** CBI (Historical Narrative).
 > - **Key Requirement:** Focus on Statehood traditions. Primary sources: Treaties, Letters, Chronicles.
 > - **Decolonization:** Explicitly debunk "Reunification" myths (M89, M96).
@@ -1261,7 +1261,7 @@
 ### Phase B2.3c: Trauma & Resistance (M107-117)
 
 > **Production Specs:**
-> - **Template:** `docs/l2-uk-en/templates/b2-history-module-template.md`
+> - **Template:** `docs/l2-uk-en/templates/history-module-template.md`
 > - **Pedagogy:** CBI.
 > - **Sensitive Content:** Handle trauma (Holodomor, Deportation) with respect. Focus on facts and resilience.
 > - **Primary Sources:** Diaries, Memoirs, Decrees.
@@ -1414,7 +1414,7 @@
 ### Phase B2.3e: Independence & War (M118-123)
 
 > **Production Specs:**
-> - **Template:** `docs/l2-uk-en/templates/b2-history-module-template.md`
+> - **Template:** `docs/l2-uk-en/templates/history-module-template.md`
 > - **Pedagogy:** CBI.
 > - **Key Requirement:** Modern political vocabulary. Understanding the "why" of Independence.
 
@@ -1466,7 +1466,7 @@
 ### Phase B2.3f: War for Existence (M124-129)
 
 > **Production Specs:**
-> - **Template:** `docs/l2-uk-en/templates/b2-history-module-template.md`
+> - **Template:** `docs/l2-uk-en/templates/history-module-template.md`
 > - **Pedagogy:** CBI.
 > - **Key Requirement:** Recent history (2014-2024). Accuracy is critical.
 > - **Decolonization:** Countering "Civil War" and "Nazi" narratives.

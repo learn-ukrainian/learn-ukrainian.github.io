@@ -54,7 +54,7 @@ The cache follows `schemas/module-status.schema.json`:
 ```json
 {
   "timestamp": "2026-01-26T12:00:00Z",
-  "source_file": "curriculum/l2-uk-en/b2-hist/kozatstvo-vytoky.md",
+  "source_file": "curriculum/l2-uk-en/hist/kozatstvo-vytoky.md",
   "source_mtimes": {
     "md": 1706270400,
     "meta": 1706270400,
@@ -148,7 +148,7 @@ If you suspect the cache is stale but timestamps haven't changed:
 
 ```bash
 npm run status:b1        # Generate B1 status from cache
-npm run status:b2-hist   # Generate B2-HIST status from cache
+npm run status:hist   # Generate HIST status from cache
 npm run status:all       # Generate all levels
 ```
 

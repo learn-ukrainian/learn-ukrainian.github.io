@@ -84,7 +84,7 @@ export default defineConfig({
         { label: 'C1 - Advanced', autogenerate: { directory: 'c1' }, collapsed: true },
         { label: 'C2 - Mastery', autogenerate: { directory: 'c2' }, collapsed: true },
         { label: 'LIT - Literature', autogenerate: { directory: 'lit' }, collapsed: true },
-        { label: 'B2-HIST - Історія України', autogenerate: { directory: 'b2-hist' }, collapsed: true },
+        { label: 'HIST - Історія України', autogenerate: { directory: 'hist' }, collapsed: true },
         { label: 'C1-HIST - Історіографія', autogenerate: { directory: 'c1-hist' }, collapsed: true },
         { label: 'C1-BIO - Біографії українців', autogenerate: { directory: 'c1-bio' }, collapsed: true },
         { label: 'B2-PRO - Професійна українська', autogenerate: { directory: 'b2-pro' }, collapsed: true },

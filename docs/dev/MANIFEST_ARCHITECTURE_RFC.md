@@ -38,11 +38,11 @@ curriculum:
               path: "b2/future-perfect.md"
             # NOTE: History modules moved out, but files can stay or move
             
-    b2-hist:
+    hist:
       title: "Ukrainian History"
       modules:
         - slug: "kyivan-rus"
-          path: "b2-hist/kyivan-rus.md" # or even keep in b2/ if we want
+          path: "hist/kyivan-rus.md" # or even keep in b2/ if we want
 ```
 
 ### 2. Physical Storage (The "Repository")
@@ -65,7 +65,7 @@ Links must survive reordering.
 **New Syntax Proposal:**
 *   Use the `slug` as the anchor.
 *   Format: `[Link Text](@module/kyivan-rus)` or `[Link Text](slug:kyivan-rus)`
-*   **Preprocessor:** The build script (MDX Generator) replaces `slug:kyivan-rus` with the actual calculated relative path (e.g., `../b2-hist/module-01.mdx`) based on the *current* manifest order.
+*   **Preprocessor:** The build script (MDX Generator) replaces `slug:kyivan-rus` with the actual calculated relative path (e.g., `../hist/module-01.mdx`) based on the *current* manifest order.
 
 ### 4. Migration Plan (Incremental)
 

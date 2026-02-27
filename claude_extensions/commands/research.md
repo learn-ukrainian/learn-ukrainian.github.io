@@ -2,7 +2,7 @@
 
 <skill>
 name: research
-description: Research topics for seminar tracks using strictly Ukrainian resources. Use before writing content for b2-hist, c1-bio, c1-hist, oes, ruth, lit modules. Auto-updates active /task if set.
+description: Research topics for seminar tracks using strictly Ukrainian resources. Use before writing content for hist, c1-bio, c1-hist, oes, ruth, lit modules. Auto-updates active /task if set.
 arguments: topic - The topic to research (figure, event, era, literary work, document)
 </skill>
 
@@ -17,7 +17,7 @@ Conduct research using **only Ukrainian-language sources** to gather accurate, a
 | Track | Research Focus |
 |-------|----------------|
 | `c1-bio` | Historical figures - birth/death dates, key events, legacy, quotes |
-| `b2-hist` | Historical events, eras, causes/consequences, primary sources |
+| `hist` | Historical events, eras, causes/consequences, primary sources |
 | `c1-hist` | Historiographical analysis, interpretations, scholarly debates |
 | `lit` | Literary works, authors, movements, textual analysis |
 | `oes` | Old East Slavic documents, paleography, linguistic features |
@@ -53,7 +53,7 @@ Based on the topic and track, determine what information is needed:
 - Myths vs facts (for decolonization perspective)
 - **VITAL STATUS**: Is the person ALIVE or DECEASED?
 
-**For History (b2-hist, c1-hist):**
+**For History (hist, c1-hist):**
 - Event dates and timeline
 - Key figures involved
 - Causes and consequences
@@ -233,7 +233,7 @@ curriculum/l2-uk-en/{track}/research/{slug}-research.md
 
 **Example paths:**
 - `curriculum/l2-uk-en/c1-bio/research/danylo-apostol-research.md`
-- `curriculum/l2-uk-en/b2-hist/research/kozatstvo-vytoky-research.md`
+- `curriculum/l2-uk-en/hist/research/kozatstvo-vytoky-research.md`
 
 ### Step 6: Update Active Task (if exists)
 

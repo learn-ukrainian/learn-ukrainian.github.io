@@ -115,7 +115,7 @@ class TestMaxAuditIters:
 
     def test_seminar_tracks(self):
         """Seminar tracks get more iterations due to higher complexity."""
-        for track in ["b2-hist", "c1-bio", "c1-hist"]:
+        for track in ["hist", "c1-bio", "c1-hist"]:
             assert _max_audit_iters(track) == MAX_AUDIT_FIX_ITERS_SEMINAR
 
     def test_pro_tracks(self):

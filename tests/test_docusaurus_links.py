@@ -33,7 +33,7 @@ MANIFEST_PATH = Path(__file__).parent.parent / "curriculum" / "l2-uk-en" / "curr
 # All tracks that should exist in the docs directory
 ALL_TRACKS = [
     "a1", "a2", "b1", "b2", "c1", "c2",
-    "b2-hist", "b2-pro",
+    "hist", "b2-pro",
     "c1-bio", "c1-hist", "c1-pro",
     "lit", "oes", "ruth",
     "lit-essay", "lit-hist-fic", "lit-fantastika",
@@ -45,7 +45,7 @@ ALL_TRACKS = [
 # Only include tracks where index.mdx has ./slug links that can be tested.
 TRACKS_WITH_MODULES = [
     "a1", "a2", "b1", "b2",
-    "b2-hist", "c1", "c1-bio", "c1-hist",
+    "hist", "c1", "c1-bio", "c1-hist",
 ]
 
 # Tracks where ALL manifest modules should have MDX (fully built).
@@ -60,7 +60,7 @@ MIN_MODULE_COUNTS = {
     "a2": 31,
     "b1": 5,
     "b2": 2,
-    "b2-hist": 6,
+    "hist": 6,
     "c1-bio": 4,
     "c1-hist": 2,
 }

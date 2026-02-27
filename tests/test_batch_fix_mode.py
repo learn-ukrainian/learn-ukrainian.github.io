@@ -360,7 +360,7 @@ class TestFixTemplateRegistration:
 
     def test_all_known_tracks_have_fix_template(self):
         from scripts.batch_gemini_config import get_track_config
-        for track in ["c1-bio", "b2-hist", "c1-hist", "lit", "a1", "a2"]:
+        for track in ["c1-bio", "hist", "c1-hist", "lit", "a1", "a2"]:
             config = get_track_config(track)
             assert "fix" in config["templates"], f"{track} missing fix template"
 
@@ -513,7 +513,7 @@ class TestActivityExamples:
     def test_seminar_examples_have_delimiters(self):
         """Activity examples must include the standard delimiters."""
         from scripts.batch_gemini_runner import _get_seminar_activity_examples
-        result = _get_seminar_activity_examples("b2-hist")
+        result = _get_seminar_activity_examples("hist")
         assert "===ACTIVITIES_START===" in result
         assert "===ACTIVITIES_END===" in result
         assert "===VOCABULARY_START===" in result
@@ -811,7 +811,7 @@ class TestSchemaFilterVerification:
         schema_content = schema_path.read_text()
 
         seminar_configs = {
-            'B2-history': LEVEL_CONFIG.get('B2-history', {}),
+            'history': LEVEL_CONFIG.get('history', {}),
             'C1-biography': LEVEL_CONFIG.get('C1-biography', {}),
             'LIT': LEVEL_CONFIG.get('LIT', {}),
             'OES': LEVEL_CONFIG.get('OES', {}),

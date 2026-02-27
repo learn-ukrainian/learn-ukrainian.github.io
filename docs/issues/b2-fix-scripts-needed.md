@@ -380,7 +380,7 @@ if __name__ == '__main__':
 
 ### Script 5: Add Reading Sections to History Modules
 
-**File:** `scripts/fix_b2_history_reading.py`
+**File:** `scripts/fix_history_reading.py`
 **Impact:** Fixes 80 violations
 **Affected:** History modules M71-M131 missing "Читання"
 
@@ -472,7 +472,7 @@ if __name__ == '__main__':
 
 **Run:**
 ```bash
-.venv/bin/python scripts/fix_b2_history_reading.py
+.venv/bin/python scripts/fix_history_reading.py
 ```
 
 **Follow-up:** Manually populate TODO markers using:
@@ -484,7 +484,7 @@ if __name__ == '__main__':
 
 ### Script 6: Add Primary Sources & Decolonization Sections
 
-**File:** `scripts/fix_b2_history_callouts.py`
+**File:** `scripts/fix_history_callouts.py`
 **Impact:** Fixes 32 + 8 + 47 violations (87 total)
 **Affected:** History modules M71-M131
 
@@ -639,7 +639,7 @@ if __name__ == '__main__':
 
 **Run:**
 ```bash
-.venv/bin/python scripts/fix_b2_history_callouts.py
+.venv/bin/python scripts/fix_history_callouts.py
 ```
 
 ---

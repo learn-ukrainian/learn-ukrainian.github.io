@@ -165,7 +165,7 @@ Both are in the M91-M110 range, suggesting recent creation with current template
 ### Templates
 
 - `docs/l2-uk-en/templates/b2-module-template.md` - Standard structure
-- `docs/l2-uk-en/templates/b2-history-module-template.md` - History requirements
+- `docs/l2-uk-en/templates/history-module-template.md` - History requirements
 - `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` - Quality standards
 
 ### Passing Modules (Reference Examples)

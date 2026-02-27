@@ -1,7 +1,7 @@
 # Audit Report: M11 — checkpoint-cases.md
 **Level:** A2 | **Module:** M11 | **Phase:** A2.1 | **Pedagogy:** TTT | **Target:** 2500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-26 14:14:59
+**Generated:** 2026-02-27 10:57:11
 
 ## Configuration
 **Type:** A2-checkpoint

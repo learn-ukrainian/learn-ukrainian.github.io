@@ -2,7 +2,7 @@
 
 > **⚠️ ALWAYS use `.venv/bin/python` - NEVER use `python3` or `python` directly!**
 
-Generates a high-quality "Seminar Style" module (e.g., B2-HIST, C1) strictly based on its Metadata YAML.
+Generates a high-quality "Seminar Style" module (e.g., HIST, C1) strictly based on its Metadata YAML.
 This command replaces the generic `/module-create` for advanced modules.
 
 ## Prerequisites
@@ -19,7 +19,7 @@ This command replaces the generic `/module-create` for advanced modules.
 **Example:**
 
 ```
-/generate-seminar-module b2-hist scythians-sarmatians
+/generate-seminar-module hist scythians-sarmatians
 ```
 
 ## Workflow

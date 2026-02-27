@@ -17,17 +17,6 @@
       "status": "complete",
       "ts": "2026-02-22T20:53:16Z",
       "task_id": "v3-checkpoint-cases-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-22T20:57:01Z",
-      "attempts": 2
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T21:02:26Z",
-      "attempts": 1,
-      "note": "d1-only"
     }
   }
 }

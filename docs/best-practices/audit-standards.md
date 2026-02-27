@@ -42,7 +42,7 @@ MDX Gate (deterministic)
 | B2 | 1750w |
 | C1 | 3000w |
 | C2 | 3000w |
-| B2-HIST | 5000w |
+| HIST | 5000w |
 | C1-BIO | 5000w |
 | C1-HIST | 5000w |
 | LIT | 2500w |
@@ -67,7 +67,7 @@ Fix: Phase A template explicitly says "section names must match plan exactly."
 
 ## Activities Gate
 
-| Metric | Seminar (b2-hist, c1-bio, etc.) | Core (a1-c2) |
+| Metric | Seminar (hist, c1-bio, etc.) | Core (a1-c2) |
 |--------|----------------------------------|--------------|
 | Min activities | 3 | 8 (A1), 10 (A2+) |
 | Max activities | 9 | varies |
@@ -167,7 +167,7 @@ Each module has `curriculum/l2-uk-en/{track}/status/{slug}.json`:
 ```json
 {
   "slug": "slavic-tribes",
-  "track": "b2-hist",
+  "track": "hist",
   "timestamp": "2026-02-19T10:00:00Z",
   "overall": "PASS",
   "gates": {

@@ -1,0 +1,2 @@
+data/textbook_images/grade-01/1-klas-bukvar-zaharijchuk-2025-1-p052-08.png	solid_color (1 colors, 2082B)
+data/textbook_images/grade-01/1-klas-bukvar-zaharijchuk-2025-1-p106-06.png	solid_color (1 colors, 2006B)

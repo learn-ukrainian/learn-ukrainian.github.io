@@ -159,7 +159,7 @@ scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
 | A2 | 70/70 | 70 | ✅ Complete | Production ready |
 | B1 | 92/92 | 23 | 🚧 25% | Quality fixes needed |
 | B2 | 94/94 | TBD | 🚧 In progress | - |
-| B2-HIST | 140/140 | TBD | 🚧 Content phase | - |
+| HIST | 140/140 | TBD | 🚧 Content phase | - |
 | C1 | 106/106 | TBD | 🚧 In progress | - |
 | C1-BIO | 128/128 | TBD | 📋 Planned | - |
 | C1-HIST | 135/135 | TBD | 📋 Planned | - |
@@ -326,7 +326,7 @@ pyenv install 3.12.8
 **Updated files**:
 - `CLAUDE.md` - Removed MCP references, added Python env notes
 - `docs/B1-STATUS.md` - Auto-generated, shows 23/92 passing
-- `docs/B2-HIST-STATUS.md` - Auto-generated
+- `docs/HIST-STATUS.md` - Auto-generated
 - `docs/CURRENT-STATUS.md` - This file
 
 **Quick reference docs**:
@@ -376,7 +376,7 @@ pyenv install 3.12.8
 - `/explain-decision` (understand design rationale)
 - Bug fix protocol (efficient communication)
 
-### Medium Priority: Complete B2-HIST
+### Medium Priority: Complete HIST
 
 - 140 history modules in content phase
 - Many need final review and activities

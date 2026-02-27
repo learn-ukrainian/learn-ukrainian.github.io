@@ -62,7 +62,7 @@ def hydrate_module(meta_path):
     
     # Resolve details for Architect
     focus = data.get('focus', 'general')
-    # Extract level from module ID or path (e.g., b2-hist -> b2)
+    # Extract level from module ID or path (e.g., hist -> b2)
     level = "b2" # Default fallback
     if 'module' in data and '-' in data['module']:
         level = data['module'].split('-')[0]

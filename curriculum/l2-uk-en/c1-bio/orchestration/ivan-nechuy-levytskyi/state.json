@@ -3,6 +3,13 @@
   "track": "c1-bio",
   "module_num": 44,
   "mode": "v3",
-  "phases": {},
-  "last_updated": "2026-02-18T23:19:07Z"
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-27T15:54:05Z",
+      "words": 3994,
+      "attempts": 1
+    }
+  },
+  "last_updated": "2026-02-27T15:54:05Z"
 }

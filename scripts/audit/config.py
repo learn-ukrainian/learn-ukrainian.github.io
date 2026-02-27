@@ -239,14 +239,14 @@ ACTIVITY_COMPLEXITY = {
         'B1-vocab': {'min_len': 5, 'max_len': 18, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
         'B1-culture': {'min_len': 5, 'max_len': 18, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
         'B2': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 8},  # Relaxed to 5 for factual questions (Issue #441)
-        'B2-history': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
+        'history': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
         'B2-biography': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
         'B2-skills': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Skills: allow short factual questions (5+ words)
         'C1': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},  # Lowered min_len to 5
         'C2': {'min_len': 5, 'max_len': 35, 'options': [4], 'min_items': 5},  # Lowered min_len to 5
         # Seminar tracks - quiz is supplementary, focus is analytical work
         'lit': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
-        'b2-hist': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 5},
+        'hist': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 5},
         'c1-hist': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
         'c1-bio': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
     },
@@ -265,7 +265,7 @@ ACTIVITY_COMPLEXITY = {
         'B1-vocab': {'sent_min': 7, 'sent_max': 12, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
         'B1-culture': {'sent_min': 7, 'sent_max': 12, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
         'B2': {'sent_min': 9, 'sent_max': 16, 'min_items': 8},  # CEFR: smooth +1 from B1 (was 10)
-        'B2-history': {'sent_min': 8, 'sent_max': 14, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
+        'history': {'sent_min': 8, 'sent_max': 14, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
         'B2-biography': {'sent_min': 8, 'sent_max': 14, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
         'C1': {'sent_min': 11, 'sent_max': 18, 'min_items': 6},  # CEFR: smooth +2 from B2 (was 8)
         'C2': {'sent_min': 13, 'sent_max': 20, 'min_items': 6},  # CEFR: smooth +2 from C1 (was 10)
@@ -277,7 +277,7 @@ ACTIVITY_COMPLEXITY = {
         'B1-vocab': {'min_len': 7, 'max_len': 16, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
         'B1-culture': {'min_len': 7, 'max_len': 16, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
         'B2': {'min_len': 9, 'max_len': 22, 'min_items': 8},  # CEFR: smooth +1 from B1 (was 10)
-        'B2-history': {'min_len': 8, 'max_len': 20, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
+        'history': {'min_len': 8, 'max_len': 20, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
         'B2-biography': {'min_len': 8, 'max_len': 20, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
         'C1': {'min_len': 11, 'max_len': 25, 'min_items': 5},  # CEFR: smooth +2 from B2 (was 8)
         'C2': {'min_len': 13, 'max_len': 30, 'min_items': 5},  # CEFR: smooth +2 from C1 (was 10)
@@ -297,7 +297,7 @@ ACTIVITY_COMPLEXITY = {
         'B1-vocab': {'words_min': 8, 'words_max': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 10)
         'B1-culture': {'words_min': 8, 'words_max': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 10)
         'B2': {'words_min': 6, 'words_max': 18, 'min_items': 6},  # Relaxed to 6 for natural formal phrases (Issue #441)
-        'B2-history': {'words_min': 6, 'words_max': 15, 'min_items': 6},  # Aligned with B2 base
+        'history': {'words_min': 6, 'words_max': 15, 'min_items': 6},  # Aligned with B2 base
         'B2-biography': {'words_min': 6, 'words_max': 15, 'min_items': 6},  # Aligned with B2 base
         'C1': {'words_min': 12, 'words_max': 20, 'min_items': 5},  # CEFR: smooth +2 from B2
         'C2': {'words_min': 14, 'words_max': 22, 'min_items': 5},  # CEFR: smooth +2 from C1
@@ -312,7 +312,7 @@ ACTIVITY_COMPLEXITY = {
         'B1-vocab': {'errors': 2, 'min_len': 7, 'max_len': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 8)
         'B1-culture': {'errors': 2, 'min_len': 7, 'max_len': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 8)
         'B2': {'errors': 2, 'min_len': 9, 'max_len': 20, 'min_items': 6},  # CEFR: smooth +1 from B1 (was 10)
-        'B2-history': {'errors': 2, 'min_len': 8, 'max_len': 18, 'min_items': 6},  # Context-specific: -1 from standard (was 7)
+        'history': {'errors': 2, 'min_len': 8, 'max_len': 18, 'min_items': 6},  # Context-specific: -1 from standard (was 7)
         'B2-biography': {'errors': 2, 'min_len': 8, 'max_len': 18, 'min_items': 6},  # Context-specific: -1 from standard (was 7)
         'C1': {'errors': 2, 'min_len': 12, 'max_len': 24, 'min_items': 5},  # CEFR: smooth +3 from B2 (kept at 12)
         'C2': {'errors': 2, 'min_len': 14, 'max_len': 28, 'min_items': 5},  # CEFR: smooth +2 from C1 (kept at 14)
@@ -330,7 +330,7 @@ ACTIVITY_COMPLEXITY = {
         'B1-vocab': {'min_len': 9, 'max_len': 16, 'marks': [3, 4, 5], 'min_items': 6},  # Context-specific: -1 from standard (was 10)
         'B1-culture': {'min_len': 9, 'max_len': 16, 'marks': [3, 4, 5], 'min_items': 6},  # Context-specific: -1 from standard (was 10)
         'B2': {'min_len': 11, 'max_len': 22, 'marks': [4, 5, 6], 'min_items': 6},  # CEFR: smooth +1 from B1 (was 12)
-        'B2-history': {'min_len': 10, 'max_len': 20, 'marks': [4, 5, 6], 'min_items': 6},  # Context-specific: -1 from standard (kept at 10)
+        'history': {'min_len': 10, 'max_len': 20, 'marks': [4, 5, 6], 'min_items': 6},  # Context-specific: -1 from standard (kept at 10)
         'B2-biography': {'min_len': 10, 'max_len': 20, 'marks': [4, 5, 6], 'min_items': 6},  # Context-specific: -1 from standard (kept at 10)
         'C1': {'min_len': 13, 'max_len': 25, 'marks': [5, 8], 'min_items': 5},  # CEFR: smooth +2 from B2 (was 14)
         'C2': {'min_len': 15, 'max_len': 30, 'marks': [6, 10], 'min_items': 5},  # CEFR: smooth +2 from C1 (was 16)
@@ -341,7 +341,7 @@ ACTIVITY_COMPLEXITY = {
         'B1-vocab': {'min_len': 7, 'max_len': 12, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (was 8)
         'B1-culture': {'min_len': 7, 'max_len': 12, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (was 8)
         'B2': {'min_len': 9, 'max_len': 18, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # CEFR: smooth +1 from B1 (was 10)
-        'B2-history': {'min_len': 8, 'max_len': 16, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (kept at 8)
+        'history': {'min_len': 8, 'max_len': 16, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (kept at 8)
         'B2-biography': {'min_len': 8, 'max_len': 16, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (kept at 8)
         'C1': {'min_len': 11, 'max_len': 20, 'options': [5, 7], 'correct': [2, 4], 'min_items': 5},  # CEFR: smooth +2 from B2 (was 10)
         'C2': {'min_len': 13, 'max_len': 22, 'options': [6, 8], 'correct': [3, 5], 'min_items': 5},  # CEFR: smooth +2 from C1 (was 12)
@@ -352,7 +352,7 @@ ACTIVITY_COMPLEXITY = {
         'B1-vocab': {'min_len': 5, 'max_len': 12, 'options': 4, 'min_items': 6},  # Context-specific: -1 from standard (was 6)
         'B1-culture': {'min_len': 5, 'max_len': 12, 'options': 4, 'min_items': 6},  # Context-specific: -1 from standard (was 6)
         'B2': {'min_len': 7, 'max_len': 18, 'options': 4, 'min_items': 6},  # CEFR: smooth +1 from B1 (was 10)
-        'B2-history': {'min_len': 7, 'max_len': 16, 'options': 4, 'min_items': 6},  # Context-specific: =0 from standard (kept at 7)
+        'history': {'min_len': 7, 'max_len': 16, 'options': 4, 'min_items': 6},  # Context-specific: =0 from standard (kept at 7)
         'B2-biography': {'min_len': 7, 'max_len': 16, 'options': 4, 'min_items': 6},  # Context-specific: =0 from standard (kept at 7)
         'C1': {'min_len': 9, 'max_len': 22, 'options': 5, 'min_items': 5},  # CEFR: smooth +2 from B2 (was 12)
         'C2': {'min_len': 11, 'max_len': 28, 'options': 5, 'min_items': 5},  # CEFR: smooth +2 from C1 (was 14)
@@ -378,7 +378,7 @@ ACTIVITY_COMPLEXITY = {
         'A2': {'min_items': 2},
         'B1': {'min_items': 3},
         'B2': {'min_items': 3},
-        'B2-history': {'min_items': 1},
+        'history': {'min_items': 1},
         'C1': {'min_items': 3},
         'C1-biography': {'min_items': 1},
         'C1-history': {'min_items': 1},
@@ -679,8 +679,8 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
-    'B2-history': {
-        # B2-HIST Track: History seminar style
+    'history': {
+        # HIST Track: History seminar style
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
         'min_activities': 3,
         'max_activities': 9,
@@ -1220,8 +1220,8 @@ LEVEL_CONFIG = {
     # =============================================================================
     # SEMINAR-STYLE TRACKS (Quality over Quantity)
     # =============================================================================
-    'B2-HIST-seminar': {
-        # B2-HIST Track: Transitional seminar style (B2 level)
+    'HIST-seminar': {
+        # HIST Track: Transitional seminar style (B2 level)
         # Activities: reading + essay-response (shorter) + critical-analysis + true-false (factual)
         # Easier than LIT: shorter essays, some factual checks allowed
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum

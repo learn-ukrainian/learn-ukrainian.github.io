@@ -12,7 +12,7 @@ Word targets (from `config.py` v2026-02-15 — if stale, re-read config.py):
 - A1 modules: **2000 words minimum**
 - A2 modules: **3000 words minimum**
 - B1+ Regular modules: **4000 words minimum**
-- Seminar tracks (B2-HIST, C1-BIO, C1-HIST, LIT, C2, OES, RUTH): **5000 words minimum**
+- Seminar tracks (HIST, C1-BIO, C1-HIST, LIT, C2, OES, RUTH): **5000 words minimum**
 
 **If a module is under target:**
 
@@ -47,7 +47,7 @@ Word targets (from `config.py` v2026-02-15 — if stale, re-read config.py):
 
 **What MUST be met:**
 
-1. **Total word count** ≥ `word_target` (e.g., 4000 for B2-HIST)
+1. **Total word count** ≥ `word_target` (e.g., 4000 for HIST)
 2. Each section within **±10% tolerance** of its target (or better)
 
 **What is FLEXIBLE:**
@@ -366,7 +366,7 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 | A2 | A2 | 3000 |
 | B1 | B1-grammar/vocab/cultural | 4000 |
 | B2 | B2 | 4000 |
-| B2-HIST | B2-history | 5000 |
+| HIST | history | 5000 |
 | C1 | C1 | 4000 |
 | C1-HIST | C1-history | 5000 |
 | C1-BIO | C1-biography | 5000 |

@@ -6,13 +6,13 @@
 
 **Related Plan:** `docs/l2-uk-en/C1-HIST-CURRICULUM-PLAN.md`
 
-**Prerequisite:** B2-HIST Track (for factual foundation)
+**Prerequisite:** HIST Track (for factual foundation)
 
 ---
 
 ## ⚠️ BEFORE WRITING: Research Historiographical Content First!
 
-**CRITICAL:** C1-HIST is NOT about historical facts (that's B2-HIST). It's about **how we know history** — sources, methods, interpretations, contested narratives. This requires academic-level research.
+**CRITICAL:** C1-HIST is NOT about historical facts (that's HIST). It's about **how we know history** — sources, methods, interpretations, contested narratives. This requires academic-level research.
 
 ### Research Strategy
 
@@ -105,7 +105,7 @@ Before submitting a C1-HIST module, verify all items from `c1-module-template.md
 - [ ] **Activity count:** 3-9 seminar-style activities (reading + essay-response + critical-analysis)
 - [ ] **Academic vocabulary:** 30+ historiographical terms per module
 - [ ] **Essay activity:** 250-500 word analytical essay in YAML — NO essay section in markdown
-- [ ] **NO factual drills:** This is NOT B2-HIST — no quiz on dates/events
+- [ ] **NO factual drills:** This is NOT HIST — no quiz on dates/events
 
 ---
 
@@ -160,7 +160,7 @@ vocabulary_focus:
 > 🎯 **Чому це важливо?**
 >
 > [Explain why this method/debate/source matters for understanding Ukrainian history]
-> [How this develops analytical skills beyond B2-HIST]
+> [How this develops analytical skills beyond HIST]
 
 ## Методологічний вступ
 
@@ -423,7 +423,7 @@ Per config.py, C1-HIST does NOT use:
 
 - **Base template:** `docs/l2-uk-en/templates/c1-module-template.md`
 - **C1-HIST Curriculum Plan:** `docs/l2-uk-en/C1-HIST-CURRICULUM-PLAN.md`
-- **B2 History Template:** `docs/l2-uk-en/templates/b2-history-module-template.md` (for narrative approach comparison)
+- **B2 History Template:** `docs/l2-uk-en/templates/history-module-template.md` (for narrative approach comparison)
 - **Primary Sources:** litopys.org.ua
 
 ---

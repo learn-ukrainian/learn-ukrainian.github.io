@@ -37,6 +37,7 @@ forbidden_claims:
 1. [Енциклопедія Сучасної України (ЕСУ)](https://esu.com.ua/) — аналіз модерністського етапу творчості О. Кобилянської, ніцшеанських мотивів.
 2. [Вікіпедія (uk.wikipedia.org)](https://uk.wikipedia.org/wiki/Царівна_(повість)) — історія створення, дати публікацій, загальний сюжет.
 3. [UkrLib (Бібліотека української літератури)](https://www.ukrlib.com.ua/) — повний текст повісті «Царівна», первинні цитати, літературознавча критика.
+4. [Kyiv Independent: Meet Olha Kobylianska, the Ukrainian author who redefined women's freedom](https://kyivindependent.com/olha-kobylianska/) — Kate Tsurkan, Hidden Canon (Jan 2026). Аналіз «Царівни» проф. Юлією Ладигіною. Героїня Наталка — ізоляція як наслідок вірності ідентичності. Переклад Ладигіної — Harvard HURI, 2027.
 
 ## Хронологія
 - 1888-1893: Робота над початковим німецьким варіантом твору («Лореляй»).

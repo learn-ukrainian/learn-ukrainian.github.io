@@ -1,0 +1,70 @@
+{
+  "slug": "trypillian-civilization",
+  "track": "hist",
+  "module_num": 1,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:28:04Z",
+      "note": "adopted-existing-research"
+    },
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:28:04Z",
+      "note": "already-enriched"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:28:55Z",
+      "task_id": "yw-trypillian-civilization-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:28:55Z",
+      "note": "adopted-existing-prose",
+      "words": 4495
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:23:02Z",
+      "note": "v3-audit"
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:28:55Z",
+      "note": "adopted-existing"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T12:28:55Z",
+      "note": "adopted-existing"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-21T19:20:31Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-21T19:20:31Z",
+      "note": "v3-phase-D"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:23:02Z",
+      "note": "v3-audit"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-21T19:20:31Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:33:36Z",
+      "verdict": "APPROVE"
+    }
+  },
+  "last_updated": "2026-02-23T08:36:23Z"
+}

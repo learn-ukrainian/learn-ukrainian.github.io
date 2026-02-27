@@ -2,12 +2,12 @@
   "module": "register-medical-ukrainian",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T08:17:57.247654Z",
+  "last_audit": "2026-02-27T10:47:41.119030Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-25T22:22:17.786842Z",
+    "md": "2026-02-27T10:47:39.322641Z",
     "meta": "2026-02-24T00:47:22.530698Z",
-    "activities": "2026-02-25T22:22:17.789503Z",
+    "activities": "2026-02-27T10:42:43.326887Z",
     "vocabulary": "2026-02-26T10:56:38.152007Z",
     "plan": "2026-02-20T21:39:37.632872Z",
     "research": "2026-02-24T00:47:22.527135Z"
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "6295/4000 (raw: 6589)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6012/4000 (raw: 6382) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -44,17 +44,15 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
-    ],
-    "pass_count": 5,
+    "blocking_issues": [],
+    "pass_count": 4,
     "fail_count": 1,
     "deferred_count": 0
   }

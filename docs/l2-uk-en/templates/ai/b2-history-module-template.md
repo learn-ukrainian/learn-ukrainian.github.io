@@ -1,7 +1,7 @@
-# B2-HIST Module Template (AI-Optimized)
+# HIST Module Template (AI-Optimized)
 
-> **Full documentation:** `docs/l2-uk-en/templates/b2-history-module-template.md`
-> **Config source of truth:** `scripts/audit/config.py` → `B2-history`
+> **Full documentation:** `docs/l2-uk-en/templates/history-module-template.md`
+> **Config source of truth:** `scripts/audit/config.py` → `history`
 
 ---
 
@@ -56,9 +56,9 @@ IF missing sources → WebSearch again or mark [NEEDS VERIFICATION]
 
 ```
 CREATE 3 files:
-1. curriculum/l2-uk-en/b2-hist/{slug}.md        # Prose content
-2. curriculum/l2-uk-en/b2-hist/vocabulary/{slug}.yaml  # Vocabulary
-3. curriculum/l2-uk-en/b2-hist/activities/{slug}.yaml  # Activities
+1. curriculum/l2-uk-en/hist/{slug}.md        # Prose content
+2. curriculum/l2-uk-en/hist/vocabulary/{slug}.yaml  # Vocabulary
+3. curriculum/l2-uk-en/hist/activities/{slug}.yaml  # Activities
 ```
 
 ### Step 2.2: Write Markdown Content
@@ -133,7 +133,7 @@ required_types:
 
 ```yaml
 - type: reading
-  id: b2-hist-XX-reading-01
+  id: hist-XX-reading-01
   title: "Аналіз первинного джерела"
   resource:
     type: primary_source
@@ -149,7 +149,7 @@ required_types:
 
 ```yaml
 - type: essay-response
-  id: b2-hist-XX-essay-01
+  id: hist-XX-essay-01
   title: "Есе: [Topic]"
   prompt: |
     Напишіть есе (150-250 слів) на тему: "[Topic]"
@@ -178,7 +178,7 @@ required_types:
 ```yaml
 # vocabulary/{slug}.yaml
 
-# Per config.py B2-history:
+# Per config.py history:
 min_items: 25
 format: 3-column (lemma, translation, note)
 ```
@@ -233,7 +233,7 @@ SOURCES:
 ### Step 5.2: Run Audit
 
 ```bash
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2-hist/{slug}.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/hist/{slug}.md
 ```
 
 ---

@@ -74,7 +74,7 @@ Comprehensive audit of 384 modules across B1, B2, and C1 reveals:
 
 **B2:**
 - `b2-module-template.md`
-- `b2-history-synthesis-module-template.md`
+- `history-synthesis-module-template.md`
 
 **C1:**
 - `c1-module-template.md`

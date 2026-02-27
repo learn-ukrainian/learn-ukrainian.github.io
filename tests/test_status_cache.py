@@ -33,16 +33,16 @@ class TestPlanMtimePopulated:
     """Verify plan mtime is populated for seminar-like track paths."""
 
     def setup_method(self):
-        """Create temp directory mimicking curriculum/l2-uk-en/b2-hist/."""
+        """Create temp directory mimicking curriculum/l2-uk-en/hist/."""
         self.tmpdir = tempfile.mkdtemp()
-        # Simulate: curriculum/l2-uk-en/b2-hist/
+        # Simulate: curriculum/l2-uk-en/hist/
         self.l2_dir = Path(self.tmpdir) / "curriculum" / "l2-uk-en"
-        self.track_dir = self.l2_dir / "b2-hist"
+        self.track_dir = self.l2_dir / "hist"
         self.track_dir.mkdir(parents=True)
         (self.track_dir / "status").mkdir()
 
         # Create plans directory at sibling level
-        self.plans_dir = self.l2_dir / "plans" / "b2-hist"
+        self.plans_dir = self.l2_dir / "plans" / "hist"
         self.plans_dir.mkdir(parents=True)
 
         # Create a plan file (bare slug, no numeric prefix)
@@ -57,7 +57,7 @@ class TestPlanMtimePopulated:
         shutil.rmtree(self.tmpdir)
 
     def test_plan_mtime_populated_for_seminar_track(self):
-        """Plan mtime should NOT be null when plan exists under plans/b2-hist/."""
+        """Plan mtime should NOT be null when plan exists under plans/hist/."""
         path = save_status_cache(
             str(self.md_file), "B2", "05-bohdan-khmelnytskyi",
             results={}, has_critical_failure=False,

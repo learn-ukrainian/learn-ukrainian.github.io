@@ -185,7 +185,7 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
     level_from_path = None
     track_from_path = None  # Full track name for track-aware checks (e.g., C1-BIO)
     # Match a1, a2, b1, b2, c1, c2 (case insensitive)
-    # Also matches tracks like b2-hist, c1-bio, lit, oes, ruth
+    # Also matches tracks like hist, c1-bio, lit, oes, ruth
     path_match = re.search(r'/([abc][12])(-[a-z0-9]+)?/', file_path.lower())
     if path_match:
         base_level = path_match.group(1).upper()  # e.g., C1
@@ -238,7 +238,7 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
 
 def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "", file_path: str = "") -> str | None:
     """Detect module focus (grammar, vocab, checkpoint, skills, cultural, history, etc.)."""
-    # Detect track directories first (b2-hist, c1-bio, c1-hist, lit)
+    # Detect track directories first (hist, c1-bio, c1-hist, lit)
     # These override all other detection methods
     if file_path:
         track_match = re.search(r'/([abc][12])-([a-z]+)/', file_path.lower())
@@ -635,7 +635,7 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
     # e.g. curriculum/l2-uk-en/b1/01.md -> level=b1
     try:
         level_part = md_path.parent.name # e.g. 'b1' or 'c1' or 'lit'
-        if level_part in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'b2-hist', 'c1-bio', 'c1-hist']:
+        if level_part in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'c1-bio', 'c1-hist']:
              level = level_part
         else:
              # Fallback: try to find level in path
@@ -726,10 +726,10 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
             'C2': 'c2',
         }
 
-        # Check if file is in a track directory (b2-hist, c1-bio, etc.)
+        # Check if file is in a track directory (hist, c1-bio, etc.)
         track_match = re.search(r'/([abc][12]-[a-z]+)/', file_path)
         if track_match:
-            level_key = track_match.group(1)  # e.g., 'b2-hist'
+            level_key = track_match.group(1)  # e.g., 'hist'
         else:
             level_key = level_key_map.get(level_code, level_code.lower())
 
@@ -832,7 +832,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
     display_level = level_code
     track_match = re.search(r'/([abc][12]-[a-z]+)/', file_path.lower())
     if track_match:
-        display_level = track_match.group(1).upper()  # e.g., "C1-BIO", "B2-HIST"
+        display_level = track_match.group(1).upper()  # e.g., "C1-BIO", "HIST"
     elif re.search(r'/lit/', file_path.lower()):
         display_level = 'LIT'
 
@@ -854,8 +854,13 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     print(f"\n📋 Auditing: {display_level} M{module_num:02d} — {module_title}")
     
-    # Check word target — config is source of truth (meta may have stale values)
+    # Check word target — config is source of truth, but meta.yaml can override
     target = get_word_target(level_code, module_num, module_focus)
+    if meta_data and 'word_target' in meta_data:
+        target = int(meta_data['word_target'])
+    elif plan_data and 'word_target' in plan_data:
+        target = int(plan_data['word_target'])
+
     print(f"   File: {file_path} | Target: {target} words")
 
     # Required Metadata Check
@@ -902,7 +907,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
             from .checks import template_compliance as tc_module
             
             # Construct module ID for template mapping
-            # Extract full level including track suffix (b2-hist, c1-bio, lit)
+            # Extract full level including track suffix (hist, c1-bio, lit)
             module_slug = Path(file_path).stem
             track_match = re.search(r'/([abc][12](?:-[a-z0-9]+)?|lit)/', file_path.lower())
             full_level = track_match.group(1) if track_match else level_code.lower()
@@ -1318,7 +1323,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # Check external resource URLs in reading activities (Issue #430)
     external_url_violations = []
-    if yaml_activities and level_code.lower() in ['lit', 'b2-hist', 'c1-hist', 'c1-bio']:
+    if yaml_activities and level_code.lower() in ['lit', 'hist', 'c1-hist', 'c1-bio']:
         external_url_violations = check_external_resources(yaml_activities, module_title)
         if external_url_violations:
             print(f"  🔗 External URL validation issues: {len(external_url_violations)}")
@@ -1357,7 +1362,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
                 items = count_items('', activity)
                 density_target = config['min_items_per_activity']
                 if act_type in ACTIVITY_COMPLEXITY:
-                    # Try specific key first (e.g. B2-history)
+                    # Try specific key first (e.g. history)
                     specific_key = f"{level_code}-{module_focus}" if module_focus else level_code
                     complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(specific_key)
 

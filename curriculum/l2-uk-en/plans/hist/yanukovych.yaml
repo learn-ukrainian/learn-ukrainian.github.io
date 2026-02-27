@@ -1,0 +1,90 @@
+module: hist-124
+level: HIST
+sequence: 124
+slug: yanukovych
+version: '2.0'
+title: 'Епоха Януковича: Реванш'
+subtitle: 'The Yanukovych Era: The Revanche'
+content_outline:
+- section: 'Вступ: Повернення'
+  points:
+  - '2010: обрання Януковича'
+  - Реванш після Помаранчевої революції
+  - Хто такий Янукович
+- section: Політика режиму
+  points:
+  - 'Харківські угоди: флот за газ'
+  - Закон про мови Ківалова-Колесніченка
+  - Ув'язнення Тимошенко
+  - Авторитарні тенденції
+  - Контроль над медіа та судами
+- section: «Сім'я» та корупція
+  points:
+  - Олександр Янукович — «Сім'я»
+  - Межигір'я як символ
+  - Масштаби корупції
+  - Олігархи при владі
+- section: Первинні джерела
+  points:
+  - Журналістські розслідування
+  - Документи з Межигір'я
+  - Записи переговорів
+- section: Деколонізаційний погляд
+  points:
+  - Російський вплив на Україну
+  - Янукович як проросійська сила
+  - Шлях до Євромайдану
+- section: 'Підсумок: Листопад 2013'
+  points:
+  - Відмова від Угоди про асоціацію
+  - Початок Євромайдану
+  - Кінець режиму
+vocabulary_hints:
+  required:
+  - президент (president)
+  - авторитаризм (authoritarianism)
+  - корупція (corruption)
+  - режим (regime)
+  - «Сім'я» (The Family)
+  - євроінтеграція (European integration)
+  - ув'язнення (imprisonment)
+  - угода (agreement)
+  recommended:
+  - олігарх (oligarch)
+  - Межигір'я (Mezhyhirya)
+  - медіа (media)
+  - суд (court)
+  - опозиція (opposition)
+  - протест (protest)
+activity_hints:
+- type: reading
+  focus: Документи та розслідування про корупцію
+  source: Журналістські матеріали
+  items: 4
+- type: critical-analysis
+  focus: 'Верифікація фактів: Факти про режим Януковича'
+  items: 5
+- type: essay-response
+  focus: Як політика Януковича призвела до Революції Гідності?
+focus: history
+pedagogy: CBI
+prerequisites:
+- hist-122 (Помаранчева революція)
+connects_to:
+- hist-127 (Революція Гідності)
+- hist-128 (Анексія Криму)
+objectives:
+- Учень може описати політичний курс Януковича
+- Учень може пояснити причини відмови від євроінтеграції
+- Учень може проаналізувати авторитарні тенденції режиму
+- Учень може оцінити роль корупції та «Сім'ї»
+grammar:
+- Минулий час в історичному наративі
+- Політична лексика
+- Складнопідрядні речення
+register: публіцистичний
+phase: HIST.12 [Independence & Modern Era]
+persona:
+  voice: Senior Professor of History
+  role: Investigative Journalist
+word_target: 5000

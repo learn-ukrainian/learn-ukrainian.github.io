@@ -6,10 +6,10 @@ Scans module .md files for Ukrainian words, filters out vocabulary from
 prior modules, and creates skeleton YAML entries ready for enrichment.
 
 Usage:
-    .venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/b2-hist/volodymyr-monomakh.md
+    .venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md
     
 Output:
-    Creates/updates curriculum/l2-uk-en/b2-hist/vocabulary/volodymyr-monomakh.yaml
+    Creates/updates curriculum/l2-uk-en/hist/vocabulary/volodymyr-monomakh.yaml
     with skeleton entries for all new words found in content.
 """
 
@@ -136,7 +136,7 @@ def load_prior_vocabulary(md_path: Path) -> Set[str]:
     """
     Load vocabulary from all prior modules in this level.
     
-    For tracks (b2-hist, c1-bio, etc.), loads vocabulary from
+    For tracks (hist, c1-bio, etc.), loads vocabulary from
     all modules that come before this one in the curriculum.
     """
     level_dir = md_path.parent
@@ -353,7 +353,7 @@ def main():
     parser.add_argument('md_file', type=Path, help='Path to module .md file')
     parser.add_argument('--min-words', type=int, default=2, help='Minimum word length (default: 2)')
     parser.add_argument('--dry-run', action='store_true', help='Show what would be extracted without writing files')
-    parser.add_argument('--use-db-baseline', action='store_true', help='Use vocabulary.db as baseline for deduplication (for tracks like b2-hist)')
+    parser.add_argument('--use-db-baseline', action='store_true', help='Use vocabulary.db as baseline for deduplication (for tracks like hist)')
     
     args = parser.parse_args()
     

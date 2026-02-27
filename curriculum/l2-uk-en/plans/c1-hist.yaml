@@ -6,7 +6,7 @@ level: c1-hist
 track: historiography
 version: "1.0"
 status: in_progress
-prerequisite: "B2-HIST completion, C1 Core (M01-35)"
+prerequisite: "HIST completion, C1 Core (M01-35)"
 vocabulary_target: 3000
 immersion: "100%"
 
@@ -118,7 +118,7 @@ phases:
 
 notes: |
   C1-HIST is an advanced historiography track for students who have
-  completed B2-HIST. Focuses on primary source analysis, critical
+  completed HIST. Focuses on primary source analysis, critical
   historiography, and thematic deep dives.
 
   This track develops university-level historical literacy and

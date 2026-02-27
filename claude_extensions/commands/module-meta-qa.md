@@ -24,7 +24,7 @@ Read: `claude_extensions/phases/module-meta-qa.md`
 
 ### Step 2: Load Meta YAML
 
-**For tracks (b2-hist, c1-bio, lit):**
+**For tracks (hist, c1-bio, lit):**
 
 1. Look up slug from manifest:
    ```bash

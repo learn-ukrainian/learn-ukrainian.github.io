@@ -55,7 +55,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           // Editing disabled
-          // Custom admonition keywords for historical tracks (OES, RUTH, LIT, B2-HIST)
+          // Custom admonition keywords for historical tracks (OES, RUTH, LIT, HIST)
           admonitions: {
             keywords: [
               // Standard Docusaurus admonitions
@@ -134,8 +134,8 @@ const config: Config = {
               value: '<hr style="margin: 4px 12px; border-color: var(--ifm-color-emphasis-300);">',
             },
             {
-              label: 'B2-HIST - Ukrainian History',
-              to: '/docs/b2-hist/',
+              label: 'HIST - Ukrainian History',
+              to: '/docs/hist/',
             },
             {
               label: 'C1-HIST - Historiography',
@@ -255,8 +255,8 @@ const config: Config = {
           title: 'Tracks',
           items: [
             {
-              label: 'B2-HIST - History',
-              to: '/docs/b2-hist/',
+              label: 'HIST - History',
+              to: '/docs/hist/',
             },
             {
               label: 'C1-BIO - Biographies',

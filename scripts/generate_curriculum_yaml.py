@@ -29,7 +29,7 @@ LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
 
 # Specialized tracks (not in core path)
 TRACKS = {
-    'b2-hist': {
+    'hist': {
         'name': 'B2 History Track - Ukrainian History',
         'description': 'Ukrainian history from Kyivan Rus to present',
         'prerequisite': 'b2-core-70'
@@ -37,7 +37,7 @@ TRACKS = {
     'c1-bio': {
         'name': 'C1 Biography Track - Famous Ukrainians',
         'description': 'Biographies of notable Ukrainian figures',
-        'prerequisite': 'b2-hist-61'
+        'prerequisite': 'hist-61'
     },
     'b2-pro': {
         'name': 'B2 Professional Track - Business Ukrainian',

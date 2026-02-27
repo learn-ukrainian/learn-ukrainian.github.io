@@ -67,7 +67,7 @@ activity_hints:
   output: Есе-аналіз
 focus: biography
 prerequisites:
-- b2-hist-sixtiers
+- hist-sixtiers
 connects_to:
 - lit-essay-64-kotsiubynsky-shadows-forgotten
 - c1-bio-135-vasyl-stus

@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "slobozhanshchyna",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:04:22Z",
+      "task_id": "v3-slobozhanshchyna-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T18:42:57Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T18:44:41Z",
+      "task_id": "v3-slobozhanshchyna-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T19:03:43Z",
+      "attempts": 3
+    }
+  }
+}

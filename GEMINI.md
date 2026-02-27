@@ -64,7 +64,7 @@ Rules: **WAIT for user instructions.** Do NOT auto-start work, check inbox, or p
 
 ## Content Standards
 
-*   **Word Count** (from `config.py` v2026-02-15): A1: 2000, A2: 3000, B1+: 4000, Seminars (B2-HIST/C1-BIO/C1-HIST/LIT/C2/OES/RUTH): 5000. If this date is older than config.py's latest change, re-read config.py.
+*   **Word Count** (from `config.py` v2026-02-15): A1: 2000, A2: 3000, B1+: 4000, Seminars (HIST/C1-BIO/C1-HIST/LIT/C2/OES/RUTH): 5000. If this date is older than config.py's latest change, re-read config.py.
 *   **Activity Density**: A1-B1: ~8-10 activities/12 items; Seminar tracks: 3-9 activities/1+ items for deep analysis.
 *   **Activities Test LANGUAGE, Not Content**: Can the learner answer without reading the Ukrainian text? If YES → it tests content recall, not language. REWRITE. No "У якому році..." / "Хто був..." / "Скільки..." quiz questions. Use "Згідно з текстом..." / "У тексті автор характеризує..." instead.
 *   **Audit Compliance**: Pass `audit_module.py` and `pipeline.py` gates.
@@ -81,8 +81,8 @@ Plans in `plans/` are IMMUTABLE source of truth. Meta in `meta/` is mutable buil
 **`curriculum/l2-uk-en/curriculum.yaml`** is the absolute source of truth for module ordering. Filenames and `sequence` fields in plan YAMLs are legacy.
 
 ```bash
-# Find Module 5 of B2-HIST
-yq '.levels.b2-hist.modules[4]' curriculum/l2-uk-en/curriculum.yaml
+# Find Module 5 of HIST
+yq '.levels.hist.modules[4]' curriculum/l2-uk-en/curriculum.yaml
 ```
 
 ## Cross-Agent Review Architecture
@@ -123,7 +123,7 @@ Always use `.venv/bin/python`. Never `python3` or `python` directly.
 
 ### Research-First Mandate (Seminar Tracks)
 
-MANDATORY for `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `ruth`.
+MANDATORY for `hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `ruth`.
 
 1. Research using ONLY Ukrainian sources (esu.com.ua, history.org.ua, uk.wikipedia.org, litopys.org.ua)
 2. Russian-language sources (`ru.wikipedia.org`, `*.ru`) are STRICTLY FORBIDDEN

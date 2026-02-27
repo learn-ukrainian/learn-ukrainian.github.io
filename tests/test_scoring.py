@@ -225,8 +225,8 @@ class TestCountLegacySections:
 # =============================================================================
 
 class TestGetCapsForTrack:
-    def test_b2_hist_has_caps(self):
-        caps = get_caps_for_track('b2-hist')
+    def test_hist_has_caps(self):
+        caps = get_caps_for_track('hist')
         assert len(caps) >= 3
         names = [c.name for c in caps]
         assert 'zero_myth_busters' in names
@@ -264,7 +264,7 @@ class TestApplyCriticalCaps:
         metrics = {'total_myth_buster_callouts': 0, 'total_quote_callouts': 5,
                    'agency_marker_ratio': 0.2, 'total_cross_references': 3}
         scores = {'decolonization_perspective': 9.0, 'primary_source_integration': 8.0}
-        updated, results = apply_critical_caps('b2-hist', metrics, scores)
+        updated, results = apply_critical_caps('hist', metrics, scores)
         assert updated['decolonization_perspective'] <= 4.0
         assert any(r.cap_applied and r.cap_name == 'zero_myth_busters' for r in results)
 
@@ -273,7 +273,7 @@ class TestApplyCriticalCaps:
         metrics = {'total_myth_buster_callouts': 5, 'total_quote_callouts': 5,
                    'agency_marker_ratio': 0.2, 'total_cross_references': 3}
         scores = {'decolonization_perspective': 9.0, 'primary_source_integration': 8.0}
-        updated, results = apply_critical_caps('b2-hist', metrics, scores)
+        updated, results = apply_critical_caps('hist', metrics, scores)
         assert updated['decolonization_perspective'] == 9.0
 
     def test_cap_not_needed_score_already_low(self):
@@ -291,7 +291,7 @@ class TestApplyCriticalCaps:
         metrics = {'total_myth_buster_callouts': 5, 'total_quote_callouts': 0,
                    'agency_marker_ratio': 0.2, 'total_cross_references': 3}
         scores = {'primary_source_integration': 8.0}
-        updated, _ = apply_critical_caps('b2-hist', metrics, scores)
+        updated, _ = apply_critical_caps('hist', metrics, scores)
         assert updated['primary_source_integration'] <= 3.0
 
 
@@ -303,7 +303,7 @@ class TestCheckCapViolations:
     def test_detects_violations(self):
         metrics = {'total_myth_buster_callouts': 0, 'total_quote_callouts': 0,
                    'agency_marker_ratio': 0.05, 'total_cross_references': 0}
-        violations = check_cap_violations('b2-hist', metrics)
+        violations = check_cap_violations('hist', metrics)
         assert len(violations) >= 3
         cap_names = [v['cap_name'] for v in violations]
         assert 'zero_myth_busters' in cap_names
@@ -312,7 +312,7 @@ class TestCheckCapViolations:
     def test_no_violations_when_metrics_good(self):
         metrics = {'total_myth_buster_callouts': 5, 'total_quote_callouts': 5,
                    'agency_marker_ratio': 0.2, 'total_cross_references': 3}
-        violations = check_cap_violations('b2-hist', metrics)
+        violations = check_cap_violations('hist', metrics)
         assert len(violations) == 0
 
     def test_lit_low_citation(self):

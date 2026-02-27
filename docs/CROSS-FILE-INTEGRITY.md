@@ -50,12 +50,12 @@ Created `scripts/audit/checks/cross_file_integrity.py` integrated into the main 
 Automatically runs as part of `audit_module.py`:
 
 ```bash
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2-hist/aneksiia-krymu.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/hist/aneksiia-krymu.md
 
 # Output includes vocabulary integrity section:
 ❌ Vocabulary integrity violations: 763
    ⚠️ [VOCABULARY_NOT_DEFINED] Word 'автентику' used in activities...
-   Add to: curriculum/l2-uk-en/b2-hist/vocabulary/aneksiia-krymu.yaml
+   Add to: curriculum/l2-uk-en/hist/vocabulary/aneksiia-krymu.yaml
 ```
 
 ## How It Works
@@ -131,7 +131,7 @@ violations.append({
 
 ### Performance Results
 
-**Test module:** `curriculum/l2-uk-en/b2-hist/aneksiia-krymu.md` (B2 History)
+**Test module:** `curriculum/l2-uk-en/hist/aneksiia-krymu.md` (B2 History)
 
 | Metric | Exact Match Only | Smart Matching | Improvement |
 |--------|------------------|----------------|-------------|
@@ -235,11 +235,11 @@ Since ~60-80% of violations may be false positives for B2+ content:
 - `scripts/audit/core.py`
   - Added import for `check_vocabulary_integrity`
   - Integrated check into YAML validation section (line 877-883)
-  - Extracts full level path (b2-hist, c1-bio, etc.) for correct paths
+  - Extracts full level path (hist, c1-bio, etc.) for correct paths
 
 ### Testing
 
-**Test module:** `curriculum/l2-uk-en/b2-hist/aneksiia-krymu.md`
+**Test module:** `curriculum/l2-uk-en/hist/aneksiia-krymu.md`
 
 **Results:**
 ```
@@ -247,7 +247,7 @@ Since ~60-80% of violations may be false positives for B2+ content:
 ✅ Activities scanned: 16 activities
 ✅ Words extracted: 798 unique Ukrainian words
 ❌ Violations found: 763 (many are inflected forms)
-✅ Path generation: Correct (b2-hist/vocabulary/...)
+✅ Path generation: Correct (hist/vocabulary/...)
 ✅ Error messages: Clear and actionable
 ```
 
@@ -265,7 +265,7 @@ Since ~60-80% of violations may be false positives for B2+ content:
 
 ```bash
 # Runs automatically during audit
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2-hist/aneksiia-krymu.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/hist/aneksiia-krymu.md
 
 # Look for vocabulary integrity violations in output
 # Review warnings, ignore obvious inflected forms
@@ -333,7 +333,7 @@ Since ~60-80% of violations may be false positives for B2+ content:
          Review carefully - many may be false positives for B2+ content.
 
          Word 'автентику' used in activities but not defined in vocabulary.
-         Add to: curriculum/l2-uk-en/b2-hist/vocabulary/aneksiia-krymu.yaml
+         Add to: curriculum/l2-uk-en/hist/vocabulary/aneksiia-krymu.yaml
          Example:
          - lemma: автентику
            ipa: ''

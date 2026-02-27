@@ -24,4 +24,4 @@ def fix_callouts(file_path):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(text)
 
-fix_callouts('curriculum/l2-uk-en/b2-hist/oun.md')
+fix_callouts('curriculum/l2-uk-en/hist/oun.md')

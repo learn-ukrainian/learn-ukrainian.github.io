@@ -15,7 +15,7 @@ Sync meta.yaml to match existing markdown content.
 ## Examples
 
 ```bash
-/module-sync b2-hist 1      # Sync meta to existing trypillian-civilization.md
+/module-sync hist 1      # Sync meta to existing trypillian-civilization.md
 /module-sync b2 45          # Sync meta for existing B2 module 45
 /module-sync c1-bio 12      # Sync meta for biography module 12
 ```
@@ -54,7 +54,7 @@ Parse arguments: {level} {num}
 
 ### Step 1: Resolve Module Slug
 
-**For tracks (b2-hist, c1-bio, c1-hist, lit):**
+**For tracks (hist, c1-bio, c1-hist, lit):**
 
 ```bash
 slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curriculum.yaml)
@@ -331,14 +331,14 @@ Audit report: curriculum/l2-uk-en/{level}/review/{slug}-review.md
 
 ```bash
 # User has module where meta.yaml outline doesn't match markdown reality
-$ .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2-hist/trypillian-civilization.md
+$ .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/hist/trypillian-civilization.md
 
 ❌ AUDIT FAILED
   • Outline compliance: meta has 5 sections, markdown has 7 sections
   • Activity mirroring: 3 violations
 
 # Sync meta to match markdown reality
-$ /module-sync b2-hist 1
+$ /module-sync hist 1
 
 → Reading existing markdown...
 → Extracting 7 sections with word counts...
@@ -349,5 +349,5 @@ $ /module-sync b2-hist 1
 → Re-running audit... ✅ ALL GATES PASS
 → Deploying...
 
-MODULE SYNCED: b2-hist/trypillian-civilization ✅
+MODULE SYNCED: hist/trypillian-civilization ✅
 ```

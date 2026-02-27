@@ -77,7 +77,7 @@ Each track type uses different weights based on its pedagogical focus:
 
 | Track | Type | Modules | Score | Pass Rate | Status |
 |-------|------|---------|-------|-----------|--------|
-| **B2-HIST** | History | 140 | 7.2/10 | 77% (109/140) | ⚠️ Good |
+| **HIST** | History | 140 | 7.2/10 | 77% (109/140) | ⚠️ Good |
 | **LIT** | Literature | 30 | 3.2/10 | 0% (0/30) | 🔴 Vocab block |
 | **C1-BIO** | Biography | 128 | 2.8/10 | 3% (4/128) | 🔴 Many gaps |
 | **B2-PRO** | Professional | 40 | 1.0/10 | 0% (0/40) | 🔴 Greenfield |
@@ -93,7 +93,7 @@ Priority ranking based on effort-to-impact ratio:
 | Priority | Track | Score | Effort | ROI Rationale |
 |----------|-------|-------|--------|---------------|
 | **1** | LIT | 3.2→10 | 40h | Content exists, vocab only |
-| **2** | B2-HIST | 7.2→10 | 77h | 77% done, finish strong |
+| **2** | HIST | 7.2→10 | 77h | 77% done, finish strong |
 | **3** | C1-BIO | 2.8→10 | 319h | 87% content, needs vocab |
 | **4** | B2-PRO | 1.0→10 | 160h | Practical, B2 audience |
 | **5** | C1-PRO | 1.0→10 | 200h | Advanced professional |
@@ -103,7 +103,7 @@ Priority ranking based on effort-to-impact ratio:
 
 ## Current State by Track
 
-### B2-HIST (Most Complete)
+### HIST (Most Complete)
 ```
 ✅ 109 modules passing (77%)
 ❌ 23 modules failing
@@ -155,7 +155,7 @@ Priority ranking based on effort-to-impact ratio:
 | Track | Content | Vocab | Activities | Other | Total |
 |-------|---------|-------|------------|-------|-------|
 | LIT | 10 | 20 | 3 | 7 | **40** |
-| B2-HIST | 56 | 8 | 8 | 5 | **77** |
+| HIST | 56 | 8 | 8 | 5 | **77** |
 | C1-BIO | 228 | 37 | 17 | 37 | **319** |
 | B2-PRO | 120 | 20 | 15 | 5 | **160** |
 | C1-PRO | 160 | 25 | 10 | 5 | **200** |
@@ -170,10 +170,10 @@ Priority ranking based on effort-to-impact ratio:
 | Month | Focus | Hours |
 |-------|-------|-------|
 | Feb | LIT vocabulary | 40h |
-| Mar | B2-HIST stubs | 77h |
-| Apr | B2-HIST completion | — |
+| Mar | HIST stubs | 77h |
+| Apr | HIST completion | — |
 
-**Q1 Result:** LIT 10/10, B2-HIST 10/10
+**Q1 Result:** LIT 10/10, HIST 10/10
 
 ### Q2 2026: C1-BIO Push
 | Month | Focus | Hours |
@@ -212,7 +212,7 @@ Priority ranking based on effort-to-impact ratio:
 | Track | Improvement Plan |
 |-------|------------------|
 | LIT | `docs/l2-uk-en/LIT-10-10-IMPROVEMENT-PLAN.md` |
-| B2-HIST | `docs/l2-uk-en/B2-HIST-10-10-IMPROVEMENT-PLAN.md` |
+| HIST | `docs/l2-uk-en/HIST-10-10-IMPROVEMENT-PLAN.md` |
 | C1-BIO | `docs/l2-uk-en/C1-BIO-10-10-IMPROVEMENT-PLAN.md` |
 | C1-HIST | `docs/l2-uk-en/C1-HIST-10-10-IMPROVEMENT-PLAN.md` |
 | B2-PRO, C1-PRO | `docs/l2-uk-en/PRO-TRACKS-10-10-IMPROVEMENT-PLAN.md` |
@@ -229,7 +229,7 @@ Priority ranking based on effort-to-impact ratio:
 | 2 | A2 | 9.6/10 | 11h | Core |
 | 3 | LIT | 3.2/10 | 40h | Track |
 | 4 | B1 | 7.0/10 | 21h | Core |
-| 5 | B2-HIST | 7.2/10 | 77h | Track |
+| 5 | HIST | 7.2/10 | 77h | Track |
 | 6 | B2 | 4.9/10 | 79h | Core |
 | 7 | C1-BIO | 2.8/10 | 319h | Track |
 | 8 | C1 | 4.7/10 | 99h | Core |

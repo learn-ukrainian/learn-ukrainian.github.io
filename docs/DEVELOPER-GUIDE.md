@@ -387,7 +387,7 @@ npm run status:b1
 |-----|---------|
 | **CORE-A-WORKFLOW.md** | Mixed-language rebuild workflow (A1/A2/B1.0 — 119 modules) |
 | **CORE-B-WORKFLOW.md** | Full-immersion rebuild workflow (B1.1+/B2/C1/C2/PRO — 477 modules) |
-| **RESEARCH-FIRST-WORKFLOW.md** | Deep research workflow (seminar tracks — B2-HIST, C1-BIO, LIT) |
+| **RESEARCH-FIRST-WORKFLOW.md** | Deep research workflow (seminar tracks — HIST, C1-BIO, LIT) |
 | **MODULE-RICHNESS-GUIDELINES-v2.md** | Activity counts, complexity requirements |
 | **PLANNING-GUIDE.md** | How to create module plans |
 | **STATUS-SYSTEM.md** | Status caching system |
@@ -557,7 +557,7 @@ ls -la .agent/workflows/interview.md
 | A2 | 70 | 70 | ✅ Complete |
 | B1 | 92 | 23 | 🚧 25% (fixing) |
 | B2 | 94 | TBD | 🚧 In progress |
-| B2-HIST | 140 | TBD | 🚧 Content phase |
+| HIST | 140 | TBD | 🚧 Content phase |
 | C1 | 106 | TBD | 🚧 In progress |
 
 **Current priority**: Fix B1 failing modules (23/92 → 80%+)
@@ -570,7 +570,7 @@ ls -la .agent/workflows/interview.md
 
 **Immediate**:
 1. Fix B1 failing modules using new workflow tools
-2. Complete B2-HIST content generation
+2. Complete HIST content generation
 3. Batch deep review before publication
 
 **Future**:

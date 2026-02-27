@@ -113,7 +113,7 @@ c2:
 # =============================================================================
 
 # History Track (relocated from B2 M71-131)
-b2-hist:
+hist:
   planned: 140
   status: auto
   description: "History — Ukrainian history from origins to present"

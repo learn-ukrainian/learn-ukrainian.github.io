@@ -2,26 +2,26 @@
   "module": "passive-voice-system",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T08:24:57.104616Z",
+  "last_audit": "2026-02-27T10:46:54.962101Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T08:18:52.264732Z",
+    "md": "2026-02-27T10:41:50.191479Z",
     "meta": "2026-02-19T11:54:25.501935Z",
-    "activities": "2026-02-19T12:09:32.825079Z",
-    "vocabulary": "2026-02-26T10:56:53.960991Z",
+    "activities": "2026-02-27T10:41:50.183774Z",
+    "vocabulary": "2026-02-27T10:41:50.184636Z",
     "plan": "2026-02-20T21:37:38.119036Z",
     "research": "2026-02-19T11:54:25.491195Z"
   },
   "gates": {
     "meta": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Valid Structure"
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Vocabulary' header OR vocabulary sidecar"
     },
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4208/4000 (raw: 4652)"
+      "message": "4549/4000 (raw: 5014)"
     },
     "activities": {
       "status": "pass",
@@ -44,17 +44,17 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Only 30/64 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "Only 30/64 Ukrainian citations in the review were found in the source module. The reviewer may be quoting from memory rather than from the actual content. REDO: DELETE the existing review file and regenerate from scratch. Run /review-content-v4 using claude_extensions/commands/review-tiers/tier-2-core.md. Do NOT patch the existing review \u2014 start fresh. You MUST: (1) read every line of the .md and activities .yaml, (2) cite specific Ukrainian sentences with issues (quote them with \u00ab\u00bb), (3) apply the 'Did I Learn?' test from the tier-2 guide, (4) score each dimension honestly \u2014 justify any 10/10 with evidence, (5) list at least 1 real issue (no module is perfect)."
+      "Structure: Missing '## Vocabulary' header OR vocabulary sidecar"
     ],
-    "pass_count": 4,
+    "pass_count": 3,
     "fail_count": 1,
     "deferred_count": 0
   }

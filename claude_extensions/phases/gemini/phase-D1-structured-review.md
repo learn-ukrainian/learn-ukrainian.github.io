@@ -45,7 +45,17 @@ Read ALL of these files before writing anything:
 
 **Do not proceed until you have read every line of the content and every activity item.**
 
-**For seminar tracks** (b2-hist, c1-bio, c1-hist, lit, oes, ruth): you MUST also read the research notes. If they contain a Key Facts Ledger, use it as the ground truth for verifying dates, events, attributions, and quotes in the prose.
+**For seminar tracks** (hist, c1-bio, c1-hist, lit, oes, ruth): you MUST also read the research notes. If they contain a Key Facts Ledger, use it as the ground truth for verifying dates, events, attributions, and quotes in the prose.
+
+---
+
+## Pre-Fetched RAG Primary Source Matches
+
+The following passages from the module were searched against our indexed primary source collection (litopys.org.ua literary texts). Use these matches to verify quote accuracy.
+
+{RAG_PRIMARY_SOURCES}
+
+**How to use**: If a quote from the module matches a RAG result, the quote is verified against a primary source. If no match was found, the quote may be fabricated — flag it in Factual Accuracy. Minor wording differences between module and source are acceptable (paraphrasing), but fabricated quotes with no source match are critical errors.
 
 ---
 
@@ -142,7 +152,7 @@ Also check for:
 
 1. **Grammar explanations**: Verify every rule statement is accurate. Flag overgeneralizations (e.g., claiming a rule applies universally when it has exceptions).
 
-#### Part 3: Research Cross-Reference (seminar tracks only — b2-hist, c1-bio, c1-hist, lit, oes, ruth)
+#### Part 3: Research Cross-Reference (seminar tracks only — hist, c1-bio, c1-hist, lit, oes, ruth)
 
 **Additionally verify factual claims against the research notes.**
 

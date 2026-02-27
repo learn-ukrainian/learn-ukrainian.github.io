@@ -209,7 +209,7 @@ Per module:
 ## Priority Recommendation
 
 **C1-HIST should be lower priority than:**
-1. B2-HIST (77% complete, 77 hours to finish)
+1. HIST (77% complete, 77 hours to finish)
 2. LIT (content complete, 40 hours for vocab)
 3. C1-BIO (87% content, 319 hours total)
 

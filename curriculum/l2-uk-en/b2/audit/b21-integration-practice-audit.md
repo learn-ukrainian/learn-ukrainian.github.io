@@ -1,7 +1,7 @@
 # Audit Report: M29 — b21-integration-practice.md
 **Level:** B2 | **Module:** M29 | **Phase:** B2.1c | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 11:02:52
+**Generated:** 2026-02-27 10:57:17
 
 ## Configuration
 **Type:** B2-grammar
@@ -39,6 +39,15 @@
 - Required types used: 3/3 (essay-response, reading, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4413/4000 (raw: 4675)
 - **Activities:** ✅ 12/10
@@ -49,7 +58,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

@@ -1,6 +1,6 @@
 # Tier 2: Core Levels (B1/B2 Core/B2-PRO)
 
-> **Target:** B1, B2 Core, and B2-PRO modules (NOT B2-HIST, NOT seminar tracks)
+> **Target:** B1, B2 Core, and B2-PRO modules (NOT HIST, NOT seminar tracks)
 > **Pedagogy:** TTT (Test-Teach-Test) for grammar; ESP for B2-PRO
 > **Immersion:** 85-100% Ukrainian
 > **Experience Goal:** Serious teaching — learner is challenged and grows

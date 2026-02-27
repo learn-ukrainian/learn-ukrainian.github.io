@@ -1,6 +1,6 @@
 import re
 
-with open('curriculum/l2-uk-en/b2-hist/holodomor-pamiat.md', 'r', encoding='utf-8') as f:
+with open('curriculum/l2-uk-en/hist/holodomor-pamiat.md', 'r', encoding='utf-8') as f:
     text = f.read()
 
 # Remove inline English. Looks like: (English text)
@@ -21,7 +21,7 @@ text = text.replace('не лише функцію збереження арте�
 # "не лише ..., а й ..."
 text = text.replace('не лише акт справедливості щодо жертв, але й механізм', 'акт справедливості щодо жертв, а також надійний механізм')
 
-with open('curriculum/l2-uk-en/b2-hist/holodomor-pamiat.md', 'w', encoding='utf-8') as f:
+with open('curriculum/l2-uk-en/hist/holodomor-pamiat.md', 'w', encoding='utf-8') as f:
     f.write(text)
 
 print("Done.")

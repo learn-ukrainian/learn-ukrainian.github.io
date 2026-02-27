@@ -2,7 +2,7 @@
 # Pre-seed Phase A research for tracks that still need it
 # Skips modules with Phase A already complete
 #
-# Already done: a1, a2, b1, b2, c1, b2-hist, c1-bio (856/1638)
+# Already done: a1, a2, b1, b2, c1, hist, c1-bio (856/1638)
 
 set -e
 

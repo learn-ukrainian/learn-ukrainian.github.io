@@ -8,6 +8,20 @@
       "ts": "2026-02-19T13:06:13Z",
       "task_id": "v3-semen-hulak-artemovskyy-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T14:41:52Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T14:43:51Z",
+      "task_id": "v3-semen-hulak-artemovskyy-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T14:47:08Z",
+      "attempts": 2
     }
   }
 }

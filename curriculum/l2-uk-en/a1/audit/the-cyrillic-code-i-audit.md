@@ -1,7 +1,7 @@
 # Audit Report: M01 — the-cyrillic-code-i.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:39:47
+**Generated:** 2026-02-27 13:27:05
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,16 +37,15 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2607/2000 (raw: 2985)
+- **Words:** ✅ 2602/2000 (raw: 2978)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ⚠️ 0 < 1 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
@@ -62,7 +61,7 @@
 | **The Cyrillic Code I** | ✅ | 53 | Included in Core |
 | **Розминка: Чому кирилиця?** | ✅ | 476 | Included in Core |
 | **Презентація: Літери-друзі та літери-пастки** | ✅ | 868 | Included in Core |
-| **Практика: Читаємо міжнародні слова** | ✅ | 307 | Included in Core |
+| **Практика: Читаємо міжнародні слова** | ✅ | 302 | Included in Core |
 | **Культурний контекст: Українська ідентичність літери «І»** | ✅ | 388 | Included in Core |
 | **Продукція: Ваші перші слова** | ✅ | 338 | Included in Core |
 | **Підсумок** | ✅ | 177 | Included in Core |

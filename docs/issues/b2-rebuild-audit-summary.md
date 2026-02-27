@@ -64,7 +64,7 @@ These issues stem from:
 - **Fix:** Normalize header names to canonical forms OR update template to accept more aliases
 
 **History-specific sections (120 modules):**
-- **Cause:** History modules (M71-M131) created before `b2-history-module-template.md` was finalized
+- **Cause:** History modules (M71-M131) created before `history-module-template.md` was finalized
 - **Impact:** Missing reading passages, primary sources, decolonization analysis
 - **Fix:** Add missing sections using history template as guide (manual content creation required)
 
@@ -235,8 +235,8 @@ options:
 
 | Missing Callout | Count | Required By Template |
 |-----------------|-------|----------------------|
-| `[!myth-buster]` | 24 | `b2-history-module-template` |
-| `[!history-bite]` | 23 | `b2-history-module-template` |
+| `[!myth-buster]` | 24 | `history-module-template` |
+| `[!history-bite]` | 23 | `history-module-template` |
 
 ### Analysis
 
@@ -263,7 +263,7 @@ options:
 ### Fix Strategy
 
 Add required callouts to all history modules based on:
-1. `docs/l2-uk-en/templates/b2-history-module-template.md`
+1. `docs/l2-uk-en/templates/history-module-template.md`
 2. Decolonization perspective from Ukrainian historiography
 3. Contemporary scholarship debunking imperial narratives
 
@@ -327,7 +327,7 @@ Vocabulary items with excessive morphological complexity for single-word teachin
 ### ✅ M105: UNR and ZUNR
 
 **Why it passes:**
-- Created with current `b2-history-module-template.md`
+- Created with current `history-module-template.md`
 - All history-specific sections present
 - Required callouts (`[!myth-buster]`, `[!history-bite]`)
 - Activities enriched to B2 complexity
@@ -407,7 +407,7 @@ Vocabulary items with excessive morphological complexity for single-word teachin
 4. Add "Деколонізаційний погляд" to 8 modules
 
 **Resources:**
-- `docs/l2-uk-en/templates/b2-history-module-template.md`
+- `docs/l2-uk-en/templates/history-module-template.md`
 - M102, M105 as reference examples
 
 ### Phase 3: Complexity Enrichment (8-12 hours)
@@ -474,4 +474,4 @@ Vocabulary items with excessive morphological complexity for single-word teachin
 - `b2-fix-scripts-needed.md` - Implementation guide
 - `b2-rebuild-index.md` - Navigation and progress tracker
 - `docs/l2-uk-en/templates/b2-module-template.md` - Template standard
-- `docs/l2-uk-en/templates/b2-history-module-template.md` - History template
+- `docs/l2-uk-en/templates/history-module-template.md` - History template

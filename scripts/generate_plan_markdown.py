@@ -3,8 +3,8 @@
 Generate human-readable markdown from YAML plans.
 
 Usage:
-    .venv/bin/python scripts/generate_plan_markdown.py b2-hist
-    .venv/bin/python scripts/generate_plan_markdown.py b2-hist --diff  # Compare with archived
+    .venv/bin/python scripts/generate_plan_markdown.py hist
+    .venv/bin/python scripts/generate_plan_markdown.py hist --diff  # Compare with archived
 
 This allows comparing new YAML-based plans with old markdown plans.
 """
@@ -71,7 +71,7 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
     # Build slug to number mapping - prefer meta files as they have proper IDs
     slug_to_num = {}
 
-    # First, build from meta files (most reliable - have b2-hist-XX format)
+    # First, build from meta files (most reliable - have hist-XX format)
     for slug, meta in meta_files.items():
         # Try multiple fields - prefer ones with number format
         for field in ['id', 'module']:
@@ -330,7 +330,7 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
 
 def main():
     parser = argparse.ArgumentParser(description="Generate markdown from YAML plans")
-    parser.add_argument("level", help="Level to generate (e.g., b2-hist, c1-bio)")
+    parser.add_argument("level", help="Level to generate (e.g., hist, c1-bio)")
     parser.add_argument("--diff", action="store_true", help="Compare with archived plan")
     parser.add_argument("--output", "-o", help="Output file path (default: stdout)")
     args = parser.parse_args()

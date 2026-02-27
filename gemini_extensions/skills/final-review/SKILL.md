@@ -45,7 +45,7 @@ description: Adversarial final review for otaman-built modules. Runs in a NEW se
 ```
 
 **Required parameters:**
-- `{track}` -- Track identifier (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro, b2-hist, c1-bio, c1-hist, lit, lit-*, oes, ruth)
+- `{track}` -- Track identifier (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro, hist, c1-bio, c1-hist, lit, lit-*, oes, ruth)
 - `{num}` -- 1-indexed module number within the track
 
 **Constants:**
@@ -164,7 +164,7 @@ Scan for these specific patterns:
 
 **Rule: For B1 and above, IPA belongs ONLY in the vocabulary YAML file, NOT inline in content.**
 
-- If track is b1, b2, c1, c2, or any compound (b2-hist, c1-bio, etc.):
+- If track is b1, b2, c1, c2, or any compound (hist, c1-bio, etc.):
   - `grep -n '\[/.*/' ${CONTENT_PATH}` -- should return ZERO results
   - IPA like `[/word/]` or `/word/` in prose = FAIL (move to vocabulary YAML)
 - A1 and A2 tracks: inline IPA is allowed (beginner phonics support)
@@ -212,7 +212,7 @@ This outputs JSON with `ukrainian_percent` and `english_percent`. Compare agains
 
 ### 5.7: Factual verification (seminar tracks)
 
-For b2-hist, c1-bio, c1-hist, lit, oes, ruth:
+For hist, c1-bio, c1-hist, lit, oes, ruth:
 - Check dates against known facts
 - Check Ukrainian names are spelled correctly
 - Check historical claims are accurate
@@ -256,7 +256,7 @@ If the schema exists, read it. Check for `forbidden_types` or constraints. Verif
 
 **Level-specific rules:**
 - A1: NO `cloze` type activities (too advanced)
-- Seminar tracks (b2-hist, c1-bio, etc.): activities should be seminar-style (4-9 activities, not drill-heavy)
+- Seminar tracks (hist, c1-bio, etc.): activities should be seminar-style (4-9 activities, not drill-heavy)
 
 ---
 
@@ -470,7 +470,7 @@ Apply the appropriate tier based on track:
 - All practice at end
 - Cold, mechanical voice
 
-### Tier 3: Seminar Modules (B2-HIST, C1-HIST, C1-BIO, LIT, OES, RUTH)
+### Tier 3: Seminar Modules (HIST, C1-HIST, C1-BIO, LIT, OES, RUTH)
 
 **Experience Goal:** A+ seminar lecture -- memorable, engaging, transformative.
 

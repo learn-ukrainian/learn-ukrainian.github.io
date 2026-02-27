@@ -1,6 +1,6 @@
 # Seminar Track Full-Rebuild Workflow
 
-This workflow is the mandatory standard for rebuilding or creating modules in "Seminar" tracks: `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, and `ruth`. It prioritizes research-driven, decolonized, and linguistically rich content.
+This workflow is the mandatory standard for rebuilding or creating modules in "Seminar" tracks: `hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, and `ruth`. It prioritizes research-driven, decolonized, and linguistically rich content.
 
 ## Phase 0: Research-First Mandate
 - **Sniper Search**: Use `google_web_search` with `site:esu.com.ua OR site:history.org.ua OR site:elib.nlu.org.ua` for academic accuracy.

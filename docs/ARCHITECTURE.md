@@ -67,8 +67,8 @@ learn-ukrainian/
 │       │   ├── a1/                # Module plans
 │       │   │   ├── 01-the-cyrillic-code-i.yaml
 │       │   │   └── ...
-│       │   ├── b2-hist.yaml       # Track level plan
-│       │   ├── b2-hist/           # Track module plans
+│       │   ├── hist.yaml       # Track level plan
+│       │   ├── hist/           # Track module plans
 │       │   └── ...
 │       ├── a1/                    # A1 build artifacts (34)
 │       ├── a2/                    # A2 build artifacts (50)
@@ -76,7 +76,7 @@ learn-ukrainian/
 │       ├── b2/                    # B2 build artifacts (110)
 │       ├── c1/                    # C1 build artifacts (160)
 │       ├── c2/                    # C2 build artifacts (100)
-│       ├── b2-hist/               # B2-HIST track (61)
+│       ├── hist/               # HIST track (61)
 │       ├── c1-bio/                # C1-BIO track (25)
 │       ├── lit/                   # LIT modules (30) - post-C1 track
 │       └── vocabulary.db          # SQLite vocabulary database
@@ -394,7 +394,7 @@ Claude handles interactive activities and final QA (better reasoning, structured
 Model defaults are track-aware and centralized in `scripts/batch_gemini_config.py`:
 
 ```python
-# Seminar tracks: c1-bio, b2-hist, c1-hist, lit, oes, ruth
+# Seminar tracks: c1-bio, hist, c1-hist, lit, oes, ruth
 CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS    # Phase A via --use-claude A
 CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS    # Phase C (always Claude)
 CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS    # Phase F (always Claude)

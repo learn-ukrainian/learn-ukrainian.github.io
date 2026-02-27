@@ -40,8 +40,8 @@ def generate_block(topic, count):
 
 header = (
     "---\\n"
-    "module: b2-hist-138\\n"
-    "id: b2-hist-138\\n"
+    "module: hist-138\\n"
+    "id: hist-138\\n"
     "title: \"Міжнародна підтримка\"\\n"
     "subtitle: \"International Support\"\\n"
     "slug: mizhnarodna-pidtrymka\\n"
@@ -143,7 +143,7 @@ full_text = (
     outro_resources
 )
 
-with open("curriculum/l2-uk-en/b2-hist/mizhnarodna-pidtrymka.md", "w", encoding="utf-8") as f:
+with open("curriculum/l2-uk-en/hist/mizhnarodna-pidtrymka.md", "w", encoding="utf-8") as f:
     f.write(full_text)
 
 print("Generated structured authentic content.")

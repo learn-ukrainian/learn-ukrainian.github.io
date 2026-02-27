@@ -1,7 +1,7 @@
 # l2-uk-direct Track Architecture
 
-> Last updated: 2026-02-26
-> Status: Planning phase — first module (`abetka`) drafted
+> Last updated: 2026-02-27
+> Status: Planning phase — A1/A2/B1 curriculum plans complete
 
 ---
 
@@ -215,25 +215,77 @@ Optional field for real-world Ukrainian video content showing the word in natura
 
 ---
 
-## 10. State Standard Compliance
+## 10. Textbook-to-CEFR Mapping: Approach C (Hybrid)
 
-Reference: `docs/l2-uk-en/state-standard-2024-mapping.yaml`
+### The Problem
 
-The Ukrainian State Standard 2024 defines WHAT to teach, not HOW. It is compatible with the direct method approach.
+Ukrainian school textbooks (Grades 1–11) teach L1 literacy to native speakers — children who already know 5000+ words when they start school. They follow a **spiral curriculum**: every grammar concept is introduced simply, then revisited with increasing depth across grades. The same case system appears in Grade 1 (implicit), Grade 4 (named explicitly), Grade 6 (full paradigm tables), and Grade 11 (consolidated reference).
 
-### Key A1 constraints
-- **Nominative**: from module 1 (required)
-- **Accusative**: not before module 11 (required)
-- **Locative**: not before module 13 (required)
-- **Dative**: NOT ALLOWED at A1
-- **Instrumental**: NOT ALLOWED at A1
-- **Imperatives**: 2nd person only at A1
+A rigid mapping like "A1 = Grade 1–2, A2 = Grade 3–4, B1 = Grade 5–6" breaks because:
+- Grade 5 restarts ALL grammar with formal terminology — same content, higher abstraction
+- Grade 6 has the BEST declension tables, but they're useful for A2 learners, not just B1
+- Grade 11 has the most complete grammar reference, relevant to every level
+- L2 learners need communicative vocabulary (transport, shopping, health) that textbooks never teach because native children absorb it from environment
 
-See `CURRICULUM-PLAN.md` for full module-by-module alignment.
+### The Solution: Three-Layer Architecture
+
+| Layer | Source | Role | Scope |
+|-------|--------|------|-------|
+| **Structure** | CEFR framework | Defines progression levels (A1 → A2 → B1 → B2) | Fixed |
+| **Requirements** | State Standard 2024 | Defines WHAT to teach per level: communicative intentions, thematic areas, linguistic competence | Fixed |
+| **Content library** | Textbooks (ALL grades) | Provides HOW to teach: explanations, examples, paradigm tables, activities | Searchable |
+
+**Key principle**: Any module at any CEFR level can draw content from ANY textbook grade. An A2 case module might use Grade 4's question-word approach, Grade 6's paradigm tables, and Grade 3's practice exercises.
+
+### Textbook Content Index
+
+| Grade | Primary Author | Best Content For |
+|-------|---------------|-----------------|
+| 1 (Букvar) | Bolshakova 2025 | Alphabet, sounds-before-letters, pre-literacy, first words |
+| 2 | Tsepova 2019 | Question-word grammar, basic sentence patterns |
+| 3 | Vashulenko 2020 | Word structure, phonetics, folklore activities, prefix rules |
+| 4 | Kravtsova/Savchenko 2021 | Case system (all 7 named), verb tenses, adjective agreement |
+| 5 | Avramenko 2022 | Euphony tables, stress patterns, formal terminology, anti-суржик |
+| 6 | Avramenko 2023 | Full declension paradigms, phraseology, morphology reference |
+| 7–11 | Various | Advanced syntax, consolidated tables, NMT/ZNO prep (to be indexed) |
+
+Research notes: `docs/l2-uk-direct/textbook-reading-notes/`
+
+### What This Means in Practice
+
+**For A2 case modules**: Use Grade 4's question-word approach to INTRODUCE the case. Use Grade 6's paradigm tables as REFERENCE. Use Grade 3's riddle/proverb activities for PRACTICE.
+
+**For B1 declension modules**: Use Grade 6's full paradigm tables as PRIMARY source. Use Grade 5's formal terminology for NAMING. Use Grade 11 tables (once indexed) for CONSOLIDATION.
+
+**For any vocabulary module**: State Standard 2024 defines required thematic areas. Textbooks provide themed word clusters. Missing daily-life vocabulary (transport, shopping, health) is sourced externally because textbooks never teach what native children already know.
 
 ---
 
-## 11. What This Track Is NOT
+## 11. State Standard Compliance
+
+Reference: `docs/l2-uk-en/state-standard-2024-mapping.yaml`
+Extracted requirements: `docs/l2-uk-direct/textbook-reading-notes/state-standard-2024-notes.md`
+
+The Ukrainian State Standard 2024 defines WHAT to teach, not HOW. It is the structural spine of this curriculum. Every module must map to specific State Standard requirements.
+
+### Key Level Constraints
+
+| Constraint | A1 | A2 | B1 |
+|-----------|----|----|-----|
+| Cases | 4 (Н, Зн, М, Кл) | ALL 7 | ALL 7 (nuanced meanings) |
+| Verb moods | Indicative + Imperative (2nd only) | + Full imperative (хай/нехай) | + Conditional |
+| Sentence types | Simple + basic compound | + Complex with що/щоб/де/бо | + Full subordination |
+| Vocabulary | 750 | 1800 cumulative | 3300 cumulative |
+| Dialogue length | 4–6 turns | 8–10 turns | 10–12 turns |
+
+See curriculum plans for full module-by-module alignment:
+- `CURRICULUM-PLAN.md` (A1)
+- `A2-CURRICULUM.md` (A2)
+- `B1-CURRICULUM.md` (B1)
+
+---
+
+## 12. What This Track Is NOT
 
 - Not a replacement for `l2-uk-en` — parallel track, different audience
 - Not translation-based — no bilingual glossaries

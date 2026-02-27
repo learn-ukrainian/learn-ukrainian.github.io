@@ -39,7 +39,7 @@ activities:
 
 ## Allowed Activity Types by Track
 
-### Seminar tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth)
+### Seminar tracks (hist, c1-bio, c1-hist, lit, oes, ruth)
 
 **Allowed:**
 - `reading` — text comprehension (REQUIRED)
@@ -71,7 +71,7 @@ All activity types allowed. Required types vary by level — check `scripts/audi
 | B2 | 10 | 15 | quiz, match-up, cloze |
 | C1 | 12 | 18 | all core types |
 | C2 | 16 | 20 | all core types |
-| B2-HIST | 3 | 9 | reading, essay-response, critical-analysis |
+| HIST | 3 | 9 | reading, essay-response, critical-analysis |
 | C1-BIO | 3 | 9 | reading, essay-response, critical-analysis |
 | C1-HIST | 3 | 9 | reading, essay-response, critical-analysis |
 | LIT | 3 | 9 | reading, essay-response, critical-analysis |

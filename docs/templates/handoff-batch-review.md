@@ -108,7 +108,7 @@ For each reviewed module, assess:
 ```markdown
 ## Batch Review Summary
 
-**Scope**: B2-HIST | **Modules Reviewed**: 35/140
+**Scope**: HIST | **Modules Reviewed**: 35/140
 **Date**: YYYY-MM-DD
 
 ### Results by Tier

@@ -10,13 +10,13 @@ This system extracts quantitative metrics from curriculum modules and calculates
 
 ```bash
 # Score a single track
-npm run score:b2-hist
+npm run score:hist
 
 # Score all tracks (summary)
 npm run score:all
 
 # Extract raw metrics
-npm run metrics:extract b2-hist
+npm run metrics:extract hist
 ```
 
 ## Architecture
@@ -65,7 +65,7 @@ npm run metrics:extract b2-hist
 
 | Track ID | Description | Module Count | Key Criteria |
 |----------|-------------|--------------|--------------|
-| `b2-hist` | Ukrainian History (B2) | 140 | Historical accuracy, primary sources, decolonization |
+| `hist` | Ukrainian History (B2) | 140 | Historical accuracy, primary sources, decolonization |
 | `c1-hist` | Historiography (C1) | 30 | Source criticism, methodology, thematic coherence |
 | `c1-bio` | Ukrainian Biographies (C1) | 128 | Biographical accuracy, legacy analysis, context |
 | `lit` | Ukrainian Literature | 30 | Literary depth, authentic texts, stylistic devices |
@@ -83,7 +83,7 @@ npm run metrics:extract b2-hist
 
 ## Scoring Criteria
 
-### B2-HIST Track (Ukrainian History)
+### HIST Track (Ukrainian History)
 
 | Criterion | Weight | Measurement |
 |-----------|--------|-------------|
@@ -187,7 +187,7 @@ Patterns detected:
 
 ```
 ═══════════════════════════════════════════════════════════════════
-  B2-HIST Track Scoring Report
+  HIST Track Scoring Report
   Generated: 2026-02-02 | Modules: 140 | Coverage: 100%
 ═══════════════════════════════════════════════════════════════════
 
@@ -203,7 +203,7 @@ AUTOMATED METRICS (from extract_track_metrics.py):
 ### Markdown (`--format markdown`)
 
 ```markdown
-# B2-HIST Track Scoring Report
+# HIST Track Scoring Report
 
 **Generated:** 2026-02-02
 **Modules:** 140/140
@@ -294,10 +294,10 @@ class ModuleMetrics:
 
 ```bash
 # Run a quick test
-.venv/bin/python scripts/score_track.py b2-hist
+.venv/bin/python scripts/score_track.py hist
 
 # Verify metrics extraction
-.venv/bin/python scripts/extract_track_metrics.py b2-hist --format json | head -50
+.venv/bin/python scripts/extract_track_metrics.py hist --format json | head -50
 
 # Compare with manual verification
 npm run score:all 2>&1 | tee scoring-output.txt
@@ -316,7 +316,7 @@ curriculum/l2-uk-en/{level_dir}/
 
 Check that the module files exist and contain expected patterns:
 ```bash
-grep -r '\[!quote\]' curriculum/l2-uk-en/b2-hist/*.md | wc -l
+grep -r '\[!quote\]' curriculum/l2-uk-en/hist/*.md | wc -l
 ```
 
 ### Score doesn't match expectations
@@ -342,7 +342,7 @@ After LLM or human verification, add a `verification` block to `status/{slug}.js
 ```json
 {
   "module": "slug-name",
-  "level": "b2-hist",
+  "level": "hist",
   "gates": { ... },
   "overall": { ... },
   "verification": {
@@ -362,7 +362,7 @@ After LLM or human verification, add a `verification` block to `status/{slug}.js
 from scripts.audit.report import set_verification
 
 set_verification(
-    status_file='curriculum/l2-uk-en/b2-hist/status/oleh-ihor.json',
+    status_file='curriculum/l2-uk-en/hist/status/oleh-ihor.json',
     tier='llm-verified',
     reviewer='claude',
     score=9.5,
@@ -395,6 +395,6 @@ candidates = get_sampling_candidates(module_data_list)
 
 ## See Also
 
-- `docs/l2-uk-en/B2-HIST-10-10-IMPROVEMENT-PLAN.md` - Improvement plan
+- `docs/l2-uk-en/HIST-10-10-IMPROVEMENT-PLAN.md` - Improvement plan
 - `docs/STATUS-SYSTEM.md` - Status caching system
 - `scripts/audit/` - Module auditing system

@@ -2,11 +2,11 @@
 
 **Purpose:** Reference template for B2 Ukrainian history synthesis modules (M83, M108, M119, M125, M131)
 
-**Based on:** `b2-history-module-template.md` — inherits decolonization standards
+**Based on:** `history-module-template.md` — inherits decolonization standards
 
 **Related Issues:** [#332](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/332)
 
-> **Note:** Regular history modules (M71-82, M84-107, etc.) use `b2-history-module-template.md` instead.
+> **Note:** Regular history modules (M71-82, M84-107, etc.) use `history-module-template.md` instead.
 
 <!--
 TEMPLATE_METADATA:
@@ -512,7 +512,7 @@ Each synthesis module must include ONE complete model essay (300-400 words) demo
 
 ## Related Documentation
 
-- **Base template:** `docs/l2-uk-en/templates/b2-history-module-template.md`
+- **Base template:** `docs/l2-uk-en/templates/history-module-template.md`
 - **B2 Curriculum Plan:** `docs/l2-uk-en/B2-CURRICULUM-PLAN.md`
 - **Decolonization guidelines:** Referenced in history template
 - **Activity Reference:** `docs/ACTIVITY-MARKDOWN-REFERENCE.md`

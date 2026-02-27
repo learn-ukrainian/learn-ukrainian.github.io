@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "holodomor-pamiat",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:01:39Z",
+      "task_id": "v3-holodomor-pamiat-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T21:20:34Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T21:21:38Z",
+      "task_id": "v3-holodomor-pamiat-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T21:24:46Z",
+      "attempts": 2
+    }
+  }
+}

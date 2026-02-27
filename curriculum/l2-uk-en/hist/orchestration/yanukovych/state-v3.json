@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "yanukovych",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:27:11Z",
+      "task_id": "v3-yanukovych-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T01:36:27Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T01:38:19Z",
+      "task_id": "v3-yanukovych-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T23:51:41Z",
+      "attempts": 1
+    }
+  }
+}

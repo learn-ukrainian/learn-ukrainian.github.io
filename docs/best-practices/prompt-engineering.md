@@ -132,7 +132,7 @@ Templates use `{PLACEHOLDER_NAME}` for runtime injection via `placeholders.yaml`
 | `{CONTENT_PATH}` | Path to lesson markdown |
 | `{WORD_TARGET}` | Integer word count target |
 | `{TOPIC_TITLE}` | Human-readable module title |
-| `{TRACK}` | Track identifier (c1-bio, b2-hist, etc.) |
+| `{TRACK}` | Track identifier (c1-bio, hist, etc.) |
 
 **Rule:** Never hardcode paths. Always use placeholders.
 

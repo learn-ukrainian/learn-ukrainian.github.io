@@ -39,10 +39,10 @@ focus: biography
 pedagogy: seminar
 prerequisites:
 - c1-bio-07 (Роман Мстиславич)
-- b2-hist danylo-halytskyi module
+- hist danylo-halytskyi module
 connects_to:
 - c1-bio-09 (Лев Данилович)
-- b2-hist mongolska-navala module
+- hist mongolska-navala module
 objectives:
 - Аналізувати дипломатичні успіхи та поразки Данила
 - Оцінити значення коронації для української історії

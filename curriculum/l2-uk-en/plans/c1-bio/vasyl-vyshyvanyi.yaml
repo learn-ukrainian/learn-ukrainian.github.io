@@ -67,7 +67,7 @@ activity_hints:
   output: Філософський есей
 focus: biography
 prerequisites:
-- b2-hist-wwi-ukraine
+- hist-wwi-ukraine
 connects_to:
 - c1-bio-44-symon-petliura
 - c1-bio-61-olena-stepaniv

@@ -2,7 +2,7 @@
 
 **Status:** ✅ IMPLEMENTED (relocated from C1 Core, January 2026)
 **Modules:** 01-119 (119 modules + 1 checkpoint)
-**Prerequisite:** B2-HIST Track (M01-61)
+**Prerequisite:** HIST Track (M01-61)
 **Vocabulary Target:** Content-driven (~24/module)
 **Immersion:** 100% Ukrainian
 
@@ -31,7 +31,7 @@
 
 ### Попередні вимоги
 
-- Рекомендовано: B2-HIST Track (для історичного контексту)
+- Рекомендовано: HIST Track (для історичного контексту)
 - Завершення B2 Core мінімум
 - Словниковий запас ~5,500 слів
 
@@ -328,9 +328,9 @@ Key modules addressing colonialism:
 
 | Prerequisite | This Track | Leads To  |
 | ------------ | ---------- | --------- |
-| B2-HIST      | **C1-BIO** | LIT Track |
+| HIST      | **C1-BIO** | LIT Track |
 
-Students should complete B2-HIST for historical context before studying individual biographies.
+Students should complete HIST for historical context before studying individual biographies.
 
 ---
 

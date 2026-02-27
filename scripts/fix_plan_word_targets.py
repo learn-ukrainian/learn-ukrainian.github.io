@@ -36,7 +36,7 @@ def get_config_target(level: str, module_num: int = 1, focus: str = None) -> int
         'b2': 'B2',
         'c1': 'C1',
         'c2': 'C2',
-        'b2-hist': 'B2-history',
+        'hist': 'history',
         'c1-hist': 'C1-history',
         'c1-bio': 'C1-biography',
         'lit': 'LIT',

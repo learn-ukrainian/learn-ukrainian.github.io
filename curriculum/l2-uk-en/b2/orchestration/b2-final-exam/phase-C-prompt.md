@@ -56,7 +56,7 @@ These are the top failure causes from previous rebuilds — write with them in m
 - **Forbidden fields**: `id` only on `reading` type (seminar tracks). Reading activities REQUIRE `text` (inline source) + `tasks` (comprehension questions). `instruction` is optional.
 - **Russian characters**: ы, э, ё, ъ in any activity text = hard fail
 - **Ukrainian quotes**: do NOT use «» in YAML values — they break parsing with colons
-- **IPA in YAML**: NEVER include IPA symbols in YAML — pronunciation goes in markdown content only
+- **No IPA**: NEVER include IPA symbols or `ipa` fields
 
 ---
 
@@ -110,7 +110,7 @@ Using a forbidden type wastes the entire activity generation phase. Check the al
 
 **Reading schema varies by track — always check `schemas/activities-b2.schema.json` for your track's required fields.**
 
-**Seminar tracks (C1-HIST, C1-BIO, LIT, B2-HIST):** Reading = passive input linked to analytical activities.
+**Seminar tracks (C1-HIST, C1-BIO, LIT, HIST):** Reading = passive input linked to analytical activities.
 ```yaml
 - type: reading
   id: reading-hrushevsky          # REQUIRED for seminar tracks (for source_reading links)
@@ -164,13 +164,15 @@ options:
 
 3. **No extra fields** — The schema uses `additionalProperties: false`. ANY field not in the schema causes instant failure. Common mistakes: adding `id` to non-reading activities, adding `hint` where not allowed, adding `explanation` inside option objects.
 
-4. **Vocabulary YAML structure** — Use object with `items:` array wrapper. Each entry uses `lemma` (NOT `term`), `translation`, `pos`. Optional: `gender` (m/f/n for nouns), `aspect` (for verbs), `notes`, `usage`, `example`. Do NOT use bare list for vocabulary. Do NOT include `ipa` — IPA is generated deterministically by the pipeline after Phase C.
+4. **Vocabulary YAML structure** — Use object with `items:` array wrapper. Each entry uses `lemma` (NOT `term`), `translation`, `pos`. Optional: `gender` (m/f/n for nouns), `aspect` (for verbs), `notes`, `usage`, `example`. Do NOT use bare list for vocabulary. Do NOT include `ipa` fields.
 
 ### Activity Quality Standards (MANDATORY)
 
 **These rules prevent low-quality activities that waste learner time:**
 
-1. **Production over recognition** — At least 2 activities must require the learner to PRODUCE language, not just recognize it. Production types: `translate` (with free text, not multiple choice), `fill-in`, `unjumble`, `error-correction`, `cloze`. Recognition types: `quiz`, `true-false`, `select`, `match-up`, `group-sort`. A module with only recognition activities fails review.
+1. **Activities test LANGUAGE, not content** — The Golden Rule: Can the learner answer this question WITHOUT reading the Ukrainian text? If YES → it tests content recall, not language. **REWRITE IT.** FORBIDDEN patterns: "У якому році..." (dates), "Хто був..." (names), "Скільки..." (numbers), "Що символізує..." (interpretation without text reference). REQUIRED patterns: "Згідно з текстом, як автор...", "У тексті модуля автор характеризує...", "Яку функцію автор підкреслює...", "Який аргумент автор наводить...". Applies to ALL quiz/reading/essay activities in HIST, C1-BIO, C1-HIST, LIT, and content-heavy modules. If a quiz question is answerable from general knowledge alone, you have FAILED the activity.
+
+2. **Production over recognition** — At least 2 activities must require the learner to PRODUCE language, not just recognize it. Production types: `translate` (with free text, not multiple choice), `fill-in`, `unjumble`, `error-correction`, `cloze`. Recognition types: `quiz`, `true-false`, `select`, `match-up`, `group-sort`. A module with only recognition activities fails review.
 
 2. **Plausible example sentences** — Every sentence in every activity must be something a real Ukrainian speaker might actually say, write, or encounter. FORBIDDEN: philosophical/motivational statements ("Граматика — це музика мови"), meta-sentences about learning ("Ми спостерігаємо за тривалістю лінгвістичного експерименту"), or artificially constructed sentences that exist only to contain target vocabulary. GOOD: everyday speech, textbook excerpts, teacher instructions, realistic dialogues.
 
@@ -212,9 +214,9 @@ options:
 
 ### Pronunciation in Activity Explanations (HARD FAIL)
 
-**In YAML explanations, use the Ukrainian word directly — NEVER Latin transliteration, NEVER IPA symbols.**
+**In YAML explanations, use the Ukrainian word directly — NEVER Latin transliteration.**
 
-IPA symbols (`[ʒ]`, ``) belong in markdown content only. YAML explanations should reference Ukrainian words in Cyrillic.
+YAML explanations should reference Ukrainian words in Cyrillic.
 
 ```yaml
 ❌ WRONG (Latin transliteration):
@@ -222,8 +224,8 @@ IPA symbols (`[ʒ]`, ``) belong in markdown content only. YAML explanations shou
   explanation: 'Dity uses the soft І sound.'
   explanation: 'The first vowel in Kyiv is hard И (Ky-yiv).'
 
-❌ WRONG (IPA in YAML):
-  explanation: 'Жити uses the hard И sound.'
+❌ WRONG (non-Cyrillic in YAML):
+  explanation: 'Жити [ˈʒɪ.tɪ] uses the hard И sound.'
 
 ✅ RIGHT (Ukrainian word directly):
   explanation: 'Жити uses the hard И sound.'
@@ -233,7 +235,7 @@ IPA symbols (`[ʒ]`, ``) belong in markdown content only. YAML explanations shou
 
 **Rules:**
 1. Reference words in Cyrillic, not Latin transliteration (ZhYty → Жити)
-2. No IPA notation in YAML — keep explanations simple and readable
+2. Keep explanations simple and readable — use Cyrillic only
 3. English descriptions of sounds are fine ("hard И", "soft І", "the ch sound")
 
 ### Vocabulary YAML Rules
@@ -242,7 +244,7 @@ IPA symbols (`[ʒ]`, ``) belong in markdown content only. YAML explanations shou
 2. **Follow plan's vocabulary_hints** — include all required items, optionally include recommended
 3. **Each entry needs**: `lemma` (NOT `term`), `translation`, `pos` (part of speech)
 4. **Optional fields**: `gender` (for nouns: m/f/n), `aspect` (for verbs), `notes`, `usage`, `example`
-5. **NO IPA in YAML** — Do NOT include an `ipa` field. IPA is generated deterministically by the pipeline after Phase C (via the IPA generator script). If you include IPA, it will be overwritten.
+5. **NO `ipa` field** — Do NOT include an `ipa` field in vocabulary YAML.
 6. **Count target**: 30 items
 
 ## Output Format

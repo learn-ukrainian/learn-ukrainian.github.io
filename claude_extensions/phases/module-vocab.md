@@ -292,7 +292,7 @@ Provide accurate, contextual translations:
 - Historical/cultural terms (епоха, культура)
 - Complex verbs with prefixes (перевершувати, спростовувати)
 
-### B2-HIST / C1-BIO / C1-HIST / LIT Tracks
+### HIST / C1-BIO / C1-HIST / LIT Tracks
 
 **Focus:**
 
@@ -379,7 +379,7 @@ Example (aspect module):
   gender: m
 ```
 
-### History Modules (B2-HIST, C1-HIST)
+### History Modules (HIST, C1-HIST)
 
 **Focus:** Historical events, figures, places, all inflected forms
 
@@ -461,7 +461,7 @@ Next: Run /module-vocab-qa {level} {module_num}
 
 ## Examples
 
-### Example 1: B2-HIST Vocabulary Generation
+### Example 1: HIST Vocabulary Generation
 
 **Input:** Lesson content with historical terms
 

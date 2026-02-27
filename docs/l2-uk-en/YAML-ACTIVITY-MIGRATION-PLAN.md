@@ -1524,7 +1524,7 @@ docs/l2-uk-en/templates/
 ├── b1-checkpoint-module-template.md
 ├── b1-integration-module-template.md
 ├── b2-grammar-module-template.md
-├── b2-history-module-template.md
+├── history-module-template.md
 ├── b2-phraseology-module-template.md
 ├── b2-checkpoint-module-template.md
 ├── b2-integration-module-template.md

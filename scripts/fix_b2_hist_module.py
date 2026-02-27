@@ -1,6 +1,6 @@
 import re
 
-filepath = "curriculum/l2-uk-en/b2-hist/ivan-mazepa-kultura.md"
+filepath = "curriculum/l2-uk-en/hist/ivan-mazepa-kultura.md"
 with open(filepath, "r", encoding="utf-8") as f:
     content = f.read()
 

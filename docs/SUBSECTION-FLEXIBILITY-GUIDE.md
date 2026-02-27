@@ -8,7 +8,7 @@
 
 ### What MUST be met
 
-1. ✅ **Total word count** ≥ `word_target` (e.g., 4000 for B2-HIST)
+1. ✅ **Total word count** ≥ `word_target` (e.g., 4000 for HIST)
 2. ✅ Each section within **±10% tolerance** of target
 
 ### What is FLEXIBLE

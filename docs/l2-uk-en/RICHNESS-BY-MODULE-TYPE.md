@@ -17,7 +17,7 @@
 | B1 Grammar | `b1-grammar-module-template.md` | 24+ examples, 4+ dialogues, proverbs |
 | B1 Vocabulary | `b1-vocab-module-template.md` | Collocations, synonyms, register |
 | B1 Cultural | `b1-cultural-module-template.md` | Authentic materials, regional refs |
-| B2 History | `b2-history-module-template.md` | Primary sources, decolonization, 500+ narrative |
+| B2 History | `history-module-template.md` | Primary sources, decolonization, 500+ narrative |
 | B2 Phraseology | `b2-phraseology-module-template.md` | Idiom context, etymology, register |
 | C1 Biography | `c1-biography-module-template.md` | 800-1000 narrative, quotes, legacy |
 | C1 Academic | `c1-academic-module-template.md` | Citations, frameworks, data |

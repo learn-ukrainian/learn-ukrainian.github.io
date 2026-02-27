@@ -17,7 +17,7 @@ Create a new module OR migrate an existing module to YAML format.
 /module-create [LEVEL] [START]-[END]   # Batch mode
 ```
 
-> **🔥 SEMINAR TRACKS (LIT, B2-HIST, C1-BIO, C1-HIST):**
+> **🔥 SEMINAR TRACKS (LIT, HIST, C1-BIO, C1-HIST):**
 > Use **`/generate-seminar-module [TRACK] [SLUG]`** instead.
 > Example: `/generate-seminar-module c1-bio lesya-ukrainka`
 > This command enforces the Meta-Driven workflow required for these tracks.

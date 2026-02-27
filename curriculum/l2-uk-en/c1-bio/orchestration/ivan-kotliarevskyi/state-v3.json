@@ -8,6 +8,20 @@
       "ts": "2026-02-19T12:57:05Z",
       "task_id": "v3-ivan-kotliarevskyi-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T14:25:55Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T14:28:07Z",
+      "task_id": "v3-ivan-kotliarevskyi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T14:33:20Z",
+      "attempts": 2
     }
   }
 }

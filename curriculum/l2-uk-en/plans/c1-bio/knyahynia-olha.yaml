@@ -55,10 +55,10 @@ focus: biography
 pedagogy: seminar
 prerequisites:
 - c1-bio-01 (Олег Віщий)
-- b2-hist knyahynia-olha module
+- hist knyahynia-olha module
 connects_to:
 - c1-bio-03 (Святослав Хоробрий)
-- b2-hist hrystyianstvo module
+- hist hrystyianstvo module
 objectives:
 - Проаналізувати адміністративні реформи Ольги
 - Оцінити дипломатичні успіхи у відносинах з Візантією

@@ -614,9 +614,9 @@ def extract_module_metrics(
     All operations are automated (no LLM calls).
 
     Args:
-        level_dir: Path to level directory (e.g., curriculum/l2-uk-en/b2-hist)
+        level_dir: Path to level directory (e.g., curriculum/l2-uk-en/hist)
         module_slug: Module slug (e.g., "01-trypilska-kultura")
-        level_code: Level code (e.g., "b2-hist")
+        level_code: Level code (e.g., "hist")
 
     Returns:
         ModuleMetrics dataclass with all extracted metrics
@@ -730,7 +730,7 @@ def extract_all_module_metrics(
 
     Args:
         curriculum_path: Path to curriculum directory (e.g., curriculum/l2-uk-en)
-        track_id: Track identifier (e.g., "b2-hist")
+        track_id: Track identifier (e.g., "hist")
 
     Returns:
         List of ModuleMetrics for all modules in the track

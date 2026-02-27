@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "hromady",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T16:34:17Z",
+      "task_id": "v3-hromady-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T21:09:10Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T21:10:33Z",
+      "task_id": "v3-hromady-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T21:12:59Z",
+      "attempts": 2
+    }
+  }
+}

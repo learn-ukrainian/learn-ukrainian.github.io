@@ -111,7 +111,7 @@ python scripts/generate_mdx.py l2-uk-en {level} {num}
 **Verify output:**
 
 - For Core (A1-C2): `docusaurus/docs/{level}/module-{num}.mdx`
-- For Tracks (b2-hist, etc): `docusaurus/docs/{level}/{slug}.mdx`
+- For Tracks (hist, etc): `docusaurus/docs/{level}/{slug}.mdx`
 
 ### Step 5: Run Final Audit
 
@@ -176,26 +176,26 @@ After integration:
 
 ## Examples
 
-### Example 1: B2-HIST Integration Success
+### Example 1: HIST Integration Success
 
 **Input:** Locked meta, lesson, activities for trypillian-civilization
 
 **Output:**
 
 ```
-INTEGRATION COMPLETE: b2-hist/trypillian-civilization
+INTEGRATION COMPLETE: hist/trypillian-civilization
 
 ✓ Meta verified
 ✓ Lesson verified (4000 words)
 ✓ Activities verified (4 activities)
 ✓ Skeleton vocabulary created
-✓ MDX generated: docusaurus/docs/b2-hist/trypillian-civilization.mdx
+✓ MDX generated: docusaurus/docs/hist/trypillian-civilization.mdx
 ✓ Audit: ALL GATES ✅
 
-Preview: http://localhost:3000/docs/b2-hist/trypillian-civilization
+Preview: http://localhost:3000/docs/hist/trypillian-civilization
 
 Note: Vocabulary table is empty.
-      Run /module-vocab-enrich b2-hist when track is complete.
+      Run /module-vocab-enrich hist when track is complete.
 ```
 
 ### Example 2: Core Module Integration

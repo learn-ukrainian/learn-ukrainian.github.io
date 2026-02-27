@@ -8,6 +8,11 @@
       "ts": "2026-02-19T15:17:45Z",
       "task_id": "v3-olena-pchilka-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-27T17:42:25Z",
+      "note": "word-count-3798-below-80pct-5000"
     }
   }
 }

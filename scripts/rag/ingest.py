@@ -1,4 +1,4 @@
-"""Ingest extracted chunks and images into Qdrant.
+"""Ingest extracted chunks, images, and literary texts into Qdrant.
 
 Creates collections with named vectors (dense + sparse for text,
 SigLIP for images) and uploads in batches.
@@ -9,6 +9,12 @@ Usage:
 
     # Ingest images from extracted metadata JSONL
     .venv/bin/python scripts/rag/ingest.py --images data/textbook_images/grade-01/1-klas-bukvar-bolshakova-2025-1-images.jsonl
+
+    # Ingest literary text chunks
+    .venv/bin/python scripts/rag/ingest.py --literary data/literary_texts/wave0-slovo-o-polku.jsonl
+
+    # Ingest all literary texts at once
+    .venv/bin/python scripts/rag/ingest.py --all-literary
 
     # Ingest all extracted data for specific grades
     .venv/bin/python scripts/rag/ingest.py --all --grade 1 3
@@ -30,6 +36,8 @@ from rag.config import (
     CHUNKS_DIR,
     IMAGES_DIR,
     IMAGE_COLLECTION,
+    LITERARY_COLLECTION,
+    LITERARY_DIR,
     QDRANT_GRPC_PORT,
     QDRANT_HOST,
     QDRANT_REST_PORT,
@@ -309,6 +317,127 @@ def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
     return uploaded
 
 
+def create_literary_collection(client, recreate: bool = False):
+    """Create or verify the literary_texts collection."""
+    from qdrant_client.models import (
+        Distance,
+        PayloadSchemaType,
+        SparseIndexParams,
+        SparseVectorParams,
+        VectorParams,
+    )
+
+    exists = client.collection_exists(LITERARY_COLLECTION)
+    if exists and not recreate:
+        info = client.get_collection(LITERARY_COLLECTION)
+        print(f"[ingest] Collection '{LITERARY_COLLECTION}' exists with {info.points_count} points")
+        return
+    if exists and recreate:
+        print(f"[ingest] Deleting collection '{LITERARY_COLLECTION}'...")
+        client.delete_collection(LITERARY_COLLECTION)
+
+    print(f"[ingest] Creating collection '{LITERARY_COLLECTION}'...")
+    client.create_collection(
+        collection_name=LITERARY_COLLECTION,
+        vectors_config={
+            "dense": VectorParams(
+                size=BGE_M3_DENSE_DIM,
+                distance=Distance.COSINE,
+            ),
+        },
+        sparse_vectors_config={
+            "sparse": SparseVectorParams(
+                index=SparseIndexParams(on_disk=False),
+            ),
+        },
+    )
+
+    for field, schema_type in [
+        ("work", PayloadSchemaType.KEYWORD),
+        ("author", PayloadSchemaType.KEYWORD),
+        ("year", PayloadSchemaType.INTEGER),
+        ("genre", PayloadSchemaType.KEYWORD),
+        ("language_period", PayloadSchemaType.KEYWORD),
+    ]:
+        client.create_payload_index(
+            collection_name=LITERARY_COLLECTION,
+            field_name=field,
+            field_schema=schema_type,
+        )
+    print(f"[ingest] Collection '{LITERARY_COLLECTION}' created with indexes.")
+
+
+def ingest_literary_chunks(client, jsonl_path: Path, batch_size: int = 32):
+    """Embed and ingest literary text chunks into Qdrant."""
+    from qdrant_client.models import PointStruct, SparseVector
+
+    jsonl_path = Path(jsonl_path)
+    print(f"\n[ingest] Ingesting literary chunks from {jsonl_path.name}...")
+
+    chunks = []
+    with open(jsonl_path, "r", encoding="utf-8") as f:
+        for line in f:
+            chunks.append(json.loads(line))
+
+    if not chunks:
+        print("  No chunks found, skipping.")
+        return 0
+
+    print(f"  {len(chunks)} chunks to embed...")
+
+    encoder = get_text_encoder()
+    texts = [c["text"] for c in chunks]
+    embeddings = encoder.encode(texts, batch_size=batch_size)
+
+    dense_vecs = embeddings["dense_vecs"]
+    sparse_weights = embeddings["lexical_weights"]
+
+    points = []
+    for i, chunk in enumerate(chunks):
+        sw = sparse_weights[i]
+        if isinstance(sw, dict):
+            indices = list(
+                int(k) if isinstance(k, (int, float)) else hash(k) % (2**31)
+                for k in sw.keys()
+            )
+            values = list(sw.values())
+        else:
+            indices, values = [], []
+
+        payload = {
+            "text": chunk["text"],
+            "chunk_id": chunk["chunk_id"],
+            "work": chunk.get("work", ""),
+            "author": chunk.get("author", ""),
+            "year": chunk.get("year", 0),
+            "genre": chunk.get("genre", ""),
+            "language_period": chunk.get("language_period", ""),
+            "source_url": chunk.get("source_url", ""),
+            "token_count": chunk.get("token_count", 0),
+        }
+        if "original_text" in chunk:
+            payload["original_text"] = chunk["original_text"]
+
+        point = PointStruct(
+            id=int(hashlib.sha256(chunk["chunk_id"].encode()).hexdigest()[:15], 16),
+            vector={
+                "dense": dense_vecs[i].tolist(),
+                "sparse": SparseVector(indices=indices, values=values),
+            },
+            payload=payload,
+        )
+        points.append(point)
+
+    print(f"  Uploading {len(points)} points to Qdrant...")
+    for i in range(0, len(points), batch_size):
+        batch = points[i : i + batch_size]
+        client.upsert(collection_name=LITERARY_COLLECTION, points=batch)
+        print(f"  Uploaded {min(i + batch_size, len(points))}/{len(points)}")
+
+    print(f"  Done: {len(points)} literary chunks ingested.")
+    return len(points)
+
+
 def find_jsonl_files(base_dir: Path, grades: list[int] | None = None, suffix: str = ".jsonl") -> list[Path]:
     """Find JSONL files, optionally filtered by grade."""
     files = []
@@ -324,30 +453,38 @@ def find_jsonl_files(base_dir: Path, grades: list[int] | None = None, suffix: st
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Ingest text/images into Qdrant")
+    parser = argparse.ArgumentParser(description="Ingest text/images/literary texts into Qdrant")
     parser.add_argument("--text", type=str, action="append", help="Path to text chunks JSONL (repeatable)")
     parser.add_argument("--images", type=str, action="append", help="Path to image metadata JSONL (repeatable)")
+    parser.add_argument("--literary", type=str, action="append", help="Path to literary text JSONL (repeatable)")
     parser.add_argument("--all", action="store_true", help="Ingest all extracted data")
-    parser.add_argument("--grade", type=int, nargs="+", help="Filter by grades")
+    parser.add_argument("--all-literary", action="store_true", help="Ingest all literary JSONL files in data/literary_texts/")
+    parser.add_argument("--grade", type=int, nargs="+", help="Filter by grades (textbook only)")
     parser.add_argument("--reset", action="store_true", help="Delete and recreate collections")
     parser.add_argument("--batch-size", type=int, default=64, help="Embedding batch size")
     args = parser.parse_args()
 
     client = get_client()
 
+    has_literary = args.literary or args.all_literary
+    has_textbook = args.text or args.images or args.all
+
     if args.reset:
         create_text_collection(client, recreate=True)
         create_image_collection(client, recreate=True)
-        if not (args.text or args.images or args.all):
+        create_literary_collection(client, recreate=True)
+        if not (has_textbook or has_literary):
             print("Collections reset. Done.")
             return
 
-    # Ensure collections exist
-    create_text_collection(client)
-    create_image_collection(client)
-
     total_chunks = 0
     total_images = 0
+    total_literary = 0
+
+    # Textbook ingestion
+    if args.text or args.images or args.all:
+        create_text_collection(client)
+        create_image_collection(client)
 
     if args.text:
         for text_path in args.text:
@@ -358,23 +495,42 @@ def main():
             total_images += ingest_images(client, Path(img_path), batch_size=min(args.batch_size, 16))
 
     if args.all:
-        # Ingest all text chunks
         text_files = find_jsonl_files(CHUNKS_DIR, args.grade, suffix=".jsonl")
-        # Exclude image metadata files
         text_files = [f for f in text_files if not f.name.endswith("-images.jsonl")]
         for tf in text_files:
             total_chunks += ingest_text_chunks(client, tf, batch_size=args.batch_size)
 
-        # Ingest all images
         image_files = find_jsonl_files(IMAGES_DIR, args.grade, suffix="-images.jsonl")
         for imf in image_files:
             total_images += ingest_images(client, imf, batch_size=min(args.batch_size, 16))
 
-    if total_chunks or total_images:
-        print(f"\n=== Ingestion complete: {total_chunks} text chunks, {total_images} images ===")
+    # Literary ingestion
+    if has_literary:
+        create_literary_collection(client)
 
-        # Print collection stats
-        for coll in [TEXT_COLLECTION, IMAGE_COLLECTION]:
+    if args.literary:
+        for lit_path in args.literary:
+            total_literary += ingest_literary_chunks(client, Path(lit_path), batch_size=min(args.batch_size, 32))
+
+    if args.all_literary:
+        if LITERARY_DIR.exists():
+            for jsonl_file in sorted(LITERARY_DIR.glob("*.jsonl")):
+                total_literary += ingest_literary_chunks(client, jsonl_file, batch_size=min(args.batch_size, 32))
+        else:
+            print(f"[ingest] Literary dir not found: {LITERARY_DIR}")
+
+    # Summary
+    totals = []
+    if total_chunks:
+        totals.append(f"{total_chunks} text chunks")
+    if total_images:
+        totals.append(f"{total_images} images")
+    if total_literary:
+        totals.append(f"{total_literary} literary chunks")
+
+    if totals:
+        print(f"\n=== Ingestion complete: {', '.join(totals)} ===")
+        for coll in [TEXT_COLLECTION, IMAGE_COLLECTION, LITERARY_COLLECTION]:
             try:
                 info = client.get_collection(coll)
                 print(f"  {coll}: {info.points_count} points")

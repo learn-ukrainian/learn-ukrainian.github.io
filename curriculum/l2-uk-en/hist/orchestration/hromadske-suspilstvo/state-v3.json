@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "hromadske-suspilstvo",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:40:06Z",
+      "task_id": "v3-hromadske-suspilstvo-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-25T22:18:45Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-25T22:20:23Z",
+      "task_id": "v3-hromadske-suspilstvo-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T23:52:36Z",
+      "attempts": 1
+    }
+  }
+}

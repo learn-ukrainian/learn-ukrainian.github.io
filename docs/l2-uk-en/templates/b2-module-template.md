@@ -2,7 +2,7 @@
 
 **Purpose:** Reference template for creating B2 Core modules (M01-94: Grammar, Phraseology, Register, Communication Skills)
 
-> **Note:** History content (61 modules) has been moved to the **B2-HIST** track. See `b2-history-module-template.md` for history-specific guidance.
+> **Note:** History content (61 modules) has been moved to the **HIST** track. See `history-module-template.md` for history-specific guidance.
 
 **Based on:** B1-grammar-module-template.md, scaled to B2 requirements per Ukrainian State Standard 2024
 
@@ -494,7 +494,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 - M85-93: Communication skills (professional email, news analysis, presentations)
 - M94: B2 Final Exam (cumulative assessment)
 
-> **Note:** History content (61 modules) has been moved to the **B2-HIST** track.
+> **Note:** History content (61 modules) has been moved to the **HIST** track.
 
 **Focus:** Integrated skills, final assessment
 **Pedagogy:** CBI + Skills integration

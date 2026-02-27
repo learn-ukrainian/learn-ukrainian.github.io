@@ -1,0 +1,59 @@
+{
+  "module": "petro-sahaidachny",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-27T11:35:47.997989Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-27T11:34:33.635289Z",
+    "meta": "2026-02-19T13:00:49.284085Z",
+    "activities": "2026-02-27T11:34:33.652421Z",
+    "vocabulary": "2026-02-27T11:31:12.265803Z",
+    "plan": "2026-02-17T13:33:56.619873Z",
+    "research": "2026-02-22T10:35:24.549435Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "5008/5000 (raw: 5480)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

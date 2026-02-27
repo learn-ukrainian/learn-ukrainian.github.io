@@ -1,0 +1,35 @@
+sequence: 112
+module: ruth-112
+slug: intermedii-xvii-xviii
+title_uk: "Українські інтермедії XVII-XVIII ст."
+title_en: "Ukrainian Interludes (17th-18th c.)"
+phase: 5
+phase_id: linguistic-identity
+phase_name: "Мовна ідентичність"
+focus: "Vernacular comedy between acts of high drama — the closest we get to hearing how Ukrainians actually spoke"
+content_outline:
+- section: Вступ
+  description: "What are interludes? Comedy performed in VERNACULAR Ukrainian between acts of serious Latin or Church Slavonic drama at brotherhood schools. The audience needed relief — and that relief came in their own language."
+- section: Основний матеріал
+  description: "Reading actual interlude texts. Humor, social satire, stereotypes. The characters: merchant, peasant, Cossack, Jew, Pole — stock types revealing social reality. Colloquial Ukrainian: idioms, jokes, curses, proverbs."
+- section: Практика
+  description: "Analyzing spoken register markers in written text. Identifying dialectal features, colloquialisms, and phraseology that survive in modern Ukrainian."
+- section: Підсумок
+  description: "Interludes as the voice of the people — unfiltered, uncensored, alive. These short comedies contain more authentic Ukrainian than volumes of church literature."
+vocabulary_hints:
+- інтермедія
+- комедія
+- вертеп
+- народна мова
+- жарт
+- сатира
+- побутовий
+activity_types:
+- transcription
+- register-identify
+- parallel-text
+- comparative-style
+persona:
+  voice: "Theater Scholar"
+  role: "Brotherhood Student"
+source_url: "http://litopys.org.ua/ukrinter/int.htm"

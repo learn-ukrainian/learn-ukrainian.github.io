@@ -6,8 +6,8 @@ Validates activity files against the JSON schema BEFORE running full audit.
 This provides faster, more specific feedback on schema issues.
 
 Usage:
-    .venv/bin/python scripts/validate_activities_schema.py curriculum/l2-uk-en/b2-hist/activities/krym-1954.yaml
-    .venv/bin/python scripts/validate_activities_schema.py --level b2-hist
+    .venv/bin/python scripts/validate_activities_schema.py curriculum/l2-uk-en/hist/activities/krym-1954.yaml
+    .venv/bin/python scripts/validate_activities_schema.py --level hist
     .venv/bin/python scripts/validate_activities_schema.py --all
 """
 
@@ -134,7 +134,7 @@ def main():
 
     if not args:
         print("Usage: .venv/bin/python scripts/validate_activities_schema.py <file.yaml>")
-        print("       .venv/bin/python scripts/validate_activities_schema.py --level b2-hist")
+        print("       .venv/bin/python scripts/validate_activities_schema.py --level hist")
         print("       .venv/bin/python scripts/validate_activities_schema.py --all")
         sys.exit(1)
 

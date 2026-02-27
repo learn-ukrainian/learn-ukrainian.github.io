@@ -15,7 +15,7 @@ Enrich vocabulary for an entire track/course after all modules are content-compl
 ## Examples
 
 ```bash
-/module-vocab-enrich b2-hist    # Enrich all B2-HIST modules
+/module-vocab-enrich hist    # Enrich all HIST modules
 /module-vocab-enrich c1-bio     # Enrich all C1-BIO modules
 /module-vocab-enrich lit        # Enrich all LIT modules
 ```
@@ -190,14 +190,14 @@ WARN: Word 'козак' appears in both M3 and M7.
 
 ```bash
 # After all modules content-complete:
-/module-vocab-enrich b2-hist
+/module-vocab-enrich hist
 
 # Verify vocab was enriched:
-wc -l curriculum/l2-uk-en/b2-hist/vocabulary/*.yaml
+wc -l curriculum/l2-uk-en/hist/vocabulary/*.yaml
 
 # Regenerate MDX manually if needed:
-npm run generate l2-uk-en b2-hist
+npm run generate l2-uk-en hist
 
 # Full rebuild:
-npm run pipeline l2-uk-en b2-hist
+npm run pipeline l2-uk-en hist
 ```

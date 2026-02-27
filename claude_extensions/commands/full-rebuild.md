@@ -2,7 +2,7 @@
 
 > **Alternative:** `/orchestrate-rebuild` — Claude orchestrates phase-by-phase, Gemini executes focused tasks. Use when Gemini skips steps or produces thin content in solo mode.
 
-> **Scope:** Mandatory standard for rebuilding or creating modules in seminar tracks: `b2-hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, and `ruth`. Prioritizes research-driven, decolonized, and linguistically rich content.
+> **Scope:** Mandatory standard for rebuilding or creating modules in seminar tracks: `hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, and `ruth`. Prioritizes research-driven, decolonized, and linguistically rich content.
 
 ## Usage
 
@@ -16,12 +16,12 @@
 ```
 /full-rebuild c1-hist 4               # Runs all phases (resumable)
 /full-rebuild c1-hist 4 --from=review # Force start from review phase
-/full-rebuild b2-hist 5
+/full-rebuild hist 5
 ```
 
 **Arguments:**
 
-- `{track}` - Seminar track level (b2-hist, c1-bio, c1-hist, lit, oes, ruth)
+- `{track}` - Seminar track level (hist, c1-bio, c1-hist, lit, oes, ruth)
 - `{module_num}` - Module number (1-indexed)
 - `--from=PHASE` - Optional: force start from a specific phase (research, meta, content, yaml, audit, review, mdx)
 

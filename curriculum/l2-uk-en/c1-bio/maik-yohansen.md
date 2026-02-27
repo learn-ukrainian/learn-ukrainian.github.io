@@ -2,8 +2,8 @@
 Covers: Життєвий шлях, творча еволюція та естетичні концепції Майка Йогансена, його роль у формуванні українського авангарду, діяльність у ВАПЛІТЕ та трагічна загибель.
 Not covered:
   - Детальний лінгвістичний розбір усіх граматичних праць автора.
-  - Повна історія кіностудії ВУФКУ → b2-hist/ukrainian-cinema-1920s
-Related: c1-bio/mykola-khvylovyi, c1-bio/les-kurbas, b2-hist/rozstriliane-vidrodzennia
+  - Повна історія кіностудії ВУФКУ → hist/ukrainian-cinema-1920s
+Related: c1-bio/mykola-khvylovyi, c1-bio/les-kurbas, hist/rozstriliane-vidrodzennia
 -->
 
 # Майк Йогансен: Геній гри та форми

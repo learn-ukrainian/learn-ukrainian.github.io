@@ -5,7 +5,7 @@ Fully immersed (100% Ukrainian). Academic historiographic prose.
 Flag ANY English in prose.
 
 ## Russicism Lookup (C1-HIST — includes imperial framing)
-All B2-HIST Russicisms plus:
+All HIST Russicisms plus:
 - Academic Russicisms in historical terminology
 - Soviet historiographic terminology when Ukrainian academic alternatives exist
 - Russian imperial periodization schemes (e.g., "Київська Русь як колиска трьох народів")

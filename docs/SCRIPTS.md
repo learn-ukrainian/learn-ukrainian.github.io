@@ -142,7 +142,7 @@ Convert YAML plans to readable markdown for review and comparison.
 
 ```bash
 # Generate readable plan for specific level
-.venv/bin/python scripts/generate_plan_markdown.py b2-hist
+.venv/bin/python scripts/generate_plan_markdown.py hist
 
 # Generate plans for all levels
 .venv/bin/python scripts/generate_plan_markdown.py --all
@@ -167,7 +167,7 @@ Convert YAML plans to readable markdown for review and comparison.
 
 Generate human-readable status reports from per-module JSON cache:
 - `scripts/generate_level_status.py {level}` - Generates `docs/{LEVEL}-STATUS.md`
-- `npm run status:{level}` - Shortcut for the above (e.g., `npm run status:b2-hist`)
+- `npm run status:{level}` - Shortcut for the above (e.g., `npm run status:hist`)
 
 ### Manifest Utilities (RFC #410)
 
@@ -179,7 +179,7 @@ The curriculum manifest (`curriculum.yaml`) is the single source of truth for mo
 
 # Validate manifest matches filesystem
 .venv/bin/python scripts/manifest_utils.py validate-fs
-.venv/bin/python scripts/manifest_utils.py validate-fs b2-hist  # Specific level
+.venv/bin/python scripts/manifest_utils.py validate-fs hist  # Specific level
 
 # Show manifest statistics
 .venv/bin/python scripts/manifest_utils.py stats
@@ -188,7 +188,7 @@ The curriculum manifest (`curriculum.yaml`) is the single source of truth for mo
 .venv/bin/python scripts/manifest_utils.py lookup trypillian-civilization
 
 # List modules for level
-.venv/bin/python scripts/manifest_utils.py level b2-hist
+.venv/bin/python scripts/manifest_utils.py level hist
 ```
 
 **Features:**
@@ -203,13 +203,13 @@ Validate that plan files match the config.py constraints.
 ```bash
 # Validate plans vs config.py (RUN BEFORE GENERATING CONTENT)
 .venv/bin/python scripts/validate_plan_config.py b1
-.venv/bin/python scripts/validate_plan_config.py b2-hist
+.venv/bin/python scripts/validate_plan_config.py hist
 
 # Fix plan word_targets if mismatched
 .venv/bin/python scripts/fix_plan_word_targets.py b1 --dry-run
 .venv/bin/python scripts/fix_plan_word_targets.py b1 --fix
 
-# Fix invalid activity types in B2-HIST plans
+# Fix invalid activity types in HIST plans
 .venv/bin/python scripts/fix_b2hist_activity_types.py --dry-run
 .venv/bin/python scripts/fix_b2hist_activity_types.py --apply
 ```
@@ -277,7 +277,7 @@ Adapted for mixed-language modules with English scaffolding.
 **v4.0 introduces a modular tier architecture** — short dispatcher (~260 lines) with tier-specific files (~250 lines each). This ensures AI reads and executes the full prompt without skipping sections.
 
 ```bash
-/review-content-v4 b2-hist 5      # Review single module
+/review-content-v4 hist 5      # Review single module
 /review-content-v4 b1 1-10        # Review range (uses subagents)
 /review-content-v4 c1 50          # Review C1 module
 ```
@@ -288,7 +288,7 @@ Adapted for mixed-language modules with English scaffolding.
 |------|--------|------------------|------|
 | **Tier 1** | A1, A2 | Lesson Quality (encouraging tutor) | `tier-1-beginner.md` |
 | **Tier 2** | B1, B2 Core, B2-PRO | Teaching Quality (effective teaching) | `tier-2-core.md` |
-| **Tier 3** | B2-HIST, C1-HIST, C1-BIO, LIT | Lecture Quality (A+ seminar) | `tier-3-seminar.md` |
+| **Tier 3** | HIST, C1-HIST, C1-BIO, LIT | Lecture Quality (A+ seminar) | `tier-3-seminar.md` |
 | **Tier 4** | C1 Core, C1-PRO, C2 | Learning Quality (intellectual depth) | `tier-4-advanced.md` |
 
 **File locations:**
@@ -340,7 +340,7 @@ Adapted for mixed-language modules with English scaffolding.
 - Focus: Quick wins, English support, encouragement
 - Warmth threshold: ≥15 direct address, ≥3 encouragement phrases
 
-**Tier 3 (B2-HIST/C1-HIST/C1-BIO/LIT) — A+ Seminar:**
+**Tier 3 (HIST/C1-HIST/C1-BIO/LIT) — A+ Seminar:**
 - Arc: HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
 - Focus: Narrative engagement, primary sources, emotional peaks
 - Weak moments: DEAD_INTRO, WALL_OF_FACTS, FORCED_CONNECTION, ENERGY_DROP, etc.
@@ -372,7 +372,7 @@ Adapted for mixed-language modules with English scaffolding.
 
 ## 9-Phase Module Workflow (RFC-001)
 
-> **NEW:** For track levels (b2-hist, c1-bio, c1-hist, c1-pro, b2-pro, lit) and C2, use the 9-phase workflow.
+> **NEW:** For track levels (hist, c1-bio, c1-hist, c1-pro, b2-pro, lit) and C2, use the 9-phase workflow.
 >
 > **See:** GitHub issue #444 for full RFC discussion and implementation status.
 
@@ -380,11 +380,11 @@ Adapted for mixed-language modules with English scaffolding.
 
 | Situation | Command | What it does |
 |-----------|---------|--------------|
-| **New module from scratch** | `/module b2-hist 5` | Full build: phases 1-7 |
-| **Module exists, meta needs update** | `/module-sync b2-hist 5` | Syncs meta to markdown reality |
-| **Rebuild meta+activities, keep content** | `/module b2-hist 5 --refresh` | Regenerates via architect, preserves .md |
-| **Resume after fixing lesson** | `/module b2-hist 5 --from=lesson` | Starts at phase 3 |
-| **Just check status** | `/module b2-hist 5 --check` | Reports current state |
+| **New module from scratch** | `/module hist 5` | Full build: phases 1-7 |
+| **Module exists, meta needs update** | `/module-sync hist 5` | Syncs meta to markdown reality |
+| **Rebuild meta+activities, keep content** | `/module hist 5 --refresh` | Regenerates via architect, preserves .md |
+| **Resume after fixing lesson** | `/module hist 5 --from=lesson` | Starts at phase 3 |
+| **Just check status** | `/module hist 5 --check` | Reports current state |
 
 **Key difference:**
 - `--refresh`: Uses **architect skill** to regenerate outline (plan-driven)
@@ -407,10 +407,10 @@ Unified entry point for building modules. Auto-detects state and runs appropriat
 **Examples:**
 
 ```bash
-/module b2-hist 5               # Build module 5 (content + skeleton deploy)
-/module b2-hist 1-5             # Build modules 1-5
-/module b2-hist 5 --from=lesson # Resume from phase 3 (lesson)
-/module b2-hist 5 --refresh     # Refresh meta+activities keeping lesson content
+/module hist 5               # Build module 5 (content + skeleton deploy)
+/module hist 1-5             # Build modules 1-5
+/module hist 5 --from=lesson # Resume from phase 3 (lesson)
+/module hist 5 --refresh     # Refresh meta+activities keeping lesson content
 /module c1-bio 12 --check       # Show which phases are complete
 ```
 
@@ -443,7 +443,7 @@ Unified entry point for building modules. Auto-detects state and runs appropriat
 Sync meta.yaml to match existing markdown content. Use this when markdown exists and is good, but meta needs updating.
 
 ```bash
-/module-sync b2-hist 1      # Sync meta to existing trypillian-civilization.md
+/module-sync hist 1      # Sync meta to existing trypillian-civilization.md
 ```
 
 **What it does:**
@@ -462,7 +462,7 @@ Comprehensive check-and-fix loop for a complete module. Orchestrates all QA chec
 
 ```bash
 /module-fix b1 12           # Fix B1 module 12
-/module-fix b2-hist 5       # Fix B2-HIST module 5
+/module-fix hist 5       # Fix HIST module 5
 ```
 
 **What it does:**
@@ -493,7 +493,7 @@ Check and fix invalid activity types in meta.yaml files across the curriculum.
 ```bash
 /meta-fix                   # Dry-run on all levels
 /meta-fix b1                # Dry-run on B1 only
-/meta-fix b2-hist --apply   # Fix B2-HIST modules
+/meta-fix hist --apply   # Fix HIST modules
 /meta-fix --apply           # Fix all levels
 ```
 
@@ -519,7 +519,7 @@ Check and fix invalid activity types in meta.yaml files across the curriculum.
 When building multiple modules, the command runs each through all phases and reports a summary:
 
 ```
-Batch: b2-hist 1-5
+Batch: hist 1-5
 Results:
   - 1: DEPLOYED
   - 2: DEPLOYED
@@ -535,7 +535,7 @@ Summary: 4/5 deployed
 For batch vocabulary enrichment across a track after modules are content-complete:
 
 ```bash
-/module-vocab-enrich b2-hist    # Enrich vocab M1→MN in order
+/module-vocab-enrich hist    # Enrich vocab M1→MN in order
 ```
 
 This command:
@@ -568,7 +568,7 @@ This command:
 | `validate_meta_yaml.py`   | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
 | `manifest_utils.py`       | Manifest validation & lookup   | `.venv/bin/python scripts/manifest_utils.py validate`        |
 | `validate_plan_config.py` | Plan vs config.py validation   | `.venv/bin/python scripts/validate_plan_config.py b1`        |
-| `assess_research.py`     | Research quality & upgrade      | `.venv/bin/python scripts/assess_research.py b2-hist --upgrade-process` |
+| `assess_research.py`     | Research quality & upgrade      | `.venv/bin/python scripts/assess_research.py hist --upgrade-process` |
 | `enrich_research_quotes.py` | Convert `"..."` → `«»` in research files | `.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks c1-hist` |
 | `enrich_research_gaps.py`   | Close deterministic research gaps (quotes, sections) | `.venv/bin/python scripts/enrich_research_gaps.py --apply` |
 
@@ -771,7 +771,7 @@ Or with issues:
 
 # Validate specific level
 .venv/bin/python scripts/validate_meta_yaml.py --level lit
-.venv/bin/python scripts/validate_meta_yaml.py --level b2-hist
+.venv/bin/python scripts/validate_meta_yaml.py --level hist
 
 # Show only errors (hide warnings)
 .venv/bin/python scripts/validate_meta_yaml.py --level lit --errors-only
@@ -811,7 +811,7 @@ Or with issues:
 **Usage:**
 
 ```bash
-.venv/bin/python scripts/fractal/check_hydration.py --hydrate curriculum/l2-uk-en/b2-hist/meta/afhanistan.yaml
+.venv/bin/python scripts/fractal/check_hydration.py --hydrate curriculum/l2-uk-en/hist/meta/afhanistan.yaml
 ```
 
 **Logic:**
@@ -980,14 +980,14 @@ The vocabulary system uses SQLite (`vocabulary.db`) to track all words across mo
 
 **Purpose:** Automatically extract Ukrainian vocabulary from module content and create skeleton YAML entries.
 
-**Solves:** Manual vocabulary identification bottleneck for B2-HIST expansion (117 skeleton modules).
+**Solves:** Manual vocabulary identification bottleneck for HIST expansion (117 skeleton modules).
 
 ```bash
 # Extract vocabulary from a module
-.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/b2-hist/volodymyr-monomakh.md
+.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md
 
 # Dry run (preview only)
-.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/b2-hist/volodymyr-monomakh.md --dry-run
+.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md --dry-run
 ```
 
 **What it does:**
@@ -1040,10 +1040,10 @@ The vocabulary system uses SQLite (`vocabulary.db`) to track all words across mo
 
 ```bash
 # Enrich vocabulary file with IPA, lemma, and POS
-.venv/bin/python scripts/vocab_enrich_nlp.py curriculum/l2-uk-en/b2-hist/vocabulary/trypillian-civilization.yaml
+.venv/bin/python scripts/vocab_enrich_nlp.py curriculum/l2-uk-en/hist/vocabulary/trypillian-civilization.yaml
 
 # Dry run (preview changes)
-.venv/bin/python scripts/vocab_enrich_nlp.py curriculum/l2-uk-en/b2-hist/vocabulary/trypillian-civilization.yaml --dry-run
+.venv/bin/python scripts/vocab_enrich_nlp.py curriculum/l2-uk-en/hist/vocabulary/trypillian-civilization.yaml --dry-run
 ```
 
 **What it does:**
@@ -1077,8 +1077,8 @@ The vocabulary system uses SQLite (`vocabulary.db`) to track all words across mo
 **Batch usage for entire level:**
 
 ```bash
-# Enrich all vocabulary files in B2-HIST
-for f in curriculum/l2-uk-en/b2-hist/vocabulary/*.yaml; do
+# Enrich all vocabulary files in HIST
+for f in curriculum/l2-uk-en/hist/vocabulary/*.yaml; do
   .venv/bin/python scripts/vocab_enrich_nlp.py "$f"
 done
 ```
@@ -1095,7 +1095,7 @@ done
 
 ```bash
 # Runs automatically during module audit
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2-hist/aneksiia-krymu.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/hist/aneksiia-krymu.md
 
 # Output includes vocabulary integrity violations
 ```
@@ -1116,7 +1116,7 @@ done
 
    ❌ [VOCABULARY_NOT_DEFINED] Word 'автентику' used in activities...
       Checked: exact match, stem match, fuzzy match - all failed.
-      Add to: curriculum/l2-uk-en/b2-hist/vocabulary/aneksiia-krymu.yaml
+      Add to: curriculum/l2-uk-en/hist/vocabulary/aneksiia-krymu.yaml
       Example:
       - lemma: автентику
         ipa: ''
@@ -1168,7 +1168,7 @@ Remaining false positives are typically irregular forms, diminutives, or prefixe
 
 - Only for modules with `content_outline` in meta YAML
 - Gracefully skips modules without outlines
-- Common for B2-HIST modules using fractal generation
+- Common for HIST modules using fractal generation
 
 **Fuzzy matching features:**
 
@@ -1425,26 +1425,26 @@ Output: Verified 10/10 score with evidence
 
 ```bash
 # Score a single track
-npm run score:b2-hist
+npm run score:hist
 
 # Score all tracks (summary table)
 npm run score:all
 
 # Extract raw metrics (for debugging)
-npm run metrics:extract b2-hist
+npm run metrics:extract hist
 ```
 
 ### Scripts
 
 | Script | Purpose | Command |
 |--------|---------|---------|
-| `score_track.py` | Score tracks with weighted criteria | `npm run score:b2-hist` |
-| `extract_track_metrics.py` | Extract raw metrics from modules | `npm run metrics:extract b2-hist` |
+| `score_track.py` | Score tracks with weighted criteria | `npm run score:hist` |
+| `extract_track_metrics.py` | Extract raw metrics from modules | `npm run metrics:extract hist` |
 
 ### npm Scripts
 
 ```bash
-npm run score:b2-hist     # Score B2-HIST track
+npm run score:hist     # Score HIST track
 npm run score:c1-bio      # Score C1-BIO track
 npm run score:c1-hist     # Score C1-HIST track
 npm run score:lit         # Score LIT track
@@ -1456,7 +1456,7 @@ npm run metrics:extract   # Extract raw metrics
 
 | Track | Modules | Key Criteria |
 |-------|---------|--------------|
-| `b2-hist` | 140 | Historical accuracy, primary sources, decolonization |
+| `hist` | 140 | Historical accuracy, primary sources, decolonization |
 | `c1-hist` | 30 | Source criticism, methodology, thematic coherence |
 | `c1-bio` | 128 | Biographical accuracy, legacy, cultural context |
 | `lit` | 30 | Literary depth, authentic texts, stylistic devices |
@@ -1486,7 +1486,7 @@ Certain conditions cap maximum scores regardless of other criteria:
 
 ```
 ══════════════════════════════════════════════════════════════════
-  B2-HIST: Ukrainian History Scoring Report
+  HIST: Ukrainian History Scoring Report
   Generated: 2026-02-02 | Modules: 140 | Coverage: 100%
 ══════════════════════════════════════════════════════════════════
 
@@ -1567,7 +1567,7 @@ User → /hetman {track} {num}  (later, when capacity available)
 # Stage 1: Content sprint (GEMINI skills — run in Gemini interactive mode)
 /otaman b1 5           # [Gemini] Prose-only rebuild of B1 module 5
 /otaman c1-bio 12      # [Gemini] Prose-only rebuild of C1-BIO module 12
-/otaman b2-hist        # [Gemini] Batch: all remaining modules in track
+/otaman hist        # [Gemini] Batch: all remaining modules in track
 
 # Stage 2: Activity enrichment (GEMINI skills)
 /hetman b1 5           # [Gemini] Add activities + final review to B1 module 5
@@ -1595,7 +1595,7 @@ scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
 
 # Batch scan for structural activity errors (run after large Gemini batches)
 .venv/bin/python scripts/scan_activity_errors.py                    # Scan all tracks
-.venv/bin/python scripts/scan_activity_errors.py --track b2 b2-hist # Scan specific tracks
+.venv/bin/python scripts/scan_activity_errors.py --track b2 hist # Scan specific tracks
 ```
 
 ### Deterministic Python Builder v3 (Preferred — Hybrid Gemini+Claude pipeline)
@@ -1665,7 +1665,7 @@ to avoid Claude Code's 2-minute bash timeout, or to use Claude's superior activi
 **Per-phase model overrides:**
 
 Default models are set in `scripts/batch_gemini_config.py` and auto-selected based on track type:
-- Seminar tracks (c1-bio, b2-hist, c1-hist, lit, oes, ruth): **claude-opus-4-6** for Claude phases
+- Seminar tracks (c1-bio, hist, c1-hist, lit, oes, ruth): **claude-opus-4-6** for Claude phases
 - Core tracks (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro): **claude-sonnet-4-6** for Claude phases
 - Phase D (review): always **claude-opus-4-6** (cross-agent review needs best model)
 - Phase F (final review): always **claude-opus-4-6** regardless of track
@@ -1837,7 +1837,7 @@ Checks: runs FULL audit (no `--skip-activities`), ALL gates must pass (no deferr
 **`scripts/scan_activity_errors.py`** — Batch structural correctness scanner:
 ```bash
 .venv/bin/python scripts/scan_activity_errors.py                     # All tracks
-.venv/bin/python scripts/scan_activity_errors.py --track b2 b2-hist  # Selected tracks
+.venv/bin/python scripts/scan_activity_errors.py --track b2 hist  # Selected tracks
 ```
 Scans every `activities/*.yaml` file for 5 structural errors that the YAML schema cannot catch. Exit 0 = clean, exit 1 = critical errors found.
 
@@ -1879,7 +1879,7 @@ These same checks run automatically inside `audit_module.sh` (hooked into `audit
 .venv/bin/python scripts/batch_dispatcher.py dispatch-one --track c1-bio
 
 # Focus on specific tracks
-.venv/bin/python scripts/batch_dispatcher.py run --include-tracks b2-hist c1-bio lit
+.venv/bin/python scripts/batch_dispatcher.py run --include-tracks hist c1-bio lit
 
 # Exclude tracks
 .venv/bin/python scripts/batch_dispatcher.py run --exclude-tracks a1 b1 b2
@@ -1897,9 +1897,9 @@ These same checks run automatically inside `audit_module.sh` (hooked into `audit
 | 3 | b1 | 92 | core | a2 ≥80% |
 | 4 | b2 | 94 | core | b1 ≥80% |
 | 5 | c1 | 106 | core | b2 ≥80% |
-| 6 | b2-hist | 140 | seminar | b1 ≥80% |
+| 6 | hist | 140 | seminar | b1 ≥80% |
 | 7 | c1-bio | 128 | seminar | b2 ≥80% |
-| 8 | c1-hist | 98 | seminar | b2-hist ≥80%, c1 ≥30% |
+| 8 | c1-hist | 98 | seminar | hist ≥80%, c1 ≥30% |
 | 9 | lit | 30 | seminar | b2 ≥80% |
 | 10-15 | lit-* | varies | seminar | lit ≥80% |
 | 16 | oes | 102 | seminar | c1 ≥80% |
@@ -1920,7 +1920,7 @@ A1 → A2 → B1 → B2 → C1 → C2
                │      ├→ C1-BIO
                │      ├→ LIT → lit-essay, lit-hist-fic, lit-fantastika,
                │      │        lit-war, lit-humor, lit-juvenile
-               │      └→ B2-HIST → C1-HIST (also needs C1 ≥30%)
+               │      └→ HIST → C1-HIST (also needs C1 ≥30%)
                └→ B2-PRO
 ```
 
@@ -2029,7 +2029,7 @@ npm run api:reload     # Start with auto-reload (development)
 ```bash
 # Full level (audits all modules)
 npm run status:a2              # Generate A2 status
-npm run status:b2-hist         # Generate B2-HIST status
+npm run status:hist         # Generate HIST status
 npm run status:all             # Generate all levels
 
 # Filtered modules (faster - only audits specified modules)
@@ -2063,14 +2063,14 @@ npm run status:all             # Generate all levels
 
 ```bash
 # Quality table (tracks with a rubric)
-.venv/bin/python scripts/assess_research.py b2-hist
+.venv/bin/python scripts/assess_research.py hist
 .venv/bin/python scripts/assess_research.py a1
 
 # Single module detail
-.venv/bin/python scripts/assess_research.py b2-hist 5
+.venv/bin/python scripts/assess_research.py hist 5
 
 # Only modules with gaps
-.venv/bin/python scripts/assess_research.py b2-hist --gaps
+.venv/bin/python scripts/assess_research.py hist --gaps
 
 # Coverage only (tracks without a rubric)
 .venv/bin/python scripts/assess_research.py b1
@@ -2079,16 +2079,16 @@ npm run status:all             # Generate all levels
 .venv/bin/python scripts/assess_research.py --all
 
 # JSON output
-.venv/bin/python scripts/assess_research.py b2-hist --json
+.venv/bin/python scripts/assess_research.py hist --json
 
 # Refresh queue (research upgraded, content stale)
 .venv/bin/python scripts/assess_research.py a1 --refresh-queue
 .venv/bin/python scripts/assess_research.py a1 --process           # rebuild stale modules
 
 # Upgrade queue (research below score threshold)
-.venv/bin/python scripts/assess_research.py b2-hist --upgrade                  # list modules below 9/10
-.venv/bin/python scripts/assess_research.py b2-hist --upgrade --min-score 8    # custom threshold
-.venv/bin/python scripts/assess_research.py b2-hist --upgrade-process          # regenerate weak research
+.venv/bin/python scripts/assess_research.py hist --upgrade                  # list modules below 9/10
+.venv/bin/python scripts/assess_research.py hist --upgrade --min-score 8    # custom threshold
+.venv/bin/python scripts/assess_research.py hist --upgrade-process          # regenerate weak research
 
 # Enrich plans from 9+ research
 .venv/bin/python scripts/assess_research.py c1-bio --enrich-plans
@@ -2109,7 +2109,7 @@ npm run status:all             # Generate all levels
 # Apply to specific tracks
 .venv/bin/python scripts/enrich_research_quotes.py --apply --tracks c1-hist c1-bio
 
-# Apply to default tracks (b2-hist, c1-hist, c1-bio)
+# Apply to default tracks (hist, c1-hist, c1-bio)
 .venv/bin/python scripts/enrich_research_quotes.py --apply
 ```
 
@@ -2219,7 +2219,7 @@ npm run status:b1             # Generate B1 status
 npm run status:b2             # Generate B2 status
 npm run status:c1             # Generate C1 status
 npm run status:c2             # Generate C2 status
-npm run status:b2-hist        # Generate B2-HIST status
+npm run status:hist        # Generate HIST status
 npm run status:c1-bio         # Generate C1-BIO status
 npm run status:c1-hist        # Generate C1-HIST status
 npm run status:lit            # Generate LIT status
@@ -2514,7 +2514,7 @@ cd docusaurus && pnpm start    # Start Docusaurus dev server (for HTML validatio
 
 ```bash
 # Option 1: Use /module command (recommended - runs full 7-phase workflow)
-/module b2-hist 5
+/module hist 5
 
 # Option 2: Manual pipeline after writing content
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
@@ -2585,14 +2585,14 @@ Auto-detects Core A vs Core B workflow. See `claude_extensions/commands/full-reb
 
 ### Seminar Track Full Rebuild
 
-For seminar tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth), use the 6-phase full-rebuild workflow that chains research, content generation, audit, and deep review:
+For seminar tracks (hist, c1-bio, c1-hist, lit, oes, ruth), use the 6-phase full-rebuild workflow that chains research, content generation, audit, and deep review:
 
 ```bash
 /full-rebuild {track} {slug}
 
 # Examples:
 /full-rebuild c1-bio lesya-ukrainka
-/full-rebuild b2-hist bohdan-khmelnytskyi
+/full-rebuild hist bohdan-khmelnytskyi
 /full-rebuild lit marusya
 ```
 

@@ -1,0 +1,18 @@
+{
+  "track": "hist",
+  "slug": "ruska-pravda",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:51:04Z",
+      "task_id": "v3-ruska-pravda-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-25T19:26:30Z",
+      "note": "word-count-3559-below-80pct-5000"
+    }
+  }
+}

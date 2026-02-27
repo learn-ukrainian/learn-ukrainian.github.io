@@ -1,0 +1,34 @@
+sequence: 101
+module: oes-101
+slug: galytsko-volynskyi-literary-art
+title_uk: "Галицько-Волинський літопис як літературний шедевр"
+title_en: "The Galician-Volhynian Chronicle as Literary Art"
+phase: 4
+phase_id: high-poetry
+phase_name: "Висока поезія"
+focus: "GVL's unique literary style — military poetics, nature imagery, 'О горе' laments, rhythmic prose"
+content_outline:
+- section: Вступ
+  description: "The GVL as a distinct literary work from PVL. Different authorial voice, different aesthetic. Written in Galician-Volhynian lands, reflecting Western Ukrainian literary consciousness."
+- section: Основний матеріал
+  description: "Close reading: the famous 'О горе' passages, battle descriptions as poetic set pieces, nature imagery tied to emotional states. Comparison with PVL's chronicle style. The GVL's secular tone vs PVL's religious framing. Multiple authors, multiple styles."
+- section: Практика
+  description: "Analyzing literary techniques in GVL: metaphor, rhythm, rhetorical figures. Identifying the shift from annalistic to narrative prose."
+- section: Підсумок
+  description: "The GVL as evidence of Western Ukrainian literary sophistication. A chronicle that is also a work of art — connecting to the later Galician literary tradition."
+vocabulary_hints:
+- літопис
+- поетика
+- ритмічна проза
+- ламент
+- батальна сцена
+- образність
+activity_types:
+- transcription
+- grammar-identify
+- parallel-text
+- comparative-style
+persona:
+  voice: "Literary Critic"
+  role: "Galician Chronicler"
+source_url: "http://litopys.org.ua/litop/lit22.htm"

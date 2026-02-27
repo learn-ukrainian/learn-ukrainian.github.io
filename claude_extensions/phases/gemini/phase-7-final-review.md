@@ -131,7 +131,7 @@ This outputs JSON with `ukrainian_percent` and `english_percent`. Compare agains
 **If `ukrainian_percent` is BELOW the minimum → AUTO-FAIL.** The module has too much English.
 
 ### 3h: Factual verification (seminar tracks only)
-For b2-hist, c1-bio, c1-hist, lit, oes, ruth: verify dates, names, historical claims.
+For hist, c1-bio, c1-hist, lit, oes, ruth: verify dates, names, historical claims.
 
 ---
 

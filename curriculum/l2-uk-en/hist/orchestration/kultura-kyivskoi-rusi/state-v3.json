@@ -1,0 +1,29 @@
+{
+  "track": "hist",
+  "slug": "kultura-kyivskoi-rusi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:54:27Z",
+      "task_id": "v3-kultura-kyivskoi-rusi-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T11:55:06Z",
+      "note": "adopted-existing-content",
+      "words": 4261
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T11:57:27Z",
+      "task_id": "v3-kultura-kyivskoi-rusi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-25T19:26:45Z",
+      "attempts": 1
+    }
+  }
+}

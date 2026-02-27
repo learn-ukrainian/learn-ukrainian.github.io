@@ -632,7 +632,7 @@ class BatchRunner:
         _TRACK_TO_CONFIG = {
             "c1-bio": "C1-biography",
             "c1-hist": "C1-history",
-            "b2-hist": "B2-history",
+            "hist": "history",
             "lit": "LIT",
             "oes": "OES",
             "ruth": "RUTH",

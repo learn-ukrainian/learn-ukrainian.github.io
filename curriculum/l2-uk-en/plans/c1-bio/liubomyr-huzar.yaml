@@ -67,7 +67,7 @@ activity_hints:
   output: Есе-роздум
 focus: biography
 prerequisites:
-- b2-hist-independence
+- hist-independence
 connects_to:
 - c1-bio-139-josyf-slipyj
 - c1-bio-63-andrey-sheptytsky

@@ -2,7 +2,7 @@
 
 **Generated from YAML plans**
 **Modules:** 135 module meta files found
-**Prerequisite:** B2-HIST completion, C1 Core (M01-35)
+**Prerequisite:** HIST completion, C1 Core (M01-35)
 **Vocabulary Target:** 3000
 **Immersion:** 100%
 
@@ -11,7 +11,7 @@
 ## Track Overview
 
 C1-HIST is an advanced historiography track for students who have
-completed B2-HIST. Focuses on primary source analysis, critical
+completed HIST. Focuses on primary source analysis, critical
 historiography, and thematic deep dives.
 
 This track develops university-level historical literacy and

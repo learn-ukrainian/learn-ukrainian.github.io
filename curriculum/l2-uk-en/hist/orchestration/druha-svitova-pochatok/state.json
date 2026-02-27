@@ -1,0 +1,35 @@
+{
+  "slug": "druha-svitova-pochatok",
+  "track": "hist",
+  "module_num": 105,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:45:01Z",
+      "words": 5566,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:46:30Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:46:30Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T23:23:57Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T23:23:57Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-25T23:23:57Z"
+}

@@ -74,7 +74,7 @@ TRACK_SKILLS: dict[str, tuple[str, str, str]] = {
     "c1-pro":   ("full-rebuild-core-b", "Senior Ukrainian Language & Culture Specialist", "Ethnographer"),
     "c2":       ("full-rebuild-core-b", "Senior Ukrainian Language & Culture Specialist", "Ethnographer"),
     "c1-bio":   ("full-rebuild-c1-bio", "Professor of Ukrainian Arts (biography)", "The Archival Detective"),
-    "b2-hist":  ("full-rebuild-b2-hist", "Professor of Ukrainian Arts (history)", "The Decolonial Lecturer"),
+    "hist":  ("full-rebuild-hist", "Professor of Ukrainian Arts (history)", "The Decolonial Lecturer"),
     "c1-hist":  ("full-rebuild-c1-hist", "Professor of Ukrainian Arts (historiography)", "The Source Critic"),
     "lit":      ("full-rebuild-lit", "Professor of Ukrainian Arts (literature)", "The Stylistic Critic"),
     "oes":      ("full-rebuild-oes", "Professor of Ukrainian Arts (paleography)", "The Paleographer"),
@@ -230,7 +230,7 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
         "ALLOWED_ACTIVITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, quiz, true-false",
         "REQUIRED_TYPES": "", "PRIORITY_TYPES": "reading, essay-response, critical-analysis",
     },
-    "b2-hist": {
+    "hist": {
         "ACTIVITY_COUNT_TARGET": "5", "ACTIVITY_MIN": "3", "ACTIVITY_MAX": "9", "ITEMS_MIN": "1",
         "VOCAB_COUNT_TARGET": "25",
         "FORBIDDEN_ACTIVITY_TYPES": "quiz, fill-in, cloze, match-up, error-correction, unjumble, mark-the-words, group-sort, select, translate, anagram",
@@ -312,7 +312,7 @@ def get_track_skill(track: str, module_num: int) -> tuple[str, str, str]:
 
 def get_immersion_rule(track: str, module_num: int) -> str:
     """Compute immersion rule from track + module number."""
-    base = track.split("-")[0] if track not in ("b2-hist", "c1-bio", "c1-hist", "b2-pro", "c1-pro") else track
+    base = track.split("-")[0] if track not in ("hist", "c1-bio", "c1-hist", "b2-pro", "c1-pro") else track
     if base == "a1":
         if module_num <= 2:
             return IMMERSION_RULES["a1-m01-02"]
@@ -365,7 +365,7 @@ def get_level_label(track: str) -> str:
 
 
 _TRACK_FOCUS_MAP: dict[str, tuple[str, str | None]] = {
-    "b2-hist": ("B2", "history"),
+    "hist": ("B2", "history"),
     "c1-bio": ("C1", "biography"),
     "c1-hist": ("C1", "history"),
     "b2-pro": ("B2", "professional"),
@@ -1382,7 +1382,7 @@ TIER_MAP: dict[str, str] = {
     "b1": "tier-2-core.md",
     "b2": "tier-2-core.md",
     "b2-pro": "tier-2-core.md",
-    "b2-hist": "tier-3-seminar.md",
+    "hist": "tier-3-seminar.md",
     "c1-bio": "tier-3-seminar.md",
     "c1-hist": "tier-3-seminar.md",
     "lit": "tier-3-seminar.md",
@@ -1774,6 +1774,64 @@ Total: {{total}} words
 """
 
 
+def _prefetch_sources_for_phase_B(ctx: ModuleContext) -> str:
+    """Pre-fetch primary source excerpts from RAG for Phase B content generation.
+
+    For seminar tracks: extracts section names + key terms from plan/meta,
+    searches literary RAG, returns formatted excerpts Gemini can cite.
+    """
+    track_key = "lit" if ctx.track.startswith("lit-") else ctx.track
+    if track_key not in SEMINAR_TRACKS:
+        return ""
+
+    # Extract search terms from content_outline section names + topic title
+    search_terms = []
+    topic = ctx.meta.get("topic_title", ctx.slug.replace("-", " "))
+    search_terms.append(topic)
+    for section in ctx.content_outline:
+        section_name = section.get("section", "")
+        if section_name:
+            search_terms.append(section_name)
+    # Add vocabulary hints as search terms
+    vocab_hints = ctx.plan.get("vocabulary_hints", {})
+    for term in vocab_hints.get("required", [])[:3]:
+        search_terms.append(term)
+    # Cap at 5 searches
+    search_terms = [t for t in search_terms if t.strip()][:5]
+    if not search_terms:
+        return ""
+
+    try:
+        from rag.query import search_literary
+    except ImportError:
+        return ""
+
+    results = []
+    seen_chunks = set()
+    for term in search_terms:
+        try:
+            hits = search_literary(term, limit=2)
+        except Exception:
+            continue
+        for hit in hits:
+            cid = hit.get("chunk_id", "")
+            if cid in seen_chunks:
+                continue
+            seen_chunks.add(cid)
+            work = hit.get("work", "unknown")
+            year = hit.get("year", "?")
+            genre = hit.get("genre", "")
+            text = hit.get("text", "")[:300]
+            results.append(
+                f"**{work}** ({year}, {genre}):\n> {text}"
+            )
+
+    if not results:
+        return ""
+
+    return "\n\n".join(results[:8])  # Cap at 8 excerpts
+
+
 def phase_2_content(ctx: ModuleContext) -> bool:
     """Phase 2: Content (whole-module, single Gemini call)."""
     phase = "2"
@@ -1798,12 +1856,14 @@ def phase_2_content(ctx: ModuleContext) -> bool:
     prompt_file = ctx.orch_dir / "phase-2-prompt.md"
 
     word_target_tokens = ctx.word_target * 2 // 1000
+    primary_sources = _prefetch_sources_for_phase_B(ctx)
     overrides = {
         "OVERSHOOT_TARGET": str(overshoot),
         "ENGAGEMENT_MIN": str(engagement_min),
         "EXAMPLE_MIN": str(example_min),
         "SECTION_BUDGET_TABLE": _build_section_budget_table(sections, ctx.word_target),
         "WORD_TARGET_TOKENS": str(word_target_tokens),
+        "PRIMARY_SOURCE_EXCERPTS": primary_sources or "(No primary source excerpts available from RAG)",
     }
     if not fill_template(template, placeholders_yaml, prompt_file, overrides=overrides):
         return False

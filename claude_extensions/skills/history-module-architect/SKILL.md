@@ -26,8 +26,8 @@ Create or review history (B2) and biography (C1) modules using the appropriate t
 
 | Level        | Template (AI-Optimized)                                           | Full Reference                                            | Modules                     |
 | ------------ | ----------------------------------------------------------------- | --------------------------------------------------------- | --------------------------- |
-| B2 History   | `docs/l2-uk-en/templates/ai/b2-history-module-template.md`        | `docs/l2-uk-en/templates/b2-history-module-template.md`   | M71-131 (excl. synthesis)   |
-| B2 Synthesis | `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md` | —                                                         | M83, M108, M119, M125, M131 |
+| B2 History   | `docs/l2-uk-en/templates/ai/history-module-template.md`        | `docs/l2-uk-en/templates/history-module-template.md`   | M71-131 (excl. synthesis)   |
+| B2 Synthesis | `docs/l2-uk-en/templates/history-synthesis-module-template.md` | —                                                         | M83, M108, M119, M125, M131 |
 | C1 Biography | `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`      | `docs/l2-uk-en/templates/c1-biography-module-template.md` | M36-100                     |
 | C1 History   | `docs/l2-uk-en/templates/ai/c1-history-module-template.md`        | `docs/l2-uk-en/templates/c1-history-module-template.md`   | M01-135                     |
 
@@ -132,12 +132,12 @@ History/Biography tracks support two activity modes. Check which applies to your
 
 | Track | Mode | Activity Types |
 |-------|------|----------------|
-| `b2-hist`, `c1-bio` | **Seminar** | reading + essay-response + critical-analysis |
+| `hist`, `c1-bio` | **Seminar** | reading + essay-response + critical-analysis |
 | `b2` (history modules), `c1` (biography modules) | **Traditional** | quiz, fill-in, cloze, etc. |
 
 ---
 
-## Seminar Mode (b2-hist, c1-bio tracks)
+## Seminar Mode (hist, c1-bio tracks)
 
 <critical>
 
@@ -158,7 +158,7 @@ Every analytical activity MUST link to a reading source:
   title: 'Есе: Дипломатія Мазепи'
   source_reading: reading-mazepa     # ← REQUIRED: Links to reading above
   prompt: 'Проаналізуйте...'
-  min_words: 150  # b2-hist: 150-250, c1-bio: 300-500
+  min_words: 150  # hist: 150-250, c1-bio: 300-500
 ```
 
 ### Validation (Audit Enforcement)
@@ -245,7 +245,7 @@ If you find a legacy module with a Markdown essay section, **DELETE IT** and mov
 | **Есе-аналіз (YAML ONLY)** | Analytical essay prompt + model answer in YAML    |
 | **Зв'язок із сьогоденням** | Connection to modern Ukraine                      |
 
-See `b2-history-synthesis-module-template.md` for full structure and example essay prompts
+See `history-synthesis-module-template.md` for full structure and example essay prompts
 
 ---
 

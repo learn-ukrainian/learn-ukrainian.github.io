@@ -1,0 +1,27 @@
+{
+  "track": "hist",
+  "slug": "upa",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T17:08:27Z",
+      "task_id": "v3-upa-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-24T22:14:41Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-24T22:16:19Z",
+      "task_id": "v3-upa-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-24T22:23:37Z",
+      "attempts": 2
+    }
+  }
+}

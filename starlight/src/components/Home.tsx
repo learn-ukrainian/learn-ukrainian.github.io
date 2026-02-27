@@ -183,7 +183,7 @@ export default function Home(): ReactNode {
             </h2>
             <div style={{display: 'flex', flexWrap: 'wrap', gap: '20px'}}>
               <LevelCard
-                level="B2-HIST"
+                level="HIST"
                 name="History"
                 description="Ukrainian history from origins to present"
                 modules={140}
@@ -288,7 +288,7 @@ export default function Home(): ReactNode {
             <div className={styles.footerCol}>
               <h4>Tracks</h4>
               <ul>
-                <li><a href="/b2-hist/">B2-HIST - History</a></li>
+                <li><a href="/hist/">HIST - History</a></li>
                 <li><a href="/c1-bio/">C1-BIO - Biographies</a></li>
                 <li><a href="/lit/">LIT - Literature</a></li>
               </ul>

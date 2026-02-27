@@ -25,7 +25,7 @@ Alignment: This module directly addresses the B2 requirement to navigate societa
 
 ## Cross-References
 - Builds on: Abstract noun formation and introductory passive constructions from B1.
-- Prepares for: C1 legal/academic discourse, professional business communication (B2-PRO), and understanding historical legal documents in B2-HIST.
+- Prepares for: C1 legal/academic discourse, professional business communication (B2-PRO), and understanding historical legal documents in HIST.
 
 ## Notes for Content Writing
 - **Decolonized Framing:** Frame Ukraine's legal history (Rus' Pravda, Magdeburg Law) as a continuous integration with European legal norms of self-governance and codified justice, directly challenging the imperial narrative of an inherently autocratic past.

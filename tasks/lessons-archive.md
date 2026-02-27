@@ -183,7 +183,7 @@
 - Ukrainian-only research skill ensures authentic sources
 
 **Rule**:
-- **ALWAYS use research-first workflow for seminar tracks** (B2-HIST, C1-BIO, C1-HIST, LIT, OES, RUTH)
+- **ALWAYS use research-first workflow for seminar tracks** (HIST, C1-BIO, C1-HIST, LIT, OES, RUTH)
 - Writing from memory → thin content (2000-3000 words), inaccuracies, failed word counts
 - Research-first → rich content (4500-5500 words), authoritative, passes audits
 - One-shot generation possible with proper research foundation
@@ -291,7 +291,7 @@
 - Gemini's metaphor: Claude builds walls and roof; content needs furniture, library, and fire
 
 **Division of Labor**:
-- Seminar tracks (c1-hist, c1-bio, b2-hist, lit): Gemini writes/polishes content
+- Seminar tracks (c1-hist, c1-bio, hist, lit): Gemini writes/polishes content
 - Core tracks (A1-C1): Claude can build these (more structural, less decolonization-dependent)
 - Infrastructure always: Claude (meta, plans, YAML, scripts, audit)
 

@@ -193,7 +193,7 @@ export default function Home(): ReactNode {
             </Heading>
             <div className="row">
               <LevelCard
-                level="B2-HIST"
+                level="HIST"
                 name="History"
                 description="Ukrainian history from origins to present"
                 modules={140}

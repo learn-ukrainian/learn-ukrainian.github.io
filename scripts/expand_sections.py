@@ -91,4 +91,4 @@ def expand_sections(file_path):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(text)
 
-expand_sections('curriculum/l2-uk-en/b2-hist/oun.md')
+expand_sections('curriculum/l2-uk-en/hist/oun.md')

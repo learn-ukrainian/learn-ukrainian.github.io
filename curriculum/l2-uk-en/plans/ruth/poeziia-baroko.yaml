@@ -1,0 +1,35 @@
+sequence: 113
+module: ruth-113
+slug: poeziia-baroko
+title_uk: "Українська бароко поезія XVI-XVII ст."
+title_en: "Ukrainian Baroque Poetry (16th-17th c.)"
+phase: 5
+phase_id: linguistic-identity
+phase_name: "Мовна ідентичність"
+focus: "Syllabic verse, panegyrics, and laments — Ukrainian competing with Latin and Polish as a literary language"
+content_outline:
+- section: Вступ
+  description: "Context: baroque poetry as a European phenomenon. Ukrainian poets writing in Ukrainian, Latin, and Polish simultaneously — but CHOOSING Ukrainian for specific purposes."
+- section: Основний матеріал
+  description: "Anthology analysis: syllabic verse forms, acrostics, panegyrics to hetmans and church leaders. Kasijan Sakovych, Lazarus Baranovych, and anonymous brotherhood poets. Poetic vocabulary and imagery."
+- section: Практика
+  description: "Scanning syllabic verse. Identifying Latin/Polish borrowings vs native Ukrainian in poetic register. Writing analysis of a selected poem."
+- section: Підсумок
+  description: "Baroque poetry proves Ukrainian was a full-status literary language in the 16th-17th centuries — capable of sophisticated verse forms alongside Europe's major languages."
+vocabulary_hints:
+- бароко
+- вірш
+- силабічний
+- панегірик
+- акровірш
+- епітафія
+- ода
+activity_types:
+- transcription
+- grammar-identify
+- comparative-style
+- register-identify
+persona:
+  voice: "Poetry Scholar"
+  role: "Brotherhood Poet"
+source_url: "http://litopys.org.ua/ukrpoetry/anto.htm"

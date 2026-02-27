@@ -7,7 +7,7 @@ Uses:
 - ukrainian-word-stress: Stress marks → IPA conversion
 
 Usage:
-    .venv/bin/python scripts/vocab_enrich_nlp.py curriculum/l2-uk-en/b2-hist/vocabulary/trypillian-civilization.yaml
+    .venv/bin/python scripts/vocab_enrich_nlp.py curriculum/l2-uk-en/hist/vocabulary/trypillian-civilization.yaml
 
 This script:
 1. Loads a vocabulary YAML file

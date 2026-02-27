@@ -114,7 +114,7 @@ CORE PATH (Required - everyone does this):
 ┌─────────────────────────────────────────────────────────────────────┐
 │                                                                     │
 │  📜 HISTORY & BIOGRAPHY TRACK (EXISTING - relocated)                │
-│  ├── B2-HIST: Ukrainian History (61 modules) [from B2 M71-131]     │
+│  ├── HIST: Ukrainian History (61 modules) [from B2 M71-131]     │
 │  └── C1-BIO: Famous Ukrainians (96 modules) [from C1 M36-131]      │
 │                                                                     │
 │  💼 PROFESSIONAL TRACK (NEW)                                        │
@@ -142,7 +142,7 @@ curriculum/l2-uk-en/
 ├── c1/                    # C1 Core only (M01-35 academic + M36-141 stylistics/arts/lit)
 ├── c2/                    # C2 Core (unchanged)
 │
-├── b2-hist/               # NEW: B2 History Track (relocated from b2/M71-131)
+├── hist/               # NEW: B2 History Track (relocated from b2/M71-131)
 ├── c1-bio/                # NEW: C1 Biography Track (relocated from c1/M36-131)
 │
 ├── b2-pro/                # NEW: B2 Professional Track
@@ -227,19 +227,19 @@ These become the CORE B2 skills modules (part of core, not B2-PRO track):
 
 ### Phase 2: Relocate History & Biography to Tracks
 
-#### B2-HIST Track (from B2 M71-131)
+#### HIST Track (from B2 M71-131)
 
 **Source:** `curriculum/l2-uk-en/b2/71-*.md` through `curriculum/l2-uk-en/b2/131-*.md`
-**Destination:** `curriculum/l2-uk-en/b2-hist/01-*.md` through `curriculum/l2-uk-en/b2-hist/61-*.md`
+**Destination:** `curriculum/l2-uk-en/hist/01-*.md` through `curriculum/l2-uk-en/hist/61-*.md`
 
 | Old Path | New Path | New Module # |
 |----------|----------|--------------|
-| b2/71-kyivan-rus-origins.md | b2-hist/01-kyivan-rus-origins.md | B2-HIST-01 |
-| b2/72-*.md | b2-hist/02-*.md | B2-HIST-02 |
+| b2/71-kyivan-rus-origins.md | hist/01-kyivan-rus-origins.md | HIST-01 |
+| b2/72-*.md | hist/02-*.md | HIST-02 |
 | ... | ... | ... |
-| b2/131-*.md | b2-hist/61-*.md | B2-HIST-61 |
+| b2/131-*.md | hist/61-*.md | HIST-61 |
 
-**Curriculum Plan:** Create `B2-HIST-CURRICULUM-PLAN.md`
+**Curriculum Plan:** Create `HIST-CURRICULUM-PLAN.md`
 
 #### C1-BIO Track (from C1 M36-131)
 
@@ -261,7 +261,7 @@ These become the CORE B2 skills modules (part of core, not B2-PRO track):
 
 #### B2 Core Renumbering
 
-After moving M71-131 to b2-hist:
+After moving M71-131 to hist:
 
 | Old # | New # | Content |
 |-------|-------|---------|
@@ -392,7 +392,7 @@ After moving M36-131 to c1-bio:
 
 | Document | Purpose |
 |----------|---------|
-| `B2-HIST-CURRICULUM-PLAN.md` | Plan for relocated B2 History track |
+| `HIST-CURRICULUM-PLAN.md` | Plan for relocated B2 History track |
 | `C1-BIO-CURRICULUM-PLAN.md` | Plan for relocated C1 Biography track |
 | `B2-PRO-CURRICULUM-PLAN.md` | Plan for new B2 Professional track |
 | `C1-PRO-CURRICULUM-PLAN.md` | Plan for new C1 Professional track |
@@ -406,7 +406,7 @@ After moving M36-131 to c1-bio:
 | `B1-CURRICULUM-PLAN.md` | Add skills modules (B1-92 to B1-99) |
 | `B2-CURRICULUM-PLAN.md` | Remove history section, add core skills, update phase structure |
 | `C1-CURRICULUM-PLAN.md` | Remove biography section, renumber, update phase structure |
-| `template_mappings.yaml` | Add mappings for b2-hist, c1-bio, b2-pro, c1-pro |
+| `template_mappings.yaml` | Add mappings for hist, c1-bio, b2-pro, c1-pro |
 
 ---
 
@@ -421,7 +421,7 @@ After moving M36-131 to c1-bio:
 | `b1-skills-module-template.md` | B1 correspondence/listening |
 | `b2-pro-module-template.md` | B2 Professional track |
 | `c1-pro-module-template.md` | C1 Professional track |
-| `b2-hist-module-template.md` | B2 History track (adapt from existing) |
+| `hist-module-template.md` | B2 History track (adapt from existing) |
 | `c1-bio-module-template.md` | C1 Biography track (adapt from existing) |
 
 ---
@@ -457,7 +457,7 @@ After moving M36-131 to c1-bio:
 | **Core Total** | **513** | |
 | | | |
 | **SPECIALIZED TRACKS** | | |
-| B2-HIST | 61 | relocated from B2 |
+| HIST | 61 | relocated from B2 |
 | C1-BIO | 96 | relocated from C1 |
 | B2-PRO | 40 | new |
 | C1-PRO | 50 | new |
@@ -494,7 +494,7 @@ After moving M36-131 to c1-bio:
 
 ### Phase C: Content Relocation
 
-- [ ] Move B2 M71-131 to b2-hist (with renumbering script)
+- [ ] Move B2 M71-131 to hist (with renumbering script)
 - [ ] Move C1 M36-131 to c1-bio (with renumbering script)
 - [ ] Renumber B2 core (M132-145 → M71-84)
 - [ ] Renumber C1 core (M132-202 → M36-106)
@@ -502,7 +502,7 @@ After moving M36-131 to c1-bio:
 
 ### Phase D: Create New Curriculum Plans
 
-- [ ] Create B2-HIST-CURRICULUM-PLAN.md
+- [ ] Create HIST-CURRICULUM-PLAN.md
 - [ ] Create C1-BIO-CURRICULUM-PLAN.md
 - [ ] Create B2-PRO-CURRICULUM-PLAN.md
 - [ ] Create C1-PRO-CURRICULUM-PLAN.md
@@ -544,7 +544,7 @@ After moving M36-131 to c1-bio:
 ## Part 9: Open Questions
 
 1. **A1 Checkpoint:** Should A1-34 checkpoint remain as M34, or move to after new practical modules?
-2. **B2 Prerequisites:** Should B2-PRO require B2-HIST or just B2 Core?
+2. **B2 Prerequisites:** Should B2-PRO require HIST or just B2 Core?
 3. **Track Sequencing:** Can tracks be done in parallel or must follow sequence?
 4. **LIT Expansion:** When/how to expand LIT to include modern literature?
 5. **Localization:** Should track names be in Ukrainian for immersed learners?
@@ -565,7 +565,7 @@ B1 Core (99)
     ▼
 B2 Core (94) ──────────────────────────────┐
     │                                       │
-    ├───► B2-HIST (61) ───► C1-BIO (96)    │
+    ├───► HIST (61) ───► C1-BIO (96)    │
     │                                       │
     └───► B2-PRO (40) ───► C1-PRO (50)     │
                                             │
@@ -595,14 +595,14 @@ C2 Core (100)
 
 ### Specialized Tracks
 
-- `b2-hist/01-module-slug.md` through `b2-hist/61-module-slug.md`
+- `hist/01-module-slug.md` through `hist/61-module-slug.md`
 - `c1-bio/01-module-slug.md` through `c1-bio/96-module-slug.md`
 - `b2-pro/01-module-slug.md` through `b2-pro/40-module-slug.md`
 - `c1-pro/01-module-slug.md` through `c1-pro/50-module-slug.md`
 
 ### Curriculum Plans
 
-- `B2-HIST-CURRICULUM-PLAN.md`
+- `HIST-CURRICULUM-PLAN.md`
 - `C1-BIO-CURRICULUM-PLAN.md`
 - `B2-PRO-CURRICULUM-PLAN.md`
 - `C1-PRO-CURRICULUM-PLAN.md`

@@ -18,27 +18,26 @@
   Module:  mykhailo-kotsiubynsky
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  3 Outline Compliance Errors
   failing gates:
-    lesson: 4340/5000 (raw: 4842)
+    lesson: 4814/5000 (raw: 5316)
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-
-
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 1 violations (minor)
-
+  Pedagogy     ✅ Level-appropriate
+  Content_heavy ⏳ Deferred (content-only audit)
+  Grammar      ℹ️ N/A (covered by naturalness)
+  Naturalness  ℹ️ PENDING — awaiting review
+  Activity_quality ⏳ Deferred (content-only audit)
+  Research     ⚠️ Refresh recommended: Research has 5+ sources but content cites 0
+  Immersion    🇺🇦 99.1% (target 95-100% (biography))
+  Richness     ✅ 97% (biography)
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/audit/mykhailo-kotsiubynsky-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/c1-bio/status/mykhailo-kotsiubynsky.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
-
-  Critical Failures:
-    • 3 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/mykhailo-kotsiubynsky-audit.log for details)
         ```

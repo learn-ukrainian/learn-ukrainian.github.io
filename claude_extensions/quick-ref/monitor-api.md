@@ -16,7 +16,7 @@ curl -s http://localhost:8765/api/batch/active
 
 ```bash
 # Queue: Phase A done, B not started
-curl -s "http://localhost:8765/api/state/ready-to-build?track=b2-hist" | python3 -m json.tool
+curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
 
 # Phase-level state for a track
 curl -s http://localhost:8765/api/state/pipeline/c1-hist | python3 -m json.tool
@@ -26,7 +26,7 @@ curl -s http://localhost:8765/api/state/pipeline/c1-hist | python3 -m json.tool
 
 ```bash
 # Failing or weak modules
-curl -s "http://localhost:8765/api/state/failing?track=b2-hist" | python3 -m json.tool
+curl -s "http://localhost:8765/api/state/failing?track=hist" | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/weak-points?track=c1-bio" | python3 -m json.tool
 
 # Outstanding critical issues

@@ -2,7 +2,7 @@
 Covers: Детальна біографія Дмитра Фальківського, його місце в українському модернізмі, участь у групі МАРС, трагедія співпраці з ЧК, аналіз ліричної спадщини та історія перетворення вірша на гімн УПА. Розглядається механізм терору 1934 року.
 Not covered:
   - Глибокий аналіз творчості Валер'яні Підмогильного чи Євгена Плужника → c1-bio/valerian-pidmohylnyi, c1-bio/yevhen-pluzhnyk
-Related: b2-hist/rozstriliane-vidrodzennia, b2-hist/mekhanizm-teroru
+Related: hist/rozstriliane-vidrodzennia, hist/mekhanizm-teroru
 -->
 
 # Дмитро Фальківський: Поет поліського смутку

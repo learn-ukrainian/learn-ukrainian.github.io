@@ -1,151 +1,201 @@
+# Рецензія: Пасивний стан: повна система
+
 **Reviewed-By:** claude-opus-4-6
 
----
+**Level:** B2 | **Module:** b2-01
+**Overall Score:** 8.3/10
+**Status:** FAIL
+**Reviewed:** 2026-02-27
+
+## Plan Verification
+
+```
+Plan-Content Alignment: FAIL
+- Sections: PARTIAL — Plan has 6 sections, content has 7 (added "Підсумок і практика" not in plan). Meta redistributed words (permissible as mutable build config).
+- Vocabulary: 13/13 required present in vocab sidecar, 17 recommended partially covered in prose. HOWEVER: Vocab YAML is malformed (no list markers), audit reads 0 items.
+- Grammar scope: PASS — stays within passive voice system
+- Objectives: PARTIAL — Plan section 2 requires "Пасив у науковому етикеті" in Form 1; content places this in "Вибір форми" section instead. Plan section 3 requires "Аналіз державних документів: використання форм на -но/-то в Конституції України та Акті проголошення незалежності" — COMPLETELY ABSENT from content.
+```
 
 ## Scores
 
-| # | Dimension | Score | Justification |
-|---|-----------|-------|---------------|
-| 1 | **Teaching Quality** | 7/10 | Effective hook with вертеп metaphor, good TTT elements (examples before rules), solid progression. But the "Laboratory Scientist (Лаборант)" persona from meta is entirely absent — replaced with ethnographic storyteller. Multiple plan-required teaching points missing (see below). The "Did I Learn?" test: yes for forms 1-4 individually, but the critical cross-form comparisons (when agent is prohibited in -но/-то vs -ся) are undertaught. |
-| 2 | **Linguistic Accuracy** | 6/10 | **Grammar error in a grammar module.** Line 406: «Помилок припущено» uses genitive plural ("помилок") where accusative ("помилки") is required — contradicting the module's own rule at line 183 that -но/-то requires знахідний відмінок. Also, the -но/-то form "припущено" derives from "припустити," but the intended meaning ("committing errors") uses reflexive "припуститися помилок" which cannot form -но/-то. The plan's "critical prohibition" of instrumental agents with -но/-то is not taught. |
-| 3 | **Language Quality** | 8/10 | Mostly natural, fluent Ukrainian at appropriate register for B2 teaching. Good balance of formal and conversational tone. However: colonial framing at line 130 (see Critical Issues). Some passages are overly flowery for a grammar module (e.g., the extended tattoo metaphor at line 65). |
-| 4 | **Plan Compliance** | 5/10 | **Major gaps.** (1) Plan section 2 requires "Аналіз державних документів: використання форм на -но/-то в Конституції України та Акті проголошення незалежності" — completely absent. (2) Plan section 2 requires "Критична заборона: неможливість вживання агента... в орудному відмінку з формами на -но/-то" — taught only for -ся, NOT for -но/-то. (3) Plan section 3 requires "Ризик двозначності: 'дитина миється' (сама) vs 'посуд миється' (кимсь)" — absent. (4) Plan section 1 requires "вважається, досліджено, встановлено" — absent. (5) Plan section 7 requires "Фінальний чекліст" and "Місток до наступної теми" in summary — absent from that section. |
-| 5 | **Activity Quality** | 7/10 | Excellent variety (11 types). Good progressive difficulty. BUT: unjumble activity line 254 has «Рішення про ремонт ухвалено міською радою» as correct answer — this is an instrumental agent with -но/-то, directly contradicting the research notes and plan. The select activity (lines 486-495) tests -но/-то agent restriction that was never explicitly taught in the lesson body. |
-| 6 | **LLM Fingerprint** | 7/10 | «набагато більше, ніж» pattern appears twice (lines 12, 389). Every H2 section opens with an elaborate, poetic subtitle pattern (metaphor + cultural allusion): "Метафора прожектора," "Магія -НО/-ТО: Голос Історії та Долі," "Само-дія: Механізм природи," "Голос Громади." This structural monotony (all 4 form sections: evocative title → philosophical musing → examples → error warning) is a fingerprint. The prose is substantive but the framing is formulaic. |
-| 7 | **Richness** | 8/10 | Strong cultural embedding: proverbs (line 95: «За одного битого двох небитих дають»), folk songs (line 311), вертеп metaphor, ethnographic scenarios (побілка хати). Good table (lines 342-347). Missing the planned Constitution/Independence Act cultural hook — this would have been the richest, most impactful cultural reference in the module. |
-| 8 | **Factual Accuracy** | 7/10 | Grammar error at line 406 (see Linguistic Accuracy). The claim at line 148 that -но/-то forms are «унікальна риса української мови, якої немає в більшості інших слов'янських мов» is an overstatement — analogous forms exist in Polish, Czech, and other Slavic languages, though Ukrainian's -но/-то is indeed particularly productive. No fabricated claims in callout boxes. |
-| 9 | **Engagement** | 8/10 | 8 engagement boxes (3× `[!culture]`, 1× `[!myth-buster]`, 1× `[!tip]`, 1× `[!warning]`, 1× `[!observe]`, 1× `[!context]`). Good variety. Direct address (ви, давайте) throughout. Confusion anticipation present (common errors sections). The summary's "Перевірте себе" section (lines 449-468) is an excellent self-check. |
-| 10 | **Vocabulary Sidecar** | 2/10 | The vocabulary YAML file has invalid format — entries lack `-` list prefix. Each entry starts with bare `  lemma:` instead of `- lemma:`. YAML parsers will interpret repeated keys in a mapping, discarding all but the last entry. This is why the audit reports 0 vocabulary items. The content itself (30 terms) is appropriate, but the file is unparseable as a list. |
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 8/10 | <7 | Culturally rich opening metaphor (вертеп/прожектор), warm teacher voice throughout. However, lecture-dominant with no discovery phase; practice only in section "Підсумок і практика". "Would I Continue?" 4/5. |
+| 2 | Coherence | 9/10 | <7 | Logical 4-form progression. Each section builds on the previous. Consistent metaphorical framework (прожектор → татуювання → фотографія → кіно). Smooth transitions between sections "Форма 1 — Дієприкметники на -ний/-тий" through "Форма 4 — Третя особа множини". |
+| 3 | Relevance | 9/10 | <7 | Directly addresses B2 passive voice requirements. Practical scenarios (news vs conversation, tourist vs ethnographer in section "Вибір форми пасиву за контекстом") are immediately applicable. |
+| 4 | Educational | 8/10 | <7 | Strong explanations and rich examples, but two plan-required points missing: Constitution/Independence Act analysis (plan section 3), scientific etiquette in Form 1 (plan section 2). No TTT discovery element. |
+| 5 | Language | 8/10 | <8 | High-quality Ukrainian throughout. One colonial framing instance at line 130 (see Critical Issues). One English term at line 401 「Одна з найбільших проблем — це спроба перекласти англійський *Passive Voice* дослівно.」 — minor, justified in context. |
+| 6 | Pedagogy | 7/10 | <7 | No TTT structure — rules are presented first, examples second. Practice concentrated entirely in section "Підсумок і практика" rather than integrated throughout. Concept density in section "Форма 2 — Безособові конструкції на -но/-то" is high (7+ concepts without processing break). Missing "test before teach" moments. |
+| 7 | Immersion | 10/10 | <6 | 99.8% Ukrainian. The sole English instance ("Passive Voice" on line 401) is a justified metalinguistic reference. Target 95-100% for B2 — exceeded. |
+| 8 | Activities | 8/10 | <7 | 11 activities with excellent type variety (quiz, group-sort, match-up, mark-the-words, fill-in, unjumble, error-correction, cloze, translate, select, essay). BUT: internal contradiction on instrumental agent rule (unjumble line 254 vs select line 489); unjumble missing comma (line 252); one select question with all-correct options (line 496-506). |
+| 9 | Richness | 9/10 | <6 | Excellent cultural hooks: вертеп metaphor, wedding songs, козацькі universal, народна магія ("пороблено"). Tables present (agreement table line 111, register table line 341). Multiple callout types ([!myth-buster], [!culture], [!tip], [!warning], [!observe], [!context]). |
+| 10 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5 — Content is well-paced for B2. Section "Форма 2 — Безособові конструкції на -но/-то" is dense but manageable. Clear error examples help. Only weakness: no quick-win exercises early in the module. |
+| 11 | LLM Fingerprint | 8/10 | <7 | 「це набагато більше」 pattern appears twice (lines 12 and 72). Sections "Форма 3 — Зворотний пасив із -ся" and "Форма 4 — Третя особа множини" both open with "{N}-та форма пасиву" pattern. Line 437 「Ця система виходить за межі правил — це спосіб бачити світ」 borders on generic philosophical wrap-up. Generally natural, but these patterns reduce the score slightly. |
+| 12 | Linguistic Accuracy | 9/10 | <9 | Grammar rules are correctly stated: accusative with -но/-то, -ся agent prohibition, participle agreement, -учий/-ючий as calques. One hedged overstatement at line 148 「Це унікальна риса української мови, якої немає в більшості інших слов'янських мов у такому вигляді.」 — Polish has analogous constructions (e.g., "napisano książkę"), so "більшості" is a stretch even with the "у такому вигляді" hedge. Not a grammar error, but a comparative linguistics inaccuracy. |
+| 13 | Factual Accuracy | 8/10 | <8 | All callout boxes verified: [!myth-buster] on passive overuse (line 34) — correct; [!culture] on wedding songs (line 74) — accurate symbolism; [!warning] on nominative/-но/-то mixing (line 180) — correct. Overstatement at line 148 about -но/-то uniqueness. Also, the activity set presents an implicit rule about institutional vs. personal agents in instrumental with -но/-то (「Рішення про ремонт ухвалено міською радою」 = correct, 「Збори оголошено директором.」 = incorrect) that is never taught in the prose — a factual/pedagogical gap. |
 
----
+**Weighted Overall:** (8×1.5 + 9×1.0 + 9×1.0 + 8×1.2 + 8×1.1 + 7×1.2 + 10×1.0 + 8×1.3 + 9×0.9 + 8×1.3 + 8×1.0 + 9×1.5 + 8×1.5) / 15.5 = (12 + 9 + 9 + 9.6 + 8.8 + 8.4 + 10 + 10.4 + 8.1 + 10.4 + 8 + 13.5 + 12) / 15.5 = 129.2 / 15.5 = **8.3/10**
+
+## Auto-Fail Checklist Results
+
+- Russianisms: [CLEAN] — No Russian lexical borrowings detected. Euphony appears respected throughout.
+- Calques: [CLEAN] — The module explicitly teaches against calques and provides corrections.
+- Colonial framing: [1 INSTANCE] — Line 130: 「Українська мова, на відміну від російської, дуже неохоче утворює *активні* дієприкметники теперішнього часу」 defines a Ukrainian feature by contrast with Russian.
+- Grammar scope: [CLEAN] — Stays within passive voice system, appropriate references to cases and aspects as prerequisites.
+- Activity errors: [3 ISSUES] — (1) Internal contradiction on instrumental agent, (2) missing comma in unjumble, (3) trivially easy select question.
+- Beginner safety: 4/5
+- Factual accuracy: [1 ISSUE] — Overstated uniqueness claim for -но/-то (line 148).
 
 ## Critical Issues Found
 
-### Issue 1: ACTIVITY_GRAMMAR_CONTRADICTION — Unjumble presents incorrect grammar as correct answer
-- **Location:** Activities file, line 254 (unjumble activity, item 4)
-- **Evidence:** The answer «Рішення про ремонт ухвалено міською радою» contains an instrumental agent ("міською радою") with a -но/-то form ("ухвалено"). The research notes explicitly state: *"У формах на -но/-то агент неможливий"* (research line 28). The plan requires teaching this as a "Критична заборона" (plan line 38-40). This answer should be either: (a) «Рішення про ремонт ухвалено» (agent removed), or (b) «Міська рада ухвалила рішення про ремонт» (active voice).
-- **Severity:** Critical — teaches incorrect grammar in a grammar module.
+### Issue 1: Vocabulary YAML Malformation (BLOCKING)
+- **Location**: `/curriculum/l2-uk-en/b2/vocabulary/passive-voice-system.yaml` (entire file)
+- **Problem**: The YAML file contains 30 vocabulary entries but uses no list markers (`-`). Each block starts with `  lemma:` without a dash prefix, causing YAML to parse it as a mapping with repeated keys. `yaml.safe_load()` returns only the last entry, causing audit to report 0 vocabulary items.
+- **Fix**: Add `- ` before each `lemma:` to create a proper YAML list:
+  ```yaml
+  - lemma: пасивний стан
+    pos: phrase
+    translation: passive voice
+  - lemma: активний стан
+    pos: phrase
+    translation: active voice
+  ```
 
-### Issue 2: GRAMMAR_ERROR_IN_LESSON — Incorrect case in example sentence
-- **Location:** Content file, line 406
-- **Evidence:** «Помилок припущено» uses genitive plural "помилок." The module's own rule at line 183 states: «Форма на **-но/-то** вимагає прямого додатка в Знахідному відмінку.» The accusative plural of "помилка" is "помилки," not "помилок" (genitive). Correct form: «Помилки припущено» or better «Помилок припустилися» (reflexive verb + genitive, active voice).
-- **Severity:** Critical — a grammar error in a grammar lesson undermines pedagogical authority.
+### Issue 2: Colonial Framing in Section "Форма 1 — Дієприкметники на -ний/-тий"
+- **Location**: Line 130
+- **Original**: 「Українська мова, на відміну від російської, дуже неохоче утворює *активні* дієприкметники теперішнього часу (слова на **-учий/-ючий**). Це чужорідний елемент у нашій мовній картині світу.」
+- **Problem**: Defines a Ukrainian linguistic feature by explicit contrast with Russian. This is colonial framing per review protocol. While pedagogically useful for learner awareness, it positions Russian as the baseline.
+- **Fix**: Reframe to present Ukrainian on its own terms: "Українська мова дуже неохоче утворює *активні* дієприкметники теперішнього часу (слова на **-учий/-ючий**). Замість них вживаються підрядні конструкції: *студент, який подорожує* замість ~~подорожуючий студент~~."
 
-### Issue 3: COLONIAL_FRAMING — Ukrainian defined by contrast with Russian
-- **Location:** Content file, line 130
-- **Evidence:** «Українська мова, на відміну від російської, дуже неохоче утворює *активні* дієприкметники теперішнього часу» — This defines Ukrainian grammar by what Russian does, making Russian the baseline. Fix: present Ukrainian's preference independently, e.g., "Українська мова дуже неохоче утворює активні дієприкметники теперішнього часу (слова на -учий/-ючий). Це чужорідний елемент для літературної норми."
-- **Severity:** Critical — per review protocol, colonial framing = Language Quality ≤ 7.
+### Issue 3: Activity Internal Contradiction — Instrumental Agent with -но/-то
+- **Location**: Activities file, unjumble (line 254) vs. select (line 489)
+- **Original (unjumble)**: 「Рішення про ремонт ухвалено міською радою」 — presented as CORRECT answer
+- **Original (select)**: 「Збори оголошено директором.」 — presented as INCORRECT (correct: false)
+- **Problem**: Both use -но/-то form with an instrumental agent. The distinction (institutional "міською радою" vs. personal "директором") is linguistically valid in formal Ukrainian but is NEVER explicitly taught in the content. A learner has no way to know why one is correct and the other isn't. This creates confusion rather than learning.
+- **Fix**: Either (a) add explicit teaching about the institutional vs. personal agent distinction in section "Форма 2 — Безособові конструкції на -но/-то", or (b) change the unjumble answer to remove the institutional agent ("Рішення про ремонт ухвалено вчора").
 
-### Issue 4: PLAN_VIOLATION — Missing critical -но/-то agent prohibition
-- **Location:** Section «Форма 2 — Безособові конструкції на -но/-то» (lines 145-222)
-- **Evidence:** The plan (line 38-40) explicitly requires: "Критична заборона: неможливість вживання агента (виконавця) в орудному відмінку з формами на -но/-то (Learner error: виправлення конструкцій на кшталт «Закон прийнято депутатами»)." The content teaches the agent prohibition ONLY for -ся forms (section «Форма 3», lines 264-288) and NEVER mentions it for -но/-то. This is the single most important learner error for this form and it's omitted.
-- **Severity:** Critical — plan-required content is missing from the most important section.
+### Issue 4: Missing Plan-Required Content — Constitution and Act of Independence
+- **Location**: Section "Форма 2 — Безособові конструкції на -но/-то" (entire section)
+- **Problem**: The plan (plans/b2/passive-voice-system.yaml, section 3) explicitly requires: "Аналіз державних документів: використання форм на -но/-то в Конституції України та Акті проголошення незалежності («Закон прийнято», «Державу проголошено»)." This is completely absent from the content. The section discusses -но/-то in general official usage but never references these specific foundational documents.
+- **Fix**: Add a subsection or paragraph in section "Форма 2 — Безособові конструкції на -но/-то" with examples from the Constitution and Act of Independence. E.g.: "В Акті проголошення незалежності України (1991) ця форма є основою: *«Проголошено незалежність України»*, *«Створено державу Україна»*."
 
-### Issue 5: PLAN_VIOLATION — Missing Конституція/Акт проголошення examples
-- **Location:** Section «Форма 2 — Безособові конструкції на -но/-то»
-- **Evidence:** The plan (line 35-37) requires: "Аналіз державних документів: використання форм на -но/-то в Конституції України та Акті проголошення незалежності («Закон прийнято», «Державу проголошено»)." Research notes (line 18) also flag this as cultural hook #1. The content uses generic examples (храм, закон, рух транспорту) instead. This is the strongest possible cultural anchor for -но/-то forms and it's completely absent.
-- **Severity:** Major — misses a key cultural hook and plan requirement.
+### Issue 5: Unjumble Activity — Missing Comma
+- **Location**: Activities file, line 252
+- **Original**: 「У народі кажуть що щастя любить тишу」
+- **Problem**: Missing comma before subordinate conjunction "що". Standard Ukrainian orthography requires: "кажуть, що..."
+- **Fix**: Change answer to "У народі кажуть, що щастя любить тишу"
 
-### Issue 6: PLAN_VIOLATION — Missing -ся ambiguity discussion
-- **Location:** Section «Форма 3 — Зворотний пасив із -ся» (lines 225-289)
-- **Evidence:** The plan (meta line 31) requires: "Ризик двозначності: 'дитина миється' (сама) vs 'посуд миється' (кимсь)." This key concept — that -ся can mean both reflexive ("washes itself") and passive ("is being washed") — is entirely absent. The content covers the agent restriction but not the ambiguity.
-- **Severity:** Major — missing plan-required content.
+### Issue 6: Overstated Linguistic Claim in Section "Форма 2 — Безособові конструкції на -но/-то"
+- **Location**: Line 148
+- **Original**: 「Це унікальна риса української мови, якої немає в більшості інших слов'янських мов у такому вигляді.」
+- **Problem**: Polish has analogous impersonal -no/-to constructions (e.g., "napisano książkę", "zrobiono"). While Ukrainian's usage IS more productive and frequent, claiming it's absent in "більшості" Slavic languages is overstated even with the "у такому вигляді" hedge.
+- **Fix**: Rephrase to: "Це одна з найрозвиненіших рис українського синтаксису, значно продуктивніша, ніж аналогічні форми в інших слов'янських мовах."
 
-### Issue 7: VOCAB_YAML_FORMAT — Vocabulary file unparseable
-- **Location:** Vocabulary file (all 30 entries)
-- **Evidence:** Every entry starts with `  lemma:` (indented, no dash) instead of `- lemma:`. This makes the file a single YAML mapping with repeated keys rather than a list. YAML spec: repeated keys → only last survives. Audit correctly reports 0 vocabulary items.
-- **Severity:** Major — vocabulary sidecar is non-functional.
+## Ukrainian Language Issues
 
-### Issue 8: PERSONA_MISMATCH — Specified persona completely absent
-- **Location:** Entire content file
-- **Evidence:** Meta specifies `role: Laboratory Scientist (Лаборант)` but the content uses an ethnographic storyteller voice (вертеп theatre, pottery, вишиванка, косa). Not a single laboratory or scientific experiment metaphor appears. The plan specifies this persona for a reason — a grammar module benefits from systematic, analytical framing.
-- **Severity:** Minor-to-Major — doesn't affect grammar accuracy but violates build config.
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 130 | 「Українська мова, на відміну від російської, дуже неохоче утворює...」 | Remove "на відміну від російської" — present Ukrainian on own terms | Colonial framing |
+| 148 | 「Це унікальна риса української мови, якої немає в більшості інших слов'янських мов у такому вигляді.」 | 「Це одна з найрозвиненіших рис українського синтаксису, значно продуктивніша, ніж аналогічні форми в інших слов'янських мовах.」 | Factual overstatement |
+| Act. 252 | 「У народі кажуть що щастя любить тишу」 | 「У народі кажуть, що щастя любить тишу」 | Punctuation (missing comma before що) |
 
-### Issue 9: FACTUAL_OVERSTATEMENT — Uniqueness claim for -но/-то
-- **Location:** Content file, line 148
-- **Evidence:** «Це унікальна риса української мови, якої немає в більшості інших слов'янських мов у такому вигляді» — Polish has analogous constructions (e.g., "Zrobiono"), Czech has similar impersonal passives. The qualifier "у такому вигляді" provides some hedge, but "немає в більшості інших слов'янських мов" is still an overstatement. Should be more nuanced: "Ця форма особливо продуктивна в українській мові."
-- **Severity:** Minor — the hedge softens it, but a superlative claim in a `[!culture]`-adjacent context should be precise.
+## Beginner Safety Audit
 
-### Issue 10: ACTIVITY_TESTS_UNTAUGHT_MATERIAL — Select items test undiscussed rule
-- **Location:** Activities file, lines 486-495 (select activity, item 4)
-- **Evidence:** The activity asks to identify correct -но/-то usage and marks «Збори оголошено директором» and «Вікно розбито хуліганом» as incorrect (instrumental agents). But the lesson body NEVER teaches that -но/-то cannot have instrumental agents (Issue 4). Learners would have no basis to answer correctly. This must be taught before being tested.
-- **Severity:** Major — violates TTT pedagogy (test content that was taught).
+"Would I Continue?" Test: 4/5
+- Overwhelmed? **Pass** — Content is well-paced for B2, metaphors aid comprehension
+- Instructions clear? **Pass** — Each form clearly delineated with examples
+- Quick wins? **Fail** — No practice or discovery exercises until the very end; learner reads for ~3500 words before any self-check
+- Ukrainian scary? **Pass** — Warm, encouraging teacher voice throughout
+- Come back tomorrow? **Pass** — Culturally fascinating content motivates continued engagement
 
----
+## Strengths
+
+- **Exceptional cultural embedding**: The вертеп/прожектор metaphor in section "Вступ — Що таке пасивний стан?" (line 17) is a brilliant pedagogical device. The народна магія subsection in section "Форма 2 — Безособові конструкції на -но/-то" (lines 158-165) with 「Йому **пороблено**」 is authentically Ukrainian and unforgettable.
+- **Strong decolonization perspective**: Section "Вибір форми пасиву за контекстом" (lines 388-398) presents agency shift as both linguistic and political act — genuinely insightful, not performative.
+- **Practical register contrasts**: The etнографічна експедиція scenario in section "Вибір форми пасиву за контекстом" (lines 372-386) showing the same action through four different registers is excellent pedagogy.
+- **Activity variety**: 11 activities spanning 9 different types (quiz, group-sort, match-up, mark-the-words, fill-in, unjumble, error-correction, cloze, translate, select, essay-response) with strong focus on language skills over content recall.
+- **Error anticipation**: Section "Форма 3 — Зворотний пасив із -ся" (lines 264-283) on the instrumental agent prohibition is thorough and memorable with the 「Книга читає себе студентом」 logical absurdity explanation (line 270).
+
+## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
+
+### Pedagogy: 7/10 → 9/10
+**What to fix:**
+1. Add a TTT discovery element at the start of section "Вступ — Що таке пасивний стан?": Before explaining, present 4 sentences (one per form) and ask the learner to guess the difference. This takes 100-150 words.
+2. Insert a brief self-check exercise (3-5 items) between sections "Форма 2 — Безособові конструкції на -но/-то" and "Форма 3 — Зворотний пасив із -ся" (around line 223). The content has ~2500 words of explanation before any practice.
+3. Add a "mini-drill" after section "Форма 4 — Третя особа множини" (around line 334) — even 3 quick-fire "choose the form" items would break the lecture monotony.
+
+**Expected score after fix:** 9/10
+
+### Educational: 8/10 → 9/10
+**What to fix:**
+1. Section "Форма 2 — Безособові конструкції на -но/-то": Add paragraph with Constitution/Act of Independence examples as required by plan (see Issue 4). This fills the plan compliance gap AND adds powerful real-world context.
+2. Section "Форма 1 — Дієприкметники на -ний/-тий": Add brief mention of scientific register usage ("вважається", "досліджено") as required by plan section 2. Currently this content is displaced to section "Вибір форми пасиву за контекстом".
+
+**Expected score after fix:** 9/10
+
+### Language: 8/10 → 9/10
+**What to fix:**
+1. Line 130: Remove colonial framing (see Issue 2). Reframe the -учий/-ючий discussion without Russian as baseline.
+2. Line 148: Soften the uniqueness claim (see Issue 6).
+
+**Expected score after fix:** 9/10
+
+### Activities: 8/10 → 9/10
+**What to fix:**
+1. Fix unjumble comma (Issue 5, line 252).
+2. Resolve instrumental agent contradiction (Issue 3) — either teach the rule in prose or harmonize activities.
+3. Select question at line 496-506 (min_correct: 4 with 4/4 correct options) is trivially easy — replace one option with an incorrect distractor.
+
+**Expected score after fix:** 9/10
+
+### Experience Quality: 8/10 → 9/10
+**What to fix:**
+1. Integrate practice earlier in the module (overlaps with Pedagogy fix). Adding 2-3 quick exercises between major sections transforms the experience from "lecture" to "guided discovery."
+
+**Expected score after fix:** 9/10
+
+### Factual Accuracy: 8/10 → 9/10
+**What to fix:**
+1. Fix line 148 overstatement (overlaps with Language fix).
+2. Either teach the institutional-vs-personal agent distinction explicitly or harmonize activities (overlaps with Activities fix).
+
+**Expected score after fix:** 9/10
+
+### LLM Fingerprint: 8/10 → 9/10
+**What to fix:**
+1. Line 12: 「це набагато більше, ніж суха граматична категорія」 and line 72: 「це значно більше за суху констатацію факту」 — vary one of these phrasings to avoid the "це X більше" repetition.
+2. Line 437: 「Ця система виходить за межі правил — це спосіб бачити світ」 — tighten the philosophical wrap-up to be more concrete.
+
+**Expected score after fix:** 9/10
+
+### Projected Overall After Fixes
+```
+(9×1.5 + 9×1.0 + 9×1.0 + 9×1.2 + 9×1.1 + 9×1.2 + 10×1.0 + 9×1.3 + 9×0.9 + 8×1.3 + 9×1.0 + 9×1.5 + 9×1.5) / 15.5
+= (13.5 + 9 + 9 + 10.8 + 9.9 + 10.8 + 10 + 11.7 + 8.1 + 10.4 + 9 + 13.5 + 13.5) / 15.5
+= 139.2 / 15.5
+= 8.98 → ~9.0/10
+```
 
 ## Factual Verification
 
-| Claim | Source Check | Verdict |
-|-------|------------|---------|
-| «За одного битого двох небитих дають» (line 95) | Real Ukrainian proverb | ✅ Verified |
-| «-ся» historically from «себе» (line 233) | Standard etymology, confirmed | ✅ Verified |
-| «-но/-то» forms require accusative object (line 172-183) | Standard grammar, Пономарів | ✅ Verified |
-| «-ся» cannot take animate agent in instrumental (lines 264-284) | Standard grammar rule | ✅ Verified |
-| «Помилок припущено» (line 406) | Genitive case, should be accusative | ❌ Grammar error |
-| Uniqueness of -но/-то in Slavic languages (line 148) | Polish "zrobiono" is analogous | ⚠️ Overstatement |
-| «Наступаючий рік» as калька (line 132) | Confirmed: standard prescriptive advice | ✅ Verified |
-| «Віруючі люди» as калька (line 135) | Confirmed: prescriptive norm recommends «віряни» | ✅ Verified |
-| Soviet bureaucratic language abused passive (lines 30, 392) | Historical fact, well-documented | ✅ Verified |
-
----
+- Research notes consulted: NOT_APPLICABLE (B2 core track, not seminar)
+- Key Facts Ledger present: NO (not required for core track)
+- Grammar rules verified: 8 rules checked — all correct (participle formation, accusative with -но/-то, -ся agent prohibition, agreement paradigm, -учий/-ючий as calques, бути usage in tenses, канцелярит definition, aspect distinctions)
+- Callout boxes verified: 9 callout boxes — all factually sound
+- Comparative linguistics claim: 1 overstatement (line 148, -но/-то uniqueness)
+- Activity-prose consistency: 1 contradiction (instrumental agent distinction taught in activities but not prose)
 
 ## Verification Summary
 
-| Check | Result | Notes |
-|-------|--------|-------|
-| All H2 sections from plan present? | ⚠️ PARTIAL | H2 headers match meta, but multiple plan *points* within sections are missing |
-| Vocabulary hints covered? | ⚠️ PARTIAL | Required terms used in content but vocab YAML file is unparseable |
-| Grammar scope respected? | ✅ PASS | No scope creep into later modules |
-| Objectives addressed? | ⚠️ PARTIAL | Objectives are generic ("Identify and correctly use...") — met superficially |
-| Colonial framing? | ❌ FOUND | Line 130: "на відміну від російської" |
-| Russianisms? | ✅ CLEAN | No Russian calques or ghost words detected |
-| LLM clichés (3+)? | ⚠️ BORDERLINE | "набагато більше, ніж" ×2; structural monotony in section openings |
-| Callout variety? | ✅ PASS | 7 different types, no repeated titles |
-| Factual errors? | ❌ FOUND | Grammar error at line 406; overstatement at line 148 |
-| Activity errors? | ❌ FOUND | Unjumble contradicts grammar; select tests untaught material |
-
----
-
-## Fix Plan
-
-### Priority 1 (Critical — must fix before pass)
-
-1. **Section «Форма 2 — Безособові конструкції на -но/-то»**: Add a subsection (after line 193 or replacing "Уникнення канцеляриту") explicitly teaching the -но/-то agent prohibition. Include: (a) the rule that instrumental agents are impossible with -но/-то; (b) the specific error example «Закон прийнято депутатами» → «Депутати прийняли закон»; (c) a `[!warning]` box parallel to the existing one for -ся. This is a plan requirement.
-
-2. **Section «Форма 2 — Безособові конструкції на -но/-то»**: Add Конституція України and Акт проголошення незалежності examples. Suggested placement: within "Сфера вживання" subsection (after line 191), e.g.: «В Акті проголошення незалежності: "Проголошено незалежність України"», «У Конституції: "Права і свободи людини і громадянина гарантовано Конституцією"».
-
-3. **Line 406**: Fix «Помилок припущено» → «Помилки допущено» (accusative, standard construction) or «Ми припустилися помилок» (active voice, as already shown on line 407).
-
-4. **Line 130**: Remove colonial framing. Replace «Українська мова, на відміну від російської, дуже неохоче утворює *активні* дієприкметники теперішнього часу» with «Українська літературна мова дуже неохоче утворює активні дієприкметники теперішнього часу (слова на -учий/-ючий). Це чужорідний елемент для норми.»
-
-5. **Activities — unjumble item 4** (line 254): Change «Рішення про ремонт ухвалено міською радою» to either «Міська рада ухвалила рішення про ремонт» (active) or remove "міською радою" from the word bank entirely and use a different sentence.
-
-### Priority 2 (Major — fix for quality)
-
-6. **Section «Форма 3 — Зворотний пасив із -ся»**: Add the planned ambiguity discussion. After line 233, add examples: «Дитина миється» (reflexive: washes herself) vs «Посуд миється» (passive: is being washed [by someone]). This explains why context matters for -ся interpretation.
-
-7. **Vocabulary YAML**: Add `-` prefix to every entry to make it a valid YAML list: `- lemma: пасивний стан` instead of `  lemma: пасивний стан`.
-
-8. **Content — scientific register examples**: Add "вважається, досліджено, встановлено" either in section «Вступ» (as the plan intended) or in section «Форма 3» where scientific style is discussed (lines 365-371). These are core passive examples for academic Ukrainian.
-
-### Priority 3 (Minor polish)
-
-9. **Line 148**: Soften «немає в більшості інших слов'янських мов» to «є особливо продуктивною в українській мові порівняно з іншими слов'янськими мовами».
-
-10. **Persona alignment**: While a full persona rewrite is not needed, consider adding 1-2 "laboratory experiment" framings (e.g., "Проведемо лінгвістичний дослід..." or "Подивимося на цю конструкцію під мікроскопом...") to partially align with the Лаборант persona.
-
----
+- Content lines read: 466
+- Activity items checked: 116 (all items across 11 activities)
+- Ukrainian sentences verified: ~40 (grammar, case usage, naturalness)
+- Citations in bank: 18
+- Issues found: 6 (1 blocking, 3 critical, 2 minor)
 
 ## Verdict
 
-**FAIL — Fix Required (D.2 Repair)**
+**FAIL**
 
-The module has a strong pedagogical foundation — the four-form structure is well-conceived, examples are culturally rich, and the engagement journey works. However, it has critical issues that prevent passing:
-
-1. A **grammar error** in a grammar lesson (line 406)
-2. **Colonial framing** (line 130)
-3. A **critical plan requirement** (instrumental agent prohibition with -но/-то) is completely missing — and an activity contradicts the very rule that should have been taught
-4. Key **cultural anchors** (Constitution, Independence Act) required by both plan and research are absent
-5. **Vocabulary YAML** is unparseable
-
-The content needs targeted D.2 repair focused on (a) adding the -но/-то agent prohibition, (b) fixing the grammar error and colonial framing, (c) fixing the unjumble activity, and (d) fixing the vocabulary YAML format. The core content quality is solid and does not need wholesale rewriting.
+Blocking issues: (1) Vocabulary YAML is malformed — no list markers cause audit to read 0 items; (2) Activity internal contradiction on instrumental agent rule between unjumble and select exercises creates learner confusion; (3) Plan-required content about Constitution and Act of Independence is completely absent. The content quality is genuinely strong — warm voice, excellent cultural embedding, correct grammar rules — but these structural and compliance issues require a D.2 repair pass before the module can pass.

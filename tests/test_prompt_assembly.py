@@ -32,9 +32,9 @@ class TestFillTemplate:
 
     def test_multiple_placeholders(self):
         template = "Track: {TRACK}, Level: {LEVEL}, Target: {WORD_TARGET} words"
-        placeholders = {"TRACK": "b2-hist", "LEVEL": "B2", "WORD_TARGET": "3500"}
+        placeholders = {"TRACK": "hist", "LEVEL": "B2", "WORD_TARGET": "3500"}
         result = fill_template(template, placeholders)
-        assert result == "Track: b2-hist, Level: B2, Target: 3500 words"
+        assert result == "Track: hist, Level: B2, Target: 3500 words"
 
     def test_repeated_placeholder(self):
         """Same placeholder used twice in template."""

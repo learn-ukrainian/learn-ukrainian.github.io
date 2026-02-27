@@ -3,7 +3,7 @@ Track-specific scoring criteria definitions and weights.
 
 Each track has unique scoring criteria optimized for its content type:
 - Standard tracks: Grammar/content balance, skills distribution
-- B2-HIST: Historical accuracy, decolonization, primary sources
+- HIST: Historical accuracy, decolonization, primary sources
 - C1-HIST: Historiographical methodology, source criticism
 - C1-BIO: Biographical accuracy, cultural context, legacy analysis
 - LIT: Literary analysis, authentic text engagement, stylistic devices
@@ -37,11 +37,11 @@ class TrackConfig(TypedDict):
 TRACK_CONFIGS: dict[str, TrackConfig] = {
 
     # =========================================================================
-    # B2-HIST: Ukrainian History (B2 Level)
+    # HIST: Ukrainian History (B2 Level)
     # =========================================================================
-    'b2-hist': {
-        'name': 'B2-HIST: Ukrainian History',
-        'level_dir': 'b2-hist',
+    'hist': {
+        'name': 'HIST: Ukrainian History',
+        'level_dir': 'hist',
         'module_count': 140,
         'criteria': {
             'audit_pass_rate': {
@@ -1260,7 +1260,7 @@ def get_track_config(track_id: str) -> TrackConfig:
     Get configuration for a track.
 
     Args:
-        track_id: Track identifier (b2-hist, c1-bio, c1-hist, lit, a1, a2, etc.)
+        track_id: Track identifier (hist, c1-bio, c1-hist, lit, a1, a2, etc.)
 
     Returns:
         TrackConfig for the specified track

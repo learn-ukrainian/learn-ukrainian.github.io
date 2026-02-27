@@ -26,7 +26,7 @@ For any module build, context priority (highest → lowest):
 ## Research File
 
 ### When to include
-Always for seminar tracks (b2-hist, c1-bio, c1-hist, lit, oes, ruth). Optional for core tracks.
+Always for seminar tracks (hist, c1-bio, c1-hist, lit, oes, ruth). Optional for core tracks.
 
 ### Quality threshold
 A research file under 500 words is not usable — dispatch Phase A in full research mode instead.
@@ -85,7 +85,7 @@ Plan sections with 5+ bullet points must become multiple meta sections. Bullets 
 
 | Track type | Track context | Rationale |
 |-----------|---------------|-----------|
-| Seminar (b2-hist, c1-bio, c1-hist, lit, oes, ruth) | **Empty** | Topics are independent. Plans + research + meta are sufficient. |
+| Seminar (hist, c1-bio, c1-hist, lit, oes, ruth) | **Empty** | Topics are independent. Plans + research + meta are sufficient. |
 | Core (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro) | Last 5 modules | Needed for vocabulary/grammar consistency across sequential modules. |
 
 **Never include full-track context for seminar tracks.** Even 50KB of context costs output budget and adds no consistency value when topics are independent (Bohdan Khmelnytskyi has nothing to do with Lesya Ukrainka).

@@ -574,9 +574,9 @@ Pedagogy     ❌ 44 violations
 ❌ **100-shevchenko-awakening**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-     ℹ️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+     ℹ️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
      ⚠️ [TOO_MANY_MORPHEMES] Знайдіть прикметники
 Pedagogy     ❌ 21 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Життя Тараса Шевченка' Q1 prompt length 4 (target: 6-20)
@@ -596,25 +596,25 @@ Pedagogy     ❌ 21 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Рефлексія' Q5 prompt length 4 (target: 6-20)
   [COMPLEXITY_WORD_COUNT] quiz 'Рефлексія' Q7 prompt length 5 (target: 6-20)
   [COMPLEXITY_WORD_COUNT] quiz 'Рефлексія' Q8 prompt length 4 (target: 6-20)
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 25 violations (severe - consider revision)
 ```
 
 ❌ **101-ideolhy-drahomanov-kulish**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
 Pedagogy     ❌ 2 violations
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 7 violations (significant)
 ```
 ✅ 102-franko-lesia-hrinchenko
@@ -622,36 +622,36 @@ Pedagogy     ❌ 2 violations
 ❌ **103-mykhailo-hrushevskyi**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
 Pedagogy     ❌ 1 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Відновлення порядку слів у складних реченнях' item 2 has 18 words (target: 7-15)
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 6 violations (moderate)
 ```
 
 ❌ **104-first-world-war**
 ```
   ⚠️  Template violations: 5 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 104-first-world-war.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 104-first-world-war.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 10 violations (significant)
 ```
 ✅ 105-unr-zunr
@@ -697,8 +697,8 @@ Pedagogy     ❌ 5 violations
 ❌ **108-rozstriliane-vidrodzennia-postati**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 108-rozstriliane-vidrodzennia-postati.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 108-rozstriliane-vidrodzennia-postati.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -729,8 +729,8 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 108-rozstriliane-vidrodzennia-postati.yaml: [linguistic_features_repressions] select: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 108-rozstriliane-vidrodzennia-postati.yaml: [general_knowledge_executed] quiz: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 108-rozstriliane-vidrodzennia-postati.yaml: [content_check_executed] true-false: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
@@ -738,8 +738,8 @@ Pedagogy     ❌ 16 violations
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст: Від сподівань до розстрільних ям, Вступ, Контекст: Велика чистка та Наказ № 00447
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 13
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-0] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-1] fill-in: 'title' is a required property
@@ -770,10 +770,10 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-11] quiz: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 109-rozstriliane-vidrodzhennia-ii-mekhanizm-teroru.yaml: [index-12] fill-in: 'title' is a required property
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст: Від сподівань до розстрільних ям, Вступ, Контекст: Велика чистка та Наказ № 00447
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 21 violations (severe - consider revision)
 ```
 
@@ -854,8 +854,8 @@ Pedagogy     ❌ 3 violations
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст і причини, Вступ
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'history-module-template'
   ❌ YAML schema violations: 4
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 111-holodomor-ii-pamiat.yaml: [розуміння-тексту] quiz: 'items.7' - 'question' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 111-holodomor-ii-pamiat.yaml: [аналіз-джерела-(радченко-та-лисивець)] select: 'items.5' - 'question' is a required property
@@ -867,9 +867,9 @@ Pedagogy     ❌ 6 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 111-holodomor-ii-pamiat.yaml: [граматика:-пасивний-стан-(revision)] quiz: 'items.7' - 'question' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 111-holodomor-ii-pamiat.yaml: [англомовні-поняття] translate: 'items.5' - 'source' is a required property
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст і причини, Вступ
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 10 violations (significant)
 ```
 
@@ -877,16 +877,16 @@ Pedagogy     ❌ 6 violations
 ```
   ⚠️  Template violations: 6 critical, 0 warnings, 2 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Граматика в контексті, Контекст: Пакт Молотова — Ріббентропа та «Перші совіти», Вступ
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
      ⚠️ [TOO_MANY_MORPHEMES] Граматика в контексті
 Pedagogy     ❌ 4 violations
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Граматика в контексті, Контекст: Пакт Молотова — Ріббентропа та «Перші совіти», Вступ
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 12 violations (severe - consider revision)
 ```
 
@@ -894,8 +894,8 @@ Pedagogy     ❌ 4 violations
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 0 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Контекст: Початок боротьби
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 113-upa-i-zbroinyi-opir.yaml: [аналітичний-квіз:-постаті] quiz: 'items.7.options.3' - 'correct' is a required property
 Pedagogy     ❌ 12 violations
@@ -910,8 +910,8 @@ Pedagogy     ❌ 12 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Аналітичний квіз: Постаті' Q7 prompt length 4 (target: 6-20)
   [YAML_SCHEMA_VIOLATION] Schema error in 113-upa-i-zbroinyi-opir.yaml: [аналітичний-квіз:-постаті] quiz: 'items.7.options.3' - 'correct' is a required property
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Контекст: Початок боротьби
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 15 violations (severe - consider revision)
 ```
 
@@ -919,8 +919,8 @@ Pedagogy     ❌ 12 violations
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 0 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст: Відлига та сподівання, Вступ
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
 Pedagogy     ❌ 13 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту: Радянська русифікація' Q3 prompt length 3 (target: 6-20)
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту: Радянська русифікація' Q4 prompt length 3 (target: 6-20)
@@ -934,8 +934,8 @@ Pedagogy     ❌ 13 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення' item 7 has 4 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення' item 8 has 4 words (target: 7-15)
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст: Відлига та сподівання, Вступ
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 16 violations (severe - consider revision)
 ```
 
@@ -943,8 +943,8 @@ Pedagogy     ❌ 13 violations
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 0 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст та передумови геноциду, Вступ
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 115-surgunlik-deportatsiia-1944.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 115-surgunlik-deportatsiia-1944.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -976,16 +976,16 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 115-surgunlik-deportatsiia-1944.yaml: [linguistic_features_1] select: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 115-surgunlik-deportatsiia-1944.yaml: [final_comp_check] quiz: 'title' is a required property
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст та передумови геноциду, Вступ
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 19 violations (severe - consider revision)
 ```
 
 ❌ **116-shistdesiatnyky**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 116-shistdesiatnyky.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 116-shistdesiatnyky.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1016,16 +1016,16 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 116-shistdesiatnyky.yaml: [grammar_prep_1] fill-in: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 116-shistdesiatnyky.yaml: [cultural_context] select: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 116-shistdesiatnyky.yaml: [terms_translation] translate: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
 ❌ **117-chornobyl**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 117-chornobyl.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 117-chornobyl.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1056,16 +1056,16 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 117-chornobyl.yaml: [translation] translate: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 117-chornobyl.yaml: [linguistic_features] select: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 117-chornobyl.yaml: [general_knowledge] quiz: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
 ❌ **118-diaspora-kovcheh-derzhavy**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 118-diaspora-kovcheh-derzhavy.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 118-diaspora-kovcheh-derzhavy.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1096,17 +1096,17 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 118-diaspora-kovcheh-derzhavy.yaml: [translation] translate: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 118-diaspora-kovcheh-derzhavy.yaml: [linguistic_features] select: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 118-diaspora-kovcheh-derzhavy.yaml: [general_knowledge] quiz: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
 ❌ **119-syntez-trahedii-xx-stolittia**
 ```
   ⚠️  Template violations: 5 critical, 0 warnings, 1 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
   ❌ YAML schema violations: 6
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 119-syntez-trahedii-xx-stolittia.yaml: [письмове-завдання-(аналіз)] select: 'items.7' - 'question' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 119-syntez-trahedii-xx-stolittia.yaml: [порівняльний-аналіз-джерел] select: 'items.6' - 'question' is a required property
@@ -1121,12 +1121,12 @@ Pedagogy     ❌ 8 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 119-syntez-trahedii-xx-stolittia.yaml: [методи-деколонізації] select: 'items.5' - 'question' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 119-syntez-trahedii-xx-stolittia.yaml: [патерни-нищення-та-спротиву] group-sort: 'groups.1' - 'name' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 119-syntez-trahedii-xx-stolittia.yaml: [професійний-переклад] translate: 'items.5' - 'source' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
    → 14 violations (severe - consider revision)
 ```
 
@@ -1193,8 +1193,8 @@ Pedagogy     ❌ 48 violations
 ❌ **120-shliakh-do-nezalezhnosti**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 120-shliakh-do-nezalezhnosti.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 120-shliakh-do-nezalezhnosti.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1225,16 +1225,16 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 120-shliakh-do-nezalezhnosti.yaml: [translation_matching] translate: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 120-shliakh-do-nezalezhnosti.yaml: [linguistic_nuances] select: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 120-shliakh-do-nezalezhnosti.yaml: [general_knowledge_history] quiz: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
 ❌ **121-ukraine-1991-2004**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 121-ukraine-1991-2004.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 121-ukraine-1991-2004.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1265,8 +1265,8 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 121-ukraine-1991-2004.yaml: [grammar_prep_2] fill-in: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 121-ukraine-1991-2004.yaml: [linguistic_features_2] select: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 121-ukraine-1991-2004.yaml: [terms_translation_2] translate: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
@@ -1274,8 +1274,8 @@ Pedagogy     ❌ 16 violations
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Контекст: Кінець епохи Кучми та передісторія конфлікту
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 122-pomarancheva-revoliutsiia.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 122-pomarancheva-revoliutsiia.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1307,18 +1307,18 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 122-pomarancheva-revoliutsiia.yaml: [general_knowledge_1] quiz: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 122-pomarancheva-revoliutsiia.yaml: [content_check_2] true-false: 'title' is a required property
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Контекст: Кінець епохи Кучми та передісторія конфлікту
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!quote]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!quote]' per template 'history-module-template'
    → 21 violations (severe - consider revision)
 ```
 
 ❌ **123-epokha-yanukovycha**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 123-epokha-yanukovycha.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 123-epokha-yanukovycha.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1349,16 +1349,16 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 123-epokha-yanukovycha.yaml: [grammar_prep_2] fill-in: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 123-epokha-yanukovycha.yaml: [true_statements] select: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 123-epokha-yanukovycha.yaml: [terms_translation_2] translate: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
 ❌ **124-dukhovnyi-front-tomos**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 124-dukhovnyi-front-tomos.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 124-dukhovnyi-front-tomos.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1389,17 +1389,17 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 124-dukhovnyi-front-tomos.yaml: [general_knowledge_church] quiz: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 124-dukhovnyi-front-tomos.yaml: [content_check_church] true-false: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 124-dukhovnyi-front-tomos.yaml: [synonyms_church] match-up: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
 ❌ **125-shliakh-do-voli**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 1 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'history-module-template'
   ❌ YAML schema violations: 5
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 125-shliakh-do-voli.yaml: [критерії-успішної-деколонізації] select: 'items.6' - 'question' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 125-shliakh-do-voli.yaml: [міфи-та-реальність-незалежності] true-false: 'items.7' - 'correct' is a required property
@@ -1412,11 +1412,11 @@ Pedagogy     ❌ 7 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 125-shliakh-do-voli.yaml: [процеси-державотворення] group-sort: 'groups.1' - 'name' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 125-shliakh-do-voli.yaml: [вимоги-до-есе-про-незалежність] select: 'items.6' - 'question' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 125-shliakh-do-voli.yaml: [аналіз-первинних-джерел] select: 'items.5' - 'question' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
    → 12 violations (severe - consider revision)
 ```
 
@@ -1424,8 +1424,8 @@ Pedagogy     ❌ 7 violations
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 1 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст, Вступ
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 126-revoliutsiia-hidnosti.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 126-revoliutsiia-hidnosti.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1457,17 +1457,17 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 126-revoliutsiia-hidnosti.yaml: [general_knowledge_maidan] quiz: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 126-revoliutsiia-hidnosti.yaml: [content_check_maidan] true-false: 'title' is a required property
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст, Вступ
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
    → 20 violations (severe - consider revision)
 ```
 
 ❌ **127-aneksiia-krymu**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 127-aneksiia-krymu.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 127-aneksiia-krymu.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1498,16 +1498,16 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 127-aneksiia-krymu.yaml: [general_knowledge] quiz: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 127-aneksiia-krymu.yaml: [additional_check] true-false: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 127-aneksiia-krymu.yaml: [additional_select] select: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
 ❌ **128-viina-na-donbasi-2014-2022**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 128-viina-na-donbasi-2014-2022.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 128-viina-na-donbasi-2014-2022.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1538,16 +1538,16 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 128-viina-na-donbasi-2014-2022.yaml: [general_knowledge] quiz: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 128-viina-na-donbasi-2014-2022.yaml: [additional_check] true-false: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 128-viina-na-donbasi-2014-2022.yaml: [additional_select] select: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
 ❌ **129-pownomasshtabne-wtorhnessnia**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 129-pownomasshtabne-wtorhnessnia.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 129-pownomasshtabne-wtorhnessnia.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1578,8 +1578,8 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 129-pownomasshtabne-wtorhnessnia.yaml: [terms_translation_1] translate: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 129-pownomasshtabne-wtorhnessnia.yaml: [vocabulary_features_1] select: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 129-pownomasshtabne-wtorhnessnia.yaml: [final_comp_check_1] quiz: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
@@ -1640,8 +1640,8 @@ Pedagogy     ❌ 43 violations
 ❌ **130-zlochyny-i-stiikist**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 14
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 130-zlochyny-i-stiikist.yaml: [reading_comp_1] quiz: 'title' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 130-zlochyny-i-stiikist.yaml: [vocab_context_1] fill-in: 'title' is a required property
@@ -1672,17 +1672,17 @@ Pedagogy     ❌ 16 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 130-zlochyny-i-stiikist.yaml: [linguistic_features_war] select: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 130-zlochyny-i-stiikist.yaml: [final_comp_check_resilience] quiz: 'title' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 130-zlochyny-i-stiikist.yaml: [additional_check_resilience] true-false: 'title' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 18 violations (severe - consider revision)
 ```
 
 ❌ **131-syntez-viyna-za-isnuvannya**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'history-module-template'
   ❌ YAML schema violations: 4
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [критерії-справжньої-перемоги] select: 'items.11' - 'question' is a required property
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [аналітичний-переклад] translate: 'items.11' - 'source' is a required property
@@ -1693,10 +1693,10 @@ Pedagogy     ❌ 6 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [аналітичний-переклад] translate: 'items.11' - 'source' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [факти-сучасної-війни] true-false: 'items.11' - 'correct' is a required property
   [YAML_SCHEMA_VIOLATION] Schema error in 131-syntez-viyna-za-isnuvannya.yaml: [цінності-українського-опору] select: 'items.11' - 'question' is a required property
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Деколонізаційний погляд' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
    → 10 violations (significant)
 ```
 
@@ -5079,8 +5079,8 @@ Pedagogy     ❌ 12 violations
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 3 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Монгольська навала: Історичний контекст
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
 Pedagogy     ❌ 16 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення' item 1 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення' item 2 has 4 words (target: 7-15)
@@ -5097,11 +5097,11 @@ Pedagogy     ❌ 16 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення' item 14 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення' item 15 has 4 words (target: 7-15)
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Монгольська навала: Історичний контекст
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!quote]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!quote]' per template 'history-module-template'
    → 22 violations (severe - consider revision)
 ```
 
@@ -5304,9 +5304,9 @@ Pedagogy     ❌ 19 violations
 ❌ **87-khmelnychchyna-i-povstannia**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
      ⚠️ [TOO_MANY_MORPHEMES] Знайдіть військову термінологію
 Pedagogy     ❌ 14 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту про повстання Хмельницького' Q9 prompt length 5 (target: 6-20)
@@ -5321,11 +5321,11 @@ Pedagogy     ❌ 14 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про повстання' item 14 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про повстання' item 15 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про повстання' item 16 has 4 words (target: 7-15)
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 19 violations (severe - consider revision)
 ```
 
@@ -5366,9 +5366,9 @@ Pedagogy     ❌ 22 violations
 ❌ **89-pereiaslav-treaty**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-     ℹ️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+     ℹ️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
 Pedagogy     ❌ 13 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Переяславську угоду' item 2 has 4 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Переяславську угоду' item 3 has 5 words (target: 7-15)
@@ -5381,19 +5381,19 @@ Pedagogy     ❌ 13 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Переяславську угоду' item 15 has 4 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Переяславську угоду' item 16 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] quiz 'Аналіз первинних джерел' Q5 prompt length 5 (target: 6-20)
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 17 violations (severe - consider revision)
 ```
 
 ❌ **90-ruina-i-vyhovsky**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
 Pedagogy     ❌ 19 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту про період Руїни' Q3 prompt length 5 (target: 6-20)
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту про період Руїни' Q5 prompt length 5 (target: 6-20)
@@ -5412,20 +5412,20 @@ Pedagogy     ❌ 19 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Руїну' item 14 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Руїну' item 15 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] quiz 'Аналіз первинних джерел' Q12 prompt length 5 (target: 6-20)
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 24 violations (severe - consider revision)
 ```
 
 ❌ **91-ruina-ii-doroshenko**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
      ⚠️ [TOO_MANY_MORPHEMES] Знайдіть політичну та військову термінологію
 Pedagogy     ❌ 14 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту про Петра Дорошенка' Q15 prompt length 5 (target: 6-20)
@@ -5440,20 +5440,20 @@ Pedagogy     ❌ 14 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Дорошенка' item 12 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Дорошенка' item 14 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] quiz 'Аналіз первинних джерел' Q5 prompt length 5 (target: 6-20)
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 19 violations (severe - consider revision)
 ```
 
 ❌ **92-ivan-mazepa-i-derzhavnyk**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
      ⚠️ [TOO_MANY_MORPHEMES] Знайдіть політичну термінологію
 Pedagogy     ❌ 16 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту про Івана Мазепу' Q3 prompt length 5 (target: 6-20)
@@ -5470,11 +5470,11 @@ Pedagogy     ❌ 16 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Мазепу' item 13 has 4 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Мазепу' item 14 has 4 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Мазепу' item 15 has 5 words (target: 7-15)
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 21 violations (severe - consider revision)
 ```
 
@@ -5482,8 +5482,8 @@ Pedagogy     ❌ 16 violations
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 2 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Літературний контекст
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
      ⚠️ [TOO_MANY_MORPHEMES] Знайдіть культурну термінологію
 Pedagogy     ❌ 16 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту про культурну спадщину Мазепи' Q5 prompt length 4 (target: 6-20)
@@ -5501,20 +5501,20 @@ Pedagogy     ❌ 16 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про культуру Мазепи' item 16 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] quiz 'Аналіз первинних джерел' Q4 prompt length 5 (target: 6-20)
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Літературний контекст
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 22 violations (severe - consider revision)
 ```
 
 ❌ **94-ivan-mazepa-iii-poltava**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
      ⚠️ [TOO_MANY_MORPHEMES] Знайдіть військову термінологію
 Pedagogy     ❌ 9 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Полтаву і вигнання' item 2 has 5 words (target: 7-15)
@@ -5524,20 +5524,20 @@ Pedagogy     ❌ 9 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Полтаву і вигнання' item 14 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Полтаву і вигнання' item 15 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Полтаву і вигнання' item 16 has 5 words (target: 7-15)
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 14 violations (severe - consider revision)
 ```
 
 ❌ **95-hryhorii-skovoroda**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
      ⚠️ [TOO_MANY_MORPHEMES] Знайдіть філософську термінологію
 Pedagogy     ❌ 18 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту про життя Сковороди' Q5 prompt length 5 (target: 6-20)
@@ -5556,20 +5556,20 @@ Pedagogy     ❌ 18 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Сковороду' item 13 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Сковороду' item 15 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Сковороду' item 16 has 5 words (target: 7-15)
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 23 violations (severe - consider revision)
 ```
 
 ❌ **96-rosiiski-mify-pro-ukrainu**
 ```
   ⚠️  Template violations: 2 critical, 0 warnings, 2 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-     ℹ️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+     ℹ️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
 Pedagogy     ❌ 9 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту про російські міфи' Q10 prompt length 4 (target: 6-20)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про міфи та деколонізацію' item 2 has 5 words (target: 7-15)
@@ -5578,10 +5578,10 @@ Pedagogy     ❌ 9 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про міфи та деколонізацію' item 8 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про міфи та деколонізацію' item 10 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про міфи та деколонізацію' item 11 has 5 words (target: 7-15)
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 13 violations (severe - consider revision)
 ```
 
@@ -5589,8 +5589,8 @@ Pedagogy     ❌ 9 violations
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 2 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст: Після війни з Туреччиною, Вступ
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
 Pedagogy     ❌ 18 violations
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту про ліквідацію Гетьманщини' Q9 prompt length 5 (target: 6-20)
   [COMPLEXITY_WORD_COUNT] quiz 'Розуміння тексту про ліквідацію Гетьманщини' Q12 prompt length 5 (target: 6-20)
@@ -5609,11 +5609,11 @@ Pedagogy     ❌ 18 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Гетьманщину' item 15 has 4 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про Гетьманщину' item 16 has 4 words (target: 7-15)
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Контекст: Після війни з Туреччиною, Вступ
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 24 violations (severe - consider revision)
 ```
 
@@ -5621,8 +5621,8 @@ Pedagogy     ❌ 18 violations
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 2 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Контекст
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
 Pedagogy     ❌ 10 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про заборони мови' item 5 has 5 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про заборони мови' item 7 has 5 words (target: 7-15)
@@ -5633,11 +5633,11 @@ Pedagogy     ❌ 10 violations
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про заборони мови' item 15 has 4 words (target: 7-15)
   [COMPLEXITY_WORD_COUNT] unjumble 'Складіть речення про заборони мови' item 16 has 4 words (target: 7-15)
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Контекст
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Первинні джерела' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 16 violations (severe - consider revision)
 ```
 
@@ -5645,8 +5645,8 @@ Pedagogy     ❌ 10 violations
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 2 info
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Контекст: Поділи Речі Посполитої
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
   ❌ YAML schema violations: 5
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 99-austrian-galicia.yaml: [розуміння-тексту:-австрійська-галичина] quiz: 'items.15.options.1' - Additional properties are not allowed ('explanation' was unexpected)
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 99-austrian-galicia.yaml: [історична-лексика-в-контексті] fill-in: 'items.15' - Additional properties are not allowed ('blank_index' was unexpected)
@@ -5669,10 +5669,10 @@ Pedagogy     ❌ 17 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 99-austrian-galicia.yaml: [переклад-історичної-лексики] translate: 'items.15.options.0' - Additional properties are not allowed ('explanation' was unexpected)
   [YAML_SCHEMA_VIOLATION] Schema error in 99-austrian-galicia.yaml: [деколонізаційні-питання] quiz: 'items.3.options' - [{'text': 'Це був автентичний вибір галичан', 'correct': False}, {'text': 'Це була російська диверсія для розколу українського руху', 'correct': True, 'explanation': "Текст: «Російська імперія навмисно підтримувала 'москвофільство'»."}, {'text': 'Це австрійська провокація', 'correct': False}] is too short
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка' found: Вступ, Контекст: Поділи Речі Посполитої
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'b2-history-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'b2-history-module-template'
-  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'b2-history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Читання' per template 'history-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!myth-buster]' per template 'history-module-template'
+  ⚠️ [MISSING_REQUIRED_CALLOUT] Missing required callout '[!history-bite]' per template 'history-module-template'
    → 22 violations (severe - consider revision)
 ```
 

@@ -1,6 +1,6 @@
 import re
 
-path = 'curriculum/l2-uk-en/b2-hist/syntez-kozatstvo-vytoky.md'
+path = 'curriculum/l2-uk-en/hist/syntez-kozatstvo-vytoky.md'
 with open(path, 'r', encoding='utf-8') as f:
     text = f.read()
 

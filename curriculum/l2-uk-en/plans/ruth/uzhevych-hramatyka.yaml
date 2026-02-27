@@ -1,0 +1,34 @@
+sequence: 108
+module: ruth-108
+slug: uzhevych-hramatyka
+title_uk: "Граматика слов'янська Івана Ужевича"
+title_en: "Ivan Uzhevych's Slavonic Grammar"
+phase: 5
+phase_id: linguistic-identity
+phase_name: "Мовна ідентичність"
+focus: "A Ukrainian grammar written in Paris — documenting Ukrainian phonology in Latin alphabet, identity in exile"
+content_outline:
+- section: Вступ
+  description: "Ivan Uzhevych: a Ukrainian scholar in 1640s Paris. Why he wrote a grammar of his native language abroad. The Paris manuscript as an act of cultural preservation."
+- section: Основний матеріал
+  description: "Structure of the Grammar: phonology, morphology, syntax. Uzhevych's use of Latin alphabet to transcribe Ukrainian sounds — what this reveals about actual pronunciation. Comparison with Smotrytsky's grammar."
+- section: Практика
+  description: "Reading Uzhevych's Latin-alphabet transcriptions. Reconstructing 17th-century Ukrainian pronunciation. Parallels to modern phonology."
+- section: Підсумок
+  description: "The Grammar as evidence of Ukrainian linguistic consciousness in the European intellectual space. A Ukrainian grammarian alongside French, Latin, Italian counterparts."
+vocabulary_hints:
+- граматика
+- фонетика
+- морфологія
+- транскрипція
+- рукопис
+- латинський алфавіт
+activity_types:
+- transcription
+- grammar-identify
+- parallel-text
+- comparative-style
+persona:
+  voice: "Grammarian"
+  role: "Ukrainian Scholar in Paris"
+source_url: "http://litopys.org.ua/uzhgram/uz.htm"

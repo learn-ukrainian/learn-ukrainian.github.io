@@ -16,12 +16,12 @@
 | `c2` | C2 | Core | 101 | 3000w | CLIL |
 | `b2-pro` | B2 | Core (professional) | 40 | 1750w | CLIL |
 | `c1-pro` | C1 | Core (professional) | 50 | 3000w | CLIL |
-| `b2-hist` | B2 | Seminar | 140 | 5000w | CBI |
-| `c1-bio` | C1 | Seminar | 172 | 5000w | CBI |
+| `hist` | B2 | Seminar | 140 | 5000w | CBI |
+| `c1-bio` | C1 | Seminar | 175 | 5000w | CBI |
 | `c1-hist` | C1 | Seminar | 136 | 5000w | CBI |
 | `lit` | C1+ | Seminar | 218 | 2500w | CBI |
 | `oes` | C2 | Seminar | 100 | 3000w | CBI |
-| `ruth` | C2 | Seminar | 100 | 3000w | CBI |
+| `ruth` | C2 | Seminar | 112 | 3000w | CBI |
 
 ---
 
@@ -158,7 +158,7 @@ curriculum/l2-uk-en/
 
 ## Seminar Track Specifics
 
-### b2-hist (B2 History)
+### hist (B2 History)
 - Ukrainian history from proto-Slavic period to modern day
 - Decolonization perspective mandatory
 - 140 modules, ~700,000 words total when complete
@@ -171,7 +171,7 @@ curriculum/l2-uk-en/
 ### c1-hist (C1 History)
 - Advanced historiographical analysis
 - Multiple perspectives, contested narratives
-- Higher linguistic sophistication than b2-hist
+- Higher linguistic sophistication than hist
 
 ### lit (Literature)
 - Ukrainian literary works, essays, criticism

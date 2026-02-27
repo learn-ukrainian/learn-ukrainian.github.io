@@ -1,0 +1,94 @@
+module: c1-bio-46
+level: C1-BIO
+sequence: 46
+slug: mykhailo-starytsky
+version: '2.0'
+title: 'Михайло Старицький: Корифей українського театру'
+content_outline:
+- section: Вступ — Архітектор національної сцени
+  points:
+  - Старицький як засновник українського професійного театру
+  - Драматург, поет, прозаїк, перекладач — багатогранність таланту
+  - Роль у формуванні української театральної культури в умовах Емського указу
+- section: Полтавщина та формування (1840-1860-ті)
+  points:
+  - Народження в Кліщинцях Золотоніського повіту
+  - Родинні зв'язки з Лисенками та Косачами (двоюрідний брат Олени Пчілки)
+  - Навчання в Полтаві та Харківському університеті
+  - Ранні літературні спроби та захоплення Шевченком
+- section: Київський період та Стара Громада (1870-ті)
+  points:
+  - Участь у київській Старій Громаді
+  - Співпраця з Лисенком над українською оперою
+  - Наслідки Емського указу 1876 — заборона українського театру
+  - Перші драматичні твори та переклади
+- section: Театральна революція (1882-1895)
+  points:
+  - Створення першої професійної української трупи з Кропивницьким
+  - Театр як єдина легальна форма українського культурного життя
+  - Ключові вистави та гастролі
+  - Конфлікт із цензурою та обмеження репертуару
+  - Співпраця із Садовським та Заньковецькою
+- section: Літературна спадщина
+  points:
+  - Історичні романи («Богдан Хмельницький», «Руїна», «Молодість Мазепи»)
+  - Драматургія — від побутових п'єс до історичних драм
+  - Переклади Шекспіра, Байрона, Гоголя українською
+  - Поезія та лібрето для опер Лисенка
+- section: Спадщина — Батько української сцени
+  points:
+  - Смерть у 1904 році та визнання сучасників
+  - Роль у збереженні української мови через театр
+  - Донька Людмила Старицька-Черняхівська — продовження традиції
+  - Деколонізація — від «етнографічного театру» до національного мистецтва
+vocabulary_hints:
+  required:
+  - корифей (coryphaeus/master)
+  - драматург (playwright)
+  - трупа (theater company)
+  - режисер (director)
+  - репертуар (repertoire)
+  - цензура (censorship)
+  - лібрето (libretto)
+  - гастролі (touring performances)
+  - переклад (translation)
+  - громада (community)
+  recommended:
+  - Емський указ (Ems Decree)
+  - антреприза (private theater enterprise)
+  - побутова п'єса (domestic drama)
+  - Стара Громада (Old Hromada)
+  - прем'єра (premiere)
+activity_hints:
+- type: reading
+  focus: Український театр у XIX столітті
+  source: Theater history sources
+  items: 3 passages
+- type: essay-response
+  focus: Чому театр став ключовим інструментом збереження українськості?
+  output: Analytical essay
+focus: biography
+prerequisites:
+- c1-bio-045
+connects_to:
+- c1-bio-047
+- c1-bio-066
+module_type: biography
+sources:
+- name: Старицький Михайло Петрович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Старицький_Михайло_Петрович
+  type: primary
+  notes: Comprehensive biography of the theater founder
+- name: УІНП — 1840 народився Михайло Старицький
+  url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/14/1840-narodyvsya-myhaylo-staryckyy
+  type: reference
+  notes: Ukrainian Institute of National Memory biographical entry
+immersion: 100% Ukrainian
+phase: C1-BIO
+objectives:
+- Analyze the life and legacy of Михайло Старицький as founder of Ukrainian professional theater
+- Evaluate the role of theater in preserving Ukrainian culture under imperial censorship
+- Trace the connections between Starytsky and the broader Ukrainian cultural movement
+persona:
+  voice: Senior Biographer
+  role: Theater Historian

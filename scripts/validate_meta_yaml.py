@@ -7,7 +7,7 @@ Can also auto-fix common issues.
 
 Usage:
     .venv/bin/python scripts/validate_meta_yaml.py                    # Validate all
-    .venv/bin/python scripts/validate_meta_yaml.py --level b2-hist    # Validate specific level
+    .venv/bin/python scripts/validate_meta_yaml.py --level hist    # Validate specific level
     .venv/bin/python scripts/validate_meta_yaml.py --fix              # Auto-fix issues
 """
 
@@ -38,7 +38,7 @@ CURRICULUM_BASE = Path("curriculum/l2-uk-en")
 
 # Levels that use the new meta YAML architecture
 META_YAML_LEVELS = [
-    "a1", "a2", "b1", "b2", "b2-hist", 
+    "a1", "a2", "b1", "b2", "hist", 
     "c1", "c1-hist", "c1-bio", "c2", "lit"
 ]
 
@@ -229,7 +229,7 @@ def print_summary(results: dict[Path, dict]) -> None:
 
 def main():
     parser = argparse.ArgumentParser(description="Validate Meta YAML files against schema")
-    parser.add_argument("--level", "-l", help="Specific level to validate (e.g., b2-hist)")
+    parser.add_argument("--level", "-l", help="Specific level to validate (e.g., hist)")
     parser.add_argument("--fix", "-f", action="store_true", help="Auto-fix missing optional fields")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show all files, not just errors")
     parser.add_argument("--errors-only", "-e", action="store_true", help="Only show errors, hide warnings")

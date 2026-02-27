@@ -613,7 +613,7 @@ Use when referring to longer external materials:
 > - LIT: 300-500 words
 > - C1-HIST: 300-500 words
 > - C1-BIO: 250-400 words
-> - B2-HIST: 150-250 words (transitional)
+> - HIST: 150-250 words (transitional)
 
 ### critical-analysis
 

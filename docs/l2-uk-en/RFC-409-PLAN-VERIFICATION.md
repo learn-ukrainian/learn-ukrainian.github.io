@@ -28,7 +28,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 
 | Track | Plan File | Modules | Status | Notes |
 |-------|-----------|---------|--------|-------|
-| **B2-HIST** | B2-HIST-CURRICULUM-PLAN.md | 61 | ✅ Complete | All 61 meta files exist |
+| **HIST** | HIST-CURRICULUM-PLAN.md | 61 | ✅ Complete | All 61 meta files exist |
 | **C1-BIO** | C1-BIO-CURRICULUM-PLAN.md | 96 | ✅ Complete | All 96 meta files exist |
 | **B2-PRO** | B2-PRO-CURRICULUM-PLAN.md | 40 | ✅ Complete | All 40 modules specified |
 | **C1-PRO** | C1-PRO-CURRICULUM-PLAN.md | 50 | ✅ Complete | All 50 modules specified |
@@ -185,7 +185,7 @@ After RFC #409, all identified gaps have been addressed:
 | Practical scenarios | M35-44 | M59-70 | - | - | ✅ Filled |
 | Communication skills | - | - | M92-99 | M85-94 | ✅ Filled |
 | Professional content | - | - | - | B2-PRO | ✅ New track |
-| History track | - | - | - | B2-HIST | ✅ Relocated |
+| History track | - | - | - | HIST | ✅ Relocated |
 | Biography track | - | - | - | C1-BIO | ✅ Relocated |
 
 ---
@@ -200,7 +200,7 @@ After RFC #409, all identified gaps have been addressed:
 | **B2 Core** | 94 | 84 written, 10 to write |
 | **C1 Core** | 106 | 106 written |
 | **C2 Core** | 100 | 0 written |
-| **B2-HIST** | 61 | 61 written |
+| **HIST** | 61 | 61 written |
 | **C1-BIO** | 96 | 96 written |
 | **B2-PRO** | 40 | 0 written |
 | **C1-PRO** | 50 | 0 written |

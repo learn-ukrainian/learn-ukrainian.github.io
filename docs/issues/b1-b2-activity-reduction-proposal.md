@@ -178,7 +178,7 @@ Similar reduction pattern with emphasis on production activities.
 
 **B2:**
 - `docs/l2-uk-en/templates/b2-module-template.md`
-- `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md`
+- `docs/l2-uk-en/templates/history-synthesis-module-template.md`
 
 **Changes:**
 - Activity count: Update checklist from "12+/14+" to "8-10/10-12"

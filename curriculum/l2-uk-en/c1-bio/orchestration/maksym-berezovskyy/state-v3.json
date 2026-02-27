@@ -2,5 +2,17 @@
   "track": "c1-bio",
   "slug": "maksym-berezovskyy",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-27T14:05:34Z",
+      "task_id": "v3-maksym-berezovskyy-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-27T14:08:50Z",
+      "note": "word-count-3842-below-80pct-5000"
+    }
+  }
 }

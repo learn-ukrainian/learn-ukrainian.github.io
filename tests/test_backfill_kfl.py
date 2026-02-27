@@ -473,7 +473,7 @@ class TestBuildKflYaml:
             events=[{"raw_date": "5500 р. до н.е.", "event": "Початок", "year": -5500}],
             quotes=[],
             forbidden_claims=[],
-            track="b2-hist",
+            track="hist",
         )
         assert "## Key Facts Ledger" in kfl
         assert "```yaml" in kfl
@@ -505,7 +505,7 @@ class TestBuildKflYaml:
             events=[],
             quotes=[],
             forbidden_claims=[],
-            track="b2-hist",
+            track="hist",
         )
         assert "vital_status:" not in kfl
 
@@ -515,7 +515,7 @@ class TestBuildKflYaml:
             events=[],
             quotes=[{"text": "Цитата тут", "source": "ПМЛ", "attribution": "Нестор"}],
             forbidden_claims=[],
-            track="b2-hist",
+            track="hist",
         )
         assert "primary_quotes:" in kfl
         assert "Цитата тут" in kfl
@@ -527,7 +527,7 @@ class TestBuildKflYaml:
             events=[],
             quotes=[],
             forbidden_claims=["Claim A", "Claim B"],
-            track="b2-hist",
+            track="hist",
         )
         assert "forbidden_claims:" in kfl
         assert "Claim A" in kfl
@@ -535,7 +535,7 @@ class TestBuildKflYaml:
 
     def test_caps_quotes_at_five(self):
         quotes = [{"text": f"Q{i}", "source": "", "attribution": ""} for i in range(8)]
-        kfl = build_kfl_yaml("Topic", [], quotes, [], "b2-hist")
+        kfl = build_kfl_yaml("Topic", [], quotes, [], "hist")
         assert kfl.count("text:") == 5
 
     def test_skips_events_without_year(self):
@@ -543,14 +543,14 @@ class TestBuildKflYaml:
             {"raw_date": "невідомо", "event": "Something", "year": None},
             {"raw_date": "1000 р.", "event": "Real event", "year": 1000},
         ]
-        kfl = build_kfl_yaml("Topic", events, [], [], "b2-hist")
+        kfl = build_kfl_yaml("Topic", events, [], [], "hist")
         assert "year: 1000" in kfl
         assert "Something" not in kfl
 
     def test_truncates_long_events(self):
         long_event = "x" * 300
         events = [{"raw_date": "1000 р.", "event": long_event, "year": 1000}]
-        kfl = build_kfl_yaml("Topic", events, [], [], "b2-hist")
+        kfl = build_kfl_yaml("Topic", events, [], [], "hist")
         # Event text should be truncated to 200 chars
         assert "x" * 200 in kfl
         assert "x" * 201 not in kfl
@@ -672,7 +672,7 @@ class TestIntegration:
         myths = parse_decolonization(extract_section(content, "Деколонізаційний контекст"))
         claims = _fallback_claims(myths)
 
-        kfl = build_kfl_yaml(subject, events, quotes, claims, "b2-hist")
+        kfl = build_kfl_yaml(subject, events, quotes, claims, "hist")
         result = insert_kfl(content, kfl)
 
         # KFL should be present
@@ -684,7 +684,7 @@ class TestIntegration:
     def test_idempotency(self):
         """Inserting KFL twice should not duplicate it (has_kfl guard)."""
         content = self.SAMPLE_RESEARCH
-        kfl = build_kfl_yaml("Test", [], [], [], "b2-hist")
+        kfl = build_kfl_yaml("Test", [], [], [], "hist")
         once = insert_kfl(content, kfl)
         assert has_kfl(once)
         # has_kfl would prevent a second insertion in process_file(),

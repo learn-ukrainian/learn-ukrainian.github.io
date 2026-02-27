@@ -1,0 +1,34 @@
+sequence: 106
+module: ruth-106
+slug: zyzaniy-leksys
+title_uk: "Лексис Лаврентія Зизанія (1596)"
+title_en: "Zyzaniy's Lexis (1596)"
+phase: 5
+phase_id: linguistic-identity
+phase_name: "Мовна ідентичність"
+focus: "First printed Ukrainian dictionary — Church Slavonic to 'проста мова' translation as linguistic self-awareness"
+content_outline:
+- section: Вступ
+  description: "Lavrentiy Zyzaniy and the Vilnius brotherhood school. Context: why Ukrainians needed to TRANSLATE Church Slavonic — it was no longer understood."
+- section: Основний матеріал
+  description: "Structure of the Lexis: 1061 entries. Analysis of translation strategies. What the vernacular equivalents reveal about spoken Ukrainian in 1596. Sample entries with modern parallels."
+- section: Практика
+  description: "Comparative reading: Zyzaniy's Ukrainian vs modern Ukrainian. Semantic shifts over 400 years. Identifying still-living vocabulary."
+- section: Підсумок
+  description: "The Lexis as evidence of Ukrainian as a distinct language. Connection to Berynda's later expansion."
+vocabulary_hints:
+- лексикон
+- словник
+- тлумачення
+- просторіччя
+- книжна мова
+- синонім
+activity_types:
+- transcription
+- etymology-trace
+- parallel-text
+- loanword-trace
+persona:
+  voice: "Lexicographer"
+  role: "Brotherhood Teacher"
+source_url: "http://litopys.org.ua/zyzlex/zyz.htm"

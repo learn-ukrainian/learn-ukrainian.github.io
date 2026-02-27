@@ -9,13 +9,13 @@
     "word_target"
   ],
   "properties": {
-    "module": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Module identifier (e.g., b2-hist-01)" },
+    "module": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Module identifier (e.g., hist-01)" },
     "id": { "type": "string", "description": "Canonical module ID" },
     "title": { "type": "string", "description": "Ukrainian title" },
     "subtitle": { "type": "string", "description": "English subtitle" },
     "slug": { "type": "string", "description": "URL-safe identifier" },
     "version": { "type": "string" },
-    "phase": { "type": "string", "description": "Curriculum phase (e.g., B2-HIST.1 [Витоки])" },
+    "phase": { "type": "string", "description": "Curriculum phase (e.g., HIST.1 [Витоки])" },
     "focus": {
       "type": "string",
       "enum": ["history", "biography", "grammar", "vocabulary", "style", "checkpoint", "lit", "literature", "practical", "review", "culture", "analysis", "narrative", "linguistics", "phraseology", "communication", "domain", "project", "integration", "skills", "bridge", "cultural", "fine-arts", "exam", "practice", "phonology", "stylistics", "translation", "methodology", "historiography", "synthesis"],

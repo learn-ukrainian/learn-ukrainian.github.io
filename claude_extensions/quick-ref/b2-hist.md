@@ -1,4 +1,4 @@
-# B2-HIST Quick Reference (Ukrainian History Track)
+# HIST Quick Reference (Ukrainian History Track)
 
 ## Track Overview
 
@@ -28,24 +28,24 @@
 | Engagement       | 5+      | min_engagement      |
 | Vocab            | 20+     | min_vocab           |
 
-**Note:** B2-HIST uses seminar-style activities (reading + essay-response + critical-analysis), not traditional drill activities. Quality over quantity.
+**Note:** HIST uses seminar-style activities (reading + essay-response + critical-analysis), not traditional drill activities. Quality over quantity.
 
 ---
 
 ## Templates
 
-**Before writing any B2-HIST module, read the appropriate template:**
+**Before writing any HIST module, read the appropriate template:**
 
-- **History modules** (M01-61, excluding synthesis) → `docs/l2-uk-en/templates/ai/b2-history-module-template.md`
-- **Synthesis modules** (M13, M27, M37, M49, M55, M61) → `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md`
+- **History modules** (M01-61, excluding synthesis) → `docs/l2-uk-en/templates/ai/history-module-template.md`
+- **Synthesis modules** (M13, M27, M37, M49, M55, M61) → `docs/l2-uk-en/templates/history-synthesis-module-template.md`
 
-> **Full documentation:** See `docs/l2-uk-en/templates/b2-history-module-template.md` for complete reference.
+> **Full documentation:** See `docs/l2-uk-en/templates/history-module-template.md` for complete reference.
 
 ---
 
 ## Workflow Integration
 
-**B2-HIST uses the 9-phase track workflow:**
+**HIST uses the 9-phase track workflow:**
 
 1. **Meta** → Generate module metadata (hydrated content outline)
 2. **Meta-QA** → Validate metadata and word targets
@@ -59,9 +59,9 @@
 
 **Commands:**
 
-- Start: `/module b2-hist {num}`
-- Resume: `/module b2-hist {num} --from={phase}` (phase: meta, lesson, act, vocab)
-- Status: `/module b2-hist {num} --check`
+- Start: `/module hist {num}`
+- Resume: `/module hist {num} --from={phase}` (phase: meta, lesson, act, vocab)
+- Status: `/module hist {num} --check`
 
 **Reference:** `docs/SCRIPTS.md` for full 9-phase documentation.
 
@@ -83,7 +83,7 @@
 
 Before writing, confirm:
 
-- [ ] Read module plan from `curriculum/l2-uk-en/plans/b2-hist/{slug}.yaml` for content outline + vocabulary hints
+- [ ] Read module plan from `curriculum/l2-uk-en/plans/hist/{slug}.yaml` for content outline + vocabulary hints
 - [ ] **Read the appropriate template** (history or synthesis)
 - [ ] Identify if this is a synthesis module (M13, M27, M37, M49, M55, M61)
 - [ ] All metadata YAML fields ready
@@ -94,12 +94,12 @@ Before writing, confirm:
 ## Metadata YAML Template (`meta/{slug}.yaml`)
 
 ```yaml
-module: b2-hist-XX
+module: hist-XX
 slug: '{slug}'
 title: '{Title in Ukrainian}'
 subtitle: '{Subtitle}'
 version: '1.0'
-phase: 'B2-HIST.X'
+phase: 'HIST.X'
 pedagogy: 'CBI'
 duration: 90
 transliteration: 'none'
@@ -109,7 +109,7 @@ objectives:
   - 'Learner can understand historical narrative about...'
   - 'Learner can use period-specific vocabulary...'
 prerequisites:
-  - b2-hist-XX # Previous module
+  - hist-XX # Previous module
 ```
 
 ## Content Requirements
@@ -124,7 +124,7 @@ prerequisites:
 
 ## Activity Requirements (per config.py)
 
-**B2-HIST uses seminar-style pedagogy:**
+**HIST uses seminar-style pedagogy:**
 
 | Requirement        | History | Synthesis |
 | ------------------ | ------- | --------- |
@@ -141,7 +141,7 @@ prerequisites:
 **Optional activity types:**
 - `critical-analysis` - Analytical questions about source material
 - `comparative-study` - Cross-period or cross-figure comparisons
-- `true-false` - Only for factual checks (allowed in B2-HIST)
+- `true-false` - Only for factual checks (allowed in HIST)
 
 **Forbidden activity types (NEVER use — per config.py):**
 - `quiz`, `fill-in`, `cloze`, `match-up`, `error-correction`
@@ -153,7 +153,7 @@ Essays are defined ONLY in `activities/{slug}.yaml`, NOT in markdown:
 
 ```yaml
 - type: essay-response
-  id: b2-hist-XX-essay-01
+  id: hist-XX-essay-01
   title: 'Есе: [Topic]'
   prompt: |
     Напишіть есе (150-250 слів)...
@@ -233,10 +233,10 @@ History modules must present Ukrainian history from Ukrainian perspective:
 
 ## Related Documentation
 
-- **B2-HIST Level Plan:** `curriculum/l2-uk-en/plans/b2-hist.yaml`
-- **B2-HIST Module Plans:** `curriculum/l2-uk-en/plans/b2-hist/{slug}.yaml`
-- **Generated Plan (Readable):** `docs/l2-uk-en/B2-HIST-PLAN-GENERATED.md`
-- **History Template (AI):** `docs/l2-uk-en/templates/ai/b2-history-module-template.md`
-- **History Template (Full):** `docs/l2-uk-en/templates/b2-history-module-template.md`
-- **Synthesis Template:** `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md`
+- **HIST Level Plan:** `curriculum/l2-uk-en/plans/hist.yaml`
+- **HIST Module Plans:** `curriculum/l2-uk-en/plans/hist/{slug}.yaml`
+- **Generated Plan (Readable):** `docs/l2-uk-en/HIST-PLAN-GENERATED.md`
+- **History Template (AI):** `docs/l2-uk-en/templates/ai/history-module-template.md`
+- **History Template (Full):** `docs/l2-uk-en/templates/history-module-template.md`
+- **Synthesis Template:** `docs/l2-uk-en/templates/history-synthesis-module-template.md`
 - **Activity Reference:** `docs/ACTIVITY-YAML-REFERENCE.md`

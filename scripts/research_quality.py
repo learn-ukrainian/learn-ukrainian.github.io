@@ -25,7 +25,7 @@ RUBRIC_REGISTRY = {
                         "learner_errors", "cross_references", "pedagogy_notes"],
     },
     "history": {
-        "tracks": {"b2-hist", "c1-bio", "c1-hist", "oes", "ruth",
+        "tracks": {"hist", "c1-bio", "c1-hist", "oes", "ruth",
                     "lit", "lit-essay", "lit-fantastika", "lit-hist-fic",
                     "lit-humor", "lit-youth", "lit-war", "lit-doc",
                     "lit-drama", "lit-crimea"},
@@ -243,7 +243,7 @@ def _score_core(text: str) -> dict:
 
 
 def _score_history(text: str) -> dict:
-    """Score a research file using the history rubric (B2-HIST)."""
+    """Score a research file using the history rubric (HIST)."""
     dims = {}
 
     # sources (max 3)
@@ -564,7 +564,7 @@ def assess_research(text: str, track_id: str, content_text: str | None = None) -
 
     Args:
         text: Research file content.
-        track_id: Track identifier (e.g. "a1", "b2-hist").
+        track_id: Track identifier (e.g. "a1", "hist").
         content_text: Optional module content for alignment checking.
 
     Returns:

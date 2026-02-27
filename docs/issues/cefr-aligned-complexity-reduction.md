@@ -60,7 +60,7 @@
 | **B1-vocab** | 10 | **8** | -2 | Factual vocab testing, -1 from standard |
 | **B1-cultural** | 8 | **8** | 0 | Factual cultural content, -1 from standard |
 | **B2 (standard)** | 10 | **10** | 0 | Upper-intermediate, smooth from B1 (+1) ✅ |
-| **B2-history** | 6 | **8** | +2 | Biographical facts, -2 from standard ✅ |
+| **history** | 6 | **8** | +2 | Biographical facts, -2 from standard ✅ |
 | **B2-biography** | 6 | **8** | +2 | Same as history |
 | **C1** | 8 | **12** | +4 | Advanced, smooth from B2 (+2) ✅ |
 | **C2** | 10 | **14** | +4 | Mastery, smooth from C1 (+2) ✅ |
@@ -81,7 +81,7 @@
 | **B1-vocab** | 10 | **8** | -2 | Simpler vocab sentences, -1 from standard |
 | **B1-cultural** | 10 | **8** | -2 | Shorter cultural sentences, -1 from standard |
 | **B2 (standard)** | 10 | **10** | 0 | Upper-intermediate, smooth from B1 (+1) ✅ |
-| **B2-history** | 7 | **8** | +1 | Authentic quotes, -2 from standard ✅ |
+| **history** | 7 | **8** | +1 | Authentic quotes, -2 from standard ✅ |
 | **B2-biography** | 7 | **8** | +1 | Same as history |
 | **C1** | 12 | **12** | 0 | Advanced, smooth from B2 (+2) ✅ |
 | **C2** | 14 | **14** | 0 | Mastery, smooth from C1 (+2) ✅ |
@@ -89,7 +89,7 @@
 **Key Changes:**
 - ✅ Fixed backward jump: B1(12)→B2(10) becomes B1(9)→B2(10)
 - ✅ Reduced B1 by 3 words: meets existing content (8-10 word sentences)
-- ✅ Increased B2-history from 7→8: better alignment with B2 standard
+- ✅ Increased history from 7→8: better alignment with B2 standard
 - ✅ Small subtype gaps: 1-2 words max
 
 ### Other Activity Types (Aligned Updates)
@@ -101,7 +101,7 @@
 - B1-vocab: 8 → **7** (-1, -1 from standard)
 - B1-cultural: 8 → **7** (-1, -1 from standard)
 - B2: 10 → **9** (-1, smooth from B1)
-- B2-history: 7 → **8** (+1, align with unjumble)
+- history: 7 → **8** (+1, align with unjumble)
 - C1: 8 → **10** (+2, smooth from B2)
 - C2: 10 → **12** (+2, smooth from C1)
 
@@ -112,7 +112,7 @@
 - B1-vocab: 8 → **7** (-1, -1 from standard)
 - B1-cultural: 8 → **7** (-1, -1 from standard)
 - B2: 10 → **9** (-1, smooth from B1)
-- B2-history: 7 → **8** (+1, align with others)
+- history: 7 → **8** (+1, align with others)
 - C1: 8 → **10** (+2, smooth from B2)
 - C2: 10 → **12** (+2, smooth from C1)
 
@@ -122,7 +122,7 @@
 - B1-vocab: 8 → **7** (-1, -1 from standard)
 - B1-cultural: 8 → **7** (-1, -1 from standard)
 - B2: 10 → **9** (-1, smooth from B1)
-- B2-history: 7 → **8** (+1, align with others)
+- history: 7 → **8** (+1, align with others)
 - C1: 12 → **12** (no change, already appropriate)
 - C2: 14 → **14** (no change, already appropriate)
 
@@ -132,7 +132,7 @@
 - B1-vocab: 8 → **7** (-1, -1 from standard)
 - B1-cultural: 8 → **7** (-1, -1 from standard)
 - B2: 10 → **9** (-1, smooth from B1)
-- B2-history: 8 → **8** (no change, already aligned)
+- history: 8 → **8** (no change, already aligned)
 - C1: 10 → **12** (+2, smooth from B2)
 - C2: 12 → **14** (+2, smooth from C1)
 
@@ -142,7 +142,7 @@
 - B1-vocab: 6 → **6** (no change, already lower)
 - B1-cultural: 6 → **6** (no change, already lower)
 - B2: 10 → **9** (-1, smooth from B1)
-- B2-history: 7 → **8** (+1, align with others)
+- history: 7 → **8** (+1, align with others)
 - C1: 12 → **12** (no change, already appropriate)
 - C2: 14 → **14** (no change, already appropriate)
 
@@ -152,7 +152,7 @@
 - B1-vocab: 10 → **9** (-1, -1 from standard)
 - B1-cultural: 10 → **9** (-1, -1 from standard)
 - B2: 12 → **11** (-1, smooth from B1)
-- B2-history: 10 → **10** (no change, already aligned)
+- history: 10 → **10** (no change, already aligned)
 - C1: 14 → **14** (no change, already appropriate)
 - C2: 16 → **16** (no change, already appropriate)
 
@@ -291,7 +291,7 @@ Remove hardcoded complexity values, replace with references:
 - `b1-cultural-module-template.md`
 - `b1-integration-module-template.md`
 - `b2-module-template.md`
-- `b2-history-synthesis-module-template.md`
+- `history-synthesis-module-template.md`
 
 ### Phase 3: Re-audit B1/B2 (15 minutes)
 

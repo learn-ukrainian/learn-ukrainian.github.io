@@ -7,8 +7,8 @@ track_id: ruth
 track_name: "Руська мова"
 track_name_en: "Ruthenian (Middle Ukrainian)"
 period: "XIV–XVIII century (Grand Duchy of Lithuania → Cossack Era)"
-modules: 100
-prerequisite: "B2 Core, B2-HIST Phase 2-3, OES completion (recommended)"
+modules: 112
+prerequisite: "B2 Core, HIST Phase 2-3, OES completion (recommended)"
 immersion: "100% Ukrainian"
 
 # Track Overview:
@@ -147,6 +147,27 @@ timeline_key_texts:
   - year: 1722
     text: "Філософські твори Сковороди"
     phase: 4
+  - year: "1300s"
+    text: "Українські грамоти XIV ст."
+    phase: 5
+  - year: "1500s"
+    text: "Волинські грамоти XVI ст."
+    phase: 5
+  - year: 1574
+    text: "Буквар Івана Федоровича (Львів)"
+    phase: 5
+  - year: 1596
+    text: "Лексис Лаврентія Зизанія"
+    phase: 5
+  - year: 1627
+    text: "Лексикон словенороський Памва Беринди"
+    phase: 5
+  - year: "1640s"
+    text: "Граматика Івана Ужевича (Париж)"
+    phase: 5
+  - year: "1600-1700s"
+    text: "Українські інтермедії, бароко поезія, байки"
+    phase: 5
   - year: 1798
     text: "«Енеїда» Котляревського"
     phase: 4
@@ -158,6 +179,33 @@ linguistic_evolution:
     high: "Church Slavonic (religious texts)"
     middle: "Chancery Ruthenian (legal documents)"
     low: "Prosta Mova (vernacular literature)"
+
+  - id: 5
+    name_uk: "«Мовна ідентичність» — Народна мова та граматична традиція"
+    name_en: "Linguistic Identity — Vernacular Traditions & Grammars"
+    modules: 105-116
+    focus:
+      - "Early printing (Fedorovych Bukvar, 1574)"
+      - "Lexicography as identity (Zyzaniy, Berynda, Synonyma)"
+      - "Grammar in exile (Uzhevych in Paris)"
+      - "Vernacular literature (interludes, baroque poetry, fables)"
+      - "Practical registers (letter-writing, medical manuals)"
+      - "Administrative charters (XIV-XVI century)"
+    rationale: "These texts document Ukrainian linguistic SELF-AWARENESS — not literature about identity but the infrastructure of identity: dictionaries, grammars, primers, and everyday writing."
+    source_issue: "#673"
+    primary_sources:
+      - name: "Буквар Федоровича (1574)"
+        url: "http://litopys.org.ua/fedorovych/bf.htm"
+      - name: "Лексис Зизанія (1596)"
+        url: "http://litopys.org.ua/zyzlex/zyz.htm"
+      - name: "Лексикон Беринди (1627)"
+        url: "http://litopys.org.ua/berlex/be.htm"
+      - name: "Граматика Ужевича"
+        url: "http://litopys.org.ua/uzhgram/uz.htm"
+      - name: "Українські інтермедії"
+        url: "http://litopys.org.ua/ukrinter/int.htm"
+      - name: "Грамоти XIV ст."
+        url: "http://litopys.org.ua/gramxiv/grb.htm"
 
 activity_types:
   # See ISSUE-502-activity-spec.yaml for full schemas

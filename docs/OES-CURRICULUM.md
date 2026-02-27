@@ -3,7 +3,7 @@
 > **Track Type:** Linguistics (Historical)
 > **Period:** X–XIII century (Kyivan Rus')
 > **Modules:** 100
-> **Prerequisite:** B2 Core completion, B2-HIST Phase 1 (Kyivan Rus')
+> **Prerequisite:** B2 Core completion, HIST Phase 1 (Kyivan Rus')
 > **Immersion:** 100% Ukrainian
 
 ---

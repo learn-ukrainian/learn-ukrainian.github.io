@@ -29,7 +29,7 @@ Alignment: This directly maps to the module's grammar focus on formulating compl
 
 ## Cross-References
 - Builds on: B1 sentence structures and abstract vocabulary foundations.
-- Prepares for: B2-HIST modules dealing with church history (e.g., Beresteiska Union, Kyiv-Mohyla Academy) and C1 level discussions on identity and society.
+- Prepares for: HIST modules dealing with church history (e.g., Beresteiska Union, Kyiv-Mohyla Academy) and C1 level discussions on identity and society.
 
 ## Notes for Content Writing
 - Decolonized framing is MANDATORY. Do not frame the 2019 Tomos merely as a "split from Russia"; frame it as the restoration of historical canonical justice for the Orthodox Church of Ukraine (ПЦУ).

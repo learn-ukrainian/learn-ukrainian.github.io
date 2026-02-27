@@ -39,7 +39,7 @@ class CapCondition:
 
 # Caps that apply to specific tracks
 CRITICAL_CAPS: dict[str, list[CapCondition]] = {
-    'b2-hist': [
+    'hist': [
         CapCondition(
             name='zero_myth_busters',
             criterion='decolonization_perspective',

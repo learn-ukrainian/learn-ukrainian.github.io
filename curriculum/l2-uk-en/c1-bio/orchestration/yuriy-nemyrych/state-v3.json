@@ -8,6 +8,20 @@
       "ts": "2026-02-19T12:06:18Z",
       "task_id": "v3-yuriy-nemyrych-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T11:36:34Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T11:39:30Z",
+      "task_id": "v3-yuriy-nemyrych-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T11:45:15Z",
+      "attempts": 2
     }
   }
 }

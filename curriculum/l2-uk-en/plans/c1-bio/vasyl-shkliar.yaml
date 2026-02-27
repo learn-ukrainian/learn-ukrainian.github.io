@@ -67,7 +67,7 @@ activity_hints:
   output: Аналітичний есей
 focus: biography
 prerequisites:
-- b2-hist-civil-war
+- hist-civil-war
 connects_to:
 - c1-bio-82-yuriy-vynnychuk
 - c1-bio-85-mariya-matios

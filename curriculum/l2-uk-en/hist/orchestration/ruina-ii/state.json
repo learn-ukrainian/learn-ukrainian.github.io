@@ -1,0 +1,35 @@
+{
+  "slug": "ruina-ii",
+  "track": "hist",
+  "module_num": 59,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:32:42Z",
+      "words": 5210,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:33:57Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-24T21:33:57Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:53:09Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-25T19:53:09Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-25T19:53:09Z"
+}

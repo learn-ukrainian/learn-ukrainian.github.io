@@ -8,6 +8,20 @@
       "ts": "2026-02-19T15:13:53Z",
       "task_id": "v3-ivan-puliui-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T16:51:42Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T16:54:07Z",
+      "task_id": "v3-ivan-puliui-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T17:38:37Z",
+      "attempts": 6
     }
   }
 }

@@ -1,0 +1,34 @@
+sequence: 115
+module: ruth-115
+slug: pysovnyk-lystuvannia
+title_uk: "Старовинний український письмовник"
+title_en: "The Old Ukrainian Letter-Writing Manual"
+phase: 5
+phase_id: linguistic-identity
+phase_name: "Мовна ідентичність"
+focus: "Practical letter-writing manual — Ukrainian in the everyday register of personal correspondence"
+content_outline:
+- section: Вступ
+  description: "What is a 'письмовник'? A manual teaching people how to write letters. Context: who needed this? Literate Ukrainians navigating personal, business, and official correspondence."
+- section: Основний матеріал
+  description: "Reading letter templates: greetings, requests, complaints, congratulations, condolences. Formulaic language vs personal expression. Social hierarchy encoded in address forms. What the manual reveals about everyday life."
+- section: Практика
+  description: "Analyzing epistolary formulae. Comparison with modern Ukrainian letter conventions. Identifying enduring vs obsolete address forms."
+- section: Підсумок
+  description: "The письмовник as a window into daily Ukrainian life — not the grand narratives of chronicles, but the intimate world of personal communication."
+vocabulary_hints:
+- письмовник
+- листування
+- звертання
+- формула ввічливості
+- адресат
+- кореспонденція
+activity_types:
+- transcription
+- register-identify
+- parallel-text
+- historical-writing
+persona:
+  voice: "Epistolary Scholar"
+  role: "Correspondence Teacher"
+source_url: "http://litopys.org.ua/rizne/hrinch.htm"

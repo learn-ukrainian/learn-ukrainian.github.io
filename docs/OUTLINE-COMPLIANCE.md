@@ -31,7 +31,7 @@ Created `scripts/audit/checks/outline_compliance.py` with **Level 1: Structural 
 Automatically runs as part of `audit_module.py`:
 
 ```bash
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2-hist/volodymyr-monomakh.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md
 
 # Output includes outline compliance section:
 ⚠️  Outline compliance: 7 errors, 8 warnings
@@ -137,7 +137,7 @@ Section 'Деколонізаційний погляд' found in markdown but no
 
 ## Test Results
 
-**Test module:** `curriculum/l2-uk-en/b2-hist/volodymyr-monomakh.md`
+**Test module:** `curriculum/l2-uk-en/hist/volodymyr-monomakh.md`
 
 **Outline (from meta YAML):**
 ```yaml
@@ -212,7 +212,7 @@ content_outline:
 - Empty outline array
 
 **Expected usage:**
-- B2-HIST modules using fractal generation (23 modules currently have outlines)
+- HIST modules using fractal generation (23 modules currently have outlines)
 - C1-BIO modules with detailed structure
 - Any module requiring pre-planned section breakdown
 
@@ -278,7 +278,7 @@ outline:
 # Write content section by section
 # Check compliance as you go
 
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b2-hist/my-module.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/hist/my-module.md
 
 # Output shows which sections need work:
 ⚠️  Outline compliance: 2 errors, 1 warning
@@ -289,8 +289,8 @@ outline:
 ### Batch Checking All Modules
 
 ```bash
-# Check all B2-HIST modules with outlines
-for f in curriculum/l2-uk-en/b2-hist/*.md; do
+# Check all HIST modules with outlines
+for f in curriculum/l2-uk-en/hist/*.md; do
   echo "Checking $f..."
   .venv/bin/python scripts/audit_module.py "$f" 2>&1 | grep "Outline compliance"
 done
@@ -332,7 +332,7 @@ done
 
 If content is written but outline is outdated:
 ```bash
-.venv/bin/python scripts/update_outline_from_content.py curriculum/l2-uk-en/b2-hist/my-module.md
+.venv/bin/python scripts/update_outline_from_content.py curriculum/l2-uk-en/hist/my-module.md
 
 # Extracts actual section structure and updates meta YAML
 ```
@@ -341,7 +341,7 @@ If content is written but outline is outdated:
 
 For existing modules without outlines:
 ```bash
-.venv/bin/python scripts/generate_outline.py curriculum/l2-uk-en/b2-hist/my-module.md
+.venv/bin/python scripts/generate_outline.py curriculum/l2-uk-en/hist/my-module.md
 
 # Creates content_outline based on existing sections
 ```

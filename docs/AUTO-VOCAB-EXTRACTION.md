@@ -7,7 +7,7 @@
 ## Problem
 
 Manual vocabulary extraction is a massive bottleneck:
-- 117 skeleton B2-HIST modules need vocabulary
+- 117 skeleton HIST modules need vocabulary
 - Each module requires 24-30 unique words with IPA and translations
 - No automated extraction from `.md` content to `vocabulary/*.yaml`
 - Manual process takes 30+ minutes per module
@@ -27,7 +27,7 @@ Created `scripts/auto_vocab_extract.py` that:
 
 ```bash
 # Extract vocabulary from a module
-.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/b2-hist/volodymyr-monomakh.md
+.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md
 
 # Output:
 # Extracting vocabulary from: volodymyr-monomakh.md
@@ -37,10 +37,10 @@ Created `scripts/auto_vocab_extract.py` that:
 #
 #   ✅ Extracted 361 new words to volodymyr-monomakh.yaml
 #   💡 Run enrichment next:
-#      .venv/bin/python scripts/enrich_yaml_vocab.py curriculum/l2-uk-en/b2-hist/vocabulary/volodymyr-monomakh.yaml
+#      .venv/bin/python scripts/enrich_yaml_vocab.py curriculum/l2-uk-en/hist/vocabulary/volodymyr-monomakh.yaml
 
 # Dry run (preview only)
-.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/b2-hist/volodymyr-monomakh.md --dry-run
+.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md --dry-run
 ```
 
 ## Features
@@ -130,13 +130,13 @@ Generates valid YAML ready for enrichment:
 
 ```bash
 # Step 1: Extract vocabulary
-.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/b2-hist/volodymyr-monomakh.md
+.venv/bin/python scripts/auto_vocab_extract.py curriculum/l2-uk-en/hist/volodymyr-monomakh.md
 
 # Step 2: Enrich with IPA and translations
-.venv/bin/python scripts/enrich_yaml_vocab.py curriculum/l2-uk-en/b2-hist/vocabulary/volodymyr-monomakh.yaml
+.venv/bin/python scripts/enrich_yaml_vocab.py curriculum/l2-uk-en/hist/vocabulary/volodymyr-monomakh.yaml
 
 # Step 3: Audit cross-module consistency
-.venv/bin/python scripts/global_vocab_audit.py --level b2-hist
+.venv/bin/python scripts/global_vocab_audit.py --level hist
 ```
 
 ## Implementation Details
@@ -158,7 +158,7 @@ Generates valid YAML ready for enrichment:
 
 Tested with:
 - ✅ Small test module (32 words extracted)
-- ✅ Real B2-HIST module (volodymyr-monomakh.md, 595 words)
+- ✅ Real HIST module (volodymyr-monomakh.md, 595 words)
 - ✅ Dry run mode (preview without writing)
 - ✅ POS detection accuracy (adjectives, verbs, nouns correctly identified)
 - ✅ Gender detection for nouns
@@ -206,7 +206,7 @@ POS distribution:
 
 **Reduction:** 83% time savings
 
-### Impact on B2-HIST Expansion
+### Impact on HIST Expansion
 
 - 117 skeleton modules × 30 min/module = **58.5 hours** (before)
 - 117 skeleton modules × 5 min/module = **9.75 hours** (after)
@@ -269,4 +269,4 @@ POS distribution:
 - Issue #440: Outline compliance checker (PENDING)
 - `scripts/enrich_yaml_vocab.py` - Existing enrichment tool
 - `scripts/global_vocab_audit.py` - Vocabulary validation
-- B2-HIST expansion - 117 skeleton modules needing vocabulary
+- HIST expansion - 117 skeleton modules needing vocabulary

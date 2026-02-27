@@ -67,7 +67,7 @@ activity_hints:
   output: Аргументований есей
 focus: biography
 prerequisites:
-- b2-hist-ukrainian-revolution
+- hist-ukrainian-revolution
 connects_to:
 - c1-bio-44-symon-petliura
 - c1-bio-52-dmytro-dontsov

@@ -132,7 +132,7 @@ gh issue list --label "task" --state open --limit 10
 
 📋 Active Tasks:
 #500 [working:claude] Fix C1-BIO M25-M29 word targets
-#498 [review:gemini] B2-HIST naturalness audit
+#498 [review:gemini] HIST naturalness audit
 #495 [blocked] C1-BIO research pipeline
 ```
 
