@@ -1,0 +1,15 @@
+{
+  "slug": "synonyms-communication",
+  "track": "b2",
+  "module_num": 59,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-24T23:03:41Z",
+      "words": 3166,
+      "attempts": 1
+    }
+  },
+  "last_updated": "2026-02-24T23:03:41Z"
+}

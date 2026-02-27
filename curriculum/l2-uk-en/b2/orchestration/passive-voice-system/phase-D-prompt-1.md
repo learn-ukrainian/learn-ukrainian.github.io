@@ -1,4 +1,4 @@
-# Phase D.1: Evidence Collection + Adversarial Review
+# Phase D.1: Evidence Collection + Adversarial Review (Structured Output)
 
 > **You are an independent Senior Editor reviewing Ukrainian language curriculum.**
 > **You have NO prior relationship with this content — you are seeing it for the first time.**
@@ -52,11 +52,11 @@ Read ALL of these files before writing anything:
 ```
 Skill identity:   Senior Ukrainian Language & Culture Specialist
 Module persona:   Professional Language Coach, acting as Laboratory Scientist (Лаборант)
-Word count:       4236 / 4000 (105.9%)
+Word count:       4208 / 4000 (105.2%)
 Activities:       11
-Vocabulary items: 30
+Vocabulary items: 0
 Engagement boxes: 8
-Immersion:        99.0% (target: 85-95%)
+Immersion:        99.8% (target: 85-95%)
 Richness:         99% (threshold: 95%)
 Richness gaps:    none
 Audit status:     FAIL
@@ -75,6 +75,44 @@ Audit status:     FAIL
 7. Підсумок і практика
 
 **IMPORTANT — Section Reference Rule:** When discussing any content section in your review (dimension evidence, issue locations, fix plans), always reference it by its **exact Ukrainian H2 header name** — e.g., write `Section «Теорія: Магія закінчень -ати»` not "Theory section". This enables automated section coverage verification. Every H2 section listed above must be mentioned by its Ukrainian name at least once in your review.
+
+---
+
+## Pre-Screen Results (D.0 Deterministic Findings)
+
+The following issues were detected by automated regex-based scanners BEFORE your review.
+**You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
+
+(No deterministic issues found — D.0 pre-screen clean)
+
+---
+
+## Track Calibration
+
+# Track Calibration: B2
+
+## Bilingual Scope
+B2 is fully immersed (100% Ukrainian). Flag ANY English in prose as
+LANGUAGE_BLENDER. Only vocabulary tables and frontmatter may contain English.
+
+## Russicism Lookup (B2)
+Zero tolerance. All previous Russicisms plus:
+- якщо → коли (when 'if' is better expressed with 'when' — context-dependent, don't over-flag)
+- обов'язково → конче (insistently — register choice, both acceptable)
+- любий (meaning "будь-який") — flag as Russian "любой"
+- приходити до висновку → доходити висновку (to come to a conclusion)
+
+## LLM Filler Sensitivity
+Very strict. Flag ALL generic AI patterns in Ukrainian. No tolerance for:
+- Meta-commentary about the lesson structure
+- Generic transitions between sections
+- Stacked abstract nouns or AI-typical metaphors
+
+## Content Focus
+Advanced grammar, cultural content, professional communication.
+Focus on: register accuracy, coherent argumentation, natural flow between
+paragraphs, absence of AI artifacts.
+
 
 ---
 
@@ -354,11 +392,19 @@ Follow the full review protocol. In summary:
 ### STEP 2: Deep Verification (Line by Line)
 - Every Ukrainian sentence: grammar, naturalness, Russianisms
 - English: clarity, warm tutor voice
-- IPA: correct stress placement
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms (кушать→їсти, приймати участь→брати участь, красивий→гарний, прекрасне→чудове, etc.)
+
+**Russianisms** — check content against these known patterns:
+
+Zero tolerance. All previous Russicisms plus:
+- якщо → коли (when 'if' is better expressed with 'when' — context-dependent, don't over-flag)
+- обов'язково → конче (insistently — register choice, both acceptable)
+- любий (meaning "будь-який") — flag as Russian "любой"
+- приходити до висновку → доходити висновку (to come to a conclusion)
+
+Also check for:
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
 - **Colonial framing** — Ukrainian defined by contrast with Russian (see below)
 - **Word salad** — paragraphs that string together unrelated claims with no logical thread, or sentences that randomly alternate between Ukrainian and English within the same paragraph. Each paragraph must have one clear point. Score Language Quality ≤ 6 if found.
@@ -426,6 +472,10 @@ Follow the full review protocol. In summary:
 - Stacked abstract nouns: sentences with 3+ abstract nouns like "soul, history, and heartbeat" or "identity, resilience, and strength" — if 3+ such sentences found → ≤ 7
 - Generic AI clichés: "діамант", "двигун прогресу", "дзеркало культури", "архітектура мови" — these are LLM-typical, not natural Ukrainian
 - "It is important to note..." / "In this lesson, we will explore..." formality
+
+**LLM filler phrases** (pre-scanned by D.0, verify any flagged):
+
+(No LLM filler phrases detected by D.0 scanner)
 
 **IMPORTANT — What is NOT an LLM fingerprint:**
 - Natural Ukrainian metaphors, proverbs, and phraseology — Ukrainian is a metaphor-rich language. Pedagogical analogies ("Smile vs Grin technique", "like a pitchfork") that help learners understand pronunciation are GOOD teaching, not AI artifacts

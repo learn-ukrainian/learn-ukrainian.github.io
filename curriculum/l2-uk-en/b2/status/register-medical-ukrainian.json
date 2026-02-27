@@ -2,13 +2,13 @@
   "module": "register-medical-ukrainian",
   "level": "B2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:22:19.954526Z",
+  "last_audit": "2026-02-27T08:17:57.247654Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-25T22:22:17.786842Z",
     "meta": "2026-02-24T00:47:22.530698Z",
     "activities": "2026-02-25T22:22:17.789503Z",
-    "vocabulary": "2026-02-25T22:22:18.764525Z",
+    "vocabulary": "2026-02-26T10:56:38.152007Z",
     "plan": "2026-02-20T21:39:37.632872Z",
     "research": "2026-02-24T00:47:22.527135Z"
   },
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -59,7 +54,7 @@
     "blocking_issues": [
       "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
     ],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 1,
     "deferred_count": 0
   }

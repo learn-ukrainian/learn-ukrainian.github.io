@@ -1,7 +1,7 @@
 # Audit Report: M20 — register-medical-ukrainian.md
 **Level:** B2 | **Module:** M20 | **Phase:** B2.1b | **Pedagogy:** Not Specified | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:22:19
+**Generated:** 2026-02-27 08:17:57
 
 ## Configuration
 **Type:** B2-grammar
@@ -61,7 +61,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
