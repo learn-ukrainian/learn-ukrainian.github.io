@@ -40,7 +40,7 @@ letters:
   - upper: Г
     lower: г
     sound_type: consonant
-    note: "Г — не як англійське G. Це м'який звук, як H у слові «ahead»."
+    note: "Г — м'який горловий звук. Повітря проходить вільно. Слухай відео уважно!"
     key_word: гора
     emoji: ⛰️
     image_url: null
@@ -49,7 +49,7 @@ letters:
   - upper: Ґ
     lower: ґ
     sound_type: consonant
-    note: "Ґ — твердий звук, як англійське G у слові «go». Рідко вживається."
+    note: "Ґ — твердий звук. Вимовляється в горлі, голосні зв'язки вібрують. Рідко вживається."
     key_word: ґанок
     emoji: 🚪
     image_url: null
@@ -83,9 +83,9 @@ letters:
   - upper: Ж
     lower: ж
     sound_type: consonant
-    note: "Ж — як S у французькому слові «jour» або англійське S у «measure»."
+    note: "Ж — шиплячий дзвінкий звук. Язик піднятий, губи округлені."
     key_word: жук
-    emoji: 🐛
+    emoji: 🪲
     image_url: null
     pronunciation_video: "https://www.youtube.com/watch?v=dIrGVcqPwqM"
 
@@ -100,7 +100,7 @@ letters:
   - upper: И
     lower: и
     sound_type: vowel
-    note: "И — особливий звук. Немає точного аналогу в інших мовах. Слухай уважно!"
+    note: "И — особливий звук. Немає точного аналогу в інших мовах. Слухай уважно! И ніколи не починає слово."
     key_word: риба
     emoji: 🐟
     image_url: null
@@ -126,7 +126,7 @@ letters:
   - upper: Й
     lower: й
     sound_type: consonant
-    note: "Й — короткий звук, як Y в англійському «yes». Ніколи не утворює склад сам по собі."
+    note: "Й — дуже короткий звук. Ніколи не утворює склад сам по собі."
     key_word: йогурт
     emoji: 🥛
     image_url: null
@@ -183,7 +183,7 @@ letters:
   - upper: Р
     lower: р
     sound_type: consonant
-    note: "Р — вібруючий звук, як іспанське R. Кінчик язика вібрує."
+    note: "Р — вібруючий звук. Кінчик язика вібрує біля верхніх зубів."
     key_word: ракета
     emoji: 🚀
     image_url: null
@@ -225,7 +225,7 @@ letters:
   - upper: Х
     lower: х
     sound_type: consonant
-    note: "Х — як шотландське CH у «loch» або німецьке CH у «Bach»."
+    note: "Х — глухий звук із горла. Повітря проходить із тертям. Порівняй: Г (дзвінкий) — Х (глухий)."
     key_word: хліб
     emoji: 🍞
     image_url: null
@@ -234,7 +234,7 @@ letters:
   - upper: Ц
     lower: ц
     sound_type: consonant
-    note: "Ц — два звуки разом: Т + С. Як TS у «cats»."
+    note: "Ц — злитий звук: Т + С вимовляються як одне ціле."
     key_word: цибуля
     emoji: 🧅
     image_url: null
@@ -243,7 +243,7 @@ letters:
   - upper: Ч
     lower: ч
     sound_type: consonant
-    note: "Ч — як CH в англійському «church»."
+    note: "Ч — злитий звук: Т + Ш вимовляються як одне ціле. Язик торкається піднебіння."
     key_word: черепаха
     emoji: 🐢
     image_url: null
@@ -252,7 +252,7 @@ letters:
   - upper: Ш
     lower: ш
     sound_type: consonant
-    note: "Ш — як SH в англійському «ship»."
+    note: "Ш — шиплячий глухий звук. Губи округлені, язик піднятий. Порівняй: Ж (дзвінкий) — Ш (глухий)."
     key_word: шапка
     emoji: 🧢
     image_url: null
@@ -261,7 +261,7 @@ letters:
   - upper: Щ
     lower: щ
     sound_type: consonant
-    note: "Щ — два звуки разом: Ш + Ч. Як «shch» у «fresh cheese» вимовлених швидко."
+    note: "Щ — це два звуки разом: [шч]. Одна буква — два звуки."
     key_word: щітка
     emoji: 🪥
     image_url: null
@@ -279,7 +279,7 @@ letters:
   - upper: Ю
     lower: ю
     sound_type: vowel
-    note: "Ю — починається зі звуку Й. Як англійське «you»."
+    note: "Ю — починається зі звуку Й. На початку слова і після голосної чути обидва звуки."
     key_word: юнак
     emoji: 🧑
     image_url: null
@@ -288,7 +288,7 @@ letters:
   - upper: Я
     lower: я
     sound_type: vowel
-    note: "Я — починається зі звуку Й. Також означає «I» українською."
+    note: "Я — починається зі звуку Й. Також це слово: Я = я (я іду, я читаю)."
     key_word: яблуко
     emoji: 🍎
     image_url: null
@@ -315,6 +315,26 @@ apostrophe:
 vowels: [А, Е, И, І, О, У, Є, Ї, Ю, Я]
 consonants: [Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ]
 special: [Ь]
+
+# ─────────────────────────────────────────────
+# DIGRAPHS — two letters, one sound
+# ─────────────────────────────────────────────
+digraphs:
+  - letters: ДЖ
+    sound_type: consonant
+    note: "ДЖ — дві букви, один звук. Вимовляється злито, як одне ціле."
+    key_word: джерело
+    emoji: ⛲
+    image_url: null
+    pronunciation_video: null
+
+  - letters: ДЗ
+    sound_type: consonant
+    note: "ДЗ — дві букви, один звук. Вимовляється злито, як одне ціле."
+    key_word: дзвін
+    emoji: 🔔
+    image_url: null
+    pronunciation_video: null
 
 # ─────────────────────────────────────────────
 # STRESS RULE
@@ -415,11 +435,11 @@ activities:
     # — = consonant (formed by noise + voice)
     categories:
       - label: "•"
-        symbol_hint: vowel
+        symbol_hint: "голосний"
         items: [А, Е, И, І, О, У, Є, Ї, Ю, Я]
       - label: "—"
-        symbol_hint: consonant
-        items: [М, С, Н, Л, К, Р, Б, В, Д, Г, Ж, З, П, Т, Х, Ф, Ц, Ч, Ш, Щ, Й]
+        symbol_hint: "приголосний"
+        items: [М, С, Н, Л, К, Р, Б, В, Д, Г, Ґ, Ж, З, П, Т, Х, Ф, Ц, Ч, Ш, Щ, Й]
 
   - type: image_to_letter
     # See an emoji/image — tap which letter the word starts with.
@@ -443,7 +463,7 @@ activities:
       - emoji: 🦝
         answer: Є
         distractors: [Е, І, Ї]
-      - emoji: 🐛
+      - emoji: 🪲
         answer: Ж
         distractors: [З, Ш, Ч]
       - emoji: 🦓
@@ -500,7 +520,7 @@ activities:
       - emoji: 🧂
         answer: С
         distractors: [З, Ц, Ш]
-        note: "сіль — С, not Ь. Ь never starts a word."
+        note: "сіль — С, не Ь. Ь ніколи не починає слово."
       - emoji: 🍎
         answer: Я
         distractors: [Є, Ї, Ю]

@@ -1,0 +1,472 @@
+module: sklad
+track: l2-uk-direct
+level: a1
+type: script_foundation
+title: Склад
+standard_ref: "§4.1.4 — vowel–consonant combinations, §4.1.5 — stress mark, §4.1.6 — syllable"
+
+# ─────────────────────────────────────────────
+# SYLLABLE RULE
+# ─────────────────────────────────────────────
+syllable_rule:
+  text: "Кожний склад має рівно одну голосну. Скільки голосних у слові — стільки складів."
+  vowels: [А, Е, И, І, О, У, Є, Ї, Ю, Я]
+  examples:
+    - word: мама
+      split: "ма-ма"
+      syllables: 2
+      emoji: 👩
+    - word: молоко
+      split: "мо-ло-ко"
+      syllables: 3
+      emoji: 🥛
+    - word: кіт
+      split: "кіт"
+      syllables: 1
+      emoji: 🐱
+    - word: черепаха
+      split: "че-ре-па-ха"
+      syllables: 4
+      emoji: 🐢
+
+# ─────────────────────────────────────────────
+# SYLLABLE TABLES
+# CV = consonant + vowel (most common in Ukrainian)
+# VC = vowel + consonant
+# ─────────────────────────────────────────────
+syllable_tables:
+  - title: "Приголосний + голосний"
+    subtitle: "Найчастіший тип складу в українській мові"
+    type: cv
+    consonants: [М, Н, Л, Р, С, К, Б, В, Д, Т, П]
+    vowels: [А, О, У, И, Е, І]
+
+  - title: "Голосний + приголосний"
+    subtitle: "Часто на початку слова"
+    type: vc
+    vowels: [А, О, У, И]
+    consonants: [М, Н, Л, С, К, Р]
+
+# ─────────────────────────────────────────────
+# SOFT CONSONANTS
+# Ь softens the preceding consonant
+# ─────────────────────────────────────────────
+soft_consonants:
+  rule: "Ь пом'якшує приголосний перед собою. Це не окрема буква-звук, а знак м'якості."
+  examples:
+    - hard: "НА"
+      soft: "НЯ"
+      note: "Н + Ь → м'який Н. НЬ + А = НЯ."
+    - hard: "ЛА"
+      soft: "ЛЯ"
+      note: "Л + Ь → м'який Л. ЛЬ + А = ЛЯ."
+    - hard: "ТА"
+      soft: "ТЯ"
+      note: "Т + Ь → м'який Т. ТЬ + А = ТЯ."
+  words:
+    - word: "сіль"
+      emoji: 🧂
+      note: "м'яке ЛЬ на кінці"
+    - word: "день"
+      emoji: ☀️
+      note: "м'яке НЬ на кінці"
+    - word: "мить"
+      emoji: ⏳
+      note: "м'яке ТЬ на кінці"
+
+# ─────────────────────────────────────────────
+# APOSTROPHE (review from abetka)
+# ─────────────────────────────────────────────
+apostrophe:
+  rule: "Апостроф розділяє твердий приголосний від м'якої голосної (Я, Ю, Є, Ї). Обидва звуки вимовляються повністю."
+  examples:
+    - word: "м'яч"
+      emoji: ⚽
+      split: "м + яч"
+    - word: "п'ять"
+      emoji: 5️⃣
+      split: "п + ять"
+    - word: "б'є"
+      emoji: 🥊
+      split: "б + є"
+    - word: "з'їв"
+      emoji: 🍽️
+      split: "з + їв"
+
+# ─────────────────────────────────────────────
+# STRESS
+# ─────────────────────────────────────────────
+stress:
+  rule: "Наголос в українській мові вільний — він може падати на будь-який склад."
+  marker: "Наголос позначається знаком ´ над голосною: а́, о́, у́, и́, е́, і́"
+  meaning_change:
+    note: "Наголос може змінити значення слова!"
+    pairs:
+      - word1: "за́мок"
+        emoji1: 🏰
+        meaning1: "будівля"
+        word2: "замо́к"
+        emoji2: 🔒
+        meaning2: "на дверях"
+      - word1: "о́брази"
+        emoji1: 🖼️
+        meaning1: "зображення"
+        word2: "обра́зи"
+        emoji2: 😠
+        meaning2: "образи, кривди"
+
+# ─────────────────────────────────────────────
+# VOCABULARY
+# Words the learner already knows from abetka (module 1).
+# Now shown with syllable divisions and stress marks.
+# ─────────────────────────────────────────────
+vocabulary:
+  # 1-syllable words
+  - word: "вовк"
+    emoji: 🐺
+    image_url: null
+    syllables: 1
+    split: "вовк"
+    examples: []
+  - word: "дім"
+    emoji: 🏠
+    image_url: null
+    syllables: 1
+    split: "дім"
+    examples: []
+  - word: "жук"
+    emoji: 🪲
+    image_url: null
+    syllables: 1
+    split: "жук"
+    examples: []
+  - word: "кіт"
+    emoji: 🐱
+    image_url: null
+    syllables: 1
+    split: "кіт"
+    examples: []
+  - word: "ніс"
+    emoji: 👃
+    image_url: null
+    syllables: 1
+    split: "ніс"
+    examples: []
+  - word: "ти́гр"
+    emoji: 🐯
+    image_url: null
+    syllables: 1
+    split: "тигр"
+    examples: []
+  - word: "хліб"
+    emoji: 🍞
+    image_url: null
+    syllables: 1
+    split: "хліб"
+    examples: []
+  - word: "сіль"
+    emoji: 🧂
+    image_url: null
+    syllables: 1
+    split: "сіль"
+    examples: []
+
+  # 2-syllable words
+  - word: "арбу́з"
+    emoji: 🍉
+    image_url: null
+    syllables: 2
+    split: "ар-буз"
+    examples: []
+  - word: "бана́н"
+    emoji: 🍌
+    image_url: null
+    syllables: 2
+    split: "ба-нан"
+    examples: []
+  - word: "гора́"
+    emoji: ⛰️
+    image_url: null
+    syllables: 2
+    split: "го-ра"
+    examples: []
+  - word: "зе́бра"
+    emoji: 🦓
+    image_url: null
+    syllables: 2
+    split: "зеб-ра"
+    examples: []
+  - word: "ри́ба"
+    emoji: 🐟
+    image_url: null
+    syllables: 2
+    split: "ри-ба"
+    examples: []
+  - word: "лимо́н"
+    emoji: 🍋
+    image_url: null
+    syllables: 2
+    split: "ли-мон"
+    examples: []
+  - word: "мі́сяць"
+    emoji: 🌙
+    image_url: null
+    syllables: 2
+    split: "мі-сяць"
+    examples: []
+  - word: "о́лень"
+    emoji: 🦌
+    image_url: null
+    syllables: 2
+    split: "о-лень"
+    examples: []
+  - word: "паву́к"
+    emoji: 🕷️
+    image_url: null
+    syllables: 2
+    split: "па-вук"
+    examples: []
+  - word: "со́нце"
+    emoji: ☀️
+    image_url: null
+    syllables: 2
+    split: "сон-це"
+    examples: []
+  - word: "ша́пка"
+    emoji: 🧢
+    image_url: null
+    syllables: 2
+    split: "шап-ка"
+    examples: []
+  - word: "юна́к"
+    emoji: 🧑
+    image_url: null
+    syllables: 2
+    split: "ю-нак"
+    examples: []
+
+  # 3-syllable words
+  - word: "раке́та"
+    emoji: 🚀
+    image_url: null
+    syllables: 3
+    split: "ра-ке-та"
+    examples: []
+  - word: "фламі́нго"
+    emoji: 🦩
+    image_url: null
+    syllables: 3
+    split: "фла-мін-го"
+    examples: []
+  - word: "цибу́ля"
+    emoji: 🧅
+    image_url: null
+    syllables: 3
+    split: "ци-бу-ля"
+    examples: []
+  - word: "я́блуко"
+    emoji: 🍎
+    image_url: null
+    syllables: 3
+    split: "яб-лу-ко"
+    examples: []
+
+  # 4-syllable word
+  - word: "черепа́ха"
+    emoji: 🐢
+    image_url: null
+    syllables: 4
+    split: "че-ре-па-ха"
+    examples: []
+
+# ─────────────────────────────────────────────
+# ACTIVITIES
+# Pre-literacy only: watch_and_repeat, classify, image_to_letter.
+# Meaning conveyed through: emoji, video, symbols.
+# ─────────────────────────────────────────────
+activities:
+
+  # Activity 1: Watch and repeat syllable chains.
+  # Grouped by consonant — learner watches the consonant video,
+  # then sees the CV syllable pattern to read aloud.
+  - type: watch_and_repeat
+    title: "Читаємо склади"
+    items:
+      - word: "МА МО МУ МИ МЕ МІ"
+        video: "https://www.youtube.com/watch?v=Ez95H4ibuJo"
+        note: "Послухай звук М. Тепер додай голосні!"
+      - word: "НА НО НУ НИ НЕ НІ"
+        video: "https://www.youtube.com/watch?v=vNUfiKHPYaU"
+        note: "Послухай звук Н. Тепер додай голосні!"
+      - word: "ЛА ЛО ЛУ ЛИ ЛЕ ЛІ"
+        video: "https://www.youtube.com/watch?v=v6-3Xg52Buk"
+        note: "Послухай звук Л. Тепер додай голосні!"
+      - word: "РА РО РУ РИ РЕ РІ"
+        video: "https://www.youtube.com/watch?v=fMGsQ5KPQgg"
+        note: "Послухай звук Р. Тепер додай голосні!"
+      - word: "СА СО СУ СИ СЕ СІ"
+        video: "https://www.youtube.com/watch?v=7UsFBgSL91E"
+        note: "Послухай звук С. Тепер додай голосні!"
+      - word: "КА КО КУ КИ КЕ КІ"
+        video: "https://www.youtube.com/watch?v=J7sGEI4-xJo"
+        note: "Послухай звук К. Тепер додай голосні!"
+      - word: "БА БО БУ БИ БЕ БІ"
+        video: "https://www.youtube.com/watch?v=V1hxBE_JbGg"
+        note: "Послухай звук Б. Тепер додай голосні!"
+      - word: "ВА ВО ВУ ВИ ВЕ ВІ"
+        video: "https://www.youtube.com/watch?v=aFcvYfvQ2X4"
+        note: "Послухай звук В. Тепер додай голосні!"
+      - word: "ДА ДО ДУ ДИ ДЕ ДІ"
+        video: "https://www.youtube.com/watch?v=g4Bh-lqzd48"
+        note: "Послухай звук Д. Тепер додай голосні!"
+      - word: "ТА ТО ТУ ТИ ТЕ ТІ"
+        video: "https://www.youtube.com/watch?v=m-jcLR_gK0k"
+        note: "Послухай звук Т. Тепер додай голосні!"
+      - word: "ПА ПО ПУ ПИ ПЕ ПІ"
+        video: "https://www.youtube.com/watch?v=JksSjjxyW5Y"
+        note: "Послухай звук П. Тепер додай голосні!"
+
+  # Activity 2: Classify words by syllable count.
+  # Bins use dot symbols (•, ••, •••) — pre-literacy safe.
+  - type: classify
+    title: "Скільки складів?"
+    instruction: "Скільки голосних — стільки складів."
+    categories:
+      - label: "•"
+        symbol_hint: "1"
+        items:
+          - "🐺 вовк"
+          - "🏠 дім"
+          - "🪲 жук"
+          - "🐱 кіт"
+          - "👃 ніс"
+          - "🐯 тигр"
+          - "🍞 хліб"
+          - "🧂 сіль"
+      - label: "••"
+        symbol_hint: "2"
+        items:
+          - "🍉 арбуз"
+          - "🍌 банан"
+          - "⛰️ гора"
+          - "🦓 зебра"
+          - "🐟 риба"
+          - "🍋 лимон"
+          - "🌙 місяць"
+          - "🦌 олень"
+          - "🕷️ павук"
+          - "☀️ сонце"
+          - "🧢 шапка"
+          - "🧑 юнак"
+      - label: "•••"
+        symbol_hint: "3"
+        items:
+          - "🚀 ракета"
+          - "🦩 фламінго"
+          - "🧅 цибуля"
+          - "🍎 яблуко"
+
+  # Activity 3: Stress pairs — watch and repeat.
+  # Demonstrates that stress changes meaning.
+  - type: watch_and_repeat
+    title: "Наголос змінює значення"
+    items:
+      - word: "за́мок 🏰"
+        video: "https://www.youtube.com/watch?v=BhASNxitC1A"
+        note: "Наголос на ПЕРШОМУ складі — за́мок (будівля)."
+      - word: "замо́к 🔒"
+        video: "https://www.youtube.com/watch?v=BhASNxitC1A"
+        note: "Наголос на ДРУГОМУ складі — замо́к (на дверях)."
+      - word: "о́брази 🖼️"
+        video: "https://www.youtube.com/watch?v=gJFxRIPRZbI"
+        note: "Наголос на ПЕРШОМУ складі — о́брази (зображення)."
+      - word: "обра́зи 😠"
+        video: "https://www.youtube.com/watch?v=gJFxRIPRZbI"
+        note: "Наголос на ДРУГОМУ складі — обра́зи (кривди)."
+
+  # Activity 4: Syllable count quiz.
+  # Reuses image_to_letter component — emoji stimulus, number answer.
+  # Distractors are wrong syllable counts.
+  - type: image_to_letter
+    title: "Порахуй склади"
+    items:
+      - emoji: 🐱
+        answer: "1"
+        distractors: ["2", "3"]
+        note: "кіт — один голосний І = 1 склад"
+      - emoji: 🍉
+        answer: "2"
+        distractors: ["1", "3"]
+        note: "арбуз — А, У = 2 склади"
+      - emoji: 🍎
+        answer: "3"
+        distractors: ["1", "2"]
+        note: "яблуко — Я, У, О = 3 склади"
+      - emoji: 🏠
+        answer: "1"
+        distractors: ["2", "3"]
+        note: "дім — один голосний І = 1 склад"
+      - emoji: 🐟
+        answer: "2"
+        distractors: ["1", "3"]
+        note: "риба — И, А = 2 склади"
+      - emoji: 🚀
+        answer: "3"
+        distractors: ["1", "2"]
+        note: "ракета — А, Е, А = 3 склади"
+      - emoji: 🐺
+        answer: "1"
+        distractors: ["2", "3"]
+        note: "вовк — один голосний О = 1 склад"
+      - emoji: ☀️
+        answer: "2"
+        distractors: ["1", "3"]
+        note: "сонце — О, Е = 2 склади"
+      - emoji: 🧅
+        answer: "3"
+        distractors: ["1", "2"]
+        note: "цибуля — И, У, Я = 3 склади"
+      - emoji: 🍞
+        answer: "1"
+        distractors: ["2", "3"]
+        note: "хліб — один голосний І = 1 склад"
+      - emoji: 🍌
+        answer: "2"
+        distractors: ["1", "3"]
+        note: "банан — А, А = 2 склади"
+      - emoji: 🐢
+        answer: "4"
+        distractors: ["2", "3"]
+        note: "черепаха — Е, Е, А, А = 4 склади"
+      - emoji: ⛰️
+        answer: "2"
+        distractors: ["1", "3"]
+        note: "гора — О, А = 2 склади"
+      - emoji: 🦩
+        answer: "3"
+        distractors: ["1", "2"]
+        note: "фламінго — А, І, О = 3 склади"
+      - emoji: 🧂
+        answer: "1"
+        distractors: ["2", "3"]
+        note: "сіль — один голосний І = 1 склад"
+      - emoji: 🌙
+        answer: "2"
+        distractors: ["1", "3"]
+        note: "місяць — І, Я = 2 склади"
+      - emoji: 🦌
+        answer: "2"
+        distractors: ["1", "3"]
+        note: "олень — О, Е = 2 склади"
+      - emoji: 🐯
+        answer: "1"
+        distractors: ["2", "3"]
+        note: "тигр — один голосний И = 1 склад"
+      - emoji: 🕷️
+        answer: "2"
+        distractors: ["1", "3"]
+        note: "павук — А, У = 2 склади"
+      - emoji: 🍋
+        answer: "2"
+        distractors: ["1", "3"]
+        note: "лимон — И, О = 2 склади"

@@ -56,23 +56,28 @@ UKRAINIAN_CHARS = set(
 # ── Trust tiers ────────────────────────────────────────────────────
 # Tier 1: NUS 2022+ editions (latest State Standard aligned)
 # Tier 2: 2017–2021 editions (older curriculum)
-TRUST_TIERS = {
-    # Grade 1 — 2025 NUS editions
-    "1-klas-bukvar-bolshakova-2025-1": 1,
-    "1-klas-bukvar-bolshakova-2025-2": 1,
-    "1-klas-bukvar-zaharijchuk-2025-1": 1,
-    "1-klas-bukvar-zaharijchuk-2025-2": 1,
-    # Grade 2 — 2025 editions (if they exist)
-    # Grade 3 — 2020 editions
-    "3-klas-ukrainska-mova-vashulenko-2020-1": 2,
-    "3-klas-ukrainska-mova-vashulenko-2020-2": 2,
-    "3-klas-ukrainska-mova-savchenko-2020-2": 2,
-}
+NUS_CUTOFF_YEAR = 2022
 
 
 def get_trust_tier(pdf_stem: str) -> int:
-    """Return trust tier for a PDF. Defaults to 2 (older) if unknown."""
-    return TRUST_TIERS.get(pdf_stem, 2)
+    """Return trust tier based on publication year.
+
+    Tier 1: 2022+ (NUS aligned)
+    Tier 2: pre-2022 (older curriculum)
+    """
+    meta = parse_pdf_metadata_from_stem(pdf_stem)
+    return 1 if meta["year"] >= NUS_CUTOFF_YEAR else 2
+
+
+def parse_pdf_metadata_from_stem(stem: str) -> dict:
+    """Lightweight metadata extraction from just the stem string."""
+    parts = stem.split("-")
+    grade = int(parts[0]) if parts[0].isdigit() else 0
+    year = 0
+    for p in parts:
+        if len(p) == 4 and p.isdigit():
+            year = int(p)
+    return {"grade": grade, "year": year}
 
 
 def parse_pdf_metadata(pdf_path: Path) -> dict:
