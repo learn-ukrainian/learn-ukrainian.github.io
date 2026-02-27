@@ -327,6 +327,13 @@ def _validate_audit_state(ctx: ModuleContext, state: dict) -> None:
 
     # Handle failed modules with exhausted state — reset for fresh tries under new rules
     if audit_status == "failed":
+        # Guard against infinite re-exhaustion: if note says "needs-rebuild" or
+        # "escalation-failed", the module is structurally broken — don't waste API calls.
+        audit_note = audit_phase.get("note", "")
+        if audit_note in ("needs-rebuild", "escalation-failed"):
+            log(f"  Audit revalidation: skipping — module marked '{audit_note}'")
+            return
+
         content_path = ctx.paths.get("md")
         if content_path and content_path.exists():
             passed, _ = run_verify(content_path, content_only=True)
@@ -337,15 +344,20 @@ def _validate_audit_state(ctx: ModuleContext, state: dict) -> None:
                                note="revalidation-pass")
                 log(f"  Audit revalidation: previously FAILED but now PASSES — marking complete")
                 return
-            # Still fails — but clear exhaustion state so it gets fresh Gemini tries
-            cleared = []
-            for phase_key in ("audit", "D"):
-                for sid in _V3_PHASE_STATE_IDS.get(phase_key, []):
-                    if phases.pop(sid, None):
-                        cleared.append(sid)
-            if cleared:
-                _save_state_v3(ctx, state)
-                log(f"  Audit revalidation: clearing stale FAILED state — fresh fix loop")
+            # Still fails — only clear if this is the first revalidation attempt
+            # (prevents infinite clear→exhaust→clear loop in batch mode)
+            prev_attempts = audit_phase.get("attempts", 0)
+            if prev_attempts <= 1:
+                cleared = []
+                for phase_key in ("audit", "D"):
+                    for sid in _V3_PHASE_STATE_IDS.get(phase_key, []):
+                        if phases.pop(sid, None):
+                            cleared.append(sid)
+                if cleared:
+                    _save_state_v3(ctx, state)
+                    log(f"  Audit revalidation: clearing stale FAILED state — fresh fix loop")
+            else:
+                log(f"  Audit revalidation: still failing after {prev_attempts} attempts — not clearing (use --rebuild to reset)")
         return
 
     # Only validate if audit is marked complete
@@ -405,8 +417,10 @@ def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
 
     fix_block = fix_match.group(1)
 
-    # Only process lines targeting this file
-    current_file_active = False
+    # Only process lines targeting this file.
+    # Default to active — if Claude omits FILE: headers (single-file fix),
+    # we still apply the FIND/REPLACE pairs instead of silently dropping them.
+    current_file_active = True
     file_name = file_path.name
     pairs: list[tuple[str, str]] = []
     current_find: list[str] | None = None
@@ -558,9 +572,20 @@ def _dispatch_claude_phase(
         cmd.extend(["--allowedTools", ",".join(allow_tools)])
     
     # Reinforce output format — Claude sometimes ignores delimiters in long prompts
-    expected_start = "===SECTION_FIX_START===" if "D.2" in phase_label else "===REVIEW_START==="
-    expected_end = "===SECTION_FIX_END===" if "D.2" in phase_label else "===REVIEW_END==="
-    
+    _PHASE_DELIMITERS: dict[str, tuple[str, str]] = {
+        "D.1":     ("===REVIEW_START===", "===REVIEW_END==="),
+        "D.2":     ("===SECTION_FIX_START===", "===SECTION_FIX_END==="),
+        "C vocab": ("===VOCABULARY_START===", "===VOCABULARY_END==="),
+        "C":       ("===ACTIVITIES_START===", "===ACTIVITIES_END==="),
+        "A":       ("===META_OUTLINE_START===", "===META_OUTLINE_END==="),
+    }
+    # Match the most specific phase label substring (order matters — longest first)
+    expected_start, expected_end = "===REVIEW_START===", "===REVIEW_END==="
+    for key in ("D.2", "D.1", "C vocab", "C", "A"):
+        if key in phase_label:
+            expected_start, expected_end = _PHASE_DELIMITERS[key]
+            break
+
     cmd.extend(["--append-system-prompt",
                  f"CRITICAL: Your output MUST contain {expected_start} and {expected_end} "
                  "delimiters wrapping the full structured output. Output without these delimiters "
@@ -3183,11 +3208,13 @@ def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False) -> bool:
     # --restart-from
     restart_from = getattr(ctx, "restart_from", None)
     if restart_from:
-        restart_upper = str(restart_from).upper()
-        if restart_upper not in PHASE_SEQUENCE_V3:
-            log(f"  ERROR: Unknown v3 phase '{restart_upper}'. Valid: {', '.join(PHASE_SEQUENCE_V3)}")
+        # Case-insensitive lookup: "audit" stays "audit", "A"/"a" → "A"
+        _restart_key_map = {k.upper(): k for k in PHASE_SEQUENCE_V3}
+        restart_key = _restart_key_map.get(str(restart_from).upper())
+        if restart_key is None:
+            log(f"  ERROR: Unknown v3 phase '{restart_from}'. Valid: {', '.join(PHASE_SEQUENCE_V3)}")
             return False
-        idx = PHASE_SEQUENCE_V3.index(restart_upper)
+        idx = PHASE_SEQUENCE_V3.index(restart_key)
         remaining = PHASE_SEQUENCE_V3[idx:]
         # Clear state for restarted phases
         phases = state.setdefault("phases", {})
@@ -3195,7 +3222,7 @@ def run_pipeline_v3(ctx: ModuleContext, research_only: bool = False) -> bool:
             for sid in _V3_PHASE_STATE_IDS.get(pid, []):
                 phases.pop(sid, None)
         _save_state_v3(ctx, state)
-        log(f"  --restart-from {restart_upper}: running phases {', '.join(remaining)}")
+        log(f"  --restart-from {restart_key}: running phases {', '.join(remaining)}")
         for phase_id in remaining:
             if not _call_phase_func(PHASE_FUNCTIONS_V3[phase_id], phase_id, ctx, state):
                 log(f"\n  PIPELINE STOPPED at phase {phase_id}")
@@ -3328,9 +3355,10 @@ def preflight_v3(args: argparse.Namespace) -> ModuleContext:
         raise SystemExit(1)
     if _sb:
         # Convert --stop-before X → stop after the phase preceding X
-        if _sb == "AUDIT":
-            _sb = "audit"
+        # Case-insensitive lookup matching PHASE_SEQUENCE_V3 keys
         _all_phases = PHASE_SEQUENCE_V3 + ["E", "F"]
+        _sb_key_map = {k.upper(): k for k in _all_phases}
+        _sb = _sb_key_map.get(_sb.upper(), _sb)
         _all_upper = [p.upper() for p in _all_phases]
         if _sb.upper() not in _all_upper:
             log(f"  ERROR: Unknown phase '{_sb}'. Valid phases: {', '.join(_all_phases)}")
