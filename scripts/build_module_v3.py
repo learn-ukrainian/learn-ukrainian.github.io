@@ -616,13 +616,20 @@ def _extract_delimiter(text: str, start_tag: str, end_tag: str) -> str | None:
     return text[s:e].strip()
 
 
-def _extract_delimiter_tolerant(text: str, start_tag: str, end_tag: str) -> str | None:
+def _extract_delimiter_tolerant(
+    text: str, start_tag: str, end_tag: str, *, content_type: str = "yaml"
+) -> str | None:
     """Extract delimited content, tolerating missing end tag.
 
     First tries exact extraction. If the end tag is missing but the start tag
     exists (Gemini truncation or missing closing delimiter), extracts from start
-    tag to the last valid YAML line (strips bridge status footer lines).
-    Validates result with yaml.safe_load before returning.
+    tag to the last valid line (strips bridge status footer lines).
+
+    Args:
+        content_type: ``"yaml"`` (default) validates with yaml.safe_load and
+            checks for ``items`` key — designed for vocab/activity YAML.
+            ``"markdown"`` skips YAML validation and returns cleaned content
+            if non-empty — used for D.1 Markdown reviews.
     """
     # Try exact match first
     exact = _extract_delimiter(text, start_tag, end_tag)
@@ -638,9 +645,9 @@ def _extract_delimiter_tolerant(text: str, start_tag: str, end_tag: str) -> str 
     s += len(start_tag)
     raw = text[s:]
 
-    # Strip non-YAML lines from the end (bridge footer, status messages)
+    # Strip footer lines from the end (bridge footer, status messages)
     lines = raw.split("\n")
-    yaml_lines = []
+    clean_lines = []
     for line in lines:
         # Stop at bridge status markers or separator lines
         stripped = line.strip()
@@ -648,17 +655,22 @@ def _extract_delimiter_tolerant(text: str, start_tag: str, end_tag: str) -> str 
             break
         if stripped.startswith("===") and stripped.endswith("==="):
             break
-        yaml_lines.append(line)
+        clean_lines.append(line)
 
     # Trim trailing blank lines
-    while yaml_lines and not yaml_lines[-1].strip():
-        yaml_lines.pop()
+    while clean_lines and not clean_lines[-1].strip():
+        clean_lines.pop()
 
-    candidate = "\n".join(yaml_lines).strip()
+    candidate = "\n".join(clean_lines).strip()
     if not candidate:
         return None
 
-    # Validate it's parseable YAML before accepting
+    # --- Markdown mode: accept any non-empty content ---
+    if content_type == "markdown":
+        log(f"    Tolerant extraction (markdown): recovered {len(candidate)} chars (missing {end_tag})")
+        return candidate
+
+    # --- YAML mode: validate structure before accepting ---
     import yaml
     try:
         parsed = yaml.safe_load(candidate)
@@ -669,17 +681,17 @@ def _extract_delimiter_tolerant(text: str, start_tag: str, end_tag: str) -> str 
         # Try truncating to last complete entry (last line ending with a complete value)
         # Find the last complete `- lemma:` block
         last_good = -1
-        for i, line in enumerate(yaml_lines):
+        for i, line in enumerate(clean_lines):
             if line.strip().startswith("- lemma:"):
                 last_good = i
         if last_good > 0 and last_good > 1:
             # Find next `- lemma:` or end, take up to before it
-            for j in range(last_good, len(yaml_lines)):
-                ln = yaml_lines[j].strip()
+            for j in range(last_good, len(clean_lines)):
+                ln = clean_lines[j].strip()
                 if j > last_good and ln.startswith("- lemma:"):
                     break
             # Keep lines up to (but not including) the incomplete last entry
-            trimmed = "\n".join(yaml_lines[:last_good]).strip()
+            trimmed = "\n".join(clean_lines[:last_good]).strip()
             try:
                 parsed = yaml.safe_load(trimmed)
                 if parsed and isinstance(parsed, dict) and "items" in parsed:
@@ -2061,7 +2073,7 @@ class DScreenResult:
 
 @dataclass
 class D1Result:
-    """Parsed result of D.1 structured YAML review."""
+    """Parsed result of D.1 Markdown review."""
     ok: bool
     issues: list[dict] = field(default_factory=list)
     scores: dict[str, float] = field(default_factory=dict)
@@ -2143,65 +2155,78 @@ def _scan_llm_filler(content: str) -> list[dict]:
     return issues
 
 
-def _parse_d1_yaml(raw_output: str) -> D1Result:
-    """Parse D.1 structured YAML review from ===REVIEW_START=== / ===REVIEW_END=== delimiters.
+def _parse_d1_review(raw_output: str) -> D1Result:
+    """Parse D.1 Markdown review from ===REVIEW_START=== / ===REVIEW_END=== delimiters.
 
-    Extracts YAML-structured review data. Falls back to prose regex parsing
-    (degraded mode) if YAML extraction fails.
+    The D.1 template produces structured Markdown (not YAML). This function
+    extracts the overall score, per-dimension scores from the ``## Scores``
+    table, critical issues, and verdict.
 
     Returns a D1Result with parsed fields.
     """
-    import yaml as _yaml
-
     review_text = _extract_delimiter(raw_output, "===REVIEW_START===", "===REVIEW_END===")
     if not review_text:
-        # Try tolerant extraction (missing end tag)
-        review_text = _extract_delimiter_tolerant(raw_output, "===REVIEW_START===", "===REVIEW_END===")
+        # Try tolerant extraction (missing end tag) — markdown mode skips YAML validation
+        review_text = _extract_delimiter_tolerant(
+            raw_output, "===REVIEW_START===", "===REVIEW_END===",
+            content_type="markdown",
+        )
 
     if not review_text:
         return D1Result(ok=False, raw_review="", verdict="")
 
-    # Try YAML-structured parsing first
-    # Look for the YAML block inside the review (may be wrapped in markdown)
-    yaml_block = None
-    yaml_match = re.search(
-        r'```ya?ml\s*\n(.*?)\n```',
-        review_text,
-        re.DOTALL,
-    )
-    if yaml_match:
-        yaml_block = yaml_match.group(1).strip()
-
-    if yaml_block:
-        try:
-            parsed = _yaml.safe_load(yaml_block)
-            if isinstance(parsed, dict):
-                return D1Result(
-                    ok=True,
-                    issues=parsed.get("issues", []) or [],
-                    scores=parsed.get("scores", {}) or {},
-                    verdict=str(parsed.get("verdict", "")).upper(),
-                    raw_review=review_text,
-                )
-        except _yaml.YAMLError:
-            logger.warning("D.1 YAML parse failed — falling back to prose parsing")
-
-    # Fallback: prose regex parsing (degraded mode — existing behavior)
+    # --- Extract verdict ---
     verdict = ""
     status_m = re.search(r'\*\*Status:\*\*\s*(FAIL|PASS)', review_text)
     if status_m:
         verdict = status_m.group(1)
 
+    # --- Extract overall score ---
     score = 0.0
     score_m = re.search(r'\*\*Overall Score:\*\*\s*([\d.]+)/10', review_text)
     if score_m:
         score = float(score_m.group(1))
 
+    # --- Extract per-dimension scores from ## Scores table ---
+    scores: dict[str, float] = {}
+    if score > 0:
+        scores["overall"] = score
+
+    scores_section = re.search(
+        r'## Scores\s*\n(.*?)(?=\n## |\Z)',
+        review_text,
+        re.DOTALL,
+    )
+    if scores_section:
+        # Match table rows: | N | Dimension Name | X/10 | or | N | Dimension Name | X.X/10 |
+        dim_rows = re.findall(
+            r'\|\s*\d+\s*\|\s*(.+?)\s*\|\s*([\d.]+)/10\s*\|',
+            scores_section.group(1),
+        )
+        for dim_name, dim_score in dim_rows:
+            # Normalize dimension name: "Language Quality" → "language_quality"
+            key = dim_name.strip().lower().replace(" ", "_")
+            try:
+                scores[key] = float(dim_score)
+            except ValueError:
+                pass
+
+        # Also check for "Weighted Overall:" line in the scores section
+        weighted_m = re.search(
+            r'\*\*Weighted Overall:\*\*.*?=\s*\*\*([\d.]+)/10\*\*',
+            scores_section.group(1),
+        )
+        if weighted_m:
+            try:
+                scores["weighted_overall"] = float(weighted_m.group(1))
+            except ValueError:
+                pass
+
     # Determine verdict from score if not explicit
     if not verdict and score > 0:
         verdict = "PASS" if score >= 9.0 else "FAIL"
 
-    # Extract issues from "Critical Issues Found" section (best-effort)
+    # --- Extract issues from "Critical Issues Found" section ---
     issues: list[dict] = []
     issues_section = re.search(
         r'## Critical Issues Found\s*\n(.*?)(?=\n## |\Z)',
@@ -2230,10 +2255,14 @@ def _parse_d1_yaml(raw_output: str) -> D1Result:
     return D1Result(
         ok=True,
         issues=issues,
-        scores={"overall": score} if score > 0 else {},
+        scores=scores,
         verdict=verdict,
         raw_review=review_text,
     )
+
+
+# Keep old name as alias for backward compatibility with any external callers
+_parse_d1_yaml = _parse_d1_review
 
 
 # ---------------------------------------------------------------------------
@@ -2649,8 +2678,8 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         _mark_phase_v3(ctx, state, phase, "failed", attempts=1, note="d1-dispatch-failed")
         return False
 
-    # Parse review (supports both YAML structured and prose fallback)
-    d1 = _parse_d1_yaml(raw_output)
+    # Parse Markdown review
+    d1 = _parse_d1_review(raw_output)
 
     if not d1.ok or not d1.raw_review:
         log("  D.1: WARNING — no REVIEW delimiters in output (retrying full D.1)")
@@ -2663,7 +2692,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
             allow_tools=["Read", "Grep", "Glob"],
         )
         if ok2:
-            d1 = _parse_d1_yaml(raw2)
+            d1 = _parse_d1_review(raw2)
 
         if not d1.ok or not d1.raw_review:
             log("  D.1: Full retry also failed — no delimiters")

@@ -6,7 +6,7 @@ Covers deterministic functions — no LLM calls, no network.
 Tests:
 - Citation extraction (「」 CJK + «» legacy + mixed)
 - Citation verification against source files
-- D.1 review parsing (PASS, FAIL, malformed, missing delimiters)
+- D.1 review parsing (PASS, FAIL, score table, missing delimiters, truncation recovery)
 - Review quality gate (_quick_review_quality_gate)
 - Phase D routing helpers (_all_issues_diffuse, _count_diff_lines)
 - D.2 diff limit calculation
@@ -42,7 +42,7 @@ from scripts.build_module_v3 import (
     _extract_delimiter_tolerant,
     _all_issues_diffuse,
     _count_diff_lines,
-    _parse_d1_yaml,
+    _parse_d1_review,
     _quick_review_quality_gate,
     D1Result,
     _DIFFUSE_FAILURE_CODES,
@@ -293,11 +293,11 @@ class TestVerifyCitationsAgainstSource:
 # 3. D.1 Review Parsing
 # ===========================================================================
 
-class TestParseD1Yaml:
-    """Tests for _parse_d1_yaml() in build_module_v3.py."""
+class TestParseD1Review:
+    """Tests for _parse_d1_review() in build_module_v3.py."""
 
-    def test_pass_verdict_prose_fallback(self):
-        """Prose-style review with PASS verdict is parsed correctly."""
+    def test_pass_verdict_markdown(self):
+        """Markdown review with PASS verdict is parsed correctly."""
         raw = (
             "Here is my review:\n"
             "===REVIEW_START===\n"
@@ -320,15 +320,15 @@ class TestParseD1Yaml:
             "**PASS**\n"
             "===REVIEW_END===\n"
         )
-        result = _parse_d1_yaml(raw)
+        result = _parse_d1_review(raw)
         assert result.ok is True
         assert result.verdict == "PASS"
         assert result.scores.get("overall") == 9.2
         assert len(result.issues) == 1
         assert "Line 42" in result.issues[0].get("location", "")
 
-    def test_fail_verdict_prose_fallback(self):
-        """Prose-style review with FAIL verdict is parsed correctly."""
+    def test_fail_verdict_markdown(self):
+        """Markdown review with FAIL verdict is parsed correctly."""
         raw = (
             "===REVIEW_START===\n"
             "# Рецензія: Test Module\n\n"
@@ -347,49 +347,52 @@ class TestParseD1Yaml:
             "**FAIL**\n"
             "===REVIEW_END===\n"
         )
-        result = _parse_d1_yaml(raw)
+        result = _parse_d1_review(raw)
         assert result.ok is True
         assert result.verdict == "FAIL"
         assert result.scores.get("overall") == 6.8
         assert len(result.issues) == 2
 
-    def test_yaml_structured_output(self):
-        """YAML block inside review delimiters is parsed directly."""
+    def test_score_table_extraction(self):
+        """Per-dimension scores from ## Scores table are extracted."""
         raw = (
             "===REVIEW_START===\n"
-            "```yaml\n"
-            "verdict: FAIL\n"
-            "scores:\n"
-            "  overall: 7.5\n"
-            "  language: 8\n"
-            "issues:\n"
-            "  - type: GRAMMAR\n"
-            "    location: Line 20\n"
-            "    text: Wrong case\n"
-            "```\n"
+            "**Overall Score:** 8.5/10\n"
+            "**Status:** FAIL\n\n"
+            "## Scores\n\n"
+            "| # | Dimension | Score |\n"
+            "|---|-----------|-------|\n"
+            "| 1 | Language Quality | 9/10 |\n"
+            "| 2 | Content Accuracy | 8/10 |\n"
+            "| 3 | Pedagogical Design | 7.5/10 |\n"
+            "| 4 | Activity Quality | 9/10 |\n\n"
+            "**Weighted Overall:** (9×0.3 + 8×0.25 + 7.5×0.25 + 9×0.2) = **8.5/10**\n\n"
+            "## Critical Issues Found\n\n"
+            "No critical issues.\n\n"
+            "## Verdict\n\n**FAIL**\n"
             "===REVIEW_END===\n"
         )
-        result = _parse_d1_yaml(raw)
+        result = _parse_d1_review(raw)
         assert result.ok is True
-        assert result.verdict == "FAIL"
-        assert result.scores["overall"] == 7.5
-        assert result.scores["language"] == 8
-        assert len(result.issues) == 1
+        assert result.scores["overall"] == 8.5
+        assert result.scores["language_quality"] == 9.0
+        assert result.scores["content_accuracy"] == 8.0
+        assert result.scores["pedagogical_design"] == 7.5
+        assert result.scores["activity_quality"] == 9.0
+        assert result.scores["weighted_overall"] == 8.5
 
     def test_missing_delimiters_returns_not_ok(self):
         """Missing ===REVIEW_START=== → ok=False."""
         raw = "This is just some text with no delimiters at all."
-        result = _parse_d1_yaml(raw)
+        result = _parse_d1_review(raw)
         assert result.ok is False
         assert result.raw_review == ""
 
-    def test_missing_end_delimiter_tolerant_fallback(self):
-        """Missing ===REVIEW_END=== but ===REVIEW_START=== present → tolerant extraction attempts recovery.
+    def test_missing_end_delimiter_tolerant_markdown_recovery(self):
+        """Missing ===REVIEW_END=== with Markdown content is now recovered.
 
-        The tolerant extractor requires valid YAML to return content.
-        Plain prose (non-YAML) will fail YAML validation and return None,
-        causing _parse_d1_yaml to return ok=False. This is correct behavior —
-        tolerant extraction is designed for truncated YAML blocks, not prose.
+        The tolerant extractor in markdown mode accepts non-empty content
+        without YAML validation, so truncated Markdown reviews are recovered.
         """
         raw = (
             "===REVIEW_START===\n"
@@ -398,11 +401,12 @@ class TestParseD1Yaml:
             "## Verdict\n\n**PASS**\n"
             # No ===REVIEW_END=== — simulates truncation
         )
-        result = _parse_d1_yaml(raw)
+        result = _parse_d1_review(raw)
         assert isinstance(result, D1Result)
-        # Tolerant extraction fails YAML validation on prose → ok=False.
-        # This is expected: prose reviews NEED the end delimiter for extraction.
-        assert result.ok is False
+        # Markdown tolerant extraction recovers truncated reviews
+        assert result.ok is True
+        assert result.verdict == "PASS"
+        assert result.scores.get("overall") == 8.5
 
     def test_score_below_9_inferred_fail(self):
         """Score < 9.0 without explicit Status → inferred FAIL."""
@@ -412,7 +416,7 @@ class TestParseD1Yaml:
             "## Verdict\n\nNeeds improvement.\n"
             "===REVIEW_END===\n"
         )
-        result = _parse_d1_yaml(raw)
+        result = _parse_d1_review(raw)
         assert result.ok is True
         assert result.verdict == "FAIL"
 
@@ -424,7 +428,7 @@ class TestParseD1Yaml:
             "## Verdict\n\nExcellent module.\n"
             "===REVIEW_END===\n"
         )
-        result = _parse_d1_yaml(raw)
+        result = _parse_d1_review(raw)
         assert result.ok is True
         assert result.verdict == "PASS"
 
@@ -702,19 +706,29 @@ class TestExtractDelimiter:
         result = _extract_delimiter(text, "===REVIEW_START===", "===REVIEW_END===")
         assert result == "real content"
 
-    def test_tolerant_recovers_truncated(self):
-        """Tolerant extraction: plain text without YAML fails validation → returns None.
+    def test_tolerant_yaml_mode_rejects_prose(self):
+        """Tolerant extraction (yaml mode): plain text fails YAML validation → returns None.
 
-        _extract_delimiter_tolerant requires valid YAML after the start tag.
-        Plain prose will fail YAML validation. This is by design — tolerant mode
-        is for truncated YAML output, not arbitrary text.
+        Default content_type="yaml" requires valid YAML with ``items`` key.
+        Plain prose will fail YAML validation. This is by design — yaml mode
+        is for truncated vocab/activity YAML output, not arbitrary text.
         """
         text = "===REVIEW_START===\nContent here but truncated"
         exact = _extract_delimiter(text, "===REVIEW_START===", "===REVIEW_END===")
         assert exact is None
         tolerant = _extract_delimiter_tolerant(text, "===REVIEW_START===", "===REVIEW_END===")
-        # Plain text fails YAML validation in tolerant mode → None
+        # Plain text fails YAML validation in default (yaml) mode → None
         assert tolerant is None
+
+    def test_tolerant_markdown_mode_recovers_prose(self):
+        """Tolerant extraction (markdown mode): plain text is recovered without YAML validation."""
+        text = "===REVIEW_START===\n**Overall Score:** 8.0/10\n**Status:** PASS"
+        tolerant = _extract_delimiter_tolerant(
+            text, "===REVIEW_START===", "===REVIEW_END===",
+            content_type="markdown",
+        )
+        assert tolerant is not None
+        assert "**Overall Score:** 8.0/10" in tolerant
 
     def test_tolerant_with_valid_content(self):
         """Tolerant extraction with exact match (both tags present) delegates to exact."""
