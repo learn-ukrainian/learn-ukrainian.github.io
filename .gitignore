@@ -52,6 +52,9 @@ temp/
 *.pid
 .venv/
 .agent/
+# Temporary/sample images in docs (textbook screenshots, vision test outputs)
+docs/temp_*.png
+docs/bolshakova_*.png
 
 gha-creds-*.json
 .pytest_cache/
@@ -114,8 +117,10 @@ batch_state/
 # Archive of old content (pre-rebuild snapshots)
 _archive/
 
-# MCP broker PID files
+# MCP broker runtime files
 .mcp/servers/message-broker/pids/
+.mcp/servers/message-broker/*.db-shm
+.mcp/servers/message-broker/*.db-wal
 
 # Test artifacts
 test_git_mtime/
