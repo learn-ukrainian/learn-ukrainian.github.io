@@ -1,182 +1,169 @@
-# Plan: l2-uk-direct Curriculum Rebuild — A1 + A2 + B1
+# Plan: Full-Page Textbook Analysis with Gemini Vision
 
-**GH Issues**: #661, #662 (will be updated), new issues for A2/B1
-**Scope**: Complete curriculum plans for A1, A2, B1 — built from Ukrainian textbooks + State Standard 2024
-**Replaces**: The old 44-module A1 plan (thrown out — designed from LLM memory, not from sources)
+## Context
 
-## Why
+We extracted 20,952 images from 83 Ukrainian school textbook PDFs. Three pixel-based cleanup passes removed 2,890 obvious junk (solid colors, gradients, tiny files), leaving 20,952 images. But the **real problem** isn't just junk removal — it's that extracted sub-images lose the Ukrainian text that was next to them on the page.
 
-The existing A1 curriculum (44 modules) was designed from LLM memory. Key problems:
-- **арбуз** used as key word for А (Russian word — Ukrainian is кавун, and textbooks use автобус)
-- Emoji placeholders instead of textbook illustrations
-- YouTube videos that don't match what students should be learning
-- Module content invented rather than sourced from actual Ukrainian pedagogy
-- Textbooks treated as decoration, not as the primary teaching material
+A photo of an apple means nothing alone. On the textbook page, it sits next to "яблуко" — that's the teaching context. Without preserving image+text pairs, the images are useless for the l2-uk-direct curriculum.
 
-The fix: **read the textbooks first, design the curriculum from them**.
+**Goal**: Send full textbook pages to Gemini Vision to:
+1. Extract image+text pairs (preserving pedagogical context)
+2. Classify junk images as a side effect (images with no associated text = junk)
 
-## Phase 1: Research (BLOCKING — must complete before ANY planning)
+## Image Inventory
 
-### 1a. Read State Standard 2024 — A1, A2, B1 sections
+| Type | Count | Description |
+|------|-------|-------------|
+| Full-page renders | 9,185 | image_index=0, ~800x1040px, entire PDF page |
+| Extracted sub-images | 10,708 | image_index≥1, individual elements from pages |
+| **Total** | **19,893** | After 3 cleanup passes |
 
-File: `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt` (6020 lines)
-Mapping: `docs/l2-uk-en/state-standard-2024-mapping.yaml`
+Full-page images already exist — no re-extraction needed.
 
-For each level, extract:
-- §1: Speech activities (listening, reading, writing, speaking) — what can they DO?
-- §2 Catalogue A: All communicative intentions — what situations must they handle?
-- §3 Catalogue B: All thematic areas — what topics must they cover?
-- §4 Catalogue C: Linguistic competence — what phonetics, morphology, syntax?
-- Vocabulary targets (A1: 750, A2: ?, B1: ?)
+## Auth: API Key Required
 
-### 1b. Read Ukrainian textbooks — one author per grade, systematically
+`gemini-cli` cannot read binary/image files (gitignore blocks, workspace sandbox). We use the `google-genai` Python SDK (v1.65.0, already in `.venv`).
 
-**Selection**: Pick ONE primary author per grade for deep reading. Use others for cross-reference.
+**User action** (30 seconds): Generate API key at https://aistudio.google.com/apikey
 
-| Grade | Primary Author | PDF | Pages | Covers |
-|-------|---------------|-----|-------|--------|
-| 1 | Bolshakova (2025) | Part 1 + Part 2 | ~250 | ✅ Already read |
-| 2 | Bolshakova (2019) | Part 1 + Part 2 | ~250 | ✅ Already read |
-| 3 Part 1 | Vashulenko (2020) | Part 1 | ~160 | ✅ Already read |
-| 3 Part 2 | Vashulenko (2020) | Part 2 | ~160 | 🔲 MUST READ |
-| 4 | Kravtsova (2021) | Part 1 | ~160 | 🔲 MUST READ |
-| 4 | Savchenko (2021) | Part 2 | ~160 | 🔲 MUST READ |
-| 5 | Avramenko (2022) | мова | ~250 | 🔲 MUST READ |
-| 6 | Avramenko (2023) | мова | ~250 | 🔲 MUST READ |
+```bash
+export GOOGLE_API_KEY="AIza..."
+```
 
-**~980 pages** of new reading across 5 PDFs.
+Ultra subscription rate limits apply automatically to keys from the same Google account.
 
-For each textbook, document:
-- Teaching sequence (what order are topics introduced?)
-- Grammar concepts and how they're explained
-- Vocabulary clusters with example words
-- Activity types used (загадки, правда/неправда, скоромовки, etc.)
-- What illustrations/images teach (not just decorate)
-- Key pedagogical patterns that should inform our modules
+## Script: `scripts/analyze_textbook_pages.py`
 
-### 1c. Map Bolshakova Букvar pages to letters (for abetka rebuild)
+**Model**: `gemini-2.0-flash` — fast, cheap, excellent vision.
 
-Systematically read every page of Bolshakova Part 1 + Part 2 to build:
-- Complete letter → page mapping (all 33 letters)
-- Correct key words (from the textbook, not invented)
-- Syllable tables used per letter
-- Stories and reading exercises per letter
-- Activity types per letter page
+### Prompt (per full-page image)
 
-### 1d. Cross-reference textbooks
+```
+You are analyzing a Ukrainian school textbook page for a language learning app.
 
-For key teaching concepts, check 2-3 authors to validate:
-- Do they agree on the teaching sequence?
-- What vocabulary do different authors use for the same concept?
-- What activity types appear across all textbooks? (these are proven pedagogy)
+For each distinct visual element on this page (illustration, photo, diagram, letter
+display, chart, map, table), identify:
+1. What the visual element depicts
+2. The Ukrainian text most closely associated with it (word, phrase, or sentence
+   that appears near it or labels it)
+3. Whether this element is useful for teaching Ukrainian
 
-## Phase 2: Curriculum Design
+Respond ONLY with valid JSON:
+{
+  "page_type": "lesson|exercise|reference|title|contents|blank",
+  "elements": [
+    {
+      "type": "illustration|photo|diagram|letter|chart|map|table|QR|decoration|logo",
+      "description_en": "A red apple with a green leaf",
+      "associated_text_uk": "яблуко",
+      "teaching_value": "high|medium|low|none",
+      "position": "top-left|top-center|top-right|center-left|center|center-right|bottom-left|bottom-center|bottom-right"
+    }
+  ]
+}
 
-**Only starts after ALL Phase 1 reading is complete.**
+Rules:
+- Include EVERY visual element, even junk (decorations, logos, QR codes)
+- associated_text_uk must be EXACT Ukrainian text from the page (not translated)
+- If no Ukrainian text is associated, use null
+- teaching_value: high = clear teaching image with text, medium = useful but
+  indirect, low = marginally useful, none = decoration/junk
+```
 
-### 2a. CEFR-to-Textbook mapping
+### Processing Pipeline
 
-Based on the reading, map which textbook content corresponds to which CEFR level:
-- A1: Grade ? content
-- A2: Grade ? content
-- B1: Grade ? content
+1. **Load JSONL metadata** — filter for `image_index == 0` (full-page renders)
+2. **Load cache** from `data/textbook_images/page_analysis.jsonl` (skip processed)
+3. **For each full page**:
+   - Read PNG file
+   - Send to Gemini with the prompt above
+   - Parse JSON response
+   - Write to cache (one line per page)
+4. **Rate limiting**: 10 req/sec with exponential backoff on 429
+5. **Progress**: tqdm bar with grade/page info and ETA
 
-This mapping comes FROM the reading, not from assumptions.
+### CLI Interface
 
-### 2b. Module design — from textbooks, not from memory
+```bash
+# Analyze grade 1-2 pages (priority for l2-uk-direct A1)
+.venv/bin/python scripts/analyze_textbook_pages.py --grade grade-01 grade-02
 
-For each level:
-1. List all State Standard requirements (communicative intentions, thematic areas, grammar)
-2. Map each requirement to specific textbook pages/sections that teach it
-3. Group related textbook content into modules
-4. Design activities that practice what the textbook page teaches
-5. Select textbook images as primary teaching content (emoji = absolute last fallback)
-6. Add video only where it genuinely supplements the teaching (pronunciation demos)
+# Analyze all grades
+.venv/bin/python scripts/analyze_textbook_pages.py --all
 
-### 2c. Module YAML structure update
+# Resume (skips already-processed pages automatically)
+.venv/bin/python scripts/analyze_textbook_pages.py --all
 
-Based on what we learn from the textbooks, update:
-- The YAML schema to properly support textbook images as primary content
-- The `image_ref` field usage (page-level references to specific textbook pages)
-- The `image_sources` attribution system
-- Activity types to match what Ukrainian pedagogues actually use
+# Show stats from existing analysis
+.venv/bin/python scripts/analyze_textbook_pages.py --stats
 
-### 2d. Write curriculum plans
+# Link analysis results back to extracted sub-images
+.venv/bin/python scripts/analyze_textbook_pages.py --link
 
-One plan document per level:
-- `docs/l2-uk-direct/A1-CURRICULUM.md`
-- `docs/l2-uk-direct/A2-CURRICULUM.md`
-- `docs/l2-uk-direct/B1-CURRICULUM.md`
+# Delete junk sub-images (teaching_value=none, no associated text)
+.venv/bin/python scripts/analyze_textbook_pages.py --cleanup --execute
+```
 
-Each plan includes:
-- Module list with teaching objectives (from State Standard)
-- Textbook source mapping (which pages feed each module)
-- Activity types per module
-- Image references per module
-- Vocabulary targets with actual word lists (from textbooks)
-- State Standard compliance checklist
+### Output Files
 
-## Phase 3: Implementation
+**`data/textbook_images/page_analysis.jsonl`** (one line per page):
+```jsonl
+{"page_id":"1-klas-bukvar-bolshakova-2025-1_p010_i00","page":10,"grade":1,"subject":"bukvar","author":"bolshakova","elements":[{"type":"illustration","description_en":"Red apple with leaf","associated_text_uk":"яблуко","teaching_value":"high","position":"center-left"},{"type":"QR","description_en":"QR code linking to audio","associated_text_uk":null,"teaching_value":"none","position":"bottom-right"}],"model":"gemini-2.0-flash","ts":"2026-02-27T..."}
+```
 
-### 3a. Rebuild abetka.yaml from Bolshakova Букvar
+**`data/textbook_images/image_text_pairs.jsonl`** (generated by `--link`):
+```jsonl
+{"image_id":"1-klas-bukvar-bolshakova-2025-1_p010_i01","image_path":"data/textbook_images/grade-01/...","associated_text_uk":"яблуко","description_en":"Red apple with leaf","teaching_value":"high","page":10,"grade":1,"subject":"bukvar"}
+```
 
-- Correct key words from actual textbook pages
-- image_ref for every letter (textbook page images)
-- Activities that match what the textbook teaches
-- No invented content
+### Linking Logic (`--link`)
 
-### 3b. Update components and generator
+Match Gemini's page-level elements to extracted sub-images:
+1. For each page, find all sub-images (same pdf_stem + page, image_index ≥ 1)
+2. Match by position and description (fuzzy — images may not map 1:1)
+3. For unmatched sub-images, mark as `unmatched` for manual review
+4. Output: enriched JSONL with image+text pairs
 
-- LetterGrid: show textbook images, not emoji
-- WatchAndRepeat: video as supplement, not primary
-- New component: TextbookPage (shows a textbook page with optional annotations)
-- generate_mdx_direct.py: handle image_ref rendering
+### Cleanup Logic (`--cleanup --execute`)
 
-### 3c. Build modules level by level
+Delete extracted sub-images where:
+- Parent page analysis shows `teaching_value: "none"` AND `associated_text_uk: null`
+- OR sub-image is unmatched AND below 5KB (likely junk)
+- Update `*-images.jsonl` metadata (same pattern as `cleanup_images.py`)
 
-Follow the curriculum plans. Each module built from textbook sources.
+## Phased Rollout
 
-## Phase 4: Image Quality + Search Testing
+| Phase | Scope | Pages | Purpose |
+|-------|-------|-------|---------|
+| 1 | grade-01, grade-02 | 1,548 | l2-uk-direct A1 curriculum (immediate need) |
+| 2 | grade-03, grade-04 | 960 | l2-uk-direct A2 curriculum |
+| 3 | grade-05 through grade-11 | 6,677 | Full coverage |
 
-After curriculum planning, build a web-based test suite for image search quality:
-- Search interface to query Qdrant image collection
-- Visual results display (see the actual images)
-- Quality scoring (relevance, resolution, clarity)
-- Coverage report (which modules have images, which don't)
+Phase 1 first — verify quality, then expand.
+
+## Cost Estimate
+
+- Phase 1: 1,548 pages × ~200KB avg ≈ 300MB ≈ ~$0.02-0.05
+- Full: 9,185 pages × ~200KB avg ≈ 1.8GB ≈ ~$0.10-0.30
+- Ultra subscription: generous free tier, likely $0 total
 
 ## Files
 
 | File | Action |
 |------|--------|
-| `docs/l2-uk-direct/CURRICULUM-PLAN.md` | REWRITE — old plan thrown out |
-| `docs/l2-uk-direct/A1-CURRICULUM.md` | CREATE — new A1 from textbooks |
-| `docs/l2-uk-direct/A2-CURRICULUM.md` | CREATE — new A2 from textbooks |
-| `docs/l2-uk-direct/B1-CURRICULUM.md` | CREATE — new B1 from textbooks |
-| `docs/l2-uk-direct/textbook-reading-notes/` | CREATE — research notes per grade |
-| `curriculum/l2-uk-direct/a1/abetka.yaml` | REWRITE — from Bolshakova pages |
-| `curriculum/l2-uk-direct/a1/sklad.yaml` | REWRITE — from textbook pedagogy |
-| `curriculum/l2-uk-direct/manifest.yaml` | REWRITE — new module list |
-| `schemas/activities-direct.schema.json` | UPDATE — new activity types from textbooks |
-| `scripts/image_search_test.py` | CREATE — web-based image search tester |
+| `scripts/analyze_textbook_pages.py` | CREATE — main script |
+| `data/textbook_images/page_analysis.jsonl` | CREATE — per-page analysis cache |
+| `data/textbook_images/image_text_pairs.jsonl` | CREATE — image+text pair dataset |
+| `data/textbook_images/grade-*/*.png` | DELETE — junk only, with `--cleanup --execute` |
+| `data/textbook_images/grade-*/*-images.jsonl` | UPDATE — remove junk entries |
 
 ## Verification
 
-1. Every module traces back to specific textbook pages (no invented content)
-2. Every key word verified against actual textbook usage
-3. State Standard compliance: all communicative intentions, thematic areas, grammar requirements covered
-4. Image coverage: every module has textbook image references
-5. Cross-validated against 2+ textbook authors where possible
-
-## Estimated Reading Work
-
-| Item | Pages | Time Est. |
-|------|-------|-----------|
-| State Standard A1+A2+B1 | ~500 lines | 1 session |
-| Grade 3 Part 2 | ~160 pages | 1 session |
-| Grade 4 Parts 1+2 | ~320 pages | 2 sessions |
-| Grade 5 мова | ~250 pages | 1 session |
-| Grade 6 мова | ~250 pages | 1 session |
-| Bolshakova letter mapping | ~120 pages | 1 session |
-| **Total** | ~1600 pages | ~7 sessions |
-
-Research notes saved to `docs/l2-uk-direct/textbook-reading-notes/` for cross-session persistence.
+1. Export `GOOGLE_API_KEY` (generate at aistudio.google.com)
+2. Run Phase 1: `--grade grade-01 grade-02`
+3. Inspect `page_analysis.jsonl` — spot-check 10 pages against actual images
+4. Run `--link` to generate image-text pairs
+5. Verify pairs make sense (apple image → "яблуко", etc.)
+6. Run `--stats` to see distribution of teaching_value across grades
+7. If accurate: `--cleanup --execute` to remove junk
+8. Expand to Phase 2, 3
