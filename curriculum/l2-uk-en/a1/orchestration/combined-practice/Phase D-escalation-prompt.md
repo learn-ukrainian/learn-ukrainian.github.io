@@ -114,7 +114,7 @@ If you want to sound like a local sipping coffee in Lviv, use **бо**. It immed
 
 ### Слово «також» (The word "also/too")
 
-Let us fix another very common structural error. The word **також** [tɑˈkɔʒ] means "also" or "too." English speakers naturally want to put "too" at the absolute end of the sentence: "I want coffee too." If you do this in Ukrainian, it sounds very unnatural.
+Let us fix another very common structural error. The word **також** means "also" or "too." English speakers naturally want to put "too" at the absolute end of the sentence: "I want coffee too." If you do this in Ukrainian, it sounds very unnatural.
 
 **How it works:**
 In Ukrainian, **також** should be placed *before* the verb, or right next to the word it emphasizes. It almost NEVER goes at the very end of the sentence.
@@ -143,7 +143,7 @@ The **базар** (market) is the beating heart of fresh food and social intera
 > [!history-bite] **The Heart of the Community**
 > Historically, the market square was the center of every Ukrainian town or village. Today, local bazars (базари) or rynoks (ринки) remain essential. People prefer the bazar for fresh vegetables, fruits, and homemade dairy, trusting the "babusias" (grandmothers) who bring produce from their own gardens over large chain stores.
 
-Let us look at a multi-turn interaction combining what we know. We will use the word **разом** [ˈrɑzɔm] (together) to coordinate actions.
+Let us look at a multi-turn interaction combining what we know. We will use the word **разом** (together) to coordinate actions.
 
 **Олена:** Вікторе, спочатку ми йдемо на базар, бо — ми купуємо овочі.
 (Viktor, first we go to the market, because — we are buying vegetables.)
@@ -165,7 +165,7 @@ Notice how the narrative flows:
 
 ### Вирішення проблем: «Якщо» (Problem-solving: "If")
 
-At the bazar, or in any real-life situation, things do not always go as planned. What if the market is closed? What if they don't have tomatoes? To handle unexpected changes, we use the conditional word **якщо** [jɑkˈʃtʃɔ] (if).
+At the bazar, or in any real-life situation, things do not always go as planned. What if the market is closed? What if they don't have tomatoes? To handle unexpected changes, we use the conditional word **якщо** (if).
 
 **How it works:**
 Use **якщо** to introduce a condition or a problem. Then, use a comma and provide the solution or the consequence in the second part of the sentence. Often, the second part starts with **то** (then), though it is optional.

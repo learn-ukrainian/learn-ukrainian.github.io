@@ -66,7 +66,7 @@ The phrase «Я йду на автобус» is problematic at A1. Throughout th
 This is a grammar rule compressed into one Ukrainian sentence with no English explanation. At A1, a learner encountering "після приголосної" (after a consonant) for the first time will not understand what this means without English scaffolding. The rule itself is correct, but it needs context: "Choose **у** when the previous word ends in a consonant, **в** when it ends in a vowel."
 
 **Issue 3 (LOW) — IPA discrepancy for "звідки".**
-Content line 26 shows `[ˈzʋʲidkɪ]` while vocabulary sidecar line 12 shows `[ˈzʲʋʲidkɪ]`. The consonant "з" before "в" is not palatalized in standard pronunciation; the content version is correct. The vocab sidecar needs correction.
+Content line 26 shows `` while vocabulary sidecar line 12 shows ``. The consonant "з" before "в" is not palatalized in standard pronunciation; the content version is correct. The vocab sidecar needs correction.
 
 **Positive:** No Russianisms detected. No colonial framing. Ukrainian grammar is accurate across all case forms. The в/на + Locative and в/на + Accusative distinctions are well-explained. Euphony variants з/із/зі are correctly presented (line 258-262).
 
@@ -277,7 +277,7 @@ At 44.4%, the immersion falls squarely within the 35-55% target for A1 module 30
 
 ### Fix 6 — Vocab sidecar line 12: Fix IPA for «звідки»
 **File:** `vocabulary/prepositions-direction-origin.yaml`, line 12
-**Action:** Change `[ˈzʲʋʲidkɪ]` to `[ˈzʋʲidkɪ]` — the «з» before «в» is not palatalized.
+**Action:** Change `` to `` — the «з» before «в» is not palatalized.
 
 ---
 

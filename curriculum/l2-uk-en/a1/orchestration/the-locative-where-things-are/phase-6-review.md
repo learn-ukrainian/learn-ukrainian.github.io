@@ -93,7 +93,7 @@ Plan-Content Alignment: PASS
 ### Pedagogy: 8/10 → 9/10
 **What to fix:**
 1. Line 198: Remove the "Podruga" bullet entirely. It introduces Genitive confusion.
-2. Replace with: «**Підлога** [pidˈlɔɦɑ] (floor) → **На підлозі** (on the floor). Example: "Килим на підлозі" — The carpet is on the floor.»
+2. Replace with: «**Підлога** (floor) → **На підлозі** (on the floor). Example: "Килим на підлозі" — The carpet is on the floor.»
 
 **Expected score after fix:** 9.2/10
 

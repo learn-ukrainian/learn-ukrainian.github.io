@@ -3,6 +3,28 @@
 > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
 > **NO FIX OUTPUT** — this step produces the review only. Fixes are handled in a separate step if needed.
 
+### Output Block 0: Citation Bank (BEFORE the review)
+
+**MANDATORY** — Build this FIRST by reading files with Read tool and copy-pasting exact quotes.
+Each citation must be verified with Grep before adding to the bank.
+Use `「...」` (CJK corner brackets) for ALL Ukrainian citations — NOT `«»` (those appear inside Ukrainian text and cause parsing collisions).
+
+```
+===CITATION_BANK_START===
+1. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+2. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+3. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+...
+===CITATION_BANK_END===
+```
+
+**Rules:**
+- Every entry MUST be copy-pasted verbatim from Read tool output — zero rewording
+- Verify each with Grep before adding: `Grep pattern="first 5 words" path="{CONTENT_PATH}"`
+- If Grep returns no match, you paraphrased — delete and re-copy
+- Minimum 8 citations for modules >2000 words
+- In the review body below, you may ONLY use `「」` citations that appear in this bank
+
 ### Output Block 1: Review
 
 ```
@@ -43,7 +65,7 @@ Plan-Content Alignment: [PASS/FAIL]
 
 ### Issue 1: {Category}
 - **Location**: Line {N} / Section "{name}"
-- **Original**: «{exact Ukrainian text verified via Grep}»
+- **Original**: 「{exact Ukrainian text from Citation Bank}」
 - **Problem**: {why it's wrong}
 - **Fix**: {concrete replacement}
 
@@ -53,7 +75,7 @@ Plan-Content Alignment: [PASS/FAIL]
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| {N} | «{original}» | «{fixed}» | Russianisms / Calque / Scope / Grammar |
+| {N} | 「{original}」 | 「{fixed}」 | Russianisms / Calque / Scope / Grammar |
 
 ## Beginner Safety Audit
 
@@ -71,7 +93,7 @@ Plan-Content Alignment: [PASS/FAIL]
 
 ### {Dimension Name}: {current}/10 -> 9/10
 **What to fix:**
-1. Line {N}: Change «{current}» -> «{replacement}» — {why}
+1. Line {N}: Change 「{current}」 -> 「{replacement}」 — {why}
 2. Section "{name}": {action} — {impact}
 
 **Expected score after fix:** {X}/10
@@ -99,7 +121,7 @@ Plan-Content Alignment: [PASS/FAIL]
 - Content lines read: {X}
 - Activity items checked: {X}
 - Ukrainian sentences verified: {X}
-- Factual claims verified: {X}
+- Citations in bank: {X}
 - Issues found: {X}
 
 ## Verdict    <!-- REQUIRED — rejection if missing -->
@@ -128,4 +150,6 @@ Plan-Content Alignment: [PASS/FAIL]
 
 ## CRITICAL: Output Format Reminder
 
-Your output MUST start with `===REVIEW_START===` and end with `===REVIEW_END===`. The extraction pipeline uses these exact delimiters. Any output without these delimiters is **automatically discarded** and the entire phase fails. Do not write a summary or conversational response — output the structured review inside the delimiters.
+**CITATION RULE (LAST REMINDER):** Every `「」`-quoted Ukrainian text in your review MUST appear verbatim in the source files. If you cannot find it with Grep, do NOT cite it — you are hallucinating. Use your Citation Bank as the single source of verified quotes.
+
+Your output MUST contain `===CITATION_BANK_START===` / `===CITATION_BANK_END===` BEFORE `===REVIEW_START===` / `===REVIEW_END===`. The extraction pipeline uses these exact delimiters. Any output without these delimiters is **automatically discarded** and the entire phase fails. Do not write a summary or conversational response — output the citation bank, then the structured review inside the delimiters.

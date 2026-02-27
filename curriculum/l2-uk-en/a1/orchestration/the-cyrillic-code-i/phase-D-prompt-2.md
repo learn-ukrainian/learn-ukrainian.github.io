@@ -63,7 +63,7 @@ Plan-Content Alignment: PASS
 | 9 | Richness | 8/10 | <6 | Named cultural references (Saint Cyril, First Bulgarian Empire, Glagolitic script, Ґ restoration). City names (Київ, Львів, Харків). Strong visual mnemonics. Engagement boxes well-distributed (tip, culture, warning, myth-buster, observe). |
 | 10 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 5/5 (details below). Warm opening, clear expectations, quick wins (мама, так, кіт), encouraging tone. Knocked from 9→8 because advanced untaught phrases like «Моя мама найкраща» and «Земля кругла?» appear without scaffolding — a nervous beginner might wonder "was I supposed to know this?" |
 | 11 | LLM Fingerprint | 8/10 | <7 | Section openings are varied (no structural monotony). No "це не просто" / "це не лише" patterns. No cliché metaphors. However: "Let's" / "let's" appears 8+ times across the module. The "bridge" metaphor repeats 3 times (lines 229, 246, 292). Metaphor density is high (~8 distinct metaphors: superpower, code, party, spies, safe harbor, bridge, outfit, traps) but pedagogically motivated. |
-| 12 | Linguistic Accuracy | 9/10 | <9 | All Ukrainian text is grammatically correct. IPA transcriptions verified accurate: [kʲit] for кіт (correct palatalization), [ˈkɑʋɑ] for кава (correct approximant), [t͡sɛ] for це (correct affricate). Vocab form mismatch: "друзі" (plural) in vocabulary file but "друг" (singular) used in content (line 205). |
+| 12 | Linguistic Accuracy | 9/10 | <9 | All Ukrainian text is grammatically correct. IPA transcriptions verified accurate: [kʲit] for кіт (correct palatalization), for кава (correct approximant), [t͡sɛ] for це (correct affricate). Vocab form mismatch: "друзі" (plural) in vocabulary file but "друг" (singular) used in content (line 205). |
 | 13 | Factual Accuracy | 9/10 | <8 | Saint Cyril / Glagolitic / First Bulgarian Empire claims verified. Ґ removed 1933, restored 1990 — historically accurate. "Alphabet Wars" reference to 19th-century imperial restrictions — accurate. Anti-surzhyk claim (ё, ы, э not in Ukrainian) — correct. All letter-sound correspondences accurate. |
 
 **Weighted Overall:**
@@ -94,7 +94,7 @@ Plan-Content Alignment: PASS
   - Match-up activity: `left: фото` / `right: photo`
   - Vocabulary file: `lemma: фото`
 - **Problem**: The word "фото" is NEVER introduced, used, or mentioned anywhere in the content file. Students encounter it in activities without ever seeing it in the lesson. For Module 1 absolute beginners, this is disorienting — they will scramble letters of a word they've never seen.
-- **Fix**: Either (a) add "фото" to the cognate drill table in Section «Практика: Читаємо міжнародні слова» (e.g., `| **фото** | [ˈfɔtɔ] | photo | **зробити фото** (take a photo) |`), or (b) remove "фото" from activities and vocabulary.
+- **Fix**: Either (a) add "фото" to the cognate drill table in Section «Практика: Читаємо міжнародні слова» (e.g., `| **фото** | | photo | **зробити фото** (take a photo) |`), or (b) remove "фото" from activities and vocabulary.
 
 ### Issue 2: Untaught Grammar Forms in Examples Exceed A1.1 Scope
 
@@ -157,7 +157,7 @@ Plan-Content Alignment: PASS
 
 ### Activities: 7/10 → 9/10
 **What to fix:**
-1. Add "фото" to the cognate drill table in Section «Практика: Читаємо міжнародні слова» (between lines 188-189): `| **фото** | [ˈfɔtɔ] | photo | **зробити фото** (take a photo) |`
+1. Add "фото" to the cognate drill table in Section «Практика: Читаємо міжнародні слова» (between lines 188-189): `| **фото** | | photo | **зробити фото** (take a photo) |`
 2. Activities file line 10: Change `right: o (more)` → `right: o (off)` to match content's reference word
 3. Activities file line 12: Change `right: k (skate)` → `right: k (kite)` to match content's reference word (line 62)
 

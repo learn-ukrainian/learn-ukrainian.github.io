@@ -77,7 +77,7 @@ Today, we meet the **Locative case** (Місцевий відмінок). As the
 ---NEW---
 Today, we meet the **Locative case** (Місцевий відмінок). As the name suggests, it is used exclusively for location.
 
-One important distinction: Ukrainian has two location questions. **Де?** [dɛ] means "Where is it?" — static location. **Куди?** [kuˈdɪ] means "Where to?" — direction of motion. Today, we focus only on **Де?** — where things ARE right now, not where they are going.
+One important distinction: Ukrainian has two location questions. **Де?** [dɛ] means "Where is it?" — static location. **Куди?** means "Where to?" — direction of motion. Today, we focus only on **Де?** — where things ARE right now, not where they are going.
 ===FIX_END===
 
 ===FIX_START===
@@ -103,16 +103,16 @@ FILE: curriculum/l2-uk-en/a1/the-locative-where-things-are.md
 ---OLD---
 #### Mutation Х → С
 This is the rarest of the three, but important for body parts.
-*   **Вухо** [ˈʋuxɔ] (ear) → **У вусі**.
+*   **Вухо** (ear) → **У вусі**.
     Example: «Музика у **вусі**» — Music in the ear.
 *   **Муха** (fly) → **На мусі**.
     Example: «Муха на **мусі**» — A fly on a fly (rare in real life, but grammatically correct!).
 ---NEW---
 #### Mutation Х → С
 This is the rarest of the three, but still important.
-*   **Вухо** [ˈʋuxɔ] (ear) → **У вусі**.
+*   **Вухо** (ear) → **У вусі**.
     Example: «Музика у **вусі**» — Music in the ear.
-*   **Черепаха** [t͡ʃɛrɛˈpɑxɑ] (turtle) → **На черепасі**.
+*   **Черепаха** (turtle) → **На черепасі**.
     Example: «Кіт сидить на **черепасі**» — The cat is sitting on the turtle.
 ===FIX_END===
 

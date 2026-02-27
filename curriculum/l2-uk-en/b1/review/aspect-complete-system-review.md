@@ -1,199 +1,148 @@
-<!-- content-hash: b1bb888130ca -->
-# Рецензія: Вид дієслова: повна система
-
+<!-- content-hash: 37c1984e9536 -->
 **Reviewed-By:** claude-opus-4-6
 
-**Level:** B1 | **Module:** b1-06
+# Рецензія: Вид дієслова: повна система
+
+**Level:** B1 | **Module:** 06
 **Overall Score:** 8.8/10
-**Status:** FAIL
-**Reviewed:** 2026-02-23
-
-## D.3 Re-Review: Fix Verification Summary
-
-| D.1 Issue | Status | Notes |
-|-----------|--------|-------|
-| IPA stress "завершення" | **NOT FIXED** | Still has stress on "вер" instead of "ше" |
-| IPA stress "завершувати" | **NOT FIXED** | Still has stress on "вер" instead of "ва" |
-| IPA stress "досягти" | **NOT FIXED** | Still places stress before ɦ instead of on "сяг" |
-| LLM rhetoric line 85 "гордістю мови" | **FIXED** | Now reads «унікальною рисою української морфології» |
-| LLM rhetoric line 223 "лексичні нюанси" | **FIXED** | Now reads «як зміна виду дієслова передає зовсім різний зміст без жодних додаткових слів» |
-| LLM rhetoric line 139 "людського досвіду" | **PARTIAL — REGRESSION** | Changed to «переживань і дій» but introduced double "дуже" |
-| Match-up activity count (12→15+) | **FIXED** | Both match-up activities now have 15 pairs |
-| Fill-in activity count (10→12+) | **FIXED** | First fill-in now has 12 items |
-
-**Conclusion:** 3 of 8 D.1 issues remain unfixed (all IPA), 1 partial fix introduced a regression, 4 fully fixed.
+**Status:** PASS
+**Reviewed:** 2026-02-26
 
 ## Plan Verification
 
 ```
 Plan-Content Alignment: PASS
-- Sections: All 5 H2 sections present and match plan (Розминка та Контекст, Граматична Система: Форми та Функції, Глибинна Семантика: Процес та Результат, Аналіз Помилок та Тонкощі, Практика та Мовленнєві Ситуації)
-- Vocabulary: 29/30 from plan vocabulary present. All 12 required items included, all 5 recommended items included. Additional vocab items (режисер, об'єктив, фіксувати, статика, динаміка) are pedagogically relevant.
-- Grammar scope: CLEAN — aspect system stays within b1-06 boundaries. Motion verb aspect correctly excluded (deferred to b1-16 per SCOPE comment at line 4).
-- Objectives: All 3 objectives addressed (understand complete system, identify from context, choose appropriate aspect).
-- Plan examples: Plan specified казати/сказати as primary example for future tense table; content uses читати/прочитати. Minor deviation, concept fully covered.
-- Activity plan compliance: PASS — match-up now 15 items each (plan 15+), fill-in 12 items (plan 12+). Additional unplanned activity types (error-correction, unjumble, cloze, mark-the-words) provide extra variety.
+- Sections: All 5 planned sections present as H2 headers + bonus «Підсумок» (not in plan, pedagogically appropriate addition)
+- Vocabulary: 14/14 from plan (9 required + 5 recommended), 16 extra = 30 total
+- Grammar scope: CLEAN — aspect system stays within b1-06 scope, does not encroach on b1-07/08 (past tense deep dives) or b1-16 (motion verb aspect)
+- Objectives: All 3 objectives addressed (complete system understanding, context-based identification, situational aspect choice)
 ```
 
 ## Scores
 
 | # | Dimension | Score | Auto-fail | Evidence |
 |---|-----------|-------|-----------|----------|
-| 1 | Experience Quality | 9/10 | <7 | Strong teaching experience. The Paradjanov camera metaphor in Section «Розминка та Контекст» and Video/Photo mode analogy create compelling "aha" moments. The diagnostic task (пекла/спекла at lines 26-32) immediately engages the learner in discovery. The office dialogue in Section «Практика та Мовленнєві Ситуації» (lines 293-296) shows clear real-world application. Section «Глибинна Семантика: Процес та Результат» remains slightly concept-dense (general-factual + repetition + proverbs) but is now better paced with interspersed exercises at lines 151 and 164. |
-| 2 | Coherence | 9/10 | <7 | Excellent logical flow: intuition → rules → deep semantics → error analysis → practice. The Video/Photo metaphor introduced in Section «Розминка та Контекст» is referenced throughout. One structural concern: Section «Аналіз Помилок та Тонкощі» includes semelfactives (lines 232-242) which are more of a grammatical subtype than an "error" or "nuance," fitting better in Section «Граматична Система: Форми та Функції». |
-| 3 | Relevance | 10/10 | <7 | Fully relevant to B1 learner needs. Workplace dialogue (lines 293-296), IT context (line 301), job interview scenario (line 149), and everyday situations (cooking, transport, studying) demonstrate practical applicability across life domains. |
-| 4 | Educational | 9/10 | <7 | All three learning objectives addressed thoroughly. The 4-question algorithm in Section «Практика та Мовленнєві Ситуації» (lines 258-270) is an excellent autonomous decision tool. The temporal marker table (lines 275-285) provides a clear, actionable reference. Proverb analysis in Section «Глибинна Семантика: Процес та Результат» (lines 183-187) provides a genuinely insightful linguistic anchor. |
-| 5 | Language | 8/10 | <8 | Ukrainian is largely natural. However, excessive intensifier density persists: «фундаментальна різниця» (line 30), «кардинально різняться» (line 48), «абсолютно ідентичні» (line 91), «критично важливим» (line 149), «Ще одна фундаментальна характеристика» (line 172), «надзвичайно цікавий» (line 208), «неймовірної динаміки» (line 239), «надзвичайно важливим» (line 301), «потужний інструмент» (line 309). D.2 regression at line 139: «Це дуже важливий нюанс, який робить українську мову дуже точною в описі переживань і дій» — double "дуже" in one sentence is poor Ukrainian style. No Russianisms. No calques. No colonial framing. |
-| 6 | Pedagogy | 9/10 | <7 | Strong TTT: diagnostic task first (lines 23-32), then rules, then practice. 19 engagement boxes across 10+ types provide rich variety. Section «Розминка та Контекст» uses the торт dialogue as genuine discovery before rules are stated. Practice is well-integrated throughout, not only at the end. Exercises in Section «Граматична Система: Форми та Функції» (lines 65-69, 93-104) effectively break dense grammar. |
-| 7 | Immersion | 10/10 | <6 | 99.5% Ukrainian. Target: 85-100% for B1.1. English appears only in justified parenthetical concept labels: "(Video mode)", "(Photo mode)", "(will + verb)", "(Have you ever read...?)", "(daily stand-ups)". All serve cross-linguistic reference or transliteration purposes. |
-| 8 | Activities | 9/10 | <7 | 11 activities across 8 types (quiz ×1, match-up ×2, fill-in ×3, error-correction ×1, unjumble ×1, cloze ×1, mark-the-words ×1, true-false ×1). 124 total items. Match-up activities now have 15 pairs each (plan 15+ met, up from 12 in D.1). Fill-in "Оберіть правильний вид" now has 12 items (plan 12+ met, up from 10 in D.1). All items checked linguistically correct. Error-correction and cloze narrative are particularly well-crafted. |
-| 9 | Richness | 9/10 | <6 | Cultural embedding: Параджанов's «Тіні забутих предків» (1964), Шевченко's «Кобзар», Леся Українка's «Лісова пісня», Ukrainian proverbs. Tables: comparative future tense table (lines 125-132), temporal markers table (lines 275-285). Dialogues: торт scene (lines 26-28), concert dialogue (lines 253-255), office report (lines 293-296). 19 engagement boxes across 10+ types. |
-| 10 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5. B1 learners are appropriately challenged. Section «Глибинна Семантика: Процес та Результат» is concept-dense but now has exercises interspersed (lines 151, 164) which helps pacing. The 4-question algorithm in Section «Практика та Мовленнєві Ситуації» provides a practical safety net for learners who feel overwhelmed by the semantic subtleties. Content length (4820 words) is substantial but well-structured. |
-| 11 | LLM Fingerprint | 8/10 | <7 | D.2 fixed two of three flagged instances: "гордістю мови" (line 85) now reads «унікальною рисою української морфології» — factual and clean; "лексичні нюанси" (former line 223) now reads «як зміна виду дієслова передає зовсім різний зміст без жодних додаткових слів» (line 230) — clean. However: line 309 «потужний інструмент для створення живих, динамічних та змістовних текстів» remains a classic AI closing cliché. Line 239 «Використання цих форм додає вашій розповіді неймовірної динаміки» — hyperbolic. Structural monotony: PASS (each H2 opens differently). Callout title repetition: PASS. Example formatting varies (tables, bullets, dialogues, numbered lists): PASS. |
-| 12 | Linguistic Accuracy | 8/10 | <9 | **AUTO-FAIL: 3 IPA stress errors remain unfixed in vocabulary file.** (1) Line 25: "завершення" given as — stress on "вер" instead of "ше". Correct: (завершéння). (2) Line 66: "завершувати" given as — stress on "вер" instead of "ва". Correct: (завершувáти). (3) Line 81: "досягти" given as — stress before ɦ instead of on "сяг". Correct: (дося́гти). Content grammar explanations are all accurate. All aspectual pairs verified correct. |
-| 13 | Factual Accuracy | 9/10 | <8 | Grammar rules accurately presented. State Standard §4.2.3.1 reference consistent with research notes. Параджанов's «Тіні забутих предків» (1964) correctly attributed. Etymology of synthetic future from «імати» is linguistically sound. Proverbs «Зробив діло — гуляй сміло» and «Вік живи — вік учись» are real Ukrainian proverbs, correctly analyzed. The [!culture] box about «Лісова пісня» (line 242) hedges with «можна уявити» which avoids fabrication. No factual errors found in any callout box. |
+| 1 | Experience Quality | 9/10 | <7 | Strong opening hook with Parajanov metaphor, diagnostic baking scenario (lines 24-32), Video/Photo model keeps learner anchored. "Did I Learn?" test: 5/5. |
+| 2 | Coherence | 9/10 | <7 | Clean arc: metaphor → diagnosis → grammar forms → deep semantics → error analysis → practice → summary. Each section builds on the previous; proverbs in section «Глибинна Семантика: Процес та Результат» revisit Video/Photo from section «Розминка та Контекст». |
+| 3 | Relevance | 9/10 | <7 | Aspect is the single most important B1 grammar topic. IT stand-up example (line 299), job interview scenario (line 147), and work reporting dialogue (lines 291-296) anchor grammar in real-world Ukrainian professional life. |
+| 4 | Educational | 9/10 | <7 | TTT structure: diagnostic task before rules, 4-step algorithm (lines 257-268), time marker table (lines 273-283). Clear "why" layer throughout — learner understands communicative consequences of aspect choice, not just rules. |
+| 5 | Language | 8/10 | <8 | Ukrainian is natural throughout (99.8% immersion, zero Russianisms in prose). Issue: line 192 «Це союз, створений для опису процесів» uses "союз" metaphorically (alliance), but since B1 learners know "союз" as grammatical term (conjunction), this creates unnecessary ambiguity. |
+| 6 | Pedagogy | 9/10 | <7 | Excellent TTT: diagnostic baking dialogue → concept explanation → practice integration. Proverbs as "linguistic anchors" (lines 182-185) are a clever mnemonic device. Algorithm + marker table give learners concrete tools. |
+| 7 | Immersion | 10/10 | <6 | 99.8% Ukrainian. Only non-Ukrainian content: SCOPE comment, conceptual labels "Video mode"/"Photo mode" (used as teaching mnemonics, appropriate). |
+| 8 | Activities | 8/10 | <7 | 11 activities, 8 distinct types — strong variety. Issue: 3 items use Russicism distractors ("рішав" line 534, "доказував" lines 595/602) in aspect-focused exercises, testing lexical correctness instead of aspect choice. |
+| 9 | Richness | 9/10 | <6 | Parajanov film reference, Shevchenko poetry, Ukrainian proverbs, folk tales, IT jargon context, job interview scenario, office dialogue. Tables, exercises, callout boxes distributed throughout. |
+| 10 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5. The 4-step algorithm (lines 257-268) provides a concrete safety net. Graduated difficulty: warm-up → forms → semantics → nuances → practice. |
+| 11 | LLM Fingerprint | 9/10 | <7 | Zero instances of "це не просто", "давайте розглянемо", "варто зазначити". Section openings are all distinct. Minor: "Розуміння цієї/цих X допоможе/дозволяє" appears 3× (lines 12, 18, 105), but this is natural Ukrainian pedagogical phrasing, not AI artifact. |
+| 12 | Linguistic Accuracy | 9/10 | <9 | Grammar rules verified: future tense paradigm (line 123-130 table), "бути + ДВ" prohibition, ingressive "по-", semelfactive "-ну-", general-factual imperfective — all accurate. Etymology of synthetic future from "імати" (line 105) is correct. No overgeneralizations found. |
+| 13 | Factual Accuracy | 8/10 | <8 | Parajanov/«Тіні забутих предків» (1964) claim is accurate. Issue: line 240 states «у «Лісовій пісні» Лесі Українки семельфактивні дієслова передають раптові зміни настрою героїв» as fact, then illustrates with imagined examples ("можна уявити, як"). This is unsubstantiated literary analysis presented as established observation. |
 
-**Weighted Overall:**
-```
-(9×1.5 + 9×1.0 + 10×1.0 + 9×1.2 + 8×1.1 + 9×1.2 + 10×1.0 + 9×1.3 + 9×0.9 + 8×1.3 + 8×1.0 + 8×1.5 + 9×1.5) / 15.5
-= (13.5 + 9.0 + 10.0 + 10.8 + 8.8 + 10.8 + 10.0 + 11.7 + 8.1 + 10.4 + 8.0 + 12.0 + 13.5) / 15.5
-= 136.6 / 15.5
-= **8.8/10**
-```
+**Weighted Overall:** (9×1.5 + 9×1.0 + 9×1.0 + 9×1.2 + 8×1.1 + 9×1.2 + 10×1.0 + 8×1.3 + 9×0.9 + 9×1.3 + 9×1.0 + 9×1.5 + 8×1.5) / 15.5 = (13.5 + 9 + 9 + 10.8 + 8.8 + 10.8 + 10 + 10.4 + 8.1 + 11.7 + 9 + 13.5 + 12) / 15.5 = 136.6 / 15.5 = **8.8/10**
 
 ## Auto-Fail Checklist Results
 
-- Russianisms: [CLEAN] — no instances detected
-- Calques: [CLEAN] — no instances detected
-- Colonial framing: [CLEAN] — no Russian-comparison patterns found
-- Grammar scope: [CLEAN] — aspect system within b1-06 scope, motion verb aspect correctly deferred
-- Activity errors: [CLEAN] — all 11 activities (124 items) checked, all linguistically correct
-- Beginner safety: 4/5
-- Factual accuracy: [CLEAN] — all grammar rules, cultural references, and etymologies verified
+- Russianisms: [CLEAN] — no Russianisms in prose content. "рішав" and "доказував" appear only as incorrect distractor options in activities (intentional but off-focus).
+- Calques: [CLEAN] — no calques detected.
+- Colonial framing: [CLEAN] — no Russian comparisons, no "Unlike Russian..." patterns.
+- Grammar scope: [CLEAN] — stays within b1-06 scope. Motion verb aspect explicitly excluded per SCOPE comment.
+- Activity errors: [3 off-focus distractors] — see Issue 2 below.
+- Beginner safety: 5/5
+- Factual accuracy: [1 unsubstantiated claim] — «Лісова пісня» literary analysis.
 
 ## Critical Issues Found
 
-### Issue 1: IPA Stress Placement Errors — UNFIXED FROM D.1 (Linguistic Accuracy — AUTO-FAIL TRIGGER)
-- **Location**: Vocabulary file, lines 25, 66, 81
-- **Original (line 25)**: «ipa: ''» for "завершення"
-- **Problem**: Stress mark placed on syllable "вер" instead of "ше". The word завершéння has stress on the third syllable. This was flagged in D.1 and D.2 did NOT apply the fix.
-- **Fix**: Change to `ipa: ''`
+### Issue 1: Unsubstantiated literary analysis in culture callout
+- **Location**: Line 240 / Section «Аналіз Помилок та Тонкощі»
+- **Original**: «у «Лісовій пісні» Лесі Українки семельфактивні дієслова передають раптові зміни настрою героїв: можна уявити, як на тлі тихого лісового фону (НДВ: «шуміло», «плескалося») раптово «крикнула» Мавка або «тріснула» гілка»
+- **Problem**: The opening clause states as fact that semelfactive verbs in «Лісова пісня» convey sudden mood shifts, then pivots to "можна уявити" (one can imagine) to illustrate — effectively inventing an example while framing it as analysis of the actual text. The verbs «шуміло», «плескалося», «крикнула», «тріснула» are plausible for the forest setting but are not cited from the actual drama.
+- **Fix**: Either cite a real passage from «Лісова пісня» with actual verbs, or reframe the entire callout as a hypothetical teaching exercise: «Уявімо лісову сцену...» without attributing specific linguistic features to Леся Українки's text.
 
-- **Original (line 66)**: «ipa: ''» for "завершувати"
-- **Problem**: Stress on "вер" instead of "ва". Standard -увати imperfectives have stress on the penultimate syllable: завершувáти. Unfixed from D.1.
-- **Fix**: Change to `ipa: ''`
+### Issue 2: Off-focus Russicism distractors in aspect activities
+- **Location**: Activities YAML, lines 534, 595, 602
+- **Original**: Distractor "рішав" (line 534) in negation activity; distractors "доказував"/"доказав" (lines 595, 602) in "attempt vs success" activity.
+- **Problem**: These activities test aspect choice (НДВ vs ДВ), but "рішав" and "доказувати/доказати" are Russicisms (correct: вирішував, доводити/довести). Including them as distractors tests lexical correctness rather than the target skill. A learner who correctly identifies the aspect but picks "доказував" because they don't know it's a Russicism fails for the wrong reason.
+- **Fix**: Replace "рішав" with a valid Ukrainian imperfective option (e.g., "розв'язував"). Replace "доказував"/"доказав" with aspect-contrasting alternatives using standard verbs (e.g., "переконував"/"переконав").
 
-- **Original (line 81)**: «ipa: ''» for "досягти"
-- **Problem**: Stress mark before ɦ suggests stress on final cluster. The word дося́гти has stress on the second syllable "сяг". Unfixed from D.1.
-- **Fix**: Change to `ipa: ''`
-
-### Issue 2: D.2 Regression — Double "дуже" (Language Quality)
-- **Location**: Line 139, Section «Граматична Система: Форми та Функції»
-- **Original**: «Це дуже важливий нюанс, який робить українську мову дуже точною в описі переживань і дій.»
-- **Problem**: D.2 replaced "вкрай точною в описі людського досвіду" with "дуже точною в описі переживань і дій" without noticing the earlier "дуже важливий" in the same sentence. This creates an awkward double "дуже" that a native speaker would modulate (e.g., using "вельми", "доволі", or restructuring).
-- **Fix**: Change to «Це важливий нюанс, який робить українську мову точною в описі переживань і дій.» (Remove both "дуже" — the sentence doesn't need intensifiers to make its point.)
-
-### Issue 3: Residual Intensifier Density (Language Quality)
-- **Location**: Throughout all sections
-- **Problem**: D.1 flagged ~15 intensifiers. D.2 fixed 3 flagged LLM rhetoric instances but did not address the broader pattern. Remaining: «фундаментальна різниця» (line 30), «кардинально різняться» (line 48), «абсолютно ідентичні» (line 91), «критично важливим» (line 149), «Ще одна фундаментальна характеристика» (line 172), «надзвичайно цікавий та тонкий аспект» (line 208), «неймовірної динаміки» (line 239), «надзвичайно важливим» (line 301), «потужний інструмент» (line 309). While some intensifiers are justified (e.g., "абсолютно ідентичні" in line 91 is linguistically accurate for aspect pair equivalence), the cumulative density remains higher than natural teacher speech.
-- **Fix (highest priority)**: 
-  - Line 239: «неймовірної динаміки» → «значної динаміки»
-  - Line 301: «надзвичайно важливим» → «важливим»
-  - Line 309: «потужний інструмент» → «важливий інструмент»
-
-### Issue 4: AI Closing Cliché (LLM Fingerprint)
-- **Location**: Line 309, Section «Підсумок»
-- **Original**: «Опанувавши цю систему, ви отримали потужний інструмент для створення живих, динамічних та змістовних текстів українською мовою.»
-- **Problem**: "Потужний інструмент для створення живих, динамічних та змістовних текстів" is a stack of three vague positive adjectives in the classic AI summary style. A teacher would close with something more concrete about what the learner can now do.
-- **Fix**: «Опанувавши цю систему, ви зможете точніше описувати події — від щоденних звичок до важливих досягнень — і ваша розповідь звучатиме більш природно для українського слухача.»
+### Issue 3: Potentially confusing "союз" metaphor
+- **Location**: Line 192 / Section «Аналіз Помилок та Тонкощі»
+- **Original**: «допоміжне дієслово «бути» в майбутньому часі (буду, будеш, буде) працює **винятково** з дієсловами недоконаного виду. Це союз, створений для опису процесів.»
+- **Problem**: The word "союз" is used metaphorically (meaning "alliance/partnership"), but B1 learners already know "союз" as a grammatical term meaning "conjunction" (і, але, або). This could cause a moment of confusion — "Is бути a conjunction?"
+- **Fix**: Replace "союз" with a non-grammatical metaphor: «Це тандем, створений для опису процесів» or «Це партнерство, створене для опису процесів».
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 139 | «дуже важливий нюанс, який робить українську мову дуже точною» | «важливий нюанс, який робить українську мову точною» | Stylistic (D.2 regression) |
-| 239 | «неймовірної динаміки» | «значної динаміки» | Intensifier density |
-| 301 | «надзвичайно важливим» | «важливим» | Intensifier density |
-| 309 | «потужний інструмент для створення живих, динамічних та змістовних текстів» | «зможете точніше описувати події — від щоденних звичок до важливих досягнень» | AI cliché |
+| 192 | «Це союз, створений для опису процесів» | «Це тандем, створений для опису процесів» | Clarity (ambiguous term) |
+| 534 (act.) | distractor "рішав" | "розв'язував" | Russicism distractor |
+| 595 (act.) | distractor "доказував" | "переконував" | Russicism distractor |
+| 602 (act.) | distractor "доказував"/"доказав" | "переконував"/"переконав" | Russicism distractor |
 
 ## Beginner Safety Audit
 
-"Would I Continue?" Test: 4/5
-- Overwhelmed? **Pass** — Content is dense but well-structured with 19 engagement boxes breaking up prose.
-- Instructions clear? **Pass** — Each concept is explained with concrete examples before moving forward.
-- Quick wins? **Pass** — Diagnostic task at lines 23-32 gives early success feeling; micro-practice at lines 65-69 provides quick validation.
-- Ukrainian scary? **Pass** — Complex grammar is scaffolded with the Video/Photo metaphor as a consistent anchor.
-- Come back tomorrow? **Marginal** — Section «Глибинна Семантика: Процес та Результат» introduces general-factual meaning, repetition semantics, and proverb analysis in sequence. Despite exercises at lines 151 and 164, the conceptual density may fatigue some B1 learners before reaching Section «Аналіз Помилок та Тонкощі».
+"Would I Continue?" Test: 5/5
+- Overwhelmed? Pass — graduated progression, concepts introduced one at a time with examples before rules.
+- Instructions clear? Pass — diagnostic task (baking scenario), Video/Photo model, 4-step algorithm all provide clarity.
+- Quick wins? Pass — the diagnostic task at line 24 gives immediate success experience.
+- Ukrainian scary? Pass — immersion is well-scaffolded with familiar vocabulary and real-world scenarios.
+- Come back tomorrow? Pass — cultural hooks (Parajanov, Shevchenko, IT jargon) make content memorable and worth returning to.
 
 ## Strengths
 
-- **D.2 fixes successfully addressed key LLM rhetoric issues**: The "гордістю мови" replacement at line 85 and the "лексичні нюанси" replacement at line 230 are well-done — factual, clean, and pedagogically appropriate.
-- **Activity count fixes are solid**: Match-up activities now have 15 pairs each and fill-in has 12 items, meeting plan requirements. The additional items are linguistically accurate and pedagogically relevant.
-- **Paradjanov metaphor remains highly effective**: The dynamic camera / static frame analogy is a genuinely insightful cultural bridge that makes an abstract grammar concept tangible.
-- **4-question algorithm** (lines 258-270) is an excellent practical tool for learner autonomy.
-- **Proverb analysis** (lines 183-187) is a pedagogically rich way to anchor abstract grammar in cultural memory.
-- **Error-correction activity** (activity lines 262-337) is one of the best exercises in the module — directly targets the #1 learner error (буду + perfective infinitive).
-- **Cloze narrative** (activity lines 360-462) provides authentic aspect usage in a continuous story context.
+- **Parajanov metaphor (line 17)**: Linking cinematic techniques to aspect choice is brilliant pedagogy — it makes an abstract grammar concept visual and memorable. The dynamic camera = НДВ, static frame = ДВ mapping is both culturally authentic and pedagogically effective.
+- **Diagnostic baking dialogue (lines 24-32)**: Perfect TTT implementation — the learner encounters the problem before the rule is stated. The scenario is vivid (flour everywhere, tired Olena) and the aspect contrast is immediately obvious.
+- **4-step decision algorithm (lines 257-268)**: Converts abstract grammar knowledge into a concrete, actionable procedure. This is the kind of tool a learner can actually use in live conversation.
+- **Proverbs as anchors (lines 182-185)**: «Зробив діло — гуляй сміло» (ДВ) vs «Вік живи — вік учись» (НДВ) are memorable, authentic, and perfectly illustrate the core semantic distinction.
+- **IT jargon callout (line 299)**: «я фіксив баг» vs «я пофіксив баг» shows how even borrowed vocabulary adapts to the Ukrainian aspect system — a genuinely insightful observation that connects grammar to modern professional life.
 
-## Fix Plan to Reach 9.0/10
-
-### Linguistic Accuracy: 8/10 → 9/10
-**What to fix:**
-1. Vocabulary line 25: Change `ipa: ''` → `ipa: ''` — correct stress placement for завершéння
-2. Vocabulary line 66: Change `ipa: ''` → `ipa: ''` — correct stress placement for завершувáти
-3. Vocabulary line 81: Change `ipa: ''` → `ipa: ''` — correct stress placement for дося́гти
-
-**Expected score after fix:** 9/10
+## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
 
 ### Language: 8/10 → 9/10
 **What to fix:**
-1. Line 139: Remove double "дуже" — «Це важливий нюанс, який робить українську мову точною в описі переживань і дій.»
-2. Line 239: «неймовірної динаміки» → «значної динаміки»
-3. Line 301: «надзвичайно важливим» → «важливим»
-4. Line 309: Replace AI closing cliché with concrete learner outcome.
+1. Line 192: Change «Це союз, створений для опису процесів» → «Це тандем, створений для опису процесів» — eliminates grammatical term ambiguity.
 
 **Expected score after fix:** 9/10
 
-### LLM Fingerprint: 8/10 → 9/10
+### Activities: 8/10 → 9/10
 **What to fix:**
-1. Line 309: Replace «потужний інструмент для створення живих, динамічних та змістовних текстів» with concrete description of what the learner can now do.
-2. The Language fixes above (removing intensifiers) will also improve this dimension.
+1. Line 534: Replace distractor "рішав" with "розв'язував" — tests aspect (imperfective alternative) not Russicism avoidance.
+2. Lines 595, 602: Replace distractors "доказував"/"доказав" with "переконував"/"переконав" — maintains aspect contrast with standard Ukrainian vocabulary.
+
+**Expected score after fix:** 9/10
+
+### Factual Accuracy: 8/10 → 9/10
+**What to fix:**
+1. Line 240: Rewrite the «Лісова пісня» callout to frame the example as hypothetical illustration rather than literary analysis. Change opening from «у «Лісовій пісні» Лесі Українки семельфактивні дієслова передають раптові зміни настрою героїв:» to «Уявімо сцену з лісової казки (як у «Лісовій пісні» Лесі Українки):» — removes the unsupported analytical claim while preserving the cultural reference.
 
 **Expected score after fix:** 9/10
 
 ### Projected Overall After Fixes
 ```
-(9×1.5 + 9×1.0 + 10×1.0 + 9×1.2 + 9×1.1 + 9×1.2 + 10×1.0 + 9×1.3 + 9×0.9 + 8×1.3 + 9×1.0 + 9×1.5 + 9×1.5) / 15.5
-= (13.5 + 9.0 + 10.0 + 10.8 + 9.9 + 10.8 + 10.0 + 11.7 + 8.1 + 10.4 + 9.0 + 13.5 + 13.5) / 15.5
-= 140.2 / 15.5
-= **9.0/10** → PASS
+(9×1.5 + 9×1.0 + 9×1.0 + 9×1.2 + 9×1.1 + 9×1.2 + 10×1.0 + 9×1.3 + 9×0.9 + 9×1.3 + 9×1.0 + 9×1.5 + 9×1.5) / 15.5
+= (13.5+9+9+10.8+9.9+10.8+10+11.7+8.1+11.7+9+13.5+13.5) / 15.5
+= 140.5 / 15.5 = 9.06/10
 ```
 
 ## Factual Verification
 
 - Research notes consulted: YES
-- Key Facts Ledger present: NO (not applicable for core grammar track)
-- Dates checked: 1 (Параджанов 1964 — correct)
-- Named figures verified: 3 (Параджанов, Шевченко, Леся Українка — all correctly attributed)
-- Primary quotes cross-referenced: N/A (core track)
-- Chronological sequence: N/A (core track)
-- Claims without research grounding: 0
-- State Standard §4.2.3.1 reference: Consistent with research notes (line 4 of research)
-- Etymology of synthetic future from «імати»: Linguistically sound, consistent with research
-- Proverbs verified: 2/2 — «Зробив діло — гуляй сміло» and «Вік живи — вік учись» are real Ukrainian proverbs, correctly analyzed
-- Callout box claims: All 19 boxes checked — no fabricated claims found
+- Key Facts Ledger present: NO (not a seminar track — research notes are supplementary)
+- Dates checked: 1 — «Тіні забутих предків» (1964) ✅ correct
+- Named figures verified: 2 — Сергій Параджанов ✅, Тарас Шевченко ✅
+- Primary quotes cross-referenced: 2 proverbs verified as authentic Ukrainian proverbs ✅
+- Chronological sequence: N/A (grammar module)
+- Claims without research grounding: 1 — the «Лісова пісня» semelfactive verb analysis (line 240) is not grounded in research notes and presents unsubstantiated literary analysis.
 
 ## Verification Summary
 
-- Content lines read: 318
-- Activity items checked: 124 (across 11 activities)
-- Ukrainian sentences verified: 55+
-- IPA transcriptions checked: 29 (3 errors found — all in D.1, unfixed)
-- Factual claims verified: 19 callout boxes + all grammar rules
-- Issues found: 4 (1 critical unfixed from D.1, 1 D.2 regression, 2 residual style issues)
+- Content lines read: 316
+- Activity items checked: 119 (across 11 activities)
+- Ukrainian sentences verified: 48 (all example sentences, dialogue lines, proverbs)
+- IPA transcriptions checked: 0 (none present — appropriate for B1 grammar module)
+- Factual claims verified: 5 (Parajanov film date, Shevchenko attribution, 2 proverbs, «імати» etymology)
+- Issues found: 3
 
 ## Verdict
 
-**FAIL**
+**PASS**
 
-The sole blocking issue is **Linguistic Accuracy 8/10 < 9/10** caused by three IPA stress placement errors in the vocabulary file (завершення, завершувати, досягти) that were flagged in D.1 but not addressed by D.2. These are simple stress mark position changes in the YAML file. Additionally, D.2 introduced a minor regression (double "дуже" at line 139) while fixing LLM rhetoric. All other D.1 fixes (LLM rhetoric removal, activity count increases) were successfully applied. The module is pedagogically strong and close to passing — the remaining fixes are mechanical.
+This is a strong B1 grammar module with excellent pedagogical structure, engaging cultural hooks, and near-perfect immersion. The three issues found are minor and localized: an ambiguous metaphor (line 192), off-focus activity distractors (3 items), and one unsubstantiated literary claim (line 240). All are fixable without restructuring. After targeted fixes, this module should reach 9.0+/10.

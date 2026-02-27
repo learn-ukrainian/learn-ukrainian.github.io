@@ -99,3 +99,7 @@ items:
     translation: "building"
     pos: "noun"
     gender: "f"
+  - lemma: "вид"
+    translation: "aspect (grammatical)"
+    pos: "noun"
+    gender: "m"

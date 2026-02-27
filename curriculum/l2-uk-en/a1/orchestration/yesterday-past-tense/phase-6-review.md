@@ -44,9 +44,9 @@ Plan-Content Alignment: PASS
 
 ### Issue 1: Linguistic Accuracy (IPA)
 - **Location**: Section "Cultural Hook: The First Book (1574)"
-- **Original**: «друкував [drukuˈu̯ɑu̯]»
+- **Original**: «друкував»
 - **Problem**: The IPA transcription suggests a `w` sound between vowels (`u` and `a`). In standard Ukrainian, `v` between vowels is realized as `[ʋ]` (labiodental approximant), not `[u̯]`. `[u̯]` usually occurs at the end of a syllable/word or before a consonant.
-- **Fix**: Change to «[drukuˈʋɑu̯]»
+- **Fix**: Change to «»
 
 ### Issue 2: Naturalness (Collocation/Calque)
 - **Location**: Section "Контекст: Вчора куратора"
@@ -70,7 +70,7 @@ Plan-Content Alignment: PASS
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| Hook | «друкував [drukuˈu̯ɑu̯]» | «drukuˈʋɑu̯» | IPA Error |
+| Hook | «друкував» | «drukuˈʋɑu̯» | IPA Error |
 | Context | «Я робила екскурсію» | «Я проводила екскурсію» | Naturalness |
 | Time | «я був студент» | «я був студентом» / «я вчився» | Grammar/Naturalness |
 | Practice | «Вчора я прокидався» | «Вчора я встав» | Aspect Error |

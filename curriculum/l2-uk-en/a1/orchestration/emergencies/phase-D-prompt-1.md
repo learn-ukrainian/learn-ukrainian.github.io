@@ -52,13 +52,13 @@ Read ALL of these files before writing anything:
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Patient Supportive Tutor, acting as Emergency Dispatcher
-Word count:       3064 / 2000 (153.2%)
+Word count:       3020 / 2000 (151.0%)
 Activities:       10
 Vocabulary items: 20
 Engagement boxes: 5
-Immersion:        37.2% (target: 35-55%)
-Richness:         70% (threshold: 95%)
-Richness gaps:    engagement: 4/5, cultural: 1/3, dialogues: 0/4, tables: 0/2
+Immersion:        38.3% (target: 35-55%)
+Richness:         74% (threshold: 95%)
+Richness gaps:    engagement: 4/5, cultural: 1/3, dialogues: 0/4
 Audit status:     PASS
 ```
 
@@ -265,7 +265,7 @@ WELCOME → PREVIEW → PRESENT → PRACTICE → CELEBRATE
 **Ukrainian must be:**
 - Simple vocabulary (high-frequency words)
 - Short sentences
-- Clear pronunciation guidance (IPA)
+- Clear pronunciation guidance (stress marks)
 - Consistent grammar patterns (no exceptions early)
 
 **English must be:**
@@ -380,7 +380,6 @@ Follow the full review protocol. In summary:
 ### STEP 2: Deep Verification (Line by Line)
 - Every Ukrainian sentence: grammar, naturalness, Russianisms
 - English: clarity, warm tutor voice
-- IPA: correct stress placement
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
@@ -666,7 +665,6 @@ Plan-Content Alignment: [PASS/FAIL]
 - Content lines read: {X}
 - Activity items checked: {X}
 - Ukrainian sentences verified: {X}
-- IPA transcriptions checked: {X}
 - Factual claims verified: {X}
 - Issues found: {X}
 

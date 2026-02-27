@@ -5,7 +5,7 @@
 ### Ukrainian Language Quality
 
 **IPA Accuracy** — All transcriptions verified:
-- `[dɛ]`, `[kʊˈdɪ]`, `[ˈzʋʲidkɪ]`, `[ɪˈtɪ]`, `[ˈjixɐtɪ]`, `[u̯ˈdɔmɐ]` — correct. Uses ʋ for В (not w). No tie-bar issues (no affricates in this module). **PASS**
+- `[dɛ]`, ``, ``, ``, ``, `` — correct. Uses ʋ for В (not w). No tie-bar issues (no affricates in this module). **PASS**
 
 **Russianisms** — No кушати, получати, приймати участь, слідуючий, являється, зустрінути, or other Russianisms found. **CLEAN**
 

@@ -8,8 +8,8 @@ Now let me do a thorough adversarial review, checking IPA, grammar, plan complia
 
 **Issue 1: IPA Error — швидкий stress placement**
 - **Location**: `describing-things-adjectives.md`, line 366
-- **Current**: `швидкий [ʃʋɪdˈkɪj]` (stress on second syllable)
-- **Problem**: Ukrainian шви́дкий is stressed on the FIRST syllable, not the second. Correct: [ˈʃʋɪdkɪj].
+- **Current**: `швидкий` (stress on second syllable)
+- **Problem**: Ukrainian шви́дкий is stressed on the FIRST syllable, not the second. Correct:.
 - **Severity**: Error — wrong pronunciation guidance for learners.
 
 ---
@@ -83,9 +83,9 @@ These represent the standard pattern and cover the vast majority of adjectives y
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/describing-things-adjectives.md
 ---OLD---
-*   **телефон** (phone) is Masculine → новий, чорний [ˈt͡ʃɔrnɪj] (black), швидкий [ʃʋɪdˈkɪj] (fast), дорогий, дешевий.
+*   **телефон** (phone) is Masculine → новий, чорний (black), швидкий (fast), дорогий, дешевий.
 ---NEW---
-*   **телефон** (phone) is Masculine → новий, чорний [ˈt͡ʃɔrnɪj] (black), швидкий [ˈʃʋɪdkɪj] (fast), дорогий, дешевий.
+*   **телефон** (phone) is Masculine → новий, чорний (black), швидкий (fast), дорогий, дешевий.
 ===FIX_END===
 
 ===FIX_START===

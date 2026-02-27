@@ -60,9 +60,9 @@ The plan specifies 7 activity types including **3 dedicated свій exercises**
 
 The question paradigm at lines 46-49 is cleanly presented with IPA:
 - «Чий це паспорт?» [t͡ʃɪj]
-- «Чия це сумка?» [t͡ʃɪˈja]
-- «Чиє це фото?» [t͡ʃɪˈjɛ]
-- «Чиї це ключі?» [t͡ʃɪˈji]
+- «Чия це сумка?»
+- «Чиє це фото?»
+- «Чиї це ключі?»
 
 IPA is correct. The [!context] box at line 37 effectively bridges English rigidity ("my" never changes) to Ukrainian flexibility.
 
@@ -122,9 +122,9 @@ Three IPA errors in the vocabulary YAML file that contradict the (correct) conte
 
 | Word | Vocab YAML | Content Table | Correct | Issue |
 |------|-----------|---------------|---------|-------|
-| його | [ˈjɔɦɔ] (line 41) | [jɔˈɦɔ] (line 439) | [jɔˈɦɔ] | Wrong stress — should be on 2nd syllable |
-| її | [jiji] (line 45) | [jiˈji] (line 440) | [jiˈji] | Missing stress mark |
-| прикметник | [prɪˈkmɛtnɪk] (line 81) | [prɪkˈmɛtnɪk] (line 443) | [prɪkˈmɛtnɪk] | Wrong stress placement |
+| його | (line 41) | (line 439) | | Wrong stress — should be on 2nd syllable |
+| її | [jiji] (line 45) | (line 440) | | Missing stress mark |
+| прикметник | (line 81) | (line 443) | | Wrong stress placement |
 
 The content body IPA is correct throughout. The vocabulary YAML file has the errors.
 
@@ -162,9 +162,9 @@ The content body IPA is correct throughout. The vocabulary YAML file has the err
 
 **Location:** `vocabulary/mine-and-yours.yaml` lines 41, 45, 81
 **Evidence:** Three IPA transcriptions have incorrect stress placement:
-- його: `[ˈjɔɦɔ]` should be `[jɔˈɦɔ]` (stress on 2nd syllable, not 1st)
-- її: `[jiji]` should be `[jiˈji]` (missing stress mark entirely)
-- прикметник: `[prɪˈkmɛtnɪk]` should be `[prɪkˈmɛtnɪk]` (stress misplaced)
+- його: `` should be `` (stress on 2nd syllable, not 1st)
+- її: `[jiji]` should be `` (missing stress mark entirely)
+- прикметник: `` should be `` (stress misplaced)
 **Impact:** Learners relying on vocabulary data would learn incorrect pronunciation.
 **Fix:** Correct the three IPA entries in the vocabulary YAML to match the (correct) content body.
 
@@ -293,7 +293,7 @@ Two references to Russian found:
 
 **Required fixes for D.2:**
 1. Add 3 свій-focused activities to the activities YAML (quiz: 8 items, true-false: 8 items, fill-in: 6 items)
-2. Fix 3 IPA entries in vocabulary YAML: його → [jɔˈɦɔ], її → [jiˈji], прикметник → [prɪkˈmɛtnɪk]
+2. Fix 3 IPA entries in vocabulary YAML: його →, її →, прикметник →
 3. Add 6 missing items (твоє, чия, чиє, чиї, свій, річ) to the in-content Vocabulary table
 
 **Recommended improvements (not blocking):**

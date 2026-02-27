@@ -69,7 +69,7 @@ When *you* are the center of the universe, the ending is **-ю** [ju].
 
 > **Я** + **чита** + **ю** = **Я читаю**
 
-This single word **читаю** [t͡ʃɪˈtɑju] means "I read" or "I am reading."
+This single word **читаю** means "I read" or "I am reading."
 Notice the sound. **-ю**. It sounds almost like the English word "you," but in Ukrainian, it usually signals "I" (first person singular) for this verb group.
 
 *   **Я читаю.** (I read / I am reading.)
@@ -159,9 +159,9 @@ This is the longest ending. It has a soft sign **ь** at the end, making the "t"
 ### Розширюємо горизонти: Більше слів
 Now that you have the "Master Key", you can unlock more verbs. These also follow the pattern, so you can use them immediately:
 
-*   **думати** [ˈdumɑtɪ] (to think) → **Я думаю**, **Ти думаєш**
-*   **вивчати** [ʋɪu̯ˈt͡ʃɑtɪ] (to study) → **Я вивчаю**, **Ми вивчаємо**
-*   **розуміти** [rɔzuˈmʲitɪ] (to understand) → **Я розумію**, **Ви розумієте**
+*   **думати** (to think) → **Я думаю**, **Ти думаєш**
+*   **вивчати** (to study) → **Я вивчаю**, **Ми вивчаємо**
+*   **розуміти** (to understand) → **Я розумію**, **Ви розумієте**
     *(Note: This one ends in **-іти**, but it behaves just like the others. It is an honorary member of the club!)*
 
 > [!tip]

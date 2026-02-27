@@ -5,116 +5,136 @@
 ## Scores
 
 | # | Dimension | Score | Evidence Summary |
-|---|-----------|-------|------------------|
-| 1 | Plan Adherence | 9/10 | All 4 H2 sections present and aligned with meta outline. Vocabulary scope matches plan requirements. Minor: plan separates toast/etiquette into section 4 but content places it in section 1. |
-| 2 | Immersion Balance | 8/10 | 35.5% Ukrainian per audit, at the floor of 35-55% target. For an A1.4 phase module, this is borderline low — more Ukrainian could be woven in, especially in section «Культурний контекст: Українська гостинність» which already demonstrates a bilingual pattern. |
-| 3 | Language Quality | 7/10 | **Russianism detected**: «красиві картини» (line 337) — project standards explicitly list красивий→гарний as flagged Russianism. Line 391 «В Україні не можна бути в куртці у ресторані» is slightly unnatural (more natural: «не прийнято сидіти в куртці»). Unjumble answers systematically omit required commas with «будь ласка» (5 instances). |
-| 4 | Factual Accuracy | 9/10 | Cultural facts verified: three-course structure (Перше/Друге/Третє), tipping at 10% matches research notes, «Будьмо!» toast with «Гей!» response is accurate, proverbs «Хліб — усьому голова» and «Гість у дім — Бог у дім» are genuine. Menu prices plausible for 2024-era Ukrainian restaurants. |
-| 5 | Activity Quality | 7/10 | 10 activities, good type variety (match-up ×3, group-sort ×1, quiz ×2, fill-in ×2, unjumble ×2). **Critical**: unjumble answers missing commas (5 instances). **Inconsistency**: fill-in teaches «дайте воду» (Acc., line 174) but unjumble uses «дайте води» (Gen. partitive, line 455) without explanation — confusing at A1. Quiz distractors are appropriately simple. |
-| 6 | Richness | 8/10 | Good cultural hooks: Будьмо toast (line 57-71), гардероб etiquette (line 389-396), bread culture (line 398-404), «Смачного!» usage (line 406-416). Two genuine proverbs. Sample menu is a nice touch. Extended reading passage «Вечеря у Львові» (line 329-362) is engaging. Deducted for formulaic Ukrainian-then-English pattern in section «Культурний контекст: Українська гостинність» (5 repetitions of same structure). |
-| 7 | Lesson Quality | 8/10 | "Would I Continue?" test: 3/5 pass. PASS: instructions clear (step-by-step Крок 1-6), Ukrainian not scary (good English support), content engaging. FAIL: no warm welcome/preview ("Привіт!" absent, no "Today you'll learn..."), no quick wins (massive content dump before any practice). Pacing concern: Section «Презентація: Як зробити замовлення» introduces ~30 new terms before any active practice. |
-| 8 | LLM Fingerprint | 7/10 | **Structural monotony**: 3 of 4 H2 sections open with "Let's..." pattern (lines 17, 79, 254). Section «Культурний контекст: Українська гостинність» uses formulaic "Ukrainian sentence → English expansion" ×5 (lines 379, 385, 391, 400, 408). Line 379 + 381: redundant restatement of the same idea in two languages without adding value. |
-| 9 | Humanity & Warmth | 7/10 | Zero "Don't worry" moments. Zero encouragement phrases ("Great!", "Well done!"). Only one "You can now..." validation at the very end (line 430). No warm greeting. Direct address ("you") is present throughout but emotional scaffolding is absent. For A1, this is too cold — learners need more reassurance. |
+|---|-----------|-------|-----------------|
+| 1 | **Lesson Quality** | 8/10 | Good lesson arc with practical focus, but lacks warmest opening markers and explicit learning preview. No "Привіт!" greeting, no "Today you'll learn..." preview. Closing has self-check questions but no celebratory "You can now..." moment. |
+| 2 | **Language Quality** | 9/10 | Ukrainian is grammatically accurate throughout. No Russianisms in the teaching content (the «счёт» mention in [!myth-buster] is an appropriate anti-Russicism drill). Stress marks are applied inconsistently — present on «Капусня́к», «Гарні́р», «Замо́вити» but absent on multisyllabic words like вареники (line 142), котлета (line 143). Minor: confusing etymological notation at line 163. |
+| 3 | **Immersion** | 9/10 | At 35.5%, falls exactly at the lower boundary of the target band (35-55% for Module 36). The progressive Ukrainian → English scaffolding is well-executed: cultural section (Section «Культурний контекст: Українська гостинність») uses lead-in Ukrainian sentences followed by English explanation, which is excellent pedagogy. The reading passage (lines 333-362) is a strong immersion element. |
+| 4 | **Activity Quality** | 8/10 | 10 activities with 5 types (match-up ×3, quiz ×2, fill-in ×2, unjumble ×2, group-sort ×1). Good variety. However, the fill-in "Я буду..." activity (lines 148-212) has 5 of 8 items testing masculine inanimate accusative (borshch, salat, sup, chay, desert) where the answer is trivially identical to nominative — these don't test any transformation skill. Only 3 items (kavu, vodu, pitsu) test real accusative change. The genitive fill-in (lines 278-345) is better designed with genuine morphological challenges. |
+| 5 | **Richness** | 7/10 | Audit reports 80% vs 95% threshold. Gaps: `dialogues: 0/4` — this is a **scanner false negative**: the module clearly has 4 well-constructed dialogues (lines 271-327) plus a reading passage (lines 329-362). However, `tables: 0/2` is a **genuine gap**: the accusative case explanation (lines 180-191) uses bullet lists where a 3-column table (Nominative → Accusative → Example) would be far clearer for an A1 visual learner. The sample menu (lines 136-156) is also in bullet format instead of a table. |
+| 6 | **Factual Accuracy** | 9/10 | Cultural claims are accurate: the Перше/Друге/Третє meal structure is correct per research notes. «Будьмо!» explanation is accurate. Tipping at 10-15% is current. The proverb «Гість у дім — Бог у дім» (line 420) is a real Ukrainian proverb. «Хліб — усьому голова» (line 403) is authentic. One minor issue: the [!culture] box (line 40-42) claims soup is "almost always" included in бізнес-ланч — this is broadly true but becoming less universal in modern Kyiv restaurants. Not critical. |
+| 7 | **LLM Fingerprint** | 8/10 | No "це не просто" / "це не лише" patterns detected. No generic AI clichés. However, example formatting is uniform across sections: every section uses the identical `* **Example:** «Ukrainian.» (English.)` bullet pattern (e.g., lines 50, 54, 94, 96). The 4 dialogues (lines 271-327) all follow the exact same structure: **Ситуація:** *italic English context* → bolded speaker names → identical line formatting. This structural monotony across 4 instances suggests template-driven generation rather than natural variation. |
+| 8 | **Warmth & Humanity** | 8/10 | The module is friendly and practical but lacks the strongest beginner safety markers. Direct address ("you") is present throughout. The [!tip] boxes provide genuine guidance. However: zero explicit "Don't worry" moments, zero "Great job!" encouragement, zero "You've got this!" validation. The closest is the [!observe] box on line 373-375 about «будь ласка», which feels more instructional than encouraging. The closing (lines 430-442) skips emotional validation and goes straight to self-test questions. |
+| 9 | **Plan Compliance** | 8/10 | All plan content_outline points are addressed, but several are in wrong sections: (a) «Будьмо!» toast appears in Section «Розминка: Структура меню та етикет» but the plan places it in "Підсумок та етикет"; (b) tipping etiquette appears in Section «Презентація: Як зробити замовлення» (lines 226-250) but the plan places it in "Вступ та культурний контекст"; (c) dietary needs are in Section «Презентація» but plan places them in "Практика: Типові ситуації". Two vocab items from the YAML (порція, резервація) don't appear in lesson body text. |
 
 ---
 
 ## Critical Issues Found
 
-### Issue 1: Russianism «красиві» (AUTO-FAIL LIST)
-- **Location**: Line 337, section «Практика: Діалоги у ресторані»
-- **Citation**: «На стіні висять красиві картини.»
-- **Problem**: Project standards explicitly list красивий→гарний as a flagged Russianism. While "красивий" exists in SUM, the project's review protocol marks it for replacement.
-- **Fix**: Replace «красиві картини» with «гарні картини» on line 337. Also update «Картини — paintings» in Словничок (line 370) — the word itself is fine, only the adjective needs correction.
+### Issue 1: Missing Markdown Tables (Richness Gap) — MEDIUM
 
-### Issue 2: Unjumble Activities Missing Commas with «будь ласка»
-- **Location**: Activities file, lines 231, 237, 250, 449, 474
-- **Citations**: 
-  - Line 231: `answer: 'Столик на двох будь ласка'` → should be `'Столик на двох, будь ласка'`
-  - Line 237: `answer: 'Можна меню будь ласка'` → should be `'Можна меню, будь ласка'`
-  - Line 250: `answer: 'Дайте будь ласка рахунок'` → should be `'Дайте, будь ласка, рахунок'`
-  - Line 449: `answer: 'Мені будь ласка каву'` → should be `'Мені, будь ласка, каву'`
-  - Line 474: `answer: 'Можна рахунок будь ласка'` → should be `'Можна рахунок, будь ласка'`
-- **Problem**: «Будь ласка» is a parenthetical/inserted phrase (вставне слово) that requires comma separation in Ukrainian orthography. The content file itself uses commas correctly (e.g., line 123: «Дайте, будь ласка, меню.»), but all 5 unjumble answers omit them. This teaches incorrect punctuation.
-- **Fix**: Either add comma-bearing tokens to the word arrays, or add commas to the answer strings so learners see correct punctuation in the model answer.
+**Location:** Lines 180-191 (Section «Презентація: Як зробити замовлення»)
 
-### Issue 3: Case Inconsistency Between Activities
-- **Location**: Activities file, fill-in line 174 vs unjumble line 455
-- **Citations**:
-  - Fill-in (line 173-176): `sentence: 'Будь ласка, дайте {{answer}}.'` with `answer: 'воду'` (Accusative)
-  - Unjumble (line 452-455): words `['Дайте', 'будь', 'ласка', 'води']` with `answer: 'Дайте будь ласка води'` (Genitive partitive)
-- **Problem**: The same verb «дайте» takes Accusative «воду» in one activity and Genitive «води» in another. Both are grammatically correct (Acc = specific, Gen = partitive), but at A1, the module teaches Accusative for ordering (section «Презентація: Як зробити замовлення», line 178) — introducing Genitive without explanation in the activities contradicts the grammar presentation.
-- **Fix**: Change unjumble item to use «воду» (Acc.) for consistency, or add a brief note about partitive Genitive.
+The accusative case explanation uses nested bullet lists instead of a clear table. For an A1 learner encountering case morphology, a table is dramatically more scannable.
 
-### Issue 4: Missing Beginner Safety Elements
-- **Location**: Global — entire module
-- **Problem**: The module lacks required emotional safety markers for A1:
-  - No warm welcome/greeting (zero instances of "Привіт!" or equivalent)
-  - No learning preview ("Today you'll learn..." absent)
-  - No "Don't worry" / reassurance moments (zero instances)
-  - No mid-module encouragement (zero instances of "Great!", "Well done!", "You've got this!")
-  - Only one "You can now..." validation, at line 430 (very end)
-  - The opening quote block (line 11-13) jumps straight into why the topic matters without first welcoming the learner
-- **Required fix**: Add a warm opening before the quote block, add 2-3 encouragement moments within section «Презентація: Як зробити замовлення» (after grammar tables and between steps), and add at least one "Don't worry" moment after the Accusative case introduction (line 178-192).
+**Current format (lines 180-191):**
+```
+*   Masculine (inanimate): No change.
+    *   Борщ (Nominative) → Я буду **борщ** (Accusative).
+    *   Салат (Nominative) → Я буду **салат** (Accusative).
+```
 
-### Issue 5: Structural Monotony (LLM Fingerprint)
-- **Location**: Section openings and section «Культурний контекст: Українська гостинність»
-- **Problem A — Section openings**: Three of four H2 sections open with "Let's..." pattern:
-  - Line 17: "Before we look at the menu, let's understand..."
-  - Line 79: "Now that we are seated, let's learn..."
-  - Line 254: "Let's see these phrases in action."
-- **Problem B — Formulaic subsection structure** in section «Культурний контекст: Українська гостинність»: Every subsection follows the identical pattern of a bold Ukrainian sentence → English expansion:
-  - Line 379: «В Україні ресторан — це більше, ніж просто їжа.» → English
-  - Line 385: «Багато ресторанів мають живу музику.» → English
-  - Line 391: «В Україні не можна бути в куртці у ресторані.» → English
-  - Line 400: «Українці дуже люблять хліб.» → English
-  - Line 408: «Це дуже важлива фраза.» → English
-- **Problem C — Redundancy**: Lines 379+381 say the same thing twice — Ukrainian says "a restaurant is more than just food" and English says "Dining out is more than just eating" — without adding new information.
-- **Fix**: Vary section openings (use questions, direct address, or scenario-setting). Break the Uk→En pattern in section «Культурний контекст: Українська гостинність» by using different presentation styles (dialogue snippets, "imagine you..." scenarios, tables). Remove the English redundancy on line 381.
+**Required fix:** Convert to a 3-column markdown table: | Gender | Nominative | Accusative (Я буду...) |. This also applies to the sample menu (lines 136-156), which would be clearer as a table with columns: Dish | Weight | Price.
+
+### Issue 2: Fill-In Activity Imbalance — MEDIUM
+
+**Location:** Activities YAML, lines 148-212 ("Я буду..." fill-in)
+
+5 of 8 items test masculine inanimate accusative (борщ, салат, суп, чай, десерт) where the answer is trivially identical to the nominative form — the learner doesn't practice any morphological transformation. Only 3 items (каву, воду, піцу) test the feminine -а→-у change, which is the actual learning point.
+
+**Required fix:** Replace 2-3 masculine items with feminine or neuter items that require actual case transformation, e.g., «Я буду {{answer}}.» → рибу (< риба), пасту (< паста), котлету (< котлета) — all of which appear in the lesson content.
+
+### Issue 3: Vocab Items Not In Content — LOW
+
+**Location:** Vocabulary YAML lines 58-72
+
+Two vocabulary items have lemmas and examples but never appear in the lesson content:
+- «порція» (portion) — example: «Це велика порція.» — not used anywhere in the .md file
+- «резервація» (reservation) — example: «У вас є резервація?» — only appears as a heading on line 81 (### Крок 1: Резервація), never in running text or dialogue
+
+**Required fix:** Add at least one contextual use of each word in the lesson body. E.g., in the sample menu, add portion sizes with the word «порція»; in Діалог 1, the waiter could ask «У вас є резервація?».
+
+### Issue 4: Missing Warm Opening Markers — LOW
+
+**Location:** Lines 9-17 (opening of module)
+
+The module opens with a formal blockquote «Чому це важливо?» followed by English prose. There is no warm greeting ("Привіт!"), no explicit learning preview ("Today you'll learn how to..."), and no emotional orientation for a nervous beginner. Compare with the [!observe] box on line 373 which at least addresses the learner directly.
+
+**Required fix:** Add a brief warm opening before the blockquote: a "Привіт!" greeting and a 1-2 sentence preview of what the learner will be able to do by the end (e.g., "By the end of this lesson, you'll be able to order a full meal, handle the bill, and impress your waiter with polite Ukrainian.").
+
+### Issue 5: Confusing Notation for A1 Learner — LOW
+
+**Location:** Line 163
+
+The text reads: «Деруни́ — це млинці з картоплі. Дуже смачно зі **сметаною** (< **смета́на** — sour cream).»
+
+The `(<` notation is linguistic convention for "derived from" and is not explained anywhere. An A1 learner has no context for what `<` means here. It's particularly confusing because the intent is just to show the nominative/dictionary form.
+
+**Required fix:** Replace `(< **смета́на** — sour cream)` with a clearer format like `(**смета́на** — sour cream)` or simply add «смета́на» to the vocabulary list.
 
 ---
 
 ## Factual Verification
 
-| Claim | Location | Status | Notes |
-|-------|----------|--------|-------|
-| Three-course meal structure (Перше/Друге/Третє) | Line 19-38, section «Розминка: Структура меню та етикет» | Verified | Matches research notes line 19 |
-| «Будьмо!» toast with «Гей!» response | Line 57-71, section «Розминка: Структура меню та етикет» | Verified | Matches research notes line 18 |
-| Tipping at 10-15% | Line 243-244, section «Презентація: Як зробити замовлення» | Verified | Research notes say 10%; content says 10% polite / 15% generous — reasonable expansion |
-| «Хліб — усьому голова» proverb | Line 403, section «Культурний контекст: Українська гостинність» | Verified | Genuine Ukrainian proverb |
-| «Гість у дім — Бог у дім» proverb | Line 420, section «Культурний контекст: Українська гостинність» | Verified | Genuine Ukrainian proverb |
-| Рахунок vs Чек distinction | Line 246, section «Презентація: Як зробити замовлення» | Verified | Correct: рахунок = bill before payment, чек = fiscal receipt after |
-| «Без решти» = Keep the change | Line 245, section «Презентація: Як зробити замовлення» | Verified | Standard Ukrainian phrase |
-| Accusative case rules for masculine/feminine/neuter | Lines 180-191, section «Презентація: Як зробити замовлення» | Verified | Correct: masc. inanimate unchanged, fem. -а→-у, neuter unchanged |
-| «Счёт» flagged as Russian | Line 248-250, [!myth-buster] | Verified | Legitimate myth-buster use; «рахунок» is the correct Ukrainian term per research notes line 24 |
+### Callout Box Verification
 
-**Colonial framing check**: The [!myth-buster] on line 248-250 mentions Russian but is a legitimate exception — it explicitly educates learners to avoid a common Russianism, which is exactly what myth-buster blocks are for. No other colonial framing detected.
+| Callout | Type | Location | Verdict |
+|---------|------|----------|---------|
+| "The 'First' Rule" — soup daily for health | [!culture] | Line 40-42 | **PASS** — Culturally accurate belief widely held in Ukraine. The claim about бізнес-ланч starting with soup is generally true. |
+| "Замовити чи забронювати?" | [!tip] | Lines 91-92 | **PASS** — Both verbs are correctly described. Research notes confirm: «бронювати» for tables, «замовити» for ordering. |
+| "Don't say 'What is this?' for ingredients" | [!warning] | Lines 204-205 | **PASS** — Pragmatically accurate. «З чого це?» is the correct question for ingredients. |
+| "Счёт" vs "Рахунок" | [!myth-buster] | Lines 249-250 | **PASS** — Correctly identifies «счёт» as Russian and «рахунок» as standard Ukrainian. Aligns with plan requirement and research notes. Not colonial framing — this is a legitimate anti-Russicism drill. |
+| Eye contact during toast | [!tip] | Lines 74-75 | **PASS** — Culturally accurate. Eye contact during toasting is indeed considered polite. |
+| Polite markers | [!observe] | Lines 373-375 | **PASS** — Correct pragmatic advice about «будь ласка» usage. |
+| «Гість у дім — Бог у дім» | [!quote] | Line 420 | **PASS** — Authentic Ukrainian proverb. Widely attested. |
+
+### Grammar Rule Verification
+
+| Rule | Location | Verdict |
+|------|----------|---------|
+| Masculine inanimate accusative = nominative | Line 180-183 | **PASS** — Correct for A1 scope |
+| Feminine -а → -у in accusative | Lines 184-188 | **PASS** — Correct: кава→каву, паста→пасту, вода→воду, котлета→котлету |
+| Neuter accusative = nominative | Lines 189-191 | **PASS** — Correct: вино→вино, м'ясо→м'ясо |
+| «Без» + Genitive case | Lines 209-224 | **PASS** — Correct: без м'яса, без цукру, без глютену, без молока |
+| «Я буду» + Accusative for ordering | Lines 170-176 | **PASS** — Standard colloquial Ukrainian ordering pattern |
+
+### Colonial Framing Check
+
+No colonial framing detected. The «счёт» vs «рахунок» comparison (line 249-250) is an explicit anti-Russicism correction within a [!myth-buster] box — this is a legitimate pedagogical approach per plan requirements. No other Russian comparisons found anywhere in the module.
 
 ---
 
 ## Verification Summary
 
-| Check | Result |
-|-------|--------|
-| Russianism scan | **FAIL** — «красиві» on line 337 (project auto-fail list: красивий→гарний) |
-| Colonial framing | PASS — [!myth-buster] on line 250 is legitimate |
-| Grammar scope violations | PASS — Accusative and Future Tense are the focus; Genitive with «без» is within plan scope |
-| Factual accuracy | PASS — All claims verified against research notes |
-| Activity errors | **FAIL** — 5 unjumble answers missing commas; case inconsistency «воду» vs «води» |
-| Beginner safety | **FAIL** — Missing warm welcome, zero encouragement, zero "don't worry" moments |
-| LLM fingerprint | **FAIL** — 3/4 sections open with "Let's...", formulaic Uk→En pattern ×5 in section «Культурний контекст: Українська гостинність» |
-| Word count | PASS — 2865/2000 (143.2%, above minimum) |
-| Callout box verification | PASS — 7 callout boxes, all factually accurate, no fabricated claims |
+| Check | Result | Notes |
+|-------|--------|-------|
+| Russianisms in content | CLEAN | No Russianisms in teaching text. «Счёт» mentioned only in myth-buster for correction. |
+| Colonial framing | CLEAN | No "Unlike Russian..." patterns. |
+| LLM filler phrases | CLEAN | No "це не просто", "це не лише", generic AI clichés found. |
+| Factual accuracy | PASS | All cultural claims, proverbs, and grammar rules verified. |
+| Grammar correctness | PASS | All Ukrainian sentences grammatically correct. Accusative and genitive forms accurate. |
+| Plan coverage | PARTIAL | All plan points covered but in rearranged section order. Two vocab items missing from prose. |
+| Activity quality | PARTIAL | Good variety (5 types) but accusative fill-in is imbalanced toward trivial masculine items. |
+| Richness | BELOW THRESHOLD | 80% vs 95%. Missing tables (genuine gap). Dialogues present but not scanner-detected (likely false negative). |
+| Beginner safety | ADEQUATE | Not overwhelming, clear instructions, but lacks explicit encouragement beats. |
 
 ---
 
 ## Verdict
 
-**REVISE** — The module has strong pedagogical content (well-structured steps, excellent sample menu, engaging dialogues, rich cultural hooks) but has 5 issues requiring repair:
+**CONDITIONAL PASS** — The module is pedagogically strong with accurate Ukrainian, good cultural integration, and comprehensive restaurant coverage. The word count significantly exceeds target (2863/2000). However, two issues require attention before full PASS:
 
-1. **Russianism «красиві»** → replace with «гарні» (line 337)
-2. **Unjumble comma omissions** → add commas to all 5 «будь ласка» answer strings
-3. **Case inconsistency** → align «воду»/«води» usage across activities
-4. **Beginner warmth deficit** → add welcome, 2-3 encouragement moments, 1+ "don't worry" moment
-5. **LLM fingerprint** → vary section openings and break formulaic pattern in section «Культурний контекст: Українська гостинність»
+1. **Richness gap (tables):** Add at least 2 markdown tables — one for the accusative case paradigm (lines 180-191) and one for the sample menu (lines 136-156). This directly serves A1 visual learners and closes the richness gap.
+2. **Activity rebalancing:** In the "Я буду..." fill-in, replace 2-3 trivial masculine inanimate items with feminine items requiring actual morphological change (e.g., риба→рибу, котлета→котлету).
 
-Issues 1-3 are mechanical fixes. Issues 4-5 require moderate prose additions/edits. Overall content quality is good — the restaurant scenario is practical, the grammar teaching is clear, and the cultural content is authentic. The module needs a warmth pass to meet A1 beginner standards.
+The warm opening and vocab coverage issues are recommended but not blocking.
+
+**Fix Plan:**
+
+| Priority | Action | Location | Effort |
+|----------|--------|----------|--------|
+| HIGH | Convert accusative explanation to markdown table (3 columns: Gender/Nominative/Accusative) | Lines 178-191 | Small |
+| HIGH | Convert sample menu to markdown table (Dish/Weight/Price) | Lines 136-156 | Small |
+| HIGH | Replace 2-3 masculine fill-in items with feminine items (риба→рибу, котлета→котлету, паста→пасту) | Activities YAML lines 157-204 | Small |
+| MEDIUM | Add warm opening: "Привіт!" + learning preview before the blockquote | Before line 11 | Small |
+| LOW | Add «порція» and «резервація» in contextual sentences within the lesson body | Various | Small |
+| LOW | Replace `(< **смета́на**)` notation with plain parenthetical | Line 163 | Trivial |

@@ -293,7 +293,7 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
   - Short sentences
 
-  - Clear pronunciation guidance (IPA)
+  - Clear pronunciation guidance (stress marks)
 
   - Consistent grammar patterns (no exceptions early)
 
@@ -642,8 +642,6 @@ D1_OUTPUT_FORMAT: '## Output Format
   - Activity items checked: {X}
 
   - Ukrainian sentences verified: {X}
-
-  - IPA transcriptions checked: {X}
 
   - Factual claims verified: {X}
 

@@ -34,9 +34,9 @@ A review identified issues in this module. Your job is to produce **exact FIND/R
 
 | D.1 Issue | Status | Notes |
 |-----------|--------|-------|
-| IPA stress "завершення" [zɑˈʋɛrʃɛnʲːɑ] | **NOT FIXED** | Still has stress on "вер" instead of "ше" |
-| IPA stress "завершувати" [zɑˈʋɛrʃuʋɑtɪ] | **NOT FIXED** | Still has stress on "вер" instead of "ва" |
-| IPA stress "досягти" [dɔsʲɑˈɦtɪ] | **NOT FIXED** | Still places stress before ɦ instead of on "сяг" |
+| IPA stress "завершення" | **NOT FIXED** | Still has stress on "вер" instead of "ше" |
+| IPA stress "завершувати" | **NOT FIXED** | Still has stress on "вер" instead of "ва" |
+| IPA stress "досягти" | **NOT FIXED** | Still places stress before ɦ instead of on "сяг" |
 | LLM rhetoric line 85 "гордістю мови" | **FIXED** | Now reads «унікальною рисою української морфології» |
 | LLM rhetoric line 223 "лексичні нюанси" | **FIXED** | Now reads «як зміна виду дієслова передає зовсім різний зміст без жодних додаткових слів» |
 | LLM rhetoric line 139 "людського досвіду" | **PARTIAL — REGRESSION** | Changed to «переживань і дій» but introduced double "дуже" |
@@ -72,7 +72,7 @@ Plan-Content Alignment: PASS
 | 9 | Richness | 9/10 | <6 | Cultural embedding: Параджанов's «Тіні забутих предків» (1964), Шевченко's «Кобзар», Леся Українка's «Лісова пісня», Ukrainian proverbs. Tables: comparative future tense table (lines 125-132), temporal markers table (lines 275-285). Dialogues: торт scene (lines 26-28), concert dialogue (lines 253-255), office report (lines 293-296). 19 engagement boxes across 10+ types. |
 | 10 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5. B1 learners are appropriately challenged. Section «Глибинна Семантика: Процес та Результат» is concept-dense but now has exercises interspersed (lines 151, 164) which helps pacing. The 4-question algorithm in Section «Практика та Мовленнєві Ситуації» provides a practical safety net for learners who feel overwhelmed by the semantic subtleties. Content length (4820 words) is substantial but well-structured. |
 | 11 | LLM Fingerprint | 8/10 | <7 | D.2 fixed two of three flagged instances: "гордістю мови" (line 85) now reads «унікальною рисою української морфології» — factual and clean; "лексичні нюанси" (former line 223) now reads «як зміна виду дієслова передає зовсім різний зміст без жодних додаткових слів» (line 230) — clean. However: line 309 «потужний інструмент для створення живих, динамічних та змістовних текстів» remains a classic AI closing cliché. Line 239 «Використання цих форм додає вашій розповіді неймовірної динаміки» — hyperbolic. Structural monotony: PASS (each H2 opens differently). Callout title repetition: PASS. Example formatting varies (tables, bullets, dialogues, numbered lists): PASS. |
-| 12 | Linguistic Accuracy | 8/10 | <9 | **AUTO-FAIL: 3 IPA stress errors remain unfixed in vocabulary file.** (1) Line 25: "завершення" given as [zɑˈʋɛrʃɛnʲːɑ] — stress on "вер" instead of "ше". Correct: [zɑʋɛrˈʃɛnʲːɑ] (завершéння). (2) Line 66: "завершувати" given as [zɑˈʋɛrʃuʋɑtɪ] — stress on "вер" instead of "ва". Correct: [zɑʋɛrʃuˈʋɑtɪ] (завершувáти). (3) Line 81: "досягти" given as [dɔsʲɑˈɦtɪ] — stress before ɦ instead of on "сяг". Correct: [dɔˈsʲɑɦtɪ] (дося́гти). Content grammar explanations are all accurate. All aspectual pairs verified correct. |
+| 12 | Linguistic Accuracy | 8/10 | <9 | **AUTO-FAIL: 3 IPA stress errors remain unfixed in vocabulary file.** (1) Line 25: "завершення" given as — stress on "вер" instead of "ше". Correct: (завершéння). (2) Line 66: "завершувати" given as — stress on "вер" instead of "ва". Correct: (завершувáти). (3) Line 81: "досягти" given as — stress before ɦ instead of on "сяг". Correct: (дося́гти). Content grammar explanations are all accurate. All aspectual pairs verified correct. |
 | 13 | Factual Accuracy | 9/10 | <8 | Grammar rules accurately presented. State Standard §4.2.3.1 reference consistent with research notes. Параджанов's «Тіні забутих предків» (1964) correctly attributed. Etymology of synthetic future from «імати» is linguistically sound. Proverbs «Зробив діло — гуляй сміло» and «Вік живи — вік учись» are real Ukrainian proverbs, correctly analyzed. The [!culture] box about «Лісова пісня» (line 242) hedges with «можна уявити» which avoids fabrication. No factual errors found in any callout box. |
 
 **Weighted Overall:**
@@ -97,17 +97,17 @@ Plan-Content Alignment: PASS
 
 ### Issue 1: IPA Stress Placement Errors — UNFIXED FROM D.1 (Linguistic Accuracy — AUTO-FAIL TRIGGER)
 - **Location**: Vocabulary file, lines 25, 66, 81
-- **Original (line 25)**: «ipa: '[zɑˈʋɛrʃɛnʲːɑ]'» for "завершення"
+- **Original (line 25)**: «ipa: ''» for "завершення"
 - **Problem**: Stress mark placed on syllable "вер" instead of "ше". The word завершéння has stress on the third syllable. This was flagged in D.1 and D.2 did NOT apply the fix.
-- **Fix**: Change to `ipa: '[zɑʋɛrˈʃɛnʲːɑ]'`
+- **Fix**: Change to `ipa: ''`
 
-- **Original (line 66)**: «ipa: '[zɑˈʋɛrʃuʋɑtɪ]'» for "завершувати"
+- **Original (line 66)**: «ipa: ''» for "завершувати"
 - **Problem**: Stress on "вер" instead of "ва". Standard -увати imperfectives have stress on the penultimate syllable: завершувáти. Unfixed from D.1.
-- **Fix**: Change to `ipa: '[zɑʋɛrʃuˈʋɑtɪ]'`
+- **Fix**: Change to `ipa: ''`
 
-- **Original (line 81)**: «ipa: '[dɔsʲɑˈɦtɪ]'» for "досягти"
+- **Original (line 81)**: «ipa: ''» for "досягти"
 - **Problem**: Stress mark before ɦ suggests stress on final cluster. The word дося́гти has stress on the second syllable "сяг". Unfixed from D.1.
-- **Fix**: Change to `ipa: '[dɔˈsʲɑɦtɪ]'`
+- **Fix**: Change to `ipa: ''`
 
 ### Issue 2: D.2 Regression — Double "дуже" (Language Quality)
 - **Location**: Line 139, Section «Граматична Система: Форми та Функції»
@@ -161,9 +161,9 @@ Plan-Content Alignment: PASS
 
 ### Linguistic Accuracy: 8/10 → 9/10
 **What to fix:**
-1. Vocabulary line 25: Change `ipa: '[zɑˈʋɛrʃɛnʲːɑ]'` → `ipa: '[zɑʋɛrˈʃɛnʲːɑ]'` — correct stress placement for завершéння
-2. Vocabulary line 66: Change `ipa: '[zɑˈʋɛrʃuʋɑtɪ]'` → `ipa: '[zɑʋɛrʃuˈʋɑtɪ]'` — correct stress placement for завершувáти
-3. Vocabulary line 81: Change `ipa: '[dɔsʲɑˈɦtɪ]'` → `ipa: '[dɔˈsʲɑɦtɪ]'` — correct stress placement for дося́гти
+1. Vocabulary line 25: Change `ipa: ''` → `ipa: ''` — correct stress placement for завершéння
+2. Vocabulary line 66: Change `ipa: ''` → `ipa: ''` — correct stress placement for завершувáти
+3. Vocabulary line 81: Change `ipa: ''` → `ipa: ''` — correct stress placement for дося́гти
 
 **Expected score after fix:** 9/10
 

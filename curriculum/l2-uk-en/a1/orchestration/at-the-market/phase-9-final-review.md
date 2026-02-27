@@ -7,9 +7,9 @@ Now I have all the data. Let me compile the full adversarial review.
 ### Issues Found
 
 **1. IPA inaccuracy — домашнє** (content line 41)
-- Text: `**домашнє** [doˈmɑʃnʲe]`
+- Text: `**домашнє**`
 - Ukrainian є represents [ɛ], never [e]. Ukrainian phonology has no close-mid front vowel.
-- Correct: `[doˈmɑʃnʲɛ]`
+- Correct: ``
 
 **2. LLM artifact — "Це не просто X" pattern** (content lines 17, 34)
 - Three occurrences of the same rhetorical pattern:
@@ -65,9 +65,9 @@ Now I have all the data. Let me compile the full adversarial review.
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-market.md
 ---OLD---
-Ukrainians value food that is **домашнє** [doˈmɑʃnʲe] (homemade).
+Ukrainians value food that is **домашнє** (homemade).
 ---NEW---
-Ukrainians value food that is **домашнє** [doˈmɑʃnʲɛ] (homemade).
+Ukrainians value food that is **домашнє** (homemade).
 ===FIX_END===
 
 ===FIX_START===
@@ -97,21 +97,21 @@ FILE: curriculum/l2-uk-en/a1/at-the-market.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-market.md
 ---OLD---
-**штука** [ˈʃtʊkɑ] — piece / item
+**штука** — piece / item
 Used when you buy things individually, like eggs or large fruits. **Це для яєць або фруктів.** (This is for eggs or fruits.)
 
 ### The "Kilogram" Pattern
 ---NEW---
-**штука** [ˈʃtʊkɑ] — piece / item
+**штука** — piece / item
 Used when you buy things individually, like eggs or large fruits. **Це для яєць або фруктів.** (This is for eggs or fruits.)
 
 **літр** [lʲitr] — liter
 Used for liquids: milk, juice, oil. **Це для молока, соку, олії.** (This is for milk, juice, oil.)
 
-**пляшка** [ˈplʲɑʃkɑ] — bottle
+**пляшка** — bottle
 A bottle of water or oil. **Пляшка олії або води.** (A bottle of oil or water.)
 
-**пакет** [pɑˈkɛt] — packet / bag
+**пакет** — packet / bag
 Used for juice or a bag of goods. **Це для соку або покупок.** (This is for juice or purchases.)
 
 ### The "Kilogram" Pattern
@@ -252,13 +252,13 @@ items:
     pos: "verb"
     usage: "Зважте, будь ласка..."
 ---NEW---
-- ipa: '[ˈrɪnɔk]'
+- ipa: ''
   lemma: ринок
   pos: noun
   gender: m
   translation: market
   example: "Я йду на ринок."
-- ipa: '[kʲiloˈɦrɑm]'
+- ipa: ''
   lemma: кілограм
   pos: noun
   gender: m
@@ -270,105 +270,105 @@ items:
   gender: m
   translation: gram
   example: "Двісті грам сиру."
-- ipa: '[ˈʃtʊkɑ]'
+- ipa: ''
   lemma: штука
   pos: noun
   gender: f
   translation: piece / item
   example: "Одна штука."
-- ipa: '[pʊˈt͡ʃɔk]'
+- ipa: ''
   lemma: пучок
   pos: noun
   gender: m
   translation: bunch (of greens)
   example: "Пучок петрушки."
-- ipa: '[ˈsʋʲiʒɪj]'
+- ipa: ''
   lemma: свіжий
   pos: adj
   translation: fresh
   example: "Свіжий хліб."
-- ipa: '[ˈɔʋɔt͡ʃʲi]'
+- ipa: ''
   lemma: овочі
   pos: noun
   translation: vegetables
   notes: always plural
-- ipa: '[ˈfrʊktɪ]'
+- ipa: ''
   lemma: фрукти
   pos: noun
   translation: fruits
   notes: usually plural
-- ipa: '[ˈskʲilʲkɪ]'
+- ipa: ''
   lemma: скільки
   pos: adv
   translation: how much / how many
   usage: "Скільки коштує?"
-- ipa: '[ˈdɑjte]'
+- ipa: ''
   lemma: дайте
   pos: verb
   translation: give (imperative, polite)
   usage: "Дайте, будь ласка..."
-- ipa: '[ˈzdɑt͡ʃɑ]'
+- ipa: ''
   lemma: здача
   pos: noun
   gender: f
   translation: change (money)
   example: "Ваша здача."
-- ipa: '[prodɑˈʋɛt͡sʲ]'
+- ipa: ''
   lemma: продавець
   pos: noun
   gender: m
   translation: vendor / seller
-- ipa: '[ˈjɑblʊkɔ]'
+- ipa: ''
   lemma: яблуко
   pos: noun
   gender: n
   translation: apple
-- ipa: '[kɑrˈtɔplʲɑ]'
+- ipa: ''
   lemma: картопля
   pos: noun
   gender: f
   translation: potato
   notes: usually singular in Ukrainian (collective)
-- ipa: '[pomʲiˈdɔr]'
+- ipa: ''
   lemma: помідор
   pos: noun
   gender: m
   translation: tomato
-- ipa: '[oˈɦʲirɔk]'
+- ipa: ''
   lemma: огірок
   pos: noun
   gender: m
   translation: cucumber
-- ipa: '[ˈmɔrkvɑ]'
+- ipa: ''
   lemma: морква
   pos: noun
   gender: f
   translation: carrot
   notes: usually singular (collective)
-- ipa: '[t͡sɪˈbʊlʲɑ]'
+- ipa: ''
   lemma: цибуля
   pos: noun
   gender: f
   translation: onion
   notes: usually singular (collective)
-- ipa: '[smɑˈt͡ʃnɪj]'
+- ipa: ''
   lemma: смачний
   pos: adj
   translation: tasty / delicious
-- ipa: '[soˈlɔdkɪj]'
+- ipa: ''
   lemma: солодкий
   pos: adj
   translation: sweet
-- ipa: '[ˈstɪɦlɪj]'
+- ipa: ''
   lemma: стиглий
   pos: adj
   translation: ripe
-- ipa: '[ɦoˈtʲiu̯kɑ]'
+- ipa: ''
   lemma: готівка
   pos: noun
   gender: f
   translation: cash
-- ipa: '[ˈzʋɑʒte]'
+- ipa: ''
   lemma: зважте
   pos: verb
   translation: weigh (imperative, polite)

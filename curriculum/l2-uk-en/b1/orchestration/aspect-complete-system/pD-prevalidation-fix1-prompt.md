@@ -5,67 +5,46 @@
         ## Audit Output (last 60 lines)
 
         ```
-          > Знайдіть недоконаний вид: 7 items (min 6)
-  > Заперечення та вид дієслова: 10 items (min 8)
-  > Часові маркери та вид: 12 items (min 8)
-  > Спроба проти успіху: 8 items (min 8)
-  ❌ Missing required activity types from meta.yaml: true-false
+        ============================================================
+  HETMAN VERIFY: aspect-complete-system
+============================================================
 
---- STRICT GATES (Level B1) ---
-Persona      ✅ Persona Defined
-Words        ✅ 4428/4000 (raw: 4707)
-Activities   ✅ 10/4
-Density      ✅ All > 6
-Unique_types ✅ 7/3 types
-Priority     ✅ Priority types used
-Engagement   ✅ 12/5
-Audio        ℹ️ No audio
-Vocab        ✅ 30/25
-Structure    ✅ Valid Structure
-Ipa          ✅ Clean IPA
-Lint         ✅ Clean Format
-Pedagogy     ❌ 8 violations
-Content_heavy ℹ️ N/A (standard module)
-Grammar      ℹ️ N/A (covered by naturalness)
-Naturalness  ℹ️ PENDING — awaiting review
-Activity_quality 📋 Quality validation available (optional)
-Research     ✅ Content aligned with research
-Immersion    🇺🇦 99.6% (target 85-100% (B1.1 Aspect))
-Richness     ✅ 97% (grammar)
+[1/4] Running full audit...
+[2/4] Checking sidecar files...
+[3/4] Reading status JSON...
+[4/4] Checking overall status...
 
-📚 PEDAGOGICAL VIOLATIONS FOUND:
-  [COMPLEXITY_WORD_COUNT] unjumble 'Побудуйте речення правильно' item 1 has 6 words (target: 9-16)
-     → FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-  [COMPLEXITY_WORD_COUNT] unjumble 'Побудуйте речення правильно' item 2 has 6 words (target: 9-16)
-     → FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-  [COMPLEXITY_WORD_COUNT] unjumble 'Побудуйте речення правильно' item 3 has 6 words (target: 9-16)
-     → FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-  [COMPLEXITY_WORD_COUNT] unjumble 'Побудуйте речення правильно' item 4 has 6 words (target: 9-16)
-     → FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-  [COMPLEXITY_WORD_COUNT] unjumble 'Побудуйте речення правильно' item 5 has 6 words (target: 9-16)
-     → FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-  [COMPLEXITY_WORD_COUNT] unjumble 'Побудуйте речення правильно' item 6 has 6 words (target: 9-16)
-     → FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-  [COMPLEXITY_WORD_COUNT] unjumble 'Побудуйте речення правильно' item 7 has 7 words (target: 9-16)
-     → FIX: Adjust sentence length to 9-16 words to match B1 complexity.
-  [COMPLEXITY_WORD_COUNT] unjumble 'Побудуйте речення правильно' item 8 has 6 words (target: 9-16)
-     → FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+────────────────────────────────────────────────────────────
+  VERDICT: FAIL
+  Module:  aspect-complete-system
+────────────────────────────────────────────────────────────
+  audit script returned non-zero exit code
+  overall status is 'fail' (must be 'pass')
+  failing gates:
+    lesson: 4847/4000 (raw: 5235) | pedagogy: 9 violations
+    activities: 11/4 | density: 1 < 6
+
+  Hetman has NOT completed this module.
+  Fix the issues above and re-run this script.
+
+─── Audit output (last 15 lines) ───
+       → FIX: Add more items. B1 mark-the-words requires at least 6 items.
 
 
-📝 RECOMMENDATION: UPDATE (patch fixes) (severity 30/100)
-   → 8 violations (significant)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 40/100)
+     → Revision recommended (severity 40/100)
+     → 9 violations (significant)
+     → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/aspect-complete-system-audit.md
-Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/status/aspect-complete-system.json
+  Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/aspect-complete-system-audit.md
+  Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/status/aspect-complete-system.json
 
-❌ AUDIT FAILED. Correct errors before proceeding.
+  ❌ AUDIT FAILED. Correct errors before proceeding.
 
-Critical Failures:
-  • Missing required activity types: true-false
-
-❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/aspect-complete-system-audit.log for details)
+  ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/aspect-complete-system-audit.log for details)
         ```
+
 
         ## Files to Fix
 

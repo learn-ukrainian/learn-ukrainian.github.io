@@ -8,8 +8,8 @@ Good. Confirmed: zero instances of "бо" or "тому що" in the entire conte
 
 **Issue 1: IPA Error — Спина stress placement (CRITICAL)**
 - **File:** body-and-health.md, line 32
-- **Text:** `**Спина** [ˈspɪna]`
-- **Problem:** Stress is on the first syllable [ˈspɪna], but Ukrainian спина́ has stress on the second syllable. Correct IPA: [spɪˈna]. This teaches the wrong pronunciation.
+- **Text:** `**Спина**`
+- **Problem:** Stress is on the first syllable, but Ukrainian спина́ has stress on the second syllable. Correct IPA:. This teaches the wrong pronunciation.
 
 **Issue 2: Missing "бо" and "тому що" conjunctions (IMPORTANT — plan + meta compliance)**
 - **File:** body-and-health.md
@@ -51,17 +51,17 @@ Good. Confirmed: zero instances of "бо" or "тому що" in the entire conte
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/body-and-health.md
 ---OLD---
-**Спина** [ˈspɪna] (back) — feminine. Back pain is familiar to everyone.
+**Спина** (back) — feminine. Back pain is familiar to everyone.
 ---NEW---
-**Спина** [spɪˈna] (back) — feminine. Back pain is familiar to everyone.
+**Спина** (back) — feminine. Back pain is familiar to everyone.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/body-and-health.md
 ---OLD---
-> Ukrainians love natural remedies. Many people drink **малиновий чай** (raspberry tea) or **калиновий чай** (viburnum tea). **Малина** [maˈlɪna] reduces fever, and **калина** [kaˈlɪna] boosts immunity. If a Ukrainian friend offers you tea when you are sick, accept it. It is their way of caring for you.
+> Ukrainians love natural remedies. Many people drink **малиновий чай** (raspberry tea) or **калиновий чай** (viburnum tea). **Малина** reduces fever, and **калина** boosts immunity. If a Ukrainian friend offers you tea when you are sick, accept it. It is their way of caring for you.
 ---NEW---
-> Ukrainians love natural remedies. Many people drink **малиновий чай** (raspberry tea) or **калиновий чай** (viburnum tea) with **мед** [mɛd] (honey). **Малина** [maˈlɪna] reduces fever, **калина** [kaˈlɪna] boosts immunity, and **мед** soothes a sore throat. If a Ukrainian friend offers you tea when you are sick, accept it. It is their way of caring for you.
+> Ukrainians love natural remedies. Many people drink **малиновий чай** (raspberry tea) or **калиновий чай** (viburnum tea) with **мед** [mɛd] (honey). **Малина** reduces fever, **калина** boosts immunity, and **мед** soothes a sore throat. If a Ukrainian friend offers you tea when you are sick, accept it. It is their way of caring for you.
 ===FIX_END===
 
 ===FIX_START===

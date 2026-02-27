@@ -65,8 +65,8 @@ Plan-Content Alignment: FAIL
 ### Issue 4: Imprecise Phonetics
 - **Location**: Section "Культура: Секрети вимови"
 - **Original**: «[ц':а]»
-- **Problem**: This is a simplified transcription, not standard IPA. While helpful for beginners, it should be clarified as an approximation, or standard IPA `[t͡sʲː]` should be mentioned for accuracy, especially since the prompt emphasizes IPA.
-- **Fix**: Update to «[t͡sʲːa] (roughly "ts-s-ya")» or keep the simplified version but add a note that it's an approximation.
+- **Problem**: This is a simplified transcription, not standard IPA. While helpful for beginners, it should be clarified as an approximation, or standard IPA `` should be mentioned for accuracy, especially since the prompt emphasizes IPA.
+- **Fix**: Update to « (roughly "ts-s-ya")» or keep the simplified version but add a note that it's an approximation.
 
 ## Verification Summary
 

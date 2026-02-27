@@ -13,7 +13,7 @@
 |-----------|--------|----------|
 | IPA [ʍxʲid] for вхід | **NOT FIXED** | Vocab line 9 still reads `ipa: '[ʍxʲid]'` — non-Ukrainian phoneme ʍ persists |
 | IPA missing stress on сходити | **NOT FIXED** | Vocab line 116 still reads `ipa: '[sxɔdɪtɪ]'` — no stress mark |
-| IPA stress misplaced on передбачити | **NOT FIXED** | Vocab line 93 still reads `ipa: '[pɛrɛˈdbɑt͡ʃɪtɪ]'` — mark before [d] not [b] |
+| IPA stress misplaced on передбачити | **NOT FIXED** | Vocab line 93 still reads `ipa: ''` — mark before [d] not [b] |
 | Orphaned English paragraphs | **NOT FIXED** | 4 standalone English paragraphs remain at content lines 48, 110, 119, 233 |
 | H1 Підсумок heading | **FIXED** | Line 238: `## Підсумок` (H2) |
 | Plokhy described as novelist | **FIXED** | Line 202: «новий роман Сергія Жадана» — real Ukrainian author |
@@ -45,7 +45,7 @@ Plan-Content Alignment: PASS
 | 4 | Activities | 9/10 | <7 | 12 activities across 10 unique types — excellent variety; all items align with taught content; розклад fixed to distractor-only; cloze library passage (activity line 349) is outstanding contextual practice; error-correction items (activity lines 211–250) test meaningful distinctions (aspect, euphony, бачити/дивитися); minor: activity line 245 «Мені потрібно прочитати листа весь вечір» uses genitive "листа" — acceptable but less standard than accusative "лист" |
 | 5 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5; warm greeting ✓, quick wins ✓, clear instructions ✓, Ukrainian not scary ✓, come back tomorrow ✓; section «Підсумок» provides progress celebration with self-check questions (lines 244–251); callout boxes provide emotional safety throughout; standalone English paragraphs (lines 48, 119) are not jarring enough to fail |
 | 6 | LLM Fingerprint | 8/10 | <7 | "Це не просто" pattern removed ✓; section openings vary (English intro in «Вступ», Ukrainian «Корінь...» in «Родини ход- та пис-» and «Родини чит- та бач-», English in «Фонетика та префікси», Ukrainian in «Практичне застосування», Ukrainian in «Підсумок»); callout box types: 6 different types across 7 boxes; residual generic phrasing: line 127 «Це слово показує, як логіка мови створює романтичну лексику.» and line 240 «дивовижну архітектуру української мови»; example format somewhat uniform (Ukrainian + English parenthetical) across sections but this is standard pedagogical format |
-| 7 | Linguistic Accuracy | 7/10 | <9 | **4 IPA errors**: (1) вхід `[ʍxʲid]` uses non-Ukrainian phoneme ʍ (vocab line 9); (2) сходити `[sxɔdɪtɪ]` missing stress mark (vocab line 116); (3) передбачити `[pɛrɛˈdbɑt͡ʃɪtɪ]` stress before [d] not [b] (vocab line 93); (4) NEW: префікс `[prɛfʲiks]` missing stress mark (vocab line 128); grammar explanations accurate; word formation logic correct throughout |
+| 7 | Linguistic Accuracy | 7/10 | <9 | **4 IPA errors**: (1) вхід `[ʍxʲid]` uses non-Ukrainian phoneme ʍ (vocab line 9); (2) сходити `[sxɔdɪtɪ]` missing stress mark (vocab line 116); (3) передбачити `` stress before [d] not [b] (vocab line 93); (4) NEW: префікс `[prɛfʲiks]` missing stress mark (vocab line 128); grammar explanations accurate; word formation logic correct throughout |
 
 **Weighted Overall:**
 ```
@@ -80,19 +80,19 @@ Plan-Content Alignment: PASS
 - **Location**: Vocabulary file line 116
 - **Original**: `ipa: '[sxɔdɪtɪ]'`
 - **Problem**: Flagged in D.1, unfixed. Every polysyllabic vocabulary entry must have stress marked. The stress falls on the second syllable: схо́дити.
-- **Fix**: Change to `ipa: '[sxɔˈdɪtɪ]'`
+- **Fix**: Change to `ipa: ''`
 
 ### Issue 3: UNFIXED — IPA Stress Misplacement on передбачити
 - **Location**: Vocabulary file line 93
-- **Original**: `ipa: '[pɛrɛˈdbɑt͡ʃɪtɪ]'`
+- **Original**: `ipa: ''`
 - **Problem**: Flagged in D.1, unfixed. The stress mark is placed between [ɛ] and [d], implying stress on the syllable "дба" which doesn't exist. The correct stress is передба́чити — on the syllable [bɑ].
-- **Fix**: Change to `ipa: '[pɛrɛdˈbɑt͡ʃɪtɪ]'`
+- **Fix**: Change to `ipa: ''`
 
 ### Issue 4: NEW — IPA Missing Stress Mark on префікс
 - **Location**: Vocabulary file line 128
 - **Original**: `ipa: '[prɛfʲiks]'`
 - **Problem**: Missing stress mark. The stress falls on the second syllable: префі́кс.
-- **Fix**: Change to `ipa: '[prɛˈfʲiks]'`
+- **Fix**: Change to `ipa: ''`
 
 ### Issue 5: English Translation Inaccuracy — "reading detectives"
 - **Location**: Content line 97, section «Родини чит- та бач-»
@@ -113,9 +113,9 @@ Plan-Content Alignment: PASS
 | 97 (content) | «(I love reading detectives.)» | «(I love reading detective stories.)» | Translation |
 | 166 (content) | «to type in, to insert text» | «to write in, to insert text» | Translation |
 | 9 (vocab) | `ipa: '[ʍxʲid]'` | `ipa: '[ʋxʲid]'` | IPA phoneme |
-| 93 (vocab) | `ipa: '[pɛrɛˈdbɑt͡ʃɪtɪ]'` | `ipa: '[pɛrɛdˈbɑt͡ʃɪtɪ]'` | IPA stress |
-| 116 (vocab) | `ipa: '[sxɔdɪtɪ]'` | `ipa: '[sxɔˈdɪtɪ]'` | IPA stress |
-| 128 (vocab) | `ipa: '[prɛfʲiks]'` | `ipa: '[prɛˈfʲiks]'` | IPA stress |
+| 93 (vocab) | `ipa: ''` | `ipa: ''` | IPA stress |
+| 116 (vocab) | `ipa: '[sxɔdɪtɪ]'` | `ipa: ''` | IPA stress |
+| 128 (vocab) | `ipa: '[prɛfʲiks]'` | `ipa: ''` | IPA stress |
 
 ## Beginner Safety Audit
 
@@ -140,9 +140,9 @@ Plan-Content Alignment: PASS
 ### Linguistic Accuracy: 7/10 → 9/10
 **What to fix:**
 1. Vocab line 9: Change `ipa: '[ʍxʲid]'` → `ipa: '[ʋxʲid]'` — removes non-Ukrainian phoneme
-2. Vocab line 116: Change `ipa: '[sxɔdɪtɪ]'` → `ipa: '[sxɔˈdɪtɪ]'` — adds missing stress
-3. Vocab line 93: Change `ipa: '[pɛrɛˈdbɑt͡ʃɪtɪ]'` → `ipa: '[pɛrɛdˈbɑt͡ʃɪtɪ]'` — corrects stress placement
-4. Vocab line 128: Change `ipa: '[prɛfʲiks]'` → `ipa: '[prɛˈfʲiks]'` — adds missing stress
+2. Vocab line 116: Change `ipa: '[sxɔdɪtɪ]'` → `ipa: ''` — adds missing stress
+3. Vocab line 93: Change `ipa: ''` → `ipa: ''` — corrects stress placement
+4. Vocab line 128: Change `ipa: '[prɛfʲiks]'` → `ipa: ''` — adds missing stress
 
 **Expected score after fix:** 9/10
 

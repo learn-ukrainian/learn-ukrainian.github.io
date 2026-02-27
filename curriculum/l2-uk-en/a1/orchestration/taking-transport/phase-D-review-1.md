@@ -77,7 +77,7 @@ Additionally, the Marshrutka Veteran persona is never explicitly introduced or v
 **Severity:** High
 **Location:** Line 121
 
-The IPA transcription reads: `[ɔbɛˈrɛʒnɔ dʋɛˈri zɑt͡ʃɪˈɲɑjutʲsʲɑ]`
+The IPA transcription reads: ``
 
 The stress mark on «двері» is placed as `dʋɛˈri` (stress on second syllable). The correct stress is on the **first** syllable: `ˈdʋɛrʲi`. This is a pronunciation error that learners will directly copy.
 

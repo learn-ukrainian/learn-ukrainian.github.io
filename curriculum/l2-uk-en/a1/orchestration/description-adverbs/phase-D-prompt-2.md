@@ -56,7 +56,7 @@ Plan-Content Alignment: PARTIAL FAIL
 | 9 | Richness | 8/10 | <6 | Strong cultural elements: «Добре» as agreement marker, proverb «Тихіше їдеш — далі будеш», multiple named characters (Іван, Олена, Ігор, Максим, Олег, Андрій, Марія). Missing food/cooking cultural angle from plan. |
 | 10 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5. Clear English scaffolding, encouraging tip boxes, manageable chunks. Module is long (2915 words, 145% target) but well-structured. Minor: no explicit "You can now..." celebration at end. |
 | 11 | LLM Fingerprint | 8/10 | <7 | "Here are some examples:" appears 3× (lines 26, 41, 89) — structural monotony. "Let's" appears 8× as section openers. Voice is otherwise warm and natural tutoring tone, no purple prose or "це не просто" patterns. |
-| 12 | Linguistic Accuracy | 8/10 | <9 | IPA stress error: «зовсім» transcribed as [ˈzɔu̯sʲim] (line 223) — stress should be on second syllable [zɔu̯ˈsʲim]. Unnatural sentence «Я роблю фінал» (line 250). Word order examples contradicting stated rules. |
+| 12 | Linguistic Accuracy | 8/10 | <9 | IPA stress error: «зовсім» transcribed as (line 223) — stress should be on second syllable. Unnatural sentence «Я роблю фінал» (line 250). Word order examples contradicting stated rules. |
 | 13 | Factual Accuracy | 9/10 | <8 | [!culture] box on «добре» (line 120-126): accurate. [!myth-buster] on "very much" placement (line 271-275): accurate. Proverb «Тихіше їдеш — далі будеш» (line 336): real proverb, correctly cited. Grammar rules are accurate. |
 
 **Weighted Overall:**
@@ -80,9 +80,9 @@ Plan-Content Alignment: PARTIAL FAIL
 
 ### Issue 1: IPA Stress Error on «зовсім»
 - **Location**: Line 223 / Section «Презентація 3: Ступені та Інтенсивність»
-- **Original**: «**зовсім** [ˈzɔu̯sʲim] — at all / completely / quite»
-- **Problem**: Stress mark placed on first syllable [ˈzɔu̯sʲim]. The correct stress for зовсім is on the second syllable: зовСІМ.
-- **Fix**: Change IPA to `[zɔu̯ˈsʲim]`
+- **Original**: «**зовсім** — at all / completely / quite»
+- **Problem**: Stress mark placed on first syllable. The correct stress for зовсім is on the second syllable: зовСІМ.
+- **Fix**: Change IPA to ``
 
 ### Issue 2: Unnatural Ukrainian «Я роблю фінал»
 - **Location**: Line 250 / Section «Презентація 3: Ступені та Інтенсивність»
@@ -118,7 +118,7 @@ Plan-Content Alignment: PARTIAL FAIL
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 223 | «зовсім [ˈzɔu̯sʲim]» | «зовсім [zɔu̯ˈsʲim]» | IPA stress error |
+| 223 | «зовсім» | «зовсім» | IPA stress error |
 | 250 | «Я роблю фінал» | «Я закінчую» | Unnatural/calque |
 | 336 | «Тихіше їдеш — далі будеш» (with grammar explanation of comparative) | Remove comparative grammar analysis or use «Повільно їдеш — далі будеш» | Scope violation |
 
@@ -142,7 +142,7 @@ Plan-Content Alignment: PARTIAL FAIL
 
 ### Linguistic Accuracy: 8/10 → 9/10
 **What to fix:**
-1. Line 223: Change IPA `[ˈzɔu̯sʲim]` → `[zɔu̯ˈsʲim]` — wrong stress placement
+1. Line 223: Change IPA `` → `` — wrong stress placement
 2. Line 250: Change «Я роблю фінал» → «Я закінчую» — unnatural Ukrainian
 3. Lines 64, 117, 381: Either move «добре» after the verb in examples OR add an explicit note that «добре» commonly precedes the verb — resolves contradiction with rule at line 130
 

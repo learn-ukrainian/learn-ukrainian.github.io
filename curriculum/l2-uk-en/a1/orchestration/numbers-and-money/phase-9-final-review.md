@@ -15,7 +15,7 @@ Now I have all the data I need for a thorough adversarial review.
 **Issue 2 (IPA inconsistency): п'ять transcription**
 - **Location**: `numbers-and-money.md` line 59
 - **Text**: `[pjatʲ]` uses plain `a`
-- **Problem**: Every other transcription in the module uses `ɑ` for Ukrainian а (e.g., п'ятнадцять [pjɑtˈnɑdt͡sʲɑtʲ], п'ятдесят [pjɑtdɛˈsʲɑt]). This is an internal inconsistency.
+- **Problem**: Every other transcription in the module uses `ɑ` for Ukrainian а (e.g., п'ятнадцять, п'ятдесят). This is an internal inconsistency.
 
 **Issue 3 (Pedagogical): Table headers break Zone abstraction**
 - **Location**: `numbers-and-money.md` lines 233-237
@@ -24,13 +24,13 @@ Now I have all the data I need for a thorough adversarial review.
 
 **Issue 4 (Vocab IPA — ERROR): коштувати stress wrong**
 - **Location**: `vocabulary/numbers-and-money.yaml` line 49
-- **Text**: `'[ˈkɔʃtuʋɑtɪ]'` — stress on first syllable
-- **Problem**: The stress in коштува́ти falls on the penultimate syllable -ва-: `[kɔʃtuˈʋɑtɪ]`. This is an incorrect stress placement.
+- **Text**: `''` — stress on first syllable
+- **Problem**: The stress in коштува́ти falls on the penultimate syllable -ва-: ``. This is an incorrect stress placement.
 
 **Issue 5 (Vocab IPA inconsistency): здача vowels**
 - **Location**: `vocabulary/numbers-and-money.yaml` line 65
-- **Text**: `'[ˈzdat͡ʃa]'` — uses plain `a`
-- **Problem**: Should use `ɑ` for consistency with the module: `[ˈzdɑt͡ʃɑ]`. The prose at line 334 correctly uses `[ˈzdɑt͡ʃɑ]`.
+- **Text**: `''` — uses plain `a`
+- **Problem**: Should use `ɑ` for consistency with the module: ``. The prose at line 334 correctly uses ``.
 
 **Minor notes (not fixing — follow project conventions):**
 - `[!observe]` callout: used in 83+ A1 files — this is a valid project convention, not an error. The Green Team review was wrong about this.
@@ -44,9 +44,9 @@ Now I have all the data I need for a thorough adversarial review.
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/numbers-and-money.md
 ---OLD---
-*   **16 — шістнадцять** [ʃisˈnɑdt͡sʲɑtʲ] (Notice: the 'т' from 'шість' drops out for easier pronunciation)
+*   **16 — шістнадцять** (Notice: the 'т' from 'шість' drops out for easier pronunciation)
 ---NEW---
-*   **16 — шістнадцять** [ʃisˈnɑdt͡sʲɑtʲ] (Notice: the soft sign 'ь' from 'шість' drops in spelling; the 'т' is written but often silent in speech)
+*   **16 — шістнадцять** (Notice: the soft sign 'ь' from 'шість' drops in spelling; the 'т' is written but often silent in speech)
 ===FIX_END===
 
 ===FIX_START===
@@ -76,20 +76,20 @@ FILE: curriculum/l2-uk-en/a1/numbers-and-money.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/vocabulary/numbers-and-money.yaml
 ---OLD---
-- ipa: '[ˈkɔʃtuʋɑtɪ]'
+- ipa: ''
   lemma: коштувати
 ---NEW---
-- ipa: '[kɔʃtuˈʋɑtɪ]'
+- ipa: ''
   lemma: коштувати
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/vocabulary/numbers-and-money.yaml
 ---OLD---
-- ipa: '[ˈzdat͡ʃa]'
+- ipa: ''
   lemma: здача
 ---NEW---
-- ipa: '[ˈzdɑt͡ʃɑ]'
+- ipa: ''
   lemma: здача
 ===FIX_END===
 

@@ -103,8 +103,8 @@ Now that we have our decoding tools, let's apply them to words you will definite
 | Ukrainian | IPA | English | Context/Collocation |
 | :--- | :--- | :--- | :--- |
 | **банк** | [bɑnk] | bank | **національний банк** (national bank) |
-| **метро** | [meˈtrɔ] | metro | **станція метро** (metro station) |
-| **кафе** | [kɑˈfɛ] | café | **ідемо в кафе** (let's go to a cafe) |
+| **метро** | | metro | **станція метро** (metro station) |
+| **кафе** | | café | **ідемо в кафе** (let's go to a cafe) |
 | **факт** | [fɑkt] | fact | **це факт** (it's a fact) |
 | **план** | [plɑn] | plan | **бізнес-план** (business plan) |
 | **парк** | [pɑrk] | park | **великий парк** (big park) |
@@ -137,13 +137,13 @@ This might seem simple, but you are speaking Ukrainian! You are using the nomina
 The word **так** is small but mighty. It is your primary tool for agreement.
 
 -   **Так** [tɑk] — Yes.
--   **Так, будь ласка** [tɑk budʲ ˈlɑskɑ] — Yes, please. *Use this for polite acceptance.*
--   **Так, звісно** [tɑk ˈzʋʲisnɔ] — Yes, of course. *Use this for enthusiastic agreement.*
+-   **Так, будь ласка** — Yes, please. *Use this for polite acceptance.*
+-   **Так, звісно** — Yes, of course. *Use this for enthusiastic agreement.*
 
 ### Coffee Culture Check
 A small but important distinction:
--   **Кафе** [kɑˈfɛ] = The place (Café).
--   **Кава** [ˈkɑʋɑ] = The drink (Coffee).
+-   **Кафе** = The place (Café).
+-   **Кава** = The drink (Coffee).
 
 **Кафе** is where you sit; **кава** is what you sip. You go to a **кафе** to drink **каву** (coffee). Two different words — two different things.
 
@@ -186,7 +186,7 @@ Let's break it down:
 2.  **факт** (fact) — *Cognate.* Note the **Ф** (hands on hips).
 3.  **мама** (mom) — *True Friend.*
 4.  **і** (and) — *The connector.*
-5.  **тато** [ˈtɑtɔ] (dad) — *True Friend.*
+5.  **тато** (dad) — *True Friend.*
 6.  **в** [u/v] (in) — *Preposition.*
 7.  **метро** (metro) — *Cognate.*
 

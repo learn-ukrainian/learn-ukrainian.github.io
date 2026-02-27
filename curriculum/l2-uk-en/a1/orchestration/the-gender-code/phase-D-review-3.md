@@ -33,7 +33,7 @@ Plan-Content Alignment: PASS (minor deviations)
 | 9 | Richness | 9/10 | <6 | S.T.A.L.K.E.R. hook (section «Культурний контекст: Жива мова», lines 274-279), authentic proverb «Рідна земля — мати, чужа — мачуха» (line 291), Ukrainian city names as examples (Київ, Одеса, Запоріжжя — line 289), the день/ніч pair as cultural metaphor, земля-мати nature connection. Named character dialogue (Андрій, Олена). |
 | 10 | Beginner Safety | 9/10 | <7 | "Would I Continue?" 5/5: Not overwhelmed (good pacing), instructions always clear, quick wins (line 135-140), Ukrainian introduced gently with translations, would come back (warm closure). Multiple encouragement beats: «Привіт!», «Спробуйте зараз!», «Бачите?», «Чудово!», «Молодець!» |
 | 11 | LLM Fingerprint | 8/10 | <7 | Sections «Презентація: Три кити роду», «Практика: Чотири сім'ї та винятки», and «Продукція: Колір і форма» all open with same pattern: bolded Ukrainian exclamation + English parenthetical + instructional sentence. 3 sections matching = borderline formulaic. The overarching "code" metaphor is used throughout but is thematic rather than filler. No cliché metaphors (діамант, двигун, etc.). No "це не просто" patterns. |
-| 12 | Linguistic Accuracy | 8/10 | <9 | **AUTO-FAIL.** Multiple IPA errors: (1) «сестра» [seˈstrɑ] uses [e] where Ukrainian е = [ɛ]; (2) «кімната» [kimˈnɑ.tɑ] missing palatalization [kʲ] before і; (3) «море» [ˈmɔ.re] final [e] should be [ɛ]; (4) «стіл» IPA differs between content [stʲil] and vocab file [sʲtʲil]; (5) Inconsistent є transcription — stressed є = [ɛ] (серце) but unstressed є = [e] (море, сестра). 5 IPA issues total. |
+| 12 | Linguistic Accuracy | 8/10 | <9 | **AUTO-FAIL.** Multiple IPA errors: (1) «сестра» uses [e] where Ukrainian е = [ɛ]; (2) «кімната» missing palatalization [kʲ] before і; (3) «море» final [e] should be [ɛ]; (4) «стіл» IPA differs between content [stʲil] and vocab file [sʲtʲil]; (5) Inconsistent є transcription — stressed є = [ɛ] (серце) but unstressed є = [e] (море, сестра). 5 IPA issues total. |
 | 13 | Factual Accuracy | 9/10 | <8 | Proverb «Рідна земля — мати, чужа — мачуха» verified as authentic Ukrainian proverb. French "le soleil" (M), Spanish "el sol" (M), German "die Sonne" (F) all correct. Gender assignments for all nouns verified against normative dictionaries. собака = masculine aligns with Академічний тлумачний словник. ім'я = neuter (4th declension) correct. Myth-buster comparison with сім'я valid. |
 
 **Weighted Overall:**
@@ -60,20 +60,20 @@ Plan-Content Alignment: PASS (minor deviations)
 
 ### Issue 1: IPA Inconsistency — Ukrainian /ɛ/ transcribed as [e]
 - **Location**: Lines 93, 117, 118 / Sections «Презентація: Три кити роду» and «Продукція: Колір і форма»
-- **Original**: «сестра» [seˈstrɑ] (line 93), «море» [ˈmɔ.re] (line 117), «серце» [ˈsɛr.t͡se] (line 118 — mixed: stressed ɛ, unstressed e)
+- **Original**: «сестра» (line 93), «море» (line 117), «серце» (line 118 — mixed: stressed ɛ, unstressed e)
 - **Problem**: Ukrainian phoneme /ɛ/ (е) is an open-mid front vowel, standardly transcribed [ɛ] in broad IPA. The content inconsistently uses [e] (close-mid) for unstressed positions while using [ɛ] for stressed positions. This is not a recognized standard transcription convention and will confuse learners about the actual vowel quality.
-- **Fix**: Standardize all instances of Ukrainian е to [ɛ]: сестра → [sɛˈstrɑ], море → [ˈmɔ.rɛ], серце → [ˈsɛr.t͡sɛ]. Apply same fix in vocabulary YAML.
+- **Fix**: Standardize all instances of Ukrainian е to [ɛ]: сестра →, море →, серце →. Apply same fix in vocabulary YAML.
 
 ### Issue 2: Missing Palatalization in IPA for кімната
 - **Location**: Line 95 / Section «Презентація: Три кити роду»
-- **Original**: «кімната» [kimˈnɑ.tɑ]
+- **Original**: «кімната»
 - **Problem**: In Ukrainian, consonants (except postalveolar sibilants) are palatalized before /i/. The velar /k/ before /i/ in кімната should be transcribed [kʲ]. Current transcription [k] misrepresents the pronunciation.
-- **Fix**: Change to [kʲimˈnɑ.tɑ].
+- **Fix**: Change to.
 
 ### Issue 3: IPA Inconsistency Between Content and Vocabulary Files for стіл
 - **Location**: Line 69 (content) vs vocabulary YAML line 11
 - **Original**: Content: «стіл» [stʲil] / Vocab: «стіл» [sʲtʲil]
-- **Problem**: The content file omits palatalization of /s/ before /tʲ/ (regressive assimilation), while the vocabulary file correctly includes it. A learner encountering both files sees conflicting transcriptions.
+- **Problem**: The content file omits palatalization of /s/ before (regressive assimilation), while the vocabulary file correctly includes it. A learner encountering both files sees conflicting transcriptions.
 - **Fix**: Standardize to [sʲtʲil] in both files. In Ukrainian, /s/ assimilates in palatality before a palatalized consonant.
 
 ### Issue 4: Section Title–Content Mismatch in «Продукція: Колір і форма»
@@ -85,10 +85,10 @@ Plan-Content Alignment: PASS (minor deviations)
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 93 | «сестра» [seˈstrɑ] | «сестра» [sɛˈstrɑ] | IPA — [e]→[ɛ] |
-| 95 | «кімната» [kimˈnɑ.tɑ] | «кімната» [kʲimˈnɑ.tɑ] | IPA — missing palatalization |
-| 117 | «море» [ˈmɔ.re] | «море» [ˈmɔ.rɛ] | IPA — [e]→[ɛ] |
-| 118 | «серце» [ˈsɛr.t͡se] | «серце» [ˈsɛr.t͡sɛ] | IPA — unstressed [e]→[ɛ] |
+| 93 | «сестра» | «сестра» | IPA — [e]→[ɛ] |
+| 95 | «кімната» | «кімната» | IPA — missing palatalization |
+| 117 | «море» | «море» | IPA — [e]→[ɛ] |
+| 118 | «серце» | «серце» | IPA — unstressed [e]→[ɛ] |
 | 69 | «стіл» [stʲil] | «стіл» [sʲtʲil] | IPA — content/vocab inconsistency |
 
 ## Beginner Safety Audit
@@ -113,12 +113,12 @@ Plan-Content Alignment: PASS (minor deviations)
 
 ### Linguistic Accuracy: 8/10 → 9/10
 **What to fix:**
-1. Line 93: Change «сестра» [seˈstrɑ] → [sɛˈstrɑ] — standardize Ukrainian /ɛ/
-2. Line 95: Change «кімната» [kimˈnɑ.tɑ] → [kʲimˈnɑ.tɑ] — add velar palatalization before /i/
-3. Line 117: Change «море» [ˈmɔ.re] → [ˈmɔ.rɛ] — standardize Ukrainian /ɛ/
-4. Line 118: Change «серце» [ˈsɛr.t͡se] → [ˈsɛr.t͡sɛ] — standardize unstressed /ɛ/
+1. Line 93: Change «сестра» → — standardize Ukrainian /ɛ/
+2. Line 95: Change «кімната» → — add velar palatalization before /i/
+3. Line 117: Change «море» → — standardize Ukrainian /ɛ/
+4. Line 118: Change «серце» → — standardize unstressed /ɛ/
 5. Line 69: Change «стіл» [stʲil] → [sʲtʲil] — match vocab file, reflect regressive palatalization
-6. Vocabulary YAML: Apply same [e]→[ɛ] fixes to: море [ˈmɔ.re]→[ˈmɔ.rɛ], сестра [seˈstrɑ]→[sɛˈstrɑ], серце [ˈsɛr.t͡se]→[ˈsɛr.t͡sɛ]
+6. Vocabulary YAML: Apply same [e]→[ɛ] fixes to: море→, сестра→, серце→
 
 **Expected score after fix:** 9/10
 

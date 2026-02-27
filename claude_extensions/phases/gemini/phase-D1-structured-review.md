@@ -16,17 +16,19 @@ Do not assume you wrote this content. Do not be generous.**
 
 **CRITICAL — VERBATIM CITATION RULE:**
 
-Every Ukrainian sentence you put inside «» quotes MUST be **copy-pasted verbatim** from the Read tool output. Do NOT paraphrase, do NOT reconstruct from memory, do NOT change a single word.
+Use `「...」` (CJK corner brackets) for ALL Ukrainian citations in your review — NOT `«»` (Ukrainian quotes appear inside the content and cause nesting collisions).
+
+Every Ukrainian sentence you put inside `「」` MUST be **copy-pasted verbatim** from the Read tool output. Do NOT paraphrase, do NOT reconstruct from memory, do NOT change a single word.
+
+**If you cannot find a sentence in the file to cite, do NOT report the issue — you may be hallucinating.**
 
 1. Use the Read tool to read the actual content file
-2. When you find a sentence to cite, **copy the exact text** from the Read output into your review
-3. After writing a citation, verify it with Grep:
-   ```
-   Grep pattern="first 5-6 words of your citation" path="{CONTENT_PATH}"
-   ```
-4. If Grep returns no matches — you paraphrased instead of copying. **Delete the citation and re-copy from Read output.**
+2. When you find a sentence to cite, **copy the exact text** from the Read output
+3. Verify with Grep: `Grep pattern="first 5-6 words" path="{CONTENT_PATH}"`
+4. If Grep returns no matches — you paraphrased. **Delete and re-copy from Read output.**
+5. Add verified citations to your **Citation Bank** (see Output Format) BEFORE writing the review body
 
-**Why this matters**: An automated verifier checks that your «»-quoted text appears verbatim in the source. Even minor rewording (e.g., "була не миттєвим" vs "становила не миттєвий") fails verification. 47%+ match rate = your review gets rejected and regenerated. Copy-paste, don't reconstruct.
+**Why this matters**: An automated verifier checks that your `「」`-quoted text appears verbatim in the source. Even minor rewording fails verification. Reviews with <53% match rate are **rejected and regenerated**. Copy-paste, don't reconstruct.
 
 ---
 
@@ -68,7 +70,7 @@ Audit status:     {COMPUTED_AUDIT_STATUS}
 
 {COMPUTED_H2_SECTIONS}
 
-**IMPORTANT — Section Reference Rule:** When discussing any content section in your review (dimension evidence, issue locations, fix plans), always reference it by its **exact Ukrainian H2 header name** — e.g., write `Section «Теорія: Магія закінчень -ати»` not "Theory section". This enables automated section coverage verification. Every H2 section listed above must be mentioned by its Ukrainian name at least once in your review.
+**IMPORTANT — Section Reference Rule:** When discussing any content section in your review (dimension evidence, issue locations, fix plans), always reference it by its **exact Ukrainian H2 header name** — e.g., write `Section "Теорія: Магія закінчень -ати"` not "Theory section". This enables automated section coverage verification. Every H2 section listed above must be mentioned by its Ukrainian name at least once in your review. (Use plain quotes for section names — reserve `「」` for verbatim content citations.)
 
 ---
 
@@ -261,6 +263,6 @@ Your review is checked by regex. Missing ANY of these H2 headers = AUTOMATIC REJ
 - Do NOT score generously — honesty prevents bad curriculum
 - Do NOT skip any step or dimension
 - Do NOT fabricate issues — every critique must cite a specific line number
-- Do NOT cite Ukrainian text without first verifying it with Grep
+- Do NOT cite Ukrainian text without first verifying it with Grep — use 「」 not «»
 - Do NOT give vague feedback — say exactly what and where
 - Do NOT reference orchestration artifacts or prior build phases

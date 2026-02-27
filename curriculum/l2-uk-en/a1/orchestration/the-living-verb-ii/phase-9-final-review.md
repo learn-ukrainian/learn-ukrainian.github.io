@@ -79,9 +79,9 @@ FILE: curriculum/l2-uk-en/a1/the-living-verb-ii.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/the-living-verb-ii.md
 ---OLD---
-*   **Вони роблять** [rɔˈblʲɑtʲ] — They do (The **-лю-** returns here too!)
+*   **Вони роблять** — They do (The **-лю-** returns here too!)
 ---NEW---
-*   **Вони роблять** [rɔˈblʲɑtʲ] — They do (The **Л** returns here too!)
+*   **Вони роблять** — They do (The **Л** returns here too!)
 ===FIX_END===
 
 ===FIX_START===

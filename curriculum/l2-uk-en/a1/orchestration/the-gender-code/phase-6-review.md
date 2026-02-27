@@ -60,14 +60,14 @@ Plan-Content Alignment: PASS
 - **Location**: Lines 276-277 / Section "Культурний Контекст"
 - **Original**: «**Артефакт** (Artifact)... **Зона** (The Zone)...»
 - **Problem**: New vocabulary introduced without IPA transcription.
-- **Fix**: Add IPA: `**Артефакт** [ar.teˈfɑkt]` and `**Зона** [ˈzɔ.nɑ]`.
+- **Fix**: Add IPA: `**Артефакт**` and `**Зона**`.
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 276 | «Артефакт» | «Артефакт [ar.teˈfɑkt]» | Missing IPA |
-| 277 | «Зона» | «Зона [ˈzɔ.nɑ]» | Missing IPA |
+| 276 | «Артефакт» | «Артефакт» | Missing IPA |
+| 277 | «Зона» | «Зона» | Missing IPA |
 
 ## Beginner Safety Audit
 

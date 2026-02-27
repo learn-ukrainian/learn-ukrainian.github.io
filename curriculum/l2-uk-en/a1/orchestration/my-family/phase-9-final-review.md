@@ -12,7 +12,7 @@ Good — the unjumble convention across the project omits punctuation, so the mi
 
 **Gender/case agreement**: Correct throughout. "Мій тато" (masc despite -о ending) is explicitly taught and consistently applied.
 
-**Minor IPA note** (not blocking): Line 51 uses **матір** [ˈmɑtʲir] while the activities file line 20 uses **Мати** — these are variant nominative forms of the same word. "Мати" is the standard modern literary form; "матір" is older. Since the content says "stick to мама" and barely mentions this word, the practical impact is zero. Not fixing.
+**Minor IPA note** (not blocking): Line 51 uses **матір** while the activities file line 20 uses **Мати** — these are variant nominative forms of the same word. "Мати" is the standard modern literary form; "матір" is older. Since the content says "stick to мама" and barely mentions this word, the practical impact is zero. Not fixing.
 
 ### Pedagogical Correctness
 

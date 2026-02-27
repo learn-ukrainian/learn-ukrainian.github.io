@@ -27,8 +27,8 @@ Now let me do the detailed adversarial analysis. I've read all files. Let me com
 
 **Issue 4 (IPA Mismatch): сметаною with nominative IPA**
 - **File:** `at-the-restaurant.md`, line 157
-- **Current:** `зі сметаною [smɛˈtɑnɐ]`
-- **Problem:** The IPA transcribes the nominative form (сметана), but it's placed directly after the instrumental form (сметаною). At A1, this creates confusion — the learner thinks `[smɛˈtɑnɐ]` is how you pronounce "сметаною".
+- **Current:** `зі сметаною`
+- **Problem:** The IPA transcribes the nominative form (сметана), but it's placed directly after the instrumental form (сметаною). At A1, this creates confusion — the learner thinks `` is how you pronounce "сметаною".
 - **Fix:** Introduce the word in nominative with IPA, then use the inflected form.
 
 **Issue 5 (Formatting): Proverb missing dash**
@@ -94,12 +94,12 @@ FILE: curriculum/l2-uk-en/a1/activities/at-the-restaurant.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-restaurant.md
 ---OLD---
-*   **Замовити** [zɐˈmɔʋɪtɪ] — to order / to book.
+*   **Замовити** — to order / to book.
 
 *   *Example:* «Добрий день. Я хотів би замовити столик на сьому годину.» (Good day. I would like to book a table for 7:00.)
 ---NEW---
-*   **Замовити** [zɐˈmɔʋɪtɪ] — to order / to book.
-*   **Забронювати** [zɐbrɔnʲuˈʋɑtɪ] — to reserve (specifically for tables and rooms).
+*   **Замовити** — to order / to book.
+*   **Забронювати** — to reserve (specifically for tables and rooms).
 
 > [!tip]
 > **Замовити чи забронювати?**
@@ -112,9 +112,9 @@ FILE: curriculum/l2-uk-en/a1/at-the-restaurant.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/at-the-restaurant.md
 ---OLD---
-*   **Деруни** [dɛˈrunɪ] — це млинці з картоплі. Дуже смачно зі сметаною [smɛˈtɑnɐ].
+*   **Деруни** — це млинці з картоплі. Дуже смачно зі сметаною.
 ---NEW---
-*   **Деруни** [dɛˈrunɪ] — це млинці з картоплі. Дуже смачно зі **сметаною** (< **сметана** [smɛˈtɑnɐ] — sour cream).
+*   **Деруни** — це млинці з картоплі. Дуже смачно зі **сметаною** (< **сметана** — sour cream).
 ===FIX_END===
 
 ===FIX_START===

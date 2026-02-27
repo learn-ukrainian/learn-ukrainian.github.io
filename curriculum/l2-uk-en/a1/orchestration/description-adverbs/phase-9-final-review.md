@@ -5,9 +5,9 @@ Now let me conduct a thorough adversarial review.
 ### Issue 1: IPA Error — regressive devoicing (Content file, line 94)
 
 **Location:** `description-adverbs.md` line 94
-**Current:** `**важко** [ˈʋɑʒkɔ]`
-**Problem:** Ukrainian "ж" undergoes regressive devoicing before voiceless "к", becoming [ʃ]. The vocabulary file correctly has `[ˈʋɑʃkɔ]`. The content file is wrong and inconsistent with its own vocabulary sidecar.
-**Correct:** `**важко** [ˈʋɑʃkɔ]`
+**Current:** `**важко**`
+**Problem:** Ukrainian "ж" undergoes regressive devoicing before voiceless "к", becoming [ʃ]. The vocabulary file correctly has ``. The content file is wrong and inconsistent with its own vocabulary sidecar.
+**Correct:** `**важко**`
 
 ### Issue 2: Pedagogical Contradiction — quiz models forbidden word order (Activity file, line 230)
 
@@ -50,9 +50,9 @@ Both are already correct in the current file. No action needed.
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/description-adverbs.md
 ---OLD---
-*   **важкий** (difficult/heavy) → **важко** [ˈʋɑʒkɔ] (with difficulty/hard)
+*   **важкий** (difficulthard)
 ---NEW---
-*   **важкий** (difficult/heavy) → **важко** [ˈʋɑʃkɔ] (with difficulty/hard)
+*   **важкий** (difficulthard)
 ===FIX_END===
 
 ===FIX_START===

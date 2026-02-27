@@ -104,9 +104,9 @@ Plan-Content Alignment: PASS (with minor gaps)
 
 ### Issue 4: IPA Uses Russian-Style Vowel Reduction
 - **Location**: Lines 108, 111 / Section «Presentation 2»
-- **Original**: «Щастя — [ˈʃt͡ʃɑstʲɐ]» and «Здоров'я — [zdɔˈrɔu̯jɐ]»
+- **Original**: «Щастя —» and «Здоров'я —»
 - **Problem**: The symbol [ɐ] (near-open central vowel) represents the Russian-style reduction of unstressed /а/. Standard Ukrainian phonology does not reduce unstressed vowels — final -я should be transcribed with [ɑ].
-- **Fix**: Change to [ˈʃt͡ʃɑstʲɑ] and [zdɔˈrɔu̯jɑ] respectively.
+- **Fix**: Change to and respectively.
 
 ### Issue 5: Choppy-Sentence Padding
 - **Location**: Line 185 / Section «Presentation 3»
@@ -118,8 +118,8 @@ Plan-Content Alignment: PASS (with minor gaps)
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 108 | «Щастя — [ˈʃt͡ʃɑstʲɐ]» | «Щастя — [ˈʃt͡ʃɑstʲɑ]» | IPA — non-standard vowel reduction |
-| 111 | «Здоров'я — [zdɔˈrɔu̯jɐ]» | «Здоров'я — [zdɔˈrɔu̯jɑ]» | IPA — non-standard vowel reduction |
+| 108 | «Щастя —» | «Щастя —» | IPA — non-standard vowel reduction |
+| 111 | «Здоров'я —» | «Здоров'я —» | IPA — non-standard vowel reduction |
 | 185 | «Ця традиція унікальна. Інші країни її не мають.» | «Ця традиція дуже популярна в Україні.» | Fabricated superlative |
 
 ## Beginner Safety Audit
@@ -169,8 +169,8 @@ Plan-Content Alignment: PASS (with minor gaps)
 
 ### Language: 8/10 → 9/10
 **What to fix:**
-1. Line 108: IPA [ˈʃt͡ʃɑstʲɐ] → [ˈʃt͡ʃɑstʲɑ]
-2. Line 111: IPA [zdɔˈrɔu̯jɐ] → [zdɔˈrɔu̯jɑ]
+1. Line 108: IPA →
+2. Line 111: IPA →
 3. Line 185: Remove false uniqueness claim (see Factual Accuracy above)
 
 **Expected score after fix:** 9/10

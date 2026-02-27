@@ -44,9 +44,9 @@ Plan-Content Alignment: PASS
 
 ### Issue 1: Linguistic Accuracy (IPA)
 - **Location**: Line 47 (and vocabulary.yaml) / Section "The 'Nominative Trap'"
-- **Original**: «[u ˈmɛne neˈmɑje kʋeˈtka]» (and `[kʋeˈtɔk]` in vocabulary)
+- **Original**: «» (and `` in vocabulary)
 - **Problem**: The symbol `[e]` represents the sound 'е' (as in 'bed'), but the letter is 'и' which should be `[ɪ]` (as in 'bit'). This teaches incorrect pronunciation ("кветка").
-- **Fix**: Change `e` to `ɪ` in all IPA transcriptions for 'квиток/квитка'. Example: `[kʋɪˈtka]`.
+- **Fix**: Change `e` to `ɪ` in all IPA transcriptions for 'квиток/квитка'. Example: ``.
 
 ### Issue 2: Contextual Accuracy (Telephone)
 - **Location**: Line 235 / Section "Діалог: Ввічлива відмова"
@@ -70,8 +70,8 @@ Plan-Content Alignment: PASS
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 47 | [kʋeˈtka] | [kʋɪˈtka] | IPA Error |
-| 70 | [teleˈfɔna] | [teleˈfɔnu] (if number) | Usage/Context |
+| 47 | | | IPA Error |
+| 70 | | (if number) | Usage/Context |
 | 235 | телефона | ключа / номера | Usage/Context |
 
 ## Beginner Safety Audit

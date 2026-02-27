@@ -5,7 +5,7 @@
 | # | Dimension | Score | Evidence Summary |
 |---|-----------|-------|------------------|
 | 1 | Plan Compliance | 7/10 | Multiple plan items dropped: «бо»/«тому що» causal conjunctions (§4.3.2), «де?» locative review connecting to a1-30, green cross/«Аптечний пункт» distinction, «Я болю» error drill, «за рецептом» phrase, register comparison «Я захворів» vs «У мене симптоми...». Meta section title mismatch: meta says "Лексика: Вирази про здоров'я" but content has "Лексика: Здоров'я". |
-| 2 | Language Quality | 8/10 | Ukrainian is generally correct. One stress error: content line 32 teaches «Спи́на» (stress on first syllable) but standard Ukrainian normative stress is «спина́» (final syllable). Vocabulary YAML `[ˈspɪnɑ]` reinforces the error. English is clear and accessible. No Russianisms or calques detected. No word salad. |
+| 2 | Language Quality | 8/10 | Ukrainian is generally correct. One stress error: content line 32 teaches «Спи́на» (stress on first syllable) but standard Ukrainian normative stress is «спина́» (final syllable). Vocabulary YAML `` reinforces the error. English is clear and accessible. No Russianisms or calques detected. No word salad. |
 | 3 | Factual Accuracy | 9/10 | Grammar rules (болить/болять agreement, Dative state constructions) are accurately presented. Proverb «У здоровому тілі — здоровий дух» is real and correctly attributed. Cultural note about малина/калина/мед remedies is accurate. Minor: line 14 "It is the center of our thoughts and pain" is awkward but not factually wrong. |
 | 4 | Lesson Quality | 7/10 | Clear PPP structure, logical progression from vocabulary → grammar → application → dialogues. But the persona "Polyclinic Nurse" is invisible — content reads as a generic textbook, not a supportive nurse character. No warm opening ("Привіт!" to the learner), no encouragement mid-lesson, no emotional arc. The "Would I Continue?" test: 4/5 pass (instructions clear, not overwhelming, quick wins present, Ukrainian introduced gently) but "Would I come back tomorrow?" is borderline due to cold tone. |
 | 5 | Richness | 8/10 | Two good cultural hooks (proverb in Section «Розминка: Частини тіла», herbal remedies in Section «Лексика: В аптеці»). Four diverse dialogue scenarios in Section «Практикум: Діалоги про здоров'я» covering casual/formal/pharmacy/home contexts. Good plural table in subsection «Перевірка: Множина». Missing: green cross cultural detail, «Аптечний пункт» vs «Аптека» distinction from plan. |
@@ -86,11 +86,11 @@
 
 **Severity:** Major
 
-**Evidence:** Content line 32 teaches «**Спи́на** (back)» with stress on the first syllable. The vocabulary YAML has IPA `[ˈspɪnɑ]` (stress on first syllable). Standard Ukrainian normative stress per SUM (Словник української мови) and the Орфоепічний словник is «спина́» [spɪˈnɑ] — stress on the final syllable. Teaching non-standard stress at A1 creates a pronunciation error that's hard to correct later.
+**Evidence:** Content line 32 teaches «**Спи́на** (back)» with stress on the first syllable. The vocabulary YAML has IPA `` (stress on first syllable). Standard Ukrainian normative stress per SUM (Словник української мови) and the Орфоепічний словник is «спина́» — stress on the final syllable. Teaching non-standard stress at A1 creates a pronunciation error that's hard to correct later.
 
-**Location:** Content line 32; vocabulary YAML line 42 (`ipa: '[ˈspɪnɑ]'`).
+**Location:** Content line 32; vocabulary YAML line 42 (`ipa: ''`).
 
-**Required Fix:** Change to «Спина́» in content and `[spɪˈnɑ]` in vocabulary YAML.
+**Required Fix:** Change to «Спина́» in content and `` in vocabulary YAML.
 
 ---
 

@@ -1,7 +1,7 @@
 # Audit Report: M06 — aspect-complete-system.md
 **Level:** B1 | **Module:** M06 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:42:01
+**Generated:** 2026-02-27 00:01:49
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,21 +16,42 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Теорія: розуміння видової системи | 12 | 8 | ✅ |
+| 2 | match-up | Видові пари: знайдіть відповідник | 15 | 8 | ✅ |
+| 3 | fill-in | Оберіть правильний вид у минулому часі | 12 | 8 | ✅ |
+| 4 | error-correction | Виправте типові помилки з майбутнім часом | 8 | 6 | ✅ |
+| 5 | unjumble | Побудуйте речення правильно | 8 | 6 | ✅ |
+| 6 | cloze | Історія одного дня | 14 | 6 | ✅ |
+| 7 | mark-the-words | Знайдіть недоконаний вид | 6 | 6 | ✅ |
+| 8 | fill-in | Заперечення та вид дієслова | 10 | 8 | ✅ |
+| 9 | match-up | Часові маркери та вид | 15 | 8 | ✅ |
+| 10 | fill-in | Спроба проти успіху | 8 | 8 | ✅ |
+| 11 | true-false | Правда чи брехня: граматичні правила виду | 15 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 11 (target: 4-8) ❌
+- Unique types: 8 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
+- Low density activities: 0
+
 ## Gates
-- **Words:** ✅ 4824/4000 (raw: 5215)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Words:** ✅ 4852/4000 (raw: 5240)
+- **Activities:** ✅ 11/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 8/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 14/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 99.6% (target 85-100% (B1.1 Aspect))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.8% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -61,9 +82,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Вид дієслова: повна система** | ✅ | 79 | Included in Core |
-| **Розминка та Контекст** | ✅ | 638 | Included in Core |
-| **Граматична Система: Форми та Функції** | ✅ | 1289 | Included in Core |
-| **Глибинна Семантика: Процес та Результат** | ✅ | 967 | Included in Core |
-| **Аналіз Помилок та Тонкощі** | ✅ | 910 | Included in Core |
-| **Практика та Мовленнєві Ситуації** | ✅ | 738 | Included in Core |
+| **Розминка та Контекст** | ✅ | 637 | Included in Core |
+| **Граматична Система: Форми та Функції** | ✅ | 1280 | Included in Core |
+| **Глибинна Семантика: Процес та Результат** | ✅ | 974 | Included in Core |
+| **Аналіз Помилок та Тонкощі** | ✅ | 931 | Included in Core |
+| **Практика та Мовленнєві Ситуації** | ✅ | 748 | Included in Core |
 | **Підсумок** | ✅ | 203 | Included in Core |

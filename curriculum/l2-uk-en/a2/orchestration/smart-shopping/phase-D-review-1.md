@@ -116,9 +116,9 @@ The actual section «Підсумок» has prose summary and self-check questio
 
 **Location:** Vocabulary YAML, line 115
 
-The IPA for `важливіший` is `[ʋɑˈʒlɪˈʋʲiʃɪj]` — this contains two primary stress marks (ˈ before ж and before ʋʲ). A single word can only have one primary stress. The correct IPA should be `[ʋɑʒlɪˈʋʲiʃɪj]` with stress on the penultimate syllable.
+The IPA for `важливіший` is `` — this contains two primary stress marks (ˈ before ж and before ʋʲ). A single word can only have one primary stress. The correct IPA should be `` with stress on the penultimate syllable.
 
-**Fix:** Remove the first stress mark: `[ʋɑʒlɪˈʋʲiʃɪj]`.
+**Fix:** Remove the first stress mark: ``.
 
 ---
 

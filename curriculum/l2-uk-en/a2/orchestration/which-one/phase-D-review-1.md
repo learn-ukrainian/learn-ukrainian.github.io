@@ -14,7 +14,7 @@
 | 6 | Factual Accuracy | 9/10 | Бессарабський ринок and Привоз are real landmarks (✓). «Який пан, такий жупан» proverb correctly explained (✓). Котигорошко folk tale accurate (✓). All grammar rules are correct. No fabricated claims. |
 | 7 | LLM Fingerprint | 7/10 | Main signal: four English blocks (L110, L147, L220, L252) follow an identical structural pattern — each section ends with a ~150-word English paragraph restating the Ukrainian content. This is textbook LLM bilingual padding. No "це не просто" patterns. Section openings are varied. |
 | 8 | Warmth & Humanity | 8/10 | Some direct address and encouragement (e.g., «Це ваш перший крок до створення красивих, складних описів» L55). Missing warm greeting at start (no "Привіт!"). "Don't worry" moments exist but only in English blocks. Closing has «Ми зробили величезний крок уперед» L258 which is good. |
-| 9 | Vocabulary IPA | 6/10 | Four IPA errors in vocabulary file: яка missing stress mark '[jɑkɑ]' → should be '[jɑˈkɑ]' (vocab L9); відмінок wrong stress '[ʋʲiˈdʲmʲinɔk]' → should be '[ʋʲidˈmʲinɔk]' (vocab L62); родовий double stress '[rɔˈdɔˈʋɪj]' → should be '[rɔdɔˈʋɪj]' (vocab L146); підозрюваний wrong stress '[pʲiˈdɔzʲrʲuʋɑnɪj]' → should be '[pʲidɔˈzrʲuʋɑnɪj]' (vocab L89). |
+| 9 | Vocabulary IPA | 6/10 | Four IPA errors in vocabulary file: яка missing stress mark '[jɑkɑ]' → should be '' (vocab L9); відмінок wrong stress '' → should be '' (vocab L62); родовий double stress '' → should be '' (vocab L146); підозрюваний wrong stress '' → should be '' (vocab L89). |
 
 ---
 
@@ -65,10 +65,10 @@
 **Location:** Vocabulary file, 4 items
 
 **Problems:**
-1. **яка** (vocab L9): IPA `[jɑkɑ]` — missing stress mark. Яка́ is stressed on second syllable → `[jɑˈkɑ]`
-2. **відмінок** (vocab L62): IPA `[ʋʲiˈdʲmʲinɔk]` — stress on wrong syllable, impossible consonant cluster `dʲm`. Відмі́нок → `[ʋʲidˈmʲinɔk]`
-3. **родовий** (vocab L146): IPA `[rɔˈdɔˈʋɪj]` — two stress marks (impossible). Родови́й → `[rɔdɔˈʋɪj]`
-4. **підозрюваний** (vocab L89): IPA `[pʲiˈdɔzʲrʲuʋɑnɪj]` — stress on wrong syllable. Підозрю́ваний → `[pʲidɔˈzrʲuʋɑnɪj]`
+1. **яка** (vocab L9): IPA `[jɑkɑ]` — missing stress mark. Яка́ is stressed on second syllable → ``
+2. **відмінок** (vocab L62): IPA `` — stress on wrong syllable, impossible consonant cluster `dʲm`. Відмі́нок → ``
+3. **родовий** (vocab L146): IPA `` — two stress marks (impossible). Родови́й → ``
+4. **підозрюваний** (vocab L89): IPA `` — stress on wrong syllable. Підозрю́ваний → ``
 
 **Fix:** Correct all four IPA transcriptions in the vocabulary file.
 

@@ -16,15 +16,15 @@ The module explicitly teaches the telegraphic format as `[Година (ordinal)
 
 Location: `what-time-is-it.md` line 295
 
-Given: `[ʋɛˈt͡ʃɛ.rʲɑ.tɪ]` — stress on second syllable (чe).
-Correct: `[ʋɛ.t͡ʃɛˈrʲɑ.tɪ]` — вечеря́ти has stress on -ря-.
+Given: `` — stress on second syllable (чe).
+Correct: `` — вечеря́ти has stress on -ря-.
 
 **Issue 3 (HIGH — IPA Error): Wrong stress on "Укрзалізниця"**
 
 Location: `what-time-is-it.md` line 20
 
-Given: `[ukr.zɑ.lʲizˈnɪ.t͡sʲɑ]` — stress on -ні-.
-Correct: `[u.kr.zɑ.ˈlʲi.znɪ.t͡sʲɑ]` — Укрзалі́зниця (from залі́зниця) has stress on -лі-.
+Given: `` — stress on -ні-.
+Correct: `` — Укрзалі́зниця (from залі́зниця) has stress on -лі-.
 
 **Issue 4 (MEDIUM — Euphony Violation): "й їм" phonetic clash**
 
@@ -51,9 +51,9 @@ All other vocabulary files in the project use a bare list at root. This file wra
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/what-time-is-it.md
 ---OLD---
-**Укрзалізниця** [ukr.zɑ.lʲizˈnɪ.t͡sʲɑ]
+**Укрзалізниця**
 ---NEW---
-**Укрзалізниця** [u.kr.zɑ.ˈlʲi.znɪ.t͡sʲɑ]
+**Укрзалізниця**
 ===FIX_END===
 
 ===FIX_START===
@@ -62,8 +62,8 @@ FILE: curriculum/l2-uk-en/a1/what-time-is-it.md
 *   11:10 — **Одинадцята десять**
 *   12:50 — **Дванадцята п'ятдесят**
 ---NEW---
-*   11:10 — **Одинадцята десять** [ɔ.dɪ.nɑˈd͡t͡sʲɑ.tɑ ˈdɛ.sʲɑtʲ]
-*   12:50 — **Дванадцята п'ятдесят** [dʋɑ.nɑˈd͡t͡sʲɑ.tɑ pjɑt.dɛˈsʲɑt]
+*   11:10 — **Одинадцята десять**
+*   12:50 — **Дванадцята п'ятдесят**
 ===FIX_END===
 
 ===FIX_START===
@@ -77,9 +77,9 @@ FILE: curriculum/l2-uk-en/a1/what-time-is-it.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/what-time-is-it.md
 ---OLD---
-*   **вечеряти** [ʋɛˈt͡ʃɛ.rʲɑ.tɪ] — to have dinner
+*   **вечеряти** — to have dinner
 ---NEW---
-*   **вечеряти** [ʋɛ.t͡ʃɛˈrʲɑ.tɪ] — to have dinner
+*   **вечеряти** — to have dinner
 ===FIX_END===
 
 ===FIX_START===
@@ -180,12 +180,12 @@ items:
     translation: "late"
     pos: "adverb"
 ---NEW---
-- ipa: '[ɦɔˈdɪ.nɑ]'
+- ipa: ''
   lemma: година
   notes: f; Котра година? О першій годині
   pos: noun
   translation: hour
-- ipa: '[xʋɪˈlɪ.nɑ]'
+- ipa: ''
   lemma: хвилина
   notes: f; за п'ять хвилин, одна хвилина
   pos: noun
@@ -195,12 +195,12 @@ items:
   notes: m; добрий день, робочий день
   pos: noun
   translation: day
-- ipa: '[ˈtɪʒ.dɛnʲ]'
+- ipa: ''
   lemma: тиждень
   notes: m; на цьому тижні (Loc), наступного тижня (Gen)
   pos: noun
   translation: week
-- ipa: '[ˈmʲi.sʲɑt͡sʲ]'
+- ipa: ''
   lemma: місяць
   notes: m; у цьому місяці (Loc)
   pos: noun
@@ -210,79 +210,79 @@ items:
   notes: m; новий рік, цього року (Gen)
   pos: noun
   translation: year
-- ipa: '[ˈrɑ.nɔk]'
+- ipa: ''
   lemma: ранок
   notes: m; доброго ранку, о восьмій ранку
   pos: noun
   translation: morning
-- ipa: '[ˈʋɛ.t͡ʃir]'
+- ipa: ''
   lemma: вечір
   notes: m; добрий вечір, о сьомій вечора
   pos: noun
   translation: evening
-- ipa: '[ˈzɑ.rɑz]'
+- ipa: ''
   lemma: зараз
   notes: Зараз третя десять.
   pos: adverb
   translation: now
-- ipa: '[ɔ kɔˈtrij]'
+- ipa: ''
   lemma: о котрій
   notes: О котрій ти прийдеш?
   pos: phrase
   translation: at what time
-- ipa: '[pɔ.nɛˈdʲi.lɔk]'
+- ipa: ''
   lemma: понеділок
   notes: m; у понеділок (Acc)
   pos: noun
   translation: Monday
-- ipa: '[ʋiu̯ˈtɔ.rɔk]'
+- ipa: ''
   lemma: вівторок
   notes: m; у вівторок (Acc)
   pos: noun
   translation: Tuesday
-- ipa: '[sɛ.rɛˈdɑ]'
+- ipa: ''
   lemma: середа
   notes: f; у середу (Acc)
   pos: noun
   translation: Wednesday
-- ipa: '[t͡ʃɛtˈʋɛr]'
+- ipa: ''
   lemma: четвер
   notes: m; у четвер (Acc)
   pos: noun
   translation: Thursday
-- ipa: '[ˈpjɑt.nɪ.t͡sʲɑ]'
+- ipa: ''
   lemma: п'ятниця
   notes: f; у п'ятницю (Acc)
   pos: noun
   translation: Friday
-- ipa: '[suˈbɔ.tɑ]'
+- ipa: ''
   lemma: субота
   notes: f; у суботу (Acc)
   pos: noun
   translation: Saturday
-- ipa: '[nɛˈdʲi.lʲɑ]'
+- ipa: ''
   lemma: неділя
   notes: f; у неділю (Acc)
   pos: noun
   translation: Sunday
-- ipa: '[sʲɔˈɦɔd.nʲi]'
+- ipa: ''
   lemma: сьогодні
   pos: adverb
   translation: today
-- ipa: '[ˈzɑu̯.trɑ]'
+- ipa: ''
   lemma: завтра
   pos: adverb
   translation: tomorrow
-- ipa: '[ˈpʲiz.nɔ]'
+- ipa: ''
   lemma: пізно
   pos: adverb
   translation: late
-- ipa: '[ˈu̯t͡ʃɑs.nɔ]'
+- ipa: ''
   lemma: вчасно
   notes: бути вчасно, прийти вчасно
   pos: adverb
   translation: on time
-- ipa: '[ˈrɑ.nɔ]'
+- ipa: ''
   lemma: рано
   notes: Ще рано.
   pos: adverb

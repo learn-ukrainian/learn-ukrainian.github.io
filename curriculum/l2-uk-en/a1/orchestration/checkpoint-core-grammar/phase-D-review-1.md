@@ -60,7 +60,7 @@
 
 ### Issue 7: MINOR — Misleading Phonetic Analogy for Ї
 **Location:** Section «Навичка 1: Читання та вимова», line 48
-**Evidence:** Content states: «Ї (Yi) — is always two sounds [ji]. It sounds like "ye" in the word "yeast".» The IPA transcription [ji] is correct, but the English analogy "ye" in "yeast" represents [jiː] with a front vowel [i], whereas Ї represents [ji] where the second element is Ukrainian [i] (similar to English "ee" in "feet"). The "yeast" analogy works for the initial [j] but could mislead on the vowel quality.
+**Evidence:** Content states: «Ї (Yi) — is always two sounds [ji]. It sounds like "ye" in the word "yeast".» The IPA transcription [ji] is correct, but the English analogy "ye" in "yeast" represents with a front vowel [i], whereas Ї represents [ji] where the second element is Ukrainian [i] (similar to English "ee" in "feet"). The "yeast" analogy works for the initial [j] but could mislead on the vowel quality.
 **Impact:** Minor — learners might slightly mispronounce the vowel, though the IPA notation compensates.
 **Fix:** Change analogy to: "It sounds like the 'yi' in 'yield'" or simply "like 'y' + 'ee'."
 

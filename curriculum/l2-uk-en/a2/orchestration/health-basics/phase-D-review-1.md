@@ -38,11 +38,11 @@
 
 **Citation (content):** «**спи́на** — жіночий рід. Наприклад: пряма спина, рівна спина. Його спина втомилася.»
 
-**Citation (vocab YAML):** `ipa: '[ˈspɪnɑ]'`
+**Citation (vocab YAML):** `ipa: ''`
 
-**Problem:** The stress accent is on the wrong syllable. «Спина» in Ukrainian is stressed on the second syllable: **спина́** [spɪˈnɑ], not **спи́на** [ˈspɪnɑ]. This error appears both in the content file (accented text) and the vocabulary YAML (IPA transcription). Teaching incorrect stress is a critical pronunciation issue for learners.
+**Problem:** The stress accent is on the wrong syllable. «Спина» in Ukrainian is stressed on the second syllable: **спина́**, not **спи́на**. This error appears both in the content file (accented text) and the vocabulary YAML (IPA transcription). Teaching incorrect stress is a critical pronunciation issue for learners.
 
-**Fix:** Content: change «спи́на» to «спина́». Vocabulary YAML: change `[ˈspɪnɑ]` to `[spɪˈnɑ]`.
+**Fix:** Content: change «спи́на» to «спина́». Vocabulary YAML: change `` to ``.
 
 ---
 
@@ -74,11 +74,11 @@
 
 **Location:** Vocabulary YAML, line 131
 
-**Citation:** `ipa: "[rɔˈdɔˈʋɪj]"` for lemma "родовий"
+**Citation:** `ipa: ""` for lemma "родовий"
 
-**Problem:** The IPA transcription contains two primary stress marks (ˈ), which is phonologically impossible for a single word. The correct stress for «родови́й» is on the third syllable: [rɔdɔˈʋɪj].
+**Problem:** The IPA transcription contains two primary stress marks (ˈ), which is phonologically impossible for a single word. The correct stress for «родови́й» is on the third syllable:.
 
-**Fix:** Change `[rɔˈdɔˈʋɪj]` to `[rɔdɔˈʋɪj]`.
+**Fix:** Change `` to ``.
 
 ---
 

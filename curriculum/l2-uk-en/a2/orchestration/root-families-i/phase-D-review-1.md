@@ -126,7 +126,7 @@ Plan-Content Alignment: PASS (with issues)
 1. Vocab line 9: Change IPA `[ʍxʲid]` → `[ʋxʲid]` for "вхід" — removes non-Ukrainian phoneme
 2. Line 205 (Section «Практичне застосування»): Replace «Сергія Плохія» with an actual Ukrainian novelist (Жадан, Курков, Дереш) — fixes factual error
 3. Line 44 (Section «Родини ход- та пис-»): Fix comma syntax «регулярний, рух» → «регулярний рух пішки» — fixes grammar
-4. Vocab line 105: Verify вичитати stress — current `[ˈʋɪt͡ʃɪtɑtɪ]` places stress on first syllable, standard is on third `[ʋɪt͡ʃɪˈtɑtɪ]`
+4. Vocab line 105: Verify вичитати stress — current `` places stress on first syllable, standard is on third ``
 
 **Expected score after fix:** 9/10
 

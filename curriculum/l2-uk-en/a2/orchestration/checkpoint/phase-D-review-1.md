@@ -1,211 +1,183 @@
 **Reviewed-By:** claude-opus-4-6
 
-# Phase D.1 Review — `a2/checkpoint` (A2-35: Complex Sentences & Health)
-
 ---
 
 ## Scores
 
-| # | Dimension | Score | Evidence Summary |
-|---|-----------|-------|-----------------|
-| 1 | **Language Quality** | 6/10 | Multiple gender agreement errors in instructional headings and prose (L113, L117, L119). Typo in H3 heading. Excessive intensifier padding (~25 "дуже", 5 "надзвичайно", 3 "абсолютно" in 332 lines). |
-| 2 | **Lesson Quality** | 7/10 | Warm opening and good cultural hooks, but the "який" nominative examples fail to demonstrate the taught concept (L124, L128). Mechanical stub sections (Модель/Практика/Самоперевірка) ×5 add no value. |
-| 3 | **Activity Quality** | 6/10 | Unjumble answers systematically omit commas before subordinate conjunctions (L581, L590, L599) — directly contradicts the content's own comma rules. Unnatural quiz question at L503. |
-| 4 | **Factual Accuracy** | 9/10 | Grammar rules accurately explained. Cultural claims verified. Minor overstatement: "брати ліки" framed as categorically wrong (L227) when it is merely non-preferred. |
-| 5 | **LLM Fingerprint** | 7/10 | "не просто X, а Y" pattern ×2 (L16, L256). Excessive filler adjectives throughout. Inconsistent labeling: «Plural (Plural):» at L135 vs Ukrainian labels elsewhere. |
-| 6 | **Richness** | 8/10 | Good cultural hooks (калина symbolism, Будьмо! toast). Realistic medical dialogue. 6 varied callout boxes. Missing the "який" declension table the plan specifies. |
-| 7 | **Plan Compliance** | 7/10 | All 5 sections present. Missing the required "який" rule table (plan: "Provide a rule table demonstrating gender, number, and case agreement"). щоб vs що б "targeted drill" is explanation, not a drill. |
-| 8 | **Immersion Balance** | 9/10 | 71.5% Ukrainian within 60-75% target. English used appropriately for syntax explanations. Medical examples fully Ukrainian. |
-| 9 | **Humanity & Warmth** | 8/10 | Opening «Вітаємо вас на новому етапі!» is welcoming. Regular encouragement present. Direct address frequent. Slightly undermined by mechanical stub sections that feel template-generated. |
-| 10 | **Vocabulary Coverage** | 9/10 | All required vocab present (голова, горло, температура, ліки, лікар, живіт, застуда). All recommended items covered (рука, нога, малина, калина, мед, щоб, бо). IPA provided in vocabulary YAML. |
+| # | Dimension | Score | Key Evidence |
+|---|-----------|-------|-------------|
+| 1 | **Language Quality** | 7/10 | Three gender agreement errors in Ukrainian prose: «цей універсальний слово» (line 117), «Відносний слово» (line 113), and a typo «словоа» (line 119). These are in the section *teaching* relative pronoun agreement — undermines credibility. |
+| 2 | **Factual Accuracy** | 9/10 | Grammar rules (щоб+past, через+Acc, який agreement) are correctly explained. Cultural claims about калина and Будьмо are accurate. One minor issue: examples demonstrating який in Nominative (lines 124, 128) fail to actually use який. |
+| 3 | **Lesson Quality** | 7/10 | Warm opening and good medical dialogue. But 5 sets of empty placeholder stubs (Модель/Практика/Самоперевірка, lines 100-107, 179-186, 259-266, 298-305, 323-330) break flow and feel robotic. No "rule table" for який as plan requires. |
+| 4 | **LLM Fingerprint** | 7/10 | «не просто» appears 2× (lines 16, 256) — meets the ≤7 threshold. «надзвичайно» appears 4× (lines 16, 146, 208, 291). Heavy superlative stacking throughout: «дуже» appears 30+ times. Structural monotony: every H2 section ends with identical Модель/Практика/Самоперевірка stubs. |
+| 5 | **Activity Quality** | 7/10 | 4 unjumble answer keys omit mandatory commas before subordinating conjunctions (lines 581, 590, 599, 627). One quiz question is implausible: «Де моє хворе горло, ___ сьогодні так сильно болить?» (activities line 503). In a module *teaching* complex sentence punctuation, incorrect punctuation in answer keys is a critical error. |
+| 6 | **Richness** | 9/10 | 6 callout boxes with varied types (tip, warning, observe, fact, culture). Medical dialogue is authentic and engaging. Cultural hooks (калина, Будьмо) are meaningful. |
+| 7 | **Immersion** | 9/10 | 71.5% Ukrainian — within 60-75% Band 2 target. English used appropriately for abstract syntax explanations. All medical dialogues and examples in Ukrainian. |
+| 8 | **Plan Compliance** | 8/10 | All 5 sections present. All planned grammar points covered. Missing: plan explicitly requires «a rule table demonstrating gender, number, and case agreement» for який — content provides examples only, no table. |
+| 9 | **Humanity & Warmth** | 8/10 | Warm «Вітаємо вас» opening. Multiple encouragement markers. The Будьмо cultural section is genuinely engaging. Loses a point for the 5 mechanical placeholder stubs and absence of "you can now..." celebration in the summary. |
 
 ---
 
 ## Critical Issues Found
 
-### CRITICAL ISSUE 1: Gender Agreement Errors in Instructional Headings (L113, L117, L119)
+### Issue 1: Gender Agreement Errors in Section Teaching Gender Agreement (CRITICAL)
 
-**Section:** «Навичка 2: Опис та послідовність дій»
+**Location:** Section «Навичка 2: Опис та послідовність дій», lines 113, 117, 119
 
-Three gender agreement errors in the section teaching "який" agreement — the irony is that this section *teaches* gender agreement while containing agreement violations itself:
+The section on який agreement contains three errors in the Ukrainian prose that directly contradicts the grammar being taught:
 
-1. **L113** — «Відносний слово: Який» → "слово" is neuter (середній рід), so the heading must be **«Відносне слово: Який»** (or better: **«Відносний займенник: Який»**).
+1. **Line 113** — Heading «Відносний слово: Який» — "слово" is neuter (середній рід), requires «Відносне слово: Який»
+2. **Line 117** — «Використовуйте цей універсальний слово» — again, "слово" is neuter, requires «це універсальне слово»
+3. **Line 119** — Heading «Узгодження словоа Який» — typo, "словоа" should be «слова»
 
-2. **L117** — «Використовуйте цей універсальний слово» → Two errors: demonstrative "цей" (masculine) should be "це" (neuter); adjective "універсальний" (masculine) should be "універсальне" (neuter). Correct: **«Використовуйте це універсальне слово»**.
+**Impact:** A section that teaches learners to match adjective endings to noun gender contains visible adjective-noun gender mismatches. This destroys pedagogical credibility.
 
-3. **L119** — «Узгодження словоа Який» → Typo: "словоа" must be **"слова"**.
+**Fix:** Replace «Відносний слово» → «Відносне слово», «цей універсальний слово» → «це універсальне слово», «словоа» → «слова»
 
-**Severity:** Critical. Grammar errors in the teaching material about grammar agreement destroy learner trust and model incorrect Ukrainian. A section titled "Agreement of який" must itself demonstrate correct agreement.
+### Issue 2: який Nominative Examples Don't Use який (CRITICAL)
 
-**Fix:** Correct all three: rename heading to «Відносне слово: Який» or «Відносний займенник: Який»; fix L117 to «це універсальне слово»; fix typo «словоа» → «слова».
+**Location:** Section «Навичка 2: Опис та послідовність дій», lines 124, 128
 
----
+The examples purporting to demonstrate який in Nominative case split into two separate sentences instead of using a relative clause:
 
-### CRITICAL ISSUE 2: "Який" Nominative Examples Don't Use "Який" (L124, L128)
+- Line 124: «Це новий лікар. Він працює в нашій сучасній лікарні.» — English translation says "who works" but Ukrainian has no який
+- Line 128: «Ось та аптека. Вона завжди працює вночі.» — English translation says "which always works" but Ukrainian has no яка
 
-**Section:** «Навичка 2: Опис та послідовність дій»
+**Impact:** The examples are supposed to demonstrate Nominative relative clauses but contain zero relative pronouns. The learner sees the English gloss "who/which" but the Ukrainian model sentence uses separate clauses.
 
-The nominative examples for masculine and feminine fail to demonstrate the relative pronoun they are supposed to teach:
+**Fix:** Combine into relative clauses: «Це новий лікар, який працює в нашій сучасній лікарні.» and «Ось та аптека, яка завжди працює вночі.»
 
-1. **L124** — «Це новий лікар. Він працює в нашій сучасній лікарні.» — Two independent sentences. No «який» appears. The English translation says "who works" (relative clause), but the Ukrainian has «Він працює» (independent clause). Should be: **«Це новий лікар, який працює в нашій сучасній лікарні.»**
+### Issue 3: Unjumble Answer Keys Missing Commas (MAJOR)
 
-2. **L128** — «Ось та аптека. Вона завжди працює вночі.» — Same problem. No «яка». Should be: **«Ось та аптека, яка завжди працює вночі.»**
+**Location:** Activities file, unjumble type "Побудуйте складні речення", lines 581, 590, 599, 627
 
-**Severity:** Critical. The section's pedagogical goal is to show how «який» creates relative clauses. Providing examples that DON'T use the relative pronoun defeats the entire purpose.
+Four answer keys in the complex sentence unjumble omit commas before subordinating conjunctions:
 
-**Fix:** Merge each pair into a single relative clause using the appropriate form of «який/яка».
+- Line 581: «Я почекаю тут поки ти п'єш чай» — needs comma before «поки»
+- Line 590: «Вона п'є сироп який дав їй лікар» — needs comma before «який»
+- Line 599: «Ми йшли додому коли почався сильний дощ» — needs comma before «коли»
+- Line 627: «Вони йдуть в аптеку бо дуже хворі» — needs comma before «бо»
 
----
+**Impact:** In a checkpoint module explicitly teaching complex sentence construction, answer keys that model incorrect punctuation directly undermine the lesson. The content itself (lines 26, 39) carefully notes comma placement rules.
 
-### CRITICAL ISSUE 3: Unjumble Activity Answers Model Incorrect Punctuation (L581, L590, L599)
+**Fix:** Add commas: «Я почекаю тут, поки ти п'єш чай», «Вона п'є сироп, який дав їй лікар», «Ми йшли додому, коли почався сильний дощ», «Вони йдуть в аптеку, бо дуже хворі»
 
-**Section:** Activities — «Побудуйте складні речення»
+### Issue 4: Implausible Activity Question (MINOR)
 
-The complex sentence unjumble answers systematically omit commas before subordinate conjunctions. The content explicitly teaches comma placement rules before these conjunctions, but the activity answers contradict this:
+**Location:** Activities file, quiz "Оберіть правильний займенник «який»", line 503
 
-1. **L581** — «Я почекаю тут поки ти п'єш чай» → Missing comma before «поки». Should be: **«Я почекаю тут, поки ти п'єш чай»**.
+«Де моє хворе горло, ___ сьогодні так сильно болить?» — "Where is my sick throat that hurts so badly today?" is semantically absurd. No one asks *where* their throat is. This is not a plausible Ukrainian sentence.
 
-2. **L590** — «Вона п'є сироп який дав їй лікар» → Missing comma before «який». Should be: **«Вона п'є сироп, який дав їй лікар»**.
+**Fix:** Replace with a natural sentence, e.g., «Це моє хворе горло, ___ сьогодні так сильно болить.» (keeping the яке answer)
 
-3. **L599** — «Ми йшли додому коли почався сильний дощ» → Missing comma before «коли». Should be: **«Ми йшли додому, коли почався сильний дощ»**.
+### Issue 5: Heading Inconsistency (MINOR)
 
-**Severity:** Critical. Teaching punctuation rules in prose but modeling incorrect punctuation in practice activities creates contradictory learning. The activities must either include comma tiles or use the fill-in format for complex sentences.
+**Location:** Section «Навичка 2: Опис та послідовність дій», line 135
 
-**Fix:** Add commas to all three answers. If the unjumble format doesn't support punctuation tiles, consider changing these items to fill-in or error-correction type.
+«**Plural (Plural):**» — Redundant English-only heading. All other gender headings use Ukrainian: «Чоловічий рід», «Жіночий рід», «Середній рід». The plural heading breaks the pattern.
 
----
+**Fix:** Replace with «**Множина (Plural):**»
 
-### ISSUE 4: Unnatural Activity Question (L503)
+### Issue 6: Missing який Rule Table (MINOR — Plan Compliance)
 
-**Section:** Activities — «Оберіть правильний займенник "який"»
+**Location:** Section «Навичка 2: Опис та послідовність дій»
 
-**L503** — «Де моє хворе горло, ___ сьогодні так сильно болить?» — "Where is my sick throat that hurts so badly today?" is not a natural Ukrainian sentence. No native speaker would ask "Where is my throat?" This is an implausible utterance that wouldn't occur in real communication.
+The plan (meta line 24-25) explicitly requires: «Provide a rule table demonstrating gender, number, and case agreement with the antecedent noun.» The content provides inline examples but no consolidated reference table.
 
-**Severity:** Moderate. Unnatural example sentences undermine the teaching material's credibility.
+**Fix:** Add a declension summary table for який/яка/яке/які showing at least Nominative and Accusative forms across genders.
 
-**Fix:** Replace with a natural sentence, e.g.: «Це моє хворе горло, ___ сьогодні так сильно болить.» or «У мене хворе горло, ___ сьогодні так сильно болить.»
+### Issue 7: LLM Filler — «не просто» Pattern (MINOR)
 
----
+**Location:** Lines 16, 256
 
-### ISSUE 5: Missing "Який" Declension Table (Plan Compliance)
+- Line 16: «Ви навчитеся не просто говорити короткі базові фрази, а будувати складні, глибокі логічні речення.»
+- Line 256: «Калина — це не просто корисна червона ягода.»
 
-**Section:** «Навичка 2: Опис та послідовність дій»
+Per rubric: «не просто» / «це не лише» used 2+ times → LLM Fingerprint ≤ 7.
 
-The plan specifies: *"Provide a rule table demonstrating gender, number, and case agreement with the antecedent noun."* The content provides scattered examples organized by gender, but no actual table. At A2, learners need a clean, visual reference table, not just examples. The meta outline (L24-25 in meta) also calls for "a rule table."
+**Fix:** Rewrite at least one instance. E.g., line 16 could become: «Ви навчитеся будувати складні логічні речення замість коротких базових фраз.»
 
-**Severity:** Moderate. Visual grammar tables are critical for beginner comprehension per Tier 1 rubrics.
+### Issue 8: Empty Placeholder Stubs (MINOR — Structural)
 
-**Fix:** Add a declension table before the examples showing який/яка/яке/які across nominative and accusative cases (at minimum).
+**Location:** Lines 100-107, 179-186, 259-266, 298-305, 323-330
 
----
+Every section ends with identical triple stubs:
+```
+### Модель:
+*Generic italic text*
+### Практика:
+*Generic italic text*
+### Самоперевірка
+*Generic italic text*
+```
 
-### ISSUE 6: Excessive Intensifier Padding (LLM Fingerprint)
+These contain no actual content and create mechanical repetition across all 5 sections (15 empty headings total). They break the reading flow and add no pedagogical value.
 
-Throughout the content, nearly every noun is modified by one or more intensifiers that add no pedagogical value:
-
-- «дуже сильно та довго болить» (L206) — three modifiers for one verb
-- «надзвичайно просте, але критично важливе» (L146) — two superlatives for one concept
-- «абсолютно критично важливо» (L194) — triple-stacked intensifiers
-- «вкрай слабким» (L277), «надзвичайно хворе» (L208), «суворе граматичне правило, яке не можна порушувати» (L85)
-
-The word «дуже» alone appears approximately 25 times in 332 lines (~1 per 13 lines). «Надзвичайно» appears 5 times. This over-modification is a hallmark LLM pattern and inflates word count without adding pedagogical content.
-
-**Severity:** Moderate. Inflated prose obscures the teaching points and models unnatural Ukrainian writing for learners.
-
-**Fix:** Remove 40-60% of intensifiers. A2 text should be direct and simple, not maximally modified.
-
----
-
-### ISSUE 7: "Не просто X, а Y" LLM Rhetoric Pattern (L16, L256)
-
-**L16** — «Ви навчитеся не просто говорити короткі базові фрази, а будувати складні, глибокі логічні речення.»
-
-**L256** — «Калина — це не просто корисна червона ягода.»
-
-Per rubric: "це не просто / це не лише / не просто X, а Y used 2+ times → ≤ 7."
-
-**Severity:** Moderate. Two occurrences reach the threshold.
-
-**Fix:** Rephrase one or both to avoid the pattern. E.g., L16 could become: «Ви навчитеся будувати складні логічні речення замість коротких фраз.»
-
----
-
-### ISSUE 8: Inconsistent Label "Plural (Plural):" (L135)
-
-**Section:** «Навичка 2: Опис та послідовність дій»
-
-**L135** — «**Plural (Plural):**» — Redundant English-English label. The other gender categories use Ukrainian: «Чоловічий рід», «Жіночий рід», «Середній рід». This should be **«Множина:»** for consistency.
-
-**Severity:** Minor. Inconsistency, not a serious error.
-
-**Fix:** Replace with «Множина:».
+**Fix:** Either populate with real content (model answers, practice prompts, self-check questions) or remove entirely. Activities already serve the practice function.
 
 ---
 
 ## Factual Verification
 
-| Claim | Location | Verdict |
-|-------|----------|---------|
-| «тому що» requires comma before it | L26 | **Correct** — standard Ukrainian punctuation |
-| «бо» requires comma before it | L39 | **Correct** — subordinate conjunction comma rule |
-| «через» requires Accusative case | L53 | **Correct** — standard government |
-| «щоб» + past tense when subjects differ | L75 | **Correct** — Ukrainian syntax rule per State Standard §4.4.2 |
-| «Будьмо!» = imperative of «бути» | L293 | **Correct** — hortative imperative (1st person plural) |
-| «Будьмо!» literally "Let us be!" | L293 | **Correct** |
-| Калина as national symbol | L256 | **Correct** — well-established cultural fact |
-| «брати ліки» is categorically wrong | L227 | **Slightly overstated** — it exists marginally in colloquial Ukrainian, but «приймати/пити» are overwhelmingly preferred. Pedagogically acceptable overstatement at A2. |
-| Малина, калина, мед as folk cold remedies | L241-253 | **Correct** — well-documented Ukrainian folk medicine tradition |
-| Grammar rule: який declines like hard-stem adjective | L121 | **Correct** |
+| Claim | Verified? | Notes |
+|-------|-----------|-------|
+| «тому що» requires a comma before it | ✅ Correct | Standard Ukrainian punctuation rule |
+| «бо» is colloquial register | ✅ Correct | Confirmed by State Standard §4.4.2 in research notes |
+| «через» + Accusative for cause | ✅ Correct | Standard grammar |
+| «щоб» + past tense when subjects differ | ✅ Correct | Core A2.2 grammar rule |
+| «щоб» vs «що б» distinction | ✅ Correct | Conjunction vs pronoun+particle |
+| «який» declines like a hard-stem adjective | ✅ Correct | Standard grammar |
+| «після того як» requires comma before «як» | ✅ Correct | Standard punctuation |
+| «приймати ліки» not «брати ліки» | ✅ Correct | Confirmed in research notes as common learner error |
+| «Будьмо» is imperative form of «бути» | ✅ Correct | 1st person plural imperative |
+| Калина as national symbol of Ukraine | ✅ Correct | Well-established cultural fact |
+| Малина, калина, мед as traditional cold treatments | ✅ Correct | Confirmed in research Cultural Hooks section |
 
-**Callout box check:**
-- `[!tip]` L48-49: Register advice (бо vs тому що) — **Accurate**
-- `[!warning]` L84-85: щоб + past tense rule — **Accurate**
-- `[!observe]` L139-140: Gender agreement advice — **Accurate** (though ironic given L113/L117 errors)
-- `[!fact]` L175-176: B1 bridge (якби) — **Accurate**, correctly scoped
-- `[!warning]` L236-237: "Брати ліки" correction — **Accurate** (slightly overstated, see above)
-- `[!culture]` L255-256: Калина symbolism — **Accurate**, culturally verified
-
-**No fabricated facts, dates, or attributions found.** No colonial framing detected. No Russianisms detected.
+**Grammar Rule Verification:**
+- The explanation that «боліти» uses the body part as subject + person in Genitive with у/в (line 203) is correct.
+- The explanation of Accusative with «мати» and Genitive with «немає» (lines 215-221) is correct.
+- No grammar overgeneralizations found.
 
 ---
 
 ## Verification Summary
 
-| Check | Result |
-|-------|--------|
-| All H2 sections from plan present | **PASS** — All 5 sections present as H2 headers |
-| Vocabulary scope match | **PASS** — All required and recommended items covered |
-| Grammar scope (no creep) | **PASS** — No B1+ grammar introduced; якби correctly deferred |
-| Colonial framing | **PASS** — No Ukrainian-via-Russian comparisons found |
-| Russianisms | **PASS** — No Russianisms detected |
-| Factual accuracy | **PASS** — All claims verified; minor overstatement on «брати ліки» |
-| LLM fingerprint | **WARN** — "не просто" ×2, excessive intensifiers, Plural(Plural) label |
-| Word count | **PASS** — 3570 / 3000 (119%, above minimum) |
-| Immersion | **PASS** — 71.5% within 60-75% target |
-| "Would I Continue?" test | 3/5 PASS — Warm opening (✓), clear instructions (✓), quick wins (✓), Ukrainian not scary (✓ with scaffolding), but «який» section with grammar errors is discouraging (✗) |
-| Grammar errors in content | **FAIL** — 3 gender agreement errors in section teaching gender agreement (Critical Issues 1-2) |
-| Activity punctuation | **FAIL** — 3 unjumble answers model incorrect punctuation (Critical Issue 3) |
-| Missing plan elements | **FAIL** — No «який» declension table despite plan requirement |
+| Check | Result | Details |
+|-------|--------|---------|
+| Colonial framing | ✅ Clean | No Russian comparisons found. Ukrainian grammar presented on its own terms. |
+| Russicisms | ✅ Clean | No instances of приймати участь, самий кращий, слідуючий, скучати, нравитися found. |
+| Anglicisms | ✅ Clean | Content explicitly corrects "брати ліки" anglicism. No "робити рішення" or similar patterns. |
+| LLM fingerprint | ⚠️ Flag | «не просто» 2×; «надзвичайно» 4×; structural monotony (5× identical Модель/Практика/Самоперевірка stubs) |
+| Callout monotony | ✅ Clean | 6 callouts, all different types (tip, warning ×2, observe, fact, culture) |
+| Structural monotony | ⚠️ Flag | Every H2 section opens with a 1-2 sentence Ukrainian hook then switches to English explanation — same pattern throughout |
+| Factual accuracy | ✅ Clean | All grammar rules and cultural claims verified |
+| Plan compliance | ⚠️ Gap | Missing який declension table explicitly requested in plan |
+| Activity errors | ❌ Found | 4 unjumble answers missing commas; 1 implausible quiz question |
+| Grammar errors in content | ❌ Found | 3 gender agreement errors / typos in section «Навичка 2: Опис та послідовність дій» |
 
-### Section Coverage
-
-- Section «Вступ та цілі» — Warm and well-structured opening with clear objectives. Immersion note present. Over-modified prose.
-- Section «Навичка 1: Синтаксис логіки: Причина та Мета» — Strong pedagogical structure covering тому що, бо, через, щоб+inf, щоб+past, щоб vs що б. Good examples. Slightly dense but acceptable for a checkpoint.
-- Section «Навичка 2: Опис та послідовність дій» — Contains the worst errors (gender agreement mistakes in headings, missing «який» in nominative examples, no declension table). Коли/поки/після того як are well-taught.
-- Section «Навичка 3: Медицина, тіло та народні методи» — Good vocabulary integration. Pain expression taught correctly. "Приймати vs пити vs брати" distinction is useful. Folk medicine cultural hook is engaging.
-- Section «Навичка 4: Практичне застосування та підсумок» — Medical dialogue effectively integrates all taught structures. «Будьмо!» cultural hook is well-researched and appropriate. Summary is comprehensive.
+**Section Coverage Verification:**
+- Section «Вступ та цілі» — reviewed: warm opening, good goal-setting, minor LLM filler
+- Section «Навичка 1: Синтаксис логіки: Причина та Мета» — reviewed: grammar explanations accurate, register distinction clear
+- Section «Навичка 2: Опис та послідовність дій» — reviewed: contains 3 grammar errors (Issues 1-2), missing rule table (Issue 6)
+- Section «Навичка 3: Медицина, тіло та народні методи» — reviewed: medical vocab well-presented, cultural content authentic
+- Section «Навичка 4: Практичне застосування та підсумок» — reviewed: dialogue is well-constructed, Будьмо section is engaging
 
 ---
 
 ## Verdict
 
-**NEEDS REPAIR** — The module has solid pedagogical structure and good cultural content, but Critical Issues 1-3 require mandatory fixes before approval:
+**FAIL — Targeted Repair Required (D.2)**
 
-1. **Gender agreement errors in the «який» section** — Grammar errors in material teaching grammar agreement are auto-fail quality. Three fixes needed (L113, L117, L119).
-2. **Nominative "який" examples missing the pronoun** — The two examples meant to teach «який/яка» in nominative don't use them (L124, L128). Must be merged into actual relative clauses.
-3. **Unjumble answers missing commas** — Three activity answers model incorrect punctuation before subordinate conjunctions (L581, L590, L599), directly contradicting the content's comma rules.
-4. **Missing "який" declension table** — Required by plan, critical for A2 visual learning.
+**Rationale:** The module has strong content architecture, accurate grammar explanations, and genuinely engaging cultural elements. However, three gender agreement errors in the section *teaching* gender agreement (Issues 1-2) represent a credibility-destroying contradiction. Four missing commas in unjumble answer keys (Issue 3) directly undermine the module's core teaching of complex sentence punctuation. These are not cosmetic issues — they are pedagogical self-contradictions in a checkpoint module.
 
-Secondary fixes: Replace unnatural quiz question (L503), add «Множина:» label (L135), reduce intensifier padding, rephrase one "не просто" instance.
+**Mandatory fixes for D.2:**
+1. Fix 3 gender agreement errors/typos in section «Навичка 2: Опис та послідовність дій» (lines 113, 117, 119)
+2. Rewrite 2 який Nominative examples to actually contain який (lines 124, 128)
+3. Add commas to 4 unjumble answer keys (activity lines 581, 590, 599, 627)
+4. Fix implausible quiz question (activity line 503)
+5. Fix heading «Plural (Plural)» → «Множина (Plural)» (line 135)
 
-**Estimated repair scope:** D.2 targeted fix (no full rewrite needed). ~15 specific line-level changes.
+**Recommended fixes (non-blocking):**
+6. Add який declension summary table per plan requirement
+7. Rewrite 1 instance of «не просто» to reduce LLM fingerprint
+8. Either populate or remove 15 empty Модель/Практика/Самоперевірка stubs

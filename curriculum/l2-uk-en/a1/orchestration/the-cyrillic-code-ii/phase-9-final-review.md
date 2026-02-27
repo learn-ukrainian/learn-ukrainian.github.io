@@ -39,14 +39,14 @@ Now I have all the data. Let me do the deep adversarial review.
 **Issue 4: CONFUSING PRONUNCIATION GUIDE — "KYY-yee-w" for Київ (MINOR)**
 - **Location**: `the-cyrillic-code-ii.md`, line 236
 - **Text**: `Result: KYY-yee-w. It is not "Key-ev."`
-- **Problem**: "KYY-yee-w" suggests three syllables when Київ is two syllables [ˈkɪ.jiu̯]. The double Y in "KYY" is confusing. A clearer approximation for A1 learners: "KY-yiv".
+- **Problem**: "KYY-yee-w" suggests three syllables when Київ is two syllables. The double Y in "KYY" is confusing. A clearer approximation for A1 learners: "KY-yiv".
 - **Fix**: Simplify to a two-syllable approximation.
 
 ---
 
 ### Checks Passed (No Issues)
 
-**IPA Accuracy**: All IPA transcriptions verified. Affricates have tie bars (t͡s, t͡ʃ). В correctly rendered as [ʋ]. Г correctly as [ɦ]. Palatalization marks [ʲ] present where needed. Європа [jɛu̯ˈrɔpɑ] — defensible (В → [u̯] before consonant).
+**IPA Accuracy**: All IPA transcriptions verified. Affricates have tie bars (t͡s, t͡ʃ). В correctly rendered as [ʋ]. Г correctly as [ɦ]. Palatalization marks [ʲ] present where needed. Європа — defensible (В → [u̯] before consonant).
 
 **Russianisms**: CLEAN. No кушати, получати, приймати участь, слідуючий found.
 

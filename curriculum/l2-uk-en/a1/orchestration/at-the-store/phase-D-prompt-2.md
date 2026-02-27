@@ -87,9 +87,9 @@ Plan-Content Alignment: PASS (with gaps)
 
 ### Issue 2: IPA Inconsistency in Loanwords
 - **Location**: Lines 26, 30 / Section «Український супермаркет: більше ніж просто покупки»
-- **Original**: «**Супермаркет** [superˈmɑrket]» and «**Гіпермаркет** [ɦiperˈmɑrket]»
-- **Problem**: The Ukrainian е is rendered as [e] in these loanwords, but elsewhere in the same module, е is consistently rendered as [ɛ] — e.g., «Цукерки» [t͡suˈkɛrkɪ] (line 100), «Печиво» [ˈpɛt͡ʃɪʋɔ] (line 101), «Вибачте» [ʋɪˈbɑt͡ʃtɛ] (line 150). This internal inconsistency undermines IPA reliability for A1 learners.
-- **Fix**: Change to [supɛrˈmɑrkɛt] and [ɦipɛrˈmɑrkɛt] for consistency with the module's own transcription convention.
+- **Original**: «**Супермаркет**» and «**Гіпермаркет**»
+- **Problem**: The Ukrainian е is rendered as [e] in these loanwords, but elsewhere in the same module, е is consistently rendered as [ɛ] — e.g., «Цукерки» (line 100), «Печиво» (line 101), «Вибачте» (line 150). This internal inconsistency undermines IPA reliability for A1 learners.
+- **Fix**: Change to and for consistency with the module's own transcription convention.
 
 ### Issue 3: Unjumble Answers Missing Mandatory Punctuation
 - **Location**: Lines 180, 184 / Activities file
@@ -112,9 +112,9 @@ Plan-Content Alignment: PASS (with gaps)
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 26 | «[superˈmɑrket]» | «[supɛrˈmɑrkɛt]» | IPA |
-| 30 | «[ɦiperˈmɑrket]» | «[ɦipɛrˈmɑrkɛt]» | IPA |
-| 185 | «[pɑˈkɛt pɔˈtriben]» | «[pɑˈkɛt pɔˈtrʲibɛn]» | IPA (missing palatalization, wrong vowel) |
+| 26 | «» | «» | IPA |
+| 30 | «» | «» | IPA |
+| 185 | «» | «» | IPA (missing palatalization, wrong vowel) |
 
 ## Beginner Safety Audit
 
@@ -154,9 +154,9 @@ Emotional Safety Markers:
 
 ### Language: 8/10 → 9/10
 **What to fix:**
-1. Line 26: Change [superˈmɑrket] → [supɛrˈmɑrkɛt]
-2. Line 30: Change [ɦiperˈmɑrket] → [ɦipɛrˈmɑrkɛt]
-3. Line 185: Change [pɑˈkɛt pɔˈtriben] → [pɑˈkɛt pɔˈtrʲibɛn]
+1. Line 26: Change →
+2. Line 30: Change →
+3. Line 185: Change →
 
 **Expected score after fix:** 9/10
 

@@ -167,7 +167,7 @@ This appears in: Форми чоловічого роду, Форми жіноч
 | Russicisms in content | ✅ PASS — No Russicisms detected in lesson prose |
 | Russicisms in activities | ⚠️ Activity correctly catches «кушав» → «з'їв» (line 260). But mislabels «брав участь» as Russicism (line 278). |
 | Grammar accuracy | ⚠️ PARTIAL — All rules correct, but line 80 gives a misleading generalization |
-| IPA spot-check | ✅ PASS — Checked зробив [zrɔˈbɪu̯], сказав [skɑˈzɑu̯], пішов [pʲiˈʃɔu̯] — stress placement correct |
+| IPA spot-check | ✅ PASS — Checked зробив, сказав, пішов — stress placement correct |
 | Vocabulary scope | ❌ FAIL — 7 of 16 required vocabulary items absent |
 | Activity item accuracy | ❌ FAIL — Nonsensical sentence on line 284, misleading error label on line 278 |
 | "Would I Continue?" test | 3.5/5 — Warm opening, clear explanations, but dense philosophical opener before terminology is introduced; no inline practice before activities |

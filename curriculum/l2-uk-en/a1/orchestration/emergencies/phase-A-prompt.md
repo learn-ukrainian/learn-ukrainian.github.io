@@ -74,7 +74,6 @@ Plan your outline knowing that Phase B content must pass these gates:
 - **Word count**: minimum **2000** words — allocate outline sections accordingly
 - **Colonial framing**: plan decolonized framing NOW so Phase B doesn't default to Russian comparisons
 - **Russianisms**: ensure vocabulary_hints and examples avoid banned words (кушати→їсти, получати→отримувати)
-- **IPA vowels**: Ukrainian о = [ɔ] always, е = [ɛ] always, ч = [t͡ʃ] with tie-bar
 - **Duplicate headers**: ensure outline section names don't share keywords
 
 ---

@@ -60,7 +60,7 @@ You have named the city, but the cashier needs more details. Trains in Ukraine h
 Касир запитує вас. Ви відповідаєте. Ви обираєте вагон. Ви обираєте місце.
 
 ### Купе (Coupe)
-This is the standard "closed compartment" class. A **купе** [kʊˈpɛ] has four bunks (two lower, two upper) and a sliding door that closes for privacy. It is comfortable, quiet, and perfect for sleeping. The word **купе** is indeclinable—it never changes its form.
+This is the standard "closed compartment" class. A **купе** has four bunks (two lower, two upper) and a sliding door that closes for privacy. It is comfortable, quiet, and perfect for sleeping. The word **купе** is indeclinable—it never changes its form.
 
 Це класичний вагон. Це зручний вагон. Тут є двері. Тут тихо і спокійно. Ви можете спати.
 
@@ -77,7 +77,7 @@ Example:
 *   **Постіль входить у ціну?** (Is bedding included in the price?)
 
 ### Плацкарт (Platskart)
-This is an "open dormitory" carriage. **Плацкарт** [plɐtˈskɑrt] has no doors between compartments; the hallway is open. It is cheaper and very social. You will hear everything your neighbors discuss, but it is a classic experience for students and budget travelers.
+This is an "open dormitory" carriage. **Плацкарт** has no doors between compartments; the hallway is open. It is cheaper and very social. You will hear everything your neighbors discuss, but it is a classic experience for students and budget travelers.
 
 Це великий вагон. Тут немає дверей. Тут багато людей. Ви чуєте сусідів. Це дешевий квиток.
 
@@ -92,8 +92,8 @@ Example:
 
 ### Вибір місця: Нижнє чи Верхнє?
 In a sleeper train, you must choose your bunk.
-*   **Нижнє місце** [ˈnɪʒnʲɛ ˈm⁽ʲ⁾isʲtse] is the "lower seat/bunk". It is usually preferred because you can sit on it during the day and don't have to climb.
-*   **Верхнє місце** [ˈʋɛrxnʲɛ ˈm⁽ʲ⁾isʲtse] is the "upper seat/bunk". It is often cheaper, but requires some agility to access.
+*   **Нижнє місце** is the "lower seat/bunk". It is usually preferred because you can sit on it during the day and don't have to climb.
+*   **Верхнє місце** is the "upper seat/bunk". It is often cheaper, but requires some agility to access.
 
 Example:
 *   **Я хочу нижнє місце, будь ласка.** (I want a lower bunk, please.)
@@ -102,8 +102,8 @@ Example:
 
 ### Розклад: Відправлення і Прибуття
 To manage your time, you need to ask about the schedule. There are two key nouns here:
-1.  **Відправлення** [ʋ⁽ʲ⁾idˈprɑu̯lʲɐnʲːɐ] — Departure.
-2.  **Прибуття** [prɪbʊˈtʲːɑ] — Arrival.
+1.  **Відправлення** — Departure.
+2.  **Прибуття** — Arrival.
 
 Коли поїзд їде? Коли поїзд буде у Львові? Дивіться розклад.
 
@@ -115,7 +115,7 @@ Example:
 *   **О котрій ми будемо у Львові?** (At what time will we be in Lviv?)
 
 ### Навігація: Вагон і Платформа
-Once you have the ticket, look at it closely. It will show your **вагон** [ʋɐˈɦɔn] (carriage/car) and **місце** (seat). At the station, listen for announcements about the **платформа** [plɐtˈfɔrmɐ] (platform).
+Once you have the ticket, look at it closely. It will show your **вагон** (carriage/car) and **місце** (seat). At the station, listen for announcements about the **платформа** (platform).
 
 Ви на вокзалі. Де ваш поїзд? Дивіться на табло. Там є інформація.
 
@@ -197,7 +197,7 @@ Ukrainian trains are more than just transport; they are a cultural experience.
 Це дуже цікаво. Подорож поїздом — це справжній український досвід. Давайте дізнаємося більше.
 
 ### Провідник (The Conductor)
-Every sleeping carriage has a **провідник** [prɔʋ⁽ʲ⁾idˈnɪk] (male) or **провідниця** [prɔʋ⁽ʲ⁾idˈnɪt͡sʲɐ] (female). This person checks your ticket, gives you bed linen (**постіль**), and wakes you up before your stop. They are the authority figure of the carriage. Treat them with respect, and your trip will be smooth.
+Every sleeping carriage has a **провідник** (male) or **провідниця** (female). This person checks your ticket, gives you bed linen (**постіль**), and wakes you up before your stop. They are the authority figure of the carriage. Treat them with respect, and your trip will be smooth.
 
 Провідник — це важлива людина у вагоні. Він перевіряє квитки. Він дає постіль і чай. Провідник допомагає пасажирам.
 
@@ -206,7 +206,7 @@ Example:
 *   **Запитайте у провідниці.** (Ask the conductor [female].)
 
 ### Чай у підстаканниках (Tea Tradition)
-The most iconic part of a Ukrainian train ride is the tea. You can order tea from the conductor at any time. It is traditionally served in a glass tumbler placed inside a metal holder called a **підстаканник** [p⁽ʲ⁾idstɐˈkɑnːɪk]. This prevents you from burning your fingers while the train shakes. Drinking hot tea while watching the landscapes roll by is a mandatory ritual for any traveler in Ukraine.
+The most iconic part of a Ukrainian train ride is the tea. You can order tea from the conductor at any time. It is traditionally served in a glass tumbler placed inside a metal holder called a **підстаканник**. This prevents you from burning your fingers while the train shakes. Drinking hot tea while watching the landscapes roll by is a mandatory ritual for any traveler in Ukraine.
 
 Українці п'ють чай у поїзді. Це ритуал. Провідник приносить чай у склянці. Склянці потрібен підстаканник. Це красиво і зручно.
 
@@ -224,7 +224,7 @@ Example:
 > Some foreigners worry about safety in **плацкарт** or **купе**. In reality, Ukrainian trains are generally very safe. People often share food, play cards, and talk for hours. If you are invited to share a meal (usually roasted chicken, boiled eggs, or sandwiches), accept a small piece politely. It is a gesture of hospitality.
 
 ### Щасливої дороги!
-When you buy a ticket or board a train, you will hear this phrase: **Щасливої дороги!** [ʃt͡ʃɐˈslɪʋɔji dɔˈrɔɦɪ]. It means "Have a happy journey" or "Bon voyage". It is the perfect way to say goodbye to a friend leaving the station.
+When you buy a ticket or board a train, you will hear this phrase: **Щасливої дороги!**. It means "Have a happy journey" or "Bon voyage". It is the perfect way to say goodbye to a friend leaving the station.
 
 Example:
 *   **Щасливої дороги до Києва!** (Have a safe trip to Kyiv!)

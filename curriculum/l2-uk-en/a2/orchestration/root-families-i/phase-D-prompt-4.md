@@ -63,7 +63,7 @@ Plan-Content Alignment: PASS
 | 4 | Activities | 9/10 | <7 | 12 varied activity types — excellent range; all items align with taught content; розклад fixed to distractor-only; cloze library passage (line 349) is outstanding contextual practice |
 | 5 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5; warm greeting ✓, quick wins ✓, clear instructions ✓, Ukrainian not scary ✓; come back tomorrow 4/5 (orphaned English blocks at lines 89, 128 are jarring mid-lesson) |
 | 6 | LLM Fingerprint | 8/10 | <7 | "Це не просто" and "In this module, we will explore" removed ✓; section openings vary ✓; residual formulaic phrasing: «Це слово чудово показує, як логічна лінгвістична структура може створювати дуже емоційну та романтичну лексику.» (line 125); callout box types varied (tip, warning, culture, observe, fact, myth-buster) |
-| 7 | Linguistic Accuracy | 8/10 | <9 | **IPA error unfixed**: вхід transcribed as [ʍxʲid] using non-Ukrainian phoneme ʍ (vocab line 9); IPA stress missing on сходити [sxɔdɪtɪ] (vocab line 116); IPA stress misplaced on передбачити [pɛrɛˈdbɑt͡ʃɪtɪ] (vocab line 93) — mark before [d] instead of before [b] |
+| 7 | Linguistic Accuracy | 8/10 | <9 | **IPA error unfixed**: вхід transcribed as [ʍxʲid] using non-Ukrainian phoneme ʍ (vocab line 9); IPA stress missing on сходити [sxɔdɪtɪ] (vocab line 116); IPA stress misplaced on передбачити (vocab line 93) — mark before [d] instead of before [b] |
 
 **Weighted Overall:**
 ```
@@ -98,13 +98,13 @@ Plan-Content Alignment: PASS
 - **Location**: Vocabulary file line 116
 - **Original**: `ipa: '[sxɔdɪtɪ]'`
 - **Problem**: No stress mark present. Every polysyllabic vocabulary entry should have stress marked. The correct stress is on the second syllable: схо-ДИ-ти.
-- **Fix**: Change to `ipa: '[sxɔˈdɪtɪ]'`
+- **Fix**: Change to `ipa: ''`
 
 ### Issue 3: IPA Stress Misplacement on передбачити
 - **Location**: Vocabulary file line 93
-- **Original**: `ipa: '[pɛrɛˈdbɑt͡ʃɪtɪ]'`
+- **Original**: `ipa: ''`
 - **Problem**: The stress marker ˈ is positioned before [d], placing it at an impossible syllable boundary. The syllabification is пе-ред-БА-чи-ти, with stress on the third syllable [bɑ].
-- **Fix**: Change to `ipa: '[pɛrɛdˈbɑt͡ʃɪtɪ]'`
+- **Fix**: Change to `ipa: ''`
 
 ### Issue 4: Three Orphaned English Paragraphs Remain
 - **Location**: Lines 89, 128, 235
@@ -149,8 +149,8 @@ Plan-Content Alignment: PASS
 ### Linguistic Accuracy: 8/10 → 9/10
 **What to fix:**
 1. Vocabulary line 9: Change `ipa: '[ʍxʲid]'` → `ipa: '[ʋxʲid]'` — removes non-Ukrainian phoneme
-2. Vocabulary line 116: Change `ipa: '[sxɔdɪtɪ]'` → `ipa: '[sxɔˈdɪtɪ]'` — adds missing stress mark
-3. Vocabulary line 93: Change `ipa: '[pɛrɛˈdbɑt͡ʃɪtɪ]'` → `ipa: '[pɛrɛdˈbɑt͡ʃɪtɪ]'` — corrects stress placement
+2. Vocabulary line 116: Change `ipa: '[sxɔdɪtɪ]'` → `ipa: ''` — adds missing stress mark
+3. Vocabulary line 93: Change `ipa: ''` → `ipa: ''` — corrects stress placement
 
 **Expected score after fix:** 9/10
 

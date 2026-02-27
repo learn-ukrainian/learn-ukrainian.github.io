@@ -13,8 +13,8 @@ Now I have all the evidence I need. Here is my deep adversarial review.
 
 ### Issue 2: IPA INCONSISTENCY — скільки palatalization
 **File:** `vocabulary/questions-and-negation.yaml`, line 42
-**Text:** `ipa: '[ˈsʲkʲilʲ.kɪ]'`
-**Problem:** The content file uses [ˈskʲilʲkɪ] (line 140) without palatalizing с. The vocabulary file adds [sʲ] which is phonologically questionable — Ukrainian /с/ does not undergo regressive palatalization before /к/ in standard pronunciation. The content version is more accurate.
+**Text:** `ipa: ''`
+**Problem:** The content file uses (line 140) without palatalizing с. The vocabulary file adds [sʲ] which is phonologically questionable — Ukrainian /с/ does not undergo regressive palatalization before /к/ in standard pronunciation. The content version is more accurate.
 
 ### Issue 3: FORWARD REFERENCE — "можемо" in activity
 **File:** `activities/questions-and-negation.yaml`, line 252
@@ -68,12 +68,12 @@ FILE: curriculum/l2-uk-en/a1/questions-and-negation.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/vocabulary/questions-and-negation.yaml
 ---OLD---
-- ipa: '[ˈsʲkʲilʲ.kɪ]'
+- ipa: ''
   lemma: скільки
   pos: adverb
   translation: how much / how many
 ---NEW---
-- ipa: '[ˈskʲilʲkɪ]'
+- ipa: ''
   lemma: скільки
   pos: adverb
   translation: how much / how many

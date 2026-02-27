@@ -8,8 +8,8 @@ Now I have everything I need. Here is my deep adversarial review.
 
 ### ISSUE 1 — Vocabulary YAML: цікаво IPA completely wrong
 **File:** vocabulary YAML, line 71
-**Current:** `[ˈtʲsʲikɑvo]`
-**Problem:** Three errors in one transcription: (1) Ukrainian "ц" is the affricate [t͡s], NOT separate [tʲsʲ]; (2) stress is on the second syllable (ці-**КА**-во), not the first; (3) "в" should be [ʋ] not [v]. Correct: `[t͡sʲiˈkɑʋo]`.
+**Current:** ``
+**Problem:** Three errors in one transcription: (1) Ukrainian "ц" is the affricate [t͡s], NOT separate [tʲsʲ]; (2) stress is on the second syllable (ці-**КА**-во), not the first; (3) "в" should be [ʋ] not [v]. Correct: ``.
 
 ### ISSUE 2 — Vocabulary YAML: Systematic [v] instead of [ʋ] for Ukrainian В
 **File:** vocabulary YAML, lines 28, 49, 55, 81, 91, 141
@@ -116,13 +116,13 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[poˈdɔbɑtʲisʲɑ]'
+- ipa: ''
   lemma: подобатися
   notes: governs Dative case (Subject pleases Recipient)
   pos: verb
   translation: to like / to please
 ---NEW---
-- ipa: '[poˈdɔbɑtɪsʲɑ]'
+- ipa: ''
   lemma: подобатися
   notes: governs Dative case (Subject pleases Recipient)
   pos: verb
@@ -132,13 +132,13 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[dzvoˈnɪtɪ]'
+- ipa: ''
   lemma: дзвонити
   notes: governs Dative case
   pos: verb
   translation: to call (phone)
 ---NEW---
-- ipa: '[d͡zʋoˈnɪtɪ]'
+- ipa: ''
   lemma: дзвонити
   notes: governs Dative case
   pos: verb
@@ -148,13 +148,13 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[zdɑˈvɑtʲisʲɑ]'
+- ipa: ''
   lemma: здаватися
   notes: governs Dative case (impersonal)
   pos: verb
   translation: to seem
 ---NEW---
-- ipa: '[zdɑˈʋɑtɪsʲɑ]'
+- ipa: ''
   lemma: здаватися
   notes: governs Dative case (impersonal)
   pos: verb
@@ -164,13 +164,13 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[ˈtʲsʲikɑvo]'
+- ipa: ''
   lemma: цікаво
   notes: impersonal state
   pos: adverb
   translation: interesting / interested
 ---NEW---
-- ipa: '[t͡sʲiˈkɑʋo]'
+- ipa: ''
   lemma: цікаво
   notes: impersonal state
   pos: adverb
@@ -180,13 +180,13 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[ˈvɛselo]'
+- ipa: ''
   lemma: весело
   notes: impersonal state
   pos: adverb
   translation: fun / merry
 ---NEW---
-- ipa: '[ˈʋɛselo]'
+- ipa: ''
   lemma: весело
   notes: impersonal state
   pos: adverb
@@ -196,13 +196,13 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[ˈvɑʒko]'
+- ipa: ''
   lemma: важко
   notes: impersonal state
   pos: adverb
   translation: difficult / hard
 ---NEW---
-- ipa: '[ˈʋɑʒko]'
+- ipa: ''
   lemma: важко
   notes: impersonal state
   pos: adverb
@@ -212,13 +212,13 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[ˈbɔlʲɑtʃe]'
+- ipa: ''
   lemma: боляче
   notes: impersonal state
   pos: adverb
   translation: painful / hurts
 ---NEW---
-- ipa: '[ˈbɔlʲɑt͡ʃe]'
+- ipa: ''
   lemma: боляче
   notes: impersonal state
   pos: adverb
@@ -228,13 +228,13 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[dɑˈvɑlʲnɪj]'
+- ipa: ''
   lemma: давальний
   notes: grammatical term
   pos: adjective
   translation: Dative (case)
 ---NEW---
-- ipa: '[dɑˈʋɑlʲnɪj]'
+- ipa: ''
   lemma: давальний
   notes: grammatical term
   pos: adjective
@@ -244,28 +244,28 @@ FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/the-dative-i-pronouns.yaml
 ---OLD---
-- ipa: '[iˈmɛnːɪk]'
+- ipa: ''
   lemma: іменник
   notes: grammatical term
   pos: noun
   translation: noun
 ---NEW---
-- ipa: '[iˈmɛnːɪk]'
+- ipa: ''
   lemma: іменник
   notes: grammatical term
   pos: noun
   translation: noun
-- ipa: '[dɑˈʋɑtɪ]'
+- ipa: ''
   lemma: давати
   notes: governs Dative case (давати комусь)
   pos: verb
   translation: to give
-- ipa: '[dʲɑˈkuʋɑtɪ]'
+- ipa: ''
   lemma: дякувати
   notes: governs Dative case (дякую тобі)
   pos: verb
   translation: to thank
-- ipa: '[poˈrʲiɦ]'
+- ipa: ''
   lemma: поріг
   notes: 'Cultural context: не через поріг'
   pos: noun

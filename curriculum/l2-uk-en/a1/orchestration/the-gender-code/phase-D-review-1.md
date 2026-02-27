@@ -50,9 +50,9 @@ The content states: «**собака** is **Masculine** by default in standard U
 
 **Severity: Minor**
 
-The vocabulary entry for зона shows IPA as `[zɔnɑ]` without a stress mark. For a disyllabic word, the stress mark is necessary: should be `[ˈzɔnɑ]`. All other polysyllabic entries (мама, тато, сестра, etc.) correctly include stress marks.
+The vocabulary entry for зона shows IPA as `[zɔnɑ]` without a stress mark. For a disyllabic word, the stress mark is necessary: should be ``. All other polysyllabic entries (мама, тато, сестра, etc.) correctly include stress marks.
 
-**Fix**: Change `[zɔnɑ]` to `[ˈzɔnɑ]` in vocabulary file.
+**Fix**: Change `[zɔnɑ]` to `` in vocabulary file.
 
 ### Issue 5: Plan-Specified Adjective Collocations Missing from Section «Презентація: Три кити роду» (Content file, lines 58-140)
 
@@ -125,7 +125,7 @@ The main weakness is in activity quality: the "Пастки та винятки"
 **Required fixes (3):**
 1. Diversify distractors and replace regular items in "Пастки та винятки" quiz
 2. Replace second group-sort with a distinct activity type
-3. Fix зона IPA stress mark: `[zɔnɑ]` → `[ˈzɔnɑ]`
+3. Fix зона IPA stress mark: `[zɔnɑ]` → ``
 
 **Recommended fixes (2):**
 4. Remove собака feminine usage option (line 165) — simplify for A1

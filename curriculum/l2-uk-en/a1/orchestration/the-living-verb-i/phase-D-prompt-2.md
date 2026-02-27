@@ -79,7 +79,7 @@ Plan-Content Alignment: PASS (with scope violation)
 
 ### Issue 1: Scope Violation — розуміти Introduction
 - **Location**: Line 191-192 / Section "Теорія: Магія закінчень -ати"
-- **Original**: «**розуміти** [rɔzuˈmʲitɪ] (to understand) → **Я розумію**, **Ви розумієте**» followed by «*(Note: This one ends in **-іти**, but it behaves just like the others. It is an honorary member of the club!)*»
+- **Original**: «**розуміти** (to understand) → **Я розумію**, **Ви розумієте**» followed by «*(Note: This one ends in **-іти**, but it behaves just like the others. It is an honorary member of the club!)*»
 - **Problem**: The module's own SCOPE comment (line 4) explicitly states "Second conjugation (-ити) → a1-08" as NOT COVERED. Introducing розуміти here with a handwave ("honorary member") creates a false expectation that -іти verbs always behave like -ати verbs. When learners hit actual II conjugation verbs in Module 8 (e.g., робити → роблю, говорити → говорю), the "honorary member" framing will cause confusion.
 - **Fix**: Remove розуміти entirely from line 191-192. Replace with another regular -ати verb from the recommended list (e.g., відпочивати, which is already used in examples on line 251/278 but not formally introduced here). This keeps the "expanding horizons" subsection within scope.
 
@@ -110,7 +110,7 @@ Plan-Content Alignment: PASS (with scope violation)
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 191 | «розуміти [rɔzuˈmʲitɪ] (to understand) → Я розумію, Ви розумієте» | Remove entirely (scope violation) | Scope |
+| 191 | «розуміти (to understand) → Я розумію, Ви розумієте» | Remove entirely (scope violation) | Scope |
 | 192 | «This one ends in -іти, but it behaves just like the others. It is an honorary member of the club!» | Remove (misleading claim) | Scope |
 | 274 | «Він знає: це журнал.» | «Він знає — це журнал.» or «Він читає. Це журнал.» | Style (minor — colon usage is acceptable but dash or split reads more naturally in mini-story context) |
 

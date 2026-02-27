@@ -1,4 +1,4 @@
-# Phase D.1: Evidence Collection + Adversarial Review
+# Phase D.1: Evidence Collection + Adversarial Review (Structured Output)
 
 > **You are an independent Senior Editor reviewing Ukrainian language curriculum.**
 > **You have NO prior relationship with this content — you are seeing it for the first time.**
@@ -52,14 +52,14 @@ Read ALL of these files before writing anything:
 ```
 Skill identity:   Patient & Supportive Ukrainian Tutor
 Module persona:   Senior Language & Culture Specialist, acting as Linguistics Professor
-Word count:       5286 / 4000 (132.1%)
+Word count:       5225 / 4000 (130.6%)
 Activities:       4
 Vocabulary items: 18
 Engagement boxes: 7
 Immersion:        91.9% (target: 60-100%)
 Richness:         99% (threshold: 90%)
 Richness gaps:    none
-Audit status:     FAIL
+Audit status:     PASS
 ```
 
 **Richness gate**: If richness is below threshold, your Fix Plan MUST include concrete additions that close each gap dimension. For example, if `cultural: 2/3`, add one `[!culture]` callout; if `tables: 1/2`, add one comparison table. Each addition should be pedagogically useful, not filler.
@@ -75,6 +75,50 @@ Audit status:     FAIL
 7. Підсумок і самоперевірка
 
 **IMPORTANT — Section Reference Rule:** When discussing any content section in your review (dimension evidence, issue locations, fix plans), always reference it by its **exact Ukrainian H2 header name** — e.g., write `Section «Теорія: Магія закінчень -ати»` not "Theory section". This enables automated section coverage verification. Every H2 section listed above must be mentioned by its Ukrainian name at least once in your review.
+
+---
+
+## Pre-Screen Results (D.0 Deterministic Findings)
+
+The following issues were detected by automated regex-based scanners BEFORE your review.
+**You do NOT need to re-discover these** — confirm or dismiss each one, and look for issues the scanners missed.
+
+1. **[LLM_FILLER]** (severity: MEDIUM)
+   Location: ~line 21
+   Text: In this lesson, we will
+   Fix: Rewrite into concrete, specific teaching content
+
+---
+
+## Track Calibration
+
+# Track Calibration: B1 (Modules 1-5 — Metalanguage Bridge)
+
+## Bilingual Scope
+B1 modules 1-5 use a "Metalanguage Bridge" (60-100% Ukrainian immersion).
+English is allowed for max 2 intro paragraphs per section, then Ukrainian.
+The floor of 60% maintains continuity from A2 Band 3 (75-90%).
+Do NOT flag bilingual content as LANGUAGE_BLENDER when within range.
+Flag: Modules below 60% immersion (too much English).
+Flag: Full English sections beyond brief intros.
+
+## Russicism Lookup (B1 Bridge)
+All A2 Russicisms plus:
+- красивий → гарний / вродливий (beautiful — context-dependent)
+- прекрасний → чудовий / прекрасний (fine in some contexts, flag when used as Russian calque)
+- добавити → додати (to add)
+- хватить → вистачить (to be enough)
+- обязательно → обов'язково (necessarily)
+
+## LLM Filler Sensitivity
+Moderate — metalanguage sections may need some English framing.
+Flag: Generic AI transitions, "Let's explore", "In this module we will".
+Do NOT flag: Pedagogical meta-commentary that explains grammar concepts.
+
+## Content Focus
+Grammar-heavy with examples. Focus on: correct grammar explanations,
+accurate aspect pair presentation, natural example sentences.
+
 
 ---
 
@@ -354,11 +398,20 @@ Follow the full review protocol. In summary:
 ### STEP 2: Deep Verification (Line by Line)
 - Every Ukrainian sentence: grammar, naturalness, Russianisms
 - English: clarity, warm tutor voice
-- IPA: correct stress placement
 - Activities: check EVERY item individually
 
 ### STEP 3: Auto-Fail Checklist
-- Russianisms (кушать→їсти, приймати участь→брати участь, красивий→гарний, прекрасне→чудове, etc.)
+
+**Russianisms** — check content against these known patterns:
+
+All A2 Russicisms plus:
+- красивий → гарний / вродливий (beautiful — context-dependent)
+- прекрасний → чудовий / прекрасний (fine in some contexts, flag when used as Russian calque)
+- добавити → додати (to add)
+- хватить → вистачить (to be enough)
+- обязательно → обов'язково (necessarily)
+
+Also check for:
 - Calques (робити сенс→мати сенс, брати місце→відбуватися, etc.)
 - **Colonial framing** — Ukrainian defined by contrast with Russian (see below)
 - **Word salad** — paragraphs that string together unrelated claims with no logical thread, or sentences that randomly alternate between Ukrainian and English within the same paragraph. Each paragraph must have one clear point. Score Language Quality ≤ 6 if found.
@@ -426,6 +479,11 @@ Follow the full review protocol. In summary:
 - Stacked abstract nouns: sentences with 3+ abstract nouns like "soul, history, and heartbeat" or "identity, resilience, and strength" — if 3+ such sentences found → ≤ 7
 - Generic AI clichés: "діамант", "двигун прогресу", "дзеркало культури", "архітектура мови" — these are LLM-typical, not natural Ukrainian
 - "It is important to note..." / "In this lesson, we will explore..." formality
+
+**LLM filler phrases** (pre-scanned by D.0, verify any flagged):
+
+D.0 found these filler phrases — verify each one:
+- "In this lesson, we will" at ~line 21
 
 **IMPORTANT — What is NOT an LLM fingerprint:**
 - Natural Ukrainian metaphors, proverbs, and phraseology — Ukrainian is a metaphor-rich language. Pedagogical analogies ("Smile vs Grin technique", "like a pitchfork") that help learners understand pronunciation are GOOD teaching, not AI artifacts

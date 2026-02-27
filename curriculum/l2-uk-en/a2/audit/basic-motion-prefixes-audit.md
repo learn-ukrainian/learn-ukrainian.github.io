@@ -1,7 +1,7 @@
 # Audit Report: M36 — basic-motion-prefixes.md
 **Level:** A2 | **Module:** M36 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:18:06
+**Generated:** 2026-02-26 20:37:21
 
 ## Configuration
 **Type:** A2-grammar
@@ -15,30 +15,42 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Not allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (4 occurrences): (Entrance is forbidden), (No entry), (Emergency exit) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | group-sort | Розподіліть за групами простору | 10 | 8 | ✅ |
+| 2 | match-up | Знайдіть граматичну пару | 8 | 8 | ✅ |
+| 3 | true-false | Правда чи брехня? | 8 | 8 | ✅ |
+| 4 | quiz | Оберіть правильний варіант | 8 | 8 | ✅ |
+| 5 | fill-in | Вставте пропущене слово | 8 | 8 | ✅ |
+| 6 | unjumble | Побудуйте речення | 6 | 6 | ✅ |
+| 7 | error-correction | Виправте помилки в реченнях | 6 | 6 | ✅ |
+| 8 | select | Множинний вибір | 6 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть дієслова руху з префіксами | 6 | 6 | ✅ |
+| 10 | translate | Перекладіть англійські фрази | 6 | 6 | ✅ |
+| 11 | fill-in | Вставте правильний прийменник | 8 | 8 | ✅ |
+| 12 | quiz | Доконаний чи недоконаний вид? | 8 | 8 | ✅ |
 
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
+**Summary:**
+- Total activities: 12 (target: 10-14) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3161/3000 (raw: 3440)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Words:** ⚠️ 2996/3000 (raw: 3275) (4 short)
+- **Activities:** ✅ 12/10
+- **Density:** ✅ All > 8
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 26/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 71.9% (target 60-75% (A2.2))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 70.9% (target 60-75% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -48,8 +60,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Basic Motion Prefixes** | ✅ | 46 | Included in Core |
-| **Вступ** | ✅ | 427 | Included in Core |
-| **Презентація: В- та Ви-** | ✅ | 883 | Included in Core |
-| **Культурний контекст** | ✅ | 561 | Included in Core |
-| **Практика та помилки** | ✅ | 813 | Included in Core |
-| **Підсумок та діалоги** | ✅ | 431 | Included in Core |
+| **Вступ** | ✅ | 399 | Included in Core |
+| **Презентація: В- та Ви-** | ✅ | 859 | Included in Core |
+| **Культурний контекст** | ✅ | 476 | Included in Core |
+| **Практика та помилки** | ✅ | 796 | Included in Core |
+| **Підсумок та діалоги** | ✅ | 420 | Included in Core |

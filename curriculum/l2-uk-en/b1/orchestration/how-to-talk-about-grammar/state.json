@@ -42,15 +42,13 @@
     },
     "6": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:44:53Z",
-      "task_id": "gr-how-to-talk-about-grammar",
-      "attempts": 1
+      "timestamp": "2026-02-26T21:29:26Z",
+      "note": "v3-phase-D"
     },
     "6b": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:49:31Z",
-      "task_id": "yw-how-to-talk-about-grammar-6b",
-      "attempts": 1
+      "timestamp": "2026-02-26T21:29:26Z",
+      "note": "v3-phase-D"
     },
     "5-enrich": {
       "status": "complete",
@@ -59,8 +57,8 @@
     },
     "7-final": {
       "status": "complete",
-      "timestamp": "2026-02-18T11:49:32Z",
-      "attempts": 1
+      "timestamp": "2026-02-26T21:29:26Z",
+      "note": "v3-phase-D"
     },
     "9-final-review": {
       "status": "complete",
@@ -72,5 +70,5 @@
       "timestamp": "2026-02-21T00:02:11Z"
     }
   },
-  "last_updated": "2026-02-25T09:41:35Z"
+  "last_updated": "2026-02-26T21:29:26Z"
 }

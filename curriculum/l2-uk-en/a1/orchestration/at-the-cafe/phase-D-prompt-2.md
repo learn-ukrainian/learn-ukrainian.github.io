@@ -52,7 +52,7 @@ The plan also lists `Polite imperatives (принесіть, візьміть)` 
 | 2 | Coherence | 9/10 | <7 | Logical 7-section progression; each section builds on the previous; Kulchytsky legend in final section matches meta outline |
 | 3 | Relevance | 9/10 | <7 | Directly practical — café ordering is high-frequency A1 need; vocabulary is immediately usable |
 | 4 | Educational | 8/10 | <7 | Clear accusative rule + table (line 181-192); missing «Мені, будь ласка» pattern is a real pedagogical gap; good рахунок/чек distinction (line 294-298) |
-| 5 | Language | 8/10 | <8 | Line 286: «каву з молоком» used in non-accusative English context (should be citation form «кава з молоком»); IPA inconsistency: stressed а = [a] in «кава» [ˈkaʋɐ] but [ɑ] elsewhere |
+| 5 | Language | 8/10 | <8 | Line 286: «каву з молоком» used in non-accusative English context (should be citation form «кава з молоком»); IPA inconsistency: stressed а = [a] in «кава» but [ɑ] elsewhere |
 | 6 | Pedagogy | 8/10 | <7 | PPP structure present; good scaffolding from chunks to rules to practice; missing key ordering pattern and insufficient encouragement per beginner safety requirements |
 | 7 | Immersion | 8/10 | <6 | 25.4% Ukrainian (target 25-40%); at the very bottom of the range; multiple dialogues and Ukrainian phrases embedded well |
 | 8 | Activities | 7/10 | <7 | 9 activities with good variety; implausible «Дайте смачну воду» (line 214-215); unjumble tests «Мені будь ласка каву» (line 235-236) which prose never teaches |
@@ -85,7 +85,7 @@ The plan also lists `Polite imperatives (принесіть, візьміть)` 
 - **Problem**: The plan explicitly requires teaching «Мені, будь ласка...» as a core polite ordering form alongside «Я буду...». This is arguably the MOST commonly used ordering pattern in real Ukrainian cafés. The content teaches «Я буду...» (line 161-167) and «Я візьму...» (line 169-173) but completely skips «Мені, будь ласка...». Meanwhile, the unjumble activity (line 235-236) tests exactly this pattern — asking students to assemble «Мені будь ласка каву» — which the prose never taught. The quiz explanation on line 348 also says "Use «Я буду» or «Мені, будь ласка»" — referencing a pattern that was never presented.
 - **Fix**: Add a third ordering structure in Section «Замовлення: Знахідний відмінок» after the «Я візьму...» block (around line 173):
 ```
-**3. Мені...** [meˈnʲi]
+**3. Мені...**
 Literally: "For me..."
 This is the most natural way to order in casual settings.
 - **Мені каву, будь ласка.** (Coffee for me, please.)
@@ -175,7 +175,7 @@ This is the most natural way to order in casual settings.
 ### Language: 8/10 → 9/10
 **What to fix:**
 1. Line 286: Change «каву з молоком» → «кава з молоком» in the English prose context.
-2. Standardize IPA for stressed а — use [ɑ] consistently (line 30 «кава» [ˈkaʋɐ] → [ˈkɑʋɐ]; line 21 «каву» [ˈkaʋu] → [ˈkɑʋu]).
+2. Standardize IPA for stressed а — use [ɑ] consistently (line 30 «кава» →; line 21 «каву» →).
 
 **Expected score after fix:** 9/10
 

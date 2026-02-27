@@ -1,7 +1,7 @@
 # Audit Report: M50 — integrated-grammar-lab.md
 **Level:** B1 | **Module:** M50 | **Phase:** B1.4b | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:45:33
+**Generated:** 2026-02-27 01:21:20
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,21 +16,41 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | error-correction | Виправте канцеляризми та росіянізми | 6 | 6 | ✅ |
+| 2 | quiz | Стилістична діагностика: оберіть правильний варіант | 8 | 8 | ✅ |
+| 3 | unjumble | Складіть речення: активний стан та новини | 6 | 6 | ✅ |
+| 4 | fill-in | Доповніть речення правильними словами | 8 | 8 | ✅ |
+| 5 | match-up | Знайдіть відповідність: синоніми та регістри | 12 | 8 | ✅ |
+| 6 | true-false | Правда чи неправда: правила стилістичної гнучкості | 8 | 8 | ✅ |
+| 7 | group-sort | Розподіліть фрази за регістрами | 12 | 6 | ✅ |
+| 8 | select | Оберіть усі правильні варіанти | 6 | 6 | ✅ |
+| 9 | error-correction | Виправте стилістичні помилки в ділових текстах | 6 | 6 | ✅ |
+| 10 | cloze | Заповніть пропуски в тексті про стилістику | 14 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 9 (minimum: 3) ✅
+- Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
+- Required types used: 3/3 (error-correction, fill-in, quiz) ✅
+- Low density activities: 0
+
 ## Gates
-- **Words:** ✅ 4362/4000 (raw: 4718)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Words:** ✅ 4329/4000 (raw: 4685)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 9/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 98.3% (target 85-100% (B1.5-6 Vocab))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -60,12 +80,12 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Інтегрована граматична лабораторія** | ✅ | 78 | Included in Core |
-| **Вступний тест: Стилістична діагностика** | ✅ | 629 | Included in Core |
-| **Пояснення: Синтез і стилістична гнучкість** | ✅ | 656 | Included in Core |
-| **Сценарій 1: Офіційно-діловий звіт** | ✅ | 582 | Included in Core |
-| **Сценарій 2: Неофіційна сімейна розмова** | ✅ | 553 | Included in Core |
-| **Сценарій 3: Новини та медіа** | ✅ | 574 | Included in Core |
-| **Практика: Лабораторія редагування** | ✅ | 628 | Included in Core |
+| **Інтегрована граматична лабораторія** | ✅ | 74 | Included in Core |
+| **Вступний тест: Стилістична діагностика** | ✅ | 621 | Included in Core |
+| **Пояснення: Синтез і стилістична гнучкість** | ✅ | 651 | Included in Core |
+| **Сценарій 1: Офіційно-діловий звіт** | ✅ | 579 | Included in Core |
+| **Сценарій 2: Неофіційна сімейна розмова** | ✅ | 545 | Included in Core |
+| **Сценарій 3: Новини та медіа** | ✅ | 573 | Included in Core |
+| **Практика: Лабораторія редагування** | ✅ | 624 | Included in Core |
 | **Діалоги та текстотворення** | ✅ | 440 | Included in Core |
 | **Підсумок: Потрібно більше практики?** | ✅ | 222 | Included in Core |

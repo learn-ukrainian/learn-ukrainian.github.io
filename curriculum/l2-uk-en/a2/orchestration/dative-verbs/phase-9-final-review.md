@@ -41,9 +41,9 @@ Good. The Grep confirms zero of the 9 missing required plan verbs appear in the 
 
 **Issue 6: IPA — missing tie bars on affricates (MEDIUM)**
 - **File:** `vocabulary/dative-verbs.yaml`
-- цукор: `[ˈtsukɔr]` → should be `[ˈt͡sukɔr]` (ц = /t͡s/)
-- офіціант: `[ɔfʲitsʲiˈjɑnt]` → should be `[ɔfʲit͡sʲiˈjɑnt]` (ц = /t͡s/)
-- щиро: `[ˈʃtʃɪrɔ]` → should be `[ˈʃt͡ʃɪrɔ]` (щ contains /t͡ʃ/)
+- цукор: `` → should be `` (ц = /t͡s/)
+- офіціант: `` → should be `` (ц = /t͡s/)
+- щиро: `` → should be `` (щ contains)
 
 **Issue 7: Plan vocabulary compliance — 9 required verbs missing (MAJOR, cannot patch)**
 - **File:** `dative-verbs.md` (entire module)
@@ -161,25 +161,25 @@ FILE: curriculum/l2-uk-en/a2/activities/dative-verbs.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/dative-verbs.yaml
 ---OLD---
-    ipa: [ˈtsukɔr]
+    ipa:
 ---NEW---
-    ipa: [ˈt͡sukɔr]
+    ipa:
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/dative-verbs.yaml
 ---OLD---
-    ipa: [ɔfʲitsʲiˈjɑnt]
+    ipa:
 ---NEW---
-    ipa: [ɔfʲit͡sʲiˈjɑnt]
+    ipa:
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a2/vocabulary/dative-verbs.yaml
 ---OLD---
-    ipa: [ˈʃtʃɪrɔ]
+    ipa:
 ---NEW---
-    ipa: [ˈʃt͡ʃɪrɔ]
+    ipa:
 ===FIX_END===
 
 ---

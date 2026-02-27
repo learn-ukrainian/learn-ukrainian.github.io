@@ -20,7 +20,7 @@ The plan lists `Questions (Можна...?, Скільки?)` under grammar focus
 The phrase "Окремий рахунок" appears in match-up activity (line 15–16) and unjumble (line 296–297), but is never introduced or explained in the content prose. The plan vocabulary hints include it under `рахунок` collocations. It should appear in the payment section.
 
 **ISSUE 5 — MINOR: IPA for "кав'ярня"**
-Line 29: `[kɐu̯ˈjɑrnʲɐ]` — The в in кав'ярня precedes a vowel (я = [jɑ]) across an apostrophe boundary. At this syllable juncture, [ʋ] is more standard than [u̯] in Ukrainian phonological transcription. However, since the apostrophe marks в as syllable-final (кав-'яр-ня), [u̯] is defensible. I will not fix this — it's within acceptable variation for A1.
+Line 29: `` — The в in кав'ярня precedes a vowel (я = [jɑ]) across an apostrophe boundary. At this syllable juncture, [ʋ] is more standard than [u̯] in Ukrainian phonological transcription. However, since the apostrophe marks в as syllable-final (кав-'яр-ня), [u̯] is defensible. I will not fix this — it's within acceptable variation for A1.
 
 **ISSUE 6 — MINOR: LLM artifact opener**
 Line 19: "Welcome to the world of Ukrainian coffee!" — Generic LLM-style opener. Not critical for A1 practical module.

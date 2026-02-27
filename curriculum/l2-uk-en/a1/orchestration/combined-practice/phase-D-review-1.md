@@ -12,7 +12,7 @@
 | 4 | Factual Accuracy | 8/10 | Grammar rules mostly correct, but the narrative breakdown (lines 294–298) misquotes its own model paragraph |
 | 5 | Richness | 8/10 | Good cultural hooks (coffee ritual, market culture), but reading passages at lines 265–277 are generic filler unrelated to module objectives |
 | 6 | Activity Quality | 6/10 | 4 unjumble answers missing mandatory commas; quiz marks valid Ukrainian word orders as incorrect; match-up pair contradicts taught pattern |
-| 7 | Vocabulary Quality | 7/10 | IPA for «також» has double stress mark `[ˈtɑˈkɔʒ]`; IPA for «вирішити» has wrong stress placement `[ˈʋɪrʲiʃɪtɪ]` |
+| 7 | Vocabulary Quality | 7/10 | IPA for «також» has double stress mark ``; IPA for «вирішити» has wrong stress placement `` |
 | 8 | Humanity / Warmth | 8/10 | Warm "Привіт!" opening, regular encouragement, but warmth drops completely in the reading passages |
 | 9 | LLM Fingerprint | 7/10 | 9 identical "**How it works:**" subheadings and 9 identical "**Usage note:**" subheadings create rigid structural monotony |
 | 10 | Plan Compliance | 7/10 | Large reading passages (lines 265–277) and 6 extra activities not in plan; breakdown section fabricates quotes from its own paragraph |
@@ -42,9 +42,9 @@ These are 4 separate instances of the same systematic error. An A1 learner who d
 
 **Location:** vocabulary/combined-practice.yaml
 
-(a) Line 43: `ipa: '[ˈtɑˈkɔʒ]'` for «також» — contains TWO primary stress marks (ˈ), which is phonetically impossible. The correct IPA is `[tɑˈkɔʒ]` with stress on the second syllable.
+(a) Line 43: `ipa: ''` for «також» — contains TWO primary stress marks (ˈ), which is phonetically impossible. The correct IPA is `` with stress on the second syllable.
 
-(b) Line 65: `ipa: '[ˈʋɪrʲiʃɪtɪ]'` for «вирішити» — places stress on the first syllable «ви». The correct stress is вирі́шити → `[ʋɪˈrʲiʃɪtɪ]`.
+(b) Line 65: `ipa: ''` for «вирішити» — places stress on the first syllable «ви». The correct stress is вирі́шити → ``.
 
 **Fix:** Correct both IPA transcriptions.
 
@@ -191,7 +191,7 @@ The consolidation paragraph "Мій ідеальний день" (line 288) is a
 
 **Critical fixes (must resolve):**
 1. Add commas to all 4 unjumble answers (activities lines 365, 367, 418, 424) and include comma tiles
-2. Fix IPA: «також» → `[tɑˈkɔʒ]`, «вирішити» → `[ʋɪˈrʲiʃɪtɪ]`
+2. Fix IPA: «також» → ``, «вирішити» → ``
 3. Rewrite model paragraph at line 288 to connect «бо» and «тому що» clauses with commas instead of periods
 4. Fix breakdown at lines 294–298 to match the actual model paragraph text
 

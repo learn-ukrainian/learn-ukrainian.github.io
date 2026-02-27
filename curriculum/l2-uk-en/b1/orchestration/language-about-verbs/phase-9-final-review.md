@@ -30,14 +30,14 @@ This is wrong. The standard Orthoepic Dictionary gives "писáтиму" (stres
 **Issue 7 — NEW: Systematic IPA error in vocabulary YAML — [v]/[w] instead of [ʋ]**
 Ukrainian В before vowels is a labiodental approximant [ʋ], not labiodental fricative [v] or bilabial [w]. Affected entries:
 - `[vɪd]` → `[ʋɪd]`
-- `[dɔˈkɔnɐnɪj vɪd]` → `[dɔˈkɔnɐnɪj ʋɪd]`
-- `[nɛdɔˈkɔnɐnɪj vɪd]` → `[nɛdɔˈkɔnɐnɪj ʋɪd]`
-- `[vɪdɔˈwɑ ˈpɑrɐ]` → `[ʋɪdɔˈʋɑ ˈpɑrɐ]`
-- `[trɪˈwɑlʲisʲtʲ]` → `[trɪˈʋɑlʲisʲtʲ]`
-- `[nɐkɐˈzɔwɪj ˈspɔsib]` → `[nɐkɐˈzɔʋɪj ˈspɔsib]`
-- `[pɔt͡ʃɐtˈkɔwɐ ˈfɔrmɐ]` → `[pɔt͡ʃɐtˈkɔʋɐ ˈfɔrmɐ]`
-- `[dʲijɛwidˈmʲinʲʊwɐnʲːɐ]` → `[dʲijɛʋidˈmʲinʲuʋɐnʲːɐ]`
-Note: `[pɔwˈtɔrɛnʲːɐ]` is CORRECT — В before consonant т → [w].
+- `` → ``
+- `` → ``
+- `` → ``
+- `` → ``
+- `` → ``
+- `` → ``
+- `` → ``
+Note: `` is CORRECT — В before consonant т → [w].
 
 **Issue 8 — NEW: LLM clichés (lines 17, 35)**
 - Line 17: `захопливого світу української граматики` — textbook LLM purple prose
@@ -161,70 +161,70 @@ FILE: curriculum/l2-uk-en/b1/vocabulary/language-about-verbs.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/b1/vocabulary/language-about-verbs.yaml
 ---OLD---
-- ipa: '[dɔˈkɔnɐnɪj vɪd]'
+- ipa: ''
   lemma: доконаний вид
 ---NEW---
-- ipa: '[dɔˈkɔnɐnɪj ʋɪd]'
+- ipa: ''
   lemma: доконаний вид
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/b1/vocabulary/language-about-verbs.yaml
 ---OLD---
-- ipa: '[nɛdɔˈkɔnɐnɪj vɪd]'
+- ipa: ''
   lemma: недоконаний вид
 ---NEW---
-- ipa: '[nɛdɔˈkɔnɐnɪj ʋɪd]'
+- ipa: ''
   lemma: недоконаний вид
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/b1/vocabulary/language-about-verbs.yaml
 ---OLD---
-- ipa: '[vɪdɔˈwɑ ˈpɑrɐ]'
+- ipa: ''
   lemma: видова пара
 ---NEW---
-- ipa: '[ʋɪdɔˈʋɑ ˈpɑrɐ]'
+- ipa: ''
   lemma: видова пара
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/b1/vocabulary/language-about-verbs.yaml
 ---OLD---
-- ipa: '[trɪˈwɑlʲisʲtʲ]'
+- ipa: ''
   lemma: тривалість
 ---NEW---
-- ipa: '[trɪˈʋɑlʲisʲtʲ]'
+- ipa: ''
   lemma: тривалість
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/b1/vocabulary/language-about-verbs.yaml
 ---OLD---
-- ipa: '[nɐkɐˈzɔwɪj ˈspɔsib]'
+- ipa: ''
   lemma: наказовий спосіб
 ---NEW---
-- ipa: '[nɐkɐˈzɔʋɪj ˈspɔsib]'
+- ipa: ''
   lemma: наказовий спосіб
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/b1/vocabulary/language-about-verbs.yaml
 ---OLD---
-- ipa: '[pɔt͡ʃɐtˈkɔwɐ ˈfɔrmɐ]'
+- ipa: ''
   lemma: початкова форма
 ---NEW---
-- ipa: '[pɔt͡ʃɐtˈkɔʋɐ ˈfɔrmɐ]'
+- ipa: ''
   lemma: початкова форма
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/b1/vocabulary/language-about-verbs.yaml
 ---OLD---
-- ipa: '[dʲijɛwidˈmʲinʲʊwɐnʲːɐ]'
+- ipa: ''
   lemma: дієвідмінювання
 ---NEW---
-- ipa: '[dʲijɛʋidˈmʲinʲuʋɐnʲːɐ]'
+- ipa: ''
   lemma: дієвідмінювання
 ===FIX_END===
 

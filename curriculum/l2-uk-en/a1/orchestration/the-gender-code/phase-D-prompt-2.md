@@ -98,7 +98,7 @@ Plan-Content Alignment: PASS
 ### Issue 2: IPA Inconsistency — стіл Transcription
 - **Location**: Line 69 (content) vs vocabulary file line 12
 - **Original**: Content: «стіл [stʲil]» / Vocabulary: `[sʲtʲil]`
-- **Problem**: The vocabulary file correctly marks regressive palatalization of /s/ before /tʲ/ as [sʲtʲil]. The content file omits this, showing [stʲil]. Students consulting both files will see conflicting IPA.
+- **Problem**: The vocabulary file correctly marks regressive palatalization of /s/ before as [sʲtʲil]. The content file omits this, showing [stʲil]. Students consulting both files will see conflicting IPA.
 - **Fix**: Change line 69 to: `**стіл** [sʲtʲil] — table (ends in 'l' → Masculine)` to match the vocabulary file.
 
 ### Issue 3: Pacing — Declension Families Cognitive Overload

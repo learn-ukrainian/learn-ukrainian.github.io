@@ -1,7 +1,7 @@
 # Audit Report: M15 — aspect-morphology.md
 **Level:** A2 | **Module:** M15 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-26 14:59:55
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-26 15:00:51
 
 ## Configuration
 **Type:** A2-grammar
@@ -39,19 +39,8 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'Вони не повністю суплетивними вони...'
-- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося
-  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 2 violations (minor)
-
 ## Gates
-- **Words:** ✅ 3722/3000 (raw: 3953)
+- **Words:** ✅ 3717/3000 (raw: 3948)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 8
 - **Unique_types:** ✅ 11/4 types
@@ -61,7 +50,7 @@
 - **Vocab:** ✅ 28/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 52.6% (target 50-60% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -74,8 +63,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Aspect Morphology: Prefixes and Suffixes** | ✅ | 81 | Included in Core |
 | **Вступ: Концепція видових пар (Introduction: The Aspectual Pair Concept)** | ✅ | 604 | Included in Core |
-| **Творення префіксами та правило правопису (Prefixal Formation and Spelling Rules)** | ✅ | 731 | Included in Core |
-| **Творення суфіксами та суплетивні пари (Suffixal Formation and Suppletive Pairs)** | ✅ | 686 | Included in Core |
+| **Творення префіксами та правило правопису (Prefixal Formation and Spelling Rules)** | ✅ | 730 | Included in Core |
+| **Творення суфіксами та суплетивні пари (Suffixal Formation and Suppletive Pairs)** | ✅ | 683 | Included in Core |
 | **Практика: Помилки та вибір аспекту (Practice: Errors and Aspect Choice)** | ✅ | 684 | Included in Core |
-| **Культурний контекст та діалоги (Cultural Context and Dialogues)** | ✅ | 741 | Included in Core |
+| **Культурний контекст та діалоги (Cultural Context and Dialogues)** | ✅ | 740 | Included in Core |
 | **Підсумок** | ✅ | 195 | Included in Core |

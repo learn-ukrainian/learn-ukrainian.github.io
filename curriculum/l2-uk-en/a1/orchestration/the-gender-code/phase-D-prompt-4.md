@@ -103,7 +103,7 @@ The plan (plans/a1/the-gender-code.yaml) specifies in Презентація: "M
 ### Issue 4: Plan Vocabulary Gap — хліб and кімната Missing
 - **Location**: Global — plan (plans/a1/the-gender-code.yaml) Презентація section
 - **Problem**: The plan specifies "Masculine (consonant: стіл, хліб, дім), Feminine (-а/-я: книга, кімната, земля)" but neither хліб nor кімната appears anywhere in the content or vocabulary file. The content substitutes other words (брат, серце) that serve similar purposes, but plan-specified vocabulary should be included.
-- **Fix**: Add хліб [xlʲib] as an additional masculine example in Section «Презентація: Три кити роду» masculine subsection. Add кімната [kimˈnɑ.tɑ] as an additional feminine example in the feminine subsection.
+- **Fix**: Add хліб [xlʲib] as an additional masculine example in Section «Презентація: Три кити роду» masculine subsection. Add кімната as an additional feminine example in the feminine subsection.
 
 ## Ukrainian Language Issues
 

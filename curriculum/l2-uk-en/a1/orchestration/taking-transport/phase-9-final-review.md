@@ -30,7 +30,7 @@ The match-up activity includes "Контролер" → "Людина, яка п
 **ISSUE 4 — MODERATE: Non-standard IPA notation for пересісти**
 File: `taking-transport.md`, line 166
 
-`[pɛrɛˈs⁽ʲ⁾istɪ]` — The superscript parenthetical `⁽ʲ⁾` is non-standard IPA. Should be `[pɛrɛˈsʲistɪ]` (с before і is unambiguously palatalized).
+`` — The superscript parenthetical `⁽ʲ⁾` is non-standard IPA. Should be `` (с before і is unambiguously palatalized).
 
 **ISSUE 5 — MODERATE: Heading hierarchy broken**
 File: `taking-transport.md`, line 317
@@ -120,9 +120,9 @@ FILE: curriculum/l2-uk-en/a1/activities/taking-transport.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/taking-transport.md
 ---OLD---
-**Пересісти на...** [pɛrɛˈs⁽ʲ⁾istɪ nɑ] — To change to... / To transfer to...
+**Пересісти на...** — To change to... / To transfer to...
 ---NEW---
-**Пересісти на...** [pɛrɛˈsʲistɪ nɑ] — To change to... / To transfer to...
+**Пересісти на...** — To change to... / To transfer to...
 ===FIX_END===
 
 ===FIX_START===
@@ -333,7 +333,7 @@ items:
   aspect: 'perf'
   usage: 'завалідувати квиток'
 - lemma: 'прокомпостувати'
-  ipa: '[prɔkɔmpɔstʊˈʋɑtɪ]'
+  ipa: ''
   translation: 'to validate (old style, punch ticket)'
   pos: 'verb'
   aspect: 'perf'

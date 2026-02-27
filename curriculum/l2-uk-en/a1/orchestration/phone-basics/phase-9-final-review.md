@@ -10,11 +10,11 @@ Good, I have all the source files. Now let me conduct the deep adversarial revie
 
 Ukrainian В before a vowel is the labiodental approximant [ʋ], not the bilabial [w]. This is a systematic error across three transcriptions:
 
-- **Line 60**: `[d͡zwoˈnɪtɪ]` for дзвонити — should be `[d͡zʋoˈnɪtɪ]`
-- **Line 134**: `[xwɪˈlɪnkɐ]` for хвилинку — should be `[xʋɪˈlɪnkɐ]`
-- **Line 217**: `[pɛrɛd͡zwoˈnɪtɪ]` for передзвонити — should be `[pɛrɛd͡zʋoˈnɪtɪ]`
+- **Line 60**: `` for дзвонити — should be ``
+- **Line 134**: `` for хвилинку — should be ``
+- **Line 217**: `` for передзвонити — should be ``
 
-Note: the module correctly uses [ʋ] for телефонувати `[tɛlɛfonuˈʋɑtɪ]` on the same line 60, and for До зв'язку `[do zʋjɐzˈku]` on line 148 — so this is inconsistency, not ignorance.
+Note: the module correctly uses [ʋ] for телефонувати `` on the same line 60, and for До зв'язку `` on line 148 — so this is inconsistency, not ignorance.
 
 **Issue 2: Pedagogically dangerous phrase taught as polite (Line 50)**
 
@@ -45,25 +45,25 @@ The group-sort categorizes «Що Ви хотіли?» under "Офіційний
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/phone-basics.md
 ---OLD---
-**дзвонити** [d͡zwoˈnɪtɪ]
+**дзвонити**
 ---NEW---
-**дзвонити** [d͡zʋoˈnɪtɪ]
+**дзвонити**
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/phone-basics.md
 ---OLD---
-**Зачекайте одну хвилинку.** [xwɪˈlɪnkɐ]
+**Зачекайте одну хвилинку.**
 ---NEW---
-**Зачекайте одну хвилинку.** [xʋɪˈlɪnkɐ]
+**Зачекайте одну хвилинку.**
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/phone-basics.md
 ---OLD---
-**передзвонити** [pɛrɛd͡zwoˈnɪtɪ]
+**передзвонити**
 ---NEW---
-**передзвонити** [pɛrɛd͡zʋoˈnɪtɪ]
+**передзвонити**
 ===FIX_END===
 
 ===FIX_START===
@@ -123,7 +123,7 @@ FILE: curriculum/l2-uk-en/a1/activities/phone-basics.yaml
 - **Russian characters**: No ы, э, ё, ъ detected
 - **Case agreement**: All checked — дативе (другу, мамі, Анні, Олегу), генітів (Анни, Олега, дверей, будинку), інструменталь (номером, директором) — all correct
 - **Verb aspect**: Appropriate throughout; передзвонити (pf.) for single future acts, дзвонити (impf.) for habitual/ongoing
-- **Other IPA**: [ɑˈlɔ], [ˈsluxɐju], [zɐt͡ʃɛˈkɑi̯te], [tɛlɛfonuˈʋɑtɪ], [do zʋjɐzˈku], [pomɪˈlɪtɪsʲ], [ˈzɑi̯nʲɐtɪi̯], [poʋʲiˈdɔmlennʲɐ], [pɛrɛˈdɑtɪ], [ˈnɔmɛr tɛlɛˈfɔnu] — all correct, tie bars present on affricates
+- **Other IPA**:,,,,,,,,, — all correct, tie bars present on affricates
 - **Activity fill-in answers**: All produce grammatical sentences when inserted
 - **Activity unjumble**: Words arrays contain all tokens in answers (punctuation omitted by convention — consistent)
 - **True-false answers**: All factually correct

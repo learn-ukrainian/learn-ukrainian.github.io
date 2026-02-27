@@ -26,19 +26,19 @@ Now I have everything I need. Let me conduct the full adversarial review.
 #### IMPORTANT — IPA Accuracy
 
 **Issue 5: Wrong stress on «Тепло»**
-- **Location:** content L82, L104 — `[ˈtɛplɔ]`
-- **Problem:** As an impersonal adverb ("it is warm"), тепло has stress on the last syllable: теплó [tɛpˈlɔ]. The transcription [ˈtɛplɔ] gives the stress of the noun (тéпло = warmth). Since this module teaches the adverb, the stress is wrong.
+- **Location:** content L82, L104 — ``
+- **Problem:** As an impersonal adverb ("it is warm"), тепло has stress on the last syllable: теплó. The transcription gives the stress of the noun (тéпло = warmth). Since this module teaches the adverb, the stress is wrong.
 
 **Issue 6: Systematic В transcribed as [v] instead of [ʋ]**
 - **Locations:** L190 (Вітер), L193 (Світить), L199 (Вітряно), L262 (чудова), L264 (жахлива), L272 (градусів), L321 (Взимку), L327 (Навесні), L333 (Влітку), L339 (Восени)
 - **Problem:** Ukrainian В is a labiodental approximant [ʋ], not a labiodental fricative [v]. The prompt explicitly requires "ʋ not w for В."
 
 **Issue 7: Missing tie bars on affricates**
-- **Locations:** L162 (Дощ [dɔʃtʃ]), L188 (Сонце [ˈsɔntsɛ]), L197 (Сонячно [ˈsɔnʲɑtʃnɔ]), L262 (чудова [tʃuˈdɔvɑ])
+- **Locations:** L162 (Дощ [dɔʃtʃ]), L188 (Сонце), L197 (Сонячно), L262 (чудова)
 - **Problem:** Affricates require tie bars: ц = [t͡s], ч = [t͡ʃ], щ = [ʃt͡ʃ].
 
 **Issue 8: Inconsistent г transcription — [h] vs [ɦ]**
-- **Locations:** L272 градусів [ˈhrɑdusʲiv], L395 Градус [ˈhrɑdus] — use [h], but L394 Прогноз [prɔɦˈnɔz] correctly uses [ɦ].
+- **Locations:** L272 градусів, L395 Градус — use [h], but L394 Прогноз correctly uses [ɦ].
 - **Problem:** Ukrainian г is voiced glottal fricative [ɦ], not voiceless [h].
 
 #### MINOR
@@ -85,7 +85,7 @@ FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 We use short sentences to explain our actions.
 
 *   **На вулиці холодно. Ми не гуляємо.** — It is cold outside. We are not walking.
-*   **Йде дощ. Я беру парасолю.** — It is raining. I am taking an umbrella. (**Парасоля** [pɑrɑˈsɔlʲɑ] = umbrella).
+*   **Йде дощ. Я беру парасолю.** — It is raining. I am taking an umbrella. (**Парасоля** = umbrella).
 *   **Світить сонце. Ми йдемо в парк.** — The sun shines. We are going to the park.
 ---NEW---
 ### Причина та Наслідок (Cause and Effect)
@@ -96,7 +96,7 @@ We can connect a result with a reason using **бо** [bɔ] — *because*. Always
 > **[Result], бо [Reason].**
 
 *   **Ми не гуляємо, бо холодно.** — We are not walking, because it is cold.
-*   **Я беру парасолю, бо йде дощ.** — I am taking an umbrella, because it is raining. (**Парасоля** [pɑrɑˈsɔlʲɑ] = umbrella).
+*   **Я беру парасолю, бо йде дощ.** — I am taking an umbrella, because it is raining. (**Парасоля** = umbrella).
 *   **Ми йдемо в парк, бо світить сонце.** — We are going to the park, because the sun is shining.
 ===FIX_END===
 
@@ -119,19 +119,19 @@ FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Тепло** [ˈtɛplɔ] — Warm
-*   **Спекотно** [speˈkɔtnɔ] — Hot
+*   **Тепло** — Warm
+*   **Спекотно** — Hot
 ---NEW---
-*   **Тепло** [tɛpˈlɔ] — Warm
-*   **Спекотно** [speˈkɔtnɔ] — Hot
+*   **Тепло** — Warm
+*   **Спекотно** — Hot
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-2.  **Тепло** [ˈtɛplɔ] — Warm (20°C - 25°C)
+2.  **Тепло** — Warm (20°C - 25°C)
 ---NEW---
-2.  **Тепло** [tɛpˈlɔ] — Warm (20°C - 25°C)
+2.  **Тепло** — Warm (20°C - 25°C)
 ===FIX_END===
 
 ===FIX_START===
@@ -145,105 +145,105 @@ FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Сонце** [ˈsɔntsɛ] — Sun
+*   **Сонце** — Sun
 ---NEW---
-*   **Сонце** [ˈsɔnt͡sɛ] — Sun
+*   **Сонце** — Sun
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Вітер** [ˈvʲitɛr] — Wind
+*   **Вітер** — Wind
 ---NEW---
-*   **Вітер** [ˈʋʲitɛr] — Wind
+*   **Вітер** — Wind
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Світить сонце.** [ˈsvʲitɪtʲ] — The sun is shining.
+*   **Світить сонце.** — The sun is shining.
 ---NEW---
-*   **Світить сонце.** [ˈsʋʲitɪtʲ] — The sun is shining.
+*   **Світить сонце.** — The sun is shining.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Сонячно** [ˈsɔnʲɑtʃnɔ] — Sunny
+*   **Сонячно** — Sunny
 ---NEW---
-*   **Сонячно** [ˈsɔnʲɑt͡ʃnɔ] — Sunny
+*   **Сонячно** — Sunny
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Вітряно** [ˈvʲitrʲɑnɔ] — Windy
+*   **Вітряно** — Windy
 ---NEW---
-*   **Вітряно** [ˈʋʲitrʲɑnɔ] — Windy
+*   **Вітряно** — Windy
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Сьогодні чудова погода.** [tʃuˈdɔvɑ] — Today is wonderful weather.
+*   **Сьогодні чудова погода.** — Today is wonderful weather.
 ---NEW---
-*   **Сьогодні чудова погода.** [t͡ʃuˈdɔʋɑ] — Today is wonderful weather.
+*   **Сьогодні чудова погода.** — Today is wonderful weather.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Сьогодні жахлива погода.** [ʒɑxˈlɪvɑ] — Today is terrible weather.
+*   **Сьогодні жахлива погода.** — Today is terrible weather.
 ---NEW---
-*   **Сьогодні жахлива погода.** [ʒɑxˈlɪʋɑ] — Today is terrible weather.
+*   **Сьогодні жахлива погода.** — Today is terrible weather.
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Скільки градусів?** [ˈskʲilʲkɪ ˈhrɑdusʲiv] — How many degrees?
+*   **Скільки градусів?** — How many degrees?
 ---NEW---
-*   **Скільки градусів?** [ˈskʲilʲkɪ ˈɦrɑdusʲiʋ] — How many degrees?
+*   **Скільки градусів?** — How many degrees?
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Градус** [ˈhrɑdus] — Degree
+*   **Градус** — Degree
 ---NEW---
-*   **Градус** [ˈɦrɑdus] — Degree
+*   **Градус** — Degree
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Коли?** (When?): **Взимку** [ˈvzɪmku] — In winter
+*   **Коли?** (When?): **Взимку** — In winter
 ---NEW---
-*   **Коли?** (When?): **Взимку** [ˈʋzɪmku] — In winter
+*   **Коли?** (When?): **Взимку** — In winter
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Коли?** (When?): **Навесні** [nɑvɛsˈnʲi] — In spring
+*   **Коли?** (When?): **Навесні** — In spring
 ---NEW---
-*   **Коли?** (When?): **Навесні** [nɑʋɛsˈnʲi] — In spring
+*   **Коли?** (When?): **Навесні** — In spring
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Коли?** (When?): **Влітку** [ˈvlʲitku] — In summer
+*   **Коли?** (When?): **Влітку** — In summer
 ---NEW---
-*   **Коли?** (When?): **Влітку** [ˈʋlʲitku] — In summer
+*   **Коли?** (When?): **Влітку** — In summer
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/weather-and-nature.md
 ---OLD---
-*   **Коли?** (When?): **Восени** [vɔsɛˈnɪ] — In autumn
+*   **Коли?** (When?): **Восени** — In autumn
 ---NEW---
-*   **Коли?** (When?): **Восени** [ʋɔsɛˈnɪ] — In autumn
+*   **Коли?** (When?): **Восени** — In autumn
 ===FIX_END===
 
 ===FIX_START===

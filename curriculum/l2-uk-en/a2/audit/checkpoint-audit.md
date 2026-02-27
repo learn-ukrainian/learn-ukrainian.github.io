@@ -1,7 +1,7 @@
 # Audit Report: M35 — checkpoint.md
 **Level:** A2 | **Module:** M35 | **Phase:** A2.2 | **Pedagogy:** TTT | **Target:** 2500
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:18:02
+**Generated:** 2026-02-26 16:15:48
 
 ## Configuration
 **Type:** A2-checkpoint
@@ -47,7 +47,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

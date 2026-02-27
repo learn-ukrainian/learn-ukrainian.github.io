@@ -12,9 +12,9 @@
 
 | D.1 Issue | Status | Evidence |
 |-----------|--------|----------|
-| Issue 1: IPA stress error — маркер | **NOT FIXED** | Vocabulary line 57: `ipa: '[mɑrkɛr]'` — still no stress mark. Standard: ма́ркер → `[ˈmɑrkɛr]` |
-| Issue 2: IPA stress error — завершувати | **NOT FIXED** | Vocabulary line 66: `ipa: '[zɑˈʋɛrʃuʋɑtɪ]'` — stress still on 2nd syllable. Standard: завершува́ти → `[zɑʋɛrʃuˈʋɑtɪ]` |
-| Issue 3: IPA stress error — досягти | **NOT FIXED** | Vocabulary line 81: `ipa: '[dɔsʲɑˈɦtɪ]'` — stress still misplaced. Standard: досягти́ → `[dɔsʲɑɦˈtɪ]` |
+| Issue 1: IPA stress error — маркер | **NOT FIXED** | Vocabulary line 57: `ipa: '[mɑrkɛr]'` — still no stress mark. Standard: ма́ркер → `` |
+| Issue 2: IPA stress error — завершувати | **NOT FIXED** | Vocabulary line 66: `ipa: ''` — stress still on 2nd syllable. Standard: завершува́ти → `` |
+| Issue 3: IPA stress error — досягти | **NOT FIXED** | Vocabulary line 81: `ipa: ''` — stress still misplaced. Standard: досягти́ → `` |
 | Issue 4 (from D.1 cycle 1): Ingressive по- misplacement | **STILL FIXED** | Correctly placed at line 136 within Section «Граматична Система: Форми та Функції» |
 | Issue 5 (from D.1 cycle 1): Wrong callout type [!biography] | **STILL FIXED** | Changed to `[!context]` — confirmed at lines 148, 293 |
 
@@ -77,25 +77,25 @@ Plan-Content Alignment: PASS
 - **Location**: Vocabulary file, line 57
 - **Original**: `ipa: '[mɑrkɛr]'`
 - **Problem**: No stress mark present. Standard Ukrainian: ма́ркер (stress on 1st syllable).
-- **Fix**: Change IPA to `'[ˈmɑrkɛr]'`
+- **Fix**: Change IPA to `''`
 
 ### Issue 2: IPA Stress Error — завершувати (UNFIXED — 2nd repair cycle)
 - **Location**: Vocabulary file, line 66
-- **Original**: `ipa: '[zɑˈʋɛrʃuʋɑtɪ]'`
+- **Original**: `ipa: ''`
 - **Problem**: Stress placed on 2nd syllable (ʋɛr). Standard Ukrainian: завершува́ти (stress on 4th syllable, ва).
-- **Fix**: Change IPA to `'[zɑʋɛrʃuˈʋɑtɪ]'`
+- **Fix**: Change IPA to `''`
 
 ### Issue 3: IPA Stress Error — досягти (UNFIXED — 2nd repair cycle)
 - **Location**: Vocabulary file, line 81
-- **Original**: `ipa: '[dɔsʲɑˈɦtɪ]'`
+- **Original**: `ipa: ''`
 - **Problem**: Stress mark placed before ɦ (on 2nd syllable boundary). Standard Ukrainian: досягти́ (stress on final syllable).
-- **Fix**: Change IPA to `'[dɔsʲɑɦˈtɪ]'`
+- **Fix**: Change IPA to `''`
 
 ### Issue 4: IPA Stress Error — завершення (NEW — not previously flagged)
 - **Location**: Vocabulary file, line 25
-- **Original**: `ipa: '[zɑˈʋɛrʃɛnʲːɑ]'`
+- **Original**: `ipa: ''`
 - **Problem**: Stress placed on 2nd syllable (ʋɛr). Standard Ukrainian: заверше́ння (stress on 3rd syllable, шен).
-- **Fix**: Change IPA to `'[zɑʋɛrˈʃɛnʲːɑ]'`
+- **Fix**: Change IPA to `''`
 
 ### Issue 5: Ambiguous terminology in grammar module
 - **Location**: Content file, line 187, Section «Аналіз Помилок та Тонкощі»
@@ -112,10 +112,10 @@ Plan-Content Alignment: PASS
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| Vocab 25 | «[zɑˈʋɛrʃɛnʲːɑ]» | «[zɑʋɛrˈʃɛnʲːɑ]» | IPA stress |
-| Vocab 57 | «[mɑrkɛr]» | «[ˈmɑrkɛr]» | IPA stress |
-| Vocab 66 | «[zɑˈʋɛrʃuʋɑtɪ]» | «[zɑʋɛrʃuˈʋɑtɪ]» | IPA stress |
-| Vocab 81 | «[dɔsʲɑˈɦtɪ]» | «[dɔsʲɑɦˈtɪ]» | IPA stress |
+| Vocab 25 | «» | «» | IPA stress |
+| Vocab 57 | «[mɑrkɛr]» | «» | IPA stress |
+| Vocab 66 | «» | «» | IPA stress |
+| Vocab 81 | «» | «» | IPA stress |
 | 187 | «Це союз, створений для опису процесів.» | «Це поєднання, створене для опису процесів.» | Ambiguous terminology |
 
 ## Beginner Safety Audit
@@ -139,10 +139,10 @@ Plan-Content Alignment: PASS
 
 ### Linguistic Accuracy: 8/10 → 9/10
 **What to fix:**
-1. Vocabulary line 25: Change `ipa: '[zɑˈʋɛrʃɛnʲːɑ]'` → `ipa: '[zɑʋɛrˈʃɛnʲːɑ]'` — stress on correct syllable (заверше́ння)
-2. Vocabulary line 57: Change `ipa: '[mɑrkɛr]'` → `ipa: '[ˈmɑrkɛr]'` — add missing stress mark (ма́ркер)
-3. Vocabulary line 66: Change `ipa: '[zɑˈʋɛrʃuʋɑtɪ]'` → `ipa: '[zɑʋɛrʃuˈʋɑtɪ]'` — move stress to correct syllable (завершува́ти)
-4. Vocabulary line 81: Change `ipa: '[dɔsʲɑˈɦtɪ]'` → `ipa: '[dɔsʲɑɦˈtɪ]'` — move stress to final syllable (досягти́)
+1. Vocabulary line 25: Change `ipa: ''` → `ipa: ''` — stress on correct syllable (заверше́ння)
+2. Vocabulary line 57: Change `ipa: '[mɑrkɛr]'` → `ipa: ''` — add missing stress mark (ма́ркер)
+3. Vocabulary line 66: Change `ipa: ''` → `ipa: ''` — move stress to correct syllable (завершува́ти)
+4. Vocabulary line 81: Change `ipa: ''` → `ipa: ''` — move stress to final syllable (досягти́)
 
 **Expected score after fix:** 9/10
 

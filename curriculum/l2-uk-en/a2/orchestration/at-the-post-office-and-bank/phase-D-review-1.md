@@ -7,7 +7,7 @@
 | # | Dimension | Score | Key Evidence |
 |---|-----------|-------|-------------|
 | 1 | Lesson Quality | 8/10 | Functional but cold — zero "Great!/Well done" quick-wins, zero "Don't worry" moments, only 1 "You are now" marker at line 272. 3/5 on "Would I Continue?" test. |
-| 2 | Language | 7/10 | Grammatical error «щоден життя» (line 22, must be «щоденне життя»); IPA error in vocab file: `[ʍklɑˈdɑtɪ]` for вкладати (line 110 of vocab YAML, should be `[ʋklɑˈdɑtɪ]`); unnatural example «Це мій старий білий лист.» (line 58) |
+| 2 | Language | 7/10 | Grammatical error «щоден життя» (line 22, must be «щоденне життя»); IPA error in vocab file: `` for вкладати (line 110 of vocab YAML, should be ``); unnatural example «Це мій старий білий лист.» (line 58) |
 | 3 | Immersion | 9/10 | 50.2% well within the 50-60% target. Good English/Ukrainian balance for A2 Band 1. |
 | 4 | Activity Quality | 7/10 | Quiz "Ввічливі прохання" (activities YAML lines 30-143): all 10 items test the same binary хотів/хотіла gender distinction — extreme monotony. Other 11 activities are well-designed. |
 | 5 | Richness | 7/10 | Plan explicitly requires Monobank, Privat24, and QR codes (plan lines 42, 15-16); all three are completely absent from content. Named Ukrainian cultural references are thin. |
@@ -36,9 +36,9 @@
 
 **Location:** Vocabulary file, entry for "вкладати"
 
-**Evidence:** `ipa: '[ʍklɑˈdɑtɪ]'`
+**Evidence:** `ipa: ''`
 
-The symbol `ʍ` is the voiceless labial-velar approximant (English "wh-"). This phoneme does not exist in Ukrainian. The correct initial consonant is `ʋ` (voiced labiodental approximant). Should be `[ʋklɑˈdɑtɪ]`.
+The symbol `ʍ` is the voiceless labial-velar approximant (English "wh-"). This phoneme does not exist in Ukrainian. The correct initial consonant is `ʋ` (voiced labiodental approximant). Should be ``.
 
 **Fix:** Replace `ʍ` → `ʋ` in the IPA for вкладати.
 

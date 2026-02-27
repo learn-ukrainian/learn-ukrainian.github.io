@@ -46,7 +46,7 @@ Plan-Content Alignment: FAIL
 
 ### Issue 1: Missing Vocabulary Table
 - **Location**: Section "Vocabulary" (End of file)
-- **Original**: Table contains only one row: `| дієслово | [dʲi.jɛˈsɫɔ.vɔ] | verb | ... |`
+- **Original**: Table contains only one row: `| дієслово | | verb | ... |`
 - **Problem**: The module introduces ~20 key words (чи, не, ні, так, хто, що, де, коли, etc.) which are listed in the plan and YAML, but missing from the student-facing Markdown table. This breaks the "Vocabulary scope" requirement and makes the module incomplete for study.
 - **Fix**: Populate the Markdown table with all 20 vocabulary items.
 

@@ -57,9 +57,9 @@ Plan-Content Alignment: PASS (minor gaps)
 
 ### Issue 2: Misleading "Doubled Consonant + -я = Neuter" Pattern
 - **Location**: Line 285 / Section «Культурний контекст: Жива мова»
-- **Original**: «Укриття [uˈkrɪtːʲɑ] (Shelter) — Ends in '-я' after a double consonant. It is **Neuter** — a place, a state of safety.»
+- **Original**: «Укриття (Shelter) — Ends in '-я' after a double consonant. It is **Neuter** — a place, a state of safety.»
 - **Problem**: Lines 285 and 295 present "doubled consonant + -я" as a neuter indicator. However, this pattern is not reliable — «суддя» (judge) has doubled дд + -я but is masculine. At A1, introducing an unreliable pattern as if it were a rule creates future confusion. The actual pattern is that deverbative nouns with the -ття/-ззя suffix are neuter, not all "doubled consonant + -я" words.
-- **Fix**: Change line 285 to: «**Укриття** [uˈkrɪtːʲɑ] (Shelter) — Ends in '-тя', a Neuter ending for this type of noun. It is **Neuter** — a place, a state of safety.» On line 295, change to: «**Запоріжжя** (Zaporizhzhia) is Neuter (-жжя ending, like *укриття*)» — removing the generalized "doubled consonant" claim.
+- **Fix**: Change line 285 to: «**Укриття** (Shelter) — Ends in '-тя', a Neuter ending for this type of noun. It is **Neuter** — a place, a state of safety.» On line 295, change to: «**Запоріжжя** (Zaporizhzhia) is Neuter (-жжя ending, like *укриття*)» — removing the generalized "doubled consonant" claim.
 
 ### Issue 3: Quiz Activity Overlap
 - **Location**: Activities file, activities 3 (lines 62-198) and 9 (lines 494-630)

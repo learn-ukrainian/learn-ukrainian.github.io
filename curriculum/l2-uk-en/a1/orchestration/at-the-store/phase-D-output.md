@@ -59,14 +59,14 @@
 - **Location**: Line 169
 - **Original**: «Другий товар безкоштовно.»
 - **Problem**: "Безкоштовно" is a long, complex word introduced without IPA or translation gloss.
-- **Fix**: Add «[bezkɔʃˈtɔu̯nɔ] (free)».
+- **Fix**: Add « (free)».
 
 ## Ukrainian Language Issues
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
 | 207 | «у відділі «Напої»» | «у відділі «Кава і чай»» | Logic |
-| 169 | «безкоштовно» | «безкоштовно [bezkɔʃˈtɔu̯nɔ] (free)» | Scaffolding |
+| 169 | «безкоштовно» | «безкоштовно (free)» | Scaffolding |
 
 ## Beginner Safety Audit
 
@@ -126,7 +126,7 @@ FILE: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/at-th
 FIND:
 «Також є акція "1+1". Ви купуєте один товар. Другий товар безкоштовно. Це дуже вигідно.»
 REPLACE:
-«Також є акція "1+1". Ви купуєте один товар. Другий товар **безкоштовно** [bezkɔʃˈtɔu̯nɔ] (free). Це дуже вигідно.»
+«Також є акція "1+1". Ви купуєте один товар. Другий товар **безкоштовно** (free). Це дуже вигідно.»
 ---
 FIND:
 «**Працівник:** Кава там, у відділі «Напої»»

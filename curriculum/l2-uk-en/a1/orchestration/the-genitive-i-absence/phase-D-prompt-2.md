@@ -55,7 +55,7 @@ Plan-Content Alignment: PASS
 | 9 | Richness | 8/10 | <6 | Strong cultural content: proverb «Немає диму без вогню», hospitality culture «Чим багаті, тим і раді», market interaction patterns, polite refusal conventions. Three realistic dialogues (café, service, shop). No named Ukrainian cultural figures beyond generic cultural practices. |
 | 10 | Beginner Safety | 7/10 | <7 | "Would I Continue?" 4/5 (fails on quick wins — 150 lines of grammar before practice). Three paragraphs of complex untranslated Ukrainian at A1: lines 247, 302, 335-337 use vocabulary like «пряме», «різко», «фактична», «пом'якшує» without English support. Zero explicit encouragement phrases found. |
 | 11 | LLM Fingerprint | 9/10 | <7 | No structural monotony — all H2 sections open differently. No clichéd metaphors. No "це не просто" rhetoric. No AI opener patterns. Example sentences are natural and varied. Dialogues feel authentic. |
-| 12 | Linguistic Accuracy | 8/10 | <9 | IPA stress error on «мене»: transcribed as [ˈmɛne] (first-syllable stress) at lines 33 and 68, but standard Ukrainian is мене́ [meˈnɛ] (second-syllable stress). «День» (soft-stem) and «Батько» (-о ending) listed under hard-noun heading. IPA vowel quality issue in «інтернету» at line 67: [e] should be [ɛ]. |
+| 12 | Linguistic Accuracy | 8/10 | <9 | IPA stress error on «мене»: transcribed as (first-syllable stress) at lines 33 and 68, but standard Ukrainian is мене́ (second-syllable stress). «День» (soft-stem) and «Батько» (-о ending) listed under hard-noun heading. IPA vowel quality issue in «інтернету» at line 67: [e] should be [ɛ]. |
 | 13 | Factual Accuracy | 9/10 | <8 | Grammar rules are correctly explained. Proverb «Немає диму без вогню» is authentic. Gen.Pl. «проблем» correctly identified. «Гроші» as plural-only noun is accurate. Cultural claims about polite refusals and «Немає проблем» usage are plausible and accurate. No fabricated facts in callout boxes. |
 
 **Weighted Overall:** (8×1.5 + 8×1.0 + 9×1.0 + 8×1.2 + 8×1.1 + 8×1.2 + 8×1.0 + 7×1.3 + 8×0.9 + 7×1.3 + 9×1.0 + 8×1.5 + 9×1.5) / 15.5 = (12 + 8 + 9 + 9.6 + 8.8 + 9.6 + 8 + 9.1 + 7.2 + 9.1 + 9 + 12 + 13.5) / 15.5 = 124.9 / 15.5 = **8.1/10**
@@ -75,9 +75,9 @@ Plan-Content Alignment: PASS
 
 ### Issue 1: IPA Stress Error on «мене» (Linguistic Accuracy)
 - **Location**: Lines 33, 68 / Section «Вступ: Ситуація відсутності» and Section «Граматика: Конструкція «Немає» та «Без»»
-- **Original**: «У мене немає квитка.» [u ˈmɛne neˈmɑje kʋɪˈtka] (line 33) and «У мене немає паспорта.» [u ˈmɛne neˈmɑje ˈpɑsporta] (line 68)
-- **Problem**: The IPA transcription [ˈmɛne] places stress on the first syllable. Standard Ukrainian pronunciation is мене́ [meˈnɛ] with stress on the second syllable. This error appears twice, teaching incorrect pronunciation to beginners.
-- **Fix**: Change [ˈmɛne] to [meˈnɛ] in both occurrences.
+- **Original**: «У мене немає квитка.» (line 33) and «У мене немає паспорта.» (line 68)
+- **Problem**: The IPA transcription places stress on the first syllable. Standard Ukrainian pronunciation is мене́ with stress on the second syllable. This error appears twice, teaching incorrect pronunciation to beginners.
+- **Fix**: Change to in both occurrences.
 
 ### Issue 2: Activity Distractor «води немає» Is Valid Ukrainian (Activities)
 - **Location**: Activities file line 314 / Activity "Заповніть діалоги", item 6
@@ -112,10 +112,10 @@ Plan-Content Alignment: PASS
 
 | Line | Current | Corrected | Type |
 |------|---------|-----------|------|
-| 33 | «[u ˈmɛne neˈmɑje kʋɪˈtka]» | «[u meˈnɛ neˈmɑje kʋɪˈtka]» | IPA stress |
+| 33 | «» | «» | IPA stress |
 | 47 | «(Here is no water.)» | «(There is no water here.)» | English grammar |
-| 67 | «[tut neˈmɑje interˈnetu]» | «[tut neˈmɑje intɛrˈnɛtu]» | IPA vowel quality |
-| 68 | «[u ˈmɛne neˈmɑje ˈpɑsporta]» | «[u meˈnɛ neˈmɑje ˈpɑsporta]» | IPA stress |
+| 67 | «» | «» | IPA vowel quality |
+| 68 | «» | «» | IPA stress |
 
 ## Beginner Safety Audit
 
@@ -143,9 +143,9 @@ Plan-Content Alignment: PASS
 
 ### Linguistic Accuracy: 8/10 → 9/10
 **What to fix:**
-1. Line 33: Change IPA «[u ˈmɛne neˈmɑje kʋɪˈtka]» → «[u meˈnɛ neˈmɑje kʋɪˈtka]» — correct stress on мене
-2. Line 68: Change IPA «[u ˈmɛne neˈmɑje ˈpɑsporta]» → «[u meˈnɛ neˈmɑje ˈpɑsporta]» — same fix
-3. Line 67: Change IPA «[tut neˈmɑje interˈnetu]» → «[tut neˈmɑje intɛrˈnɛtu]» — correct vowel quality
+1. Line 33: Change IPA «» → «» — correct stress on мене
+2. Line 68: Change IPA «» → «» — same fix
+3. Line 67: Change IPA «» → «» — correct vowel quality
 4. Lines 83-85: Move "День" and "Батько" out of the "### Genitive Endings: Masculine Hard Nouns (-а)" subsection into a separate "### Special Cases" subsection, or add explicit note that these are exceptions to the hard-noun pattern.
 
 **Expected score after fix:** 9/10

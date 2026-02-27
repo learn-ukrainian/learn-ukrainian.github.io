@@ -14,24 +14,24 @@ Now I have everything I need. Let me compile the full adversarial review.
 
 **Issue 2: IPA — вихідні wrong stress placement**
 - **File**: `tomorrow-future-tense.md`, line 204
-- **Current**: `[ʋɪˈxidnʲi]` (stress on second syllable)
-- **Problem**: Standard stress is вихідні́ — final syllable. Correct IPA: `[ʋɪxidˈnʲi]`.
+- **Current**: `` (stress on second syllable)
+- **Problem**: Standard stress is вихідні́ — final syllable. Correct IPA: ``.
 
 **Issue 3: IPA — збирається inconsistent affricate notation**
 - **File**: `tomorrow-future-tense.md`, line 100
-- **Current**: `[zbɪˈrɑjetʲsʲa]` — breaks `-ться` into separate `[tʲsʲ]`
-- **Problem**: Module uses tie bars for all other affricates (t͡ʃ, t͡s). Ukrainian `-ться` is phonetically an affricate [t͡sʲː]. The transcription is internally inconsistent.
-- **Fix**: `[zbɪˈrɑjet͡sʲːa]`
+- **Current**: `` — breaks `-ться` into separate `[tʲsʲ]`
+- **Problem**: Module uses tie bars for all other affricates (t͡ʃ, t͡s). Ukrainian `-ться` is phonetically an affricate. The transcription is internally inconsistent.
+- **Fix**: ``
 
 **Issue 4: IPA — спати missing stress marker**
 - **File**: `tomorrow-future-tense.md`, line 275
 - **Current**: `[spɑtɪ]`
-- **Problem**: All other IPA transcriptions in the module include stress markers. This one is missing. Stress: спа́ти → `[ˈspɑtɪ]`.
+- **Problem**: All other IPA transcriptions in the module include stress markers. This one is missing. Stress: спа́ти → ``.
 
 **Issue 5: IPA — снідати missing stress marker**
 - **File**: `tomorrow-future-tense.md`, line 275
 - **Current**: `[sʲnʲidɑtɪ]`
-- **Problem**: Missing stress marker. Stress: сніда́ти → `[sʲnʲiˈdɑtɪ]`.
+- **Problem**: Missing stress marker. Stress: сніда́ти → ``.
 
 **Issue 6: Pedagogical — Dialogue 2 uses untaught grammar (present-for-future)**
 - **File**: `tomorrow-future-tense.md`, line 251
@@ -72,17 +72,17 @@ Now I have everything I need. Let me compile the full adversarial review.
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-You need only one small helper word — **буду** [ˈbudʊ] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть.
+You need only one small helper word — **буду** (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть.
 ---NEW---
-You need only one small helper word — **буду** [ˈbudʊ] (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть. (The Ukrainian language is music. Listen and speak.)
+You need only one small helper word — **буду** (I will be). You simply add it to the word you already know — and just like that, you are speaking about the future. Українська мова — це музика. Слухайте і говоріть. (The Ukrainian language is music. Listen and speak.)
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-*   Він **збирається** [zbɪˈrɑjetʲsʲa] працювати. (He is going to work.)
+*   Він **збирається** працювати. (He is going to work.)
 ---NEW---
-*   Він **збирається** [zbɪˈrɑjet͡sʲːa] працювати. (He is going to work.)
+*   Він **збирається** працювати. (He is going to work.)
 ===FIX_END===
 
 ===FIX_START===
@@ -96,9 +96,9 @@ FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ===FIX_START===
 FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
-*   **вихідні** [ʋɪˈxidnʲi] — weekend (literally: exit days)
+*   **вихідні** — weekend (literally: exit days)
 ---NEW---
-*   **вихідні** [ʋɪxidˈnʲi] — weekend (literally: exit days)
+*   **вихідні** — weekend (literally: exit days)
 ===FIX_END===
 
 ===FIX_START===
@@ -122,7 +122,7 @@ FILE: curriculum/l2-uk-en/a1/tomorrow-future-tense.md
 ---OLD---
 Завтра буде чудовий день. Вранці я **буду спати** [spɑtɪ] довго. Потім я **буду снідати** [sʲnʲidɑtɪ] в кафе.
 ---NEW---
-Завтра буде чудовий день. Вранці я **буду спати** [ˈspɑtɪ] довго. Потім я **буду снідати** [sʲnʲiˈdɑtɪ] в кафе.
+Завтра буде чудовий день. Вранці я **буду спати** довго. Потім я **буду снідати** в кафе.
 ===FIX_END===
 
 ===FIX_START===

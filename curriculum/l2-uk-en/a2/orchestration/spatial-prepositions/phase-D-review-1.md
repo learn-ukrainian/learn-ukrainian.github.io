@@ -12,7 +12,7 @@
 | 4 | **Richness** | 7/10 | The [!culture] box about «Українська Хата» (line 168) is good, and the [!myth-buster] about Покуття (line 213) adds genuine depth. However, the plan calls for a full "hospitality hook" where guests are seated «на покутті» and «за столом» — this is absent. The cultural closing about the stove and sacred corner in the Підсумок is also absent (plan section 5 requires it). The module reads as a grammar reference more than a culturally-anchored lesson. |
 | 5 | **Activity Quality** | 6/10 | **Critical error**: The error-correction activity (activity file line 216) marks «Я йду до банку» as incorrect, but the *content itself* at line 231 explicitly teaches that «Я йду до банку» is valid ("I walk towards the bank, maybe just to the ATM outside"). This is a direct pedagogical contradiction — the lesson teaches a form and then penalizes the student for using it. The hedging explanation ("While 'до банку' implies approach...If correct context implies entering") confirms the item is flawed. Otherwise activities are well-structured and varied (12 activities, 8 types). |
 | 6 | **LLM Fingerprint** | 7/10 | **Structural monotony**: «Розглянемо приклади:» appears 4 times as an identical section opener (lines 196, 208, 224, 238) within section «Презентація / Presentation». This is a clear LLM fingerprint — a real tutor would vary the phrasing. The rest of the content avoids major AI tells, but this repetition is notable. |
-| 7 | **Factual Accuracy** | 8/10 | Grammar rules are accurately presented. The State Standard references in the research notes align with the content's treatment of Locative/Accusative/Instrumental governance. However, the vocabulary file contains IPA errors: «всередині» is transcribed as `[ʍsɛˈrɛdɪnʲi]` (line 93 of vocab file) — the initial sound should be [ʋ] not [ʍ] (voiceless labial-velar approximant). «Посеред» has a double stress mark `[pɔˈsɛˈrɛd]` (line 104 of vocab file) — Ukrainian words have one primary stress, should be `[pɔsɛˈrɛd]`. |
+| 7 | **Factual Accuracy** | 8/10 | Grammar rules are accurately presented. The State Standard references in the research notes align with the content's treatment of Locative/Accusative/Instrumental governance. However, the vocabulary file contains IPA errors: «всередині» is transcribed as `` (line 93 of vocab file) — the initial sound should be [ʋ] not [ʍ] (voiceless labial-velar approximant). «Посеред» has a double stress mark `` (line 104 of vocab file) — Ukrainian words have one primary stress, should be ``. |
 
 ---
 
@@ -119,8 +119,8 @@ The module teaches "до банку" as a valid, meaningful construction with a 
 |------|-------|-----|
 | 185 | «two distinct distinct items» — doubled word | Remove one «distinct» |
 | 244 | «Ukrainian hates clear consonant clusters» — informal/anthropomorphizing | Rephrase: "Ukrainian avoids adjacent consonant clusters" |
-| Vocab line 93 | IPA `[ʍsɛˈrɛdɪnʲi]` for «всередині» — [ʍ] is wrong | Change to `[ʋsɛˈrɛdɪnʲi]` |
-| Vocab line 104 | IPA `[pɔˈsɛˈrɛd]` for «посеред» — double stress | Change to `[pɔsɛˈrɛd]` |
+| Vocab line 93 | IPA `` for «всередині» — [ʍ] is wrong | Change to `` |
+| Vocab line 104 | IPA `` for «посеред» — double stress | Change to `` |
 
 ### Warmth / Encouragement Markers
 

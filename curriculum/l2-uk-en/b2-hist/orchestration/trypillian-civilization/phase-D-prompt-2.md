@@ -197,7 +197,7 @@ Discrepancies/unverified claims:
 - Content lines read: 219
 - Activity items checked: 9 activities (including 20 true-false items)
 - Ukrainian sentences verified: 35+
-- IPA transcriptions checked: 25 (all vocabulary items; "горно" [hornˈo] flagged for stress verification — standard dictionaries suggest [ˈhorno])
+- IPA transcriptions checked: 25 (all vocabulary items; "горно" flagged for stress verification — standard dictionaries suggest)
 - Factual claims verified: 15 (3 discrepancies found)
 - Issues found: 6
 

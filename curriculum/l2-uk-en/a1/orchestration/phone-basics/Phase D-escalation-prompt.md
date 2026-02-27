@@ -105,11 +105,11 @@ Because we want to remain polite, we use the formal, plural form of the imperati
 
 Here are the two most important polite commands you will need:
 
-*   **Зачекайте, будь ласка.** [zɐt͡ʃɛˈkɑi̯te]
+*   **Зачекайте, будь ласка.**
     *   Wait, please. (Use this when you need a moment to check something.)
 *   **Повторіть, будь ласка.**
     *   Repeat, please. (Use this when you did not hear or understand.)
-*   **Зачекайте одну хвилинку.** [xwɪˈlɪnkɐ]
+*   **Зачекайте одну хвилинку.**
     *   Wait one moment.
 
 Using the formal imperative ending (usually **-іть** or **-йте**) ensures that your request is respectful. It turns a harsh command into a cooperative instruction. 
@@ -123,7 +123,7 @@ Using the formal imperative ending (usually **-іть** or **-йте**) ensures 
 
 Ви вже знаєте формальне прощання: **До побачення**. Ви також знаєте неформальний варіант: **Бувай**. Але є ще одна ідеальна фраза.
 
-The phrase is **До зв'язку!** [do zʋjɐzˈku]. This translates literally as "Until the connection!" and means "Talk soon!" or "Keep in touch!". It is incredibly popular right now, especially for ending phone calls or signing off on messaging apps. It is friendly, modern, and implies that your relationship or communication will continue.
+The phrase is **До зв'язку!**. This translates literally as "Until the connection!" and means "Talk soon!" or "Keep in touch!". It is incredibly popular right now, especially for ending phone calls or signing off on messaging apps. It is friendly, modern, and implies that your relationship or communication will continue.
 
 *   **Добре, дякую. До зв'язку!**
     *   Good, thank you. Talk soon!
@@ -142,7 +142,7 @@ Using this modern sign-off will immediately make your Ukrainian sound contempora
 
 Ваш телефон дзвонить. Ви відповідаєте. Незнайомець шукає іншу людину. Або ви дзвоните не туди.
 
-When this happens, you need a fixed formula to explain the situation quickly and politely. You do not need to construct a complex sentence; you can simply memorize this helpful chunk of language. The key verb here is to mistakenly dial, which is **помилитись** [pomɪˈlɪtɪsʲ]. 
+When this happens, you need a fixed formula to explain the situation quickly and politely. You do not need to construct a complex sentence; you can simply memorize this helpful chunk of language. The key verb here is to mistakenly dial, which is **помилитись**. 
 
 We use this verb with the word for number to say that we dialed incorrectly. 
 
@@ -192,9 +192,9 @@ Let us practice with a short delivery scenario:
 
 Телефонні дзвінки важливі. Але тексти також дуже популярні. Телеграм і Вайбер — це головний спосіб. Іноді людина не відповідає. 
 
-Лінія зайнята? Ви почуєте слово **зайнятий** [ˈzɑi̯nʲɐtɪi̯]. У вас є вибір. Можна зателефонувати пізніше. Це дієслово **передзвонити** [pɛrɛd͡zwoˈnɪtɪ]. Можна написати текст.
+Лінія зайнята? Ви почуєте слово **зайнятий**. У вас є вибір. Можна зателефонувати пізніше. Це дієслово **передзвонити**. Можна написати текст.
 
-The most common alternative is to write a message or leave a voice message. The noun for message is **повідомлення** [poʋʲiˈdɔmlennʲɐ]. We use it with verbs to describe our actions. You can also ask someone to pass on a message using the verb **передати** [pɛrɛˈdɑtɪ].
+The most common alternative is to write a message or leave a voice message. The noun for message is **повідомлення**. We use it with verbs to describe our actions. You can also ask someone to pass on a message using the verb **передати**.
 
 *   **Лінія зайнята. Я передзвоню пізніше.**
     *   The line is busy. I will call back later.
@@ -238,7 +238,7 @@ Let us see how these elements come together in two contrasting dialogue simulati
 — **Добре. Я буду через десять хвилин.** (Good. I will be there in ten minutes.)
 — **Супер. До зв'язку!** (Super. Talk soon!)
 
-Finally, remember these high-frequency collocations that will make you sound incredibly natural: your phone number is your **номер телефону** [ˈnɔmɛr tɛlɛˈfɔnu], when someone is speaking on another call, the **лінія зайнята**, and when you want to speak with your mother, you will **дзвонити мамі**.
+Finally, remember these high-frequency collocations that will make you sound incredibly natural: your phone number is your **номер телефону**, when someone is speaking on another call, the **лінія зайнята**, and when you want to speak with your mother, you will **дзвонити мамі**.
 
 **Перевірте себе:**
 1. You receive a call from an unknown number. Do you answer with «Алло» or «Слухаю»?

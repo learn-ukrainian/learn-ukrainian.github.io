@@ -25,9 +25,9 @@
 - **Severity:** Critical (factual accuracy)
 - **Location:** `vocabulary/description-adverbs.yaml` lines 21, 30, 34
 - **Evidence:**
-  - Line 21: завжди has IPA `[ˈzɑˈʋʒdɪ]` — **two primary stress marks** is invalid IPA. Should be `[zɑˈʋʒdɪ]` (stress on second syllable only).
-  - Line 34: ніколи has IPA `[nʲikɔlɪ]` — **no stress mark at all**. Should be `[nʲiˈkɔlɪ]`.
-  - Line 30: іноді has IPA `[ˈinɔdʲi]` — standard pronunciation is іно́ді `[iˈnɔdʲi]` (stress on second syllable). Current IPA places stress on first syllable.
+  - Line 21: завжди has IPA `` — **two primary stress marks** is invalid IPA. Should be `` (stress on second syllable only).
+  - Line 34: ніколи has IPA `[nʲikɔlɪ]` — **no stress mark at all**. Should be ``.
+  - Line 30: іноді has IPA `` — standard pronunciation is іно́ді `` (stress on second syllable). Current IPA places stress on first syllable.
 - **Fix:** Correct all three IPA transcriptions to standard stress positions.
 
 ### Issue 3: Scope violation — comparative adverb form «тихіше» used despite scope exclusion

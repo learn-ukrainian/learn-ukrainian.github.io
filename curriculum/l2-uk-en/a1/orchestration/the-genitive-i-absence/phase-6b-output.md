@@ -17,7 +17,7 @@ Related: a1-15-around-the-city, a1-17-numbers-and-money, a1-18-food-and-shopping
 
 ### What is "Absence" in Ukrainian?
 
-In English, when we want to say something is missing, we use negative verbs like "don't have" or "there isn't." In Ukrainian, we have a special word for this: **немає** [neˈmɑje]. It means "there is not" or "it is absent."
+In English, when we want to say something is missing, we use negative verbs like "don't have" or "there isn't." In Ukrainian, we have a special word for this: **немає**. It means "there is not" or "it is absent."
 
 **Немає** changes the word that follows it. You cannot use the dictionary form. You must change the word's form to show that it is missing. This change is called the **Genitive Case**.
 
@@ -25,13 +25,13 @@ When an object is present, it is unchanged (Nominative case). When it is absent,
 
 ### The "Nominative Trap"
 
-A common mistake is using the dictionary form after **немає**. For example, the word for "ticket" is **квиток** [kʋɪˈtɔk].
+A common mistake is using the dictionary form after **немає**. For example, the word for "ticket" is **квиток**.
 
 *   ❌ *У мене немає квиток.* (Incorrect!)
 
 To a Ukrainian ear, this is confusing. The correct way to say it is:
 
-*   ✅ **У мене немає квитка.** [u ˈmɛne neˈmɑje kʋɪˈtka]
+*   ✅ **У мене немає квитка.**
 
 Notice how **квиток** became **квитка**? That small change at the end is the signal of absence. It tells the listener, "This object is not here."
 
@@ -60,14 +60,14 @@ When you use **немає**, the object changes to Genitive:
 
 ### The Structure of Absence: Немає + Genitive
 
-The word **немає** [neˈmɑje] comes from **не** (not) + **має** (has). In spoken Ukrainian, you will often hear it shortened to **нема** [neˈmɑ].
+The word **немає** comes from **не** (not) + **має** (has). In spoken Ukrainian, you will often hear it shortened to **нема**.
 
 Whenever you use this word to say "there is no X" or "I don't have X," the "X" **must** be in the Genitive case.
 
 **Examples in context:**
-*   **Тут немає інтернету.** [tut neˈmɑje interˈnetu] (There is no internet here.)
-*   **У мене немає паспорта.** [u ˈmɛne neˈmɑje ˈpɑsporta] (I don't have a passport.)
-*   **Сьогодні немає концерту.** [sʲoˈɦɔdnʲi neˈmɑje konˈtsɛrtu] (There is no concert today.)
+*   **Тут немає інтернету.** (There is no internet here.)
+*   **У мене немає паспорта.** (I don't have a passport.)
+*   **Сьогодні немає концерту.** (There is no concert today.)
 
 ### Genitive Endings: Masculine Hard Nouns (-а)
 
@@ -75,7 +75,7 @@ For most masculine nouns ending in a hard consonant (like **стіл**, **кви
 
 *   **паспорт** → немає **паспорта**
 *   **брат** → немає **брата**
-*   **телефон** → немає **телефона** [teleˈfɔna]
+*   **телефон** → немає **телефона**
 
 Words often drop a vowel when you add the ending (the "fleeting vowel" rule):
 *   **квиток** (ticket) → немає **квитка** (not *квитока*)
@@ -97,10 +97,10 @@ This usually happens with:
 3.  **Locations/Spaces**: Київ, парк, магазин.
 
 **Memorize these key A1 words that take -у:**
-*   **час** (time) → немає **часу** [ˈtʃɑsu]
-*   **цукор** (sugar) → без **цукру** [ˈtsukru] (Notice the fleeting 'o'!)
-*   **чай** (tea) → немає **чаю** [ˈtʃɑju]
-*   **обід** (lunch) → немає **обіду** [oˈbʲidu]
+*   **час** (time) → немає **часу**
+*   **цукор** (sugar) → без **цукру** (Notice the fleeting 'o'!)
+*   **чай** (tea) → немає **чаю**
+*   **обід** (lunch) → немає **обіду**
 
 > [!warning] **Увага: Типова помилка (-а vs. -у)**
 > *   Is it a concrete object (ticket, passport, phone)? Use **-а**.
@@ -112,16 +112,16 @@ Feminine nouns usually end in **-а** or **-я**. Switch the vowel.
 
 **Hard Rule (-а → -и):**
 If the word ends in **-а** (after a hard consonant), change it to **-и**.
-*   **вода** (water) → немає **води** [voˈdɪ]
-*   **кава** (coffee) → немає **кави** [ˈkɑvɪ]
-*   **мама** (mom) → немає **мами** [ˈmɑmɪ]
-*   **проблема** (problem) → немає **проблеми** [proˈblɛmɪ]
+*   **вода** (water) → немає **води**
+*   **кава** (coffee) → немає **кави**
+*   **мама** (mom) → немає **мами**
+*   **проблема** (problem) → немає **проблеми**
 
 **Soft Rule (-я → -і):**
 If the word ends in **-я** (soft), change it to **-і**.
-*   **кухня** (kitchen) → немає **кухні** [ˈkuxnʲi]
-*   **Надія** (Hope - name) → немає **Надії** [nɑˈdʲiji]
-*   **сім'я** (family) → немає **сім'ї** [sʲiˈmjɪ]
+*   **кухня** (kitchen) → немає **кухні**
+*   **Надія** (Hope - name) → немає **Надії**
+*   **сім'я** (family) → немає **сім'ї**
 
 Singular words ending in **-ія** become **-ії**.
 *   **Україна** (Ukraine) → немає **України**
@@ -167,11 +167,11 @@ Use **немає** when talking about the *existence* or *possession* of an obje
 
 ### A Special Case: «Гроші» (Money)
 
-The word **гроші** [ˈɦrɔʃi] (money) is plural in Ukrainian. You **must** know how to say "no money" because it is a very common phrase.
+The word **гроші** (money) is plural in Ukrainian. You **must** know how to say "no money" because it is a very common phrase.
 
 Memorize this as a fixed phrase:
 *   Nominative: **гроші**
-*   Genitive: **грошей** [ˈɦrɔʃei]
+*   Genitive: **грошей**
 
 **Example:**
 *   **Вибачте, у мене немає грошей.** (Sorry, I have no money.)
@@ -200,14 +200,14 @@ Review how words transform from "Presence" (Nominative) to "Absence" (Genitive).
 Here are full sentences. Notice how the grammar changes slightly depending on what we are saying is missing.
 
 **Модель 1: Відсутність (Location)**
-*   **Вдома немає хліба.** [ˈvdɔmɑ neˈmɑje ˈxlʲibɑ] (There is no bread at home.)
-*   **У місті немає парку.** [u ˈmʲistʲi neˈmɑje ˈpɑrku] (There is no park in the city.)
-*   **Тут немає сигналу.** [tut neˈmɑje sɪɦˈnɑlu] (There is no signal here.)
+*   **Вдома немає хліба.** (There is no bread at home.)
+*   **У місті немає парку.** (There is no park in the city.)
+*   **Тут немає сигналу.** (There is no signal here.)
 
 **Модель 2: Особиста власність (Person)**
-*   **У мене немає ключа.** [u ˈmɛne neˈmɑje klʲuˈtʃɑ] (I don't have a key.)
-*   **У тебе немає часу.** [u ˈtɛbe neˈmɑje ˈtʃɑsu] (You don't have time.)
-*   **У нас немає молока.** [u nɑs neˈmɑje moloˈkɑ] (We don't have milk.)
+*   **У мене немає ключа.** (I don't have a key.)
+*   **У тебе немає часу.** (You don't have time.)
+*   **У нас немає молока.** (We don't have milk.)
 
 > [!context] **Контекст: «Я маю» vs «У мене є»**
 > **Possession Structure Recall**
@@ -249,7 +249,7 @@ Here are full sentences. Notice how the grammar changes slightly depending on wh
 
 ### Фраза «Немає проблем»
 
-In Ukraine, you hear this phrase constantly: **Немає проблем!** [neˈmɑje proˈblɛm].
+In Ukraine, you hear this phrase constantly: **Немає проблем!**.
 
 It means "There are no problems". It is the Ukrainian equivalent of "No problem", "Don't worry about it" or "It's all good".
 
@@ -264,7 +264,6 @@ It means "There are no problems". It is the Ukrainian equivalent of "No problem"
 Український фольклор часто використовує структуру відсутності. Ось відоме прислів'я:
 
 **«Немає диму без вогню.»**
-[neˈmɑje ˈdɪmu bɛz voˈɦnʲu]
 *(There is no smoke without fire.)*
 
 Давайте розберемо (Let's break it down):
@@ -305,7 +304,7 @@ You are now ready to navigate the world of "haves" and "have-nots" in Ukrainian.
 ## Applied Fixes
 
 1. Section "Вступ": Replaced introductory paragraph with direct explanation to increase immersion and reduce fluff.
-2. Section "The 'Nominative Trap'": Corrected IPA for 'квиток' to `[kʋɪˈtɔk]` and 'квитка' to `[kʋɪˈtka]` (Issue 1).
+2. Section "The 'Nominative Trap'": Corrected IPA for 'квиток' to `` and 'квитка' to `` (Issue 1).
 3. Section "The 'Nominative Trap'": Trimmed English explanation about "governor" and "demands respect" (Issue 4).
 4. Section "Граматика": Condensed English connective text in all subsections. Removed "Let's look at...", "Here is a tricky nuance...", etc. (Issue 4).
 5. Section "Діалог": Changed dialogue scene from asking for a phone number to asking for a key (`ключ`/`ключа`) to fix contextual ambiguity (Issue 2).

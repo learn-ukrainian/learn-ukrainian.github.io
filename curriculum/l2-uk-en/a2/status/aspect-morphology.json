@@ -2,10 +2,10 @@
   "module": "aspect-morphology",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-26T14:59:55.127365Z",
+  "last_audit": "2026-02-26T15:00:51.435050Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T14:54:09.943324Z",
+    "md": "2026-02-26T15:00:50.606542Z",
     "meta": "2026-02-22T22:28:43.392081Z",
     "activities": "2026-02-22T22:34:53.237941Z",
     "vocabulary": "2026-02-26T10:56:38.083050Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3722/3000 (raw: 3953) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3717/3000 (raw: 3948)"
     },
     "activities": {
       "status": "pass",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "pass",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
+    "pass_count": 6,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

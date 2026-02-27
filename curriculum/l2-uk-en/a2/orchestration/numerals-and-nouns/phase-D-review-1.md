@@ -84,7 +84,7 @@ Strong cultural hooks: the hryvnia history (lines 36-43), the Dual Legacy sectio
 
 **Grammar rules verified:** Zone 1 (gender agreement with 1), Zone 2 (Nominative Plural with 2-4), Zone 3 (Genitive Plural with 5-20), 11-14 trap, Last Digit Rule — all grammatically correct. The animacy rule explanation (lines 297-318) is correct in principle but has flawed examples (see Language Quality).
 
-**Vocabulary IPA (file lines 52-54, 56-58):** «п'ятдесят» transcribed as [pjɑddɛˈsʲɑt] — the [dd] cluster appears to be an assimilation error; standard is [td]. «Вісімдесят» transcribed as [ʋʲisʲimdɛˈsʲɑt] — stress placement on final syllable is questionable; primary stress should be [ˈʋʲisʲimdɛsʲɑt].
+**Vocabulary IPA (file lines 52-54, 56-58):** «п'ятдесят» transcribed as — the [dd] cluster appears to be an assimilation error; standard is [td]. «Вісімдесят» transcribed as — stress placement on final syllable is questionable; primary stress should be.
 
 ### 8. Vocabulary Coverage — 8/10
 
