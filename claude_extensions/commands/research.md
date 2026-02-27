@@ -2,7 +2,7 @@
 
 <skill>
 name: research
-description: Research topics for seminar tracks using strictly Ukrainian resources. Use before writing content for hist, bio, istoriohrafiia, oes, ruth, lit modules. Auto-updates active /task if set.
+description: Research topics for seminar tracks using strictly Ukrainian resources. Use before writing content for hist, bio, istorio, oes, ruth, lit modules. Auto-updates active /task if set.
 arguments: topic - The topic to research (figure, event, era, literary work, document)
 </skill>
 
@@ -18,7 +18,7 @@ Conduct research using **only Ukrainian-language sources** to gather accurate, a
 |-------|----------------|
 | `bio` | Historical figures - birth/death dates, key events, legacy, quotes |
 | `hist` | Historical events, eras, causes/consequences, primary sources |
-| `istoriohrafiia` | Historiographical analysis, interpretations, scholarly debates |
+| `istorio` | Historiographical analysis, interpretations, scholarly debates |
 | `lit` | Literary works, authors, movements, textual analysis |
 | `oes` | Old East Slavic documents, paleography, linguistic features |
 | `ruth` | Ruthenian documents, Cossack-era texts, legal/religious writings |
@@ -53,7 +53,7 @@ Based on the topic and track, determine what information is needed:
 - Myths vs facts (for decolonization perspective)
 - **VITAL STATUS**: Is the person ALIVE or DECEASED?
 
-**For History (hist, istoriohrafiia):**
+**For History (hist, istorio):**
 - Event dates and timeline
 - Key figures involved
 - Causes and consequences

@@ -12,7 +12,7 @@ Auto-cleared when the line contains critical context markers (myth-busting,
 historical resistance, «guillemets», decolonization callouts).
 
 Track exemptions:
-  OES, RUTH, LIT, HIST, ISTORIOHRAFIIA — may contain legitimate comparative linguistics
+  OES, RUTH, LIT, HIST, ISTORIO — may contain legitimate comparative linguistics
   or historical content involving Russian colonial rule.
 """
 
@@ -20,7 +20,7 @@ import re
 from typing import List, Dict
 
 # Tracks where Russian references appear in historical/comparative context
-EXEMPT_TRACKS = {"oes", "ruth", "lit", "hist", "istoriohrafiia", "bio"}
+EXEMPT_TRACKS = {"oes", "ruth", "lit", "hist", "istorio", "bio"}
 
 # Patterns that indicate colonial framing (Russian-as-baseline)
 COLONIAL_PATTERNS: List[Dict] = [
@@ -86,7 +86,7 @@ def _detect_track(file_path: str) -> str | None:
     if not file_path:
         return None
     path = str(file_path)
-    for track in ["istoriohrafiia", "bio", "hist", "b2-pro", "c1-pro",
+    for track in ["istorio", "bio", "hist", "b2-pro", "c1-pro",
                   "oes", "ruth", "lit", "a1", "a2", "b1", "b2", "c1", "c2"]:
         if f"/{track}/" in path:
             return track

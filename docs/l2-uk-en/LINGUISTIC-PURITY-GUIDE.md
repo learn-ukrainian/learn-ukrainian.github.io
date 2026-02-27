@@ -171,7 +171,7 @@ These characters appear in authentic Old East Slavic, Ruthenian, and Church Slav
 *   **ѳ, ѵ, ѡ** (fita, izhitsa, omega) — Greek-origin letters
 
 **Where historical characters ARE allowed:**
-1.  **Blockquotes in historical tracks** (OES, RUTH, LIT, HIST, BIO, ISTORIOHRAFIIA):
+1.  **Blockquotes in historical tracks** (OES, RUTH, LIT, HIST, BIO, ISTORIO):
     ```markdown
     > Цитата з первинного джерела: «сънъ» означало...
     ```

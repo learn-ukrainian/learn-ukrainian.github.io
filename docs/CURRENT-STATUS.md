@@ -162,7 +162,7 @@ scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
 | HIST | 140/140 | TBD | 🚧 Content phase | - |
 | C1 | 106/106 | TBD | 🚧 In progress | - |
 | BIO | 128/128 | TBD | 📋 Planned | - |
-| ISTORIOHRAFIIA | 135/135 | TBD | 📋 Planned | - |
+| ISTORIO | 135/135 | TBD | 📋 Planned | - |
 | C2 | 100/100 | 0 | 📋 Planned | - |
 | LIT | 30/30 | TBD | 📋 Planned | - |
 
@@ -387,7 +387,7 @@ pyenv install 3.12.8
 
 - C1 core modules
 - BIO track (128 modules)
-- ISTORIOHRAFIIA track (135 modules)
+- ISTORIO track (135 modules)
 - C2 core (100 modules)
 - LIT track (30 modules)
 

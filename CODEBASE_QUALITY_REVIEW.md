@@ -134,7 +134,7 @@ The file `playgrounds/v2-blue/batch-monitor.html` was deleted from the repo but 
 
 These failures are expected given the in-progress curriculum build, not code quality issues:
 
-- `tests/test_docusaurus_links.py` — 26 failures: MDX not yet generated for all modules (c1, istoriohrafiia, lit, etc. still building)
+- `tests/test_docusaurus_links.py` — 26 failures: MDX not yet generated for all modules (c1, istorio, lit, etc. still building)
 - `tests/test_gold_dashboard_ui.py` — 4 errors: require live API server at localhost:8765
 
 Total baseline: **648 passing, 27 failing, 36 errors** (36 errors are API/server-dependent, expected when server not running).

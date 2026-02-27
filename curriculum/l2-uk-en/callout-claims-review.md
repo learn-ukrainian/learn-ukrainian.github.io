@@ -2433,12 +2433,12 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-# ISTORIOHRAFIIA (10 callouts)
+# ISTORIO (10 callouts)
 
-## istoriohrafiia/holodomor-svidky (audit: no-status)
+## istorio/holodomor-svidky (audit: no-status)
 
 ### Claim #191 — `[!historiography]` at line 15
-**File:** `curriculum/l2-uk-en/istoriohrafiia/holodomor-svidky.md:15`
+**File:** `curriculum/l2-uk-en/istorio/holodomor-svidky.md:15`
 
 > [!historiography]
 > **Джерела: Архів проти Пам'яті**
@@ -2449,7 +2449,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #192 — `[!myth-buster]` at line 31
-**File:** `curriculum/l2-uk-en/istoriohrafiia/holodomor-svidky.md:31`
+**File:** `curriculum/l2-uk-en/istorio/holodomor-svidky.md:31`
 
 > [!myth-buster]
 > **Міф про "куркульські ями"**
@@ -2460,7 +2460,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #193 — `[!history-bite]` at line 45
-**File:** `curriculum/l2-uk-en/istoriohrafiia/holodomor-svidky.md:45`
+**File:** `curriculum/l2-uk-en/istorio/holodomor-svidky.md:45`
 
 > [!history-bite]
 > **Торгсіни: Золото за життя**
@@ -2471,7 +2471,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #194 — `[!quote]` at line 61
-**File:** `curriculum/l2-uk-en/istoriohrafiia/holodomor-svidky.md:61`
+**File:** `curriculum/l2-uk-en/istorio/holodomor-svidky.md:61`
 
 > [!quote]
 > **Мова свідка**
@@ -2484,7 +2484,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #195 — `[!decolonization]` at line 77
-**File:** `curriculum/l2-uk-en/istoriohrafiia/holodomor-svidky.md:77`
+**File:** `curriculum/l2-uk-en/istorio/holodomor-svidky.md:77`
 
 > [!decolonization]
 > **Школа як інструмент державного насильства**
@@ -2495,7 +2495,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #196 — `[!culture]` at line 95
-**File:** `curriculum/l2-uk-en/istoriohrafiia/holodomor-svidky.md:95`
+**File:** `curriculum/l2-uk-en/istorio/holodomor-svidky.md:95`
 
 > [!culture]
 > **Пам'ять як зцілення нації**
@@ -2505,10 +2505,10 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-## istoriohrafiia/litopys-velychka (audit: fail)
+## istorio/litopys-velychka (audit: fail)
 
 ### Claim #197 — `[!decolonization]` at line 47
-**File:** `curriculum/l2-uk-en/istoriohrafiia/litopys-velychka.md:47`
+**File:** `curriculum/l2-uk-en/istorio/litopys-velychka.md:47`
 
 > [!decolonization]
 > **Імперська амнезія**
@@ -2519,7 +2519,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #198 — `[!history-bite]` at line 77
-**File:** `curriculum/l2-uk-en/istoriohrafiia/litopys-velychka.md:77`
+**File:** `curriculum/l2-uk-en/istorio/litopys-velychka.md:77`
 
 > [!history-bite]
 > **Писарі сліпого літописця**
@@ -2530,7 +2530,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #199 — `[!historiography]` at line 159
-**File:** `curriculum/l2-uk-en/istoriohrafiia/litopys-velychka.md:159`
+**File:** `curriculum/l2-uk-en/istorio/litopys-velychka.md:159`
 
 > [!historiography]
 > **Битва за Переяслав**
@@ -2541,7 +2541,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #200 — `[!myth-buster]` at line 183
-**File:** `curriculum/l2-uk-en/istoriohrafiia/litopys-velychka.md:183`
+**File:** `curriculum/l2-uk-en/istorio/litopys-velychka.md:183`
 
 > [!myth-buster]
 > **Чи брехав Величко?**

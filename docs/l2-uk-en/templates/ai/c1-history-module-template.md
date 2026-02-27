@@ -1,7 +1,7 @@
-# ISTORIOHRAFIIA Module Template (AI-Optimized)
+# ISTORIO Module Template (AI-Optimized)
 
-> **Full documentation:** `docs/l2-uk-en/templates/istoriohrafiiaory-module-template.md`
-> **Config source of truth:** `scripts/audit/config.py` → `istoriohrafiia`
+> **Full documentation:** `docs/l2-uk-en/templates/istorioory-module-template.md`
+> **Config source of truth:** `scripts/audit/config.py` → `istorio`
 
 ---
 
@@ -10,8 +10,8 @@
 ### Step 1.1: Confirm Track
 
 ```
-⛔ STOP: ISTORIOHRAFIIA is NOT about historical facts (that's HIST).
-ISTORIOHRAFIIA is about HOW we know history — sources, methods, historiography.
+⛔ STOP: ISTORIO is NOT about historical facts (that's HIST).
+ISTORIO is about HOW we know history — sources, methods, historiography.
 
 IF you need factual narrative → USE history-module-template.md
 IF you need source analysis, methodology, competing narratives → CONTINUE
@@ -57,9 +57,9 @@ IF missing sources → WebSearch again or mark [NEEDS VERIFICATION]
 
 ```
 CREATE 3 files:
-1. curriculum/l2-uk-en/istoriohrafiia/{slug}.md        # Prose content
-2. curriculum/l2-uk-en/istoriohrafiia/vocabulary/{slug}.yaml  # Vocabulary
-3. curriculum/l2-uk-en/istoriohrafiia/activities/{slug}.yaml  # Activities
+1. curriculum/l2-uk-en/istorio/{slug}.md        # Prose content
+2. curriculum/l2-uk-en/istorio/vocabulary/{slug}.yaml  # Vocabulary
+3. curriculum/l2-uk-en/istorio/activities/{slug}.yaml  # Activities
 ```
 
 ### Step 2.2: Write Markdown Content
@@ -145,7 +145,7 @@ DO NOT include:
 ```yaml
 # activities/{slug}.yaml
 
-# REQUIRED (per config.py istoriohrafiia):
+# REQUIRED (per config.py istorio):
 min_activities: 3
 max_activities: 9
 required_types:
@@ -158,7 +158,7 @@ required_types:
 
 ```yaml
 - type: reading
-  id: istoriohrafiia-XX-reading-01
+  id: istorio-XX-reading-01
   title: "Аналіз первинного джерела"
   resource:
     type: primary_source
@@ -174,7 +174,7 @@ required_types:
 
 ```yaml
 - type: essay-response
-  id: istoriohrafiia-XX-essay-01
+  id: istorio-XX-essay-01
   title: "Історіографічний аналіз"
   prompt: |
     Напишіть порівняльний аналіз (250-500 слів):
@@ -199,7 +199,7 @@ required_types:
 
 ```yaml
 - type: critical-analysis
-  id: istoriohrafiia-XX-analysis-01
+  id: istorio-XX-analysis-01
   title: "Методологічна рефлексія"
   questions:
     - "Як застосувати цей метод критики джерел до інших періодів?"
@@ -216,7 +216,7 @@ required_types:
 ```yaml
 # vocabulary/{slug}.yaml
 
-# Per config.py istoriohrafiia:
+# Per config.py istorio:
 min_items: 30
 format: 3-column (lemma, translation, note)
 ```
@@ -273,7 +273,7 @@ SOURCES:
 ### Step 5.2: Run Audit
 
 ```bash
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/istoriohrafiia/{slug}.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/istorio/{slug}.md
 ```
 
 ---
@@ -300,9 +300,9 @@ SOURCES:
 | Never attribute views | Check actual arguments first |
 | When in doubt | Mark [NEEDS VERIFICATION] |
 
-### ISTORIOHRAFIIA vs HIST
+### ISTORIO vs HIST
 
-| Aspect | HIST | ISTORIOHRAFIIA |
+| Aspect | HIST | ISTORIO |
 |--------|---------|---------|
 | Focus | Historical facts | Historiographical analysis |
 | Questions | What happened? | How do we know? |

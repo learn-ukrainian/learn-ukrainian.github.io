@@ -1,0 +1,13 @@
+{
+  "track": "istorio",
+  "slug": "1991-referendum",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T22:04:16Z",
+      "task_id": "v3-1991-referendum-pA",
+      "mode": "full"
+    }
+  }
+}

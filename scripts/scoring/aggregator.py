@@ -514,7 +514,7 @@ def calculate_criterion_score(
         return 6.0
 
     # =========================================================================
-    # HISTORIOGRAPHY CRITERIA (ISTORIOHRAFIIA)
+    # HISTORIOGRAPHY CRITERIA (ISTORIO)
     # =========================================================================
 
     elif criterion_name == 'historiographical_methodology':

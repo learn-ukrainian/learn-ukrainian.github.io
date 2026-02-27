@@ -1,4 +1,4 @@
-# ISTORIOHRAFIIA Curriculum Plan: Historiography Track
+# ISTORIO Curriculum Plan: Historiography Track
 
 **Generated from YAML plans**
 **Modules:** 135 module meta files found
@@ -10,7 +10,7 @@
 
 ## Track Overview
 
-ISTORIOHRAFIIA is an advanced historiography track for students who have
+ISTORIO is an advanced historiography track for students who have
 completed HIST. Focuses on primary source analysis, critical
 historiography, and thematic deep dives.
 
@@ -27,13 +27,13 @@ critical thinking about Ukrainian history from multiple perspectives.
 
 | # | Slug | Title (UK) | Word Target | Objectives |
 |---|------|------------|-------------|------------|
-| 01 | shcho-take-istoriohrafiia | Що таке історіографія? | 3500 | 2 obj |
+| 01 | shcho-take-istorio | Що таке історіографія? | 3500 | 2 obj |
 | 02 | ukrainska-istoriohrafichna-tradytsiia | Українська історіографічна традиція | 3500 | 2 obj |
-| 03 | rosiiska-imperialna-istoriohrafiia | Російська імперіальна історіографія | 3500 | 0 obj |
-| 04 | radyanska-istoriohrafiia | Радянська історіографія: Деформації | 3500 | 0 obj |
+| 03 | rosiiska-imperialna-istorio | Російська імперіальна історіографія | 3500 | 0 obj |
+| 04 | radyanska-istorio | Радянська історіографія: Деформації | 3500 | 0 obj |
 | 05 | polskyi-pohliad | Польський погляд на українську історію | 3500 | 0 obj |
 | 06 | diaspora-ta-zakhidni-istoriky | Діаспора та західні історики | 3500 | 0 obj |
-| 07 | nova-ukrainska-istoriohrafiia | Нова українська історіографія після 1991 | 3500 | 0 obj |
+| 07 | nova-ukrainska-istorio | Нова українська історіографія після 1991 | 3500 | 0 obj |
 | 08 | metodolohiia-dekolonizatsii | Методологія деколонізації | 3500 | 0 obj |
 | 09 | krytyka-dzherel | Критика джерел: Принципи та практика | 3500 | 0 obj |
 | 10 | istorychna-pamiat-i-polityka | Історична пам'ять і політика | 3500 | 0 obj |
@@ -106,7 +106,7 @@ critical thinking about Ukrainian history from multiple perspectives.
 
 | # | Slug | Title (UK) | Word Target | Objectives |
 |---|------|------------|-------------|------------|
-| 45 | holodomor-istoriohrafiia | Голодомор: Історіографія теми | 3500 | 0 obj |
+| 45 | holodomor-istorio | Голодомор: Історіографія теми | 3500 | 0 obj |
 | 46 | holodomor-mekhanizmy-i | Механізми Голодомору I: Колективізація | 3500 | 0 obj |
 | 47 | holodomor-mekhanizmy-ii | Механізми Голодомору II: Чорні дошки | 3500 | 0 obj |
 | 48 | holodomor-heohrafiia | Географія Голодомору: Регіональні відмінності | 3500 | 0 obj |

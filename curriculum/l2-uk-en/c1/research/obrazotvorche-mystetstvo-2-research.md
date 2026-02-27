@@ -26,7 +26,7 @@ Alignment: Модуль розкриває тему образотворчого
 3. **Узгодження з "мистецтво"**: *Українська мистецтво* → *Українське мистецтво* (середній рід).
 
 ## Cross-References
-- Builds on: ISTORIOHRAFIIA (History of USSR), HIST (Dissident movement context).
+- Builds on: ISTORIO (History of USSR), HIST (Dissident movement context).
 - Prepares for: BIO (Stus - visual poetry connection), C1 Literature (Poetry of the Sixtiers).
 
 ## Notes for Content Writing

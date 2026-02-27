@@ -61,13 +61,13 @@ def check_heading_levels(content: str, level_code: str = None) -> list[dict]:
     2. Main Sections (Activities, Summary, Vocabulary) must be H1 (#)
     3. Subsection headers (warm-up, exercises, etc.) must be H2 (##)
 
-    Note: Seminar tracks (bio, hist, istoriohrafiia, lit, oes, ruth) use a different
+    Note: Seminar tracks (bio, hist, istorio, lit, oes, ruth) use a different
     structure where Підсумок is H2, not H1, since all content sections are at H2 level.
     """
     violations = []
 
     # Seminar tracks use flat H2 structure for all content sections
-    seminar_tracks = ['bio', 'hist', 'istoriohrafiia', 'lit', 'oes', 'ruth']
+    seminar_tracks = ['bio', 'hist', 'istorio', 'lit', 'oes', 'ruth']
     is_seminar = level_code and any(track in level_code.lower() for track in seminar_tracks)
 
     # Main Sections that MUST be H1 (#) - but not for seminar tracks

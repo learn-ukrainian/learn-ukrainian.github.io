@@ -1,0 +1,115 @@
+module: istorio-027
+level: istorio
+sequence: 27
+version: '1.0'
+title: 'Документи Січі: Козацьке самоврядування'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of документи січі: козацьке самоврядування'
+- Evaluate the historical significance of січ як держава
+content_outline:
+- section: Вступ — Січ як держава
+  subsections:
+  - Запорозька Січ — що це було?
+  - Самоврядування — унікальний феномен
+  - Документи Січі — що збереглося
+  - Чому важливо вивчати
+- section: Устрій Січі
+  subsections:
+  - Козацька рада — верховна влада
+  - Кошовий отаман — виконавча
+  - Курені і паланки
+  - Вибори — як працювали
+  - Демократія чи олігархія?
+- section: Типи документів
+  subsections:
+  - Протоколи рад
+  - Судові справи
+  - Господарські документи
+  - Дипломатичне листування
+  - Що втрачено
+- section: Козацьке право
+  subsections:
+  - Звичаєве право — не писане
+  - Судочинство — як працювало
+  - Покарання — жорстокі
+  - Захист власності
+  - Рівність? — для кого
+- section: Фрагмент — Судова справа
+  subsections:
+  - Текст (з глосами)
+  - Процедура суду
+  - Аргументи сторін
+  - Вирок і виконання
+- section: Січ і зовнішній світ
+  subsections:
+  - Відносини з Гетьманщиною
+  - Відносини з Москвою
+  - Дипломатія з Кримом і Туреччиною
+  - Документальні свідчення
+- section: Підсумок
+  subsections:
+  - Січ — протодержава?
+  - Унікальність документів
+  - Романтизація vs. реальність
+vocabulary:
+- Січ
+- самоврядування
+- козацька рада
+- кошовий отаман
+- курінь
+- звичаєве право
+- судочинство
+- вибори
+- демократія
+- протокол
+- паланка
+- осавул
+- писар
+- регалія
+- клейноди
+activities:
+- type: reading
+  focus: Sich rada protocol excerpt
+- type: critical-analysis
+  focus: Analyze a court case — procedure and verdict
+- type: comparative-study
+  focus: Compare Sich governance with Polish Sejm
+- type: essay-response
+  focus: Чи можна назвати Січ демократичною державою?
+sources:
+- name: Запорозька Січ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Запорозька_Січ
+  type: reference
+  notes: Overview
+- name: Козацьке право
+  url: https://uk.wikipedia.org/wiki/Козацьке_право
+  type: reference
+  notes: Cossack law
+- name: Козацька рада
+  url: https://uk.wikipedia.org/wiki/Козацька_рада
+  type: reference
+  notes: Cossack council
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Zaporozhian Archivist

@@ -1,0 +1,104 @@
+module: istorio-117
+level: istorio
+sequence: 117
+version: '1.0'
+title: 'Синтез: 2022 — Історичний перелом'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of синтез: 2022 — історичний перелом'
+- Evaluate the historical significance of неочікуване братерство
+content_outline:
+- section: Вступ — Неочікуване братерство
+  subsections:
+  - Огляд модулів 114-116
+  - 24.02.2022 — все змінилось
+  - Від травми до солідарності
+  - Мета синтезу
+- section: Що змінилось
+  subsections:
+  - Мільйони біженців — прийняли
+  - Військова допомога — перша
+  - Громадянське суспільство
+  - «Нарешті спільний ворог»
+- section: Роль пам'яті
+  subsections:
+  - Волинь — відкладено, не забуто
+  - Спільні герої — нові
+  - «Ми розберемося після війни»
+  - Примирення чи пауза?
+- section: Структурні зміни
+  subsections:
+  - Політичні еліти
+  - Громадська думка
+  - Економічні зв'язки
+  - Культурні обміни
+- section: Виклики і ризики
+  subsections:
+  - Зерновий конфлікт 2023
+  - Втомленість від біженців
+  - Вибори і популізм
+  - Чи це триватиме
+- section: Підсумок
+  subsections:
+  - 2022 — поворотний момент
+  - Не кінець історії
+  - Перехід до єврейсько-українських відносин
+vocabulary:
+- синтез
+- історичний перелом
+- солідарність
+- біженець
+- допомога
+- примирення
+- травма
+- братерство
+- спільний ворог
+- громадська думка
+- репатріант
+- гуманітарний коридор
+- зерновий конфлікт
+- популізм
+- стратегічне партнерство
+activities:
+- type: essay-response
+  focus: 600 years → 2022 transformation
+- type: critical-analysis
+  focus: What changed in Polish-Ukrainian relations post-2022
+- type: critical-analysis
+  focus: Will solidarity last?
+- type: comparative-study
+  focus: Poland 2022 vs. other historical responses
+- type: essay-response
+  focus: Чи 2022 рік закрив історичні рахунки між Польщею і Україною?
+sources:
+- name: Польсько-українські відносини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Польсько-українські_відносини
+  type: reference
+  notes: Current relations
+- name: Допомога Польщі Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Допомога_Польщі_Україні_у_2022
+  type: reference
+  notes: Polish aid to Ukraine
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Solidarity Historian

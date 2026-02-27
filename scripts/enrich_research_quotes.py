@@ -10,7 +10,7 @@ Also scans for blockquote-style quotes (> "...") and converts to (> «...»).
 Usage:
     .venv/bin/python scripts/enrich_research_quotes.py --dry-run
     .venv/bin/python scripts/enrich_research_quotes.py --apply
-    .venv/bin/python scripts/enrich_research_quotes.py --apply --tracks bio istoriohrafiia
+    .venv/bin/python scripts/enrich_research_quotes.py --apply --tracks bio istorio
 """
 
 from __future__ import annotations
@@ -100,8 +100,8 @@ def main():
     parser.add_argument("--dry-run", action="store_true", default=True,
                         help="Preview changes without writing (default)")
     parser.add_argument("--apply", action="store_true", help="Apply changes")
-    parser.add_argument("--tracks", nargs="+", default=["hist", "istoriohrafiia", "bio"],
-                        help="Tracks to process (default: hist istoriohrafiia bio)")
+    parser.add_argument("--tracks", nargs="+", default=["hist", "istorio", "bio"],
+                        help="Tracks to process (default: hist istorio bio)")
     args = parser.parse_args()
 
     dry_run = not args.apply

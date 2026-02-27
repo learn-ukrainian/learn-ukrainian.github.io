@@ -24,7 +24,7 @@ Reviews (`*-review.md`) appear in BOTH `audit/` and `review/` directories depend
 | hist | 134 review files | 140 review files |
 | c1 | 2 files: audit-report + review | 108 review files |
 | bio | 11 files: audit-report + review | (in review/) |
-| istoriohrafiia | 1 audit-report | 6 review files |
+| istorio | 1 audit-report | 6 review files |
 | lit | 35 review files | 21 review files |
 
 ### Problem 2: Slug format inconsistency

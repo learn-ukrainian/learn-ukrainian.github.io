@@ -1,0 +1,112 @@
+module: istorio-088
+level: istorio
+sequence: 88
+version: '1.0'
+title: 'Синтез: Чому цикл повторюється?'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of синтез: чому цикл повторюється?'
+- Evaluate the historical significance of паттерн через віки
+content_outline:
+- section: Вступ — Паттерн через віки
+  subsections:
+  - Огляд модулів 81-87
+  - Шість циклів — одна структура
+  - Чому повторюється
+  - Мета синтезу
+- section: Порівняльна таблиця циклів
+  subsections:
+  - Хмельницький → Мазепа → Розумовський
+  - Українізація → Шелест → Янукович
+  - Фази — скрізь однакові
+  - Відмінності — масштаб, методи
+- section: Чому цикл працює
+  subsections:
+  - Асиметрія сили
+  - Надія на «цього разу інакше»
+  - Короткострокові інтереси еліт
+  - Відсутність альтернатив (здавалося)
+  - Недостатня пам'ять
+- section: Чому цикл ламається (2014, 2022)
+  subsections:
+  - Громадянське суспільство — новий актор
+  - Інформаційна доступність
+  - Європейська альтернатива
+  - Національна свідомість — масова
+  - Рішення приймає народ, не еліта
+- section: Чи зламався цикл назавжди?
+  subsections:
+  - 2022 — унікальна ситуація
+  - Загрози — післявоєнна втома
+  - Західна залежність — новий цикл?
+  - Як запобігти
+- section: Уроки для майбутнього
+  subsections:
+  - Розпізнавати фази циклу
+  - Не вірити обіцянкам
+  - Шукати альтернативи
+  - Пам'ятати історію
+- section: Підсумок
+  subsections:
+  - Цикл — не фатальний
+  - 2014-2022 — можливий вихід
+  - Перехід до поворотних точок
+vocabulary:
+- синтез
+- цикл
+- паттерн
+- кооптація
+- фаза
+- асиметрія
+- громадянське суспільство
+- національна свідомість
+- альтернатива
+- урок
+- структурний
+- циклічний
+- імперський механізм
+- точка зламу
+- запобігання
+activities:
+- type: essay-response
+  focus: Create master cycle comparison diagram
+- type: critical-analysis
+  focus: What's constant, what changes across cycles
+- type: critical-analysis
+  focus: Why 2014 and 2022 broke the cycle
+- type: essay-response
+  focus: Could cycle restart? How to prevent?
+- type: essay-response
+  focus: Як Україна може назавжди вийти з циклу кооптації?
+sources:
+- name: Російський імперіалізм (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російський_імперіалізм
+  type: reference
+  notes: Imperial patterns
+- name: Українсько-російські відносини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українсько-російські_відносини
+  type: reference
+  notes: Bilateral history
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Analyst of Historical Cycles

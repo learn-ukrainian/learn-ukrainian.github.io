@@ -8,7 +8,7 @@
   "properties": {
     "level": {
       "type": "string",
-      "pattern": "^(a1|a2|b1|b2|c1|c2|hist|b2-pro|bio|istoriohrafiia|c1-pro|c2-pro|lit)$",
+      "pattern": "^(a1|a2|b1|b2|c1|c2|hist|b2-pro|bio|istorio|c1-pro|c2-pro|lit)$",
       "description": "Level identifier"
     },
     "updated": {

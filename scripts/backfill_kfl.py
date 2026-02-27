@@ -33,7 +33,7 @@ GEMINI_BIN = shutil.which("gemini") or "/opt/homebrew/bin/gemini"
 
 # Tracks that contain seminar research files
 SEMINAR_TRACKS = [
-    "hist", "bio", "istoriohrafiia",
+    "hist", "bio", "istorio",
     "lit", "lit-essay", "lit-fantastika", "lit-hist-fic",
     "lit-humor", "lit-juvenile", "lit-war",
     "oes", "ruth",
@@ -486,7 +486,7 @@ def main():
         description="Backfill Key Facts Ledger (KFL) into seminar research files.",
     )
     parser.add_argument("--track", type=str, default=None,
-                        help="Process a single track (hist, bio, istoriohrafiia)")
+                        help="Process a single track (hist, bio, istorio)")
     parser.add_argument("--all", action="store_true", dest="process_all",
                         help="Process all seminar tracks")
     parser.add_argument("--dry-run", action="store_true",

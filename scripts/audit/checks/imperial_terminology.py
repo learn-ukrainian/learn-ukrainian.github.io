@@ -108,7 +108,7 @@ def _detect_track(file_path: str) -> str | None:
     if not file_path:
         return None
     path = str(file_path)
-    for track in ["istoriohrafiia", "bio", "hist", "b2-pro", "c1-pro",
+    for track in ["istorio", "bio", "hist", "b2-pro", "c1-pro",
                   "oes", "ruth", "lit", "a1", "a2", "b1", "b2", "c1", "c2"]:
         if f"/{track}/" in path:
             return track

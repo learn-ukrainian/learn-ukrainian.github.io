@@ -1,0 +1,13 @@
+{
+  "track": "istorio",
+  "slug": "zapovit-ta-lysty-shevchenka",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T21:25:29Z",
+      "task_id": "v3-zapovit-ta-lysty-shevchenka-pA",
+      "mode": "meta-only"
+    }
+  }
+}

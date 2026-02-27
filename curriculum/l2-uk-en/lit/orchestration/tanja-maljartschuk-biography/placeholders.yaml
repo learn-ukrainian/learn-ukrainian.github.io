@@ -20,10 +20,10 @@ PERSONA_ROLE: Time Weaver
 IMMERSION_RULE: Full Ukrainian immersion. No English except technical terminology.
   Sentences max 35 words.
 LEVEL_CONSTRAINTS: No grammar restrictions. Full literary Ukrainian.
-TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, BIO, LIT)
+TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIO, BIO, LIT)
 
 
-  > **Target:** HIST (History), ISTORIOHRAFIIA (History), BIO (Biography), LIT (Literature)
+  > **Target:** HIST (History), ISTORIO (History), BIO (Biography), LIT (Literature)
   tracks
 
   > **Pedagogy:** CBI (Content-Based Instruction)
@@ -412,7 +412,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, BIO, LIT)
 
   | HIST | 98-100% | Full historical immersion |
 
-  | ISTORIOHRAFIIA | 98-100% | Full historical immersion (C1 complexity) |
+  | ISTORIO | 98-100% | Full historical immersion (C1 complexity) |
 
   | BIO | 98-100% | Full biographical immersion |
 
@@ -471,7 +471,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, BIO, LIT)
 
   - HIST: 95%
 
-  - ISTORIOHRAFIIA: 95%
+  - ISTORIO: 95%
 
   - BIO: 95%
 
@@ -535,7 +535,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, BIO, LIT)
   - Connection to Ukrainian identity
 
 
-  ### ISTORIOHRAFIIA (History — Advanced)
+  ### ISTORIO (History — Advanced)
 
 
   **Required elements:**

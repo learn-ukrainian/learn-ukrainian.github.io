@@ -183,7 +183,7 @@
 - Ukrainian-only research skill ensures authentic sources
 
 **Rule**:
-- **ALWAYS use research-first workflow for seminar tracks** (HIST, BIO, ISTORIOHRAFIIA, LIT, OES, RUTH)
+- **ALWAYS use research-first workflow for seminar tracks** (HIST, BIO, ISTORIO, LIT, OES, RUTH)
 - Writing from memory → thin content (2000-3000 words), inaccuracies, failed word counts
 - Research-first → rich content (4500-5500 words), authoritative, passes audits
 - One-shot generation possible with proper research foundation
@@ -271,7 +271,7 @@
 
 ## 2026-02-06 - Seminar Content: Encyclopedic vs. Analytical
 
-**Observation**: Gemini's feedback on ISTORIOHRAFIIA modules identified five systematic gaps in Claude's seminar track drafts.
+**Observation**: Gemini's feedback on ISTORIO modules identified five systematic gaps in Claude's seminar track drafts.
 
 **The Five Gaps (Claude → Gemini quality shift)**:
 
@@ -291,7 +291,7 @@
 - Gemini's metaphor: Claude builds walls and roof; content needs furniture, library, and fire
 
 **Division of Labor**:
-- Seminar tracks (istoriohrafiia, bio, hist, lit): Gemini writes/polishes content
+- Seminar tracks (istorio, bio, hist, lit): Gemini writes/polishes content
 - Core tracks (A1-C1): Claude can build these (more structural, less decolonization-dependent)
 - Infrastructure always: Claude (meta, plans, YAML, scripts, audit)
 

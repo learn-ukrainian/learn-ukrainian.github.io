@@ -12,7 +12,7 @@ Word targets (from `config.py` v2026-02-15 — if stale, re-read config.py):
 - A1 modules: **2000 words minimum**
 - A2 modules: **3000 words minimum**
 - B1+ Regular modules: **4000 words minimum**
-- Seminar tracks (HIST, BIO, ISTORIOHRAFIIA, LIT, C2, OES, RUTH): **5000 words minimum**
+- Seminar tracks (HIST, BIO, ISTORIO, LIT, C2, OES, RUTH): **5000 words minimum**
 
 **If a module is under target:**
 
@@ -368,7 +368,7 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 | B2 | B2 | 4000 |
 | HIST | history | 5000 |
 | C1 | C1 | 4000 |
-| ISTORIOHRAFIIA | istoriohrafiia | 5000 |
+| ISTORIO | istorio | 5000 |
 | BIO | biography | 5000 |
 | LIT | LIT | 5000 |
 | C2 | C2 | 5000 |
@@ -386,7 +386,7 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 - ❌ Generating content_outline without checking config.py
 - ❌ Using hardcoded word targets from memory
 - ❌ Assuming "typical" values (e.g., "seminars are usually 3500")
-**This rule exists because:** In January 2026, ALL 270 ISTORIOHRAFIIA plans were generated with 3500 words instead of 4000 because Claude didn't check config.py. This wasted hours of debugging. Word targets now come exclusively from `scripts/audit/config.py` — plans no longer contain word_target fields.
+**This rule exists because:** In January 2026, ALL 270 ISTORIO plans were generated with 3500 words instead of 4000 because Claude didn't check config.py. This wasted hours of debugging. Word targets now come exclusively from `scripts/audit/config.py` — plans no longer contain word_target fields.
 
 ---
 

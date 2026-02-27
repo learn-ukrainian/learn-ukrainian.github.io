@@ -1,0 +1,34 @@
+{
+  "track": "istorio",
+  "slug": "ukrainska-istoriohrafichna-tradytsiia",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-23T13:51:27Z",
+      "task_id": "v3-ukrainska-istoriohrafichna-tradytsiia-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-23T13:51:27Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-23T15:04:15Z",
+      "task_id": "v3-ukrainska-istoriohrafichna-tradytsiia-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-23T15:14:49Z",
+      "attempts": 0,
+      "note": "auto-fix"
+    },
+    "v3-D": {
+      "status": "failed",
+      "ts": "2026-02-23T16:46:32Z",
+      "attempts": 2,
+      "note": "d2-dispatch-failed"
+    }
+  }
+}

@@ -54,7 +54,7 @@ Parse arguments: {level} {num}
 
 ### Step 1: Resolve Module Slug
 
-**For tracks (hist, bio, istoriohrafiia, lit):**
+**For tracks (hist, bio, istorio, lit):**
 
 ```bash
 slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curriculum.yaml)

@@ -128,7 +128,7 @@ HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
 | A2 | 1000w | — |
 | B1 | 1500w | — |
 | B2 | 1750w | 5000w (hist) |
-| C1 | 3000w | 5000w (bio, istoriohrafiia) |
+| C1 | 3000w | 5000w (bio, istorio) |
 | C2 | 3000w | — |
 | LIT | — | 2500w |
 

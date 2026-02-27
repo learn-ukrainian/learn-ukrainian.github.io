@@ -71,7 +71,7 @@ def check_research_file(file_path: str) -> list[dict]:
     Returns:
         List of violation dictionaries (warning level).
     """
-    seminar_tracks = {'hist', 'istoriohrafiia', 'bio', 'lit', 'oes', 'ruth'}
+    seminar_tracks = {'hist', 'istorio', 'bio', 'lit', 'oes', 'ruth'}
 
     md_path = Path(file_path)
     # Track is the parent directory name (e.g., bio, hist)
@@ -79,7 +79,7 @@ def check_research_file(file_path: str) -> list[dict]:
     if track.lower() not in seminar_tracks:
         return []
 
-    stem = md_path.stem  # e.g., "04-radyanska-istoriohrafiia" or "radyanska-istoriohrafiia"
+    stem = md_path.stem  # e.g., "04-radyanska-istorio" or "radyanska-istorio"
     research_dir = md_path.parent / "research"
 
     # Try exact stem match first (e.g., research/04-slug-research.md)
@@ -119,7 +119,7 @@ def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, ped
 
     # Determine if this is a seminar module
     is_seminar = pedagogy and pedagogy.lower() == 'seminar'
-    is_seminar_track = level_code.lower() in ['hist', 'istoriohrafiia', 'bio', 'lit']
+    is_seminar_track = level_code.lower() in ['hist', 'istorio', 'bio', 'lit']
 
     # If not a seminar module, we skip strict validation
     if not (is_seminar or is_seminar_track):

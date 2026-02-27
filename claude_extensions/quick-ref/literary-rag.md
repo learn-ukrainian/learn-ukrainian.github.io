@@ -33,7 +33,7 @@ results = search_literary("Мазепа", limit=5, genre="chronicle")
 - **Travelogues/Diaries**: Боплан (170), Шевальє (165), Крман (75), Ханенко (810), Де ля Фліз (57)
 - **Polemic**: Суспільно-політична думка XVI-XVII (821)
 
-### Scholarly Reference (ISTORIOHRAFIIA/LIT tracks)
+### Scholarly Reference (ISTORIO/LIT tracks)
 - **Грушевський — Історія України-Руси** (10 vol, 9,763 ch.) — covers Kyivan Rus through Hetmanate
 - **Грушевський — Іст. укр. літератури** (6 vol, 1,341 ch.) — literary history
 - **Чижевський** (4 works, 2,284 ch.) — Іст. літ., Бароко, Філософія, Сковорода

@@ -1,0 +1,111 @@
+module: istorio-038
+level: istorio
+sequence: 38
+version: '1.0'
+title: 'Синтез: Джерела нової доби'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of синтез: джерела нової доби'
+- Evaluate the historical significance of від козаків до xx століття
+content_outline:
+- section: Вступ — Від козаків до XX століття
+  subsections:
+  - Огляд модулів 29-37
+  - Нові типи джерел
+  - Нові проблеми
+  - Мета синтезу
+- section: Типологія джерел XIX-XX ст.
+  subsections:
+  - Політичні маніфести
+  - Імперські документи (заборони)
+  - Публіцистика
+  - Усна історія
+  - Архівні документи
+  - Таблиця порівняння
+- section: Особливості модерних джерел
+  subsections:
+  - Більша кількість — більше голосів
+  - Масова грамотність — ширший спектр
+  - Преса — новий тип джерела
+  - Фотографія і кіно
+  - Проблема надлишку
+- section: Джерела репресій
+  subsections:
+  - Імперські vs. радянські
+  - Як читати мову репресора
+  - Голос жертви — де шукати
+  - Етичні питання
+- section: Методологічні уроки
+  subsections:
+  - Порівняння офіційного і підпільного
+  - Імперський дискурс — розпізнавання
+  - Пропаганда vs. документ
+  - Усна історія — місце в дослідженні
+- section: Практикум
+  subsections:
+  - Одна подія — різні джерела
+  - 'Наприклад: 1933 рік'
+  - Радянські документи + свідчення + преса
+  - Комплексна реконструкція
+- section: Підсумок
+  subsections:
+  - Готовність до дисидентських джерел
+  - Чек-ліст для модерних джерел
+  - Від минулого до сучасності
+vocabulary:
+- синтез
+- типологія
+- модерний
+- публіцистика
+- преса
+- репресія
+- офіційний
+- підпільний
+- пропаганда
+- комплексний
+- масмедіа
+- фотодокумент
+- кіно хроніка
+- цензура
+- самвидав
+activities:
+- type: essay-response
+  focus: Create source matrix for modules 29-37
+- type: critical-analysis
+  focus: One event from 4+ source types
+- type: critical-analysis
+  focus: Create checklist for analyzing 20th-century sources
+- type: essay-response
+  focus: Чим джерела XX ст. відрізняються від козацьких?
+sources:
+- name: Джерелознавство (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джерелознавство
+  type: reference
+  notes: Source studies
+- name: Історичне джерело
+  url: https://uk.wikipedia.org/wiki/Історичне_джерело
+  type: reference
+  notes: Source types
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Digital History Archivist

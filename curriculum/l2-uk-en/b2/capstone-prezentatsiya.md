@@ -1,7 +1,7 @@
 <!-- SCOPE
 Covers: мистецтво публічного виступу, структурування презентації, українська риторична спадщина, візуалізація даних, взаємодія з аудиторією
 Not covered:
-  - академічне письмо → istoriohrafiia-module-1
+  - академічне письмо → istorio-module-1
 Related: b2-grammar-syntax, b2-professional-communication
 -->
 

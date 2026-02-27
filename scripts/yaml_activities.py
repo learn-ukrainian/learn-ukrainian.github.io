@@ -373,7 +373,7 @@ class SourceMetadata:
 
 @dataclass
 class SourceEvaluationActivity:
-    """ISTORIOHRAFIIA: Structured source criticism using the 5-question method."""
+    """ISTORIO: Structured source criticism using the 5-question method."""
     type: str = "source-evaluation"
     title: str = ""
     instruction: str = ""
@@ -396,7 +396,7 @@ class DebatePosition:
 
 @dataclass
 class DebateActivity:
-    """ISTORIOHRAFIIA: Contested historiographical interpretations."""
+    """ISTORIO: Contested historiographical interpretations."""
     type: str = "debate"
     title: str = ""
     instruction: str = ""
@@ -693,7 +693,7 @@ class ActivityParser:
         )
 
     def _parse_source_evaluation(self, data: dict) -> SourceEvaluationActivity:
-        """Parse source-evaluation activity (ISTORIOHRAFIIA)."""
+        """Parse source-evaluation activity (ISTORIO)."""
         metadata_raw = data.get('source_metadata', {})
         metadata = None
         if metadata_raw:
@@ -714,7 +714,7 @@ class ActivityParser:
         )
 
     def _parse_debate(self, data: dict) -> DebateActivity:
-        """Parse debate activity (ISTORIOHRAFIIA)."""
+        """Parse debate activity (ISTORIO)."""
         positions = []
         for pos_data in data.get('positions', []):
             positions.append(DebatePosition(
@@ -1005,7 +1005,7 @@ class ActivityParser:
         return f"### {self._escape_jsx(activity.title)}\n\n<AuthorialIntent client:load title=\"{self._escape_jsx(activity.title)}\" excerpt={{{json.dumps(activity.excerpt, ensure_ascii=False)}}} questions={{JSON.parse(`{questions}`)}} modelAnswer={{{json.dumps(activity.model_answer, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _source_evaluation_to_mdx(self, activity: SourceEvaluationActivity, is_ukrainian_forced: bool = False) -> str:
-        """Convert source-evaluation activity to SourceEvaluation component (ISTORIOHRAFIIA)."""
+        """Convert source-evaluation activity to SourceEvaluation component (ISTORIO)."""
         # Build sourceMetadata object
         metadata_dict = {}
         if activity.source_metadata:
@@ -1026,7 +1026,7 @@ class ActivityParser:
         return f"### {self._escape_jsx(activity.title)}\n\n<SourceEvaluation client:load title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} sourceText={{{json.dumps(activity.source_text, ensure_ascii=False)}}}{metadata_prop}{criteria_prop}{questions_prop} modelEvaluation={{{json.dumps(activity.model_evaluation, ensure_ascii=False)}}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _debate_to_mdx(self, activity: DebateActivity, is_ukrainian_forced: bool = False) -> str:
-        """Convert debate activity to Debate component (ISTORIOHRAFIIA)."""
+        """Convert debate activity to Debate component (ISTORIO)."""
         # Build positions array
         positions_data = []
         for pos in activity.positions:

@@ -156,7 +156,7 @@ status/
 ├── c2.yaml
 ├── hist.yaml
 ├── bio.yaml
-├── istoriohrafiia.yaml
+├── istorio.yaml
 └── lit.yaml
 ```
 

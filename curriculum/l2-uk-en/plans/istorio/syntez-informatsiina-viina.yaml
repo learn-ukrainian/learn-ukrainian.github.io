@@ -1,0 +1,104 @@
+module: istorio-113
+level: istorio
+sequence: 113
+version: '1.0'
+title: 'Синтез: Хто виграє війну наративів?'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of синтез: хто виграє війну наративів?'
+- Evaluate the historical significance of війна за правду
+content_outline:
+- section: Вступ — Війна за правду
+  subsections:
+  - Огляд модулів 108-112
+  - Інформаційна війна — частина війни
+  - 300 років vs 30 років
+  - Мета синтезу
+- section: Еволюція російської пропаганди
+  subsections:
+  - «Малоросія» — імперський період
+  - Радянська — «дружба народів»
+  - Путінська — «фашисти»
+  - Спільне — заперечення України
+- section: Поле бою
+  subsections:
+  - Росія — де виграє
+  - Україна — де виграє
+  - Захід — поле конкуренції
+  - Глобальний Південь
+- section: Уроки 2022
+  subsections:
+  - Чому «3 дні» провалились
+  - Зеленський — ефект
+  - Західна консолідація
+  - Але — не перемога
+- section: Майбутнє інформаційної війни
+  subsections:
+  - AI — нові загрози
+  - Deepfakes
+  - Як готуватися
+  - Роль освіти
+- section: Підсумок
+  subsections:
+  - Війна наративів — довга
+  - Правда — не автоматично перемагає
+  - Перехід до польсько-українських відносин
+vocabulary:
+- синтез
+- інформаційна війна
+- наратив
+- пропаганда
+- дезінформація
+- контрнаратив
+- «м'яка сила»
+- правда
+- маніпуляція
+- медіаграмотність
+- deepfake
+- штучний інтелект
+- ехо-камера
+- поляризація
+- когнітивна війна
+activities:
+- type: essay-response
+  focus: Create information warfare evolution timeline
+- type: critical-analysis
+  focus: Where each side wins/loses information war
+- type: critical-analysis
+  focus: AI and deepfakes — future information war
+- type: essay-response
+  focus: What 2022 taught about information warfare
+- type: essay-response
+  focus: Чи може правда перемогти пропаганду?
+sources:
+- name: Інформаційна війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Інформаційна_війна
+  type: reference
+  notes: Information warfare overview
+- name: Російсько-українська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російське_вторгнення_в_Україну_(з_2022)
+  type: reference
+  notes: Current war context
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Media Archaeologist

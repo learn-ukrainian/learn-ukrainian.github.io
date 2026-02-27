@@ -80,7 +80,7 @@ EXPLICIT_MAPPING = {
     'timeline': 'unjumble',
 }
 
-# Pattern-based mappings for ISTORIOHRAFIIA analytical types
+# Pattern-based mappings for ISTORIO analytical types
 PATTERN_MAPPING = {
     r'.*-analysis$': 'critical-analysis',
     r'.*-study$': 'comparative-study',

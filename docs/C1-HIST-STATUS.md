@@ -1,4 +1,4 @@
-# ISTORIOHRAFIIA Module Status
+# ISTORIO Module Status
 
 **Generated:** 2026-02-25 20:36:09
 **Total Modules:** 136
@@ -15,13 +15,13 @@
 
 | # | Slug | Status | Words | Issues |
 |---|------|--------|-------|--------|
-| 001 | shcho-take-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
+| 001 | shcho-take-istorio | ⚠️ MISSING | 0/0 | no_file |
 | 002 | ukrainska-istoriohrafichna-tradytsiia | ❌ FAIL | 6522/5000 | Review concludes with **Status:** FAIL — the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module. |
-| 003 | rosiiska-imperialna-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
-| 004 | radyanska-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
+| 003 | rosiiska-imperialna-istorio | ⚠️ MISSING | 0/0 | no_file |
+| 004 | radyanska-istorio | ⚠️ MISSING | 0/0 | no_file |
 | 005 | polskyi-pohliad | ⚠️ MISSING | 0/0 | no_file |
 | 006 | diaspora-ta-zakhidni-istoriky | ⚠️ MISSING | 0/0 | no_file |
-| 007 | nova-ukrainska-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
+| 007 | nova-ukrainska-istorio | ⚠️ MISSING | 0/0 | no_file |
 | 008 | metodolohiia-dekolonizatsii | ⚠️ MISSING | 0/0 | no_file |
 | 009 | krytyka-dzherel | ⚠️ MISSING | 0/0 | no_file |
 | 010 | istorychna-pamiat-i-polityka | ⚠️ MISSING | 0/0 | no_file |
@@ -59,7 +59,7 @@
 | 042 | memorandum-uhh | ⚠️ MISSING | 0/0 | no_file |
 | 043 | akt-nezalezhnosti-1991 | ⚠️ MISSING | 0/0 | no_file |
 | 044 | syntez-dysydentski-dzherela | ⚠️ MISSING | 0/0 | no_file |
-| 045 | holodomor-istoriohrafiia | ⚠️ MISSING | 0/0 | no_file |
+| 045 | holodomor-istorio | ⚠️ MISSING | 0/0 | no_file |
 | 046 | holodomor-mekhanizmy-i | ⚠️ MISSING | 0/0 | no_file |
 | 047 | holodomor-mekhanizmy-ii | ⚠️ MISSING | 0/0 | no_file |
 | 048 | holodomor-heohrafiia | ⚠️ MISSING | 0/0 | no_file |

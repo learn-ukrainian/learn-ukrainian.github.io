@@ -11,7 +11,7 @@ This script:
 Usage:
     .venv/bin/python scripts/fix_plan_word_targets.py --check          # Report mismatches only
     .venv/bin/python scripts/fix_plan_word_targets.py --fix            # Fix all mismatches
-    .venv/bin/python scripts/fix_plan_word_targets.py --fix istoriohrafiia    # Fix specific level
+    .venv/bin/python scripts/fix_plan_word_targets.py --fix istorio    # Fix specific level
 """
 
 import argparse
@@ -28,7 +28,7 @@ from audit.config import get_word_target
 def get_config_target(level: str, module_num: int = 1, focus: str = None) -> int:
     """Get the authoritative word target from config.py."""
     # Map plan level names to LEVEL_CONFIG keys
-    # Note: LEVEL_CONFIG uses 'istoriohrafiia' not 'ISTORIOHRAFIIA'
+    # Note: LEVEL_CONFIG uses 'istorio' not 'ISTORIO'
     level_map = {
         'a1': 'A1',
         'a2': 'A2',
@@ -37,7 +37,7 @@ def get_config_target(level: str, module_num: int = 1, focus: str = None) -> int
         'c1': 'C1',
         'c2': 'C2',
         'hist': 'history',
-        'istoriohrafiia': 'istoriohrafiia',
+        'istorio': 'istorio',
         'bio': 'biography',
         'lit': 'LIT',
     }
@@ -224,20 +224,20 @@ Examples:
     .venv/bin/python scripts/fix_plan_word_targets.py --check
 
     # Check specific level
-    .venv/bin/python scripts/fix_plan_word_targets.py --check istoriohrafiia
+    .venv/bin/python scripts/fix_plan_word_targets.py --check istorio
 
     # Fix all mismatches (dry run)
     .venv/bin/python scripts/fix_plan_word_targets.py --fix --dry-run
 
     # Fix specific level
-    .venv/bin/python scripts/fix_plan_word_targets.py --fix istoriohrafiia
+    .venv/bin/python scripts/fix_plan_word_targets.py --fix istorio
         """
     )
 
     parser.add_argument('--check', action='store_true', help='Check for mismatches (report only)')
     parser.add_argument('--fix', action='store_true', help='Fix mismatches')
     parser.add_argument('--dry-run', action='store_true', help='Show what would be fixed without making changes')
-    parser.add_argument('level', nargs='?', help='Specific level to process (e.g., istoriohrafiia)')
+    parser.add_argument('level', nargs='?', help='Specific level to process (e.g., istorio)')
 
     args = parser.parse_args()
 

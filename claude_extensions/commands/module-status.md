@@ -27,7 +27,7 @@ Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 slug=$(ls curriculum/l2-uk-en/${level}/${num}-*.md 2>/dev/null | head -1 | xargs basename -s .md)
 ```
 
-**For tracks (hist, bio, istoriohrafiia, lit):**
+**For tracks (hist, bio, istorio, lit):**
 ```bash
 slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curriculum.yaml)
 ```

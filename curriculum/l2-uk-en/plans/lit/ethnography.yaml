@@ -71,7 +71,7 @@ prerequisites:
 - lit-03 (Eneida Feast — обрядовість бенкету)
 connects_to:
 - lit-10 (Language of Kvitka — обрядова лексика)
-- istoriohrafiia (Historical modules — культурна пам'ять)
+- istorio (Historical modules — культурна пам'ять)
 objectives:
 - Analyze the role of rituals in Kvitka's prose
 - Compare wedding and funeral rites in "Marusya"

@@ -1,0 +1,13 @@
+{
+  "track": "istorio",
+  "slug": "ukrainski-kontrnararyvy",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T20:03:59Z",
+      "task_id": "v3-ukrainski-kontrnararyvy-pA",
+      "mode": "full"
+    }
+  }
+}

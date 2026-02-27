@@ -82,7 +82,7 @@ Each track type uses different weights based on its pedagogical focus:
 | **BIO** | Biography | 128 | 2.8/10 | 3% (4/128) | 🔴 Many gaps |
 | **B2-PRO** | Professional | 40 | 1.0/10 | 0% (0/40) | 🔴 Greenfield |
 | **C1-PRO** | Professional | 50 | 1.0/10 | 0% (0/50) | 🔴 Greenfield |
-| **ISTORIOHRAFIIA** | Historiography | 135 | 0.9/10 | 1% (1/135) | 🔴 Greenfield |
+| **ISTORIO** | Historiography | 135 | 0.9/10 | 1% (1/135) | 🔴 Greenfield |
 
 ---
 
@@ -97,7 +97,7 @@ Priority ranking based on effort-to-impact ratio:
 | **3** | BIO | 2.8→10 | 319h | 87% content, needs vocab |
 | **4** | B2-PRO | 1.0→10 | 160h | Practical, B2 audience |
 | **5** | C1-PRO | 1.0→10 | 200h | Advanced professional |
-| **6** | ISTORIOHRAFIIA | 0.9→10 | 540h | Largest greenfield |
+| **6** | ISTORIO | 0.9→10 | 540h | Largest greenfield |
 
 ---
 
@@ -127,7 +127,7 @@ Priority ranking based on effort-to-impact ratio:
 ```
 **Primary issues:** 17 missing files, 111 missing vocabulary
 
-### ISTORIOHRAFIIA (Greenfield)
+### ISTORIO (Greenfield)
 ```
 ✅ 1 module passing (1%)
 ⚠️ 134 modules missing files
@@ -159,7 +159,7 @@ Priority ranking based on effort-to-impact ratio:
 | BIO | 228 | 37 | 17 | 37 | **319** |
 | B2-PRO | 120 | 20 | 15 | 5 | **160** |
 | C1-PRO | 160 | 25 | 10 | 5 | **200** |
-| ISTORIOHRAFIIA | 400 | 60 | 60 | 20 | **540** |
+| ISTORIO | 400 | 60 | 60 | 20 | **540** |
 | **Total** | **974** | **170** | **113** | **79** | **1,336** |
 
 ---
@@ -201,9 +201,9 @@ Priority ranking based on effort-to-impact ratio:
 
 **Q4 Result:** B2-PRO 10/10, C1-PRO 3/10
 
-### 2027: C1-PRO + ISTORIOHRAFIIA
+### 2027: C1-PRO + ISTORIO
 - Q1: C1-PRO completion (140h)
-- Q2-Q4: ISTORIOHRAFIIA (540h)
+- Q2-Q4: ISTORIO (540h)
 
 ---
 
@@ -214,7 +214,7 @@ Priority ranking based on effort-to-impact ratio:
 | LIT | `docs/l2-uk-en/LIT-10-10-IMPROVEMENT-PLAN.md` |
 | HIST | `docs/l2-uk-en/HIST-10-10-IMPROVEMENT-PLAN.md` |
 | BIO | `docs/l2-uk-en/BIO-10-10-IMPROVEMENT-PLAN.md` |
-| ISTORIOHRAFIIA | `docs/l2-uk-en/ISTORIOHRAFIIA-10-10-IMPROVEMENT-PLAN.md` |
+| ISTORIO | `docs/l2-uk-en/ISTORIO-10-10-IMPROVEMENT-PLAN.md` |
 | B2-PRO, C1-PRO | `docs/l2-uk-en/PRO-TRACKS-10-10-IMPROVEMENT-PLAN.md` |
 
 ---
@@ -236,7 +236,7 @@ Priority ranking based on effort-to-impact ratio:
 | 9 | B2-PRO | 1.0/10 | 160h | Track |
 | 10 | C1-PRO | 1.0/10 | 200h | Track |
 | 11 | C2 | 4.9/10 | 420h | Core |
-| 12 | ISTORIOHRAFIIA | 0.9/10 | 540h | Track |
+| 12 | ISTORIO | 0.9/10 | 540h | Track |
 
 ### Total Curriculum Effort
 

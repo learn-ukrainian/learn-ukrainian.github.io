@@ -1,4 +1,4 @@
-# ISTORIOHRAFIIA Curriculum Plan: Advanced Historical Analysis Track
+# ISTORIO Curriculum Plan: Advanced Historical Analysis Track
 
 **Status:** DRAFT v3 (January 2026)
 **Modules:** 01-135 (135 modules)
@@ -43,7 +43,7 @@
 
 ## Track Overview
 
-The ISTORIOHRAFIIA track transforms learners from history consumers to history analysts. Building on HIST's narrative foundation, this track develops critical thinking through:
+The ISTORIO track transforms learners from history consumers to history analysts. Building on HIST's narrative foundation, this track develops critical thinking through:
 
 1. **Historiographical awareness** — understanding how history is written and contested
 2. **Primary source literacy** — reading original documents in context
@@ -70,13 +70,13 @@ The ISTORIOHRAFIIA track transforms learners from history consumers to history a
 
 | # | Slug | Title (UK) | Focus |
 |---|------|------------|-------|
-| 01 | shcho-take-istoriohrafiia | Що таке історіографія? | Discipline introduction, key concepts |
+| 01 | shcho-take-istorio | Що таке історіографія? | Discipline introduction, key concepts |
 | 02 | ukrainska-istoriohrafichna-tradytsiia | Українська історіографічна традиція | Hrushevsky, Doroshenko, Ohloblyn, diaspora school |
-| 03 | rosiiska-imperialna-istoriohrafiia | Російська імперіальна історіографія | "Малоросія" narrative, Pogodin theory |
-| 04 | radyanska-istoriohrafiia | Радянська історіографія: Деформації | Forbidden topics, required narratives, "friendship of peoples" |
+| 03 | rosiiska-imperialna-istorio | Російська імперіальна історіографія | "Малоросія" narrative, Pogodin theory |
+| 04 | radyanska-istorio | Радянська історіографія: Деформації | Forbidden topics, required narratives, "friendship of peoples" |
 | 05 | polskyi-pohliad | Польський погляд на українську історію | Kresy narrative, Giedroyc doctrine, modern revisions |
 | 06 | diaspora-ta-zakhidni-istoriky | Діаспора та західні історики | Harvard Ukrainian Research Institute, Pritsak, Subtelny |
-| 07 | nova-ukrainska-istoriohrafiia | Нова українська історіографія після 1991 | Post-Soviet revisions, decommunization debates |
+| 07 | nova-ukrainska-istorio | Нова українська історіографія після 1991 | Post-Soviet revisions, decommunization debates |
 | 08 | metodolohiia-dekolonizatsii | Методологія деколонізації | Critical analysis of imperial narratives, subaltern studies |
 | 09 | krytyka-dzherel | Критика джерел: Принципи та практика | Source criticism methods, authenticity, bias detection |
 | 10 | istorychna-pamiat-i-polityka | Історична пам'ять і політика | Memory laws, monument wars, instrumentalization of history |
@@ -159,7 +159,7 @@ The ISTORIOHRAFIIA track transforms learners from history consumers to history a
 
 | # | Slug | Title (UK) | Focus |
 |---|------|------------|-------|
-| 45 | holodomor-istoriohrafiia | Голодомор: Історіографія теми | Conquest, Mace, Kulchytsky, denial literature |
+| 45 | holodomor-istorio | Голодомор: Історіографія теми | Conquest, Mace, Kulchytsky, denial literature |
 | 46 | holodomor-mekhanizmy-i | Механізми Голодомору I: Колективізація | How collectivization created famine conditions |
 | 47 | holodomor-mekhanizmy-ii | Механізми Голодомору II: Чорні дошки | Blacklist system, food confiscation, cordons |
 | 48 | holodomor-heohrafiia | Географія Голодомору: Регіональні відмінності | Why some regions died more, targeting patterns |
@@ -422,7 +422,7 @@ The ISTORIOHRAFIIA track transforms learners from history consumers to history a
 | Level | Words/Module | Total Track | Approach |
 |-------|--------------|-------------|----------|
 | HIST | ~3000 | ~420,000 | Narrative (what happened) |
-| **ISTORIOHRAFIIA** | **~3500** | **~472,500** | Analytical (how we know) |
+| **ISTORIO** | **~3500** | **~472,500** | Analytical (how we know) |
 
 **Combined B2+C1:** ~892,500 words of historical content
 
@@ -514,7 +514,7 @@ Each source-based module includes:
 
 ## Differentiation from HIST
 
-| Aspect | HIST | ISTORIOHRAFIIA |
+| Aspect | HIST | ISTORIO |
 |--------|---------|---------|
 | **Question** | What happened? | How do we know? Who says? What's contested? |
 | **Sources** | Narrative summaries | Original documents with analysis |
@@ -550,11 +550,11 @@ Each source-based module includes:
 
 | Prerequisite | This Track | Complements |
 |--------------|------------|-------------|
-| HIST (140 modules) | **ISTORIOHRAFIIA** (135 modules) | BIO (100 modules) |
+| HIST (140 modules) | **ISTORIO** (135 modules) | BIO (100 modules) |
 
 **Recommended path:**
 1. HIST → factual foundation (what happened)
-2. ISTORIOHRAFIIA → analytical skills (how we know, patterns)
+2. ISTORIO → analytical skills (how we know, patterns)
 3. BIO → biographical depth (parallel or after)
 
 **Cross-references:**

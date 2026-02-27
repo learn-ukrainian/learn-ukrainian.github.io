@@ -1,4 +1,4 @@
-# ISTORIOHRAFIIA Track: Path to 10/10
+# ISTORIO Track: Path to 10/10
 
 **Created:** 2026-01-31
 **Current Score:** 0.9/10
@@ -40,7 +40,7 @@ Historiography tracks prioritize source criticism, methodological rigor, and dec
 
 ## Critical State: Greenfield Track
 
-**Only M01 (shcho-take-istoriohrafiia) exists and passes.**
+**Only M01 (shcho-take-istorio) exists and passes.**
 
 All other 134 modules are **completely missing**:
 - No markdown content
@@ -66,7 +66,7 @@ This is a **greenfield implementation** requiring full content creation.
 
 ---
 
-## Content Requirements (ISTORIOHRAFIIA Specific)
+## Content Requirements (ISTORIO Specific)
 
 Per module:
 - **Word count:** 4,000 words
@@ -137,13 +137,13 @@ Per module:
 ## Implementation Checklist
 
 ### Phase 1: Foundation (Month 1) — 40 hours
-- [x] M01 shcho-take-istoriohrafiia ✅ PASS
+- [x] M01 shcho-take-istorio ✅ PASS
 - [ ] M02 ukrainska-istoriohrafichna-tradytsiia
-- [ ] M03 rosiiska-imperialna-istoriohrafiia
-- [ ] M04 radyanska-istoriohrafiia
+- [ ] M03 rosiiska-imperialna-istorio
+- [ ] M04 radyanska-istorio
 - [ ] M05 polskyi-pohliad
 - [ ] M06 diaspora-ta-zakhidni-istoriky
-- [ ] M07 nova-ukrainska-istoriohrafiia
+- [ ] M07 nova-ukrainska-istorio
 - [ ] M08 metodolohiia-dekolonizatsii
 - [ ] M09 krytyka-dzherel
 - [ ] M10 istorychna-pamiat-i-polityka
@@ -208,17 +208,17 @@ Per module:
 
 ## Priority Recommendation
 
-**ISTORIOHRAFIIA should be lower priority than:**
+**ISTORIO should be lower priority than:**
 1. HIST (77% complete, 77 hours to finish)
 2. LIT (content complete, 40 hours for vocab)
 3. BIO (87% content, 319 hours total)
 
-**Rationale:** ISTORIOHRAFIIA requires complete greenfield development (540 hours). Other tracks have existing content that can be improved more efficiently.
+**Rationale:** ISTORIO requires complete greenfield development (540 hours). Other tracks have existing content that can be improved more efficiently.
 
 ---
 
 ## References
 
-- `docs/ISTORIOHRAFIIA-STATUS.md` - Current audit status
-- `claude_extensions/quick-ref/istoriohrafiia.md` - HIST workflow
-- `curriculum/l2-uk-en/plans/istoriohrafiia/` - All 135 plans
+- `docs/ISTORIO-STATUS.md` - Current audit status
+- `claude_extensions/quick-ref/istorio.md` - HIST workflow
+- `curriculum/l2-uk-en/plans/istorio/` - All 135 plans

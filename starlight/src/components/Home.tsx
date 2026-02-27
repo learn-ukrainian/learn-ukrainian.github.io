@@ -190,7 +190,7 @@ export default function Home(): ReactNode {
                 color="#795548"
               />
               <LevelCard
-                level="ISTORIOHRAFIIA"
+                level="ISTORIO"
                 name="Historiography"
                 description="Primary sources, imperial mechanisms, interethnic relations"
                 modules={136}

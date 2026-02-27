@@ -2295,7 +2295,7 @@ def _get_russicism_table(level: str) -> str:
 
 
 # Seminar tracks that get longer timeouts and mandatory Phase F after D.2
-_SEMINAR_TIMEOUT_TRACKS = {"hist", "istoriohrafiia", "bio", "lit", "oes", "ruth"}
+_SEMINAR_TIMEOUT_TRACKS = {"hist", "istorio", "bio", "lit", "oes", "ruth"}
 
 # ---------------------------------------------------------------------------
 # RAG: Pre-fetch literary primary source matches for D.1 quote verification

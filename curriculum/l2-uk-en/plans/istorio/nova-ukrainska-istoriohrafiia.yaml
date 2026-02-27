@@ -1,0 +1,123 @@
+module: istorio-007
+level: istorio
+sequence: 7
+version: '1.0'
+title: Нова українська історіографія після 1991
+focus: history
+pedagogy: seminar
+objectives:
+- Analyze the causes and consequences of нова українська історіографія після 1991
+- Evaluate the historical significance of історія для нової держави
+- Trace the development of виклики і перспективи
+content_outline:
+- section: Вступ — Історія для нової держави
+  subsections:
+  - 1991 — що змінилося?
+  - Відкриття архівів
+  - Повернення забороненого
+  - Нові питання, старі відповіді?
+- section: Перше десятиліття (1991-2000)
+  subsections:
+  - Повернення діаспорної спадщини
+  - Реабілітація Грушевського
+  - Голодомор — від табу до центральної теми
+  - Проблема кадрів — хто вчить істориків
+  - Нові підручники — хаос і пошук
+- section: Друге десятиліття (2000-2014)
+  subsections:
+  - Професіоналізація
+  - Контроверсії — ОУН-УПА, Бандера
+  - Регіональні відмінності — Захід vs. Схід
+  - Інституційний розвиток
+  - «Війни пам'яті» з Росією
+- section: Декомунізація (2015)
+  subsections:
+  - Чотири закони про декомунізацію
+  - Перейменування — масштаб операції
+  - Що заборонено, що дозволено
+  - Критика — внутрішня і зовнішня
+  - Результати — що змінилося
+- section: Інститут національної пам'яті
+  subsections:
+  - Створення і мандат
+  - Володимир В'ятрович — перший голова
+  - Функції — архіви, освіта, пам'ять
+  - Контроверсії — політизація?
+  - Порівняння з польським IPN
+- section: Сучасний стан (2022+)
+  subsections:
+  - Війна як каталізатор
+  - Деколонізація — новий етап
+  - Деросіянізація культурного простору
+  - Молоде покоління істориків
+  - Міжнародне визнання
+- section: Виклики і перспективи
+  subsections:
+  - Що залишається спірним
+  - Баланс — національний наратив vs. критична історія
+  - Роль у формуванні нації
+  - Що далі
+vocabulary:
+- декомунізація
+- реабілітація
+- національна пам'ять
+- перейменування
+- архівна революція
+- деколонізація
+- табуйована тема
+- переосмислення
+- контроверсія
+- інституція
+- люстрація
+- політизація
+- регіональна відмінність
+- наративна війна
+- пострадянський
+activities:
+- type: reading
+  focus: Excerpt from decommunization law (2015) — key provisions
+- type: reading
+  focus: Explore UINP website — what current projects exist?
+- type: critical-analysis
+  focus: Analyze renaming of a street/city — what was the historical reasoning?
+- type: essay-response
+  focus: Чи є декомунізація переписуванням історії?
+sources:
+- name: Інститут історії України НАНУ
+  url: http://history.org.ua/
+  type: reference
+  notes: Main academic institution
+- name: Український інститут національної пам'яті
+  url: https://uinp.gov.ua/
+  type: reference
+  notes: State memory policy institution
+- name: Декомунізація в Україні
+  url: https://uk.wikipedia.org/wiki/Декомунізація_в_Україні
+  type: reference
+  notes: Legal framework for historical revision
+- name: Закони про декомунізацію (2015)
+  url: https://zakon.rada.gov.ua/laws/show/317-19
+  type: primary
+  notes: Decommunization law text
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Academic Reformer

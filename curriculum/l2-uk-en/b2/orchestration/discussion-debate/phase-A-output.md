@@ -28,7 +28,7 @@ Alignment: The module directly fulfills this dialogic speech requirement by buil
 
 ## Cross-References
 - Builds on: B1 grammar modules covering complex sentences (підрядні речення) and basic opinion verbs.
-- Prepares for: B2-PRO, ISTORIOHRAFIIA, and BIO modules requiring advanced analytical essays and academic debate.
+- Prepares for: B2-PRO, ISTORIO, and BIO modules requiring advanced analytical essays and academic debate.
 
 ## Notes for Content Writing
 - Decolonized framing: Contrast the democratic, horizontal tradition of Ukrainian "диспути" with vertical, authoritarian models of communication. 

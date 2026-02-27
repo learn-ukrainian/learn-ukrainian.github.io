@@ -71,7 +71,7 @@ Sample response:
 {
   "generated_at": "2026-02-19T15:30:06Z",
   "tracks": {
-    "istoriohrafiia": {
+    "istorio": {
       "total": 136, "profile": "seminar",
       "research_done": 26, "content_done": 0,
       "audit_passing": 0, "final_review_done": 0
@@ -93,7 +93,7 @@ Sample response:
 Per-module v3 phase state for one track. Shows each module's phase progress.
 
 ```bash
-curl -s http://localhost:8765/api/state/pipeline/istoriohrafiia | python3 -m json.tool
+curl -s http://localhost:8765/api/state/pipeline/istorio | python3 -m json.tool
 curl -s http://localhost:8765/api/state/pipeline/hist | python3 -m json.tool
 ```
 

@@ -1,0 +1,116 @@
+module: istorio-032
+level: istorio
+sequence: 32
+version: '1.0'
+title: 'Емський указ: Повний текст'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of емський указ: повний текст'
+- Evaluate the historical significance of суворіший за валуєва
+content_outline:
+- section: Вступ — Суворіший за Валуєва
+  subsections:
+  - 1876 рік — 13 років після циркуляра
+  - Чому потрібен новий документ?
+  - Що нового заборонено
+  - Значення для культури
+- section: Історичний контекст
+  subsections:
+  - Зростання українського руху
+  - Київська громада
+  - Драгоманов і закордонна діяльність
+  - Імперська реакція
+- section: Текст указу — детальний аналіз
+  subsections:
+  - Текст (з глосами)
+  - Заборона ввезення книг
+  - Заборона театру і концертів
+  - Звільнення вчителів
+  - Закриття Київського відділу Географічного товариства
+- section: Порівняння з Валуєвським циркуляром
+  subsections:
+  - Що спільного
+  - Що нового — суворіше
+  - Таблиця порівняння
+  - Логіка ескалації
+- section: Фрагмент — Заборона театру
+  subsections:
+  - Текст (з глосами)
+  - Чому театр небезпечний?
+  - Культура як загроза
+  - Абсурдність заборони
+- section: Наслідки і опір
+  subsections:
+  - Еміграція інтелігенції
+  - Галичина як притулок
+  - Женева — Драгоманов
+  - Підпільна діяльність
+  - Як указ похоронив себе
+- section: Підсумок
+  subsections:
+  - Указ як свідчення сили руху
+  - Заборона не спрацювала
+  - Уроки для сьогодення
+vocabulary:
+- указ
+- заборона
+- ввезення
+- театр
+- концерт
+- звільнення
+- еміграція
+- підпільний
+- ескалація
+- репресія
+- інтелігенція
+- громада
+- притулок
+- культурний рух
+- контрабанда
+activities:
+- type: reading
+  focus: Full text with glosses
+- type: comparative-study
+  focus: 'Create detailed comparison table: Valuev vs. Ems'
+- type: critical-analysis
+  focus: How did the ban backfire?
+- type: reading
+  focus: Find examples of resistance to the decree
+- type: essay-response
+  focus: Чому заборони не знищили українську культуру?
+sources:
+- name: Емський указ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Емський_указ
+  type: reference
+  notes: Overview
+- name: Текст указу
+  url: https://uk.wikisource.org/wiki/Емський_указ
+  type: primary
+  notes: Full text
+- name: Олександр II
+  url: https://uk.wikipedia.org/wiki/Олександр_II
+  type: reference
+  notes: Emperor context
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Language Policy Historian

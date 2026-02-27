@@ -1,0 +1,114 @@
+module: istorio-097
+level: istorio
+sequence: 97
+version: '1.0'
+title: '1991: Промова «Курча по-київськи»'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of 1991: промова «курча по-київськи»'
+- Evaluate the historical significance of «суїцидальний націоналізм»
+content_outline:
+- section: Вступ — «Суїцидальний націоналізм»
+  subsections:
+  - 1 серпня 1991 — Буш у Києві
+  - Що він сказав
+  - Чому це називають «Курча по-київськи»
+  - Структура модуля
+- section: Контекст — Горбачов і Буш
+  subsections:
+  - Буш вірить Горбачову
+  - Страх розпаду СРСР
+  - «Керований» процес — ілюзія
+  - Чому Америка боялася
+- section: Текст промови
+  subsections:
+  - «Суїцидальний націоналізм»
+  - Попередження українцям
+  - Підтримка Горбачова
+  - Аналіз риторики
+- section: Реакція в Україні
+  subsections:
+  - Шок і розчарування
+  - Але не зупинило
+  - 24 серпня — незалежність
+  - 1 грудня — референдум
+- section: Чому Буш помилився
+  subsections:
+  - Нерозуміння України
+  - Ставка на Москву
+  - Страх невідомого
+  - Традиційна політика
+- section: «Chicken Kyiv» — ярлик
+  subsections:
+  - Як виник термін
+  - Критика Буша
+  - Урок для політиків
+  - Сучасне значення
+- section: Підсумок
+  subsections:
+  - США — проти незалежності
+  - Але Україна вирішила сама
+  - Перехід до Будапешту
+vocabulary:
+- «Курча по-київськи»
+- промова
+- «суїцидальний націоналізм»
+- незалежність
+- попередження
+- риторика
+- ярлик
+- ставка на Москву
+- розчарування
+- самовизначення
+- Джордж Буш-старший
+- перебудова
+- керований розпад
+- зовнішня політика
+- критика
+activities:
+- type: critical-analysis
+  focus: Close reading of Bush's Kiev speech
+- type: critical-analysis
+  focus: Why did Bush say this? US interests
+- type: comparative-study
+  focus: Ukrainian response to the speech
+- type: comparative-study
+  focus: US attitude to Ukraine 1991 vs. 2022
+- type: essay-response
+  focus: Чому Буш попереджав українців проти незалежності?
+sources:
+- name: Chicken Kiev speech (Wikipedia EN)
+  url: https://en.wikipedia.org/wiki/Chicken_Kiev_speech
+  type: reference
+  notes: Speech context
+- name: Джордж Буш-старший (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Джордж_Герберт_Вокер_Буш
+  type: reference
+  notes: Speaker
+- name: Незалежність України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Проголошення_незалежності_України
+  type: reference
+  notes: Independence context
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: US-Soviet Relations Expert

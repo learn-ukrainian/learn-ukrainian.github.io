@@ -394,7 +394,7 @@ Claude handles interactive activities and final QA (better reasoning, structured
 Model defaults are track-aware and centralized in `scripts/batch_gemini_config.py`:
 
 ```python
-# Seminar tracks: bio, hist, istoriohrafiia, lit, oes, ruth
+# Seminar tracks: bio, hist, istorio, lit, oes, ruth
 CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS    # Phase A via --use-claude A
 CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS    # Phase C (always Claude)
 CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS    # Phase F (always Claude)

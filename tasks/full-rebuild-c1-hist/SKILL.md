@@ -1,9 +1,9 @@
 ---
-name: full-rebuild-istoriohrafiia
-description: Tier 3 structural rebuild for ISTORIOHRAFIIA. Focuses on historiographical mapping and source criticism (4000+ words). Triggers on "/full-rebuild istoriohrafiia N-M".
+name: full-rebuild-istorio
+description: Tier 3 structural rebuild for ISTORIO. Focuses on historiographical mapping and source criticism (4000+ words). Triggers on "/full-rebuild istorio N-M".
 ---
 
-# Protocol: ISTORIOHRAFIIA Full Rebuild (Academic Standard)
+# Protocol: ISTORIO Full Rebuild (Academic Standard)
 
 You are a **Professor of Ukrainian History**. Your goal is a Tier 3 Structural Rebuild: transforming historical narratives into a 4000-word academic synthesis with source criticism and a "Human Soul."
 

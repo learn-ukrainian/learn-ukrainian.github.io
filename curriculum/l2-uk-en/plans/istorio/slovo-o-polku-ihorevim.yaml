@@ -1,0 +1,115 @@
+module: istorio-014
+level: istorio
+sequence: 14
+version: '1.0'
+title: 'Слово о полку Ігоревім: Автентичність і значення'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of слово о полку ігоревім: автентичність і
+  значення'
+- Evaluate the historical significance of найзагадковіша пам'ятка
+content_outline:
+- section: Вступ — Найзагадковіша пам'ятка
+  subsections:
+  - Що таке Слово?
+  - Чому ця пам'ятка особлива?
+  - Історія відкриття (1795)
+  - Чому дебати про автентичність?
+- section: Історія рукопису
+  subsections:
+  - Мусін-Пушкін і знахідка
+  - Пожежа 1812 року — втрата оригіналу
+  - Що залишилося — копії та видання
+  - Чому це проблематично для науки
+- section: Дебати про автентичність
+  subsections:
+  - Аргументи за автентичність
+  - Аргументи проти (підробка XVIII ст.?)
+  - Лінгвістичні докази
+  - Зільдербауер, Зімін та інші скептики
+  - Сучасний консенсус — здебільшого автентичне
+- section: Зміст і структура
+  subsections:
+  - Похід Ігоря 1185 року — історичний контекст
+  - Структура — вступ, похід, поразка, плач, втеча
+  - Плач Ярославни — найвідоміший фрагмент
+  - Язичницькі та християнські елементи
+- section: Фрагмент — Плач Ярославни
+  subsections:
+  - Текст (з глосами)
+  - Поетична краса
+  - Жіночий голос у середньовічній літературі
+  - Язичницькі мотиви — звернення до природи
+- section: Слово як історичне джерело
+  subsections:
+  - Що нам каже про XII ст.?
+  - Політична роздробленість — моральний урок
+  - Стосунки з половцями
+  - Географія — топоніми
+  - Літературна vs. історична цінність
+- section: Підсумок
+  subsections:
+  - Слово — національний символ
+  - Важливість критичного підходу
+  - Навіть з сумнівами — цінне джерело
+vocabulary:
+- автентичність
+- підробка
+- рукопис
+- половці
+- похід
+- плач
+- язичництво
+- усна традиція
+- епос
+- символ
+- палеографічний аналіз
+- текстологія
+- архаїзм
+- стилістика
+- інтерполяція
+activities:
+- type: reading
+  focus: Yaroslavna's Lament with glosses
+- type: comparative-study
+  focus: Compare Slovo's account with chronicle account of 1185 campaign
+- type: critical-analysis
+  focus: Identify pagan vs. Christian elements
+- type: essay-response
+  focus: Яке значення має Слово о полку Ігоревім для української культури?
+sources:
+- name: Слово о полку Ігоревім (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Слово_о_полку_Ігоревім
+  type: reference
+  notes: Overview and debates
+- name: Слово о полку Ігоревім (текст)
+  url: https://litopys.org.ua/slovo/slov.htm
+  type: primary
+  notes: Full text with translation
+- name: Ігор Святославич
+  url: https://uk.wikipedia.org/wiki/Ігор_Святославич
+  type: reference
+  notes: Historical context of 1185 campaign
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Epic Poetry Scholar

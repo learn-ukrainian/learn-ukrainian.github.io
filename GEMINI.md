@@ -64,7 +64,7 @@ Rules: **WAIT for user instructions.** Do NOT auto-start work, check inbox, or p
 
 ## Content Standards
 
-*   **Word Count** (from `config.py` v2026-02-15): A1: 2000, A2: 3000, B1+: 4000, Seminars (HIST/BIO/ISTORIOHRAFIIA/LIT/C2/OES/RUTH): 5000. If this date is older than config.py's latest change, re-read config.py.
+*   **Word Count** (from `config.py` v2026-02-15): A1: 2000, A2: 3000, B1+: 4000, Seminars (HIST/BIO/ISTORIO/LIT/C2/OES/RUTH): 5000. If this date is older than config.py's latest change, re-read config.py.
 *   **Activity Density**: A1-B1: ~8-10 activities/12 items; Seminar tracks: 3-9 activities/1+ items for deep analysis.
 *   **Activities Test LANGUAGE, Not Content**: Can the learner answer without reading the Ukrainian text? If YES → it tests content recall, not language. REWRITE. No "У якому році..." / "Хто був..." / "Скільки..." quiz questions. Use "Згідно з текстом..." / "У тексті автор характеризує..." instead.
 *   **Audit Compliance**: Pass `audit_module.py` and `pipeline.py` gates.
@@ -123,7 +123,7 @@ Always use `.venv/bin/python`. Never `python3` or `python` directly.
 
 ### Research-First Mandate (Seminar Tracks)
 
-MANDATORY for `hist`, `bio`, `istoriohrafiia`, `lit`, `oes`, `ruth`.
+MANDATORY for `hist`, `bio`, `istorio`, `lit`, `oes`, `ruth`.
 
 1. Research using ONLY Ukrainian sources (esu.com.ua, history.org.ua, uk.wikipedia.org, litopys.org.ua)
 2. Russian-language sources (`ru.wikipedia.org`, `*.ru`) are STRICTLY FORBIDDEN
@@ -154,7 +154,7 @@ Check if phrasing echoes Russian dezinformatsiia framing (Volhynia, Holodomor, O
 - **Decolonization**: Debunk Russian/Soviet myths; highlight Ukrainian agency
 - **Linguistic Depth**: IPA, Ukrainian quotes, proverbs (B1+), cultural context
 - **Typography**: ALWAYS use Ukrainian angular quotes `«...»`
-- **Transliteration Ban (C1+)**: Latin transliteration STRICTLY PROHIBITED in ISTORIOHRAFIIA/BIO
+- **Transliteration Ban (C1+)**: Latin transliteration STRICTLY PROHIBITED in ISTORIO/BIO
 - **Semantic Nuance (C1+)**: Use modal hedging: «можливо», «ймовірно», «з одного боку», «водночас»
 
 ### Structural Rules
@@ -283,7 +283,7 @@ Check breakdown in audit review file. Common cause: low `engagement` score (see 
 
 **CORRECT FIX**: Read the schema file directly:
 ```bash
-.venv/bin/python -c "import json; print(json.dumps(json.load(open('schemas/activities-istoriohrafiia.schema.json')), indent=2))" | jq '.definitions."true-false-istoriohrafiia"'
+.venv/bin/python -c "import json; print(json.dumps(json.load(open('schemas/activities-istorio.schema.json')), indent=2))" | jq '.definitions."true-false-istorio"'
 ```
 
 ### search_file_content Tool Broken

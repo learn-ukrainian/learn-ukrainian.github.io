@@ -238,7 +238,7 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
 
 def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "", file_path: str = "") -> str | None:
     """Detect module focus (grammar, vocab, checkpoint, skills, cultural, history, etc.)."""
-    # Detect track directories first (hist, bio, istoriohrafiia, lit)
+    # Detect track directories first (hist, bio, istorio, lit)
     # These override all other detection methods
     if file_path:
         track_match = re.search(r'/([abc][12])-([a-z]+)/', file_path.lower())
@@ -635,7 +635,7 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
     # e.g. curriculum/l2-uk-en/b1/01.md -> level=b1
     try:
         level_part = md_path.parent.name # e.g. 'b1' or 'c1' or 'lit'
-        if level_part in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istoriohrafiia']:
+        if level_part in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istorio']:
              level = level_part
         else:
              # Fallback: try to find level in path
@@ -1323,7 +1323,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # Check external resource URLs in reading activities (Issue #430)
     external_url_violations = []
-    if yaml_activities and level_code.lower() in ['lit', 'hist', 'istoriohrafiia', 'bio']:
+    if yaml_activities and level_code.lower() in ['lit', 'hist', 'istorio', 'bio']:
         external_url_violations = check_external_resources(yaml_activities, module_title)
         if external_url_violations:
             print(f"  🔗 External URL validation issues: {len(external_url_violations)}")

@@ -607,7 +607,7 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
     path_str = str(file_path).lower()
     if '/lit/' in path_str:
         return 'literature'
-    if '/hist/' in path_str or '/istoriohrafiia/' in path_str:
+    if '/hist/' in path_str or '/istorio/' in path_str:
         return 'history'
     if '/bio/' in path_str:
         return 'biography'

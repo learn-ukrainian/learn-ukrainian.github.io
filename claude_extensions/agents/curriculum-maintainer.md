@@ -229,7 +229,7 @@ When spawned as a subagent via the Task tool, this agent can execute the full mo
 |-----------|----------|--------|---------------|
 | a1, a2, b1 (num ≤ 5) | Core A | 5 phases (Research → Assess → Enrich Plan → Build → Review) | `/review-content-core-a` (12 dimensions) |
 | b1 (num ≥ 6), b2, c1, c2, b2-pro, c1-pro | Core B | 5 phases | `/review-content-v4` (14 dimensions) |
-| hist, bio, istoriohrafiia, lit, oes, ruth | Seminar | 7 phases (Research → Assess → Enrich Plan → Meta → Content → YAML → Review) | `/review-content-v4` (14 dimensions) |
+| hist, bio, istorio, lit, oes, ruth | Seminar | 7 phases (Research → Assess → Enrich Plan → Meta → Content → YAML → Review) | `/review-content-v4` (14 dimensions) |
 
 ### Dynamic File Loading (MANDATORY)
 
@@ -243,7 +243,7 @@ claude_extensions/commands/review-content-v4.md        # Core B / Seminar
 # Tier-specific quality bar
 claude_extensions/commands/review-tiers/tier-1-beginner.md    # A1, A2
 claude_extensions/commands/review-tiers/tier-2-core.md        # B1, B2, B2-PRO
-claude_extensions/commands/review-tiers/tier-3-seminar.md     # HIST, BIO, ISTORIOHRAFIIA, LIT
+claude_extensions/commands/review-tiers/tier-3-seminar.md     # HIST, BIO, ISTORIO, LIT
 claude_extensions/commands/review-tiers/tier-4-advanced.md    # C1, C1-PRO, C2
 
 # Activity schema (for validating fixes)

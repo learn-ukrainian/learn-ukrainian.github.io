@@ -973,16 +973,16 @@ levels:
       - kobrynska-pershyi-vinok
       - vaplite-literary-avant-garde
       - kyiv-school-of-poetry
-  istoriohrafiia:
+  istorio:
     type: track
     modules:
-      - shcho-take-istoriohrafiia
+      - shcho-take-istorio
       - ukrainska-istoriohrafichna-tradytsiia
-      - rosiiska-imperialna-istoriohrafiia
-      - radyanska-istoriohrafiia
+      - rosiiska-imperialna-istorio
+      - radyanska-istorio
       - polskyi-pohliad
       - diaspora-ta-zakhidni-istoriky
-      - nova-ukrainska-istoriohrafiia
+      - nova-ukrainska-istorio
       - metodolohiia-dekolonizatsii
       - krytyka-dzherel
       - istorychna-pamiat-i-polityka
@@ -1020,7 +1020,7 @@ levels:
       - memorandum-uhh
       - akt-nezalezhnosti-1991
       - syntez-dysydentski-dzherela
-      - holodomor-istoriohrafiia
+      - holodomor-istorio
       - holodomor-mekhanizmy-i
       - holodomor-mekhanizmy-ii
       - holodomor-heohrafiia

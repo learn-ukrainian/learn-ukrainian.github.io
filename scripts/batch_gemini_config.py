@@ -41,7 +41,7 @@ CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS   # Phase F, all tracks
 
 # Seminar tracks get research (phase 0) + review (phase 5)
 SEMINAR_TRACKS = {
-    "bio", "hist", "istoriohrafiia", "lit", "oes", "ruth",
+    "bio", "hist", "istorio", "lit", "oes", "ruth",
     "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-youth",
 }
 
@@ -84,7 +84,7 @@ TRACK_CONFIGS = {
         "quick_ref": QUICK_REF_DIR / "HIST.md",
         "validation_phases": [2, 3],
     },
-    "istoriohrafiia": {
+    "istorio": {
         "type": "seminar",
         "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
@@ -97,7 +97,7 @@ TRACK_CONFIGS = {
             "fix-content": PHASES_DIR / "phase-fix-content.md",
             "fix-activities": PHASES_DIR / "phase-fix-activities.md",
         },
-        "quick_ref": QUICK_REF_DIR / "ISTORIOHRAFIIA.md",
+        "quick_ref": QUICK_REF_DIR / "ISTORIO.md",
         "validation_phases": [2, 3],
     },
     "lit": {

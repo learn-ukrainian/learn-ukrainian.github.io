@@ -359,12 +359,12 @@ def check_seminar_reading_pairing(yaml_activities: list, level: str) -> list:
     3. Orphan readings (not referenced by any analysis) trigger WARNING
     4. Orphan analyses (missing or invalid source_reading) trigger ERROR
 
-    Only applies to seminar tracks: LIT, HIST, ISTORIOHRAFIIA, BIO
+    Only applies to seminar tracks: LIT, HIST, ISTORIO, BIO
     """
     violations = []
 
     # Seminar tracks that require reading-analysis pairing
-    seminar_tracks = {'lit', 'hist', 'istoriohrafiia', 'bio', 'bio-seminar'}
+    seminar_tracks = {'lit', 'hist', 'istorio', 'bio', 'bio-seminar'}
     level_lower = level.lower() if level else ''
 
     # Skip if not a seminar track

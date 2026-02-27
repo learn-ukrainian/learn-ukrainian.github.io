@@ -110,7 +110,7 @@ Using a forbidden type wastes the entire activity generation phase. Check the al
 
 **Reading schema varies by track — always check `schemas/activities-hist.schema.json` for your track's required fields.**
 
-**Seminar tracks (ISTORIOHRAFIIA, BIO, LIT, HIST):** Reading = passive input linked to analytical activities.
+**Seminar tracks (ISTORIO, BIO, LIT, HIST):** Reading = passive input linked to analytical activities.
 ```yaml
 - type: reading
   id: reading-hrushevsky          # REQUIRED for seminar tracks (for source_reading links)

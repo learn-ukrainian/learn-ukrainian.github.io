@@ -1,4 +1,4 @@
-# ISTORIOHRAFIIA Quick Reference (Ukrainian Historiography Track)
+# ISTORIO Quick Reference (Ukrainian Historiography Track)
 
 ## Track Overview
 
@@ -7,7 +7,7 @@
 **Pedagogy:** CBI (Content-Based Instruction) with historiographical analysis
 **Immersion:** 95-100% Ukrainian
 
-> **ISTORIOHRAFIIA is NOT about historical facts (that's HIST). It's about HOW we know history** — sources, methods, interpretations, contested narratives.
+> **ISTORIO is NOT about historical facts (that's HIST). It's about HOW we know history** — sources, methods, interpretations, contested narratives.
 
 ---
 
@@ -28,7 +28,7 @@
 | Unique types     | 3+      | min_types_unique    |
 | Vocab            | 25+     | min_vocab           |
 
-**Note:** ISTORIOHRAFIIA uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
+**Note:** ISTORIO uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
 
 ---
 
@@ -47,9 +47,9 @@
 
 ## Templates
 
-**Before writing any ISTORIOHRAFIIA module, read:**
+**Before writing any ISTORIO module, read:**
 
-- **History modules** → `docs/l2-uk-en/templates/istoriohrafiiaory-module-template.md`
+- **History modules** → `docs/l2-uk-en/templates/istorioory-module-template.md`
 - **Tier 3 guidance** → `claude_extensions/commands/review-tiers/tier-3-seminar.md`
 
 ---
@@ -73,18 +73,18 @@
 
 ## Pre-flight Checklist
 
-Before writing any ISTORIOHRAFIIA module:
+Before writing any ISTORIO module:
 
-1. ✅ Read the plan: `curriculum/l2-uk-en/plans/istoriohrafiia/{slug}.yaml`
-2. ✅ Read the meta: `curriculum/l2-uk-en/istoriohrafiia/meta/{slug}.yaml`
-3. ✅ Read the template: `docs/l2-uk-en/templates/istoriohrafiiaory-module-template.md`
+1. ✅ Read the plan: `curriculum/l2-uk-en/plans/istorio/{slug}.yaml`
+2. ✅ Read the meta: `curriculum/l2-uk-en/istorio/meta/{slug}.yaml`
+3. ✅ Read the template: `docs/l2-uk-en/templates/istorioory-module-template.md`
 4. ✅ Check curriculum.yaml for correct sequence number
 
 ---
 
 ## Research-First Workflow (MANDATORY)
 
-**ISTORIOHRAFIIA requires Phase 0: Deep Research before writing.**
+**ISTORIO requires Phase 0: Deep Research before writing.**
 
 1. **Research the topic** using academic sources:
    - [litopys.org.ua](https://litopys.org.ua) — Primary sources
@@ -175,7 +175,7 @@ Before writing any ISTORIOHRAFIIA module:
 
 ## Seminar Quality Standards
 
-**ISTORIOHRAFIIA modules must achieve A+ seminar quality:**
+**ISTORIO modules must achieve A+ seminar quality:**
 
 | Criterion | A+ Standard |
 |-----------|-------------|
@@ -195,23 +195,23 @@ Before writing any ISTORIOHRAFIIA module:
 
 ```bash
 # Build module
-/module istoriohrafiia {num}
+/module istorio {num}
 
 # Resume from phase
-/module istoriohrafiia {num} --from={phase}
+/module istorio {num} --from={phase}
 
 # Check status
-/module istoriohrafiia {num} --check
+/module istorio {num} --check
 
 # Batch build
-/module istoriohrafiia {start}-{end}
+/module istorio {start}-{end}
 ```
 
 ---
 
 ## Key Differences from HIST
 
-| Aspect | HIST | ISTORIOHRAFIIA |
+| Aspect | HIST | ISTORIO |
 |--------|---------|---------|
 | Focus | What happened | How we know |
 | Content | Historical events | Historiographical debates |

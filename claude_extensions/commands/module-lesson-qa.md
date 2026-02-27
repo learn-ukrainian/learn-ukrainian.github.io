@@ -26,7 +26,7 @@ Read: `claude_extensions/phases/module-lesson-qa.md`
 
 > **Architecture v2.0:** Compare build against plan (not just meta.yaml).
 
-**For tracks (hist, bio, lit, istoriohrafiia, b2-pro):**
+**For tracks (hist, bio, lit, istorio, b2-pro):**
 
 1. Look up slug from manifest:
    ```bash

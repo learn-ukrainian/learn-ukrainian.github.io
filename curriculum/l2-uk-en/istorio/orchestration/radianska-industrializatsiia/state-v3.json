@@ -1,0 +1,13 @@
+{
+  "track": "istorio",
+  "slug": "radianska-industrializatsiia",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T19:41:24Z",
+      "task_id": "v3-radianska-industrializatsiia-pA",
+      "mode": "full"
+    }
+  }
+}

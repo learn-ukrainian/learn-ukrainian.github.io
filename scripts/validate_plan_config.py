@@ -12,8 +12,8 @@ This script should be integrated into:
 
 Usage:
     .venv/bin/python scripts/validate_plan_config.py                    # Validate all
-    .venv/bin/python scripts/validate_plan_config.py istoriohrafiia           # Validate level
-    .venv/bin/python scripts/validate_plan_config.py istoriohrafiia/shcho-*   # Validate specific plan
+    .venv/bin/python scripts/validate_plan_config.py istorio           # Validate level
+    .venv/bin/python scripts/validate_plan_config.py istorio/shcho-*   # Validate specific plan
 
 Exit codes:
     0 = All plans valid
@@ -38,11 +38,11 @@ WORD_TARGET_TOLERANCE = 0.05
 def get_config_target(level: str, sequence: int = 1, focus: str = None) -> int:
     """Get the authoritative word target from config.py."""
     # Map plan level names to LEVEL_CONFIG keys
-    # Note: LEVEL_CONFIG uses 'istoriohrafiia' not 'ISTORIOHRAFIIA'
+    # Note: LEVEL_CONFIG uses 'istorio' not 'ISTORIO'
     level_map = {
         'a1': 'A1', 'a2': 'A2', 'b1': 'B1', 'b2': 'B2',
         'c1': 'C1', 'c2': 'C2',
-        'hist': 'history', 'istoriohrafiia': 'istoriohrafiia',
+        'hist': 'history', 'istorio': 'istorio',
         'bio': 'biography', 'lit': 'LIT',
     }
     level_code = level_map.get(level.lower(), level.upper())
@@ -133,7 +133,7 @@ def main():
         epilog='Exit code 0 = valid, 1 = errors found'
     )
     parser.add_argument('target', nargs='?',
-                        help='Level (e.g., istoriohrafiia) or plan path pattern (e.g., istoriohrafiia/shcho-*)')
+                        help='Level (e.g., istorio) or plan path pattern (e.g., istorio/shcho-*)')
     parser.add_argument('--quiet', '-q', action='store_true',
                         help='Only show errors, not successes')
 

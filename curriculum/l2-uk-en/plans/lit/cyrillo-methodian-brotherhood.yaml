@@ -70,7 +70,7 @@ prerequisites:
 connects_to:
 - lit-26 (Nechuy-Levytsky — наступна фаза)
 - lit-20 (Cult of Shevchenko — Шевченко-революціонер)
-- istoriohrafiia (Historical modules)
+- istorio (Historical modules)
 grammar:
 - Political Terminology
 - Religious Rhetoric

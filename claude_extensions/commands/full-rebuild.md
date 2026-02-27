@@ -2,7 +2,7 @@
 
 > **Alternative:** `/orchestrate-rebuild` — Claude orchestrates phase-by-phase, Gemini executes focused tasks. Use when Gemini skips steps or produces thin content in solo mode.
 
-> **Scope:** Mandatory standard for rebuilding or creating modules in seminar tracks: `hist`, `bio`, `istoriohrafiia`, `lit`, `oes`, and `ruth`. Prioritizes research-driven, decolonized, and linguistically rich content.
+> **Scope:** Mandatory standard for rebuilding or creating modules in seminar tracks: `hist`, `bio`, `istorio`, `lit`, `oes`, and `ruth`. Prioritizes research-driven, decolonized, and linguistically rich content.
 
 ## Usage
 
@@ -14,14 +14,14 @@
 **Examples:**
 
 ```
-/full-rebuild istoriohrafiia 4               # Runs all phases (resumable)
-/full-rebuild istoriohrafiia 4 --from=review # Force start from review phase
+/full-rebuild istorio 4               # Runs all phases (resumable)
+/full-rebuild istorio 4 --from=review # Force start from review phase
 /full-rebuild hist 5
 ```
 
 **Arguments:**
 
-- `{track}` - Seminar track level (hist, bio, istoriohrafiia, lit, oes, ruth)
+- `{track}` - Seminar track level (hist, bio, istorio, lit, oes, ruth)
 - `{module_num}` - Module number (1-indexed)
 - `--from=PHASE` - Optional: force start from a specific phase (research, meta, content, yaml, audit, review, mdx)
 
@@ -32,9 +32,9 @@
 **This command is idempotent.** Run it in multiple sessions — it detects completed phases and picks up where it left off.
 
 ```
-Session 1: /full-rebuild istoriohrafiia 4  → research + meta + content (context fills up)
-Session 2: /full-rebuild istoriohrafiia 4  → skips done phases, does audit + review
-Session 3: /full-rebuild istoriohrafiia 4  → skips done phases, does MDX
+Session 1: /full-rebuild istorio 4  → research + meta + content (context fills up)
+Session 2: /full-rebuild istorio 4  → skips done phases, does audit + review
+Session 3: /full-rebuild istorio 4  → skips done phases, does MDX
 ```
 
 ---
@@ -216,7 +216,7 @@ yq '.content_outline' curriculum/l2-uk-en/{track}/meta/{slug}.yaml
 >
 > # ❌ WRONG — metadata headers (not part of schema)
 > module: some-slug
-> level: istoriohrafiia
+> level: istorio
 > activities:
 >   - type: reading
 > ```

@@ -1,0 +1,13 @@
+{
+  "track": "istorio",
+  "slug": "akt-zluki",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T00:08:37Z",
+      "task_id": "v3-akt-zluki-pA",
+      "mode": "meta-only"
+    }
+  }
+}

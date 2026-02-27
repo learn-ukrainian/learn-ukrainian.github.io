@@ -1426,7 +1426,7 @@ def check_yaml_activity_types(activities: list) -> list[dict]:
 def check_forbidden_activity_types(activities: list, level_code: str, module_focus: str = None) -> list[dict]:
     """Check if activities contain types forbidden for this level/track.
 
-    Seminar tracks (HIST, ISTORIOHRAFIIA, BIO, LIT) have strict activity type requirements.
+    Seminar tracks (HIST, ISTORIO, BIO, LIT) have strict activity type requirements.
     Grammar drills are forbidden in favor of seminar-style activities.
 
     Args:

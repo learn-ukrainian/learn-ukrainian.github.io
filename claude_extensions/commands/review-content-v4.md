@@ -158,7 +158,7 @@ Check if any phrasing echoes Russian dezinformatsiia framing:
 
 C1 and above MUST demonstrate modal hedging and intellectual nuance:
 - Check for presence of: можливо, ймовірно, з одного боку...з іншого, водночас, утім, проте
-- Count hedging markers: minimum 5 per 1000 words for ISTORIOHRAFIIA/BIO
+- Count hedging markers: minimum 5 per 1000 words for ISTORIO/BIO
 - Verify balanced framing: "Деякі дослідники вважають..." vs "Інші стверджують..."
 - Absence of nuance markers in academic content → Language score capped at 7
 

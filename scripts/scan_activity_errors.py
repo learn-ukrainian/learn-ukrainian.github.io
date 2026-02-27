@@ -32,7 +32,7 @@ from audit.checks.activity_validation import (
 # All known tracks (directories under curriculum/l2-uk-en/)
 ALL_TRACKS = [
     'a1', 'a2', 'b1', 'b2', 'c1', 'c2',
-    'hist', 'b2-pro', 'bio', 'istoriohrafiia', 'c1-pro',
+    'hist', 'b2-pro', 'bio', 'istorio', 'c1-pro',
     'lit', 'oes', 'ruth',
 ]
 

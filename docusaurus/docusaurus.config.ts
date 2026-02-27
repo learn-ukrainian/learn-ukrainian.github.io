@@ -138,8 +138,8 @@ const config: Config = {
               to: '/docs/hist/',
             },
             {
-              label: 'ISTORIOHRAFIIA - Historiography',
-              to: '/docs/istoriohrafiia/',
+              label: 'ISTORIO - Historiography',
+              to: '/docs/istorio/',
             },
             {
               label: 'BIO - Biographies',

@@ -7,7 +7,7 @@ config keys, and schemas. Uses git mv for directory renames to preserve history.
 Usage:
     .venv/bin/python scripts/rename_track.py hist hist --dry-run
     .venv/bin/python scripts/rename_track.py hist hist
-    .venv/bin/python scripts/rename_track.py istoriohrafiia istoriohrafiia --dry-run
+    .venv/bin/python scripts/rename_track.py istorio istorio --dry-run
     .venv/bin/python scripts/rename_track.py bio bio
 
 Config mapping (must be defined in RENAME_CONFIG below for each rename).
@@ -51,12 +51,12 @@ RENAME_CONFIG = {
         "old_quick_ref": "HIST",
         "new_quick_ref": "HIST",
     },
-    "istoriohrafiia": {
-        "new_slug": "istoriohrafiia",
-        "old_config_key": "istoriohrafiia",
-        "new_config_key": "istoriohrafiia",
-        "old_quick_ref": "ISTORIOHRAFIIA",
-        "new_quick_ref": "ISTORIOHRAFIIA",
+    "istorio": {
+        "new_slug": "istorio",
+        "old_config_key": "istorio",
+        "new_config_key": "istorio",
+        "old_quick_ref": "ISTORIO",
+        "new_quick_ref": "ISTORIO",
     },
     "bio": {
         "new_slug": "bio",

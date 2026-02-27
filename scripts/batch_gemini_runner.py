@@ -631,7 +631,7 @@ class BatchRunner:
         from audit.config import LEVEL_CONFIG
         _TRACK_TO_CONFIG = {
             "bio": "biography",
-            "istoriohrafiia": "istoriohrafiia",
+            "istorio": "istorio",
             "hist": "history",
             "lit": "LIT",
             "oes": "OES",

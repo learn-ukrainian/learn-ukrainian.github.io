@@ -19,7 +19,7 @@ curl -s http://localhost:8765/api/batch/active
 curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
 
 # Phase-level state for a track
-curl -s http://localhost:8765/api/state/pipeline/istoriohrafiia | python3 -m json.tool
+curl -s http://localhost:8765/api/state/pipeline/istorio | python3 -m json.tool
 ```
 
 ## After Batch / QA

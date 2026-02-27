@@ -93,7 +93,7 @@ PROFILE_MAP = {
     "a1": "core", "a2": "core", "b1": "core", "b2": "core",
     "b2-pro": "pro", "c1-pro": "pro",
     "c1": "core", "c2": "core",
-    "hist": "seminar", "istoriohrafiia": "seminar", "bio": "seminar",
+    "hist": "seminar", "istorio": "seminar", "bio": "seminar",
     "lit": "seminar", "lit-essay": "seminar", "lit-hist-fic": "seminar",
     "lit-fantastika": "seminar", "lit-war": "seminar",
     "lit-humor": "seminar", "lit-youth": "seminar",

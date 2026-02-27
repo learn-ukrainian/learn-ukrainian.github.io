@@ -292,7 +292,7 @@ Provide accurate, contextual translations:
 - Historical/cultural terms (епоха, культура)
 - Complex verbs with prefixes (перевершувати, спростовувати)
 
-### HIST / BIO / ISTORIOHRAFIIA / LIT Tracks
+### HIST / BIO / ISTORIO / LIT Tracks
 
 **Focus:**
 
@@ -379,7 +379,7 @@ Example (aspect module):
   gender: m
 ```
 
-### History Modules (HIST, ISTORIOHRAFIIA)
+### History Modules (HIST, ISTORIO)
 
 **Focus:** Historical events, figures, places, all inflected forms
 
