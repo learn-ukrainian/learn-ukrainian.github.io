@@ -1,0 +1,674 @@
+/* ============================================================
+   Direct Method Components — l2-uk-direct track
+   ============================================================ */
+
+/* ─── WatchAndRepeat ─── */
+
+.warProgress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.warProgressBar {
+  flex: 1;
+  height: 6px;
+  background: var(--ifm-color-emphasis-200);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.warProgressFill {
+  height: 100%;
+  background: var(--ifm-color-primary);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.warCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--ifm-background-surface-color);
+  border-radius: 12px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.warLetterDisplay {
+  font-size: clamp(6rem, 15vw, 12rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ifm-color-primary);
+  text-align: center;
+}
+
+.warWordDisplay {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ifm-heading-color);
+  text-align: center;
+}
+
+.warVideoWrapper {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+
+.warVideo {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Click-to-play thumbnail — avoids YouTube bot detection */
+.warThumbnailBtn {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  background: #000;
+}
+
+.warThumbnailBtn:hover .warPlayIcon {
+  transform: translate(-50%, -50%) scale(1.15);
+  background: rgba(255, 0, 0, 0.95);
+}
+
+.warThumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.warPlayIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: #fff;
+  background: rgba(255, 0, 0, 0.8);
+  width: 64px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  transition: transform 0.15s ease, background 0.15s ease;
+  pointer-events: none;
+}
+
+.warRepeatPrompt {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  padding: 0.5rem 1.5rem;
+  border: 2px solid var(--ifm-color-primary);
+  border-radius: 24px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.warNote {
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 8px;
+}
+
+.warNav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.warNavButton {
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid var(--ifm-color-primary);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ifm-color-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.warNavButton:hover:not(:disabled) {
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
+
+.warNavButton:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ─── Classify ─── */
+
+.classifyBins {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.classifyBin {
+  flex: 1;
+  min-width: 140px;
+  min-height: 120px;
+  border: 2px dashed var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  padding: 1rem;
+  background: var(--ifm-background-surface-color);
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+
+.classifyBin:hover {
+  border-color: var(--ifm-color-primary);
+  background: rgba(0, 87, 183, 0.03);
+}
+
+.classifyBinLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  color: var(--ifm-heading-color);
+}
+
+.classifyBinIcon {
+  font-size: 1rem;
+  color: var(--ifm-color-primary);
+}
+
+.classifyBinItems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.classifyPlacedItem {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: #34A853;
+  color: #fff;
+  border-radius: 6px;
+}
+
+.classifyPool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 12px;
+}
+
+.classifyTile {
+  padding: 0.5rem 0.9rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-card-background-color);
+  cursor: grab;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.classifyTile:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 2px 8px rgba(0, 87, 183, 0.15);
+}
+
+.classifyTile:active {
+  cursor: grabbing;
+}
+
+.classifyTileSelected {
+  border-color: var(--ifm-color-primary);
+  background: rgba(0, 87, 183, 0.08);
+  box-shadow: 0 0 0 2px var(--ifm-color-primary);
+}
+
+.classifyTileCorrect {
+  background: #34A853;
+  color: #fff;
+  border-color: #34A853;
+  animation: popIn 0.3s ease;
+}
+
+.classifyTileIncorrect {
+  animation: shake 0.4s ease;
+  border-color: #EA4335;
+}
+
+/* ─── ImageToLetter ─── */
+
+.itlCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 2rem 1.5rem;
+}
+
+.itlEmoji {
+  font-size: clamp(5rem, 12vw, 8rem);
+  line-height: 1;
+}
+
+.itlHint {
+  font-size: 1rem;
+  color: var(--ifm-color-emphasis-600);
+  padding: 0.4rem 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 8px;
+}
+
+.itlOptions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.itlOption {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  border: 3px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  background: var(--ifm-card-background-color);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.itlOption:hover:not(:disabled) {
+  border-color: var(--ifm-color-primary);
+  background: rgba(0, 87, 183, 0.05);
+  transform: scale(1.05);
+}
+
+.itlOption:disabled {
+  cursor: default;
+}
+
+.itlOptionCorrect {
+  background: #34A853 !important;
+  border-color: #34A853 !important;
+  color: #fff;
+  animation: popIn 0.3s ease;
+}
+
+.itlOptionWrong {
+  border-color: #EA4335 !important;
+  animation: shake 0.4s ease;
+}
+
+/* ─── LetterGrid ─── */
+
+.letterGridContainer {
+  margin: 2rem 0;
+}
+
+.letterGridTitle {
+  margin-bottom: 1rem;
+}
+
+.letterGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  .letterGrid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+.letterCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 0.5rem;
+  border-radius: 12px;
+  border: 2px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-card-background-color);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.letterCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.letterCardVowel {
+  border-color: #0057B7;
+  background: rgba(0, 87, 183, 0.04);
+}
+
+.letterCardConsonant {
+  border-color: #FFD700;
+  background: rgba(255, 215, 0, 0.04);
+}
+
+.letterCardSpecial {
+  border-color: #8B5CF6;
+  background: rgba(139, 92, 246, 0.04);
+}
+
+.letterCardUpper {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ifm-heading-color);
+}
+
+.letterCardLower {
+  font-size: 1.1rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-top: 0.15rem;
+}
+
+.letterCardEmoji {
+  font-size: 1.6rem;
+  margin-top: 0.4rem;
+}
+
+.letterCardWord {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-500);
+  margin-top: 0.2rem;
+  text-align: center;
+}
+
+.letterCardNote {
+  font-size: 0.65rem;
+  color: var(--ifm-color-emphasis-400);
+  font-style: italic;
+  margin-top: 0.2rem;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* ─── VocabCard ─── */
+
+.vocabCardsContainer {
+  margin: 2rem 0;
+}
+
+.vocabCardsTitle {
+  margin-bottom: 1rem;
+}
+
+.vocabCards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.vocabCard {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  background: var(--ifm-card-background-color);
+  align-items: flex-start;
+}
+
+@media (max-width: 480px) {
+  .vocabCard {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.vocabCardVisual {
+  flex-shrink: 0;
+}
+
+.vocabCardEmoji {
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.vocabCardImage {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.vocabCardContent {
+  flex: 1;
+}
+
+.vocabCardWord {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ifm-heading-color);
+}
+
+.vocabCardQuestion {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+  background: rgba(0, 87, 183, 0.08);
+  border-radius: 4px;
+}
+
+.vocabCardPlayBtn {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ifm-color-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.vocabCardPlayBtn:hover {
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
+
+.vocabCardVideoWrapper {
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+
+.vocabCardVideo {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.vocabCardExamples {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.6;
+}
+
+.vocabCardExamples li {
+  margin-bottom: 0.25rem;
+}
+
+/* ─── PhraseTable ─── */
+
+.phraseTableContainer {
+  margin: 2rem 0;
+}
+
+.phraseTableTitle {
+  margin-bottom: 1rem;
+}
+
+.phraseGroup {
+  margin-bottom: 1.5rem;
+}
+
+.phraseGroupLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-200);
+}
+
+.phraseList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.phraseItem {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  background: var(--ifm-background-surface-color);
+}
+
+.phraseItem:nth-child(even) {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.phraseEmoji {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.phraseText {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+}
+
+.phraseContext {
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-500);
+  font-style: italic;
+}
+
+/* ─── DialogueBox ─── */
+
+.dialogueContainer {
+  margin: 2rem 0;
+}
+
+.dialogueTitle {
+  margin-bottom: 1rem;
+}
+
+.dialogueExchanges {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 560px;
+}
+
+.dialogueBubble {
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  max-width: 85%;
+}
+
+.dialogueBubbleLeft {
+  align-self: flex-start;
+  background: var(--ifm-color-emphasis-100);
+  border-bottom-left-radius: 4px;
+}
+
+.dialogueBubbleRight {
+  align-self: flex-end;
+  background: rgba(0, 87, 183, 0.08);
+  border-bottom-right-radius: 4px;
+}
+
+.dialogueSpeaker {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  margin-bottom: 0.25rem;
+}
+
+.dialogueText {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--ifm-heading-color);
+}
+
+/* ─── Shared Animations ─── */
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}

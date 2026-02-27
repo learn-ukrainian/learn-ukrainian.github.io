@@ -1,0 +1,134 @@
+import React, { useState } from 'react';
+import styles from './Activities.module.css';
+import directStyles from './Direct.module.css';
+
+interface WatchAndRepeatItem {
+  video: string;
+  letter?: string;
+  word?: string;
+  note?: string;
+}
+
+interface WatchAndRepeatProps {
+  items: WatchAndRepeatItem[];
+  title?: string;
+  isUkrainian?: boolean;
+}
+
+function extractVideoId(url: string): string | null {
+  const match = url.match(/(?:v=|\/embed\/|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+export default function WatchAndRepeat({
+  items,
+  title,
+  isUkrainian = true,
+}: WatchAndRepeatProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  // Only load iframe after user clicks play — avoids YouTube bot detection
+  const [playing, setPlaying] = useState(false);
+
+  if (!items || items.length === 0) return null;
+
+  const item = items[currentIndex];
+  const videoId = extractVideoId(item.video);
+  const total = items.length;
+
+  const prevLabel = isUkrainian ? '← Назад' : '← Back';
+  const nextLabel = isUkrainian ? 'Далі →' : 'Next →';
+  const repeatLabel = isUkrainian ? 'Повтори!' : 'Repeat!';
+  const playLabel = isUkrainian ? '▶ Дивитись відео' : '▶ Play video';
+  const headerLabel = title || (isUkrainian ? 'Дивись і повторюй' : 'Watch and Repeat');
+
+  const goTo = (idx: number) => {
+    setCurrentIndex(idx);
+    setPlaying(false); // reset to thumbnail when switching items
+  };
+
+  return (
+    <div className={styles.activityContainer}>
+      <div className={styles.activityHeader}>
+        <span className={styles.activityIcon}>🔊</span>
+        <span>{headerLabel}</span>
+      </div>
+
+      <div className={directStyles.warProgress}>
+        <span>
+          {currentIndex + 1} / {total}
+        </span>
+        <div className={directStyles.warProgressBar}>
+          <div
+            className={directStyles.warProgressFill}
+            style={{ width: `${((currentIndex + 1) / total) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      <div className={directStyles.warCard}>
+        {item.letter && (
+          <div className={directStyles.warLetterDisplay}>{item.letter}</div>
+        )}
+        {item.word && !item.letter && (
+          <div className={directStyles.warWordDisplay}>{item.word}</div>
+        )}
+
+        {videoId ? (
+          playing ? (
+            <div className={directStyles.warVideoWrapper}>
+              <iframe
+                key={videoId}
+                src={`https://www.youtube.com/embed/${videoId}?rel=0&autoplay=1`}
+                title={item.letter || item.word || 'Video'}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className={directStyles.warVideo}
+              />
+            </div>
+          ) : (
+            <button
+              className={directStyles.warThumbnailBtn}
+              onClick={() => setPlaying(true)}
+              aria-label={playLabel}
+            >
+              <img
+                src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+                alt={item.letter || item.word || 'Video thumbnail'}
+                className={directStyles.warThumbnail}
+                loading="lazy"
+              />
+              <span className={directStyles.warPlayIcon}>▶</span>
+            </button>
+          )
+        ) : (
+          <p style={{ color: 'var(--ifm-color-emphasis-500)' }}>
+            Video unavailable
+          </p>
+        )}
+
+        <div className={directStyles.warRepeatPrompt}>{repeatLabel}</div>
+
+        {item.note && (
+          <p className={directStyles.warNote}>{item.note}</p>
+        )}
+      </div>
+
+      <div className={directStyles.warNav}>
+        <button
+          className={directStyles.warNavButton}
+          onClick={() => goTo(Math.max(0, currentIndex - 1))}
+          disabled={currentIndex === 0}
+        >
+          {prevLabel}
+        </button>
+        <button
+          className={directStyles.warNavButton}
+          onClick={() => goTo(Math.min(total - 1, currentIndex + 1))}
+          disabled={currentIndex === total - 1}
+        >
+          {nextLabel}
+        </button>
+      </div>
+    </div>
+  );
+}
