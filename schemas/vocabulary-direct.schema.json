@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "l2-uk-direct vocabulary entry",
-  "description": "L1-agnostic vocabulary. No translation field in core. IPA is required and first.",
+  "description": "L1-agnostic vocabulary. No translation field. Meaning anchored via images, emoji, video, and Ukrainian context.",
   "type": "object",
   "required": ["word", "pronunciation_video", "category", "examples"],
   "additionalProperties": false,
@@ -32,8 +32,16 @@
     },
     "question": {
       "type": "string",
-      "enum": ["ХТО?", "ЩО?", "ЩО РОБИТЬ?", "ЯКИЙ?", "ДЕ?", "КОЛИ?", "СКІЛЬКИ?"],
-      "description": "Grammar category expressed as question word — never use grammatical terms"
+      "enum": [
+        "ХТО?", "ЩО?",
+        "ЩО РОБИТЬ?", "ЩО ЗРОБИВ?",
+        "ЯКИЙ?", "ЯК?",
+        "ДЕ?", "КУДИ?", "ЗВІДКИ?",
+        "КОЛИ?", "СКІЛЬКИ?",
+        "ЧОМУ?", "НАВІЩО?",
+        "СЛОВО-ПОМІЧНИК"
+      ],
+      "description": "Grammar category as question word. СЛОВО-ПОМІЧНИК = function words (conjunctions, prepositions, particles) that don't answer questions but connect other words."
     },
     "examples": {
       "type": "array",

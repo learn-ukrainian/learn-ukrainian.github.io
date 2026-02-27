@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 """Analyze textbook pages with Gemini Vision to extract image+text pairs.
 
-Sends full-page renders (image_index=0) to Gemini 2.0 Flash, which identifies
-visual elements and their associated Ukrainian text. This preserves the
-pedagogical context that's lost when images are extracted individually.
+Renders each PDF page with pymupdf and sends it to Gemini via gemini-cli,
+which uses the user's Ultra subscription auth. Identifies visual elements
+and their associated Ukrainian text, preserving pedagogical context.
 
-Auth: Set GOOGLE_API_KEY env var (generate at https://aistudio.google.com/apikey).
-      Keys from Ultra accounts get Ultra rate limits automatically.
+Auth: Uses gemini-cli OAuth (Google AI Ultra subscription).
+      No API key needed — gemini-cli must be installed and authenticated.
 
 Usage:
     # Analyze grade 1-2 pages (priority for l2-uk-direct A1)
-    .venv/bin/python scripts/analyze_textbook_pages.py --grade grade-01 grade-02
+    .venv/bin/python scripts/analyze_textbook_pages.py --grade 1 2
 
     # Analyze all grades
     .venv/bin/python scripts/analyze_textbook_pages.py --all
 
     # Resume (skips already-processed pages automatically)
-    .venv/bin/python scripts/analyze_textbook_pages.py --grade grade-01
+    .venv/bin/python scripts/analyze_textbook_pages.py --grade 1
 
     # Show stats from existing analysis
     .venv/bin/python scripts/analyze_textbook_pages.py --stats
@@ -32,50 +32,69 @@ Usage:
 """
 
 import argparse
-import asyncio
 import json
-import os
+import shutil
+import subprocess
 import sys
+import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+import pymupdf
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+TEXTBOOKS_DIR = BASE_DIR / "data" / "textbooks"
 IMAGE_DIR = BASE_DIR / "data" / "textbook_images"
 ANALYSIS_FILE = IMAGE_DIR / "page_analysis.jsonl"
 PAIRS_FILE = IMAGE_DIR / "image_text_pairs.jsonl"
 
-MODEL = "gemini-2.0-flash"
-MAX_CONCURRENT = 10
-MAX_RETRIES = 5
-INITIAL_BACKOFF = 1.0
+RENDER_DPI = 150  # ~1250x1625 for A4, good balance of quality vs size
+MAX_RETRIES = 3
+RETRY_DELAY = 5.0
 
-VISION_PROMPT = """You are analyzing a Ukrainian school textbook page for a language learning app.
+VISION_PROMPT = """Read the image file at {image_path}
+
+You are analyzing a Ukrainian school textbook page for a language learning app.
 
 For each distinct visual element on this page (illustration, photo, diagram, letter display, chart, map, table), identify:
-1. What the visual element depicts
+1. What the visual element depicts (describe in Ukrainian)
 2. The Ukrainian text most closely associated with it (word, phrase, or sentence that appears near it or labels it)
 3. Whether this element is useful for teaching Ukrainian
 
-Respond ONLY with valid JSON:
-{
-  "page_type": "lesson|exercise|reference|title|contents|blank",
-  "elements": [
-    {
-      "type": "illustration|photo|diagram|letter|chart|map|table|QR|decoration|logo",
-      "description_en": "A red apple with a green leaf",
-      "associated_text_uk": "яблуко",
-      "teaching_value": "high|medium|low|none",
-      "position": "top-left|top-center|top-right|center-left|center|center-right|bottom-left|bottom-center|bottom-right"
-    }
-  ]
-}
+Respond ONLY with valid JSON (no markdown, no code fences, no explanation):
+{{"page_type": "lesson|exercise|reference|title|contents|blank", "elements": [{{"type": "illustration|photo|diagram|letter|chart|map|table|QR|decoration|logo", "description_uk": "Червоне яблуко із зеленим листком", "associated_text_uk": "яблуко", "teaching_value": "high|medium|low|none", "position": "top-left|top-center|top-right|center-left|center|center-right|bottom-left|bottom-center|bottom-right"}}]}}
 
 Rules:
 - Include EVERY visual element, even junk (decorations, logos, QR codes)
+- description_uk: describe in Ukrainian what the image shows
 - associated_text_uk must be EXACT Ukrainian text from the page (not translated)
 - If no Ukrainian text is associated, use null
 - teaching_value: high = clear teaching image with text, medium = useful but indirect, low = marginally useful, none = decoration/junk"""
+
+
+def parse_pdf_stem(pdf_path: Path) -> dict:
+    """Parse metadata from PDF filename."""
+    stem = pdf_path.stem
+    parts = stem.split("-")
+    meta = {"pdf_stem": stem, "grade": 0, "subject": "", "author": "", "year": 0}
+    try:
+        meta["grade"] = int(parts[0])
+    except (ValueError, IndexError):
+        pass
+    # Find author, year, subject from naming convention
+    # {grade}-klas-{subject}-{author}-{year}[-{part}].pdf
+    if len(parts) >= 4:
+        meta["subject"] = "-".join(parts[2:-2]) if len(parts) >= 5 else parts[2]
+        meta["author"] = parts[-2] if len(parts) >= 5 else parts[-1]
+        try:
+            meta["year"] = int(parts[-1])
+        except ValueError:
+            try:
+                meta["year"] = int(parts[-2])
+            except (ValueError, IndexError):
+                pass
+    return meta
 
 
 def load_processed_ids() -> set[str]:
@@ -93,189 +112,221 @@ def load_processed_ids() -> set[str]:
     return ids
 
 
-def load_full_pages(grade_dirs: list[Path]) -> list[dict]:
-    """Load metadata for all full-page images (image_index=0) in given grades."""
+def collect_pages(grade_nums: list[int]) -> list[dict]:
+    """Collect all PDF pages for given grades."""
     pages = []
-    for grade_dir in grade_dirs:
+    for grade_num in grade_nums:
+        grade_dir = TEXTBOOKS_DIR / f"grade-{grade_num:02d}"
         if not grade_dir.exists():
             print(f"WARNING: {grade_dir} does not exist, skipping")
             continue
-        for jsonl_file in sorted(grade_dir.glob("*-images.jsonl")):
-            for line in jsonl_file.read_text().strip().split("\n"):
-                if not line:
-                    continue
-                try:
-                    record = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if record.get("image_index") == 0:
-                    # Resolve image path
-                    img_path = BASE_DIR / record["image_path"]
-                    if not img_path.exists():
-                        # Try relative from IMAGE_DIR
-                        parts = record["image_path"].split("/")
-                        img_path = IMAGE_DIR / parts[-2] / parts[-1] if len(parts) >= 2 else img_path
-                    record["_resolved_path"] = img_path
-                    pages.append(record)
+        for pdf_path in sorted(grade_dir.glob("*.pdf")):
+            meta = parse_pdf_stem(pdf_path)
+            doc = pymupdf.open(str(pdf_path))
+            n_pages = len(doc)
+            doc.close()
+            for page_num in range(n_pages):
+                page_id = f"{meta['pdf_stem']}_p{page_num + 1:03d}"
+                pages.append({
+                    "page_id": page_id,
+                    "pdf_path": pdf_path,
+                    "page_num": page_num,  # 0-indexed
+                    "page": page_num + 1,  # 1-indexed
+                    **meta,
+                })
     return pages
 
 
-async def analyze_page(
-    client,
-    types_module,
-    record: dict,
-    semaphore: asyncio.Semaphore,
-    progress: dict,
-) -> dict | None:
-    """Analyze a single page with Gemini Vision."""
-    page_id = record["image_id"]
-    img_path: Path = record["_resolved_path"]
+def render_page(pdf_path: Path, page_num: int, output_path: Path) -> bool:
+    """Render a single PDF page as PNG."""
+    try:
+        doc = pymupdf.open(str(pdf_path))
+        page = doc[page_num]
+        pix = page.get_pixmap(dpi=RENDER_DPI)
+        pix.save(str(output_path))
+        doc.close()
+        return True
+    except Exception as e:
+        print(f"\n  Render error: {e}")
+        return False
 
-    if not img_path.exists():
-        progress["skipped"] += 1
+
+def extract_json_from_response(response_text: str) -> dict | None:
+    """Extract JSON object from gemini-cli response text."""
+    text = response_text.strip()
+
+    # Strip markdown code fences
+    if "```json" in text:
+        text = text.split("```json", 1)[1]
+        text = text.split("```", 1)[0].strip()
+    elif "```" in text:
+        parts = text.split("```")
+        if len(parts) >= 3:
+            text = parts[1].strip()
+            if text.startswith("json\n"):
+                text = text[5:]
+
+    # Find outermost JSON object
+    brace_start = text.find("{")
+    if brace_start < 0:
         return None
 
-    img_bytes = img_path.read_bytes()
-
-    async with semaphore:
-        for attempt in range(MAX_RETRIES):
-            try:
-                response = await client.aio.models.generate_content(
-                    model=MODEL,
-                    contents=[
-                        types_module.Part.from_bytes(
-                            data=img_bytes, mime_type="image/png"
-                        ),
-                        VISION_PROMPT,
-                    ],
-                    config={
-                        "response_mime_type": "application/json",
-                        "temperature": 0.1,
-                    },
-                )
-
-                # Parse JSON response
-                text = response.text.strip()
-                # Handle markdown code blocks
-                if text.startswith("```"):
-                    text = text.split("\n", 1)[1]
-                    if text.endswith("```"):
-                        text = text[:-3].strip()
-
-                data = json.loads(text)
-
-                result = {
-                    "page_id": page_id,
-                    "page": record.get("page", 0),
-                    "grade": record.get("grade", 0),
-                    "subject": record.get("subject", ""),
-                    "author": record.get("author", ""),
-                    "pdf_stem": record.get("pdf_stem", ""),
-                    "page_type": data.get("page_type", "unknown"),
-                    "elements": data.get("elements", []),
-                    "model": MODEL,
-                    "ts": datetime.now(timezone.utc).isoformat(),
-                }
-
-                progress["done"] += 1
-                total = progress["total"]
-                done = progress["done"]
-                skipped = progress["skipped"]
-                elapsed = time.time() - progress["start"]
-                rate = done / elapsed if elapsed > 0 else 0
-                eta = (total - done - skipped) / rate if rate > 0 else 0
-                n_elements = len(result["elements"])
-                print(
-                    f"\r[{done + skipped}/{total}] "
-                    f"{img_path.parent.name}/{img_path.name} "
-                    f"→ {n_elements} elements ({result['page_type']}) "
-                    f"[{rate:.1f}/s, ETA {eta/60:.0f}m]   ",
-                    end="",
-                    flush=True,
-                )
-                return result
-
-            except Exception as e:
-                err_str = str(e)
-                if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
-                    wait = INITIAL_BACKOFF * (2**attempt)
-                    print(
-                        f"\n  Rate limited on {page_id}, waiting {wait:.0f}s "
-                        f"(attempt {attempt + 1}/{MAX_RETRIES})"
-                    )
-                    await asyncio.sleep(wait)
-                elif "500" in err_str or "503" in err_str:
-                    wait = INITIAL_BACKOFF * (2**attempt)
-                    print(
-                        f"\n  Server error on {page_id}, retrying in {wait:.0f}s "
-                        f"(attempt {attempt + 1}/{MAX_RETRIES})"
-                    )
-                    await asyncio.sleep(wait)
-                else:
-                    print(f"\n  ERROR on {page_id}: {e}")
-                    progress["errors"] += 1
+    depth = 0
+    for i in range(brace_start, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                try:
+                    return json.loads(text[brace_start : i + 1])
+                except json.JSONDecodeError:
                     return None
+    return None
 
-        print(f"\n  FAILED after {MAX_RETRIES} retries: {page_id}")
-        progress["errors"] += 1
+
+def analyze_page_via_cli(record: dict, tmp_dir: Path) -> dict | None:
+    """Render a page and analyze it via gemini-cli."""
+    page_id = record["page_id"]
+    pdf_path = record["pdf_path"]
+    page_num = record["page_num"]
+
+    # Render page to temp PNG
+    tmp_img = tmp_dir / f"{page_id}.png"
+    if not render_page(pdf_path, page_num, tmp_img):
         return None
 
+    prompt = VISION_PROMPT.format(image_path=tmp_img)
 
-async def run_analysis(pages: list[dict], processed_ids: set[str]):
-    """Run vision analysis on all unprocessed pages."""
-    from google import genai
-    from google.genai import types as genai_types
+    for attempt in range(MAX_RETRIES):
+        try:
+            result = subprocess.run(
+                [
+                    "gemini",
+                    "--include-directories", str(tmp_dir),
+                    "-p", prompt,
+                    "-o", "text",
+                    "--yolo",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=120,
+                cwd=str(BASE_DIR),
+            )
 
-    api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        print("ERROR: Set GOOGLE_API_KEY or GEMINI_API_KEY env var.")
-        print("  Generate at: https://aistudio.google.com/apikey")
-        print("  Ultra subscription keys get Ultra rate limits.")
+            # gemini-cli writes status messages to stderr, response to stdout
+            response_text = result.stdout.strip()
+            stderr = result.stderr.strip()
+
+            if result.returncode != 0:
+                if "429" in stderr or "RESOURCE_EXHAUSTED" in stderr:
+                    wait = RETRY_DELAY * (2**attempt)
+                    print(f"\n  Rate limited, waiting {wait:.0f}s (attempt {attempt + 1})")
+                    time.sleep(wait)
+                    continue
+                if "Thinking_config" in stderr:
+                    print(f"\n  Model config error on {page_id}: {stderr[:100]}")
+                    return None
+                print(f"\n  ERROR on {page_id}: {stderr[:200]}")
+                return None
+
+            # Check for read_file errors (gitignore block → hallucination)
+            if "Error executing tool read_file" in response_text or "is ignored by configured" in (response_text + stderr):
+                print(f"\n  File read blocked for {page_id}, retrying...")
+                time.sleep(RETRY_DELAY)
+                continue
+
+            data = extract_json_from_response(response_text)
+            if data is None:
+                print(f"\n  No JSON in response for {page_id}")
+                if attempt < MAX_RETRIES - 1:
+                    time.sleep(RETRY_DELAY)
+                    continue
+                return None
+
+            return {
+                "page_id": page_id,
+                "page": record["page"],
+                "grade": record.get("grade", 0),
+                "subject": record.get("subject", ""),
+                "author": record.get("author", ""),
+                "pdf_stem": record.get("pdf_stem", ""),
+                "page_type": data.get("page_type", "unknown"),
+                "elements": data.get("elements", []),
+                "model": "gemini-cli-default",
+                "ts": datetime.now(timezone.utc).isoformat(),
+            }
+
+        except subprocess.TimeoutExpired:
+            print(f"\n  TIMEOUT on {page_id} (attempt {attempt + 1})")
+            time.sleep(RETRY_DELAY)
+        except Exception as e:
+            print(f"\n  ERROR on {page_id}: {e}")
+            return None
+        finally:
+            if tmp_img.exists():
+                tmp_img.unlink()
+
+    return None
+
+
+def run_analysis(pages: list[dict], processed_ids: set[str]):
+    """Run vision analysis on all unprocessed pages via gemini-cli."""
+    if not shutil.which("gemini"):
+        print("ERROR: gemini-cli not found.")
         sys.exit(1)
 
-    client = genai.Client(api_key=api_key)
-
-    # Filter already processed
-    to_process = [p for p in pages if p["image_id"] not in processed_ids]
+    to_process = [p for p in pages if p["page_id"] not in processed_ids]
     if not to_process:
         print("All pages already processed!")
         return
 
     print(f"Pages to analyze: {len(to_process)} (skipping {len(pages) - len(to_process)} already done)")
-    print(f"Model: {MODEL}, concurrency: {MAX_CONCURRENT}")
+    print(f"Model: gemini-cli default (Ultra auth)")
     print()
 
-    semaphore = asyncio.Semaphore(MAX_CONCURRENT)
-    progress = {
-        "done": 0,
-        "skipped": 0,
-        "errors": 0,
-        "total": len(to_process),
-        "start": time.time(),
-    }
-
-    # Open output file in append mode
     ANALYSIS_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-    # Process in batches to write results incrementally
-    batch_size = 50
-    for batch_start in range(0, len(to_process), batch_size):
-        batch = to_process[batch_start : batch_start + batch_size]
-        tasks = [
-            analyze_page(client, genai_types, record, semaphore, progress)
-            for record in batch
-        ]
-        results = await asyncio.gather(*tasks)
+    done = 0
+    errors = 0
+    start = time.time()
 
-        # Write successful results
-        with open(ANALYSIS_FILE, "a") as f:
-            for result in results:
-                if result is not None:
+    with tempfile.TemporaryDirectory(prefix="textbook_analysis_") as tmp_dir:
+        tmp_path = Path(tmp_dir)
+
+        for i, record in enumerate(to_process):
+            result = analyze_page_via_cli(record, tmp_path)
+
+            if result is not None:
+                with open(ANALYSIS_FILE, "a") as f:
                     f.write(json.dumps(result, ensure_ascii=False) + "\n")
+                done += 1
+                n_elements = len(result["elements"])
+                elapsed = time.time() - start
+                rate = done / elapsed if elapsed > 0 else 0
+                remaining = len(to_process) - i - 1
+                eta = remaining / rate if rate > 0 else 0
+                print(
+                    f"\r[{i + 1}/{len(to_process)}] "
+                    f"p{record['page']:03d} {record['pdf_stem'][:40]} "
+                    f"→ {n_elements} el ({result['page_type']}) "
+                    f"[{rate:.2f}/s, ETA {eta / 60:.0f}m]   ",
+                    end="",
+                    flush=True,
+                )
+            else:
+                errors += 1
+                print(
+                    f"\r[{i + 1}/{len(to_process)}] "
+                    f"p{record['page']:03d} {record['pdf_stem'][:40]} → ERROR   ",
+                    end="",
+                    flush=True,
+                )
 
-    elapsed = time.time() - progress["start"]
-    print(f"\n\nDone! {progress['done']} pages analyzed in {elapsed:.0f}s")
-    print(f"  Errors: {progress['errors']}, Skipped: {progress['skipped']}")
+    elapsed = time.time() - start
+    print(f"\n\nDone! {done} pages analyzed in {elapsed:.0f}s ({elapsed / 60:.1f}m)")
+    print(f"  Errors: {errors}")
+    print(f"  Rate: {done / elapsed:.2f} pages/s" if elapsed > 0 else "")
     print(f"  Output: {ANALYSIS_FILE}")
 
 
@@ -301,7 +352,6 @@ def show_stats():
     print(f"Total pages analyzed: {len(records)}")
     print()
 
-    # By grade
     by_grade = {}
     for r in records:
         g = r.get("grade", 0)
@@ -313,7 +363,6 @@ def show_stats():
         total_elements = sum(len(r.get("elements", [])) for r in grade_records)
         print(f"  Grade {grade:2d}: {len(grade_records):5d} pages, {total_elements:6d} elements")
 
-    # By page type
     print()
     by_type = {}
     for r in records:
@@ -323,7 +372,6 @@ def show_stats():
     for pt, count in sorted(by_type.items(), key=lambda x: -x[1]):
         print(f"  {pt:15s}: {count:5d}")
 
-    # By teaching value
     print()
     by_value = {"high": 0, "medium": 0, "low": 0, "none": 0}
     total_elements = 0
@@ -338,7 +386,6 @@ def show_stats():
         pct = count / total_elements * 100 if total_elements else 0
         print(f"  {tv:8s}: {count:6d} ({pct:.1f}%)")
 
-    # By element type
     print()
     by_etype = {}
     for r in records:
@@ -349,7 +396,6 @@ def show_stats():
     for et, count in sorted(by_etype.items(), key=lambda x: -x[1]):
         print(f"  {et:15s}: {count:5d}")
 
-    # Elements with Ukrainian text
     print()
     with_text = sum(
         1
@@ -357,8 +403,11 @@ def show_stats():
         for el in r.get("elements", [])
         if el.get("associated_text_uk")
     )
-    print(f"Elements with Ukrainian text: {with_text}/{total_elements} "
-          f"({with_text / total_elements * 100:.1f}%)" if total_elements else "")
+    if total_elements:
+        print(
+            f"Elements with Ukrainian text: {with_text}/{total_elements} "
+            f"({with_text / total_elements * 100:.1f}%)"
+        )
 
 
 def link_to_sub_images():
@@ -367,7 +416,6 @@ def link_to_sub_images():
         print("No analysis file found. Run analysis first.")
         return
 
-    # Load all page analyses
     analyses = {}
     for line in ANALYSIS_FILE.read_text().strip().split("\n"):
         if not line:
@@ -380,7 +428,6 @@ def link_to_sub_images():
 
     print(f"Loaded {len(analyses)} page analyses")
 
-    # Load all sub-image metadata (image_index >= 1)
     sub_images = []
     for jsonl_file in sorted(IMAGE_DIR.rglob("*-images.jsonl")):
         for line in jsonl_file.read_text().strip().split("\n"):
@@ -395,18 +442,16 @@ def link_to_sub_images():
 
     print(f"Found {len(sub_images)} sub-images to link")
 
-    # Match: for each sub-image, find its parent page analysis
     pairs = []
     matched = 0
     unmatched = 0
 
     for sub in sub_images:
-        # Build parent page_id: same pdf_stem + page, image_index=0
-        parent_id = f"{sub['pdf_stem']}_p{sub['page']:03d}_i00"
+        # New page_id format: {pdf_stem}_p{page:03d} (no _i00 suffix)
+        parent_id = f"{sub['pdf_stem']}_p{sub['page']:03d}"
 
         if parent_id not in analyses:
             unmatched += 1
-            # Still create a record but mark as unmatched
             pairs.append({
                 "image_id": sub["image_id"],
                 "image_path": sub["image_path"],
@@ -421,21 +466,16 @@ def link_to_sub_images():
                 "pdf_stem": sub["pdf_stem"],
                 "width": sub.get("width", 0),
                 "height": sub.get("height", 0),
-                "file_size": sub.get("file_size", 0),
             })
             continue
 
         analysis = analyses[parent_id]
         elements = analysis.get("elements", [])
+        img_idx = sub["image_index"] - 1
 
-        # Simple strategy: assign elements to sub-images by order
-        # Sub-images are extracted in page order; elements are listed top-to-bottom
-        # This is imperfect but provides a reasonable starting point
-        img_idx = sub["image_index"] - 1  # 0-based index into elements
-
-        # Filter to non-junk elements (skip decorations, QR, logos)
         teaching_elements = [
-            e for e in elements
+            e
+            for e in elements
             if e.get("teaching_value") in ("high", "medium", "low")
         ]
 
@@ -460,8 +500,6 @@ def link_to_sub_images():
             })
             matched += 1
         elif elements:
-            # More sub-images than teaching elements — use page-level info
-            # Mark as having partial context from the page
             pairs.append({
                 "image_id": sub["image_id"],
                 "image_path": sub["image_path"],
@@ -497,7 +535,6 @@ def link_to_sub_images():
                 "height": sub.get("height", 0),
             })
 
-    # Write pairs
     with open(PAIRS_FILE, "w") as f:
         for pair in pairs:
             f.write(json.dumps(pair, ensure_ascii=False) + "\n")
@@ -506,7 +543,6 @@ def link_to_sub_images():
     print(f"Unmatched/unlinked: {unmatched}")
     print(f"Output: {PAIRS_FILE}")
 
-    # Stats on linked pairs
     with_text = sum(1 for p in pairs if p.get("associated_text_uk"))
     print(f"Pairs with Ukrainian text: {with_text}")
 
@@ -517,7 +553,6 @@ def cleanup_junk(execute: bool = False):
         print("No analysis file found. Run analysis first.")
         return
 
-    # Load analyses indexed by (pdf_stem, page)
     page_elements = {}
     for line in ANALYSIS_FILE.read_text().strip().split("\n"):
         if not line:
@@ -529,8 +564,7 @@ def cleanup_junk(execute: bool = False):
         except (json.JSONDecodeError, KeyError):
             pass
 
-    # Find junk sub-images
-    junk_files = []  # (path, reason)
+    junk_files = []
     kept = 0
 
     for grade_dir in sorted(IMAGE_DIR.iterdir()):
@@ -547,7 +581,7 @@ def cleanup_junk(execute: bool = False):
                     continue
 
                 if record.get("image_index", 0) == 0:
-                    continue  # Keep full-page renders
+                    continue
 
                 img_path = BASE_DIR / record["image_path"]
                 if not img_path.exists():
@@ -557,14 +591,12 @@ def cleanup_junk(execute: bool = False):
                 analysis = page_elements.get(key)
 
                 if analysis is None:
-                    # Page not analyzed — check if tiny file
                     if img_path.stat().st_size < 5000:
                         junk_files.append((img_path, "unanalyzed_tiny"))
                     else:
                         kept += 1
                     continue
 
-                # Check if ALL elements on this page are junk
                 elements = analysis.get("elements", [])
                 has_teaching = any(
                     e.get("teaching_value") in ("high", "medium")
@@ -588,7 +620,6 @@ def cleanup_junk(execute: bool = False):
         print("Nothing to clean up!")
         return
 
-    # Show breakdown by reason
     by_reason = {}
     total_size = 0
     for path, reason in junk_files:
@@ -604,7 +635,6 @@ def cleanup_junk(execute: bool = False):
         print("\nDRY RUN — pass --execute to delete.")
         return
 
-    # Execute deletion
     deleted = 0
     deleted_by_grade = {}
 
@@ -615,7 +645,6 @@ def cleanup_junk(execute: bool = False):
         path.unlink()
         deleted += 1
 
-    # Update JSONL metadata
     jsonl_updated = 0
     for grade, filenames in deleted_by_grade.items():
         grade_dir = IMAGE_DIR / grade
@@ -646,11 +675,14 @@ def main():
     parser.add_argument(
         "--grade",
         nargs="+",
-        help="Grade directories to process (e.g., grade-01 grade-02)",
+        type=int,
+        help="Grade numbers to process (e.g., 1 2)",
     )
     parser.add_argument("--all", action="store_true", help="Process all grades")
     parser.add_argument(
-        "--stats", action="store_true", help="Show statistics from existing analysis"
+        "--stats",
+        action="store_true",
+        help="Show statistics from existing analysis",
     )
     parser.add_argument(
         "--link",
@@ -658,7 +690,9 @@ def main():
         help="Link page analysis to extracted sub-images",
     )
     parser.add_argument(
-        "--cleanup", action="store_true", help="Identify junk sub-images for deletion"
+        "--cleanup",
+        action="store_true",
+        help="Identify junk sub-images for deletion",
     )
     parser.add_argument(
         "--execute",
@@ -679,30 +713,23 @@ def main():
         cleanup_junk(execute=args.execute)
         return
 
-    # Determine grade directories
     if args.all:
-        grade_dirs = sorted(
-            d
-            for d in IMAGE_DIR.iterdir()
-            if d.is_dir() and d.name.startswith("grade-")
-        )
+        grade_nums = list(range(1, 12))
     elif args.grade:
-        grade_dirs = [IMAGE_DIR / g for g in args.grade]
+        grade_nums = args.grade
     else:
         parser.print_help()
         print("\nSpecify --grade, --all, --stats, --link, or --cleanup")
         sys.exit(1)
 
-    print(f"Grades: {', '.join(d.name for d in grade_dirs)}")
+    print(f"Grades: {', '.join(str(g) for g in grade_nums)}")
 
-    # Load pages and check what's already done
-    pages = load_full_pages(grade_dirs)
+    pages = collect_pages(grade_nums)
     processed = load_processed_ids()
-    print(f"Full-page images found: {len(pages)}")
+    print(f"Total pages in PDFs: {len(pages)}")
     print(f"Already processed: {len(processed)}")
 
-    # Run analysis
-    asyncio.run(run_analysis(pages, processed))
+    run_analysis(pages, processed)
 
 
 if __name__ == "__main__":

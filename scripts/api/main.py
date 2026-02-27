@@ -34,6 +34,7 @@ from .gold_router import router as gold_router
 from .dashboard_router import router as dashboard_router
 from .state_router import router as state_router
 from .comms_router import router as comms_router
+from .rag_router import router as rag_router
 
 app = FastAPI(
     title="Playground API",
@@ -64,6 +65,7 @@ app.include_router(gold_router, prefix="/api/gold")
 app.include_router(dashboard_router, prefix="/api/dashboard")
 app.include_router(state_router, prefix="/api/state")
 app.include_router(comms_router, prefix="/api/comms")
+app.include_router(rag_router, prefix="/api/rag")
 
 
 # Server start time for uptime calculation
@@ -194,6 +196,33 @@ async def batch_websocket(websocket: WebSocket):
             await asyncio.sleep(5)
     except WebSocketDisconnect:
         pass
+
+
+# ==================== IMAGE SERVING ====================
+
+_IMAGE_DIR = PROJECT_ROOT / "data" / "textbook_images"
+_ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
+_MIME_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp"}
+
+
+@app.get("/images/{path:path}")
+async def serve_image(path: str):
+    """Serve textbook images with caching. Path relative to data/textbook_images/."""
+    file_path = _IMAGE_DIR / path
+    if not file_path.suffix.lower() in _ALLOWED_IMG_EXT:
+        raise HTTPException(status_code=403, detail="Forbidden file type")
+    if not file_path.exists() or not file_path.is_file():
+        raise HTTPException(status_code=404)
+    # Prevent path traversal
+    try:
+        file_path.resolve().relative_to(_IMAGE_DIR.resolve())
+    except ValueError:
+        raise HTTPException(status_code=403, detail="Path traversal not allowed")
+    return FileResponse(
+        file_path,
+        media_type=_MIME_TYPES.get(file_path.suffix.lower(), "application/octet-stream"),
+        headers={"Cache-Control": "max-age=3600"},
+    )
 
 
 # ==================== STATIC FILES (MUST BE LAST) ====================

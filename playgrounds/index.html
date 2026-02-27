@@ -90,9 +90,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
     <p>Build progress, audit, enrichment, final reviews, ETA — one view per track. Auto-refreshes.</p>
     <div class="card-stat" id="health-stat"></div>
   </a>
+  <a class="card" href="/images.html" style="border-left: 3px solid var(--yellow);">
+    <div class="icon">&#128444;</div>
+    <h2>Images</h2>
+    <p>Browse textbook images by grade. RAG-powered semantic search. Mark bad images for cleanup.</p>
+    <div class="card-stat" id="images-stat"></div>
+  </a>
 </div>
 
-<div class="footer">Serving from localhost:8765</div>
+<div class="footer">Serving from localhost:8090</div>
 
 <script>
 async function loadStats() {

@@ -116,7 +116,7 @@
     },
 
     "match_sound": {
-      "description": "Match a letter or sound to its description/IPA. Used in abetka and sklad.",
+      "description": "Match a letter to its sound type or example word. Used in abetka and sklad. No IPA ever.",
       "required": ["type", "title", "pairs"],
       "properties": {
         "type": { "const": "match_sound" },
@@ -126,10 +126,11 @@
           "minItems": 3,
           "items": {
             "type": "object",
-            "required": ["letter", "ipa"],
+            "required": ["letter", "sound_hint"],
             "properties": {
-              "letter": { "type": "string" },
-              "ipa":    { "type": "string" }
+              "letter":     { "type": "string", "description": "The Ukrainian letter" },
+              "sound_hint": { "type": "string", "description": "Ukrainian description or example word, e.g. 'як у слові мама' or 'голосний'" },
+              "video":      { "type": ["string", "null"], "description": "Optional YouTube pronunciation URL" }
             }
           }
         }
