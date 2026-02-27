@@ -8,6 +8,11 @@
       "ts": "2026-02-19T19:33:06Z",
       "task_id": "v3-borys-liatoshynskyi-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-26T23:27:44Z",
+      "note": "word-count-3463-below-80pct-5000"
     }
   }
 }

@@ -2,13 +2,13 @@
   "module": "kniaz-yaroslav-mudryi",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-26T00:42:05.731609Z",
+  "last_audit": "2026-02-27T01:51:32.356228Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-21T20:20:11.644182Z",
     "meta": "2026-02-19T11:24:48.095251Z",
     "activities": "2026-02-26T00:42:04.872765Z",
-    "vocabulary": "2026-02-18T18:39:32.355371Z",
+    "vocabulary": "2026-02-26T10:56:38.198223Z",
     "plan": "2026-02-17T13:37:38.095912Z",
     "research": "2026-02-22T10:35:24.534547Z"
   },
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "warn",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
+    "pass_count": 2,
     "fail_count": 0,
     "deferred_count": 3
   }

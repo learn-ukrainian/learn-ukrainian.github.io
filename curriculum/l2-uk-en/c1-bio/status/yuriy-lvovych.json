@@ -2,13 +2,13 @@
   "module": "yuriy-lvovych",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-26T01:25:25.019534Z",
+  "last_audit": "2026-02-27T01:52:12.191504Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-26T01:23:54.359080Z",
     "meta": "2026-02-26T01:24:33.443492Z",
     "activities": "2026-02-26T01:22:35.308364Z",
-    "vocabulary": "2026-02-26T01:22:35.294355Z",
+    "vocabulary": "2026-02-26T10:56:38.200093Z",
     "plan": "2026-02-17T13:37:38.119219Z",
     "research": "2026-02-22T10:35:24.559220Z"
   },
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "warn",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
+    "pass_count": 2,
     "fail_count": 0,
     "deferred_count": 3
   }

@@ -2,13 +2,13 @@
   "module": "knyahynia-olha",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-26T00:41:53.879620Z",
+  "last_audit": "2026-02-27T01:51:21.086614Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-21T20:20:11.644449Z",
     "meta": "2026-02-19T10:56:42.416676Z",
     "activities": "2026-02-19T22:23:51.313803Z",
-    "vocabulary": "2026-02-26T00:41:52.814393Z",
+    "vocabulary": "2026-02-26T10:56:38.198524Z",
     "plan": "2026-02-18T15:59:52.245649Z",
     "research": "2026-02-22T10:35:24.534803Z"
   },
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "10/10 (High)"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "warn",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 3,
     "fail_count": 0,
     "deferred_count": 3
   }

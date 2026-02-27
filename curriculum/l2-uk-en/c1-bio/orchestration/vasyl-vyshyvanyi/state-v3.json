@@ -8,6 +8,20 @@
       "ts": "2026-02-19T19:38:06Z",
       "task_id": "v3-vasyl-vyshyvanyi-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-26T23:36:07Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-26T23:38:51Z",
+      "task_id": "v3-vasyl-vyshyvanyi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-26T23:40:51Z",
+      "attempts": 2
     }
   }
 }

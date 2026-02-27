@@ -10,9 +10,20 @@
       "mode": "meta-only"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-26T00:55:42Z",
-      "note": "word-count-3987-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-27T00:52:24Z",
+      "note": "adopted-existing-content",
+      "words": 4322
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T00:54:38Z",
+      "task_id": "v3-kostiantyn-vasyl-ostrozky-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T00:57:48Z",
+      "attempts": 2
     }
   }
 }

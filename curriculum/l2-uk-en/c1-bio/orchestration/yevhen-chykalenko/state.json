@@ -2,13 +2,39 @@
   "slug": "yevhen-chykalenko",
   "track": "c1-bio",
   "module_num": 54,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
       "timestamp": "2026-02-20T23:15:35Z",
       "task_id": "yw-yevhen-chykalenko-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:20:32Z",
+      "words": 6690,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:22:14Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:22:14Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:24:34Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:24:34Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-20T23:15:35Z"
+  "last_updated": "2026-02-27T00:24:34Z"
 }

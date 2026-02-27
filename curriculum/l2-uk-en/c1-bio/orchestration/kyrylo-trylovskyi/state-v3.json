@@ -2,5 +2,27 @@
   "track": "c1-bio",
   "slug": "kyrylo-trylovskyi",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-27T00:52:51Z",
+      "task_id": "v3-kyrylo-trylovskyi-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T00:55:55Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T00:57:44Z",
+      "task_id": "v3-kyrylo-trylovskyi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T00:57:47Z",
+      "attempts": 0,
+      "note": "auto-fix"
+    }
+  }
 }

@@ -955,6 +955,14 @@ Attached data:
         prompt += """
 ---
 
+REVIEW PROTOCOL (mandatory for all review requests):
+- You MUST read every referenced file COMPLETELY before writing your review. Use read_file or cat — do not skim.
+- For EVERY issue you report, cite the exact content from the file (quote the line, value, or field).
+- If you cannot cite evidence from the actual file, do NOT report the issue — you may be hallucinating.
+- Do NOT invent examples that are not in the files. Only critique what actually exists.
+- Before critiquing a vocabulary list, activity list, or similar: list ALL items you found in the file first, THEN review each one.
+- If a file has 25 vocabulary entries, your review must reference the actual 25 entries, not imagined ones.
+
 Please respond appropriately. If this is a request, fulfill it.
 If Claude asked for feedback, provide your honest assessment.
 Format your response clearly.

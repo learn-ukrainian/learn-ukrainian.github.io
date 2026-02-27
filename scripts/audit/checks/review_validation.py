@@ -212,7 +212,11 @@ def _extract_ukrainian_citations(content: str) -> list[str]:
     """
     raw_citations = []
     min_len = 10
-    # «...» angular quotes
+    # 「...」 CJK corner brackets (preferred — no collision with Ukrainian «» quotes)
+    for match in re.findall(r'「([^」]*)」', content):
+        if len(match) >= min_len and re.search(r'[а-яіїєґ]', match):
+            raw_citations.append(match)
+    # «...» angular quotes (legacy — kept for backward compatibility with older reviews)
     for match in re.findall(r'«([^»]*)»', content):
         if len(match) >= min_len and re.search(r'[а-яіїєґ]', match):
             raw_citations.append(match)

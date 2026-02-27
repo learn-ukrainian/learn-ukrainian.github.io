@@ -8,6 +8,20 @@
       "ts": "2026-02-21T00:08:11Z",
       "task_id": "v3-yuriy-kondratiuk-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T00:15:34Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T00:17:12Z",
+      "task_id": "v3-yuriy-kondratiuk-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T00:19:13Z",
+      "attempts": 2
     }
   }
 }

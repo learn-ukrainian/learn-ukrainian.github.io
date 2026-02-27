@@ -2,5 +2,26 @@
   "track": "c1-bio",
   "slug": "borys-hrinchenko",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-27T00:26:13Z",
+      "task_id": "v3-borys-hrinchenko-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T00:30:55Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T00:33:26Z",
+      "task_id": "v3-borys-hrinchenko-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T00:40:17Z",
+      "attempts": 2
+    }
+  }
 }

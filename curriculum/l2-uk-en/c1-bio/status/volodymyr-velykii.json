@@ -2,13 +2,13 @@
   "module": "volodymyr-velykii",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-26T00:42:02.126180Z",
+  "last_audit": "2026-02-27T01:51:28.457314Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-21T20:20:11.647415Z",
     "meta": "2026-02-19T11:16:07.810562Z",
     "activities": "2026-02-26T00:42:01.114361Z",
-    "vocabulary": "2026-02-26T00:42:01.098617Z",
+    "vocabulary": "2026-02-26T10:56:53.981773Z",
     "plan": "2026-02-18T17:54:25.129844Z",
     "research": "2026-02-22T10:35:24.556709Z"
   },
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "10/10 (High)"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "warn",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 3,
     "fail_count": 0,
     "deferred_count": 3
   }

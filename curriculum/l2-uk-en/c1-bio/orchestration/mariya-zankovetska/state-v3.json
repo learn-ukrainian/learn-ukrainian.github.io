@@ -8,6 +8,20 @@
       "ts": "2026-02-19T15:23:39Z",
       "task_id": "v3-mariya-zankovetska-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-26T23:26:44Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-26T23:34:45Z",
+      "task_id": "v3-mariya-zankovetska-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-26T23:44:48Z",
+      "attempts": 2
     }
   }
 }

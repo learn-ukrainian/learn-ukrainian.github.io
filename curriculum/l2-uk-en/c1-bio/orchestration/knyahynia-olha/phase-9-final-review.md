@@ -57,17 +57,17 @@ Confirmed Latin U+006F instead of Cyrillic U+043E. Invisible to readers but brea
 Per Ukrainian punctuation rules, comma required before "поєднуючи" (adverbial participle clause).
 
 **ISSUE 9 — VOCABULARY IPA: автократор uses /u̯/ not /ʋ/ for В (vocab, line 9)**
-> ipa: /ɑu̯.tɔˈkrɑ.tɔr/
+> ipa:
 
-The file uses /ʋ/ for В consistently elsewhere (e.g., "ловища" /ˈlɔ.**ʋ**ɪ.ʃt͡ʃɑ/). This entry should use /ɑʋ/ for consistency. The QA spec explicitly requires "ʋ not w for В".
+The file uses /ʋ/ for В consistently elsewhere (e.g., "ловища"). This entry should use for consistency. The QA spec explicitly requires "ʋ not w for В".
 
 **ISSUE 10 — VOCABULARY: "ловища" lemma should be singular (vocab, line 31)**
-Lemma is "ловища" (plural) but gender says "n" (neuter singular). Lemma should be "ловище". IPA stress is also wrong: /ˈlɔ.ʋɪ.ʃt͡ʃɑ/ (first syllable) should be /lɔˈʋɪ.ʃt͡ʃɛ/ (second syllable, with /ɛ/ for neuter singular ending).
+Lemma is "ловища" (plural) but gender says "n" (neuter singular). Lemma should be "ловище". IPA stress is also wrong: (first syllable) should be (second syllable, with /ɛ/ for neuter singular ending).
 
 **ISSUE 11 — VOCABULARY IPA: "знамення" stress on wrong syllable (vocab, line 39)**
-> ipa: /ˈznɑ.mɛn.ɲɑ/
+> ipa:
 
-Stress should be on the second syllable: /znɑˈmɛn.ɲɑ/ (знамéння).
+Stress should be on the second syllable: (знамéння).
 
 **ISSUE 12 — STYLISTIC: "детектив" cliché (content, lines 32, 40)**
 > "Робота історика тут нагадує роботу детектива"
@@ -201,9 +201,9 @@ FILE: curriculum/l2-uk-en/c1-bio/activities/knyahynia-olha.yaml
 ===FIX_START===
 FILE: curriculum/l2-uk-en/c1-bio/vocabulary/knyahynia-olha.yaml
 ---OLD---
-    ipa: /ɑu̯.tɔˈkrɑ.tɔr/
+    ipa:
 ---NEW---
-    ipa: /ɑʋ.tɔˈkrɑ.tɔr/
+    ipa:
 ===FIX_END===
 
 ===FIX_START===
@@ -213,21 +213,21 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/knyahynia-olha.yaml
     translation: hunting grounds
     pos: noun
     gender: n
-    ipa: /ˈlɔ.ʋɪ.ʃt͡ʃɑ/
+    ipa:
 ---NEW---
   - lemma: ловище
     translation: hunting ground
     pos: noun
     gender: n
-    ipa: /lɔˈʋɪ.ʃt͡ʃɛ/
+    ipa:
 ===FIX_END===
 
 ===FIX_START===
 FILE: curriculum/l2-uk-en/c1-bio/vocabulary/knyahynia-olha.yaml
 ---OLD---
-    ipa: /ˈznɑ.mɛn.ɲɑ/
+    ipa:
 ---NEW---
-    ipa: /znɑˈmɛn.ɲɑ/
+    ipa:
 ===FIX_END===
 
 ---

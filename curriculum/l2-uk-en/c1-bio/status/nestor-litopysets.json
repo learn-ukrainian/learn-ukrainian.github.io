@@ -2,13 +2,13 @@
   "module": "nestor-litopysets",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-26T00:55:36.145466Z",
+  "last_audit": "2026-02-27T01:51:47.914276Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-26T00:54:55.443693Z",
     "meta": "2026-02-26T00:55:20.911310Z",
     "activities": "2026-02-26T00:53:28.214135Z",
-    "vocabulary": "2026-02-26T00:53:28.702312Z",
+    "vocabulary": "2026-02-26T10:56:38.199201Z",
     "plan": "2026-02-17T13:33:56.611257Z",
     "research": "2026-02-22T22:10:48.277199Z"
   },
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "warn",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
+    "pass_count": 2,
     "fail_count": 0,
     "deferred_count": 3
   }

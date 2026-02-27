@@ -1,7 +1,7 @@
 # Audit Report: M04 — kniaz-yaroslav-mudryi.md
 **Level:** C1-BIO | **Module:** M04 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 00:42:05
+**Generated:** 2026-02-27 01:51:32
 
 ## Configuration
 **Type:** C1-biography
@@ -26,7 +26,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)

@@ -47,7 +47,7 @@ Review each callout box below. For each claim, mark:
 
 > [!culture]
 > **Львів — кавова столиця**
-> Lviv is widely considered the coffee capital of Ukraine. The city has a distinct Austro-Hungarian heritage. In Lviv, you don't just "drink" coffee; you experience it. The local dialect even has a special word for a coffee cup: **філіжанка** [fʲilʲiˈʒɑnkɐ]. Using this word instantly makes you sound like a local connoisseur!
+> Lviv is widely considered the coffee capital of Ukraine. The city has a distinct Austro-Hungarian heritage. In Lviv, you don't just "drink" coffee; you experience it. The local dialect even has a special word for a coffee cup: **філіжанка**. Using this word instantly makes you sound like a local connoisseur!
 
 **Verdict:** _________________
 
@@ -71,7 +71,7 @@ Review each callout box below. For each claim, mark:
 
 > [!culture]
 > **Cultural Insight: The Slow Sip**
-> In many Western countries, coffee is "fuel" to go. In Ukraine, coffee is a "pause." Even in a busy city, when you sit down in a **кав'ярня** [kɐu̯ˈjɑrnʲɐ] (café), the rush stops. You are expected to relax. **Українці люблять каву.** (Ukrainians love coffee.)
+> In many Western countries, coffee is "fuel" to go. In Ukraine, coffee is a "pause." Even in a busy city, when you sit down in a **кав'ярня** (café), the rush stops. You are expected to relax. **Українці люблять каву.** (Ukrainians love coffee.)
 
 **Verdict:** _________________
 
@@ -204,7 +204,7 @@ Review each callout box below. For each claim, mark:
 > [!culture]
 > **Природна аптека**
 >
-> Ukrainians love natural remedies. Many people drink **малиновий чай** (raspberry tea) or **калиновий чай** (viburnum tea) with **мед** [mɛd] (honey). **Малина** [maˈlɪna] reduces fever, **калина** [kaˈlɪna] boosts immunity, and **мед** soothes a sore throat. If a Ukrainian friend offers you tea when you are sick, accept it. It is their way of caring for you.
+> Ukrainians love natural remedies. Many people drink **малиновий чай** (raspberry tea) or **калиновий чай** (viburnum tea) with **мед** [mɛd] (honey). **Малина** reduces fever, **калина** boosts immunity, and **мед** soothes a sore throat. If a Ukrainian friend offers you tea when you are sick, accept it. It is their way of caring for you.
 
 **Verdict:** _________________
 
@@ -356,7 +356,7 @@ Review each callout box below. For each claim, mark:
 
 > [!culture]
 > **Kyiv Underground**
-> The metro station **«Арсенальна»** [ɑrsɛˈnɑlʲnɑ] in Kyiv is the deepest in the world (105.5 meters). When you are riding the long escalators down, you can practice your cases:
+> The metro station **«Арсенальна»** in Kyiv is the deepest in the world (105.5 meters). When you are riding the long escalators down, you can practice your cases:
 > *   **Ми на станції.** (We are at the station.)
 > *   **Ми в метро.** (We are in the metro.)
 
@@ -380,7 +380,7 @@ Review each callout box below. For each claim, mark:
 
 > [!culture]
 > **Golden Gate**
-> The metro station **«Золоті Ворота»** [zɔlɔˈtʲi ʋɔˈrɔtɑ] (Golden Gate) is your landmark in the center of Kyiv. It is famous for its mosaics and looks like an underground palace. If someone says "Let's meet at Zoloti Vorota," they usually mean near the exit upstairs, by the monument to Yaroslav the Wise. It is the perfect meeting point because everyone knows it.
+> The metro station **«Золоті Ворота»** (Golden Gate) is your landmark in the center of Kyiv. It is famous for its mosaics and looks like an underground palace. If someone says "Let's meet at Zoloti Vorota," they usually mean near the exit upstairs, by the monument to Yaroslav the Wise. It is the perfect meeting point because everyone knows it.
 
 **Verdict:** _________________
 
@@ -556,7 +556,7 @@ Review each callout box below. For each claim, mark:
 
 > [!myth-buster]
 > **The Password: Паляниця**
-> You may have heard the word **паляниця** [pɑlʲɑˈnɪt͡sʲɑ]. It is a type of traditional round wheat bread. But recently, it became famous as a "shibboleth" — a password used to identify non-native speakers. The palatalized **ля** [lʲɑ] and the soft **ця** [t͡sʲɑ] create a combination that is extremely difficult for Russian speakers to pronounce correctly — in Russian, **ц** is always hard, never palatalized. For a Ukrainian, it is effortless. It represents safety and identity.
+> You may have heard the word **паляниця**. It is a type of traditional round wheat bread. But recently, it became famous as a "shibboleth" — a password used to identify non-native speakers. The palatalized **ля** [lʲɑ] and the soft **ця** [t͡sʲɑ] create a combination that is extremely difficult for Russian speakers to pronounce correctly — in Russian, **ц** is always hard, never palatalized. For a Ukrainian, it is effortless. It represents safety and identity.
 
 **Verdict:** _________________
 
@@ -617,7 +617,7 @@ Review each callout box below. For each claim, mark:
 
 > [!culture]
 > **Український сніданок**
-> Traditionally, a Ukrainian breakfast is substantial. Традиційно український сніданок — це ситна їжа. It might include **сирники** [sɪrˈnɪkɪ] (cottage cheese pancakes), **каша** [ˈkɑʃɑ] (porridge), or **млинці** [mlɪnˈt͡sʲi] (crepes). It is rarely just a coffee and a croissant. «Сніданок з'їж сам» — це популярна приказка. Сніданок — це енергія для роботи.
+> Traditionally, a Ukrainian breakfast is substantial. Традиційно український сніданок — це ситна їжа. It might include **сирники** (cottage cheese pancakes), **каша** (porridge), or **млинці** (crepes). It is rarely just a coffee and a croissant. «Сніданок з'їж сам» — це популярна приказка. Сніданок — це енергія для роботи.
 
 **Verdict:** _________________
 
@@ -639,7 +639,7 @@ Review each callout box below. For each claim, mark:
 
 > [!culture]
 > **Домашній одяг (Home Clothes)**
-> When Ukrainians come home, one of the first things they do is change into **домашній одяг** [doˈmɑʃnʲij oˈdʲɐɦ] (home clothes). Коли українці приходять додому, вони переодягаються. This is a deeply ingrained habit: street clothes stay at the door, and comfortable clothes go on. Вуличний одяг — це для вулиці. Домашній одяг — це для дому. It marks the boundary between the public and private sphere. Це межа між роботою і відпочинком.
+> When Ukrainians come home, one of the first things they do is change into **домашній одяг** (home clothes). Коли українці приходять додому, вони переодягаються. This is a deeply ingrained habit: street clothes stay at the door, and comfortable clothes go on. Вуличний одяг — це для вулиці. Домашній одяг — це для дому. It marks the boundary between the public and private sphere. Це межа між роботою і відпочинком.
 
 **Verdict:** _________________
 
@@ -651,7 +651,7 @@ Review each callout box below. For each claim, mark:
 **File:** `curriculum/l2-uk-en/a1/my-family.md:60`
 
 > [!culture] **Мама vs. Ненька**
-> You might hear the word **ненька** [ˈnɛnʲkɑ] in songs or poetry. This is a very tender, poetic, and old-fashioned word for mother. Ukrainians often call Ukraine "Ненька Україна" (Mother Ukraine). It shows deep love and reverence.
+> You might hear the word **ненька** in songs or poetry. This is a very tender, poetic, and old-fashioned word for mother. Ukrainians often call Ukraine "Ненька Україна" (Mother Ukraine). It shows deep love and reverence.
 
 **Verdict:** _________________
 
@@ -703,7 +703,7 @@ Review each callout box below. For each claim, mark:
 
 > [!culture]
 > **Готівка чи Картка?**
-> У сучасній Україні ви можете платити карткою або телефоном (Apple Pay/Google Pay) майже всюди. Проте, у менших містах або на традиційних базарах **готівка** [ɦɔˈtiʋkɑ] (cash) досі головна. Завжди мудро мати дрібні купюри (20, 50, 100) для чайових.
+> У сучасній Україні ви можете платити карткою або телефоном (Apple Pay/Google Pay) майже всюди. Проте, у менших містах або на традиційних базарах **готівка** (cash) досі головна. Завжди мудро мати дрібні купюри (20, 50, 100) для чайових.
 
 **Verdict:** _________________
 
@@ -831,7 +831,7 @@ Review each callout box below. For each claim, mark:
 
 > [!culture]
 > **Deepest in the World**
-> The station **Арсенальна** [ɑrsɛˈnɑlʲnɑ] in Kyiv is the deepest metro station in the world, at 105.5 meters underground. The escalator ride takes about 5 minutes! People actually read books or listen to podcasts just while riding down to the train.
+> The station **Арсенальна** in Kyiv is the deepest metro station in the world, at 105.5 meters underground. The escalator ride takes about 5 minutes! People actually read books or listen to podcasts just while riding down to the train.
 
 **Verdict:** _________________
 
@@ -877,7 +877,7 @@ Review each callout box below. For each claim, mark:
 
 > [!culture]
 > **Гречка — The Strategic Reserve**
-> In Ukraine, **гречка** [ˈɦrɛt͡ʃkɑ] (buckwheat) is more than just food; it's a strategic resource. When people worry about the economy, they buy *гречку*.
+> In Ukraine, **гречка** (buckwheat) is more than just food; it's a strategic resource. When people worry about the economy, they buy *гречку*.
 > *   Я купую **гречку**.
 > Note clearly: *гречка* becomes *гречку*.
 
@@ -1168,7 +1168,7 @@ Review each callout box below. For each claim, mark:
 > [!culture]
 > **Бабине літо**
 >
-> В Україні є **бабине літо** [ˈbɑbɪne ˈlʲitɔ]. Це теплі дні у вересні або жовтні. Світить сонце. Люди гуляють у парку. Це дуже гарний час.
+> В Україні є **бабине літо**. Це теплі дні у вересні або жовтні. Світить сонце. Люди гуляють у парку. Це дуже гарний час.
 >
 > In late September or early October, Ukraine often enjoys a period of warm, sunny days called "Indian summer" (literally "grandmother's summer"). It is a beloved time when people go to parks, forests, and enjoy the last warmth before winter.
 
@@ -1219,7 +1219,7 @@ Review each callout box below. For each claim, mark:
 **File:** `curriculum/l2-uk-en/a1/what-time-is-it.md:19`
 
 > [!culture] **Ukrzaliznytsia Punctuality**
-> The Ukrainian railway system, **Укрзалізниця** [u.kr.zɑ.ˈlʲi.znɪ.t͡sʲɑ], is legendary for its resilience and punctuality. Even during the most difficult times of war, the vast majority of trains continue to run on schedule. In Ukraine, time is respected. Being "on time" (**вчасно** [ˈu̯t͡ʃɑs.nɔ]) is a sign of reliability.
+> The Ukrainian railway system, **Укрзалізниця**, is legendary for its resilience and punctuality. Even during the most difficult times of war, the vast majority of trains continue to run on schedule. In Ukraine, time is respected. Being "on time" (**вчасно**) is a sign of reliability.
 
 **Verdict:** _________________
 
@@ -1242,7 +1242,7 @@ Review each callout box below. For each claim, mark:
 
 > [!culture]
 > **Закон ЗУНР (1919)**
-> До речі, про історію. Саме 15 лютого 1919 року сталася ще одна подія. ЗУНР (Західноукраїнська Народна Республіка) **ухвалила** [uxʋɑˈlɪlɑ] закон про українську мову.
+> До речі, про історію. Саме 15 лютого 1919 року сталася ще одна подія. ЗУНР (Західноукраїнська Народна Республіка) **ухвалила** закон про українську мову.
 > *   Республіка (жіночий рід) → **ухвалила** (минулий час, вона).
 > Навіть уряди повинні дотримуватися правил граматики!
 

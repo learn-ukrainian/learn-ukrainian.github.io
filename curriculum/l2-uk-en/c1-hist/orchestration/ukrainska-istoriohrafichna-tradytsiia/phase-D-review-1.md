@@ -238,7 +238,7 @@ Total = 139.5 / 15.5 = 9.0/10
 - Content lines read: 326
 - Activity items checked: 5 activities (reading, critical-analysis, essay-response, true-false with 12 items, comparative-study)
 - Ukrainian sentences verified: 60+ (all example sentences, all callout boxes, key narrative sentences)
-- IPA transcriptions checked: 30 (vocabulary file — spot-checked "бездержавний" [bɛzdɛrˈʒɑu̯nɪj] — stress position plausible)
+- IPA transcriptions checked: 30 (vocabulary file — spot-checked "бездержавний" — stress position plausible)
 - Factual claims verified: 15+ (dates, attributions, institutional facts)
 - Issues found: 10
 

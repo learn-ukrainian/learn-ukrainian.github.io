@@ -8,6 +8,15 @@
       "ts": "2026-02-19T11:59:09Z",
       "task_id": "v3-severyn-nalyvaiko-pA",
       "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T07:17:52Z"
+    },
+    "v3-C": {
+      "status": "failed",
+      "ts": "2026-02-27T07:20:13Z",
+      "note": "activities-schema-invalid"
     }
   }
 }

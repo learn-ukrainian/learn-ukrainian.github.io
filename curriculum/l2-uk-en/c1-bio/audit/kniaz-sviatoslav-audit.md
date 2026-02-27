@@ -1,7 +1,7 @@
 # Audit Report: M02 — kniaz-sviatoslav.md
 **Level:** C1-BIO | **Module:** M02 | **Phase:** C1.3 | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 00:41:57
+**Generated:** 2026-02-27 01:51:24
 
 ## Configuration
 **Type:** C1-biography
@@ -26,7 +26,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)

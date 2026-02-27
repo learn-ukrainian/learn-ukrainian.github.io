@@ -8,6 +8,15 @@
       "ts": "2026-02-19T19:31:11Z",
       "task_id": "v3-anatol-petrytskyi-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-26T23:23:27Z"
+    },
+    "v3-C": {
+      "status": "failed",
+      "ts": "2026-02-26T23:25:19Z",
+      "note": "activities-schema-invalid"
     }
   }
 }

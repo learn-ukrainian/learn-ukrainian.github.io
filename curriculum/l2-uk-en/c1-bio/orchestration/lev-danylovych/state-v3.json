@@ -10,9 +10,20 @@
       "mode": "meta-only"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-26T00:16:18Z",
-      "note": "word-count-3784-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-26T23:52:27Z",
+      "note": "adopted-existing-content",
+      "words": 4024
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-26T23:55:04Z",
+      "task_id": "v3-lev-danylovych-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T00:52:07Z",
+      "attempts": 1
     }
   }
 }

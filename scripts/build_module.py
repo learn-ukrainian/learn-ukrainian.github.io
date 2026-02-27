@@ -3056,8 +3056,9 @@ def write_placeholders(ctx: ModuleContext) -> None:
     """Write placeholders.yaml for template filling."""
     placeholders_path = ctx.orch_dir / "placeholders.yaml"
 
-    # Skip if exists and not rebuilding
-    if placeholders_path.exists() and not ctx.rebuild:
+    # Skip if exists and not rebuilding/force-phase
+    # Always refresh on --force-phase (review templates may have changed)
+    if placeholders_path.exists() and not ctx.rebuild and not getattr(ctx, "force_phase", False):
         log("Placeholders: Using existing")
         return
 

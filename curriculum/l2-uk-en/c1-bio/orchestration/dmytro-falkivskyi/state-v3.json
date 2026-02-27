@@ -8,6 +8,11 @@
       "ts": "2026-02-19T19:47:37Z",
       "task_id": "v3-dmytro-falkivskyi-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-27T00:24:01Z",
+      "note": "word-count-3759-below-80pct-5000"
     }
   }
 }

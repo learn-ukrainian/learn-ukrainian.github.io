@@ -10,9 +10,20 @@
       "mode": "meta-only"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-26T00:13:51Z",
-      "note": "word-count-3917-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-26T23:44:23Z",
+      "note": "adopted-existing-content",
+      "words": 4267
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-26T23:46:08Z",
+      "task_id": "v3-danylo-halytskyi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T00:52:03Z",
+      "attempts": 1
     }
   }
 }

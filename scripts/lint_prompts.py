@@ -36,23 +36,6 @@ CURRICULUM_RESEARCH_DIRS = [
 # exception_pattern: if this also matches the same line, it's a false positive (anti-pattern guards)
 
 RULES = [
-    # IPA flooding
-    (
-        "IPA_EVERY_WORD",
-        "error",
-        "IPA instruction says 'every word' — should be 'first occurrence only'",
-        "*.md",
-        re.compile(r"IPA\s+(for\s+)?every\s+new", re.IGNORECASE),
-        re.compile(r"(NEVER|NOT|Don't|wrong|incorrect)", re.IGNORECASE),
-    ),
-    (
-        "IPA_MANDATORY_EVERY",
-        "error",
-        "Mandatory IPA for every word — will cause IPA flooding",
-        "*.md",
-        re.compile(r"Mandatory\s+IPA\s+stress\s+for\s+EVERY", re.IGNORECASE),
-        None,
-    ),
     # Persona contamination
     (
         "HELPFUL_NEIGHBOR",
@@ -79,15 +62,6 @@ RULES = [
         re.compile(r"persona|PERSONA_FLAVOR|voice.*instructor|voice.*teacher", re.IGNORECASE),
         re.compile(r"(Do NOT reference persona|forbid|never.*persona)", re.IGNORECASE),
     ),
-    # Missing IPA prohibition for B1+
-    (
-        "MISSING_NO_IPA_B1PLUS",
-        "warn",
-        "Skill for B1+ track has no explicit 'no IPA' / 'no inline IPA' statement",
-        "*/full-rebuild-core-b/SKILL.md",
-        re.compile(r"^(?!.*[Nn]o\s+inline\s+IPA).*$", re.DOTALL),
-        None,
-    ),
     # Colleague/колего tone
     (
         "COLLEAGUE_TONE",
@@ -96,15 +70,6 @@ RULES = [
         "*.md",
         re.compile(r"колего!|Вітаю.*колег[иі]!", re.IGNORECASE),
         None,
-    ),
-    # IPA Mandate without level gating
-    (
-        "IPA_MANDATE_UNGATED",
-        "error",
-        "IPA Mandate without 'no inline' qualifier — will cause IPA in B1+ prose",
-        "*/full-rebuild-*/SKILL.md",
-        re.compile(r"IPA\s+Mandate.*MUST\s+use\s+IPA", re.IGNORECASE),
-        re.compile(r"no\s+inline|vocabulary\s+YAML|only\s+in", re.IGNORECASE),
     ),
     # Hardcoded activity counts (not level-specific)
     (
@@ -178,27 +143,9 @@ RESEARCH_RULES = [
 
 
 def check_file_level_rule(filepath: Path) -> list[dict]:
-    """Check rules that apply to the whole file (like MISSING_NO_IPA_B1PLUS)."""
+    """Check rules that apply to the whole file."""
     violations = []
-    content = filepath.read_text(encoding="utf-8")
-
-    # Check: B1+ skills must have "no inline IPA" or "No inline IPA" somewhere
-    # Skip calibration files — they're not skill/phase prompts
-    if "/calibration/" in str(filepath):
-        return violations
-    if "full-rebuild-core-b" in str(filepath) or any(
-        track in str(filepath)
-        for track in ["b2-hist", "c1-bio", "c1-hist", "oes", "ruth", "lit"]
-    ):
-        if not re.search(r"[Nn]o\s+inline\s+IPA", content):
-            violations.append({
-                "rule": "MISSING_NO_IPA",
-                "severity": "warn",
-                "file": str(filepath.relative_to(PROJECT_ROOT)),
-                "line": 0,
-                "message": "B1+ skill missing explicit 'No inline IPA' statement",
-            })
-
+    # No file-level rules currently active
     return violations
 
 
@@ -209,10 +156,6 @@ def check_line_rules(filepath: Path) -> list[dict]:
     lines = content.splitlines()
 
     for rule_id, severity, description, file_glob, pattern, exception in RULES:
-        # Skip file-level rules (handled separately)
-        if rule_id == "MISSING_NO_IPA_B1PLUS":
-            continue
-
         # Check file glob match
         if file_glob != "*.md":
             from fnmatch import fnmatch

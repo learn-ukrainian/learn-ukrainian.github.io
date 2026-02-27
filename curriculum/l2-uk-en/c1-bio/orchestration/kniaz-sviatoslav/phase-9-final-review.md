@@ -124,7 +124,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
 
 ---NEW---
 - term: воїн
-  ipa: /ˈʋɔjin/
+  ipa:
   pos: іменник
   gender: чол.
   translation: warrior
@@ -136,7 +136,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Святослав увійшов в історію як хоробрий воїн, якого боялися навіть вороги."
 
 - term: завойовник
-  ipa: /zɑˈʋɔjɔʋnɪk/
+  ipa:
   pos: іменник
   gender: чол.
   translation: conqueror
@@ -147,7 +147,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Святослав увійшов у світову історію як завойовник, що знищив Хозарський каганат."
 
 - term: каганат
-  ipa: /kɑɦɑˈnɑt/
+  ipa:
   pos: іменник
   gender: чол.
   translation: khaganate
@@ -158,7 +158,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Розгром Хозарського каганату відкрив Русі прямий вихід на торгові шляхи Сходу."
 
 - term: похід
-  ipa: /ˈpɔxid/
+  ipa:
   pos: іменник
   gender: чол.
   translation: campaign, march
@@ -170,7 +170,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Під час Балканського походу Святослав захопив понад вісімдесят міст уздовж Дунаю."
 
 - term: дружина
-  ipa: /druˈʒɪnɑ/
+  ipa:
   pos: іменник
   gender: жін.
   translation: retinue, warband (princely armed force)
@@ -182,7 +182,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Дружина Святослава відзначалася незламним бойовим духом і сліпою відданістю своєму ватажкові."
 
 - term: печеніги
-  ipa: /pɛt͡ʃɛˈnʲiɦɪ/
+  ipa:
   pos: іменник
   gender: чол. мн.
   translation: Pechenegs (nomadic steppe people)
@@ -193,7 +193,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Поки Святослав воював на Балканах, печеніги оточили Київ і ледь не захопили місто."
 
 - term: пороги
-  ipa: /pɔˈrɔɦɪ/
+  ipa:
   pos: іменник
   gender: чол. мн.
   translation: rapids (in a river)
@@ -204,7 +204,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Свенельд застерігав: «Обійди, княже, пороги на конях, бо стоять печеніги»."
 
 - term: засідка
-  ipa: /zɑˈsidkɑ/
+  ipa:
   pos: іменник
   gender: жін.
   translation: ambush
@@ -215,7 +215,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Біля Дніпрових порогів на Святослава вже чекала підготовлена засідка."
 
 - term: данник
-  ipa: /ˈdɑnnɪk/
+  ipa:
   pos: іменник
   gender: чол.
   translation: tributary (one who pays tribute)
@@ -226,7 +226,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "В'ятичі були данниками хозарів, доки Святослав не звільнив їх і не включив до складу Русі."
 
 - term: договір
-  ipa: /dɔɦɔˈʋir/
+  ipa:
   pos: іменник
   gender: чол.
   translation: treaty, agreement
@@ -237,7 +237,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Зрештою, сили були нерівними, і Святослав був змушений укласти почесний мирний договір."
 
 - term: чаша
-  ipa: /ˈt͡ʃɑʃɑ/
+  ipa:
   pos: іменник
   gender: жін.
   translation: cup, goblet
@@ -248,7 +248,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Хан Куря наказав зробити ритуальну чашу з черепа Святослава, окувавши її золотом."
 
 - term: череп
-  ipa: /ˈt͡ʃɛrɛp/
+  ipa:
   pos: іменник
   gender: чол.
   translation: skull
@@ -258,7 +258,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Пити з черепа великого воїна означало не зневагу, а найвищу честь і містичне причастя до його сили."
 
 - term: здобич
-  ipa: /ˈzdɔbɪt͡ʃ/
+  ipa:
   pos: іменник
   gender: жін.
   translation: spoils, booty
@@ -269,7 +269,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Дружинники жили за рахунок здобичі та данини з підкорених народів."
 
 - term: облога
-  ipa: /ɔbˈlɔɦɑ/
+  ipa:
   pos: іменник
   gender: жін.
   translation: siege
@@ -280,7 +280,7 @@ FILE: curriculum/l2-uk-en/c1-bio/vocabulary/kniaz-sviatoslav.yaml
   example: "Тримісячна облога Доростола стала легендою військової доблесті руських воїнів."
 
 - term: перемога
-  ipa: /pɛrɛˈmɔɦɑ/
+  ipa:
   pos: іменник
   gender: жін.
   translation: victory

@@ -144,7 +144,7 @@ options:
 
 **In YAML explanations, use the Ukrainian word directly — NEVER Latin transliteration, NEVER IPA symbols.**
 
-IPA symbols (`[ʒ]`, `[ˈʃkɔ.lɑ]`) belong in markdown content only. YAML explanations should reference Ukrainian words in Cyrillic.
+IPA symbols (`[ʒ]`, ``) belong in markdown content only. YAML explanations should reference Ukrainian words in Cyrillic.
 
 ```yaml
 ❌ WRONG (Latin transliteration):
@@ -153,7 +153,7 @@ IPA symbols (`[ʒ]`, `[ˈʃkɔ.lɑ]`) belong in markdown content only. YAML expl
   explanation: 'The first vowel in Kyiv is hard И (Ky-yiv).'
 
 ❌ WRONG (IPA in YAML):
-  explanation: 'Жити [ˈʒɪ.tɪ] uses the hard И sound.'
+  explanation: 'Жити uses the hard И sound.'
 
 ✅ RIGHT (Ukrainian word directly):
   explanation: 'Жити uses the hard И sound.'

@@ -91,6 +91,7 @@ export default defineConfig({
         { label: 'C1-PRO - Фахова українська', autogenerate: { directory: 'c1-pro' }, collapsed: true },
         { label: 'OES - Old East Slavic', autogenerate: { directory: 'oes' }, collapsed: true },
         { label: 'RUTH - Ruthenian', autogenerate: { directory: 'ruth' }, collapsed: true },
+        { label: 'Direct — Українська з нуля', autogenerate: { directory: 'direct/a1' }, collapsed: true },
       ],
     }),
     react(),

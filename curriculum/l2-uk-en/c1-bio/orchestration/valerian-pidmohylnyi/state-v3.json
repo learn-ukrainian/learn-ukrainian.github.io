@@ -8,6 +8,21 @@
       "ts": "2026-02-19T20:05:50Z",
       "task_id": "v3-valerian-pidmohylnyi-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T00:59:45Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T01:01:57Z",
+      "task_id": "v3-valerian-pidmohylnyi-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T01:01:58Z",
+      "attempts": 0,
+      "note": "auto-fix"
     }
   }
 }

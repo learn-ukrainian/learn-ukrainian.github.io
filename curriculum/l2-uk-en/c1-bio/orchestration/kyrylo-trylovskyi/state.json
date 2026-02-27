@@ -2,13 +2,39 @@
   "slug": "kyrylo-trylovskyi",
   "track": "c1-bio",
   "module_num": 58,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
       "timestamp": "2026-02-20T23:20:54Z",
       "task_id": "yw-kyrylo-trylovskyi-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:55:54Z",
+      "words": 6110,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:57:44Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:57:44Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:57:47Z",
+      "note": "v3-audit-autofix"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:57:47Z",
+      "note": "v3-audit-autofix"
     }
   },
-  "last_updated": "2026-02-20T23:20:54Z"
+  "last_updated": "2026-02-27T00:57:47Z"
 }

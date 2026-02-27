@@ -10,9 +10,21 @@
       "mode": "meta-only"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-25T23:43:48Z",
-      "note": "word-count-3894-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-26T23:12:34Z",
+      "note": "adopted-existing-content",
+      "words": 4243
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-26T23:14:42Z",
+      "task_id": "v3-knyazhna-anna-yaroslavna-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T00:51:37Z",
+      "attempts": 0,
+      "note": "auto-fix"
     }
   }
 }

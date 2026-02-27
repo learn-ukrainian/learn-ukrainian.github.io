@@ -2,7 +2,7 @@
 **Level:** C1-BIO | **Module:** M03 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 00:42:02
+**Generated:** 2026-02-27 01:51:28
 
 ## Configuration
 **Type:** C1-biography
@@ -27,7 +27,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)

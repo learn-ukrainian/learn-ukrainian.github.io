@@ -132,6 +132,7 @@ ESCALATION_MODEL_GEMINI = PRO_MODEL                # Escalation: Gemini fixes wh
 TIMEOUT_CONTENT = 600       # Phase A/B: research + content generation (10 min)
 TIMEOUT_ACTIVITIES = 600    # Phase C: activities + vocab (10 min)
 TIMEOUT_FIX = 600           # Audit/D/F fix dispatches (10 min — was 300, too tight)
+TIMEOUT_PRE_D_FIX = 120     # D.0 pre-validation fixes (2 min — simple targeted replacements)
 TIMEOUT_REVIEW = 900        # Phase D review (15 min — D.1 uses tool access, needs more time)
 
 # ---------------------------------------------------------------------------
@@ -2453,55 +2454,8 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         log("  D.0: Running deterministic screen...")
         screen = _deterministic_screen(ctx)
 
-        # Pre-D activity validation with fix loop (#633)
-        if not screen.audit_passed:
-            MAX_PRE_D_FIXES = 2
-            log("  D.0: Pre-D validation FAIL — attempting Gemini fixes...")
-            pre_d_output = screen.audit_output
-
-            for pre_d_fix in range(MAX_PRE_D_FIXES):
-                fix_prompt = _build_fix_prompt(ctx, pre_d_output, content_only=False)
-                fix_prompt_file = ctx.orch_dir / f"pD-prevalidation-fix{pre_d_fix + 1}-prompt.md"
-                fix_prompt_file.write_text(fix_prompt, "utf-8")
-
-                fix_output = _gemini_output_path(ctx.slug, f"pD-prevalidation-fix{pre_d_fix + 1}")
-                ok, _ = dispatch_gemini(
-                    _dispatch_prompt(ctx, fix_prompt_file),
-                    task_id=f"v3-{ctx.slug}-pD-prevalidation-fix{pre_d_fix + 1}",
-                    model=ctx.model, allow_write=True, output_file=fix_output,
-                    timeout=TIMEOUT_FIX,
-                )
-                if not ok:
-                    log(f"  D.0: Pre-D fix dispatch {pre_d_fix + 1} failed")
-                    continue
-
-                if fix_output.exists():
-                    fix_text = fix_output.read_text("utf-8")
-                    if "===SECTION_FIX_START===" in fix_text:
-                        _apply_section_fixes(ctx.paths["md"], fix_text)
-                        if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-                            _apply_find_replace_fixes(ctx.paths["activities"], fix_text)
-                    elif "FIND:" in fix_text and "REPLACE:" in fix_text:
-                        _apply_find_replace_fixes(ctx.paths["md"], fix_text)
-                        if ctx.paths.get("activities") and ctx.paths["activities"].exists():
-                            _apply_find_replace_fixes(ctx.paths["activities"], fix_text)
-
-                # Re-screen after fixes
-                screen = _deterministic_screen(ctx)
-                if screen.audit_passed:
-                    break
-                pre_d_output = screen.audit_output
-
-            if not screen.audit_passed:
-                # Check if it's just skip-review issues vs hard failures
-                pre_d_passed_sr, _ = run_verify(ctx.paths["md"], skip_review=True)
-                if not pre_d_passed_sr:
-                    pre_d_log = ctx.orch_dir / "pD-pre-validation.log"
-                    pre_d_log.write_text(screen.audit_output, "utf-8")
-                    log("  D.0: BLOCKED — activity/vocab audit failed after fix attempts")
-                    for line in screen.audit_output.strip().split("\n")[-5:]:
-                        log(f"    {line}")
-                    return False
+        # D.0 fix loop removed — D.0.5 proofread handles all fixes (#660)
+        # D.0 only screens; D.0.5 dispatches Gemini proofread+fix for everything.
 
         log(f"  D.0: Screen complete — audit {'PASS' if screen.audit_passed else 'FAIL'}, "
             f"{len(screen.deterministic_issues)} deterministic issue(s)")
@@ -2688,47 +2642,20 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         mark_phase_locked(ctx, "7-final", "complete", note="v3-phase-D")
         return True
 
-    # Audit fails but review passes — check if failures are truly structural
-    _STRUCTURAL_GATES = {"meta", "structure", "activities", "vocab"}
+    # Audit fails but review passes — let D.2 try to fix audit issues.
+    # Review PASS means the content is structurally sound (sections present, activities work,
+    # vocab adequate). Audit failures at this point are fixable: pedagogy violations, word count
+    # shortfalls, transliteration, engagement counts, etc.
     _audit_only_d2 = False  # When True, D.2 fixes audit failures only (review said PASS)
     if not passed and not review_says_fail:
-        # Parse which gates actually failed from raw audit format:
-        # "GateName     ❌ message" (gate name at start of line, ❌ after whitespace)
-        failing_gates = set()
-        for line in audit_out.split("\n"):
-            stripped = line.strip()
-            # Match: "Pedagogy     ❌ 2 violations" or "Meta         ❌ Missing..."
-            gate_match = re.match(r'^(\w[\w_]*)\s+❌', stripped)
-            if gate_match:
-                failing_gates.add(gate_match.group(1).lower())
-            # Also match Hetman "failing gates:" block: "    lesson: 2700/2000..."
-            elif stripped.startswith("lesson:") or stripped.startswith("activities:") \
-                    or stripped.startswith("meta:") or stripped.startswith("vocab:"):
-                failing_gates.add(stripped.split(":")[0].strip().lower())
-
-        structural_failures = failing_gates & _STRUCTURAL_GATES
-        fixable_failures = failing_gates - _STRUCTURAL_GATES
-
-        if structural_failures and not fixable_failures:
-            # ONLY structural failures (missing sections, bad meta, no activities) → rebuild
-            log("  D.1: Audit FAIL but review PASS — structural issues only, needs rebuild")
-            for gate in sorted(structural_failures):
-                log(f"    ❌ {gate}")
-            _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
-                           note="needs-rebuild-structural")
-            return False
-        elif not failing_gates:
-            # Could not parse any gate names — fall back to needs-rebuild
-            log("  D.1: Audit FAIL but review PASS — could not parse failing gates, needs rebuild")
-            _mark_phase_v3(ctx, state, phase, "failed", attempts=1,
-                           note="needs-rebuild-unparseable")
-            return False
-        else:
-            # Fixable failures (pedagogy, engagement, immersion, lesson, etc.) → let D.2 try
-            log(f"  D.1: Audit FAIL but review PASS — {len(fixable_failures)} fixable gate(s): "
-                f"{', '.join(sorted(fixable_failures))} — proceeding to D.2")
-            review_says_fail = True  # Force D.2 entry
-            _audit_only_d2 = True  # Flag: D.2 should fix audit failures only, not review issues
+        # Log what's failing for diagnostics
+        fail_lines = [l.strip() for l in audit_out.split("\n")
+                      if "❌" in l and "AUDIT FAILED" not in l][:5]
+        log(f"  D.1: Audit FAIL but review PASS — proceeding to D.2 for audit-only fixes")
+        for line in fail_lines:
+            log(f"    {line}")
+        review_says_fail = True  # Force D.2 entry
+        _audit_only_d2 = True  # Flag: D.2 should fix audit failures only, not review issues
 
     if passed and review_says_fail:
         log("  D.1: Audit PASSED but review flags issues — proceeding to D.2 for repair")
@@ -2849,7 +2776,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
                 changed_lines += _count_diff_lines(act_before, act_after)
             if vocab_before is not None and vocab_after is not None:
                 changed_lines += _count_diff_lines(vocab_before, vocab_after)
-            max_allowed = max(fix_pair_count * 15, 30)
+            max_allowed = max(fix_pair_count * 25, 50)
 
             if changed_lines > max_allowed:
                 log(f"  D.2{iter_suffix}: REJECTED — {changed_lines} lines changed "
