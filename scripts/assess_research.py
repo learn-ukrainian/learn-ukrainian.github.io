@@ -364,14 +364,14 @@ def _render_refresh_queue(track_id: str, results: list[dict]):
     print("\u2550" * 70)
     if queue:
         print(f"{len(queue)} module(s) ready for content refresh")
-        print(f"Run: .venv/bin/python scripts/build_module_v2.py {track_id} {{num}} --refresh")
+        print(f"Run: .venv/bin/python scripts/build_module_v3.py {track_id} {{num}} --refresh")
     else:
         print("No modules need content refresh.")
     print()
 
 
 def _process_refresh_queue(track_id: str, results: list[dict]):
-    """Process the refresh queue — run build_module_v2.py --refresh for each module."""
+    """Process the refresh queue — run build_module_v3.py --refresh for each module."""
     import subprocess
 
     queue = _build_refresh_queue(results)
@@ -394,7 +394,7 @@ def _process_refresh_queue(track_id: str, results: list[dict]):
 
         cmd = [
             str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
-            str(SCRIPTS_DIR / "build_module_v2.py"),
+            str(SCRIPTS_DIR / "build_module_v3.py"),
             track_id, str(num), "--refresh",
         ]
         try:
@@ -657,7 +657,7 @@ def _process_enrich_plans(track_id: str, results: list[dict], min_score: int = 9
 
         cmd = [
             str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
-            str(SCRIPTS_DIR / "build_module_v2.py"),
+            str(SCRIPTS_DIR / "build_module_v3.py"),
             track_id, str(num), "--force-phase", "0.5",
         ]
         try:
@@ -689,7 +689,7 @@ def main():
     parser.add_argument("num", nargs="?", type=int, help="Module number")
     parser.add_argument("--gaps", action="store_true", help="Only show modules with gaps")
     parser.add_argument("--refresh-queue", action="store_true", help="List modules where content refresh is recommended")
-    parser.add_argument("--process", action="store_true", help="Process the refresh queue (run build_module_v2.py --refresh for each)")
+    parser.add_argument("--process", action="store_true", help="Process the refresh queue (run build_module_v3.py --refresh for each)")
     parser.add_argument("--upgrade", action="store_true", help="List modules with research below --min-score")
     parser.add_argument("--upgrade-process", action="store_true", help="Regenerate research for modules below --min-score")
     parser.add_argument("--min-score", type=int, default=9, help="Minimum research score target (default: 9)")

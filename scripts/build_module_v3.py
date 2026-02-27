@@ -56,29 +56,33 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 # ---------------------------------------------------------------------------
-# Import from v2 — v3 reuses v2's helpers and monkey-patches
+# Import from pipeline_lib — consolidated shared utilities (no monkey-patching)
 # ---------------------------------------------------------------------------
-import build_module_v2 as v2
-from build_module_v2 import (
-    # Monkey-patched dispatch + log (already wired up at v2 import time)
+import pipeline_lib
+from pipeline_lib import (
+    # Dispatch + logging
     dispatch_gemini, log,
     # Phase helpers
-    run_verify_prose_only, run_verify,
+    run_verify,
     _build_fix_prompt, _apply_section_fixes, _identify_affected_sections,
     fill_template, _dispatch_prompt, _gemini_output_path,
-    mark_phase_locked,
+    mark_phase_locked, _run_with_heartbeat, _init_log,
     # Phase E + F (MDX + Claude final review) — reuse directly
     phase_8_mdx as phase_E_v3_delegate,
     phase_9_final_review as phase_F_v3_delegate,
+    # Phase B content (archive check + fallback to phase_2_content)
+    phase_B_content,
     # Preflight + completion
     preflight_v2, write_completion_report_v2,
-)
-import build_module as v1
-from build_module import (
+    # State helpers
     is_phase_complete, load_state, save_state, _now_iso,
-    extract_phase_output, write_placeholders,
+    write_placeholders,
     write_review_with_hash,
     ModuleContext,
+    # Thread-safe locks
+    _state_lock, FileLock,
+    # Validation
+    _validate_activities_yaml,
 )
 from batch_gemini_config import (
     CURRICULUM_DIR, PHASES_DIR, PRO_MODEL, PROJECT_ROOT,
@@ -188,8 +192,7 @@ def _is_phase_v3_complete(ctx: ModuleContext, phase_id: str, state: dict) -> boo
 
 
 def _mark_phase_v3(ctx: ModuleContext, state: dict, phase_id: str, status: str, **extra: Any) -> None:
-    """Mark a v3 phase in state-v3.json (thread-safe via v2's file lock)."""
-    from build_module_v2 import _state_lock, FileLock
+    """Mark a v3 phase in state-v3.json (thread-safe via file lock)."""
     lock = _state_lock or FileLock(str(ctx.orch_dir / "state-v3.json.lock"))
     with lock:
         phases = state.setdefault("phases", {})
@@ -564,7 +567,7 @@ def _dispatch_claude_phase(
                  "is automatically discarded. Do NOT summarize — produce the FULL output requested."])
 
     try:
-        from build_module import _run_with_heartbeat
+        from pipeline_lib import _run_with_heartbeat
         result = _run_with_heartbeat(
             cmd,
             label=f"Claude {phase_label}",
@@ -1393,7 +1396,7 @@ def phase_B_v3(ctx: ModuleContext, state: dict) -> bool:
         log("  Phase B: DRY-RUN — would dispatch content (phase-2-content.md)")
         return True
 
-    ok = v2.phase_2_v2(ctx)
+    ok = phase_B_content(ctx)
 
     if not ok:
         _mark_phase_v3(ctx, state, phase, "failed")
@@ -1530,7 +1533,6 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
     act_path = ctx.paths.get("activities")
     voc_path = ctx.paths.get("vocabulary")
     if (act_path and act_path.exists() and voc_path and voc_path.exists()):
-        from build_module_v2 import _validate_activities_yaml
         if _validate_activities_yaml(act_path):
             log("  Phase C: ADOPT — existing activities/vocab found and valid")
             _mark_phase_v3(ctx, state, phase, "complete", note="adopted-existing")
@@ -1547,7 +1549,6 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
     # recovery), skip the full dispatch and go straight to vocabulary-only.
     if (act_path and act_path.exists() and act_path.stat().st_size > 10
             and (not voc_path or not voc_path.exists())):
-        from build_module_v2 import _validate_activities_yaml
         if _validate_activities_yaml(act_path):
             log("  Phase C: Activities exist and valid, vocabulary missing — vocab-only dispatch")
             use_claude = "C" in getattr(ctx, "use_claude", set())
@@ -1575,8 +1576,7 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
                         voc_path.write_text(vocab_text, "utf-8")
                         log(f"  Phase C: Vocabulary generated via fast-path → {voc_path.name}")
                         # Validate activities schema before marking complete
-                        from build_module_v2 import _validate_activities_yaml as _vact
-                        if not _vact(act_path):
+                        if not _validate_activities_yaml(act_path):
                             log("  Phase C: FAILED — activities YAML failed schema validation")
                             _mark_phase_v3(ctx, state, phase, "failed", note="activities-schema-invalid")
                             return False
@@ -1699,7 +1699,6 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
 
     # Post-C schema validation gate (#623): verify generated YAML is valid
     # before marking complete — prevents 15-20 modules from wasting audit+D cycles
-    from build_module_v2 import _validate_activities_yaml
     if act_path and act_path.exists() and not _validate_activities_yaml(act_path):
         log(f"  Phase C: FAILED — activities YAML failed schema validation")
         _mark_phase_v3(ctx, state, phase, "failed", note="activities-schema-invalid")
@@ -3176,7 +3175,7 @@ def _run_final_phases(ctx: ModuleContext, state: dict) -> bool:
     log(f"\n  Phase E: {PHASE_LABELS_V3['E']} (post-review)")
     # Reset v2 MDX state so it regenerates even when already complete
     ctx.state.get("phases", {}).pop("8", None)
-    v1.save_state(ctx)
+    save_state(ctx)
     return phase_E_v3(ctx)
 
 
@@ -3592,7 +3591,6 @@ def main() -> int:
 
 def _run_single_module(args: argparse.Namespace) -> int:
     """Run the v3 pipeline for a single module. Returns 0 on success, 1 on failure."""
-    from build_module import _init_log
     try:
         # --rebuild: nuke v3 state
         if args.rebuild:

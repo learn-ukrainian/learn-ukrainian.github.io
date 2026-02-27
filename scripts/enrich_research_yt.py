@@ -8,7 +8,7 @@ import re
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_module import dispatch_gemini
+from pipeline_lib import dispatch_gemini_raw as dispatch_gemini
 
 def download_transcript(url: str) -> str:
     print(f"Downloading transcript for {url}...")

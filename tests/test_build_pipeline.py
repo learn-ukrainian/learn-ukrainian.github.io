@@ -452,7 +452,7 @@ class TestPhaseCGates:
 
     def test_valid_activities_pass_schema(self, tmp_path):
         """Well-formed activities YAML should pass validation."""
-        from build_module_v2 import _validate_activities_yaml
+        from pipeline_lib import _validate_activities_yaml
         act = tmp_path / "activities.yaml"
         # Schema requires: question (not q), options array with exactly 4 items
         act.write_text(
@@ -474,14 +474,14 @@ class TestPhaseCGates:
 
     def test_empty_file_passes_schema(self, tmp_path):
         """Empty YAML file parses to None — validator treats as 'nothing to validate'."""
-        from build_module_v2 import _validate_activities_yaml
+        from pipeline_lib import _validate_activities_yaml
         act = tmp_path / "activities.yaml"
         act.write_text("")
         # Empty file = no activities to validate = valid (Phase C checks existence separately)
         assert _validate_activities_yaml(act) is True
 
     def test_malformed_yaml_fails_schema(self, tmp_path):
-        from build_module_v2 import _validate_activities_yaml
+        from pipeline_lib import _validate_activities_yaml
         act = tmp_path / "activities.yaml"
         act.write_text("not: valid: yaml: [[[")
         assert _validate_activities_yaml(act) is False

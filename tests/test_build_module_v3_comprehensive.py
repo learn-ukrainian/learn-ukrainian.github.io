@@ -137,16 +137,16 @@ class TestMarkPhaseV3:
 
     def test_marks_complete(self, mock_ctx):
         state = {"phases": {}}
-        with patch("build_module_v2._state_lock", None), \
-             patch("build_module_v2.FileLock", MagicMock()):
+        with patch("pipeline_lib._state_lock", None), \
+             patch("pipeline_lib.FileLock", MagicMock()):
             _mark_phase_v3(mock_ctx, state, "A", "complete")
         assert state["phases"]["v3-A"]["status"] == "complete"
         assert "ts" in state["phases"]["v3-A"]
 
     def test_marks_failed_with_extras(self, mock_ctx):
         state = {"phases": {}}
-        with patch("build_module_v2._state_lock", None), \
-             patch("build_module_v2.FileLock", MagicMock()):
+        with patch("pipeline_lib._state_lock", None), \
+             patch("pipeline_lib.FileLock", MagicMock()):
             _mark_phase_v3(mock_ctx, state, "D", "failed", note="needs-rebuild", attempts=2)
         assert state["phases"]["v3-D"]["status"] == "failed"
         assert state["phases"]["v3-D"]["note"] == "needs-rebuild"
@@ -154,8 +154,8 @@ class TestMarkPhaseV3:
 
     def test_saves_to_disk(self, mock_ctx):
         state = {"phases": {}}
-        with patch("build_module_v2._state_lock", None), \
-             patch("build_module_v2.FileLock", MagicMock()):
+        with patch("pipeline_lib._state_lock", None), \
+             patch("pipeline_lib.FileLock", MagicMock()):
             _mark_phase_v3(mock_ctx, state, "B", "complete")
         sf = mock_ctx.orch_dir / "state-v3.json"
         assert sf.exists()

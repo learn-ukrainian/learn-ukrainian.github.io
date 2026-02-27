@@ -9,7 +9,7 @@ import re
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_module import dispatch_gemini
+from pipeline_lib import dispatch_gemini_raw as dispatch_gemini
 
 def get_subject_from_research(research_path: Path) -> str | None:
     """Extract the 'subject' from the YAML ledger in the research file."""

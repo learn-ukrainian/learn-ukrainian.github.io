@@ -1718,98 +1718,29 @@ Phase A (research+meta)   [Gemini by default; --use-claude A for Claude]
 - Track context injected into Phases B + C for cross-module consistency
 - State: `state-v3.json` (no conflict with v2's `state.json`)
 - Templates: `phase-A-seminar.md`, `phase-A-core.md`, `phase-D-review-fix.md`
-- v2 remains available as fallback
+- Shared utilities: `scripts/pipeline_lib.py` (extracted from v1+v2 in #671)
 
-### Deterministic Python Builder v2 (Fallback — archive support)
+### Shared Utility Library
 
-`scripts/build_module_v2.py` — use for modules with archived prose (1.4M word
-archive detection + restore). Also the utility library imported by v3.
-Gemini only gets called for LLM tasks (research, writing, reviewing).
+`scripts/pipeline_lib.py` — all shared functions used by v3 and external scripts.
+Extracted from the former v1 (`build_module.py`) and v2 (`build_module_v2.py`) in #671.
 
-```bash
-# Single module (resume-aware)
-.venv/bin/python scripts/build_module_v2.py {track} {num}
+Contains: `dispatch_gemini` (with rate-limit fallback), `dispatch_gemini_raw` (no fallback),
+`mark_phase` (thread-safe via FileLock), state helpers, template helpers, verify helpers,
+archive detection/restoration, Phase B/E/F delegates, preflight, logging, config tables.
 
-# Build entire track sequentially (skips already-passing modules)
-.venv/bin/python scripts/build_module_v2.py {track} --all
+### Legacy Shims
 
-# Build a range of modules
-.venv/bin/python scripts/build_module_v2.py {track} --range 4-44
-
-# Rebuild from scratch (nuke ALL state + artifacts)
-.venv/bin/python scripts/build_module_v2.py {track} {num} --rebuild
-
-# Re-run a single phase (cleans that phase's artifacts only)
-.venv/bin/python scripts/build_module_v2.py {track} {num} --force-phase 3
-
-# Restart from a phase (cleans that phase + all subsequent, then runs forward)
-.venv/bin/python scripts/build_module_v2.py {track} {num} --restart-from 6
-
-# Force fresh research even if research file exists
-.venv/bin/python scripts/build_module_v2.py {track} {num} --force-research
-
-# Regenerate prose from updated research
-.venv/bin/python scripts/build_module_v2.py {track} {num} --refresh
-
-# Dry-run (show plan, no Gemini dispatches, no artifact cleanup)
-.venv/bin/python scripts/build_module_v2.py {track} {num} --dry-run
-
-# Just verify (run audit, print PASS/FAIL, exit immediately)
-.venv/bin/python scripts/build_module_v2.py {track} {num} --verify
-
-# Combine: dry-run entire track to see what needs building
-.venv/bin/python scripts/build_module_v2.py {track} --all --dry-run
-```
-
-**Pipeline phases** (all handled within one command):
-```
-Phase 0 (research) → 0.5 (enrich) → 1 (meta) → 2 (prose) → 3 (prose audit+fix)
-→ 4ab (activities+vocab) → 6 (review) → 6b (apply fixes)
-→ 5 (enrichment audit+fix) → 7 (final audit+fix) → 8 (MDX)
-```
-
-**After `build_module_v2.py` passes**, run Claude cross-agent review:
-```bash
-/final-review {track} {num}    # Claude QA (~5 turns) — separate from Gemini's Phase 6
-```
-
-**Artifact cleanup** (automatic on re-runs):
-
-| Flag | Cleans | Runs |
-|------|--------|------|
-| `--force-phase 6b` | Phase 6b artifacts only | That one phase |
-| `--restart-from 6` | Phase 6 + all subsequent artifacts + state | Pipeline from phase 6 onward |
-| `--rebuild` | ALL artifacts + state.json | Full pipeline from scratch |
-
-Each phase's orchestration files (prompts, logs, verify files), external artifacts
-(audit reports, review files, status JSON), and state entries are cleaned automatically.
-No stale files from previous runs.
-
-**Key advantages:**
-- Deterministic state tracking in `orchestration/{slug}/state.json`
-- Automatic artifact cleanup on re-runs (no stale prompts/logs)
-- Whole-module prose generation (single Gemini call per module)
-- Prose quality gate (drill blocks, glossary lists, LLM fingerprints)
-- Batch mode (`--all`, `--range`) with auto-skip for passing modules
-- Config tables for immersion rules, level constraints, activity configs
-
-### Legacy v1 Builder
-
-`scripts/build_module.py` — the original split-mode builder. Use v2 instead.
-
-```bash
-.venv/bin/python scripts/build_module.py {track} {num}                # Full pipeline
-.venv/bin/python scripts/build_module.py {track} {num} --content-only # Prose only
-.venv/bin/python scripts/build_module.py {track} {num} --enrich       # Activities only
-```
+`scripts/build_module.py` — backward-compat shim that re-exports from `pipeline_lib`.
+`scripts/build_module_v2.py` — **deleted** (#671). All functionality moved to `pipeline_lib.py`.
 
 ### Key Components
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
 | **Module builder v3** | `scripts/build_module_v3.py` | **4-call optimised pipeline (preferred)** |
-| Module builder v2 | `scripts/build_module_v2.py` | E2E pipeline — fallback, archive support |
-| Module builder v1 | `scripts/build_module.py` | Legacy split-mode builder (utility library for v2/v3) |
+| Shared utilities | `scripts/pipeline_lib.py` | Dispatch, state, verify, config (extracted #671) |
+| v1 shim | `scripts/build_module.py` | Backward-compat re-export from pipeline_lib |
 | Final review (Claude) | `claude_extensions/commands/final-review.md` | Claude cross-agent QA |
 | Final review (Gemini) | `.gemini/skills/final-review/SKILL.md` | Gemini adversarial QA |
 | Verify gates | `scripts/otaman_verify.py`, `scripts/hetman_verify.py` | Hard pass/fail gates |
