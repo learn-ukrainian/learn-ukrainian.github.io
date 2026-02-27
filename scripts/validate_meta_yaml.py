@@ -39,7 +39,7 @@ CURRICULUM_BASE = Path("curriculum/l2-uk-en")
 # Levels that use the new meta YAML architecture
 META_YAML_LEVELS = [
     "a1", "a2", "b1", "b2", "hist", 
-    "c1", "c1-hist", "c1-bio", "c2", "lit"
+    "c1", "istoriohrafiia", "c1-bio", "c2", "lit"
 ]
 
 # Default values for missing optional fields

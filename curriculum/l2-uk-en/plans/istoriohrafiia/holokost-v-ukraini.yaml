@@ -1,0 +1,108 @@
+module: istoriohrafiia-119
+level: istoriohrafiia
+sequence: 119
+version: '1.0'
+title: 'Голокост в Україні: Співучасть і рятування'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of голокост в україні: співучасть і рятування'
+- Evaluate the historical significance of найтемніша сторінка
+content_outline:
+- section: Вступ — Найтемніша сторінка
+  subsections:
+  - Голокост в Україні — масштаб
+  - 1,5 мільйона жертв
+  - Співучасть І рятування
+  - Структура модуля
+- section: «Голокост від куль»
+  subsections:
+  - Айнзацгрупи
+  - Бабин Яр — символ
+  - Методи знищення
+  - Чому в Україні — особливо
+- section: Українська поліція
+  subsections:
+  - Допоміжна поліція — хто йшов
+  - Роль у Голокості
+  - Не виправдання — пояснення
+  - Масштаб участі
+- section: ОУН і євреї
+  subsections:
+  - Антисемітизм в ОУН
+  - Погроми 1941
+  - Еволюція позиції
+  - Суперечливість
+- section: Праведники
+  subsections:
+  - 2700+ українських праведників
+  - Митрополит Шептицький
+  - Ризик — смерть
+  - Індивідуальний вибір
+- section: Підсумок
+  subsections:
+  - І злочинці, і рятівники
+  - Не «українці» — окремі люди
+  - Перехід до радянського антисемітизму
+vocabulary:
+- Голокост
+- «Голокост від куль»
+- Бабин Яр
+- айнзацгрупи
+- допоміжна поліція
+- співучасть
+- праведник
+- рятування
+- жертва
+- злочин
+- гетто
+- «юденрат»
+- «Яд Вашем»
+- Шептицький
+- колабораціонізм
+activities:
+- type: critical-analysis
+  focus: Holocaust in Ukraine — numbers and geography
+- type: critical-analysis
+  focus: Who collaborated and why
+- type: reading
+  focus: Ukrainian Righteous — stories and patterns
+- type: critical-analysis
+  focus: OUN and Jews — complex relationship
+- type: essay-response
+  focus: Як оцінювати українську роль у Голокості?
+sources:
+- name: Голокост в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голокост_в_Україні
+  type: reference
+  notes: Holocaust overview
+- name: Бабин Яр (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Бабин_Яр
+  type: reference
+  notes: Babi Yar
+- name: Праведники народів світу (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Праведники_народів_світу
+  type: reference
+  notes: Righteous Among Nations
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Holocaust Memory Keeper

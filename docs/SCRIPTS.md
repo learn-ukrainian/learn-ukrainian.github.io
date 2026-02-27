@@ -288,7 +288,7 @@ Adapted for mixed-language modules with English scaffolding.
 |------|--------|------------------|------|
 | **Tier 1** | A1, A2 | Lesson Quality (encouraging tutor) | `tier-1-beginner.md` |
 | **Tier 2** | B1, B2 Core, B2-PRO | Teaching Quality (effective teaching) | `tier-2-core.md` |
-| **Tier 3** | HIST, C1-HIST, C1-BIO, LIT | Lecture Quality (A+ seminar) | `tier-3-seminar.md` |
+| **Tier 3** | HIST, ISTORIOHRAFIIA, C1-BIO, LIT | Lecture Quality (A+ seminar) | `tier-3-seminar.md` |
 | **Tier 4** | C1 Core, C1-PRO, C2 | Learning Quality (intellectual depth) | `tier-4-advanced.md` |
 
 **File locations:**
@@ -340,7 +340,7 @@ Adapted for mixed-language modules with English scaffolding.
 - Focus: Quick wins, English support, encouragement
 - Warmth threshold: ≥15 direct address, ≥3 encouragement phrases
 
-**Tier 3 (HIST/C1-HIST/C1-BIO/LIT) — A+ Seminar:**
+**Tier 3 (HIST/ISTORIOHRAFIIA/C1-BIO/LIT) — A+ Seminar:**
 - Arc: HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
 - Focus: Narrative engagement, primary sources, emotional peaks
 - Weak moments: DEAD_INTRO, WALL_OF_FACTS, FORCED_CONNECTION, ENERGY_DROP, etc.
@@ -372,7 +372,7 @@ Adapted for mixed-language modules with English scaffolding.
 
 ## 9-Phase Module Workflow (RFC-001)
 
-> **NEW:** For track levels (hist, c1-bio, c1-hist, c1-pro, b2-pro, lit) and C2, use the 9-phase workflow.
+> **NEW:** For track levels (hist, c1-bio, istoriohrafiia, c1-pro, b2-pro, lit) and C2, use the 9-phase workflow.
 >
 > **See:** GitHub issue #444 for full RFC discussion and implementation status.
 
@@ -569,7 +569,7 @@ This command:
 | `manifest_utils.py`       | Manifest validation & lookup   | `.venv/bin/python scripts/manifest_utils.py validate`        |
 | `validate_plan_config.py` | Plan vs config.py validation   | `.venv/bin/python scripts/validate_plan_config.py b1`        |
 | `assess_research.py`     | Research quality & upgrade      | `.venv/bin/python scripts/assess_research.py hist --upgrade-process` |
-| `enrich_research_quotes.py` | Convert `"..."` → `«»` in research files | `.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks c1-hist` |
+| `enrich_research_quotes.py` | Convert `"..."` → `«»` in research files | `.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks istoriohrafiia` |
 | `enrich_research_gaps.py`   | Close deterministic research gaps (quotes, sections) | `.venv/bin/python scripts/enrich_research_gaps.py --apply` |
 
 ### Slug & Path Utilities (Python)
@@ -1446,7 +1446,7 @@ npm run metrics:extract hist
 ```bash
 npm run score:hist     # Score HIST track
 npm run score:c1-bio      # Score C1-BIO track
-npm run score:c1-hist     # Score C1-HIST track
+npm run score:istoriohrafiia     # Score ISTORIOHRAFIIA track
 npm run score:lit         # Score LIT track
 npm run score:all         # Score all tracks (summary)
 npm run metrics:extract   # Extract raw metrics
@@ -1457,7 +1457,7 @@ npm run metrics:extract   # Extract raw metrics
 | Track | Modules | Key Criteria |
 |-------|---------|--------------|
 | `hist` | 140 | Historical accuracy, primary sources, decolonization |
-| `c1-hist` | 30 | Source criticism, methodology, thematic coherence |
+| `istoriohrafiia` | 30 | Source criticism, methodology, thematic coherence |
 | `c1-bio` | 128 | Biographical accuracy, legacy, cultural context |
 | `lit` | 30 | Literary depth, authentic texts, stylistic devices |
 | `a1`-`c2` | varies | Grammar/content coverage, skills balance, CEFR alignment |
@@ -1665,7 +1665,7 @@ to avoid Claude Code's 2-minute bash timeout, or to use Claude's superior activi
 **Per-phase model overrides:**
 
 Default models are set in `scripts/batch_gemini_config.py` and auto-selected based on track type:
-- Seminar tracks (c1-bio, hist, c1-hist, lit, oes, ruth): **claude-opus-4-6** for Claude phases
+- Seminar tracks (c1-bio, hist, istoriohrafiia, lit, oes, ruth): **claude-opus-4-6** for Claude phases
 - Core tracks (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro): **claude-sonnet-4-6** for Claude phases
 - Phase D (review): always **claude-opus-4-6** (cross-agent review needs best model)
 - Phase F (final review): always **claude-opus-4-6** regardless of track
@@ -1899,7 +1899,7 @@ These same checks run automatically inside `audit_module.sh` (hooked into `audit
 | 5 | c1 | 106 | core | b2 ≥80% |
 | 6 | hist | 140 | seminar | b1 ≥80% |
 | 7 | c1-bio | 128 | seminar | b2 ≥80% |
-| 8 | c1-hist | 98 | seminar | hist ≥80%, c1 ≥30% |
+| 8 | istoriohrafiia | 98 | seminar | hist ≥80%, c1 ≥30% |
 | 9 | lit | 30 | seminar | b2 ≥80% |
 | 10-15 | lit-* | varies | seminar | lit ≥80% |
 | 16 | oes | 102 | seminar | c1 ≥80% |
@@ -1920,7 +1920,7 @@ A1 → A2 → B1 → B2 → C1 → C2
                │      ├→ C1-BIO
                │      ├→ LIT → lit-essay, lit-hist-fic, lit-fantastika,
                │      │        lit-war, lit-humor, lit-juvenile
-               │      └→ HIST → C1-HIST (also needs C1 ≥30%)
+               │      └→ HIST → ISTORIOHRAFIIA (also needs C1 ≥30%)
                └→ B2-PRO
 ```
 
@@ -2107,9 +2107,9 @@ npm run status:all             # Generate all levels
 .venv/bin/python scripts/enrich_research_quotes.py --dry-run
 
 # Apply to specific tracks
-.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks c1-hist c1-bio
+.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks istoriohrafiia c1-bio
 
-# Apply to default tracks (hist, c1-hist, c1-bio)
+# Apply to default tracks (hist, istoriohrafiia, c1-bio)
 .venv/bin/python scripts/enrich_research_quotes.py --apply
 ```
 
@@ -2221,7 +2221,7 @@ npm run status:c1             # Generate C1 status
 npm run status:c2             # Generate C2 status
 npm run status:hist        # Generate HIST status
 npm run status:c1-bio         # Generate C1-BIO status
-npm run status:c1-hist        # Generate C1-HIST status
+npm run status:istoriohrafiia        # Generate ISTORIOHRAFIIA status
 npm run status:lit            # Generate LIT status
 npm run status:all            # Generate all level status indices
 
@@ -2585,7 +2585,7 @@ Auto-detects Core A vs Core B workflow. See `claude_extensions/commands/full-reb
 
 ### Seminar Track Full Rebuild
 
-For seminar tracks (hist, c1-bio, c1-hist, lit, oes, ruth), use the 6-phase full-rebuild workflow that chains research, content generation, audit, and deep review:
+For seminar tracks (hist, c1-bio, istoriohrafiia, lit, oes, ruth), use the 6-phase full-rebuild workflow that chains research, content generation, audit, and deep review:
 
 ```bash
 /full-rebuild {track} {slug}

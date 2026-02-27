@@ -42,7 +42,7 @@ def load_config() -> dict:
     # Core levels + specialized tracks
     all_levels = [
         'a1', 'a2', 'b1', 'b2', 'c1', 'c2',  # Core path
-        'hist', 'c1-bio', 'c1-hist',       # History & Biography tracks
+        'hist', 'c1-bio', 'istoriohrafiia',       # History & Biography tracks
         'b2-pro', 'c1-pro',                   # Professional tracks
         'lit', 'oes', 'ruth',                  # Literature & historical linguistics
     ]
@@ -228,7 +228,7 @@ def print_summary(stats: dict):
     print("────────  ───────  ─────  ──────")
 
     # Specialized tracks
-    track_levels = ['hist', 'c1-bio', 'c1-hist', 'b2-pro', 'c1-pro', 'lit', 'oes', 'ruth']
+    track_levels = ['hist', 'c1-bio', 'istoriohrafiia', 'b2-pro', 'c1-pro', 'lit', 'oes', 'ruth']
     track_planned = 0
     track_ready = 0
     for level in track_levels:

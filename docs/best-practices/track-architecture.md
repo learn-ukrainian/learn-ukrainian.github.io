@@ -18,7 +18,7 @@
 | `c1-pro` | C1 | Core (professional) | 50 | 3000w | CLIL |
 | `hist` | B2 | Seminar | 140 | 5000w | CBI |
 | `c1-bio` | C1 | Seminar | 175 | 5000w | CBI |
-| `c1-hist` | C1 | Seminar | 136 | 5000w | CBI |
+| `istoriohrafiia` | C1 | Seminar | 136 | 5000w | CBI |
 | `lit` | C1+ | Seminar | 218 | 2500w | CBI |
 | `oes` | C2 | Seminar | 100 | 3000w | CBI |
 | `ruth` | C2 | Seminar | 112 | 3000w | CBI |
@@ -168,7 +168,7 @@ curriculum/l2-uk-en/
 - Biographical narrative arc required (birth → impact → legacy)
 - Living people: "Значення" / "Вплив" sections; deceased: "Спадщина" / "Наслідки"
 
-### c1-hist (C1 History)
+### istoriohrafiia (C1 History)
 - Advanced historiographical analysis
 - Multiple perspectives, contested narratives
 - Higher linguistic sophistication than hist

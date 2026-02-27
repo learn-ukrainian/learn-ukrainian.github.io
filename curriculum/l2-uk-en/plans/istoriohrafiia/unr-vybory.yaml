@@ -1,0 +1,114 @@
+module: istoriohrafiia-091
+level: istoriohrafiia
+sequence: 91
+version: '1.0'
+title: 'УНР 1917-1921: Стратегічні помилки'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of унр 1917-1921: стратегічні помилки'
+- Evaluate the historical significance of втрачена незалежність
+content_outline:
+- section: Вступ — Втрачена незалежність
+  subsections:
+  - 1917-1921 — шанс і провал
+  - Чому важливо аналізувати
+  - Стратегічні рішення — ключові
+  - Структура модуля
+- section: Помилка 1 — Федералізм замість незалежності
+  subsections:
+  - Центральна Рада — автономія
+  - Чому не одразу незалежність
+  - Втрачений час
+  - Коли змінили курс — пізно
+- section: Помилка 2 — Армія
+  subsections:
+  - Небажання мілітаризму
+  - «Вільне козацтво» — не армія
+  - Без армії — без держави
+  - Що могли зробити
+- section: Помилка 3 — Брест-Литовськ
+  subsections:
+  - Угода з Німеччиною
+  - Окупація — ціна допомоги
+  - Гетьманат Скоропадського
+  - Делегітимізація УНР
+- section: Помилка 4 — Союзники
+  subsections:
+  - Польща — війна і союз
+  - Антанта — ігнорування
+  - Ставка на одного партнера
+  - Геополітична наївність
+- section: Що могли зробити інакше
+  subsections:
+  - Раніша незалежність
+  - Створення армії
+  - Інша зовнішня політика
+  - Чи було шанс?
+- section: Підсумок
+  subsections:
+  - УНР — трагедія помилок
+  - Уроки для майбутнього
+  - Перехід до 1991
+vocabulary:
+- УНР
+- стратегічна помилка
+- федералізм
+- незалежність
+- армія
+- союзник
+- Брест-Литовськ
+- Антанта
+- Центральна Рада
+- мілітаризм
+- Гетьманат
+- «Вільне козацтво»
+- делегітимізація
+- геополітична наївність
+- реальполітик
+activities:
+- type: critical-analysis
+  focus: Catalog UNR strategic errors
+- type: essay-response
+  focus: What if UNR declared independence immediately?
+- type: comparative-study
+  focus: UNR vs. successful independence movements
+- type: critical-analysis
+  focus: Could UNR have built an effective army?
+- type: essay-response
+  focus: Яка помилка УНР була найфатальнішою?
+sources:
+- name: Українська Народна Республіка (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_Народна_Республіка
+  type: reference
+  notes: UNR history
+- name: Українсько-радянська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українсько-радянська_війна_(1917—1921)
+  type: reference
+  notes: War context
+- name: Центральна Рада (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_Центральна_Рада
+  type: reference
+  notes: Government
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Electoral Systems Historian

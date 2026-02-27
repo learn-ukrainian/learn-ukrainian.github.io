@@ -80,7 +80,7 @@ Examples:
     python scripts/score_track.py --all --summary
 
 Valid track IDs:
-    Specialized tracks: hist, c1-hist, c1-bio, lit
+    Specialized tracks: hist, istoriohrafiia, c1-bio, lit
     Standard tracks: a1, a2, b1, b2, c1, c2
         """
     )
@@ -126,7 +126,7 @@ Valid track IDs:
     # Get tracks to process
     if args.all:
         # Process specialized tracks first, then standard
-        specialized = ['hist', 'c1-bio', 'c1-hist', 'lit']
+        specialized = ['hist', 'c1-bio', 'istoriohrafiia', 'lit']
         standard = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
         tracks = specialized + standard
     else:

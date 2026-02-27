@@ -93,7 +93,7 @@ Unified entry point for building modules using the 7-phase workflow (content + s
 
 Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
-> **📄 Seminar Tracks (hist, c1-bio, c1-hist, lit, oes, ruth):**
+> **📄 Seminar Tracks (hist, c1-bio, istoriohrafiia, lit, oes, ruth):**
 >
 > Before generating content, read `docs/RESEARCH-FIRST-WORKFLOW.md`
 >
@@ -136,7 +136,7 @@ Parse arguments — level: `$ARGUMENTS[0]`, module_num: `$ARGUMENTS[1]`
 
 Extract:
 
-- `level`: a1, a2, b1, b2, c1, c2, hist, c1-bio, c1-hist, lit
+- `level`: a1, a2, b1, b2, c1, c2, hist, c1-bio, istoriohrafiia, lit
 - `num`: Module number or range (e.g., `5` or `1-5`)
 - `flags`: --from=PHASE, --check, --refresh (optional)
 
@@ -162,7 +162,7 @@ Extract:
 
 ### Step 1.6: Research Gate (Seminar Tracks Only)
 
-**For seminar tracks ONLY (hist, c1-bio, c1-hist, lit, oes, ruth):**
+**For seminar tracks ONLY (hist, c1-bio, istoriohrafiia, lit, oes, ruth):**
 
 **SMART ENFORCEMENT**: Research is required only for:
 
@@ -174,7 +174,7 @@ Extract:
 
 ```bash
 # Define seminar tracks
-SEMINAR_TRACKS="hist c1-bio c1-hist lit oes ruth"
+SEMINAR_TRACKS="hist c1-bio istoriohrafiia lit oes ruth"
 
 # Check if current level is a seminar track
 if echo "$SEMINAR_TRACKS" | grep -qw "$level"; then
@@ -289,7 +289,7 @@ fi
 >
 > **NEVER construct paths manually. ALWAYS use curriculum.yaml lookup.**
 
-**For tracks (hist, c1-bio, c1-hist, lit):**
+**For tracks (hist, c1-bio, istoriohrafiia, lit):**
 
 ```bash
 # Get slug from curriculum.yaml (module numbers are 1-indexed, array is 0-indexed)
@@ -635,12 +635,12 @@ This categorizes modules into:
 
 ### Step 0.5: Research Gate (Seminar Tracks - Smart Enforcement)
 
-**For seminar tracks (hist, c1-bio, c1-hist, lit, oes, ruth):**
+**For seminar tracks (hist, c1-bio, istoriohrafiia, lit, oes, ruth):**
 
 Before building, categorize modules by research need:
 
 ```bash
-SEMINAR_TRACKS="hist c1-bio c1-hist lit oes ruth"
+SEMINAR_TRACKS="hist c1-bio istoriohrafiia lit oes ruth"
 
 if echo "$SEMINAR_TRACKS" | grep -qw "$level"; then
   echo "📚 Analyzing research needs for batch..."

@@ -118,11 +118,11 @@ def load_base_schema() -> Dict:
 def get_activity_schema(activity_type: str, base_schema: Dict) -> Optional[Dict]:
     """Get the schema definition for a specific activity type.
 
-    Checks for track-specific definitions first (e.g., reading-c1-hist),
+    Checks for track-specific definitions first (e.g., reading-istoriohrafiia),
     then falls back to the base type name (e.g., reading).
     """
     definitions = base_schema.get('definitions', {})
-    # Track-specific schemas name definitions as "type-track" (e.g., "reading-c1-hist")
+    # Track-specific schemas name definitions as "type-track" (e.g., "reading-istoriohrafiia")
     # Try all keys that start with the activity type and pick the first match
     for key in definitions:
         if key.startswith(f"{activity_type}-"):
@@ -347,7 +347,7 @@ def validate_activity_yaml_file(yaml_path: Path) -> Tuple[bool, List[str]]:
     # Includes track levels: lit, hist, c1-bio, b2-pro, c1-pro
     level_match = None
     for parent in yaml_path.parents:
-        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'c1-bio', 'c1-hist', 'oes', 'ruth', 'b2-pro', 'c1-pro']:
+        if parent.name in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'c1-bio', 'istoriohrafiia', 'oes', 'ruth', 'b2-pro', 'c1-pro']:
             level_match = parent.name
             break
 
@@ -814,7 +814,7 @@ def remove_forbidden_activities(yaml_path: Path, level_code: str, module_focus: 
     """
     Remove forbidden activity types from a YAML activity file.
 
-    For seminar tracks (HIST, C1-HIST, C1-BIO, LIT), grammar drill activities
+    For seminar tracks (HIST, ISTORIOHRAFIIA, C1-BIO, LIT), grammar drill activities
     are forbidden and should be removed.
 
     Args:
@@ -911,18 +911,18 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
     if not yaml_path.exists():
         return 0, []
 
-    # Load schema — prefer track-specific (e.g., activities-c1-hist.schema.json)
+    # Load schema — prefer track-specific (e.g., activities-istoriohrafiia.schema.json)
     # over base schema, so auto-fixes respect track-specific field rules.
     try:
         base_schema = load_base_schema()
     except FileNotFoundError as e:
         return 0, [f"Schema not found: {e}"]
 
-    # Detect track from path: .../c1-hist/activities/slug.yaml → "c1-hist"
+    # Detect track from path: .../istoriohrafiia/activities/slug.yaml → "istoriohrafiia"
     track_schema = None
     for parent in yaml_path.parents:
         if parent.name in ('a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit',
-                           'hist', 'c1-bio', 'c1-hist', 'oes', 'ruth',
+                           'hist', 'c1-bio', 'istoriohrafiia', 'oes', 'ruth',
                            'b2-pro', 'c1-pro'):
             track_path = get_schemas_dir() / f"activities-{parent.name}.schema.json"
             if track_path.exists():
@@ -930,7 +930,7 @@ def fix_yaml_file(yaml_path: Path, dry_run: bool = False) -> Tuple[int, List[str
                     track_schema = json.load(f)
             break
 
-    # Use track schema if available (has track-specific definitions like reading-c1-hist)
+    # Use track schema if available (has track-specific definitions like reading-istoriohrafiia)
     fix_schema = track_schema if track_schema else base_schema
 
     # Pre-fix: Fix raw text issues that prevent YAML parsing

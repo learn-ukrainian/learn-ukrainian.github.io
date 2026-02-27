@@ -14,16 +14,16 @@ echo "============================================="
 echo "  Phase A Pre-Seed — $TIMESTAMP"
 echo "============================================="
 echo ""
-echo "Gemini: c1-hist (4), c2 (101), b2-pro (40), c1-pro (50)"
+echo "Gemini: istoriohrafiia (4), c2 (101), b2-pro (40), c1-pro (50)"
 echo "Claude: lit* (387), oes (100), ruth (100)"
 echo "Logs:   $LOGDIR/"
 echo ""
 
 # --- Gemini tracks ---
 
-echo "[G1] c1-hist (4 remaining)..."
-.venv/bin/python scripts/build_module_v3.py c1-hist --all --research-only \
-  > "$LOGDIR/c1-hist-$TIMESTAMP.log" 2>&1 &
+echo "[G1] istoriohrafiia (4 remaining)..."
+.venv/bin/python scripts/build_module_v3.py istoriohrafiia --all --research-only \
+  > "$LOGDIR/istoriohrafiia-$TIMESTAMP.log" 2>&1 &
 
 sleep 10
 

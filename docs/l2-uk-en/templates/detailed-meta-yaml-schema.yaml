@@ -1,5 +1,5 @@
 # Detailed Meta YAML Schema for Curriculum Modules
-# Reference implementation: curriculum/l2-uk-en/c1-hist/meta/*.yaml
+# Reference implementation: curriculum/l2-uk-en/istoriohrafiia/meta/*.yaml
 # Version: 1.0 (January 2026)
 
 # =============================================================================
@@ -188,7 +188,7 @@ naturalness:
 #   - a1-03 (Noun gender recognition)
 
 # --- B2+ EXAMPLE ---
-# See: curriculum/l2-uk-en/c1-hist/meta/01-shcho-take-istoriohrafiia.yaml
+# See: curriculum/l2-uk-en/istoriohrafiia/meta/01-shcho-take-istoriohrafiia.yaml
 
 # =============================================================================
 # CONVERSION NOTES
@@ -209,4 +209,4 @@ naturalness:
 #    - C1+: 4000-5000
 
 # Total: 812 modules across all levels need conversion
-# C1-HIST (135 modules) is the reference implementation
+# ISTORIOHRAFIIA (135 modules) is the reference implementation

@@ -29,7 +29,7 @@ Create or review history (B2) and biography (C1) modules using the appropriate t
 | B2 History   | `docs/l2-uk-en/templates/ai/history-module-template.md`        | `docs/l2-uk-en/templates/history-module-template.md`   | M71-131 (excl. synthesis)   |
 | B2 Synthesis | `docs/l2-uk-en/templates/history-synthesis-module-template.md` | —                                                         | M83, M108, M119, M125, M131 |
 | C1 Biography | `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`      | `docs/l2-uk-en/templates/c1-biography-module-template.md` | M36-100                     |
-| C1 History   | `docs/l2-uk-en/templates/ai/c1-history-module-template.md`        | `docs/l2-uk-en/templates/c1-history-module-template.md`   | M01-135                     |
+| C1 History   | `docs/l2-uk-en/templates/ai/istoriohrafiiaory-module-template.md`        | `docs/l2-uk-en/templates/istoriohrafiiaory-module-template.md`   | M01-135                     |
 
 **CRITICAL:** Read the AI-optimized template BEFORE creating a module. Full reference provides additional context.
 

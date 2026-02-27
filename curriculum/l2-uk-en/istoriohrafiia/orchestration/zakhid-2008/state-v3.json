@@ -1,0 +1,13 @@
+{
+  "track": "istoriohrafiia",
+  "slug": "zakhid-2008",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T19:31:06Z",
+      "task_id": "v3-zakhid-2008-pA",
+      "mode": "full"
+    }
+  }
+}

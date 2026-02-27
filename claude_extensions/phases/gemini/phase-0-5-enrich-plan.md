@@ -45,7 +45,7 @@ From the research file, extract and map to relevant section points:
 4. **Content writing notes** — Integrate specific teaching suggestions into section points
 5. **State Standard references** — Note relevant standard alignment in section points where applicable
 
-### For Seminar Tracks (HIST, C1-HIST, C1-BIO, LIT, OES, RUTH)
+### For Seminar Tracks (HIST, ISTORIOHRAFIIA, C1-BIO, LIT, OES, RUTH)
 
 From the research file, extract and map to relevant sections:
 

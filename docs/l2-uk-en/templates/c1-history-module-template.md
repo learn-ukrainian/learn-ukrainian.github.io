@@ -1,10 +1,10 @@
 # C1 History Module Template
 
-**Purpose:** Reference template for C1-HIST advanced historical analysis modules (M01-135: Historiography, Primary Sources, Imperial Mechanisms)
+**Purpose:** Reference template for ISTORIOHRAFIIA advanced historical analysis modules (M01-135: Historiography, Primary Sources, Imperial Mechanisms)
 
 **Based on:** `c1-module-template.md` — inherits all C1 quality standards
 
-**Related Plan:** `docs/l2-uk-en/C1-HIST-CURRICULUM-PLAN.md`
+**Related Plan:** `docs/l2-uk-en/ISTORIOHRAFIIA-CURRICULUM-PLAN.md`
 
 **Prerequisite:** HIST Track (for factual foundation)
 
@@ -12,7 +12,7 @@
 
 ## ⚠️ BEFORE WRITING: Research Historiographical Content First!
 
-**CRITICAL:** C1-HIST is NOT about historical facts (that's HIST). It's about **how we know history** — sources, methods, interpretations, contested narratives. This requires academic-level research.
+**CRITICAL:** ISTORIOHRAFIIA is NOT about historical facts (that's HIST). It's about **how we know history** — sources, methods, interpretations, contested narratives. This requires academic-level research.
 
 ### Research Strategy
 
@@ -72,7 +72,7 @@ WebSearch: "[source title] site:litopys.org.ua"
 4. **NEVER invent dating or authorship debates** — these are well-documented
 5. **When in doubt, mark as [NEEDS VERIFICATION]** — flag for review
 
-> 💡 **Tip:** C1-HIST teaches how to analyze history, not history itself. Focus on methodology, source criticism, and competing narratives.
+> 💡 **Tip:** ISTORIOHRAFIIA teaches how to analyze history, not history itself. Focus on methodology, source criticism, and competing narratives.
 
 ---
 
@@ -87,14 +87,14 @@ TEMPLATE_METADATA:
   pedagogy: CLIL
   min_word_count: 3500
   required_callouts: []
-  description: C1-HIST modules focus on historiographical analysis and primary sources
+  description: ISTORIOHRAFIIA modules focus on historiographical analysis and primary sources
 -->
 
 ---
 
 ## Quick Reference Checklist
 
-Before submitting a C1-HIST module, verify all items from `c1-module-template.md` PLUS:
+Before submitting a ISTORIOHRAFIIA module, verify all items from `c1-module-template.md` PLUS:
 
 ### History Analysis-Specific Requirements
 
@@ -132,7 +132,7 @@ Before finalizing the module, verify prose activities achieve:
 
 ```yaml
 ---
-module: c1-hist-XX
+module: istoriohrafiia-XX
 title: "[Historiographical Topic]: Ukrainian Title"
 phase: "C1H.X [Phase Name]"
 pedagogy: "CLIL"
@@ -259,7 +259,7 @@ vocabulary_focus:
 
 ## Activity Format (Seminar-Style Only)
 
-**CRITICAL:** C1-HIST uses ONLY seminar-style activities per config.py.
+**CRITICAL:** ISTORIOHRAFIIA uses ONLY seminar-style activities per config.py.
 
 ### Required Activity Types
 
@@ -267,7 +267,7 @@ vocabulary_focus:
 # In activities/{slug}.yaml
 
 - type: reading
-  id: c1-hist-XX-reading-01
+  id: istoriohrafiia-XX-reading-01
   title: "Аналіз первинного джерела"
   resource:
     type: primary_source
@@ -279,7 +279,7 @@ vocabulary_focus:
     - "Які упередження автора можна виявити з тексту?"
 
 - type: essay-response
-  id: c1-hist-XX-essay-01
+  id: istoriohrafiia-XX-essay-01
   title: "Історіографічний аналіз"
   prompt: |
     Напишіть порівняльний аналіз (250-500 слів):
@@ -304,7 +304,7 @@ vocabulary_focus:
       description: Обґрунтованість висновків
 
 - type: critical-analysis
-  id: c1-hist-XX-analysis-01
+  id: istoriohrafiia-XX-analysis-01
   title: "Методологічна рефлексія"
   questions:
     - "Як застосувати цей метод критики джерел до інших періодів?"
@@ -361,9 +361,9 @@ vocabulary_focus:
     [Model answer showing balanced evaluation of positions]
 ```
 
-### Additional C1-HIST Activity Types
+### Additional ISTORIOHRAFIIA Activity Types
 
-In addition to the required types above, C1-HIST supports:
+In addition to the required types above, ISTORIOHRAFIIA supports:
 
 - **`source-evaluation`**: Structured 5-question method (Хто? Коли? Для кого? Чому? Що опущено?) applied to primary/secondary sources. Use for historiographical methodology training.
 
@@ -373,7 +373,7 @@ In addition to the required types above, C1-HIST supports:
 
 ### Forbidden Activity Types
 
-Per config.py, C1-HIST does NOT use:
+Per config.py, ISTORIOHRAFIIA does NOT use:
 - match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words
 - quiz (unless testing methodology concepts, not factual recall)
 
@@ -422,7 +422,7 @@ Per config.py, C1-HIST does NOT use:
 ## Related Documentation
 
 - **Base template:** `docs/l2-uk-en/templates/c1-module-template.md`
-- **C1-HIST Curriculum Plan:** `docs/l2-uk-en/C1-HIST-CURRICULUM-PLAN.md`
+- **ISTORIOHRAFIIA Curriculum Plan:** `docs/l2-uk-en/ISTORIOHRAFIIA-CURRICULUM-PLAN.md`
 - **B2 History Template:** `docs/l2-uk-en/templates/history-module-template.md` (for narrative approach comparison)
 - **Primary Sources:** litopys.org.ua
 

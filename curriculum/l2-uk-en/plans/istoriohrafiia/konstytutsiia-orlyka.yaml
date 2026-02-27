@@ -1,0 +1,115 @@
+module: istoriohrafiia-025
+level: istoriohrafiia
+sequence: 25
+version: '1.0'
+title: 'Конституція Орлика: Перша європейська'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of конституція орлика: перша європейська'
+- Evaluate the historical significance of конституція в екзилі
+content_outline:
+- section: Вступ — Конституція в екзилі
+  subsections:
+  - 1710 рік — контекст
+  - Після Полтави — еміграція
+  - Чому «перша європейська»?
+  - Значення документа
+- section: Історичний контекст
+  subsections:
+  - Полтава 1709 — катастрофа
+  - Мазепа помирає
+  - Орлик — новий гетьман в екзилі
+  - Потреба легітимації
+- section: Автор і обставини
+  subsections:
+  - Пилип Орлик — біографія
+  - Еміграція — Туреччина, Швеція
+  - Укладення Конституції в Бендерах
+  - Підписанти — хто погодився
+- section: Структура і зміст
+  subsections:
+  - Преамбула — історична легітимація
+  - Обмеження влади гетьмана
+  - Рада старшин — законодавча влада
+  - Права козаків
+  - Захист від тиранії
+- section: Фрагмент — Обмеження гетьманської влади
+  subsections:
+  - Текст (з глосами)
+  - Розподіл влади
+  - Вибори — процедура
+  - Підзвітність гетьмана
+- section: Чому "конституція"?
+  subsections:
+  - Порівняння з іншими документами
+  - Республіканські ідеї
+  - Вплив польського конституціоналізму
+  - Чи застосовувалася?
+- section: Підсумок
+  subsections:
+  - Символічне значення
+  - Конституція як аргумент
+  - Зв'язок із сучасністю
+vocabulary:
+- конституція
+- екзиль
+- легітимація
+- обмеження влади
+- рада старшин
+- підзвітність
+- розподіл влади
+- республіка
+- тиранія
+- вибори
+- конституціоналізм
+- преамбула
+- артикул
+- клятва
+- суверенітет
+activities:
+- type: reading
+  focus: Articles on hetman's power limitation
+- type: comparative-study
+  focus: Compare with other 18th-century constitutions
+- type: critical-analysis
+  focus: What mechanisms check the hetman's power?
+- type: essay-response
+  focus: What if Orlik's constitution was implemented?
+- type: essay-response
+  focus: Чи можна назвати документ Орлика 'конституцією'?
+sources:
+- name: Конституція Пилипа Орлика (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
+  type: reference
+  notes: Overview
+- name: Текст Конституції
+  url: https://uk.wikisource.org/wiki/Конституція_Пилипа_Орлика
+  type: primary
+  notes: Full text
+- name: Пилип Орлик
+  url: https://uk.wikipedia.org/wiki/Пилип_Орлик
+  type: reference
+  notes: Author biography
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Early Modern Legal Historian

@@ -56,7 +56,7 @@ HISTORICAL_CYRILLIC_CHARS = {
 ALL_FORBIDDEN_IN_MODERN = RUSSIAN_ONLY_CHARS | HISTORICAL_CYRILLIC_CHARS
 
 # Tracks that legitimately quote historical texts
-HISTORICAL_TRACKS = {'oes', 'ruth', 'lit', 'hist', 'c1-bio', 'c1-hist'}
+HISTORICAL_TRACKS = {'oes', 'ruth', 'lit', 'hist', 'c1-bio', 'istoriohrafiia'}
 
 # Tracks that TEACH historical linguistics - fully exempt from character checks
 # These tracks explicitly analyze historical Cyrillic (including Russian-like forms)
@@ -200,7 +200,7 @@ def detect_track_from_path(file_path: str) -> str | None:
         (r'/lit/', 'lit'),
         (r'/hist/', 'hist'),
         (r'/c1-bio/', 'c1-bio'),
-        (r'/c1-hist/', 'c1-hist'),
+        (r'/istoriohrafiia/', 'istoriohrafiia'),
     ]
 
     for pattern, track in track_patterns:

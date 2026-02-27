@@ -27,7 +27,7 @@ LEVELS = [
     {"id": "c2", "name": "C2 - Mastery", "path": "c2"},
     # Seminar tracks
     {"id": "hist", "name": "HIST - History Track", "path": "hist"},
-    {"id": "c1-hist", "name": "C1-HIST - History Track", "path": "c1-hist"},
+    {"id": "istoriohrafiia", "name": "ISTORIOHRAFIIA - History Track", "path": "istoriohrafiia"},
     {"id": "c1-bio", "name": "C1-BIO - Biography Track", "path": "c1-bio"},
     {"id": "lit", "name": "LIT - Literature Track", "path": "lit"},
     {"id": "lit-essay", "name": "LIT-ESSAY - Essays", "path": "lit-essay"},
@@ -46,7 +46,7 @@ LEVELS = [
 
 # Seminar tracks (require Phase 0 research)
 SEMINAR_TRACK_IDS = {
-    "hist", "c1-hist", "c1-bio",
+    "hist", "istoriohrafiia", "c1-bio",
     "lit", "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-youth",
     "lit-doc", "lit-drama", "lit-crimea",
     "oes", "ruth",

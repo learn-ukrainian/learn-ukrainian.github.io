@@ -304,7 +304,7 @@ Per module:
 | HIST | 7.2/10 | 77h | 2 |
 | C1-BIO | 2.8/10 | 319h | 3 |
 | B2-PRO | 1.0/10 | 160h | 4 |
-| C1-HIST | 0.9/10 | 540h | 5 |
+| ISTORIOHRAFIIA | 0.9/10 | 540h | 5 |
 | C1-PRO | 1.0/10 | 200h | 6 |
 
 **Rationale:** PRO tracks are greenfield with no existing content. Focus on completing tracks with existing content first (LIT, HIST, C1-BIO) before starting new tracks.

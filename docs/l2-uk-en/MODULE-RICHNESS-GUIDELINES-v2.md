@@ -555,7 +555,7 @@ Each module should include review items from previous module(s) to reinforce ret
 | `C1-folk`         | 56-80                   | 3000+ | 12    | 24+   | Folk culture, arts, dialects, Surzhyk        |
 | `C1-literature`   | 81-115                  | 3500+ | 12    | 24+   | Literary analysis: classics to contemporary  |
 | `C1-biography`    | 36-100                  | 4000+ | 4-9   | 24+   | Biography seminar style                      |
-| `C1-history`      | 101-115                 | 4000+ | 4-9   | 25+   | Historical analysis seminar style            |
+| `istoriohrafiia`      | 101-115                 | 4000+ | 4-9   | 25+   | Historical analysis seminar style            |
 | `C1-checkpoint`   | 20, 35, 55, 80, 95, 115 | 1750+ | 14    | 15    | Phase review & CEFR self-assessment          |
 | `C1-capstone`     | 111-112                 | 1750+ | 12    | 15    | Research paper (2000+ words) & oral defense  |
 

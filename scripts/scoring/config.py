@@ -4,7 +4,7 @@ Track-specific scoring criteria definitions and weights.
 Each track has unique scoring criteria optimized for its content type:
 - Standard tracks: Grammar/content balance, skills distribution
 - HIST: Historical accuracy, decolonization, primary sources
-- C1-HIST: Historiographical methodology, source criticism
+- ISTORIOHRAFIIA: Historiographical methodology, source criticism
 - C1-BIO: Biographical accuracy, cultural context, legacy analysis
 - LIT: Literary analysis, authentic text engagement, stylistic devices
 """
@@ -127,11 +127,11 @@ TRACK_CONFIGS: dict[str, TrackConfig] = {
     },
 
     # =========================================================================
-    # C1-HIST: Historiography (C1 Level)
+    # ISTORIOHRAFIIA: Historiography (C1 Level)
     # =========================================================================
-    'c1-hist': {
-        'name': 'C1-HIST: Ukrainian Historiography',
-        'level_dir': 'c1-hist',
+    'istoriohrafiia': {
+        'name': 'ISTORIOHRAFIIA: Ukrainian Historiography',
+        'level_dir': 'istoriohrafiia',
         'module_count': 30,  # Approximate
         'criteria': {
             'audit_pass_rate': {
@@ -1260,7 +1260,7 @@ def get_track_config(track_id: str) -> TrackConfig:
     Get configuration for a track.
 
     Args:
-        track_id: Track identifier (hist, c1-bio, c1-hist, lit, a1, a2, etc.)
+        track_id: Track identifier (hist, c1-bio, istoriohrafiia, lit, a1, a2, etc.)
 
     Returns:
         TrackConfig for the specified track

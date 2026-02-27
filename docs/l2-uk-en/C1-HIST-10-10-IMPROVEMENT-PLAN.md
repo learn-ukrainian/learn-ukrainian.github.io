@@ -1,4 +1,4 @@
-# C1-HIST Track: Path to 10/10
+# ISTORIOHRAFIIA Track: Path to 10/10
 
 **Created:** 2026-01-31
 **Current Score:** 0.9/10
@@ -66,7 +66,7 @@ This is a **greenfield implementation** requiring full content creation.
 
 ---
 
-## Content Requirements (C1-HIST Specific)
+## Content Requirements (ISTORIOHRAFIIA Specific)
 
 Per module:
 - **Word count:** 4,000 words
@@ -208,17 +208,17 @@ Per module:
 
 ## Priority Recommendation
 
-**C1-HIST should be lower priority than:**
+**ISTORIOHRAFIIA should be lower priority than:**
 1. HIST (77% complete, 77 hours to finish)
 2. LIT (content complete, 40 hours for vocab)
 3. C1-BIO (87% content, 319 hours total)
 
-**Rationale:** C1-HIST requires complete greenfield development (540 hours). Other tracks have existing content that can be improved more efficiently.
+**Rationale:** ISTORIOHRAFIIA requires complete greenfield development (540 hours). Other tracks have existing content that can be improved more efficiently.
 
 ---
 
 ## References
 
-- `docs/C1-HIST-STATUS.md` - Current audit status
-- `claude_extensions/quick-ref/c1-hist.md` - HIST workflow
-- `curriculum/l2-uk-en/plans/c1-hist/` - All 135 plans
+- `docs/ISTORIOHRAFIIA-STATUS.md` - Current audit status
+- `claude_extensions/quick-ref/istoriohrafiia.md` - HIST workflow
+- `curriculum/l2-uk-en/plans/istoriohrafiia/` - All 135 plans

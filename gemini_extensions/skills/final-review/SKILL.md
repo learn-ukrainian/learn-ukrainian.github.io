@@ -45,7 +45,7 @@ description: Adversarial final review for otaman-built modules. Runs in a NEW se
 ```
 
 **Required parameters:**
-- `{track}` -- Track identifier (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro, hist, c1-bio, c1-hist, lit, lit-*, oes, ruth)
+- `{track}` -- Track identifier (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro, hist, c1-bio, istoriohrafiia, lit, lit-*, oes, ruth)
 - `{num}` -- 1-indexed module number within the track
 
 **Constants:**
@@ -212,7 +212,7 @@ This outputs JSON with `ukrainian_percent` and `english_percent`. Compare agains
 
 ### 5.7: Factual verification (seminar tracks)
 
-For hist, c1-bio, c1-hist, lit, oes, ruth:
+For hist, c1-bio, istoriohrafiia, lit, oes, ruth:
 - Check dates against known facts
 - Check Ukrainian names are spelled correctly
 - Check historical claims are accurate
@@ -470,7 +470,7 @@ Apply the appropriate tier based on track:
 - All practice at end
 - Cold, mechanical voice
 
-### Tier 3: Seminar Modules (HIST, C1-HIST, C1-BIO, LIT, OES, RUTH)
+### Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, C1-BIO, LIT, OES, RUTH)
 
 **Experience Goal:** A+ seminar lecture -- memorable, engaging, transformative.
 

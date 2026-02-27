@@ -1,0 +1,112 @@
+module: istoriohrafiia-012
+level: istoriohrafiia
+sequence: 12
+version: '1.0'
+title: 'Повість минулих літ II: Ключові фрагменти'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of повість минулих літ ii: ключові фрагменти'
+- Evaluate the historical significance of читаємо первинне джерело
+- Trace the development of ваш аналіз
+content_outline:
+- section: Вступ — Читаємо первинне джерело
+  subsections:
+  - Від теорії до практики
+  - Три ключові фрагменти
+  - Як будемо аналізувати
+- section: Фрагмент 1 — Покликання варягів (862)
+  subsections:
+  - Текст (з глосами)
+  - Земля наша велика і обильна, а наряду в ней немає
+  - Історичність — що з цього правда?
+  - Норманська теорія — політичні імплікації
+  - Чому літописець включив цю історію?
+- section: Фрагмент 2 — Хрещення Володимира (988)
+  subsections:
+  - Текст вибору вір (з глосами)
+  - А вино пить не можем...
+  - Легенда vs. реальна політика
+  - Візантійський союз
+  - Пропаганда чи історія?
+- section: Фрагмент 3 — Помста Ольги
+  subsections:
+  - Текст (з глосами)
+  - Чотири помсти древлянам
+  - Фольклорні мотиви
+  - Жінка-правителька в літописі
+  - Язичницька жорстокість до хрещення
+- section: Порівняльний аналіз
+  subsections:
+  - Спільні риси трьох фрагментів
+  - Наративні техніки літописця
+  - Що підкреслено, що замовчано
+  - Ідеологічна програма ПМЛ
+- section: Практикум — ваш аналіз
+  subsections:
+  - Застосування 5 питань до джерела
+  - Що ми дізналися
+  - Що залишається невідомим
+  - Підготовка до наступних модулів
+vocabulary:
+- варяг
+- покликання
+- наряд
+- хрещення
+- вибір вір
+- помста
+- древляни
+- данина
+- літописна легенда
+- наративна техніка
+- етіологічний міф
+- топос
+- агіографія
+- біблійна алюзія
+- риторика
+activities:
+- type: reading
+  focus: Analyze one fragment line by line
+- type: critical-analysis
+  focus: Apply 5 questions to Varangian calling passage
+- type: comparative-study
+  focus: Compare PVL baptism story with Byzantine sources
+- type: essay-response
+  focus: Rewrite one legend from different political perspective
+- type: essay-response
+  focus: Яка ідеологічна програма Повісті минулих літ?
+sources:
+- name: Повість минулих літ (повний текст)
+  url: https://litopys.org.ua/pvlyar/yar.htm
+  type: primary
+  notes: Full text with fragments
+- name: Покликання варягів
+  url: https://uk.wikipedia.org/wiki/Покликання_варягів
+  type: reference
+  notes: Varangian calling legend
+- name: Хрещення Русі
+  url: https://uk.wikipedia.org/wiki/Хрещення_Русі
+  type: reference
+  notes: Baptism narrative
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Old Rus Philologist

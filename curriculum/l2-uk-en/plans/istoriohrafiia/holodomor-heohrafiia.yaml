@@ -1,0 +1,115 @@
+module: istoriohrafiia-048
+level: istoriohrafiia
+sequence: 48
+version: '1.0'
+title: 'Географія Голодомору: Регіональні відмінності'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of географія голодомору: регіональні відмінності'
+- Evaluate the historical significance of голодомор на карті
+content_outline:
+- section: Вступ — Голодомор на карті
+  subsections:
+  - Не всі регіони постраждали однаково
+  - Чому географія важлива
+  - Що нам говорять карти
+  - Структура модуля
+- section: Найбільш постраждалі регіони
+  subsections:
+  - Київщина — епіцентр
+  - Харківщина — другий центр
+  - Полтавщина, Черкащина
+  - Степова Україна
+  - Карта з даними
+- section: Менш постраждалі регіони
+  subsections:
+  - Західна Україна — під Польщею
+  - Донбас — промисловий регіон
+  - Міста vs. села
+  - Чому різниця?
+- section: Кубань і етнічні українці
+  subsections:
+  - Українці за межами УРСР
+  - Кубань — особливий випадок
+  - Знищення українськості
+  - Паралелі з Україною
+- section: Чому саме ці регіони
+  subsections:
+  - Зернові райони — більший тиск
+  - Опір колективізації
+  - Національний фактор
+  - «Покарання» vs. «політика»
+- section: Демографічні наслідки
+  subsections:
+  - Скільки загинуло — дискусія
+  - 3.9 мільйона — консервативна оцінка
+  - Вплив на населення — до сьогодні
+  - Втрачені покоління
+- section: Підсумок
+  subsections:
+  - Географія як доказ
+  - Від карт до свідчень
+  - Підготовка до усної історії
+vocabulary:
+- географія
+- регіон
+- розподіл
+- епіцентр
+- втрати
+- демографія
+- карта
+- село
+- місто
+- Кубань
+- зерновий район
+- щільність населення
+- смертність
+- народжуваність
+- депопуляція
+activities:
+- type: critical-analysis
+  focus: Analyze Holodomor mortality map — what patterns?
+- type: comparative-study
+  focus: Compare mortality rates in different oblasts
+- type: critical-analysis
+  focus: Explain why specific regions suffered most
+- type: critical-analysis
+  focus: Work with demographic data
+- type: essay-response
+  focus: Що географія Голодомору говорить нам про його характер?
+sources:
+- name: Втрати населення в Голодомор
+  url: https://uk.wikipedia.org/wiki/Втрати_України_в_Голодоморі
+  type: reference
+  notes: Casualty estimates
+- name: Регіональний розподіл Голодомору
+  url: https://uk.wikipedia.org/wiki/Голодомор#Географія
+  type: reference
+  notes: Regional breakdown
+- name: Карти Голодомору
+  url: https://ucrdc.org/
+  type: reference
+  notes: UCRDC mapping projects
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Historical Cartographer

@@ -32,10 +32,10 @@ REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/h
 SCHEMA_PATH: schemas/activities-hist.schema.json
 SKILL_IDENTITY: Professor of Ukrainian Arts (history)
 SLUG: sloviany-origins
-TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, C1-HIST, C1-BIO, LIT)
+TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, C1-BIO, LIT)
 
 
-  > **Target:** HIST (History), C1-HIST (History), C1-BIO (Biography), LIT (Literature)
+  > **Target:** HIST (History), ISTORIOHRAFIIA (History), C1-BIO (Biography), LIT (Literature)
   tracks
 
   > **Pedagogy:** CBI (Content-Based Instruction)
@@ -424,7 +424,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, C1-HIST, C1-BIO, LIT)
 
   | HIST | 98-100% | Full historical immersion |
 
-  | C1-HIST | 98-100% | Full historical immersion (C1 complexity) |
+  | ISTORIOHRAFIIA | 98-100% | Full historical immersion (C1 complexity) |
 
   | C1-BIO | 98-100% | Full biographical immersion |
 
@@ -483,7 +483,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, C1-HIST, C1-BIO, LIT)
 
   - HIST: 95%
 
-  - C1-HIST: 95%
+  - ISTORIOHRAFIIA: 95%
 
   - C1-BIO: 95%
 
@@ -547,7 +547,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, C1-HIST, C1-BIO, LIT)
   - Connection to Ukrainian identity
 
 
-  ### C1-HIST (History — Advanced)
+  ### ISTORIOHRAFIIA (History — Advanced)
 
 
   **Required elements:**

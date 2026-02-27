@@ -1,0 +1,112 @@
+module: istoriohrafiia-067
+level: istoriohrafiia
+sequence: 67
+version: '1.0'
+title: 'Діаспорні організації: UCC, UCCA, OUN'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of діаспорні організації: ucc, ucca, oun'
+- Evaluate the historical significance of держава в еміграції
+content_outline:
+- section: Вступ — Держава в еміграції
+  subsections:
+  - Без держави — потреба організації
+  - Функції діаспорних інституцій
+  - «Замінники держави»
+  - Структура модуля
+- section: Конгрес українців Канади (UCC)
+  subsections:
+  - Заснування — 1940
+  - Структура — парасолькова організація
+  - Функції — представництво, лобіювання
+  - Досягнення — мультикультуралізм
+- section: UCCA — Український конгрес Америки
+  subsections:
+  - Заснування — 1940
+  - Структура і членство
+  - Холодна війна — антикомуністична діяльність
+  - Лобіювання в Конгресі
+- section: Світовий конгрес українців
+  subsections:
+  - Координація діаспор
+  - Міжнародне представництво
+  - Зв'язок з Україною після 1991
+  - Сучасна роль
+- section: Політичні організації — ОУН в еміграції
+  subsections:
+  - Бандерівці vs. мельниківці
+  - Антибольшовицький блок народів (АБН)
+  - Холодна війна — співпраця з Заходом
+  - Контроверсії і спадщина
+- section: Церковні структури
+  subsections:
+  - УГКЦ в діаспорі — кардинал Сліпий
+  - УАПЦ — автокефалія в еміграції
+  - Церква як центр громади
+  - Після 1991 — зміни
+- section: Підсумок
+  subsections:
+  - Діаспора як «держава в еміграції»
+  - Політичні конфлікти
+  - Роль у незалежності
+vocabulary:
+- організація
+- конгрес
+- парасолькова організація
+- лобіювання
+- представництво
+- діаспора
+- антикомуністичний
+- Холодна війна
+- координація
+- еміграція
+- АБН
+- мультикультуралізм
+- етнічне лобі
+- громадська організація
+- політичний розкол
+activities:
+- type: critical-analysis
+  focus: Compare UCC vs. UCCA structures
+- type: critical-analysis
+  focus: What did diaspora organizations achieve politically?
+- type: comparative-study
+  focus: Map political divisions in diaspora
+- type: essay-response
+  focus: Як діаспорні організації виконували функції держави?
+sources:
+- name: Конгрес українців Канади (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Конгрес_українців_Канади
+  type: reference
+  notes: UCC history
+- name: Український конгресовий комітет Америки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Український_конгресовий_комітет_Америки
+  type: reference
+  notes: UCCA history
+- name: Світовий конгрес українців (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Світовий_конгрес_українців
+  type: reference
+  notes: World Congress
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Institutional Historian

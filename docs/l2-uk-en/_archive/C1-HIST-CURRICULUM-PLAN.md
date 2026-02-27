@@ -1,4 +1,4 @@
-# C1-HIST Curriculum Plan: Advanced Historical Analysis Track
+# ISTORIOHRAFIIA Curriculum Plan: Advanced Historical Analysis Track
 
 **Status:** DRAFT v3 (January 2026)
 **Modules:** 01-135 (135 modules)
@@ -43,7 +43,7 @@
 
 ## Track Overview
 
-The C1-HIST track transforms learners from history consumers to history analysts. Building on HIST's narrative foundation, this track develops critical thinking through:
+The ISTORIOHRAFIIA track transforms learners from history consumers to history analysts. Building on HIST's narrative foundation, this track develops critical thinking through:
 
 1. **Historiographical awareness** — understanding how history is written and contested
 2. **Primary source literacy** — reading original documents in context
@@ -422,7 +422,7 @@ The C1-HIST track transforms learners from history consumers to history analysts
 | Level | Words/Module | Total Track | Approach |
 |-------|--------------|-------------|----------|
 | HIST | ~3000 | ~420,000 | Narrative (what happened) |
-| **C1-HIST** | **~3500** | **~472,500** | Analytical (how we know) |
+| **ISTORIOHRAFIIA** | **~3500** | **~472,500** | Analytical (how we know) |
 
 **Combined B2+C1:** ~892,500 words of historical content
 
@@ -514,7 +514,7 @@ Each source-based module includes:
 
 ## Differentiation from HIST
 
-| Aspect | HIST | C1-HIST |
+| Aspect | HIST | ISTORIOHRAFIIA |
 |--------|---------|---------|
 | **Question** | What happened? | How do we know? Who says? What's contested? |
 | **Sources** | Narrative summaries | Original documents with analysis |
@@ -550,11 +550,11 @@ Each source-based module includes:
 
 | Prerequisite | This Track | Complements |
 |--------------|------------|-------------|
-| HIST (140 modules) | **C1-HIST** (135 modules) | C1-BIO (100 modules) |
+| HIST (140 modules) | **ISTORIOHRAFIIA** (135 modules) | C1-BIO (100 modules) |
 
 **Recommended path:**
 1. HIST → factual foundation (what happened)
-2. C1-HIST → analytical skills (how we know, patterns)
+2. ISTORIOHRAFIIA → analytical skills (how we know, patterns)
 3. C1-BIO → biographical depth (parallel or after)
 
 **Cross-references:**

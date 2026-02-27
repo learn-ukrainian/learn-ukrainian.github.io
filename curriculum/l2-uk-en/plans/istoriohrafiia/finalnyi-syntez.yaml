@@ -1,0 +1,102 @@
+module: istoriohrafiia-135
+level: istoriohrafiia
+sequence: 135
+version: '1.0'
+title: 'Фінальний синтез: Що ми дізналися'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of фінальний синтез: що ми дізналися'
+- Evaluate the historical significance of кінець курсу, початок розуміння
+content_outline:
+- section: Вступ — Кінець курсу, початок розуміння
+  subsections:
+  - 135 модулів — що ми пройшли
+  - Не факти — методи
+  - Як думати про історію
+  - Структура модуля
+- section: Методологічні уроки
+  subsections:
+  - Джерелознавство — чому важливе
+  - Множинність інтерпретацій
+  - Критичне мислення
+  - Як оцінювати історичні твердження
+- section: Тематичні уроки
+  subsections:
+  - Імперські механізми — як розпізнавати
+  - Культурна резистенція — як працює
+  - Агентність — чому ключова
+  - Пам'ять — як формується
+- section: Практичні уроки
+  subsections:
+  - Як читати джерела
+  - Як оцінювати аргументи
+  - Як писати про історію
+  - Як розпізнавати пропаганду
+- section: Відкриті питання
+  subsections:
+  - Що залишається невідомим
+  - Де потрібні дослідження
+  - Нові джерела — нові інтерпретації
+  - Історія — незавершений проект
+- section: Підсумок курсу
+  subsections:
+  - Від фактів до розуміння
+  - Від споживача до критика
+  - Завершення ISTORIOHRAFIIA
+vocabulary:
+- фінальний синтез
+- методологія
+- джерелознавство
+- критичне мислення
+- інтерпретація
+- агентність
+- пам'ять
+- пропаганда
+- аргумент
+- дослідження
+- епістемологія
+- верифікація
+- контекстуалізація
+- деконструкція
+- рефлексія
+activities:
+- type: essay-response
+  focus: What did you learn in 135 modules?
+- type: critical-analysis
+  focus: Key methodological takeaways
+- type: essay-response
+  focus: What questions remain open?
+- type: essay-response
+  focus: Як ISTORIOHRAFIIA змінив ваше розуміння української історії?
+sources:
+- name: Історіографія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історіографія_України
+  type: reference
+  notes: Ukrainian historiography
+- name: Методологія історії (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Методологія_історії
+  type: reference
+  notes: Historical methodology
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Curriculum Architect

@@ -201,7 +201,7 @@ export default function Home(): ReactNode {
                 isTrack
               />
               <LevelCard
-                level="C1-HIST"
+                level="ISTORIOHRAFIIA"
                 name="Historiography"
                 description="Primary sources, imperial mechanisms, interethnic relations"
                 modules={136}

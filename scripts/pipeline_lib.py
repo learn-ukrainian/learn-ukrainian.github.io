@@ -75,7 +75,7 @@ TRACK_SKILLS: dict[str, tuple[str, str, str]] = {
     "c2":       ("full-rebuild-core-b", "Senior Ukrainian Language & Culture Specialist", "Ethnographer"),
     "c1-bio":   ("full-rebuild-c1-bio", "Professor of Ukrainian Arts (biography)", "The Archival Detective"),
     "hist":  ("full-rebuild-hist", "Professor of Ukrainian Arts (history)", "The Decolonial Lecturer"),
-    "c1-hist":  ("full-rebuild-c1-hist", "Professor of Ukrainian Arts (historiography)", "The Source Critic"),
+    "istoriohrafiia":  ("full-rebuild-istoriohrafiia", "Professor of Ukrainian Arts (historiography)", "The Source Critic"),
     "lit":      ("full-rebuild-lit", "Professor of Ukrainian Arts (literature)", "The Stylistic Critic"),
     "oes":      ("full-rebuild-oes", "Professor of Ukrainian Arts (paleography)", "The Paleographer"),
     "ruth":     ("full-rebuild-ruth", "Professor of Ukrainian Arts (Ruthenian)", "The Baroque Scholar"),
@@ -245,7 +245,7 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
         "REQUIRED_TYPES": "reading, essay-response, critical-analysis",
         "PRIORITY_TYPES": "reading, essay-response, critical-analysis, comparative-study, authorial-intent, quiz",
     },
-    "c1-hist": {
+    "istoriohrafiia": {
         "ACTIVITY_COUNT_TARGET": "5", "ACTIVITY_MIN": "3", "ACTIVITY_MAX": "9", "ITEMS_MIN": "1",
         "VOCAB_COUNT_TARGET": "30",
         "FORBIDDEN_ACTIVITY_TYPES": "match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words",
@@ -312,7 +312,7 @@ def get_track_skill(track: str, module_num: int) -> tuple[str, str, str]:
 
 def get_immersion_rule(track: str, module_num: int) -> str:
     """Compute immersion rule from track + module number."""
-    base = track.split("-")[0] if track not in ("hist", "c1-bio", "c1-hist", "b2-pro", "c1-pro") else track
+    base = track.split("-")[0] if track not in ("hist", "c1-bio", "istoriohrafiia", "b2-pro", "c1-pro") else track
     if base == "a1":
         if module_num <= 2:
             return IMMERSION_RULES["a1-m01-02"]
@@ -367,7 +367,7 @@ def get_level_label(track: str) -> str:
 _TRACK_FOCUS_MAP: dict[str, tuple[str, str | None]] = {
     "hist": ("B2", "history"),
     "c1-bio": ("C1", "biography"),
-    "c1-hist": ("C1", "history"),
+    "istoriohrafiia": ("C1", "history"),
     "b2-pro": ("B2", "professional"),
     "c1-pro": ("C1", "professional"),
     "lit": ("C1", "literature"),
@@ -1384,7 +1384,7 @@ TIER_MAP: dict[str, str] = {
     "b2-pro": "tier-2-core.md",
     "hist": "tier-3-seminar.md",
     "c1-bio": "tier-3-seminar.md",
-    "c1-hist": "tier-3-seminar.md",
+    "istoriohrafiia": "tier-3-seminar.md",
     "lit": "tier-3-seminar.md",
     "c1": "tier-4-advanced.md",
     "c1-pro": "tier-4-advanced.md",
@@ -1558,7 +1558,7 @@ def write_placeholders(ctx: ModuleContext) -> None:
 ARCHIVE_DIR = PROJECT_ROOT / "_archive"
 ARCHIVE_WORD_THRESHOLD = 2000
 ARCHIVE_GIT_REF = os.environ.get("ARCHIVE_GIT_REF", "944f3524a^")
-ARCHIVE_SKIP_TRACKS: set[str] = {"c1-bio", "c1-hist", "lit"}
+ARCHIVE_SKIP_TRACKS: set[str] = {"c1-bio", "istoriohrafiia", "lit"}
 
 
 def detect_archived_prose(track: str, slug: str) -> tuple[bool, str, Path | None]:

@@ -247,7 +247,7 @@ ACTIVITY_COMPLEXITY = {
         # Seminar tracks - quiz is supplementary, focus is analytical work
         'lit': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
         'hist': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 5},
-        'c1-hist': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
+        'istoriohrafiia': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
         'c1-bio': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
     },
     'match-up': {
@@ -381,7 +381,7 @@ ACTIVITY_COMPLEXITY = {
         'history': {'min_items': 1},
         'C1': {'min_items': 3},
         'C1-biography': {'min_items': 1},
-        'C1-history': {'min_items': 1},
+        'istoriohrafiia': {'min_items': 1},
         'LIT': {'min_items': 1},
         'C2': {'min_items': 3},
     },
@@ -863,8 +863,8 @@ LEVEL_CONFIG = {
         'essay_min_words': 250,
         'essay_max_words': 400
     },
-    'C1-history': {
-        # C1-HIST Track: History seminar style (C1 level)
+    'istoriohrafiia': {
+        # ISTORIOHRAFIIA Track: History seminar style (C1 level)
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: historical analysis, source criticism, historiographical debate
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
@@ -1240,8 +1240,8 @@ LEVEL_CONFIG = {
         'essay_min_words': 150,  # Shorter than LIT (150-200 vs 300-500)
         'essay_max_words': 250
     },
-    'C1-HIST-seminar': {
-        # C1-HIST Track: Academic seminar style (C1 level)
+    'ISTORIOHRAFIIA-seminar': {
+        # ISTORIOHRAFIIA Track: Academic seminar style (C1 level)
         # Activities: reading + essay-response (full) + critical-analysis + comparative-study
         # Academic rigor: longer essays, source criticism, historiographical analysis
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum

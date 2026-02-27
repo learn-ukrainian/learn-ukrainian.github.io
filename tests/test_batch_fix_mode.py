@@ -360,7 +360,7 @@ class TestFixTemplateRegistration:
 
     def test_all_known_tracks_have_fix_template(self):
         from scripts.batch_gemini_config import get_track_config
-        for track in ["c1-bio", "hist", "c1-hist", "lit", "a1", "a2"]:
+        for track in ["c1-bio", "hist", "istoriohrafiia", "lit", "a1", "a2"]:
             config = get_track_config(track)
             assert "fix" in config["templates"], f"{track} missing fix template"
 

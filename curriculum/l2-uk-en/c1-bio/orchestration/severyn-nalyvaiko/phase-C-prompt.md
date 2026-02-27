@@ -110,7 +110,7 @@ Using a forbidden type wastes the entire activity generation phase. Check the al
 
 **Reading schema varies by track — always check `schemas/activities-c1-bio.schema.json` for your track's required fields.**
 
-**Seminar tracks (C1-HIST, C1-BIO, LIT, HIST):** Reading = passive input linked to analytical activities.
+**Seminar tracks (ISTORIOHRAFIIA, C1-BIO, LIT, HIST):** Reading = passive input linked to analytical activities.
 ```yaml
 - type: reading
   id: reading-hrushevsky          # REQUIRED for seminar tracks (for source_reading links)
@@ -170,7 +170,7 @@ options:
 
 **These rules prevent low-quality activities that waste learner time:**
 
-1. **Activities test LANGUAGE, not content** — The Golden Rule: Can the learner answer this question WITHOUT reading the Ukrainian text? If YES → it tests content recall, not language. **REWRITE IT.** FORBIDDEN patterns: "У якому році..." (dates), "Хто був..." (names), "Скільки..." (numbers), "Що символізує..." (interpretation without text reference). REQUIRED patterns: "Згідно з текстом, як автор...", "У тексті модуля автор характеризує...", "Яку функцію автор підкреслює...", "Який аргумент автор наводить...". Applies to ALL quiz/reading/essay activities in HIST, C1-BIO, C1-HIST, LIT, and content-heavy modules. If a quiz question is answerable from general knowledge alone, you have FAILED the activity.
+1. **Activities test LANGUAGE, not content** — The Golden Rule: Can the learner answer this question WITHOUT reading the Ukrainian text? If YES → it tests content recall, not language. **REWRITE IT.** FORBIDDEN patterns: "У якому році..." (dates), "Хто був..." (names), "Скільки..." (numbers), "Що символізує..." (interpretation without text reference). REQUIRED patterns: "Згідно з текстом, як автор...", "У тексті модуля автор характеризує...", "Яку функцію автор підкреслює...", "Який аргумент автор наводить...". Applies to ALL quiz/reading/essay activities in HIST, C1-BIO, ISTORIOHRAFIIA, LIT, and content-heavy modules. If a quiz question is answerable from general knowledge alone, you have FAILED the activity.
 
 2. **Production over recognition** — At least 2 activities must require the learner to PRODUCE language, not just recognize it. Production types: `translate` (with free text, not multiple choice), `fill-in`, `unjumble`, `error-correction`, `cloze`. Recognition types: `quiz`, `true-false`, `select`, `match-up`, `group-sort`. A module with only recognition activities fails review.
 

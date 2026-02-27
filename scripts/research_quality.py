@@ -25,7 +25,7 @@ RUBRIC_REGISTRY = {
                         "learner_errors", "cross_references", "pedagogy_notes"],
     },
     "history": {
-        "tracks": {"hist", "c1-bio", "c1-hist", "oes", "ruth",
+        "tracks": {"hist", "c1-bio", "istoriohrafiia", "oes", "ruth",
                     "lit", "lit-essay", "lit-fantastika", "lit-hist-fic",
                     "lit-humor", "lit-youth", "lit-war", "lit-doc",
                     "lit-drama", "lit-crimea"},

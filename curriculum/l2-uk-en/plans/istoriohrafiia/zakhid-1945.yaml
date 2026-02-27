@@ -1,0 +1,113 @@
+module: istoriohrafiia-096
+level: istoriohrafiia
+sequence: 96
+version: '1.0'
+title: '1945: Ялта і зрада'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of 1945: ялта і зрада'
+- Evaluate the historical significance of друга зрада
+content_outline:
+- section: Вступ — Друга зрада
+  subsections:
+  - 1945 — новий світовий порядок
+  - Україна — знову забута
+  - Примусова репатріація — злочин
+  - Структура модуля
+- section: Ялтинська конференція
+  subsections:
+  - Велика трійка
+  - Поділ Європи
+  - Україна — в радянській сфері
+  - Жодних питань
+- section: Західна Україна
+  subsections:
+  - Галичина, Волинь — у СРСР
+  - Закарпаття — «добровільно»
+  - Польща отримує компенсацію
+  - Примусове переселення
+- section: Примусова репатріація
+  subsections:
+  - ДіПі — хто хотів повернутися
+  - Операція Keelhaul
+  - Самогубства, опір
+  - Західні союзники — співучасники
+- section: Чому погодились
+  subsections:
+  - Сталін — союзник
+  - Реальполітик — цинічний
+  - Незнання чи байдужість
+  - Масштаб злочину
+- section: Наслідки для України
+  subsections:
+  - Західна Україна — радянізація
+  - ДіПі — врятувалися хто зміг
+  - Травма і пам'ять
+- section: Підсумок
+  subsections:
+  - Ялта — зрада заради миру
+  - Паттерн продовжується
+  - Перехід до «Курча по-київськи»
+vocabulary:
+- Ялта
+- конференція
+- примусова репатріація
+- ДіПі
+- зрада
+- сфера впливу
+- «Велика трійка»
+- реальполітик
+- співучасник
+- радянізація
+- операція Keelhaul
+- лінія Керзона
+- примусове переселення
+- табір ДіПі
+- цинізм
+activities:
+- type: critical-analysis
+  focus: What was decided at Yalta about Ukraine?
+- type: critical-analysis
+  focus: Forced repatriation — Western responsibility
+- type: comparative-study
+  focus: DP experiences with repatriation threat
+- type: comparative-study
+  focus: 1918 vs. 1945 — patterns of Western betrayal
+- type: essay-response
+  focus: Чи мав Захід моральне право видавати біженців СРСР?
+sources:
+- name: Ялтинська конференція (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ялтинська_конференція
+  type: reference
+  notes: Yalta conference
+- name: Примусова репатріація (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Примусова_репатріація_радянських_громадян
+  type: reference
+  notes: Forced repatriation
+- name: Операція «Кіл Хаул» (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Операція_«Кілгаул»
+  type: reference
+  notes: Operation Keelhaul
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Cold War Historian

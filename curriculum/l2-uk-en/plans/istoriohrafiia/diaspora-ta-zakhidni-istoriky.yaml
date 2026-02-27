@@ -1,0 +1,122 @@
+module: istoriohrafiia-006
+level: istoriohrafiia
+sequence: 6
+version: '1.0'
+title: Діаспора та західні історики
+focus: history
+pedagogy: seminar
+objectives:
+- Analyze the causes and consequences of діаспора та західні історики
+- Evaluate the historical significance of історія в екзилі
+- Trace the development of діалог із україною після 1991
+content_outline:
+- section: Вступ — Історія в екзилі
+  subsections:
+  - Чому діаспора писала історію
+  - Держава без держави — наука як замінник
+  - Збереження пам'яті для майбутнього
+  - Зв'язок із батьківщиною
+- section: Українські наукові інституції на Заході
+  subsections:
+  - НТШ (Наукове товариство імені Шевченка)
+  - У|ван (Українська Вільна Академія Наук)
+  - Гарвардський українознавчий інститут (HURI)
+  - Канадський інститут українських студій (CIUS)
+  - Чому університети, а не уряд
+- section: Омелян Пріцак і Гарвард
+  subsections:
+  - Біографія — від Львова до Гарварду
+  - Створення HURI (1973)
+  - Методологія — тюркологія, орієнталістика
+  - «Походження Русі» — контроверсійна праця
+  - Спадщина — журнали, конференції, кадри
+- section: Орест Субтельний — популяризатор
+  subsections:
+  - Біографія — другe покоління діаспори
+  - '«Ukraine: A History» (1988) — чому стала класикою'
+  - Доступність для неспеціалістів
+  - Критика — що застаріло
+  - Переклад українською
+- section: Інші ключові постаті
+  subsections:
+  - Пол Роберт Маґочі — Закарпаття
+  - Джон-Пол Химка — соціальна історія
+  - Сергій Плохій — сучасний лідер
+  - Тімоті Снайдер — глобальна аудиторія
+  - Марк фон Гаґен — імперська історія
+- section: Методологічні особливості західної школи
+  subsections:
+  - Об'єктивність vs. національний наратив
+  - Доступ до архівів — переваги і межі
+  - Аудиторія — хто читає
+  - Вплив на політику — експертиза
+- section: Діалог із Україною після 1991
+  subsections:
+  - Повернення праць на батьківщину
+  - Спільні проєкти
+  - Нове покоління — вже не діаспора
+  - Що далі
+vocabulary:
+- діаспора
+- українознавство
+- наукова інституція
+- архів
+- методологія
+- орієнталістика
+- популяризація
+- об'єктивність
+- експертиза
+- спадщина
+- екзиль
+- академічна свобода
+- наукова школа
+- рецензія
+- синтез
+activities:
+- type: reading
+  focus: 'Preface from Subtelny''s «Ukraine: A History»'
+- type: reading
+  focus: Explore HURI website — list 3 current research projects
+- type: comparative-study
+  focus: Compare chapter on Khmelnytsky in Subtelny vs. Soviet textbook
+- type: essay-response
+  focus: Яку роль відіграла діаспора у збереженні української історичної пам'яті?
+sources:
+- name: Harvard Ukrainian Research Institute (HURI)
+  url: https://huri.harvard.edu/
+  type: reference
+  notes: Key Western academic institution
+- name: Омелян Пріцак
+  url: https://uk.wikipedia.org/wiki/Пріцак_Омелян_Йосипович
+  type: reference
+  notes: Founder of HURI
+- name: Орест Субтельний
+  url: https://uk.wikipedia.org/wiki/Субтельний_Орест
+  type: reference
+  notes: Author of most popular English-language history
+- name: 'Ukraine: A History (book info)'
+  url: https://www.utpress.utoronto.ca/9781442609914/ukraine
+  type: secondary
+  notes: Subtelny's standard text
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Historiographical Liaison

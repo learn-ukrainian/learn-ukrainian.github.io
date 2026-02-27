@@ -1,0 +1,104 @@
+module: istoriohrafiia-127
+level: istoriohrafiia
+sequence: 127
+version: '1.0'
+title: 'Громадянське суспільство: Держава без держави'
+focus: history
+pedagogy: seminar
+objectives:
+- 'Analyze the causes and consequences of громадянське суспільство: держава без держави'
+- Evaluate the historical significance of самоорганізація
+content_outline:
+- section: Вступ — Самоорганізація
+  subsections:
+  - Громадянське суспільство — що це
+  - Коли держава не працює
+  - Україна — особливий випадок
+  - Структура модуля
+- section: Історичні корені
+  subsections:
+  - Козацьке самоврядування
+  - «Просвіта» і кооперативи
+  - Радянський період — знищення
+  - Відродження після 1991
+- section: Майдан як лабораторія
+  subsections:
+  - 2004 — Помаранчева революція
+  - 2013-2014 — Євромайдан
+  - Самоорганізація — як працювала
+  - «Республіка Майдан»
+- section: Волонтерський рух
+  subsections:
+  - 2014 — армія без держави
+  - Волонтери — хто вони
+  - Масштаб — мільйони
+  - Паралельні структури
+- section: Після 2022
+  subsections:
+  - Миттєва мобілізація
+  - Територіальна оборона
+  - Гуманітарна допомога
+  - Держава + суспільство
+- section: Підсумок
+  subsections:
+  - Громадянське суспільство — сила
+  - Коли держава слабка — суспільство сильне
+  - Перехід до Гранітної революції
+vocabulary:
+- громадянське суспільство
+- самоорганізація
+- волонтер
+- самоврядування
+- Майдан
+- територіальна оборона
+- паралельні структури
+- мобілізація
+- солідарність
+- держава
+- краудфандинг
+- НГО
+- горизонтальні зв'язки
+- низова ініціатива
+- «Республіка Майдан»
+activities:
+- type: critical-analysis
+  focus: Trace civil society from Cossacks to Maidan
+- type: critical-analysis
+  focus: How Euromaidan self-organized — case study
+- type: critical-analysis
+  focus: 2014 volunteer army — how it worked
+- type: critical-analysis
+  focus: Instant mobilization — why it worked
+- type: essay-response
+  focus: Чому українське громадянське суспільство сильніше за державу?
+sources:
+- name: Громадянське суспільство в Україні (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Громадянське_суспільство_в_Україні
+  type: reference
+  notes: Civil society overview
+- name: Євромайдан (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Євромайдан
+  type: reference
+  notes: Euromaidan self-organization
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+persona:
+  voice: Academic Historiographer
+  role: Sociologist of Movements

@@ -1,4 +1,4 @@
-# C1-HIST Quick Reference (Ukrainian Historiography Track)
+# ISTORIOHRAFIIA Quick Reference (Ukrainian Historiography Track)
 
 ## Track Overview
 
@@ -7,7 +7,7 @@
 **Pedagogy:** CBI (Content-Based Instruction) with historiographical analysis
 **Immersion:** 95-100% Ukrainian
 
-> **C1-HIST is NOT about historical facts (that's HIST). It's about HOW we know history** — sources, methods, interpretations, contested narratives.
+> **ISTORIOHRAFIIA is NOT about historical facts (that's HIST). It's about HOW we know history** — sources, methods, interpretations, contested narratives.
 
 ---
 
@@ -28,7 +28,7 @@
 | Unique types     | 3+      | min_types_unique    |
 | Vocab            | 25+     | min_vocab           |
 
-**Note:** C1-HIST uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
+**Note:** ISTORIOHRAFIIA uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
 
 ---
 
@@ -47,9 +47,9 @@
 
 ## Templates
 
-**Before writing any C1-HIST module, read:**
+**Before writing any ISTORIOHRAFIIA module, read:**
 
-- **History modules** → `docs/l2-uk-en/templates/c1-history-module-template.md`
+- **History modules** → `docs/l2-uk-en/templates/istoriohrafiiaory-module-template.md`
 - **Tier 3 guidance** → `claude_extensions/commands/review-tiers/tier-3-seminar.md`
 
 ---
@@ -73,18 +73,18 @@
 
 ## Pre-flight Checklist
 
-Before writing any C1-HIST module:
+Before writing any ISTORIOHRAFIIA module:
 
-1. ✅ Read the plan: `curriculum/l2-uk-en/plans/c1-hist/{slug}.yaml`
-2. ✅ Read the meta: `curriculum/l2-uk-en/c1-hist/meta/{slug}.yaml`
-3. ✅ Read the template: `docs/l2-uk-en/templates/c1-history-module-template.md`
+1. ✅ Read the plan: `curriculum/l2-uk-en/plans/istoriohrafiia/{slug}.yaml`
+2. ✅ Read the meta: `curriculum/l2-uk-en/istoriohrafiia/meta/{slug}.yaml`
+3. ✅ Read the template: `docs/l2-uk-en/templates/istoriohrafiiaory-module-template.md`
 4. ✅ Check curriculum.yaml for correct sequence number
 
 ---
 
 ## Research-First Workflow (MANDATORY)
 
-**C1-HIST requires Phase 0: Deep Research before writing.**
+**ISTORIOHRAFIIA requires Phase 0: Deep Research before writing.**
 
 1. **Research the topic** using academic sources:
    - [litopys.org.ua](https://litopys.org.ua) — Primary sources
@@ -175,7 +175,7 @@ Before writing any C1-HIST module:
 
 ## Seminar Quality Standards
 
-**C1-HIST modules must achieve A+ seminar quality:**
+**ISTORIOHRAFIIA modules must achieve A+ seminar quality:**
 
 | Criterion | A+ Standard |
 |-----------|-------------|
@@ -195,23 +195,23 @@ Before writing any C1-HIST module:
 
 ```bash
 # Build module
-/module c1-hist {num}
+/module istoriohrafiia {num}
 
 # Resume from phase
-/module c1-hist {num} --from={phase}
+/module istoriohrafiia {num} --from={phase}
 
 # Check status
-/module c1-hist {num} --check
+/module istoriohrafiia {num} --check
 
 # Batch build
-/module c1-hist {start}-{end}
+/module istoriohrafiia {start}-{end}
 ```
 
 ---
 
 ## Key Differences from HIST
 
-| Aspect | HIST | C1-HIST |
+| Aspect | HIST | ISTORIOHRAFIIA |
 |--------|---------|---------|
 | Focus | What happened | How we know |
 | Content | Historical events | Historiographical debates |

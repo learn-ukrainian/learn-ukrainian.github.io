@@ -1,6 +1,6 @@
 # Research-First Workflow for Historical & Literary Tracks
 
-> **Applies to:** `hist`, `c1-bio`, `c1-hist`, `lit`, `oes`, `ruth` (seminar tracks)
+> **Applies to:** `hist`, `c1-bio`, `istoriohrafiia`, `lit`, `oes`, `ruth` (seminar tracks)
 > **Purpose**: This workflow ensures high-quality content by requiring deep research BEFORE writing.
 
 > **Note:** Core (non-seminar) tracks have their own lighter research phases:
@@ -378,7 +378,7 @@ Map research to required sections with word allocations:
 ### Phase 3: Activities (ONLY 4-9 needed!)
 
 **Activity Requirements (Seminar Style):**
-> **Applies to:** C1-BIO, C1-HIST, OES, RUTH, LIT (HIST may vary)
+> **Applies to:** C1-BIO, ISTORIOHRAFIIA, OES, RUTH, LIT (HIST may vary)
 
 - Min activities: **4**
 - Max activities: **9**

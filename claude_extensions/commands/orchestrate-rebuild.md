@@ -35,7 +35,7 @@ This is the order for the full curriculum rebuild:
 5. **A1** (remaining), **A2**, **B1**, **B2**, **C1**, **C2**
 
 ### Wave 3: Seminar + specialization tracks
-6. **HIST**, **C1-BIO**, **C1-HIST**, **LIT**, **OES**, **RUTH**
+6. **HIST**, **C1-BIO**, **ISTORIOHRAFIIA**, **LIT**, **OES**, **RUTH**
 7. **LIT-\***, **B2-PRO**, **C1-PRO**
 
 ---
@@ -43,7 +43,7 @@ This is the order for the full curriculum rebuild:
 ## Track Detection
 
 ```
-SEMINAR_TRACKS: hist, c1-bio, c1-hist, lit, oes, ruth → 6 phases (0-5)
+SEMINAR_TRACKS: hist, c1-bio, istoriohrafiia, lit, oes, ruth → 6 phases (0-5)
 CORE_TRACKS: a1, a2, b1, b2, c1, c2, b2-pro, c1-pro    → 4 phases (0, 2-4)
 ```
 

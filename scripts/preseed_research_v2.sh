@@ -2,7 +2,7 @@
 # Pre-seed Phase A research — v2
 # Resumes from where v1 left off. Skips modules with research already done.
 #
-# Completed in v1: c1-hist (136/136), b2-pro (40/40)
+# Completed in v1: istoriohrafiia (136/136), b2-pro (40/40)
 # Partial in v1:   c1-pro (49/50), c2 (68/101), oes (30/100), ruth (23/100)
 # Failed in v1:    lit* (4/387) — plan file naming bug (fixed below)
 

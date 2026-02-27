@@ -1,4 +1,4 @@
-# C1-HIST Curriculum Plan: Historiography Track
+# ISTORIOHRAFIIA Curriculum Plan: Historiography Track
 
 **Generated from YAML plans**
 **Modules:** 135 module meta files found
@@ -10,7 +10,7 @@
 
 ## Track Overview
 
-C1-HIST is an advanced historiography track for students who have
+ISTORIOHRAFIIA is an advanced historiography track for students who have
 completed HIST. Focuses on primary source analysis, critical
 historiography, and thematic deep dives.
 

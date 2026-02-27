@@ -44,7 +44,7 @@ MDX Gate (deterministic)
 | C2 | 3000w |
 | HIST | 5000w |
 | C1-BIO | 5000w |
-| C1-HIST | 5000w |
+| ISTORIOHRAFIIA | 5000w |
 | LIT | 2500w |
 
 **Word target in meta file overrides the above.** If meta sets `word_target: 4000`, that's the gate.

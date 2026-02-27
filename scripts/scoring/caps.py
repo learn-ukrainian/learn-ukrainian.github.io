@@ -73,7 +73,7 @@ CRITICAL_CAPS: dict[str, list[CapCondition]] = {
             reason_template='0 cross-references: no module connections',
         ),
     ],
-    'c1-hist': [
+    'istoriohrafiia': [
         CapCondition(
             name='zero_quotes',
             criterion='primary_source_integration',

@@ -108,7 +108,7 @@ Add to `package.json`:
     "status:c2": "python scripts/generate_level_status.py c2",
     "status:hist": "python scripts/generate_level_status.py hist",
     "status:c1-bio": "python scripts/generate_level_status.py c1-bio",
-    "status:c1-hist": "python scripts/generate_level_status.py c1-hist",
+    "status:istoriohrafiia": "python scripts/generate_level_status.py istoriohrafiia",
     "status:lit": "python scripts/generate_level_status.py lit",
     "status:all": "python scripts/generate_level_status.py all"
   }

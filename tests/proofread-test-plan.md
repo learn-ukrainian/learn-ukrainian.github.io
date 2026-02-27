@@ -12,7 +12,7 @@ All tracks, from A1 through seminar. Run when capacity is available.
 | b2 | 34 | 95 | 100% | Ready to test |
 | hist | 27 | 140 | 100% Ukrainian | Ready to test |
 | c1 | 1 | 108 | 100% | 1 module only |
-| c1-hist | 3 | 136 | 100% Ukrainian | 3 modules |
+| istoriohrafiia | 3 | 136 | 100% Ukrainian | 3 modules |
 | c1-bio | 4 | 172 | 100% Ukrainian | 4 modules |
 | lit | 0 | 217 | 100% Ukrainian | No content yet |
 | oes | 0 | 100 | 100% Ukrainian | No content yet |
@@ -82,11 +82,11 @@ Modules: 1 (trypillian), 5, 10, 15, 20
 .venv/bin/python scripts/proofread.py c1 1 --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1-01.txt
 ```
 
-### C1-HIST (seminar, 3 modules)
+### ISTORIOHRAFIIA (seminar, 3 modules)
 
 ```bash
 for n in 1 2 3; do
-  .venv/bin/python scripts/proofread.py c1-hist $n --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1hist-$(printf '%02d' $n).txt
+  .venv/bin/python scripts/proofread.py istoriohrafiia $n --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1hist-$(printf '%02d' $n).txt
 done
 ```
 
@@ -118,7 +118,7 @@ After Phase 1 validates the prompt works for each track, run full coverage.
 
 # Seminar tracks
 .venv/bin/python scripts/proofread.py hist --all --dry-run 2>&1 | tee tests/proofread-results/full-b2hist.txt
-.venv/bin/python scripts/proofread.py c1-hist --all --dry-run 2>&1 | tee tests/proofread-results/full-c1hist.txt
+.venv/bin/python scripts/proofread.py istoriohrafiia --all --dry-run 2>&1 | tee tests/proofread-results/full-c1hist.txt
 .venv/bin/python scripts/proofread.py c1-bio --all --dry-run 2>&1 | tee tests/proofread-results/full-c1bio.txt
 ```
 
@@ -133,7 +133,7 @@ Run `--evaluate` on a subset of Phase 2 results to get quality metrics.
 .venv/bin/python scripts/proofread.py b1 --range 6-15 --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-b1-batch.txt
 .venv/bin/python scripts/proofread.py b2 --range 1-10 --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-b2-batch.txt
 .venv/bin/python scripts/proofread.py hist --range 1-5 --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-b2hist-batch.txt
-.venv/bin/python scripts/proofread.py c1-hist --all --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1hist-batch.txt
+.venv/bin/python scripts/proofread.py istoriohrafiia --all --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1hist-batch.txt
 .venv/bin/python scripts/proofread.py c1-bio --all --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1bio-batch.txt
 ```
 
@@ -166,7 +166,7 @@ After quality metrics are validated (precision >80%, rewrite quality >70%, safet
 | B1 immersed (6+) | 3-8 | LLM_FILLER, LANGUAGE_BLENDER (if English leaks) |
 | B2 core | 3-8 | LLM_FILLER, WORD_SALAD |
 | HIST seminar | 2-6 | RUSSIANISM, WORD_SALAD, SOURCE_VERIFICATION |
-| C1/C1-HIST/C1-BIO | 2-5 | WORD_SALAD, SOURCE_VERIFICATION, HISTORICAL_INTEGRITY |
+| C1/ISTORIOHRAFIIA/C1-BIO | 2-5 | WORD_SALAD, SOURCE_VERIFICATION, HISTORICAL_INTEGRITY |
 | LIT | 2-5 | SOURCE_VERIFICATION, WORD_SALAD |
 
 ## Notes
