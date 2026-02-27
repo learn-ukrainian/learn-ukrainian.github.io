@@ -92,7 +92,7 @@ All C1 templates are **correctly aligned** with the curriculum plan:
 
 | Template | Modules | Status |
 |----------|---------|--------|
-| `c1-biography-module-template.md` | M36-100 | ✅ Aligned |
+| `biography-module-template.md` | M36-100 | ✅ Aligned |
 | `c1-folk-culture-module-template.md` | M121-145 | ✅ Aligned |
 | `c1-literature-module-template.md` | M146-160 | ✅ Aligned |
 

@@ -182,7 +182,7 @@ For each `activity_hints` entry, generate corresponding YAML activity following 
 
 #### Common Activity Types by Pedagogy
 
-**Seminar (HIST, C1-BIO, ISTORIOHRAFIIA, LIT):**
+**Seminar (HIST, BIO, ISTORIOHRAFIIA, LIT):**
 
 - reading (2-3): External texts with linguistic analysis
 - quiz (12+): Comprehension questions
@@ -400,7 +400,7 @@ Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 | C2    | 15-25            | 20+ quiz items | 15+ fill-in   | 6-12 other |
 
 **Seminar Tracks (Analysis-Focused):**
-*Applies to: HIST, C1-BIO, ISTORIOHRAFIIA, LIT*
+*Applies to: HIST, BIO, ISTORIOHRAFIIA, LIT*
 
 | Level      | Total Activities | Reading | Essay | Quiz/Fill-in |
 | ---------- | ---------------- | ------- | ----- | ------------ |
@@ -442,7 +442,7 @@ Minimum activity counts by level (from MODULE-RICHNESS-GUIDELINES-v2.md):
 
 **Immersion:** 100% Ukrainian (all instructions, explanations)
 
-### HIST / C1-BIO / ISTORIOHRAFIIA / LIT Tracks
+### HIST / BIO / ISTORIOHRAFIIA / LIT Tracks
 
 **Activity focus:**
 

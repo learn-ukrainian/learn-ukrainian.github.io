@@ -17,7 +17,7 @@ Sync meta.yaml to match existing markdown content.
 ```bash
 /module-sync hist 1      # Sync meta to existing trypillian-civilization.md
 /module-sync b2 45          # Sync meta for existing B2 module 45
-/module-sync c1-bio 12      # Sync meta for biography module 12
+/module-sync bio 12      # Sync meta for biography module 12
 ```
 
 ---
@@ -54,7 +54,7 @@ Parse arguments: {level} {num}
 
 ### Step 1: Resolve Module Slug
 
-**For tracks (hist, c1-bio, istoriohrafiia, lit):**
+**For tracks (hist, bio, istoriohrafiia, lit):**
 
 ```bash
 slug=$(yq ".levels.\"${level}\".modules[$((num-1))]" curriculum/l2-uk-en/curriculum.yaml)

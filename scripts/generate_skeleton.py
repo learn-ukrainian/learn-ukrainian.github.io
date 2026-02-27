@@ -64,8 +64,8 @@ def determine_module_type(level: str, module_num: int) -> str:
         return 'b2-grammar'
     elif level == 'HIST':
         return 'history'
-    elif level == 'C1-BIO':
-        return 'c1-bio'
+    elif level == 'BIO':
+        return 'bio'
     elif level == 'C1':
         return 'c1'
     elif level == 'C2':
@@ -91,7 +91,7 @@ def get_template_path(level: str, module_type: str) -> Path:
         'b2-grammar': 'b2-grammar-module-template.md',
         'b2-checkpoint': 'b2-checkpoint-module-template.md',
         'history': 'history-module-template.md',
-        'c1-bio': 'ai/c1-biography-module-template.md',
+        'bio': 'ai/biography-module-template.md',
         'c1': 'c1-module-template.md',
         'c2': 'c2-module-template.md',
     }
@@ -487,7 +487,7 @@ def main():
     if len(sys.argv) < 4:
         print("Usage: python3 scripts/generate_skeleton.py <curriculum> <level> <module_id> [--track TRACK]")
         print("Example: python3 scripts/generate_skeleton.py l2-uk-en b1 43")
-        print("Example: python3 scripts/generate_skeleton.py l2-uk-en c1-bio some-slug --track c1-bio")
+        print("Example: python3 scripts/generate_skeleton.py l2-uk-en bio some-slug --track bio")
         sys.exit(1)
 
     curriculum = sys.argv[1]

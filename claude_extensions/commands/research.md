@@ -2,7 +2,7 @@
 
 <skill>
 name: research
-description: Research topics for seminar tracks using strictly Ukrainian resources. Use before writing content for hist, c1-bio, istoriohrafiia, oes, ruth, lit modules. Auto-updates active /task if set.
+description: Research topics for seminar tracks using strictly Ukrainian resources. Use before writing content for hist, bio, istoriohrafiia, oes, ruth, lit modules. Auto-updates active /task if set.
 arguments: topic - The topic to research (figure, event, era, literary work, document)
 </skill>
 
@@ -16,7 +16,7 @@ Conduct research using **only Ukrainian-language sources** to gather accurate, a
 
 | Track | Research Focus |
 |-------|----------------|
-| `c1-bio` | Historical figures - birth/death dates, key events, legacy, quotes |
+| `bio` | Historical figures - birth/death dates, key events, legacy, quotes |
 | `hist` | Historical events, eras, causes/consequences, primary sources |
 | `istoriohrafiia` | Historiographical analysis, interpretations, scholarly debates |
 | `lit` | Literary works, authors, movements, textual analysis |
@@ -42,7 +42,7 @@ Before researching, determine:
 
 Based on the topic and track, determine what information is needed:
 
-**For Biography (c1-bio):**
+**For Biography (bio):**
 - Full name in Ukrainian (with patronymic if applicable)
 - Birth/death dates and locations
 - Key life events (chronological)
@@ -232,7 +232,7 @@ curriculum/l2-uk-en/{track}/research/{slug}-research.md
 ```
 
 **Example paths:**
-- `curriculum/l2-uk-en/c1-bio/research/danylo-apostol-research.md`
+- `curriculum/l2-uk-en/bio/research/danylo-apostol-research.md`
 - `curriculum/l2-uk-en/hist/research/kozatstvo-vytoky-research.md`
 
 ### Step 6: Update Active Task (if exists)
@@ -294,12 +294,12 @@ User: /research Данило Апостол
 Claude: [Searches Ukrainian sources]
 [Compiles research notes]
 [Validates quality]
-[Saves to curriculum/l2-uk-en/c1-bio/audit/danylo-apostol-research.md]
+[Saves to curriculum/l2-uk-en/bio/audit/danylo-apostol-research.md]
 
 📚 Research Complete: Данило Апостол
 
-Track: c1-bio
-Saved: curriculum/l2-uk-en/c1-bio/audit/danylo-apostol-research.md
+Track: bio
+Saved: curriculum/l2-uk-en/bio/audit/danylo-apostol-research.md
 
 Key findings:
 - Данило Павлович Апостол (1654-1734)
@@ -313,13 +313,13 @@ Cross-references: Ivan Mazepa, Pylyp Orlyk, Pavlo Polubotok
 
 ✅ Research quality: PASSED
 
-Ready for /module c1-bio 28
+Ready for /module bio 28
 ```
 
 ### With Active Task
 
 ```
-User: /task create "Write C1-BIO Danylo Apostol"
+User: /task create "Write BIO Danylo Apostol"
       /research Данило Апостол
 
 Claude: [Research process...]
@@ -334,7 +334,7 @@ Claude: [Research process...]
 The `/module` skill enforces research for seminar tracks:
 
 ```
-/module c1-bio 28
+/module bio 28
   → Check: Does research/danylo-apostol-research.md exist?
   → If NO: "Research required. Run /research 'Данило Апостол' first."
   → If YES: Proceed with content generation
@@ -342,7 +342,7 @@ The `/module` skill enforces research for seminar tracks:
 
 **To skip research check (NOT recommended):**
 ```
-/module c1-bio 28 --no-research
+/module bio 28 --no-research
 ```
 
 ## Gemini Collaboration Pattern
@@ -353,7 +353,7 @@ For complex research, leverage both agents:
 # Claude structures, Gemini researches (parallel)
 # Send research request to Gemini:
 .venv/bin/python scripts/ai_agent_bridge.py ask-gemini \
-  "Research Данило Апостол for C1-BIO module. Save notes to research/danylo-apostol-research.md" \
+  "Research Данило Апостол for BIO module. Save notes to research/danylo-apostol-research.md" \
   --task-id gh-500
 
 # Continue with other work while Gemini researches

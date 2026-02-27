@@ -57,7 +57,7 @@ def save_status_cache(
     
     # Derive track directory from file path for plan lookup
     # base_path is e.g. curriculum/l2-uk-en/hist — use its name directly
-    # so seminar tracks (hist, c1-bio, etc.) resolve correctly
+    # so seminar tracks (hist, bio, etc.) resolve correctly
     track_dir_name = base_path.name  # e.g., "hist", "a1", "b1"
     plan_path = base_path.parent / 'plans' / track_dir_name / f"{module_slug}.yaml"
     if not plan_path.exists():
@@ -343,7 +343,7 @@ def generate_report(
     """Generate markdown report content."""
     report_lines = []
 
-    # Use display_level for report output (e.g., "C1-BIO"), fall back to level_code
+    # Use display_level for report output (e.g., "BIO"), fall back to level_code
     shown_level = display_level if display_level else level_code
 
     # Build header with module number if available

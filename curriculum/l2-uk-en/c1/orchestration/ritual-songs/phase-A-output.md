@@ -50,7 +50,7 @@ Alignment: Модуль детально розглядає календарно
 
 ## Cross-References
 - Builds on: B1-M72 (Традиції), B2-Folk modules.
-- Prepares for: C1-LIT (Лісова пісня), C1-BIO (Леся Українка, Микола Лисенко).
+- Prepares for: C1-LIT (Лісова пісня), BIO (Леся Українка, Микола Лисенко).
 
 ## Notes for Content Writing
 - Дотримуватися академічного, але живого стилю (C1).

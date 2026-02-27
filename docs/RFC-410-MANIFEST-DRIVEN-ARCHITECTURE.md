@@ -141,7 +141,7 @@ tracks:
       - slug: kyivan-rus-origins
         # ...
 
-  c1-bio:
+  bio:
     name: "C1 Biography Track"
     description: "Famous Ukrainians Throughout History"
     prerequisite: c1
@@ -437,7 +437,7 @@ Rationale: With ~600 modules it's ~2000 lines - manageable. Merge conflicts are 
 
 **Decision: Slug-only for tracks (no numbers)**
 
-Tracks (hist, c1-bio, b2-pro, c1-pro, lit) use:
+Tracks (hist, bio, b2-pro, c1-pro, lit) use:
 - `slug:` field only in meta YAML
 - No `module:` field with numbers
 - Order determined by manifest, not by numbering
@@ -449,7 +449,7 @@ Core levels (a1, a2, b1, b2, c1, c2) retain numbered format until full migration
 | Track | Files with `module:` to remove |
 |-------|-------------------------------|
 | HIST | 63 |
-| C1-BIO | 101 |
+| BIO | 101 |
 | LIT | 23 |
 | **Total** | **187** |
 

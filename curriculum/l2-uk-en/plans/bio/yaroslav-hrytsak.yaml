@@ -1,0 +1,97 @@
+module: bio-155
+level: BIO
+sequence: 155
+slug: yaroslav-hrytsak
+version: '2.0'
+title: 'Ярослав Грицак: Публічний історик'
+content_outline:
+- section: Вступ — Історик, який говорить з людьми
+  points:
+  - Грицак як найвпливовіший публічний історик України
+  - Від академічної науки до широкої аудиторії
+  - Роль у формуванні історичної свідомості
+- section: Львівське дитинство та освіта
+  points:
+  - Народження у Львові (1960)
+  - Навчання та академічне становлення
+  - Вплив львівської інтелектуальної традиції
+- section: Академічна кариєра
+  points:
+  - Дослідження української історії
+  - Біографія Франка як ключова праця
+  - Міжнародне визнання
+- section: Подолання минулого
+  points:
+  - Концепція подолання минулого
+  - Критика націоналістичних міфів
+  - Європейський контекст української історії
+- section: Публічна історія
+  points:
+  - Лекції та публічні виступи
+  - Роль в УКУ
+  - Історія для широкої аудиторії
+- section: Війна та сучасність
+  points:
+  - Реакція на російську агресію
+  - Переосмислення деяких позицій
+  - Роль інтелектуала під час війни
+- section: Дискусія — Обов'язок історика
+  points:
+  - Об'єктивність vs громадянська позиція
+  - Як говорити неприємну правду
+vocabulary_hints:
+  required:
+  - публічна історія (public history)
+  - модернізація (modernization)
+  - подолання минулого (overcoming the past)
+  - європеїзація (Europeanization)
+  - національний міф (national myth)
+  - історична память (historical memory)
+  - деконструкція (deconstruction)
+  - критичний аналіз (critical analysis)
+  - інтелектуал (intellectual)
+  - дискурс (discourse)
+  recommended:
+  - ревізіонізм (revisionism)
+  - історіографія (historiography)
+  - наратив (narrative)
+  - ідентичність (identity)
+  - травма (trauma)
+activity_hints:
+- type: reading
+  focus: Фрагменти праць Грицака
+  source: Академічні та публіцистичні тексти
+  items: 3 passages
+- type: essay-response
+  focus: Чи повинен історик бути обєктивним?
+  output: Аргументований есей
+focus: biography
+prerequisites:
+- hist-independence
+connects_to:
+- bio-35-mykhailo-hrushevskyi
+- bio-88-vitaly-portnikov
+- bio-86-oksana-zabuzhko
+module_type: biography
+sources:
+- name: Ярослав Грицак (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Грицак_Ярослав_Йосипович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Український католицький університет
+  url: https://ucu.edu.ua/
+  type: reference
+  notes: Академічна діяльність
+- name: Книги та публікації
+  url: https://krytyka.com/
+  type: reference
+  notes: Наукові праці
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of ярослав грицак: публічний історик'
+- Evaluate the contributions of історик, який говорить з людьми
+- Trace the career and influence of обов'язок історика
+persona:
+  voice: Senior Biographer
+  role: Public Historian

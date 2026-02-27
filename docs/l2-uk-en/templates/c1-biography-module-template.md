@@ -326,7 +326,7 @@ Biography modules should include **2-3 external reading tasks** for deeper engag
 - Word count inflation (~700 words added to content)
 - QA confusion (auditing both locations)
 
-**Per config.py, C1-biography essay-response requirements:**
+**Per config.py, biography essay-response requirements:**
 - **Word count:** 250-400 words (student response length)
 - **Required:** Every module must have essay-response + critical-analysis activities
 
@@ -476,13 +476,13 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ## Seminar-Style Activity Examples
 
-**Per config.py, C1-BIO modules use ONLY seminar-style activities.** Traditional drill activities (fill-in, match-up, error-correction, group-sort, etc.) are FORBIDDEN.
+**Per config.py, BIO modules use ONLY seminar-style activities.** Traditional drill activities (fill-in, match-up, error-correction, group-sort, etc.) are FORBIDDEN.
 
 ### 1. Reading Activity
 
 ```yaml
 - type: reading
-  id: c1-bio-XX-reading-01
+  id: bio-XX-reading-01
   title: 'Аналіз первинного джерела'
   resource:
     type: primary_source
@@ -498,7 +498,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ```yaml
 - type: essay-response
-  id: c1-bio-XX-essay-01
+  id: bio-XX-essay-01
   title: 'Есе: Порівняльний аналіз'
   prompt: |
     Напишіть порівняльне есе (250-400 слів):
@@ -520,7 +520,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ```yaml
 - type: critical-analysis
-  id: c1-bio-XX-analysis-01
+  id: bio-XX-analysis-01
   title: 'Критичний аналіз спадщини'
   questions:
     - 'Як сучасна українська культура оцінює внесок цієї постаті?'
@@ -532,7 +532,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ```yaml
 - type: comparative-study
-  id: c1-bio-XX-compare-01
+  id: bio-XX-compare-01
   title: 'Порівняльний аналіз'
   figures:
     - '[Figure 1]'
@@ -549,7 +549,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 
 ```yaml
 - type: quiz
-  id: c1-bio-XX-quiz-01
+  id: bio-XX-quiz-01
   title: 'Концептуальний аналіз'
   items:
     - question: 'Згідно з текстом, як автор характеризує вплив цієї постаті?'

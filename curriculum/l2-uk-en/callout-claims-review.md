@@ -2189,12 +2189,12 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-# C1-BIO (21 callouts)
+# BIO (21 callouts)
 
-## c1-bio/kniaz-sviatoslav (audit: fail)
+## bio/kniaz-sviatoslav (audit: fail)
 
 ### Claim #170 — `[!history-bite]` at line 30
-**File:** `curriculum/l2-uk-en/c1-bio/kniaz-sviatoslav.md:30`
+**File:** `curriculum/l2-uk-en/bio/kniaz-sviatoslav.md:30`
 
 > [!history-bite]
 > **Свідок епохи:** Лев Диякон у своїй «Історії» описує князя з фотографічною точністю: «Побачили його, що сидячи в човні, бив веслом нарівні з іншими, без жодної різниці... Середнього зросту, не надто високого і не дуже низького, з кошлатими бровами і світло-синіми очима, кирпатий, безбородий, з густим, надмірно довгим волоссям над верхньою губою [вусами]. Голова в нього була зовсім гола, але з одного боку її звисало пасмо волосся [оселедець], що означало знатність роду... В одне вухо в нього була вдіта золота сережка; вона була прикрашена карбункулом, обрамленим двома перлинами. Одяг на ньому був білий і відрізнявся від одягу його наближених тільки чистотою».
@@ -2204,7 +2204,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #171 — `[!quote]` at line 129
-**File:** `curriculum/l2-uk-en/c1-bio/kniaz-sviatoslav.md:129`
+**File:** `curriculum/l2-uk-en/bio/kniaz-sviatoslav.md:129`
 
 > [!quote]
 > **Голос джерела:** «...бо то є середина землі моєї, адже там усі блага сходяться: від Греків — золото, паволоки, вина й овочі різні; від Чехів і Угрів — срібло й коні; із Русі ж — хутро і віск, і мед, і челядь».
@@ -2214,7 +2214,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #172 — `[!myth-buster]` at line 171
-**File:** `curriculum/l2-uk-en/c1-bio/kniaz-sviatoslav.md:171`
+**File:** `curriculum/l2-uk-en/bio/kniaz-sviatoslav.md:171`
 
 > [!myth-buster]
 > **Випадковість чи змова?** Радянські підручники часто подавали це як звичайний, випадковий набіг кочівників. Однак «архівний детектив» вказує на чіткі сліди візантійської дипломатії. Грецький хроніст Іоанн Скіліца прямо пише, що імператор Цимісхій, підписавши мир і відпустивши Святослава, одразу ж відправив послів (на чолі з Феофілом Еротиком) до печенігів з проханням не пропустити русів. Він таємно повідомив їм маршрут і час руху князя. Для Візантії було життєво важливо, щоб цей небезпечний і харизматичний **воїн** ніколи не повернувся до Києва і не зібрав нові сили для реваншу. Це був класичний приклад візантійської підступності: посміхатися в очі і гострити ніж у спину руками найманців.
@@ -2224,7 +2224,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #173 — `[!decolonization]` at line 260
-**File:** `curriculum/l2-uk-en/c1-bio/kniaz-sviatoslav.md:260`
+**File:** `curriculum/l2-uk-en/bio/kniaz-sviatoslav.md:260`
 
 > [!decolonization]
 > **Повернення кодів:** Визнання Святослава частиною українського національного пантеону — це акт повернення історичної правди і справедливості. Його «оселедець» — це є не екзотичною зачіскою, а маркером приналежності до певної військової касти (кшатріїв нашого степу), яка століттями існувала на українських землях: від стародавніх аріїв і сарматів через русів до запорозьких козаків і січових стрільців.
@@ -2233,10 +2233,10 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-## c1-bio/kniaz-yaroslav-mudryi (audit: fail)
+## bio/kniaz-yaroslav-mudryi (audit: fail)
 
 ### Claim #174 — `[!history-bite]` at line 24
-**File:** `curriculum/l2-uk-en/c1-bio/kniaz-yaroslav-mudryi.md:24`
+**File:** `curriculum/l2-uk-en/bio/kniaz-yaroslav-mudryi.md:24`
 
 > [!history-bite]
 > **Кульгавість як знак долі**
@@ -2247,7 +2247,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #175 — `[!fact]` at line 42
-**File:** `curriculum/l2-uk-en/c1-bio/kniaz-yaroslav-mudryi.md:42`
+**File:** `curriculum/l2-uk-en/bio/kniaz-yaroslav-mudryi.md:42`
 
 > [!fact]
 > **Титул «Каган»**
@@ -2258,7 +2258,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #176 — `[!perspective]` at line 121
-**File:** `curriculum/l2-uk-en/c1-bio/kniaz-yaroslav-mudryi.md:121`
+**File:** `curriculum/l2-uk-en/bio/kniaz-yaroslav-mudryi.md:121`
 
 > [!perspective]
 > **Руська Правда ≠ Російське право**
@@ -2269,7 +2269,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #177 — `[!myth-buster]` at line 136
-**File:** `curriculum/l2-uk-en/c1-bio/kniaz-yaroslav-mudryi.md:136`
+**File:** `curriculum/l2-uk-en/bio/kniaz-yaroslav-mudryi.md:136`
 
 > [!myth-buster]
 > **Коли збудували Софію?**
@@ -2280,7 +2280,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #178 — `[!culture]` at line 179
-**File:** `curriculum/l2-uk-en/c1-bio/kniaz-yaroslav-mudryi.md:179`
+**File:** `curriculum/l2-uk-en/bio/kniaz-yaroslav-mudryi.md:179`
 
 > [!culture]
 > **Геополітичний маркер**
@@ -2291,7 +2291,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #179 — `[!legacy]` at line 222
-**File:** `curriculum/l2-uk-en/c1-bio/kniaz-yaroslav-mudryi.md:222`
+**File:** `curriculum/l2-uk-en/bio/kniaz-yaroslav-mudryi.md:222`
 
 > [!legacy]
 > **«Шапка Мономаха» — фейк імперії**
@@ -2302,10 +2302,10 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-## c1-bio/knyahynia-olha (audit: fail)
+## bio/knyahynia-olha (audit: fail)
 
 ### Claim #180 — `[!myth-buster]` at line 47
-**File:** `curriculum/l2-uk-en/c1-bio/knyahynia-olha.md:47`
+**File:** `curriculum/l2-uk-en/bio/knyahynia-olha.md:47`
 
 > [!myth-buster]
 > **Псковська селянка чи болгарська принцеса?**
@@ -2316,7 +2316,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #181 — `[!quote]` at line 74
-**File:** `curriculum/l2-uk-en/c1-bio/knyahynia-olha.md:74`
+**File:** `curriculum/l2-uk-en/bio/knyahynia-olha.md:74`
 
 > [!quote]
 > **Літопис Руський:**
@@ -2327,7 +2327,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #182 — `[!culture]` at line 103
-**File:** `curriculum/l2-uk-en/c1-bio/knyahynia-olha.md:103`
+**File:** `curriculum/l2-uk-en/bio/knyahynia-olha.md:103`
 
 > [!culture]
 > **Жінка у варязькому світі**
@@ -2338,7 +2338,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #183 — `[!history-bite]` at line 161
-**File:** `curriculum/l2-uk-en/c1-bio/knyahynia-olha.md:161`
+**File:** `curriculum/l2-uk-en/bio/knyahynia-olha.md:161`
 
 > [!history-bite]
 > **Альтернативна історія**
@@ -2349,7 +2349,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #184 — `[!decolonization]` at line 194
-**File:** `curriculum/l2-uk-en/c1-bio/knyahynia-olha.md:194`
+**File:** `curriculum/l2-uk-en/bio/knyahynia-olha.md:194`
 
 > [!decolonization]
 > **Київська княгиня, а не «російська свята»**
@@ -2359,10 +2359,10 @@ Review each callout box below. For each claim, mark:
 
 ---
 
-## c1-bio/volodymyr-velykii (audit: fail)
+## bio/volodymyr-velykii (audit: fail)
 
 ### Claim #185 — `[!decolonization]` at line 23
-**File:** `curriculum/l2-uk-en/c1-bio/volodymyr-velykii.md:23`
+**File:** `curriculum/l2-uk-en/bio/volodymyr-velykii.md:23`
 
 > [!decolonization]
 > **Війна пам'ятників**
@@ -2374,7 +2374,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #186 — `[!history-bite]` at line 36
-**File:** `curriculum/l2-uk-en/c1-bio/volodymyr-velykii.md:36`
+**File:** `curriculum/l2-uk-en/bio/volodymyr-velykii.md:36`
 
 > [!history-bite]
 > **Великі бастарди історії**
@@ -2386,7 +2386,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #187 — `[!myth-buster]` at line 58
-**File:** `curriculum/l2-uk-en/c1-bio/volodymyr-velykii.md:58`
+**File:** `curriculum/l2-uk-en/bio/volodymyr-velykii.md:58`
 
 > [!myth-buster]
 > **Не романтика, а політика**
@@ -2398,7 +2398,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #188 — `[!myth-buster]` at line 105
-**File:** `curriculum/l2-uk-en/c1-bio/volodymyr-velykii.md:105`
+**File:** `curriculum/l2-uk-en/bio/volodymyr-velykii.md:105`
 
 > [!myth-buster]
 > **Прагматизм, а не просвітлення**
@@ -2410,7 +2410,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #189 — `[!culture]` at line 130
-**File:** `curriculum/l2-uk-en/c1-bio/volodymyr-velykii.md:130`
+**File:** `curriculum/l2-uk-en/bio/volodymyr-velykii.md:130`
 
 > [!culture]
 > **Народження Тризуба**
@@ -2422,7 +2422,7 @@ Review each callout box below. For each claim, mark:
 ---
 
 ### Claim #190 — `[!myth-buster]` at line 168
-**File:** `curriculum/l2-uk-en/c1-bio/volodymyr-velykii.md:168`
+**File:** `curriculum/l2-uk-en/bio/volodymyr-velykii.md:168`
 
 > [!myth-buster]
 > **Київська, а не московська спадщина**

@@ -1,0 +1,80 @@
+module: bio-21
+level: BIO
+sequence: 21
+slug: bohdan-khmelnytskyy
+version: '2.0'
+title: 'Богдан Хмельницький: Гетьман-державотворець'
+content_outline:
+- section: Вступ — Творець козацької держави
+  points:
+  - Хмельницький як символ суб'єктності
+  - Унікальність поєднання воїна та дипломата
+  - Значення для українського державотворення
+- section: Життєпис
+  points:
+  - Походження та освіта
+  - Чигиринська трагедія
+  - Початок Великої війни 1648 р.
+  - Тріумфальні перемоги
+- section: Історичний контекст
+  points:
+  - Європа середини XVII ст.
+  - Геополітичний трикутник
+- section: Внесок
+  points:
+  - Будівництво державних інституцій
+  - Військова реформа
+- section: Останні роки
+  points:
+  - Переяславська рада 1654 р.
+  - Пошук нових союзників
+  - Смерть гетьмана
+- section: Спадщина
+  points:
+  - Образ "батька нації"
+  - Історичні оцінки
+- section: Підсумок
+  points:
+  - Уроки Хмельниччини
+focus: biography
+pedagogy: seminar
+prerequisites:
+- bio-10 (Данило Галицький)
+- hist hmelnychyna module
+connects_to:
+- bio-24 (Іван Виговський)
+- hist ruina-i module
+objectives:
+- Аналізувати стратегію державотворення Хмельницького
+- Оцінити дипломатичні маневри між великими державами
+- Дослідити причини та наслідки Переяславської угоди
+grammar:
+- Архаїчна та офіційна лексика (універсали)
+- Аналітичні конструкції
+module_type: biography
+sources:
+- name: Богдан Хмельницький (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Богдан_Хмельницький
+  type: primary
+  notes: Фундаментальна біографія
+- name: Документи Богдана Хмельницького
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Тексти універсалів та листів
+immersion: 100% Ukrainian
+phase: BIO
+vocabulary_hints:
+  required:
+  - гетьман (hetman)
+  - універсал (universal)
+  - Гетьманщина (Hetmanate)
+activity_hints:
+- type: reading
+  focus: Аналіз гетьманських універсалів
+  source: Primary sources (adapted)
+- type: comparative-study
+  focus: Хмельницький vs Кромвель
+persona:
+  voice: Senior Biographer
+  role: Rebellion Leader
+word_target: 5000

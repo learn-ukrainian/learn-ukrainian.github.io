@@ -22,7 +22,7 @@ model: claude-opus-4-6
 **Examples:**
 ```
 /final-review b1 5
-/final-review c1-bio 12
+/final-review bio 12
 /final-review hist 43
 ```
 

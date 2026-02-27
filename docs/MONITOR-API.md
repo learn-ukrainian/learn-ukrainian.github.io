@@ -269,7 +269,7 @@ Criteria:
 - word count < 80% of `word_target`
 
 ```bash
-curl -s "http://localhost:8765/api/state/weak-points?track=c1-bio" | python3 -m json.tool
+curl -s "http://localhost:8765/api/state/weak-points?track=bio" | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/weak-points?min_score=8&limit=50" | python3 -m json.tool
 ```
 
@@ -302,7 +302,7 @@ Returns:
 ```json
 {
   "tracks": {
-    "c1-bio": {
+    "bio": {
       "total_modules": 172,
       "has_research": 104,
       "pct_coverage": 60,

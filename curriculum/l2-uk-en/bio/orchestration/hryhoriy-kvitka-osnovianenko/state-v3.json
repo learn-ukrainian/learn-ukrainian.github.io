@@ -1,0 +1,18 @@
+{
+  "track": "bio",
+  "slug": "hryhoriy-kvitka-osnovianenko",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T13:03:43Z",
+      "task_id": "v3-hryhoriy-kvitka-osnovianenko-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-27T14:38:55Z",
+      "note": "word-count-3900-below-80pct-5000"
+    }
+  }
+}

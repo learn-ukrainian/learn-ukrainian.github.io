@@ -1,0 +1,40 @@
+{
+  "slug": "pavlo-polubotok",
+  "track": "bio",
+  "module_num": 30,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-20T22:34:27Z",
+      "task_id": "yw-pavlo-polubotok-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-27T12:26:55Z",
+      "words": 4452,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-27T12:29:05Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-27T12:29:05Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-27T12:34:20Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-27T12:34:20Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-27T12:34:20Z"
+}

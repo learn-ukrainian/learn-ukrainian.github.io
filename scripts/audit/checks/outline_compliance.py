@@ -148,7 +148,7 @@ def load_content_outline(md_path: Path) -> Optional[List[Dict]]:
     try:
         # Determine level from path or parent name
         level = md_path.parent.name
-        if level not in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'c1-bio', 'istoriohrafiia']:
+        if level not in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istoriohrafiia']:
              # Fallback logic if needed, but standard structure is reliable
              pass
         

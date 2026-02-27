@@ -288,7 +288,7 @@ Adapted for mixed-language modules with English scaffolding.
 |------|--------|------------------|------|
 | **Tier 1** | A1, A2 | Lesson Quality (encouraging tutor) | `tier-1-beginner.md` |
 | **Tier 2** | B1, B2 Core, B2-PRO | Teaching Quality (effective teaching) | `tier-2-core.md` |
-| **Tier 3** | HIST, ISTORIOHRAFIIA, C1-BIO, LIT | Lecture Quality (A+ seminar) | `tier-3-seminar.md` |
+| **Tier 3** | HIST, ISTORIOHRAFIIA, BIO, LIT | Lecture Quality (A+ seminar) | `tier-3-seminar.md` |
 | **Tier 4** | C1 Core, C1-PRO, C2 | Learning Quality (intellectual depth) | `tier-4-advanced.md` |
 
 **File locations:**
@@ -340,7 +340,7 @@ Adapted for mixed-language modules with English scaffolding.
 - Focus: Quick wins, English support, encouragement
 - Warmth threshold: ≥15 direct address, ≥3 encouragement phrases
 
-**Tier 3 (HIST/ISTORIOHRAFIIA/C1-BIO/LIT) — A+ Seminar:**
+**Tier 3 (HIST/ISTORIOHRAFIIA/BIO/LIT) — A+ Seminar:**
 - Arc: HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
 - Focus: Narrative engagement, primary sources, emotional peaks
 - Weak moments: DEAD_INTRO, WALL_OF_FACTS, FORCED_CONNECTION, ENERGY_DROP, etc.
@@ -372,7 +372,7 @@ Adapted for mixed-language modules with English scaffolding.
 
 ## 9-Phase Module Workflow (RFC-001)
 
-> **NEW:** For track levels (hist, c1-bio, istoriohrafiia, c1-pro, b2-pro, lit) and C2, use the 9-phase workflow.
+> **NEW:** For track levels (hist, bio, istoriohrafiia, c1-pro, b2-pro, lit) and C2, use the 9-phase workflow.
 >
 > **See:** GitHub issue #444 for full RFC discussion and implementation status.
 
@@ -411,7 +411,7 @@ Unified entry point for building modules. Auto-detects state and runs appropriat
 /module hist 1-5             # Build modules 1-5
 /module hist 5 --from=lesson # Resume from phase 3 (lesson)
 /module hist 5 --refresh     # Refresh meta+activities keeping lesson content
-/module c1-bio 12 --check       # Show which phases are complete
+/module bio 12 --check       # Show which phases are complete
 ```
 
 ### Phase Reference
@@ -1445,7 +1445,7 @@ npm run metrics:extract hist
 
 ```bash
 npm run score:hist     # Score HIST track
-npm run score:c1-bio      # Score C1-BIO track
+npm run score:bio      # Score BIO track
 npm run score:istoriohrafiia     # Score ISTORIOHRAFIIA track
 npm run score:lit         # Score LIT track
 npm run score:all         # Score all tracks (summary)
@@ -1458,7 +1458,7 @@ npm run metrics:extract   # Extract raw metrics
 |-------|---------|--------------|
 | `hist` | 140 | Historical accuracy, primary sources, decolonization |
 | `istoriohrafiia` | 30 | Source criticism, methodology, thematic coherence |
-| `c1-bio` | 128 | Biographical accuracy, legacy, cultural context |
+| `bio` | 128 | Biographical accuracy, legacy, cultural context |
 | `lit` | 30 | Literary depth, authentic texts, stylistic devices |
 | `a1`-`c2` | varies | Grammar/content coverage, skills balance, CEFR alignment |
 
@@ -1566,16 +1566,16 @@ User → /hetman {track} {num}  (later, when capacity available)
 ```bash
 # Stage 1: Content sprint (GEMINI skills — run in Gemini interactive mode)
 /otaman b1 5           # [Gemini] Prose-only rebuild of B1 module 5
-/otaman c1-bio 12      # [Gemini] Prose-only rebuild of C1-BIO module 12
+/otaman bio 12      # [Gemini] Prose-only rebuild of BIO module 12
 /otaman hist        # [Gemini] Batch: all remaining modules in track
 
 # Stage 2: Activity enrichment (GEMINI skills)
 /hetman b1 5           # [Gemini] Add activities + final review to B1 module 5
-/hetman c1-bio         # [Gemini] Batch: enrich all content-complete modules
+/hetman bio         # [Gemini] Batch: enrich all content-complete modules
 
 # Full E2E mode (GEMINI skill — content + activities + review, no otaman needed)
 /hetman b1 5 --full    # [Gemini] Full pipeline for a single module
-/hetman c1-bio --full  # [Gemini] Batch: all incomplete modules from scratch
+/hetman bio --full  # [Gemini] Batch: all incomplete modules from scratch
 
 # After Hetman completes (CLAUDE skill):
 /final-review b1 5     # [Claude] Final QA (~5 turns)
@@ -1665,7 +1665,7 @@ to avoid Claude Code's 2-minute bash timeout, or to use Claude's superior activi
 **Per-phase model overrides:**
 
 Default models are set in `scripts/batch_gemini_config.py` and auto-selected based on track type:
-- Seminar tracks (c1-bio, hist, istoriohrafiia, lit, oes, ruth): **claude-opus-4-6** for Claude phases
+- Seminar tracks (bio, hist, istoriohrafiia, lit, oes, ruth): **claude-opus-4-6** for Claude phases
 - Core tracks (a1, a2, b1, b2, c1, c2, b2-pro, c1-pro): **claude-sonnet-4-6** for Claude phases
 - Phase D (review): always **claude-opus-4-6** (cross-agent review needs best model)
 - Phase F (final review): always **claude-opus-4-6** regardless of track
@@ -1876,10 +1876,10 @@ These same checks run automatically inside `audit_module.sh` (hooked into `audit
 .venv/bin/python scripts/batch_dispatcher.py status
 
 # Force a specific track
-.venv/bin/python scripts/batch_dispatcher.py dispatch-one --track c1-bio
+.venv/bin/python scripts/batch_dispatcher.py dispatch-one --track bio
 
 # Focus on specific tracks
-.venv/bin/python scripts/batch_dispatcher.py run --include-tracks hist c1-bio lit
+.venv/bin/python scripts/batch_dispatcher.py run --include-tracks hist bio lit
 
 # Exclude tracks
 .venv/bin/python scripts/batch_dispatcher.py run --exclude-tracks a1 b1 b2
@@ -1898,7 +1898,7 @@ These same checks run automatically inside `audit_module.sh` (hooked into `audit
 | 4 | b2 | 94 | core | b1 ≥80% |
 | 5 | c1 | 106 | core | b2 ≥80% |
 | 6 | hist | 140 | seminar | b1 ≥80% |
-| 7 | c1-bio | 128 | seminar | b2 ≥80% |
+| 7 | bio | 128 | seminar | b2 ≥80% |
 | 8 | istoriohrafiia | 98 | seminar | hist ≥80%, c1 ≥30% |
 | 9 | lit | 30 | seminar | b2 ≥80% |
 | 10-15 | lit-* | varies | seminar | lit ≥80% |
@@ -1917,7 +1917,7 @@ A1 → A2 → B1 → B2 → C1 → C2
                │      │     ├→ OES
                │      │     ├→ RUTH
                │      │     └→ C1-PRO
-               │      ├→ C1-BIO
+               │      ├→ BIO
                │      ├→ LIT → lit-essay, lit-hist-fic, lit-fantastika,
                │      │        lit-war, lit-humor, lit-juvenile
                │      └→ HIST → ISTORIOHRAFIIA (also needs C1 ≥30%)
@@ -2091,7 +2091,7 @@ npm run status:all             # Generate all levels
 .venv/bin/python scripts/assess_research.py hist --upgrade-process          # regenerate weak research
 
 # Enrich plans from 9+ research
-.venv/bin/python scripts/assess_research.py c1-bio --enrich-plans
+.venv/bin/python scripts/assess_research.py bio --enrich-plans
 ```
 
 **Self-healing retries:** `--upgrade-process` retries each module up to 3 attempts (`MAX_RESEARCH_UPGRADE_RETRIES`). Hard failures (build error, timeout, missing file) stop retries immediately. Ctrl+C exits cleanly with a progress summary.
@@ -2107,9 +2107,9 @@ npm run status:all             # Generate all levels
 .venv/bin/python scripts/enrich_research_quotes.py --dry-run
 
 # Apply to specific tracks
-.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks istoriohrafiia c1-bio
+.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks istoriohrafiia bio
 
-# Apply to default tracks (hist, istoriohrafiia, c1-bio)
+# Apply to default tracks (hist, istoriohrafiia, bio)
 .venv/bin/python scripts/enrich_research_quotes.py --apply
 ```
 
@@ -2129,19 +2129,19 @@ npm run status:all             # Generate all levels
 
 ```bash
 # 1. Pre-seed research for all modules
-.venv/bin/python scripts/build_module_v3.py c1-bio --all --research-only
+.venv/bin/python scripts/build_module_v3.py bio --all --research-only
 
 # 2. Assess — see what's below 9/10
-.venv/bin/python scripts/assess_research.py c1-bio --gaps
+.venv/bin/python scripts/assess_research.py bio --gaps
 
 # 3. Upgrade weak research (auto-resets v3 Phase A for upgraded modules)
-.venv/bin/python scripts/assess_research.py c1-bio --upgrade-process
+.venv/bin/python scripts/assess_research.py bio --upgrade-process
 
 # 4. Enrich plans from 9+ research
-.venv/bin/python scripts/assess_research.py c1-bio --enrich-plans
+.venv/bin/python scripts/assess_research.py bio --enrich-plans
 
 # 5. Full build — Phase A cached for passing modules, re-runs for upgraded ones
-.venv/bin/python scripts/build_module_v3.py c1-bio --all
+.venv/bin/python scripts/build_module_v3.py bio --all
 ```
 
 ---
@@ -2220,7 +2220,7 @@ npm run status:b2             # Generate B2 status
 npm run status:c1             # Generate C1 status
 npm run status:c2             # Generate C2 status
 npm run status:hist        # Generate HIST status
-npm run status:c1-bio         # Generate C1-BIO status
+npm run status:bio         # Generate BIO status
 npm run status:istoriohrafiia        # Generate ISTORIOHRAFIIA status
 npm run status:lit            # Generate LIT status
 npm run status:all            # Generate all level status indices
@@ -2585,13 +2585,13 @@ Auto-detects Core A vs Core B workflow. See `claude_extensions/commands/full-reb
 
 ### Seminar Track Full Rebuild
 
-For seminar tracks (hist, c1-bio, istoriohrafiia, lit, oes, ruth), use the 6-phase full-rebuild workflow that chains research, content generation, audit, and deep review:
+For seminar tracks (hist, bio, istoriohrafiia, lit, oes, ruth), use the 6-phase full-rebuild workflow that chains research, content generation, audit, and deep review:
 
 ```bash
 /full-rebuild {track} {slug}
 
 # Examples:
-/full-rebuild c1-bio lesya-ukrainka
+/full-rebuild bio lesya-ukrainka
 /full-rebuild hist bohdan-khmelnytskyi
 /full-rebuild lit marusya
 ```

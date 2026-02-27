@@ -79,7 +79,7 @@ TRACKS = [
     {"id": "c2", "name": "C2", "path": "c2"},
     {"id": "hist", "name": "HIST", "path": "hist"},
     {"id": "istoriohrafiia", "name": "ISTORIOHRAFIIA", "path": "istoriohrafiia"},
-    {"id": "c1-bio", "name": "C1-BIO", "path": "c1-bio"},
+    {"id": "bio", "name": "BIO", "path": "bio"},
     {"id": "lit", "name": "LIT", "path": "lit"},
     {"id": "lit-essay", "name": "LIT-ESSAY", "path": "lit-essay"},
     {"id": "lit-fantastika", "name": "LIT-FANTASTIKA", "path": "lit-fantastika"},

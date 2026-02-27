@@ -78,7 +78,7 @@ Comprehensive audit of 384 modules across B1, B2, and C1 reveals:
 
 **C1:**
 - `c1-module-template.md`
-- `c1-biography-module-template.md`
+- `biography-module-template.md`
 
 **C2:**
 - `c2-module-template.md` (if exists)

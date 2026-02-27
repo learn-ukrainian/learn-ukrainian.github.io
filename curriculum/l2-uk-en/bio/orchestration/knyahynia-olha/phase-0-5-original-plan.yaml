@@ -1,0 +1,79 @@
+module: bio-1
+level: BIO
+sequence: 1
+slug: knyahynia-olha
+version: '2.0'
+title: 'Княгиня Ольга: Дипломатія та реформи'
+content_outline:
+- section: Вступ — Мудра володарка Києва
+  points:
+  - Ольга як символ державної мудрості
+  - Поєднання язичницької сили та християнського вибору
+  - Роль у зміцненні внутрішнього ладу
+- section: Життєпис
+  points:
+  - Походження (легенди про Псков та болгарське коріння)
+  - Шлюб з Ігорем
+  - Трагедія 945 р. та помста древлянам
+  - Регентство при Святославі
+- section: Історичний контекст
+  points:
+  - Стан Русі в середині X ст.
+  - Стосунки з Візантією та Священною Римською імперією
+- section: Внесок
+  points:
+  - Податкова реформа (устави, уроки, погости)
+  - Встановлення перших державних кордонів
+- section: Останні роки
+  points:
+  - Дипломатична місія до Константинополя 957 р.
+  - Прийняття християнства
+  - Смерть та канонізація
+- section: Спадщина
+  points:
+  - Ольга як "передвісниця" Хрещення Русі
+  - Образ у літописах та мистецтві
+- section: Підсумок
+  points:
+  - Ольга як архітекторка регулярної держави
+focus: biography
+pedagogy: seminar
+prerequisites:
+- bio-01 (Олег Віщий)
+- hist knyahynia-olha module
+connects_to:
+- bio-03 (Святослав Хоробрий)
+- hist hrystyianstvo module
+objectives:
+- Проаналізувати адміністративні реформи Ольги
+- Оцінити дипломатичні успіхи у відносинах з Візантією
+- Дослідити причини та наслідки прийняття християнства
+grammar:
+- Архаїзми в літописному контексті
+- Офіційний регістр (опис реформ)
+module_type: biography
+sources:
+- name: Княгиня Ольга (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Княгиня_Ольга
+  type: primary
+  notes: Основне джерело фактів
+- name: Повість минулих літ
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Літописні легенди
+immersion: 100% Ukrainian
+phase: BIO
+vocabulary_hints:
+  required:
+  - регент (regent)
+  - погост (pohost - administrative center)
+  - урок (urok - fixed tax)
+activity_hints:
+- type: reading
+  focus: Аналіз літописної розповіді про помсту
+  source: Повість минулих літ (адаптовано)
+- type: critical-analysis
+  focus: Сутність податкової реформи
+persona:
+  voice: Senior Biographer
+  role: Regent

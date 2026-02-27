@@ -33,7 +33,7 @@ Read: `claude_extensions/phases/module-meta.md`
 
 ### Step 2: Load Plan
 
-**For tracks (hist, c1-bio, lit, istoriohrafiia):**
+**For tracks (hist, bio, lit, istoriohrafiia):**
 
 1. Look up slug from manifest:
    ```bash

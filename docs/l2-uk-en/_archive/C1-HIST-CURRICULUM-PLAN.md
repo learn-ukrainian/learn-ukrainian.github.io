@@ -550,17 +550,17 @@ Each source-based module includes:
 
 | Prerequisite | This Track | Complements |
 |--------------|------------|-------------|
-| HIST (140 modules) | **ISTORIOHRAFIIA** (135 modules) | C1-BIO (100 modules) |
+| HIST (140 modules) | **ISTORIOHRAFIIA** (135 modules) | BIO (100 modules) |
 
 **Recommended path:**
 1. HIST → factual foundation (what happened)
 2. ISTORIOHRAFIIA → analytical skills (how we know, patterns)
-3. C1-BIO → biographical depth (parallel or after)
+3. BIO → biographical depth (parallel or after)
 
 **Cross-references:**
-- C1H.12 (Imperial Mechanisms) connects to C1-BIO modules on Mazepa, Rozumovsky, Skoropadsky
-- C1H.17-18 (Interethnic relations) connects to C1-BIO modules on Kulish, Franko
-- C1H.20 (Agency) connects to C1-BIO modules on dissidents
+- C1H.12 (Imperial Mechanisms) connects to BIO modules on Mazepa, Rozumovsky, Skoropadsky
+- C1H.17-18 (Interethnic relations) connects to BIO modules on Kulish, Franko
+- C1H.20 (Agency) connects to BIO modules on dissidents
 
 ---
 

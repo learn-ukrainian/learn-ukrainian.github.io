@@ -248,7 +248,7 @@ ACTIVITY_COMPLEXITY = {
         'lit': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
         'hist': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 5},
         'istoriohrafiia': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
-        'c1-bio': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
+        'bio': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
     },
     'match-up': {
         'A1': {'pairs_min': 8, 'pairs_max': 20, 'min_items': 8},
@@ -380,7 +380,7 @@ ACTIVITY_COMPLEXITY = {
         'B2': {'min_items': 3},
         'history': {'min_items': 1},
         'C1': {'min_items': 3},
-        'C1-biography': {'min_items': 1},
+        'biography': {'min_items': 1},
         'istoriohrafiia': {'min_items': 1},
         'LIT': {'min_items': 1},
         'C2': {'min_items': 3},
@@ -843,8 +843,8 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in', 'mark-the-words'}
     },
-    'C1-biography': {
-        # C1-BIO Track: Biography seminar style (C1 level)
+    'biography': {
+        # BIO Track: Biography seminar style (C1 level)
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: biographical analysis, legacy evaluation, era context
         'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum

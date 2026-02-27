@@ -1,4 +1,4 @@
-# C1-BIO Quick Reference (Ukrainian Biographies Track)
+# BIO Quick Reference (Ukrainian Biographies Track)
 
 ## Track Overview
 
@@ -11,7 +11,7 @@
 
 ## Workflow Integration
 
-**C1-BIO uses the 9-phase track workflow:**
+**BIO uses the 9-phase track workflow:**
 
 1. **Meta** → Generate module metadata (hydrated content outline)
 2. **Meta-QA** → Validate metadata and word targets
@@ -25,9 +25,9 @@
 
 **Commands:**
 
-- Start: `/module c1-bio {num}`
-- Resume: `/module c1-bio {num} --from={phase}` (phase: meta, lesson, act, vocab)
-- Status: `/module c1-bio {num} --check`
+- Start: `/module bio {num}`
+- Resume: `/module bio {num} --from={phase}` (phase: meta, lesson, act, vocab)
+- Status: `/module bio {num} --check`
 
 **Reference:** `docs/SCRIPTS.md` for full 9-phase documentation.
 
@@ -50,18 +50,18 @@
 | Engagement       | 5+      | min_engagement      |
 | Vocab            | 24+     | min_vocab           |
 
-**Note:** C1-BIO uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
+**Note:** BIO uses pure seminar-style activities. Traditional drill activities are FORBIDDEN.
 
 ---
 
 ## Templates
 
-**Before writing any C1-BIO module, read:**
+**Before writing any BIO module, read:**
 
-- **Biography modules (AI)** → `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
+- **Biography modules (AI)** → `docs/l2-uk-en/templates/ai/biography-module-template.md`
 - **Checkpoint** (M101) → `docs/l2-uk-en/templates/c1-checkpoint-module-template.md`
 
-> **Full documentation:** See `docs/l2-uk-en/templates/c1-biography-module-template.md` for complete reference.
+> **Full documentation:** See `docs/l2-uk-en/templates/biography-module-template.md` for complete reference.
 
 ---
 
@@ -87,8 +87,8 @@
 
 Before writing, confirm:
 
-- [ ] Read module plan from `curriculum/l2-uk-en/plans/c1-bio/{slug}.yaml` for content outline + vocabulary hints
-- [ ] **Read the biography template** (`c1-biography-module-template.md`)
+- [ ] Read module plan from `curriculum/l2-uk-en/plans/bio/{slug}.yaml` for content outline + vocabulary hints
+- [ ] **Read the biography template** (`biography-module-template.md`)
 - [ ] Research the historical figure thoroughly (use reliable Ukrainian sources)
 - [ ] All metadata YAML fields ready
 - [ ] Activity plan: 3-9 seminar-style activities (must include reading + essay-response + critical-analysis)
@@ -99,12 +99,12 @@ Before writing, confirm:
 ## Metadata YAML Template (`meta/{slug}.yaml`)
 
 ```yaml
-module: c1-bio-XX
+module: bio-XX
 slug: '{slug}'
 title: '{Name}: {Epithet}'
 subtitle: '{English subtitle}'
 version: '1.0'
-phase: 'C1-BIO.X'
+phase: 'BIO.X'
 pedagogy: 'CBI'
 duration: 90
 transliteration: 'none'
@@ -114,7 +114,7 @@ objectives:
   - 'Learner can understand biographical narrative about...'
   - 'Learner can use vocabulary of achievements and legacy...'
 prerequisites:
-  - c1-bio-XX # Previous module
+  - bio-XX # Previous module
 naturalness:
   score: 0
   status: PENDING
@@ -133,7 +133,7 @@ naturalness:
 
 ## Activity Requirements (per config.py)
 
-**C1-BIO uses pure seminar-style pedagogy:**
+**BIO uses pure seminar-style pedagogy:**
 
 | Requirement        | Biography | Checkpoint |
 | ------------------ | --------- | ---------- |
@@ -155,7 +155,7 @@ naturalness:
 
 ### FORBIDDEN Activity Types (per config.py)
 
-**These traditional drill activities are NOT ALLOWED in C1-BIO:**
+**These traditional drill activities are NOT ALLOWED in BIO:**
 - match-up
 - fill-in
 - cloze
@@ -172,7 +172,7 @@ Essays are defined ONLY in `activities/{slug}.yaml`, NOT in markdown:
 
 ```yaml
 - type: essay-response
-  id: c1-bio-XX-essay-01
+  id: bio-XX-essay-01
   title: 'Есе: Порівняльний аналіз'
   prompt: |
     Напишіть порівняльне есе (250-400 слів)...
@@ -272,11 +272,11 @@ The track maintains diversity:
 
 ## Related Documentation
 
-- **C1-BIO Level Plan:** `curriculum/l2-uk-en/plans/c1-bio.yaml`
-- **C1-BIO Module Plans:** `curriculum/l2-uk-en/plans/c1-bio/{slug}.yaml`
-- **Generated Plan (Readable):** `docs/l2-uk-en/C1-BIO-PLAN-GENERATED.md`
-- **Biography Template (AI):** `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
-- **Biography Template (Full):** `docs/l2-uk-en/templates/c1-biography-module-template.md`
+- **BIO Level Plan:** `curriculum/l2-uk-en/plans/bio.yaml`
+- **BIO Module Plans:** `curriculum/l2-uk-en/plans/bio/{slug}.yaml`
+- **Generated Plan (Readable):** `docs/l2-uk-en/BIO-PLAN-GENERATED.md`
+- **Biography Template (AI):** `docs/l2-uk-en/templates/ai/biography-module-template.md`
+- **Biography Template (Full):** `docs/l2-uk-en/templates/biography-module-template.md`
 - **Checkpoint Template:** `docs/l2-uk-en/templates/c1-checkpoint-module-template.md`
 - **Activity Reference:** `docs/ACTIVITY-YAML-REFERENCE.md`
 - **Richness Guidelines:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`

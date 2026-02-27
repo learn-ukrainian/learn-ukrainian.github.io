@@ -73,12 +73,12 @@ def load_all_prior_vocabulary(md_path: Path, module_num: int) -> Set[str]:
     Load vocabulary from all prior modules in this level AND all prior levels.
 
     For B2+ modules, loads all vocabulary from A1, A2, B1, and current level.
-    For track levels (hist, c1-bio), loads all vocabulary from base levels + track.
+    For track levels (hist, bio), loads all vocabulary from base levels + track.
     """
     level_dir = md_path.parent
     curriculum_root = level_dir.parent  # e.g., curriculum/l2-uk-en
 
-    current_level = level_dir.name  # e.g., 'b2', 'c1-bio'
+    current_level = level_dir.name  # e.g., 'b2', 'bio'
 
     # Map levels to their prerequisites (levels whose vocabulary should be available)
     level_hierarchy = {
@@ -88,7 +88,7 @@ def load_all_prior_vocabulary(md_path: Path, module_num: int) -> Set[str]:
         'b2': ['a1', 'a2', 'b1'],
         'hist': ['a1', 'a2', 'b1', 'b2'],
         'c1': ['a1', 'a2', 'b1', 'b2'],
-        'c1-bio': ['a1', 'a2', 'b1', 'b2', 'c1'],
+        'bio': ['a1', 'a2', 'b1', 'b2', 'c1'],
         'c2': ['a1', 'a2', 'b1', 'b2', 'c1'],
         'lit': ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'],
     }

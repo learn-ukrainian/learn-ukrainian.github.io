@@ -51,7 +51,7 @@ Alignment: Цей модуль розкриває тему народних ре
 
 ## Cross-References
 - Builds on: B1 Cultural modules (Holidays, Daily Life), A2/B1 modules on describing objects.
-- Prepares for: C1-BIO (Biographies of artists like Kateryna Bilokur or Maria Prymachenko), C1.5 Literature modules (descriptive passages in extensive reading).
+- Prepares for: BIO (Biographies of artists like Kateryna Bilokur or Maria Prymachenko), C1.5 Literature modules (descriptive passages in extensive reading).
 
 ## Notes for Content Writing
 - Акцентувати увагу на **технологічному процесі** (лексика дії: *ліпити, випалювати, точити, різьбити, інкрустувати*).

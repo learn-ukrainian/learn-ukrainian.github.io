@@ -29,7 +29,7 @@ Stage by file group:
 ```bash
 git add scripts/build_module_v3.py scripts/build_module_v2.py  # scripts
 git add claude_extensions/phases/gemini/phase-A-seminar.md     # templates
-git add curriculum/l2-uk-en/plans/c1-bio/petro-veskliaov.yaml  # content fixes
+git add curriculum/l2-uk-en/plans/bio/petro-veskliaov.yaml  # content fixes
 ```
 
 ### What NOT to commit together
@@ -66,7 +66,7 @@ feat: build_module_v3.py — 4-call optimised pipeline (#585)
 
 fix: meta health check + Phase A splitting rules for oversized sections (#589)
 
-fix: 7 c1-bio plan files with YAML syntax errors (unquoted colon in list items)
+fix: 7 bio plan files with YAML syntax errors (unquoted colon in list items)
 ```
 
 ### Rules

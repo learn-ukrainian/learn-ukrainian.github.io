@@ -59,7 +59,7 @@ Alignment: This module directly addresses the C1 requirement to discuss family h
 
 ## Cross-References
 - Builds on: B1 modules on family/holidays (basic vocabulary).
-- Prepares for: C1-085 (Folk Culture Checkpoint), C1-BIO (biographies often mention family status/rituals).
+- Prepares for: C1-085 (Folk Culture Checkpoint), BIO (biographies often mention family status/rituals).
 
 ## Notes for Content Writing
 - **Tone**: Anthropological yet respectful. Distinguish between archaic traditions (verified ethnography) and modern practice.

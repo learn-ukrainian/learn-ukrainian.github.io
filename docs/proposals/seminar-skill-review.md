@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-I have reviewed the `full-rebuild-c1-bio`, `full-rebuild-hist`, and `full-rebuild-lit` skill definitions. The current "Tier 3 Rigorous" standard is technically impressive and pedagogically sound for a high-level language course. The focus on *Agency*, *Decolonization*, and *Sensory Detail* places it well ahead of standard language curricula.
+I have reviewed the `full-rebuild-bio`, `full-rebuild-hist`, and `full-rebuild-lit` skill definitions. The current "Tier 3 Rigorous" standard is technically impressive and pedagogically sound for a high-level language course. The focus on *Agency*, *Decolonization*, and *Sensory Detail* places it well ahead of standard language curricula.
 
 However, to make these modules **"the best in the world"**—to truly simulate a university-level seminar—we must move beyond *narrative reconstruction* (telling a better story) to *historiographical conflict* (debating how the story is told).
 
@@ -45,7 +45,7 @@ A seminar is not about "facts"; it is about "arguments". The current skills are 
     *   *Action:* Require at least 2 quotes from Category 1 (Diaries/Letters) to capture the "voice" of the era.
 
 ### 5. Material Culture (The "Sensory" Expansion)
-**Critique:** `full-rebuild-hist` has the excellent "Sensory Historian" persona. This should be universal, especially for C1-BIO and LIT.
+**Critique:** `full-rebuild-hist` has the excellent "Sensory Historian" persona. This should be universal, especially for BIO and LIT.
 **Recommendation:**
 *   **Universalize "Sensory Anchors"**: Every biography must mention *material* details: the cost of bread, the texture of paper, the smell of the ink, the specific coffee house. This grounds abstract ideas in physical reality.
 
@@ -54,7 +54,7 @@ A seminar is not about "facts"; it is about "arguments". The current skills are 
 ### Update 1: Refined Personas (Moving beyond "Journalist")
 The current personas are functional but generic. Let's make them *academic archetypes*:
 
-**For `full-rebuild-c1-bio`:**
+**For `full-rebuild-bio`:**
 *   **Current:** *Investigative Journalist* / *Humanist Biographer*
 *   **Proposed:**
     *   **The Micro-Historian**: Focuses on "small" details (a letter, a receipt) to reveal "big" structures. (Carlo Ginzburg style).

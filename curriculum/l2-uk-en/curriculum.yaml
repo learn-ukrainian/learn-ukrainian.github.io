@@ -571,7 +571,7 @@ levels:
       - mizhnarodna-pidtrymka
       - zlochyny-stiikist
       - syntez-viyna
-  c1-bio:
+  bio:
     type: track
     modules:
       - knyahynia-olha

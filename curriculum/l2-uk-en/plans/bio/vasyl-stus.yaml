@@ -1,0 +1,97 @@
+module: bio-140
+level: BIO
+sequence: 140
+slug: vasyl-stus
+version: '2.0'
+title: 'Василь Стус: Вертикальне стояння духу'
+content_outline:
+- section: Вступ — Поезія як форма спротиву
+  points:
+  - Стус як символ незламності українського духу
+  - Від поета до політв'язня
+  - Загибель у таборі як вершина трагедії
+- section: Донбаське дитинство
+  points:
+  - Народження в селі Рахнівка (1938)
+  - Повоєнне дитинство на Донбасі
+  - Шлях до освіти та літератури
+- section: Літературне становлення
+  points:
+  - Навчання в Донецькому університеті
+  - Перші поетичні спроби
+  - Переїзд до Києва та аспірантура
+- section: Шістдесятництво та перший арешт
+  points:
+  - Участь у русі шістдесятників
+  - Протести проти арештів 1965 року
+  - Ув'язнення та заборона публікуватися
+- section: Другий арешт та табори
+  points:
+  - Арешт 1972 року
+  - Роки в мордовських таборах
+  - Творчість за ґратами
+- section: Загибель та безсмертя
+  points:
+  - Третій арешт та Перм-36
+  - Обставини смерті (1985)
+  - Перепоховання та канонізація
+- section: Дискусія — Ціна свободи
+  points:
+  - Моральний вибір дисидента
+  - Стус як приклад для сучасників
+vocabulary_hints:
+  required:
+  - дисидент (dissident)
+  - політвязень (political prisoner)
+  - табір (camp/gulag)
+  - спротив (resistance)
+  - шістдесятник (Sixtier)
+  - незламність (unbreakability)
+  - заслання (exile)
+  - самвидав (samvydav/samizdat)
+  - правозахисник (human rights defender)
+  - реабілітація (rehabilitation)
+  recommended:
+  - екзистенціалізм (existentialism)
+  - метафізичний (metaphysical)
+  - страждання (suffering)
+  - моральний вибір (moral choice)
+  - духовна вертикаль (spiritual vertical)
+activity_hints:
+- type: reading
+  focus: Поезії Стуса з таборів
+  source: Первинні джерела
+  items: 3 passages
+- type: essay-response
+  focus: Що означає вертикальне стояння духу?
+  output: Філософський есей
+focus: biography
+prerequisites:
+- bio-75-vasyl-symonenko
+connects_to:
+- bio-76-viacheslav-chornovil
+- bio-72-alla-horska
+- bio-71-levko-lukyanenko
+module_type: biography
+sources:
+- name: Василь Стус (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Стус_Василь_Семенович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Архів Українського правозахисного руху
+  url: https://archive.khpg.org/
+  type: reference
+  notes: Документи дисидентського руху
+- name: Музей Василя Стуса
+  url: https://stus.museum/
+  type: reference
+  notes: Матеріали про життя та творчість
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of василь стус: вертикальне стояння духу'
+- Evaluate the contributions of поезія як форма спротиву
+- Trace the career and influence of ціна свободи
+persona:
+  voice: Senior Biographer
+  role: Human Rights Defender

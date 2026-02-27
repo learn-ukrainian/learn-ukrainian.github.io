@@ -10,8 +10,8 @@
 
 ```bash
 # ✅ Correct
-.venv/bin/python scripts/build_module_v3.py c1-bio 5
-scripts/audit_module.sh curriculum/l2-uk-en/c1-bio/module.md  # wraps venv automatically
+.venv/bin/python scripts/build_module_v3.py bio 5
+scripts/audit_module.sh curriculum/l2-uk-en/bio/module.md  # wraps venv automatically
 
 # ❌ Wrong
 python3 scripts/build_module_v3.py   # missing deps
@@ -97,7 +97,7 @@ v2 phase IDs are plain numbers: `0`, `1`, `2`, `3a`, `3b`, `6`, `8`.
 ### State schema
 ```json
 {
-  "track": "c1-bio",
+  "track": "bio",
   "slug": "danylo-apostol",
   "mode": "v3",
   "phases": {

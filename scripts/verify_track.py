@@ -159,7 +159,7 @@ def main():
                "  %(prog)s a1 --range 1-5 --full # Modules 1-5, all gates must pass\n",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("track", help="Track to verify (e.g., a1, b1, c1-bio)")
+    parser.add_argument("track", help="Track to verify (e.g., a1, b1, bio)")
     parser.add_argument("--range", type=parse_range, metavar="N-M",
                         help="Only verify modules N through M (1-indexed)")
     parser.add_argument("--full", action="store_true",

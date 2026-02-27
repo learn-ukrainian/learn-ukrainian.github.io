@@ -114,7 +114,7 @@ fi
    - **B2 core**: `docs/l2-uk-en/templates/b2-grammar-module-template.md` (or others)
    - **HIST**: `docs/l2-uk-en/templates/ai/history-module-template.md`
    - **B2-PRO**: `docs/l2-uk-en/templates/ai/b2-pro-module-template.md`
-   - **C1-BIO**: `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
+   - **BIO**: `docs/l2-uk-en/templates/ai/biography-module-template.md`
    - **ISTORIOHRAFIIA**: `docs/l2-uk-en/templates/ai/istoriohrafiiaory-module-template.md`
    - **C1-PRO**: `docs/l2-uk-en/templates/ai/c1-pro-module-template.md`
    - **LIT**: `docs/l2-uk-en/templates/ai/lit-module-template.md`
@@ -317,7 +317,7 @@ If outside range: Adjust largest section(s) to compensate.
 
 ### Seminar (Content-Based)
 
-**Used in:** HIST, C1-BIO, ISTORIOHRAFIIA, LIT
+**Used in:** HIST, BIO, ISTORIOHRAFIIA, LIT
 
 > **⚠️ REQUIRED: Read Research-First Workflow before generating seminar content!**
 >
@@ -329,7 +329,7 @@ If outside range: Adjust largest section(s) to compensate.
 > 3. Create structured outline with word targets per section
 > 4. THEN write with research notes open
 >
-> **This is mandatory for C1-BIO and HIST. Do not skip.**
+> **This is mandatory for BIO and HIST. Do not skip.**
 
 **Content structure:**
 

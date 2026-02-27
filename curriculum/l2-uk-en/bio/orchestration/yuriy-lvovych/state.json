@@ -1,0 +1,40 @@
+{
+  "slug": "yuriy-lvovych",
+  "track": "bio",
+  "module_num": 12,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-20T22:59:02Z",
+      "task_id": "yw-yuriy-lvovych-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-26T00:21:05Z",
+      "words": 6229,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-26T00:22:34Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-26T00:22:34Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-27T09:59:27Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-27T09:59:27Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-27T09:59:27Z"
+}

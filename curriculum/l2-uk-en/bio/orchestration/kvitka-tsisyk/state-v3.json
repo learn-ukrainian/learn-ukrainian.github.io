@@ -1,0 +1,13 @@
+{
+  "track": "bio",
+  "slug": "kvitka-tsisyk",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T10:04:04Z",
+      "task_id": "v3-kvitka-tsisyk-pA",
+      "mode": "full"
+    }
+  }
+}

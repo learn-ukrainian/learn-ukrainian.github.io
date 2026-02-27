@@ -63,7 +63,7 @@ def check_research_file(file_path: str) -> list[dict]:
     Research files are expected at:
         curriculum/l2-uk-en/{track}/research/{slug}-research.md
 
-    Determines track from the file path directory (e.g., c1-bio from .../c1-bio/slug.md).
+    Determines track from the file path directory (e.g., bio from .../bio/slug.md).
 
     Args:
         file_path: Path to the module .md file.
@@ -71,10 +71,10 @@ def check_research_file(file_path: str) -> list[dict]:
     Returns:
         List of violation dictionaries (warning level).
     """
-    seminar_tracks = {'hist', 'istoriohrafiia', 'c1-bio', 'lit', 'oes', 'ruth'}
+    seminar_tracks = {'hist', 'istoriohrafiia', 'bio', 'lit', 'oes', 'ruth'}
 
     md_path = Path(file_path)
-    # Track is the parent directory name (e.g., c1-bio, hist)
+    # Track is the parent directory name (e.g., bio, hist)
     track = md_path.parent.name
     if track.lower() not in seminar_tracks:
         return []
@@ -119,7 +119,7 @@ def check_seminar_meta_requirements(meta_data: dict | None, level_code: str, ped
 
     # Determine if this is a seminar module
     is_seminar = pedagogy and pedagogy.lower() == 'seminar'
-    is_seminar_track = level_code.lower() in ['hist', 'istoriohrafiia', 'c1-bio', 'lit']
+    is_seminar_track = level_code.lower() in ['hist', 'istoriohrafiia', 'bio', 'lit']
 
     # If not a seminar module, we skip strict validation
     if not (is_seminar or is_seminar_track):

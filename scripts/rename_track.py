@@ -8,7 +8,7 @@ Usage:
     .venv/bin/python scripts/rename_track.py hist hist --dry-run
     .venv/bin/python scripts/rename_track.py hist hist
     .venv/bin/python scripts/rename_track.py istoriohrafiia istoriohrafiia --dry-run
-    .venv/bin/python scripts/rename_track.py c1-bio bio
+    .venv/bin/python scripts/rename_track.py bio bio
 
 Config mapping (must be defined in RENAME_CONFIG below for each rename).
 """
@@ -58,11 +58,11 @@ RENAME_CONFIG = {
         "old_quick_ref": "ISTORIOHRAFIIA",
         "new_quick_ref": "ISTORIOHRAFIIA",
     },
-    "c1-bio": {
+    "bio": {
         "new_slug": "bio",
-        "old_config_key": "C1-biography",
+        "old_config_key": "biography",
         "new_config_key": "biography",
-        "old_quick_ref": "C1-BIO",
+        "old_quick_ref": "BIO",
         "new_quick_ref": "BIO",
     },
 }

@@ -1,0 +1,29 @@
+{
+  "track": "bio",
+  "slug": "knyazhna-anna-yaroslavna",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T00:00:29Z",
+      "task_id": "v3-knyazhna-anna-yaroslavna-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-26T23:12:34Z",
+      "note": "adopted-existing-content",
+      "words": 4243
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-26T23:14:42Z",
+      "task_id": "v3-knyazhna-anna-yaroslavna-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T09:58:40Z",
+      "attempts": 1
+    }
+  }
+}

@@ -124,7 +124,7 @@ constraints:
 | `vocabulary` | Vocabulary expansion | A1-B2 |
 | `cultural` | Cultural content | B1-C1 |
 | `history` | Historical narratives | HIST |
-| `biography` | Famous Ukrainians | C1-BIO |
+| `biography` | Famous Ukrainians | BIO |
 | `literature` | Literary analysis | LIT |
 | `integration` | Review/consolidation | All |
 | `checkpoint` | Assessment modules | All |

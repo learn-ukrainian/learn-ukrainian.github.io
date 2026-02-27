@@ -145,7 +145,7 @@ mappings:
   - meta_field: focus
     value: biography
     level: c1
-    template: c1-biography-module-template.md
+    template: biography-module-template.md
     description: 'C1 biography modules'
 
   - meta_field: focus
@@ -246,12 +246,12 @@ mappings:
     description: 'HIST history track modules'
 
   # =============================================================================
-  # C1-BIO: Biography Track (relocated from C1 M36-131)
+  # BIO: Biography Track (relocated from C1 M36-131)
   # =============================================================================
-  - pattern: '^c1-bio-'
-    level: c1-bio
-    template: c1-biography-module-template.md
-    description: 'C1-BIO biography track modules'
+  - pattern: '^bio-'
+    level: bio
+    template: biography-module-template.md
+    description: 'BIO biography track modules'
 
   # =============================================================================
   # B2-PRO: Professional Track (new)

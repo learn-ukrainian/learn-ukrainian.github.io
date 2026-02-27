@@ -43,7 +43,7 @@ MDX Gate (deterministic)
 | C1 | 3000w |
 | C2 | 3000w |
 | HIST | 5000w |
-| C1-BIO | 5000w |
+| BIO | 5000w |
 | ISTORIOHRAFIIA | 5000w |
 | LIT | 2500w |
 
@@ -67,7 +67,7 @@ Fix: Phase A template explicitly says "section names must match plan exactly."
 
 ## Activities Gate
 
-| Metric | Seminar (hist, c1-bio, etc.) | Core (a1-c2) |
+| Metric | Seminar (hist, bio, etc.) | Core (a1-c2) |
 |--------|----------------------------------|--------------|
 | Min activities | 3 | 8 (A1), 10 (A2+) |
 | Max activities | 9 | varies |

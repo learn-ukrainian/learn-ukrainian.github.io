@@ -1,4 +1,4 @@
-# C1-BIO Module Status
+# BIO Module Status
 
 **Generated:** 2026-02-25 20:36:08
 **Total Modules:** 172

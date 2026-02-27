@@ -61,7 +61,7 @@ class _FixLoopTestBase:
 
     def setup_method(self):
         self.tmpdir = tempfile.mkdtemp()
-        self.track_dir = Path(self.tmpdir) / "c1-bio"
+        self.track_dir = Path(self.tmpdir) / "bio"
         self.track_dir.mkdir(parents=True)
 
         for subdir in ("audit", "review", "status", "meta", "activities",
@@ -76,11 +76,11 @@ class _FixLoopTestBase:
 
         # Meta file
         (self.track_dir / "meta" / "test-slug.yaml").write_text(
-            "level: C1-BIO\nword_target: 3000\n"
+            "level: BIO\nword_target: 3000\n"
         )
 
         # Plan file
-        plans_dir = Path(self.tmpdir) / "plans" / "c1-bio"
+        plans_dir = Path(self.tmpdir) / "plans" / "bio"
         plans_dir.mkdir(parents=True)
         (plans_dir / "test-slug.yaml").write_text("title: Test\nword_target: 3000\n")
 
@@ -88,7 +88,7 @@ class _FixLoopTestBase:
         self.status_file = self.track_dir / "status" / "test-slug.json"
 
         # Failures dir
-        self.failures_dir = Path(self.tmpdir) / "batch_state" / "failures" / "c1-bio"
+        self.failures_dir = Path(self.tmpdir) / "batch_state" / "failures" / "bio"
 
         # Build paths dict matching get_module_paths() output
         self.paths = {
@@ -104,7 +104,7 @@ class _FixLoopTestBase:
         # Create runner with mocked init
         with patch.object(BatchRunner, '__init__', lambda self, *a, **kw: None):
             self.runner = BatchRunner.__new__(BatchRunner)
-            self.runner.track = "c1-bio"
+            self.runner.track = "bio"
             self.runner.config = {"type": "seminar", "templates": {}, "phases": []}
             self.runner.state = {"modules": {"test-slug": {}}}
 

@@ -13,7 +13,7 @@
 - User feedback: "it helped a lot"
 
 **Templates affected:**
-- `c1-biography-module-template.md`: 10-12 activities
+- `biography-module-template.md`: 10-12 activities
 - `c1-literature-module-template.md`: 10-12 activities
 - History modules in `MODULE-RICHNESS-GUIDELINES-v2.md`: 10-12 activities
 

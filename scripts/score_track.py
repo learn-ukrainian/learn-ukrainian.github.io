@@ -7,7 +7,7 @@ using automated metric extraction. No LLM calls required.
 
 Usage:
     python scripts/score_track.py hist
-    python scripts/score_track.py c1-bio --format markdown
+    python scripts/score_track.py bio --format markdown
     python scripts/score_track.py --all
 """
 
@@ -76,11 +76,11 @@ def main():
         epilog="""
 Examples:
     python scripts/score_track.py hist
-    python scripts/score_track.py c1-bio --format markdown > c1-bio-score.md
+    python scripts/score_track.py bio --format markdown > bio-score.md
     python scripts/score_track.py --all --summary
 
 Valid track IDs:
-    Specialized tracks: hist, istoriohrafiia, c1-bio, lit
+    Specialized tracks: hist, istoriohrafiia, bio, lit
     Standard tracks: a1, a2, b1, b2, c1, c2
         """
     )
@@ -88,7 +88,7 @@ Valid track IDs:
     parser.add_argument(
         'track',
         nargs='?',
-        help='Track ID to score (e.g., hist, c1-bio, lit, a1)'
+        help='Track ID to score (e.g., hist, bio, lit, a1)'
     )
 
     parser.add_argument(
@@ -126,7 +126,7 @@ Valid track IDs:
     # Get tracks to process
     if args.all:
         # Process specialized tracks first, then standard
-        specialized = ['hist', 'c1-bio', 'istoriohrafiia', 'lit']
+        specialized = ['hist', 'bio', 'istoriohrafiia', 'lit']
         standard = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
         tracks = specialized + standard
     else:

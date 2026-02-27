@@ -1,0 +1,80 @@
+module: bio-6
+level: BIO
+sequence: 6
+slug: volodymyr-monomakh
+version: '2.0'
+title: 'Володимир Мономах: Укріплювач Русі'
+content_outline:
+- section: Вступ — Останній великий самодержець Києва
+  points:
+  - Мономах як ідеал руського князя
+  - Успіхи у боротьбі з половцями
+  - Зупинення процесу розпаду держави
+- section: Життєпис
+  points:
+  - Походження та ранні роки
+  - Любецький з'їзд 1097 р.
+  - Шлях до київського престолу
+  - Правління в Києві (1113–1125)
+- section: Історичний контекст
+  points:
+  - Феодальна роздробленість
+  - Половецька загроза
+  - Соціальні рухи в Києві
+- section: Внесок
+  points:
+  - '"Повчання дітям" як етичний кодекс'
+  - Реформування законодавства ("Статут")
+- section: Останні роки
+  points:
+  - Зміцнення династичних зв'язків
+  - Дипломатія з Візантією
+  - Смерть та поховання
+- section: Спадщина
+  points:
+  - Образ Мономаха в літописах
+  - Символіка "Шапки Мономаха" (міфи та реальність)
+- section: Підсумок
+  points:
+  - Значення правління для історії України
+focus: biography
+pedagogy: seminar
+prerequisites:
+- bio-05 (Всеволод Ярославич)
+- hist monomakh module
+connects_to:
+- bio-07 (Мстислав Великий)
+- hist rozdroblenist module
+objectives:
+- Проаналізувати політичну стратегію Мономаха щодо єдності Русі
+- Дослідити етичні засади "Повчання дітям"
+- Оцінити роль князя у захисті від степових кочовиків
+grammar:
+- Публіцистичний стиль (аналіз повчань)
+- Офіційно-діловий стиль (статути)
+module_type: biography
+sources:
+- name: Володимир Мономах (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Володимир_Мономах
+  type: primary
+  notes: Детальний життєпис
+- name: '"Повчання" Володимира Мономаха'
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Оригінальний текст та коментарі
+immersion: 100% Ukrainian
+phase: BIO
+vocabulary_hints:
+  required:
+  - удільна роздробленість (feudal fragmentation)
+  - половці (Cumans)
+  - статут (statute)
+activity_hints:
+- type: reading
+  focus: Аналіз "Повчання дітям"
+  source: Primary sources (adapted)
+- type: critical-analysis
+  focus: Причини київського повстання 1113 р.
+persona:
+  voice: Senior Biographer
+  role: Instruction Writer

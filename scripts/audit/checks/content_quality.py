@@ -56,7 +56,7 @@ HISTORICAL_CYRILLIC_CHARS = {
 ALL_FORBIDDEN_IN_MODERN = RUSSIAN_ONLY_CHARS | HISTORICAL_CYRILLIC_CHARS
 
 # Tracks that legitimately quote historical texts
-HISTORICAL_TRACKS = {'oes', 'ruth', 'lit', 'hist', 'c1-bio', 'istoriohrafiia'}
+HISTORICAL_TRACKS = {'oes', 'ruth', 'lit', 'hist', 'bio', 'istoriohrafiia'}
 
 # Tracks that TEACH historical linguistics - fully exempt from character checks
 # These tracks explicitly analyze historical Cyrillic (including Russian-like forms)
@@ -199,7 +199,7 @@ def detect_track_from_path(file_path: str) -> str | None:
         (r'/ruth/', 'ruth'),
         (r'/lit/', 'lit'),
         (r'/hist/', 'hist'),
-        (r'/c1-bio/', 'c1-bio'),
+        (r'/bio/', 'bio'),
         (r'/istoriohrafiia/', 'istoriohrafiia'),
     ]
 
@@ -399,7 +399,7 @@ def validate_characters_in_content(
     - RUSSIAN_ONLY chars (ы, э, ё): Always flagged as errors
     - HISTORICAL_CYRILLIC chars (ъ, ѣ, etc.):
       - Allowed in historical quote blocks
-      - Allowed in historical tracks (OES, RUTH, LIT, HIST, C1-BIO)
+      - Allowed in historical tracks (OES, RUTH, LIT, HIST, BIO)
       - Flagged in modern Ukrainian prose
 
     Exception: OES and RUTH tracks are FULLY EXEMPT from these checks

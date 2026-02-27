@@ -1738,7 +1738,7 @@ def get_modules_from_manifest(target_level: Optional[str] = None) -> list[Module
             continue
         all_modules.extend(get_modules_for_level(level))
 
-    # Process tracks (hist, c1-bio, lit)
+    # Process tracks (hist, bio, lit)
     for track_name in TRACKS:
         if target_level and track_name != target_level:
             continue

@@ -1,0 +1,79 @@
+module: bio-23
+level: BIO
+sequence: 23
+slug: sylvestr-kosiv
+version: '2.0'
+title: 'Сильвестр Косів: Освітянин і будівничий'
+content_outline:
+- section: Вступ — Митрополит бурхливої епохи
+  points:
+  - Косів як наступник Могили
+  - Життя у вогні Хмельниччини
+  - Збереження духовної незалежності
+- section: Життєпис
+  points:
+  - Походження та освіта (Замойська академія)
+  - Співпраця з Петром Могилою
+  - Робота в Лаврській школі
+  - Обрання митрополитом 1647 р.
+- section: Історичний контекст
+  points:
+  - Хмельниччина та церква
+  - Проблема юрисдикції (Константинополь чи Москва)
+- section: Внесок
+  points:
+  - Розбудова Києво-Могилянського колегіуму
+  - '"Патерикон" та літературна діяльність'
+- section: Останні роки
+  points:
+  - Переяславська рада та відмова від присяги царю
+  - Дипломатичне балансування
+  - Смерть 1657 р.
+- section: Спадщина
+  points:
+  - Ідеолог "київського християнства"
+  - Збереження автономії церкви
+- section: Підсумок
+  points:
+  - Косів як інтелектуальний щит нації
+focus: biography
+pedagogy: seminar
+prerequisites:
+- bio-23 (Петро Могила)
+- Знання контексту Хотинської війни
+connects_to:
+- bio-20 (Богдан Хмельницький)
+- hist hmelnychyna module
+objectives:
+- Оцінити роль Косіва у збереженні автономії української церкви
+- Проаналізувати його літературну спадщину
+- Дослідити позицію митрополита під час Переяславської ради
+grammar:
+- Церковно-слов'янізми (обмежено)
+- Текст-аналіз полеміки
+module_type: biography
+sources:
+- name: Сильвестр Косів (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Сильвестр_Косів
+  type: primary
+  notes: Біографія та діяльність
+- name: Патерикон Сильвестра Косіва
+  url: http://izbornyk.org.ua/
+  type: primary
+  notes: Літературна праця
+immersion: 100% Ukrainian
+phase: BIO
+vocabulary_hints:
+  required:
+  - митрополит (metropolitan)
+  - Патерикон (Paterikon)
+  - присяга (oath)
+activity_hints:
+- type: reading
+  focus: Аналіз "Патерикону" та листів до царя
+  source: Primary sources (adapted)
+- type: essay-response
+  focus: Церква як гарант суверенітету
+persona:
+  voice: Senior Biographer
+  role: Academy Rector

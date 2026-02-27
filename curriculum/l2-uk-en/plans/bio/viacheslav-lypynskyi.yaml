@@ -1,0 +1,97 @@
+module: bio-81
+level: BIO
+sequence: 81
+slug: viacheslav-lypynskyi
+version: '2.0'
+title: 'В''ячеслав Липинський: Консерватор-державник'
+content_outline:
+- section: Вступ — Український консерватизм як ідея
+  points:
+  - Липинський як найоригінальніший український мислитель XX ст.
+  - Від польського шляхтича до українського ідеолога
+  - Чому його ідеї актуальні сьогодні
+- section: Шляхетське коріння
+  points:
+  - Народження в польській родині (1882)
+  - Освіта в Києві та за кордоном
+  - Шлях до української ідентичності
+- section: Історик як державотворець
+  points:
+  - Дослідження козаччини
+  - Переосмислення української історії
+  - Роль шляхти в українському русі
+- section: Гетьманат та політична діяльність
+  points:
+  - Посол Української Держави у Відні
+  - Підтримка Скоропадського
+  - Концепція класократії
+- section: Листи до братів-хліборобів
+  points:
+  - Головний теоретичний твір
+  - Ідея територіального патріотизму
+  - Критика народництва та інтелігенції
+- section: Еміграція та останні роки
+  points:
+  - Життя в Австрії та Чехословаччині
+  - Важка хвороба (туберкульоз)
+  - Смерть та інтелектуальна спадщина
+- section: Дискусія — Консерватизм vs народництво
+  points:
+  - Два шляхи українського державотворення
+  - Релевантність Липинського для XXI століття
+vocabulary_hints:
+  required:
+  - консерватизм (conservatism)
+  - державник (statist)
+  - територіальний патріотизм (territorial patriotism)
+  - класократія (classocracy)
+  - шляхта (nobility/gentry)
+  - гетьманат (Hetmanate)
+  - народництво (populism/Narodnikism)
+  - еліта (elite)
+  - ідеолог (ideologue)
+  - традиція (tradition)
+  recommended:
+  - монархізм (monarchism)
+  - аристократія (aristocracy)
+  - легітимізм (legitimism)
+  - органічна держава (organic state)
+  - хлібороби (agrarians)
+activity_hints:
+- type: reading
+  focus: Фрагменти Листів до братів-хліборобів
+  source: Первинні джерела
+  items: 3 passages
+- type: essay-response
+  focus: Чи актуальний консерватизм для України?
+  output: Аргументований есей
+focus: biography
+prerequisites:
+- hist-ukrainian-revolution
+connects_to:
+- bio-44-symon-petliura
+- bio-52-dmytro-dontsov
+- bio-35-mykhailo-hrushevskyi
+module_type: biography
+sources:
+- name: В'ячеслав Липинський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Липинський_В%27ячеслав_Казимирович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Інститут В'ячеслава Липинського
+  url: https://lipynsky.org/
+  type: reference
+  notes: Наукова спадщина та дослідження
+- name: Твори Липинського
+  url: https://diasporiana.org.ua/
+  type: reference
+  notes: Повні тексти праць
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of в''ячеслав липинський: консерватор-державник'
+- Evaluate the contributions of український консерватизм як ідея
+- Trace the career and influence of консерватизм vs народництво
+persona:
+  voice: Senior Biographer
+  role: Monarchist Philosopher

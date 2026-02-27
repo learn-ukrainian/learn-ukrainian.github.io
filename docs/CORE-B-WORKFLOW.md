@@ -23,7 +23,7 @@ Use Core B for any module where the learner operates in Ukrainian:
 | C1-PRO | Expert professional Ukrainian (50 modules) | 100% | ESP |
 
 > **For A1, A2, B1 M01-05:** Use [Core A Workflow](CORE-A-WORKFLOW.md).
-> **For seminar tracks (HIST, C1-BIO, LIT):** Use [Research-First Workflow](RESEARCH-FIRST-WORKFLOW.md).
+> **For seminar tracks (HIST, BIO, LIT):** Use [Research-First Workflow](RESEARCH-FIRST-WORKFLOW.md).
 
 ---
 

@@ -438,7 +438,7 @@ def build_status_dashboard():
     <button class="filter-btn" data-level="c1">C1</button>
     <button class="filter-btn" data-level="c2">C2</button>
     <button class="filter-btn" data-level="hist">HIST</button>
-    <button class="filter-btn" data-level="c1-bio">C1-BIO</button>
+    <button class="filter-btn" data-level="bio">BIO</button>
     <button class="filter-btn" data-level="lit">LIT</button>
 
     <div class="status-filter">

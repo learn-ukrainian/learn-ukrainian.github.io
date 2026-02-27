@@ -553,12 +553,12 @@ claude --teleport c1-m110-review
 
 ```bash
 # Create named sessions for different levels
-claude --session-id c1-biographies
+claude --session-id biographies
 claude --session-id history-fixes
 claude --session-id a2-vocabulary-enrichment
 
 # Resume by name
-claude --resume c1-biographies
+claude --resume biographies
 ```
 
 **Expected Impact:**

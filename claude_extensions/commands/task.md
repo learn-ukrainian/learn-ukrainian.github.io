@@ -60,9 +60,9 @@ gh issue create --title "Title" --template "complex-task.md" --label "task,worki
 
 **Example:**
 ```
-/task create "Fix C1-BIO M25-M29 word targets"
+/task create "Fix BIO M25-M29 word targets"
 
-📋 Created issue #500: "Fix C1-BIO M25-M29 word targets"
+📋 Created issue #500: "Fix BIO M25-M29 word targets"
    Labels: task, working:claude
    Active task set: #500
 
@@ -131,9 +131,9 @@ gh issue list --label "task" --state open --limit 10
 /task list
 
 📋 Active Tasks:
-#500 [working:claude] Fix C1-BIO M25-M29 word targets
+#500 [working:claude] Fix BIO M25-M29 word targets
 #498 [review:gemini] HIST naturalness audit
-#495 [blocked] C1-BIO research pipeline
+#495 [blocked] BIO research pipeline
 ```
 
 ### /task handoff #N gemini "message"
@@ -241,7 +241,7 @@ The skill tracks `ACTIVE_TASK_ID` during the session:
 ```
 /task
 
-📋 Active task: #500 "Fix C1-BIO M25-M29 word targets"
+📋 Active task: #500 "Fix BIO M25-M29 word targets"
    Phase 1: Planning ✅
    Phase 2: Implementation ⬜ (current)
    ...
@@ -279,7 +279,7 @@ Claude: "Ready to commit. Add (#500) to message?"
 User: "yes" / "no"
 
 # If yes:
-git commit -m "Fix word targets for C1-BIO M25-M29 (#500)"
+git commit -m "Fix word targets for BIO M25-M29 (#500)"
 ```
 
 ## Labels
@@ -307,16 +307,16 @@ gh label create "task:feature" --color "A2EEEF" --description "New feature"
 ## Example Full Workflow
 
 ```
-User: We need to fix word targets for C1-BIO batch 25-29
+User: We need to fix word targets for BIO batch 25-29
 
 Claude: "This looks like a complex task (4 modules, research needed).
          Want me to create a GH issue to track it?"
 
 User: yes
 
-Claude: /task create "Fix C1-BIO M25-M29 word targets"
+Claude: /task create "Fix BIO M25-M29 word targets"
 
-📋 Created issue #500: "Fix C1-BIO M25-M29 word targets"
+📋 Created issue #500: "Fix BIO M25-M29 word targets"
    Label: working:claude
    Active task set: #500
 
@@ -385,7 +385,7 @@ Track errors during task execution:
 ```markdown
 # tasks/lessons.md format:
 ## [Date] - [Category]
-**Task**: #500 - Fix C1-BIO M25-M29 word targets
+**Task**: #500 - Fix BIO M25-M29 word targets
 **Mistake**: Changed word_target instead of expanding content
 **Correction**: Word targets are minimums, not maximums
 **Rule**: Never change word_target to match short content - expand content instead

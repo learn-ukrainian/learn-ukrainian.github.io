@@ -1,0 +1,13 @@
+{
+  "track": "bio",
+  "slug": "oleksandr-arkhypenko",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T18:12:45Z",
+      "task_id": "v3-oleksandr-arkhypenko-pA",
+      "mode": "full"
+    }
+  }
+}

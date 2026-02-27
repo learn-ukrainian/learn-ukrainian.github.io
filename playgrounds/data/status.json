@@ -8604,9 +8604,9 @@
       "fail_count": 17,
       "pending_count": 83
     },
-    "c1-bio": {
-      "id": "c1-bio",
-      "name": "C1-BIO - Biography Track",
+    "bio": {
+      "id": "bio",
+      "name": "BIO - Biography Track",
       "modules": [
         {
           "id": "kniaz-sviatoslav",

@@ -1,0 +1,107 @@
+module: bio-27
+level: BIO
+sequence: 27
+slug: ivan-mazepa
+version: '2.0'
+title: 'Іван Мазепа: Меценат і трагічний герой'
+content_outline:
+- section: Вступ — Між зрадою та героїзмом
+  points:
+  - Суперечливість постаті Мазепи
+  - Його місце в українській та російській історіографії
+  - Значення його вибору 1708 року
+- section: Молодість та шлях до влади
+  points:
+  - Шляхетське походження
+  - Освіта та служба при дворах
+  - Козацька кар'єра
+  - Обрання гетьманом 1687 року
+- section: 'Гетьманування: успіхи'
+  points:
+  - Внутрішня політика та реформи
+  - Військові походи з Петром I
+  - Культурний розквіт — мазепинське бароко
+  - Меценатство та будівництво
+- section: Шлях до розриву з Москвою
+  points:
+  - Наростання суперечностей
+  - Обмеження автономії
+  - Північна війна та її тягар
+  - Переговори з Карлом XII
+- section: Полтава та вигнання
+  points:
+  - Відкритий виступ 1708 року
+  - Руйнування Батурина
+  - Полтавська катастрофа
+  - Втеча до Бендер
+  - Смерть та анафема
+- section: Спадщина та реабілітація
+  points:
+  - Образ Мазепи в літературі
+  - Байрон, Пушкін, Словацький
+  - Реабілітація в незалежній Україні
+  - Мазепа на банкноті
+- section: Підсумок — Трагічний вибір
+  points:
+  - Мазепа як символ боротьби за незалежність
+  - Уроки його історії
+  - Актуальність сьогодні
+vocabulary_hints:
+  required:
+  - гетьман (hetman)
+  - меценат (patron)
+  - бароко (baroque)
+  - анафема (anathema)
+  - зрада (treason - in Russian narrative)
+  - автономія (autonomy)
+  - союз (alliance)
+  - вигнання (exile)
+  - універсал (decree)
+  - резиденція (residence)
+  recommended:
+  - клейноди (regalia)
+  - старшина (officer class)
+  - гетьманщина (Hetmanate)
+  - протекторат (protectorate)
+  - капітуляція (capitulation)
+activity_hints:
+- type: reading
+  focus: Mazepa's manifesto and correspondence
+  source: Primary sources (adapted)
+  items: 3 passages
+- type: essay-response
+  focus: Was Mazepa a traitor or a patriot?
+  output: Analysis of competing narratives
+- type: critical-analysis
+  focus: Analyze Mazepa in Ukrainian vs. Russian historiography
+  output: Comparative historiography
+focus: biography
+prerequisites:
+- bio-10 (Bohdan Khmelnytskyi - earlier hetman)
+- bio-11 (Yuriy Nemyrych - European orientation)
+connects_to:
+- bio-13 (Kost Hordiyenko - ally)
+- bio-14 (Pylyp Orlyk - successor)
+- bio-15 (Petro Kalnyshevskyy - end of autonomy)
+module_type: biography
+sources:
+- name: Іван Мазепа (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: primary
+  notes: Biography, hetmanate, Poltava
+- name: Полтавська битва (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Полтавська_битва
+  type: reference
+  notes: Military context and consequences
+- name: Мазепинське бароко
+  url: https://uk.wikipedia.org/wiki/Мазепинське_бароко
+  type: reference
+  notes: Cultural patronage
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of іван мазепа: меценат і трагічний герой'
+- Evaluate the contributions of між зрадою та героїзмом
+persona:
+  voice: Senior Biographer
+  role: Patron of Arts

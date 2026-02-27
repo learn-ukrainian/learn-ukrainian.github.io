@@ -2,7 +2,7 @@
 
 **Purpose:** Reference template for creating C1 Core modules (M01-106: Academic Foundation, Professional, Stylistics, Folk Culture, Literature)
 
-> **Note:** Biography content (101 modules) has been moved to the **C1-BIO** track. See `c1-biography-module-template.md` for biography-specific guidance.
+> **Note:** Biography content (101 modules) has been moved to the **BIO** track. See `biography-module-template.md` for biography-specific guidance.
 
 **Based on:** B2-module-template.md, scaled to C1 requirements per Ukrainian State Standard 2024
 
@@ -530,7 +530,7 @@ See [ACTIVITY-YAML-REFERENCE.md](../../ACTIVITY-YAML-REFERENCE.md) for schemas a
 - M105: Literature Checkpoint
 - M106: C1 Final Exam
 
-> **Note:** Biography content (101 modules) has been moved to the **C1-BIO** track.
+> **Note:** Biography content (101 modules) has been moved to the **BIO** track.
 - M159: Literature Review
 - M160: C1 Final Exam (Checkpoint)
 

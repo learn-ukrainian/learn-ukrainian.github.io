@@ -77,7 +77,7 @@ learn-ukrainian/
 │       ├── c1/                    # C1 build artifacts (160)
 │       ├── c2/                    # C2 build artifacts (100)
 │       ├── hist/               # HIST track (61)
-│       ├── c1-bio/                # C1-BIO track (25)
+│       ├── bio/                # BIO track (25)
 │       ├── lit/                   # LIT modules (30) - post-C1 track
 │       └── vocabulary.db          # SQLite vocabulary database
 │
@@ -394,7 +394,7 @@ Claude handles interactive activities and final QA (better reasoning, structured
 Model defaults are track-aware and centralized in `scripts/batch_gemini_config.py`:
 
 ```python
-# Seminar tracks: c1-bio, hist, istoriohrafiia, lit, oes, ruth
+# Seminar tracks: bio, hist, istoriohrafiia, lit, oes, ruth
 CLAUDE_MODEL_SEMINAR_RESEARCH   = CLAUDE_OPUS    # Phase A via --use-claude A
 CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS    # Phase C (always Claude)
 CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS    # Phase F (always Claude)
@@ -425,7 +425,7 @@ When running from Claude Code's bash tool, the 2-minute timeout applies.
 
 ```bash
 # Terminal (no timeout): Claude handles Phase C + F automatically
-.venv/bin/python scripts/build_module_v3.py c1-bio --all --final-review
+.venv/bin/python scripts/build_module_v3.py bio --all --final-review
 
 # Route Phase A to Claude too (e.g. for c1/c2 where Claude research is preferred)
 .venv/bin/python scripts/build_module_v3.py c1 --all --use-claude A

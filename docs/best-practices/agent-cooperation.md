@@ -56,7 +56,7 @@ For requests needing immediate response:
 For non-blocking FYI messages Gemini sees at next session start:
 ```python
 mcp__message-broker__send_message(
-    to="gemini", content="FYI: c1-bio Phase A complete. See #560.",
+    to="gemini", content="FYI: bio Phase A complete. See #560.",
     from_llm="claude", message_type="context"
 )
 ```
@@ -134,8 +134,8 @@ Use Gemini's skill files instead of verbose prompts. Each skill encodes the full
 
 ```bash
 # Seminar track rebuild
-.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "/full-rebuild-c1-bio 5" \
-  --task-id rebuild-c1-bio-5
+.venv/bin/python scripts/ai_agent_bridge.py ask-gemini "/full-rebuild-bio 5" \
+  --task-id rebuild-bio-5
 
 # Core track rebuild
 .venv/bin/python scripts/ai_agent_bridge.py ask-gemini "/full-rebuild-core-a a1 3" \

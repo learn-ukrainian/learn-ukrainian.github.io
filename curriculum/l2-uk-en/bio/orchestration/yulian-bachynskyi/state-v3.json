@@ -1,0 +1,13 @@
+{
+  "track": "bio",
+  "slug": "yulian-bachynskyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T00:02:27Z",
+      "task_id": "v3-yulian-bachynskyi-pA",
+      "mode": "meta-only"
+    }
+  }
+}

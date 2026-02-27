@@ -78,7 +78,7 @@ scripts/sync_module_ids.py       → load_curriculum()
 scripts/validate_curriculum_plans.py → load_curriculum()
 scripts/verify_track.py          → load_curriculum()
 scripts/generate_level_status.py → load_curriculum_yaml()
-scripts/fix_c1_bio_ids.py        → load_curriculum_order()
+scripts/fix_bio_ids.py        → load_curriculum_order()
 scripts/update_a2_immersion.py   → load_curriculum_modules()
 ```
 

@@ -17,7 +17,7 @@
 | `b2-pro` | B2 | Core (professional) | 40 | 1750w | CLIL |
 | `c1-pro` | C1 | Core (professional) | 50 | 3000w | CLIL |
 | `hist` | B2 | Seminar | 140 | 5000w | CBI |
-| `c1-bio` | C1 | Seminar | 175 | 5000w | CBI |
+| `bio` | C1 | Seminar | 175 | 5000w | CBI |
 | `istoriohrafiia` | C1 | Seminar | 136 | 5000w | CBI |
 | `lit` | C1+ | Seminar | 218 | 2500w | CBI |
 | `oes` | C2 | Seminar | 100 | 3000w | CBI |
@@ -115,7 +115,7 @@ Modules are numbered within their track. Numbers are stable references (do not c
 .venv/bin/python -c "
 import sys; sys.path.insert(0, 'scripts')
 from batch_gemini_config import slug_for_num
-print(slug_for_num('c1-bio', 28))  # → 'danylo-apostol'
+print(slug_for_num('bio', 28))  # → 'danylo-apostol'
 "
 ```
 
@@ -163,7 +163,7 @@ curriculum/l2-uk-en/
 - Decolonization perspective mandatory
 - 140 modules, ~700,000 words total when complete
 
-### c1-bio (C1 Biography)
+### bio (C1 Biography)
 - 172 Ukrainian historical and cultural figures
 - Biographical narrative arc required (birth → impact → legacy)
 - Living people: "Значення" / "Вплив" sections; deceased: "Спадщина" / "Наслідки"

@@ -26,7 +26,7 @@ Alignment: This module directly addresses the C1 thematic requirement for detail
 
 ## Cross-References
 - Builds on: **A2-M12 (Ukrainian Traditions)**, **B1-M72 (Regional Culture)**
-- Prepares for: **C1-M105 (Cultural Synthesis)**, **C1-BIO modules** (understanding religious context of historical figures)
+- Prepares for: **C1-M105 (Cultural Synthesis)**, **BIO modules** (understanding religious context of historical figures)
 
 ## Notes for Content Writing
 - **Tone**: Respectful but analytical. Explain the *why* behind rituals (e.g., egg = universe/life source).

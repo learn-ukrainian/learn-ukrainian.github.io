@@ -13,7 +13,7 @@ All tracks, from A1 through seminar. Run when capacity is available.
 | hist | 27 | 140 | 100% Ukrainian | Ready to test |
 | c1 | 1 | 108 | 100% | 1 module only |
 | istoriohrafiia | 3 | 136 | 100% Ukrainian | 3 modules |
-| c1-bio | 4 | 172 | 100% Ukrainian | 4 modules |
+| bio | 4 | 172 | 100% Ukrainian | 4 modules |
 | lit | 0 | 217 | 100% Ukrainian | No content yet |
 | oes | 0 | 100 | 100% Ukrainian | No content yet |
 | ruth | 0 | 100 | 100% Ukrainian | No content yet |
@@ -90,11 +90,11 @@ for n in 1 2 3; do
 done
 ```
 
-### C1-BIO (seminar, 4 modules)
+### BIO (seminar, 4 modules)
 
 ```bash
 for n in 1 2 3 4; do
-  .venv/bin/python scripts/proofread.py c1-bio $n --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1bio-$(printf '%02d' $n).txt
+  .venv/bin/python scripts/proofread.py bio $n --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1bio-$(printf '%02d' $n).txt
 done
 ```
 
@@ -119,7 +119,7 @@ After Phase 1 validates the prompt works for each track, run full coverage.
 # Seminar tracks
 .venv/bin/python scripts/proofread.py hist --all --dry-run 2>&1 | tee tests/proofread-results/full-b2hist.txt
 .venv/bin/python scripts/proofread.py istoriohrafiia --all --dry-run 2>&1 | tee tests/proofread-results/full-c1hist.txt
-.venv/bin/python scripts/proofread.py c1-bio --all --dry-run 2>&1 | tee tests/proofread-results/full-c1bio.txt
+.venv/bin/python scripts/proofread.py bio --all --dry-run 2>&1 | tee tests/proofread-results/full-c1bio.txt
 ```
 
 ## Phase 3: Full Evaluate (sample per track)
@@ -134,7 +134,7 @@ Run `--evaluate` on a subset of Phase 2 results to get quality metrics.
 .venv/bin/python scripts/proofread.py b2 --range 1-10 --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-b2-batch.txt
 .venv/bin/python scripts/proofread.py hist --range 1-5 --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-b2hist-batch.txt
 .venv/bin/python scripts/proofread.py istoriohrafiia --all --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1hist-batch.txt
-.venv/bin/python scripts/proofread.py c1-bio --all --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1bio-batch.txt
+.venv/bin/python scripts/proofread.py bio --all --dry-run --evaluate 2>&1 | tee tests/proofread-results/eval-c1bio-batch.txt
 ```
 
 ## Phase 4: Fix Application
@@ -166,7 +166,7 @@ After quality metrics are validated (precision >80%, rewrite quality >70%, safet
 | B1 immersed (6+) | 3-8 | LLM_FILLER, LANGUAGE_BLENDER (if English leaks) |
 | B2 core | 3-8 | LLM_FILLER, WORD_SALAD |
 | HIST seminar | 2-6 | RUSSIANISM, WORD_SALAD, SOURCE_VERIFICATION |
-| C1/ISTORIOHRAFIIA/C1-BIO | 2-5 | WORD_SALAD, SOURCE_VERIFICATION, HISTORICAL_INTEGRITY |
+| C1/ISTORIOHRAFIIA/BIO | 2-5 | WORD_SALAD, SOURCE_VERIFICATION, HISTORICAL_INTEGRITY |
 | LIT | 2-5 | SOURCE_VERIFICATION, WORD_SALAD |
 
 ## Notes

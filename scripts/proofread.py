@@ -106,7 +106,7 @@ LANGUAGE (highest priority)
    framing are NEVER acceptable. Replace each instance with its proper Ukrainian equivalent.
    Examples: здача → решта, вообще → взагалі, получити → отримати, добавити → додати,
    хватить → вистачить, обязательно → обов'язково. Severity: always HIGH.
-   In seminar tracks (HIST, ISTORIOHRAFIIA, C1-BIO, LIT, OES, RUTH): also flag any imperial
+   In seminar tracks (HIST, ISTORIOHRAFIIA, BIO, LIT, OES, RUTH): also flag any imperial
    framing — "brotherly nations", "Little Russian", Soviet-era terminology for Ukrainian
    culture or history. Replace with Ukrainian academic standard terminology.
 2. ANGLICISM: English syntax calqued into Ukrainian (e.g., "Я є студент" from "I am a
@@ -444,8 +444,8 @@ def proofread_module(
     track_calib = ""
     if level in ["hist", "istoriohrafiia"]:
         track_calib = "- TRACK CALIBRATION (HISTORY): Historical narrative. Expect structured storytelling, debunking of imperial/Soviet myths, and factual recounting of events based strictly on Ukrainian academic sources. Flag any Russian imperial framing."
-    elif level == "c1-bio":
-        track_calib = "- TRACK CALIBRATION (C1-BIO): Biographical narrative. Expect formal recounting of life events, legacy, and societal impact based on Ukrainian academic consensus. Flag subjective, overly dramatic framing, or imperial bias."
+    elif level == "bio":
+        track_calib = "- TRACK CALIBRATION (BIO): Biographical narrative. Expect formal recounting of life events, legacy, and societal impact based on Ukrainian academic consensus. Flag subjective, overly dramatic framing, or imperial bias."
     elif level == "lit":
         track_calib = "- TRACK CALIBRATION (LIT): Literary analysis. Expect poetic terms, analysis of stylistics, and discussion of literary movements. Flag non-academic interpretations."
     elif level in ["oes", "ruth"]:

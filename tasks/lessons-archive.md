@@ -110,7 +110,7 @@
 
 ## 2026-02-02 - Task Delegation Boundaries (Claude-Gemini)
 
-**Mistake**: Gemini sent a request asking me to write C1-BIO module content (nestor-litopysets.md), attempting to delegate his work back to me.
+**Mistake**: Gemini sent a request asking me to write BIO module content (nestor-litopysets.md), attempting to delegate his work back to me.
 
 **Correction**: User clarified: "gemini is sending you request to write content, it should be his responsibility to write content and not yours"
 
@@ -150,7 +150,7 @@
 
 ## 2026-02-05 - CRITICAL: Word Targets from Memory
 
-**Mistake**: Told Gemini that C1-BIO word target is "3500+" when config.py clearly states 4000. Wrote from memory instead of checking the source of truth.
+**Mistake**: Told Gemini that BIO word target is "3500+" when config.py clearly states 4000. Wrote from memory instead of checking the source of truth.
 
 **Correction**: User caught it immediately: "the config.py says 4000+ clearly, what made you to write 3500+?"
 
@@ -169,7 +169,7 @@
 
 **Observation**: Gemini successfully one-shot biography modules using research-first workflow (#506).
 
-**Data (19 C1-BIO modules):**
+**Data (19 BIO modules):**
 - **Average word count:** 4894 words (vs 4000 target = 122% achievement)
 - **Richness scores:** 97-99% across all modules
 - **Audit status:** All 19 passed on first try
@@ -183,13 +183,13 @@
 - Ukrainian-only research skill ensures authentic sources
 
 **Rule**:
-- **ALWAYS use research-first workflow for seminar tracks** (HIST, C1-BIO, ISTORIOHRAFIIA, LIT, OES, RUTH)
+- **ALWAYS use research-first workflow for seminar tracks** (HIST, BIO, ISTORIOHRAFIIA, LIT, OES, RUTH)
 - Writing from memory → thin content (2000-3000 words), inaccuracies, failed word counts
 - Research-first → rich content (4500-5500 words), authoritative, passes audits
 - One-shot generation possible with proper research foundation
 - Document workflow in `docs/RESEARCH-FIRST-WORKFLOW.md`
 
-**Applied**: 2026-02-05 (C1-BIO batch #506, all 19 modules passed - data validated)
+**Applied**: 2026-02-05 (BIO batch #506, all 19 modules passed - data validated)
 
 ---
 
@@ -230,7 +230,7 @@
 - Batch 2-3 modules maximum for research-first workflow
 - Never search "open web" - always use trusted Ukrainian academic sources
 
-**Applied**: 2026-02-05 (C1-BIO M49-50 batch using domain sniping)
+**Applied**: 2026-02-05 (BIO M49-50 batch using domain sniping)
 
 ---
 
@@ -291,7 +291,7 @@
 - Gemini's metaphor: Claude builds walls and roof; content needs furniture, library, and fire
 
 **Division of Labor**:
-- Seminar tracks (istoriohrafiia, c1-bio, hist, lit): Gemini writes/polishes content
+- Seminar tracks (istoriohrafiia, bio, hist, lit): Gemini writes/polishes content
 - Core tracks (A1-C1): Claude can build these (more structural, less decolonization-dependent)
 - Infrastructure always: Claude (meta, plans, YAML, scripts, audit)
 
@@ -301,7 +301,7 @@
 
 ## 2026-02-06 - Missing .md Files Break Audit Discovery
 
-**Mistake**: Created 8 new C1-BIO figures with meta + plan YAML files but no `.md` content files. `npm run audit -- c1-bio` only showed 148 modules instead of 156.
+**Mistake**: Created 8 new BIO figures with meta + plan YAML files but no `.md` content files. `npm run audit -- bio` only showed 148 modules instead of 156.
 
 **Correction**: User reported "still only shows 148." Root cause: `audit_level.py` discovers modules by scanning `*.md` files in the level directory, not meta/plan YAMLs.
 

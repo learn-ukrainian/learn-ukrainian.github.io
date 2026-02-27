@@ -1,0 +1,106 @@
+module: bio-34
+level: BIO
+sequence: 34
+slug: maksym-berezovskyy
+version: '2.0'
+title: 'Максим Березовський: Композитор барокко'
+content_outline:
+- section: Вступ — Трагічний геній
+  points:
+  - Березовський як перший український оперний композитор
+  - Його місце в європейській музиці XVIII століття
+  - Трагедія непризнаного таланту
+- section: Молодість та музична освіта
+  points:
+  - Походження з Глухова
+  - Глухівська музична школа
+  - Придворна капела в Петербурзі
+  - Ранні твори
+- section: Італійський період
+  points:
+  - Навчання в Болонській академії
+  - Членство в Accademia Filarmonica
+  - Опера "Демофонт"
+  - Визнання в Італії
+- section: Повернення до Росії
+  points:
+  - Сподівання на кар'єру при дворі
+  - Ставлення до українських митців
+  - Невдалі спроби реалізації
+  - Конфлікти та розчарування
+- section: Духовна музика
+  points:
+  - Хорові концерти
+  - Не отвержи мене во время старості
+  - Синтез барокової традиції
+  - Вплив на церковну музику
+- section: Смерть та посмертна слава
+  points:
+  - Обставини смерті (самогубство?)
+  - Забуття за життя
+  - Відкриття у XX столітті
+  - Місце в українській музичній культурі
+- section: Підсумок — Втрачений геній
+  points:
+  - Березовський як символ імперського поглинання талантів
+  - Його спадщина для української музики
+  - Уроки його долі
+vocabulary_hints:
+  required:
+  - композитор (composer)
+  - опера (opera)
+  - бароко (baroque)
+  - хоровий концерт (choral concerto)
+  - капела (chapel/choir)
+  - партитура (score)
+  - академія (academy)
+  - меланхолія (melancholy)
+  - самогубство (suicide)
+  - спадщина (legacy)
+  recommended:
+  - ораторія (oratorio)
+  - контрапункт (counterpoint)
+  - тенор (tenor)
+  - соліст (soloist)
+  - імпровізація (improvisation)
+activity_hints:
+- type: reading
+  focus: Historical accounts of Berezovskyy's life
+  source: Adapted historical sources
+  items: 3 passages
+- type: essay-response
+  focus: Why was Berezovskyy forgotten in his time?
+  output: Analysis of imperial cultural dynamics
+- type: critical-analysis
+  focus: How does imperial context explain his tragedy?
+  output: Decolonial interpretation
+focus: biography
+prerequisites:
+- bio-16 (Hryhoriy Skovoroda - same era)
+- Basic understanding of classical music
+connects_to:
+- bio-18 (Dmytro Bortnyanskyy - contemporary composer)
+- bio-19 (Semen Hulak-Artemovskyy - later opera)
+- bio-23 (Mykola Lysenko - national music tradition)
+module_type: biography
+sources:
+- name: Максим Березовський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Максим_Березовський
+  type: primary
+  notes: Biography, musical works, tragic death
+- name: Українське барокове мистецтво
+  url: https://uk.wikipedia.org/wiki/Українське_бароко
+  type: reference
+  notes: Cultural context
+- name: Глухівська музична школа
+  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
+  type: reference
+  notes: Musical education context
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of максим березовський: композитор барокко'
+- Evaluate the contributions of трагічний геній
+persona:
+  voice: Senior Biographer
+  role: Court Composer

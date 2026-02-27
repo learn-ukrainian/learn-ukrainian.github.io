@@ -67,7 +67,7 @@ npm run metrics:extract hist
 |----------|-------------|--------------|--------------|
 | `hist` | Ukrainian History (B2) | 140 | Historical accuracy, primary sources, decolonization |
 | `istoriohrafiia` | Historiography (C1) | 30 | Source criticism, methodology, thematic coherence |
-| `c1-bio` | Ukrainian Biographies (C1) | 128 | Biographical accuracy, legacy analysis, context |
+| `bio` | Ukrainian Biographies (C1) | 128 | Biographical accuracy, legacy analysis, context |
 | `lit` | Ukrainian Literature | 30 | Literary depth, authentic texts, stylistic devices |
 
 ### Standard Tracks

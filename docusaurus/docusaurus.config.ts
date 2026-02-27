@@ -142,8 +142,8 @@ const config: Config = {
               to: '/docs/istoriohrafiia/',
             },
             {
-              label: 'C1-BIO - Biographies',
-              to: '/docs/c1-bio/',
+              label: 'BIO - Biographies',
+              to: '/docs/bio/',
             },
             {
               label: 'B2-PRO - Professional',
@@ -259,8 +259,8 @@ const config: Config = {
               to: '/docs/hist/',
             },
             {
-              label: 'C1-BIO - Biographies',
-              to: '/docs/c1-bio/',
+              label: 'BIO - Biographies',
+              to: '/docs/bio/',
             },
             {
               label: 'LIT - Literature',

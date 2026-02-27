@@ -1,0 +1,40 @@
+{
+  "slug": "borys-hrinchenko",
+  "track": "bio",
+  "module_num": 55,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-20T23:19:11Z",
+      "task_id": "yw-borys-hrinchenko-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:30:55Z",
+      "words": 5703,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:33:26Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:33:26Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-27T17:51:23Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-27T17:51:23Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-27T17:51:23Z"
+}

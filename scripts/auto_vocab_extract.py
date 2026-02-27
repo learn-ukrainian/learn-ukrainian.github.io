@@ -136,7 +136,7 @@ def load_prior_vocabulary(md_path: Path) -> Set[str]:
     """
     Load vocabulary from all prior modules in this level.
     
-    For tracks (hist, c1-bio, etc.), loads vocabulary from
+    For tracks (hist, bio, etc.), loads vocabulary from
     all modules that come before this one in the curriculum.
     """
     level_dir = md_path.parent

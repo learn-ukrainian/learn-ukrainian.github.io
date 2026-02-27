@@ -1,0 +1,97 @@
+module: bio-130
+level: BIO
+sequence: 130
+slug: mykola-pohribnyi
+version: '2.0'
+title: 'Микола Погрібний: Українська редакторська школа'
+content_outline:
+- section: Вступ — Голос української вимови
+  points:
+  - Микола Погрібний — легендарний диктор і редактор
+  - Еталон української літературної вимови
+  - Вплив на формування мовних стандартів
+- section: Ранні роки та освіта (1931-1955)
+  points:
+  - Народження на Полтавщині
+  - Навчання та формування як мовця
+  - Перші кроки в журналістиці
+  - Прихід на Українське радіо
+- section: Кар'єра на радіо (1955-1990)
+  points:
+  - Робота диктором Українського радіо
+  - Формування еталону радіомовлення
+  - Ведення культурних та новинних програм
+  - Визнання як голосу епохи
+- section: Редакторська діяльність
+  points:
+  - Робота редактором мовного відділу
+  - Боротьба за чистоту української мови
+  - Виправлення русизмів та суржику
+  - Навчання молодих дикторів
+- section: Орфоепічна школа
+  points:
+  - Принципи правильної вимови
+  - Робота над наголосом та інтонацією
+  - Зв'язок з мовознавцями та консультації
+  - Практичні посібники для дикторів
+- section: Останні роки та спадщина (1990-2003)
+  points:
+  - Продовження діяльності в незалежній Україні
+  - Передача досвіду новому поколінню
+  - Смерть у 2003 році
+  - Погрібний як символ мовної культури
+vocabulary_hints:
+  required:
+  - диктор (announcer/broadcaster)
+  - орфоепія (orthoepy/pronunciation)
+  - редактор (editor)
+  - вимова (pronunciation)
+  - наголос (stress/accent)
+  - літературна мова (literary language)
+  - норма (norm/standard)
+  - інтонація (intonation)
+  - дикція (diction)
+  - еталон (standard/model)
+  recommended:
+  - суржик (surzhyk)
+  - русизм (Russianism)
+  - мовлення (speech)
+  - артикуляція (articulation)
+  - фонетика (phonetics)
+activity_hints:
+- type: reading
+  focus: Статті про культуру мови та спогади колег
+  source: Публіцистика та мемуари
+  items: 3 passages
+- type: essay-response
+  focus: Яка роль радіо у збереженні мови?
+  output: Media analysis
+focus: biography
+prerequisites:
+- bio-97-panteleimon-kulish
+connects_to:
+- bio-98-ivan-ohienko
+- bio-30-borys-hrinchenko
+module_type: biography
+sources:
+- name: Микола Погрібний (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Погрібний_Микола_Іванович
+  type: primary
+  notes: Біографія, професійна діяльність, внесок у мовну культуру
+- name: Українське радіомовлення
+  url: https://uk.wikipedia.org/wiki/Українське_радіо
+  type: reference
+  notes: Контекст роботи на радіо
+- name: Культура української мови
+  url: https://uk.wikipedia.org/wiki/Культура_мови
+  type: reference
+  notes: Норми літературної мови та орфоепія
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of микола погрібний: українська редакторська школа'
+- Evaluate the contributions of голос української вимови
+- Trace the career and influence of останні роки та спадщина (1990-2003)
+persona:
+  voice: Senior Biographer
+  role: Textbook Editor

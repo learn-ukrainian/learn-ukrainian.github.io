@@ -8,7 +8,7 @@ checks that audit/core.py now enforces, then reports a summary.
 Usage:
     .venv/bin/python scripts/scan_activity_errors.py
     .venv/bin/python scripts/scan_activity_errors.py --track b2
-    .venv/bin/python scripts/scan_activity_errors.py --track b2 hist c1-bio
+    .venv/bin/python scripts/scan_activity_errors.py --track b2 hist bio
     .venv/bin/python scripts/scan_activity_errors.py --fix-report   # output fixable errors only
 """
 
@@ -32,7 +32,7 @@ from audit.checks.activity_validation import (
 # All known tracks (directories under curriculum/l2-uk-en/)
 ALL_TRACKS = [
     'a1', 'a2', 'b1', 'b2', 'c1', 'c2',
-    'hist', 'b2-pro', 'c1-bio', 'istoriohrafiia', 'c1-pro',
+    'hist', 'b2-pro', 'bio', 'istoriohrafiia', 'c1-pro',
     'lit', 'oes', 'ruth',
 ]
 

@@ -387,7 +387,7 @@ npm run status:b1
 |-----|---------|
 | **CORE-A-WORKFLOW.md** | Mixed-language rebuild workflow (A1/A2/B1.0 — 119 modules) |
 | **CORE-B-WORKFLOW.md** | Full-immersion rebuild workflow (B1.1+/B2/C1/C2/PRO — 477 modules) |
-| **RESEARCH-FIRST-WORKFLOW.md** | Deep research workflow (seminar tracks — HIST, C1-BIO, LIT) |
+| **RESEARCH-FIRST-WORKFLOW.md** | Deep research workflow (seminar tracks — HIST, BIO, LIT) |
 | **MODULE-RICHNESS-GUIDELINES-v2.md** | Activity counts, complexity requirements |
 | **PLANNING-GUIDE.md** | How to create module plans |
 | **STATUS-SYSTEM.md** | Status caching system |

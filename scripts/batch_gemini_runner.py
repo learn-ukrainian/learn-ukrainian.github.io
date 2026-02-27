@@ -630,7 +630,7 @@ class BatchRunner:
         # Resolve allowed/forbidden activity types from audit config
         from audit.config import LEVEL_CONFIG
         _TRACK_TO_CONFIG = {
-            "c1-bio": "C1-biography",
+            "bio": "biography",
             "istoriohrafiia": "istoriohrafiia",
             "hist": "history",
             "lit": "LIT",
@@ -1822,7 +1822,7 @@ def show_failures(track):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Gemini Batch Runner")
-    parser.add_argument("track", help="Track to process (e.g., c1-bio, all)")
+    parser.add_argument("track", help="Track to process (e.g., bio, all)")
     parser.add_argument("--range", help="Range of modules (e.g., 1-10 or 5)")
     parser.add_argument(
         "--resume", action="store_true", help="Resume from last checkpoint"

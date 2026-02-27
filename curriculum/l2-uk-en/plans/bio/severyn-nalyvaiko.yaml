@@ -1,0 +1,67 @@
+module: bio-18
+level: BIO
+sequence: 18
+slug: severyn-nalyvaiko
+version: '2.0'
+title: 'Северин Наливайко: Лідер козацького повстання'
+subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
+content_outline:
+- section: Вступ — Перший бунтар
+  points:
+  - Лідер першого масштабного козацького повстання (1594-1596)
+  - Перехід від найманства до соціальної боротьби
+  - Трагічна смерть у Варшаві
+- section: Життєпис
+  points:
+  - Походження з роду Наливайків
+  - Служба у князя Острозького
+  - Походи на Молдову
+  - Повстання та Солоницька трагедія
+- section: Історичний контекст
+  points:
+  - Криза Речі Посполитої
+  - Релігійний фактор (Берестейська унія)
+- section: Внесок та Спадщина
+  points:
+  - Ідея Козацької держави
+  - Військове мистецтво
+  - Образ у літературі
+- section: Порівняльний аналіз
+  points:
+  - Наливайко vs. Хмельницький
+vocabulary_hints:
+  required:
+  - повстання (uprising)
+  - бунт (rebellion)
+  - ватажок (leader)
+  - табір (camp)
+  - облога (siege)
+  - страта (execution)
+  - зрада (betrayal)
+  - найманець (mercenary)
+  - поразка (defeat)
+activity_hints:
+- type: reading
+  focus: Chronicle description of Solonytsia
+- type: essay-response
+  focus: Hero or Bandit? Perspectives on Nalyvaiko
+focus: biography
+pedagogy: CBI
+objectives:
+- Understand the causes of the first Cossack rebellions
+- Analyze Nalyvaiko's tactics and goals
+grammar:
+- Military terminology
+- Action narrative
+sources:
+- name: Северин Наливайко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Северин_Наливайко
+  type: primary
+- name: Повстання Наливайка
+  url: https://uk.wikipedia.org/wiki/Повстання_Наливайка
+  type: primary
+immersion: 100% Ukrainian
+phase: BIO
+persona:
+  voice: Senior Biographer
+  role: Insurgent Captain

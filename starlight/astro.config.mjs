@@ -86,7 +86,7 @@ export default defineConfig({
         { label: 'LIT - Literature', autogenerate: { directory: 'lit' }, collapsed: true },
         { label: 'HIST - Історія України', autogenerate: { directory: 'hist' }, collapsed: true },
         { label: 'ISTORIOHRAFIIA - Історіографія', autogenerate: { directory: 'istoriohrafiia' }, collapsed: true },
-        { label: 'C1-BIO - Біографії українців', autogenerate: { directory: 'c1-bio' }, collapsed: true },
+        { label: 'BIO - Біографії українців', autogenerate: { directory: 'bio' }, collapsed: true },
         { label: 'B2-PRO - Професійна українська', autogenerate: { directory: 'b2-pro' }, collapsed: true },
         { label: 'C1-PRO - Фахова українська', autogenerate: { directory: 'c1-pro' }, collapsed: true },
         { label: 'OES - Old East Slavic', autogenerate: { directory: 'oes' }, collapsed: true },

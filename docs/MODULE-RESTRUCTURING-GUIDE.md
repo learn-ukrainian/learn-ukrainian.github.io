@@ -131,7 +131,7 @@ Example:
 
 ❌ **Don't add template sections alongside plan sections** - This creates duplicate coverage
 
-❌ **Don't mix English and Ukrainian** - C1-BIO is 100% Ukrainian content
+❌ **Don't mix English and Ukrainian** - BIO is 100% Ukrainian content
 
 ❌ **Don't invent new vocabulary** - Use only what's in the plan
 

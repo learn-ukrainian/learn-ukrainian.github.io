@@ -4,7 +4,7 @@ Check for valid content review files across all tiers.
 Four review tiers with different standards:
   Tier 1 (Beginner): A1, A2 — /review-content-core-a + tier-1-beginner
   Tier 2 (Core):     B1, B2, B2-PRO — /review-content-v4 + tier-2-core
-  Tier 3 (Seminar):  HIST, ISTORIOHRAFIIA, C1-BIO, LIT, OES, RUTH — /review-content-v4 + tier-3-seminar
+  Tier 3 (Seminar):  HIST, ISTORIOHRAFIIA, BIO, LIT, OES, RUTH — /review-content-v4 + tier-3-seminar
   Tier 4 (Advanced): C1, C1-PRO, C2 — /review-content-v4 + tier-4-advanced
 
 Detection heuristics:
@@ -29,7 +29,7 @@ from slug_utils import to_bare_slug, review_path as _review_path
 
 # --- Tier Configuration ---
 
-TIER_3_TRACKS = {'c1-bio', 'hist', 'istoriohrafiia', 'lit', 'oes', 'ruth'}
+TIER_3_TRACKS = {'bio', 'hist', 'istoriohrafiia', 'lit', 'oes', 'ruth'}
 
 # Regex patterns for required review sections.
 # Accept natural variations: numbered prefixes (## 1. ...), synonyms, modifiers.
@@ -138,7 +138,7 @@ def _detect_tier(file_path: str, level_code: str) -> int | None:
     for tier_num, cfg in TIER_CONFIG.items():
         if level_upper in cfg['levels']:
             # Exclude levels that are actually seminar tracks
-            # e.g., C1 level but c1-bio track → tier 3, not tier 4
+            # e.g., C1 level but bio track → tier 3, not tier 4
             if tier_num == 4 and any(t in path_lower for t in TIER_3_TRACKS):
                 continue
             return tier_num

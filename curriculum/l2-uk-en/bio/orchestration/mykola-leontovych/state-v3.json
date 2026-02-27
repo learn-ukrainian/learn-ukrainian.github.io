@@ -1,0 +1,13 @@
+{
+  "track": "bio",
+  "slug": "mykola-leontovych",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T00:03:56Z",
+      "task_id": "v3-mykola-leontovych-pA",
+      "mode": "full"
+    }
+  }
+}

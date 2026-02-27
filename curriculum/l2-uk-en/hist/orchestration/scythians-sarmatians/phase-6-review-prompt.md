@@ -37,9 +37,9 @@ Audit status:     FAIL (content gates)
 
 ## Tier-Specific Review Guidance
 
-# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, C1-BIO, LIT)
+# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, BIO, LIT)
 
-> **Target:** HIST (History), ISTORIOHRAFIIA (History), C1-BIO (Biography), LIT (Literature) tracks
+> **Target:** HIST (History), ISTORIOHRAFIIA (History), BIO (Biography), LIT (Literature) tracks
 > **Pedagogy:** CBI (Content-Based Instruction)
 > **Immersion:** 98-100% Ukrainian
 > **Experience Goal:** A+ seminar lecture — memorable, engaging, transformative
@@ -242,7 +242,7 @@ When Lecture Quality < 9, apply these fixes:
 |-------|--------------|-------|
 | HIST | 98-100% | Full historical immersion |
 | ISTORIOHRAFIIA | 98-100% | Full historical immersion (C1 complexity) |
-| C1-BIO | 98-100% | Full biographical immersion |
+| BIO | 98-100% | Full biographical immersion |
 | LIT | 100% | Pure Ukrainian (essays, not drills) |
 
 ### Language Quality (Seminar Level)
@@ -275,7 +275,7 @@ When Lecture Quality < 9, apply these fixes:
 **Richness score minimums:**
 - HIST: 95%
 - ISTORIOHRAFIIA: 95%
-- C1-BIO: 95%
+- BIO: 95%
 - LIT: 90%
 
 ### Humanity & Teacher Voice (Seminar)
@@ -321,7 +321,7 @@ When Lecture Quality < 9, apply these fixes:
 - Connection to broader European/world history
 - Higher linguistic sophistication (C1-level vocabulary)
 
-### C1-BIO (Biography)
+### BIO (Biography)
 
 **Required elements:**
 - Personal narrative arc (life story)

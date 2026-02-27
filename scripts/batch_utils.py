@@ -88,7 +88,7 @@ class BatchLock:
     """Context manager providing PID-based lock files for batch runs.
 
     Usage:
-        with BatchLock("c1-bio", lock_dir=Path("batch_state/locks")):
+        with BatchLock("bio", lock_dir=Path("batch_state/locks")):
             # ... run batch ...
 
     Raises LockConflictError if another live process holds the lock.

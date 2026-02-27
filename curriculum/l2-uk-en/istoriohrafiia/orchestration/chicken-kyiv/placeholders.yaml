@@ -20,10 +20,10 @@ PERSONA_ROLE: US-Soviet Relations Expert
 IMMERSION_RULE: Full Ukrainian immersion. No English except technical terminology.
   Sentences max 35 words.
 LEVEL_CONSTRAINTS: No grammar restrictions. Full literary Ukrainian.
-TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, C1-BIO, LIT)
+TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, BIO, LIT)
 
 
-  > **Target:** HIST (History), ISTORIOHRAFIIA (History), C1-BIO (Biography), LIT (Literature)
+  > **Target:** HIST (History), ISTORIOHRAFIIA (History), BIO (Biography), LIT (Literature)
   tracks
 
   > **Pedagogy:** CBI (Content-Based Instruction)
@@ -414,7 +414,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, C1-BIO, LIT)
 
   | ISTORIOHRAFIIA | 98-100% | Full historical immersion (C1 complexity) |
 
-  | C1-BIO | 98-100% | Full biographical immersion |
+  | BIO | 98-100% | Full biographical immersion |
 
   | LIT | 100% | Pure Ukrainian (essays, not drills) |
 
@@ -473,7 +473,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, C1-BIO, LIT)
 
   - ISTORIOHRAFIIA: 95%
 
-  - C1-BIO: 95%
+  - BIO: 95%
 
   - LIT: 90%
 
@@ -553,7 +553,7 @@ TIER_GUIDANCE: '# Tier 3: Seminar Modules (HIST, ISTORIOHRAFIIA, C1-BIO, LIT)
   - Higher linguistic sophistication (C1-level vocabulary)
 
 
-  ### C1-BIO (Biography)
+  ### BIO (Biography)
 
 
   **Required elements:**

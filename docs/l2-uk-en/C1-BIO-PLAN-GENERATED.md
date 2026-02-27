@@ -1,4 +1,4 @@
-# C1-BIO Curriculum Plan: Biography Track
+# BIO Curriculum Plan: Biography Track
 
 **Generated from YAML plans**
 **Modules:** 129 module meta files found

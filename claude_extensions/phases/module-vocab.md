@@ -292,7 +292,7 @@ Provide accurate, contextual translations:
 - Historical/cultural terms (епоха, культура)
 - Complex verbs with prefixes (перевершувати, спростовувати)
 
-### HIST / C1-BIO / ISTORIOHRAFIIA / LIT Tracks
+### HIST / BIO / ISTORIOHRAFIIA / LIT Tracks
 
 **Focus:**
 
@@ -397,7 +397,7 @@ Example:
   gender: m
 ```
 
-### Biography Modules (C1-BIO)
+### Biography Modules (BIO)
 
 **Focus:** Person's life, attributes, achievements, family members
 

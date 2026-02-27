@@ -24,7 +24,7 @@ Alignment: Модуль аналізує використання риторич
 3. **Stylistic**: Неправильна інтонація риторичних запитань при читанні вголос (читання як звичайного запитання, що вимагає відповіді).
 
 ## Cross-References
-- Builds on: B2 History modules (Context of late 19th century), C1-BIO (Biography if covered separately).
+- Builds on: B2 History modules (Context of late 19th century), BIO (Biography if covered separately).
 - Prepares for: C1 Literature (Drama/Lisova Pisnia), C2 Stylistics.
 
 ## Notes for Content Writing

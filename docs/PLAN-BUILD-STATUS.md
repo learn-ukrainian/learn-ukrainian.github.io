@@ -38,7 +38,7 @@ Plans are NOT created from thin air. They must be grounded in authoritative sour
 |-------|-----------------|--------|
 | **hist** (Cossack Era) | `docs/references/textbooks/`, Ukrainian Wikipedia, Claude corpus | 🟡 50% - modules in progress |
 | **istoriohrafiia** (Historiography) | Ukrainian university history programs (TBD), Ukrainian Wikipedia | ⚠️ Needs planning - specific sources to be identified |
-| **c1-bio** (Biographies) | Claude's training data + Ukrainian internet verification (each person researched individually) | ✅ Almost done |
+| **bio** (Biographies) | Claude's training data + Ukrainian internet verification (each person researched individually) | ✅ Almost done |
 | **lit** (Literature) | **ukrlib** (Ukrainian digital library) | ✅ Done |
 | **b2-pro** (Professional) | TBD - domain-specific Ukrainian resources | ⚠️ Needs planning - scope and sources to be defined |
 | **c1-pro** (Professional) | TBD - domain-specific Ukrainian resources | ⚠️ Needs planning - scope and sources to be defined |

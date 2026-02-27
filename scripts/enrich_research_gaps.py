@@ -47,10 +47,10 @@ MODULES = [
     ("istoriohrafiia", "radianska-propaganda",         ["sources", "chronology"]),
     ("istoriohrafiia", "syntez-pislya-2014",           ["chronology", "primary_quotes"]),
     ("istoriohrafiia", "kulturna-rezystentsiia",       ["sources", "primary_quotes"]),
-    ("c1-bio",  "ivan-vyhovskyi",               ["sources", "primary_quotes"]),
-    ("c1-bio",  "yulian-bachynskyi",            ["sources", "primary_quotes"]),
-    ("c1-bio",  "viacheslav-lypynskyi",         ["sources", "decolonization"]),
-    ("c1-bio",  "yuriy-kondratiuk",             ["sources", "primary_quotes"]),
+    ("bio",  "ivan-vyhovskyi",               ["sources", "primary_quotes"]),
+    ("bio",  "yulian-bachynskyi",            ["sources", "primary_quotes"]),
+    ("bio",  "viacheslav-lypynskyi",         ["sources", "decolonization"]),
+    ("bio",  "yuriy-kondratiuk",             ["sources", "primary_quotes"]),
 ]
 
 BASE = Path("curriculum/l2-uk-en")

@@ -151,7 +151,7 @@ key: "value: another_value"
 
 ### Missing Template Sections Pattern
 
-**Error:** Missing required sections per c1-biography-module-template
+**Error:** Missing required sections per biography-module-template
 **Count:** 23 modules (82% of failures)
 
 **Missing Sections:**
@@ -309,7 +309,7 @@ key: "value: another_value"
 # 4. Flag for manual content filling
 ```
 
-**Script:** Create `scripts/fix/fix_c1_biography_sections.py`
+**Script:** Create `scripts/fix/fix_biography_sections.py`
 
 #### 3. Remove Duplicate M04
 

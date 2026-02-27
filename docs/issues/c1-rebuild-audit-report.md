@@ -48,13 +48,13 @@ Pedagogy     ❌ 4 violations
 ❌ **109-lina-kostenko**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 4 violations (moderate)
 ```
 ✅ 11-summary-paraphrase
@@ -152,117 +152,117 @@ Pedagogy     ❌ 2 violations
 ❌ **36-knyahynia-olha**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 36-knyahynia-olha.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 36-knyahynia-olha.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 7 violations (significant)
 ```
 
 ❌ **37-kniaz-sviatoslav**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Спадщина' found: Спадщина та сучасне сприйняття, Спадщина
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 37-kniaz-sviatoslav.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 37-kniaz-sviatoslav.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
   🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Спадщина' found: Спадщина та сучасне сприйняття, Спадщина
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 7 violations (significant)
 ```
 
 ❌ **38-volodymyr-velykii**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 38-volodymyr-velykii.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 38-volodymyr-velykii.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 6 violations (moderate)
 ```
 
 ❌ **39-kniaz-yaroslav-mudryi**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 39-kniaz-yaroslav-mudryi.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 39-kniaz-yaroslav-mudryi.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 6 violations (moderate)
 ```
 
 ❌ **40-knyazhna-anna-yaroslavna**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 40-knyazhna-anna-yaroslavna.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 40-knyazhna-anna-yaroslavna.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 7 violations (significant)
 ```
 
 ❌ **41-mykhailo-chernihivskyi**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 41-mykhailo-chernihivskyi.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 41-mykhailo-chernihivskyi.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 7 violations (significant)
 ```
 
 ❌ **42-roksolana**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 42-roksolana.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 42-roksolana.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 7 violations (significant)
 ```
 ✅ 43-iov-boretskyi
@@ -270,17 +270,17 @@ Pedagogy     ❌ 3 violations
 ❌ **44-sylvestr-kosiv**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 44-sylvestr-kosiv.yaml: [c1-44-comp-1] comparative-study: 'items_to_compare.1' - {'«Петро Могила': 'Системна інституційна реформа, спроба легального діалогу з владою...»'} is not of type 'string'
 Pedagogy     ❌ 1 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 44-sylvestr-kosiv.yaml: [c1-44-comp-1] comparative-study: 'items_to_compare.1' - {'«Петро Могила': 'Системна інституційна реформа, спроба легального діалогу з владою...»'} is not of type 'string'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 5 violations (moderate)
 ```
 ✅ 45-bohdan-khmelnytskyy
@@ -288,17 +288,17 @@ Pedagogy     ❌ 1 violations
 ❌ **46-yuriy-nemyrych**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 46-yuriy-nemyrych.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 46-yuriy-nemyrych.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 7 violations (significant)
 ```
 ✅ 47-ivan-mazepa
@@ -341,103 +341,103 @@ Pedagogy     ❌ 3 violations
 ❌ **83-marko-kropyvnytskyi**
 ```
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 83-marko-kropyvnytskyi.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 83-marko-kropyvnytskyi.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 4 violations (moderate)
 ```
 
 ❌ **84-oleksandr-hrekiv**
 ```
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 84-oleksandr-hrekiv.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 84-oleksandr-hrekiv.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 4 violations (moderate)
 ```
 
 ❌ **85-oleksandr-bohomazov**
 ```
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 85-oleksandr-bohomazov.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 85-oleksandr-bohomazov.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 4 violations (moderate)
 ```
 
 ❌ **86-viacheslav-lypynskyi**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 86-viacheslav-lypynskyi.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 86-viacheslav-lypynskyi.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 6 violations (moderate)
 ```
 
 ❌ **87-dmytro-dontsov**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 87-dmytro-dontsov.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 87-dmytro-dontsov.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 7 violations (significant)
 ```
 
 ❌ **88-petro-bolbochan**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 88-petro-bolbochan.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 88-petro-bolbochan.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 7 violations (significant)
 ```
 
 ❌ **89-nataliia-polonska-vasylenko**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 89-nataliia-polonska-vasylenko.yaml: YAML parse error: mapping values are not allowed here
 Pedagogy     ❌ 3 violations
   [YAML_SCHEMA_VIOLATION] Schema error in 89-nataliia-polonska-vasylenko.yaml: YAML parse error: mapping values are not allowed here
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 7 violations (significant)
 ```
 
@@ -461,12 +461,12 @@ Pedagogy     ❌ 2 violations
 ❌ **96-olena-stepaniv**
 ```
   ⚠️  Template violations: 3 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 3 violations (minor)
 ```
 ✅ 97-vira-kholodna
@@ -474,13 +474,13 @@ Pedagogy     ❌ 2 violations
 ❌ **98-mykola-khvylovyi**
 ```
   ⚠️  Template violations: 4 critical, 0 warnings, 0 info
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'c1-biography-module-template'
-  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'c1-biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+     🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Життєпис' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Внесок' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Спадщина' per template 'biography-module-template'
+  🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Need More Practice?' per template 'biography-module-template'
    → 4 violations (moderate)
 ```
 ✅ 99-borys-liatoshynskyi

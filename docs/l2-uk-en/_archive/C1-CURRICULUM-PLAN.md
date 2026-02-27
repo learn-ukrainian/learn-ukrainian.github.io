@@ -7,9 +7,9 @@
 **Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
 > **RFC #409 Reorganization (January 2026):**
-> - Biography content (96 modules) relocated to **C1-BIO** optional track
+> - Biography content (96 modules) relocated to **BIO** optional track
 > - Core C1 now focuses on academic writing, stylistics, folk culture, and literature
-> - See `C1-BIO-CURRICULUM-PLAN.md` for biography track details
+> - See `BIO-CURRICULUM-PLAN.md` for biography track details
 
 ---
 
@@ -51,7 +51,7 @@ C1 — це рівень, де ви перестаєте «вивчати укр
 
 ### Додатковий трек
 
-- **C1-BIO:** 96 біографій видатних українців (окремий трек)
+- **BIO:** 96 біографій видатних українців (окремий трек)
 
 ---
 
@@ -1382,8 +1382,8 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 ## Phase C1.3: Advanced Stylistics & Rhetoric (Modules 36-55)
 
-> **Note:** Biographies (96 modules) relocated to **C1-BIO** specialized track per RFC #409.
-> See `C1-BIO-CURRICULUM-PLAN.md` for biography content.
+> **Note:** Biographies (96 modules) relocated to **BIO** specialized track per RFC #409.
+> See `BIO-CURRICULUM-PLAN.md` for biography content.
 
 ### Learning Goals
 
@@ -3039,12 +3039,12 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | --- | ------------------------------------------ | ---------- | ------------------------------ |
 | 176 | Історія української літератури             | Literature | Periods and movements          |
 | 177 | Котляревський: Енеїда                      | Literature | Burlesque, national revival    |
-| 178 | Шевченко: Щоденник та листи                | Literature | Personal prose (bio: C1-BIO M20)      |
+| 178 | Шевченко: Щоденник та листи                | Literature | Personal prose (bio: BIO M20)      |
 | 179 | Шевченко: Поезія                           | Literature | Major poems analysis           |
 | 180 | Шевченко: Спадщина                         | Literature | Legacy, influence              |
-| 181 | Франко: Громадянська та філософська лірика | Literature | Major poetic cycles (bio: C1-BIO M28) |
+| 181 | Франко: Громадянська та філософська лірика | Literature | Major poetic cycles (bio: BIO M28) |
 | 182 | Франко: Проза                              | Literature | Захар Беркут excerpts          |
-| 183 | Леся Українка: Лірична поезія              | Literature | Lyric poetry (bio: C1-BIO M40)        |
+| 183 | Леся Українка: Лірична поезія              | Literature | Lyric poetry (bio: BIO M40)        |
 | 184 | Леся Українка: Драма                       | Literature | Лісова пісня                   |
 | 185 | Вовчок та Мирний                           | Literature | Social realism                 |
 | 186 | Коцюбинський                               | Literature | Тіні забутих предків           |
@@ -3445,9 +3445,9 @@ Vocabulary will emerge naturally from thematic content and should meet:
 
 1. Literary History (M92) - Ukrainian literary periods and movements
 2. Early Classics (M93) - Kotlyarevsky, Eneida
-3. Shevchenko (M94-192) - diary/letters, poetry, legacy (bio: C1-BIO M20)
-4. Franko (M97-194) - major poetic cycles, prose (bio: C1-BIO M28)
-5. Lesia Ukrainka (M99-196) - lyric poetry, drama (bio: C1-BIO M40)
+3. Shevchenko (M94-192) - diary/letters, poetry, legacy (bio: BIO M20)
+4. Franko (M97-194) - major poetic cycles, prose (bio: BIO M28)
+5. Lesia Ukrainka (M99-196) - lyric poetry, drama (bio: BIO M40)
 6. Other Classics (M101-198) - Vovchok, Myrny, Kotsyubynsky
 7. Literary Terminology (M103) - literary analysis vocabulary
 8. Practice Integration (M104-201) - poetry analysis, review
@@ -3475,7 +3475,7 @@ Vocabulary will emerge naturally from thematic content and should meet:
 | C1.3      | 36-55      | 20      | Advanced Stylistics & Rhetoric                                      |
 | C1.4      | 56-91      | 36      | Folk Culture & Fine Arts                                            |
 | C1.5      | 92-106     | 15      | Literature                                                          |
-| **TOTAL** | **01-106** | **106** | *Biographies (96) relocated to C1-BIO track*                        |
+| **TOTAL** | **01-106** | **106** | *Biographies (96) relocated to BIO track*                        |
 
 ### Vocabulary Summary
 
@@ -3540,7 +3540,7 @@ graph TD
         M102 --> M106[M106 Checkpoint]
     end
 
-    %% Phase Connections (Biographies relocated to C1-BIO track)
+    %% Phase Connections (Biographies relocated to BIO track)
     C1_1 --> C1_2
     C1_2 --> C1_3
     C1_3 --> C1_4
@@ -3625,13 +3625,13 @@ Before generating any C1 module:
 | C1.3      | 36-55      | ✅ Advanced Stylistics & Rhetoric                                    |
 | C1.4      | 56-91      | ✅ Folk Culture & Fine Arts (36 modules)                             |
 | C1.5      | 92-106     | ✅ Literature (incl. capstone)                                       |
-| **TOTAL** | **01-106** | **106** *(+96 biographies in C1-BIO track)*                          |
+| **TOTAL** | **01-106** | **106** *(+96 biographies in BIO track)*                          |
 
 ---
 
 ## Notes
 
-1. **106 modules** (core) + 96 biographies (C1-BIO track) provides comprehensive C1 coverage aligned with CEFR and Ukrainian State Standard 2024.
+1. **106 modules** (core) + 96 biographies (BIO track) provides comprehensive C1 coverage aligned with CEFR and Ukrainian State Standard 2024.
 
 2. **Level-relative numbering** (01-106) for core curriculum.
 
@@ -3645,7 +3645,7 @@ Before generating any C1 module:
 
 7. **Final Assessment** (Module 106) serves as the comprehensive C1 checkpoint.
 
-> **Note:** Biographies (96 modules) relocated to **C1-BIO** specialized track per RFC #409.
+> **Note:** Biographies (96 modules) relocated to **BIO** specialized track per RFC #409.
 
 ---
 
@@ -3661,7 +3661,7 @@ Before generating any C1 module:
 
 ## Changelog
 
-- **2026-01-15:** RFC #409 Reorganization: Relocated 96 biographies to C1-BIO specialized track. C1 core now 106 modules: C1.1 Academic (M01-20), C1.2 Professional (M21-35), C1.3 Stylistics (M36-55), C1.4 Culture & Arts (M56-91), C1.5 Literature (M92-106).
+- **2026-01-15:** RFC #409 Reorganization: Relocated 96 biographies to BIO specialized track. C1 core now 106 modules: C1.1 Academic (M01-20), C1.2 Professional (M21-35), C1.3 Stylistics (M36-55), C1.4 Culture & Arts (M56-91), C1.5 Literature (M92-106).
 - **2026-01-11:** Fixed module numbering inconsistencies.
 - **2026-01-08:** Expanded biographies: +6 ULP S6 (Котляревський, Вовчок, Кропивницький, Павличко, Симоненко, Івасюк).
 - **2026-01-02:** Refined Biography section with high-impact moral and civic leaders.

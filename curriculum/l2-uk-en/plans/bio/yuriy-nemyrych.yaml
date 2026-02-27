@@ -1,0 +1,79 @@
+module: bio-26
+level: BIO
+sequence: 26
+slug: yuriy-nemyrych
+version: '2.0'
+title: 'Юрій Немирич: Дипломат і мислитель'
+content_outline:
+- section: Вступ — Архітектор нездійсненної держави
+  points:
+  - Немирич як європейський інтелектуал у козацькому середовищі
+  - Візія Великого Князівства Руського
+  - Роль у Гадяцькій унії
+- section: Життєпис
+  points:
+  - Походження та європейська освіта (Лейден, Оксфорд)
+  - Релігійний пошук (аріанство, православ'я)
+  - Перехід на бік козаків 1655 р.
+  - Канцлер при Івані Виговському
+- section: Історичний контекст
+  points:
+  - Шляхетська республіка vs Козацька вольниця
+  - Протестантизм в Україні XVII ст.
+- section: Внесок
+  points:
+  - Дипломатична місія до Швеції
+  - Співавторство Гадяцького договору 1658 р.
+- section: Останні роки
+  points:
+  - Конотопська битва та участь Немирича
+  - Загибель у Свидовці 1659 р.
+  - Трагедія нерозуміння сучасниками
+- section: Спадщина
+  points:
+  - Ідеї федералізму та толерантності
+  - Образ у сучасній історіографії
+- section: Підсумок
+  points:
+  - Немирич як пророк європейського шляху України
+focus: biography
+pedagogy: seminar
+prerequisites:
+- bio-24 (Іван Виговський)
+- Знання про Хотинську війну та Гадяч
+connects_to:
+- bio-28 (Пилип Орлик)
+- hist ruina-i module
+objectives:
+- Оцінити інтелектуальний внесок Юрія Немирича в українську дипломатію
+- Проаналізувати проект Великого Князівства Руського
+- Дослідити вплив європейської політичної думки на Немирича
+grammar:
+- Науково-публіцистичний стиль
+- Латинізми в українському політичному контексті
+module_type: biography
+sources:
+- name: Юрій Немирич (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Юрій_Немирич
+  type: primary
+  notes: Повна біографія
+- name: Гадяцький договір 1658
+  url: http://izbornyk.org.ua/
+  type: reference
+  notes: Аналіз документа
+immersion: 100% Ukrainian
+phase: BIO
+vocabulary_hints:
+  required:
+  - Велике Князівство Руське (Grand Duchy of Ruthenia)
+  - аріанство (Arianism)
+  - канцлер (chancellor)
+activity_hints:
+- type: reading
+  focus: Аналіз промови Немирича на сеймі
+  source: Primary sources (adapted)
+- type: critical-analysis
+  focus: 'Конфлікт ідентичностей: шляхтич vs козак'
+persona:
+  voice: Senior Biographer
+  role: Treaty Negotiator

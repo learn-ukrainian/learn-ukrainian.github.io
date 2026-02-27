@@ -43,7 +43,7 @@ def get_config_target(level: str, sequence: int = 1, focus: str = None) -> int:
         'a1': 'A1', 'a2': 'A2', 'b1': 'B1', 'b2': 'B2',
         'c1': 'C1', 'c2': 'C2',
         'hist': 'history', 'istoriohrafiia': 'istoriohrafiia',
-        'c1-bio': 'C1-biography', 'lit': 'LIT',
+        'bio': 'biography', 'lit': 'LIT',
     }
     level_code = level_map.get(level.lower(), level.upper())
 

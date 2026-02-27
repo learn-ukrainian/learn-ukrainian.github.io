@@ -243,28 +243,28 @@ Overlaps with YAML errors (concentrated in M36-M99):
 1. **Automated:** Add empty sections with TODO markers
 2. **Manual:** Content authors fill in TODO sections (defer)
 
-### Script: `scripts/fix/fix_c1_biography_sections.py`
+### Script: `scripts/fix/fix_biography_sections.py`
 
 ```python
 #!/usr/bin/env python3
 """
 Add missing template sections to C1 biography modules.
 
-Adds required sections per c1-biography-module-template:
+Adds required sections per biography-module-template:
 - Життєпис (Biography)
 - Внесок (Contribution)
 - Спадщина (Legacy)
 - Need More Practice?
 
 Usage:
-    .venv/bin/python scripts/fix/fix_c1_biography_sections.py
+    .venv/bin/python scripts/fix/fix_biography_sections.py
 """
 
 import re
 from pathlib import Path
 from typing import List, Set, Tuple
 
-# Required sections per c1-biography-module-template
+# Required sections per biography-module-template
 REQUIRED_SECTIONS = {
     "Життєпис": "Biography",
     "Внесок": "Contribution",
@@ -429,10 +429,10 @@ if __name__ == "__main__":
 
 ```bash
 # Dry run on one module first
-.venv/bin/python scripts/fix/fix_c1_biography_sections.py --module 36 --dry-run
+.venv/bin/python scripts/fix/fix_biography_sections.py --module 36 --dry-run
 
 # Apply to all
-.venv/bin/python scripts/fix/fix_c1_biography_sections.py
+.venv/bin/python scripts/fix/fix_biography_sections.py
 
 # Verify
 .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/c1/36-*.md
@@ -647,7 +647,7 @@ grep "✅" docs/issues/c1-rebuild-audit-report.md | head -20
 - [ ] Verify YAML parsing works
 
 **Afternoon (2h):**
-- [ ] Create `scripts/fix/fix_c1_biography_sections.py`
+- [ ] Create `scripts/fix/fix_biography_sections.py`
 - [ ] Test on 3 modules
 - [ ] Run on all 23 affected modules
 - [ ] Verify sections present (TODOs acceptable)

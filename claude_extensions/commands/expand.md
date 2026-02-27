@@ -3,7 +3,7 @@
 <skill>
 name: expand
 description: Expand module content to meet word count target. Use when audit shows word count shortfall.
-arguments: module_path - Path to the module file (e.g., curriculum/l2-uk-en/c1-bio/danylo-apostol.md)
+arguments: module_path - Path to the module file (e.g., curriculum/l2-uk-en/bio/danylo-apostol.md)
 </skill>
 
 ## Purpose
@@ -112,14 +112,14 @@ Continue expanding until word target is met (or exceeded - that's fine!).
 ## Example Usage
 
 ```
-User: /expand curriculum/l2-uk-en/c1-bio/danylo-apostol.md
+User: /expand curriculum/l2-uk-en/bio/danylo-apostol.md
 
 Claude:
 1. Reading audit log...
    Current: 1465 words, Target: 4300 words, Gap: 2835 words
 
 2. Checking research notes...
-   Found: curriculum/l2-uk-en/c1-bio/audit/danylo-apostol-research.md
+   Found: curriculum/l2-uk-en/bio/audit/danylo-apostol-research.md
 
 3. Section analysis:
    - Вступ: 150/600 words (-450)

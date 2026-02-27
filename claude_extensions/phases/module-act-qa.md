@@ -137,7 +137,7 @@ From MODULE-RICHNESS-GUIDELINES-v2.md:
 - Count fill-in items (sum of all items[] in fill-in activities)
 - Verify counts meet minimums for level
 
-**Note for tracks (HIST, C1-BIO, LIT):** May have fewer gamified drills if balanced with reading/essay activities.
+**Note for tracks (HIST, BIO, LIT):** May have fewer gamified drills if balanced with reading/essay activities.
 
 ### 4. Schema Compliance
 

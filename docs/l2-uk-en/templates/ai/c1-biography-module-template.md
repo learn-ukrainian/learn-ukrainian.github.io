@@ -1,7 +1,7 @@
-# C1-BIO Module Template (AI-Optimized)
+# BIO Module Template (AI-Optimized)
 
-> **Full documentation:** `docs/l2-uk-en/templates/c1-biography-module-template.md`
-> **Config source of truth:** `scripts/audit/config.py` → `C1-biography`
+> **Full documentation:** `docs/l2-uk-en/templates/biography-module-template.md`
+> **Config source of truth:** `scripts/audit/config.py` → `biography`
 
 ---
 
@@ -55,9 +55,9 @@ REQUIRED: At least 2 primary source quotes verified
 
 ```
 CREATE 3 files:
-1. curriculum/l2-uk-en/c1-bio/{slug}.md        # Prose content
-2. curriculum/l2-uk-en/c1-bio/vocabulary/{slug}.yaml  # Vocabulary
-3. curriculum/l2-uk-en/c1-bio/activities/{slug}.yaml  # Activities
+1. curriculum/l2-uk-en/bio/{slug}.md        # Prose content
+2. curriculum/l2-uk-en/bio/vocabulary/{slug}.yaml  # Vocabulary
+3. curriculum/l2-uk-en/bio/activities/{slug}.yaml  # Activities
 ```
 
 ### Step 2.2: Write Markdown Content
@@ -128,7 +128,7 @@ DO NOT include:
 ```yaml
 # activities/{slug}.yaml
 
-# REQUIRED (per config.py C1-biography):
+# REQUIRED (per config.py biography):
 min_activities: 4
 max_activities: 9
 required_types:
@@ -141,7 +141,7 @@ required_types:
 
 ```yaml
 - type: reading
-  id: c1-bio-XX-reading-01
+  id: bio-XX-reading-01
   title: "Первинні джерела: Листи/Промови"
   resource:
     type: primary_source
@@ -164,7 +164,7 @@ required_types:
 
 ```yaml
 - type: essay-response
-  id: c1-bio-XX-essay-01
+  id: bio-XX-essay-01
   title: "Есе: Порівняльний аналіз"
   prompt: |
     Напишіть порівняльне есе (250-400 слів):
@@ -189,7 +189,7 @@ required_types:
 
 ```yaml
 - type: critical-analysis
-  id: c1-bio-XX-analysis-01
+  id: bio-XX-analysis-01
   title: "Критичний аналіз спадщини"
   questions:
     - "Як сучасна українська культура оцінює внесок цієї постаті?"
@@ -206,7 +206,7 @@ required_types:
 ```yaml
 # vocabulary/{slug}.yaml
 
-# Per config.py C1-biography:
+# Per config.py biography:
 min_items: 30
 format: 3-column (lemma, translation, note)
 ```
@@ -265,7 +265,7 @@ SOURCES:
 ### Step 5.2: Run Audit
 
 ```bash
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/c1-bio/{slug}.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/bio/{slug}.md
 ```
 
 ---

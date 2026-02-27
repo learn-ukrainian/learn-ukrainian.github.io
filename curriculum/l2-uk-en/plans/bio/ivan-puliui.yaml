@@ -1,0 +1,79 @@
+module: bio-48
+level: BIO
+sequence: 48
+slug: ivan-puliui
+version: '2.0'
+title: 'Іван Пулюй: Першовідкривач X-променів'
+content_outline:
+- section: Вступ — Світовий геній української науки
+  points:
+  - Пулюй як піонер сучасної фізики
+  - Відкриття X-променів (раніше Рентгена)
+  - Поєднання науки та національної справи
+- section: Життєпис
+  points:
+  - Походження та духовна освіта (Тернопільщина)
+  - Навчання у Віденському університеті
+  - Співпраця з провідними вченими Європи
+  - Академічна кар'єра у Празі
+- section: Історичний контекст
+  points:
+  - Золота доба європейської фізики
+  - Стан української еміграції в Австро-Угорщині
+- section: Внесок
+  points:
+  - '"Лампа Пулюя" та її значення'
+  - Наукові праці з електротехніки та фізики
+- section: Останні роки
+  points:
+  - Громадська діяльність (захист української мови)
+  - Переклад Біблії українською мовою
+  - Смерть та поховання у Празі
+- section: Спадщина
+  points:
+  - Питання пріоритету у відкритті променів
+  - Вшанування в Україні та світі
+- section: Підсумок
+  points:
+  - Пулюй як символ інтелектуальної потуги нації
+focus: biography
+pedagogy: seminar
+prerequisites:
+- bio-50 (Юрій Кондратюк)
+- Розуміння наукового контексту XIX ст.
+connects_to:
+- bio-55 (Володимир Вернадський)
+- hist ukrainians-world module
+objectives:
+- Оцінити науковий внесок Івана Пулюя
+- Проаналізувати його діяльність щодо популяризації української мови
+- Дослідити історію відкриття X-променів
+grammar:
+- Науковий стиль мовлення
+- Обговорення пріоритету та етики в науці
+module_type: biography
+sources:
+- name: Іван Пулюй (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович
+  type: primary
+  notes: Життя та відкриття
+- name: Пулюй та Рентген
+  url: https://puliui.org.ua/
+  type: reference
+  notes: Музей та архіви
+immersion: 100% Ukrainian
+phase: BIO
+vocabulary_hints:
+  required:
+  - X-промені (X-rays)
+  - електротехніка (electrical engineering)
+  - переклад (translation)
+activity_hints:
+- type: reading
+  focus: Порівняння робіт Пулюя та Рентгена
+  source: Scientific articles (adapted)
+- type: critical-analysis
+  focus: Чому Нобелівську премію отримав не Пулюй?
+persona:
+  voice: Senior Biographer
+  role: X-Ray Pioneer

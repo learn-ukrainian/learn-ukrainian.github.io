@@ -21,7 +21,7 @@ TRACKS = [
     (4,  "b2",             94,  "core",    [("b1", 0.80)]),
     (5,  "c1",            106,  "core",    [("b2", 0.80)]),
     (6,  "hist",       140,  "seminar", [("b1", 0.80)]),
-    (7,  "c1-bio",        128,  "seminar", [("b2", 0.80)]),
+    (7,  "bio",        128,  "seminar", [("b2", 0.80)]),
     (8,  "istoriohrafiia",        98,  "seminar", [("hist", 0.80), ("c1", 0.30)]),
     (9,  "lit",            30,  "seminar", [("b2", 0.80)]),
     (10, "lit-essay",      58,  "seminar", [("lit", 0.80)]),

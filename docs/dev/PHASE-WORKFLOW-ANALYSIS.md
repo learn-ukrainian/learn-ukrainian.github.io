@@ -190,7 +190,7 @@ No phase modifies outputs of previous phases.
 
 ### Recommendation
 
-**DO IT** for content-heavy modules (HIST, C1-BIO, LIT).
+**DO IT** for content-heavy modules (HIST, BIO, LIT).
 
 For simple A1-A2 modules, current workflow may be fine since those are mostly done.
 

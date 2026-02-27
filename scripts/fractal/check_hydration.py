@@ -27,7 +27,7 @@ def find_template(focus, level):
     # This logic mirrors the project conventions
     template_dir = Path("docs/l2-uk-en/templates")
     
-    # Priority 1: Specific Focus + Level (e.g., c1-biography)
+    # Priority 1: Specific Focus + Level (e.g., biography)
     candidates = [
         f"{level}-{focus}-module-template.md",
         f"{focus}-module-template.md",

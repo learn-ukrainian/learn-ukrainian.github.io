@@ -15,7 +15,7 @@ While the Blue Team (Claude) serves as the architectural visionary, orchestrator
 2. **The Volume of Rigor**: Expanding a seminar module to 5,000 words without padding requires monumental academic effort. We must weave in debates, sociolinguistic nuances, and cultural layers that go far beyond standard language app content.
 3. **Strict Automated Gates**: The YAML schemas, word count minimums, and regex validations are uncompromising. A single missing `id` or an incorrect item count triggers a hard failure. 
 4. **Linguistic Purity**: Guarding against "Surzhyk" or subtle imperial framing requires constant vigilance. It is a continuous battle against deeply ingrained language models that often lean toward Russian-influenced phrasing or hagiographic descriptions of historical figures. We maintain a 100% zero-tolerance policy against Russian Cyrillic characters.
-5. **Context Collapse**: Managing the deep historical context required for Seminar Tracks (HIST, C1-BIO, LIT) in large batches can lead to context exhaustion, necessitating strict batch limits (1-2 modules).
+5. **Context Collapse**: Managing the deep historical context required for Seminar Tracks (HIST, BIO, LIT) in large batches can lead to context exhaustion, necessitating strict batch limits (1-2 modules).
 
 ## Improving Blue-Yellow Cooperation
 To successfully execute this monumental V2.0 rebuild, both teams must refine their collaboration:

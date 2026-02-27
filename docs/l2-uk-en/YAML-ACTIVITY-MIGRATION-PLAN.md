@@ -1529,7 +1529,7 @@ docs/l2-uk-en/templates/
 ├── b2-checkpoint-module-template.md
 ├── b2-integration-module-template.md
 ├── c1-literature-module-template.md
-├── c1-biography-module-template.md
+├── biography-module-template.md
 ├── c1-folk-culture-module-template.md
 ├── c1-academic-module-template.md
 ├── c1-sociolinguistics-module-template.md

@@ -41,7 +41,7 @@ CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS   # Phase F, all tracks
 
 # Seminar tracks get research (phase 0) + review (phase 5)
 SEMINAR_TRACKS = {
-    "c1-bio", "hist", "istoriohrafiia", "lit", "oes", "ruth",
+    "bio", "hist", "istoriohrafiia", "lit", "oes", "ruth",
     "lit-essay", "lit-hist-fic", "lit-fantastika", "lit-war", "lit-humor", "lit-youth",
 }
 
@@ -52,7 +52,7 @@ PRO_TRACKS = {"b2-pro", "c1-pro"}
 # Track definitions
 TRACK_CONFIGS = {
     # --- Seminar tracks (Pro Model MANDATORY) ---
-    "c1-bio": {
+    "bio": {
         "type": "seminar",
         "model": PRO_MODEL,
         "phases": [0, 2, 3, 5],
@@ -65,7 +65,7 @@ TRACK_CONFIGS = {
             "fix-content": PHASES_DIR / "phase-fix-content.md",
             "fix-activities": PHASES_DIR / "phase-fix-activities.md",
         },
-        "quick_ref": QUICK_REF_DIR / "C1-BIO.md",
+        "quick_ref": QUICK_REF_DIR / "BIO.md",
         "validation_phases": [2, 3],
     },
     "hist": {

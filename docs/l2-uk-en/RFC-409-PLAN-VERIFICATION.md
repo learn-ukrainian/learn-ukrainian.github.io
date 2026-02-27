@@ -21,7 +21,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 | **A2** | A2-CURRICULUM-PLAN.md | M59-70 (12 practical) | ✅ Complete | Phase A2.7 fully specified |
 | **B1** | B1-CURRICULUM-PLAN.md | M92-99 (8 skills) | ✅ Complete | Phase B1.9 fully specified |
 | **B2** | B2-CURRICULUM-PLAN.md | M85-94 (10 professional) | ✅ Complete | Phase B2.4 fully specified |
-| **C1** | C1-CURRICULUM-PLAN.md | 106 modules (core) | ⚠️ Needs Update | Still shows 202; biographies in C1-BIO |
+| **C1** | C1-CURRICULUM-PLAN.md | 106 modules (core) | ⚠️ Needs Update | Still shows 202; biographies in BIO |
 | **C2** | C2-CURRICULUM-PLAN.md | 100 modules | ✅ Complete | No changes needed |
 
 ### Specialized Tracks
@@ -29,7 +29,7 @@ All curriculum plans have been reviewed for completeness against RFC #409 Curric
 | Track | Plan File | Modules | Status | Notes |
 |-------|-----------|---------|--------|-------|
 | **HIST** | HIST-CURRICULUM-PLAN.md | 61 | ✅ Complete | All 61 meta files exist |
-| **C1-BIO** | C1-BIO-CURRICULUM-PLAN.md | 96 | ✅ Complete | All 96 meta files exist |
+| **BIO** | BIO-CURRICULUM-PLAN.md | 96 | ✅ Complete | All 96 meta files exist |
 | **B2-PRO** | B2-PRO-CURRICULUM-PLAN.md | 40 | ✅ Complete | All 40 modules specified |
 | **C1-PRO** | C1-PRO-CURRICULUM-PLAN.md | 50 | ✅ Complete | All 50 modules specified |
 | **LIT** | LIT-CURRICULUM-PLAN.md | 30 | ✅ Complete | 14 written, 16 planned |
@@ -160,11 +160,11 @@ All curriculum plans reference and align with:
 
 ### C1 Curriculum Plan Update Needed
 
-**Issue:** C1-CURRICULUM-PLAN.md still shows 202 modules and includes biographies (M36-131) that have been relocated to C1-BIO track.
+**Issue:** C1-CURRICULUM-PLAN.md still shows 202 modules and includes biographies (M36-131) that have been relocated to BIO track.
 
 **Required Action:** Update C1-CURRICULUM-PLAN.md to reflect RFC #409 reorganization:
 - Change module count from 202 to 106
-- Remove Phase C1.3: Biographies (M36-131) - now in C1-BIO
+- Remove Phase C1.3: Biographies (M36-131) - now in BIO
 - Update Phase numbering:
   - C1.1: Academic Foundation (M01-20) - unchanged
   - C1.2: Professional & Social Context (M21-35) - unchanged
@@ -186,7 +186,7 @@ After RFC #409, all identified gaps have been addressed:
 | Communication skills | - | - | M92-99 | M85-94 | ✅ Filled |
 | Professional content | - | - | - | B2-PRO | ✅ New track |
 | History track | - | - | - | HIST | ✅ Relocated |
-| Biography track | - | - | - | C1-BIO | ✅ Relocated |
+| Biography track | - | - | - | BIO | ✅ Relocated |
 
 ---
 
@@ -201,7 +201,7 @@ After RFC #409, all identified gaps have been addressed:
 | **C1 Core** | 106 | 106 written |
 | **C2 Core** | 100 | 0 written |
 | **HIST** | 61 | 61 written |
-| **C1-BIO** | 96 | 96 written |
+| **BIO** | 96 | 96 written |
 | **B2-PRO** | 40 | 0 written |
 | **C1-PRO** | 50 | 0 written |
 | **LIT** | 30 | 14 written |

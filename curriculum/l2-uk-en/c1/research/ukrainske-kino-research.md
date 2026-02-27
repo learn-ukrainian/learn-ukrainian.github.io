@@ -27,7 +27,7 @@ Alignment: This module directly addresses the thematic requirement of discussing
 
 ## Cross-References
 - Builds on: **B2-Culture** (general arts vocabulary), **B2-History** (Soviet period context).
-- Prepares for: **C1-LIT** (literary analysis skills), **C1-BIO** (deeper dives into dissidents like Stus).
+- Prepares for: **C1-LIT** (literary analysis skills), **BIO** (deeper dives into dissidents like Stus).
 
 ## Notes for Content Writing
 - Focus on the visual language: use terms like *метафора*, *алегорія*, *символізм*.

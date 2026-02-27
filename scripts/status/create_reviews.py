@@ -12,7 +12,7 @@ reviews = {
     "petro-sahaidachny": "c6ba092b"
 }
 
-template = """# LLM Self-Validation Report: {slug} (C1-BIO)
+template = """# LLM Self-Validation Report: {slug} (BIO)
 
 **Content Hash:** {hash}
 
@@ -40,7 +40,7 @@ template = """# LLM Self-Validation Report: {slug} (C1-BIO)
 **Overall Status: PASS**
 """
 
-audit_dir = "curriculum/l2-uk-en/c1-bio/audit"
+audit_dir = "curriculum/l2-uk-en/bio/audit"
 os.makedirs(audit_dir, exist_ok=True)
 
 for slug, hash_val in reviews.items():

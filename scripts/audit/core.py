@@ -183,9 +183,9 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
 
     # Detect level and track from file path
     level_from_path = None
-    track_from_path = None  # Full track name for track-aware checks (e.g., C1-BIO)
+    track_from_path = None  # Full track name for track-aware checks (e.g., BIO)
     # Match a1, a2, b1, b2, c1, c2 (case insensitive)
-    # Also matches tracks like hist, c1-bio, lit, oes, ruth
+    # Also matches tracks like hist, bio, lit, oes, ruth
     path_match = re.search(r'/([abc][12])(-[a-z0-9]+)?/', file_path.lower())
     if path_match:
         base_level = path_match.group(1).upper()  # e.g., C1
@@ -238,7 +238,7 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
 
 def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "", file_path: str = "") -> str | None:
     """Detect module focus (grammar, vocab, checkpoint, skills, cultural, history, etc.)."""
-    # Detect track directories first (hist, c1-bio, istoriohrafiia, lit)
+    # Detect track directories first (hist, bio, istoriohrafiia, lit)
     # These override all other detection methods
     if file_path:
         track_match = re.search(r'/([abc][12])-([a-z]+)/', file_path.lower())
@@ -635,7 +635,7 @@ def load_yaml_plan(md_file_path: str) -> dict | None:
     # e.g. curriculum/l2-uk-en/b1/01.md -> level=b1
     try:
         level_part = md_path.parent.name # e.g. 'b1' or 'c1' or 'lit'
-        if level_part in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'c1-bio', 'istoriohrafiia']:
+        if level_part in ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit', 'hist', 'bio', 'istoriohrafiia']:
              level = level_part
         else:
              # Fallback: try to find level in path
@@ -726,7 +726,7 @@ def get_module_number_from_curriculum(file_path: str, level_code: str) -> int | 
             'C2': 'c2',
         }
 
-        # Check if file is in a track directory (hist, c1-bio, etc.)
+        # Check if file is in a track directory (hist, bio, etc.)
         track_match = re.search(r'/([abc][12]-[a-z]+)/', file_path)
         if track_match:
             level_key = track_match.group(1)  # e.g., 'hist'
@@ -828,11 +828,11 @@ def audit_module(file_path: str, skip_activities: bool = False,
     # Detect Metadata
     level_code, module_num, track_code = detect_level(file_path, frontmatter_str)
 
-    # Detect full track identifier for display (e.g., "C1-BIO" instead of "C1")
+    # Detect full track identifier for display (e.g., "BIO" instead of "C1")
     display_level = level_code
     track_match = re.search(r'/([abc][12]-[a-z]+)/', file_path.lower())
     if track_match:
-        display_level = track_match.group(1).upper()  # e.g., "C1-BIO", "HIST"
+        display_level = track_match.group(1).upper()  # e.g., "BIO", "HIST"
     elif re.search(r'/lit/', file_path.lower()):
         display_level = 'LIT'
 
@@ -907,7 +907,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
             from .checks import template_compliance as tc_module
             
             # Construct module ID for template mapping
-            # Extract full level including track suffix (hist, c1-bio, lit)
+            # Extract full level including track suffix (hist, bio, lit)
             module_slug = Path(file_path).stem
             track_match = re.search(r'/([abc][12](?:-[a-z0-9]+)?|lit)/', file_path.lower())
             full_level = track_match.group(1) if track_match else level_code.lower()
@@ -1323,7 +1323,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
 
     # Check external resource URLs in reading activities (Issue #430)
     external_url_violations = []
-    if yaml_activities and level_code.lower() in ['lit', 'hist', 'istoriohrafiia', 'c1-bio']:
+    if yaml_activities and level_code.lower() in ['lit', 'hist', 'istoriohrafiia', 'bio']:
         external_url_violations = check_external_resources(yaml_activities, module_title)
         if external_url_violations:
             print(f"  🔗 External URL validation issues: {len(external_url_violations)}")

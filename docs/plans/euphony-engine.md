@@ -231,7 +231,7 @@ This prevents violations at generation time rather than catching them only in th
 
 ### False positive scan
 
-Run against all built `.md` files in a1, a2, b1, b2, c1, hist, istoriohrafiia, c1-bio before declaring done.
+Run against all built `.md` files in a1, a2, b1, b2, c1, hist, istoriohrafiia, bio before declaring done.
 Target: zero errors on clearly correct existing content.
 
 ---

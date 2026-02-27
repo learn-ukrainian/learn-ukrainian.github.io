@@ -229,7 +229,7 @@ Check that item count meets level minimums:
 | C1    | 80        | 80-150        |
 | C2    | 100       | 100-200       |
 
-**For tracks (HIST, C1-BIO, LIT):** 150-300 items expected
+**For tracks (HIST, BIO, LIT):** 150-300 items expected
 
 **Check:**
 

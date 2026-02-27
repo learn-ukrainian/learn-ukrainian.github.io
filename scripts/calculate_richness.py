@@ -609,7 +609,7 @@ def extract_module_type(content: str, file_path: Union[str, Path, None] = None) 
         return 'literature'
     if '/hist/' in path_str or '/istoriohrafiia/' in path_str:
         return 'history'
-    if '/c1-bio/' in path_str:
+    if '/bio/' in path_str:
         return 'biography'
 
     # Default to grammar for B1-B2, content for others

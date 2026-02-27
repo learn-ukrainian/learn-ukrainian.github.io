@@ -70,7 +70,7 @@ User: "yes" / "no, just do it"
 
 | Command | Purpose | Example |
 |---------|---------|---------|
-| `/task create "Title"` | Create GH issue, set as active | `/task create "Fix C1-BIO word targets"` |
+| `/task create "Title"` | Create GH issue, set as active | `/task create "Fix BIO word targets"` |
 | `/task update #N "msg"` | Add progress comment | `/task update #500 "Phase 1 complete"` |
 | `/task close #N` | Close with summary, prompt for lessons | `/task close #500 "All audits pass"` |
 | `/task list` | Show active/recent tasks | `/task list` |
@@ -250,7 +250,7 @@ The skill tracks `ACTIVE_TASK_ID` during the session:
 ```
 /task
 
-📋 Active task: #500 "Fix C1-BIO M25-M29 word targets"
+📋 Active task: #500 "Fix BIO M25-M29 word targets"
    Phase 1: Planning ✅
    Phase 2: Implementation ⬜ (current)
    Phase 3: Testing ⬜
@@ -283,7 +283,7 @@ User: "yes"
 
 **If yes:**
 ```bash
-git commit -m "Expand C1-BIO M25-M29 to meet word targets (#500)"
+git commit -m "Expand BIO M25-M29 to meet word targets (#500)"
 ```
 
 **Benefits:**
@@ -298,16 +298,16 @@ git commit -m "Expand C1-BIO M25-M29 to meet word targets (#500)"
 ### Example 1: Content Expansion Task
 
 ```
-User: We need to fix word targets for C1-BIO batch 25-29
+User: We need to fix word targets for BIO batch 25-29
 
 Claude: "This looks like a complex task (5 modules, expansion needed).
          Want me to create a GH issue to track it?"
 
 User: yes
 
-Claude: /task create "Fix C1-BIO M25-M29 word targets"
+Claude: /task create "Fix BIO M25-M29 word targets"
 
-📋 Created issue #500: "Fix C1-BIO M25-M29 word targets"
+📋 Created issue #500: "Fix BIO M25-M29 word targets"
    Labels: task, working:claude
    Active task set: #500
 
@@ -397,11 +397,11 @@ Claude: "Complex task (research + writing). Create GH issue to track?"
 
 User: yes
 
-Claude: /task create "Write C1-BIO Danylo Apostol module"
+Claude: /task create "Write BIO Danylo Apostol module"
 
 Phase 1: Let me ask Gemini to help research while I prepare the structure...
 
-[Sends to Gemini via broker: "Research Danylo Apostol for C1-BIO module"]
+[Sends to Gemini via broker: "Research Danylo Apostol for BIO module"]
 
 Meanwhile, I'll read the plan and meta files...
 
@@ -431,14 +431,14 @@ Now writing content with combined research...
 ```
 [New session starts]
 
-User: Continue working on the C1-BIO expansion
+User: Continue working on the BIO expansion
 
 Claude: Let me check what's in progress...
 
 /task list
 
 📋 Active Tasks:
-#500 [working:claude] Fix C1-BIO M25-M29 word targets
+#500 [working:claude] Fix BIO M25-M29 word targets
      Last update: Phase 2 in progress, M25-M27 done
 
 I found task #500. Let me read the issue to see where we left off...
@@ -596,7 +596,7 @@ User: "Never change word_target in meta to match short content"
 # tasks/lessons.md
 
 ## [2025-02-05] - Content Quality
-**Task**: #500 - Fix C1-BIO M25-M29 word targets
+**Task**: #500 - Fix BIO M25-M29 word targets
 **Mistake**: Initially tried changing word_target instead of expanding content
 **Correction**: Word targets are minimums, not maximums
 **Rule**: Never change word_target to match short content - expand content instead

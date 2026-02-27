@@ -232,8 +232,8 @@ class TestGetCapsForTrack:
         assert 'zero_myth_busters' in names
         assert 'zero_quotes' in names
 
-    def test_c1_bio_has_caps(self):
-        caps = get_caps_for_track('c1-bio')
+    def test_bio_has_caps(self):
+        caps = get_caps_for_track('bio')
         names = [c.name for c in caps]
         assert 'zero_quotes' in names
         assert 'no_legacy' in names
@@ -281,7 +281,7 @@ class TestApplyCriticalCaps:
         metrics = {'total_quote_callouts': 0, 'total_cross_references': 5,
                    'total_legacy_sections': 3}
         scores = {'source_reliability': 2.0}
-        updated, results = apply_critical_caps('c1-bio', metrics, scores)
+        updated, results = apply_critical_caps('bio', metrics, scores)
         # Score 2.0 is already below cap of 4.0, so cap_applied=False
         quote_cap = [r for r in results if r.cap_name == 'zero_quotes']
         assert len(quote_cap) == 1

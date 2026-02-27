@@ -16,7 +16,7 @@ Enrich vocabulary for an entire track/course after all modules are content-compl
 
 ```bash
 /module-vocab-enrich hist    # Enrich all HIST modules
-/module-vocab-enrich c1-bio     # Enrich all C1-BIO modules
+/module-vocab-enrich bio     # Enrich all BIO modules
 /module-vocab-enrich lit        # Enrich all LIT modules
 ```
 

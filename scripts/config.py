@@ -51,7 +51,7 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
         "persona": "The Sensory Historian",
         "immersion_range": [1.0, 1.0],
     },
-    "c1-bio": {
+    "bio": {
         "model": "gemini-3-pro-preview",
         "word_floor": 5000,
         "persona": "The Humanist Biographer",

@@ -1,0 +1,27 @@
+{
+  "track": "bio",
+  "slug": "taras-shevchenko",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-27T14:48:52Z",
+      "task_id": "v3-taras-shevchenko-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T14:54:36Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T14:57:43Z",
+      "task_id": "v3-taras-shevchenko-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T15:01:25Z",
+      "attempts": 2
+    }
+  }
+}

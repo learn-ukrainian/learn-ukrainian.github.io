@@ -48,7 +48,7 @@ Alignment: This module directly addresses the C1 requirement to discuss funerals
 
 ## Cross-References
 - **Builds on**: B1 M82 (Ukrainian Holidays - general), B2 M76 (Traditions).
-- **Prepares for**: C1.5 Literature (Immortality themes in Kotsiubynsky/Franko), C1-BIO (Biographies/Obituaries).
+- **Prepares for**: C1.5 Literature (Immortality themes in Kotsiubynsky/Franko), BIO (Biographies/Obituaries).
 
 ## Notes for Content Writing
 - **Tone**: Must balance ethnographic precision (academic) with deep emotional resonance (sacred/solemn).

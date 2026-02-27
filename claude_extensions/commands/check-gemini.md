@@ -91,7 +91,7 @@ Claude:
 Found 2 unread messages:
 
 1. [msg #45] from Gemini (2 hours ago)
-   Task: c1-bio-research
+   Task: bio-research
    Type: response
    Preview: "Дослідження завершено. Основні факти про Данила Апостола..."
 
@@ -120,6 +120,6 @@ This skill should be invoked automatically (or reminded) at session start:
 
 After checking inbox, consider proactive collaboration:
 
-- "I'm about to write C1-BIO module. Should I ask Gemini to research while I structure?"
+- "I'm about to write BIO module. Should I ask Gemini to research while I structure?"
 - "This content needs naturalness review. Want me to send to Gemini?"
 - "Gemini might have insights on this historical figure. Should I query?"

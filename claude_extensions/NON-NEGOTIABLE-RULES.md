@@ -12,7 +12,7 @@ Word targets (from `config.py` v2026-02-15 — if stale, re-read config.py):
 - A1 modules: **2000 words minimum**
 - A2 modules: **3000 words minimum**
 - B1+ Regular modules: **4000 words minimum**
-- Seminar tracks (HIST, C1-BIO, ISTORIOHRAFIIA, LIT, C2, OES, RUTH): **5000 words minimum**
+- Seminar tracks (HIST, BIO, ISTORIOHRAFIIA, LIT, C2, OES, RUTH): **5000 words minimum**
 
 **If a module is under target:**
 
@@ -369,7 +369,7 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 | HIST | history | 5000 |
 | C1 | C1 | 4000 |
 | ISTORIOHRAFIIA | istoriohrafiia | 5000 |
-| C1-BIO | C1-biography | 5000 |
+| BIO | biography | 5000 |
 | LIT | LIT | 5000 |
 | C2 | C2 | 5000 |
 | OES | OES | 5000 |

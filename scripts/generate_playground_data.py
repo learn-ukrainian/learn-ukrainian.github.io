@@ -20,7 +20,7 @@ LEVELS = [
     {"id": "c1", "name": "C1 - Advanced", "path": "c1"},
     {"id": "c2", "name": "C2 - Mastery", "path": "c2"},
     {"id": "hist", "name": "HIST - History Track", "path": "hist"},
-    {"id": "c1-bio", "name": "C1-BIO - Biography Track", "path": "c1-bio"},
+    {"id": "bio", "name": "BIO - Biography Track", "path": "bio"},
     {"id": "lit", "name": "LIT - Literature Track", "path": "lit"},
     {"id": "lit-essay", "name": "LIT-ESSAY", "path": "lit-essay"},
     {"id": "lit-fantastika", "name": "LIT-FANTASTIKA", "path": "lit-fantastika"},

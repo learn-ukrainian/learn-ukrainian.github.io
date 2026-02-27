@@ -63,9 +63,9 @@ class TestDetectLevel:
         assert level == 'B1'
         assert num == 5
 
-    def test_c1_bio_from_path(self):
+    def test_bio_from_path(self):
         level, num, track = detect_level(
-            '/curriculum/l2-uk-en/c1-bio/taras-shevchenko.md', 'level: C1'
+            '/curriculum/l2-uk-en/bio/taras-shevchenko.md', 'level: C1'
         )
         assert level == 'C1'
         assert 'BIO' in track.upper()
@@ -92,7 +92,7 @@ class TestDetectLevel:
 
     def test_no_number_in_filename(self):
         level, num, track = detect_level(
-            '/curriculum/l2-uk-en/c1-bio/taras-shevchenko.md', ''
+            '/curriculum/l2-uk-en/bio/taras-shevchenko.md', ''
         )
         assert num == 999  # Default when no number found
 

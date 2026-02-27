@@ -51,11 +51,11 @@ Alignment: Модуль розкриває тему образотворчого
 
 ## Cross-References
 - Builds on: ISTORIOHRAFIIA (History of USSR), HIST (Dissident movement context).
-- Prepares for: C1-BIO (Stus - visual poetry connection), C1 Literature (Poetry of the Sixtiers).
+- Prepares for: BIO (Stus - visual poetry connection), C1 Literature (Poetry of the Sixtiers).
 
 ## Notes for Content Writing
 - Важливо чітко розмежовувати "бойчукізм" (професійна школа, візантійські впливи) та "наївне мистецтво" (народна традиція, самоучки). Це різні, хоч і одночасно знищувані/гноблені явища.
-- Для Алли Горської акцент саме на візуальному мистецтві (мозаїка, графіка), а не лише на біографії (яка буде в C1-BIO).
+- Для Алли Горської акцент саме на візуальному мистецтві (мозаїка, графіка), а не лише на біографії (яка буде в BIO).
 
 ===RESEARCH_END===
 

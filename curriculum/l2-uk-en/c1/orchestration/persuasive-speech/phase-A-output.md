@@ -48,7 +48,7 @@ Alignment: Модуль безпосередньо реалізує вимогу
 
 ## Cross-References
 - Builds on: c1-107 (Asyndetic Semantics - connection without conjunctions)
-- Prepares for: c1-109 (C1 Final Checkpoint), C1-BIO modules (analyzing speeches of historical figures)
+- Prepares for: c1-109 (C1 Final Checkpoint), BIO modules (analyzing speeches of historical figures)
 
 ## Notes for Content Writing
 - Focus on the distinction between *переконування* (process) and *переконання* (belief/result).

@@ -280,7 +280,7 @@ Learners need to practice:
 
 1. `history-module-template.md`
 2. `c1-literature-module-template.md`
-3. `c1-biography-module-template.md`
+3. `biography-module-template.md`
 4. `c1-folk-culture-module-template.md`
 5. `c1-fine-arts-module-template.md`
 

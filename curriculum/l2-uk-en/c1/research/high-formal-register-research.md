@@ -26,7 +26,7 @@ Alignment: This module directly addresses the C1 requirement to master functiona
 
 ## Cross-References
 - **Builds on**: B2 Professional Communication modules (formal correspondence basics).
-- **Prepares for**: C2 Professional mastery (drafting complex legal texts), C1-BIO modules (reading historical documents/biographies of statesmen).
+- **Prepares for**: C2 Professional mastery (drafting complex legal texts), BIO modules (reading historical documents/biographies of statesmen).
 
 ## Notes for Content Writing
 - Distinguish clearly between necessary formal language and "канцелярит" (bureaucratese) which is considered poor style when overused or used out of context.

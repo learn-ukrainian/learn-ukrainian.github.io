@@ -1,0 +1,93 @@
+module: bio-58
+level: BIO
+sequence: 58
+slug: kyrylo-trylovskyi
+version: '2.0'
+title: 'Кирило Трильовський: Засновник Січі'
+content_outline:
+- section: Вступ — Батько «Січі»
+  points:
+  - Засновник гімнастичного руху «Січ»
+  - Адвокат і громадський діяч
+  - Творець українського спортивно-патріотичного руху
+- section: Юність та освіта (1864-1890)
+  points:
+  - Народження на Покутті
+  - Освіта у Відні
+  - Юридична кар'єра
+  - Формування патріотичних поглядів
+- section: Заснування «Січі» (1900-1914)
+  points:
+  - Ідея гімнастичних товариств
+  - Перша «Січ» у Заваллі (1900)
+  - Поширення руху Галичиною та Буковиною
+  - Вплив сокольського руху
+- section: Адвокатська та громадська діяльність (1890-1914)
+  points:
+  - Правовий захист селян
+  - Політична діяльність
+  - Депутат Галицького сейму
+  - Боротьба за права українців
+- section: Воєнні роки та еміграція (1914-1941)
+  points:
+  - Перша світова війна
+  - Українські Січові Стрільці
+  - Еміграція до Чехословаччини
+  - Смерть у Празі
+- section: Спадщина — Батько українського спорту
+  points:
+  - Вплив на український національний рух
+  - «Січ» і сучасні спортивні організації
+  - Трильовський у памяті нації
+  - Значення для формування нації
+vocabulary_hints:
+  required:
+  - Січ (Sich)
+  - гімнастичне товариство (gymnastics society)
+  - адвокат (lawyer)
+  - громадський діяч (public activist)
+  - патріотичний рух (patriotic movement)
+  - Галичина (Galicia)
+  - сейм (sejm/parliament)
+  - січовик (Sich member)
+  - фізичне виховання (physical education)
+  - національна свідомість (national consciousness)
+  recommended:
+  - сокольський рух (Sokol movement)
+  - Покуття (Pokuttia)
+  - селянство (peasantry)
+  - правовий захист (legal defense)
+  - стрільці (riflemen)
+activity_hints:
+- type: reading
+  focus: Український національний рух у Галичині
+  source: Historical sources
+  items: 3 passages
+- type: essay-response
+  focus: Яку роль відіграв рух «Січ» у формуванні української нації?
+  output: Analytical essay
+focus: biography
+prerequisites:
+- bio-31
+connects_to:
+- bio-28
+- bio-42
+module_type: biography
+sources:
+- name: Кирило Трильовський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Трильовський_Кирило_Йосипович
+  type: primary
+  notes: Biography of the founder of the Sich movement
+- name: Українські Січові Стрільці
+  url: https://uk.wikipedia.org/wiki/Українські_січові_стрільці
+  type: reference
+  notes: History of the movement Trylovsky founded
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of кирило трильовський: засновник січі'
+- Evaluate the contributions of батько «січі»
+- Trace the career and influence of батько українського спорту
+persona:
+  voice: Senior Biographer
+  role: Sich Organizer

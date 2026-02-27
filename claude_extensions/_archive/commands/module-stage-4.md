@@ -57,7 +57,7 @@ Read: `claude_extensions/stages/stage-4-review-fix.md`
 curriculum/l2-uk-en/{level}/{number:02d}-*.md
 ```
 
-**For track levels (hist, c1-bio, lit, b2-pro, c1-pro):**
+**For track levels (hist, bio, lit, b2-pro, c1-pro):**
 Tracks use slug-only filenames without number prefixes.
 
 1. Look up the slug from manifest by position:

@@ -1,0 +1,20 @@
+{
+  "slug": "kostiantyn-ostrozky-elder",
+  "track": "bio",
+  "module_num": 13,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-20T23:25:39Z",
+      "task_id": "yw-kostiantyn-ostrozky-elder-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-26T00:29:16Z",
+      "words": 3895,
+      "attempts": 1
+    }
+  },
+  "last_updated": "2026-02-26T00:29:16Z"
+}

@@ -1,0 +1,42 @@
+sequence: 169
+module: bio-169
+level: C1.BIO
+slug: illia-chernilevskyi
+version: '2.0'
+title: Ілля Чернілевський
+subtitle: Ілля Чернілевський
+content_outline:
+- section: Вступ та контекст
+  points: []
+- section: Голос розстріляного покоління Z
+  points: []
+- section: Музика та поезія спротиву
+  points: []
+- section: Деколонізаційна перспектива
+  points:
+  - Зв'язок з Розстріляним Відродженням 1930-х
+  - Українська суб'єктність та опір
+- section: Підсумок та спадщина
+  points: []
+vocabulary_hints:
+  required:
+  - суб'єктність
+  - тяглість
+  - геноцид
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз життєвого шляху та вибору
+- type: essay-response
+  focus: Критичне есе про ціну культури
+focus: history
+pedagogy: seminar
+immersion: 100% Ukrainian
+phase: Executed Renaissance 2.0
+objectives:
+- Дослідити життя та внесок Ілля Чернілевський у сучасну українську культуру
+- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
+persona:
+  voice: Senior Biographer
+  role: Warrior Poet

@@ -211,7 +211,7 @@ Per module:
 **ISTORIOHRAFIIA should be lower priority than:**
 1. HIST (77% complete, 77 hours to finish)
 2. LIT (content complete, 40 hours for vocab)
-3. C1-BIO (87% content, 319 hours total)
+3. BIO (87% content, 319 hours total)
 
 **Rationale:** ISTORIOHRAFIIA requires complete greenfield development (540 hours). Other tracks have existing content that can be improved more efficiently.
 

@@ -81,7 +81,7 @@ def update_state(track: str, slug: str, status: str, duration: float | None = No
 
 def main():
     parser = argparse.ArgumentParser(description="Report module status to batch monitor")
-    parser.add_argument("track", help="Track name (e.g. c1-bio, hist)")
+    parser.add_argument("track", help="Track name (e.g. bio, hist)")
     parser.add_argument("slug", help="Module slug (e.g. knyahynia-olha)")
     parser.add_argument("status", choices=["running", "pass", "fail"], help="Module status")
     parser.add_argument("--duration", type=float, help="Duration in seconds")

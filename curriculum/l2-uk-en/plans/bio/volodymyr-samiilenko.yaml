@@ -1,0 +1,93 @@
+module: bio-60
+level: BIO
+sequence: 60
+slug: volodymyr-samiilenko
+version: '2.0'
+title: 'Володимир Самійленко: Поет, сатирик і будівничий мови'
+content_outline:
+- section: Вступ — Голос, якого не почули
+  points:
+  - Самійленко як поет-лірик, сатирик і перекладач
+  - Незаслужено маловідома постать української літератури
+  - Поруч із Франком, Лесею Українкою та Коцюбинським на Полтавському з'їзді 1903
+- section: Полтавщина та гімназійні роки (1864-1884)
+  points:
+  - Народження в Сорочинцях Миргородського повіту
+  - Батько-поміщик Іван Лисевич і мати Олександра Самійленко
+  - Полтавська гімназія та перші поетичні спроби
+  - Вплив Шевченкової традиції та гоголівського Миргорода
+- section: Київський університет та літературні кола (1884-1890-ті)
+  points:
+  - Фізико-математичний факультет Київського університету
+  - Участь у літературних гуртках та знайомство з Лесею Українкою
+  - Перша збірка «З поезій Володимира Самійленка» (1890)
+  - Псевдонім «Сивенький» та літературна репутація
+- section: Перекладацький подвиг
+  points:
+  - Переклади Гомера, Данте, Мольєра, Байрона, Шиллера українською
+  - Доведення спроможності української мови нести світову літературу
+  - Переклади як протест проти Валуєвського циркуляру та Емського указу
+  - Значення перекладів для формування українського літературного канону
+- section: Сатира проти імперії
+  points:
+  - Сатиричні поезії проти русифікації та цензури
+  - Гумор як зброя в умовах заборони
+  - Журнальна діяльність та газета «Рада»
+  - Участь в українському національному русі
+- section: Спадщина — Мовний архітектор
+  points:
+  - Діяльність в добу Української Народної Республіки
+  - Останні роки в Боярці та смерть у 1925
+  - Роль перекладів у формуванні української літературної мови
+  - Деколонізація — Самійленко як приклад свідомого мовного вибору
+vocabulary_hints:
+  required:
+  - сатира (satire)
+  - лірика (lyric poetry)
+  - перекладач (translator)
+  - гімназія (gymnasium)
+  - русифікація (Russification)
+  - цензура (censorship)
+  - псевдонім (pseudonym)
+  - збірка (collection)
+  - канон (canon)
+  - просвітництво (enlightenment)
+  recommended:
+  - Миргородщина (Myrhorod region)
+  - Сорочинці (Sorochyntsi)
+  - Валуєвський циркуляр (Valuev Circular)
+  - літературний гурток (literary circle)
+  - УНР (UNR — Ukrainian People's Republic)
+activity_hints:
+- type: reading
+  focus: Українська поезія та переклад кінця XIX — початку XX ст.
+  source: Literary history sources
+  items: 3 passages
+- type: essay-response
+  focus: Яку роль відігравав переклад у боротьбі за українську мову?
+  output: Analytical essay
+focus: biography
+prerequisites:
+- bio-059
+connects_to:
+- bio-061
+- bio-053
+module_type: biography
+sources:
+- name: Самійленко Володимир Іванович (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Самійленко_Володимир_Іванович
+  type: primary
+  notes: Comprehensive biography of the poet, satirist and translator
+- name: УІНП — 1864 народився Володимир Самійленко
+  url: https://uinp.gov.ua/istorychnyy-kalendar/lyutyy/3/1864-narodyvsya-volodymyr-samiylenko
+  type: reference
+  notes: Ukrainian Institute of National Memory biographical entry
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- Analyze the life and legacy of Володимир Самійленко as poet, satirist and translator
+- Evaluate the role of literary translation in building the Ukrainian literary language
+- Trace how satire functioned as resistance under imperial censorship
+persona:
+  voice: Senior Biographer
+  role: Literary Historian

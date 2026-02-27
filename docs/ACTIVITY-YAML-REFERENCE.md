@@ -612,7 +612,7 @@ Use when referring to longer external materials:
 > **Track-specific word counts:**
 > - LIT: 300-500 words
 > - ISTORIOHRAFIIA: 300-500 words
-> - C1-BIO: 250-400 words
+> - BIO: 250-400 words
 > - HIST: 150-250 words (transitional)
 
 ### critical-analysis

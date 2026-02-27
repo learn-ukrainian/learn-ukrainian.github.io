@@ -1,0 +1,74 @@
+{
+  "slug": "kniaz-sviatoslav",
+  "track": "bio",
+  "module_num": 2,
+  "mode": "v3",
+  "phases": {
+    "0": {
+      "status": "complete",
+      "timestamp": "2026-02-18T16:22:46Z",
+      "task_id": "yw-kniaz-sviatoslav-p0"
+    },
+    "0.5": {
+      "status": "complete",
+      "timestamp": "2026-02-18T16:23:50Z",
+      "task_id": "yw-kniaz-sviatoslav-p0.5"
+    },
+    "1": {
+      "status": "complete",
+      "timestamp": "2026-02-18T16:25:02Z",
+      "task_id": "yw-kniaz-sviatoslav-p1"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-18T16:29:58Z",
+      "words": 4625,
+      "attempts": 2
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-27T09:58:24Z",
+      "note": "v3-audit"
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-18T16:44:52Z",
+      "note": "adopted-existing"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-18T16:44:52Z",
+      "note": "adopted-existing"
+    },
+    "6": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:03:30Z",
+      "note": "v3-phase-D"
+    },
+    "6b": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:03:30Z",
+      "note": "v3-phase-D"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-27T09:58:24Z",
+      "note": "v3-audit"
+    },
+    "7-final": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:03:30Z",
+      "note": "v3-phase-D"
+    },
+    "9-final-review": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:10:50Z",
+      "verdict": "APPROVE"
+    },
+    "8": {
+      "status": "complete",
+      "timestamp": "2026-02-19T10:15:09Z"
+    }
+  },
+  "last_updated": "2026-02-27T09:58:24Z"
+}

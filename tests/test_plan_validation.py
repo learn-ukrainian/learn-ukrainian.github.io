@@ -32,8 +32,8 @@ class TestGetConfigTarget:
         assert isinstance(target, int)
         assert target >= 2000
 
-    def test_c1_bio_target(self):
-        target = get_config_target('c1-bio')
+    def test_bio_target(self):
+        target = get_config_target('bio')
         assert isinstance(target, int)
         assert target >= 2000
 

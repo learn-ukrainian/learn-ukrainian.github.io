@@ -171,7 +171,7 @@ def main():
 
     levels = [args.level]
     if args.level == 'all':
-        levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'hist', 'c1-bio', 'istoriohrafiia', 'lit']
+        levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'hist', 'bio', 'istoriohrafiia', 'lit']
     
     for lvl in levels:
         migrate_level(lvl, args.dry_run)

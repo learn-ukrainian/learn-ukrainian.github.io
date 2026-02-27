@@ -1,0 +1,100 @@
+module: bio-94
+level: BIO
+sequence: 94
+slug: milena-rudnytska
+version: '2.0'
+title: 'Мілена Рудницька: Голос українського фемінізму'
+content_outline:
+- section: Вступ — Піонерка жіночого руху
+  points:
+  - Рудницька як перша жінка-посол у польському сеймі від українців
+  - Лідерка Союзу українок
+  - Борець за права жінок і національне визволення
+- section: Молодість і освіта
+  points:
+  - Народження у Збаражі (1892)
+  - Навчання у Відні
+  - Вплив європейського фемінізму
+  - Повернення до Галичини
+- section: Політична кар'єра
+  points:
+  - Депутатка польського сейму (1928-1935)
+  - Захист прав української меншини
+  - Боротьба за освіту українською мовою
+  - Протести проти пацифікації
+- section: Союз українок
+  points:
+  - Очолення найбільшої жіночої організації
+  - Програма економічної самодопомоги
+  - Освітня діяльність
+  - Міжнародні зв'язки
+- section: Війна та еміграція
+  points:
+  - Радянська окупація 1939
+  - Втеча на Захід
+  - Діяльність в еміграції
+  - Документування радянських злочинів
+- section: Спадщина та визнання
+  points:
+  - Смерть у Мюнхені (1976)
+  - Вплив на український фемінізм
+  - Перевидання праць в незалежній Україні
+  - Рудницька як взірець жінки-політика
+vocabulary_hints:
+  required:
+  - фемінізм (feminism)
+  - посол (representative/deputy)
+  - сейм (parliament/Sejm)
+  - меншина (minority)
+  - пацифікація (pacification)
+  - емансипація (emancipation)
+  - самодопомога (self-help)
+  - права жінок (women's rights)
+  - еміграція (emigration)
+  - громадська діячка (civic activist)
+  recommended:
+  - суфражистка (suffragette)
+  - виборче право (voting rights)
+  - петиція (petition)
+  - делегація (delegation)
+  - маніфест (manifesto)
+activity_hints:
+- type: reading
+  focus: Rudnytska's speeches and articles
+  source: Historical archives
+  items: 3 passages
+- type: essay-response
+  focus: How did Rudnytska combine feminism with national liberation?
+  output: Analysis of intersectional activism
+focus: biography
+prerequisites:
+- bio-59 (Olha Basarab - earlier activist)
+- bio-68 (Olena Teliha - contemporary)
+- Understanding of interwar Galicia
+connects_to:
+- bio-59 (Olha Basarab - earlier generation)
+- bio-68 (Olena Teliha - contemporary activist)
+- bio-108 (Konovalets - same political era)
+module_type: biography
+sources:
+- name: Мілена Рудницька (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Рудницька_Мілена_Іванівна
+  type: primary
+  notes: Biography, activism, political career
+- name: Союз українок
+  url: https://uk.wikipedia.org/wiki/Союз_українок
+  type: reference
+  notes: Organization she led
+- name: УНДО
+  url: https://uk.wikipedia.org/wiki/Українське_національно-демократичне_об%27єднання
+  type: reference
+  notes: Political party she represented
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of мілена рудницька: голос українського фемінізму'
+- Evaluate the contributions of піонерка жіночого руху
+- Trace the career and influence of спадщина та визнання
+persona:
+  voice: Senior Biographer
+  role: Parliamentary Delegate

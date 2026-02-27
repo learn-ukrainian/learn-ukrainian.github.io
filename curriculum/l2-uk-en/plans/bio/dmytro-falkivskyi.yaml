@@ -1,0 +1,84 @@
+module: bio-107
+level: BIO
+sequence: 107
+slug: dmytro-falkivskyi
+version: '2.0'
+title: 'Дмитро Фальківський: <!-- Title -->'
+content_outline:
+- section: Вступ — Poet
+  points:
+  - <!-- point -->
+- section: Ранні роки та становлення
+  points:
+  - <!-- point -->
+- section: Творчий шлях та основні здобутки
+  points:
+  - <!-- point -->
+- section: Роль у Розстріляному відродженні
+  points:
+  - <!-- point -->
+- section: Переслідування та трагічна доля
+  points:
+  - <!-- point -->
+- section: Спадщина та значення
+  points:
+  - <!-- point -->
+vocabulary_hints:
+  required:
+  - Розстріляне відродження
+  - Дмитро Фальківський
+  recommended:
+  - модернізм (modernism)
+  - сатира (satire)
+  - абсурд (absurd)
+  - тоталітаризм (totalitarianism)
+activity_hints:
+- type: reading
+  focus: Фрагменти п'єси «Мина Мазайло»
+  source: Первинне джерело
+  items: 3 passages
+- type: essay-response
+  focus: Мовне питання у творчості Куліша
+  output: Аргументований есей
+- type: critical-analysis
+  focus: Порівняння долі Куліша та Курбаса
+focus: biography
+prerequisites:
+- hist/rozstriliane-vidrodzennia
+- hist/mekhanizm-teroru
+connects_to:
+- bio/les-kurbas
+- bio/mykola-khvylovyi
+module_type: biography
+sources:
+- name: Микола Куліш (Енциклопедія історії України)
+  url: https://esu.com.ua/article-7980
+  type: primary
+  notes: Академічна біографія
+- name: Куліш М. П'єси
+  type: primary
+  notes: Збірка драматичних творів
+- name: Жулинський М. Микола Куліш
+  type: reference
+  notes: Монографія про творчість
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- Дізнатися про життя та творчість Дмитро Фальківський
+notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20th
+  century.
+
+  His plays combined modernist techniques with deep exploration of Ukrainian identity
+
+  and the absurdities of Soviet reality. "Myna Mazailo" brilliantly satirized
+
+  linguistic assimilation. His partnership with director Les Kurbas created
+
+  legendary theatrical productions. Both were arrested in 1934 and executed on
+
+  the same day (November 3, 1937) in the Sandarmokh mass execution.
+
+  '
+persona:
+  voice: Senior Biographer
+  role: Lyric Poet

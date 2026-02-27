@@ -35,7 +35,7 @@ Alignment: Module covers symptoms, doctor visits, diagnostics, and pharmacology,
 
 ## Cross-References
 - Builds on: B1 Health modules (basic body parts, simple ailments).
-- Prepares for: C1-BIO *Amosov* module, B2-PRO *Medical Ukrainian* track.
+- Prepares for: BIO *Amosov* module, B2-PRO *Medical Ukrainian* track.
 
 ## Notes for Content Writing
 - **Reform Context**: Ensure the dialogue reflects the MODERN system (electronic referrals, family doctor as gatekeeper), not the old Soviet polyclinic system.

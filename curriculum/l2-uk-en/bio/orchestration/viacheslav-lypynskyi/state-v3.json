@@ -1,0 +1,13 @@
+{
+  "track": "bio",
+  "slug": "viacheslav-lypynskyi",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-21T00:04:52Z",
+      "task_id": "v3-viacheslav-lypynskyi-pA",
+      "mode": "meta-only"
+    }
+  }
+}

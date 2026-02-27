@@ -1,0 +1,13 @@
+{
+  "track": "bio",
+  "slug": "dmytro-pavlychko",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T09:14:49Z",
+      "task_id": "v3-dmytro-pavlychko-pA",
+      "mode": "full"
+    }
+  }
+}

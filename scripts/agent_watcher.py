@@ -136,9 +136,9 @@ def notify_human(from_agent: str, to_agent: str, message_id: int, task_id: str):
 def _save_stuck_report(task_id: str, turn_count: int, last_msg: dict):
     """Save a stuck report when a task hits the turn limit."""
     try:
-        # Try to extract track and slug from task_id (e.g., "c1-bio-knyahynia-olha-rebuild")
+        # Try to extract track and slug from task_id (e.g., "bio-knyahynia-olha-rebuild")
         report_dir = None
-        for track in ("c1-bio", "hist", "istoriohrafiia", "lit", "oes", "ruth"):
+        for track in ("bio", "hist", "istoriohrafiia", "lit", "oes", "ruth"):
             if track in task_id:
                 report_dir = Path(__file__).parent.parent / f"curriculum/l2-uk-en/{track}/stuck"
                 report_dir.mkdir(parents=True, exist_ok=True)

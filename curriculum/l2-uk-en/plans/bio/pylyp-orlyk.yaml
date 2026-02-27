@@ -1,0 +1,100 @@
+module: bio-31
+level: BIO
+sequence: 31
+slug: pylyp-orlyk
+version: '2.0'
+title: 'Пилип Орлик: Автор першої конституції'
+content_outline:
+- section: Вступ — Батько українського конституціоналізму
+  points:
+  - Значення Конституції 1710 року
+  - Орлик як політичний мислитель
+  - Перша українська політична еміграція
+- section: Молодість та служба при Мазепі
+  points:
+  - Походження та освіта
+  - Кар'єра в гетьманській канцелярії
+  - Генеральний писар
+  - Вірність Мазепі
+- section: Обрання гетьманом в еміграції
+  points:
+  - Смерть Мазепи в Бендерах
+  - Обрання гетьманом 1710 року
+  - Присяга та Конституція
+  - Легітимність еміграційного гетьманства
+- section: Конституція Пилипа Орлика
+  points:
+  - Структура документа
+  - Обмеження влади гетьмана
+  - Права козацтва та населення
+  - Порівняння з європейськими конституціями
+  - Демократичні елементи
+- section: Дипломатична діяльність
+  points:
+  - Боротьба за міжнародну підтримку
+  - Прутський похід 1711 року
+  - Листування з європейськими дворами
+  - Мандри Європою
+- section: Останні роки та спадщина
+  points:
+  - Життя в еміграції
+  - Смерть у Молдові
+  - Доля нащадків
+  - Конституція як символ
+- section: Підсумок — Візія, що випередила час
+  points:
+  - Орлик як провісник демократії
+  - Актуальність Конституції 1710 року
+  - Місце в українській політичній думці
+vocabulary_hints:
+  required:
+  - конституція (constitution)
+  - гетьман (hetman)
+  - еміграція (emigration)
+  - писар (scribe/secretary)
+  - рада (council)
+  - обмеження влади (limitation of power)
+  - присяга (oath)
+  - пакти (pacts)
+  - привілеї (privileges)
+  - канцелярія (chancellery)
+  recommended:
+  - генеральний (general - as in rank)
+  - статті (articles)
+  - ратифікація (ratification)
+  - клейноди (regalia)
+  - протекторат (protectorate)
+activity_hints:
+- type: reading
+  focus: Excerpts from the Constitution of 1710
+  source: Original text (adapted)
+- type: essay-response
+  focus: Was Orlyk's Constitution democratic for its time?
+- type: critical-analysis
+  focus: Evaluate claims of "first European constitution"
+focus: biography
+pedagogy: seminar
+prerequisites:
+- bio-27 (Іван Мазепа)
+- bio-30 (Кость Гордієнко)
+connects_to:
+- bio-32 (Петро Калнишевський)
+module_type: biography
+sources:
+- name: Пилип Орлик (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Пилип_Орлик
+  type: primary
+  notes: Biography, Constitution of 1710, exile
+- name: Конституція Пилипа Орлика
+  url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
+  type: primary
+  notes: Text and analysis of Constitution
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- Оцінити державницький внесок Пилипа Орлика
+- Проаналізувати основні положення Конституції 1710 року
+- Дослідити роль української політичної еміграції XVIII століття
+persona:
+  voice: Senior Biographer
+  role: Constitution Drafter

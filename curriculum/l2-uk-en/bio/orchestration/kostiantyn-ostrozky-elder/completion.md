@@ -1,0 +1,10 @@
+FAIL: build_module_v2.py bio 13 — E2E
+
+  Module:   kostiantyn-ostrozky-elder
+  Track:    bio
+  Mode:     e2e
+  Words:    3895 (target: 5000)
+  Sections: ?/?
+  Archive:  no
+  Verdict:  FAIL
+  Date:     2026-02-27T09:59:31Z

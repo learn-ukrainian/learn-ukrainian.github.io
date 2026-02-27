@@ -55,7 +55,7 @@ sources: ✓ # Required for tracks, optional for core
 | HIST   | 3000 | 5000 | History track                                |
 | B2-PRO    | 2000 | 3000 | Professional track                           |
 | C1 (core) | 2000 | 3000 | Advanced                                     |
-| C1-BIO    | 4000 | 6000 | Biography track                              |
+| BIO    | 4000 | 6000 | Biography track                              |
 | ISTORIOHRAFIIA   | 4000 | 6000 | History track                                |
 | LIT       | 5000 | 8000 | Literature spec                              |
 | C2        | 2000 | 4000 | Mastery level                                |
@@ -101,7 +101,7 @@ Sum of all section word counts MUST equal ±10% of `word_target`.
 
 ### 6. Sources Credibility
 
-**Track modules (HIST, C1-BIO, ISTORIOHRAFIIA, LIT):** Minimum 2 sources REQUIRED
+**Track modules (HIST, BIO, ISTORIOHRAFIIA, LIT):** Minimum 2 sources REQUIRED
 
 **Core modules (A1-C2 core):** Sources OPTIONAL (but recommended for B2+)
 

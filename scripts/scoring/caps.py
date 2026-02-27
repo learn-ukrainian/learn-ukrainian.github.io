@@ -91,7 +91,7 @@ CRITICAL_CAPS: dict[str, list[CapCondition]] = {
             reason_template='0 cross-references: no thematic connections',
         ),
     ],
-    'c1-bio': [
+    'bio': [
         CapCondition(
             name='zero_quotes',
             criterion='source_reliability',

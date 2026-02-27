@@ -1,0 +1,35 @@
+{
+  "slug": "nataliya-kobrynska",
+  "track": "bio",
+  "module_num": 52,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-26T23:48:07Z",
+      "words": 4806,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-26T23:50:40Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-26T23:50:40Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-27T17:42:54Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-27T17:42:54Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-27T17:42:54Z"
+}

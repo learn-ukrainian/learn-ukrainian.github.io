@@ -155,7 +155,7 @@ status/
 ├── c1.yaml
 ├── c2.yaml
 ├── hist.yaml
-├── c1-bio.yaml
+├── bio.yaml
 ├── istoriohrafiia.yaml
 └── lit.yaml
 ```

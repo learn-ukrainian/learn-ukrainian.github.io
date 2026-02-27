@@ -3,7 +3,7 @@
 **Status:** Implemented
 **Author:** Claude (with user direction)
 **Created:** 2026-01-21
-**Target:** Tracks (hist, c1-bio, lit) + C2 levels
+**Target:** Tracks (hist, bio, lit) + C2 levels
 
 ---
 
@@ -296,7 +296,7 @@ sources:
 - Follow schema: lemma, ipa, translation, pos, gender (if applicable)
 
 **Cumulative dependency:**
-- Tracks (hist, c1-bio, lit): A1 → B2 core vocabulary
+- Tracks (hist, bio, lit): A1 → B2 core vocabulary
 - C2: A1 → C1 core vocabulary
 
 **Note:** Vocabulary extraction can be done in batch across multiple modules since it happens after deployment. This allows working on modules out of sequence.
@@ -425,7 +425,7 @@ scripts/
 
 **Rollout Phase 1 - New Content:**
 - hist (new modules)
-- c1-bio (new modules)
+- bio (new modules)
 - lit (new modules)
 - C2 (new modules)
 - Any new modules in core levels (B1, B2, C1)

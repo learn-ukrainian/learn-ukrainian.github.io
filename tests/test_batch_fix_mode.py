@@ -119,7 +119,7 @@ class TestDiagnoseModule:
     def setup_method(self):
         """Create runner with mocked config and temp dirs."""
         self.tmpdir = tempfile.mkdtemp()
-        self.track_dir = Path(self.tmpdir) / "c1-bio"
+        self.track_dir = Path(self.tmpdir) / "bio"
         self.track_dir.mkdir(parents=True)
         (self.track_dir / "audit").mkdir()
         (self.track_dir / "review").mkdir()
@@ -132,7 +132,7 @@ class TestDiagnoseModule:
         self.md_file.write_text("# Test\n" + "word " * 500)
 
         # Create fake meta + plan
-        (self.track_dir / "meta" / "test-slug.yaml").write_text("level: C1-BIO\n")
+        (self.track_dir / "meta" / "test-slug.yaml").write_text("level: BIO\n")
 
         self.paths = {
             "md": self.md_file,
@@ -147,7 +147,7 @@ class TestDiagnoseModule:
         # Create a runner (we only use its methods, not actual batch)
         with patch.object(BatchRunner, '__init__', lambda self, *a, **kw: None):
             self.runner = BatchRunner.__new__(BatchRunner)
-            self.runner.track = "c1-bio"
+            self.runner.track = "bio"
             self.runner.config = {"type": "seminar", "templates": {}, "phases": []}
 
     def teardown_method(self):
@@ -266,7 +266,7 @@ class TestFixApplyOutput:
 
     def setup_method(self):
         self.tmpdir = tempfile.mkdtemp()
-        self.track_dir = Path(self.tmpdir) / "c1-bio"
+        self.track_dir = Path(self.tmpdir) / "bio"
         self.track_dir.mkdir(parents=True)
         (self.track_dir / "activities").mkdir()
         (self.track_dir / "vocabulary").mkdir()
@@ -360,7 +360,7 @@ class TestFixTemplateRegistration:
 
     def test_all_known_tracks_have_fix_template(self):
         from scripts.batch_gemini_config import get_track_config
-        for track in ["c1-bio", "hist", "istoriohrafiia", "lit", "a1", "a2"]:
+        for track in ["bio", "hist", "istoriohrafiia", "lit", "a1", "a2"]:
             config = get_track_config(track)
             assert "fix" in config["templates"], f"{track} missing fix template"
 
@@ -371,7 +371,7 @@ class TestFixTemplateRegistration:
 
     def test_fix_template_file_exists(self):
         from scripts.batch_gemini_config import get_track_config
-        config = get_track_config("c1-bio")
+        config = get_track_config("bio")
         assert config["templates"]["fix"].exists()
 
     def test_oes_and_ruth_have_seminar_type(self):
@@ -481,7 +481,7 @@ class TestActivityExamples:
     def test_seminar_examples_contain_seminar_types(self):
         """Seminar examples should include reading, critical-analysis, essay-response."""
         from scripts.batch_gemini_runner import _get_seminar_activity_examples
-        result = _get_seminar_activity_examples("c1-bio")
+        result = _get_seminar_activity_examples("bio")
         assert "type: reading" in result
         assert "type: critical-analysis" in result
         assert "type: essay-response" in result
@@ -490,7 +490,7 @@ class TestActivityExamples:
     def test_seminar_examples_exclude_core_types(self):
         """Seminar examples should NOT include quiz or fill-in."""
         from scripts.batch_gemini_runner import _get_seminar_activity_examples
-        result = _get_seminar_activity_examples("c1-bio")
+        result = _get_seminar_activity_examples("bio")
         assert "type: quiz" not in result
         assert "type: fill-in" not in result
 
@@ -532,7 +532,7 @@ class TestStallDetection:
 
     def setup_method(self):
         self.tmpdir = tempfile.mkdtemp()
-        self.track_dir = Path(self.tmpdir) / "c1-bio"
+        self.track_dir = Path(self.tmpdir) / "bio"
         self.track_dir.mkdir(parents=True)
         for subdir in ("audit", "review", "status", "meta", "activities",
                        "vocabulary", "research"):
@@ -544,11 +544,11 @@ class TestStallDetection:
         self.md_path.write_text("# Test Module\n" + "word " * 500)
 
         (self.track_dir / "meta" / "test-slug.yaml").write_text(
-            "level: C1-BIO\nword_target: 3000\n"
+            "level: BIO\nword_target: 3000\n"
         )
 
         # Plan file is required by process_module_fix
-        plans_dir = Path(self.tmpdir) / "plans" / "c1-bio"
+        plans_dir = Path(self.tmpdir) / "plans" / "bio"
         plans_dir.mkdir(parents=True)
         (plans_dir / "test-slug.yaml").write_text("title: Test\nword_target: 3000\n")
 
@@ -640,7 +640,7 @@ class TestDiagnoseModuleActivitiesRouting:
 
     def setup_method(self):
         self.tmpdir = tempfile.mkdtemp()
-        self.track_dir = Path(self.tmpdir) / "c1-bio"
+        self.track_dir = Path(self.tmpdir) / "bio"
         self.track_dir.mkdir(parents=True)
         (self.track_dir / "audit").mkdir()
         (self.track_dir / "review").mkdir()
@@ -650,7 +650,7 @@ class TestDiagnoseModuleActivitiesRouting:
 
         self.md_file = self.track_dir / "test-slug.md"
         self.md_file.write_text("# Test\n" + "word " * 500)
-        (self.track_dir / "meta" / "test-slug.yaml").write_text("level: C1-BIO\n")
+        (self.track_dir / "meta" / "test-slug.yaml").write_text("level: BIO\n")
 
         self.paths = {
             "md": self.md_file,
@@ -664,7 +664,7 @@ class TestDiagnoseModuleActivitiesRouting:
 
         with patch.object(BatchRunner, '__init__', lambda self, *a, **kw: None):
             self.runner = BatchRunner.__new__(BatchRunner)
-            self.runner.track = "c1-bio"
+            self.runner.track = "bio"
             self.runner.config = {"type": "seminar", "templates": {}, "phases": []}
 
     def teardown_method(self):
@@ -812,7 +812,7 @@ class TestSchemaFilterVerification:
 
         seminar_configs = {
             'history': LEVEL_CONFIG.get('history', {}),
-            'C1-biography': LEVEL_CONFIG.get('C1-biography', {}),
+            'biography': LEVEL_CONFIG.get('biography', {}),
             'LIT': LEVEL_CONFIG.get('LIT', {}),
             'OES': LEVEL_CONFIG.get('OES', {}),
             'RUTH': LEVEL_CONFIG.get('RUTH', {}),

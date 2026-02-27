@@ -197,7 +197,7 @@ export default function Home(): ReactNode {
                 color="#6D4C41"
               />
               <LevelCard
-                level="C1-BIO"
+                level="BIO"
                 name="Biographies"
                 description="Notable Ukrainians through history"
                 modules={172}
@@ -289,7 +289,7 @@ export default function Home(): ReactNode {
               <h4>Tracks</h4>
               <ul>
                 <li><a href="/hist/">HIST - History</a></li>
-                <li><a href="/c1-bio/">C1-BIO - Biographies</a></li>
+                <li><a href="/bio/">BIO - Biographies</a></li>
                 <li><a href="/lit/">LIT - Literature</a></li>
               </ul>
             </div>

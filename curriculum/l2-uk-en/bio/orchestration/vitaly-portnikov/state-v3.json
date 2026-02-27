@@ -1,0 +1,13 @@
+{
+  "track": "bio",
+  "slug": "vitaly-portnikov",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T10:21:02Z",
+      "task_id": "v3-vitaly-portnikov-pA",
+      "mode": "full"
+    }
+  }
+}

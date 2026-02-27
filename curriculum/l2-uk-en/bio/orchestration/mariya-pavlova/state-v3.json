@@ -1,0 +1,28 @@
+{
+  "track": "bio",
+  "slug": "mariya-pavlova",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T15:20:35Z",
+      "task_id": "v3-mariya-pavlova-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-26T23:18:03Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-26T23:21:48Z",
+      "task_id": "v3-mariya-pavlova-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T17:42:35Z",
+      "attempts": 0,
+      "note": "auto-fix"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+module: bio-139
+level: BIO
+sequence: 139
+slug: viacheslav-chornovil
+version: '2.0'
+title: 'В''ячеслав Чорновіл: Незламний правозахисник'
+content_outline:
+- section: Вступ — Людина, яка не схилялася
+  points:
+  - Чорновіл як символ української незламності
+  - Від журналіста до кандидата в президенти
+  - Трагічна загибель та незавершена місія
+- section: Черкащина та формування характеру
+  points:
+  - Народження в селі Єрки (1937)
+  - Повоєнне дитинство
+  - Освіта та журналістські початки
+- section: Журналіст-бунтар
+  points:
+  - Робота на телебаченні
+  - Перші конфлікти з владою
+  - Документування репресій
+- section: Лихо з розуму та перший арешт
+  points:
+  - Збірка документів про репресії 1965-1966
+  - Арешт та ув'язнення (1967)
+  - Роки в таборах
+- section: Гельсінська група та другий арешт
+  points:
+  - Участь в Українській Гельсінській групі
+  - Правозахисна діяльність
+  - Повторне ув'язнення
+- section: Незалежність та політика
+  points:
+  - Народний Рух України
+  - Президентська кампанія 1991
+  - Роль в розбудові держави
+- section: Загибель та спадщина
+  points:
+  - Загадкова автокатастрофа (1999)
+  - Питання про причини смерті
+  - Значення для української демократії
+vocabulary_hints:
+  required:
+  - правозахисник (human rights defender)
+  - дисидент (dissident)
+  - Гельсінська група (Helsinki Group)
+  - Рух (Movement/Rukh)
+  - незламність (unbreakability)
+  - репресії (repressions)
+  - політв'язень (political prisoner)
+  - журналіст (journalist)
+  - президентські вибори (presidential elections)
+  - автокатастрофа (car accident)
+  recommended:
+  - самвидав (samizdat)
+  - правозахисний рух (human rights movement)
+  - опозиція (opposition)
+  - демократизація (democratization)
+  - незалежність (independence)
+activity_hints:
+- type: reading
+  focus: Фрагменти з Лихо з розуму
+  source: Первинні джерела
+  items: 3 passages
+- type: essay-response
+  focus: Що означає бути правозахисником?
+  output: Етичний есей
+focus: biography
+prerequisites:
+- bio-75-vasyl-symonenko
+connects_to:
+- bio-77-vasyl-stus
+- bio-71-levko-lukyanenko
+- bio-78-myroslav-marynovych
+module_type: biography
+sources:
+- name: В'ячеслав Чорновіл (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Чорновіл_В%27ячеслав_Максимович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Український Гельсінський союз
+  url: https://helsinki.org.ua/
+  type: reference
+  notes: Історія правозахисного руху
+- name: Народний Рух України
+  url: https://nru.org.ua/
+  type: reference
+  notes: Політична діяльність
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of в''ячеслав чорновіл: незламний правозахисник'
+- Evaluate the contributions of людина, яка не схилялася
+- Trace the career and influence of загибель та спадщина
+persona:
+  voice: Senior Biographer
+  role: Samizdat Editor

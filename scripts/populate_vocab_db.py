@@ -18,7 +18,7 @@ from pathlib import Path
 DB_PATH = "curriculum/l2-uk-en/vocabulary.db"
 CURRICULUM_PATH = "curriculum/l2-uk-en"
 
-# Core levels only - exclude tracks (hist, c1-bio, etc.)
+# Core levels only - exclude tracks (hist, bio, etc.)
 CORE_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
 
 def get_db_connection():

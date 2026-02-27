@@ -39,7 +39,7 @@ def fix_yaml_file(filepath):
     return False
 
 def main():
-    directory = "curriculum/l2-uk-en/c1-bio/meta"
+    directory = "curriculum/l2-uk-en/bio/meta"
     for filename in os.listdir(directory):
         if filename.endswith(".yaml"):
             path = os.path.join(directory, filename)

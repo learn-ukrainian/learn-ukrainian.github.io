@@ -1,0 +1,97 @@
+module: bio-46
+level: BIO
+sequence: 46
+slug: mykhailo-drahomanov
+version: '2.0'
+title: 'Михайло Драгоманов: Політичний мислитель'
+content_outline:
+- section: Вступ — Архітектор європейської України
+  points:
+  - Михайло Драгоманов — найвпливовіший український політичний мислитель XIX ст.
+  - Від професора до політичного вигнанця
+  - Ідея України як частини європейської цивілізації
+- section: Ранні роки та освіта (1841-1864)
+  points:
+  - Народження в Гадячі на Полтавщині
+  - Навчання в Київському університеті
+  - Формування наукових та політичних поглядів
+  - Вплив Кирило-Мефодіївського братства
+- section: Київський період (1864-1876)
+  points:
+  - Робота приват-доцентом у Київському університеті
+  - Етнографічні та фольклористичні дослідження
+  - Участь в громадівському русі
+  - Конфлікт з владою та звільнення
+- section: Еміграція та політична діяльність (1876-1895)
+  points:
+  - Переїзд до Женеви після Емського указу
+  - Видання журналу «Громада»
+  - Розробка концепції федералізму
+  - Вплив на молоде покоління — Франко, Леся Українка
+- section: Політична філософія
+  points:
+  - Федералізм як альтернатива централізованим імперіям
+  - Критика російського деспотизму
+  - Ідея соціального прогресу через освіту
+  - Космополітизм та національна ідентичність
+- section: Останні роки та спадщина (1889-1895)
+  points:
+  - Професорство в Софійському університеті
+  - Смерть у 1895 році
+  - Вплив на українську політичну думку XX століття
+  - Драгоманов як «вчитель» Франка та Лесі Українки
+vocabulary_hints:
+  required:
+  - федералізм (federalism)
+  - політичний мислитель (political thinker)
+  - еміграція (emigration)
+  - громадівець (member of Hromada movement)
+  - космополітизм (cosmopolitanism)
+  - прогрес (progress)
+  - деспотизм (despotism)
+  - соціалізм (socialism)
+  - публіцист (publicist)
+  - інтелігенція (intelligentsia)
+  recommended:
+  - автономія (autonomy)
+  - децентралізація (decentralization)
+  - конституціоналізм (constitutionalism)
+  - етнографія (ethnography)
+  - вигнанець (exile)
+activity_hints:
+- type: reading
+  focus: Політичні есе та листування Драгоманова
+  source: Публіцистичні твори
+  items: 3 passages
+- type: essay-response
+  focus: Чи актуальні ідеї Драгоманова сьогодні?
+  output: Political analysis
+focus: biography
+prerequisites:
+- bio-20-taras-shevchenko
+connects_to:
+- bio-28-ivan-franko
+- bio-40-lesya-ukrainka
+module_type: biography
+sources:
+- name: Михайло Драгоманов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Михайло_Драгоманов
+  type: primary
+  notes: Біографія, політичні погляди, вплив на культуру
+- name: Федералізм
+  url: https://uk.wikipedia.org/wiki/Федералізм
+  type: reference
+  notes: Політична концепція Драгоманова
+- name: Українофільство
+  url: https://uk.wikipedia.org/wiki/Українофільство
+  type: reference
+  notes: Рух національного пробудження
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of михайло драгоманов: політичний мислитель'
+- Evaluate the contributions of архітектор європейської україни
+- Trace the career and influence of останні роки та спадщина (1889-1895)
+persona:
+  voice: Senior Biographer
+  role: Political Exile

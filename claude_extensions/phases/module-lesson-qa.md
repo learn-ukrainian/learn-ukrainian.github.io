@@ -59,7 +59,7 @@ This script verifies:
 - **B2 core:** `docs/l2-uk-en/templates/b2-grammar-module-template.md` (or cultural/vocab based on focus)
 - **HIST:** `docs/l2-uk-en/templates/ai/history-module-template.md`
 - **B2-PRO:** `docs/l2-uk-en/templates/ai/b2-pro-module-template.md`
-- **C1-BIO:** `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`
+- **BIO:** `docs/l2-uk-en/templates/ai/biography-module-template.md`
 - **ISTORIOHRAFIIA:** `docs/l2-uk-en/templates/ai/istoriohrafiiaory-module-template.md`
 - **C1-PRO:** `docs/l2-uk-en/templates/ai/c1-pro-module-template.md`
 - **LIT:** `docs/l2-uk-en/templates/ai/lit-module-template.md`

@@ -1,12 +1,12 @@
 # Seminar Track Rebuild Plan
 
-> **Tracks:** C1-BIO (156 modules), HIST (140 modules), LIT (30 modules)
-> **Priority:** C1-BIO first, then HIST, then LIT
+> **Tracks:** BIO (156 modules), HIST (140 modules), LIT (30 modules)
+> **Priority:** BIO first, then HIST, then LIT
 > **Method:** Research-first workflow, cross-track research sharing, Claude review gate
 
 ---
 
-## 1. Current State (C1-BIO)
+## 1. Current State (BIO)
 
 | Category | Count | What's needed |
 |----------|-------|---------------|
@@ -85,7 +85,7 @@ Phase 6: MDX GENERATION
 
 ### What Gemini sends to Claude:
 ```
-REVIEW_REQUEST: c1-bio knyahynia-olha
+REVIEW_REQUEST: bio knyahynia-olha
 ```
 That's it. No content. No context dump. Just the track and slug.
 
@@ -99,7 +99,7 @@ That's it. No content. No context dump. Just the track and slug.
 7. Sends SHORT response back:
 
 ```
-REVIEW_RESULT: c1-bio knyahynia-olha
+REVIEW_RESULT: bio knyahynia-olha
 Score: 9.2/10 PASS
 Issues: 1 Russicism (line 119: под→під), 2 minor (see review file)
 Action: Fix Russicism, then PASS. Full report: review/knyahynia-olha-review.md
@@ -162,16 +162,16 @@ The watcher daemon has a per-task turn limit. When hit, the message sits unproce
 
 ## 6. Cross-Track Research Grouping
 
-### Why group C1-BIO + HIST research
+### Why group BIO + HIST research
 
 Many historical figures appear in both tracks:
-- **C1-BIO** tells their life story (biography focus)
+- **BIO** tells their life story (biography focus)
 - **HIST** tells the events of their era (historical event focus)
 - Same sources serve both
 
-### Era-Based Batches (C1-BIO + HIST together)
+### Era-Based Batches (BIO + HIST together)
 
-| Batch | Era | C1-BIO modules | HIST modules | Shared research |
+| Batch | Era | BIO modules | HIST modules | Shared research |
 |-------|-----|----------------|-----------------|-----------------|
 | **A** | Kyivan Rus (850-1240) | M001-M012 (12) | M006-M028 (23) | Olha, Sviatoslav, Volodymyr, Yaroslav, Monomakh, Danylo |
 | **B** | Lithuanian-Polish (1240-1560) | M013-M018 (6) | M029-M040 (12) | Ostrozky, Nalyvaiko, Roksolana |
@@ -195,7 +195,7 @@ For a figure like **Ivan Mazepa**:
    - Save to: `research/ivan-mazepa-research.md` (shared)
    - Covers: biography, political career, cultural patronage, Poltava, legacy
 
-2. **C1-BIO module** (M027: ivan-mazepa):
+2. **BIO module** (M027: ivan-mazepa):
    - Uses the shared research
    - Focus: personal life, character, motivations, cultural patronage
    - Tone: biographical narrative
@@ -209,9 +209,9 @@ For a figure like **Ivan Mazepa**:
 
 ### Non-overlapping modules
 
-Some C1-BIO modules have no HIST counterpart (e.g., artists, scientists, modern figures). These get standalone research as usual.
+Some BIO modules have no HIST counterpart (e.g., artists, scientists, modern figures). These get standalone research as usual.
 
-Some HIST modules have no C1-BIO counterpart (e.g., Trypillian civilization, Scythians, synthesis chapters). These also get standalone research.
+Some HIST modules have no BIO counterpart (e.g., Trypillian civilization, Scythians, synthesis chapters). These also get standalone research.
 
 ---
 
@@ -226,20 +226,20 @@ Some HIST modules have no C1-BIO counterpart (e.g., Trypillian civilization, Scy
 - [ ] Validate the pipeline works before scaling
 
 ### Phase 2: Batch A - Kyivan Rus (Day 1-3)
-- 12 C1-BIO modules (M001-M012)
+- 12 BIO modules (M001-M012)
 - 23 HIST modules (M006-M028)
-- Start with C1-BIO (biography builds the research base)
+- Start with BIO (biography builds the research base)
 - Then HIST (reuses research)
 - **Cross-track research figures:** Olha, Sviatoslav, Volodymyr, Yaroslav, Monomakh, Danylo
 
 ### Phase 3: Batch B - Lithuanian-Polish (Day 3-4)
-- 6 C1-BIO + 12 HIST
+- 6 BIO + 12 HIST
 
 ### Phase 4-10: Remaining batches
 - Follow the era order in the table above
-- Each batch: C1-BIO first (builds research), then HIST (reuses)
+- Each batch: BIO first (builds research), then HIST (reuses)
 
-### Phase 11: LIT track (after C1-BIO + HIST)
+### Phase 11: LIT track (after BIO + HIST)
 - 30 modules, standalone research
 - Depends on literary analysis skills, may need different approach
 
@@ -262,7 +262,7 @@ Update issue with progress as modules complete.
 
 ### Daily summary
 ```bash
-npm run status:c1-bio   # Generate human-readable status report
+npm run status:bio   # Generate human-readable status report
 npm run status:hist
 ```
 

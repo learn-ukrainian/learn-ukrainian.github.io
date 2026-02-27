@@ -1,6 +1,6 @@
-# Session Tasks: C1-BIO Batch 2 (M46-M50)
+# Session Tasks: BIO Batch 2 (M46-M50)
 
-**Goal**: Ensure modules 46-50 in the C1-BIO track are fully built, audited, and passing.
+**Goal**: Ensure modules 46-50 in the BIO track are fully built, audited, and passing.
 
 ## Batch Status
 - [x] M46: mykhailo-drahomanov (Passing)

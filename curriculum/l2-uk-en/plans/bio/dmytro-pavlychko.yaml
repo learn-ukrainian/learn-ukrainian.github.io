@@ -1,0 +1,93 @@
+module: bio-134
+level: BIO
+sequence: 134
+slug: dmytro-pavlychko
+version: '2.0'
+title: 'Дмитро Павличко: Поет і дипломат'
+content_outline:
+- section: Вступ — Два кольори однієї душі
+  points:
+  - Поет, перекладач, політик, дипломат
+  - Автор легендарної пісні «Два кольори»
+  - Життя між поезією та політикою
+- section: Юність і формування (1929-1953)
+  points:
+  - Народження на Івано-Франківщині
+  - Важке повоєнне дитинство
+  - Навчання у Львівському університеті
+  - Перші вірші та публікації
+- section: Поетичний шлях (1953-1970)
+  points:
+  - Входження в літературу
+  - Збірки «Любов і ненависть», «Правда кличе»
+  - Пісня «Два кольори» (1965)
+  - Шістдесятництво та його межі
+- section: Перекладацька діяльність (1960-ті–1990-ті)
+  points:
+  - Переклади Шекспіра
+  - Переклади світової поезії
+  - Роль перекладу у збереженні мови
+  - Визнання як перекладача
+- section: Політик і дипломат (1988-2000-ні)
+  points:
+  - Участь у Народному Русі
+  - Співавтор Акту незалежності
+  - Посол України в Польщі та Словаччині
+  - Політичні позиції та суперечки
+- section: Спадщина — Голос України
+  points:
+  - Вплив на українську поезію
+  - «Два кольори» як другий гімн
+  - Пізня творчість
+  - Місце в історії літератури
+vocabulary_hints:
+  required:
+  - поет (poet)
+  - перекладач (translator)
+  - дипломат (diplomat)
+  - пісня (song)
+  - символіка (symbolism)
+  - шістдесятництво (Sixtiers movement)
+  - Народний Рух (People's Movement)
+  - посол (ambassador)
+  - літературна спадщина (literary legacy)
+  - ліричний (lyrical)
+  recommended:
+  - патріотизм (patriotism)
+  - поетика (poetics)
+  - романтизм (romanticism)
+  - політична поезія (political poetry)
+  - національна свідомість (national consciousness)
+activity_hints:
+- type: reading
+  focus: Українська поезія XX ст.
+  source: Literary sources
+  items: 3 passages
+- type: essay-response
+  focus: Як поезія може впливати на політичні зміни?
+  output: Analytical essay
+focus: biography
+prerequisites:
+- bio-72
+connects_to:
+- bio-74
+- bio-79
+module_type: biography
+sources:
+- name: Дмитро Павличко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Павличко_Дмитро_Васильович
+  type: primary
+  notes: Biography of the poet, translator, and diplomat
+- name: Національна спілка письменників України
+  url: https://nspu.org.ua/
+  type: reference
+  notes: Literary biography and works
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of дмитро павличко: поет і дипломат'
+- Evaluate the contributions of два кольори однієї душі
+- Trace the career and influence of голос україни
+persona:
+  voice: Senior Biographer
+  role: Poet Diplomat

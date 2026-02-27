@@ -28,7 +28,7 @@ Create or review history (B2) and biography (C1) modules using the appropriate t
 | ------------ | ----------------------------------------------------------------- | --------------------------------------------------------- | --------------------------- |
 | B2 History   | `docs/l2-uk-en/templates/ai/history-module-template.md`        | `docs/l2-uk-en/templates/history-module-template.md`   | M71-131 (excl. synthesis)   |
 | B2 Synthesis | `docs/l2-uk-en/templates/history-synthesis-module-template.md` | —                                                         | M83, M108, M119, M125, M131 |
-| C1 Biography | `docs/l2-uk-en/templates/ai/c1-biography-module-template.md`      | `docs/l2-uk-en/templates/c1-biography-module-template.md` | M36-100                     |
+| C1 Biography | `docs/l2-uk-en/templates/ai/biography-module-template.md`      | `docs/l2-uk-en/templates/biography-module-template.md` | M36-100                     |
 | C1 History   | `docs/l2-uk-en/templates/ai/istoriohrafiiaory-module-template.md`        | `docs/l2-uk-en/templates/istoriohrafiiaory-module-template.md`   | M01-135                     |
 
 **CRITICAL:** Read the AI-optimized template BEFORE creating a module. Full reference provides additional context.
@@ -132,12 +132,12 @@ History/Biography tracks support two activity modes. Check which applies to your
 
 | Track | Mode | Activity Types |
 |-------|------|----------------|
-| `hist`, `c1-bio` | **Seminar** | reading + essay-response + critical-analysis |
+| `hist`, `bio` | **Seminar** | reading + essay-response + critical-analysis |
 | `b2` (history modules), `c1` (biography modules) | **Traditional** | quiz, fill-in, cloze, etc. |
 
 ---
 
-## Seminar Mode (hist, c1-bio tracks)
+## Seminar Mode (hist, bio tracks)
 
 <critical>
 
@@ -158,7 +158,7 @@ Every analytical activity MUST link to a reading source:
   title: 'Есе: Дипломатія Мазепи'
   source_reading: reading-mazepa     # ← REQUIRED: Links to reading above
   prompt: 'Проаналізуйте...'
-  min_words: 150  # hist: 150-250, c1-bio: 300-500
+  min_words: 150  # hist: 150-250, bio: 300-500
 ```
 
 ### Validation (Audit Enforcement)

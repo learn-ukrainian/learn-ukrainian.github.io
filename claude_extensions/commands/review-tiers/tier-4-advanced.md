@@ -1,6 +1,6 @@
 # Tier 4: Advanced Levels (C1/C1-PRO/C2 Core)
 
-> **Target:** C1 Core, C1-PRO, and C2 Core modules (NOT ISTORIOHRAFIIA, NOT C1-BIO — those are Tier 3 seminars)
+> **Target:** C1 Core, C1-PRO, and C2 Core modules (NOT ISTORIOHRAFIIA, NOT BIO — those are Tier 3 seminars)
 > **Pedagogy:** TTT/CLIL for Core; ESP+CLIL for C1-PRO
 > **Immersion:** 100% Ukrainian
 > **Experience Goal:** Advanced learning — sophisticated, nuanced, intellectually stimulating

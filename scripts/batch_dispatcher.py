@@ -23,10 +23,10 @@ Usage:
     .venv/bin/python scripts/batch_dispatcher.py status
 
     # Force a specific track
-    .venv/bin/python scripts/batch_dispatcher.py dispatch-one --track c1-bio
+    .venv/bin/python scripts/batch_dispatcher.py dispatch-one --track bio
 
     # Filter tracks
-    --include-tracks hist c1-bio lit
+    --include-tracks hist bio lit
     --exclude-tracks a1 b1 b2
 
     # Safety timeout

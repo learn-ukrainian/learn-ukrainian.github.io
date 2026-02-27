@@ -6,10 +6,10 @@ searches each against the literary RAG collection, and reports which modules
 have unverified quotes (candidates for Phase D re-review).
 
 Usage:
-    .venv/bin/python scripts/check_rag_coverage.py c1-bio
-    .venv/bin/python scripts/check_rag_coverage.py c1-bio --json
+    .venv/bin/python scripts/check_rag_coverage.py bio
+    .venv/bin/python scripts/check_rag_coverage.py bio --json
     .venv/bin/python scripts/check_rag_coverage.py --all-seminar
-    .venv/bin/python scripts/check_rag_coverage.py c1-bio --threshold 0.4
+    .venv/bin/python scripts/check_rag_coverage.py bio --threshold 0.4
 """
 
 from __future__ import annotations
@@ -185,7 +185,7 @@ def main():
     parser.add_argument(
         "track",
         nargs="?",
-        help="Track slug (e.g., c1-bio, hist). Required unless --all-seminar.",
+        help="Track slug (e.g., bio, hist). Required unless --all-seminar.",
     )
     parser.add_argument(
         "--all-seminar",

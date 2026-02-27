@@ -3,7 +3,7 @@
 <skill>
 name: batch-fix
 description: Run audit on module range and fix non-content issues systematically. Does NOT fix word count issues - those require /research + /expand.
-arguments: level range - e.g., "b1 15-20" or "c1-bio 25-29"
+arguments: level range - e.g., "b1 15-20" or "bio 25-29"
 </skill>
 
 ## Purpose
@@ -48,7 +48,7 @@ Collect results into categories:
 ### Step 2: Report Status
 
 ```
-📊 Batch Audit: c1-bio 25-29
+📊 Batch Audit: bio 25-29
 
 ✅ PASSED (1):
    - M27 ivan-mazepa
@@ -94,17 +94,17 @@ Still needs work (use /expand individually):
 - M29 pavlo-polubotok: 1343/4300 words
 
 To fix word count issues:
-  /expand curriculum/l2-uk-en/c1-bio/danylo-apostol.md
-  /expand curriculum/l2-uk-en/c1-bio/pavlo-polubotok.md
+  /expand curriculum/l2-uk-en/bio/danylo-apostol.md
+  /expand curriculum/l2-uk-en/bio/pavlo-polubotok.md
 ```
 
 ## Example Usage
 
 ```
-User: /batch-fix c1-bio 25-29
+User: /batch-fix bio 25-29
 
 Claude:
-📊 Auditing c1-bio modules 25-29...
+📊 Auditing bio modules 25-29...
 
 [Runs audits, categorizes results]
 
@@ -146,7 +146,7 @@ These require:
 This skill should be called from `/module` when processing ranges:
 
 ```
-/module c1-bio 25-29
+/module bio 25-29
 → Run batch audit first
 → Auto-fix fixable issues
 → Flag word count issues for individual /expand

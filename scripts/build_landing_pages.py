@@ -27,7 +27,7 @@ LEVEL_STATUS_FILE = PROJECT_ROOT / "docs" / "l2-uk-en" / "level-status.yaml"
 
 # Core levels and specialized tracks
 CORE_LEVELS = ["a1", "a2", "b1", "b2", "c1", "c2"]
-SPECIALIZED_TRACKS = ["hist", "c1-bio", "istoriohrafiia", "b2-pro", "c1-pro", "lit", "oes", "ruth"]
+SPECIALIZED_TRACKS = ["hist", "bio", "istoriohrafiia", "b2-pro", "c1-pro", "lit", "oes", "ruth"]
 
 # Ukrainian level names
 LEVEL_NAMES_UK = {
@@ -38,7 +38,7 @@ LEVEL_NAMES_UK = {
     "c1": "C1 - Просунутий",
     "c2": "C2 - Досконалий",
     "hist": "HIST - Історія України",
-    "c1-bio": "C1-BIO - Біографії українців",
+    "bio": "BIO - Біографії українців",
     "istoriohrafiia": "ISTORIOHRAFIIA - Історіографія",
     "b2-pro": "B2-PRO - Професійна українська",
     "c1-pro": "C1-PRO - Фахова українська",
@@ -56,7 +56,7 @@ LEVEL_NAMES_EN = {
     "c1": "Advanced",
     "c2": "Mastery",
     "hist": "History Track",
-    "c1-bio": "Biography Track",
+    "bio": "Biography Track",
     "istoriohrafiia": "Historiography Track",
     "b2-pro": "Professional Track",
     "c1-pro": "Professional Mastery",
@@ -256,7 +256,7 @@ import Home from '@site/src/components/Home';
 # Sidebar positions for _category.json
 LEVEL_POSITIONS = {
     "a1": 2, "a2": 3, "b1": 4, "b2": 5, "c1": 6, "c2": 7,
-    "hist": 8, "c1-bio": 9, "istoriohrafiia": 10,
+    "hist": 8, "bio": 9, "istoriohrafiia": 10,
     "b2-pro": 11, "c1-pro": 12,
     "lit": 13, "oes": 14, "ruth": 15,
 }
@@ -270,7 +270,7 @@ CATEGORY_DESCRIPTIONS = {
     "c1": "Stylistics, folk culture, literature, and advanced language. {n} modules for proficient users.",
     "c2": "Stylistic perfection and professional specialization. {n} modules for complete mastery.",
     "hist": "Ukrainian history from Trypillia to modern independence. {n} modules at B2 level.",
-    "c1-bio": "Notable Ukrainians through history — poets, scientists, warriors, artists. {n} biographical modules.",
+    "bio": "Notable Ukrainians through history — poets, scientists, warriors, artists. {n} biographical modules.",
     "istoriohrafiia": "Primary sources, historiography, and analytical history. {n} modules at academic level.",
     "b2-pro": "Business communication and professional domains. {n} modules for the workplace.",
     "c1-pro": "Executive, academic, and specialized professional Ukrainian. {n} modules.",
@@ -285,7 +285,7 @@ CATEGORY_LABELS = {
     "b1": "B1 - Intermediate", "b2": "B2 - Upper-Intermediate",
     "c1": "C1 - Advanced", "c2": "C2 - Mastery",
     "hist": "HIST - Історія України",
-    "c1-bio": "C1-BIO - Біографії українців",
+    "bio": "BIO - Біографії українців",
     "istoriohrafiia": "ISTORIOHRAFIIA - Історіографія",
     "b2-pro": "B2-PRO - Професійна українська",
     "c1-pro": "C1-PRO - Фахова українська",

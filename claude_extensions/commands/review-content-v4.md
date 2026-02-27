@@ -158,7 +158,7 @@ Check if any phrasing echoes Russian dezinformatsiia framing:
 
 C1 and above MUST demonstrate modal hedging and intellectual nuance:
 - Check for presence of: можливо, ймовірно, з одного боку...з іншого, водночас, утім, проте
-- Count hedging markers: minimum 5 per 1000 words for ISTORIOHRAFIIA/C1-BIO
+- Count hedging markers: minimum 5 per 1000 words for ISTORIOHRAFIIA/BIO
 - Verify balanced framing: "Деякі дослідники вважають..." vs "Інші стверджують..."
 - Absence of nuance markers in academic content → Language score capped at 7
 
@@ -358,7 +358,7 @@ For level-specific expectations, read the appropriate tier file:
 |-------|-----------|
 | A1, A2 | `claude_extensions/commands/review-tiers/tier-1-beginner.md` |
 | B1, B2 Core | `claude_extensions/commands/review-tiers/tier-2-core.md` |
-| HIST, C1-BIO, LIT | `claude_extensions/commands/review-tiers/tier-3-seminar.md` |
+| HIST, BIO, LIT | `claude_extensions/commands/review-tiers/tier-3-seminar.md` |
 | C1, C2 | `claude_extensions/commands/review-tiers/tier-4-advanced.md` |
 
 ---

@@ -209,7 +209,7 @@ export default function Home(): ReactNode {
                 isTrack
               />
               <LevelCard
-                level="C1-BIO"
+                level="BIO"
                 name="Biographies"
                 description="Notable Ukrainians through history"
                 modules={172}

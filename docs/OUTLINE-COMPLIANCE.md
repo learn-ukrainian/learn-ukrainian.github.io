@@ -213,7 +213,7 @@ content_outline:
 
 **Expected usage:**
 - HIST modules using fractal generation (23 modules currently have outlines)
-- C1-BIO modules with detailed structure
+- BIO modules with detailed structure
 - Any module requiring pre-planned section breakdown
 
 ## Limitations

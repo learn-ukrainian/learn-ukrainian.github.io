@@ -1,0 +1,27 @@
+{
+  "track": "bio",
+  "slug": "petro-sahaidachny",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T12:00:49Z",
+      "task_id": "v3-petro-sahaidachny-pA",
+      "mode": "meta-only"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-27T10:28:15Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T10:31:12Z",
+      "task_id": "v3-petro-sahaidachny-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-27T10:35:48Z",
+      "attempts": 2
+    }
+  }
+}

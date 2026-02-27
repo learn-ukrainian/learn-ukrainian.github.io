@@ -389,7 +389,7 @@ M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, 
 ### Why C1 Is Better Quality
 
 1. **Newer creation** - Benefits from improved templates and workflow
-2. **Better templates** - c1-biography-module-template is more mature
+2. **Better templates** - biography-module-template is more mature
 3. **Improved process** - Lessons learned from B1/B2 rebuilds
 4. **Structural only** - No pedagogical issues (immersion, density, complexity are good)
 
@@ -508,7 +508,7 @@ M36, M37, M38, M39, M40, M41, M42, M44, M46, M83, M84, M85, M86, M87, M88, M89, 
 ### Templates (Reference)
 
 - `docs/l2-uk-en/templates/c1-module-template.md` - Standard C1 template
-- `docs/l2-uk-en/templates/c1-biography-module-template.md` - Biography template
+- `docs/l2-uk-en/templates/biography-module-template.md` - Biography template
 - `docs/l2-uk-en/templates/b1-checkpoint-module-template.md` - Checkpoint template
 
 ### Curriculum Plans

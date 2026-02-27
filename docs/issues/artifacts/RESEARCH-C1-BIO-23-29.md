@@ -1,4 +1,4 @@
-# Research Notes: C1-BIO Modules 23-29
+# Research Notes: BIO Modules 23-29
 
 > **Policy**: All research conducted in Ukrainian. No Russian sources.
 > **Context**: C1 Biography Track (Seminar Style). Focus on depth, historical accuracy, and authentic terminology.

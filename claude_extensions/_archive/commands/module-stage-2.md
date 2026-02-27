@@ -57,7 +57,7 @@ Read the module file created in Stage 1:
 **For core levels (a1, a2, b1, b2, c1, c2):**
 `curriculum/l2-uk-en/{level}/{number:02d}-*.md`
 
-**For track levels (hist, c1-bio, lit, b2-pro, c1-pro):**
+**For track levels (hist, bio, lit, b2-pro, c1-pro):**
 Look up slug from manifest: `yq ".levels.\"{level}\".modules[{number-1}]" curriculum/l2-uk-en/curriculum.yaml`
 Then: `curriculum/l2-uk-en/{level}/{slug}.md`
 

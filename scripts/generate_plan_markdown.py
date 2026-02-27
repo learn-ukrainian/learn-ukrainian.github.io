@@ -330,7 +330,7 @@ def generate_plan_markdown(level: str, base_path: Path) -> str:
 
 def main():
     parser = argparse.ArgumentParser(description="Generate markdown from YAML plans")
-    parser.add_argument("level", help="Level to generate (e.g., hist, c1-bio)")
+    parser.add_argument("level", help="Level to generate (e.g., hist, bio)")
     parser.add_argument("--diff", action="store_true", help="Compare with archived plan")
     parser.add_argument("--output", "-o", help="Output file path (default: stdout)")
     args = parser.parse_args()

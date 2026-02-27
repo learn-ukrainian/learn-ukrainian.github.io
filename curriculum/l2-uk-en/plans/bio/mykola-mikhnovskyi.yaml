@@ -1,0 +1,97 @@
+module: bio-73
+level: BIO
+sequence: 73
+slug: mykola-mikhnovskyi
+version: '2.0'
+title: 'Микола Міхновський: Ідеолог самостійництва'
+content_outline:
+- section: Вступ — Голос української незалежності
+  points:
+  - Микола Міхновський — перший ідеолог повної незалежності України
+  - Від студентського братства до «Самостійної України»
+  - Трагічна смерть і посмертне визнання
+- section: Ранні роки та освіта (1873-1895)
+  points:
+  - Народження в селі Турівка на Київщині
+  - Навчання на юридичному факультеті Київського університету
+  - Формування національних переконань
+  - Заснування Братства тарасівців (1891)
+- section: «Самостійна Україна» (1900-1905)
+  points:
+  - Публікація брошури «Самостійна Україна» (1900)
+  - Гасло «Україна для українців»
+  - Критика автономізму та федералізму
+  - Вплив на радикалізацію національного руху
+- section: Політична діяльність (1905-1917)
+  points:
+  - Заснування Української народної партії
+  - Юридична практика та захист політв'язнів
+  - Конфлікти з іншими напрямами національного руху
+  - Організація «Вільного козацтва»
+- section: Революційні роки (1917-1918)
+  points:
+  - Критика поміркованої політики Центральної Ради
+  - Спроба військового перевороту
+  - Конфлікт з Грушевським та соціалістами
+  - Маргіналізація в політичному житті
+- section: Останні роки та загибель (1918-1924)
+  points:
+  - Самотність у добу Гетьманату та Директорії
+  - Самогубство в 1924 році в Києві
+  - Суперечки щодо обставин смерті
+  - Посмертне визнання як пророка незалежності
+vocabulary_hints:
+  required:
+  - самостійність (independence)
+  - ідеолог (ideologue)
+  - націоналізм (nationalism)
+  - автономія (autonomy)
+  - федералізм (federalism)
+  - братство (brotherhood)
+  - маніфест (manifesto)
+  - радикал (radical)
+  - державність (statehood)
+  - незалежність (independence)
+  recommended:
+  - сепаратизм (separatism)
+  - інтеґральний (integral)
+  - республіка (republic)
+  - суверенітет (sovereignty)
+  - патріотизм (patriotism)
+activity_hints:
+- type: reading
+  focus: Уривки з «Самостійної України» та промов
+  source: Публіцистичні твори
+  items: 3 passages
+- type: essay-response
+  focus: Чому Міхновський випередив свій час?
+  output: Historical analysis
+focus: biography
+prerequisites:
+- bio-22-mykhailo-drahomanov
+connects_to:
+- bio-52-dmytro-dontsov
+- bio-44-symon-petliura
+module_type: biography
+sources:
+- name: Микола Міхновський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Микола_Міхновський
+  type: primary
+  notes: Біографія, політична діяльність, ідеологія
+- name: Самостійна Україна (брошура)
+  url: https://uk.wikipedia.org/wiki/Самостійна_Україна_(брошура)
+  type: reference
+  notes: Програмний документ українського самостійництва
+- name: Братство тарасівців
+  url: https://uk.wikipedia.org/wiki/Братство_тарасівців
+  type: reference
+  notes: Перша політична організація Міхновського
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of микола міхновський: ідеолог самостійництва'
+- Evaluate the contributions of голос української незалежності
+- Trace the career and influence of останні роки та загибель (1918-1924)
+persona:
+  voice: Senior Biographer
+  role: Independence Ideologue

@@ -7,7 +7,7 @@ without any LLM calls. Output can be used for scoring or analysis.
 
 Usage:
     python scripts/extract_track_metrics.py hist
-    python scripts/extract_track_metrics.py c1-bio --format json
+    python scripts/extract_track_metrics.py bio --format json
     python scripts/extract_track_metrics.py --all
 """
 
@@ -32,7 +32,7 @@ def main():
         epilog="""
 Examples:
     python scripts/extract_track_metrics.py hist
-    python scripts/extract_track_metrics.py c1-bio --format json
+    python scripts/extract_track_metrics.py bio --format json
     python scripts/extract_track_metrics.py --all --format json > metrics.json
         """
     )
@@ -40,7 +40,7 @@ Examples:
     parser.add_argument(
         'track',
         nargs='?',
-        help='Track ID to extract metrics from (e.g., hist, c1-bio, lit, a1)'
+        help='Track ID to extract metrics from (e.g., hist, bio, lit, a1)'
     )
 
     parser.add_argument(

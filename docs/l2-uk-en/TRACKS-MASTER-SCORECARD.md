@@ -79,7 +79,7 @@ Each track type uses different weights based on its pedagogical focus:
 |-------|------|---------|-------|-----------|--------|
 | **HIST** | History | 140 | 7.2/10 | 77% (109/140) | ⚠️ Good |
 | **LIT** | Literature | 30 | 3.2/10 | 0% (0/30) | 🔴 Vocab block |
-| **C1-BIO** | Biography | 128 | 2.8/10 | 3% (4/128) | 🔴 Many gaps |
+| **BIO** | Biography | 128 | 2.8/10 | 3% (4/128) | 🔴 Many gaps |
 | **B2-PRO** | Professional | 40 | 1.0/10 | 0% (0/40) | 🔴 Greenfield |
 | **C1-PRO** | Professional | 50 | 1.0/10 | 0% (0/50) | 🔴 Greenfield |
 | **ISTORIOHRAFIIA** | Historiography | 135 | 0.9/10 | 1% (1/135) | 🔴 Greenfield |
@@ -94,7 +94,7 @@ Priority ranking based on effort-to-impact ratio:
 |----------|-------|-------|--------|---------------|
 | **1** | LIT | 3.2→10 | 40h | Content exists, vocab only |
 | **2** | HIST | 7.2→10 | 77h | 77% done, finish strong |
-| **3** | C1-BIO | 2.8→10 | 319h | 87% content, needs vocab |
+| **3** | BIO | 2.8→10 | 319h | 87% content, needs vocab |
 | **4** | B2-PRO | 1.0→10 | 160h | Practical, B2 audience |
 | **5** | C1-PRO | 1.0→10 | 200h | Advanced professional |
 | **6** | ISTORIOHRAFIIA | 0.9→10 | 540h | Largest greenfield |
@@ -119,7 +119,7 @@ Priority ranking based on effort-to-impact ratio:
 ```
 **Primary issue:** All 30 missing vocabulary sidecars
 
-### C1-BIO (Partially Complete)
+### BIO (Partially Complete)
 ```
 ✅ 4 modules passing (3%)
 ❌ 107 modules failing
@@ -156,7 +156,7 @@ Priority ranking based on effort-to-impact ratio:
 |-------|---------|-------|------------|-------|-------|
 | LIT | 10 | 20 | 3 | 7 | **40** |
 | HIST | 56 | 8 | 8 | 5 | **77** |
-| C1-BIO | 228 | 37 | 17 | 37 | **319** |
+| BIO | 228 | 37 | 17 | 37 | **319** |
 | B2-PRO | 120 | 20 | 15 | 5 | **160** |
 | C1-PRO | 160 | 25 | 10 | 5 | **200** |
 | ISTORIOHRAFIIA | 400 | 60 | 60 | 20 | **540** |
@@ -175,23 +175,23 @@ Priority ranking based on effort-to-impact ratio:
 
 **Q1 Result:** LIT 10/10, HIST 10/10
 
-### Q2 2026: C1-BIO Push
+### Q2 2026: BIO Push
 | Month | Focus | Hours |
 |-------|-------|-------|
-| May | C1-BIO missing files | 68h |
-| Jun | C1-BIO vocabulary | 100h |
-| Jul | C1-BIO expansion | 100h |
+| May | BIO missing files | 68h |
+| Jun | BIO vocabulary | 100h |
+| Jul | BIO expansion | 100h |
 
-**Q2 Result:** C1-BIO ~7/10
+**Q2 Result:** BIO ~7/10
 
-### Q3 2026: C1-BIO Completion + B2-PRO Start
+### Q3 2026: BIO Completion + B2-PRO Start
 | Month | Focus | Hours |
 |-------|-------|-------|
-| Aug | C1-BIO completion | 51h |
+| Aug | BIO completion | 51h |
 | Sep | B2-PRO Phase 1 | 60h |
 | Oct | B2-PRO Phase 2 | 72h |
 
-**Q3 Result:** C1-BIO 10/10, B2-PRO 4/10
+**Q3 Result:** BIO 10/10, B2-PRO 4/10
 
 ### Q4 2026: B2-PRO + C1-PRO Start
 | Month | Focus | Hours |
@@ -213,7 +213,7 @@ Priority ranking based on effort-to-impact ratio:
 |-------|------------------|
 | LIT | `docs/l2-uk-en/LIT-10-10-IMPROVEMENT-PLAN.md` |
 | HIST | `docs/l2-uk-en/HIST-10-10-IMPROVEMENT-PLAN.md` |
-| C1-BIO | `docs/l2-uk-en/C1-BIO-10-10-IMPROVEMENT-PLAN.md` |
+| BIO | `docs/l2-uk-en/BIO-10-10-IMPROVEMENT-PLAN.md` |
 | ISTORIOHRAFIIA | `docs/l2-uk-en/ISTORIOHRAFIIA-10-10-IMPROVEMENT-PLAN.md` |
 | B2-PRO, C1-PRO | `docs/l2-uk-en/PRO-TRACKS-10-10-IMPROVEMENT-PLAN.md` |
 
@@ -231,7 +231,7 @@ Priority ranking based on effort-to-impact ratio:
 | 4 | B1 | 7.0/10 | 21h | Core |
 | 5 | HIST | 7.2/10 | 77h | Track |
 | 6 | B2 | 4.9/10 | 79h | Core |
-| 7 | C1-BIO | 2.8/10 | 319h | Track |
+| 7 | BIO | 2.8/10 | 319h | Track |
 | 8 | C1 | 4.7/10 | 99h | Core |
 | 9 | B2-PRO | 1.0/10 | 160h | Track |
 | 10 | C1-PRO | 1.0/10 | 200h | Track |

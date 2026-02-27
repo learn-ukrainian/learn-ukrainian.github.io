@@ -48,7 +48,7 @@ Alignment: Цей модуль розкриває тему "українські
 
 ## Cross-References
 - **Builds on:** A2 (Clothing module), B1.4 Folk Culture (M72-86).
-- **Prepares for:** C1.4 Literature (M86+ - описи героїв у класичній літературі), C1-BIO (біографії історичних постатей).
+- **Prepares for:** C1.4 Literature (M86+ - описи героїв у класичній літературі), BIO (біографії історичних постатей).
 
 ## Notes for Content Writing
 - Використовувати термін "стрій" (costume/outfit) як синонім до "костюм" для стилістичного збагачення.

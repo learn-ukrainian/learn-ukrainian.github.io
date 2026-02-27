@@ -1,4 +1,4 @@
-# C1-BIO Curriculum Plan: Ukrainian Biographies Track
+# BIO Curriculum Plan: Ukrainian Biographies Track
 
 **Status:** ✅ IMPLEMENTED (relocated from C1 Core, January 2026)
 **Modules:** 01-119 (119 modules + 1 checkpoint)
@@ -39,7 +39,7 @@
 
 ## Track Overview
 
-The C1-BIO track presents biographies of notable Ukrainians from Kyivan Rus to the present day. It follows a **chronological-thematic** approach, grouping figures by historical era and field of achievement.
+The BIO track presents biographies of notable Ukrainians from Kyivan Rus to the present day. It follows a **chronological-thematic** approach, grouping figures by historical era and field of achievement.
 
 **Learning Goals:**
 
@@ -208,7 +208,7 @@ The C1-BIO track presents biographies of notable Ukrainians from Kyivan Rus to t
 
 | #   | Slug              | Title                       | Type       |
 | --- | ----------------- | --------------------------- | ---------- |
-| 101 | c1-bio-checkpoint | Контрольна точка: Біографії | Checkpoint |
+| 101 | bio-checkpoint | Контрольна точка: Біографії | Checkpoint |
 
 ### Phase BIO.12: Literature Pioneers (M102-103)
 
@@ -303,7 +303,7 @@ The track covers diverse fields of Ukrainian achievement:
 - 10-12 activities
 - 100% Ukrainian immersion
 
-**Template:** `c1-biography-module-template.md`
+**Template:** `biography-module-template.md`
 
 ---
 
@@ -328,7 +328,7 @@ Key modules addressing colonialism:
 
 | Prerequisite | This Track | Leads To  |
 | ------------ | ---------- | --------- |
-| HIST      | **C1-BIO** | LIT Track |
+| HIST      | **BIO** | LIT Track |
 
 Students should complete HIST for historical context before studying individual biographies.
 

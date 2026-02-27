@@ -27,7 +27,7 @@ curl -s http://localhost:8765/api/state/pipeline/istoriohrafiia | python3 -m jso
 ```bash
 # Failing or weak modules
 curl -s "http://localhost:8765/api/state/failing?track=hist" | python3 -m json.tool
-curl -s "http://localhost:8765/api/state/weak-points?track=c1-bio" | python3 -m json.tool
+curl -s "http://localhost:8765/api/state/weak-points?track=bio" | python3 -m json.tool
 
 # Outstanding critical issues
 curl -s "http://localhost:8765/api/state/issues?severity=critical" | python3 -m json.tool

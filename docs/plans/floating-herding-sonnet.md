@@ -9,7 +9,7 @@ The next step is **prevention**: give Gemini access to real primary source passa
 Three workstreams, in dependency order:
 1. **Phase B RAG pre-fetch** — inject primary source excerpts into Gemini's content generation prompt
 2. **RAG coverage recheck script** — identify modules needing re-review against expanded RAG
-3. **Track rename** — `hist` → `hist`, `istoriohrafiia` → `istoriohrafiia`, `c1-bio` → `bio` (with migration script)
+3. **Track rename** — `hist` → `hist`, `istoriohrafiia` → `istoriohrafiia`, `bio` → `bio` (with migration script)
 
 ---
 
@@ -123,8 +123,8 @@ New standalone script `scripts/check_rag_coverage.py` that:
 
 ```
 Usage:
-    .venv/bin/python scripts/check_rag_coverage.py c1-bio
-    .venv/bin/python scripts/check_rag_coverage.py c1-bio --json
+    .venv/bin/python scripts/check_rag_coverage.py bio
+    .venv/bin/python scripts/check_rag_coverage.py bio --json
     .venv/bin/python scripts/check_rag_coverage.py --all-seminar
 ```
 
@@ -142,7 +142,7 @@ Usage:
 
 **Output format (stdout):**
 ```
-=== RAG Coverage Report: c1-bio ===
+=== RAG Coverage Report: bio ===
 
 | Module                  | Quotes | Verified | Unverified | Action   |
 |-------------------------|--------|----------|------------|----------|
@@ -164,14 +164,14 @@ Summary: 53 modules, 12 RECHECK, 8 AWAIT, 33 OK
 
 ---
 
-## Workstream 3: Track Rename (`hist` → `hist`, `istoriohrafiia` → `istoriohrafiia`, `c1-bio` → `bio`)
+## Workstream 3: Track Rename (`hist` → `hist`, `istoriohrafiia` → `istoriohrafiia`, `bio` → `bio`)
 
 ### Scale
 
 This is a massive rename. Per exploration results:
 - `hist`: ~850 files affected (129 Python, 333 YAML, 288 JSON, 100+ MD)
 - `istoriohrafiia`: ~720 files affected (53 Python, 281 YAML, 182 JSON, 200+ MD)
-- `c1-bio`: ~800+ files affected (similar scope to istoriohrafiia — Python, YAML, JSON, MD)
+- `bio`: ~800+ files affected (similar scope to istoriohrafiia — Python, YAML, JSON, MD)
 - Total: ~2,370+ files across the project
 
 ### Approach: Migration script
@@ -228,7 +228,7 @@ For each rename, replace these string variants:
 |----------|----------|----------------|----------------|---------------|---------------|
 | `hist` | `hist` | `history` | `history` | `HIST.md` | `HIST.md` |
 | `istoriohrafiia` | `istoriohrafiia` | `istoriohrafiia` | `istoriohrafiia` | `ISTORIOHRAFIIA.md` | `ISTORIOHRAFIIA.md` |
-| `c1-bio` | `bio` | `C1-biography` | `biography` | `C1-BIO.md` | `BIO.md` |
+| `bio` | `bio` | `biography` | `biography` | `BIO.md` | `BIO.md` |
 
 ### Execution order
 
@@ -236,8 +236,8 @@ For each rename, replace these string variants:
 2. Run `scripts/rename_track.py hist hist` → commit
 3. Run `scripts/rename_track.py istoriohrafiia istoriohrafiia --dry-run` → review output
 4. Run `scripts/rename_track.py istoriohrafiia istoriohrafiia` → commit
-5. Run `scripts/rename_track.py c1-bio bio --dry-run` → review output
-6. Run `scripts/rename_track.py c1-bio bio` → commit
+5. Run `scripts/rename_track.py bio bio --dry-run` → review output
+6. Run `scripts/rename_track.py bio bio` → commit
 7. Run full test suite: `pytest tests/ -x`
 8. Deploy: `npm run claude:deploy`
 
@@ -275,13 +275,13 @@ npm run claude:deploy  # deploy template
 .venv/bin/python -m pytest tests/test_pipeline_v3.py -x
 
 # Workstream 2: Recheck script
-.venv/bin/python scripts/check_rag_coverage.py c1-bio
-.venv/bin/python scripts/check_rag_coverage.py c1-bio --json | head -20
+.venv/bin/python scripts/check_rag_coverage.py bio
+.venv/bin/python scripts/check_rag_coverage.py bio --json | head -20
 
 # Workstream 3: Track rename (dry-run each, then execute sequentially)
 .venv/bin/python scripts/rename_track.py hist hist --dry-run
 .venv/bin/python scripts/rename_track.py istoriohrafiia istoriohrafiia --dry-run
-.venv/bin/python scripts/rename_track.py c1-bio bio --dry-run
+.venv/bin/python scripts/rename_track.py bio bio --dry-run
 # (review dry-run output, then execute each + commit)
 .venv/bin/python -m pytest tests/ -x
 ```

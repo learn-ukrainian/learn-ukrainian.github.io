@@ -1,4 +1,4 @@
-# C1-BIO Track: Path to 10/10
+# BIO Track: Path to 10/10
 
 **Created:** 2026-01-31
 **Current Score:** 2.8/10
@@ -242,7 +242,7 @@ Focus on era-appropriate vocabulary:
 
 ## References
 
-- `docs/C1-BIO-STATUS.md` - Current audit status
-- `claude_extensions/quick-ref/c1-bio.md` - BIO workflow
-- `curriculum/l2-uk-en/plans/c1-bio/` - All 128 plans
-- `curriculum/l2-uk-en/c1-bio/BIRTH_ORDER.yaml` - Chronological ordering
+- `docs/BIO-STATUS.md` - Current audit status
+- `claude_extensions/quick-ref/bio.md` - BIO workflow
+- `curriculum/l2-uk-en/plans/bio/` - All 128 plans
+- `curriculum/l2-uk-en/bio/BIRTH_ORDER.yaml` - Chronological ordering

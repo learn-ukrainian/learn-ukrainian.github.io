@@ -26,7 +26,7 @@ Read: `claude_extensions/phases/module-act-qa.md`
 
 > **Architecture v2.0:** Read activity types from plan.
 
-**For tracks (hist, c1-bio, lit, istoriohrafiia, b2-pro):**
+**For tracks (hist, bio, lit, istoriohrafiia, b2-pro):**
 
 1. Look up slug from manifest:
    ```bash

@@ -63,7 +63,7 @@ class TestCheckHeadingLevels:
     def test_seminar_track_allows_h2_summary(self):
         """Seminar tracks use flat H2 for Підсумок."""
         content = "---\nmodule: 1\n---\n\n# Title\n\n## Підсумок\n\nContent"
-        violations = check_heading_levels(content, level_code='c1-bio')
+        violations = check_heading_levels(content, level_code='bio')
         # Should NOT flag Підсумок as needing H1 in seminar tracks
         summary_violations = [v for v in violations if 'підсумок' in v.get('issue', '').lower()]
         assert len(summary_violations) == 0

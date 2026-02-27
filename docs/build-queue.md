@@ -6,7 +6,7 @@
 
 ## Rationale
 
-Priority order: finish A1 (1 remaining) > fix failing A2 modules > expand A2 > parallel seminar tracks (HIST, C1-BIO). Core levels are sequential (learners need them in order). Seminar tracks can run in parallel since they're independent.
+Priority order: finish A1 (1 remaining) > fix failing A2 modules > expand A2 > parallel seminar tracks (HIST, BIO). Core levels are sequential (learners need them in order). Seminar tracks can run in parallel since they're independent.
 
 ## Current Priorities (Next 20 Targets)
 
@@ -28,10 +28,10 @@ Priority order: finish A1 (1 remaining) > fix failing A2 modules > expand A2 > p
 | 14 | `hist` | `khozary-i-sloviany` | A-D | Yellow | Pending | |
 | 15 | `hist` | `syntez-vytoky-1` | A-D | Yellow | Pending | Synthesis module |
 | 16 | `hist` | `oleh-ihor` | A-D | Yellow | Pending | |
-| 17 | `c1-bio` | `knyazhna-anna-yaroslavna` | A-D | Yellow | Pending | Seminar — parallel with HIST |
-| 18 | `c1-bio` | `volodymyr-monomakh` | A-D | Yellow | Pending | |
-| 19 | `c1-bio` | `nestor-litopysets` | A-D | Yellow | Pending | |
-| 20 | `c1-bio` | `roman-mstyslavych` | A-D | Yellow | Pending | |
+| 17 | `bio` | `knyazhna-anna-yaroslavna` | A-D | Yellow | Pending | Seminar — parallel with HIST |
+| 18 | `bio` | `volodymyr-monomakh` | A-D | Yellow | Pending | |
+| 19 | `bio` | `nestor-litopysets` | A-D | Yellow | Pending | |
+| 20 | `bio` | `roman-mstyslavych` | A-D | Yellow | Pending | |
 
 ## Handoff Contract Template
 
@@ -54,7 +54,7 @@ Blue echoes back confirmation or flags mismatches before work begins.
 
 1. **Pull from top**: Work on the highest-priority available module in your phase.
 2. **Fix before build**: Modules marked "Failing audit" should be fixed before building new ones in the same track.
-3. **Batch limit**: Seminar tracks (HIST, C1-BIO): max 2 modules per batch to prevent context exhaustion.
+3. **Batch limit**: Seminar tracks (HIST, BIO): max 2 modules per batch to prevent context exhaustion.
 4. **Factual verification**: Seminar tracks require Key Facts Ledger in Phase A research. Phase D reviewer verifies against it.
 5. **Completion**: When a module passes Phase D, mark it DONE here and add the next module from the backlog.
 6. **No freelancing**: Do not work on modules outside this queue without explicit coordination on #619.

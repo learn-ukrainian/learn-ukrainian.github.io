@@ -21,7 +21,7 @@ gh issue create \
 ## Overview
 
 **Module**: `curriculum/l2-uk-en/{level}/{num}-{slug}.md`
-**Level**: [A1/A2/B1/B2/C1/C2/HIST/C1-BIO/etc.]
+**Level**: [A1/A2/B1/B2/C1/C2/HIST/BIO/etc.]
 **Assigned to**: [Claude / Gemini]
 
 ## Failing Gates

@@ -34,7 +34,7 @@ TRACKS = {
         'description': 'Ukrainian history from Kyivan Rus to present',
         'prerequisite': 'b2-core-70'
     },
-    'c1-bio': {
+    'bio': {
         'name': 'C1 Biography Track - Famous Ukrainians',
         'description': 'Biographies of notable Ukrainian figures',
         'prerequisite': 'hist-61'

@@ -1,0 +1,93 @@
+module: bio-55
+level: BIO
+sequence: 55
+slug: borys-hrinchenko
+version: '2.0'
+title: 'Борис Грінченко: Лексикограф і просвітник'
+content_outline:
+- section: Вступ — Вартовий українського слова
+  points:
+  - Автор першого повного словника української мови
+  - Письменник, педагог, просвітитель
+  - Життя на службі українському народові
+- section: Дитинство та юність (1863-1881)
+  points:
+  - Народження на Харківщині
+  - Родина та виховання
+  - Раннє захоплення українською мовою
+  - Початок літературної діяльності
+- section: Педагогічна робота (1881-1893)
+  points:
+  - Вчителювання в сільських школах
+  - Методика навчання українською мовою
+  - Написання підручників для народу
+  - Конфлікти з царською владою
+- section: Літературна діяльність (1880-ті–1900-ті)
+  points:
+  - Оповідання та повісті
+  - Тема простого народу
+  - Драматургія
+  - Публіцистика та критика
+- section: Словник української мови (1907-1909)
+  points:
+  - Історія створення словника
+  - Методологія збору матеріалу
+  - Чотири томи та їхній зміст
+  - Значення для стандартизації мови
+- section: Спадщина — Каменяр словникарства
+  points:
+  - Останні роки та смерть (1910)
+  - Вплив на українську лексикографію
+  - Словник Грінченка в сучасній Україні
+  - Вшанування памяті
+vocabulary_hints:
+  required:
+  - лексикограф (lexicographer)
+  - словник (dictionary)
+  - просвітитель (enlightener)
+  - педагог (pedagogue)
+  - стандартизація мови (language standardization)
+  - лексикографія (lexicography)
+  - реєстрове слово (headword)
+  - гасло (entry)
+  - народна мова (folk language)
+  - діалект (dialect)
+  recommended:
+  - етимологія (etymology)
+  - тлумачення (definition)
+  - мовознавство (linguistics)
+  - кодифікація (codification)
+  - літературна норма (literary norm)
+activity_hints:
+- type: reading
+  focus: Українська лексикографія XIX ст.
+  source: Linguistic history sources
+  items: 3 passages
+- type: essay-response
+  focus: Яке значення мав Словник Грінченка для української мови?
+  output: Analytical essay
+focus: biography
+prerequisites:
+- bio-29
+connects_to:
+- bio-28
+- bio-97
+module_type: biography
+sources:
+- name: Борис Грінченко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Грінченко_Борис_Дмитрович
+  type: primary
+  notes: Comprehensive biography of lexicographer and educator
+- name: Словник Грінченка онлайн
+  url: https://hrinchenko.com/
+  type: reference
+  notes: Digital version of the famous dictionary
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of борис грінченко: лексикограф і просвітник'
+- Evaluate the contributions of вартовий українського слова
+- Trace the career and influence of каменяр словникарства
+persona:
+  voice: Senior Biographer
+  role: Dictionary Compiler

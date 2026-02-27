@@ -10,7 +10,7 @@ Deterministic extraction for ~80% of fields; Gemini CLI for the rest
 
 Usage:
     .venv/bin/python scripts/backfill_kfl.py --track hist
-    .venv/bin/python scripts/backfill_kfl.py --track c1-bio --dry-run
+    .venv/bin/python scripts/backfill_kfl.py --track bio --dry-run
     .venv/bin/python scripts/backfill_kfl.py --all
     .venv/bin/python scripts/backfill_kfl.py --all --skip-llm
 
@@ -33,13 +33,13 @@ GEMINI_BIN = shutil.which("gemini") or "/opt/homebrew/bin/gemini"
 
 # Tracks that contain seminar research files
 SEMINAR_TRACKS = [
-    "hist", "c1-bio", "istoriohrafiia",
+    "hist", "bio", "istoriohrafiia",
     "lit", "lit-essay", "lit-fantastika", "lit-hist-fic",
     "lit-humor", "lit-juvenile", "lit-war",
     "oes", "ruth",
 ]
 # Tracks where subjects are people (have birth/death dates)
-BIOGRAPHICAL_TRACKS = {"c1-bio"}
+BIOGRAPHICAL_TRACKS = {"bio"}
 
 # Death keywords in Ukrainian chronology
 _DEATH_KEYWORDS = re.compile(
@@ -278,7 +278,7 @@ def build_kfl_yaml(
         f'subject: "{_yaml_escape(subject)}"',
     ]
 
-    # Biographical fields (c1-bio only)
+    # Biographical fields (bio only)
     is_bio = track in BIOGRAPHICAL_TRACKS
     if is_bio:
         vital = detect_vital_status(events, "")
@@ -486,7 +486,7 @@ def main():
         description="Backfill Key Facts Ledger (KFL) into seminar research files.",
     )
     parser.add_argument("--track", type=str, default=None,
-                        help="Process a single track (hist, c1-bio, istoriohrafiia)")
+                        help="Process a single track (hist, bio, istoriohrafiia)")
     parser.add_argument("--all", action="store_true", dest="process_all",
                         help="Process all seminar tracks")
     parser.add_argument("--dry-run", action="store_true",

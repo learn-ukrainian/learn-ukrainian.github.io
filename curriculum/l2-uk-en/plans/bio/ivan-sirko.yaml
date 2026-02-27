@@ -1,0 +1,79 @@
+module: bio-25
+level: BIO
+sequence: 25
+slug: ivan-sirko
+version: '2.0'
+title: 'Іван Сірко: Легендарний кошовий отаман'
+content_outline:
+- section: Вступ — Легенда Запорозької Січі
+  points:
+  - Сірко як символ непереможності
+  - Урус-Шайтан: образ у ворогів
+  - Феномен характерництва
+- section: Життєпис
+  points:
+  - Походження та ранні роки
+  - Шлях до отаманства
+  - Десятикратне обрання кошовим
+  - Заслання до Сибіру та повернення
+- section: Історичний контекст
+  points:
+  - Епоха Руїни
+  - Запорожжя як автономний центр сили
+- section: Внесок
+  points:
+  - Військова тактика (рейдова війна)
+  - Звільнення невільників
+- section: Останні роки
+  points:
+  - Оборона Чигирина 1677–1678 рр.
+  - Життя на пасіці
+  - Смерть 1680 р.
+- section: Спадщина
+  points:
+  - Образ у фольклорі та мистецтві (Рєпін)
+  - Меморіал у Капулівці
+- section: Підсумок
+  points:
+  - Сірко як вічний чатовий українського Степу
+focus: biography
+pedagogy: seminar
+prerequisites:
+- bio-24 (Іван Виговський)
+- Розуміння контексту турецько-татарських набігів
+connects_to:
+- bio-26 (Юрій Немирич)
+- hist ruina-ii module
+objectives:
+- Проаналізувати військові стратегії Івана Сірка
+- Оцінити роль Запорозької Січі в епоху Руїни
+- Дослідити міфологізацію постаті Сірка в народній культурі
+grammar:
+- Епічний стиль розповіді
+- Термінологія козацького звичаєвого права
+module_type: biography
+sources:
+- name: Іван Сірко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Іван_Сірко
+  type: primary
+  notes: Біографія та походи
+- name: Дмитро Яворницький "Історія запорозьких козаків"
+  url: http://izbornyk.org.ua/
+  type: reference
+  notes: Класичне дослідження
+immersion: 100% Ukrainian
+phase: BIO
+vocabulary_hints:
+  required:
+  - характерник (kharakternyk)
+  - кошовий отаман (koshovyi otaman)
+  - невільник (slave / captive)
+activity_hints:
+- type: reading
+  focus: Лист запорожців турецькому султану (легендарний)
+  source: Folklore (adapted)
+- type: essay-response
+  focus: Феномен непереможності Сірка
+persona:
+  voice: Senior Biographer
+  role: Kish Otaman

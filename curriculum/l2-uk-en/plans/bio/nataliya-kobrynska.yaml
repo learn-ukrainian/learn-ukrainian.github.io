@@ -1,0 +1,98 @@
+module: bio-52
+level: BIO
+sequence: 52
+slug: nataliya-kobrynska
+version: '2.0'
+title: 'Наталія Кобринська: Піонерка фемінізму'
+content_outline:
+- section: Вступ — Народження українського фемінізму
+  points:
+  - Кобринська як засновниця жіночого руху в Україні
+  - Значення альманаху «Перший вінок»
+  - Зв'язок літературної та громадської діяльності
+- section: Дитинство та освіта (1855-1875)
+  points:
+  - Народження в родині священика на Галичині
+  - Домашня освіта та самоосвіта
+  - Вплив батька на формування світогляду
+  - Знайомство з європейськими ідеями емансипації
+- section: Шлюб та переломний момент (1875-1883)
+  points:
+  - Шлюб із священиком Теофілом Кобринським
+  - Смерть чоловіка та переосмислення життя
+  - Перші літературні спроби
+  - Формування феміністичної свідомості
+- section: «Перший вінок» та жіночий рух (1884-1893)
+  points:
+  - Співпраця з Оленою Пчілкою
+  - Видання альманаху «Перший вінок» (1887)
+  - Заснування Товариства руських жінок
+  - Боротьба за освіту та права жінок
+- section: Літературна творчість
+  points:
+  - Оповідання про долю селянок та міщанок
+  - Тема економічної незалежності жінок
+  - Критика патріархальних традицій
+  - Співпраця з Іваном Франком
+- section: Останні роки та спадщина (1893-1920)
+  points:
+  - Продовження громадської діяльності
+  - Труднощі Першої світової війни
+  - Смерть у Станіславі
+  - Вплив на подальший жіночий рух
+vocabulary_hints:
+  required:
+  - фемінізм (feminism)
+  - емансипація (emancipation)
+  - жіночий рух (women's movement)
+  - альманах (almanac)
+  - товариство (society/association)
+  - патріархат (patriarchy)
+  - рівноправність (equality)
+  - громадська діячка (public activist)
+  - священик (priest)
+  - просвітництво (enlightenment)
+  recommended:
+  - «Перший вінок» (The First Wreath)
+  - самоосвіта (self-education)
+  - економічна незалежність (economic independence)
+  - Галичина (Galicia)
+  - оповідання (short story)
+activity_hints:
+- type: reading
+  focus: Літературна спадщина
+  source: Уривки з оповідань Кобринської
+  items: 3 passages
+- type: essay-response
+  focus: Чому жіночий рух важливий для національного пробудження?
+  output: Аргументативне есе
+focus: biography
+prerequisites:
+- bio-20 (Тарас Шевченко)
+connects_to:
+- bio-24 (Олена Пчілка)
+- bio-28 (Іван Франко)
+- bio-31 (Ольга Кобилянська)
+module_type: biography
+sources:
+- name: Наталія Кобринська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Кобринська_Наталія_Іванівна
+  type: primary
+  notes: Біографія, літературна та громадська діяльність
+- name: Франко та жіночий рух
+  url: https://franko.lnu.edu.ua
+  type: reference
+  notes: Співпраця з Іваном Франком
+- name: Архів жіночого руху
+  url: https://uma.lvivcenter.org
+  type: reference
+  notes: Матеріали про «Перший вінок»
+immersion: 100% Ukrainian
+phase: BIO
+objectives:
+- 'Analyze the life and legacy of наталія кобринська: піонерка фемінізму'
+- Evaluate the contributions of народження українського фемінізму
+- Trace the career and influence of останні роки та спадщина (1893-1920)
+persona:
+  voice: Senior Biographer
+  role: Feminist Pioneer

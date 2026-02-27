@@ -1,6 +1,6 @@
 # Research-First Workflow for Historical & Literary Tracks
 
-> **Applies to:** `hist`, `c1-bio`, `istoriohrafiia`, `lit`, `oes`, `ruth` (seminar tracks)
+> **Applies to:** `hist`, `bio`, `istoriohrafiia`, `lit`, `oes`, `ruth` (seminar tracks)
 > **Purpose**: This workflow ensures high-quality content by requiring deep research BEFORE writing.
 
 > **Note:** Core (non-seminar) tracks have their own lighter research phases:
@@ -28,17 +28,17 @@
 
 ```bash
 # New module - BLOCKED without research
-/module c1-bio 28
+/module bio 28
   → No content exists
   → ⛔ "Research required. Run /research first."
 
 # Existing module passing word count - ALLOWED
-/module c1-bio 15
+/module bio 15
   → Content exists: 3800 words (target 3500)
   → ✅ "Research gate: SKIPPED (module already has content)"
 
 # Existing module under target - BLOCKED
-/module c1-bio 22
+/module bio 22
   → Content exists: 2100 words (target 3500)
   → ⛔ "Research required for expansion."
 ```
@@ -46,8 +46,8 @@
 **Quick commands:**
 ```bash
 /research "Данило Апостол"       # Research topic (saves to audit/)
-/module c1-bio 28                # Smart gate check
-/module c1-bio 28 --no-research  # Skip check (NOT recommended)
+/module bio 28                # Smart gate check
+/module bio 28 --no-research  # Skip check (NOT recommended)
 ```
 
 **Task integration:** If `/task` is active, research completion auto-updates the issue.
@@ -72,7 +72,7 @@
 ```markdown
 # Research Notes: [Topic]
 
-**Track**: [c1-bio/hist/etc]
+**Track**: [bio/hist/etc]
 **Module**: [slug]
 **Researched**: [date]
 **Sources consulted**: [count]
@@ -378,7 +378,7 @@ Map research to required sections with word allocations:
 ### Phase 3: Activities (ONLY 4-9 needed!)
 
 **Activity Requirements (Seminar Style):**
-> **Applies to:** C1-BIO, ISTORIOHRAFIIA, OES, RUTH, LIT (HIST may vary)
+> **Applies to:** BIO, ISTORIOHRAFIIA, OES, RUTH, LIT (HIST may vary)
 
 - Min activities: **4**
 - Max activities: **9**

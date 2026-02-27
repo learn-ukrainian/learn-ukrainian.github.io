@@ -483,7 +483,7 @@ class TestBuildKflYaml:
         assert "year: -5500" in kfl
 
     def test_biographical_track(self):
-        """c1-bio should include vital_status and birth/death dates."""
+        """bio should include vital_status and birth/death dates."""
         events = [
             {"raw_date": "942 р.", "event": "Народився", "year": 942},
             {"raw_date": "972 р.", "event": "Загинув у бою", "year": 972},
@@ -493,7 +493,7 @@ class TestBuildKflYaml:
             events=events,
             quotes=[],
             forbidden_claims=[],
-            track="c1-bio",
+            track="bio",
         )
         assert "vital_status:" in kfl
         assert "birth:" in kfl
@@ -707,7 +707,7 @@ class TestIntegration:
         events = parse_chronology(extract_section(content, "Хронологія"))
         quotes = parse_quotes(extract_section(content, "Ключові факти та цитати"))
 
-        kfl = build_kfl_yaml(subject, events, quotes, [], "c1-bio")
+        kfl = build_kfl_yaml(subject, events, quotes, [], "bio")
         assert 'vital_status: "deceased"' in kfl
         assert 'birth: "~942"' in kfl
         assert 'death: "972"' in kfl

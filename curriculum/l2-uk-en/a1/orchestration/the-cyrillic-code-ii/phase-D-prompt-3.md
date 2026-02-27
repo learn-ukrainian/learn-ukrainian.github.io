@@ -43,7 +43,7 @@ Read ALL of these files before writing anything:
 
 **Do not proceed until you have read every line of the content and every activity item.**
 
-**For seminar tracks** (hist, c1-bio, istoriohrafiia, lit, oes, ruth): you MUST also read the research notes. If they contain a Key Facts Ledger, use it as the ground truth for verifying dates, events, attributions, and quotes in the prose.
+**For seminar tracks** (hist, bio, istoriohrafiia, lit, oes, ruth): you MUST also read the research notes. If they contain a Key Facts Ledger, use it as the ground truth for verifying dates, events, attributions, and quotes in the prose.
 
 ---
 
@@ -345,7 +345,7 @@ Follow the full review protocol. In summary:
 
 1. **Grammar explanations**: Verify every rule statement is accurate. Flag overgeneralizations (e.g., claiming a rule applies universally when it has exceptions).
 
-#### Part 3: Research Cross-Reference (seminar tracks only — hist, c1-bio, istoriohrafiia, lit, oes, ruth)
+#### Part 3: Research Cross-Reference (seminar tracks only — hist, bio, istoriohrafiia, lit, oes, ruth)
 
 **Additionally verify factual claims against the research notes.**
 

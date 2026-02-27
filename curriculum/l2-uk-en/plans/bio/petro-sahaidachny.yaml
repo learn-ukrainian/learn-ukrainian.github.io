@@ -1,0 +1,74 @@
+module: bio-20
+level: BIO
+sequence: 20
+slug: petro-sahaidachny
+version: '2.0'
+title: 'Петро Сагайдачний: Гетьман-Державник'
+subtitle: 'Petro Sahaidachny: The Statesman Hetman'
+content_outline:
+- section: Вступ — Меч і Хрест
+  points:
+  - Найвидатніший гетьман до Хмельницького
+  - Перетворення козацтва на регулярне військо
+  - Союз меча (козаків) і хреста (церкви)
+- section: Життєпис
+  points:
+  - Походження (шляхтич з Самбора)
+  - Освіта в Острозькій академії (М14)
+  - Морські походи на Кафу, Синоп, Варну (звільнення невільників)
+  - Похід на Москву (1618)
+  - Відновлення православної ієрархії (1620)
+  - Хотинська битва (1621) — порятунок Європи
+  - Смерть від рани у Києві
+- section: Історичний контекст
+  points:
+  - Доба героїчних морських походів
+  - Тридцятилітня війна в Європі
+  - Занепад православ'я після унії
+- section: Внесок та Спадщина
+  points:
+  - Реформа війська (дисципліна, мушкети)
+  - '"Військо Запорозьке" вступає до Київського братства'
+  - Київ знову стає культурним центром (Могилянка)
+- section: Порівняльний аналіз
+  points:
+  - Сагайдачний vs. Наливайко (лояльність vs бунт)
+  - Сагайдачний vs. Дорошенко (стратегічне бачення)
+vocabulary_hints:
+  required:
+  - чайка (chaika/boat)
+  - реєстр (register)
+  - дисципліна (discipline)
+  - ієрархія (hierarchy)
+  - патріарх (patriarch)
+  - братство (brotherhood)
+  - облога (siege)
+  - штурм (assault)
+  - невільник (captive/slave)
+  - меценат (philanthropist)
+activity_hints:
+- type: reading
+  focus: '"Verses on the Funeral of Sahaidachny" (1622)'
+- type: essay-response
+  focus: Why Sahaidachny supported the Church?
+focus: biography
+pedagogy: CBI
+objectives:
+- Analyze Sahaidachny's reforms of the Cossack army
+- Evaluate the restoration of the Orthodox hierarchy (1620)
+- Discuss the Battle of Khotyn (1621)
+grammar:
+- Political vocabulary
+- Military strategy terms
+sources:
+- name: Петро Конашевич-Сагайдачний (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Петро_Конашевич-Сагайдачний
+  type: primary
+- name: Хотинська битва 1621
+  url: https://uk.wikipedia.org/wiki/Хотинська_битва_(1621)
+  type: primary
+immersion: 100% Ukrainian
+phase: BIO
+persona:
+  voice: Senior Biographer
+  role: Naval Commander

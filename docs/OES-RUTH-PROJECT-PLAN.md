@@ -106,7 +106,7 @@ claude_extensions/skills/
 - [ ] #19 Generate 100 RUTH meta files (blocked by #17)
 - [ ] #20 Create OES quick-ref file
 - [ ] #21 Create RUTH quick-ref file
-- [ ] #22 Update C1-BIO modules with chronicle quotes
+- [ ] #22 Update BIO modules with chronicle quotes
 
 ### Completed Tasks (Gemini) - GitHub Issues
 - [x] #490 Research: OES Phase 2 (Chronicles) - `docs/issues/artifacts/ISSUE-490-research.md`
@@ -171,6 +171,6 @@ See: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/498
 
 ## Notes
 
-- C1-BIO modules should be updated with chronicle quotes (task #22)
+- BIO modules should be updated with chronicle quotes (task #22)
 - No activities yet - validate content/pedagogy first
 - Use litopys.org.ua Ukrainian translations for primary sources

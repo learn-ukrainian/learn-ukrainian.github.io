@@ -235,7 +235,7 @@ Since ~60-80% of violations may be false positives for B2+ content:
 - `scripts/audit/core.py`
   - Added import for `check_vocabulary_integrity`
   - Integrated check into YAML validation section (line 877-883)
-  - Extracts full level path (hist, c1-bio, etc.) for correct paths
+  - Extracts full level path (hist, bio, etc.) for correct paths
 
 ### Testing
 

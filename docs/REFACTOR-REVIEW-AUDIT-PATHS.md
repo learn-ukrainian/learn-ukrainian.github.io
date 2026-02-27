@@ -23,7 +23,7 @@ Reviews (`*-review.md`) appear in BOTH `audit/` and `review/` directories depend
 | b2 | 1 review file | 99 review files |
 | hist | 134 review files | 140 review files |
 | c1 | 2 files: audit-report + review | 108 review files |
-| c1-bio | 11 files: audit-report + review | (in review/) |
+| bio | 11 files: audit-report + review | (in review/) |
 | istoriohrafiia | 1 audit-report | 6 review files |
 | lit | 35 review files | 21 review files |
 
@@ -34,7 +34,7 @@ Numbered tracks (a1, a2, b1, b2, c1, c2) have `.md` files like `01-the-cyrillic-
 - `audit/the-cyrillic-code-i-review.md` (bare — batch_gemini_runner strips numbers)
 - `status/01-the-cyrillic-code-i.json` (numbered — audit/report.py uses stem)
 
-Seminar tracks (c1-bio, hist, etc.) have bare slugs naturally: `knyahynia-olha.md`.
+Seminar tracks (bio, hist, etc.) have bare slugs naturally: `knyahynia-olha.md`.
 
 ## Target State
 
@@ -262,11 +262,11 @@ fd -e json '^\d+-' curriculum/l2-uk-en/*/status/
 
 # 6. Run audit on a module from each tier
 scripts/audit_module.sh curriculum/l2-uk-en/a1/01-the-cyrillic-code-i.md
-scripts/audit_module.sh curriculum/l2-uk-en/c1-bio/knyahynia-olha.md
+scripts/audit_module.sh curriculum/l2-uk-en/bio/knyahynia-olha.md
 
 # 7. Run fix mode on a module from each tier
 .venv/bin/python scripts/batch_gemini_runner.py a1 --range 1 --mode fix
-.venv/bin/python scripts/batch_gemini_runner.py c1-bio --range 1 --mode fix
+.venv/bin/python scripts/batch_gemini_runner.py bio --range 1 --mode fix
 
 # 8. Run unit tests
 .venv/bin/python -m pytest tests/test_batch_fix_mode.py -v

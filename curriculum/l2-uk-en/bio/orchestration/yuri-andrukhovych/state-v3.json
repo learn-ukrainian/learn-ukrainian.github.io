@@ -1,0 +1,13 @@
+{
+  "track": "bio",
+  "slug": "yuri-andrukhovych",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-19T10:19:21Z",
+      "task_id": "v3-yuri-andrukhovych-pA",
+      "mode": "full"
+    }
+  }
+}

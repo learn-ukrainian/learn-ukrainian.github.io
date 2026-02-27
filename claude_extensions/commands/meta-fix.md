@@ -10,7 +10,7 @@ Check and fix invalid activity types in meta.yaml files.
 
 ## Arguments
 
-- `level` (optional): Specific level to check (e.g., `b1`, `hist`, `c1-bio`). If omitted, checks all levels.
+- `level` (optional): Specific level to check (e.g., `b1`, `hist`, `bio`). If omitted, checks all levels.
 - `--apply`: Apply fixes. Without this flag, runs in dry-run mode (report only).
 
 ## Examples

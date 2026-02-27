@@ -1,0 +1,35 @@
+{
+  "slug": "klavdiya-latysheva",
+  "track": "bio",
+  "module_num": 105,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:02:43Z",
+      "words": 5991,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:04:22Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:04:22Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:12:11Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-27T00:12:11Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-27T00:12:11Z"
+}
