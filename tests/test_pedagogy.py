@@ -14,7 +14,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.checks.pedagogy import (
     check_duplicate_content,
-    check_ipa_validation,
     check_topic_consistency,
 )
 
@@ -99,42 +98,6 @@ class TestDuplicateContent:
         violations = check_duplicate_content(content)
         dup_violations = [v for v in violations if 'DUPLICATE' in v.get('type', '')]
         assert len(dup_violations) == 0
-
-
-# =============================================================================
-# TEST: IPA Validation
-# =============================================================================
-
-class TestIPAValidation:
-    """Test IPA pronunciation validation."""
-
-    def test_valid_ipa_format(self):
-        """Valid IPA should pass."""
-        content = """
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| слово | /ˈslɔwɔ/ | word | noun | n | - |
-| книга | /ˈknɪɦa/ | book | noun | f | - |
-"""
-        violations = check_ipa_validation(content)
-        ipa_violations = [v for v in violations if 'IPA' in v.get('type', '')]
-        assert len(ipa_violations) == 0
-
-    def test_missing_ipa_flagged(self):
-        """Missing IPA should be flagged."""
-        content = """
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| слово | | word | noun | n | - |
-| книга | /ˈknɪɦa/ | book | noun | f | - |
-"""
-        violations = check_ipa_validation(content)
-        # Should detect missing IPA
-        assert isinstance(violations, list)
 
 
 # =============================================================================

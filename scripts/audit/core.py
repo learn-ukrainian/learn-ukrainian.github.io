@@ -193,11 +193,18 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
         level_from_path = base_level
         track_from_path = f"{base_level}{track_suffix.upper()}" if track_suffix else base_level
     else:
-        # Try to match special tracks (lit, oes, ruth)
-        special_match = re.search(r'/(lit|oes|ruth)/', file_path.lower())
+        # Try to match special tracks (lit, oes, ruth, bio, hist, istorio)
+        special_match = re.search(r'/(lit|oes|ruth|bio|hist|istorio)/', file_path.lower())
         if special_match:
-            level_from_path = special_match.group(1).upper()
-            track_from_path = level_from_path
+            track_name = special_match.group(1)
+            # Map track slugs to their CEFR levels
+            _TRACK_LEVEL_MAP = {
+                'bio': 'C1', 'istorio': 'C1',
+                'hist': 'B2',
+                'lit': 'LIT', 'oes': 'OES', 'ruth': 'RUTH',
+            }
+            level_from_path = _TRACK_LEVEL_MAP.get(track_name, track_name.upper())
+            track_from_path = track_name.upper()
 
     # Use path-detected level if available
     if phase == 'LIT':
@@ -238,21 +245,25 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int, str]:
 
 def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "", file_path: str = "") -> str | None:
     """Detect module focus (grammar, vocab, checkpoint, skills, cultural, history, etc.)."""
-    # Detect track directories first (hist, bio, istorio, lit)
+    # Detect track directories first (hist, bio, istorio, lit, oes, ruth)
     # These override all other detection methods
     if file_path:
-        track_match = re.search(r'/([abc][12])-([a-z]+)/', file_path.lower())
+        fp_lower = file_path.lower()
+        # Top-level track directories (post-rename: no level prefix)
+        if '/hist/' in fp_lower:
+            return 'history'
+        if '/bio/' in fp_lower:
+            return 'biography'
+        if '/istorio/' in fp_lower:
+            return 'istorio'
+        if '/lit/' in fp_lower:
+            return 'literature'
+        # Legacy level-prefixed tracks (b2-pro, c1-pro still use prefix)
+        track_match = re.search(r'/([abc][12])-([a-z]+)/', fp_lower)
         if track_match:
             track_suffix = track_match.group(2)
-            if track_suffix == 'hist':
-                return 'history'
-            elif track_suffix == 'bio':
-                return 'biography'
-            elif track_suffix == 'pro':
+            if track_suffix == 'pro':
                 return 'professional'
-        # LIT track
-        if '/lit/' in file_path.lower():
-            return 'literature'
 
     # Check frontmatter for explicit focus - recognize all valid config types
     # Including content-heavy types: history, literature, biography, folk-culture, fine-arts, synthesis

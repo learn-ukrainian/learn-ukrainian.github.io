@@ -20,6 +20,8 @@ import json
 import sys
 from pathlib import Path
 
+import numpy as np
+
 try:
     from PIL import Image
 except ImportError:
@@ -76,7 +78,7 @@ def analyze_image(path: Path) -> dict:
             result["reason"] = f"unreadable ({e})"
         return result
 
-    # Rule 2: Small files — check colors and dimensions
+    # Rule 2: Small files — check colors, dimensions, and gradients
     if size < MAX_SIZE_FOR_COLOR_CHECK:
         try:
             img = Image.open(path)
@@ -103,7 +105,27 @@ def analyze_image(path: Path) -> dict:
             if unique < MIN_UNIQUE_COLORS:
                 result["delete"] = True
                 result["reason"] = f"solid_color ({unique} colors, {size}B)"
+                img.close()
+                return result
 
+            # Gradient/placeholder detection via edge analysis
+            gray = img.convert("L")
+            arr = np.array(gray)
+            std = float(arr.std())
+            dx = float(np.abs(np.diff(arr, axis=1)).mean())
+            dy = float(np.abs(np.diff(arr, axis=0)).mean())
+            edge_score = dx + dy
+
+            # Smooth gradient or near-solid color
+            if edge_score < 25 and std < 50:
+                result["delete"] = True
+                result["reason"] = f"gradient (edge={edge_score:.1f}, std={std:.1f}, {size}B)"
+            # Very low std = near-uniform regardless of edge (shadow edges on solid)
+            elif std < 15 and edge_score < 40:
+                result["delete"] = True
+                result["reason"] = f"near_uniform (std={std:.1f}, edge={edge_score:.1f}, {size}B)"
+
+            gray.close()
             img.close()
         except Exception:
             pass

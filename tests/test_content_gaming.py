@@ -124,16 +124,13 @@ class TestIpaDensity:
         violations = check_ipa_density(content)
         assert violations == []
 
-    def test_excessive_ipa_warning(self):
-        """IPA >5% of word count triggers warning."""
-        # Create content where IPA tokens are >5% of total
-        # Regex requires IPA char not at position 0, so use realistic transcriptions
+    def test_excessive_ipa_noop(self):
+        """IPA check is now a no-op (IPA removed from curriculum)."""
         ipa_blocks = " ".join([f"/prɪˈvit{i}/" for i in range(15)])
         body = _words(100) + " " + ipa_blocks
         content = _make_module({"Пояснення": body})
         violations = check_ipa_density(content)
-        assert len(violations) == 1
-        assert violations[0]['type'] == 'IPA_DENSITY_EXCESSIVE'
+        assert violations == []
 
     def test_slash_alternatives_not_ipa(self):
         """Plain slashes like він/вона should NOT be detected as IPA."""
@@ -145,13 +142,13 @@ class TestIpaDensity:
         violations = check_ipa_density(content)
         assert violations == []
 
-    def test_bracket_ipa_detected(self):
-        """IPA in [brackets with ˈ markers] is detected."""
+    def test_bracket_ipa_noop(self):
+        """IPA check is now a no-op (IPA removed from curriculum)."""
         ipa_blocks = " ".join([f"[ˈslovo{i}]" for i in range(20)])
         body = _words(80) + " " + ipa_blocks
         content = _make_module({"Пояснення": body})
         violations = check_ipa_density(content)
-        assert len(violations) == 1
+        assert violations == []
 
 
 # =============================================================================

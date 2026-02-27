@@ -1466,10 +1466,15 @@ def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
 def get_level_config(level_code: str, module_focus: str = None) -> dict:
     """Get configuration for a specific level, optionally with focus."""
     config_key = level_code
-    if module_focus and level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2'):
-        specific_key = f"{level_code}-{module_focus}"
-        if specific_key in LEVEL_CONFIG:
-            config_key = specific_key
+    if module_focus:
+        # Try focus as direct top-level key first (renamed seminar tracks: biography, history, istorio)
+        if module_focus in LEVEL_CONFIG:
+            config_key = module_focus
+        elif level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2'):
+            # Legacy pattern: level-focus (e.g., B1-grammar, B2-professional)
+            specific_key = f"{level_code}-{module_focus}"
+            if specific_key in LEVEL_CONFIG:
+                config_key = specific_key
     return LEVEL_CONFIG.get(config_key, LEVEL_CONFIG['A1'])
 
 
