@@ -26,6 +26,15 @@
       },
       {
         "$ref": "#/definitions/anagram-a1"
+      },
+      {
+        "$ref": "#/definitions/watch-and-repeat-a1"
+      },
+      {
+        "$ref": "#/definitions/classify-a1"
+      },
+      {
+        "$ref": "#/definitions/image-to-letter-a1"
       }
     ]
   },
@@ -392,6 +401,158 @@
         "instruction": {
           "type": "string",
           "description": "Additional instructions for the learner"
+        }
+      }
+    },
+    "watch-and-repeat-a1": {
+      "type": "object",
+      "description": "Cyrillic modules (1-4) only. Watch Anna Ohoiko video, repeat the sound/word aloud.",
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "watch-and-repeat"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "video"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "letter": {
+                "type": "string",
+                "description": "The letter being demonstrated"
+              },
+              "word": {
+                "type": "string",
+                "description": "Example word being demonstrated"
+              },
+              "video": {
+                "type": "string",
+                "description": "YouTube URL for Anna Ohoiko pronunciation video"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "classify-a1": {
+      "type": "object",
+      "description": "Cyrillic modules (1-4) only. Sort letters into categories (vowel/consonant, voiced/voiceless).",
+      "required": [
+        "type",
+        "categories"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "classify"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "categories": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "items"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Category label, e.g. Голосні, Приголосні"
+              },
+              "symbol_hint": {
+                "type": "string",
+                "description": "Hint for renderer, e.g. vowel, consonant"
+              },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "image-to-letter-a1": {
+      "type": "object",
+      "description": "Cyrillic modules (1-4) only. See an emoji — tap which letter the word starts with.",
+      "required": [
+        "type",
+        "items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "image-to-letter"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": [
+              "emoji",
+              "answer",
+              "distractors"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "emoji": {
+                "type": "string"
+              },
+              "answer": {
+                "type": "string",
+                "description": "The correct letter"
+              },
+              "distractors": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     }

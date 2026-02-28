@@ -258,13 +258,31 @@ def get_full_text(work: str, max_chars: int = 50_000) -> dict:
     return metadata
 
 
-def search_images(query: str, grade: int | None = None, limit: int = 5) -> list[dict]:
-    """Image search via Ukrainian text query (SigLIP text-to-image)."""
+def search_images(query: str, grade: int | None = None,
+                   teaching_value: str | None = None,
+                   subject: str | None = None,
+                   limit: int = 5) -> list[dict]:
+    """Image search via Ukrainian text query (SigLIP text-to-image).
+
+    Args:
+        teaching_value: Filter by annotation quality — "high", "medium", "low", or "none".
+        subject: Filter by textbook subject (e.g., "bukvar").
+    """
+    from qdrant_client.models import FieldCondition, Filter, MatchValue
+
     client = get_client()
     encoder = get_image_encoder()
 
     query_vec = encoder.encode_text([query])[0].tolist()
-    qfilter = build_filter(grade)
+
+    conditions = []
+    if grade is not None:
+        conditions.append(FieldCondition(key="grade", match=MatchValue(value=grade)))
+    if subject:
+        conditions.append(FieldCondition(key="subject", match=MatchValue(value=subject)))
+    if teaching_value:
+        conditions.append(FieldCondition(key="teaching_value", match=MatchValue(value=teaching_value)))
+    qfilter = Filter(must=conditions) if conditions else None
 
     results = client.query_points(
         collection_name=IMAGE_COLLECTION,
@@ -277,7 +295,7 @@ def search_images(query: str, grade: int | None = None, limit: int = 5) -> list[
     hits = []
     for point in results.points:
         payload = point.payload or {}
-        hits.append({
+        hit = {
             "score": point.score if hasattr(point, 'score') else 0,
             "image_id": payload.get("image_id", ""),
             "image_path": payload.get("image_path", ""),
@@ -286,7 +304,15 @@ def search_images(query: str, grade: int | None = None, limit: int = 5) -> list[
             "author": payload.get("author", ""),
             "width": payload.get("width", 0),
             "height": payload.get("height", 0),
-        })
+        }
+        # Include annotation fields when present
+        if payload.get("description_uk"):
+            hit["description_uk"] = payload["description_uk"]
+        if payload.get("associated_text_uk"):
+            hit["associated_text_uk"] = payload["associated_text_uk"]
+        if payload.get("teaching_value"):
+            hit["teaching_value"] = payload["teaching_value"]
+        hits.append(hit)
     return hits
 
 
@@ -457,6 +483,12 @@ def main():
             print(f"  Path: {hit['image_path']}")
             print(f"  Grade {hit['grade']}, {hit['author']}, page {hit['page']}")
             print(f"  Size: {hit['width']}x{hit['height']}")
+            if hit.get("description_uk"):
+                print(f"  Description: {hit['description_uk']}")
+            if hit.get("associated_text_uk"):
+                print(f"  Associated text: {hit['associated_text_uk']}")
+            if hit.get("teaching_value"):
+                print(f"  Teaching value: {hit['teaching_value']}")
 
     elif args.command == "context":
         chunks = get_chunk_context(args.chunk_id, window=args.window)

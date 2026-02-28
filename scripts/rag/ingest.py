@@ -133,6 +133,7 @@ def create_image_collection(client, recreate: bool = False):
         ("grade", PayloadSchemaType.INTEGER),
         ("subject", PayloadSchemaType.KEYWORD),
         ("author", PayloadSchemaType.KEYWORD),
+        ("teaching_value", PayloadSchemaType.KEYWORD),
     ]:
         client.create_payload_index(
             collection_name=IMAGE_COLLECTION,
@@ -235,11 +236,53 @@ def ingest_text_chunks(client, jsonl_path: Path, batch_size: int = 64):
     return len(points)
 
 
+_annotation_cache = None
+
+
+def load_annotations() -> dict[str, dict]:
+    """Load image annotations from image_text_pairs.jsonl if available.
+
+    Returns a dict keyed by image_id with annotation fields.
+    Cached globally so it's only loaded once per run.
+    """
+    global _annotation_cache
+    if _annotation_cache is not None:
+        return _annotation_cache
+
+    pairs_file = IMAGES_DIR / "image_text_pairs.jsonl"
+    _annotation_cache = {}
+    if not pairs_file.exists():
+        return _annotation_cache
+
+    with open(pairs_file, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            try:
+                rec = json.loads(line)
+                image_id = rec.get("image_id")
+                if image_id:
+                    _annotation_cache[image_id] = {
+                        "description_uk": rec.get("description_uk"),
+                        "associated_text_uk": rec.get("associated_text_uk"),
+                        "teaching_value": rec.get("teaching_value"),
+                        "element_type": rec.get("element_type"),
+                        "position": rec.get("position"),
+                    }
+            except json.JSONDecodeError:
+                pass
+
+    if _annotation_cache:
+        print(f"[ingest] Loaded {len(_annotation_cache)} image annotations from {pairs_file.name}")
+    return _annotation_cache
+
+
 def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
     """Embed and ingest images from an image metadata JSONL file.
 
     Streams in batches: encode batch_size images → upload → free memory → next batch.
     This avoids OOM on large JSONL files (300+ images).
+    Merges annotation data from image_text_pairs.jsonl when available.
     """
     from qdrant_client.models import PointStruct
 
@@ -249,6 +292,9 @@ def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
     records = []
     with open(jsonl_path, "r", encoding="utf-8") as f:
         for line in f:
+            line = line.strip()
+            if not line:
+                continue
             records.append(json.loads(line))
 
     if not records:
@@ -273,6 +319,10 @@ def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
 
     total = len(valid_records)
     print(f"  {total} images to embed+upload (streaming, batch={batch_size})...")
+
+    # Load annotations (cached, loaded only once)
+    annotations = load_annotations()
+    annotated_count = 0
 
     encoder = get_image_encoder()
     uploaded = 0
@@ -300,6 +350,22 @@ def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
                 "height": rec.get("height", 0),
                 "pdf_stem": rec.get("pdf_stem", ""),
             }
+
+            # Merge annotation data if available
+            ann = annotations.get(rec["image_id"])
+            if ann:
+                annotated_count += 1
+                if ann.get("description_uk"):
+                    payload["description_uk"] = ann["description_uk"]
+                if ann.get("associated_text_uk"):
+                    payload["associated_text_uk"] = ann["associated_text_uk"]
+                if ann.get("teaching_value"):
+                    payload["teaching_value"] = ann["teaching_value"]
+                if ann.get("element_type"):
+                    payload["element_type"] = ann["element_type"]
+                if ann.get("position"):
+                    payload["position"] = ann["position"]
+
             point = PointStruct(
                 id=int(hashlib.sha256(rec["image_id"].encode()).hexdigest()[:15], 16),
                 vector=vecs[i].tolist(),
@@ -313,7 +379,7 @@ def ingest_images(client, jsonl_path: Path, batch_size: int = 16):
 
         del vecs, points  # Free memory immediately
 
-    print(f"  Done: {uploaded} images ingested.")
+    print(f"  Done: {uploaded} images ingested ({annotated_count} with annotations).")
     return uploaded
 
 
