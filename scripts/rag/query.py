@@ -31,12 +31,14 @@ from rag.config import (
     QDRANT_HOST,
     SIGLIP_DIM,
     TEXT_COLLECTION,
+    VESUM_DB_PATH,
 )
 
 # Module-level singletons (lazy-loaded)
 _qdrant_client = None
 _text_encoder = None
 _image_encoder = None
+_vesum_conn = None
 
 
 def get_client():
@@ -391,6 +393,53 @@ def collection_stats() -> dict:
     return stats
 
 
+def get_vesum_conn():
+    """Lazy-load SQLite connection to VESUM dictionary."""
+    global _vesum_conn
+    if _vesum_conn is None:
+        import sqlite3
+        if not VESUM_DB_PATH.exists():
+            raise FileNotFoundError(
+                f"VESUM database not found at {VESUM_DB_PATH}. "
+                "Run: .venv/bin/python scripts/rag/import_vesum.py"
+            )
+        _vesum_conn = sqlite3.connect(str(VESUM_DB_PATH), check_same_thread=False)
+        _vesum_conn.row_factory = sqlite3.Row
+    return _vesum_conn
+
+
+def verify_word(word: str, pos_filter: str | None = None) -> list[dict]:
+    """Check if a word form exists in VESUM.
+
+    Returns list of {lemma, pos, tags} matches. Empty list = not found.
+    """
+    conn = get_vesum_conn()
+    if pos_filter:
+        rows = conn.execute(
+            "SELECT lemma, pos, tags FROM forms WHERE word_form = ? AND pos = ?",
+            (word, pos_filter),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            "SELECT lemma, pos, tags FROM forms WHERE word_form = ?",
+            (word,),
+        ).fetchall()
+    return [{"lemma": r["lemma"], "pos": r["pos"], "tags": r["tags"]} for r in rows]
+
+
+def verify_lemma(lemma: str) -> list[dict]:
+    """Get all inflected forms of a lemma.
+
+    Returns list of {word_form, pos, tags} for every form.
+    """
+    conn = get_vesum_conn()
+    rows = conn.execute(
+        "SELECT word_form, pos, tags FROM forms WHERE lemma = ? ORDER BY pos, tags",
+        (lemma,),
+    ).fetchall()
+    return [{"word_form": r["word_form"], "pos": r["pos"], "tags": r["tags"]} for r in rows]
+
+
 def main():
     parser = argparse.ArgumentParser(description="Query the RAG pipeline")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -429,6 +478,15 @@ def main():
 
     # Stats
     subparsers.add_parser("stats", help="Collection statistics")
+
+    # VESUM word verification
+    word_parser = subparsers.add_parser("word", help="Verify a Ukrainian word form (VESUM)")
+    word_parser.add_argument("query", help="Word form to check")
+    word_parser.add_argument("--pos", type=str, help="Filter by POS (e.g., noun, verb, adj)")
+
+    # VESUM lemma lookup
+    lemma_parser = subparsers.add_parser("lemma", help="Get all forms of a lemma (VESUM)")
+    lemma_parser.add_argument("query", help="Lemma to look up")
 
     args = parser.parse_args()
 
@@ -501,6 +559,24 @@ def main():
     elif args.command == "stats":
         stats = collection_stats()
         print(json.dumps(stats, indent=2))
+
+    elif args.command == "word":
+        matches = verify_word(args.query, pos_filter=args.pos)
+        if not matches:
+            print(f"❌ '{args.query}' not found in VESUM")
+        else:
+            print(f"✅ '{args.query}' — {len(matches)} match(es):")
+            for m in matches:
+                print(f"  lemma={m['lemma']}  pos={m['pos']}  tags={m['tags']}")
+
+    elif args.command == "lemma":
+        forms = verify_lemma(args.query)
+        if not forms:
+            print(f"❌ Lemma '{args.query}' not found in VESUM")
+        else:
+            print(f"✅ '{args.query}' — {len(forms)} form(s):")
+            for f in forms:
+                print(f"  {f['word_form']:20s}  {f['tags']}")
 
 
 if __name__ == "__main__":

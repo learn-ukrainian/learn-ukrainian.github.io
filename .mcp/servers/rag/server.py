@@ -198,6 +198,48 @@ async def list_tools() -> list[Tool]:
                 "properties": {},
             },
         ),
+        Tool(
+            name="verify_word",
+            description=(
+                "Check if a Ukrainian word form exists in the VESUM morphological dictionary "
+                "(415K lemmas, ~6M inflected forms). Returns lemma, POS, and morphological tags "
+                "for each match. Use this to verify that a Ukrainian word form is real "
+                "(not a hallucination). Empty result = word does not exist."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "Ukrainian word form to verify (e.g., 'берізонька', 'горонька')"
+                    },
+                    "pos_filter": {
+                        "type": "string",
+                        "description": "Optional POS filter (e.g., 'noun', 'verb', 'adj', 'adv'). "
+                                       "Only returns matches with this POS."
+                    },
+                },
+                "required": ["word"]
+            },
+        ),
+        Tool(
+            name="verify_lemma",
+            description=(
+                "Get all inflected forms of a Ukrainian lemma from the VESUM morphological dictionary. "
+                "Returns every word form with its POS and morphological tags. "
+                "Use this to find the correct declension/conjugation of a word."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "lemma": {
+                        "type": "string",
+                        "description": "Ukrainian lemma (dictionary form) to look up (e.g., 'коза', 'писати')"
+                    },
+                },
+                "required": ["lemma"]
+            },
+        ),
     ]
 
 
@@ -217,6 +259,10 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             return await handle_get_chunk_context(arguments)
         elif name == "collection_stats":
             return await handle_collection_stats(arguments)
+        elif name == "verify_word":
+            return await handle_verify_word(arguments)
+        elif name == "verify_lemma":
+            return await handle_verify_lemma(arguments)
         else:
             return [TextContent(type="text", text=f"Unknown tool: {name}")]
     except Exception as e:
@@ -360,6 +406,47 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
     from rag.query import collection_stats
     stats = await asyncio.to_thread(collection_stats)
     return [TextContent(type="text", text=json.dumps(stats, indent=2))]
+
+
+async def handle_verify_word(args: dict) -> list[TextContent]:
+    word = args["word"]
+    pos_filter = args.get("pos_filter")
+
+    from rag.query import verify_word
+    matches = await asyncio.to_thread(verify_word, word, pos_filter)
+
+    if not matches:
+        return [TextContent(type="text", text=f"'{word}' — NOT FOUND in VESUM. This word form may not exist in standard Ukrainian.")]
+
+    lines = [f"'{word}' — {len(matches)} match(es) in VESUM:\n"]
+    for m in matches:
+        lines.append(f"- **lemma**: {m['lemma']}  |  **pos**: {m['pos']}  |  **tags**: `{m['tags']}`")
+
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_verify_lemma(args: dict) -> list[TextContent]:
+    lemma = args["lemma"]
+
+    from rag.query import verify_lemma
+    forms = await asyncio.to_thread(verify_lemma, lemma)
+
+    if not forms:
+        return [TextContent(type="text", text=f"Lemma '{lemma}' — NOT FOUND in VESUM.")]
+
+    # Group forms by POS for readability
+    by_pos: dict[str, list] = {}
+    for f in forms:
+        by_pos.setdefault(f["pos"], []).append(f)
+
+    lines = [f"'{lemma}' — {len(forms)} form(s) across {len(by_pos)} POS:\n"]
+    for pos, pos_forms in by_pos.items():
+        lines.append(f"### {pos} ({len(pos_forms)} forms)")
+        for f in pos_forms:
+            lines.append(f"- {f['word_form']}  |  `{f['tags']}`")
+        lines.append("")
+
+    return [TextContent(type="text", text="\n".join(lines))]
 
 
 async def main():
