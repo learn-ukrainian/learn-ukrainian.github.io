@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 22 — E2E
+PASS: pipeline a1 37
 
   Module:   tomorrow-future-tense
   Track:    a1
-  Mode:     e2e
-  Words:    2508 (target: 2000)
+  Mode:     v3
+  Words:    2531 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T22:24:53Z
+  Date:     2026-02-28T12:59:52Z

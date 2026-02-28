@@ -5,9 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:42:39Z",
+      "ts": "2026-02-28T13:08:34Z",
       "task_id": "v3-food-vocabulary-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T13:13:27Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T13:15:55Z",
+      "task_id": "v3-food-vocabulary-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T13:22:59Z",
+      "attempts": 2
     }
   }
 }

@@ -2,31 +2,32 @@
 
 ## State Standard Reference
 §4.2.4.1: "утворення форм минулого часу дієслова: читав, читала, читало, читали; сміявся, сміялася, сміялося, сміялися; був, була, було, були"
-Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо формування навичок утворення та вживання минулого часу дієслів (дійсний спосіб) на рівні А1.
+Alignment: The module directly fulfills the A1 requirement to teach the indicative mood past tense formation and its gender/number agreement patterns, including reflexive verbs and the irregular verb "бути".
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| вчора | High (Top 100 adv) | вчора ввечері, вчора зранку, тільки вчора |
-| минулий | High (Top 200 adj) | минулого тижня, минулого року, минулої ночі |
-| бути | Very High (Top 10 verb) | був удома, була на роботі, було цікаво |
-| робити | Very High (Top 20 verb) | робити каву, робити уроки, що ти робив? |
-| читати | High (Top 50 verb) | читав книгу, читала новини |
-| йти/ходити | High (Top 50 verb) | ішов додому, ходила в магазин |
+| вчора (yesterday) | Top 100 Adverb | вчора ввечері, вчора зранку, тільки вчора |
+| бути (to be) | Top 10 Verb | був удома, була на роботі |
+| робити (to do) | Top 20 Verb | робити каву, що ти робив? |
+| минулий (past) | Top 100 Adjective | минулого тижня, минулого року (no prep) |
+| читати (to read) | Top 50 Verb | читав книгу, читала новини |
 
 ## Cultural Hooks
-1. **Перша друкована книга (1574)**: 15 лютого 1574 року Іван Федоров у Львові видав "Апостол". Це класичний приклад події в минулому ("надрукував"), що є важливим маркером української історії.
-2. **ЗУНР (1918-1919)**: Короткий період державності, що залишив слід у законодавстві та культурі (мова про закон про державну мову), дозволяє використати дієслова "було", "прийняли".
+1. On February 15, 1574, Ivan Fedorov printed the first book ("Apostol") in Lviv — a definitive, completed historical event to contextualize past actions.
+2. On February 15, 1919, the West Ukrainian People's Republic (ZUNR) adopted the law on the state language («ЗУНР прийняла закон») — useful for demonstrating feminine agreement with acronyms and institutions.
 
 ## Common Learner Errors
-1. **Gender Agreement Violation**: Жінки часто кажуть "я писав" або "я ходив" за аналогією з інфінітивом або present tense. → *Correction*: Акцентувати на -ла для жінок.
-2. **"To be" Calque**: "Я був працював" (I was working). → *Correction*: Пояснити, що в українській минулий час самодостатній: "Я працював".
-3. **Motion Verb Confusion**: Плутанина між "ішов" (process/one way) та "ходив" (round trip/fact). На рівні А1 часто спрощується, але варто розрізняти контексти.
+1. **Gender mismatch**: A female speaker saying «Я писав» instead of «Я писала» — happens because the English past tense does not inflect for gender.
+2. **Unnecessary auxiliary verbs**: Calquing "I was working" literally as «Я був працював» instead of simply «Я працював». Ukrainian simple past covers both continuous and completed actions here.
+3. **Preposition calque**: Saying «в минулому тижні» (in last week) instead of the correct genitive construction «минулого тижня» without a preposition.
 
 ## Cross-References
-- Builds on: a1-06 (Verbs I), a1-11 (Accusative Case - for objects like "читав книгу")
-- Prepares for: a1-22 (Tomorrow - Future Tense), a1-25 (Daily Routine - narratives)
+- Builds on: a1-20 (Checkpoint Navigation)
+- Prepares for: a1-37 (Tomorrow - Future Tense), a1-38 (My Daily Routine)
 
 ## Notes for Content Writing
-- Keep explanations regarding aspect simple; focus on "fact of action" (usually imperfective in simple past statements like "Що ти робив?") unless the result is emphasized.
-- Ensure the contrast between "він читав" and "вона читала" is visually clear (bold suffixes).
+- Frame the Ukrainian past tense positively as a unique system that elegantly reflects the subject's identity (gender) and number, distinguishing it from English.
+- Avoid Russian comparisons. Do not mention "unlike Russian"; teach the Ukrainian rules cleanly and independently.
+- Follow A1 immersion rules: use English scaffolding to explain the grammatical mechanics, but provide all examples and dialogues in Ukrainian.
+- Keep sentences short (max 8-10 words per Ukrainian sentence). Add IPA only to the first occurrence of all new vocabulary words.

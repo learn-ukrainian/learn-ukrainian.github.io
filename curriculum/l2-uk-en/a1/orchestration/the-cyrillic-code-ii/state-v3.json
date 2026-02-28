@@ -5,8 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:20:50Z",
-      "note": "adopted-existing-meta"
+      "ts": "2026-02-28T12:35:29Z",
+      "task_id": "v3-the-cyrillic-code-ii-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T12:39:44Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T12:39:44Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T12:43:24Z",
+      "attempts": 2
     }
   }
 }

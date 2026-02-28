@@ -5,8 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:27:10Z",
-      "note": "adopted-existing-meta"
+      "ts": "2026-02-28T15:04:34Z",
+      "task_id": "v3-this-is-i-am-pA",
+      "mode": "full"
     }
   }
 }

@@ -1,4 +1,4 @@
-        # Fix Phase — full audit failures
+        # Fix Phase — content-only audit failures
 
         The following audit errors must be fixed for module `tomorrow-future-tense`:
 
@@ -6,33 +6,32 @@
 
         ```
         ============================================================
-  HETMAN VERIFY: tomorrow-future-tense
+  OTAMAN VERIFY: tomorrow-future-tense
 ============================================================
 
-[1/4] Running full audit...
-[2/4] Checking sidecar files...
-[3/4] Reading status JSON...
-[4/4] Checking overall status...
+[1/3] Running audit with --skip-activities...
+[2/3] Reading status JSON...
+[3/3] Checking orchestration artifacts...
 
 ────────────────────────────────────────────────────────────
   VERDICT: FAIL
   Module:  tomorrow-future-tense
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  overall status is 'fail' (must be 'pass')
-  4 Outline Compliance Errors
   failing gates:
-    lesson: 1751/2000 (raw: 2056) | engagement: 0/3 | pedagogy: 57 violations | immersion: 80.2% HIGH (target 35-55% (M22))
-    activities: 10/8 | density: 10 < 12
+    lesson: 3464/2000 (raw: 3672) | engagement: 0/3 | pedagogy: 17 violations | immersion: 24.8% LOW (target 35-55% (M37))
 
-  Hetman has NOT completed this module.
+  Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-     → 58 violations (severe - consider revision)
-     → 33 grammar-level violations (fundamental)
-     → Immersion 25% off target (major rebalancing needed)
-     → Activity density below minimum
+       → FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 90/100)
+     → 18 violations (severe - consider revision)
+     → 6 grammar-level violations (fundamental)
+     → Immersion 10% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/tomorrow-future-tense-audit.md
@@ -40,17 +39,15 @@
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  Critical Failures:
-    • 4 Outline Compliance Errors
-
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/tomorrow-future-tense-audit.log for details)
         ```
+
 
         ## Files to Fix
 
         - Content: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/tomorrow-future-tense.md`
-        - Activities: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/activities/tomorrow-future-tense.yaml`
-        - Vocabulary: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/vocabulary/tomorrow-future-tense.yaml`
+
+
 
         ## Instructions
 

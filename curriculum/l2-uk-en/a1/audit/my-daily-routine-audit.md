@@ -1,7 +1,7 @@
 # Audit Report: M38 — my-daily-routine.md
 **Level:** A1 | **Module:** M38 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 03:41:23
+**Generated:** 2026-02-28 14:07:31
 
 ## Configuration
 **Type:** A1
@@ -16,49 +16,20 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | match-up | Знайдіть пару: дія та переклад | 8 | 8 | ✅ |
-| 2 | group-sort | Розподіліть дії за часом доби | 13 | 12 | ✅ |
-| 3 | quiz | Оберіть правильну форму дієслова | 8 | 8 | ✅ |
-| 4 | fill-in | Вставте пропущене слово | 8 | 8 | ✅ |
-| 5 | unjumble | Складіть речення | 6 | 6 | ✅ |
-| 6 | match-up | Знайдіть переклад слів-маркерів | 8 | 8 | ✅ |
-| 7 | quiz | Перевірка розуміння | 8 | 8 | ✅ |
-| 8 | fill-in | Вставте правильний прислівник | 8 | 8 | ✅ |
-| 9 | unjumble | Складіть складніші речення | 6 | 6 | ✅ |
-
-**Summary:**
-- Total activities: 9 (target: 8-12) ✅
-- Unique types: 5 (minimum: 4) ✅
-- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
-- Required types used: 3/3 (fill-in, match-up, quiz) ✅
-- Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_BALANCE_BLOATED]** Section 'Ранок, день та вечір' has 1570 words (54% of total). Bloated sections: 'Ранок, день та вечір' (54%)
-  - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2802/2000 (raw: 3036)
-- **Activities:** ✅ 9/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 5/4 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/3
+- **Words:** ✅ 3479/2000 (raw: 3678)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
+- **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 21/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 40.9% (target 35-55% (M38))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 35.1% (target 35-55% (M38))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -67,8 +38,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **My Daily Routine** | ✅ | 72 | Included in Core |
-| **Вступ: Ваш розпорядок дня** | ✅ | 436 | Included in Core |
-| **Ранок, день та вечір** | ✅ | 1537 | Included in Core |
-| **Практика: Робочий день і вихідні** | ✅ | 499 | Included in Core |
-| **Підсумок: Мій ідеальний день** | ✅ | 258 | Included in Core |
+| **My Daily Routine** | ✅ | 43 | Included in Core |
+| **Вступ** | ✅ | 628 | Included in Core |
+| **Презентація** | ✅ | 1092 | Included in Core |
+| **Практика** | ✅ | 934 | Included in Core |
+| **Продукування та Підсумок** | ✅ | 637 | Included in Core |
+| **Підсумок** | ✅ | 145 | Included in Core |

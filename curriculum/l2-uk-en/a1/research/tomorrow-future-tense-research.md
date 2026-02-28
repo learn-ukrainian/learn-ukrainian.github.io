@@ -1,33 +1,33 @@
 # Дослідження: Tomorrow - Future Tense
 
 ## State Standard Reference
-§4.2.4.1: "утворення складеної форми майбутнього часу дієслів недоконаного виду: буду читати, будеш сидіти, буде сміятися, будемо гуляти, будете працювати, будуть відпочивати"
-Alignment: This module directly teaches the formation of the compound future tense (буду + infinitive), which is the primary A1 requirement for future tense.
+§4.2.4.1: "дієвідмінювання дієслова бути в майбутньому часі: буду, будеш, буде, будемо, будете, будуть; утворення складеної форми майбутнього часу дієслів недоконаного виду: буду читати..."
+Alignment: Addresses the core A1 requirement to form the compound future tense for imperfective verbs and conjugate the auxiliary verb 'бути'.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| завтра | High (Top 100) | завтра вранці, завтра ввечері, завтра вдень |
-| план | High | мати плани, складати план, плани на майбутнє |
-| наступний | High | наступного тижня, наступного року, наступного разу (Genitive time expressions) |
-| збиратися | Medium | збиратися додому, я збираюся (I intend to), збиратися в дорогу |
-| хотіти | High | хочу знати, хочу сказати, дуже хочу |
-| скоро | High | скоро буду, дуже скоро, як скоро |
+| завтра | Top 100 (high) | завтра вранці, завтра вдень, завтра ввечері |
+| буду | High (auxiliary) | буду працювати, буду читати |
+| наступний | High | наступного тижня, наступного року |
+| план | High | мати плани, складати план |
+| скоро | High | скоро буду, дуже скоро |
+| потім | High | а потім, потім скажу |
+| хотіти | Top 100 (high) | хочу знати, хочу відпочити |
 
 ## Cultural Hooks
-1. **Superstition about plans**: «Не кажи "гоп", поки не перескочиш» (Don't say "hop" until you've jumped). Ukrainians can be cautious about stating plans too definitively to avoid "jinxing" them.
-2. **Resilience/Optimism**: «Завтра буде новий день» (Tomorrow will be a new day). A common phrase offering hope and perspective during difficult times.
+1. The proverb «Не кажи 'гоп', поки не перескочиш» highlights Ukrainian cautiousness and modesty when discussing unfulfilled future plans, acting as a cultural superstition against "jinxing" intentions.
+2. The phrase «Завтра буде новий день» (Tomorrow is a new day) is a common, culturally resonant expression of optimism, resilience, and hope during difficult times.
 
 ## Common Learner Errors
-1. **Aspect Clash**: Using *буду* with perfective verbs (e.g., *буду прочитати* instead of *буду читати* or *прочитаю*). Correction: Only imperfective verbs use *буду*.
-2. **Case Error in Time Expressions**: Using Nominative instead of Genitive for "next" (e.g., *наступний тиждень я їду* instead of *наступного тижня я їду*).
-3. **Conjugation Drift**: Confusing forms of *бути* (e.g., *ми будуть* instead of *ми будемо*).
+1. **Conflict of Aspects:** "Буду прочитати" (Wrong) → "Буду читати" (Correct). Learners mistakenly pair "буду" with perfective verbs. The auxiliary "буду" must exclusively be used with imperfective verbs.
+2. **Genitive of Time Mistake:** Direct English translation "next week" as "наступний тиждень" (Nominative) → Correct: "наступного тижня" (Genitive). Time expressions with "наступний" require the genitive case.
+3. **Intent vs. Definite Action:** Confusing "Я хочу/збираюся" (I want/intend to) with "Я буду" (I will definitely). 
 
 ## Cross-References
-- **Builds on**: A1-21 (Yesterday - Past Tense) — contrasts past/future.
-- **Prepares for**: A1-23 (What Time Is It), A1-25 (My Daily Routine) — expands time management vocab.
+- Builds on: a1-36 (Yesterday - Past Tense), a1-23 (What Time Is It)
+- Prepares for: a1-38 (My Daily Routine)
 
 ## Notes for Content Writing
-- **Immersion**: A1 Level (Band 3: M21-34). Use ~35-40% immersion. Explain grammar in English.
-- **Focus**: Keep the distinction between "intent" (хочу/збираюся) and "certainty" (буду робити) clear.
-- **Scaffolding**: Provide a clear table for *буду* conjugation.
+- **Decolonized Framing:** Frame the Ukrainian future tense positively, focusing on its elegant simplicity. Emphasize that it is structurally simpler than English (lacking the "will/shall/going to" nuance) and do not use Russian grammar as a point of comparison.
+- **Bridge Module Scaffolding:** This is an A1 level module. Ensure English scaffolding is clear during the introduction to contrast the past and future timelines before transitioning into the 35-40% Ukrainian immersion target.

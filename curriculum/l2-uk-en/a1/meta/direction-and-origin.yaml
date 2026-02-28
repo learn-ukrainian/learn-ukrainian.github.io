@@ -6,28 +6,31 @@ content_outline:
   words: 500
   points:
   - 'Note for author: Use English scaffolding for all grammar rules and explanations
-    (A1 requirement).'
-  - Introduce the question 'Куди?' (Where to?) and contrast it with 'Де?' (Where at?).
+    (A1 requirement: 10-50% immersion).'
+  - Introduce the question 'Куди?' (Where to?) and contrast it conceptually with 'Де?'
+    (Where at?).
   - 'Explain the rule for direction: verbs of motion (іти, їхати) + в/у or на + Accusative
     case.'
   - Detail the Accusative forms for inanimate nouns (masculine remains same, feminine
     -а/-я changes to -у/-ю).
-  - 'Provide clear examples: Я іду в магазин, Я їду на роботу. Include a decolonization
-    note on using ''в Україну'' instead of ''на Україну''.'
+  - 'Provide clear examples: Я іду в магазин, Я їду на роботу. Include a strict decolonization
+    note: always use ''в Україну'' (entering the state), never ''на Україну''.'
 - section: До + Родовий
   words: 400
   points:
-  - Introduce 'до' + Genitive case for direction.
+  - Introduce 'до' + Genitive case for direction using English scaffolding.
   - 'Explain its specific semantic use: approaching a boundary, a city, or going to
     see a person (до лікаря, до Києва).'
   - 'Contrast with в/у: ''в лікарню'' (entering the building) vs ''до лікаря'' (visiting
     the person).'
-  - Provide a brief Genitive ending overview for the core examples used.
+  - Provide a brief Genitive ending overview (-а/-я for masculine, -и/-і for feminine)
+    for the core examples used.
 - section: Звідки? + Родовий
   words: 400
   points:
-  - Introduce the question 'Звідки?' (Where from?).
-  - Explain 'з / із / зі' + Genitive for spatial origin (з України, зі Львова).
+  - Introduce the question 'Звідки?' (Where from?) with clear English explanations.
+  - Explain 'з / із / зі' + Genitive for spatial origin (з України, зі Львова). Reiterate
+    the decolonized 'з України'.
   - Explain 'від' + Genitive for origin/returning from a person (від мами, від лікаря).
   - Include phonetic/euphony rules for choosing between з, із, and зі.
 - section: Три питання
@@ -45,4 +48,5 @@ content_outline:
     (Куди ти йдеш? — Я на роботу).
   - 'Include guided transformation examples: taking a location and producing its direction
     and origin equivalents.'
-  - Final summary of the key grammatical takeaways.
+  - Ensure all examples have English translations, maintaining the A1 safe-harbor
+    approach.

@@ -1,0 +1,326 @@
+<!-- SCOPE
+Covers: The final 11 Cyrillic letters (sibilants, iotated vowels, soft sign, apostrophe), pronunciation mechanics, and full alphabet review.
+Not covered:
+  - Reading fluency and syllable stress patterns → a1-05
+Related: a1-01, a1-02, a1-03
+-->
+
+# The Cyrillic Code IV
+
+> **Чому це важливо?**
+>
+> You are standing at the threshold of a major intellectual achievement. Reading a completely new writing system is a superpower that opens up a new world, allowing you to navigate streets, read menus, and connect authentically with people. Today, you will finalize your complete mastery of the Ukrainian alphabet.
+
+## Вступ
+
+Welcome to the final stage of cracking the Cyrillic code. Over the course of the previous three modules, you have successfully learned twenty-two letters and two special digraphs. You can already read a vast and growing number of Ukrainian words, recognizing the shapes and associating them with their proper sounds. Now, only eleven characters remain between you and complete alphabet fluency. These final characters represent some of the most distinctive, beautiful, and culturally significant sounds in the Ukrainian language. 
+
+In this specific module, we maintain a very clear structural approach to support your learning. Because we are dealing with the finer mechanics of physical pronunciation and unique spelling rules, all grammatical explanations, phonetic instructions, and structural rules will be provided entirely in English. This ensures absolute clarity and prevents any confusion. The Ukrainian language will appear strictly in our practical examples, practice sentences, and vocabulary drills, and it will always be accompanied by precise English translations. This scaffolding allows you to understand the theory deeply before you practice the application.
+
+Before we dive into the new phonetic material, let us take a brief moment to celebrate the knowledge you already possess. The ability to decode foreign symbols into meaningful sounds is a powerful cognitive skill. Let us verify your current foundation with a quick diagnostic reading exercise. Read the following five words aloud. They use only the letters you have already mastered in earlier lessons.
+
+1. **ма́ма** (mother) — straightforward, universal, and instantly recognizable.
+2. **бра́т** (brother) — testing your ability to produce crisp and clear consonants.
+3. **во́да** (water) — feeling the rhythm of the vowels and the voiced consonants.
+4. **до́бре** (good) — an essential word you will use every single day in conversation.
+5. **мі́сто** (city) — testing your memory of the soft vowel acting upon the preceding consonant.
+
+If you could read those words comfortably, you are perfectly prepared for this final push. The finish line is in sight. Let us cross it together and complete your Ukrainian alphabet.
+
+## Шиплячі та свистячі
+
+We begin our final phonetic journey with a group of consonants that often look intimidating to new learners but actually follow very logical articulatory rules. Linguists call these "sibilants" because they produce a hissing, hushing, or rushing sound of air. Let us examine each one individually, focusing intensely on exactly where your tongue should be placed inside your mouth.
+
+### The Letter Ц
+The letter **Ц** represents an affricate sound. An affricate is a sound that begins as a hard stop and immediately releases into a continuous friction sound. The absolute most crucial rule here is that **Ц** represents a single, unified sound. It is not a sequence of two separate letters pronounced one after the other. You must blend the articulation. Think of the sharp, singular sound right at the end of the English word «cats» or «boots». 
+
+When you pronounce it correctly, the very tip of your tongue presses firmly against the back of your upper teeth, building air pressure, and then quickly pulls away to release a sharp hiss. It is a highly frequent sound in Ukrainian, especially forming the endings of many descriptive words.
+
+Let us look at a core vocabulary word to anchor this sound. For example, **це́нтр** begins with the sharp, crisp ending found in «cats». Another good word is **ціка́вий**, an adjective meaning "interesting". You will also see this letter in **цу́кор**, which is the word for "sugar".
+
+Here are a few practical ways you will see these words in real life:
+*   «Ми йдемо́ в це́нтр.» (We are going to the center.)
+*   «Це це́нтр мі́ста.» (This is the city center.)
+*   «Він працю́є в це́нтрі.» (He works in the center.)
+*   «Це ду́же ціка́вий текст.» (This is a very interesting text.)
+*   «Я хо́чу чай і цу́кор.» (I want tea and sugar.)
+*   «Де тут це́нтр?» (Where is the center here?)
+
+**Пра́ктика чита́ння (Reading Practice)**
+«Це мій брат. Він іде́ в це́нтр. Це́нтр мі́ста ду́же ціка́вий. Тут є цу́кор.»
+(This is my brother. He is going to the center. The city center is very interesting. There is sugar here.)
+
+> [!tip] Watch the Endings
+> You will frequently see the letter **Ц** at the end of Ukrainian nouns denoting professions or specific characteristics. While we will explore those specific grammar patterns in later lessons, for now, focus purely on training your tongue to produce that crisp, singular affricate sound without separating it.
+
+### The Letter Ч
+The letter **Ч** is visually striking, somewhat resembling an upside-down lowercase «h» or perhaps the number «4». Phonetically, however, it is wonderfully straightforward for English speakers. It represents a clear, unmistakable sound, exactly as you hear it at the beginning of the English words «church», «chair», or «cheese».
+
+Unlike some other Slavic languages where this specific sound can vary in its softness or breathiness, the Ukrainian **Ч** is pronounced quite firmly and clearly. It is one of the foundational building blocks of the language, so mastering its visual shape quickly will greatly increase your reading speed.
+
+Our key vocabulary word here is one of the most comforting words in any language. The word **ча́й** begins exactly like the English word «church». Another example is **ча́с**, the word for "time". You will also see this sound in **число́**, which means "number".
+
+Let us practice seeing these words in conversational context:
+*   «Я хочу пи́ти ча́й.» (I want to drink tea.)
+*   «Це чо́рний ча́й.» (This is black tea.)
+*   «Де моя́ ча́шка ча́ю?» (Where is my cup of tea?)
+*   «Який це ча́с?» (What time is it?)
+*   «Це вели́ке число́.» (This is a big number.)
+*   «Я ма́ю ча́с.» (I have time.)
+
+**Пра́ктика чита́ння (Reading Practice)**
+«Я ма́ю ча́с. Я хо́чу пи́ти ча́й. Це мій чо́рний ча́й. Це га́рний ча́с.»
+(I have time. I want to drink tea. This is my black tea. It is a good time.)
+
+### The Letter Ш
+The letter **Ш** looks somewhat like a pitchfork or a capital «E» that has been rotated to point upwards. This letter represents a strictly hard, rushing sound, practically identical to the initial sound in the English words «ship», «shoe», or «shop».
+
+The physical mechanics of producing this sound are incredibly important for your accent. To pronounce **Ш** correctly in Ukrainian, you must pull the main body of your tongue slightly back in your mouth, away from your teeth. The sound should feel deep, robust, and full of rushing air, not light or airy. It is a definitively hard consonant.
+
+Consider this essential vocabulary word that you will use frequently. The word **шко́ла** begins with the rushing sound found in «shop». Another popular word is **шокола́д**, the word for "chocolate". You will also use this letter in numbers, like **ші́сть**, which means "six".
+
+Here is how you might use these words in daily logistical conversation:
+*   «Моя́ дити́на у шко́лі.» (My child is at school.)
+*   «За́втра ми йдемо́ до шко́ли.» (Tomorrow we are going to school.)
+*   «Ця шко́ла ду́же вели́ка.» (This school is very big.)
+*   «Я люблю́ шокола́д.» (I love chocolate.)
+*   «Тут є ші́сть я́блук.» (There are six apples here.)
+*   «Він їсть шокола́д.» (He is eating chocolate.)
+
+**Пра́ктика чита́ння (Reading Practice)**
+«Це на́ша шко́ла. Шко́ла ду́же вели́ка. Я ма́ю ші́сть я́блук. Я люблю́ шокола́д.»
+(This is our school. The school is very big. I have six apples. I love chocolate.)
+
+> [!observe] Visual Mnemonics
+> Many successful learners remember the letter **Ш** by thinking of its three vertical bars as three distinct shelves in a «shop» (a word that conveniently starts with that exact sound). Find the visual hook or imaginative association that works best for your own brain.
+
+### The Letter Щ
+The letter **Щ** is highly distinctive to the Ukrainian language. Visually, it looks exactly like the letter **Ш**, but with a small, descending tail attached to the bottom right corner. Phonetically, it represents a double-soft sibilant. You can conceptualize it as a prolonged, very soft combination of a rushing sound flowing seamlessly into a sharper «ch» sound. 
+
+This is the moment where articulatory placement becomes absolutely critical. While the previous letter **Ш** strictly requires your tongue to be pulled back, **Щ** requires the exact opposite. You must push the blade of your tongue far forward, raising it flat toward the roof of your mouth. This physical shift creates a much softer, more palatalized, breathy hissing sound that is fundamentally different from its harder cousin.
+
+Let us practice with a high-frequency function word and a beautiful descriptive noun. The word **ще́** is a soft, breathy blend indicating "more" or "still". The word **ща́стя** begins with the same soft, forward-placed rushing sound. You can also practice with **щоде́нник**, the word for "diary".
+
+Here are practical examples showing these words in action:
+*   «Я хочу ще́ оди́н.» (I want one more.)
+*   «Прочита́й це ще́ ра́з.» (Read this once more.)
+*   «Я бажа́ю ща́стя!» (I wish happiness!)
+*   «Це мій щоде́нник.» (This is my diary.)
+*   «Він пи́ше у щоде́нник.» (He writes in the diary.)
+*   «Ми ма́ємо ще́ ча́с.» (We still have time.)
+
+**Пра́ктика чита́ння (Reading Practice)**
+«Це мій щоде́нник. Я пи́шу тут ко́жен де́нь. Я хо́чу ще́ ча́й. Це моє́ ща́стя.»
+(This is my diary. I write here every day. I want more tea. This is my happiness.)
+
+> [!warning] A Common Learner Pitfall
+> A frequent mistake is attempting to pronounce **Щ** as a harsh, clunky sequence of two entirely separate, hard consonants. It is absolutely not that. It is a smooth, continuous, extremely soft sound. Practicing the physical contrast is essential: **Ш** is strictly hard with the tongue back, while **Щ** is strictly soft with the tongue forward.
+
+**Articulatory Contrast Drill**
+To truly master the critical difference between the hard **Ш** and the soft **Щ**, you should try this physical mirror self-check technique. Stand in front of a mirror in a well-lit room and alternate saying the two sounds aloud. 
+When you sustain the sound of **Ш**, your lips should be slightly rounded, and you will feel that your tongue is retracted deep in your mouth. 
+When you shift your articulation to **Щ**, you should physically feel your tongue slide forward and flatten against your upper palate. Furthermore, you will notice the corners of your mouth pull back slightly into a subtle, tight smile.
+
+## Йотовані голосні
+
+We now arrive at a fascinating and elegant feature of the Cyrillic alphabet: the iotated vowels. These four specific letters — **Ю**, **Я**, **Є**, **Ї** — operate under a special linguistic concept known as the "dual nature" principle. 
+
+Understanding this specific principle is the absolute key to achieving accurate, natural-sounding Ukrainian pronunciation. These letters behave entirely differently depending on their physical position within a given word. 
+
+When one of these letters is placed at the very beginning of a word, or immediately following another regular vowel, it produces TWO distinct sounds simultaneously: a gliding "y" sound (represented phonetically by the consonant Й) followed instantly by a core vowel. 
+However, when one of these letters is placed immediately after a consonant, it loses that initial gliding "y" sound. Instead, it produces only ONE core vowel sound, and, crucially, it acts backward to soften the consonant that comes right before it. Let us break this complex mechanism down letter by letter.
+
+### The Letter Ю
+The letter **Ю** visually resembles an English «I» connected by a small bridge to an «O». 
+
+**Position 1: Start of a word or after a vowel (Two Sounds)**
+When **Ю** starts a word, you pronounce it with a full glide, practically identical to the English word "you". It is robust and clear.
+**юна́к** — a core vocabulary word starting with this letter.
+*   «Цей юна́к ду́же розу́мний.» (This young man is very smart.)
+*   «Там стої́ть юна́к.» (A young man is standing there.)
+
+**Пра́ктика чита́ння (Reading Practice)**
+«Цей юна́к — мій брат. Він ду́же розу́мний. Він іде́ в це́нтр. Це ціка́вий юна́к. Я люблю́ мого́ бра́та.»
+(This young man is my brother. He is very smart. He is going to the center. This is an interesting young man. I love my brother.)
+
+**Position 2: After a consonant (One Sound + Softening)**
+When **Ю** follows directly after a consonant, it only makes a pure, round vowel sound. However, its presence tells you that you must soften the preceding consonant. For example, if you see it after the letter Л, the consonant becomes soft and liquid, while the vowel remains pure.
+
+### The Letter Я
+The letter **Я** looks exactly like a backwards English capital «R». It is undoubtedly one of the most common and important letters in the language because, standing all by itself, it forms the pronoun meaning "I".
+
+**Position 1: Start of a word or after a vowel (Two Sounds)**
+When placed at the beginning, it carries a strong initial glide, similar to the start of the English word «yard».
+**я́блуко** — begins exactly like the word «yard».
+*   «Я люблю́ черво́не я́блуко.» (I love a red apple.)
+*   «Час ї́сти я́блуко.» (Time to eat an apple.)
+
+**Пра́ктика чита́ння (Reading Practice)**
+«Я люблю́ я́блука. Це ду́же смачне́ я́блуко. Я їм я́блуко ко́жен де́нь. Я ма́ю час.»
+(I love apples. This is a very tasty apple. I eat an apple every day. I have time.)
+
+**Position 2: After a consonant (One Sound + Softening)**
+After a consonant, **Я** strips away its glide, making a simple, open «ah» sound, but it profoundly softens the consonant right before it, altering the physical shape of your mouth as you speak.
+
+> [!fact] The Pronoun "I"
+> In the Ukrainian language, the single letter **Я** is a complete, independent word meaning "I". When used as a pronoun, it is always pronounced fully with the complete two-sound glide. 
+> «Я студе́нт.» (I am a student.)
+
+### The Letter Є
+The letter **Є** looks remarkably like an English capital «E» that has a horizontal line drawn neatly through its middle. 
+
+**Position 1: Start of a word or after a vowel (Two Sounds)**
+This letter carries a glide similar to the opening sound of the English word «yellow». It is strongly tied to important geographical, historical, and cultural vocabulary.
+**Євро́па** — begins with the gliding sound of «yellow».
+*   «Ми хо́чемо жи́ти в Євро́пі.» (We want to live in Europe.)
+*   «Це За́хідна Євро́па.» (This is Western Europe.)
+
+**Пра́ктика чита́ння (Reading Practice)**
+«Ми живе́мо в Євро́пі. Євро́па ду́же вели́ка і га́рна. Я люблю́ Євро́пу. Це на́ша Євро́па. Моя́ сім'я́ те́ж живе́ тут. Ми ма́ємо дім в Євро́пі.»
+(We live in Europe. Europe is very big and beautiful. I love Europe. This is our Europe. My family also lives here. We have a home in Europe.)
+
+**Position 2: After a consonant (One Sound + Softening)**
+While it is relatively rare to find **Є** immediately after a consonant compared to the other iotated vowels, when you do encounter it in this position, it produces a simple, flat vowel sound while simultaneously softening the consonant preceding it.
+
+> [!culture] A Symbol of Direction
+> The letter **Є** is deeply and permanently embedded in modern Ukrainian political history. The defining term «Євромайдан» (Euromaidan) combined the concept of Europe with the traditional Ukrainian public square (the maidan), acting as the catalyst for a massive civic movement that firmly defined the nation's modern democratic trajectory.
+
+### The Letter Ї
+The letter **Ї** is visually quite striking and beautiful: it is an «I» topped with two distinct dots, similar to a German umlaut. This specific letter is the grand, majestic exception to the "dual nature" rule we just spent time learning.
+
+The rule for **Ї** is absolute and uncompromising: It ALWAYS makes two full, distinct sounds. It NEVER loses its initial gliding "y" sound, regardless of where it sits in a word, and it NEVER softens a preceding consonant. It stands completely independent and unyielding.
+
+**ї́жа** — begins with the strong gliding sound found in the word «yield».
+**ї́хати** — the verb for "to go/ride".
+*   «Це ду́же смачна́ ї́жа.» (This is very tasty food.)
+*   «Я люблю́ дома́шню ї́жу.» (I love home food.)
+*   «Ми хо́чемо ї́хати.» (We want to ride.)
+
+**Пра́ктика чита́ння (Reading Practice)**
+«Я люблю́ ї́хати в це́нтр. Там є смачна́ ї́жа. Я хо́чу ї́сти ко́жен де́нь. Це моя́ ї́жа.»
+(I love to ride to the center. There is tasty food there. I want to eat every day. This is my food.)
+
+> [!decolonization] A Mark of Identity
+> The letter **Ї** is completely exclusive to the Ukrainian Cyrillic alphabet; it simply does not exist in the alphabets of neighboring Slavic languages. Because of this exclusivity, the letter **Ї** has evolved into a powerful, visual symbol of Ukrainian identity and defiance. During periods of military occupation, citizens have frequently drawn this specific letter on walls, fences, and public spaces as a silent, courageous assertion of their enduring culture and presence.
+
+## М'який знак та апостроф
+
+Our final two characters in the Cyrillic code are quite unique because they are not actually letters that produce their own independent sounds. Instead, they function entirely as silent phonetic modifiers. They act as traffic signals for your tongue, instructing you exactly how to physically pronounce the letters surrounding them. Understanding these two specific symbols is absolutely essential for sounding authentic and natural when you speak.
+
+### The Soft Sign (Ь)
+The symbol **Ь** is universally known as the soft sign. It will never, under any circumstances, appear at the very beginning of a word because it literally cannot be pronounced on its own. Its sole grammatical and phonetic purpose is to indicate palatalization. While palatalization is a technical linguistic term, the physical action required in your mouth is actually quite simple to master.
+
+When you see a soft sign immediately after a consonant, you must physically "soften" that specific consonant. You achieve this mechanically by pressing the broad middle body of your tongue upward, flat against the hard palate (the roof of your mouth), while simultaneously articulating the consonant. This action adds a slight, breathy, almost liquid quality to the consonant itself, making it sound significantly lighter, thinner, and more delicate than its hard counterpart.
+
+Let us look at some crucial, everyday vocabulary where the soft sign is highly prominent and necessary. For instance, the word **де́нь** ends with a delicate, softened «n» sound. Similarly, **сі́ль** ends with a liquid, palatalized «l» sound. You will also see it at the beginning of words, such as in **Льві́в**, which begins with a soft «l» before transitioning into the rest of the city's name.
+
+Notice how these vital words are used in common daily phrases:
+*   «До́брий де́нь!» (Good day!)
+*   «Я роблю́ це ко́жен де́нь.» (I do this every day.)
+*   «Ми хо́чемо ї́хати до Льво́ва.» (We want to go to Lviv.)
+*   «Це морська́ сі́ль.» (This is sea salt.)
+
+**Пра́ктика чита́ння (Reading Practice)**
+«До́брий де́нь! Сього́дні га́рний де́нь. Ми ї́демо до Льво́ва. Львів ду́же ціка́вий. Тут є сі́ль.»
+(Good day! Today is a beautiful day. We are riding to Lviv. Lviv is very interesting. There is salt here.)
+
+**Minimal Contrast Drills**
+To truly train your ear to recognize this phenomenon, it helps immensely to hear how the soft sign actually changes the literal meaning of a word. The difference is not just an accent or a regional flavor; it is a fundamental structural change in the language.
+Consider the stark difference between a hard consonant and a soft consonant in these pairs:
+*   **кон** (an archaic word referring to a specific area) versus **кі́нь** (a horse).
+*   **мат** (the declaration of checkmate in a chess game) versus **мать** (an archaic, poetic word for a mother).
+If you accidentally ignore the soft sign while reading or speaking, you are quite literally saying a completely different word, which can lead to significant confusion.
+
+### The Apostrophe (')
+The apostrophe in the Ukrainian spelling system serves a very specific, mechanical, and highly necessary function. It acts as a strict phonetic blocker. 
+
+Earlier, we learned that the iotated vowels (**Ю**, **Я**, **Є**) automatically soften the consonant that comes immediately before them. But a structural problem arises: what happens if a word absolutely requires a hard consonant, but that consonant must be followed by the full, double-gliding sound of an iotated vowel? This exact scenario is where the apostrophe steps in to solve the problem.
+
+When you deliberately place an apostrophe between a consonant and an iotated vowel, it forcefully and entirely separates them. It acts as a physical wall. It prevents the consonant from becoming soft, keeping it hard and crisp, and it forces the iotated vowel to retain its full, original two sounds. 
+
+Let us carefully examine two extremely high-frequency examples that strictly require the apostrophe for correct pronunciation:
+**м'я́со** — the apostrophe preserves the «y» glide right before the «a» vowel.
+**сім'я́** — the apostrophe ensures the «m» stays hard and distinct from the following vowel.
+
+Let us see these words functioning in full, descriptive sentences:
+*   «Я купу́ю сві́же м'я́со.» (I am buying fresh meat.)
+*   «Це моя́ ду́же вели́ка сім'я́.» (This is my very large family.)
+
+**Пра́ктика чита́ння (Reading Practice)**
+«Це моя́ сім'я́. Сім'я́ ду́же вели́ка і га́рна. Ми купу́ємо м'я́со. Ми лю́бимо м'я́со.»
+(This is my family. The family is very big and beautiful. We are buying meat. We love meat.)
+
+If the apostrophe were entirely removed from a word like "м'ясо", the phonetic rules would take over: the «М» would instantly become soft and mushy, and the «Я» would lose its glide, sounding merely like a flat «ah». The apostrophe actively blocks that entire process, ensuring we clearly hear the distinct consonant followed by the necessary glide.
+
+> [!note] Rule Summary
+> To master these modifiers, keep this simple visual logic exceptionally clear in your mind:
+> 1. The **Ь** (soft sign) reaches BACKWARDS to gently soften the consonant right before it.
+> 2. The **'** (apostrophe) acts as an impenetrable WALL. It completely blocks softening and preserves the full, gliding sound of the vowel that comes immediately after it.
+
+**The Mechanics of the Apostrophe**
+To further visualize exactly how the apostrophe alters the mechanics of a word, study this theoretical comparison carefully:
+
+| Spelling Format | Phonetic Result | Grammatical Explanation |
+| :--- | :--- | :--- |
+| мя (no apostrophe) | A soft «М» seamlessly blended with a flat «ah» vowel. | The iotated vowel exerts its power, softening the preceding consonant. |
+| **м'я** (with apostrophe) | A distinctly hard «М» followed by the full gliding «ya» sound. | The apostrophe acts as a barrier, completely blocking the softening effect. |
+
+## Підсумок: Весь алфавіт
+
+You have finally arrived at a truly significant milestone in your language journey. Through dedication, focus, and consistent practice across these four modules, you have completely cracked the Cyrillic code. You now possess the foundational key to unlocking the entire Ukrainian language.
+
+Here is the complete, magnificent thirty-three-letter Ukrainian alphabet, presented in its proper, traditional alphabetical order. Take a moment to look at them all together and recognize how many you now know intimately:
+
+**А Б В Г Ґ Д Е Є Ж З И Й Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**
+
+The absolute hardest part of beginning any new language that utilizes a completely different script is exactly what you have just successfully accomplished. You have systematically re-trained your brain to associate new visual symbols with entirely new phonetic sounds. From this point forward in your studies, the nature of the challenge shifts entirely. You will no longer be stopping to ask yourself, "What letter is that shape?" Instead, you will be focusing on building true fluency—stringing these established sounds together to form syllables, complete words, and eventually, fluid, expressive sentences.
+
+Let us perform one final, comprehensive, and celebratory reading drill. This extended dialogue is specially designed to contain a wide variety of the letters you have learned throughout this entire series. Read it slowly, aloud, using the provided stress marks to guide your rhythm and emphasis.
+
+**Діало́г: Зу́стріч у це́нтрі (Dialogue: Meeting in the center)**
+
+— До́брий де́нь! Як спра́ви?
+— До́брий де́нь! Дя́кую, ду́же до́бре. А як ви?
+— Те́ж до́бре, дя́кую. Що ви тут ро́бите?
+— Я чека́ю на бра́та. Ми йдемо́ в це́нтр.
+— Це чудо́во! Наш це́нтр мі́ста ду́же га́рний.
+— Так, я зна́ю. Я люблю́ гуля́ти тут.
+— Ви хо́чете пи́ти ча́й чи ка́ву?
+— Я люблю́ чо́рний ча́й. А ви?
+— Я п'ю ка́ву ко́жен де́нь. Це моя́ улю́блена зви́чка зра́нку.
+— Ва́ша сім'я́ живе́ в Євро́пі?
+— Так, моя́ сім'я́ живе́ тут. Мій син хо́дить у шко́лу. Ця шко́ла ду́же вели́ка.
+— Це ціќаво. Що ви ро́бите за́втра?
+— За́втра ми йдемо́ на ри́нок. Я хо́чу купи́ти сві́же м'я́со. Я тако́ж купу́ю морську́ сі́ль. Я хо́чу я́блука. Я купу́ю чай, ка́ву і шокола́д. Ри́нок ду́же вели́кий. Ми ма́ємо час. Це га́рний план на за́втра.
+— Я бажа́ю ща́стя і га́рного дня!
+— Ду́же дя́кую! Ще ра́з до поба́чення!
+— До поба́чення!
+
+(— Good day! How are things?
+— Good day! Thank you, very good. And how are you?
+— Also good, thank you. What are you doing here?
+— I am waiting for my brother. We are going to the center.
+— That is wonderful! Our city center is very beautiful.
+— Yes, I know. I love to walk here.
+— Do you want to drink tea or coffee?
+— I love black tea. And you?
+— I drink coffee every day. It is my favorite habit in the morning.
+— Does your family live in Europe?
+— Yes, my family lives here. My son goes to school. This school is very big.
+— That is interesting. What are you doing tomorrow?
+— Tomorrow we are going to the market. I want to buy fresh meat. I also buy sea salt. I want apples. I buy tea, coffee, and chocolate. The market is very big. We have time. This is a good plan for tomorrow.
+— I wish happiness and a good day!
+— Thank you very much! Once more, goodbye!)
+
+Before we officially conclude this module and this entire phonetic series, take a quiet moment to evaluate your own progress and ensure the concepts have settled in your mind.
+
+**Перевірте себе:**
+1. Can you physically explain the difference in tongue placement between the hard sibilant **Ш** and the forward, double-soft sibilant **Щ**?
+2. What exactly is the "dual nature" rule for the iotated vowels **Ю**, **Я**, and **Є** when they appear at the very beginning of a word versus when they appear immediately after a consonant?
+3. Which specific iotated vowel is the grand exception to this rule, always making two sounds and standing as an exclusive, visual symbol of Ukrainian identity?
+4. How does the physical shape of your tongue change inside your mouth when you need to accurately pronounce a consonant followed by a soft sign (**Ь**)?
+5. When you see an apostrophe (**'**) in a word like «сім'я», what specific phonetic action is it commanding you to take regarding the surrounding letters?
+
+In our very next module, "Syllables and Transfer," we will firmly transition from focusing on isolated, individual letters to mastering the rhythm, cadence, and flow of complete Ukrainian words. You will learn exactly how syllables are constructed, where the natural emphasis falls, and how to begin reading with increasing speed, accuracy, and confidence. You now have all the tools; it is time to build.
+
+---

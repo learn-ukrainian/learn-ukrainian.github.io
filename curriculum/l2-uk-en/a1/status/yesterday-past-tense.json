@@ -2,15 +2,15 @@
   "module": "yesterday-past-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:41:21.092470Z",
+  "last_audit": "2026-02-28T13:52:09.167820Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T22:54:15.098372Z",
-    "meta": "2026-02-19T22:27:20.045664Z",
+    "md": "2026-02-28T13:51:55.291790Z",
+    "meta": "2026-02-28T13:46:12.982607Z",
     "activities": "2026-02-20T23:49:17.192912Z",
     "vocabulary": "2026-02-26T10:56:53.942287Z",
     "plan": "2026-02-28T03:02:37.401057Z",
-    "research": "2026-02-19T22:27:20.036598Z"
+    "research": "2026-02-28T13:46:12.973968Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2863/2000 (raw: 3208)"
+      "message": "3124/2000 (raw: 3294)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "deferred",
       "violations": 0,
-      "message": "0 < 1 (soft target)"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 5,
+    "pass_count": 3,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

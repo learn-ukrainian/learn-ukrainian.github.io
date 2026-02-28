@@ -19,19 +19,20 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2800/2000 (raw: 2996) | immersion: 2.8% LOW (target 5-15% (M02))
+    meta: Valid Structure | Lint: 1 Format Errors
+    lesson: 4079/2000 (raw: 4208) | immersion: 1.8% LOW (target 5-15% (M02))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📚 PEDAGOGICAL VIOLATIONS FOUND:
-    [ROBOTIC_STRUCTURE] Robotic structure: 3 sentences start with 'it is...'.
-       → FIX: Vary sentence structure.
+  Immersion    ❌ 1.8% LOW (target 5-15% (M02))
+
+  ❌ LINT ERRORS FOUND:
+    - Line 20: AI Contamination detected ('\bIn the previous\b'). Remove thinking/self-correction artifacts.
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 1 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 2/100)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-ii-audit.md
@@ -41,6 +42,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-cyrillic-code-ii-audit.log for details)
         ```
+
 
         ## Files to Fix
 
@@ -57,4 +59,20 @@
 
         **IMPORTANT:** Do NOT add or remove sections. Do NOT change the module structure.
         Fix only the specific violations listed above.
+
+## Section-Level Fix (IMPORTANT)
+
+This is a large module (4208 words). To avoid token truncation,
+fix ONLY the following section(s): "Вступ"
+
+**Output format:** Output ONLY the fixed section(s) between delimiters:
+
+```
+===SECTION_FIX_START===
+## {section title}
+{fixed section content}
+===SECTION_FIX_END===
+```
+
+Do NOT output the entire file. Only output the section(s) listed above.
 

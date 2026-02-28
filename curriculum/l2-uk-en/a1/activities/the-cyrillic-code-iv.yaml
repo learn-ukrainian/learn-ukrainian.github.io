@@ -1,0 +1,251 @@
+- type: anagram
+  title: "Розшифруйте слова: Шиплячі та свистячі"
+  instruction: "Rearrange the letters to form the correct Ukrainian word."
+  items:
+    - scrambled: "й а ч"
+      answer: "чай"
+    - scrambled: "л о к ш а"
+      answer: "школа"
+    - scrambled: "р т е ц н"
+      answer: "центр"
+    - scrambled: "б у к л о я"
+      answer: "яблуко"
+    - scrambled: "н ь е д"
+      answer: "день"
+    - scrambled: "т я щ а с"
+      answer: "щастя"
+    - scrambled: "к а ю н"
+      answer: "юнак"
+    - scrambled: "с а ч"
+      answer: "час"
+
+- type: group-sort
+  title: "Розподіліть за групами"
+  instruction: "Sort the words into the correct categories based on their modifiers."
+  groups:
+    - name: "Слова з м'яким знаком"
+      items: ["день", "сіль", "Львів", "кінь"]
+    - name: "Слова з апострофом"
+      items: ["м'ясо", "сім'я", "п'ять", "об'єкт"]
+    - name: "Без м'якого знака чи апострофа"
+      items: ["школа", "центр", "чай", "яблуко"]
+
+- type: fill-in
+  title: "Доповніть речення"
+  instruction: "Choose the correct word to complete the sentence."
+  items:
+    - sentence: "Це моя дуже велика _____."
+      answer: "сім'я"
+      options: ["сім'я", "школа", "їжа", "сіль"]
+    - sentence: "Я хочу пити чорний _____."
+      answer: "чай"
+      options: ["чай", "цукор", "день", "центр"]
+    - sentence: "Завтра ми йдемо до _____."
+      answer: "школи"
+      options: ["школи", "центру", "Європи", "Львова"]
+    - sentence: "Мені треба морська _____."
+      answer: "сіль"
+      options: ["сіль", "вода", "їжа", "сім'я"]
+    - sentence: "Я купую свіже _____."
+      answer: "м'ясо"
+      options: ["м'ясо", "яблуко", "щастя", "чай"]
+    - sentence: "Він працює в _____ міста."
+      answer: "центрі"
+      options: ["центрі", "школі", "Львові", "часі"]
+
+- type: quiz
+  title: "Перевірте знання: Звуки та букви"
+  instruction: "Choose the correct answer for each phonetic rule."
+  items:
+    - question: "Яка літера позначає один злитий звук, як у слові cats?"
+      explanation: "Літера Ц позначає один злитий звук."
+      options:
+        - text: "Ц"
+          correct: true
+        - text: "Ч"
+          correct: false
+        - text: "Ш"
+          correct: false
+        - text: "Щ"
+          correct: false
+    - question: "Яка літера позначає звук, який ми чуємо на початку слова church?"
+      explanation: "Літера Ч звучить як у слові church."
+      options:
+        - text: "Ч"
+          correct: true
+        - text: "Ц"
+          correct: false
+        - text: "Ш"
+          correct: false
+        - text: "Щ"
+          correct: false
+    - question: "Яка з цих літер є подвійним м'яким шиплячим звуком?"
+      explanation: "Літера Щ позначає подвійний м'який шиплячий звук."
+      options:
+        - text: "Щ"
+          correct: true
+        - text: "Ш"
+          correct: false
+        - text: "Ц"
+          correct: false
+        - text: "Ч"
+          correct: false
+    - question: "Яка йотована голосна завжди позначає два звуки і ніколи не пом'якшує приголосний?"
+      explanation: "Літера Ї завжди позначає два звуки і ніколи не пом'якшує приголосні."
+      options:
+        - text: "Ї"
+          correct: true
+        - text: "Ю"
+          correct: false
+        - text: "Я"
+          correct: false
+        - text: "Є"
+          correct: false
+    - question: "Яка літера не має власного звуку, а лише пом'якшує попередній приголосний?"
+      explanation: "М'який знак (Ь) лише пом'якшує попередній приголосний."
+      options:
+        - text: "Ь"
+          correct: true
+        - text: "Ї"
+          correct: false
+        - text: "Щ"
+          correct: false
+        - text: "Ц"
+          correct: false
+    - question: "Що ми використовуємо, щоб зберегти твердість приголосного перед йотованою голосною?"
+      explanation: "Апостроф зберігає твердість приголосного перед йотованою голосною."
+      options:
+        - text: "апостроф"
+          correct: true
+        - text: "м'який знак"
+          correct: false
+        - text: "крапку"
+          correct: false
+        - text: "кому"
+          correct: false
+    - question: "Який звук позначає літера Ш у слові школа?"
+      explanation: "Літера Ш позначає твердий шиплячий звук."
+      options:
+        - text: "твердий шиплячий"
+          correct: true
+        - text: "м'який шиплячий"
+          correct: false
+        - text: "дзвінкий"
+          correct: false
+        - text: "голосний"
+          correct: false
+    - question: "Скільки звуків позначає літера Я на початку слова яблуко?"
+      explanation: "На початку слова літера Я позначає два звуки."
+      options:
+        - text: "два звуки"
+          correct: true
+        - text: "один звук"
+          correct: false
+        - text: "три звуки"
+          correct: false
+        - text: "жодного звуку"
+          correct: false
+
+- type: match-up
+  title: "Знайдіть пару: Слова та їхнє значення"
+  instruction: "Match the Ukrainian words with their English translations."
+  pairs:
+    - left: "чай"
+      right: "tea"
+    - left: "школа"
+      right: "school"
+    - left: "день"
+      right: "day"
+    - left: "їжа"
+      right: "food"
+    - left: "сім'я"
+      right: "family"
+    - left: "м'ясо"
+      right: "meat"
+    - left: "яблуко"
+      right: "apple"
+    - left: "центр"
+      right: "center"
+
+- type: unjumble
+  title: "Складіть речення з поданих слів"
+  instruction: "Rearrange the words to form correct Ukrainian sentences."
+  items:
+    - words: ["Я", "хочу", "пити", "чай"]
+      answer: "Я хочу пити чай"
+    - words: ["Це", "моя", "велика", "сім'я"]
+      answer: "Це моя велика сім'я"
+    - words: ["Ми", "живемо", "в", "Європі"]
+      answer: "Ми живемо в Європі"
+    - words: ["Де", "моя", "чашка", "чаю"]
+      answer: "Де моя чашка чаю"
+    - words: ["Я", "люблю", "їсти", "яблуко"]
+      answer: "Я люблю їсти яблуко"
+    - words: ["Це", "дуже", "смачна", "їжа"]
+      answer: "Це дуже смачна їжа"
+
+- type: anagram
+  title: "Розшифруйте слова: Йотовані голосні та інші"
+  instruction: "Rearrange the letters to form the correct Ukrainian word."
+  items:
+    - scrambled: "р о п а Є в"
+      answer: "Європа"
+    - scrambled: "а ж ї"
+      answer: "їжа"
+    - scrambled: "л ь с і"
+      answer: "сіль"
+    - scrambled: "в і Л ь в"
+      answer: "Львів"
+    - scrambled: "р о ц у к"
+      answer: "цукор"
+    - scrambled: "о л с и ч"
+      answer: "число"
+
+- type: group-sort
+  title: "Розподіліть слова за початковою літерою"
+  instruction: "Sort the words into the correct categories."
+  groups:
+    - name: "Починаються на Ц або Ч"
+      items: ["центр", "цукор", "цікавий", "чай", "час", "число"]
+    - name: "Починаються на Ш або Щ"
+      items: ["школа", "шоколад", "шість", "ще", "щастя", "щоденник"]
+
+- type: fill-in
+  title: "Доповніть речення правильним словом"
+  instruction: "Choose the correct word to complete the sentence."
+  items:
+    - sentence: "Він працює в _____."
+      answer: "центрі"
+      options: ["центрі", "школі", "чай", "сіль"]
+    - sentence: "Це чорний _____."
+      answer: "чай"
+      options: ["чай", "час", "цукор", "центр"]
+    - sentence: "Моя дитина у _____."
+      answer: "школі"
+      options: ["школі", "сім'ї", "Європі", "центрі"]
+    - sentence: "Ми хочемо їхати до _____."
+      answer: "Львова"
+      options: ["Львова", "Києва", "центру", "школи"]
+    - sentence: "Я роблю це кожен _____."
+      answer: "день"
+      options: ["день", "час", "чай", "центр"]
+    - sentence: "Де моя чашка _____?"
+      answer: "чаю"
+      options: ["чаю", "соку", "кави", "води"]
+
+- type: unjumble
+  title: "Складіть короткі речення"
+  instruction: "Rearrange the words to form correct Ukrainian sentences."
+  items:
+    - words: ["Це", "чорний", "чай"]
+      answer: "Це чорний чай"
+    - words: ["Це", "центр", "міста"]
+      answer: "Це центр міста"
+    - words: ["Мені", "треба", "морська", "сіль"]
+      answer: "Мені треба морська сіль"
+    - words: ["Там", "смачна", "їжа"]
+      answer: "Там смачна їжа"
+    - words: ["Я", "купую", "свіже", "м'ясо"]
+      answer: "Я купую свіже м'ясо"
+    - words: ["Це", "моя", "сім'я"]
+      answer: "Це моя сім'я"

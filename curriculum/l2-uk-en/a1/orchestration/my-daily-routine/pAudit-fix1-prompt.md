@@ -18,28 +18,30 @@
   Module:  my-daily-routine
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  1 Outline Compliance Errors
+  failing gates:
+    lesson: 3532/2000 (raw: 3731) | pedagogy: 7 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  Grammar      ℹ️ N/A (covered by naturalness)
-  Naturalness  ℹ️ PENDING — awaiting review
-  Activity_quality ⏳ Deferred (content-only audit)
-  Research     ⚠️ Refresh recommended: Content predates research (research file is newer)
-  Immersion    🇺🇦 39.8% (target 35-55% (M25))
+       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 11 violations (severe - consider revision)
+     → 6 grammar-level violations (fundamental)
+
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/my-daily-routine-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/my-daily-routine.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  Critical Failures:
-    • 1 Outline Compliance Errors
-
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/my-daily-routine-audit.log for details)
         ```
+
 
         ## Files to Fix
 

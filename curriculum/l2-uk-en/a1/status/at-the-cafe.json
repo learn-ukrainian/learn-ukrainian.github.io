@@ -2,15 +2,15 @@
   "module": "at-the-cafe",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:44:15.304418Z",
+  "last_audit": "2026-02-28T14:40:49.765461Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:02.776546Z",
-    "meta": "2026-02-18T22:47:21.905770Z",
+    "md": "2026-02-28T14:40:29.156266Z",
+    "meta": "2026-02-28T14:34:31.665820Z",
     "activities": "2026-02-22T00:27:13.145979Z",
     "vocabulary": "2026-02-26T10:56:38.068808Z",
     "plan": "2026-02-28T03:02:13.890490Z",
-    "research": "2026-02-18T22:47:21.902210Z"
+    "research": "2026-02-28T14:34:31.661199Z"
   },
   "gates": {
     "meta": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2585/2000 (raw: 2997) | immersion: 25.9% LOW (target 35-55% (M41))"
+      "status": "pass",
+      "violations": 0,
+      "message": "4479/2000 (raw: 4717)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "9/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "22/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
-    "deferred_count": 0
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
   }
 }

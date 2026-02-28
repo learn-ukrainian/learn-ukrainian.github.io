@@ -5,46 +5,51 @@ content_outline:
 - section: Що таке склад?
   words: 400
   points:
-  - 'English scaffolding: Clearly define ''голосний'' (vowel) and explain the golden
-    rule: one vowel equals one syllable.'
-  - 'Provide examples breaking down words by vowel count: кіт (1), мо-ло-ко (3), у-кра-ї-на
-    (4).'
-  - 'Cultural connection: Introduce the idea of Ukrainian as a melodic, flowing language
-    (''солов''їна мова'') due to its syllable structure.'
-- section: Відкриті та закриті типи
+  - 'English Scaffolding: Define the concept of a syllable (склад) and vowel (голосний
+    звук). Establish the golden rule: One vowel equals one syllable.'
+  - 'Demonstrate with clear examples using familiar vocabulary: кіт (1 vowel = 1 syllable),
+    мо-ло-ко (3 vowels = 3 syllables), у-кра-ї-на (4 vowels = 4 syllables).'
+  - 'Cultural connection: Explain why Ukrainian is called «солов''їна мова» (nightingale
+    language) — its melodic flow comes directly from this syllable structure.'
+- section: Типи складів
   words: 400
   points:
-  - Define open (ending in vowel) and closed (ending in consonant) forms in English.
-  - Explain Ukrainian's preference for open endings and the principle of maximal onset
-    for consonant clusters (e.g., се-стра, not сес-тра).
-  - Practice identifying types using vocabulary words like ву-ли-ця (open) and ав-то-бус
-    (closed final).
+  - 'English Scaffolding: Explain open syllables (відкритий склад) ending in vowels,
+    and closed syllables (закритий склад) ending in consonants.'
+  - 'Highlight Ukrainian''s strong preference for open syllables and the principle
+    of maximal onset (pushing consonants to the next syllable: се-стра, not сес-тра).'
+  - 'Provide a breakdown of high-frequency words by type: ву-ли-ця (open), ав-то-бус
+    (closed final).'
+  - 'Decolonized framing: Compare Ukrainian''s fluid open-syllable rhythm to languages
+    like Italian or Spanish, rather than using Russian as a reference point.'
 - section: Правила переносу
   words: 500
   points:
-  - Introduce 'переніс' (word hyphenation) and its importance in Ukrainian cursive
-    handwriting and typing.
-  - 'Rule 1: Never leave or transfer a single letter (о-ко has two syllables, but
-    cannot be split across lines).'
-  - 'Rule 2: The soft sign (ь) and apostrophe ('') must stay with the preceding consonant
-    (паль-ці, сі-м''я).'
-  - 'Rule 3: Digraphs дж/дз cannot be split when representing a single sound.'
-  - Address common learner errors of applying English hyphenation rules to Ukrainian
-    words.
-- section: Позиція наголосу
+  - 'English Scaffolding: Introduce «переніс» (word hyphenation) and its practical
+    importance for handwriting and typing in Ukrainian.'
+  - 'Rule 1: Never leave or carry over a single letter (e.g., о-ко cannot be split
+    across lines).'
+  - 'Rule 2: The soft sign (ь) and apostrophe ('') must remain attached to the preceding
+    consonant (паль-ці, сі-м''я).'
+  - 'Rule 3: Digraphs дж and дз cannot be split when they represent a single sound
+    (бу-дзьок).'
+  - 'Address common learner friction: warn against applying English intuitive hyphenation
+    patterns to Ukrainian words.'
+- section: Наголос і склади
   words: 400
   points:
-  - 'Preview ''наголос'' (stress): explain that the stressed vowel is pronounced longer
-    and louder.'
-  - Note that Ukrainian stress is dynamic and not predictable from spelling, requiring
-    per-word memorization.
-  - Introduce the dictionary accent mark (´) and demonstrate it on multi-syllable
-    vocabulary words.
+  - 'English Scaffolding: Preview the concept of stress (наголос). Explain that the
+    stressed syllable is pronounced longer and with more intensity.'
+  - Clarify that Ukrainian stress is dynamic and unpredictable from spelling, requiring
+    memorization per word.
+  - Introduce the dictionary accent mark (´) and demonstrate how stress changes the
+    'weight' of syllables using previous vocabulary.
 - section: Практика
   words: 300
   points:
-  - 'Syllable counting drill: Students identify the number of vowels to find the syllables.'
-  - 'Hyphenation drill: Students identify correct and incorrect ''переніс'' for longer
-    words (бібліотека, університет).'
-  - 'Reading practice: Encourage reading syllable-by-syllable to build confidence
-    and fluency before full-speed reading.'
+  - Include a syllable counting walkthrough where learners identify vowels to determine
+    the number of syllables.
+  - Provide a hyphenation walkthrough identifying correct and incorrect «переніс»
+    for multi-syllable words (бі-блі-о-те-ка, у-ні-вер-си-тет).
+  - Recommend reading multi-syllable words slowly, syllable-by-syllable, to build
+    phonological confidence before attempting full speed reading.

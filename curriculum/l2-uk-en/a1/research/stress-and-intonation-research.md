@@ -3,33 +3,36 @@
 ## State Standard Reference
 §4.1.5: "Наголос."
 §4.1.8: "Інтонація (розповідна, питальна, оклична)."
-Alignment: This module directly addresses the A1 linguistic competence requirements for understanding word stress dynamics and the three fundamental sentence intonation contours.
+Alignment: This module explicitly addresses the State Standard requirements for teaching free word stress (§4.1.5) and the three foundational intonation patterns (§4.1.8).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| вода | Top 300 | пити воду, холодна вода |
-| рука | Top 200 | права рука, ліва рука |
-| школа | Top 200 | у школі, йти до школи |
-| добрий | Top 100 | добрий день, добрий ранок |
-| писати | Top 200 | писати лист, писати ручкою |
-| замок | Top 1000 | старий зАмок, новий замОк |
-| далеко | Top 500 | далеко звідси, дуже далеко |
+| замок | Mid frequency | зАмок (castle), замОк (lock) |
+| вода | Top 300 | холодна водА, пити водУ |
+| рука | Top 200 | правА рукА, рУки |
+| писати | Top 200 | писАти лист, я пишУ |
+| школа | Top 200 | у шкОлі, до шкОли |
+| молоко | Mid frequency | пити молокО |
+| добрий | Top 100 | дОбрий ранок, дОбрий день |
+| далеко | Top 300 | далекО від дому |
+| питання | Top 100 | задати питАння |
 
 ## Cultural Hooks
-1. The classic "мУка/мукА" (torment vs flour) and "зАмок/замОк" (castle vs lock) minimal pairs are cultural touchstones used in every Ukrainian elementary school to teach the importance of stress.
-2. Ukrainian yes/no questions rely entirely on the musicality of pitch. While English uses structural syntax markers ("Do you..."), Ukrainian speakers raise their pitch on the most important word in the sentence, making intonation semantically crucial.
+1. "зАмок" (castle) vs "замОк" (lock) and "мУка" (torment) vs "мукА" (flour) are classic Ukrainian pedagogical tools to demonstrate the functional load of stress.
+2. The Ukrainian language's high degree of free, mobile stress contributes directly to its renowned melodic and rhythmic qualities, often culturally celebrated in the phrase "солов'їна мова" (nightingale language).
 
 ## Common Learner Errors
-1. **Applying L1 fixed stress** → E.g., defaulting to penultimate stress like in Polish or first-syllable like in Czech. Correct form: recognizing stress is free and must be memorized per word (e.g., "молокО" not "молОко"). — Why it happens: native language interference.
-2. **Flat intonation in yes/no questions** → E.g., saying "Це кафе?" with a falling pitch. Correct form: sharp rise at the end. — Why it happens: English relies on syntax (auxiliary verbs) for questions, not just pitch contour.
-3. **Ignoring stress marks in dictionaries** → Assuming spelling indicates pronunciation. Correct form: always checking the acute accent (´). — Why it happens: English doesn't use accent marks for stress.
+1. Predicting stress based on spelling → Assuming identical word endings share stress patterns (e.g., mispronouncing кнИга based on водА).
+2. Ignoring stress mobility → Retaining the nominative singular stress in plural forms (e.g., saying рукИ instead of the correct рУки).
+3. Using English question intonation for Ukrainian yes/no questions → Ukrainian requires a sharp, sustained upward pitch at the end of yes/no questions without question words.
 
 ## Cross-References
 - Builds on: a1-05 (Syllables and Transfer)
-- Prepares for: a1-07 (The Gender Code) - gender forms and case endings will require an understanding of mobile stress patterns.
+- Prepares for: a1-07 (The Gender Code), a1-09 (Reflexive Verbs), a1-17 (Accusative Case)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Present Ukrainian stress as a core feature of the language's melodic nature. Contrast its "free" nature with fixed-stress languages like Polish or French. Never use Russian as the baseline or reference point for comparisons.
-- **English Scaffolding**: As an A1.1 module (15-25% immersion target), the core grammatical concepts (mobile stress, intonation contours) must be explained in English first, followed by clear Ukrainian examples with IPA strictly on the first occurrence of new words.
-- Avoid Russianisms in examples (e.g., use "відповідь" not "отвіт", "питання" not "вопрос").
+- Module is A1.1: English scaffolding is REQUIRED for all grammatical and theoretical explanations (Immersion < 25%).
+- Always use the acute accent (´) for the first occurrence of vocabulary words.
+- Frame Ukrainian independently. Use Polish (penultimate) or French (final) for contrast, avoiding Russian baselines.
+- Maintain an encouraging "Safe Harbor" tone. Stress mobility is hard; frame it as something to observe now, not master immediately.

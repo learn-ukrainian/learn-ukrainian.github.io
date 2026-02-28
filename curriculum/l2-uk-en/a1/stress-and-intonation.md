@@ -1,0 +1,340 @@
+<!-- SCOPE
+Covers: Free and mobile word stress, functional load of stress, three basic intonation contours (declarative, interrogative, exclamatory).
+Not covered:
+  - Specific spelling rules for prefixes/suffixes
+  - Complex sentence stress (focus marking)
+Related: a1-05 (Syllables and Transfer), a1-07 (The Gender Code), a1-09 (Reflexive Verbs)
+-->
+
+# Stress and Intonation
+
+> **Чому це важливо?**
+>
+> Нова мова — як нова музика. Ви повинні вивчити літери. Але ви також повинні знати ритм. Українська мова дуже мелодійна. Наголос і інтонація роблять цей ритм. Вивчайте новий матеріал уважно. Тоді носії мови легко зрозуміють слова. Давайте практикувати разом!
+
+## Наголос
+
+When you listen to native Ukrainian speakers, you might notice a beautiful, flowing rhythm to their speech. This rhythm is not accidental. It comes directly from how Ukrainians emphasize certain parts of words. This emphasis is called **на́голос** (stress). 
+
+In many languages, word stress follows strict, predictable mathematical rules. For example, in French, the stress almost always falls on the final syllable of a word. In Polish, you can reliably expect the stress to land on the penultimate (second-to-last) syllable. Ukrainian, however, takes a completely different approach. Ukrainian features what linguists call "free stress." This means that the stress can fall on any syllable in a word—the first, the middle, or the last. There is no single universal rule that dictates where the emphasis must go based on the spelling. While this might seem challenging at first, this incredible flexibility is precisely what gives spoken Ukrainian its dynamic, expressive, and deeply melodic character. 
+
+### Що таке наголос?
+
+So, what exactly happens when we stress a syllable? In Ukrainian, the **на́голос** (stress) is a clear acoustic emphasis placed on one specific vowel within a word. When a vowel carries the stress, you pronounce it slightly louder, slightly longer, and with much more clarity than the other vowels in the same word. 
+
+Think of it like a primary heartbeat or a strong drumbeat within the word. If a word has three syllables, one of those syllables will be the strong, dominant beat, while the other two will be softer, shorter, and more relaxed. 
+
+Let us look at a simple example using the word for "school", which is **шко́ла**. This word has two syllables: "шко" and "ла". The stress falls firmly on the first syllable. Therefore, you say "ШКО-ла," giving that first "О" a clear, strong sound. The final "А" is pronounced a bit more softly. If you were to stress the second syllable by mistake ("шко-ЛА"), a native speaker would still figure out what you mean, but it would sound quite unnatural and confusing to their ears. 
+
+### Зміна значення
+
+You might wonder, "If people can still understand me when I make a mistake, why is getting the exact stress so important?" This is where the concept of the "functional load" of stress comes into play. In Ukrainian, stress is not merely a stylistic or decorative choice; it is a core grammatical tool. Sometimes, shifting the stress from one syllable to another completely changes the literal meaning of the word. 
+
+We call these pairs of words "minimal pairs." They are spelled absolutely identically, letter for letter, but they are pronounced with different stress, resulting in entirely different definitions. 
+
+Here are two classic minimal pairs that every Ukrainian student learns to demonstrate this concept:
+
+*   **за́мок** (castle) versus **замо́к** (lock)
+*   **му́ка** (torment) versus **мука́** (flour)
+
+Let us see them in context to understand how critical the difference can be in real-world communication. 
+
+**Ukrainian:** Це старий **за́мок**.
+(English: This is an old castle.)
+
+**Ukrainian:** Це новий **замо́к**.
+(English: This is a new lock.)
+
+If you are a tourist asking for directions to a famous historical medieval castle, but you place the stress on the last syllable, you will be asking locals where to find a padlock! This demonstrates why paying attention to the "beat" of the word is just as important as learning the consonant and vowel sounds themselves.
+
+### Символ наголосу
+
+Because Ukrainian stress is free and cannot be guessed simply by looking at the letters, you need a reliable way to know where the stress belongs whenever you encounter a new vocabulary word. 
+
+Whenever you look up a word in a high-quality Ukrainian dictionary, or when you learn new vocabulary words in this curriculum, you will see a special mark. We use the acute accent (´) placed directly over the stressed vowel. 
+
+Here are a few examples of how you will see new words presented in your lessons:
+*   **до́брий** (good)
+*   **далеко́** (far)
+*   **пита́ння** (question)
+
+When you see **до́брий**, the mark tells you to put your vocal energy on the first "О". When you see **далеко́**, the mark tells you that the energy waits until the very last "О". 
+
+> [!tip] **Ваша стратегія**
+> Завжди запам'ятовуйте слово і наголос. Це дуже важливо. Наприклад, слово «вода». Наголос завжди на останньому складі: вода́. Уявіть знак наголосу як літеру. Це допомагає читати правильно. Робіть це завжди!
+
+
+
+> [!culture] **Солов'їна мова**
+> Українська мова звучить дуже красиво. Українці кажуть: «солов'їна мова». Вільний наголос робить звук дуже музичним. Кожне речення має свій гарний ритм. Ви зараз вивчаєте цю музику. Це дуже цікаво!
+
+## Типові наголоси
+
+Even though we have firmly established that Ukrainian stress is "free" and not governed by a single universal law, this does not mean the language is entirely random chaos. As you slowly build your vocabulary, you will begin to notice certain patterns naturally emerging. Many common words share similar stress profiles based on their history and structure. 
+
+Recognizing these typical patterns will help you develop a highly intuitive "feel" for the language. Let us explore the three most common places where stress tends to fall, using some of the most frequent vocabulary words you will need at the A1 level.
+
+### Наголос на першому складі
+
+A very large number of fundamental, everyday Ukrainian words carry their stress on the very first syllable. This creates a strong, decisive opening beat when you speak. This pattern is particularly common among core family terms, simple nouns, and basic adjectives.
+
+When pronouncing these words, start strong and let the rest of the word fall away softly.
+
+*   **ма́ма** (mom)
+*   **та́то** (dad)
+*   **ка́ва** (coffee)
+*   **до́брий** (good)
+*   **ві́дповідь** (answer)
+
+Let us see how these words sound in short, natural sentences. Remember to put your energy on that first highlighted vowel.
+
+**Ukrainian:** Це моя **ма́ма**.
+(English: This is my mom.)
+
+**Ukrainian:** Де смачна **ка́ва**?
+(English: Where is the tasty coffee?)
+
+**Ukrainian:** Це дуже **до́брий** день.
+(English: This is a very good day.)
+
+### Наголос на останньому складі
+
+Just as common as first-syllable stress is final-syllable stress. In these words, the vocal energy builds up and lands firmly on the very last vowel. This pattern is frequently found in words denoting substances, abstract concepts, and many common adverbs of location. 
+
+When you say these words, keep the beginning of the word light and quick, saving your breath and volume to emphasize the final sound.
+
+*   **молоко́** (milk)
+*   **далеко́** (far)
+*   **вода́** (water)
+
+Let us practice these in simple contexts. Notice how the sentence continually drives forward toward the final stressed syllable.
+
+**Ukrainian:** Я п'ю холодне **молоко́**.
+(English: I drink cold milk.)
+
+**Ukrainian:** Це чиста **вода́**.
+(English: This is clean water.)
+
+**Ukrainian:** Школа дуже **далеко́**.
+(English: The school is very far.)
+
+### Наголос на передостанньому складі
+
+Finally, many Ukrainian words have their stress placed comfortably on the penultimate syllable (the second-to-last syllable). For words with three or more syllables, this creates a pleasant "rising and falling" rhythm that feels very balanced and symmetrical.
+
+*   **шко́ла** (school)
+*   **доро́га** (road / way)
+*   **пита́ння** (question)
+
+Let us look at how these flow smoothly in a sentence:
+
+**Ukrainian:** Це нова **шко́ла**.
+(English: This is a new school.)
+
+**Ukrainian:** Це гарне **пита́ння**.
+(English: This is a good question.)
+
+By familiarizing yourself with these three broad categories—first, last, and penultimate—you will start to hear the natural structural architecture of Ukrainian vocabulary. However, it is crucial to remember that these are just common trends, not absolute laws that you can guess.
+
+> [!warning] **Орфографія і наголос**
+> Слова мають один суфікс. Але вони мають різний наголос. Не вгадуйте наголос. Це дуже поширена помилка. Завжди перевіряйте словник. Там є правильний наголос.
+
+To make this visual, consider the following comparison table. It compares pairs of nouns that look structurally identical—they share the exact same vowel endings—but they behave completely differently when spoken aloud:
+
+| Слово (Word) | Закінчення (Ending) | Де наголос? (Where is the stress?) |
+| :--- | :--- | :--- |
+| **кни́га** (book) | -а | На першому складі |
+| **вода́** (water) | -а | На останньому складі |
+| **мі́сто** (city) | -о | На першому складі |
+| **вікно́** (window) | -о | На останньому складі |
+
+As you can clearly see from the table above, the final letter tells you absolutely nothing about the word's rhythm. Your ears and your dictionary are always your best guides, not the spelling rules alone.
+
+## Рухомий наголос
+
+We have learned that every single word has a specific stressed syllable that you must memorize. But Ukrainian has one more fascinating phonetic feature to introduce: "mobile stress" (**рухо́мий на́голос**). 
+
+Mobile stress means that the stress does not always stay fixed on the exact same syllable when a word changes its grammatical form. As words physically transform to show different quantities (like changing from singular to plural) or to show different actions (like "I do" versus "you do"), the stress will sometimes physically jump to a completely different part of the word. 
+
+This shifting is a very natural and fundamental characteristic of the Ukrainian language. While it certainly requires some practice to master, it is also what makes the language feel so alive, fluid, and dynamic. Let us look at the two most common grammatical situations where you will encounter mobile stress.
+
+### Іменники: Singular and Plural
+
+One of the most frequent places you will see the stress literally jump is when a noun changes from singular (representing one item) to plural (representing many items). 
+
+Let us take a highly common body part vocabulary word: **рука́** (hand or arm). When you are talking about just one single hand, the stress is firmly anchored on the final "А". 
+
+However, when you want to talk about two hands, the word changes to the plural form "руки". But the stress does not stay politely on the ending. It jumps backward onto the root of the word. The plural form is pronounced **ру́ки**.
+
+Notice the distinct shift in pronunciation:
+*   Singular: **рука́** (roo-KAH)
+*   Plural: **ру́ки** (ROO-ky)
+
+Let us see this mobility applied in context:
+
+**Ukrainian:** Це моя права **рука́**.
+(English: This is my right hand.)
+
+**Ukrainian:** У мене чисті **ру́ки**.
+(English: I have clean hands.)
+
+This backward shift from the ending to the root stem is extremely common when forming plurals for feminine nouns. You will see it constantly as you expand your vocabulary in upcoming modules.
+
+### Дієслова: від інфінітива до особи
+
+The second major grammatical area where mobile stress plays a huge, noticeable role is in verbs. When you take a base dictionary verb (the infinitive form, like "to write") and conjugate it to match a specific person (like "I write" or "you write"), the stress often dances around the word.
+
+Let us look deeply at the essential action verb **писа́ти** (to write). In its un-conjugated dictionary form, the stress sits comfortably right in the middle of the word, on the "А".
+
+When you change the verb to say "I write" (я пишу), the stress physically moves to the very end of the word. It becomes **пишу́**.
+
+But watch what happens when you change it again to say "you write" (ти пишеш). The stress jumps all the way back to the first syllable! It becomes **пи́шеш**.
+
+Observe the fascinating journey of the stress across three forms:
+*   Інфінітив (Infinitive): **писа́ти** (to write)
+*   Я (I): я **пишу́** (I write) — Stress moves to the final ending.
+*   Ти (You): ти **пи́шеш** (you write) — Stress moves to the initial root.
+
+Let us put these changing rhythms into short, practical sentences:
+
+**Ukrainian:** Я люблю **писа́ти**.
+(English: I love to write.)
+
+**Ukrainian:** Зараз я **пишу́** текст.
+(English: Right now I am writing text.)
+
+**Ukrainian:** Що ти **пи́шеш**?
+(English: What are you writing?)
+
+This constant shifting might feel slightly overwhelming right now as a beginner. That reaction is perfectly normal.
+
+> [!tip] **Не панікуйте!**
+> Рухомий наголос — це складно. Ви маєте час. Рівень А1 — це тільки початок. Слухайте уважно. Носії мови кажуть «ру́ки». Вони не кажуть «руки́». Це нормально. Ми вивчаємо це пізніше. Зараз просто слухайте ритм.
+
+## Інтонація
+
+If word stress is the rhythm of a single drumbeat, then **інтона́ція** (intonation) is the melody of the entire song. Intonation refers to how the musical pitch of your voice rises and falls over the course of a whole sentence. 
+
+Just like individual word stress, sentence intonation carries a massive functional load in Ukrainian. Sometimes, the only difference between stating a simple, boring fact and asking a highly surprised question is the melody of your voice. The words themselves might not change at all!
+
+According to the Ukrainian State Standard for language learning, there are three foundational intonation patterns you must recognize and master to communicate effectively. Let us break down exactly how your voice should move for each one.
+
+### Розповідна інтонація
+
+The most basic and common melody is the **розповідна́ інтона́ція** (declarative intonation). You use this when you are simply stating a fact, giving a direct answer, or describing a normal situation. 
+
+The physical rule here is simple: your voice should start at a normal, comfortable pitch, stay relatively flat through the middle of the sentence, and then distinctly drop down in pitch at the very end of the sentence. This falling pitch acts like a vocal period; it signals to the listener that your thought is complete and the statement is officially finished.
+
+Imagine drawing a line in the air with your finger that stays straight and then slopes down sharply at the end.
+
+Let us use a simple declarative sentence: «Це шко́ла.» (This is a school.)
+When you say this, you do not want your voice to go up on the word "школа". You want it to land firmly and drop downward.
+
+**Ukrainian:** Це шко́ла. (↓)
+(English: This is a school.)
+
+**Ukrainian:** Я п'ю молоко́. (↓)
+(English: I am drinking milk.)
+
+This downward drop is crucial for sounding fluent. If you keep your voice high or completely flat at the end of the sentence, the native speaker will likely stand there waiting, assuming you have not finished your thought yet!
+
+### Питальна інтонація
+
+Asking questions requires a completely different vocal melody. This is called **пита́льна інтона́ція** (interrogative intonation). This is the area where English speakers often make their biggest pronunciation errors, so pay very close attention to the mechanics.
+
+In Ukrainian, we have two main types of questions, and they utilize different melodies.
+
+**1. Questions with a Question Word (Wh-questions)**
+If your question contains a specific, dedicated question word like "where" (**де**), "what" (**що**), or "who" (**хто**), the melody is fairly straightforward. Your voice pitch rises slightly on the question word itself (emphasizing what you want to know), and then falls smoothly at the end of the sentence, much like a standard declarative statement.
+
+**Ukrainian:** Де школа? (↑ Де... школа ↓)
+(English: Where is the school?)
+You naturally emphasize the word "Де" and then let your voice drop.
+
+**2. Yes/No Questions (Without a Question Word)**
+This is the slightly tricky part. If you want to ask a question that requires a simple "yes" or "no" answer, Ukrainian does not use helper verbs like "do" or "is" at the beginning of the sentence the way English does. Instead, you use the exact same vocabulary words as a declarative statement, but you change the melody entirely. 
+
+To form a yes/no question, your voice must rise sharply and hold that high pitch on the specific word you are asking about, usually located at the very end of the sentence. 
+
+Let us compare the statement and the question using the exact same words:
+*   Statement: Це шко́ла. (↓ Voice falls. Fact: This is a school.)
+*   Question: Це шко́ла? (↑ Voice rises sharply. Question: Is this a school?)
+
+> [!note] **Пастка інтонації**
+> Англійська інтонація дуже м'яка. Українські питання звучать інакше. Тон голосу йде різко вгору. Робіть це дуже чітко. Інакше люди не зрозуміють питання. Люди подумають просте твердження. Говоріть енергійно!
+
+### Оклична інтонація
+
+The third essential pattern is **оклична інтонація** (exclamatory intonation). You use this specific melody when you want to express strong, overwhelming emotion—whether that is surprise, joy, anger, or intense excitement. 
+
+This melody involves a sharp rise in overall pitch and a lot of extra physical breath energy on the stressed syllable of the most important word in the sentence. It is audibly louder, sharper, and more forceful than a regular statement or a simple question.
+
+Imagine you have been walking around a new city looking for the language school for an hour, and you finally see it. You would not use the flat, boring declarative melody. You would use exclamatory intonation.
+
+**Ukrainian:** Це шко́ла! (↑↑ Voice rises high with strong vocal emphasis!)
+(English: This is the school!)
+
+**Ukrainian:** Це дуже добре! (↑↑ Strong emphasis on the words "дуже" and "добре".)
+(English: This is very good!)
+
+By mastering these three distinct melodies—the falling fact, the sharply rising question, and the highly energetic exclamation—you will instantly sound much more authentic, expressive, and easily understood when speaking Ukrainian.
+
+## Практика
+
+Now that we have deeply explored the theory behind word stress and sentence intonation, it is time to put these linguistic concepts into active physical practice. Reading about rhythm is helpful for your brain, but the only way to truly internalize it is to use your voice and mouth. 
+
+Below are three short practice exercises designed to train your eyes to see the stress marks and systematically train your mouth to produce the correct melodies. 
+
+### Знайди наголос
+
+Прочитайте ці слова вголос. Дивіться на знак наголосу (´). Робіть цей склад гучним. Робіть склад довгим. Не бійтеся. Практикуйте свій голос. 
+
+1.  **ві́дповідь** (answer) — Hit the first syllable very hard: VIID-po-vid.
+2.  **вода́** (water) — Wait patiently for the very end: vo-DAH.
+3.  **замо́к** (lock) — Push all your energy into the final syllable: za-MOK.
+4.  **ка́ва** (coffee) — Have a strong, open start: KAH-va.
+5.  **ру́ки** (hands) — Emphasize the root of the word: ROO-ky.
+
+Прочитайте список три рази. Зберігайте правильний ритм.
+
+### Мінімальні пари
+
+Прочитайте ці два речення. Вони майже як одне речення. Але наголос інший. Наголос змінює значення слова. Це дуже важливо. Говоріть чітко і правильно.
+
+**Сценарій А (Scenario A): You are a tourist looking at medieval architecture.**
+«Це дуже старий **за́мок**.» (Tseh duzhe staryy ZAH-mok.)
+*Focus all your vocal energy firmly on the first syllable.*
+
+**Сценарій Б (Scenario B): You are trying to secure your bicycle to a fence.**
+«Це дуже старий **замо́к**.» (Tseh duzhe staryy za-MOK.)
+*Focus all your vocal energy firmly on the last syllable.*
+
+### Три інтонації
+
+Прочитайте одне речення три рази. Використовуйте три різні інтонації. Встаньте. Зробіть глибокий вдих. 
+
+Фраза: **Це вода**.
+
+1.  **Факт:** Розповідна інтонація. Почніть рівно. Тон падає вниз. *«Це вода́.» (↓)*
+2.  **Сюрприз:** Оклична інтонація. Говоріть голосно і високо. Покажіть емоцію! *«Це вода́!» (↑↑)*
+3.  **Сумнів:** Питальна інтонація. Тон іде різко вгору. *«Це вода́?» (↑)*
+
+Practice switching back and forth between these three distinct melodies until you can feel the exact physical difference in how your throat and voice operate for each one.
+
+---
+
+# Підсумок
+
+Український наголос дуже вільний. Він падає на будь-який склад. Наголос також може бути рухомим. Він змінює позицію. Слово змінює форму і наголос змінює позицію. Це дуже важливо знати. Наголос може змінити значення слова. Наприклад: за́мок і замо́к. Треба пам'ятати наголос. Ми використовуємо знак акута (´). Це допомагає читати правильно.
+
+Українська інтонація має три мелодії. Перша мелодія — розповідна. Тон голосу падає вниз. Друга мелодія — питальна. Тон голосу йде вгору. Третя мелодія — оклична. Вона має високу енергію. Вона дуже емоційна. Практикуйте ці мелодії. Тоді українська мова звучить природно.
+
+**Перевірте себе:**
+1. Why is Ukrainian word stress considered "free" compared to languages like French or Polish?
+2. What exactly happens to the literal meaning of a word if you place the stress on the wrong syllable in a "minimal pair"?
+3. How can you visually identify the stressed syllable when looking up a new word in a Ukrainian dictionary or textbook?
+4. True or False: If two Ukrainian words have the exact same vowel ending, they will always have the exact same stress pattern.
+5. What physically happens to the stress in the word **рука́** when it transforms into its plural form (**ру́ки**)?
+6. How does the vocal intonation of a Ukrainian yes/no question differ critically from the intonation of a simple declarative statement?
+
+---

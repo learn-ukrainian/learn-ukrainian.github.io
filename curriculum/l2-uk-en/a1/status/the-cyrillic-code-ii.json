@@ -2,15 +2,15 @@
   "module": "the-cyrillic-code-ii",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:20:50.552975Z",
+  "last_audit": "2026-02-28T13:43:24.777515Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-25T23:38:20.021626Z",
-    "meta": "2026-02-22T19:33:12.890319Z",
+    "md": "2026-02-28T13:43:22.877253Z",
+    "meta": "2026-02-28T13:35:29.398831Z",
     "activities": "2026-02-25T23:38:20.022537Z",
     "vocabulary": "2026-02-26T10:56:53.940500Z",
     "plan": "2026-02-28T03:02:37.344832Z",
-    "research": "2026-02-22T19:33:12.885818Z"
+    "research": "2026-02-28T13:35:29.387919Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3408/2000 (raw: 3721)"
+      "message": "4241/2000 (raw: 4370)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "8/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "deferred",
       "violations": 0,
-      "message": "0 < 1 (soft target)"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -39,9 +39,9 @@
       "message": "PENDING \u2014 awaiting review"
     },
     "research": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Content aligned with research"
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
     },
     "review": {
       "status": "deferred",
@@ -52,8 +52,8 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 2,
     "fail_count": 0,
-    "deferred_count": 1
+    "deferred_count": 3
   }
 }

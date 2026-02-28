@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2364/2000 (raw: 2700) | pedagogy: 1 violations
+    lesson: 3135/2000 (raw: 3307) | pedagogy: 23 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Break into shorter sentences. First 5 words: 'Слово вчора почина ється зі...'
-    [SECTION_BALANCE_BLOATED] Section 'Граматика: Минулий час дієслів' has 1159 words (45% of total). Bloated sections: 'Граматика: Минулий час дієслів' (45%)
-       → FIX: Consider splitting the large section or expanding smaller sections to improve balance.
+       → FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 2 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 26 violations (severe - consider revision)
+     → 20 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/yesterday-past-tense-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/yesterday-past-tense-audit.log for details)
         ```
+
 
         ## Files to Fix
 

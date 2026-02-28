@@ -1,0 +1,17 @@
+{
+  "track": "a1",
+  "slug": "description-adverbs",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T13:42:03Z",
+      "task_id": "v3-description-adverbs-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "failed",
+      "ts": "2026-02-28T14:30:41Z"
+    }
+  }
+}

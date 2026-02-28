@@ -1,0 +1,470 @@
+- type: quiz
+  title: "Перевірка знань: Склади"
+  instruction: "Choose the correct answer based on the lesson rules."
+  items:
+    - question: "Що є основою кожного складу в українській мові?"
+      explanation: "Кожен склад обов'язково має один голосний звук."
+      options:
+        - text: "голосний звук"
+          correct: true
+        - text: "приголосний звук"
+          correct: false
+        - text: "наголос"
+          correct: false
+        - text: "м'який знак"
+          correct: false
+    - question: "Як визначити кількість складів у слові?"
+      explanation: "Один голосний звук дорівнює одному складу."
+      options:
+        - text: "порахувати голосні звуки"
+          correct: true
+        - text: "порахувати всі літери"
+          correct: false
+        - text: "порахувати приголосні звуки"
+          correct: false
+        - text: "подивитися у словнику"
+          correct: false
+    - question: "Який склад називається відкритим в українській мові?"
+      explanation: "Відкритий склад завжди закінчується на голосний звук."
+      options:
+        - text: "склад, який закінчується на голосний"
+          correct: true
+        - text: "склад, який закінчується на приголосний"
+          correct: false
+        - text: "перший склад у слові"
+          correct: false
+        - text: "наголошений склад"
+          correct: false
+    - question: "Як правильно розділити слово 'сестра' для вимови?"
+      explanation: "Українська мова переносить приголосні в наступний склад."
+      options:
+        - text: "се-стра"
+          correct: true
+        - text: "сес-тра"
+          correct: false
+        - text: "с-естра"
+          correct: false
+        - text: "сест-ра"
+          correct: false
+    - question: "Як правильно перенести слово 'око' на інший рядок?"
+      explanation: "Одну літеру не можна залишати на рядку."
+      options:
+        - text: "його не можна переносити"
+          correct: true
+        - text: "о-ко"
+          correct: false
+        - text: "ок-о"
+          correct: false
+        - text: "можна як завгодно"
+          correct: false
+    - question: "Що не можна відривати від попередньої літери при переносі?"
+      explanation: "М'який знак та апостроф завжди залишаються з попередньою літерою."
+      options:
+        - text: "м'який знак та апостроф"
+          correct: true
+        - text: "голосний звук"
+          correct: false
+        - text: "останню літеру"
+          correct: false
+        - text: "наголошений склад"
+          correct: false
+    - question: "Як вимовляється наголошений склад в українській мові?"
+      explanation: "Наголошений склад має більшу інтенсивність і довжину."
+      options:
+        - text: "довше і гучніше"
+          correct: true
+        - text: "дуже швидко"
+          correct: false
+        - text: "тихо і коротко"
+          correct: false
+        - text: "без голосного звуку"
+          correct: false
+    - question: "Що не можна розділяти при переносі слова 'ґудзик'?"
+      explanation: "Диграф дз позначає один звук і не розділяється."
+      options:
+        - text: "літери д та з"
+          correct: true
+        - text: "літери у та д"
+          correct: false
+        - text: "літери з та и"
+          correct: false
+        - text: "літери и та к"
+          correct: false
+
+- type: group-sort
+  title: "Розподіліть слова за кількістю складів"
+  instruction: "Count the vowels to determine the correct group."
+  groups:
+    - name: "Один склад"
+      items:
+        - "кіт"
+        - "склад"
+        - "звук"
+    - name: "Два склади"
+      items:
+        - "око"
+        - "місто"
+        - "мова"
+        - "сестра"
+    - name: "Три склади"
+      items:
+        - "дерево"
+        - "молоко"
+        - "вулиця"
+        - "автобус"
+    - name: "Чотири і більше"
+      items:
+        - "Україна"
+        - "бібліотека"
+        - "університет"
+
+- type: match-up
+  title: "Знайдіть пару: слово та його переклад"
+  instruction: "Match the Ukrainian word with its English meaning."
+  pairs:
+    - left: "молоко"
+      right: "milk"
+    - left: "сестра"
+      right: "sister"
+    - left: "вулиця"
+      right: "street"
+    - left: "дерево"
+      right: "tree"
+    - left: "бібліотека"
+      right: "library"
+    - left: "око"
+      right: "eye"
+    - left: "місто"
+      right: "city"
+    - left: "автобус"
+      right: "bus"
+
+- type: unjumble
+  title: "Складіть речення з поданих слів"
+  instruction: "Arrange the words to form a correct Ukrainian sentence."
+  items:
+    - words:
+        - "мій"
+        - "кіт"
+        - "спить"
+      answer: "Мій кіт спить"
+    - words:
+        - "це"
+        - "старе"
+        - "дерево"
+      answer: "Це старе дерево"
+    - words:
+        - "він"
+        - "п'є"
+        - "молоко"
+      answer: "Він п'є молоко"
+    - words:
+        - "я"
+        - "живу"
+        - "в"
+        - "Україні"
+      answer: "Я живу в Україні"
+    - words:
+        - "це"
+        - "головна"
+        - "вулиця"
+      answer: "Це головна вулиця"
+    - words:
+        - "він"
+        - "чекає"
+        - "автобус"
+      answer: "Він чекає автобус"
+    - words:
+        - "це"
+        - "моя"
+        - "старша"
+        - "сестра"
+      answer: "Це моя старша сестра"
+    - words:
+        - "це"
+        - "моя"
+        - "сім'я"
+      answer: "Це моя сім'я"
+
+- type: anagram
+  title: "Розшифруйте слова"
+  instruction: "Rearrange the letters to form the correct Ukrainian word."
+  items:
+    - scrambled: "о м о к л о"
+      answer: "молоко"
+      hint: "milk"
+    - scrambled: "а с е р т с"
+      answer: "сестра"
+      hint: "sister"
+    - scrambled: "я и ц л у в"
+      answer: "вулиця"
+      hint: "street"
+    - scrambled: "о е р в е д"
+      answer: "дерево"
+      hint: "tree"
+    - scrambled: "о т і с м"
+      answer: "місто"
+      hint: "city"
+    - scrambled: "т і к"
+      answer: "кіт"
+      hint: "cat"
+    - scrambled: "к о о"
+      answer: "око"
+      hint: "eye"
+    - scrambled: "д а л к с"
+      answer: "склад"
+      hint: "syllable"
+
+- type: group-sort
+  title: "Розподіліть склади на відкриті та закриті"
+  instruction: "Determine if the syllable ends in a vowel (open) or consonant (closed)."
+  groups:
+    - name: "Відкритий склад (Open)"
+      items:
+        - "мо"
+        - "ло"
+        - "ко"
+        - "де"
+        - "ре"
+        - "во"
+        - "ву"
+        - "ли"
+        - "ця"
+    - name: "Закритий склад (Closed)"
+      items:
+        - "кіт"
+        - "ав"
+        - "бус"
+        - "вер"
+        - "тет"
+        - "склад"
+
+- type: fill-in
+  title: "Заповніть пропуски у реченнях"
+  instruction: "Choose the correct word to complete the sentence."
+  items:
+    - sentence: "Він п'є свіже _____."
+      answer: "молоко"
+      options:
+        - "молоко"
+        - "дерево"
+        - "місто"
+        - "око"
+      explanation: "Молоко is a drink."
+    - sentence: "Ми йдемо в _____, щоб взяти книгу."
+      answer: "бібліотеку"
+      options:
+        - "бібліотеку"
+        - "дерево"
+        - "молоко"
+        - "автобус"
+      explanation: "Книги беруть у бібліотеці."
+    - sentence: "По цій дорозі їде _____."
+      answer: "автобус"
+      options:
+        - "автобус"
+        - "склад"
+        - "голосний"
+        - "університет"
+      explanation: "Автобус is a vehicle that drives."
+    - sentence: "Моя старша _____ живе в Києві."
+      answer: "сестра"
+      options:
+        - "сестра"
+        - "вулиця"
+        - "бібліотека"
+        - "мова"
+      explanation: "Сестра is a family member."
+    - sentence: "Хрещатик — це головна _____ Києва."
+      answer: "вулиця"
+      options:
+        - "вулиця"
+        - "сестра"
+        - "мова"
+        - "сім'я"
+      explanation: "Хрещатик is a famous street."
+    - sentence: "Мій брат навчається в _____."
+      answer: "університеті"
+      options:
+        - "університеті"
+        - "молоці"
+        - "оці"
+        - "складі"
+      explanation: "Університет is a place of study."
+    - sentence: "В парку росте велике зелене _____."
+      answer: "дерево"
+      options:
+        - "дерево"
+        - "місто"
+        - "переніс"
+        - "наголос"
+      explanation: "Дерево grows in a park."
+    - sentence: "Київ — це велике _____."
+      answer: "місто"
+      options:
+        - "місто"
+        - "дерево"
+        - "око"
+        - "молоко"
+      explanation: "Київ is a city."
+
+- type: match-up
+  title: "Знайдіть правильний варіант переносу"
+  instruction: "Match the word to its correctly hyphenated form."
+  pairs:
+    - left: "Україна"
+      right: "Укра-їна"
+    - left: "бібліотека"
+      right: "бібліо-тека"
+    - left: "сім'я"
+      right: "сі-м'я"
+    - left: "пальці"
+      right: "паль-ці"
+    - left: "ґудзик"
+      right: "ґу-дзик"
+    - left: "університет"
+      right: "універ-ситет"
+    - left: "автобус"
+      right: "авто-бус"
+    - left: "сестра"
+      right: "се-стра"
+
+- type: quiz
+  title: "Перевірка правил: Наголос і переніс"
+  instruction: "Choose the correct answer regarding syllables, stress, and transfer."
+  items:
+    - question: "Скільки складів має слово 'університет'?"
+      explanation: "Слово має п'ять голосних: у, і, е, и, е."
+      options:
+        - text: "п'ять"
+          correct: true
+        - text: "чотири"
+          correct: false
+        - text: "шість"
+          correct: false
+        - text: "три"
+          correct: false
+    - question: "Який варіант переносу слова 'пальці' є правильним?"
+      explanation: "М'який знак не можна відривати від попередньої приголосної."
+      options:
+        - text: "паль-ці"
+          correct: true
+        - text: "пал-ьці"
+          correct: false
+        - text: "па-льці"
+          correct: false
+        - text: "пальц-і"
+          correct: false
+    - question: "Який варіант переносу слова 'сім'я' є правильним?"
+      explanation: "Апостроф залишається з тією літерою, після якої він стоїть."
+      options:
+        - text: "сі-м'я"
+          correct: true
+        - text: "сім-'я"
+          correct: false
+        - text: "сі-м'-я"
+          correct: false
+        - text: "с-ім'я"
+          correct: false
+    - question: "Яке з цих слів містить лише відкриті склади?"
+      explanation: "У слові дерево (де-ре-во) всі склади закінчуються на голосні."
+      options:
+        - text: "дерево"
+          correct: true
+        - text: "кіт"
+          correct: false
+        - text: "автобус"
+          correct: false
+        - text: "склад"
+          correct: false
+    - question: "Скільки голосних звуків у слові 'бібліотека'?"
+      explanation: "Голосні у слові: і, і, о, е, а."
+      options:
+        - text: "п'ять"
+          correct: true
+        - text: "чотири"
+          correct: false
+        - text: "шість"
+          correct: false
+        - text: "три"
+          correct: false
+    - question: "Чи можна розірвати слово 'око' при переносі на новий рядок?"
+      explanation: "За правилами переносу одну літеру залишати на рядку заборонено."
+      options:
+        - text: "ні, одну літеру не можна залишати"
+          correct: true
+        - text: "так, це правильно"
+          correct: false
+        - text: "можна, якщо мало місця"
+          correct: false
+        - text: "тільки у віршах"
+          correct: false
+    - question: "Який тип звуку завжди утворює новий склад?"
+      explanation: "Скільки в слові голосних звуків, стільки й складів."
+      options:
+        - text: "голосний"
+          correct: true
+        - text: "приголосний"
+          correct: false
+        - text: "твердий"
+          correct: false
+        - text: "м'який"
+          correct: false
+    - question: "На який склад падає наголос у слові 'молоко'?"
+      explanation: "Наголошений останній склад: молоКО."
+      options:
+        - text: "на останній склад"
+          correct: true
+        - text: "на перший склад"
+          correct: false
+        - text: "на середній склад"
+          correct: false
+        - text: "на кожен склад"
+          correct: false
+
+- type: unjumble
+  title: "Складіть довші речення з поданих слів"
+  instruction: "Arrange the words to form correct Ukrainian sentences."
+  items:
+    - words:
+        - "ось"
+        - "велика"
+        - "бібліотека"
+      answer: "Ось велика бібліотека"
+    - words:
+        - "це"
+        - "праве"
+        - "око"
+      answer: "Це праве око"
+    - words:
+        - "я"
+        - "загубив"
+        - "ґудзик"
+      answer: "Я загубив ґудзик"
+    - words:
+        - "яка"
+        - "це"
+        - "вулиця"
+      answer: "Яка це вулиця"
+    - words:
+        - "мій"
+        - "університет"
+        - "дуже"
+        - "старий"
+      answer: "Мій університет дуже старий"
+    - words:
+        - "вона"
+        - "працює"
+        - "в"
+        - "бібліотеці"
+      answer: "Вона працює в бібліотеці"
+    - words:
+        - "це"
+        - "гарне"
+        - "місто"
+      answer: "Це гарне місто"
+    - words:
+        - "Україна"
+        - "велика"
+        - "країна"
+      answer: "Україна велика країна"

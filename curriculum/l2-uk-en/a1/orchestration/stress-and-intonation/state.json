@@ -1,0 +1,35 @@
+{
+  "slug": "stress-and-intonation",
+  "track": "a1",
+  "module_num": 6,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-28T13:33:34Z",
+      "words": 3972,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-28T13:35:53Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-28T13:35:53Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T13:42:43Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T13:42:43Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-28T13:42:43Z"
+}

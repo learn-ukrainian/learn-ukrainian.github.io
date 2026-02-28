@@ -4,9 +4,8 @@
   "mode": "v3",
   "phases": {
     "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-28T02:25:25Z",
-      "note": "adopted-existing-meta"
+      "status": "failed",
+      "ts": "2026-02-28T13:58:50Z"
     }
   }
 }

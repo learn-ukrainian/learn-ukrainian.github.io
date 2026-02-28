@@ -2,39 +2,50 @@ slug: yesterday-past-tense
 title: Yesterday - Past Tense
 word_target: 2000
 content_outline:
-- section: 'Розминка: Вчора і сьогодні'
+- section: 'Вступ: Що було вчора?'
   words: 400
   points:
-  - 'Контраст між теперішнім і минулим часом: прості візуальні приклади (''Сьогодні
-    я тут'' — ''Вчора я був там'')'
-  - 'Культурний якір: 15 лютого 1574 року — Іван Федоров ''надрукував'' першу книгу
-    (дія, що відбулася в минулому)'
-  - 'Часові маркери: введення слів ''вчора'', ''вчора ввечері'', ''вчора зранку''
-    з прикладами'
-  - 'Конструкції з ''минулий'': ''минулого тижня/місяця/року'' — пояснення відсутності
-    прийменника ''в'' (типова помилка)'
-- section: 'Граматика: Минулий час дієслів'
-  words: 1000
+  - Establish the English scaffolding (A1 immersion rules) to introduce the concept
+    of past tense, visually contrasting present ('Сьогодні я тут') with past ('Вчора
+    я був там').
+  - 'Introduce the cultural hook: the printing of the Apostol book in Lviv on Feb
+    15, 1574, to anchor a concrete, historical past event.'
+  - 'Present high-frequency time markers: ''вчора'', ''вчора ввечері'', ''вчора зранку''
+    with short, comprehensible Ukrainian examples.'
+  - 'Explain the grammatical rule for ''минулий'': ''минулого тижня/року/місяця''
+    MUST be used without the preposition ''в'', explicitly warning against this common
+    L1 English interference.'
+- section: Основи минулого часу
+  words: 650
   points:
-  - 'Алгоритм утворення: основа інфінітива + суфікси -в (він), -ла (вона), -ло (воно),
-    -ли (вони)'
-  - 'Таблиця закінчень: чітка візуалізація узгодження за родом і числом'
-  - 'Фокус на роді: чому жінки кажуть ''я писала'', а чоловіки ''я писав'' (уникнення
-    помилки узгодження)'
-  - 'Дієслово ''бути'': форми був, була, було, були — єдине дієслово, що змінюється
-    як зв''язка'
-  - 'Анти-калька: ''Я працював'' vs ''Я був працював'' — пояснення, чому друге неправильно
-    (I was working)'
-  - 'Особливі форми: ''їсти'' (їв/їла) та ''йти'' (ішов/ішла/ішли) — пояснення чергування
-    та суплетивізму'
-  - 'Контекстний приклад: розповідь куратора про те, що ''було'' в музеї вчора (експонати,
-    відвідувачі)'
-- section: 'Практика: Спогади про вчора'
+  - 'Provide the core State Standard §4.2.4.1 rule: base infinitive + suffixes -в
+    (він), -ла (вона), -ло (воно), -ли (вони).'
+  - Create a visual reference table showing gender and number agreement using high-frequency
+    verbs like 'робити' and 'читати'.
+  - 'Dedicate a specific H3 subsection to gender agreement for the first person (''я''):
+    why men say ''я читав'' and women say ''я читала'', addressing the most common
+    learner error.'
+  - Dedicate a specific H3 subsection to the verb 'бути' (був, була, було, були) as
+    the foundational linking verb for past states.
+  - 'Address the English calque error: explain why ''I was working'' translates to
+    ''Я працював'', and explicitly warn against using ''Я був працював''.'
+- section: Складні випадки та практика
   words: 600
   points:
-  - 'Модель розповіді: ''Вчора я встав, зробив каву, читав новини'' (ланцюжок дій)'
-  - 'Сталі вирази (collocations): тренування фраз ''робити домашнє завдання'', ''ходити
-    в магазин'', ''дивитися фільм'' у минулому часі'
-  - 'Діалог: запитання і відповіді ''Що ти робив?'' з використанням вивченої лексики'
-  - 'Різниця рухів: просте розрізнення ''ішов'' (процес) та ''ходив'' (факт відвідування)
-    на прикладах'
+  - Introduce essential irregular verbs and suppletion, specifically focusing on 'їсти'
+    (їв/їла) and 'йти' (ішов/ішла/ішли).
+  - Explain the vowel alternation (о/і) in verbs of motion like 'йти', keeping the
+    explanation accessible for A1 beginners.
+  - Provide a mini-dialogue or narrative set in a museum context (referencing the
+    ZUNR language law of 1919) to show irregular verbs in action.
+  - Include quick-fire drills distinguishing gender forms (він пив / вона пила, він
+    ішов / вона йшла) to build automaticity with verb endings.
+- section: 'Підсумок: Мій день'
+  words: 350
+  points:
+  - Synthesize the lesson with a model narrative describing yesterday's routine using
+    collocations ('робити каву', 'ходити в магазин', 'читати новини').
+  - Present a standard Q&A dialogue ('Що ти робив вчора?' / 'Я дивився фільм') for
+    immediate conversational application.
+  - Conclude with a final summary checklist of the -в/-ла/-ло/-ли endings and a reminder
+    to always match the subject's gender.

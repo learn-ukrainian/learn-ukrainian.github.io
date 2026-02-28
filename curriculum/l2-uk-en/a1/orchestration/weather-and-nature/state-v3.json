@@ -3,31 +3,9 @@
   "slug": "weather-and-nature",
   "mode": "v3",
   "phases": {
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-20T23:51:01Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-20T23:51:01Z",
-      "note": "migrated-from-v2"
-    },
     "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T23:51:01Z",
-      "note": "adopted-existing-meta"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-22T23:03:07Z",
-      "attempts": 3
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T23:08:16Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "status": "failed",
+      "ts": "2026-02-28T14:46:26Z"
     }
   }
 }

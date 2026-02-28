@@ -1,0 +1,35 @@
+{
+  "slug": "direction-and-origin",
+  "track": "a1",
+  "module_num": 35,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-28T12:32:33Z",
+      "words": 5027,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-28T12:34:57Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-28T12:34:57Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T12:42:30Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T12:42:30Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-28T12:42:30Z"
+}

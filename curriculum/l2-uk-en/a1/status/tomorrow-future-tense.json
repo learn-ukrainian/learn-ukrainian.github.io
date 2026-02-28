@@ -2,15 +2,15 @@
   "module": "tomorrow-future-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:41:22.471763Z",
+  "last_audit": "2026-02-28T13:59:52.809810Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:03.247309Z",
-    "meta": "2026-02-19T20:40:15.764404Z",
+    "md": "2026-02-28T13:59:29.072111Z",
+    "meta": "2026-02-28T13:53:13.111531Z",
     "activities": "2026-02-20T23:55:26.137586Z",
     "vocabulary": "2026-02-26T10:56:38.079026Z",
     "plan": "2026-02-28T03:02:37.382422Z",
-    "research": "2026-02-19T20:40:15.756088Z"
+    "research": "2026-02-28T13:53:13.101921Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2185/2000 (raw: 2507)"
+      "message": "2324/2000 (raw: 2531)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "21/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 3,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

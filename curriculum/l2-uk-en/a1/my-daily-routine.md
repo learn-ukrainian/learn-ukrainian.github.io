@@ -1,300 +1,191 @@
 <!-- SCOPE
-Covers: Daily routine vocabulary, reflexive verbs conjugation, adverbs of frequency and sequence, time expressions in context.
+Covers: Daily routine vocabulary, reflexive verbs (-ся/-сь), sequence adverbs, telling time with events
 Not covered:
-  - Complex aspect pairs (imperfective vs perfective nuances beyond basic routine) → A2
-  - Instrumental case for "with whom" (briefly mentioned as context, not focus) → A1-27
-Related: a1-09 (Reflexive Verbs), a1-23 (Time), a1-26 (Adjectives)
+  - Complex time telling (minutes) → a1-23
+Related: a1-17, a1-23
 -->
 
 # My Daily Routine
 
 > **Чому це важливо?**
 >
-> Talking about your daily life is one of the first steps to fluency. Розмови про щоденне життя — це перший крок. It allows you to share your lifestyle, understand others' schedules, and make plans. Whether you are explaining your work hours or describing a lazy Sunday, these phrases are the building blocks of everyday conversation. Mastering reflexive verbs here unlocks a huge portion of Ukrainian vocabulary.
+> Talking about your daily routine is the foundation of small talk in any language. Mastering these specific verbs and sequence words allows you to confidently describe your day, share your personal habits, and connect with others naturally. 
 
-## Вступ: Ваш розпорядок дня
+## Вступ
 
-### Що таке розпорядок?
-**Розпорядок дня** (daily routine) — це структура вашого життя. It is the sequence of actions that you perform every day, from the moment you open your eyes until you go to sleep. Це послідовність дій. Ви робите їх щодня. Від ранку до сну.
+### Типові щоденні заняття
+Ми робимо багато справ щодня вдома. Ми рано прокидаємося, їмо та працюємо. Це наші типові щоденні заняття. Кожен новий день має свій ритм. Це дуже важлива та цікава тема. Знати ці слова дуже корисно. Вони допомагають приємно спілкуватися. 
 
-In Ukrainian culture, having a stable routine is often seen as a sign of discipline and health. В українській культурі стабільний розпорядок — це часто ознака дисципліни та здоров'я. When we talk about routine, we answer the question: «Що ти робиш щодня?» (What do you do every day?). Кожен день ми робимо те саме. Це наше життя.
+We do many things every day at home. We wake up early, eat, and work. These are our typical daily activities (**типо́ві щоде́нні заня́ття**). Every new day has its own rhythm, and discussing it helps us connect with others on a personal level. This is a very important and interesting topic for daily communication. Knowing these words is extremely useful for a beginner. They help to communicate pleasantly with friends and colleagues about our lives. You will quickly see how a structured vocabulary makes talking about your day much easier. When you meet new people, they will often ask you about your routine. Mastering this vocabulary opens up many natural conversations.
 
-To describe your day, you need more than just verbs. You need a specific type of verb called **зворотні дієслова** (reflexive verbs), which describe actions you do to yourself, like washing or dressing. Описуємо день. Потрібні зворотні дієслова. You also need to anchor these actions in time. Without time markers, a routine is just a list of random acts. With them, it becomes a story. Розпорядок — це ваша історія.
+### Робочий день
+Мій робочий день дуже і дуже активний. Я щодня багато і важко працюю. Часу на відпочинок завжди вкрай мало. Це мій типовий і довгий робочий день. Ми робимо багато різних важливих справ. Люди швидко поспішають у своїх справах.
 
-By the way — are you a **жа́йворонок** (lark — a morning person) or a **сова́** (owl — a night person)? Ви жайворонок чи сова? In Ukrainian, we divide people into these two types when talking about daily habits. No matter which one you are, this lesson will give you the words to describe your day — from the first alarm to the last yawn. Ми вивчимо слова «спочатку», «потім» та «нарешті». Ви розкажете свою історію.
+My working day is very, very active. I work a lot and hard every day. There is always extremely little time for rest. This is my typical and long working day (**робо́чий день**). We do many different important tasks. People hurry quickly about their business. When we describe a working day, we focus on productivity, energy, and tight schedules. The language we use for this type of day is usually fast-paced and highly structured. You will notice that working days require specific action verbs that denote effort. We often talk about daily obligations, meetings, and strict routines. Understanding how to structure these sentences is key to daily fluency. Let us look closely at how to build this narrative step by step.
 
-### Час: Коротке повторення
-Before we dive into new actions, let's briefly recall how we pinpoint time. Спочатку згадаємо час. In our previous lessons, we learned to ask «Котра година?» (What time is it?) and «О котрій годині?» (At what time?). For routines, the second question is crucial.
+### Вихідний день
+Вихідний день — це гарний час для відпочинку. Ми не працюємо у цей приємний день. Ми довго гуляємо у великому міському парку. Це дуже приємний і максимально спокійний час. Ми спимо довго теплим і світлим ранком. Ми читаємо цікаві та нові книги.
 
-When stating *when* something happens, we use the preposition **о** (or **об** before vowels) followed by the time. Ми використовуємо прийменник **о** для часу.
-*   **О сьо́мій** — at seven.
-*   **О во́сьмій три́дцять** — at eight thirty.
-*   **Об одина́дцятій** — at eleven.
+A day off is a good time for rest. We do not work on this pleasant day. We walk for a long time in the large city park. This is a very pleasant and maximally calm time. We sleep for a long time on a warm and bright morning. We read interesting and new books. The day off (**вихідни́й день**) stands in complete contrast to the busy working schedule we just discussed. On these free days, our routine completely changes and slows down. We use different verbs and adverbs to describe relaxation, hobbies, and peace. It is important to know how to contrast these two very different types of days. Notice how the feeling of the sentences shifts from active to passive. We will practice describing both scenarios thoroughly.
 
-Remember that usually, for daily routines, we use the 24-hour format in official contexts (schedules, work), but often the 12-hour format in casual conversation. However, simply saying "seven" is enough if the context (morning/evening) is clear.
+### Початок і кінець дня
+Кожен день має свій власний новий початок. Також він має свій логічний і тихий кінець. Ранок — це світлий початок нашого нового дня. Вечір — це темний кінець нашого довгого дня. Ми завжди ретельно й уважно плануємо час.
 
-> [!tip]
-> **Preposition Alert**
-> Don't forget the preposition **о**! Не забувайте про прийменник **о**! In English, you can sometimes drop "at" ("See you seven-ish"), but in Ukrainian grammar, the preposition is the glue that holds the time and action together.
-> *   Wrong: Я встаю сьома. (I get up seven.)
-> *   Correct: **Я встаю о сьомій.** (I get up *at* the seventh [hour].)
+Every day has its own new beginning. It also has its logical and quiet end. Morning is the bright start of our new day. Evening is the dark end of our long day. We always carefully and attentively plan time. The start and end of the day (**поча́ток і кіне́ць дня**) act as the solid anchors of our daily routine. By establishing these two points, everything else falls into place naturally. You can build a clear and logical narrative by moving chronologically from morning to evening. This logical flow is essential for clear and effective communication in Ukrainian. We will use chronological markers to smoothly guide our listeners through our day.
 
-## Ранок, день та вечір
+## Презентація
 
-### Ранок (Morning)
-The morning sets the tone for the entire day. Ранок задає ритм усього дня. In Ukrainian, morning activities are rich with reflexive verbs because you are preparing *yourself* for the world. Let's look at the essential sequence. Ранок — це дуже важливий час.
-
-**Прокидатися** (to wake up)
-This is the moment you stop sleeping. У цей момент ви перестаєте спати. It doesn't necessarily mean getting out of bed yet; it just means opening your eyes and regaining consciousness.
-*   **Я прокидаюся** рано. (I wake up early.)
-*   **Ти прокидаєшся** пізно. (You wake up late.)
-
-**Встава́ти** (to get up)
-This is the physical action of leaving your bed. Це фізична дія — ви встаєте з ліжка. Note that this is *not* a reflexive verb in Ukrainian, unlike "waking up". It simply describes the motion of standing up.
-*   Я **встаю** о сьомій. (I get up at seven.)
-*   Він **встає** повільно. (He gets up slowly.)
-
-**Вмива́тися** (to wash oneself/face)
-This verb specifically refers to splashing water on your face to freshen up. Це дієслово означає мити обличчя водою. It is strictly reflexive. Це завжди зворотне дієслово.
-*   Я **вмиваюся** холодною водою. (I wash [myself] with cold water.)
-*   Ми **вмиваємося** у ванній. (We wash [ourselves] in the bathroom.)
-
-**Чи́стити зу́би** (to brush teeth)
-Literally "to clean teeth". Буквально означає чистити зуби. This is a standard phrase used by everyone. Стандартна фраза для всіх.
-*   Я **чищу** зуби щоранку. (I brush teeth every morning.)
-*   Вона **чистить** зуби двічі на день. (She brushes teeth twice a day.)
-
-**Одяга́тися** (to get dressed)
-The process of putting clothes on yourself. Ви надягаєте одяг на себе.
-*   Я **одягаюся** швидко. (I get dressed quickly.)
-*   Ти **одягаєшся** тепло. (You dress warmly.)
-
-**Сні́дати** (to have breakfast)
-In English, you "have" breakfast. In Ukrainian, it is a single specific verb. Українська мова має одне спеціальне дієслово. There is no need to say "мати сніданок" (which sounds unnatural). Just conjugate *снідати*. Просто **снідати**.
-*   Ми **снідаємо** на кухні. (We have breakfast in the kitchen.)
-*   Вони не **снідають**. (They don't have breakfast.)
-
-> [!culture]
-> **Український сніданок**
-> Traditionally, a Ukrainian breakfast is substantial. Традиційно український сніданок — це ситна їжа. It might include **си́рники** (cottage cheese pancakes), **ка́ша** (porridge), or **млинці́** (crepes). It is rarely just a coffee and a croissant. «Сніданок з'їж сам» — це популярна приказка. Сніданок — це енергія для роботи.
-
-### День (Daytime)
-The middle of the day is focused on productivity and sustenance. Середина дня — це час для роботи. День — це час для активної роботи.
-
-**Йти на роботу / до школи** (to go to work / to school)
-We use the verb *йти* (to go on foot) or *їхати* (to go by transport) depending on the distance, but *йти* is often used generally for the routine of attending. Ми використовуємо дієслово *йти* або *їхати*.
-*   Я **йду** на роботу о восьмій. (I go to work at eight.)
-*   Діти **йдуть** до школи. (Children go to school.)
-
-**Працюва́ти** (to work)
-The core activity for adults. Це основна дія для дорослих.
-*   Я **працюю** в офісі. (I work in an office.)
-*   Ми **працюємо** багато. (We work a lot.)
-
-**Обі́дати** (to have lunch)
-Like *снідати*, this is a dedicated verb. Як і *снідати*, це окреме дієслово. In the working world, lunch is protected time: **обі́дня пере́рва** (lunch break), usually one hour. На роботі є **обідня перерва** — зазвичай одна година.
-*   Я **обідаю** о першій годині. (I have lunch at one o'clock.)
-*   Де ти **обідаєш**? (Where do you have lunch?)
-
-> [!myth-buster]
-> **Lunch vs Dinner**
-> In many English-speaking cultures, "lunch" is a light meal. В англомовних країнах "lunch" — це легка їжа. In Ukraine, **обід** (lunch) is traditionally the main meal of the day, eaten between 13:00 and 14:00. В Україні **обід** — це традиційно головна їжа дня. It often consists of a "first course" (soup or borshch) and a "second course" (meat with garnish). It is meant to be filling. A sandwich at your desk is not considered a proper *обід*. Обід має бути смачним і гарячим.
-
-### Вечір (Evening)
-The evening is for winding down, family, and rest. Вечір — це відпочинок і спокій.
-
-**Поверта́тися** (to return / come back)
-A reflexive verb meaning to turn yourself back to where you started. Це зворотне дієслово: ви повертаєте себе туди, де були.
-*   Я **повертаюся** додому о шостій. (I return home at six.)
-*   Коли ти **повертаєшся**? (When do you come back?)
-
-> [!culture]
-> **Домашній одяг (Home Clothes)**
-> When Ukrainians come home, one of the first things they do is change into **дома́шній о́дяг** (home clothes). Коли українці приходять додому, вони переодягаються. This is a deeply ingrained habit: street clothes stay at the door, and comfortable clothes go on. Вуличний одяг — це для вулиці. Домашній одяг — це для дому. It marks the boundary between the public and private sphere. Це межа між роботою і відпочинком.
-
-**Вече́ряти** (to have dinner)
-The third dedicated meal verb. Третє дієслово для їжі. Dinner is usually lighter than lunch. Вечеря зазвичай легша, ніж обід.
-*   Ми **вечеряємо** разом. (We have dinner together.)
-*   Я **вечеряю** пізно. (I have dinner late.)
-
-**Відпочива́ти** (to rest)
-This covers everything from sitting on the sofa to watching TV or reading. Це антонім до слова "працювати". It is the opposite of working. Це означає сидіти на дивані або читати.
-*   Увечері я **відпочиваю**. (In the evening I rest.)
-*   Ми **відпочиваємо** вдома. (We rest at home.)
-
-**Прийма́ти душ** (to take a shower)
-While you can say *митися* (to wash oneself generally), the phrase *приймати душ* is very common for the specific act of showering. Ви можете сказати *митися*, але фраза *приймати душ* дуже популярна.
-*   Я **приймаю** душ. (I take a shower.)
-
-**Ляга́ти спа́ти** (to go to sleep)
-Literally "to lie down to sleep". Буквально означає лягати спати. This describes the action of getting into bed.
-*   Я **лягаю** спати о десятій. (I go to sleep at ten.)
-*   Діти **лягають** спати рано. (Children go to sleep early.)
-
-### Граматика: Зворотні дієслова (Reflexive Verbs)
-You noticed many verbs ending in **-ся**. These are **зворотні дієслова**. Багато дієслів закінчуються на **-ся**. The particle **-ся** (short for *себе* - self) indicates the action is directed back at the subject. Частка **-ся** показує: дія спрямована на суб'єкт.
-
-When conjugating, remember the rule of thumb for euphony (pleasant sound):
-*   Use **-ся** after consonants.
-*   Use **-сь** after vowels (optional but common in speech).
-*   *Note:* At A1 level, using **-ся** is always correct and safe. You may hear **-сь** in everyday speech (вмиваюсь instead of вмиваюся), but both forms are accepted.
-
-**Conjugation of Вмиватися (Class I):**
-*   Я вмиваю**ся**
-*   Ти вмиваєш**ся**
-*   Він/Вона вмиваєть**ся**
-*   Ми вмиваємо**ся**
-*   Ви вмиваєте**ся**
-*   Вони вмивають**ся**
-
-> [!warning]
-> **Common Mistake: Вмиватися vs Мити**
-> Do not confuse **вмиватися** with **мити**. Не плутайте **вмиватися** та **мити**.
-> *   **Вмиватися** = to wash one's face (reflexive, no object needed). «Я вмиваюся.»
-> *   **Мити** = to wash something else (transitive, needs an object). «Я мию руки.» (I wash hands.) «Я мию посуд.» (I wash dishes.)
-> Never say «Я вмиваю руки» — that sounds like you are washing your hands' face! Ніколи не кажіть «Я вмиваю руки»!
-
-### Граматика: Дієслово "Дивитися" (Class II)
-The verb **диви́тися** (to watch/look) is essential for evening routines (watching TV, YouTube). Дієслово **дивитися** важливе для вечірнього розпорядку. It belongs to Class II (verbs ending in -ити), so it has a slight vowel shift in the "I" form. Це II група, тому є зміни в формі "Я".
-
-**Conjugation Pattern:**
-*   Я дивл**ю**ся (note the added **л**)
-*   Ти див**и**шся
-*   Він/Вона див**и**ться
-*   Ми див**и**мося
-*   Ви див**и**теся
-*   Вони див**ля**ться (note the **ля**)
-
-Usage:
-*   Я **дивлюся** телевізор. (I watch TV.)
-*   Він **дивиться** фільм. (He watches a film.)
-
-### Прислівники послідовності (Adverbs of Sequence)
-To build a narrative, you need bridge words. Для історії потрібні слова-містки. Without them, your sentences sound like a robot list. Без них ваші речення звучать як список робота.
-
-**Споча́тку** (First / At first)
-Used to start your story. Для початку історії.
-*   **Спочатку** я снідаю. (First, I have breakfast.)
-
-**По́тім** (Then / Later)
-Used for the next step. Для наступного кроку.
-*   **Потім** я йду на роботу. (Then I go to work.)
-
-**Пі́сля цього́** (After that)
-A slightly more formal variant of "then". Трохи більш офіційний варіант "потім".
-*   **Після цього** я чищу зуби. (After that I brush teeth.)
-
-**Наре́шті** (Finally)
-Used for the last step. Для останнього кроку.
-*   **Нарешті** я лягаю спати. (Finally, I go to sleep.)
-
-### Прислівники частоти (Adverbs of Frequency)
-How often do you do these things? Як часто ви це робите?
-
-**За́вжди́** (Always)
-100% frequency. 100% частота.
-*   Я **завжди** снідаю вдома. (I always have breakfast at home.)
-
-**Зазвича́й** (Usually)
-Most of the time. This is the most useful word for daily routines. Найкорисніше слово для розпорядку.
-*   Я **зазвичай** встаю о сьомій. (I usually get up at seven.)
-
-**І́ноді** (Sometimes)
-Irregular frequency. Нерегулярно.
-*   **Іноді** я не снідаю. (Sometimes I don't have breakfast.)
-
-**Рі́дко** (Rarely)
-Almost never. Майже ніколи.
-*   Я **рідко** дивлюся телевізор. (I rarely watch TV.)
-
-**Ніколи не** (Never)
-Remember the double negative rule in Ukrainian! Пам'ятайте про подвійне заперечення! You must use **не** with the verb. Використовуйте слово **не** і дієслово.
-*   Я **ніколи не** спізнююся. (I am never late.) — literally "never not am late".
-
-## Практика: Робочий день і вихідні
-
-### Діалог 1: Типовий ранок (Typical Morning)
-Let's look at a conversation between two friends, **Олег** and **Ірина**. Послухайте розмову між двома друзями, Олегом та Іриною. Pay attention to how they ask about time. Зверніть увагу, як вони запитують про час.
-
-**Олег:** Привіт, Ірино! О котрій ти зазвичай прокидаєшся?
-**Ірина:** Привіт! Я прокидаюся о шостій тридцять.
-**Олег:** Ого, це дуже рано! Що ти робиш потім?
-**Ірина:** Спочатку я вмиваюся і чищу зуби. Потім я снідаю. А ти?
-**Олег:** Я встаю о восьмій. Я люблю поспати.
-**Ірина:** Ти снідаєш вдома?
-**Олег:** Ні, я зазвичай п'ю каву на роботі.
-
-**Analysis:**
-*   Irina uses the sequence: **Спочатку** (first) ... **Потім** (then). Ірина використовує послідовність: **Спочатку** ... **Потім**.
-*   Oleg uses **люблю поспати** (like to sleep a bit) — a common phrase for late risers. Олег каже **люблю поспати**.
-*   Note the question **«О котрій?»** asking for the specific time. Зверніть увагу на питання **«О котрій?»**.
-
-### Діалог 2: Плани на суботу (Plans for Saturday)
-Weekends often look very different. Вихідні часто виглядають інакше. The verb **відпочивати** becomes the star here. Дієслово **відпочивати** тут головне.
-
-**Андрій:** Що ти робиш у суботу?
-**Марія:** У суботу я відпочиваю. Я прокидаюся пізно, об одинадцятій.
-**Андрій:** Це чудово. Що потім?
-**Марія:** Потім я довго снідаю і читаю книгу. Я нікуди не поспішаю.
-**Андрій:** А я у суботу прибираю вдома. Це мій "робочий" вихідний.
-
-**Analysis:**
-*   **Прокидатися пізно** (to wake up late) vs **прокидатися рано** (to wake up early).
-*   **Нікуди не поспішаю** (I am not hurrying anywhere) — a key phrase for a relaxing day. Ключова фраза для релаксу.
-*   **Прибираю** (I clean/tidy up) — a common weekend chore. Звичайна робота на вихідних.
-
-### Робочий день vs Вихідний (Workday vs Weekend)
-Let's compare the vocabulary directly using a table. Порівняємо лексику в таблиці. This helps you see the contrast in lifestyle. Це допоможе побачити різницю.
-
-| Категорія | Робочий день (Workday) | Вихідний день (Weekend) |
-| :--- | :--- | :--- |
-| **Час** | Встаю рано (о 7:00). | Встаю пізно (о 10:00). |
-| **Одяг** | Одягаюся швидко. Одягаю костюм. | Одягаюся зручно. Я у піжамі. |
-| **Їжа** | Снідаю швидко або не снідаю. | Снідаю повільно і смачно. |
-| **Діяльність** | Працюю, маю стрес. | Відпочиваю, гуляю, дивлюся фільми. |
-| **Вечір** | Лягаю спати рано. | Лягаю спати пізно. |
-
-> [!observe]
-> **Contrast Markers**
-> To contrast these two days in speech, use the conjunction **а** (but/and/whereas). Протиставляємо дні. Використовуйте сполучник **а**.
-> *   У понеділок я працюю, **а** у неділю я відпочиваю.
-> *   Я встаю рано, **а** він встає пізно.
-> This small word highlights the difference perfectly. Це маленьке слово чудово підкреслює різницю.
-
-### Будуємо речення (Building Sentences)
-Now, let's practice putting it all together into a narrative structure. А тепер спробуємо поєднати все це в історію. A good description of a routine flows logically. Гарний опис розпорядку має логіку.
-
-**Template:**
-1.  **Time + Action 1**: О сьомій я прокидаюся.
-2.  **Sequence + Action 2**: Потім я йду у душ.
-3.  **Detail (Frequency)**: Я зазвичай снідаю вдома.
-4.  **Action 3 + Destination**: Потім я йду на роботу.
-5.  **Evening + Action**: Увечері я повертаюся і вечеряю.
-
-**Example Narrative:**
-«Мій день починається о сьомій. Спочатку я вмиваюся й одягаюся. Я зазвичай не снідаю, тільки п'ю каву. О восьмій тридцять я вже на роботі. Я працюю до п'ятої. Увечері я готую вечерю та дивлюся серіали. Нарешті, об одинадцятій я лягаю спати.»
-
-Notice how simple sentences become a story just by adding time and sequence words. Прості речення стають історією. Додайте час. You don't need complex grammar to tell your story effectively. Складна граматика не потрібна. Розкажіть про свій день.
-
-## Підсумок: Мій ідеальний день
-
-So — what does your day look like now, in Ukrainian? Як виглядає ваш день? You can wake up, wash, dress, work, eat, rest, and go to sleep — all with the right words. Ви навчилися прокидатися, вмиватися, одягатися, працювати та відпочивати. Тепер у вас є слова для кожної частини дня.
-
-You now possess the tools to:
-1.  **Use reflexive verbs** correctly (*вмиватися, одягатися*).
-2.  **Distinguish** between similar actions (*мити* vs *вмиватися*).
-3.  **Structure a story** using sequence adverbs (*спочатку, потім, нарешті*).
-4.  **Describe habits** using frequency adverbs (*зазвичай, рідко, ніколи*).
-
-Ваш розпорядок — це ваша історія. Whether it is chaotic or organized, early or late — you now have the language for it. Хаотична чи організована, рання чи пізня — тепер ви можете її розповісти. In the next module, we add color: **adjectives** will let you say not just *what* you do, but *how* it feels. Was the coffee delicious? Was the morning sunny? Далі ми вивчимо **прикметники**. Розкажіть комусь про свій день — сьогодні!
+### Дієслово «прокидатися»
+Я прокидаюся дуже рано о сьомій годині. Ти прокидаєшся пізно у цей теплий вихідний. Ми прокидаємося швидко і п'ємо гарячу каву. Це дуже важливе і дуже часте дієслово. Воно означає самий початок нашого нового дня. Це перша дія кожної людини рано вранці.
+
+I wake up very early at seven o'clock. You wake up late on this warm day off. We wake up quickly and drink hot coffee. This is a very important and very frequent verb. It means the very start of our new day. It is the first action of every person early in the morning. The verb **прокида́тися** (to wake up) is a reflexive verb, which means the action reflects back on the subject performing it. It is highly frequent in daily life conversations. Notice how the ending changes depending on who exactly is performing the action. We often pair this verb with adverbs of time to be precise. It sets the tone for the entire narrative.
+
+* **Я прокида́юся** дуже рано. (I wake up very early.)
+* **Він прокида́ється** пізно. (He wakes up late.)
+* **Ми прокида́ємося** вдома. (We wake up at home.)
+
+### Дієслово «вмиватися»
+Після сну я йду у ванну вмиватися. Він вмивається холодною водою у своїй кімнаті. Вони швидко вмиваються перед довгою і важкою роботою. Це наша обов'язкова щоденна і дуже важлива гігієна. Ми робимо це щодня абсолютно без жодних винятків.
+
+After sleep I go to the bathroom to wash my face. He washes himself with cold water in his room. They wash themselves quickly before long and hard work. This is our mandatory daily and very important hygiene. We do this every day absolutely without any exceptions. The verb **вмива́тися** (to wash oneself) specifically refers to washing one's face and upper body. It is a core part of the morning routine for everyone. Like other reflexive verbs, it requires careful attention to its specific endings. It is an essential word for daily descriptions. Understanding its exact meaning prevents common and awkward mistakes.
+
+* Я завжди **вмива́юся** водою. (I always wash myself with water.)
+* Ти швидко **вмива́єшся**. (You wash yourself quickly.)
+* Вона **вмива́ється** зранку. (She washes herself in the morning.)
+
+### Різниця: «вмиватися» чи «мити руки»?
+Це дуже часта помилка багатьох іноземних студентів. Слово «вмиватися» — це мити своє власне обличчя. Але ми миємо наші брудні руки теплою водою. Не можна ніколи казати «я вмиваю свої руки». Це звучить зовсім і абсолютно неправильно для нас.
+
+This is a very common mistake among many foreign students. The word "to wash oneself" means to wash your own face. But we wash our dirty hands with warm water. You can never say "I wash myself my hands". This sounds completely and absolutely incorrect to us. Learners often misuse the reflexive verb when they actually mean to wash a specific object, like their hands. Remember that **вмиватися** is an action performed on your own whole face or body. If you are washing a specific body part or a physical object, you must use the transitive verb **ми́ти** (to wash). This clear distinction is very important for natural-sounding and correct speech.
+
+> [!warning] Уникайте помилок
+> ❌ Я вмиваю руки. (Incorrect — you cannot reflexive wash an object)
+> ✅ Я **мию** руки. (Correct — washing an object)
+> ✅ Я **вмиваюся**. (Correct — washing your face/body)
+
+### Дієслово «одягатися»
+Після ванної я відразу йду у спальню одягатися. Вона одягається дуже тепло взимку перед довгою прогулянкою. Ми швидко одягаємося і відразу йдемо на роботу. Це наступний важливий крок нашого типового і швидкого ранку. Він обов'язковий кожного ранку для всіх людей навколо.
+
+After the bathroom I immediately go to the bedroom to get dressed. She dresses very warmly in winter before a long walk. We get dressed quickly and immediately go to work. This is the next important step of our typical and fast morning. It is mandatory every morning for all people around. The verb **одяга́тися** (to dress oneself) naturally continues our morning sequence. Notice how frequently we pair it with adverbs like quickly or warmly to add detail to the action. The reflexive particle clearly signifies that you are putting clothes on yourself, not on someone else. Mastering this verb helps you describe your preparation for the day ahead. We use it every single day.
+
+* Я тепло **одяга́юся**. (I dress warmly.)
+* Він швидко **одяга́ється**. (He gets dressed quickly.)
+* Діти **одяга́ються** самі. (The children dress themselves.)
+
+### Дієвідмінювання дієслова «дивитися»
+Ввечері ми любимо дивитися цікавий і новий телевізор. Я дивлюся новий український фільм у своїй кімнаті. Ти дивишся вечірні новини вдома. Це цікаве і максимально спокійне заняття після довгої роботи. Ми часто це робимо разом удома після вечері.
+
+In the evening we like to watch interesting and new TV. I am watching a new Ukrainian movie in my room. You are watching the evening news at home. This is an interesting and maximally calm activity after long work. We often do this together at home after dinner. The verb **диви́тися** (to watch/look) is a core Class II reflexive verb. It follows a specific conjugation pattern that you must learn. We must drill the -ся/-сь rule here carefully. You use **-сь** after vowels, for example, "я дивлюсь". You use **-ся** after consonants, for example, "ти дивишся". Both "-ся" and "-сь" are acceptable after vowels, but "-сь" is often preferred for smoother flow.
+
+| Особа (Person) | Дієслово «дивитися» | Правило (Rule) |
+|-----------|--------------------|------------|
+| Я | дивлю́ся (дивлю́сь) | -ся / -сь |
+| Ти | ди́вишся | -ся (after consonant) |
+| Він/Вона | ди́виться | -ся (after consonant) |
+| Ми | ди́вимося (ди́вимось) | -ся / -сь |
+| Ви | ди́витеся (ди́витесь) | -ся / -сь |
+| Вони | ди́вляться | -ся (after consonant) |
+
+### Культура: Український обід
+Обід — це наша найбільша і головна їжа. Ми зазвичай обідаємо о першій годині кожного дня. Це велика й обов'язково гаряча порція смачної їжі. Там завжди є суп і м'ясо або риба. Це стара і дуже смачна українська культурна традиція.
+
+Lunch is our largest and main meal. We usually have lunch at one o'clock every day. It is a large and necessarily hot portion of tasty food. There is always soup and meat or fish there. This is an old and very tasty Ukrainian cultural tradition. Unlike Western habits, where lunch is often a light and quick sandwich eaten at a desk, the traditional Ukrainian **обі́д** is the most substantial meal of the entire day. It usually takes place between 13:00 and 14:00. A proper lunch consists of a first course, like hot borscht, and a second course, usually meat or fish with a side dish. The **обі́дня пере́рва** (lunch break) is a highly respected pause in the working day.
+
+> [!culture] Обідня перерва (The Lunch Break)
+> In Ukraine, the lunch break is a protected hour (often 13:00 to 14:00). Offices and many shops close entirely so employees can eat a full, hot meal. Grabbing a cold sandwich at your desk is much less common than sitting down for a proper two-course lunch. It is a time to truly rest.
+
+## Практика
+
+### Рух: «їхати на роботу» чи «йти на роботу»
+Як ви дістаєтесь на вашу роботу кожного ранку? Я їду туди на швидкому і великому автобусі. Мій друг йде туди пішки через великий парк. Це два різні дієслова для різних типів руху. Важливо їх ніколи не плутати під час вашої розмови.
+
+How do you get to your work every morning? I go there by fast and large bus. My friend goes there on foot through the large park. These are two different verbs for different types of motion. It is important never to confuse them during your conversation. When describing your daily commute, you must carefully choose the correct verb of motion. If you use any form of transport, you must say **ї́хати на робо́ту** (to go to work by vehicle). If you walk using your own legs, you use **йти на робо́ту** (to go to work on foot). This clear distinction is fundamental in Ukrainian grammar. It adds necessary precision to your daily narrative.
+
+* **Марія:** Ти їдеш на роботу чи йдеш пішки?
+* **Олег:** Я йду пішки. Мій офіс дуже близько.
+* **Марія:** А я завжди їду на автобусі. Це далеко.
+
+### Час: «о сьомій годині»
+О котрій годині ти прокидаєшся у свій робочий день? Я прокидаюся о сьомій годині у своїй затишній кімнаті. Ми смачно обідаємо о першій годині на роботі. Це правильна граматична форма для нашого розкладу. Будь ласка, завжди говоріть саме так про ваш час.
+
+At what time do you wake up on your working day? I wake up at seven o'clock in my cozy room. We have a tasty lunch at one o'clock at work. This is the correct grammatical form for our schedule. Please, always speak exactly like this about your time. A very common learner error is using the preposition "в" plus the Accusative case for telling time on the clock. This is a noticeable mistake. The authentic Ukrainian scheduling structure uses the preposition **о** or **об** followed strictly by the Locative case. Therefore, "at seven o'clock" is **о сьо́мій годи́ні**. This structure proves you understand independent Ukrainian grammar and avoid bad habits.
+
+> [!tip] Говоримо про час
+> To say "at [hour] o'clock", always use **о + [ordinal number in Locative] + годині**.
+> * о пе́ршій годи́ні (at 1:00)
+> * о сьо́мій годи́ні (at 7:00)
+> * об одина́дцятій годи́ні (at 11:00) - use **об** before vowels.
+
+### Прислівник «зазвичай» та «щодня»
+Я зазвичай встаю дуже рано і п'ю смачну каву. Я активно працюю майже щодня у своєму світлому офісі. Це мої постійні звички протягом усього мого довгого життя. Вони дуже стабільні та надійні для мого робочого ритму. Я люблю свій чіткий розклад і дотримуюся його завжди.
+
+I usually get up very early and drink tasty coffee. I actively work almost every day in my bright office. These are my constant habits throughout my entire long life. They are very stable and reliable for my working rhythm. I like my clear schedule and adhere to it always. To describe routines effectively and naturally, we need to use adverbs of frequency. The word **зазви́чай** (usually) is incredibly useful for stating what you do on a typical, average day. Similarly, the word **щодня́** (every day) strongly emphasizes the repetition of your actions. These small but powerful words make your sentences sound much more natural and connected. They help frame the entire concept of a daily routine.
+
+* Я **зазви́чай** снідаю вдома. (I usually have breakfast at home.)
+* Вона працює **щодня́**. (She works every day.)
+* Ми **зазви́чай** гуляємо ввечері. (We usually walk in the evening.)
+
+### Послідовність: «спочатку», «потім», «нарешті»
+Спочатку я йду вмиватися холодною водою у свою ванну. Потім я смачно снідаю вдома. Після цього я йду працювати у свій великий офіс. Нарешті я відпочиваю ввечері після довгого і важкого дня. Це мій звичайний і дуже типовий робочий день сьогодні.
+
+First I go to wash myself with cold water in my bathroom. Then I have a tasty breakfast at home. After that I go to work in my large office. Finally I rest in the evening after a long and hard day. This is my usual and very typical working day today. A good narrative needs sequence adverbs to flow logically from start to finish. We use words like **споча́тку** (first), **по́тім** (then), and **наре́шті** (finally) to clearly link our actions together. Without these markers, a description sounds like a robotic, disconnected list of facts. By adding them, you create a cohesive and engaging story about your day.
+
+> [!note] Порядок дій
+> 1. **Споча́тку** (First) ...
+> 2. **По́тім** / **Після цього** (Then / After that) ...
+> 3. **Наре́шті** (Finally) ...
+
+### Щоденні прийоми їжі: «снідати», «обідати», «вечеряти»
+Вранці ми завжди снідаємо вдома дуже свіжою та смачною їжею. Вдень ми обідаємо на роботі. Ввечері наша родина вечеряє вдома. Це три головні прийоми їжі для кожної людини щодня. Вони гарно структурують наш день і дають енергію.
+
+We always have breakfast in the morning at home with very fresh and tasty food. We have lunch in the afternoon at work. Our family has dinner in the evening at home. These are the three main meals for every person every day. They beautifully structure our day and give energy. In Ukrainian, meals are usually expressed as single verbs rather than a phrase like "to have breakfast". We use **сні́дати** (to have breakfast), **обі́дати** (to have lunch), and **вече́ряти** (to have dinner). These verbs are incredibly common and follow the standard Class I conjugation. Using them correctly is a big step toward sounding like a natural speaker.
+
+* **Споча́тку** я вмиваюся, а **по́тім** снідаю. (First I wash myself, and then I have breakfast.)
+* Ми зазвичай обідаємо о першій годині. (We usually have lunch at one o'clock.)
+* Вони вечеряють дуже пізно. (They have dinner very late.)
+
+## Продукування та Підсумок
+
+### Вечір та дієслово «лягати спати»
+Ввечері ми часто дуже втомлені після довгої і важкої роботи. Я люблю лягати пізно вночі і читати цікаву книгу. Але треба лягати спати дуже рано для свого здоров'я. Хороший сон дає багато енергії на весь завтрашній день. Це логічний кінець нашого дня і початок спокійного нічного відпочинку.
+
+We are often very tired in the evening after long and hard work. I like to go to bed late at night and read an interesting book. But one needs to go to bed very early for one's health. Good sleep gives a lot of energy for the whole tomorrow. This is the logical end of our day and the start of calm night rest. The phrase **ляга́ти спа́ти** (to go to bed, literally "to lie down to sleep") clearly marks the conclusion of our daily routine. It is a highly frequent expression in evening conversations. Notice how it pairs naturally with adverbs like early or late to describe your habits. This is the final step in our chronological narrative of the day. 
+
+### Традиція: Домашній одяг
+Ми приходимо додому. Ми завжди відразу переодягаємося у спальні. Ми надягаємо наш домашній одяг і стаємо дуже спокійними. Це дуже важливо для нас і нашої домашньої гігієни. Це комфортно, тепло і чисто для відпочинку після довгої роботи. Вуличний брудний одяг завжди залишається там у темному коридорі.
+
+We come home. We always immediately change clothes in the bedroom. We put on our home clothes and become very calm. This is very important for us and our home hygiene. It is comfortable, warm, and clean for resting after long work. Street dirty clothes always remain there in the dark hallway. It is a very strong cultural norm in Ukraine to change out of one's "street clothes" immediately upon returning home. We switch into comfortable **дома́шній о́дяг** (home clothes). This practice clearly separates the public sphere from the private, clean sphere of the home. It is a crucial part of the evening transition for almost everyone. It signals that the working day is truly over.
+
+> [!fact] Домашній комфорт (Home comfort)
+> Wearing outdoor shoes or jeans inside an apartment is considered rude and unhygienic in Ukraine. Changing into "домашній одяг" and slippers (капці) is the first thing guests and residents do when crossing the threshold. It keeps the home a sanctuary.
+
+### Синтез: Розповідь про свій день
+Тепер ми можемо легко розповісти про свій типовий робочий день. Подивімося на цей хороший приклад правильної і красивої розповіді. Зверніть увагу на всі наші нові слова та важливі дієслова. Цей текст показує правильну послідовність дій зранку до самого вечора. Ви можете використовувати цей текст як чудову модель для себе.
+
+Now we can easily tell about our typical working day. Let us look at this good example. Pay attention to all our new words and important verbs. This text shows the correct sequence of actions from morning to the very evening. You can use this text as an excellent model for yourself when talking about your life.
+
+> [!quote] Модельна відповідь (Model Answer)
+> «Мій робочий день дуже активний. Я зазвичай прокидаюся о сьомій годині. Спочатку я йду у ванну і вмиваюся. Потім я швидко одягаюся. Я снідаю вдома, а після цього йду на роботу. Я багато працюю щодня. Обідня перерва у нас о першій годині. Ввечері я йду додому. Я надягаю домашній одяг і вечеряю. Нарешті я можу відпочивати і дивитися фільм. Я лягаю спати пізно.»
+>
+> *(My working day is very active. I usually wake up at seven o'clock. First I go to the bathroom and wash my face. Then I get dressed quickly. I have breakfast at home, and after that I go to work. I work a lot every day. Our lunch break is at one o'clock. In the evening I go home. I put on home clothes and have dinner. Finally I can rest and watch a movie. I go to bed late.)*
+
+---
+
+# Підсумок
+
+У цьому уроці ми успішно вивчили нові слова. Ми описуємо свій типовий день українською мовою. Ми познайомилися з новими корисними зворотними дієсловами та прислівниками нашого часу.
+
+* **Зворотні дієслова**: прокида́тися, вмива́тися, одяга́тися, диви́тися.
+* **Прийоми їжі**: сні́дати, обі́дати, вече́ряти.
+* **Послідовність дій**: споча́тку, по́тім, після цього, наре́шті.
+* **Граматика часу**: ми використовуємо прийменник «о» або «об» + місцевий відмінок (наприклад, о сьомій годині).
+* **Культура**: традиція ситного українського обіду та переодягання в домашній одяг.
 
 **Перевірте себе:**
-
-1.  Як сказати українською "I wash myself" vs "I wash my hands"? У чому різниця?
-2.  Conjugate the verb **прокидатися** for "ми" (we) and "вони" (they).
-3.  What is the Ukrainian word for "usually"? Use it in a sentence.
-4.  What four words can you use to order events in a story (First, Then, After that, Finally)?
-5.  How do you say "I watch TV"? Be careful with the conjugation of the verb!
-6.  What is the traditional main meal of the day in Ukraine, and when is it eaten?
+1. Як правильно сказати: «I wash my face» чи «I wash my hands» українською мовою?
+2. Яке закінчення має зворотне дієслово «дивитися» для слова «я» (I watch)?
+3. Яке українське слово ми використовуємо для позначення першої дії (first) у нашій розповіді?
+4. О котрій годині зазвичай починається традиційна українська обідня перерва на роботі?
+5. Який прийменник ми завжди використовуємо для точного часу: «в сьомій годині» чи «о сьомій годині»?
 
 ---

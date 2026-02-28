@@ -1,95 +1,72 @@
-✅ Message sent to Gemini (ID: 8759)
-✓ Message 8759 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #8759...
-📨 Message #8759
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-description-adverbs-pA
-   Time: 2026-02-19T22:01:59.142082+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/description-adverbs/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
-
 # Дослідження: Description: Adverbs
 
 ## State Standard Reference
-§2 (Каталог А): "виразити просторові значення: тут, там, далеко, близько... виразити часові поняття: сьогодні, учора, завтра"
-§1.3.1: "елементарний опис людей, місць, предметів, ознак і дій"
-Alignment: Цей модуль розширює "опис дій" (Description of Actions) через прислівники способу дії (як?) та частоти (як часто?), що є необхідним для реалізації комунікативних намірів рівня А1.
+§1.3.2 and §1.4.2: "елементарний опис людей, місць, предметів, ознак і дій" (elementary description of people, places, objects, features and actions).
+Alignment: This module directly fulfills the requirement to describe actions (дії) at an elementary level by introducing adverbs of manner, frequency, and intensity.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| добре | High (Top 100) | дуже добре, все добре, добре знати |
-| швидко | High | швидко йти, швидко читати, дуже швидко |
-| часто | Medium-High | як часто?, досить часто, дуже часто |
-| ніколи | High | ніколи не (+ дієслово), я ніколи не був |
-| зазвичай | Medium | як зазвичай, я зазвичай снідаю |
+| добре (well) | High (Top 100) | дуже добре, все добре |
+| швидко (quickly) | High | швидко йти, дуже швидко |
+| часто (often) | Medium-High | як часто?, дуже часто |
+| ніколи (never) | High | ніколи не бачив, ніколи не був |
+| зазвичай (usually) | Medium | як зазвичай, зазвичай вранці |
+| дуже (very) | High | дуже добре, дуже цікаво |
 
 ## Cultural Hooks
-1. **"Добре" як універсальна відповідь**: В українській культурі слово "добре" функціонує як універсальний маркер згоди, підтвердження та позитивної оцінки (аналог "OK", "Good", "Agreed").
-2. **Народна мудрість**: Прислів'я "Повільно їдеш — далі будеш" (Тихіше їдеш — далі будеш) відображає цінність поміркованості та обережності, на противагу поспіху.
+1. Proverb: «Повільно їдеш — далі будеш» (Haste makes waste / Slow and steady) — reflects traditional Ukrainian values of careful planning and pacing.
+2. The word "добре" serves as a deeply ingrained cultural anchor, used universally as a sign of agreement ("okay", "agreed") and as the standard positive response to "Як справи?".
 
 ## Common Learner Errors
-1. **Adjective vs Adverb**: Використання прикметника замість прислівника (*Він говорить хороший* замість *Він говорить добре*). Cause: L1 interference (English "fast/fast", "hard/hard").
-2. **Double Negation**: Пропуск частки "не" з "ніколи" (*Я ніколи бачив це*). Correct: *Я ніколи НЕ бачив це*.
-3. **Word Order with "Дуже"**: Розміщення "дуже" після прикметника/прислівника (*Це добре дуже*). Correct: *Це дуже добре*.
+1. Adjective instead of Adverb → Він говорить хороший (instead of Він говорить добре). Why: Interference from English where colloquial speech often drops the "-ly" (e.g., "he talks good" or "he drives fast").
+2. Missing double negation with ніколи → Я ніколи працюю (instead of Я ніколи не працюю). Why: Direct translation of English syntax ("I never work").
+3. Misplaced intensifier → Це добре дуже (instead of Це дуже добре). Why: Attempting to add emphasis at the end of a thought.
 
 ## Cross-References
-- Builds on: a1-26 (Describing Things - Adjectives), a1-06 (First Verbs)
-- Prepares for: a1-29 (Weather - "холодно", "тепло"), a2-05 (Past Tense - time markers)
+- Builds on: a1-11 (Describing Things - Adjectives), a1-12 (Colors and Clothing)
+- Prepares for: a1-29 (Weather and Seasons), a1-30 (Checkpoint Consolidation)
 
 ## Notes for Content Writing
-- State Standard at A1 treats adverbs mainly as lexical items for communicative intentions rather than a complex morphological category. Focus on usage/syntax over deep derivation rules.
-- Ensure strict scaffolding: "Adjective + -о" rule needs clear visual pairs (гарний -> гарно).
-
+- Provide explicit English scaffolding for the grammatical concept of "adverb" (immersion target is 10-50%).
+- Ensure Ukrainian phrasing avoids any comparison to Russian syntax; treat the Ukrainian rules (like double negation) as logical independent features.
+- Provide IPA for the first occurrence of each new word, but avoid IPA on full sentences.
+- Keep example sentences under 8-10 words to maintain the "Safe Harbor" principle.
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Розминка: Як чи Який?"
-    words: 300
-    points:
-      - "Концептуальна різниця між ознакою предмета (Який? - Прикметник) та ознакою дії (Як? - Прислівник)"
-      - "Візуальна схема: Іменник + Прикметник vs Дієслово + Прислівник"
-      - "Введення базових пар: добрий/добре, швидкий/швидко"
-  - section: "Презентація: Утворення та Винятки"
+  - section: "Вступ"
     words: 400
     points:
-      - "Правило утворення: основа прикметника + суфікс -о (швидкий → швидко)"
-      - "Ключові винятки та зміни: добрий → добре (не 'добро')"
-      - "Культурний контекст: слово 'добре' як універсальна згода"
-      - "Позиція прислівника в реченні (після дієслова: Він читає швидко)"
-  - section: "Презентація 2: Як часто?"
+      - "Include English scaffolding to define an 'adverb' and the core question Як? (How?)."
+      - "Create a visual contrast table comparing Який? (Adjective describing a noun) with Як? (Adverb describing an action)."
+      - "Address the common error of using adjectives instead of adverbs directly, using simple English explanation."
+  - section: "Основи та формування"
     words: 450
     points:
-      - "Шкала частоти: завжди → зазвичай → часто → іноді → рідко → ніколи"
-      - "Синтаксис: позиція прислівників частоти (перед дієсловом: Я часто читаю)"
-      - "Критичне правило: 'ніколи' + 'не' (подвійне заперечення)"
-      - "Візуалізація шкали від 100% до 0%"
-  - section: "Презентація 3: Ступені та Інтенсивність"
-    words: 350
+      - "Explain the derivation rule: Adjective stem + -ий → -о (швидкий → швидко) with a step-by-step visual mapping."
+      - "Highlight the exception добрий → добре, dedicating a paragraph to its frequency and use as a universal 'OK/Agreed'."
+      - "Establish standard word order: Adverb follows the verb (Він працює добре) with 3-4 simple example sentences."
+  - section: "Час та частота"
+    words: 450
     points:
-      - "Модифікатори міри: дуже, трохи, зовсім, майже"
-      - "Правило позиції 'дуже': завжди ПЕРЕД словом, яке воно описує (дуже добре, дуже швидко)"
-      - "Поширені помилки: уникнення структури 'добре дуже'"
-  - section: "Практика: Звички та Стиль Життя"
-    words: 500
+      - "Present the frequency scale visually: завжди → зазвичай → часто → іноді → рідко → ніколи."
+      - "Provide a dedicated H3 for 'ніколи', explicitly teaching the double negation rule (Я ніколи не...)."
+      - "Integrate Catalog A spatial and temporal markers (тут, там, сьогодні, завтра) into simple sentence patterns."
+  - section: "Синтаксис та інтенсивність"
+    words: 400
     points:
-      - "Інтеграція: опис дій (Як?) та частоти (Як часто?) в одному контексті"
-      - "Моделювання діалогів: обговорення щоденних звичок (Я зазвичай снідаю швидко)"
-      - "Культурний елемент: прислів'я 'Повільно їдеш — далі будеш'"
-      - "Підсумковий опис власного стилю життя"
+      - "Introduce intensity modifiers: дуже, трохи, зовсім, майже."
+      - "Emphasize the strict placement rule: 'дуже' MUST precede the modified word, never at the end."
+      - "Provide correct vs. incorrect examples (дуже добре vs добре дуже) to preempt learner errors."
+  - section: "Підсумок та культура"
+    words: 300
+    points:
+      - "Integrate the cultural hook: explain the proverb «Повільно їдеш — далі будеш»."
+      - "Frame a short 'Food Critic' roleplay scenario describing how someone cooks or eats."
+      - "Provide a short paragraph modeling a daily routine using frequency adverbs (Я зазвичай снідаю швидко)."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -100,11 +77,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (4153 chars)
-✅ Message sent to Claude (ID: 8765)
-✓ Message 8765 acknowledged
-   Auto-acknowledged reply #8765 (stdout delivery — no inbox accumulation)
-✓ Message 8759 acknowledged

@@ -1,4 +1,4 @@
-PASS: pipeline a1 8
+FAIL: pipeline a1 8
 
   Module:   greetings-and-politeness
   Track:    a1
@@ -6,5 +6,5 @@ PASS: pipeline a1 8
   Words:    0 (target: 2000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T02:27:06Z
+  Verdict:  FAIL
+  Date:     2026-02-28T14:30:41Z

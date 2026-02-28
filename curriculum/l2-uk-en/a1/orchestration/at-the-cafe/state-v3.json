@@ -3,26 +3,25 @@
   "slug": "at-the-cafe",
   "mode": "v3",
   "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T13:34:31Z",
+      "task_id": "v3-at-the-cafe-pA",
+      "mode": "full"
+    },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T02:44:13Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T13:37:21Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T02:44:13Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T13:37:21Z",
+      "note": "adopted-existing"
     },
-    "9-final-review": {
+    "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T02:44:13Z",
-      "note": "migrated-from-v2",
-      "verdict": "APPROVE"
-    },
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-28T02:44:15Z",
-      "note": "adopted-existing-meta"
+      "ts": "2026-02-28T13:40:49Z",
+      "attempts": 2
     }
   }
 }

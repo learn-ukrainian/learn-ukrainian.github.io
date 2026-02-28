@@ -1,0 +1,388 @@
+- type: match-up
+  title: "Словник кухаря: Базові продукти"
+  instruction: "Match the Ukrainian food words to their English translations."
+  pairs:
+    - left: "хліб"
+      right: "bread"
+    - left: "борщ"
+      right: "borscht"
+    - left: "м'ясо"
+      right: "meat"
+    - left: "овочі"
+      right: "vegetables"
+    - left: "фрукти"
+      right: "fruits"
+    - left: "вода"
+      right: "water"
+    - left: "кава"
+      right: "coffee"
+    - left: "чай"
+      right: "tea"
+    - left: "молоко"
+      right: "milk"
+    - left: "сік"
+      right: "juice"
+    - left: "суп"
+      right: "soup"
+    - left: "сир"
+      right: "cheese"
+
+- type: group-sort
+  title: "Категорії на кухні: Їжа чи напої"
+  instruction: "Sort the vocabulary items into food (їжа) and drinks (напої)."
+  groups:
+    - name: "Їжа"
+      items:
+        - "хліб"
+        - "борщ"
+        - "м'ясо"
+        - "овочі"
+        - "фрукти"
+        - "суп"
+        - "каша"
+        - "риба"
+        - "сир"
+    - name: "Напої"
+      items:
+        - "вода"
+        - "кава"
+        - "чай"
+        - "молоко"
+        - "сік"
+        - "компот"
+
+- type: group-sort
+  title: "Граматика продуктів: Рід іменників"
+  instruction: "Sort the food items by their grammatical gender (masculine, feminine, neuter, plural)."
+  groups:
+    - name: "Чоловічий рід"
+      items:
+        - "хліб"
+        - "борщ"
+        - "суп"
+        - "чай"
+        - "сік"
+        - "компот"
+        - "сир"
+    - name: "Жіночий рід"
+      items:
+        - "вода"
+        - "кава"
+        - "каша"
+        - "риба"
+        - "паляниця"
+    - name: "Середній рід"
+      items:
+        - "м'ясо"
+        - "молоко"
+    - name: "Множина"
+      items:
+        - "овочі"
+        - "фрукти"
+
+- type: fill-in
+  title: "Оберіть правильний прикметник"
+  instruction: "Choose the correct adjective ending to match the noun's gender."
+  items:
+    - sentence: "___ хліб лежить на столі."
+      answer: "Свіжий"
+      options: ["Свіжий", "Свіжа", "Свіже", "Свіжі"]
+    - sentence: "Я люблю ___ каву."
+      answer: "гарячу"
+      options: ["гарячу", "гарячий", "гаряче", "гарячі"]
+    - sentence: "Це дуже ___ борщ."
+      answer: "смачний"
+      options: ["смачний", "смачна", "смачне", "смачні"]
+    - sentence: "___ вода дуже освіжає влітку."
+      answer: "Холодна"
+      options: ["Холодна", "Холодний", "Холодне", "Холодні"]
+    - sentence: "Я хочу купити ___ м'ясо."
+      answer: "свіже"
+      options: ["свіже", "свіжий", "свіжа", "свіжі"]
+    - sentence: "Діти їдять ___ фрукти."
+      answer: "солодкі"
+      options: ["солодкі", "солодкий", "солодка", "солодке"]
+    - sentence: "Ми п'ємо ___ чай з лимоном."
+      answer: "зелений"
+      options: ["зелений", "зелена", "зелене", "зелені"]
+    - sentence: "На обід у нас ___ каша."
+      answer: "смачна"
+      options: ["смачна", "смачний", "смачне", "смачні"]
+
+- type: quiz
+  title: "Правила замовлення та споживання"
+  instruction: "Choose the grammatically correct option based on what you learned in the module."
+  items:
+    - question: "Яку форму має слово вода, коли ви її замовляєте?"
+      explanation: "У Знахідному відмінку жіночий рід на -а змінюється на -у."
+      options:
+        - text: "воду"
+          correct: true
+        - text: "вода"
+          correct: false
+        - text: "воді"
+          correct: false
+        - text: "водою"
+          correct: false
+    - question: "Яке дієслово правильно використовувати для споживання супу чи борщу?"
+      explanation: "Суп в українській культурі — це їжа, тому ми його їмо."
+      options:
+        - text: "їсти"
+          correct: true
+        - text: "пити"
+          correct: false
+        - text: "читати"
+          correct: false
+        - text: "писати"
+          correct: false
+    - question: "Як правильно сказати англійську фразу I want coffee українською мовою?"
+      explanation: "Слово кава змінюється на каву як прямий додаток (Знахідний відмінок)."
+      options:
+        - text: "Я хочу каву"
+          correct: true
+        - text: "Я хочу кава"
+          correct: false
+        - text: "Я хочу каві"
+          correct: false
+        - text: "Я хочу кавою"
+          correct: false
+    - question: "Як правильно сказати українською, що ви не вживаєте м'ясо?"
+      explanation: "Для загальної відмови від їжі ми використовуємо фразу 'Я не їм'."
+      options:
+        - text: "Я не їм м'ясо"
+          correct: true
+        - text: "Мені не подобається м'яса"
+          correct: false
+        - text: "Я не п'ю м'ясо"
+          correct: false
+        - text: "Я не люблю м'ясі"
+          correct: false
+    - question: "Яку форму має слово сік у Знахідному відмінку прямого додатка?"
+      explanation: "Чоловічий рід для неістот не змінюється у Знахідному відмінку."
+      options:
+        - text: "сік"
+          correct: true
+        - text: "соку"
+          correct: false
+        - text: "сока"
+          correct: false
+        - text: "соком"
+          correct: false
+    - question: "Яка з цих фраз про вподобання їжі є граматично правильною?"
+      explanation: "З дієсловом подобається їжа залишається в Називному відмінку як підмет."
+      options:
+        - text: "Мені подобається борщ"
+          correct: true
+        - text: "Мені подобається борщу"
+          correct: false
+        - text: "Я люблю борщу"
+          correct: false
+        - text: "Мені подобається борщем"
+          correct: false
+    - question: "Як правильно висловити свою медичну проблему чи обмеження щодо горіхів?"
+      explanation: "Фраза 'У мене алергія на...' використовується для медичних обмежень."
+      options:
+        - text: "У мене алергія на горіхи"
+          correct: true
+        - text: "Я не люблю горіхи"
+          correct: false
+        - text: "Горіхи це дуже погано"
+          correct: false
+        - text: "Я не хочу горіхи"
+          correct: false
+    - question: "Як перекладається та що означає прислів'я Хліб — усьому голова?"
+      explanation: "Хліб історично вважається основою життя та головним елементом на столі."
+      options:
+        - text: "Хліб — найважливіша їжа"
+          correct: true
+        - text: "Хліб має форму людської голови"
+          correct: false
+        - text: "Хліб завжди їдять з головою"
+          correct: false
+        - text: "Хліб ніколи не можна їсти"
+          correct: false
+
+- type: unjumble
+  title: "Що ми полюбляємо?"
+  instruction: "Rearrange the words to form correct sentences expressing food preferences."
+  items:
+    - words: ["Мені", "дуже", "подобається", "борщ"]
+      answer: "Мені дуже подобається борщ"
+    - words: ["Я", "не", "їм", "м'ясо"]
+      answer: "Я не їм м'ясо"
+    - words: ["Я", "хочу", "гарячу", "каву"]
+      answer: "Я хочу гарячу каву"
+    - words: ["Ми", "п'ємо", "зелений", "чай"]
+      answer: "Ми п'ємо зелений чай"
+    - words: ["Я", "люблю", "смачний", "суп"]
+      answer: "Я люблю смачний суп"
+    - words: ["У", "мене", "алергія", "на", "сир"]
+      answer: "У мене алергія на сир"
+    - words: ["Мені", "подобаються", "свіжі", "фрукти"]
+      answer: "Мені подобаються свіжі фрукти"
+    - words: ["Вона", "замовляє", "яблучний", "сік"]
+      answer: "Вона замовляє яблучний сік"
+
+- type: fill-in
+  title: "Дієслова їсти та пити"
+  instruction: "Choose the correct form of the verbs to eat (їсти) and to drink (пити)."
+  items:
+    - sentence: "Вранці я завжди ___ кашу."
+      answer: "їм"
+      options: ["їм", "п'ю", "їдять", "п'ють"]
+    - sentence: "Ми ___ гарячий чай з лимоном."
+      answer: "п'ємо"
+      options: ["п'ємо", "їмо", "п'ю", "їм"]
+    - sentence: "Українці дуже часто ___ борщ."
+      answer: "їдять"
+      options: ["їдять", "п'ють", "їмо", "п'ємо"]
+    - sentence: "Ти ___ свіже молоко?"
+      answer: "п'єш"
+      options: ["п'єш", "їси", "п'є", "їсть"]
+    - sentence: "Він ніколи не ___ рибу."
+      answer: "їсть"
+      options: ["їсть", "п'є", "їдять", "п'ють"]
+    - sentence: "Я хочу ___ смачний суп."
+      answer: "їсти"
+      options: ["їсти", "пити", "читати", "спати"]
+    - sentence: "Ти ___ свіжий яблучний сік?"
+      answer: "п'єш"
+      options: ["п'єш", "їси", "п'є", "їсть"]
+    - sentence: "Вони із задоволенням ___ солодкі фрукти."
+      answer: "їдять"
+      options: ["їдять", "п'ють", "їмо", "п'ємо"]
+
+- type: match-up
+  title: "Корисні фрази в ресторані"
+  instruction: "Match the useful conversational phrases to their English equivalents."
+  pairs:
+    - left: "Мені подобається"
+      right: "I like"
+    - left: "Я люблю"
+      right: "I love"
+    - left: "Я не їм"
+      right: "I do not eat"
+    - left: "У мене алергія на"
+      right: "I have an allergy to"
+    - left: "Дайте будь ласка"
+      right: "Give me please"
+    - left: "Я хочу"
+      right: "I want"
+    - left: "Що ви бажаєте?"
+      right: "What would you like?"
+    - left: "Яка твоя улюблена їжа?"
+      right: "What is your favorite food?"
+
+- type: quiz
+  title: "Культура їжі в Україні"
+  instruction: "Test your knowledge of the cultural significance of food and drinks in Ukraine."
+  items:
+    - question: "Згідно з текстом, чому хліб ніколи не можна було викидати?"
+      explanation: "Хліб має глибокий сакральний статус і повагу в українській культурі."
+      options:
+        - text: "Це сакральний символ поваги"
+          correct: true
+        - text: "Він дуже дорого коштував"
+          correct: false
+        - text: "Його важко було готувати"
+          correct: false
+        - text: "Він міг бути дуже отруєним"
+          correct: false
+    - question: "Яку важливу лінгвістичну функцію виконувало слово паляниця під час війни?"
+      explanation: "Російськомовним людям дуже важко правильно вимовити м'які звуки у цьому слові."
+      options:
+        - text: "Це був пароль для перевірки вимови"
+          correct: true
+        - text: "Це була назва секретної зброї"
+          correct: false
+        - text: "Це була секретна команда"
+          correct: false
+        - text: "Це був спеціальний код для радіо"
+          correct: false
+    - question: "Згідно з текстом модуля, які традиційні напої є популярними в Україні?"
+      explanation: "В Україні співіснують сильні традиції чаю з лимоном та кави."
+      options:
+        - text: "Чай з лимоном та кава"
+          correct: true
+        - text: "Сік та солодка газована вода"
+          correct: false
+        - text: "Фруктовий компот та холодне молоко"
+          correct: false
+        - text: "Гарячий шоколад та зелений чай"
+          correct: false
+    - question: "Який традиційний і дуже типовий український сніданок згадується у тексті?"
+      explanation: "Гаряча каша, зокрема гречана, є класичним ранковим сніданком."
+      options:
+        - text: "Гаряча гречана каша"
+          correct: true
+        - text: "Смажене м'ясо з картоплею"
+          correct: false
+        - text: "Солодкий компот з фруктами"
+          correct: false
+        - text: "Традиційний борщ зі сметаною"
+          correct: false
+    - question: "Згідно з текстом, який звук у слові паляниця найбільше видає іноземців?"
+      explanation: "Природно м'який звук ц є специфічною і складною рисою української фонетики."
+      options:
+        - text: "М'який звук ц"
+          correct: true
+        - text: "Твердий звук п"
+          correct: false
+        - text: "Голосний звук а"
+          correct: false
+        - text: "Твердий звук л"
+          correct: false
+    - question: "Яку традиційну страву завжди використовують для зустрічі дуже важливих гостей?"
+      explanation: "Традиція хліб-сіль на вишитому рушнику — це символ глибокої поваги."
+      options:
+        - text: "Хліб із сіллю"
+          correct: true
+        - text: "Борщ із м'ясом"
+          correct: false
+        - text: "Солодкі літні фрукти"
+          correct: false
+        - text: "Міцну каву з молоком"
+          correct: false
+    - question: "Згідно з текстом, який гарячий напій традиційно пропонують гостям вдома?"
+      explanation: "Чай є стандартним напоєм гостинності в українських домах."
+      options:
+        - text: "Чай з лимоном"
+          correct: true
+        - text: "Каву по-львівськи"
+          correct: false
+        - text: "Холодну мінеральну воду"
+          correct: false
+        - text: "Свіжий яблучний сік"
+          correct: false
+    - question: "Який рід має слово м'ясо і як це впливає на прикметник?"
+      explanation: "М'ясо — це середній рід, тому ми кажемо свіже м'ясо."
+      options:
+        - text: "Середній рід, прикметник закінчується на -е"
+          correct: true
+        - text: "Чоловічий рід, прикметник закінчується на -ий"
+          correct: false
+        - text: "Жіночий рід, прикметник закінчується на -а"
+          correct: false
+        - text: "Множина, прикметник закінчується на -і"
+          correct: false
+
+- type: unjumble
+  title: "Замовлення в ресторані"
+  instruction: "Rearrange the words to form correct sentences when ordering food."
+  items:
+    - words: ["Я", "хочу", "смачний", "борщ"]
+      answer: "Я хочу смачний борщ"
+    - words: ["Вона", "замовляє", "гарячу", "каву"]
+      answer: "Вона замовляє гарячу каву"
+    - words: ["Ми", "хочемо", "мінеральну", "воду"]
+      answer: "Ми хочемо мінеральну воду"
+    - words: ["Він", "купує", "свіжий", "хліб"]
+      answer: "Він купує свіжий хліб"
+    - words: ["Мама", "готує", "смачну", "рибу"]
+      answer: "Мама готує смачну рибу"
+    - words: ["Я", "люблю", "апельсиновий", "сік"]
+      answer: "Я люблю апельсиновий сік"
+    - words: ["Вони", "їдять", "свіжі", "овочі"]
+      answer: "Вони їдять свіжі овочі"
+    - words: ["Я", "не", "п'ю", "молоко"]
+      answer: "Я не п'ю молоко"

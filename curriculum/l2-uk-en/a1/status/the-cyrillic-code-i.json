@@ -2,15 +2,15 @@
   "module": "the-cyrillic-code-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:20:48.032501Z",
+  "last_audit": "2026-02-28T13:34:12.744643Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T01:55:23.629101Z",
-    "meta": "2026-02-28T01:51:51.990776Z",
+    "md": "2026-02-28T13:33:54.725112Z",
+    "meta": "2026-02-28T13:27:02.984542Z",
     "activities": "2026-02-22T09:50:03.383986Z",
     "vocabulary": "2026-02-26T10:56:53.939984Z",
     "plan": "2026-02-20T20:39:43.498966Z",
-    "research": "2026-02-28T01:51:51.966774Z"
+    "research": "2026-02-28T13:27:02.976516Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 2,
-      "message": "3754/2000 (raw: 3978) | pedagogy: 1 violations | immersion: 1.9% LOW (target 5-15% (M01))"
+      "status": "pass",
+      "violations": 0,
+      "message": "6488/2000 (raw: 6782)"
     },
     "activities": {
       "status": "deferred",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 1,
+    "pass_count": 3,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

@@ -5,51 +5,49 @@ content_outline:
 - section: Їжа
   words: 500
   points:
-  - Introductory English scaffolding explaining the concept of noun gender for food
-    items and how it affects adjectives.
-  - 'Vocabulary introduction with IPA for first occurrences: хліб, м''ясо, риба, овочі,
-    фрукти, каша, суп, борщ.'
-  - H3 subsection for each gender group (Чоловічий рід, Жіночий рід, Середній рід,
-    Множина) with basic matching adjectives.
-  - 'Grammar/Usage note: Explain that in Ukrainian, we ''eat'' soup (їсти суп), not
-    drink it. Provide collocations (свіжий хліб, смачний борщ).'
+  - Introduce English scaffolding to explain the concept of noun gender for food items
+    and its effect on adjectives.
+  - 'Present core food vocabulary with IPA for first occurrences: хліб, м''ясо, риба,
+    овочі, фрукти, каша, суп, борщ.'
+  - Group vocabulary by gender (Чоловічий рід, Жіночий рід, Середній рід, Множина)
+    and provide basic matching adjectives (свіжий, гаряча, смачний).
+  - 'Grammar/Usage note: Explain the Ukrainian phrasing ''to eat soup'' (їсти суп)
+    rather than ''drink soup''.'
 - section: Напої
   words: 400
   points:
-  - 'H3 for common drinks vocabulary: вода, чай, кава, сік, молоко, компот. IPA on
-    first use.'
-  - 'English scaffolding explaining the Accusative case for ordering: Я хочу... Emphasize
-    the feminine -а to -у change (кава -> каву, вода -> воду).'
-  - 'Cultural note: Contrast Ukrainian tea culture (чай з лимоном) with the deep historical
-    roots of Lviv''s coffee culture (кава по-львівськи).'
-  - 'Mini-dialogue: Ordering a drink at a cafe using the new structures.'
+  - 'Introduce common drinks vocabulary with IPA: вода, чай, кава, сік, молоко, компот.'
+  - 'Provide English scaffolding for ordering using the Accusative case: ''Я хочу...''.
+    Highlight the feminine -а to -у shift (каву, воду).'
+  - 'Cultural note: Contrast traditional Ukrainian tea culture (чай з лимоном) with
+    the historic coffee culture of Lviv (кава по-львівськи).'
+  - Include a short, authentic mini-dialogue for ordering a drink at a cafe.
 - section: Паляниця
   words: 300
   points:
-  - 'H3 on ''Паляниця'': Explain its physical form (round wheat bread) and its critical
-    role as a linguistic shibboleth during the 2022 invasion.'
-  - 'H3 on bread traditions: Explain ''хліб-сіль'' (bread and salt) hospitality and
-    the proverb «Хліб — усьому голова».'
-  - 'Decolonization note: Focus on the distinct phonetic properties of Ukrainian (soft
-    ''ц'') that make ''паляниця'' difficult for non-native speakers, highlighting
-    Ukrainian linguistic independence.'
+  - Explain the physical nature of 'паляниця' (a round wheat bread) and its critical
+    cultural role as a linguistic shibboleth during the 2022 invasion.
+  - 'Decolonization note: Focus on the independent phonetic properties of Ukrainian,
+    specifically the soft ''ц'', which makes the word difficult for non-native speakers.'
+  - Discuss Ukrainian bread traditions, including 'хліб-сіль' (bread and salt) hospitality
+    and the proverb «Хліб — усьому голова».
 - section: Мені подобається / Я не їм
   words: 400
   points:
-  - English scaffolding to explain the Dative structure 'Мені подобається' vs the
-    Nominative/Accusative 'Я люблю'.
-  - 'H3 for expressing preferences with examples: Мені подобається борщ. Я люблю каву
-    з молоком.'
-  - 'H3 for dietary restrictions and dislikes: Я не їм м''ясо. Я не п''ю молоко. У
-    мене алергія на...'
-  - Provide short 2-3 line situational dialogues expressing food preferences and restrictions
+  - Use English scaffolding to introduce the Dative structure 'Мені подобається' versus
+    the Nominative/Accusative 'Я люблю'.
+  - 'Provide clear examples expressing preferences: ''Мені подобається борщ'', ''Я
+    люблю каву з молоком''.'
+  - 'Introduce vocabulary for dietary restrictions and dislikes: ''Я не їм м''ясо''
+    (vegetarian context), ''Я не п''ю молоко'', ''У мене алергія на...''.'
+  - Present 2-3 short situational dialogues demonstrating how to express food preferences
     at a dinner table.
 - section: Практика
   words: 400
   points:
-  - 'H3: ''Читаємо меню'' - A simulated simple restaurant menu showing authentic food
-    and drink names with prices in hryvnias.'
-  - 'H3: ''Розмова'' - Conversational practice dialogues asking ''Що ти любиш їсти?''
-    and ''Яка твоя улюблена їжа?'''
-  - Ensure all practice texts remain strictly within A1 grammar bounds (Present tense,
-    Nominative/Accusative).
+  - Provide a simulated simple restaurant menu (Читаємо меню) featuring authentic
+    Ukrainian food and drink names with prices in hryvnias.
+  - Include conversational practice (Розмова) with dialogues asking 'Що ти любиш їсти?'
+    and 'Яка твоя улюблена їжа?'.
+  - Design vocabulary drills for categorization (їжа vs напої), gender sorting, and
+    basic adjective matching.

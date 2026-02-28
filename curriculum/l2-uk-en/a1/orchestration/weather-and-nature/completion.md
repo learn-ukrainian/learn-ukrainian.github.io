@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 29 — E2E
+FAIL: pipeline a1 43
 
   Module:   weather-and-nature
   Track:    a1
-  Mode:     e2e
-  Words:    3145 (target: 2000)
+  Mode:     v3
+  Words:    3140 (target: 2000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-22T23:08:16Z
+  Verdict:  FAIL
+  Date:     2026-02-28T14:46:26Z

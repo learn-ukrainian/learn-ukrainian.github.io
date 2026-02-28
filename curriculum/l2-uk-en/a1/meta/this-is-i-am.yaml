@@ -2,54 +2,50 @@ slug: this-is-i-am
 title: This Is / I Am
 word_target: 2000
 content_outline:
-- section: 'Вступ: Де дієслово «бути»?'
+- section: 'Вступ: Хто це? Що це?'
+  words: 400
+  points:
+  - Provide English scaffolding to explain the concept of simple identification (State
+    Standard §4.2.3.1).
+  - Introduce the demonstrative pronoun 'це'. Show its versatility for both people
+    and objects.
+  - Contrast 'Хто це?' (Who is this?) for living beings and 'Що це?' (What is this?)
+    for inanimate objects with 3-4 clear examples for each (e.g., Це мама. Це підручник).
+  - Include IPA pronunciation for 'хто' and 'що' on their first occurrence.
+- section: 'Презентація: Особові займенники'
+  words: 600
+  points:
+  - Present all 8 personal pronouns (я, ти, він, вона, воно, ми, ви, вони) in a clean,
+    structured table with English translations.
+  - 'Explain the ''Ви Safety Net'' in English: clearly state that ''Ви'' is mandatory
+    for strangers and elders in Ukrainian culture to show respect.'
+  - Include a cultural callout box about 'Bruderschaft' and the famous phrase 'Ми
+    з вами на брудершафт не пили!' to explain the formal-to-informal transition.
+  - Give short example sentences for each pronoun to establish context.
+- section: 'Граматика: Секрет нульової зв''язки'
+  words: 400
+  points:
+  - 'Explicitly explain the ''Zero Copula'' rule using English scaffolding: Ukrainian
+    connects subjects and predicates directly in the present tense without ''am/is/are''.'
+  - Create a visual mapping or table showing English 'I [am] a student' vs. Ukrainian
+    'Я [Ø] студент'.
+  - 'Address the ''Phantom Is'' error: explicitly warn learners not to insert ''є''
+    into these simple identity sentences.'
+- section: Робота над помилками та практика
   words: 300
   points:
-  - 'Explain the ''Zero Copula'' concept clearly: Ukrainian drops ''am/is/are'' in
-    the present tense.'
-  - 'Visual comparison: English ''I am a student'' vs. Ukrainian ''Я — студент'' (using
-    gaps/strike-through).'
-  - 'Address the ''Phantom Is'' error: explicitly warn against using ''є'' in simple
-    identification.'
-  - 'Briefly mention pro-drop nature: ''Я тут'' vs ''Тут'' (context dependent), but
-    focus on full forms first.'
-  - 'Immersion Note: Use English for these conceptual explanations.'
-- section: 'Граматика: Займенники та «нульова зв''язка»'
-  words: 700
+  - 'Address the ''It Trap'': remind learners of the gender rules from a1-07, emphasizing
+    that ''він'' and ''вона'' are used for inanimate objects, while ''воно'' is strictly
+    for neuter nouns.'
+  - Provide a mini-drill replacing nouns with correct gendered pronouns (e.g., Стіл
+    -> він, Книга -> вона).
+  - 'Show transformation examples: how to go from ''Це Іван'' to ''Він студент''.'
+- section: 'Продакшн: Хто я і Хто ви?'
+  words: 300
   points:
-  - Present the full table of Personal Pronouns (я, ти, він, вона, воно, ми, ви, вони)
-    with audio icons.
-  - 'Deep dive: The ''It'' Trap. Explain that ''він/вона'' apply to objects (stiles,
-    lamps), not just people.'
-  - 'Social Register: The ''Vi'' Safety Net. Contrast ''ти'' (friend/child) vs ''Ви''
-    (stranger/elder/group).'
-  - 'Pattern: Subject + Predicate (No Verb). Examples: ''Він — українець'', ''Ми —
-    студенти''.'
-  - 'Note on ''є'': Acknowledge it exists (definitions, philosophy) but is banned
-    in simple speech.'
-- section: 'Практикум: Хто це і що це?'
-  words: 500
-  points:
-  - 'Transformation Drills: Convert nouns to pronouns (Іван → Він, Олена → Вона, Книга
-    → Вона).'
-  - 'Drill ''Це...'': Identifying people and objects (''Хто це? Це мама.'', ''Що це?
-    Це телефон.'').'
-  - 'Scenario Analysis: ''Ти'' or ''Ви''? Present situations (meeting a boss, talking
-    to a cat, asking a policeman).'
-  - 'Gender reinforcement: Matching objects to ''він/вона/воно'' pronouns.'
-- section: 'Ваш вихід: Розкажіть про себе'
-  words: 250
-  points:
-  - 'Model a simple self-introduction: Name + Status + Location (Я Том. Я студент.
-    Я тут.).'
-  - 'Task: Introduce a friend (Це Анна. Вона тут.).'
-  - 'Q&A mechanics: ''Ти студент?'' — ''Так, я студент''.'
-- section: 'Культура: Тонкощі «Ти» і «Ви»'
-  words: 250
-  points:
-  - 'The ''Bruderschaft'' Moment: The ritual of switching to ''ти'' (drinking, kissing,
-    agreement).'
-  - 'Modern Ukraine: Young people and IT culture might use ''ти'' faster, but ''Ви''
-    is always safer.'
-  - 'Distance vs. Closeness: How language encodes social distance.'
-  - 'Proverb/Saying: A simple phrase about respect or identity.'
+  - 'Model a simple self-introduction paragraph (Name, role, nationality): e.g., ''Я
+    Джон. Я студент. Я американець''.'
+  - 'Provide two short mini-dialogues demonstrating register: one formal meeting (''Ви'')
+    and one informal meeting (''ти'').'
+  - Conclude with a brief summary list reinforcing the zero copula and the T-V register
+    distinction.

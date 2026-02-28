@@ -4,10 +4,8 @@
   "mode": "v3",
   "phases": {
     "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-28T02:45:15Z",
-      "task_id": "v3-checkpoint-daily-life-pA",
-      "mode": "full"
+      "status": "failed",
+      "ts": "2026-02-28T15:04:05Z"
     }
   }
 }

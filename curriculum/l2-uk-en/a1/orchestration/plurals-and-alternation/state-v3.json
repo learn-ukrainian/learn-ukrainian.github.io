@@ -2,12 +2,5 @@
   "track": "a1",
   "slug": "plurals-and-alternation",
   "mode": "v3",
-  "phases": {
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-28T02:29:56Z",
-      "task_id": "v3-plurals-and-alternation-pA",
-      "mode": "full"
-    }
-  }
+  "phases": {}
 }

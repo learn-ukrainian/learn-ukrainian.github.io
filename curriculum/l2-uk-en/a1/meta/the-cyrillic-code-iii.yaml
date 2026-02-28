@@ -5,44 +5,68 @@ content_outline:
 - section: Вступ (Review & New Set)
   words: 300
   points:
-  - Greet the learner and state the lesson goals; explicitly use English scaffolding
-    for clear instructions (A1 immersion level).
-  - Provide a diagnostic mini-drill to review the 15 letters from a1-01 and a1-02.
-  - Highlight the 'False Friends' (Р, Н, В, С) from previous modules to reactivate
-    prior knowledge.
-  - Introduce the 'middle block' of the alphabet (О-Х) and the two uniquely Ukrainian
-    digraphs (Дж, Дз).
+  - Explicitly use English scaffolding (A1 immersion level) to welcome the learner
+    and outline the module's objectives.
+  - Include a diagnostic mini-drill with a 5-item matching task to review the 15 letters
+    previously covered in a1-01 and a1-02.
+  - Re-highlight the 'False Friends' (Р, Н, В, С) from earlier lessons, setting up
+    the new False Friend 'Р' as a primary focus.
+  - Introduce the target set (О, П, Р, С, Т, Ф, Х) and the uniquely Ukrainian digraphs
+    (Дж, Дз) as the bridge to reading full everyday words.
 - section: Нові літери (New Letters О–Х)
   words: 700
   points:
-  - Create an H3 subsection for each new letter (О, П, Р, С, Т, Ф, Х).
-  - 'О: Emphasize the decolonized phonetic rule that unstressed О never reduces to
-    /a/ in Ukrainian.'
-  - 'П vs Р: Detail the critical contrast between Cyrillic П (/p/) and Cyrillic Р
-    (rolled /r/) to avoid English interference.'
-  - 'Ф: Add a cultural note explaining that Ф is rare in native words and appears
-    mostly in borrowings.'
-  - 'Х: Provide articulation guidance (like Scottish ''loch'') using the cultural
-    anchor word ''хліб''.'
+  - Allocate an individual H3 subsection for each of the 7 new letters (О, П, Р, С,
+    Т, Ф, Х), providing the letter shape, sound equivalent, and 2-3 examples with
+    English translations.
+  - 'For ''О'': Explain the phonological rule that unstressed О must remain a clear
+    /o/ in Ukrainian, emphasizing correct articulation without reference to Russian
+    ''akanye''.'
+  - 'For ''П'' vs ''Р'': Dedicate a specific warning box explaining the visual trap.
+    П is /p/ (Platform shape), while Р is a rolled /r/ (Roaring Engine). Provide minimal
+    pairs if possible, or distinct high-contrast examples.'
+  - 'For ''Ф'': Add a Cultural Guide note explaining that Ф is rare in native vocabulary
+    and appears primarily in international loanwords (фото, факт).'
+  - 'For ''Х'': Provide articulatory guidance (liken to Scottish ''loch'') and anchor
+    it to the culturally vital word ''хліб'', briefly explaining the ''хліб-сіль''
+    tradition.'
 - section: Диграфи (Digraphs)
   words: 400
   points:
-  - Define what a digraph is and explain that Дж and Дз represent single affricate
-    sounds, not two separate consonants.
-  - Create an H3 for Дж with pronunciation guide (/dʒ/) and examples (джерело, джаз).
-  - Create an H3 for Дз with pronunciation guide (/dz/) and examples (дзвінок, дзеркало).
-  - Frame these affricates as a beautiful and distinct feature of Ukrainian phonology.
+  - 'Define ''digraph'' in simple English: two letters working together to create
+    one single, inseparable sound.'
+  - Create an H3 subsection for 'Дж' (/dʒ/). Provide pronunciation instructions linking
+    it to the English 'j' in 'jungle', with examples like 'джерело' and 'джаз'.
+  - Create an H3 subsection for 'Дз' (/dz/). Note the lack of a direct English equivalent
+    but liken it to the 'dz' in 'adze'. Use examples like 'дзвінок'.
+  - Include a 'Patient Tutor' tip reminding learners not to split these sounds when
+    reading syllables.
 - section: Практика читання (Reading Practice)
   words: 400
   points:
-  - Provide decoding drills combining all 22 letters learned so far.
-  - 'Group vocabulary by theme: internationalisms (ресторан, транспорт, порт) and
-    daily words (пошта, хліб).'
-  - Include minimal pairs and consonant cluster practice for T, C, P, П.
-  - Recommend the Anna Ohoiko pronunciation video playlist for individual letter drilling.
+  - Construct a progressive reading drill starting with syllables (то, по, ро, со)
+    and building up to full words.
+  - Create an H3 for 'International Words' containing words like 'ресторан', 'транспорт',
+    'порт', allowing learners to easily guess the meaning after decoding.
+  - Create an H3 for 'Everyday Vocabulary' featuring 'пошта' and 'хліб'.
+  - Embed a recommendation box for the Anna Ohoiko pronunciation video playlist (PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV)
+    for independent auditory drilling.
 - section: Підсумок (Summary)
   words: 200
   points:
-  - Provide a final read-aloud paragraph incorporating all 22 letters and both digraphs.
-  - Include a self-assessment checklist (e.g., 'Can I distinguish П and Р?').
-  - Display a progress tracker showing 22 out of 33 letters mastered.
+  - Provide a concluding read-aloud paragraph consisting of 3-4 short, simple sentences
+    that incorporate all 22 letters learned so far, plus the digraphs.
+  - 'Present a self-assessment checklist: ''Can I distinguish П and Р?'', ''Can I
+    pronounce О clearly when it is not stressed?''.'
+  - Include a visual progress marker showing that the learner has now mastered 22
+    out of 33 letters.
+activity_hints:
+- type: group-sort
+  focus: Sort letters into vowels vs consonants
+  items: 12
+- type: quiz
+  focus: Letter identification and sound matching
+  items: 20
+- type: match-up
+  focus: Letter-sound pairs including digraphs
+  items: 15

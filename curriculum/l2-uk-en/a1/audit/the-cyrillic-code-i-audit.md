@@ -1,7 +1,7 @@
 # Audit Report: M01 — the-cyrillic-code-i.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-28 03:20:48
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-28 13:34:12
 
 ## Configuration
 **Type:** A1-grammar
@@ -16,23 +16,8 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[RUSSIAN_CHARACTERS]** Found Russian-only characters: э, ё, ы (lines: [93])
-  - FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
-- **[RUSSIAN_CHARACTERS]** Found Russian-only characters: э, ё, ы (lines: [93])
-  - FIX: Replace with Ukrainian equivalents: ы→и, э→е, ё→ьо/йо. These characters never appear in Ukrainian.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'the letter...'.
-  - FIX: Vary sentence structure.
-- **[COLONIAL_FRAMING]** Line 192: Reference to Russian script as comparison point — "Russian letters" positions Russian as baseline.
-  - FIX: If contrasting letter systems, name specific letters rather than 'Russian script'.
-
-## Recommendation
-**📝 UPDATE** (severity 15/100)
-
-- 4 violations (moderate)
-
 ## Gates
-- **Words:** ✅ 3754/2000 (raw: 3978)
+- **Words:** ✅ 6488/2000 (raw: 6782)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -42,9 +27,9 @@
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** ❌ 1.9% LOW (target 5-15% (M01))
+- **Immersion:** 🇺🇦 5.3% (target 5-15% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -53,9 +38,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Cyrillic Code I** | ✅ | 70 | Included in Core |
-| **Вступ** | ✅ | 652 | Included in Core |
-| **Презентація** | ✅ | 1157 | Included in Core |
-| **Практика** | ✅ | 751 | Included in Core |
-| **Культурний контекст** | ✅ | 671 | Included in Core |
-| **Підсумок та продукція** | ✅ | 453 | Included in Core |
+| **The Cyrillic Code I** | ✅ | 52 | Included in Core |
+| **Вступ** | ✅ | 786 | Included in Core |
+| **Презентація** | ✅ | 1793 | Included in Core |
+| **Практика** | ✅ | 2389 | Included in Core |
+| **Культурний контекст** | ✅ | 956 | Included in Core |
+| **Підсумок** | ✅ | 512 | Included in Core |

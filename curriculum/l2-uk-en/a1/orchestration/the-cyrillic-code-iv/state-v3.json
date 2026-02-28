@@ -5,9 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:22:41Z",
+      "ts": "2026-02-28T12:59:56Z",
       "task_id": "v3-the-cyrillic-code-iv-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T13:03:20Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T13:06:13Z",
+      "task_id": "v3-the-cyrillic-code-iv-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T13:13:06Z",
+      "attempts": 2
     }
   }
 }

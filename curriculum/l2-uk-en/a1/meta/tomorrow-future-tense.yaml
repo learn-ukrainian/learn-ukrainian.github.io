@@ -2,57 +2,46 @@ slug: tomorrow-future-tense
 title: Tomorrow - Future Tense
 word_target: 2000
 content_outline:
-- section: 'Розминка: Час летить'
-  words: 150
+- section: Вступ
+  words: 400
   points:
-  - Brief recap of Past Tense (Yesterday) to contrast with Future.
-  - Introduction of the concept of 'Tomorrow' and looking forward.
-  - 'English scaffolding: How Ukrainian future tense is simpler than English (no ''will/shall/going
-    to'' distinction in the same way).'
-- section: 'Граматика: Майбутній час (Я буду...)'
-  words: 350
+  - 'Explicit English scaffolding: Provide context on how the Ukrainian future tense
+    is elegantly simple, requiring no complex distinction between ''will'' and ''going
+    to''.'
+  - 'Contrast present, past, and future timelines: Briefly review A1-36 (Yesterday)
+    and map out where we are now versus where we will be tomorrow.'
+  - 'Cultural context: Introduce the phrase «Завтра буде новий день» as an anchor
+    for expressing Ukrainian optimism and resilience.'
+- section: Презентація граматики
+  words: 600
   points:
-  - 'Core Grammar: The Compound Future Formula (буду + infinitive).'
-  - 'Conjugation table of ''бути'' (future): буду, будеш, буде, будемо, будете, будуть.'
-  - 'Step-by-step examples: Я читаю -> Я буду читати.'
-  - 'Addressing the Common Error: Only use imperfective verbs (skip complex aspect
-    theory, just rule of thumb).'
-- section: 'Плани та наміри: Що ми будемо робити?'
-  words: 300
+  - Introduce the compound future formula (буду + infinitive) aligned with State Standard
+    §4.2.4.1.
+  - Provide a comprehensive conjugation table for the auxiliary verb 'бути' (буду,
+    будеш, буде, будемо, будете, будуть) with simple examples.
+  - 'Address the Common Learner Error (Conflict of aspects): Explicitly state the
+    rule that ''буду'' is only used with imperfective verbs. Contrast correct (''буду
+    читати'') and incorrect (''буду прочитати'') usage.'
+  - Briefly overview the synthetic future tense (працюватиму) strictly as a recognition-only
+    feature (FYI) for authentic texts, without drilling.
+- section: Лексика та культурний контекст
+  words: 600
   points:
-  - 'Expressing intent vs. simple future: ''Я хочу...'' vs ''Я буду...''.'
-  - Verb 'збиратися' (to be going to/intend) as a useful alternative.
-  - 'Cultural Hook: «Не кажи ''гоп''...» — discussion on sharing plans cautiously.'
-  - 'Collocations: збиратися додому, хотіти знати.'
-- section: 'Коли це буде? (Частина 1: Конкретний час)'
-  words: 300
+  - Introduce future time markers (завтра, післязавтра, скоро) and high-frequency
+    phrases (завтра вранці, завтра вдень).
+  - Explain the 'Genitive of Time' rule for phrases like 'наступного тижня' and 'наступного
+    року' to prevent the common error of using the Nominative case.
+  - Differentiate between expressing intentions ('хочу', 'збираюся') and definite
+    future actions ('буду').
+  - 'Integrate the cultural hook: Discuss the proverb «Не кажи ''гоп'', поки не перескочиш»
+    to explain Ukrainian cultural cautiousness regarding sharing plans.'
+- section: Практика та підсумок
+  words: 400
   points:
-  - 'Key vocabulary: завтра, післязавтра.'
-  - 'Grammar Focus: The ''Genitive of Time'' rule for ''наступний'' (наступного тижня,
-    наступного року).'
-  - 'Drill patterns: наступного понеділка vs у понеділок (future context).'
-- section: 'Коли це буде? (Частина 2: Абстрактний час)'
-  words: 250
-  points:
-  - 'Adverbs of time: скоро, незабаром, потім, пізніше.'
-  - 'Cultural Hook: «Завтра буде новий день» — optimism.'
-  - Usage examples showing word order (Скоро я буду... vs Я буду скоро...).
-- section: 'Наші плани: Вихідні та відпустка'
-  words: 300
-  points:
-  - 'Contextual application: Discussing weekend plans.'
-  - 'Vocabulary: відпустка, канікули, вихідні.'
-  - 'Collocations: мати плани, складати план.'
-  - 'Model sentences: ''Наступного літа я буду відпочивати...'''
-- section: 'Практика: Діалоги про плани'
-  words: 200
-  points:
-  - 'Dialogue 1: Short interaction about evening plans (informal).'
-  - 'Dialogue 2: Discussing vacation plans (using ''збиратися'' and ''буду'').'
-  - Highlighting natural responses.
-- section: 'Практика: Мій ідеальний день завтра'
-  words: 150
-  points:
-  - 'Narrative text: A simple story describing a planned day.'
-  - Check for understanding (What will they do first? Then?).
-  - Transition to Activity Section.
+  - Provide controlled practice dialogues focusing on weekend and evening plans, incorporating
+    collocations like 'мати плани' and 'складати план'.
+  - 'Develop a role-play scenario (Persona: ''Організатор подій'' / Event Planner)
+    where the learner actively plans a vacation or work week using the conjugated
+    forms of ''бути''.'
+  - Summarize the grammar rules, highlighting the correct usage of the auxiliary verb
+    and the genitive case for time markers.

@@ -5,9 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:25:21Z",
+      "ts": "2026-02-28T13:30:50Z",
       "task_id": "v3-stress-and-intonation-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T13:33:34Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T13:35:53Z",
+      "task_id": "v3-stress-and-intonation-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T13:42:43Z",
+      "attempts": 2
     }
   }
 }

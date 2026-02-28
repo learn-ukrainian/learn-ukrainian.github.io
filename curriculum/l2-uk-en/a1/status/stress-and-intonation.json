@@ -1,0 +1,59 @@
+{
+  "module": "stress-and-intonation",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-28T14:42:43.691238Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-28T14:42:30.610547Z",
+    "meta": "2026-02-28T14:30:50.489213Z",
+    "activities": "2026-02-28T14:35:53.645895Z",
+    "vocabulary": "2026-02-28T14:35:53.646099Z",
+    "plan": "2026-02-28T02:44:43.230267Z",
+    "research": "2026-02-28T14:30:50.484100Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "3297/2000 (raw: 3478)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

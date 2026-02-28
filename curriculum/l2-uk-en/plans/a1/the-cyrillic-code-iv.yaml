@@ -96,13 +96,13 @@ vocabulary_hints:
   - 'м''ясо (meat) — demonstrates apostrophe; collocations: ''свіже м''ясо'' (fresh meat)'
   - 'сіль (salt) — demonstrates soft sign; collocations: ''морська сіль'' (sea salt)'
 activity_hints:
-- type: watch-and-repeat
+- type: match-up
   focus: Pronunciation of 11 new characters (Ц, Ч, Ш, Щ, Й, Ю, Я, Є, Ї, Ь, apostrophe)
   items: 11
-- type: classify
+- type: group-sort
   focus: Sort into sibilants vs iotated vowels vs modifiers
   items: 12
-- type: image-to-letter
+- type: select
   focus: Emoji and image identification for new letters
   items: 8
 - type: quiz

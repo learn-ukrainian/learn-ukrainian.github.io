@@ -1,4 +1,4 @@
-PASS: pipeline a1 44
+FAIL: pipeline a1 44
 
   Module:   checkpoint-daily-life
   Track:    a1
@@ -6,5 +6,5 @@ PASS: pipeline a1 44
   Words:    0 (target: 2000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T02:45:15Z
+  Verdict:  FAIL
+  Date:     2026-02-28T15:04:05Z
