@@ -1,6 +1,6 @@
-module: b2-13
+module: b2-20
 level: B2
-sequence: 13
+sequence: 20
 slug: emphasis-and-inversion
 version: '2.0'
 title: Емфаза та інверсія
@@ -116,13 +116,13 @@ activity_hints:
   output: Model answer with analysis
 focus: grammar
 prerequisites:
-- b2-11 (Multi-clause Sentences)
-- b2-12 (Parenthetical Expressions)
+- b2-18 (Multi-clause Sentences)
+- b2-16 (Parenthetical Expressions)
 - Basic word order
 connects_to:
-- b2-14 (Stylistic Connectors)
-- 'b2-22 (Register: Literary Ukrainian)'
-- b2-25 (B2.1b Checkpoint)
+- b2-21 (Stylistic Connectors)
+- 'b2-30 (Register: Literary Ukrainian)'
+- b2-24 (Checkpoint Syntax)
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Word Order
@@ -138,7 +138,7 @@ sources:
   type: reference
   notes: B2 style and register awareness
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: B2.2
 objectives:
 - Identify and correctly use емфаза та інверсія
 - Form and apply порядок слів в українській мові

@@ -1,6 +1,6 @@
-module: b2-46
+module: b2-58
 level: B2
-sequence: 46
+sequence: 58
 slug: proverbs-nature-time-caution
 version: '2.0'
 title: 'Прислів''я II: Природа, час і обережність'
@@ -74,7 +74,7 @@ grammar:
 - Proverb structure and variation
 immersion: 100
 register: varies
-phase: B2.2 [Phraseology & Synonymy]
+phase: B2.6
 vocabulary_hints:
   required:
   - верба (willow) — сакральний символ; частотна у висловах про воду та Україну

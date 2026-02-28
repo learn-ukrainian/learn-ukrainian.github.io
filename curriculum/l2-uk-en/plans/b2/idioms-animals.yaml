@@ -1,9 +1,9 @@
-module: b2-52
+module: b2-61
 level: B2
-sequence: 52
-slug: idioms-animals-i
+sequence: 61
+slug: idioms-animals
 version: '2.0'
-title: 'Фразеологізми: Тварини I (Вовк, Собака, Кінь)'
+title: 'Фразеологізми: Тварини (Вовк, Собака, Кінь, Кіт, Миша та інші)'
 content_outline:
 - section: 'Вступ: Тваринний код української культури (Introduction: Animal Code of
     Ukrainian Culture)'
@@ -68,7 +68,11 @@ grammar:
 - Fixed expressions
 - Idiom structure and variation
 register: varies
-phase: B2.2 [Phraseology & Synonymy]
+phase: B2.6 [Lexicology]
+prerequisites:
+- b2-60 (Idioms Somatic)
+connects_to:
+- b2-62 (Idioms Nature)
 vocabulary_hints:
   required:
   - фразеологізм (idiom) — стійке сполучення слів; high frequency in literature

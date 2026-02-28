@@ -1,6 +1,6 @@
-module: b2-17
+module: b2-27
 level: B2
-sequence: 17
+sequence: 27
 slug: register-business-ukrainian
 version: '2.0'
 title: Ділова українська мова
@@ -116,14 +116,14 @@ activity_hints:
   output: Model answer with annotations
 focus: style
 prerequisites:
-- b2-15 (Register Introduction)
-- 'b2-16 (Register: Formal/Informal)'
+- b2-25 (Register Introduction)
+- 'b2-26 (Register: Formal/Informal)'
 - Basic letter writing
 connects_to:
-- 'b2-18 (Register: Academic Ukrainian)'
-- 'b2-19 (Register: Official-Legal)'
-- b2-25 (B2.1b Checkpoint)
-- b2-80 (Professional Communication I)
+- 'b2-28 (Register: Academic Ukrainian)'
+- 'b2-29 (Register: Official-Legal)'
+- b2-24 (Checkpoint Syntax)
+- b2-65 (Professional Email Basics)
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Business Communication
@@ -139,7 +139,7 @@ sources:
   type: reference
   notes: B2 workplace language requirements
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: B2.3
 objectives:
 - Understand and apply ділова українська мова
 - Analyze and evaluate ділове спілкування

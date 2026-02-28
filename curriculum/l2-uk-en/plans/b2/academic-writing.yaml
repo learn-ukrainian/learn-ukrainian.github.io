@@ -1,6 +1,6 @@
-module: b2-77
+module: b2-69
 level: B2
-sequence: 77
+sequence: 69
 slug: academic-writing
 version: '2.0'
 title: Академічне письмо
@@ -73,7 +73,7 @@ objectives:
 grammar:
 - Структура аргументативного есе
 - Використання вставних слів для зв’язку думок (отже, по-перше, з іншого боку)
-phase: B2.4 Skills & Capstone
+phase: B2.7
 vocabulary_hints:
   required:
   - теза (thesis) — сформулювати тезу, обґрунтувати тезу; High frequency academic

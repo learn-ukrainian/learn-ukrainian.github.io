@@ -1,10 +1,10 @@
-module: b2-84
+module: b2-35
 level: B2
-sequence: 84
-slug: checkpoint-register-synthesis
+sequence: 35
+slug: checkpoint-register
 version: '2.0'
-title: 'Checkpoint: Register Synthesis (Синтез регістрів)'
-subtitle: Confirm register readiness before communication skills
+title: 'Контрольна точка: регістри'
+subtitle: Checkpoint — Register System
 content_outline:
 - section: Вступ та огляд (Introduction and Overview)
   words: 400
@@ -69,7 +69,11 @@ objectives:
 - Pass final comprehensive assessment
 grammar:
 - Comprehensive B2 Grammar
-phase: B2.4 Skills & Capstone
+phase: B2.3 [Register System]
+prerequisites:
+- b2-34 (Register Practice Cross-Register Rewriting)
+connects_to:
+- b2-36 (Politics Government Vocabulary)
 vocabulary_hints:
   required:
   - чинне законодавство (current legislation) — Official style; key collocation for

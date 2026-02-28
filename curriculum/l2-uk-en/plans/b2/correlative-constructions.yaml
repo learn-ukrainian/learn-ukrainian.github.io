@@ -1,6 +1,6 @@
-module: b2-43
+module: b2-19
 level: B2
-sequence: 43
+sequence: 19
 slug: correlative-constructions
 version: '2.0'
 title: Співвідносні конструкції
@@ -69,7 +69,7 @@ grammar:
 - 'Часові корелятиви: тоді...коли, доти...поки'
 - 'Кількісні корелятиви: стільки...скільки, настільки...наскільки'
 register: науковий
-phase: B2.2 [Phraseology & Synonymy]
+phase: B2.2
 vocabulary_hints:
   required:
   - термін (term) — вживається у конструкціях 'той термін, який...'; частотний елемент

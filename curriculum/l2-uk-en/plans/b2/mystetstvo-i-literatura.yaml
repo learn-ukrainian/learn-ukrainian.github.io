@@ -1,6 +1,6 @@
-module: b2-74
+module: b2-79
 level: B2
-sequence: 74
+sequence: 79
 slug: mystetstvo-i-literatura
 version: '2.0'
 title: Мистецтво і література
@@ -73,7 +73,7 @@ objectives:
 grammar:
 - Literary register
 - Art criticism vocabulary
-phase: B2.4 Skills & Capstone
+phase: B2.8
 vocabulary_hints:
   required:
   - аналіз (analysis) — глибокий аналіз, критичний аналіз; ключовий термін для мистецтвознавства.

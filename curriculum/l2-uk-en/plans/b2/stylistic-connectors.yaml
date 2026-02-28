@@ -1,6 +1,6 @@
-module: b2-14
+module: b2-21
 level: B2
-sequence: 14
+sequence: 21
 slug: stylistic-connectors
 version: '2.0'
 title: Стилістичні сполучники
@@ -111,13 +111,13 @@ activity_hints:
   output: Model answer provided
 focus: grammar
 prerequisites:
-- b2-11 (Multi-clause Sentences)
-- b2-12 (Parenthetical Expressions)
+- b2-18 (Multi-clause Sentences)
+- b2-16 (Parenthetical Expressions)
 - Basic conjunctions (і, але, або)
 connects_to:
-- b2-15 (Register Introduction)
-- 'b2-22 (Register: Literary Ukrainian)'
-- b2-25 (B2.1b Checkpoint)
+- b2-25 (Register Introduction)
+- 'b2-30 (Register: Literary Ukrainian)'
+- b2-24 (Checkpoint Syntax)
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Connectors
@@ -133,7 +133,7 @@ sources:
   type: reference
   notes: B2 text cohesion requirements
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: B2.2
 objectives:
 - Identify and correctly use стилістичні сполучники
 - Form and apply сполучники як засіб зв'язку

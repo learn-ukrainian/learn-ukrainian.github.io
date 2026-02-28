@@ -1,7 +1,7 @@
 module: b2-03
 level: B2
 sequence: 3
-slug: impersonal-passive
+slug: b2-impersonal-passive
 version: '2.0'
 title: Безособові конструкції на -но/-то
 content_outline:
@@ -101,14 +101,9 @@ activity_hints:
   output: Model answer provided
 focus: grammar
 prerequisites:
-- b2-01 (Passive Voice System)
 - b2-02 (Past Passive Participles)
-- Accusative case mastery
 connects_to:
 - b2-04 (Reflexive Passive)
-- b2-06 (Passive in Context)
-- 'b2-19 (Register: Official/Legal)'
-- b2-10 (B2.1a Checkpoint)
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Impersonal Constructions
@@ -124,7 +119,7 @@ sources:
   type: secondary
   notes: Register characteristics and examples
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: B2.1 [Voice & Participles]
 objectives:
 - Identify and correctly use безособові конструкції на -но/-то
 - Form and apply безособовість в українській мові

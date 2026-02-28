@@ -1,5 +1,5 @@
-sequence: 86
-module: b2-86
+sequence: 66
+module: b2-66
 level: B2
 slug: professional-email-advanced
 version: '2.0'
@@ -60,7 +60,7 @@ objectives:
 - Learner understands CC/BCC etiquette and confidentiality protocols
 - Learner can write follow-up messages and acknowledgments appropriately
 - Learner can delegate tasks and coordinate complex projects via email
-phase: B2.4 Communication Skills
+phase: B2.7
 vocabulary_hints:
   required:
   - термін (term/deadline) — у визначений термін, порушити термін, подовжити термін;

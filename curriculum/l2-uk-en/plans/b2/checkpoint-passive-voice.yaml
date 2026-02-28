@@ -131,9 +131,9 @@ focus: checkpoint
 prerequisites:
 - b2-01 through b2-09 (all passive voice modules)
 connects_to:
-- b2-11 (Multi-clause Sentences)
-- b2-15 (Register Introduction)
-- b2-25 (B2.1b Checkpoint)
+- b2-18 (Multi-clause Sentences)
+- b2-25 (Register Introduction)
+- b2-24 (Checkpoint Syntax)
 module_type: checkpoint
 sources:
 - name: Ukrainian State Standard 2024 - B2 Assessment
@@ -149,7 +149,7 @@ sources:
   type: reference
   notes: Checkpoint structure and requirements
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: B2.1
 objectives:
 - Understand and apply контрольний модуль b2.1a — система пасивного стану
 - Analyze and evaluate що ми вивчили

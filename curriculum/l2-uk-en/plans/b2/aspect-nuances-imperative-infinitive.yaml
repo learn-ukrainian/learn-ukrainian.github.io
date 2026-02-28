@@ -1,6 +1,6 @@
-module: b2-42
+module: b2-41
 level: B2
-sequence: 42
+sequence: 41
 slug: aspect-nuances-imperative-infinitive
 version: '2.0'
 title: 'Відтінки виду II: наказовий спосіб та інфінітив'
@@ -72,7 +72,7 @@ grammar:
 - Prohibition with imperfective
 - Aspect in infinitive constructions
 - не можна + aspect distinction
-phase: B2.2 [Grammar Completion]
+phase: B2.5
 vocabulary_hints:
   required:
   - термін (term) — термін виконання (deadline), у визначений термін (within a specified

@@ -1,6 +1,6 @@
-module: b2-75
+module: b2-80
 level: B2
-sequence: 75
+sequence: 80
 slug: modern-diaspora
 version: '2.0'
 title: Сучасна діаспора
@@ -59,7 +59,7 @@ objectives:
 grammar:
 - Пасивні конструкції (-но/-то, -ний/-тий, -ся) у публіцистичному контексті
 - Функціональні стилі (публіцистичний vs офіційно-діловий)
-phase: B2.4 Skills & Capstone
+phase: B2.8
 vocabulary_hints:
   required:
   - термін (term) — вживати термін, визначення терміна; висока частотність у публіцистичному

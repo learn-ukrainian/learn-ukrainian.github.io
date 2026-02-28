@@ -1,6 +1,6 @@
-module: b2-67
+module: b2-51
 level: B2
-sequence: 67
+sequence: 51
 slug: advanced-conjunctions-i
 version: '2.0'
 title: 'Складні Сполучники I: Причина та Допуск'
@@ -69,7 +69,7 @@ grammar:
 - Concessive conjunctions (хоча vs незважаючи на)
 immersion: 100
 register: публіцистичний
-phase: B2.2 [Phraseology & Synonymy]
+phase: B2.5
 vocabulary_hints:
   required:
   - 'тому що (because) — нейтральний; collocations: саме тому що, основна причина

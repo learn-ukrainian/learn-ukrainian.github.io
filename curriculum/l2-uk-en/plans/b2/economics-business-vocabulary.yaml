@@ -1,6 +1,6 @@
-module: b2-28
+module: b2-38
 level: B2
-sequence: 28
+sequence: 38
 slug: economics-business-vocabulary
 version: '2.0'
 title: 'Економічна лексика: говоримо про бізнес'
@@ -66,7 +66,7 @@ grammar:
 - Business communication conventions
 - Financial news reading strategies
 register: науковий
-phase: B2.1c [Register & Domain Vocab]
+phase: B2.4
 vocabulary_hints:
   required:
   - прибуток (profit) — чистий ~, валовий ~, податок на ~; висока частотність у бізнес-реєстрі

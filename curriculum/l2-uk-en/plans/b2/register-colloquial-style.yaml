@@ -1,6 +1,6 @@
-module: b2-24
+module: b2-32
 level: B2
-sequence: 24
+sequence: 32
 slug: register-colloquial-style
 version: '2.0'
 title: Розмовний стиль
@@ -68,7 +68,7 @@ grammar:
 - 'Particles: ж/же, бо, таки'
 - 'Наповнювачі: типу, ну, от, та'
 - 'Informal interjections: ого, класно, жесть'
-phase: B2.1b [Grammar Completion]
+phase: B2.3
 vocabulary_hints:
   required:
   - типу (like/sort of) — ну типу, це типу як; high frequency filler

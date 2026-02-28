@@ -1,6 +1,6 @@
-module: b2-19
+module: b2-29
 level: B2
-sequence: 19
+sequence: 29
 slug: register-official-legal
 version: '2.0'
 title: 'Офіційно-діловий стиль: документи, закони, заяви'
@@ -118,12 +118,12 @@ activity_hints:
   output: Model answer with annotations
 focus: style
 prerequisites:
-- b2-15 (Register Introduction)
+- b2-25 (Register Introduction)
 - b2-03 (Impersonal -но/-то)
-- 'b2-17 (Register: Business Ukrainian)'
+- 'b2-27 (Register: Business Ukrainian)'
 connects_to:
-- 'b2-20 (Register: Medical Ukrainian)'
-- b2-25 (B2.1b Checkpoint)
+- 'b2-28 (Register: Academic/Technical)'
+- b2-24 (Checkpoint Syntax)
 - b2-81 (Professional Communication II)
 module_type: grammar
 sources:
@@ -140,7 +140,7 @@ sources:
   type: reference
   notes: B2 formal document comprehension
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: B2.3
 objectives:
 - 'Understand and apply офіційно-діловий стиль: документи, закони, заяви'
 - Analyze and evaluate офіційно-діловий стиль

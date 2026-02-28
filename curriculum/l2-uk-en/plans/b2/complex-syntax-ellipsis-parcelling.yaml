@@ -1,6 +1,6 @@
-module: b2-44
+module: b2-22
 level: B2
-sequence: 44
+sequence: 22
 slug: complex-syntax-ellipsis-parcelling
 version: '2.0'
 title: 'Складний синтаксис: еліпсис і парцеляція'
@@ -70,7 +70,7 @@ grammar:
 - Parcelling (парцеляція) - stylistic fragmentation with periods
 - Expressive syntax in literature and speech
 register: художній
-phase: B2.2 [Phraseology & Synonymy]
+phase: B2.2
 vocabulary_hints:
   required:
   - термін (term) — науковий термін, вживати термін; висока частотність у лінгвістичному

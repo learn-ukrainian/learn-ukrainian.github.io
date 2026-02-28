@@ -1,6 +1,6 @@
-module: b2-54
+module: b2-62
 level: B2
-sequence: 54
+sequence: 62
 slug: idioms-nature
 version: '2.0'
 title: 'Фразеологізми: Природа (Вода, Вогонь, Земля, Вітер)'
@@ -68,7 +68,7 @@ grammar:
 - Fixed expressions
 - Idiom structure and variation
 register: varies
-phase: B2.2 [Phraseology & Synonymy]
+phase: B2.6
 vocabulary_hints:
   required:
   - фразеологізм (idiom) — вживати фразеологізм, влучний фразеологізм; core term for

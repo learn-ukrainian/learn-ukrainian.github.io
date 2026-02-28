@@ -110,7 +110,7 @@ prerequisites:
 connects_to:
 - b2-09 (Participles vs Relative Clauses)
 - b2-10 (B2.1a Checkpoint)
-- 'b2-22 (Register: Literary Ukrainian)'
+- 'b2-30 (Register: Literary Ukrainian)'
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Participles
@@ -126,7 +126,7 @@ sources:
   type: reference
   notes: Official position on -лий participles
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: B2.1
 objectives:
 - Identify and correctly use активні дієприкметники минулого часу (-лий)
 - Form and apply минулі активні дієприкметники

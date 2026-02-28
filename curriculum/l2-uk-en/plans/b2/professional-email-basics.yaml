@@ -1,5 +1,5 @@
-sequence: 85
-module: b2-85
+sequence: 65
+module: b2-65
 level: B2
 slug: professional-email-basics
 version: '2.0'
@@ -76,7 +76,7 @@ grammar:
 - Formal register in written communication
 immersion: 100
 register: офіційно-діловий
-phase: B2.4
+phase: B2.7
 vocabulary_hints:
   required:
   - термін (term) — у визначений термін, термін дії, порушення термінів; висока частотність

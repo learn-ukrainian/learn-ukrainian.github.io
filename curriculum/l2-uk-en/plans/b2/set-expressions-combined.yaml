@@ -1,10 +1,10 @@
-module: b2-47
+module: b2-59
 level: B2
-sequence: 47
-slug: set-expressions-i-body-animals
+sequence: 59
+slug: set-expressions-combined
 version: '2.0'
-title: 'Сталі вирази I: Частини тіла та тварини'
-subtitle: 'Set Expressions I: Body & Animals'
+title: 'Сталі вирази: Тіло, тварини, предмети та абстракції'
+subtitle: 'Set Expressions: Body, Animals, Objects & Abstract (merged)'
 content_outline:
 - section: 'Вступ: Роль фразеологізмів у мовній компетенції (Introduction: Role of
     Phraseology)'
@@ -77,7 +77,11 @@ grammar:
 - Somatic and zoomorphic idioms
 immersion: 100
 register: varies
-phase: B2.2 [Phraseology & Synonymy]
+phase: B2.6 [Lexicology]
+prerequisites:
+- b2-58 (Proverbs Nature Time Caution)
+connects_to:
+- b2-60 (Idioms Somatic)
 vocabulary_hints:
   required:
   - термін (term) — мовознавче поняття

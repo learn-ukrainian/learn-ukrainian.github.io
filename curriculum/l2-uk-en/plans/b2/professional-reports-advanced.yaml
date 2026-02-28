@@ -1,6 +1,6 @@
-module: b2-88
+module: b2-68
 level: B2
-sequence: 88
+sequence: 68
 slug: professional-reports-advanced
 version: '2.0'
 title: 'Професійні звіти: Поглиблення'
@@ -62,7 +62,7 @@ objectives:
 - Learner can use hedging and tentative language appropriately
 - Learner can present report findings to stakeholders orally
 - Learner can critically evaluate existing reports for quality
-phase: B2.4 Communication Skills
+phase: B2.7
 vocabulary_hints:
   required:
   - Звіт (report) — подати/скласти звіт, річний звіт, звіт за результатами; висока

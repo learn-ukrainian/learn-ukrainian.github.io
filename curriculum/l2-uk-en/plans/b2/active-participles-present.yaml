@@ -123,7 +123,7 @@ prerequisites:
 connects_to:
 - b2-08 (Active Participles Past)
 - b2-09 (Participles vs Relative Clauses)
-- 'b2-22 (Register: Literary Ukrainian)'
+- 'b2-30 (Register: Literary Ukrainian)'
 - b2-10 (B2.1a Checkpoint)
 module_type: grammar
 sources:
@@ -140,7 +140,7 @@ sources:
   type: reference
   notes: Official orthography rules for participles
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: B2.1
 objectives:
 - Identify and correctly use активні дієприкметники теперішнього часу (-учий/-ючий)
 - Form and apply активні дієприкметники

@@ -1,6 +1,6 @@
-module: b2-15
+module: b2-25
 level: B2
-sequence: 15
+sequence: 25
 slug: register-introduction
 version: '2.0'
 title: Функціональні стилі мови
@@ -103,15 +103,15 @@ activity_hints:
   output: Model answers for comparison
 focus: style
 prerequisites:
-- b2-01 through b2-14 (Grammar foundations)
+- b2-01 through b2-22 (Grammar & Syntax foundations)
 - Basic understanding of formality levels
 - Connector usage
 connects_to:
-- 'b2-16 (Register: Formal/Informal)'
-- 'b2-17 (Register: Business Ukrainian)'
-- 'b2-18 (Register: Academic Ukrainian)'
-- 'b2-19 (Register: Official-Legal)'
-- b2-25 (B2.1b Checkpoint)
+- 'b2-26 (Register: Formal/Informal)'
+- 'b2-27 (Register: Business Ukrainian)'
+- 'b2-28 (Register: Academic Ukrainian)'
+- 'b2-29 (Register: Official-Legal)'
+- b2-24 (Checkpoint Syntax)
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Functional Styles
@@ -127,7 +127,7 @@ sources:
   type: reference
   notes: B2 register awareness requirements
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: B2.3
 objectives:
 - Understand and apply функціональні стилі мови
 - Analyze and evaluate що таке функціональний стиль?

@@ -276,101 +276,100 @@ levels:
   b2:
     type: core
     modules:
-      - passive-voice-system
-      - past-passive-participles
-      - impersonal-passive
-      - reflexive-passive
-      - third-person-plural-passive
-      - passive-in-context
-      - active-participles-present
-      - active-participles-past
-      - participles-vs-relative-clauses
-      - checkpoint-passive-voice
-      - multi-clause-sentences
-      - parenthetical-expressions
-      - emphasis-and-inversion
-      - stylistic-connectors
-      - register-introduction
-      - register-formal-informal
-      - register-business-ukrainian
-      - register-academic-ukrainian
-      - register-official-legal
-      - register-medical-ukrainian
-      - register-technical-scientific
-      - register-literary-ukrainian
-      - register-media-journalistic
-      - register-colloquial-style
-      - register-practice-cross-register-rewriting
-      - politics-government-vocabulary
-      - law-justice-vocabulary
-      - economics-business-vocabulary
-      - b21-integration-practice
-      - b21-checkpoint
-      - numeral-declension-time-dates
-      - numeral-declension-compound-numbers
-      - word-formation-person-suffixes
-      - word-formation-abstract-nouns
-      - word-formation-place-object-names
-      - word-formation-adjective-formation
-      - word-formation-adverbs-integration
-      - one-member-sentences
-      - register-religious-epistolary
-      - b21c-checkpoint
-      - aspect-nuances-secondary-imperfectivization
-      - aspect-nuances-imperative-infinitive
-      - correlative-constructions
-      - complex-syntax-ellipsis-parcelling
-      - proverbs-work-wisdom-character
-      - proverbs-nature-time-caution
-      - set-expressions-i-body-animals
-      - set-expressions-ii-objects-abstract
-      - idioms-body-head-face
-      - idioms-body-hands-legs
-      - idioms-body
-      - idioms-animals-i
-      - idioms-animals-ii
-      - idioms-nature
-      - synonyms-emotion
-      - synonyms-size
-      - synonyms-movement
-      - synonyms-quality
-      - synonyms-communication
-      - synonyms-character
-      - synonyms-time
-      - synonyms-place
-      - synonyms-quantity
-      - synonyms-action
-      - synonyms-state
-      - synonyms-abstract
-      - advanced-conjunctions-i
-      - advanced-conjunctions-ii
-      - integration-practice
-      - b2-checkpoint
-      - medytsyna-pohlybleno
-      - tekhnolohii-ta-shi
-      - nauka-i-doslidzhennia
-      - mystetstvo-i-literatura
-      - modern-diaspora
-      - religion-in-ukraine
-      - academic-writing
-      - text-analysis
-      - capstone-research
-      - analiz-tekstu
-      - capstone-doslidzhennya
-      - capstone-prezentatsiya
-      - b2-pidsumkovyy-ohlyad
-      - checkpoint-register-synthesis
-      - professional-email-basics
-      - professional-email-advanced
-      - professional-reports-basics
-      - professional-reports-advanced
-      - news-analysis-basics
-      - news-analysis-advanced
-      - presentation-skills-basics
-      - presentation-skills-advanced
-      - discussion-debate
-      - pluperfect-tense
-      - b2-final-exam
+      # ── Phase B2.1: Voice & Participles (1-10) ──
+      - passive-voice-system              #  1
+      - past-passive-participles          #  2
+      - b2-impersonal-passive             #  3 RENAMED (avoid A2 cross-level conflict)
+      - reflexive-passive                 #  4
+      - third-person-plural-passive       #  5
+      - passive-in-context                #  6
+      - active-participles-present        #  7
+      - active-participles-past           #  8
+      - participles-vs-relative-clauses   #  9
+      - checkpoint-passive-voice          # 10
+      # ── Phase B2.2: Syntax Mastery (11-24) — Grade 8 foundations ──
+      - phrases-word-combinations         # 11 NEW — словосполучення types
+      - predicate-types                   # 12 NEW — 3 predicate types
+      - secondary-sentence-members        # 13 NEW — додаток, означення, обставина, прикладка
+      - b2-one-member-sentences           # 14 RENAMED (avoid B1 cross-level conflict)
+      - homogeneous-members               # 15 NEW — однорідні + узагальнюючі слова
+      - parenthetical-expressions         # 16
+      - detached-members                  # 17 NEW — відокремлені члени (5 subtypes)
+      - multi-clause-sentences            # 18
+      - correlative-constructions         # 19 MOVED from old M43
+      - emphasis-and-inversion            # 20
+      - stylistic-connectors              # 21
+      - complex-syntax-ellipsis-parcelling # 22 MOVED from old M44
+      - direct-indirect-speech            # 23 NEW — пряма/непряма мова, цитування
+      - checkpoint-syntax                 # 24 NEW
+      # ── Phase B2.3: Register System (25-35) — compressed 12→10 ──
+      - register-introduction             # 25
+      - register-formal-informal          # 26
+      - register-business-ukrainian       # 27
+      - register-academic-technical       # 28 MERGED (academic + technical)
+      - register-official-legal           # 29
+      - register-literary-ukrainian       # 30
+      - register-media-journalistic       # 31
+      - register-colloquial-style         # 32
+      - register-religious-ukrainian      # 33 EXPANDED (all faiths in Ukraine)
+      - register-practice-cross-register-rewriting # 34
+      - checkpoint-register               # 35 RENAMED from checkpoint-register-synthesis
+      # ── Phase B2.4: Domain Vocabulary (36-39) ──
+      - politics-government-vocabulary    # 36
+      - law-justice-vocabulary            # 37
+      - economics-business-vocabulary     # 38
+      - checkpoint-domain                 # 39 RENAMED from b21-checkpoint
+      # ── Phase B2.5: Advanced Morphology (40-53) ──
+      - aspect-nuances-secondary-imperfectivization # 40
+      - aspect-nuances-imperative-infinitive        # 41
+      - pluperfect-tense                  # 42 MOVED from isolated old M94
+      - conditional-mood-particles        # 43 NEW — умовний спосіб + частки + вигуки
+      - numeral-declension-time-dates     # 44
+      - numeral-declension-compound-numbers # 45
+      - word-formation-person-suffixes    # 46
+      - word-formation-abstract-nouns     # 47
+      - word-formation-place-object-names # 48
+      - word-formation-adjective-formation # 49
+      - word-formation-adverbs-integration # 50
+      - advanced-conjunctions-i           # 51 MOVED from old M67
+      - advanced-conjunctions-ii          # 52 MOVED from old M68
+      - checkpoint-morphology             # 53 RENAMED from b21c-checkpoint
+      # ── Phase B2.6: Lexicology (54-64) — synonyms 12→3, phraseology 10→6 ──
+      - synonymy-types-and-rows           # 54 NEW — absolute, contextual, stylistic
+      - synonymy-in-registers             # 55 NEW — synonym selection across styles
+      - synonymy-practice-precision       # 56 NEW — precision drills
+      - proverbs-work-wisdom-character    # 57
+      - proverbs-nature-time-caution      # 58
+      - set-expressions-combined          # 59 MERGED (i + ii)
+      - idioms-somatic                    # 60 MERGED (head-face + hands-legs + body)
+      - idioms-animals                    # 61 MERGED (animals-i + animals-ii)
+      - idioms-nature                     # 62
+      - neologisms-borrowings             # 63 NEW — неологізми, запозичення
+      - checkpoint-lexicology             # 64 RENAMED from b2-checkpoint
+      # ── Phase B2.7: Communication Skills (65-76) ──
+      - professional-email-basics         # 65
+      - professional-email-advanced       # 66
+      - professional-reports-basics       # 67
+      - professional-reports-advanced     # 68
+      - academic-writing                  # 69
+      - text-analysis                     # 70
+      - news-analysis-basics              # 71
+      - news-analysis-advanced            # 72
+      - presentation-skills-basics        # 73
+      - presentation-skills-advanced      # 74
+      - discussion-debate                 # 75
+      - checkpoint-communication          # 76 NEW
+      # ── Phase B2.8: Culture & Thematic (77-81) ──
+      - tekhnolohii-ta-shi               # 77
+      - nauka-i-doslidzhennia            # 78
+      - mystetstvo-i-literatura          # 79
+      - modern-diaspora                  # 80
+      - religion-in-ukraine              # 81
+      # ── Phase B2.9: Capstone & Final (82-85) ──
+      - capstone-research                # 82
+      - capstone-prezentatsiya           # 83
+      - b2-pidsumkovyy-ohlyad           # 84
+      - b2-final-exam                    # 85
   c1:
     type: core
     modules:

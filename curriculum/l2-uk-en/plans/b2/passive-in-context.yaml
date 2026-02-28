@@ -113,7 +113,7 @@ prerequisites:
 - b2-05 (3rd Person Plural Passive)
 connects_to:
 - b2-07 (Active Participles Present)
-- b2-15 (Register Introduction)
+- b2-25 (Register Introduction)
 - b2-10 (B2.1a Checkpoint)
 module_type: grammar
 sources:
@@ -130,7 +130,7 @@ sources:
   type: reference
   notes: B2 register awareness requirements
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: B2.1
 objectives:
 - Identify and correctly use пасив у контексті — вибір за регістром
 - Form and apply регістр і пасив

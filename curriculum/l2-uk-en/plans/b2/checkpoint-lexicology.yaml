@@ -1,10 +1,10 @@
-module: b2-70
+module: b2-64
 level: B2
-sequence: 70
-slug: b2-checkpoint
+sequence: 64
+slug: checkpoint-lexicology
 version: '2.0'
-title: Контрольна точка B2.2
-subtitle: B2.2 Checkpoint
+title: 'Контрольна точка: лексикологія'
+subtitle: Checkpoint — Lexicology
 content_outline:
 - section: Вступ та організація (Introduction and Organization)
   words: 400
@@ -64,7 +64,11 @@ grammar:
 - Review of M31-M69 grammar topics
 immersion: 100
 register: академічний
-phase: B2.2 [Phraseology & Synonymy]
+phase: B2.6 [Lexicology]
+prerequisites:
+- b2-63 (Neologisms Borrowings)
+connects_to:
+- b2-65 (Professional Email Basics)
 vocabulary_hints:
   required:
   - термін (term) — вживання у науковому та офіційному регістрах

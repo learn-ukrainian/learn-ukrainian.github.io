@@ -103,7 +103,7 @@ prerequisites:
 - Dative case mastery
 connects_to:
 - b2-06 (Passive in Context)
-- 'b2-24 (Register: Colloquial Style)'
+- 'b2-32 (Register: Colloquial Style)'
 - b2-10 (B2.1a Checkpoint)
 module_type: grammar
 sources:
@@ -120,7 +120,7 @@ sources:
   type: reference
   notes: B2 speaking fluency expectations
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: B2.1
 objectives:
 - Identify and correctly use пасив третьою особою множини
 - Form and apply найрозмовніший пасив

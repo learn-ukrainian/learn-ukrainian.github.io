@@ -1,6 +1,6 @@
-module: b2-95
+module: b2-42
 level: B2
-sequence: 95
+sequence: 42
 slug: pluperfect-tense
 version: '2.0'
 title: Давноминулий час
@@ -118,11 +118,11 @@ activity_hints:
 - type: match-up
   focus: Match temporal sequence to correct tense pair
   items: 12
-phase: B2.4 Communication Skills
+phase: B2.5
 prerequisites:
-- b2-93 (Discussion & Debate)
+- b2-75 (Discussion & Debate)
 connects_to:
-- b2-96 (B2 Final Exam)
+- b2-85 (B2 Final Exam)
 register: літературний
 immersion: 100% Ukrainian
 persona:

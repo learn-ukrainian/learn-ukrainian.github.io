@@ -1,6 +1,6 @@
-module: b2-35
+module: b2-48
 level: B2
-sequence: 35
+sequence: 48
 slug: word-formation-place-object-names
 version: '2.0'
 title: 'Словотворення: назви місць та об''єктів'
@@ -71,7 +71,7 @@ grammar:
 - Derivational morphology for place names
 immersion: 100
 register: науковий
-phase: B2.1c [Grammar Completion]
+phase: B2.5
 vocabulary_hints:
   required:
   - термін (term) — наукова назва поняття; часто вживається з дієсловом 'визначати'

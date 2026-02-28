@@ -107,8 +107,8 @@ prerequisites:
 - Relative clause formation
 connects_to:
 - b2-10 (B2.1a Checkpoint)
-- b2-11 (Multi-clause Sentences)
-- 'b2-22 (Register: Literary Ukrainian)'
+- b2-18 (Multi-clause Sentences)
+- 'b2-30 (Register: Literary Ukrainian)'
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Syntax
@@ -124,7 +124,7 @@ sources:
   type: reference
   notes: B2 complex sentence requirements
 immersion: 100% Ukrainian
-phase: B2.1a [Passive Voice]
+phase: B2.1
 objectives:
 - Identify and correctly use дієприкметники проти підрядних речень
 - Form and apply два способи вираження ознаки за дією

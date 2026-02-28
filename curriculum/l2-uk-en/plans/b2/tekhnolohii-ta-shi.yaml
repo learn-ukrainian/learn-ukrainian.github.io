@@ -1,6 +1,6 @@
-module: b2-72
+module: b2-77
 level: B2
-sequence: 72
+sequence: 77
 slug: tekhnolohii-ta-shi
 version: '2.0'
 title: Технології та ШІ
@@ -63,7 +63,7 @@ objectives:
 grammar:
 - Technical register
 - Professional terminology
-phase: B2.4 Skills & Capstone
+phase: B2.8
 vocabulary_hints:
   required:
   - застосунок (app) — мобільний застосунок, встановити застосунок; основний нормативний

@@ -1,6 +1,6 @@
-module: b2-11
+module: b2-18
 level: B2
-sequence: 11
+sequence: 18
 slug: multi-clause-sentences
 version: '2.0'
 title: Багатоскладні речення
@@ -122,9 +122,9 @@ prerequisites:
 - Simple sentence structure
 - Basic conjunctions
 connects_to:
-- b2-12 (Parenthetical Expressions)
-- b2-14 (Stylistic Connectors)
-- b2-25 (B2.1b Checkpoint)
+- b2-16 (Parenthetical Expressions)
+- b2-21 (Stylistic Connectors)
+- b2-24 (Checkpoint Syntax)
 module_type: grammar
 sources:
 - name: Ukrainian State Standard 2024 - Syntax
@@ -140,7 +140,7 @@ sources:
   type: reference
   notes: B2 complex sentence requirements
 immersion: 100% Ukrainian
-phase: B2.1b [Participles & Register Intro]
+phase: B2.2
 objectives:
 - Identify and correctly use багатоскладні речення
 - Form and apply багатоскладні речення

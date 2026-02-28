@@ -1,6 +1,6 @@
-module: b2-25
+module: b2-34
 level: B2
-sequence: 25
+sequence: 34
 slug: register-practice-cross-register-rewriting
 version: '2.0'
 title: 'Регістрова практика: Перенесення тексту між стилями'
@@ -60,7 +60,7 @@ grammar:
 - register-transformation
 - style-adaptation
 - cross-register-writing
-phase: B2
+phase: B2.3
 vocabulary_hints:
   required:
   - термін (term) — науковий термін, вживати термін; висока частотність у науковому

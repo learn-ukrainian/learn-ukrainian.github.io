@@ -1,10 +1,10 @@
-module: b2-40
+module: b2-53
 level: B2
-sequence: 40
-slug: b21c-checkpoint
+sequence: 53
+slug: checkpoint-morphology
 version: '2.0'
-title: 'Контрольна точка B2.1c: Числівники, словотвір та синтаксис'
-subtitle: 'B2.1c Checkpoint: Numerals, Word Formation & Syntax'
+title: 'Контрольна точка: морфологія'
+subtitle: Checkpoint — Advanced Morphology
 content_outline:
 - section: 'Вступ та огляд: Контрольна точка B2.1c (Introduction & Overview: B2.1c
     Checkpoint)'
@@ -67,7 +67,11 @@ grammar:
 - Religious and epistolary register review
 immersion: 100
 register: varies
-phase: B2.1c [Checkpoint]
+phase: B2.5 [Advanced Morphology]
+prerequisites:
+- b2-52 (Advanced Conjunctions II)
+connects_to:
+- b2-54 (Synonymy Types and Rows)
 vocabulary_hints:
   required:
   - термін (term) — науковий термін, вживати термін, визначення терміна; термін придатності

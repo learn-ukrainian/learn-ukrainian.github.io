@@ -1,6 +1,6 @@
-module: b2-90
+module: b2-72
 level: B2
-sequence: 90
+sequence: 72
 slug: news-analysis-advanced
 version: '2.0'
 title: 'Аналіз новин: Поглиблено'
@@ -67,7 +67,7 @@ grammar:
 - Конструкції хеджування та модальності
 immersion: 100
 register: публіцистичний
-phase: B2.4 Communication Skills
+phase: B2.7
 vocabulary_hints:
   required:
   - упередженість (bias) — редакційна/політична упередженість; упереджене ставлення
