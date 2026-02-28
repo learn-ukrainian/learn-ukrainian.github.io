@@ -1,4 +1,4 @@
-PASS: pipeline b1 42
+FAIL: pipeline b1 42
 
   Module:   reported-statements
   Track:    b1
@@ -6,5 +6,5 @@ PASS: pipeline b1 42
   Words:    4848 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T08:41:37Z
+  Verdict:  FAIL
+  Date:     2026-02-28T12:20:08Z

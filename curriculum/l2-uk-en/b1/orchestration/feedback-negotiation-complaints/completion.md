@@ -1,4 +1,4 @@
-PASS: pipeline b1 99
+FAIL: pipeline b1 99
 
   Module:   feedback-negotiation-complaints
   Track:    b1
@@ -6,5 +6,5 @@ PASS: pipeline b1 99
   Words:    7602 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T08:53:42Z
+  Verdict:  FAIL
+  Date:     2026-02-28T12:20:14Z

@@ -1,4 +1,4 @@
-PASS: pipeline b1 43
+FAIL: pipeline b1 43
 
   Module:   reported-questions-commands
   Track:    b1
@@ -6,5 +6,5 @@ PASS: pipeline b1 43
   Words:    5799 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T08:41:40Z
+  Verdict:  FAIL
+  Date:     2026-02-28T12:20:09Z

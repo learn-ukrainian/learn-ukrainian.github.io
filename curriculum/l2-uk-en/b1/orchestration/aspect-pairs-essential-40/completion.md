@@ -1,4 +1,4 @@
-PASS: pipeline b1 14
+FAIL: pipeline b1 14
 
   Module:   aspect-pairs-essential-40
   Track:    b1
@@ -6,5 +6,5 @@ PASS: pipeline b1 14
   Words:    4829 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-28T08:40:04Z
+  Verdict:  FAIL
+  Date:     2026-02-28T12:20:06Z

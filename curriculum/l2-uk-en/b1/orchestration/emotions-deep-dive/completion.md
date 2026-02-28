@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 64 — E2E
+FAIL: pipeline b1 75
 
   Module:   emotions-deep-dive
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    5862 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-24T23:05:45Z
+  Verdict:  FAIL
+  Date:     2026-02-28T12:20:12Z

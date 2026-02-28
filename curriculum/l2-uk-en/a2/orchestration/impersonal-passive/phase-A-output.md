@@ -1,34 +1,36 @@
 ===RESEARCH_START===
-
 # Дослідження: Impersonal Passive Forms
 
 ## State Standard Reference
-The specific syntactic construction "-но/-то" is not explicitly codified in the A2 morphology section of the `UKRAINIAN-STATE-STANDARD-2024.txt` (the explicit grammatical term "безособові речення" appears at B2/C1 levels). However, this module perfectly aligns with the A2 Thematic Catalogue (§3) covering "послуги", "купівля", and "подорожі", and fulfills the communicative intention of reading public signs, digital interfaces, and labels. These forms are treated here as high-frequency lexicalized items essential for A2 functional literacy.
+§4.2.2.1: "Називний відмінок: суб’єкт активної дії..."
+Alignment: The Ukrainian State Standard 2024 mapping file links passive constructions to §4.2.2.1 (Nominative case expanded usage). However, reviewing the original text of §4.2.2.1 (lines 1258-1263) shows no explicit mention of the passive voice; it focuses on active subjects and identification. Impersonal passives (-но/-то) and participles are formally introduced at the B2 level (§4.1.3.1). Because these forms are highly frequent in environmental print (signs, labels), they are taught receptively and for functional literacy at A2 to meet real-world communicative needs.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| зроблено | Very High (environmental print, products) | Зроблено в Україні (Made in Ukraine) |
-| відкрито / закрито | Very High (physical signs) | Магазин відкрито/закрито (Shop open/closed) |
-| заборонено | High (official signs, warnings) | Вхід заборонено (Entry forbidden), Курити заборонено |
-| надіслано | High (digital interfaces) | Повідомлення надіслано (Message sent) |
-| написано | High (publishing, media) | Написано українською (Written in Ukrainian) |
+| зроблено | Very High (Corpus/Real world) | Зроблено в Україні, добре зроблено |
+| закрито | Very High (Signage) | Магазин закрито, двері закрито |
+| відкрито | Very High (Signage) | Відкрито цілодобово, рахунок відкрито |
+| заборонено | High (Signage/Official) | Вхід заборонено, палити заборонено |
+| написано | High (Media/Books) | Написано українською, написано від руки |
+| засновано | High (Business/History) | Засновано у 2014 році, компанію засновано |
 
 ## Cultural Hooks
-1. **«Зроблено в Україні»**: This phrase has become a powerful symbol of resilience, quality, and national pride, especially since 2014 and further amplified post-2022. It is actively promoted by Ukrainian businesses to support the local economy.
-2. **Physical Door Signs**: In Ukrainian cities, it is still very common for shops and cafes to have a reversible physical placard on the door reading «ВІДКРИТО» on one side and «ЗАКРИТО» on the other.
+1. "Зроблено в Україні" (Made in Ukraine) is a powerful cultural brand that signifies economic resilience, national identity, and support for local businesses, especially prominent after 2014 and 2022.
+2. The -но/-то forms are ubiquitous in Ukrainian public spaces for signage and instructions. They offer a polite, objective way to state a fact (e.g., "Вхід заборонено") without needing an active agent, framing the rule as a universal state rather than a personal command.
 
 ## Common Learner Errors
-1. **Adjectival Agreement Error**: Learners often try to make the impersonal passive agree with the noun (e.g., saying *"Кава зроблена"* or *"Замовлена доставлена"* instead of *Каву зроблено* / *Замовлення доставлено*).
-2. **Overusing the active voice for signs**: Direct translation from English can lead learners to formulate clunky active sentences instead of the natural Ukrainian impersonal state.
+1. **Adjective Agreement Confusion**: Learners treat the -но/-то form as an adjective and try to decline it to match the noun (e.g., saying *"замовлена доставлена"* instead of "замовлення доставлено"). This happens because English passive participles ("delivered") act like adjectives.
+2. **Imperfective Verbs**: Learners try to form -но/-то from imperfective verbs. Since these constructions emphasize a completed state or result, they are almost exclusively formed from perfective verbs.
 
 ## Cross-References
-- Builds on: A2 perfective verb aspect, A2 verb conjugation.
+- Builds on: a2-73 (Passive Participles), A2 perfective verb aspect, A2 verb conjugation.
 - Prepares for: a2-75 (Gerunds Introduction).
 
-## Notes for Content Writing (Decolonized Framing)
-- **Crucial Decolonization Point**: Emphasize that the `-но/-то` construction is a hallmark of authentic, natural Ukrainian syntax. In contrast to the heavy reliance on reflexive passives (verbs with *-ся*) in Russian officialese, Ukrainian naturally prefers the impersonal `-но/-то` form to report completed actions and states. We must actively teach this as the "proper Ukrainian way" to express these ideas, steering learners away from calquing Russian-style *-ся* passives.
-
+## Notes for Content Writing
+- Decolonized framing: Treat the -но/-то construction as an elegant, native feature of Ukrainian syntactic style, preferring impersonal objective statements for official contexts. Do not draw comparisons to Russian short adjectives.
+- The immersion band is 65-75% (Band 2). Ensure abstract grammar concepts (impersonal vs. adjective) are explained in English, while examples and dialogues remain in Ukrainian.
+- Avoid Russianisms in examples (e.g., use *отримано* instead of *получено*).
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
@@ -36,51 +38,50 @@ content_outline:
   - section: "Вступ: Написи навколо нас"
     words: 500
     points:
-      - "[English Scaffolding]: Explicitly introduce the grammatical concept of the impersonal passive state in English before providing Ukrainian examples, as per A2 immersion Band 2."
-      - "Cultural hook: Ukrainian environmental print (signs, apps, labels) uses -но/-то heavily. Introduce 'Магазин закрито' and 'Вхід заборонено'."
-      - "Functional literacy goal: Explain that mastering these forms allows learners to decode real-world Ukrainian independently."
-      - "Key contrast: Establish that these forms report a state or completed result impersonally — there is no subject, and no agent is required."
+      - "[English Scaffolding]: Explicitly explain the abstract grammatical concept of the 'impersonal passive state' in English before showing Ukrainian examples. Clarify that it reports a state or completed action impersonally—without a subject."
+      - "Cultural hook: Introduce the concept of environmental print in Ukraine. Provide visual examples of common signs like «Магазин закрито» and «Вхід заборонено»."
+      - "Establish the functional literacy goal: learning to independently decode shop signs, app notifications, official notices, and product labels."
   - section: "Утворення форм на -но/-то"
     words: 600
     points:
-      - "Pattern 1 (verbs in -ати/-яти): зробити → зроблено, написати → написано. Explain the rule: drop the infinitive -и and add -но."
-      - "Pattern 2 (verbs in -ити/-іти): побудувати → побудовано. Explain the vowel change and suffix -ено."
-      - "Pattern 3 (consonant roots in -ти): знайти → знайдено, привезти → привезено."
-      - "Aspect gatekeeper rule: Clearly state that these forms are derived exclusively from perfective verbs because they indicate a completed result."
+      - "Provide the rule for Pattern 1 (-ати/-яти verbs): drop the infinitive -и and add -но (e.g., зробити → зроблено, написати → написано). Provide 3-4 clear examples with English translations."
+      - "Provide the rule for Pattern 2 (-ити/-іти verbs): explain the vowel change and the suffix -ено (e.g., побудувати → побудовано). Include a simple paradigm table."
+      - "Provide the rule for Pattern 3 (consonant roots in -ти): add -ено/-дено (e.g., знайти → знайдено, привезти → привезено). Mention the irregular -то suffix for certain verbs (відкрити → відкрито, закрити → закрито)."
+      - "Explicitly state the Aspect Gatekeeper Rule: these forms are derived exclusively from perfective verbs because they indicate a completed result."
   - section: "Форма на -но/-то чи дієприкметник?"
     words: 600
     points:
-      - "Critical distinction: Emphasize that -но/-то is INVARIABLE. It never changes for gender, number, or case."
-      - "Contrastive examples: 'Магазин закрито' (impersonal state: it is closed right now) vs 'Закритий магазин' (descriptive adjective: a closed shop)."
-      - "Syntactic position: Note that -но/-то acts as the predicate (usually at the end), while the participle sits next to the noun it modifies."
-      - "Learner error alert: Explicitly warn against combining two adjectives (e.g., *'Замовлена доставлена'*) and teach the correct form ('Замовлення доставлено')."
+      - "Critical distinction: Emphasize that -но/-то forms are INVARIABLE predicates. They never change for gender, number, or case, unlike participles which are adjectives."
+      - "Create a contrastive table: «Магазин закрито» (impersonal state, predicate at the end) vs. «Закритий магазин» (descriptive adjective modifying a noun)."
+      - "Syntactic position note: Show that -но/-то typically appears at the end of the clause as the predicate."
+      - "Learner error alert: Warn against combining two adjectives (*«Замовлена доставлена»*) and provide the correct functional phrase («Замовлення доставлено»)."
   - section: "Національна ідентичність: «Зроблено в Україні»"
     words: 500
     points:
-      - "Cultural context: Discuss 'Зроблено в Україні' as a brand, a marker of national identity, and economic resilience."
-      - "Language and the Instrumental case: Teach the pattern 'написано українською' (written in Ukrainian), common in books and digital metadata."
-      - "Years and the Locative case: Teach the pattern 'засновано у 2014 році' (founded in 2014), common for NGOs, companies, and apps."
-      - "Showcase patriotic and commercial applications: 'знято в Україні' (film credits), product certifications."
+      - "Discuss «Зроблено в Україні» as a brand and a marker of national identity and economic resilience. Present this as a purely Ukrainian cultural phenomenon."
+      - "Grammar in context: Teach the instrumental case pattern for languages («написано українською» — written in Ukrainian), highlighting its use in book colophons and metadata."
+      - "Grammar in context: Teach the locative case pattern for years («засновано у 2014 році» — founded in 2014) for company and NGO profiles."
+      - "Provide a realistic dialogue or reading snippet featuring film credits («знято в Україні») and product certifications."
   - section: "Читання вивісок та етикеток"
     words: 400
     points:
-      - "Physical sign vocabulary: Drill 'Вхід заборонено', 'Вихід закрито'."
-      - "Digital and app notifications: Drill 'Повідомлення надіслано', 'Файл завантажено', 'Акаунт підтверджено', 'Оплату прийнято'."
-      - "Official/Bureaucratic register: Note words like 'підписано' and 'скасовано', explaining that Ukrainian prefers this over active voice in official texts."
-      - "Recipes and instructions: Explain forms like 'нарізано дрібно', 'посолено за смаком' in contexts without a stated agent."
-  - section: "Практика та підсумок"
+      - "Present a visual-style list of physical signs: «Вхід заборонено», «Вихід закрито», «Зачинено на ремонт» with Ukrainian explanations."
+      - "List common digital/app notifications: «Повідомлення надіслано», «Файл завантажено», «Оплату прийнято», «Акаунт підтверджено»."
+      - "Explain the official bureaucratic register: why Ukrainian prefers these passive forms over active voice in administrative texts (e.g., «затверджено», «скасовано»)."
+      - "Provide examples from recipes or instructions: «нарізано дрібно», «посолено за смаком» in contexts without a stated agent."
+  - section: "Практика"
     words: 400
     points:
-      - "Transformation drill concept: Prompt learners to mentally transform active sentences ('Вони зробили замовлення') into impersonal ones ('Замовлення зроблено')."
-      - "Identification practice: Contrast physical signs vs. adjectival descriptions."
-      - "Summary: Recap -но/-то as the 'done-ness stamp' that is invariable, perfective, and acts only as a predicate."
+      - "Transformation drill concept: Prompt learners to mentally transform active sentences («Вони зробили замовлення») into impersonal ones («Замовлення зроблено»)."
+      - "Identification practice: Present a mix of signs and descriptive phrases; ask the learner to identify whether it's an impersonal -но/-то state or a participial adjective."
+      - "Summary: Recap the -но/-то construction as an invariable, perfective 'done-ness stamp' that acts strictly as a predicate."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
 **Phase**: Phase A: Meta + Research (Core)
-**Step**: Researching State Standard mapping for A2
+**Step**: Full Phase A
 **Friction Type**: STATE_STANDARD_NOT_FOUND
-**Raw Error**: The specific term "-но/-то" or "безособові речення" is not explicitly listed in the A2 section of the state standard text (it appears later at B2/C1).
-**Self-Correction**: I verified that the communicative intent perfectly aligns with A2 themes ("купівля", "послуги", environmental print). I noted this honest finding in the research block and justified the module's inclusion based on lexical necessity and thematic catalogues rather than morphological strictness.
-**Proposed Tooling Fix**: N/A. The mapping file description for A2 cases (`subject in passive`) was slightly ambiguous, but the workaround of checking thematic alignment was sufficient.
+**Raw Error**: None
+**Self-Correction**: The mapping file pointed to §4.2.2.1 for A2 passive constructions, but reading lines 1258-1263 of the State Standard revealed no explicit mention of the passive voice (it focuses on active subjects). I noted this discrepancy honestly in the research output and explained that while formally a B2 topic (§4.1.3.1), it is taught at A2 for functional literacy.
+**Proposed Tooling Fix**: Update `docs/l2-uk-en/state-standard-2024-mapping.yaml` to either reflect that the A2 passive requirement is functional/lexical rather than morphological, or map it to a more accurate paragraph if available.
 ===FRICTION_END===

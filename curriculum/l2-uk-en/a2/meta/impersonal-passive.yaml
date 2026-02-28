@@ -5,62 +5,67 @@ content_outline:
 - section: 'Вступ: Написи навколо нас'
   words: 500
   points:
-  - '[English Scaffolding]: Explicitly introduce the grammatical concept of the impersonal
-    passive state in English before providing Ukrainian examples, as per A2 immersion
-    Band 2.'
-  - 'Cultural hook: Ukrainian environmental print (signs, apps, labels) uses -но/-то
-    heavily. Introduce ''Магазин закрито'' and ''Вхід заборонено''.'
-  - 'Functional literacy goal: Explain that mastering these forms allows learners
-    to decode real-world Ukrainian independently.'
-  - 'Key contrast: Establish that these forms report a state or completed result impersonally
-    — there is no subject, and no agent is required.'
+  - '[English Scaffolding]: Explicitly explain the abstract grammatical concept of
+    the ''impersonal passive state'' in English before showing Ukrainian examples.
+    Clarify that it reports a state or completed action impersonally—without a subject.'
+  - 'Cultural hook: Introduce the concept of environmental print in Ukraine. Provide
+    visual examples of common signs like «Магазин закрито» and «Вхід заборонено».'
+  - 'Establish the functional literacy goal: learning to independently decode shop
+    signs, app notifications, official notices, and product labels.'
 - section: Утворення форм на -но/-то
   words: 600
   points:
-  - 'Pattern 1 (verbs in -ати/-яти): зробити → зроблено, написати → написано. Explain
-    the rule: drop the infinitive -и and add -но.'
-  - 'Pattern 2 (verbs in -ити/-іти): побудувати → побудовано. Explain the vowel change
-    and suffix -ено.'
-  - 'Pattern 3 (consonant roots in -ти): знайти → знайдено, привезти → привезено.'
-  - 'Aspect gatekeeper rule: Clearly state that these forms are derived exclusively
+  - 'Provide the rule for Pattern 1 (-ати/-яти verbs): drop the infinitive -и and
+    add -но (e.g., зробити → зроблено, написати → написано). Provide 3-4 clear examples
+    with English translations.'
+  - 'Provide the rule for Pattern 2 (-ити/-іти verbs): explain the vowel change and
+    the suffix -ено (e.g., побудувати → побудовано). Include a simple paradigm table.'
+  - 'Provide the rule for Pattern 3 (consonant roots in -ти): add -ено/-дено (e.g.,
+    знайти → знайдено, привезти → привезено). Mention the irregular -то suffix for
+    certain verbs (відкрити → відкрито, закрити → закрито).'
+  - 'Explicitly state the Aspect Gatekeeper Rule: these forms are derived exclusively
     from perfective verbs because they indicate a completed result.'
 - section: Форма на -но/-то чи дієприкметник?
   words: 600
   points:
-  - 'Critical distinction: Emphasize that -но/-то is INVARIABLE. It never changes
-    for gender, number, or case.'
-  - 'Contrastive examples: ''Магазин закрито'' (impersonal state: it is closed right
-    now) vs ''Закритий магазин'' (descriptive adjective: a closed shop).'
-  - 'Syntactic position: Note that -но/-то acts as the predicate (usually at the end),
-    while the participle sits next to the noun it modifies.'
-  - 'Learner error alert: Explicitly warn against combining two adjectives (e.g.,
-    *''Замовлена доставлена''*) and teach the correct form (''Замовлення доставлено'').'
+  - 'Critical distinction: Emphasize that -но/-то forms are INVARIABLE predicates.
+    They never change for gender, number, or case, unlike participles which are adjectives.'
+  - 'Create a contrastive table: «Магазин закрито» (impersonal state, predicate at
+    the end) vs. «Закритий магазин» (descriptive adjective modifying a noun).'
+  - 'Syntactic position note: Show that -но/-то typically appears at the end of the
+    clause as the predicate.'
+  - 'Learner error alert: Warn against combining two adjectives (*«Замовлена доставлена»*)
+    and provide the correct functional phrase («Замовлення доставлено»).'
 - section: 'Національна ідентичність: «Зроблено в Україні»'
   words: 500
   points:
-  - 'Cultural context: Discuss ''Зроблено в Україні'' as a brand, a marker of national
-    identity, and economic resilience.'
-  - 'Language and the Instrumental case: Teach the pattern ''написано українською''
-    (written in Ukrainian), common in books and digital metadata.'
-  - 'Years and the Locative case: Teach the pattern ''засновано у 2014 році'' (founded
-    in 2014), common for NGOs, companies, and apps.'
-  - 'Showcase patriotic and commercial applications: ''знято в Україні'' (film credits),
-    product certifications.'
+  - Discuss «Зроблено в Україні» as a brand and a marker of national identity and
+    economic resilience. Present this as a purely Ukrainian cultural phenomenon.
+  - 'Grammar in context: Teach the instrumental case pattern for languages («написано
+    українською» — written in Ukrainian), highlighting its use in book colophons and
+    metadata.'
+  - 'Grammar in context: Teach the locative case pattern for years («засновано у 2014
+    році» — founded in 2014) for company and NGO profiles.'
+  - Provide a realistic dialogue or reading snippet featuring film credits («знято
+    в Україні») and product certifications.
 - section: Читання вивісок та етикеток
   words: 400
   points:
-  - 'Physical sign vocabulary: Drill ''Вхід заборонено'', ''Вихід закрито''.'
-  - 'Digital and app notifications: Drill ''Повідомлення надіслано'', ''Файл завантажено'',
-    ''Акаунт підтверджено'', ''Оплату прийнято''.'
-  - 'Official/Bureaucratic register: Note words like ''підписано'' and ''скасовано'',
-    explaining that Ukrainian prefers this over active voice in official texts.'
-  - 'Recipes and instructions: Explain forms like ''нарізано дрібно'', ''посолено
-    за смаком'' in contexts without a stated agent.'
-- section: Практика та підсумок
+  - 'Present a visual-style list of physical signs: «Вхід заборонено», «Вихід закрито»,
+    «Зачинено на ремонт» with Ukrainian explanations.'
+  - 'List common digital/app notifications: «Повідомлення надіслано», «Файл завантажено»,
+    «Оплату прийнято», «Акаунт підтверджено».'
+  - 'Explain the official bureaucratic register: why Ukrainian prefers these passive
+    forms over active voice in administrative texts (e.g., «затверджено», «скасовано»).'
+  - 'Provide examples from recipes or instructions: «нарізано дрібно», «посолено за
+    смаком» in contexts without a stated agent.'
+- section: Практика
   words: 400
   points:
   - 'Transformation drill concept: Prompt learners to mentally transform active sentences
-    (''Вони зробили замовлення'') into impersonal ones (''Замовлення зроблено'').'
-  - 'Identification practice: Contrast physical signs vs. adjectival descriptions.'
-  - 'Summary: Recap -но/-то as the ''done-ness stamp'' that is invariable, perfective,
-    and acts only as a predicate.'
+    («Вони зробили замовлення») into impersonal ones («Замовлення зроблено»).'
+  - 'Identification practice: Present a mix of signs and descriptive phrases; ask
+    the learner to identify whether it''s an impersonal -но/-то state or a participial
+    adjective.'
+  - 'Summary: Recap the -но/-то construction as an invariable, perfective ''done-ness
+    stamp'' that acts strictly as a predicate.'
