@@ -34,10 +34,10 @@ npm run pipeline l2-uk-en a1 5
 npm run generate:json l2-uk-en a1 5
 ```
 
-**Note:** HTML validation requires Docusaurus dev server running:
+**Note:** HTML validation requires Astro Starlight dev server running:
 
 ```bash
-cd docusaurus && pnpm start  # In separate terminal
+npm run dev:starlight  # In separate terminal
 ```
 
 ### Step 1: Audit Module
@@ -568,7 +568,7 @@ This command:
 | `validate_meta_yaml.py`   | Meta YAML schema validation    | `.venv/bin/python scripts/validate_meta_yaml.py --level lit` |
 | `manifest_utils.py`       | Manifest validation & lookup   | `.venv/bin/python scripts/manifest_utils.py validate`        |
 | `validate_plan_config.py` | Plan vs config.py validation   | `.venv/bin/python scripts/validate_plan_config.py b1`        |
-| `assess_research.py`     | Research quality & upgrade      | `.venv/bin/python scripts/assess_research.py hist --upgrade-process` |
+| `assess_research.py`     | Research quality & upgrade      | `.venv/bin/python scripts/assess_research.py hist --upgrade` |
 | `enrich_research_quotes.py` | Convert `"..."` → `«»` in research files | `.venv/bin/python scripts/enrich_research_quotes.py --apply --tracks istorio` |
 | `enrich_research_gaps.py`   | Close deterministic research gaps (quotes, sections) | `.venv/bin/python scripts/enrich_research_gaps.py --apply` |
 
@@ -611,7 +611,7 @@ npm run pipeline l2-uk-en a1        # Validate entire level
 npm run pipeline l2-uk-en a1 5      # Validate single module
 ```
 
-**Requires:** Docusaurus dev server running (`cd docusaurus && pnpm start`)
+**Requires:** Astro Starlight dev server running (`npm run dev:starlight`)
 
 ---
 
@@ -721,8 +721,8 @@ npm run validate:html l2-uk-en a1 5 # Validate single module
 When the dev server is not running, validation skips gracefully with exit code 0:
 
 ```
-ℹ️  Docusaurus dev server not running - skipping HTML validation
-   To enable: cd docusaurus && pnpm start
+ℹ️  Starlight dev server not running - skipping HTML validation
+   To enable: npm run dev:starlight
 ```
 
 This allows the pipeline to continue without failing.
@@ -749,7 +749,7 @@ Or with issues:
 
 **Requires:**
 
-- Docusaurus dev server running (`cd docusaurus && pnpm start`)
+- Astro Starlight dev server running (`npm run dev:starlight`)
 - Playwright installed (`playwright install`)
 
 ---
@@ -1989,7 +1989,7 @@ The FastAPI server (`scripts/api/main.py`) exposes batch state as REST endpoints
 **Start the server:**
 
 ```bash
-npm run api            # Start on port 8090
+npm run api            # Start on port 8765
 npm run api:reload     # Start with auto-reload (development)
 ```
 
@@ -2057,46 +2057,38 @@ npm run status:all             # Generate all levels
 
 ### assess_research.py
 
-**Purpose:** Assess research quality across tracks, identify gaps, and auto-upgrade weak research.
+**Purpose:** Research quality assessment and upgrade pipeline.
 
-**Usage:**
+**Workflow (run in order):**
 
 ```bash
-# Quality table (tracks with a rubric)
-.venv/bin/python scripts/assess_research.py hist
+# 1. Assess — see current quality
 .venv/bin/python scripts/assess_research.py a1
 
-# Single module detail
-.venv/bin/python scripts/assess_research.py hist 5
+# 2. Upgrade — regenerate research below 9/10 (retries up to 3x)
+.venv/bin/python scripts/assess_research.py a1 --upgrade
 
-# Only modules with gaps
-.venv/bin/python scripts/assess_research.py hist --gaps
+# 3. Enrich — enrich plans from 9+ research
+.venv/bin/python scripts/assess_research.py a1 --enrich
 
-# Coverage only (tracks without a rubric)
-.venv/bin/python scripts/assess_research.py b1
-
-# All tracks overview
-.venv/bin/python scripts/assess_research.py --all
-
-# JSON output
-.venv/bin/python scripts/assess_research.py hist --json
-
-# Refresh queue (research upgraded, content stale)
-.venv/bin/python scripts/assess_research.py a1 --refresh-queue
-.venv/bin/python scripts/assess_research.py a1 --process           # rebuild stale modules
-
-# Upgrade queue (research below score threshold)
-.venv/bin/python scripts/assess_research.py hist --upgrade                  # list modules below 9/10
-.venv/bin/python scripts/assess_research.py hist --upgrade --min-score 8    # custom threshold
-.venv/bin/python scripts/assess_research.py hist --upgrade-process          # regenerate weak research
-
-# Enrich plans from 9+ research
-.venv/bin/python scripts/assess_research.py bio --enrich-plans
+# 4. Refresh — rebuild content for modules with upgraded research
+.venv/bin/python scripts/assess_research.py a1 --refresh
 ```
 
-**Self-healing retries:** `--upgrade-process` retries each module up to 3 attempts (`MAX_RESEARCH_UPGRADE_RETRIES`). Hard failures (build error, timeout, missing file) stop retries immediately. Ctrl+C exits cleanly with a progress summary.
+**Other options:**
 
-**v3 integration:** after a successful upgrade, `--upgrade-process` automatically clears Phase A from `state-v3.json` for that module. This forces `build_module_v3.py` to regenerate the meta outline from the improved research on the next run. Modules whose research wasn't upgraded keep their Phase A cached.
+```bash
+.venv/bin/python scripts/assess_research.py a1 5          # single module detail
+.venv/bin/python scripts/assess_research.py a1 --gaps     # only modules with gaps
+.venv/bin/python scripts/assess_research.py --all         # all tracks overview
+.venv/bin/python scripts/assess_research.py a1 --json     # JSON output
+.venv/bin/python scripts/assess_research.py a1 --upgrade --dry-run      # preview without building
+.venv/bin/python scripts/assess_research.py a1 --upgrade --min-score 8  # custom threshold
+```
+
+**Self-healing retries:** `--upgrade` retries each module up to 3 attempts. Hard failures (build error, timeout, missing file) stop retries immediately. Ctrl+C exits cleanly with a progress summary.
+
+**v3 integration:** after a successful upgrade, `--upgrade` automatically clears Phase A from `state-v3.json` for that module, forcing meta outline regeneration from the improved research on next build.
 
 ### enrich_research_quotes.py
 
@@ -2135,10 +2127,10 @@ npm run status:all             # Generate all levels
 .venv/bin/python scripts/assess_research.py bio --gaps
 
 # 3. Upgrade weak research (auto-resets v3 Phase A for upgraded modules)
-.venv/bin/python scripts/assess_research.py bio --upgrade-process
+.venv/bin/python scripts/assess_research.py bio --upgrade
 
 # 4. Enrich plans from 9+ research
-.venv/bin/python scripts/assess_research.py bio --enrich-plans
+.venv/bin/python scripts/assess_research.py bio --enrich
 
 # 5. Full build — Phase A cached for passing modules, re-runs for upgraded ones
 .venv/bin/python scripts/build_module_v3.py bio --all
@@ -2503,7 +2495,7 @@ npm run playgrounds:build     # Build HTML with embedded data
 npm run playgrounds           # Full rebuild + open in browser
 
 # Development
-cd docusaurus && pnpm start    # Start Docusaurus dev server (for HTML validation)
+npm run dev:starlight          # Start Astro Starlight dev server (for HTML validation)
 ```
 
 ---
@@ -2636,7 +2628,7 @@ npm run vocab:rebuild
 npm run validate:mdx l2-uk-en a1 5
 
 # Full validation (requires dev server)
-cd docusaurus && pnpm start  # In terminal 1
+npm run dev:starlight  # In terminal 1
 npm run pipeline l2-uk-en a1 5  # In terminal 2
 ```
 

@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
 """
-CLI tool for research quality assessment.
+Research quality assessment and upgrade pipeline.
 
-Usage:
-  .venv/bin/python scripts/assess_research.py hist                # quality table (has rubric)
-  .venv/bin/python scripts/assess_research.py hist 5              # single module
-  .venv/bin/python scripts/assess_research.py hist --gaps         # only modules with gaps
-  .venv/bin/python scripts/assess_research.py a1                     # quality table (has rubric)
-  .venv/bin/python scripts/assess_research.py b1                     # coverage only (no rubric)
-  .venv/bin/python scripts/assess_research.py --all                  # all tracks overview
-  .venv/bin/python scripts/assess_research.py hist --json         # JSON output
-  .venv/bin/python scripts/assess_research.py a1 --refresh-queue     # modules needing content refresh
-  .venv/bin/python scripts/assess_research.py a1 --process          # rebuild all stale modules
-  .venv/bin/python scripts/assess_research.py hist --upgrade     # research below 9/10
-  .venv/bin/python scripts/assess_research.py hist --upgrade-process  # regenerate weak research (retries up to 3x)
-  .venv/bin/python scripts/assess_research.py hist --upgrade --min-score 8  # custom threshold
-  .venv/bin/python scripts/assess_research.py a1 --enrich-plans    # enrich plans from 9+ research
+Workflow (run in order):
+  1. Assess:   .venv/bin/python scripts/assess_research.py a1
+  2. Upgrade:  .venv/bin/python scripts/assess_research.py a1 --upgrade
+  3. Enrich:   .venv/bin/python scripts/assess_research.py a1 --enrich
+  4. Refresh:  .venv/bin/python scripts/assess_research.py a1 --refresh
 
---upgrade-process retries each module up to MAX_RESEARCH_UPGRADE_RETRIES (3) times.
-Hard failures (build error, timeout, missing file) stop retries for that module immediately.
+Other:
+  .venv/bin/python scripts/assess_research.py a1 5             # single module detail
+  .venv/bin/python scripts/assess_research.py a1 --gaps        # only modules with gaps
+  .venv/bin/python scripts/assess_research.py --all            # all tracks overview
+  .venv/bin/python scripts/assess_research.py a1 --json        # JSON output
+
+Flags:
+  --dry-run       Preview what would be done (works with --upgrade, --refresh)
+  --min-score N   Score threshold (default: 9)
 """
 
 import argparse
@@ -29,11 +27,20 @@ from pathlib import Path
 # Add scripts/ to path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import yaml
+from research_quality import (
+    DIMENSION_SHORT_LABELS,
+    assess_research_compat,
+    find_research_path,
+    get_dimensions,
+    get_rubric,
+)
+
 
 def _clear_v3_phase_a(track_id: str, slug: str) -> bool:
     """Clear Phase A from state-v3.json so build_module_v3 re-runs it with improved research.
 
-    Called after --upgrade-process successfully upgrades a module's research to 9+.
+    Called after --upgrade successfully upgrades a module's research to 9+.
     Without this, v3 would skip Phase A (still marked complete) and use a stale
     meta outline generated from the old weak research.
     """
@@ -49,18 +56,9 @@ def _clear_v3_phase_a(track_id: str, slug: str) -> bool:
         if cleared is not None:
             state_file.write_text(json.dumps(state, indent=2, ensure_ascii=False), "utf-8")
             return True
-    except Exception:
-        pass
+    except (json.JSONDecodeError, OSError) as e:
+        print(f"Warning: Could not clear v3 phase A for {track_id}/{slug}: {e}", file=sys.stderr)
     return False
-
-import yaml
-from research_quality import (
-    DIMENSION_SHORT_LABELS,
-    assess_research_compat,
-    find_research_path,
-    get_dimensions,
-    get_rubric,
-)
 
 # Project paths
 SCRIPTS_DIR = Path(__file__).resolve().parent
@@ -93,6 +91,10 @@ TRACKS = [
     {"id": "oes", "name": "OES", "path": "oes"},
     {"id": "ruth", "name": "RUTH", "path": "ruth"},
 ]
+
+
+def _get_track_name(track_id: str) -> str:
+    return next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
 
 
 def _load_manifest() -> dict:
@@ -174,13 +176,13 @@ def _colored(text: str, quality: str | None) -> str:
     return f"{color}{text}{RESET}" if color else text
 
 
-def _render_quality_table(track_id: str, results: list[dict], show_gaps: bool = False):
+def _render_quality_table(track_id: str, results: list[dict], manifest: dict, show_gaps: bool = False):
     """Render a quality table for tracks with a rubric."""
     rubric_name = get_rubric(track_id)
     dim_names = get_dimensions(rubric_name)
     dim_labels = [DIMENSION_SHORT_LABELS.get(d, d[:3]) for d in dim_names]
 
-    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    track_name = _get_track_name(track_id)
     print(f"\n{BOLD}{track_name} Research Quality ({rubric_name} rubric){RESET}")
     print("\u2550" * 90)
 
@@ -243,12 +245,10 @@ def _render_quality_table(track_id: str, results: list[dict], show_gaps: bool = 
 
     print("\u2550" * 90)
     avg = f"{score_sum / total:.1f}" if total > 0 else "0"
-    total_modules = len([r for r in _all_results if r["info"] is not None]) if '_all_results' in dir() else total
     summary_parts = []
     for label in ["exemplary", "solid", "adequate", "thin", "stub"]:
         if counts.get(label, 0) > 0:
             summary_parts.append(f"{counts[label]} {label}")
-    manifest = _load_manifest()
     module_count = len(manifest.get("levels", {}).get(track_id, {}).get("modules", []))
     print(f"Summary: {', '.join(summary_parts)} | {total}/{module_count} researched | avg {avg}/10")
     print()
@@ -256,7 +256,7 @@ def _render_quality_table(track_id: str, results: list[dict], show_gaps: bool = 
 
 def _render_coverage_only(track_id: str, results: list[dict]):
     """Render coverage-only output for tracks without a rubric."""
-    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    track_name = _get_track_name(track_id)
     researched = [r for r in results if r["info"] is not None]
     total = len(results)
     pct = f"{len(researched) / total * 100:.1f}" if total > 0 else "0"
@@ -341,7 +341,7 @@ def _build_refresh_queue(results: list[dict]) -> list[dict]:
 
 def _render_refresh_queue(track_id: str, results: list[dict]):
     """Render modules where content refresh is recommended (research upgraded, content stale)."""
-    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    track_name = _get_track_name(track_id)
     queue = _build_refresh_queue(results)
 
     print(f"\n{BOLD}{track_name} Refresh Queue (research upgraded, content stale){RESET}")
@@ -379,7 +379,7 @@ def _process_refresh_queue(track_id: str, results: list[dict]):
         print("No modules need content refresh.")
         return
 
-    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    track_name = _get_track_name(track_id)
     total = len(queue)
     print(f"\n{BOLD}{track_name}: Processing {total} module(s){RESET}")
     print("\u2550" * 70)
@@ -439,7 +439,7 @@ def _build_upgrade_queue(results: list[dict], min_score: int = 9) -> list[dict]:
 
 def _render_upgrade_queue(track_id: str, results: list[dict], min_score: int = 9):
     """Render modules with research below min_score threshold."""
-    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    track_name = _get_track_name(track_id)
     queue = _build_upgrade_queue(results, min_score)
 
     print(f"\n{BOLD}{track_name} Upgrade Queue (research below {min_score}/10){RESET}")
@@ -481,7 +481,7 @@ def _process_upgrade_queue(track_id: str, results: list[dict], min_score: int = 
         print(f"All modules at {min_score}/10+. Nothing to upgrade.")
         return
 
-    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    track_name = _get_track_name(track_id)
     total = len(queue)
     max_attempts = MAX_RESEARCH_UPGRADE_RETRIES
     print(f"\n{BOLD}{track_name}: Upgrading research for {total} module(s) (max {max_attempts} attempts each){RESET}")
@@ -637,7 +637,7 @@ def _process_enrich_plans(track_id: str, results: list[dict], min_score: int = 9
                 continue
             queue.append(r)
 
-    track_name = next((t["name"] for t in TRACKS if t["id"] == track_id), track_id.upper())
+    track_name = _get_track_name(track_id)
     if not queue:
         print(f"No {track_name} modules need enrichment ({skipped} already enriched).")
         return
@@ -684,16 +684,29 @@ def _process_enrich_plans(track_id: str, results: list[dict], min_score: int = 9
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Research quality assessment")
-    parser.add_argument("track", nargs="?", help="Track ID (e.g. hist, a1)")
-    parser.add_argument("num", nargs="?", type=int, help="Module number")
+    epilog = """\
+Example workflow:
+  assess_research.py a1                  # 1. See quality table
+  assess_research.py a1 --upgrade        # 2. Regenerate research below 9/10
+  assess_research.py a1 --enrich         # 3. Enrich plans from 9+ research
+  assess_research.py a1 --refresh        # 4. Rebuild stale content
+
+Add --dry-run to preview without making changes:
+  assess_research.py a1 --upgrade --dry-run
+"""
+    parser = argparse.ArgumentParser(
+        description="Research quality assessment and upgrade pipeline",
+        epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("track", nargs="?", help="Track ID (e.g. hist, a1, b1)")
+    parser.add_argument("num", nargs="?", type=int, help="Module number (for single-module detail)")
+    parser.add_argument("--upgrade", action="store_true", help="Regenerate research below --min-score (retries up to 3x)")
+    parser.add_argument("--enrich", action="store_true", help="Enrich plans from research at --min-score or above")
+    parser.add_argument("--refresh", action="store_true", help="Rebuild content for modules with upgraded research")
+    parser.add_argument("--dry-run", action="store_true", help="Preview what would be done (no builds)")
+    parser.add_argument("--min-score", type=int, default=9, help="Score threshold (default: 9)")
     parser.add_argument("--gaps", action="store_true", help="Only show modules with gaps")
-    parser.add_argument("--refresh-queue", action="store_true", help="List modules where content refresh is recommended")
-    parser.add_argument("--process", action="store_true", help="Process the refresh queue (run build_module_v3.py --refresh for each)")
-    parser.add_argument("--upgrade", action="store_true", help="List modules with research below --min-score")
-    parser.add_argument("--upgrade-process", action="store_true", help="Regenerate research for modules below --min-score")
-    parser.add_argument("--min-score", type=int, default=9, help="Minimum research score target (default: 9)")
-    parser.add_argument("--enrich-plans", action="store_true", help="Enrich plans for modules with research at --min-score or above")
     parser.add_argument("--json", action="store_true", help="JSON output")
     parser.add_argument("--all", action="store_true", help="Overview of all tracks")
     args = parser.parse_args()
@@ -735,29 +748,20 @@ def main():
 
     results = _scan_track(track_id, manifest)
 
-    if getattr(args, "enrich_plans", False):
-        min_score = getattr(args, "min_score", 9)
-        _process_enrich_plans(track_id, results, min_score)
+    if args.upgrade:
+        _render_upgrade_queue(track_id, results, args.min_score)
+        if not args.dry_run:
+            _process_upgrade_queue(track_id, results, args.min_score)
         return
 
-    if getattr(args, "upgrade_process", False):
-        min_score = getattr(args, "min_score", 9)
-        _render_upgrade_queue(track_id, results, min_score)
-        _process_upgrade_queue(track_id, results, min_score)
+    if args.enrich:
+        _process_enrich_plans(track_id, results, args.min_score)
         return
 
-    if getattr(args, "upgrade", False):
-        min_score = getattr(args, "min_score", 9)
-        _render_upgrade_queue(track_id, results, min_score)
-        return
-
-    if getattr(args, "process", False):
+    if args.refresh:
         _render_refresh_queue(track_id, results)
-        _process_refresh_queue(track_id, results)
-        return
-
-    if getattr(args, "refresh_queue", False):
-        _render_refresh_queue(track_id, results)
+        if not args.dry_run:
+            _process_refresh_queue(track_id, results)
         return
 
     if args.num:
@@ -781,7 +785,7 @@ def main():
 
     rubric_name = get_rubric(track_id)
     if rubric_name:
-        _render_quality_table(track_id, results, show_gaps=args.gaps)
+        _render_quality_table(track_id, results, manifest, show_gaps=args.gaps)
     else:
         _render_coverage_only(track_id, results)
 

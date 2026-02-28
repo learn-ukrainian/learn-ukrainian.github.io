@@ -413,6 +413,7 @@ WAVE_4_SCHOLARLY = [
 ]
 
 WAVES = {
+    0: ("Foundations (Slovo, PVL, Samovydets)", []),
     1: ("OES Chronicles & Legal", WAVE_1_OES),
     2: ("RUTH Chronicles, Grammars & Lexicons", WAVE_2_RUTH_CHRONICLES),
     3: ("RUTH Vernacular Literature & Admin Docs", WAVE_3_RUTH_VERNACULAR),
