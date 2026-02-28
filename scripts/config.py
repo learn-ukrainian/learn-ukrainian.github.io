@@ -14,25 +14,25 @@ from typing import Dict, Any
 TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
     # --- Core Tracks (Beginner/Intermediate) ---
     "a1": {
-        "model": "gemini-3-flash-preview",
+        "model": "gemini-3.1-flash-preview",
         "word_floor": 2000,
         "persona": "The Helpful Neighbor",
         "immersion_range": [0.10, 0.50],
     },
     "a2": {
-        "model": "gemini-3-flash-preview",
+        "model": "gemini-3.1-flash-preview",
         "word_floor": 2500,
         "persona": "The Cultural Guide",
         "immersion_range": [0.50, 0.90],
     },
     "b1": {
-        "model": "gemini-3-flash-preview",
+        "model": "gemini-3.1-flash-preview",
         "word_floor": 3000,
         "persona": "The Storyteller",
         "immersion_range": [0.85, 1.0],
     },
     "b2": {
-        "model": "gemini-3-flash-preview",
+        "model": "gemini-3.1-flash-preview",
         "word_floor": 3500,
         "persona": "The Urbanist",
         "immersion_range": [0.95, 1.0],
@@ -40,25 +40,25 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
     
     # --- Seminar Tracks (Advanced/Scholar) ---
     "hist": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 4000,
         "persona": "The Decolonizer",
         "immersion_range": [0.95, 1.0],
     },
     "istorio": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Sensory Historian",
         "immersion_range": [1.0, 1.0],
     },
     "bio": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Humanist Biographer",
         "immersion_range": [1.0, 1.0],
     },
     "lit": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Stylistic Critic",
         "immersion_range": [1.0, 1.0],
@@ -66,55 +66,55 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
     
     # --- Specialized Literature Tracks ---
     "lit-war": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Trauma Analyst",
         "immersion_range": [1.0, 1.0],
     },
     "lit-essay": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Intellectual Historian",
         "immersion_range": [1.0, 1.0],
     },
     "lit-fantastika": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The World-Builder",
         "immersion_range": [1.0, 1.0],
     },
     "lit-hist-fic": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Historical Narratologist",
         "immersion_range": [1.0, 1.0],
     },
     "lit-humor": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Irony Analyst",
         "immersion_range": [1.0, 1.0],
     },
     "lit-youth": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Childhood Scholar",
         "immersion_range": [1.0, 1.0],
     },
     "lit-doc": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Witness Documentarian",
         "immersion_range": [1.0, 1.0],
     },
     "lit-drama": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Avant-Garde Playwright",
         "immersion_range": [1.0, 1.0],
     },
     "lit-crimea": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Crimean Narratologist",
         "immersion_range": [1.0, 1.0],
@@ -122,25 +122,25 @@ TRACK_CONFIG: Dict[str, Dict[str, Any]] = {
     
     # --- Scholar Tracks (Ancient/Professional) ---
     "ruth": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Baroque Scholar",
         "immersion_range": [0.97, 1.0],
     },
     "oes": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Paleographer",
         "immersion_range": [0.97, 1.0],
     },
     "b2-pro": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 4000,
         "persona": "The Professional Coach",
         "immersion_range": [0.95, 1.0],
     },
     "c1-pro": {
-        "model": "gemini-3-pro-preview",
+        "model": "gemini-3.1-pro-preview",
         "word_floor": 5000,
         "persona": "The Corporate Strategist",
         "immersion_range": [1.0, 1.0],
@@ -174,7 +174,7 @@ def get_next_turn(current_turn: float) -> float:
 def get_config(track: str) -> Dict[str, Any]:
     """Retrieves config for a specific track, falling back to default core config."""
     return TRACK_CONFIG.get(track, {
-        "model": "gemini-3-flash-preview",
+        "model": "gemini-3.1-flash-preview",
         "word_floor": 2500,
         "persona": "The Helpful Neighbor",
         "immersion_range": [0.5, 1.0],

@@ -485,7 +485,7 @@ def send_message(content: str, task_id: str = None, msg_type: str = "response", 
     Args:
         from_llm: Agent family (gemini, claude) - for routing
         to_llm: Target agent family - for routing
-        from_model: Exact model ID (e.g., 'claude-opus-4-5-20251101', 'gemini-3-flash-preview')
+        from_model: Exact model ID (e.g., 'claude-opus-4-5-20251101', 'gemini-3.1-flash-preview')
         to_model: Target model ID
         quiet: If True, suppress printing to stdout
     """
@@ -635,11 +635,11 @@ def _detect_model_error(stderr: str, model: str) -> str | None:
     return None
 
 
-def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None, skip_model_check: bool = False, allow_write: bool = False, delimiters: str = None):
+def ask_gemini(content: str, task_id: str = None, msg_type: str = "query", data: str = None, model: str = "gemini-3.1-flash-preview", from_model: str = None, async_mode: bool = False, stdout_only: bool = False, output_path: str = None, extract_tags: list = None, skip_model_check: bool = False, allow_write: bool = False, delimiters: str = None):
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     Args:
-        model: Gemini model to use (default: gemini-3-flash-preview)
+        model: Gemini model to use (default: gemini-3.1-flash-preview)
         from_model: Exact model ID of sender (e.g., 'claude-opus-4-5-20251101')
         async_mode: If True, just queue message without invoking Gemini CLI.
                    Auto-enabled for 'handoff' type messages (complex tasks).
@@ -826,7 +826,7 @@ def get_conversation(task_id: str):
             print(f"\n... [{len(content) - 500} more characters]")
         print()
 
-def process_and_respond(message_id: int, model: str = "gemini-3-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None, allow_write: bool = False, delimiters: str = None):
+def process_and_respond(message_id: int, model: str = "gemini-3.1-flash-preview", fire_and_forget: bool = False, no_timeout: bool = False, stdout_only: bool = False, output_path: str = None, allow_write: bool = False, delimiters: str = None):
     """Read message, process with Gemini CLI, send response.
 
     Runs in sync mode by default (15 min timeout). On any failure, sends an
@@ -1565,7 +1565,7 @@ def interactive_mode():
             print(f"Error: {e}")
 
 
-def process_all_gemini(model: str = "gemini-3-flash-preview"):
+def process_all_gemini(model: str = "gemini-3.1-flash-preview"):
     """Process ALL unread messages for Gemini in batch."""
     conn = get_db()
     cursor = conn.cursor()
@@ -1688,7 +1688,7 @@ def main():
     # process (for Gemini)
     proc_parser = subparsers.add_parser("process", help="Process message with Gemini and respond")
     proc_parser.add_argument("message_id", type=int, help="Message ID to process")
-    proc_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model")
+    proc_parser.add_argument("--model", default="gemini-3.1-flash-preview", help="Gemini model")
     proc_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
                              help="Run sync without timeout (used internally by fire-and-forget)")
 
@@ -1723,7 +1723,7 @@ def main():
     ask_gemini_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
     ask_gemini_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_gemini_parser.add_argument("--data", help="Path to data file to attach")
-    ask_gemini_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model to use (also used as to_model)")
+    ask_gemini_parser.add_argument("--model", default="gemini-3.1-flash-preview", help="Gemini model to use (also used as to_model)")
     ask_gemini_parser.add_argument("--from-model", dest="from_model",
                                    help="Exact sender model ID (e.g., claude-opus-4-5-20251101)")
     ask_gemini_parser.add_argument("--async", dest="async_mode", action="store_true",
@@ -1746,7 +1746,7 @@ def main():
 
     # process-all (batch process all unread for Gemini)
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
-    proc_all_parser.add_argument("--model", default="gemini-3-flash-preview", help="Gemini model")
+    proc_all_parser.add_argument("--model", default="gemini-3.1-flash-preview", help="Gemini model")
 
     # process-claude-all (batch process all unread for Claude)
     proc_claude_all_parser = subparsers.add_parser("process-claude-all", help="Process ALL unread messages with Claude")
@@ -1755,7 +1755,7 @@ def main():
 
     # check-model (pre-flight model availability test)
     check_model_parser = subparsers.add_parser("check-model", help="Check if a Gemini model is available")
-    check_model_parser.add_argument("model", help="Model name (e.g., gemini-3-pro-preview)")
+    check_model_parser.add_argument("model", help="Model name (e.g., gemini-3.1-pro-preview)")
 
     # cleanup
     cleanup_parser = subparsers.add_parser("cleanup", help="Clean stuck broker state (stale PIDs, ancient messages)")

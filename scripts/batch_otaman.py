@@ -254,7 +254,7 @@ def dispatch_otaman(track_name: str, num: int, slug: str,
     """Dispatch a single module to the Gemini Otaman.
 
     Calls: ask-gemini "/otaman {track} {num}" --task-id otaman-{slug}
-           --allow-write --model gemini-3-pro-preview
+           --allow-write --model gemini-3.1-pro-preview
 
     Returns dict with success, returncode, duration_s, quota_hit, stderr.
     """
@@ -265,7 +265,7 @@ def dispatch_otaman(track_name: str, num: int, slug: str,
         f"otaman {track_name} {num}",
         "--task-id", task_id,
         "--allow-write",
-        "--model", "gemini-3-pro-preview",
+        "--model", "gemini-3.1-pro-preview",
         "--stdout-only",
     ]
 

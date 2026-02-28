@@ -22,8 +22,8 @@ PHASES_DIR = PROJECT_ROOT / "claude_extensions" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
 
 # Model Tiering — Gemini
-FLASH_MODEL = "gemini-3-flash-preview"
-PRO_MODEL = "gemini-3-pro-preview"
+FLASH_MODEL = "gemini-3.1-flash-preview"
+PRO_MODEL = "gemini-3.1-pro-preview"
 
 # Model Tiering — Claude (used by build_module_v3.py --use-claude phases)
 # Change these to switch models across the entire pipeline without touching CLI flags.

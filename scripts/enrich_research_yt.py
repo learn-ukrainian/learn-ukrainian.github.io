@@ -111,7 +111,7 @@ TRANSCRIPT:
     ok, response = dispatch_gemini(
         prompt=prompt,
         task_id="yt-enrich",
-        model="gemini-3-pro-preview",
+        model="gemini-3.1-pro-preview",
         stdout_only=True,
         timeout=300
     )

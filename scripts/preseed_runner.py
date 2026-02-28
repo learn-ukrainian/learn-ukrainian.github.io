@@ -13,7 +13,7 @@ Usage:
     .venv/bin/python scripts/preseed_runner.py wave2 lit lit-essay lit-war
 
     # Control parallelism and model
-    .venv/bin/python scripts/preseed_runner.py wave2 all --slots 3 --model gemini-3-pro-preview
+    .venv/bin/python scripts/preseed_runner.py wave2 all --slots 3 --model gemini-3.1-pro-preview
 
     # Dry run
     .venv/bin/python scripts/preseed_runner.py wave2 all --dry-run
@@ -286,7 +286,7 @@ Examples:
   %(prog)s wave2 all                          # All remaining tracks, 2 Gemini slots
   %(prog)s wave2 lit lit-essay                 # Specific tracks
   %(prog)s wave2 all --slots 3                 # 3 parallel slots
-  %(prog)s wave2 all --model gemini-3-pro-preview  # Different model
+  %(prog)s wave2 all --model gemini-3.1-pro-preview  # Different model
   %(prog)s status                              # Show remaining research counts
   %(prog)s wave2 all --dry-run                 # Preview without running
         """
