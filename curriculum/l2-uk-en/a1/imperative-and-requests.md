@@ -20,24 +20,24 @@ The imperative mood is a special grammatical form of the verb. We use this form 
 > In some cultures, direct commands sound rude or aggressive. This is not true in Ukrainian culture! Using the imperative mood is the standard, culturally appropriate way to ask for things. It does not sound bossy at all when used correctly.
 
 ### Форми «Ти» та «Ви»
-В українській мові є дві головні форми. Перша форма — це «ти». Друга форма — це «ви». Ваш вибір залежить від соціальної ситуації. Форма «ти» потрібна для друзів. Ми також використовуємо її для дітей. Форма «ви» потрібна для незнайомих людей. Ми використовуємо її для групи людей.
+Українська мова має дві головні форми. Перша форма — це «ти». Друга форма — це «ви». Ваш вибір залежить від соціальної ситуації. Форма «ти» потрібна для друзів. Ми також використовуємо її для дітей. Форма «ви» потрібна для незнайомих людей. Ми використовуємо її для групи людей.
 In the Ukrainian language, there are two main grammatical forms for the imperative mood. The first form is for **ти** (informal, singular). The second form is for **ви** (formal, singular or plural). Your choice always depends entirely on the social situation. The **ти** form is required for close friends and family. We also use it when speaking to children. The **ви** form is strictly necessary for strangers, service staff, or colleagues. We also use it to address any group of people.
 
-Щоб зробити ввічливу форму «ви», є просте правило. Ми беремо базову форму «ти». Потім ми просто додаємо закінчення. Це закінчення — «-те» або «-іть».
+Ми робимо ввічливу форму «ви». Є просте правило. Ми беремо базову форму «ти». Потім ми просто додаємо закінчення. Це закінчення — «-те» або «-іть».
 To create the polite or plural **ви** form, there is a simple rule. We take the basic **ти** form. Then we simply add a grammatical suffix to the end. This suffix is either **-те** or **-іть**.
 
 | Ситуація (Situation) | Контекст (Context) | Форма (Form) | Приклад (Example) |
 | --- | --- | --- | --- |
-| Близький друг (Close friend) | Неформальний (Informal) | Ти | Читай книгу! |
+| Близький друг | Неформальний (Informal) | Ти | Читай книгу! |
 | Викладач (Teacher) | Офіційний (Formal) | Ви | Читайте текст! |
 | Дитина (Child) | Неформальний (Informal) | Ти | Роби завдання! |
-| Група людей (Group of people) | Множина (Plural) | Ви | Робіть роботу! |
+| Група людей | Група (Plural) | Ви | Робіть роботу! |
 
 ### Правила утворення: голосні звуки
 Як правильно зробити наказовий спосіб? Це дуже логічний граматичний процес. Спочатку ми беремо інфінітив дієслова. Потім ми забираємо стандартне закінчення «-ти». Далі ми дивимося на останній звук основи.
 How do you correctly form the imperative mood? It is a very logical grammatical process. First, we take the infinitive form of the verb. Then, we remove the standard infinitive ending **-ти**. Next, we look carefully at the final sound of the remaining verb stem.
 
-Якщо основа закінчується на голосний звук. Правило тут дуже просте. Ми додаємо літеру «-й» для форми «ти». Ми додаємо закінчення «-йте» для форми «ви».
+Основа закінчується на голосний звук. Правило тут дуже просте. Ми додаємо літеру «-й» для форми «ти». Ми додаємо закінчення «-йте» для форми «ви».
 If the stem ends in a vowel sound (like a, e, u). The rule here is very straightforward. We add the letter **-й** for the informal **ти** form. We add the ending **-йте** for the formal/plural **ви** form.
 
 - Чита́ти (to read) → основа «чита-» + і → **Читай!** (Read, informal)
@@ -46,7 +46,7 @@ If the stem ends in a vowel sound (like a, e, u). The rule here is very straight
 - Слу́хати (to listen) → основа «слуха-» + йте → **Слухайте!** (Listen, formal/plural)
 
 ### Правила утворення: приголосні звуки
-Якщо основа закінчується на приголосний звук. Ми використовуємо зовсім інше закінчення. Це дуже важлива фонетична зміна. Ми додаємо літеру «-и» для форми «ти». Ми додаємо закінчення «-іть» для форми «ви».
+Основа закінчується на приголосний звук. Ми використовуємо зовсім інше закінчення. Це дуже важлива фонетична зміна. Ми додаємо літеру «-и» для форми «ти». Ми додаємо закінчення «-іть» для форми «ви».
 If the stem ends in a consonant sound (like b, v, r). We use a completely different ending. This is a very important phonetic change. We add the letter **-и** for the informal **ти** form. We add the ending **-іть** for the formal/plural **ви** form.
 
 - Говори́ти (to speak) → основа «говор-» + и → **Говори!** (Speak, informal)
@@ -76,7 +76,7 @@ The official Ukrainian State Standard defines eight basic verbs for focused stud
 | стоя́ти | стій | стійте | stop! / stand! |
 
 ### Класні команди
-Викладачі української мови постійно використовують ці слова. Ви будете чути їх під час навчання. Це чудовий спосіб тренувати наказовий спосіб. Викладач зазвичай звертається до всієї групи. Тому він постійно використовує форму множини.
+Викладачі української мови постійно використовують ці слова. Ви будете чути їх під час навчання. Це чудовий спосіб тренувати наказовий спосіб. Викладач зазвичай звертається до всієї групи. Тому він постійно використовує форму «ви».
 Ukrainian language teachers constantly use these specific words in their lessons. You will hear them every single day during your studies. This is a wonderful, highly practical way to train your ear for the imperative mood. The teacher usually addresses the entire group of students at once. Therefore, they consistently use the plural **ви** form.
 
 - «**Слухайте** текст дуже уважно, будь ласка.» (Listen to the text very carefully, please.)
@@ -89,15 +89,15 @@ Ukrainian language teachers constantly use these specific words in their lessons
 > The verb «дивитися» (to look) is a reflexive verb. It has the special reflexive particle «-ся» at the very end. When forming the imperative mood, this particle changes shape. It becomes «-сь» after a vowel (дивись) and «-ся» after a soft consonant (дивіться). 
 
 ### Зміни приголосних звуків
-Іноді останній приголосний звук основи несподівано змінюється. Це абсолютно нормальне історичне явище. Ви бачите це у словах «писати» та «сказати». Ці зміни роблять мову більш зручною для вимови.
+Часто останній приголосний звук основи несподівано змінюється. Це абсолютно нормальне історичне явище. Ви бачите це у словах «писати» та «сказати». Ці зміни роблять мову більш зручною для вимови.
 Sometimes the final consonant sound of the verb stem unexpectedly changes. This is an absolutely normal historical phenomenon in the Ukrainian language. You can clearly see this pattern in the words for "to write" and "to say". These specific phonetic changes make the language more melodious and comfortable for rapid pronunciation.
 
 - Дієслово «писа́ти»: базовий звук «с» змінюється на «ш». Ми кажемо: **пиши**, **пишіть**.
-  Verb «писати»: the basic sound "с" harmoniously changes to "ш". We say: **пиши**, **пишіть**. (We never say «писи»).
+  
 - Дієслово «сказа́ти»: базовий звук «із» змінюється на «ж». Ми кажемо: **скажи**, **скажіть**.
-  Verb «сказати»: the basic sound "з" harmoniously changes to "ж". We say: **скажи**, **скажіть**. (We never say «скази»).
+  
 
-Вам не потрібно вчити складні лінгвістичні правила. Просто запам'ятайте ці дві конкретні популярні форми.
+Не потрібно вчити складні лінгвістичні правила. Просто запам'ятайте ці дві конкретні популярні форми.
 You do not need to learn complex linguistic rules about historical sound changes right now. Simply memorize these two specific, high-frequency forms. They sound natural to native speakers.
 
 ### Важливі винятки: дати і стояти
@@ -110,28 +110,28 @@ The verb «дати» loses a significant part of its original word structure. W
 Дієслово «стояти» кардинально змінює свій головний голосний звук. Буква «о» всередині слова стає буквою «і». Ми кажемо коротко: **стій** або **стійте**.
 The verb «стояти» radically changes its main vowel sound. The letter "о" inside the word becomes the letter "і". We say shortly: **стій** or **стійте**.
 
-- «**Дайте** мені чорну каву, будь ласка.» (Give me a black coffee, please. - formal request)
-- «**Дай** мені твій телефон.» (Give me your phone. - informal request to a friend)
+- «**Дайте** чорну каву, будь ласка.» (Give me a black coffee, please. - formal request)
+- «**Дай** твій телефон.» (Give me your phone. - informal request to a friend)
 - «**Стій**! Там дуже небезпечно!» (Stop! It is very dangerous there! - urgent informal command)
 
 ## Ввічливе прохання
 
 ### Чарівні слова «будь ласка»
-Сам по собі наказовий спосіб звучить занадто прямо. Щоб зробити його приємним, ми додаємо чарівні слова. Найкращий і найпопулярніший варіант — це фраза «будь ласка».
+Сам по собі наказовий спосіб звучить занадто прямо. Ми робимо його приємним. Ми додаємо чарівні слова. Найкращий і найпопулярніший варіант — це фраза «будь ласка».
 By itself, the imperative mood can sometimes sound a bit too direct. To make it pleasant and soft, we absolutely must add special magic words. The absolute best and most popular option everywhere is the phrase «будь ласка» (please).
 
 Ця фраза миттєво робить будь-яке ваше прохання ввічливим. Вона має неймовірну синтаксичну гнучкість у класичному реченні. Ви можете поставити її на початку, всередині або в кінці.
 This wonderful phrase instantly makes any of your requests highly polite. It has incredible syntactic flexibility in a classic Ukrainian sentence. You can freely place it at the very beginning, right in the middle, or at the very end of your sentence.
 
-1. **Будь ласка**, дайте мені меню. (Please, give me the menu. - Emphasizes politeness first)
-2. Дайте мені, **будь ласка**, меню. (Give me, please, the menu. - Very natural flow)
-3. Дайте мені меню, **будь ласка**. (Give me the menu, please. - Also very common)
+1. **Будь ласка**, дайте меню. (Please, give me the menu. - Emphasizes politeness first)
+2. Дайте, **будь ласка**, меню. (Give me, please, the menu. - Very natural flow)
+3. Дайте меню, **будь ласка**. (Give me the menu, please. - Also very common)
 
 Усі три варіанти абсолютно правильні та звучать ідеально. Найчастіше українці ставлять ці слова після головного дієслова. Це створює прекрасний ритм мовлення.
 All three variants are absolutely correct and sound structurally perfect. Most often, Ukrainians place these magic words immediately after the main verb. This creates a beautiful, natural rhythm of speech.
 
 ### Офіційні прохання з «прошу»
-Іноді нам потрібен набагато більш офіційний та серйозний стиль. Це актуально для банків, державних установ або ділових офісів. Тоді ми використовуємо спеціальне ввічливе слово «прошу».
+Часто потрібен набагато більш офіційний та серйозний стиль. Це актуально для банків, державних установ або ділових офісів. Тоді ми використовуємо спеціальне ввічливе слово «прошу».
 Sometimes we need a much more formal and serious style of communication. This is highly relevant for banks, government institutions, luxury restaurants, or business offices. Then we use the special polite word «прошу» (I request/ask).
 
 Граматична конструкція тут дуже проста та елегантна. Ми кажемо «Прошу вас» плюс звичайний інфінітив дієслова. Наказовий спосіб у цій фразі зовсім не потрібен.
@@ -147,7 +147,7 @@ This official form shows great professional respect for the other person. It cre
 > [!culture]
 > You will often hear the word «прошу» used completely alone, without any other words, especially when a waiter hands you a menu or a cashier gives you a receipt. In this specific context, it functions exactly like the English phrase "Here you go" or "You are welcome." It is a highly versatile and ubiquitous polite word, especially popular in Western Ukraine.
 
-### Ввічлива конструкція з питанням
+### Ввічлива конструкція: питання
 Є ще один чудовий спосіб попросити про допомогу. Це найбільш делікатний варіант для студентів рівня А1. Замість наказу, ми використовуємо спеціальне ввічливе питання.
 There is one more truly excellent way to ask for a favor or help. This is the absolute most delicate polite variant available for A1-level students. Instead of any direct command, we use a special polite question format.
 
@@ -155,19 +155,19 @@ There is one more truly excellent way to ask for a favor or help. This is the ab
 This useful phrase sounds like this: «Чи не могли б ви...?». This translates exactly to "Could you...?" in English. After this complex introductory phrase, we always put a regular infinitive verb.
 
 - **Чи не могли б ви** сказати пароль від інтернету? (Could you possibly tell me the internet password?)
-- **Чи не могли б ви** допомогти мені з цим багажем? (Could you possibly help me with this luggage?)
-- **Чи не могли б ви** показати мені дорогу? (Could you possibly show me the way?)
+- **Чи не могли б ви** допомогти з цим багажем? (Could you possibly help me with this luggage?)
+- **Чи не могли б ви** показати дорогу? (Could you possibly show me the way?)
 
-Зараз вам не потрібно аналізувати граматику цієї довгої фрази. Просто запам'ятайте її як єдиний готовий блок слів. Це комунікативна суперсила для ресторанів та різних магазинів.
+Зараз не потрібно аналізувати граматику цієї довгої фрази. Просто запам'ятайте її як єдиний готовий блок слів. Це комунікативна суперсила для ресторанів та різних магазинів.
 Right now, you absolutely do not need to analyze the complex conditional grammar of this long phrase. Just memorize it as a single, ready-to-use vocabulary chunk. This is your communicative superpower for polite interactions in restaurants and various shops.
 
 ## Заборони
 
 ### Заперечна форма
-Як правильно сказати людині не робити щось погане? Це надзвичайно легко і швидко зробити українською мовою. Нам потрібна лише маленька заперечна частка «не».
+Як правильно сказати людині не робити щось погане? Це надзвичайно легко і швидко зробити українською мовою. Потрібна лише маленька заперечна частка «не».
 How do you correctly tell a person not to do something bad or unwanted? It is extremely easy and fast to do in the Ukrainian language. We only need the small negative particle «не».
 
-Головне правило дуже просте та максимально логічне завжди. Ми ставимо слово «не» безпосередньо перед дієсловом у наказовому способі. Сама форма дієслова залишається абсолютно такою ж самою.
+Головне правило дуже просте та максимально логічне завжди. Ми ставимо слово «не», а потім дієслово у наказовому способі. Сама форма дієслова залишається абсолютно такою ж самою.
 The main rule is very simple and maximally logical always. We place the word «не» directly before the verb in the imperative mood. The form of the verb itself remains absolutely exactly the same. It does not change.
 
 - Роби! → **Не роби!** (Do it! informal → Don't do it! informal)
@@ -194,11 +194,11 @@ Here are several very typical examples of real-life prohibitions. You might freq
 These warning phrases are very often spoken emotionally and loudly. Therefore, we traditionally use an exclamation mark in writing at the end to show urgency.
 
 ### Контекст: особисті та публічні заборони
-Існує важлива стилістична різниця між живою розмовою та табличками. Якщо ви емоційно говорите з реальною людиною, ви використовуєте наказовий спосіб. Ви кажете: «Не чіпай!» або «Не чіпайте!». Це пряма заборона.
+Є важлива стилістична різниця між живою розмовою та табличками. Ви емоційно говорите? Це реальна людина? Ви використовуєте наказовий спосіб. Ви кажете: «Не чіпай!» або «Не чіпайте!». Це пряма заборона.
 There is an important stylistic difference between a live conversation and printed signs. If you are speaking emotionally to a real person, you use the imperative mood. You say: «Не чіпай!» or «Не чіпайте!» (Don't touch!). This is a direct personal prohibition.
 
 Але в тихому музеї ви побачите зовсім інший текст. Офіційна табличка буде писати: «Не торкатися!». Це граматичний інфінітив. Публічні заборони завжди використовують інфінітив для загального звернення. Вони встановлюють універсальне правило для всіх людей.
-But in a quiet museum, you will see completely different text. An official sign will write: «Не торкатися!» (Not to touch). This is the grammatical infinitive. Public prohibitions always use the infinitive for general address. They establish a universal rule for all people, not just one specific person.
+But in a quiet museum, you will see completely different text. An official sign will write: «Не торкатися!». This is the grammatical infinitive. Public prohibitions always use the infinitive for general address. They establish a universal rule for all people, not just one specific person.
 
 | Тип заборони (Prohibition Type) | Граматика (Grammar) | Приклад (Example) |
 | --- | --- | --- |
@@ -216,14 +216,14 @@ Let us look carefully at how this grammar works wonderfully in practice. Imagine
 — Прошу. Що будете смачного замовляти? (Here you go. What delicious thing will you order?)
 — **Скажіть**, у вас є свіжий зелений чай? (Tell me, do you have fresh green tea?)
 — Так, звісно є. **Зачекайте** хвилину біля столика, будь ласка. (Yes, of course we do. Wait a minute near the table, please.)
-— Дякую вам. (Thank you.)
+— Дякую. (Thank you.)
 
 **Діалог 2: На вулиці**
 — Перепрошую. **Підкажіть**, де метро? (Excuse me. Tell me, where is the subway?)
 — **Ідіть** прямо, потім **подивіться** ліворуч. (Go straight, then look left.)
 — Дякую! (Thanks!)
 
-У цих розмовах люди використовують офіційну форму «ви». Вони гармонійно додають магічні слова «будь ласка», щоб звучати ввічливо.
+У цих розмовах люди використовують офіційну форму «ви». Вони гармонійно додають магічні слова «будь ласка». Вони звучать ввічливо.
 In these conversations, people use the formal **ви** form. They harmoniously add the magic words «будь ласка» to sound completely polite.
 
 > [!reflection]
@@ -242,34 +242,34 @@ We can easily take a regular command and make it extremely polite. This is an in
 Modern Ukrainians most often use exactly the safe third level. It truly is the perfect balance between sincere respect and simplicity.
 
 ### Ситуаційні комунікативні завдання
-Тепер ваша черга активно і самостійно працювати. Уявіть ці чотири життєві ситуації. Подумайте, яке саме дієслово найкраще використати. Використовуйте нові слова.
+Тепер ваша черга активно і самостійно працювати. Уявіть ці чотири життєві ситуації. Подумайте. Яке дієслово найкраще використати? Використовуйте нові слова.
 Now it is your turn to work actively and independently. Imagine these four real-life situations. Think about exactly which verb is best to use. Use the new vocabulary words we learned.
 
-1. Ви хочете, щоб ваш найкращий друг прочитав статтю. Що ви емоційно скажете йому? (You want your best friend to read an article. What do you emotionally say to him?)
+1. Ваш найкращий друг читає статтю. Що ви емоційно скажете? (You want your best friend to read an article. What do you emotionally say to him?)
    — Ваш правильний варіант: **Читай!** (Read! - informal)
 2. Ви ввічливо просите вашого викладача написати складне слово. (You politely ask your teacher to write a difficult word.)
    — Ваш правильний варіант: **Пишіть, будь ласка!** (Please write! - formal)
 3. Ви просите вашого знайомого взяти ці важкі сумки. (You ask your acquaintance to take these heavy bags.)
    — Ваш правильний варіант: **Візьми ці сумки.** (Take these bags. - informal)
-4. Ви просите офіціанта в ресторані дати вам рахунок. (You ask a waiter in a restaurant to give you the bill.)
+4. Ви просите офіціанта в ресторані дати рахунок. (You ask a waiter in a restaurant to give you the bill.)
    — Ваш правильний варіант: **Дайте рахунок, будь ласка.** (Give the bill, please. - formal polite request)
 
-Це ваші найважливіші базові практичні навички на сьогодні. Вони гарантовано зроблять ваше спілкування в Україні легким та зрозумілим.
+Це ваші найважливіші практичні навички на сьогодні. Вони гарантовано зроблять ваше спілкування в Україні легким та зрозумілим.
 These are your most important basic practical skills for today. They will guaranteed make your communication in Ukraine easy and highly understandable.
 
 ---
 
 # Підсумок
 
-Наказовий спосіб — це найголовніший ключ до успішного щоденного спілкування українською мовою. Він ніколи не звучить грубо чи агресивно, якщо ви використовуєте його правильно в контексті. Навпаки, використання правильної граматичної форми показує вашу глибоку повагу до співрозмовника та знання культури. Пам'ятайте одне дуже важливе золоте правило: ми ніколи не використовуємо інфінітив для особистих прохань. Ми завжди уважно вибираємо між близьким неформальним «ти» (Читай! Пиши!) та поважним формальним «ви» (Читайте! Пишіть!).
+Наказовий спосіб — це найголовніший ключ до успішного щоденного спілкування українською мовою. Він ніколи не звучить грубо чи агресивно. Використовуйте його правильно в контексті. Навпаки. Правильна граматична форма показує вашу глибоку повагу. Вона показує знання культури. Пам'ятайте одне дуже важливе золоте правило: ми ніколи не використовуємо інфінітив для особистих прохань. Ми завжди уважно вибираємо між близьким неформальним «ти» (Читай! Пиши!) та поважним формальним «ви» (Читайте! Пишіть!).
 
-Для створення наказового способу ми беремо основу і додаємо «-й» або «-и» для форми «ти», і «-йте» або «-іть» для форми «ви». Ви повинні обов'язково знати напам'ять вісім базових дієслів: читати, писати, сказати, дати, іти, слухати, дивитися, стояти. Деякі з них, як-от «дати» (утворює форму «дай») та «стояти» (утворює форму «стій»), мають унікальні неправильні форми. Щоб ваше прохання завжди звучало м'яко та інтелігентно, обов'язково додавайте магічні слова «будь ласка». А якщо ви хочете зупинити або заборонити дію, просто поставте частку «не» прямо перед вашим дієсловом.
+Ми беремо основу. Ми додаємо «-й» або «-и» (форма «ти»). Ми додаємо «-йте» або «-іть» (форма «ви»). Ви повинні обов'язково знати напам'ять вісім базових дієслів: читати, писати, сказати, дати, іти, слухати, дивитися, стояти. Деякі дієслова мають унікальні форми. Це слова «дати» (форма «дай») та «стояти» (форма «стій»). Ваше прохання звучить м'яко та інтелігентно. Обов'язково додавайте магічні слова «будь ласка». Ви хочете зупинити дію? Просто поставте частку «не» прямо перед вашим дієсловом.
 
 **Перевірте себе:**
 1. Як правильно сказати команду «Read!» своєму близькому другу, а як — поважному викладачу університету?
 2. Яке універсальне магічне українське слово миттєво робить будь-який прямий наказ ввічливим?
 3. Згідно з правилами, чому ми ніколи не кажемо фразу «Читати текст!», коли особисто звертаємося до реального студента?
-4. Яке дуже просте граматичне правило допомагає нам утворити чітку заперечну форму від дієслова «Слухай»?
+4. Яке дуже просте граматичне правило допомагає утворити чітку заперечну форму від дієслова «Слухай»?
 5. Яка розмовна форма є набагато більш делікатною та ввічливою для ресторану: пряме «Дайте» чи питальне «Чи не могли б ви дати»?
 
 ---

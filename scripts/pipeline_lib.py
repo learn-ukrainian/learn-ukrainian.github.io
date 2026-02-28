@@ -720,8 +720,12 @@ def dispatch_gemini_raw(
     prompt: str, task_id: str, model: str = PRO_MODEL,
     stdout_only: bool = False, allow_write: bool = False,
     output_file: Path | None = None, timeout: int = 1800,
+    max_retries: int = 3,
 ) -> tuple[bool, str]:
     """Dispatch a prompt to Gemini via ai_agent_bridge.py (no rate-limit fallback).
+
+    Retries up to max_retries times on transient network errors
+    (TLS drops, socket resets, etc.) with exponential backoff.
 
     Returns (success, raw_output_text).
     """
@@ -735,22 +739,43 @@ def dispatch_gemini_raw(
         args.append("--stdout-only")
     if allow_write:
         args.append("--allow-write")
-    try:
-        result = _run_with_heartbeat(
-            [VENV_PYTHON] + args,
-            label=f"Gemini {task_id}",
-            timeout=timeout,
-            cwd=str(PROJECT_ROOT), capture_output=True, text=True,
-            input=prompt,
-        )
-        output_text = result.stdout or ""
-        if output_file:
-            output_file.parent.mkdir(parents=True, exist_ok=True)
-            output_file.write_text(output_text, encoding="utf-8")
-        return result.returncode == 0, output_text
-    except subprocess.TimeoutExpired:
-        log(f"  TIMEOUT: Gemini dispatch {task_id} exceeded {timeout}s")
-        return False, ""
+
+    last_output = ""
+    for attempt in range(1, max_retries + 1):
+        try:
+            result = _run_with_heartbeat(
+                [VENV_PYTHON] + args,
+                label=f"Gemini {task_id}",
+                timeout=timeout,
+                cwd=str(PROJECT_ROOT), capture_output=True, text=True,
+                input=prompt,
+            )
+            output_text = result.stdout or ""
+            last_output = output_text
+            if result.returncode == 0:
+                if output_file:
+                    output_file.parent.mkdir(parents=True, exist_ok=True)
+                    output_file.write_text(output_text, encoding="utf-8")
+                return True, output_text
+            # Check if failure is a transient network error
+            combined = f"{output_text}\n{result.stderr or ''}"
+            if attempt < max_retries and _is_transient_error(combined):
+                delay = 5 * (2 ** (attempt - 1))  # 5s, 10s
+                log(f"  [retry] Transient network error on attempt {attempt}/{max_retries}, "
+                    f"waiting {delay}s...")
+                time.sleep(delay)
+                continue
+            # Non-transient failure or final attempt
+            if output_file:
+                output_file.parent.mkdir(parents=True, exist_ok=True)
+                output_file.write_text(output_text, encoding="utf-8")
+            return False, output_text
+        except subprocess.TimeoutExpired:
+            log(f"  TIMEOUT: Gemini dispatch {task_id} exceeded {timeout}s")
+            return False, ""
+
+    # Exhausted retries
+    return False, last_output
 
 
 # Rate limit / auth failure signatures in Gemini CLI output
@@ -763,11 +788,30 @@ _RATE_LIMIT_PATTERNS = [
     "429",
 ]
 
+# Transient network error signatures (TLS drops, socket resets)
+_TRANSIENT_PATTERNS = [
+    "premature close",
+    "econnreset",
+    "socket hang up",
+    "fetch failed",
+    "network error",
+    "etimedout",
+    "enotfound",
+    "epipe",
+    "connection reset",
+]
+
 
 def _is_rate_limited(output: str) -> bool:
     """Check if dispatch failed due to rate limiting or auth exhaustion."""
     lower = output.lower()
     return any(p.lower() in lower for p in _RATE_LIMIT_PATTERNS)
+
+
+def _is_transient_error(output: str) -> bool:
+    """Check if dispatch failed due to a transient network error."""
+    lower = output.lower()
+    return any(p in lower for p in _TRANSIENT_PATTERNS)
 
 
 def dispatch_gemini(

@@ -2,10 +2,10 @@
   "module": "imperative-and-requests",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-03-01T00:28:06.624070Z",
+  "last_audit": "2026-03-01T00:30:10.862505Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-01T00:28:03.565476Z",
+    "md": "2026-03-01T00:30:09.388136Z",
     "meta": "2026-03-01T00:24:45.553449Z",
     "activities": "2026-02-28T17:19:52.784703Z",
     "vocabulary": "2026-02-28T17:06:29.522941Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3655/2000 (raw: 3998) | pedagogy: 29 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3574/2000 (raw: 3911)"
     },
     "activities": {
       "status": "deferred",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 1,
+    "pass_count": 3,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

@@ -469,6 +469,10 @@ VALID_ACTIVITY_TYPES = [
     "register-identify",  # Identify register (Vernacular/Literary/Chancery/Prosta)
     "loanword-trace",     # Trace foreign borrowings (Greek, Polish, Latin, Turkic)
     "comparative-style",  # Compare linguistic features across registers/periods
+    # Pre-literacy / bukvar types (A1 alphabet modules)
+    "watch-and-repeat",   # Watch pronunciation video, repeat aloud
+    "classify",           # Sort items into categories (e.g., vowels vs consonants)
+    "image-to-letter",    # See image/emoji, identify starting letter
 ]
 
 # Activity keywords for detection
@@ -484,6 +488,8 @@ ACTIVITY_KEYWORDS = [
     "paleography-analysis", "dialect-comparison", "translation-critique",
     "phonology-lab", "grammar-lab", "parallel-text", "historical-writing",
     "register-identify", "loanword-trace", "comparative-style",
+    # Pre-literacy / bukvar types (A1 alphabet modules)
+    "watch-and-repeat", "classify", "image-to-letter",
 ]
 
 # Core section keywords (not activities)
@@ -513,7 +519,7 @@ LEVEL_CONFIG = {
         'min_engagement': 3,
         'immersion_graduated': True,
         'transliteration_allowed': True,
-        'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz'}
+        'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz', 'watch-and-repeat', 'classify', 'image-to-letter'}
     },
     'A2': {
         'target_words': 3000,  # Feb 2026: raised from 1000 — word targets are MINIMUMS
