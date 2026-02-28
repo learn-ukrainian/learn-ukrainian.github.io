@@ -2,14 +2,14 @@
   "module": "sofiya-okunevska",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T19:31:55.705710Z",
+  "last_audit": "2026-02-28T01:06:50.976472Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T19:29:34.425623Z",
+    "md": "2026-02-27T20:41:10.924605Z",
     "meta": "2026-02-19T17:39:52.055267Z",
     "activities": "2026-02-27T19:29:57.241991Z",
     "vocabulary": "2026-02-27T19:27:38.482750Z",
-    "plan": "2026-02-17T13:37:38.112300Z",
+    "plan": "2026-02-27T20:41:24.151085Z",
     "research": "2026-02-22T10:35:24.552091Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5378/5000 (raw: 5710)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5378/5000 (raw: 5710) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

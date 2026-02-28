@@ -1,7 +1,7 @@
 <!-- SCOPE
-Covers: Comprehensive review of the 7-case system in Ukrainian (Nominative, Genitive, Dative, Accusative, Instrumental, Locative, Vocative)
+Covers: Comprehensive review of the entire Ukrainian case system (all 7 cases), prepositional governance, error correction, and practical application in digital and historical contexts.
 Not covered:
-  - Verb aspect introduction (to be covered in a2-12)
+  - Verb aspect (perfective/imperfective) → a2-12
 Related: a2-01 through a2-10
 -->
 
@@ -9,271 +9,360 @@ Related: a2-01 through a2-10
 
 > **Чому це важливо?**
 >
-> The case system is the beating heart of the Ukrainian language. Instead of relying on strict word order to show who does what to whom, Ukrainian changes the endings of words. Mastering these seven cases unlocks your ability to express complex thoughts, navigate daily services, and understand the subtle nuances of Ukrainian culture and history.
+> Mastering the Ukrainian case system is a defining milestone. In this checkpoint, we consolidate all seven cases, focusing on how they interact with prepositions, shift under negation, and express precise spatial and temporal relationships. This grammatical foundation prepares you for the next major topic: verb aspect.
 
 ## Огляд та самооцінка
 
-Welcome to your first major checkpoint! You have been building a strong foundation in Ukrainian morphology, and now it is time to bring all the pieces together. Ukrainian has seven cases (відмінки), and each one plays a specific role in how a sentence functions. 
+Ласкаво просимо до вашого великого контрольного модуля! Ви вже вивчили всі сім українських відмінків. Тепер потрібно перевірити, наскільки впевнено ви їх використовуєте. У цьому модулі ми:
 
-When we talk about the Ukrainian language, we see a system that is incredibly flexible and expressive. Cases allow us to emphasize different parts of a sentence simply by changing the endings of nouns, pronouns, and adjectives. 
+- повторимо кожен відмінок із прикладами,
+- побачимо, як відмінки працюють у реальних ситуаціях (на пошті, у банку),
+- прочитаємо історичний текст про українські гроші 1918 року.
 
-Before we dive into the specific rules and nuances, let us take a moment for self-assessment. 
+Якщо щось здається складним — не хвилюйтеся. Це нормально. Головне — практика.
 
-### Ваш прогрес: Самооцінка
+Up to this point, you have been exploring the Ukrainian cases individually, observing how each one modifies noun, adjective, and pronoun endings to reflect their grammatical role. Now, it is time to bring all of these pieces together into a unified, coherent system. 
 
-Take a look at the following "Can-Do" statements. These reflect the European A2 standard for language learners. Read each statement and ask yourself if you feel confident using these grammar points in real-life conversations. 
+The Ukrainian case system, or система **відмінків**, is not merely an academic exercise or a set of rules to memorize; it is the mechanism that organizes the entire language. In English, meaning is heavily dependent on strict word order—if you change the order of the words, you change the entire meaning of the sentence. Because word order in Ukrainian is highly flexible, it is the endings of the words that carry the structural meaning. Whether a word is the subject, the object, the instrument, or the location is communicated entirely by its ending.
 
-*   I can identify and use the Nominative case for the subject of a sentence.
-*   I can use the Genitive case to show possession, absence (negation), and exact dates.
-*   I can use the Dative case to express feelings, state someone's age, and indicate the recipient of an action.
-*   I can use the Accusative case for direct objects and to show the direction of motion.
-*   I can use the Instrumental case to talk about my profession, the tools I use, and the people I am with.
-*   I can use the Locative case to describe where something is located.
-*   I can use the Vocative case correctly when addressing someone directly.
+In this checkpoint, we will review how to correctly identify, form, and use all seven cases: the Nominative (Називний), Genitive (Родовий), Dative (**Давальний**), Accusative (Знахідний), Instrumental (**Орудний**), Locative (Місцевий), and Vocative (Кличний). Before we introduce the concept of verb aspect in the next module, we need to ensure your noun endings are stable and accurate.
 
-If you feel unsure about any of these, do not worry! This checkpoint is designed to help you review and consolidate your knowledge. Ми будемо працювати разом, крок за кроком.
+### CEFR A2 Self-Assessment Checklist
 
-### Прийменники та відмінки: Системний погляд
+Before we dive into the detailed grammar review, take a moment to **перевірити** (to check) your current confidence level. By the end of this module, you should be able to confidently say "Yes" to all of the following statements. This **оцінка** (assessment) helps you identify which specific areas of grammar require more of your focus and practice.
 
-One of the biggest challenges for learners is matching prepositions (прийменники) with the correct case. A preposition often dictates which case must follow. This concept is called "prepositional governance." Let us look at a comprehensive matrix of the most common prepositions and the cases they demand. 
+**Мої досягнення:**
+* I can talk about a person's age using the proper grammatical case.
+* I can ask for assistance in a bank or post office using the correct prepositions.
+* I can accurately use physical tools and state a person's profession.
+* I can correctly form negative sentences without making structural errors.
+* I can distinguish between describing motion towards a destination and being statically located in a place.
+* I can politely address someone using their name in the appropriate form.
 
-Understanding this table is your key to fluency. Many learners struggle with choosing the right ending because they focus only on the noun, forgetting that the preposition is the actual "boss" of the phrase.
+If any of these statements feel challenging or intimidating, do not worry. We will break each concept down systematically and provide extensive examples.
 
-| Прийменник | Відмінок | Значення / Функція | Приклад |
+> [!practice] **Швидка перевірка**
+> Спробуйте відповісти: Як правильно — «Я пишу ручка» чи «Я пишу ручкою»? Якщо ви обрали другий варіант — ви вже розумієте Орудний відмінок!
+
+### The Role and Philosophy of Prepositions
+
+Прийменник — це маленьке слово, яке з'єднує інші слова в реченні. В українській мові кожен прийменник вимагає конкретного відмінка. Правильний прийменник + правильний відмінок = граматично правильне речення.
+
+A **прийменник** (preposition) shows the relationship between different parts of a sentence. In Ukrainian, a preposition almost never works alone; it always operates in tandem with a specific grammatical case. This partnership is known as "case governance." 
+
+Matching the right preposition with the correct case is a critical skill at the A2 level. If you use the right preposition but the wrong noun ending, the sentence will sound grammatically broken to a native speaker. Below are the core prepositions and the cases they govern. Pay special attention to prepositions like **з** and **на**, which can govern more than one case and change meaning entirely.
+
+**Preposition Mapping Reference**
+
+| Прийменник | Case Governed | Meaning & Grammatical Function | Приклад |
 | :--- | :--- | :--- | :--- |
-| **без** (without) | Genitive (Родовий) | Absence, exclusion | Кава без цукру |
-| **для** (for) | Genitive (Родовий) | Intended recipient or purpose | Подарунок для мами |
-| **з / із / зі** (from) | Genitive (Родовий) | Origin, starting point | Приїхати з Києва |
-| **після** (after) | Genitive (Родовий) | Sequence in time | Після уроку |
-| **через** (through/because of) | Accusative (Знахідний) | Route, cause, time span | Через дощ, Через тиждень |
-| **в / у** (into) | Accusative (Знахідний) | Direction of motion | Йти в банк |
-| **з / із / зі** (with) | Instrumental (Орудний) | Accompaniment | Чай з молоком |
-| **в / у** (in/at) | Locative (Місцевий) | Static location | Бути в банку |
-| **на** (on/at) | Locative (Місцевий) | Static location (surfaces/events) | На пошті |
+| **з (із/зі)** | Genitive | From (origin or starting point). | Вона приїхала **з Києва**. |
+| **з (із/зі)** | Instrumental | With (accompaniment or addition). | Я п'ю каву **з молоком**. |
+| **до** | Genitive | To (destination or a person). | Ми йдемо **до лікаря**. |
+| **для** | Genitive | For (the beneficiary of an action). | Це подарунок **для мами**. |
+| **без** | Genitive | Without (the absence of something). | Він п'є чай **без цукру**. |
+| **через** | Accusative | Through / Because of / In (time). | Ми йдемо **через парк**. |
+| **після** | Genitive | After (temporal sequence). | Зустрінемося **після роботи**. |
+| **на** | Accusative | Onto (direction of motion). | Я кладу книгу **на стіл**. |
+| **на** | Locative | On (static physical location). | Книга лежить **на столі**. |
+| **в (у)** | Accusative | Into (direction of motion inside). | Він іде **в кімнату**. |
+| **в (у)** | Locative | In (static physical location inside). | Він сидить **у кімнаті**. |
 
-> [!tip] **Порада:** Notice how the preposition **з** (with/from) and **в/у** (in/into) change meaning depending on the case that follows them. Context is everything!
+> [!tip] **Милозвучність**
+> A hallmark of the Ukrainian language is its melodic flow, known as euphony (милозвучність). Remember to systematically alternate the prepositions **в/у** and **з/із/зі** to maintain this natural rhythm. You should use **в** or **з** before words starting with vowels, and **у** or **із/зі** before words starting with consonants (especially consonant clusters). This structural rule helps you avoid awkward, difficult-to-pronounce sounds.
 
 ## Навичка 1: Відмінки в дії: Давальний та Орудний
 
-Let us start our detailed review with two cases that add rich layers of meaning to your sentences: the Dative case (Давальний відмінок) and the Instrumental case (Орудний відмінок). 
+Давальний і Орудний відмінки — це відмінки стосунків. Давальний показує, **кому** ми допомагаємо, даємо чи пишемо. Орудний показує, **чим** ми працюємо і **з ким** проводимо час.
 
-These cases are incredibly active in daily communication. The Dative case is your tool for expressing how you feel, how old you are, and who receives your actions. The Instrumental case helps you explain how you do things and who you are in terms of profession.
+The Dative and Instrumental cases describe relationships between people, or the relationship between people and the tools they use.
 
-### Модель: Давальний відмінок (Отримувачі дії)
+### Модель: Давальний відмінок: Recipients and States
 
-The core function of the Dative case is to indicate the indirect object—the person or thing that receives the action. When you give, send, or show something to someone, that "someone" takes the Dative ending.
+Давальний відмінок відповідає на запитання **Кому? Чому?** Ми використовуємо його, коли хтось отримує щось: допомогу, подарунок, листа. Він також потрібен для віку людини. А ще — для фізичного або емоційного стану.
 
-The most common verbs that require the Dative case are **давати** (to give), **дарувати/подарувати** (to gift), and **допомагати** (to help). Remember, the action flows *toward* the noun in the Dative case.
+The **Давальний** (Dative) case answers the questions **Кому? Чому?** (To whom? To what?). Its primary function is to indicate the recipient or beneficiary of an action. It is also essential for expressing a person's age and their internal physical or emotional states. 
 
-*   Ми подарували нову книжку **студентові**. (We gifted a new book to the student.)
-*   Я часто допомагаю **мамі** на кухні. (I often help mom in the kitchen.)
-*   Брат допомагає **другові** з роботою. (The brother helps a friend with work.)
+**1. Recipients of an Action**
+Whenever you give, show, tell, or offer something to someone, the person receiving the action is placed in the Dative case. The high-frequency verb **допомагати** (to help) is a classic example of a verb that strictly requires the Dative case for the person receiving the assistance.
 
-### Давальний відмінок: Вираження віку
+* Я хочу допомогти **моєму другові**. (I want to help my friend.)
+* Вона дарує красиві квіти **вчительці**. (She gifts beautiful flowers to the teacher.)
+* Ми часто пишемо листи **нашому братові**. (We often write letters to our brother.)
+* Студент дає зошит **викладачу**. (The student gives the notebook to the instructor.)
+* Ти можеш допомогти **цій жінці**? (Can you help this woman?)
 
-In Ukrainian, you do not "have" years like you do in English ("I am twenty"). Instead, years "are given" to you. This is a fundamental structural difference. To express age, the person is placed in the Dative case, followed by the number and the word for years (роки/років).
+**2. Expressing Age**
+In English, age is a characteristic that you *are* (e.g., "I am twenty years old"), utilizing the verb "to be." In Ukrainian, the conceptualization of age is entirely different. Age is not a state of being; rather, it is an accumulation of years that is "given" to a person by time. Therefore, the person receiving the years must be in the Dative case. The literal translation is closer to "To me there are twenty years."
 
-This structure shows that age is a state that happens to a person, rather than a possession they hold. 
+* **Моєму дідусеві** вісімдесят років. (My grandfather is eighty years old.)
+* **Моїй старшій сестрі** двадцять один рік. (My older sister is twenty-one years old.)
+* Скільки **вам** років? (How old are you?)
+* **Моєму братові** виповнилося тридцять. (My brother turned thirty.)
+* **Цьому місту** понад тисяча років. (This city is over a thousand years old.)
 
-*   Моєму **дідусеві** вісімдесят років. (My grandfather is eighty years old.)
-*   **Студентці** двадцять один рік. (The female student is twenty-one years old.)
-*   Скільки **вам** років? (How old are you?)
+**3. Expressions of Feeling and State**
+When talking about physical sensations or internal emotional states, the person experiencing the state is placed in the Dative case, typically used alongside adverbs. The very common verb **подобатися** (to like / to be pleasing) operates precisely on this logic. The literal translation is "To me, this is pleasing."
 
-> [!culture] **Культурний контекст:** In Ukrainian culture, elders are treated with deep respect. Knowing how to correctly ask and state someone's age using the Dative case is not just good grammar; it is a sign of cultural competence.
+* **Мені** зараз дуже холодно. (I am very cold right now.)
+* **Йому** завжди цікаво читати. (He is always interested in reading.)
+* **Моїй мамі** дуже подобається це старе місто. (My mom really likes this old city.)
+* Чи подобається **новим студентам** цей університет? (Do the new students like this university?)
+* **Нам** весело на цьому концерті. (We are having fun at this concert.)
 
-### Давальний відмінок: Емоції та стани
+### Практика: Орудний відмінок: Tools and Companions
 
-Just like age, physical and emotional states happen *to* a person in Ukrainian. If you want to say "I am cold" or "I am interested," you must put the pronoun or noun into the Dative case, followed by an adverb.
+Орудний відмінок відповідає на запитання **Ким? Чим?** Він потрібен для інструментів: пишемо **ручкою**. Для професій: працюю **лікарем**. І для супроводу: іду **з другом**.
 
-The highly frequent verb **подобатися** (to like) works exactly the same way. The literal translation of "I like Kyiv" is "To me, Kyiv is pleasing."
+The **Орудний** (Instrumental) case answers the questions **Ким? Чим?** (By whom? With what?). It describes the physical tool used to perform an action, professional status, and accompaniment.
 
-*   **Мені** дуже холодно сьогодні. (I am very cold today.)
-*   **Студентам** цікаво читати цю статтю. (The students are interested in reading this article.)
-*   **Вчителю** подобається наш новий проєкт. (The teacher likes our new project.)
-*   **Мені** подобається це старе місто. (I like this old city.)
+**1. Tools and Instruments (Without Prepositions)**
+When you use a physical object to accomplish a specific task, you put that noun in the Instrumental case. Crucially, you do not use any preposition here. The ending of the word alone signals its function as a tool.
 
-### Практика: Орудний відмінок (Професія та статус)
+* Студент уважно пише новою **ручкою**. (The student is writing carefully with a new pen.)
+* Я завжди їм гарячий суп **ложкою**. (I always eat hot soup with a spoon.)
+* Він обережно ріже свіжий хліб **ножем**. (He carefully cuts the fresh bread with a knife.)
+* Ми малюємо картину **олівцем**. (We are drawing a picture with a pencil.)
+* Вона відкриває двері **ключем**. (She opens the door with a key.)
 
-The Instrumental case is your go-to tool for defining identity, profession, and changing status. When you use the verb **бути** (to be) in the past or future tense, or verbs like **працювати** (to work) and **стати** (to become), the profession must take the Instrumental ending.
+**2. Profession and Status**
+When describing what someone does for a living, particularly after the verbs *бути* (to be), *працювати* (to work), or *стати* (to become), the profession must be placed in the Instrumental case. This shows what role the person is taking on.
 
-This usage highlights that a profession is an instrument of your identity, a role you take on.
+* Моя молодша сестра працює **лікаркою**. (My younger sister works as a doctor.)
+* Я дуже хочу бути **програмувальником**. (I really want to be a programmer.)
+* Мій друг став **директором** компанії. (My friend became the director of the company.)
+* Вона була відомою **акторкою**. (She was a famous actress.)
+* Він працює **архітектором** у Києві. (He works as an architect in Kyiv.)
 
-*   Мій брат хоче бути **програмувальником**. (My brother wants to be a programmer.)
-*   Вона працює **менеджеркою** у великій компанії. (She works as a manager in a large company.)
-*   Раніше він був **студентом**, а тепер він інженер. (Previously he was a student, but now he is an engineer.)
+**3. Accompaniment (With the Preposition «з»)**
+When doing something *together with* someone or something, we use the preposition **з (із/зі)** followed immediately by the Instrumental case.
 
-### Самоперевірка: Орудний відмінок (Інструменти та засоби)
+* Я довго розмовляю **з моїм другом**. (I am talking for a long time with my friend.)
+* Ми часто п'ємо ранкову каву **з молоком**. (We often drink morning coffee with milk.)
+* Вона щовечора гуляє **із собакою** в парку. (She walks with the dog in the park every evening.)
+* Я йду в кіно **зі своєю сестрою**. (I am going to the cinema with my sister.)
+* Вони працюють **із новими клієнтами**. (They are working with new clients.)
 
-As the name suggests, the Instrumental case indicates the instrument or tool used to perform an action. In English, you use the preposition "with" (e.g., "I write with a pen"). In Ukrainian, you drop the preposition completely and simply change the ending of the tool.
+### Самоперевірка: Типова помилка: Називний замість Орудного
 
-This is a very common place for learners to make mistakes by forgetting the ending and using the Nominative case instead.
+One of the most frequent and persistent mistakes learners make is forgetting to decline the noun when talking about physical tools. When speaking quickly, it is deeply tempting to default to the dictionary form (the Nominative case).
 
-*   Я пишу листа чорною **ручкою**. (I write the letter with a black pen.)
-*   Він їсть суп **ложкою**. (He eats soup with a spoon.)
-*   Ми подорожуємо **поїздом**. (We travel by train.)
+> [!warning] **Типова помилка**
+> ❌ **Неправильно:** Я пишу ручка. (Literal: I write pen.)
+> ✅ **Правильно:** Я пишу **ручкою**. (I write with a pen.)
 
-> [!warning] **Типова помилка:** 
-> ❌ *Неправильно:* Я пишу ручка. (Direct translation of "I write pen" without the preposition.)
-> ✅ *Правильно:* Я пишу **ручкою**.
-> Always remember to change the ending when describing the tool you are using. The Nominative case (ручка) can only be the subject!
+**Why is this a severe mistake?** 
+In the structure of the Ukrainian language, "Я пишу ручка" implies a bizarre scenario like "I write, and a pen also writes" or even "I am writing, and I am a pen." The sentence entirely lacks the grammatical marker that signals to the listener that the pen is merely a passive tool in your hand. By intentionally changing the ending to **-ою** (ручкою), you explicitly and correctly signal the mechanical function of the object. To **виправити** (to correct) this mistake, you must train yourself to always ask: "Am I holding or using this object to accomplish a task?" If the answer is yes, you must apply the Instrumental case.
 
-## Навичка 2: Граматичні тонкощі: Родовий, Знахідний та Кличний
+## Граматичні тонкощі: Родовий, Знахідний та Кличний
 
-Now we move to three cases that require precision and an understanding of grammatical nuances. The Genitive case (Родовий відмінок) is arguably the most frequently used oblique case in Ukrainian. The Accusative case (Знахідний відмінок) handles direct objects and motion, while the Vocative case (Кличний відмінок) is the soul of Ukrainian interpersonal communication.
+Тепер розглянемо відмінки, які відповідають за складніші поняття: відсутність, час, напрямок руху, місце і звертання.
 
-Let us break down their specific functions and common pitfalls.
+Now let's focus on the cases that handle more abstract, yet highly frequent concepts: absence, temporal events, physical direction, location, and direct address. These nuances are what make your spoken Ukrainian sound natural.
 
-### Модель: Родовий відмінок (Точний час та дати)
+### Родовий відмінок: Dates, Absence, and Origin
 
-While the Accusative case is used for days of the week, the Genitive case is absolutely mandatory when you are stating an exact date—specifically, the day of the month. Both the number (the ordinal adjective) and the name of the month must take the Genitive ending.
+Родовий відмінок відповідає на запитання **Кого? Чого?** Це найуживаніший непрямий відмінок. Він потрібен для дат (**десятого** березня), відсутності (немає **часу**) та походження (з **Києва**). Також стоїть після прийменників: для, без, після, до.
 
-This pattern answers the question "Коли?" (When?) when a specific calendar date is involved.
+The **Родовий** (Genitive) case answers the questions **Кого? Чого?** (Of whom? Of what?). It is the most frequently used oblique case in Ukrainian — responsible for expressing possession, origin, exact dates, and negative statements.
 
-*   Ми зустрічаємося **десятого березня**. (We are meeting on the tenth of March.)
-*   Свято буде **першого січня**. (The holiday will be on the first of January.)
-*   Я народився **п'ятого вересня**. (I was born on the fifth of September.)
+**1. Dates and Temporal Markers**
+When you state the exact date an event happens, both the ordinal number (the day) and the month take the Genitive case. This structure is non-negotiable for formal scheduling.
 
-### Родовий відмінок: Прийменники простору та мети
+* Ця історична подія сталася **десятого березня**. (This historical event happened on the tenth of March.)
+* Наш великий концерт буде **п'ятого травня**. (Our big concert will be on the fifth of May.)
+* Ми повернемося додому **першого вересня**. (We will return home on the first of September.)
+* Мій день народження **двадцятого жовтня**. (My birthday is on the twentieth of October.)
+* Вони зустрілися **другого квітня**. (They met on the second of April.)
 
-The Genitive case governs a large number of prepositions. These prepositions often describe origin (where something is from), proximity (near), or purpose (for). Memorizing these prepositions as "Genitive triggers" is highly recommended.
+**2. Mandatory Prepositions**
+A large group of very common prepositions exclusively govern the Genitive case. These prepositions often indicate a point of origin, the absence of an item, or the intended beneficiary of an action.
 
-The most critical ones are **з** (from), **до** (to/until), **для** (for), and **біля** (near).
+* **з (від)**: Він щойно приїхав **з Києва**. (He just arrived from Kyiv.)
+* **до**: Ми зараз ідемо **до драматичного театру**. (We are currently going to the drama theater.)
+* **для**: Цей смачний торт приготували **для брата**. (This delicious cake was prepared for the brother.)
+* **біля**: Наш собака мирно спить **біля столу**. (Our dog is sleeping peacefully near the table.)
+* **без**: Я завжди п'ю ранкову каву **без цукру**. (I always drink morning coffee without sugar.)
+* **після**: Що ти плануєш робити **після важкої роботи**? (What do you plan to do after hard work?)
 
-*   Вона приїхала **з Києва** вчора. (She arrived from Kyiv yesterday.)
-*   Цей подарунок **для мами**. (This gift is for mom.)
-*   Кіт спить **біля столу**. (The cat sleeps near the table.)
-*   Я буду чекати **до вечора**. (I will wait until the evening.)
+### Типова помилка: Називний після заперечення
 
-### Родовий відмінок: Заперечення та відсутність
+Це найважливіше правило Родового відмінка: після слова **немає** іменник завжди стоїть у Родовому відмінку. Якщо чогось немає — використовуйте Родовий.
 
-One of the strictest rules in Ukrainian grammar is that the direct object of a negated verb often takes the Genitive case instead of the Accusative. More importantly, when expressing absence or lack using the construction **немає** (there is no / does not have), the noun MUST be in the Genitive case.
+The most critical syntactic rule of the Genitive case is its mandatory use in negative statements that express the absence of an object. 
 
-Learners frequently use the Nominative case here, directly translating from English. This is a major structural error.
+> [!warning] **Типова помилка**
+> ❌ **Неправильно:** У мене немає гроші. 
+> ✅ **Правильно:** У мене немає **грошей**. 
 
-> [!warning] **Типова помилка:**
-> ❌ *Неправильно:* У мене немає гроші. (Translating "I don't have money" literally.)
-> ✅ *Правильно:* У мене немає **грошей**. 
-> The absence of an object requires the Genitive case. This rule is absolute.
+When you use the word **немає** (there is no / does not have), the object that is absent MUST shift structurally into the Genitive case. This is a foundational pillar of Ukrainian grammar. If an object does not exist, it cannot take the Nominative case.
 
-Let us look at minimal pairs to see the shift from presence (Nominative) to absence (Genitive):
-*   У мене є **час** (Nom). → У мене немає **часу** (Gen). (I have time. → I don't have time.)
-*   Тут є **проблема** (Nom). → Тут немає **проблеми** (Gen). (There is a problem here. → There is no problem here.)
-*   У нас є **вода** (Nom). → У нас немає **води** (Gen). (We have water. → We don't have water.)
+Let us drill several minimal pairs to clearly see the necessary shift from Nominative (presence) to Genitive (absence):
 
-### Практика: Знахідний проти Місцевого
+| Ствердження | Заперечення |
+| :--- | :--- |
+| У мене є вільний **час**. (I have free time.) | У мене немає вільного **часу**. (I do not have free time.) |
+| Тут є серйозна **проблема**. (Here is a serious problem.) | Тут немає серйозної **проблеми**. (There is no serious problem.) |
+| В офісі є новий **директор**. (The new director is in the office.) | В офісі немає нового **директора**. (The new director is not in the office.) |
+| На столі лежить **книга**. (A book is lying on the table.) | На столі немає **книги**. (There is no book on the table.) |
+| У неї є розумна **ідея**. (She has a smart idea.) | У неї немає розумної **ідеї**. (She does not have a smart idea.) |
 
-A classic point of confusion is choosing between the Accusative case (Знахідний) and the Locative case (Місцевий) when using the prepositions **в/у** (in/into) and **на** (on/onto). 
+Always remember: **немає + Родовий відмінок** (Genitive).
 
-The rule is based on motion versus static location. If there is dynamic motion towards a destination (answering the question *Куди?* - Where to?), use the Accusative. If the subject is already at the location and static (answering the question *Де?* - Where?), use the Locative.
+### Знахідний чи Місцевий? (Accusative vs. Locative)
 
-Additionally, the preposition **через** (through/across) always takes the Accusative case.
+Запам'ятайте головне правило:
+* **Куди?** (напрямок руху) → Знахідний відмінок: Я йду **в банк**.
+* **Де?** (місце) → Місцевий відмінок: Я вже **в банку**.
 
-| Контекст | Питання | Відмінок | Приклад |
-| :--- | :--- | :--- | :--- |
-| Motion (Напрямок) | Куди? (Where to?) | Знахідний (Acc) | Я йду **в банк**. |
-| Static (Розташування) | Де? (Where at?) | Місцевий (Loc) | Я стою **в банку**. |
-| Motion (Напрямок) | Куди? (Where to?) | Знахідний (Acc) | Ми йдемо **на пошту**. |
-| Static (Розташування) | Де? (Where at?) | Місцевий (Loc) | Ми працюємо **на пошті**. |
-| Path (Шлях) | Куди? / Як? | Знахідний (Acc) | Ми йдемо **через дорогу**. |
+Ті самі прийменники **в (у)** і **на** працюють із двома різними відмінками. Рух — Знахідний. Місце — Місцевий.
 
-### Самоперевірка: Кличний відмінок
+This is one of the most logical features of Ukrainian grammar: the same prepositions — **в (у)** and **на** — govern different cases depending on whether you describe movement or location.
 
-The Vocative case (Кличний відмінок) is uniquely distinctive in Ukrainian. It is used exclusively for addressing someone directly. While many languages (including Russian) have lost their vocative case, Ukrainian has preserved and nurtured it. It is a sign of politeness, respect, and natural fluency.
+* Direction or movement towards a goal (Куди?) → **Accusative** (Знахідний) case.
+* Static location or resting state (Де?) → **Locative** (Місцевий) case.
 
-Learners often default to the Nominative case when saying hello or calling someone's name. Let us correct this habit.
+Examine this comparative table to see the philosophy in action:
 
-> [!myth-buster] **Деколонізація мови:** 
-> Some older textbooks might suggest the Vocative case is optional or "archaic." This is a colonial myth. The Vocative case is vibrant, mandatory in polite society, and a beautiful marker of authentic Ukrainian speech. 
+| Контекст | Прийменник + Знахідний (Direction / Motion) | Прийменник + Місцевий (Static Location) |
+| :--- | :--- | :--- |
+| **в / у** (in / into) | Я швидко йду **в велику кімнату**. (I am walking quickly into the big room.) | Я спокійно стою **у великій кімнаті**. (I am standing calmly in the big room.) |
+| **в / у** (in / into) | Він їде **в нове місто**. (He is driving to the new city.) | Він зараз живе **в новому місті**. (He currently lives in the new city.) |
+| **на** (on / onto) | Вона кладе важку книгу **на стіл**. (She puts the heavy book onto the table.) | Важка книга довго лежить **на столі**. (The heavy book lies on the table for a long time.) |
+| **на** (event / abstract) | Ми зараз ідемо **на важливу роботу**. (We are going to important work now.) | Ми зараз **на важливій роботі**. (We are currently at important work.) |
 
-Notice the difference in natural dialogues:
-> ❌ *Неправильно:* Сергій, привіт! Як справи?
-> ✅ *Правильно:* **Сергію**, привіт! Як справи?
+Additionally, the preposition **через** (through, across, because of) exclusively governs the Accusative case, whether describing physical movement or causality:
+* Ми обережно йдемо **через широку дорогу**. (We are walking carefully across the wide road.)
+* Урок несподівано скасували **через сильний дощ**. (The lesson was unexpectedly canceled because of the heavy rain.)
+* Ми повернемося додому **через один тиждень**. (We will return home in one week.)
 
-*   Добрий день, **пане** директоре! (Good day, Mr. Director!)
-*   **Олено**, ти можеш мені допомогти? (Olena, can you help me?)
-*   Слухай, **друже**, у мене є ідея. (Listen, friend, I have an idea.)
+### Кличний відмінок: The Art of Direct Address
 
-## Навичка 3: Сервіси та цифрова Україна
+Кличний відмінок — це відмінок звертання. Звертаєтесь на ім'я, за посадою чи за родинним зв'язком? Закінчення слова змінюється обов'язково. Це правило.
 
-To truly master the cases, you must see them working together in real-world contexts. Let us explore two common service environments: the post office (пошта) and the bank (банк). 
+The **Кличний** (Vocative) case is one of the distinctive features of Ukrainian. It is used exclusively for direct address — whenever you call someone by their name, title, or relationship to you.
 
-Modern Ukraine is a global leader in digital services. The "Diia" (Дія) app and digital banks like Monobank have revolutionized how Ukrainians interact with the state and their finances. However, the grammar of these interactions remains rooted in the traditional case system.
+> [!culture] **Культурний контекст**
+> The Vocative case is absolutely not optional. During certain historical periods under imperial and Soviet rule, attempts were made to diminish the importance of the Vocative case to make Ukrainian resemble Russian grammar more closely. However, the Vocative survived and is a vibrant part of modern identity. Using the Nominative case to address someone (e.g., "Сергій, привіт!") sounds harsh, unpolished, and unnatural. Using the Vocative case demonstrates deep respect, cultural intimacy, and a genuine understanding of Ukrainian conversational etiquette. 
 
-### Модель: Діалог на пошті
+**Correcting the Error:**
+❌ **Неправильно:** Сергій, привіт!
+✅ **Правильно:** **Сергію**, привіт!
 
-In this context, pay attention to the Locative case for the location (**на пошті**) and the Instrumental case for the method of sending (**відправити поштою**). The verb **відправляти/відправити** (to send) takes a direct object in the Accusative case.
+❌ **Неправильно:** Мама, іди швидко сюди!
+✅ **Правильно:** **Мамо**, іди швидко сюди!
 
-**Працівниця:** Добрий день! Чим я можу вам допомогти?
-**Клієнт:** Добрий день. Я хочу відправити цю **посилку** (Acc) **поштою** (Орудний).
-**Працівниця:** Добре. Куди ви відправляєте?
-**Клієнт:** Я відправляю її **в Київ** (Acc).
-**Працівниця:** Чудово. Заповніть цей **документ** (Acc), будь ласка. 
+**Examples in Context:**
+* **Олено**, ти зараз маєш вільний час? (Olena, do you have free time right now?)
+* Пане **президенте**, дозвольте мені запитати. (Mr. President, allow me to ask.)
+* Мій дорогий **друже**, я хочу тобі допомогти. (My dear friend, I want to help you.)
+* Шановна **вчителько**, поясніть це ще раз. (Respected teacher, explain this one more time.)
+* **Брате**, де ти був учора? (Brother, where were you yesterday?)
 
-Notice how the client uses the Accusative for the destination (в Київ) because it involves motion.
+By mastering the Vocative endings, you immediately sound more natural, polite, and connected to native speakers.
 
-### Практика: Діалог у банку (Цифрові послуги)
+## Сервіси та цифрова Україна
 
-Here, look for the Locative case indicating location (**у банку**, **на рахунку**) and the Dative case for the recipient of help (**допомогти клієнту**). The verb **обмінювати** (to exchange) is also highly relevant here.
+To solidify your theoretical knowledge, let's apply it to real-world scenarios. Navigating everyday services in Ukraine requires you to rapidly switch between cases to communicate effectively.
 
-**Менеджер:** Вітаю! Ви хочете відкрити новий **рахунок** (Acc)?
-**Клієнт:** Ні, я маю **рахунок** (Acc) **у банку** (Loc). Я хочу обміняти **долари** (Acc) на **гривні** (Acc).
-**Менеджер:** Зрозуміло. Скільки **грошей** (Gen) ви хочете обміняти?
-**Клієнт:** Двісті **доларів** (Gen). 
-**Менеджер:** Добре. Гроші будуть **на рахунку** (Loc) через **хвилину** (Acc). Ви використовуєте додаток «Дія»?
-**Клієнт:** Так, звичайно. Це дуже зручно.
+### На пошті (At the Post Office)
 
-> [!fact] **Сучасна Україна:** Ukraine is one of the first countries in the world to fully legalize digital passports and driver's licenses via the government app «Дія» (Diia). When you open an account at modern digital banks like Monobank, the entire process is completed online in minutes, often without stepping foot **в банк** (into a bank).
+A routine visit to the **пошта** (post office) requires you to actively use the Accusative case for the item you are sending, the Genitive case for the recipient (using the preposition "для"), and the Locative or Instrumental depending on your sending method.
 
-### Самоперевірка: Цифрова Україна
+Here is a typical interaction when you need to **відправити** (send) a package. Pay attention to the noun endings.
 
-Are you ready to use digital services in Ukraine? Think about which case you would use when saying "I sent it via Diia". (Hint: It is the Instrumental case!)
+**Діалог:**
+— Добрий день. Я дуже хочу **відправити поштою** цю велику книгу. 
+*(Instrumental: by mail; Accusative: this big book)*
+— Добрий день. Це звичайна **посилка для друга**? 
+*(Nominative: package; Genitive: for a friend)*
+— Так, усе правильно. Він зараз живе **в сонячній Одесі**. 
+*(Locative: in sunny Odesa)*
+— Добре. Напишіть його точну адресу **синьою ручкою**, будь ласка. 
+*(Instrumental: with a blue pen)*
+— Готово. Скажіть, будь ласка, скільки це коштує?
+— П'ятдесят гривень.
+
+Notice how naturally and fluidly the cases blend together to form a complete thought. The speaker uses the Instrumental case to describe *how* to write the address (синьою ручкою) and *how* the package will travel (поштою). They utilize the Locative case to state the static destination city (в Одесі), and the Genitive case to explicitly show who the package is intended for (для друга).
+
+### У банку (At the Bank)
+
+Banking is another essential, high-frequency service. In this context, you will frequently discuss opening a **рахунок** (account), use the verb **обмінювати** (to exchange) for currency, and ask bank employees to assist you.
+
+**Діалог:**
+— Доброго ранку. Скажіть, чим я можу **допомогти вам** сьогодні? 
+*(Dative: help you)*
+— Доброго ранку. Я хочу відкрити новий **рахунок у банку**. 
+*(Accusative: new account; Locative: in the bank)*
+— Звісно, без проблем. Ви зараз працюєте **програмувальником**? 
+*(Instrumental: as a programmer)*
+— Так. Мені терміново потрібен рахунок **для зарплати**. 
+*(Genitive: for salary)*
+— Зрозуміло. Дайте ваш паспорт. Також ви можете зручно **обмінювати гроші** у нашому мобільному додатку. 
+*(Accusative: exchange money; Locative: in our mobile app)*
+— Дуже дякую, що швидко допомагаєте **з оформленням**. 
+*(Instrumental: with the paperwork)*
+
+In this dialogue, the Dative case appears immediately with the phrase "допомогти вам". The Instrumental case is required for stating the profession (програмувальником) and for indicating what the customer needs help with (з оформленням). The Genitive case describes the core purpose of the account (для зарплати).
+
+### Культурний контекст: Цифрова Україна
+
+Україна — один зі світових лідерів у сфері цифрових державних послуг. Мільйони українців щодня користуються додатком «Дія» і мобільними банками замість паперових документів.
+
+> [!fact] **Цифрова революція**
+> Ukraine is broadly recognized as a global leader in digital state services and innovative neobanking. You might learn dialogues for visiting a physical bank building, but in reality, millions of Ukrainians manage absolutely everything through their smartphones. The revolutionary state application "Дія" (Diia) holds digital passports, driver's licenses, and tax records, all carrying the exact same legal weight as traditional paper documents. 
+
+When interacting with modern Ukrainian tech ecosystems like Monobank, Privat24, or Diia, your vocabulary shifts towards technology, but the foundational grammar remains completely identical. You still need your cases.
+
+* Мої гроші безпечно лежать **на банківському рахунку**. (My money lies safely on the bank account. — *Locative*)
+* Я завжди переказую кошти **через новий додаток**. (I always transfer funds through the new app. — *Accusative*)
+* Ми швидко оплачуємо всі рахунки **без жодних проблем**. (We quickly pay all bills without any problems. — *Genitive*)
+
+Whether you are physically standing in a brick-and-mortar building or simply tapping on a glowing screen, the prepositions and their strictly governed cases are the unshakeable foundation of your sentence.
 
 ## Історичний виклик та підсумок
 
-To consolidate everything we have reviewed, let us look at a fascinating historical fact that brings our vocabulary of banks, money, and post offices together. Reading historical texts is a great way to see the case system operating naturally in complex sentences.
+Прочитайте історичний текст і зверніть увагу на відмінки у контексті. Які прийменники ви бачите? Які відмінки вони вимагають?
 
-### Читання: Марки як валюта (1918)
+Let's practice reading a historical text that naturally uses various cases in context.
 
-In the turbulent year of 1918, during the era of the Ukrainian People's Republic (УНР), the young state faced a severe shortage of metal for minting coins. The government needed a practical solution for small change.
+### Історичний факт: Марки як гроші (1918)
 
-У тисяча дев'ятсот вісімнадцятому **році** (Loc) Українська Народна Республіка мала велику **проблему** (Acc). У **держави** (Gen) не було **металу** (Gen) для монет. Тому уряд вирішив використовувати поштові **марки** (Acc) як **гроші** (Acc). Люди могли купувати **хліб** (Acc) і платити **марками** (Орудний). На звороті **марок** (Gen) був текст: «Ходить нарівні з дзвінкою **монетою** (Орудний)». Це унікальний історичний приклад, коли **пошта** (Nom) і **банк** (Nom) об'єднали свої функції.
+During the complex era of the Ukrainian People's Republic (Українська Народна Республіка — УНР) in 1918, the newly independent nation faced immense economic and logistical challenges.
 
-In this short paragraph, almost every case is utilized. 
-- *У році* (Locative - point in time)
-- *Проблему* (Accusative - direct object)
-- *У держави* (Genitive - possession)
-- *Не було металу* (Genitive - negation/absence)
-- *Марками* (Instrumental - instrument of payment)
-- *З монетою* (Instrumental - accompaniment)
+> [!history-bite] **Шаги**
+> У тисяча дев'ятсот вісімнадцятому році в Україні була велика економічна криза. Молода держава зовсім не мала металу **для дрібних монет** *(Genitive: for small coins)*. Тому український уряд швидко випустив спеціальні паперові марки. Звичайні люди щодня використовували ці марки **як справжні гроші** *(Accusative: as real money)*. Відомий художник Георгій Нарбут довго працював **над унікальним дизайном** *(Instrumental: on the unique design)*. Ці маленькі паперові гроші офіційно називалися «шагами». Люди постійно купували свіжий хліб **за ці шаги** *(Accusative: for these stamps)* і щоранку ходили **з ними** *(Instrumental: with them)* на міський ринок.
 
-### Підсумкова таблиця
+Notice how this text uses the Genitive case to show the absence of metal (**для дрібних монет**), the Instrumental case for action and accompaniment (**над унікальним дизайном**, **з ними**), and the Accusative case for exchange (**за ці шаги**). Reading short historical texts is a great way to see how prepositions and cases work together in real sentences.
 
-Here is a final summary matrix of the core functions we reviewed. Keep this mental map handy as you continue your studies.
+### Підсумок: Комплексна матриця відмінків
 
-| Відмінок | Основна роль | Питання |
-| :--- | :--- | :--- |
-| **Називний (Nom)** | Subject of the sentence | Хто? Що? |
-| **Родовий (Gen)** | Possession, absence, exact dates | Кого? Чого? |
-| **Давальний (Dat)** | Recipient, age, feelings | Кому? Чому? |
-| **Знахідний (Acc)** | Direct object, motion towards | Кого? Що? |
-| **Орудний** | Instrument, profession, accompaniment | Ким? Чим? |
-| **Місцевий (Loc)** | Static location | На/У кому? На/У чому? |
-| **Кличний (Voc)** | Direct address | (No question word) |
+To truly solidify this checkpoint and ensure your structural knowledge is complete, let us look at a comprehensive summary matrix. This is your master key for navigating the Ukrainian case system. Use it to **перевірити** your understanding.
 
-In the next module (a2-12), we will introduce a new, exciting concept: Verbal Aspect. This will allow you to distinguish between completed actions and ongoing processes. The great news is that **the rules for the seven cases remain exactly the same**, regardless of which verb aspect you use. Your mastery of cases will provide the stable foundation you need to conquer the Ukrainian verb system.
+| Відмінок | Питання | Основна функція | Практичний приклад |
+| :--- | :--- | :--- | :--- |
+| **Називний** (Nominative) | Хто? Що? | The subject of the sentence; the dictionary form. | Це мій старший **брат**. |
+| **Родовий** (Genitive) | Кого? Чого? | Possession, absence, exact dates, origin. | У мене зараз немає **брата**. |
+| **Давальний** (Dative) | Кому? Чому? | The recipient, person's age, emotional state. | Я даю цікаву книгу **братові**. |
+| **Знахідний** (Accusative) | Кого? Що? | The direct object of an action, direction of motion. | Я добре бачу мого **брата**. |
+| **Орудний** (Instrumental) | Ким? Чим? | The physical tool, a profession, accompaniment. | Я часто гуляю з **братом**. |
+| **Місцевий** (Locative) | На/У кому? чому? | The static physical location of an object or person. | На **браті** сьогодні новий светр. |
+| **Кличний** (Vocative) | — | Direct address, calling someone respectfully. | Привіт, мій любий **брате**! |
 
----
+### Що далі? (What's Next?)
 
-# Підсумок
+You have now reviewed the entire Ukrainian nominal case system. Understanding these rules is a major step, but **правильно** (correctly) applying them in spontaneous speech takes practice. Do not worry when a **помилка** (mistake) happens—it is a natural part of building fluency.
 
-You have successfully completed the A2 Checkpoint on cases! We reviewed the profound importance of prepositional governance, learned to correct common errors like using the Nominative case for tools or after negation, and practiced addressing people correctly with the beautiful Vocative case. We also saw these cases in action across digital banking, post offices, and even historical events from 1918. The Ukrainian case system is logical, consistent, and highly expressive.
+In module a2-12, we will introduce a major, conceptually fascinating new topic: Verb Aspect (Perfective vs. Imperfective). This concept deals entirely with *how* an action happens in time. Is the action ongoing and continuous, or is it a completed, singular result? 
 
-**Перевірте себе:**
+Crucially, **noun cases do not change based on verb aspect.** Whether you are reading a book for five hours straight (imperfective) or you finish reading the book in one sitting (perfective), the word "book" remains in the Accusative case (книгу). Your knowledge of cases will remain stable as we introduce new verb rules.
 
-1. If you want to say "I write with a pencil" (олівець), which case must the word "pencil" take?
-2. Translate the following sentence accurately, paying attention to the negation: "I do not have time (час)."
-3. You are walking *into* a bank. Do you use the Accusative case (в банк) or the Locative case (в банку)?
-4. How do you correctly address your friend Ivan (Іван) when saying hello?
-5. Which case do you use to express your age?
+**Перевірте себе (Self-Check Questions):**
+1. Який саме відмінок ми обов'язково використовуємо для фізичних інструментів (наприклад, писати ручкою)?
+2. Як граматично правильно сказати українською: «У мене немає (вільний час)»?
+3. Який прийменник показує напрямок руху всередину (в чи на), й який відмінок він вимагає?
+4. Як правильно та ввічливо звернутися до близького друга: «Друг» чи «Друже»?
+5. Який відмінок завжди потрібен після дієслова «допомагати»?
+6. Який відмінок ми використовуємо, коли говоримо про професію людини?
 
 ---

@@ -2,14 +2,14 @@
   "module": "taras-shevchenko",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T16:01:25.577177Z",
+  "last_audit": "2026-02-28T00:56:22.122639Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T16:01:11.719652Z",
+    "md": "2026-02-27T20:41:10.787539Z",
     "meta": "2026-02-27T15:48:52.840831Z",
     "activities": "2026-02-27T15:57:43.583214Z",
     "vocabulary": "2026-02-27T15:57:43.583999Z",
-    "plan": "2026-02-17T13:37:38.114195Z",
+    "plan": "2026-02-27T20:41:24.241216Z",
     "research": "2026-02-22T22:12:28.854199Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5106/5000 (raw: 5528)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5106/5000 (raw: 5528) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

@@ -5,6 +5,8 @@
 > **Your #1 job: Write 4500 words of rich, structured Ukrainian content.**
 > Every concept gets dedicated depth. Every H3 gets 80-100+ words. This is how you hit the target.
 
+> **Output capacity: You can generate 65,000+ tokens per response.** A 3000-word Ukrainian module is ~6K tokens — well within your single-turn limit. Do NOT preemptively truncate, self-limit, or report TOKEN_LIMIT_TRUNCATION friction. Write the complete module in full.
+
 ## Files to Read
 
 | File | Purpose |
@@ -15,6 +17,14 @@
 | `/Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A2.md` | Level constraints, immersion %, engagement minimums |
 
 Read ALL four files before writing anything.
+
+## Primary Source Excerpts (Cite These — Don't Invent Quotes)
+
+These passages were retrieved from indexed primary sources (litopys.org.ua). When you need to cite a primary source, prefer these verified passages over inventing quotes from memory. You may paraphrase or excerpt, but attribute correctly.
+
+(No primary source excerpts available from RAG)
+
+---
 
 ## Your Task
 
@@ -33,7 +43,6 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 - **Colonial framing**: NEVER define Ukrainian by contrast with Russian (hard fail)
 - **Russianisms**: banned words — кушати, приймати участь, получати, самий кращий, слідуючий (hard fail)
 - **Russian characters**: ы, э, ё, ъ must NEVER appear (hard fail)
-- **IPA vowels**: Ukrainian о = [ɔ] always, е = [ɛ] always, ч = [t͡ʃ] with tie-bar
 - **Euphony**: і/й, у/в, з/із alternation (auto-fixable but better to write correctly)
 - **Engagement callouts**: 4+ using counted types ([!tip], [!warning], [!quote], [!myth-buster], [!culture], [!fact], [!context], [!reflection], [!note])
 - **Duplicate headers**: no two H2s sharing the same keyword (e.g., two headers containing «спадщина»)
@@ -46,11 +55,11 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 
 | Section | Target | Write Minimum (1.5x) |
 |---------|--------|---------------------|
-| Огляд та самооцінка (Overview and Self-assessment) | 500 | 750 |
-| Відмінки в дії: Давальний та Орудний (Cases in Action: Dative and Instrumental) | 800 | 1200 |
-| Граматичні тонкощі: Родовий, Знахідний та Кличний (Grammar Nuances: Genitive, Accusative, and Vocative) | 800 | 1200 |
-| Сервіси та цифрова Україна (Services and Digital Ukraine) | 600 | 900 |
-| Історичний виклик та підсумок (Historical Challenge and Summary) | 300 | 450 |
+| Огляд та самооцінка | 400 | 600 |
+| Відмінки в дії: Давальний та Орудний | 700 | 1050 |
+| Граматичні тонкощі: Родовий, Знахідний та Кличний | 800 | 1200 |
+| Сервіси та цифрова Україна | 600 | 900 |
+| Історичний виклик та підсумок | 500 | 750 |
 | **Total** | **3000** | **4500** |
 
 ---
@@ -210,6 +219,24 @@ Prefer: «Ви можете використати...», «Ми застосов
 
 This is the #1 generation error from previous rebuilds. Scan EVERY sentence before submitting. If you find ANY English word that is not inside parentheses `()` as a translation, fix it immediately.
 
+### No Word Salad (HARD FAIL)
+
+**Every paragraph must have ONE clear point and logical flow between sentences.** Do NOT string together unrelated observations.
+
+```markdown
+❌ WRONG (three disconnected claims stitched together):
+"Ukraine is a very digital country. You'll often see prices written as «50 грн».
+Cashiers speak fast. Telling 50 from 15 by ear is a superpower."
+
+✅ RIGHT (one clear point with logical flow):
+"In shops, prices are written as digits — «50 грн». Reading them is easy.
+But when the cashier says the total out loud, you need to catch the difference
+between п'ятдесят (50) and п'ятнадцять (15). Training your ear for these
+pairs is one of the most practical skills in this lesson."
+```
+
+**Also forbidden:** Alternating sentence language randomly within a paragraph (Ukrainian sentence, then English sentence, then Ukrainian again with no pattern). Each paragraph should have a consistent language frame — either English prose with Ukrainian terms introduced, or Ukrainian prose with English glosses.
+
 ### Colonial Framing: Ukrainian Stands on Its Own (HARD FAIL if found)
 
 **NEVER define Ukrainian by contrast with Russian.** Ukrainian is an independent language with its own history — it does not need Russian as a reference point.
@@ -273,9 +300,9 @@ Key: й can ONLY follow a vowel. After a consonant, always use і — even befor
 
 ### Pronunciation (HARD FAIL if Latin transliteration found)
 
-**Level-gated pronunciation rules:**
-- **A1–A2**: Use **stress marks** (мі́сто, not) for pronunciation hints on the first occurrence of new vocabulary words. Do NOT use inline IPA `[...]` in prose content — IPA is generated deterministically in vocabulary YAML by our tooling.
-- **B1+**: No pronunciation annotations in content. IPA lives in vocabulary YAML only.
+**Pronunciation rules:**
+- **A1–A2**: Use **stress marks** (мі́сто) for pronunciation hints on the first occurrence of new vocabulary words.
+- **B1+**: No pronunciation annotations in content.
 
 **Latin transliterations are BANNED at ALL levels.** Never use kh, sh, ch, zh, ts, ya, yu, ye, shch.
 
@@ -283,9 +310,6 @@ Key: й can ONLY follow a vowel. After a consonant, always use і — even befor
 ❌ WRONG (Latin transliteration):
 "Х sounds like 'kh' in Scottish 'loch'"
 "хліб (khlib)"
-
-❌ WRONG (inline IPA in A1/A2 prose):
-"**хліб** — [xlʲib]"
 
 ✅ RIGHT (stress mark + English approximation):
 "**Х**, like the «ch» in Scottish «loch»"

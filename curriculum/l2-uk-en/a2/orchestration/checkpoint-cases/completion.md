@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 11 — E2E
+FAIL: pipeline a2 11
 
   Module:   checkpoint-cases
   Track:    a2
-  Mode:     e2e
-  Words:    3103 (target: 3000)
+  Mode:     v3
+  Words:    4523 (target: 3000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-27T09:57:11Z
+  Verdict:  FAIL
+  Date:     2026-02-28T00:02:15Z

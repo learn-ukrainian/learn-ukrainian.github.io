@@ -1,10 +1,10 @@
-# Audit Report: M57 — olha-kobylianska.md
-**Level:** BIO | **Module:** M57 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 3250
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-27 18:58:28
+# Audit Report: M999 — olha-kobylianska.md
+**Level:** C1 | **Module:** M999 | **Phase:** BIO | **Pedagogy:** Not Specified | **Target:** 3250
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 01:03:19
 
 ## Configuration
-**Type:** biography
+**Type:** C1-biography
 **Word Target:** 3250 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
@@ -16,19 +16,50 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Первинне джерело: Роль Ольги Кобилянської | 1 | 3 | ❌ |
+| 2 | critical-analysis | Аналіз концепції нової жінки | 1 | 1 | ✅ |
+| 3 | essay-response | Письмова робота: Перехід до модернізму | 1 | 1 | ✅ |
+| 4 | reading | Первинне джерело: Влада землі | 1 | 3 | ❌ |
+| 5 | authorial-intent | Аналіз авторського задуму: Епос землі | 1 | 1 | ✅ |
+| 6 | quiz | Перевірте знання: Життя і творчість Ольги Кобилянської | 6 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 5/6 (authorial-intent, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 2
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** reading 'Первинне джерело: Роль Ольги Кобилянської' has 1 items (minimum: 3)
+  - FIX: Add more items. C1 reading requires at least 3 items.
+- **[COMPLEXITY]** reading 'Первинне джерело: Влада землі' has 1 items (minimum: 3)
+  - FIX: Add more items. C1 reading requires at least 3 items.
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
+  - FIX: Add a comparative-study activity to meet advanced richness standards.
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 3 violations (minor)
+- Activity density below minimum
+
 ## Gates
 - **Words:** ✅ 3665/3250 (raw: 4141)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 6/3
+- **Density:** ❌ 2 < 1
+- **Unique_types:** ✅ 5/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 3 violations
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.0% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -53,6 +84,13 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 6 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.6%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Первинне джерело: Роль Ольги Кобилянської | reading | 1 | 3 | Add 2 more items |
+| Первинне джерело: Влада землі | reading | 1 | 3 | Add 2 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

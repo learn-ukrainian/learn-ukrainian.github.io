@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T16:01:29Z",
       "task_id": "v3-marko-kropyvnytskyi-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T16:07:25Z",
-      "attempts": 2
     }
   }
 }

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 62 — E2E
+PASS: pipeline bio 64
 
   Module:   sofiya-okunevska
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    5710 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T18:31:55Z
+  Date:     2026-02-28T00:06:51Z

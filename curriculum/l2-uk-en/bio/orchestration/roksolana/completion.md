@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 14 — E2E
+PASS: pipeline bio 14
 
   Module:   roksolana
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    5453 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T09:59:38Z
+  Date:     2026-02-27T23:54:07Z

@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T16:35:17Z",
       "task_id": "v3-mykola-lysenko-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T16:48:30Z",
-      "attempts": 3
     }
   }
 }

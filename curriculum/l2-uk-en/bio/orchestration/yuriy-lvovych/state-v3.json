@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-26T00:22:34Z",
       "task_id": "v3-yuriy-lvovych-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T09:59:27Z",
-      "attempts": 1
     }
   }
 }

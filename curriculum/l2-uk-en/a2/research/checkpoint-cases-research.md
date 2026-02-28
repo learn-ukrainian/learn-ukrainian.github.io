@@ -1,33 +1,34 @@
 # Дослідження: Checkpoint — Cases
 
 ## State Standard Reference
-§4.2.2: "Морфологія: Відмінкова система" (Linguistic competence: morphology, Catalogue C).
-Alignment: The module provides a comprehensive review of the 7-case system in Ukrainian, meeting the specific A2 requirements for Dative (§4.2.2.3), Instrumental (§4.2.2.5), Genitive (§4.2.2.2), Accusative (§4.2.2.4), Locative (§4.2.2.6), and Vocative (§4.2.2.6*) cases through practical contexts and preposition governance.
+§4.2.2.2–§4.2.2.6 (A2 Level):
+- Dative (§4.2.2.3): "особа або предмет, для яких... відбувається дія: Подарувати книжку студентові... суб’єкт кількісної вікової ознаки: Дідусеві вісімдесят років."
+- Genitive (§4.2.2.2): "час і дата дії... об’єкт дії під час заперечення: Не вивчив вірша."
+- Instrumental (§4.2.2.5): "знаряддя і засіб дії: Студент пише новою ручкою."
+Alignment: Comprehensive review of A2 morphological case requirements (Catalogue C), consolidating all seven cases, functions, and prepositional governance.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| допомагати | High (A1/A2 core) | допомагати мамі/другові, допомагати з роботою (Dative) |
-| подобатися | High (A1/A2 core) | мені подобається, подобатися вчителю (Dative) |
+| допомагати | High (Core verb) | допомагати другу, допомагати з роботою (Dat) |
 | з (із/зі) | Very High | кава з молоком (Inst), приїхати з Києва (Gen) |
-| через | High (A2) | через дорогу, через дощ, через тиждень (Acc) |
-| пошта | Medium (Services) | на пошті (Loc), відправити поштою (Inst) |
+| через | High | через дорогу (Acc), через дощ (Acc) |
+| рахунок | Medium (Services) | відкрити рахунок, гроші на рахунку (Loc) |
 
 ## Cultural Hooks
-1. **Digital Ukraine Leadership:** Ukraine's global leadership in digital services, specifically the "Diia" (Дія) app and advanced digital banking (like Monobank), providing a modern, relevant context for practicing cases in service environments.
-2. **Historical Currency:** During the UNR (Ukrainian People's Republic) period in 1918, postage stamps circulated equally with coins due to a metal shortage—an interesting historical anchor for "post office and bank" vocabulary.
+1. **Digital Ukraine**: Ukraine is a global leader in digital state services (the "Diia" app) and neobanking (Monobank), making service and banking dialogues highly relevant to modern Ukrainian life.
+2. **Stamps as Currency (1918)**: During the Ukrainian People's Republic (UNR), due to a shortage of metal, postage stamps designed by famous artists like Heorhiy Narbut were printed on thick paper and circulated as small change ("shahiv" / шаги).
 
 ## Common Learner Errors
-1. **Nominative for Instruments** → "Я пишу ручка" instead of "Я пишу ручкою". Caused by direct translation from L1s that lack case inflection for tools.
-2. **Nominative after Negation** → "У мене немає гроші" instead of "У мене немає грошей". Caused by literal translation of "I do not have money".
-3. **Nominative instead of Vocative** → "Сергій, привіт!" instead of "Сергію, привіт!". Caused by L1 interference, as many languages do not have a dedicated case for addressing someone.
+1. **Nominative for Instruments**: *Я пишу ручка.* → **Я пишу ручкою.** — Learners forget to decline tools, treating them as direct objects.
+2. **Nominative after Negation**: *У мене немає гроші.* → **У мене немає грошей.** — Learners fail to shift the object to Genitive under "немає".
+3. **Nominative instead of Vocative**: *Сергій, привіт!* → **Сергію, привіт!** — Learners default to the dictionary form for direct address.
 
 ## Cross-References
-- Builds on: a2-01 through a2-10 (all A2.1 modules)
+- Builds on: a2-01 through a2-10 (A2.1 modules)
 - Prepares for: a2-12 (Aspect Introduction), a2-25, a2-35
 
 ## Notes for Content Writing
-- **Decolonized framing:** Present the rich case system, especially the Vocative case, as a vibrant, living feature of the Ukrainian language. Do not compare to Russian cases or frame the complexity as a deviation from Russian norms. 
-- **Immersion:** A2 Band 1 requires 50-60% Ukrainian. Use English for grammar theory and complex explanations (especially when summarizing all 7 cases), but switch to Ukrainian for all examples, dialogues, and practice.
-- **IPA:** Use IPA only on the first occurrence of each new vocabulary word. 
-- Avoid banned Russianisms and ensure Ukrainian angular quotes «...» are used for citations and dialogue.
+- **Decolonized Framing**: Emphasize the Vocative case as a fundamental, vibrant feature of Ukrainian identity and politeness, rather than an "optional" or "archaic" form. Describe the Ukrainian case system positively as a tool for expressive flexibility.
+- **Immersion**: Band 1 (50-60%). Grammar theory must be in English to ensure clear scaffolding, but examples, dialogues, and practice must be in Ukrainian.
+- **Word count**: Allocate robust explanations, diverse examples, and distinct H3s for each function to meet the minimum 3000 words.

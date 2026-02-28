@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 8 — E2E
+PASS: pipeline bio 8
 
   Module:   roman-mstyslavych
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    5797 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T09:58:58Z
+  Date:     2026-02-27T23:53:16Z

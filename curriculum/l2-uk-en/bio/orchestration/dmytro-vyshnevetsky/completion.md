@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 15 — E2E
+PASS: pipeline bio 15
 
   Module:   dmytro-vyshnevetsky
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    5538 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T09:59:45Z
+  Date:     2026-02-27T23:54:13Z

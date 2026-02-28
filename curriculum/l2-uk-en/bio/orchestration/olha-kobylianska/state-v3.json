@@ -19,11 +19,6 @@
       "status": "complete",
       "ts": "2026-02-27T17:54:04Z",
       "task_id": "v3-olha-kobylianska-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T17:58:28Z",
-      "attempts": 2
     }
   }
 }

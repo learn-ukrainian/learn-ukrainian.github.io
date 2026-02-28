@@ -19,11 +19,6 @@
       "status": "complete",
       "ts": "2026-02-26T23:46:08Z",
       "task_id": "v3-danylo-halytskyi-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T09:59:12Z",
-      "attempts": 1
     }
   }
 }

@@ -1,0 +1,61 @@
+{
+  "module": "olena-pchilka",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-28T01:02:33.687057Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-27T18:42:25.112899Z",
+    "meta": "2026-02-24T22:37:44.871500Z",
+    "activities": null,
+    "vocabulary": null,
+    "plan": "2026-02-27T20:41:24.059921Z",
+    "research": "2026-02-22T10:35:24.546761Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "3798/5000 (raw: 4198)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has decolonization section but content lacks it"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "5 Outline Compliance Errors"
+    ],
+    "pass_count": 1,
+    "fail_count": 1,
+    "deferred_count": 3
+  }
+}

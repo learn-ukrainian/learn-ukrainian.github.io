@@ -246,10 +246,10 @@
     ]
   },
   "anatol-petrytskyi.md": {
-    "mtime": 1772148206.8167973,
+    "mtime": 1772221270.7080097,
     "hashes": [
       "794eab93c72dfd493eeaae2e482e8183",
-      "960023f2bbc32770e20049c890fb1204",
+      "6d7e4b651ed410ddfa96b75f84ad0637",
       "b39e6a5ca7b7692179302f8844102ba1",
       "56f6594f5630b613df8cda194ab9421e",
       "bceeea3364213415f6e25d6f9c2c6d44",
@@ -690,10 +690,10 @@
     ]
   },
   "bohdan-khmelnytskyy.md": {
-    "mtime": 1772189083.782525,
+    "mtime": 1772221270.9440482,
     "hashes": [
       "df9b2197369d39c5a388121e5cf7e900",
-      "09fca5dff71031b219ee0e9c2cb0ece4",
+      "9d07feae48a8b2d0ec6fbdca949acac6",
       "fb9ba4eb88bc4f5c6a5e4e8d9b59778f",
       "648fc8d0fcc1412c4c5ab77869b8a4d3",
       "42279608ea1cb928463e483477a00c25",
@@ -900,10 +900,10 @@
     ]
   },
   "borys-hrinchenko.md": {
-    "mtime": 1772152714.1832497,
+    "mtime": 1772221270.7966218,
     "hashes": [
       "587dc4b7b92356c085cbc867861e8ee3",
-      "1a07e359af57a6f8b4330fc1767b9607",
+      "13aa04f8c1fa2f626ffed9e900007039",
       "53e507cd65ba6e5baf4a1cea3666dd97",
       "fae0e85a59d142f181948eb56739ccca",
       "c30b7afc81f752400d82862e49c569bc",
@@ -1235,10 +1235,10 @@
     ]
   },
   "danylo-halytskyi.md": {
-    "mtime": 1772149929.8322577,
+    "mtime": 1772221270.8359993,
     "hashes": [
       "aba76a901a1b996b1b3a73ab37e17e01",
-      "7d72ab018a97508cb1ef529d1c040197",
+      "15ca8fe025f43a6f23bef2c988c7e828",
       "a0df2583b2ce38b458174af210a1c829",
       "27e7957ac0454b6b19287a7ee2bc5782",
       "f5c88174525788c464b17877eb1e4840",
@@ -1497,10 +1497,10 @@
     ]
   },
   "dmytro-falkivskyi.md": {
-    "mtime": 1772151841.2525606,
+    "mtime": 1772221270.7462626,
     "hashes": [
       "d62250c5e41321798cdd74a5517d0756",
-      "f1b5a0d68e8571bbfb259e0d27af8a4e",
+      "ff3988f570787beb9dffb2bdbce72dc2",
       "741f271cd92f41d77095839206a682dd",
       "014b6bb516ab487dac90153e582f92d7",
       "0814df8c9d23de04ab849c76b350c8df",
@@ -2112,10 +2112,10 @@
     ]
   },
   "hryhorii-kosynka.md": {
-    "mtime": 1772152520.9698274,
+    "mtime": 1772221270.9504519,
     "hashes": [
       "06d521e5d5cb5c0d75eec165ca49560d",
-      "64d46eabb1d703430a43cc3a81043b3a",
+      "db153ca31d096a49f4cc04d689cc9c4a",
       "435b340f1b829c6f3244aca53c3fcd8d",
       "2efb90ba9a4940033f2195f76a39a5f1",
       "1ccbf07116af6f2598e1136ac5076047",
@@ -2351,10 +2351,10 @@
     ]
   },
   "iov-boretskyi.md": {
-    "mtime": 1772069753.588491,
+    "mtime": 1772221270.6729548,
     "hashes": [
       "3944050380646827e3aab4a6e0b3d354",
-      "f117ce34379d97aecbc1fb163d2d6b4a",
+      "7b6c762be3c23c75d926e3a3541731b1",
       "daadb596d576bc1b75e1887093d747d2",
       "3024f8a47e0f65605726b3a1975438aa",
       "a495270b0f806421acf0bcf96600abec",
@@ -2577,10 +2577,10 @@
     ]
   },
   "ivan-franko.md": {
-    "mtime": 1772214640.6823838,
+    "mtime": 1772221270.7738345,
     "hashes": [
       "728098219ebae62737062cf6335e220e",
-      "9ec78049b774ccef90e1b7a0c75fbaa6",
+      "0c25f268053454961c1293a50022ddfc",
       "cc86edf7bb91d6b5a92cb55c718d2b98",
       "ce416b9c2b681562e1457c355c370d4c",
       "467d9a3632f821829ce1721768fb73e0",
@@ -2814,10 +2814,10 @@
     ]
   },
   "ivan-sirko.md": {
-    "mtime": 1772191943.9722798,
+    "mtime": 1772221270.9351075,
     "hashes": [
       "a54b03ab051c994075da865a0f40865a",
-      "ca5370a6db3fb0fbb1a0506b39c8aace",
+      "d48de8d36b036fad30807c4141038310",
       "25f645329c15df094589931a9516a912",
       "b483ea6485cb8bd83f0111441d164cac",
       "9ced47b72f9bcd145943e4b3b8ac280e",
@@ -3049,10 +3049,10 @@
     ]
   },
   "ivan-vyhovskyi.md": {
-    "mtime": 1772191198.4723651,
+    "mtime": 1772221270.8835812,
     "hashes": [
       "012618c121a7cd56435c4b8ba2c53c4d",
-      "a42d8a640c55b212ee14febd94a83f11",
+      "9b25e7b1ca826283bd864b5a020e16b3",
       "aa074b3af4d04217e67b464c34bd738c",
       "91c0fe6ffb17f3918690097e93316dec",
       "ddc587b8c33e19281930dae45b56929d",
@@ -3296,10 +3296,10 @@
     ]
   },
   "kateryna-bilokur.md": {
-    "mtime": 1772153114.953538,
+    "mtime": 1772221270.8460662,
     "hashes": [
       "963b1e3cc48c0615db908e5acd8a63f5",
-      "16de30537b05ef4f842131d156fbe1aa",
+      "b36a3ed76c20ac4e7a589bac67f699f8",
       "805fb4b974e121df3755cfb4c30d66df",
       "bb44d2b86c74646295d47c53bf1f08cb",
       "1b4cab3dbc0a7b76f9a9d05c6772656d",
@@ -3814,10 +3814,10 @@
     ]
   },
   "kniaz-sviatoslav.md": {
-    "mtime": 1771701611.643938,
+    "mtime": 1772221270.8725111,
     "hashes": [
       "3b07a09748aa69023f9d553517bcd43e",
-      "95edd392c71864a108377012ac7aaeab",
+      "774fc9e88f0908d8a7c442ff9f633441",
       "d9cb23f419e93e92b5b1042a55506843",
       "598902b61850c20aa808858f3ed936ac",
       "19734a4fa23a2eb8027fb8563afb784d",
@@ -4042,10 +4042,10 @@
     ]
   },
   "kniaz-yaroslav-mudryi.md": {
-    "mtime": 1771701611.6441822,
+    "mtime": 1772221270.87819,
     "hashes": [
       "99846f6e69163c6a8a8d6457640f0905",
-      "11d5dc2ad795ed8c6993587e965806dc",
+      "d224847e3aeee4a0367e45a111a2ed1b",
       "f107acad0e54fcbf9372f1cdbbb4a257",
       "3ea85b438e4f982a719894474651e412",
       "1174be8538a9c78f9d4b72f14884c374",
@@ -4281,10 +4281,10 @@
     ]
   },
   "knyahynia-olha.md": {
-    "mtime": 1771701611.6444488,
+    "mtime": 1772236003.6645854,
     "hashes": [
       "258e6c9c5e10ec6fc556fef849c86959",
-      "201dec5d8e08ffc9bfa6408ab73d9acc",
+      "e7b2f2181634e88f2b4e4c1c1f98a96e",
       "1a38fa61f81a90362435abe937a03930",
       "7dbdec4778ffc9a9779004191ad38660",
       "00652103ea677dad53cb53b4caf6466a",
@@ -4512,10 +4512,10 @@
     ]
   },
   "knyazhna-anna-yaroslavna.md": {
-    "mtime": 1772153496.7664337,
+    "mtime": 1772221270.677402,
     "hashes": [
       "59889f1ab654f954a7ebf818386be2d5",
-      "b8e91ef519bb6b45ddcbb970151b7449",
+      "97ebdfa67d9b28816bed62e23ebbc16c",
       "483b0ff761083d0ab1308d469ec0fc13",
       "53232cc071ad739263c6a62bc372a0b0",
       "ee9bb46533e7609757e173ed148351b7",
@@ -4944,10 +4944,10 @@
     ]
   },
   "kostiantyn-vasyl-ostrozky.md": {
-    "mtime": 1772153850.323857,
+    "mtime": 1772221270.7490404,
     "hashes": [
       "3dad3d8a7371cc9f6e669dbad0cb57f7",
-      "5d9988453dfe0bd074d93ad97087871e",
+      "00ff0e44ff7d73cb989727a5768dbf50",
       "f0a0c911e4fd616a7652a1eb5c96af6c",
       "06e2ee862c23f47713d0ce2b86edfb04",
       "ba0864442e308d0390046e11ffa9c79c",
@@ -5501,10 +5501,10 @@
     ]
   },
   "lev-danylovych.md": {
-    "mtime": 1772150895.419913,
+    "mtime": 1772221270.741178,
     "hashes": [
       "58a62ff5f4a5d9d70c57e3a03af113b1",
-      "b5483749eb58391b900d38040aad62c0",
+      "86790e84eb630b5d28557a7718fb5bcb",
       "2e83ae501cfb4ec72b7f751684cfb88b",
       "5dc1f6ac800bd364c6e9151024bfcb09",
       "ff19f12edefb6eac01da158536f0c8cd",
@@ -5685,10 +5685,10 @@
     ]
   },
   "maik-yohansen.md": {
-    "mtime": 1772148678.458291,
+    "mtime": 1772221270.964148,
     "hashes": [
       "98ee9c9fb24bb710ddf11e02d2825c4b",
-      "4b78f448cba2c89b48a4fa74e117d7af",
+      "7245a5fcdad61f5a7fa45f5297557c4f",
       "4d275cd7af9e5e7d9ad46b56ec36e713",
       "0b571e84a92ce8737e6d628d0d22d25b",
       "f33fa08138ec1a5a107f5ef1fefef69a",
@@ -5844,10 +5844,10 @@
     ]
   },
   "mariya-pavlova.md": {
-    "mtime": 1772214153.6037333,
+    "mtime": 1772221270.823785,
     "hashes": [
       "5b67ccee05f9fe2141fbd6e74f3bf464",
-      "b8161e258aec53ad0c82f49235034bc0",
+      "f2fc93491127d1eaadbbf187042c7a37",
       "f7960f2e151b346901df60fbf745051d",
       "066cb2d748fbf7aaa1fb6e67e85a83c6",
       "a0857798949d02eb377829f85cb3942e",
@@ -6021,10 +6021,10 @@
     ]
   },
   "mariya-zankovetska.md": {
-    "mtime": 1772149351.368485,
+    "mtime": 1772221270.7687943,
     "hashes": [
       "375d24c53d840dd09ca6efa48df4d655",
-      "ac8333e88df87bd2fa9c2b9f878fce52",
+      "4a34a7dd5eb65919254ac7141c136332",
       "d2c74a925ef9fa05680f989109bb968b",
       "cc811fdd073615c7d48bff8f33c4fe42",
       "78d8c772d4b32d674567e99000bf9cb9",
@@ -6304,10 +6304,10 @@
     ]
   },
   "meletii-smotrytskyi.md": {
-    "mtime": 1772187822.606239,
+    "mtime": 1772221270.725471,
     "hashes": [
       "ac6d5765ee1c3e2033ff4dc5a961c97f",
-      "cc4ee369acfa1b60af67a5c4870d4520",
+      "f7596441c162dfd2741948071cba0c59",
       "c23432fa5b333e0c93c51604b529112a",
       "0dbdc92a4d81c08e57c9a90cfb27c672",
       "6f51e9c4ec13c2d3304fef112a98578c",
@@ -6518,10 +6518,10 @@
     ]
   },
   "mykhailo-chernihivskyi.md": {
-    "mtime": 1772064636.081352,
+    "mtime": 1772221270.8964267,
     "hashes": [
       "436c68d7bc3f74d146d0079d559d0278",
-      "caa943e443b06c67dc173c8bafe766a5",
+      "06399ac14bcf29797e799283849a5f6a",
       "af2da89ce7d1c9b9ed60ce69f70b2a52",
       "856a91d7c9b13124d7da05a781520650",
       "85bf025ad88be42668a485f8513c63ef",
@@ -6844,10 +6844,10 @@
     ]
   },
   "mykhailo-kotsiubynsky.md": {
-    "mtime": 1772215616.3299732,
+    "mtime": 1772221270.6962166,
     "hashes": [
       "ac683e7c4f898387093d07ef6c1daea0",
-      "88c7674b625abf34b8fef8114180a6a2",
+      "2e7d3ae3e086e8659abf01473ada2550",
       "f259159d1891b033365cbf5ba4298acd",
       "8f8533fef29ad6f52e25d1e3977a54ad",
       "a1e5989d6f31ebbe853c4e4920e7011b",
@@ -7065,10 +7065,10 @@
     ]
   },
   "nataliya-kobrynska.md": {
-    "mtime": 1772151047.1559365,
+    "mtime": 1772221270.7624688,
     "hashes": [
       "95d4d315d1a44d4ecd57b0e3d2b7c2d6",
-      "dbefc64d7f19c5637c9f9b96ba72a54b",
+      "cb16b9ece2c5329444a91780ccf61415",
       "b674ba8f7718af37071b59fa2a125e9a",
       "c81a4faf8c1fd893433fce6fc04eab3b",
       "beb626dab499b06b5402b649d7fb0c61",
@@ -7297,10 +7297,10 @@
     ]
   },
   "nestor-litopysets.md": {
-    "mtime": 1772063695.4436934,
+    "mtime": 1772221270.8074117,
     "hashes": [
       "96d3d411a948133d879b4303e97c4974",
-      "3f6b9652569a2a9ce831c7472f57a290",
+      "96715493bf7df381dc81844cfb40533f",
       "736780ac744e3cbc4041993ee77e0094",
       "dea45b448bceae3da4ecfa4f2ae5c4c4",
       "60ebfbbf27cc3fbe7f51f886cd85f5cd",
@@ -7601,10 +7601,10 @@
     ]
   },
   "olha-kobylianska.md": {
-    "mtime": 1772215030.1711895,
+    "mtime": 1772221270.817522,
     "hashes": [
       "44d0bb3bb4bed5c1667105e34edd0e30",
-      "27d7d9b30d88414e957de1b398203054",
+      "c394350a8ea2d313058308d7fe57705b",
       "6abeb4072b3a2c2db568a91ff5654ef4",
       "a72ccfed914523ae73041222793a34aa",
       "069f0c05a1a503f7b2a3725dc38bb67b",
@@ -7777,10 +7777,10 @@
     ]
   },
   "petro-mohyla.md": {
-    "mtime": 1772189701.2987683,
+    "mtime": 1772221270.8388095,
     "hashes": [
       "1d108f83d73785679ddd318fd165f77c",
-      "5ba2785111497e959769110805a441d9",
+      "21f408337e2927daa4aed514aaa8643e",
       "bbf8ea56f6f5d4f80734feb1b32176f5",
       "ff26f638073d3f53cd4039c1938e4897",
       "615caefda47a066e0beadeab55f9648b",
@@ -8415,10 +8415,10 @@
     ]
   },
   "roman-mstyslavych.md": {
-    "mtime": 1772064139.7038798,
+    "mtime": 1772221270.7790315,
     "hashes": [
       "a0766b2e2707c33d1b34932802b1f4fe",
-      "2fea9b3615b0baadf894be4c32922734",
+      "bb5edf4bfd8d13913f5fdfbdc641dc50",
       "00653bc1f21d1003a139752e2af9ee27",
       "d08b8e7a7bc482af63eb6a166eb3247c",
       "341be26004cd4d1caede79f69b692408",
@@ -8947,10 +8947,10 @@
     ]
   },
   "sylvestr-kosiv.md": {
-    "mtime": 1772190334.7097921,
+    "mtime": 1772221270.921317,
     "hashes": [
       "cb456669dc50f361884eb33f600485ae",
-      "3388b788b38b6c494c08e4c469320f1a",
+      "3fcd3cff12b8142ed5473fa00a911963",
       "14936fa60464f2cb2717f2e65d8aee05",
       "517bf115e981b59320f7a9644464e3dc",
       "3eb812bff68286fc8463d43d0a111142",
@@ -9157,10 +9157,10 @@
     ]
   },
   "valerian-pidmohylnyi.md": {
-    "mtime": 1772154117.180006,
+    "mtime": 1772221270.757496,
     "hashes": [
       "cc5e198d66c74d2319c255f3430d1abf",
-      "acd3dc392c90612d145b23cb9c0fec23",
+      "a6d1d3e986e313049745b06cf06e832e",
       "b56eca96edeeb223c2e4b60b73346e73",
       "aa50cc01db45f3d01830c01cbca024fe",
       "8302fe5e3f755cb5f6766e2f7168fbde",
@@ -9398,10 +9398,10 @@
     ]
   },
   "vasyl-vyshyvanyi.md": {
-    "mtime": 1772149223.1925595,
+    "mtime": 1772221270.7440085,
     "hashes": [
       "95a445df081600edf0272238bae96d98",
-      "0dbed29b5563c3374f0ebff3d40c3491",
+      "bc46505a6be596f8dae9e5bc7c940560",
       "7c6f1c5c9a8bbfe8cb6e57b2a52eac0c",
       "6a31115352a6b021a243a25d807001b1",
       "36cf99b8666a62fefa30ea474f6695a1",
@@ -9738,10 +9738,10 @@
     ]
   },
   "volodymyr-monomakh.md": {
-    "mtime": 1772149423.5188613,
+    "mtime": 1772221270.7308793,
     "hashes": [
       "861d9393b1a3f74661154b407b84e92a",
-      "ae113c78ce2be0d7d91a76400fa02864",
+      "36b0b4532dec38784392ab81e8a85e61",
       "bcc3a9df11e6ebbae07c14b7f0eae516",
       "3ae195498a37a0cd531c006fccf6f4c9",
       "df40a337b028e95a8144443768572961",
@@ -9981,9 +9981,9 @@
     ]
   },
   "volodymyr-velykii.md": {
-    "mtime": 1771701611.647415,
+    "mtime": 1772221270.6984892,
     "hashes": [
-      "b86cc17b6424ac73d71420d5e407c3a7",
+      "c7a3320207cdf503e7ff0722aacaedac",
       "2dfc339a4a46e034504ed192ea485862",
       "a17943510627f03a2744e1455dcf19cd",
       "6f250db65ecbaa41f74a72a1152b1bb9",
@@ -10224,10 +10224,10 @@
     ]
   },
   "volodymyr-vernadskyi.md": {
-    "mtime": 1772153392.133534,
+    "mtime": 1772221270.8917336,
     "hashes": [
       "96bed9eb28c4af41267ef98f3cc37684",
-      "e3228102e78d4d56cd1e9c89aad85797",
+      "1b3fa38e3da432bb534a54b2a8e4df15",
       "ca356f68d79c57a9c693101b2da616c4",
       "067beec7819f53564806f02ea0642c9c",
       "8d86c5fb19a6ef723d496c233dd55aa1",
@@ -10483,11 +10483,11 @@
     ]
   },
   "yevhen-chykalenko.md": {
-    "mtime": 1772151844.9505227,
+    "mtime": 1772221270.7137163,
     "hashes": [
       "aa6ed8cd79b4f269c89851679192f548",
       "867eec3756d18aee01ae234857e42d99",
-      "f01b673d3ad3cb9f21fcdffc10941bf2",
+      "002a5248ad48fd0da0e744948c1e9f18",
       "3f09c85f5993cf29a924fd87ad69bfdd",
       "5ae9df9b611da6298625f21f132e087e",
       "8cb02ff40f9593dbe0b6e5624b868ad6",
@@ -10874,10 +10874,10 @@
     ]
   },
   "yurii-lypa.md": {
-    "mtime": 1772153596.175404,
+    "mtime": 1772221270.843248,
     "hashes": [
       "fc41c96830890ebe9721bc6c91738e5d",
-      "ede7c354bc6fe50eec0c6277db1b618f",
+      "6ab6fad3c534d0683f9987bebc0d6b3f",
       "0b282e879d314d85051148951029750b",
       "a475fab186892048c11108e90be6249c",
       "7a15a05aa0a73ae968467748b5af2013",
@@ -11161,10 +11161,10 @@
     ]
   },
   "yuriy-kondratiuk.md": {
-    "mtime": 1772151497.3364918,
+    "mtime": 1772221270.8305116,
     "hashes": [
       "3298d173c78a4320149249296679ba45",
-      "90d9b1cd3257865fc84fbee4acd29ac9",
+      "8dd2ff47a0fba87c418eee1151b5b39a",
       "3201766f066f102ff2b4fb31b94ac8b0",
       "6320647fe83bfccaee4355654d36b0fc",
       "7a1dfdac1befb22828f5c98a189eb037",
@@ -11612,10 +11612,10 @@
     ]
   },
   "yuriy-nemyrych.md": {
-    "mtime": 1772192682.0705645,
+    "mtime": 1772221270.7929118,
     "hashes": [
       "e3b1ea84066b0fd91baa843f22ce540f",
-      "75e73604125598212a2802d6558ff04a",
+      "f253cf82b212c22686c272d73bd57a6c",
       "7cae98eafa7166832460b0dbd5205771",
       "eda45d09f03081813f017b59ce7b06a7",
       "29a9c39e67c77a7845c31751b837b832",
@@ -12065,10 +12065,10 @@
     ]
   },
   "kost-hordiyenko.md": {
-    "mtime": 1772194810.6618516,
+    "mtime": 1772221270.7282362,
     "hashes": [
       "8af75650d0fb59ae634a710c65d23d95",
-      "94f27f76b5797b0181e18440817d0f46",
+      "c61432172b7f815b73e82795e9b49ffc",
       "952827f1c04b17a1e8cbe70b5b00def3",
       "2b9e81b9ed92037d506641cb55db1c1a",
       "cc6fb3fbf13be7dd60217b5c58983977",
@@ -12457,10 +12457,10 @@
     ]
   },
   "dmytro-bortnyanskyy.md": {
-    "mtime": 1772202079.5738924,
+    "mtime": 1772221270.8579574,
     "hashes": [
       "3c5e71187b591ebc16c19af899536715",
-      "1f5ba73dff06fb59e0470ed664c11573",
+      "15660040908437c112c89a9d992efd59",
       "51406d7d9e8b405b1c4a59cd9afdd57f",
       "f8e4762b404307630e7d13d5561a6e20",
       "6e253d44ac43cdf8fe2147f73d79df94",
@@ -12695,10 +12695,10 @@
     ]
   },
   "hryhoriy-skovoroda.md": {
-    "mtime": 1772201042.2890964,
+    "mtime": 1772221270.94061,
     "hashes": [
       "a1c22b5419f124451d48cc354382aa15",
-      "976f82187b83777b50b2d60efe08de2f",
+      "140991a83297b96b7cfe8276115c35c7",
       "ffdff20f9d6b0dbb02e6dc024ff3606b",
       "ec0d3357ab3286cca3169d9831aef9cf",
       "1d057272ca2a632abf128ba3d7b307d5",
@@ -12876,10 +12876,10 @@
     ]
   },
   "maksym-berezovskyy.md": {
-    "mtime": 1772201330.365423,
+    "mtime": 1772221270.754612,
     "hashes": [
       "f197f1d9d2a8bb410fb31d7cc5e51d30",
-      "935dbd98c2a9ccfb0f7e8232ba94652d",
+      "e567d907c10b2a25a96fa9ba431340b6",
       "471ab12c2002af2858077766b30f1324",
       "2173e7ad19c0c3113b397a040bc8edfc",
       "4d166fae6ecf947adb4db63d8042e20f",
@@ -13046,10 +13046,10 @@
     ]
   },
   "petro-kalnyshevskyy.md": {
-    "mtime": 1772198894.1635292,
+    "mtime": 1772221351.262035,
     "hashes": [
       "2a4acbe3066ee891aa4b80b0c733d34d",
-      "369c5267f6ee3afe94bcfcfe0b8e56a8",
+      "727b5c3c74d9be932df097e2793b8076",
       "23c7a9c45ba61c8a66af7bd34dbe3823",
       "cc702986425d21a553f82bd893a97b7f",
       "f6572064aa5014a2633f0bbaec604127",
@@ -13185,139 +13185,198 @@
     ]
   },
   "pylyp-orlyk.md": {
-    "mtime": 1772196232.2668061,
+    "mtime": 1772236827.9603627,
     "hashes": [
-      "7c52ca7c72aa38d78e084477940116f9",
-      "8a4fd1e7ed65d5b1e4b4e4301579c1c4",
-      "1f13bc15a8372ccbd9ac7b91e73f09c0",
-      "c947bbc6d8a03ca7160c8265e61a6da5",
-      "c7a7e14e9b6d6729a7cc2c2576497fea",
-      "4f51ffea60932f58f4938e4df38b56cf",
-      "9ca9876c72348c3fe6bf695a2806717a",
-      "0f82b5a1a6dacec793d7e0812fb80bd5",
-      "fe36c797a821c4f14a5f409bbdef64c5",
-      "a4b6fb78c65979d82c029d582b1ac660",
-      "2ab1b0a80378cdb66f1a0f8455c51ff3",
-      "5c68fc89542dadbe18c23a5824d07481",
-      "31be5eeb4e977fbc699440d17a8b3442",
-      "efa22dea645896a4a3c8fe715d15a022",
-      "23b1e770ad2c12e2326b56092dfc26dc",
-      "45886d6eeb414de1292e57e99dd58e42",
-      "e02688797436de8ec9b7364c1a2ff7da",
-      "4a85c92709ace8a2075cf336c2ae3238",
-      "82a7ae96d0a337f368a85cf6f44af8d1",
-      "8f070ddcec423490fc83f90c6e296ea3",
-      "a6d4e12d5a4769fce4b8c87d216dd3c7",
-      "981d11d7961d058640375d456dd45a46",
-      "6775826d4edf648277b301c8d96688fb",
-      "16fe4cdbb84e17cdcd98e2125e70868c",
-      "1c2685b33b7a9baaa6b03d9e77abe6c1",
-      "90305f3100f9a5a245b646c92040a964",
-      "973c3101f3fcd7a202018f11f900cce9",
-      "c4c0b74902d618f1024ddcc42edf9c8c",
-      "360d380df789ffa70248c1c142a9c53a",
-      "b348b2deac40ebcbddb03675541f948b",
-      "ed62c9e902b38c0ccfdb54c90a4e266a",
-      "22ee5cf8045368938f0635bc841cfbd8",
-      "18c6ce4d976b016d49b416b7f7f4d6e3",
-      "c28556dc41975aecfe829a0600dcfc1d",
-      "f2a4062b99eb548da7757a084449f5ed",
-      "1b177afcc338679b2e8d263bf63542d3",
-      "31a42fe2c30335373affc070f7e3f15b",
-      "ca266da0a47359126c74e3bd51db75d3",
-      "9cf3c247d7a5bc44e35aa9204449eb4d",
-      "d10de06e964df415e80a0d2595d1558d",
-      "d6947208727e8c9adb316e3218c98051",
-      "36b086bad51b502d4d24c06d8a35aa1d",
-      "be82541dd51917c1bc6c45ab2eecf384",
-      "0feab0532932480d49560e43d306734b",
-      "39e429b8f7181eb11817029de13edd11",
-      "933034a43f2967673c10a6fbdd30e6ad",
-      "6060c287d48e6999aac82488862cde34",
-      "851dccd80e7204d004addf2116681820",
-      "b27821daa5e94155d92cfa0458e81157",
-      "72255fb96129832dc14f780c3aa4ff04",
-      "63c40d4ab45c96c0c61c1f8d743a5e28",
-      "efa176d2d933ec584da936ec3e018ea4",
-      "a3e6ca986a1b23c029dbf4edd266f1a4",
-      "18eaf9e6085815dcd4c3e315fecb9db4",
-      "c31e94067c2c49fd03935ea6b1a3a79a",
-      "f9e0cf8bd9fb200e758d5390e3f4337d",
-      "8bb63c52f23911364deb1ac9186e2c2c",
-      "59eb97ff8e622d53517a7cb6ace2aa34",
-      "3355fef57f5aaf3d4452a5333f725891",
-      "8244d495510336c20c2e87a3a6956426",
-      "60cc73c39d266b294664fab284a11802",
-      "c3a8a8043d76602389383098557a0cb1",
-      "0c5dacd5c538a88c22b84bc3b01310be",
-      "4833752c7198b367d940878c46e1ad16",
-      "12764ca06f750380bd04fcb57ec6d993",
-      "e7c8306aa70fb55b30af8f50b32c9b96",
-      "5086e81a1beab87d36b85a078709605a",
-      "e5053f293e964c5803f6b70db481bc35",
-      "26b74513da502fad5daa230e7e2b2ebf",
-      "92b6d9cefc433611c9ed5ec6806efe58",
-      "369e0c0700868282cbace29cd2dd80ae",
-      "7080cf2eec881e204f2e14dd2c43c457",
-      "d73650a13e3e2a0e5fe244a14191957b",
-      "31c294c656d93d156c9bb4732c3b20c8",
-      "a969e45687ddcf2d13c85d0c205849f3",
-      "ea0f048343cd1025796f205f2ed60019",
-      "0e0a03e80c02372f3b85e3c4f2ee0153",
-      "0be0a60737a59bd96d8e3435792b34c3",
-      "1fbc0dac9a241302eced81b9d954f80d",
-      "5695b30cfa8f57d0c7d8adc1cd2187e8",
-      "52e7b188a8eb9992e7489cea88c5b385",
-      "eb4e6a243af78c9ff680fa58cd784908",
-      "3a904996086a8c4a3127f3985477a60d",
-      "0ab480b2cd9883d91ecdc39e8087f7dd",
-      "9d6c0030f3b682729e2b443b8817bf8c",
-      "e0f05df86a29a776f3bb79aa7695d604",
-      "8430aeed75a1c2808a63d6cb6eb5e7c6",
-      "16835b0c69fba334ee814d0bbaabccd2",
-      "c8c3395fe7b0ed2b5bb24e6ede263b9b",
-      "6b617bc9994a146090a2698819434d6e",
-      "0036da86f9e0409a4772d1ab0d2f6609",
-      "7c23edfa1cb74aede72303d358ac8ea3",
-      "6ddfac1d8696d70d0950adcb51145328",
-      "c33aee137bd1093edc586f223e081514",
-      "c1bef561497e6441f715582eaf747e5d",
-      "952b0617b525d0825c6736d363b8d67a",
-      "86b5abaf07200c5f0602e1169b07cca2",
-      "5a264c11b54e263dd307ec11c7d6ea5f",
-      "7d9b26e101176316eaba5bd4e80beddd",
-      "e0d5bc4a8faeadcbd21b383e19ef14e4",
-      "c7222df260a6d8cea4adcb7e42c720b5",
-      "cfe4c2a143d49b699d296768f3c0789a",
-      "3685a2c1e5ebd43f45cdf24e1f574bca",
-      "5d5d0a02d554ec615e64ac04370e9bd8",
-      "072b1e65804771c5c8055f36a3f3143e",
-      "ff9781fff4410dc516c2a0706452cafb",
-      "eeecac682e9c4f81312a8fdc28cf00c1",
-      "c751928a521a3823d82e3af90b747822",
-      "9b2520070d3738298cf58f8fb31e56a8",
-      "e69dee0fb5ff77811dfdf4931814fe3d",
-      "1bee9288ca8728b09c162974c66cb0d3",
-      "4615515d584b7fd08144da1a77c22543",
-      "3e9f1b9d29b672c5d32333be0310909f",
-      "642a7a768753a9d0351e95650e2209e9",
-      "1f20ae2484180abb87403b2ddb95c0a5",
-      "e4107877799f2236faa829d732cf84fb",
-      "77ed1105aa9bbd91f5e5c21a707685a0",
-      "a06673f0831aea4b75516f678b3ac284",
-      "4b119faadcdef3b217b1cc0708633072",
-      "00fbeaaa02f232fc9924109207abb293",
-      "9864060b8109c06a598b58352d4463f1",
-      "7165392928dd7238ea8b05ac4736f760",
-      "92c9e7228a687418aee564016c0f1b6b",
-      "f10432c4a1bdf18f17c3dce6c5add44b"
+      "3389e9fc1e8e8f8dcd4f8fcd3f3d2761",
+      "781dca6a54478a8dd76d0f0c02088a4a",
+      "4530d51b828b24406c0eb583fb9ab093",
+      "68f7e9a0dd058832bd63afdc44bd9962",
+      "0acb199466d758973972fe972a5f5306",
+      "145e449b9ebe2aacaecd74d8441ae527",
+      "e62b0371d771a8f585016aa9d105f615",
+      "ded093c01add09aae4efd2b166a117ce",
+      "51168a97296250696814aa3e1118036e",
+      "0588734a23e02f9a440be743e9f8790e",
+      "afc34d147ed42fbffe4d068dea793294",
+      "687682e83092adf176b7986972380092",
+      "c3f6c74707a9a4d95ca6a924a2347977",
+      "43514fc392b408389591cfc9c0d74e61",
+      "cdf24bfa276d88f802e53e827e91df01",
+      "1d6741597e41be3e8444dce58d78c513",
+      "382c4115fa71cbe817200b2d83f1e3c2",
+      "ff8814b09608c7a2952d482cd1a3e945",
+      "4a931ab045211af570a6834c63383372",
+      "d3e48612f0938d1295019309b9a48119",
+      "c105e8cfdbc277fbff9967aa56b8fbe1",
+      "60e048cec4f447be8d98c29620ce508b",
+      "380690c997e87eca2c7f0de38ae47cf1",
+      "d60d4a186f781fb527f9c4980e5cc90a",
+      "d4b0db6c93d58a3ae92c7c776bc3e4e3",
+      "896a613a3ca57907a0b2caa13ad19a9b",
+      "9da9873bbd074a055040438c3f888935",
+      "6a5f57fed29e1418f3c73c676c471366",
+      "a94f0b218dbf3dc8bd258f230422b1b0",
+      "307c8f4e2b7e5edc754a2732b561dce7",
+      "b137abf7f77e42d0da42e8ead9b29b2d",
+      "0353901626046f76da36faee901f714c",
+      "4d05c371143bd4dff03cd9e0a0d50751",
+      "5bf2ebc2b71f09fdd0d28a272fd2163d",
+      "78d384c41aaa817d3f5aeaaffe6ec9ce",
+      "bf160b65134f3a40c1f6796df4c75721",
+      "e59d1903e05d940ecea169ce3cffa232",
+      "ca3ee120e73b0d907d5dfe73f50485a3",
+      "f7df0402a6a9f1fc1caa86ac829fec1c",
+      "f7d3ecb592f44d189cb7c626e04594a1",
+      "ff1a19f96d145e71e1483464579a6f3f",
+      "6ad1d7037b129f7729bf7047345816e5",
+      "c7bf5112d0b59fb50a60227dffad8cb1",
+      "958129b2af263d99132a15cafd30f016",
+      "06bb6e090960cce5abf05df7fdcd146d",
+      "565e7be3bb36ff2c60811d79b0ffb08e",
+      "fd96bc44043df55d32c4a064c97c2b68",
+      "559c5e2abcb3d9167d31e7fb1303b2bd",
+      "aa588b6ecd5a31d8c7daf08278d0c89b",
+      "1905878a7df76476ef7f88ceacdd006e",
+      "d83b708b2019995181308fa564b841b6",
+      "1b0df6e4378e4bba39aec437c409ed17",
+      "c192cf9950cb5b75c63e219ec842f7b6",
+      "366afe6b48087373521d32359354ef2c",
+      "c902448deb9fee1185e33391eb42e1f5",
+      "ddb29202b0472063d1ce0af5734e9961",
+      "67d654e0269fd6bcea151f279a7faf5f",
+      "accc84a202bc80dcc69502e2b26e16f8",
+      "b473be538458bfca4c149cdc95e88bed",
+      "51544eb1b2f37e74647747471090e358",
+      "f53100a2ae865787796282cf69deeb28",
+      "55f98ec5a67bc6871333f54e4eac3f3d",
+      "e595726d47109311ad11503bc2b822c6",
+      "4061d9b559a6c4466d71d5bfe5c742b5",
+      "de8bd7db54f23c7f0d706d6045108a60",
+      "0bc30e9818d98edfa19ce5bb3f243a1c",
+      "7ff3848269d3d3e52c57e47bab6af484",
+      "2adcbd12bd0613d04ae8ca4791d0acbf",
+      "817bc2aa35a9963f2973dc8af9f25cd4",
+      "15a9a7fd69dab686e642e588610035df",
+      "d81d29f7c9c3f232af4311419e1b0bb5",
+      "6ef936e1924323dab874f4c7d57d2218",
+      "b4bbde57743442a08cced0e3d66903f2",
+      "74d957aa22b9075feae2ebf67970a9c0",
+      "a336a5a7f44c8cde8f510ebbcf95a106",
+      "85cfe258fb8a011d2948537bc9c4c697",
+      "68a3fb142ef6b40fac1f24cb9967b243",
+      "06fbe505cc4b3e634b3d3d947706b539",
+      "cff8851f6cdda13cc956d131768b0edf",
+      "07d6b63c61014ff641a22ea1de0fceda",
+      "206ef1fd479006343a29f4e0ff73b9c8",
+      "c263d36026f4751f89912019cc5a4d68",
+      "730901f0bca02eb313932f768d3f5040",
+      "a255a8aa780b8d9368b8f54dabb5a61b",
+      "4333c172f3fcfe773632d0360699d065",
+      "0ccf2e0f73e57458a0abfe94f9a733d1",
+      "7882d78169a6bedacaedda3af4e98209",
+      "5b66b1207615bdc77734e4acc81d55d0",
+      "c6e30c3be2216f58432b7df575d9f0d7",
+      "578ca0b9c816acdd67773eb480993215",
+      "73380deed26c472c9ec23dbb1ee95ca5",
+      "2d9675ea3357b1adcb327fd1dd3f6fbf",
+      "df7c93e9e0f04218b90192812dfefcdf",
+      "7a66a159733a855908ffa2fdd2666f6f",
+      "8764aedee10cc24d2ac5efa1712bd3de",
+      "28fbea18bc48dfb081ae49e2230a61d0",
+      "6d9e3df817b866ce97d0d83fa3f1d3bb",
+      "2d2fb7700aee4d5a1c6c70d84335d4ca",
+      "4cd4e0e2842a3188ebdb4d447cded05c",
+      "6b632d57da0845826c1721356ce04482",
+      "6bd5773852548768dc15e575b20a41e7",
+      "15ed6e7086eda1a4182166cda05e6240",
+      "9259f0a6220bc4983f9b11dbcb764bb8",
+      "7c05fb8f6fedf1df458f1863fbbcfe0e",
+      "c25d4e927bb71ab627fb1efe757b1985",
+      "7e17ad380b7b2a33a1585ddcdeb77d53",
+      "8c80a47cfdb2ad915a6d52f849b03be1",
+      "c2910fecd6e668322457c7a45c1d5f09",
+      "512e1827a87fd92d7213339af6ba3740",
+      "901e549bc1cf945f9c1b5ce252044337",
+      "a364aa305b6946e38f6494d85bb9f976",
+      "2455afdc0f6bfe061a5e1cbd86344b89",
+      "463276d2804ffa9bee1cd9fcc35873e1",
+      "8e8e762f416b9e9577a57bedac253da5",
+      "986418a8ffb4d2170343a0f798dfe489",
+      "6265ed974a0d40dbc8e6cc62c8ca28a9",
+      "e2e5f6a318713d37b960f1d1c21f334a",
+      "5974a03949efed134aca8b16797978ba",
+      "710d2577026a8f649b698a24149d895a",
+      "41d52dd5d5f3410c5b75ebceef9f134a",
+      "c8ddfbb06f9f71eca81b302878850dde",
+      "0aca5105c8bc9efd8926d390a8927c87",
+      "47d6792e1706b0097188425302f6e82c",
+      "8e572717ec8f16dc892c39d6ba298409",
+      "df5bcb17d34152a786c511c52f94fdd8",
+      "f40ceb06928210d61773147accd2a47f",
+      "9ef279efeb4a2c037402cf167e0cbdac",
+      "fc17a367eb3064718ec2c7f94dbe34ad",
+      "859b81525b91e74e588bdfffdebf65d1",
+      "839315442a8109af08999f0708ba9add",
+      "73c548d28a0d108cb88be920ee5dd946",
+      "c876e66a975b13b26b1305e49dd0bf12",
+      "9e36571f0e8bbb7e06b3173c24788781",
+      "2d9a5887633b4be6b8c3cd414b565162",
+      "631da7959f0740cac24f898b51a4501f",
+      "1f4732c9994f17a5a3fc3dbb637dc053",
+      "18f4f655506811cb17ebe4381dd8cd3b",
+      "f836180f14fca0209b1015a8717bda8e",
+      "c9be3bb3c071def4e664b22c4a6fbb10",
+      "760f67f17ab04c1ef9d6e337d1ae58fa",
+      "d848245f0da997ca58fecff8b770890c",
+      "a1903b8b4ca252a34c965a4fb2a9d1aa",
+      "2f07fbdce9b81c7c8850b26dbba0c09a",
+      "5c80f9f7092d3f00046faac3c8230ca7",
+      "86f11d93eb15e8b36bee7659312892c0",
+      "274fb18d717cb703b3b40c44a368f38f",
+      "d49c3c7d9ef655e3eedecdc6726ea9ee",
+      "7a86eea0986353ec1f6fb49cb5d4e26a",
+      "7f77cd98bd5ce71ebe6623420afa473c",
+      "91331dfb084b64c57e1c47ffbf72e38a",
+      "b2da6a8165552f12f594d7b4af814780",
+      "ae610678e8d326546168d8f3eb8d85ab",
+      "94c07d63a5df9d37231b03f45e48bb43",
+      "13763fedc11b20f3a283a5740b7fb397",
+      "77ccdf6a4dda2b9850b4ccf895f769b8",
+      "9230c3aeb1b0b5b79242f9a30a0b1e95",
+      "9ba9b72b33f8a2afa636dd25615a4ff1",
+      "98dc03825ccd400a14b6f987508796c7",
+      "b5f6b9db8647946ef0a0478db507cc78",
+      "6b4553508b27888231be34a65d322a5f",
+      "6efb93b0c2e0e4e6709ede02d3c898dc",
+      "76d7aec15a5bfbcefd952db934c49fe7",
+      "5a53ebacf4da1828d622766599bead5b",
+      "27272cbd84cddb10b432c7d8734192b3",
+      "d812e15534fbd255d9a2bbbbee45e2d7",
+      "663a66f7477d78e1d8de8a93800b2ff4",
+      "6fb1603fc4bc9043ab3fc8f2a2fb3d79",
+      "9f8f391f3443458b834a60436cdbaae3",
+      "f6ae5700511f8beb2f0941201c245a6e",
+      "a211cf37cf990400d08e85e4321c3056",
+      "a9c38fcbeea5871819a8f21e0314a589",
+      "0806f469da133db04fa1302d2fd95bac",
+      "52c9cfc9f7bc39ed2e1b786355b5430b",
+      "12d15b675b8a321ec94e54be20e5f2fc",
+      "025406b1fc4fb8eeeebefeb6b71427e1",
+      "bffdb5c5469c5900a927e86bba759fdc",
+      "0efe20d22202ba9a27c56fbc8e413270",
+      "84c05692d158d910f49c29672a095110",
+      "018c6be7d10b106d17b731cf819a9b14",
+      "f45a6ba84f19ed01297d15497a548190",
+      "9c73dfeff550ebe29c6c6ae0dad4624b",
+      "9dabdbcba5ee05efdf4a3b133a7e93e2",
+      "9772ccc155a4c9d94aa33a00560547b7"
     ]
   },
   "ivan-kotliarevskyi.md": {
-    "mtime": 1772202777.4507551,
+    "mtime": 1772221270.8874304,
     "hashes": [
       "8243f72bedd54106f7db7376fa564eae",
-      "42557f107f299f2557b8de908737db79",
+      "64a8eca99fb4dd9282537921d538bf96",
       "676296b226918cf81083f064023dadf1",
       "be54ff417a25934e7909ef3765e072b9",
       "b7c6ae7f0e5e7ed0938e3f49d3697d19",
@@ -13561,10 +13620,10 @@
     ]
   },
   "semen-hulak-artemovskyy.md": {
-    "mtime": 1772203605.3690598,
+    "mtime": 1772221270.9182124,
     "hashes": [
       "194f792e8b08e711dce37a94a32983b7",
-      "cec495266241366462fc7bae394475bb",
+      "105ccd54b65014aca70d8d3b41d5695e",
       "af748c6b073e0f372f3e250f3d015ed3",
       "8f507430ad538bbca14dba1b2cce1a06",
       "96a1d83ee4cd217fd5f4d006d1b0af53",
@@ -13791,10 +13850,10 @@
     ]
   },
   "hryhoriy-kvitka-osnovianenko.md": {
-    "mtime": 1772203135.349614,
+    "mtime": 1772221270.9279883,
     "hashes": [
       "4ae6abdc09d909bdd83b98e9a611d501",
-      "eb49eea9af9469d8604eb941929e4de7",
+      "547d991995bb653c2c66e10871ee9ddb",
       "ea0d4f77e7082a4844711a3a13636089",
       "714e1e94e39948a29552e2657b4338d3",
       "e872b696423e944d5ca13ea5e1f46bc2",
@@ -13957,10 +14016,10 @@
     ]
   },
   "taras-shevchenko.md": {
-    "mtime": 1772204471.719652,
+    "mtime": 1772221270.7875395,
     "hashes": [
       "2d0e8ad0d6525ce61053b973ead8c72c",
-      "2c38da9bcb3529ea2382df8caf66474e",
+      "7ad20dfd593ef482c4be47daca0fc7b2",
       "0882ea44b559a7781fedaf4c2f9fa1e8",
       "e9850aed138020c42d5606bf483080c8",
       "2e12f8002c6040a1a6994b2a37e8796a",
@@ -14400,10 +14459,10 @@
     ]
   },
   "marko-vovchok.md": {
-    "mtime": 1772206436.1250994,
+    "mtime": 1772221270.826625,
     "hashes": [
       "a88ea123d31113708c29e00582012098",
-      "79a2901918e5efefb65c066227caf4dc",
+      "42c14897a01615d387125483f75e3f2a",
       "bf8d242afae668a9664b3a593aada3e2",
       "b99375562053c7ef8dfe78a1f03df696",
       "15524ea248e9e615d0f640d226c72754",
@@ -14636,10 +14695,10 @@
     ]
   },
   "hanna-barvinok.md": {
-    "mtime": 1772205336.1387138,
+    "mtime": 1772221270.6919389,
     "hashes": [
       "7003b82447089a7773e00095b5bddf37",
-      "a6f5da07bee755b0d040d365fc88bfc0",
+      "b24697b56e73713ff4a169ce283fb5a8",
       "c5d93ae23fbb5bc918ed050da3b57370",
       "55b1513f20e5e026815d098780218869",
       "4615b2a404f53c3ba35d776f270d2eaa",
@@ -14788,10 +14847,10 @@
     ]
   },
   "oleksander-potebnya.md": {
-    "mtime": 1772207361.8248892,
+    "mtime": 1772221270.6801493,
     "hashes": [
       "4f87a8e2736346afc2c19008b00cc587",
-      "eafe8ee780b1ac1ae7603847680adf7e",
+      "8a8560101558e735a3e81da2f400bd4d",
       "4972a676fda2091a3018fb080ba07348",
       "8b91de166ede6d4b2e670200b3ecfddf",
       "91d4462d7907e27532ba23b3cc97c1ce",
@@ -14995,10 +15054,10 @@
     ]
   },
   "marko-kropyvnytskyi.md": {
-    "mtime": 1772208403.462019,
+    "mtime": 1772221270.9107504,
     "hashes": [
       "c980596dccdd2b8e66adc6dab998e251",
-      "c7b30903f549e723fdc714b2704ce741",
+      "d225e80de845bd2bd92f6ca79fe36252",
       "9c22629cfb82d01a5d2c8f9002f8317d",
       "664c91160ec1a6ecde5345927191da2b",
       "99e6132f85669d13758346946792516d",
@@ -15238,10 +15297,10 @@
     ]
   },
   "ivan-nechuy-levytskyi.md": {
-    "mtime": 1772207645.0255692,
+    "mtime": 1772221270.812538,
     "hashes": [
       "324ce305e54fa6ce09956bdd1c3cea54",
-      "6715644690921962daf47e6752ee3f1f",
+      "e50de108c58d990f6752ed18714bbd36",
       "f1c66aff01418933aaf7dd129c9e5b5e",
       "c819b642921eb9c97648b11522843587",
       "7f7f8db920faeac2b1c13cc6a583315e",
@@ -15401,10 +15460,10 @@
     ]
   },
   "mykhailo-drahomanov.md": {
-    "mtime": 1772209325.049169,
+    "mtime": 1772221270.8029199,
     "hashes": [
       "ba4b92cb6d8bfd49a28d8b3983bf7d19",
-      "799047211011ad7f95f7ecdd1b685007",
+      "9beb1779db1da35bc911bba4a814c18c",
       "f0a477f2c7c3f7d86bebf1cef6e914d6",
       "61728ba5711b49b51c9d6435d4dde68a",
       "b13ec6f0b2cf934c42ec8f7be07b46fb",
@@ -15632,10 +15691,10 @@
     ]
   },
   "mykola-lysenko.md": {
-    "mtime": 1772210876.4811764,
+    "mtime": 1772221270.8617496,
     "hashes": [
       "099dd22d2b46640c79c939242c2dc450",
-      "70788c1f188f372d5f36f8530fccbd55",
+      "e5068736b25ee58a126665eebebe0a70",
       "de9b8e4f6a586242edff329da0e6d6aa",
       "366aa33df277c209ce96608380e20b4c",
       "17247d5483468829f0d4262d05f3511c",
@@ -15880,10 +15939,10 @@
     ]
   },
   "ivan-puliui.md": {
-    "mtime": 1772213848.623987,
+    "mtime": 1772221270.7381594,
     "hashes": [
       "ebbbe9a579ed63cba383033c733fb6ec",
-      "2e9a0826af854815da1be908a06cc369",
+      "932308d19b96395a1fdb0092d3185234",
       "3fd5848cd0d737afd81f6bba157ee081",
       "cdcf1419071fbf5aa5494f3fac013951",
       "9a1aa721322a6add2364cf0fc69fa8b4",
@@ -16545,10 +16604,10 @@
     ]
   },
   "andrey-sheptytsky.md": {
-    "mtime": 1772215823.1120012,
+    "mtime": 1772221270.8530478,
     "hashes": [
       "c8db56def702d72426d05618c655afca",
-      "9d5ba062872e55ef6f6c621ce38f473b",
+      "313cae96b0cff9fbbaaaa5724827c758",
       "59e0de20c32a5d9c5822bb72602615d6",
       "66e621958029168f03a9545906c6b0ae",
       "f6817a8fa71a4daa4d83a7c834bc0ccf",
@@ -16718,10 +16777,10 @@
     ]
   },
   "sofiya-okunevska.md": {
-    "mtime": 1772216974.4256227,
+    "mtime": 1772221270.9246047,
     "hashes": [
       "07ddd8e2064ba72a502212d3df4d6f3f",
-      "2c08816ca11414288bf91758b699742a",
+      "5d13b9c30774fc190926ffcc2299ffc9",
       "2543d4cf3e14d3bf3cc32506fb2864d6",
       "bc7d4b5341e8837c4ec344a1ca080bd7",
       "5c13c731a6d8ef532861f4ca5d1dfad7",

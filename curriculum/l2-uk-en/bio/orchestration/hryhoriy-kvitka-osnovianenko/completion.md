@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py bio 37 — E2E
+PASS: pipeline bio 37
 
   Module:   hryhoriy-kvitka-osnovianenko
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    4319 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T14:38:55Z
+  Verdict:  PASS
+  Date:     2026-02-27T23:56:11Z

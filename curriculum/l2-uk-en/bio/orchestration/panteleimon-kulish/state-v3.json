@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T15:08:28Z",
       "task_id": "v3-panteleimon-kulish-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T15:11:41Z",
-      "attempts": 2
     }
   }
 }

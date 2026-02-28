@@ -2,14 +2,14 @@
   "module": "knyazhna-anna-yaroslavna",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T10:58:40.652062Z",
+  "last_audit": "2026-02-28T00:52:51.314318Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T01:51:36.766434Z",
+    "md": "2026-02-27T20:41:10.677402Z",
     "meta": "2026-02-27T00:20:20.724648Z",
     "activities": "2026-02-27T00:20:27.176444Z",
     "vocabulary": "2026-02-27T00:14:42.059755Z",
-    "plan": "2026-02-17T13:33:56.599859Z",
+    "plan": "2026-02-27T20:41:24.291447Z",
     "research": "2026-02-22T10:35:24.535058Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "6222/5000 (raw: 6571)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6222/3920 (raw: 6571) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "Missing required activity types: creative-writing"
+    ],
     "pass_count": 3,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

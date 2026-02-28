@@ -19,11 +19,6 @@
       "status": "complete",
       "ts": "2026-02-26T23:14:42Z",
       "task_id": "v3-knyazhna-anna-yaroslavna-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T09:58:40Z",
-      "attempts": 1
     }
   }
 }

@@ -2,14 +2,14 @@
   "module": "roman-mstyslavych",
   "level": "C1",
   "plan_version": "1",
-  "last_audit": "2026-02-27T10:58:58.553761Z",
+  "last_audit": "2026-02-28T00:53:16.210318Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T01:02:19.703880Z",
+    "md": "2026-02-27T20:41:10.779032Z",
     "meta": "2026-02-26T01:02:31.396013Z",
     "activities": "2026-02-26T01:00:11.464499Z",
     "vocabulary": "2026-02-26T10:56:38.199667Z",
-    "plan": "2026-02-17T13:37:38.111207Z",
+    "plan": "2026-02-27T20:41:24.285573Z",
     "research": "2026-02-22T10:35:24.550191Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5441/5000 (raw: 5797)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5441/5000 (raw: 5797) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

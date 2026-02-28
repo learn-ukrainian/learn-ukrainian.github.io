@@ -2,14 +2,14 @@
   "module": "bohdan-khmelnytskyy",
   "level": "C1",
   "plan_version": "1",
-  "last_audit": "2026-02-27T11:46:13.471300Z",
+  "last_audit": "2026-02-28T00:54:46.759300Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T11:44:43.782525Z",
+    "md": "2026-02-27T20:41:10.944048Z",
     "meta": "2026-02-27T11:45:50.880083Z",
     "activities": "2026-02-27T11:43:16.786182Z",
     "vocabulary": "2026-02-27T11:43:16.617129Z",
-    "plan": "2026-02-18T19:03:39.219110Z",
+    "plan": "2026-02-27T20:41:24.144283Z",
     "research": "2026-02-22T10:35:24.526739Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5005/5000 (raw: 5355)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5005/5000 (raw: 5355) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6/3 | density: 2 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

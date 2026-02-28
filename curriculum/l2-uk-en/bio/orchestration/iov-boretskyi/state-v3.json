@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-26T01:02:28Z",
       "task_id": "v3-iov-boretskyi-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T10:00:01Z",
-      "attempts": 1
     }
   }
 }

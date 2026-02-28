@@ -2,14 +2,14 @@
   "module": "volodymyr-velykii",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T10:58:30.142642Z",
+  "last_audit": "2026-02-28T00:52:38.059282Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T20:20:11.647415Z",
+    "md": "2026-02-27T20:41:10.698489Z",
     "meta": "2026-02-19T11:16:07.810562Z",
     "activities": "2026-02-26T00:42:01.114361Z",
     "vocabulary": "2026-02-26T10:56:53.981773Z",
-    "plan": "2026-02-18T17:54:25.129844Z",
+    "plan": "2026-02-27T20:41:24.126021Z",
     "research": "2026-02-22T10:35:24.556709Z"
   },
   "gates": {
@@ -41,7 +41,7 @@
     "research": {
       "status": "warn",
       "violations": 0,
-      "message": "Refresh recommended: Content predates research (research file is newer)"
+      "message": "Refresh recommended: Research has 5+ sources but content cites 0"
     },
     "review": {
       "status": "deferred",

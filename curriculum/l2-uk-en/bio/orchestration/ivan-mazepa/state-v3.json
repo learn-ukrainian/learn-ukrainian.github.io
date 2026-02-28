@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T11:53:28Z",
       "task_id": "v3-ivan-mazepa-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T11:57:41Z",
-      "attempts": 2
     }
   }
 }

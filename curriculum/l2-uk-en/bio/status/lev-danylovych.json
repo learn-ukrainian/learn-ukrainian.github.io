@@ -2,14 +2,14 @@
   "module": "lev-danylovych",
   "level": "C1",
   "plan_version": "1",
-  "last_audit": "2026-02-27T10:59:20.318047Z",
+  "last_audit": "2026-02-28T00:53:42.894279Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T01:08:15.419913Z",
+    "md": "2026-02-27T20:41:10.741178Z",
     "meta": "2026-02-27T01:07:32.860435Z",
     "activities": "2026-02-27T01:00:27.291554Z",
     "vocabulary": "2026-02-27T00:55:04.561707Z",
-    "plan": "2026-02-17T13:37:38.097917Z",
+    "plan": "2026-02-27T20:41:24.119990Z",
     "research": "2026-02-22T10:35:24.536837Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "6331/5000 (raw: 6570)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6331/5000 (raw: 6570) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6/3 | density: 2 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

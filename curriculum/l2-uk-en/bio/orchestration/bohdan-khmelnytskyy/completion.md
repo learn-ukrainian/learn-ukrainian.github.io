@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 21 — E2E
+PASS: pipeline bio 21
 
   Module:   bohdan-khmelnytskyy
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    5355 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T10:46:13Z
+  Date:     2026-02-27T23:54:46Z

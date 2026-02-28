@@ -2,14 +2,14 @@
   "module": "kostiantyn-vasyl-ostrozky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T10:59:52.786899Z",
+  "last_audit": "2026-02-28T00:54:18.112907Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T01:57:30.323857Z",
+    "md": "2026-02-27T20:41:10.749040Z",
     "meta": "2026-02-19T12:57:28.013628Z",
     "activities": "2026-02-27T01:54:38.227093Z",
     "vocabulary": "2026-02-27T01:54:38.193923Z",
-    "plan": "2026-02-17T13:33:56.600250Z",
+    "plan": "2026-02-27T20:41:24.247825Z",
     "research": "2026-02-22T10:35:24.535594Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5985/5000 (raw: 6320)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5985/5000 (raw: 6320) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T10:02:47Z",
       "task_id": "v3-severyn-nalyvaiko-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T10:06:09Z",
-      "attempts": 2
     }
   }
 }

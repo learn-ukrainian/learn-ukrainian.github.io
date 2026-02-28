@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-26T00:00:11Z",
       "task_id": "v3-roman-mstyslavych-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T09:58:58Z",
-      "attempts": 1
     }
   }
 }

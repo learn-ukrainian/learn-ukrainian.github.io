@@ -1,10 +1,10 @@
-# Audit Report: M13 — kostiantyn-ostrozky-elder.md
-**Level:** BIO | **Module:** M13 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 5000
+# Audit Report: M999 — kostiantyn-ostrozky-elder.md
+**Level:** C1 | **Module:** M999 | **Phase:** BIO | **Pedagogy:** CBI | **Target:** 5000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-27 10:59:31
+**Generated:** 2026-02-28 00:54:00
 
 ## Configuration
-**Type:** biography
+**Type:** C1-biography
 **Word Target:** 5000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items

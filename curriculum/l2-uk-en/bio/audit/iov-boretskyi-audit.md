@@ -1,10 +1,10 @@
-# Audit Report: M17 — iov-boretskyi.md
-**Level:** BIO | **Module:** M17 | **Phase:** C1 | **Pedagogy:** CBI | **Target:** 5000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-27 11:00:01
+# Audit Report: M999 — iov-boretskyi.md
+**Level:** C1 | **Module:** M999 | **Phase:** BIO | **Pedagogy:** CBI | **Target:** 5000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 00:54:23
 
 ## Configuration
-**Type:** biography
+**Type:** C1-biography
 **Word Target:** 5000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
@@ -16,19 +16,44 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Первинне джерело: Протестація | 3 | 3 | ✅ |
+| 2 | critical-analysis | Аналіз: Легітимізація козацтва | 1 | 1 | ✅ |
+| 3 | essay-response | Есе: Союз меча і хреста | 1 | 1 | ✅ |
+| 4 | true-false | Перевірка фактів: Біографія та контекст | 6 | 5 | ✅ |
+| 5 | quiz | Перевірка розуміння: Життєвий шлях | 5 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
+  - FIX: Add a comparative-study activity to meet advanced richness standards.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 5533/5000 (raw: 5915)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 5/3
+- **Density:** ✅ All > 1
+- **Unique_types:** ✅ 5/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.9% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

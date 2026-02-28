@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T14:43:51Z",
       "task_id": "v3-semen-hulak-artemovskyy-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T14:47:08Z",
-      "attempts": 2
     }
   }
 }

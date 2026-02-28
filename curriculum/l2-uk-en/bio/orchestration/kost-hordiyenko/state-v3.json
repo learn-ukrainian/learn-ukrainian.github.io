@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T12:17:51Z",
       "task_id": "v3-kost-hordiyenko-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T12:22:11Z",
-      "attempts": 2
     }
   }
 }

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 57 — E2E
+PASS: pipeline bio 58
 
   Module:   volodymyr-vernadskyi
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    5384 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T17:58:42Z
+  Date:     2026-02-28T00:03:28Z

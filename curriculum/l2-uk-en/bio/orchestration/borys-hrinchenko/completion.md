@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 55 — E2E
+PASS: pipeline bio 56
 
   Module:   borys-hrinchenko
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    6162 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T17:51:23Z
+  Date:     2026-02-28T00:03:12Z

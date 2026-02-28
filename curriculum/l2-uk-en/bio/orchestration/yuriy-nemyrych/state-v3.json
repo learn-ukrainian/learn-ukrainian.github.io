@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T11:39:30Z",
       "task_id": "v3-yuriy-nemyrych-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T11:45:15Z",
-      "attempts": 2
     }
   }
 }

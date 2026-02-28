@@ -2,14 +2,14 @@
   "module": "ivan-sirko",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-27T12:33:07.803302Z",
+  "last_audit": "2026-02-28T00:55:12.893334Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T12:32:23.972280Z",
+    "md": "2026-02-27T20:41:10.935107Z",
     "meta": "2026-02-27T12:32:49.388542Z",
     "activities": "2026-02-27T12:30:04.310778Z",
     "vocabulary": "2026-02-27T12:30:04.312744Z",
-    "plan": "2026-02-17T13:33:56.596911Z",
+    "plan": "2026-02-27T20:41:24.129696Z",
     "research": "2026-02-22T10:35:24.532910Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "6556/5000 (raw: 7015)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6556/5000 (raw: 7015) | pedagogy: 3 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 2 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

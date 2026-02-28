@@ -18,19 +18,17 @@
   Module:  checkpoint-cases
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  2 Outline Compliance Errors
   Checkpoint Format Errors
-  failing gates:
-    lesson: 2547/2500 (raw: 3130) | pedagogy: 1 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 3 violations (minor)
-
+  Grammar      ℹ️ N/A (covered by naturalness)
+  Naturalness  ℹ️ PENDING — awaiting review
+  Activity_quality ⏳ Deferred (content-only audit)
+  Research     ✅ Content aligned with research
+  Immersion    🇺🇦 20.1% (checkpoint - no gate)
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/audit/checkpoint-cases-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/status/checkpoint-cases.json
@@ -38,11 +36,11 @@
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
   Critical Failures:
-    • 2 Outline Compliance Errors
     • Checkpoint Format Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/checkpoint-cases-audit.log for details)
         ```
+
 
         ## Files to Fix
 

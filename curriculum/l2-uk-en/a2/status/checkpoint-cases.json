@@ -2,15 +2,15 @@
   "module": "checkpoint-cases",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T10:57:11.764648Z",
+  "last_audit": "2026-02-28T01:02:14.967182Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T21:56:51.633467Z",
-    "meta": "2026-02-24T22:37:07.221274Z",
+    "md": "2026-02-28T01:02:12.346648Z",
+    "meta": "2026-02-28T00:34:55.379819Z",
     "activities": "2026-02-22T21:53:16.679496Z",
-    "vocabulary": "2026-02-26T10:56:38.085752Z",
+    "vocabulary": "2026-02-28T01:02:12.351236Z",
     "plan": "2026-02-20T21:00:15.023721Z",
-    "research": "2026-02-22T20:43:45.229629Z"
+    "research": "2026-02-28T00:34:55.371893Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2573/2500 (raw: 3103)"
+      "message": "3688/3000 (raw: 4523)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "25/1"
+      "message": "26/1"
     },
     "naturalness": {
       "status": "info",
@@ -44,18 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
-      "violations": 0,
-      "message": ""
+      "status": "fail",
+      "violations": 1,
+      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "2 Outline Compliance Errors"
+      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
     ],
     "pass_count": 5,
-    "fail_count": 0,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

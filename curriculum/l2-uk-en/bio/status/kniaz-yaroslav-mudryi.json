@@ -2,14 +2,14 @@
   "module": "kniaz-yaroslav-mudryi",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-27T10:58:34.877584Z",
+  "last_audit": "2026-02-28T00:52:45.193106Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T20:20:11.644182Z",
+    "md": "2026-02-27T20:41:10.878190Z",
     "meta": "2026-02-19T11:24:48.095251Z",
     "activities": "2026-02-26T00:42:04.872765Z",
     "vocabulary": "2026-02-26T10:56:38.198223Z",
-    "plan": "2026-02-17T13:37:38.095912Z",
+    "plan": "2026-02-27T20:41:24.193650Z",
     "research": "2026-02-22T10:35:24.534547Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5316/5000 (raw: 5561)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5316/5000 (raw: 5561) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "warn",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12 < 24 (soft target)"
     },
     "naturalness": {
       "status": "info",
@@ -41,19 +41,19 @@
     "research": {
       "status": "warn",
       "violations": 0,
-      "message": "Refresh recommended: Content predates research (research file is newer)"
+      "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "pass_count": 1,
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

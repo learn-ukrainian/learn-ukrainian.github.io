@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py bio 34 — E2E
+PASS: pipeline bio 34
 
   Module:   maksym-berezovskyy
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    4256 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T14:08:50Z
+  Verdict:  PASS
+  Date:     2026-02-27T23:55:56Z

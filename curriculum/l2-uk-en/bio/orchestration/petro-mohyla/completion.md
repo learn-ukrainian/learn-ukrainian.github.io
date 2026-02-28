@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 22 — E2E
+PASS: pipeline bio 22
 
   Module:   petro-mohyla
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    5321 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T10:55:29Z
+  Date:     2026-02-27T23:54:52Z

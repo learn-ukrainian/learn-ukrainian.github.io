@@ -2,14 +2,14 @@
   "module": "ivan-vyhovskyi",
   "level": "C1",
   "plan_version": "1",
-  "last_audit": "2026-02-27T12:21:49.988847Z",
+  "last_audit": "2026-02-28T00:55:06.343453Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T12:19:58.472365Z",
+    "md": "2026-02-27T20:41:10.883581Z",
     "meta": "2026-02-27T12:20:19.394658Z",
     "activities": "2026-02-27T12:21:28.957470Z",
     "vocabulary": "2026-02-27T12:15:52.917655Z",
-    "plan": "2026-02-17T13:33:56.597434Z",
+    "plan": "2026-02-27T20:41:24.076622Z",
     "research": "2026-02-22T10:35:24.533083Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5232/5000 (raw: 5692)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5232/5000 (raw: 5692) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

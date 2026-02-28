@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py bio 32 — E2E
+PASS: pipeline bio 32
 
   Module:   petro-kalnyshevskyy
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    3723 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T13:39:53Z
+  Verdict:  PASS
+  Date:     2026-02-27T23:55:49Z

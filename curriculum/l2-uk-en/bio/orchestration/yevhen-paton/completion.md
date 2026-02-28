@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py bio 67 — E2E
+PASS: pipeline bio 69
 
   Module:   yevhen-paton
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-20T23:33:59Z
+  Verdict:  PASS
+  Date:     2026-02-28T00:08:09Z

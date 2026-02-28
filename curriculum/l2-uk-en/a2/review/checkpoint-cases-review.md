@@ -1,171 +1,183 @@
-<!-- content-hash: 5ffe199d0675 -->
+<!-- content-hash: 8039581d96e6 -->
+# Рецензія: Checkpoint — Cases
+
+**Level:** A2 | **Module:** a2-11
+**Overall Score:** 7.9/10
+**Status:** FAIL
+**Reviewed:** 2026-02-28
 **Reviewed-By:** claude-opus-4-6
 
----
+## Plan Verification
+
+```
+Plan-Content Alignment: PASS (minor deviations)
+- Sections: 5/5 present. Section 2 has extra "Навичка 1:" prefix not in plan.
+- Vocabulary: 25/25 required items present. All plan-required vocabulary hints covered.
+- Grammar scope: CLEAN — no scope creep beyond case system review.
+- Objectives: All 4 objectives addressed (identify cases, choose prepositions, correct errors, apply in context).
+- Activity hints: fill-in has 12 items vs plan's 15+ (shortfall of 3).
+```
 
 ## Scores
 
-| # | Dimension | Score | Justification |
-|---|-----------|-------|---------------|
-| 1 | Plan Compliance | 7/10 | All 5 H2 sections present and matching the meta `content_outline`. Vocabulary coverage is complete (all 15 required items appear). However: word count is 2573/3000 (85.8%, below minimum target), zero IPA transcriptions despite research notes requiring them on first occurrence, and immersion is 18% vs 50-60% spec. |
-| 2 | Language (Ukrainian) | 7/10 | Ukrainian example sentences are grammatically correct. However, **colonial framing** on line 181 defines Ukrainian's vocative by explicit contrast with Russian — outside any myth-buster or decolonization callout. Per rules: capped at ≤7. Minor: inconsistent case annotations mixing "(Орудний)" with English abbreviations (Acc, Gen, Loc). |
-| 3 | Language (English) | 6/10 | Overly formal throughout: "let us" appears 8 times (lines 20, 38, 58, 124, 158, 183, 198, 233) instead of the rubric-recommended "Let's." Zero contractions ("it is", "do not", "let us") when the rubric explicitly allows and encourages them for beginner warmth. Reads like an academic textbook, not an encouraging tutor. |
-| 4 | Immersion Balance | 3/10 | Audit shows 18.0% Ukrainian; target is 50-60%. The module is essentially an English grammar lecture with Ukrainian example sentences. All theory, transitions, introductions, and explanations are in English. Only dialogues (lines 206-223), the historical passage (line 239), and isolated example sentences provide Ukrainian text. This is a 32+ percentage-point deficit. |
-| 5 | Lesson Quality | 6/10 | "Would I Continue?" test: Overwhelmed? No (Pass). Instructions clear? Yes (Pass). Quick wins? First practice doesn't come until deep into Section «Навичка 1: Відмінки в дії: Давальний та Орудний» after long theory blocks (Fail). Was Ukrainian scary? No, too little of it (Pass). Would I come back? Feels like a textbook chapter, not a tutor session (Fail). 3/5 = 8, but formal tone and weak emotional arc drop it to 6. |
-| 6 | Activity Quality | 7/10 | Excellent variety (10 types across 12 activities). Comprehensive case coverage. But two errors: (1) "через проблеми" marked incorrect (activities line 551-552) when it's valid Accusative plural; (2) fabricated distractor "еконовив" (activities line 724). Pedagogically questionable: "дивитися на картину" grouped under "Напрямок руху" (line 331) — looking at something isn't physical motion. |
-| 7 | Richness | 8/10 | Strong cultural hooks: Diia app context in Section «Навичка 3: Сервіси та цифрова Україна», stamps-as-currency historical reading in Section «Історичний виклик та підсумок». Good tables (preposition matrix line 42, Acc vs. Loc comparison line 171, summary matrix line 253). Practical dialogues with inline case annotations are pedagogically useful. Could benefit from mnemonic devices or visual mnemonics. |
-| 8 | LLM Fingerprint | 5/10 | **Structural monotony**: "Let us" opens or appears in 8 different paragraphs. **Generic AI rhetoric**: Line 18 — "When we talk about the Ukrainian language, we see a system that is incredibly flexible and expressive" is classic LLM filler. Line 122 — "is arguably the most frequently used oblique case" is hedging filler. Formal voice throughout ("it is time to bring all the pieces together", "this concept is called 'prepositional governance'") feels generated, not authored. |
-| 9 | Humanity & Warmth | 4/10 | **COLD_PEDAGOGY triggered.** Encouragement count: 1 "do not worry!" (line 34). "You can now..." validation: 0 (the closing at line 269 says "You have successfully completed" but doesn't list concrete abilities). "Don't worry" moments: 1 total. Required minimums: ≥3 encouragement, ≥2 "don't worry", ≥2 "You can now..." — fails all three. No warm Ukrainian greeting (opens with English "Welcome"). |
-| 10 | Factual Accuracy | 9/10 | Stamps-as-currency 1918 is historically documented. Diia app digital passport claim (line 225) is accurate. Grammar explanations are correct throughout. All case function descriptions are accurate. Minor: the quote «Ходить нарівні з дзвінкою монетою» on line 239 matches historical sources. |
+| # | Dimension | Score | Auto-fail | Evidence |
+|---|-----------|-------|-----------|----------|
+| 1 | Experience Quality | 8/10 | <7 | Well-structured checkpoint with clear progression through all 7 cases; practical dialogues in section "Сервіси та цифрова Україна" are engaging. However, section "Огляд та самооцінка" is lecture-heavy with no inline practice for ~600 words. |
+| 2 | Language | 8/10 | <8 | One grammar error on line 149: 「Це історична подія сталася **десятого березня**」— "Це" must be "Ця" (feminine agreement with "подія"). Unnatural collocation on line 158: 「Він щойно приїхав **з великого Києва**」— the adjective "великого" before a proper noun is unusual in this context. |
+| 3 | Pedagogy | 8/10 | <7 | TTT structure solid: self-assessment (Test) → case review (Teach) → activities (Test). Error correction pedagogy is excellent (line 132 warning box, line 170 negation drill). Table on line 197 (Acc vs. Loc comparison) is outstanding. Missing inline mini-exercises between theory sections. |
+| 4 | Activities | 8/10 | <7 | 12 activity blocks with excellent variety (quiz, match-up, fill-in, error-correction, unjumble, group-sort, true-false, select, translate, cloze). Error-correction catches real Russianisms (кушати, із-за). Fill-in has 12 items vs plan's 15+ requirement. |
+| 5 | Beginner Safety | 8/10 | <7 | "Would I Continue?" 4/5. Dense English theory in sections "Огляд та самооцінка" and "Граматичні тонкощі: Родовий, Знахідний та Кличний" could overwhelm. No inline practice until YAML activities. Quick wins present in self-assessment checklist. |
+| 6 | LLM Fingerprint | 7/10 | <7 | 「In this section, we will explore the cases that handle more abstract, yet highly frequent concepts」(line 140) — generic AI transition. 「magnificent hallmark」(line 211) — inflated language. 「fundamental engine that drives the language」(line 18) — abstract grand statement. Uniform example formatting (bullet `*` + bold case ending + English gloss) across all 5 case subsections creates structural monotony. |
+| 7 | Linguistic Accuracy | 8/10 | <9 | **AUTO-FAIL.** Grammar error on line 149: "Це" must be "Ця" (demonstrative pronoun must agree with feminine "подія"). Semantically absurd example on line 313: 「Новий капелюх лежить на **браті**」— a hat resting "on a brother" is bizarre; should be "на столі" or "на поличці". English translation gap on line 160: "for brother" missing article. |
 
----
+**Weighted Overall:** (8×1.5 + 8×1.1 + 8×1.2 + 8×1.3 + 8×1.3 + 7×1.0 + 8×1.5) / 8.9 = (12.0 + 8.8 + 9.6 + 10.4 + 10.4 + 7.0 + 12.0) / 8.9 = 70.2 / 8.9 = **7.9/10**
+
+## Auto-Fail Checklist Results
+
+- Russianisms: CLEAN in prose. Activities correctly identify "кушати" and "із-за" as errors to correct (pedagogically appropriate).
+- Calques: CLEAN — no calques detected in prose.
+- Colonial framing: CLEAN. The Vocative culture note (line 214) discusses colonial-era suppression of the Vocative case, which is legitimate decolonization framing, not colonial framing.
+- Grammar scope: CLEAN — stays within case system review.
+- Activity errors: CLEAN — all correct answers verified, all distractors plausible.
+- Beginner safety: 4/5
+- Factual accuracy: The 1918 UNR stamps ("шаги") narrative matches research notes. Heorhiy Narbut attribution confirmed. Diia app cultural hook is factually accurate.
 
 ## Critical Issues Found
 
-### Issue 1: Colonial Framing (CRITICAL — Auto-flag)
+### Issue 1: Grammar Error — Demonstrative Pronoun Agreement
+- **Location**: Line 149 / Section "Граматичні тонкощі: Родовий, Знахідний та Кличний"
+- **Original**: 「Це історична подія сталася **десятого березня**.」
+- **Problem**: "Це" is neuter nominative. The noun "подія" is feminine, requiring the feminine demonstrative "Ця." This error appears in a sentence specifically teaching Genitive case usage for dates — a grammar error in a grammar-teaching example severely undermines credibility.
+- **Fix**: Change "Це" to "Ця": "Ця історична подія сталася десятого березня."
 
-**Location:** Line 181, Section «Навичка 2: Граматичні тонкощі: Родовий, Знахідний та Кличний», subsection «Самоперевірка: Кличний відмінок»
+### Issue 2: Semantically Absurd Example in Summary Matrix
+- **Location**: Line 313 / Section "Історичний виклик та підсумок"
+- **Original**: 「Новий капелюх лежить на **браті**.」
+- **Problem**: A hat lying "on a brother" is semantically bizarre and would never appear in natural speech. This is clearly an AI-generated example forced to fit the "брат" paradigm across all 7 cases. The Locative example should use a realistic location.
+- **Fix**: Replace with "Мій брат живе **у великому місті**." or keep the "брат" paradigm with "Книга лежить на **столі**." with the paradigm shifted to "стіл" for the Locative row.
 
-**Text:** «While many languages (including Russian) have lost their vocative case, Ukrainian has preserved and nurtured it.»
+### Issue 3: Immersion Far Below Target (21.6% vs 50-60%)
+- **Location**: Entire module, all sections
+- **Problem**: The audit reports 21.6% Ukrainian immersion against a Band 1 target of 50-60%. The module is overwhelmingly English prose with Ukrainian appearing only in example sentences and dialogues. Sections "Огляд та самооцінка" and "Граматичні тонкощі: Родовий, Знахідний та Кличний" are especially English-heavy.
+- **Fix**: This requires a significant rewrite. Strategy: (1) Add Ukrainian introductory sentences at the start of each subsection before English explanation, (2) Present grammar tables with Ukrainian headers and descriptions, (3) Add Ukrainian transitional prose between example blocks, (4) Expand the Ukrainian dialogue sections in "Сервіси та цифрова Україна", (5) Add a short Ukrainian reading passage in "Огляд та самооцінка".
 
-**Problem:** This defines Ukrainian's vocative case by explicit contrast with Russian. The parenthetical "(including Russian)" singles out Russian as the comparison baseline. This is **not** inside a `[!myth-buster]` or `[!decolonization]` callout — it's in regular prose. Per colonial framing rules, this is a flag.
+### Issue 4: Unnatural Collocation
+- **Location**: Line 158 / Section "Граматичні тонкощі: Родовий, Знахідний та Кличний"
+- **Original**: 「Він щойно приїхав **з великого Києва**.」
+- **Problem**: Adding "великого" before "Києва" in this sentence is unnatural. A native speaker would say "з Києва" without the adjective. The adjective appears to be inserted to demonstrate Genitive case agreement, but it produces an unnatural sentence. "Великий Київ" is a valid collocation in certain contexts (e.g., historical/poetic) but not for a casual arrival statement.
+- **Fix**: Either remove the adjective: "Він щойно приїхав з Києва." — or use a different adjective-noun combination that demonstrates Genitive agreement naturally: "Він щойно приїхав з великого міста." (from a big city).
 
-**Fix:** Remove the Russian reference entirely. Present the vocative as a living feature of Ukrainian on its own terms:
-> "The Vocative case (Кличний відмінок) is a living, vibrant feature of Ukrainian. It is used exclusively for addressing someone directly — a sign of politeness, respect, and natural fluency."
+### Issue 5: English Translation Error
+- **Location**: Line 160 / Section "Граматичні тонкощі: Родовий, Знахідний та Кличний"
+- **Original**: 「Цей смачний торт приготували **для брата**. (This delicious cake was prepared for brother.)」
+- **Problem**: The English "for brother" is missing the article — should be "for the/a brother" or "for [the] brother."
+- **Fix**: Change translation to "(This delicious cake was prepared for the brother.)"
 
----
+### Issue 6: LLM Fingerprint — Inflated Language and Structural Monotony
+- **Location**: Lines 18, 140, 211 across multiple sections
+- **Problem**: Phrases like 「magnificent hallmark」(line 211), 「fundamental engine that drives the language」(line 18), and 「In this section, we will explore」(line 140) are recognizable LLM writing patterns. Additionally, all case subsections use identical bullet-list formatting for examples, creating visual monotony.
+- **Fix**: (1) Replace "magnificent hallmark" → "a distinctive feature" or "one of the defining features"; (2) Replace "fundamental engine" → "the mechanism" or "the system"; (3) Replace "In this section, we will explore" → "Now let's focus on" or start with a Ukrainian sentence; (4) Vary example presentation — use a dialogue for one case, a table for another, inline examples for a third.
 
-### Issue 2: Catastrophic Immersion Deficit (CRITICAL)
+## Ukrainian Language Issues
 
-**Location:** Entire module
+| Line | Current | Corrected | Type |
+|------|---------|-----------|------|
+| 149 | 「Це історична подія сталася」 | 「Ця історична подія сталася」 | Grammar (demonstrative pronoun agreement) |
+| 158 | 「з великого Києва」 | 「з Києва」 or 「з великого міста」 | Naturalness (unnatural collocation) |
+| 160 | "for brother" | "for the brother" | English translation |
+| 313 | 「Новий капелюх лежить на **браті**」 | 「Мій брат живе у великому **місті**」 | Semantics (absurd example) |
 
-**Problem:** Immersion is 18.0% vs. the 50-60% target for A2 Band 1. The module is structured as an English grammar lecture with Ukrainian relegated to example sentences and dialogues only. All section introductions, theory explanations, transitions, and meta-commentary are in English. For a checkpoint module reviewing content learners have already studied, this is especially problematic — learners should be ready for more Ukrainian at this stage.
+## Beginner Safety Audit
 
-**Fix:** Convert substantial portions of theory text to Ukrainian with English glosses. For example, the opening of Section «Огляд та самооцінка» (lines 16-18) should lead with Ukrainian, not English. The self-assessment checklist (lines 26-32) could be bilingual. Section transitions should use Ukrainian with English support rather than pure English.
+"Would I Continue?" Test: 4/5
+- Overwhelmed? **Borderline Pass** — Covering all 7 cases is ambitious; the preposition table (line 44) and Acc/Loc table (line 197) are dense but well-structured. Some theory sections run 400+ words without practice.
+- Instructions clear? **Pass** — Learning objectives clearly stated in English checklist (line 27). Each case section has clear H3 structure.
+- Quick wins? **Pass** — Self-assessment checklist provides orientation; error correction warning boxes (lines 131-133, 169-171) are satisfying "aha" moments.
+- Ukrainian scary? **Pass** — Heavy English scaffolding ensures Ukrainian is never unsupported. However, the immersion is actually too LOW (21.6%), meaning learners don't get enough Ukrainian exposure.
+- Come back tomorrow? **Pass** — Module feels achievable; the dialogues and historical story provide interest hooks.
 
----
+## Strengths
+- Comprehensive case review covering all 7 cases with clear, correct paradigm examples across Dative, Instrumental, Genitive, Accusative/Locative, and Vocative.
+- Excellent error-correction pedagogy: the warning boxes contrasting ❌/✅ forms (lines 131-133 for Instrumental, 169-171 for Genitive negation) mirror real learner errors from research.
+- The Accusative vs. Locative comparison table (line 197) is an outstanding pedagogical tool — clear, visual, and directly addresses a documented learner confusion point.
+- The dialogues in section "Сервіси та цифрова Україна" (post office lines 243-254, bank lines 261-273) are realistic, well-integrated, and demonstrate multiple cases in natural context.
+- Activity variety is exceptional: 12 types including error-correction that catches genuine Russianisms (кушати→їсти, із-за→через).
+- Historical hook about 1918 UNR stamps (section "Історичний виклик та підсумок") is factually grounded, culturally relevant, and linguistically rich.
 
-### Issue 3: Activity Error — Valid Answer Marked Incorrect (CRITICAL)
+## Fix Plan to Reach 9.0/10 (REQUIRED — score < 9.0)
 
-**Location:** Activities file line 549-552, select activity «Які слова використовуємо для вираження причини зі словом "через"?»
+### Linguistic Accuracy: 8/10 → 9/10
+**What to fix:**
+1. Line 149: Change 「Це історична подія сталася」→ 「Ця історична подія сталася」— fix demonstrative pronoun agreement.
+2. Line 313: Replace 「Новий капелюх лежить на **браті**」→ use a natural Locative example like "Він зараз живе у великому **місті**." or change the paradigm word for the Locative row.
+3. Line 158: Remove unnatural adjective: 「з великого Києва」→ 「з Києва」or replace with 「з великого міста」.
+4. Line 160: Fix English translation: "for brother" → "for the brother."
 
-**Text:** The option «через проблеми» is marked `correct: false`.
+**Expected score after fix:** 9/10
 
-**Problem:** "Проблеми" is the Accusative plural of "проблема" (feminine noun). "Через" governs Accusative. Therefore "через проблеми" (because of problems) is grammatically correct Ukrainian. Marking it false teaches learners that a valid Ukrainian construction is wrong.
+### Language: 8/10 → 9/10
+**What to fix:**
+1. Fix the grammar error and unnatural collocations listed under Linguistic Accuracy (they overlap).
+2. Increase Ukrainian immersion from 21.6% to at least 50% by adding Ukrainian introductions, transitional prose, and more Ukrainian-language explanatory content in sections "Огляд та самооцінка", "Навичка 1: Відмінки в дії: Давальний та Орудний", and "Граматичні тонкощі: Родовий, Знахідний та Кличний".
 
-**Fix:** Either mark «через проблеми» as `correct: true` (and adjust `min_correct`), or replace the distractor with a genuinely incorrect form like «через проблемою» (Instrumental, clearly wrong case).
+**Expected score after fix:** 9/10
 
----
+### LLM Fingerprint: 7/10 → 8/10
+**What to fix:**
+1. Line 211: Replace "magnificent hallmark" → "distinctive feature" or "one of the defining features" in section "Граматичні тонкощі: Родовий, Знахідний та Кличний".
+2. Line 18: Tone down "fundamental engine that drives the language" → "the system that organizes the language" in section "Огляд та самооцінка".
+3. Line 140: Replace "In this section, we will explore" → "Now let's look at" or start with a Ukrainian hook sentence in section "Граматичні тонкощі: Родовий, Знахідний та Кличний".
+4. Vary example presentation format across case subsections (use tables, dialogues, and inline examples instead of uniform bullet lists throughout).
 
-### Issue 4: Fabricated Distractor Word (HIGH)
+**Expected score after fix:** 8/10
 
-**Location:** Activities file line 724, cloze activity blank #10
+### Experience Quality: 8/10 → 9/10
+**What to fix:**
+1. Add at least one inline mini-exercise (e.g., "Quick check: Which case would you use for...?") within section "Огляд та самооцінка" before the full YAML activities.
+2. Add a brief Ukrainian warm-up paragraph at the very start, before the English theory.
 
-**Text:** Distractor option «еконовив»
+**Expected score after fix:** 9/10
 
-**Problem:** The word "еконовив" does not exist in Ukrainian. The verb "економити" conjugates to past tense "економив" (not "еконовив"). Distractors should be plausible but wrong Ukrainian forms — fabricated non-words undermine the activity's pedagogical value and look unprofessional.
+### Projected Overall After Fixes
+```
+Experience: 9×1.5 = 13.5
+Language: 9×1.1 = 9.9
+Pedagogy: 8×1.2 = 9.6 (unchanged)
+Activities: 8×1.3 = 10.4 (unchanged — fill-in shortfall is minor)
+Beginner Safety: 8×1.3 = 10.4 (unchanged)
+LLM Fingerprint: 8×1.0 = 8.0
+Linguistic Accuracy: 9×1.5 = 13.5
 
-**Fix:** Replace «еконовив» with «зекономив» (perfective past, which would be the wrong aspect for this context) or «економило» (wrong gender agreement).
+Total: 75.3 / 8.9 = 8.5/10
+```
 
----
+**Note:** Reaching 9.0 overall would additionally require improving Pedagogy (add inline exercises), Activities (add 3 more fill-in items), and Beginner Safety (reduce dense theory blocks). The immersion fix (Issue 3) is the highest-impact change — it would improve Language, Beginner Safety, and Experience Quality simultaneously.
 
-### Issue 5: Zero IPA in Content (HIGH)
+## Factual Verification
 
-**Location:** Entire content file
+- Research notes consulted: YES
+- Key Facts Ledger present: NO (research notes use narrative format)
+- Dates checked: 1 (1918 UNR — correct per research notes)
+- Named figures verified: 1 (Heorhiy Narbut — confirmed in research)
+- Primary quotes cross-referenced: NOT_APPLICABLE (not a seminar track)
+- Chronological sequence: CONSISTENT
+- Claims without research grounding: 0
 
-**Problem:** Research notes (line 32) explicitly state: "Use IPA only on the first occurrence of each new vocabulary word." The content file contains zero IPA transcriptions. The vocabulary file has IPA, but learners need it inline in the prose on first encounter of key terms.
-
-**Fix:** Add IPA for at least the high-frequency vocabulary on first occurrence: відмінок, прийменник, допомагати, подобатися, etc.
-
----
-
-### Issue 6: Vocabulary IPA Errors — Double Stress Marks (HIGH)
-
-**Location:** Vocabulary file lines 12 and 95
-
-**Text:**
-- Line 12: «родовий» → `` (two stress marks)
-- Line 95: «помилка» → `` (two stress marks)
-
-**Problem:** Ukrainian words have exactly one primary stress. "Родовий" should be (stress on final syllable). "Помилка" should be (stress on мі).
-
-**Fix:** Remove the spurious stress marks: `` and ``.
-
----
-
-### Issue 7: LLM Voice — "Let us" × 8 (MEDIUM)
-
-**Location:** Lines 20, 38, 58, 124, 158, 183, 198, 233
-
-**Problem:** "Let us" is used 8 times throughout the module. This is a strong LLM fingerprint — real tutors and teachers say "Let's." The review rubric explicitly marks ✅ "Let's start with..." and flags formal AI voice. Combined with zero contractions elsewhere ("it is", "do not", "you must"), the module reads as machine-generated.
-
-**Fix:** Replace all "Let us" with "Let's." Convert "it is" → "it's", "do not" → "don't", "you have been" → "you've been" throughout. This alone would significantly improve the natural, warm tutoring voice.
-
----
-
-### Issue 8: COLD_PEDAGOGY — Insufficient Warmth (MEDIUM)
-
-**Location:** Throughout
-
-**Problem:** The module has only 1 "don't worry" moment (line 34: «do not worry!»), 0 "You can now..." validation statements, and minimal encouragement phrases. The closing paragraph (line 269) says «You have successfully completed» but doesn't tell learners what specific abilities they've gained. Required minimums for beginner modules: ≥3 encouragement, ≥2 "don't worry", ≥2 "You can now..." — all three thresholds are missed. No warm Ukrainian opening (missing "Привіт!").
-
-**Fix:**
-1. Add a Ukrainian greeting to the opening: "Привіт! Welcome to your checkpoint!"
-2. Add encouragement after the first practice subsection in «Навичка 1: Відмінки в дії: Давальний та Орудний»: "Great work! You're using cases correctly."
-3. Add "don't worry" moments at the start of sections «Навичка 2» and «Навичка 3».
-4. Rewrite the closing to explicitly list abilities: "You can now: express age using the Dative, describe your profession using the Instrumental..."
-
----
-
-### Issue 9: Inconsistent Case Annotation Labels (LOW)
-
-**Location:** Lines 50, 207, 239 vs. lines 159-161, 173-177, 207-222
-
-**Problem:** The Instrumental case is annotated as "(Орудний)" in Ukrainian (lines 50, 207, 239), while all other cases use English abbreviations: (Acc), (Gen), (Loc), (Nom). This inconsistency could confuse learners.
-
-**Fix:** Standardize to either all English abbreviations (Inst) or all Ukrainian names. Given the immersion deficit, using Ukrainian names for all annotations would help increase Ukrainian exposure.
-
----
+Cultural claims verified:
+- Diia app holds digital documents with legal weight: Plausible, well-known fact
+- Monobank as neobanking leader: Plausible, well-known
+- Stamps circulated as money in 1918 (шаги): Confirmed by research notes
 
 ## Verification Summary
 
-| Check | Result | Details |
-|-------|--------|---------|
-| Colonial framing | **FOUND** | Line 181: Ukrainian vocative defined by contrast with Russian |
-| Russianisms | CLEAN | No кушати, із-за, красивий, etc. in prose. Note: activity line 261 tests "кушаю" as an error to correct — this is pedagogically appropriate |
-| Grammar accuracy | CLEAN | All case explanations and example sentences are grammatically correct |
-| Factual claims | VERIFIED | Stamps-as-currency 1918, Diia app claims are accurate |
-| LLM fingerprint | **FOUND** | "Let us" × 8, generic rhetoric on line 18, zero contractions |
-| Activity errors | **FOUND** | "через проблеми" false positive (line 552), "еконовив" fabricated (line 724) |
-| IPA | **MISSING** | Zero IPA in content; 2 double-stress errors in vocabulary file |
-| Immersion | **FAIL** | 18% vs 50-60% target |
-| Warmth markers | **FAIL** | COLD_PEDAGOGY: 1 encouragement, 0 "You can now", 1 "don't worry" |
-| Section coverage | PASS | All 5 H2 sections present and match plan outline |
-| Word count | **BELOW TARGET** | 2573/3000 (85.8%) |
-| Engagement boxes | PASS | 6-7 callout boxes ([!tip], [!culture], [!warning] ×2, [!myth-buster], [!fact]) |
-
----
+- Content lines read: 332
+- Activity items checked: 157 (across 12 activity blocks)
+- Ukrainian sentences verified: 55+
+- Citations in bank: 20
+- Issues found: 6 (1 grammar error, 1 absurd example, 1 immersion shortfall, 1 unnatural collocation, 1 translation error, 1 LLM fingerprint cluster)
 
 ## Verdict
 
-**FAIL — Needs D.2 Repair**
+**FAIL**
 
-The module has strong structural bones: all plan sections are covered, activities show excellent variety (10 types), cultural hooks are well-chosen (Diia, stamps-as-currency), and Ukrainian grammar accuracy is solid throughout. The preposition governance table and Acc/Loc comparison table are genuinely useful pedagogical tools.
-
-However, three systemic issues require repair before this module can pass:
-
-1. **Immersion crisis** (18% vs 50-60%): The module is an English grammar lecture, not a Ukrainian learning experience. This requires substantial rewriting to shift theory sections into bilingual Ukrainian-with-English-support format.
-
-2. **Cold pedagogy**: The formal academic tone ("Let us", zero contractions, minimal encouragement) is inappropriate for A2 beginners who need warmth and reassurance. Every section opening should be rewritten for warmth.
-
-3. **Activity errors**: The "через проблеми" false positive is a genuine grammar teaching error that must be fixed. The "еконовив" fabricated word must be replaced.
-
-Secondary issues (colonial framing, missing IPA, word count deficit, vocabulary IPA errors) should be fixed concurrently.
-
-**Priority for D.2 repair:**
-1. Fix activity errors (через проблеми, еконовив) — surgical fixes
-2. Remove colonial framing on line 181
-3. Rewrite English for warmth (contractions, "Let's", encouragement markers)
-4. Increase immersion to ≥50% by converting theory sections to bilingual format
-5. Add IPA on first occurrence of key vocabulary
-6. Expand content to meet 3000-word minimum
+Blocking issues: (1) Linguistic Accuracy 8/10 triggers auto-fail at <9 threshold — a demonstrative pronoun agreement error ("Це" → "Ця") in a grammar-teaching example on line 149 and a semantically absurd example on line 313 must be fixed. (2) Immersion at 21.6% is critically below the 50-60% Band 1 target, requiring substantial Ukrainian content expansion across all theory sections.

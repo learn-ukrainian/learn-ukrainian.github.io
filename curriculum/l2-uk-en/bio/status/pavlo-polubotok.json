@@ -2,14 +2,14 @@
   "module": "pavlo-polubotok",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T13:34:19.959455Z",
+  "last_audit": "2026-02-28T00:55:42.295556Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-27T13:31:20.468597Z",
     "meta": "2026-02-27T13:33:54.918633Z",
     "activities": "2026-02-27T13:29:05.807375Z",
     "vocabulary": "2026-02-27T13:29:05.731741Z",
-    "plan": "2026-02-17T13:33:56.618901Z",
+    "plan": "2026-02-27T20:41:24.245299Z",
     "research": "2026-02-22T10:35:24.548466Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4079/4000 (raw: 4445)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4079/4000 (raw: 4445) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

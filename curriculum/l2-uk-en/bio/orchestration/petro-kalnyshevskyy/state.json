@@ -2,13 +2,19 @@
   "slug": "petro-kalnyshevskyy",
   "track": "bio",
   "module_num": 32,
-  "mode": "e2e",
+  "mode": "v3",
   "phases": {
     "0": {
       "status": "complete",
       "timestamp": "2026-02-20T22:39:41Z",
       "task_id": "yw-petro-kalnyshevskyy-p0"
+    },
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-28T00:09:53Z",
+      "words": 6942,
+      "attempts": 1
     }
   },
-  "last_updated": "2026-02-20T22:39:41Z"
+  "last_updated": "2026-02-28T00:09:53Z"
 }

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 30 — E2E
+PASS: pipeline bio 30
 
   Module:   pavlo-polubotok
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    4445 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T12:34:20Z
+  Date:     2026-02-27T23:55:42Z

@@ -1,10 +1,10 @@
-# Audit Report: M11 — lev-danylovych.md
-**Level:** BIO | **Module:** M11 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-27 10:59:20
+# Audit Report: M999 — lev-danylovych.md
+**Level:** C1 | **Module:** M999 | **Phase:** BIO | **Pedagogy:** seminar | **Target:** 5000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 00:53:42
 
 ## Configuration
-**Type:** biography
+**Type:** C1-biography
 **Word Target:** 5000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
@@ -16,19 +16,48 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Заснування та розбудова Львова | 2 | 3 | ❌ |
+| 2 | essay-response | Стратегічний аналіз перенесення столиці | 1 | 1 | ✅ |
+| 3 | comparative-study | Порівняльний аналіз політичних стратегій: Лев та Данило | 1 | 1 | ✅ |
+| 4 | reading | Зовнішня політика та Золота Орда | 2 | 3 | ❌ |
+| 5 | critical-analysis | Оцінка дипломатії Лева Даниловича | 1 | 1 | ✅ |
+| 6 | quiz | Контекст та лексичні нюанси | 8 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 6 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 5/6 (comparative-study, critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 2
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** reading 'Заснування та розбудова Львова' has 2 items (minimum: 3)
+  - FIX: Add more items. C1 reading requires at least 3 items.
+- **[COMPLEXITY]** reading 'Зовнішня політика та Золота Орда' has 2 items (minimum: 3)
+  - FIX: Add more items. C1 reading requires at least 3 items.
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 2 violations (minor)
+- Activity density below minimum
+
 ## Gates
 - **Words:** ✅ 6331/5000 (raw: 6570)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 6/3
+- **Density:** ❌ 2 < 1
+- **Unique_types:** ✅ 5/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 2 violations
+- **Content_heavy:** ✅ Content-heavy OK (6 activities)
 - **Immersion:** 🇺🇦 99.1% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -53,6 +82,13 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 6 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **95.2%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Заснування та розбудова Львова | reading | 2 | 3 | Add 1 more items |
+| Зовнішня політика та Золота Орда | reading | 2 | 3 | Add 1 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

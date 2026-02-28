@@ -2,14 +2,14 @@
   "module": "dmytro-bortnyanskyy",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T15:21:49.513922Z",
+  "last_audit": "2026-02-28T00:56:02.933854Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T15:21:19.573892Z",
+    "md": "2026-02-27T20:41:10.857957Z",
     "meta": "2026-02-27T15:09:54.366025Z",
     "activities": "2026-02-27T15:16:23.192230Z",
     "vocabulary": "2026-02-27T15:16:23.192672Z",
-    "plan": "2026-02-17T13:37:38.088989Z",
+    "plan": "2026-02-27T20:41:24.226263Z",
     "research": "2026-02-22T10:35:24.528107Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5005/5000 (raw: 5483)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5005/5000 (raw: 5483) | pedagogy: 3 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6/3 | density: 2 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

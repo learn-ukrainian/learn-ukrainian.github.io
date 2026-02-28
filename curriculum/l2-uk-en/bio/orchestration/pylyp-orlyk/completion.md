@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py bio 31 — E2E
+PASS: pipeline bio 31
 
   Module:   pylyp-orlyk
   Track:    bio
-  Mode:     e2e
-  Words:    3303 (target: 5000)
+  Mode:     v3
+  Words:    5665 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T12:56:39Z
+  Verdict:  PASS
+  Date:     2026-02-28T00:03:34Z

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 45 — E2E
+PASS: pipeline bio 45
 
   Module:   marko-kropyvnytskyi
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    5861 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T16:07:25Z
+  Date:     2026-02-27T23:56:52Z

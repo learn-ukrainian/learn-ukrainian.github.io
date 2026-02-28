@@ -10,8 +10,18 @@
       "mode": "meta-only"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-27T12:56:39Z"
+      "status": "complete",
+      "ts": "2026-02-27T23:57:01Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-27T23:58:50Z",
+      "task_id": "v3-pylyp-orlyk-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T00:03:34Z",
+      "attempts": 2
     }
   }
 }

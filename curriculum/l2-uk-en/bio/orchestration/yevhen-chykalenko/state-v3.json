@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T00:22:14Z",
       "task_id": "v3-yevhen-chykalenko-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T17:51:12Z",
-      "attempts": 1
     }
   }
 }

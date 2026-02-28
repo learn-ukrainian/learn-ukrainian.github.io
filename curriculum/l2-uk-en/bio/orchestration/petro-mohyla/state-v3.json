@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T10:52:39Z",
       "task_id": "v3-petro-mohyla-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T10:55:29Z",
-      "attempts": 2
     }
   }
 }

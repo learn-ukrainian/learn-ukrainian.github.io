@@ -1,95 +1,76 @@
-✅ Message sent to Gemini (ID: 14316) [auto-acked: self-addressed]
-✓ Message 14316 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #14316...
-📨 Message #14316
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-checkpoint-cases-pA
-   Time: 2026-02-22T19:42:41.770339+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/orchestration/checkpoint-cases/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
 # Дослідження: Checkpoint — Cases
 
 ## State Standard Reference
-§4.2.2: "Морфологія: Відмінкова система" (Linguistic competence: morphology, Catalogue C).
-Alignment: The module provides a comprehensive review of the 7-case system in Ukrainian, meeting the specific A2 requirements for Dative (§4.2.2.3), Instrumental (§4.2.2.5), Genitive (§4.2.2.2), Accusative (§4.2.2.4), Locative (§4.2.2.6), and Vocative (§4.2.2.6*) cases through practical contexts and preposition governance.
+§4.2.2.2–§4.2.2.6 (A2 Level):
+- Dative (§4.2.2.3): "особа або предмет, для яких... відбувається дія: Подарувати книжку студентові... суб’єкт кількісної вікової ознаки: Дідусеві вісімдесят років."
+- Genitive (§4.2.2.2): "час і дата дії... об’єкт дії під час заперечення: Не вивчив вірша."
+- Instrumental (§4.2.2.5): "знаряддя і засіб дії: Студент пише новою ручкою."
+Alignment: Comprehensive review of A2 morphological case requirements (Catalogue C), consolidating all seven cases, functions, and prepositional governance.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| допомагати | High (A1/A2 core) | допомагати мамі/другові, допомагати з роботою (Dative) |
-| подобатися | High (A1/A2 core) | мені подобається, подобатися вчителю (Dative) |
+| допомагати | High (Core verb) | допомагати другу, допомагати з роботою (Dat) |
 | з (із/зі) | Very High | кава з молоком (Inst), приїхати з Києва (Gen) |
-| через | High (A2) | через дорогу, через дощ, через тиждень (Acc) |
-| пошта | Medium (Services) | на пошті (Loc), відправити поштою (Inst) |
+| через | High | через дорогу (Acc), через дощ (Acc) |
+| рахунок | Medium (Services) | відкрити рахунок, гроші на рахунку (Loc) |
 
 ## Cultural Hooks
-1. **Digital Ukraine Leadership:** Ukraine's global leadership in digital services, specifically the "Diia" (Дія) app and advanced digital banking (like Monobank), providing a modern, relevant context for practicing cases in service environments.
-2. **Historical Currency:** During the UNR (Ukrainian People's Republic) period in 1918, postage stamps circulated equally with coins due to a metal shortage—an interesting historical anchor for "post office and bank" vocabulary.
+1. **Digital Ukraine**: Ukraine is a global leader in digital state services (the "Diia" app) and neobanking (Monobank), making service and banking dialogues highly relevant to modern Ukrainian life.
+2. **Stamps as Currency (1918)**: During the Ukrainian People's Republic (UNR), due to a shortage of metal, postage stamps designed by famous artists like Heorhiy Narbut were printed on thick paper and circulated as small change ("shahiv" / шаги).
 
 ## Common Learner Errors
-1. **Nominative for Instruments** → "Я пишу ручка" instead of "Я пишу ручкою". Caused by direct translation from L1s that lack case inflection for tools.
-2. **Nominative after Negation** → "У мене немає гроші" instead of "У мене немає грошей". Caused by literal translation of "I do not have money".
-3. **Nominative instead of Vocative** → "Сергій, привіт!" instead of "Сергію, привіт!". Caused by L1 interference, as many languages do not have a dedicated case for addressing someone.
+1. **Nominative for Instruments**: *Я пишу ручка.* → **Я пишу ручкою.** — Learners forget to decline tools, treating them as direct objects.
+2. **Nominative after Negation**: *У мене немає гроші.* → **У мене немає грошей.** — Learners fail to shift the object to Genitive under "немає".
+3. **Nominative instead of Vocative**: *Сергій, привіт!* → **Сергію, привіт!** — Learners default to the dictionary form for direct address.
 
 ## Cross-References
-- Builds on: a2-01 through a2-10 (all A2.1 modules)
+- Builds on: a2-01 through a2-10 (A2.1 modules)
 - Prepares for: a2-12 (Aspect Introduction), a2-25, a2-35
 
 ## Notes for Content Writing
-- **Decolonized framing:** Present the rich case system, especially the Vocative case, as a vibrant, living feature of the Ukrainian language. Do not compare to Russian cases or frame the complexity as a deviation from Russian norms. 
-- **Immersion:** A2 Band 1 requires 50-60% Ukrainian. Use English for grammar theory and complex explanations (especially when summarizing all 7 cases), but switch to Ukrainian for all examples, dialogues, and practice.
-- **IPA:** Use IPA only on the first occurrence of each new vocabulary word. 
-- Avoid banned Russianisms and ensure Ukrainian angular quotes «...» are used for citations and dialogue.
+- **Decolonized Framing**: Emphasize the Vocative case as a fundamental, vibrant feature of Ukrainian identity and politeness, rather than an "optional" or "archaic" form. Describe the Ukrainian case system positively as a tool for expressive flexibility.
+- **Immersion**: Band 1 (50-60%). Grammar theory must be in English to ensure clear scaffolding, but examples, dialogues, and practice must be in Ukrainian.
+- **Word count**: Allocate robust explanations, diverse examples, and distinct H3s for each function to meet the minimum 3000 words.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Огляд та самооцінка (Overview and Self-assessment)"
-    words: 500
+  - section: "Огляд та самооцінка"
+    words: 400
     points:
-      - "Note explicit English scaffolding rules in the introduction (A2 Band 1 immersion: 50-60% Ukrainian)."
-      - "Define the checkpoint goals and align them with the Ukrainian State Standard §4.2.2 requirements."
-      - "Provide a comprehensive self-assessment checklist based on CEFR A2 descriptors covering all 7 cases."
-      - "Include a 'Preposition + Case' matching table to directly address preposition governance, a common learner friction point."
-  - section: "Відмінки в дії: Давальний та Орудний (Cases in Action: Dative and Instrumental)"
+      - "Introductory English scaffolding (Band 1 immersion: 50-60% Ukrainian): Clearly explain that this checkpoint reviews all 7 cases before moving to verb aspect."
+      - "Set clear learning goals mapped to State Standard §4.2.2 (Linguistic competence: morphology)."
+      - "Provide an H3 CEFR A2 self-assessment checklist for all cases (e.g., 'I can talk about my age', 'I can ask for help in a bank')."
+      - "Include a 'Preposition + Case' reference table to map core prepositions (з, до, на, в, через) to their governed cases."
+  - section: "Відмінки в дії: Давальний та Орудний"
+    words: 700
+    points:
+      - "H3: Давальний відмінок (Dative). Explain recipients (подарувати студентові), age (дідусеві 80 років), and physical/emotional states (мені холодно/цікаво) with 3+ examples each."
+      - "H3: Орудний відмінок (Instrumental). Explain professions/status (бути програмувальником) and tools (писати ручкою) with 3+ examples each."
+      - "H3: Типова помилка (Common Error). Contrast incorrect 'Я пишу ручка' with correct 'Я пишу ручкою', explicitly explaining the logic of the instrumental tool case."
+  - section: "Граматичні тонкощі: Родовий, Знахідний та Кличний"
     words: 800
     points:
-      - "Review the Dative case (Standard §4.2.2.3): Dedicate clear H3s to recipients (подарувати студентові), age (дідусеві вісімдесят років), and expressions of feeling (мені холодно)."
-      - "Review the Instrumental case (Standard §4.2.2.5): Focus on profession/status (бути програмувальником) and tools (писати ручкою) using separate H3s."
-      - "Targeted error correction (Nom. for Instruments): Explicitly contrast 'Я пишу ручка' (incorrect) with 'Я пишу ручкою' (correct) to solidify case endings for tools."
-  - section: "Граматичні тонкощі: Родовий, Знахідний та Кличний (Grammar Nuances: Genitive, Accusative, and Vocative)"
-    words: 800
-    points:
-      - "Review Genitive functions (Standard §4.2.2.2): Detail its use for time (десятого березня) and mandatory prepositions (з, до, для, біля)."
-      - "Targeted error correction (Nom. after Negation): Drill minimal pairs showing the mandatory shift to Genitive (У мене є гроші -> У мене немає грошей)."
-      - "Contrast Accusative vs. Locative for Motion/Location (Standard §4.2.2.4/§4.2.2.6): Use a comparative table for prepositions в/у, на to show direction vs. static location."
-      - "Vocative case mastery: Correct the 'Nom. instead of Voc.' error with dialogue examples (Сергію, привіт!) emphasizing natural conversational habits."
-  - section: "Сервіси та цифрова Україна (Services and Digital Ukraine)"
+      - "H3: Родовий відмінок (Genitive). Detail usage for dates (десятого березня) and mandatory prepositions (з, до, для, біля) with clear examples."
+      - "H3: Типова помилка (Common Error). Drill minimal pairs for negation, showing the mandatory shift to Genitive: 'У мене є гроші' vs. 'У мене немає грошей'."
+      - "H3: Знахідний чи Місцевий? (Accusative vs. Locative). Create a comparative table for prepositions 'в/у', 'на' to distinguish direction of motion (Accusative) vs. static location (Locative)."
+      - "H3: Кличний відмінок (Vocative). Correct the 'Nom. instead of Voc.' error (Сергію, привіт!) and highlight its cultural importance for natural, polite conversational habits."
+  - section: "Сервіси та цифрова Україна"
     words: 600
     points:
-      - "Present practical dialogues blending multiple cases in post office and banking environments (Standard Catalogue B)."
-      - "Integrate active vocabulary like 'відправити поштою', 'рахунок у банку', 'допомагати з роботою' in context."
-      - "Cultural Hook: Use the context of Ukraine's digital banking leadership (Diia app, Monobank) to frame the modern service dialogues."
-  - section: "Історичний виклик та підсумок (Historical Challenge and Summary)"
-    words: 300
+      - "H3: На пошті (At the Post Office). Present a practical dialogue using 'відправити поштою' and 'посилка для друга' that blends multiple cases."
+      - "H3: У банку (At the Bank). Present a dialogue integrating 'рахунок у банку', 'допомагати з роботою', and 'обмінювати гроші'."
+      - "H3: Культурний контекст (Cultural Context). Discuss Ukraine's digital leadership with Monobank and the Diia app, showcasing how physical banking is rapidly evolving in modern Ukraine."
+  - section: "Історичний виклик та підсумок"
+    words: 500
     points:
-      - "Integration Challenge: Provide a mixed-case narrative reading based on the historical hook of 'Stamps as Currency (1918)' in the UNR."
-      - "Provide a final summary matrix mapping cases to their core prepositions and functions."
-      - "Include a transition pointing toward a2-12 (Aspect Introduction), clarifying that case endings remain constant regardless of the verb's aspect."
+      - "H3: Історичний факт (Historical Fact). Present a short, accessible reading passage about 'Stamps as Currency (1918)' during the UNR, highlighting different cases within the narrative."
+      - "H3: Підсумок (Summary). Provide a final matrix mapping all 7 cases to their core questions, main functions, and a key example."
+      - "H3: Що далі? (What's Next?). Prepare the learner for a2-12 (Aspect Introduction), reassuring them that noun case endings remain perfectly stable regardless of the verb's aspect."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -100,11 +81,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (6090 chars)
-✅ Message sent to Claude (ID: 14317)
-✓ Message 14317 acknowledged
-   Auto-acknowledged reply #14317 (stdout delivery — no inbox accumulation)
-✓ Message 14316 acknowledged

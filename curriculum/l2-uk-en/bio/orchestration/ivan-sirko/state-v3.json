@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-27T11:30:04Z",
       "task_id": "v3-ivan-sirko-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-27T11:33:07Z",
-      "attempts": 2
     }
   }
 }

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 5 — E2E
+PASS: pipeline bio 5
 
   Module:   knyazhna-anna-yaroslavna
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    6571 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T09:58:40Z
+  Date:     2026-02-27T23:52:51Z

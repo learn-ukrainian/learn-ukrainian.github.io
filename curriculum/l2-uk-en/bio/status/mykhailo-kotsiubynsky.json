@@ -2,14 +2,14 @@
   "module": "mykhailo-kotsiubynsky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T19:07:14.816702Z",
+  "last_audit": "2026-02-28T01:06:37.221636Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T19:06:56.329973Z",
+    "md": "2026-02-27T20:41:10.696217Z",
     "meta": "2026-02-19T21:50:15.539496Z",
     "activities": "2026-02-27T08:19:00.410976Z",
     "vocabulary": "2026-02-27T08:19:00.420094Z",
-    "plan": "2026-02-17T13:37:38.101175Z",
+    "plan": "2026-02-27T20:41:24.095020Z",
     "research": "2026-02-27T11:40:58.653984Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5125/5000 (raw: 5627)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5125/5000 (raw: 5627) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

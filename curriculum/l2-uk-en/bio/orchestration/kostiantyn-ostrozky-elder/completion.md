@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py bio 13 — E2E
+PASS: pipeline bio 13
 
   Module:   kostiantyn-ostrozky-elder
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    3895 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T09:59:31Z
+  Verdict:  PASS
+  Date:     2026-02-27T23:54:00Z

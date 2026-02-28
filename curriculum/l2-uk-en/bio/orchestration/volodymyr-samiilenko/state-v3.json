@@ -1,0 +1,13 @@
+{
+  "track": "bio",
+  "slug": "volodymyr-samiilenko",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T00:06:26Z",
+      "task_id": "v3-volodymyr-samiilenko-pA",
+      "mode": "full"
+    }
+  }
+}

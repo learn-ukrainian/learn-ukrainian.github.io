@@ -2,14 +2,14 @@
   "module": "knyahynia-olha",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T10:58:17.607622Z",
+  "last_audit": "2026-02-28T00:52:24.935988Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-21T20:20:11.644449Z",
-    "meta": "2026-02-19T10:56:42.416676Z",
+    "md": "2026-02-28T00:46:43.664585Z",
+    "meta": "2026-02-28T00:47:42.750126Z",
     "activities": "2026-02-19T22:23:51.313803Z",
     "vocabulary": "2026-02-26T10:56:38.198524Z",
-    "plan": "2026-02-18T15:59:52.245649Z",
+    "plan": "2026-02-27T20:41:24.272045Z",
     "research": "2026-02-22T10:35:24.534803Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5239/5000 (raw: 5465)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5239/5000 (raw: 5492) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "38/24"
     },
     "naturalness": {
       "status": "pass",
@@ -39,21 +39,21 @@
       "message": "10/10 (High)"
     },
     "research": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "Refresh recommended: Content predates research (research file is newer)"
+      "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 3,
-    "fail_count": 0,
-    "deferred_count": 3
+    "pass_count": 4,
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

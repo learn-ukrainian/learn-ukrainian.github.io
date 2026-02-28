@@ -2,14 +2,14 @@
   "module": "mykhailo-chernihivskyi",
   "level": "C1",
   "plan_version": "1",
-  "last_audit": "2026-02-27T10:59:04.772632Z",
+  "last_audit": "2026-02-28T00:53:21.962439Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T01:10:36.081352Z",
+    "md": "2026-02-27T20:41:10.896427Z",
     "meta": "2026-02-26T01:11:33.883766Z",
     "activities": "2026-02-26T01:09:59.843111Z",
     "vocabulary": "2026-02-26T10:56:38.198909Z",
-    "plan": "2026-02-17T13:33:56.605872Z",
+    "plan": "2026-02-27T20:41:24.314747Z",
     "research": "2026-02-22T10:35:24.540747Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "6155/5000 (raw: 7086)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6155/5000 (raw: 7086) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

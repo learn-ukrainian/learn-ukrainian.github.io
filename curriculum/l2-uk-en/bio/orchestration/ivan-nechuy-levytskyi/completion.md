@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py bio 44 — E2E
+PASS: pipeline bio 44
 
   Module:   ivan-nechuy-levytskyi
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    3994 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T15:54:05Z
+  Verdict:  PASS
+  Date:     2026-02-27T23:56:46Z

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 54 — E2E
+PASS: pipeline bio 55
 
   Module:   yevhen-chykalenko
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    6655 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T17:51:12Z
+  Date:     2026-02-28T00:03:04Z

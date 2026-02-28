@@ -1,0 +1,61 @@
+{
+  "module": "hryhoriy-kvitka-osnovianenko",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-28T00:56:11.935171Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-27T20:41:10.927988Z",
+    "meta": "2026-02-24T22:37:44.889498Z",
+    "activities": null,
+    "vocabulary": null,
+    "plan": "2026-02-27T20:41:24.070767Z",
+    "research": "2026-02-22T10:35:24.530223Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "3900/5000 (raw: 4319)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "6 Outline Compliance Errors"
+    ],
+    "pass_count": 2,
+    "fail_count": 1,
+    "deferred_count": 3
+  }
+}

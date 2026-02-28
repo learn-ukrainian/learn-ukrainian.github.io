@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py bio 49 — E2E
+PASS: pipeline bio 50
 
   Module:   olena-pchilka
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    4198 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T17:42:25Z
+  Verdict:  PASS
+  Date:     2026-02-28T00:02:33Z

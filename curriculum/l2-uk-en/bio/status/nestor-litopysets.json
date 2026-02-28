@@ -2,14 +2,14 @@
   "module": "nestor-litopysets",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-27T10:58:52.721157Z",
+  "last_audit": "2026-02-28T00:53:09.013785Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T00:54:55.443693Z",
-    "meta": "2026-02-26T00:55:20.911310Z",
+    "md": "2026-02-27T20:41:10.807412Z",
+    "meta": "2026-02-27T20:41:11.308768Z",
     "activities": "2026-02-26T00:53:28.214135Z",
     "vocabulary": "2026-02-26T10:56:38.199201Z",
-    "plan": "2026-02-17T13:33:56.611257Z",
+    "plan": "2026-02-27T20:41:24.246071Z",
     "research": "2026-02-22T22:10:48.277199Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "6734/5000 (raw: 7124)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6734/5000 (raw: 7124) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has 5+ sources but content cites 0"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }
