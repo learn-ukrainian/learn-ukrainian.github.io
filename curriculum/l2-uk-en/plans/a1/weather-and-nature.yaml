@@ -1,6 +1,6 @@
-module: a1-29
+module: a1-43
 level: A1
-sequence: 29
+sequence: 43
 slug: weather-and-nature
 version: '2.0'
 title: Weather & Nature
@@ -79,7 +79,7 @@ prerequisites:
 - a1-28 (Description - Adverbs)
 connects_to:
 - a1-30 (Prepositions: Direction & Origin)
-- a1-33 (Holidays and Traditions)
+- a1-50 (Holidays and Traditions)
 objectives:
 - Learner can describe the weather
 - Learner can ask about weather conditions
@@ -90,7 +90,7 @@ grammar:
 - Seasons with prepositions
 - Temperature and weather adjectives
 register: розмовний
-phase: A1.3 [Consolidation]
+phase: A1.4 [Tenses & Daily Life]
 persona:
   voice: Patient Supportive Tutor
   role: Carpathian Ranger

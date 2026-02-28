@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 7 — E2E
+PASS: pipeline a1 18
 
   Module:   questions-and-negation
   Track:    a1
-  Mode:     e2e
-  Words:    2906 (target: 2000)
+  Mode:     v3
+  Words:    2895 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T23:51:31Z
+  Date:     2026-02-28T02:30:15Z

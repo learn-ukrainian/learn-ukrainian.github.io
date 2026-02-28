@@ -11,10 +11,30 @@
     },
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-27T14:08:50Z",
-      "words": 4256,
-      "attempts": 1
+      "timestamp": "2026-02-28T00:20:34Z",
+      "note": "v3-phase-B-adopt",
+      "words": 4256
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-28T00:22:35Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-28T00:22:35Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T00:24:41Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T00:24:41Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-27T14:08:50Z"
+  "last_updated": "2026-02-28T00:24:41Z"
 }

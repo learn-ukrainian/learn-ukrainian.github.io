@@ -5,24 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T22:30:21Z",
-      "task_id": "v3-sports-fitness-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T22:33:26Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-24T08:09:33Z",
-      "task_id": "v3-sports-fitness-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:18:58Z",
-      "attempts": 0,
-      "note": "auto-fix"
+      "ts": "2026-02-28T02:47:05Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 16 — E2E
+PASS: pipeline b1 18
 
   Module:   motion-verbs-full-system
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    6354 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:42:51Z
+  Date:     2026-02-28T08:40:17Z

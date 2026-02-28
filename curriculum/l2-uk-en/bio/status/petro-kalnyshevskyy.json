@@ -1,0 +1,59 @@
+{
+  "module": "petro-kalnyshevskyy",
+  "level": "C1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-28T01:14:43.624123Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-28T01:13:46.894866Z",
+    "meta": "2026-02-27T14:01:28.562965Z",
+    "activities": "2026-02-28T01:14:02.944147Z",
+    "vocabulary": "2026-02-28T01:11:53.451235Z",
+    "plan": "2026-02-27T20:41:24.234547Z",
+    "research": "2026-02-22T10:41:01.250082Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "6483/5000 (raw: 6933)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has decolonization section but content lacks it"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 2,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

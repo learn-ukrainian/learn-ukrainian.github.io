@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-24T23:13:02Z",
       "task_id": "v3-relationships-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:46:27Z",
-      "attempts": 1
     }
   }
 }

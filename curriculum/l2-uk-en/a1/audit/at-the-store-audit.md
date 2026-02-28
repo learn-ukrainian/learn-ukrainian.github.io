@@ -1,7 +1,7 @@
-# Audit Report: M38 — at-the-store.md
-**Level:** A1 | **Module:** M38 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M61 — at-the-store.md
+**Level:** A1 | **Module:** M61 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 13:23:49
+**Generated:** 2026-02-28 03:55:04
 
 ## Configuration
 **Type:** A1
@@ -49,7 +49,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 54.8% (target 35-55% (M38))
+- **Immersion:** 🇺🇦 54.8% (target 35-55% (M61))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

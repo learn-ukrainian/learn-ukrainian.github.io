@@ -5,29 +5,24 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-20T21:30:36Z",
+      "ts": "2026-02-28T02:33:34Z",
       "note": "migrated-from-v2"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-20T21:30:36Z",
+      "ts": "2026-02-28T02:33:34Z",
       "note": "migrated-from-v2"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-20T21:30:36Z",
+      "ts": "2026-02-28T02:33:34Z",
       "note": "migrated-from-v2"
     },
-    "v3-audit": {
+    "9-final-review": {
       "status": "complete",
-      "ts": "2026-02-22T21:11:13Z",
-      "attempts": 1
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T21:16:36Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T02:33:34Z",
+      "note": "migrated-from-v2",
+      "verdict": "APPROVE"
     }
   }
 }

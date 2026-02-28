@@ -1,7 +1,7 @@
-# Audit Report: M36 — basic-motion-prefixes.md
-**Level:** A2 | **Module:** M36 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M41 — basic-motion-prefixes.md
+**Level:** A2 | **Module:** M41 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 20:37:21
+**Generated:** 2026-02-28 03:46:06
 
 ## Configuration
 **Type:** A2-grammar
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 70.9% (target 60-75% (A2.2))
+- **Immersion:** 🇺🇦 70.9% (target 60-75% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

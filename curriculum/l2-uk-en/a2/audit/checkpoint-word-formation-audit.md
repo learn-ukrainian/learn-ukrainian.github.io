@@ -1,11 +1,11 @@
-# Audit Report: M44 — checkpoint-word-formation.md
-**Level:** A2 | **Module:** M44 | **Phase:** A2.4 | **Pedagogy:** TTT | **Target:** 2500
+# Audit Report: M49 — checkpoint-word-formation.md
+**Level:** A2 | **Module:** M49 | **Phase:** A2.4 | **Pedagogy:** TTT | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:18:28
+**Generated:** 2026-02-28 03:46:31
 
 ## Configuration
 **Type:** A2-checkpoint
-**Word Target:** 2500 words
+**Word Target:** 3000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
@@ -17,7 +17,7 @@
 **Transliteration:** Not allowed
 
 ## Gates
-- **Words:** ✅ 5139/2500 (raw: 5557)
+- **Words:** ✅ 5139/3000 (raw: 5557)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -26,7 +26,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)

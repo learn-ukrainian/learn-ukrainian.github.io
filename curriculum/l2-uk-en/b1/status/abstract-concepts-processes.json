@@ -2,13 +2,13 @@
   "module": "abstract-concepts-processes",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T10:45:40.589912Z",
+  "last_audit": "2026-02-28T09:49:32.802138Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T21:59:49.206343Z",
     "meta": "2026-02-24T21:51:05.409399Z",
     "activities": "2026-02-24T21:57:09.965301Z",
-    "vocabulary": "2026-02-24T21:55:24.356494Z",
+    "vocabulary": "2026-02-26T10:56:38.106635Z",
     "plan": "2026-02-20T21:30:38.035101Z",
     "research": "2026-02-24T21:51:05.405317Z"
   },
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 0
   }

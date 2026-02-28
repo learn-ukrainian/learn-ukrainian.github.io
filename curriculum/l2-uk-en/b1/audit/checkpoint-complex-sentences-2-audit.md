@@ -1,7 +1,7 @@
-# Audit Report: M41 — checkpoint-complex-sentences-2.md
-**Level:** B1 | **Module:** M41 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M44 — checkpoint-complex-sentences-2.md
+**Level:** B1 | **Module:** M44 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:44:47
+**Generated:** 2026-02-28 09:41:41
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -47,7 +47,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/10
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

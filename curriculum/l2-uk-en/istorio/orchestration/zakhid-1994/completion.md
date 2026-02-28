@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 98 — E2E
+PASS: pipeline istorio 98
 
   Module:   zakhid-1994
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T23:10:40Z
+  Date:     2026-02-28T00:49:55Z

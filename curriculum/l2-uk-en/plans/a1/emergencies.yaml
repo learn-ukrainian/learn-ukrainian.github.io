@@ -1,5 +1,5 @@
-sequence: 42
-module: a1-42
+sequence: 62
+module: a1-62
 level: A1
 slug: emergencies
 version: '2.0'
@@ -80,8 +80,8 @@ activity_hints:
 focus: practical
 pedagogy: PPP
 prerequisites:
-- a1-31 (Body and Health)
-- a1-41 (Phone Basics)
+- a1-48 (Body and Health)
+- a1-58 (Phone Basics)
 connects_to:
 - a1-43 (Combined Practice)
 objectives:
@@ -94,7 +94,7 @@ grammar:
 - Location expressions
 - Simple problem descriptions
 register: розмовний
-phase: A1.4 [Practical Scenarios]
+phase: A1.6 [Real-World Skills]
 persona:
   voice: Patient Supportive Tutor
   role: Emergency Dispatcher

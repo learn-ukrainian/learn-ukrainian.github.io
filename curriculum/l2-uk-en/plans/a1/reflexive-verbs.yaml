@@ -1,6 +1,6 @@
-module: a1-09
+module: a1-17
 level: A1
-sequence: 9
+sequence: 17
 slug: reflexive-verbs
 version: '2.0'
 title: Reflexive Verbs (-ся)
@@ -93,10 +93,10 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- a1-08 (The Living Verb II)
+- a1-16 (The Living Verb II)
 connects_to:
 - a1-10 (Checkpoint - First Contact)
-- a1-25 (My Daily Routine)
+- a1-38 (My Daily Routine)
 objectives:
 - Learner can identify reflexive verbs ending in -ся
 - Learner can conjugate reflexive verbs in present tense
@@ -107,7 +107,7 @@ grammar:
 - Conjugation of reflexive verbs
 - Transitive vs reflexive pairs
 register: розмовний
-phase: A1.1 [First Contact]
+phase: A1.2 [Verbs & Sentences]
 persona:
   voice: Patient Supportive Tutor
   role: Yoga Instructor

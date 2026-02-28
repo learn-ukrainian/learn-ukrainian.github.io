@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 2 — E2E
+PASS: pipeline lit 2
 
   Module:   eneida-part-1
   Track:    lit
-  Mode:     e2e
-  Words:    0 (target: 4000)
+  Mode:     v3
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T17:13:40Z
+  Date:     2026-02-28T00:55:26Z

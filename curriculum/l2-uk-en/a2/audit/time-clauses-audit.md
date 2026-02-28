@@ -1,7 +1,7 @@
-# Audit Report: M33 — time-clauses.md
-**Level:** A2 | **Module:** M33 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M38 — time-clauses.md
+**Level:** A2 | **Module:** M38 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:18:01
+**Generated:** 2026-02-28 03:44:56
 
 ## Configuration
 **Type:** A2-grammar
@@ -37,6 +37,15 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 3637/3000 (raw: 3835)
 - **Activities:** ✅ 12/10
@@ -47,7 +56,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

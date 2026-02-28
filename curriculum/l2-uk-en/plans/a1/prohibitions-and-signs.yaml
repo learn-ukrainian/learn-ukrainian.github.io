@@ -1,0 +1,102 @@
+module: a1-55
+level: A1
+sequence: 55
+slug: prohibitions-and-signs
+version: '2.0'
+title: Prohibitions and Signs
+subtitle: Do Not Enter!
+content_outline:
+- section: Заборони (Prohibitions)
+  words: 500
+  points:
+  - 'Infinitive prohibitions on signs: Не курити! (No smoking!). Не входити! (Do
+    not enter!). Не торкатися! (Do not touch!). Public signs use infinitive, not imperative
+    — this is a register distinction.'
+  - 'Common public signs: Вхід (Entrance), Вихід (Exit), Зачинено (Closed), Відчинено
+    (Open). Everyday survival vocabulary for navigating Ukrainian public spaces.'
+  - 'Sign vs personal command contrast: Не торкатися! (sign — infinitive, impersonal)
+    vs Не чіпай! (personal command — imperative). Same meaning, different grammatical
+    form and social context.'
+- section: Попередження (Warnings)
+  words: 400
+  points:
+  - 'Warning exclamations: Увага! (Attention!). Обережно! (Careful!). Небезпечно!
+    (Dangerous!). Short-form adjectives and adverbs used as standalone warnings.'
+  - 'Warning signs: Мокра підлога (Wet floor). Високa напруга (High voltage). Recognizing
+    danger signs for personal safety. Reading compound noun phrases on signs.'
+  - 'Understanding urgency: Warning signs protect safety — these are high-priority
+    vocabulary items. Learner should recognize them instantly without translation.'
+- section: Розклади та оголошення (Schedules and notices)
+  words: 400
+  points:
+  - 'Reading schedules: години роботи (operating hours), вихідний (day off), перерва
+    (break). Format: з 9:00 до 18:00 (from 9:00 to 18:00). Genitive of time.'
+  - 'Bus/train schedule reading: відправлення (departure), прибуття (arrival), номер
+    маршруту (route number). Connecting to a1-52 (Travel and Transport) vocabulary.'
+  - 'Notices and announcements: Оголошення (Announcement). Акція (Sale/Promotion).
+    Знижка (Discount). Practical reading for everyday life.'
+- section: На вулиці (On the street)
+  words: 400
+  points:
+  - 'Street signs: вулиця (street), площа (square), провулок (lane). Reading address
+    plates: вул. Хрещатик, пл. Незалежності. Abbreviations on signs.'
+  - 'Traffic and transport signs: Стоп (Stop), Пішохідний перехід (Pedestrian crossing).
+    Metro signs: Вхід (Entrance), Вихід (Exit), Перехід (Transfer). Urban navigation.'
+- section: Практика (Practice)
+  words: 300
+  points:
+  - 'Sign reading drills: Identify the meaning and grammatical form (infinitive vs
+    imperative vs noun phrase) of various Ukrainian signs.'
+  - 'Schedule comprehension: Read a schedule and answer questions about operating
+    hours, days off, and departure times. Practical reading skill development.'
+vocabulary_hints:
+  required:
+  - не курити (no smoking) — infinitive prohibition; public sign
+  - увага (attention) — Увага! Обережно!; warning exclamation
+  - обережно (carefully/caution) — Обережно, мокра підлога!; warning sign
+  - вхід (entrance) — Вхід заборонено; public navigation
+  - вихід (exit) — Запасний вихід; emergency exit sign
+  - зачинено (closed) — Магазин зачинено; business hours
+  - відчинено (open) — Кафе відчинено; business hours
+  - розклад (schedule) — розклад руху; timetable
+  - вихідний (day off) — Вихідний — неділя; schedule term
+  - перерва (break) — Перерва з 13:00 до 14:00; schedule term
+  recommended:
+  - небезпечно (dangerous) — Небезпечно! Високa напруга!; warning sign
+  - пішохідний (pedestrian) — пішохідний перехід; traffic sign
+  - перехід (crossing/transfer) — підземний перехід; metro/street
+  - зупинка (stop) — Зупинка автобуса; transport sign
+activity_hints:
+- type: match-up
+  focus: Match Ukrainian sign to its meaning
+  items: 12
+- type: quiz
+  focus: Sign comprehension and prohibition identification
+  items: 10
+- type: true-false
+  focus: Schedule reading comprehension
+  items: 8
+- type: fill-in
+  focus: Complete sign text with missing word
+  items: 8
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-54 (Checkpoint Communication)
+connects_to:
+- a1-56 (Buying Tickets)
+objectives:
+- Understand Ukrainian prohibition signs
+- Read warning signs and notices
+- Interpret schedules and operating hours
+- Navigate using street signs
+grammar:
+- Infinitive in prohibitions
+- Sign language conventions
+- Schedule reading (з... до... construction)
+register: розмовний
+phase: A1.6 [Real-World Skills]
+persona:
+  voice: Patient Supportive Tutor
+  role: Safety Officer
+word_target: 2000

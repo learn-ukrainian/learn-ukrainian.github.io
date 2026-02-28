@@ -2,14 +2,14 @@
   "module": "the-locative-where-things-are",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:40:01.620608Z",
+  "last_audit": "2026-02-28T03:34:49.423641Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:41:52.176971Z",
+    "md": "2026-02-26T11:21:03.245941Z",
     "meta": "2026-02-19T22:50:23.785491Z",
     "activities": "2026-02-20T22:43:21.366661Z",
-    "vocabulary": "2026-02-22T18:40:48.703179Z",
-    "plan": "2026-02-20T20:40:09.630045Z",
+    "vocabulary": "2026-02-26T10:56:53.941476Z",
+    "plan": "2026-02-28T03:02:37.374753Z",
     "research": "2026-02-19T22:50:23.777771Z"
   },
   "gates": {
@@ -19,29 +19,24 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2752/2000 (raw: 2945)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2751/2000 (raw: 2944) | immersion: 25.4% LOW (target 35-55% (M28))"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "20/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 7,
-    "fail_count": 0,
-    "deferred_count": 0
+    "pass_count": 2,
+    "fail_count": 1,
+    "deferred_count": 3
   }
 }

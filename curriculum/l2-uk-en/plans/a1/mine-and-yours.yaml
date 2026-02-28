@@ -1,6 +1,6 @@
-module: a1-14
+module: a1-20
 level: A1
-sequence: 14
+sequence: 20
 slug: mine-and-yours
 version: '2.0'
 title: Mine and Yours
@@ -95,10 +95,10 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- a1-13 (The Locative)
+- a1-28 (The Locative)
 connects_to:
-- a1-15 (Around the City)
-- a1-32 (My Family)
+- a1-29 (Around the City)
+- a1-49 (My Family)
 objectives:
 - Learner can use possessive pronouns мій/твій/його/її/наш/ваш/їхній
 - Learner can match possessive pronouns to noun gender (m/f/n/pl)
@@ -111,7 +111,7 @@ grammar:
 - Variable vs invariable forms
 - Reflexive possessive свій (свій vs його/її)
 register: розмовний
-phase: A1.2 [Navigation]
+phase: A1.2 [Verbs & Sentences]
 persona:
   voice: Patient Supportive Tutor
   role: Kindergarten Teacher

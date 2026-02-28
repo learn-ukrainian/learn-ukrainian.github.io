@@ -2,13 +2,13 @@
   "module": "discourse-markers-advanced",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T10:45:55.209256Z",
+  "last_audit": "2026-02-28T09:49:42.997182Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T22:45:07.729116Z",
     "meta": "2026-02-24T22:36:35.190449Z",
     "activities": "2026-02-24T22:43:01.307518Z",
-    "vocabulary": "2026-02-24T22:40:52.879248Z",
+    "vocabulary": "2026-02-26T10:56:38.115620Z",
     "plan": "2026-02-20T21:31:10.476206Z",
     "research": "2026-02-24T22:36:35.170171Z"
   },
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 0
   }

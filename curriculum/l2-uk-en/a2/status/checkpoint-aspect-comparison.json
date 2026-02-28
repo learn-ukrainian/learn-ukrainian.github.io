@@ -2,13 +2,13 @@
   "module": "checkpoint-aspect-comparison",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T20:35:47.340640Z",
+  "last_audit": "2026-02-28T03:44:33.363682Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-23T02:12:19.321929Z",
     "meta": "2026-02-24T22:37:07.172982Z",
     "activities": "2026-02-23T02:08:16.503043Z",
-    "vocabulary": "2026-02-23T02:12:41.327601Z",
+    "vocabulary": "2026-02-26T10:56:38.085492Z",
     "plan": "2026-02-20T21:01:42.419035Z",
     "research": "2026-02-23T01:45:45.945983Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3234/2500 (raw: 3482)"
+      "message": "3234/3000 (raw: 3482)"
     },
     "activities": {
       "status": "pass",
@@ -38,27 +38,22 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

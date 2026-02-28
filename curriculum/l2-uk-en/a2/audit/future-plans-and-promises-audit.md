@@ -1,7 +1,7 @@
-# Audit Report: M14 — future-plans-and-promises.md
-**Level:** A2 | **Module:** M14 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M16 — future-plans-and-promises.md
+**Level:** A2 | **Module:** M16 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:27
+**Generated:** 2026-02-28 03:37:50
 
 ## Configuration
 **Type:** A2-grammar
@@ -39,6 +39,15 @@
 - Required types used: 2/2 (fill-in, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте повторимо' → повторімо
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 3058/3000 (raw: 3245)
 - **Activities:** ✅ 12/10
@@ -49,7 +58,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 15/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

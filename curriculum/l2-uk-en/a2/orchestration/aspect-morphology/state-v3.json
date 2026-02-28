@@ -5,29 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T21:28:43Z",
-      "task_id": "v3-aspect-morphology-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-22T21:31:46Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-22T21:34:53Z",
-      "task_id": "v3-aspect-morphology-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-22T21:40:19Z",
-      "attempts": 2
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-26T14:00:51Z",
-      "attempts": 2,
-      "note": "d2-iter1"
+      "ts": "2026-02-28T02:37:52Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

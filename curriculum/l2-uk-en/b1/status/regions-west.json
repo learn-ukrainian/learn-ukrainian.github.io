@@ -2,13 +2,13 @@
   "module": "regions-west",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T11:18:19.224698Z",
+  "last_audit": "2026-02-28T09:50:19.950292Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-25T02:34:17.428605Z",
     "meta": "2026-02-25T02:26:40.065421Z",
     "activities": "2026-02-25T02:32:20.008031Z",
-    "vocabulary": "2026-02-25T02:32:20.363611Z",
+    "vocabulary": "2026-02-26T10:56:38.128369Z",
     "plan": "2026-02-20T21:32:33.209734Z",
     "research": "2026-02-25T02:26:40.060174Z"
   },
@@ -19,29 +19,24 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4166/4000 (raw: 4419)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4166/4000 (raw: 4419) | pedagogy: 14 violations"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "10/8"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/25"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "Missing required activity types: reading"
+    ],
     "pass_count": 4,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

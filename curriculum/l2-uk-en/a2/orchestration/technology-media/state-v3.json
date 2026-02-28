@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T21:49:51Z",
-      "task_id": "v3-technology-media-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T21:53:20Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T21:55:26Z",
-      "task_id": "v3-technology-media-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:18:49Z",
-      "attempts": 1
+      "ts": "2026-02-28T02:46:54Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

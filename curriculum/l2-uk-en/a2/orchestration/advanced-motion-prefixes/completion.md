@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 37 — E2E
+PASS: pipeline a2 42
 
   Module:   advanced-motion-prefixes
   Track:    a2
-  Mode:     e2e
+  Mode:     v3
   Words:    3270 (target: 3000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-24T10:05:51Z
+  Date:     2026-02-28T02:46:08Z

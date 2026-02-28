@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 74 — E2E
+PASS: pipeline istorio 74
 
   Module:   volyn-pamiat-i-travma
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T22:58:48Z
+  Date:     2026-02-28T00:42:23Z

@@ -1,7 +1,7 @@
-# Audit Report: M50 — technology-media.md
-**Level:** A2 | **Module:** M50 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 3000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:18:49
+# Audit Report: M55 — technology-media.md
+**Level:** A2 | **Module:** M55 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 3000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:46:54
 
 ## Configuration
 **Type:** A2-vocab
@@ -19,11 +19,13 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'it has...'.
   - FIX: Vary sentence structure.
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 4171/3000 (raw: 4654)
@@ -35,11 +37,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 72.8% (target 60-75% (A2.3))
+- **Immersion:** ❌ 72.8% LOW (target 75-90% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

@@ -1,7 +1,7 @@
-# Audit Report: M16 — the-genitive-i-absence.md
-**Level:** A1 | **Module:** M16 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:04
+# Audit Report: M32 — the-genitive-i-absence.md
+**Level:** A1 | **Module:** M32 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:37:13
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,29 +38,29 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_BALANCE_BLOATED]** Section 'Граматика: Конструкція «Немає» та «Без»' has 1052 words (41% of total). Bloated sections: 'Граматика: Конструкція «Немає» та «Без»' (41%)
+- **[SECTION_BALANCE_BLOATED]** Section 'Граматика: Конструкція «Немає» та «Без»' has 1042 words (42% of total). Bloated sections: 'Граматика: Конструкція «Немає» та «Без»' (42%)
   - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
 - 1 violations (minor)
+- Immersion 5% off target (minor)
 
 ## Gates
-- **Words:** ✅ 2227/2000 (raw: 2673)
+- **Words:** ✅ 2185/2000 (raw: 2631)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ⚠️ 0 < 1 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.2% (target 25-40% (M16))
+- **Immersion:** ❌ 29.6% LOW (target 35-55% (M32))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -70,8 +70,8 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **The Genitive I: Absence** | ✅ | 55 | Included in Core |
-| **Вступ: Ситуація відсутності** | ✅ | 294 | Included in Core |
-| **Граматика: Конструкція «Немає» та «Без»** | ✅ | 888 | Included in Core |
-| **Практика: Родовий відмінок у дії** | ✅ | 477 | Included in Core |
-| **Культурний контекст: «Немає проблем»** | ✅ | 349 | Included in Core |
+| **Вступ: Ситуація відсутності** | ✅ | 290 | Included in Core |
+| **Граматика: Конструкція «Немає» та «Без»** | ✅ | 878 | Included in Core |
+| **Практика: Родовий відмінок у дії** | ✅ | 455 | Included in Core |
+| **Культурний контекст: «Немає проблем»** | ✅ | 343 | Included in Core |
 | **Підсумок** | ✅ | 164 | Included in Core |

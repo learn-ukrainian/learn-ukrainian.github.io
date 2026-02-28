@@ -1,7 +1,7 @@
-# Audit Report: M40 — reported-questions-commands.md
-**Level:** B1 | **Module:** M40 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M43 — reported-questions-commands.md
+**Level:** B1 | **Module:** M43 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:44:46
+**Generated:** 2026-02-28 09:41:40
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,40 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Трансформація загальних питань та наказів | 12 | 8 | ✅ |
+| 2 | error-correction | Виправте типові помилки | 12 | 6 | ✅ |
+| 3 | unjumble | Складіть правильні речення | 12 | 6 | ✅ |
+| 4 | quiz | Теорія непрямої мови | 12 | 8 | ✅ |
+| 5 | match-up | Від прямої мови до непрямої | 12 | 8 | ✅ |
+| 6 | cloze | Складна нарада в офісі | 14 | 6 | ✅ |
+| 7 | mark-the-words | Знайдіть дієслова комунікації | 12 | 6 | ✅ |
+| 8 | select | Виберіть правильні варіанти | 6 | 6 | ✅ |
+| 9 | true-false | Правда чи неправда | 12 | 8 | ✅ |
+| 10 | translate | Переклад англійських конструкцій | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 10 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 2/2 (error-correction, fill-in) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 5349/4000 (raw: 5799)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 10/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

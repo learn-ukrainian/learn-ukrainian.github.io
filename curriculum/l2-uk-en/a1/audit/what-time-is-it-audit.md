@@ -1,7 +1,7 @@
 # Audit Report: M23 — what-time-is-it.md
-**Level:** A1 | **Module:** M23 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
+**Level:** A1 | **Module:** M23 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:12
+**Generated:** 2026-02-28 03:32:20
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,16 +38,15 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2625/2000 (raw: 2849)
+- **Words:** ✅ 2620/2000 (raw: 2844)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 22/1
+- **Vocab:** ⚠️ 0 < 1 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
@@ -61,7 +60,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **What Time Is It?** | ✅ | 51 | Included in Core |
-| **Warm-up** | ✅ | 234 | Included in Core |
+| **Warm-up** | ✅ | 229 | Included in Core |
 | **Presentation: The Clock Face** | ✅ | 499 | Included in Core |
 | **Days of the Week** | ✅ | 366 | Included in Core |
 | **Months of the Year** | ✅ | 374 | Included in Core |

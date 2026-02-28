@@ -1,0 +1,13 @@
+{
+  "track": "a2",
+  "slug": "reflexive-sebe",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T02:40:14Z",
+      "task_id": "v3-reflexive-sebe-pA",
+      "mode": "full"
+    }
+  }
+}

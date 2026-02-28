@@ -1,7 +1,7 @@
-# Audit Report: M16 — motion-verbs-full-system.md
-**Level:** B1 | **Module:** M16 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M18 — motion-verbs-full-system.md
+**Level:** B1 | **Module:** M18 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:42:51
+**Generated:** 2026-02-28 09:40:17
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,41 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: вектор та цикл | 14 | 8 | ✅ |
+| 2 | group-sort | Класифікація руху | 16 | 6 | ✅ |
+| 3 | fill-in | Оберіть правильне дієслово | 12 | 8 | ✅ |
+| 4 | fill-in | Від події до звички | 10 | 8 | ✅ |
+| 5 | true-false | Правда чи неправда: правила логістики | 14 | 8 | ✅ |
+| 6 | unjumble | Побудуйте логістичні речення | 8 | 6 | ✅ |
+| 7 | error-correction | Виправте логістичні помилки | 8 | 6 | ✅ |
+| 8 | quiz | Перевірка правил системи | 10 | 8 | ✅ |
+| 9 | cloze | Сучасна логістика Нової Пошти | 14 | 6 | ✅ |
+| 10 | select | Оберіть усі правильні характеристики | 8 | 6 | ✅ |
+| 11 | mark-the-words | Знайдіть дієслова руху | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 11 (target: 4-8) ❌
+- Unique types: 10 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 5981/4000 (raw: 6354)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 11/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 10/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 15/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

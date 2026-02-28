@@ -2,7 +2,7 @@
   "module": "oleksander-potebnya",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T00:56:43.359338Z",
+  "last_audit": "2026-02-28T01:48:43.610107Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-27T20:41:10.680149Z",
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5370/5000 (raw: 5707) | pedagogy: 2 violations"
-    },
-    "activities": {
-      "status": "fail",
-      "violations": 1,
-      "message": "5/3 | density: 1 < 1"
-    },
-    "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "30/24"
+      "message": "5370/5000 (raw: 5707)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 2,
-    "deferred_count": 0
+    "fail_count": 0,
+    "deferred_count": 3
   }
 }

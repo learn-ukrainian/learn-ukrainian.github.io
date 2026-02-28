@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 66 — E2E
+PASS: pipeline b1 77
 
   Module:   business-basics
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    4912 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:46:32Z
+  Date:     2026-02-28T08:50:09Z

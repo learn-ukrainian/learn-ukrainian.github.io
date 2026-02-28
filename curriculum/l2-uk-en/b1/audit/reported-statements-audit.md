@@ -1,7 +1,7 @@
-# Audit Report: M39 — reported-statements.md
-**Level:** B1 | **Module:** M39 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:44:42
+# Audit Report: M42 — reported-statements.md
+**Level:** B1 | **Module:** M42 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:41:37
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,72 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | true-false | Правила непрямої мови | 8 | 8 | ✅ |
+| 2 | quiz | Оберіть правильний варіант | 8 | 8 | ✅ |
+| 3 | match-up | Знайдіть відповідність: пряма та непряма мова | 8 | 8 | ✅ |
+| 4 | fill-in | Вставте пропущені слова | 8 | 8 | ✅ |
+| 5 | error-correction | Виправте помилки в непрямій мові | 6 | 6 | ✅ |
+| 6 | unjumble | Складіть речення з непрямою мовою | 6 | 6 | ✅ |
+| 7 | cloze | Переказ розмови | 14 | 6 | ✅ |
+| 8 | select | Оберіть правильні варіанти | 6 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть дієслова говоріння | 6 | 6 | ✅ |
+| 10 | unjumble | Складіть новини з фрагментів | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 9 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 2/2 (error-correction, fill-in) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть відповідність: пряма та непряма мова' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з непрямою мовою' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з непрямою мовою' item 2 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з непрямою мовою' item 3 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з непрямою мовою' item 4 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з непрямою мовою' item 5 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з непрямою мовою' item 6 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть новини з фрагментів' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть новини з фрагментів' item 2 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть новини з фрагментів' item 3 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть новини з фрагментів' item 4 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть новини з фрагментів' item 5 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 12 violations (severe - consider revision)
+
 ## Gates
 - **Words:** ✅ 4454/4000 (raw: 4848)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 9/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 12 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 96.7% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

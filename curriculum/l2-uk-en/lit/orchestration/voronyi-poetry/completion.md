@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 74 — E2E
+PASS: pipeline lit 75
 
   Module:   voronyi-poetry
   Track:    lit
-  Mode:     e2e
-  Words:    0 (target: 4000)
+  Mode:     v3
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T06:52:15Z
+  Date:     2026-02-28T01:14:52Z

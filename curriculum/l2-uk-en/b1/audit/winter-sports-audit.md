@@ -1,7 +1,7 @@
-# Audit Report: M84 — winter-sports.md
-**Level:** B1 | **Module:** M84 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M92 — winter-sports.md
+**Level:** B1 | **Module:** M92 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-25 20:35:49
+**Generated:** 2026-02-28 09:50:58
 
 ## Configuration
 **Type:** B1-culture
@@ -29,28 +29,23 @@
   - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 ## Recommendation
-**📝 UPDATE** (severity 60/100)
+**📝 UPDATE** (severity 15/100)
 
-- Revision recommended (severity 60/100)
 - 5 violations (moderate)
-- Structure issue: Missing '## Activities' header OR activities sidecar
-- Activity count below minimum
-- Activity density below minimum
 
 ## Gates
 - **Words:** ⚠️ 3909/4000 (raw: 4308) (91 short)
-- **Activities:** ❌ 0/8
-- **Density:** ❌ 0 < 12
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 25 (soft target)
-- **Structure:** ❌ Missing '## Activities' header OR activities sidecar
-- **Ipa:** ✅ Clean IPA
+- **Vocab:** ⏳ Deferred (content-only audit)
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 96% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

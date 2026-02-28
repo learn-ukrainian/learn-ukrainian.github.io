@@ -2,51 +2,55 @@ slug: the-dative-i-pronouns
 title: The Dative I — Pronouns
 word_target: 3000
 content_outline:
-- section: Introduction / Вступ
-  words: 400
+- section: 'Вступ: Роль адресата'
+  words: 500
   points:
-  - 'Immersion Alert: 50-60%. Explain grammar in English to avoid confusion. Use clear,
-    simple Ukrainian for examples.'
-  - 'Concept: The Dative Case (Давальний відмінок) answers ''Кому?'' (To whom?) and
-    ''Чому?'' (To what?).'
-  - 'Core Function: The Recipient of an action (giving TO, telling TO, helping TO).'
-  - 'The ''Experience'' Concept: In Ukrainian, you often don''t DO feelings, they
-    happen TO you (I am cold → To me is cold).'
-  - 'Why it matters: Essential for polite requests, expressing needs, and talking
-    about age (Мені 20 років).'
-- section: Presentation / Презентація
-  words: 1600
+  - 'Immersion Alert (50-60% Band 1): Explicitly establish that English will be used
+    to scaffold grammar concepts, while examples and dialogues will be in Ukrainian.'
+  - 'Define the Dative Case (Давальний відмінок) focusing on its core questions: Кому?
+    (To whom?) and Чому? (To what?).'
+  - 'Introduce the ''Recipient Role'': explain that the Dative is used for the person
+    or object for whose benefit or harm an action occurs.'
+  - 'Explain the logic of quantitative age traits in Ukrainian: frame it as age happening
+    *to* a person («Мені 20 років»), contrasting with English ''I am'' per State Standard
+    A2 requirements.'
+- section: 'Презентація: Форми та базові сполучення'
+  words: 700
   points:
-  - 'Forms: Present the full paradigm of Personal Pronouns in Dative (Мені, Тобі,
-    Йому, Їй, Нам, Вам, Їм). Use a lookup table.'
-  - 'The ''Like'' Inversion (Подобатися): Explain the SVO → OVS shift. ''I like music''
-    becomes ''Music (Nom) pleases me (Dat)''. Use a diagram.'
-  - 'Needs (Треба / Потрібно): Structure ''Dative + Adverb + Infinitive/Noun''. Emphasize
-    that the person is NOT the subject.'
-  - 'Physical & Emotional States: Group by pronoun. ''Мені холодно'' (I''m cold),
-    ''Йому нудно'' (He''s bored), ''Їй весело'' (She''s having fun).'
-  - 'Key Verbs taking Dative: Focus on ''допомагати'' (help TO), ''дзвонити'' (call
-    TO), ''давати'' (give TO), ''казати'' (tell TO).'
-  - 'Cultural Hook 1: ''Мені приємно'' (It is pleasant to me) as the standard response
-    to introductions.'
-  - 'Cultural Hook 2: The Threshold Rule (Поріг). Never give things ''через поріг''.
-    Step inside first!'
-  - 'Hospitality: Offering food/drink (''Вам каву чи чай?'').'
-- section: Practice / Практика
-  words: 600
+  - Each pronoun gets its own clear row in a comprehensive Nominative-to-Dative mapping
+    table. Include IPA only for the first occurrence of each new Dative pronoun.
+  - 'Dedicate an H3 subsection to high-frequency verb collocations requiring Dative:
+    дай мені, скажи мені, дзвони йому, допоможи їй. Include 2+ example sentences for
+    each.'
+  - 'Add a specific note on register distinction: explain the polite use of «Вам»
+    in hospitality and professional contexts (e.g., «Що Вам запропонувати?»).'
+- section: 'Подобатися та Потрібно: Пастка інверсії'
+  words: 800
   points:
-  - 'Drill 1: Nominative → Dative transformation (Я → Мені, Він → Йому). Simple substitution.'
-  - 'Drill 2: The ''Like'' Logic. Translate sentences requiring inversion (I like
-    coffee → Кава подобається мені).'
-  - 'Drill 3: Needs & States. Fill in the blank with correct pronoun: ''(___) холодно'',
-    ''(___) треба працювати''.'
-  - 'Error Spotter: Identify and fix common mistakes like ''Я подобаю'' or ''Я допомагаю
-    тебе''.'
-- section: Dialogues / Діалоги
-  words: 400
+  - 'Dedicate an H3 to the ''I Like'' Trap: Deconstruct the syntax of «Мені подобається».
+    Use clear structural breakdowns to show how the English subject becomes the Ukrainian
+    Dative recipient, and the English object becomes the Nominative subject.'
+  - 'Dedicate an H3 to the ''I Need'' Trap: Contrast incorrect learner forms («Я треба»)
+    with the correct impersonal states («Мені треба/потрібно»).'
+  - 'Dedicate an H3 to ''Indirect Object Alignment'': Explain why «допомагати» (to
+    help) and «дякувати» (to thank) take the Dative case, framing it independently
+    without relying on Russian grammar comparisons.'
+- section: 'Стани та емоції: Світ відчуттів'
+  words: 500
   points:
-  - 'Scenario 1: Meeting New People. Using ''Мені приємно'', asking ''Як вам?''.'
-  - 'Scenario 2: The Birthday Gift. Offering a gift (avoiding the threshold!), saying
-    ''Це тобі'', asking ''Тобі подобається?''.'
-  - 'Scenario 3: A Cold Day. Discussing feelings (''Мені холодно'') and needs (''Мені
-    треба чай'').'
+  - 'Create an H3 for ''Physical States'': Explain the impersonal construction using
+    adverbs («мені холодно», «йому жарко»). Provide 3+ practical examples.'
+  - 'Create an H3 for ''Emotional States'': Explore phrases like «їй весело», «нам
+    сумно», and «мені здається». Emphasize the feeling acting upon the person.'
+  - Detail the logic of convenience and suitability with phrases like «мені зручно»
+    and «їй пасує», accompanied by a short mini-dialogue.
+- section: Культурний код та етикет
+  words: 500
+  points:
+  - Explain the etiquette of first meetings using the Dative standard response «Мені
+    приємно» with a short contextual dialogue.
+  - 'Detail the ''Threshold Taboo'' («Не через поріг!»): Give cultural context on
+    why one must not give gifts or shake hands across a threshold, utilizing Dative
+    forms in the explanation.'
+  - Describe hospitality norms and offering phrasing («Вам каву чи чай?») emphasizing
+    the use of Dative pronouns when hosting guests.

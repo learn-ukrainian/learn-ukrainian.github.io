@@ -1,7 +1,7 @@
-# Audit Report: M62 — environment-ecology.md
-**Level:** B1 | **Module:** M62 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:46:17
+# Audit Report: M73 — environment-ecology.md
+**Level:** B1 | **Module:** M73 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:49:58
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,21 +16,64 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: словник екології | 12 | 8 | ✅ |
+| 2 | match-up | Знайдіть пару: екологічні словосполучення | 12 | 8 | ✅ |
+| 3 | fill-in | Вставте пропущене слово: практика | 12 | 8 | ✅ |
+| 4 | quiz | Перевірка розуміння тексту | 8 | 8 | ✅ |
+| 5 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 6 | unjumble | Складіть речення: причини та наслідки | 8 | 6 | ✅ |
+| 7 | error-correction | Виправте типові помилки | 8 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть екологічні терміни | 9 | 6 | ✅ |
+| 9 | quiz | Лексика і граматика: тестування | 8 | 8 | ✅ |
+| 10 | fill-in | Відновіть екологічні поради | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 7 (minimum: 4) ✅
+- Priority types used: 3/4 (mark-the-words, match-up, quiz) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: причини та наслідки' item 1 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: причини та наслідки' item 2 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: причини та наслідки' item 3 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: причини та наслідки' item 4 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: причини та наслідки' item 5 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: причини та наслідки' item 6 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: причини та наслідки' item 7 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: причини та наслідки' item 8 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 8 violations (significant)
+
 ## Gates
 - **Words:** ✅ 4966/4000 (raw: 5707)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 7/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 97.7% (target 85-100% (B1.5-6 Vocab))
+- **Pedagogy:** ❌ 8 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 97.7% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ⚠️ 99% (vocabulary) - 1 flags
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

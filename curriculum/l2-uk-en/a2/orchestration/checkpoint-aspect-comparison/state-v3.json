@@ -5,29 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T00:45:45Z",
-      "task_id": "v3-checkpoint-aspect-comparison-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T01:05:55Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T01:08:16Z",
-      "task_id": "v3-checkpoint-aspect-comparison-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-23T01:12:41Z",
-      "attempts": 3
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-23T01:17:33Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T02:44:33Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

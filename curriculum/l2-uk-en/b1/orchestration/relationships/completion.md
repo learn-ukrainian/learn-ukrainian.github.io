@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 65 — E2E
+PASS: pipeline b1 76
 
   Module:   relationships
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    6457 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:46:27Z
+  Date:     2026-02-28T08:50:06Z

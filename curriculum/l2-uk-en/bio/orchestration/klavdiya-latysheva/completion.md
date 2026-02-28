@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 105 — E2E
+PASS: pipeline bio 108
 
   Module:   klavdiya-latysheva
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    6026 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T00:12:11Z
+  Date:     2026-02-28T00:15:30Z

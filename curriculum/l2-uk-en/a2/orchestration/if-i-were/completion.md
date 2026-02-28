@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 22 — E2E
+PASS: pipeline a2 27
 
   Module:   if-i-were
   Track:    a2
-  Mode:     e2e
+  Mode:     v3
   Words:    4687 (target: 3000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-24T20:17:43Z
+  Date:     2026-02-28T02:44:24Z

@@ -19,11 +19,6 @@
       "status": "complete",
       "ts": "2026-02-25T07:05:07Z",
       "task_id": "v3-travel-geography-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:46:37Z",
-      "attempts": 1
     }
   }
 }

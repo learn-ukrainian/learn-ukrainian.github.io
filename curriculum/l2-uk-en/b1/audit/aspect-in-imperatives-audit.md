@@ -1,7 +1,7 @@
-# Audit Report: M11 — aspect-in-imperatives.md
-**Level:** B1 | **Module:** M11 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:42:27
+# Audit Report: M13 — aspect-in-imperatives.md
+**Level:** B1 | **Module:** M13 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:40:01
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,76 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Оберіть правильний вид дієслова | 15 | 8 | ✅ |
+| 2 | fill-in | Вставте правильну форму дієслова | 12 | 8 | ✅ |
+| 3 | fill-in | Порада чи наказ: оберіть дієслово | 10 | 8 | ✅ |
+| 4 | match-up | Знайдіть відповідність: Ситуація та наказ | 12 | 8 | ✅ |
+| 5 | unjumble | Складіть речення з правильним порядком слів | 6 | 6 | ✅ |
+| 6 | error-correction | Виправте граматичні та прагматичні помилки | 6 | 6 | ✅ |
+| 7 | unjumble | Побудуйте заперечні речення | 6 | 6 | ✅ |
+| 8 | error-correction | Виправте помилки: Вид дієслова | 6 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть дієслова у наказовому способі | 6 | 6 | ✅ |
+| 10 | cloze | Заповніть пропуски в тексті | 14 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з правильним порядком слів' item 1 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з правильним порядком слів' item 2 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з правильним порядком слів' item 3 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з правильним порядком слів' item 4 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з правильним порядком слів' item 5 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з правильним порядком слів' item 6 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте заперечні речення' item 1 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте заперечні речення' item 2 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте заперечні речення' item 3 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте заперечні речення' item 4 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте заперечні речення' item 5 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте заперечні речення' item 6 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+- **[INVALID_ANSWER]** mark-the-words 'Знайдіть дієслова у наказовому способі' answer 'продовжуйте' not found in passage
+  - FIX: Ensure 'продовжуйте' is exactly present in the passage field
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 14 violations (severe - consider revision)
+
 ## Gates
 - **Words:** ✅ 5938/4000 (raw: 6424)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 7/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 13 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 97% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

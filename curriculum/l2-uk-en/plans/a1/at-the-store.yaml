@@ -1,5 +1,5 @@
-sequence: 38
-module: a1-38
+sequence: 61
+module: a1-61
 level: A1
 slug: at-the-store
 version: '2.0'
@@ -94,9 +94,9 @@ activity_hints:
 focus: practical
 pedagogy: PPP
 prerequisites:
-- a1-37 (At the Market)
+- a1-60 (At the Market)
 connects_to:
-- a1-39 (Buying Tickets)
+- a1-56 (Buying Tickets)
 objectives:
 - Learner can navigate a supermarket
 - Learner can find items and ask for help
@@ -107,7 +107,7 @@ grammar:
 - Accusative for shopping
 - Quantity expressions
 register: розмовний
-phase: A1.4 [Practical Scenarios]
+phase: A1.6 [Real-World Skills]
 persona:
   voice: Patient Supportive Tutor
   role: Supermarket Manager

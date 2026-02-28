@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-23T21:22:22Z",
       "task_id": "v3-aspect-integration-practice-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:42:41Z",
-      "attempts": 1
     }
   }
 }

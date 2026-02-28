@@ -1,7 +1,7 @@
-# Audit Report: M39 — adjective-suffixes-qualities.md
-**Level:** A2 | **Module:** M39 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M44 — adjective-suffixes-qualities.md
+**Level:** A2 | **Module:** M44 | **Phase:** A2.3 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:18:09
+**Generated:** 2026-02-28 03:46:14
 
 ## Configuration
 **Type:** A2-grammar
@@ -37,6 +37,15 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 3053/3000 (raw: 3369)
 - **Activities:** ✅ 12/10
@@ -47,11 +56,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 70.1% (target 60-75% (A2.2))
+- **Immersion:** 🇺🇦 70.1% (target 60-75% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

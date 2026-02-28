@@ -5,29 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T08:22:14Z",
-      "task_id": "v3-action-verb-prefixes-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T08:26:19Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T08:28:56Z",
-      "task_id": "v3-action-verb-prefixes-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-23T08:38:51Z",
-      "attempts": 2
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-23T08:45:20Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T02:46:11Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

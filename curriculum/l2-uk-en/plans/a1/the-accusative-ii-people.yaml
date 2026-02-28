@@ -1,6 +1,6 @@
-module: a1-12
+module: a1-26
 level: A1
-sequence: 12
+sequence: 26
 slug: the-accusative-ii-people
 version: '2.0'
 title: 'The Accusative II: People'
@@ -89,8 +89,8 @@ pedagogy: PPP
 prerequisites:
 - a1-11 (The Accusative I - Things)
 connects_to:
-- a1-13 (The Locative)
-- a1-32 (My Family)
+- a1-28 (The Locative)
+- a1-49 (My Family)
 objectives:
 - Learner can use accusative case for animate nouns (people/animals)
 - Learner can distinguish between animate and inanimate accusative
@@ -101,7 +101,7 @@ grammar:
 - 'Masculine animate: accusative = genitive'
 - 'Feminine animate: same as inanimate'
 register: розмовний
-phase: A1.2 [Navigation]
+phase: A1.3 [Cases & Navigation]
 persona:
   voice: Patient Supportive Tutor
   role: HR Recruiter

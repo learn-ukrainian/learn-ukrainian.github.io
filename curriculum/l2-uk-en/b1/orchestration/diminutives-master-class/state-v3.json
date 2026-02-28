@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-24T09:36:58Z",
       "task_id": "v3-diminutives-master-class-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:45:23Z",
-      "attempts": 1
     }
   }
 }

@@ -1,7 +1,7 @@
 # Audit Report: M01 — the-dative-i-pronouns.md
 **Level:** A2 | **Module:** M01 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:16
+**Generated:** 2026-02-28 03:34:11
 
 ## Configuration
 **Type:** A2-grammar
@@ -40,20 +40,19 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 4016/3000 (raw: 4364)
+- **Words:** ✅ 6490/3000 (raw: 6806)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 8
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 33/1
+- **Vocab:** ✅ 35/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 51.2% (target 50-60% (A2.1))
+- **Immersion:** 🇺🇦 50.7% (target 50-60% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -62,10 +61,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Dative I — Pronouns** | ✅ | 57 | Included in Core |
-| **Introduction / Вступ** | ✅ | 570 | Included in Core |
-| **Presentation / Презентація** | ✅ | 1469 | Included in Core |
-| **States and Verbs / Стани і дієслова** | ✅ | 645 | Included in Core |
-| **Practice / Практика** | ✅ | 574 | Included in Core |
-| **Dialogues / Діалоги** | ✅ | 493 | Included in Core |
-| **Підсумок** | ✅ | 208 | Included in Core |
+| **The Dative I — Pronouns** | ✅ | 92 | Included in Core |
+| **Вступ: Роль адресата** | ✅ | 830 | Included in Core |
+| **Презентація: Форми та базові сполучення** | ✅ | 1868 | Included in Core |
+| **Подобатися та Потрібно: Пастка інверсії** | ✅ | 1441 | Included in Core |
+| **Стани та емоції: Світ відчуттів** | ✅ | 975 | Included in Core |
+| **Культурний код та етикет** | ✅ | 1040 | Included in Core |
+| **Підсумок** | ✅ | 244 | Included in Core |

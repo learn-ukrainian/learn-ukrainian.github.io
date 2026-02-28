@@ -2,13 +2,13 @@
   "module": "education-learning",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:18:54.153676Z",
+  "last_audit": "2026-02-28T03:47:00.100497Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T16:44:41.870962Z",
     "meta": "2026-02-23T23:07:07.213514Z",
     "activities": "2026-02-24T16:42:42.622333Z",
-    "vocabulary": "2026-02-24T16:28:36.760616Z",
+    "vocabulary": "2026-02-26T10:56:38.088080Z",
     "plan": "2026-02-20T21:05:06.504059Z",
     "research": "2026-02-23T23:07:07.209087Z"
   },
@@ -24,24 +24,19 @@
       "message": "5064/3000 (raw: 5305)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "25/1"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -57,8 +52,8 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 3
+    "deferred_count": 1
   }
 }

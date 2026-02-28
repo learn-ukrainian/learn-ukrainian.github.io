@@ -2,15 +2,15 @@
   "module": "checkpoint-cases",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T01:02:14.967182Z",
+  "last_audit": "2026-02-28T03:37:42.620249Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T01:02:12.346648Z",
-    "meta": "2026-02-28T00:34:55.379819Z",
+    "md": "2026-02-28T01:20:01.877665Z",
+    "meta": "2026-02-28T01:20:01.878187Z",
     "activities": "2026-02-22T21:53:16.679496Z",
     "vocabulary": "2026-02-28T01:02:12.351236Z",
     "plan": "2026-02-20T21:00:15.023721Z",
-    "research": "2026-02-28T00:34:55.371893Z"
+    "research": "2026-02-28T01:12:49.514451Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3688/3000 (raw: 4523)"
+      "message": "3886/3000 (raw: 4371)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "12/10"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "26/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,18 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "Checkpoint Format Errors"
     ],
-    "pass_count": 5,
-    "fail_count": 1,
-    "deferred_count": 0
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
   }
 }

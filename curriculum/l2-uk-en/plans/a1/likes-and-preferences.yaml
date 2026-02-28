@@ -1,0 +1,95 @@
+module: a1-19
+level: A1
+sequence: 19
+slug: likes-and-preferences
+version: '2.0'
+title: Likes and Preferences
+subtitle: What Do You Like?
+content_outline:
+- section: 'Мені подобається (I like)'
+  words: 500
+  points:
+  - 'Давальна конструкція «Мені подобається + іменник/інфінітив» (Cat A 13, Dative
+    chunks): підмет — не особа, а те, що подобається. Мені подобається кава. Мені
+    подобається читати.'
+  - 'Парадигма за особами: мені/тобі/йому/їй/нам/вам/їм подобається. Узгодження
+    з числом підмета: подобається (одн.) vs подобаються (множ.) — Мені подобаються
+    квіти.'
+- section: 'Я люблю (I love)'
+  words: 400
+  points:
+  - 'Конструкція «Люблю + Знахідний відмінок»: Я люблю каву. Я люблю маму. Дієвідмінювання
+    любити (II дієвідміна: люблю, любиш, любить...).'
+  - 'Різниця між подобається (appeals to me, state) та люблю (I love/enjoy actively,
+    action): Мені подобається ця книга (I find this book appealing) vs Я люблю цю
+    книгу (I love this book).'
+- section: 'Я хочу (I want)'
+  words: 400
+  points:
+  - 'Конструкція «Хочу + інфінітив»: Я хочу їсти. Я хочу піти. Дієвідмінювання
+    хотіти (хочу, хочеш, хоче, хочемо, хочете, хочуть).'
+  - 'Конструкція «Хочу + Знахідний»: Я хочу каву. Я хочу квиток. Контраст із
+    «подобається», яке не потребує знахідного.'
+- section: 'Порівняння (Comparing likes)'
+  words: 400
+  points:
+  - 'Питання про уподобання інших: А ти? А вам? Тобі подобається...? Ти любиш...?
+    Ви хочете...? Побудова діалогів про спільні та різні вподобання.'
+  - 'Культурний контекст: що українці люблять їсти, пити, робити у вільний час.
+    Природне введення лексики для наступних модулів (їжа, дозвілля).'
+- section: 'Практика (Practice)'
+  words: 300
+  points:
+  - 'Вправи на вибір правильної конструкції (подобається vs люблю vs хочу) залежно
+    від контексту та значення.'
+  - 'Діалогові завдання: заповнення пропусків у розмовах про уподобання, створення
+    власних висловлювань.'
+vocabulary_hints:
+  required:
+  - подобатися (to like/appeal) — мені подобається кава, подобається читати; Dative construction
+  - любити (to love) — я люблю каву, я люблю маму; II conjugation + Accusative
+  - хотіти (to want) — я хочу їсти, я хочу піти; Irregular conjugation
+  - кава (coffee) — мені подобається кава, я люблю каву; High frequency
+  - музика (music) — мені подобається музика; High frequency
+  - читати (to read) — мені подобається читати; Infinitive after подобається
+  - їсти (to eat) — я хочу їсти; Infinitive after хочу
+  - піти (to go) — я хочу піти; Perfective infinitive after хочу
+  recommended:
+  - цікавий (interesting) — цікава книга, цікавий фільм; Adjective for preferences
+  - нудний (boring) — нудна лекція, нудний фільм; Contrast with цікавий
+  - смачний (tasty) — смачна кава, смачний борщ; Food preferences
+  - улюблений (favourite) — улюблена книга, улюблений колір; Superlative preference
+activity_hints:
+- type: quiz
+  focus: Choose correct construction (подобається vs люблю vs хочу)
+  items: 10
+- type: fill-in
+  focus: Complete preference sentences with correct form
+  items: 8
+- type: match-up
+  focus: Match construction to meaning
+  items: 10
+- type: unjumble
+  focus: Reorder preference dialogues
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-18 (Questions and Negation)
+connects_to:
+- a1-20 (Mine and Yours)
+objectives:
+- Express likes using the Dative construction Мені подобається
+- Express love and enjoyment using Я люблю with Accusative
+- Express wants using Я хочу with infinitive or Accusative
+- Ask others about their preferences and compare likes
+grammar:
+- Dative construction Мені подобається
+- Люблю + Accusative
+- Хочу + infinitive
+register: розмовний
+phase: A1.2 [Verbs & Sentences]
+persona:
+  voice: Patient Supportive Tutor
+  role: Food Critic
+word_target: 2000

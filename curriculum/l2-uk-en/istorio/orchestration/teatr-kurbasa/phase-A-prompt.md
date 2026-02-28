@@ -1,146 +1,130 @@
-===RESEARCH_START===
+# Phase A: Meta Outline Only (Research Already Exists)
 
-# Дослідження: Театр Курбаса: Реформа і знищення
+> **You are Gemini, executing Phase A (meta-only mode) of an optimised rebuild (build_module_v3).**
+> **Research is already complete. Your ONLY task: Rebuild the meta outline from the existing research.**
 
-## Використані джерела
-1. [Курбас Лесь — Енциклопедія Сучасної України](https://esu.com.ua/article-51786) — Фундаментальна біографічна та мистецтвознавча стаття.
-2. [Лесь Курбас: Повернення в майбутнє — УІНП](https://uinp.gov.ua/informaciyni-materialy/statti/les-kurbas-povernennya-v-maybutnye) — Аналіз реформаторської діяльності та репресій.
-3. [Національний центр театрального мистецтва ім. Леся Курбаса](https://kurbas.org.ua/) — Джерело про методологію та філософію "Березоля".
-4. [Розстріляне відродження: Лесь Курбас](https://litopys.org.ua/) — Контекст репресій 1930-х років.
+---
 
-## Хронологія
-- **1887, 25 лютого**: Народився у м. Самбір (нині Львівська обл.) у родині акторів.
-- **1917**: Заснування "Молодого театру" в Києві — початок європеїзації української сцени.
-- **1922, 31 березня**: Створення Мистецького об’єднання "Березіль" у Києві.
-- **1926**: Переїзд "Березоля" до Харкова (тодішньої столиці УСРР).
-- **1928**: Прем’єра вистави "Народний Малахій" Миколи Куліша — початок гострої полеміки.
-- **1929**: Постановка "Мини Мазайла" — вершина співпраці з Кулішем.
-- **1933, 5 жовтня**: Курбаса звільнено з посади керівника "Березоля" за "націоналізм" і "формалізм".
-- **1933, 26 грудня**: Арешт у Москві.
-- **1937, 3 листопада**: Розстріляний в урочищі Сандармох (Карелія) на честь 20-річчя Жовтневої революції.
-- **1957**: Посмертна реабілітація.
+## Your Input
 
-## Ключові факти та цитати
-- **Філософія**: "Початком мистецтва світу є театр. Він — могутній засіб перетворення грубого в тонке, підйому у вищі сфери".
-- **Метод**: "Перетворення" — актор не грає роль, а перетворюється, використовуючи інтелект і тіло (міміка, жести, акробатика).
-- **Візія**: "Театр має бути таким, яким суспільство має бути завтра".
-- **Європеїзм**: Курбас володів 8 мовами, перекладав європейську драму, орієнтувався на експресіонізм та конструктивізм, відкидаючи "малоросійську" побутовщину ("етнографізм").
-- **Критика**: Радянська влада звинувачувала його у "відриві від мас" та незрозумілості для пролетаріату.
+Read the **existing research notes** (already complete — do NOT re-research):
 
-## Engagement Hooks (mapped to sections)
-- **Section "Вступ — Революціонер сцени"**: [!history-bite] — Курбас першим в українському театрі відмовився від "шароварщини" та побутових п'єс на користь інтелектуального європейського модернізму.
-- **Section "Шлях до Березоля"**: [!context] — Назва "Березіль" походить від назви першого весняного місяця, символізуючи весну українського мистецтва.
-- **Section "Театральна реформа Курбаса"**: [!quote] — "Мистецтво — це не відтворення дійсності, а творення нової реальності".
-- **Section "Найважливіші постановки"**: [!myth-buster] — Міф про "незрозумілість" Курбаса був штучно створений партійною критикою, насправді зали були повні, а молодь захоплювалася його експериментами.
-- **Section "Конфлікт із владою"**: [!decolonization] — Термін "формалізм" використовувався імперською владою як тавро для знищення будь-якого мистецтва, що виходило з-під ідеологічного контролю Москви та мало національні риси.
-- **Section "Загибель і пам'ять"**: [!culture] — "Список Сандармоху" — це не просто перелік жертв, це зріз української еліти, знищеної для зупинки розвитку нації.
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/istorio/research/teatr-kurbasa-research.md
+```
 
-## Деколонізаційний контекст
-- **Імперський міф**: Курбас — "формаліст", який "відірвався від народу" і шкодив соціалістичному будівництву. Його мистецтво — "буржуазне збочення".
-- **Українська реальність**: Курбас інтегрував українську культуру в європейський контекст, роблячи її модерною та самодостатньою. Його знищили саме за успішність цього проекту, який загрожував російській культурній гегемонії. "Березіль" був небезпечний, бо творив *українську* Європу.
+Read the plan file (SOURCE OF TRUTH for structure):
 
-## Contested Terms
-| Concept | Imperial/Soviet framing | Ukrainian (decolonized) framing |
-|---------|-------------------------|---------------------------------|
-| Формалізм | Шкідливе зосередження на формі на шкоду змісту, буржуазна течія. | Експериментальний пошук нових естетичних засобів, свобода творчості, модернізм. |
-| Націоналізм (у мистецтві) | Ворожа ідеологія, спроба розколоти "братні народи". | Прагнення до національної самобутності та культурної незалежності. |
-| Реалізм (соцреалізм) | Єдиний правильний метод мистецтва. | Інструмент ідеологічної уніфікації та контролю над митцями. |
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/istorio/teatr-kurbasa.yaml
+```
 
-## Section-Mapped Research Notes
+Read the current meta file (for reference — you will replace the content_outline):
 
-### Вступ — Революціонер сцени
-Курбас як фігура світового масштабу. Він змінив парадигму українського театру з етнографічно-побутового на філософсько-інтелектуальний. Театр для нього був інструментом пробудження нації та формування нової людини.
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/istorio/meta/teatr-kurbasa.yaml
+```
 
-### Шлях до "Березоля"
-Навчання у Відні та Львові. Вплив західної культури. "Молодий театр" (1917) як лабораторія. Відмова від корифеїв (Кропивницький, Садовський) на користь пошуку нових форм. Заснування МОБ ("Березіль") у 1922 році як мистецького об'єднання, а не просто трупи.
+---
 
-### Театральна реформа Курбаса
-Впровадження системи "розумного арлекіна" (актор-філософ, актор-акробат). Відмова від реалістичних декорацій на користь конструктивізму (сценограф Вадим Меллер). Ритм, рух, музика як основні елементи. Використання кінопроекцій ("кінофікація" театру).
+## Your Task
 
-### Найважливіші постановки
-"Газ" Ґ. Кайзера — вершина експресіонізму, рух акторів імітував роботу машин. "Джіммі Гіггінз" — використання екранів для трансляції думок героя. Співпраця з М. Кулішем: "Народний Малахій" (трагедія візіонерства) та "Мина Мазайло" (сатира на міщанство та русифікацію).
+**Rebuild** the `content_outline` from scratch using:
+- The **plan's section structure** as the skeleton (match section names exactly)
+- The **research notes** to inform depth, word allocation, and specific bullet points
 
-### Конфлікт із владою
-Згортання українізації у 1930-х. Посилення цензури. Диспути про шляхи розвитку театру, де Курбаса таврували. Вимога "зрозумілості" (спрощення). Звільнення з театру після відмови каятися.
+The existing meta `content_outline` is likely outdated (wrong section sizes, stale points). Do NOT copy it. Start fresh from the plan + research.
 
-### Загибель і пам'ять
-Арешт у Москві (де він працював у Міхоелса). Етапування на Соловки. Табірний театр Курбаса. Розстріл капітаном Матвєєвим у Сандармоху. Довге забуття та реабілітація під час "відлиги".
+### Rules
 
-===RESEARCH_END===
+- **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
+- Allocations must sum to approximately **5000** words (±10% acceptable)
+- Minimum section allocation: 200 words (merge smaller sections)
+- For modules with target ≥ 4000w, aim for **8-12 sections minimum** — this prevents any one section from consuming a disproportionate share of the module.
+- **No single section may consume more than 25% of the total word target.** A 5000w module → max 1250w per section. If a plan section would exceed this, you MUST split it.
+- Each section must have `section`, `words`, and `points` fields
+- Section names must be in Ukrainian (these become H2 headings in the lesson)
+- **Section names must match plan exactly** — if the plan has a `content_outline` with section names,
+  use those EXACT names (or very close Ukrainian equivalents). When splitting a large plan section,
+  add a subtitle (e.g. "Читання: I — Походження").
+- Points reflect research findings — cite specific facts, dates, quotes where relevant
+- Check the subject's vital status: living person → "Значення" / "Вплив"; deceased → "Спадщина" / "Наслідки"
 
+### How to split a plan section (CRITICAL)
+
+**The plan's bullet points are section topics, not sub-bullets.** A plan section with 10 bullet points should become 3-5 meta sections, not one giant section.
+
+**Process:**
+1. Count the bullet points in each plan section
+2. If a section has 5+ bullets: group them into thematic clusters of 2-4 bullets
+3. Each cluster becomes its own meta section with the parent name as prefix:
+   - `"Читання: I — Розселення та племінна мозаїка"` (bullets 1-4)
+   - `"Читання: II — Суспільний устрій і права"` (bullets 5-7)
+   - `"Читання: III — Духовний світ та побут"` (bullets 8-11)
+   - etc.
+4. Allocate words based on research depth for each cluster
+
+**Example:** A plan section `Читання` with 14 bullet points should NOT become one 3200w meta section. It should become 4-5 sub-sections of 600-800w each. The bullets tell you what the sub-sections should cover.
+
+---
+
+## Output Format
+
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+
+### Output Block: Meta Outline
+
+```
 ===META_OUTLINE_START===
 content_outline:
-  - section: Вступ — Революціонер сцени
-    words: 600
+  - section: "{Section 1 name in Ukrainian}"
+    words: {allocation}
     points:
-      - Лесь Курбас — творець українського модерного театру та фігура європейського масштабу.
-      - Суть театральної революції: перехід від "театру корифеїв" (побут, етнографія) до "театру вираження" (інтелект, філософія).
-      - Театр як політичний інструмент: формування нової української ідентичності через мистецтво.
-      - Огляд структури модуля: від реформ до репресій.
-  - section: Шлях до "Березоля"
-    words: 800
+      - "{key point 1 — informed by research}"
+      - "{key point 2}"
+  - section: "{Section 2 name}"
+    words: {allocation}
     points:
-      - Ранні роки: походження, навчання у Відні та Львові, вплив європейської культури.
-      - "Молодий театр" (1917–1919): перші експерименти з формою, пошук нової театральної мови в умовах революції.
-      - Перша світова війна та Українська революція як тло для формування світогляду митця.
-      - Заснування Мистецького об'єднання "Березіль" (1922): ідея театру-студії та лабораторії.
-  - section: Театральна реформа Курбаса: I — Система і Естетика
-    words: 600
-    points:
-      - Бунт проти традиції: чому старий реалістичний театр не задовольняв потреби часу.
-      - Концепція "перетворення": актор як мислитель і майстер свого тіла, а не імітатор життя.
-      - Естетика експресіонізму: вираження внутрішнього стану через гіперболізацію та гротеск.
-      - Конструктивізм у сценографії (співпраця з В. Меллером): функціональність декорацій, гра з простором.
-  - section: Театральна реформа Курбаса: II — Синтетичний театр
-    words: 600
-    points:
-      - "Синтетичний актор": поєднання слова, пластики, акробатики та ритму.
-      - Музичність вистави: ритм як організуюча сила сценічної дії.
-      - Вплив європейського авангарду: паралелі з Мейєрхольдом, Рейнхардтом, Брехтом.
-      - Кіно і театр: використання новітніх технологій у виставах ("Джіммі Гіггінз").
-  - section: Найважливіші постановки: I — Експерименти
-    words: 600
-    points:
-      - "Газ" Георга Кайзера: людина і машина, механізація рухів, тріумф експресіонізму.
-      - "Джіммі Гіггінз" Ептона Сінклера: вибух свідомості героя, візуалізація думок.
-      - "Макбет" Шекспіра: смілива інтерпретація класики, "король-м'ясник".
-      - Реакція глядачів: шок, захоплення молоді та нерозуміння консерваторів.
-  - section: Найважливіші постановки: II — Драматургія Миколи Куліша
-    words: 600
-    points:
-      - Творчий тандем Курбас–Куліш: вершина українського театру 1920-х.
-      - "Народний Малахій": трагедія фанатика і утопіста, пророцтво про долю "мрійників".
-      - "Мина Мазайло": блискуча сатира на малоросійство та шовінізм, філологічний водевіль.
-      - "Маклена Граса": остання вистава, передчуття катастрофи.
-  - section: Конфлікт із владою
-    words: 600
-    points:
-      - Зміна політичного клімату в 1930-х: кінець українізації, наступ тоталітаризму.
-      - Звинувачення у "формалізмі" та "націоналізмі": ідеологічна травля в пресі.
-      - Диспути про театр: Курбас проти "пролетарського реалізму" та спрощення.
-      - Звільнення з посади керівника "Березоля" (1933) та переїзд до Москви.
-  - section: Загибель і пам'ять
-    words: 600
-    points:
-      - Арешт (грудень 1933) та сфабриковані звинувачення в тероризмі (УВО).
-      - Заслання на Соловецькі острови: Курбас створює театр навіть у таборі.
-      - Розстріл в урочищі Сандармох (3 листопада 1937): знищення цвіту нації.
-      - Реабілітація (1957) та повернення спадщини: Курбас як символ незнищенності духу.
-      - Вплив на сучасний український театр: продовжувачі традицій.
-  - section: Підсумок
-    words: 400
-    points:
-      - Лесь Курбас — реформатор, що випередив свій час і зробив український театр європейським.
-      - Трагедія "Березоля" як дзеркало долі української культури в ХХ столітті.
-      - Від експерименту до злочину: як тоталітарна система знищує вільну думку.
-      - Механізм знищення: від критики в пресі до фізичної ліквідації (Сандармох).
+      - "..."
+  # ... all sections
+  # Total: ~5000 words
 ===META_OUTLINE_END===
+```
 
+### Validation checklist (complete before outputting):
+
+- [ ] All section names are Ukrainian
+- [ ] Section names match plan structure
+- [ ] Each section has `words` and `points`
+- [ ] Sum of all `words` ≈ 5000
+- [ ] No section has fewer than 200 words
+- [ ] Points reflect research findings
+- [ ] 8-12 sections for ≥ 4000w targets
+
+---
+
+## Friction Report (MANDATORY)
+
+After the meta outline output, include:
+
+```
 ===FRICTION_START===
-**Phase**: Phase A: Research + Meta (Seminar)
-**Step**: Full Phase A
-**Friction Type**: NONE
-**Raw Error**: None
-**Self-Correction**: Split "Театральна реформа Курбаса" and "Найважливіші постановки" into two subsections each to adhere to the rule of max ~25% per section and ensure depth.
-**Proposed Tooling Fix**: N/A
+**Phase**: Phase A: Meta Outline Only (research-exists mode)
+**Step**: {what you were doing when friction occurred, or "Full meta outline"}
+**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
 ===FRICTION_END===
+```
+
+---
+
+## Boundaries
+
+- Do NOT re-research — use only the provided research file
+- Do NOT write lesson content — only the meta outline
+- Do NOT generate activities or vocabulary
+- Do NOT skip any section from the plan's content_outline
+- Do NOT reference persona names or voice instructions
+- Do NOT request skills, delegate to Claude, or skip this phase

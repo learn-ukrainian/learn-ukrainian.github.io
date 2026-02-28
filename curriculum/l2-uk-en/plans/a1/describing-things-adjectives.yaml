@@ -1,6 +1,6 @@
-module: a1-26
+module: a1-11
 level: A1
-sequence: 26
+sequence: 11
 slug: describing-things-adjectives
 version: '2.0'
 title: Describing Things - Adjectives
@@ -97,10 +97,10 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- a1-03 (The Gender Code)
-- a1-25 (My Daily Routine)
+- a1-07 (The Gender Code)
+- a1-38 (My Daily Routine)
 connects_to:
-- a1-27 (Colors and Clothing)
+- a1-12 (Colors and Clothing)
 - a1-28 (Description - Adverbs)
 objectives:
 - Learner can use correct adjective endings for masculine nouns
@@ -112,7 +112,7 @@ grammar:
 - Hard stem adjectives (-ий/-а/-е/-і)
 - Soft stem adjectives (-ій/-я/-є/-і)
 register: розмовний
-phase: A1.3 [Consolidation]
+phase: A1.1 [First Contact]
 persona:
   voice: Patient Supportive Tutor
   role: Real Estate Agent

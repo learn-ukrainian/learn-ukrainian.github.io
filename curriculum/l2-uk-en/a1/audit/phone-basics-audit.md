@@ -1,7 +1,7 @@
-# Audit Report: M41 — phone-basics.md
-**Level:** A1 | **Module:** M41 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M58 — phone-basics.md
+**Level:** A1 | **Module:** M58 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 13:23:51
+**Generated:** 2026-02-28 03:53:47
 
 ## Configuration
 **Type:** A1
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.5% (target 35-55% (M41))
+- **Immersion:** 🇺🇦 36.5% (target 35-55% (M58))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

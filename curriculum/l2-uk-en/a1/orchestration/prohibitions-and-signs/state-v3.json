@@ -1,0 +1,13 @@
+{
+  "track": "a1",
+  "slug": "prohibitions-and-signs",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T02:53:43Z",
+      "task_id": "v3-prohibitions-and-signs-pA",
+      "mode": "full"
+    }
+  }
+}

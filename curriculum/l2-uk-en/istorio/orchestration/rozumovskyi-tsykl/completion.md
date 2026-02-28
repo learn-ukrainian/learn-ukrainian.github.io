@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 84 — E2E
+PASS: pipeline istorio 84
 
   Module:   rozumovskyi-tsykl
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T23:03:05Z
+  Date:     2026-02-28T00:45:28Z

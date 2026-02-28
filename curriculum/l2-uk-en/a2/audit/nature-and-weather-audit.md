@@ -1,7 +1,7 @@
-# Audit Report: M47 — nature-and-weather.md
-**Level:** A2 | **Module:** M47 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 3000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:18:39
+# Audit Report: M52 — nature-and-weather.md
+**Level:** A2 | **Module:** M52 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 3000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:46:41
 
 ## Configuration
 **Type:** A2-vocab
@@ -26,7 +26,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 3607/3000 (raw: 3985)
+- **Words:** ✅ 3607/3000 (raw: 3982)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -35,11 +35,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 70.2% (target 60-75% (A2.3))
+- **Immersion:** ❌ 70.2% LOW (target 75-90% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

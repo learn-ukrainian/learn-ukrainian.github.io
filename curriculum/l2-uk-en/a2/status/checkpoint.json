@@ -2,7 +2,7 @@
   "module": "checkpoint",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-26T16:15:48.045048Z",
+  "last_audit": "2026-02-28T03:46:03.892815Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-23T07:44:04.074636Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3570/2500 (raw: 3759)"
+      "message": "3570/3000 (raw: 3759)"
     },
     "activities": {
       "status": "pass",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

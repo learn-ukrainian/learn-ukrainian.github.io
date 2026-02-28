@@ -1,7 +1,7 @@
-# Audit Report: M29 — i-think-that.md
-**Level:** A2 | **Module:** M29 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M34 — i-think-that.md
+**Level:** A2 | **Module:** M34 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:57
+**Generated:** 2026-02-28 03:44:45
 
 ## Configuration
 **Type:** A2-vocab
@@ -15,6 +15,15 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Not allowed
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 3888/3000 (raw: 4292)
 - **Activities:** ⏳ Deferred (content-only audit)
@@ -25,7 +34,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)

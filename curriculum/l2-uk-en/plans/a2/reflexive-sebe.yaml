@@ -1,0 +1,154 @@
+module: a2-20
+level: A2
+sequence: 20
+slug: reflexive-sebe
+version: '2.0'
+title: Reflexive Pronoun Sebe
+subtitle: "себе/собі/собою — Talking About Oneself"
+content_outline:
+- section: 'Вступ: Навіщо «себе»? (Introduction: Why себе?)'
+  words: 400
+  points:
+  - 'The gap in the pronoun table: себе has no Nominative form because the subject
+    and the reflexive target cannot occupy the same slot — the subject already appears
+    as я/ти/він etc.'
+  - 'Cross-person generality: себе refers back to the subject regardless of person
+    or number — Я бачу себе / Ти бачиш себе / Вони бачать себе — one form covers
+    all persons and both numbers.'
+  - 'Contrast with English: English requires six different reflexive pronouns (myself,
+    yourself, himself, herself, ourselves, yourselves) while Ukrainian needs only
+    one — себе simplifies reflexive reference.'
+- section: 'Відмінювання «себе» (Declension of себе)'
+  words: 600
+  points:
+  - 'Complete declension table: Nom — (none); Gen/Acc — себе; Dat/Loc — собі; Inst
+    — собою; no plural forms (same for singular and plural subjects).'
+  - 'Genitive/Accusative себе: most frequent form — Я бачу себе в дзеркалі (I see
+    myself in the mirror); Вона купила собі нову книгу (she bought herself a new
+    book — note: direct obj = книгу, себе here is Dat).'
+  - 'Dative/Locative собі: Він думає про себе (he thinks about himself — Loc); Купи
+    собі каву (buy yourself a coffee — Dat); собі as beneficiary of the action.'
+  - 'Instrumental собою: Вона задоволена собою (she is satisfied with herself); Він
+    говорить про себе, а не про інших (talks about himself, not others).'
+  - 'Drill: fill in the correct form — Він не може контролювати ___ (себе); Вона
+    написала листа ___ (собі); Ми задоволені ___ (собою).'
+- section: 'Дієслова з «себе» vs зворотні дієслова (себе vs Reflexive -ся Verbs)'
+  words: 600
+  points:
+  - 'Two ways to express reflexivity in Ukrainian: explicit себе (with a case-marked
+    form) vs the -ся suffix baked into the verb.'
+  - 'When to use себе: for emphasis or clarity — Він миє себе (he washes himself,
+    emphatic — not someone else); contrast with Він миється (he is washing, routine
+    action).'
+  - 'High-frequency verb pairs: бачити себе / дивитися; мити себе / митися; одягати
+    себе / одягатися; знайти собі / знаходитися; контролювати себе / контролюватися.'
+  - 'When -ся is obligatory: verbs with no non-reflexive counterpart — сміятися,
+    намагатися, боятися — these cannot use себе.'
+  - 'When себе is obligatory: after купити собі, зробити для себе, взяти для себе
+    — the beneficiary reading requires explicit себе/собі.'
+  - 'Comprehension check: which is natural? (а) Вона одягає себе vs (b) Вона одягається
+    — answer: (b) is natural, (a) is overly emphatic; drill 10 pairs.'
+- section: 'Конструкція «собі» як підсилення (собі as Colloquial Intensifier)'
+  words: 400
+  points:
+  - 'Colloquial dative of interest: собі weakens or softens the action — Іди собі!
+    (just go!, dismissive); Живе собі спокійно (lives peacefully, minding one''s
+    own business).'
+  - 'Contrast with beneficiary sobí: купи собі каву (buy yourself a coffee — genuine
+    beneficiary) vs Іди собі (just go — intensifier/dismissive).'
+  - 'More examples: Сидить собі читає (just sits there reading); Думає собі думку
+    (thinks his own thoughts); recognise this pattern in spoken Ukrainian.'
+  - 'Register note: colloquial собі intensifier appears in informal speech and literature;
+    learners should recognise it but produce it cautiously.'
+- section: 'Зв''язок з «свій»: себе + свій (Connection with свій)'
+  words: 500
+  points:
+  - 'Functional distinction: свій expresses whose something belongs to (possession);
+    себе expresses the target or recipient of an action (reflexive reference).'
+  - 'Contrastive pair: Він узяв свою книгу (he took his [own] book — свій = possession);
+    Він бачить себе в дзеркалі (he sees himself — себе = action target).'
+  - 'Combined sentences: Вона купила собі свою першу машину (She bought herself her
+    first car) — собі = Dat beneficiary, свою = possessive agreement.'
+  - 'Common confusion drill: choose свій or себе — Він узяв ___ телефон (свій);
+    Він почув ___ у записі (себе); Вона пишається ___ роботою (своєю).'
+  - 'Summary rule: if you can substitute "own" in English → свій; if you can substitute
+    "myself/yourself/himself" → себе.'
+- section: Практика (Practice)
+  words: 500
+  points:
+  - 'Case selection: supply the correct form of себе — Вона не чує ___ (себе); Він
+    купив ___ каву (собі); Ми задоволені ___ (собою); Думаю про ___ (себе/себе).'
+  - 'себе vs -ся verb choice: choose the more natural option in 12 sentence pairs
+    — Він одягає себе / Він одягається; Вона милує себе / Вона милується.'
+  - 'себе vs свій distinction: 10-item quiz — fill in the blank with the correct
+    form of either себе or свій.'
+  - 'Dialogue reading: short conversation where two people discuss themselves and
+    their own belongings; learner identifies every instance of себе and свій and
+    explains the choice.'
+vocabulary_hints:
+  required:
+  - себе (Gen/Acc of reflexive pronoun) — Я бачу себе; core reflexive form
+  - собі (Dat/Loc of reflexive pronoun) — купи собі; думати про себе (Loc with prep)
+  - собою (Inst of reflexive pronoun) — задоволений собою; бути собою (be oneself)
+  - бачити себе (to see oneself) — Він бачить себе; high frequency reflexive verb phrase
+  - знайти собі (to find oneself / get oneself) — Знайди собі роботу; Dat beneficiary
+  - купити собі (to buy oneself) — Купи собі каву; Dat beneficiary construction
+  - дбати про себе (to take care of oneself) — essential wellbeing phrase
+  - думати про себе (to think about oneself) — Loc with preposition про
+  - контролювати себе (to control oneself) — Acc reflexive; emotional regulation phrase
+  - задоволений собою (satisfied with oneself) — Inst after задоволений
+  recommended:
+  - митися (to wash oneself) — vs мити себе (emphatic); reflexive -ся verb
+  - одягатися (to dress oneself) — vs одягати себе; reflexive -ся verb
+  - намагатися (to try) — obligatory -ся verb; cannot use себе
+  - боятися (to be afraid) — obligatory -ся verb; cannot use себе
+  - 'Іди собі! (Just go away!) — colloquial собі intensifier'
+  - бути собою (to be oneself) — fixed phrase using Inst собою
+activity_hints:
+- type: fill-in
+  focus: Supply the correct case form of себе (себе/собі/собою) in context sentences
+  items: 15+
+- type: fill-in
+  focus: Choose between explicit себе construction or -ся reflexive verb
+  items: 12+
+- type: quiz
+  focus: Distinguish between себе and свій in ambiguous contexts
+  items: 10+
+- type: match-up
+  focus: Match sentences with correct reflexive form and explain the case used
+  items: 15+
+focus: grammar
+pedagogy: TTT
+prerequisites:
+- a2-19 (Possessive свій)
+- A1 personal pronouns (я/ти/він/вона/ми/ви/вони)
+- A2 case system basics (Dat, Acc, Inst, Loc)
+connects_to:
+- a2-21 (Indefinite and Negative Pronouns)
+- i-feel-like
+objectives:
+- Learner can decline себе across all available cases (Gen/Acc, Dat/Loc, Inst)
+- Learner can choose between себе and reflexive -ся verbs appropriately
+- Learner can recognise the colloquial собі intensifier in spoken and written Ukrainian
+- Learner can distinguish between себе (action target) and свій (possession) in context
+grammar:
+- себе declension (no Nominative form)
+- себе vs reflexive -ся verbs
+- собі as dative of interest (colloquial intensifier)
+- себе vs свій functional distinction
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Pronouns
+  url: https://mon.gov.ua/
+  type: reference
+  notes: A2 reflexive pronoun requirements
+- name: Ukrainian Grammar Reference - Reflexive Pronoun
+  url: https://uk.wikipedia.org/wiki/Займенник
+  type: reference
+  notes: Declension of себе and contrast with -ся verbs
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Reflective Communicator
+word_target: 3000

@@ -1,7 +1,7 @@
-# Audit Report: M28 — relative-clauses-koly-shcho.md
-**Level:** B1 | **Module:** M28 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:43:48
+# Audit Report: M31 — relative-clauses-koly-shcho.md
+**Level:** B1 | **Module:** M31 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:41:00
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,67 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Оберіть правильний сполучник: коли чи що | 10 | 8 | ✅ |
+| 2 | error-correction | Виправте помилки у часових підрядних реченнях | 8 | 6 | ✅ |
+| 3 | error-correction | Виправте стилістичні та граматичні помилки | 6 | 6 | ✅ |
+| 4 | translate | Перекладіть українською | 8 | 6 | ✅ |
+| 5 | quiz | Перевірка теоретичних знань | 8 | 8 | ✅ |
+| 6 | unjumble | Складіть складнопідрядні речення | 8 | 6 | ✅ |
+| 7 | match-up | Знайдіть правильне закінчення речення | 8 | 8 | ✅ |
+| 8 | true-false | Умова чи час? | 8 | 8 | ✅ |
+| 9 | select | Оберіть усі правильні варіанти | 6 | 6 | ✅ |
+| 10 | group-sort | Сполучник чи займенник? | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 9 (minimum: 3) ✅
+- Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
+- Required types used: 3/3 (error-correction, fill-in, translate) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть складнопідрядні речення' item 1 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть складнопідрядні речення' item 2 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть складнопідрядні речення' item 3 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть складнопідрядні речення' item 4 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть складнопідрядні речення' item 5 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть складнопідрядні речення' item 6 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть складнопідрядні речення' item 7 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть складнопідрядні речення' item 8 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY]** match-up 'Знайдіть правильне закінчення речення' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** group-sort 'Сполучник чи займенник?' has 8 items (target: 12-999)
+  - FIX: Adjust number of items to sort to 12-999.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 10 violations (significant)
+
 ## Gates
 - **Words:** ✅ 4238/4000 (raw: 4620)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 9/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 10 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

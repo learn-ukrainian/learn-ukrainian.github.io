@@ -1,6 +1,6 @@
-module: a1-16
+module: a1-32
 level: A1
-sequence: 16
+sequence: 32
 slug: the-genitive-i-absence
 version: '2.0'
 title: 'The Genitive I: Absence'
@@ -78,9 +78,9 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- a1-15 (Around the City)
+- a1-29 (Around the City)
 connects_to:
-- a1-17 (Numbers and Money)
+- a1-22 (Numbers and Money)
 - a1-18 (Food and Shopping)
 objectives:
 - Learner can express absence using немає + genitive
@@ -92,7 +92,7 @@ grammar:
 - Genitive endings
 - Немає + genitive
 register: розмовний
-phase: A1.2 [Navigation]
+phase: A1.3 [Cases & Navigation]
 persona:
   voice: Patient Supportive Tutor
   role: Inventory Specialist

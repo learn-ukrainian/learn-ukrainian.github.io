@@ -1,0 +1,55 @@
+slug: stress-and-intonation
+title: Stress and Intonation
+word_target: 2000
+content_outline:
+- section: Наголос (Stress)
+  words: 500
+  points:
+  - 'Explicit English scaffolding (Immersion < 25%): Define ''free and mobile stress''
+    in English. Contrast with fixed-stress languages (Polish, French) to show that
+    Ukrainian stress can fall on any syllable.'
+  - 'Create an H3 for ''Stress Changes Meaning'' using the cultural hook minimal pairs:
+    зАмок/замОк and мУка/мукА, complete with English translations and brief context.'
+  - Create an H3 for 'Dictionary Marks' explaining the acute accent (´) and providing
+    3-4 examples of how to read dictionary entries.
+  - 'Provide a clear learner strategy: always memorize the stress along with the new
+    word.'
+- section: Типові наголоси (Common stress patterns)
+  words: 400
+  points:
+  - Create an H3 for 'First-syllable stress' with examples like мАма, тАто, кАва,
+    дОбрий.
+  - Create an H3 for 'Last-syllable stress' with examples like молокО, далекО, водА.
+  - Create an H3 for 'Penultimate stress' with examples like шкОла, дорОга.
+  - Include a callout box emphasizing that despite these patterns, there are no absolute
+    rules predicting stress from spelling alone.
+- section: Рухомий наголос (Mobile stress)
+  words: 400
+  points:
+  - Explain in English that stress can shift when a word changes form (declension/conjugation).
+  - 'Create an H3 for ''Noun Shifts'' showing singular to plural changes: рукА (Nom
+    sg) → рУки (Nom/Acc pl).'
+  - 'Create an H3 for ''Verb Shifts'' showing infinitive to conjugated forms: писАти
+    → пишУ → пИшеш.'
+  - Add a reassuring note that mobile stress will be practiced gradually in future
+    grammar modules (A1-09+), and absolute mastery is not expected yet.
+- section: Інтонація (Intonation)
+  words: 400
+  points:
+  - Introduce the three basic intonation contours required by §4.1.8.
+  - 'Create an H3 for ''Declarative'' (розповідна): explain falling pitch with the
+    example ''Це кафе.'' and use a downward arrow visual.'
+  - 'Create an H3 for ''Interrogative'' (питальна): contrast wh-questions (pitch rises
+    on question word, then falls) with yes/no questions (sharp rise at the end, e.g.,
+    ''Це кафе?'').'
+  - 'Create an H3 for ''Exclamatory'' (оклична): explain the sharp rise and emphasis
+    for surprise, e.g., ''Це кафе!'''
+- section: Практика (Practice)
+  words: 300
+  points:
+  - Include an inline practice section where learners identify the stressed syllable
+    in 5 new common words.
+  - Provide a minimal pair reading drill (зАмок vs замОк).
+  - 'Create a ''Read Aloud'' challenge: one sentence (''Це школа'') written as a statement,
+    a question, and an exclamation, prompting the learner to practice the three intonation
+    contours.'

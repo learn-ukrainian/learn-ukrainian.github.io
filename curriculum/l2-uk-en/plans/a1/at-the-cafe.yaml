@@ -1,6 +1,6 @@
-module: a1-19
+module: a1-41
 level: A1
-sequence: 19
+sequence: 41
 slug: at-the-cafe
 version: '2.0'
 title: At the Café
@@ -82,7 +82,7 @@ prerequisites:
 - a1-18 (Food and Shopping)
 connects_to:
 - a1-20 (Checkpoint Navigation)
-- a1-36 (At the Restaurant)
+- a1-53 (At the Restaurant)
 objectives:
 - Learner can order food and drinks at a café
 - Learner can ask for recommendations
@@ -93,7 +93,7 @@ grammar:
 - Polite imperatives (принесіть, візьміть)
 - Future tense preview (візьму)
 register: розмовний
-phase: A1.2 [Navigation]
+phase: A1.4 [Tenses & Daily Life]
 persona:
   voice: Patient Supportive Tutor
   role: Chatty Barista

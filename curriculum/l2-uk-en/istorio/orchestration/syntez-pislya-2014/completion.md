@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 125 — E2E
+PASS: pipeline istorio 125
 
   Module:   syntez-pislya-2014
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T00:20:32Z
+  Date:     2026-02-28T00:51:29Z

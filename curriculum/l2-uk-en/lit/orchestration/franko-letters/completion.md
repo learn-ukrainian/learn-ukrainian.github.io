@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 49 — E2E
+PASS: pipeline lit 49
 
   Module:   franko-letters
   Track:    lit
-  Mode:     e2e
-  Words:    0 (target: 4000)
+  Mode:     v3
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T16:57:38Z
+  Date:     2026-02-28T01:07:22Z

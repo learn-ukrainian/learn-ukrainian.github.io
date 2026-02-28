@@ -1,0 +1,121 @@
+module: a1-06
+level: A1
+sequence: 6
+slug: stress-and-intonation
+version: '2.0'
+title: Stress and Intonation
+subtitle: The Music of Ukrainian
+content_outline:
+- section: Наголос (Stress)
+  words: 500
+  points:
+  - 'Free and mobile stress concept: unlike Polish (penultimate) or French (final),
+    Ukrainian stress can fall on any syllable — there is no fixed rule'
+  - 'Stress changes meaning: зАмок (castle) vs замОк (lock), мУка (torment) vs мукА
+    (flour) — minimal pairs that demonstrate the functional load of stress'
+  - 'How stress is marked in dictionaries and textbooks: the acute accent (´) over
+    the stressed vowel; practice reading dictionary entries'
+  - 'Learner strategy: when encountering a new word, always check stress placement —
+    guessing from spelling will often be wrong'
+- section: Типові наголоси (Common stress patterns)
+  words: 400
+  points:
+  - 'First-syllable stress: мАма, тАто, хАта, кАва — common in basic family and
+    household words'
+  - 'Last-syllable stress: молокО, далекО, говорЮ — common in longer words and some
+    verb forms'
+  - 'Penultimate stress: шкОла, кнИжка, дорОга — frequent in two- and three-syllable
+    words'
+  - 'No fixed rule: the same ending can have different stress (кнИга vs водА, both
+    -а ending) — stress must be learned per word, not predicted from spelling'
+- section: Рухомий наголос (Mobile stress)
+  words: 400
+  points:
+  - 'Stress shifts in declension: рукА (nominative) → рУки (genitive/plural) — the
+    stress moves when the word form changes'
+  - 'Stress shifts in conjugation: писАти (infinitive) → пишУ (I write) → пИшеш
+    (you write) — verb stress can shift between stems and endings'
+  - 'Preview note: mobile stress will matter more when learning cases (a1-17+) and
+    verb conjugation (a1-09+) — for now, awareness is the goal'
+  - 'Practical tip: listening to native speakers is the best way to internalize stress
+    patterns — no amount of rules can replace exposure'
+- section: Інтонація (Intonation)
+  words: 400
+  points:
+  - 'Declarative intonation: pitch falls at the end of the sentence — Це кафе. (This
+    is a cafe.) with a downward contour'
+  - 'Interrogative with question word: pitch rises on the question word, then falls —
+    ДЕ кафе? (Where is the cafe?) with emphasis on де'
+  - 'Yes/no questions (without question word): pitch rises sharply at the end — Це
+    кафе? (Is this a cafe?) with an upward contour'
+  - 'Exclamatory intonation: sharp rise with emphasis — Це кафе! (This IS a cafe!)
+    expressing surprise or excitement'
+  - 'Contrast drill: practicing the same sentence with all four intonation patterns
+    to hear and produce the differences'
+- section: Практика (Practice)
+  words: 300
+  points:
+  - 'Stress placement drills: identify which syllable carries the stress in common
+    words using audio cues and dictionary notation'
+  - 'Minimal pairs practice: distinguish words that differ only in stress (зАмок/замОк,
+    мУка/мукА) in listening and production'
+  - 'Intonation reading exercises: read the same sentence as a statement, question,
+    and exclamation with correct pitch contour'
+vocabulary_hints:
+  required:
+  - 'замок (castle/lock) — stress minimal pair: зАмок (castle) vs замОк (lock);
+    demonstrates functional load of stress'
+  - 'вода (water) — last-syllable stress водА; Top 300 word; collocations: пити воду,
+    холодна вода'
+  - 'рука (hand/arm) — mobile stress рукА → рУки; Top 200 word; collocations: права
+    рука, лівою рукою'
+  - 'писати (to write) — mobile stress in conjugation писАти → пишУ → пИшеш; Top
+    200 word'
+  - 'школа (school) — penultimate stress шкОла; Top 200 word; collocations: у школі,
+    іти до школи'
+  - 'молоко (milk) — last-syllable stress молокО; collocations: пити молоко, склянка
+    молока'
+  - 'добрий (good) — first-syllable stress дОбрий; Top 100 word; collocations: добрий
+    день, добрий ранок'
+  - 'далеко (far) — last-syllable stress далекО; collocations: далеко від, дуже далеко'
+  recommended:
+  - наголос (stress/accent) — metalinguistic term; essential for lesson comprehension
+  - інтонація (intonation) — metalinguistic term; pitch contour of sentences
+  - 'питання (question) — high-frequency word; collocations: задати питання, відповідь
+    на питання'
+  - 'відповідь (answer) — high-frequency word; collocations: правильна відповідь, дати
+    відповідь'
+activity_hints:
+- type: quiz
+  focus: Identify which syllable carries the stress
+  items: 12
+- type: match-up
+  focus: Match stress minimal pairs to their meanings
+  items: 8
+- type: true-false
+  focus: Recognize correct intonation patterns for sentence types
+  items: 8
+- type: fill-in
+  focus: Place stress marks on common words
+  items: 10
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-05 (Syllables and Transfer)
+connects_to:
+- a1-07 (The Gender Code)
+objectives:
+- Identify the stressed syllable in common Ukrainian words
+- Understand that Ukrainian stress is free and mobile
+- Produce correct intonation for statements, questions, and exclamations
+- Use stress marks when reading dictionary entries
+grammar:
+- Word stress
+- Stress mobility
+- Intonation patterns
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Orchestra Conductor
+word_target: 2000

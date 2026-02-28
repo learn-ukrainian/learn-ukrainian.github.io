@@ -2,13 +2,13 @@
   "module": "emotional-intelligence",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T11:18:14.467431Z",
+  "last_audit": "2026-02-28T09:50:16.556660Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-25T02:25:06.642330Z",
     "meta": "2026-02-25T02:23:28.040587Z",
     "activities": "2026-02-25T02:21:27.442349Z",
-    "vocabulary": "2026-02-25T02:21:27.836383Z",
+    "vocabulary": "2026-02-26T10:56:38.116234Z",
     "plan": "2026-02-20T21:32:33.220460Z",
     "research": "2026-02-25T02:15:58.390681Z"
   },
@@ -19,29 +19,24 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4404/4000 (raw: 4854)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4404/4000 (raw: 4854) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "10/8"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "warn",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30 < 35 (soft target)"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0,
-    "deferred_count": 3
+    "pass_count": 3,
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

@@ -2,50 +2,50 @@ slug: the-cyrillic-code-i
 title: The Cyrillic Code I
 word_target: 2000
 content_outline:
-- section: 'Розминка: Чому кирилиця?'
-  words: 350
-  points:
-  - 'Immersion Note: This module uses English for all explanations (A1 standard).
-    Target immersion: ~20% (examples only).'
-  - 'Cultural Hook: The alphabet is named after St. Cyril (9th c.), but he likely
-    created Glagolitic. His students developed Cyrillic in the First Bulgarian Empire.'
-  - 'Anxiety reduction: Many letters are ''True Friends'' that look and sound like
-    English (Strategy: Cognates like ''таксі'', ''піца'', ''метро'').'
-  - 'The ''I'' Identity: Brief intro to how Ukrainian retains ''І'' (like Latin) alongside
-    ''И'', making it distinct from Russian.'
-- section: 'Презентація: Літери-друзі та літери-пастки'
-  words: 650
-  points:
-  - 'True Friends (А, Е, І, О, К, М, Т): Letters that look and sound the same. Examples:
-    ''Мама'', ''Кіт'', ''Так''.'
-  - 'False Friends (В, Н, Р, С, Х): The ''Traps''. В = V (Vehicle), Н = N (Hen), Р
-    = R (Purring/Roaring), С = S (Sound), Х = Kh.'
-  - 'New Letters (Б, Д, З, Л, П, Ф): Visual aids (Д is a house, Л is a pair of legs,
-    Ф is hands on hips).'
-  - 'Anti-Surzhyk: Explicitly state that ''ё'', ''ы'', ''э'' do not exist in Ukrainian.'
-  - 'Mnemonics: Reinforce the ''Purring Cat'' (Р) and ''Hen'' (Н) visualizations.'
-- section: 'Практика: Читаємо міжнародні слова'
+- section: Вступ
   words: 400
   points:
-  - 'Reading Drill: International words ''банк'', ''метро'', ''кафе'', ''план'', ''факт''.'
-  - 'Collocations: ''У банку'', ''станція метро'', ''ідемо в кафе'', ''бізнес-план''.'
-  - 'Mini-dialogues: Using ''Так, будь ласка'' and ''Так, звісно'' in context (at
-    a café or metro).'
-  - 'Visual recognition: Spotting the difference between ''кафе'' and ''кава'' (coffee).'
-- section: 'Культурний контекст: Українська ідентичність літери «І»'
-  words: 300
+  - 'Immersion Note: A1 target immersion is 10-50%. Explicitly list English scaffolding
+    requirements for introducing the concept of the Cyrillic alphabet.'
+  - 'Provide the cultural hook: Cyrillic was named after St. Cyril but developed by
+    his students in the First Bulgarian Empire.'
+  - Introduce the learning strategy of 'True Friends' vs 'False Friends' to reduce
+    learner anxiety immediately.
+  - Demonstrate familiar sounds via international cognates like 'таксі', 'піца', 'метро'
+    to show the alphabet is partially cracked already.
+- section: Презентація
+  words: 600
   points:
-  - 'Why ''І'' matters: It connects Ukrainian visually to European scripts, unlike
-    Russian ''И''-only standard.'
-  - 'Visual distinction: The dotted ''і'' makes Ukrainian text instantly recognizable.'
-  - 'Historical note: The 19th-century struggle for the Ukrainian alphabet and distinctness.'
-  - 'Pronunciation nuance: Contrast sharp ''І'' vs deep ''И''.'
-- section: 'Продукція: Ваші перші слова'
-  words: 300
+  - 'True Friends (А, Е, І, О, К, М, Т): Give this category its own H3. Define each
+    letter with 2+ Ukrainian examples and English translations.'
+  - 'False Friends (В, Н, Р, С): Give this its own H3. Explicitly explain the ''P''
+    Trap, ''H'' Trap, ''B'' Trap, and ''C'' Trap using clear visual mnemonics.'
+  - 'New Letters (Б, Д, З, Л, П, Ф): Give this its own H3. Provide visual aids (e.g.,
+    ''Д'' looks like a little house, ''Л'' has two walking legs).'
+  - 'The Exclusion Rule: Explicitly state that Russian-only characters like ''ё'',
+    ''ы'', ''э'' do not exist in Ukrainian to establish linguistic boundaries.'
+- section: Практика
+  words: 400
   points:
-  - 'Decoding Challenge: ''Це факт'' (It''s a fact) — combining False Friend ''С''
-    and New Letter ''Ф''.'
-  - 'Pronunciation Lab: Focused drill on the ''P'' Trap (rolled /r/) and ''B'' Trap
-    (voiced /v/).'
-  - 'Review Checklist: Verify recognition of 19 letters (True + False + 6 New).'
-  - 'Next Steps: Tease ''The Cyrillic Code II'' for the remaining letters.'
+  - Create a decoding drill section for reading high-frequency urban words ('банк',
+    'метро', 'кафе').
+  - Include a collocation practice block introducing essential phrases like 'національний
+    банк' and 'станція метро' for context.
+  - Provide functional mini-dialogues using 'так, будь ласка' and 'так, звісно' to
+    demonstrate immediate communicative utility.
+- section: Культурний контекст
+  words: 400
+  points:
+  - Give an H3 to 'The I Identity', explaining how the dotted 'І' serves as a visual
+    symbol of Ukrainian identity and European connection.
+  - 'Briefly tell the Story of Ґ: the repressed letter (removed in 1933, restored
+    in 1990) as a compelling hook for linguistic resilience.'
+  - 'Incorporate State Standard §4.1.1 words: practice recognizing letters in national
+    terms like ''Київ'', ''Україна'', and ''українець''.'
+- section: Підсумок та продукція
+  words: 200
+  points:
+  - Include a pronunciation production drill contrasting the 'Purring Cat' rolled
+    /r/ (Р) with the English /p/.
+  - Provide a final decoding self-check using the phrase 'це факт' (it's a fact) to
+    test both 'Ф' and 'Т' letter recognition.

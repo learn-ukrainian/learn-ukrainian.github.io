@@ -2,5 +2,12 @@
   "track": "lit",
   "slug": "franko-letters",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T01:07:22Z",
+      "task_id": "v3-franko-letters-pA",
+      "mode": "meta-only"
+    }
+  }
 }

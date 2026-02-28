@@ -2,13 +2,13 @@
   "module": "aspect-future",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T10:42:17.009951Z",
+  "last_audit": "2026-02-28T09:39:54.616595Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T11:55:19.562405Z",
     "meta": "2026-02-23T21:40:44.108287Z",
     "activities": "2026-02-23T21:46:43.056946Z",
-    "vocabulary": "2026-02-24T11:48:34.379744Z",
+    "vocabulary": "2026-02-26T10:56:38.108437Z",
     "plan": "2026-02-20T21:18:57.294636Z",
     "research": "2026-02-23T21:40:44.104717Z"
   },
@@ -19,29 +19,24 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4468/4000 (raw: 4866)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4468/4000 (raw: 4866) | pedagogy: 8 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "10/4 | density: 1 < 6"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "31/25"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0,
-    "deferred_count": 3
+    "pass_count": 3,
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py bio 102 — E2E
+PASS: pipeline bio 105
 
   Module:   maik-yohansen
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    3792 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-26T23:31:18Z
+  Verdict:  PASS
+  Date:     2026-02-28T00:15:13Z

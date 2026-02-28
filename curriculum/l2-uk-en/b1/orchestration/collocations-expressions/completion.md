@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 70 — E2E
+PASS: pipeline b1 62
 
   Module:   collocations-expressions
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    4468 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T10:18:09Z
+  Date:     2026-02-28T08:49:31Z

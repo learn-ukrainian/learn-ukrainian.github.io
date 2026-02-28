@@ -1,7 +1,7 @@
-# Audit Report: M79 — sports-in-ukraine.md
-**Level:** B1 | **Module:** M79 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 15:00:40
+# Audit Report: M87 — sports-in-ukraine.md
+**Level:** B1 | **Module:** M87 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:50:45
 
 ## Configuration
 **Type:** B1-culture
@@ -16,20 +16,74 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Перевірте знання спортивної лексики | 8 | 8 | ✅ |
+| 2 | fill-in | Вставте пропущене слово | 8 | 8 | ✅ |
+| 3 | unjumble | Складіть речення з поданих слів | 8 | 6 | ✅ |
+| 4 | mark-the-words | Знайдіть спортивні дієслова | 8 | 6 | ✅ |
+| 5 | error-correction | Виправте русизми та помилки | 8 | 6 | ✅ |
+| 6 | cloze | Заповніть пропуски в тексті про спорт | 14 | 12 | ✅ |
+| 7 | fill-in | Оберіть правильне дієслово | 8 | 8 | ✅ |
+| 8 | quiz | Олімпійські ігри та спорт в Україні | 8 | 8 | ✅ |
+| 9 | unjumble | Спортивні новини: складіть речення | 6 | 6 | ✅ |
+| 10 | mark-the-words | Знайдіть усі іменники | 7 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 2/4 (fill-in, quiz) ✅
+- Required types used: 2/4 (fill-in, quiz) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з поданих слів' item 1 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з поданих слів' item 2 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з поданих слів' item 3 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з поданих слів' item 4 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з поданих слів' item 5 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з поданих слів' item 6 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з поданих слів' item 7 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з поданих слів' item 8 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Спортивні новини: складіть речення' item 1 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Спортивні новини: складіть речення' item 2 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Спортивні новини: складіть речення' item 4 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Спортивні новини: складіть речення' item 5 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Спортивні новини: складіть речення' item 6 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 13 violations (severe - consider revision)
+
 ## Gates
 - **Words:** ✅ 4240/4000 (raw: 4725)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 13 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.5% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 96% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

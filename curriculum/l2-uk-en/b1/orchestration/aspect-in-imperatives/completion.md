@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 11 — E2E
+PASS: pipeline b1 13
 
   Module:   aspect-in-imperatives
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    6424 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:42:27Z
+  Date:     2026-02-28T08:40:01Z

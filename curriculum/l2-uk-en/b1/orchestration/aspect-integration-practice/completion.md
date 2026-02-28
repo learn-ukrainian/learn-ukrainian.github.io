@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 14 — E2E
+PASS: pipeline b1 16
 
   Module:   aspect-integration-practice
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    6491 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:42:41Z
+  Date:     2026-02-28T08:40:11Z

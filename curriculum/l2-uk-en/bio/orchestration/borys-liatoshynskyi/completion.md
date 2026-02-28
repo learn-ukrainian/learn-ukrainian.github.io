@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py bio 101 — E2E
+PASS: pipeline bio 104
 
   Module:   borys-liatoshynskyi
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    3768 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-26T23:27:44Z
+  Verdict:  PASS
+  Date:     2026-02-28T00:15:10Z

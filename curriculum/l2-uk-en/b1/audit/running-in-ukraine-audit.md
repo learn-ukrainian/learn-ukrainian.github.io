@@ -1,7 +1,7 @@
-# Audit Report: M81 — running-in-ukraine.md
-**Level:** B1 | **Module:** M81 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M89 — running-in-ukraine.md
+**Level:** B1 | **Module:** M89 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-25 20:35:48
+**Generated:** 2026-02-28 09:50:49
 
 ## Configuration
 **Type:** B1-culture
@@ -23,28 +23,23 @@
   - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 ## Recommendation
-**📝 UPDATE** (severity 50/100)
+**📝 UPDATE** (severity 5/100)
 
-- Revision recommended (severity 50/100)
 - 2 violations (minor)
-- Structure issue: Missing '## Activities' header OR activities sidecar
-- Activity count below minimum
-- Activity density below minimum
 
 ## Gates
 - **Words:** ❌ 2948/4000 (raw: 3213)
-- **Activities:** ❌ 0/8
-- **Density:** ❌ 0 < 12
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ❌ 0/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 25 (soft target)
-- **Structure:** ❌ Missing '## Activities' header OR activities sidecar
-- **Ipa:** ✅ Clean IPA
+- **Vocab:** ⏳ Deferred (content-only audit)
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 97.5% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ❌ 46% < 95% min (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

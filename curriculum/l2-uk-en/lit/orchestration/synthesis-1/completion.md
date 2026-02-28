@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 41 — E2E
+PASS: pipeline lit 41
 
   Module:   synthesis-1
   Track:    lit
-  Mode:     e2e
-  Words:    0 (target: 4000)
+  Mode:     v3
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T22:58:56Z
+  Date:     2026-02-28T01:05:02Z

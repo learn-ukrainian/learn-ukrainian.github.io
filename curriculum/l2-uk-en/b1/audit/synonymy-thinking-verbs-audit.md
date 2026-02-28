@@ -1,7 +1,7 @@
-# Audit Report: M68 — synonymy-thinking-verbs.md
-**Level:** B1 | **Module:** M68 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 11:17:59
+# Audit Report: M58 — synonymy-thinking-verbs.md
+**Level:** B1 | **Module:** M58 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:46:25
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,21 +16,54 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: дієслова та їх значення | 8 | 8 | ✅ |
+| 2 | quiz | Перевірте свої знання | 8 | 8 | ✅ |
+| 3 | fill-in | Вставте пропущене слово | 8 | 8 | ✅ |
+| 4 | error-correction | Виправте типові помилки | 6 | 6 | ✅ |
+| 5 | unjumble | Складіть речення | 6 | 6 | ✅ |
+| 6 | true-false | Правда чи хиба? | 8 | 8 | ✅ |
+| 7 | select | Оберіть правильні варіанти | 6 | 6 | ✅ |
+| 8 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 9 | group-sort | Розподіліть слова за категоріями | 16 | 12 | ✅ |
+| 10 | mark-the-words | Знайдіть дієслова мислення | 7 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/4 (mark-the-words, match-up, quiz) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть пару: дієслова та їх значення' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 1 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 2 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 3 violations (minor)
+
 ## Gates
 - **Words:** ✅ 5357/4000 (raw: 5853)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 98.2% (target 85-100% (B1.7-8 Ukraine))
+- **Pedagogy:** ❌ 3 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.2% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 97% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

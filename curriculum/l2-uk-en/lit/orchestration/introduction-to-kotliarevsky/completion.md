@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 1 — E2E
+FAIL: pipeline lit 1
 
   Module:   introduction-to-kotliarevsky
   Track:    lit
-  Mode:     e2e
-  Words:    0 (target: 4000)
+  Mode:     v3
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-22T17:10:00Z
+  Verdict:  FAIL
+  Date:     2026-02-28T00:53:42Z

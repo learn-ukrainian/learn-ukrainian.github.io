@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T21:05:43Z",
-      "task_id": "v3-food-and-cooking-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T21:11:11Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T21:14:20Z",
-      "task_id": "v3-food-and-cooking-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:18:32Z",
-      "attempts": 1
+      "ts": "2026-02-28T02:46:34Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

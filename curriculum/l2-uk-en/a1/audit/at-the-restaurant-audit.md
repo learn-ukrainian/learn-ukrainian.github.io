@@ -1,7 +1,7 @@
-# Audit Report: M36 — at-the-restaurant.md
-**Level:** A1 | **Module:** M36 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M53 — at-the-restaurant.md
+**Level:** A1 | **Module:** M53 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 14:13:15
+**Generated:** 2026-02-28 03:51:28
 
 ## Configuration
 **Type:** A1
@@ -59,7 +59,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.5% (target 35-55% (M36))
+- **Immersion:** 🇺🇦 35.5% (target 35-55% (M53))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

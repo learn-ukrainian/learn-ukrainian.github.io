@@ -1,17 +1,29 @@
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/activities/asking-for-directions.yaml
-ACTIVITY_COUNT_TARGET: '12'
-ACTIVITY_MIN: '10'
-ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, unjumble, mark-the-words, cloze,
-  error-correction, group-sort
+TRACK: a2
+LEVEL: A2
+SLUG: asking-for-directions
+TOPIC_TITLE: Asking for Directions
+MODULE_NUM: '66'
+PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a2/asking-for-directions.yaml
+META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/meta/asking-for-directions.yaml
 CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/asking-for-directions.md
-FORBIDDEN_ACTIVITY_TYPES: anagram, essay-response, critical-analysis, comparative-study,
-  authorial-intent
-IMMERSION_RULE: 'TARGET: 75-90% Ukrainian, 10-25% English. English only in vocabulary
-  tables and brief grammar notes. Near-full Ukrainian immersion. Ukrainian sentences
+ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/activities/asking-for-directions.yaml
+VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/vocabulary/asking-for-directions.yaml
+RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/research/asking-for-directions-research.md
+REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/review/asking-for-directions-review.md
+QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A2.md
+SCHEMA_PATH: schemas/activities-a2.schema.json
+WORD_TARGET: '3000'
+SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
+PERSONA_FLAVOR: The Helpful Neighbor
+PERSONA_VOICE: Encouraging Cultural Guide
+PERSONA_ROLE: Lost Tourist in Odesa
+IMMERSION_RULE: 'TARGET: 75-90% Ukrainian, 10-25% English. APPROACH: Write ALL content
+  in Ukrainian first. Add English only in vocabulary tables and one-line grammar notes
+  where absolutely needed. CRITICAL: NEVER mix languages within a sentence. Each sentence
+  is 100% Ukrainian OR 100% English. COMPLEXITY: A2 register. Concrete everyday vocabulary.
+  No literary language, no metaphors. Near-full Ukrainian immersion. Ukrainian sentences
   max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only.
   Full aspect pairs. No participles.'
-ITEMS_MIN: '12'
-LEVEL: A2
 LEVEL_CONSTRAINTS: 'GRAMMAR RULES:
 
   - Max 15 words per Ukrainian sentence
@@ -25,20 +37,6 @@ LEVEL_CONSTRAINTS: 'GRAMMAR RULES:
   - Aspect pairs introduced but not complex
 
   - No participles'
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/meta/asking-for-directions.yaml
-MODULE_NUM: '66'
-PERSONA_FLAVOR: The Helpful Neighbor
-PERSONA_ROLE: Lost Tourist in Odesa
-PERSONA_VOICE: Encouraging Cultural Guide
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a2/asking-for-directions.yaml
-PRIORITY_TYPES: error-correction, unjumble, fill-in
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/A2.md
-REQUIRED_TYPES: ''
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/research/asking-for-directions-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/review/asking-for-directions-review.md
-SCHEMA_PATH: schemas/activities-a2.schema.json
-SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
-SLUG: asking-for-directions
 TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
 
@@ -220,6 +218,12 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
   | **ABRUPT_END** | No celebration of progress | Module just stops | Add "You can
   now..." summary |
 
+  | **WORD_SALAD** | Sentences randomly mix Ukrainian and English within the same
+  clause, or a paragraph strings together unrelated ideas with no logical thread |
+  "Україна — цифровізована країна (digital). Касири говорять швидко (fast). Це суперсила
+  (superpower)." — three disconnected claims stitched together | Rewrite paragraph
+  with one clear point; each sentence in one primary language |
+
 
   ### A+ Beginner Lesson Checklist
 
@@ -286,7 +290,7 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
   - Short sentences
 
-  - Clear pronunciation guidance (IPA)
+  - Clear pronunciation guidance (stress marks)
 
   - Consistent grammar patterns (no exceptions early)
 
@@ -459,9 +463,323 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
   | ≤5 | Poor — discouraging or overwhelming | Full rewrite |
 
   '
-TOPIC_TITLE: Asking for Directions
-TRACK: a2
-TRACK_CONTEXT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/orchestration/asking-for-directions/track-context.md
+D1_OUTPUT_FORMAT: '## Output Format
+
+
+  > **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded
+  by the extraction pipeline.
+
+  > **NO FIX OUTPUT** — this step produces the review only. Fixes are handled in a
+  separate step if needed.
+
+
+  ### Output Block 0: Citation Bank (BEFORE the review)
+
+
+  **MANDATORY** — Build this FIRST by reading files with Read tool and copy-pasting
+  exact quotes.
+
+  Each citation must be verified with Grep before adding to the bank.
+
+  Use `「...」` (CJK corner brackets) for ALL Ukrainian citations — NOT `«»` (those
+  appear inside Ukrainian text and cause parsing collisions).
+
+
+  ```
+
+  ===CITATION_BANK_START===
+
+  1. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+
+  2. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+
+  3. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+
+  ...
+
+  ===CITATION_BANK_END===
+
+  ```
+
+
+  **Rules:**
+
+  - Every entry MUST be copy-pasted verbatim from Read tool output — zero rewording
+
+  - Verify each with Grep before adding: `Grep pattern="first 5 words" path="{CONTENT_PATH}"`
+
+  - If Grep returns no match, you paraphrased — delete and re-copy
+
+  - Minimum 8 citations for modules >2000 words
+
+  - In the review body below, you may ONLY use `「」` citations that appear in this
+  bank
+
+
+  ### Output Block 1: Review
+
+
+  ```
+
+  ===REVIEW_START===
+
+  # Рецензія: {TOPIC_TITLE}
+
+
+  **Level:** {LEVEL} | **Module:** {MODULE_NUM}
+
+  **Overall Score:** {X.X}/10
+
+  **Status:** PASS / FAIL
+
+  **Reviewed:** {date}
+
+
+  ## Plan Verification
+
+
+  ```
+
+  Plan-Content Alignment: [PASS/FAIL]
+
+  - Sections: [status]
+
+  - Vocabulary: [X/Y from plan, Z extra]
+
+  - Grammar scope: [status]
+
+  - Objectives: [status]
+
+  ```
+
+
+  ## Scores    <!-- REQUIRED — rejection if missing -->
+
+
+  {SCORING_OUTPUT_TABLE}
+
+
+  **Weighted Overall:** {show calculation} = **X.X/10**
+
+
+  ## Auto-Fail Checklist Results
+
+
+  - Russianisms: [CLEAN] or [list]
+
+  - Calques: [CLEAN] or [list]
+
+  - Grammar scope: [CLEAN] or [list]
+
+  - Activity errors: [CLEAN] or [list]
+
+  - Beginner safety: X/5
+
+  - Factual accuracy: [CLEAN] or [list of discrepancies]
+
+
+  ## Critical Issues Found    <!-- REQUIRED — rejection if missing -->
+
+
+  ### Issue 1: {Category}
+
+  - **Location**: Line {N} / Section "{name}"
+
+  - **Original**: 「{exact Ukrainian text from Citation Bank}」
+
+  - **Problem**: {why it''s wrong}
+
+  - **Fix**: {concrete replacement}
+
+
+  [... more issues ...]
+
+
+  ## Ukrainian Language Issues
+
+
+  | Line | Current | Corrected | Type |
+
+  |------|---------|-----------|------|
+
+  | {N} | 「{original}」 | 「{fixed}」 | Russianisms / Calque / Scope / Grammar |
+
+
+  ## Beginner Safety Audit
+
+
+  "Would I Continue?" Test: X/5
+
+  - Overwhelmed? [Pass/Fail]
+
+  - Instructions clear? [Pass/Fail]
+
+  - Quick wins? [Pass/Fail]
+
+  - Ukrainian scary? [Pass/Fail]
+
+  - Come back tomorrow? [Pass/Fail]
+
+
+  ## Strengths
+
+  - [Specific strength with evidence]
+
+
+  ## Fix Plan to Reach 9/10 (REQUIRED if score < 9.0)
+
+
+  ### {Dimension Name}: {current}/10 -> 9/10
+
+  **What to fix:**
+
+  1. Line {N}: Change 「{current}」 -> 「{replacement}」 — {why}
+
+  2. Section "{name}": {action} — {impact}
+
+
+  **Expected score after fix:** {X}/10
+
+
+  ### Projected Overall After Fixes
+
+  ```
+
+  {Recalculate weighted overall with projected scores}
+
+  ```
+
+
+  ## Factual Verification    <!-- REQUIRED for seminar tracks — rejection if missing
+  -->
+
+
+  - Research notes consulted: {YES/NO/NOT_APPLICABLE}
+
+  - Key Facts Ledger present: {YES/NO}
+
+  - Dates checked: {X} ({all correct / N discrepancies listed below})
+
+  - Named figures verified: {X}
+
+  - Primary quotes cross-referenced: {X/Y matched}
+
+  - Chronological sequence: {CONSISTENT / ISSUES}
+
+  - Claims without research grounding: {N found — listed below if any}
+
+
+  {If discrepancies found, list each one:}
+
+  {- Line N: Prose says "X" but research says "Y" for [event/date/attribution]}
+
+
+  ## Verification Summary    <!-- REQUIRED — rejection if missing -->
+
+
+  - Content lines read: {X}
+
+  - Activity items checked: {X}
+
+  - Ukrainian sentences verified: {X}
+
+  - Citations in bank: {X}
+
+  - Issues found: {X}
+
+
+  ## Verdict    <!-- REQUIRED — rejection if missing -->
+
+
+  **PASS** or **FAIL**
+
+
+  {1-3 sentences. If FAIL, list blocking issues.}
+
+
+  ===REVIEW_END===
+
+  ```
+
+
+  ### Output Block 2: Friction Report (MANDATORY)
+
+
+  ```
+
+  ===FRICTION_START===
+
+  **Phase**: Phase D.1: Evidence Review
+
+  **Step**: {what you were doing when friction occurred, or "Full Phase D.1"}
+
+  **Friction Type**: NONE | YAML_SCHEMA_VIOLATION | TOKEN_LIMIT_TRUNCATION | ...
+
+  **Raw Error**: {actual error or "None"}
+
+  **Self-Correction**: {what you changed, or "N/A"}
+
+  **Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
+
+  ===FRICTION_END===
+
+  ```
+
+
+  ---
+
+
+  ## CRITICAL: Output Format Reminder
+
+
+  **CITATION RULE (LAST REMINDER):** Every `「」`-quoted Ukrainian text in your review
+  MUST appear verbatim in the source files. If you cannot find it with Grep, do NOT
+  cite it — you are hallucinating. Use your Citation Bank as the single source of
+  verified quotes.
+
+
+  Your output MUST contain `===CITATION_BANK_START===` / `===CITATION_BANK_END===`
+  BEFORE `===REVIEW_START===` / `===REVIEW_END===`. The extraction pipeline uses these
+  exact delimiters. Any output without these delimiters is **automatically discarded**
+  and the entire phase fails. Do not write a summary or conversational response —
+  output the citation bank, then the structured review inside the delimiters.
+
+  '
+SCORING_SECTION: "### STEP 4: Score 7 Dimensions\n\n| # | Dimension | Weight | Auto-fail\
+  \ |\n|---|-----------|--------|-----------|\n| 1 | Experience Quality | 1.5 | <7\
+  \ |\n| 2 | Language | 1.1 | <8 |\n| 3 | Pedagogy | 1.2 | <7 |\n| 4 | Activities\
+  \ | 1.3 | <7 |\n| 5 | Beginner Safety | 1.3 | <7 |\n| 6 | LLM Fingerprint | 1.0\
+  \ | <7 |\n| 7 | Linguistic Accuracy | 1.5 | <9 |\n\n**Weighted Overall:**\n```\n\
+  Overall = (Experience x 1.5 + Language x 1.1 + Pedagogy x 1.2 +\n          Activities\
+  \ x 1.3 + Beginner_Safety x 1.3 + LLM x 1.0 +\n          Linguistic_Accuracy x 1.5)\
+  \ / 8.9\n```\n\n**Why 7 dimensions?** A1/A2 modules are short and topic-constrained,\
+  \ so Coherence, Relevance, Educational, Immersion, Richness, and Factual Accuracy\
+  \ are noise at this level — they auto-pass trivially and waste reviewer attention.\
+  \ Focus scoring on what actually differentiates good beginner modules."
+SCORING_OUTPUT_TABLE: '| # | Dimension | Score | Auto-fail | Evidence |
+
+  |---|-----------|-------|-----------|----------|
+
+  | 1 | Experience Quality | X/10 | <7 | [specific finding] |
+
+  | 2 | Language | X/10 | <8 | [specific finding] |
+
+  | 3 | Pedagogy | X/10 | <7 | [specific finding] |
+
+  | 4 | Activities | X/10 | <7 | [specific finding] |
+
+  | 5 | Beginner Safety | X/10 | <7 | ["Would I Continue?" X/5] |
+
+  | 6 | LLM Fingerprint | X/10 | <7 | [specific finding] |
+
+  | 7 | Linguistic Accuracy | X/10 | <9 | [specific finding] |'
+ACTIVITY_COUNT_TARGET: '12'
+ACTIVITY_MIN: '10'
+ITEMS_MIN: '12'
 VOCAB_COUNT_TARGET: '25'
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/vocabulary/asking-for-directions.yaml
-WORD_TARGET: '3000'
+FORBIDDEN_ACTIVITY_TYPES: anagram, essay-response, critical-analysis, comparative-study,
+  authorial-intent
+ALLOWED_ACTIVITY_TYPES: quiz, fill-in, match-up, unjumble, mark-the-words, cloze,
+  error-correction, group-sort
+REQUIRED_TYPES: ''
+PRIORITY_TYPES: error-correction, unjumble, fill-in

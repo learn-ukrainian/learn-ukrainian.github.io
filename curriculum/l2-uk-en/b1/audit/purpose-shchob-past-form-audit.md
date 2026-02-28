@@ -1,7 +1,7 @@
-# Audit Report: M30 — purpose-shchob-past-form.md
-**Level:** B1 | **Module:** M30 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:43:58
+# Audit Report: M33 — purpose-shchob-past-form.md
+**Level:** B1 | **Module:** M33 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:41:07
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,63 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Виберіть правильну форму дієслова | 8 | 8 | ✅ |
+| 2 | error-correction | Виправте помилки в реченнях | 8 | 6 | ✅ |
+| 3 | error-correction | Виправте помилки узгодження | 6 | 6 | ✅ |
+| 4 | translate | Переклад англійських конструкцій | 6 | 6 | ✅ |
+| 5 | quiz | Перевірка граматичних правил | 8 | 8 | ✅ |
+| 6 | unjumble | Побудуйте правильні речення | 8 | 6 | ✅ |
+| 7 | match-up | Знайдіть відповідність | 8 | 8 | ✅ |
+| 8 | true-false | Правда чи хиба? | 8 | 8 | ✅ |
+| 9 | select | Оберіть правильні варіанти дієслів | 6 | 6 | ✅ |
+| 10 | cloze | Заповніть пропуски в діалозі | 14 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 9 (minimum: 3) ✅
+- Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
+- Required types used: 3/3 (error-correction, fill-in, translate) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 2 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 3 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 4 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 6 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 7 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 8 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY]** match-up 'Знайдіть відповідність' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 8 violations (significant)
+
 ## Gates
 - **Words:** ✅ 4517/4000 (raw: 4782)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 9/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 8 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 97% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

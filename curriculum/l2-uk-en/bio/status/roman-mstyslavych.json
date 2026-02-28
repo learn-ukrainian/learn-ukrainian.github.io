@@ -2,7 +2,7 @@
   "module": "roman-mstyslavych",
   "level": "C1",
   "plan_version": "1",
-  "last_audit": "2026-02-28T00:53:16.210318Z",
+  "last_audit": "2026-02-28T02:21:07.517691Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-27T20:41:10.779032Z",
@@ -44,7 +44,7 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "skipped",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
@@ -54,6 +54,6 @@
     "blocking_issues": [],
     "pass_count": 2,
     "fail_count": 2,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

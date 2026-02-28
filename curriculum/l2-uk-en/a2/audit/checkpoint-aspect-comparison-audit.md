@@ -1,11 +1,11 @@
-# Audit Report: M25 — checkpoint-aspect-comparison.md
-**Level:** A2 | **Module:** M25 | **Phase:** A2.2 | **Pedagogy:** TTT | **Target:** 2500
+# Audit Report: M30 — checkpoint-aspect-comparison.md
+**Level:** A2 | **Module:** M30 | **Phase:** A2.2 | **Pedagogy:** TTT | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 20:35:47
+**Generated:** 2026-02-28 03:44:33
 
 ## Configuration
 **Type:** A2-checkpoint
-**Word Target:** 2500 words
+**Word Target:** 3000 words
 **Activities:** 10-14 required
 **Items per Activity:** ≥10 items
 **Unique Types:** ≥4 types required
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3234/2500 (raw: 3482)
+- **Words:** ✅ 3234/3000 (raw: 3482)
 - **Activities:** ✅ 12/10
 - **Density:** ✅ All > 10
 - **Unique_types:** ✅ 8/4 types
@@ -47,7 +47,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 31/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

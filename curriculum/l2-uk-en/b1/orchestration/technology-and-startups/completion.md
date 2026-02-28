@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 78 — E2E
+PASS: pipeline b1 86
 
   Module:   technology-and-startups
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    6592 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T11:17:39Z
+  Date:     2026-02-28T08:50:41Z

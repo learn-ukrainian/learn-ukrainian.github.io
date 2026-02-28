@@ -1,5 +1,5 @@
-sequence: 41
-module: a1-41
+sequence: 58
+module: a1-58
 level: A1
 slug: phone-basics
 version: '2.0'
@@ -90,10 +90,10 @@ activity_hints:
 focus: practical
 pedagogy: PPP
 prerequisites:
-- a1-07 (Questions and Negation)
-- a1-40 (Taking Transport)
+- a1-18 (Questions and Negation)
+- a1-57 (Taking Transport)
 connects_to:
-- a1-42 (Emergencies)
+- a1-62 (Emergencies)
 - a1-43 (Combined Practice)
 objectives:
 - Learner can make and receive phone calls
@@ -105,7 +105,7 @@ grammar:
 - Imperative for requests
 - Could you... (Чи могли б ви...)
 register: розмовний
-phase: A1.4 [Practical Scenarios]
+phase: A1.6 [Real-World Skills]
 persona:
   voice: Patient Supportive Tutor
   role: Tech Support Specialist

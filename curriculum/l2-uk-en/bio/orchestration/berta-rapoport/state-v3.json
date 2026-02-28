@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-26T23:47:25Z",
       "task_id": "v3-berta-rapoport-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-26T23:58:34Z",
-      "attempts": 3
     }
   }
 }

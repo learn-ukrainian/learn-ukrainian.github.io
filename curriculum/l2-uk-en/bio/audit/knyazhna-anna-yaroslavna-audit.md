@@ -1,7 +1,7 @@
 # Audit Report: M999 — knyazhna-anna-yaroslavna.md
 **Level:** C1 | **Module:** M999 | **Phase:** BIO | **Pedagogy:** seminar | **Target:** 3920
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-28 00:52:51
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-28 02:17:10
 
 ## Configuration
 **Type:** C1-biography
@@ -16,47 +16,28 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Первинне джерело: Лист Папи Римського Миколая II | 1 | 3 | ❌ |
-| 2 | critical-analysis | Аналіз дипломатичної кореспонденції | 1 | 1 | ✅ |
-| 3 | essay-response | Епістолярний жанр: Лист Анни до батька | 1 | 1 | ✅ |
-| 4 | comparative-study | Порівняльний аналіз: Статус королеви в XI столітті | 1 | 1 | ✅ |
-| 5 | true-false | Перевірка розуміння тексту | 6 | 5 | ✅ |
-
-**Summary:**
-- Total activities: 5 (target: 3-9) ✅
-- Unique types: 5 (minimum: 3) ✅
-- Priority types used: 4/6 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 1/2 (reading) ❌
-- Low density activities: 1
-
 ## PEDAGOGICAL VIOLATIONS
-- **[COMPLEXITY]** reading 'Первинне джерело: Лист Папи Римського Миколая II' has 1 items (minimum: 3)
-  - FIX: Add more items. C1 reading requires at least 3 items.
 - **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (12 total): 'не просто X, а Y' x4, 'не лише X, а й Y' x8 — robotic prose
   - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
-- Activity density below minimum
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 6222/3920 (raw: 6571)
-- **Activities:** ✅ 5/3
-- **Density:** ❌ 1 < 1
-- **Unique_types:** ✅ 5/3 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/24
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (5 activities)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.4% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -81,12 +62,6 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 7 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **95.2%** |
-
-## Low Density Activities
-| Activity | Type | Items | Required | Fix |
-|----------|------|-------|----------|-----|
-| Первинне джерело: Лист Папи Римського Миколая II | reading | 1 | 3 | Add 2 more items |
-
 
 ## Section Audit
 | Section | Status | Count | Notes |

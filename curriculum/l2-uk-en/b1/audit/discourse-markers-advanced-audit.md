@@ -1,7 +1,7 @@
-# Audit Report: M57 — discourse-markers-advanced.md
-**Level:** B1 | **Module:** M57 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
+# Audit Report: M68 — discourse-markers-advanced.md
+**Level:** B1 | **Module:** M68 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:45:55
+**Generated:** 2026-02-28 09:49:42
 
 ## Configuration
 **Type:** B1-vocab
@@ -37,6 +37,15 @@
 - Required types used: 2/2 (fill-in, true-false) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4002/4000 (raw: 4836)
 - **Activities:** ✅ 10/8
@@ -47,11 +56,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.5-6 Vocab))
+- **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ⚠️ 99% (vocabulary) - 1 flags
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

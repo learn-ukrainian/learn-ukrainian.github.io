@@ -1,7 +1,7 @@
-# Audit Report: M25 — my-daily-routine.md
-**Level:** A1 | **Module:** M25 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M38 — my-daily-routine.md
+**Level:** A1 | **Module:** M38 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:14
+**Generated:** 2026-02-28 03:41:23
 
 ## Configuration
 **Type:** A1
@@ -55,11 +55,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 40.9% (target 35-55% (M25))
+- **Immersion:** 🇺🇦 40.9% (target 35-55% (M38))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

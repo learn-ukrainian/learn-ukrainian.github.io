@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py b1 20 — E2E
+PASS: pipeline b1 22
 
   Module:   motion-approaching-departing
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    3162 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T09:57:12Z
+  Verdict:  PASS
+  Date:     2026-02-28T08:40:30Z

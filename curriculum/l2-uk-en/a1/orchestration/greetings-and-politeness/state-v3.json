@@ -1,0 +1,13 @@
+{
+  "track": "a1",
+  "slug": "greetings-and-politeness",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T02:27:06Z",
+      "task_id": "v3-greetings-and-politeness-pA",
+      "mode": "full"
+    }
+  }
+}

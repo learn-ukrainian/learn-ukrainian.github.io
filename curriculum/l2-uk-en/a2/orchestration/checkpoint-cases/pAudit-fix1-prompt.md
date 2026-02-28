@@ -19,16 +19,18 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   Checkpoint Format Errors
+  failing gates:
+    lesson: 3881/3000 (raw: 4363) | engagement: 0/3 | pedagogy: 9 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  Grammar      ℹ️ N/A (covered by naturalness)
-  Naturalness  ℹ️ PENDING — awaiting review
-  Activity_quality ⏳ Deferred (content-only audit)
-  Research     ✅ Content aligned with research
-  Immersion    🇺🇦 20.1% (checkpoint - no gate)
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 50/100)
+     → Revision recommended (severity 50/100)
+     → 11 violations (severe - consider revision)
+
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/audit/checkpoint-cases-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/status/checkpoint-cases.json

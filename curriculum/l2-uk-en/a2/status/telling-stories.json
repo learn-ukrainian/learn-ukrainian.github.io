@@ -2,15 +2,15 @@
   "module": "telling-stories",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:17:49.493358Z",
+  "last_audit": "2026-02-28T03:44:36.203249Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-23T02:29:44.320795Z",
     "meta": "2026-02-23T02:19:13.860851Z",
     "activities": "2026-02-23T02:30:24.429286Z",
-    "vocabulary": "2026-02-23T02:25:41.288649Z",
+    "vocabulary": "2026-02-26T10:56:38.099954Z",
     "plan": "2026-02-20T21:01:56.962194Z",
-    "research": "2026-02-23T02:19:13.857316Z"
+    "research": "2026-02-26T11:21:03.650104Z"
   },
   "gates": {
     "meta": {
@@ -38,27 +38,22 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Content aligned with research"
+      "message": "Refresh recommended: Content predates research (research file is newer)"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 4,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

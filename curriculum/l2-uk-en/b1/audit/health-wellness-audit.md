@@ -1,7 +1,7 @@
-# Audit Report: M63 — health-wellness.md
-**Level:** B1 | **Module:** M63 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:46:22
+# Audit Report: M74 — health-wellness.md
+**Level:** B1 | **Module:** M74 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:50:01
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,21 +16,60 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару до медичних термінів | 10 | 8 | ✅ |
+| 2 | fill-in | Доповніть речення: базова термінологія | 8 | 8 | ✅ |
+| 3 | fill-in | Доповніть діалоги: візит до лікаря | 8 | 8 | ✅ |
+| 4 | quiz | Перевірте знання: Здоров'я та культура | 8 | 8 | ✅ |
+| 5 | error-correction | Виправте типові мовні помилки | 6 | 6 | ✅ |
+| 6 | unjumble | Складіть правильні речення | 6 | 6 | ✅ |
+| 7 | mark-the-words | Знайдіть частини тіла | 6 | 6 | ✅ |
+| 8 | true-false | Правда чи брехня: факти про лікування | 8 | 8 | ✅ |
+| 9 | cloze | Заповніть пропуски: Аптека та народна медицина | 14 | 12 | ✅ |
+| 10 | select | Оберіть усі правильні відповіді | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/4 (mark-the-words, match-up, quiz) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть пару до медичних термінів' has 10 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 1 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 2 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 3 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 5 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 6 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 6 violations (moderate)
+
 ## Gates
 - **Words:** ✅ 4826/4000 (raw: 5453)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 9/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 99.6% (target 85-100% (B1.5-6 Vocab))
+- **Pedagogy:** ❌ 6 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.6% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 95% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

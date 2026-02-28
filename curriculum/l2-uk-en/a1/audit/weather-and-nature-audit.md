@@ -1,7 +1,7 @@
-# Audit Report: M29 — weather-and-nature.md
-**Level:** A1 | **Module:** M29 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M43 — weather-and-nature.md
+**Level:** A1 | **Module:** M43 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 13:23:46
+**Generated:** 2026-02-28 03:44:18
 
 ## Configuration
 **Type:** A1-vocab
@@ -48,7 +48,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.6% (target 35-55% (M29))
+- **Immersion:** 🇺🇦 35.6% (target 35-55% (M43))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

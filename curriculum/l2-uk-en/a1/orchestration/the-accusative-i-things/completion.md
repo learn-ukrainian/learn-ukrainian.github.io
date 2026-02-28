@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 11 — E2E
+PASS: pipeline a1 25
 
   Module:   the-accusative-i-things
   Track:    a1
-  Mode:     e2e
-  Words:    2990 (target: 2000)
+  Mode:     v3
+  Words:    2985 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T21:11:08Z
+  Date:     2026-02-28T02:33:30Z

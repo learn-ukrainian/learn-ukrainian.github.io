@@ -1,5 +1,5 @@
-sequence: 40
-module: a1-40
+sequence: 57
+module: a1-57
 level: A1
 slug: taking-transport
 version: '2.0'
@@ -50,7 +50,7 @@ content_outline:
     the 'Де' vs. 'Куди' distinction.
   - Final review of the 'Marshrutka Veteran' persona's street-smart tips for navigating
     Ukrainian cities efficiently.
-  - 'Cross-reference: Preparing for a1-41 (Phone Basics) and a1-42 (Emergencies) by
+  - 'Cross-reference: Preparing for a1-58 (Phone Basics) and a1-62 (Emergencies) by
     ensuring the learner can identify their location while traveling.'
 vocabulary_hints:
   required:
@@ -91,11 +91,11 @@ activity_hints:
 focus: practical
 pedagogy: PPP
 prerequisites:
-- a1-15 (Around the City)
-- a1-39 (Buying Tickets)
+- a1-29 (Around the City)
+- a1-56 (Buying Tickets)
 connects_to:
-- a1-41 (Phone Basics)
-- a1-42 (Emergencies)
+- a1-58 (Phone Basics)
+- a1-62 (Emergencies)
 objectives:
 - Learner can use public transport
 - Learner can ask for directions
@@ -106,7 +106,7 @@ grammar:
 - Imperative for directions
 - Locative for stops
 register: розмовний
-phase: A1.4 [Practical Scenarios]
+phase: A1.6 [Real-World Skills]
 persona:
   voice: Patient Supportive Tutor
   role: Marshrutka Veteran

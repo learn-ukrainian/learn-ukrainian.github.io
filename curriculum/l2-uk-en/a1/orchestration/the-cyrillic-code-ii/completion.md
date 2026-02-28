@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 2 — E2E
+PASS: pipeline a1 2
 
   Module:   the-cyrillic-code-ii
   Track:    a1
-  Mode:     e2e
+  Mode:     v3
   Words:    3721 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T22:38:21Z
+  Date:     2026-02-28T02:20:50Z

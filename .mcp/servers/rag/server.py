@@ -77,7 +77,8 @@ async def list_tools() -> list[Tool]:
             description=(
                 "Search textbook images using a Ukrainian text query. "
                 "Uses SigLIP 2 for cross-modal text-to-image matching. "
-                "Returns image paths with metadata."
+                "Returns image paths with metadata and annotations "
+                "(description_uk, associated_text_uk, teaching_value) when available."
             ),
             inputSchema={
                 "type": "object",
@@ -89,6 +90,15 @@ async def list_tools() -> list[Tool]:
                     "grade": {
                         "type": "integer",
                         "description": "Filter by school grade (1-11). Optional."
+                    },
+                    "teaching_value": {
+                        "type": "string",
+                        "description": "Filter by teaching value: 'high', 'medium', 'low', 'none'. Optional.",
+                        "enum": ["high", "medium", "low", "none"]
+                    },
+                    "subject": {
+                        "type": "string",
+                        "description": "Filter by subject (e.g., 'bukvar', 'ukrainska-mova'). Optional."
                     },
                     "limit": {
                         "type": "integer",
@@ -293,10 +303,15 @@ async def handle_get_full_text(args: dict) -> list[TextContent]:
 async def handle_search_images(args: dict) -> list[TextContent]:
     query = args["query"]
     grade = args.get("grade")
+    teaching_value = args.get("teaching_value")
+    subject = args.get("subject")
     limit = min(args.get("limit", 5), 20)
 
     from rag.query import search_images
-    hits = await asyncio.to_thread(search_images, query, grade, limit)
+    hits = await asyncio.to_thread(
+        search_images, query, grade,
+        teaching_value=teaching_value, subject=subject, limit=limit,
+    )
 
     if not hits:
         return [TextContent(type="text", text="No image results found.")]
@@ -307,6 +322,12 @@ async def handle_search_images(args: dict) -> list[TextContent]:
         lines.append(f"- **Path**: `{hit['image_path']}`")
         lines.append(f"- **Source**: Grade {hit['grade']}, {hit['author']}, page {hit['page']}")
         lines.append(f"- **Size**: {hit['width']}x{hit['height']}")
+        if hit.get("description_uk"):
+            lines.append(f"- **Description**: {hit['description_uk']}")
+        if hit.get("associated_text_uk"):
+            lines.append(f"- **Associated text**: {hit['associated_text_uk']}")
+        if hit.get("teaching_value"):
+            lines.append(f"- **Teaching value**: {hit['teaching_value']}")
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]

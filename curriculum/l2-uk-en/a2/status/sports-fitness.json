@@ -2,13 +2,13 @@
   "module": "sports-fitness",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:18:58.357555Z",
+  "last_audit": "2026-02-28T03:47:05.908496Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T17:32:44.363946Z",
+    "md": "2026-02-26T11:21:03.690429Z",
     "meta": "2026-02-23T23:30:21.930871Z",
     "activities": "2026-02-24T09:09:33.622872Z",
-    "vocabulary": "2026-02-24T21:18:57.610310Z",
+    "vocabulary": "2026-02-26T10:56:38.099251Z",
     "plan": "2026-02-20T21:04:54.038834Z",
     "research": "2026-02-23T23:30:21.927664Z"
   },
@@ -21,27 +21,22 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4191/3000 (raw: 4600)"
+      "message": "4176/3000 (raw: 4585)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "25/1"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "warn",
@@ -57,8 +52,8 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 3,
+    "pass_count": 4,
     "fail_count": 0,
-    "deferred_count": 3
+    "deferred_count": 1
   }
 }

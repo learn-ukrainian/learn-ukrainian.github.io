@@ -1,7 +1,7 @@
-# Audit Report: M15 — around-the-city.md
-**Level:** A1 | **Module:** M15 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:03
+# Audit Report: M29 — around-the-city.md
+**Level:** A1 | **Module:** M29 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:34:54
 
 ## Configuration
 **Type:** A1
@@ -37,21 +37,25 @@
 - Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
 
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- Immersion 10% off target (minor)
+
 ## Gates
-- **Words:** ✅ 2616/2000 (raw: 2997)
+- **Words:** ✅ 2612/2000 (raw: 2993)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 23/1
+- **Vocab:** ⚠️ 0 < 1 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.3% (target 25-40% (M15))
+- **Immersion:** ❌ 25.3% LOW (target 35-55% (M29))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,10 +65,10 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Around the City** | ✅ | 59 | Included in Core |
-| **Вступ: Місто та орієнтири** | ✅ | 406 | Included in Core |
+| **Вступ: Місто та орієнтири** | ✅ | 405 | Included in Core |
 | **Лексика: Напрямки та місця** | ✅ | 545 | Included in Core |
 | **Граматика: Прийменники та рух** | ✅ | 553 | Included in Core |
-| **Практика: Маршрути та діалоги** | ✅ | 367 | Included in Core |
+| **Практика: Маршрути та діалоги** | ✅ | 364 | Included in Core |
 | **Творче завдання: Ваш шлях** | ✅ | 200 | Included in Core |
 | **Культура: Українська навігація** | ✅ | 320 | Included in Core |
 | **Підсумок** | ✅ | 166 | Included in Core |

@@ -1,169 +1,111 @@
-# Plan: Full-Page Textbook Analysis with Gemini Vision
+# Plan: Textbook Processing Pipeline — Clean Start
 
 ## Context
 
-We extracted 20,952 images from 83 Ukrainian school textbook PDFs. Three pixel-based cleanup passes removed 2,890 obvious junk (solid colors, gradients, tiny files), leaving 20,952 images. But the **real problem** isn't just junk removal — it's that extracted sub-images lose the Ukrainian text that was next to them on the page.
+We have 175 curriculum modules planned (A1-B2) but can't build them properly because the textbook content isn't searchable. The 4 abetka YAML files have `image_url: null` everywhere — they're skeletons, not real modules.
 
-A photo of an apple means nothing alone. On the textbook page, it sits next to "яблуко" — that's the teaching context. Without preserving image+text pairs, the images are useless for the l2-uk-direct curriculum.
+**What exists but isn't connected:**
+- 85 PDFs in `data/textbooks/grade-{01..11}/`
+- 12,298 extracted images in `data/textbook_images/` (cleaned, all grades)
+- Text chunks for grades 1-3 only (1,205 chunks in 9 JSONL files)
+- Grades 4-11 text: NOT extracted
+- Qdrant: EMPTY (Docker via `docker-compose.qdrant.yaml`, never populated)
+- All RAG scripts exist and are functional — just never run end-to-end
+- **Playground app** (`playgrounds/images.html` + `scripts/api/`) — FastAPI web UI for browsing/searching
 
-**Goal**: Send full textbook pages to Gemini Vision to:
-1. Extract image+text pairs (preserving pedagogical context)
-2. Classify junk images as a side effect (images with no associated text = junk)
+**What we need:** Populate Qdrant so the playground app and MCP RAG tools can search textbook content. SigLIP handles cross-modal text→image search natively (no Gemini Vision annotation needed).
 
-## Image Inventory
+## Pipeline (3 steps)
 
-| Type | Count | Description |
-|------|-------|-------------|
-| Full-page renders | 9,185 | image_index=0, ~800x1040px, entire PDF page |
-| Extracted sub-images | 10,708 | image_index≥1, individual elements from pages |
-| **Total** | **19,893** | After 3 cleanup passes |
-
-Full-page images already exist — no re-extraction needed.
-
-## Auth: API Key Required
-
-`gemini-cli` cannot read binary/image files (gitignore blocks, workspace sandbox). We use the `google-genai` Python SDK (v1.65.0, already in `.venv`).
-
-**User action** (30 seconds): Generate API key at https://aistudio.google.com/apikey
+### Step 1: Start Qdrant + verify clean state
 
 ```bash
-export GOOGLE_API_KEY="AIza..."
+docker-compose -f docker-compose.qdrant.yaml up -d
+curl http://localhost:6333/collections
+# Should return {"collections":[]} (clean start)
 ```
 
-Ultra subscription rate limits apply automatically to keys from the same Google account.
+### Step 2: Extract text from ALL grades
 
-## Script: `scripts/analyze_textbook_pages.py`
-
-**Model**: `gemini-2.0-flash` — fast, cheap, excellent vision.
-
-### Prompt (per full-page image)
-
-```
-You are analyzing a Ukrainian school textbook page for a language learning app.
-
-For each distinct visual element on this page (illustration, photo, diagram, letter
-display, chart, map, table), identify:
-1. What the visual element depicts
-2. The Ukrainian text most closely associated with it (word, phrase, or sentence
-   that appears near it or labels it)
-3. Whether this element is useful for teaching Ukrainian
-
-Respond ONLY with valid JSON:
-{
-  "page_type": "lesson|exercise|reference|title|contents|blank",
-  "elements": [
-    {
-      "type": "illustration|photo|diagram|letter|chart|map|table|QR|decoration|logo",
-      "description_en": "A red apple with a green leaf",
-      "associated_text_uk": "яблуко",
-      "teaching_value": "high|medium|low|none",
-      "position": "top-left|top-center|top-right|center-left|center|center-right|bottom-left|bottom-center|bottom-right"
-    }
-  ]
-}
-
-Rules:
-- Include EVERY visual element, even junk (decorations, logos, QR codes)
-- associated_text_uk must be EXACT Ukrainian text from the page (not translated)
-- If no Ukrainian text is associated, use null
-- teaching_value: high = clear teaching image with text, medium = useful but
-  indirect, low = marginally useful, none = decoration/junk
-```
-
-### Processing Pipeline
-
-1. **Load JSONL metadata** — filter for `image_index == 0` (full-page renders)
-2. **Load cache** from `data/textbook_images/page_analysis.jsonl` (skip processed)
-3. **For each full page**:
-   - Read PNG file
-   - Send to Gemini with the prompt above
-   - Parse JSON response
-   - Write to cache (one line per page)
-4. **Rate limiting**: 10 req/sec with exponential backoff on 429
-5. **Progress**: tqdm bar with grade/page info and ETA
-
-### CLI Interface
+Currently only grades 1-3 have text chunks. Run for all 85 PDFs:
 
 ```bash
-# Analyze grade 1-2 pages (priority for l2-uk-direct A1)
-.venv/bin/python scripts/analyze_textbook_pages.py --grade grade-01 grade-02
-
-# Analyze all grades
-.venv/bin/python scripts/analyze_textbook_pages.py --all
-
-# Resume (skips already-processed pages automatically)
-.venv/bin/python scripts/analyze_textbook_pages.py --all
-
-# Show stats from existing analysis
-.venv/bin/python scripts/analyze_textbook_pages.py --stats
-
-# Link analysis results back to extracted sub-images
-.venv/bin/python scripts/analyze_textbook_pages.py --link
-
-# Delete junk sub-images (teaching_value=none, no associated text)
-.venv/bin/python scripts/analyze_textbook_pages.py --cleanup --execute
+.venv/bin/python scripts/rag/extract_text.py --all
 ```
 
-### Output Files
+- Digital PDFs (grades 3+): PyMuPDF fast mode (~2s per PDF)
+- Scanned PDFs (G1 Bolshakova, Kravcova): Marker OCR (slower)
+- Output: `data/textbook_chunks/grade-{01..11}/*.jsonl`
 
-**`data/textbook_images/page_analysis.jsonl`** (one line per page):
-```jsonl
-{"page_id":"1-klas-bukvar-bolshakova-2025-1_p010_i00","page":10,"grade":1,"subject":"bukvar","author":"bolshakova","elements":[{"type":"illustration","description_en":"Red apple with leaf","associated_text_uk":"яблуко","teaching_value":"high","position":"center-left"},{"type":"QR","description_en":"QR code linking to audio","associated_text_uk":null,"teaching_value":"none","position":"bottom-right"}],"model":"gemini-2.0-flash","ts":"2026-02-27T..."}
+### Step 3: Ingest into Qdrant
+
+**Text chunks** (BGE-M3 embeddings — hybrid dense+sparse):
+```bash
+.venv/bin/python scripts/rag/ingest.py --text --all
 ```
 
-**`data/textbook_images/image_text_pairs.jsonl`** (generated by `--link`):
-```jsonl
-{"image_id":"1-klas-bukvar-bolshakova-2025-1_p010_i01","image_path":"data/textbook_images/grade-01/...","associated_text_uk":"яблуко","description_en":"Red apple with leaf","teaching_value":"high","page":10,"grade":1,"subject":"bukvar"}
+**Images** (SigLIP 2 embeddings — cross-modal text→image):
+```bash
+./scripts/rag/ingest_overnight.sh
+# Or specific grades: ./scripts/rag/ingest_overnight.sh --grade 1 2
 ```
 
-### Linking Logic (`--link`)
+**Literary texts** (BGE-M3 — 78K+ chunks ready):
+```bash
+.venv/bin/python scripts/rag/ingest.py --literary --all
+```
 
-Match Gemini's page-level elements to extracted sub-images:
-1. For each page, find all sub-images (same pdf_stem + page, image_index ≥ 1)
-2. Match by position and description (fuzzy — images may not map 1:1)
-3. For unmatched sub-images, mark as `unmatched` for manual review
-4. Output: enriched JSONL with image+text pairs
+### Step 4: Verify
 
-### Cleanup Logic (`--cleanup --execute`)
+```bash
+# Collection stats
+.venv/bin/python scripts/rag/query.py stats
 
-Delete extracted sub-images where:
-- Parent page analysis shows `teaching_value: "none"` AND `associated_text_uk: null`
-- OR sub-image is unmatched AND below 5KB (likely junk)
-- Update `*-images.jsonl` metadata (same pattern as `cleanup_images.py`)
+# Text search
+.venv/bin/python scripts/rag/query.py text "яблуко" --grade 1
 
-## Phased Rollout
+# Image search (SigLIP cross-modal)
+.venv/bin/python scripts/rag/query.py images "яблуко" --grade 1
 
-| Phase | Scope | Pages | Purpose |
-|-------|-------|-------|---------|
-| 1 | grade-01, grade-02 | 1,548 | l2-uk-direct A1 curriculum (immediate need) |
-| 2 | grade-03, grade-04 | 960 | l2-uk-direct A2 curriculum |
-| 3 | grade-05 through grade-11 | 6,677 | Full coverage |
+# Playground web UI
+.venv/bin/python -m uvicorn scripts.api.main:app --port 8790
+# Open http://localhost:8790/images.html
 
-Phase 1 first — verify quality, then expand.
+# MCP tools (from Claude Code session)
+# mcp__rag__search_text query="яблуко" grade=1
+# mcp__rag__search_images query="яблуко" grade=1
+```
 
-## Cost Estimate
+## What Already Works (no code changes needed)
 
-- Phase 1: 1,548 pages × ~200KB avg ≈ 300MB ≈ ~$0.02-0.05
-- Full: 9,185 pages × ~200KB avg ≈ 1.8GB ≈ ~$0.10-0.30
-- Ultra subscription: generous free tier, likely $0 total
+| Script | Purpose | Status |
+|--------|---------|--------|
+| `scripts/rag/extract_images.py` | Extract PNGs from PDFs | ✅ Done for all grades (12,298 images) |
+| `scripts/rag/extract_text.py` | Extract text chunks (PyMuPDF + Marker OCR) | ✅ Code works (only run for G1-3) |
+| `scripts/rag/embed.py` | BGE-M3 (text) + SigLIP 2 (images) | ✅ Complete |
+| `scripts/rag/ingest.py` | Batch upload to Qdrant | ✅ Complete |
+| `scripts/rag/query.py` | CLI search interface | ✅ Complete |
+| `scripts/rag/ingest_overnight.sh` | Batch image ingestion wrapper | ✅ Complete |
+| `scripts/cleanup_images.py` | Remove junk images | ✅ Already run (removed 2,890 junk) |
+| `.mcp/servers/rag/server.py` | MCP RAG tools (6 tools) | ✅ Complete |
+| `scripts/api/rag_router.py` | FastAPI search endpoints | ✅ Complete |
+| `playgrounds/images.html` | Web UI for image browsing/search | ✅ Complete |
 
-## Files
+## After Qdrant Is Populated
 
-| File | Action |
-|------|--------|
-| `scripts/analyze_textbook_pages.py` | CREATE — main script |
-| `data/textbook_images/page_analysis.jsonl` | CREATE — per-page analysis cache |
-| `data/textbook_images/image_text_pairs.jsonl` | CREATE — image+text pair dataset |
-| `data/textbook_images/grade-*/*.png` | DELETE — junk only, with `--cleanup --execute` |
-| `data/textbook_images/grade-*/*-images.jsonl` | UPDATE — remove junk entries |
+Build `scripts/source_images_direct.py` (#664):
+- Takes a module YAML (e.g., `abetka-1.yaml`)
+- For each item with `image_url: null`, searches Qdrant for matching images
+- Suggests best matches with SigLIP similarity scores
+- User confirms → populates `image_ref` field
 
-## Verification
+This unblocks #662 (A1 Module Build).
 
-1. Export `GOOGLE_API_KEY` (generate at aistudio.google.com)
-2. Run Phase 1: `--grade grade-01 grade-02`
-3. Inspect `page_analysis.jsonl` — spot-check 10 pages against actual images
-4. Run `--link` to generate image-text pairs
-5. Verify pairs make sense (apple image → "яблуко", etc.)
-6. Run `--stats` to see distribution of teaching_value across grades
-7. If accurate: `--cleanup --execute` to remove junk
-8. Expand to Phase 2, 3
+## Resource Notes
+
+- Qdrant Docker: ~200MB RAM
+- SigLIP model loading: ~1.5GB RAM (one-time during ingestion)
+- BGE-M3 model loading: ~1.2GB RAM (one-time during ingestion)
+- Text extraction: CPU-only, lightweight
+- Image ingestion: GPU-accelerated if available, CPU fallback
+- **Run steps sequentially** — don't overlap model loading with other heavy processes

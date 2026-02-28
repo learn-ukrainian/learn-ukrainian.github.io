@@ -2,13 +2,13 @@
   "module": "work-professions",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:18:46.745267Z",
+  "last_audit": "2026-02-28T03:46:50.193094Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T15:22:18.034062Z",
+    "md": "2026-02-26T11:21:03.704861Z",
     "meta": "2026-02-23T22:39:58.213391Z",
     "activities": "2026-02-23T22:48:51.670630Z",
-    "vocabulary": "2026-02-24T20:35:49.808280Z",
+    "vocabulary": "2026-02-26T10:56:38.106017Z",
     "plan": "2026-02-20T21:04:26.616507Z",
     "research": "2026-02-23T22:39:58.209406Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4723/3000 (raw: 5170)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4718/3000 (raw: 5165) | immersion: 71.5% LOW (target 75-90% (A2.3))"
     },
     "activities": {
       "status": "deferred",
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -55,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0,
+    "pass_count": 2,
+    "fail_count": 1,
     "deferred_count": 3
   }
 }

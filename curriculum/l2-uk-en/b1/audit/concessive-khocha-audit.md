@@ -1,7 +1,7 @@
-# Audit Report: M35 — concessive-khocha.md
-**Level:** B1 | **Module:** M35 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:44:22
+# Audit Report: M38 — concessive-khocha.md
+**Level:** B1 | **Module:** M38 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:41:23
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,58 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Перевірте знання: допустові речення | 8 | 8 | ✅ |
+| 2 | fill-in | Доповніть речення: сполучники та прийменники | 8 | 8 | ✅ |
+| 3 | match-up | Знайдіть пару: початок і кінець речення | 8 | 8 | ✅ |
+| 4 | unjumble | Складіть допустові речення | 6 | 6 | ✅ |
+| 5 | error-correction | Виправте помилки: кальки та орфографія | 6 | 6 | ✅ |
+| 6 | true-false | Правда чи брехня: граматика та стилістика | 8 | 8 | ✅ |
+| 7 | cloze | Заповніть пропуски: Підготовка до дебатів | 14 | 6 | ✅ |
+| 8 | select | Оберіть усі правильні відповіді | 6 | 6 | ✅ |
+| 9 | fill-in | Доповніть речення: лексика та контекст | 8 | 8 | ✅ |
+| 10 | mark-the-words | Знайдіть маркери допусту | 5 | 6 | ❌ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 9 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 2/3 (error-correction, fill-in) ❌
+- Low density activities: 1
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть пару: початок і кінець речення' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть допустові речення' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть допустові речення' item 2 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть допустові речення' item 3 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY]** mark-the-words 'Знайдіть маркери допусту' has 5 items (minimum: 6)
+  - FIX: Add more items. B1 mark-the-words requires at least 6 items.
+
+## Recommendation
+**📝 UPDATE** (severity 25/100)
+
+- 5 violations (moderate)
+- Activity density below minimum
+
 ## Gates
 - **Words:** ✅ 4370/4000 (raw: 4679)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ❌ 1 < 6
+- **Unique_types:** ✅ 9/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 31/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 5 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.3% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -55,6 +93,12 @@
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
 | **TOTAL** | | | | | **96.8%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Знайдіть маркери допусту | mark-the-words | 5 | 6 | Add 1 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

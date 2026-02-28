@@ -1,0 +1,63 @@
+slug: word-formation-modifiers
+title: Словотвір прикметників та прислівників
+word_target: 4000
+content_outline:
+- section: 'Вступ: Від іменника до прикметника'
+  words: 400
+  points:
+  - Introduce the concept of word formation (словотвір) as a tool for exponential
+    vocabulary growth.
+  - 'Reference State Standard §4.3.6-7: moving from nouns to modifiers.'
+  - Explain that this module is 100% in Ukrainian, focusing on advanced descriptive
+    tools.
+  - Provide a brief overview of suffixation and prefixation mechanisms.
+- section: Суфіксальний словотвір прикметників
+  words: 900
+  points:
+  - 'H3: Відносні прикметники. Suffixes -н- (книжний), -ськ- (київський), -ів-/-їв-
+    (батьківський).'
+  - 'H3: Якісні прикметники. Suffixes -ист- (барвистий), -уват- (синюватий), -еньк-
+    (маленький).'
+  - 'H3: Матеріальні прикметники. Suffixes -ян- (дерев''яний), -ов- (шовковий).'
+  - 'H3: Віддієслівні прикметники. Suffixes -лив- (працьовитий), -н- (нездоланний
+    — note difference from participles).'
+  - 'H3: Чергування приголосних. Explicitly teach the correct rules: к/ч/ц + ськ =
+    цьк (козак→козацький) and г/ж/з + ськ = зьк (Прага→празький). Correct the misconceptions.'
+- section: Префіксальний словотвір прикметників
+  words: 700
+  points:
+  - 'H3: Заперечення (не-). Discuss неможливий, незалежний. Include a cultural note
+    on ''незалежний'' as a core identity word.'
+  - 'H3: Інтенсивність ознаки. Prefixes пре- (прекрасний), над- (надзвичайний), за-
+    (завеликий).'
+  - 'H3: Префіксально-суфіксальний спосіб. Simultaneous addition: без- + -н- (безмежний),
+    між- + -н- (міжнародний).'
+- section: Складні прикметники
+  words: 600
+  points:
+  - 'H3: Рівноправні компоненти (сурядні). Provide hyphenation rules, e.g., жовто-блакитний,
+    сільськогосподарський (wait, сільськогосподарський is subordinate, fix to: науково-технічний).'
+  - 'H3: Підрядні компоненти. Solid spelling for dependent words: давньоруський, давньоукраїнський,
+    сільськогосподарський.'
+  - 'H3: Кольори та напрямки. Hyphens for colors (жовто-гарячий - wait, жовтогарячий
+    is an exception in modern orthography! Use світло-зелений) and cardinal directions
+    (південно-західний).'
+  - 'H3: Від числівників. Solid spelling: стодесятий, двадцятирічний.'
+- section: Словотвір прислівників
+  words: 800
+  points:
+  - 'H3: Від прикметників (-о/-е). The most productive pattern: добре, гарно, швидко.'
+  - 'H3: Прислівники способу дії (-и). Prefix ''по-'' and suffix ''-и'': по-українськи,
+    по-новому. Explain hyphenation and contrast with incorrect learner forms.'
+  - 'H3: Від іменників. Contextual shifts: вранці (від ранок), взимку (від зима),
+    угорі (від гора).'
+  - 'H3: Префіксальні та складні форми. на- (надворі), по- (повсюди), мимохідь, мимоволі.'
+- section: 'Практика: Словотвірний аналіз'
+  words: 600
+  points:
+  - 'H3: Аналіз морфем. Step-by-step breakdown of modifiers into root, suffix, and
+    prefix.'
+  - 'H3: Утворення від іменників. Guided examples of forming adjectives from given
+    nouns.'
+  - 'H3: Текст для аналізу. A short, descriptive narrative rich in derived adjectives
+    and adverbs for reading comprehension and pattern spotting.'

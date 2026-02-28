@@ -1,7 +1,7 @@
-# Audit Report: M22 — if-i-were.md
-**Level:** A2 | **Module:** M22 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M27 — if-i-were.md
+**Level:** A2 | **Module:** M27 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:43
+**Generated:** 2026-02-28 03:44:24
 
 ## Configuration
 **Type:** A2-grammar
@@ -25,14 +25,13 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 74.0% (target 60-75% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Section Audit
 | Section | Status | Count | Notes |

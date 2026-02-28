@@ -12,6 +12,16 @@
     "v3-B": {
       "status": "complete",
       "ts": "2026-02-28T00:09:54Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T00:11:53Z",
+      "task_id": "v3-petro-kalnyshevskyy-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T00:14:43Z",
+      "attempts": 2
     }
   }
 }

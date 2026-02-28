@@ -1,7 +1,7 @@
-# Audit Report: M89 — communication-channels.md
-**Level:** B1 | **Module:** M89 | **Phase:** B1.9 | **Pedagogy:** PPP | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 17:55:59
+# Audit Report: M97 — communication-channels.md
+**Level:** B1 | **Module:** M97 | **Phase:** B1.9 | **Pedagogy:** PPP | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:53:34
 
 ## Configuration
 **Type:** B1-skills
@@ -16,29 +16,65 @@
 **Vocab Target:** ≥15 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Фрази для телефонної розмови | 12 | 8 | ✅ |
+| 2 | match-up | Цифровий сленг та термінологія | 15 | 8 | ✅ |
+| 3 | fill-in | Шаблони ділового листування | 12 | 8 | ✅ |
+| 4 | quiz | Етикет комунікаційних каналів | 10 | 8 | ✅ |
+| 5 | error-correction | Робота над типовими помилками | 8 | 6 | ✅ |
+| 6 | unjumble | Побудова ділових речень | 8 | 6 | ✅ |
+| 7 | true-false | Правила ділового етикету | 10 | 8 | ✅ |
+| 8 | cloze | Цифрова комунікація в Україні | 14 | 12 | ✅ |
+| 9 | group-sort | Регістри та стилі | 12 | 12 | ✅ |
+| 10 | select | Множинний вибір: Етикет та Граматика | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 10-14) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 2/3 (cloze, fill-in) ✅
+- Required types used: 4/4 (error-correction, fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
 ## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова ділових речень' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова ділових речень' item 2 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова ділових речень' item 3 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова ділових речень' item 4 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова ділових речень' item 5 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова ділових речень' item 6 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова ділових речень' item 7 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова ділових речень' item 8 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
 - **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'самий кращий' → найкращий
   - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 30/100)
 
-- 1 violations (minor)
+- 9 violations (significant)
 
 ## Gates
 - **Words:** ⚠️ 3937/4000 (raw: 4402) (63 short)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/10
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 9/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/15
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 8 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.5% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 95% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

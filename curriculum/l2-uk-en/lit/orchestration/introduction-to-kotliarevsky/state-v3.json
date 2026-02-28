@@ -2,5 +2,10 @@
   "track": "lit",
   "slug": "introduction-to-kotliarevsky",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "failed",
+      "ts": "2026-02-28T00:53:42Z"
+    }
+  }
 }

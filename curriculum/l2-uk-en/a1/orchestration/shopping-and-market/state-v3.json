@@ -1,0 +1,13 @@
+{
+  "track": "a1",
+  "slug": "shopping-and-market",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T02:44:09Z",
+      "task_id": "v3-shopping-and-market-pA",
+      "mode": "full"
+    }
+  }
+}

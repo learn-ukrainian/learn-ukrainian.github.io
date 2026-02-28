@@ -1,106 +1,76 @@
-✅ Message sent to Gemini (ID: 9050)
-✓ Message 9050 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #9050...
-📨 Message #9050
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-the-dative-i-pronouns-pA
-   Time: 2026-02-20T00:47:34.863833+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/orchestration/the-dative-i-pronouns/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
-
-⏳ Rate limited (attempt 1/5). Waiting 30s...
-
-⏳ Rate limited (attempt 2/5). Waiting 60s...
-
-⏳ Rate limited (attempt 3/5). Waiting 120s...
-
-⏳ Rate limited (attempt 4/5). Waiting 240s...
 ===RESEARCH_START===
 
 # Дослідження: The Dative I — Pronouns
 
 ## State Standard Reference
-§4.2.2.3: "особа або предмет, для яких (на користь чи на шкоду) відбувається дія: Подарувати книжку студентові... суб’єкт кількісної вікової ознаки: Дідусеві вісімдесят років."
-Also §4.2.1.4 (Pronouns) confirms the forms: "я (мене, мені, мною...), ти (тебе, тобі, тобою...)"
-Alignment: This module directly addresses the A2 requirement for Dative case usage to express the recipient of an action and the subject of age/quantity, as well as the "object of interest" construction in §4.2.2.1 ("Мені подобається...").
+- **§4.2.2.3 (Давальний відмінок)**: "особа або предмет, для яких (на користь чи на шкоду) відбувається дія... суб’єкт кількісної вікової ознаки: Дідусеві вісімдесят років."
+- **§4.2.2.1 (Називний відмінок)**: "об’єкт зацікавлення: Мені подобається Ігор."
+- **§4.2.1.4 (Займенник)**: "особові займенники: я (... мені ...), ти (... тобі ...)"
+**Alignment**: This module directly addresses A2 requirements by teaching the personal pronoun paradigms in the Dative case, applying them to indirect objects, age descriptions, states, and the specific syntax of the "подобатися" construction.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| мені, тобі... | High (Core A1/A2) | дай мені, скажи мені, мені треба |
-| подобатися | High | мені подобається, як тобі? |
-| потрібно / треба | High | мені потрібно, нам треба |
-| допомагати | High | допоможи мені (Dat), я допомагаю мамі |
-| дзвонити | High | дзвони мені, я подзвоню йому |
-| давати | High | дай мені, я дам тобі |
-| холодно, весело... | High | мені холодно, їм весело, нам нудно |
+| мені / тобі | Very High (Core) | мені подобається, що тобі треба, дай мені |
+| йому / їй | High | йому/їй подобається, дзвони йому, допоможи їй |
+| нам / вам / їм | High | нам треба, вам каву?, їм цікаво |
+| подобатися | Very High | мені подобається (requires Dative + Nominative) |
+| потрібно / треба | Very High | мені треба (requires Dative + Infinitive) |
+| допомагати / дякувати | Medium-High | допомагати йому, дякувати вам |
 
 ## Cultural Hooks
-1. **"Мені приємно"**: The standard, polite response when meeting someone new ("It is pleasant to me").
-2. **Threshold Taboo (Поріг)**: Never hand a gift or shake hands across the threshold. You must step inside or go outside. Phrase: "Не через поріг!" (Not across the threshold!).
-3. **Hospitality**: Guests are constantly offered food/drink. "Вам каву чи чай?" is a standard host phrase.
+1. **The Threshold Taboo (Поріг)**: "Не через поріг!" (Not across the threshold!) is a strong cultural superstition in Ukraine. You must never greet someone, shake hands, or hand over a gift across a doorway threshold, as it is believed to cause arguments or cut off the connection. Both people must be on the same side.
+2. **"Мені приємно"**: The universal, polite Dative response when being introduced to someone, meaning "It is pleasant to me," reflecting a cultural focus on expressing internal emotional states directly.
 
 ## Common Learner Errors
-1. **The "I Like" Trap**: "Я подобаю..." (Active SVO) → Correct: "Мені подобається..." (Dative Inversion). Source: English interference.
-2. **The "I Need" Trap**: "Я треба..." → Correct: "Мені треба...". Source: English interference.
-3. **Direct vs Indirect Object**: "Help me" translated as "Допоможи мене" (Accusative) → Correct: "Допоможи мені" (Dative). English "help" takes a direct object; Ukrainian "допомагати" gives help TO someone.
+1. **"Я подобаю" → "Мені подобається"**: English speakers naturally try to use a Subject-Verb-Object structure. In Ukrainian, the experiencer takes the Dative, and the object of affection takes the Nominative as the active subject.
+2. **"Я треба" → "Мені треба / потрібно"**: Directly translating "I need" instead of using the correct impersonal construction where the need acts upon the Dative recipient.
+3. **"Дякую тебе" → "Дякую тобі"**: Treating verbs like "дякувати" (to thank) or "допомагати" (to help) as requiring a direct object (Accusative) rather than an indirect recipient (Dative).
 
 ## Cross-References
-- Builds on: A1 (Nominative personal pronouns, basic verb conjugation).
-- Prepares for: a2-02 (Dative II - Nouns), a2-03 (Dative Verbs), a2-07 (Spatial Prepositions with Dative).
+- Builds on: A1 basic sentence structure and Nominative personal pronouns.
+- Prepares for: a2-02 (Dative II - Nouns), a2-03 (Dative Verbs).
 
 ## Notes for Content Writing
-- **Immersion Band 1 (50-60%)**: Grammar explanations MUST be in English. Examples and dialogues in Ukrainian.
-- **Pedagogy**: Use visual mapping for the Subject/Object inversion in "подобатися".
-- **Tone**: Encouraging Cultural Guide (Persona). Frame grammar through the lens of relationships and feelings.
+- **Decolonized Framing**: Do NOT use Russian ("Мне нравится") as a point of comparison for the inversion trap. If comparison is helpful, reference Spanish ("Me gusta") or simply explain the Ukrainian logic independently: the feeling or state "happens to" the person.
+- **Immersion Rules**: Adhere strictly to the A2 Band 1 immersion target (50-60%). English is essential here to carefully scaffold the syntactical inversion of Dative experiencers, but keep all examples and mini-dialogues entirely in Ukrainian.
+- **Typography**: Ensure proper Ukrainian angular quotes «...» are used in the final content.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Вступ"
-    words: 400
+  - section: "Вступ: Роль адресата"
+    words: 500
     points:
-      - "Immersion Alert: 50-60%. Explain grammar in English to avoid confusion. Use clear, simple Ukrainian for examples."
-      - "Concept: The Dative Case (Давальний відмінок) answers 'Кому?' (To whom?) and 'Чому?' (To what?)."
-      - "Core Function: The Recipient of an action (giving TO, telling TO, helping TO)."
-      - "The 'Experience' Concept: In Ukrainian, you often don't DO feelings, they happen TO you (I am cold → To me is cold)."
-      - "Why it matters: Essential for polite requests, expressing needs, and talking about age (Мені 20 років)."
-  - section: "Презентація"
-    words: 1600
+      - "Immersion Alert (50-60% Band 1): Explicitly establish that English will be used to scaffold grammar concepts, while examples and dialogues will be in Ukrainian."
+      - "Define the Dative Case (Давальний відмінок) focusing on its core questions: Кому? (To whom?) and Чому? (To what?)."
+      - "Introduce the 'Recipient Role': explain that the Dative is used for the person or object for whose benefit or harm an action occurs."
+      - "Explain the logic of quantitative age traits in Ukrainian: frame it as age happening *to* a person («Мені 20 років»), contrasting with English 'I am' per State Standard A2 requirements."
+  - section: "Презентація: Форми та базові сполучення"
+    words: 700
     points:
-      - "Forms: Present the full paradigm of Personal Pronouns in Dative (Мені, Тобі, Йому, Їй, Нам, Вам, Їм). Use a lookup table."
-      - "The 'Like' Inversion (Подобатися): Explain the SVO → OVS shift. 'I like music' becomes 'Music (Nom) pleases me (Dat)'. Use a diagram."
-      - "Needs (Треба / Потрібно): Structure 'Dative + Adverb + Infinitive/Noun'. Emphasize that the person is NOT the subject."
-      - "Physical & Emotional States: Group by pronoun. 'Мені холодно' (I'm cold), 'Йому нудно' (He's bored), 'Їй весело' (She's having fun)."
-      - "Key Verbs taking Dative: Focus on 'допомагати' (help TO), 'дзвонити' (call TO), 'давати' (give TO), 'казати' (tell TO)."
-      - "Cultural Hook 1: 'Мені приємно' (It is pleasant to me) as the standard response to introductions."
-      - "Cultural Hook 2: The Threshold Rule (Поріг). Never give things 'через поріг'. Step inside first!"
-      - "Hospitality: Offering food/drink ('Вам каву чи чай?')."
-  - section: "Практика"
-    words: 600
+      - "Each pronoun gets its own clear row in a comprehensive Nominative-to-Dative mapping table. Include IPA only for the first occurrence of each new Dative pronoun."
+      - "Dedicate an H3 subsection to high-frequency verb collocations requiring Dative: дай мені, скажи мені, дзвони йому, допоможи їй. Include 2+ example sentences for each."
+      - "Add a specific note on register distinction: explain the polite use of «Вам» in hospitality and professional contexts (e.g., «Що Вам запропонувати?»)."
+  - section: "Подобатися та Потрібно: Пастка інверсії"
+    words: 800
     points:
-      - "Drill 1: Nominative → Dative transformation (Я → Мені, Він → Йому). Simple substitution."
-      - "Drill 2: The 'Like' Logic. Translate sentences requiring inversion (I like coffee → Кава подобається мені)."
-      - "Drill 3: Needs & States. Fill in the blank with correct pronoun: '(___) холодно', '(___) треба працювати'."
-      - "Error Spotter: Identify and fix common mistakes like 'Я подобаю' or 'Я допомагаю тебе'."
-  - section: "Діалоги"
-    words: 400
+      - "Dedicate an H3 to the 'I Like' Trap: Deconstruct the syntax of «Мені подобається». Use clear structural breakdowns to show how the English subject becomes the Ukrainian Dative recipient, and the English object becomes the Nominative subject."
+      - "Dedicate an H3 to the 'I Need' Trap: Contrast incorrect learner forms («Я треба») with the correct impersonal states («Мені треба/потрібно»)."
+      - "Dedicate an H3 to 'Indirect Object Alignment': Explain why «допомагати» (to help) and «дякувати» (to thank) take the Dative case, framing it independently without relying on Russian grammar comparisons."
+  - section: "Стани та емоції: Світ відчуттів"
+    words: 500
     points:
-      - "Scenario 1: Meeting New People. Using 'Мені приємно', asking 'Як вам?'."
-      - "Scenario 2: The Birthday Gift. Offering a gift (avoiding the threshold!), saying 'Це тобі', asking 'Тобі подобається?'."
-      - "Scenario 3: A Cold Day. Discussing feelings ('Мені холодно') and needs ('Мені треба чай')."
+      - "Create an H3 for 'Physical States': Explain the impersonal construction using adverbs («мені холодно», «йому жарко»). Provide 3+ practical examples."
+      - "Create an H3 for 'Emotional States': Explore phrases like «їй весело», «нам сумно», and «мені здається». Emphasize the feeling acting upon the person."
+      - "Detail the logic of convenience and suitability with phrases like «мені зручно» and «їй пасує», accompanied by a short mini-dialogue."
+  - section: "Культурний код та етикет"
+    words: 500
+    points:
+      - "Explain the etiquette of first meetings using the Dative standard response «Мені приємно» with a short contextual dialogue."
+      - "Detail the 'Threshold Taboo' («Не через поріг!»): Give cultural context on why one must not give gifts or shake hands across a threshold, utilizing Dative forms in the explanation."
+      - "Describe hospitality norms and offering phrasing («Вам каву чи чай?») emphasizing the use of Dative pronouns when hosting guests."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -111,11 +81,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5301 chars)
-✅ Message sent to Claude (ID: 9083)
-✓ Message 9083 acknowledged
-   Auto-acknowledged reply #9083 (stdout delivery — no inbox accumulation)
-✓ Message 9050 acknowledged

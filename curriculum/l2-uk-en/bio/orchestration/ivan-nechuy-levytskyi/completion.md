@@ -1,4 +1,4 @@
-PASS: pipeline bio 44
+FAIL: pipeline bio 44
 
   Module:   ivan-nechuy-levytskyi
   Track:    bio
@@ -6,5 +6,5 @@ PASS: pipeline bio 44
   Words:    3994 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-27T23:56:46Z
+  Verdict:  FAIL
+  Date:     2026-02-28T00:48:47Z

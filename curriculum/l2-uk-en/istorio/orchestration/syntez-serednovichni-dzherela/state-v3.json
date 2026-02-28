@@ -2,5 +2,12 @@
   "track": "istorio",
   "slug": "syntez-serednovichni-dzherela",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T00:32:33Z",
+      "task_id": "v3-syntez-serednovichni-dzherela-pA",
+      "mode": "meta-only"
+    }
+  }
 }

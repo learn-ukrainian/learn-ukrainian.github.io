@@ -3,31 +3,10 @@
   "slug": "spatial-prepositions",
   "mode": "v3",
   "phases": {
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-21T07:50:21Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-21T07:50:21Z",
-      "note": "migrated-from-v2"
-    },
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-21T07:50:21Z",
+      "ts": "2026-02-28T02:34:29Z",
       "note": "adopted-existing-meta"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-22T19:07:32Z",
-      "attempts": 1
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T19:13:55Z",
-      "attempts": 1,
-      "note": "d1-only"
     }
   }
 }

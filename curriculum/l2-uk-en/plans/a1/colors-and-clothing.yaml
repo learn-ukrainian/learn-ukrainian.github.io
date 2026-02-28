@@ -1,6 +1,6 @@
-module: a1-27
+module: a1-12
 level: A1
-sequence: 27
+sequence: 12
 slug: colors-and-clothing
 version: '2.0'
 title: Colors & Clothing
@@ -87,7 +87,7 @@ activity_hints:
 focus: vocabulary
 pedagogy: PPP
 prerequisites:
-- a1-26 (Describing Things - Adjectives)
+- a1-11 (Describing Things - Adjectives)
 connects_to:
 - a1-28 (Description - Adverbs)
 - a1-30 (Checkpoint Consolidation)
@@ -101,7 +101,7 @@ grammar:
 - Clothing vocabulary
 - Носити (to wear) + accusative
 register: розмовний
-phase: A1.3 [Consolidation]
+phase: A1.1 [First Contact]
 persona:
   voice: Patient Supportive Tutor
   role: Vyshyvanka Designer

@@ -2,13 +2,13 @@
   "module": "technology-media",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:18:49.977910Z",
+  "last_audit": "2026-02-28T03:46:54.373506Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T15:33:56.777155Z",
     "meta": "2026-02-23T22:49:51.344863Z",
     "activities": "2026-02-23T22:55:26.007354Z",
-    "vocabulary": "2026-02-24T15:23:03.857504Z",
+    "vocabulary": "2026-02-26T10:56:38.099582Z",
     "plan": "2026-02-20T21:04:30.539936Z",
     "research": "2026-02-23T22:49:51.341163Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4171/3000 (raw: 4654)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4171/3000 (raw: 4654) | immersion: 72.8% LOW (target 75-90% (A2.3))"
     },
     "activities": {
       "status": "deferred",
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -55,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0,
+    "pass_count": 2,
+    "fail_count": 1,
     "deferred_count": 3
   }
 }

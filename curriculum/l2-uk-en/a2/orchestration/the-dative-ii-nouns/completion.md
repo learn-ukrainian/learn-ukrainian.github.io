@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 2 — E2E
+PASS: pipeline a2 2
 
   Module:   the-dative-ii-nouns
   Track:    a2
-  Mode:     e2e
-  Words:    4021 (target: 3000)
+  Mode:     v3
+  Words:    6090 (target: 3000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T18:30:07Z
+  Date:     2026-02-28T02:34:15Z

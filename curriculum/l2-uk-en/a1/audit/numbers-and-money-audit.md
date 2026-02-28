@@ -1,7 +1,7 @@
-# Audit Report: M17 — numbers-and-money.md
-**Level:** A1 | **Module:** M17 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M22 — numbers-and-money.md
+**Level:** A1 | **Module:** M22 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:57:57
+**Generated:** 2026-02-28 03:32:18
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,7 +38,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[SECTION_BALANCE_BLOATED]** Section 'Теорія: Числа та гроші' has 1393 words (49% of total). Bloated sections: 'Теорія: Числа та гроші' (49%)
+- **[SECTION_BALANCE_BLOATED]** Section 'Теорія: Числа та гроші' has 1371 words (49% of total). Bloated sections: 'Теорія: Числа та гроші' (49%)
   - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 
 ## Recommendation
@@ -47,20 +47,19 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2636/2000 (raw: 2959)
+- **Words:** ✅ 2599/2000 (raw: 2922)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ⚠️ 0 < 1 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.8% (target 25-40% (M17))
+- **Immersion:** 🇺🇦 38.4% (target 35-55% (M22))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -71,7 +70,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Numbers & Money** | ✅ | 53 | Included in Core |
 | **Розминка: Числа в житті** | ✅ | 317 | Included in Core |
-| **Теорія: Числа та гроші** | ✅ | 1218 | Included in Core |
-| **Практика: У магазині** | ✅ | 682 | Included in Core |
+| **Теорія: Числа та гроші** | ✅ | 1196 | Included in Core |
+| **Практика: У магазині** | ✅ | 667 | Included in Core |
 | **Культурний контекст: Історія гривні** | ✅ | 211 | Included in Core |
 | **Підсумок** | ✅ | 155 | Included in Core |

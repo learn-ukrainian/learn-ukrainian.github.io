@@ -1,7 +1,7 @@
-# Audit Report: M31 — body-and-health.md
-**Level:** A1 | **Module:** M31 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M48 — body-and-health.md
+**Level:** A1 | **Module:** M48 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:21
+**Generated:** 2026-02-28 03:49:01
 
 ## Configuration
 **Type:** A1-vocab
@@ -47,11 +47,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.6% (target 35-55% (M31))
+- **Immersion:** 🇺🇦 35.6% (target 35-55% (M48))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

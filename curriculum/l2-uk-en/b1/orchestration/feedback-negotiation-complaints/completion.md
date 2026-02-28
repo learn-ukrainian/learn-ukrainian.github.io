@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 91 — E2E
+PASS: pipeline b1 99
 
   Module:   feedback-negotiation-complaints
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    7602 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T17:48:20Z
+  Date:     2026-02-28T08:53:42Z

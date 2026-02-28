@@ -2,13 +2,13 @@
   "module": "aspect-mastery-pairs",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:17:28.730153Z",
+  "last_audit": "2026-02-28T03:37:55.331861Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-22T23:30:34.161205Z",
     "meta": "2026-02-22T22:46:47.983591Z",
     "activities": "2026-02-22T23:25:14.873205Z",
-    "vocabulary": "2026-02-22T23:25:14.851367Z",
+    "vocabulary": "2026-02-26T10:57:30.384509Z",
     "plan": "2026-02-20T21:01:13.464781Z",
     "research": "2026-02-22T22:46:47.980270Z"
   },
@@ -38,27 +38,22 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

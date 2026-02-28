@@ -1,7 +1,7 @@
-# Audit Report: M80 — active-lifestyle.md
-**Level:** B1 | **Module:** M80 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
+# Audit Report: M88 — active-lifestyle.md
+**Level:** B1 | **Module:** M88 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-25 20:35:48
+**Generated:** 2026-02-28 09:50:47
 
 ## Configuration
 **Type:** B1-culture
@@ -17,6 +17,8 @@
 **Transliteration:** Not allowed
 
 ## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'здача (change/money)' → решта
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
 - **[EUPHONY]** Line 20: «з собакою» — з перед з/с/ш/ч; має бути «із собакою»
   - FIX: Replace «з» with «із» (before sibilant)
 - **[EUPHONY]** Line 34: «в 1970-х» — в перед збігом приголосних; має бути «у 1970-х»
@@ -41,27 +43,24 @@
   - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 ## Recommendation
-**🔄 REWRITE** (severity 95/100)
+**📝 UPDATE** (severity 50/100)
 
-- 11 violations (severe - consider revision)
-- Structure issue: Missing '## Activities' header OR activities sidecar
-- Activity count below minimum
-- Activity density below minimum
+- Revision recommended (severity 50/100)
+- 12 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ❌ 2816/4000 (raw: 3095)
-- **Activities:** ❌ 0/8
-- **Density:** ❌ 0 < 12
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 25 (soft target)
-- **Structure:** ❌ Missing '## Activities' header OR activities sidecar
-- **Ipa:** ✅ Clean IPA
+- **Vocab:** ⏳ Deferred (content-only audit)
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ❌ 79% < 95% min (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

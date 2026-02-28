@@ -1,7 +1,7 @@
-# Audit Report: M59 — media-news.md
-**Level:** B1 | **Module:** M59 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:46:04
+# Audit Report: M70 — media-news.md
+**Level:** B1 | **Module:** M70 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:49:49
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,21 +16,62 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Значення слів | 12 | 8 | ✅ |
+| 2 | match-up | Складіть словосполучення | 12 | 8 | ✅ |
+| 3 | fill-in | Вставте пропущені дієслова | 8 | 8 | ✅ |
+| 4 | fill-in | Керування дієслова повідомляти | 8 | 8 | ✅ |
+| 5 | quiz | Перевірка знань | 8 | 8 | ✅ |
+| 6 | quiz | Розуміння медіапростору | 8 | 8 | ✅ |
+| 7 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 8 | error-correction | Виправте помилки | 8 | 6 | ✅ |
+| 9 | cloze | Сучасний інформаційний простір | 14 | 12 | ✅ |
+| 10 | mark-the-words | Знайдіть дієслова | 7 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 7 (minimum: 4) ✅
+- Priority types used: 3/4 (mark-the-words, match-up, quiz) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 1 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 2 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 3 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 5 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 6 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 7 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 8 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 7 violations (significant)
+
 ## Gates
 - **Words:** ✅ 5521/4000 (raw: 6026)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 7/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 99.4% (target 85-100% (B1.5-6 Vocab))
+- **Pedagogy:** ❌ 7 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.4% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 97% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 58 — E2E
+PASS: pipeline b1 69
 
   Module:   describing-changes
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    4656 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:45:59Z
+  Date:     2026-02-28T08:49:46Z

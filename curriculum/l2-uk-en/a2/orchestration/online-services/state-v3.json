@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-24T00:17:30Z",
-      "task_id": "v3-online-services-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-24T00:22:03Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-24T00:24:46Z",
-      "task_id": "v3-online-services-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:19:44Z",
-      "attempts": 1
+      "ts": "2026-02-28T02:47:46Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

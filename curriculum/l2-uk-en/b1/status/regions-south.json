@@ -2,13 +2,13 @@
   "module": "regions-south",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T11:18:29.517986Z",
+  "last_audit": "2026-02-28T09:50:27.531093Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-25T09:25:08.810163Z",
     "meta": "2026-02-25T05:28:43.829736Z",
     "activities": "2026-02-25T09:16:15.306871Z",
-    "vocabulary": "2026-02-25T09:16:15.646558Z",
+    "vocabulary": "2026-02-26T10:56:38.127830Z",
     "plan": "2026-02-20T21:32:53.693798Z",
     "research": "2026-02-25T05:28:43.824093Z"
   },
@@ -19,29 +19,24 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5085/4000 (raw: 5383)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5085/4000 (raw: 5383) | pedagogy: 10 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "10/8 | density: 2 < 12"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/25"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
-    "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0,
-    "deferred_count": 3
+    "status": "fail",
+    "blocking_issues": [
+      "Missing required activity types: reading"
+    ],
+    "pass_count": 3,
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

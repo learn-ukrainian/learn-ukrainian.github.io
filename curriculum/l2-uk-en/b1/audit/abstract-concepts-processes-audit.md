@@ -1,7 +1,7 @@
-# Audit Report: M53 — abstract-concepts-processes.md
-**Level:** B1 | **Module:** M53 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
+# Audit Report: M64 — abstract-concepts-processes.md
+**Level:** B1 | **Module:** M64 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:45:40
+**Generated:** 2026-02-28 09:49:32
 
 ## Configuration
 **Type:** B1-vocab
@@ -47,7 +47,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

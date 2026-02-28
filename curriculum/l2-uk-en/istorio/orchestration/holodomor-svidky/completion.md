@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 49 — E2E
+PASS: pipeline istorio 49
 
   Module:   holodomor-svidky
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    3426 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T00:10:05Z
+  Date:     2026-02-28T00:37:29Z

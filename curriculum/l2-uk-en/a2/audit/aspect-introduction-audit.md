@@ -1,7 +1,7 @@
-# Audit Report: M12 — aspect-introduction.md
-**Level:** A2 | **Module:** M12 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M14 — aspect-introduction.md
+**Level:** A2 | **Module:** M14 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:25
+**Generated:** 2026-02-28 03:37:45
 
 ## Configuration
 **Type:** A2-grammar
@@ -49,7 +49,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

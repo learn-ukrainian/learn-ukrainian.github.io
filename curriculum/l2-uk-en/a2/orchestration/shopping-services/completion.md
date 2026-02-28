@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 53 — E2E
+PASS: pipeline a2 58
 
   Module:   shopping-services
   Track:    a2
-  Mode:     e2e
+  Mode:     v3
   Words:    4461 (target: 3000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-24T15:58:31Z
+  Date:     2026-02-28T02:47:02Z

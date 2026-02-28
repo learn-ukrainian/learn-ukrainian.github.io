@@ -2,5 +2,12 @@
   "track": "istorio",
   "slug": "halytsko-volynskyi-litopys-i",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T00:31:16Z",
+      "task_id": "v3-halytsko-volynskyi-litopys-i-pA",
+      "mode": "meta-only"
+    }
+  }
 }

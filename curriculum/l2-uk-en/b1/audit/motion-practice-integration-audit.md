@@ -1,7 +1,7 @@
-# Audit Report: M24 — motion-practice-integration.md
-**Level:** B1 | **Module:** M24 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M26 — motion-practice-integration.md
+**Level:** B1 | **Module:** M26 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:43:26
+**Generated:** 2026-02-28 09:40:42
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,40 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Вибір прийменника напрямку | 12 | 8 | ✅ |
+| 2 | fill-in | Орієнтування в місті | 12 | 8 | ✅ |
+| 3 | fill-in | Моя Одіссея: подорож у гори | 15 | 8 | ✅ |
+| 4 | fill-in | Зміна маршруту | 12 | 8 | ✅ |
+| 5 | cloze | Київська прогулянка | 14 | 6 | ✅ |
+| 6 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 7 | error-correction | Виправте граматичні помилки | 8 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть дієслова руху | 8 | 6 | ✅ |
+| 9 | match-up | Складіть правильні словосполучення | 12 | 8 | ✅ |
+| 10 | quiz | Перевірка знань про транспорт та просторові ідіоми | 8 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 2/2 (fill-in, quiz) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4453/4000 (raw: 4797)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 7/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 12/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

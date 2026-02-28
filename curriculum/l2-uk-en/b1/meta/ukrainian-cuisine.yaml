@@ -2,55 +2,54 @@ slug: ukrainian-cuisine
 title: Українська кухня
 word_target: 4000
 content_outline:
-  - section: 'Вступ: Кулінарна ДНК України (Introduction: Ukraine''s Culinary DNA)'
-    words: 500
-    points:
-      - 'Огляд цілей модуля: обговорення регіональних особливостей та розуміння автентичних
-        текстів про їжу (Standard §3.11, §3.15)'
-      - 'Українська кухня як нематеріальна культурна спадщина ЮНЕСКО: кейс борщу та
-        понад 300 автентичних рецептів'
-      - 'Концепція ''Нової української кухні'': як сучасні шеф-кухарі (Клопотенко)
-        змінюють сприйняття традиційних страв'
-  - section: Регіональна гастрономічна мапа (Regional Gastronomic Map)
-    words: 1000
-    points:
-      - 'Полтавщина: культ полтавських галушок та символізм пам''ятника Галушці у
-        Полтаві'
-      - 'Галичина та Львів: культура кави (жіночий рід!) та вплив європейської кухні
-        на грибну юшку та бограч'
-      - 'Одеса: морська фузія — історія форшмаку та смажених бичків як мультикультурної
-        спадщини'
-      - 'Наративна арка: подорож героя від затишних кав''ярень Львова через Полтаву
-        до рибних ресторанів Одеси'
-  - section: Символізм та ритуальна кухня (Symbolism and Ritual Cuisine)
-    words: 800
-    points:
-      - 'Вареники як символ місяця: прадавні ритуали, техніка ліплення та різноманіття
-        начинок (вишня, картопля, сир)'
-      - 'Кутя на Святвечір: ритуальне значення інгредієнтів (пшениця, мак, мед) як
-        зв''язок з предками'
-      - 'Великодній стіл: Паска та крашанки — кулінарна репрезентація головного свята
-        весни'
-      - 'Сало як культурний код: козацькі традиції, шкварки та вживання сала з часником'
-  - section: Граматика смаку та етикет (Grammar of Taste and Etiquette)
-    words: 900
-    points:
-      - 'Реєстр спілкування: розмовний стиль вдома проти офіційного замовлення в ресторані
-        (Standard §4.5.1)'
-      - 'Learner Error: вживання називного відмінка замість родового часткового (Я
-        хочу борщу — Genitive vs Я хочу борщ — Accusative)'
-      - 'Learner Error: помилки в роді іменників (Смачна кава — Feminine, а не Masculine)
-        — вправи на узгодження'
-      - 'Культурний етикет: ввічливі форми відмови від частування (''Дякую, я вже
-        не голодний''), щоб не образити господаря'
-  - section: Практика та Продукція (Practice and Production)
-    words: 800
-    points:
-      - 'Аналіз автентичного рецепта: використання дієслів наказового способу для
-        опису процесу готування'
-      - 'Діалог у ресторані: як замовляти страви, розпитувати про інгредієнти та використовувати
-        вираз ''Смачного!'''
-      - 'Критичне порівняння: обговорення смакових вподобань та паралелі між українською
-        та власною кухнею'
-      - 'Підсумок: Смачного! Закріплення ключових концепцій модуля та стратегій спілкування
-        за столом'
+- section: 'Вступ: Кулінарна ДНК України'
+  words: 500
+  points:
+  - 'H3: Значення їжі в українській культурі — Introduction to the module''s goals
+    and food as a cultural connector.'
+  - 'H3: Борщ як спадщина ЮНЕСКО — Detail the 2022 UNESCO recognition, framing it
+    as cultural preservation and decolonization.'
+  - 'H3: Нова українська кухня — Introduce modern culinary trends (e.g., Klopotenko)
+    that reclaim pre-Soviet authentic recipes.'
+- section: Регіональна гастрономічна мапа
+  words: 1000
+  points:
+  - 'H3: Полтавщина: серце української кухні — Focus on ''галушки'', the monument
+    in Poltava, and central Ukrainian flavors.'
+  - 'H3: Галичина та Львів: кавова столиця — Explore Lviv''s coffee culture (emphasizing
+    ''кава'' is feminine) and dishes like ''бограч''.'
+  - 'H3: Одеса: морська фузія — Highlight the multicultural culinary influence in
+    Odesa, focusing on ''форшмак'' and ''смажені бички''.'
+- section: Символізм та ритуальна кухня
+  words: 800
+  points:
+  - 'H3: Вареники: магія форми та начинки — Explain the ritualistic shape and list
+    traditional fillings (cherry, potato, cheese).'
+  - 'H3: Різдвяна кутя — Detail the ingredients (wheat, poppy seeds, honey) and their
+    symbolic connection to ancestors.'
+  - 'H3: Великодній стіл: паска та крашанки — Describe the Easter bread and painted
+    eggs as symbols of spring and rebirth.'
+  - 'H3: Сало: культурний код — Explain the historical context from Cossack times
+    to modern day, including ''шкварки'' and garlic.'
+- section: Граматика смаку та етикет
+  words: 900
+  points:
+  - 'H3: Реєстр спілкування — Contrast informal home dining phrases with formal restaurant
+    ordering etiquette (Standard §4.5.1).'
+  - 'H3: Родовий відмінок частковості — Explain ''Я хочу борщу'' (Genitive) vs ''Я
+    хочу борщ'' (Accusative) with a comparative table.'
+  - 'H3: Узгодження роду: смачна кава — Address the common learner error regarding
+    the feminine gender of ''кава''.'
+  - 'H3: Культурний етикет — Provide polite phrases to refuse extra food without offending
+    the host (e.g., ''Дякую, я вже ситий'').'
+- section: Практика та Продукція
+  words: 800
+  points:
+  - 'H3: Аналіз автентичного рецепта — Provide a short authentic recipe using imperative
+    verbs to describe the cooking process.'
+  - 'H3: Міні-діалог у ресторані — Present a 10-line dialogue showing how to ask about
+    ingredients and order politely.'
+  - 'H3: Критичне порівняння — Provide a structured framework for learners to discuss
+    and compare their native cuisine with Ukrainian dishes.'
+  - 'H3: Підсумок: Смачного! — Summarize the grammar points and cultural highlights
+    with a closing engaging thought.'

@@ -19,6 +19,11 @@
       "status": "complete",
       "ts": "2026-02-26T23:35:48Z",
       "task_id": "v3-volodymyr-monomakh-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T01:17:44Z",
+      "attempts": 1
     }
   }
 }

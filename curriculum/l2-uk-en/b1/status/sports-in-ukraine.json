@@ -2,13 +2,13 @@
   "module": "sports-in-ukraine",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T15:00:40.194785Z",
+  "last_audit": "2026-02-28T09:50:45.077157Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-25T15:00:14.599375Z",
     "meta": "2026-02-25T12:19:18.707713Z",
     "activities": "2026-02-25T14:55:28.415549Z",
-    "vocabulary": "2026-02-25T14:55:28.386921Z",
+    "vocabulary": "2026-02-26T10:56:38.131486Z",
     "plan": "2026-02-20T21:33:19.091863Z",
     "research": "2026-02-25T12:19:18.702636Z"
   },
@@ -19,29 +19,24 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4240/4000 (raw: 4725)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4240/4000 (raw: 4725) | pedagogy: 13 violations"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "10/8"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/25"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
-    "blocking_issues": [],
+    "status": "fail",
+    "blocking_issues": [
+      "Missing required activity types: match-up, reading"
+    ],
     "pass_count": 4,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

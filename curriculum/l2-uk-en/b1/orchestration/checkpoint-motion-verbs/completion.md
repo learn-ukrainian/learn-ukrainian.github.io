@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 25 — E2E
+PASS: pipeline b1 27
 
   Module:   checkpoint-motion-verbs
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    5389 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:43:31Z
+  Date:     2026-02-28T08:40:46Z

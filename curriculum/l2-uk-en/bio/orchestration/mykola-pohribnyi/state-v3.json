@@ -2,5 +2,10 @@
   "track": "bio",
   "slug": "mykola-pohribnyi",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "failed",
+      "ts": "2026-02-28T00:27:32Z"
+    }
+  }
 }

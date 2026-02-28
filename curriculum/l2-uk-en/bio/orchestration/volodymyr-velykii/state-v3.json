@@ -17,6 +17,11 @@
       "status": "complete",
       "ts": "2026-02-19T10:16:07Z",
       "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T01:16:19Z",
+      "attempts": 1
     }
   }
 }

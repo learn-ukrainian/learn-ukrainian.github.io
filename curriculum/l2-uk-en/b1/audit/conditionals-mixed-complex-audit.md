@@ -1,7 +1,7 @@
-# Audit Report: M33 — conditionals-mixed-complex.md
-**Level:** B1 | **Module:** M33 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M36 — conditionals-mixed-complex.md
+**Level:** B1 | **Module:** M36 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:44:12
+**Generated:** 2026-02-28 09:41:17
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,49 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Реальність чи гіпотеза: оберіть правильний варіант | 12 | 8 | ✅ |
+| 2 | fill-in | Оберіть правильний сполучник | 12 | 8 | ✅ |
+| 3 | unjumble | Складіть умовні речення | 12 | 6 | ✅ |
+| 4 | error-correction | Виправте помилки: русизми та кальки | 12 | 6 | ✅ |
+| 5 | match-up | Знайдіть логічний наслідок | 12 | 8 | ✅ |
+| 6 | fill-in | Змішаний тип: підбір дієслів | 12 | 8 | ✅ |
+| 7 | error-correction | Пунктуація: де сховалася кома? | 12 | 6 | ✅ |
+| 8 | quiz | Логічні ланцюжки та діловий стиль | 12 | 8 | ✅ |
+| 9 | unjumble | Офіційно-діловий стиль: логіка контрактів | 12 | 6 | ✅ |
+| 10 | fill-in | Трансформація речень | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
+- Required types used: 3/3 (error-correction, fill-in, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося; 'здача (change/money)' → решта
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 5669/4000 (raw: 6006)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 5/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.5% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 97% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

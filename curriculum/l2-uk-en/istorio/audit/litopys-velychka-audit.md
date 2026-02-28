@@ -1,10 +1,10 @@
-# Audit Report: M22 — litopys-velychka.md
-**Level:** ISTORIO | **Module:** M22 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
+# Audit Report: M999 — litopys-velychka.md
+**Level:** C1 | **Module:** M999 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-25 20:36:09
+**Generated:** 2026-02-28 01:32:35
 
 ## Configuration
-**Type:** istorio
+**Type:** C1-istorio
 **Word Target:** 5000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
@@ -46,38 +46,31 @@
   - FIX: Replace «в» with «у» (before consonant cluster)
 - **[LLM_FINGERPRINT_REPETITION]** Repetitive LLM rhetorical patterns (11 total): 'не просто X, а Y' x8, 'не лише X, а й Y' x3 — robotic prose
   - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: essay-response
-  - FIX: Add a essay-response activity to meet advanced richness standards.
-- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: history) missing advanced activity type: comparative-study
-  - FIX: Add a comparative-study activity to meet advanced richness standards.
 
 ## Recommendation
-**🔄 REWRITE** (severity 97/100)
+**📝 UPDATE** (severity 52/100)
 
-- 15 violations (severe - consider revision)
-- Structure issue: Missing '## Activities' header OR activities sidecar
-- Activity count below minimum
-- Activity density below minimum
+- Revision recommended (severity 52/100)
+- 13 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ❌ 3138/5000 (raw: 3426)
-- **Activities:** ❌ 0/3
-- **Density:** ❌ 0 < 1
-- **Unique_types:** ❌ 0/3 types
-- **Priority:** ❌ No priority types
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ❌ 3/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 25 (soft target)
-- **Structure:** ❌ Missing '## Activities' header OR activities sidecar
-- **Ipa:** ✅ Clean IPA
+- **Vocab:** ⏳ Deferred (content-only audit)
+- **Structure:** ✅ Valid Structure
 - **Lint:** ❌ 1 Format Errors
-- **Pedagogy:** ❌ 3 violations
-- **Content_heavy:** ⚠️ Too few activities: 0 (target 3-9)
-- **Immersion:** 🇺🇦 97.0% (target 95-100% (history))
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 96.9% (target 95-100% (istorio))
 - **Richness:** ❌ 92% < 95% min (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
+- **Research:** ⚠️ Refresh recommended: Research has decolonization section but content lacks it
 
 ## Richness Details
 **Score:** 92% (minimum: 95%)

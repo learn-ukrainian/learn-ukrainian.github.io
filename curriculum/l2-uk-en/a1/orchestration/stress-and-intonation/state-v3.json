@@ -1,0 +1,13 @@
+{
+  "track": "a1",
+  "slug": "stress-and-intonation",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T02:25:21Z",
+      "task_id": "v3-stress-and-intonation-pA",
+      "mode": "full"
+    }
+  }
+}

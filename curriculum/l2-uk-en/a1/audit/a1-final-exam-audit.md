@@ -1,7 +1,7 @@
-# Audit Report: M44 — a1-final-exam.md
-**Level:** A1 | **Module:** M44 | **Phase:** A1.4 | **Pedagogy:** TTT | **Target:** 2000
+# Audit Report: M64 — a1-final-exam.md
+**Level:** A1 | **Module:** M64 | **Phase:** A1.6 | **Pedagogy:** TTT | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:34
+**Generated:** 2026-02-28 03:56:32
 
 ## Configuration
 **Type:** A1
@@ -47,11 +47,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 37.9% (target 35-55% (M44))
+- **Immersion:** 🇺🇦 37.9% (target 35-55% (M64))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

@@ -2,13 +2,13 @@
   "module": "abstract-concepts-ideas",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T10:45:39.673174Z",
+  "last_audit": "2026-02-28T09:49:31.944209Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T21:49:22.121411Z",
     "meta": "2026-02-24T21:39:53.076591Z",
     "activities": "2026-02-24T21:47:56.290809Z",
-    "vocabulary": "2026-02-24T21:46:54.210787Z",
+    "vocabulary": "2026-02-26T10:56:38.106338Z",
     "plan": "2026-02-20T21:30:26.986568Z",
     "research": "2026-02-24T21:39:53.072373Z"
   },
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 0
   }

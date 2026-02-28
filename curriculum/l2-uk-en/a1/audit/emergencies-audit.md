@@ -1,7 +1,7 @@
-# Audit Report: M42 — emergencies.md
-**Level:** A1 | **Module:** M42 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M62 — emergencies.md
+**Level:** A1 | **Module:** M62 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 13:07:06
+**Generated:** 2026-02-28 03:55:05
 
 ## Configuration
 **Type:** A1
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.3% (target 35-55% (M42))
+- **Immersion:** 🇺🇦 38.3% (target 35-55% (M62))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

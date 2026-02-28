@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 69 — E2E
+PASS: pipeline b1 59
 
   Module:   synonymy-speaking-verbs
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    5078 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T10:18:04Z
+  Date:     2026-02-28T08:46:28Z

@@ -1,7 +1,7 @@
-# Audit Report: M08 — aspect-past-result-process.md
-**Level:** B1 | **Module:** M08 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M10 — aspect-past-result-process.md
+**Level:** B1 | **Module:** M10 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:42:11
+**Generated:** 2026-02-28 09:39:51
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,40 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Процес чи результат: перевірка розуміння | 8 | 8 | ✅ |
+| 2 | fill-in | Маркери тривалості та недоконаний вид | 8 | 8 | ✅ |
+| 3 | fill-in | Додавання маркера результату | 8 | 8 | ✅ |
+| 4 | group-sort | Процес чи результат? | 16 | 6 | ✅ |
+| 5 | unjumble | Побудова речень із маркерами часу | 6 | 6 | ✅ |
+| 6 | match-up | Знайдіть пару: маркер та вид дієслова | 12 | 8 | ✅ |
+| 7 | true-false | Правила використання видів | 8 | 8 | ✅ |
+| 8 | error-correction | Виправлення типових помилок | 6 | 6 | ✅ |
+| 9 | mark-the-words | Пошук дієслів доконаного виду | 6 | 6 | ✅ |
+| 10 | select | Оберіть правильні маркери результату | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 9 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 2/2 (fill-in, quiz) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4447/4000 (raw: 4753)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 9/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

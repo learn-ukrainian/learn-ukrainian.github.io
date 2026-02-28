@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 15 — E2E
+PASS: pipeline a1 29
 
   Module:   around-the-city
   Track:    a1
-  Mode:     e2e
-  Words:    2997 (target: 2000)
+  Mode:     v3
+  Words:    2993 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T21:32:41Z
+  Date:     2026-02-28T02:34:54Z

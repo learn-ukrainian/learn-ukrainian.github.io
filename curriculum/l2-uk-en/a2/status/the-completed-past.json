@@ -2,13 +2,13 @@
   "module": "the-completed-past",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:17:26.464695Z",
+  "last_audit": "2026-02-28T03:37:47.861418Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-22T23:06:44.541373Z",
     "meta": "2026-02-22T22:18:04.911237Z",
     "activities": "2026-02-22T23:05:01.180788Z",
-    "vocabulary": "2026-02-22T23:07:13.750206Z",
+    "vocabulary": "2026-02-26T10:56:38.103828Z",
     "plan": "2026-02-20T21:00:32.046653Z",
     "research": "2026-02-22T22:18:04.908032Z"
   },
@@ -38,27 +38,22 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 6 — E2E
+PASS: pipeline istorio 6
 
   Module:   diaspora-ta-zakhidni-istoriky
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T00:10:03Z
+  Date:     2026-02-28T00:29:35Z

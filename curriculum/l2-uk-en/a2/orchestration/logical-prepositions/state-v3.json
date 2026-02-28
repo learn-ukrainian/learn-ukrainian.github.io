@@ -5,29 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T19:15:01Z",
-      "task_id": "v3-logical-prepositions-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-22T19:16:22Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-22T20:23:56Z",
-      "task_id": "v3-logical-prepositions-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-22T20:27:17Z",
-      "attempts": 2
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T20:33:48Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T02:34:32Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

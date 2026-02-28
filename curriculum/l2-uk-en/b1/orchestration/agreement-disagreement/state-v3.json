@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-24T21:12:58Z",
       "task_id": "v3-agreement-disagreement-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:45:50Z",
-      "attempts": 1
     }
   }
 }

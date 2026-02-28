@@ -1,7 +1,7 @@
-# Audit Report: M29 — purpose-shchob-infinitive.md
-**Level:** B1 | **Module:** M29 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:43:53
+# Audit Report: M32 — purpose-shchob-infinitive.md
+**Level:** B1 | **Module:** M32 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:41:04
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,63 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Вибір сполучника та форми дієслова | 8 | 8 | ✅ |
+| 2 | error-correction | Виправте граматичні помилки | 6 | 6 | ✅ |
+| 3 | unjumble | Складіть речення з конструкцією мети | 6 | 6 | ✅ |
+| 4 | match-up | Знайдіть логічне продовження | 8 | 8 | ✅ |
+| 5 | quiz | Перевірка теоретичних знань | 8 | 8 | ✅ |
+| 6 | true-false | Правда чи хиба? | 8 | 8 | ✅ |
+| 7 | translate | Переклад цільових конструкцій | 6 | 6 | ✅ |
+| 8 | select | Вибір граматично правильних речень | 6 | 6 | ✅ |
+| 9 | cloze | Текст із пропусками: В музеї | 14 | 6 | ✅ |
+| 10 | mark-the-words | Знайдіть інфінітиви | 7 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 10 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 3/3 (error-correction, fill-in, translate) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з конструкцією мети' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з конструкцією мети' item 2 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з конструкцією мети' item 3 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з конструкцією мети' item 4 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з конструкцією мети' item 5 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення з конструкцією мети' item 6 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY]** match-up 'Знайдіть логічне продовження' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 8 violations (significant)
+
 ## Gates
 - **Words:** ✅ 4163/4000 (raw: 4536)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 10/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 7 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

@@ -2,13 +2,13 @@
   "module": "rental-accommodation",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:19:24.004065Z",
+  "last_audit": "2026-02-28T03:47:24.847611Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T19:27:24.897347Z",
     "meta": "2026-02-24T00:27:40.033805Z",
     "activities": "2026-02-24T00:33:08.748234Z",
-    "vocabulary": "2026-02-24T19:23:29.878169Z",
+    "vocabulary": "2026-02-26T10:56:38.096250Z",
     "plan": "2026-02-20T21:05:59.560938Z",
     "research": "2026-02-24T00:27:40.029472Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3626/3000 (raw: 3866)"
+      "status": "fail",
+      "violations": 1,
+      "message": "3626/3000 (raw: 3866) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "deferred",
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -55,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0,
+    "pass_count": 2,
+    "fail_count": 1,
     "deferred_count": 3
   }
 }

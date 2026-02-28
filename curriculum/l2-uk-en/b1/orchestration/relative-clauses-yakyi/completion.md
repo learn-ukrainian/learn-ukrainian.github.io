@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 26 — E2E
+PASS: pipeline b1 29
 
   Module:   relative-clauses-yakyi
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    6597 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:43:36Z
+  Date:     2026-02-28T08:40:53Z

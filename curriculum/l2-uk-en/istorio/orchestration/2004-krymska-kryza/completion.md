@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 129 — E2E
+PASS: pipeline istorio 129
 
   Module:   2004-krymska-kryza
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T00:10:06Z
+  Date:     2026-02-28T00:52:51Z

@@ -1,6 +1,0 @@
-===TAG_START===
-Fixes applied:
-- Reduced complexity of 3 sentences identified in audit by breaking them down.
-- Added metalanguage words (давальний, прикметник, називний) to vocabulary list.
-- Removed transliteration from "(adjective)".
-===TAG_END===

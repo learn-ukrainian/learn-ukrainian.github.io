@@ -2,15 +2,15 @@
   "module": "if-i-were",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:17:43.912373Z",
+  "last_audit": "2026-02-28T03:44:24.914598Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T09:44:11.815991Z",
     "meta": "2026-02-24T09:42:08.401398Z",
     "activities": "2026-02-23T21:26:56.402536Z",
-    "vocabulary": "2026-02-24T09:38:07.066036Z",
+    "vocabulary": "2026-02-26T10:56:38.092536Z",
     "plan": "2026-02-20T21:01:34.263148Z",
-    "research": "2026-02-23T01:21:47.468017Z"
+    "research": "2026-02-26T11:21:03.644298Z"
   },
   "gates": {
     "meta": {
@@ -38,15 +38,10 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "Content aligned with research"
+      "message": "Refresh recommended: Content predates research (research file is newer)"
     },
     "review": {
       "status": "deferred",
@@ -57,7 +52,7 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 2,
     "fail_count": 0,
     "deferred_count": 3
   }

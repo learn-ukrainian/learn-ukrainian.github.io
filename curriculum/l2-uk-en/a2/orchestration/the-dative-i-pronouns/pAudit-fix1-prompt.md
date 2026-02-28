@@ -17,29 +17,31 @@
   VERDICT: FAIL
   Module:  the-dative-i-pronouns
 ────────────────────────────────────────────────────────────
-  missing orchestration artifacts:
-    no Phase 2 artifacts (section files or prompt)
+  audit script returned non-zero exit code
+  failing gates:
+    lesson: 7208/3000 (raw: 7526) | pedagogy: 30 violations | immersion: 49.5% LOW (target 50-60% (A2.1))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📚 PEDAGOGICAL VIOLATIONS FOUND:
-    [SECTION_BALANCE_BLOATED] Section 'Presentation / Презентація' has 1803 words (49% of total). Bloated sections: 'Presentation / Презентація' (49%)
-       → FIX: Consider splitting the large section or expanding smaller sections to improve balance.
+    [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (3 occurrences): (Nominative pronouns), (It is pleasant to me), (It is pleasant to me) — breaks immersion target
+       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 1 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 50/100)
+     → Revision recommended (severity 50/100)
+     → 34 violations (severe - consider revision)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/audit/the-dative-i-pronouns-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/status/the-dative-i-pronouns.json
 
-  ✅ AUDIT PASSED.
+  ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  ✅ AUDIT PASSED
+  ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-dative-i-pronouns-audit.log for details)
         ```
+
 
         ## Files to Fix
 
@@ -56,20 +58,4 @@
 
         **IMPORTANT:** Do NOT add or remove sections. Do NOT change the module structure.
         Fix only the specific violations listed above.
-
-## Section-Level Fix (IMPORTANT)
-
-This is a large module (3823 words). To avoid token truncation,
-fix ONLY the following section(s): "Presentation / Презентація"
-
-**Output format:** Output ONLY the fixed section(s) between delimiters:
-
-```
-===SECTION_FIX_START===
-## {section title}
-{fixed section content}
-===SECTION_FIX_END===
-```
-
-Do NOT output the entire file. Only output the section(s) listed above.
 

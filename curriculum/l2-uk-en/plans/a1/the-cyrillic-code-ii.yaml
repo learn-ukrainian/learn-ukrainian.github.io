@@ -94,7 +94,7 @@ pedagogy: PPP
 prerequisites:
 - a1-01 (The Cyrillic Code I)
 connects_to:
-- a1-03 (The Gender Code)
+- a1-07 (The Gender Code)
 objectives:
 - Learner can recognize unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч, Ц)
 - Learner can identify iotated vowels (Є, Ї, Ю, Я)

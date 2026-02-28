@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 68 — E2E
+PASS: pipeline b1 58
 
   Module:   synonymy-thinking-verbs
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    5853 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T10:18:00Z
+  Date:     2026-02-28T08:46:25Z

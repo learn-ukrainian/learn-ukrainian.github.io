@@ -1,0 +1,102 @@
+module: a1-33
+level: A1
+sequence: 33
+slug: prepositions-of-place
+version: '2.0'
+title: Prepositions of Place
+subtitle: Where Things Are
+content_outline:
+- section: В/У + Місцевий (In + Locative)
+  words: 500
+  points:
+  - 'Location inside enclosed spaces: в магазині, у школі, в Україні. High-frequency
+    collocations with в/у + Locative for buildings, cities, and countries.'
+  - 'Euphonic в/у rule: в before consonant clusters, у before vowels or after consonants.
+    Drill common learner errors: correcting «В університеті» to «В університеті» vs
+    «У Львові» (not «В Львові»).'
+  - 'Consonant alternations in Locative: г→з (нога → на нозі), к→ц (рука → у руці),
+    х→с (вухо → у вусі). Review from a1-13 with expanded drills.'
+- section: На + Місцевий (On + Locative)
+  words: 500
+  points:
+  - 'Location on surfaces: на столі, на стіні, на підлозі. Physical contact meaning
+    of на.'
+  - 'Location at events and institutions: на концерті, на роботі, на пошті, на уроці.
+    The social/activity exception where на replaces в/у.'
+  - 'Contrast pairs: в кімнаті (inside a room) vs на кухні (in the kitchen — traditional
+    usage). в театрі (inside the building) vs на виставі (at the performance).'
+- section: Біля/Поруч/Між (Near/Next to/Between)
+  words: 400
+  points:
+  - 'Біля + Genitive for proximity: біля школи, біля парку, біля зупинки. High-frequency
+    pattern for giving directions.'
+  - 'Навпроти + Genitive for opposite position: навпроти банку, навпроти аптеки.
+    Useful for city orientation tasks.'
+  - 'Preview of Instrumental prepositions: поруч з + Instrumental (next to), між +
+    Instrumental (between). Introduced as formulaic chunks, not full case explanation.'
+- section: Де знаходиться...? (Where is...?)
+  words: 350
+  points:
+  - 'Asking location questions: Де знаходиться пошта? Де знаходиться найближча аптека?
+    The verb знаходитися (to be located) as a formal alternative to бути.'
+  - 'Answering with full sentences: Пошта знаходиться на вулиці Хрещатик. Аптека
+    знаходиться біля метро. Combining prepositions with correct case forms.'
+  - 'Cultural context: Using Kyiv landmarks as location reference points — Хрещатик,
+    Майдан, Золоті Ворота.'
+- section: Практика (Practice)
+  words: 250
+  points:
+  - 'Location description drills: Describe where objects are in a room, where buildings
+    are in a city. Multiple prepositions in connected speech.'
+  - 'Dialogues: asking and answering "Where is...?" in realistic scenarios — tourist
+    asking for directions, describing your neighbourhood.'
+vocabulary_hints:
+  required:
+  - магазин (store) — в магазині; high frequency location noun
+  - школа (school) — у школі; euphonic у before ш-cluster
+  - вулиця (street) — на вулиці; surface preposition на
+  - стіл (table) — на столі; basic surface location
+  - кухня (kitchen) — на кухні; traditional на exception
+  - пошта (post office) — на пошті; institutional на usage
+  - біля (near) — біля + Gen; proximity preposition
+  - навпроти (opposite) — навпроти + Gen; orientation preposition
+  - знаходиться (is located) — formal location verb; Де знаходиться...?
+  recommended:
+  - поруч (nearby) — поруч з + Inst; preview chunk
+  - між (between) — між + Inst; preview chunk
+  - далеко (far) — далеко від + Gen; distance expression
+  - близько (near/close) — близько від + Gen; distance expression
+activity_hints:
+- type: fill-in
+  focus: Choose correct preposition (в/у/на) and Locative form
+  items: 10
+- type: quiz
+  focus: Select appropriate preposition for given location
+  items: 10
+- type: match-up
+  focus: Match place to correct preposition phrase
+  items: 10
+- type: true-false
+  focus: Evaluate location statements for correctness
+  items: 8
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-32 (The Genitive I)
+connects_to:
+- a1-34 (Checkpoint Cases)
+objectives:
+- Use в/у + Locative for indoor locations
+- Use на + Locative for surfaces and events
+- Apply біля/навпроти + Genitive for relative position
+- Ask and answer 'Where is...?' questions
+grammar:
+- Locative prepositions (в/у, на)
+- Euphonic в/у alternation
+- Біля/навпроти + Genitive
+register: розмовний
+phase: A1.3 [Cases & Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: City Cartographer
+word_target: 2000

@@ -2,7 +2,7 @@
   "module": "the-instrumental-ii-means-and-tools",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-26T14:22:18.131244Z",
+  "last_audit": "2026-02-28T03:34:24.001727Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-26T14:22:17.356778Z",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

@@ -2,5 +2,12 @@
   "track": "istorio",
   "slug": "volyn-pamiat-i-travma",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T00:42:23Z",
+      "task_id": "v3-volyn-pamiat-i-travma-pA",
+      "mode": "meta-only"
+    }
+  }
 }

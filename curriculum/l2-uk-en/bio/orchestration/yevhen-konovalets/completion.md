@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 92 — E2E
+PASS: pipeline bio 95
 
   Module:   yevhen-konovalets
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T22:51:07Z
+  Date:     2026-02-28T00:15:01Z

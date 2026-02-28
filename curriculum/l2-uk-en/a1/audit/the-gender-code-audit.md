@@ -1,7 +1,7 @@
-# Audit Report: M03 — the-gender-code.md
-**Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:39:50
+# Audit Report: M07 — the-gender-code.md
+**Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:25:24
 
 ## Configuration
 **Type:** A1-grammar
@@ -16,41 +16,29 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | group-sort | Сортування за родом | 18 | 12 | ✅ |
-| 2 | match-up | Мій, Моя чи Моє? | 14 | 8 | ✅ |
-| 3 | quiz | Теорія роду | 12 | 8 | ✅ |
-| 4 | fill-in | Правильний займенник | 12 | 8 | ✅ |
-| 5 | anagram | Знайдіть слово | 12 | 8 | ✅ |
-| 6 | true-false | Правда чи ні? | 12 | 8 | ✅ |
-| 7 | group-sort | Сортування за закінченням | 12 | 12 | ✅ |
-| 8 | fill-in | Оберіть іменник | 12 | 8 | ✅ |
-| 9 | quiz | Пастки та винятки | 12 | 8 | ✅ |
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: чоловічий, жіночий, середній, рід
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
-**Summary:**
-- Total activities: 9 (target: 8-12) ✅
-- Unique types: 6 (minimum: 4) ✅
-- Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
-- Required types used: 3/3 (fill-in, match-up, quiz) ✅
-- Low density activities: 0
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 2803/2000 (raw: 3059)
-- **Activities:** ✅ 9/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 8/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 12.6% (target 10-25% (M03))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** ❌ 12.6% LOW (target 15-35% (M07))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

@@ -1,0 +1,13 @@
+{
+  "track": "a1",
+  "slug": "leisure-and-hobbies",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T02:50:26Z",
+      "task_id": "v3-leisure-and-hobbies-pA",
+      "mode": "full"
+    }
+  }
+}

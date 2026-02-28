@@ -2,14 +2,14 @@
   "module": "vasyl-vyshyvanyi",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T00:40:51.608040Z",
+  "last_audit": "2026-02-28T01:15:18.926011Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T00:40:23.192559Z",
+    "md": "2026-02-27T20:41:10.744009Z",
     "meta": "2026-02-24T22:37:08.538602Z",
     "activities": "2026-02-27T00:38:51.654024Z",
     "vocabulary": "2026-02-27T00:38:51.610435Z",
-    "plan": "2026-02-17T13:37:38.116497Z",
+    "plan": "2026-02-27T20:41:24.132534Z",
     "research": "2026-02-22T10:35:24.555021Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "7507/5000 (raw: 8008)"
+      "status": "fail",
+      "violations": 1,
+      "message": "7507/5000 (raw: 8008) | pedagogy: 2 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has 5+ sources but content cites 0"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

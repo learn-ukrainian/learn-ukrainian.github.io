@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 103 — E2E
+PASS: pipeline bio 106
 
   Module:   vasyl-vyshyvanyi
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    8008 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-26T23:40:51Z
+  Date:     2026-02-28T00:15:18Z

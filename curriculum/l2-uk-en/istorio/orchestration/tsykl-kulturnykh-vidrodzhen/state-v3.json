@@ -2,5 +2,12 @@
   "track": "istorio",
   "slug": "tsykl-kulturnykh-vidrodzhen",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T00:51:29Z",
+      "task_id": "v3-tsykl-kulturnykh-vidrodzhen-pA",
+      "mode": "meta-only"
+    }
+  }
 }

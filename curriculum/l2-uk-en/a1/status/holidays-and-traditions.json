@@ -2,14 +2,14 @@
   "module": "holidays-and-traditions",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:40:23.338909Z",
+  "last_audit": "2026-02-28T03:49:04.255228Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-22T18:41:45.951631Z",
     "meta": "2026-02-20T01:41:22.143981Z",
     "activities": "2026-02-22T08:03:30.926786Z",
-    "vocabulary": "2026-02-22T18:40:40.742698Z",
-    "plan": "2026-02-20T20:42:31.275306Z",
+    "vocabulary": "2026-02-26T10:56:38.074390Z",
+    "plan": "2026-02-28T03:02:37.231618Z",
     "research": "2026-02-20T01:36:36.226218Z"
   },
   "gates": {
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -57,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 6,
     "fail_count": 0,
     "deferred_count": 0
   }

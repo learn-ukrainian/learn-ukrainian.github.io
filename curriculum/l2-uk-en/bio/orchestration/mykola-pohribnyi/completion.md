@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 130 — E2E
+FAIL: pipeline bio 133
 
   Module:   mykola-pohribnyi
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  PASS
-  Date:     2026-02-20T22:56:34Z
+  Verdict:  FAIL
+  Date:     2026-02-28T00:27:32Z

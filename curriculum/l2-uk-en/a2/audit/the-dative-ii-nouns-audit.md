@@ -1,7 +1,7 @@
 # Audit Report: M02 — the-dative-ii-nouns.md
 **Level:** A2 | **Module:** M02 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:17
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:34:15
 
 ## Configuration
 **Type:** A2-grammar
@@ -16,53 +16,63 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | group-sort | Сортування за закінченнями | 18 | 8 | ✅ |
-| 2 | match-up | Знайдіть пару: Дія та Адресат | 10 | 8 | ✅ |
-| 3 | quiz | Оберіть правильну форму | 8 | 8 | ✅ |
-| 4 | fill-in | Чоловічий рід: кому? | 8 | 8 | ✅ |
-| 5 | fill-in | Жіночий рід: магія чергування | 8 | 8 | ✅ |
-| 6 | fill-in | Множина: щедрість для всіх | 8 | 8 | ✅ |
-| 7 | unjumble | Складіть речення | 6 | 6 | ✅ |
-| 8 | error-correction | Виправте помилки | 6 | 6 | ✅ |
-| 9 | mark-the-words | Знайдіть слова у Давальному відмінку | 6 | 6 | ✅ |
-| 10 | translate | Переклад фраз | 6 | 6 | ✅ |
-| 11 | cloze | День народження | 12 | 8 | ✅ |
-| 12 | select | Культурний контекст | 6 | 6 | ✅ |
-
-**Summary:**
-- Total activities: 12 (target: 10-14) ✅
-- Unique types: 10 (minimum: 4) ✅
-- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
-- Required types used: 3/3 (fill-in, match-up, quiz) ✅
-- Low density activities: 0
-
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_NOT_IN_CONTENT]** Only 17/26 (65%) vocabulary words appear in content+activities. Missing: бажати, бракувати, вистачати, вірити, гість, довіряти, заважати, личити (+1 more)
-  - FIX: Integrate missing vocabulary words into the prose or activities. Each vocab word should appear at least once in context.
+- **[GRAMMAR]** Participle used before B1: 'Досвідчений'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[GRAMMAR]** Participle used before B1: 'досвідчений'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[GRAMMAR]** Participle used before B1: 'Досвідчений'
+  - FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'українській мові ми дуже рідко...'
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Ви завжди повинні пам ятати...'
+- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Коли ви говорите людиною або...'
+- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Якщо слово чоловічого роду закінчується...'
+- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Коли ви говорите про велику...'
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Українська мова має дуже багатий...'
+- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Мова квітів та математика Ця...'
+- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Якщо ви дуже хочете подарувати...'
+- **[COMPLEXITY]** Sentence too long for A2: 19 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Для багатьох українців це свято...'
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Людина яка радісно святкує цей...'
+- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Він чітко показує кому ви...'
+- **[COMPLEXITY]** Sentence too long for A2: 25 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Завжди пам ятайте про дуже...'
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: родовий, множина, давальний, знахідний, називний
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'the sound...'.
+  - FIX: Vary sentence structure.
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 70/100)
 
-- 1 violations (minor)
+- Revision recommended (severity 70/100)
+- 17 violations (severe - consider revision)
+- 3 grammar-level violations (fundamental)
 
 ## Gates
-- **Words:** ✅ 3689/3000 (raw: 4021)
-- **Activities:** ✅ 12/10
-- **Density:** ✅ All > 8
-- **Unique_types:** ✅ 10/4 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/4
+- **Words:** ✅ 5735/3000 (raw: 6090)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
+- **Engagement:** ❌ 0/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 56.9% (target 50-60% (A2.1))
+- **Pedagogy:** ❌ 15 violations
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 58.4% (target 50-60% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -71,12 +81,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **The Dative II — Nouns** | ✅ | 44 | Included in Core |
-| **Вступ: Концепція адресата** | ✅ | 545 | Included in Core |
-| **Чоловічий та середній рід: -ові/-у** | ✅ | 678 | Included in Core |
-| **Жіночий рід та чергування приголосних** | ✅ | 575 | Included in Core |
-| **Plural: Даруємо всім!** | ✅ | 406 | Included in Core |
-| **Ключові дієслова та керування** | ✅ | 541 | Included in Core |
-| **Практика: Етикет подарунків** | ✅ | 370 | Included in Core |
-| **Діалоги: День Ангела** | ✅ | 318 | Included in Core |
-| **Підсумок** | ✅ | 212 | Included in Core |
+| **The Dative II — Nouns** | ✅ | 181 | Included in Core |
+| **Вступ: Концепція адресата та вік** | ✅ | 911 | Included in Core |
+| **Чоловічий та середній рід: -ові/-еві та -у/-ю** | ✅ | 910 | Included in Core |
+| **Жіночий рід та множина: -і та чергування** | ✅ | 1188 | Included in Core |
+| **Дієслова: Керування давальним відмінком** | ✅ | 1167 | Included in Core |
+| **Культура та етикет: Подарунки і свята** | ✅ | 1102 | Included in Core |
+| **Підсумок** | ✅ | 276 | Included in Core |

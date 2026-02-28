@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T23:27:40Z",
-      "task_id": "v3-rental-accommodation-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T23:30:26Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T23:33:08Z",
-      "task_id": "v3-rental-accommodation-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:19:24Z",
-      "attempts": 1
+      "ts": "2026-02-28T02:47:24Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

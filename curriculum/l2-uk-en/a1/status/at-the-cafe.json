@@ -2,14 +2,14 @@
   "module": "at-the-cafe",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:40:08.119000Z",
+  "last_audit": "2026-02-28T03:44:15.304418Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:47:35.687604Z",
+    "md": "2026-02-26T11:21:02.776546Z",
     "meta": "2026-02-18T22:47:21.905770Z",
     "activities": "2026-02-22T00:27:13.145979Z",
-    "vocabulary": "2026-02-22T18:44:35.212336Z",
-    "plan": "2026-02-20T20:41:06.032688Z",
+    "vocabulary": "2026-02-26T10:56:38.068808Z",
+    "plan": "2026-02-28T03:02:13.890490Z",
     "research": "2026-02-18T22:47:21.902210Z"
   },
   "gates": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2609/2000 (raw: 3021)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2585/2000 (raw: 2997) | immersion: 25.9% LOW (target 35-55% (M41))"
     },
     "activities": {
       "status": "pass",
@@ -38,27 +38,22 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 7,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 51 — E2E
+PASS: pipeline b1 55
 
   Module:   checkpoint-advanced-grammar
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    4676 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:45:38Z
+  Date:     2026-02-28T08:43:58Z

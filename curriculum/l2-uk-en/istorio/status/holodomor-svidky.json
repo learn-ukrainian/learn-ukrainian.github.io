@@ -2,14 +2,14 @@
   "module": "holodomor-svidky",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-23T13:23:06.875570Z",
+  "last_audit": "2026-02-28T01:37:29.607433Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-19T17:16:02.786411Z",
     "meta": "2026-02-19T22:27:53.466361Z",
     "activities": "2026-02-19T17:16:33.626535Z",
-    "vocabulary": "2026-02-21T18:06:33.706869Z",
-    "plan": "2026-02-17T13:37:38.127298Z",
+    "vocabulary": "2026-02-26T10:56:38.200410Z",
+    "plan": "2026-02-27T20:42:34.478397Z",
     "research": "2026-02-22T10:35:24.566786Z"
   },
   "gates": {
@@ -24,24 +24,19 @@
       "message": "3379/5000 (raw: 3426) | engagement: 5/6 | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "6/3"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "30/25"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "pass",
       "violations": 0,
       "message": "10/10 (High)"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "warn",
@@ -49,7 +44,7 @@
       "message": "Refresh recommended: Content predates research (research file is newer)"
     },
     "review": {
-      "status": "skipped",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
@@ -59,8 +54,8 @@
     "blocking_issues": [
       "6 Outline Compliance Errors"
     ],
-    "pass_count": 5,
+    "pass_count": 2,
     "fail_count": 1,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

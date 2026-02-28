@@ -1,7 +1,7 @@
-# Audit Report: M14 — mine-and-yours.md
-**Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:02
+# Audit Report: M20 — mine-and-yours.md
+**Level:** A1 | **Module:** M20 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:31:15
 
 ## Configuration
 **Type:** A1-grammar
@@ -38,8 +38,8 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_NOT_IN_CONTENT]** Only 13/21 (62%) vocabulary words appear in content+activities. Missing: його, мій, наш, наша, твоя, твоє, твій, її
-  - FIX: Integrate missing vocabulary words into the prose or activities. Each vocab word should appear at least once in context.
+- **[VOCAB_FORMAT]** A1/A2 vocabulary requires 5 columns, found 6: | Word | IPA | English | POS | Gender | Note |
+  - FIX: Format: | Word | English | POS | Gender | Note |
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -47,20 +47,19 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 3017/2000 (raw: 3499)
+- **Words:** ✅ 3014/2000 (raw: 3485)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 21/1
+- **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.1% (target 25-40% (M14))
+- **Immersion:** 🇺🇦 25.1% (target 25-40% (M20))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -70,7 +69,7 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Mine and Yours** | ✅ | 68 | Included in Core |
-| **Вступ: Бюро знахідок** | ✅ | 384 | Included in Core |
+| **Вступ: Бюро знахідок** | ✅ | 381 | Included in Core |
 | **Граматика: Мій, твій, наш** | ✅ | 501 | Included in Core |
 | **Граматика: Його, її, їхній** | ✅ | 549 | Included in Core |
 | **Практика: Чия це річ?** | ✅ | 497 | Included in Core |

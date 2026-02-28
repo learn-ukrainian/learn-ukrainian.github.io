@@ -1,6 +1,6 @@
-module: a1-28
+module: a1-42
 level: A1
-sequence: 28
+sequence: 42
 slug: description-adverbs
 version: '2.0'
 title: 'Description: Adverbs'
@@ -95,8 +95,8 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- a1-26 (Describing Things - Adjectives)
-- a1-27 (Colors and Clothing)
+- a1-11 (Describing Things - Adjectives)
+- a1-12 (Colors and Clothing)
 connects_to:
 - a1-29 (Weather and Seasons)
 - a1-30 (Checkpoint Consolidation)
@@ -110,7 +110,7 @@ grammar:
 - Adverbs of frequency
 - Adverb placement in sentences
 register: розмовний
-phase: A1.3 [Consolidation]
+phase: A1.4 [Tenses & Daily Life]
 persona:
   voice: Patient Supportive Tutor
   role: Food Critic

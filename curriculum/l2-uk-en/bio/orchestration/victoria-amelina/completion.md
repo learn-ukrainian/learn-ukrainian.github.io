@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 167 — E2E
+PASS: pipeline bio 170
 
   Module:   victoria-amelina
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-19T20:52:27Z
+  Date:     2026-02-28T00:29:29Z

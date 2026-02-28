@@ -5,29 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T06:33:10Z",
-      "task_id": "v3-checkpoint-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T06:36:41Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T06:39:19Z",
-      "task_id": "v3-checkpoint-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-23T06:44:59Z",
-      "attempts": 2
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-26T15:15:48Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T02:46:03Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

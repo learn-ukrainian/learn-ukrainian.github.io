@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 12 — E2E
+PASS: pipeline a1 26
 
   Module:   the-accusative-ii-people
   Track:    a1
-  Mode:     e2e
+  Mode:     v3
   Words:    2982 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T21:16:37Z
+  Date:     2026-02-28T02:33:35Z

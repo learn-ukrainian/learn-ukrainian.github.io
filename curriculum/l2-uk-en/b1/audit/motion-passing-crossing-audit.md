@@ -1,7 +1,7 @@
-# Audit Report: M18 — motion-passing-crossing.md
-**Level:** B1 | **Module:** M18 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:43:00
+# Audit Report: M20 — motion-passing-crossing.md
+**Level:** B1 | **Module:** M20 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:40:24
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,30 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 1 violations (minor)
+- Activity count below minimum
+- Activity density below minimum
+
 ## Gates
-- **Words:** ✅ 4152/4000 (raw: 4533)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Words:** ✅ 4151/4000 (raw: 4532)
+- **Activities:** ❌ 0/4
+- **Density:** ❌ 0 < 6
+- **Unique_types:** ❌ 0/3 types
+- **Priority:** ❌ No priority types
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 0 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -63,7 +73,7 @@
 | **Рух: перехід і обхід** | ✅ | 82 | Included in Core |
 | **Вступ** | ✅ | 421 | Included in Core |
 | **Тест** | ✅ | 536 | Included in Core |
-| **Пояснення** | ✅ | 996 | Included in Core |
+| **Пояснення** | ✅ | 995 | Included in Core |
 | **Поглиблення** | ✅ | 1092 | Included in Core |
 | **Практика** | ✅ | 589 | Included in Core |
 | **Підсумок** | ✅ | 436 | Included in Core |

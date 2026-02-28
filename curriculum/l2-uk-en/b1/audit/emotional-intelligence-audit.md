@@ -1,7 +1,7 @@
-# Audit Report: M71 — emotional-intelligence.md
-**Level:** B1 | **Module:** M71 | **Phase:** B1.6 | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 11:18:14
+# Audit Report: M79 — emotional-intelligence.md
+**Level:** B1 | **Module:** M79 | **Phase:** B1.6 | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:50:16
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,20 +16,53 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Поняття емоційного інтелекту | 12 | 8 | ✅ |
+| 2 | fill-in | Дієслова та емоції | 12 | 8 | ✅ |
+| 3 | error-correction | Виправте поширені помилки | 12 | 6 | ✅ |
+| 4 | unjumble | Складіть речення | 12 | 6 | ✅ |
+| 5 | quiz | Теорія емоційного інтелекту | 12 | 8 | ✅ |
+| 6 | mark-the-words | Знайдіть ключові слова | 15 | 6 | ✅ |
+| 7 | cloze | Заповніть пропуски | 14 | 12 | ✅ |
+| 8 | match-up | Стійкі вирази та колокації | 12 | 8 | ✅ |
+| 9 | fill-in | Слова в контексті | 12 | 8 | ✅ |
+| 10 | quiz | Як діяти у складних ситуаціях | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 7 (minimum: 4) ✅
+- Priority types used: 3/4 (mark-the-words, match-up, quiz) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 2 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 7 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 3 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4404/4000 (raw: 4854)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 7/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 2 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

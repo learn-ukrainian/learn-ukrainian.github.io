@@ -1,7 +1,7 @@
-# Audit Report: M73 — regions-east.md
-**Level:** B1 | **Module:** M73 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 11:18:24
+# Audit Report: M81 — regions-east.md
+**Level:** B1 | **Module:** M81 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:50:23
 
 ## Configuration
 **Type:** B1-culture
@@ -16,20 +16,40 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Розуміння тексту: Східний регіон | 10 | 8 | ✅ |
+| 2 | match-up | Колокації: Індустрія та культура | 12 | 8 | ✅ |
+| 3 | fill-in | Заповніть пропуски: Географія та історія Сходу | 10 | 8 | ✅ |
+| 4 | unjumble | Складіть речення: Мовна практика та історія | 8 | 6 | ✅ |
+| 5 | true-false | Правда чи хиба: Факти про Схід України | 10 | 8 | ✅ |
+| 6 | cloze | Заповніть пропуски: Від степу до індустрії | 14 | 12 | ✅ |
+| 7 | error-correction | Виправте мовні помилки | 8 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть цільові слова | 6 | 6 | ✅ |
+| 9 | select | Оберіть правильні варіанти | 8 | 6 | ✅ |
+| 10 | translate | Переклад: Індустріальна та культурна лексика | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/4 (fill-in, match-up, quiz) ✅
+- Required types used: 3/4 (fill-in, match-up, quiz) ❌
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 5673/4000 (raw: 6063)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 96% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

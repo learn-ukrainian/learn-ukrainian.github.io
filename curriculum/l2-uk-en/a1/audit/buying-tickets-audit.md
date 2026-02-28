@@ -1,7 +1,7 @@
-# Audit Report: M39 — buying-tickets.md
-**Level:** A1 | **Module:** M39 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M56 — buying-tickets.md
+**Level:** A1 | **Module:** M56 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 13:23:50
+**Generated:** 2026-02-28 03:53:45
 
 ## Configuration
 **Type:** A1
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.4% (target 35-55% (M39))
+- **Immersion:** 🇺🇦 36.4% (target 35-55% (M56))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

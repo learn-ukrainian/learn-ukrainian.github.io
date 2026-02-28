@@ -2,14 +2,14 @@
   "module": "colors-and-clothing",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-26T13:23:45.892035Z",
+  "last_audit": "2026-02-28T03:27:17.061673Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-26T11:21:02.798046Z",
     "meta": "2026-02-19T22:26:17.357667Z",
     "activities": "2026-02-22T23:41:29.161194Z",
     "vocabulary": "2026-02-26T10:56:38.072172Z",
-    "plan": "2026-02-20T20:41:52.372125Z",
+    "plan": "2026-02-28T03:02:37.187153Z",
     "research": "2026-02-19T22:26:17.351042Z"
   },
   "gates": {

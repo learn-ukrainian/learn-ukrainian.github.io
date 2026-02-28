@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py b1 81 — E2E
+PASS: pipeline b1 89
 
   Module:   running-in-ukraine
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    3213 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T09:57:12Z
+  Verdict:  PASS
+  Date:     2026-02-28T08:50:49Z

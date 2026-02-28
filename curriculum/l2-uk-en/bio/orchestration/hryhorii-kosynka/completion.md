@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 109 — E2E
+PASS: pipeline bio 112
 
   Module:   hryhorii-kosynka
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    5300 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-27T00:35:35Z
+  Date:     2026-02-28T00:15:46Z

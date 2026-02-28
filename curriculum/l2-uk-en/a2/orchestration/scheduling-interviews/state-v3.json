@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-24T08:25:28Z",
-      "task_id": "v3-scheduling-interviews-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-24T20:36:40Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-24T20:38:45Z",
-      "task_id": "v3-scheduling-interviews-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:43:26Z",
-      "attempts": 2
+      "ts": "2026-02-28T02:47:31Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

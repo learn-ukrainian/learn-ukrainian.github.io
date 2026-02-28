@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 8 — E2E
+PASS: pipeline a1 16
 
   Module:   the-living-verb-ii
   Track:    a1
-  Mode:     e2e
-  Words:    2646 (target: 2000)
+  Mode:     v3
+  Words:    2633 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T20:56:37Z
+  Date:     2026-02-28T02:30:07Z

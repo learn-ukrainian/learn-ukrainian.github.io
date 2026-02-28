@@ -1,7 +1,7 @@
-# Audit Report: M19 — at-the-cafe.md
-**Level:** A1 | **Module:** M19 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:08
+# Audit Report: M41 — at-the-cafe.md
+**Level:** A1 | **Module:** M41 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:44:15
 
 ## Configuration
 **Type:** A1
@@ -36,8 +36,13 @@
 - Required types used: 2/2 (fill-in, quiz) ✅
 - Low density activities: 0
 
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- Immersion 9% off target (minor)
+
 ## Gates
-- **Words:** ✅ 2609/2000 (raw: 3021)
+- **Words:** ✅ 2585/2000 (raw: 2997)
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -46,11 +51,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.7% (target 25-40% (M19))
+- **Immersion:** ❌ 25.9% LOW (target 35-55% (M41))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -61,10 +65,10 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **At the Café** | ✅ | 63 | Included in Core |
 | **Розминка: Кава — це культура** | ✅ | 350 | Included in Core |
-| **Презентація: Привітання та ввічливість** | ✅ | 362 | Included in Core |
-| **Замовлення: Знахідний відмінок** | ✅ | 450 | Included in Core |
+| **Презентація: Привітання та ввічливість** | ✅ | 352 | Included in Core |
+| **Замовлення: Знахідний відмінок** | ✅ | 446 | Included in Core |
 | **Уточнення: Яку каву ви бажаєте?** | ✅ | 426 | Included in Core |
-| **Рахунок та оплата** | ✅ | 274 | Included in Core |
+| **Рахунок та оплата** | ✅ | 264 | Included in Core |
 | **Практика: У кав'ярні** | ✅ | 279 | Included in Core |
 | **Культурний контекст: Українські кав'ярні** | ✅ | 220 | Included in Core |
 | **Підсумок** | ✅ | 185 | Included in Core |

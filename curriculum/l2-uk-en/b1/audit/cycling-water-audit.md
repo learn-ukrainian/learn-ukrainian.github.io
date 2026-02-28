@@ -1,7 +1,7 @@
-# Audit Report: M83 — cycling-water.md
-**Level:** B1 | **Module:** M83 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 15:39:24
+# Audit Report: M91 — cycling-water.md
+**Level:** B1 | **Module:** M91 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:50:56
 
 ## Configuration
 **Type:** B1-culture
@@ -16,20 +16,65 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: словник активного відпочинку | 8 | 8 | ✅ |
+| 2 | quiz | Оберіть правильне дієслово руху: плавати чи плисти? | 8 | 8 | ✅ |
+| 3 | fill-in | Заповніть пропуски: спорядження та умови оренди | 8 | 8 | ✅ |
+| 4 | unjumble | Складіть речення: напрямок чи місце дії? | 6 | 6 | ✅ |
+| 5 | error-correction | Виправте граматичні помилки іноземців | 6 | 6 | ✅ |
+| 6 | match-up | Знайдіть пару: найкращі локації для спорту | 8 | 8 | ✅ |
+| 7 | cloze | Заповніть пропуски: наші ідеальні літні вихідні | 14 | 12 | ✅ |
+| 8 | quiz | Перевірка розуміння тексту: спорт та безпека | 8 | 8 | ✅ |
+| 9 | mark-the-words | Знайдіть дієслова активного руху | 4 | 6 | ❌ |
+| 10 | fill-in | Заповніть пропуски: інтеграція лексики водного спорту | 8 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 7 (minimum: 4) ✅
+- Priority types used: 3/4 (fill-in, match-up, quiz) ✅
+- Required types used: 3/4 (fill-in, match-up, quiz) ❌
+- Low density activities: 1
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть пару: словник активного відпочинку' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: напрямок чи місце дії?' item 1 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: напрямок чи місце дії?' item 3 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: напрямок чи місце дії?' item 4 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: напрямок чи місце дії?' item 5 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: напрямок чи місце дії?' item 6 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY]** match-up 'Знайдіть пару: найкращі локації для спорту' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** mark-the-words 'Знайдіть дієслова активного руху' has 4 items (minimum: 6)
+  - FIX: Add more items. B1 mark-the-words requires at least 6 items.
+
+## Recommendation
+**📝 UPDATE** (severity 40/100)
+
+- Revision recommended (severity 40/100)
+- 8 violations (significant)
+- Activity density below minimum
+
 ## Gates
 - **Words:** ✅ 5031/4000 (raw: 5429)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ❌ 1 < 12
+- **Unique_types:** ✅ 7/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 8 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -52,6 +97,12 @@
 | realworld | 13 | - | 100% | 7% | 6.7% |
 | questions | 15 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **99.9%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Знайдіть дієслова активного руху | mark-the-words | 4 | 6 | Add 2 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

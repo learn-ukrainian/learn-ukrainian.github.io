@@ -19,11 +19,6 @@
       "status": "complete",
       "ts": "2026-02-24T20:17:57Z",
       "task_id": "v3-past-passive-participles-1-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:45:08Z",
-      "attempts": 1
     }
   }
 }

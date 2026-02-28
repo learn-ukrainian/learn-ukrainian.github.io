@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 51 — E2E
+PASS: pipeline lit 51
 
   Module:   lesia-forest-song-1
   Track:    lit
-  Mode:     e2e
-  Words:    0 (target: 4000)
+  Mode:     v3
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T23:13:02Z
+  Date:     2026-02-28T01:07:22Z

@@ -10,9 +10,20 @@
       "mode": "full"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-27T14:38:55Z",
-      "note": "word-count-3900-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-28T00:24:55Z",
+      "note": "adopted-existing-content",
+      "words": 4319
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T00:27:07Z",
+      "task_id": "v3-hryhoriy-kvitka-osnovianenko-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T00:30:19Z",
+      "attempts": 2
     }
   }
 }

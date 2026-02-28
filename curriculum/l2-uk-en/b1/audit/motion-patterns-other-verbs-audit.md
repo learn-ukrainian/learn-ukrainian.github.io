@@ -1,7 +1,7 @@
-# Audit Report: M23 — motion-patterns-other-verbs.md
-**Level:** B1 | **Module:** M23 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M25 — motion-patterns-other-verbs.md
+**Level:** B1 | **Module:** M25 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:43:21
+**Generated:** 2026-02-28 09:40:40
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,49 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть відповідність: значення префіксів | 12 | 8 | ✅ |
+| 2 | true-false | Правда чи хиба: просторова логіка | 12 | 8 | ✅ |
+| 3 | fill-in | Заповніть пропуски: вибір дієслова | 12 | 8 | ✅ |
+| 4 | quiz | Тест: прогнозування значення | 12 | 8 | ✅ |
+| 5 | unjumble | Складіть речення: професійний та емоційний контекст | 12 | 6 | ✅ |
+| 6 | error-correction | Виправте помилку: точність префіксів | 8 | 6 | ✅ |
+| 7 | mark-the-words | Знайдіть дієслова з префіксом ВИ- | 6 | 6 | ✅ |
+| 8 | group-sort | Розподіліть за логікою префіксів | 12 | 6 | ✅ |
+| 9 | select | Оберіть правильні синоніми | 6 | 6 | ✅ |
+| 10 | fill-in | Конструктор: змініть значення дієслова | 12 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 9 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4550/4000 (raw: 4974)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 9/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 9 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

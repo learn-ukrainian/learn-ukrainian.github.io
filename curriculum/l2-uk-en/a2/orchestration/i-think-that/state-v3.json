@@ -5,25 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T01:57:58Z",
-      "task_id": "v3-i-think-that-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T20:22:56Z",
-      "note": "adopted-existing-content",
-      "words": 2680
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T20:29:41Z",
-      "task_id": "v3-i-think-that-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:17:57Z",
-      "attempts": 1
+      "ts": "2026-02-28T02:44:45Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

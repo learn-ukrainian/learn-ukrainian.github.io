@@ -1,5 +1,5 @@
-sequence: 37
-module: a1-37
+sequence: 60
+module: a1-60
 level: A1
 slug: at-the-market
 version: '2.0'
@@ -78,9 +78,9 @@ focus: practical
 pedagogy: PPP
 prerequisites:
 - a1-18 (Food and Shopping)
-- a1-36 (At the Restaurant)
+- a1-53 (At the Restaurant)
 connects_to:
-- a1-38 (At the Store)
+- a1-61 (At the Store)
 objectives:
 - Learner can buy fresh produce at a market
 - Learner can ask about prices and quantities
@@ -91,7 +91,7 @@ grammar:
 - Accusative for requests
 - Numbers with nouns
 register: розмовний
-phase: A1.4 [Practical Scenarios]
+phase: A1.6 [Real-World Skills]
 persona:
   voice: Patient Supportive Tutor
   role: Privoz Market Vendor

@@ -1,7 +1,7 @@
-# Audit Report: M51 — hobbies-leisure.md
-**Level:** A2 | **Module:** M51 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M56 — hobbies-leisure.md
+**Level:** A2 | **Module:** M56 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:18:50
+**Generated:** 2026-02-28 03:46:57
 
 ## Configuration
 **Type:** A2-vocab
@@ -49,7 +49,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 28/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

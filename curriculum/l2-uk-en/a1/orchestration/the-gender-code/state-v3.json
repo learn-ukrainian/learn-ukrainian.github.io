@@ -5,29 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-20T20:34:55Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-20T20:34:55Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-20T20:34:55Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-22T20:16:57Z",
-      "attempts": 2
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T20:22:12Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T02:25:25Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

@@ -1,0 +1,132 @@
+module: a1-04
+level: A1
+sequence: 4
+slug: the-cyrillic-code-iv
+version: '2.0'
+title: The Cyrillic Code IV
+subtitle: The Final Letters
+content_outline:
+- section: 'Вступ (Review & Final Push)'
+  words: 250
+  points:
+  - 'You''ve learned 22 letters and 2 digraphs — only 11 more characters remain to master
+    the complete Ukrainian alphabet. Motivational framing: the finish line is in sight.'
+  - 'Quick diagnostic: read 5 words using all 22 previously learned letters to confirm
+    readiness for the final push.'
+- section: 'Шиплячі та свистячі (Sibilants)'
+  words: 500
+  points:
+  - 'Ц — the ''ts'' affricate: like English ''cats'' but as a single sound. Examples:
+    цікавий (interesting), центр (center), цукор (sugar). Common in word endings (-ець,
+    -иця).'
+  - 'Ч — the ''ch'' sound: like English ''church''. Examples: чай (tea), час (time),
+    число (number). One of the most frequent Ukrainian consonants.'
+  - 'Ш — the ''sh'' sound: like English ''ship''. Examples: школа (school), шоколад
+    (chocolate), шість (six). Hard articulation — tongue pulled back.'
+  - 'Щ — the double-soft sibilant: like a prolonged soft ''sh+ch'' combination, unique
+    to Ukrainian. Examples: ще (more/still), щастя (happiness), щоденник (diary).
+    Common learner confusion: Ш is hard, Щ is soft — drilling minimal pairs.'
+  - 'Articulatory contrast drill: Ш (tongue back, hard) vs Щ (tongue forward, soft) with
+    mirror self-check technique and Anna Ohoiko pronunciation video reference.'
+- section: 'Йотовані голосні (Iotated Vowels)'
+  words: 500
+  points:
+  - 'The ''dual nature'' principle: iotated vowels represent TWO sounds at word beginning
+    or after a vowel (Й+vowel), but only soften the preceding consonant when after a
+    consonant.'
+  - 'Ю = /ju/ at word start (юнак — young man, юрист — lawyer) vs softening after consonant
+    (люди — people, where Л becomes soft). Collocations: юнак, юрист.'
+  - 'Я = /ja/ at word start (яблуко — apple, якщо — if) vs softening after consonant
+    (м''ясо requires apostrophe to preserve /ja/). High frequency: я = ''I'' in Ukrainian.'
+  - 'Є = /je/ at word start (Європа — Europe, єдиний — the only one). Rare after consonants.
+    Cultural note: Євромайдан as a cultural touchstone.'
+  - 'Ї = /ji/ always (їжа — food, їхати — to go/ride, Київ — Kyiv in oblique cases).
+    ALWAYS two sounds — never softens a consonant. Cultural hook: the letter Ї as a
+    symbol of Ukrainian identity, used in resistance graffiti in occupied territories.'
+- section: 'М''який знак та апостроф (Soft Sign & Apostrophe)'
+  words: 400
+  points:
+  - 'Ь (soft sign) — not a letter with its own sound but a modifier that softens the
+    preceding consonant. Palatalization explained simply: pressing the middle of the tongue
+    against the hard palate. Examples: день (day), сіль (salt), Львів (Lviv).'
+  - 'Contrast drills: кон (horse archaic) vs кінь (horse modern), мат (checkmate) vs
+    мать (mother archaic) — the soft sign changes meaning. Minimal pairs to train the ear.'
+  - 'Апостроф ('') — separates a consonant from a following iotated vowel to preserve the
+    /j/ sound. Examples: м''ясо (meat), сім''я (family), п''ять (five), об''єкт (object).
+    Without the apostrophe, the consonant would soften instead of keeping /j/.'
+  - 'Rule summary: Ь softens what comes BEFORE it. Apostrophe BLOCKS softening and keeps
+    the /j/ in the following iotated vowel. Both are modifiers, not independent sounds.'
+- section: 'Підсумок: Весь алфавіт (Summary: The Full Alphabet)'
+  words: 350
+  points:
+  - 'The complete 33-letter Ukrainian alphabet presented in order with pronunciation guide:
+    А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я.'
+  - 'Celebration moment: the learner has cracked the entire Cyrillic code across four
+    modules. Reinforcement that reading fluency comes with practice — the hard part
+    (letter recognition) is done.'
+  - 'Full alphabet reading drill: a short paragraph using all 33 letters, with stress marks
+    for pronunciation guidance. Self-assessment checklist for all four Cyrillic Code modules.'
+  - 'Bridge to next module: preview of a1-05 (Syllables and Transfer) where letter knowledge
+    becomes word-building skill — syllable structure, stress patterns, and reading fluency.'
+vocabulary_hints:
+  required:
+  - 'чай (tea) — collocations: ''пити чай'' (to drink tea), ''чорний чай'', ''чашка чаю'';
+    top 500 word'
+  - 'школа (school) — collocations: ''у школі'' (at school), ''іти до школи''; top 200
+    word'
+  - 'центр (center) — collocations: ''у центрі'' (in the center), ''центр міста'' (city
+    center); top 300 word'
+  - 'ще (more/still) — usage: high frequency function word; collocations: ''ще раз'' (once
+    more), ''ще один'' (one more)'
+  - 'яблуко (apple) — collocations: ''червоне яблуко'' (red apple), ''їсти яблуко'';
+    medium frequency'
+  - 'Європа (Europe) — collocations: ''жити в Європі'', ''Західна Європа''; high cultural
+    frequency'
+  - 'їжа (food) — collocations: ''смачна їжа'' (tasty food), ''домашня їжа'' (home food);
+    core daily vocabulary'
+  - 'день (day) — collocations: ''добрий день'' (good day), ''кожен день'' (every day);
+    top 50 word'
+  - 'сім''я (family) — collocations: ''моя сім''я'' (my family), ''велика сім''я'';
+    demonstrates apostrophe usage'
+  - 'Львів (Lviv) — usage: demonstrates soft sign; collocations: ''їхати до Львова'',
+    ''у Львові'''
+  recommended:
+  - 'щастя (happiness) — demonstrates Щ; collocations: ''бажаю щастя'' (I wish happiness)'
+  - 'юнак (young man) — demonstrates Ю at word start; iotated vowel example'
+  - 'м''ясо (meat) — demonstrates apostrophe; collocations: ''свіже м''ясо'' (fresh meat)'
+  - 'сіль (salt) — demonstrates soft sign; collocations: ''морська сіль'' (sea salt)'
+activity_hints:
+- type: watch-and-repeat
+  focus: Pronunciation of 11 new characters (Ц, Ч, Ш, Щ, Й, Ю, Я, Є, Ї, Ь, apostrophe)
+  items: 11
+- type: classify
+  focus: Sort into sibilants vs iotated vowels vs modifiers
+  items: 12
+- type: image-to-letter
+  focus: Emoji and image identification for new letters
+  items: 8
+- type: quiz
+  focus: Full alphabet recognition test
+  items: 25
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-03 (The Cyrillic Code III)
+connects_to:
+- a1-05 (Syllables and Transfer)
+objectives:
+- Learner can recognize and pronounce all 33 Ukrainian letters
+- Learner can distinguish sibilants Ш (hard) from Щ (soft)
+- Learner can understand the function of the soft sign (Ь) and apostrophe
+- Learner can read the complete Ukrainian alphabet fluently
+grammar:
+- Sibilant consonants (Ц, Ч, Ш, Щ)
+- Iotated vowels (Ю, Я, Є, Ї)
+- Soft sign palatalization
+- Apostrophe function
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Typography Artist
+word_target: 2000

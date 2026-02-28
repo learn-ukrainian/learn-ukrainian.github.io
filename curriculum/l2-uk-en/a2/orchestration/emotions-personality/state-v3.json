@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T21:30:21Z",
-      "task_id": "v3-emotions-personality-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T21:36:26Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T21:39:05Z",
-      "task_id": "v3-emotions-personality-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:18:42Z",
-      "attempts": 1
+      "ts": "2026-02-28T02:46:46Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

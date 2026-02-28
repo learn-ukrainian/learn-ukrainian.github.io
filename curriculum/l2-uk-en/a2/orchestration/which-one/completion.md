@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 32 — E2E
+PASS: pipeline a2 37
 
   Module:   which-one
   Track:    a2
-  Mode:     e2e
+  Mode:     v3
   Words:    3518 (target: 3000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-23T03:10:29Z
+  Date:     2026-02-28T02:44:54Z

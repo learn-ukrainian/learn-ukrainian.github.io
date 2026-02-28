@@ -2,14 +2,14 @@
   "module": "reflexive-verbs",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-26T01:06:32.046130Z",
+  "last_audit": "2026-02-28T03:30:11.689886Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T01:00:40.174366Z",
+    "md": "2026-02-26T11:21:03.187218Z",
     "meta": "2026-02-19T17:50:24.955428Z",
     "activities": "2026-02-20T22:18:41.347960Z",
-    "vocabulary": "2026-02-22T18:40:43.334788Z",
-    "plan": "2026-02-20T20:39:34.937381Z",
+    "vocabulary": "2026-02-26T10:56:53.939381Z",
+    "plan": "2026-02-28T03:02:37.309256Z",
     "research": "2026-02-19T17:50:24.947357Z"
   },
   "gates": {
@@ -19,29 +19,24 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2767/2000 (raw: 3423)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2764/2000 (raw: 3420) | immersion: 22.5% LOW (target 25-40% (M17))"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "23/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 7,
-    "fail_count": 0,
-    "deferred_count": 0
+    "pass_count": 2,
+    "fail_count": 1,
+    "deferred_count": 3
   }
 }

@@ -1,7 +1,7 @@
-# Audit Report: M20 — motion-approaching-departing.md
-**Level:** B1 | **Module:** M20 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M22 — motion-approaching-departing.md
+**Level:** B1 | **Module:** M22 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-25 10:43:07
+**Generated:** 2026-02-28 09:40:30
 
 ## Configuration
 **Type:** B1-grammar
@@ -48,11 +48,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 96.4% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 96.4% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ❌ 75% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

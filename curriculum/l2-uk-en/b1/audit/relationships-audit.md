@@ -1,7 +1,7 @@
-# Audit Report: M65 — relationships.md
-**Level:** B1 | **Module:** M65 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:46:27
+# Audit Report: M76 — relationships.md
+**Level:** B1 | **Module:** M76 | **Phase:** B1.6 | **Pedagogy:** PPP | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:50:06
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,21 +16,66 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: терміни та їхні значення | 10 | 8 | ✅ |
+| 2 | fill-in | Вставте пропущені слова | 8 | 8 | ✅ |
+| 3 | error-correction | Виправте помилки: Русизми та семантика | 6 | 6 | ✅ |
+| 4 | unjumble | Складіть речення: Життєві ситуації | 7 | 6 | ✅ |
+| 5 | quiz | Перевірка знань: Соціальна термінологія | 8 | 8 | ✅ |
+| 6 | mark-the-words | Знайдіть типи зв'язків | 6 | 6 | ✅ |
+| 7 | cloze | Заповніть пропуски: Великий тест | 14 | 12 | ✅ |
+| 8 | match-up | Знайдіть пару: сталі лексичні комбінації | 10 | 8 | ✅ |
+| 9 | fill-in | Вставте пропущені слова в історії | 8 | 8 | ✅ |
+| 10 | quiz | Перевірка нюансів: Любити чи Кохати? | 8 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 7 (minimum: 4) ✅
+- Priority types used: 3/4 (mark-the-words, match-up, quiz) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть пару: терміни та їхні значення' has 10 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Життєві ситуації' item 1 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Життєві ситуації' item 2 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Життєві ситуації' item 3 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Життєві ситуації' item 4 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Життєві ситуації' item 5 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Життєві ситуації' item 6 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Життєві ситуації' item 7 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY]** match-up 'Знайдіть пару: сталі лексичні комбінації' has 10 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 9 violations (significant)
+
 ## Gates
 - **Words:** ✅ 6005/4000 (raw: 6457)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 7/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 99.9% (target 85-100% (B1.5-6 Vocab))
+- **Pedagogy:** ❌ 9 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

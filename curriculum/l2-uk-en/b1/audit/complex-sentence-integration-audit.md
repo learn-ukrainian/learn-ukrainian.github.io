@@ -1,7 +1,7 @@
-# Audit Report: M38 — complex-sentence-integration.md
-**Level:** B1 | **Module:** M38 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:44:37
+# Audit Report: M41 — complex-sentence-integration.md
+**Level:** B1 | **Module:** M41 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:41:34
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,55 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Оберіть правильний сполучник | 8 | 8 | ✅ |
+| 2 | fill-in | Вставте правильну форму слова який | 8 | 8 | ✅ |
+| 3 | error-correction | Виправте граматичні помилки | 6 | 6 | ✅ |
+| 4 | error-correction | Виправте стилістичні помилки | 6 | 6 | ✅ |
+| 5 | unjumble | Побудуйте багатокомпонентне речення | 6 | 6 | ✅ |
+| 6 | unjumble | Складіть речення з правильним порядком слів | 6 | 6 | ✅ |
+| 7 | quiz | Перевірка теоретичних знань | 8 | 8 | ✅ |
+| 8 | match-up | Знайдіть логічну пару | 8 | 8 | ✅ |
+| 9 | mark-the-words | Знайдіть усі сполучники та відносні займенники | 6 | 6 | ✅ |
+| 10 | cloze | Заповніть пропуски в тексті | 14 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 2/2 (error-correction, fill-in) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте багатокомпонентне речення' item 1 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте багатокомпонентне речення' item 4 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте багатокомпонентне речення' item 5 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY]** match-up 'Знайдіть логічну пару' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 4 violations (moderate)
+
 ## Gates
 - **Words:** ✅ 4523/4000 (raw: 4835)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 7/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 4 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.6% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

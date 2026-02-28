@@ -17,10 +17,18 @@ SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Encouraging Cultural Guide
 PERSONA_ROLE: Manuscript Proofreader
-IMMERSION_RULE: 'TARGET: 50-60% Ukrainian, 40-50% English. Grammar theory in English,
-  dialogues and examples in Ukrainian. Section intros can mix languages. Ukrainian
-  sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses
-  only (який/що/коли). Aspect pairs introduced. No participles.'
+IMMERSION_RULE: 'TARGET: 50-60% Ukrainian, 40-50% English. APPROACH: Write ALL content
+  in Ukrainian first — every paragraph, every explanation, every example. Then add
+  English translation paragraphs after Ukrainian paragraphs where needed for grammar
+  theory, to bring the balance to 50-60% Ukrainian / 40-50% English. CRITICAL: NEVER
+  mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English.
+  Ukrainian paragraph first, then English translation paragraph below it. Never ''Pronouns
+  in the Dative case відкривають...''. COMPLEXITY: A2 register ONLY. Concrete everyday
+  vocabulary (їсти, ходити, купувати, подобатися). NO literary/poetic language. NO
+  abstract nouns (почуття, відчуття, стан, сутність). NO metaphors or figurative speech.
+  Write like a simple conversation, not an essay. Ukrainian sentences max 15 words.
+  Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли).
+  Aspect pairs introduced. No participles.'
 LEVEL_CONSTRAINTS: 'GRAMMAR RULES:
 
   - Max 15 words per Ukrainian sentence

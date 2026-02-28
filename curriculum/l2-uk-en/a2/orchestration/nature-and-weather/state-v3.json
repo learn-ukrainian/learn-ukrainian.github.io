@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T21:22:31Z",
-      "task_id": "v3-nature-and-weather-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T21:25:12Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T21:28:38Z",
-      "task_id": "v3-nature-and-weather-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:18:39Z",
-      "attempts": 1
+      "ts": "2026-02-28T02:46:41Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

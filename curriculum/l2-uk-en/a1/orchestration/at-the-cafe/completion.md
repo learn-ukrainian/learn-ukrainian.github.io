@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 19 — E2E
+PASS: pipeline a1 41
 
   Module:   at-the-cafe
   Track:    a1
-  Mode:     e2e
-  Words:    3060 (target: 2000)
+  Mode:     v3
+  Words:    2997 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T23:27:14Z
+  Date:     2026-02-28T02:44:15Z

@@ -1,0 +1,87 @@
+module: a1-34
+level: A1
+sequence: 34
+slug: checkpoint-cases
+version: '2.0'
+title: 'Checkpoint: Cases'
+subtitle: Can You Handle the Cases?
+content_outline:
+- section: Огляд (Overview)
+  words: 300
+  points:
+  - 'Структура контрольної точки TTT: перевірка Знахідного, Місцевого та Родового
+    відмінків, прийменників, відмінювання прикметників та займенників.'
+  - 'Мета: виявлення прогалин у відмінковій системі перед переходом до A1.4. Фокус
+    на практичному застосуванні в комунікативних ситуаціях.'
+- section: 'Навичка 1: Відмінки (Skill 1: Cases)'
+  words: 500
+  points:
+  - 'Знахідний відмінок: неживий (= Називний для чол./серед., -у/-ю для жін.) та
+    живий (= Родовий для чол.). Вибір відмінка за питальним словом: Кого? Що?'
+  - 'Місцевий відмінок: в/у/на + Місцевий для місцезнаходження. Питання: Де? Родовий
+    відмінок: немає + Родовий для відсутності. Питання: Чого? Кого немає?'
+- section: 'Навичка 2: Прийменники (Skill 2: Prepositions)'
+  words: 400
+  points:
+  - 'Прийменники напрямку: в/у/на + Знахідний (Куди?). Прийменники місцезнаходження:
+    в/у/на + Місцевий (Де?). Контраст напрямок vs місце.'
+  - 'Інші прийменники зі Знахідним: за (for/behind), через (through/because of),
+    про (about). Відповідність прийменник-відмінок як система.'
+- section: 'Навичка 3: Узгодження (Skill 3: Agreement)'
+  words: 400
+  points:
+  - 'Прикметники у Знахідному та Місцевому: нову книгу (Зн. жін.), у новому місті
+    (Місц. чол./серед.), у новій книзі (Місц. жін.). Ланцюжки узгодження.'
+  - 'Відмінювання займенників: мене/мені/мені, тебе/тобі, його/нього. Правило
+    префікса н- після прийменників. Інтеграція з прикметниковими формами.'
+- section: Інтеграційне завдання (Integration Task)
+  words: 400
+  points:
+  - 'Навігаційний сценарій із використанням усіх відмінків, прийменників та узгодження:
+    опис маршруту, місцезнаходження об''єктів, запитання дороги.'
+  - 'Самооцінка відмінкової компетенції: виявлення найслабших відмінків для додаткового
+    опрацювання перед продовженням курсу.'
+vocabulary_hints:
+  required:
+  - де (where) — Де ти? Де кафе?; Location question
+  - куди (where to) — Куди ти йдеш? Куди їдеш?; Direction question
+  - звідки (from where) — Звідки ти? Звідки це?; Origin question
+  - немає (there is no) — Немає кави, немає часу; Genitive trigger
+  - новий (new) — новий/нову/новому/новій; Paradigm adjective
+  - великий (big) — великий/велику/великому/великій; Paradigm adjective
+  - мене (me) — бачить мене, для мене, у мене; Pronoun declension
+  - тебе (you) — знаю тебе, без тебе, у тебе; Pronoun declension
+  - його (him/his) — бачу його, у нього; н-prefix review
+  recommended:
+  - через (through) — через парк, через дощ; Acc preposition
+  - за (for) — дякую за, за годину; Acc preposition
+  - про (about) — книга про, думати про; Acc preposition
+  - красивий (beautiful) — красиву книгу, у красивому місті; Agreement practice
+  - маленький (small) — маленьку каву, у маленькому кафе; Agreement practice
+activity_hints:
+- type: quiz
+  focus: Comprehensive case and preposition test
+  items: 30
+focus: checkpoint
+pedagogy: TTT
+prerequisites:
+- a1-33 (Prepositions of Place)
+connects_to:
+- a1-35 (Direction and Origin)
+objectives:
+- Demonstrate correct case usage for Accusative, Locative, and Genitive
+- Select the correct preposition for direction, location, and other functions
+- Apply adjective and pronoun agreement in oblique cases
+- Navigate practical scenarios using integrated case knowledge
+grammar:
+- Accusative case (inanimate and animate)
+- Locative case (location)
+- Genitive case (absence)
+- Prepositions with Accusative and Locative
+- Adjective and pronoun declension in oblique cases
+register: розмовний
+phase: A1.3 [Cases & Navigation]
+persona:
+  voice: Patient Supportive Tutor
+  role: City Navigator
+word_target: 2000

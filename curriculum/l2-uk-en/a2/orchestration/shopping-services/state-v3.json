@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T22:22:40Z",
-      "task_id": "v3-shopping-services-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T22:26:03Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T22:28:34Z",
-      "task_id": "v3-shopping-services-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T15:58:31Z",
-      "attempts": 2
+      "ts": "2026-02-28T02:47:02Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

@@ -1,0 +1,106 @@
+module: a1-39
+level: A1
+sequence: 39
+slug: food-vocabulary
+version: '2.0'
+title: Food and Drink
+subtitle: What Shall We Eat?
+content_outline:
+- section: Їжа (Food)
+  words: 500
+  points:
+  - 'Basic food categories: хліб, м''ясо, риба, овочі, фрукти, каша, суп, борщ.
+    Organized by food group for memorization.'
+  - 'Gender of food nouns: masculine (хліб, суп, борщ, сир), feminine (каша, риба,
+    картопля), neuter (м''ясо, яблуко, молоко). Gender awareness for adjective agreement.'
+  - 'Collocations with adjectives: свіжий хліб, гаряча каша, смачний борщ, домашній
+    суп. Building natural-sounding food descriptions.'
+- section: Напої (Drinks)
+  words: 400
+  points:
+  - 'Common drinks vocabulary: вода, чай, кава, сік, молоко, компот. Gender and typical
+    modifiers: гаряча кава, холодна вода, апельсиновий сік.'
+  - 'Ordering pattern: Я хочу каву (Accusative). Будь ласка, чай з молоком. Building
+    on Accusative knowledge from earlier modules.'
+  - 'Cultural note: Ukrainian tea culture (чай з медом, чай з лимоном) vs coffee
+    culture (кава по-львівськи). Regional preferences across Ukraine.'
+- section: Паляниця (The Shibboleth Bread)
+  words: 300
+  points:
+  - 'Cultural sidebar: Паляниця — the round wheat bread that became a linguistic
+    shibboleth during 2022. The specific pronunciation of пал-я-ни-ця is difficult
+    for Russian speakers to reproduce.'
+  - 'Ukrainian bread traditions: хліб as sacred (never thrown away), the ''хліб-сіль''
+    (bread and salt) hospitality greeting. Connection to the proverb «Хліб — усьому
+    голова».'
+- section: Мені подобається / Я не їм (Preferences)
+  words: 400
+  points:
+  - 'Expressing food preferences: Мені подобається борщ (I like borscht). Я люблю
+    каву з молоком (I love coffee with milk). Review of подобатися + Dative construction.'
+  - 'Expressing dislikes and restrictions: Я не їм м''ясо (I don''t eat meat — vegetarian).
+    Я не п''ю каву (I don''t drink coffee). Negation with food verbs.'
+  - 'Allergies and dietary needs: У мене алергія на горіхи (I have an allergy to
+    nuts). Я не можу їсти глютен. Practical survival phrases for dietary restrictions.'
+- section: Практика (Practice)
+  words: 400
+  points:
+  - 'Food vocabulary drills: Categorization (їжа vs напої), gender sorting, adjective
+    matching. Building automatic recall of food terms.'
+  - 'Menu reading preview: Simple Ukrainian menu items. Recognizing food words in
+    authentic format with prices.'
+  - 'Preference dialogues: Що ти любиш їсти? Яка твоя улюблена їжа? Conversational
+    practice expressing food tastes.'
+vocabulary_hints:
+  required:
+  - хліб (bread) — свіжий хліб; sacred symbol, хліб-сіль tradition
+  - борщ (borscht) — смачний борщ; national dish, masculine gender
+  - м'ясо (meat) — neuter gender; Я не їм м'ясо (vegetarian phrase)
+  - овочі (vegetables) — plural noun; food category
+  - фрукти (fruits) — plural noun; food category
+  - вода (water) — холодна вода, пляшка води; high frequency
+  - кава (coffee) — кава з молоком; feminine gender
+  - чай (tea) — чай з лимоном; masculine gender
+  - молоко (milk) — neuter gender; кава з молоком
+  - сік (juice) — апельсиновий сік; masculine gender
+  - суп (soup) — їсти суп (eat, not drink); masculine gender
+  recommended:
+  - паляниця (palianytsia) — cultural shibboleth; round wheat bread
+  - каша (porridge) — гаряча каша; feminine gender, traditional breakfast
+  - компот (compote) — traditional Ukrainian drink; masculine gender
+  - риба (fish) — feminine gender; food category
+  - сир (cheese) — masculine gender; not to confuse with Russian сыр
+activity_hints:
+- type: match-up
+  focus: Match food word to its category (їжа vs напої)
+  items: 12
+- type: quiz
+  focus: Food preference expressions and correct forms
+  items: 10
+- type: fill-in
+  focus: Complete food dialogue with correct vocabulary
+  items: 8
+- type: group-sort
+  focus: Sort items into їжа vs напої categories
+  items: 12
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-38 (My Daily Routine)
+connects_to:
+- a1-40 (Shopping and Market)
+objectives:
+- Name common foods and drinks in Ukrainian
+- Express food preferences and dislikes
+- Understand the cultural significance of паляниця
+- Read a simple menu
+grammar:
+- Food noun gender
+- Я не їм construction
+- Food collocations with adjectives
+register: розмовний
+phase: A1.4 [Tenses & Daily Life]
+persona:
+  voice: Patient Supportive Tutor
+  role: Ukrainian Chef
+word_target: 2000

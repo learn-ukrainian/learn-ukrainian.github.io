@@ -222,6 +222,12 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
   | **ABRUPT_END** | No celebration of progress | Module just stops | Add "You can
   now..." summary |
 
+  | **WORD_SALAD** | Sentences randomly mix Ukrainian and English within the same
+  clause, or a paragraph strings together unrelated ideas with no logical thread |
+  "Україна — цифровізована країна (digital). Касири говорять швидко (fast). Це суперсила
+  (superpower)." — three disconnected claims stitched together | Rewrite paragraph
+  with one clear point; each sentence in one primary language |
+
 
   ### A+ Beginner Lesson Checklist
 
@@ -288,7 +294,7 @@ TIER_GUIDANCE: '# Tier 1: Beginner Levels (A1/A2)
 
   - Short sentences
 
-  - Clear pronunciation guidance (IPA)
+  - Clear pronunciation guidance (stress marks)
 
   - Consistent grammar patterns (no exceptions early)
 
@@ -471,6 +477,49 @@ D1_OUTPUT_FORMAT: '## Output Format
   separate step if needed.
 
 
+  ### Output Block 0: Citation Bank (BEFORE the review)
+
+
+  **MANDATORY** — Build this FIRST by reading files with Read tool and copy-pasting
+  exact quotes.
+
+  Each citation must be verified with Grep before adding to the bank.
+
+  Use `「...」` (CJK corner brackets) for ALL Ukrainian citations — NOT `«»` (those
+  appear inside Ukrainian text and cause parsing collisions).
+
+
+  ```
+
+  ===CITATION_BANK_START===
+
+  1. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+
+  2. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+
+  3. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+
+  ...
+
+  ===CITATION_BANK_END===
+
+  ```
+
+
+  **Rules:**
+
+  - Every entry MUST be copy-pasted verbatim from Read tool output — zero rewording
+
+  - Verify each with Grep before adding: `Grep pattern="first 5 words" path="{CONTENT_PATH}"`
+
+  - If Grep returns no match, you paraphrased — delete and re-copy
+
+  - Minimum 8 citations for modules >2000 words
+
+  - In the review body below, you may ONLY use `「」` citations that appear in this
+  bank
+
+
   ### Output Block 1: Review
 
 
@@ -540,7 +589,7 @@ D1_OUTPUT_FORMAT: '## Output Format
 
   - **Location**: Line {N} / Section "{name}"
 
-  - **Original**: «{exact Ukrainian text verified via Grep}»
+  - **Original**: 「{exact Ukrainian text from Citation Bank}」
 
   - **Problem**: {why it''s wrong}
 
@@ -557,7 +606,7 @@ D1_OUTPUT_FORMAT: '## Output Format
 
   |------|---------|-----------|------|
 
-  | {N} | «{original}» | «{fixed}» | Russianisms / Calque / Scope / Grammar |
+  | {N} | 「{original}」 | 「{fixed}」 | Russianisms / Calque / Scope / Grammar |
 
 
   ## Beginner Safety Audit
@@ -588,7 +637,7 @@ D1_OUTPUT_FORMAT: '## Output Format
 
   **What to fix:**
 
-  1. Line {N}: Change «{current}» -> «{replacement}» — {why}
+  1. Line {N}: Change 「{current}」 -> 「{replacement}」 — {why}
 
   2. Section "{name}": {action} — {impact}
 
@@ -638,9 +687,7 @@ D1_OUTPUT_FORMAT: '## Output Format
 
   - Ukrainian sentences verified: {X}
 
-  - IPA transcriptions checked: {X}
-
-  - Factual claims verified: {X}
+  - Citations in bank: {X}
 
   - Issues found: {X}
 
@@ -689,10 +736,17 @@ D1_OUTPUT_FORMAT: '## Output Format
   ## CRITICAL: Output Format Reminder
 
 
-  Your output MUST start with `===REVIEW_START===` and end with `===REVIEW_END===`.
-  The extraction pipeline uses these exact delimiters. Any output without these delimiters
-  is **automatically discarded** and the entire phase fails. Do not write a summary
-  or conversational response — output the structured review inside the delimiters.
+  **CITATION RULE (LAST REMINDER):** Every `「」`-quoted Ukrainian text in your review
+  MUST appear verbatim in the source files. If you cannot find it with Grep, do NOT
+  cite it — you are hallucinating. Use your Citation Bank as the single source of
+  verified quotes.
+
+
+  Your output MUST contain `===CITATION_BANK_START===` / `===CITATION_BANK_END===`
+  BEFORE `===REVIEW_START===` / `===REVIEW_END===`. The extraction pipeline uses these
+  exact delimiters. Any output without these delimiters is **automatically discarded**
+  and the entire phase fails. Do not write a summary or conversational response —
+  output the citation bank, then the structured review inside the delimiters.
 
   '
 SCORING_SECTION: "### STEP 4: Score 7 Dimensions\n\n| # | Dimension | Weight | Auto-fail\

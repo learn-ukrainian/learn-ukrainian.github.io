@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-24T20:02:10Z",
       "task_id": "v3-adverbial-participles-imperfective-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:44:53Z",
-      "attempts": 1
     }
   }
 }

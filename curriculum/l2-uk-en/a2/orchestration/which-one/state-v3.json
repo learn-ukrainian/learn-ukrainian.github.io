@@ -5,29 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T02:56:54Z",
-      "task_id": "v3-which-one-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T02:59:03Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T03:01:36Z",
-      "task_id": "v3-which-one-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-23T03:05:38Z",
-      "attempts": 2
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-23T03:10:29Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T02:44:54Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

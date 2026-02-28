@@ -2,13 +2,13 @@
   "module": "the-instrumental-i-accompaniment",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:17:19.274919Z",
+  "last_audit": "2026-02-28T03:34:21.203905Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-21T08:41:35.302413Z",
     "meta": "2026-02-20T02:51:50.717121Z",
     "activities": "2026-02-21T08:40:24.500669Z",
-    "vocabulary": "2026-02-22T18:45:36.789573Z",
+    "vocabulary": "2026-02-26T10:56:38.104509Z",
     "plan": "2026-02-20T20:59:25.034782Z",
     "research": "2026-02-20T02:51:50.713692Z"
   },
@@ -38,27 +38,22 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

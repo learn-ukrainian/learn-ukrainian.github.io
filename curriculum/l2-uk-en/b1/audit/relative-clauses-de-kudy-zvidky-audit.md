@@ -1,7 +1,7 @@
-# Audit Report: M27 — relative-clauses-de-kudy-zvidky.md
-**Level:** B1 | **Module:** M27 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:43:42
+# Audit Report: M30 — relative-clauses-de-kudy-zvidky.md
+**Level:** B1 | **Module:** M30 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:40:57
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,49 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Оберіть правильне слово | 8 | 8 | ✅ |
+| 2 | unjumble | Складіть речення | 7 | 6 | ✅ |
+| 3 | error-correction | Виправте помилки калькування | 7 | 6 | ✅ |
+| 4 | match-up | Знайдіть пару: Вказівні слова | 12 | 8 | ✅ |
+| 5 | group-sort | Розподіліть дієслова за векторами | 12 | 6 | ✅ |
+| 6 | quiz | Перевірка просторової граматики | 8 | 8 | ✅ |
+| 7 | select | Оберіть усі правильні варіанти | 6 | 6 | ✅ |
+| 8 | true-false | Правда чи Брехня: Правила та факти | 8 | 8 | ✅ |
+| 9 | cloze | Заповніть пропуски в тексті | 14 | 6 | ✅ |
+| 10 | translate | Перекладіть українською | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 10 (minimum: 3) ✅
+- Priority types used: 4/7 (error-correction, fill-in, match-up, quiz) ✅
+- Required types used: 4/4 (error-correction, fill-in, match-up, translate) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in relative-clauses-de-kudy-zvidky.yaml: Schema validation error at key '9': {'type': 'translate', 'title': 'Перекладіть українською', 'instruction': 'Оберіть правильний переклад речення українською мовою.', 'items': [{'source': 'This is the old house where I lived.', 'options': [{'text': 'Це старий будинок, де я жив.', 'correct': True}, {'text': 'Це старий будинок, куди я жив.', 'correct': False}]}, {'source': 'Show me the road where we need to go.', 'options': [{'text': 'Покажи мені дорогу, куди нам потрібно йти.', 'correct': True}, {'text': 'Покажи мені дорогу, де нам потрібно йти.', 'correct': False}]}, {'source': 'The city where he comes from is very beautiful.', 'options': [{'text': 'Місто, звідки він походить, дуже гарне.', 'correct': True}, {'text': 'Місто, куди він походить, дуже гарне.', 'correct': False}]}, {'source': 'We will go where you want to go.', 'options': [{'text': 'Ми поїдемо туди, куди ти хочеш поїхати.', 'correct': True}, {'text': 'Ми поїдемо там, де ти хочеш поїхати.', 'correct': False}]}, {'source': 'It is good there, where we are not.', 'options': [{'text': 'Добре там, де нас немає.', 'correct': True}, {'text': 'Добре туди, куди нас немає.', 'correct': False}]}, {'source': 'He put his keys somewhere in the room.', 'options': [{'text': 'Він поклав ключі десь у кімнаті.', 'correct': True}, {'text': 'Він поклав ключі кудись у кімнаті.', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activities-base.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 7430/4000 (raw: 7799)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 10/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.7% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 97% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

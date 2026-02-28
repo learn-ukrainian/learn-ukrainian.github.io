@@ -2,14 +2,14 @@
   "module": "ukrainska-istoriohrafichna-tradytsiia",
   "level": "C1",
   "plan_version": "1.0",
-  "last_audit": "2026-02-23T17:36:29.737119Z",
+  "last_audit": "2026-02-28T01:29:35.151897Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-23T15:03:12.783299Z",
     "meta": "2026-02-23T15:03:12.782410Z",
     "activities": "2026-02-23T17:26:28.371661Z",
-    "vocabulary": "2026-02-23T16:14:48.304717Z",
-    "plan": "2026-02-17T13:37:38.140390Z",
+    "vocabulary": "2026-02-26T10:56:38.200733Z",
+    "plan": "2026-02-27T20:42:34.542046Z",
     "research": "2026-02-22T10:35:24.583605Z"
   },
   "gates": {
@@ -19,14 +19,14 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "6522/5000 (raw: 7005)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6522/5000 (raw: 7005) | pedagogy: 1 violations"
     },
     "activities": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5/3"
+      "status": "fail",
+      "violations": 1,
+      "message": "5/3 | density: 1 < 1"
     },
     "vocabulary": {
       "status": "pass",
@@ -38,29 +38,22 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "fail",
-      "violations": 1,
-      "message": "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
+      "status": "skipped",
+      "violations": 0,
+      "message": ""
     }
   },
   "overall": {
     "status": "fail",
-    "blocking_issues": [
-      "Review concludes with **Status:** FAIL \u2014 the reviewer identified issues that need to be fixed before the module can pass. Run Phase D.2 repair or rebuild the module."
-    ],
-    "pass_count": 6,
-    "fail_count": 1,
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 2,
     "deferred_count": 0
   }
 }

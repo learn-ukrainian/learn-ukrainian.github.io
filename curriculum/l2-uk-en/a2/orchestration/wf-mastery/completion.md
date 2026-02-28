@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 43 — E2E
+PASS: pipeline a2 48
 
   Module:   wf-mastery
   Track:    a2
-  Mode:     e2e
+  Mode:     v3
   Words:    3987 (target: 3000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-24T20:18:23Z
+  Date:     2026-02-28T02:46:27Z

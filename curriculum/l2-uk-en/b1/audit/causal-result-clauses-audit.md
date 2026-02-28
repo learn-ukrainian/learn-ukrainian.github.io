@@ -1,7 +1,7 @@
-# Audit Report: M36 — causal-result-clauses.md
-**Level:** B1 | **Module:** M36 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:44:27
+# Audit Report: M39 — causal-result-clauses.md
+**Level:** B1 | **Module:** M39 | **Phase:** B1.3b | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:41:27
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,61 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Заповніть пропуски сполучниками | 12 | 8 | ✅ |
+| 2 | error-correction | Виправте логічні та орфографічні помилки | 12 | 6 | ✅ |
+| 3 | unjumble | Складіть причинові речення | 10 | 6 | ✅ |
+| 4 | quiz | Оберіть правильний сполучник | 10 | 8 | ✅ |
+| 5 | cloze | Відновіть текст про дослідження | 14 | 6 | ✅ |
+| 6 | match-up | З'єднайте причину та наслідок | 12 | 8 | ✅ |
+| 7 | mark-the-words | Знайдіть логічні зв'язки в тексті | 6 | 6 | ✅ |
+| 8 | fill-in | Перетворіть причину на наслідок | 12 | 8 | ✅ |
+| 9 | error-correction | Замініть пасивний стан на активний | 8 | 6 | ✅ |
+| 10 | quiz | Стилістика та логіка мовлення | 10 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 2/3 (error-correction, fill-in) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть причинові речення' item 2 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть причинові речення' item 3 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть причинові речення' item 4 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть причинові речення' item 5 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть причинові речення' item 6 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть причинові речення' item 9 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 7 violations (significant)
+
 ## Gates
 - **Words:** ✅ 4144/4000 (raw: 4733)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 7/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 6 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

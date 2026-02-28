@@ -1,8 +1,8 @@
-# Audit Report: M32 — my-family.md
-**Level:** A1 | **Module:** M32 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M49 — my-family.md
+**Level:** A1 | **Module:** M49 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 2000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:22
+**Generated:** 2026-02-28 03:49:02
 
 ## Configuration
 **Type:** A1-vocab
@@ -39,7 +39,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 3278/2000 (raw: 3610)
+- **Words:** ✅ 3259/2000 (raw: 3591)
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 5/4 types
@@ -48,11 +48,10 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 35.6% (target 35-55% (M32))
+- **Immersion:** 🇺🇦 35.6% (target 35-55% (M49))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
 - **Research:** ✅ Content aligned with research
@@ -63,8 +62,8 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **My Family (Моя сім'я)** | ✅ | 115 | Included in Core |
 | **Розминка: Члени сім'ї (Warm-up: Family Members)** | ✅ | 591 | Included in Core |
-| **Близька та розширена родина (Close and Extended Family)** | ✅ | 620 | Included in Core |
-| **Опис родини: Вік та характер (Describing Family: Age & Character)** | ✅ | 552 | Included in Core |
+| **Близька та розширена родина (Close and Extended Family)** | ✅ | 617 | Included in Core |
+| **Опис родини: Вік та характер (Describing Family: Age & Character)** | ✅ | 536 | Included in Core |
 | **Практика: Моя сім'я (Practice: My Family)** | ✅ | 482 | Included in Core |
 | **Діалоги та фотоальбом** | ✅ | 607 | Included in Core |
 | **Підсумок: Розповідь про себе (Summary)** | ✅ | 311 | Included in Core |

@@ -1,7 +1,7 @@
-# Audit Report: M56 — discourse-markers-basic.md
-**Level:** B1 | **Module:** M56 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
+# Audit Report: M67 — discourse-markers-basic.md
+**Level:** B1 | **Module:** M67 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:45:54
+**Generated:** 2026-02-28 09:49:42
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,21 +16,41 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: маркер та його значення | 12 | 8 | ✅ |
+| 2 | quiz | Перевірте свої знання про дискурсивні маркери | 12 | 8 | ✅ |
+| 3 | fill-in | Вставте пропущені конектори | 12 | 8 | ✅ |
+| 4 | unjumble | Побудуйте речення з маркерами | 12 | 6 | ✅ |
+| 5 | error-correction | Виправте пунктуаційні та лексичні помилки | 12 | 6 | ✅ |
+| 6 | mark-the-words | Знайдіть усі дискурсивні маркери | 12 | 6 | ✅ |
+| 7 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 8 | select | Оберіть правильні маркери для різних ситуацій | 8 | 6 | ✅ |
+| 9 | true-false | Правда чи хиба: правила використання конекторів | 12 | 8 | ✅ |
+| 10 | group-sort | Розподіліть маркери за їхньою функцією | 16 | 12 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/4 (mark-the-words, match-up, quiz) ✅
+- Required types used: 2/2 (error-correction, fill-in) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4903/4000 (raw: 5275)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 99.9% (target 85-100% (B1.5-6 Vocab))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 99.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

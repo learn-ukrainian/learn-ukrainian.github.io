@@ -5,29 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T21:03:36Z",
-      "task_id": "v3-aspect-introduction-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-22T21:05:09Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-22T21:07:44Z",
-      "task_id": "v3-aspect-introduction-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-22T21:12:44Z",
-      "attempts": 2
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T21:17:07Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T02:37:45Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

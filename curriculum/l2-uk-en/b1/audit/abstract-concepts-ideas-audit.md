@@ -1,7 +1,7 @@
-# Audit Report: M52 — abstract-concepts-ideas.md
-**Level:** B1 | **Module:** M52 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
+# Audit Report: M63 — abstract-concepts-ideas.md
+**Level:** B1 | **Module:** M63 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:45:39
+**Generated:** 2026-02-28 09:49:31
 
 ## Configuration
 **Type:** B1-vocab
@@ -37,6 +37,15 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4176/4000 (raw: 4760)
 - **Activities:** ✅ 10/8
@@ -47,7 +56,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⚠️ 30 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

@@ -1,7 +1,7 @@
-# Audit Report: M91 — feedback-negotiation-complaints.md
-**Level:** B1 | **Module:** M91 | **Phase:** B1.9 | **Pedagogy:** PPP | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 18:48:20
+# Audit Report: M99 — feedback-negotiation-complaints.md
+**Level:** B1 | **Module:** M99 | **Phase:** B1.9 | **Pedagogy:** PPP | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:53:42
 
 ## Configuration
 **Type:** B1-skills
@@ -16,20 +16,63 @@
 **Vocab Target:** ≥15 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Лексика: Знайдіть пару | 12 | 8 | ✅ |
+| 2 | true-false | Правда чи неправда: Правила спілкування | 8 | 8 | ✅ |
+| 3 | fill-in | Доповніть речення правильними словами | 8 | 8 | ✅ |
+| 4 | quiz | Оберіть правильний варіант | 8 | 8 | ✅ |
+| 5 | unjumble | Складіть речення: Ввічливі прохання та поради | 8 | 6 | ✅ |
+| 6 | error-correction | Виправте типові помилки | 8 | 6 | ✅ |
+| 7 | mark-the-words | Знайдіть ключові іменники | 6 | 6 | ✅ |
+| 8 | cloze | Заповніть пропуски: Структура формальної скарги | 14 | 12 | ✅ |
+| 9 | select | Оберіть усі правильні варіанти: Ввічлива комунікація | 6 | 6 | ✅ |
+| 10 | translate | Перекладіть англійські фрази українською | 8 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 10-14) ✅
+- Unique types: 10 (minimum: 4) ✅
+- Priority types used: 3/3 (cloze, fill-in, mark-the-words) ✅
+- Required types used: 4/4 (error-correction, fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Ввічливі прохання та поради' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Ввічливі прохання та поради' item 2 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Ввічливі прохання та поради' item 3 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Ввічливі прохання та поради' item 4 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Ввічливі прохання та поради' item 5 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Ввічливі прохання та поради' item 6 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Ввічливі прохання та поради' item 7 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення: Ввічливі прохання та поради' item 8 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 8 violations (significant)
+
 ## Gates
 - **Words:** ✅ 7044/4000 (raw: 7602)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/10
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/15
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 8 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

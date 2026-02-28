@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T20:52:10Z",
-      "task_id": "v3-wf-mastery-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T20:54:05Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T20:56:20Z",
-      "task_id": "v3-wf-mastery-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:18:23Z",
-      "attempts": 1
+      "ts": "2026-02-28T02:46:27Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

@@ -1,7 +1,7 @@
-# Audit Report: M26 — relative-clauses-yakyi.md
-**Level:** B1 | **Module:** M26 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:43:36
+# Audit Report: M29 — relative-clauses-yakyi.md
+**Level:** B1 | **Module:** M29 | **Phase:** B1.3a | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:40:53
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,52 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Оберіть правильну форму займенника | 8 | 8 | ✅ |
+| 2 | error-correction | Виправте граматичні помилки | 6 | 6 | ✅ |
+| 3 | unjumble | Складіть речення | 6 | 6 | ✅ |
+| 4 | quiz | Теоретичний тест: Правила узгодження | 8 | 8 | ✅ |
+| 5 | match-up | Знайдіть логічну пару | 8 | 8 | ✅ |
+| 6 | true-false | Правда чи хиба? | 8 | 8 | ✅ |
+| 7 | cloze | Заповніть пропуски в тексті | 14 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть форми займенника | 5 | 6 | ❌ |
+| 9 | select | Оберіть правильні форми | 6 | 6 | ✅ |
+| 10 | group-sort | Логічні ролі та відмінки | 12 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 10 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 2/3 (error-correction, fill-in) ❌
+- Low density activities: 1
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть логічну пару' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** mark-the-words 'Знайдіть форми займенника' has 5 items (minimum: 6)
+  - FIX: Add more items. B1 mark-the-words requires at least 6 items.
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 2 violations (minor)
+- Activity density below minimum
+
 ## Gates
 - **Words:** ✅ 6339/4000 (raw: 6597)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ❌ 1 < 6
+- **Unique_types:** ✅ 10/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 2 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.5% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ⚠️ 95% (grammar) - 1 flags
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -60,6 +92,12 @@
 - ❌ **NO_TABLES**
   - FIX:
     Address this issue to improve richness score
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Знайдіть форми займенника | mark-the-words | 5 | 6 | Add 1 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

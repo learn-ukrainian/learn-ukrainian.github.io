@@ -1,100 +1,74 @@
-✅ Message sent to Gemini (ID: 9308)
-✓ Message 9308 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #9308...
-📨 Message #9308
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-the-cyrillic-code-i-pA
-   Time: 2026-02-20T07:46:27.121558+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/the-cyrillic-code-i/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
 # Дослідження: The Cyrillic Code I
 
 ## State Standard Reference
 §4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець."
-Alignment: Цей модуль знайомить з 19 літерами українського алфавіту, розрізняючи їх за графічною подібністю до латиниці ("Літери-друзі") та відмінністю звучання ("Літери-пастки").
+Alignment: This module precisely satisfies §4.1.1 by introducing the first 19 print letters of the Ukrainian alphabet, basic sound-letter correspondence, and State Standard prescribed proper nouns ('Україна', 'Олена', 'Київ').
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| так | High (Top 100) | так, будь ласка; так, звісно |
-| банк | High (Urban) | у банку, національний банк |
-| метро | High (Transport) | станція метро, у метро |
-| кафе | High (Daily) | у кафе, ідемо в кафе |
-| мама | Core (Family) | моя мама, люблю маму |
-| кіт | Core (Animals) | мій кіт, чорний кіт |
+| так | Top 100 | так, будь ласка; так, звісно |
+| банк | High frequency urban | у банку, національний банк |
+| метро | High frequency transport | станція метро, у метро |
+| кафе | Daily frequency | у кафе, ідемо в кафе |
+| кіт | Core family/pet | мій кіт, чорний кіт |
+| мама | Core family | моя мама, люблю маму |
 
 ## Cultural Hooks
-1. **Saint Cyril**: The alphabet is named after him, but he likely created the Glagolitic script. The Cyrillic script was developed by his students (e.g., Clement of Ohrid) in the First Bulgarian Empire.
-2. **The Letter «І»**: A symbol of Ukrainian identity. Unlike Russian, which relies on «И», Ukrainian uses the "dotted I" (as in Latin/European scripts), visually linking it to Europe.
-3. **The Letter «Ґ»**: Mentioning it as a "repressed letter" (removed in 1933, restored in 1990) adds depth, though it's not a focus letter for this specific module (focus is on common letters first).
+1. The Cyrillic alphabet is named after St. Cyril (9th c.), but he likely created the Glagolitic script. Cyrillic was actually developed and refined by his students, like Clement of Ohrid, in the First Bulgarian Empire.
+2. The letter "І": The dotted "І" acts as a strong visual symbol of Ukrainian identity, connecting it to Latin/European typographic traditions and serving as a distinct marker of the Ukrainian language.
 
 ## Common Learner Errors
-1. **The "P" Trap**: Reading Cyrillic «Р» as English /p/ instead of rolled /r/. (Mnemonic: A roaring engine or purring cat).
-2. **The "H" Trap**: Reading Cyrillic «Н» as English /h/ instead of /n/. (Mnemonic: N for Hen).
-3. **The "B" Trap**: Reading Cyrillic «В» as English /b/ instead of /v/. (Mnemonic: V for Vehicle).
-4. **The "C" Trap**: Reading Cyrillic «С» as /k/ instead of /s/. (Mnemonic: S for Snake/Sound).
+1. The "P" Trap (Cyrillic Р) → Pronouncing as English /p/ instead of a rolled /r/. Visual interference from the Latin script triggers an automatic reflex.
+2. The "H" Trap (Cyrillic Н) → Pronouncing as English /h/ instead of /n/ (like in "hen"). 
+3. The "C" Trap (Cyrillic С) → Reading it as /k/ depending on English spelling rules instead of a consistent /s/ (like in "snake").
 
 ## Cross-References
-- Builds on: None (First module).
-- Prepares for: a1-02 (The Cyrillic Code II) which covers the remaining letters (Ж, Ш, Щ, Ц, Ч, Ю, Я, Ї, Є, Г, Ґ).
+- Builds on: None (First Contact)
+- Prepares for: a1-02 (The Cyrillic Code II)
 
 ## Notes for Content Writing
-- **Immersion Policy**: A1.1 requires heavy English scaffolding. Explanations must be in English. Only examples and specific terms in Ukrainian.
-- **Visuals**: Strong need for visual mnemonics (House for Д, Legs for Л).
+- Decolonized Framing: Present Ukrainian as an independent, complete system. Explicitly state that letters like "ё", "ы", and "э" do NOT exist in Ukrainian, completely avoiding any "added/missing" comparisons that frame Ukrainian against Russian as a baseline. Celebrate the dotted "і" as a unique, European-aligned feature.
+- Scaffolding Requirement: Since this is A1 (10-50% immersion), use English extensively for all grammar and phonetic explanations to maintain a "Safe Harbor" learning environment.
+- IPA Usage: Provide IPA annotations ONLY on the first occurrence of new vocabulary words (e.g., /mɛˈtrɔ/). Do not transcribe full sentences.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Розминка: Чому кирилиця?"
-    words: 350
-    points:
-      - "Immersion Note: This module uses English for all explanations (A1 standard). Target immersion: ~20% (examples only)."
-      - "Cultural Hook: The alphabet is named after St. Cyril (9th c.), but he likely created Glagolitic. His students developed Cyrillic in the First Bulgarian Empire."
-      - "Anxiety reduction: Many letters are 'True Friends' that look and sound like English (Strategy: Cognates like 'таксі', 'піца', 'метро')."
-      - "The 'I' Identity: Brief intro to how Ukrainian retains 'І' (like Latin) alongside 'И', making it distinct from Russian."
-  - section: "Презентація: Літери-друзі та літери-пастки"
-    words: 650
-    points:
-      - "True Friends (А, Е, І, О, К, М, Т): Letters that look and sound the same. Examples: 'Мама', 'Кіт', 'Так'."
-      - "False Friends (В, Н, Р, С, Х): The 'Traps'. В = V (Vehicle), Н = N (Hen), Р = R (Purring/Roaring), С = S (Sound), Х = Kh."
-      - "New Letters (Б, Д, З, Л, П, Ф): Visual aids (Д is a house, Л is a pair of legs, Ф is hands on hips)."
-      - "Anti-Surzhyk: Explicitly state that 'ё', 'ы', 'э' do not exist in Ukrainian."
-      - "Mnemonics: Reinforce the 'Purring Cat' (Р) and 'Hen' (Н) visualizations."
-  - section: "Практика: Читаємо міжнародні слова"
+  - section: "Вступ"
     words: 400
     points:
-      - "Reading Drill: International words 'банк', 'метро', 'кафе', 'план', 'факт'."
-      - "Collocations: 'У банку', 'станція метро', 'ідемо в кафе', 'бізнес-план'."
-      - "Mini-dialogues: Using 'Так, будь ласка' and 'Так, звісно' in context (at a café or metro)."
-      - "Visual recognition: Spotting the difference between 'кафе' and 'кава' (coffee)."
-  - section: "Культурний контекст: Українська ідентичність літери «І»"
-    words: 300
+      - "Immersion Note: A1 target immersion is 10-50%. Explicitly list English scaffolding requirements for introducing the concept of the Cyrillic alphabet."
+      - "Provide the cultural hook: Cyrillic was named after St. Cyril but developed by his students in the First Bulgarian Empire."
+      - "Introduce the learning strategy of 'True Friends' vs 'False Friends' to reduce learner anxiety immediately."
+      - "Demonstrate familiar sounds via international cognates like 'таксі', 'піца', 'метро' to show the alphabet is partially cracked already."
+  - section: "Презентація"
+    words: 600
     points:
-      - "Why 'І' matters: It connects Ukrainian visually to European scripts, unlike Russian 'И'-only standard."
-      - "Visual distinction: The dotted 'і' makes Ukrainian text instantly recognizable."
-      - "Historical note: The 19th-century struggle for the Ukrainian alphabet and distinctness."
-      - "Pronunciation nuance: Contrast sharp 'І' vs deep 'И'."
-  - section: "Продукція: Ваші перші слова"
-    words: 300
+      - "True Friends (А, Е, І, О, К, М, Т): Give this category its own H3. Define each letter with 2+ Ukrainian examples and English translations."
+      - "False Friends (В, Н, Р, С): Give this its own H3. Explicitly explain the 'P' Trap, 'H' Trap, 'B' Trap, and 'C' Trap using clear visual mnemonics."
+      - "New Letters (Б, Д, З, Л, П, Ф): Give this its own H3. Provide visual aids (e.g., 'Д' looks like a little house, 'Л' has two walking legs)."
+      - "The Exclusion Rule: Explicitly state that Russian-only characters like 'ё', 'ы', 'э' do not exist in Ukrainian to establish linguistic boundaries."
+  - section: "Практика"
+    words: 400
     points:
-      - "Decoding Challenge: 'Це факт' (It's a fact) — combining False Friend 'С' and New Letter 'Ф'."
-      - "Pronunciation Lab: Focused drill on the 'P' Trap (rolled /r/) and 'B' Trap (voiced /v/)."
-      - "Review Checklist: Verify recognition of 19 letters (True + False + 6 New)."
-      - "Next Steps: Tease 'The Cyrillic Code II' for the remaining letters."
+      - "Create a decoding drill section for reading high-frequency urban words ('банк', 'метро', 'кафе')."
+      - "Include a collocation practice block introducing essential phrases like 'національний банк' and 'станція метро' for context."
+      - "Provide functional mini-dialogues using 'так, будь ласка' and 'так, звісно' to demonstrate immediate communicative utility."
+  - section: "Культурний контекст"
+    words: 400
+    points:
+      - "Give an H3 to 'The I Identity', explaining how the dotted 'І' serves as a visual symbol of Ukrainian identity and European connection."
+      - "Briefly tell the Story of Ґ: the repressed letter (removed in 1933, restored in 1990) as a compelling hook for linguistic resilience."
+      - "Incorporate State Standard §4.1.1 words: practice recognizing letters in national terms like 'Київ', 'Україна', and 'українець'."
+  - section: "Підсумок та продукція"
+    words: 200
+    points:
+      - "Include a pronunciation production drill contrasting the 'Purring Cat' rolled /r/ (Р) with the English /p/."
+      - "Provide a final decoding self-check using the phrase 'це факт' (it's a fact) to test both 'Ф' and 'Т' letter recognition."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -105,11 +79,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5179 chars)
-✅ Message sent to Claude (ID: 9309)
-✓ Message 9309 acknowledged
-   Auto-acknowledged reply #9309 (stdout delivery — no inbox accumulation)
-✓ Message 9308 acknowledged

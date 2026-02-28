@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py istorio 2 — E2E
+PASS: pipeline istorio 2
 
   Module:   ukrainska-istoriohrafichna-tradytsiia
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    7005 (target: 5000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-23T16:46:32Z
+  Verdict:  PASS
+  Date:     2026-02-28T00:29:35Z

@@ -2,14 +2,14 @@
   "module": "around-the-city",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:40:03.806765Z",
+  "last_audit": "2026-02-28T03:34:54.899255Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:41:37.183058Z",
+    "md": "2026-02-26T11:21:02.772299Z",
     "meta": "2026-02-19T23:05:13.518233Z",
     "activities": "2026-02-20T23:09:46.250061Z",
-    "vocabulary": "2026-02-22T18:40:32.851151Z",
-    "plan": "2026-02-20T20:40:36.034344Z",
+    "vocabulary": "2026-02-26T10:56:53.934965Z",
+    "plan": "2026-02-28T03:02:13.887345Z",
     "research": "2026-02-19T23:03:30.256032Z"
   },
   "gates": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2616/2000 (raw: 2997)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2612/2000 (raw: 2993) | immersion: 25.3% LOW (target 35-55% (M29))"
     },
     "activities": {
       "status": "pass",
@@ -29,19 +29,14 @@
       "message": "10/8"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "23/1"
+      "message": "0 < 1 (soft target)"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 7,
-    "fail_count": 0,
+    "pass_count": 3,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

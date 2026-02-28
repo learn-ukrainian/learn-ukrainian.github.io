@@ -1,6 +1,6 @@
-module: a1-08
+module: a1-16
 level: A1
-sequence: 8
+sequence: 16
 slug: the-living-verb-ii
 version: '2.0'
 title: The Living Verb II
@@ -92,10 +92,10 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- a1-06 (The Living Verb I)
-- a1-07 (Questions and Negation)
+- a1-15 (The Living Verb I)
+- a1-18 (Questions and Negation)
 connects_to:
-- a1-09 (Reflexive Verbs)
+- a1-17 (Reflexive Verbs)
 - a1-21 (Past Tense)
 objectives:
 - Learner can conjugate Second Conjugation verbs (-ити) in present tense
@@ -107,7 +107,7 @@ grammar:
 - Consonant mutation patterns
 - Irregular verbs
 register: розмовний
-phase: A1.1 [First Contact]
+phase: A1.2 [Verbs & Sentences]
 persona:
   voice: Patient Supportive Tutor
   role: Choreographer

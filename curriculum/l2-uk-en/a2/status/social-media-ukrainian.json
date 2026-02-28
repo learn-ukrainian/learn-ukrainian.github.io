@@ -2,13 +2,13 @@
   "module": "social-media-ukrainian",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:19:38.191232Z",
+  "last_audit": "2026-02-28T03:47:41.253250Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T20:12:07.302408Z",
     "meta": "2026-02-24T00:58:28.716251Z",
     "activities": "2026-02-24T01:09:13.491987Z",
-    "vocabulary": "2026-02-24T20:10:08.959137Z",
+    "vocabulary": "2026-02-26T10:56:38.098559Z",
     "plan": "2026-02-20T21:06:39.522911Z",
     "research": "2026-02-24T00:58:28.712681Z"
   },
@@ -24,24 +24,19 @@
       "message": "4136/3000 (raw: 4410)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "25/1"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -57,8 +52,8 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 3
+    "deferred_count": 1
   }
 }

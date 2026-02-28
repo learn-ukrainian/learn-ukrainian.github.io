@@ -1,7 +1,7 @@
-# Audit Report: M82 — mountains-trail.md
-**Level:** B1 | **Module:** M82 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 15:23:30
+# Audit Report: M90 — mountains-trail.md
+**Level:** B1 | **Module:** M90 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:50:52
 
 ## Configuration
 **Type:** B1-culture
@@ -16,20 +16,65 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: туристичні терміни | 10 | 8 | ✅ |
+| 2 | true-false | Правда чи брехня | 8 | 8 | ✅ |
+| 3 | fill-in | Оберіть правильне дієслово руху (йти чи ходити) | 8 | 8 | ✅ |
+| 4 | error-correction | Виправте мовні помилки (антисуржик) | 6 | 6 | ✅ |
+| 5 | quiz | Перевірте свої знання про культуру Карпат | 8 | 8 | ✅ |
+| 6 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 7 | fill-in | Правила милозвучності (у або в) | 8 | 8 | ✅ |
+| 8 | cloze | Підсумок: Підготовка до походу | 14 | 12 | ✅ |
+| 9 | mark-the-words | Знайдіть туристичне спорядження | 5 | 6 | ❌ |
+| 10 | group-sort | Розподіліть дієслова за типами руху | 8 | 12 | ❌ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/4 (fill-in, match-up, quiz) ✅
+- Required types used: 3/4 (fill-in, match-up, quiz) ❌
+- Low density activities: 2
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть пару: туристичні терміни' has 10 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 1 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 2 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 4 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 5 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть речення' item 6 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY]** mark-the-words 'Знайдіть туристичне спорядження' has 5 items (minimum: 6)
+  - FIX: Add more items. B1 mark-the-words requires at least 6 items.
+- **[COMPLEXITY]** group-sort 'Розподіліть дієслова за типами руху' has 8 items (target: 12-999)
+  - FIX: Adjust number of items to sort to 12-999.
+
+## Recommendation
+**📝 UPDATE** (severity 40/100)
+
+- Revision recommended (severity 40/100)
+- 8 violations (significant)
+- Activity density below minimum
+
 ## Gates
 - **Words:** ✅ 4061/4000 (raw: 4433)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ❌ 2 < 12
+- **Unique_types:** ✅ 9/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 8 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.5% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -52,6 +97,13 @@
 | realworld | 14 | - | 100% | 7% | 6.7% |
 | questions | 13 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **99.5%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Знайдіть туристичне спорядження | mark-the-words | 5 | 6 | Add 1 more items |
+| Розподіліть дієслова за типами руху | group-sort | 8 | 12 | Add 4 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 79 — E2E
+PASS: pipeline b1 87
 
   Module:   sports-in-ukraine
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    4725 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T14:00:40Z
+  Date:     2026-02-28T08:50:45Z

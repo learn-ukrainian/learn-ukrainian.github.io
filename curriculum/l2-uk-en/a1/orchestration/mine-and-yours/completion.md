@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 14 — E2E
+PASS: pipeline a1 20
 
   Module:   mine-and-yours
   Track:    a1
-  Mode:     e2e
-  Words:    3499 (target: 2000)
+  Mode:     v3
+  Words:    3485 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T21:27:43Z
+  Date:     2026-02-28T02:31:15Z

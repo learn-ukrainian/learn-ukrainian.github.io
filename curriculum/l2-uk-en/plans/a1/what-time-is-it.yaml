@@ -79,11 +79,11 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- a1-17 (Numbers and Money)
-- a1-22 (Tomorrow - Future Tense)
+- a1-22 (Numbers and Money)
+- a1-37 (Tomorrow - Future Tense)
 connects_to:
 - a1-24 (Can, Must, Want - Modals)
-- a1-25 (My Daily Routine)
+- a1-38 (My Daily Routine)
 objectives:
 - Learner can ask and tell the time
 - Learner can name all days of the week
@@ -94,7 +94,7 @@ grammar:
 - Time prepositions (о, до, після)
 - Days and months in context
 register: розмовний
-phase: A1.3 [Consolidation]
+phase: A1.2 [Verbs & Sentences]
 persona:
   voice: Patient Supportive Tutor
   role: Ukrzaliznytsia Conductor

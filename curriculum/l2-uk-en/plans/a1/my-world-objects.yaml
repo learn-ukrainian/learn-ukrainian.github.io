@@ -1,6 +1,6 @@
-module: a1-05
+module: a1-10
 level: A1
-sequence: 5
+sequence: 10
 slug: my-world-objects
 version: '2.0'
 title: 'My World: Objects'
@@ -86,10 +86,10 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- a1-04 (This Is, I Am)
+- a1-09 (This Is, I Am)
 connects_to:
-- a1-06 (The Living Verb I)
-- a1-15 (Around the City)
+- a1-15 (The Living Verb I)
+- a1-29 (Around the City)
 objectives:
 - Learner can use цей/ця/це/ці to point to objects near them
 - Learner can use той/та/те/ті to point to objects far from them

@@ -1,323 +1,196 @@
 <!-- SCOPE
-Covers: Ukrainian alphabet introduction (19 letters), cognates, True/False Friends strategy, basic reading rules
+Covers: The first 17-19 print letters of the Ukrainian alphabet (True Friends, False Friends, New Shapes), basic decoding of internationalisms, and essential cultural context.
 Not covered:
-  - The remaining 14 letters (The Cyrillic Code II)
-  - Cursive writing
-Related: a1-02-the-cyrillic-code-ii
+  - Cursive handwriting → a1-02
+  - The remaining alphabet letters → a1-02
+Related: a1-02 (The Cyrillic Code II)
 -->
 
 # The Cyrillic Code I
 
 > **Чому це важливо?**
 >
-> Learning to read Cyrillic is your first "superpower" in Ukrainian. It unlocks the ability to navigate cities, read menus, and understand thousands of international words that are already familiar to you. This module transforms "scary symbols" into friendly tools, giving you immediate access to the language's logic.
+> Learning a new alphabet often feels like deciphering a secret code, creating an immediate visual barrier to the language. By categorizing the first batch of Ukrainian letters into logical, familiar groups, you can rapidly bypass this barrier and build reading confidence. You already know more shapes and sounds than you think, and cracking this initial code serves as your foundational step toward true immersion.
 
-## Розминка: Чому кирилиця?
+## Вступ
 
-### The Cyrillic Misnomer
-Welcome to your first step into the Ukrainian world! You might be looking at the Ukrainian alphabet (**українська абетка**) and thinking, "This looks like a secret code." You are absolutely right—it is a code, but it is one that you can crack much faster than you think.
+Welcome to the very beginning of your Ukrainian language journey. The first obstacle many adult learners face is the visual barrier of a new writing system. The script might look intimidating or alien at first glance, but the Ukrainian alphabet is highly logical, deeply historical, and much more familiar than you might expect. When you look at a text in a new language, your brain naturally tries to map familiar geometric shapes to familiar phonetic sounds. Our goal in this module is not to overwhelm you with all thirty-three letters at once. Instead, we break the code by focusing on the first nineteen print letters, specifically choosing those that help you navigate daily life and read international words immediately. 
 
-First, let's clear up a historical mystery. The alphabet is called "Cyrillic" (**кирилиця**), named after Saint Cyril, a missionary from the 9th century. However, here is the twist: Cyril likely didn't invent this specific alphabet. He created a different, much more complex script called Glagolitic, which looks like little loops and circles. It was actually his students in the First Bulgarian Empire who developed the sharp, clear letters we use today. They named it "Cyrillic" to honor their teacher. So, when you write in Ukrainian, you are using a writing system that was streamlined and perfected by devoted students over a thousand years ago.
+### The Origins of the Code
+The writing system you are learning is known as the Cyrillic alphabet. It carries a rich, complex cultural legacy that connects Eastern Europe. You will often hear people state that Saint Cyril, a Byzantine theologian from the ninth century, created the alphabet. However, historians and linguists understand this as a simplification. While Saint Cyril and his brother Methodius did create a writing system for the Slavs, that original script was actually Glagolitic—a complex, highly stylized set of symbols that looks nothing like the modern letters we use today. 
 
-### Psychological Safety: The "Scary" Script
-It is completely normal to feel a bit intimidated by the new shapes. When English speakers see words like **РЕСТОРАН** (restaurant) or **БАНК** (bank), their brain often signals "Unknown Danger!" simply because the letters don't trigger immediate recognition.
+Their dedicated students, most notably Clement of Ohrid, developed and refined the Cyrillic script later in the First Bulgarian Empire. They took the sophisticated Glagolitic phonetic principles and elegantly adapted them to the visual shapes of the Greek uncial script. Over centuries, this alphabet evolved into the distinct, beautiful typography that defines modern Ukrainian. Understanding this history helps us appreciate the letters not merely as arbitrary shapes, but as a deep historical bridge across European cultures.
 
-But here is the secret: Ukrainian is a European language with deep ties to the systems you already know. You are not starting from zero. You are actually starting with a huge advantage called the **Cognate Strategy**.
+> [!context]
+> **The Glagolitic Past**
+> Before Cyrillic, there was Glagolitic. The transition from complex Glagolitic symbols to the clear Cyrillic letterforms you are learning today represented a major technological leap for written communication in Eastern Europe, prioritizing clarity and ease of reading.
 
-> [!tip]
-> **The Cognate Strategy (Стратегія)**
-> Thousands of words in Ukrainian are "cognates"—words that share the same origin and sound almost identical to English. Words like **таксі** (taxi), **піца** (pizza), and **метро** (metro) are just waiting for you to recognize them. Your job isn't to learn a new word (**нове слово**); it's just to recognize an old friend in a new outfit.
+### The Strategy of True and False Friends
+To make your learning process smooth and completely anxiety-free, we employ a specific categorization strategy. We divide our first batch of letters into highly manageable groups based entirely on how they interact with the English alphabet. This approach instantly reduces your cognitive load and gives your brain a reliable framework.
 
-### Our Methodology: True Friends vs. False Friends
-To master this alphabet without a headache, we are not going to memorize letters in alphabetical order (A, B, V, G...). That is the slow way. Instead, we will use a strategic method called "True Friends vs. False Friends."
+Our first category consists of the "True Friends." These are letters that look exactly like English letters and sound exactly the same. They act as your immediate allies. You do not need to learn anything new to read them; you simply need to trust your eyes. 
 
-Imagine the alphabet as a party.
-1.  **True Friends** are the letters that look like English and sound like English. You already know them.
-2.  **False Friends** are the tricksters. They look like English letters you know, but they make a completely different sound. These are the traps we need to disarm.
-3.  **Strangers (New Letters)** are the ones that look unique. They are actually the easiest because you have no bad habits associated with them.
+Our second category involves the "False Friends," or what we call the "Trap Letters." These are the tricksters of the alphabet. They look exactly like English letters, but they produce completely different sounds. Your brain will instinctively want to read them using English rules, and our job is to rewire that specific reflex through awareness. Finally, we introduce the "New Shapes." These letters do not look like anything in the English alphabet, but they represent familiar English sounds. They require new visual connections, but their memorable forms make them easy to master.
 
-### Visual Aids and Imagination
-We will use your imagination to lock these sounds in. We won't just say "Д is D." We will say "**Д** looks like a little **D**oor or a house with legs. When we see **Л**, we will see a pair of **L**egs.
+### Internationalisms as Your Key
+You might naturally wonder why we start with these specific letters instead of going in strict alphabetical order. The answer lies in immediate practical utility and motivation. By mastering this specific subset, you instantly unlock the ability to read high-frequency international words. Languages frequently borrow concepts and terminology from one another, especially words for modern infrastructure, global dining, and banking.
 
-By the end of this lesson, you won't just see shapes; you will hear sounds. You will look at **ФАКТ** and instinctively know it means "fact." Let's start decoding.
+Think about everyday concepts like a bank, a metro system, or a local cafe. These concepts exist globally, and the words for them sound remarkably similar across dozens of different languages. By learning the specific Cyrillic letters that make up these words, you instantly demonstrate to yourself that the alphabet code is already partially cracked. You will find yourself reading authentic Ukrainian vocabulary within minutes, proving that the visual barrier is nothing more than a temporary illusion. 
 
----
+## Презентація
 
-## Презентація: Літери-друзі та літери-пастки
+We now break down the core letters of the Ukrainian alphabet. By approaching them in our strategic groups, you will quickly build a solid, reliable foundation for reading real texts.
 
-### Group 1: True Friends
-These letters are your "Safe Harbor." They look exactly like their Latin counterparts and make essentially the same sounds. You don't need to study these; you just need to trust them.
+### True Friends: The Foundation
+The "True Friends" are the most welcoming characters you will encounter. These letters look almost identical to their English counterparts and represent very similar sounds. They provide an immediate sense of comfort, allowing you to start reading instantly without learning new phonetic rules. 
 
-#### The Vowels: А, Е, І, О
--   **А а** — [ɑ]. Like the "a" in "f**a**ther." It is open and relaxed.
--   **Е е** — [ɛ]. Sounds like the "e" in "p**e**t" or "m**e**t." It is short and clear.
--   **І і** — [i]. Matches the "ee" in "s**ee**" or "m**ee**t." It is sharp and smiling.
--   **О о** — [ɔ]. Similar to the "o" in "d**o**g" or "**o**ff." It is rounded, never a diphthong like "go."
+We begin with the vowels in this group: **А**, **Е**, **І**, and **О**.
+The letter **А** (a) makes a clear, open sound, like the "a" in the English word "father" or "car." It consistently represents a clear sound and avoids the flat "a" sound found in the English word "cat." When you see it, drop your jaw slightly and make a pure, resonant sound.
+The letter **Е** (e) produces a short, crisp sound, similar to the "e" in "pet," "red," or "ten." It does not have a lingering "y" sound at the beginning; it starts and stops cleanly.
+The letter **І** (i) sounds like the double "ee" in "meet" or "see." We discuss the immense cultural significance of this dotted letter in a later section, but for phonetics, just remember its sharp, bright sound.
+The letter **О** (o) is round and pure, like the "o" in "port" or the Scottish "loch." English speakers frequently let the "o" glide into a "w" sound at the end (as in "go"), but the Ukrainian **О** remains perfectly stable and abruptly stops.
 
-> [!culture]
-> **The Ukrainian "O"**
-> In Ukrainian, **О** is always pronounced fully and clearly, regardless of stress. An unstressed **О** stays **О** — it never weakens or shifts to another vowel. This consistency is part of what gives Ukrainian its melodic, rhythmic quality. Every **О** you see is an **О** you hear.
+Next, we have the consonants in this group: **К**, **М**, and **Т**.
+The letter **К** (k) is crisp. English speakers often produce a "k" with a strong puff of air (called aspiration), but the Ukrainian **К** is unaspirated. It functions as a sharp, clean click in the back of the throat.
+The letter **М** (m) is pronounced exactly as you would expect, precisely like the "m" in "mother" or "moon." You produce it by pressing the lips together and letting the sound resonate in the nasal cavity.
+The letter **Т** (t) is extremely similar to English, but it requires a slight adjustment in tongue placement. Instead of tapping the ridge behind your upper teeth, bring your tongue further forward so it gently touches the back of the upper teeth, producing a softer sound.
 
-#### The Consonants: К, М, Т
--   **К к** — [k]. As in "**k**ite."
--   **М м** — [m]. Think of "**m**om."
--   **Т т** — [t]. Same as "**t**ent."
+Consider the word **такт** /tɑkt/ (tact). It consists entirely of True Friends, proving you can already read a Ukrainian word with zero prior training. 
 
-Let's combine these into your first Ukrainian words.
+### The Trap Letters: False Friends
+This next category demands your absolute full attention. The "False Friends" look exactly like English letters, but they represent entirely different sounds. Your brain automatically tries to read them using English phonetics, so you must actively and consciously override this powerful visual instinct. We refer to these as the "Trap Letters."
 
-**Examples:**
--   **ма́ма** (mom) — Looks and sounds exactly like you expect.
--   **кіт** (cat) — Note the soft "i" makes the K sound a bit lighter.
--   **так** (yes) — A powerful little word.
--   **такт** (tact) — Musical beat or social tact.
+First, we must navigate the **"P" Trap**. The Ukrainian letter **Р** looks identical to an English "P", but it actually represents a rolled or trilled "r" sound. Think of the Spanish or Italian "r", or the physical vibration of a roaring engine. When you see **Р**, you must resist the powerful urge to close your lips. Instead, let your tongue tap rapidly behind your upper teeth. 
 
-### Group 2: False Friends (The Traps)
-Now, engage your focus. These letters are the "spies." They wear familiar disguises but carry different sounds. If you make a mistake, it will likely be here.
+Next is the highly deceptive **"H" Trap**. The letter **Н** looks exactly like an English "H", but it produces the sound of an English "N", as in "hen," "nest," or "net". This visual similarity creates confusion at first glance. When encountering **Н**, a useful trick is to imagine the two vertical lines representing the two rigid legs of the lowercase letter "n" standing firmly on the ground.
 
-#### The "B" Trap: В
--   **Symbol**: **В в**
--   **Sound**: [ʋ] (like English **v** in "**v**ine").
--   **The Trap**: It looks like a "B," but it is definitely NOT a "B."
--   **Mnemonic**: Think of a **V**ehicle. It has two wheels (the loops of the B). It drives sounds like "Vvvvv."
+Then we face the **"B" Trap**. The letter **В** looks like a capital "B", but it sounds like an English "V", as in "vehicle," "voice," or "van." A helpful visual mnemonic is to picture the two outward loops of the **В** as the two steering wheels of a van driving down the road. This reminds you to bite your lower lip slightly to produce the friction required for a "v" sound.
 
-**Example:**
--   **віза** (visa) — Not "biza."
+Finally, we have the **"C" Trap**. The letter **С** looks like an English "C", but it primarily functions as a crisp, hissing "S", like in "snake" or "sun." Unlike the English "C", which unpredictably sounds like a "K" (as in "cat") or an "S" (as in "city"), the Ukrainian **С** is remarkably consistent and reliable. 
 
-#### The "H" Trap: Н
--   **Symbol**: **Н н**
--   **Sound**: [n] (like English **n** in "**n**o").
--   **Mnemonic**: It looks like an "H", but think of a He**N** — what do you hear at the end? **N**! That's the sound this letter makes.
+**The False Friends Decoding Table**
 
-**Example:**
--   **ні** (no) — It looks like "Hi," but it means "No"!
+| Cyrillic Letter | English Trap | Correct Sound | Example Letter Shape Focus |
+|-----------------|--------------|---------------|----------------------------|
+| **Р** | Looks like P | Rolled "R" | Let the tongue tap rapidly |
+| **Н** | Looks like H | Sound "N" | Picture two legs of an "n" |
+| **В** | Looks like B | Sound "V" | Picture wheels of a van |
+| **С** | Looks like C | Sound "S" | Remember the snake hiss |
 
-#### The "P" Trap: Р
--   **Symbol**: **Р р**
--   **Sound**: [r] (trilled, like in Spanish or Italian).
--   **The Trap**: It looks like a "P."
--   **Mnemonic**: Think of a **R**oaring engine or a **P**urring cat. The cat says "Rrrrr."
+### New Cyrillic Shapes
+Now we encounter the letters that possess no visual equivalent in the English alphabet. While their geometric shapes are completely new to your eyes, the reassuring news is that their sounds are perfectly familiar to English speakers. You simply need to link a new symbol to an old sound.
 
-**Example:**
--   **парк** (park) — Notice the first letter is a real P (which we will learn next), and the third letter is this trilled R.
+The letter **Б** (b) sounds like the English "b" in "boy" or "boat." You easily remember it by noticing that the bottom circular loop strongly resembles the rounded belly of a lowercase "b."
+The letter **Д** (d) sounds like the English "d" in "dog" or "door." The visual shape is incredibly iconic and architectural; it looks like a little traditional house with a flat roof and two small structural feet resting firmly on the ground.
+The letter **З** (z) sounds like the English "z" in "zoo" or "zero." It looks somewhat like the numeral "3", which helps you mentally connect the shape to its sharp, continuous buzzing sound.
+The letter **Л** (l) sounds like the English "l" in "lamp" or "light." Notice that its shape resembles two long legs walking forward, helping you associate it with the concept of locomotion or forward movement.
+The letter **П** (p) sounds like the English "p" in "pen" or "paper." Its rigid, square, doorway-like structure closely resembles the mathematical symbol Pi, which conveniently also starts with a "p" sound.
+The letter **Ф** (f) sounds like the English "f" in "fact" or "flower." Its elegant shape features a solid vertical line splitting a circle directly in half, almost resembling a blooming flower or a standing figure with hands resting on their hips.
 
-#### The "C" Trap: С
--   **Symbol**: **С с**
--   **Sound**: [s] (like the "s" in "**s**un").
--   **The Trap**: It is always the hissing snake sound. Never a "K".
--   **Mnemonic**: It is the shape of a **S**nake coiled up. Or the shape of a **C**rescent moon.
+### The Exclusion Rule
+To truly master the Ukrainian alphabet, you must establish clear linguistic boundaries. Understanding what characters do not belong in the language is just as important as knowing the ones that do. Ukrainian is a distinct, complete, and independent linguistic system. 
 
-**Example:**
--   **суп** (soup) — Simple and tasty.
-
-#### The "Y" Trap: У
--   **Symbol**: **У у**
--   **Sound**: [u] (like "m**oo**n" or "b**oo**t").
--   **The Trap**: It looks like a "Y", but it makes the "oo" sound.
--   **Mnemonic**: Think of "Y" as a slingshot shooting the moon (**oo**).
--   **Example**: **суп** (soup) — See? It’s S-OO-P.
-
-#### The "X" Trap: Х
--   **Symbol**: **Х х**
--   **Sound**: [x] (like the Scottish "lo**ch**" or German "Ba**ch**").
--   **The Trap**: It is not "ks" like in "box." It is a friction sound in your throat.
--   **Mnemonic**: It is the symbol for crossing something out.
-
-**Example:**
--   **хобі** (hobby) — A nice international word.
-
-> [!warning]
-> **Don't Be Tricked!**
-> When you see the word **РЕСТОРАН**, your brain wants to say "Pectopah." Fight it!
->
-> **Р** = R (Roaring)
-> **Е** = E
-> **С** = S (Snake)
-> **Т** = T
-> **О** = O
-> **Р** = R
-> **А** = A
-> **Н** = N (Hen)
->
-> It reads: **Restoran**. You just decoded it!
-
-### Group 3: New Letters
-These shapes are new to you. They have no "baggage" from English, so you can learn them fresh.
-
-#### Б (Be) and Д (De)
--   **Б б** — [b]. Matches the "**b**" in "**b**oy."
-    -   *Visual*: It looks like a lowercase "b" with a roof.
--   **Д д** — [d]. Think of "**d**og."
-    -   *Visual*: It looks like a little **D**oor or a house with legs.
-
-#### З (Ze) and Л (El)
--   **З з** — [z]. Same sound as "**z**oo."
-    -   *Visual*: It looks like the number **3**. "Ze three zebras."
--   **Л л** — [l]. Like "**l**ove."
-    -   *Visual*: It looks like a pair of **L**egs walking.
-
-#### П (Pe) and Ф (Ef)
--   **П п** — [p]. Corresponds to "**p**ark."
-    -   *Visual*: It looks like a **P**ortal or a goal post.
--   **Ф ф** — [f]. Use the "f" from "**f**un."
-    -   *Visual*: It looks like a person standing with their hands on their hips, looking **F**ierce.
+You must establish a strict exclusion rule in your mind: Russian-only characters like 'ё', 'ы', and 'э' do not exist in Ukrainian. If you see these specific letters in a text, you are definitively not reading Ukrainian. This difference reflects completely distinct phonological evolutions. Ukrainian utilizes its own beautifully efficient characters to represent its sounds. By consciously excluding those foreign letters from your mental framework, you protect your Ukrainian pronunciation and honor the authentic structure of the language.
 
 > [!myth-buster]
-> **The Anti-Surzhyk Alert**
-> You might see characters in some apps or textbooks that look like an "e" with two dots, a backwards "e", or a "bl" combination. These three letters **do not exist** in Ukrainian.
->
-> If you spot them in a "Ukrainian" resource, that resource is mixing in Russian. Ukrainian has its own elegant system — **Є** for the "ye" sound, **І** for the "ee" sound, and **И** for the short vowel (as in "bit"). Trust the real Ukrainian alphabet.
+> **The Myth of "Russian Letters"**
+> You might occasionally hear misinformed people refer to the Cyrillic alphabet broadly as "Russian letters." The Cyrillic script predates the modern Russian state by centuries and serves many distinct nations. Ukrainian possesses its own unique typographic tradition and independently developed letterforms.
+
+## Практика
+
+With the fundamental rules and letter categories firmly established, you must put your knowledge into immediate action. Reading requires active decoding and steady repetition to build permanent neural pathways. We begin with highly recognizable vocabulary to build your confidence.
+
+### Decoding Urban Vocabulary
+One of the most instantly satisfying experiences when learning a new script is realizing you already possess the ability to read words found in any modern city. Let us practice decoding some high-frequency urban terms that demonstrate your new skills.
+
+Look carefully at the word **банк** /bɑnk/ (bank). It starts with the new shape **Б**, followed by the True Friends **А** and **К**, with the Trap Letter **Н** placed right in the middle. Remember the "H" Trap—that letter represents an "n" sound, not an "h". Therefore, the word is easily recognizable as "bank."
+
+Next, consider the word **метро́** /mɛˈtrɔ/ (metro). You immediately recognize the True Friends **М**, **Е**, and **О**. The primary challenge here lies in the Trap Letter **Р** and the True Friend **Т**. You must remember the "P" Trap and intentionally roll the "r" sound, while simultaneously resisting the deeply ingrained urge to read the **Р** as a "p". 
+
+Finally, let us read the word **кафе́** /kɑˈfɛ/ (café). This short word uses the True Friends **К**, **А**, and **Е**, alongside the elegantly structured new shape **Ф**. The sharp, clear vowel sounds make its meaning unmistakable. Another excellent example is **парк** /pɑrk/ (park), which perfectly tests your ability to navigate the "P" Trap in the middle of True Friends. By actively practicing these international words, you train your eyes to jump smoothly over the visual hurdles.
+
+### Building Essential Collocations
+Single words offer a great starting point, but language operates in natural chunks. To increase your reading fluency, we practice collocations—words that naturally and frequently appear together in daily life. 
+
+Imagine you are navigating the city. You frequently see the phrase **ста́нція метро́** (metro station). Here, the new word features the "C" Trap with the letter **С**, the True Friend **Т**, the True Friend **А**, the "H" Trap **Н**, and additional vowels. Reading the phrase as a complete unit accelerates your comprehension.
+
+Another vital phrase is **націона́льний банк** (national bank). This longer expression tests your visual endurance. You must successfully navigate the "H" Trap in the very first letter of the first word, then read through a sequence of vowels and consonants until you reach the familiar word for bank at the end. Reading phrases like **у ба́нку** (in the bank) or **у кафе́** (in the café) provides essential context. When you see a sentence like **іде́мо в кафе́** (we are going to the café), you experience the letters functioning together to convey motion and destination in a real-world scenario.
+
+### Functional Mini-Dialogues
+To bring the letters to life, let us examine how they function in basic conversational exchanges. Daily communication heavily relies on simple affirmations and polite responses.
+
+The word **так** /tɑk/ (yes) serves as a high-frequency cornerstone of the language. It consists entirely of True Friends, making it instantly readable. In everyday conversation, it rarely stands completely alone. You frequently hear the polite phrase **так, бу́дь ла́ска** (yes, please). This short sentence requires you to identify the new shape **Б**, navigate the "B" Trap in **В**, and confidently read the surrounding True Friends.
+
+Another exceptionally common affirmation is **так, зві́сно** (yes, of course). This phrase actively tests your recognition of the new shape **З**, the "B" Trap **В**, and the "C" Trap **С**. 
+
+Here is how you encounter these phrases in a real-world interaction:
+
+**У кафе́:**
+— **Так, бу́дь ла́ска.** (Yes, please.)
+— **Так, зві́сно.** (Yes, of course.)
+
+Reading these mini-dialogues out loud connects the visual shapes directly to practical communicative utility.
+
+### Family Connections
+Beyond the bustling city streets, your new reading skills apply perfectly to core vocabulary regarding the family. Some of the most foundational human words remain incredibly visually straightforward in Ukrainian.
+
+The word **ма́ма** /ˈmɑ.mɑ/ (mom) is composed exclusively of True Friends. It looks exactly as it sounds, requiring zero mental translation. Similarly, the word **та́то** /ˈtɑ.tɔ/ (dad) remains visually transparent. You easily form descriptive phrases like **моя́ ма́ма** (my mom) or **мій та́то** (my dad). 
+
+If you happen to have a pet, you practice reading the word **кіт** /kit/ (cat). Combining it into a phrase like **мій кіт** (my cat) or **чо́рний кіт** (black cat) allows you to practice the True Friend **І** and the True Friend **Т** in an endearing context. You might express affection by reading **люблю́ ма́му** (I love mom), practicing the letters in a sentence that conveys deep, universal emotion.
+
+## Культурний контекст
+
+Language never functions just as a mechanical tool for communication; it serves as a profound reflection of a nation's history, identity, and resilience. The Ukrainian alphabet contains specific characters that act as vital cultural anchors, telling compelling stories of resistance and European alignment.
+
+### The "І" Identity
+One of the most striking visual features of the Ukrainian language is the dotted letter **І**. While it might seem like a simple vowel to a new learner, it carries immense cultural, historical, and political weight.
+
+In the complex landscape of Eastern European typography, the dotted **І** acts as a powerful, undeniable symbol of Ukrainian identity. It creates a direct visual connection to the Latin script and the broader European typographic tradition. Historically, the presence of this specific letter distinguished Ukrainian texts at a single glance, setting them apart visually from neighboring languages that relied on entirely different characters for similar sounds.
+
+When you see the dotted **І** in a word, you look at a marker of authenticity. It represents a strict phonetic reality—a sharp, clear vowel sound—that remains fundamental to the melody of the language. The letter holds such profound cultural significance that it frequently appears in modern graphic design, poetry, and national branding as a standalone emblem of the Ukrainian spirit. Embracing this letter means embracing a key visual component of the nation's heritage.
+
+### The Story of the Letter Ґ
+Another fascinating aspect of the alphabet is the history of the letter **Ґ** (g). Though we primarily focus on the first nineteen letters in this module, the story of this specific character provides essential insight into the resilience of the language.
+
+The letter **Ґ** represents a hard "g" sound, like in "good" or "gate." However, its history involves severe political repression. In 1933, during a tragic period of intense Russification and linguistic standardization, the Soviet regime officially banned and removed the letter **Ґ** from the alphabet. The regime's goal was to force the Ukrainian language closer to the phonetic structure of Russian, actively erasing its unique characteristics.
+
+For decades, the letter survived primarily in the diaspora and in the quiet rebellion of private writings. It was not until 1990, on the eve of Ukrainian independence, that the state officially restored the letter **Ґ** to its rightful place in the alphabet. Today, it stands as a permanent testament to the indestructible nature of the language. Learning about the "repressed letter" transforms the alphabet from a simple list of characters into a compelling narrative of survival.
+
+> [!quote]
+> **A Living Heritage**
+> The alphabet you are learning is the direct result of centuries of cultural preservation. Every time you read a Ukrainian word correctly, you actively participate in the ongoing vitality of the language.
+
+### Naming the Nation
+To fully appreciate the alphabet, we must apply it to the most important words in the official State Standard vocabulary. Reading the proper names of the country and its capital serves as a profound first step in your cultural immersion.
+
+Let us carefully examine the word **Украї́на** /ukrɑˈjinɑ/ (Ukraine). It begins with the True Friend **У** (which looks somewhat like an English "Y" but sounds like the "oo" in "boot"). Following that, it features the True Friends **К** and **А**, and includes the "P" Trap **Р** and the "H" Trap **Н**. It also contains the unique letter **Ї**, which we study in detail in a future lesson. Reading this word accurately requires you to navigate the visual traps while honoring the specific vowel sounds that give the nation's name its melodic quality.
+
+Similarly, consider the word **украї́нець** /ukrɑˈjinɛt͡sʲ/ (Ukrainian person). It directly builds upon the national name, allowing you to identify the people who carry this identity. Finally, we analyze the capital city, **Ки́їв** /ˈkɪjiu̯/ (Kyiv). The name begins with the crisp True Friend **К** and ends with the "B" Trap **В**. Recognizing and pronouncing these proper nouns correctly is not merely an academic exercise; it represents an active act of respect and cultural acknowledgment. By mastering the fundamental letters that form these essential names, you firmly ground your new language skills in the very heart of the nation.
+
+## Підсумок та продукція
+
+You have successfully navigated the foundational elements of the Ukrainian alphabet. By systematically categorizing the letters into True Friends, Trap Letters, and New Shapes, you completely disarmed the visual complexity of the Cyrillic script. You now possess the practical tools to read international vocabulary, essential urban collocations, and core family terms. Most importantly, you deeply understand the cultural weight behind the typography.
+
+### The Purring Cat vs. Roaring Engine
+Before concluding, you must ensure your physical pronunciation perfectly matches your visual recognition. The most common pitfall for English speakers remains the "P" Trap. 
+
+We must clearly distinguish the English /p/ from the Ukrainian rolled /r/. Think of the English "p" as a sudden burst of air—a momentary pop. Now, contrast this carefully with the Ukrainian **Р**. This letter requires continuous airflow and a rapid tapping of the tongue against the roof of the mouth. It is the difference between a sudden drop and the continuous rumble of a roaring engine. When you read the word **парк** (park) or **бар** /bɑr/ (bar), you must consciously activate that roaring engine for the **Р**, ensuring it does not sound like a gentle English "p". Practice this physical transition until it feels entirely natural.
+
+### Fact-Checking the Code
+To prove your mastery, consider the phrase **це факт** (it's a fact). This short expression serves as a perfect self-test. You must read the new shape **Ф** correctly as an "f" sound, recognize the True Friends **А** and **К**, and finish strongly with the True Friend **Т**. Furthermore, the phrase features the core word **факт** /fɑkt/ (fact). You easily expand this to **ціка́вий факт** (interesting fact) as your vocabulary grows. 
+
+Another excellent word to practice your True Friends and New Shapes is **план** /plɑn/ (plan). If you read **бі́знес-план** (business plan) effortlessly or confidently declare **ма́ю план** (I have a plan), you successfully cracked the first layer of the code.
+
+> [!tip]
+> **Daily Practice**
+> Do not try to memorize the entire alphabet in one sitting. Instead, spend five minutes a day scanning Ukrainian texts—like news headlines or street signs online—simply looking for the True Friends and identifying the Trap Letters.
+
+**Перевірте себе:**
+1. Which specific category of letters looks identical to English but represents completely different sounds?
+2. Explain the physical difference between the visual shape of the Ukrainian "Р" and its actual pronunciation.
+3. How does the dotted letter "І" serve as a powerful symbol of Ukrainian typographic identity?
+4. Why is it historically and culturally incorrect to refer to the Ukrainian alphabet as utilizing "Russian letters"?
+5. Decode the word "метро" and explicitly identify which letter acts as a "False Friend" in this context.
+6. What mental strategy or visual mnemonic can you use to avoid falling into the "H" Trap when reading the letter "Н"?
 
 ---
-
-## Практика: Читаємо міжнародні слова
-
-### Cognate Drill
-Now that we have our decoding tools, let's apply them to words you will definitely encounter. Read these out loud (**вголос**). Don't worry about perfect accent yet; focus on decoding the symbols.
-
-| Ukrainian | IPA | English | Context/Collocation |
-| :--- | :--- | :--- | :--- |
-| **банк** | [bɑnk] | bank | **національний банк** (national bank) |
-| **метро** | | metro | **станція метро** (metro station) |
-| **кафе** | | café | **ідемо в кафе** (let's go to a cafe) |
-| **факт** | [fɑkt] | fact | **це факт** (it's a fact) |
-| **план** | [plɑn] | plan | **бізнес-план** (business plan) |
-| **парк** | [pɑrk] | park | **великий парк** (big park) |
-| **бар** | [bɑr] | bar | **кава-бар** (coffee bar) |
-| **суп** | [sup] | soup | **гарячий суп** (hot soup) |
-| **тест** | [tɛst] | test | **тест на IQ** (IQ test) |
-| **старт** | [stɑrt] | start | **старт проекту** (project start) |
-
-### Collocation Context
-In Ukrainian, we rarely speak in isolated words. We speak in chunks (**фрази**). Let's practice some very common combinations to get your tongue moving.
-
-1.  **У банку** — In the bank.
-    *   *Usage*: "Де мама?" (Where is mom?) — "**У банку**."
-2.  **Це факт** — It is a fact.
-    *   *Usage*: Use this to agree with someone emphatically. "Земля кругла? **Це факт**."
-3.  **Мій кіт** — My cat.
-    *   *Usage*: Introducing your pet. "**Це мій кіт** Мурчик."
-4.  **Моя мама** — My mom.
-    *   *Usage*: The most important person to talk about! "**Моя мама найкраща.**" (My mom is the best.)
-
-### Visualizing the Scene
-Imagine you have just arrived in **Київ** (Kyiv). You are at the **метро**. You need to buy a token. You look for the sign that says **КАСА** (Kasa - Cashier).
-
-You see a friend (**друг**). They ask: "**Кафе**?" (Café?)
-You answer: "**Так**, чудовий план." (Yes, great plan.)
-
-This might seem simple, but you are speaking Ukrainian! You are using the nominative case (naming things) and basic sentence structures without even realizing it. The grammar will come later; for now, focus on the joy of understanding.
-
-### The "Yes" Words
-The word **так** is small but mighty. It is your primary tool for agreement.
-
--   **Так** — Yes.
--   **Так, будь ласка** — Yes, please. *Use this for polite acceptance.*
--   **Так, звісно** — Yes, of course. *Use this for enthusiastic agreement.*
-
-### Coffee Culture Check
-A small but important distinction:
--   **Кафе́** = The place (Café).
--   **Ка́ва** = The drink (Coffee).
-
-**Кафе** is where you sit; **кава** is what you sip. You go to a **кафе** to drink **каву** (coffee). Two different words — two different things.
-
----
-
-## Культурний контекст: Українська ідентичність літери «І»
-
-### The "I" Identity
-Ukrainian uses the letter **І** (with a dot), which looks exactly like the Latin "I". Among Slavic languages using Cyrillic, this is a distinctly Ukrainian feature — a bridge between the Latin alphabet you already know and the Cyrillic world you are entering.
-
-This small dot is a big deal (**велика справа**). The letter **І** became a symbol of Ukrainian identity (**ідентичність**). During the 19th century, there were actual "Alphabet Wars" where imperial authorities tried to ban Ukrainian spelling rules. They wanted to erase the unique features of Ukrainian. Keeping the **І** was an act of cultural resistance — and Ukrainians won.
-
-### Visual Character
-Ukrainian has a distinctive set of four letters that, taken together, set it apart from its East Slavic neighbors: **І** (with its familiar vertical stroke), **Ї** (crowned with two dots), **Є** (a graceful curve), and **Ґ** (a Г with an upturn). While individual letters like І also appear in Belarusian, the combination of all four is the fingerprint of Ukrainian. When you spot them together on a page, you know instantly: this is Ukrainian.
-
-When you write **Україна** (Ukraine), the letter **ї** appears right in the heart of the word — carrying two dots like a quiet signature of the language.
-
-### The Letter That Came Back
-The letter **Ґ** has a dramatic story. In 1933, Soviet authorities removed it from the Ukrainian alphabet, replacing it with **Г**. For almost 60 years, **Ґ** was a "ghost letter" — used only by Ukrainians in the diaspora. When Ukraine moved toward independence, **Ґ** was officially restored in 1990. Today, it lives in words like **ґанок** (porch) and **ґудзик** (button). It is small but mighty — a symbol of linguistic survival.
-
-### Pronunciation Nuance
-This letter isn't just for show. It represents a very specific sound.
--   **І** is sharp, high, and front (like "mach**i**ne").
--   **И** (which looks like a backwards N) is slightly lower and more relaxed (like "m**y**th" or "r**hy**thm").
-
-We will master the deep **И** in the next lesson, but for now, embrace the **І**. It is your bridge between the alphabet you know and the new one you are learning.
-
-> [!observe]
-> **Look at the Map (Карта)**
-> Look at a map of Ukraine. You will see cities like **Київ** (Kyiv), **Львів** (Lviv), **Харків** (Kharkiv). Notice how the **і** appears in so many important names. It is the sound of the land.
-
----
-
-## Продукція: Ваші перші слова
-
-### Decoding Challenge
-Let's bring it all together. You have learned True Friends (easy), False Friends (tricky), and New Letters (fun). Can you decode this sentence?
-
-**Це факт: мама і тато в метро.**
-
-Let's break it down:
-1.  **Це** (This) — *A high-frequency starter word. The letter Ц is a sneak preview — you will learn it properly in Module 2.*
-2.  **факт** (fact) — *Cognate.* Note the **Ф** (hands on hips).
-3.  **мама** (mom) — *True Friend.*
-4.  **і** (and) — *The connector.*
-5.  **та́то** (dad) — *True Friend.*
-6.  **в** [u/v] (in) — *Preposition.*
-7.  **метро** (metro) — *Cognate.*
-
-*Meaning: It's a fact: mom and dad are in the metro.*
-
-### Pronunciation Lab: The "P" and "B" Check
-Before we finish, let's do one final check on our "False Friends." These are the most common errors for beginners, so let's fix them now.
-
-1.  **The "P" Check**: Say "**Парк**".
-    *   Did you roll the **Р**? Make sure it sounds like a purring cat, not a puff of air.
-    *   *Correct*: [pɑrk] (make that Р roll!)
-    *   *Incorrect*: [pɑɹk] (Don't use the flat English R — make it vibrate!)
-2.  **The "B" vs "V" Check**: Say "**База**" vs "**Ваза**".
-    *   **База** (base) starts with a B-boy sound. Explosive.
-    *   **Ваза** (vase) starts with a V-vehicle sound. Buzzing.
-
-### My First Words Checklist
-Now, take a moment to reflect. Can you pronounce these words without hesitating?
-
--   [ ] **Так** (Yes)
--   [ ] **Мама** (Mom)
--   [ ] **Кіт** (Cat)
--   [ ] **Метро** (Metro)
--   [ ] **Банк** (Bank)
-
-If you checked them all, congratulations! You are officially a reader of Cyrillic. You have crossed the bridge from "strange symbols" to "meaningful words."
-
-### Challenge for Tomorrow (Виклик на завтра)
-Before you start the next module, try to find 3 things in your house that look like Ukrainian letters.
--   Does your chair look like a **Ч** (we will learn this later)?
--   Does your doorframe look like a **П**?
--   Can you find a "Snake" (**С**)?
-
-Visualizing these letters in the real world will help your brain accept them as normal shapes, not alien codes. Good luck (**успіхів**)!
-
----
-
-# Підсумок
-
-### Review Checklist
-Сьогодні ви вивчили 19 літер. (Today you learned 19 letters).
-
--   **True Friends**: І, А, Е, О, К, М, Т
--   **False Friends**: В, Н, Р, С, У, Х
--   **New Letters**: Б, Д, З, Л, П, Ф
-
-You can now read words like **так**, **кіт**, **метро**, and **банк**. You can identify **мама** and **тато**. You know that **Р** is a roar and **Н** is a hen.
-
-### Що далі? (Next Steps)
-In "The Cyrillic Code II," we will complete the puzzle. You will meet the "Spiky Letter" (**Ж**), the "Goalpost" (**Г**), and the unique Ukrainian letter with two dots (**Ї**) that is so famous it has its own statue.
-
-**Перевірте себе (Check yourself):**
-1. Which letter looks like a "B" but sounds like a "V"? (Think of a vehicle).
-2. How do you say "Yes" in Ukrainian? (Three letters, starts with T).
-3. Which letter represents the "R" sound? (It looks like a P).
-4. Is the letter with **two dots** over "e" used in Ukrainian?
-5. Read this word: **СУП**. Does it start with an S or a K sound?

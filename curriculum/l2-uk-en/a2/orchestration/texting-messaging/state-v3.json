@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-24T00:10:21Z",
-      "task_id": "v3-texting-messaging-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-24T00:14:24Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-24T00:16:30Z",
-      "task_id": "v3-texting-messaging-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:19:41Z",
-      "attempts": 1
+      "ts": "2026-02-28T02:47:44Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

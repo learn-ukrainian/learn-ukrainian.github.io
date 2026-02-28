@@ -1,0 +1,97 @@
+module: a1-21
+level: A1
+sequence: 21
+slug: demonstratives-this-that
+version: '2.0'
+title: Demonstratives
+subtitle: This and That
+content_outline:
+- section: 'Цей/ця/це (This)'
+  words: 500
+  points:
+  - 'Узгодження за родом: цей (чол.), ця (жін.), це (серед.). Приклади: цей хлопець,
+    ця дівчина, це місто. Парадигма подібна до присвійних займенників (мій/моя/моє).'
+  - 'Різниця між «Це» як зв''язкою (Це кафе = This is a cafe) та «це» як вказівним
+    займенником (Це кафе гарне = This cafe is nice). Критичний контраст для початківців
+    (§4.2.2).'
+- section: 'Ці (These)'
+  words: 300
+  points:
+  - 'Множинна форма для всіх родів: ці книги, ці студенти, ці міста. Порівняння
+    з однинними формами: цей → ці, ця → ці, це → ці.'
+  - 'Типова помилка: вживання однинної форми з множиною (*цей книги замість ці
+    книги). Стратегія запобігання.'
+- section: 'Той/та/те/ті (That/Those)'
+  words: 500
+  points:
+  - 'Узгодження за родом: той (чол.), та (жін.), те (серед.), ті (множ.). Приклади:
+    той будинок, та вулиця, те озеро, ті люди.'
+  - 'Увага: збіг форми «та» (жін.) зі сполучником «та» (і/and). Контекстне розрізнення:
+    Та дівчина та її подруга (That girl and her friend).'
+- section: 'Цей vs Той у контексті (This vs That in context)'
+  words: 400
+  points:
+  - 'Просторова дистанція: цей стілець (близько) vs той стілець (далеко). У магазині:
+    Дайте мені цей торт (this cake here) vs Дайте мені той торт (that cake there).'
+  - 'Текстуальна дистанція: посилання на щойно сказане (цей) та раніше згадане (той).
+    Вживання в діалогах та описах.'
+- section: 'Практика (Practice)'
+  words: 300
+  points:
+  - 'Вправи на вибір правильного вказівного займенника відповідно до роду та числа
+    іменника.'
+  - 'Класифікація за групами цей/ця/це/ці та той/та/те/ті. Контрастні вправи
+    на просторову дистанцію.'
+vocabulary_hints:
+  required:
+  - цей (this m.) — цей хлопець, цей будинок; Demonstrative masculine
+  - ця (this f.) — ця дівчина, ця книга; Demonstrative feminine
+  - це (this n.) — це місто, це озеро; Demonstrative neuter (also copula)
+  - ці (these) — ці книги, ці студенти; Demonstrative plural
+  - той (that m.) — той будинок, той стілець; Distant demonstrative masculine
+  - та (that f.) — та вулиця, та дівчина; Distant demonstrative feminine
+  - те (that n.) — те озеро, те місто; Distant demonstrative neuter
+  - ті (those) — ті люди, ті міста; Distant demonstrative plural
+  - будинок (building/house) — цей будинок, той будинок; Context noun
+  - вулиця (street) — ця вулиця, та вулиця; Context noun
+  - озеро (lake) — це озеро, те озеро; Neuter context noun
+  - стілець (chair) — цей стілець, той стілець; Proximity contrast noun
+  recommended:
+  - такий (such) — такий великий, такий цікавий; Related demonstrative
+  - інший (other) — інший будинок, інша вулиця; Contrast adjective
+  - кожний (every) — кожний студент, кожна книга; Universal pronoun
+  - сам (oneself) — сам бачив, сама знає; Emphatic pronoun
+activity_hints:
+- type: fill-in
+  focus: Insert correct demonstrative pronoun
+  items: 10
+- type: quiz
+  focus: Gender agreement with demonstratives
+  items: 12
+- type: match-up
+  focus: Match demonstrative to correct noun
+  items: 10
+- type: group-sort
+  focus: Sort nouns into цей-group vs той-group
+  items: 12
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-20 (Mine and Yours)
+connects_to:
+- a1-22 (Numbers and Money)
+objectives:
+- Use цей/ця/це/ці correctly with nouns of matching gender
+- Use той/та/те/ті for distant reference with correct agreement
+- Distinguish demonstrative це from copula це
+- Apply gender and number agreement with demonstrative pronouns
+grammar:
+- Demonstrative pronouns
+- Gender agreement
+- Proximity distinction
+register: розмовний
+phase: A1.2 [Verbs & Sentences]
+persona:
+  voice: Patient Supportive Tutor
+  role: Museum Guide
+word_target: 2000

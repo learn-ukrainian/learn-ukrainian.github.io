@@ -1,10 +1,10 @@
-# Audit Report: M110 — kateryna-bilokur.md
-**Level:** BIO | **Module:** M110 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 5000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-27 01:46:19
+# Audit Report: M999 — kateryna-bilokur.md
+**Level:** C1 | **Module:** M999 | **Phase:** BIO | **Pedagogy:** Not Specified | **Target:** 5000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 01:15:51
 
 ## Configuration
-**Type:** biography
+**Type:** C1-biography
 **Word Target:** 5000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
@@ -16,19 +16,45 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Первинне джерело: Лист Катерини Білокур | 2 | 3 | ❌ |
+| 2 | true-false | Інтерпретація фактів біографії | 5 | 5 | ✅ |
+| 3 | comparative-study | Порівняльний аналіз: Білокур та академічний живопис | 1 | 1 | ✅ |
+| 4 | quiz | Перевірка розуміння тексту | 5 | 5 | ✅ |
+| 5 | essay-response | Есе: Деколонізація спадщини | 1 | 1 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (comparative-study, essay-response, quiz, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 1
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** reading 'Первинне джерело: Лист Катерини Білокур' has 2 items (minimum: 3)
+  - FIX: Add more items. C1 reading requires at least 3 items.
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 1 violations (minor)
+- Activity density below minimum
+
 ## Gates
 - **Words:** ✅ 5329/5000 (raw: 5650)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 5/3
+- **Density:** ❌ 1 < 1
+- **Unique_types:** ✅ 5/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 99.3% (target 95-100% (biography))
 - **Richness:** ✅ 95% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -53,6 +79,12 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 5 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **95.2%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Первинне джерело: Лист Катерини Білокур | reading | 2 | 3 | Add 1 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

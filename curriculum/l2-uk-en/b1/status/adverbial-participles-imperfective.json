@@ -2,13 +2,13 @@
   "module": "adverbial-participles-imperfective",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T10:44:53.080336Z",
+  "last_audit": "2026-02-28T09:43:43.551345Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-24T21:08:48.218738Z",
+    "md": "2026-02-26T11:21:03.711099Z",
     "meta": "2026-02-24T20:56:13.456853Z",
     "activities": "2026-02-24T21:02:10.786784Z",
-    "vocabulary": "2026-02-24T21:02:11.128443Z",
+    "vocabulary": "2026-02-26T10:56:38.107221Z",
     "plan": "2026-02-20T21:29:22.884019Z",
     "research": "2026-02-24T20:56:13.452043Z"
   },
@@ -19,29 +19,24 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "4809/4000 (raw: 5258)"
+      "status": "fail",
+      "violations": 1,
+      "message": "4740/4000 (raw: 5187) | pedagogy: 10 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "10/4 | density: 1 < 6"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/25"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0,
-    "deferred_count": 3
+    "pass_count": 3,
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

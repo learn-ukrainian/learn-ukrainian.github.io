@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 83 — E2E
+PASS: pipeline lit 84
 
   Module:   tychyna-soviet-period
   Track:    lit
-  Mode:     e2e
-  Words:    0 (target: 4000)
+  Mode:     v3
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T07:09:00Z
+  Date:     2026-02-28T01:17:16Z

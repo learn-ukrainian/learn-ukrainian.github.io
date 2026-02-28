@@ -1,11 +1,11 @@
-# Audit Report: M49 — holodomor-svidky.md
-**Level:** ISTORIO | **Module:** M49 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
+# Audit Report: M999 — holodomor-svidky.md
+**Level:** C1 | **Module:** M999 | **Phase:** C1 | **Pedagogy:** seminar | **Target:** 5000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-23 13:23:06
+**Generated:** 2026-02-28 01:37:29
 
 ## Configuration
-**Type:** istorio
+**Type:** C1-istorio
 **Word Target:** 5000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
@@ -16,23 +16,6 @@
 **Immersion:** 95-100%
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
-
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | reading | Свідчення з 'Народної Книги-Меморіал' | 1 | 1 | ✅ |
-| 2 | quiz | Перевірка розуміння модуля | 5 | 5 | ✅ |
-| 3 | true-false | Правда чи вигадка | 12 | 5 | ✅ |
-| 4 | critical-analysis | Аналіз свідчення | 1 | 1 | ✅ |
-| 5 | essay-response | Есе-рефлексія | 1 | 1 | ✅ |
-| 6 | comparative-study | Порівняльний аналіз наративів | 1 | 1 | ✅ |
-
-**Summary:**
-- Total activities: 6 (target: 3-9) ✅
-- Unique types: 6 (minimum: 3) ✅
-- Priority types used: 4/4 (comparative-study, critical-analysis, essay-response, reading) ✅
-- Required types used: 3/3 (essay-response, reading, true-false) ✅
-- Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
 - **[INVALID_META_YAML]** Meta YAML Schema Violation at 'root': 'id' is a required property
@@ -63,19 +46,18 @@
 
 ## Gates
 - **Words:** ❌ 3379/5000 (raw: 3426)
-- **Activities:** ✅ 6/3
-- **Density:** ✅ All > 1
-- **Unique_types:** ✅ 6/3 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ❌ 5/6
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 30/25
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ✅ Content-heavy OK (6 activities)
-- **Immersion:** 🇺🇦 99.6% (target 95-100% (history))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 99.6% (target 95-100% (istorio))
 - **Richness:** ✅ 95% (history)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)

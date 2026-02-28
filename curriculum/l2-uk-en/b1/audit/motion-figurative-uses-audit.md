@@ -1,7 +1,7 @@
-# Audit Report: M21 — motion-figurative-uses.md
-**Level:** B1 | **Module:** M21 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M23 — motion-figurative-uses.md
+**Level:** B1 | **Module:** M23 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:43:11
+**Generated:** 2026-02-28 09:40:33
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,41 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару | 15 | 8 | ✅ |
+| 2 | fill-in | Виберіть правильний вираз | 12 | 8 | ✅ |
+| 3 | quiz | Пряме чи переносне значення? | 15 | 8 | ✅ |
+| 4 | fill-in | Діалоги з метафорами | 12 | 8 | ✅ |
+| 5 | error-correction | Виправте типові помилки | 8 | 6 | ✅ |
+| 6 | unjumble | Складіть речення | 8 | 6 | ✅ |
+| 7 | cloze | Метафори в нашому житті | 14 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть дієслова | 9 | 6 | ✅ |
+| 9 | quiz | Прийменники та відмінки | 8 | 8 | ✅ |
+| 10 | error-correction | Лексичні пастки | 8 | 6 | ✅ |
+| 11 | true-false | Правда чи брехня | 10 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 11 (target: 4-8) ❌
+- Unique types: 8 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4460/4000 (raw: 4895)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 11/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 8/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.6% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

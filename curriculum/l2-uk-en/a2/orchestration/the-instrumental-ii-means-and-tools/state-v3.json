@@ -5,29 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T18:42:37Z",
-      "task_id": "v3-the-instrumental-ii-means-and-tools-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-22T18:45:34Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-22T18:48:38Z",
-      "task_id": "v3-the-instrumental-ii-means-and-tools-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-22T20:14:56Z",
-      "attempts": 1
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-26T13:22:18Z",
-      "attempts": 2,
-      "note": "d2-iter1"
+      "ts": "2026-02-28T02:34:24Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

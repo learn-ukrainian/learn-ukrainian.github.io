@@ -1,7 +1,7 @@
-# Audit Report: M53 — shopping-services.md
-**Level:** A2 | **Module:** M53 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M58 — shopping-services.md
+**Level:** A2 | **Module:** M58 | **Phase:** A2.5 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:18:54
+**Generated:** 2026-02-28 03:47:02
 
 ## Configuration
 **Type:** A2-vocab
@@ -39,6 +39,15 @@
 - Required types used: 3/3 (cloze, fill-in, match-up) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'здача (change/money)' → решта
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4253/3000 (raw: 4461)
 - **Activities:** ✅ 12/10
@@ -49,7 +58,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 29/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

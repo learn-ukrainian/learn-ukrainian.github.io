@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 27 — E2E
+PASS: pipeline lit 27
 
   Module:   kaidash-family-characters
   Track:    lit
-  Mode:     e2e
-  Words:    0 (target: 4000)
+  Mode:     v3
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T23:16:14Z
+  Date:     2026-02-28T01:03:43Z

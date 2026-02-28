@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 54 — E2E
+PASS: pipeline b1 65
 
   Module:   expressing-opinions
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    5052 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:45:45Z
+  Date:     2026-02-28T08:49:36Z

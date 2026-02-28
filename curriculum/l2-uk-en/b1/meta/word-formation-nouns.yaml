@@ -1,0 +1,67 @@
+slug: word-formation-nouns
+title: Словотвір іменників
+word_target: 4000
+content_outline:
+- section: 'Вступ: Як народжуються нові слова'
+  words: 400
+  points:
+  - 'Hook: Introduce the concept of a language building itself from modular blocks
+    (morphemes), rather than memorizing infinite isolated words.'
+  - 'Briefly define the core morphemes in Ukrainian: корінь (root), суфікс (suffix),
+    префікс (prefix), закінчення (ending).'
+  - Provide a clear, visual breakdown of a word like 'під-вод-н-ий' or 'за-пис-к-а'
+    to demonstrate the components.
+  - 'Note: B1 level requires 100% Ukrainian immersion; all explanations must use clear
+    Ukrainian phrasing without English scaffolding.'
+- section: Суфіксальний словотвір
+  words: 1100
+  points:
+  - Create distinct H3 subsections for different semantic categories of suffixes.
+  - 'H3: Назви осіб за діяльністю (-ник, -ець, -ач, -тель). Explain productivity and
+    provide tables with verb->noun transformations (e.g., читати -> читач).'
+  - 'H3: Абстрактні поняття та процеси (-ість, -ння, -ство, -ота). Differentiate between
+    state (-ість: радість) and process (-ння: читання) per State Standard §4.3.4.'
+  - 'H3: Назви місць (-ня, -ище). Give examples from State Standard §4.3.5 (спальня,
+    читальня) and modern contexts (летовище).'
+  - 'H3: Фемінітиви (-ка, -иня, -еса). Decolonized framing: explain these are historically
+    natural to Ukrainian, not modern slang. Give clear transformation rules.'
+- section: Префіксальний словотвір
+  words: 800
+  points:
+  - 'H3 for negative and privative prefixes: не- (нещастя) vs без- (безробіття). Clearly
+    explain the semantic difference (opposite state vs. absence of something).'
+  - 'Highlight common learner error: explain the critical difference between the prefix
+    ''не-'' (creates a new concept) and the particle ''не'' (negates a sentence).'
+  - 'H3 for spatial/temporal prefixes used with nouns: перед- (передмова), після-
+    (післямова), під- (підзаголовок), над- (надзвичайність).'
+  - Include an engagement box (e.g., 💡 **Порада**) on how to logically guess the meaning
+    of new prefixed nouns.
+- section: Основоскладання
+  words: 800
+  points:
+  - Explain compounding (основоскладання) as an alternative to English noun-adjunct
+    strings.
+  - 'H3: Зі сполучними голосними ''о'' та ''е'' (пароплав, землетрус, водоспад). Explain
+    the rule for choosing ''о'' (after hard consonants) vs ''е'' (after soft/hushing).'
+  - 'H3: Без сполучних голосних та з дефісом (кіносеанс, прем''єр-міністр, інтернет-магазин).'
+  - 'Include a cultural/modern context box: show how compounding is used for modern
+    tech vocabulary (кіберзахист) and traditional concepts (землеробство).'
+- section: Словотвірні ланцюжки
+  words: 700
+  points:
+  - Introduce the concept of a 'словотвірне гніздо' (word family / nest). This is
+    crucial for vocabulary expansion at B1 level.
+  - 'Walk through a comprehensive example visually: земля → земляний → підземелля
+    → землетрус.'
+  - 'Walk through a verb-based example: писати → письмо → письменник → письменність.'
+  - 'Provide a mini-diagnostic or thought exercise for the learner: asking them to
+    trace back the root of ''співробітництво''.'
+- section: 'Практика: Розпізнавання та творення'
+  words: 400
+  points:
+  - Guided, narrative practice section bridging theory and the automated exercises.
+  - Include a short text where learners must identify complex nouns and break them
+    down into morphemes mentally.
+  - Provide a set of verbs/adjectives and walk through the logical steps to transform
+    them into nouns using the correct suffixes/prefixes learned.
+  - Summarize the key takeaways regarding word-building autonomy.

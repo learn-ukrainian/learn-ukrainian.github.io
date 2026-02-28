@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-24T08:20:53Z",
       "task_id": "v3-active-participles-phrases-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:45:03Z",
-      "attempts": 1
     }
   }
 }

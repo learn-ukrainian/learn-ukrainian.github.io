@@ -1,7 +1,7 @@
-# Audit Report: M92 — indefinite-negative-pronouns.md
-**Level:** B1 | **Module:** M92 | **Phase:** B1.9 | **Pedagogy:** PPP | **Target:** 4000
+# Audit Report: M28 — indefinite-negative-pronouns.md
+**Level:** B1 | **Module:** M28 | **Phase:** B1.9 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 19:02:22
+**Generated:** 2026-02-28 09:40:48
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,21 +16,50 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Оберіть правильний займенник | 8 | 8 | ✅ |
+| 2 | fill-in | Заперечні займенники та прийменники | 8 | 8 | ✅ |
+| 3 | match-up | Знайдіть відповідність | 12 | 8 | ✅ |
+| 4 | true-false | Правда чи брехня | 8 | 8 | ✅ |
+| 5 | unjumble | Побудуйте речення | 6 | 6 | ✅ |
+| 6 | error-correction | Знайдіть помилку | 6 | 6 | ✅ |
+| 7 | select | Множинний вибір | 6 | 6 | ✅ |
+| 8 | mark-the-words | Аналіз тексту | 7 | 6 | ✅ |
+| 9 | cloze | Заповніть пропуски в історії | 14 | 6 | ✅ |
+| 10 | group-sort | Класифікація займенників | 16 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 10 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 4/4 (error-correction, fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'надіятися' → сподіватися
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4882/4000 (raw: 5491)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 10/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 15/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 98.0% (target 85-100% (B1.7-8 Ukraine))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.0% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-23T22:47:56Z",
       "task_id": "v3-checkpoint-motion-verbs-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:43:31Z",
-      "attempts": 1
     }
   }
 }

@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-23T22:02:32Z",
       "task_id": "v3-motion-starting-returning-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:43:05Z",
-      "attempts": 1
     }
   }
 }

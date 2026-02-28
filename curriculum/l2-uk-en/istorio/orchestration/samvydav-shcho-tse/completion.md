@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 39 — E2E
+PASS: pipeline istorio 39
 
   Module:   samvydav-shcho-tse
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T00:09:24Z
+  Date:     2026-02-28T00:37:20Z

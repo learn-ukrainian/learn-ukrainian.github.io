@@ -1,7 +1,7 @@
-# Audit Report: M40 — taking-transport.md
-**Level:** A1 | **Module:** M40 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
+# Audit Report: M57 — taking-transport.md
+**Level:** A1 | **Module:** M57 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 13:23:51
+**Generated:** 2026-02-28 03:53:46
 
 ## Configuration
 **Type:** A1
@@ -50,7 +50,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.4% (target 35-55% (M40))
+- **Immersion:** 🇺🇦 38.4% (target 35-55% (M57))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

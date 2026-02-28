@@ -10,9 +10,20 @@
       "mode": "full"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-27T15:15:36Z",
-      "note": "word-count-3681-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-28T00:30:41Z",
+      "note": "adopted-existing-content",
+      "words": 4098
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T00:32:44Z",
+      "task_id": "v3-hanna-barvinok-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T00:48:32Z",
+      "attempts": 3
     }
   }
 }

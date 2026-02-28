@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 4 — E2E
+PASS: pipeline a1 9
 
   Module:   this-is-i-am
   Track:    a1
-  Mode:     e2e
-  Words:    2797 (target: 2000)
+  Mode:     v3
+  Words:    2775 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T13:46:41Z
+  Date:     2026-02-28T02:27:10Z

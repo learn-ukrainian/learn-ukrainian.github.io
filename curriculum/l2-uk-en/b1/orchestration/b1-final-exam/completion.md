@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py b1 94 — E2E
+PASS: pipeline b1 100
 
   Module:   b1-final-exam
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    4461 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T09:57:14Z
+  Verdict:  PASS
+  Date:     2026-02-28T08:53:44Z

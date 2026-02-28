@@ -1,7 +1,7 @@
-# Audit Report: M43 — adverbial-participles-perfective.md
-**Level:** B1 | **Module:** M43 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:44:57
+# Audit Report: M51 — adverbial-participles-perfective.md
+**Level:** B1 | **Module:** M51 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:43:46
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,21 +16,64 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Утворіть дієприслівники: від інфінітива до звороту | 9 | 8 | ✅ |
+| 2 | match-up | Значення високочастотних дієприслівників | 8 | 8 | ✅ |
+| 3 | fill-in | Логіка наслідків: оберіть правильну форму | 8 | 8 | ✅ |
+| 4 | fill-in | Морфологія: вибір правильного суфікса | 8 | 8 | ✅ |
+| 5 | quiz | Теорія: розуміння попередності та видів | 8 | 8 | ✅ |
+| 6 | unjumble | Наративна трансформація: створіть правильну послідовність | 6 | 6 | ✅ |
+| 7 | error-correction | Синтаксичні пастки: відірваний дієприслівник | 6 | 6 | ✅ |
+| 8 | error-correction | Одночасність чи попередність? (Aspect Mismatch) | 6 | 6 | ✅ |
+| 9 | mark-the-words | Розпізнавання дієприслівників у тексті | 6 | 6 | ✅ |
+| 10 | cloze | Історія одного робочого дня | 14 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Утворіть дієприслівники: від інфінітива до звороту' has 9 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** match-up 'Значення високочастотних дієприслівників' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Наративна трансформація: створіть правильну послідовність' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Наративна трансформація: створіть правильну послідовність' item 2 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Наративна трансформація: створіть правильну послідовність' item 3 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Наративна трансформація: створіть правильну послідовність' item 4 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Наративна трансформація: створіть правильну послідовність' item 5 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Наративна трансформація: створіть правильну послідовність' item 6 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 8 violations (significant)
+
 ## Gates
 - **Words:** ✅ 4626/4000 (raw: 5043)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 7/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 11/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 98.3% (target 85-100% (B1.3-4 Complex))
+- **Pedagogy:** ❌ 8 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.3% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

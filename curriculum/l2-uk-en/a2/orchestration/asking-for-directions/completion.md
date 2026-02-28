@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 66 — E2E
+PASS: pipeline a2 69
 
   Module:   asking-for-directions
   Track:    a2
-  Mode:     e2e
+  Mode:     v3
   Words:    6037 (target: 3000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-24T20:19:34Z
+  Date:     2026-02-28T02:47:38Z

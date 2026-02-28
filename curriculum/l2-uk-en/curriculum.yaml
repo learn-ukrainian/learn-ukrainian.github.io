@@ -4,221 +4,275 @@ levels:
   a1:
     type: core
     modules:
-      - the-cyrillic-code-i
-      - the-cyrillic-code-ii
-      - the-gender-code
-      - this-is-i-am
-      - my-world-objects
-      - the-living-verb-i
-      - questions-and-negation
-      - the-living-verb-ii
-      - reflexive-verbs
-      - checkpoint-first-contact
-      - the-accusative-i-things
-      - the-accusative-ii-people
-      - the-locative-where-things-are
-      - mine-and-yours
-      - around-the-city
-      - the-genitive-i-absence
-      - numbers-and-money
-      - food-and-shopping
-      - at-the-cafe
-      - checkpoint-navigation
-      - yesterday-past-tense
-      - tomorrow-future-tense
-      - what-time-is-it
-      - can-must-want-modals
-      - my-daily-routine
-      - describing-things-adjectives
-      - colors-and-clothing
-      - description-adverbs
-      - weather-and-nature
-      - prepositions-direction-origin
-      - body-and-health
-      - my-family
-      - holidays-and-traditions
-      - checkpoint-core-grammar
-      - at-the-cafe-practical
-      - at-the-restaurant
-      - at-the-market
-      - at-the-store
-      - buying-tickets
-      - taking-transport
-      - phone-basics
-      - emergencies
-      - combined-practice
-      - a1-final-exam
+      # Phase A1.1: Script & First Contact (1-14)
+      - the-cyrillic-code-i          # 1  Letters А-Ж (8)
+      - the-cyrillic-code-ii         # 2  Letters З-Н (7)
+      - the-cyrillic-code-iii        # 3  Letters О-Х (7) + Дж/Дз
+      - the-cyrillic-code-iv         # 4  Letters Ц-Я (11) + ь + '
+      - syllables-and-transfer       # 5  Syllable structure, word transfer
+      - stress-and-intonation        # 6  Наголос, intonation patterns
+      - the-gender-code              # 7  Masculine/feminine/neuter
+      - greetings-and-politeness     # 8  Добрий ранок, Дякую, Ти vs Ви
+      - this-is-i-am                 # 9  Це..., Я..., Мене звати...
+      - my-world-objects             # 10 Concrete nouns, Що це?
+      - describing-things-adjectives # 11 ЯКИЙ?/ЯКА?/ЯКЕ?
+      - colors-and-clothing          # 12 Color adjectives, clothing
+      - plurals-and-alternation      # 13 Noun/adj plurals, vowel alternation
+      - checkpoint-first-contact     # 14 Checkpoint: script, gender, greetings
+      # Phase A1.2: Verbs & Sentences (15-24)
+      - the-living-verb-i            # 15 Present tense I (-ати)
+      - the-living-verb-ii           # 16 Present tense II (-ити)
+      - reflexive-verbs              # 17 -ся/-сь verbs
+      - questions-and-negation       # 18 Хто?/Що?/Де?/Куди? + Чи + бо
+      - likes-and-preferences        # 19 Мені подобається / Я люблю
+      - mine-and-yours               # 20 Possessive pronouns: мій/моя/моє
+      - demonstratives-this-that     # 21 Цей/ця/це/ці, той/та/те/ті
+      - numbers-and-money            # 22 Numbers 1-100, гривня
+      - what-time-is-it              # 23 Time, days, months
+      - checkpoint-sentences         # 24 Checkpoint: verbs, questions, possessives
+      # Phase A1.3: Cases & Navigation (25-34)
+      - the-accusative-i-things      # 25 Acc: inanimate direct objects
+      - the-accusative-ii-people     # 26 Acc: animate nouns
+      - accusative-prepositions      # 27 Acc with в/на (direction), за, через, про
+      - the-locative-where-things-are # 28 Loc: в/у + Loc, на + Loc
+      - around-the-city              # 29 City vocabulary + locative
+      - adjective-case-forms         # 30 Adj declension in Acc + Loc
+      - pronoun-declension           # 31 мене/мені, тебе/тобі, нас/нам
+      - the-genitive-i-absence       # 32 Gen: немає + Gen, у мене є
+      - prepositions-of-place        # 33 Static: Де? в/у + Loc, на + Loc
+      - checkpoint-cases             # 34 Checkpoint: cases, prepositions
+      # Phase A1.4: Tenses & Daily Life (35-44)
+      - direction-and-origin         # 35 Куди? (Acc, до+Gen), Звідки? (з+Gen)
+      - yesterday-past-tense         # 36 Past tense: -в/-ла/-ло/-ли
+      - tomorrow-future-tense        # 37 Analytical future + perfective preview
+      - my-daily-routine             # 38 Daily routine, sequence adverbs
+      - food-vocabulary              # 39 Food/drink vocab, Паляниця
+      - shopping-and-market          # 40 Скільки коштує?, shopping dialogues
+      - at-the-cafe                  # 41 Ordering, menu, payment
+      - description-adverbs          # 42 Adverbs of manner
+      - weather-and-nature           # 43 Weather, seasons, nature
+      - checkpoint-daily-life        # 44 Checkpoint: tenses, daily life
+      # Phase A1.5: Modals, Commands & Life (45-54)
+      - can-and-know-how             # 45 Могти vs вміти, можна
+      - must-and-want                # 46 Треба/потрібно, хотіти
+      - imperative-and-requests      # 47 8 verbs: читай, скажи, дай...
+      - body-and-health              # 48 Body parts, symptoms
+      - my-family                    # 49 Family + appearance vocabulary
+      - holidays-and-traditions      # 50 Holidays, birthday, Вітаю!
+      - leisure-and-hobbies          # 51 Hobbies, sports
+      - travel-and-transport         # 52 Station, airport, transport
+      - at-the-restaurant            # 53 Restaurant ordering, Будьмо!
+      - checkpoint-communication     # 54 Checkpoint: modals, imperatives
+      # Phase A1.6: Real-World Skills (55-64)
+      - prohibitions-and-signs       # 55 Не курити! signs, notices
+      - buying-tickets               # 56 Tickets for transport/events
+      - taking-transport             # 57 Metro, bus, marshrutka
+      - phone-basics                 # 58 Phone, SMS, messaging
+      - writing-skills               # 59 Postcards, forms, self-description
+      - at-the-market                # 60 Market, produce, Gen quantities
+      - at-the-store                 # 61 Store, sizes, returns
+      - emergencies                  # 62 Emergency 112, Допоможіть!
+      - euphony-and-polish           # 63 у/в, і/й, з/із/зі rules
+      - a1-final-exam                # 64 Final A1 assessment
   a2:
     type: core
     modules:
-      - the-dative-i-pronouns
-      - the-dative-ii-nouns
-      - dative-verbs
-      - the-instrumental-i-accompaniment
-      - the-instrumental-ii-means-and-tools
-      - being-and-becoming
-      - spatial-prepositions
-      - logical-prepositions
-      - all-cases-practice
-      - at-the-post-office-and-bank
-      - checkpoint-cases
-      - aspect-introduction
-      - the-completed-past
-      - future-plans-and-promises
-      - aspect-morphology
-      - aspect-mastery-pairs
-      - possessive-sviy
-      - bigger-better-stronger
-      - the-best-the-worst
-      - preferences-and-choices
-      - numerals-and-nouns
-      - if-i-were
-      - complete-imperative
-      - smart-shopping
-      - checkpoint-aspect-comparison
-      - telling-stories
-      - because-and-although
-      - she-said-that
-      - i-think-that
-      - i-feel-like
-      - in-order-to
-      - which-one
-      - time-clauses
-      - health-basics
-      - checkpoint
-      - basic-motion-prefixes
-      - advanced-motion-prefixes
-      - action-verb-prefixes
-      - adjective-suffixes-qualities
-      - adjective-suffixes-types
-      - root-families-i
-      - root-families-ii
-      - wf-mastery
-      - checkpoint-word-formation
-      - food-and-cooking
-      - home-and-furniture
-      - nature-and-weather
-      - emotions-personality
-      - work-professions
-      - technology-media
-      - hobbies-leisure
-      - education-learning
-      - shopping-services
-      - sports-fitness
-      - health-wellness
-      - checkpoint-full-grammar
-      - practical-intro
-      - practical-warm-up
-      - medical-care
-      - at-the-pharmacy
-      - hotel-accommodation
-      - rental-accommodation
-      - scheduling-appointments
-      - scheduling-interviews
-      - giving-directions
-      - asking-for-directions
-      - social-media-ukrainian
-      - texting-messaging
-      - online-services
-      - participles-intro
-      - a2-final-exam
+      # Phase A2.1: Cases (1-13) — all 7 cases + plural paradigms
+      - the-dative-i-pronouns        #  1 Dative pronouns
+      - the-dative-ii-nouns          #  2 Dative nouns
+      - dative-verbs                 #  3 Verbs governing Dative
+      - the-instrumental-i-accompaniment #  4 Instrumental: з + Inst
+      - the-instrumental-ii-means-and-tools #  5 Instrumental: means
+      - being-and-becoming           #  6 бути/стати + Instrumental
+      - spatial-prepositions         #  7 Spatial prepositions + cases
+      - logical-prepositions         #  8 Logical prepositions + cases
+      - plural-noun-declension       #  9 NEW — noun plural paradigms across all cases
+      - plural-adjective-declension  # 10 NEW — adjective plural forms across all cases
+      - all-cases-practice           # 11 MOVED — now after plural declension taught
+      - at-the-post-office-and-bank  # 12 Practical case usage
+      - checkpoint-cases             # 13 Checkpoint: all cases including plurals
+      # Phase A2.2: Aspect, Pronouns & Comparison (14-28)
+      - aspect-introduction          # 14 Aspect pairs overview
+      - the-completed-past           # 15 Perfective past
+      - future-plans-and-promises    # 16 Future tense + perfective future
+      - aspect-morphology            # 17 Prefix/suffix aspect formation
+      - aspect-mastery-pairs         # 18 50 essential aspect pairs
+      - possessive-sviy              # 19 свій vs його/її/їхній
+      - reflexive-sebe               # 20 NEW — себе/собі/собою declension + usage
+      - indefinite-negative-pronouns # 21 NEW — хтось/ніхто/будь-хто/ніщо
+      - bigger-better-stronger       # 22 Comparative adjectives/adverbs
+      - the-best-the-worst           # 23 Superlative forms
+      - preferences-and-choices      # 24 Expressing preferences
+      - numerals-and-nouns           # 25 Numbers 100+, ordinals
+      - numeral-case-agreement       # 26 NEW — number + noun case agreement
+      - if-i-were                    # 27 Conditional mood
+      - complete-imperative          # 28 Full imperative system
+      # Phase A2.3: Shopping, Complex Sentences & Health (29-40)
+      - smart-shopping               # 29 Shopping scenarios
+      - checkpoint-aspect-comparison # 30 Checkpoint: aspect + comparison
+      - telling-stories              # 31 Narrative past
+      - because-and-although         # 32 Causal/concessive clauses
+      - she-said-that                # 33 Reported speech
+      - i-think-that                 # 34 Opinion clauses
+      - i-feel-like                  # 35 Expressing feelings
+      - in-order-to                  # 36 Purpose clauses
+      - which-one                    # 37 Relative clauses
+      - time-clauses                 # 38 Temporal clauses
+      - health-and-body              # 39 CONSOLIDATED — body, symptoms, doctor, folk remedies
+      - checkpoint                   # 40 Checkpoint: sentences + health
+      # Phase A2.4: Word Formation (41-49)
+      - basic-motion-prefixes        # 41 Motion verb prefixes
+      - advanced-motion-prefixes     # 42 Complex motion prefixes
+      - action-verb-prefixes         # 43 Action verb prefixes
+      - adjective-suffixes-qualities # 44 Quality adjective suffixes
+      - adjective-suffixes-types     # 45 Type adjective suffixes
+      - root-families-i              # 46 Word families I
+      - root-families-ii             # 47 Word families II
+      - wf-mastery                   # 48 Word formation mastery
+      - checkpoint-word-formation    # 49 Checkpoint: word formation
+      # Phase A2.5: Vocabulary Expansion (50-60)
+      - food-and-cooking             # 50 Food vocabulary
+      - home-and-furniture           # 51 Home vocabulary
+      - nature-and-weather           # 52 Nature vocabulary
+      - emotions-personality         # 53 Emotions vocabulary
+      - work-professions             # 54 Work vocabulary
+      - technology-media             # 55 Technology vocabulary
+      - hobbies-leisure              # 56 Hobbies vocabulary
+      - education-learning           # 57 Education vocabulary
+      - shopping-services            # 58 Shopping vocabulary
+      - sports-fitness               # 59 Sports vocabulary
+      - checkpoint-full-grammar      # 60 Checkpoint: vocabulary + grammar
+      # Phase A2.6: Practical Scenarios (61-72)
+      - practical-intro              # 61 Practical skills intro
+      - practical-warm-up            # 62 Warm-up scenarios
+      - at-the-pharmacy              # 63 Pharmacy interaction
+      - hotel-accommodation          # 64 Hotel booking
+      - rental-accommodation         # 65 Rental scenarios
+      - scheduling-appointments      # 66 Appointment scheduling
+      - scheduling-interviews        # 67 Interview scheduling
+      - giving-directions            # 68 Giving directions
+      - asking-for-directions        # 69 Asking for directions
+      - social-media-ukrainian       # 70 Social media
+      - texting-messaging            # 71 Texting/messaging
+      - online-services              # 72 Online services
+      # Phase A2.7: Participles, Gerunds & Exam (73-76)
+      - participles-passive          # 73 SPLIT — passive participles (-ний/-тий)
+      - impersonal-passive           # 74 NEW — -но/-то forms (Зроблено в Україні)
+      - gerunds-intro                # 75 NEW — gerunds (-ючи/-ачи, -вши/-ши)
+      - a2-final-exam                # 76 Final A2 exam
   b1:
     type: core
     modules:
-      - how-to-talk-about-grammar
-      - language-about-verbs
-      - reading-grammar-rules
-      - sentence-structure
-      - ready-for-immersion
-      - aspect-complete-system
-      - aspect-past-single-repeated
-      - aspect-past-result-process
-      - aspect-future
-      - aspect-negation
-      - aspect-in-imperatives
-      - aspect-pairs-essential-40
-      - work-week-aspect-in-action
-      - aspect-integration-practice
-      - checkpoint-aspect-mastery
-      - motion-verbs-full-system
-      - motion-coming-going
-      - motion-passing-crossing
-      - motion-starting-returning
-      - motion-approaching-departing
-      - motion-figurative-uses
-      - motion-full-prefix-integration
-      - motion-patterns-other-verbs
-      - motion-practice-integration
-      - checkpoint-motion-verbs
-      - relative-clauses-yakyi
-      - relative-clauses-de-kudy-zvidky
-      - relative-clauses-koly-shcho
-      - purpose-shchob-infinitive
-      - purpose-shchob-past-form
-      - conditionals-real-yakshcho
-      - conditionals-unreal-yakby
-      - conditionals-mixed-complex
-      - checkpoint-complex-sentences-1
-      - concessive-khocha
-      - causal-result-clauses
-      - temporal-clauses
-      - complex-sentence-integration
-      - reported-statements
-      - reported-questions-commands
-      - checkpoint-complex-sentences-2
-      - adverbial-participles-imperfective
-      - adverbial-participles-perfective
-      - active-participles-phrases
-      - past-passive-participles-1
-      - past-passive-participles-2
-      - passive-constructions
-      - diminutives-master-class
-      - numerals-collectives-fractions
-      - integrated-grammar-lab
-      - checkpoint-advanced-grammar
-      - abstract-concepts-ideas
-      - abstract-concepts-processes
-      - expressing-opinions
-      - agreement-disagreement
-      - discourse-markers-basic
-      - discourse-markers-advanced
-      - describing-changes
-      - media-news
-      - society-politics
-      - professional-communication
-      - environment-ecology
-      - health-wellness
-      - emotions-deep-dive
-      - relationships
-      - business-basics
-      - travel-geography
-      - synonymy-thinking-verbs
-      - synonymy-speaking-verbs
-      - collocations-expressions
-      - emotional-intelligence
-      - regions-west
-      - regions-east
-      - regions-south
-      - regions-center
-      - ukrainian-music-today
-      - ukrainian-cinema-and-tv
-      - technology-and-startups
-      - sports-in-ukraine
-      - active-lifestyle
-      - running-in-ukraine
-      - mountains-trail
-      - cycling-water
-      - winter-sports
-      - ukrainian-cuisine
-      - ukrainski-sviata-ta-festyvali
-      - novyny-yak-chytaty
-      - interviu-ta-podkasty
-      - communication-channels
-      - presentations-visuals
-      - feedback-negotiation-complaints
-      - indefinite-negative-pronouns
-      - phonetics-assimilation
-      - b1-final-exam
+      # ── Phase B1.1: Meta-Language & Phonetics (1-7) ──
+      - how-to-talk-about-grammar        #  1
+      - language-about-verbs              #  2
+      - reading-grammar-rules             #  3
+      - sentence-structure                #  4
+      - ready-for-immersion               #  5
+      - phonetics-assimilation            #  6 MOVED from M93, narrowed: voicing + softness + -ться
+      - phonetics-alternation-simplification #  7 NEW SPLIT — cluster simplification + alternations
+      # ── Phase B1.2: Aspect Mastery (8-17) ──
+      - aspect-complete-system            #  8
+      - aspect-past-single-repeated       #  9
+      - aspect-past-result-process        # 10
+      - aspect-future                     # 11
+      - aspect-negation                   # 12
+      - aspect-in-imperatives             # 13
+      - aspect-pairs-essential-40         # 14
+      - work-week-aspect-in-action        # 15
+      - aspect-integration-practice       # 16
+      - checkpoint-aspect-mastery         # 17
+      # ── Phase B1.3: Motion Verbs (18-27) ──
+      - motion-verbs-full-system          # 18
+      - motion-coming-going               # 19
+      - motion-passing-crossing           # 20
+      - motion-starting-returning         # 21
+      - motion-approaching-departing      # 22
+      - motion-figurative-uses            # 23
+      - motion-full-prefix-integration    # 24
+      - motion-patterns-other-verbs       # 25
+      - motion-practice-integration       # 26
+      - checkpoint-motion-verbs           # 27
+      # ── Phase B1.4: Pronouns & Complex Sentences I (28-37) ──
+      - indefinite-negative-pronouns      # 28 MOVED from M92 — before relative clauses
+      - relative-clauses-yakyi            # 29
+      - relative-clauses-de-kudy-zvidky   # 30
+      - relative-clauses-koly-shcho       # 31
+      - purpose-shchob-infinitive         # 32
+      - purpose-shchob-past-form          # 33
+      - conditionals-real-yakshcho        # 34
+      - conditionals-unreal-yakby         # 35
+      - conditionals-mixed-complex        # 36
+      - checkpoint-complex-sentences-1    # 37
+      # ── Phase B1.5: Complex Sentences II (38-44) ──
+      - concessive-khocha                 # 38
+      - causal-result-clauses             # 39
+      - temporal-clauses                  # 40
+      - complex-sentence-integration      # 41
+      - reported-statements               # 42
+      - reported-questions-commands        # 43
+      - checkpoint-complex-sentences-2    # 44
+      # ── Phase B1.6: Participles & Advanced Grammar (45-57) ──
+      - active-participles-phrases        # 45 REORDERED: participles before adverbial
+      - past-passive-participles-1        # 46
+      - past-passive-participles-2        # 47
+      - passive-constructions             # 48
+      - one-member-sentences              # 49 NEW SPLIT — before adverbial participles
+      - adverbial-participles-imperfective # 50 REORDERED: adverbial after participles
+      - adverbial-participles-perfective  # 51
+      - diminutives-master-class          # 52
+      - numerals-collectives-fractions    # 53
+      - integrated-grammar-lab            # 54 narrowed: one-member sentences extracted
+      - checkpoint-advanced-grammar       # 55
+      # ── Phase B1.7: Word Formation & Lexicology (56-67) ──
+      - word-formation-nouns              # 56 NEW — §4.3.3 noun suffixes/prefixes
+      - word-formation-modifiers          # 57 NEW — §4.3.6-7 adjective/adverb formation
+      - synonymy-thinking-verbs           # 58
+      - synonymy-speaking-verbs           # 59
+      - antonyms-polysemy                 # 60 NEW — антоніми + багатозначність
+      - homonyms-paronyms                 # 61 NEW — омоніми + пароніми
+      - collocations-expressions          # 62
+      - abstract-concepts-ideas           # 63
+      - abstract-concepts-processes       # 64
+      - expressing-opinions               # 65
+      - agreement-disagreement            # 66
+      - discourse-markers-basic           # 67
+      # ── Phase B1.8: Communication & Society (68-78) ──
+      - discourse-markers-advanced        # 68
+      - describing-changes                # 69
+      - media-news                        # 70
+      - society-politics                  # 71
+      - professional-communication        # 72
+      - environment-ecology               # 73
+      - health-wellness                   # 74
+      - emotions-deep-dive                # 75
+      - relationships                     # 76
+      - business-basics                   # 77
+      - travel-geography                  # 78
+      # ── Phase B1.9: Culture & Regions (79-87) ──
+      - emotional-intelligence            # 79
+      - regions-west                      # 80
+      - regions-east                      # 81
+      - regions-south                     # 82
+      - regions-center                    # 83
+      - ukrainian-music-today             # 84
+      - ukrainian-cinema-and-tv           # 85
+      - technology-and-startups           # 86
+      - sports-in-ukraine                 # 87
+      # ── Phase B1.10: Lifestyle, Media & Final (88-100) ──
+      - active-lifestyle                  # 88
+      - running-in-ukraine                # 89
+      - mountains-trail                   # 90
+      - cycling-water                     # 91
+      - winter-sports                     # 92
+      - ukrainian-cuisine                 # 93
+      - ukrainski-sviata-ta-festyvali     # 94
+      - novyny-yak-chytaty                # 95
+      - interviu-ta-podkasty              # 96
+      - communication-channels            # 97
+      - presentations-visuals             # 98
+      - feedback-negotiation-complaints   # 99
+      - b1-final-exam                     # 100
   b2:
     type: core
     modules:

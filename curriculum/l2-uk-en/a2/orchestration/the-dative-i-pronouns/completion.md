@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 1 — E2E
+PASS: pipeline a2 1
 
   Module:   the-dative-i-pronouns
   Track:    a2
-  Mode:     e2e
-  Words:    4364 (target: 3000)
+  Mode:     v3
+  Words:    6806 (target: 3000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T18:23:47Z
+  Date:     2026-02-28T02:34:11Z

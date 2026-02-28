@@ -1,0 +1,66 @@
+slug: phonetics-alternation-simplification
+title: 'Фонетика: спрощення та чергування'
+word_target: 4000
+content_outline:
+- section: 'Вступ: Звукові зміни на стику'
+  words: 500
+  points:
+  - Introduce the concept of 'милозвучність' (euphony) as an active, structural principle
+    of the Ukrainian language, extending from the previous module's assimilation.
+  - 'Explicitly state the 100% Ukrainian immersion rule for this module in a welcoming,
+    instructor tone (Voice: Senior Language Specialist).'
+  - Preview the mechanics of syllable structures and how they drive both spelling
+    simplifications and morphological alternations.
+- section: Спрощення в групах приголосних
+  words: 800
+  points:
+  - Create an H3 for the 'стн → сн' pattern with target vocabulary (честь → чесний,
+    якість → якісний).
+  - Create an H3 for the 'здн → зн' pattern (виїзд → виїзний, тиждень → тижня) and
+    'стл → сл' (щастя → щасливий).
+  - Include an engagement box highlighting the 'Cluster Literalism' error, contrasting
+    explicit spelling with smooth pronunciation.
+  - Provide a clear table comparing the base noun with its simplified adjectival or
+    derived form.
+- section: Чергування голосних
+  words: 800
+  points:
+  - Create an H3 for the 'о/і' alternation in open vs. closed syllables. Provide a
+    clear definition of open/closed syllables first.
+  - 'Provide rich example tables for nominative/genitive and singular/plural pairs:
+    стіл/столи, ніч/ночі, кіт/кота.'
+  - Create an H3 for the 'е/і' alternation (піч/печі, осінь/осені), keeping it distinct
+    from o/i to avoid overgeneralization.
+  - Frame this historical shift positively as a unique phonological resolution of
+    Ukrainian that enhances the language's melodic rhythm.
+- section: Чергування приголосних
+  words: 800
+  points:
+  - Create an H3 for 'г/ж/з'. Show how the root shifts based on suffixes (нога → ніжка
+    → на нозі).
+  - Create an H3 for 'к/ч/ц'. Use vocative examples (козак → козаче) and locative
+    (рука → у руці).
+  - Create an H3 for 'х/ш/с'. Demonstrate with diminutives and locative case (вухо
+    → вушко, у вусі).
+  - Include a mermaid flowchart or visual logic table demonstrating how grammatical
+    case and derivation dictate the consonant choice.
+- section: Милозвучність на стику слів
+  words: 600
+  points:
+  - Create an H3 for 'у/в' alternation. Provide practical rules and examples for avoiding
+    consonant clusters across word boundaries.
+  - Create an H3 for 'і/й' alternation with a clear chart of surrounding phonetic
+    contexts.
+  - Create an H3 for 'з/із/зі', framing the three variants as graduated phonetic tools
+    for resolving increasing consonant density.
+  - 'Emphasize active agency: ''Ukrainian chooses the variant that maintains the speech
+    stream maximally open and flowing''.'
+- section: 'Практика: Вимова і правопис'
+  words: 500
+  points:
+  - Design an H3 dictation exercise guide ('write explicitly, pronounce smoothly')
+    forcing awareness of the spelling/pronunciation mismatch.
+  - Provide an H3 with traditional and modern 'скоромовки' (tongue twisters) specifically
+    targeting simplified consonant clusters.
+  - Include an H3 summary table comparing key alternations and simplifications as
+    a quick-reference for the learner.

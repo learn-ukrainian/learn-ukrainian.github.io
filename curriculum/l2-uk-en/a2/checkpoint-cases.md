@@ -1,368 +1,323 @@
 <!-- SCOPE
-Covers: Comprehensive review of the entire Ukrainian case system (all 7 cases), prepositional governance, error correction, and practical application in digital and historical contexts.
+Covers: Review of all 7 cases, prepositions, common errors, digital Ukraine context
 Not covered:
-  - Verb aspect (perfective/imperfective) → a2-12
-Related: a2-01 through a2-10
+  - Verbal Aspect (Intro) → a2-12
+Related: a2-01, a2-12, a2-25
 -->
 
 # Checkpoint — Cases
 
 > **Чому це важливо?**
 >
-> Mastering the Ukrainian case system is a defining milestone. In this checkpoint, we consolidate all seven cases, focusing on how they interact with prepositions, shift under negation, and express precise spatial and temporal relationships. This grammatical foundation prepares you for the next major topic: verb aspect.
+> Це ваш перший великий рубіж. Ви успішно вивчили всі сім відмінків української мови. Тепер ми об'єднаємо їх у єдину систему, щоб ви говорили впевнено та природно. Відмінки — це логічний інструмент, який робить комунікацію точною і красивою.
+>
+> This is your first major milestone. You have successfully learned all seven cases of the Ukrainian language. Now we will integrate them into a single system so you can speak confidently and naturally. Cases are a logical tool that makes communication precise and beautiful.
 
-## Огляд та самооцінка
+## Навичка 1: Огляд та самооцінка
 
-Ласкаво просимо до вашого великого контрольного модуля! Ви вже вивчили всі сім українських відмінків. Тепер потрібно перевірити, наскільки впевнено ви їх використовуєте. У цьому модулі ми:
+### Чому відмінки важливі
+Українська мова має дуже глибоку граматичну структуру. У центрі цієї структури лежить **відмінок** (case). Ми використовуємо відмінки щодня в кожному реченні і в кожній розмові. Навіщо вони потрібні? В англійській мові порядок слів є надзвичайно суворим. Якщо ви зміните слова місцями, сенс речення повністю зруйнується. В українській мові порядок слів дуже гнучкий. Ми можемо ставити слова в майже будь-якому порядку, тому що закінчення слова показує його роль.
 
-- повторимо кожен відмінок із прикладами,
-- побачимо, як відмінки працюють у реальних ситуаціях (на пошті, у банку),
-- прочитаємо історичний текст про українські гроші 1918 року.
+Ukrainian grammar has a very deep grammatical structure. At the center of this structure is the **case** (відмінок). We use cases every day in every sentence and in every conversation. Why are they needed? In English, word order is extremely strict. If you change the order of words, the meaning of the sentence is completely destroyed. In Ukrainian, word order is very flexible. We can put words in almost any order because the ending of the word shows its role.
 
-Якщо щось здається складним — не хвилюйтеся. Це нормально. Головне — практика.
+Завдяки відмінкам ми маємо свободу виділяти головну інформацію в тексті. Ми не потребуємо великої кількості маленьких слів або жорсткого порядку. Наше закінчення дає нам усю необхідну граматичну інформацію. Наприклад, коли ми бачимо закінчення давального відмінка, ми одразу знаємо, хто є отримувачем дії. Коли ви розумієте цю логічну систему, ви починаєте думати українською мовою.
 
-Up to this point, you have been exploring the Ukrainian cases individually, observing how each one modifies noun, adjective, and pronoun endings to reflect their grammatical role. Now, it is time to bring all of these pieces together into a unified, coherent system. 
+Thanks to cases, we have the freedom to highlight the main information in the text. We do not need a large number of small words or a rigid order, because the ending gives us all the necessary grammatical information. For example, when we see a Dative case ending, we immediately know who the recipient of the action is. When you understand this logical system, you start thinking in Ukrainian.
 
-The Ukrainian case system, or система **відмінків**, is not merely an academic exercise or a set of rules to memorize; it is the mechanism that organizes the entire language. In English, meaning is heavily dependent on strict word order—if you change the order of the words, you change the entire meaning of the sentence. Because word order in Ukrainian is highly flexible, it is the endings of the words that carry the structural meaning. Whether a word is the subject, the object, the instrument, or the location is communicated entirely by its ending.
+### Самооцінка за стандартами A2
+Сьогодні ми будемо робити комплексну перевірку. Вам потрібно **перевірити** (to check) свої знання. Згідно з європейськими стандартами рівня A2, ви повинні вміти використовувати відмінки у базових щоденних ситуаціях. Прочитайте цей список уважно. Це ваша особиста **оцінка** (assessment) прогресу.
 
-In this checkpoint, we will review how to correctly identify, form, and use all seven cases: the Nominative (Називний), Genitive (Родовий), Dative (**Давальний**), Accusative (Знахідний), Instrumental (**Орудний**), Locative (Місцевий), and Vocative (Кличний). Before we introduce the concept of verb aspect in the next module, we need to ensure your noun endings are stable and accurate.
+Today we will do a comprehensive check. You need to check your knowledge. According to European A2 level standards, you must be able to use cases in basic daily situations. Read this list carefully. This is your personal assessment of progress.
 
-### CEFR A2 Self-Assessment Checklist
+Поставте собі питання: «Чи можу я це зробити **правильно** (correctly)?»
+1. Я можу назвати свій вік та вік моїх родичів (Дідусеві шістдесят років).
+2. Я можу розказати про свою професію (Вона працює менеджеркою).
+3. Я можу описати свої відчуття та стан (Мені сьогодні дуже тепло).
+4. Я можу використовувати знаряддя дії (Він ріже свіжий торт гострим ножем).
+5. Я можу звернутися до колеги на ім'я (Пане Андрію, добрий день!).
+6. Я можу сказати, звідки я приїхав учора (Ми приїхали з Канади).
+7. Я можу розповісти, куди я йду і де я знаходжуся зараз (Я йду в театр, але зараз я в парку).
+8. Я можу пояснити, чого у мене зараз немає (У нас немає вільного часу).
 
-Before we dive into the detailed grammar review, take a moment to **перевірити** (to check) your current confidence level. By the end of this module, you should be able to confidently say "Yes" to all of the following statements. This **оцінка** (assessment) helps you identify which specific areas of grammar require more of your focus and practice.
+> [!tip] Як працювати з цим списком
+> Якщо ви розумієте всі ці приклади, ви готові рухатися далі. Якщо ви бачите **помилку** (mistake) у своєму розумінні, не хвилюйтеся. Наша мета сьогодні — знайти ці слабкі місця та швидко їх **виправити** (to correct). 
 
-**Мої досягнення:**
-* I can talk about a person's age using the proper grammatical case.
-* I can ask for assistance in a bank or post office using the correct prepositions.
-* I can accurately use physical tools and state a person's profession.
-* I can correctly form negative sentences without making structural errors.
-* I can distinguish between describing motion towards a destination and being statically located in a place.
-* I can politely address someone using their name in the appropriate form.
+### Прийменники та відмінки
+Ще один надзвичайно важливий елемент граматики — це **прийменник** (preposition). Відмінки часто працюють разом із прийменниками у парі. Знання того, який прийменник вимагає якого відмінка, є критичним для успішного спілкування. Деякі прийменники завжди вимагають лише одного відмінка. Інші можуть змінювати своє значення.
 
-If any of these statements feel challenging or intimidating, do not worry. We will break each concept down systematically and provide extensive examples.
+Another extremely important element of grammar is the preposition. Cases often work together with prepositions in a pair. Knowing which preposition requires which case is critical for successful communication. Some prepositions always require only one case. Others can change their meaning.
 
-> [!practice] **Швидка перевірка**
-> Спробуйте відповісти: Як правильно — «Я пишу ручка» чи «Я пишу ручкою»? Якщо ви обрали другий варіант — ви вже розумієте Орудний відмінок!
+| Прийменник | Значення | Відмінок (Case) | Приклад (Example) |
+|------------|-------------------|-----------------|-------------------|
+| **з / із / зі** | from (origin) | Родовий (Genitive) | Мій друг приїхав **із Києва**. |
+| **для** | for (benefit) | Родовий (Genitive) | Це подарунок **для мами**. |
+| **без** | without | Родовий (Genitive) | Я п'ю каву **без цукру**. |
+| **після** | after | Родовий (Genitive) | Зустрінемося **після роботи**. |
+| **до** | to (destination) | Родовий (Genitive) | Ми часто йдемо **до лісу**. |
+| **біля** | near / by | Родовий (Genitive) | Кіт спить **біля вікна**. |
+| **через** | through / because of | Знахідний (Accusative) | Я йду **через великий парк**. |
+| **в / у** | in (location) | Місцевий (Locative) | Гроші лежать **у банку**. |
+| **на** | on (location) | Місцевий (Locative) | Свіжа книга **на столі**. |
+| **з / із / зі** | with (accompaniment) | Орудний (Instrumental) | Я люблю каву **з молоком**. |
 
-### The Role and Philosophy of Prepositions
+> [!note] Зверніть особливу увагу
+> Прийменник **з** має два абсолютно різні значення. З родовим відмінком він означає «from» (напрямок звідкись). З орудним відмінком він означає «with» (разом із кимось або чимось). Завжди перевіряйте закінчення іменника!
+> The preposition **з** has two completely different meanings. With the Genitive case, it means "from" (direction from somewhere). With the Instrumental case, it means "with" (together with someone or something). Always check the noun ending!
 
-Прийменник — це маленьке слово, яке з'єднує інші слова в реченні. В українській мові кожен прийменник вимагає конкретного відмінка. Правильний прийменник + правильний відмінок = граматично правильне речення.
+## Навичка 2: Відмінки в дії: Давальний та Орудний
 
-A **прийменник** (preposition) shows the relationship between different parts of a sentence. In Ukrainian, a preposition almost never works alone; it always operates in tandem with a specific grammatical case. This partnership is known as "case governance." 
+### Давальний відмінок
+**Давальний** відмінок відповідає на питання *Кому? Чому?*. Він показує особу-отримувача дії, вік людини, а також її стан. Найчастіше цей відмінок працює без жодних прийменників. Ми постійно використовуємо його у щоденному спілкуванні.
 
-Matching the right preposition with the correct case is a critical skill at the A2 level. If you use the right preposition but the wrong noun ending, the sentence will sound grammatically broken to a native speaker. Below are the core prepositions and the cases they govern. Pay special attention to prepositions like **з** and **на**, which can govern more than one case and change meaning entirely.
+The **Dative** case answers the questions *Кому? Чому?*. It shows the person receiving the action, a person's age, and their state. Most often, this case works without any prepositions. We constantly use it in daily communication.
 
-**Preposition Mapping Reference**
+**1. Отримувач дії**
+Коли ми щось даємо, даруємо, розповідаємо або пояснюємо, людина-отримувач стоїть у давальному відмінку. Дієслово **допомагати** (to help) є дуже важливим — воно завжди вимагає давального відмінка.
+When we give, gift, tell, or explain something, the recipient person stands in the Dative case. The verb **допомагати** is very important — it always requires the Dative case.
 
-| Прийменник | Case Governed | Meaning & Grammatical Function | Приклад |
-| :--- | :--- | :--- | :--- |
-| **з (із/зі)** | Genitive | From (origin or starting point). | Вона приїхала **з Києва**. |
-| **з (із/зі)** | Instrumental | With (accompaniment or addition). | Я п'ю каву **з молоком**. |
-| **до** | Genitive | To (destination or a person). | Ми йдемо **до лікаря**. |
-| **для** | Genitive | For (the beneficiary of an action). | Це подарунок **для мами**. |
-| **без** | Genitive | Without (the absence of something). | Він п'є чай **без цукру**. |
-| **через** | Accusative | Through / Because of / In (time). | Ми йдемо **через парк**. |
-| **після** | Genitive | After (temporal sequence). | Зустрінемося **після роботи**. |
-| **на** | Accusative | Onto (direction of motion). | Я кладу книгу **на стіл**. |
-| **на** | Locative | On (static physical location). | Книга лежить **на столі**. |
-| **в (у)** | Accusative | Into (direction of motion inside). | Він іде **в кімнату**. |
-| **в (у)** | Locative | In (static physical location inside). | Він сидить **у кімнаті**. |
+* Я хочу подарувати цю цікаву книжку **студентові**. (I want to gift this interesting book to the student.)
+* Вона дуже часто допомагає **своєму найкращому другові**. (She very often helps her best friend.)
+* Ми щовечора телефонуємо **мамі** та **батькові**. (We call mom and dad every evening.)
 
-> [!tip] **Милозвучність**
-> A hallmark of the Ukrainian language is its melodic flow, known as euphony (милозвучність). Remember to systematically alternate the prepositions **в/у** and **з/із/зі** to maintain this natural rhythm. You should use **в** or **з** before words starting with vowels, and **у** or **із/зі** before words starting with consonants (especially consonant clusters). This structural rule helps you avoid awkward, difficult-to-pronounce sounds.
+**2. Вік**
+В українській мові ми використовуємо іншу структуру для опису віку, ніж в англійській. Ми не кажемо «I am thirty years old». Ми кажемо «To me is thirty years». Особа завжди стоїть у давальному відмінку.
+In the Ukrainian language, we use a different structure for describing age than in English. We do not say "I am thirty years old". We say "To me is thirty years". The person is always in the Dative case.
 
-## Навичка 1: Відмінки в дії: Давальний та Орудний
+* **Моєму старому дідусеві** вісімдесят років. (My old grandfather is eighty years old.)
+* **Цій молодій дівчині** двадцять один рік. (This young girl is twenty-one years old.)
+* Скільки років **вашому молодшому брату**? (How old is your younger brother?)
 
-Давальний і Орудний відмінки — це відмінки стосунків. Давальний показує, **кому** ми допомагаємо, даємо чи пишемо. Орудний показує, **чим** ми працюємо і **з ким** проводимо час.
+**3. Стан і почуття**
+Коли ми описуємо, як людина себе почуває (холодно, тепло, сумно, цікаво), ми також використовуємо давальний відмінок. Дієслово **подобатися** (to like) працює за такою ж граматичною логікою.
+When we describe how a person feels (cold, warm, sad, interesting), we also use the Dative case. The verb **подобатися** works by the same grammatical logic.
 
-The Dative and Instrumental cases describe relationships between people, or the relationship between people and the tools they use.
+* **Мені** дуже холодно сьогодні на вулиці. (I am very cold today outside.)
+* **Студентам** цікаво слухати цю лекцію. (The students find it interesting to listen to this lecture.)
+* **Мені подобається** це красиве місто. (I like this beautiful city. / This beautiful city is pleasing to me.)
 
-### Модель: Давальний відмінок: Recipients and States
+### Орудний відмінок
+**Орудний** відмінок відповідає на питання *Ким? Чим?*. Він показує професію людини, компанію (з ким ми щось робимо), інструмент і навіть транспорт. Цей відмінок є ключовим для опису нашої взаємодії зі світом.
 
-Давальний відмінок відповідає на запитання **Кому? Чому?** Ми використовуємо його, коли хтось отримує щось: допомогу, подарунок, листа. Він також потрібен для віку людини. А ще — для фізичного або емоційного стану.
+The **Instrumental** case answers the questions *Ким? Чим?*. It shows a person's profession, company (who we do something with), instrument, and even transport. This case is key for describing our interaction with the world.
 
-The **Давальний** (Dative) case answers the questions **Кому? Чому?** (To whom? To what?). Its primary function is to indicate the recipient or beneficiary of an action. It is also essential for expressing a person's age and their internal physical or emotional states. 
+**1. Професія та статус**
+Після дієслів *бути* у минулому або майбутньому часі ми використовуємо орудний відмінок. Також ми використовуємо його після дієслів *працювати* та *стати*.
+After verbs like *бути* (to be) in the past or future tense, *працювати* (to work), and *стати* (to become), we always use the Instrumental case to describe a profession.
 
-**1. Recipients of an Action**
-Whenever you give, show, tell, or offer something to someone, the person receiving the action is placed in the Dative case. The high-frequency verb **допомагати** (to help) is a classic example of a verb that strictly requires the Dative case for the person receiving the assistance.
+* Мій брат активно вчиться і хоче бути **програмувальником**. (My brother studies actively and wants to be a programmer.)
+* Вона вже десять років працює **головною вчителькою** в школі. (She has been working as a head teacher in the school for ten years already.)
+* Колись він був **дуже відомим лікарем**. (He once was a very famous doctor.)
 
-* Я хочу допомогти **моєму другові**. (I want to help my friend.)
-* Вона дарує красиві квіти **вчительці**. (She gifts beautiful flowers to the teacher.)
-* Ми часто пишемо листи **нашому братові**. (We often write letters to our brother.)
-* Студент дає зошит **викладачу**. (The student gives the notebook to the instructor.)
-* Ти можеш допомогти **цій жінці**? (Can you help this woman?)
+**2. Компанія**
+Коли ми робимо щось разом з іншою людиною, ми використовуємо прийменник **з (із/зі)**. Також ми робимо це, коли поєднуємо різні речі.
+When we do something together with another person or combine different things, we obligatorily use the preposition **з (із/зі)**.
 
-**2. Expressing Age**
-In English, age is a characteristic that you *are* (e.g., "I am twenty years old"), utilizing the verb "to be." In Ukrainian, the conceptualization of age is entirely different. Age is not a state of being; rather, it is an accumulation of years that is "given" to a person by time. Therefore, the person receiving the years must be in the Dative case. The literal translation is closer to "To me there are twenty years."
+* Я дуже люблю розмовляти **з другом** про політику. (I really love talking with a friend about politics.)
+* Вона щоранку п'є гарячу каву **з молоком**. (Every morning she drinks hot coffee with milk.)
+* Ми йдемо в кіно **із сестрою** та її чоловіком. (We are going to the cinema with my sister and her husband.)
 
-* **Моєму дідусеві** вісімдесят років. (My grandfather is eighty years old.)
-* **Моїй старшій сестрі** двадцять один рік. (My older sister is twenty-one years old.)
-* Скільки **вам** років? (How old are you?)
-* **Моєму братові** виповнилося тридцять. (My brother turned thirty.)
-* **Цьому місту** понад тисяча років. (This city is over a thousand years old.)
+**3. Знаряддя і транспорт**
+Орудний відмінок показує річ, за допомогою якої ми виконуємо дію. У цьому значенні ми не використовуємо прийменників.
+The Instrumental case shows the object with which we perform an action. In this meaning, we do not use prepositions.
 
-**3. Expressions of Feeling and State**
-When talking about physical sensations or internal emotional states, the person experiencing the state is placed in the Dative case, typically used alongside adverbs. The very common verb **подобатися** (to like / to be pleasing) operates precisely on this logic. The literal translation is "To me, this is pleasing."
+* Я пишу цього довгого листа **синьою ручкою**. (I am writing this long letter with a blue pen.)
+* Ми завжди їдемо до Києва **швидким поїздом**. (We always travel to Kyiv by a fast train.)
+* Він ріже овочі **великим ножем**. (He cuts vegetables with a large knife.)
 
-* **Мені** зараз дуже холодно. (I am very cold right now.)
-* **Йому** завжди цікаво читати. (He is always interested in reading.)
-* **Моїй мамі** дуже подобається це старе місто. (My mom really likes this old city.)
-* Чи подобається **новим студентам** цей університет? (Do the new students like this university?)
-* **Нам** весело на цьому концерті. (We are having fun at this concert.)
+### Типова помилка: Знаряддя дії
+Тут ми маємо зробити паузу і детально розібрати дуже часту **помилку** (mistake). Англомовні студенти звикли використовувати слово «with» для інструментів («I eat with a spoon»). Вони часто перекладають це дослівно, додаючи прийменник «з», або використовують називний відмінок.
 
-### Практика: Орудний відмінок: Tools and Companions
+Here we must pause and analyze a very common mistake in detail. English-speaking students are used to using the word "with" for instruments. They often translate this literally, adding the preposition "з", or they use the Nominative case.
 
-Орудний відмінок відповідає на запитання **Ким? Чим?** Він потрібен для інструментів: пишемо **ручкою**. Для професій: працюю **лікарем**. І для супроводу: іду **з другом**.
+> [!warning] Уникайте калькування з англійської мови
+> Коли ви використовуєте предмет як інструмент, не використовуйте прийменник «з». В українській мові фраза «з ложкою» означає, що ложка — це ваша компанія, наче жива істота. 
+> When you use an object as a tool, do not use the preposition "з". In Ukrainian, the phrase "з ложкою" means that the spoon is your company, like a living being.
 
-The **Орудний** (Instrumental) case answers the questions **Ким? Чим?** (By whom? With what?). It describes the physical tool used to perform an action, professional status, and accompaniment.
+Уявіть таку ситуацію в ресторані. Студент хоче попросити ложку, щоб з'їсти свій суп. Він каже офіціанту: «Я хочу суп із великою ложкою». Офіціант дивується, але приносить тарілку гарячого супу, в якому прямо як інгредієнт плаває металева ложка! Студент використав прийменник «з» (орудний відмінок компанії), і це означало, що ложка — це частина страви. 
+Щоб попросити інструмент для їжі, правильно сказати: «Дайте мені ложку, я їм суп великою ложкою» (без прийменника). Ця кумедна історія чудово показує логіку української мови. Закінчення слова вже працює як прийменник.
 
-**1. Tools and Instruments (Without Prepositions)**
-When you use a physical object to accomplish a specific task, you put that noun in the Instrumental case. Crucially, you do not use any preposition here. The ending of the word alone signals its function as a tool.
+Imagine such a situation in a restaurant. A student wants to ask for a spoon to eat his soup. He says to the waiter: "I want soup with a large spoon". The waiter is surprised but brings a plate of hot soup in which a metal spoon floats exactly like an ingredient! The student used the preposition "з" (Instrumental), and this meant that the spoon was part of the dish.
+To ask for an eating tool, it is correct to say: "Give me a spoon, I eat soup with a large spoon" (without a preposition). This funny story perfectly shows the logic of the Ukrainian language. The word ending already works as a preposition.
 
-* Студент уважно пише новою **ручкою**. (The student is writing carefully with a new pen.)
-* Я завжди їм гарячий суп **ложкою**. (I always eat hot soup with a spoon.)
-* Він обережно ріже свіжий хліб **ножем**. (He carefully cuts the fresh bread with a knife.)
-* Ми малюємо картину **олівцем**. (We are drawing a picture with a pencil.)
-* Вона відкриває двері **ключем**. (She opens the door with a key.)
+Ще кілька порівнянь:
+* ❌ Він малює олівець. (Називний відмінок)
+* ❌ Він малює з олівцем. (Компанія)
+* ✅ Він малює **олівцем**. (Інструмент)
 
-**2. Profession and Status**
-When describing what someone does for a living, particularly after the verbs *бути* (to be), *працювати* (to work), or *стати* (to become), the profession must be placed in the Instrumental case. This shows what role the person is taking on.
+## Навичка 3: Граматичні тонкощі
 
-* Моя молодша сестра працює **лікаркою**. (My younger sister works as a doctor.)
-* Я дуже хочу бути **програмувальником**. (I really want to be a programmer.)
-* Мій друг став **директором** компанії. (My friend became the director of the company.)
-* Вона була відомою **акторкою**. (She was a famous actress.)
-* Він працює **архітектором** у Києві. (He works as an architect in Kyiv.)
+### Родовий відмінок і заперечення
+**Родовий** відмінок виконує багато різних функцій: він показує дати, приналежність, і працює з багатьма прийменниками (для, без, після, до, біля). Але найголовніша його особливість на цьому етапі — це постійна робота із запереченням і словом «немає».
 
-**3. Accompaniment (With the Preposition «з»)**
-When doing something *together with* someone or something, we use the preposition **з (із/зі)** followed immediately by the Instrumental case.
+The **Genitive** case performs many different functions: it shows dates, possession, and works with many prepositions (для, без, після, до, біля). But its most important feature at this stage is its constant work with negation and the word "немає".
 
-* Я довго розмовляю **з моїм другом**. (I am talking for a long time with my friend.)
-* Ми часто п'ємо ранкову каву **з молоком**. (We often drink morning coffee with milk.)
-* Вона щовечора гуляє **із собакою** в парку. (She walks with the dog in the park every evening.)
-* Я йду в кіно **зі своєю сестрою**. (I am going to the cinema with my sister.)
-* Вони працюють **із новими клієнтами**. (They are working with new clients.)
+**1. Час, дати та приналежність**
+Родовий відмінок замінює англійське закінчення «-'s» для показу приналежності (чиє це?). Також він використовується для назв місяців у датах.
+The Genitive case replaces the English ending "-'s" to show possession (whose is it?). It is also used for the names of months in dates.
 
-### Самоперевірка: Типова помилка: Називний замість Орудного
+* Це новий автомобіль **нашого сусіда**. (This is our neighbor's new car.)
+* Де лежить телефон **твоєї сестри**? (Where is your sister's phone lying?)
+* Свято буде **двадцять четвертого серпня**. (The holiday will be on the twenty-fourth of August.)
 
-One of the most frequent and persistent mistakes learners make is forgetting to decline the noun when talking about physical tools. When speaking quickly, it is deeply tempting to default to the dictionary form (the Nominative case).
+**2. Заперечення з «Немає»**
+Слово «немає» (there is not / does not have) — це диктатор української граматики. Воно завжди вимагає після себе родового відмінка. Якщо ви хочете сказати, що чогось не існує, ви обов'язково повинні змінити відмінок. 
 
-> [!warning] **Типова помилка**
-> ❌ **Неправильно:** Я пишу ручка. (Literal: I write pen.)
-> ✅ **Правильно:** Я пишу **ручкою**. (I write with a pen.)
+The word "немає" is a dictator of Ukrainian grammar. It always requires the Genitive case after it. If you want to say that something does not exist, you must obligatorily change the case.
 
-**Why is this a severe mistake?** 
-In the structure of the Ukrainian language, "Я пишу ручка" implies a bizarre scenario like "I write, and a pen also writes" or even "I am writing, and I am a pen." The sentence entirely lacks the grammatical marker that signals to the listener that the pen is merely a passive tool in your hand. By intentionally changing the ending to **-ою** (ручкою), you explicitly and correctly signal the mechanical function of the object. To **виправити** (to correct) this mistake, you must train yourself to always ask: "Am I holding or using this object to accomplish a task?" If the answer is yes, you must apply the Instrumental case.
+Порівняйте ці пари речень:
+* **Є:** У мене є вільний час. (I have free time.)
+* **Немає:** У мене немає вільного **часу**. (I don't have free time.)
 
-## Граматичні тонкощі: Родовий, Знахідний та Кличний
+* **Є:** На столі лежить цікава книга. (An interesting book is lying on the table.)
+* **Немає:** На столі немає цікавої **книги**. (There is no interesting book on the table.)
 
-Тепер розглянемо відмінки, які відповідають за складніші поняття: відсутність, час, напрямок руху, місце і звертання.
+* **Є:** У місті є новий сучасний театр. (The city has a new modern theater.)
+* **Немає:** У місті немає нового сучасного **театру**. (The city does not have a new modern theater.)
 
-Now let's focus on the cases that handle more abstract, yet highly frequent concepts: absence, temporal events, physical direction, location, and direct address. These nuances are what make your spoken Ukrainian sound natural.
+Це правило не має винятків. Завжди перевіряйте себе, коли використовуєте слово «немає».
 
-### Родовий відмінок: Dates, Absence, and Origin
+### Знахідний чи Місцевий?
+Студенти часто плутають **Знахідний** (Accusative) та **Місцевий** (Locative) відмінки, коли розповідають про місцезнаходження або напрямок. Проблема виникає через те, що короткі прийменники **в/у** та **на** активно використовуються з обома відмінками. Як їх розрізняти? Секрет криється у дієслові.
 
-Родовий відмінок відповідає на запитання **Кого? Чого?** Це найуживаніший непрямий відмінок. Він потрібен для дат (**десятого** березня), відсутності (немає **часу**) та походження (з **Києва**). Також стоїть після прийменників: для, без, після, до.
+Students often confuse the Accusative and Locative cases when talking about location or direction. The problem arises because the short prepositions **в/у** and **на** are actively used with both cases. How to distinguish them? The secret lies in the verb.
 
-The **Родовий** (Genitive) case answers the questions **Кого? Чого?** (Of whom? Of what?). It is the most frequently used oblique case in Ukrainian — responsible for expressing possession, origin, exact dates, and negative statements.
+Якщо дієслово означає динамічний **рух** у певному напрямку (куди? / where to?), ми використовуємо **Знахідний** відмінок.
+Якщо дієслово означає **статичне місце** (де? / where at?), ми використовуємо **Місцевий** відмінок.
 
-**1. Dates and Temporal Markers**
-When you state the exact date an event happens, both the ordinal number (the day) and the month take the Genitive case. This structure is non-negotiable for formal scheduling.
+If the verb indicates dynamic motion in a certain direction (where to?), we use the Accusative case.
+If the verb indicates a static location (where at?), we use the Locative case.
 
-* Ця історична подія сталася **десятого березня**. (This historical event happened on the tenth of March.)
-* Наш великий концерт буде **п'ятого травня**. (Our big concert will be on the fifth of May.)
-* Ми повернемося додому **першого вересня**. (We will return home on the first of September.)
-* Мій день народження **двадцятого жовтня**. (My birthday is on the twentieth of October.)
-* Вони зустрілися **другого квітня**. (They met on the second of April.)
+| Контекст | Питання | Відмінок | Приклад використання |
+|----------|---------|----------|----------------------|
+| **Рух (Motion)** | Куди? (Where to?) | Знахідний (Accusative) | Я йду **в банк** (у + Acc). Він кладе книгу **на стіл** (на + Acc). |
+| **Місце (Location)** | Де? (Where at?) | Місцевий (Locative) | Я працюю **у банку** (у + Loc). Книга вже лежить **на столі** (на + Loc). |
 
-**2. Mandatory Prepositions**
-A large group of very common prepositions exclusively govern the Genitive case. These prepositions often indicate a point of origin, the absence of an item, or the intended beneficiary of an action.
+Крім того, прийменник **через** (through / because of) завжди вимагає знахідного відмінка, незалежно від типу дієслова.
+* Ми обережно йдемо **через дорогу**. (We are carefully walking across/through the road.)
+* Він залишився вдома **через дощ**. (He stayed at home because of the rain.)
 
-* **з (від)**: Він щойно приїхав **з Києва**. (He just arrived from Kyiv.)
-* **до**: Ми зараз ідемо **до драматичного театру**. (We are currently going to the drama theater.)
-* **для**: Цей смачний торт приготували **для брата**. (This delicious cake was prepared for the brother.)
-* **біля**: Наш собака мирно спить **біля столу**. (Our dog is sleeping peacefully near the table.)
-* **без**: Я завжди п'ю ранкову каву **без цукру**. (I always drink morning coffee without sugar.)
-* **після**: Що ти плануєш робити **після важкої роботи**? (What do you plan to do after hard work?)
+### Кличний відмінок
+**Кличний** відмінок дуже специфічний. Він не відповідає на жодне запитання (ні «Хто?», ні «Де?»). Він має лише одну головну функцію: звернути увагу людини під час розмови. 
 
-### Типова помилка: Називний після заперечення
+The **Vocative** case is very specific. It does not answer any question (neither "Who?" nor "Where?"). It has only one main function: to draw a person's attention during a conversation.
 
-Це найважливіше правило Родового відмінка: після слова **немає** іменник завжди стоїть у Родовому відмінку. Якщо чогось немає — використовуйте Родовий.
+> [!culture] Культура звертання
+> В українському суспільстві використання кличного відмінка показує вашу повагу до співрозмовника. Називний відмінок у прямому звертанні звучить дещо грубо та неприродно. Справжня українська мова вимагає зміни закінчення імені.
+> In Ukrainian society, using the Vocative case shows your respect for the conversation partner. The Nominative case in direct address sounds somewhat rude and unnatural. Authentic Ukrainian language requires changing the name's ending.
 
-The most critical syntactic rule of the Genitive case is its mandatory use in negative statements that express the absence of an object. 
+Основні правила для імен:
+* Чоловічі імена часто закінчуються на **-е** або **-ю**: Іван -> Іване, Максим -> Максиме, Андрій -> Андрію, Сергій -> Сергію.
+* Жіночі імена на **-а** змінюються на **-о**: Олена -> Олено, Анна -> Анно.
+* Жіночі імена на **-я** змінюються на **-є** або **-ю**: Марія -> Маріє, Надія -> Надію.
 
-> [!warning] **Типова помилка**
-> ❌ **Неправильно:** У мене немає гроші. 
-> ✅ **Правильно:** У мене немає **грошей**. 
+❌ **Неправильно:** Сергій, привіт! Олена, слухай!
+✅ **Правильно:** **Сергію**, привіт! **Олено**, слухай!
 
-When you use the word **немає** (there is no / does not have), the object that is absent MUST shift structurally into the Genitive case. This is a foundational pillar of Ukrainian grammar. If an object does not exist, it cannot take the Nominative case.
+Завжди звертайтеся до людей у кличному відмінку!
 
-Let us drill several minimal pairs to clearly see the necessary shift from Nominative (presence) to Genitive (absence):
+## Навичка 4: Сервіси та цифрова Україна
 
-| Ствердження | Заперечення |
-| :--- | :--- |
-| У мене є вільний **час**. (I have free time.) | У мене немає вільного **часу**. (I do not have free time.) |
-| Тут є серйозна **проблема**. (Here is a serious problem.) | Тут немає серйозної **проблеми**. (There is no serious problem.) |
-| В офісі є новий **директор**. (The new director is in the office.) | В офісі немає нового **директора**. (The new director is not in the office.) |
-| На столі лежить **книга**. (A book is lying on the table.) | На столі немає **книги**. (There is no book on the table.) |
-| У неї є розумна **ідея**. (She has a smart idea.) | У неї немає розумної **ідеї**. (She does not have a smart idea.) |
+### На пошті
+Тепер ми переходимо до практики. Як усі ці відмінки працюють разом у живому спілкуванні? Уявіть, що ви прийшли у відділення. Вам потрібно скористатися послугами: **пошта** (post office) обробляє листи та пакунки. Ви хочете **відправляти** (to send) подарунок.
 
-Always remember: **немає + Родовий відмінок** (Genitive).
+Now we move on to practice. How do all these cases work together in live communication? Imagine you came to a branch. You need to use services: the post office processes letters and packages. You want to send a gift.
 
-### Знахідний чи Місцевий? (Accusative vs. Locative)
+В Україні працюють державна компанія «Укрпошта» та дуже популярна приватна компанія «Нова пошта». Українці надзвичайно активно замовляють товари через інтернет, тому пошта — це дуже важливе місце.
+In Ukraine, the state company "Ukrposhta" and a very popular private company "Nova Poshta" operate. Ukrainians order goods via the Internet extremely actively, so the post office is a very important place.
 
-Запам'ятайте головне правило:
-* **Куди?** (напрямок руху) → Знахідний відмінок: Я йду **в банк**.
-* **Де?** (місце) → Місцевий відмінок: Я вже **в банку**.
+Тут ми побачимо знахідний відмінок як прямий об'єкт. Також буде орудний відмінок як засіб та родовий відмінок із прийменником «для».
 
-Ті самі прийменники **в (у)** і **на** працюють із двома різними відмінками. Рух — Знахідний. Місце — Місцевий.
+— Добрий день! Мені потрібна допомога. Я хочу відправити цю велику коробку (Accusative) поштою (Instrumental).
+— Добрий день. Куди саме ви її відправляєте?
+— Я відправляю її до Львова (Genitive). Це сюрприз для мого брата (Genitive).
+— Добре. Напишіть адресу на цьому бланку (Locative). Будь ласка, пишіть синьою ручкою (Instrumental). Також ви можете купити поштові марки (Accusative).
+— Дякую. А через скільки днів (Accusative) посилка буде там?
+— Доставка буде через три дні (Accusative). Ваш номер посилки є на чеку (Locative).
 
-This is one of the most logical features of Ukrainian grammar: the same prepositions — **в (у)** and **на** — govern different cases depending on whether you describe movement or location.
+Зверніть увагу: ми кажемо «відправити поштою». Тут ми використовуємо орудний відмінок без прийменника. Це показує сервіс як логічний інструмент доставки. 
 
-* Direction or movement towards a goal (Куди?) → **Accusative** (Знахідний) case.
-* Static location or resting state (Де?) → **Locative** (Місцевий) case.
+### У банку
+Інша типова ситуація — це візит до фінансової установи. Тут нам часто потрібно **обмінювати** (to exchange) готівку, відкривати новий **рахунок** (account) або просити спеціаліста допомогти розібратися з документами.
 
-Examine this comparative table to see the philosophy in action:
+Another typical situation is a visit to a financial institution. Here we often need to exchange cash, open a new account, or ask a specialist to help sort out documents.
 
-| Контекст | Прийменник + Знахідний (Direction / Motion) | Прийменник + Місцевий (Static Location) |
-| :--- | :--- | :--- |
-| **в / у** (in / into) | Я швидко йду **в велику кімнату**. (I am walking quickly into the big room.) | Я спокійно стою **у великій кімнаті**. (I am standing calmly in the big room.) |
-| **в / у** (in / into) | Він їде **в нове місто**. (He is driving to the new city.) | Він зараз живе **в новому місті**. (He currently lives in the new city.) |
-| **на** (on / onto) | Вона кладе важку книгу **на стіл**. (She puts the heavy book onto the table.) | Важка книга довго лежить **на столі**. (The heavy book lies on the table for a long time.) |
-| **на** (event / abstract) | Ми зараз ідемо **на важливу роботу**. (We are going to important work now.) | Ми зараз **на важливій роботі**. (We are currently at important work.) |
+Тут ми побачимо давальний відмінок (отримувач допомоги) та місцевий відмінок (локація).
 
-Additionally, the preposition **через** (through, across, because of) exclusively governs the Accusative case, whether describing physical movement or causality:
-* Ми обережно йдемо **через широку дорогу**. (We are walking carefully across the wide road.)
-* Урок несподівано скасували **через сильний дощ**. (The lesson was unexpectedly canceled because of the heavy rain.)
-* Ми повернемося додому **через один тиждень**. (We will return home in one week.)
+— Добрий ранок. Чим я можу вам (Dative) сьогодні допомогти?
+— Добрий ранок. Мені (Dative) потрібно відкрити рахунок у вашому банку (Locative). І також я хочу обмінювати долари на гривні (Accusative). Який у вас курс?
+— Курс купівлі — тридцять вісім гривень за долар (Accusative). Наш менеджер може допомогти вам (Dative) із цим завданням (Instrumental). Дайте мені (Dative), будь ласка, ваш паспорт.
+— Звісно, ось він.
+— Дякую. Тепер вам потрібно поставити підпис на цих офіційних документах (Locative). 
+— Усе готово. Ви дуже швидко допомагаєте клієнтам (Dative).
 
-### Кличний відмінок: The Art of Direct Address
+Ви чітко бачите важливе правило. Дієслово **допомагати** завжди працює з давальним відмінком для людини (допомогти вам, допомогти клієнтам). А для завдання ми використовуємо орудний відмінок (допомогти з роботою, із завданням).
 
-Кличний відмінок — це відмінок звертання. Звертаєтесь на ім'я, за посадою чи за родинним зв'язком? Закінчення слова змінюється обов'язково. Це правило.
+### Дія та Монобанк (Культурний контекст)
+Сучасна Україна — це держава з глибоко інтегрованими технологіями. Багато класичних сервісів повністю змінили свій формат. Наприклад, щоб відкрити банківський **рахунок**, українцям майже ніколи не потрібно йти у фізичне відділення.
 
-The **Кличний** (Vocative) case is one of the distinctive features of Ukrainian. It is used exclusively for direct address — whenever you call someone by their name, title, or relationship to you.
+Modern Ukraine is a state with deeply integrated technologies. Many classic services have completely changed their format. For example, to open a bank account, Ukrainians almost never need to go to a physical branch.
 
-> [!culture] **Культурний контекст**
-> The Vocative case is absolutely not optional. During certain historical periods under imperial and Soviet rule, attempts were made to diminish the importance of the Vocative case to make Ukrainian resemble Russian grammar more closely. However, the Vocative survived and is a vibrant part of modern identity. Using the Nominative case to address someone (e.g., "Сергій, привіт!") sounds harsh, unpolished, and unnatural. Using the Vocative case demonstrates deep respect, cultural intimacy, and a genuine understanding of Ukrainian conversational etiquette. 
+> [!fact] Цифрова держава
+> Україна є одним із провідних світових лідерів у сфері цифрових державних послуг. Застосунок «Дія» містить повністю легальні цифрові паспорти та водійські права. Вони мають таку саму юридичну силу, як і паперові документи. А такі сервіси, як «Монобанк», працюють виключно через застосунок у смартфоні, не маючи жодного фізичного офісу.
+> Ukraine is one of the leading global leaders in the field of digital government services. The "Diia" app contains fully legal digital passports and driver's licenses, which have the same legal force as paper ones. And services like "Monobank" operate exclusively through a smartphone app, without having a single physical office.
 
-**Correcting the Error:**
-❌ **Неправильно:** Сергій, привіт!
-✅ **Правильно:** **Сергію**, привіт!
+Завдяки цим технологіям наша мова також отримує новий контекст використання. Ми беремо старі відмінки, але застосовуємо їх до сучасного життя:
+* Я показую свій паспорт безпосередньо **у Дії** (Locative).
+* Я миттєво переказую гроші **на Монобанк** (Accusative).
+* Я оплачую покупки в супермаркеті **телефоном** (Instrumental — телефон працює як інструмент оплати).
+* На жаль, у мене сьогодні немає **готівки** (Genitive).
+* Мені дуже подобається **цей застосунок** (Dative + Nominative).
 
-❌ **Неправильно:** Мама, іди швидко сюди!
-✅ **Правильно:** **Мамо**, іди швидко сюди!
+Навіть у цифровому світі ми завжди маємо **перевірити** (to check) свої закінчення та використовувати їх **правильно** (correctly).
 
-**Examples in Context:**
-* **Олено**, ти зараз маєш вільний час? (Olena, do you have free time right now?)
-* Пане **президенте**, дозвольте мені запитати. (Mr. President, allow me to ask.)
-* Мій дорогий **друже**, я хочу тобі допомогти. (My dear friend, I want to help you.)
-* Шановна **вчителько**, поясніть це ще раз. (Respected teacher, explain this one more time.)
-* **Брате**, де ти був учора? (Brother, where were you yesterday?)
+## Навичка 5: Історичний виклик та підсумок
 
-By mastering the Vocative endings, you immediately sound more natural, polite, and connected to native speakers.
+### Історичний факт: Марки замість монет
+Давайте прочитаємо цікавий історичний факт, який показує, як працювали фінансові сервіси понад сто років тому. Зверніть особливу увагу на відмінки у цьому тексті. Це чудова можливість перевірити свої навички читання в історичному контексті.
 
-## Сервіси та цифрова Україна
+Let's read an interesting historical fact that shows how financial services worked over a hundred years ago. Pay special attention to the cases in this text. This is a great opportunity to check your reading skills in a historical context.
 
-To solidify your theoretical knowledge, let's apply it to real-world scenarios. Navigating everyday services in Ukraine requires you to rapidly switch between cases to communicate effectively.
+У тисяча дев'ятсот вісімнадцятому році держава (Nominative) мала серйозну економічну проблему. Це було під час існування Української Народної Республіки (Genitive). На території України (Locative) спостерігався критичний дефіцит металу (Genitive). Держава просто не могла карбувати дрібні монети. Але молодій республіці (Dative) терміново були потрібні власні гроші (Nominative) для торгівлі. Що зробив уряд? Вони знайшли дуже креативне та незвичне рішення. 
 
-### На пошті (At the Post Office)
+Уряд вирішив надрукувати спеціальні поштові марки на цупкому картоні (Locative). Видатні українські художники, серед яких був Георгій Нарбут (Nominative), створили чудовий дизайн. Люди (Nominative) почали використовувати ці марки замість звичайних монет (Genitive). Ви могли піти на базар (Accusative), купити хліб (Accusative) і заплатити марками (Instrumental). 
 
-A routine visit to the **пошта** (post office) requires you to actively use the Accusative case for the item you are sending, the Genitive case for the recipient (using the preposition "для"), and the Locative or Instrumental depending on your sending method.
+Це дуже цікавий та особливий період української історії, коли поштові марки офіційно стали грошима (Instrumental). Люди обережно носили їх у своїх гаманцях (Locative). 
 
-Here is a typical interaction when you need to **відправити** (send) a package. Pay attention to the noun endings.
+> [!reflection] Подумайте
+> У цьому короткому історичному тексті ми використали всі сім відмінків української мови. Чи можете ви знайти їх і пояснити логіку їхнього використання? Це найкраще тренування перед фінальним тестом.
 
-**Діалог:**
-— Добрий день. Я дуже хочу **відправити поштою** цю велику книгу. 
-*(Instrumental: by mail; Accusative: this big book)*
-— Добрий день. Це звичайна **посилка для друга**? 
-*(Nominative: package; Genitive: for a friend)*
-— Так, усе правильно. Він зараз живе **в сонячній Одесі**. 
-*(Locative: in sunny Odesa)*
-— Добре. Напишіть його точну адресу **синьою ручкою**, будь ласка. 
-*(Instrumental: with a blue pen)*
-— Готово. Скажіть, будь ласка, скільки це коштує?
-— П'ятдесят гривень.
+### Підсумок відмінків
+Ви проробили фантастичну роботу. Ми розглянули всі сім відмінків та їхні найголовніші функції. Ця система — це великий механізм, і ви вже вмієте ним керувати. Давайте зробимо фінальний підсумок. Ця консолідована таблиця буде вашим головним довідником.
 
-Notice how naturally and fluidly the cases blend together to form a complete thought. The speaker uses the Instrumental case to describe *how* to write the address (синьою ручкою) and *how* the package will travel (поштою). They utilize the Locative case to state the static destination city (в Одесі), and the Genitive case to explicitly show who the package is intended for (для друга).
+You have done fantastic work. We have reviewed all seven cases and their main functions. This system is a large mechanism, and you already know how to operate it. Let's make a final summary. This consolidated table will be your main reference guide.
 
-### У банку (At the Bank)
+| Відмінок (Case) | Питання | Головна функція | Приклад (Example) |
+|-----------------|---------|---------------------------------|-------------------|
+| Називний (Nom) | Хто? Що? | Суб'єкт, головний герой речення | **Студент** читає книгу. |
+| Родовий (Gen) | Кого? Чого? | Заперечення (немає), дата, власність | У мене немає **часу**. |
+| Давальний (Dat) | Кому? Чому? | Отримувач, допомога, вік, стан | Я допомагаю **другові**. |
+| Знахідний (Acc) | Кого? Що? | Прямий об'єкт, напрямок (через/в) | Я швидко бачу **школу**. |
+| Орудний (Inst) | Ким? Чим? | Інструмент, професія, компанія (з) | Я гарно пишу **ручкою**. |
+| Місцевий (Loc) | На/В кому/чому? | Статичне місце (в/на) | Ми живемо **в місті**. |
+| Кличний (Voc) | — | Пряме звертання до особи | **Брате**, привіт тобі! |
 
-Banking is another essential, high-frequency service. In this context, you will frequently discuss opening a **рахунок** (account), use the verb **обмінювати** (to exchange) for currency, and ask bank employees to assist you.
+**Перевірте себе:**
+Відповіді на ці п'ять запитань допоможуть вам закріпити знання:
+1. Який саме відмінок ми використовуємо для вираження віку (мені 20 років)?
+2. Який відмінок обов'язково потрібен після слова «немає» у заперечних реченнях?
+3. Чому фраза «Я пишу з ручкою» є граматичною помилкою? Як сказати це правильно?
+4. Яка фундаментальна різниця між фразами «Я йду в банк» та «Я сиджу в банку»?
+5. Як ви правильно та ввічливо звернетеся до людини на ім'я Максим чи Олена?
 
-**Діалог:**
-— Доброго ранку. Скажіть, чим я можу **допомогти вам** сьогодні? 
-*(Dative: help you)*
-— Доброго ранку. Я хочу відкрити новий **рахунок у банку**. 
-*(Accusative: new account; Locative: in the bank)*
-— Звісно, без проблем. Ви зараз працюєте **програмувальником**? 
-*(Instrumental: as a programmer)*
-— Так. Мені терміново потрібен рахунок **для зарплати**. 
-*(Genitive: for salary)*
-— Зрозуміло. Дайте ваш паспорт. Також ви можете зручно **обмінювати гроші** у нашому мобільному додатку. 
-*(Accusative: exchange money; Locative: in our mobile app)*
-— Дуже дякую, що швидко допомагаєте **з оформленням**. 
-*(Instrumental: with the paperwork)*
+### Що далі?
+Ви подолали дуже важливий рубіж у вивченні української мови. Відмінкова система іменників — це найскладніша структурна частина для англомовних студентів. Тепер ви розумієте цю логіку, і ваша мова стане набагато багатшою.
 
-In this dialogue, the Dative case appears immediately with the phrase "допомогти вам". The Instrumental case is required for stating the profession (програмувальником) and for indicating what the customer needs help with (з оформленням). The Genitive case describes the core purpose of the account (для зарплати).
+You have crossed a very important milestone in learning the Ukrainian language. The noun case system is the most difficult structural part for English-speaking students. Now you understand this logic, and your language will become much richer.
 
-### Культурний контекст: Цифрова Україна
+Наступний великий крок — це система дієслів. У наступному модулі ми почнемо вивчати нову тему — граматичну різницю між діями, які ще тривають, і діями, які вже успішно завершені. Але я маю для вас дуже гарну новину. Незалежно від того, яку форму дієслова ви використовуєте, закінчення іменників і відмінки залишаються абсолютно стабільними. Вони більше не змінюються! 
 
-Україна — один зі світових лідерів у сфері цифрових державних послуг. Мільйони українців щодня користуються додатком «Дія» і мобільними банками замість паперових документів.
+The next big step is the verb system. In the next module, we will start learning verbal aspect — the grammatical difference between actions that are still ongoing and actions that are already successfully completed. But I have very good news for you. Regardless of which verb aspect you use, noun endings and cases remain perfectly stable. They do not change anymore! 
 
-> [!fact] **Цифрова революція**
-> Ukraine is broadly recognized as a global leader in digital state services and innovative neobanking. You might learn dialogues for visiting a physical bank building, but in reality, millions of Ukrainians manage absolutely everything through their smartphones. The revolutionary state application "Дія" (Diia) holds digital passports, driver's licenses, and tax records, all carrying the exact same legal weight as traditional paper documents. 
-
-When interacting with modern Ukrainian tech ecosystems like Monobank, Privat24, or Diia, your vocabulary shifts towards technology, but the foundational grammar remains completely identical. You still need your cases.
-
-* Мої гроші безпечно лежать **на банківському рахунку**. (My money lies safely on the bank account. — *Locative*)
-* Я завжди переказую кошти **через новий додаток**. (I always transfer funds through the new app. — *Accusative*)
-* Ми швидко оплачуємо всі рахунки **без жодних проблем**. (We quickly pay all bills without any problems. — *Genitive*)
-
-Whether you are physically standing in a brick-and-mortar building or simply tapping on a glowing screen, the prepositions and their strictly governed cases are the unshakeable foundation of your sentence.
-
-## Історичний виклик та підсумок
-
-Прочитайте історичний текст і зверніть увагу на відмінки у контексті. Які прийменники ви бачите? Які відмінки вони вимагають?
-
-Let's practice reading a historical text that naturally uses various cases in context.
-
-### Історичний факт: Марки як гроші (1918)
-
-During the complex era of the Ukrainian People's Republic (Українська Народна Республіка — УНР) in 1918, the newly independent nation faced immense economic and logistical challenges.
-
-> [!history-bite] **Шаги**
-> У тисяча дев'ятсот вісімнадцятому році в Україні була велика економічна криза. Молода держава зовсім не мала металу **для дрібних монет** *(Genitive: for small coins)*. Тому український уряд швидко випустив спеціальні паперові марки. Звичайні люди щодня використовували ці марки **як справжні гроші** *(Accusative: as real money)*. Відомий художник Георгій Нарбут довго працював **над унікальним дизайном** *(Instrumental: on the unique design)*. Ці маленькі паперові гроші офіційно називалися «шагами». Люди постійно купували свіжий хліб **за ці шаги** *(Accusative: for these stamps)* і щоранку ходили **з ними** *(Instrumental: with them)* на міський ринок.
-
-Notice how this text uses the Genitive case to show the absence of metal (**для дрібних монет**), the Instrumental case for action and accompaniment (**над унікальним дизайном**, **з ними**), and the Accusative case for exchange (**за ці шаги**). Reading short historical texts is a great way to see how prepositions and cases work together in real sentences.
-
-### Підсумок: Комплексна матриця відмінків
-
-To truly solidify this checkpoint and ensure your structural knowledge is complete, let us look at a comprehensive summary matrix. This is your master key for navigating the Ukrainian case system. Use it to **перевірити** your understanding.
-
-| Відмінок | Питання | Основна функція | Практичний приклад |
-| :--- | :--- | :--- | :--- |
-| **Називний** (Nominative) | Хто? Що? | The subject of the sentence; the dictionary form. | Це мій старший **брат**. |
-| **Родовий** (Genitive) | Кого? Чого? | Possession, absence, exact dates, origin. | У мене зараз немає **брата**. |
-| **Давальний** (Dative) | Кому? Чому? | The recipient, person's age, emotional state. | Я даю цікаву книгу **братові**. |
-| **Знахідний** (Accusative) | Кого? Що? | The direct object of an action, direction of motion. | Я добре бачу мого **брата**. |
-| **Орудний** (Instrumental) | Ким? Чим? | The physical tool, a profession, accompaniment. | Я часто гуляю з **братом**. |
-| **Місцевий** (Locative) | На/У кому? чому? | The static physical location of an object or person. | На **браті** сьогодні новий светр. |
-| **Кличний** (Vocative) | — | Direct address, calling someone respectfully. | Привіт, мій любий **брате**! |
-
-### Що далі? (What's Next?)
-
-You have now reviewed the entire Ukrainian nominal case system. Understanding these rules is a major step, but **правильно** (correctly) applying them in spontaneous speech takes practice. Do not worry when a **помилка** (mistake) happens—it is a natural part of building fluency.
-
-In module a2-12, we will introduce a major, conceptually fascinating new topic: Verb Aspect (Perfective vs. Imperfective). This concept deals entirely with *how* an action happens in time. Is the action ongoing and continuous, or is it a completed, singular result? 
-
-Crucially, **noun cases do not change based on verb aspect.** Whether you are reading a book for five hours straight (imperfective) or you finish reading the book in one sitting (perfective), the word "book" remains in the Accusative case (книгу). Your knowledge of cases will remain stable as we introduce new verb rules.
-
-**Перевірте себе (Self-Check Questions):**
-1. Який саме відмінок ми обов'язково використовуємо для фізичних інструментів (наприклад, писати ручкою)?
-2. Як граматично правильно сказати українською: «У мене немає (вільний час)»?
-3. Який прийменник показує напрямок руху всередину (в чи на), й який відмінок він вимагає?
-4. Як правильно та ввічливо звернутися до близького друга: «Друг» чи «Друже»?
-5. Який відмінок завжди потрібен після дієслова «допомагати»?
-6. Який відмінок ми використовуємо, коли говоримо про професію людини?
+Уся ваша важка робота з відмінками вже зараз дає потужні результати. Ви будете використовувати ці знання кожного дня, будуючи складні речення. Продовжуйте практикуватися. Вивчення мови — це довгий шлях, і ви йдете ним дуже успішно та впевнено!
 
 ---

@@ -1,7 +1,7 @@
-# Audit Report: M13 — work-week-aspect-in-action.md
-**Level:** B1 | **Module:** M13 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:42:36
+# Audit Report: M15 — work-week-aspect-in-action.md
+**Level:** B1 | **Module:** M15 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:40:07
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,63 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | fill-in | Робочі звіти та правильний вид | 12 | 8 | ✅ |
+| 2 | fill-in | Розповідь про робочий тиждень | 10 | 8 | ✅ |
+| 3 | fill-in | Від плану до звіту: зміна виду | 8 | 8 | ✅ |
+| 4 | quiz | Теорія: процес чи результат? | 8 | 8 | ✅ |
+| 5 | unjumble | Складіть робочі речення | 6 | 6 | ✅ |
+| 6 | match-up | Знайдіть ділову пару | 8 | 8 | ✅ |
+| 7 | error-correction | Виправте офісні помилки | 6 | 6 | ✅ |
+| 8 | cloze | Типовий робочий тиждень | 14 | 6 | ✅ |
+| 9 | mark-the-words | Знайдіть завершені дії | 6 | 6 | ✅ |
+| 10 | true-false | Корпоративна культура та граматика | 8 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 8 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 1/1 (fill-in) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть робочі речення' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть робочі речення' item 2 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть робочі речення' item 3 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть робочі речення' item 4 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть робочі речення' item 5 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть робочі речення' item 6 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY]** match-up 'Знайдіть ділову пару' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося; 'здача (change/money)' → решта
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 8 violations (significant)
+
 ## Gates
 - **Words:** ✅ 5653/4000 (raw: 6272)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 8/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 7 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

@@ -1,0 +1,128 @@
+module: a1-08
+level: A1
+sequence: 8
+slug: greetings-and-politeness
+version: '2.0'
+title: Greetings and Politeness
+subtitle: Hello and Thank You
+content_outline:
+- section: Вітання (Greetings)
+  words: 400
+  points:
+  - 'Informal greeting: Привіт — used with friends, peers, and children; the universal
+    casual hello'
+  - 'Formal time-based greetings: Добрий ранок (morning, until ~12:00), Добрий день
+    (afternoon, ~12:00-18:00), Добрий вечір (evening, after ~18:00) — used with strangers,
+    elders, and in professional settings'
+  - 'Goodbyes: До побачення (formal goodbye, literally ''until seeing''), Бувай/Бувайте
+    (informal goodbye, literally ''be well''), На все добре (all the best)'
+  - 'When to use which: matching the greeting to the social context and time of day —
+    using Добрий день as the safe default when unsure'
+- section: Ти і Ви (T-V distinction)
+  words: 400
+  points:
+  - 'Ти = singular informal: used with one person you know well — friends, family members,
+    children, peers of your age'
+  - 'Ви = singular formal OR plural: used with one person you respect (stranger, teacher,
+    elder, boss) OR with any group of two or more people'
+  - 'The safety rule: always start with Ви until explicitly invited to switch — the
+    phrase ''Давай на ти?'' (Shall we switch to ти?) signals the transition'
+  - 'Cultural importance: using Ти with a stranger or elder is considered rude and
+    disrespectful in Ukrainian culture; this is more strictly observed than in many
+    Western European cultures'
+- section: Ввічливість (Politeness)
+  words: 400
+  points:
+  - 'Дякую (thank you) — the universal expression of gratitude; can be intensified
+    with Дуже дякую (thank you very much) or Щиро дякую (sincerely thank you)'
+  - 'Будь ласка (please/you''re welcome) — dual function: used both when requesting
+    something and when responding to thanks'
+  - 'Вибачте (excuse me, formal) vs Вибач (excuse me, informal) — used to get attention,
+    apologize for a minor inconvenience, or interrupt politely'
+  - 'Перепрошую (I apologize) — a more formal and sincere apology than Вибачте; used
+    when you have genuinely inconvenienced someone'
+  - 'Usage contexts: ordering at a cafe (Будь ласка, каву), bumping into someone
+    (Вибачте!), receiving a gift (Дуже дякую!)'
+- section: Знайомство (Introductions)
+  words: 400
+  points:
+  - 'Asking names: Як вас звати? (formal) vs Як тебе звати? (informal) — literally
+    ''How do they call you?'''
+  - 'Responding: Мене звати... (My name is...) — the standard self-introduction formula
+    from State Standard §4.2.3.1'
+  - 'Pleased to meet you: Дуже приємно (very pleasant) or Приємно познайомитись (pleasant
+    to meet) — said after exchanging names'
+  - 'Formal vs informal introductions: meeting a professor (Добрий день. Як вас звати?
+    Мене звати... Дуже приємно.) vs meeting a classmate (Привіт! Як тебе звати? Я...
+    Приємно!)'
+- section: Діалоги (Dialogues)
+  words: 400
+  points:
+  - 'Dialogue 1 — Meeting someone for the first time (formal): full greeting-introduction-farewell
+    sequence using Ви, Добрий день, Як вас звати, До побачення'
+  - 'Dialogue 2 — Greeting a friend (informal): using Привіт, Як справи? (How are
+    things?), Бувай with casual register'
+  - 'Dialogue 3 — Asking for something politely: using Вибачте to get attention, Будь
+    ласка when requesting, Дякую when receiving'
+  - 'Dialogue 4 — Thanking and saying goodbye: combining gratitude expressions with
+    appropriate farewell formulas for formal and informal contexts'
+vocabulary_hints:
+  required:
+  - 'привіт (hello, informal) — Top 200 word; the universal casual greeting among
+    friends and peers'
+  - 'добрий ранок (good morning) — formal morning greeting; collocations: Добрий ранок,
+    пане/пані!'
+  - 'добрий день (good afternoon) — formal daytime greeting; the safest default greeting;
+    Top 100 collocation'
+  - 'добрий вечір (good evening) — formal evening greeting; used after approximately
+    18:00'
+  - 'до побачення (goodbye) — formal farewell; literally ''until seeing''; Top 300
+    collocation'
+  - 'дякую (thank you) — Top 100 word; collocations: дуже дякую, щиро дякую'
+  - 'будь ласка (please/you''re welcome) — Top 100 collocation; dual function as
+    request marker and response to thanks'
+  - 'вибачте (excuse me, formal) — Top 500 word; used to get attention or apologize
+    politely'
+  - 'перепрошую (I apologize) — formal apology; more sincere than вибачте'
+  - 'дуже приємно (pleased to meet you) — introduction formula; literally ''very pleasant'''
+  recommended:
+  - 'бувай/бувайте (bye, informal/formal plural) — casual farewell; literally ''be well'''
+  - здрастуйте (hello, formal) — alternative formal greeting; slightly old-fashioned
+    but still used
+  - 'ласкаво просимо (welcome) — used when receiving guests; collocations: Ласкаво
+    просимо до України!'
+  - на все добре (all the best) — warm farewell formula; used in both formal and semi-formal
+    contexts
+activity_hints:
+- type: match-up
+  focus: Match formal and informal greeting equivalents
+  items: 10
+- type: quiz
+  focus: Choose the appropriate greeting for a given social situation
+  items: 10
+- type: fill-in
+  focus: Complete greeting and introduction dialogues
+  items: 8
+- type: unjumble
+  focus: Put greeting dialogue lines in correct order
+  items: 6
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-07 (The Gender Code)
+connects_to:
+- a1-09 (This Is, I Am)
+objectives:
+- Greet people appropriately by time of day
+- Choose correctly between Ти and Ви based on social context
+- Use basic politeness expressions (thank you, please, excuse me)
+- Introduce yourself and respond to introductions
+grammar:
+- T-V distinction
+- Imperative forms in politeness expressions
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Friendly Barista
+word_target: 2000

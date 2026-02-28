@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 136 — E2E
+PASS: pipeline istorio 136
 
   Module:   finalnyi-syntez
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-21T00:24:28Z
+  Date:     2026-02-28T00:52:51Z

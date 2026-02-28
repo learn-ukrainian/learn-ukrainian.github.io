@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a2 15 — E2E
+PASS: pipeline a2 17
 
   Module:   aspect-morphology
   Track:    a2
-  Mode:     e2e
+  Mode:     v3
   Words:    3948 (target: 3000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-26T14:00:51Z
+  Date:     2026-02-28T02:37:52Z

@@ -5,29 +5,18 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-21T00:00:33Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T00:58:27Z",
+      "task_id": "v3-the-dative-ii-nouns-pA",
+      "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-21T00:00:33Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T01:01:56Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-21T00:00:33Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-22T18:23:51Z",
-      "attempts": 1
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T18:30:06Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T01:01:56Z",
+      "note": "adopted-existing"
     }
   }
 }

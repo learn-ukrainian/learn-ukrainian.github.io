@@ -1,7 +1,7 @@
-# Audit Report: M61 — professional-communication.md
-**Level:** B1 | **Module:** M61 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
+# Audit Report: M72 — professional-communication.md
+**Level:** B1 | **Module:** M72 | **Phase:** B1.5 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:46:12
+**Generated:** 2026-02-28 09:49:55
 
 ## Configuration
 **Type:** B1-vocab
@@ -16,21 +16,41 @@
 **Vocab Target:** ≥35 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: професійна лексика | 12 | 8 | ✅ |
+| 2 | fill-in | Заповніть пропуски: на роботі | 8 | 8 | ✅ |
+| 3 | unjumble | Складіть речення: формальний регістр | 6 | 6 | ✅ |
+| 4 | error-correction | Виправте лексичні та граматичні помилки | 6 | 6 | ✅ |
+| 5 | true-false | Правда чи брехня: правила етикету | 8 | 8 | ✅ |
+| 6 | select | Оберіть правильні варіанти: термінологія | 6 | 6 | ✅ |
+| 7 | quiz | Тест: професійна комунікація | 8 | 8 | ✅ |
+| 8 | cloze | Заповніть пропуски: робочий день | 14 | 12 | ✅ |
+| 9 | fill-in | Заповніть пропуски: освітній процес | 8 | 8 | ✅ |
+| 10 | translate | Перекладіть речення: офіційний стиль | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 9 (minimum: 4) ✅
+- Priority types used: 3/4 (match-up, quiz, translate) ✅
+- Required types used: 2/2 (fill-in, match-up) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 6124/4000 (raw: 6792)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 9/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 31 < 35 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 98.6% (target 85-100% (B1.5-6 Vocab))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 98.6% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 98% (vocabulary)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

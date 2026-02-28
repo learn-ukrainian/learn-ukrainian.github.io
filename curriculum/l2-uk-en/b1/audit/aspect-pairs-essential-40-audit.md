@@ -1,7 +1,7 @@
-# Audit Report: M12 — aspect-pairs-essential-40.md
-**Level:** B1 | **Module:** M12 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M14 — aspect-pairs-essential-40.md
+**Level:** B1 | **Module:** M14 | **Phase:** B1.1 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:42:31
+**Generated:** 2026-02-28 09:40:04
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,40 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: недоконаний та доконаний вид | 12 | 8 | ✅ |
+| 2 | group-sort | Процес чи результат? | 12 | 6 | ✅ |
+| 3 | true-false | Правда чи міф про видові пари | 8 | 8 | ✅ |
+| 4 | quiz | Оберіть правильний вид дієслова | 8 | 8 | ✅ |
+| 5 | unjumble | Складіть речення: процеси та результати | 8 | 6 | ✅ |
+| 6 | fill-in | Виберіть дієслово у правильній формі | 8 | 8 | ✅ |
+| 7 | error-correction | Знайдіть і виправте помилку | 8 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть дієслова доконаного виду | 10 | 6 | ✅ |
+| 9 | select | Оберіть правильні варіанти | 6 | 6 | ✅ |
+| 10 | cloze | Заповніть пропуски у діалозі | 14 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 10 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4227/4000 (raw: 4829)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 10/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 19 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.0% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 97% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

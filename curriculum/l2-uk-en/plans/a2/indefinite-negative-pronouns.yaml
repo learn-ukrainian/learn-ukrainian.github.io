@@ -1,0 +1,168 @@
+module: a2-21
+level: A2
+sequence: 21
+slug: indefinite-negative-pronouns
+version: '2.0'
+title: Indefinite and Negative Pronouns
+subtitle: "хтось, щось, ніхто, ніщо, будь-хто"
+content_outline:
+- section: 'Вступ: Хтось подзвонив! (Introduction: Someone Called!)'
+  words: 400
+  points:
+  - 'Natural entry point: the phone rings, the door knocks — хтось подзвонив (someone
+    called), щось упало (something fell); these are the most immediate contexts
+    where indefinite pronouns arise.'
+  - 'Three-way contrast preview: хтось (someone specific but unknown), ніхто (nobody),
+    будь-хто (anyone at all) — each answers a different communicative need.'
+  - 'Why this matters at A2: learners at this stage need to talk about unknown quantities
+    (someone, something), make negations (nobody, nothing), and give open invitations
+    (anyone, anything); these are essential discourse tools.'
+- section: Неозначені займенники (Indefinite Pronouns)
+  words: 700
+  points:
+  - 'Formation with suffix -сь: хто → хтось (someone); що → щось (something); де
+    → десь (somewhere); куди → кудись (somewhere [direction]); коли → колись (sometime/once);
+    як → якось (somehow); який → якийсь (some kind of).'
+  - 'Declension of хтось: Nom хтось, Gen когось, Dat комусь, Acc когось, Inst кимось,
+    Loc (на) комусь — follows хто pattern with -сь suffix throughout.'
+  - 'Declension of щось: Nom щось, Gen чогось, Dat чомусь, Acc щось, Inst чимось,
+    Loc (на) чомусь — follows що pattern with -сь suffix throughout.'
+  - 'Formation with будь-: будь-хто (anyone), будь-що (anything), будь-де (anywhere),
+    будь-коли (any time), будь-який (any kind of); будь- forms suggest open, unrestricted
+    reference.'
+  - 'Formation with хто-небудь/що-небудь: alternative to будь-хто/будь-що; slightly
+    more formal register; same meaning — хто-небудь може допомогти? (can anyone
+    help?).'
+  - 'Usage contexts: -сь forms used in specific-unknown contexts (хтось телефонував
+    — a specific unknown person called); будь-/небудь forms used in generic-open
+    contexts (будь-хто може зробити це — literally anyone can do this).'
+- section: Заперечні займенники (Negative Pronouns)
+  words: 700
+  points:
+  - 'Formation with prefix ні-: хто → ніхто (nobody); що → ніщо/нічого (nothing);
+    де → ніде (nowhere); куди → нікуди (nowhere [direction]); коли → ніколи (never);
+    як → ніяк (no way/somehow not); який → ніякий (no kind of).'
+  - 'CRITICAL rule — double negation is REQUIRED: Ukrainian requires BOTH the negative
+    pronoun AND не before the verb — Ніхто не прийшов (Nobody came); Ніщо не
+    сталося (Nothing happened). Writing "Ніхто прийшов" is ungrammatical.'
+  - 'Declension of ніхто: Nom ніхто, Gen нікого, Dat нікому, Acc нікого, Inst ніким,
+    Loc (ні на) кому — the ні- prefix stays attached, and with prepositions see
+    next section.'
+  - 'Declension of ніщо/нічого: Nom ніщо, Gen нічого, Dat нічому, Acc нічого, Inst
+    нічим, Loc (ні на) чому — note ніщо is rarely used; нічого is the dominant
+    oblique/Nom form in spoken Ukrainian.'
+  - 'Double negation drill: translate — Nobody knows (Ніхто не знає); I saw nothing
+    (Я нічого не бачив); She never comes (Вона ніколи не приходить); He went nowhere
+    (Він нікуди не пішов).'
+  - 'Contrast with English: English single negation (Nobody came) = Ukrainian double
+    negation (Ніхто не прийшов) — frame this as a feature, not an error.'
+- section: 'Ні- з прийменниками (Negative Pronouns with Prepositions)'
+  words: 500
+  points:
+  - 'The split rule: when a ні- pronoun requires a preposition, the preposition goes
+    BETWEEN ні and the pronoun stem — ні + з + ким = ні з ким (with nobody); ні
+    + про + що = ні про що (about nothing); ні + на + кого = ні на кого.'
+  - 'Complete split examples: ні з ким (with nobody); ні про що (about nothing);
+    ні до кого (to nobody); ні від кого (from nobody); ні на кого (on/for nobody);
+    ні в кому (in nobody).'
+  - 'Common learner error: writing *ніз ким, *нікому про — the split is ALWAYS preposition
+    between ні and the stem, written as three separate words.'
+  - 'Contrast with indefinite forms: someтhing with preposition — з кимось (with
+    someone); про щось (about something) — no split needed, suffix -сь stays attached.'
+  - 'Drill: rewrite sentences — Він не розмовляє з кимось → Він ні з ким не розмовляє;
+    Вона не думає про щось → Вона ні про що не думає; practise 8 examples.'
+- section: 'Хтось vs ніхто vs будь-хто (Contrast and Usage)'
+  words: 400
+  points:
+  - 'Three-way decision chart: хтось = a specific person exists but is unknown (Хтось
+    телефонував — someone [specific] called); ніхто = no person exists/applies
+    (Ніхто не телефонував — nobody called); будь-хто = any person without restriction
+    (Будь-хто може зателефонувати — anyone can call).'
+  - 'Question type determines pronoun type: affirmative questions/statements with
+    unknown referent → хтось/щось; negative statements → ніхто/ніщо + не; open
+    permission/ability statements → будь-хто/будь-що.'
+  - 'Register and pragmatics: хтось can express surprise or suspicion; ніхто + не
+    can express disappointment or reassurance; будь-хто can express openness or
+    indifference.'
+  - 'Quick diagnostic: Чи є тут хтось? (Is anyone here? — specific check); Тут нікого
+    нема (Nobody is here); Приходь будь-хто! (Anyone can come!) — note different
+    use of "anyone" in English maps to three different Ukrainian forms.'
+- section: Практика (Practice)
+  words: 300
+  points:
+  - 'Fill-in drill: choose хтось/щось/ніхто/ніщо/будь-хто in 15 dialogue lines —
+    contexts include phone calls, party invitations, reassurances.'
+  - 'Double negation completion: supply both the negative pronoun and не — ___ не
+    знає правди; Я ___ не бачив; Вона ___ не відповіла.'
+  - 'Reading comprehension: short dialogue using all three pronoun types; learner
+    answers comprehension questions and identifies the type and case of each pronoun.'
+vocabulary_hints:
+  required:
+  - хтось/когось/комусь (someone/of someone/to someone) — indefinite pronoun, -сь series
+  - щось/чогось/чомусь (something/of something/to something) — indefinite pronoun, -сь series
+  - десь (somewhere) — indefinite adverb of place
+  - кудись (somewhere/in some direction) — indefinite adverb of direction
+  - колись (sometime/once upon a time) — indefinite adverb of time
+  - ніхто/нікого/нікому (nobody/of nobody/to nobody) — negative pronoun, ні- series
+  - ніщо/нічого/нічому (nothing/of nothing/to nothing) — negative pronoun; нічого dominant
+  - ніде (nowhere) — negative adverb of place
+  - ніколи (never) — negative adverb of time; always with не
+  - будь-хто (anyone) — open/unrestricted indefinite pronoun
+  - будь-що (anything) — open/unrestricted indefinite pronoun
+  - хто-небудь (anyone/somebody) — alternative to будь-хто, slightly more formal
+  recommended:
+  - якийсь/якась/якесь (some kind of - m/f/n) — indefinite adjective-pronoun
+  - будь-який/будь-яка (any kind of) — open indefinite adjective-pronoun
+  - ніякий (no kind of/not any) — negative adjective-pronoun
+  - ніяк (no way/somehow not) — negative adverb of manner
+  - 'ні з ким (with nobody) — split negative pronoun + preposition'
+  - 'ні про що (about nothing) — split negative pronoun + preposition'
+activity_hints:
+- type: fill-in
+  focus: Choose the correct pronoun (хтось/щось/ніхто/ніщо/будь-хто) based on context
+  items: 20+
+- type: fill-in
+  focus: Complete sentences with double negation (supply negative pronoun + не)
+  items: 12+
+- type: quiz
+  focus: Distinguish хтось vs ніхто vs будь-хто in given contexts
+  items: 15+
+- type: match-up
+  focus: Match base pronoun (хто/що) to its indefinite, negative, and open forms
+  items: 15+
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a2-20 (Reflexive себе)
+- A1 interrogative pronouns (хто/що/де/коли)
+- A2 basic negation with не
+connects_to:
+- a2-22 (Bigger, Better, Stronger — comparative adjectives)
+- i-think-that
+objectives:
+- Learner can form indefinite pronouns using -сь and будь- prefixes
+- Learner can form negative pronouns using ні- prefix and apply mandatory double negation
+- Learner can split ні- pronouns when a preposition intervenes
+- Learner can distinguish хтось/ніхто/будь-хто by communicative context
+grammar:
+- indefinite pronouns (-сь series and будь- series)
+- negative pronouns (ні- series)
+- double negation (ні-pronoun + не + verb)
+- split ні- pronoun with intervening preposition
+- declension of хтось and ніхто
+module_type: grammar
+sources:
+- name: Ukrainian State Standard 2024 - Pronouns
+  url: https://mon.gov.ua/
+  type: reference
+  notes: A2 pronoun requirements including indefinite and negative categories
+- name: Ukrainian Grammar Reference - Pronouns
+  url: https://uk.wikipedia.org/wiki/Займенник
+  type: reference
+  notes: Declension and formation of indefinite and negative pronouns
+immersion: 50-60% Ukrainian
+phase: A2.2
+persona:
+  voice: Encouraging Cultural Guide
+  role: Practical Communicator
+word_target: 3000

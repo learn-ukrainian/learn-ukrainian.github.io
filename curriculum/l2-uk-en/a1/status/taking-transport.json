@@ -2,14 +2,14 @@
   "module": "taking-transport",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-26T13:23:51.044934Z",
+  "last_audit": "2026-02-28T03:53:46.555497Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-26T11:21:03.239714Z",
     "meta": "2026-02-20T20:07:52.716269Z",
     "activities": "2026-02-20T23:55:18.570181Z",
     "vocabulary": "2026-02-26T10:56:38.077025Z",
-    "plan": "2026-02-20T20:43:19.990129Z",
+    "plan": "2026-02-28T03:02:37.326947Z",
     "research": "2026-02-20T20:07:52.698651Z"
   },
   "gates": {

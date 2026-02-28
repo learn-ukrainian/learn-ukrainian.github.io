@@ -2,10 +2,10 @@
   "module": "motion-passing-crossing",
   "level": "B1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T10:43:00.056997Z",
+  "last_audit": "2026-02-28T09:40:24.389597Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-25T07:37:09.453407Z",
+    "md": "2026-02-26T11:21:03.795027Z",
     "meta": "2026-02-23T22:50:42.404773Z",
     "activities": "2026-02-24T22:09:01.185612Z",
     "vocabulary": "2026-02-24T22:08:36.961120Z",
@@ -21,27 +21,22 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4152/4000 (raw: 4533)"
+      "message": "4151/4000 (raw: 4532)"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 4,
+      "message": "0/4 | density: 0 < 6 | unique_types: 0/3 types | priority: No priority types"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "warn",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "0 < 25 (soft target)"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,18 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
-    "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0,
-    "deferred_count": 3
+    "status": "fail",
+    "blocking_issues": [
+      "Missing required activity types: fill-in, match-up, quiz"
+    ],
+    "pass_count": 3,
+    "fail_count": 1,
+    "deferred_count": 0
   }
 }

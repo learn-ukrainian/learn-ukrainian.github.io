@@ -2,13 +2,13 @@
   "module": "shopping-services",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:18:54.941189Z",
+  "last_audit": "2026-02-28T03:47:02.893289Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T16:56:56.820586Z",
     "meta": "2026-02-23T23:22:40.186556Z",
     "activities": "2026-02-24T16:48:43.883278Z",
-    "vocabulary": "2026-02-24T16:55:28.126899Z",
+    "vocabulary": "2026-02-26T10:56:38.097927Z",
     "plan": "2026-02-20T21:04:55.845661Z",
     "research": "2026-02-23T23:22:40.183130Z"
   },
@@ -38,27 +38,22 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

@@ -1,7 +1,7 @@
-# Audit Report: M17 — motion-coming-going.md
-**Level:** B1 | **Module:** M17 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:42:55
+# Audit Report: M19 — motion-coming-going.md
+**Level:** B1 | **Module:** M19 | **Phase:** B1.2 | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:40:21
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,63 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Вибір правильного префікса напрямку | 15 | 8 | ✅ |
+| 2 | fill-in | Вставте правильне дієслово | 15 | 8 | ✅ |
+| 3 | fill-in | Зміна напрямку руху | 10 | 8 | ✅ |
+| 4 | match-up | Знайдіть пару: дієслово та його значення | 12 | 8 | ✅ |
+| 5 | unjumble | Побудуйте речення з дієсловами руху | 6 | 6 | ✅ |
+| 6 | error-correction | Виправте типові помилки напрямку | 8 | 6 | ✅ |
+| 7 | quiz | Культура та ідіоматика | 8 | 8 | ✅ |
+| 8 | match-up | Знайдіть пару: дієслово та правильний прийменник | 8 | 8 | ✅ |
+| 9 | mark-the-words | Знайдіть дієслова руху з префіксами | 6 | 6 | ✅ |
+| 10 | cloze | Щоденник адміністратора готелю | 14 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 3/3 (fill-in, match-up, quiz) ✅
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте речення з дієсловами руху' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте речення з дієсловами руху' item 2 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте речення з дієсловами руху' item 3 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте речення з дієсловами руху' item 4 has 7 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте речення з дієсловами руху' item 5 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте речення з дієсловами руху' item 6 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY]** match-up 'Знайдіть пару: дієслово та правильний прийменник' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 30/100)
+
+- 8 violations (significant)
+
 ## Gates
 - **Words:** ✅ 4468/4000 (raw: 4827)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 7/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 8/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 15 < 25 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 7 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.9% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 97% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 6 — E2E
+PASS: pipeline lit 6
 
   Module:   kvitka-bio
   Track:    lit
-  Mode:     e2e
-  Words:    0 (target: 4000)
+  Mode:     v3
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T16:30:08Z
+  Date:     2026-02-28T00:58:45Z

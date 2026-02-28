@@ -1,7 +1,7 @@
 # Audit Report: M03 — dative-verbs.md
 **Level:** A2 | **Module:** M03 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:18
+**Generated:** 2026-02-28 03:34:18
 
 ## Configuration
 **Type:** A2-grammar
@@ -42,11 +42,13 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: давальний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте повторимо' → повторімо
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 3452/3000 (raw: 3923)
@@ -58,7 +60,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 38/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

@@ -2,13 +2,13 @@
   "module": "i-feel-like",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:17:58.619505Z",
+  "last_audit": "2026-02-28T03:44:48.527971Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-23T03:28:56.760339Z",
     "meta": "2026-02-23T03:01:10.001376Z",
     "activities": "2026-02-23T03:27:44.762117Z",
-    "vocabulary": "2026-02-23T03:35:34.874531Z",
+    "vocabulary": "2026-02-26T10:56:38.091989Z",
     "plan": "2026-02-20T21:02:38.713872Z",
     "research": "2026-02-23T03:01:09.998421Z"
   },
@@ -38,27 +38,22 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 1
   }
 }

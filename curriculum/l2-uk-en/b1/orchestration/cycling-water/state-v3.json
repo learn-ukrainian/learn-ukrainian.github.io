@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-25T14:34:17Z",
       "task_id": "v3-cycling-water-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T14:39:24Z",
-      "attempts": 2
     }
   }
 }

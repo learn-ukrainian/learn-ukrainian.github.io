@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-24T22:14:31Z",
       "task_id": "v3-media-news-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T09:46:04Z",
-      "attempts": 1
     }
   }
 }

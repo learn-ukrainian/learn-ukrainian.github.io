@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 90 — E2E
+PASS: pipeline b1 98
 
   Module:   presentations-visuals
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    4560 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T17:12:16Z
+  Date:     2026-02-28T08:53:38Z

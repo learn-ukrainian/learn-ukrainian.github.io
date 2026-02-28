@@ -1,7 +1,7 @@
-# Audit Report: M65 — giving-directions.md
-**Level:** A2 | **Module:** M65 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M68 — giving-directions.md
+**Level:** A2 | **Module:** M68 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:19:31
+**Generated:** 2026-02-28 03:47:35
 
 ## Configuration
 **Type:** A2
@@ -26,7 +26,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)

@@ -1,0 +1,13 @@
+{
+  "track": "a1",
+  "slug": "checkpoint-communication",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T02:52:28Z",
+      "task_id": "v3-checkpoint-communication-pA",
+      "mode": "full"
+    }
+  }
+}

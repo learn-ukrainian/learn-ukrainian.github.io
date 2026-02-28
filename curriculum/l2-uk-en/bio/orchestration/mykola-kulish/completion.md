@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 95 — E2E
+PASS: pipeline bio 98
 
   Module:   mykola-kulish
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-19T20:52:26Z
+  Date:     2026-02-28T00:15:01Z

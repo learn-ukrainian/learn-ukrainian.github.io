@@ -1,5 +1,5 @@
-sequence: 39
-module: a1-39
+sequence: 56
+module: a1-56
 level: A1
 slug: buying-tickets
 version: '2.0'
@@ -82,10 +82,10 @@ activity_hints:
 focus: practical
 pedagogy: PPP
 prerequisites:
-- a1-17 (Numbers and Money)
-- a1-38 (At the Store)
+- a1-22 (Numbers and Money)
+- a1-61 (At the Store)
 connects_to:
-- a1-40 (Taking Transport)
+- a1-57 (Taking Transport)
 objectives:
 - Learner can buy train and bus tickets
 - Learner can specify destination and class
@@ -96,7 +96,7 @@ grammar:
 - Time expressions for schedules
 - Numbers for platforms and seats
 register: розмовний
-phase: A1.4 [Practical Scenarios]
+phase: A1.6 [Real-World Skills]
 persona:
   voice: Patient Supportive Tutor
   role: Theater Box Office Manager

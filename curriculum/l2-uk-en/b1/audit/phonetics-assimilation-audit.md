@@ -1,7 +1,7 @@
-# Audit Report: M93 — phonetics-assimilation.md
-**Level:** B1 | **Module:** M93 | **Phase:** B1.9 | **Pedagogy:** PPP | **Target:** 4000
+# Audit Report: M06 — phonetics-assimilation.md
+**Level:** B1 | **Module:** M06 | **Phase:** B1.1 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-25 20:35:50
+**Generated:** 2026-02-28 09:38:17
 
 ## Configuration
 **Type:** B1-grammar
@@ -41,28 +41,25 @@
   - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 ## Recommendation
-**🔄 REWRITE** (severity 95/100)
+**📝 UPDATE** (severity 50/100)
 
+- Revision recommended (severity 50/100)
 - 11 violations (severe - consider revision)
-- Structure issue: Missing '## Activities' header OR activities sidecar
-- Activity count below minimum
-- Activity density below minimum
 
 ## Gates
 - **Words:** ❌ 3417/4000 (raw: 3787)
-- **Activities:** ❌ 0/4
-- **Density:** ❌ 0 < 6
-- **Unique_types:** ❌ 0/3 types
-- **Priority:** ❌ No priority types
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 5/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 25 (soft target)
-- **Structure:** ❌ Missing '## Activities' header OR activities sidecar
-- **Ipa:** ✅ Clean IPA
+- **Vocab:** ⏳ Deferred (content-only audit)
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.7-8 Ukraine))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 99.1% (target 85-100% (B1.1 Aspect))
 - **Richness:** ❌ 74% < 95% min (grammar) - REWRITE needed
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

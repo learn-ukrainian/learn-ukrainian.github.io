@@ -1,10 +1,10 @@
-FAIL: build_module_v2.py b1 86 — E2E
+PASS: pipeline b1 94
 
   Module:   ukrainski-sviata-ta-festyvali
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 4000)
   Sections: ?/?
   Archive:  no
-  Verdict:  FAIL
-  Date:     2026-02-27T09:57:13Z
+  Verdict:  PASS
+  Date:     2026-02-28T08:53:24Z

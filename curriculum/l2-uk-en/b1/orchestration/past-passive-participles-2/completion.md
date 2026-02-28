@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 46 — E2E
+PASS: pipeline b1 47
 
   Module:   past-passive-participles-2
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    4644 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T09:45:13Z
+  Date:     2026-02-28T08:41:51Z

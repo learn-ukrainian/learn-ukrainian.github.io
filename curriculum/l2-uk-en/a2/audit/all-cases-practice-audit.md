@@ -1,7 +1,7 @@
-# Audit Report: M09 — all-cases-practice.md
-**Level:** A2 | **Module:** M09 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M11 — all-cases-practice.md
+**Level:** A2 | **Module:** M11 | **Phase:** A2.1 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:23
+**Generated:** 2026-02-28 03:37:35
 
 ## Configuration
 **Type:** A2-grammar
@@ -39,6 +39,15 @@
 - Required types used: 3/3 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 3132/3000 (raw: 3781)
 - **Activities:** ✅ 12/10
@@ -49,7 +58,6 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)

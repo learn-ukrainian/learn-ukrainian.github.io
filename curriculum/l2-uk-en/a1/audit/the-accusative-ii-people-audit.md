@@ -1,7 +1,7 @@
-# Audit Report: M12 — the-accusative-ii-people.md
-**Level:** A1 | **Module:** M12 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 22:40:00
+# Audit Report: M26 — the-accusative-ii-people.md
+**Level:** A1 | **Module:** M26 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:33:35
 
 ## Configuration
 **Type:** A1-grammar
@@ -37,6 +37,11 @@
 - Required types used: 2/2 (fill-in, match-up) ✅
 - Low density activities: 0
 
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- Immersion 8% off target (minor)
+
 ## Gates
 - **Words:** ✅ 2341/2000 (raw: 2982)
 - **Activities:** ✅ 10/8
@@ -45,13 +50,12 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ⚠️ 0 < 1 (soft target)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 27.3% (target 25-40% (M12))
+- **Immersion:** ❌ 27.3% LOW (target 35-55% (M26))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research

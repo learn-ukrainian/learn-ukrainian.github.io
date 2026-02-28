@@ -10,9 +10,20 @@
       "mode": "meta-only"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-27T14:08:50Z",
-      "note": "word-count-3842-below-80pct-5000"
+      "status": "complete",
+      "ts": "2026-02-28T00:20:34Z",
+      "note": "adopted-existing-content",
+      "words": 4256
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T00:22:35Z",
+      "task_id": "v3-maksym-berezovskyy-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T00:24:41Z",
+      "attempts": 2
     }
   }
 }

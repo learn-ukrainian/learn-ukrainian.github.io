@@ -2,13 +2,13 @@
   "module": "emotions-personality",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:18:42.650108Z",
+  "last_audit": "2026-02-28T03:46:45.955929Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T15:15:19.375725Z",
     "meta": "2026-02-23T22:30:21.693550Z",
     "activities": "2026-02-24T15:16:30.284869Z",
-    "vocabulary": "2026-02-24T14:59:57.305349Z",
+    "vocabulary": "2026-02-26T10:56:38.088388Z",
     "plan": "2026-02-20T21:04:25.617471Z",
     "research": "2026-02-23T22:30:21.689895Z"
   },
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "5486/3000 (raw: 6065)"
+      "status": "fail",
+      "violations": 1,
+      "message": "5486/3000 (raw: 6065) | immersion: 70.8% LOW (target 75-90% (A2.3))"
     },
     "activities": {
       "status": "deferred",
@@ -38,11 +38,6 @@
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
     },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
-    },
     "research": {
       "status": "pass",
       "violations": 0,
@@ -55,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 0,
+    "pass_count": 2,
+    "fail_count": 1,
     "deferred_count": 3
   }
 }

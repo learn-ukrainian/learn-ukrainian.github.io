@@ -1,0 +1,103 @@
+module: a1-35
+level: A1
+sequence: 35
+slug: direction-and-origin
+version: '2.0'
+title: Direction and Origin
+subtitle: Where To and Where From
+content_outline:
+- section: Куди? + Знахідний (Where to? + Accusative)
+  words: 500
+  points:
+  - 'Direction with в/у + Accusative: Я іду в магазин, Я їду у Львів. The Accusative
+    retains the base form for masculine inanimates — contrast with Locative endings.'
+  - 'Direction with на + Accusative: Я іду на пошту, Я їду на роботу. Same на +
+    institution/event pattern as Locative, but Accusative form for direction.'
+  - 'Key contrast drill: Де? (в магазині — Locative) vs Куди? (в магазин — Accusative).
+    Learner error prevention: mixing static location and directional forms.'
+- section: До + Родовий (To + Genitive)
+  words: 400
+  points:
+  - 'До + Genitive for direction towards person or institution: Я іду до лікаря,
+    Я їду до Києва. High-frequency pattern for "going to see someone".'
+  - 'Semantic difference: в/у/на (entering inside or onto) vs до (towards, approaching).
+    Contrast: Я іду в лікарню (into the hospital) vs Я іду до лікаря (to the doctor).'
+  - 'Common collocations: до дому (homeward), до друга (to a friend), до школи (to
+    school — approaching).'
+- section: Звідки? + Родовий (Where from? + Genitive)
+  words: 400
+  points:
+  - 'Origin with з/із/зі + Genitive: Я з України, Він із Києва, Вона зі Львова.
+    Expressing where someone is from.'
+  - 'Від + Genitive for "from a person": Лист від мами, Подарунок від друга. Contrast:
+    з (from inside a place) vs від (from a person).'
+  - 'Euphonic з/із/зі rules: з before vowels and voiced consonants, із in formal
+    speech or before consonant clusters, зі before з-/с-/ш-/щ- initial words.'
+- section: Три питання (Three Questions)
+  words: 400
+  points:
+  - 'The three-question paradigm: Де? (location, Locative) → Куди? (direction, Accusative
+    or до + Gen) → Звідки? (origin, з/від + Gen).'
+  - 'Same place, three perspectives: в школі (at school) / в школу (to school) /
+    зі школи (from school). Parallel drill with multiple locations.'
+  - 'Summary table: Question word → Case → Prepositions. Visual anchor for the full
+    spatial paradigm at A1 level.'
+- section: Практика (Practice)
+  words: 300
+  points:
+  - 'Direction and origin dialogues: Куди ти йдеш? — Я іду на роботу. Звідки ти? —
+    Я з Одеси. Realistic conversation patterns.'
+  - 'Three-question transformation drills: Given a location, produce all three forms
+    (Де?/Куди?/Звідки?) with correct case and preposition.'
+vocabulary_hints:
+  required:
+  - іти (to go on foot) — Я іду в магазин; basic motion verb (unidirectional)
+  - їхати (to go by vehicle) — Я їду у Львів; vehicular motion verb
+  - до (to/towards) — до + Gen; direction towards person or place
+  - від (from person) — від + Gen; source as person
+  - з/із (from inside) — з/із + Gen; origin from place
+  - лікар (doctor) — до лікаря; animate Genitive form
+  - робота (work) — на роботу (Acc.); direction to work
+  - пошта (post office) — на пошту (Acc.); direction to institution
+  - Київ (Kyiv) — до Києва, у Київ, з Києва; all three question forms
+  - Україна (Ukraine) — в Україну, з України; direction and origin
+  recommended:
+  - повертатися (to return) — повертатися додому; complement to direction verbs
+  - виходити (to go out) — виходити з дому; origin verb
+  - аеропорт (airport) — до аеропорту, в аеропорт; travel context
+  - вокзал (station) — на вокзал, з вокзалу; travel context
+activity_hints:
+- type: fill-in
+  focus: Choose correct preposition and case form for direction/origin
+  items: 12
+- type: quiz
+  focus: Distinguish direction (Куди?) from location (Де?)
+  items: 10
+- type: match-up
+  focus: Match question word to correct case and preposition
+  items: 10
+- type: unjumble
+  focus: Reorder words into correct direction sentences
+  items: 6
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-34 (Checkpoint Cases)
+connects_to:
+- a1-36 (Yesterday - Past Tense)
+objectives:
+- Express direction using в/у/на + Accusative
+- Express direction using до + Genitive
+- Express origin using з/від + Genitive
+- Distinguish Де?/Куди?/Звідки? question-case pairs
+grammar:
+- Direction prepositions + Accusative
+- До + Genitive
+- З/від + Genitive
+- Three-question paradigm (Де/Куди/Звідки)
+register: розмовний
+phase: A1.4 [Tenses & Daily Life]
+persona:
+  voice: Patient Supportive Tutor
+  role: Train Conductor
+word_target: 2000

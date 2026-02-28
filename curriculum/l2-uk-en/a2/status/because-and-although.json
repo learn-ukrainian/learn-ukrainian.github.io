@@ -2,13 +2,13 @@
   "module": "because-and-although",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-02-24T21:17:52.987280Z",
+  "last_audit": "2026-02-28T03:44:39.141088Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-24T10:35:17.567013Z",
     "meta": "2026-02-24T10:33:51.500538Z",
     "activities": "2026-02-23T21:22:52.636592Z",
-    "vocabulary": "2026-02-24T10:35:53.480933Z",
+    "vocabulary": "2026-02-26T10:56:38.084372Z",
     "plan": "2026-02-20T21:02:21.569689Z",
     "research": "2026-02-23T02:36:28.190948Z"
   },
@@ -24,24 +24,19 @@
       "message": "4528/3000 (raw: 4665)"
     },
     "activities": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "12/10"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "27/1"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -57,8 +52,8 @@
   "overall": {
     "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0,
-    "deferred_count": 3
+    "deferred_count": 1
   }
 }

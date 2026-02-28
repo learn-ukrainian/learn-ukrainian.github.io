@@ -1,7 +1,7 @@
-# Audit Report: M62 — rental-accommodation.md
-**Level:** A2 | **Module:** M62 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 3000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:19:24
+# Audit Report: M65 — rental-accommodation.md
+**Level:** A2 | **Module:** M65 | **Phase:** A2.6 | **Pedagogy:** PPP | **Target:** 3000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:47:24
 
 ## Configuration
 **Type:** A2
@@ -16,6 +16,15 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Not allowed
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 3 Russicism(s) in content: 'давайте подивимося' → подивімося; 'здача (change/money)' → решта
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 3626/3000 (raw: 3866)
 - **Activities:** ⏳ Deferred (content-only audit)
@@ -26,9 +35,8 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 88.0% (target 75-90% (A2.3))
 - **Grammar:** ℹ️ N/A (covered by naturalness)

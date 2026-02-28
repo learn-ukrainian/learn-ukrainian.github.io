@@ -1,0 +1,13 @@
+{
+  "track": "a1",
+  "slug": "syllables-and-transfer",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T02:24:01Z",
+      "task_id": "v3-syllables-and-transfer-pA",
+      "mode": "full"
+    }
+  }
+}

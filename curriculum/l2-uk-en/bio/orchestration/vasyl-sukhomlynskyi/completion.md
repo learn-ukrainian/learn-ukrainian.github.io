@@ -1,10 +1,10 @@
-PASS: build_module_v2.py bio 128 — E2E
+PASS: pipeline bio 131
 
   Module:   vasyl-sukhomlynskyi
   Track:    bio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T22:55:01Z
+  Date:     2026-02-28T00:17:32Z

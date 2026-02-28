@@ -2,14 +2,14 @@
   "module": "the-accusative-i-things",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:39:59.276193Z",
+  "last_audit": "2026-02-28T03:33:30.586488Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:41:49.057122Z",
+    "md": "2026-02-26T11:21:03.240377Z",
     "meta": "2026-02-19T16:12:59.324392Z",
     "activities": "2026-02-19T15:38:12.312577Z",
-    "vocabulary": "2026-02-22T18:44:52.662634Z",
-    "plan": "2026-02-20T20:40:11.768939Z",
+    "vocabulary": "2026-02-26T10:56:53.939632Z",
+    "plan": "2026-02-28T03:02:37.331301Z",
     "research": "2026-02-19T16:12:59.315653Z"
   },
   "gates": {
@@ -19,29 +19,24 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "2748/2000 (raw: 2990)"
+      "status": "fail",
+      "violations": 1,
+      "message": "2743/2000 (raw: 2985) | immersion: 27.6% LOW (target 35-55% (M25))"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "20/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 7,
-    "fail_count": 0,
-    "deferred_count": 0
+    "pass_count": 2,
+    "fail_count": 1,
+    "deferred_count": 3
   }
 }

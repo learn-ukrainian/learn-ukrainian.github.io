@@ -1,0 +1,118 @@
+module: a1-13
+level: A1
+sequence: 13
+slug: plurals-and-alternation
+version: '2.0'
+title: Plurals and Alternation
+subtitle: More Than One
+content_outline:
+- section: Множина іменників (Noun plurals)
+  words: 500
+  points:
+  - 'Basic plural endings for masculine nouns: -и/-і (студент → студенти, хлопець →
+    хлопці) — the most common and predictable pattern'
+  - 'Basic plural endings for feminine nouns: -и/-і replacing -а/-я (книга → книги,
+    земля → землі) — the final vowel changes to -и or -і'
+  - 'Basic plural endings for neuter nouns: -а/-я replacing -о/-е (місто → міста,
+    море → моря) — neuter plurals swap their characteristic ending'
+  - 'Irregular plurals that must be memorized: діти (children, from дитина), люди
+    (people, from людина), очі (eyes, from око) — high-frequency exceptions'
+- section: Чергування (Alternation)
+  words: 400
+  points:
+  - 'Vowel alternation і → о/е in stems: when adding plural endings, the і in the
+    stem may revert to о or е — кіт → коти, піч → печі, ніж → ножі'
+  - 'Why alternation happens: historical vowel changes (the ''fleeting і'') — і appears
+    in closed syllables but reverts when the syllable opens in plural forms'
+  - 'Consonant alternation preview: к → ц, г → з, х → с before the ending -і — рука →
+    руці, нога → нозі (this pattern returns in the locative case)'
+  - 'Pattern recognition strategy: if a word has і in the last syllable of the stem,
+    check whether it alternates in the plural — most common with monosyllabic masculine
+    nouns'
+- section: Множина прикметників (Adjective plurals)
+  words: 400
+  points:
+  - 'Simplification: all three genders collapse into one plural form ending in -і/-ї —
+    новий (m) / нова (f) / нове (n) → нові (plural for all genders)'
+  - 'Soft-stem adjectives: синій (m) / синя (f) / синє (n) → сині (plural) — the
+    pattern is the same, just with the soft variant'
+  - 'Agreement with plural nouns: adjective must match the noun in number — нові книги,
+    великі міста, молоді студенти'
+  - 'Practice forming noun phrases: combining plural adjectives with plural nouns in
+    simple sentences — Це нові книги. Ті великі будинки старі.'
+- section: Винятки та особливості (Exceptions and special cases)
+  words: 300
+  points:
+  - 'Uncountable nouns that have no plural: молоко (milk), цукор (sugar), вода (water
+    in general sense), повітря (air) — these exist only in singular'
+  - 'Plural-only nouns (pluralia tantum): гроші (money), двері (door), ножиці (scissors),
+    окуляри (glasses) — these exist only in plural'
+  - 'Stress shifts in plural: some nouns change stress when pluralized — рукА → рУки,
+    сестрА → сЕстри, нОга → нОги (review from a1-06 stress mobility)'
+- section: Практика (Practice)
+  words: 400
+  points:
+  - 'Plural formation drills: given singular nouns, produce the correct plural form
+    with attention to ending changes and vowel alternation'
+  - 'Matching singulars to plurals: identify which plural form belongs to which singular,
+    including irregular pairs like дитина → діти'
+  - 'Reading plural phrases: practice reading and understanding simple sentences with
+    plural noun phrases — У мене є нові книги. Це великі міста.'
+vocabulary_hints:
+  required:
+  - 'студент/студенти (student/students) — regular masculine plural -и; Top 500 word;
+    collocations: нові студенти, молоді студенти'
+  - 'книга/книги (book/books) — regular feminine plural -и replacing -а; Top 200 word;
+    collocations: цікаві книги, старі книги'
+  - 'місто/міста (city/cities) — regular neuter plural -а replacing -о; Top 100 word;
+    collocations: великі міста, нові міста'
+  - 'кіт/коти (cat/cats) — vowel alternation і → о; collocations: руді коти, домашні
+    коти'
+  - 'діти (children) — irregular plural from дитина; Top 100 word; collocations: маленькі
+    діти, наші діти'
+  - 'люди (people) — irregular plural from людина; Top 50 word; collocations: добрі
+    люди, молоді люди'
+  - 'гроші (money) — plural-only noun; Top 300 word; collocations: багато грошей,
+    заробляти гроші'
+  - 'двері (door) — plural-only noun; Top 500 word; collocations: відкрити двері,
+    зачинити двері'
+  recommended:
+  - 'очі (eyes) — irregular plural from око; Top 300 word; collocations: сині очі,
+    великі очі'
+  - ножиці (scissors) — plural-only noun; demonstrates pluralia tantum concept
+  - 'цукор (sugar) — uncountable noun; collocations: ложка цукру, без цукру'
+  - 'молоко (milk) — uncountable noun; collocations: склянка молока, пити молоко'
+activity_hints:
+- type: fill-in
+  focus: Form the correct plural from a given singular noun
+  items: 12
+- type: match-up
+  focus: Match singular nouns to their plural forms
+  items: 12
+- type: quiz
+  focus: Choose the correct plural form (including alternation)
+  items: 10
+- type: group-sort
+  focus: Sort nouns into countable vs uncountable/plural-only
+  items: 10
+focus: grammar
+pedagogy: PPP
+prerequisites:
+- a1-12 (Colors and Clothing)
+connects_to:
+- a1-14 (Checkpoint First Contact)
+objectives:
+- Form plurals for common masculine, feminine, and neuter nouns
+- Recognize vowel alternation patterns (і → о/е) in plural formation
+- Make adjectives agree with plural nouns using the -і/-ї ending
+- Identify uncountable nouns and plural-only nouns
+grammar:
+- Noun plural formation
+- Vowel alternation (і → о/е)
+- Adjective plural agreement
+register: розмовний
+phase: A1.1 [First Contact]
+persona:
+  voice: Patient Supportive Tutor
+  role: Market Vendor
+word_target: 2000

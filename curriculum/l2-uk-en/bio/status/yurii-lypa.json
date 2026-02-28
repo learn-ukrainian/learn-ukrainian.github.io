@@ -2,14 +2,14 @@
   "module": "yurii-lypa",
   "level": "C1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-27T01:53:17.289809Z",
+  "last_audit": "2026-02-28T01:15:58.479827Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-27T01:53:16.175404Z",
+    "md": "2026-02-27T20:41:10.843248Z",
     "meta": "2026-02-19T21:03:34.082410Z",
     "activities": "2026-02-27T01:53:16.184639Z",
     "vocabulary": "2026-02-27T01:53:16.151896Z",
-    "plan": "2026-02-17T13:37:38.118993Z",
+    "plan": "2026-02-27T20:41:24.277675Z",
     "research": "2026-02-22T10:35:24.558820Z"
   },
   "gates": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "6898/5000 (raw: 7428)"
+      "status": "fail",
+      "violations": 1,
+      "message": "6898/5000 (raw: 7428) | pedagogy: 3 violations"
     },
     "activities": {
-      "status": "deferred",
-      "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "status": "fail",
+      "violations": 1,
+      "message": "7/3 | density: 2 < 1"
     },
     "vocabulary": {
-      "status": "deferred",
+      "status": "pass",
       "violations": 0,
-      "message": "Deferred (content-only audit)"
+      "message": "30/24"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Refresh recommended: Research has decolonization section but content lacks it"
     },
     "review": {
-      "status": "deferred",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "content-complete",
+    "status": "fail",
     "blocking_issues": [],
     "pass_count": 2,
-    "fail_count": 0,
-    "deferred_count": 3
+    "fail_count": 2,
+    "deferred_count": 0
   }
 }

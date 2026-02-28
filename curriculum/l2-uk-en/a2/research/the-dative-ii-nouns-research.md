@@ -2,32 +2,33 @@
 
 ## State Standard Reference
 §4.2.2.3: "Давальний відмінок: особа або предмет, для яких (на користь чи на шкоду) відбувається дія: Подарувати книжку студентові... суб’єкт кількісної вікової ознаки: Дідусеві вісімдесят років."
-Alignment: This module directly teaches the core function of the Dative case (recipient/indirect object) and age expressions as required by the standard.
+Alignment: This module directly addresses the State Standard requirement for expressing the recipient/beneficiary of an action and the subject experiencing an age, both requiring the Dative case.
 
 ## Vocabulary Frequency
-| Word | Frequency / Source | Key collocations |
-|------|-------------------|------------------|
-| дарувати | High (Core) | дарувати квіти (odd number!), дарувати радість |
-| допомагати | High (Core) | допомагати мамі (Dat), допомагати у навчанні |
-| телефонувати | High (Core) | телефонувати лікарю (Dat), телефонувати подрузі |
-| відповідати | High (Core) | відповідати на питання, відповідати вчителю |
-| личити | Medium (Descriptive) | ця сукня тобі личить |
+| Word | Frequency | Key collocations |
+|------|-----------|------------------|
+| давати | Core / High | давати пораду, давати відповідь |
+| дарувати | High | дарувати квіти, дарувати радість |
+| допомагати | High | допомагати мамі, допомагати другові |
+| телефонувати | High | телефонувати лікареві, телефонувати подрузі |
+| відповідати | High | відповідати вчителю, відповідати на питання |
+| личити | Medium | ця сукня тобі личить |
 
 ## Cultural Hooks
-1. **Odd vs. Even Flowers**: Always give an odd number of flowers to the living (1, 3, 5...). Even numbers are strictly for funerals.
-2. **Taboo Gifts**: Watches (symbolize running out of time) and knives (symbolize severing ties) are considered bad luck. The "hack" is to "buy" the gift for a small coin (5-10 kopiyok) to neutralize the omen.
-3. **Angel Day (День Ангела)**: Name Days are often celebrated as significantly as birthdays. The greeting «З Днем ангела!» is essential cultural knowledge.
+1. **Flower Etiquette**: In Ukrainian culture, giving an odd number of flowers (1, 3, 5, 7) is strictly for celebrations and the living. Even numbers (2, 4, 6) are exclusively reserved for funerals.
+2. **Taboo Gifts**: Gifting sharp objects (knives, scissors) or watches is considered bad luck (symbolizing severing ties or running out of time). The recipient must "buy" the gift by handing over a small coin (e.g., 5 kopiyok) to neutralize the omen.
+3. **День Ангела**: Name Days are culturally significant events, sometimes celebrated alongside or even instead of birthdays.
 
 ## Common Learner Errors
-1. **The "Help" Trap**: Using Accusative for 'help' (like English). *Error:* Допомагати маму. *Correct:* Допомагати мамі.
-2. **The "Call" Trap**: Using Accusative for 'call/phone'. *Error:* Телефонувати директора. *Correct:* Телефонувати директору.
-3. **Consonant Shift Amnesia**: Forgetting the velar shifts in Feminine Dative. *Error:* Ногі, рукі. *Correct:* Нозі, руці.
-4. **Masculine Confusion**: Confusing Dative (-у) with Genitive (-а/-у) endings.
+1. **The "Call/Help" Accusative Trap**: English speakers instinctively use the Accusative direct object for verbs like `телефонувати` (to call) and `допомагати` (to help) (e.g., *допомагати маму* instead of the correct `допомагати мамі`). 
+2. **Masculine Genitive/Dative Confusion**: Mixing the `-у` Dative ending with the `-у` Genitive ending. Solution: Promote the uniquely Ukrainian `-ові/-еві` endings for animate masculine nouns to ensure complete clarity.
+3. **Gender Cross-contamination**: Applying the masculine `-у` ending to feminine `-а/-я` nouns (e.g., saying *сестру* instead of the correct `сестрі` for Dative).
 
 ## Cross-References
-- **Builds on**: A2-01 (Dative Pronouns), A1-09 (Nominative Plural logic).
-- **Prepares for**: A2-03 (Dative Verbs), A2-09 (All Cases Practice).
+- Builds on: a2-01 (Dative pronouns), A1 gender recognition, A1 Nominative plural stems.
+- Prepares for: a2-03 (Dative Verbs), a2-04 (Instrumental I).
 
 ## Notes for Content Writing
-- **Immersion Band 1 (50-60%)**: Explain the logic of cases and endings in English, but keep examples and dialogues in Ukrainian.
-- **Euphony**: Emphasize the -ові/-еві ending for masculine animate nouns as more "Ukrainian" and euphonious than just -у, although both are correct.
+- **Decolonized Framing**: Explicitly highlight the `-ові/-еві` masculine endings as a beautiful, euphonious, and distinctly Ukrainian feature. Never compare it to Russian as a baseline or treat it as a secondary option for animates.
+- **Phonetics**: The velar consonant shifts (г-з, к-ц, х-с) in the feminine Dative (рука - руці) should be framed positively as part of Ukrainian phonetic flow and melody, not as arbitrary exceptions.
+- **Immersion**: This is an A2 Module 02 (Band 1, 50-60%). Use English for the core grammar scaffolding of Dative mechanics, but switch fully to Ukrainian for all examples, mini-dialogues, and practice sentences.

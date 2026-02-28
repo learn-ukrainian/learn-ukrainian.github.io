@@ -1,6 +1,6 @@
-module: b1-50
+module: b1-54
 level: B1
-sequence: 50
+sequence: 54
 slug: integrated-grammar-lab
 version: '2.0'
 title: Інтегрована граматична лабораторія
@@ -40,9 +40,10 @@ content_outline:
 - section: 'Сценарій 3: Новини та медіа (Scenario 3: News and Media)'
   words: 600
   points:
-  - 'News register syntax: Implementing one-member sentences and ellipsis for brevity
-    and impact in headlines and bulletins.'
-  - 'Synthesizing B1.4 features: Combining aspectual nuances with the concise syntax
+  - 'News register syntax: Implementing ellipsis and concise sentence structure for
+    brevity and impact in headlines and bulletins (one-member sentences covered in
+    dedicated module b1-51).'
+  - 'Synthesizing B1.6 features: Combining aspectual nuances with the concise syntax
     required for modern Ukrainian journalism.'
 - section: 'Практика: Лабораторія редагування (Practice: Editing Laboratory)'
   words: 600
@@ -104,9 +105,9 @@ activity_hints:
 focus: grammar
 pedagogy: TTT
 prerequisites:
-- b1-49 (Numerals Collectives Fractions)
+- b1-53 (Numerals Collectives Fractions)
 connects_to:
-- b1-51 (Checkpoint Advanced Grammar)
+- b1-55 (Checkpoint Advanced Grammar)
 objectives:
 - Learner can combine B1.4 grammar constructions in coherent texts
 - Learner can distinguish between styles and registers
@@ -116,9 +117,9 @@ grammar:
 - 'Синтез: дієприкметники + пасив + демінутиви + числівники'
 - Стилістична гнучкість (stylistic flexibility)
 - Перемикання регістрів (register switching)
-- Односкладні речення (one-member sentences) — State Standard 2024
+- Боротьба з канцеляритом (anti-bureaucratese)
 register: розмовний
-phase: B1.4b [Advanced Grammar Synthesis]
+phase: B1.6 [Participles and Advanced Grammar]
 persona:
   voice: Senior Language & Culture Specialist
   role: Linguistic Researcher

@@ -3,31 +3,10 @@
   "slug": "dative-verbs",
   "mode": "v3",
   "phases": {
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-21T00:07:33Z",
-      "note": "migrated-from-v2"
-    },
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-21T00:07:33Z",
+      "ts": "2026-02-28T02:34:18Z",
       "note": "adopted-existing-meta"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-21T00:07:34Z",
-      "note": "adopted-existing"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-22T18:30:11Z",
-      "attempts": 1
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T18:35:42Z",
-      "attempts": 1,
-      "note": "d1-only"
     }
   }
 }

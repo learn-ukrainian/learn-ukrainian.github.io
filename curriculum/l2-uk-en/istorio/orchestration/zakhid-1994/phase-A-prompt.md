@@ -1,127 +1,130 @@
-===RESEARCH_START===
+# Phase A: Meta Outline Only (Research Already Exists)
 
-# Дослідження: Будапештський меморандум: Гарантії без гарантій
+> **You are Gemini, executing Phase A (meta-only mode) of an optimised rebuild (build_module_v3).**
+> **Research is already complete. Your ONLY task: Rebuild the meta outline from the existing research.**
 
-## Використані джерела
-1. [Будапештський меморандум: 25 років розчарувань і надій (Радіо Свобода)](https://www.radiosvoboda.org/a/budapeshtskyy-memorandum/30308674.html) — аналіз історичного контексту та наслідків.
-2. [Ядерне роззброєння України (Енциклопедія Сучасної України)](https://esu.com.ua/article-12345) — академічний огляд процесу роззброєння (узагальнено).
-3. [Текст меморандуму (Законодавство України)](https://zakon.rada.gov.ua/laws/show/998_158) — першоджерело.
-4. [Юрій Костенко. Історія ядерного роззброєння України](https://www.istpravda.com.ua/articles/2019/12/5/156645/) — спогади учасника переговорів, аналіз "пастки".
+---
 
-## Хронологія
-- 1991, 24 жовтня: Верховна Рада проголошує без'ядерний статус України (заява про наміри).
-- 1992, травень: Лісабонський протокол — Україна визнається стороною ДУГ-1 (START I).
-- 1994, 14 січня: Тристороння заява (Україна, США, Росія) у Москві — попередні домовленості.
-- 1994, 16 листопада: Верховна Рада приєднується до ДНЯО (з застереженнями).
-- 1994, 5 грудня: Підписання Будапештського меморандуму (Кучма, Клінтон, Єльцин, Мейджор).
-- 2014, березень: Анексія Криму Росією — перше пряме порушення гарантій.
+## Your Input
 
-## Ключові факти та цитати
-- **Арсенал**: 176 міжконтинентальних балістичних ракет (МБР), 44 важкі бомбардувальники, близько 2000 ядерних боєголовок. Третій у світі після США та РФ.
-- **Цитата (Меморандум, п. 2)**: "Російська Федерація, Сполучене Королівство... і Сполучені Штати Америки підтверджують їх зобов'язання утримуватися від загрози силою чи її використання проти територіальної цілісності чи політичної незалежності України".
-- **Цитата (Леонід Кучма)**: "Ми здали ядерну зброю, але не отримали справжніх гарантій. Це була наша помилка, за яку ми платимо кров'ю".
-- **Факт**: Генерал-майор Володимир Шевцов стверджував, що Україна могла отримати операційний контроль над зброєю протягом 12-18 місяців ("міф про відсутність кодів").
+Read the **existing research notes** (already complete — do NOT re-research):
 
-## Engagement Hooks (mapped to sections)
-- Section "Вступ — Угода без зубів": [!context] — Україна мала арсенал потужніший за Китай, Францію та Британію разом узяті.
-- Section "Контекст — Третій ядерний арсенал": [!myth-buster] — "Україна не могла керувати зброєю". Реальність: фізичний контроль був, операційний можна було встановити.
-- Section "Текст меморандуму": [!historiography] — "Assurances" (запевнення) vs "Guarantees" (гарантії). Як переклад змінив історію.
-- Section "Чи могла Україна інакше": [!decolonization] — Захід і Росія діяли як єдиний імперський фронт проти української суб'єктності ("Ми не хочемо ще однієї Югославії з ядерною зброєю").
-- Section "2014 — Провал": [!history-bite] — "Паперовий щит": як у 2014 році гаранти відмовилися навіть від консультацій.
-- Section "Підсумок": [!quote] — "Безпека не в паперах, а в силі".
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/istorio/research/zakhid-1994-research.md
+```
 
-## Деколонізаційний контекст
-- **Imperial/Soviet myth**: Україна — "тимчасовий утримувач" радянської зброї, "мавпа з гранатою", неспроможна держава.
-- **Ukrainian reality**: Україна зробила свідомий (хоч і вимушений) цивілізаційний вибір на користь роззброєння в обмін на визнання кордонів, але була ошукана "великими гравцями", які використали її довіру.
+Read the plan file (SOURCE OF TRUTH for structure):
 
-## Contested Terms
-| Concept | Imperial framing (Russian/Western Realist) | Ukrainian framing (Decolonized) |
-|---------|-------------------------------------------|---------------------------------|
-| Ядерний статус | Україна ніколи не була ядерною державою, лише "складом". | Україна була власником зброї де-юре і де-факто (спадкоємець СРСР). |
-| Будапештський документ | "Політична декларація", "Наміри". | Міжнародно-правовий договір (на момент підписання сприймався так Києвом). |
-| Причина роззброєння | Технічна неспроможність, бідність. | Геополітичний тиск (шантаж) з боку США та РФ + економічна блокада. |
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/istorio/zakhid-1994.yaml
+```
 
-## Section-Mapped Research Notes
+Read the current meta file (for reference — you will replace the content_outline):
 
-### Вступ — Угода без зубів
-У 1994 році Україна володіла третім за потужністю ядерним арсеналом у світі. Рішення про відмову від нього стало безпрецедентним в історії. Натомість Київ отримав документ, який мав гарантувати безпеку, але став символом невиправданих надій.
+```
+/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/istorio/meta/zakhid-1994.yaml
+```
 
-### Контекст — Третій ядерний арсенал
-Після розпаду СРСР Україна успадкувала 176 шахтних установок (МБР), стратегічні бомбардувальники Ту-95МС та Ту-160. Загальна потужність боєголовок перевищувала 1200 Хіросім. Утримання вимагало коштів, але міф про "неможливість" був перебільшений.
+---
 
-### Переговори
-США і Росія виступали єдиним фронтом. Вашингтон боявся "розповсюдження" і "нестабільності". Росія хотіла повернути монополію на статус наддержави. Кравчук почав процес, Кучма завершив. Тиск був тотальним: погрози ізоляцією, економічні санкції.
+## Your Task
 
-### Текст меморандуму
-Ключова підміна понять: англійське "security assurances" (запевнення) переклали як "гарантії безпеки". Стаття 1: повага до кордонів. Стаття 2: відмова від загрози силою. Стаття 4: дії Радбезу ООН (де Росія має вето!). Документ не передбачав механізму автоматичного захисту.
+**Rebuild** the `content_outline` from scratch using:
+- The **plan's section structure** as the skeleton (match section names exactly)
+- The **research notes** to inform depth, word allocation, and specific bullet points
 
-### 2014 — Провал
-Анексія Криму показала нікчемність "гарантій". Жоден підписант не застосував силу для захисту України. Консультації (передбачені п. 6) були проігноровані Росією. Захід обмежився "стурбованістю". Це зруйнувало довіру до режиму нерозповсюдження у світі.
+The existing meta `content_outline` is likely outdated (wrong section sizes, stale points). Do NOT copy it. Start fresh from the plan + research.
 
-### Чи могла Україна інакше
-Дилема 90-х: ядерна зброя чи хліб? Економіка падала, інфляція тисячі відсотків. Але головне — політична воля. Можна було торгуватися за справжній договір (як НАТО), а не декларацію. Або залишити тактичну зброю як стримуючий фактор.
+### Rules
 
-### Підсумок
-Будапешт навчив Україну: у світі realpolitik сила права поступається праву сили. Довіра до паперів без армії — ілюзія. Цей урок став фундаментом нової української ідентичності після 2014 року.
+- **Do NOT copy the old meta's outline** — rebuild from the plan's section structure
+- Allocations must sum to approximately **5000** words (±10% acceptable)
+- Minimum section allocation: 200 words (merge smaller sections)
+- For modules with target ≥ 4000w, aim for **8-12 sections minimum** — this prevents any one section from consuming a disproportionate share of the module.
+- **No single section may consume more than 25% of the total word target.** A 5000w module → max 1250w per section. If a plan section would exceed this, you MUST split it.
+- Each section must have `section`, `words`, and `points` fields
+- Section names must be in Ukrainian (these become H2 headings in the lesson)
+- **Section names must match plan exactly** — if the plan has a `content_outline` with section names,
+  use those EXACT names (or very close Ukrainian equivalents). When splitting a large plan section,
+  add a subtitle (e.g. "Читання: I — Походження").
+- Points reflect research findings — cite specific facts, dates, quotes where relevant
+- Check the subject's vital status: living person → "Значення" / "Вплив"; deceased → "Спадщина" / "Наслідки"
 
-===RESEARCH_END===
+### How to split a plan section (CRITICAL)
 
+**The plan's bullet points are section topics, not sub-bullets.** A plan section with 10 bullet points should become 3-5 meta sections, not one giant section.
+
+**Process:**
+1. Count the bullet points in each plan section
+2. If a section has 5+ bullets: group them into thematic clusters of 2-4 bullets
+3. Each cluster becomes its own meta section with the parent name as prefix:
+   - `"Читання: I — Розселення та племінна мозаїка"` (bullets 1-4)
+   - `"Читання: II — Суспільний устрій і права"` (bullets 5-7)
+   - `"Читання: III — Духовний світ та побут"` (bullets 8-11)
+   - etc.
+4. Allocate words based on research depth for each cluster
+
+**Example:** A plan section `Читання` with 14 bullet points should NOT become one 3200w meta section. It should become 4-5 sub-sections of 600-800w each. The bullets tell you what the sub-sections should cover.
+
+---
+
+## Output Format
+
+> **DELIMITER ENFORCEMENT**: Content outside delimiters is automatically discarded by the extraction pipeline.
+
+### Output Block: Meta Outline
+
+```
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Вступ: Угода без зубів"
-    words: 400
+  - section: "{Section 1 name in Ukrainian}"
+    words: {allocation}
     points:
-      - "1994 рік: історичний прецедент добровільної відмови від ядерного статусу."
-      - "Масштаб втрати: третій арсенал світу в обмін на папір."
-      - "Головне питання: чи була це помилка, чи неминучість?"
-  - section: "Контекст: Третій ядерний арсенал"
-    words: 800
+      - "{key point 1 — informed by research}"
+      - "{key point 2}"
+  - section: "{Section 2 name}"
+    words: {allocation}
     points:
-      - "Спадок імперії: 176 МБР, 44 бомбардувальники, 2000 боєголовок."
-      - "Міф про «купу брухту»: зброя була боєздатною і грізною."
-      - "Проблема управління: фізичний контроль проти операційного (кодів)."
-      - "Економічний тягар: вартість утримання в умовах кризи 90-х."
-  - section: "Дипломатичний фронт: Тиск гігантів"
-    words: 800
-    points:
-      - "Рідкісний альянс: США і Росія проти ядерної України."
-      - "Страхи Заходу: «ядерна Югославія» та режим нерозповсюдження."
-      - "Російський інтерес: монополія на статус «спадкоємця СРСР»."
-      - "Позиція Києва: торгівля суверенітетом за визнання та гроші."
-  - section: "Текст меморандуму: Пастка перекладу"
-    words: 900
-    points:
-      - "Assurances vs Guarantees: лінгвістична диверсія."
-      - "Аналіз статей 1-3: повага до кордонів та відмова від сили."
-      - "Стаття 4 та 6: ілюзія захисту через Радбез ООН (де агресор має вето)."
-      - "Юридична природа: чому це не ратифікований договір."
-  - section: "2014: Крах системи безпеки"
-    words: 800
-    points:
-      - "Кримський тест: перше пряме порушення Росією."
-      - "Реакція гарантів: «глибока стурбованість» замість дій."
-      - "Крах глобальної довіри: урок для Ірану та КНДР."
-      - "Чому механізм консультацій не спрацював."
-  - section: "Альтернативна історія: Чи був вибір?"
-    words: 800
-    points:
-      - "Сценарій збереження: ізоляція, санкції, статус «країни-ізгоя»."
-      - "Технічний аспект: термін придатності боєголовок (до 1997-1998)."
-      - "Політична помилка: можна було вимагати більше (ПДЧ в НАТО, реальний союз)."
-      - "Висновки генерала Шевцова: можливість перехоплення контролю."
-  - section: "Підсумок: Жорстокі уроки"
-    words: 500
-    points:
-      - "Меморандум як символ зради національних інтересів."
-      - "Кінець епохи романтизму: світ поважає лише силу."
-      - "Вплив на сучасну доктрину безпеки України."
+      - "..."
+  # ... all sections
+  # Total: ~5000 words
 ===META_OUTLINE_END===
+```
 
+### Validation checklist (complete before outputting):
+
+- [ ] All section names are Ukrainian
+- [ ] Section names match plan structure
+- [ ] Each section has `words` and `points`
+- [ ] Sum of all `words` ≈ 5000
+- [ ] No section has fewer than 200 words
+- [ ] Points reflect research findings
+- [ ] 8-12 sections for ≥ 4000w targets
+
+---
+
+## Friction Report (MANDATORY)
+
+After the meta outline output, include:
+
+```
 ===FRICTION_START===
-**Phase**: Phase A: Research + Meta (Seminar)
-**Step**: Full Phase A
-**Friction Type**: NONE
-**Raw Error**: None
-**Self-Correction**: Adjusted word counts to ensure balanced depth across sections, specifically giving more weight to the "Text of Memorandum" to explain the legal nuance of "Assurances".
-**Proposed Tooling Fix**: N/A
+**Phase**: Phase A: Meta Outline Only (research-exists mode)
+**Step**: {what you were doing when friction occurred, or "Full meta outline"}
+**Friction Type**: NONE | TOKEN_LIMIT_TRUNCATION | TOOL_REDUNDANCY | SOURCE_NOT_FOUND | ...
+**Raw Error**: {actual error or "None"}
+**Self-Correction**: {what you changed, or "N/A"}
+**Proposed Tooling Fix**: {if a script/design issue, or "N/A"}
 ===FRICTION_END===
+```
+
+---
+
+## Boundaries
+
+- Do NOT re-research — use only the provided research file
+- Do NOT write lesson content — only the meta outline
+- Do NOT generate activities or vocabulary
+- Do NOT skip any section from the plan's content_outline
+- Do NOT reference persona names or voice instructions
+- Do NOT request skills, delegate to Claude, or skip this phase

@@ -2,14 +2,14 @@
   "module": "yesterday-past-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:40:10.237838Z",
+  "last_audit": "2026-02-28T03:41:21.092470Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-02-22T22:54:15.098372Z",
     "meta": "2026-02-19T22:27:20.045664Z",
     "activities": "2026-02-20T23:49:17.192912Z",
-    "vocabulary": "2026-02-22T18:40:50.030307Z",
-    "plan": "2026-02-20T20:41:12.306243Z",
+    "vocabulary": "2026-02-26T10:56:53.942287Z",
+    "plan": "2026-02-28T03:02:37.401057Z",
     "research": "2026-02-19T22:27:20.036598Z"
   },
   "gates": {
@@ -29,19 +29,14 @@
       "message": "10/8"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "20/1"
+      "message": "0 < 1 (soft target)"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -57,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 7,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 0
   }

@@ -18,20 +18,20 @@
   Module:  the-dative-i-pronouns
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  1 Outline Compliance Errors
   failing gates:
-    lesson: 2765/3000 (raw: 3087)
-  missing orchestration artifacts:
-    no Phase 2 artifacts (section files or prompt)
+    lesson: 7198/3000 (raw: 7514) | pedagogy: 30 violations | immersion: 49.6% LOW (target 50-60% (A2.1))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+    [LLM_FINGERPRINT_REPETITION] Repetitive LLM rhetorical patterns (4 total): 'не просто X, а Y' x2, 'це не лише' x2 — robotic prose
+       → FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 1 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 50/100)
+     → Revision recommended (severity 50/100)
+     → 33 violations (severe - consider revision)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a2/audit/the-dative-i-pronouns-audit.md
@@ -39,11 +39,9 @@
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  Critical Failures:
-    • 1 Outline Compliance Errors
-
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-dative-i-pronouns-audit.log for details)
         ```
+
 
         ## Files to Fix
 

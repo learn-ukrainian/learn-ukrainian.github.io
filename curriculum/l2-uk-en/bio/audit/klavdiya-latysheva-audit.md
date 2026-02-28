@@ -1,10 +1,10 @@
-# Audit Report: M105 — klavdiya-latysheva.md
-**Level:** BIO | **Module:** M105 | **Phase:** C1 | **Pedagogy:** Not Specified | **Target:** 5000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-27 01:12:11
+# Audit Report: M999 — klavdiya-latysheva.md
+**Level:** C1 | **Module:** M999 | **Phase:** BIO | **Pedagogy:** Not Specified | **Target:** 5000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 01:15:30
 
 ## Configuration
-**Type:** biography
+**Type:** C1-biography
 **Word Target:** 5000 words
 **Activities:** 3-9 required
 **Items per Activity:** ≥1 items
@@ -16,19 +16,47 @@
 **Vocab Target:** ≥24 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | reading | Первинне джерело: Здобутки Клавдії Латишевої | 2 | 3 | ❌ |
+| 2 | critical-analysis | Критичний аналіз наукового шляху | 1 | 1 | ✅ |
+| 3 | essay-response | Розгорнута відповідь: Подолання бар'єрів | 1 | 1 | ✅ |
+| 4 | quiz | Перевірка розуміння тексту та лексики | 8 | 5 | ✅ |
+| 5 | true-false | Аналіз тверджень за текстом | 6 | 5 | ✅ |
+
+**Summary:**
+- Total activities: 5 (target: 3-9) ✅
+- Unique types: 5 (minimum: 3) ✅
+- Priority types used: 4/6 (critical-analysis, essay-response, quiz, reading) ✅
+- Required types used: 2/2 (essay-response, reading) ✅
+- Low density activities: 1
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** reading 'Первинне джерело: Здобутки Клавдії Латишевої' has 2 items (minimum: 3)
+  - FIX: Add more items. C1 reading requires at least 3 items.
+- **[MISSING_ADVANCED_ACTIVITY]** B2+ module (focus: biography) missing advanced activity type: comparative-study
+  - FIX: Add a comparative-study activity to meet advanced richness standards.
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 2 violations (minor)
+- Activity density below minimum
+
 ## Gates
 - **Words:** ✅ 5279/5000 (raw: 6026)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 5/3
+- **Density:** ❌ 1 < 1
+- **Unique_types:** ✅ 5/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/24
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 2 violations
+- **Content_heavy:** ✅ Content-heavy OK (5 activities)
 - **Immersion:** 🇺🇦 98.8% (target 95-100% (biography))
 - **Richness:** ✅ 97% (biography)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -53,6 +81,12 @@
 | paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
 | questions | 22 | 3 | 100% | 5% | 4.8% |
 | **TOTAL** | | | | | **97.0%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Первинне джерело: Здобутки Клавдії Латишевої | reading | 2 | 3 | Add 1 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

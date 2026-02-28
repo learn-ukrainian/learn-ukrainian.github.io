@@ -1,7 +1,7 @@
-# Audit Report: M07 — questions-and-negation.md
-**Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-26 00:51:31
+# Audit Report: M18 — questions-and-negation.md
+**Level:** A1 | **Module:** M18 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:30:15
 
 ## Configuration
 **Type:** A1-grammar
@@ -16,28 +16,9 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | quiz | Основи запитань | 8 | 8 | ✅ |
-| 2 | match-up | Питальні слова | 8 | 8 | ✅ |
-| 3 | group-sort | Хто чи Що? | 12 | 12 | ✅ |
-| 4 | fill-in | Оберіть правильне слово | 8 | 8 | ✅ |
-| 5 | fill-in | Скажіть «ні» | 8 | 8 | ✅ |
-| 6 | match-up | Запитання та відповіді | 8 | 8 | ✅ |
-| 7 | anagram | Розшифруйте слова | 8 | 8 | ✅ |
-| 8 | fill-in | Ввічливі запитання | 8 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 8 (target: 8-12) ✅
-- Unique types: 5 (minimum: 4) ✅
-- Priority types used: 4/5 (anagram, fill-in, match-up, quiz) ✅
-- Required types used: 1/1 (fill-in) ✅
-- Low density activities: 0
-
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_NOT_IN_CONTENT]** Only 15/24 (62%) vocabulary words appear in content+activities. Missing: де, звідки, коли, куди, ні, так, хто, чому (+1 more)
-  - FIX: Integrate missing vocabulary words into the prose or activities. Each vocab word should appear at least once in context.
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
@@ -45,20 +26,19 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2741/2000 (raw: 2906)
-- **Activities:** ✅ 8/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 5/4 types
-- **Priority:** ✅ Priority types used
+- **Words:** ✅ 2730/2000 (raw: 2895)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 21.2% (target 15-35% (M07))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** ❌ 21.3% LOW (target 25-40% (M18))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -69,7 +49,7 @@
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Questions & Negation** | ✅ | 50 | Included in Core |
 | **Вступ: Мистецтво ставити питання** | ✅ | 421 | Included in Core |
-| **Граматика: Як будувати питання** | ✅ | 1004 | Included in Core |
+| **Граматика: Як будувати питання** | ✅ | 993 | Included in Core |
 | **Практика: Інтонація та конструктор** | ✅ | 469 | Included in Core |
 | **Застосування: Розмова в реальному житті** | ✅ | 315 | Included in Core |
 | **Культурний контекст: Ввічливість і гумор** | ✅ | 286 | Included in Core |

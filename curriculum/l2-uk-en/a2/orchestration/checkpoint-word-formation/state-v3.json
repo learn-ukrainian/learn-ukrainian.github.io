@@ -5,23 +5,8 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-23T20:57:08Z",
-      "task_id": "v3-checkpoint-word-formation-pA",
-      "mode": "full"
-    },
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-23T21:01:42Z"
-    },
-    "v3-C": {
-      "status": "complete",
-      "ts": "2026-02-23T21:04:12Z",
-      "task_id": "v3-checkpoint-word-formation-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-24T20:18:28Z",
-      "attempts": 1
+      "ts": "2026-02-28T02:46:31Z",
+      "note": "adopted-existing-meta"
     }
   }
 }

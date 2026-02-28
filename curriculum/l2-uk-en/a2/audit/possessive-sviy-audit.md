@@ -1,7 +1,7 @@
-# Audit Report: M17 — possessive-sviy.md
-**Level:** A2 | **Module:** M17 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:29
+# Audit Report: M19 — possessive-sviy.md
+**Level:** A2 | **Module:** M19 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 03:37:59
 
 ## Configuration
 **Type:** A2-grammar
@@ -16,43 +16,28 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Not allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | quiz | Чия це річ? | 12 | 8 | ✅ |
-| 2 | fill-in | Відмінювання займенника 'свій' | 12 | 8 | ✅ |
-| 3 | unjumble | Побудуйте речення | 12 | 6 | ✅ |
-| 4 | error-correction | Виправте помилки з займенниками | 12 | 6 | ✅ |
-| 5 | match-up | Знайдіть пару | 12 | 8 | ✅ |
-| 6 | group-sort | Розподіліть поняття | 12 | 8 | ✅ |
-| 7 | true-false | Правда чи брехня? | 12 | 8 | ✅ |
-| 8 | cloze | Заповніть пропуски в тексті | 14 | 8 | ✅ |
-| 9 | quiz | Виберіть найкраще слово | 12 | 8 | ✅ |
-| 10 | select | Оберіть усі правильні варіанти | 6 | 6 | ✅ |
-| 11 | mark-the-words | Знайдіть форми займенника | 7 | 6 | ✅ |
-| 12 | fill-in | Переклад: власний чи чужий? | 12 | 8 | ✅ |
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 3 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
 
-**Summary:**
-- Total activities: 12 (target: 10-14) ✅
-- Unique types: 10 (minimum: 4) ✅
-- Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
-- Required types used: 2/2 (fill-in, quiz) ✅
-- Low density activities: 0
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 3100/3000 (raw: 3363)
-- **Activities:** ✅ 12/10
-- **Density:** ✅ All > 8
-- **Unique_types:** ✅ 10/4 types
-- **Priority:** ✅ Priority types used
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 34/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Pedagogy:** ❌ 1 violations
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 59.7% (target 50-60% (A2.1))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review

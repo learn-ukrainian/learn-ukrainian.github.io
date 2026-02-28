@@ -1,0 +1,13 @@
+{
+  "track": "a1",
+  "slug": "pronoun-declension",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T02:37:07Z",
+      "task_id": "v3-pronoun-declension-pA",
+      "mode": "full"
+    }
+  }
+}

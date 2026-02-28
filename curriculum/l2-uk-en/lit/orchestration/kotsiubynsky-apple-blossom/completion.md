@@ -1,10 +1,10 @@
-PASS: build_module_v2.py lit 66 — E2E
+PASS: pipeline lit 67
 
   Module:   kotsiubynsky-apple-blossom
   Track:    lit
-  Mode:     e2e
-  Words:    0 (target: 4000)
+  Mode:     v3
+  Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T14:38:33Z
+  Date:     2026-02-28T01:13:31Z

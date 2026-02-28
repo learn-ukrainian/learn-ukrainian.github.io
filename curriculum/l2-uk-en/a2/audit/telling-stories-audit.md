@@ -1,7 +1,7 @@
-# Audit Report: M26 — telling-stories.md
-**Level:** A2 | **Module:** M26 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
+# Audit Report: M31 — telling-stories.md
+**Level:** A2 | **Module:** M31 | **Phase:** A2.2 | **Pedagogy:** PPP | **Target:** 3000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-24 21:17:49
+**Generated:** 2026-02-28 03:44:36
 
 ## Configuration
 **Type:** A2-vocab
@@ -37,6 +37,15 @@
 - Priority types used: 3/3 (error-correction, fill-in, unjumble) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[RUSSICISM_DETECTED]** Found 1 Russicism(s) in content: 'давайте подивимося' → подивімося
+  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 4701/3000 (raw: 4957)
 - **Activities:** ✅ 12/10
@@ -47,14 +56,13 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 72.7% (target 60-75% (A2.2))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Section Audit
 | Section | Status | Count | Notes |

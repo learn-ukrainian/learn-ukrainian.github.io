@@ -1,7 +1,7 @@
-# Audit Report: M72 — regions-west.md
-**Level:** B1 | **Module:** M72 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 11:18:19
+# Audit Report: M80 — regions-west.md
+**Level:** B1 | **Module:** M80 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:50:19
 
 ## Configuration
 **Type:** B1-culture
@@ -16,20 +16,76 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | match-up | Знайдіть пару: характеристика регіонів | 8 | 8 | ✅ |
+| 2 | match-up | З'єднайте слова з їхніми значеннями | 8 | 8 | ✅ |
+| 3 | fill-in | Доповніть речення правильними словами | 8 | 8 | ✅ |
+| 4 | error-correction | Виправте граматичні та лексичні помилки | 6 | 6 | ✅ |
+| 5 | quiz | Перевірте свої знання про Західну Україну | 8 | 8 | ✅ |
+| 6 | unjumble | Складіть правильні речення | 6 | 6 | ✅ |
+| 7 | unjumble | Відновіть порядок слів | 6 | 6 | ✅ |
+| 8 | mark-the-words | Знайдіть географічні назви | 7 | 6 | ✅ |
+| 9 | fill-in | Вставте правильні слова з діалекту та повсякденної мови | 8 | 8 | ✅ |
+| 10 | quiz | Перевірте розуміння культурних текстів | 8 | 8 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 6 (minimum: 4) ✅
+- Priority types used: 3/4 (fill-in, match-up, quiz) ✅
+- Required types used: 3/4 (fill-in, match-up, quiz) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть пару: характеристика регіонів' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY]** match-up 'З'єднайте слова з їхніми значеннями' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 1 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 2 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 3 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 4 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 5 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Складіть правильні речення' item 6 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть порядок слів' item 1 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть порядок слів' item 2 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть порядок слів' item 3 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть порядок слів' item 4 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть порядок слів' item 5 has 5 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Відновіть порядок слів' item 6 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+
+## Recommendation
+**📝 UPDATE** (severity 50/100)
+
+- Revision recommended (severity 50/100)
+- 14 violations (severe - consider revision)
+
 ## Gates
 - **Words:** ✅ 4166/4000 (raw: 4419)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 6/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 10/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 14 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.4% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

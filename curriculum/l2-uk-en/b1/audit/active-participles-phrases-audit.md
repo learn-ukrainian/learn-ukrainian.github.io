@@ -1,7 +1,7 @@
-# Audit Report: M44 — active-participles-phrases.md
-**Level:** B1 | **Module:** M44 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:45:03
+# Audit Report: M45 — active-participles-phrases.md
+**Level:** B1 | **Module:** M45 | **Phase:** B1.4a | **Pedagogy:** TTT | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:41:45
 
 ## Configuration
 **Type:** B1-grammar
@@ -16,20 +16,65 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Теоретичні знання про дієприкметники | 8 | 8 | ✅ |
+| 2 | match-up | Заміна канцеляризмів: знайдіть правильний відповідник | 8 | 8 | ✅ |
+| 3 | fill-in | Узгодження дієприкметників з іменниками | 8 | 8 | ✅ |
+| 4 | unjumble | Побудова речень із дієприкметниковими зворотами | 6 | 6 | ✅ |
+| 5 | error-correction | Редагування: очищення мови від канцеляризмів | 6 | 6 | ✅ |
+| 6 | mark-the-words | Пошук нормативних дієприкметників | 4 | 6 | ❌ |
+| 7 | cloze | Стилістика української мови: заповніть пропуски | 14 | 6 | ✅ |
+| 8 | quiz | Практика використання дієприкметників | 8 | 8 | ✅ |
+| 9 | fill-in | Заміна активних дієприкметників | 8 | 8 | ✅ |
+| 10 | error-correction | Фінальний тест на відчуття мови | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 4-8) ❌
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 3/3 (error-correction, fill-in, quiz) ✅
+- Low density activities: 1
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Заміна канцеляризмів: знайдіть правильний відповідник' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень із дієприкметниковими зворотами' item 1 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень із дієприкметниковими зворотами' item 2 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень із дієприкметниковими зворотами' item 3 has 5 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень із дієприкметниковими зворотами' item 4 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень із дієприкметниковими зворотами' item 5 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудова речень із дієприкметниковими зворотами' item 6 has 6 words (target: 9-16)
+  - FIX: Adjust sentence length to 9-16 words to match B1 complexity.
+- **[COMPLEXITY]** mark-the-words 'Пошук нормативних дієприкметників' has 4 items (minimum: 6)
+  - FIX: Add more items. B1 mark-the-words requires at least 6 items.
+
+## Recommendation
+**📝 UPDATE** (severity 40/100)
+
+- Revision recommended (severity 40/100)
+- 8 violations (significant)
+- Activity density below minimum
+
 ## Gates
 - **Words:** ✅ 5124/4000 (raw: 5679)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/4
+- **Density:** ❌ 1 < 6
+- **Unique_types:** ✅ 7/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 8 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.2% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -55,6 +100,12 @@
 | paragraph_var | 1.00 | - | 100% | 3% | 3.0% |
 | proverbs | 10 | 1 | 100% | 3% | 3.0% |
 | **TOTAL** | | | | | **96.5%** |
+
+## Low Density Activities
+| Activity | Type | Items | Required | Fix |
+|----------|------|-------|----------|-----|
+| Пошук нормативних дієприкметників | mark-the-words | 4 | 6 | Add 2 more items |
+
 
 ## Section Audit
 | Section | Status | Count | Notes |

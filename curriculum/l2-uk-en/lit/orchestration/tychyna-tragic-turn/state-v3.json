@@ -2,5 +2,12 @@
   "track": "lit",
   "slug": "tychyna-tragic-turn",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T01:17:16Z",
+      "task_id": "v3-tychyna-tragic-turn-pA",
+      "mode": "meta-only"
+    }
+  }
 }

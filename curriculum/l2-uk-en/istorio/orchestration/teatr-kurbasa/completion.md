@@ -1,10 +1,10 @@
-PASS: build_module_v2.py istorio 55 — E2E
+PASS: pipeline istorio 55
 
   Module:   teatr-kurbasa
   Track:    istorio
-  Mode:     e2e
+  Mode:     v3
   Words:    0 (target: 5000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-20T22:52:02Z
+  Date:     2026-02-28T00:41:11Z

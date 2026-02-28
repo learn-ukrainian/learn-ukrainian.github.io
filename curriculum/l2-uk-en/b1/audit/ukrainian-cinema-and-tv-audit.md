@@ -1,7 +1,7 @@
-# Audit Report: M77 — ukrainian-cinema-and-tv.md
-**Level:** B1 | **Module:** M77 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
-**Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 11:56:42
+# Audit Report: M85 — ukrainian-cinema-and-tv.md
+**Level:** B1 | **Module:** M85 | **Phase:** B1.7 | **Pedagogy:** CBI | **Target:** 4000
+**Overall Status:** ❌ FAIL
+**Generated:** 2026-02-28 09:50:38
 
 ## Configuration
 **Type:** B1-culture
@@ -16,20 +16,57 @@
 **Vocab Target:** ≥25 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | mark-the-words | Знайдіть слова, пов'язані з кіно | 10 | 6 | ✅ |
+| 2 | match-up | Знайдіть пару: термін та його значення | 8 | 8 | ✅ |
+| 3 | fill-in | Заповніть пропуски відповідними словами | 8 | 8 | ✅ |
+| 4 | quiz | Перевірте свої знання про кінематограф | 8 | 8 | ✅ |
+| 5 | unjumble | Побудуйте правильні речення | 6 | 6 | ✅ |
+| 6 | error-correction | Виправте граматичні та лексичні помилки | 6 | 6 | ✅ |
+| 7 | cloze | Заповніть пропуски в тексті | 14 | 12 | ✅ |
+| 8 | quiz | Розширений словниковий запас | 8 | 8 | ✅ |
+| 9 | fill-in | Відновіть речення | 8 | 8 | ✅ |
+| 10 | unjumble | Побудуйте правильні речення (Частина 2) | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 10 (target: 8-12) ✅
+- Unique types: 7 (minimum: 4) ✅
+- Priority types used: 3/4 (fill-in, match-up, quiz) ✅
+- Required types used: 3/4 (fill-in, match-up, quiz) ❌
+- Low density activities: 0
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** match-up 'Знайдіть пару: термін та його значення' has 8 pairs (target: 12-16)
+  - FIX: Adjust number of pairs to 12-16.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 1 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 2 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 4 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+- **[COMPLEXITY_WORD_COUNT]** unjumble 'Побудуйте правильні речення' item 6 has 6 words (target: 8-14)
+  - FIX: Adjust sentence length to 8-14 words to match B1 complexity.
+
+## Recommendation
+**📝 UPDATE** (severity 15/100)
+
+- 5 violations (moderate)
+
 ## Gates
 - **Words:** ✅ 5011/4000 (raw: 5369)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 10/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 7/4 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 9/5
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 30/25
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Pedagogy:** ❌ 5 violations
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 99.3% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (cultural)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

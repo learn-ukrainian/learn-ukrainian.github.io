@@ -2,14 +2,14 @@
   "module": "mine-and-yours",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-25T22:40:02.717999Z",
+  "last_audit": "2026-02-28T03:31:15.133291Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:47:35.762895Z",
+    "md": "2026-02-26T11:21:02.803319Z",
     "meta": "2026-02-19T23:03:00.692510Z",
     "activities": "2026-02-20T22:49:23.380444Z",
-    "vocabulary": "2026-02-22T18:40:41.004427Z",
-    "plan": "2026-02-20T20:40:22.513936Z",
+    "vocabulary": "2026-02-26T10:56:53.938130Z",
+    "plan": "2026-02-28T03:02:37.249703Z",
     "research": "2026-02-19T23:03:00.684089Z"
   },
   "gates": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
-      "violations": 0,
-      "message": "3017/2000 (raw: 3499)"
+      "status": "fail",
+      "violations": 1,
+      "message": "3014/2000 (raw: 3485) | pedagogy: 1 violations"
     },
     "activities": {
       "status": "pass",
@@ -31,17 +31,12 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "21/1"
+      "message": "16/1"
     },
     "naturalness": {
       "status": "info",
       "violations": 0,
       "message": "PENDING \u2014 awaiting review"
-    },
-    "ipa": {
-      "status": "pass",
-      "violations": 0,
-      "message": "Clean IPA"
     },
     "research": {
       "status": "pass",
@@ -49,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "skipped",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "fail",
     "blocking_issues": [],
-    "pass_count": 7,
-    "fail_count": 0,
+    "pass_count": 4,
+    "fail_count": 1,
     "deferred_count": 0
   }
 }

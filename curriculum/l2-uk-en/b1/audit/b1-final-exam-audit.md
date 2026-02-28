@@ -1,7 +1,7 @@
-# Audit Report: M94 — b1-final-exam.md
-**Level:** B1 | **Module:** M94 | **Phase:** B1.9 | **Pedagogy:** TTT | **Target:** 4000
+# Audit Report: M100 — b1-final-exam.md
+**Level:** B1 | **Module:** M100 | **Phase:** B1.9 | **Pedagogy:** TTT | **Target:** 4000
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-02-25 20:35:51
+**Generated:** 2026-02-28 09:53:44
 
 ## Configuration
 **Type:** B1-checkpoint
@@ -37,27 +37,23 @@
   - FIX: Vary sentence structures. Replace formulaic 'не просто X, а Y' with diverse rhetorical devices
 
 ## Recommendation
-**🔄 REWRITE** (severity 75/100)
+**📝 UPDATE** (severity 30/100)
 
 - 9 violations (significant)
-- Structure issue: Missing '## Activities' header OR activities sidecar
-- Activity count below minimum
-- Activity density below minimum
 
 ## Gates
 - **Words:** ✅ 4103/4000 (raw: 4461)
-- **Activities:** ❌ 0/10
-- **Density:** ❌ 0 < 12
-- **Unique_types:** ❌ 0/4 types
-- **Priority:** ❌ No priority types
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 10 (soft target)
-- **Structure:** ❌ Missing '## Activities' header OR activities sidecar
-- **Ipa:** ✅ Clean IPA
+- **Vocab:** ⏳ Deferred (content-only audit)
+- **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ❌ 2 violations
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 97.5% (checkpoint - no gate)
 - **Richness:** ✅ 89% (checkpoint)
 - **Grammar:** ℹ️ N/A (covered by naturalness)

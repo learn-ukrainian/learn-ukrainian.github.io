@@ -1,0 +1,103 @@
+module: a1-51
+level: A1
+sequence: 51
+slug: leisure-and-hobbies
+version: '2.0'
+title: Leisure and Hobbies
+subtitle: What Do You Do for Fun?
+content_outline:
+- section: Хобі (Hobbies)
+  words: 500
+  points:
+  - 'Common hobbies vocabulary: читати (read), малювати (draw), грати на гітарі (play
+    guitar), фотографувати (photograph), танцювати (dance), співати (sing), готувати
+    (cook). Building a personal hobby lexicon.'
+  - 'Expressing hobbies: Моє хобі — це... (My hobby is...). Я захоплююся... (I am
+    passionate about... + Instrumental). Мені подобається... (I like... + infinitive).
+    Three patterns for the same communicative function.'
+  - 'Hobby-related questions: Яке у тебе хобі? (What is your hobby?). Чим ти захоплюєшся?
+    (What are you into?). Building conversational exchange about interests.'
+- section: Спорт (Sports)
+  words: 400
+  points:
+  - 'Sports with грати в + Accusative: грати в футбол, грати в баскетбол, грати в
+    теніс, грати в шахи. The в + Acc construction for ball/team sports.'
+  - 'Individual sports without грати: плавати (swim), бігати (run), кататися на велосипеді
+    (cycle). These use the bare infinitive or conjugated form: Я плаваю щодня.'
+  - 'Sports venues: стадіон (stadium), басейн (swimming pool), спортзал (gym). Connecting
+    activity to place: Я плаваю в басейні (Locative), Я йду в басейн (Accusative).'
+- section: Дозвілля (Leisure activities)
+  words: 400
+  points:
+  - 'Entertainment: ходити в кіно (go to the cinema), дивитися серіали (watch series),
+    гуляти в парку (walk in the park). Ходити в + Acc for habitual outings.'
+  - 'Social activities: зустрічатися з друзями (meet with friends — Instrumental),
+    ходити в гості (visit someone). Socializing vocabulary and patterns.'
+  - 'Weekend routine question: Що ти робиш у вихідні? (What do you do on weekends?).
+    Building a mini-narrative about typical weekend activities.'
+- section: Запрошення (Invitations)
+  words: 350
+  points:
+  - 'Making invitations: Хочеш піти в кіно? (Want to go to the cinema?). Ходімо
+    разом! (Let us go together!). Давай зустрінемось! (Let us meet up!). Three invitation
+    patterns of varying formality.'
+  - 'Responding: Accepting — З задоволенням! (With pleasure!), Чудова ідея! (Great
+    idea!). Declining — На жаль, не можу (Unfortunately, I cannot). Може, іншим разом?
+    (Maybe another time?).'
+- section: Практика (Practice)
+  words: 350
+  points:
+  - 'Hobby discussion dialogues: exchanging information about hobbies and preferences
+    with a partner. Building fluency in interest-related conversation.'
+  - 'Making plans: Combining invitation patterns with time expressions from earlier
+    modules. Planning a weekend activity with a friend.'
+vocabulary_hints:
+  required:
+  - хобі (hobby) — Моє хобі — це...; indeclinable neuter noun
+  - малювати (to draw) — Я люблю малювати; creative hobby
+  - грати (to play) — грати в футбол, грати на гітарі; two constructions
+  - танцювати (to dance) — Я вмію танцювати; hobby and skill
+  - плавати (to swim) — Я плаваю в басейні; sport and venue
+  - стадіон (stadium) — на стадіоні (Locative); sports venue
+  - басейн (swimming pool) — у басейні (Locative); sports venue
+  - кіно (cinema) — ходити в кіно; indeclinable neuter noun
+  - парк (park) — гуляти в парку (Locative); leisure venue
+  recommended:
+  - захоплюватися (to be passionate about) — + Instrumental case; Чим ти захоплюєшся?
+  - велосипед (bicycle) — кататися на велосипеді; transport and sport
+  - спортзал (gym) — у спортзалі (Locative); fitness venue
+  - вихідні (weekend) — у вихідні; time expression for leisure
+activity_hints:
+- type: match-up
+  focus: Match hobby or sport to its description
+  items: 10
+- type: quiz
+  focus: Activity and leisure vocabulary in context
+  items: 10
+- type: fill-in
+  focus: Complete invitation dialogues with correct phrases
+  items: 8
+- type: group-sort
+  focus: Sort activities into sports vs arts vs social
+  items: 12
+focus: vocabulary
+pedagogy: PPP
+prerequisites:
+- a1-50 (Holidays and Traditions)
+connects_to:
+- a1-52 (Travel and Transport)
+objectives:
+- Name common hobbies and sports in Ukrainian
+- Describe leisure activities
+- Make and respond to invitations
+- Discuss weekend plans
+grammar:
+- Грати в/на construction
+- Ходити в + Accusative
+- Invitation patterns (Ходімо, Давай)
+register: розмовний
+phase: A1.5 [Modals, Commands & Life]
+persona:
+  voice: Patient Supportive Tutor
+  role: Activities Coordinator
+word_target: 2000

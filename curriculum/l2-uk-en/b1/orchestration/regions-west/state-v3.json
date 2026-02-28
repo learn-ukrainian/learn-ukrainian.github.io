@@ -17,11 +17,6 @@
       "status": "complete",
       "ts": "2026-02-25T01:32:20Z",
       "task_id": "v3-regions-west-pC"
-    },
-    "v3-audit": {
-      "status": "complete",
-      "ts": "2026-02-25T10:18:19Z",
-      "attempts": 1
     }
   }
 }

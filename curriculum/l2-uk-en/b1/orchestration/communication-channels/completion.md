@@ -1,10 +1,10 @@
-PASS: build_module_v2.py b1 89 — E2E
+PASS: pipeline b1 97
 
   Module:   communication-channels
   Track:    b1
-  Mode:     e2e
+  Mode:     v3
   Words:    4402 (target: 4000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-25T16:55:59Z
+  Date:     2026-02-28T08:53:34Z

@@ -1,132 +1,141 @@
-  lemma: мені
+- lemma: мені
   notes: Dative form of 'я'
   pos: pronoun
   translation: to me
-  lemma: тобі
+- lemma: тобі
   notes: Dative form of 'ти'
   pos: pronoun
   translation: to you (singular)
-  lemma: йому
+- lemma: йому
   notes: Dative form of 'він' / 'воно'
   pos: pronoun
   translation: to him / to it
-  lemma: їй
+- lemma: їй
   notes: Dative form of 'вона'
   pos: pronoun
   translation: to her
-  lemma: нам
+- lemma: нам
   notes: Dative form of 'ми'
   pos: pronoun
   translation: to us
-  lemma: вам
+- lemma: вам
   notes: Dative form of 'ви'
   pos: pronoun
   translation: to you (plural/formal)
-  lemma: їм
+- lemma: їм
   notes: Dative form of 'вони'
   pos: pronoun
   translation: to them
-  lemma: подобатися
+- lemma: подобатися
   notes: governs Dative case (Subject pleases Recipient)
   pos: verb
   translation: to like / to please
-  lemma: допомагати
+- lemma: допомагати
   notes: governs Dative case
   pos: verb
   translation: to help
-  lemma: дзвонити
+- lemma: дзвонити
   notes: governs Dative case
   pos: verb
   translation: to call (phone)
-  lemma: здаватися
+- lemma: здаватися
   notes: governs Dative case (impersonal)
   pos: verb
   translation: to seem
-  lemma: потрібно
+- lemma: потрібно
   notes: impersonal usage with Dative
   pos: adverb
   translation: necessary / need
-  lemma: треба
+- lemma: треба
   notes: impersonal usage with Dative
   pos: adverb
   translation: need / necessary
-  lemma: необхідно
+- lemma: необхідно
   notes: stronger than 'треба'
   pos: adverb
   translation: necessary / essential
-  lemma: цікаво
+- lemma: цікаво
   notes: impersonal state
   pos: adverb
   translation: interesting / interested
-  lemma: нудно
+- lemma: нудно
   notes: impersonal state
   pos: adverb
   translation: boring / bored
-  lemma: весело
+- lemma: весело
   notes: impersonal state
   pos: adverb
   translation: fun / merry
-  lemma: сумно
+- lemma: сумно
   notes: impersonal state
   pos: adverb
   translation: sad
-  lemma: важко
+- lemma: важко
   notes: impersonal state
   pos: adverb
   translation: difficult / hard
-  lemma: легко
+- lemma: легко
   notes: impersonal state
   pos: adverb
   translation: easy
-  lemma: приємно
+- lemma: приємно
   notes: impersonal state
   pos: adverb
   translation: pleasant / nice
-  lemma: боляче
+- lemma: боляче
   notes: impersonal state
   pos: adverb
   translation: painful / hurts
-  lemma: холодно
+- lemma: холодно
   notes: impersonal state
   pos: adverb
   translation: cold
-  lemma: жарко
+- lemma: жарко
   notes: impersonal state
   pos: adverb
   translation: hot
-  lemma: гарно
+- lemma: гарно
   notes: impersonal state
   pos: adverb
   translation: nice / good / well
-  lemma: називний
+- lemma: називний
   notes: grammatical term
   pos: adjective
   translation: Nominative (case)
-  lemma: займенник
+- lemma: займенник
   notes: grammatical term
   pos: noun
   translation: pronoun
-  lemma: прикметник
+- lemma: прикметник
   notes: grammatical term
   pos: noun
   translation: adjective
-  lemma: давальний
+- lemma: давальний
   notes: grammatical term
   pos: adjective
   translation: Dative (case)
-  lemma: іменник
+- lemma: іменник
   notes: grammatical term
   pos: noun
   translation: noun
-  lemma: давати
+- lemma: давати
   notes: governs Dative case (давати комусь)
   pos: verb
   translation: to give
-  lemma: дякувати
+- lemma: дякувати
   notes: governs Dative case (дякую тобі)
   pos: verb
   translation: to thank
-  lemma: поріг
+- lemma: поріг
   notes: 'Cultural context: не через поріг'
   pos: noun
   translation: threshold
+
+- lemma: знахідний
+  notes: grammatical term
+  pos: adjective
+  translation: Accusative (case)
+- lemma: множина
+  notes: grammatical term
+  pos: noun
+  translation: plural

@@ -1,7 +1,7 @@
 # Audit Report: M03 — reading-grammar-rules.md
 **Level:** B1 | **Module:** M03 | **Phase:** B1.0 | **Pedagogy:** PPP | **Target:** 4000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-25 10:41:49
+**Generated:** 2026-02-28 09:38:07
 
 ## Configuration
 **Type:** B1-bridge
@@ -16,20 +16,37 @@
 **Vocab Target:** ≥20 words
 **Transliteration:** Not allowed
 
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Перевірте розуміння аналітичних термінів | 8 | 8 | ✅ |
+| 2 | match-up | Інструкції та їх значення | 16 | 8 | ✅ |
+| 3 | fill-in | Граматичні пояснення | 8 | 8 | ✅ |
+| 4 | group-sort | Категорії термінів | 15 | 6 | ✅ |
+| 5 | true-false | Правда чи міф про мову? | 10 | 8 | ✅ |
+| 6 | mark-the-words | Знайдіть дієслова-інструкції | 11 | 6 | ✅ |
+| 7 | error-correction | Виправте мовні помилки | 6 | 6 | ✅ |
+
+**Summary:**
+- Total activities: 7 (target: 4-8) ✅
+- Unique types: 7 (minimum: 3) ✅
+- Priority types used: 5/7 (error-correction, fill-in, mark-the-words, match-up, quiz) ✅
+- Required types used: 6/6 (error-correction, fill-in, mark-the-words, match-up, quiz, true-false) ✅
+- Low density activities: 0
+
 ## Gates
 - **Words:** ✅ 4556/4000 (raw: 4911)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
+- **Activities:** ✅ 7/4
+- **Density:** ✅ All > 6
+- **Unique_types:** ✅ 7/3 types
+- **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 17/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
-- **Ipa:** ✅ Clean IPA
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 98.8% (target 60-100% (B1.0 Bridge))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
