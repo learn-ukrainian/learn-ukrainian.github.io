@@ -8,6 +8,20 @@
       "ts": "2026-02-28T15:04:34Z",
       "task_id": "v3-this-is-i-am-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T15:40:37Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T15:40:37Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T15:45:36Z",
+      "attempts": 2
     }
   }
 }

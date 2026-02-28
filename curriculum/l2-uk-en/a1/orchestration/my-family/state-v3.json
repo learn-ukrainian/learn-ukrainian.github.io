@@ -3,31 +3,25 @@
   "slug": "my-family",
   "mode": "v3",
   "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T16:34:34Z",
+      "task_id": "v3-my-family-pA",
+      "mode": "full"
+    },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-20T21:43:23Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T16:39:12Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-20T21:43:23Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T21:43:24Z",
-      "note": "adopted-existing-meta"
+      "ts": "2026-02-28T16:39:13Z",
+      "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-22T23:21:46Z",
-      "attempts": 2
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T23:51:14Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T16:59:20Z",
+      "attempts": 3
     }
   }
 }

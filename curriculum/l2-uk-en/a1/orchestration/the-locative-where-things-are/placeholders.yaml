@@ -2,7 +2,7 @@ TRACK: a1
 LEVEL: A1
 SLUG: the-locative-where-things-are
 TOPIC_TITLE: 'The Locative: Where Things Are'
-MODULE_NUM: '13'
+MODULE_NUM: '28'
 PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/the-locative-where-things-are.yaml
 META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/the-locative-where-things-are.yaml
 CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/the-locative-where-things-are.md
@@ -17,12 +17,11 @@ SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
 PERSONA_ROLE: Kyiv City Guide
-IMMERSION_RULE: 'TARGET: 25-40% Ukrainian, 60-75% English. Write cultural notes, practical
-  sections, observations, and drill instructions in Ukrainian first (2-3 sentence
-  paragraphs, max 10 words per sentence), then add English translation below. CRITICAL:
-  NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English.
-  Grammar RULES stay in English. Provide 3-4 Ukrainian examples per grammar point.
-  Some callout/tip text in Ukrainian. A1 register only — simple concrete vocabulary.'
+IMMERSION_RULE: 'TARGET: 35-55% Ukrainian, 45-65% English. Write ALL section content
+  in Ukrainian first (max 10 words per sentence). Then add English translation paragraphs
+  for grammar explanations to bring Ukrainian down to 35-55%. CRITICAL: NEVER mix
+  languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. Grammar
+  rules still anchored in English. A1 register — simple concrete vocabulary.'
 LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Max 10 words per Ukrainian sentence (STRICT — count every word)

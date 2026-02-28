@@ -2,32 +2,32 @@
 
 ## State Standard Reference
 §4.2.1.4: "Займенник. Уживання відмінкових форм особових займенників: я (мене, мені), ти (тебе, тобі), ми (нас, нам), ви (вас, вам)."
-Alignment: Core grammar coverage of personal pronouns in the four oblique cases (Accusative, Locative, Dative, Genitive) required for A1 proficiency.
+Alignment: This module fulfills the A1 requirement by systematically teaching the basic declension of personal pronouns across Accusative, Locative, Dative, and Genitive cases, providing necessary scaffolding for basic conversational fluency.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| мене | Top 50 (Corpus)   | бачити мене, для мене, у мене є |
-| тебе | Top 100 (Corpus)  | знати тебе, без тебе |
-| його / нього | Top 50 | бачу його, про нього |
-| її / неї | Top 100 | знаю її, біля неї |
-| нас, вас | Top 100 | для нас, бачити вас |
-| їх / них | Top 100 | знаю їх, у них є |
+| мене | High (Top 100) | для мене, у мене є, чекай мене |
+| тебе | High (Top 100) | у тебе, я тебе розумію, без тебе |
+| його | High (Top 50) | його немає, біля нього, я знаю його |
+| її | High (Top 50) | її немає, для неї, запитай її |
+| нас | High (Top 100) | у нас, для нас, він бачить нас |
+| вас | High (Top 100) | чекаю на вас, у вас, для вас |
 
 ## Cultural Hooks
-1. Formal Address: In Ukrainian, the formal "ви" is capitalized in direct written correspondence ("Ви", "Вас", "Вам") as a sign of respect for elders, teachers, or professionals. It is distinct in usage from the plural "ви".
-2. Grammatical Gender of Objects: Unlike English "it", Ukrainian assigns "він", "вона", or "воно" to inanimate objects. This means pronouns change entirely depending on the grammatical gender of the referent (e.g., a table, "стіл" -> "його"; a book, "книга" -> "її").
+1. **The Politeness Distance ("Ви" vs "Ти")**: The choice of pronoun isn't merely grammatical; it dictates social distance. The capitalized «Вас/Вам» is highly respected in formal written correspondence and professional settings.
+2. **Location over Ownership ("У мене є")**: Unlike English "I have", the Ukrainian phrase «у мене є» grammatically translates to "at me there is." This reflects a distinct linguistic mindset focusing on proximity/location rather than direct possession.
 
 ## Common Learner Errors
-1. Missing the `н-` prefix after prepositions: Learners often say *для його instead of "для нього". Ukrainian requires this phonetic bridge for all third-person pronouns following prepositions.
-2. Over-applying the `н-` prefix: Using it when there is no preposition (e.g., saying *бачу нього instead of "бачу його").
-3. Translating English "it" directly: Forgetting to match the noun's grammatical gender in Ukrainian.
+1. **Missing the `н-` prefix** → *для його* instead of *для нього* — Learners often forget that 3rd person pronouns require the `н-` prefix after prepositions.
+2. **Locative without a preposition** → *мені* instead of *на мені/у мені* (when expressing location) — The Locative case always requires a preposition; using the naked pronoun form defaults to Dative.
+3. **Overusing «я маю»** → Translating "I have" directly to *я маю* instead of the more natural, idiomatic *у мене є*.
 
 ## Cross-References
-- Builds on: a1-30 (Adjective Case Forms), a1-19 (Мені подобається)
+- Builds on: a1-30 (Adjective Case Forms), a1-19 (Dative Introduction: «мені подобається»)
 - Prepares for: a1-32 (The Genitive I)
 
 ## Notes for Content Writing
-- Immersion Target: 35-40% (Consolidation module). Ensure English scaffolding is explicitly used to explain the grammar rules, while examples and simple contexts are in Ukrainian.
-- Decolonized framing: Treat the `н-` prefix as a natural, euphonic feature of Ukrainian designed to prevent vowel clashes and maintain the language's vocalic-consonantal balance. Do not compare it to Russian equivalents.
-- Ensure IPA is provided only on the first occurrence of each new pronoun form.
+- **Scaffolding Required**: As an A1 module, utilize English to explicitly explain syntactic roles (direct/indirect object) before jumping into Ukrainian paradigms.
+- **Decolonized Framing**: Present the `н-` prefix as a core structural harmony feature of the Ukrainian language. Do not compare the paradigm to Russian or frame it as an "exception" relative to other Slavic languages.
+- **Visual Aids**: Combine the cases into a comparative summary table at the end of the theory sections so learners can easily see the form overlaps (e.g., Genitive/Accusative).

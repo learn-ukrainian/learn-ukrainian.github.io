@@ -18,20 +18,18 @@
   Module:  taking-transport
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
+  3 Outline Compliance Errors
   failing gates:
-    lesson: 2204/2000 (raw: 2509) | pedagogy: 3 violations | immersion: 19.9% LOW (target 35-55% (M40))
+    lesson: 2588/2000 (raw: 2850) | engagement: 0/3 | pedagogy: 13 violations | immersion: 22.2% LOW (target 35-55% (M57))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-    [INLINE_ENGLISH_IN_PROSE] Inline English translations in B1+ prose (12 occurrences): (City locations), (Buying tickets), (Bus stop) — breaks immersion target
-       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-
-
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
-     → 3 violations (minor)
-     → Immersion 15% off target
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 90/100)
+     → 17 violations (severe - consider revision)
+     → 8 grammar-level violations (fundamental)
+     → Immersion 13% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/taking-transport-audit.md
@@ -39,8 +37,12 @@
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
+  Critical Failures:
+    • 3 Outline Compliance Errors
+
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/taking-transport-audit.log for details)
         ```
+
 
         ## Files to Fix
 

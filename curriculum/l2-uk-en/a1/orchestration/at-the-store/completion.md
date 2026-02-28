@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 38 — E2E
+PASS: pipeline a1 61
 
   Module:   at-the-store
   Track:    a1
-  Mode:     e2e
-  Words:    2864 (target: 2000)
+  Mode:     v3
+  Words:    3230 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T08:38:10Z
+  Date:     2026-02-28T19:38:07Z

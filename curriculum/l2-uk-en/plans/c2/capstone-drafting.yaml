@@ -1,10 +1,12 @@
-module: c2-091
-level: c2
-sequence: 91
+module: c2-082
+level: C2
+sequence: 82
+slug: capstone-drafting
 version: '2.0'
 title: Дипломний проєкт — Написання чернетки
 focus: practice
 pedagogy: TTT
+phase: 'C2.4 [Meta-Skills & Capstone]'
 objectives:
 - TBD
 sources:

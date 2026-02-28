@@ -1,6 +1,6 @@
-module: c1-063
+module: c1-083
 level: C1
-sequence: 63
+sequence: 83
 slug: pomynalni-obriady
 version: '2.0'
 title: Поминальні обряди
@@ -68,7 +68,7 @@ objectives:
 grammar:
 - Eschatological terminology
 - Sacred and commemorative registers
-phase: C1.5 Folk Culture & Fine Arts
+phase: C1.6 [Folk Culture & Traditions]
 persona:
   voice: Senior Specialist
   role: Хранитель роду

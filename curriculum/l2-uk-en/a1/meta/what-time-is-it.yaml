@@ -2,52 +2,46 @@ slug: what-time-is-it
 title: What Time Is It?
 word_target: 2000
 content_outline:
-- section: Warm-up
-  words: 250
+- section: Вступ
+  words: 400
   points:
-  - 'Cultural Hook: Ukrzaliznytsia as a symbol of punctuality and the importance of
-    time in Ukraine'
-  - 'The two questions: «Котра година?» (What time is it?) vs «О котрій?» (At what
-    time?)'
-  - 'Standard §4.2.3.4: Polite forms of address when asking for time («Скажіть, будь
-    ласка...»)'
-- section: Presentation
-  words: 450
+  - Explicit English scaffolding paragraph introducing the goals of the lesson.
+  - 'Cultural hook: Ukrzaliznytsia''s 92%+ punctuality and the value of being «вчасно»
+    (on time) as a symbol of Ukrainian resilience.'
+  - 'Introduce the difference between the two core questions: «Котра година?» (current
+    time) vs. «О котрій?» (scheduled time).'
+  - 'Provide examples of polite address using the Vocative case (§4.2.3.4): «Пане
+    / пані, скажіть, будь ласка, котра година?».'
+- section: Презентація часу
+  words: 600
   points:
-  - 'The Clock Face: Using ordinal numbers (перша, друга) for hours'
-  - 'Gender agreement: Why it is «друга година» (feminine) and not «другий»'
-  - 'Simple Minutes: The ''Digital'' or ''Telegraphic'' style (десять двадцять, п''ята
-    тридцять) for easy communication'
-  - 'Introduction of key vocabulary: година, хвилина, зараз'
-- section: Days of the Week
-  words: 300
+  - Explain in English that hours use feminine ordinal numbers (перша, друга) to agree
+    with «година». Include a table for 1-12.
+  - 'Address common learner error: warn against using cardinal numbers like «два годин»,
+    explaining why «друга година» is correct.'
+  - Introduce 'telegraphic style' for minutes (година + хвилина, e.g., «п'ята тридцять»)
+    for A1 simplicity.
+  - Include short mini-dialogues asking and telling the current time, with IPA for
+    first occurrence of new words.
+- section: Дні та місяці
+  words: 600
   points:
-  - 'The 7 days: понеділок through неділя (etymology note: неділя = ''no work'')'
-  - 'Grammar Focus: Accusative case for ''On [Day]'' (§4.2.3.2.2) — «у понеділок»,
-    «у вівторок»'
-  - 'Common Error Alert: Distinguishing «середа» (Nominative) vs «у середу» (Accusative)'
-- section: Months of the Year
-  words: 300
+  - 'Present the 7 days of the week. Explain the grammar rule (§4.2.3.2.2): use «у/в»
+    + Accusative case for ''on [Day]'' («у понеділок»).'
+  - Warn against using Locative for days. Mention euphony rules for choosing between
+    у and в.
+  - Present the 12 months, highlighting their authentic connection to nature (e.g.,
+    січень, лютий) as a cultural note.
+  - 'Explain the grammar rule (§4.2.3.3): use «у/в» + Locative case for ''in [Month]''
+    («у січні», «у травні»). Group months by season in a table.'
+- section: Практика та розклад
+  words: 400
   points:
-  - 'The 12 months: Descriptive nature of Ukrainian names (січень - cutting, лютий
-    - fierce)'
-  - 'Grammar Focus: Locative case for ''In [Month]'' (§4.2.3.3) — «у січні», «у лютому»'
-  - 'Seasons connection: Grouping months by season to aid memory'
-- section: Time Prepositions
-  words: 250
-  points:
-  - The preposition «о / об» for specific times (О котрій? — О сьомій)
-  - The prepositions «до» (until) and «після» (after) for scheduling
-  - 'Usage examples: «Магазин працює з дев''ятої до шостої»'
-- section: Presentation 2
-  words: 250
-  points:
-  - 'Daily Schedules: Integrating time, days, and verbs of routine'
-  - 'The 24-hour vs 12-hour distinction: Official (17:00) vs Spoken (п''ята вечора)'
-  - 'Context: Reading a train ticket or station schedule'
-- section: Practice
-  words: 200
-  points:
-  - 'Dialogue: Asking for the time on the street (Polite register)'
-  - 'Dialogue: Planning a meeting for the week (Informal register)'
-  - 'Scenario: Creating a simple weekly schedule using correct case forms'
+  - 'Introduce prepositions for scheduling: «о» (at), «до» (until), «після» (after),
+    and «з... до» (from... to).'
+  - 'Explain the register distinction: 24-hour format for official schedules (transport)
+    vs. 12-hour format for conversational speech.'
+  - 'Provide a reading scenario: a simple daily routine or a train conductor''s shift
+    schedule.'
+  - Conclude with an informal dialogue planning a meeting for the coming week, integrating
+    days and time expressions.

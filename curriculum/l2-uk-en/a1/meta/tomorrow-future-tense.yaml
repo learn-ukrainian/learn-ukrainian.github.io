@@ -5,43 +5,44 @@ content_outline:
 - section: Вступ
   words: 400
   points:
-  - 'Explicit English scaffolding: Provide context on how the Ukrainian future tense
-    is elegantly simple, requiring no complex distinction between ''will'' and ''going
+  - 'English scaffolding requirement: Explicitly use English to introduce the Ukrainian
+    future tense, highlighting its simplicity compared to English ''will'' vs. ''going
     to''.'
-  - 'Contrast present, past, and future timelines: Briefly review A1-36 (Yesterday)
-    and map out where we are now versus where we will be tomorrow.'
-  - 'Cultural context: Introduce the phrase «Завтра буде новий день» as an anchor
-    for expressing Ukrainian optimism and resilience.'
+  - 'Timeline mapping: Briefly review A1-36 (Yesterday) and contrast the past and
+    present timelines with where we will be tomorrow.'
+  - 'Cultural hook: Introduce the phrase «Завтра буде новий день» as an anchor for
+    expressing Ukrainian optimism and resilience.'
 - section: Презентація граматики
   words: 600
   points:
   - Introduce the compound future formula (буду + infinitive) aligned with State Standard
-    §4.2.4.1.
-  - Provide a comprehensive conjugation table for the auxiliary verb 'бути' (буду,
-    будеш, буде, будемо, будете, будуть) with simple examples.
-  - 'Address the Common Learner Error (Conflict of aspects): Explicitly state the
-    rule that ''буду'' is only used with imperfective verbs. Contrast correct (''буду
-    читати'') and incorrect (''буду прочитати'') usage.'
-  - Briefly overview the synthetic future tense (працюватиму) strictly as a recognition-only
-    feature (FYI) for authentic texts, without drilling.
+    §4.2.4.1. Each person gets its own H3 for the conjugation of 'бути' (буду, будеш,
+    буде, будемо, будете, будуть) with simple bilingual examples.
+  - 'Address the Common Learner Error (Conflict of aspects): Explicitly state in English
+    that ''буду'' is only used with imperfective verbs. Contrast correct («буду читати»)
+    and incorrect («буду прочитати») usage.'
+  - Briefly overview the synthetic future tense («працюватиму») in a short FYI box,
+    strictly as a recognition-only feature for authentic texts, without any drilling
+    or exercises.
 - section: Лексика та культурний контекст
   words: 600
   points:
   - Introduce future time markers (завтра, післязавтра, скоро) and high-frequency
-    phrases (завтра вранці, завтра вдень).
-  - Explain the 'Genitive of Time' rule for phrases like 'наступного тижня' and 'наступного
-    року' to prevent the common error of using the Nominative case.
-  - Differentiate between expressing intentions ('хочу', 'збираюся') and definite
-    future actions ('буду').
+    phrases (завтра вранці, завтра вдень) using a structured vocabulary table.
+  - Explain the 'Genitive of Time' rule for phrases like «наступного тижня» and «наступного
+    року». Warn against the common error of using the Nominative case.
+  - Differentiate between expressing intentions («хочу», «збираюся») and definite
+    future actions («буду») using simple parallel examples.
   - 'Integrate the cultural hook: Discuss the proverb «Не кажи ''гоп'', поки не перескочиш»
-    to explain Ukrainian cultural cautiousness regarding sharing plans.'
+    to explain Ukrainian cultural cautiousness regarding sharing definite plans.'
 - section: Практика та підсумок
   words: 400
   points:
-  - Provide controlled practice dialogues focusing on weekend and evening plans, incorporating
-    collocations like 'мати плани' and 'складати план'.
+  - Provide controlled practice mini-dialogues focusing on weekend and evening plans,
+    incorporating collocations like «мати плани» and «складати план».
   - 'Develop a role-play scenario (Persona: ''Організатор подій'' / Event Planner)
-    where the learner actively plans a vacation or work week using the conjugated
+    where the learner actively plans a vacation or work week, observing the conjugated
     forms of ''бути''.'
-  - Summarize the grammar rules, highlighting the correct usage of the auxiliary verb
-    and the genitive case for time markers.
+  - Summarize the grammar rules in a bulleted recap, highlighting the correct usage
+    of the auxiliary verb, the imperfective infinitive rule, and the genitive case
+    for time markers.

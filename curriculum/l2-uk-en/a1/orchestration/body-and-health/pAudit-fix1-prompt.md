@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2143/2000 (raw: 2350) | pedagogy: 9 violations | immersion: 22.1% LOW (target 35-55% (M31))
+    lesson: 4734/2000 (raw: 4987) | pedagogy: 33 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 
   📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
      → Revision recommended (severity 70/100)
-     → 10 violations (significant)
-     → 9 grammar-level violations (fundamental)
-     → Immersion 13% off target
+     → 36 violations (severe - consider revision)
+     → 31 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/body-and-health-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/body-and-health-audit.log for details)
         ```
+
 
         ## Files to Fix
 

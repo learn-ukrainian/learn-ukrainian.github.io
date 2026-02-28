@@ -1,327 +1,248 @@
 <!-- SCOPE
-Covers: Buying train/bus tickets, asking for schedules, platform navigation, carriage types, cultural aspects of Ukrainian trains.
+Covers: Vocabulary for transport types, station navigation, ticket purchasing, and train travel culture.
 Not covered:
-  - Complex Genitive case theory (deep dive) → a2-genitive
-  - International travel specificities
-Related: a1-17 (Numbers), a1-40 (Taking Transport)
+  - Complex vehicle mechanics
+  - Deep case paradigms for all nouns
+Related: a1-22, a1-61, a1-57
 -->
 
 # Buying Tickets
 
-Купівля квитків — це просто.
-
 > **Чому це важливо?**
 >
-> Це важливо для вас.
->
-> Being able to buy a ticket is your passport to exploring Ukraine beyond the city center. Whether you are planning a trip to the Carpathian Mountains or visiting Lviv for coffee, you need to communicate your destination and preferences clearly. Let's learn the exact phrases you need to buy a ticket and travel with confidence.
+> Подорожі Україною — це дуже цікавий досвід. Там є красива архітектура міста Львів. Також є море біля міста Одеса. Люди люблять гуляти в горах. Ви маєте знати транспортні слова. У цьому уроці ми вивчаємо вокзали. Ми також вибираємо транспорт. Ми купуємо квитки.
 
-Це важливий урок. Ви хочете купити квиток? Ви хочете поїхати до Львова? Це прекрасно. Ви маєте знати слова. Слухайте і читайте.
+## Вступ та підготовка
 
-## Види транспорту та вокзали
+Географія України дуже цікава. Це велика країна. Внутрішні подорожі — це велика подія. Вони займають багато часу. 
 
-Ukraine is a large country, and moving between cities is a part of daily life. To start your journey, you first need to know where to go and what vehicle to look for.
+### Види міжміського транспорту
+When planning a journey between distant cities, you have three primary transport options. Understanding the distinct operational role of each helps you choose the right speed, cost, and comfort level for your specific itinerary.
+- **по́їзд** (train): The absolute, undeniable backbone of Ukrainian intercity travel. The national railway network is incredibly vast and reaches almost every inhabited corner of the country. Trains are highly reliable, operate smoothly in all severe weather conditions, and are the overwhelmingly preferred method for any trip lasting longer than four hours. They offer the distinct comfort of sleeping horizontally.
+- **авто́бус** (bus): Standard, large-capacity long-distance coaches. These vehicles are crucial for routes where the train takes an inefficient, winding path or where no railway tracks exist due to terrain. They are especially common for international travel across borders and for connecting mid-sized regional cities directly.
+- **маршру́тка** (minibus): Smaller, privately operated commercial vans. These vehicles connect nearby towns, rural villages, and regional administrative centers. They operate differently from buses: they depart frequently, usually only when all passenger seats are physically full, making them significantly faster but decidedly less spacious than regular coaches.
 
-Україна — велика країна. Ви плануєте подорож? Ви шукаєте транспорт? Ви знаєте слово вокзал? Тут стоять поїзди.
+"Ми зараз плануємо нашу велику подорож." (We are planning our big journey now.)
+"Мій найулюбленіший транспорт — це нічний поїзд." (My most favorite transport is the night train.)
+"Вони довго чекають на вечірній автобус." (They are waiting a long time for the evening bus.)
+"Ця біла маршрутка їде дуже швидко." (This white minibus drives very fast.)
 
-### Поїзд (Train)
-The most popular way to travel long distances in Ukraine is by train. The Ukrainian word for "train" is **по́їзд**. Trains are reliable, affordable, and often the most comfortable option for overnight trips. When you want to find the main railway station in a city, you look for the **залізни́чний вокза́л**. Note that we rarely say just "station" for a major hub; we use the specific word **вокзал** to indicate a large terminal building with ticket offices, waiting halls, and platforms.
+When talking with local residents, you will frequently hear them debate the optimal transport method for a specific route. For example, traveling from the capital Kyiv to the western hub of Lviv is universally done by train, but moving between smaller scattered towns deep in the Carpathian mountain region relies almost entirely on the agile minibus network.
 
-Example:
-*   **Я їду на вокзал.** (I am going to the terminal.)
-*   **Це швидкий поїзд.** (This is a fast train.)
+### Головні транспортні вузли
+Кожне місто має свою інфраструктуру. Вокзали мають точні назви. Ви маєте знати правильну назву. Туристи часто роблять помилки.
+- **вокза́л** (railway station): This word specifically and exclusively denotes the main train station of a city. This building is usually a grand, historic, architectural landmark located near the city center. If a local friend says "Зустрінемося на вокзалі", they implicitly mean the main railway station, without needing to specify the word for train.
+- **автовокза́л** (central bus station): This is the major, centralized hub for all intercity and international coaches. This facility is frequently located further away from the historical center, often positioned near major ring roads or highways to allow heavy buses easy access.
+- **автоста́нція** (local bus station): A significantly smaller facility, often serving only regional, suburban, and rural routes within a specific local district. A large city might possess one central "автовокзал" and several smaller "автостанції" scattered on the geographical outskirts.
 
-### Автобус та Маршрутка (Bus and Minibus)
-For shorter distances or routes not covered by trains, you will use a bus. A large intercity bus is an **авто́бус**. However, unique to Ukraine and its neighbors is the **маршру́тка**. This is a smaller minibus (often yellow) that travels on fixed routes. While an **автобус** usually departs from a large terminal called an **автовокза́л**, a **маршрутка** might stop at a smaller local **автоста́нція** or even just a designated stop on the street.
+"Скажіть, де знаходиться головний вокзал?" (Tell me, where is the main railway station located?)
+"Наш великий автобус відправляється з автовокзалу." (Our big bus departs from the central bus station.)
+"Це дуже маленька сільська автостанція." (This is a very small rural local bus station.)
+"Я зараз чекаю тебе на вокзалі." (I am waiting for you at the railway station now.)
 
-Маршрутка — це маленький автобус. Вона їздить по місту.
+> [!tip] **Таксі та вокзали**
+> Ви сідаєте в таксі. Ви говорите: «на вокзал». Водій автоматично їде на залізничну станцію. Водій не має питань. Але ваш квиток може бути на автобус. Тоді ви маєте сказати: «на автовокзал». Це дуже важливе правило. Воно допомагає туристам встигнути на рейс.
 
-Example:
-*   **Де стоїть мій автобус?** (Where is my bus standing?)
-*   **Це маршрутка до Києва?** (Is this a minibus to Kyiv?)
+### Напрямок руху: правило «до»
+Ви купуєте квиток. Ви читаєте розклад. Ви говорите напрямок поїздки. Тут ми використовуємо прийменник **до** (to). Ми також використовуємо родовий відмінок.
+На рівні А1 студенти не вчать всі правила. Просто запам'ятайте ці слова як блоки. Назви міст на приголосний додають "-а". Назви на "-а" змінюють кінець на "-и".
 
-> [!culture]
-> **Cultural Context: Вокзал vs. Станція**
-> In English, "station" covers everything from a small metro stop to a massive international terminal. In Ukrainian, size matters. A **вокзал** is a major building—a gateway to the city. A **станція** is usually a smaller technical stop or a metro station. If you tell a taxi driver "to the station" (*на станцію*), they might be confused. Say **на вокзал** to get to your train.
->
-> Вокзал — це велика будівля. Станція — це маленька зупинка.
+"Я сьогодні ввечері їду до Києва." (I am traveling to Kyiv this evening.)
+"Він купує новий квиток до Львова." (He is buying a new ticket to Lviv.)
+"Ми щороку подорожуємо до Одеси влітку." (We travel to Odesa every year in the summer.)
+"Вона щойно успішно приїхала до Харкова." (She just successfully arrived to Kharkiv.)
 
-### Навігація на вокзалі (Station Navigation)
-When you arrive at the **вокзал**, you will see signs and digital boards. The most important words to recognize immediately are **Ка́са** (Ticket Office) and **До́відка** (Information Desk). If you already have your ticket, look for the **Ро́зклад** (Schedule) to find your train.
+> [!warning] **Правило прийменників**
+> Англомовні люди часто роблять помилку. Вони хочуть перекласти "traveling to" словом «в». Наприклад, вони кажуть: «Я їду в Львів». Це звучить дуже неприродно для українців. Ви завжди маєте використовувати слово «до» для міст. Правильна фраза: «Я їду до Львова». Це природна і правильна українська граматика для напрямку.
 
-Ви на вокзалі. Тут є знаки. Тут є каса і довідка.
+Let us observe a short, realistic conversation between two colleagues discussing their upcoming weekend plans:
 
-Example:
-*   **Де каса?** (Where is the ticket office?)
-*   **Там є розклад.** (There is a schedule over there.)
+**Олена:** Ти їдеш до Києва на ці вихідні? (Are you traveling to Kyiv for these weekends?)
+**Марк:** Ні, я маю інші плани поїхати до Львова. (No, I have other plans to travel to Lviv.)
+**Олена:** Це справді чудова ідея. Ти вже маєш квиток на швидкий поїзд? (That is truly a wonderful idea. Do you already have a ticket for the fast train?)
+**Марк:** Так, звичайно. Я їду з головного вокзалу завтра вранці. (Yes, of course. I am leaving from the main railway station tomorrow morning.)
 
-## Купівля квитка та напрямок
+## Каса та замовлення
 
-Now that you are at the **каса**, let’s construct the most important sentence of this module: buying the ticket itself.
+Ми знаємо наш маршрут. Тепер ми купуємо квитки. Касир хоче знати деталі. Ви говорите кількість і напрямок.
 
-Ви біля каси. Ви хочете купити квиток.
+### Основна комунікація: купівля квитка
+The fundamental, foundational word for any ticket is **квито́к**. Grammatically, this specific noun is masculine. This gender classification becomes highly relevant the moment you need to specify the quantity. When verbally asking for one single ticket, you must use the masculine form of the number one: **оди́н**. The most common, universally understood, and polite transactional structures utilize the phrases «Дайте, будь ласка» (Give, please) or «Я хочу» (I want).
 
-### The Core Request Formula
-To ask for a ticket politely, we use the structure: "One ticket to [City], please." In Ukrainian, this starts with the number and the object: **Оди́н квито́к**. Note that **квиток** is masculine, so we use **один** (not *одна*). This is a very common mistake for beginners! Always remember: **один квиток**.
+"Один квиток до Львова, будь ласка." (One ticket to Lviv, please.)
+"Я хочу один квиток на сьогоднішній вечір." (I want one ticket for tonight's evening.)
+"Дайте, будь ласка, два квитки до Харкова." (Give, please, two tickets to Kharkiv.)
+"Скажіть, скільки коштує один квиток?" (Tell me, how much does one ticket cost?)
 
-Ви хочете один квиток. Це просто.
+> [!warning] **Увага на рід**
+> Студенти часто вчать слово «одна» першим. Тому вони часто говорять касиру: «одна квиток». Це дуже помітна помилка. Слово «квиток» — це чоловічий рід. Ви маєте тренувати свій слух. Завжди використовуйте правильну форму разом: «оди́н квито́к». Ніколи не використовуйте жіночий рід тут.
 
-Example:
-*   **Один квиток, будь ласка.** (One ticket, please.)
-*   **Я хочу купити один квиток.** (I want to buy one ticket.)
-*   **Дайте, будь ласка, два квитки.** (Give, please, two tickets.)
+### Тип поїздки: один бік чи два?
+When actively processing your request at the window, the cashier desperately needs to know the complete scope of your travel. Are you returning, or are you just going there permanently? We use highly specific, fixed phrases to effectively describe the journey format.
+- **в оди́н бік** (one way): This useful phrase translates quite literally as "in one direction".
+- **туди́ й наза́д** (round trip): This highly descriptive phrase translates literally as "there and back".
 
-> [!note]
-> **Cultural Note: Politeness**
-> You can also simply name the destination and the ticket count. "До Львова, один, будь ласка." (To Lviv, one, please). It is polite and efficient.
->
-> Будьте ввічливі. Кажіть: "Один квиток, будь ласка".
+"Дайте один квиток до Одеси тільки в один бік." (Give one ticket to Odesa only one way.)
+"Я терміново хочу квиток до Києва туди й назад." (I urgently want a ticket to Kyiv, round trip.)
+"Я зараз купую два квитки туди й назад." (I am buying two tickets, round trip now.)
+"Пам'ятайте, цей поїзд їде тільки в один бік." (Remember, this train goes only one way.)
 
-### Destination Pattern: До + Genitive
-To say "to [City]", we use the preposition **до** followed by the destination in the Genitive case. For this level, you don't need to memorize all Genitive rules, but you must learn the pattern for cities.
-*   Cities ending in a consonant add **-а** or **-я**:
-    *   Київ → **до Києва**
-    *   Львів → **до Львова**
-    *   Харків → **до Харкова**
-    *   Ужгород → **до Ужгорода**
-*   Cities ending in **-а** change to **-и**; cities ending in **-я** change to **-і**:
-    *   Полтава → **до Полтави**
-    *   Одеса → **до Одеси**
-    *   Вінниця → **до Вінниці**
+These phrases function practically as unified blocks of vocabulary. You can simply append them directly to the end of your initial request at the ticket window to provide all the necessary, complete information to the staff.
 
-Example:
-*   **Один квиток до Києва.** (One ticket to Kyiv.)
-*   **Два квитки до Львова.** (Two tickets to Lviv.)
-*   **Я їду до Харкова.** (I am going to Kharkiv.)
+### Де купити: каси та цифрова революція
+Ви купуєте квитки тут. Це місце — **ка́са** (ticket office). Раніше люди стояли в довгих чергах. Сьогодні українці часто використовують смартфони. Вони часто мають **електро́нний квито́к** (electronic ticket) у смартфоні.
+The national railway operator, known as Укрзалізниця, maintains a highly efficient, user-friendly mobile application. You absolutely do not need to print an electronic ticket; the carriage conductor simply scans the square QR code directly from your bright smartphone screen immediately before you board.
 
-> [!warning]
-> **Common Mistake Alert: Квиток до...**
-> When buying a ticket, always use **до + city**: **квиток до Києва** (a ticket to Kyiv). Do not say *квиток в Київ*. For tickets and schedules, **до** is the correct preposition.
->
-> Правильно: квиток до Києва. Неправильно: квиток в Київ.
+"Скажіть, де знаходиться найближча квиткова каса?" (Tell me, where is the nearest ticket office located?)
+"Ця головна каса працює цілодобово без перерви." (This main ticket office works 24/7 without a break.)
+"Я завжди швидко купую електронний квиток онлайн." (I always quickly buy an electronic ticket online.)
+"Мій новий електронний квиток збережено у телефоні." (My new electronic ticket is saved in the phone.)
 
-### Practice: Where are we going?
-Let's look at more examples. Try to read them aloud:
-1.  **Ми їдемо до Дніпра.** (We are going to Dnipro.)
-2.  **Ви їдете до Житомира.** (You are going to Zhytomyr.)
-3.  **Вони хочуть квиток до Херсона.** (They want a ticket to Kherson.)
+> [!fact] **Цифрова революція (Digital transformation)**
+> Україна має дуже швидкий цифровий розвиток. Раніше всі стояли в довгих чергах біля каси. Тепер люди генерують **електро́нний квито́к** дуже швидко. Це повністю змінило досвід подорожей. Сьогодні такі квитки купують дуже рідко. Їх купують старі люди. Вони люблять готівку. Або туристи купують їх як сувеніри.
 
-Читайте голосно. Це практика.
+### Вибір класу вагона: купе чи плацкарт
+Because Ukraine is geographically expansive, overnight train travel is the absolute standard method for covering long domestic distances. When you purchase a ticket for a slow night train, you must select your carriage class. The two dominant options available offer radically different environments and complex social dynamics.
+- **купе́** (compartment): A specifically closed, private room containing four beds (two lower, two upper), a small central table, and a secure sliding door. It provides essential privacy, quiet, and security, making it the strongly preferred choice for families with children, tired business travelers, and those seeking uninterrupted rest.
+- **плацка́рт** (platzkart): A fully open-plan, communal carriage where the sleeping berths are not separated by any walls or doors. It functions essentially as a rolling dormitory on rails. This option is significantly cheaper and accommodates many more passengers per carriage.
 
-### Тип поїздки (Trip Type)
-The cashier will ask if you want a return ticket. You have two main options to memorize as fixed phrases.
-1.  **В оди́н бік** — literally "in one side" (one-way).
-2.  **Туди́ й наза́д** — literally "there and back" (round trip).
+"Я завжди хочу купити квиток у тихе купе." (I always want to buy a ticket in a quiet compartment.)
+"Довга подорож у плацкарті коштує значно дешевше." (A long journey in platzkart costs significantly less.)
+"У нас дуже зручне, чисте і тихе купе." (We have a very comfortable, clean, and quiet compartment.)
+"Бідні студенти часто весело їздять у плацкарті." (Poor students often happily travel in platzkart.)
 
-Ви їдете тільки туди? Чи ви їдете назад? Скажіть це на касі.
+> [!culture] **Соціологія плацкарта**
+> Загальний **плацкарт** — це не страшно. Це дуже автентичне культурне місце. Це не просто дешевий квиток. Пасажири одягають зручний домашній одяг. Вони діляться домашньою їжею. Наприклад, вони їдять курку, яйця та бутерброди. Вони довго говорять з іншими людьми. Це дуже соціальна подорож. Вона показує добрий характер українців.
 
-Example:
-*   **Я хочу квиток в один бік.** (I want a one-way ticket.)
-*   **Квитки туди й назад, будь ласка.** (Round-trip tickets, please.)
-*   **Тільки туди.** (Only there / one way.)
+Let us examine a very typical, standard interaction at the busy station ticket window:
 
-### Comparison: Direction vs Location
-Let's see the difference between being *in* a city and going *to* a city.
+**Касир:** Добрий день. Що ви бажаєте сьогодні? (Good afternoon. What do you wish today?)
+**Пасажир:** Добрий день. Дайте один квиток до Львова, будь ласка. (Good afternoon. Give one ticket to Lviv, please.)
+**Касир:** Ви їдете на сьогодні? Туди й назад? (Are you traveling for today? Round trip?)
+**Пасажир:** Так, поїздка на сьогодні. Тільки в один бік. (Yes, the trip is for today. Only one way.)
+**Касир:** Який клас вибираєте: плацкарт чи купе? (Which class do you choose: platzkart or compartment?)
+**Пасажир:** Я вибираю купе, будь ласка. (I choose compartment, please.)
 
-Де ви? Куди ви їдете? Це різні питання.
-
-| Concept | Ukrainian | Context |
-| :--- | :--- | :--- |
-| **Location** (Where are you?) | Я **у** Львові. | Locative case (I am in Lviv.) |
-| **Direction** (Where to?) | Я їду **до** Львова. | Genitive case (I am going to Lviv.) |
-| **Ticket** (For what route?) | Квиток **до** Львова. | Genitive case (Ticket to Lviv.) |
-
-## Деталі подорожі: Клас і Розклад
-
-You have named the city, but the cashier needs more details. Trains in Ukraine have specific carriage classes that determine comfort and price.
-
-Касир запитує вас. Ви відповідаєте. Ви обираєте вагон. Ви обираєте місце.
-
-### Купе (Coupe)
-This is the standard "closed compartment" class. A **купе́** has four bunks (two lower, two upper) and a sliding door that closes for privacy. It is comfortable, quiet, and perfect for sleeping. The word **купе** is indeclinable—it never changes its form.
-
-Це класичний вагон. Це зручний вагон. Тут є двері. Тут тихо і спокійно. Ви можете спати.
-
-In a coupe, you also get **постіль** (bedding).
-*   **Постіль** — Bed linen (sheets, pillowcase, towel).
-*   **Подушка** — Pillow.
-*   **Ковдра** — Blanket.
-
-У купе є постіль. Це подушка і ковдра.
-
-Example:
-*   **Одне місце в купе.** (One seat in a coupe.)
-*   **Я люблю їхати в купе.** (I like traveling in a coupe.)
-*   **Постіль входить у ціну?** (Is bedding included in the price?)
-
-### Плацкарт (Platskart)
-This is an "open dormitory" carriage. **Плацка́рт** has no doors between compartments; the hallway is open. It is cheaper and very social. You will hear everything your neighbors discuss, but it is a classic experience for students and budget travelers.
-
-Це великий вагон. Тут немає дверей. Тут багато людей. Ви чуєте сусідів. Це дешевий квиток.
-
-Example:
-*   **Ви хочете плацкарт чи купе?** (Do you want platskart or coupe?)
-*   **Скільки коштує плацкарт?** (How much does platskart cost?)
-*   **Я беру плацкарт, це дешево.** (I take platskart, it is cheap.)
-
-> [!fact]
-> **Intercity Trains**
-> Modern high-speed trains are called **Інтерсіті** (Intercity). Here, you don't sleep; you sit in a chair like on an airplane. Classes here are simply **перший клас** (first class) and **другий клас** (second class). These trains connect major cities like Kyiv, Lviv, Kharkiv, and Odesa.
-
-### Вибір місця: Нижнє чи Верхнє?
-In a sleeper train, you must choose your bunk.
-*   **Ни́жнє мі́сце** is the "lower seat/bunk". It is usually preferred because you can sit on it during the day and don't have to climb.
-*   **Ве́рхнє мі́сце** is the "upper seat/bunk". It is often cheaper, but requires some agility to access.
-
-Example:
-*   **Я хочу нижнє місце, будь ласка.** (I want a lower bunk, please.)
-*   **Є тільки верхнє місце.** (There is only an upper bunk.)
-*   **Дайте нижнє місце.** (Give a lower bunk.)
-
-### Розклад: Відправлення і Прибуття
-To manage your time, you need to ask about the schedule. There are two key nouns here:
-1.  **Відпра́влення** — Departure.
-2.  **Прибуття́** — Arrival.
-
-Коли поїзд їде? Коли поїзд буде у Львові? Дивіться розклад.
-
-To ask "at what time", use the phrase **О котрій годині...?** or simply **О котрій...?**.
-
-Example:
-*   **О котрій відправлення?** (At what time is the departure?)
-*   **Коли прибуття до Києва?** (When is the arrival to Kyiv?)
-*   **О котрій ми будемо у Львові?** (At what time will we be in Lviv?)
-
-### Навігація: Вагон і Платформа
-Once you have the ticket, look at it closely. It will show your **ваго́н** (carriage/car) and **місце** (seat). At the station, listen for announcements about the **платфо́рма** (platform).
-
-Ви на вокзалі. Де ваш поїзд? Дивіться на табло. Там є інформація.
-
-Example:
-*   **Який це вагон?** (Which carriage is this?)
-*   **Поїзд на першій платформі.** (The train is on the first platform.)
-*   **Де п'ятий вагон?** (Where is the fifth carriage?)
-
-## Практика: Діалоги на вокзалі
-
-Let's see how these phrases work together in real conversations. Read these aloud to practice the flow.
-
-### Діалог 1: Buying a Train Ticket
-**Situation:** You are at the central station in Kyiv, buying a ticket to Lviv for tonight.
-
-Це діалоги. Читайте їх вголос.
-
-**Турист:** Добрий день! Скажіть, будь ласка, є квитки до Львова на сьогодні?
-**Касир:** Добрий день. Так, є вечірній поїзд номер 91 (дев'яносто один). Ви хочете купе чи плацкарт?
-**Турист:** Я хочу купе, будь ласка. Це комфортно.
-**Касир:** Зрозуміло. Нижнє чи верхнє місце?
-**Турист:** Нижнє, будь ласка. Я не люблю верхнє.
-**Касир:** Добре. Один квиток до Львова, купе, нижнє місце. З вас 450 (чотириста п'ятдесят) гривень.
-**Турист:** Ось гроші. Дякую. А о котрій відправлення?
-**Касир:** Відправлення о 22:00 (двадцять другій нуль-нуль). Щасливої дороги!
-
-*(Translation summary: Asking for tickets to Lviv for today. Choosing coupe and a lower bunk. Paying and confirming departure time.)*
-
-### Діалог 2: At the Bus Station
-**Situation:** You are looking for a bus to a smaller town.
-
-**Пасажир:** Вибачте, де каса?
-**Охоронець:** Каса там, праворуч. Ви бачите вікно?
-**Пасажир:** Так, бачу. Дякую. (At the window) Добрий день. Я хочу один квиток до Умані.
-**Касир:** Автобус відправляється через 20 (двадцять) хвилин. Квиток коштує 200 (двісті) гривень.
-**Пасажир:** Чудово. Це з цієї автостанції?
-**Касир:** Так, третя платформа. Ваше місце номер 12 (дванадцять).
-**Пасажир:** Дякую! До побачення!
-
-*(Translation summary: Asking for the ticket office, buying a ticket to Uman, confirming departure time and platform number.)*
-
-### Діалог 3: Clarifying Details
-**Situation:** You are confused about your train car number.
-
-**Пасажир:** Перепрошую, це п'ятий вагон?
-**Провідник:** Ні, це четвертий вагон. П'ятий вагон там, далі.
-**Пасажир:** Дякую. Коли прибуття до Одеси?
-**Провідник:** За розкладом прибуття о сьомій ранку.
-**Пасажир:** Це дуже добре. Дякую!
-
-*(Translation summary: Checking if this is carriage #5. Conductor corrects it to #4 and confirms arrival time in Odesa.)*
-
-### Діалог 4: At the Information Desk
-**Situation:** You cannot find your train on the schedule board.
-
-**Турист:** Добрий день. Скажіть, будь ласка, де мій поїзд?
-**Працівник:** Який ваш поїзд? Скажіть номер.
-**Турист:** Поїзд номер 12 (дванадцять), Київ-Львів.
-**Працівник:** Дивіться, він на другій платформі.
-**Турист:** О котрій він відправляється?
-**Працівник:** Відправлення через 10 (десять) хвилин. Поспішайте!
-**Турист:** Дякую велике!
-
-*(Translation summary: Asking where the train is. Worker asks for number, confirms platform 2. Tourist asks departure time, worker says "in 10 minutes, hurry up".)*
-
-> [!tip]
-> **Politeness Marker: "Будь ласка"**
-> When ordering tickets (or food, or coffee), always add **будь ласка**. It is the magic word. **Один квиток, будь ласка.**
-
-### Текст для читання: Моя подорож
-Read this short story aloud to practice your flow.
-
-Я люблю подорожувати. Сьогодні я їду до Одеси. Я на вокзалі. Ось мій поїзд. У мене є квиток. Це купе, місце номер 12. Це нижнє місце. Я заходжу у вагон. Провідник каже: "Добрий день!". Я кажу: "Добрий день!". Я замовляю чай. Поїзд рушає. До побачення, Київ! Привіт, Одеса!
-
-## Подорож поїздом: Традиції
-
-Ukrainian trains are more than just transport; they are a cultural experience.
-
-Це дуже цікаво. Подорож на поїзді — це справжній український досвід. Давайте дізнаємося більше.
-
-### Провідник (The Conductor)
-Every sleeping carriage has a **провідни́к** (male) or **провідни́ця** (female). This person checks your ticket, gives you bed linen (**постіль**), and wakes you up before your stop. They are the authority figure of the carriage. Treat them with respect, and your trip will be smooth.
-
-Провідник — це важлива людина у вагоні. Він перевіряє квитки. Він дає постіль і чай. Провідник працює у вагоні.
-
-Example:
-*   **Провідник перевіряє квитки.** (The conductor is checking tickets.)
-*   **Запитайте у провідниці.** (Ask the conductor [female].)
-
-### Чай у підстаканниках (Tea Tradition)
-The most iconic part of a Ukrainian train ride is the tea. You can order tea from the conductor at any time. It is traditionally served in a glass tumbler placed inside a metal holder called a **підстака́нник**. This prevents you from burning your fingers while the train shakes. Drinking hot tea while watching the landscapes roll by is a mandatory ritual for any traveler in Ukraine.
-
-Українці п'ють чай у поїзді. Це ритуал. Провідник приносить чай у склянці. Підстаканник — це для склянки. Це красиво і зручно.
-
-**Українська традиція:**
-Українці люблять їсти в поїзді. Це наша традиція. Ми беремо курку, яйця, хліб, овочі та фрукти. Ми їмо. Ми п'ємо чай. Ми говоримо. Це дуже смачно і весело. Це є у купе і плацкарті. Сусіди часто пропонують їжу. Це гостинність.
-
-*(Translation: Ukrainians love to eat on the train. This is our tradition. We take chicken, eggs, bread, vegetables, and fruits. We eat, drink tea, and talk. It is very tasty and fun. If you travel in a coupe or platskart, you will see this. Neighbors often offer food. This is hospitality.)*
-
-Example:
-*   **Один чай, будь ласка.** (One tea, please.)
-*   **Чай з цукром чи без?** (Tea with sugar or without?)
-
-> [!myth-buster]
-> **Is it safe?**
-> Some foreigners worry about safety in **плацкарт** or **купе**. In reality, Ukrainian trains are generally very safe. People often share food, play cards, and talk for hours. If you are invited to share a meal (usually roasted chicken, boiled eggs, or sandwiches), accept a small piece politely. It is a gesture of hospitality.
-
-### Щасливої дороги!
-When you buy a ticket or board a train, you will hear this phrase: **Щасливої дороги!**. It means "Have a happy journey" or "Bon voyage". It is the perfect way to say goodbye to a friend leaving the station.
-
-Example:
-*   **Щасливої дороги до Києва!** (Have a safe trip to Kyiv!)
+## Поїздка та комфорт
+
+Ви маєте квиток. Ви прибули на вокзал. Тут ми вивчаємо нові слова. Ви шукаєте платформу і вагон. Ви також вивчаєте культурні традиції поїзда.
+
+### Орієнтація на вокзалі: платформи та вагони
+Великі вокзали можуть лякати. Там є багато колій і поїздів. Ви маєте знати місце відправлення. Одне слово для частини поїзда — це **ваго́н**. Ми використовуємо місцевий відмінок: «на платформі», «у вагоні».
+
+"На якій платформі зараз стоїть мій поїзд?" (On which platform currently stands my train?)
+"Швидкий поїзд до Києва знаходиться на першій платформі." (The fast train to Kyiv is located on the first platform.)
+"В якому вагоні наше заброньоване місце?" (In which carriage is our booked seat?)
+"Ваш вагон номер п'ять, він знаходиться у кінці." (Your carriage is number five, it is located at the end.)
+"Підкажіть, будь ласка, де мій вагон?" (Tell me, please, where is my carriage?)
+
+When your train finally approaches, automated loudspeakers will broadcast the platform number. Knowing your numbers (which we studied in a previous module) is absolutely essential here. If you cannot decipher the loud, echoing announcement, simply present your physical or digital ticket to any station employee and ask, «Яка платформа?» (Which platform?). They will quickly point you in the correct direction.
+
+### Вибір і розташування місця
+Ваш квиток має конкретне **мі́сце** (seat/place). У нічному поїзді це місце для сну. Пасажири мають свої улюблені місця. Місце також має свої правила.
+- **ни́жнє мі́сце** (lower berth): This is the most highly desired position. It provides immediate, unrestricted access to the shared table, requires no physical climbing, and grants you total control over the heavy luggage storage area situated beneath the bed.
+- **ве́рхнє мі́сце** (upper berth): This elevated position requires ascending a small, somewhat awkward built-in metal ladder. It offers superior privacy for sleeping and reading, but during waking hours, you are somewhat isolated near the ceiling.
+
+"Це точно моє законне місце." (This is exactly my legal seat.)
+"Я завжди купую зручне нижнє місце для комфорту." (I always buy a comfortable lower berth for comfort.)
+"Він молодий, сильний і любить верхнє місце." (He is young, strong, and likes the upper berth.)
+"Скажіть, чи є тут вільне місце біля вікна?" (Tell me, is there a free seat near the window here?)
+
+> [!observe] **Етикет місць (The etiquette of berths)**
+> Поїзд має свій соціальний етикет. Ви маєте **ни́жнє мі́сце**. Вдень ви маєте дозволити пасажиру зверху сидіти на вашому ліжку. Це правило ввічливості. Пасажир зверху хоче їсти за спільним столом. Або він просто хоче говорити з людьми. Нижнє місце — це спільна територія вдень. Вночі це ваше приватне місце для сну.
+
+### Контроль часу: розклад та пунктуальність
+Контроль часу дуже важливий. Ви часто бачите слово **розкла́д** (schedule) на вокзалі. Ми використовуємо точні питання для часу.
+- **о котрі́й відпра́влення?** (at what time is the departure?): This phrase is used exclusively to ascertain exactly when the train will leave the station.
+- **коли́ прибуття́?** (when is the arrival?): This phrase is used to determine exactly when the train will finally reach its final destination.
+
+"Де ми можемо подивитися актуальний електронний розклад?" (Where can we look at the current electronic schedule?)
+"О котрій відправлення нашого нічного поїзда?" (At what time is the departure of our night train?)
+"Точне відправлення рівно о восьмій годині вечора." (Exact departure is exactly at eight o'clock in the evening.)
+"Коли очікується наше прибуття до Львова?" (When is our arrival to Lviv expected?)
+"Наш поїзд майже завжди іде чітко за розкладом." (Our train almost always goes strictly according to schedule.)
+
+### Провідник та чайна традиція
+Every single carriage operates under the strict management of a dedicated staff member known as the **провідни́к** (conductor - male) or **провідни́ця** (conductor - female). They are fully responsible for checking documents, distributing sealed packages of clean bed linen, and maintaining general order and safety. More significantly, they proudly facilitate the most iconic ritual of Ukrainian travel: the serving of tea.
+Hot tea on a train is invariably served in a simple, clear glass, which is securely held inside an ornate, traditional metal holder called a **підстака́нник**.
+
+"Провідник уважно перевіряє мій електронний квиток і паспорт." (The conductor carefully checks my electronic ticket and passport.)
+"Привітна провідниця приносить свіжий гарячий чай." (The friendly conductor brings fresh hot tea.)
+"Цей старий металевий підстака́нник виглядає дуже гарно." (This old metal glass holder looks very beautiful.)
+"Я завжди із задоволенням п'ю солодкий чай з лимоном." (I always with pleasure drink sweet tea with lemon.)
+
+> [!culture] **Звуки подорожі**
+> Звук ложки у склянці — це класичний звук поїзда. Металевий **підстаканник** робить цей звук особливим. Цей звук і рух поїзда — це справжній український досвід. Ви замовляєте чай у провідника. Це не просто напій. Цей ритуал означає початок відпочинку. Ваша довга подорож починається.
+
+Let us carefully observe a standard interaction inside the narrow carriage corridor:
+
+**Провідник:** Добрий вечір. Ваш квиток та особисті документи, будь ласка. (Good evening. Your ticket and personal documents, please.)
+**Пасажир:** Ось мій електронний квиток на екрані телефона. (Here is my electronic ticket on the phone screen.)
+**Провідник:** Дякую, все добре. Ваш вагон номер сім, ваше нижнє місце зліва. Бажаєте замовити гарячий чай? (Thank you, all is well. Your carriage is number seven, your lower berth is on the left. Do you wish to order hot tea?)
+**Пасажир:** Так, принесіть один чай з цукром, будь ласка. (Yes, bring one tea with sugar, please.)
+
+## Практика та підсумок
+
+We will now synthesize all these learned vocabulary elements and grammatical structures into a comprehensive, highly realistic scenario. Imagine you have excitedly decided to travel to the dramatic, snowy landscapes of the Carpathian Mountains for a long winter holiday.
+
+### Симуляція: Велика подорож у Карпати
+Read this continuous narrative and dialogue carefully. It fully integrates the core station vocabulary, the choice of comfort class, and the essential, polite interaction with railway personnel.
+
+**Context:** Андрій is planning an expedition to the high mountains. He arrives at the busy city center station to secure his passage.
+
+**Андрій:** Добрий день. Я терміново хочу один квиток до Яремче. (Good afternoon. I urgently want one ticket to Yaremche.)
+**Касир:** Вітаю. Ви плануєте поїздку на сьогодні? (Greetings. Are you planning the trip for today?)
+**Андрій:** Так, я дуже хочу встигнути на вечірній поїзд. Тільки в один бік. (Yes, I very much want to catch the evening train. Only one way.)
+**Касир:** У нас є вільні місця в купе та у плацкарті. (We have free seats in the compartment and in the platzkart.)
+**Андрій:** Дайте купе, будь ласка. Я дуже хочу комфортне нижнє місце для відпочинку. (Give a compartment, please. I very much want a comfortable lower berth for rest.)
+**Касир:** Добре, я знайшла одне. О котрій ви хочете виїхати? Точне відправлення о дев'ятнадцятій годині. (Good, I found one. At what time do you want to leave? Exact departure is at nineteen hours.)
+**Андрій:** Це ідеально підходить. Підкажіть, з якої платформи він рушає? (That fits perfectly. Tell me, from which platform does it move?)
+**Касир:** Ваш поїзд буде чекати на другій платформі. (Your train will be waiting on the second platform.)
+
+Андрій finalizes the financial transaction, gathers his heavy luggage, and successfully locates his designated carriage on the cold, windy platform.
+
+**Андрій:** Добрий вечір. Скажіть, це мій вагон номер сім? (Good evening. Tell me, is this my carriage number seven?)
+**Провідник:** Добрий вечір. Покажіть ваш електронний квиток, будь ласка. Так, все абсолютно вірно, проходьте. Ваше місце номер п'ять. (Good evening. Show your electronic ticket, please. Yes, everything is absolutely correct, come in. Your seat is number five.)
+**Андрій:** Коли поїзд прибуває в гори? (Tell me, when does the train arrive in the mountains?)
+**Провідник:** Ми їдемо суворо за розкладом, тому прибуття буде рано вранці. Ви хочете гарячий чай зараз? (We are going strictly according to schedule, so the arrival will be early in the morning. Do you want hot tea now?)
+**Андрій:** Так, це чудова ідея, дуже дякую! (Yes, that is a wonderful idea, thank you very much!)
+
+### Огляд: Прийменник напрямку
+Let us solidify the most critical functional grammar point extracted from this entire lesson. When declaring active travel toward a specific city or town, we consistently and exclusively employ the preposition **до**.
+- Формула: «до» + City Name (in Genitive case)
+- Правильно: Ми швидко їдемо до Києва. (We are driving fast to Kyiv.)
+- Правильно: Він вже має квиток до Одеси. (He already has a ticket to Odesa.)
+- Неправильно: Я зараз їду в Львів. (I am currently traveling in Lviv.)
+
+### Словниковий запас подорожнього
+A structured, final recap of your fundamental linguistic toolkit for efficiently navigating the entire station environment:
+- Системи транспорту: по́їзд (train), авто́бус (bus), маршру́тка (minibus)
+- Локації: вокза́л (railway station), автовокза́л (central bus station), ка́са (ticket office)
+- Документи: квито́к (ticket), електро́нний квито́к (electronic ticket), туди́ і наза́д (round trip)
+- Умови поїздки: купе́ (compartment), плацка́рт (platzkart), мі́сце (seat), розкла́д (schedule)
+- Люди: провідни́к (conductor)
+
+We formally conclude this educational module with a traditional, heartfelt phrase you will encounter continuously in Ukraine. When a person is departing on any journey, friends, family, and even strangers always wish them a safe and pleasant path.
+**Щасли́вої доро́ги!** (Have a safe trip! / Happy journey!)
 
 ---
 
 # Підсумок
 
-Congratulations! You are now ready to navigate the Ukrainian transport system. You have learned how to identify different types of stations (**вокзал** vs **автостанція**), distinguish between train carriages (**купе**, **плацкарт**), and most importantly, construct the key sentence to buy a ticket using the **до + City** pattern. You also discovered the unique tea culture that makes train travel in Ukraine so special.
-
-Тепер ви знаєте все. Ви маєте квиток. Ви знаєте свій вагон. Ви маєте все для подорожі. Україна чекає на вас! Ви молодець! Це був добрий урок.
+Знати слова для подорожей — це дуже важливо. На цьому уроці ми вивчили багато нових слів. Ми знаємо, як купувати квиток. Ми знаємо, як шукати поїзд. Ми розуміємо культуру українських подорожей.
+Слово **вокза́л** — це місце для поїздів. Слово **автовокза́л** — це місце для автобусів.
+Тепер ми знаємо граматику. Ми просимо **оди́н квито́к** (masculine form). Ми використовуємо прийменник **до** для напрямку. Ми не використовуємо прийменник «в».
+Ми розуміємо різницю між класами поїзда. Ми можемо вибрати приватне **купе́**. Або ми можемо вибрати соціальний **плацка́рт**. Ми знаємо, як просити зручне **ни́жнє мі́сце**.
+Також ми знаємо про чай. Ми можемо пити чай. Провідник приносить чай у традиційному металевому стакані. Цей стакан називається **підстака́нник**.
+Сьогодні всі використовують технології. Тому ми знаємо про **електро́нний квито́к**. Його легко показати на смартфоні.
+Щасливої доро́ги! (Have a safe trip!)
 
 **Перевірте себе:**
+1. How do you grammatically correctly ask the cashier for "one ticket to Lviv"?
+2. What is the functional difference between the locations «вокзал» and «автовокзал»?
+3. If you require a return journey, what specific phrase do you append to your ticket request?
+4. How do you politely ask the train conductor "When is the arrival?"
+5. Why do Ukrainian speakers use the preposition «до» instead of «в» when stating they are traveling to a specific city?
+6. What is the traditional, ornate metal glass holder utilized for serving tea on trains called?
 
-1.  What is the difference between **вокзал** and **станція**?
-2.  How do you say "to Lviv" and "to Odesa" in Ukrainian? (Hint: check the endings).
-3.  Which is more private: **купе** or **плацкарт**?
-4.  If you want a round-trip ticket, what phrase do you use?
-5.  What is a **підстаканник** and who serves it to you?
-6.  How do you ask "When is the departure?" in Ukrainian?
-
-Next, we will focus more on the action of moving and taking transport in Module 40. **Щасливої дороги!**
+---

@@ -18,18 +18,20 @@
   Module:  at-the-restaurant
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  2 Outline Compliance Errors
   failing gates:
-    lesson: 1943/2000 (raw: 2112) (57 short) | pedagogy: 4 violations | immersion: 21.7% LOW (target 35-55% (M36))
+    lesson: 5640/2000 (raw: 6040) | pedagogy: 24 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-     → Revision recommended (severity 55/100)
-     → 4 violations (moderate)
-     → 3 grammar-level violations (fundamental)
-     → Immersion 13% off target
+       → FIX: Vary sentence structure.
+
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 26 violations (severe - consider revision)
+     → 19 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/at-the-restaurant-audit.md
@@ -37,11 +39,9 @@
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  Critical Failures:
-    • 2 Outline Compliance Errors
-
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/at-the-restaurant-audit.log for details)
         ```
+
 
         ## Files to Fix
 

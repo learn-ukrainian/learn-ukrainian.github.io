@@ -1,10 +1,12 @@
-module: c2-098
-level: c2
-sequence: 98
+module: c2-089
+level: C2
+sequence: 89
+slug: final-exam-integrated-skills
 version: '2.0'
 title: Фінальний екзамен — Інтегровані навички
 focus: checkpoint
 pedagogy: TTT
+phase: 'C2.4 [Meta-Skills & Capstone]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: Вступ — Структура та контекст фінального екзамену (Introduction — Exam
     Structure and Context)
-  words: 600
+  words: 750
   points:
   - Огляд компонентів екзамену відповідно до Держстандарту 2024 (§1.1–1.4) та критеріїв
     вільного володіння другого ступеня (С2).
@@ -33,7 +35,7 @@ content_outline:
     можливого діапазону виражальних засобів (§4.3.6).
 - section: 'Компонент I та II — Рецептивні навички: Аудіювання та Читання (Component
     I and II — Receptive Skills: Listening and Reading)'
-  words: 800
+  words: 1000
   points:
   - 'Слухання (§1.1): стратегії сприйняття швидкого мовлення в складних акустичних
     умовах, розуміння діалектів та ідіоматики в лекціях та медіа.'
@@ -43,7 +45,7 @@ content_outline:
     і публіцистичних джерел.
 - section: Компонент III — Продуктивне письмо та трансформація стилів (Component III
     — Productive Writing and Style Transformation)
-  words: 900
+  words: 1100
   points:
   - Вимоги до створення складних структурованих текстів та вторинних текстів (анотація,
     реферат, рецензія) згідно з §4.3.8.
@@ -55,7 +57,7 @@ content_outline:
     (результат) в академічному контексті.'
 - section: 'Компонент IV — Говоріння: Спонтанність та фразеологічне багатство (Component
     IV — Speaking: Spontaneity and Phraseological Richness)'
-  words: 700
+  words: 900
   points:
   - Спонтанний монолог та діалог (12–15 реплік) на абстрактні теми з використанням
     відтінків змісту та алюзій (§1.4).
@@ -65,7 +67,7 @@ content_outline:
     та стилістична доречність у формальному реєстрі.'
 - section: Пробний екзамен — Повна симуляція та оцінювання (Mock Exam — Full Simulation
     and Assessment)
-  words: 1000
+  words: 1250
   points:
   - Комплексна симуляція повного циклу екзамену (3-4 години) з інтеграцією всіх видів
     мовленнєвої діяльності згідно з вимогами Рівня С2.

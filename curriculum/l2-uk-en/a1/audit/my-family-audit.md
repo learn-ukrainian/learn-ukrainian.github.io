@@ -2,7 +2,7 @@
 **Level:** A1 | **Module:** M49 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 2000
 **Naturalness:** 10/10 (PASS)
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 03:49:02
+**Generated:** 2026-02-28 17:59:20
 
 ## Configuration
 **Type:** A1-vocab
@@ -17,40 +17,19 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | match-up | Пари: Чоловік і Жінка | 8 | 8 | ✅ |
-| 2 | match-up | Хто це? | 8 | 8 | ✅ |
-| 3 | group-sort | Він чи Вона? | 14 | 12 | ✅ |
-| 4 | fill-in | Мій чи Моя? | 8 | 8 | ✅ |
-| 5 | fill-in | Опис родини | 8 | 8 | ✅ |
-| 6 | unjumble | Складіть речення | 6 | 6 | ✅ |
-| 7 | unjumble | Запитання та відповіді | 6 | 6 | ✅ |
-| 8 | match-up | Кличний відмінок | 8 | 8 | ✅ |
-| 9 | fill-in | Звертання до рідних | 8 | 8 | ✅ |
-| 10 | quiz | Перевірка знань | 8 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 10 (target: 8-12) ✅
-- Unique types: 5 (minimum: 4) ✅
-- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
-- Required types used: 2/2 (fill-in, match-up) ✅
-- Low density activities: 0
-
 ## Gates
-- **Words:** ✅ 3259/2000 (raw: 3591)
-- **Activities:** ✅ 10/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 5/4 types
-- **Priority:** ✅ Priority types used
+- **Words:** ✅ 3259/2000 (raw: 3580)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 21/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 35.6% (target 35-55% (M49))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ✅ 10/10 (High)
@@ -61,9 +40,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **My Family (Моя сім'я)** | ✅ | 115 | Included in Core |
-| **Розминка: Члени сім'ї (Warm-up: Family Members)** | ✅ | 591 | Included in Core |
-| **Близька та розширена родина (Close and Extended Family)** | ✅ | 617 | Included in Core |
-| **Опис родини: Вік та характер (Describing Family: Age & Character)** | ✅ | 536 | Included in Core |
+| **Вступ: Моя сім'я** | ✅ | 591 | Included in Core |
+| **Презентація: Близька та розширена родина** | ✅ | 617 | Included in Core |
+| **Презентація: Характеристики та стосунки** | ✅ | 536 | Included in Core |
 | **Практика: Моя сім'я (Practice: My Family)** | ✅ | 482 | Included in Core |
-| **Діалоги та фотоальбом** | ✅ | 607 | Included in Core |
+| **Практика: Звертання та спілкування** | ✅ | 607 | Included in Core |
 | **Підсумок: Розповідь про себе (Summary)** | ✅ | 311 | Included in Core |

@@ -5,8 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:27:14Z",
-      "note": "adopted-existing-meta"
+      "ts": "2026-02-28T15:47:10Z",
+      "task_id": "v3-my-world-objects-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T15:51:15Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T15:51:15Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T15:56:39Z",
+      "attempts": 2
     }
   }
 }

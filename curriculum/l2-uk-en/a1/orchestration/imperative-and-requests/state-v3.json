@@ -5,9 +5,18 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:49:00Z",
+      "ts": "2026-02-28T23:24:45Z",
       "task_id": "v3-imperative-and-requests-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T23:28:03Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T23:28:03Z",
+      "note": "adopted-existing"
     }
   }
 }

@@ -5,51 +5,52 @@ content_outline:
 - section: Хобі
   words: 500
   points:
-  - Introduce the module with explicit English scaffolding for A1 learners. Define
-    'хобі' (neuter, indeclinable) with IPA.
-  - 'Provide a clear table of 7 common verbs for hobbies: читати, малювати, грати,
-    фотографувати, танцювати, співати, готувати. Include IPA and English translations.'
-  - 'Create 3 specific H3 subsections for expressing hobbies: ''Моє хобі — це...'',
-    ''Я захоплююся... (+ Instrumental)'', ''Мені подобається... (+ infinitive)''.
-    Explain each structure clearly in English.'
-  - Add a mini-dialogue demonstrating 'Яке у тебе хобі?' and 'Чим ти захоплюєшся?'
+  - Introduce the concept of 'хобі' (neuter, indeclinable noun) with explicit English
+    scaffolding for A1 learners. Provide IPA.
+  - 'Present a table of 7 common verbs for hobbies: читати, малювати, грати, фотографувати,
+    танцювати, співати, готувати. Include IPA and English translations.'
+  - 'Create three distinct H3 subsections for expressing hobbies: ''Моє хобі — це...'',
+    ''Я захоплююся... (+ Instrumental)'', and ''Мені подобається... (+ infinitive)''.
+    Explain the structure of each in English.'
+  - Write a mini-dialogue demonstrating 'Яке у тебе хобі?' and 'Чим ти захоплюєшся?'
     with English translations.
 - section: Спорт
   words: 400
   points:
-  - Explain the 'грати в + Accusative' construction for team/ball sports using English
-    scaffolding. Provide a list of sports (футбол, баскетбол, теніс, шахи).
-  - 'Contrast ''грати в'' with individual sports that use bare verbs: плавати, бігати,
-    кататися на велосипеді. Give 3-4 example sentences.'
-  - 'Introduce sports venues (стадіон, басейн, спортзал). Create a table comparing
-    ''location'' (Locative: в басейні) with ''destination'' (Accusative: в басейн)
-    using the verb ''ходити''.'
+  - Explain the 'грати в + Accusative' construction for team and ball sports (футбол,
+    баскетбол, теніс, шахи) using English scaffolding.
+  - Contrast 'грати в' with individual sports that use bare verbs (плавати, бігати,
+    кататися на велосипеді) in a separate H3 subsection.
+  - Introduce sports venues (стадіон, басейн, спортзал).
+  - 'Create a visual table comparing ''location'' (Locative: в басейні, на стадіоні)
+    vs. ''destination'' (Accusative: в басейн, на стадіон) using the verb ''ходити''.'
 - section: Дозвілля
   words: 400
   points:
   - 'Introduce vocabulary for entertainment outings: ходити в кіно, дивитися серіали,
-    гуляти в парку. Include IPA.'
-  - Explain the concept of habitual outings with 'ходити в + Accusative' using English.
+    гуляти в парку. Explicitly note that ''кіно'' is indeclinable.'
+  - Explain the concept of habitual outings using 'ходити в + Accusative' with English
+    instructions.
   - 'Present social activities: зустрічатися з друзями (note the Instrumental case
-    context), ходити в гості.'
+    usage) and ходити в гості.'
   - Draft a short, simple paragraph describing a typical weekend (Що ти робиш у вихідні?)
-    using short sentences (max 8-10 words per sentence).
+    using short sentences of maximum 8-10 words.
 - section: Запрошення
   words: 350
   points:
-  - 'Introduce 3 patterns for making invitations, giving each its own H3 subsection:
-    ''Хочеш піти в...?'', ''Ходімо разом!'', ''Давай зустрінемось!''. Explain the
-    nuance of each.'
-  - 'Provide a visual aid (e.g., a two-column table) for responding: Accepting (З
-    задоволенням, Чудова ідея) vs. Declining (На жаль, не можу, Може, іншим разом).'
+  - 'Introduce 3 patterns for making invitations, giving each its own H3: ''Хочеш
+    піти в...?'', ''Ходімо разом!'', ''Давай зустрінемось!''. Explain the formality
+    nuance of each in English.'
+  - 'Provide a two-column table for responding: Accepting (З задоволенням, Чудова
+    ідея) vs. Declining (На жаль, не можу, Може, іншим разом).'
   - Include a short, practical dialogue demonstrating an invitation to the cinema
     and a positive response.
 - section: Практика
   words: 350
   points:
   - Provide a guided reading text (100-150 words) where two characters discuss their
-    hobbies and sports preferences, integrating target grammar and vocabulary.
-  - Include an engagement callout (e.g., [!cultural]) about the popularity of chess
-    in Ukrainian parks or mushroom foraging.
-  - Summarize the key takeaways (грати в/на, ходити в, invitations) in a bulleted
-    list for easy review.
+    hobbies and sports preferences, integrating the target grammar.
+  - Include an engagement callout [!cultural] about the popularity of playing chess
+    in Ukrainian public parks.
+  - Summarize the key takeaways (грати в, ходити в, invitation patterns) in a clear,
+    bulleted list for easy review.

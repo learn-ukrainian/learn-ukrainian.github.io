@@ -2,15 +2,15 @@
   "module": "around-the-city",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:34:54.899255Z",
+  "last_audit": "2026-02-28T21:16:13.064026Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:02.772299Z",
-    "meta": "2026-02-19T23:05:13.518233Z",
+    "md": "2026-02-28T21:15:50.534434Z",
+    "meta": "2026-02-28T21:08:02.618114Z",
     "activities": "2026-02-20T23:09:46.250061Z",
     "vocabulary": "2026-02-26T10:56:53.934965Z",
     "plan": "2026-02-28T03:02:13.887345Z",
-    "research": "2026-02-19T23:03:30.256032Z"
+    "research": "2026-02-28T21:08:02.611142Z"
   },
   "gates": {
     "meta": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2612/2000 (raw: 2993) | immersion: 25.3% LOW (target 35-55% (M29))"
-    },
-    "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/8"
+      "message": "2550/2000 (raw: 2749)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "deferred",
       "violations": 0,
-      "message": "0 < 1 (soft target)"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 1,
-    "deferred_count": 0
+    "fail_count": 0,
+    "deferred_count": 3
   }
 }

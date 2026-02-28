@@ -1,0 +1,35 @@
+{
+  "slug": "checkpoint-cases",
+  "track": "a1",
+  "module_num": 34,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-28T21:22:21Z",
+      "words": 3989,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-28T21:24:38Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-28T21:24:38Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T21:27:41Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T21:27:41Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-28T21:27:41Z"
+}

@@ -18,18 +18,20 @@
   Module:  description-adverbs
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  1 Outline Compliance Errors
   failing gates:
-    lesson: 2024/2000 (raw: 2295) | pedagogy: 11 violations | immersion: 22.7% LOW (target 35-55% (M28))
+    lesson: 3219/2000 (raw: 3494) | engagement: 0/3 | pedagogy: 3 violations | immersion: 8.1% LOW (target 35-55% (M42))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 90/100)
-     → 12 violations (severe - consider revision)
-     → 6 grammar-level violations (fundamental)
-     → Immersion 12% off target
+       → FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 75/100)
+     → 4 violations (moderate)
+     → 3 grammar-level violations (fundamental)
+     → Immersion 27% off target (major rebalancing needed)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/description-adverbs-audit.md
@@ -37,11 +39,9 @@
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  Critical Failures:
-    • 1 Outline Compliance Errors
-
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/description-adverbs-audit.log for details)
         ```
+
 
         ## Files to Fix
 

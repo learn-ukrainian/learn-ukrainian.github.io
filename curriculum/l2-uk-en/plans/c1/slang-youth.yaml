@@ -1,11 +1,14 @@
-module: c1-045
-level: c1
-sequence: 45
+module: c1-061
+
+sequence: 61
+
+slug: slang-youth
 version: '1.0'
 title: Сленг та молодіжна мова
 subtitle: Slang & Youth Language
 focus: style
-pedagogy: Sociolinguistics
+
+phase: C1.5 [Stylistics & Rhetoric]
 objectives:
 - Learner can understand and appropriate use common Ukrainian youth slang
 - Learner can distinguish between slang and standard language

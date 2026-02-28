@@ -1,126 +1,81 @@
-✅ Message sent to Gemini (ID: 9978) [auto-acked: self-addressed]
-✓ Message 9978 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #9978...
-📨 Message #9978
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-taking-transport-pA
-   Time: 2026-02-20T19:01:05.901701+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/taking-transport/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
-
-⏳ Rate limited (attempt 1/5). Waiting 30s...
-
-⏳ Rate limited (attempt 2/5). Waiting 60s...
-
-⏳ Rate limited (attempt 3/5). Waiting 120s...
-To ensure the 'Warm-up 2' section is handled correctly, I will map it to 'Закріплення: Подорож метром' which accurately reflects the narrative content described in the plan while serving as a logical closing section.
-
 ===RESEARCH_START===
 
 # Дослідження: Taking Transport
 
 ## State Standard Reference
-§3.3: "Місто (заклади, транспорт і місця)... громадський транспорт; таксі"
-§3.7: "Подорожі... основні дії на позначення руху (іти, їхати – у базових фразах)"
-§4.2.3.2 (Знахідний): "в, у, на (указівка на кінцевий пункт руху або переміщення)"
-§4.2.3.3 (Місцевий): "у, в, на (позначення місця)"
-Alignment: This module directly addresses the State Standard's requirements for navigating city transport, using motion verbs (іти/їхати) and the distinction between location (Locative) and direction (Accusative).
+§3.3. Місто (заклади, транспорт і місця): "громадський транспорт"
+§3.7. Подорожі: "основні дії на позначення руху (іти, їхати – у базових фразах)"
+§4.2.3.2. Знахідний відмінок: "в, у, на (указівка на кінцевий пункт руху або переміщення)"
+§4.2.3.3. Місцевий відмінок: "у, в, на (позначення місця)"
+Alignment: This module seamlessly blends thematic categories §3.3 and §3.7 with the critical A1 grammar distinction between Destination (Accusative) and Location (Locative).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| метро | High / Common | їхати на метро, станція метро, жетон (archaic but cultural), карта метро |
-| маршрутка | High / Spoken | зупиніть на зупинці, передайте за проїзд, повна маршрутка |
-| зупинка | High / Common | наступна зупинка, на зупинці, автобусна зупинка |
-| пересадка | Medium / Transport | робити пересадку, станція пересадки, без пересадок |
-| валідатор | Rising / Modern | прикласти картку до валідатора, не працює валідатор |
+| метро | High (Top 1000) | їхати на метро, станція метро |
+| зупинка | High (Top 1000) | автобусна зупинка, наступна зупинка |
+| маршрутка | Very High (Spoken) | повна маршрутка, чекати маршрутку |
+| пересадка | Medium (A2/B1 formal) | робити пересадку, станція пересадки |
+| валідатор | High (Modern Urban) | прикласти картку до валідатора |
 
 ## Cultural Hooks
-1. **Kyiv Metro Depth**: Arsenalna station is the deepest in the world (105.5m). The long escalator ride is a specific Kyiv experience where people read, listen to music, or run down (though not allowed).
-2. **"Pass the fare" (Передайте за проїзд)**: In marshrutkas, passengers pass cash from hand to hand to the driver, often across the whole bus. It requires trust and social interaction ("За одного, будь ласка").
-3. **Kyiv Digital**: The shift from plastic tokens ("жетони") to QR-codes and NFC payments. The "Kyiv Digital" app is now central to city transport.
+1. **Arsenalna Metro Station**: The deepest metro station in the world at 105.5 meters, requiring a long escalator ride. Represents Kyiv's massive underground infrastructure.
+2. **Kyiv Digital vs. Traditional Transit**: The transition from handing cash to the driver ("Передайте за проїзд") to modern European e-ticketing via the "Київ Цифровий" app and QR codes.
 
 ## Common Learner Errors
-1. **Motion Verbs**: Confusing *іти* (to go by foot) and *їхати* (to go by vehicle).
-   *   *Error*: "Я йду на метро." → *Correction*: "Я їду на метро."
-2. **Case Confusion (Instrumental vs Locative)**:
-   *   *Error*: "Я їду автобус." (Direct translation)
-   *   *Correction*: "Я їду автобусом" (Instrumental - means) OR "Я їду на автобусі" (Locative - location).
-3. **Direction vs Location**:
-   *   *Error*: "Де ти йдеш?" (Where are you walking inside something?)
-   *   *Correction*: "Куди ти йдеш?" (Where are you going to?)
+1. **Verbs of Motion mismatch**: Translating "I go on the metro" directly as "Я йду на метро" instead of the correct vehicle-motion "Я їду на метро".
+2. **Missing Preposition/Case**: Saying "Я їду автобус" instead of "Я їду на автобусі" (Locative) or "Я їду автобусом" (Instrumental).
+3. **Stop Vocabulary**: Confusing "станція" (used for rail/metro) with "зупинка" (used for buses/trams).
 
 ## Cross-References
-- Builds on: `a1-15` (Around the City - locations), `a1-39` (Buying Tickets - basics)
-- Prepares for: `a1-41` (Phone Basics), `a1-42` (Emergencies - lost in city)
+- Builds on: a1-29 (Around the City), a1-56 (Buying Tickets)
+- Prepares for: a1-58 (Phone Basics), a1-62 (Emergencies)
 
 ## Notes for Content Writing
-- **Decolonization**: Avoid Soviet-style terms if outdated. Focus on modern Ukrainian urban reality (QR codes, electronic tickets) but acknowledge the persisting "marshrutka culture".
-- **Pedagogy**: Explicitly scaffold the difference between "Де?" (Locative) and "Куди?" (Accusative) as it's a frequent sticking point.
-- **Tone**: Keep it practical. The "Marshrutka Veteran" persona aspect should be helpful/street-smart, not grumpy.
+- **Decolonized Framing**: Emphasize Ukraine's modern, digital urban infrastructure (e-tickets, Kyiv Digital app) to counter outdated Soviet-era transport stereotypes.
+- **English Scaffolding**: Since this is A1, use English explanations for the Destination vs. Location grammar logic.
+- **Lexical Note**: While the Instrumental case for means of transport ("автобусом") is formally A2 in the State Standard, it is highly frequent and specifically requested by the plan. Present it as a fixed lexical alternative to the Locative ("на автобусі").
+- **Voice**: Maintain the "Patient Supportive Tutor" (Marshrutka Veteran) persona, giving practical street-smart advice.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Вступ: Транспорт у місті"
-    words: 350
-    points:
-      - "Introduce main transport types (метро, автобус, тролейбус, трамвай, маршрутка) with images/icons context."
-      - "Briefly engage with the 'Arsenalna' cultural hook (deepest station)."
-      - "Grammar hook: Briefly contrast 'іти' (foot) vs 'їхати' (transport) to set the stage."
-      - "Ask the learner: 'Як ви їздите на роботу?' introducing the Instrumental case pattern (-ом/-ем) for means of transport."
-
-  - section: "Презентація: Види транспорту та оплата"
-    words: 650
-    points:
-      - "Vocabulary deep dive: 'зупинка' (ground transport) vs 'станція' (metro/train). Visual comparison."
-      - "Key Phrases: 'Наступна зупинка...', 'Обережно, двері зачиняються'. Mention the 'Voice of the Metro' culture."
-      - "Payment methods: 'квиток', 'проїзний', 'валідатор', 'QR-код'. Pronunciation focus on 'прокомпостувати' (legacy term but useful) vs 'завалідувати'."
-      - "Transfer logic: 'робити пересадку', 'пересісти на...'. Simple diagram of a transfer."
-      - "Grammar focus: Accusative for Direction ('Куди?' -> в метро) vs Locative for Location ('Де?' -> у метро)."
-
-  - section: "Практика: Орієнтування в місті"
-    words: 600
-    points:
-      - "Scenario: Asking for directions ('Як доїхати до...?'). Structured dialogue frame."
-      - "Scenario: Buying a ticket/interacting with a driver ('Один квиток, будь ласка', 'Передайте за проїзд')."
-      - "Marshrutka etiquette: 'На зупинці!' (Stop here!), 'Ви виходите?' (Are you getting off? - crucial for crowded buses)."
-      - "Exercise: Distinguishing 'Де' vs 'Куди' in context (fill-in-the-blank logic)."
-
-  - section: "Закріплення: Подорож метром"
+  - section: "Вступ"
     words: 400
     points:
-      - "Narrative text: A story about a trip through Kyiv metro (entering, validating, escalator, waiting, transfer)."
-      - "Highlight sensory details: noise of the train, voice announcements, crowd flow."
-      - "Contextual vocabulary: 'ескалатор', 'платформа', 'перехід'."
-      - "Final check: Comprehension questions based on the narrative."
+      - "Introduce the 'Marshrutka Veteran' persona with an English scaffolding paragraph welcoming the learner to the topic of urban transport (громадський транспорт)."
+      - "Contrast the basic verbs of motion: іти (on foot) vs їхати (by vehicle), providing 3 parallel example sentences."
+      - "Explicitly address and correct the common English-transfer error: 'Я йду на метро' -> 'Я їду на метро'."
+      - "Introduce the modern Ukrainian context: the blend of traditional transport networks with the Kyiv Digital (Київ Цифровий) ecosystem."
+  - section: "Презентація"
+    words: 600
+    points:
+      - "Categorize transport vocabulary into ground (зупинка: автобус, тролейбус, трамвай, маршрутка) and underground (станція: метро), with examples for each."
+      - "Present the cultural hook about Arsenalna station (the world's deepest) and the culture of reading/listening to music on long escalators."
+      - "Grammar H3: Explain Accusative (Destination/Куди) vs. Locative (Location/Де) with a 4-row comparative table (e.g., їду в метро vs я в метро)."
+      - "Grammar H3: Explain case selection for transit, establishing Locative (їхати на автобусі) as the primary pattern while introducing Instrumental (їхати автобусом) to correct the 'їду автобус' omission error."
+  - section: "Практика"
+    words: 600
+    points:
+      - "Dialogue H3: Paying for fare. Provide a mini-dialogue contrasting traditional cash payment (Передайте за проїзд) with modern digital validation (валідатор, прикласти картку)."
+      - "Phrasebook H3: Navigating crowds. Teach essential phrases like 'Ви виходите?' (Are you getting off?) and 'Обережно, двері зачиняються'."
+      - "Scenario: Provide a structured Q&A frame for asking directions (Як доїхати до...?) and navigating transfers (станція пересадки)."
+      - "Include a short 5-6 sentence reading paragraph about a commute to work, requiring the learner to observe the 'Де' vs 'Куди' distinctions in context."
+  - section: "Підсумок"
+    words: 400
+    points:
+      - "Provide a summary table consolidating the іти vs їхати rules and the key prepositions for transport."
+      - "Review the top 5 survival phrases from the lesson (e.g., Зупиніть на зупинці, Ви виходите?)."
+      - "Include a short concluding message from the persona encouraging the learner to feel confident traveling in a Ukrainian city."
+      - "Provide a bridging sentence preparing the learner for the upcoming Phone Basics and Emergencies modules by emphasizing location awareness."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
 **Phase**: Phase A: Meta + Research (Core)
-**Step**: Meta Outline Generation
+**Step**: Full Phase A
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Renamed the plan's "Warm-up 2" section to "Закріплення: Подорож метром" to provide a meaningful Ukrainian header for the narrative content, as "Warm-up 2" appeared to be a copy-paste error in the source plan.
+**Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5749 chars)
-✅ Message sent to Claude (ID: 9983)
-✓ Message 9983 acknowledged
-   Auto-acknowledged reply #9983 (stdout delivery — no inbox accumulation)
-✓ Message 9978 acknowledged

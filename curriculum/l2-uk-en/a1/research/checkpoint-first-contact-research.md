@@ -3,34 +3,33 @@
 ## State Standard Reference
 §4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець."
 §4.2.1.1: "загальні родові значення іменників в однині (чоловічий рід, жіночий рід, середній рід): чоловік, жінка, місто"
-§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш...), працювати (працюю, працюєш...)"
-§4.3.1: "питальне речення зі спеціальними словами де, звідки, куди, що, хто... спонукальне речення для вираження прохання: Дайте, будь ласка, два квитки."
-Alignment: This module directly assesses the fundamental A1.1 competencies defined in the standard: alphabet recognition, basic noun gender classification, present tense verb conjugation (I/II), and simple sentence construction with interrogatives.
+§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: читати (читаю...)"
+§4.3.1: "питальне речення зі спеціальними словами де, звідки, куди, що, хто... стверджувальні й заперечні речення"
+Alignment: This module directly addresses A1 requirements by consolidating foundational phonology (Cyrillic alphabet), morphology (noun gender classification, present tense verb conjugation), and syntax (basic questions and negation) into a single checkpoint.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| читати | High (Core A1) | читати книгу, читати вголос, читати українською |
-| писати | High (Core A1) | писати листа, писати вправу, писати ручкою |
-| говорити | High (Core A1) | говорити правду, говорити повільно, говорити по-українськи |
-| кава | High (Cultural) | філіжанка кави, кава з молоком, чорна кава |
-| рахунок | Medium (Service) | просити рахунок, оплатити рахунок |
-| хто/що | High (Grammar) | Хто це? Що це? |
+| читати | High | читати меню, читати текст |
+| писати | High | писати вправу, писати ручкою |
+| говорити | High | говорити українською |
+| хто, що, де | Essential Q&A | Хто це? Що це? Де кафе? |
+| кава | Frequent | чорна кава, кава з молоком |
 
 ## Cultural Hooks
-1. **Lviv Coffee Culture**: Yuriy Kulchytsky, a Ukrainian noble from Sambir region, is credited with opening one of the first coffee houses in Vienna (The Blue Bottle) in 1683, originating the Viennese coffee culture which is deeply connected to Lviv today.
-2. **"Смачного!"**: The universal Ukrainian phrase for "Bon appetit", essential for any dining context.
+1. Lviv has a deep historical coffee culture. Yuriy Kulchytsky, a Ukrainian born near Lviv, is widely credited with opening one of Vienna's first coffeehouses ("Under the Blue Bottle" in 1683), organically connecting Ukraine to European dining traditions.
+2. "Смачного!" (Bon appetit) is an essential cultural phrase in Ukraine, demonstrating fundamental hospitality and respect at any meal.
 
 ## Common Learner Errors
-1. **И vs І**: Confusion between the deep /ɪ/ (bit) and bright /i/ (bee) sounds.
-2. **"Тато" Gender**: Learners often mistake "тато" (dad) for neuter due to the -o ending, despite natural masculine gender.
-3. **Conjugation Mix-up**: Confusing the 3rd person plural endings -уть/-ють (Type I) with -ать/-ять (Type II).
+1. Confusing letters 'И' /ɪ/ and 'І' /i/ in pronunciation. → Practice minimal pairs. Remind learners that Ukrainian 'И' is closer to the English 'i' in "bit", not the harsh Russian "Ы".
+2. Classifying 'тато' (dad) as neuter because it ends in '-о'. → Emphasize that semantic gender (meaning a person) always overrides the grammatical ending.
+3. Mixing up 3rd person plural endings: '-уть/-ють' (Class I) vs '-ать/-ять' (Class II). → Group verbs strictly by class during drills to reinforce correct patterns.
 
 ## Cross-References
-- Builds on: a1-01 (Alphabet), a1-04 (Gender), a1-06 (Verbs), a1-09 (Reflexive Verbs)
-- Prepares for: a1-11 (Accusative Case), a1-13 (Locative Case)
+- Builds on: a1-01 to a1-13 (Alphabet, genders, pronouns, basic verbs)
+- Prepares for: a1-25 (The Accusative I) and the rest of A1.2
 
 ## Notes for Content Writing
-- This is a "Checkpoint" module, meaning pedagogy is TTT (Test-Teach-Test) or Review-focused.
-- Immersion is low (A1), so instructions must be in English, but the "test" items should be in Ukrainian.
-- Use the "Friendly Hostel Host" persona to make the "exam" feel like a helpful check-in.
+- Persona: Friendly Hostel Host. Frame the checkpoint as a supportive check-in.
+- Bridge module: Provide clear English scaffolding (Immersion < 50%) since learners are still at A1.1.
+- Decolonized framing: Treat the Ukrainian alphabet as an independent system. Highlight uniquely Ukrainian letters ('Ґ', 'Є', 'І', 'Ї') positively.

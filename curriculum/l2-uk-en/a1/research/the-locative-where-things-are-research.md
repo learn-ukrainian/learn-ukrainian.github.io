@@ -1,33 +1,31 @@
 # Дослідження: The Locative: Where Things Are
 
 ## State Standard Reference
-§4.2.3.3: "Місцевий відмінок: у, в, на (позначення місця): Спортивний костюм у великій сумці. Студент працює в новій лабораторії. Гроші лежать на столі."
-Alignment: This module directly addresses the core function of the Locative case for spatial location using the primary prepositions `у/в` and `на`.
+§4.2.3.3: "у, в, на (позначення місця): Спортивний костюм у великій сумці. Студент працює в новій лабораторії. Гроші лежать на столі;"
+Alignment: This module precisely fulfills the standard by focusing on prepositions "у/в" and "на" to denote location, contrasting containers versus surfaces, and teaching the required morphological endings for nouns in the Locative case answering the question "Де?".
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| де (where) | High (Core A1) | Де ти? Де ви? Де це? Де туалет? |
-| в/у (in) | Top 10 (Func) | у школі, вдома (adverbial), у Києві, у парку |
-| на (on/at) | Top 10 (Func) | на роботі, на столі, на вулиці, на вокзалі |
-| кімната (room) | High (Domestic) | у моїй кімнаті, велика кімната |
-| стіл (table) | High (Domestic) | на столі, під столом (Instr - later) |
-| робота (work) | High (Social) | на роботі (locative exception usage) |
+| де | Top 50 | Де ти? Де ви? Де це? Де туалет? |
+| в/у | Top 10 | у кімнаті, у школі, у парку, у банку |
+| на | Top 10 | на столі, на роботі, на вулиці, на вокзалі |
+| робота | High | на роботі |
+| стіл | High | на столі |
 
 ## Cultural Hooks
-1. **The "Shoes Off" Rule (Тапочки)**: It is mandatory to remove shoes upon entering a Ukrainian home. Guests are offered *tapochki* (slippers). Walking in street shoes inside is a cultural taboo.
-2. **Housing Types**: Ukrainians often describe location by building type—*Stalinka* (high ceilings, old), *Khrushchevka* (small, 5 floors), or *Novobudova* (new build). This context helps in describing "my room" or "my flat."
+1. The "Shoes Off" Rule: Taking off street shoes and wearing "тапочки" (slippers) is a mandatory ritual in Ukrainian homes, defining the boundary of the domestic space ("вдома", "у кімнаті").
+2. Housing Types: Urban landscapes in Ukraine are often defined by housing eras ("Хрущовка", "Сталінка", "Новобудова"), providing authentic context for describing where one lives.
 
 ## Common Learner Errors
-1. **Preposition Calque**: Using "v" for work (`*в роботі`) because of English "in work". Correct: `на роботі` (activity/surface logic).
-2. **Missing Mutations**: Failing to apply velar mutations. `*у рукі`, `*на ногі`. Correct: `у руці` (к→ц), `на нозі` (г→з).
-3. **Euphony Violation**: Ignoring the vocalic flow. `*В Львові`. Correct: `У Львові` (consonant cluster avoidance).
-4. **Direction vs. Location**: Confusing Accusative (motion) with Locative (static). `*Я в парк` (I am to park). Correct: `Я у парку`.
+1. Preposition Calquing: Translating "at work" as `*в роботі` instead of the correct `на роботі`. Ukrainian treats work as an event/activity, requiring "на".
+2. Ignoring Velar Mutations: Creating forms like `*на ногі` instead of `на нозі`. The к→ц, г→з, х→с mutation is highly irregular for English speakers.
+3. Case Confusion (Location vs Direction): Saying `*Я в парк` (Accusative motion) instead of `Я у парку` (Locative static).
 
 ## Cross-References
-- Builds on: `a1-12` (The Accusative II) — distinction between object and location.
-- Prepares for: `a1-14` (Mine and Yours) — possession often involves location; `a1-15` (Around the City) — heavy use of locative for directions.
+- Builds on: a1-26 (The Accusative II)
+- Prepares for: a1-20 (Mine and Yours), a1-29 (Around the City)
 
 ## Notes for Content Writing
-- A1 Level requires heavy English scaffolding for the grammar explanations (mutations are tricky).
-- Use the "Hand and Leg" mnemonic for mutations (`рука` -> `ці`, `нога` -> `зі`).
+- Highlight the euphony rule (милозвучність) regarding "у" vs "в" as a unique, melodic feature of the Ukrainian language, rather than comparing it to Russian. Emphasize examples like "У Львові" to prevent consonant clusters.
+- Use the simple English mnemonic "Hand and Leg" (рука → у руці, нога → на нозі, вухо → у вусі) to make velar mutations memorable.

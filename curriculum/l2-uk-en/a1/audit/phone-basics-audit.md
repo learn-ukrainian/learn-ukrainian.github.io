@@ -1,7 +1,7 @@
 # Audit Report: M58 — phone-basics.md
 **Level:** A1 | **Module:** M58 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 03:53:47
+**Generated:** 2026-02-28 19:49:08
 
 ## Configuration
 **Type:** A1
@@ -16,41 +16,20 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | match-up | Знайдіть відповідність: Привітання та прощання | 8 | 8 | ✅ |
-| 2 | true-false | Чи правильне твердження? (Етикет) | 8 | 8 | ✅ |
-| 3 | fill-in | Заповніть пропуски: Корисні фрази | 8 | 8 | ✅ |
-| 4 | quiz | Оберіть правильну відповідь: Реакції | 8 | 8 | ✅ |
-| 5 | unjumble | Складіть речення: Прохання та інструкції | 6 | 6 | ✅ |
-| 6 | group-sort | Розподіліть за стилем: Офіційний чи неофіційний? | 12 | 12 | ✅ |
-| 7 | fill-in | Заповніть пропуски: Доставка | 8 | 8 | ✅ |
-| 8 | match-up | Знайдіть відповідність: Українська та англійська | 8 | 8 | ✅ |
-| 9 | true-false | Чи правильне твердження? (Частина 2) | 8 | 8 | ✅ |
-| 10 | quiz | Перевірте знання: Ситуації | 8 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 10 (target: 8-12) ✅
-- Unique types: 6 (minimum: 4) ✅
-- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
-- Required types used: 2/2 (fill-in, quiz) ✅
-- Low density activities: 0
-
 ## Gates
-- **Words:** ✅ 2117/2000 (raw: 2302)
-- **Activities:** ✅ 10/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/3
+- **Words:** ✅ 3081/2000 (raw: 3264)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
+- **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.5% (target 35-55% (M58))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 39.2% (target 35-55% (M58))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -59,8 +38,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Phone Basics** | ✅ | 38 | Included in Core |
-| **Вступ та етикет** | ✅ | 557 | Included in Core |
-| **Презентація: Основні структури** | ✅ | 656 | Included in Core |
-| **Практика: Життєві ситуації** | ✅ | 576 | Included in Core |
-| **Продукція та підсумок** | ✅ | 290 | Included in Core |
+| **Phone Basics** | ✅ | 54 | Included in Core |
+| **Вступ та етикет** | ✅ | 827 | Included in Core |
+| **Презентація: Основні структури** | ✅ | 1062 | Included in Core |
+| **Практика: Життєві ситуації** | ✅ | 783 | Included in Core |
+| **Продукція та підсумок** | ✅ | 237 | Included in Core |
+| **Підсумок** | ✅ | 118 | Included in Core |

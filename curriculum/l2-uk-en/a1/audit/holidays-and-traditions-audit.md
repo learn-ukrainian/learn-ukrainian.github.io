@@ -1,7 +1,7 @@
 # Audit Report: M50 — holidays-and-traditions.md
 **Level:** A1 | **Module:** M50 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 03:49:04
+**Generated:** 2026-02-28 18:08:16
 
 ## Configuration
 **Type:** A1-culture
@@ -16,41 +16,20 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | match-up | Поєднайте свято і пору року | 8 | 8 | ✅ |
-| 2 | match-up | Правильне привітання | 8 | 8 | ✅ |
-| 3 | quiz | Українські традиції | 8 | 8 | ✅ |
-| 4 | fill-in | Граматика вітань | 8 | 8 | ✅ |
-| 5 | fill-in | Найкращі побажання | 8 | 8 | ✅ |
-| 6 | unjumble | Складіть речення | 6 | 6 | ✅ |
-| 7 | group-sort | Граматика: З чи Бажаю? | 14 | 12 | ✅ |
-| 8 | true-false | Правда чи ні? | 8 | 8 | ✅ |
-| 9 | match-up | Святковий словник | 8 | 8 | ✅ |
-| 10 | fill-in | Заповніть діалог | 8 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 10 (target: 8-12) ✅
-- Unique types: 6 (minimum: 4) ✅
-- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
-- Required types used: 2/2 (fill-in, match-up) ✅
-- Low density activities: 0
-
 ## Gates
-- **Words:** ✅ 2593/2000 (raw: 2844)
-- **Activities:** ✅ 10/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/3
+- **Words:** ✅ 3009/2000 (raw: 3334)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
+- **Engagement:** ✅ 8/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 45.7% (target 35-55% (M50))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 46.6% (target 35-55% (M50))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -59,12 +38,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Holidays & Traditions** | ✅ | 43 | Included in Core |
-| **Warm-up** | ✅ | 312 | Included in Core |
-| **Presentation** | ✅ | 413 | Included in Core |
-| **Presentation 2** | ✅ | 329 | Included in Core |
-| **Presentation 3** | ✅ | 367 | Included in Core |
-| **Practice** | ✅ | 314 | Included in Core |
-| **Practice 2** | ✅ | 405 | Included in Core |
-| **Practice 3** | ✅ | 285 | Included in Core |
-| **Summary** | ✅ | 125 | Included in Core |
+| **Holidays & Traditions** | ✅ | 68 | Included in Core |
+| **Вступ та культура** | ✅ | 684 | Included in Core |
+| **Презентація: Вітання** | ✅ | 603 | Included in Core |
+| **Презентація: Побажання** | ✅ | 689 | Included in Core |
+| **Практика та дні народження** | ✅ | 685 | Included in Core |
+| **Підсумок** | ✅ | 280 | Included in Core |

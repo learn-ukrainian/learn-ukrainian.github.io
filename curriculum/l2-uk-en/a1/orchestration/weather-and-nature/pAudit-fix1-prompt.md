@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2965/2000 (raw: 3248) | pedagogy: 1 violations
+    lesson: 4303/2000 (raw: 4488) | pedagogy: 12 violations | immersion: 28.2% LOW (target 35-55% (M43))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📚 PEDAGOGICAL VIOLATIONS FOUND:
-    [STRUCTURAL_MONOTONY] 6 of 30 section openers share >70% lexical overlap. Sections: ### Читання: Прогулянка під дощем (Readi; ## Презентація 3: Запитання про погоду; ## Презентація 5: Прогноз та планування... Opener pattern: "**Українською:**..."
-       → FIX: Diversify section openings. Each section should start with a unique approach: questions, examples, cultural hooks, direct instruction, comparisons — not the same template.
+       → FIX: Rewrite in neutral educational voice. Remove first-person teacher persona.
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 1 violations (minor)
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 80/100)
+     → 13 violations (severe - consider revision)
+     → 11 grammar-level violations (fundamental)
+     → Immersion 7% off target (minor)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/weather-and-nature-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/weather-and-nature-audit.log for details)
         ```
+
 
         ## Files to Fix
 
@@ -57,20 +58,4 @@
 
         **IMPORTANT:** Do NOT add or remove sections. Do NOT change the module structure.
         Fix only the specific violations listed above.
-
-## Section-Level Fix (IMPORTANT)
-
-This is a large module (3248 words). To avoid token truncation,
-fix ONLY the following section(s): "Презентація 3: Запитання про погоду", "Презентація 5: Прогноз та планування"
-
-**Output format:** Output ONLY the fixed section(s) between delimiters:
-
-```
-===SECTION_FIX_START===
-## {section title}
-{fixed section content}
-===SECTION_FIX_END===
-```
-
-Do NOT output the entire file. Only output the section(s) listed above.
 

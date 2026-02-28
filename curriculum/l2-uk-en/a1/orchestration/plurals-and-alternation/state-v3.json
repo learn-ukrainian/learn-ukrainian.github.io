@@ -2,5 +2,26 @@
   "track": "a1",
   "slug": "plurals-and-alternation",
   "mode": "v3",
-  "phases": {}
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T16:32:50Z",
+      "task_id": "v3-plurals-and-alternation-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T16:36:14Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T16:40:32Z",
+      "task_id": "v3-plurals-and-alternation-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T16:47:23Z",
+      "attempts": 2
+    }
+  }
 }

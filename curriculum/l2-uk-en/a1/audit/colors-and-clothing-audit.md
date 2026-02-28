@@ -1,7 +1,7 @@
 # Audit Report: M12 — colors-and-clothing.md
 **Level:** A1 | **Module:** M12 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 03:27:17
+**Generated:** 2026-02-28 17:31:24
 
 ## Configuration
 **Type:** A1-vocab
@@ -16,49 +16,20 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | match-up | Кольори: Українська та Англійська | 8 | 8 | ✅ |
-| 2 | match-up | Одяг: Знайдіть пару | 8 | 8 | ✅ |
-| 3 | group-sort | Сортування за родом | 13 | 12 | ✅ |
-| 4 | quiz | Який це колір? (Узгодження) | 8 | 8 | ✅ |
-| 5 | fill-in | Оберіть правильне закінчення | 8 | 8 | ✅ |
-| 6 | match-up | Культура та Граматика | 8 | 8 | ✅ |
-| 7 | unjumble | Складіть прості речення | 6 | 6 | ✅ |
-| 8 | fill-in | Граматика: Дієслово та Відмінок | 8 | 8 | ✅ |
-| 9 | unjumble | Побудуйте речення | 6 | 6 | ✅ |
-
-**Summary:**
-- Total activities: 9 (target: 8-12) ✅
-- Unique types: 5 (minimum: 4) ✅
-- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
-- Required types used: 2/2 (fill-in, match-up) ✅
-- Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[RUSSICISM_DETECTED]** Found 2 Russicism(s) in content: 'давайте подивимося' → подивімося
-  - FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2287/2000 (raw: 2525)
-- **Activities:** ✅ 9/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 5/4 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 5/3
+- **Words:** ✅ 3370/2000 (raw: 3648)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 31/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.4% (target 25-40% (M12))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 25.0% (target 25-40% (M12))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -67,12 +38,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Colors & Clothing** | ✅ | 59 | Included in Core |
-| **Кольори навколо нас** | ✅ | 497 | Included in Core |
-| **Основні кольори та узгодження** | ✅ | 346 | Included in Core |
-| **Одяг і дієслово «носити»** | ✅ | 364 | Included in Core |
-| **Множина: штани та окуляри** | ✅ | 170 | Included in Core |
-| **Опис зовнішності та вишиванка** | ✅ | 359 | Included in Core |
-| **Діалог: У магазині одягу** | ✅ | 145 | Included in Core |
-| **Практика: Опис одягу** | ✅ | 181 | Included in Core |
-| **Підсумок** | ✅ | 166 | Included in Core |
+| **Кольори та одяг (Colors & Clothing)** | ✅ | 73 | Included in Core |
+| **Вступ та культурний контекст** | ✅ | 340 | Included in Core |
+| **Презентація кольорів та граматика узгодження** | ✅ | 894 | Included in Core |
+| **Одяг та дієслово «носити»** | ✅ | 1047 | Included in Core |
+| **Практичне застосування та покупки** | ✅ | 847 | Included in Core |
+| **Підсумок** | ✅ | 169 | Included in Core |

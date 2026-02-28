@@ -1,59 +1,25 @@
 {
   "slug": "body-and-health",
   "track": "a1",
-  "module_num": 31,
+  "module_num": 48,
   "mode": "v3",
   "phases": {
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-19T23:29:20Z",
-      "words": 2350,
+      "timestamp": "2026-02-28T16:27:15Z",
+      "words": 4987,
       "attempts": 1
-    },
-    "3a": {
-      "status": "complete",
-      "timestamp": "2026-02-19T23:30:51Z",
-      "note": "v3-phase-C"
-    },
-    "3b": {
-      "status": "complete",
-      "timestamp": "2026-02-19T23:30:51Z",
-      "note": "v3-phase-C"
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-22T23:13:48Z",
+      "timestamp": "2026-02-28T16:33:18Z",
       "note": "v3-audit"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-22T23:13:48Z",
+      "timestamp": "2026-02-28T16:33:18Z",
       "note": "v3-audit"
-    },
-    "6": {
-      "status": "complete",
-      "timestamp": "2026-02-22T23:20:08Z",
-      "note": "v3-phase-D"
-    },
-    "6b": {
-      "status": "complete",
-      "timestamp": "2026-02-22T23:20:08Z",
-      "note": "v3-phase-D"
-    },
-    "7-final": {
-      "status": "complete",
-      "timestamp": "2026-02-22T23:20:08Z",
-      "note": "v3-phase-D"
-    },
-    "9-final-review": {
-      "status": "complete",
-      "timestamp": "2026-02-20T21:41:45Z",
-      "verdict": "APPROVE"
-    },
-    "8": {
-      "status": "complete",
-      "timestamp": "2026-02-22T23:20:09Z"
     }
   },
-  "last_updated": "2026-02-22T23:20:09Z"
+  "last_updated": "2026-02-28T16:33:18Z"
 }

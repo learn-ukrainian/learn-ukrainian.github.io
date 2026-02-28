@@ -1,7 +1,7 @@
 <!-- SCOPE
-Covers: Core food and drink vocabulary, noun genders for food items, expressing preferences, the Accusative shift for ordering, cultural significance of bread.
+Covers: Core food and drink vocabulary, noun gender of food items, ordering with the Accusative case, expressing preferences (Мені подобається), dietary restrictions (Я не їм), and the cultural significance of Ukrainian bread (паляниця).
 Not covered:
-  - Buying food at a market → a1-40
+  - Shopping at a market → a1-40
 Related: a1-38
 -->
 
@@ -9,403 +9,360 @@ Related: a1-38
 
 > **Чому це важливо?**
 >
-> Food is the center of everyday life and cultural expression in Ukraine. Knowing how to name your meals, order drinks, and politely explain your dietary preferences is a fundamental survival skill. In this module, we will explore core food vocabulary, practice matching adjectives with noun genders, and uncover the deep historical meaning behind traditional Ukrainian bread.
+> Їжа — це важлива частина української культури. Ми любимо смачно готувати та пригощати гостей. Знання цих слів допоможе у кафе та ресторані.
+>
+> Food is a cornerstone of Ukrainian culture. We love to cook delicious meals and treat our guests with deep hospitality. Knowing how to correctly name everyday foods, order drinks, and express your personal preferences is an absolute fundamental survival skill for any visitor or language learner. This comprehensive lesson will equip you with the exact vocabulary and grammatical structures you need to confidently navigate cafes, restaurants, and family dinner tables across Ukraine.
 
 ## Їжа
 
-Understanding Ukrainian food vocabulary begins with recognizing the everyday staples that make up a meal. However, memorizing the words alone is not enough. You must also understand how these nouns interact with adjectives through the system of grammatical gender. In Ukrainian, every single noun belongs to a specific gender category. This gender dictates the ending of any adjective that describes the food.
+Ми починаємо нашу подорож у світ української кухні з базових слів. Кожне слово має свій рід. Це дуже важливо для правильного опису їжі.
 
-### Основні продукти
-Let us start by looking at the broad categories of ingredients. Ми вивчимо найважливіші слова. Ви побачите їх на кожній кухні (We will introduce the most essential words that you will see in every kitchen).
+### Слова чоловічого роду
 
-**о́вочі** [ˈɔwot͡ʃi] (vegetables)
-Овочі — це основа для наших відомих супів та свіжих літніх салатів. Вони дуже важливі для щоденного приготування їжі (Vegetables form the foundation of our famous soups and fresh summer salads. They are vital for everyday cooking).
-Свіжі овочі ростуть на городі. (Fresh vegetables grow in the garden.)
-Ми нарізаємо овочі для салату. (We are cutting vegetables for the salad.)
+Слова чоловічого роду зазвичай закінчуються на твердий приголосний звук. Це дуже велика і популярна категорія слів у нашій мові.
 
-**фру́кти** [ˈfruktɪ] (fruits)
-Фрукти дуже смачні свіжими в теплу пору року. Часто їх зберігають як варення або компоти на зиму (Fruits are enjoyed fresh during the warm months and are often preserved as jams or compotes for the winter).
-Солодкі фрукти лежать у кошику. (Sweet fruits lie in the basket.)
-Діти дуже люблять фрукти. (Children really love fruits.)
+**Нові слова:**
+*   **хлі́б** — bread
+*   **бо́рщ** — borscht (traditional beet soup)
+*   **су́п** — soup
+*   **си́р** — cheese
 
-**м'я́со** [ˈmjɑso] (meat)
-М'ясо є головним компонентом для традиційних основних страв (Meat is central to traditional main courses). It is a neuter noun, which means its adjectives will typically end in "-е" or "-є".
-Свіже м'ясо лежить у холодильнику. (Fresh meat lies in the fridge.)
-Вона смажить м'ясо на сковорідці. (She is frying meat on the pan.)
+**Приклади в контексті:**
+*   На столі́ лежи́ть сві́жий хлі́б.
+*   Я дуже люблю́ смачни́й бо́рщ.
+*   Мій брат сього́дні готу́є гаря́чий су́п.
+*   Це традиці́йний украї́нський си́р.
 
-**ри́ба** [ˈrɪbɐ] (fish)
-Риба — це поширена альтернатива м'ясу, особливо в регіонах біля річок та моря (Fish is a common alternative to meat, especially in regions near rivers and the sea). It is a feminine noun, so its adjectives end in "-а" or "-я".
-Свіжа риба продається на ринку. (Fresh fish is sold at the market.)
-Ми готуємо смачну рибу. (We are cooking tasty fish.)
+**Як це працює:**
+Notice carefully how the adjectives **сві́жий** (fresh), **смачни́й** (delicious), and **гаря́чий** (hot) all align perfectly with the masculine gender of the nouns they modify. When you learn a new word like **си́р**, you should immediately mentally tag it as a masculine noun. This allows you to naturally and automatically pair it with masculine adjectives in the future.
 
-Grouping these fundamental categories in your mind helps build a mental map of a Ukrainian kitchen. This makes recalling the words much faster when you need them.
+> [!tip] **Ukrainian Cheese Terminology**
+> In standard Ukrainian, the word **си́р** is wonderfully versatile. It can refer to both hard yellow cheese (similar to cheddar or gouda) and soft, crumbly farmer's cheese or cottage cheese. We use the same root word for both, though we sometimes specify «тверди́й си́р» for the hard variety. Keep in mind that Ukrainian **си́р** covers all these types naturally, making it a very high-frequency word in recipes and menus.
 
-### Чоловічий рід: Традиційні страви
-Masculine nouns typically end in a consonant in their dictionary form. When you want to describe a masculine food item as fresh, hot, or tasty, the adjective usually ends in "-ий" or "-ій".
+### Слова жіночого роду
 
-**хліб** [xlʲib] (bread)
-Хліб має велику повагу і супроводжує майже кожну традиційну страву (Bread is universally respected and accompanies almost every traditional meal).
-Свіжий хліб завжди лежить на столі. (Fresh bread always lies on the table.)
-Він купує теплий хліб у пекарні. (He buys warm bread at the bakery.)
+Слова жіночого роду найчастіше закінчуються на голосні «-а» або «-я». Вони мають м'яке та мелодійне звучання.
 
-**борщ** [bɔrʃt͡ʃ] (borscht)
-Борщ — це національна страва. Це дуже смачний суп з буряка (Borscht is the iconic national dish—a rich, complex beet soup). It is a masculine noun.
-Цей смачний борщ дуже гарячий. (This tasty borscht is very hot.)
-Мама готує український борщ. (Mom cooks Ukrainian borscht.)
+**Нові слова:**
+*   **ка́ша** — porridge
+*   **ри́ба** — fish
 
-**суп** [sup] (soup)
-Це загальний термін для будь-якого супу, крім борщу (This is a general term for any soup other than borscht). It behaves exactly the same way.
-Домашній суп має чудовий аромат. (Homemade soup has a wonderful aroma.)
-Я люблю гарячий суп. (I love hot soup.)
+**Приклади в контексті:**
+*   Це дуже гаря́ча ка́ша.
+*   На тарі́лці лежи́ть смачна́ ри́ба.
+*   Моя́ ма́ма щора́нку готу́є ка́шу.
 
-**сир** [sɪr] (cheese)
-Це слово означає твердий жовтий продукт. Також це м'який білий продукт (This word covers both hard yellow cheeses and the soft, white cottage cheese used in many desserts).
-Традиційний сир дуже корисний. (Traditional cheese is very healthy.)
-Вона їсть солодкий сир. (She eats sweet cheese.)
+**Як це працює:**
+The grammatical endings align flawlessly: the feminine adjective **гаря́ч-а** pairs with the feminine noun **ка́ш-а**, and **смачн-а́** pairs with **ри́б-а**. This agreement makes the spoken language sound incredibly poetic and structurally sound. Porridge (**ка́ша**) is an absolute staple of the traditional Ukrainian breakfast, especially variations made from buckwheat or oatmeal.
 
-By consistently pairing the masculine noun with a masculine adjective, you train your ear to expect the rhythmic "-ий" sound.
+### Слова середнього роду
 
-### Жіночий рід: Щоденні інгредієнти
-Feminine nouns generally end in "-а" or "-я". The adjectives that describe them will match this pattern, ending in "-а" or "-я" as well. This creates a balanced, rhyming harmony in the sentence.
+Слова середнього роду зазвичай закінчуються на голосні «-о» або «-е». Їх відносно небагато, але вони дуже важливі для щоденного спілкування.
 
-**ка́ша** [ˈkɑʃɐ] (porridge)
-Каша, особливо гречана, — це класичний сніданок або гарнір (Porridge, particularly buckwheat, is a classic breakfast or side dish).
-Гаряча каша чекає на тарілці. (Hot porridge waits on the plate.)
-Вранці я завжди їм кашу. (In the morning I always eat porridge.)
+**Нові слова:**
+*   **м'я́со** — meat
 
-**вода́** [woˈdɑ] (water)
-Вода — це напій. Але це дуже важливе слово. Воно має жіночий рід (While it is a drink, it is a crucial feminine noun to remember for adjective matching).
-Холодна вода дуже освіжає влітку. (Cold water is very refreshing in summer.)
-Дайте, будь ласка, чисту воду. (Give me clean water, please.)
+**Приклади в контексті:**
+*   У магази́ні продаю́ть сві́же м'я́со.
+*   Сього́дні на вече́рю ми їмо́ смачне́ м'я́со.
+*   Це м'я́со дуже гаря́че.
 
-Notice how "Гаряч**а** каш**а**" and "Холодн**а** вод**а**" sound musically balanced. This euphony is a defining characteristic of beautiful Ukrainian speech.
+**Як це працює:**
+Once again, we observe the strict grammatical harmony required by the language: the neuter adjective ending matches the neuter noun, forming **сві́ж-е м'я́с-о**. Getting this gender agreement right from the very beginning helps you avoid sounding unnatural or disjointed in conversation.
 
-> [!tip] **Adjective Matching Strategy**
-> Коли ви вчите нове слово, завжди пишіть його з описом. Не пишіть просто «борщ» — пишіть «смачний борщ» (Whenever you write down a new vocabulary word, never write it alone. Always write it with a descriptive adjective). This forces your brain to learn the gender and the noun simultaneously.
+### Групи продуктів
 
-### Порівняння роду іменників
-Давайте подивимось на таблицю (Let us look at a comparison table). Таблиця показує зміни закінчень (showing how the adjective "смачний" changes across the different noun genders).
+Деякі слова позначають багато предметів одразу. Це слова про загальні категорії продуктів.
 
-| Рід (Gender) | Закінчення (Ending) | Приклад (Example) | Переклад (Translation) |
-|---|---|---|---|
-| Чоловічий | -ий | смачний борщ | tasty borscht |
-| Жіночий | -а | смачна каша | tasty porridge |
-| Середній | -е | смачне м'ясо | tasty meat |
-| Plural | -і | смачні овочі | tasty vegetables |
+**Нові слова:**
+*   **о́вочі** — vegetables
+*   **фру́кти** — fruits
 
-Studying this table will help you recognize the underlying logic of Ukrainian grammar. The endings are highly predictable once you know the gender of the core noun.
+**Приклади в контексті:**
+*   Я щодня́ купу́ю сві́жі о́вочі.
+*   Ді́ти дуже лю́блять соло́дкі фру́кти.
+*   На на́шому база́рі є га́рні о́вочі та фру́кти.
 
-### Дієслово «Їсти» та суп
-Це дуже цікава культурна деталь (One of the most fascinating cultural details involves how we consume liquid foods). В Англії ви можете сказати "I drink soup" (In English, you might say "I drink soup" or "I am having soup").
+**Як це працює:**
+While it is technically possible to talk about a single, specific vegetable or one isolated piece of fruit, it is far more common in everyday speech to refer to them as collective, plural categories, exactly as you would in English. When you visit a market, you are looking for **о́вочі**, not just one vegetable.
 
-В Україні суп — це їжа, а не напій (In Ukrainian, soup is considered a proper, substantial dish, not a beverage). Тому ми завжди використовуємо дієслово **ї́сти** для супу (Therefore, we always use the verb **ї́сти** for soup).
+### Дієслово «їсти»
 
-**ї́сти суп** (to eat soup)
-Ми їмо гарячий суп на обід. (We are eating hot soup for lunch.)
-Вони їдять український борщ. (They are eating Ukrainian borscht.)
+Для правильної розмови про їжу потрібне відповідне дієслово. В українській мові ми використовуємо дієслово «їсти».
 
-You will almost never hear a native speaker say they "drink" borscht. The verb "пити" (to drink) is strictly reserved for beverages, which we will explore in the next section.
+**Відмінювання (Conjugation):**
+*   Я їм
+*   Ти їси́
+*   Він / Вона́ / Воно́ їсть
+*   Ми їмо́
+*   Ви їсте́
+*   Вони́ їдя́ть
 
-> [!warning] **Direct Translation Trap**
-> Не перекладайте англійську фразу "I drink soup" дослівно українською (Do not translate the English phrase "I drink soup" directly into Ukrainian). If you say «Я п'ю суп», people will be very confused. Soup is food. Always use «їсти суп» або «їсти борщ».
+**Приклади в контексті:**
+*   Я їм сві́жий і смачни́й хлі́б.
+*   Ми їмо́ гаря́чий су́п на обі́д.
+*   Що ви їсте́ сього́дні?
+
+> [!warning] **Stop the Surzhyk!**
+> You might occasionally hear some people use the word «кушати» for eating. This is heavily influenced by Russian and is entirely incorrect in standard Ukrainian. You must absolutely avoid this word. Always use the proper, authentic verb **ї́сти**.
+>
+> Another crucial cultural and linguistic detail: In Ukrainian, **ми їмо́ суп** (we eat soup) and **ми їмо́ бо́рщ** (we eat borscht). We do not "drink" soup. Traditional Ukrainian soups like borscht are famously thick, hearty, and packed full of vegetables and meat, explicitly requiring a spoon to consume. Therefore, soup is always eaten, never drunk.
 
 ## Напої
 
-Напої — це окрема категорія слів (Beverages form their own distinct category of vocabulary). Як і їжа, напої мають рід (Just like food items, drinks have assigned genders). Рід впливає на закінчення. Коли ви замовляєте напої, ви використовуєте Знахідний відмінок (Furthermore, ordering drinks introduces the Accusative case for direct objects).
+Тепер ми докладно поговоримо про напої. Україна має багату культуру напоїв. У нас є традиційні домашні рецепти. У нас також є сучасні кав'ярні.
 
-### Щоденні напої: Вода та Сік
-Let us look at the most frequent drinks you will encounter. Pay close attention to the pronunciation and the inherent gender of each word.
+### Популярні напої
 
-**вода́** [woˈdɑ] (water)
-Вода — це слово жіночого роду. Це абсолютна основа для гідратації (Water is a feminine noun. It is the absolute foundation of hydration).
-Чиста вода дуже важлива для здоров'я. (Clean water is very important for health.)
-Ми п'ємо воду щодня. (We drink water every day.)
+Вивчімо назви найвідоміших та найпопулярніших напоїв. Вони будуть потрібні щодня у будь-якому місті.
 
-**сік** [sʲik] (juice)
-Сік — це слово чоловічого роду. It usually requires an adjective to specify the flavor, such as apple or orange.
-Свіжий сік має багато вітамінів. (Fresh juice has many vitamins.)
-Я люблю апельсиновий сік. (I love orange juice.)
+*   **вода́** (ж.р. - feminine) — water
+*   **ка́ва** (ж.р. - feminine) — coffee
+*   **ча́й** (ч.р. - masculine) — tea
+*   **сі́к** (ч.р. - masculine) — juice
+*   **компо́т** (ч.р. - masculine) — compote (a traditional sweet fruit drink)
+*   **молоко́** (с.р. - neuter) — milk
 
-### Чоловічий рід: Чай та Компот
-Masculine drinks behave exactly like masculine food items. They take the "-ий" adjective ending.
+**Приклади в контексті:**
+*   На столі́ стої́ть холо́дна вода́.
+*   Я щора́нку п'ю гаря́чу ка́ву.
+*   Твій апельси́новий сі́к дуже смачни́й.
+*   Бабу́ся ро́бить соло́дкий компо́т.
 
-**чай** [t͡ʃɑj] (tea)
-Чай — це популярний напій. Це слово чоловічого роду. Це щоденний напій у багатьох родинах (Tea is an extremely common masculine noun. It is a daily staple in many households across the country).
-Гарячий чай стоїть на кухонному столі. (Hot tea stands on the kitchen table.)
-Ми п'ємо зелений чай. (We are drinking green tea.)
+**Як це працює:**
+The word **компо́т** refers to a deeply traditional homemade beverage created by boiling fresh or dried fruits and berries in water, usually sweetened with sugar. It is served in almost every household and public cafeteria across Ukraine, offering a comforting taste of home.
 
-**компо́т** [komˈpɔt] (compote)
-Компот — це традиційний домашній напій (Compote is a traditional homemade drink made by boiling fruits or berries in water with sugar). It is also masculine.
-Солодкий компот вариться з літніх фруктів. (Sweet compote is boiled from summer fruits.)
-Він п'є холодний компот. (He drinks cold compote.)
+### Як замовити напій
 
-### Середній рід: Молоко
-**молоко́** [moloˈkɔ] (milk)
-Молоко — це слово середнього роду. Тому закінчення прикметника буде "-е".
-Тепле молоко дуже смачне ввечері. (Warm milk is very tasty in the evening.)
-Я додаю молоко у каву. (I add milk to coffee.)
+У кафе або ресторані ви маєте знати правила замовлення. Ми використовуємо знахідний відмінок для об'єкта дії.
 
-### Жіночий рід: Кава та трансформація
-**ка́ва** [ˈkɑwɐ] (coffee)
-Кава — це слово жіночого роду. Це важливе слово. Ви часто будете замовляти каву (This is an important word because you will use it frequently when ordering).
-Міцна кава допомагає швидко прокинутися. (Strong coffee helps to wake up quickly.)
-Вона готує ранкову каву. (She prepares morning coffee.)
+**The Rule for Ordering:**
+When you use the standard phrase **Я хо́чу...** (I want...), the noun that immediately follows it must be transformed into the Accusative case. Here is how you apply the rule depending on the noun's gender:
 
-> [!fact] **Coffee Gender Confusion**
-> Learners sometimes mistakenly assume that all loan words might not follow strict rules, but «кава» follows standard feminine rules perfectly. It dictates feminine adjectives and changes its ending correctly.
+1.  **Masculine and Neuter inanimate nouns** stay exactly the same as their dictionary form.
+    *   ча́й ➡️ ча́й: Я хо́чу ча́й.
+    *   сі́к ➡️ сі́к: Я хо́чу сі́к.
+    *   молоко́ ➡️ молоко́: Я хо́чу молоко́.
+2.  **Feminine nouns ending in -а** must change their ending to **-у**. This is the most critical shift for beginners to remember.
+    *   вод**а́** ➡️ вод**у́**: Я хо́чу вод**у́**.
+    *   ка́в**а** ➡️ ка́в**у**: Я хо́чу ка́в**у**.
 
-### Правило Знахідного відмінка
-When you order a drink in a cafe, or when you state that you want a specific drink, that drink becomes the direct object of your sentence. In Ukrainian grammar, the direct object takes the Accusative case (Знахідний відмінок).
+**Приклади в контексті:**
+*   Я хо́чу чорну ка́ву, будь ла́ска.
+*   Він хо́че гаря́чий ча́й з лимо́ном.
+*   Ми хо́чемо холо́дну вод**у́**.
 
-For masculine nouns denoting inanimate objects (like чай, сік, компот), and for neuter nouns (like молоко), the Accusative case form is identical to the Nominative dictionary form. They do not change at all.
+> [!context] **The Feminine Accusative Shift**
+> Beginners frequently forget to change the feminine **-а** ending to **-у** when ordering, resulting in phrases like "Я хочу кава" or "Я хочу вода". While a waiter will understand you, this grammatical error sounds instantly jarring and unnatural to a native speaker. You must actively train your brain to automatically say **ка́ву** and **воду́** the moment you decide to order them.
 
-Я хочу сік. (I want juice.)
-Він п'є чай. (He drinks tea.)
-Ми любимо молоко. (We love milk.)
+### Традиції пиття в Україні
 
-However, feminine nouns ending in "-а" undergo a crucial transformation. They change their ending from "-а" to "-у" in the Accusative case. This is a mandatory rule for ordering.
+Які напої п'ють українці? Наші смаки дуже різноманітні і залежать від регіону та часу доби.
 
-ка́ва → ка́ву
-вода́ → во́ду
+Tea (**ча́й**) is universally cherished across the entire country, especially in the comfort of one's home. A classic and beloved Ukrainian way to serve tea during cold weather is **ча́й з лимо́ном** (tea with lemon) or **ча́й з ме́дом** (tea with honey). It is a symbol of warmth and recovery.
 
-Let us see this transformation in action:
-Я хочу каву. (I want coffee.)
-Дайте, будь ласка, воду. (Give me water, please.)
-Вона замовляє гарячу каву. (She orders hot coffee.)
+Conversely, the western city of Lviv has cultivated a legendary and sophisticated coffee culture dating back centuries. **Ка́ва по-льві́вськи** (Lviv-style coffee) is traditionally brewed in a special small copper pot called a turka over hot sand, famous for delivering an intensely strong, rich, and aromatic flavor. Today, thriving modern coffee shops are ubiquitous in every Ukrainian city, and ordering a flat white or a cappuccino is an established everyday urban routine.
 
-Notice that the adjective also changes to match the feminine Accusative form ("гаряч**у**"). This "-у" ending is your primary linguistic tool for requesting most common feminine items.
+**Приклади в контексті:**
+*   Взимку́ украї́нці лю́блять ча́й з ме́дом.
+*   Львів — це старе́ мі́сто, де всі п'ють ка́ву.
 
-| Називний (Dictionary) | Знахідний (Accusative) | Приклад (Example) |
-|---|---|---|
-| вода | воду | Я хочу воду. |
-| кава | каву | Я п'ю каву. |
-| каша | кашу | Я їм кашу. |
-| риба | рибу | Я готую рибу. |
+### Діалог у кафе
 
-### Культура: Захід та Схід
-Beverage preferences in Ukraine reflect deep historical nuances and regional traditions. The country enjoys a rich dual culture of both tea and coffee.
+Подивімося, як ці правила працюють у реальному житті. Уявіть затишне кафе.
 
-**Чай з лимоном**
-Traditional tea culture is strong throughout Ukraine. Black tea is frequently consumed with a slice of lemon and sometimes honey. It is the default welcoming drink offered when you visit someone's home.
-Ми п'ємо чай з лимоном та медом. (We are drinking tea with lemon and honey.)
+**Офіціант:** Добрий день! Що ви бу́дете пи́ти?
+**Ви:** Добрий день. Я хо́чу ка́ву з молоко́м, будь ла́ска.
+**Офіціант:** Гаря́чу чи холо́дну ка́ву?
+**Ви:** Гаря́чу ка́ву. І ще я хо́чу вод**у́**.
+**Офіціант:** Добре, хвили́нку.
 
-**Кава по-львівськи**
-Western Ukraine, particularly the city of Lviv, has a historic coffee culture dating back centuries. Coffee here is more than a simple drink; it is a profound social ritual. Lviv-style coffee is traditionally brewed in a small copper pot over hot sand.
-Я замовляю справжню каву по-львівськи. (I am ordering authentic Lviv-style coffee.)
-
-These two traditions coexist perfectly. You can easily find modern specialty coffee shops located right next to traditional tea houses anywhere in the country.
-
-### Діалог: У кав'ярні
-Let us look at a realistic mini-dialogue to see how these vocabulary words and grammatical rules work together in a real-world scenario.
-
-**Ситуація:** Олена замовляє напої у кав'ярні. (Situation: Olena is ordering drinks in a cafe.)
-
-Офіціант: Доброго дня! Що ви бажаєте? (Good day! What would you like?)
-Олена: Доброго дня. Я хочу каву з молоком. (Good day. I want coffee with milk.)
-Офіціант: Гарячу чи холодну? (Hot or cold?)
-Олена: Гарячу каву, будь ласка. І ще мінеральну воду. (Hot coffee, please. And also mineral water.)
-Офіціант: Добре, кава і вода. (Good, coffee and water.)
-
-In this short exchange, Olena successfully applies the Accusative case ("каву", "воду") and matches the adjective correctly ("гарячу"). This is the exact pattern you will use when traveling.
+**Як це працює:**
+Pay close attention to how the customer flawlessly uses the Accusative case for both **ка́ву** and **воду́**. Furthermore, notice that when the waiter asks about the temperature, the adjective itself shifts to match the feminine Accusative form, becoming **гаря́чу** and **холо́дну**. This dialogue represents the exact standard of conversational fluency you are aiming for.
 
 ## Паляниця
 
-Мова — це не тільки граматика і словник. Мова глибоко пов'язана з національною історією та культурою (Language is deeply tied to national identity, history, and cultural survival). Жодне слово не показує це краще, ніж «паляниця» (No single word illustrates this reality better than "паляниця").
+Тепер ми поговоримо про щось справді особливе та унікальне. Це живий символ нашої мови. Це також символ стійкості та свободи.
 
-### Анатомія хліба
-Спочатку давайте визначимо, що це таке (First, let us define the physical object itself). **Паляни́ця** [pɐlʲɐˈnɪt͡sʲɐ] — це тип традиційного українського хліба, випеченого в печі (is a type of traditional Ukrainian hearth-baked bread).
+### Що таке паляниця?
 
-Смачна паляниця лежить на столі. (A tasty palianytsia lies on the table.)
-Ми печемо свіжу паляницю вдома. (We are baking a fresh palianytsia at home.)
+Паляниця — це традиційний український хліб. Він завжди круглий, білий і надзвичайно смачний.
 
-Історично її пекли в традиційній глиняній печі (Historically, it was baked in a traditional clay oven). Хліб має круглу форму, зазвичай робиться з пшеничного борошна (The loaf is round, typically made from wheat flour). Зверху він має горизонтальний надріз (and features a distinct horizontal cut across the top crust). Скоринка товста і хрустка, а всередині хліб м'який (The crust is thick and crusty, while the inside remains soft and porous). Це великий символ домашнього тепла (It is a potent symbol of domestic warmth and sustenance).
+**Паляни́ця** is a deeply traditional Ukrainian round, hearth-baked wheat bread. It is characterized by its specific shape: it usually features a distinct horizontal cut scored across the top before baking. This technique creates a wonderfully crispy, golden crust that protects a soft, dense, and fragrant interior. Historically, this premium white bread was not meant for everyday consumption; rather, it was meticulously baked for major holidays, significant family gatherings, and special occasions to warmly welcome honored guests, representing prosperity, joy, and warmth in the household.
 
-### Мовний пароль
-In the spring of 2022, during the full-scale invasion, this simple bread assumed a profound new role. "Паляниця" became a shibboleth—a linguistic password used to distinguish native Ukrainian speakers from foreign infiltrators and saboteurs.
+**Приклади в контексті:**
+*   Моя́ бабу́ся спекла́ сві́жу паляни́цю.
+*   Паляни́ця — це бі́лий і духмя́ний хлі́б.
+*   Цей хлі́б має дуже га́рну скори́нку.
 
-Why was this specific word chosen? The answer lies in the distinctive phonetic properties of the Ukrainian language. The word contains a sequence of sounds that are incredibly difficult for non-native speakers to pronounce correctly without extensive, targeted practice.
+**Як це працює:**
+While the physical characteristics and the delicious taste of the bread remain cherished, in modern times, the culinary definition has arguably become less famous than the word itself. The word has transcended its origins in the bakery and transitioned into a profound cultural phenomenon.
 
-> [!decolonization] **Phonetic Independence**
-> The "паляниця" phenomenon highlights the distinct phonological structure of Ukrainian. The sequence involves a soft «л» (ль), the vowel «я», and crucially, the soft «ц» (ць) followed by «я». The naturally soft «ц» is a characteristic feature of Ukrainian phonetics. When occupying forces attempted to say it, they consistently produced a rigid, hardened sound like «паляніца», instantly revealing their foreign origin and debunking colonial myths that the languages are practically identical.
+### Символ ідентичності
 
-### Традиції: Хліб і сіль
-Хліб має священний статус в українській культурі (Bread holds a sacred status in Ukrainian culture). До нього ставляться з великою повагою всі покоління (It is treated with immense respect across all generations). Історично хліб ніколи не викидали (Historically, bread was never thrown away). Іноді шматочок падав на підлогу. Тоді його піднімали і цілували (If a piece accidentally fell on the floor, custom dictated that it should be picked up and kissed).
+Чому це слово стало таким відомим у всьому світі? Відповідь ховається у його фонетиці.
 
-Ця глибока повага закріплена у традиції **хліб-сіль** (This deep reverence is enshrined in the tradition of bread and salt). Українці зустрічають гостей. Вони подають хліб і сіль (When welcoming guests, they present bread and salt). Хліб лежить на традиційному рушнику (It is placed on a «рушник»).
+The precise sequence of sounds required to articulate **па-ля-ни́-ця** relies entirely on the independent phonetic properties and vowel harmony inherent to the Ukrainian language. The most critical and difficult point of articulation is the final syllable: it demands the distinctly soft Ukrainian **«ц»** [t͡sʲ] immediately followed by the vowel **«я»**. Non-native speakers, particularly those trying to mimic the language, typically lack this specific soft consonant in their phonetic repertoire. They struggle immensely to soften the "ц" correctly and naturally default to substituting an "і" or an "а" sound, thereby instantly revealing their non-native, foreign accent.
 
-Гості з радістю приймають хліб і сіль. (The guests joyfully accept bread and salt.)
-Це символ нашої глибокої поваги. (This is a symbol of our deep respect.)
+> [!decolonization] **The Power of Phonetics**
+> For decades, persistent colonial narratives systematically attempted to diminish Ukrainian, falsely presenting it as a mere "dialect" or a subordinate, derivative offshoot of neighboring languages. The word **паляни́ця** elegantly and effortlessly dismantles this harmful myth. It provides undeniable proof that Ukrainian possesses its own highly complex, independent phonetic rules and sophisticated vowel harmony. These features cannot be effortlessly mimicked or faked without genuine, deep-rooted native fluency. Our language stands firmly, proudly, and undeniably on its own merits.
 
-The profound cultural importance of bread is perfectly summarized in the famous Ukrainian proverb:
+### Хліб-сіль та гостинність
 
-«Хліб — усьому голова.» (Bread is the head of everything.)
+В Україні хліб завжди має глибоке культурне та сакральне значення. Ми зберігаємо багато стародавніх традицій, пов'язаних із хлібом.
 
-This proverb signifies that bread is the most essential element of life and the center of the meal. Without bread, a traditional meal is considered incomplete. Learning the word "паляниця" is not just about expanding your vocabulary; it is about understanding the soul of Ukrainian resilience and hospitality.
+In Ukraine, bread has always held a profound cultural and almost sacred significance. We carefully preserve many ancient, inherited traditions that intimately involve bread. It is treated with immense respect; historically, dropping a piece of bread on the floor or thoughtlessly throwing it away was widely considered a serious cultural transgression or sin.
+
+The ultimate, most formal expression of traditional Ukrainian hospitality involves greeting an important, highly respected guest with **хлі́б-сі́ль** (bread and salt). The bread, often a large, beautifully decorated loaf, rests gracefully on an intricately embroidered ritual towel known as a **рушни́к**. In this powerful welcoming ceremony, the bread represents abundant wealth, sustenance, and open-hearted welcome, while the salt represents protection from harm and the promise of an enduring, pure friendship.
+
+**Приклади в контексті:**
+*   Дороги́х госте́й зустріча́ють хлі́бом і сі́ллю.
+*   Украї́нці — це дуже щи́рі та гости́нні лю́ди.
+
+> [!quote] **Народна мудрість**
+> «Хліб — усьому́ голова́.» (Bread is the head of everything.)
+> This famous and universally understood Ukrainian proverb powerfully dictates that bread is the absolute most important element of any meal. It acts as the literal and metaphorical foundation of survival, community, and prosperity. No matter how incredibly rich or extravagant the feast on the table may be, the meal is considered entirely incomplete without the presence of bread.
 
 ## Мені подобається / Я не їм
 
-Дуже важливо вміти говорити про свої смаки (Expressing what you enjoy eating and what you prefer to avoid is essential). Це потрібно для вечері з друзями, в кафе та ресторанах (for navigating social dinners, cafes, and restaurants). Українці використовують спеціальні конструкції (In Ukrainian, we use specific grammatical structures to express preferences).
+Кожна людина має свої власні смаки та вподобання. Ми вчимося говорити про наші смаки.
 
-### Використання «Мені подобається»
-To express that you generally like a specific food or drink, Ukrainian frequently uses an indirect construction. Instead of saying "I like soup" with a direct verb, the literal translation is closer to "Soup is pleasing to me".
+### Як сказати про симпатії
 
-We use the Dative pronoun **Мені** (meaning "to me") and the verb **подобається** (is pleasing). The food item itself remains in the Nominative case (the dictionary form) because it acts as the subject of the sentence.
+Ви вже добре знаєте просту фразу «Я люблю». Але в українській мові є ще одна, набагато природніша структура.
 
-Мені подобається борщ. (I like borscht. / Lit: Borscht is pleasing to me.)
-Мені подобається свіжий хліб. (I like fresh bread.)
-Мені подобається гаряча кава. (I like hot coffee.)
+**The Structure:**
+This highly useful construction requires the Dative case for the pronoun (**Мені́** translates literally to "to me") and importantly leaves the actual food item in its basic Nominative case, acting as the subject that is doing the pleasing.
 
-Notice that the nouns (борщ, хліб, кава) do not change their endings here. This makes the "мені подобається" structure very friendly for beginners, as you can use the vocabulary exactly as you learned it from the dictionary.
+*   **Мені́ подо́бається бо́рщ.** (I like borscht. / Borscht is pleasing to me.)
+*   **Мені́ подо́бається цей гаря́чий су́п.** (I like this hot soup.)
+*   **Мені́ подо́бається ка́ва з молоко́м.** (I like coffee with milk.)
 
-> [!observe] **Plural Preferences**
-> If the food you like is plural (like овочі or фрукти), the verb must change to its plural form: **подобаються**.
-> Мені подобаються свіжі фрукти. (I like fresh fruits.)
-> Мені подобаються ці овочі. (I like these vegetables.)
+**Приклади в контексті:**
+*   Я люблю́ сві́жий хлі́б, і мені́ дуже подо́бається смажена ри́ба.
+*   Моє́му бра́ту подо́бається м'я́со.
+*   Ви лю́бите традиці́йну украї́нську ї́жу?
 
-### Структура «Я люблю»
-Alternatively, you can use the direct verb **любити** (to love / to like strongly). This verb acts directly on the food, making the food the direct object. Therefore, the food must be in the Accusative case, just like when you are ordering a drink.
+**Як це працює:**
+As a general rule of thumb, use **Я люблю́** when you want to express a very strong personal attachment, deep passion, or active love for a particular dish. In contrast, use **Мені́ подо́бається** for a more standard, conversational statement indicating your general taste or positive preference. Both structures are perfectly natural and widely used by native speakers.
 
-Я люблю смачний борщ. (I love tasty borscht. - Masculine, no change.)
-Я люблю гарячу каву. (I love hot coffee. - Feminine "а" changes to "у".)
-Я люблю свіже м'ясо. (I love fresh meat. - Neuter, no change.)
+### Заперечення
 
-Both "Мені подобається" and "Я люблю" are perfectly natural and frequently used in daily conversation. You can choose the structure you feel most comfortable with, but you must remember the grammatical rule each specific verb requires.
+Іноді ми зовсім не хочемо щось їсти. Для цього ми використовуємо просте заперечення із часткою «не».
 
-### Відмова від їжі: «Я не їм»
-Equally important is the ability to decline food politely or explain your dietary restrictions. To state that you do not eat a certain category of food, use the negated verb **не їм** (I do not eat) or **не п'ю** (I do not drink).
+**The Rule for Negation:**
+The mechanics are incredibly straightforward: simply place the word **не** directly and immediately before the main verb of your sentence.
+*   Я ї́м ➡️ Я **не** ї́м (I do not eat)
+*   Я п'ю́ ➡️ Я **не** п'ю́ (I do not drink)
 
-At the A1 level, we will use the simple Accusative case for these general statements.
+**Приклади в контексті:**
+*   Я зо́всім не ї́м м'я́со, я вегетаріа́нець.
+*   Вона́ ніко́ли не п'є́ ка́ву пі́зно вве́чері.
+*   Ми не їмо́ цей су́п, він зана́дто гаря́чий.
 
-Я не їм м'ясо. (I do not eat meat.)
-This is the standard, universally understood phrase for expressing vegetarianism.
-Я не п'ю молоко. (I do not drink milk.)
-Він ніколи не їсть рибу. (He never eats fish.)
+**Як це працює:**
+Being able to clearly, firmly, and politely state exactly what you do not consume is a vital survival skill in any foreign environment. This is especially true if you hold specific dietary preferences, moral objections, or strict health restrictions. The grammatical structure is intentionally simple and direct to avoid any miscommunication.
 
-### Алергія та безпека
-If you have a medical reason to avoid a specific food, you can express allergies using the phrase **У мене алергія на...** (I have an allergy to...). This structure also requires the Accusative case for the food item.
+### Алергія та дієта
 
-У мене алергія на горіхи. (I have an allergy to nuts.)
-Я не можу їсти цей сир. (I cannot eat this cheese.)
+Сьогодні багато людей мають особливі дієти. Вони також можуть мати алергії. Ви обов'язково маєте знати ці рятівні слова.
 
-These phrases are vital survival tools for traveling or eating as a guest in Ukraine. Native speakers are famously hospitable and will often offer large amounts of food during a visit. Knowing how to politely decline while explaining your reasons is an essential social skill.
+**Корисні фрази (Highly Useful phrases):**
+*   **У ме́не алер́гія на...** — I have an allergy to...
+    *   У ме́не алер́гія на горі́хи.
+    *   У ме́не алер́гія на молоко́.
+*   **Я не мо́жу ї́сти...** — I cannot eat...
+    *   Я не мо́жу ї́сти глюте́н.
+    *   Я не мо́жу ї́сти цу́кор.
 
-### Ситуаційні діалоги
-Let us observe how these expressions work in conversational contexts at the dinner table. Pay attention to how the speakers switch between liking and declining food.
+> [!tip] **Communicating Strict Dietary Needs**
+> Ukrainians are traditionally famous for being incredibly eager to feed their guests massive amounts of food. If you attempt to decline a dish simply by casually saying "I'm not hungry" or "No thanks," a dedicated host might politely insist or try to coax you into taking just a small bite. However, if you clearly and firmly state **«У ме́не алер́гія»** (I have an allergy) or definitively say **«Я не ї́м м'я́со»** (I don't eat meat), the host will immediately respect your hard dietary boundary. In fact, they will likely rush back to the kitchen to enthusiastically find or prepare something else that you *can* safely enjoy!
 
-**Ситуація 1: Вечеря вдома** (Situation 1: Dinner at home)
-Марія: Що ти будеш їсти сьогодні? (What will you eat today?)
-Джон: Мені дуже подобається борщ. Я буду їсти борщ. (I really like borscht. I will eat borscht.)
-Марія: А смажене м'ясо? (And fried meat?)
-Джон: Ні, дякую. Я не їм м'ясо. Я хочу тільки овочі. (No, thank you. I do not eat meat. I want only vegetables.)
+### Діалоги під час обіду
 
-**Ситуація 2: Солодкий десерт** (Situation 2: Sweet dessert)
-Олег: Ти любиш свіжі фрукти? (Do you love fresh fruits?)
-Анна: Так, мені подобаються яблука та груші. (Yes, I like apples and pears.)
-Олег: Я маю дуже смачний торт. (I have a very tasty cake.)
-Анна: Вибач, я не можу їсти торт. У мене сильна алергія. (Sorry, I cannot eat cake. I have a severe allergy.)
+Подивіться уважно, як люди говорять під час обіду. Це дві дуже типові розмови.
 
-These mini-dialogues demonstrate that mixing "Мені подобається" and "Я не їм" creates natural, fluid conversations about food preferences without causing offense.
+**Діалог 1: У гостях**
+**Марі́я:** Оле́но, ти бу́деш ї́сти бо́рщ?
+**Оле́на:** Ні, дя́кую. Я не ї́м м'я́со. Мені́ подо́бається ті́льки ри́ба.
+**Марі́я:** О, я все розумі́ю. Тоді́ візьми́ ці сві́жі о́вочі.
+
+**Діалог 2: Вибір напою**
+**Іва́н:** Що ти зазвича́й лю́биш пи́ти зра́нку?
+**А́нна:** Я дуже люблю́ міцну чорну ка́ву. А ти?
+**Іва́н:** Мені́ подо́бається зеле́ний ча́й. Я зо́всім не п'ю́ ка́ву.
 
 ## Практика
 
-Now that we have comprehensively covered the core vocabulary, gender rules, and preference structures, it is time to put your knowledge to practical use. Reading a restaurant menu and holding a basic conversation are the two most common applications of this module.
+Зараз час для вашої активної практики. Використовуйте всі нові слова у реальних, змодельованих ситуаціях.
 
-### Аналіз українського меню
-Imagine you sit down at a traditional Ukrainian restaurant (ресторан) or a casual cafe (кафе). The waiter hands you a menu. The menu will almost always be divided into clear, logical sections. Let us read a simplified, authentic version. Prices are listed in Ukrainian hryvnias (грн).
+### Читаємо меню
 
-**МЕНЮ**
+Уявіть популярний український ресторан. Ви щойно зайшли туди. Ви уважно читаєте їхнє меню.
 
-**Перші страви**
-Український борщ зі сметаною ........ 120 грн
-Домашній курячий суп ................... 90 грн
+| Категорія (Category) | Страва / Напій (Dish / Drink) | Ціна (Price) |
+| :--- | :--- | :--- |
+| **Пе́рші стра́ви (First Courses)** | Бо́рщ украї́нський | 120 грн |
+| | Су́п ку́рячий | 95 грн |
+| **Дру́гі стра́ви (Main Courses)** | М'я́со по-дома́шньому | 180 грн |
+| | Сма́жена ри́ба | 160 грн |
+| | Ка́ша греча́на | 60 грн |
+| **Напо́ї (Drinks)** | Ка́ва (еспре́со) | 45 грн |
+| | Ча́й чо́рний | 40 грн |
+| | Вода́ мінера́льна | 35 грн |
+| | Компо́т | 30 грн |
 
-**Основні страви**
-Смажене м'ясо з картоплею ........... 180 грн
-Свіжа риба з лимоном ................... 160 грн
-Гречана каша ................................. 60 грн
+**Як це працює:**
+When looking closely at this menu, challenge yourself to mentally identify the grammatical gender of every single item listed. **Бо́рщ** is definitively masculine, **ри́ба** is clearly feminine, and **м'я́со** is neuter. After sorting them, imagine actively ordering them from a waiter using the target phrase **Я хо́чу...** Remember the golden rule: you must alter **ри́ба** to **ри́бу** and **вода́** to **воду́**, but leave the masculine and neuter items exactly as they appear on the page!
 
-**Салати**
-Свіжі овочі ..................................... 80 грн
+### Розподіл слів
 
-**Напої**
-Кава по-львівськи .......................... 65 грн
-Чай з лимоном ............................... 40 грн
-Яблучний сік .................................. 50 грн
-Мінеральна вода ............................ 30 грн
-Традиційний компот ....................... 45 грн
+Зробімо швидку, але дуже корисну вправу прямо у вашій голові. Це тренує ваш мозок.
 
-Take a moment to carefully analyze this menu. Notice how the adjectives match the nouns perfectly. "Український борщ" uses a masculine adjective. "Смажене м'ясо" uses a neuter adjective. "Свіжа риба" uses a feminine adjective. Recognizing these grammatical patterns helps you predict what kind of dish you are ordering, even if you do not immediately recognize every single ingredient word.
+1.  **Їжа чи напій? (Is it food or a drink?)** Look at this mixed list of words and instantly sort them mentally into two distinct columns: *сік, хліб, компот, сир, овочі, вода*. Doing this rapidly builds your intuitive recall speed.
+2.  **Який це рід? (Which specific gender is it?)** Think analytically about the ending letter of these words: *каша, суп, м'ясо, молоко*. Immediately match them in your mind with a basic descriptive adjective like *смачний / смачна / смачне*. (For example: Смачна каша, смачний суп, смачне м'ясо, смачне молоко).
 
-### Класифікація за категоріями
-To solidify your vocabulary retention, mental categorization is a highly effective study technique. Try to build a mental map of the kitchen and sort the words.
+> [!reflection] **Thinking in Grammatical Categories**
+> By actively and consistently sorting new words into precise grammatical categories—rather than just passively memorizing their English translations—you are proactively building the essential mental infrastructure required to construct fluent, complex sentences later on. As a habit, whenever you encounter and learn a brand new noun, instantly tag it in your memory as masculine, feminine, or neuter. This small habit yields massive results.
 
-**Група 1: Що ми їмо?**
-Хліб, паляниця, борщ, суп, каша, м'ясо, риба, овочі, фрукти, сир.
+### Розмова
 
-**Група 2: Що ми п'ємо?**
-Вода, кава, чай, молоко, сік, компот.
+Як правильно запитати іншу людину про її гастрономічні смаки? Ми використовуємо прості, зрозумілі питання.
 
-**Група 3: Який це рід?**
-Чоловічий (Masculine): хліб, борщ, суп, чай, сік, компот, сир.
-Жіночий (Feminine): кава, вода, каша, риба, паляниця.
-Середній (Neuter): м'ясо, молоко.
-Plural: овочі, фрукти.
+**Корисні запитання для бесіди:**
+*   **Що ти лю́биш ї́сти?** — What do you love to eat?
+*   **Яка́ твоя́ улю́блена ї́жа?** — What is your absolutely favorite food?
+*   **Ти п'єш ка́ву чи ча́й?** — Do you drink coffee or tea?
 
-### Текст для читання: Моя кухня
-Я дуже люблю готувати. Моя кухня велика і світла. У мене завжди є свіжі продукти. У холодильнику лежить м'ясо і риба. Також там є овочі: помідори, огірки і капуста. На столі лежать фрукти. Я люблю солодкі яблука і банани.
-Вранці я завжди готую сніданок. Я роблю гарячу кашу. Також я готую каву. Кава дуже ароматна. Мій брат не п'є каву. Він п'є теплий чай.
-На обід ми їмо суп або борщ. Це дуже корисно. До борщу ми беремо хліб. Ми дуже поважаємо хліб.
-На вечерю ми готуємо рибу. Це легка їжа. Після вечері ми п'ємо компот. Це чудовий день!
+**Можливі природні відповіді (Possible natural answers):**
+*   Моя́ улю́блена ї́жа — це гаря́чий бо́рщ і хлі́б.
+*   Я дуже люблю́ ї́сти сві́жі фру́кти.
+*   Зра́нку я зазвича́й п'ю апельси́новий сі́к.
 
-### Текст для читання: Наш похід у магазин
-Кожного тижня ми ходимо в магазин. Ми купуємо продукти для всієї родини. Магазин дуже великий. Там продається різна їжа і напої. Спочатку ми йдемо у відділ овочів. Ми купуємо картоплю, моркву і цибулю. З цих овочів мама готує смачний суп. Потім ми йдемо за фруктами. Я беру яблука й апельсини. Фрукти дуже солодкі. 
-Після цього ми йдемо у відділ м'яса. Ми купуємо свіже м'ясо для вечері. Також ми беремо рибу. Мій тато дуже любить рибу. У магазині є великий вибір сиру. Ми завжди купуємо твердий сир на сніданок.
-В кінці ми йдемо у відділ напоїв. Ми купуємо мінеральну воду, яблучний сік і молоко. Я дуже люблю молоко з кашею. Ми платимо гроші і йдемо додому. Вдома ми готуємо смачну їжу. Ми дуже любимо їсти всі разом! Це наша традиція.
+**Як це працює:**
+When enthusiastically answering the common question **«Що ти лю́биш ї́сти?»** (What do you love to eat?), you have excellent options. You can reply dynamically with **«Я люблю́...»** (I love...) followed immediately by the Accusative case (Я люблю́ ка́ву). Alternatively, you can comfortably use the Nominative case if you frame your sentence with the descriptive structure **«Моя́ улю́блена ї́жа — це...»** (My favorite food is...). Both methods are completely grammatically sound and represent excellent ways to keep a friendly conversation flowing smoothly.
 
-By constantly sorting words into these mental buckets, your ability to recall the correct adjective endings and Accusative forms will dramatically improve. This active sorting process builds strong neural pathways.
+### Ваша черга
 
-> [!quote] **Food Wisdom**
-> «Сніданок з'їж сам, обід розділи з другом, а вечерю віддай ворогу.» (Eat breakfast yourself, share lunch with a friend, and give dinner to your enemy.) Ця традиційна приказка підкреслює важливість ситної їжі на початку дня (This traditional saying highlights the importance of eating a substantial meal early in the day).
+Тепер настала ваша черга створити власні речення. Подумайте про ваш сьогоднішній сніданок або обід.
 
-### Розгорнутий діалог у ресторані
-When you make friends in Ukraine, they will inevitably ask about your food preferences. You need to be ready to answer questions like:
-**Що ти любиш їсти?** (What do you love to eat?)
-**Яка твоя улюблена їжа?** (What is your favorite food?)
+1.  State confidently one specific thing you genuinely like to eat using the Dative structure (**Мені́ подо́бається...**).
+2.  State precisely one thing you are drinking right now or urgently want to order (**Я хо́чу...**).
+3.  State clearly one item that you absolutely do not consume under any circumstances (**Я не ї́м...**).
 
-### Текст для читання: Мій ресторан
-Сьогодні ми йдемо в ресторан. Це дуже гарний ресторан. Ми хочемо смачно поїсти. Я дивлюся в меню. Там є багато страв. Я замовляю гарячий суп. Також я хочу свіжий салат. Мій друг замовляє смажене м'ясо. Він дуже любить м'ясо. А ще він бере теплий хліб. Ми також замовляємо напої. Я хочу холодну воду. Друг хоче яблучний сік. 
-Після обіду ми п'ємо каву. Гаряча кава дуже смачна. Ми також їмо солодкі фрукти. Я дуже люблю цей ресторан. Тут завжди смачно.
-
-Let us look at a comprehensive dialogue combining all the grammatical and vocabulary elements we have learned into one seamless conversation.
-
-**Ситуація: Замовлення та розмова про їжу.** (Situation: Ordering and conversation about food.)
-
-Тарас: Привіт! Яка твоя улюблена їжа? (Hi! What is your favorite food?)
-Марк: Привіт! Мені дуже подобається український борщ. А ти любиш борщ? (Hi! I really like Ukrainian borscht. And do you love borscht?)
-Тарас: Я люблю м'ясо і свіжі овочі. Ти любиш рибу? (I love meat and fresh vegetables. Do you love fish?)
-Марк: Ні, я не їм рибу. Але мені подобається каша. (No, I do not eat fish. But I like porridge.)
-Офіціант: Доброго вечора. Що ви будете замовляти? (Good evening. What will you order?)
-Тарас: Я хочу свіже м'ясо і мінеральну воду. (I want fresh meat and mineral water.)
-Марк: А я хочу гарячий суп. І ще каву, будь ласка. (And I want hot soup. And also coffee, please.)
-Офіціант: Добре, м'ясо, вода, суп і кава. Дякую. (Good, meat, water, soup and coffee. Thank you.)
-Тарас: Чудово! Я дуже хочу їсти. (Great! I really want to eat.)
-
-In this dialogue, Mark and Taras seamlessly navigate personal likes ("Мені дуже подобається"), direct objects ("Я люблю м'ясо"), negative preferences ("Я не їм рибу"), and formal ordering requests in the Accusative case ("Я хочу воду", "Я хочу каву"). Mastering this flow will make you confident in any dining situation in Ukraine.
+Practicing these highly personalized, self-reflective sentences ensures that the new vocabulary sticks in your long-term memory significantly faster than just passively reading sterile lists.
 
 ---
 
 # Підсумок
 
-У цьому модулі ми детально вивчили базовий словник їжі та напоїв. Ми навчилися описувати їжу. Ми вивчили вплив роду на закінчення. Українці їдять суп. Вони не п'ють суп. Це дуже важливе правило.
-
-Також ми вивчили Знахідний відмінок для напоїв. Тепер ми вміємо правильно замовляти воду і каву. Ми розуміємо велике культурне значення слова «паляниця». Ми знаємо традицію подавати хліб і сіль гостям. Нарешті, ми навчилися говорити про наші смаки. Ми вміємо використовувати фрази «Мені подобається» та «Я люблю». Ми також можемо сказати «Я не їм м'ясо» або «У мене алергія». Це чудовий результат!
+У цьому уроці ми вивчили багато нових слів. Ми знаємо слова про українську їжу та напої. Ми детально розібрали, як працює граматика в ресторані. Ми навчилися замовляти каву та воду, правильно використовуючи знахідний відмінок. Також ми дізналися про велику культурну важливість українського традиційного хліба — паляниці.
 
 **Перевірте себе:**
-1. Що відбувається зі словом «вода», коли ви кажете «Я хочу...»?
-2. Як сказати "I do not eat meat"?
-3. Чому українці кажуть «їсти суп», а не «пити суп»?
-4. Яке значення має хліб «паляниця»?
-5. Як змінюється закінчення для чоловічого роду («смачний борщ») та жіночого роду («смачна каша»)?
-6. Як перекласти фразу: "I like fresh bread and hot coffee."?
+1. Який граматичний рід має слово «суп», і яке саме закінчення воно має?
+2. Як абсолютно правильно сказати під час замовлення: «Я хочу (вода)» чи «Я хочу (воду)»? Чому саме так?
+3. Що конкретно означає поширена фраза «Мені подобається борщ», і чим граматично вона відрізняється від фрази «Я люблю борщ»?
+4. Ви строгий вегетаріанець або маєте алергію. Яку рятівну фразу ви впевнено скажете на святі?
+5. Чому саме звичайне слово «паляниця» раптово стало таким потужним лінгвістичним паролем для всіх українців під час війни?
 
 ---

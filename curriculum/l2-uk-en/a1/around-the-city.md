@@ -1,347 +1,284 @@
 <!-- SCOPE
-Covers: Navigating a city, asking for directions, prepositions of place, basic motion verbs, city infrastructure vocabulary.
+Covers: Navigating a city, key locations, asking for directions, static vs dynamic location (Де vs Куди), basic Locative case.
 Not covered:
-  - Complex transport routes (transferring lines) → a1-40
-  - Advanced genitive case rules → a1-16
-Related: a1-13 (Locative), a1-14 (Mine/Yours), a1-40 (Taking Transport)
+  - Complex transportation routes → moving-around-city
+  - Advanced Locative case exceptions → locative-advanced
+Related: greetings, basic-needs
 -->
 
-# Around the City
+# Навколо міста
 
 > **Чому це важливо?**
 >
-> Getting lost is part of the adventure, but finding your way back is a skill. Whether you are looking for a pharmacy in Lviv or meeting a friend at a square in Kyiv, knowing how to ask "Where is...?" and understand the answer is essential. Today, we turn the city into your map.
+> Navigation is one of the most immediate practical needs when you arrive in a new country. Knowing how to identify key buildings, ask for directions, and understand the answers will give you independence and confidence. This module provides the essential vocabulary and the core grammatical logic needed to move freely around any Ukrainian urban space.
 
-## Вступ: Місто та орієнтири
+## Вступ: Міський простір
 
-### Серце міста (The Heart of the City)
-Центр міста — це серце життя. Тут ми зустрічаємось, гуляємо і п’ємо каву. Головне місце — це **пло́ща** або **майда́н**.
+### Що таке місто?
+Україна має багато гарних міст. Кожне місто має свій особливий характер. Місто — це великий простір. Тут живуть люди. Тут є будинки, парки та вулиці. Центр міста завжди дуже активний. Люди йдуть на роботу. Діти йдуть до школи.
 
-In almost every Ukrainian city, life revolves around a central open space. This is not just a patch of concrete; it is the meeting point, the navigation hub, and the cultural heart. When you arrange to meet someone, you will often hear: «Давай зустрінемось на площі» (Let's meet at the square).
+Слово **мі́сто** — це дуже важливе слово. Це слово закінчується на літеру «-о». Ми кажемо «вели́ке мі́сто». Ми ніколи не кажемо «великий місто». Це правило працює добре.
 
-Understanding this helps you navigate. Directions often start from the center. If you are lost, finding the central square helps you reset your internal compass. Unlike some grid-based American cities, old Ukrainian streets wind and curve. We navigate by landmarks—churches, monuments, and squares—rather than by "blocks" or cardinal directions like "north" or "south."
+### Місто чи село?
+Україна — це велика країна. В Україні є великі міста й є маленькі села.
 
-### Де чи Куди? (Location vs. Direction)
-Це два різні питання. "Де" — це місце. Я тут. "Куди" — це рух. Я йду туди. Це дуже важливо.
+Слово **село́** — це також дуже важливе слово. Це слово також закінчується на літеру «-о».
 
-There are two fundamental questions you will ask in a new city. They look similar, but they use different grammar cases, which we will explore today.
+Місто має багато машин і багато будинків. Село має багато природи. Багато українців мають родину у селі. Вони їздять туди влітку.
 
-1.  **Де?** [dɛ] (Where?) — This asks about **location**. It is static. You are looking for a place that stays still.
-    *   Example: «Де аптека?» (Where is the pharmacy?)
-2.  **Куди?** (Where to?) — This asks about **direction** or **motion**. It implies movement from point A to point B.
-    *   Example: «Куди ми йдемо?» (Where are we going?)
+Ми вивчаємо місто. Ми маємо знати будинки і транспорт.
 
-> [!warning]
-> **Common Mistake**: Do not say «Де ти йдеш?» — this is wrong! If someone is walking somewhere, the correct question is «**Куди** ти йдеш?» because they are in motion. Reserve **Де** for static location: «Де ти?» (Where are you?).
+### Головні локації
+У кожному місті є важливі локації. Ми відвідуємо ці місця щодня. Ось базова лексика для орієнтування.
 
-> [!note]
-> **Helpful Tip**: Think of **Де** as a dot on a map (📍). Think of **Куди** as an arrow pointing to a destination (➡️).
+Ви у новому місці. Ви маєте знати прості слова.
 
-### Орієнтири міста (Navigating by Landmarks)
-Українці малюють картину словами. Вони кажуть: «Ідіть до церкви. Потім наліво біля банку». Ми не кажемо «на північ» або «на південь».
+*   **апте́ка** (pharmacy) — This is a feminine noun ending in «-а». You will usually look for a green cross sign.
+*   **ліка́рня** (hospital) — Another feminine noun, ending in «-я».
+*   **магази́н** (shop / store) — A masculine noun ending in a consonant.
+*   **ба́нк** (bank) — A masculine noun. It sounds almost identical to the English word.
+*   **па́рк** (park) — A masculine noun. A place for rest and nature.
+*   **зупи́нка** (stop / bus stop) — A feminine noun. Essential for finding public transport.
+*   **метро́** (metro / subway) — A neuter noun, but it is a special borrowed word that does not change its ending.
 
-When a Ukrainian gives you directions, they paint a picture. They won't say "Walk 200 meters north." They will say: "Go to the church, then turn left at the bank."
+Це дуже корисні слова. Ви будете використовувати їх постійно.
 
-To understand them, you need to recognize key buildings and infrastructure. We don't count steps; we look for the **апте́ка** (pharmacy) or the **по́шта** (post office). This lesson focuses on these visual anchors. By the end of this module, you will be able to guide a tourist from the opera house to the best coffee shop in town.
+### Запитання «Де?»
+Ми шукаємо локацію. Тоді ми питаємо «Де?». Це одне з найважливіших питань туриста. Де банк? Де аптека? Де зупинка?
 
-## Лексика: Напрямки та місця
+The question word **де** means "where" in the sense of a static, fixed location. You use it when you want to know the current position of an object, a place, or a person. Notice that in Ukrainian, we do not need to use a "to be" verb like "is" or "are" in the present tense.
 
-### Основні напрямки (Basic Directions)
-Для впевненого орієнтування в місті вивчіть чотири головні команди.
+«Де банк?» literally translates to "Where bank?". The "is" is understood from the context. This makes forming basic questions in Ukrainian incredibly simple and fast. 
 
-To move through the city, you need a few core adverbs. These are your controls—forward, left, right, and back.
+> [!warning] Забуті дієслова
+> English speakers often feel the urge to insert the word «є» (is) into these simple questions, saying «Де є банк?». While this is not strictly grammatically incorrect, it sounds slightly unnatural and overly formal for an A1 conversation on the street. It is much more natural to simply say «Де банк?». Drop the "is" and speak like a local!
 
-#### Прямо (Straight)
-**Пря́мо** means "straight ahead." It is an adverb describing the path.
-*   «Ідіть прямо.» (Go straight.)
-*   «Ми йдемо прямо.» (We are going straight.)
+### Вказівні слова: тут і там
+Ми знаємо назви місць. Ми використовуємо прості слова для локації. Найпростіші слова — це «тут» і «там».
 
-Use this when the path is clear and direct. Note that sometimes you might hear «просто» in colloquial speech, but «прямо» is the standard direction.
+Ми можемо використовувати прості слова: **тут** і **там**. Ці слова ніколи не змінюють форму.
 
-#### Наліво and Направо (Left and Right)
-These are the most common ways to say "to the left" and "to the right" in everyday speech.
-*   **Налі́во** (to the left)
-*   **Напра́во** (to the right)
+*   **тут** indicates proximity. The object or place is close to the speaker.
+*   **там** indicates distance. The object or place is further away.
 
-*   «Поверніть наліво.» (Turn left.)
-*   «Подивіться направо.» (Look right.)
+Ви дивитесь на карту. Ви використовуєте ці два слова.
 
-#### Ліворуч and Праворуч (Formal/Standard Synonyms)
-You will often see these words on street signs, GPS systems, or hear them in more formal instructions. They mean exactly the same thing as *наліво* and *направо*, but usually imply "on the left hand side" or "on the right hand side."
-*   **Ліво́руч** (on the left / to the left)
-*   **Право́руч** (on the right / to the right)
+*   Де лікарня? Вона тут. (Where is the hospital? It is here.)
+*   Де парк? Парк там. (Where is the park? The park is there.)
 
-> [!tip]
-> **Synonym Alert**: You can use **наліво** and **ліворуч** interchangeably for directions. *Ліворуч* sounds slightly more elegant and precise. Try using *ліворуч* when describing where a building is located ("The bank is on the left"), and *наліво* for the action of turning ("Turn left").
+> [!note] Граматична простота
+> Ці речення дуже прості. «Парк там» — це ідеальне речення. Embrace this simplicity early in your learning journey!
 
-### Інфраструктура міста (City Infrastructure)
-Створімо ментальну карту міста. Знайдімо найважливіші місця: аптеку, вокзал, зупинку. Це основа для кожного туриста.
+## Презентація: Граматика та напрямки
 
-Let's build your mental map of a city. These are the places you will search for most often.
+### Запитання «Куди?»
+Українська мова розділяє статику та динаміку. Це дуже важливий концепт. Ви йдете. Тоді ви використовуєте слово «Куди?».
 
-#### Вулиця (Street)
-**Ву́лиця** is the generic word for street.
-*   «Це стара вулиця.» (This is an old street.)
-*   «Ми на вулиці.» (We are on the street / outside.)
+In English, the word "where" does double duty. You ask "Where are you?" (static location) and "Where are you going?" (destination/motion). In Ukrainian, these are two entirely different concepts that require two different question words. This is a crucial mental shift for English speakers.
 
-Notice the preposition **на**. Even though buildings are *on* the street, we think of the street as an open surface.
+The word **куди́** means "where to" or "in what direction". You must use it whenever there is a verb of motion involved, such as walking, driving, or running.
 
-#### Зупинка (Stop)
-**Зупи́нка** refers to a bus, tram, or trolleybus stop. It is crucial for public transport.
-*   «Де зупинка?» (Where is the stop?)
-*   «Я чекаю на зупинці.» (I am waiting at the stop.)
+*   Куди ви йдете? (Where are you going?)
+*   Куди їде цей автобус? (Where is this bus going?)
 
-#### Аптека (Pharmacy)
-**Аптека** is where you buy medicine. In Ukraine, they are everywhere, often marked with a green cross.
-*   «Це нова аптека.» (This is a new pharmacy.)
-*   «Він в аптеці.» (He is in the pharmacy.)
+You cannot use «де» in these sentences. Asking «Де ви йдете?» would sound very strange to a native speaker, as if you are asking "In what specific physical location are you currently performing the action of walking?". Always match the question word to the presence or absence of motion.
 
-#### Станція (Station)
-**Ста́нція** usually refers to a metro station (*станція метро*) or a small train station. Large intercity train hubs are often called *вокзал*, but *станція* is your daily word for the subway.
-*   «Це станція "Університет".» (This is "University" station.)
-*   «Ми на станції.» (We are at the station.)
+### Різниця між «Де?» та «Куди?»
+Ми маємо пам'ятати цю різницю завжди. Вона змінює структуру речення і наш спосіб мислення.
 
-### Вживання Місцевого відмінка (Locative Case Usage)
-We learned the **Locative Case** (Місцевий відмінок) in Module 13. Remember, it answers the question **Де?** (Where?). Here is how it applies to our new city vocabulary.
+To make the distinction absolutely clear, let us compare the two concepts side by side. Memorizing this conceptual difference now will prevent many grammatical errors later.
 
-Most nouns ending in **-а/-я** change to **-і/-ї**.
-Most nouns ending in a consonant add **-і** (or **-у/ю** for some masculine words, but mostly **-і** for places).
-
-| Noun (Nominative) | Preposition | Locative Form (Where?) | English |
+| Запитання | Значення (Meaning) | Контекст (Context) | Приклад (Example) |
 | :--- | :--- | :--- | :--- |
-| **вулиця** | **на** | на вулиц**і** | on the street |
-| **зупинка** | **на** | на зупинц**і** | at the stop |
-| **аптека** | **в** | в аптец**і** | in the pharmacy |
-| **пошта** | **на** | на пошт**і** | at the post office |
-| **площа** | **на** | на площ**і** | on the square |
-| **парк** | **у** | у парк**у** | in the park |
+| **Де?** | Where? (Location) | Static, no movement. | Де банк? (Where is the bank?) |
+| **Куди?** | Where to? (Destination) | Dynamic, with motion verbs. | Куди ви йдете? (Where are you going?) |
 
-> [!warning]
-> **Common Mistake**: Do not confuse **в** (in) and **на** (on/at).
-> *   Closed buildings usually take **в**: *в аптеці* (inside the pharmacy), *в ресторані* (inside the restaurant).
-> *   Open spaces and "surfaces" usually take **на**: *на вулиці* (on the street), *на площі* (on the square), *на зупинці* (at the stop).
-> *   Events and functional places often take **на**: *на пошті* (at the post office), *на концерті* (at the concert).
+This separation of static location versus dynamic destination is a fundamental feature of the Ukrainian language. 
 
-## Граматика: Прийменники та рух
+### Напрямки: прямо, ліворуч, праворуч
+Ми даємо інформацію. Ми знаємо напрямки. Ми використовуємо прості слова.
 
-### Прийменники місця (Prepositions of Place)
-Опишіть розташування точно. Слів «в» або «на» замало. Важливі слова: «біля», «навпроти», «за», «перед».
+Once someone asks you «Де?» or «Куди?», you need the vocabulary to respond accurately. Here are the three most important directional adverbs you will use.
 
-To describe exactly where something is relative to something else, we need more than just "in" or "on." We need words like "near," "opposite," "behind," and "in front of."
+*   **пря́мо** (straight / straight ahead)
+*   **ліво́руч** (to the left / on the left)
+*   **право́руч** (to the right / on the right)
 
-In Ukrainian, these prepositions demand specific cases. To keep things simple for A1, we will learn them as **fixed patterns** or chunks. You don't need to memorize the full case declension table yet—just learn how the ending changes for these specific words.
+These words are adverbs, which means they do not change their form. They do not have a gender, and they do not have plural forms. You simply learn them exactly as they are and use them freely.
 
-#### Біля (Near/By)
-**Бі́ля** means "near," "by," or "at." It requires the **Genitive case**.
-For feminine nouns ending in **-а**, the ending changes to **-и**.
-For feminine nouns ending in **-я**, the ending changes to **-і**.
+*   Йдіть прямо. (Go straight.)
+*   Аптека ліворуч. (The pharmacy is on the left.)
+*   Банк праворуч. (The bank is on the right.)
 
-*   **аптека** → **біля аптеки** (near the pharmacy)
-*   **пошта** → **біля пошти** (near the post office)
-*   **зупинка** → **біля зупинки** (near the stop)
+> [!tip] Як запам'ятати
+> A helpful mnemonic for English speakers: **Л**іворуч starts with the letter **Л**, just like the English word **L**eft. **П**раворуч starts with the letter **П** (which makes a "P" sound), but remember that the root "прав-" is connected to the word "правильний" (correct/right).
 
-*   «Банк біля аптеки.» (The bank is near the pharmacy.)
-*   «Ми біля пошти.» (We are near the post office.)
+### Місцевий відмінок: Базове правило
+Це найскладніша частина для початківців. Українські слова змінюють закінчення. Це залежить від їхньої ролі в реченні.
 
-#### Навпроти (Opposite)
-**Навпро́ти** means "opposite" or "across from." It also uses the same **Genitive pattern** as *біля*.
+When you want to say that something is located *inside* or *at* a specific place, you cannot just use the basic dictionary form of the noun. You must use the Locative case (Місцевий відмінок). This case answers the question «Де?» (Where?).
 
-*   **парк** → **навпроти парку** (opposite the park)
-*   **школа** → **навпроти школи** (opposite the school)
-*   **банк** → **навпроти банку** (opposite the bank)
+To form the Locative case, you typically use a preposition—most commonly **у** (in/at) or **в** (in/at)—and then change the ending of the noun.
 
-*   «Аптека навпроти банку.» (The pharmacy is opposite the bank.)
-*   «Зупинка навпроти парку.» (The stop is opposite the park.)
+The choice between **у** and **в** depends on euphony (милозвучність), which means making the language sound melodic and flowing. Generally, use **у** before a word starting with a consonant, and **в** before a word starting with a vowel.
 
-> [!observe]
-> **Pattern Recognition**: Notice that *біля* and *навпроти* trigger the same change: **-а** becomes **-и** (usually).
-> *   Це аптек**а**. (Nominative)
-> *   Я біля аптек**и**. (Genitive)
-> *   Ти навпроти аптек**и**. (Genitive)
+For most regular feminine nouns ending in «-а» and masculine/neuter nouns ending in a consonant or «-о», the ending changes to the letter **-і**.
 
-#### За та Перед (Behind and In front of)
-These prepositions use the **Instrumental case**, which is advanced for now. For A1, we will just recognize them in context or use them with simple nouns.
+*   апте́ка (pharmacy) ➔ **в** апте́ц**і** (in the pharmacy)
+*   мі́сто (city) ➔ **у** мі́ст**і** (in the city)
+*   центр (center) ➔ **у** це́нтр**і** (in the center)
 
-*   **За** — Behind
-*   **Пе́ред** — In front of
+Some masculine nouns ending in a consonant take the ending **-у**.
 
-Let's focus on **біля** and **навпроти** as your primary tools for now, as they are extremely common in directions.
+*   па́рк (park) ➔ **у** па́рк**у** (in the park)
+*   сад (garden) ➔ **у** сад**у** (in the garden)
 
-### Де? vs. Куди? (Location vs. Motion)
-This is the most important grammatical distinction for navigation. In English, we often just say "Where?" for both ("Where are you?" vs "Where are you going?"). In Ukrainian, you must choose.
+For now, treat these as fixed phrases to memorize rather than complex grammar rules to calculate on the fly. Knowing «у парку» and «в аптеці» will cover a large percentage of your daily needs.
 
-#### Де? (Location)
-Uses the **Locative Case** (*Місцевий відмінок*).
-*   Structure: **Preposition (в/на) + Locative Ending (-і/-у)**
-*   «**Де** ти?» (Where are you?)
-*   «Я **в** парк**у**.» (I am in the park.) — *Static location.*
+## Практика: Орієнтування за мапою
 
-#### Куди? (Direction)
-Uses the **Accusative Case** (*Знахідний відмінок*) for inanimate objects.
-For inanimate objects (like a park, bank, shop), the noun usually **does not change** (it looks like the Nominative).
-*   Structure: **Preposition (в/на) + Nominative Form (mostly)**
-*   «**Куди** ти йдеш?» (Where are you going?)
-*   «Я йду **в** парк.» (I am going to the park.) — *Motion towards.*
+### Читання простої карти
+Уявіть ситуацію. Ви турист. У вас є карта міста. Ви дивитесь на вулиці та площі. Ви маєте знайти дорогу до готелю.
 
-**Let's Compare:**
+Reading a map requires combining all the vocabulary and grammar we have learned so far. You need to identify the locations (nouns), understand their position relative to you (adverbs), and process simple instructions. 
 
-| Question | Meaning | Case | Example |
-| :--- | :--- | :--- | :--- |
-| **Де** ти? | Location (Static) | Locative | Я **в** магазин**і**. (I am in the shop.) |
-| **Куди** ти йдеш? | Direction (Motion) | Accusative | Я йду **в** магазин. (I am going to the shop.) |
+Читання карти вимагає нових слів. Ви знаходите локації.
 
-> [!myth-buster]
-> **Common Myth**: "Ukrainian cases are random."
-> **Reality**: They are logical! **Locative** locks you in a place (think of it as a container). **Accusative** points an arrow at a target. If you are moving *into* the target, you use Accusative. If you are resting *inside* the container, you use Locative.
+Давайте подивимось на простий приклад:
 
-### Example Scenarios
-Let's see this in action.
+Ви стоїте на площі. Прямо є великий парк. Ліворуч є банк. Праворуч є магазин і аптека. Зупинка автобуса знаходиться там, біля парку.
 
-**Scenario 1: The Taxi**
-*   Passenger: «**Куди** ми їдемо?» (Where are we going?)
-*   Driver: «Ми їдемо **в центр**.» (We are driving to the center.) — *Motion*
+You are standing on the square. Straight ahead is a large park. On the left is a bank. On the right is a shop and a pharmacy. The bus stop is located there, near the park.
 
-**Scenario 2: The Meeting**
-*   Friend 1: «**Де** ти?» (Where are you?)
-*   Friend 2: «Я **в центрі**.» (I am in the center.) — *Location*
+Ці слова роблять картинку у голові. Ви працюєте з цими словами. By actively visualizing these descriptions, you train your brain to react to the words instantly without translating them to English first. 
 
-Notice: *в центр* (motion) vs. *в центрі* (location).
+### Діалоги на вулиці
+Ви загубилися. Треба запитати людей. Українці зазвичай дуже раді допомогти. Вони покажуть напрямок.
 
-## Практика: Маршрути та діалоги
+When you are lost, you need to ask people. Ukrainians are usually very happy to help. They will show you the direction. Let us examine some realistic mini-dialogues you might have on the street. Pay attention to how the questions are formed and how the answers are given using our directional vocabulary.
 
-### Слідуємо за картою (Following a Map)
-Ви на площі. Турист запитує дорогу. Він шукає аптеку. Ви показуєте дорогу.
+Давайте подивимось на діалоги на вулиці.
 
-Imagine you are standing at the central square. A stranger asks you for directions. You need to combine your verbs of motion (from Module 12) with your new directional adverbs.
+**Діалог 1: Шукаємо аптеку**
+— Вибачте, де тут аптека?
+— Аптека там. Йдіть прямо і потім ліворуч.
+— Дуже дякую!
 
-Key phrases for giving directions:
-1.  **Ідіть прямо.** (Go straight.)
-2.  **Поверніть наліво.** (Turn left.)
-3.  **Поверніть направо.** (Turn right.)
-4.  **Це там.** [t͡sɛ tɑm] (It is there.)
+**Dialogue 1: Looking for a pharmacy**
+— Excuse me, where is a pharmacy here?
+— The pharmacy is there. Go straight and then to the left.
+— Thank you very much!
 
-**Example Route:**
-*   «Ідіть прямо. Потім поверніть направо. Аптека там.»
-    (Go straight. Then turn right. The pharmacy is there.)
+**Діалог 2: Шукаємо метро**
+— Перепрошую, куди йти до метро?
+— Метро праворуч. Це близько.
+— Дякую.
 
-### Як запитати дорогу (Asking for Directions)
-Ви турист. Ви загубились. Ви шукаєте дорогу. Будьте ввічливі. Використовуйте слова «Вибачте» або «Перепрошую».
+**Dialogue 2: Looking for the metro**
+— Excuse me, which way to go to the metro? (Where to go to the metro?)
+— The metro is on the right. It is close.
+— Thank you.
 
-You have two polite ways to ask for help.
+У діалозі людина питає «Куди йти?». Це запитання про рух. Notice in Dialogue 2, the person asks «Куди йти?» (Where to go?) because they are asking about the direction of movement required to reach the destination, rather than just the static location.
 
-**Option 1: Де...? (Simple)**
-*   «Вибачте, **де** банк?» (Excuse me, where is the bank?)
-*   «Перепрошую, **де** туалет?» (Excuse me, where is the toilet?)
+### Використання транспорту
+Велике місто має багато транспорту. Ви можете їхати на автобусі або на метро. Це зручно і швидко.
 
-**Option 2: Як дістатися до...? (Advanced/Phrase)**
-This means "How to get to...?" It uses the Genitive case (like *біля*).
-*   «**Як дістатися до** центру?» (How to get to the center?)
-*   «**Як дістатися до** аптеки?» (How to get to the pharmacy?)
+A large city has a lot of transport. You can travel by bus or by metro. It is convenient and fast. Navigating a city often involves finding the right public transport.
 
-### Dialogue: The Lost Tourist
-Read this dialogue. Note the mix of location and direction words.
+Ми шукаємо правильний транспорт. Найбільш часте слово — це **зупи́нка**. Ми питаємо про зупинку автобуса. The most common word you will need is **зупи́нка** (stop). If you are looking for a bus, you ask for the «зупинка автобуса».
 
-**Турист**: Вибачте, **де** метро?
-**Місцевий**: Метро? Це недалеко. Ідіть **прямо**.
-**Турист**: Прямо?
-**Місцевий**: Так. Там парк. Метро **біля парку**.
-**Турист**: Дякую! А **де** тут банк?
-**Місцевий**: Банк **навпроти аптеки**. Поверніть **наліво**.
-**Турист**: Дякую!
+У місті Київ чи Харків **метро** працює дуже швидко. Це слово ніколи не змінює форму. If you are in a major city like Kyiv or Kharkiv, the **метро́** (subway/underground) is the fastest way to travel. The word «метро» is extremely easy to use because it never changes its ending, regardless of the grammar case.
 
-*Translation:*
-*Tourist: Excuse me, where is the metro?*
-*Local: Metro? It is not far. Go straight.*
-*Tourist: Straight?*
-*Local: Yes. There is a park there. The metro is near the park.*
-*Tourist: Thank you! And where is a bank here?*
-*Local: The bank is opposite the pharmacy. Turn left.*
-*Tourist: Thank you!*
+*   Де метро? (Where is the metro?)
+*   Я в метро. (I am in the metro.)
+*   Ми йдемо до метро. (We are going to the metro.)
 
-> [!context]
-> **Politeness Check**: Did you notice the words **Вибачте** (Excuse me) and **Перепрошую** (I apologize/Excuse me)? Ukrainians are polite when approaching strangers. Always start with one of these words before asking a question.
+> [!fact] Метро в Україні
+> Київське метро має станцію Арсенальна. Це дуже глибока станція! The Kyiv Metro features the Arsenalna station, which is one of the deepest subway stations in the world, located 105.5 meters underground! Riding the long escalator down is a unique and slightly dizzying experience.
 
-### Послідовність (Sequence Markers)
-Інструкція має бути чіткою. Спочатку ми робимо одну дію. Потім іншу.
+### Як сказати «Я не розумію»
+Ви запитали дорогу. Людина говорить дуже швидко. Ви нічого не розумієте. Що робити?
 
-To give a good direction, you need to sequence your instructions.
-*   **Споча́тку** — First / At first
-*   **По́тім** — Then / Later
+You asked for the way. The person answers very fast. You understand nothing. What to do?
 
-*   «**Спочатку** прямо. **Потім** направо.» (First straight. Then right.)
-*   «**Спочатку** до банку. **Потім** наліво.» (First to the bank. Then left.)
+Це нормальна ситуація для студента. Ви питаєте ідеально. Людина дає складну інформацію. This is a universally common experience for language learners. You memorize the question perfectly, you ask it with a great accent, and the native speaker assumes you are fluent. They reply with a rapid torrent of complex directions.
 
-## Творче завдання: Ваш шлях
+Ми маємо зупинити людину ввічливо. Ось прості фрази:
 
-### Опишіть ваш маршрут (Describe Your Route)
-Тепер ваша черга. Розкажіть про ваш шлях до магазину або парку. Використовуйте прості речення. Ви знаєте слова. Ви знаєте граматику. Спробуйте!
+You need a polite way to stop them, explain your level, and ask for clarification. Here are the most essential survival phrases for this exact scenario:
 
-Now it is your turn. Think about the route from your home to the nearest shop or park. Try to describe it in Ukrainian using short, simple sentences.
+*   **Я не розумі́ю.** (I do not understand.)
+*   **Я пога́но говорю́ українською.** (I speak Ukrainian poorly.)
+*   **Повторі́ть, будь ла́ска.** (Repeat, please.)
+*   **Говорі́ть не так швидко, будь ла́ска.** (Speak slower, please.)
 
-Use this template:
-1.  Я йду... (прямо / наліво / направо).
-2.  Там... (парк / магазин / школа).
-3.  Магазин... (біля парку / навпроти школи).
+Ці фрази працюють добре. Люди одразу змінять темп. Вони покажуть дорогу рукою. Using these phrases is not a failure; it is active communication. Native speakers will immediately adjust their speech, often resorting to pointing or using the simple directional words (прямо, ліворуч, праворуч) that you have already learned.
 
-*Example:*
-«Я йду прямо. Потім повертаю наліво. Там школа. Мій дім навпроти школи.»
-(I go straight. Then I turn left. There is a school there. My house is opposite the school.)
+## Культура та Продакшн: Життя в місті
 
-### Roleplay: Taxi Driver
-Ви в таксі. Ви розмовляєте з водієм. Ви їдете в центр. Ви не знаєте дорогу. Ви запитуєте водія про маршрут.
+### Українські вулиці та площі
+Кожне місто в Україні має свій унікальний центр. Головна вулиця або площа — це серце міста. Тут відбуваються свята.
 
-Imagine you are telling a taxi driver where to stop.
-*   **Ви**: «Добрий день. В центр, будь ласка.» (Good day. To the center, please.)
-*   **Водій**: «Куди саме?» (Where exactly?)
-*   **Ви**: «Вулиця Шевченка. Біля театру.» (Shevchenko Street. Near the theater.)
-*   **Водій**: «Добре.»
-*   **Ви**: «Тут, будь ласка. На зупинці.» (Here, please. At the stop.)
+Слово **пло́ща** (square) є дуже важливим.
 
-This simple exchange covers:
-*   Destination (Accusative: *В центр*)
-*   Landmark (Genitive: *Біля театру*)
-*   Location (Locative: *На зупинці*)
+У Києві є відома площа — це **Майдан Незалежності** (Independence Square). Це історичний символ України. У Львові є **Площа Ринок** (Market Square). Там є красива архітектура і кав'ярні.
 
-## Культура: Українська навігація
+Люди зустрічаються тут. Це місця для життя.
 
-### Феномен маршрутки (The Marshrutka Phenomenon)
-Маршрутка — це маленький автобус. Це дуже популярний транспорт в Україні. Вона швидка, але іноді хаотична. Це як таксі, але дешевше. Вона зупиняється на зупинках. Іноді вона не зупиняється. Треба кричати!
+### Безпека на вулиці
+Гуляти українським містом дуже цікаво. Але треба знати правила безпеки. Дороги часто широкі і мають багато машин.
 
-In many Ukrainian cities, the **маршру́тка** (minibus) is the most common way to get around. Unlike big municipal buses that stop at every official stop, a marshrutka driver might skip a stop if nobody wants to get off or on.
+Великі міста мають дуже широкі дороги. Ви не можете переходити там. Це небезпечно.
 
-Therefore, you must speak up! When you see your destination, you shout from the back of the bus:
-«**На зупинці, будь ласка!**» (At the stop, please!)
+Ви маєте використовувати **підзе́мний перехі́д**. Вони є всюди у місті. Там також є маленькі магазини. Вони продають каву і квіти.
 
-If you are shy, you might miss your stop. It is a great exercise for your voice and confidence.
+*   Де перехід? (Where is the crossing?)
+*   Перехід прямо і праворуч. (The crossing is straight and to the right.)
 
-### Landmarks Over Distance
-Українці не кажуть: «Це 500 метрів». Вони кажуть: «Йти 5 хвилин». Або вони кажуть: «Це біля церкви». Ми дивимось на орієнтири.
+Never attempt to run across a multi-lane avenue in a Ukrainian city if there is no marked crosswalk or traffic light. Always look for the stairs leading down into the «підземний перехід».
 
-If you ask a Ukrainian "How far is the metro?", they rarely answer "500 meters." They answer in time ("5 minutes") or landmarks ("Past the big church").
+### Транспортна культура
+Українці мають свої правила у транспорті. Це важливо знати кожному іноземцю.
 
-We navigate by visual history. "Turn left at the monument" is a standard instruction. Even if the monument was removed ten years ago, locals might still use it as a reference point! This shows how deeply the city's history is woven into daily language.
+When you use public transport like a bus or a tram, there is an unspoken but strictly followed cultural rule: younger people and men are expected to give up their seats for the elderly, pregnant women, and people with small children.
 
-### Maidan Culture
-У кожному місті є майдан або площа. Це публічне місце. Тут є фестивалі. Тут гуляють друзі. Ми кажемо: «Побачимось на Майдані».
+If you are sitting and someone from these groups boards the vehicle, it is polite to stand up and say «Сідайте, будь ласка» (Sit down, please).
 
-Every major city has a central **майдан** or **площа**. This is public space in its truest form. It is where festivals happen, where protests organize, and where friends meet. "See you at the Maidan" is a phrase that needs no further explanation in a specific city context—everyone knows *which* Maidan.
+Additionally, when the transport is very crowded, it is common to pass your fare money forward through the hands of other passengers to the driver. You simply hand the money to the person in front of you and say «Передайте, будь ласка» (Pass it on, please).
 
-> [!culture]
-> **Did you know?** The word **майдан** is of Persian origin, coming to Ukrainian via Turkic languages. It signifies an open space or square. It became globally famous after the "Euromaidan" protests in 2013-2014, symbolizing freedom and public will.
+> [!culture] Негласні правила
+> Передача грошей в автобусі вимагає довіри. Це працює ідеально в Україні. Квиток знайде вас. Це гарний приклад співпраці людей.
+
+### Як запитати дорогу ввічливо
+Ввічливість відкриває всі двері. Ви говорите українською. Люди завжди цінують вашу повагу.
+
+When stopping a stranger on the street to ask for directions, you should never just abruptly ask «Де банк?». You must preface your question with a polite interruption.
+
+You have two excellent options:
+1.  **Ви́бачте** (Excuse me / I'm sorry)
+2.  **Перепро́шую** (Excuse me / Pardon me)
+
+Both are perfectly acceptable and widely used. «Перепрошую» is considered slightly softer and more polite, especially in the western parts of Ukraine.
+
+*   Перепрошую, де тут аптека? (Excuse me, where is a pharmacy here?)
+*   Вибачте, як пройти до парку? (Excuse me, how to get to the park?)
+
+Always remember to conclude the interaction with a heartfelt **Дя́кую** (Thank you).
 
 ---
 
 # Підсумок
 
-Today we unlocked the city. You learned that navigating Ukraine is not just about coordinates, but about people, landmarks, and correct grammar cases. You can now distinguish between being somewhere (**Де?** + Locative) and going somewhere (**Куди?** + Accusative). You know that **на площі** implies an open space, while **в аптеці** implies being inside. You can guide a driver and find your way to the city center.
+Сьогодні ми вивчили багато нових слів та правил. Ви тепер знаєте головні локації у місті. Ви розумієте різницю між питаннями «Де?» та «Куди?». Ви вмієте давати прості інструкції: прямо, ліворуч, праворуч. Ви також дізналися, як ввічливо питати дорогу в українців.
+
+Navigating a new city in a new language is a big step. Practice these words when you walk around your own neighborhood. Point to buildings and name them in Ukrainian to build your reflex.
 
 **Перевірте себе:**
+1. Як сказати "pharmacy" та "hospital" українською мовою?
+2. У чому граматична різниця між запитаннями «Де?» та «Куди?»
+3. Як ви перекладете інструкцію "Go straight, then to the left"?
+4. Ми зупиняємо людину на вулиці. Яке ввічливе слово ми використовуємо?
+5. Змініть форму слова «місто» для запитання «Де ви?».
 
-1.  Which question word do you use for **motion** (Where to?): Де or Куди?
-2.  If you are **inside** the pharmacy, do you say «на аптеці» or «в аптеці»?
-3.  Translate: "The bank is near the metro." (Hint: use *біля*)
-4.  What do you shout in a marshrutka to make the driver stop?
-5.  If you want to say "Go straight," which adverb do you use?
-6.  Complete the phrase: "Спочатку прямо, ______ направо." (First straight, *then* right.)
-
-Next, we will look deeper into the grammar of possession, but for now, go out and explore the map!
+---

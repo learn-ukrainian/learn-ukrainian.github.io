@@ -1,36 +1,30 @@
 # Дослідження: My World: Objects
 
 ## State Standard Reference
-§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм вказівних займенників: той, та, те; цей, ця, це... утворення форм множини присвійних і вказівних займенників: мої, твої, наші, ваші, їхні, ті, ці."
-Alignment: This module directly addresses the formation and usage of gendered demonstrative pronouns (цей/той) and their plural forms as explicitly required by the standard.
+§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм вказівних займенників: той, та, те; цей, ця, це... утворення форм множини присвійних і вказівних займенників: ... ті, ці."
+Alignment: This module precisely delivers the §4.2.2 requirement by introducing the formation and usage of demonstrative pronouns (цей/той) across all genders and the plural form, mapping them to foundational vocabulary.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| цей / ця / це / ці | High (Top 100) | цей стіл, ця кімната, це вікно, ці речі |
-| той / та / те / ті | High (Top 200) | той будинок, та жінка, те місце, ті люди |
-| стіл | High (Household) | на столі, за столом, письмовий стіл, обідній стіл |
-| шафа | High (Household) | у шафі, книжкова шафа, шафа для одягу |
-| ліжко | Medium (Household) | у ліжку, лягати в ліжко, двоспальне ліжко |
-| вікно | High (General) | біля вікна, дивитися у вікно, відчинити вікно |
+| цей / той | Top 100 / 200 | цей стіл, той будинок, ця кімната |
+| стіл | High (household) | письмовий стіл, на столі |
+| вікно | High (general) | біля вікна, велике вікно |
+| книга | High | цікава книга, читати книгу |
+| двері | High (plural only) | ці двері, вхідні двері |
 
 ## Cultural Hooks
-1. **"В гостях добре, а вдома краще"**: A quintessential Ukrainian proverb equivalent to "East or West, home is best," reflecting the deep cultural value placed on the home (дім/хата) as a sanctuary.
-2. **Pokuttia (Покуття)**: The traditional "Red Corner" in a Ukrainian home, placed diagonally from the stove (піч), where icons and rushnyky were kept. While modern apartments lack the stove, the concept of a spiritual focal point remains relevant in design and tradition.
+1. **Покуття (Pokuttia)**: The "Red Corner" or focal point of a traditional Ukrainian home. Historically the place for icons and embroidered towels (rushnyky), demonstrating how physical space and objects are culturally organized.
+2. **Дім vs Хата vs Квартира**: The emotional anchor of the proverb «В гостях добре, а вдома краще» introduces the cultural warmth of 'дім' (home) as a concept, contrasting with a physical 'квартира' (modern apartment) and 'хата' (traditional rural house).
 
 ## Common Learner Errors
-1. **Identificational vs. Demonstrative "Це"**: Confusing "Це стіл" (This is a table - Identification) with "Цей стіл" (This specific table - Specification).
-   *   *Correction*: Teach that "Це" acts as a subject placeholder ("It/This is"), while "Цей/Ця/Це" acts as an adjective modifying a noun.
-2. **Gender Mismatch**: Using "цей" for all genders (e.g., "Цей книга").
-   *   *Correction*: Reinforce the rhyme/sound association (Ця -> КнигА).
-3. **Proximity Confusion**: Using "цей" for distant objects instead of "той".
-   *   *Correction*: Use clear physical gestures (touching vs. pointing) and the mnemonic "T" for "There/That".
+1. **Identification vs Specification**: Confusing the invariant subject "Це" in "Це стіл" (This is a table) with the gendered demonstrative adjective "Цей" in "Цей стіл" (This table).
+2. **Gender Mismatch**: Defaulting to the masculine "цей" for all objects (e.g., saying "цей книга" instead of "ця книга") because English "this" does not change.
 
 ## Cross-References
-- **Builds on**: a1-03 (Genders), a1-04 (This Is / I Am)
-- **Prepares for**: a1-06 (The Living Verb I), a1-15 (Around the City)
+- Builds on: a1-09 (This Is, I Am)
+- Prepares for: a1-15 (The Living Verb I), a1-29 (Around the City)
 
 ## Notes for Content Writing
-- **Visual Scaffolding**: Essential to clearly distinguish near/far. Use icons of a hand touching (near) vs. a finger pointing (far).
-- **Immersion Control**: A1 level requires heavy English scaffolding for the grammar explanation of the two different "This" concepts (Identification vs. Demonstration).
-- **Nuance**: Briefly mention that "двері" is always plural, avoiding confusion when a learner tries to say "ця двері".
+- **Decolonization & Framing**: Frame the Ukrainian gender-matching system (e.g., цЯ-книгА, цЕ-вікнО) as an elegant, rhythmic, and poetic feature native to the language's structure. Emphasize how endings naturally rhyme, aiding memory. Do not use Russian grammar as a comparison point.
+- **Scaffolding Requirement**: As an A1 First Contact module (immersion 15-25%), explicit English metalanguage is required to explain the grammatical distinction between pointing at an object (identification) and modifying a noun (specification).

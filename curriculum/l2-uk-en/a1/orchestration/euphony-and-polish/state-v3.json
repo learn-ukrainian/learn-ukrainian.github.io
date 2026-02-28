@@ -5,9 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:56:30Z",
+      "ts": "2026-02-28T19:50:34Z",
       "task_id": "v3-euphony-and-polish-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T19:54:34Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T19:56:53Z",
+      "task_id": "v3-euphony-and-polish-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T20:03:39Z",
+      "attempts": 2
     }
   }
 }

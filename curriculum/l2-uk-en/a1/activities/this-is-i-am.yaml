@@ -195,7 +195,7 @@
     - Він
     - Вони
     - Це
-    sentence: '{{The teacher (female)}} is there.'
+    sentence: '{{The female teacher}} is there.'
   - answer: Воно
     explanation: City (місто) is neuter.
     options:
@@ -369,7 +369,7 @@
       text: Вона це тут.
     - correct: false
       text: Вона є тут.
-    question: Translate 'She is here'.
+    question: How do you translate the phrase 'She is here'?
   - explanation: We = Ми, Students = студенти.
     options:
     - correct: true
@@ -380,7 +380,7 @@
       text: Ви — студенти.
     - correct: false
       text: Вони — студенти.
-    question: Translate 'We are students'.
+    question: How do you translate the phrase 'We are students'?
   - explanation: This is = Це, Mom = мама.
     options:
     - correct: true
@@ -391,7 +391,7 @@
       text: Це є мама.
     - correct: false
       text: Що мама.
-    question: Translate 'This is mom'.
+    question: How do you translate the phrase 'This is mom'?
   - explanation: To a group, 'you' is 'Ви'. The standard question word order is 'Де
       ви?'
     options:
@@ -403,7 +403,7 @@
       text: Де він?
     - correct: false
       text: Де ми?
-    question: Translate 'Where are you?' (to a group).
+    question: How do you translate the phrase 'Where are you?' (to a group)?
   - explanation: Window is neuter, so 'It' = 'Воно'.
     options:
     - correct: true
@@ -414,7 +414,7 @@
       text: Вона тут.
     - correct: false
       text: Це тут.
-    question: Translate 'It is here' (referring to a window/вікно).
+    question: How do you translate the phrase 'It is here' (referring to a window)?
   - explanation: He = Він, Student = студент.
     options:
     - correct: true
@@ -425,7 +425,7 @@
       text: Я — студент.
     - correct: false
       text: Ти — студент.
-    question: Translate 'He is a student'.
+    question: How do you translate the phrase 'He is a student'?
   - explanation: No = Ні, not = не.
     options:
     - correct: true
@@ -436,6 +436,6 @@
       text: Ні, вона тут.
     - correct: false
       text: Вона не тут.
-    question: Translate 'No, she is not here'.
+    question: How do you translate the phrase 'No, she is not here'?
   title: Translation Challenge
   type: quiz

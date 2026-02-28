@@ -18,20 +18,18 @@
   Module:  checkpoint-first-contact
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
+  Checkpoint Format Errors
   failing gates:
-    lesson: 2436/1500 (raw: 2706) | pedagogy: 1 violations
+    lesson: 3236/2000 (raw: 3645) | pedagogy: 4 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📚 PEDAGOGICAL VIOLATIONS FOUND:
-    [EUPHONY] Line 359: «з сиру» — з перед з/с/ш/ч; має бути «із сиру»
-       → FIX: Replace «з» with «із» (before sibilant)
-
-
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 1 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 50/100)
+     → Revision recommended (severity 50/100)
+     → 7 violations (significant)
+     → 4 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/checkpoint-first-contact-audit.md
@@ -39,8 +37,12 @@
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
+  Critical Failures:
+    • Checkpoint Format Errors
+
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/checkpoint-first-contact-audit.log for details)
         ```
+
 
         ## Files to Fix
 

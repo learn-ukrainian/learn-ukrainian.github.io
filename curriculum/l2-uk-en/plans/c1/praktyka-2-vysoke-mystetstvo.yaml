@@ -1,6 +1,6 @@
-module: c1-090
+module: c1-105
 level: C1
-sequence: 90
+sequence: 105
 slug: praktyka-2-vysoke-mystetstvo
 version: '2.0'
 title: Практика II — Високе мистецтво
@@ -59,7 +59,7 @@ objectives:
 grammar:
 - Integrated Stylistic Analysis
 - Comparative Art Register
-phase: C1.5 Folk Culture & Fine Arts
+phase: C1.7 [Fine Arts & High Culture]
 persona:
   voice: Senior Specialist
   role: Меценат

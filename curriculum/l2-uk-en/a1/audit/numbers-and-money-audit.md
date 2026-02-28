@@ -1,7 +1,7 @@
 # Audit Report: M22 — numbers-and-money.md
 **Level:** A1 | **Module:** M22 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 03:32:18
+**Generated:** 2026-02-28 19:42:22
 
 ## Configuration
 **Type:** A1-grammar
@@ -16,50 +16,20 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | match-up | Числа 0–10: Основи | 8 | 8 | ✅ |
-| 2 | match-up | Числа 11–100: Великі числа | 13 | 8 | ✅ |
-| 3 | quiz | Математика на базарі | 12 | 8 | ✅ |
-| 4 | group-sort | Правило 1–2–5 | 15 | 12 | ✅ |
-| 5 | fill-in | Рахуємо гривні | 12 | 8 | ✅ |
-| 6 | fill-in | Рахуємо копійки | 12 | 8 | ✅ |
-| 7 | unjumble | Діалоги в магазині | 6 | 6 | ✅ |
-| 8 | match-up | Корисні фрази | 11 | 8 | ✅ |
-| 9 | true-false | Логіка чисел | 12 | 8 | ✅ |
-| 10 | quiz | Фінальний тест | 12 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 10 (target: 8-12) ✅
-- Unique types: 6 (minimum: 4) ✅
-- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
-- Required types used: 2/2 (fill-in, quiz) ✅
-- Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[SECTION_BALANCE_BLOATED]** Section 'Теорія: Числа та гроші' has 1371 words (49% of total). Bloated sections: 'Теорія: Числа та гроші' (49%)
-  - FIX: Consider splitting the large section or expanding smaller sections to improve balance.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 2599/2000 (raw: 2922)
-- **Activities:** ✅ 10/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/3
+- **Words:** ✅ 2929/2000 (raw: 3077)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
+- **Engagement:** ✅ 10/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 1 (soft target)
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.4% (target 35-55% (M22))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 39.4% (target 35-55% (M22))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -68,9 +38,9 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Numbers & Money** | ✅ | 53 | Included in Core |
-| **Розминка: Числа в житті** | ✅ | 317 | Included in Core |
-| **Теорія: Числа та гроші** | ✅ | 1196 | Included in Core |
-| **Практика: У магазині** | ✅ | 667 | Included in Core |
-| **Культурний контекст: Історія гривні** | ✅ | 211 | Included in Core |
-| **Підсумок** | ✅ | 155 | Included in Core |
+| **Numbers & Money** | ✅ | 26 | Included in Core |
+| **Вступ** | ✅ | 328 | Included in Core |
+| **Презентація** | ✅ | 1074 | Included in Core |
+| **Практика** | ✅ | 808 | Included in Core |
+| **Культурний контекст** | ✅ | 546 | Included in Core |
+| **Підсумок** | ✅ | 147 | Included in Core |

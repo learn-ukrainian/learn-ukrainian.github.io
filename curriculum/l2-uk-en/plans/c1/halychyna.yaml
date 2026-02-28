@@ -1,6 +1,6 @@
-module: c1-064
+module: c1-084
 level: C1
-sequence: 64
+sequence: 84
 slug: halychyna
 version: '2.0'
 title: Галичина
@@ -65,7 +65,7 @@ objectives:
 grammar:
 - Regional and dialectal terminology
 - Descriptive and historical registers
-phase: C1.5 Folk Culture & Fine Arts
+phase: C1.6 [Folk Culture & Traditions]
 persona:
   voice: Senior Specialist
   role: Галицький інтелігент

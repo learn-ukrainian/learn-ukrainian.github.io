@@ -4,70 +4,71 @@
 
 ## State Standard Reference
 §4.1.7: "Засоби милозвучності української мови: уживання прийменників у, в: був у Львові, жила в Києві; уживання сполучників і, й: будинок і кімната, кімната й авдиторія; уживання прийменника з і його варіантів із, зі: з Алжиру, він із Сирії, зі школи."
-Alignment: This module directly fulfills §4.1.7 by teaching the core phonetic alternations (у/в, і/й, з/із/зі) mandated at the A1 level to ensure natural speech flow and rhythm.
+Alignment: This module directly addresses A1 requirements for phonetic and morphological adaptations to maintain euphony.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| у / в | Extremely high (Top 10) | у мене, у школі, в Україні, вдома |
-| і / й | Extremely high (Top 10) | батько і мати, мама й тато |
-| з / із / зі | Very high (Top 20) | з Києва, із Львова, зі школи, зі мною |
-| мене | High frequency | у мене є |
+| у / в | Extremely High | у мене, в школі, в Україні |
+| і / й | Extremely High | батько і мати, мама й тато |
+| з / із / зі | Very High | з Києва, із Львова, зі школи, зі мною |
+| школа | High | у школі, зі школи, до школи |
+| Київ / Львів | High | у Києві / з Києва, у Львові / із Львова |
 
 ## Cultural Hooks
-1. **Милозвучність (Euphony):** Euphony is considered a defining, celebrated characteristic of the Ukrainian language. Its phonological rules naturally developed to eliminate harsh consonant clusters, creating a smooth, melodic rhythm often highlighted in Ukrainian cultural consciousness and literature.
-2. **Folklore and Poetry:** Ukrainian folk songs and poetry naturally enforce these alternations to maintain their rhythm. The necessity of alternating 'у/в' or 'і/й' becomes intuitively obvious when singing or reciting verses, showcasing the language's vocalic balance.
+1. **"Милозвучність" (Euphony):** Ukrainian is historically celebrated for its vocalic harmony and melodic flow, often cited as one of the most musical languages. This rhythmic quality is an inherent, organic feature of the language, not merely a stylistic choice.
+2. **Universal Application:** The euphony rules apply not just to native words, but also seamlessly adapt foreign loanwords and names to fit the Ukrainian phonetic rhythm (e.g., "в Нью-Йорку", "у Вашингтоні").
 
 ## Common Learner Errors
-1. **Using dictionary defaults only** → Using 'в' and 'і' everywhere regardless of the surrounding sounds (e.g., saying *в школі* at the start of a sentence instead of *у школі*, or *мама і тато* instead of *мама й тато*). — *Why it happens:* Learners memorize isolated vocabulary and forget that Ukrainian words adapt to their phonetic environment.
-2. **Preposition crashes before sibilants** → *з школи* instead of *зі школи*. — *Why it happens:* Ignoring the physical difficulty of pronouncing consonant clusters; the form 'зі' is explicitly used to break up sibilant blocks for easier pronunciation.
-3. **Applying euphony to prefixes** → Attempting to alter a verbal prefix (e.g., writing *ізробити* instead of *зробити*). — *Why it happens:* Overgeneralizing the alternation rule for standalone prepositions to bound morphemes (prefixes), which are fixed.
+1. **Overusing "і" everywhere:** Learners say *мама і тато* instead of the correct *мама й тато*. Why it happens: English "and" is static, so learners default to the first conjunction they learn ("і") regardless of phonetic context.
+2. **Ignoring sibilant clusters with "з":** Learners say *з школи* instead of *зі школи*. Why it happens: They apply the basic "з" rule, forgetting that "ш" is a sibilant that requires the full vocalic buffer "зі".
+3. **Consonant crashes with "в":** Learners say *в Львові* instead of *у Львові*. Why it happens: Direct translation of "in" without recognizing the heavy consonant cluster "вльв".
 
 ## Cross-References
 - Builds on: a1-62 (Emergencies)
 - Prepares for: a1-64 (A1 Final Exam)
 
 ## Notes for Content Writing
-- **Scaffolding:** As an A1 module, English scaffolding is MANDATORY for all grammar explanations. Define "vowel" (голосний) and "consonant" (приголосний) clearly before introducing the alternation rules.
-- **Decolonized Framing:** Present euphony as a native, inherent feature of the Ukrainian language's phonetic elegance. Do not frame it as a divergence from Russian or use Russian as a baseline. Focus purely on the "natural flow" and "inherent rhythm" of Ukrainian.
-- **Visual Aids:** Use clear, comparative tables to show the "After Consonant / After Vowel" decision logic for each pair.
+- **Decolonized Framing:** Present euphony as a brilliant, native Ukrainian mechanism that actively prevents ugly consonant clusters and vowel clashes. Focus entirely on how Ukrainian breathes and flows. Never use Russian as a comparative baseline.
+- **English Scaffolding:** Because this is A1, the first section must explicitly define "euphony", "vowel" (голосний), and "consonant" (приголосний) in English before demonstrating the rules.
+- **IPA:** Provide IPA only for the first occurrence of new vocabulary words. Do not transcribe full sentences.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "У/В чергування (U/V alternation)"
+  - section: "У/В чергування"
     words: 500
     points:
-      - "Introductory English scaffolding: Define 'милозвучність' (euphony) and explain that Ukrainian words adapt to their environment to avoid consonant crashes. Provide quick definitions of 'vowel' and 'consonant'."
-      - "H3 for 'У': Explain its usage after consonants and after pauses (at the start of a sentence). Provide 3+ clear examples with English translations and IPA for new words (e.g., У мене є книга)."
-      - "H3 for 'В': Explain its usage after vowels. Provide 3+ clear examples (e.g., Я в школі)."
-      - "Include a visual table summarizing the U/V decision logic for easy reference."
-  - section: "І/Й чергування (I/Y alternation)"
+      - "English Scaffolding: Define «милозвучність» (euphony) and the goal of avoiding consonant crashes. Explicitly define what a 'vowel' (голосний) and 'consonant' (приголосний) are to ensure foundational understanding."
+      - "H3 for 'У': Explain its mandatory usage after consonants and at the absolute beginning of a sentence (after a pause). Provide 3+ simple examples with English translations and IPA for new words (e.g., «У мене є книга»)."
+      - "H3 for 'В': Explain its usage after vowels to maintain flow. Provide 3+ clear examples (e.g., «Я в школі»)."
+      - "Visual Aid: Include a simple Markdown table summarizing the U/V decision logic for easy visual reference."
+  - section: "І/Й чергування"
     words: 400
     points:
-      - "H3 for 'І': Explain its usage after consonants or pauses to prevent consonant clusters. Use everyday vocabulary for examples (e.g., батько і мати, брат і сестра)."
-      - "H3 for 'Й': Explain its usage after vowels to prevent vowel hiatus (two vowels clashing). Provide contrasting examples (e.g., мама й тато, Андрій й Олена)."
-      - "Include a 'Teacher Note' callout addressing the common learner error of overusing 'і' and explaining how 'й' makes speech flow effortlessly."
-  - section: "З/Із/Зі чергування (Z/Iz/Zi alternation)"
+      - "H3 for 'І': Explain its usage after consonants or pauses to prevent consonant clusters. Use everyday family vocabulary (e.g., «батько і мати», «брат і сестра»)."
+      - "H3 for 'Й': Explain its usage after vowels to prevent vowel hiatus (vowel clash). Provide contrasting examples (e.g., «мама й тато», «Андрій й Олена»)."
+      - "Teacher Note: Add a callout addressing the common learner error of overusing «і» and explain how «й» helps the sentence breathe naturally."
+  - section: "З/Із/Зі чергування"
     words: 450
     points:
-      - "H3 for 'З': Explain it as the standard form before vowels and single consonants (e.g., з Києва, з другом). Include 3 clear examples."
-      - "H3 for 'Із': Explain its usage before heavy consonant clusters (e.g., із Львова) to provide a vocalic buffer."
-      - "H3 for 'Зі': Detail its specific usage before sibilants (з, с, ш, щ) and the pronoun 'мною' (e.g., зі школи, зі мною). Provide a mnemonic or clear visual rule."
-      - "Add a warning box clarifying that this alternation rule applies only to the preposition, not to verb prefixes (e.g., зробити remains зробити)."
-  - section: "Інші правила евфонії (Other euphony rules)"
+      - "H3 for 'З': Present this as the default form before vowels and single consonants (e.g., «з Києва», «з другом»). Provide 3 simple examples."
+      - "H3 for 'Із': Detail its specific usage before heavy consonant clusters to provide a buffer (e.g., «із Львова»)."
+      - "H3 for 'Зі': Detail its usage before sibilants (з, с, ш, щ) and the pronoun «мною» (e.g., «зі школи», «зі мною»). Provide a simple mnemonic to remember the sibilants."
+      - "Warning Box: Clarify that euphony rules apply to the preposition «з», but NOT to fixed verb prefixes (e.g., «зробити» remains unchanged)."
+  - section: "Інші правила евфонії"
     words: 300
     points:
-      - "Introduce the concept of euphonic pairs in adverbs and other parts of speech, such as удень/вдень and увечері/ввечері."
-      - "Explain that the exact same consonant/vowel surrounding rule applies to these words."
-      - "Briefly mention demonstratives ці/цей to raise awareness of sound patterns, noting they do not alternate but are part of the broader melodic system."
-  - section: "Практика (Practice)"
+      - "H3 for 'Euphonic Pairs': Introduce adverbs that follow the same U/V logic, specifically «удень»/«вдень» and «увечері»/«ввечері»."
+      - "Explain that the exact same consonant/vowel surrounding rule dictates which form to use."
+      - "Brief Mention: Briefly mention demonstratives like «ці»/«цей» to build awareness of sound patterns, noting they are fixed but part of the broader melodic ecosystem."
+  - section: "Практика"
     words: 350
     points:
-      - "Provide a guided walkthrough of a short text or dialogue, breaking down analytically why each euphonic choice was made in context."
-      - "Include 3 'Fix the Error' examples where learners analyze an unnatural sentence (e.g., 'В Україні живе мама і тато') and read the step-by-step correction process."
-      - "Conclude with an encouragement to read aloud, emphasizing that learners should physically feel the difference in airflow and rhythm."
+      - "Guided Walkthrough: Provide a short, simple dialogue and analytically break down in English why each euphonic choice (у/в, і/й) was made."
+      - "Fix the Error: Include 3 examples where learners analyze an unnatural sentence (e.g., «В Україні живе мама і тато») and follow a step-by-step correction process."
+      - "Actionable advice: Conclude with a strong encouragement to read the corrected sentences aloud to physically feel the difference in airflow."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===

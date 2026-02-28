@@ -1,0 +1,446 @@
+- type: match-up
+  title: "Інфінітив та форма Ти"
+  instruction: "Match the infinitive verb to its informal imperative form."
+  pairs:
+    - left: "читати"
+      right: "читай"
+    - left: "писати"
+      right: "пиши"
+    - left: "сказати"
+      right: "скажи"
+    - left: "дати"
+      right: "дай"
+    - left: "іти"
+      right: "іди"
+    - left: "слухати"
+      right: "слухай"
+    - left: "дивитися"
+      right: "дивись"
+    - left: "стояти"
+      right: "стій"
+
+- type: match-up
+  title: "Форми Ти та Ви"
+  instruction: "Match the informal command to its polite/formal equivalent."
+  pairs:
+    - left: "читай"
+      right: "читайте"
+    - left: "пиши"
+      right: "пишіть"
+    - left: "скажи"
+      right: "скажіть"
+    - left: "дай"
+      right: "дайте"
+    - left: "іди"
+      right: "ідіть"
+    - left: "слухай"
+      right: "слухайте"
+    - left: "дивись"
+      right: "дивіться"
+    - left: "стій"
+      right: "стійте"
+
+- type: fill-in
+  title: "Доповніть речення (Форма Ви)"
+  instruction: "Choose the correct formal imperative to complete the classroom instructions."
+  items:
+    - sentence: "Учні, _____ текст уголос."
+      answer: "читайте"
+      options:
+        - "читай"
+        - "читайте"
+        - "читати"
+        - "читаю"
+    - sentence: "Будь ласка, _____ уважно, це важливо!"
+      answer: "слухайте"
+      options:
+        - "слухай"
+        - "слухати"
+        - "слухаєте"
+        - "слухайте"
+    - sentence: "_____ на дошку, будь ласка."
+      answer: "дивіться"
+      options:
+        - "дивись"
+        - "дивитися"
+        - "дивіться"
+        - "дивлюся"
+    - sentence: "_____ вправу у зошиті."
+      answer: "пишіть"
+      options:
+        - "пиши"
+        - "писати"
+        - "пишіть"
+        - "пишу"
+    - sentence: "_____, будь ласка, де метро?"
+      answer: "скажіть"
+      options:
+        - "скажи"
+        - "сказати"
+        - "скажіть"
+        - "скаже"
+    - sentence: "_____ меню, будь ласка."
+      answer: "дайте"
+      options:
+        - "дай"
+        - "дати"
+        - "дайте"
+        - "даєте"
+    - sentence: "_____ сюди, будь ласка."
+      answer: "ідіть"
+      options:
+        - "іди"
+        - "іти"
+        - "ідіть"
+        - "ідуть"
+    - sentence: "_____! Не рухайтеся!"
+      answer: "стійте"
+      options:
+        - "стій"
+        - "стояти"
+        - "стійте"
+        - "стоїте"
+
+- type: quiz
+  title: "Яку форму використати?"
+  instruction: "Choose the socially correct form for each situation."
+  items:
+    - question: "Ви говорите з хорошим другом на вулиці. Що ви скажете?"
+      explanation: "Для друга ми використовуємо неформальну форму Ти."
+      options:
+        - text: "Іди сюди!"
+          correct: true
+        - text: "Ідіть сюди!"
+          correct: false
+        - text: "Іти сюди!"
+          correct: false
+        - text: "Іду сюди!"
+          correct: false
+    - question: "Ви просите каву в незнайомого баристи в кафе. Що ви скажете?"
+      explanation: "Для незнайомих людей ми завжди використовуємо ввічливу форму Ви."
+      options:
+        - text: "Дайте каву, будь ласка."
+          correct: true
+        - text: "Дай каву, будь ласка."
+          correct: false
+        - text: "Дати каву, будь ласка."
+          correct: false
+        - text: "Даю каву, будь ласка."
+          correct: false
+    - question: "Ви говорите з маленьким братом. Як попросити його подивитися?"
+      explanation: "Для сім'ї та дітей ми використовуємо неформальну форму Ти."
+      options:
+        - text: "Дивись туди!"
+          correct: true
+        - text: "Дивіться туди!"
+          correct: false
+        - text: "Дивитися туди!"
+          correct: false
+        - text: "Дивлюся туди!"
+          correct: false
+    - question: "Ви зупиняєте групу туристів. Що ви їм скажете?"
+      explanation: "Для групи людей (навіть друзів) ми обов'язково використовуємо форму Ви."
+      options:
+        - text: "Стійте!"
+          correct: true
+        - text: "Стій!"
+          correct: false
+        - text: "Стояти!"
+          correct: false
+        - text: "Стоїмо!"
+          correct: false
+    - question: "Ви просите поліцейського допомогти на вулиці. Що ви скажете?"
+      explanation: "Для офіційних осіб та незнайомців використовуємо форму Ви."
+      options:
+        - text: "Скажіть, будь ласка, де банк?"
+          correct: true
+        - text: "Скажи, будь ласка, де банк?"
+          correct: false
+        - text: "Сказати, будь ласка, де банк?"
+          correct: false
+        - text: "Кажу, будь ласка, де банк?"
+          correct: false
+    - question: "Вчитель дає завдання всьому класу. Що він скаже?"
+      explanation: "Вчитель звертається до групи студентів, тому використовує форму Ви."
+      options:
+        - text: "Слухайте уважно!"
+          correct: true
+        - text: "Слухай уважно!"
+          correct: false
+        - text: "Слухати уважно!"
+          correct: false
+        - text: "Слухають уважно!"
+          correct: false
+    - question: "Що ви ніколи не повинні використовувати для прямого наказу людині?"
+      explanation: "Інфінітив звучить як безособове правило робота, а не як звернення."
+      options:
+        - text: "Інфінітив (наприклад, читати!)"
+          correct: true
+        - text: "Форму Ти (наприклад, читай!)"
+          correct: false
+        - text: "Форму Ви (наприклад, читайте!)"
+          correct: false
+        - text: "Слово будь ласка"
+          correct: false
+    - question: "Ви хочете заборонити другові дивитися. Що ви скажете?"
+      explanation: "Заборона утворюється за допомогою частки «не» перед наказовим дієсловом."
+      options:
+        - text: "Не дивись!"
+          correct: true
+        - text: "Ні дивись!"
+          correct: false
+        - text: "Не дивитися!"
+          correct: false
+        - text: "Не дивіться!"
+          correct: false
+
+- type: unjumble
+  title: "Складіть ввічливі прохання"
+  instruction: "Put the words in the correct order to form polite requests."
+  items:
+    - words: ["будь", "дайте", "ласка", "меню"]
+      answer: "Дайте будь ласка меню"
+    - words: ["скажіть", "де", "метро", "ласка", "будь"]
+      answer: "Скажіть будь ласка де метро"
+    - words: ["уважно", "мене", "слухайте"]
+      answer: "Слухайте мене уважно"
+    - words: ["сюди", "будь", "ідіть", "ласка"]
+      answer: "Ідіть сюди будь ласка"
+    - words: ["на", "дивіться", "будь", "дошку", "ласка"]
+      answer: "Дивіться на дошку будь ласка"
+    - words: ["допоможіть", "будь", "ласка"]
+      answer: "Допоможіть будь ласка"
+
+- type: group-sort
+  title: "Розподіліть за групами: Ти чи Ви"
+  instruction: "Categorize the imperative verbs into informal (Ти) or formal (Ви) forms."
+  groups:
+    - name: "Форма Ти (Неформально)"
+      items: ["читай", "пиши", "скажи", "дай", "іди", "слухай", "дивись", "стій"]
+    - name: "Форма Ви (Формально)"
+      items: ["читайте", "пишіть", "скажіть", "дайте", "ідіть", "слухайте", "дивіться", "стійте"]
+
+- type: unjumble
+  title: "Складіть заборони"
+  instruction: "Form negative commands."
+  items:
+    - words: ["туди", "не", "дивись"]
+      answer: "Не дивись туди"
+    - words: ["не", "сюди", "ідіть"]
+      answer: "Не ідіть сюди"
+    - words: ["це", "не", "пиши"]
+      answer: "Не пиши це"
+    - words: ["не", "мене", "слухайте"]
+      answer: "Не слухайте мене"
+    - words: ["книгу", "не", "читайте"]
+      answer: "Не читайте книгу"
+    - words: ["тут", "не", "стій"]
+      answer: "Не стій тут"
+
+- type: quiz
+  title: "Правила утворення"
+  instruction: "Test your knowledge of how the imperative is formed."
+  items:
+    - question: "Як ми утворюємо форму Ви від форми Ти?"
+      explanation: "Ми просто додаємо закінчення -те або -іть."
+      options:
+        - text: "Додаємо закінчення -те або -іть"
+          correct: true
+        - text: "Додаємо закінчення -ти"
+          correct: false
+        - text: "Забираємо голосний звук"
+          correct: false
+        - text: "Додаємо слово прошу"
+          correct: false
+    - question: "Яке закінчення отримує дієслово «читати» для форми Ти?"
+      explanation: "Основа «чита-» закінчується на голосний, тому додаємо -й."
+      options:
+        - text: "суфікс -й (читай)"
+          correct: true
+        - text: "суфікс -и (читаи)"
+          correct: false
+        - text: "закінчення -ти (читати)"
+          correct: false
+        - text: "суфікс -те (читайте)"
+          correct: false
+    - question: "Яке закінчення отримує дієслово «робити» для форми Ти?"
+      explanation: "Основа «роб-» закінчується на приголосний, тому додаємо -и."
+      options:
+        - text: "суфікс -и (роби)"
+          correct: true
+        - text: "суфікс -й (робий)"
+          correct: false
+        - text: "закінчення -ти (робити)"
+          correct: false
+        - text: "суфікс -іть (робіть)"
+          correct: false
+    - question: "Яке чергування приголосних відбувається у слові «сказати»?"
+      explanation: "Звук «з» змінюється на «ж», тому маємо скажи."
+      options:
+        - text: "звук «з» змінюється на «ж» (скажи)"
+          correct: true
+        - text: "звук «з» змінюється на «с» (скаси)"
+          correct: false
+        - text: "звук «к» змінюється на «ч» (счазати)"
+          correct: false
+        - text: "немає чергування (скази)"
+          correct: false
+    - question: "Як правильно утворити негативний наказ (заборону)?"
+      explanation: "Ми просто ставимо частку «не» перед дієсловом у наказовому способі."
+      options:
+        - text: "Поставити слово не перед наказовою формою"
+          correct: true
+        - text: "Змінити закінчення на -ти"
+          correct: false
+        - text: "Додати суфікс -ся"
+          correct: false
+        - text: "Поставити слово ні після дієслова"
+          correct: false
+    - question: "Яка форма є абсолютно неправильною для розмови з людиною?"
+      explanation: "Інфінітив використовується для безособових правил, а не для живих людей."
+      options:
+        - text: "Читати текст!"
+          correct: true
+        - text: "Читай текст!"
+          correct: false
+        - text: "Читайте текст!"
+          correct: false
+        - text: "Не читай текст!"
+          correct: false
+    - question: "Яке слово ми додаємо для ввічливого прохання?"
+      explanation: "Слово «будь ласка» робить наказ ввічливим проханням."
+      options:
+        - text: "будь ласка"
+          correct: true
+        - text: "прошу"
+          correct: false
+        - text: "нехай"
+          correct: false
+        - text: "швидко"
+          correct: false
+    - question: "Що ми робимо з інфінітивом «писати», щоб отримати форму Ти?"
+      explanation: "Забираємо -ти, змінюємо «с» на «ш» і додаємо -и (пиши)."
+      options:
+        - text: "забираємо -ти, змінюємо с на ш і додаємо -и (пиши)"
+          correct: true
+        - text: "просто додаємо -й (писатий)"
+          correct: false
+        - text: "додаємо -те (писатите)"
+          correct: false
+        - text: "забираємо -ати і додаємо -и (писи)"
+          correct: false
+
+- type: fill-in
+  title: "Переклад команд"
+  instruction: "Choose the correct imperative verb for the situation."
+  items:
+    - sentence: "Ви кажете другові: _____ сюди!"
+      answer: "Дивись"
+      options: ["Дивись", "Дивіться", "Слухай", "Дивитися"]
+    - sentence: "Ви кажете вчителю: _____ уважно!"
+      answer: "Слухайте"
+      options: ["Слухай", "Слухайте", "Слухати", "Читайте"]
+    - sentence: "Ви кажете брату: _____ мені ручку!"
+      answer: "Дай"
+      options: ["Дайте", "Дай", "Дати", "Скажи"]
+    - sentence: "Ви зупиняєте групу людей: _____!"
+      answer: "Стійте"
+      options: ["Стій", "Стійте", "Ідіть", "Стояти"]
+    - sentence: "Ви просите сестру: _____ секрет!"
+      answer: "Скажи"
+      options: ["Сказати", "Скажіть", "Скажи", "Пиши"]
+    - sentence: "Ви кажете незнайомцю: _____ прямо!"
+      answer: "Ідіть"
+      options: ["Іди", "Ідіть", "Стійте", "Іти"]
+    - sentence: "Ви просите друга: _____ цей текст!"
+      answer: "Читай"
+      options: ["Читай", "Читайте", "Слухай", "Читати"]
+    - sentence: "Ви кажете колегам: _____ цей звіт!"
+      answer: "Пишіть"
+      options: ["Пиши", "Пишіть", "Читайте", "Писати"]
+
+- type: fill-in
+  title: "Створіть заборону"
+  instruction: "Choose the correct negative particle to make the command a prohibition."
+  items:
+    - sentence: "_____ читайте цей текст, він поганий."
+      answer: "Не"
+      options:
+        - "Не"
+        - "Ні"
+        - "Без"
+        - "Будь ласка"
+    - sentence: "_____ дивись туди, там небезпечно."
+      answer: "Не"
+      options:
+        - "Ні"
+        - "Не"
+        - "Нічого"
+        - "Немає"
+    - sentence: "_____ йдіть на вулицю сьогодні."
+      answer: "Не"
+      options:
+        - "Не"
+        - "Ні"
+        - "Дайте"
+        - "Скажіть"
+    - sentence: "_____ пиши в цій книзі."
+      answer: "Не"
+      options:
+        - "Ні"
+        - "Не"
+        - "Стій"
+        - "Дай"
+    - sentence: "_____ слухайте його, він каже неправду."
+      answer: "Не"
+      options:
+        - "Ніколи"
+        - "Не"
+        - "Ні"
+        - "Прошу"
+    - sentence: "_____ стій тут, іди додому."
+      answer: "Не"
+      options:
+        - "Не"
+        - "Ні"
+        - "Скажи"
+        - "Будь"
+    - sentence: "_____ давай йому гроші."
+      answer: "Не"
+      options:
+        - "Не"
+        - "Ні"
+        - "Без"
+        - "Стій"
+    - sentence: "_____ скажи їй мій секрет."
+      answer: "Не"
+      options:
+        - "Не"
+        - "Ні"
+        - "Стій"
+        - "Дай"
+
+- type: true-false
+  title: "Правда чи неправда?"
+  instruction: "Decide if the statement about the imperative mood is true or false."
+  items:
+    - statement: "Наказовий спосіб завжди означає агресивний наказ."
+      correct: false
+    - statement: "Форма Ти використовується для хороших друзів і родини."
+      correct: true
+    - statement: "Ми повинні використовувати форму Ви для незнайомих людей."
+      correct: true
+    - statement: "Інфінітив - це найкраща форма для прямої розмови з людиною."
+      correct: false
+    - statement: "Слово «будь ласка» робить прохання більш ввічливим."
+      correct: true
+    - statement: "Заборона утворюється за допомогою слова «не» перед дієсловом."
+      correct: true
+    - statement: "Публічні знаки зазвичай використовують інфінітив."
+      correct: true
+    - statement: "Для групи людей ми завжди використовуємо форму Ти."
+      correct: false
+    - statement: "Основа дієслова «читати» закінчується на голосний звук."
+      correct: true
+    - statement: "Дієслово «стояти» має регулярну форму без змін."
+      correct: false

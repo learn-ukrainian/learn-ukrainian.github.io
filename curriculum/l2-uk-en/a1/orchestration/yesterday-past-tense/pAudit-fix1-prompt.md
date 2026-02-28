@@ -19,19 +19,20 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 3135/2000 (raw: 3307) | pedagogy: 23 violations
+    meta: Valid Structure | Lint: 1 Format Errors
+    lesson: 2882/2000 (raw: 3015) | pedagogy: 5 violations | immersion: 11.5% LOW (target 35-55% (M36))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
+       → FIX: Rewrite in neutral educational voice. Remove first-person teacher persona.
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
-     → Revision recommended (severity 70/100)
-     → 26 violations (severe - consider revision)
-     → 20 grammar-level violations (fundamental)
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 77/100)
+     → 6 violations (moderate)
+     → 4 grammar-level violations (fundamental)
+     → Immersion 23% off target (major rebalancing needed)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/yesterday-past-tense-audit.md

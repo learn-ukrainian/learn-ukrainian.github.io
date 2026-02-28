@@ -1,6 +1,6 @@
-module: c1-034
+module: c1-038
 level: C1
-sequence: 34
+sequence: 38
 slug: review
 version: '2.0'
 title: 'Огляд і повторення: Професійна комунікація'
@@ -111,7 +111,7 @@ sources:
   type: reference
   notes: National C1 competency requirements
 immersion: 100% Ukrainian
-phase: C1.2 Professional Communication
+phase: C1.3 [Movoznavstvo & Sociolinguistics]
 objectives:
 - 'Understand and apply огляд і повторення: професійна комунікація'
 - Analyze and evaluate підсумок

@@ -19,16 +19,18 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   1 Outline Compliance Errors
+  failing gates:
+    lesson: 4466/2000 (raw: 5031) | pedagogy: 1 violations | immersion: 7.9% LOW (target 25-40% (M20))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  Grammar      ℹ️ N/A (covered by naturalness)
-  Naturalness  ℹ️ PENDING — awaiting review
-  Activity_quality ⏳ Deferred (content-only audit)
-  Research     ⚠️ Refresh recommended: Content predates research (research file is newer)
-  Immersion    🇺🇦 25.1% (target 25-40% (M14))
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
+     → 2 violations (minor)
+     → Immersion 17% off target
+
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/mine-and-yours-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/mine-and-yours.json
@@ -40,6 +42,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/mine-and-yours-audit.log for details)
         ```
+
 
         ## Files to Fix
 

@@ -1,6 +1,6 @@
-module: c1-088
+module: c1-104
 level: C1
-sequence: 88
+sequence: 104
 slug: ukrainske-kino
 version: '2.0'
 title: Українське кіно
@@ -55,7 +55,7 @@ objectives:
 grammar:
 - Cinematic terminology
 - Discussing plot and acting
-phase: C1.5 Folk Culture & Fine Arts
+phase: C1.7 [Fine Arts & High Culture]
 persona:
   voice: Senior Specialist
   role: Кінокритик

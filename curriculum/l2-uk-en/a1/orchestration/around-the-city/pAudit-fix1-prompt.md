@@ -18,28 +18,30 @@
   Module:  around-the-city
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  3 Outline Compliance Errors
+  failing gates:
+    lesson: 3210/2000 (raw: 3409) | pedagogy: 16 violations | immersion: 21.5% LOW (target 35-55% (M29))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  Grammar      ℹ️ N/A (covered by naturalness)
-  Naturalness  ℹ️ PENDING — awaiting review
-  Activity_quality ⏳ Deferred (content-only audit)
-  Research     ⚠️ Refresh recommended: Content predates research (research file is newer)
-  Immersion    🇺🇦 25.2% (target 25-40% (M15))
+       → FIX: Break into shorter sentences. First 5 words: 'Коли ми знаємо назви місць...'
+
+
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 90/100)
+     → 16 violations (severe - consider revision)
+     → 15 grammar-level violations (fundamental)
+     → Immersion 13% off target
+
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/around-the-city-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/around-the-city.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  Critical Failures:
-    • 3 Outline Compliance Errors
-
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/around-the-city-audit.log for details)
         ```
+
 
         ## Files to Fix
 

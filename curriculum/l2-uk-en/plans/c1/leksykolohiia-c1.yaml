@@ -1,0 +1,106 @@
+module: c1-033
+level: C1
+sequence: 33
+slug: leksykolohiia-c1
+version: '2.0'
+title: 'Лексикологія: Багатство словника'
+subtitle: 'Advanced Lexicology: Vocabulary Richness'
+content_outline:
+- section: Слово як одиниця мови
+  words: 500
+  points:
+  - 'Моносемічні та полісемічні слова: однозначність vs багатозначність, пряме та переносне
+    значення'
+  - 'Денотація та конотація: предметне значення слова проти його емоційно-оцінного забарвлення'
+  - 'Лексичне значення та його типи: номінативне, фразеологічно зв''язане, синтаксично
+    обумовлене'
+- section: Синоніми й антоніми в стилістиці
+  words: 800
+  points:
+  - 'Типи синонімів: абсолютні (повні), контекстуальні (авторські), стилістичні (нейтральні
+    vs книжні vs розмовні) — практика добору точного синоніма'
+  - 'Типи антонімів: градуальні (холодний — гарячий), комплементарні (живий — мертвий),
+    конверсивні (купувати — продавати)'
+  - 'Стилістичне використання синонімів і антонімів для точності висловлювання та уникнення
+    повторів у тексті'
+- section: Омоніми та пароніми
+  words: 800
+  points:
+  - 'Типи омонімів: повні (коса — коса), часткові (омоформи, омофони, омографи) — розмежування
+    та приклади'
+  - 'SS gap: пароніми як джерело помилок — адрес/адреса, ефектний/ефективний, дільниця/ділянка,
+    компанія/кампанія'
+  - 'Стратегії розрізнення паронімів: етимологічний аналіз, контекстні підказки, словникова
+    перевірка'
+- section: Активна й пасивна лексика
+  words: 700
+  points:
+  - 'Неологізми: семантичні (нове значення старого слова), лексичні (нове слово), запозичення
+    (ґаджет, блог, хештег) — шляхи збагачення словника'
+  - 'Архаїзми vs історизми: архаїзми мають сучасний відповідник (перст → палець), історизми
+    не мають (кольчуга, булава)'
+  - 'Стилістична роль пасивної лексики: архаїзми для урочистості, неологізми для актуальності
+    в різних регістрах'
+- section: Власне українська та запозичена лексика
+  words: 700
+  points:
+  - 'Шари української лексики: праслов''янська спадщина, давньоруський пласт, власне українські
+    новотвори'
+  - 'Запозичення та їхня асиміляція: фонетичне, граматичне, семантичне освоєння іншомовних
+    слів'
+  - 'Калька та напівкалька: структурне запозичення (хмарочос ← skyscraper) vs пряме вживання
+    іншомовного слова'
+- section: Практика лексичної точності
+  words: 500
+  points:
+  - 'Вправи на розрізнення паронімів у контексті речення: вибір правильного варіанта'
+  - 'Добір точних синонімів для різних стилістичних регістрів: офіційний, науковий, розмовний'
+  - 'Визначення стилістичної ролі архаїзмів та неологізмів у текстових фрагментах'
+focus: grammar
+pedagogy: CBI
+objectives:
+- Distinguish polysemantic words from homonyms in context
+- Identify and correct paronym confusion errors
+- Select register-appropriate synonyms for stylistic precision
+- Classify vocabulary as active or passive and determine its stylistic role
+grammar:
+- Paronym pairs and disambiguation strategies
+- Synonym selection for register precision
+- Lexical layers of Ukrainian vocabulary
+phase: C1.3 [Movoznavstvo & Sociolinguistics]
+persona:
+  voice: Senior Specialist
+  role: Лексикограф-стиліст
+word_target: 4000
+vocabulary_hints:
+  required:
+  - лексикологія (lexicology) — розділ лексикології, предмет лексикології; Core discipline
+    term
+  - полісемія (polysemy) — полісемічне слово, явище полісемії; Essential for word meaning
+    analysis
+  - омоніми (homonyms) — повні омоніми, часткові омоніми; Frequent in linguistic analysis
+  - пароніми (paronyms) — паронімічна пара, змішування паронімів; Key error-prevention
+    concept
+  - неологізм (neologism) — лексичний неологізм, семантичний неологізм; Medium frequency
+    academic term
+  - архаїзм (archaism) — лексичний архаїзм, стилістична функція архаїзму; Literary and
+    historical analysis
+  recommended:
+  - конотація (connotation) — emotional-evaluative component of word meaning
+  - денотація (denotation) — objective referential meaning of a word
+  - історизм (historicism) — word for concept that no longer exists, unlike archaism
+  - запозичення (borrowing) — іншомовне запозичення, assimilation of foreign words
+  - калька (calque) — structural borrowing that translates morphemes
+activity_hints:
+- type: quiz
+  focus: homonym and paronym identification
+  items: 15
+- type: match-up
+  focus: synonym-antonym pairing and register classification
+  items: 12
+- type: error-correction
+  focus: paronym confusion and imprecise word choice
+  items: 15
+- type: fill-in
+  focus: selecting correct paronym or synonym in context
+  items: 10

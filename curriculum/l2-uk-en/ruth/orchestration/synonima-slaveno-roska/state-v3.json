@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "synonima-slaveno-roska",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T21:18:31Z",
+      "task_id": "v3-synonima-slaveno-roska-pA",
+      "mode": "meta-only"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+items:
+- lemma: читати
+  translation: to read
+  pos: verb
+  aspect: impf
+  usage: я читаю, ти читаєш
+- lemma: писати
+  translation: to write
+  pos: verb
+  aspect: impf
+  usage: я пишу, ти пишеш
+- lemma: говорити
+  translation: to speak
+  pos: verb
+  aspect: impf
+  usage: я говорю, ти говориш
+- lemma: подобатися
+  translation: to like
+  pos: verb
+  aspect: impf
+  usage: мені подобається
+- lemma: хотіти
+  translation: to want
+  pos: verb
+  aspect: impf
+  usage: я хочу, ти хочеш
+- lemma: що
+  translation: what
+  pos: pronoun
+- lemma: моя
+  translation: my (f.)
+  pos: pronoun
+  gender: f
+  usage: моя робота

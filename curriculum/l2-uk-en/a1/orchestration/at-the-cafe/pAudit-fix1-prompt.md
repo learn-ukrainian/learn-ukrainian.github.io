@@ -18,27 +18,26 @@
   Module:  at-the-cafe
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  1 Outline Compliance Errors
   failing gates:
-    lesson: 4609/2000 (raw: 4849) | pedagogy: 58 violations
+    lesson: 3795/2000 (raw: 4066) | pedagogy: 10 violations | immersion: 18.8% LOW (target 35-55% (M41))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
-     → Revision recommended (severity 70/100)
-     → 60 violations (severe - consider revision)
-     → 26 grammar-level violations (fundamental)
+       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+
+
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 90/100)
+     → 11 violations (severe - consider revision)
+     → 8 grammar-level violations (fundamental)
+     → Immersion 16% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/at-the-cafe-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/at-the-cafe.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
-
-  Critical Failures:
-    • 1 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/at-the-cafe-audit.log for details)
         ```

@@ -1,0 +1,35 @@
+{
+  "slug": "pronoun-declension",
+  "track": "a1",
+  "module_num": 31,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-28T20:32:51Z",
+      "words": 3886,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-28T20:35:27Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-28T20:35:27Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T20:51:42Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T20:51:42Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-28T20:51:42Z"
+}

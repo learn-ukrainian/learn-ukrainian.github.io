@@ -1,10 +1,12 @@
 module: c2-002
-level: c2
+level: C2
 sequence: 2
+slug: milozvuchnist-complete
 version: '2.0'
 title: Милозвучність — Повна система евфонії
 focus: phonology
 pedagogy: TTT
+phase: 'C2.1 [Stylistics & Rhetoric]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: Вступ — Філософія та естетика української евфонії (Introduction — Philosophy
     and Aesthetics of Ukrainian Euphony)
-  words: 600
+  words: 750
   points:
   - Концепція 'солов'їної мови' як центральний елемент мовної ідентичності та аналіз
     популярного міфу про світову першість за милозвучністю.
@@ -33,7 +35,7 @@ content_outline:
     її роль у створенні стилістичного ефекту.
 - section: Динаміка чергування у/в та і/й як стилістичний інструмент (Dynamics of
     u/v and i/y Alternation as a Stylistic Tool)
-  words: 800
+  words: 1000
   points:
   - Закон відкритого складу як фундаментальний рушій українських чергувань; реалізація
     вимог Держстандарту §4.3.2 (C2) щодо 'стилістичних засобів фонетики'.
@@ -43,7 +45,7 @@ content_outline:
     безперервного звукового потоку (speech flow).
 - section: Варіативність прийменника з/зі/із та початкових звуків (Variability of
     the Preposition z/zi/iz and Initial Sounds)
-  words: 800
+  words: 1000
   points:
   - Три варіанти прийменника 'з' та критерії їхнього вибору для запобігання какофонії;
     уникнення 'збігу приголосних' (consonant clusters).
@@ -53,7 +55,7 @@ content_outline:
     як засіб тонкого ритмічного налаштування фрази.
 - section: 'Авторська стратегія: Свідоме порушення милозвучності (Author''s Strategy:
     Conscious Violation of Euphony)'
-  words: 900
+  words: 1100
   points:
   - Використання какофонії (дисонансу) як свідомого художнього прийому для передачі
     напруги, хаосу або агресії в літературних текстах.
@@ -63,7 +65,7 @@ content_outline:
     граматичною нормою та авторською свободою вибору.'
 - section: Практикум — Високий рівень редагування та стилізації (Workshop — High-Level
     Editing and Stylization)
-  words: 900
+  words: 1150
   points:
   - Виявлення та усунення важких збігів приголосних та 'зіяння' в офіційно-ділових
     та академічних текстах без втрати змістової точності.

@@ -18,13 +18,21 @@
 
 Read ALL four files before writing anything.
 
+## Primary Source Excerpts (Cite These — Don't Invent Quotes)
+
+These passages were retrieved from indexed primary sources (litopys.org.ua). When you need to cite a primary source, prefer these verified passages over inventing quotes from memory. You may paraphrase or excerpt, but attribute correctly.
+
+(No primary source excerpts available from RAG)
+
+---
+
 ## Your Task
 
 Write the full lesson prose for **Emergencies** (a1 track).
 
 - **Total minimum**: 2000 words
 - **Write at least**: 3000 words (1.5x — aim for depth, not padding)
-- **Immersion**: TARGET: 35-55% Ukrainian, 45-65% English. Explanatory prose mixed — short Ukrainian sentences woven into English explanations. Grammar still anchored in English. Examples primarily Ukrainian with translations. Ukrainian sentences max 10 words.
+- **Immersion**: TARGET: 35-55% Ukrainian, 45-65% English. Write ALL section content in Ukrainian first (max 10 words per sentence). Then add English translation paragraphs for grammar explanations to bring Ukrainian down to 35-55%. CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. Grammar rules still anchored in English. A1 register — simple concrete vocabulary.
 - **Engagement callouts**: 4+ across sections, at least 4 different types
 - **Example sentences**: 8+ in varied formats (inline, standalone, tables, dialogues)
 

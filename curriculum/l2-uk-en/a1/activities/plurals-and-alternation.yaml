@@ -1,0 +1,430 @@
+- type: match-up
+  title: "Знайдіть пару: однина та множина"
+  instruction: "Match each singular noun with its correct plural form."
+  pairs:
+    - left: "студент"
+      right: "студенти"
+    - left: "словник"
+      right: "словники"
+    - left: "книга"
+      right: "книги"
+    - left: "проблема"
+      right: "проблеми"
+    - left: "місто"
+      right: "міста"
+    - left: "море"
+      right: "моря"
+    - left: "вікно"
+      right: "вікна"
+    - left: "кіт"
+      right: "коти"
+    - left: "рік"
+      right: "роки"
+    - left: "дитина"
+      right: "діти"
+    - left: "людина"
+      right: "люди"
+    - left: "око"
+      right: "очі"
+
+- type: fill-in
+  title: "Утворіть множину"
+  instruction: "Choose the correct plural form to complete the sentence."
+  items:
+    - sentence: "Тут стоять нові ___."
+      answer: "студенти"
+      options:
+        - "студенти"
+        - "студента"
+        - "студенто"
+        - "студенту"
+    - sentence: "Де мої ___?"
+      answer: "книги"
+      options:
+        - "книги"
+        - "книг"
+        - "книгах"
+        - "книго"
+    - sentence: "Це великі ___."
+      answer: "міста"
+      options:
+        - "міста"
+        - "місти"
+        - "місте"
+        - "місту"
+    - sentence: "Там сидять руді ___."
+      answer: "коти"
+      options:
+        - "коти"
+        - "кіти"
+        - "кота"
+        - "коту"
+    - sentence: "Минули довгі ___."
+      answer: "роки"
+      options:
+        - "роки"
+        - "ріки"
+        - "року"
+        - "рока"
+    - sentence: "Мені потрібні гострі ___."
+      answer: "ножі"
+      options:
+        - "ножі"
+        - "ніжі"
+        - "ножа"
+        - "ножу"
+    - sentence: "У людини є ___."
+      answer: "пальці"
+      options:
+        - "пальці"
+        - "палеці"
+        - "пальця"
+        - "пальцю"
+    - sentence: "Це великі теплі ___."
+      answer: "печі"
+      options:
+        - "печі"
+        - "пічі"
+        - "печа"
+        - "печу"
+    - sentence: "Там грають малі ___."
+      answer: "діти"
+      options:
+        - "діти"
+        - "дитини"
+        - "діта"
+        - "дитин"
+    - sentence: "Це дуже добрі ___."
+      answer: "люди"
+      options:
+        - "люди"
+        - "людини"
+        - "люда"
+        - "люд"
+    - sentence: "У неї гарні ___."
+      answer: "очі"
+      options:
+        - "очі"
+        - "оки"
+        - "ока"
+        - "око"
+    - sentence: "Це наші ___."
+      answer: "землі"
+      options:
+        - "землі"
+        - "земля"
+        - "землю"
+        - "земель"
+
+- type: quiz
+  title: "Перевірка правил"
+  instruction: "Choose the correct answer based on grammar rules."
+  items:
+    - question: "Яке закінчення ми додаємо для більшості чоловічих іменників?"
+      explanation: "Більшість чоловічих іменників закінчується на твердий приголосний і отримує закінчення -и у множині."
+      options:
+        - text: "-и"
+          correct: true
+        - text: "-а"
+          correct: false
+        - text: "-о"
+          correct: false
+        - text: "-е"
+          correct: false
+    - question: "Як правильно утворити множину від слова книга?"
+      explanation: "Жіночий рід на -а змінюється на -и, тому книга стає книги."
+      options:
+        - text: "книги"
+          correct: true
+        - text: "книга"
+          correct: false
+        - text: "книжі"
+          correct: false
+        - text: "книгу"
+          correct: false
+    - question: "Яку форму множини має слово середнього роду місто?"
+      explanation: "Середній рід на -о змінюється на -а, тому місто стає міста."
+      options:
+        - text: "міста"
+          correct: true
+        - text: "місти"
+          correct: false
+        - text: "місте"
+          correct: false
+        - text: "місту"
+          correct: false
+    - question: "Що відбувається з літерою і у слові кіт у множині?"
+      explanation: "Літера і часто чергується з о у відкритому складі, наприклад кіт стає коти."
+      options:
+        - text: "вона стає о"
+          correct: true
+        - text: "вона стає а"
+          correct: false
+        - text: "вона стає е"
+          correct: false
+        - text: "вона не змінюється"
+          correct: false
+    - question: "Яке з цих слів є правильною множиною для слова дитина?"
+      explanation: "Слово дитина має неправильну форму множини, яка повністю змінюється на діти."
+      options:
+        - text: "діти"
+          correct: true
+        - text: "дитини"
+          correct: false
+        - text: "дитинки"
+          correct: false
+        - text: "дітки"
+          correct: false
+    - question: "Яке з цих слів існує тільки у формі множини?"
+      explanation: "Слово гроші є незліченним іменником, який існує тільки у формі множини."
+      options:
+        - text: "гроші"
+          correct: true
+        - text: "місто"
+          correct: false
+        - text: "книга"
+          correct: false
+        - text: "людина"
+          correct: false
+    - question: "Яке з цих слів не має форми множини і завжди в однині?"
+      explanation: "Слово молоко є незліченним іменником, тому воно має тільки форму однини."
+      options:
+        - text: "молоко"
+          correct: true
+        - text: "книга"
+          correct: false
+        - text: "студент"
+          correct: false
+        - text: "око"
+          correct: false
+    - question: "Що відбувається з літерою і у слові піч у множині?"
+      explanation: "Літера і може чергуватися з е у відкритому складі, тому піч стає печі."
+      options:
+        - text: "вона стає е"
+          correct: true
+        - text: "вона стає о"
+          correct: false
+        - text: "вона стає а"
+          correct: false
+        - text: "вона не змінюється"
+          correct: false
+
+- type: group-sort
+  title: "Зліченні та незліченні іменники"
+  instruction: "Sort the nouns into Countable, Uncountable, and Plural-only categories."
+  groups:
+    - name: "Зліченні іменники"
+      items:
+        - "студент"
+        - "місто"
+        - "книга"
+        - "вікно"
+        - "кіт"
+    - name: "Незліченні іменники"
+      items:
+        - "молоко"
+        - "цукор"
+        - "вода"
+        - "повітря"
+    - name: "Тільки множина"
+      items:
+        - "гроші"
+        - "двері"
+        - "ножиці"
+        - "окуляри"
+
+- type: unjumble
+  title: "Складіть речення з множиною"
+  instruction: "Rearrange the words to form correct sentences with plural nouns."
+  items:
+    - words: ["Це", "мої", "нові", "книги"]
+      answer: "Це мої нові книги"
+    - words: ["міста", "великі", "є", "Тут"]
+      answer: "Тут є великі міста"
+    - words: ["молоді", "Там", "студенти", "працюють"]
+      answer: "Там працюють молоді студенти"
+    - words: ["добрі", "дуже", "люди", "Це"]
+      answer: "Це дуже добрі люди"
+    - words: ["У", "неї", "очі", "сині"]
+      answer: "У неї сині очі"
+    - words: ["гроші", "мої", "лежать", "Де"]
+      answer: "Де лежать мої гроші"
+
+- type: group-sort
+  title: "Підготовка до множини: сортування за родом"
+  instruction: "Sort the singular nouns by their gender. This determines their plural ending."
+  groups:
+    - name: "Чоловічий рід"
+      items:
+        - "студент"
+        - "кіт"
+        - "словник"
+        - "рік"
+        - "ніж"
+    - name: "Жіночий рід"
+      items:
+        - "книга"
+        - "проблема"
+        - "земля"
+        - "піч"
+    - name: "Середній рід"
+      items:
+        - "місто"
+        - "море"
+        - "вікно"
+
+- type: match-up
+  title: "Узгодження прикметників"
+  instruction: "Match the singular noun phrase with its plural equivalent."
+  pairs:
+    - left: "новий словник"
+      right: "нові словники"
+    - left: "цікава книга"
+      right: "цікаві книги"
+    - left: "старе місто"
+      right: "старі міста"
+    - left: "мала дитина"
+      right: "малі діти"
+    - left: "добра людина"
+      right: "добрі люди"
+    - left: "велике море"
+      right: "великі моря"
+    - left: "синій зошит"
+      right: "сині зошити"
+    - left: "тепла піч"
+      right: "теплі печі"
+
+- type: fill-in
+  title: "Множина прикметників"
+  instruction: "Choose the correct plural adjective to complete the sentence."
+  items:
+    - sentence: "Тут стоять ___ студенти."
+      answer: "нові"
+      options:
+        - "нові"
+        - "новий"
+        - "нова"
+        - "нове"
+    - sentence: "Я маю ___ сумки."
+      answer: "великі"
+      options:
+        - "великі"
+        - "великий"
+        - "велика"
+        - "велике"
+    - sentence: "Це дуже ___ міста."
+      answer: "старі"
+      options:
+        - "старі"
+        - "старий"
+        - "стара"
+        - "старе"
+    - sentence: "Там працюють ___ люди."
+      answer: "молоді"
+      options:
+        - "молоді"
+        - "молодий"
+        - "молода"
+        - "молоде"
+    - sentence: "У неї ___ очі."
+      answer: "сині"
+      options:
+        - "сині"
+        - "синій"
+        - "синя"
+        - "синє"
+    - sentence: "Де лежать ___ книги?"
+      answer: "мої"
+      options:
+        - "мої"
+        - "мій"
+        - "моя"
+        - "моє"
+
+- type: quiz
+  title: "Чергування голосних"
+  instruction: "Answer questions specifically about vowel alternation in plural nouns."
+  items:
+    - question: "Яка правильна форма множини для слова рік?"
+      explanation: "Літера і чергується з о у відкритому складі, тому рік стає роки."
+      options:
+        - text: "роки"
+          correct: true
+        - text: "ріки"
+          correct: false
+        - text: "року"
+          correct: false
+        - text: "ріку"
+          correct: false
+    - question: "Яка правильна форма множини для слова ніж?"
+      explanation: "Літера і чергується з о у відкритому складі, тому ніж стає ножі."
+      options:
+        - text: "ножі"
+          correct: true
+        - text: "ніжі"
+          correct: false
+        - text: "ніжа"
+          correct: false
+        - text: "ножа"
+          correct: false
+    - question: "Яка правильна форма множини для слова піч?"
+      explanation: "Літера і чергується з е у відкритому складі, тому піч стає печі."
+      options:
+        - text: "печі"
+          correct: true
+        - text: "пічі"
+          correct: false
+        - text: "піча"
+          correct: false
+        - text: "печа"
+          correct: false
+    - question: "Яка правильна форма множини для слова палець?"
+      explanation: "У слові палець відбувається чергування, і в множині воно стає пальці."
+      options:
+        - text: "пальці"
+          correct: true
+        - text: "палеці"
+          correct: false
+        - text: "пальця"
+          correct: false
+        - text: "палецю"
+          correct: false
+    - question: "Чому відбувається чергування літери і у множині?"
+      explanation: "Літера і часто знаходиться у закритому складі, а при додаванні закінчення він стає відкритим."
+      options:
+        - text: "тому що склад стає відкритим"
+          correct: true
+        - text: "тому що це чоловічий рід"
+          correct: false
+        - text: "тому що це виняток"
+          correct: false
+        - text: "тому що змінюється наголос"
+          correct: false
+    - question: "Як правильно сказати two cats українською?"
+      explanation: "Слово кіт має чергування і змінюється на коти у множині."
+      options:
+        - text: "два коти"
+          correct: true
+        - text: "два кіти"
+          correct: false
+        - text: "два кота"
+          correct: false
+        - text: "два кіта"
+          correct: false
+
+- type: unjumble
+  title: "Побудова складних речень"
+  instruction: "Rearrange the words to build sentences with exceptions and noun phrases."
+  items:
+    - words: ["читаємо", "книги", "Ми", "цікаві"]
+      answer: "Ми читаємо цікаві книги"
+    - words: ["є", "вода", "Тут", "чиста"]
+      answer: "Тут є чиста вода"
+    - words: ["холодне", "Вона", "п'є", "молоко"]
+      answer: "Вона п'є холодне молоко"
+    - words: ["двері", "ці", "великі", "Зачиніть"]
+      answer: "Зачиніть ці великі двері"
+    - words: ["є", "яблуко", "руці", "моїй", "У"]
+      answer: "У моїй руці є яблуко"
+    - words: ["моїй", "нозі", "черевик", "є", "На"]
+      answer: "На моїй нозі є черевик"

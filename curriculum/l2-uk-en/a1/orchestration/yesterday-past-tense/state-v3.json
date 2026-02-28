@@ -5,22 +5,22 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T12:46:12Z",
+      "ts": "2026-02-28T21:38:09Z",
       "task_id": "v3-yesterday-past-tense-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T12:48:57Z"
+      "ts": "2026-02-28T21:41:07Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T12:48:57Z",
+      "ts": "2026-02-28T21:41:07Z",
       "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T12:52:09Z",
+      "ts": "2026-02-28T21:46:26Z",
       "attempts": 2
     }
   }

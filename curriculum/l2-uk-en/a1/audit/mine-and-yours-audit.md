@@ -1,7 +1,7 @@
 # Audit Report: M20 — mine-and-yours.md
 **Level:** A1 | **Module:** M20 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-28 03:31:15
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-28 19:19:44
 
 ## Configuration
 **Type:** A1-grammar
@@ -16,49 +16,19 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | match-up | Переклад займенників | 8 | 8 | ✅ |
-| 2 | group-sort | Він, Вона, Воно чи Вони? | 16 | 12 | ✅ |
-| 3 | quiz | Правильна форма для предмета | 8 | 8 | ✅ |
-| 4 | fill-in | Мій, моя, моє чи мої? | 8 | 8 | ✅ |
-| 5 | match-up | Запитання та відповіді | 8 | 8 | ✅ |
-| 6 | unjumble | Побудуйте речення | 6 | 6 | ✅ |
-| 7 | fill-in | Його, її чи їхній? | 8 | 8 | ✅ |
-| 8 | quiz | Соціальна дистанція | 8 | 8 | ✅ |
-| 9 | true-false | Правда чи ні? | 8 | 8 | ✅ |
-| 10 | fill-in | Змішана практика | 8 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 10 (target: 8-12) ✅
-- Unique types: 6 (minimum: 4) ✅
-- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
-- Required types used: 4/4 (fill-in, match-up, quiz, true-false) ✅
-- Low density activities: 0
-
-## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_FORMAT]** A1/A2 vocabulary requires 5 columns, found 6: | Word | IPA | English | POS | Gender | Note |
-  - FIX: Format: | Word | English | POS | Gender | Note |
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ✅ 3014/2000 (raw: 3485)
-- **Activities:** ✅ 10/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
-- **Priority:** ✅ Priority types used
+- **Words:** ✅ 3014/2000 (raw: 3471)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 16/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
-- **Content_heavy:** ℹ️ N/A (standard module)
+- **Pedagogy:** ✅ Level-appropriate
+- **Content_heavy:** ⏳ Deferred (content-only audit)
 - **Immersion:** 🇺🇦 25.1% (target 25-40% (M20))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
@@ -69,11 +39,9 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
 | **Mine and Yours** | ✅ | 68 | Included in Core |
-| **Вступ: Бюро знахідок** | ✅ | 381 | Included in Core |
-| **Граматика: Мій, твій, наш** | ✅ | 501 | Included in Core |
-| **Граматика: Його, її, їхній** | ✅ | 549 | Included in Core |
-| **Практика: Чия це річ?** | ✅ | 497 | Included in Core |
-| **Діалоги: Це мій телефон** | ✅ | 468 | Included in Core |
-| **Культура: Твій чи Ваш?** | ✅ | 503 | Included in Core |
+| **Вступ: Чия це річ?** | ✅ | 381 | Included in Core |
+| **Презентація: Система форм та узгодження** | ✅ | 1050 | Included in Core |
+| **Практика та продукція** | ✅ | 965 | Included in Core |
+| **Культурний контекст: Етикет та еволюція стосунків** | ✅ | 503 | Included in Core |
 | **Підсумок** | ✅ | 47 | Included in Core |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

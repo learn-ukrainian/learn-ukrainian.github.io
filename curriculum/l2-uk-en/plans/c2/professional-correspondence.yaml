@@ -1,10 +1,12 @@
-module: c2-056
-level: c2
-sequence: 56
+module: c2-054
+level: C2
+sequence: 54
+slug: professional-correspondence
 version: '2.0'
 title: Професійна кореспонденція
 focus: grammar
 pedagogy: TTT
+phase: 'C2.3 [Professional Language]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: Вступ — Культура та еволюція кореспонденції (Introduction — Culture and
     Evolution of Correspondence)
-  words: 500
+  words: 600
   points:
   - 'Роль листування в професійному житті та дебюрократизація: перехід від радянського
     «канцеляриту» до концепції «human-to-human» комунікації при збереженні офіційного
@@ -31,7 +33,7 @@ content_outline:
   - Універсальні принципи ефективного листування та відповідність вимогам державного
     стандарту щодо стилістичного регістру (§4.3.1.1)
 - section: Офіційні листи та ДСТУ 4163:2020 (Official Letters and DSTU 4163:2020)
-  words: 800
+  words: 1000
   points:
   - 'Типологія офіційних документів згідно з ДСТУ (§1.3.2): запити, пропозиції, скарги,
     гарантії та звіти'
@@ -39,7 +41,7 @@ content_outline:
     до вимог «Вимог до оформлювання документів»
 - section: Специфіка ділової електронної комунікації (Specificity of Business Electronic
     Communication)
-  words: 700
+  words: 900
   points:
   - Етикет використання великої літери у займенниках «Ви», «Ваш» як унікальна риса
     українського ділового етикету для вияву поваги до адресата
@@ -47,7 +49,7 @@ content_outline:
     правила роботи з вкладеннями (файлами)'
 - section: Етика запитів та стратегії відповідей (Ethics of Requests and Response
     Strategies)
-  words: 700
+  words: 900
   points:
   - 'Формулювання запитів на інформацію: відмова від англійських кальок (напр., заміна
     «Я пишу, щоб запитати» на питоме «Звертаюся до Вас із запитанням»)'
@@ -55,7 +57,7 @@ content_outline:
     стосунків
 - section: Скарги, претензії та культура відмови (Complaints, Claims, and Rejection
     Culture)
-  words: 700
+  words: 900
   points:
   - 'Аргументація у скаргах та претензіях: юридична точність та доказова база; розгляд
     скарги як етап діловодного процесу'
@@ -63,7 +65,7 @@ content_outline:
     відповідальністю та корпоративним інтересом'
 - section: 'Практикум: Мовна чистота та запобігання калькам (Workshop: Language Purity
     and Calque Prevention)'
-  words: 600
+  words: 700
   points:
   - 'Корекція типових помилок керування: вживання «згідно з» виключно з Орудним відмінком
     (напр., «згідно з інструкцією»)'

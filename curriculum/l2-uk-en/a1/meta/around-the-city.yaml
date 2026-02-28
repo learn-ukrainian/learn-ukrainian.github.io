@@ -2,39 +2,40 @@ slug: around-the-city
 title: Around the City
 word_target: 2000
 content_outline:
-- section: 'Вступ: Місто та орієнтири'
-  words: 350
+- section: 'Вступ: Міський простір'
+  words: 400
   points:
-  - 'Welcome to the city center: The concept of ''Майдан'' or ''Площа'' as the navigation hub.'
-  - 'Establish the goal: Not just knowing *where* things are, but *how* to find them.'
-  - 'Core distinction intro: ''Ми тут'' (Location) vs ''Ми йдемо туди'' (Direction).'
-- section: 'Лексика: Напрямки та місця'
-  words: 550
+  - 'Scaffolding notice: Use English scaffolding to establish the core concepts of
+    urban navigation before transitioning to Ukrainian dialogues.'
+  - 'Cultural Hook: Contrast the architectural «Площа» with the community-centric
+    «Майдан», highlighting the civic significance of the latter.'
+  - 'Core Concept: Define the difference between seeking a location («Де знаходиться...?»)
+    and seeking a route («Як дістатися до...?»).'
+- section: 'Презентація: Граматика та напрямки'
+  words: 600
   points:
-  - 'Basic Directions: ''прямо'', ''наліво'', ''направо''.'
-  - 'City Infrastructure: ''вулиця'', ''зупинка'', ''аптека'', ''станція''.'
-  - 'Locative Case Usage: ''на вулиці'', ''в аптеці''.'
-- section: 'Граматика: Прийменники та рух'
-  words: 550
+  - 'Locative Prepositions: Contrast «на» (open spaces/infrastructure: зупинці, пошті,
+    площі) with «в» (enclosed buildings: аптеці), explicitly addressing common learner
+    errors.'
+  - 'Directional Vocabulary: Provide clear definitions and examples for «прямо», «наліво/ліворуч»,
+    and «направо/праворуч».'
+  - 'Grammar of Motion: Contrast static location «Де» (Locative) with movement towards
+    a goal «Куди» (Accusative) as per State Standard §4.2.3.2/3.'
+  - 'Genitive Chunks: Introduce «біля» and «навпроти» as fixed lexical blocks requiring
+    the Genitive case (біля аптеки), without teaching the full case paradigm.'
+- section: 'Практика: Орієнтування за мапою'
+  words: 600
   points:
-  - 'Prepositions of Place: ''біля'', ''навпроти'', ''за'', ''перед''.'
-  - 'Location vs Motion: ''Де?'' (Locative) vs ''Куди?'' (Accusative).'
-  - 'Example Scenarios: Taxi and Meeting.'
-- section: 'Практика: Маршрути та діалоги'
-  words: 370
+  - 'Landmark Navigation: Present a mini-dialogue demonstrating how Ukrainians navigate
+    using landmarks instead of cardinal directions.'
+  - 'Де vs Куди Drill: Include a guided narrative requiring the learner to distinguish
+    between static presence and directional motion.'
+  - 'Preposition Selection: Create a scenario (e.g., meeting a friend) focusing on
+    selecting the correct preposition (в/на) for various city locations.'
+- section: 'Культура та Продакшн: Життя в місті'
+  words: 400
   points:
-  - 'Following a Map: Giving directions.'
-  - 'Asking for Directions: ''Де...?'' vs ''Як дістатися до...?''.'
-  - 'Dialogue: The Lost Tourist.'
-  - 'Sequence Markers: ''Спочатку'', ''Потім''.'
-- section: 'Творче завдання: Ваш шлях'
-  words: 200
-  points:
-  - 'Describe Your Route: Home to shop/park.'
-  - 'Roleplay: Taxi Driver.'
-- section: 'Культура: Українська навігація'
-  words: 320
-  points:
-  - 'The Marshrutka Phenomenon.'
-  - 'Landmarks Over Distance.'
-  - 'Maidan Culture.'
+  - 'Transport Culture: Explain the necessity and etiquette of shouting «На зупинці,
+    будь ласка!» in a marshrutka, reinforcing the Locative case.'
+  - 'Roleplay Setup: Design the ''Lost Tourist'' scenario where the learner must combine
+    landmarks, directions, and prepositions to guide someone to their home or a café.'

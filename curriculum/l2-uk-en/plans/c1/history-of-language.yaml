@@ -1,6 +1,6 @@
-module: c1-030
+module: c1-031
 level: C1
-sequence: 30
+sequence: 31
 slug: history-of-language
 version: '2.0'
 title: 'Історія мови: Від Русі до сьогодення'
@@ -123,7 +123,7 @@ sources:
   type: reference
   notes: Academic linguistic history
 immersion: 100% Ukrainian
-phase: C1.2 Professional Communication
+phase: C1.3 [Movoznavstvo & Sociolinguistics]
 objectives:
 - 'Analyze the causes and consequences of історія мови: від русі до сьогодення'
 - Evaluate the historical significance of давньоруський період

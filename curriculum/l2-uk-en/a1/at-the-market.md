@@ -1,323 +1,183 @@
 <!-- SCOPE
-Covers: Market vocabulary (units, goods), Genitive case for quantities (intro), polite requests, asking price, cultural context of Ukrainian markets (Kyiv/Odesa).
+Covers: Vocabulary for buying fresh produce at a market, units of measurement, polite requests, numbers with nouns.
 Not covered:
-  - Full Genitive case declension theory → A2
-  - Supermarket specific vocab → a1-38
-Related: a1-18 (Food), a1-36 (Restaurant), a1-38 (Store)
+  - Shopping at a supermarket → a1-61
+Related: a1-18, a1-53
 -->
 
 # At the Market
 
 > **Чому це важливо?**
 >
-> In Ukraine, the market is not just a place to buy food; it is the beating heart of the community. Here you find the freshest ingredients for borshch, hear the latest news, and experience the true "smak" (taste) of the country. Learning to navigate a Ukrainian market unlocks a level of cultural immersion that a supermarket can never offer.
+> Going to the market is not just a commercial transaction in Ukraine; it is a profound cultural experience. Learning how to politely request fresh produce, negotiate quantities, and handle money will allow you to confidently participate in one of the most vibrant aspects of daily Ukrainian life.
 
-## Вступ: Культура українського ринку
+## Вступ та культура
 
-**Для студента ринок — це школа.** (For a student, the market is a school.) **Тут голосно, яскраво і цікаво.** (Here it is loud, bright and interesting.) **Це місце для розмови.** (This is a place for conversation.) **Супермаркет — це тиша.** (Supermarket is silence.) **Ринок — це життя, це серце міста.** (Market is life, the heart of the city.) **Торгівля тут — це справжнє мистецтво.** (Trade here is a real art.)
+### Український базар (The Ukrainian Market)
+В Україні базар — це не просто місце для покупок. Це важлива частина життя. (In Ukraine, the market is not just a place for shopping. It is an important part of life.) У кожному місті є великі сучасні супермаркети. Але українці дуже люблять купувати свіжі продукти на базарі. (While large modern supermarkets exist in every city, Ukrainians really love buying fresh produce at the market.) Чому? Там висока якість і свіжість. (Why? Because of the high quality and freshness.)
+На базарі продають свіжі продукти. Там є домашнє молоко та смачний сир. Там продають свіжі овочі.
+Люди довіряють продавцям. (People trust the vendors.) Вони приходять рано вранці. Вони купують найсвіжіші фрукти у фермерів. (They come early in the morning. They buy the freshest fruits from farmers.) Офіційне слово — **ри́нок** (market), але люди часто використовують тепле слово **база́р**. (The formal word is "ринок", but people often use the warm word "базар".) Both terms are completely natural and interchangeable in everyday speech.
+Сьогодні ми йдемо на ринок. Ми купуємо свіжі овочі. Ми розмовляємо з приємними людьми.
 
-### Ринок чи Базар?
-**Ви почуєте два слова: ринок і базар.** (You will hear two words: rynok and bazar.) **Це синоніми.** (These are synonyms.) Technically, they mean the same thing, but they carry different vibes. "Ry-nok" sounds a bit more official. "Ba-zar" feels more chaotic and traditional. **Офіційно: ринок. Неофіційно: базар.** (Officially: rynok. Unofficially: bazar.) **Базар — це весело.** (Bazar is fun.)
+### Легендарний Привоз в Одесі (The Legendary Pryvoz in Odesa)
+Ви хочете зрозуміти українське місто? Тоді відвідайте центральний ринок. (If you want to understand a Ukrainian city, you need to visit the central market.) Найвідоміший ринок в Україні — це Привоз в Одесі. (The most famous market in Ukraine is Pryvoz in Odesa.) Це дуже гарне історичне місце. (It is a very beautiful historical place.)
+Привоз — це дуже відомий ринок. Він знаходиться в місті Одеса. Там продають найсвіжішу рибу.
+Привоз відомий своїм гумором та атмосферою. (Pryvoz is famous for its humor and atmosphere.) Ви не просто купуєте їжу. Ви говорите, жартуєте і відчуваєте культуру. (You don't just buy food. You talk, joke, and feel the culture.) Багато людей знають цікаві історії про це місце. (Many people know wonderful stories about this place.)
+Продавці на Привозі дуже люблять жартувати. Покупці також люблять спілкуватися. Це дуже веселе місце.
 
-In a supermarket (**суперма́ркет**), you take what is on the shelf and pay silently. On the **bazar**, you interact. **Ви дивитесь в очі.** (You look in the eyes.) **Ви запитуєте.** (You ask.) **Ви пробуєте продукт.** (You taste the product.) This interaction is key. A good seller knows their tomatoes are the best, and they want to tell you why.
+> [!culture] Одеський гумор на Привозі
+> Pryvoz is considered the birthplace of Odesa's famous humor. Vendors use witty, sharp, and highly creative phrases to attract customers. Walking through the aisles is like attending a free comedy show where the produce is the main prop.
 
-> [!culture]
-> **The "Try It!" Culture**
-> If you are buying cheese (**сир**), berries, or grapes, the seller might say: «Спробуйте!» ("Try it!"). **Це ввічливо.** (It is polite.) **Скуштуйте шматочок.** (Taste a piece.) **Це нормально.** (It is normal.) **Не бійтеся.** (Don't be afraid.) **Продавець добрий.** (Seller is kind.) If you like it, you buy. If not, say «Дякую» and move on. Refusing to taste can sometimes be seen as doubting the quality!
+### Бессарабський ринок у Києві (Bessarabskyi Market in Kyiv)
+Київ — це столиця. Там є Бессарабський ринок. Це дуже красива історична будівля. (In the capital city of Kyiv is the Bessarabskyi Market. It is a very beautiful historical building.) Це був перший великий ринок у Києві. (It was the first indoor market in Kyiv.)
+Бессарабський ринок дуже красивий. Це історична будівля в самому центрі Києва. Він працює кожного дня.
+Сьогодні це чудовий ринок у центрі на вулиці Хрещатик. (Today it is a wonderful market in the center on Khreshchatyk street.) Це дуже дорогий ринок, але він має глибоку історію. (It is a very expensive market, but it has a deep history.) Це цікаве місце для туристів. (This is an interesting place for tourists.)
+Там продають дуже якісні продукти. Люди купують там красиві квіти та екзотичні фрукти. Це дорогий, але чудовий ринок.
 
-### Бессарабський ринок: The "Aristocrat"
-**Ви в Києві? Ідіть на Бессарабський ринок.** (Are you in Kyiv? Go to Bessarabskyi market.) **Він у центрі, на Хрещатику.** (It is in the center, on Khreshchatyk.) **Це легенда.** (It is a legend.)
+### Традиція «Спробуйте!» (The Tradition of "Try It!")
+One of the most beautiful and welcoming aspects of Ukrainian market culture is the tradition of tasting food before you buy it. As you walk past the stalls, you will constantly hear vendors offering you a piece of their product. This is how they prove their produce is truly the best.
+Ввічливий продавець каже: «Спробуйте!» Цей продукт дуже смачний. Він хоче показати високу якість.
+This practice applies to everything from seasonal fruits and berries to homemade cheese, honey, and pickles. It is not just a clever marketing trick; it is a sincere way to build trust with the customer. If you buy a kilogram of apples, the vendor wants you to be absolutely happy with your choice so you will come back to them next week.
+Спробуйте це солодке яблуко. Воно дуже смачне. Ви точно захочете купити цей домашній сир.
 
-Built in 1912, it was a technological marvel of its time, featuring one of the first indoor refrigeration systems in Eastern Europe. **Це великий історичний ринок.** (This is a large historical market.) **Будівля дуже стара і гарна.** (The building is very old and beautiful.) **Сьогодні він відомий високими цінами.** (Today it is known for high prices.) **Кияни кажуть: «Дорого, як на Бессарабці».** (Kyivans say: "Expensive, like at Bessarabka"). **Там купують екзотичні фрукти і квіти.** (There one buys exotic fruits and flowers.)
+> [!myth-buster] Tasting is Not Begging
+> Some foreigners feel awkward accepting free samples at the market, thinking it obligates them to buy. In Ukraine, tasting is a standard part of the selection process. If you taste a tomato and politely say "Дякую" (Thank you) without buying, no vendor will be offended.
 
-### Привоз: The Soul of Odesa
-**А ось Привоз в Одесі.** (And here is Pryvoz in Odesa.) **Привоз — це справжній театр.** (Pryvoz is a real theater.) Established in 1827, its name comes from the fact that traders would "bring" (**привозити**) wares on carts.
-
-**Привоз відомий гумором.** (Pryvoz is famous for humor.) **В Одесі кажуть: «Привоз знає все».** (In Odesa they say: "Pryvoz knows everything".) **Там є риба, фрукти і сир.** (There is fish, fruit and cheese.) **Тут треба говорити.** (Here one must talk.) **Мовчазний покупець — це дивно.** (A silent buyer is strange.) **Продавці там — як герої анекдотів.** (Sellers there are like heroes of anecdotes.)
-
-### Why Ukrainians Love Markets
-**Чому ми любимо ринок?** (Why do we love the market?) **Там усе свіже.** (There everything is fresh.) **Ми купуємо тільки свіжі помідори.** (We buy only fresh tomatoes.) **Ми хочемо справжні помідори.** (We want real tomatoes.)
-
-Ukrainians value food that is **дома́шнє** (homemade). **Домашня їжа — це найкраща їжа.** (Homemade food is the best food.) **Морква з городу смачніша.** (Carrot from the garden is tastier.) On a market you will hear: **«Тільки з грядки!»** (Straight from the garden bed!) — this means the product is as fresh as possible. We believe that mass-produced food has less flavor. **Бабуся на ринку продає найкраще.** (Grandma at market sells the best.) **Ми шукаємо справжній смак.** (We look for real taste.) **Ви хочете свіже молоко.** (You want fresh milk.) **Не із заводу, а від корови.** (Not from factory, but from cow.) **Це традиція.** (This is tradition.)
-
-> [!myth-buster]
-> **Myth:** Markets are only for older people. **Міф: Ринок — тільки для бабусь.**
-> **Reality:** **Молодь теж любить ринок!** (Youth also loves the market!) The "farm-to-table" movement is huge. Many young people prefer supporting local farmers. **Це модно.** (It is trendy.) **Це корисно.** (This is healthy.) **Багато молодих людей купують тут продукти.** (Many young people buy products here.) Going to the market on Saturday morning is a ritual.
-
----
-
-## Лексика та Граматика: Як купувати?
-
-To buy something, you need to know how to measure it. **Ви хочете купити? Треба знати міру.** (You want to buy? Need to know the measure.) In English, we say "a kilo OF apples." In Ukrainian, we don't use the word "of." Instead, we change the ending of the second word. This is our first peek at the **Genitive Case**, but don't panic — we will learn it as a simple formula.
+## Презентація лексики та граматики
 
 ### Одиниці виміру (Units of Measurement)
-First, let's learn the containers and units. **Спочатку вивчимо одиниці.** (First let's learn units.) **Вчіть ці слова.** (Learn these words.) **Це важливо для покупок.** (This is important for shopping.)
-
-**кілогра́м** — kilogram
-This is the standard unit. **Це стандарт.** (This is standard.) **Ми не використовуємо фунти.** (We do not use pounds.)
-
-**грам** — gram
-Used for cheese, butter, or expensive items. **Це для сиру або масла.** (This is for cheese or butter.) Note: Ukrainians often order "200 grams" (**двісті грам**) or "300 grams" (**триста грам**) of cheese, not "a slice."
-
-**пучо́к** — bunch
-Used for greenery like parsley, dill, or green onions. **Це для зелені: петрушка, кріп.** (This is for greens: parsley, dill.)
-
-**шту́ка** — piece / item
-Used when you buy things individually, like eggs or large fruits. **Це для яєць або фруктів.** (This is for eggs or fruits.)
-
-**літр** — liter
-Used for liquids: milk, juice, oil. **Це для молока, соку, олії.** (This is for milk, juice, oil.)
-
-**пля́шка** — bottle
-A bottle of water or oil. **Пляшка олії або води.** (A bottle of oil or water.)
-
-**паке́т** — packet / bag
-Used for juice or a bag of goods. **Це для соку або покупок.** (This is for juice or purchases.)
-
-### The "Kilogram" Pattern
-Here is the magic formula for ordering. **Ось магічна формула.** **Це легко.** (It is easy.) **Спробуйте самі.** (Try yourself.)
-
-**Formula:** `Quantity + Unit + Product (modified)`
-
-When you say "a kilo," the next word must change to answer the question "of what?".
-- **Картопля** (potato) → **кілограм картоплі** (a kilo of potato)
-- **Яблука** (apples) → **кілограм яблук** (a kilo of apples)
-- **Сало** (salo) → **кілограм сала** (a kilo of salo)
-
-Let's look at some common patterns you can memorize as chunks. **Дивіться і запам'ятовуйте.** (Look and memorize.)
-
-| Nominative (What is it?) | Genitive Pattern (A kilo of...) | English |
-|--------------------------|---------------------------------|---------|
-| **карто́пля** | кілограм **картоплі** | a kilo of potatoes |
-| **мо́рква** | кілограм **моркви** | a kilo of carrots |
-| **цибу́ля** | кілограм **цибулі** | a kilo of onions |
-| **я́блука** | кілограм **яблук** | a kilo of apples |
-| **помідо́ри** | кілограм **помідорів** | a kilo of tomatoes |
-| **огірки́** | кілограм **огірків** | a kilo of cucumbers |
-
-> [!tip]
-> **Memorize the Chunk**
-> Don't think about grammar rules yet. Just memorize "кілограм картоплі" as one single vocabulary item. It sounds like a rhyme!
-
-### Numbers + кілограм
-**Числа змінюють слово.** (Numbers change the word.) Pay attention to how "кілограм" changes with different numbers:
-
-| Number | Form | Example |
-|--------|------|---------|
-| **1** | кілограм | один **кілограм** картоплі |
-| **2, 3, 4** | кілограми | два **кілограми** яблук |
-| **5+** | кілограмів | п'ять **кілограмів** помідорів |
-| **½** | пів кілограма | пів **кілограма** сиру |
-
-> [!warning]
-> **Common Error**
-> WRONG: «Два кілограм помідорів»
-> CORRECT: «Два кілограми помідорів»
-> **Два, три, чотири + кілограми.** (Two, three, four + кілограми.) **П'ять і більше + кілограмів.** (Five and more + кілограмів.)
-
-### Asking the Price
-There are three main ways to ask about price. **Є три способи запитати про ціну.**
-
-**1. Скільки коштує?**
-(How much does it cost?)
-**Це фраза для одного товару.** (This is a phrase for one item.)
-*   Example: «Скільки коштує ця курка?» (How much does this chicken cost?)
-
-**2. По скільки?**
-(At what price?)
-**Це популярна фраза.** (This is a popular phrase.) **Це означає "Ціна за кілограм".** (This means "Price per kilo".)
-*   Example: Pointing at tomatoes — «По скільки помідори?» (How much are the tomatoes?)
-
-**3. Скільки з мене?**
-(How much from me?)
-**Це фінальна фраза.** (This is the final phrase.) **Час платити.** (Time to pay.) **Ви питаєте про загальну суму.** (You ask about the total sum.) It means "What is my total?".
-
-### Quality Adjectives
-You want the best products, right? **Ви хочете найкращі продукти, так?** You need to recognize these words when the seller praises their goods.
-
-**сві́жий** — fresh
-*   «Це свіже молоко?» (Is this fresh milk?)
-*   «Дуже свіжий хліб.» (Very fresh bread.)
-
-**соло́дкий** — sweet
-*   «Ці яблука солодкі?» (Are these apples sweet?)
-*   «Солодкий перець.» (Sweet pepper / Bell pepper.)
-
-**смачни́й** — tasty / delicious
-*   «Дуже смачний сир!» (Very tasty cheese!)
-
-**сти́глий** — ripe
-*   «Стигла полуниця.» (Ripe strawberry.)
-
-Remember that adjectives change gender to match the noun (він/вона/воно/вони), just like we learned in previous lessons.
-
-| Masculine (він) | Feminine (вона) | Neuter (воно) | Plural (вони) |
-|-----------------|-----------------|---------------|---------------|
-| свіж**ий** | свіж**а** | свіж**е** | свіж**і** |
-| солодк**ий** | солодк**а** | солодк**е** | солодк**і** |
-
----
-
-## Практика: Діалоги на ринку
-
-Now, let's put it all together. **Тепер практика.** (Now practice.) Imagine you are at the market. **Уявіть: ви на ринку.** (Imagine: you are at the market.) We will use the new vocabulary to ask for products, check prices, and pay. **Прочитайте діалоги вголос.** (Read the dialogues out loud.)
-
-### Polite Requests
-In English, "Give me" can sound rude. **Англійською "Give me" — це грубо.** (In English "Give me" is rude.) In Ukrainian, **да́йте** is acceptable IF you add the magic words.
-
-**Дайте, будь ласка...** — Give (me), please...
-This is the standard polite order.
-*   «Дайте, будь ласка, кілограм яблук.»
-
-**Зважте, будь ласка...** — Weigh, please...
-Use this when asking for a specific amount of something loose, like cherries or sugar.
-*   «Зважте, будь ласка, триста грам.»
-
-**Можна...?** — May I / Can I...?
-A soft, polite way to ask for something or to ask to taste.
-*   «Можна спробувати?» (May I taste?)
-*   «Можна два кілограми?» (Can I have two kilos?)
-
-> [!warning]
-> **Don't Translate "I want"**
-> Saying «Я хочу...» (I want...) to a seller sounds like a demanding child. It is grammatically correct but socially awkward. Use «Дайте, будь ласка...» or «Можна...?» instead.
-
-### Dialogue 1: Buying Vegetables
-**Сценарій: Ви купуєте картоплю і зелень.** (Scenario: You are buying potatoes and greens.) **Говоріть голосно.** (Speak loudly.) **Уявіть: ви на базарі.** (Imagine that you are at the market.)
-
-**Ви:** Добрий день! По скільки картопля?
-(Good day! How much are the potatoes?)
-
-**Продавець:** Добрий день! Ця — двадцять гривень. Дуже смачна!
-(Good day! This one is twenty hryvnias. Very tasty!)
-
-**Ви:** Дайте, будь ласка, два кілограми.
-(Give (me), please, two kilos.)
-
-**Продавець:** Добре. Що ще?
-(Good. What else?)
-
-**Ви:** І один пучок петрушки.
-(And one bunch of parsley.)
-
-**Продавець:** Ось, будь ласка. З вас п'ятдесят гривень.
-(Here you go. From you (total is) fifty hryvnias.)
-
-**Ви:** Дякую!
-(Thank you!)
-
-Notice the phrase **З вас** (From you). It is short for "Скільки з мене?" — "З вас...".
-
-### Dialogue 2: Buying Fruit & Tasting
-**Сценарій: Ви бачите гарну полуницю. Ви хочете знати: вона солодка?** (Scenario: You see beautiful strawberry. You want to know: is it sweet?) **Не соромтеся питати.** (Don't be shy to ask.)
-
-**Ви:** Яка гарна полуниця! Вона солодка?
-(What beautiful strawberry! Is it sweet?)
-
-**Продавець:** Як мед! Спробуйте!
-(Like honey! Try (it)!)
-
-**Ви:** Дякую... Ммм, справді солодка. Зважте пів кілограма.
-(Thank you... Mmm, really sweet. Weigh half a kilo.)
-
-**Продавець:** Тільки пів кілограма? Беріть більше, завтра не буде!
-(Only half a kilo? Take more, tomorrow (it) won't be (here)!)
-
-**Ви:** Ні, дякую, тільки пів кілограма.
-(No, thank you, only half a kilo.)
-
-Seller psychology: they will always try to sell you more! "Take more" (**беріть більше**) is a very common phrase. Stand your ground politely.
-
-### Payment & Haggling
-Finally, you need to pay. **Ви вибрали товар, тепер треба платити.** (You chose the product, now (you) need to pay.) Cash is king at the market. **На ринку ми платимо готівкою.** (At the market we pay with cash.)
-
-**готі́вка** — cash
-**Готівка — це гроші в руках.** (Cash is money in hands.)
-
-**ка́ртка** — card
-**Картка — це банк.** (Card is bank.)
-
-**ре́шта** — change (money returned)
-**Решта — це ваші гроші назад.** (Change is your money back.) Useful phrases: **«Без решти»** (Without change — exact amount) and **«Візьміть решту»** (Take your change).
-
-**Ви:** Скільки з мене?
-(How much from me?)
-
-**Продавець:** Сто сорок гривень.
-(Hundred forty hryvnias.)
-
-**Ви:** Можна карткою?
-(Can (I pay by) card?)
-
-**Продавець:** Ні, тільки готівка. Або переказ на картку.
-(No, only cash. Or transfer to card.)
-
-**Ви:** Ось двісті.
-(Here is two hundred.)
-
-**Продавець:** Дякую. Ваша решта — шістдесят.
-(Thank you. Your change is sixty.)
-
-> [!observe]
-> **Haggling (Торгування)**
-> Can you bargain? Yes, but read the room.
-> *   Supermarket: Never.
-> *   Market with price tags: Usually no.
-> *   Market without price tags: Yes!
-> *   Asking: «А дешевше можна?» (Can it be cheaper?) or «Я беру два кілограми. Яка ціна?» (I take two kilos. What is the price?).
-> *   Smile! Aggressive bargaining is rude. Friendly bargaining is a game.
-
-**Це просто, так?** (This is simple, yes?)
-
----
-
-## Історія: Мій похід на Привоз
-
-**Ось моя історія.** (Here is my story.) **Я в Одесі. Я йду на Привоз.** (I am in Odesa. I go to Pryvoz.) **Я хочу купити домашній сир.** (I want to buy homemade cheese.)
-
-**Сонце світить. Небо синє.** (Sun shines. Sky is blue.) **Це субота. Ранок.** (It is Saturday. Morning.) **Ринок гуде, як вулик.** (The market buzzes like a beehive.) **Я бачу багато людей.** (I see many people.) **Вони говорять, сміються, купують.** (They speak, laugh, buy.) **Тут є все: овочі, фрукти, м'ясо, риба.** (Here is everything: vegetables, fruits, meat, fish.) **Тут пахне рибою і кропом.** (It smells of fish and dill.) **Я йду в молочний відділ.** (I go to the dairy section.)
-
-**Там стоїть жінка.** (There stands a woman.) **У неї червоний фартух.** (She has a red apron.) **Вона сильна і весела.** (She is strong and cheerful.) **Вона дуже енергійна.** (She is very energetic.)
-
-«Хлопче! Чого стоїмо? Чого чекаємо?» **вона каже голосно і усміхається.** ("Boy! Why are we standing? Why are we waiting?" she says loudly and smiles.)
-
-«Шукаю сир,» **я кажу тихо.** ("I am looking for cheese," I say quietly.)
-
-«Ти його вже знайшов! Найкращий сир в Одесі! На, пробуй!» ("You already found it! The best cheese in Odesa! Here, try!")
-
-**Вона дає шматок на ножі.** (She gives a piece on a knife.) **Сир смачний і солоний.** (The cheese is tasty and salty.) **Він білий і м'який.** (It is white and soft.) **Це ідеальний сніданок.** (It is ideal breakfast.)
-
-«Скільки коштує?» **я запитую.** ("How much does it cost?" I ask.)
-
-«Для тебе — недорого! Бери кілограм, мама буде рада.» ("For you — not expensive! Take a kilo, mom will be happy.")
-
-**Я сміюся.** (I laugh.) **Я не хочу кілограм.** (I do not want a kilo.) **Але я купую.** (But I buy (it).) **Вона розповідає про свою корову.** (She tells about her cow.) **Я кажу: «Прийду ще».** (I say: "I will come again".)
-
-**Ринок — це не магазин.** (The market is not a shop.) **Ринок — це історія.** (The market is a story.) **Я люблю Привоз. Це моє улюблене місце.** (I love Pryvoz. It is my favorite place.) **Я йду додому. Я щасливий.** (I go home. I am happy.) **Я люблю сир. Я люблю Одесу.** (I love cheese. I love Odesa.) **Я люблю українські продукти.** (I love Ukrainian products.)
-
-Next time you are in Ukraine, don't be afraid. **Ідіть на ринок.** (Go to the market.) Say «Добрий день», smile, and try the cheese.
+When you shop at a market, you need to specify exactly how much you want to buy. The metric system is used universally across Ukraine. You will need to know the basic words for weight and quantity to communicate your shopping list effectively.
+Ми завжди використовуємо кілограми та грами. Іноді ми купуємо продукти просто поштучно. Для свіжої зелені ми використовуємо маленькі пучки.
+Here are the essential measuring words you must know. A **кілогра́м** is the standard unit for heavy, bulk produce like potatoes or apples. For smaller, lighter items like berries or expensive spices, we use a **грам**. A **шту́ка** means a single piece, and a **пучо́к** is a bunch, usually used for fresh herbs like dill or parsley.
+Дайте мені один кілограм. Зважте, будь ласка, триста грамів. Мені потрібна тільки одна штука. Дайте великий пучок зелені.
+
+### Свіжі продукти (Fresh Produce)
+The absolute main reason people visit the market is the incredible variety of fresh, seasonal food. Let us learn the essential names of the most common categories and items you will find beautifully arranged on the vibrant vendor stalls.
+Тут продають свіжі овочі та фрукти. Вони дуже яскраві та красиві. Продавець часто каже: «Вони тільки з грядки».
+The word **о́вочі** means vegetables, and **фру́кти** means fruits. Some of the most popular everyday vegetables include **карто́пля** (potatoes), **помідо́ри** (tomatoes), and **огірки́** (cucumbers). For fruits, crisp **я́блука** (apples) are a staple all year round. The colorful phrase «тільки з грядки» literally translates as "just from the garden bed," emphasizing absolute, pristine freshness.
+Я завжди купую свіжі овочі на ринку. Мені потрібна молода картопля. Я дуже люблю ці солодкі яблука. Ці зелені огірки тільки з грядки.
+
+| Категорія | Українською | English |
+| :--- | :--- | :--- |
+| Категорія | **о́вочі** | vegetables |
+| Овоч | **карто́пля** | potatoes |
+| Овоч | **помідо́ри** | tomatoes |
+| Овоч | **огірки́** | cucumbers |
+| Категорія | **фру́кти** | fruits |
+| Фрукт | **я́блука** | apples |
+
+### Конструкція «кілограм + родовий відмінок» (The "Kilogram + Genitive" Chunk)
+Now we come to an important grammatical pattern used constantly in shopping. When you ask for a specific quantity of an item, the word for the item changes its form. It takes the Genitive case. Do not worry about memorizing complex declension tables right now; simply learn these as fixed, paired vocabulary chunks.
+Мені потрібен кілограм яблук. Дайте, будь ласка, кілограм картоплі. Зважте пів кілограма стиглих помідорів.
+In English, you say "a kilogram OF apples." The tiny word "of" connects the quantity to the item. In Ukrainian, the ending of the noun physically changes to show this connection. So, **я́блука** becomes **я́блук**, and **карто́пля** becomes **карто́плі**. Just memorize the full phrase "кілограм картоплі" together as one unit.
+Це рівно кілограм свіжих огірків. Я хочу купити кілограм картоплі для супу. Вона купує два кілограми солодких яблук.
+
+### Ввічливі запити (Polite Requests)
+Ввічливість дуже важлива на ринку. (Politeness is very important at the market.) Не використовуйте слово «я хочу». (Do not use the word "I want".) Це грубо. (It is rude.) Використовуйте ввічливі слова. (Use polite words.)
+Дайте, будь ласка, ці свіжі фрукти. Можна купити ці червоні помідори? Дайте мені кілограм зелених яблук.
+Слово **да́йте** дуже ввічливе. (The word "дайте" is very polite.) Завжди кажіть **будь ласка**. (Always say "please".) Також ми часто використовуємо слово **мо́жна**. (We also often use the word "можна".) Це створює дружній тон. (This creates a friendly tone.)
+Можна спробувати цей твердий сир? Дайте, будь ласка, два пучки зеленої цибулі. Можна кілограм молодої картоплі?
+
+> [!tip] The Magic of "Можна"
+> The word "Можна" is your best friend in Ukraine. It literally means "Is it allowed?" or "May I?". Point to a tray of strawberries and say "Можна?" and the vendor will immediately know you want to taste one or buy some.
+
+### Питання про ціну (Asking About Price)
+Ви вибрали свіжі продукти. (You have selected fresh produce.) Тепер ми запитуємо про ціну. (Now you need to ask about the price.) Всі покупці використовують ці слова. (All buyers use these words.)
+Скажіть, скільки коштує ця молода картопля? Скільки з мене за все? Скільки коштують ці солодкі яблука?
+Головне питання — **Скі́льки ко́штує?** (The main question is "How much does it cost?"). Для багатьох речей ми кажемо **Скі́льки ко́штують?** (For many things we say "How much do they cost?"). Коли ви готові платити, запитайте **Скі́льки з ме́не?** (When you are ready to pay, ask "How much from me?").
+Скажіть, будь ласка, скільки це коштує сьогодні? Скільки коштує один кілограм помідорів? Дуже дякую, скільки з мене за всі овочі?
+
+## Мовні помилки та практика
+
+### Помилка після одиниць виміру (Error After Units of Measurement)
+One of the most frequent mistakes language learners make is forgetting to change the ending of the noun after a unit of measurement. It is very tempting to simply put two dictionary forms next to each other, but this sounds incredibly unnatural to a native Ukrainian speaker.
+Ми ніколи не кажемо «кілограм картопля». Ми завжди кажемо правильну форму «кілограм картоплі». Це дуже важливе правило.
+If you say "кілограм картопля," it sounds exactly like you are saying "a kilogram potato" without any connecting grammatical tissue. You must always use the Genitive case form after measuring words like kilogram, liter, or piece. Remember our earlier advice: treat them as inseparable, paired blocks of vocabulary.
+Дайте мені кілограм свіжих яблук. Мені потрібна одна штука свіжого хліба. Зважте, будь ласка, пів кілограма огірків.
+
+### Узгодження числівників (Number Agreement)
+Numbers have special, strict rules in the Ukrainian language. The word "кілограм" itself must physically change depending on the exact number that comes right before it. This is a crucial detail for accurate, confident shopping.
+Я купую один кілограм. Він купує два кілограми. Вони купують п'ять кілограмів.
+For the number one, we use the simple singular Nominative: **оди́н кілогра́м**. For numbers two, three, and four, we use the plural Nominative: **два кілогра́ми**. But for numbers five and above, we switch to the plural Genitive: **п'ять кілогра́мів**. This specific pattern applies to all masculine nouns ending in a consonant.
+Мені потрібні три кілограми стиглих помідорів. Вона зараз купує шість кілограмів картоплі. Дайте мені чотири кілограми зелених яблук.
+
+| Число | Форма слова | Приклад |
+| :--- | :--- | :--- |
+| 1 | кілогра́м | один кілограм яблук |
+| 2, 3, 4 | кілогра́ми | два кілограми картоплі |
+| 5, 6, 7... | кілогра́мів | п'ять кілограмів помідорів |
+
+### Слово «решта» (The Word "Reshta")
+Vocabulary nuance is incredibly important for avoiding daily confusion. The word "change" (money returned after a purchase) translates to **ре́шта** in pure Ukrainian. 
+Слово «решта» означає гроші після покупки. Ми кажемо «без решти», коли даємо точну суму.
+When you give a vendor a large banknote and they hand you smaller money back, that money is exclusively called **ре́шта**. If you have the exact correct amount, you say **без ре́шти** (without change). If you want to leave a polite tip or simply do not need the small coins back, you tell the friendly vendor **залиші́ть ре́шту собі́** (keep the change).
+Ось гроші за фрукти. У мене сьогодні є сума без решти. Дуже дякую, залиште решту собі.
+
+> [!warning] False Friends
+> Avoid using the Russian word "здача" for financial transactions. Always use "решта" for the financial change.
+
+### Вимова та милозвучність (Pronunciation and Euphony)
+When vendors and buyers speak quickly at a busy, loud market, you will notice that certain tiny sounds shift to make the speech flow more smoothly. This beautiful concept is formally called euphony, or "sweet sound."
+Ми часто кажемо «вона й продавець». Ми також кажемо «свіжі овочі та фрукти».
+The Ukrainian language actively avoids harsh clusters of consonants and abrupt, awkward breaks between vowels. For example, the conjunction "and" can be **і**, **й**, or **та**. After a word ending in a vowel, you use **й** or **та**. After a word ending in a consonant, you use **і**. Listening for these smooth phonetic transitions will profoundly help you understand rapid market speech.
+Він і ввічливий продавець довго розмовляють. Я купую стиглі яблука й солодкі груші. Це свіжа картопля та великі помідори.
+
+## Діалоги та рольові ігри
+
+### Діалог 1: Купівля овочів на вагу (Dialogue 1: Buying Vegetables by Weight)
+Let us see exactly how all these individual pieces fit together in a real, fluent conversation. Imagine you are standing at a bustling vegetable stall on a crisp, bright Saturday morning. You need basic ingredients for a fresh salad and some potatoes for a warm dinner.
+Продавець: Доброго ранку! Що сьогодні дати?
+Покупець: Доброго ранку. Дайте, будь ласка, кілограм картоплі.
+This dialogue beautifully demonstrates the essential, efficient flow of a normal market transaction. It is direct, polite, and effective. Notice how the buyer immediately and confidently uses the "кілограм + Genitive" grammatical structure.
+Продавець: Ось, тримайте вашу картоплю. Щось ще потрібно?
+Покупець: Так, дайте ще два кілограми помідорів і пучок зелені. Скільки з мене за все?
+Продавець: Рівно сто п'ятдесят гривень.
+Покупець: Ось двісті гривень.
+Продавець: Ваша решта — п'ятдесят гривень. Дуже дякую!
+
+### Аналіз першого діалогу (Analysis of Dialogue 1)
+Let us systematically break down why this short interaction is so phenomenally successful and natural. The buyer uses all the correct grammatical structures and cultural markers for a polite, respectful exchange.
+Наш покупець використовує дуже ввічливі слова. Він абсолютно правильно називає всі потрібні одиниці виміру. Продавець швидко дає правильну решту.
+The opening phrase "Що сьогодні дати?" (What to give you?) is a very standard, welcoming vendor greeting. The buyer smoothly responds with "Дайте, будь ласка," setting a firm, respectful tone. When asking for the total cost, the phrase "Скільки з мене?" is perfectly brief, idiomatic, and conversational.
+
+### Діалог 2: На одеському Привозі (Dialogue 2: At Odesa's Pryvoz)
+Now let us vividly imagine a slightly more colorful and energetic scenario. You are visiting the legendary Pryvoz market in Odesa. You clearly see a vibrant, towering display of fresh seasonal fruits, and the passionate vendor is actively engaging with the passing customers.
+Продавець: Підходьте сюди! Купуйте найсвіжіші фрукти! Вони тільки з грядки!
+Покупець: Добрий день. Які у вас гарні яблука. Скільки вони коштують?
+Here we clearly see the vendor enthusiastically using the classic phrase "тільки з грядки" to loudly advertise freshness. The buyer politely compliments the beautiful goods before asking the price, which is an excellent, strategic bargaining strategy.
+Продавець: Шістдесят гривень за один кілограм. Спробуйте обов'язково! Вони дуже солодкі.
+Покупець: Дійсно дуже смачні. Але це трохи дорого для мене. А дешевше можна?
+Продавець: Тільки для вас — віддам за п'ятдесят п'ять.
+Покупець: Дуже добре, дайте тоді два кілограми. Ось гроші, залиште решту собі.
+
+### Аналіз другого діалогу (Analysis of Dialogue 2)
+This specific dialogue perfectly captures the lively, highly interactive spirit of a traditional Ukrainian *базар*. It seamlessly involves tasting the product, a little bit of friendly negotiation, and building genuine human rapport.
+Продавець активно пропонує покупцю спробувати товар. Покупець дуже ввічливо просить меншу ціну. Вони швидко домовляються про нову ціну.
+The enthusiastic vendor actively invites the prospective buyer to test the high quality: "Спробуйте!" (Try it!). The buyer then strategically asks, "А дешевше можна?" (Is it possible to be cheaper?), which is a polite, completely acceptable way to bargain. Finally, leaving a small monetary tip ("Залиште решту собі") effectively rewards the vendor for the kind discount.
+
+> [!fact] Bargaining Limits
+> While bargaining («торгуватися») is entirely expected at places like Pryvoz for large purchases, it is less common for small, inexpensive items like a single bunch of parsley. Always bargain with a smile—it is a social game, not an aggressive conflict.
+
+### Рольова гра: Ви — покупець (Roleplay: You are the Buyer)
+Now it is finally your turn to actively practice. Imagine you are confidently standing at the historic Bessarabskyi Market in Kyiv. You want to buy some fresh, crisp cucumbers, but you unfortunately only have a very large banknote. How would you handle this exact situation using the helpful phrases we have learned?
+Ви зараз стоїте біля приємного продавця. Ви дуже хочете купити пів кілограма огірків. У вас є тільки велика купюра, п'ятсот гривень.
+Carefully think about your opening line. How do you politely ask for the exact quantity of cucumbers? How do you make sure the vendor knows you definitely need change back? Practice saying these important phrases out loud.
+Скажіть голосно: «Доброго ранку. Дайте, будь ласка, пів кілограма свіжих огірків».
+Then, accurately ask for the price. When you hand over the large banknote, you can politely say, "Вибачте, у мене немає без решти" (Sorry, I don't have exact change) to be extra respectful.
+Скажіть продавцю: «Скільки з мене за огірки? Вибачте, у мене немає дрібних грошей. Дайте, будь ласка, решту».
 
 ---
 
 # Підсумок
 
-**Сьогодні ми були на ринку.** (Today we were at the market.) We learned that it is more than a place of trade; it is a place of connection.
-
-**Тепер ви знаєте:** (Now you know:)
-1.  **Розуміти різницю між ринком і базаром.** (Understand difference between rynok and bazar.)
-2.  **Замовляти продукти: кілограм картоплі.** (Order products: kilo of potato.)
-3.  **Запитувати про ціну.** (Ask about price.)
-4.  **Говорити про якість: свіжий, смачний.** (Talk about quality: fresh, tasty.)
-5.  **Бути ввічливим.** (Be polite.)
+You have successfully learned how to navigate a vibrant Ukrainian market! You now understand the deep cultural significance of the *базар*, from the legendary humor of Odesa's Pryvoz to the premium stalls of Kyiv's Bessarabskyi Market. You have mastered essential vocabulary for fresh produce (**овочі**, **фрукти**, **яблука**, **картопля**) and crucial measuring units (**кілограм**, **грам**, **штука**, **пучок**). Most importantly, you learned the critical grammatical chunk «кілограм + родовий відмінок» (e.g., *кілограм картоплі*) and the rules for polite interaction using phrases like «Дайте, будь ласка» and «Скільки з мене?». You even understand the vital difference the use of the financial term **решта**.
 
 **Перевірте себе:**
-**Спробуйте відповісти на ці питання.** (Try to answer these questions.) **Використовуйте нові слова.** (Use the new words.)
+1. What is the difference in usage between the words «ринок» and «базар»?
+2. Why do Ukrainian market vendors constantly say «Спробуйте!» to customers?
+3. How do you correctly ask for a kilogram of potatoes: «кілограм картопля» or «кілограм картоплі»?
+4. If you are buying three kilograms of apples, do you say «три кілограм» or «три кілограми»?
+5. When handing money to a vendor and you do not want the coins back, what specific phrase do you use?
+6. Which polite word should you use instead of the abrupt «я хочу» when pointing to fresh produce?
 
-1.  How do you say "one kilo of carrots" in Ukrainian? (Hint: apply the pattern to *морква*).
-2.  If you want to taste a fruit before buying, what polite phrase do you use?
-3.  What is the difference between asking «Скільки коштує?» and «Скільки з мене?»?
-4.  Why might a seller say «Беріть більше!»?
-5.  How would you ask a seller "Is this milk fresh?" using the correct gender for *молоко*?
-6.  You give a seller 100 hryvnias for a 50 hryvnia purchase. The money they give back is called what?
-
-Go out there and find the freshest apple! Смачного!
+---

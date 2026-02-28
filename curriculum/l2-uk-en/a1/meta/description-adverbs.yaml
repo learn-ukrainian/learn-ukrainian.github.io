@@ -5,42 +5,51 @@ content_outline:
 - section: Вступ
   words: 400
   points:
-  - Include English scaffolding to define an 'adverb' and the core question Як? (How?).
-  - Create a visual contrast table comparing Який? (Adjective describing a noun) with
-    Як? (Adverb describing an action).
-  - Address the common error of using adjectives instead of adverbs directly, using
-    simple English explanation.
+  - 'Note for generator: Apply A1 heavy English scaffolding (10-50% immersion). Introduce
+    grammar concepts in English before providing Ukrainian examples.'
+  - 'Define what an adverb is by contrasting it with adjectives: Adjectives answer
+    Який? (What kind?, describing nouns), while adverbs answer Як? (How?, describing
+    actions).'
+  - 'Provide a visual contrast table: Noun + Adjective vs. Verb + Adverb.'
+  - Explicitly address the common learner error of using adjectives for actions (e.g.,
+    *Він говорить хороший) and explain why Ukrainian requires a different form.
 - section: Основи та формування
   words: 450
   points:
-  - 'Explain the derivation rule: Adjective stem + -ий → -о (швидкий → швидко) with
-    a step-by-step visual mapping.'
-  - Highlight the exception добрий → добре, dedicating a paragraph to its frequency
-    and use as a universal 'OK/Agreed'.
-  - 'Establish standard word order: Adverb follows the verb (Він працює добре) with
-    3-4 simple example sentences.'
+  - 'Teach the derivation rule with a clear visual step-by-step: Adjective stem +
+    -ий → -о (швидкий → швидко, гарний → гарно). Provide 4-5 core examples with IPA
+    on their first occurrence.'
+  - Create an H3 for the exception 'добре' (from добрий). Explain its high frequency
+    and universal cultural usage as 'OK/Agreed'.
+  - 'Establish the standard sentence structure: Adverbs typically follow the verb
+    to describe the action (Він працює добре). Provide 3 simple SVO sentences as examples.'
 - section: Час та частота
   words: 450
   points:
-  - 'Present the frequency scale visually: завжди → зазвичай → часто → іноді → рідко
-    → ніколи.'
-  - Provide a dedicated H3 for 'ніколи', explicitly teaching the double negation rule
-    (Я ніколи не...).
-  - Integrate Catalog A spatial and temporal markers (тут, там, сьогодні, завтра)
-    into simple sentence patterns.
+  - 'Present a visual frequency scale from 100% to 0%: завжди → зазвичай → часто →
+    іноді → рідко → ніколи.'
+  - Create a dedicated H3 for 'ніколи'. Teach the strict Ukrainian double negation
+    rule (Я ніколи не + verb). Contrast directly with English 'I never...' to preempt
+    errors.
+  - Introduce Catalog A spatial and temporal markers (тут, там, сьогодні, завтра)
+    as basic adverbs of time and place. Show them in simple 3-word sentences.
 - section: Синтаксис та інтенсивність
   words: 400
   points:
-  - 'Introduce intensity modifiers: дуже, трохи, зовсім, майже.'
-  - 'Emphasize the strict placement rule: ''дуже'' MUST precede the modified word,
-    never at the end.'
-  - Provide correct vs. incorrect examples (дуже добре vs добре дуже) to preempt learner
-    errors.
+  - 'Introduce intensity modifiers: дуже (very), трохи (a bit), зовсім (completely),
+    майже (almost).'
+  - 'State the strict syntax rule: intensifiers MUST immediately precede the modified
+    adverb or adjective. Do not place them at the end of the sentence.'
+  - Provide a 'Correct vs. Incorrect' visual box (e.g., 'Це дуже добре' vs '*Це добре
+    дуже') to reinforce the syntax.
+  - Provide a short dialogue using 'дуже' + adverbs of manner to model natural conversational
+    rhythm.
 - section: Підсумок та культура
   words: 300
   points:
-  - 'Integrate the cultural hook: explain the proverb «Повільно їдеш — далі будеш».'
-  - Frame a short 'Food Critic' roleplay scenario describing how someone cooks or
-    eats.
-  - Provide a short paragraph modeling a daily routine using frequency adverbs (Я
-    зазвичай снідаю швидко).
+  - Introduce the cultural proverb «Повільно їдеш — далі будеш» to reinforce 'повільно'
+    and discuss traditional perspectives on patience.
+  - 'Adopt the ''Food Critic'' persona: write a 4-5 sentence roleplay describing how
+    someone cooks or eats (добре, погано, дуже смачно, швидко).'
+  - Model a simple daily routine using frequency adverbs (Я зазвичай снідаю швидко)
+    to demonstrate practical application.

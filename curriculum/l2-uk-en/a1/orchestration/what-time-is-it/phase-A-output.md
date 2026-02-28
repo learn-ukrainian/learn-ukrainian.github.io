@@ -1,104 +1,72 @@
-✅ Message sent to Gemini (ID: 8515)
-✓ Message 8515 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #8515...
-📨 Message #8515
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-what-time-is-it-pA
-   Time: 2026-02-19T19:40:16.126503+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/what-time-is-it/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
 # Дослідження: What Time Is It?
 
 ## State Standard Reference
-§4.2.3.4: "Пане / пані, скажіть, будь ласка, котра година?"
-Alignment: This module directly teaches the communicative intention of asking for and telling time, as explicitly exemplified in the State Standard's section on the Vocative case and address forms. It also covers §4.2.3.2.2 (Accusative for days) and §4.2.3.3 (Locative for months).
+§4.2.3.4: "Кличний відмінок (адресат мовлення – потенційний суб’єкт дії): Пане / пані, скажіть, будь ласка, котра година?"
+§4.2.3.2.2: "Із прийменниками: у (в) (позначення часу дії (дні тижня)): До зустрічі в понеділок. У середу, мабуть, буде сонячна погода."
+§4.2.3.3: "Місцевий відмінок: у, в (позначення моменту часу (коли?) в поєднанні зі словами – назвами місяців): Марія народилася у травні."
+Alignment: This module directly fulfills the A1 linguistic and communicative requirements for asking the time, using address forms (Vocative), and applying correct cases for temporal contexts (Accusative for days, Locative for months).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| година (hour) | High (Core A1) | котра година?, о першій годині, ціла година |
-| хвилина (minute) | High (Core A1) | за п'ять хвилин, одна хвилина, 30 хвилин |
-| тиждень (week) | High (Core A1) | на цьому тижні, наступного тижня, дні тижня |
-| місяць (month) | High (Core A1) | у цьому місяці, минулого місяця, зимові місяці |
-| вчасно (on time) | Med (A1/A2) | бути вчасно, прийти вчасно, поїзд прибув вчасно |
+| година | High (Top 500) | котра година, о першій годині, ціла година |
+| хвилина | High (Top 1000) | за п'ять хвилин, одна хвилина, 30 хвилин |
+| день | High (Top 100) | добрий день, кожного дня, робочий день |
+| місяць | High (Top 1000) | у цьому місяці, зимові місяці |
+| тиждень | High (Top 1000) | наступного тижня, дні тижня |
 
 ## Cultural Hooks
-1. **Ukrzaliznytsia Punctuality**: The Ukrainian railway system is famous for its resilience and punctuality (90%+ on time), even during wartime. It serves as a perfect context for learning precise time and schedules.
-2. **24-Hour Format**: Ukraine uses the 24-hour format (14:00, 20:30) for all official schedules, transport, and digital devices. The 12-hour format is reserved strictly for spoken, colloquial communication (друга година дня).
+1. Ukrzaliznytsia's "Iron Diplomacy" and resilience: Even amid a full-scale war in 2024, Ukrainian domestic trains maintained a remarkable 92%+ punctuality rate. Being «вчасно» (on time) is highly valued as a sign of respect, reliability, and societal resilience.
+2. Authentic Slavic month names: While Russian and English use imported Roman/Julian calendar names, Ukrainian months (e.g., січень - cutting cold, березень - blooming birch trees) are deeply intertwined with natural and agricultural cycles, preserving ancient connections to the land.
 
 ## Common Learner Errors
-1. **Case Confusion with Days**: Learners often say *"у понеділку"* (Locative) mimicking "in/at", but Ukrainian requires Accusative: *у понеділок* (§4.2.3.2.2).
-2. **Cardinal vs. Ordinal for Hours**: Learners try to translate "It is two o'clock" as *"Це два годин"*. Correct: *Зараз друга година* (Ordinal number, Fem. gender).
-3. **Preposition Confusion**: Confusing *за* (in/within time span) and *на* (for a duration). At A1, focus on simple *о* (at) and *до* (until).
+1. Translating "It is two o'clock" directly as *«Два годин» → Correct: «Зараз друга година» — Ukrainian uses feminine ordinal numbers that agree with the feminine noun «година».
+2. Overgeneralizing "in/at" for days of the week by using the Locative case (*«у понеділку») → Correct: «у понеділок» — Days of the week require the Accusative case to denote time of action.
+3. Confusing the questions «Котра година?» (What time is it right now?) and «О котрій?» (At what time does an event happen?) during scheduling.
 
 ## Cross-References
-- Builds on: a1-17 (Numbers and Money), a1-22 (Tomorrow - Future Tense)
-- Prepares for: a1-24 (Can, Must, Want - Modals), a1-25 (My Daily Routine)
+- Builds on: a1-22 (Numbers and Money), a1-37 (Tomorrow - Future Tense)
+- Prepares for: a1-24 (Can, Must, Want - Modals), a1-38 (My Daily Routine)
 
 ## Notes for Content Writing
-- The distinction between "Котра година?" (asking current time) and "О котрій?" (asking when an event happens) is crucial and must be scaffolded clearly.
-- Use "telegraphic style" (вісім тридцять) as the primary method for teaching minutes to A1 beginners, as allowed by modern communicative standards, before introducing complex fractions (чверть, пів).
+- A1 constraints: Module immersion is low (10-50%). English scaffolding is MANDATORY to explain grammar concepts (cases for days/months, ordinal numbers for hours) before introducing Ukrainian examples.
+- For time presentation, use the 'telegraphic style' (година + хвилина) to keep it simple for A1 learners, leaving complex fractions (пів на, чверть) for later levels.
+- Emphasize decolonized framing when discussing month names: celebrate the authenticity of the Ukrainian calendar as an independent system, avoiding comparative baselines with Russian.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Warm-up"
-    words: 250
+  - section: "Вступ"
+    words: 400
     points:
-      - "Cultural Hook: Ukrzaliznytsia as a symbol of punctuality and the importance of time in Ukraine"
-      - "The two questions: «Котра година?» (What time is it?) vs «О котрій?» (At what time?)"
-      - "Standard §4.2.3.4: Polite forms of address when asking for time («Скажіть, будь ласка...»)"
-  - section: "Presentation"
-    words: 450
+      - "Explicit English scaffolding paragraph introducing the goals of the lesson."
+      - "Cultural hook: Ukrzaliznytsia's 92%+ punctuality and the value of being «вчасно» (on time) as a symbol of Ukrainian resilience."
+      - "Introduce the difference between the two core questions: «Котра година?» (current time) vs. «О котрій?» (scheduled time)."
+      - "Provide examples of polite address using the Vocative case (§4.2.3.4): «Пане / пані, скажіть, будь ласка, котра година?»."
+  - section: "Презентація часу"
+    words: 600
     points:
-      - "The Clock Face: Using ordinal numbers (перша, друга) for hours"
-      - "Gender agreement: Why it is «друга година» (feminine) and not «другий»"
-      - "Simple Minutes: The 'Digital' or 'Telegraphic' style (десять двадцять, п'ята тридцять) for easy communication"
-      - "Introduction of key vocabulary: година, хвилина, зараз"
-  - section: "Days of the Week"
-    words: 300
+      - "Explain in English that hours use feminine ordinal numbers (перша, друга) to agree with «година». Include a table for 1-12."
+      - "Address common learner error: warn against using cardinal numbers like «два годин», explaining why «друга година» is correct."
+      - "Introduce 'telegraphic style' for minutes (година + хвилина, e.g., «п'ята тридцять») for A1 simplicity."
+      - "Include short mini-dialogues asking and telling the current time, with IPA for first occurrence of new words."
+  - section: "Дні та місяці"
+    words: 600
     points:
-      - "The 7 days: понеділок through неділя (etymology note: неділя = 'no work')"
-      - "Grammar Focus: Accusative case for 'On [Day]' (§4.2.3.2.2) — «у понеділок», «у вівторок»"
-      - "Common Error Alert: Distinguishing «середа» (Nominative) vs «у середу» (Accusative)"
-  - section: "Months of the Year"
-    words: 300
+      - "Present the 7 days of the week. Explain the grammar rule (§4.2.3.2.2): use «у/в» + Accusative case for 'on [Day]' («у понеділок»)."
+      - "Warn against using Locative for days. Mention euphony rules for choosing between у and в."
+      - "Present the 12 months, highlighting their authentic connection to nature (e.g., січень, лютий) as a cultural note."
+      - "Explain the grammar rule (§4.2.3.3): use «у/в» + Locative case for 'in [Month]' («у січні», «у травні»). Group months by season in a table."
+  - section: "Практика та розклад"
+    words: 400
     points:
-      - "The 12 months: Descriptive nature of Ukrainian names (січень - cutting, лютий - fierce)"
-      - "Grammar Focus: Locative case for 'In [Month]' (§4.2.3.3) — «у січні», «у лютому»"
-      - "Seasons connection: Grouping months by season to aid memory"
-  - section: "Time Prepositions"
-    words: 250
-    points:
-      - "The preposition «о / об» for specific times (О котрій? — О сьомій)"
-      - "The prepositions «до» (until) and «після» (after) for scheduling"
-      - "Usage examples: «Магазин працює з дев'ятої до шостої»"
-  - section: "Presentation 2"
-    words: 250
-    points:
-      - "Daily Schedules: Integrating time, days, and verbs of routine"
-      - "The 24-hour vs 12-hour distinction: Official (17:00) vs Spoken (п'ята вечора)"
-      - "Context: Reading a train ticket or station schedule"
-  - section: "Practice"
-    words: 200
-    points:
-      - "Dialogue: Asking for the time on the street (Polite register)"
-      - "Dialogue: Planning a meeting for the week (Informal register)"
-      - "Scenario: Creating a simple weekly schedule using correct case forms"
+      - "Introduce prepositions for scheduling: «о» (at), «до» (until), «після» (after), and «з... до» (from... to)."
+      - "Explain the register distinction: 24-hour format for official schedules (transport) vs. 12-hour format for conversational speech."
+      - "Provide a reading scenario: a simple daily routine or a train conductor's shift schedule."
+      - "Conclude with an informal dialogue planning a meeting for the coming week, integrating days and time expressions."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -106,14 +74,6 @@ content_outline:
 **Step**: Full Phase A
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: N/A
+**Self-Correction**: Re-checked the plan file to ensure section names strictly matched the original plan (`Вступ`, `Презентація часу`, `Дні та місяці`, `Практика та розклад`) rather than the legacy meta file, preserving the intended 4-section structural integrity. Verified actual State Standard paragraph citations by reading exact coordinates.
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (4997 chars)
-✅ Message sent to Claude (ID: 8518)
-✓ Message 8518 acknowledged
-   Auto-acknowledged reply #8518 (stdout delivery — no inbox accumulation)
-✓ Message 8515 acknowledged

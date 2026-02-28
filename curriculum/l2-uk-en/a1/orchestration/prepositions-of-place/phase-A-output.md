@@ -4,34 +4,37 @@
 
 ## State Standard Reference
 §4.2.3.3: "Місцевий відмінок: у, в, на (позначення місця): Спортивний костюм у великій сумці. Студент працює в новій лабораторії. Гроші лежать на столі;"
-Alignment: This module directly addresses the A1 linguistic competence requirement to use the Locative case with prepositions «в/у» and «на» for indicating location, alongside introducing basic spatial relationships.
+Alignment: This module directly fulfills the A1 requirement to use the Locative case with prepositions «в/у» and «на» for spatial locations and addresses the core thematic topic of navigating the city.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| магазин | High (Core A1) | в магазині, біля магазину |
-| школа | High (Core A1) | у школі (euphonic 'у' before 'шк'), біля школи |
-| вулиця | High (Core A1) | на вулиці (surface/open area), на вулиці Хрещатик |
-| стіл | High (Core A1) | на столі (surface contact) |
-| пошта | Medium (Institutions)| на пошті (traditional 'на' exception) |
-| кухня | Medium (Home) | на кухні (traditional 'на' exception for specific rooms) |
+| магазин | Very High (A1) | в магазині (in the store) |
+| школа | Very High (A1) | у школі (at school - requires euphonic у) |
+| вулиця | Very High (A1) | на вулиці (on the street) |
+| кухня | High (A1) | на кухні (in the kitchen) |
+| пошта | High (A1) | на пошті (at the post office) |
+| знаходиться | High (A1) | де знаходиться? (where is located?) |
 
 ## Cultural Hooks
-1. **The Ukrainian Kitchen**: Historically, and in modern times, the kitchen (кухня) is the heart of a Ukrainian home. It's not just a utility space but the primary place for socializing and hosting close friends. This cultural reality helps anchor the usage of «на кухні» as a specific conceptual space.
-2. **Kyiv Landmarks as Anchors**: When learning the preposition «на» for open areas, it helps to anchor it to famous Ukrainian public spaces like «на Майдані» (on Independence Square) or main arteries like «на Хрещатику» (on Khreshchatyk street), reinforcing the concept of open/public areas taking «на».
+1. "В Україні" vs "На Україні": «в Україні» is the only correct form, reinforcing independent statehood. The imperial "на" is grammatically and politically incorrect for sovereign states.
+2. Kyiv Landmarks: Navigating using iconic landmarks like Хрещатик (Khreshchatyk street, uses «на»), Майдан Незалежності (Independence Square, uses «на»), and Золоті Ворота (Golden Gate, uses «біля»).
 
 ## Common Learner Errors
-1. **Misapplying «в/у» vs «на»** → *«в пошті»* instead of *«на пошті»*. **Why**: English speakers map "in the post office" directly to «в», missing the institutional exception.
-2. **Ignoring Euphony** → *«в школі»*, *«в Львові»* instead of *«у школі»*, *«у Львові»*. **Why**: Direct vocabulary translation without accounting for Ukrainian phonetic rules (милозвучність) that prevent consonant clusters.
-3. **Forgetting Consonant Alternations** → *«у рукі»*, *«на дорогі»* instead of *«у руці»*, *«на дорозі»*. **Why**: The Locative case triggers historical palatalizations (г→з, к→ц, х→с) which require specific drill and reinforcement.
+1. Overusing «в» for all enclosed translations → using «в пошті» instead of the correct institutional «на пошті».
+2. Euphonic violations → saying «в Львові» instead of the correct «у Львові» (violating the rule to avoid consecutive consonants).
+3. Using Nominative after prepositions instead of Locative (e.g., «в магазин» for location instead of «в магазині»).
 
 ## Cross-References
 - Builds on: a1-32 (The Genitive I)
 - Prepares for: a1-34 (Checkpoint Cases)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Frame the euphonic «в/у» alternation positively as "милозвучність" (euphony), a core, beautiful feature of the Ukrainian language that makes it flow. Do not compare the lack of this rule to Russian. Explain spatial logic (в vs на) entirely within the Ukrainian conceptual framework.
-- **Immersion Policy**: A1 (M33) targets 35-40% immersion. English scaffolding is MANDATORY for all grammar explanations, particularly for the concept of cases and prepositions governing specific cases. Ukrainian is for examples, dialogues, and practice.
+- Decolonized Framing: Explicitly teach «в Україні» as the standard for sovereign nations. Never compare Ukrainian preposition exceptions (like «на кухні») to Russian; explain them purely as Ukrainian traditional spatial concepts (kitchens were traditionally open hearths/surfaces, not enclosed rooms).
+- Scaffolding: Since this is A1, start each section with clear English explanations of the spatial concepts before providing Ukrainian examples. The immersion target is 35-40%.
+- Use explicit syntactic roles: підмет (subject), обставина (adverbial of place) when diagramming the sentences.
+- Ensure all example vocabulary strictly uses A1 core words.
+- Emphasize the euphonic «у/в» alternation as a beautiful feature of Ukrainian phonetic flow (милозвучність).
 
 ===RESEARCH_END===
 
@@ -40,28 +43,29 @@ content_outline:
   - section: "В/У + Місцевий відмінок"
     words: 500
     points:
-      - "Note for Author: A1 level requires clear English scaffolding for grammar concepts before showing Ukrainian examples. Briefly define the Locative case function for location."
-      - "Explain enclosed spaces logic using 'в/у' + Locative. Provide 5+ high-frequency examples (в магазині, в Україні, у кімнаті) with English translations."
-      - "Introduce the euphonic rule (милозвучність) for 'в' vs 'у'. Show clear contrast pairs: 'в університеті' vs 'у школі', 'в Києві' vs 'у Львові'."
-      - "Review consonant alternations (г→з, к→ц, х→с) from earlier modules with a clear reference table and 3+ contextual examples (у руці, на нозі)."
+      - "Note for Author: Provide explicit English scaffolding for the Locative case's role as an 'обставина' (adverbial of place). Define enclosed spaces logic."
+      - "Explain location inside enclosed spaces using «в/у» + Locative. Provide 5+ high-frequency collocations for buildings, cities, and countries (в магазині, у школі) with English translations."
+      - "Decolonization note: Explicitly teach «в Україні» (in Ukraine) as the standard for sovereign states. Do not mention Russian equivalents."
+      - "Introduce the euphonic rule (милозвучність) for «в» vs «у». Show clear contrast pairs: «в університеті» vs «у школі», «в Києві» vs «у Львові». Drill the correction of «В Львові» to «У Львові»."
+      - "Review Locative consonant alternations (г→з, к→ц, х→с) from a1-13 with a reference table and 3+ contextual examples (у руці, на нозі, у вусі)."
   - section: "На + Місцевий відмінок"
     words: 500
     points:
-      - "Explain physical surface locations using 'на' + Locative (на столі, на стіні, на підлозі)."
-      - "Detail the institutional/event exception for 'на' (на роботі, на пошті, на концерті) emphasizing the concept of social or public activities."
-      - "Provide explicit contrast pairs to solidify understanding: 'в кімнаті' (enclosed physical space) vs 'на кухні' (traditional exception), 'в театрі' (inside the building) vs 'на виставі' (at the performance)."
+      - "Explain physical surface locations using «на» + Locative (на столі, на стіні, на підлозі) using English scaffolding to define the physical contact meaning."
+      - "Detail the institutional/event exception for «на» (на роботі, на пошті, на концерті, на уроці) emphasizing social or public activities."
+      - "Provide explicit contrast pairs to solidify understanding: «в кімнаті» (enclosed space) vs «на кухні» (traditional surface/hearth exception), «в театрі» (inside the building) vs «на виставі» (at the performance)."
   - section: "Біля, поруч, між"
     words: 400
     points:
-      - "Introduce 'біля' + Genitive for basic proximity. Give 3+ examples (біля школи, біля метро) useful for navigation."
-      - "Introduce 'навпроти' + Genitive for orientation and opposite positioning (навпроти банку, навпроти аптеки)."
-      - "Introduce 'поруч з' and 'між' as formulaic vocabulary chunks (without deep-diving into the Instrumental case grammar). Provide 2-3 simple contextual sentences."
+      - "Introduce «біля» + Genitive for basic proximity. Give 4+ examples (біля школи, біля парку, біля зупинки) useful for navigation."
+      - "Introduce «навпроти» + Genitive for orientation and opposite positioning (навпроти банку, навпроти аптеки)."
+      - "Introduce «поруч з» and «між» as formulaic vocabulary chunks for proximity without deep-diving into the Instrumental case grammar yet. Provide 2-3 simple contextual sentences."
   - section: "Де знаходиться...?"
     words: 350
     points:
-      - "Teach the formal question structure 'Де знаходиться...?' (Where is located...?) alongside the simpler 'Де...?'."
+      - "Teach the formal question structure «Де знаходиться...?» (Where is located...?) alongside the simpler «Де...?»."
       - "Provide a mini-dialogue demonstrating a tourist asking for directions using Kyiv landmarks (Хрещатик, Золоті Ворота)."
-      - "Show full sentence answers combining the location verb 'знаходиться' with the newly learned prepositions and case forms."
+      - "Show full sentence answers combining the formal location verb «знаходиться» with the newly learned prepositions and case forms (e.g., Пошта знаходиться на вулиці Хрещатик)."
   - section: "Практика"
     words: 250
     points:

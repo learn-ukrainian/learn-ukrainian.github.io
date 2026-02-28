@@ -1,0 +1,25 @@
+{
+  "slug": "the-locative-where-things-are",
+  "track": "a1",
+  "module_num": 28,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-28T19:58:22Z",
+      "words": 3875,
+      "attempts": 1
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T20:06:51Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T20:06:51Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-28T20:06:51Z"
+}

@@ -1,10 +1,12 @@
-module: c2-099
-level: c2
-sequence: 99
+module: c2-090
+level: C2
+sequence: 90
+slug: c2-certification-preparation
 version: '2.0'
 title: Підготовка до сертифікації C2
 focus: practice
 pedagogy: TTT
+phase: 'C2.4 [Meta-Skills & Capstone]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: 'Вступ: Рівень C2 та державний стандарт (Introduction: C2 Level and State
     Standard)'
-  words: 600
+  words: 750
   points:
   - 'Детальний аналіз вимог Державного стандарту (§4603-4606): що означає «вичерпне
     ознайомлення зі структурою» та «максимально можливий діапазон виражальних засобів»'
@@ -32,7 +34,7 @@ content_outline:
   - Значення сертифікації для академічної та професійної кар'єри в сучасній Україні
 - section: Огляд сертифікаційних систем та культурний контекст (Overview of Certification
     Systems and Cultural Context)
-  words: 800
+  words: 1000
   points:
   - 'Культурний контекст: обов''язковий іспит на громадянство з 2024 року (Конституція,
     Історія, Мова) як чинник престижу офіційного сертифіката'
@@ -42,7 +44,7 @@ content_outline:
     програми оцінювання'
 - section: 'Мовна компетенція: Лексичні тонкощі та уникнення помилок (Linguistic Competence:
     Lexical Nuances and Error Avoidance)'
-  words: 900
+  words: 1100
   points:
   - 'Типова помилка: лексична інтерференція з англійської та російської — використання
     «брати екзамен» або «здавати екзамен» замість нормативного «складати іспит»'
@@ -54,7 +56,7 @@ content_outline:
     критеріям оцінювання'
 - section: Стратегії підготовки та структура іспиту (Preparation Strategies and Exam
     Structure)
-  words: 900
+  words: 1100
   points:
   - 'Мистецтво написання есе на C2: обов''язковість чіткої тези, аргументації та логічних
     містків між абзацами згідно з критеріями Нацкомісії'
@@ -64,7 +66,7 @@ content_outline:
     уникнути поспіху в секції письма'
 - section: Процедурні аспекти та фінальна підготовка (Procedural Aspects and Final
     Preparation)
-  words: 800
+  words: 1050
   points:
   - 'Технічна реєстрація та документація: робота з електронним кабінетом вступника/кандидата
     та процедура подання апеляції'

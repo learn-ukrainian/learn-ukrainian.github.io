@@ -2,15 +2,15 @@
   "module": "shopping-and-market",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T14:33:31.368904Z",
+  "last_audit": "2026-02-28T23:15:03.009359Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T14:33:12.927353Z",
-    "meta": "2026-02-28T14:24:11.996184Z",
+    "md": "2026-02-28T23:14:38.096765Z",
+    "meta": "2026-02-28T23:09:07.598156Z",
     "activities": "2026-02-28T14:29:41.706262Z",
     "vocabulary": "2026-02-28T14:29:41.706383Z",
     "plan": "2026-02-28T02:53:27.277063Z",
-    "research": "2026-02-28T14:24:11.984067Z"
+    "research": "2026-02-28T23:09:07.589440Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3692/2000 (raw: 3881)"
+      "message": "4277/2000 (raw: 4475)"
     },
     "activities": {
       "status": "deferred",

@@ -2,46 +2,43 @@ slug: the-living-verb-i
 title: The Living Verb I
 word_target: 2000
 content_outline:
-- section: 'Вступ: Від статичних описів до живих дій'
-  words: 300
+- section: Вступ
+  words: 400
   points:
-  - Contrast static 'This is a book' (Це книга) with dynamic 'I read a book' (Я читаю
-    книгу) to show the power of verbs.
-  - Introduce the concept of 'Living Verbs' — words that change their shape (conjugate)
-    to match the person.
-  - 'Define the scope: First Conjugation verbs ending in -ати (читати, працювати)
-    as the most common daily actions.'
-  - 'Scaffolding (English): Explain that unlike English (read -> read), Ukrainian
-    verbs carry ''who'' and ''when'' inside their endings.'
-- section: 'Теорія: Магія закінчень -ати'
-  words: 800
+  - Introduce the shift from 'this is' to 'I do' (building on A1-05 'My World - Objects').
+    Explain that English scaffolding will be used for all grammar concepts.
+  - 'Historical hook: Mention the ''Apostol'' (1574) by Ivan Fedorov, connecting the
+    verb ''читати'' to Ukraine''s deep literacy tradition.'
+  - 'State Standard alignment (§4.2.4.1): Frame the focus on indicative mood present
+    tense using high-frequency verbs (читати, працювати).'
+- section: Презентація
+  words: 700
   points:
-  - 'Visual Master Key: Present the Stem + Ending formula (чит + аю) clearly.'
-  - Step-by-step conjugation of 'читати' for all persons (я, ти, він/вона, ми, ви,
-    вони) with English equivalents.
-  - 'Highlight the specific endings: -ю (I), -ш (You), -мо (We), -ть (They).'
-  - 'Pro-drop rule: Explain that ''Читаю'' is a complete sentence because the ending
-    ''-ю'' already says ''I''.'
-  - 'Common Error Alert: Warn against ''Я читати'' — the verb must ''live'' and change!'
-  - 'Imperfective Aspect note: Briefly mention these describe ongoing processes (process
-    vs. result).'
-- section: 'Практика: Використовуємо дієслова в житті'
+  - Provide a clear 'Stem + Ending' table (e.g., чит + аю) to visualize the First
+    Conjugation pattern (-ати → -аю, -аєш, -ає, -аємо, -аєте, -ають).
+  - 'Explain the Imperfective Aspect using English scaffolding: these verbs describe
+    ongoing/habitual actions (process vs. result).'
+  - 'Explain the Pro-drop feature: the ending itself contains the pronoun, making
+    ''Я/Ти'' optional and allowing for a natural Ukrainian rhythm.'
+  - Show the universal application of this pattern by comparing the conjugations of
+    'читати' and 'працювати' side-by-side.
+- section: Практика
   words: 600
   points:
-  - 'Drill 1: Matching pronouns to endings (Ти... -єш, Ми... -ємо).'
-  - 'Drill 2: Forming SVO sentences with inanimate masculine/neuter objects (Я читаю
-    журнал, Ми слухаємо радіо) to avoid case complexity.'
-  - 'Contrast examples: ''I work, but you rest'' (Я працюю, а ти відпочиваєш).'
-  - 'Narrative building: Construct a simple ''Day in the Life'' sequence using only
-    -ати verbs.'
-- section: 'Культурний контекст: Сила українського слова'
+  - 'Error Correction drill: Target ''Infinitive Abuse'' by having learners replace
+    ''Я читати'' with ''Я читаю''.'
+  - 'Error Correction drill: Target ''Pronoun Overuse'' with exercises that build
+    sentences without pronouns (''Читаю. Працюю. Знаю.'').'
+  - 'SVO Sentence Practice: Combine verbs with inanimate masculine/neuter objects
+    (журнал, радіо) where Nominative = Accusative to avoid early case confusion.'
+  - 'Contextual application: Create a short routine description using multiple target
+    verbs (e.g., ''працювати вдома, слухати радіо'').'
+- section: Культурний аспект та підсумок
   words: 300
   points:
-  - 'Cultural Hook: Discuss the proverb ''Птицю пізнати по пір''ю...'' and the value
-    of eloquence.'
-  - 'Historical Note: Mention the ''Apostol'' (1574) to connect the verb ''читати''
-    to Ukrainian history.'
-  - 'The ''Master Key'' metaphor: Reiterate that knowing this one pattern unlocks
-    hundreds of verbs.'
-  - 'Motivation: Encourage learners that accurate endings are the first step to sounding
-    native.'
+  - Analyze the proverb 'Птицю пізнати по пір'ю, а людину по мові' to emphasize the
+    cultural value of grammatical accuracy.
+  - Use the 'Master Key' metaphor to summarize how mastering this single conjugation
+    unlocks a vast portion of the Ukrainian language.
+  - Recap the transition from English instructional scaffolding into initial Ukrainian
+    action statements.

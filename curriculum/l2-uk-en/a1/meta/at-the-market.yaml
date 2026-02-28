@@ -2,43 +2,41 @@ slug: at-the-market
 title: At the Market
 word_target: 2000
 content_outline:
-- section: 'Вступ: Культура українського ринку'
-  words: 400
+- section: Вступ та культура
+  words: 500
   points:
-  - Intro to the Ukrainian 'bazar' vs. 'supermarket' — atmosphere, freshness, interaction.
-  - 'Cultural Spotlight 1: Bessarabskyi Rynok (Kyiv) — history (1912), architecture,
-    status.'
-  - 'Cultural Spotlight 2: Pryvoz (Odesa) — humor, bargaining, ''tasting'' tradition.'
-  - 'Why Ukrainians love markets: ''svizhe'' (fresh), ''domashnie'' (homemade), engaging
-    with vendors.'
-- section: 'Лексика та Граматика: Як купувати?'
+  - Introduce the vibrant culture of the Ukrainian market (базар). Contrast it with
+    supermarkets, focusing on fresh (свіжий), homemade (домашній) products, and social
+    interaction. Use English scaffolding for cultural concepts.
+  - 'Cultural Spotlight: Odesa''s legendary Pryvoz (Привоз, 1827) and its humor, and
+    Kyiv''s historic Bessarabskyi Market (Бессарабський ринок, 1912).'
+  - 'Explain the tradition of «Спробуйте!» (Try it!): the importance of tasting goods
+    before buying to build trust with the vendor.'
+- section: Презентація лексики та граматики
   words: 600
   points:
-  - 'Core Vocab: Units of measurement (кілограм, грам, пучок, штука). Visual aid for
-    ''пучок'' (bunch).'
-  - 'Grammar Lite: The ''Kilogram'' Pattern. Formula: Number + Unit + Noun (Genitive).
-    Examples: ''кілограм картоплі'', ''два кілограми яблук''.'
-  - 'Asking Price: ''Скільки коштує?'' vs ''По скільки?'' (colloquial for price per
-    unit). ''Скільки з мене?'' (Total).'
-  - 'Quality Adjectives: ''свіжий'', ''солодкий'', ''смачний'', ''стиглий'' (ripe).
-    Collocations table.'
-- section: 'Практика: Діалоги на ринку'
-  words: 600
-  points:
-  - 'Polite Requests: ''Дайте, будь ласка...'', ''Зважте, будь ласка...'' (Weigh,
-    please), ''Можна...?''.'
-  - 'Dialogue 1: Vegetables. Buying potatoes and ''greenery'' (зелень/пучок). Focus
-    on quantities.'
-  - 'Dialogue 2: Fruits. Buying apples and tasting them (''Можна спробувати?''). focus
-    on adjectives.'
-  - 'Dialogue 3: Payment & Haggling. Simple polite bargaining (''А дешевше?''). Terminology:
-    ''здача'' (change), ''готівка'' (cash), ''картка'' (card).'
-- section: 'Історія: Мій похід на Привоз'
+  - 'Introduce essential vocabulary: кілограм, грам, штука, пучок, овочі, фрукти.
+    Use tables with English translations and IPA for first occurrences.'
+  - 'Grammar Lite: Teach the «кілограм + родовий відмінок» pattern as a lexical chunk
+    (e.g., «кілограм картоплі», «кілограм яблук»). Do not dive into deep Genitive
+    theory.'
+  - 'Essential phrases: Polite requests («Дайте, будь ласка», «Можна...») and asking
+    about price («Скільки коштує?», «Скільки з мене?»).'
+- section: Мовні помилки та практика
   words: 400
   points:
-  - Narrative from the Persona's perspective (Teacher sharing a story).
-  - 'Setting the scene: Noise, smells, colors of Odesa''s Pryvoz.'
-  - Interaction with a charismatic vendor (Auntie Sonia type character).
-  - 'The purchase: Getting the best ''domashniy syr'' (homemade cheese) or fruit through
-    conversation.'
-  - 'Conclusion: The market is about people, not just food.'
+  - 'Address quantity errors: Explicitly contrast «Кілограм картопля» (wrong) with
+    «Кілограм картоплі» (correct).'
+  - 'Address number agreement errors: Explain the difference between «Два кілограми»
+    (Nom.Pl for 2-4) and «П''ять кілограмів» (Gen.Pl for 5+).'
+  - 'Clarify vocabulary nuance: Teach the difference between «здача» (change) and
+    «решта» (the rest), focusing on «без здачі» and «візьміть здачу».'
+- section: Діалоги та рольові ігри
+  words: 500
+  points:
+  - 'Mini-dialogue 1: Buying vegetables by weight. Demonstrate polite requests, asking
+    for «кілограм помідорів», and finding out the total price.'
+  - 'Mini-dialogue 2: A lively scenario at Pryvoz. Buying fruit, tasting it («Можна
+    спробувати?»), and practicing light bargaining («А дешевше можна?»).'
+  - 'Interactive Roleplay: Provide a guided scenario for learners to practice being
+    the buyer, using all learned units of measurement and polite phrases.'

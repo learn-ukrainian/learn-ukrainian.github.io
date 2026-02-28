@@ -18,18 +18,20 @@
   Module:  holidays-and-traditions
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  5 Outline Compliance Errors
   failing gates:
-    lesson: 1804/2000 (raw: 2027) | pedagogy: 3 violations | immersion: 16.9% LOW (target 35-55% (M33))
+    lesson: 3108/2000 (raw: 3433) | engagement: 0/3 | pedagogy: 29 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+       → FIX: Replace Russicisms with standard Ukrainian equivalents. These are Russian calques that have standard Ukrainian forms. See Phase B prompt 'Russianisms Pre-Output Scan' table.
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 35/100)
-     → 4 violations (moderate)
-     → Immersion 18% off target
+
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 32 violations (severe - consider revision)
+     → 19 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/holidays-and-traditions-audit.md
@@ -37,11 +39,9 @@
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  Critical Failures:
-    • 5 Outline Compliance Errors
-
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/holidays-and-traditions-audit.log for details)
         ```
+
 
         ## Files to Fix
 

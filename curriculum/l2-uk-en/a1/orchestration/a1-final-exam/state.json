@@ -1,54 +1,25 @@
 {
   "slug": "a1-final-exam",
   "track": "a1",
-  "module_num": 44,
+  "module_num": 64,
   "mode": "v3",
   "phases": {
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-22T08:11:18Z",
-      "words": 2750,
+      "timestamp": "2026-02-28T20:08:53Z",
+      "words": 4269,
       "attempts": 1
-    },
-    "3a": {
-      "status": "complete",
-      "timestamp": "2026-02-22T08:13:58Z",
-      "note": "v3-phase-C"
-    },
-    "3b": {
-      "status": "complete",
-      "timestamp": "2026-02-22T08:13:58Z",
-      "note": "v3-phase-C"
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-23T00:39:26Z",
+      "timestamp": "2026-02-28T20:17:20Z",
       "note": "v3-audit"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-23T00:39:26Z",
+      "timestamp": "2026-02-28T20:17:20Z",
       "note": "v3-audit"
-    },
-    "6": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:44:44Z",
-      "note": "v3-phase-D"
-    },
-    "6b": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:44:44Z",
-      "note": "v3-phase-D"
-    },
-    "7-final": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:44:44Z",
-      "note": "v3-phase-D"
-    },
-    "8": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:44:45Z"
     }
   },
-  "last_updated": "2026-02-23T00:44:45Z"
+  "last_updated": "2026-02-28T20:17:20Z"
 }

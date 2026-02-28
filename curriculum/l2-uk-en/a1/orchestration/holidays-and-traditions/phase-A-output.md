@@ -1,115 +1,70 @@
-✅ Message sent to Gemini (ID: 8952)
-✓ Message 8952 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #8952...
-📨 Message #8952
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-holidays-and-traditions-pA
-   Time: 2026-02-20T00:30:13.440836+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/holidays-and-traditions/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
-
-⏳ Rate limited (attempt 1/5). Waiting 30s...
-
-⏳ Rate limited (attempt 2/5). Waiting 60s...
-
-⏳ Rate limited (attempt 3/5). Waiting 120s...
 ===RESEARCH_START===
 
-# Дослідження: Holidays & Traditions (A1 Core)
+# Дослідження: Holidays & Traditions
 
 ## State Standard Reference
 §3.12: "Традиції, звичаї, свята: державні й релігійні свята; день народження, весілля; подарунки."
-Alignment: This module directly addresses the thematic requirement of §3.12. While §4.2.3 (Morphology) restricts A1 case usage to Nom/Acc/Loc/Voc, this module introduces "З + Instr" and "Бажаю + Gen" strictly as *lexicalized formulae* (frozen chunks) necessary for the "Speech Etiquette" communicative intentions typical of A1.
+Alignment: This module directly addresses §3.12 by covering major state and religious holidays (Новий рік, Різдво, Великдень), birthday celebrations (день народження), and the tradition of giving gifts (подарунки). While A1 grammar typically focuses on Nominative, Accusative, and Locative, the Instrumental ("З Новим роком") and Genitive ("Бажаю щастя", dates) cases are introduced here as essential lexicalized communicative formulas.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| свято | High (top 500) | державне свято, релігійне свято, веселе свято |
-| вітати | Medium | вітати з днем народження, вітати зі святом |
-| бажати | Medium | бажати щастя, бажати здоров'я (Genitive required) |
+| свято | High (Top 500) | державне свято, релігійне свято, вітати зі святом |
+| Новий рік | High | З Новим роком! |
+| Різдво | High | на Різдво, щасливого Різдва |
+| вітати | High | вітати з днем народження, вітати зі святом |
+| бажати | High | бажати щастя, бажати здоров'я |
 | подарунок | High | дарувати подарунок, отримати подарунок |
-| Різдво | High (seasonal) | на Різдво, щасливого Різдва |
-| Великдень | High (seasonal) | на Великдень |
 
 ## Cultural Hooks
-1. **12 страв (12 Dishes):** On Christmas Eve (Sviatvechir), standard tradition involves 12 meatless dishes, centred around *Kutia* (wheat berry pudding).
-2. **Щедрик (Shchedryk):** The world-famous "Carol of the Bells" is originally a Ukrainian folk chant arranged by Mykola Leontovych.
-3. **День народження (Birthday):** The tradition of "pulling ears" (тягнути за вуха) — one pull for each year of life to make the child grow tall.
+1. **Sviatvechir & Kutia**: The tradition of 12 meatless dishes (12 пісних страв) on Christmas Eve, centered around Kutia (sweet wheat berry pudding), representing ancestors and prosperity.
+2. **Shchedryk (Carol of the Bells)**: The globally famous Christmas tune is originally a traditional Ukrainian New Year's carol (щедрівка) arranged by Mykola Leontovych, celebrating the coming of spring (historically in April) with a swallow.
 
 ## Common Learner Errors
-1. **Case Mismatch in Greetings:** Learners often use Nominative after "З" (e.g., *«З Новий рік!»* instead of *«З Новим роком!»*). Fix: Teach "З + Instr" as a fixed block.
-2. **Case Mismatch in Wishes:** Learners use Accusative/Nominative after "бажаю" (e.g., *«Бажаю успіх!»* instead of *«Бажаю успіху!»*). Fix: Emphasize Genitive for abstract concepts wished for.
-3. **Verb Confusion:** Confusing *вітати* (to congratulate/greet) with *бажати* (to wish).
+1. **Nominative for Greetings** → "З Новий рік" (incorrect) vs. "З Новим роком" (correct). *Why it happens*: Learners translate "Happy New Year" directly without realizing "З" (with) requires the Instrumental case.
+2. **Accusative for Wishes** → "Бажаю успіх" (incorrect) vs. "Бажаю успіху" (correct). *Why it happens*: Learners assume wishing for something takes a direct object (Accusative), but Ukrainian uses the Genitive for abstract, partitive, or desired concepts.
 
 ## Cross-References
-- **Builds on:** `a1-23` (What Time Is It / Dates), `a1-32` (My Family - specifically vocabulary for relatives to greet).
-- **Prepares for:** `a1-34` (Checkpoint), `a2-04` (Instrumental Case full paradigm), `a2-02` (Genitive Case full paradigm).
+- Builds on: a1-23, a1-49
+- Prepares for: a1-34
 
 ## Notes for Content Writing
-- **Immersion Constraints:** A1.3 Phase means ~30-40% immersion. Keep grammar explanations in English. Use Ukrainian for all examples, dialogues, and activity prompts.
-- **Pedagogy:** Focus on *recognition* and *production of set phrases* rather than deep grammatical analysis of the Instrumental/Genitive cases. Treat endings like `-ом`, `-ю` as part of the "holiday spelling".
+- **Decolonized Framing**: Present Ukrainian Christmas traditions (Kutia, 12 dishes) on their own terms. Frame "Shchedryk" proudly as a Ukrainian cultural export, reclaiming it from generic "Carol of the Bells" anonymity.
+- **Pedagogical Approach**: Keep grammar explanations light. Teach the Instrumental ("З + -ом/-ем") and Genitive ("бажаю + -а/-у") forms as frozen holiday phrases (lexicalized formulas) rather than full paradigm lessons, which belong in A2/B1.
+- **Linguistic Purity**: Ensure vocabulary hints are distinctly Ukrainian (e.g., use "отримувати" instead of the Russianism "получати").
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Розминка: Улюблені свята"
-    words: 250
+  - section: "Вступ та культура"
+    words: 500
     points:
-      - "Introduce the concept of major Ukrainian holidays (Новий рік, Різдво, Великдень)."
-      - "Cultural Hook: 12 dishes on Sviatvechir and the importance of Kutia."
-      - "Cultural Hook: The origin of 'Carol of the Bells' (Щедрик) by Leontovych."
-      - "Simple matching activity: Holiday name ↔ Season/Month."
-  - section: "Граматика: Як вітати зі святом"
-    words: 350
+      - "Scaffolding Note: This is an A1 level module (~40% immersion). Provide clear English scaffolding for all grammatical explanations and cultural context."
+      - "Structure: Create an H3 overview introducing State Standard §3.12 topics: major holidays (Новий рік, Різдво, Великдень) using bilingual vocabulary tables."
+      - "Cultural Deep-Dive: Write an H3 section on the tradition of 12 meatless dishes on Christmas Eve (Святвечір) and the central role of Kutia (Кутя)."
+      - "Cultural Deep-Dive: Write an H3 section detailing the authentic Ukrainian history of 'Щедрик' (Mykola Leontovych) as a traditional New Year's carol."
+  - section: "Презентація: Вітання"
+    words: 500
     points:
-      - "Explain the formula: Вітаю + З + [Holiday in Instrumental]."
-      - "Present the 'frozen' Instrumental forms: з Новим роком, з Різдвом, з Великоднем."
-      - "Common Error Alert: Do not say 'З Новий рік' (Nominative)."
-      - "Visual aid: A simple table showing 'Nominative → Greeting Form'."
-  - section: "Лексика: Найкращі побажання"
-    words: 350
+      - "Structure: Create an H3 for the core greeting formula 'Вітаю + З + [Instrumental]' with a rule definition and 3+ examples in context."
+      - "Grammar Focus: Present 'З Новим роком', 'З Різдвом', 'З Великоднем' as lexicalized, fixed formulas rather than teaching full Instrumental declension."
+      - "Usage Note: Highlight the common learner error of using the Nominative ('З Новий рік') and explain why the preposition 'З' requires the Instrumental."
+      - "Vocabulary Distinction: Clarify the verb 'вітати' (act of greeting) and provide 3+ short sentence examples."
+  - section: "Презентація: Побажання"
+    words: 500
     points:
-      - "Explain the formula: Бажаю + [Abstract Noun in Genitive]."
-      - "Key vocabulary with IPA: щастя, здоров'я, успіху, любові."
-      - "Common Error Alert: usage of Genitive (of happiness/of health) vs Accusative."
-      - "Briefly cover responses to wishes: 'Дякую!', 'Взаємно!'."
-  - section: "Тема: День народження"
-    words: 300
+      - "Structure: Create an H3 for the wishing formula 'Бажаю + [Genitive]' with a clear rule definition and 3+ examples."
+      - "Vocabulary Focus: Introduce 'щастя' /ˈʃtʃɑstʲɐ/ and 'здоров'я' /zdɔˈrɔu̯jɐ/ with pronunciation guides and their Genitive forms."
+      - "Usage Note: Explicitly warn against using the Accusative ('Бажаю успіх'); explain that wishing for abstract concepts requires the Genitive case."
+      - "Conversational Practice: Provide a mini-dialogue demonstrating how to express wishes and respond appropriately ('Дякую!', 'Взаємно!')."
+  - section: "Практика та дні народження"
+    words: 500
     points:
-      - "Asking about dates: 'Коли твій день народження?' (Recalling A1-23)."
-      - "Answering with date: 'П'ятого травня' (Genitive of date)."
-      - "Cultural Hook: The 'pulling ears' tradition for kids."
-      - "Specific greeting: 'З днем народження!'."
-  - section: "Практика: Листівки та привітання"
-    words: 250
-    points:
-      - "Practical application: Structure of a simple greeting card (To whom -> Greeting -> Wish -> From whom)."
-      - "Scaffolded writing task: Fill in the blanks in a postcard template."
-      - "Focus on correct register (informal for friends/family)."
-  - section: "Ситуації: Обмін подарунками"
-    words: 250
-    points:
-      - "Vocabulary: подарунок, дарувати (to give a gift)."
-      - "Mini-dialogues: Giving a gift ('Це тобі!') and receiving ('Вау, дякую!')."
-      - "Cultural context: Bringing small gifts when visiting (custody/hospitality)."
-  - section: "Творче завдання: Пишемо привітання"
-    words: 250
-    points:
-      - "Consolidation task: Write a birthday message to a friend."
-      - "Checklist for the learner: Did you use 'З...' correctly? Did you use 'Бажаю...' correctly?"
-      - "Model answer providing a standard, natural example."
+      - "Structure: Create an H3 on Birthdays, recalling module a1-23 to ask 'Коли твій день народження?' and answering with Genitive dates ('П'ятого травня')."
+      - "Cultural Deep-Dive: Briefly explain the playful tradition of pulling ears ('тягнути за вуха') on birthdays."
+      - "Vocabulary Focus: Introduce the collocation 'дарувати / отримати подарунок', ensuring the use of 'отримати' to avoid Surzhyk/Russianisms."
+      - "Practical Task: Conclude with a step-by-step writing guide and model answer for crafting a short, informal greeting card to a friend."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -120,11 +75,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5348 chars)
-✅ Message sent to Claude (ID: 8983)
-✓ Message 8983 acknowledged
-   Auto-acknowledged reply #8983 (stdout delivery — no inbox accumulation)
-✓ Message 8952 acknowledged

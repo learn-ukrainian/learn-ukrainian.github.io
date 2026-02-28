@@ -2,15 +2,15 @@
   "module": "the-accusative-ii-people",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:33:35.946712Z",
+  "last_audit": "2026-02-28T20:42:15.989417Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:41:49.110615Z",
-    "meta": "2026-02-19T13:56:28.449993Z",
+    "md": "2026-02-28T20:42:04.703253Z",
+    "meta": "2026-02-28T20:19:02.920958Z",
     "activities": "2026-02-20T22:35:38.097469Z",
     "vocabulary": "2026-02-26T10:56:53.939808Z",
     "plan": "2026-02-28T03:02:37.335698Z",
-    "research": "2026-02-19T13:56:28.445127Z"
+    "research": "2026-02-28T20:19:02.913068Z"
   },
   "gates": {
     "meta": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2341/2000 (raw: 2982) | immersion: 27.3% LOW (target 35-55% (M26))"
-    },
-    "activities": {
       "status": "pass",
       "violations": 0,
-      "message": "10/8"
+      "message": "5186/2000 (raw: 5536)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "warn",
+      "status": "deferred",
       "violations": 0,
-      "message": "0 < 1 (soft target)"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
     "pass_count": 3,
-    "fail_count": 1,
-    "deferred_count": 0
+    "fail_count": 0,
+    "deferred_count": 3
   }
 }

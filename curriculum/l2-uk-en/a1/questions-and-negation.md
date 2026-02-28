@@ -1,383 +1,292 @@
 <!-- SCOPE
-Covers: Asking yes/no questions (particle 'чи'), question words (хто, що, де, etc.), basic negation (particle 'не'), intonation patterns.
+Covers: Asking yes/no questions, using question words (що, хто, де, коли, куди, звідки, чому, як, скільки), basic negation (не/ні), and frequency adverbs (завжди, ніколи).
 Not covered:
-  - Genitive case negation (немає) → a1-11
-  - Complex questions (which/chi) → a1-14
-Related: a1-06-living-verb-1, a1-19-at-the-cafe
+  - Declension of question words (кого, кому) -> A2
+Related: a1-15 (The Living Verb I), a1-41 (At the Café)
 -->
 
-# Questions & Negation
+# Questions & Negation: Asking Questions and Saying No
 
 > **Чому це важливо?**
->
-> Conversation requires questions, not just statements. You cannot just make statements about the world; you must be able to ask about it. Today, we unlock the other half of communication: how to ask "Who?", "Where?", and "Do you...?" without getting tangled in complex grammar.
-
-## Вступ: Мистецтво ставити питання
-
-### Сила запитання
-Up until now, you have been building statements like "Я студент" (I am a student) or "Це книга" (This is a book). To have a real conversation, you need to be able to ask questions. Today, we will learn how to transform these basic statements into inquiries.
-
-In English, asking a question often requires a "helper" verb like "do" or "does." You have to rearrange the whole sentence: "You know" becomes "Do you know?". In Ukrainian, the process is much simpler and more direct. You do not need to perform mental gymnastics or hunt for auxiliary verbs. You often just change your voice or add a single small word. This simplicity is one of the joys of Ukrainian syntax.
-
-### Проста правда про "Do"
-Let's clear up the biggest confusion for English speakers right now. In Ukrainian, there is no word for "do" when used as a helper to ask questions.
-
-If you want to ask "Do you read?", you never translate the word "do". You simply take the statement "You read" (**Ти читаєш**) and add a question mark. That's it. The logic of Ukrainian is strictly about the main verb. The "doing" is already inside the verb itself.
-
-> [!warning]
-> **Пастка з "Do"**
->
-> Never try to translate "do" or "does" in questions!
-> *   English: "Do you know?"
-> *   Wrong Ukrainian: "Робиш ти знати?" (Do you to know?) — This sounds like you are making something!
-> *   Correct Ukrainian: "**Ти знаєш?**" (You know?)
->
-> Забудьте про допоміжні дієслова. Довіряйте головному дієслову.
-
-### Базове заперечення: Сила "Не"
-To make a sentence negative in Ukrainian, we use the particle **не**. You simply place it directly *before* the word you want to negate, which is usually the main verb.
-
-*   **Я розумію.** (I understand.)
-*   **Я не розумію.** (I do not understand.)
-*   **Він знає.** (He knows.)
-*   **Він не знає.** (He does not know.)
-
-Notice again: no "do not", no "don't". Just **не**. It is clean, efficient, and easy to use.
-
-### Пастка для учнів: "Ні" проти "Не"
-There is a common stumbling block for beginners: confusing the *answer* "No" with the *particle* "Not". In English, they sound different. In Ukrainian, they look similar but function differently.
-
-**Ні** is the answer to a question. It stands alone or starts a sentence.
-**Не** is the grammar tool. It never stands alone; it must attach to a word.
-
-*   Q: **Ти читаєш?** (Do you read?)
-*   A: **Ні, я не читаю.** (No, I do not read.)
-
-Remember: **Ні** is the independent answer "No", while **не** is the grammatical particle "not" that attaches to the action.
-
-## Граматика: Як будувати питання
-
-### Питання "Так/Ні" і частка "Чи"
-The most formal and classic way to ask a Yes/No question in Ukrainian is to use the particle **чи**. This small word acts like a flag at the beginning of the sentence. It signals to the listener: "Attention! A question is coming!"
-
-**Структура:**
-**Чи** + Subject + Verb?
-OR
-**Чи** + Verb + Subject?
-
-**Приклади:**
-*   **Чи ти читаєш?** — Do you read?
-*   **Чи це правда?** — Is this true?
-*   **Чи ви тут?** [t͡ʃɪ ʋɪ tut] — Are you here?
-*   **Чи він знає?** — Does he know?
-*   **Чи ми йдемо?** — Are we going?
-
-**Важливо знати:**
-Using **чи** makes your speech sound polite, clear, and complete. It is excellent for talking to strangers, older people, or in formal situations. It removes any ambiguity because the sentence creates a question structure immediately.
-
-Also, notice the flexibility. **Чи ти читаєш?** puts the focus on "you". **Чи читаєш ти?** puts the focus on the action "reading". Both are correct. This flexibility allows you to highlight what is important.
-
-### Інтонація: "Ліниве" питання
-In casual, spoken Ukrainian, we often drop the **чи**. The grammar remains exactly the same as a statement, but the *music* of your voice changes. This is the "Intonation Question."
-
-To turn a statement into a question without words, you must raise your pitch sharply at the end of the sentence.
-
-*   Statement: **Ти знаєш.** (You know.) ↘
-*   Question: **Ти знаєш?** (You know?) ↗
-
-**Приклади:**
-*   **Це кіт?** (Is this a cat?)
-*   **Ми йдемо?** (Are we going?)
-*   **Ти там?** (Are you there?)
-*   **Це добре?** (Is this good?)
-*   **Ти розумієш?** (Do you understand?)
-
-**Важливо знати:**
-This casual form is extremely common among friends and family because it is faster. However, if your intonation stays flat, people will think you are just stating a fact. You must exaggerate the rise in your voice!
-
-> [!culture]
-> **Рівень ввічливості**
->
-> *   **З "Чи":** "Чи ви бажаєте кави?" (Would you like coffee?) — Ввічливо, офіціант до клієнта.
-> *   **Без "Чи":** "Хочеш кави?" (Want coffee?) — Неформально, друг до друга.
->
-> Обидва варіанти правильні. Але вони створюють різну атмосферу.
-
-### Відповіді: "Так" і "Ні"
-When someone asks you a Yes/No question, you need the tools to respond.
-
-**Так** — Yes.
-**Ні** — No.
-
-These are your primary tools. You can use them alone, but it is often more polite to expand your answer slightly.
-
-**Приклади:**
-*   Q: **Чи ти тут?** (Are you here?)
-*   A: **Так.** (Yes.) / **Так, я тут.** (Yes, I am here.)
-*   Q: **Це вода?** (Is this water?)
-*   A: **Ні.** (No.) / **Ні, це сік.** (No, this is juice.)
-*   Q: **Чи ти розумієш?** (Do you understand?)
-*   A: **Ні, я не розумію.** (No, I do not understand.)
-
-**Важливо знати:**
-Be careful with **так**. In other contexts, it can mean "so" (as in "so much"). But as an answer, it always means "Yes".
-
-### Спеціальні питання: "Хто", "Що", "Де"
-Sometimes a simple "Yes" or "No" is not enough. You need information. For this, we use "Special Question Words". These words usually stand at the very beginning of the sentence.
-
-Here are the essential ones you need to know now:
-
-1.  **Хто?** [xtɔ] — Who? (People / Animates)
-2.  **Що?** [ʃt͡ʃɔ] — What? (Things / Actions)
-3.  **Де?** [dɛ] — Where? (Location)
-4.  **Куди?** — Where to? (Direction)
-5.  **Звідки?** — Where from? (Origin)
-6.  **Коли?** — When? (Time)
-7.  **Як?** [jɑk] — How? (Manner)
-8.  **Чому?** — Why? (Reason)
-9.  **Скільки?** — How much/many? (Quantity)
-
-**Приклади:**
-*   **Хто це?** — Who is this?
-*   **Що це?** — What is this?
-*   **Де ти?** — Where are you?
-*   **Куди ти йдеш?** — Where are you going?
-*   **Звідки ти?** — Where are you from?
-*   **Коли ми читаємо?** — When do we read?
-*   **Як справи?** — How are things? (How are you?)
-*   **Чому ти тут?** — Why are you here?
-*   **Скільки це коштує?** — How much does this cost?
-
-**Важливо знати:**
-Notice that we do not need "is" or "are" in strictly present tense questions like "Who is this?". **Хто це?** literally means "Who this?". The verb "to be" is silent/implied.
-
-### "Що" проти "Шо": Реальність
-You will learn **що** in textbooks. It is the literary, correct standard form. However, if you listen to Ukrainians on the street, in movies, or on YouTube, you will hear a different sound constantly: **шо**.
-
-**Що** = Standard, literary, polite.
-**Шо** = Very casual, spoken, sometimes considered "Surzhyk" (mixed language) or just lazy pronunciation.
-
-**Приклади:**
-*   **Що ти робиш?** (Correct)
-*   **Шо ти робиш?** — Це просто розмовний варіант.
-
-**Важливо знати:**
-As a learner, you should always aim to say **що**. It makes you sound educated and respectful of the language. But you must train your ear to understand **шо**. You will hear it everywhere. Don't be confused — it is exactly the same word.
-
-### Слова частоти: Відповіді на "Коли?"
-When someone asks **Коли?**, you often answer with a frequency word. Here are the four most useful ones:
-
-*   **за́вжди́** — always
-*   **ча́сто** — often
-*   **і́ноді** — sometimes
-*   **ніколи** — never
-
-**Приклади:**
-*   **Коли ти читаєш?** — **Завжди ввечері.** (Always in the evening.)
-*   **Ти часто п'єш каву?** — **Так, часто.** (Yes, often.)
-*   **Ти іноді читаєш?** — **Так, іноді.** (Yes, sometimes.)
-
-**Важливо знати:**
-The word **ніколи** contains a built-in negation. When you use it with a verb, add **не** before the verb too: **Я ніколи не читаю.** (I never read.) This double negation is standard in Ukrainian — it does not cancel itself out.
-
-> [!myth-buster]
-> **Міф про "Do"**
->
-> Many learners panic when they see a long English question: "When do you usually drink coffee?"
->
-> They start looking for "do". Стоп! Не робіть цього.
->
-> 1.  **Почніть з питального слова**: "When" = **Коли**.
-> 2.  **Далі знайдіть підмет**: "you" = **ти**.
-> 3.  **Тепер дієслово**: "drink" = **п'єш**.
-> 4.  **Потім додаток**: "coffee" = **каву**.
-> 5.  **І нарешті частота**: "usually" = **зазвичай**.
->
-> Результат: **Коли ти зазвичай п'єш каву?**
->
-> Бачите? Жодного "do". Тільки зміст.
-
-## Практика: Інтонація та конструктор
-
-### Механіка: Перетворення тверджень
-Let's practice the mental switch. You have a fact. You want to verify it. You have two paths: the formal road (**Чи**) and the casual road (Intonation).
-
-**Statement:** **Ти знаєш.** (You know.)
-
-**Path 1: The Formal Road**
-Add **Чи** at the front.
-Result: **Чи ти знаєш?**
-*Tone:* Polite, inquisitive, clear structure.
-
-**Path 2: The Casual Road**
-Keep the words. Spike the pitch at the end.
-Result: **Ти знаєш?** ↗
-*Tone:* Friendly, direct, quick.
-
-Both are perfect Ukrainian. The choice depends on who you are talking to.
-
-**Try it yourself:**
-Take the statement **Це кава**.
-*   **Formal:** Чи це кава?
-*   **Casual:** Це кава? ↗
-
-Take the statement **Ми читаємо**.
-*   **Formal:** Чи ми читаємо?
-*   **Casual:** Ми читаємо? ↗
-
-### Тренування контексту: Хто проти Що
-Choosing between **Хто** and **Що** seems easy, but it requires paying attention to "animacy" (is it alive/human?).
-
-*   **____ це? — Це мама.** (Person) → **Хто це?**
-*   **____ це? — Це телефон.** (Object) → **Що це?**
-*   **____ там? — Там кіт.** (Animal) → **Хто там?** (Note: Pets are often "Who"!)
-*   **____ це? — Це цікаво.** (Concept) → **Що це?**
-
-**Важливо знати:**
-In Ukrainian grammar, animals are considered "animate" (істоти). Therefore, we use **Хто** (Who), not **Що** (What), when asking about a dog or a cat.
-
-**Practice Grid:**
-Look at these answers and choose the correct question word.
-1.  **____ це? — Це стіл.** (Table -> Inanimate) -> **Що**.
-2.  **____ це? — Це лікар.** (Doctor -> Person) -> **Хто**.
-3.  **____ там? — Там собака.** (Dog -> Animal/Animate) -> **Хто**.
-4.  **____ це? — Це любов.** (Love -> Concept) -> **Що**.
-
-### Майстерня інтонації: Візуалізація
-Intonation is not just decoration; it is punctuation you can hear.
-
-*   **Statement (↘):** The voice drops at the end, like placing a heavy box on the floor. It says "Case closed."
-    *   **Це правда.** ↘ (It is true.)
-
-*   **Question (↗):** The voice rises sharply, like tossing a ball into the air. It says "I am waiting for a catch (an answer)."
-    *   **Це правда?** ↗ (Is it true?)
-
-If you don't toss the ball, the listener doesn't know they need to catch it. Practice saying these aloud. Exaggerate it until it feels almost silly. That is usually when it sounds native!
-
-**Visualizing the Curve:**
-Imagine drawing a line with your finger while you speak.
-*   **Statement:** Draw a straight line that curves down at the very end. `————↘`
-*   **Question:** Draw a straight line that shoots up at the very end. `————↗`
-*   **Surprise:** Draw a line that goes down then shoots up. `——↘↗` (Really??)
-
-Use your hand to "conduct" your voice. It helps your brain connect the physical motion to the sound.
-
-> [!tip]
-> **Трюк з бровами**
->
-> Важко робити висхідну інтонацію? Спробуйте піднімати брови під час запитання. Це фізично допомагає підняти висоту голосу!
->
-> **Ти розумієш?** (Підніміть брови!) ↗
-
-## Застосування: Розмова в реальному житті
-
-### Сценарій 1: Запитання в меню
-Imagine you are at a Lviv coffee shop. You want to know if they have cheesecake. You don't see it.
-
-**You:** **Вибачте, чи у вас є сирник?** (Excuse me, do you have syrnyk (cottage cheese pancakes)?)
-**Waiter:** **Так, звичайно.** (Yes, of course.)
-**You:** **А кава є?** (And is there coffee?)
-**Waiter:** **Так.** (Yes.)
-**You:** **Скільки це коштує?** (How much does it cost?)
-**Waiter:** **Це недорого.** (It is inexpensive.)
-
-Notice the mix. You started polite with **Чи** ("Do you have..."), then switched to a quick check with just intonation ("And coffee is?"). This is a very natural flow.
-
-### Сценарій 2: Соціальна цікавість
-You are sitting with a new Ukrainian friend, Oksana. She waves at someone.
-
-**You:** **Хто це?** (Who is this?)
-**Oksana:** **Це мій брат.** (This is my brother.)
-**You:** **Де він?** (Where is he?)
-**Oksana:** **Він там.** (He is over there.)
-**You:** **Що він робить?** (What is he doing?)
-**Oksana:** **Він читає.** (He is reading.)
-
-Short, punchy questions drive the conversation forward. You don't need long sentences to be interested in people.
-
-### Моделі Q&A: Пінг-понг
-Conversation is like ping-pong. Serve and return.
-
-*   **Server:** **Що це?** (What is this?)
-*   **Return:** **Це кава.** (This is coffee.)
-*   **Server:** **Чи це смачно?** (Is it tasty?)
-*   **Return:** **Так, це дуже смачно.** (Yes, it is very tasty.)
-*   **Server:** **Ти хочеш ще?** (Do you want more?)
-*   **Return:** **Ні, дякую.** (No, thank you.)
-*   **Server:** **Чи ти тут?** (Are you here?)
-*   **Return:** **Так, я тут.** (Yes, I am here.)
-
-Practice this rhythm. Question, Answer. Question, Answer. Don't break the flow by overthinking the grammar.
-
-> [!observe]
-> **Контекстні підказки**
->
-> Іноді саме лише питальне слово — це ціле речення.
->
-> *   Ви виглядаєте розгублено. Друг питає: **Що?** (What? / What's wrong?)
-> *   Ви чуєте стукіт. Ви питаєте: **Хто?** (Who? / Who is it?)
-> *   Ви шукаєте ключі. Ви бурмочете: **Де?** (Where?)
->
-> Простота є цілком прийнятною в контексті.
-
-## Культурний контекст: Ввічливість і гумор
-
-### Рівень ввічливості
-We mentioned **Чи** vs Intonation. Think of this as a "politeness dial."
-*   **High Politeness:** Job interview, talking to a grandmother, official paperwork. Use **Чи**.
-*   **Medium Politeness:** Shop assistant, colleague. Mix **Чи** and Intonation.
-*   **Low Politeness (Intimacy):** Best friend, sibling, angry argument. Use Intonation primarily.
-
-Using **Чи** with your best friend might sound sarcastic or overly dramatic. Using just intonation with a police officer might sound rude. Adjust your dial!
-
-### Пом'якшення "Ні"
-A bare **Ні** can sound blunt, even rude. In Ukrainian culture, softening your refusal is polite. Compare:
-
-*   **Ні.** — Abrupt, like slamming a door.
-*   **Ні, дякую.** — Polite, like closing a door gently.
-*   **Ні, я не хочу.** — Explanatory, gives context.
-
-When declining, add a little context. Ваша відмова буде м'якшою і приємнішою.
-
-### Культурний гачок: Легендарний АЛЬФ
-In the 1990s, the American sitcom "ALF" was dubbed into Ukrainian. The translation was a masterpiece that shaped the humor of an entire generation.
-
-There is a famous catchphrase that perfectly illustrates today's lesson. ALF is defending his culinary tastes (eating cats) to the Tanner family:
+> 
+> Уміння запитувати — це основа розмови. Заперечення допомагає встановлювати межі. Без цих навичок діалог неможливий. Цей урок дає ключі до активного спілкування.
+> (The ability to ask is the foundation of conversation. Negation helps to establish boundaries. Without these skills, dialogue is impossible. This lesson gives you the keys to active communication.)
+
+## Вступ: Основи заперечення та інтонації
+
+### The "Do Trap" and Structural Simplification
+To turn a statement into a question in Ukrainian, you do not need to add extra action verbs. You simply use the base statement itself and modify it by either changing the melody of your voice or adding a single, dedicated question particle. You only need to focus on the core action and ensure your intonation signals an inquiry.
+
+### Negation: The Strict Boundary Between «Не» and «Ні»
+The word **ні́** translates to "no". It is your standalone response. It functions like "No" at the beginning of an English sentence.
+
+The particle **не** translates to "not". It is your active negation modifier. You must place it immediately before a verb.
+
+Learners often mix these up phonetically, creating grammatically impossible combinations. Saying «Я ні знаю» is incorrect because **ні** cannot attach to or modify a verb. You must clearly separate the isolated response from the negation of the action.
+
+**Examples in context:**
+- **Ні́**, я **не** зна́ю.
+  (No, I do not know.)
+- **Ні́**, дя́кую. Я **не** хо́чу каву.
+  (No, thank you. I do not want coffee.)
+- Мій брат **не** розумі́є цю тему.
+  (My brother does not understand this topic.)
+- Вони́ **не** працю́ють тут сьогодні.
+  (They do not work here today.)
+
+### Visualizing Intonation: Arrows of Pitch
+A question, however, requires a sharp, highly noticeable rise in pitch (↗). This rise happens precisely on the focus word—the specific piece of information you are asking about. When the entire sentence is the question, the rise usually occurs at the very end of the phrase. Mastering this pitch shift is the absolute key to sounding natural and ensuring your conversational partners actually realize you are asking them a question and expecting an answer.
+
+> [!warning] The Monotone Risk
+> Saying «Ти знаєш» with a flat or falling tone actively tells the person: "You know." For "Do you know?", your pitch must spike upwards sharply on the final syllable of the verb: «Ти знаєш? ↗». Monotone questions simply do not exist in spoken Ukrainian.
+
+## Презентація: Питальні конструкції
+
+### Yes/No Questions with the Particle «Чи»
+The most structurally explicit, grammatically clear way to ask a "yes or no" question in Ukrainian is by utilizing the particle **чи**. This small, powerful word acts as a universal, dedicated question marker. When you place **чи** at the absolute beginning of a sentence, it immediately signals to the listener's brain that an inquiry is coming, long before you reach the end of the sentence.
+
+**Examples in context:**
+- **Чи** ви розумі́єте українську мову?
+  (Do you understand the Ukrainian language?)
+- **Чи** це ваш новий авто́бус?
+  (Is this your new bus?)
+- **Чи** ти зна́єш, де зараз ка́ва?
+  (Do you know where the coffee is now?)
+- **Чи** студен́т сьогодні відповіда́є?
+  (Is the student answering today?)
+
+### Casual Intonation-Only Questions
+While **чи** is standard, polite, and excellent for beginners, everyday Ukrainian conversation thrives on speed and efficiency. In casual speech among friends, family members, or close colleagues, native speakers frequently drop the particle **чи** entirely. The sentence structure becomes absolutely identical to a positive statement, and the entire burden of grammatical meaning shifts to your vocal intonation.
+
+This is common in informal settings. You must apply a sharp pitch rise (↗) on the specific word you are inquiring about. The pitch peaks on the focus word. 
+
+**Examples in context:**
+- Ти зна́єш цю людину? ↗
+  (Do you know this person?)
+- Ви працю́єте сього́дні ввечері? ↗
+  (Are you working today in the evening?)
+- Це твій старший брат? ↗
+  (Is this your older brother?)
+- Вона́ зараз вдо́ма? ↗
+  (Is she at home right now?)
+
+### Core Question Words: Identifying Things and People
+When a simple "yes" or "no" answer is insufficient for your needs, you must extract specific information. Ukrainian utilizes a set of core question words (interrogatives) placed at the beginning of the sentence to gather details about identity, objects, and concepts.
+
+For identifying objects, ideas, and abstract concepts, we use **що** (what). For identifying people, professions, and animals, we use **хто** (who).
+
+**Examples with Що (What):**
+- **Що** ти ро́биш сьогодні?
+  (What are you doing today?)
+- **Що** це на столі?
+  (What is this on the table?)
+- **Що** ви читаєте зараз?
+  (What are you reading right now?)
+
+**Examples with Хто (Who):**
+- **Хто** це сказа́в?
+  (Who told you this?)
+- **Хто** там біля дверей?
+  (Who is there by the door?)
+- **Хто** цей новий студент?
+  (Who is this new student?)
+
+> [!tip] Street Sound: Що vs Шо
+> In standard literary Ukrainian, the word for "what" is written and pronounced as **що** (shcho). However, in almost all casual, spoken interactions across the country, regardless of region, you will hear people say **шо** (sho). You should write and formally say **що** in your classes, but you must train your ear to instantly recognize **шо** on the street to understand real conversations.
+
+### Core Question Words: Navigating Space and Time
+For time, schedules, and dates, use **коли́** (when). For a static location or position, use **де** (where at). For the direction of active movement towards a destination, use **куди́** (where to). For the origin or starting point of a journey, use **зві́дки** (from where).
+
+Notice the strict distinction between location and direction. English often uses "where" for both ("Where are you?" vs "Where are you going?"). Ukrainian demands precision.
+
+**Examples in context:**
+- **Коли́** наш сніда́нок?
+  (When is our breakfast?)
+- **Коли́** ти зазвичай працюєш?
+  (When do you usually work?)
+- **Де** ви були́ вчо́ра ввечері?
+  (Where were you yesterday evening? — static location)
+- **Де** мій новий телефон?
+  (Where is my new phone? — static location)
+- **Куди́** ви ї́дете завтра?
+  (Where are you going tomorrow? — dynamic movement)
+- **Зві́дки** ти знаєш цю інформацію?
+  (From where do you know this information? — origin)
+
+### Question Words: Reason, Manner, and Quantity
+For the reason or cause of something, use **чому́** (why). For the manner in which something happens, or to inquire about someone's state, use **як** (how). For price, quantity, or amounts, use **скі́льки** (how much / how many).
+
+**Examples in context:**
+- **Чому́** ти тут так пізно?
+  (Why are you here so late?)
+- **Чому́** ні?
+  (Why not?)
+- **Як** твої справи сьогодні?
+  (How are your things [How are you] today?)
+- **Як** це працює?
+  (How does this work?)
+- **Скі́льки** це коштує в магазині?
+  (How much does this cost in the store?)
+
+### Standard Answering Patterns: Так vs Ні
+**Examples in context:**
+- — Чи ви розумієте це правило? 
+  — **Так**, я добре розумію.
+  (— Do you understand this rule? — Yes, I understand well.)
+- — Ти хочеш чорну каву?
+  — **Так**, будь ласка.
+  (— Do you want black coffee? — Yes, please.)
+- — Це ваш старий автобус?
+  — **Ні**, це не мій автобус.
+  (— Is this your old bus? — No, this is not my bus.)
+- — Ти знаєш його брата?
+  — **Ні**, я не знаю.
+  (— Do you know his brother? — No, I do not know [him].)
+
+## Практика: Тренування заперечень та запитань
+
+Зараз ми переходимо до активної практики. Це дуже важливий етап навчання. Ми будемо змінювати структуру речень. Слухайте уважно і повторюйте вголос.
+(Now we transition to active practice. This is a very important stage of learning. We will be changing the structure of sentences. Listen carefully and repeat out loud.)
+
+### The Sentence Transformation Drill
+**Transformation Drill 1: The Verb «Знати» (To Know)**
+1. **Positive Fact:** Ти зна́єш цю жінку. (You know this woman.) ↘
+2. **Negative Fact:** Ти **не** зна́єш цю жінку. (You do not know this woman.) ↘
+3. **Formal Question:** **Чи** ти зна́єш цю жінку? (Do you know this woman?) ↗
+4. **Casual Question:** Ти зна́єш цю жінку? (Do you know this woman?) ↗
+
+**Transformation Drill 2: The Verb «Працювати» (To Work)**
+1. **Positive Fact:** Вона́ працю́є вдома. (She works at home.) ↘
+2. **Negative Fact:** Вона́ **не** працю́є вдома. (She does not work at home.) ↘
+3. **Formal Question:** **Чи** вона́ працю́є вдома? (Does she work at home?) ↗
+4. **Casual Question:** Вона́ працю́є вдома? (Does she work at home?) ↗
+
+### Error Correction Lab: Fixing the Calques
+Вивчення нової мови — це також постійна робота над помилками. Ми часто робимо кальки з англійської мови. Це абсолютно нормально, але ми маємо це свідомо виправляти. Подивімося на типові помилки студентів.
+(Learning a new language is also constant work on mistakes. We often make calques [direct translations] from the English language. This is absolutely normal, but we must consciously correct it. Let's look at typical student mistakes.)
+
+**Error Profile 1: The Phantom "Do"**
+- ❌ **Incorrect Form:** Робиш ти розуміти цей текст? (Directly translating "Do you understand this text?")
+- ✅ **Correct Form:** Ти розумі́єш цей текст? / Чи ти розумі́єш цей текст?
+- **The Diagnosis:** (Слово «робити» означає виробляти або створювати. Його не можна використовувати тут. Це звучить дуже дивно. Використовуйте правильну інтонацію або слово «чи».)
+
+**Error Profile 2: The "Not" vs "No" Confusion**
+- ❌ **Incorrect Form:** Я ні хочу їсти. (Directly translating "I no want to eat.")
+- ✅ **Correct Form:** Я **не** хо́чу їсти.
+- **The Diagnosis:** (Слово «ні» — це коротка відповідь. Використовуйте слово «не» для дії.)
+
+**Error Profile 3: The Flat Statement Trap**
+- ❌ **Incorrect Form:** Це твоя кава. ↘ (Said with a flat or falling voice, but expecting an answer.)
+- ✅ **Correct Form:** Це твоя ка́ва? ↗ (Pitch rises sharply on the word 'кава'.)
+- **The Diagnosis:** (Без висхідної інтонації люди почують просто факт. Вони будуть мовчати і чекати. Виникне пауза.)
+
+### Building Contextual Logic: Matching Words to Answers
+**Contextual Matching Pairs:**
+- **The Question:** **Хто** там стоїть? (Who is standing there?)
+  **The Logical Answer:** Це мій брат Андрій. (This is my brother Andriy. — Identifies a person.)
+- **The Question:** **Що** це лежить на столі? (What is this lying on the table?)
+  **The Logical Answer:** Це новий телефон. (This is a new phone. — Identifies an object.)
+- **The Question:** **Де** ми зараз? (Where are we now?)
+  **The Logical Answer:** Ми в центрі Києва. (We are in the center of Kyiv. — Identifies a static location.)
+- **The Question:** **Куди́** ти йдеш так швидко? (Where are you going so fast?)
+  **The Logical Answer:** Я йду додому. (I am going home. — Identifies a dynamic destination.)
+- **The Question:** **Коли** він працює? (When does he work?)
+  **The Logical Answer:** Він працює вранці. (He works in the morning. — Identifies a time.)
+
+> [!observe] The Logic of Movement
+> Pay close attention to the strict difference between **де** (where at) and **куди** (where to). Asking someone in a car «Де ти їдеш?» sounds like you are asking where the car is physically located at this exact second. To know their destination, you must ask «Куди ти їдеш?».
+
+## Продукція: Комунікативні сценарії
+
+Зараз ми використовуємо наші нові знання в реальних життєвих ситуаціях. Уявіть ситуацію: ви гуляєте в місті. Ви хочете знайти інформацію. Ви хочете купити каву. 
+(Now we use our new knowledge in real life situations. Imagine that you are walking in the city. You need to find information. You need to buy coffee.)
+
+### Scenario 1: Navigating the Café
+The phrase **чи є...?** literally translates to "is there...?" or "do you have...?". It is your primary, essential tool for checking availability. Combine this with **де** to locate items in the room, and **скі́льки** to handle the financial transactions.
+
+**Mini-Dialogue: Ordering Coffee**
+- **You:** Добрий день. Скажіть, будь ласка, **де** у вас меню?
+  (Good afternoon. Tell me, please, where is your menu?)
+- **Barista:** Меню лежить тут, на столі.
+  (The menu is lying here, on the table.)
+- **You:** Дякую. **Чи є** у вас гаряче капучино?
+  (Thank you. Do you have hot cappuccino?)
+- **Barista:** Так, звичайно є.
+  (Yes, of course we have it.)
+- **You:** Чудово. **Скі́льки** це коштує?
+  (Great. How much does this cost?)
+- **Barista:** П'ятдесят гривень.
+  (Fifty hryvnias.)
+- **You:** А **чи є** цукор?
+  (And is there sugar?)
+- **Barista:** **Ні**, вибачте, ми **не** маємо цукру сьогодні.
+  (No, sorry, we do not have sugar today.)
+
+### Scenario 2: The Investigative Journalist Roleplay
+**The Journalist's Rapid Checklist:**
+- **Journalist:** Добрий вечір. **Хто** ви?
+  (Good evening. Who are you?)
+- **Subject:** Я студент університету.
+  (I am a university student.)
+- **Journalist:** **Що** ви робите тут на вулиці?
+  (What are you doing here on the street?)
+- **Subject:** Я просто читаю книгу.
+  (I am just reading a book.)
+- **Journalist:** **Звідки** ви приїхали?
+  (Where did you arrive from?)
+- **Subject:** Я приїхав з Канади.
+  (I arrived from Canada.)
+- **Journalist:** **Чому** ви зараз не вдома?
+  (Why are you not at home right now?)
+- **Subject:** Я дуже люблю це кафе.
+  (Because I really like this café.)
+
+### Expressing Routine: Frequency Adverbs and Double Negation
+These adverbs interact with the rules of negation in a very specific, strict way. When using the word **ніколи** (never), Ukrainian requires a grammatical structure known as double negation. Unlike in standard English, where using double negatives is considered grammatically incorrect (e.g., "I never do nothing"), in Ukrainian, they are absolutely, unequivocally mandatory. 
+
+When using a negative adverb like "never", the verb in the sentence must ALSO carry the negative particle **не**. The two negatives do not cancel each other out mathematically; instead, they work together to reinforce and emphasize the total absence of the action.
+
+**Examples in context:**
+- Я **завжди́** п'ю гарячу каву вранці.
+  (I always drink hot coffee in the morning.)
+- Вони **ча́сто** працюють тут разом.
+  (They often work here together.)
+- Я **ніко́ли не** сплю вдень.
+  (I never sleep during the day. — literally: I never not sleep)
+- Він **ніко́ли не** знає правильну відповідь.
+  (He never knows the correct answer. — literally: He never not knows)
+
+> [!rule] The Ironclad Double Negation Rule
+> Whenever you use the word **ніколи** in a sentence, you MUST place **не** directly before the verb. Saying «Я ніколи знаю» is grammatically impossible and sounds broken. It must always be «Я ніколи не знаю». There are no exceptions to this rule.
+
+## Культурний контекст та ALF
+
+Вивчення мови — це не тільки суха граматика зі словника. Мова — це жива культура, унікальний гумор і складні соціальні правила. Ми маємо глибоко розуміти контекст. Коли ми говоримо офіційно? Коли ми говоримо як старі друзі?
+(Learning a language is not only dry grammar from a dictionary. Language is living culture, unique humor, and complex social rules. We must deeply understand the context. When do we speak formally? When do we speak like old friends?)
+
+### Register Nuances: Navigating Formal vs. Casual Spaces
+### The ALF Phenomenon: Negation, Intonation, and Humor
+In the show, the alien ALF famously defends his unusual dietary habits with this legendary phrase:
 
 **«Ти не любиш котів? Ти просто не вмієш їх готувати!»**
-(You don't like cats? You simply don't know how to cook them!)
+*(You don't like cats? You just don't know how to cook them!)*
 
-> [!tip]
-> **Grammar Note**
->
-> Don't worry about the form 'котів' (cats) yet. Just enjoy the phrase!
-
-Let's break this down:
-1.  **Ти не любиш котів?** — A question. We see the negation **не** and hear the rising intonation, but there is no **чи**. This expresses shock: "You don't like them? Really?"
-2.  **Ти просто не вмієш...** — A statement. We use **не** to explain the reason.
-
-This phrase is a cult classic. Use it jokingly, and you will instantly find common ground with any Ukrainian over 30!
+> [!culture] The Voice of a Generation
+> The voice actor for ALF, Yevhen Malukha, gave the character a distinct, slightly raspy, and incredibly expressive Ukrainian voice. This specific dub proved to millions of viewers that Ukrainian was not just an academic language confined to literature, but a vibrant, modern medium perfectly suited for sharp comedy and global pop culture.
 
 ---
 
 # Підсумок
 
-Today, you learned how to actively ask about the world around you in Ukrainian:
-
-*   **No "Do/Does":** You don't need auxiliary verbs to ask a question.
-*   **The Formal Question:** Add the particle **чи** to the beginning of a sentence for polite, clear Yes/No questions.
-*   **The Casual Question:** Keep the statement structure but sharply raise your intonation at the end.
-*   **Question Words:** Words like **Хто** (Who), **Що** (What), and **Де** (Where) go at the beginning of the sentence.
-*   **Negation:** Use **не** right before the verb to make it negative, and use **Ні** as the standalone answer "No".
-
-You now have the tools to initiate conversations, ask for information, and express when you don't do something!
+Ми вивчили основи запитань і заперечень. Українська мова не має допоміжних слів типу «do». Ми використовуємо частку «чи» та питальні слова. Ми також використовуємо інтонацію. Ми чітко розрізняємо слово «ні» та частку «не». Ми знаємо прислівники «завжди» і «ніколи». Це дуже корисний урок. Ви можете ставити запитання. Це ключ до розмови. Практикуйте ці слова кожного дня. Запитання допомагають розуміти людей. Вивчення мови — це цікаво. Говоріть українською впевнено.
+(In this important module, we studied in detail the basics of interrogative and negative sentences. You learned that the Ukrainian language does not use auxiliary verbs like the English "do". Instead, we rely on the simple particle "чи", specific question words, and correct vocal intonation. We also learned to clearly distinguish the independent response word "ні" and the action negation particle "не", and understood how to properly use them together with frequency adverbs like "never".)
 
 **Перевірте себе:**
+1. How do you form a polite, formal yes/no question without having to rely solely on perfect vocal intonation?
+2. Why is it structurally incorrect and confusing to say "Робиш ти працювати?" when asking someone if they work?
+3. What is the fundamental, strict grammatical difference in usage between the word **ні** and the particle **не**?
+4. When asking a casual question without **чи** or a specific question word, what must your voice physically do at the end of the sentence?
+5. To say "I never drink coffee", why must you use the particle **не** in the Ukrainian translation, despite it seeming redundant to an English speaker?
+6. Which specific question word would you use to ask about a static location (where something is), and which completely different word would you use for a direction of travel (where someone is going)?
 
-1.  **Як сказати "Так" і "Ні" українською?**
-2.  **Яке маленьке слово робить речення заперечним? Де воно стоїть?**
-3.  **Які є два способи поставити питання "Так/Ні"? Який з них формальніший?**
-4.  **Перекладіть "Хто це?" та "Що це?". Коли ми їх вживаємо?**
-5.  **Ви хочете запитати "Ти читаєш?". Чи треба перекладати слово "do"? Чому?**
-6.  **Яка різниця між стандартним "що" та розмовним "шо"?**
-7.  **Назвіть чотири слова частоти (від "завжди" до "ніколи"). Що треба знати про слово "ніколи"?**
+---

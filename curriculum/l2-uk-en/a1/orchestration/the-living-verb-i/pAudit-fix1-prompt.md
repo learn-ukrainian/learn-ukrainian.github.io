@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2749/2000 (raw: 3087) | pedagogy: 1 violations
+    lesson: 3072/2000 (raw: 3389) | immersion: 7.5% LOW (target 25-40% (M15))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-    [EUPHONY] Line 121: повторення і/й без «та» — «...і «He works», і «He is working...»; використайте «та» для другого сполучника
-       → FIX: Replace second «і»/«й» with «та» for conjunction variety
+    [SECTION_BALANCE_BLOATED] Section 'Презентація' has 1436 words (44% of total). Bloated sections: 'Презентація' (44%)
+       → FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 2 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
+     → 1 violations (minor)
+     → Immersion 18% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-i-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-living-verb-i-audit.log for details)
         ```
+
 
         ## Files to Fix
 
@@ -60,8 +61,8 @@
 
 ## Section-Level Fix (IMPORTANT)
 
-This is a large module (3087 words). To avoid token truncation,
-fix ONLY the following section(s): "Теорія: Магія закінчень -ати"
+This is a large module (3389 words). To avoid token truncation,
+fix ONLY the following section(s): "Презентація"
 
 **Output format:** Output ONLY the fixed section(s) between delimiters:
 

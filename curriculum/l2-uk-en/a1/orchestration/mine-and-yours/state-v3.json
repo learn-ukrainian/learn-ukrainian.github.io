@@ -5,24 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:31:14Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T18:08:21Z",
+      "task_id": "v3-mine-and-yours-pA",
+      "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T02:31:14Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T18:12:49Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T02:31:14Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T18:12:50Z",
+      "note": "adopted-existing"
     },
-    "9-final-review": {
+    "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T02:31:14Z",
-      "note": "migrated-from-v2",
-      "verdict": "NEEDS_WORK"
+      "ts": "2026-02-28T18:19:44Z",
+      "attempts": 2
     }
   }
 }

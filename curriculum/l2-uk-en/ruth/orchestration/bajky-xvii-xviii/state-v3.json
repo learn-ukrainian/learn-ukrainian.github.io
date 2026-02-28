@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "bajky-xvii-xviii",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T21:34:12Z",
+      "task_id": "v3-bajky-xvii-xviii-pA",
+      "mode": "meta-only"
+    }
+  }
+}

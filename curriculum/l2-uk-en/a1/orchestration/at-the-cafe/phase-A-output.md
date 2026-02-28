@@ -3,67 +3,69 @@
 # Дослідження: At the Café
 
 ## State Standard Reference
-§4.2.3.2.1: "Знахідний відмінок: Без прийменника (об’єкт дії): Віра читає цікаву книжку."
-§4.2.4.2: "Наказовий спосіб. Форми 2-ї особи однини і множини наказового способу деяких дієслів: ... сказати (скажи, скажіть), дати (дай, дайте)."
-Alignment: This module introduces the Accusative case for direct objects (ordering items) and polite 2nd-person plural imperative forms (скажіть, дайте, принесіть) for interacting with waitstaff. This completely aligns with A1 morphological and communicative requirements.
+§4.2.3.2: "4.2.3.2.1. Без прийменника (об’єкт дії): Віра читає цікаву книжку."
+§4.2.4.2: "Наказовий спосіб. Форми 2-ї особи однини і множини наказового способу деяких дієслів: ... дати (дай, дайте), ... сидіти (сиди, сидіть)."
+Alignment: This module perfectly aligns with the A1 requirement to use the Accusative case without prepositions for direct objects (ordering items like «каву», «воду») and to form 2nd person plural imperative verbs for polite requests («дайте», «принесіть»).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| кава | Very High | пити каву, філіжанка кави, міцна кава |
+| кава | Very High | філіжанка кави, міцна кава, кава з молоком |
+| чай | Very High | чорний чай, зелений чай, чай з лимоном |
+| вода | Very High | вода з газом, вода без газу, склянка води |
+| меню | High | принести меню, подивитися меню |
 | рахунок | High | просити рахунок, оплатити рахунок |
-| чек | High (but diff meaning) | фіскальний чек |
-| меню | High | подивитися меню, барне меню |
-| офіціант| High | покликати офіціанта |
+| офіціант| High | покликати офіціанта, ввічливий офіціант |
+| будь ласка | Very High | скажіть, будь ласка; Мені, будь ласка... |
 
 ## Cultural Hooks
-1. Lviv Coffee Culture & Yuriy Kulchytsky: Kulchytsky, a Ukrainian noble from the Lviv region (Sambir), opened one of Vienna's first coffee houses after the 1683 Battle of Vienna and popularized adding milk and sugar to coffee. Lviv remains the coffee capital of Ukraine.
-2. The "Піти на каву" (Let's go for coffee) phenomenon: In Ukraine, this is a major social ritual. "Кава" can mean tea, dessert, or simply deep conversation.
+1. Lviv's coffee culture: Lviv has a centuries-old tradition of coffeehouses. It is heavily associated with Yuriy Kulchytsky, a Ukrainian hero of the 1683 Battle of Vienna, who opened one of Europe's very first coffeehouses and introduced coffee to the Viennese.
+2. The phrase «піти на каву» (going for coffee) is a profound social ritual in Ukraine that implies having a deep conversation, a meeting, or a date, far beyond simply consuming a beverage.
 
 ## Common Learner Errors
-1. "Я хочу кава" → "Я буду каву" / "Мені, будь ласка, каву". (Using Nominative instead of Accusative for objects; using the overly direct "Я хочу" instead of polite forms).
-2. Asking for "чек" instead of "рахунок". (Learners confuse the receipt "чек" given *after* payment with the bill "рахунок" requested *before* payment).
-3. Using "ти" with waitstaff. (In Ukrainian establishments, "Ви" is mandatory unless you are close friends with the barista).
+1. **Missing Case Marking**: «Я буду кава» → «Я буду каву». English speakers often forget that the object being ordered must be transformed into the Accusative case.
+2. **Direct Translation of "Want"**: «Я хочу...» → «Мені, будь ласка...» or «Я буду...». Using "Я хочу" sounds too direct and demanding in Ukrainian service contexts compared to the English "I want".
+3. **Lexical Confusion**: Asking for a «чек» instead of a «рахунок». Learners frequently confuse the printed receipt (чек) with the actual bill they must request to pay (рахунок).
 
 ## Cross-References
 - Builds on: a1-18 (Food and Shopping)
 - Prepares for: a1-20 (Checkpoint Navigation), a1-53 (At the Restaurant)
 
 ## Notes for Content Writing
-- Decolonized framing: Treat Ukrainian noun declensions as an independent phonetic system. Do not compare the "-у/-ю" endings to Russian. Highlight Ukraine's unique European coffee heritage through the Lviv/Vienna connection.
-- Lexical approach: Teach "з молоком" and "без цукру" strictly as ready-made lexical chunks. Do NOT explain Instrumental or Genitive case theory here, as it would overwhelm A1 learners.
-- Immersion: Provide clear English scaffolding for the Accusative case explanation and the difference between "рахунок" and "чек".
+- **Scaffolding**: This is an A1 module, so English scaffolding is strictly required for the introduction, grammar theory, and instructions. Do not attempt 100% Ukrainian immersion.
+- **Decolonized Framing**: Emphasize Ukraine's deep European roots through the Lviv/Vienna coffee connection, countering Soviet-era tea-centric cultural framing. 
+- **Vocabulary Safety**: Avoid Russianisms in examples. Ensure words like "їсти" (not "кушати") and "отримувати" (not "получати") are used if extending vocabulary.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Вступ (Introduction)"
+  - section: "Вступ"
     words: 450
     points:
-      - "English Scaffolding: Welcome from the 'Chatty Barista' persona and a brief explanation of what we will learn today (ordering politely and understanding waitstaff)."
-      - "Cultural Hook: Introduce Lviv's coffee culture, the legend of Yuriy Kulchytsky, and the social meaning of «Піти на каву»."
-      - "Vocabulary Preview: Introduce essential vocabulary (кава, чай, вода, меню) with IPA on the first occurrence."
-  - section: "Презентація (Presentation)"
+      - "Introduce the 'Chatty Barista' persona using English scaffolding to set the context and clearly state the module's goal: polite ordering in a café setting."
+      - "Cultural Hook: Present the rich Lviv coffee tradition and the legend of Yuriy Kulchytsky (Battle of Vienna, 1683), grounding Ukrainian culture firmly in a European historical context."
+      - "Vocabulary Presentation: Introduce essential vocabulary (кава, чай, вода, меню, офіціант) in a clear markdown table, providing IPA transcriptions on their first occurrence."
+  - section: "Презентація"
     words: 650
     points:
-      - "Grammar Theory (in English): Define the Accusative case for direct objects. Explain the phonetic transformation for feminine nouns (-а → -у, -я → -ю) and note that masculine inanimate nouns stay the same."
-      - "Drill Examples: Provide dedicated H3 sections showing «вода» → «воду», «кава» → «каву», «сік» → «сік»."
-      - "Polite Ordering Phrases: Teach «Мені, будь ласка...» and «Я буду...» followed by Accusative nouns. Explicitly correct the common error of using «Я хочу»."
-      - "Modifiers as Lexical Chunks: Introduce «з молоком» and «без цукру» as fixed phrases, without explaining Instrumental/Genitive case theory."
-  - section: "Практика (Practice)"
+      - "Grammar Theory (in English): Explain the Accusative case for direct objects (§4.2.3.2), emphasizing the phonetic shift for feminine nouns ending in -а/-я (-а → -у, -я → -ю)."
+      - "Provide three dedicated H3 sections with highly visible examples of case transformation: «вода» → «воду», «кава» → «каву», and the unchanged masculine inanimate «сік» → «сік»."
+      - "Polite Phrases: Explicitly contrast the rude direct translation «Я хочу» with culturally appropriate and polite alternatives like «Мені, будь ласка...» and «Я буду...»."
+      - "Lexical Chunks: Present the common modifiers «з молоком» and «без цукру» purely as fixed vocabulary phrases, intentionally avoiding any complex explanation of Instrumental or Genitive case theory."
+  - section: "Практика"
     words: 550
     points:
-      - "Polite Imperatives: Introduce «дайте, будь ласка» and «принесіть, будь ласка» with examples of asking for a menu or items."
-      - "Dialogue: A short, natural back-and-forth between an «офіціант» and a customer, demonstrating the ordering process and clarification questions (e.g., «Яку каву?»)."
-      - "Vocabulary distinction: Explicitly clarify the difference between «рахунок» (the bill to pay) and «чек» (the receipt)."
-      - "Payment Methods: Introduce vocabulary for paying: «карткою» (by card) and «готівкою» (by cash)."
-  - section: "Продукція та Підсумок (Production and Summary)"
+      - "Polite Imperatives: Dedicate an H3 to 2nd person plural imperative forms (§4.2.4.2), specifically teaching «дайте, будь ласка» and «принесіть, будь ласка» with concrete examples."
+      - "Mini-Dialogue: Provide a realistic back-and-forth exchange between an «офіціант» and a customer, demonstrating the ordering flow and typical clarification questions (e.g., «Яку каву?»)."
+      - "Usage Note: Differentiate «рахунок» (the bill to pay) and «чек» (the printed receipt), framing this explicitly as a common pitfall for English-speaking learners."
+      - "Payment Vocabulary: Introduce and drill practical vocabulary for payment methods: «карткою» (by card) and «готівкою» (by cash)."
+  - section: "Продукція та Підсумок"
     words: 350
     points:
-      - "Roleplay Scenario: A complete simulated café visit reading piece, from greeting («Добрий день») to leaving a tip («чайові»)."
-      - "Grammar Recap: A quick reference table summarizing the Accusative case noun endings for ordering food and drinks."
-      - "Self-Check: A few simple summary questions to ensure the learner grasps the core concepts before moving to activities."
+      - "Roleplay Scenario: Provide a comprehensive reading text that simulates a full café visit, beginning with the greeting («Добрий день») and concluding with payment and leaving a tip («чайові»)."
+      - "Grammar Recap: Include a concise, visual summary table reviewing the core Accusative noun endings used for ordering food and drinks."
+      - "Self-Check: End the lesson with 3-4 simple comprehension questions to verify the learner grasps the «рахунок» vs «чек» distinction and basic Accusative transformation before moving to activities."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===

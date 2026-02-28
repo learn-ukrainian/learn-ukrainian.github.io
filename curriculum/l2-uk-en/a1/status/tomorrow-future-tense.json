@@ -2,15 +2,15 @@
   "module": "tomorrow-future-tense",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T13:59:52.809810Z",
+  "last_audit": "2026-02-28T22:52:20.768339Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T13:59:29.072111Z",
-    "meta": "2026-02-28T13:53:13.111531Z",
+    "md": "2026-02-28T22:52:03.319068Z",
+    "meta": "2026-02-28T22:47:16.607421Z",
     "activities": "2026-02-20T23:55:26.137586Z",
     "vocabulary": "2026-02-26T10:56:38.079026Z",
     "plan": "2026-02-28T03:02:37.382422Z",
-    "research": "2026-02-28T13:53:13.101921Z"
+    "research": "2026-02-28T22:47:16.600229Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2324/2000 (raw: 2531)"
+      "message": "3022/2000 (raw: 3159)"
     },
     "activities": {
       "status": "deferred",

@@ -5,24 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:33:34Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T19:19:02Z",
+      "task_id": "v3-the-accusative-ii-people-pA",
+      "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T02:33:34Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T19:39:14Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T02:33:34Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T19:39:14Z",
+      "note": "adopted-existing"
     },
-    "9-final-review": {
+    "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T02:33:34Z",
-      "note": "migrated-from-v2",
-      "verdict": "APPROVE"
+      "ts": "2026-02-28T19:42:16Z",
+      "attempts": 2
     }
   }
 }

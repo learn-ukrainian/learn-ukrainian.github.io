@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2749/2000 (raw: 3087) | pedagogy: 1 violations
+    lesson: 2622/2000 (raw: 2878) | immersion: 11.9% LOW (target 25-40% (M15))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+    [METALANGUAGE] Metalanguage terms used but not in vocabulary: займенник
        → FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
-    [EUPHONY] Line 121: повторення і/й без «та» — «...і «He works», і «He is working...»; використайте «та» для другого сполучника
-       → FIX: Replace second «і»/«й» with «та» for conjunction variety
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 2 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
+     → 1 violations (minor)
+     → Immersion 13% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-i-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/the-living-verb-i-audit.log for details)
         ```
+
 
         ## Files to Fix
 
@@ -57,20 +58,4 @@
 
         **IMPORTANT:** Do NOT add or remove sections. Do NOT change the module structure.
         Fix only the specific violations listed above.
-
-## Section-Level Fix (IMPORTANT)
-
-This is a large module (3087 words). To avoid token truncation,
-fix ONLY the following section(s): "Теорія: Магія закінчень -ати"
-
-**Output format:** Output ONLY the fixed section(s) between delimiters:
-
-```
-===SECTION_FIX_START===
-## {section title}
-{fixed section content}
-===SECTION_FIX_END===
-```
-
-Do NOT output the entire file. Only output the section(s) listed above.
 

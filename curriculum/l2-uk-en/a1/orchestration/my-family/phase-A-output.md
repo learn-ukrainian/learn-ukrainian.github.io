@@ -1,113 +1,71 @@
-✅ Message sent to Gemini (ID: 8838)
-✓ Message 8838 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #8838...
-📨 Message #8838
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-my-family-pA
-   Time: 2026-02-19T23:55:26.309947+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/my-family/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
-# Дослідження: My Family (A1.32)
+# Дослідження: My Family
 
 ## State Standard Reference
-§3.1 (Людина): "сім’я і члени сім’ї, родичі; статус інших людей з оточення (друг / подруга, колега, сусід / сусідка)."
-§4.2.1.1 (Іменник): "форми знахідного та місцевого відмінків іменників... мама (маму, на мамі), тато (тата, на татові)... уживання форм кличного відмінка: Остапе, Олено..."
-§4.2.2 (Займенник): "утворення родових форм присвійних займенників: мій, моя, моє; твій, твоя, твоє..."
-
-Alignment: This module directly addresses the §3.1 theme "Family" and implements the morphological requirements for noun cases (Nominative basics, Vocative intro) and possessive pronoun agreement (§4.2.2).
+§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм присвійних займенників: мій, моя, моє... форм множини: мої..."
+§4.2.3.4: "Кличний відмінок (адресат мовлення – потенційний суб’єкт дії): Пане / пані, скажіть, будь ласка... Дівчино..."
+Alignment: This module introduces possessive pronoun agreement for family members (§4.2.2) and the fundamental Vocative forms for addressing parents/grandparents (§4.2.3.4).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| сім'я | High / Core A1 | велика сім'я, моя сім'я |
-| родина | High / Core A1 | вся родина, збиратися родиною |
-| мама / тато | Very High | рідна мама, мій тато |
-| брат / сестра | High | старший брат, молодша сестра, рідні брати |
-| дідусь / бабуся | High | любий дідусь, добра бабуся |
-| чоловік / дружина | High | мій чоловік, моя дружина |
+| мама | Extremely high | моя мама, рідна мама |
+| тато | Extremely high | мій тато, рідний тато |
+| сім'я | High | велика сім'я, моя сім'я |
+| родина | High | вся родина |
+| чоловік| High | мій чоловік (husband vs man) |
+| дружина| High | моя дружина |
 
 ## Cultural Hooks
-1. **Сім'я vs Родина**: "Сім'я" typically refers to the immediate nuclear unit living together, while "родина" implies the extended family lineage and kinship network.
-2. **Grandparents' Role**: In Ukraine, grandparents (бабуся і дідусь) play a very active role in raising grandchildren, often living with or very close to the young family.
-3. **Vocative Importance**: Addressing parents as "мамо" and "тату" (not "мама" and "тато") is a hallmark of natural Ukrainian speech, even for beginners.
+1. **Сім'я vs. Родина**: The distinction between nuclear family (сім'я) and the broader extended family/bloodline/lineage (родина) is fundamental to Ukrainian culture, reflecting strong communal bonds.
+2. **Multigenerational Living & Grandparents**: Grandparents (дідусь та бабуся) historically and currently play a very active role in raising children in Ukraine. Multigenerational households are common and valued.
 
 ## Common Learner Errors
-1. **Possessive Gender Agreement**: "Мій сестра" instead of "Моя сестра". (Cause: generalizing 'my' from English).
-2. **Lexical Confusion**: Using "чоловік" for "husband" is correct, but beginners may confuse it with generic "man". Using "жінка" for "wife" is common colloquially but "дружина" is the standard neutral term taught first.
-3. **Construction Choice**: Overusing "Я маю..." (calque from "I have...") instead of natural "У мене є..." for introducing family members.
+1. **"Мій сестра" / "Мій мама"** → **"Моя сестра" / "Моя мама"** — English speakers often fail to agree the possessive pronoun "my" with the gender of the noun.
+2. **"Я маю брата"** → **"У мене є брат"** — While grammatically possible, "я маю" is often a direct calque from English "I have". "У мене є" is the natural, idiomatic way to express having family members at the A1 level.
 
 ## Cross-References
-- **Builds on**: A1-14 (Mine and Yours — possessives), A1-31 (Body and Health — physical description adjectives).
-- **Prepares for**: A1-33 (Holidays — family gathering contexts).
+- Builds on: a1-20 (Mine and Yours), a1-48 (Body and Health)
+- Prepares for: a1-50 (Holidays and Traditions), a1-34 (Checkpoint Core Grammar)
 
 ## Notes for Content Writing
-- **Scaffolding**: Immersion target is ~35-40%. English must be used for all grammar explanations (Possessives, Vocative rules).
-- **Activity Focus**: Ensure "family tree" logic is clear. Use simple "Who is who?" logic puzzles.
+- **Decolonized framing**: When introducing the Vocative case (кличний відмінок), present it as a beautiful, distinct feature of the Ukrainian language that builds emotional connection, rather than comparing it to languages that have lost it (like Russian).
+- Ensure 10-50% immersion (heavy English scaffolding for A1 grammar concepts like possessive agreement and the Vocative case).
+- Do not use the word "жінка" when specifically meaning "wife" (use "дружина" as the neutral standard) to teach precise vocabulary.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Розминка: Члени сім'ї"
-    words: 350
-    points:
-      - "Introduce core nuclear family terms: мама, тато, брат, сестра, син, донька."
-      - "Grammar hook: Briefly revisit gender (чоловічий/жіночий рід) via family roles."
-      - "Cultural note: Usage of affectionate terms (мама/тато vs. матір/батько)."
-      - "Activity: Simple identification (Це мій тато. Це моя мама)."
-
-  - section: "Близька та розширена родина"
+  - section: "Вступ: Моя сім'я"
     words: 400
     points:
-      - "Expand to extended family: дідусь, бабуся, дядько, тітка, онук, онука."
-      - "Explain the 'У мене є...' construction for family (У мене є брат. У мене є сестра)."
-      - "Address the 'чоловік/дружина' vocabulary and the 'чоловік = man/husband' distinction."
-      - "Cultural hook: The concept of 'родина' vs 'сім'я' and multigenerational living."
-
-  - section: "Опис родини: Вік та характер"
-    words: 400
+      - "Introduce English scaffolding: Briefly explain the importance of family in Ukrainian culture."
+      - "Introduce core nuclear family vocabulary: мама, тато, брат, сестра, син, донька."
+      - "Explain the cultural and semantic difference between «сім'я» (nuclear) and «родина» (extended lineage)."
+      - "Practice the question «Хто це?» with simple answers: «Це моя мама»."
+  - section: "Презентація: Близька та розширена родина"
+    words: 600
     points:
-      - "Combine family terms with adjectives from A1-31 (добра, веселий, старий, молодий)."
-      - "Introduce 'старший' (older) and 'молодший' (younger) for siblings."
-      - "Basic age construction reinforcement: 'Моєму братові...' (Dative preview/set phrase) or simple 'Братові 25 років'."
-      - "Status/Profession basics: 'Мій тато — лікар'."
-
-  - section: "Практика: Моя сім'я"
-    words: 300
+      - "Introduce extended family vocabulary: дідусь, бабуся, дядько, тітка, онук, онука."
+      - "Provide English scaffolding to explain the possessive construction «У мене є...» (I have)."
+      - "Explicitly address and correct the common English calque «Я маю...»."
+      - "Drill possessive pronoun agreement (мій/моя) with family members. Explicitly prevent the «мій сестра» error by focusing on feminine endings."
+  - section: "Презентація: Характеристики та стосунки"
+    words: 500
     points:
-      - "Grammar focus: Possessive pronouns (мій, моя, моє, мої) with family members."
-      - "Drill gender agreement: мій дідусь, моя бабуся, мої батьки."
-      - "Common error alert: Fix 'Мій мама' mistakes explicitly."
-      - "Mini-text: Reading a short paragraph about someone's family structure."
-
-  - section: "Діалоги та фотоальбом"
-    words: 300
+      - "Introduce terms for spouses: чоловік (husband) and дружина (wife)."
+      - "Explain the dual meaning of «чоловік» (man/husband) and establish «дружина» as the standard term for wife."
+      - "Combine family terms with adjectives learned previously (добра бабуся, мудрий дідусь)."
+      - "Introduce basic age/sibling descriptors: старший брат, молодша сестра."
+  - section: "Практика: Звертання та спілкування"
+    words: 500
     points:
-      - "Scenario: Showing photos to a friend ('Хто це?' — 'Це моя сестра')."
-      - "Introduce Vocative case forms for address: Мамо, Тату, Бабусю, Дідусю."
-      - "Explanation: Why we change endings when calling someone."
-      - "Dialogue practice: Asking about friend's family ('У тебе є брат?')."
-
-  - section: "Підсумок: Розповідь про себе"
-    words: 250
-    points:
-      - "Synthesize all elements: Name family members + Age + Description + Profession."
-      - "Model text: A complete self-presentation about family."
-      - "Final checklist: Can you name 10 family members? Can you say who you have?"
-
+      - "Provide English scaffolding to introduce the Vocative case (Кличний відмінок) as a unique and beautiful feature of Ukrainian for addressing people."
+      - "Teach the specific, high-frequency Vocative forms for family: мамо, тату, бабусю, дідусю."
+      - "Create mini-dialogues showing how to address family vs. talking about them."
+      - "Synthesis: A short reading text describing a family tree (using all concepts: relationships, possessives, adjectives)."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -118,11 +76,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5217 chars)
-✅ Message sent to Claude (ID: 8839)
-✓ Message 8839 acknowledged
-   Auto-acknowledged reply #8839 (stdout delivery — no inbox accumulation)
-✓ Message 8838 acknowledged

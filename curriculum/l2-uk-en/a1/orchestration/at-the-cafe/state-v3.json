@@ -5,22 +5,22 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T13:34:31Z",
+      "ts": "2026-02-28T22:16:20Z",
       "task_id": "v3-at-the-cafe-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T13:37:21Z"
+      "ts": "2026-02-28T22:19:23Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T13:37:21Z",
+      "ts": "2026-02-28T22:19:23Z",
       "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T13:40:49Z",
+      "ts": "2026-02-28T22:24:57Z",
       "attempts": 2
     }
   }

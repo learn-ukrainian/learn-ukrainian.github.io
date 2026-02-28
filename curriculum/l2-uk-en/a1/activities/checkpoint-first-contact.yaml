@@ -346,34 +346,34 @@
     - ходити
     - вчити
   instruction: Розподіліть елементи за групами.
-- type: anagram
-  title: Word Scramble
+- type: unjumble
+  title: Sentence Builder
+  instruction: Складіть слова у правильному порядку, щоб утворити речення.
   items:
-  - scrambled: а в а к
-    answer: кава
-  - scrambled: ю н е м
-    answer: меню
-  - scrambled: п у с
-    answer: суп
-  - scrambled: к і с
-    answer: сік
-  - scrambled: а д о в
-    answer: вода
-  - scrambled: й а ч
-    answer: чай
-  - scrambled: е ф а к
-    answer: кафе
-  - scrambled: а ц і п
-    answer: піца
-  - scrambled: а з і в
-    answer: віза
-  - scrambled: е р о м
-    answer: море
-  - scrambled: о т с і м
-    answer: місто
-  - scrambled: к р а п
-    answer: парк
-  instruction: Розташуйте літери у правильному порядку.
+  - words: ["це", "мій", "новий", "олівець"]
+    answer: "Це мій новий олівець"
+  - words: ["ми", "сидимо", "в", "кафе"]
+    answer: "Ми сидимо в кафе"
+  - words: ["я", "йду", "до", "парку"]
+    answer: "Я йду до парку"
+  - words: ["цей", "парк", "дуже", "старий"]
+    answer: "Цей парк дуже старий"
+  - words: ["ця", "вулиця", "гарна"]
+    answer: "Ця вулиця гарна"
+  - words: ["це", "місто", "велике"]
+    answer: "Це місто велике"
+  - words: ["мій", "тато", "читає", "книгу"]
+    answer: "Мій тато читає книгу"
+  - words: ["він", "добре", "говорить", "українською"]
+    answer: "Він добре говорить українською"
+  - words: ["ми", "говоримо", "повільно"]
+    answer: "Ми говоримо повільно"
+  - words: ["я", "читаю", "меню"]
+    answer: "Я читаю меню"
+  - words: ["дайте", "будь", "ласка", "каву"]
+    answer: "Дайте будь ласка каву"
+  - words: ["я", "не", "п'ю", "чай"]
+    answer: "Я не п'ю чай"
 - type: match-up
   title: Question Words
   pairs:

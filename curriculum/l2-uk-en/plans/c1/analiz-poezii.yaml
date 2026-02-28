@@ -1,6 +1,6 @@
-module: c1-104
+module: c1-065
 level: C1
-sequence: 104
+sequence: 65
 slug: analiz-poezii
 version: '2.0'
 title: Аналіз поезії
@@ -73,7 +73,7 @@ objectives:
 grammar:
 - Poetic syntax and rhythm
 - Stylistic devices in verse
-phase: C1.6 Literature
+phase: C1.5 [Stylistics & Rhetoric]
 persona:
   voice: Senior Specialist
   role: Літературний критик

@@ -2,15 +2,15 @@
   "module": "the-locative-where-things-are",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:34:49.423641Z",
+  "last_audit": "2026-02-28T21:06:51.672113Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:03.245941Z",
-    "meta": "2026-02-19T22:50:23.785491Z",
+    "md": "2026-02-28T21:06:34.566883Z",
+    "meta": "2026-02-28T20:55:59.634779Z",
     "activities": "2026-02-20T22:43:21.366661Z",
     "vocabulary": "2026-02-26T10:56:53.941476Z",
     "plan": "2026-02-28T03:02:37.374753Z",
-    "research": "2026-02-19T22:50:23.777771Z"
+    "research": "2026-02-28T20:55:59.628552Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2751/2000 (raw: 2944) | immersion: 25.4% LOW (target 35-55% (M28))"
+      "status": "pass",
+      "violations": 0,
+      "message": "2866/2000 (raw: 3253)"
     },
     "activities": {
       "status": "deferred",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 1,
+    "pass_count": 3,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

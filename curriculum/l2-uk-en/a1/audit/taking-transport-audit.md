@@ -1,7 +1,7 @@
 # Audit Report: M57 — taking-transport.md
 **Level:** A1 | **Module:** M57 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 03:53:46
+**Generated:** 2026-02-28 19:39:34
 
 ## Configuration
 **Type:** A1
@@ -16,41 +16,20 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | group-sort | Де чи Куди? (Location vs. Direction) | 12 | 12 | ✅ |
-| 2 | match-up | Знайдіть пару: Термін і Визначення | 8 | 8 | ✅ |
-| 3 | quiz | Перевірка розуміння тексту | 8 | 8 | ✅ |
-| 4 | fill-in | Чим ви їдете? (Instrumental Case) | 8 | 8 | ✅ |
-| 5 | unjumble | Складіть речення | 6 | 6 | ✅ |
-| 6 | true-false | Правила етикету та факти | 8 | 8 | ✅ |
-| 7 | fill-in | Іти чи Їхати? | 8 | 8 | ✅ |
-| 8 | match-up | Корисні фрази | 8 | 8 | ✅ |
-| 9 | quiz | Граматика: Де чи Куди? | 8 | 8 | ✅ |
-| 10 | fill-in | Діалог у маршрутці | 8 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 10 (target: 8-12) ✅
-- Unique types: 6 (minimum: 4) ✅
-- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
-- Required types used: 3/3 (fill-in, match-up, quiz) ✅
-- Low density activities: 0
-
 ## Gates
-- **Words:** ✅ 2249/2000 (raw: 2557)
-- **Activities:** ✅ 10/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/3
+- **Words:** ✅ 2241/2000 (raw: 2441)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
+- **Engagement:** ✅ 7/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 26/1
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.4% (target 35-55% (M57))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 40.7% (target 35-55% (M57))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -59,9 +38,8 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Taking Transport** | ✅ | 68 | Included in Core |
-| **Вступ: Транспорт у місті** | ✅ | 549 | Included in Core |
-| **Презентація: Види транспорту та оплата** | ✅ | 672 | Included in Core |
-| **Практика: Орієнтування в місті** | ✅ | 521 | Included in Core |
-| **Закріплення: Подорож метром** | ✅ | 274 | Included in Core |
-| **Підсумок** | ✅ | 165 | Included in Core |
+| **Громадський транспорт: Як пересуватися містом** | ✅ | 70 | Included in Core |
+| **Вступ** | ✅ | 470 | Included in Core |
+| **Презентація** | ✅ | 530 | Included in Core |
+| **Практика** | ✅ | 797 | Included in Core |
+| **Підсумок** | ✅ | 374 | Included in Core |

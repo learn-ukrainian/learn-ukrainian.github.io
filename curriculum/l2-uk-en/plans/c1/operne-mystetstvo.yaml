@@ -1,6 +1,6 @@
-module: c1-079
+module: c1-095
 level: C1
-sequence: 79
+sequence: 95
 slug: operne-mystetstvo
 version: '2.0'
 title: Оперне мистецтво
@@ -62,7 +62,7 @@ objectives:
 grammar:
 - Narrative of institutional history
 - Evaluative discourse on performance
-phase: C1.5 Folk Culture & Fine Arts
+phase: C1.7 [Fine Arts & High Culture]
 persona:
   voice: Senior Specialist
   role: Лібретист

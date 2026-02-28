@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2016/2000 (raw: 2270) | pedagogy: 1 violations | immersion: 17.2% LOW (target 35-55% (M37))
+    lesson: 2851/2000 (raw: 3164) | pedagogy: 6 violations | immersion: 28.8% LOW (target 35-55% (M60))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-    [GRAMMAR] Subordinate clause marker at A1: 'якщо в'
-       → FIX: Complex sentences not allowed at A1. Use simple SVO sentences.
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
-     → 1 violations (minor)
-     → Immersion 18% off target
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 45/100)
+     → Revision recommended (severity 45/100)
+     → 6 violations (moderate)
+     → 5 grammar-level violations (fundamental)
+     → Immersion 6% off target (minor)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/at-the-market-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/at-the-market-audit.log for details)
         ```
+
 
         ## Files to Fix
 

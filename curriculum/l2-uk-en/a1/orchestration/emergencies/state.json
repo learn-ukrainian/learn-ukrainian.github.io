@@ -1,44 +1,25 @@
 {
   "slug": "emergencies",
   "track": "a1",
-  "module_num": 42,
+  "module_num": 62,
   "mode": "v3",
   "phases": {
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-26T11:44:13Z",
-      "words": 3555,
+      "timestamp": "2026-02-28T19:42:31Z",
+      "words": 4057,
       "attempts": 1
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-26T11:54:15Z",
+      "timestamp": "2026-02-28T19:49:30Z",
       "note": "v3-audit"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-26T11:54:15Z",
+      "timestamp": "2026-02-28T19:49:30Z",
       "note": "v3-audit"
-    },
-    "6": {
-      "status": "complete",
-      "timestamp": "2026-02-26T12:07:05Z",
-      "note": "v3-phase-D"
-    },
-    "6b": {
-      "status": "complete",
-      "timestamp": "2026-02-26T12:07:05Z",
-      "note": "v3-phase-D"
-    },
-    "7-final": {
-      "status": "complete",
-      "timestamp": "2026-02-26T12:07:05Z",
-      "note": "v3-phase-D"
-    },
-    "8": {
-      "status": "complete",
-      "timestamp": "2026-02-26T12:07:05Z"
     }
   },
-  "last_updated": "2026-02-26T12:07:05Z"
+  "last_updated": "2026-02-28T19:49:30Z"
 }

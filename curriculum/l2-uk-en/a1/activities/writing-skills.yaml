@@ -1,0 +1,458 @@
+- type: match-up
+  title: 'Анкета: поля та відповіді'
+  pairs:
+  - left: Прізвище
+    right: Коваленко
+  - left: Ім'я
+    right: Олена
+  - left: По батькові
+    right: Іванівна
+  - left: Дата народження
+    right: 15.03.1990
+  - left: Стать
+    right: жіноча
+  - left: Адреса
+    right: вул. Франка, буд. 10
+  - left: Телефон
+    right: 095 123 45 67
+  - left: Електронна пошта
+    right: olena@email.com
+  - left: Поштовий індекс
+    right: '79005'
+  - left: Місто
+    right: Львів
+  instruction: З'єднайте відповідні елементи.
+- type: fill-in
+  title: Заповніть інформацію в анкеті
+  items:
+  - sentence: Моє _____ — Шевченко.
+    answer: прізвище
+    options:
+    - прізвище
+    - ім'я
+    - адреса
+    - стать
+  - sentence: Моє _____ — Тарас.
+    answer: ім'я
+    options:
+    - ім'я
+    - прізвище
+    - вік
+    - місто
+  - sentence: Моя _____ — 24.08.1991.
+    answer: дата народження
+    options:
+    - дата народження
+    - стать
+    - адреса
+    - пошта
+  - sentence: Моя _____ — чоловіча.
+    answer: стать
+    options:
+    - стать
+    - адреса
+    - анкета
+    - дата
+  - sentence: Моя _____ — Київ, вул. Хрещатик.
+    answer: адреса
+    options:
+    - адреса
+    - стать
+    - ім'я
+    - пошта
+  - sentence: Мій _____ — 093 111 22 33.
+    answer: телефон
+    options:
+    - телефон
+    - індекс
+    - будинок
+    - вік
+  - sentence: Моя _____ — taras@ukr.net.
+    answer: електронна пошта
+    options:
+    - електронна пошта
+    - адреса
+    - стать
+    - анкета
+  - sentence: Мій поштовий _____ — 01001.
+    answer: індекс
+    options:
+    - індекс
+    - телефон
+    - будинок
+    - конверт
+  - sentence: Я живу у місті Київ, моя _____ — Хрещатик.
+    answer: вулиця
+    options:
+    - вулиця
+    - адреса
+    - пошта
+    - стать
+  - sentence: На конверті треба написати _____.
+    answer: адресу
+    options:
+    - адресу
+    - стать
+    - вік
+    - телефон
+  instruction: Оберіть правильне слово для заповнення пропуску.
+- type: quiz
+  title: Формат адреси та анкети
+  items:
+  - question: Яке слово ми використовуємо в анкеті для чоловічого гендеру?
+    options:
+    - text: чоловіча
+      correct: true
+    - text: чоловік
+      correct: false
+    - text: хлопець
+      correct: false
+    - text: чоловічий
+      correct: false
+    explanation: В офіційних анкетах ми завжди використовуємо прикметник чоловіча
+      (стать).
+  - question: У якому форматі українці пишуть дату народження?
+    options:
+    - text: день, місяць, рік
+      correct: true
+    - text: місяць, день, рік
+      correct: false
+    - text: рік, місяць, день
+      correct: false
+    - text: рік, день, місяць
+      correct: false
+    explanation: Українці завжди починають з дня, потім місяць і рік.
+  - question: Що означає абревіатура вул. на конверті?
+    options:
+    - text: вулиця
+      correct: true
+    - text: великий
+      correct: false
+    - text: вокзал
+      correct: false
+    - text: влітку
+      correct: false
+    explanation: Це стандартне скорочення для слова вулиця.
+  - question: Що означає абревіатура буд. на конверті?
+    options:
+    - text: будинок
+      correct: true
+    - text: будувати
+      correct: false
+    - text: будь ласка
+      correct: false
+    - text: буддень
+      correct: false
+    explanation: Це стандартне скорочення для слова будинок.
+  - question: Який відмінок ми використовуємо для поля Кому на конверті?
+    options:
+    - text: давальний
+      correct: true
+    - text: родовий
+      correct: false
+    - text: називний
+      correct: false
+    - text: знахідний
+      correct: false
+    explanation: Для одержувача (Кому) ми завжди використовуємо давальний відмінок.
+  - question: Який відмінок ми використовуємо для поля Від кого?
+    options:
+    - text: родовий
+      correct: true
+    - text: давальний
+      correct: false
+    - text: місцевий
+      correct: false
+    - text: називний
+      correct: false
+    explanation: Для відправника (Від кого) ми використовуємо родовий відмінок.
+  - question: Що обов'язково треба наклеїти на конверт?
+    options:
+    - text: марку
+      correct: true
+    - text: фотографію
+      correct: false
+    - text: анкету
+      correct: false
+    - text: листівку
+      correct: false
+    explanation: Без поштової марки ваш лист ніколи не полетить.
+  - question: Яка правильна європейська структура української адреси?
+    options:
+    - text: ім'я, вулиця, місто, індекс
+      correct: true
+    - text: індекс, місто, вулиця, ім'я
+      correct: false
+    - text: місто, вулиця, ім'я, індекс
+      correct: false
+    - text: ім'я, місто, вулиця, індекс
+      correct: false
+    explanation: 'Ми пишемо інформацію від малого до великого: людина, вулиця, місто,
+      індекс.'
+  instruction: Оберіть правильну відповідь.
+- type: unjumble
+  title: Складіть речення для листівки
+  items:
+  - words:
+    - Привіт
+    - з
+    - Києва
+    answer: Привіт з Києва
+  - words:
+    - Тут
+    - дуже
+    - гарно
+    - й
+    - тепло
+    answer: Тут дуже гарно й тепло
+  - words:
+    - Погода
+    - чудова
+    - сьогодні
+    answer: Погода чудова сьогодні
+  - words:
+    - Я
+    - бачу
+    - велику
+    - річку
+    answer: Я бачу велику річку
+  - words:
+    - Ми
+    - багато
+    - гуляємо
+    - кожен
+    - день
+    answer: Ми багато гуляємо кожен день
+  - words:
+    - Мені
+    - тут
+    - дуже
+    - подобається
+    answer: Мені тут дуже подобається
+  instruction: Розташуйте слова у правильному порядку.
+- type: fill-in
+  title: Розкажіть про себе
+  items:
+  - sentence: _____ звати Марк.
+    answer: Мене
+    options:
+    - Мене
+    - Я
+    - Мені
+    - Моє
+    explanation: Ми використовуємо фразу мене звати.
+  - sentence: _____ двадцять років.
+    answer: Мені
+    options:
+    - Мені
+    - Я
+    - Мене
+    - Моя
+    explanation: Для віку ми обов'язково використовуємо давальний відмінок мені.
+  - sentence: Я приїхав _____ Британії.
+    answer: з
+    options:
+    - з
+    - в
+    - на
+    - до
+    explanation: Ми використовуємо прийменник з та родовий відмінок.
+  - sentence: Я зараз _____ в університеті.
+    answer: навчаюся
+    options:
+    - навчаюся
+    - працюю
+    - хобі
+    - звати
+    explanation: Університет — це місце для навчання.
+  - sentence: Я _____ в банку.
+    answer: працюю
+    options:
+    - працюю
+    - навчаюся
+    - люблю
+    - бачу
+    explanation: У банку люди працюють.
+  - sentence: Моє _____ — фотографія.
+    answer: хобі
+    options:
+    - хобі
+    - спорт
+    - робота
+    - ім'я
+    explanation: Фотографія — це популярне хобі.
+  instruction: Оберіть правильне слово для заповнення пропуску.
+- type: unjumble
+  title: Складіть розповідь про себе
+  items:
+  - words:
+    - Мене
+    - звати
+    - Том
+    - і
+    - я
+    - турист
+    answer: Мене звати Том і я турист
+  - words:
+    - Мені
+    - тридцять
+    - п'ять
+    - років
+    answer: Мені тридцять п'ять років
+  - words:
+    - Я
+    - з
+    - України
+    - але
+    - живу
+    - в
+    - Польщі
+    answer: Я з України але живу в Польщі
+  - words:
+    - Я
+    - дуже
+    - люблю
+    - сучасну
+    - музику
+    answer: Я дуже люблю сучасну музику
+  - words:
+    - Моєму
+    - брату
+    - сорок
+    - років
+    answer: Моєму брату сорок років
+  - words:
+    - Я
+    - працюю
+    - в
+    - великому
+    - банку
+    answer: Я працюю в великому банку
+  instruction: Розташуйте слова у правильному порядку.
+- type: match-up
+  title: Поштові скорочення
+  pairs:
+  - left: вул.
+    right: вулиця
+  - left: буд.
+    right: будинок
+  - left: кв.
+    right: квартира
+  - left: м.
+    right: місто
+  - left: чол. стать
+    right: чоловіча
+  - left: жін. стать
+    right: жіноча
+  instruction: З'єднайте відповідні елементи.
+- type: quiz
+  title: Правила написання текстів
+  items:
+  - question: Як правильно написати привітання з міста Львів?
+    options:
+    - text: Привіт зі Львова!
+      correct: true
+    - text: Привіт з Львова!
+      correct: false
+    - text: Привіт Львів!
+      correct: false
+    - text: Привіт у Львові!
+      correct: false
+    explanation: Для милозвучності ми використовуємо форму зі Львова.
+  - question: Яке перше поле у стандартній українській анкеті?
+    options:
+    - text: прізвище
+      correct: true
+    - text: ім'я
+      correct: false
+    - text: дата народження
+      correct: false
+    - text: по батькові
+      correct: false
+    explanation: Спочатку ви завжди пишете своє прізвище.
+  - question: Від чийого імені утворюється по батькові?
+    options:
+    - text: від імені батька
+      correct: true
+    - text: від імені дідуся
+      correct: false
+    - text: від прізвища
+      correct: false
+    - text: від назви міста
+      correct: false
+    explanation: По батькові утворюється від імені батька.
+  - question: Як правильно сказати про свій вік?
+    options:
+    - text: Мені двадцять років
+      correct: true
+    - text: Я маю двадцять років
+      correct: false
+    - text: Я двадцять років
+      correct: false
+    - text: Мене двадцять років
+      correct: false
+    explanation: Ми ніколи не кажемо я маю роки, ми використовуємо давальний відмінок
+      мені.
+  - question: Яке слово часто пишуть наприкінці листівки для друзів?
+    options:
+    - text: бувай
+      correct: true
+    - text: привіт
+      correct: false
+    - text: мене звати
+      correct: false
+    - text: стать
+      correct: false
+    explanation: Ми використовуємо коротке слово бувай для дружнього прощання.
+  - question: Що ми пишемо на конверті найпершим?
+    options:
+    - text: ім'я людини
+      correct: true
+    - text: назву міста
+      correct: false
+    - text: поштовий індекс
+      correct: false
+    - text: назву вулиці
+      correct: false
+    explanation: Українська адреса починається з імені людини.
+  instruction: Оберіть правильну відповідь.
+- type: group-sort
+  title: Розподіліть слова за темами
+  groups:
+  - name: Анкета
+    items:
+    - прізвище
+    - стать
+    - дата народження
+    - телефон
+    - електронна пошта
+  - name: Конверт
+    items:
+    - індекс
+    - марка
+    - вулиця
+    - квартира
+    - адреса
+  instruction: Розподіліть елементи за групами.
+- type: group-sort
+  title: Відмінки у листах та віку
+  groups:
+  - name: Називний відмінок
+    items:
+    - вулиця
+    - поштовий індекс
+    - марка
+    - місто
+  - name: Родовий відмінок
+    items:
+    - з Києва
+    - зі Львова
+    - з Одеси
+    - від Івана
+  - name: Давальний відмінок
+    items:
+    - мені
+    - моєму брату
+    - Олені
+    - другу
+  instruction: Розподіліть елементи за групами.

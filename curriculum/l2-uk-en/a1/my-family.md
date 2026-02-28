@@ -16,7 +16,7 @@ Related: a1-14 (Mine and Yours), a1-31 (Body and Health), a1-33 (Holidays)
 > Сьогодні ми будемо говорити про маму, тата, брата і сестру. Це цікава і корисна тема!
 > Мій брат — мій друг. Моя сестра — моя подруга. У нас дружна родина.
 
-## Розминка: Члени сім'ї (Warm-up: Family Members)
+## Вступ: Моя сім'я
 
 Let's start with the most important people in our lives: the nuclear family. In Ukrainian, family terms often carry gender information, which helps you reinforce the masculine and feminine patterns you already know.
 
@@ -97,7 +97,7 @@ When we want to emphasize that someone is a biological sibling (not a cousin or 
 > *   **Брат, Син, Тато** (exception!) → Masculine (Він)
 > *   **Тато** acts masculine grammatically: "Мій тато" (not "моє").
 
-## Близька та розширена родина (Close and Extended Family)
+## Презентація: Близька та розширена родина
 
 In Ukraine, the concept of family often extends beyond just parents and children. Grandparents often live with the family or help raise grandchildren, creating a strong multi-generational bond.
 
@@ -188,7 +188,7 @@ Do not use "Я маю" (I have) for family relationships in standard conversatio
 | He has a son. | **У нього є син.** | At him is son. |
 | She has a daughter. | **У неї є донька.** | At her is daughter. |
 
-## Опис родини: Вік та характер (Describing Family: Age & Character)
+## Презентація: Характеристики та стосунки
 
 Now that we know who they are, let's describe them. We can use the adjectives we learned in previous lessons and introduce some new family-specific ones.
 
@@ -364,7 +364,7 @@ Did you catch everything?
 4.  Younger sister (Katya) is a small schoolgirl.
 5.  Grandparents live in the village.
 
-## Діалоги та фотоальбом
+## Практика: Звертання та спілкування
 
 *(Dialogues and Photo Album)*
 

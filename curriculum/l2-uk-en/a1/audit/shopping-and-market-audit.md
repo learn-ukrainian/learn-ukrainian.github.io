@@ -1,7 +1,7 @@
 # Audit Report: M40 — shopping-and-market.md
 **Level:** A1 | **Module:** M40 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 14:33:31
+**Generated:** 2026-02-28 23:15:03
 
 ## Configuration
 **Type:** A1-vocab
@@ -17,7 +17,7 @@
 **Transliteration:** Allowed
 
 ## Gates
-- **Words:** ✅ 3692/2000 (raw: 3881)
+- **Words:** ✅ 4277/2000 (raw: 4475)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -29,7 +29,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 35.3% (target 35-55% (M40))
+- **Immersion:** 🇺🇦 42.5% (target 35-55% (M40))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -38,10 +38,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Shopping and Market** | ✅ | 62 | Included in Core |
-| **Скільки коштує?** | ✅ | 780 | Included in Core |
-| **У магазині** | ✅ | 740 | Included in Core |
-| **Кількість та одиниці** | ✅ | 605 | Included in Core |
-| **Засоби гігієни** | ✅ | 493 | Included in Core |
-| **Практика** | ✅ | 811 | Included in Core |
-| **Підсумок** | ✅ | 201 | Included in Core |
+| **Shopping and Market** | ✅ | 69 | Included in Core |
+| **Скільки коштує?** | ✅ | 1008 | Included in Core |
+| **У магазині** | ✅ | 752 | Included in Core |
+| **Кількість та одиниці** | ✅ | 712 | Included in Core |
+| **Засоби гігієни** | ✅ | 663 | Included in Core |
+| **Практика** | ✅ | 804 | Included in Core |
+| **Підсумок** | ✅ | 269 | Included in Core |

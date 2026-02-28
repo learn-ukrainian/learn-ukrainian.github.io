@@ -2,15 +2,15 @@
   "module": "body-and-health",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:49:01.447780Z",
+  "last_audit": "2026-02-28T17:33:18.543358Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:41:42.393536Z",
-    "meta": "2026-02-20T00:28:11.688176Z",
+    "md": "2026-02-28T17:33:04.025770Z",
+    "meta": "2026-02-28T17:23:40.047451Z",
     "activities": "2026-02-20T22:41:44.611420Z",
     "vocabulary": "2026-02-26T10:56:38.069819Z",
     "plan": "2026-02-28T03:02:37.152145Z",
-    "research": "2026-02-20T00:28:11.681694Z"
+    "research": "2026-02-28T17:23:40.033351Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2436/2000 (raw: 2604)"
+      "message": "4598/2000 (raw: 4844)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "22/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 3,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

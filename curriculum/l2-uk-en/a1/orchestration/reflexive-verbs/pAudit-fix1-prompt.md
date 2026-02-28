@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2672/2000 (raw: 3328) | pedagogy: 1 violations
+    lesson: 3107/2000 (raw: 3368) | pedagogy: 26 violations | immersion: 20.6% LOW (target 25-40% (M17))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📚 PEDAGOGICAL VIOLATIONS FOUND:
-    [EUPHONY] Line 325: «в школі.**» — в перед збігом приголосних; має бути «у школі.**»
-       → FIX: Replace «в» with «у» (before consonant cluster)
+       → FIX: Break into shorter sentences. First 5 words: 'Вони працюють як дзеркало що...'
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 1 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 26 violations (severe - consider revision)
+     → 16 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/reflexive-verbs-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/reflexive-verbs-audit.log for details)
         ```
+
 
         ## Files to Fix
 
@@ -57,20 +58,4 @@
 
         **IMPORTANT:** Do NOT add or remove sections. Do NOT change the module structure.
         Fix only the specific violations listed above.
-
-## Section-Level Fix (IMPORTANT)
-
-This is a large module (3328 words). To avoid token truncation,
-fix ONLY the following section(s): "Практика: Дія на себе чи на іншого?"
-
-**Output format:** Output ONLY the fixed section(s) between delimiters:
-
-```
-===SECTION_FIX_START===
-## {section title}
-{fixed section content}
-===SECTION_FIX_END===
-```
-
-Do NOT output the entire file. Only output the section(s) listed above.
 

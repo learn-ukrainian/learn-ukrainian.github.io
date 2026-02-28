@@ -5,22 +5,22 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T13:08:34Z",
+      "ts": "2026-02-28T22:02:22Z",
       "task_id": "v3-food-vocabulary-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T13:13:27Z"
+      "ts": "2026-02-28T22:05:12Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T13:15:55Z",
-      "task_id": "v3-food-vocabulary-pC"
+      "ts": "2026-02-28T22:05:12Z",
+      "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T13:22:59Z",
+      "ts": "2026-02-28T22:08:04Z",
       "attempts": 2
     }
   }

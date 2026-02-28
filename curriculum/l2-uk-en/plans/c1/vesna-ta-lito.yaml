@@ -1,6 +1,6 @@
-module: c1-061
+module: c1-081
 level: C1
-sequence: 61
+sequence: 81
 slug: vesna-ta-lito
 version: '2.0'
 title: Весна та літо
@@ -63,7 +63,7 @@ objectives:
 grammar:
 - Ethnographic terminology
 - Narrative and ritual registers
-phase: C1.5 Folk Culture & Fine Arts
+phase: C1.6 [Folk Culture & Traditions]
 persona:
   voice: Senior Specialist
   role: Календарник

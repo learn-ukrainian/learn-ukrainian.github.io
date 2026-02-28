@@ -1,396 +1,577 @@
 <!-- SCOPE
-Covers: Locative case endings (-і/-ї), Prepositions в/у vs на, Consonant mutations (к→ц, г→з, х→с), Basic location vocabulary
+Covers: Locative case prepositions (у/в, на), regular endings (-і, -ї, -у), velar mutations (к→ц, г→з, х→с), and spatial logic (container vs surface).
 Not covered:
-  - Adjective endings in Locative → a1-14
-  - Plural Locative → A2
-Related: a1-12 (Accusative II), a1-14 (Mine and Yours), a1-15 (Around the City)
+  - Plural locative endings
+  - Exceptions beyond «у банку», «у парку»
+Related: a1-26 (The Accusative II), a1-20 (Mine and Yours), a1-29 (Around the City)
 -->
 
 # The Locative: Where Things Are
 
 > **Чому це важливо?**
 >
-> Until now, you could name objects («Це стіл») and interact with them («Я бачу стіл»). But you couldn't say *where* they are. This module unlocks the physical world. By the end of this lesson, you will be able to describe your room, navigate a city, and answer the most common question in any language: "Where is it?"
+> Knowing how to say where you are is a fundamental survival skill in any language. Whether you are telling a friend you are at work, finding your keys on the table, or asking for the nearest subway station, you need the Locative case. This lesson gives you the grammatical tools to accurately map your physical world in Ukrainian.
 
-## Вступ: Питання «Де?»
+## Вступ
 
-### Магія питання «Де?»
+### The Core Question: «Де?»
+Головне питання для локації — це слово «Де?».
 
-Ви зараз в Одесі (You are in Odesa). You are looking for your hotel, or perhaps a good coffee shop. To find anything, you need one powerful little word: **де**.
+«Де?»
+(Where?) 
 
-This word is your key. It is short, simple, and exactly like the English "Where", but it demands a specific grammatical answer. In English, you answer "in the bank" or "on the table". In Ukrainian, you cannot just stack words together. You must change the word itself.
+Ось популярні фрази:
 
-You have already met the Nominative case (the dictionary form) and the Accusative case (for direct objects). Today, we meet the **Locative case** (Місцевий відмінок). As the name suggests, it is used exclusively for location.
+«Де ти зараз? Ти вдома?»
+(Where are you right now? Are you at home?)
 
-One important distinction: Ukrainian has two location questions. **Де?** [dɛ] means "Where is it?" — static location. **Куди?** means "Where to?" — direction of motion. Today, we focus only on **Де?** — where things ARE right now, not where they are going.
+«Я тут, у кімнаті. А де ти?»
+(I am here, in the room. And where are you?)
 
-> [!observe]
-> **Look at these changes:**
-> *   **Банк** (Bank) → Я у **банку** — I am in the bank.
-> *   **Стіл** (Table) → Телефон на **столі** — Phone is on the table.
-> *   **Кімната** (Room) → Я в **кімнаті** — I am in the room.
->
-> Do you see the changes? The endings change to show *where* something is.
+«Де ви? Ви на роботі?»
+(Where are you? Are you at work?) — formal/plural
 
-### Основні локативи (Basic Locatives)
+«Ми на вулиці. Де наш брат?»
+(We are on the street. Where is our brother?)
 
-Before we dive into the rules of changing word endings, let's look at three phrases that Ukrainians use every single day. These should be learned almost as single vocabulary items.
+«Де це? Це у Києві?»
+(Where is this? Is this in Kyiv?)
 
-1.  **Вдо́ма** — At home.
-    This is one word. You don't say "in house". You say "at-home".
-    Наприклад: «Я **вдома**» — I am at home.
+«Так, це у Києві. Де туалет?»
+(Yes, it is in Kyiv. Where is the toilet?)
 
-2.  **На робо́ті** — At work.
-    Ukrainians never say "in work". Work is treated as an activity or event. Therefore we say **на**.
-    Наприклад: «Де тато? Тато **на роботі**» — Where is dad? Dad is at work.
+«Туалет там, у коридорі.»
+(The toilet is there, in the corridor.)
 
-3.  **У шко́лі** — At school.
-    Here we use **у** (in), because a school is a building.
-    Наприклад: «Студенти **у школі**» — The students are at school.
+«Де її сумка? Вона на столі?»
+(Where is her bag? Is it on the table?)
 
-### Концепція місця (The Concept of Location)
+«Ні, сумка на дивані. А де мій телефон?»
+(No, the bag is on the sofa. And where is my phone?)
 
-In English, we have many prepositions: *in, at, on, by, inside*. Ukrainian simplifies this significantly for beginners. We primarily worry about two main prepositions in the Locative case: **в** (or **у**) and **на**.
+«Твій телефон на столі.»
+(Your phone is on the table.)
 
-Think of it this way:
-*   **В / У** відповідає на питання "Inside what?" (Container).
-*   **На** відповідає на питання "On what surface?" or "At what event?"
+Увага: українська мова не має дієслова "to be" (is/are) у теперішньому часі.
 
-This distinction is strict. If you say "Я в концерті" — I am in the concert, it sounds like you are inside the abstract concept, or physically inside the hall itself, which is unnatural. Events take **на** (e.g., "Я **на** концерті").
+### The Spatial Boundary: The "Shoes Off" Rule
+В Україні є важливе правило — "shoes off" (без взуття). Коли ви йдете у квартиру, ви знімаєте взуття.  
 
-We will explore this logic deeply in the next section. For now, just remember: to say where something is, you need a preposition (**в** or **на**) AND a changed ending.
+> [!culture] The Shoes Off Rule
+> Це важливе правило для всіх українських домівок.
 
----
+Вдома ми носимо капці: 
 
-## Граматика: Місцевий відмінок
+«Де мої капці?»
+(Where are my slippers?)
 
-### Правило «Всередині»: В / У
+«Вони там, на підлозі.»
+(They are there, on the floor.)
 
-The preposition **в** [ʋ] (or **у** [u]) corresponds to the English "in" or "inside". We use it when an object or person is enclosed within boundaries. This applies to buildings, rooms, boxes, bags, countries, and cities.
+Коли ми вдома, ми використовуємо Місцевий відмінок.
 
-If you can physically enter it and close the door (or cross a border), you usually use **в/у**.
+«Добре. Зараз я вдома. Я у квартирі.»
+(Good. Now I am at home. I am in the apartment.)
 
-*   **Магази́н** (store) → **У магазині** (in the store).
-*   **Парк** (park) → **У парку** (in the park).
-*   **Банк** (bank) → **У банку** (in the bank).
-*   **Кімна́та** (room) → **У кімнаті** (in the room).
+«Я у кімнаті. Кімната велика.»
+(I am in the room. The room is large.)
 
-> [!tip]
-> **Cities and countries are containers**
-> In Ukrainian, you are always "in" a city or country, never "on" or "at" it.
-> *   Одеса → **В Одесі** — In Odesa.
-> *   Лондон → **У Лондоні** — In London.
-> *   Україна → **В Україні** — In Ukraine.
+«Так, ми вдома. Ми у вітальні.»
+(Yes, we are at home. We are in the living room.)
 
-### Правило «На поверхні»: На
+### Mapping Your World
+У Місцевому відмінку ми використовуємо прийменники "у" та "на".
 
-The preposition **на** corresponds to the English "on" or "at". We use it for three categories:
+«Комп'ютер на столі. Він працює.»
+(The computer is on the table. It is working.)
 
-1.  **Flat Surfaces**: Tables, walls, floors, streets.
-    *   **Стіл** (table) → **На столі** (on the table).
-    *   **Сті́на** (wall) → **На стіні** (on the wall).
-    *   **Ву́лиця** (street) → **На вулиці** (on the street).
+«Папір у столі. Там багато паперу.»
+(The paper is in the desk. There is a lot of paper there.)
 
-2.  **Open Spaces**: Stations, airports, post offices (often viewed as open hubs).
-    *   **Вокза́л** (train station) → **На вокзалі** (at the station).
-    *   **По́шта** (post office) → **На пошті** (at the post office).
+«Книга на полиці. Це цікава книга.»
+(The book is on the shelf. This is an interesting book.)
 
-3.  **Activities/Events**: Work, lessons, concerts, meetings.
-    *   **Робота** (work) → **На роботі** (at work).
-    *   **Урок** (lesson) → **На уроці** (at the lesson).
+«Одяг у шафі. Шафа нова.»
+(The clothes are in the wardrobe. The wardrobe is new.)
 
-> [!myth-buster]
-> **Чому "На пошті"?**
-> Students often ask: "Isn't a post office a building?"
-> Historically, the post system was a series of stations ("posts") along a road where horses were changed. It was an open point on a route, not a closed building. The logic remains today: **на пошті**. Similarly, **на вокзалі** — at the station — follows this "transport hub" logic.
+«Кіт на дивані. Він спить.»
+(The cat is on the sofa. He is sleeping.)
 
-### Милозвучність (Euphony): The Dance of У and В
+«Собака у коридорі. Вона чекає.»
+(The dog is in the corridor. She is waiting.)
 
-Ukrainian is a melodic language. We hate crunching too many consonants together. To keep the language flowing like a song, we switch between **у** and **в**. They mean exactly the same thing ("in"), but we choose the one that sounds better.
+## Презентація
 
-**The Golden Rule:** Avoid consonant clusters.
+Місцевий відмінок відповідає на питання «Де?». Він завжди має прийменник.
 
-1.  **Use У at the beginning of a sentence before a consonant.**
-    *   _Wrong:_ **В** магазині тихо. — V-M... too hard to say.
-    *   _Right:_ **У** магазині тихо. — In the store it is quiet.
+### The Container Logic: «У» and «В»
+Для закритого простору ми використовуємо «у» та «в».
 
-2.  **Use У between consonants.**
-    *   _Wrong:_ Він **в** парку. — Vin-v-p... three consonants!
-    *   _Right:_ Він **у** парку. — Vin-u-p... consonant-vowel-consonant. Perfect.
-
-3.  **Use В between vowels.**
-    *   _Wrong:_ Вона **у** аптеці. — Vona-u-a... too many vowels, sounds like stuttering.
-    *   _Right:_ Вона **в** аптеці. — Vona-v-a... smooth bridge.
-
-4.  **Use В at the beginning of a sentence before a vowel.**
-    *   _Right:_ **В** Одесі тепло. — It is warm in Odesa.
+«Стіл у кімнаті. Кімната світла.»
+(The table is in the room. The room is bright.)
 
-Think of **у** and **в** as the same person changing clothes. The meaning does not change, only the sound changes.
+«Вона в магазині. Вона купує хліб і молоко.»
+(She is in the store. She is buying bread and milk.)
 
-### Стандартне закінчення: -І (The Standard Ending)
+«Ми у парку. Ми гуляємо разом.»
+(We are in the park. We are walking together.)
 
-Good news in Ukrainian grammar: The Locative case is very regular. For most nouns — Masculine, Feminine, or Neuter — the ending is simply **-і**.
+«Гроші у банку. Банк дуже надійний.»
+(The money is in the bank. The bank is very reliable.)
 
-**How to form it:**
-1.  **Dictionary form (Nominative):** Start with the base word.
-2.  **Masculine (Consonant):** Add **-і**.
-3.  **Feminine (-а):** Remove **-а** and add **-і**.
-4.  **Neuter (-о):** Remove **-о** and add **-і**.
+«Моя сестра у школі. Вона вчителька.»
+(My sister is in the school. She is a teacher.)
 
-**Examples:**
-*   **Журнал** (magazine) → **У журналі** (in the magazine).
-*   **Телефон** (phone) → **У телефоні** (in the phone).
-*   **Кімната** (room) → **У кімнаті** (in the room).
-*   **Вікно** (window) → **На вікні** (on the window).
-*   **Село** (village) → **У селі** (in the village).
+«Мій брат у ресторані. Він обідає з друзями.»
+(My brother is in the restaurant. He is having lunch with friends.)
 
-There are exceptions, but for A1 the ending **-і** is your best friend and covers the majority of nouns.
+«Студенти в університеті. Вони читають складні тексти.»
+(The students are in the university. They are reading complex texts.)
 
-One exception to notice: some masculine nouns take **-у** instead of **-і** — like **парк → у парку** and **банк → у банку**. You already saw these earlier! Don't worry about the rule behind this yet; just memorize them as fixed phrases. The key pattern for A1 remains **-і**.
+«Лікар у лікарні. Він працює цілий день.»
+(The doctor is in the hospital. He works all day.)
 
-> [!tip]
-> **Soft Endings**
-> If a word ends in a soft sign **-ь** or **-я** (like **кухня** - kitchen, or **готель** - hotel), the ending becomes **-ї** or keeps the softness with **-і**.
-> *   **Кухня** → **На кухні**.
-> *   **Готель** → **У готелі**.
-> *   **Україна** → **В Україні**.
+### The Surface Logic: «На»
+Для поверхні ми використовуємо прийменник «на».
 
-### Чергування приголосних: Правило К-Г-Х (Consonant Mutations)
+«На.»
+(On.)
 
-Here is the only tricky part of the Locative case. If the stem of a word ends in **К**, **Г**, or **Х**, these sounds "mutate" (change) before the ending **-і**.
+«Книга лежить на столі. Це моя книга.»
+(The book is lying on the table. This is my book.)
 
-Why? Because Slavic languages do not like the sound combinations "ki", "gi", "khi". They sound harsh to a Ukrainian ear in this position. So, the sounds soften.
+«Картина на стіні. Вона дуже красива.»
+(The picture is on the wall. It is very beautiful.)
 
-This usually happens in **Feminine** nouns ending in **-ка**, **-га**, **-ха**.
+«Сумка на підлозі. Моя сумка чорна.»
+(The bag is on the floor. My bag is black.)
 
-**The Formula:**
-*   **К** becomes **Ц** (K → Ts)
-*   **Г** becomes **З** (G → Z)
-*   **Х** becomes **С** (Kh → S)
-
-Let's look at each mutation with examples.
-
-#### Mutation К → Ц
-This is common because many Ukrainian words end in **-ка** (diminutives, feminine objects).
-*   **Су́мка** (bag) → Remove -а → sumk- → change k to ts → **У сумці**.
-    Example: «Телефон у **сумці**» — The phone is in the bag.
-*   **Аптека** (pharmacy) → **В аптеці**.
-    Example: «Мама в **аптеці**» — Mom is at the pharmacy.
-*   **Бібліотека** (library) → **У бібліотеці**.
+«Вони на вулиці. Там зараз дуже холодно.»
+(They are on the street. It is very cold there right now.)
 
-#### Mutation Г → З
-This often happens with body parts or geographical names.
-*   **Нога́** (leg) → **На нозі**.
-    Example: «Кіт спить на **нозі**» — The cat is sleeping on the leg.
-*   **Книга** (book) → **У книзі**.
-    Example: «Фото у **книзі**» — The photo is in the book.
-*   **Підло́га** (floor) → **На підлозі** (on the floor).
-    Example: «Килим на **підлозі**» — The carpet is on the floor.
-*   **Прага** (Prague) → **У Празі**.
-    Example: «Ми у **Празі**» — We are in Prague.
-
-#### Mutation Х → С
-This is the rarest of the three, but still important.
-*   **Ву́хо** (ear) → **У вусі**.
-    Example: «Музика у **вусі**» — Music in the ear.
-*   **Черепа́ха** (turtle) → **На черепасі**.
-    Example: «Кіт сидить на **черепасі**» — The cat is sitting on the turtle.
-
-> [!context]
-> **Memory Aid: Рука, Нога, Вухо (Hand, Leg, Ear)**
-> Remember this simply. Point to yourself:
-> 1.  **Рука** (Hand) → **У руці** (К → Ц).
-> 2.  **Нога** (Leg) → **На нозі** (Г → З).
-> 3.  **Вухо** (Ear) → **У вусі** (Х → С).
->
-> Remember the trio: **Руці, Нозі, Вусі**. That is the whole rule!
+«Кіт спить на ліжку. Ліжко велике.»
+(The cat is sleeping on the bed. The bed is large.)
 
----
+«Чашка стоїть на полиці. Вона біла.»
+(The cup is standing on the shelf. It is white.)
 
-## Практика: Де це знаходиться?
+«Сніг на даху. Зима прийшла.»
+(Snow is on the roof. Winter has arrived.)
 
-### Вправа 1: Вибір прийменника
+«Машина на дорозі. Дорога довга.»
+(The car is on the road. The road is long.)
 
-Let's test your intuition. Це контейнер (**в/у**) чи поверхня (**на**)?
+### The Activity and Event Exception
+Виняток Для активності або події ми також використовуємо «на». Це працює для будівель.
 
-1.  **Парк**? (Park?) → **У парку** — In the park.
-2.  **Робота**? (Work?) → **На роботі** — At work.
-3.  **Стіл**? (Table?) → **На столі** — On the table.
-4.  **Школа**? (School?) → **У школі** — At school.
-5.  **Вокзал**? (Station?) → **На вокзалі** — At the station.
-6.  **Вулиця**? (Street?) → **На вулиці** — On the street.
+«Робота.»
+(Work.)
 
-Did you get "Вокзал" right? Remember the post-horse stations!
+«Я на роботі. Я дуже зайнятий зараз.»
+(I am at work. I am very busy right now.)
 
-### Вправа 2: Механіка чергування
+> [!warning] A Common Calque Trap
+> Запам'ятайте: завжди «на роботі» (at work), ніколи не «в роботі».
 
-Now let's practice the changes. Look at the base word and transform it.
+Інші приклади активностей:
 
-*   **Книга** (Book) → Change Г to З. Add -і.
-    Результат: **У книзі** — In the book.
+«Він на вокзалі. Він чекає на швидкий поїзд.»
+(He is at the train station. He is waiting for the fast train.)
 
-*   **Річка** (River) → Change К to Ц. Add -і.
-    Результат: **У річці** — In the river.
+«Студенти на лекції. Вони уважно слухають професора.»
+(The students are at the lecture. They are listening carefully to the professor.)
 
-*   **Пове́рх** (Floor) → Ends in -х. Change Х to С. Add -і.
-    Результат: **На поверсі** — On the floor.
+«Ми на концерті. Музика дуже гучна!»
+(We are at the concert. The music is very loud!)
 
-### Діалоги: Пошук предметів
+«Вона на уроці. Урок цікавий і корисний.»
+(She is at the lesson. The lesson is interesting and useful.)
 
-Here is a typical conversation. Notice the question word **Де** and the answer.
+«Мій друг на стадіоні. Він дивиться футбол сьогодні.»
+(My friend is at the stadium. He is watching football today.)
 
-**Діалог 1: Де телефон?**
-— Привіт! **Де** мій телефон? — Hi! Where is my phone?
-— Твій телефон **на столі**. — Your phone is on the table.
-— Ні, це не мій телефон. — No, this is not my phone.
-— А, вибач. Він **у сумці**. — Ah, sorry. It is in the bag.
+### The Rule of Euphony: Choosing Between «У» and «В»
+Українська мова має правило милозвучності. Мова дуже гарна. Ми чергуємо голосні та приголосні.
 
-**Діалог 2: Зустріч**
-— Привіт! Ти **де**? — Hi! Where are you?
-— Я зараз **у парку**. А ти? — I am in the park now. And you?
-— Я ще **на роботі**. — I am still at work.
-— Добре, я чекаю. — Okay, I am waiting.
+Між приголосними ми пишемо «у»:
 
-**Діалог 3: У квартирі**
-— Мамо, де кіт? — Mom, where is the cat?
-— Наш кіт **на вікні**. — Our cat is on the window.
-— А де собака? — And where is the dog?
-— Собака **на підлозі**. — The dog is on the floor.
+«У.»
+(In.)
 
-**Діалог 4: На вулиці**
-— Вибачте, де **аптека**?
-— Аптека **на цій вулиці**. Вона там, **у великому будинку**.
-— Дякую! А де **банкомат**?
-— Банкомат **у магазині**. Магазин поруч.
-— Дуже дякую!
+Після голосної ми пишемо «в»:
 
-> [!tip]
-> **Word Order**
-> In questions, you can swap the order for emphasis.
-> *   «Де ти?» (Where are you? — neutral)
-> *   «Ти де?» (You... where? — more casual, urgent)
->
-> Both are correct. As a beginner, stick to starting with **Де**.
+«В.»
+(In.)
 
-### Візуалізація простору
+> [!tip] Euphony Rules
+> Це дуже важливо для гарного та плавного звучання.
 
-Imagine a student's desk.
+«Він живе у Львові. Це гарне місто.»
+(He lives in Lviv. It is a beautiful city.)
 
-*   **Комп'ютер на столі.** — The computer is on the table.
-*   **Ручка у пеналі.** — The pen is in the pencil case.
-*   **Лампа на столі.** — The lamp is on the table.
-*   **Книга у сумці.** — The book is in the bag.
-*   **Студент на стільці.** — The student is on the chair.
+«Вони живуть в Одесі. Вони люблять море.»
+(They live in Odesa. They love the sea.)
 
-Wait, *стілець*? Why *на стільці*?
-Some masculine words drop a vowel when you add an ending. **Стілець** drops the **-е-**.
-*   Стіл**е**ць → На стільці.
-*   Кінець (end) → У кінці (at the end).
+«Я працюю у школі. Я вчитель.»
+(I work in a school. I am a teacher.)
 
-This is a minor pattern called a "fleeting vowel". Don't stress about it yet, just remember "on the chair" is **на стільці**.
+«Вона працює в аптеці. Вона продає ліки.»
+(She works in a pharmacy. She sells medicine.)
 
-### Швидкий тест (Quick Drill)
+«Ми у театрі. Вистава чудова.»
+(We are in the theater. The play is wonderful.)
 
-Прочитайте і повторіть (Read and repeat):
-1.  **Де я?** Я вдома. Я у кімнаті.
-2.  **Де ти?** Ти на вулиці. Ти у парку.
-3.  **Де він?** Він на роботі. Він в офісі.
-4.  **Де вона?** Вона у школі. Вона на уроці.
-5.  **Де ми?** Ми в Одесі. Ми на морі.
+«Вони в кіно. Фільм цікавий.»
+(They are at the movies. The film is interesting.)
 
----
+«Кіт у кімнаті. Він спить на килимі.»
+(The cat is in the room. He is sleeping on the rug.)
 
-## Застосування: Моя кімната і місто
+«Собака в коридорі. Вона грається.»
+(The dog is in the corridor. She is playing.)
 
-### Культурний контекст: Знімайте взуття (Take Off Your Shoes)
+### Standard Locative Endings
+Закінчення Місцевого відмінка дуже прості.
 
-If you visit a Ukrainian home, the first thing you do happens **у коридорі** (in the hallway). You take off your shoes.
+Most nouns take the ending **-і**.
+If the noun ends in a vowel sound like -ія or -я, it takes the ending **-ї**.
 
-This is mandatory. Ukrainians never walk **у кімнаті** wearing street shoes. The street is "dirt", and home is "cleanliness".
+### Masculine and Neuter Endings
+Чоловічий та Середній рід отримують закінчення **-і**.
 
-Often, your host will offer you **та́почки** (slippers).
-So, where are your shoes? **У коридорі**.
-Where are your feet? **У тапочках** (plural locative - we will learn this later, but good to know!).
+| Dictionary Form | Locative Form | Translation |
+| :--- | :--- | :--- |
+| стіл (masc.) | на столі | on the table |
+| магазин (masc.) | в магазині | in the store |
+| банк (masc.) | у банку | in the bank (exception!) |
+| місто (neut.) | у місті | in the city |
+| парк (masc.) | у парку | in the park (exception!) |
 
-### Завдання: Опишіть свою кімнату
+«Де твій новий зошит? Він лежить на столі.»
+(Where is your new notebook? It is lying on the table.)
 
-Now it is your turn. Look around your room.
+«Де мама сьогодні? Вона в магазині, купує продукти.»
+(Where is mom today? She is in the store, buying groceries.)
 
-Use the template:
-1.  **[Object] [Preposition] [Location].**
+«Де наші гроші? Вони безпечно у банку.»
+(Where is our money? It is safely in the bank.)
 
-*   _Модель:_ Мій ноутбук на столі. — My laptop is on the table.
-*   _Модель:_ Одяг у шафі. — Clothes are in the closet.
-*   _Модель:_ Я у кімнаті. — I am in the room.
+«Де ви зараз живете? Ми живемо у великому місті.»
+(Where do you live right now? We live in a big city.)
 
-Try to create sentences involving:
-1.  **Стіл** (table) → На столі.
-2.  **Диван** (sofa) → На дивані.
-3.  **Крісло** (armchair) → У кріслі.
+Виняток: «у банку» та «у парку» отримують закінчення **-у**.
 
-### Зразок опису (Example Description)
+### Feminine Endings
+Жіночий рід: **-а** змінюється на **-і**, а **-ія/я** змінюється на **-ї**.
 
-> [!model-answer]
-> **Моя кімната**
->
-> Привіт! Це моя кімната. Вона світла і гарна.
-> Великий стіл стоїть **у кутку**. Комп'ютер **на столі**.
-> Мій кіт спить **на дивані**. Книги **на полиці**.
-> Одяг **у шафі**. Я сиджу **у кріслі**.
-> Де я? Я **вдома**. Я **у своїй кімнаті**.
+| Dictionary Form | Locative Form | Translation |
+| :--- | :--- | :--- |
+| кімната (fem.) | у кімнаті | in the room |
+| школа (fem.) | у школі | in the school |
+| вулиця (fem.) | на вулиці | on the street |
+| аудиторія (fem.) | в аудиторії | in the auditorium |
+| лінія (fem.) | на лінії | on the line |
+| станція (fem.) | на станції | at the station |
 
-### Масштаб міста: Архітектура
+«Студенти сидять в аудиторії. Вони пишуть тест.»
+(The students are sitting in the auditorium. They are writing a test.)
 
-When describing where you live in a Ukrainian city, context matters.
+«Машина стоїть на вулиці. Вулиця порожня.»
+(The car is parked on the street. The street is empty.)
 
-If you say "Я живу **у центрі**" — I live in the center, you might live in a "Stalinka" (**сталінка**) — an old building with high ceilings and thick walls.
-If you say "Я живу **у спальному районі**" — I live in a residential area (literally: a "sleeping district"), you likely live in a high-rise.
+«Ми зустрічаємося на станції метро. Не запізнюйся!»
+(We are meeting at the subway station. Do not be late!)
 
-Locations in the city follow our rules:
-*   **Центр** (center) → **У центрі**.
-*   **Район** (district) → **У районі**.
-*   **Парк** → **У парку**.
-*   **Майдан** (square) → **На майдані**.
-*   **Вулиця** → **На вулиці**.
+«Моя кімната на другому поверсі. Я зараз у кімнаті.»
+(My room is on the second floor. I am in the room now.)
 
-Example:
-«Я зараз **в Одесі**. Я живу **на Дерибасівській**. Мій офіс **на Майдані**. Я працюю **у банку**.»
+### The Velar Consonant Mutations
+Чергування приголосних. Літери К, Г, Х змінюються перед закінченням -і:
 
-### Перевірка: Чи можете ви відповісти?
+Here are the three strict mutation rules:
+*   **К** changes to **Ц**
+*   **Г** changes to **З**
+*   **Х** changes to **С**
 
-Let's verify your skills. If I ask you these questions, do you know the grammar logic for the answer?
+> [!fact] Body Parts Mnemonic
+> Запам'ятайте слова: Рука, Нога, Вухо. Вони ідеально демонструють це правило.
 
-1.  **Де ти зараз?** — Where are you now?
-    *   Are you *in* a building? Use **У/В** + **-і**. (У квартирі, в офісі).
-    *   Are you *at* an event/work? Use **На**. (На уроці, на роботі).
+«Рука.»
+(Hand.)
+«У руці.»
+(In the hand.) — The К mutates to Ц.
 
-2.  **Де твій телефон?** — Where is your phone?
-    *   Is it *on* a surface? Use **На**. (На столі).
-    *   Is it *inside* something? Use **У/В**. (У кишені - pocket).
+«Нога.»
+(Leg.)
+«На нозі.»
+(On the leg.) — The Г mutates to З.
 
-This binary choice — **In vs On** — combined with the **-і** ending is the foundation of navigating the Ukrainian world.
+«Вухо.»
+(Ear.)
+«У вусі.»
+(In the ear.) — The Х mutates to С.
+
+«Що у твоїй руці? У руці мій новий телефон.»
+(What is in your hand? My new phone is in the hand.)
+
+«Що на твоїй нозі? На нозі гарне татуювання.»
+(What is on your leg? A beautiful tattoo is on the leg.)
+
+«Що у твоєму вусі? У вусі маленька сережка.»
+(What is in your ear? A small earring is in the ear.)
+
+«Підлога.»
+(Floor.)
+
+«Сумка лежить на підлозі.»
+(The bag is lying on the floor.)
+
+«Кіт сидить на підлозі і дивиться у вікно.»
+(The cat is sitting on the floor and looking out the window.)
+
+«Іграшки лежать на підлозі. Прибери їх!»
+(The toys are lying on the floor. Clean them up!)
+
+## Практика
+
+### Choosing the Right Preposition
+
+«Я в магазині. Тут багато людей сьогодні.»
+(I am in the store. There are many people here today.)
+
+«Я на вулиці. Тут дуже холодно і йде сніг.»
+(I am on the street. It is very cold here and snowing.)
+
+«Папір на столі. Ручка також на столі.»
+(The paper is on the table. The pen is also on the table.)
+
+«Мій брат на роботі. Він працює цілий день без перерви.»
+(My brother is at work. He works all day without a break.)
+
+«Моя сестра у школі. Вона вчиться писати і читати.»
+(My sister is in the school. She is learning to write and read.)
+
+«Ми на концерті. Це чудова українська музика!»
+(We are at the concert. This is wonderful Ukrainian music!)
+
+«Діти у парку. Вони радісно грають у футбол.»
+(The children are in the park. They are happily playing football.)
+
+«Квитки у касі. Ми купуємо квитки на потяг.»
+(The tickets are in the box office. We are buying tickets for the train.)
+
+### Mastering the Mutations
+
+«Аптека.»
+(Pharmacy.)
+
+You want to say that you are buying medicine inside the pharmacy. It is a building, so you choose the container preposition. The word ends in -а, so you know the case ending will become -і. But look at the consonant right before the -а. It is a К.
+
+If you simply swap the vowels, you get the incorrect form «в аптекі». To make the word flow naturally and correctly, you must apply the mutation rule where К changes to Ц.
+
+«Вона в аптеці. Вона купує ліки для бабусі.»
+(She is in the pharmacy. She is buying medicine for grandmother.)
+
+«Ліки в аптеці. Аптека на цій центральній вулиці.»
+(The medicine is in the pharmacy. The pharmacy is on this central street.)
+
+«Книга.»
+(Book.)
+
+«Цей довгий текст у книзі. Книга дуже цікава і стара.»
+(This long text is in the book. The book is very interesting and old.)
+
+«Фотографія у книзі. Я уважно дивлюся на неї.»
+(The photograph is in the book. I am carefully looking at it.)
+
+«Ріка.»
+(River.)
+
+«Риба у ріці. Вода тут дуже чиста і холодна.»
+(The fish is in the river. The water here is very clean and cold.)
+
+«Човен на ріці. Ми повільно пливемо.»
+(The boat is on the river. We are sailing slowly.)
+
+«Дорога.»
+(Road.)
+
+«Машина на дорозі. Дорога довга і небезпечна.»
+(The car is on the road. The road is long and dangerous.)
+
+«Сніг на дорозі. Будьте дуже обережні там!»
+(Snow is on the road. Be very careful there!)
+
+### Location Versus Direction
+Локація чи Напрямок? 
+
+The Locative case answers the question «Де?» (Where is it resting?).
+The Accusative case answers the question «Куди?» (Where is it going?).
+
+«Я у парку.»
+(I am in the park.) — Static location.
+
+«Я йду в парк.»
+(I am going to the park.) — Directional motion.
+
+«Ми у театрі. Вистава вже починається.»
+(We are in the theater. The play is already starting.)
+
+«Ми йдемо в театр. Ми маємо два квитки.»
+(We are going to the theater. We have two tickets.)
+
+«Вона на роботі. Вона сидить за великим столом.»
+(She is at work. She is sitting at a large desk.)
+
+«Вона йде на роботу. Вона дуже поспішає.»
+(She is going to work. She is in a big hurry.)
+
+«Вони у ресторані. Вони смачно їдять піцу.»
+(They are in the restaurant. They are deliciously eating pizza.)
+
+«Вони йдуть у ресторан. Вони дуже голодні.»
+(They are going to the restaurant. They are very hungry.)
+
+### Conversational Roleplay: Where is It?
+
+«Вибачте, де вокзал? Я шукаю поїзд.»
+(Excuse me, where is the train station? I am looking for a train.)
+
+«Вокзал там. Він на вулиці Шевченка.»
+(The train station is there. It is on Shevchenko street.)
+
+«А де пошта? Я хочу відправити лист.»
+(And where is the post office? I want to send a letter.)
+
+«Пошта поруч. Вона прямо у центрі міста.»
+(The post office is nearby. It is right in the city center.)
+
+«А де аптека? Вона далеко звідси?»
+(And where is the pharmacy? Is it far from here?)
+
+«Ні, аптека дуже близько. Вона на цій вулиці.»
+(No, the pharmacy is very close. It is on this street.)
+
+«Дякую. Моя родина зараз у парку. Це далеко?»
+(Thank you. My family is in the park right now. Is it far?)
+
+«Ні, парк поруч. Він відразу за поштою.»
+(No, the park is nearby. It is right behind the post office.)
+
+«А де найкращий ресторан для вечері?»
+(And where is the best restaurant for dinner?)
+
+«Найкращий ресторан у тому великому готелі.»
+(The best restaurant is in that big hotel.)
+
+«Дуже дякую за допомогу!»
+(Thank you very much for your help!)
+
+«Прошу! Гарного дня у нашому місті!»
+(You're welcome! Have a good day in our city!)
+
+## Виробництво та підсумок
+
+### Describing Your Environment
+
+«Я у кімнаті. Кімната велика, чиста і світла.»
+(I am in the room. The room is large, clean and bright.)
+
+«Мій комп'ютер на столі. Я зараз активно працюю.»
+(My computer is on the table. I am actively working right now.)
+
+«Килим на підлозі. Він дуже теплий і м'який.»
+(The rug is on the floor. It is very warm and soft.)
+
+«Годинник на стіні. Він показує точний час.»
+(The clock is on the wall. It shows the exact time.)
+
+«Книги на полиці. Їх там дуже багато.»
+(The books are on the shelf. There are very many of them there.)
+
+«Мій старий одяг у шафі. Шафа зовсім нова.»
+(My old clothes are in the wardrobe. The wardrobe is completely new.)
+
+«Телевізор на тумбочці. Ми зараз дивимося цікавий фільм.»
+(The television is on the nightstand. We are watching an interesting movie right now.)
+
+«Свіжі квіти у вазі. Ваза стоїть на столі.»
+(The fresh flowers are in the vase. The vase is standing on the table.)
+
+«Кіт солодко спить на кріслі. Він дуже лінивий кіт.»
+(The cat is sleeping sweetly on the armchair. He is a very lazy cat.)
+
+### Types of Ukrainian Housing
+
+«Він живе у сталінці. Це стара, але дуже надійна будівля.»
+(He lives in a Stalinka. It is an old but very reliable building.)
+
+«Вона живе у хрущовці. Це маленький, але затишний дім.»
+(She lives in a Khrushchevka. It is a small but cozy home.)
+
+«Ми живемо у новобудові. Це дуже сучасний житловий комплекс.»
+(We live in a new build. It is a very modern residential complex.)
+
+«Мої батьки живуть у селі. Вони живуть у приватному будинку.»
+(My parents live in a village. They live in a private house.)
+
+«Мій найкращий друг живе у гуртожитку. Він бідний студент.»
+(My best friend lives in a dormitory. He is a poor student.)
+
+«Я зараз живу у квартирі. Моя квартира на п'ятому поверсі.»
+(I am living in an apartment right now. My apartment is on the fifth floor.)
+
+### The Kyiv City Guide Task
+ 
+«Студенти у школі. Вони старанно пишуть складний тест.»
+(The students are in the school. They are diligently writing a difficult test.)
+
+«Люди на вокзалі. Вони чекають на швидкий поїзд до Києва.»
+(The people are at the train station. They are waiting for the fast train to Kyiv.)
+
+«Кафе на вулиці. Ми із задоволенням п'ємо гарячу каву.»
+(The cafe is on the street. We are drinking hot coffee with pleasure.)
+
+«Гроші у банку. Банк надійно працює до шостої години.»
+(The money is in the bank. The bank reliably works until six o'clock.)
+
+«Молодий лікар у лікарні. Він професійно допомагає пацієнтам.»
+(The young doctor is in the hospital. He is professionally helping patients.)
+
+«Талановиті актори у театрі. Вони геніально грають на сцені.»
+(The talented actors are in the theater. They are brilliantly playing on the stage.)
+
+«Щасливі діти у парку. Вони швидко катаються на велосипедах.»
+(The happy children are in the park. They are riding bicycles quickly.)
+
+«Свіжі продукти у супермаркеті. Ми купуємо стиглі фрукти.»
+(The fresh groceries are in the supermarket. We are buying ripe fruits.)
+
+«Старі книги у бібліотеці. Студенти читають тишком-нишком.»
+(The old books are in the library. The students are reading quietly.)
+
+### Summary Table: The Locative Case
+
+| Preposition Concept | Prepositions | Example Noun | Locative Phrase |
+| :--- | :--- | :--- | :--- |
+| Container / Enclosed | у / в | кімната | у кімнаті |
+| Surface / Flat Area | на | стіл | на столі |
+| Activity / Event | на | робота | на роботі |
+
+Remember the strict mutation rules for velar consonants:
+*   К → Ц (аптека → в аптеці)
+*   Г → З (підлога → на підлозі)
+*   Х → С (вухо → у вусі)
 
 ---
 
 # Підсумок
 
-Congratulations! You have just unlocked the third dimension of your Ukrainian language map. You are no longer floating in a void; you are **у кімнаті**, **на роботі**, or **в Україні**.
+У цьому уроці ми вивчили Місцевий відмінок. Ми знаємо прийменники «у» та «на». Ми знаємо закінчення іменників. Ми розуміємо чергування приголосних.
 
-**Let's recap the Golden Rules:**
-1.  **Question:** The magic word is **Де?**
-2.  **Ending:** The default Locative ending is **-і**. (Стіл → На столі).
-3.  **Prepositions:**
-    *   **В/У** = Inside (Container).
-    *   **На** = On (Surface) or At (Event/Open Hub).
-4.  **Mutations:** Remember "Hand, Leg, Ear" (Рука → У руці, Нога → На нозі, Вухо → У вусі).
-
-**Check yourself:**
-
-1.  Який прийменник — Which preposition — ми використовуємо для слова **робота**? Чому?
-2.  Змініть слово **парк** у Місцевий відмінок.
-3.  Чому ми кажемо **В аптеці**, але **У банку**? (Euphony).
-4.  Змініть слово **сумка** (bag) у Місцевий відмінок.
-5.  Як сказати українською "The book is on the table"?
-6.  Правда чи ні — True or False: We say "на школі" for "at school".
-
-In the next module, we will explore ownership — **Mine and Yours**. But for now, practice looking at objects around you and naming their location. You are literally **на початку** (at the beginning) of a great journey!
+**Перевірте себе:**
+1. What exact question word triggers the grammatical use of the Locative case?
+2. Why do we use two different prepositions, «у» and «в», that mean the exact same thing structurally?
+3. If you want to say you are at work, why must you use «на» instead of «в»?
+4. What happens to the letter К in the word «аптека» when you put it in the Locative case?
+5. How would you accurately translate the phrase "The book is on the table" using the surface logic?

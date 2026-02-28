@@ -2,51 +2,47 @@ slug: holidays-and-traditions
 title: Holidays & Traditions
 word_target: 2000
 content_outline:
-- section: Warm-up
-  words: 250
+- section: Вступ та культура
+  words: 500
   points:
-  - Introduce the concept of major Ukrainian holidays (Новий рік, Різдво, Великдень).
-  - 'Cultural Hook: 12 dishes on Sviatvechir and the importance of Kutia.'
-  - 'Cultural Hook: The origin of ''Carol of the Bells'' (Щедрик) by Leontovych.'
-  - 'Simple matching activity: Holiday name ↔ Season/Month.'
-- section: Presentation
-  words: 350
+  - 'Scaffolding Note: This is an A1 level module (~40% immersion). Provide clear
+    English scaffolding for all grammatical explanations and cultural context.'
+  - 'Structure: Create an H3 overview introducing State Standard §3.12 topics: major
+    holidays (Новий рік, Різдво, Великдень) using bilingual vocabulary tables.'
+  - 'Cultural Deep-Dive: Write an H3 section on the tradition of 12 meatless dishes
+    on Christmas Eve (Святвечір) and the central role of Kutia (Кутя).'
+  - 'Cultural Deep-Dive: Write an H3 section detailing the authentic Ukrainian history
+    of ''Щедрик'' (Mykola Leontovych) as a traditional New Year''s carol.'
+- section: 'Презентація: Вітання'
+  words: 500
   points:
-  - 'Explain the formula: Вітаю + З + [Holiday in Instrumental].'
-  - 'Present the ''frozen'' Instrumental forms: з Новим роком, з Різдвом, з Великоднем.'
-  - 'Common Error Alert: Do not say ''З Новий рік'' (Nominative).'
-  - 'Visual aid: A simple table showing ''Nominative → Greeting Form''.'
-- section: Presentation 2
-  words: 350
+  - 'Structure: Create an H3 for the core greeting formula ''Вітаю + З + [Instrumental]''
+    with a rule definition and 3+ examples in context.'
+  - 'Grammar Focus: Present ''З Новим роком'', ''З Різдвом'', ''З Великоднем'' as
+    lexicalized, fixed formulas rather than teaching full Instrumental declension.'
+  - 'Usage Note: Highlight the common learner error of using the Nominative (''З Новий
+    рік'') and explain why the preposition ''З'' requires the Instrumental.'
+  - 'Vocabulary Distinction: Clarify the verb ''вітати'' (act of greeting) and provide
+    3+ short sentence examples.'
+- section: 'Презентація: Побажання'
+  words: 500
   points:
-  - 'Explain the formula: Бажаю + [Abstract Noun in Genitive].'
-  - 'Key vocabulary with IPA: щастя /ˈʃtʃɑstʲɐ/, здоров''я /zdɔˈrɔu̯jɐ/, успіху, любові.'
-  - 'Common Error Alert: usage of Genitive (of happiness/of health) vs Accusative.'
-  - 'Briefly cover responses to wishes: ''Дякую!'', ''Взаємно!''.'
-- section: Presentation 3
-  words: 300
+  - 'Structure: Create an H3 for the wishing formula ''Бажаю + [Genitive]'' with a
+    clear rule definition and 3+ examples.'
+  - 'Vocabulary Focus: Introduce ''щастя'' /ˈʃtʃɑstʲɐ/ and ''здоров''я'' /zdɔˈrɔu̯jɐ/
+    with pronunciation guides and their Genitive forms.'
+  - 'Usage Note: Explicitly warn against using the Accusative (''Бажаю успіх''); explain
+    that wishing for abstract concepts requires the Genitive case.'
+  - 'Conversational Practice: Provide a mini-dialogue demonstrating how to express
+    wishes and respond appropriately (''Дякую!'', ''Взаємно!'').'
+- section: Практика та дні народження
+  words: 500
   points:
-  - 'Asking about dates: ''Коли твій день народження?'' (Recalling A1-23).'
-  - 'Answering with date: ''П''ятого травня'' (Genitive of date).'
-  - 'Cultural Hook: The ''pulling ears'' tradition for kids.'
-  - 'Specific greeting: ''З днем народження!''.'
-- section: Practice
-  words: 250
-  points:
-  - 'Practical application: Structure of a simple greeting card (To whom -> Greeting
-    -> Wish -> From whom).'
-  - 'Scaffolded writing task: Fill in the blanks in a postcard template.'
-  - Focus on correct register (informal for friends/family).
-- section: Practice 2
-  words: 250
-  points:
-  - 'Vocabulary: подарунок, дарувати (to give a gift).'
-  - 'Mini-dialogues: Giving a gift (''Це тобі!'') and receiving (''Вау, дякую!'').'
-  - 'Cultural context: Bringing small gifts when visiting (custody/hospitality).'
-- section: Practice 3
-  words: 250
-  points:
-  - 'Consolidation task: Write a birthday message to a friend.'
-  - 'Checklist for the learner: Did you use ''З...'' correctly? Did you use ''Бажаю...''
-    correctly?'
-  - Model answer providing a standard, natural example.
+  - 'Structure: Create an H3 on Birthdays, recalling module a1-23 to ask ''Коли твій
+    день народження?'' and answering with Genitive dates (''П''ятого травня'').'
+  - 'Cultural Deep-Dive: Briefly explain the playful tradition of pulling ears (''тягнути
+    за вуха'') on birthdays.'
+  - 'Vocabulary Focus: Introduce the collocation ''дарувати / отримати подарунок'',
+    ensuring the use of ''отримати'' to avoid Surzhyk/Russianisms.'
+  - 'Practical Task: Conclude with a step-by-step writing guide and model answer for
+    crafting a short, informal greeting card to a friend.'

@@ -1,10 +1,12 @@
-module: c2-037
-level: c2
-sequence: 37
+module: c2-034
+level: C2
+sequence: 34
+slug: creative-writing-prose
 version: '2.0'
 title: Творче письмо — проза
 focus: literature
 pedagogy: TTT
+phase: 'C2.2 [Literature & Creative Writing]'
 objectives:
 - TBD
 sources:

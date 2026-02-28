@@ -1,0 +1,98 @@
+module: c1-034
+level: C1
+sequence: 34
+slug: morfolohichna-norma-c1
+version: '2.0'
+title: 'Морфологічна норма: Складні випадки'
+subtitle: 'Morphological Norms: Complex Cases'
+content_outline:
+- section: Складений числівник у всіх відмінках
+  words: 1000
+  points:
+  - 'Повне відмінювання складених кількісних числівників: двісті тридцять п''ять, сімсот
+    вісімдесят дев''ять у всіх 7 відмінках — кожна складова змінюється окремо'
+  - 'Утворення та узгодження порядкових числівників: змінюється лише останнє слово (двісті
+    тридцять п''ятий, -а, -е), узгодження з іменником у роді, числі, відмінку'
+  - 'Збірні числівники (двоє, троє, п''ятеро): обмеження вживання — лише з іменниками
+    чоловічого роду, pluralia tantum, назвами малят, займенниками'
+- section: Повна парадигма займенників
+  words: 900
+  points:
+  - 'Неозначені займенники: будь-хто, хто-небудь, казна-хто, хтозна-чий, абихто, дехто
+    — семантичні відтінки та правопис (через дефіс, окремо, разом)'
+  - 'Заперечні займенники: ніякий, жодний, ніщо, ніхто — подвійне заперечення в українській
+    мові, відмінність від англійської'
+  - 'Означальні займенники: кожний/кожен, весь/увесь, інший, сам/самий — розмежування
+    значень та типові помилки (сам = alone vs самий = the very)'
+- section: 'Іменникова норма: складні випадки'
+  words: 700
+  points:
+  - 'Складні іменники: хлібороб, працедавець, землетрус — правопис (разом, через дефіс),
+    відмінювання'
+  - 'Pluralia tantum (ворота, канікули, окуляри, гроші) та singularia tantum (молоко,
+    сміливість) — узгодження з дієсловами та прикметниками'
+  - 'Іменники спільного роду (сирота, нероба, листоноша, суддя) та невідмінювані іншомовні
+    іменники (кафе, метро, журі) — визначення роду та узгодження'
+- section: Прикметникова та дієслівна норма
+  words: 700
+  points:
+  - 'Складні прикметники: суспільно-політичний, темно-зелений, давньоруський — правопис
+    через дефіс vs разом, визначення типу зв''язку між основами'
+  - 'Присвійні прикметники з нульовим закінченням: батьків, Шевченків, сестрин — відмінювання
+    за короткою формою, змішана парадигма'
+  - 'Складні дієслівні форми: відмінювання бути в майбутньому часі (буду, будеш...), наказовий
+    спосіб нестандартних дієслів (їж, ляж, біжи), дієслова з чергуванням'
+- section: 'Практика: тести на морфологічну грамотність'
+  words: 700
+  points:
+  - 'Комплексні тести на відмінювання числівників у контексті ділового та наукового стилів'
+  - 'Завдання на узгодження: вибір правильної форми займенника, прикметника, дієслова
+    в складних синтаксичних конструкціях'
+  - 'Корекція помилок: виявлення та виправлення типових морфологічних порушень у реальних
+    текстах (преса, студентські роботи)'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Decline compound cardinal numerals correctly in all seven cases
+- Use indefinite, negative, and definitive pronouns with correct semantics and spelling
+- Apply agreement rules for common-gender and indeclinable nouns
+- Identify and correct morphological norm violations in authentic texts
+grammar:
+- Compound numeral declension paradigm
+- Full pronoun paradigm including indefinite and negative
+- Common-gender noun agreement
+- Compound adjective spelling rules
+phase: C1.3 [Movoznavstvo & Sociolinguistics]
+persona:
+  voice: Senior Specialist
+  role: Граматист-нормативіст
+word_target: 4000
+vocabulary_hints:
+  required:
+  - відмінювання (declension/conjugation) — повне відмінювання, парадигма відмінювання;
+    Core morphological term
+  - числівник (numeral) — складений числівник, збірний числівник, порядковий числівник;
+    High frequency grammar term
+  - займенник (pronoun) — неозначений займенник, заперечний займенник; Essential part-of-speech
+    term
+  - узгодження (agreement) — граматичне узгодження, узгодження в роді й числі; Fundamental
+    syntactic concept
+  - парадигма (paradigm) — повна парадигма, морфологічна парадигма; Academic linguistics
+    term
+  recommended:
+  - невідмінюваний (indeclinable) — applies to borrowed nouns like кафе, метро, журі
+  - збірний числівник (collective numeral) — двоє, троє, п''ятеро; restricted usage patterns
+  - спільного роду (common gender) — applies to сирота, нероба, листоноша; determines
+    agreement
+  - pluralia tantum (pluralia tantum) — ворота, канікули; Latin term used in Ukrainian
+    grammar
+activity_hints:
+- type: fill-in
+  focus: compound numeral declension in sentences
+  items: 20
+- type: error-correction
+  focus: morphological norm violations in authentic texts
+  items: 20
+- type: quiz
+  focus: pronoun semantics and agreement rules
+  items: 15

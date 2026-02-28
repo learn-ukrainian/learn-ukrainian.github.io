@@ -1,10 +1,12 @@
 module: c2-006
-level: c2
+level: C2
 sequence: 6
+slug: khudozhniy-styl
 version: '2.0'
 title: Художній стиль — Літературна творчість
 focus: stylistics
 pedagogy: TTT
+phase: 'C2.1 [Stylistics & Rhetoric]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: 'Вступ: Художній стиль як естетичний феномен (Introduction: Artistic Style
     as an Aesthetic Phenomenon)'
-  words: 600
+  words: 750
   points:
   - Defining the aesthetic function of language according to State Standard §4.3.1.1
     and its role in artistic expression
@@ -33,7 +35,7 @@ content_outline:
     language to create a unique authorial voice'
 - section: 'Жанрові особливості: Мала проза та наратологія (Genre Features: Short
     Prose and Narratology)'
-  words: 850
+  words: 1050
   points:
   - 'Narratology in focus: distinguishing between the author and the narrator (наратор);
     exploring academic categories like ''всезнаючий'' (omniscient) and ''ненадійний''
@@ -45,7 +47,7 @@ content_outline:
   - 'Narrative perspective: exploring the ''voice'' of the narrator and the blurring
     of lines between lyricism and prose'
 - section: Художні засоби та образність (Artistic Devices and Imagery)
-  words: 850
+  words: 1050
   points:
   - 'In-depth study of stylistic devices per §4.3.3: metaphors (розгорнута, смілива),
     personification, periphrasis, and metonymy'
@@ -56,7 +58,7 @@ content_outline:
   - 'Intertextuality: how modern Ukrainian literature utilizes allusions and symbols
     to reference the established literary canon'
 - section: Драматургія та Хронотоп (Dramaturgy and Chronotope)
-  words: 800
+  words: 1000
   points:
   - 'Specifics of dramatic language: analyzing stage directions (ремарки) and characterization
     (характеротворення) through dialogue and conflict'
@@ -68,7 +70,7 @@ content_outline:
     in modern drama'
 - section: 'Практикум: Творче письмо та стилістична корекція (Practicum: Creative
     Writing and Stylistic Correction)'
-  words: 900
+  words: 1150
   points:
   - 'Application of §4.3.6: Creating a structured literary text based on a detailed
     plan, maintaining consistent stylistic register'

@@ -2,15 +2,15 @@
   "module": "at-the-cafe",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T14:40:49.765461Z",
+  "last_audit": "2026-02-28T23:24:57.199358Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T14:40:29.156266Z",
-    "meta": "2026-02-28T14:34:31.665820Z",
+    "md": "2026-02-28T23:24:29.598644Z",
+    "meta": "2026-02-28T23:16:20.712166Z",
     "activities": "2026-02-22T00:27:13.145979Z",
     "vocabulary": "2026-02-26T10:56:38.068808Z",
     "plan": "2026-02-28T03:02:13.890490Z",
-    "research": "2026-02-28T14:34:31.661199Z"
+    "research": "2026-02-28T23:16:20.704277Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4479/2000 (raw: 4717)"
+      "message": "2019/2000 (raw: 2287)"
     },
     "activities": {
       "status": "deferred",

@@ -2,15 +2,15 @@
   "module": "the-accusative-i-things",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:33:30.586488Z",
+  "last_audit": "2026-02-28T20:18:01.546262Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:03.240377Z",
-    "meta": "2026-02-19T16:12:59.324392Z",
+    "md": "2026-02-28T20:17:44.016213Z",
+    "meta": "2026-02-28T20:08:41.010920Z",
     "activities": "2026-02-19T15:38:12.312577Z",
     "vocabulary": "2026-02-26T10:56:53.939632Z",
     "plan": "2026-02-28T03:02:37.331301Z",
-    "research": "2026-02-19T16:12:59.315653Z"
+    "research": "2026-02-28T20:08:41.002586Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2743/2000 (raw: 2985) | immersion: 27.6% LOW (target 35-55% (M25))"
+      "status": "pass",
+      "violations": 0,
+      "message": "4627/2000 (raw: 4783)"
     },
     "activities": {
       "status": "deferred",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 1,
+    "pass_count": 3,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

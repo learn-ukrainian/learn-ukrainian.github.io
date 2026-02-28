@@ -1,7 +1,7 @@
 # Audit Report: M10 — my-world-objects.md
 **Level:** A1 | **Module:** M10 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-28 03:27:14
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-28 16:56:39
 
 ## Configuration
 **Type:** A1-grammar
@@ -17,7 +17,7 @@
 **Transliteration:** Allowed
 
 ## Gates
-- **Words:** ✅ 2214/2000 (raw: 2593)
+- **Words:** ✅ 4047/2000 (raw: 4205)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -29,7 +29,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** ❌ 13.2% LOW (target 15-35% (M10))
+- **Immersion:** 🇺🇦 15.5% (target 15-35% (M10))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -38,10 +38,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **My World: Objects** | ✅ | 71 | Included in Core |
-| **Вступ: Вказуємо на світ** | ✅ | 352 | Included in Core |
-| **Теорія: Вказівні займенники (Цей і Той)** | ✅ | 439 | Included in Core |
-| **Практика: Побут і речі** | ✅ | 535 | Included in Core |
-| **Культурний контекст: Український дім** | ✅ | 411 | Included in Core |
-| **Використання: Описуємо кімнату** | ✅ | 208 | Included in Core |
-| **Підсумок** | ✅ | 198 | Included in Core |
+| **My World: Objects** | ✅ | 61 | Included in Core |
+| **Вступ** | ✅ | 455 | Included in Core |
+| **Презентація** | ✅ | 1540 | Included in Core |
+| **Практика** | ✅ | 1029 | Included in Core |
+| **Культурний контекст** | ✅ | 517 | Included in Core |
+| **Продукція та підсумок** | ✅ | 268 | Included in Core |
+| **Підсумок** | ✅ | 177 | Included in Core |

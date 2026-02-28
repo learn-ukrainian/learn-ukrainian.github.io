@@ -1,236 +1,331 @@
 <!-- SCOPE
-Covers: Compound future tense, conjugation of auxiliary verb 'бути', future time markers, Genitive of Time expressions, expressing intentions vs definite plans.
+Covers: Compound future tense (буду + infinitive), future time markers, expressing plans and intentions.
 Not covered:
-  - Perfective future tense
-Related: a1-36, a1-23, a1-38
+  - Perfective future tense (simple future) -> a separate module.
+Related: a1-36 (Yesterday - Past Tense), a1-38
 -->
 
 # Tomorrow - Future Tense
 
 > **Чому це важливо?**
 >
-> Будува́ти пла́ни — це частина нашого життя. Ви вивчаєте майбутній час. Тепер ви можете планувати вихідні. Ви можете ділитися мріями. Це робить вашу мову живою та активною.
-> (Making plans is a part of our life. When you know the future tense, you can arrange meetings, plan weekends, and share your dreams. Це ро́бить ва́шу мо́ву живо́ю.)
+> Будувати плани — це важлива частина життя. (Building plans is an important part of life.) Learning how to talk about the future allows you to organize your schedule, share your dreams, and coordinate with others.
 
 ## Вступ
 
-### The Elegance of Ukrainian Future Tense
-Украї́нська мо́ва ма́є просту́ структу́ру. Ми використо́вуємо одну́ ло́гіку. Ця ло́гіка ду́же стабі́льна. Ви мо́жете говори́ти про робо́ту. Ви мо́жете говори́ти про відпочи́нок. Пра́вило залиша́ється незмі́нним.
-(The Ukrainian language has a simple structure. We use one logic. This logic is very stable. You can talk about work. You can talk about rest. The rule remains unchanged.)
+Ми живемо в теперішньому часі. (We live in the present time.) У минулому уроці ми вивчали минулий час. (In the past lesson, we studied the past tense.) Ми говорили про вчорашній день. (We talked about what we did yesterday.) Тепер ми будемо говорити про майбутнє. (Now we will talk about the future.)
 
-Let us talk about how we express future actions. English speakers often overthink the future tense. You might wonder if you should use a specific auxiliary verb, a present continuous structure, or a dedicated modal construction. In Ukrainian, we leave all this complexity behind us. Our compound future tense is built on one simple auxiliary verb. You learn one basic pattern, and you can instantly apply it to hundreds of different actions. Learning this tense unlocks your ability to make promises, schedule meetings, share your dreams, and coordinate with friends. 
+When you learn a new language, mastering the timeline is a massive milestone. You already know how to describe your current reality and how to report on your past experiences. Today, we unlock the future. This gives you the power to make promises, schedule meetings, and share your hopes.
 
-### Часова лінія: Вчора, сьогодні, завтра
-Ми вже зна́ємо мину́лий час. Вчо́ра ми чита́ли текст. Сього́дні ми чита́ємо текст. За́втра ми бу́демо чита́ти текст. Це на́ша часова́ лі́нія. Ми руха́ємося впере́д. Час не стої́ть на мі́сці.
-(We already know the past tense. Yesterday we read a text. Today we read a text. Tomorrow we will read a text. This is our timeline. Ми руха́ємося впере́д. Час іде́.)
+In English, navigating future tenses can feel like a complex puzzle. You constantly have to decide whether to use "will", "going to", or even the present continuous ("I am working tomorrow"). Ukrainian offers a refreshingly simple and elegant solution. For ongoing or repeated actions in the future, we rely on a single, straightforward structure. You do not need to worry about subtle differences between "I will" and "I am going to". 
 
-Мину́ле вже істо́рія. Ми не мо́жемо зміни́ти мину́ле. Тепері́шнє — це наш моме́нт. Ми ді́ємо за́раз. Але майбу́тнє — це на́ші пла́ни. Ми малю́ємо на́ше майбу́тнє слова́ми.
-(Мину́ле — це істо́рія. Тепері́шнє — це наш моме́нт. Але́ майбу́тнє — це на́ші пла́ни.)
+Let us look at how the timeline connects.
 
-### Український оптимізм
-How do Ukrainians view the future? Often, the future is seen as a profound source of hope, resilience, and renewal. We have a very common and powerful phrase that perfectly captures this mindset. 
+**Теперішній час**:
+Я працюю сьогодні. (I am working today.)
+Це факт. (This is a fact.)
 
-За́втра бу́де нови́й день. Це ду́же важли́ва фра́за. Ми ча́сто говори́мо ці слова́. Вони́ даю́ть наді́ю. Коли́ день важки́й, ми чека́ємо за́втра. Нови́й день прино́сить нові́ можли́вості.
-(Tomorrow will be a new day. This is a very important phrase. We often say these words. They give us hope. When the day is hard, we wait for tomorrow. Нови́й день — це нові́ можли́вості.)
+**Минулий час**:
+Я працював учора. (I worked yesterday.)
+Це історія. (This is history.)
 
-This phrase is much more than just a grammatical example for your textbook. It is a cultural anchor. During difficult times, Ukrainians rely heavily on this simple sentence to express optimism and unyielding determination. 
+**Майбутній час**:
+Я буду працювати завтра. (I will work tomorrow.)
+Це наш план. (This is our plan.)
 
-> [!context] The Power of Tomorrow
-> The phrase «За́втра бу́де нови́й день» is deeply ingrained in Ukrainian resilience. It acknowledges present difficulties while firmly looking forward to a fresh start. It is a perfect example of how language shapes our perspective on life, endurance, and survival.
+Understanding how to shift between these three points in time transforms you from a beginner into a conversational speaker. You can now tell a complete story.
+
+> > [!quote] Оптимізм у мові
+> «Завтра буде новий день.»
+> This phrase is a powerful cultural anchor in Ukraine. It expresses resilience, hope, and an optimistic outlook. No matter how difficult today is, Ukrainians often use this exact phrase to remind themselves and others that the future holds new opportunities. It is not just grammar; it is a philosophy of endurance.
+
+As your language guide and virtual event planner, my goal today is to help you map out your tomorrow. We will learn the mechanics of the future tense, the vocabulary of time, and the cultural nuances of sharing your plans. 
 
 ## Презентація граматики
 
-### Формула майбутнього часу
-Ми використо́вуємо дієсло́во «бу́ду». Це наш допоміжни́й елеме́нт. По́тім ми додає́мо інфініти́в. Інфініти́в — це початко́ва фо́рма дієсло́ва. Вона́ закін́чується на «-ти». Ра́зом вони́ створю́ють майбу́тній час.
-(We use the verb "I will be". This is our auxiliary element. Then we add the infinitive. The infinitive is the initial form of the verb. )
+To talk about the future, we use a structure called the compound future tense. The word "compound" simply means it is built using two separate parts working together as a team. This structure aligns perfectly with everyday communication needs.
 
-Я бу́ду працюва́ти. (I will work.)
-Він бу́де чита́ти. (He will read.)
-Ми бу́демо відпочива́ти. (We will rest.)
+The formula is incredibly logical: **Conjugated form of «бути»  + Infinitive of the main verb.**
 
-Уяві́ть нове́ дієсло́во. Напри́клад, дієсло́во «мрі́яти». Це означа́є ма́ти вели́кі пла́ни. Ви вже зна́єте фо́рмулу. Тепе́р ви мо́жете сказа́ти своє́ ре́чення.
-(Imagine a new verb. For example, the verb "to dream". This means to have big plans. You already know the formula. Now you can say your sentence.)
+The main action verb stays frozen in its dictionary form (the infinitive, ending in -ти). All the hard work of showing "who" is doing the action is handled entirely by the helper verb «бути». Let us explore each form of this helper verb in detail.
 
-Я бу́ду мрі́яти про по́дорож. (I will dream about a trip.)
+### Перша особа: Я бу́ду 
 
-### Дієвідмінювання дієслова «бути»
-Це ду́же важли́ве дієсло́во. Ми пови́нні зна́ти всі фо́рми. Вони́ змі́нюються за осо́бами. Ми використо́вуємо їх ко́жного дня.
-(This is a very important verb. We must know all the forms. They change according to persons. We use them every day.)
+The form **«бу́ду»** is used when you are talking about yourself. This is the first-person singular conjugation. Whenever you want to declare your own personal plans, you will start your sentence with this word. 
 
-| Pronoun | Форма (Form) | Приклад (Example) | Переклад (Translation) |
-|---|---|---|---|
-| Я | **бу́ду** | Я бу́ду спа́ти. | I will sleep. |
-| Ти | **бу́деш** | Ти бу́деш слу́хати. | You will listen. |
-| Він / Вона / Воно | **бу́де** | Вона́ бу́де писа́ти. | She will write. |
-| Ми | **бу́демо** | Ми бу́демо сні́дати. | We will have breakfast. |
-| Ви | **бу́дете** | Ви бу́дете гуля́ти. | You will walk. |
-| Вони | **бу́дуть** | Вони́ бу́дуть співа́ти. | They will sing. |
+It is a powerful word because it signifies your personal commitment to an action. When you say «Я буду», you are taking ownership of the future event. 
 
-Ви ба́чите систе́му? Ко́рінь за́вжди однако́вий. Змі́нюється ті́льки закін́чення. Це ду́же логі́чно.
-(Ви ба́чите систе́му? Ко́рінь однако́вий. Змі́нюється ті́льки закін́чення.)
+**Приклади:**
+Я буду працювати завтра. (I will work tomorrow.)
+Я буду там ввечері. (I will be there in the evening.)
+Я буду читати книгу. (I will read a book.)
 
-### Правило виду дієслова
-В украї́нській мо́ві є два ви́ди дієслі́в. Дієсло́во «бу́ти» опису́є проце́с. Це ду́же суво́ре пра́вило.
-(In the Ukrainian language, there are two aspects of verbs. These are the perfective aspect and the imperfective aspect. The verb "to be" works only with the imperfective aspect. This is a very strict rule.)
+You will use this form constantly in daily life, whether you are telling a friend about your evening or confirming your attendance at a meeting.
 
-You cannot use the auxiliary verb «бу́ду» with a perfective verb (a completed result).
+### Друга особа: Ти бу́деш 
 
-> [!warning] Conflict of Aspects
-> Learners often try to pair the auxiliary verb «бу́ду» with perfective verbs. This creates an immediate grammatical conflict. 
-> ❌ Я бу́ду прочита́ти. (Incorrect — combines ongoing auxiliary with completed result verb)
-✅ Я бу́ду чита́ти. (Correct — I will be reading.)
-The auxiliary verb inherently implies an ongoing, continuous process. It must pair exclusively with the imperfective infinitive.
+The form **«бу́деш»** is the second-person singular informal conjugation. You use this when you are speaking directly to one person whom you know well, like a friend, a family member, or a colleague you are close with.
 
-Запам'ята́йте це пра́вило наза́вжди. Ми буду́ємо проце́с. Ми не говори́мо про швидки́й результа́т. На́ша ді́я трива́є у ча́сі.
-(Remember this rule forever. We build a process. Ми говори́мо про проце́с.)
+Asking questions with «будеш» is the most common way to find out about someone else's plans. It is the core tool for making shared arrangements.
 
-### Синтетичний майбутній час
-Це одне́ сло́во замі́сть двох. Ми додає́мо закін́чення до інфініти́ва. Це звучи́ть ду́же га́рно. Ми ба́чимо це в літерату́рі. Ми чу́ємо це в нови́нах.
-(This is one word instead of two. We add an ending to the infinitive. Ми ба́чимо це в літерату́рі.)
+**Приклади:**
+Ти будеш працювати завтра? (Will you work tomorrow?)
+Що ти будеш робити? (What will you do?)
+Ти будеш там? (Will you be there?)
 
-> [!fact] The Elegant Suffix
-> The synthetic future tense (працюва́тиму) evolved historically from merging the infinitive verb with an ancient form of the verb "to have". It is a distinctive feature of Ukrainian that adds a flowing, poetic rhythm to spoken sentences.
+Notice how the main verb (працювати, робити) never changes. Only the helper verb changes to match "you".
+
+### Третя особа: Він / Вона / Воно бу́де 
+
+The form **«бу́де»** is the third-person singular conjugation. We use this when talking about another person, an object, or a general situation. It is identical for masculine, feminine, and neuter subjects, which makes it very easy to remember.
+
+This is the form you use to describe what is going to happen in the world around you, not just what people are doing.
+
+**Приклади:**
+Він буде відпочивати. (He will rest.)
+Вона буде складати план. (She will make a plan.)
+Завтра буде новий день. (Tomorrow will be a new day.)
+
+The word «буде» acts as the anchor for describing future states and third-party actions.
+
+### Перша особа множини: Ми бу́демо 
+
+The form **«бу́демо»** is the first-person plural conjugation. You use this when you are including yourself in a group. This is the ultimate word for teamwork and shared activities.
+
+Whenever you are proposing a joint plan or confirming a group effort, «будемо» is your go-to word.
+
+**Приклади:**
+Ми будемо працювати разом. (We will work together.)
+Що ми будемо робити завтра? (What will we do tomorrow?)
+Ми будемо там дуже скоро. (We will be there very soon.)
+
+Using «ми будемо» creates a sense of unity and shared direction.
+
+### Друга особа множини: Ви бу́дете 
+
+The form **«бу́дете»** serves two purposes. It is the second-person plural (speaking to multiple people) and the formal singular (speaking respectfully to one person, like a boss, a client, or a stranger).
+
+This form is essential for polite professional communication and addressing audiences.
+
+**Приклади:**
+Ви будете працювати завтра? (Will you work tomorrow? - formal/plural)
+Коли ви будете там? (When will you be there?)
+Ви будете читати цей текст. (You will read this text.)
+
+Mastering «будете» ensures you can navigate formal environments politely and effectively.
+
+### Третя особа множини: Вони бу́дуть 
+
+The form **«бу́дуть»** is the third-person plural conjugation. We use it to talk about groups of other people, or plural objects. 
+
+This form allows you to report on the plans of teams, departments, or friends when you are not part of the group.
+
+**Приклади:**
+Вони будуть складати план. (They will make a plan.)
+Студенти будуть читати. (The students will read.)
+Вони будуть там завтра вранці. (They will be there tomorrow morning.)
+
+> > [!warning] Правило виду дієслова
+> A critical rule in Ukrainian grammar is that the helper verb «бути» can ONLY be combined with **imperfective** verbs. Imperfective verbs describe the process of doing something, not the completed result. 
+> Learners often make the mistake of attaching «буду» to perfective (result-focused) verbs. This causes a conflict.
+> **Правильно:** Я буду читати.
+> **Неправильно:** Я буду прочитати.
+> Always use the basic, ongoing dictionary form of the verb with «буду».
+
+> > [!fact] Синтетичний майбутній час
+> While the "буду + infinitive" formula is the most common and essential way to build the future tense, Ukrainian has another elegant form called the synthetic future. Instead of two words, it combines them into one: «працюватиму», «читатимеш». You do not need to learn how to build this right now. However, you should recognize it when you read books or listen to the news. It means exactly the same thing as the compound form!
+
+
 
 ## Лексика та культурний контекст
 
-### Маркери часу
-Ми ма́ємо бага́то слі́в для ча́су. Найголовні́ше сло́во — це «за́втра». Ми тако́ж ча́сто ка́жемо «ско́ро». А іно́ді ми ка́жемо «по́тім».
-(We have many words for time. The most important word is "tomorrow". Ми ча́сто ка́жемо «ско́ро» або́ «по́тім».)
+Grammar provides the structure, but vocabulary gives you the specific coordinates on the timeline. To effectively discuss the future, you need precision markers. We will look at essential time words and the cultural framework Ukrainians use when organizing their lives.
 
-- **за́втра** (tomorrow)
-- **післяза́втра** (the day after tomorrow)
-- **ско́ро** (soon)
-- **по́тім** (later, then)
-- **пізні́ше** (a little later)
+### Маркери часу: за́втра, ско́ро, по́тім
 
-We frequently combine «за́втра» with specific parts of the day:
-За́втра вра́нці я бу́ду пи́ти ка́ву. (За́втра я бу́ду пи́ти ка́ву.)
-За́втра вде́нь ми бу́демо працюва́ти. (Tomorrow afternoon we will work.)
-За́втра вве́чері вони́ бу́дуть відпочива́ти. (Tomorrow evening they will rest.)
-Ско́ро я бу́ду вдо́ма. (Soon I will be at home.)
-Ми погово́римо про це по́тім. (We will talk about this later.)
+The most fundamental word for the future is **«за́втра»** (tomorrow). It is a high-frequency anchor word. You will often combine it with parts of the day to be more specific.
 
-These markers usually sit right at the beginning of the sentence to set the temporal context immediately. 
+**Приклади:**
+Я буду там завтра вранці. (I will be there tomorrow morning.)
+Ми будемо працювати завтра вдень. (We will work tomorrow afternoon.)
+Він буде відпочивати завтра ввечері. (He will rest tomorrow evening.)
 
-Ми мо́жемо будува́ти до́вгі ре́чення. Це допомага́є бу́ти то́чними.
-(We can build long sentences. This helps us be precise.)
+We also use relative markers to describe sequence and proximity. **«Ско́ро»** means "soon". **«По́тім»** means "then" or "later".
 
-За́втра я бу́ду сні́дати. По́тім я бу́ду працюва́ти. (Tomorrow morning I will have breakfast, and then I will work.)
-Післяза́втра ми бу́демо гуля́ти в па́рку. (The day after tomorrow we will walk in the park.)
+**Приклади:**
+Я скоро буду. (I will be there soon. / Literally: I soon will be.)
+Ми будемо читати, а потім відпочивати. (We will read, and then rest.)
+Я потім скажу. (I will tell later.)
 
-### Родовий відмінок часу
-When we want to say phrases like "next week" or "next year", we use the descriptive word **насту́пний** (next). But there is a very crucial grammatical shift happening here that you must master. 
+These markers allow you to build a sequence of events, explaining not just what will happen, but in what order.
 
-Ми не мо́жемо використо́вувати називни́й відмі́нок. Це вели́ка поми́лка. Ми пови́нні використо́вувати родови́й відмі́нок. Фо́рма сло́ва змі́нюється.
-(We cannot use the nominative case. This is a big mistake. We must use the genitive case. The form of the word changes.)
+### Правило родового відмінка: насту́пний
 
-In English, you just straightforwardly say "next week". In Ukrainian, the grammar absolutely requires the Genitive case to properly express this specific point in time. 
-- ти́ждень (week) → **насту́пного ти́жня** (next week)
-- рік (year) → **насту́пного ро́ку** (next year)
-- раз (time/occurrence) → **насту́пного ра́зу** (next time)
+When we want to talk about the "next" week, month, or year, we use the adjective **«насту́пний»**. However, there is a very important structural rule here.
 
-> [!tip] Genitive Time Expressions
-> Avoid the direct translation trap! Never say "насту́пний ти́ждень я бу́ду працюва́ти" using the basic dictionary form. Always apply the Genitive endings: "наступног**о** тижн**я**" and "наступног**о** рок**у**".
+In English, we use the basic form: "next week". In Ukrainian, when an event happens *during* a specific time period, that time phrase must change into the Genitive case (Родовий відмінок). It answers the hidden question "of what time?".
 
-Ми бу́демо чита́ти нову́ кни́гу. (Next week we will read a new book.)
-Насту́пного ро́ку я бу́ду жи́ти в Ки́єві. (Next year I will live in Kyiv.)
-По́тім ми бу́демо говори́ти. (Next time we will talk about this.)
+**Правило:** We change «наступний тиждень» to «наступного тижня». We change «наступний рік» to «наступного року».
 
-Mastering this specific use of the Genitive case will immediately make your Ukrainian sound much more authentic, educated, and completely natural to native speakers. 
+**Приклади:**
+Я буду працювати наступного тижня. (I will work next week.)
+Ми будемо там наступного року. (We will be there next year.)
+Я скажу наступного разу. (I will tell next time.)
 
-### Наміри та плани
-Іно́ді ми не ма́ємо то́чного пла́ну. Ми про́сто ма́ємо бажа́ння. Тоді́ ми використо́вуємо дієсло́во «хоті́ти». Або́ ми використо́вуємо дієсло́во «збира́тися».
-(Sometimes we do not have an exact plan. We simply have a desire. Then we use the verb "to want". Or we use the verb "to get ready".)
+> [!warning] Поширена помилка
+Do not use the direct, unchanged dictionary form (Nominative case) for these time expressions. 
+**Неправильно**: Я буду працювати наступний тиждень.
+**Правильно**: Я буду працювати наступного тижня.
+Mastering this Genitive time rule instantly makes your Ukrainian sound much more natural and precise.
 
-- **хоті́ти** (to want): Я хо́чу зна́ти пра́вду. (I want to know the truth.)
-- **збира́тися** (to intend / to get ready): Я збира́юся додо́му. (I am getting ready to go home.)
-- **планува́ти** (to plan): Ми плану́ємо по́дорож. (We are planning a trip.)
-- **сподіва́тися** (to hope): Я сподіва́юся на кра́ще. (I hope for the best.)
+### Планування майбутнього: план, планува́ти
 
-Я бу́ду працюва́ти. (Definite reality: I will work.)
-Я хо́чу працюва́ти. (Internal desire: I want to work.)
-Я збира́юся працюва́ти. (Active intention: I am preparing to work.)
+To be a good event planner in your own life, you need the vocabulary of organization. The noun **«план»** (plan) and the verb **«планува́ти»** are central to this.
 
-Ма́ти пла́ни — це важли́во. Ми всі склада́ємо пла́ни на майбу́тнє.
-(To have plans is important. We all make plans for the future.)
+We frequently use specific collocations (word pairings) when talking about organization. 
 
-Коли́ ми склада́ємо план, ми структу́руємо наш час.
-(When we make a plan, we structure our time.)
+**Приклади:**
+Я маю плани на майбутнє. (I have plans for the future.)
+Ми будемо складати план завтра. (We will make a plan tomorrow.)
+Вона любить планувати час. (She likes to plan time.)
+Вони будуть планувати подорож. (They will plan a trip.)
 
-- Я ма́ю пла́ни на за́втра. (I have plans for tomorrow.)
-- Вона́ склада́є план уро́ку. (She is putting together a lesson plan.)
-- На́ші пла́ни на майбу́тнє ду́же ціка́ві. (Our plans for the future are very interesting.)
+Using phrases like «мати плани» or «складати план» elevates your speech from basic single words to natural phrases.
 
-### Культура планування
-Ми не лю́бимо говори́ти зана́дто бага́то. Ми ві́римо в обере́жність. У нас є відо́ме прислі́в'я. Воно́ поясню́є наш хара́ктер.
-(We do not like to talk too much. We believe in caution. We have a famous proverb. It explains our character.)
+### Вираження намірів: хоті́ти та збира́тися
 
-> [!culture] The Modesty of Planning
-> Ukrainians frequently use the wise proverb: **«Не кажи́ 'гоп', по́ки не переско́чиш»** (Don't say 'hop' until you jump over).
-> This reflects a cultural superstition against "jinxing" one's intentions. It strongly encourages modesty and a practical focus on actually doing the hard work, rather than prematurely boasting about future results.
+Sometimes you do not have a firm, guaranteed plan. Sometimes you only have an intention, a desire, or a goal. We use different verbs for these situations.
 
-Люди́на ма́є пла́ни. Вона́ мовчи́ть. Споча́тку тре́ба зроби́ти спра́ву. По́тім мо́жна раді́ти. Це ду́же украї́нський підхі́д до життя́.
-(When a person has big plans, they stay silent. First you need to do the deed. Then you can rejoice. This is a very Ukrainian approach to life.)
+**«Хоті́ти»** means "to want". It expresses desire.
+**«Збира́тися»** means "to be going to" or "to intend to". It expresses preparation and intention.
+
+These are incredibly useful because they describe your mental state before the action happens.
+
+**Приклади:**
+Я хочу знати ваші плани. (I want to know your plans.)
+Я дуже хочу відпочивати. (I really want to rest.)
+Я збираюся додому. (I am going home. / I intend to go home.)
+Ми збираємося в дорогу. (We are getting ready for the road.)
+Усе буде добре. (I hope that everything will be fine.)
+Вона любить мріяти про відпустку. (She likes to dream about a vacation.)
+
+These verbs are distinct from «буду». "I want" or "I intend" is not as absolute as "I will".
+
+> > [!culture] Обережність у плануванні
+> «Не кажи гоп раніше часу.»
+> Ukrainians are culturally quite cautious about declaring plans as absolute certainties before they are completed. It is a mix of pragmatism and a slight cultural superstition about jinxing a good outcome. Because of this, you will often hear people prefer softer expressions of intent. Instead of saying "I will definitely do this," they might say "I plan to...". This shows a respectful acknowledgment that the future is always somewhat unpredictable.
+
+### Розмова про майбутнє
+
+— Привіт! Що ти будеш робити завтра?
+— Привіт. Завтра я буду працювати. А ти?
+— Я буду гуляти в парку. Завтра буде дуже гарна погода.
+— Це чудово. Ти будеш там сам?
+— Ні, ми будемо гуляти разом.
+— Добре. Що ви будете робити ввечері?
+— Ввечері ми будемо читати нову книгу і пити чай.
+— Який чай ви будете пити?
+— Ми будемо пити зелений чай.
+— Це дуже смачно.
+
+— Доброго ранку! Який план на сьогодні?
+— Сьогодні ми будемо вчити нові слова.
+— Це цікаво. Скільки слів ми будемо вчити?
+— Ми будемо вчити двадцять нових слів.
+— Добре. А потім?
+— Потім ми будемо слухати новий діалог.
+— Хто буде читати діалог?
+— Вчитель буде читати діалог дуже повільно.
+— Чудово. Ми будемо слухати уважно.
+— Так, ви будете слухати і запам'ятовувати.
+
+— Що ти будеш робити на вихідних?
+— Я буду відпочивати.
+— Де ти будеш відпочивати?
+— Я буду відпочивати вдома.
+— Ти будеш читати чи дивитися телевізор?
+— Я буду читати цікавий роман.
+— Хто автор?
+— Це новий український автор.
+— Ти будеш читати швидко чи повільно?
+— Я буду читати повільно.
+
+
+
+Now that we understand the mechanics and the cultural nuance, let us put this knowledge into practical scenarios. Language is a tool for connection, and organizing a shared schedule is one of its primary functions.
+
 
 ## Практика та підсумок
 
-### Планування вихідних
-Лю́ди ча́сто говоря́ть про вихідні́. Це улю́блена те́ма. Ми пита́ємо друзі́в про ї́хні пла́ни. Ми ді́лимося свої́ми іде́ями.
-(People often talk about the weekend. This is a favorite topic. We ask friends about their plans. We share our ideas.)
+### Сценарій: Плани на вихідні
 
-— Приві́т! Ти ма́єш пла́ни на за́втра?
-— Приві́т. Так, я бу́ду спа́ти до́вго. А ти?
-— Я збира́юся чита́ти кни́гу. А по́тім я хо́чу гуля́ти.
-— Чудо́во. Ми бу́демо відпочива́ти.
-(— Hi! Do you have plans for tomorrow?
-— Hi. Yes, tomorrow morning I will sleep long. And you?
-— I am intending to read a book. And then I want to walk.
-— Wonderful. We will rest.)
+Imagine you are discussing the upcoming weekend with a friend. Notice how the dialogue moves between questions with «будеш», statements with «буду», and intentions with «хочу».
 
-Цей діало́г ду́же прости́й. Але́ він звучи́ть абсолю́тно приро́дно.
-(This dialogue is very simple. But it sounds absolutely natural.)
+**Діалог 1:**
+— Привіт! Які плани на вихідні? (Hi! What are the plans for the weekend?)
+— Привіт. Я буду відпочивати. А ти? (Hi. I will rest. And you?)
+— Я хочу працювати вранці, а потім буду гуляти. (I want to work in the morning, and then I will walk.)
+— Чудово. Ми будемо гуляти разом? (Great. Will we walk together?)
+— Так, складемо план пізніше. (Yes, we will make a plan later.)
 
-You can easily replace the specific verbs in this conversational dialogue with any other imperfective verbs you already know. The underlying grammatical structure remains completely solid, predictable, and reliable. 
+This is a highly realistic exchange. It is simple, clear, and uses the compound future tense to coordinate actions.
 
-Asking questions in the future tense is exactly the same as making a standard statement. You simply change your voice intonation.
+### Сценарій: Рольова гра «Організатор подій»
 
-Що ти бу́деш роби́ти за́втра? (What will you do tomorrow?)
-Де ви бу́дете жи́ти насту́пного ро́ку? (Where will you live next year?)
-Коли́ вони́ бу́дуть сні́дати? (When will they have breakfast?)
+Let us adopt the role of an Event Planner (Організатор подій). You are organizing a work week for your team. You need to use formal structures and precise time markers.
 
-Запита́ння допомага́ють підтри́мувати розмо́ву. Ви пока́зуєте інтере́с до і́ншої люди́ни. Ми буду́ємо дру́жбу че́рез ці розмо́ви.
-(Questions help maintain the conversation. You show interest in the other person. We build friendship through these conversations.)
+**Діалог 2:**
+— Доброго ранку. Який наш план? (Good morning. What is our plan?)
+— Завтра вранці ми будемо працювати. (Tomorrow morning we will work.)
+— Ви будете там? (Will you be there? - formal)
+— Так, я буду там дуже скоро. (Yes, I will be there very soon.)
+— Що ми будемо робити наступного тижня? (And what will we do next week?)
+— Наступного тижня ми будемо планувати новий проєкт. (Next week we will plan a new project.)
 
-### Рольова гра: Організатор подій
-Let us do an interactive exercise. Imagine you are a professional Event Planner (**Організа́тор поді́й**).
+By adopting this persona, you practice taking charge of the timeline. You are not just reacting; you are directing the future using «ми будемо» and «ви будете».
 
-Ви — організа́тор. Ви контролю́єте час. Ви зна́єте план. Ви зна́єте час. Ва́ші слова́ пови́нні бу́ти впе́вненими. Лю́дям потрі́бен ваш план.
-(You are the organizer. You control the time. You know what and when will happen. Your words must be confident. People need your plan.)
+### Підсумок
 
-«До́брого дня. Ось наш план. Ми бу́демо працюва́ти ду́же бага́то. За́втра ми бу́демо слу́хати презента́цію. По́тім ми бу́демо обгово́рювати іде́ї. За́втра вве́чері ви бу́дете відпочива́ти. А післяза́втра ми бу́демо писа́ти нови́й проє́кт. Сподіва́юся, це га́рний план».
-("Good afternoon. Here is our plan. Next week we will work very much. Tomorrow morning we will listen to a presentation. Then we will discuss ideas. Tomorrow evening you will rest. And the day after tomorrow we will write a new project. I hope you like this plan.")
+Let us summarize the core principles we have mastered today. You are now equipped to navigate tomorrow.
 
-> [!reflection] Stepping into the Role
-> When you speak confidently as the Event Planner, do you feel the psychological difference between saying «хо́чу» and «бу́ду»? The auxiliary verb «бу́ду» instantly removes any doubt or hesitation. It actively asserts authority, confirms reality, and establishes a firm, undeniable schedule.
+*   **Структура**: The compound future tense requires two parts: the conjugated verb **«бути»** + the **infinitive** of the main verb (e.g., Я буду працювати).
+*   **Дієвідміна**: The forms are: буду, будеш, буде, будемо, будете, будуть. The main action verb never changes.
+*   **Правило виду**: You must ONLY use imperfective verbs with «бути».
+*   **Родовий відмінок часу**: When saying "next week" or "next year", you must use the genitive case: **наступного тижня**, **наступного року**.
+*   **Наміри**: Use **«хотіти»** and **«збиратися»** when your plans are not yet finalized.
 
-Використо́вуйте цей текст як шабло́н. Спробу́йте скла́сти свій план.
-(Use this text as a template. Try to make your own detailed plan for next week.)
+### Нові тексти (Майбутній час)
 
----
+Я буду працювати в офісі завтра вранці. Ми будемо читати новий цікавий текст про українську культуру. Вони будуть писати довгий лист додому. Ти будеш відпочивати на морі наступного тижня? Вона буде слухати сучасну українську музику весь вечір. Ми будемо пити смачну каву в центрі міста. Студенти будуть вивчати нові слова щодня. 
 
-# Підсумок
+Завтра буде дуже теплий і сонячний день. Ми будемо гуляти в парку разом. Мої друзі будуть грати у футбол на стадіоні. Я буду готувати смачну вечерю для родини. Ви будете дивитися новий фільм у кінотеатрі? Діти будуть спати після обіду. Вчитель буде пояснювати нове правило на уроці. 
 
-Let us thoroughly review the absolutely essential concepts we have successfully covered in this comprehensive module. 
+Ми будемо говорити тільки українською мовою. Це буде дуже цікава розмова про наші плани на майбутнє. Я буду планувати свою відпустку. Ми будемо купувати квитки на поїзд. Вони будуть подорожувати по всій Україні. Ти будеш фотографувати красиві місця? Так, я буду робити багато фотографій. 
 
-Ми ви́вчили ду́же важли́ву те́му. Тепе́р ви мо́жете говори́ти про майбу́тнє. Це вели́кий крок упере́д. Ви зна́єте фо́рмулу. Ви зна́єте слова́. Ви розумі́єте культу́ру. Ва́ша мо́ва стає́ бага́тшою.
-(We have studied a very important topic. Now you can talk about the future. This is a big step forward. You know the formula, you know the words, and you understand the culture. Your language is becoming richer.)
+Ми будемо зустрічати гостей завтра ввечері. Я буду прибирати в кімнаті. Вона буде пекти смачний торт. Ми будемо святкувати день народження разом. Усі будуть танцювати і співати пісні. Це буде чудове свято для всіх нас. Я буду пам'ятати цей день завжди. 
+
+Наступного року я буду жити в новому місті. Я буду працювати на новій роботі. Ми будемо шукати нову квартиру біля парку. Ти будеш робити ремонт? Вони будуть купувати нові меблі для кімнати. Ми будемо запрошувати друзів у гості. Це буде новий етап у нашому житті. 
+
+Взимку ми будемо кататися на лижах у горах. Влітку ми будемо плавати в теплому морі. Восени ми будемо збирати гриби в лісі. Навесні ми будемо садити квіти біля дому. Кожен сезон буде приносити нові радісні моменти. Ми будемо насолоджуватися кожним днем нашого життя.
+
+Сьогодні ввечері я буду читати цікаву книгу про історію. Завтра вранці я буду пити гарячий чай з лимоном. Ми будемо обговорювати наші нові ідеї на зустрічі. Вони будуть створювати новий проект для компанії. Ви будете презентувати результати вашої роботи? Ми будемо підтримувати вас у всіх ваших починаннях. 
+
+Я буду вчитися грати на гітарі наступного місяця. Ми будемо ходити на концерти живої музики. Вона буде малювати красиві картини олійними фарбами. Вони будуть відвідувати художні виставки в музеї. Ми будемо розвивати наші творчі таланти щодня. Студенти будуть знаходити натхнення у світі. 
+
+Ми будемо робити зарядку щоранку. Я буду бігати на стадіоні біля дому. Ти будеш ходити в басейн двічі на тиждень? Вони будуть грати в теніс на нових кортах. Ми будемо вести здоровий спосіб життя завжди. Люди будуть піклуватися про своє здоров'я. Це буде корисно для нас усіх. 
+
+Я буду допомагати своїм батькам на вихідних. Ми будемо працювати в саду біля будинку. Вона буде готувати смачний обід для всієї родини. Вони будуть розповідати цікаві історії з життя. Сім'я буде проводити час разом у родинному колі. Це будуть дуже теплі і радісні моменти для всіх нас.
+
+
 
 **Перевірте себе:**
-1. What are the exactly two necessary components of the compound future tense formula?
-2. How do you correctly conjugate the auxiliary verb **бу́ти** for the pronoun «Ми»?
-3. Why is it considered grammatically incorrect and illogical to say "Я бу́ду прочита́ти"?
-4. Translate this phrase into Ukrainian, making sure to avoid the common Nominative case error: "next week".
-5. What is the fundamental semantic difference between saying "Я хо́чу працюва́ти" and "Я бу́ду працюва́ти"?
-6. How does the culturally important phrase "За́втра бу́де нови́й день" reflect underlying Ukrainian cultural attitudes towards resilience?
+1. How do you say "I will read" in Ukrainian?
+2. Which form of «бути» do you use for "we will"?
+3. Is it correct to say "Я буду прочитати"? Why or why not?
+4. How do you correctly translate "next week" indicating when an action will happen?
+5. What is the difference between «Я буду працювати» and «Я хочу працювати»?
+6. Which Ukrainian proverb teaches us to be cautious about declaring our plans too early?
+
+Mastering these questions ensures you are ready to confidently step into the future tense. Завтра буде новий день, і ви будете готові! (Tomorrow will be a new day, and you will be ready!)
 
 ---

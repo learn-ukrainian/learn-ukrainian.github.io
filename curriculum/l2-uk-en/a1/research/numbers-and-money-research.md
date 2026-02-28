@@ -1,37 +1,34 @@
-# Дослідження: Numbers & Money (A1 Core)
+# Дослідження: Numbers & Money
 
 ## State Standard Reference
-§3.8 (Тематичний зміст): "Купівля: основні продукти харчування; одяг і взуття; засоби гігієни... гроші."
-Alignment: This module directly addresses the required theme of "Money" and enables basic transactions, a core A1 communicative competence. While morphological declension of cardinals is formally introduced in A2 (§4.2.1.3), A1 learners require lexical mastery of numbers 0-100 and basic agreement patterns (1-2-5) for practical shopping scenarios.
+§4.2.1.3: "Числівник. Уживання родових форм порядкових числівників..." та §3 (Thematic Catalogue): "купівля" (shopping).
+Alignment: The State Standard outlines numeral usage and case agreement. While explicit references in §4.2.1.3 emphasize ordinals, the mastery of cardinal numerals (0-100) and their syntactic agreement (nominative vs. genitive forms for counting) is the mandatory foundation for A1 thematic competency in shopping and everyday transactions.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| один (one) | High (Top 100) | один раз, одна гривня |
-| два (two) | High (Top 100) | два дні, дві гривні (feminine!) |
-| п'ять (five) | High | п'ять хвилин, п'ять гривень |
-| гривня (hryvnia) | High (Contextual) | скільки гривень? одна гривня |
-| скільки (how much) | High | скільки коштує? скільки з мене? |
-| коштувати (to cost) | Medium | скільки це коштує? |
-| ціна (price) | Medium | яка ціна? висока ціна |
+| один | High (Top 100) | один раз, одна гривня |
+| два | High (Top 100) | два дні, дві гривні |
+| три | High | три години, три гривні |
+| п'ять | High | п'ять хвилин, п'ять гривень |
+| десять | High | десять разів, десять гривень |
+| гривня | High (Contextual) | одна гривня, п'ять гривень |
+| скільки | High (Top 200) | скільки коштує, скільки з мене |
+| коштувати | Medium (Essential A1) | скільки це коштує |
 
 ## Cultural Hooks
-1. **The Hryvnia's Origin**: The word "hryvnia" comes from "hryva" (mane), referring to a valuable neck ring or torque made of silver or gold used in Kyivan Rus (11th century).
-2. **The Kopeck Proverb**: "Копійка береже гривню" (A kopeck saves a hryvnia) — reflecting traditional frugality and the value of small savings.
-3. **Symbol**: The symbol ₴ (derived from cursive 'г' with double strokes) represents stability, similar to € or ¥.
+1. **Origin of the Hryvnia**: The word "гривня" dates back to Kyivan Rus (11th century), where a *hryvna* was a valuable neck ornament or a specific weight of silver/gold, demonstrating the deep, independent historical roots of Ukraine's currency.
+2. **The ₴ Symbol**: Introduced in 2004, the symbol consists of the cursive Ukrainian letter *г* (h) with two horizontal strokes, which symbolize stability (similar to the Euro € or Yen ¥).
 
 ## Common Learner Errors
-1. **Gender of "Two"**: Using "два гривні" instead of "дві гривні". (Correction: "гривня" is feminine, so use "дві").
-2. **The 1-2-5 Rule**: Confusion over endings. 1 (Nom Sg), 2-4 (Nom Pl), 5+ (Gen Pl). Learners often say "п'ять гривні" instead of "п'ять гривень".
-3. **Pronunciation of "п'ять"**: Missing the apostrophe pause [pjat'] or softening the 'p' inappropriately.
-4. **Teen Stress**: Putting stress on the root instead of 'над' in 11-19 (e.g., saying "одИннадцять" instead of "одинАдцять").
+1. **Gender disagreement with 2**: Learners often say *два гривні (using the masculine "два" instead of the feminine "дві" for "гривня"). → Correct: дві гривні.
+2. **Ignoring the apostrophe in 5**: Learners pronounce "п'ять" as a single soft syllable (pyat) instead of articulating the hard consonant, the pause, and the jotated vowel [p-jat'].
+3. **Plural forms with 5+**: Defaulting to the nominative plural instead of the genitive plural (e.g., saying *п'ять гривні instead of the correct п'ять гривень).
 
 ## Cross-References
-- Builds on: `a1-16` (The Genitive I) — specifically the concept of case endings, though here it's taught as a fixed pattern.
-- Prepares for: `a1-18` (Food and Shopping) — essential prerequisite for price discussions.
-- Prepares for: `a1-23` (What Time Is It) — numbers 1-60 are critical for telling time.
+- Builds on: a1-32 (The Genitive I) - required for understanding "5 гривень".
+- Prepares for: a1-18 (Food and Shopping), a1-23 (What Time Is It).
 
 ## Notes for Content Writing
-- **Scaffolding**: Since this is A1.2, use English for the "1-2-5 Rule" explanation to ensure clarity. The distinction between "2 гривні" and "5 гривень" is often the first encounter with Genitive Plural for beginners.
-- **Visuals**: Use a clear table for the 1-2-5 pattern (Visual Agreement Tables are crucial per plan).
-- **Reality Check**: Use realistic 2024 prices (e.g., Coffee ~50 UAH, Bread ~25 UAH) to keep dialogues authentic.
+- **Decolonized Framing**: Present the hryvnia's history strictly through the lens of Kyivan Rus and Ukrainian statehood. Avoid framing counting patterns as "like Russian but different"; instead, present the "1-2-5 rule" as the internal, logical system of Ukrainian.
+- **Scaffolding**: This is A1. Ensure the "1-2-5" rule is explained clearly in English with simple visual tables before diving into Ukrainian examples.

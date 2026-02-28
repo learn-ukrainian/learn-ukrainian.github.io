@@ -1,122 +1,75 @@
-✅ Message sent to Gemini (ID: 8659)
-✓ Message 8659 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #8659...
-📨 Message #8659
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-describing-things-adjectives-pA
-   Time: 2026-02-19T20:44:12.554791+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/describing-things-adjectives/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
 # Дослідження: Describing Things - Adjectives
 
 ## State Standard Reference
-§4.2.1.2: "форми називного відмінка однини прикметників чоловічого, жіночого, середнього роду; узгодження прикметників з іменниками в роді й числі"
-Alignment: This module directly addresses the formation of nominative singular adjectives and their agreement with nouns, which is the foundational requirement for A1 morphology.
+§4.2.1.2: "Прикметник: форми називного відмінка однини прикметників чоловічого, жіночого, середнього роду; узгодження прикметників з іменниками в роді й числі: іноземний студент, домашній одяг; зелена сумка... зелені сумки, великі вікна..."
+Alignment: This module precisely satisfies the State Standard requirement for A1 by teaching Nominative case forms (masculine, feminine, neuter, plural), distinguishing between hard and soft stem groups, and practicing agreement in gender and number.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| новий | High (Top 100 adjectives) | новий рік, новий день, нове життя |
+| новий | Top 100 (High) | новий дім, новий рік, нова робота |
 | гарний | High | гарна погода, гарний день, гарна дівчина |
-| великий | Very High | велике місто, велика родина, великий привіт |
-| малий | High | малий бізнес, мале дитя |
-| добрий | High | добрий день, добрий вечір, добра людина |
-| синій | Medium | синє небо, синє море, сині очі |
-| цікавий | High | цікава книжка, цікаве питання |
+| великий| Top 100 (High) | велике місто, великий будинок, велика родина |
+| малий | High | малий бізнес, мале вікно |
+| старий | High | старий будинок, стара будівля |
+| добрий | Top 100 (High) | добрий день, добрий вечір, добра людина |
+| поганий| High | погана погода, поганий настрій |
+| цікавий| High | цікава книга, цікава ідея, цікава людина |
+| синій | Medium-High | синя лінія, синій зошит |
 
 ## Cultural Hooks
-1. **St. Sophia's Cathedral (Софійський собор)**: Symbol of Kyivan Rus'. Perfect for "старий" (old/ancient) and "великий" (grand/big). Built in the 11th century.
-2. **Mavka (Мавка)**: From Lesya Ukrainka's "Forest Song" (and the recent movie). Ideal for "молода" (young), "гарна" (beautiful), "цікава" (interesting), "зелена" (associated with nature/forest).
-3. **Kyiv Metro**: "Синій" (blue) tokens or lines can be a practical anchor for the soft group colors.
+1. Софійський собор (St. Sophia's Cathedral) in Kyiv — an excellent anchor for "старий" (ancient) and "великий" (grand), embodying Ukrainian history independently of colonial narratives.
+2. Мавка (Mavka) from Lesya Ukrainka's "Лісова пісня" — an authentically Ukrainian folklore figure used to practice feminine descriptors ("молода", "гарна", "зелена").
 
 ## Common Learner Errors
-1. **Gender Mismatch**: Using the masculine dictionary form for all genders (e.g., *«новий машина»* instead of *«нова машина»*). Cause: L1 interference (English adjectives don't change).
-2. **Hard/Soft Stem Confusion**: Writing *«синий»* instead of *«синій»*. Cause: Phonetic confusion or Russian interference where spelling rules differ.
-3. **Plural Mismatch**: Forgetting that plural adjectives also have specific endings (-і) regardless of gender (mostly). e.g., *«гарний люди»* instead of *«гарні люди»*.
+1. Defaulting to the masculine form: Using *новий машина* instead of *нова машина*. — Why it happens: Overgeneralizing the dictionary form (which is masculine) as invariant for all nouns.
+2. Orthographic error with soft stems: Writing *синий* instead of *синій*. — Why it happens: Confusion with hard stem patterns and potential L1/L2 phonetic interference (e.g., Russian *синий*). Emphasize unique Ukrainian orthography.
+3. Plural disagreement: Using singular adjectives with plural nouns (e.g., *гарна друзі* instead of *гарні друзі*). — Why it happens: Forgetting that adjectives must agree in number as well as gender.
 
 ## Cross-References
-- **Builds on**: `a1-03` (The Gender Code - establishing noun gender), `a1-25` (Daily Routine).
-- **Prepares for**: `a1-27` (Colors and Clothing - more adjectives), `a1-28` (Adverbs - comparing *гарний* vs *гарно*).
+- Builds on: a1-07 (The Gender Code), a1-38 (My Daily Routine)
+- Prepares for: a1-12 (Colors and Clothing), a1-28 (Description - Adverbs)
 
 ## Notes for Content Writing
-- **Immersion**: This is an A1 module. Use English for all grammar explanations.
-- **Scaffolding**: Visual tables for endings are crucial. Use color coding (Blue = Masc, Red = Fem, Yellow = Neut, Green = Plural) if possible in text descriptions.
-- **Tone**: Patient, supportive. Don't rush the soft stem rules; focus on *синій* as the primary example to avoid overwhelming the learner.
+- Decolonized framing: Present the "м'яка група" (-ій) as a distinct and elegant feature of Ukrainian phonetics. Absolutely no comparisons to Russian orthography. Describe Ukrainian grammar positively.
+- Emphasize the simplicity of the plural rule: in the Nominative case, almost all adjectives end in "-і", regardless of the noun's gender.
+- Scaffolding (A1 rules): Use English explicitly to explain grammar theory (concept of agreement) before providing Ukrainian examples. Use Ukrainian for all dialogues and examples.
+- Avoid Russianisms: Use «гарний» for "beautiful/nice" in most contexts (avoid overusing "красивий"), and absolutely avoid "хороший" where "добрий" or "гарний" is more natural in Ukrainian.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Розминка: Що навколо?"
-    words: 200
+  - section: "Вступ: Світ прикметників"
+    words: 400
     points:
-      - "Observe immediate environment: name objects (стіл, вікно, ручка)."
-      - "Recall gender questions from A1-03: Він, Вона, Воно?"
-      - "Introduce the adjective questions: Який? Яка? Яке? Які? as the key to unlocking description."
-      - "Immersion Note: Use English to explain the concept of 'agreement'."
-  - section: "Тверда група прикметників"
-    words: 300
+      - "Scaffolding: Explicitly use English to explain the concept of 'adjective agreement' in gender and number before introducing Ukrainian terminology."
+      - "Warm-up activity: Formulate the fundamental questions 'Який? Яка? Яке? Які?' and use them to describe classroom objects."
+      - "Bridge: Briefly review the 'Gender Code' (masculine, feminine, neuter) from A1-07 as the mandatory foundation for adjective endings."
+      - "Cultural Hook: Introduce St. Sophia's Cathedral (Софійський собор) as the 'старий' and 'великий' heart of Kyiv to establish descriptive context."
+  - section: "Презентація: Тверда група"
+    words: 600
     points:
-      - "Define 'Hard Group': stems ending in hard consonants (most adjectives)."
-      - "Present the paradigm: -ий (M), -а (F), -е (N), -і (Pl)."
-      - "Provide concrete examples: новий дім, нова книга, нове вікно, нові друзі."
-      - "Visual aid: A clear substitution table for endings."
-      - "Practice focus: Immediate gender matching with known nouns."
-  - section: "М'яка група прикметників"
-    words: 300
+      - "Create an H3 for the Hard Stem paradigm (-ий, -а, -е, -і) using a clear visual substitution table and color-coded gender markers."
+      - "Provide 2+ examples for each gender using high-frequency vocabulary: новий дім, нова книга, нове вікно, нові друзі."
+      - "Create an H3 to contrast attributive position ('гарна погода') with predicative position ('Погода гарна'), explaining that 'є' (to be) is omitted."
+      - "Explicitly address and correct the common error of using masculine dictionary forms for all nouns (e.g., *новий машина* -> нова машина) using minimal pair drills."
+  - section: "Презентація 2: М'яка група та Специфіка"
+    words: 500
     points:
-      - "Define 'Soft Group': stems ending in soft consonants (focus on -н- in 'синій')."
-      - "Contrast endings: -ій vs -ий, -я vs -а, -є vs -е."
-      - "Key example: 'синій' (blue) across all genders (синій, синя, синє, сині)."
-      - "Mention 'давній' or 'вечірній' briefly as other examples, but keep focus on 'синій'."
-      - "Address the common error: spelling -ий after soft consonants."
-  - section: "Позиція прикметника"
-    words: 200
+      - "Create an H3 for the Soft Stem paradigm (-ій, -я, -є, -і), focusing on 'синій' as the primary example."
+      - "Use the Kyiv Metro 'синя лінія' (Blue Line) as a practical mnemonic anchor for soft stem adjectives."
+      - "Address the orthographic error of writing '-ий' instead of '-ій' after soft consonants, emphasizing unique Ukrainian spelling rules."
+      - "Create an H3 for Plural Consistency: emphasize that plural adjectives take the ending '-і' regardless of gender (гарні дні, гарні дівчата) to prevent number disagreement."
+  - section: "Практика та Культурний контекст"
+    words: 500
     points:
-      - "Standard position: Adjective BEFORE Noun (гарний день)."
-      - "Predicative position: Adjective AFTER Noun (День гарний = The day is nice)."
-      - "Explain that Ukrainian doesn't need 'to be' (є) in the present tense here."
-      - "Contrast meaning: 'New house' vs 'The house is new'."
-  - section: "Антоніми та опис об'єктів"
-    words: 300
-    points:
-      - "Introduce key pairs: великий ↔ малий, новий ↔ старий."
-      - "Cultural Hook: Describe St. Sophia's Cathedral (Софійський собор) using 'старий' and 'великий'."
-      - "Introduce pairs: добрий ↔ поганий, дорогий ↔ дешевий."
-      - "Use common collocations: добрий день, погана погода."
-  - section: "Опис простору та людей"
-    words: 300
-    points:
-      - "Describing a room: велика кімната, біле вікно, зручне ліжко."
-      - "Describing people: молода жінка, добрий чоловік, цікава людина."
-      - "Cultural Hook: Introduce 'Mavka' as 'молода', 'гарна', 'лісова' (forest - adj)."
-      - "Practice gender agreement with animate nouns."
-  - section: "Практика: Діалоги"
-    words: 200
-    points:
-      - "Dialogue 1: Buying a phone (masculine noun focus). 'Який телефон? Новий, чорний.'."
-      - "Dialogue 2: Discussing an apartment (feminine noun focus). 'Яка квартира? Велика, світла.'."
-      - "Highlight natural usage of short questions: 'Який саме?' (Which one exactly?)."
-  - section: "Практика: Мій дім"
-    words: 200
-    points:
-      - "Synthesize grammar: A coherent text describing a personal space."
-      - "Mix hard and soft adjectives."
-      - "Mix genders and numbers."
-      - "Self-reflection: Ask the learner to mentally describe 3 objects in their room."
+      - "Cultural Portrait: Describe the folklore figure Mavka (Мавка) using feminine adjectives 'молода', 'гарна', 'цікава', 'зелена'."
+      - "Roleplay dialogue: Act as a Real Estate Agent (persona) describing a 'нова квартира' or 'великий будинок', integrating vocabulary from 'Daily Routine'."
+      - "Final Synthesis: Summarize the 'Який?' question-answer pattern for all three genders and plural."
+      - "Provide a brief self-check matching activity to connect adjectives with the correct noun genders."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -127,11 +80,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5926 chars)
-✅ Message sent to Claude (ID: 8662)
-✓ Message 8662 acknowledged
-   Auto-acknowledged reply #8662 (stdout delivery — no inbox accumulation)
-✓ Message 8659 acknowledged

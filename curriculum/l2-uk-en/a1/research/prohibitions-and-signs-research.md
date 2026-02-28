@@ -1,34 +1,30 @@
 # Дослідження: Prohibitions and Signs
 
 ## State Standard Reference
-§4.2.4.2: "Наказовий спосіб. Форми 2-ї особи однини і множини наказового способу деяких дієслів: читати (читай, читайте)..."
-§4.3.1: "спонукальне речення для вираження прохання"
-Alignment: The module teaches how prohibitions are formed on public signs (using the impersonal infinitive) versus direct personal commands (imperative), directly addressing the communicative intention of understanding rules and navigating the city.
+§3.3: "Місто: організація міського простору (вулиця, парк, площа, проспект)"
+§3.4, §3.5: "Побут і Діяльність: години і хвилини – телеграфний стиль; робочий день; вихідний день; обідня перерва"
+Alignment: This module fulfills the State Standard's thematic requirement for urban navigation (Місто) and daily schedules (Діяльність), bridging them with survival vocabulary for public signs.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| не курити | Extremely High (Public Spaces) | Курити заборонено! |
-| увага | Extremely High (Warnings) | Увага! Небезпека! |
-| обережно | High (Everyday hazards) | Обережно, мокра підлога! |
-| вхід / вихід | Ubiquitous (Navigation) | Вхід заборонено, Запасний вихід |
-| зачинено / відчинено | Ubiquitous (Retail) | Магазин зачинено, Кафе відчинено |
+| вхід / вихід | Very High (Public spaces) | запасний вихід, вхід заборонено |
+| відчинено / зачинено | High (Commerce) | магазин зачинено, двері відчинено |
+| обережно | High (Safety) | обережно, мокра підлога |
+| увага | High (Notices) | увага, акція |
 
 ## Cultural Hooks
-1. **Metro Signage**: The Kyiv Metro has iconic signage. A classic example is "Не притулятися" (Do not lean) written on metro train doors — a perfect everyday example of the infinitive prohibition.
-2. **Linguistic Precision**: Ukrainian distinguishes between opening/closing doors or businesses ("відчинено/зачинено") and opening/closing books, accounts, or discoveries ("відкрито/закрито"). Russian conflates these, so teaching the precise Ukrainian terms asserts the language's independent structure and richness.
+1. The iconic Kyiv Metro sign "Не притулятися" (Do not lean) is a perfect real-world example of the infinitive prohibition, familiar to anyone who has visited Ukraine.
+2. The strict distinction between "відчинено" (for doors/shops) and "відкрито" (for discoveries/events) highlights the precision of the Ukrainian language compared to Russian, which blurs them.
 
 ## Common Learner Errors
-1. **Translating "Don't smoke!" directly to imperative on signs**: Learners might write "Не кури!" on a public sign, failing to realize that Ukrainian public signs require the impersonal infinitive "Не курити".
-2. **Confusing "відчинено" and "відкрито"**: Due to Russian influence or dictionary simplification, learners often use "відкрито" for a shop door. The correct term for physical doors/shops is "відчинено".
-3. **Misreading schedules**: Assuming "з... до..." (from... to...) operates without case changes, when in fact it requires the genitive case (taught here as a fixed chunk for A1).
+1. Using imperative instead of infinitive for signs: *Не входьте!* instead of *Не входити!* — The imperative sounds like a personal command, while the infinitive is the standard for impersonal public rules.
+2. Using Russian-influenced vocabulary: *відкрито/закрито* for shops instead of the correct Ukrainian *відчинено/зачинено*.
 
 ## Cross-References
 - Builds on: a1-54 (Checkpoint Communication)
 - Prepares for: a1-56 (Buying Tickets)
 
 ## Notes for Content Writing
-- Provide explicit English scaffolding for the grammatical difference between the impersonal infinitive and the direct imperative.
-- Ensure the decolonized framing is clear: Ukrainian's distinct vocabulary for opening/closing is a feature of its precision, contrasting with imperial linguistic flattening.
-- Use simple, direct examples (max 8-10 words per sentence) as this is an A1 module.
-- Keep the tone encouraging: navigating a new city's signs is a major milestone in "survival" language learning.
+- English scaffolding is required for explaining the grammatical difference between impersonal infinitive signs and personal imperative commands.
+- Frame the distinction between *відчинено* and *відкрито* positively, showcasing Ukrainian's rich vocabulary for opening/closing different types of objects, rather than just "unlike Russian."

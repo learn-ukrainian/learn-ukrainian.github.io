@@ -2,15 +2,15 @@
   "module": "reflexive-verbs",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:30:11.689886Z",
+  "last_audit": "2026-02-28T18:32:47.729978Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:03.187218Z",
-    "meta": "2026-02-19T17:50:24.955428Z",
-    "activities": "2026-02-20T22:18:41.347960Z",
-    "vocabulary": "2026-02-26T10:56:53.939381Z",
+    "md": "2026-02-28T18:30:54.446370Z",
+    "meta": "2026-02-28T18:21:58.471503Z",
+    "activities": "2026-02-28T18:28:57.698112Z",
+    "vocabulary": "2026-02-28T18:29:33.389665Z",
     "plan": "2026-02-28T03:02:37.309256Z",
-    "research": "2026-02-19T17:50:24.947357Z"
+    "research": "2026-02-28T18:21:58.459440Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2764/2000 (raw: 3420) | immersion: 22.5% LOW (target 25-40% (M17))"
+      "status": "pass",
+      "violations": 0,
+      "message": "3198/2000 (raw: 3463)"
     },
     "activities": {
       "status": "deferred",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 1,
+    "pass_count": 3,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

@@ -1,7 +1,7 @@
 # Audit Report: M26 — the-accusative-ii-people.md
 **Level:** A1 | **Module:** M26 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-28 03:33:35
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-28 20:42:15
 
 ## Configuration
 **Type:** A1-grammar
@@ -16,46 +16,29 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## Activity Breakdown
-| # | Type | Title | Items | Min | Status |
-|---|------|-------|-------|-----|--------|
-| 1 | group-sort | Живе чи неживе? | 24 | 12 | ✅ |
-| 2 | match-up | Чоловічий рід: Знайдіть пару | 10 | 8 | ✅ |
-| 3 | quiz | Перевірка правил | 12 | 8 | ✅ |
-| 4 | fill-in | Кого я бачу? (Чоловічий рід) | 12 | 8 | ✅ |
-| 5 | fill-in | Кого я люблю? (Жіночий рід) | 12 | 8 | ✅ |
-| 6 | unjumble | Складіть речення | 12 | 6 | ✅ |
-| 7 | match-up | Складні форми: Знайдіть пару | 10 | 8 | ✅ |
-| 8 | quiz | Ситуації: Кого чи Що? | 12 | 8 | ✅ |
-| 9 | unjumble | Запитайте про людей | 12 | 6 | ✅ |
-| 10 | fill-in | Змішана практика: Імена | 12 | 8 | ✅ |
-
-**Summary:**
-- Total activities: 10 (target: 8-12) ✅
-- Unique types: 5 (minimum: 4) ✅
-- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
-- Required types used: 2/2 (fill-in, match-up) ✅
-- Low density activities: 0
+## PEDAGOGICAL VIOLATIONS
+- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'that is...'.
+  - FIX: Vary sentence structure.
 
 ## Recommendation
-**📝 UPDATE** (severity 10/100)
+**📝 UPDATE** (severity 5/100)
 
-- Immersion 8% off target (minor)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 2341/2000 (raw: 2982)
-- **Activities:** ✅ 10/8
-- **Density:** ✅ All > 12
-- **Unique_types:** ✅ 5/4 types
-- **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/3
+- **Words:** ✅ 5186/2000 (raw: 5536)
+- **Activities:** ⏳ Deferred (content-only audit)
+- **Density:** ⏳ Deferred (content-only audit)
+- **Unique_types:** ⏳ Deferred (content-only audit)
+- **Priority:** ⏳ Deferred (content-only audit)
+- **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⚠️ 0 < 1 (soft target)
+- **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 27.3% LOW (target 35-55% (M26))
+- **Content_heavy:** ⏳ Deferred (content-only audit)
+- **Immersion:** 🇺🇦 45.1% (target 35-55% (M26))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -63,10 +46,11 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 60 | Included in Core |
-| **Розминка: Живе чи неживе?** | ✅ | 354 | Included in Core |
-| **Теорія: Як змінюються слова** | ✅ | 416 | Included in Core |
-| **Практика: Тренуємо форми** | ✅ | 521 | Included in Core |
-| **Використання: Моя сім'я та друзі** | ✅ | 436 | Included in Core |
-| **Культурний контекст: Друзі та імена** | ✅ | 430 | Included in Core |
-| **Підсумок** | ✅ | 124 | Included in Core |
+| **Intro/Narrative** | ✅ | 0 | Included in Core |
+| **The Accusative II: People** | ✅ | 65 | Included in Core |
+| **Розминка** | ✅ | 856 | Included in Core |
+| **Презентація** | ✅ | 1068 | Included in Core |
+| **Типові помилки та практика** | ✅ | 1858 | Included in Core |
+| **Культурний контекст** | ✅ | 1021 | Included in Core |
+| **Вироблення навичок та підсумок** | ✅ | 299 | Included in Core |
+| **Summary** | ✅ | 19 | Included in Core |

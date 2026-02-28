@@ -1,6 +1,6 @@
-module: c1-060
+module: c1-080
 level: C1
-sequence: 60
+sequence: 80
 slug: zymovi-obriady
 version: '2.0'
 title: Зимові обряди
@@ -60,7 +60,7 @@ objectives:
 grammar:
 - Ethnographic terminology
 - Narrative and ritual registers
-phase: C1.5 Folk Culture & Fine Arts
+phase: C1.6 [Folk Culture & Traditions]
 persona:
   voice: Senior Specialist
   role: Берегиня

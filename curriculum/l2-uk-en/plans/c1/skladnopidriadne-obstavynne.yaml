@@ -1,0 +1,107 @@
+module: c1-043
+level: C1
+sequence: 43
+slug: skladnopidriadne-obstavynne
+version: '2.0'
+title: 'Складнопідрядне речення: обставинне'
+subtitle: 'Complex-Subordinate: Adverbial Clauses'
+content_outline:
+- section: Система обставинних підрядних
+  words: 500
+  points:
+  - 'Огляд усіх 9 типів обставинних підрядних: місця, часу, способу дії, ступеня, порівняння,
+    причини, мети, умови, допусту'
+  - 'Принцип класифікації: кожен тип відповідає на питання обставини (де? коли? як? чому?
+    з якою метою? за якої умови?)'
+  - 'Місце обставинних підрядних у загальній системі складнопідрядних речень'
+- section: Часові та місцеві підрядні
+  words: 700
+  points:
+  - 'Часові сполучники: коли, доки, поки, відколи, як тільки, після того як, перед тим
+    як — семантичні відтінки одночасності, передування, слідування'
+  - 'Кореляція часів: узгодження видо-часових форм дієслова в головному та підрядному реченнях'
+  - 'Місцеві підрядні: де, куди, звідки — підрядне вказує на місце дії головного речення,
+    відмінність від означального з де'
+- section: Причинові та цільові підрядні
+  words: 700
+  points:
+  - 'Причинові сполучники: бо (розмовне), тому що (нейтральне), оскільки (книжне), через
+    те що (офіційне) — стилістична диференціація'
+  - 'Цільові сполучники: щоб, для того щоб, аби — вимога умовного способу (щоб + форма
+    минулого часу: Я прийшов, щоб ти побачив)'
+  - 'Розмежування причини та мети: чому (причина) vs з якою метою (ціль) — типові помилки
+    змішування'
+- section: Умовні та допустові підрядні
+  words: 800
+  points:
+  - 'Реальна умова: якщо + дійсний спосіб (Якщо він прийде, ми поговоримо) — кореляція
+    часових форм'
+  - 'Нереальна умова: якби, коли б + умовний спосіб (Якби він прийшов, ми б поговорили)
+    — значення неможливості або гіпотетичності'
+  - 'Допустові підрядні: хоча, незважаючи на те що, дарма що, хай — семантика невідповідності
+    між умовою та наслідком, стилістичний вибір сполучника'
+- section: 'Порівняльні, способу дії та ступеня'
+  words: 600
+  points:
+  - 'Порівняльні сполучники: як, ніби, мов, наче, немовби — градація від реального порівняння
+    (як) до ірреального (немовби), стилістична диференціація'
+  - 'Підрядні способу дії: так що, таким чином що — вказують на спосіб виконання дії в
+    головному реченні'
+  - 'Підрядні ступеня: настільки що, до того що — вказують на міру ознаки або дії, що
+    спричиняє наслідок'
+- section: Пунктуація та практика
+  words: 700
+  points:
+  - 'Правила пунктуації для всіх типів обставинних підрядних: кома перед сполучником, розчленування
+    складених сполучників (через те, що vs через те що)'
+  - 'Вкладення кількох підрядних: пунктуація при послідовній підрядності (речення в реченні)
+    та однорідній підрядності'
+  - 'Комплексні вправи: побудова речень з обставинними підрядними всіх типів, трансформація,
+    визначення типу підрядного'
+focus: grammar
+pedagogy: PPP
+objectives:
+- Classify all nine types of adverbial subordinate clauses
+- Apply mood and tense correlation rules in conditional and purpose clauses
+- Differentiate stylistically between near-synonymous conjunctions
+- Use correct punctuation for complex and compound conjunctions
+grammar:
+- Nine types of adverbial subordinate clauses
+- Real vs unreal conditional constructions
+- Mood requirements in purpose and conditional clauses
+- Compound conjunction punctuation rules
+phase: C1.4 [Complex Sentences]
+persona:
+  voice: Senior Specialist
+  role: Синтаксист-практик
+word_target: 4000
+vocabulary_hints:
+  required:
+  - обставинне підрядне (adverbial subordinate clause) — типи обставинних підрядних, класифікація
+    обставинних; Core syntactic concept
+  - причинове (causal) — причинове підрядне, причиновий сполучник бо, тому що; High frequency
+    clause type
+  - умовне (conditional) — умовне підрядне, реальна та нереальна умова; Essential for hypothetical
+    reasoning
+  - допустове (concessive) — допустове підрядне, хоча, незважаючи на те що; Expresses unexpected
+    outcome
+  - цільове (purpose) — цільове підрядне, щоб, для того щоб; Requires subjunctive mood
+  recommended:
+  - часове (temporal) — коли, доки, поки, відколи; marks time relations between clauses
+  - місцеве (locative) — де, куди, звідки; marks spatial relations
+  - порівняльне (comparative) — як, ніби, мов, наче; real and unreal comparison markers
+  - способу дії (manner) — так що, таким чином що; indicates how action is performed
+  - ступеня (degree) — настільки що, до того що; indicates intensity leading to consequence
+activity_hints:
+- type: fill-in
+  focus: selecting correct conjunction for clause type
+  items: 15
+- type: quiz
+  focus: adverbial clause type identification
+  items: 15
+- type: error-correction
+  focus: mood errors and punctuation in adverbial clauses
+  items: 15
+- type: match-up
+  focus: matching conjunctions to clause types and semantics
+  items: 12

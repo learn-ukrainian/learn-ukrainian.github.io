@@ -2,41 +2,43 @@ slug: the-locative-where-things-are
 title: 'The Locative: Where Things Are'
 word_target: 2000
 content_outline:
-- section: 'Вступ: Питання «Де?»'
-  words: 300
-  points:
-  - 'Explicitly state A1 immersion rule: English for grammar/concepts, Ukrainian for
-    examples.'
-  - Introduce the core question «Де?» (Where?) vs «Куди?» (Where to? - brief mention
-    of difference).
-  - 'Present high-frequency set phrases immediately as lexical items: «вдома» (at
-    home), «у школі», «на роботі».'
-  - 'Contrast English ''in/at'' with Ukrainian logic: conceptual space vs physical
-    containment.'
-- section: 'Граматика: Місцевий відмінок'
-  words: 800
-  points:
-  - 'Define the Core Binary: Container («у/в» - box) vs Surface/Event («на» - table/party).'
-  - 'Euphony Rules: Explain «у» vs «в» simply (avoid consonant pile-ups: «У Львові»,
-    «В Америці»).'
-  - 'The Standard Ending -і: Show regular nouns (стіл → на столі, кімната → у кімнаті).'
-  - 'The Hard Part (Mutations): Explain k/h/kh changes with the ''Body Parts'' rule
-    (рука/нога/вухо -> ці/зі/сі).'
-  - 'Exceptions: Brief mention of -у endings for ''park/dad'' type if relevant, but
-    focus on standard -і.'
-- section: 'Практика: Де це знаходиться?'
-  words: 500
-  points:
-  - 'Drill 1: Preposition Logic. Sort words into ''Bag'' (у) or ''Table'' (на) categories.'
-  - 'Drill 2: Mutation Mechanic. Step-by-step transformation of K/G/Kh stems.'
-  - 'Dialogue: ''Lost and Found''. A: «Де мій телефон?» B: «Він на столі».'
-  - 'Visualizing Space: Describing the location of 3 objects in a picture.'
-- section: 'Застосування: Моя кімната і місто'
+- section: Вступ
   words: 400
   points:
-  - 'Cultural Hook: The Hallway & Slippers. Describe the ''shoe zone'' using locative.'
-  - 'Mini-Production: Describe your room (Furniture location: «Стіл у кімнаті», «Книги
-    на полиці»).'
-  - 'City Context: «Я в Києві». Briefly mention housing types (Stalinka/Khrushchevka)
-    as identifiers.'
-  - 'Final Self-Check: Can you answer «Де ти зараз?» correctly?'
+  - 'Explicitly state A1 immersion rule in intro: English is used to explain grammar
+    theory, while Ukrainian is used for examples and dialogues.'
+  - 'Introduce the core question «Де?» (Where?) as the functional trigger for Locative.
+    Provide high-frequency survival phrases: «Де ти?», «Де ви?», «Де це?», «Де туалет?».'
+  - 'Cultural Hook: Explain the ''Shoes Off'' rule and «тапочки» (slippers) in English
+    to establish the domestic spatial context («вдома», «у кімнаті»).'
+- section: Презентація
+  words: 800
+  points:
+  - Each concept gets its own H3. Define Container («у/в» - box) vs Surface/Activity
+    («на» - table/work) logic in English. Explicitly explain «на роботі» to prevent
+    the common `*в роботі` calque.
+  - 'Explain Euphony rules (милозвучність) in English: how to choose between «у» and
+    «в» to avoid consonant clusters, highlighting «У Львові».'
+  - Present standard Locative endings (-і/-ї) with simple tables for masculine, feminine,
+    and neuter regular nouns.
+  - Detail velar mutations (к→ц, г→з, х→с) with their own H3 using the 'Hand and Leg'
+    mnemonic in English («рука» → «у руці», «нога» → «на нозі», «вухо» → «у вусі»).
+- section: Практика
+  words: 400
+  points:
+  - 'Include an H3 for preposition logic drill: Provide English instructions to sort
+    vocabulary into ''Container'' (у/в) and ''Surface/Event'' (на) categories.'
+  - 'Include an H3 for mutation drills: Provide transformation examples targeting
+    common errors like `*на ногі`.'
+  - 'Provide a short dialogue distinguishing Static Location (Locative: «Я у парку»)
+    from Directional Motion (Accusative: `*Я в парк`).'
+- section: Виробництво та підсумок
+  words: 400
+  points:
+  - Present vocabulary for room descriptions («в кімнаті», «на столі») alongside a
+    mini-dialogue.
+  - Discuss Ukrainian housing types (Хрущовка, Сталінка, Новобудова) as authentic
+    context for describing where one lives.
+  - Provide a 'Kyiv City Guide' mini-production task where learners read about locations
+    («на вокзалі», «у школі», «на вулиці»).
+  - Conclude with a summary table of the Locative rules and prepositions.

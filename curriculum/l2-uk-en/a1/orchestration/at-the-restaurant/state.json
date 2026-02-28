@@ -1,49 +1,25 @@
 {
   "slug": "at-the-restaurant",
   "track": "a1",
-  "module_num": 36,
+  "module_num": 53,
   "mode": "v3",
   "phases": {
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-20T15:57:03Z",
-      "words": 2112,
+      "timestamp": "2026-02-28T17:42:38Z",
+      "words": 6040,
       "attempts": 1
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-23T00:03:07Z",
+      "timestamp": "2026-02-28T17:47:09Z",
       "note": "v3-audit"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-23T00:03:07Z",
+      "timestamp": "2026-02-28T17:47:09Z",
       "note": "v3-audit"
-    },
-    "6": {
-      "status": "complete",
-      "timestamp": "2026-02-26T13:13:15Z",
-      "note": "v3-phase-D"
-    },
-    "6b": {
-      "status": "complete",
-      "timestamp": "2026-02-26T13:13:15Z",
-      "note": "v3-phase-D"
-    },
-    "7-final": {
-      "status": "complete",
-      "timestamp": "2026-02-26T13:13:15Z",
-      "note": "v3-phase-D"
-    },
-    "9-final-review": {
-      "status": "complete",
-      "timestamp": "2026-02-20T22:27:10Z",
-      "verdict": "APPROVE"
-    },
-    "8": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:08:10Z"
     }
   },
-  "last_updated": "2026-02-26T13:13:15Z"
+  "last_updated": "2026-02-28T17:47:09Z"
 }

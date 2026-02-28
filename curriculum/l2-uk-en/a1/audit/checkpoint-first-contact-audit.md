@@ -1,7 +1,7 @@
 # Audit Report: M14 — checkpoint-first-contact.md
 **Level:** A1 | **Module:** M14 | **Phase:** A1.1 | **Pedagogy:** TTT | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 03:30:00
+**Generated:** 2026-02-28 17:59:14
 
 ## Configuration
 **Type:** A1-checkpoint
@@ -17,19 +17,19 @@
 **Transliteration:** Allowed
 
 ## Gates
-- **Words:** ✅ 2427/2000 (raw: 2697)
+- **Words:** ✅ 3244/2000 (raw: 3650)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
 - **Priority:** ⏳ Deferred (content-only audit)
-- **Engagement:** ✅ 11/2
+- **Engagement:** ✅ 6/2
 - **Audio:** ℹ️ No audio
 - **Vocab:** ⏳ Deferred (content-only audit)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 20.7% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 11.3% (checkpoint - no gate)
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -38,12 +38,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Checkpoint: First Contact** | ➖ | 52 | Excluded Type |
-| **Огляд та мета** | ✅ | 200 | Included in Core |
-| **Skill 1: Читання кирилиці** | ✅ | 268 | Included in Core |
-| **Skill 2: Визначення роду** | ✅ | 365 | Included in Core |
-| **Skill 3: Дієвідміна** | ✅ | 345 | Included in Core |
-| **Skill 4: Питальні речення** | ✅ | 426 | Included in Core |
-| **Skill 5: Замовлення їжі** | ✅ | 331 | Included in Core |
-| **Інтеграційне завдання** | ✅ | 265 | Included in Core |
-| **Підсумок** | ✅ | 175 | Included in Core |
+| **Checkpoint: First Contact** | ➖ | 63 | Excluded Type |
+| **Огляд** | ✅ | 303 | Included in Core |
+| **Навичка 1: Читання та рід** | ✅ | 801 | Included in Core |
+| **Навичка 2: Дієслова та питання** | ✅ | 958 | Included in Core |
+| **Культурний контекст: Кафе** | ✅ | 453 | Included in Core |
+| **Інтеграційне завдання** | ✅ | 440 | Included in Core |
+| **Підсумок** | ✅ | 226 | Included in Core |

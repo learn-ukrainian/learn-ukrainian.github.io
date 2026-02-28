@@ -1,6 +1,6 @@
-module: c1-041
+module: c1-057
 level: C1
-sequence: 41
+sequence: 57
 slug: degrees-of-certainty
 version: '2.0'
 title: 'Ступені впевненості: Модальність та хеджування'
@@ -65,7 +65,7 @@ grammar:
 - Scale of certainty (probability)
 - Subjective vs. objective modality
 immersion: 100
-phase: C1.4 Advanced Stylistics & Rhetoric
+phase: C1.5 [Stylistics & Rhetoric]
 persona:
   voice: Senior Specialist
   role: Аналітик ризиків

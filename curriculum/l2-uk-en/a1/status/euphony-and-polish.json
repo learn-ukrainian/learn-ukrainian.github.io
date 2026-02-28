@@ -1,0 +1,59 @@
+{
+  "module": "euphony-and-polish",
+  "level": "A1",
+  "plan_version": "2.0",
+  "last_audit": "2026-02-28T21:03:39.955381Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-02-28T21:02:29.770387Z",
+    "meta": "2026-02-28T20:50:34.517289Z",
+    "activities": "2026-02-28T20:59:50.453583Z",
+    "vocabulary": "2026-02-28T20:56:53.367370Z",
+    "plan": "2026-02-28T03:00:00.013550Z",
+    "research": "2026-02-28T20:50:34.509488Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "pass",
+      "violations": 0,
+      "message": "2683/2000 (raw: 2823)"
+    },
+    "activities": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "vocabulary": {
+      "status": "deferred",
+      "violations": 0,
+      "message": "Deferred (content-only audit)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+    },
+    "review": {
+      "status": "deferred",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "content-complete",
+    "blocking_issues": [],
+    "pass_count": 2,
+    "fail_count": 0,
+    "deferred_count": 3
+  }
+}

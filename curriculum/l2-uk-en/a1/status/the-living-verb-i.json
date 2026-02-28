@@ -2,15 +2,15 @@
   "module": "the-living-verb-i",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:30:04.021815Z",
+  "last_audit": "2026-02-28T18:11:57.878624Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:03.244485Z",
-    "meta": "2026-02-19T18:57:42.827467Z",
+    "md": "2026-02-28T18:11:35.527022Z",
+    "meta": "2026-02-28T18:00:27.185983Z",
     "activities": "2026-02-21T23:42:02.648291Z",
     "vocabulary": "2026-02-26T10:56:53.940997Z",
     "plan": "2026-02-28T03:02:37.366686Z",
-    "research": "2026-02-19T18:57:42.818614Z"
+    "research": "2026-02-28T18:00:27.172491Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2732/2000 (raw: 3060) | immersion: 18.3% LOW (target 25-40% (M15))"
+      "status": "pass",
+      "violations": 0,
+      "message": "3379/2000 (raw: 3636)"
     },
     "activities": {
       "status": "deferred",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 1,
+    "pass_count": 3,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

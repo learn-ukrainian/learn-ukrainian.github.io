@@ -1,115 +1,75 @@
-✅ Message sent to Gemini (ID: 7891)
-✓ Message 7891 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #7891...
-📨 Message #7891
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-checkpoint-first-contact-pA
-   Time: 2026-02-19T15:55:08.950615+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/checkpoint-first-contact/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
-
 # Дослідження: Checkpoint: First Contact
 
 ## State Standard Reference
 §4.1.1: "Український алфавіт. Друковані та писані літери. Великі і малі літери: Київ, київський, Олена, олівець, Україна, українець."
 §4.2.1.1: "загальні родові значення іменників в однині (чоловічий рід, жіночий рід, середній рід): чоловік, жінка, місто"
-§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш...), працювати (працюю, працюєш...)"
-§4.3.1: "питальне речення зі спеціальними словами де, звідки, куди, що, хто... спонукальне речення для вираження прохання: Дайте, будь ласка, два квитки."
-Alignment: This module directly assesses the fundamental A1.1 competencies defined in the standard: alphabet recognition, basic noun gender classification, present tense verb conjugation (I/II), and simple sentence construction with interrogatives.
+§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: читати (читаю...)"
+§4.3.1: "питальне речення зі спеціальними словами де, звідки, куди, що, хто... стверджувальні й заперечні речення"
+Alignment: This module directly addresses A1 requirements by consolidating foundational phonology (Cyrillic alphabet), morphology (noun gender classification, present tense verb conjugation), and syntax (basic questions and negation) into a single checkpoint.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| читати | High (Core A1) | читати книгу, читати вголос, читати українською |
-| писати | High (Core A1) | писати листа, писати вправу, писати ручкою |
-| говорити | High (Core A1) | говорити правду, говорити повільно, говорити по-українськи |
-| кава | High (Cultural) | філіжанка кави, кава з молоком, чорна кава |
-| рахунок | Medium (Service) | просити рахунок, оплатити рахунок |
-| хто/що | High (Grammar) | Хто це? Що це? |
+| читати | High | читати меню, читати текст |
+| писати | High | писати вправу, писати ручкою |
+| говорити | High | говорити українською |
+| хто, що, де | Essential Q&A | Хто це? Що це? Де кафе? |
+| кава | Frequent | чорна кава, кава з молоком |
 
 ## Cultural Hooks
-1. **Lviv Coffee Culture**: Yuriy Kulchytsky, a Ukrainian noble from Sambir region, is credited with opening one of the first coffee houses in Vienna (The Blue Bottle) in 1683, originating the Viennese coffee culture which is deeply connected to Lviv today.
-2. **"Смачного!"**: The universal Ukrainian phrase for "Bon appetit", essential for any dining context.
+1. Lviv has a deep historical coffee culture. Yuriy Kulchytsky, a Ukrainian born near Lviv, is widely credited with opening one of Vienna's first coffeehouses ("Under the Blue Bottle" in 1683), organically connecting Ukraine to European dining traditions.
+2. "Смачного!" (Bon appetit) is an essential cultural phrase in Ukraine, demonstrating fundamental hospitality and respect at any meal.
 
 ## Common Learner Errors
-1. **И vs І**: Confusion between the deep /ɪ/ (bit) and bright /i/ (bee) sounds.
-2. **"Тато" Gender**: Learners often mistake "тато" (dad) for neuter due to the -o ending, despite natural masculine gender.
-3. **Conjugation Mix-up**: Confusing the 3rd person plural endings -уть/-ють (Type I) with -ать/-ять (Type II).
+1. Confusing letters 'И' /ɪ/ and 'І' /i/ in pronunciation. → Practice minimal pairs. Remind learners that Ukrainian 'И' is closer to the English 'i' in "bit", not the harsh Russian "Ы".
+2. Classifying 'тато' (dad) as neuter because it ends in '-о'. → Emphasize that semantic gender (meaning a person) always overrides the grammatical ending.
+3. Mixing up 3rd person plural endings: '-уть/-ють' (Class I) vs '-ать/-ять' (Class II). → Group verbs strictly by class during drills to reinforce correct patterns.
 
 ## Cross-References
-- Builds on: a1-01 (Alphabet), a1-04 (Gender), a1-06 (Verbs), a1-09 (Reflexive Verbs)
-- Prepares for: a1-11 (Accusative Case), a1-13 (Locative Case)
+- Builds on: a1-01 to a1-13 (Alphabet, genders, pronouns, basic verbs)
+- Prepares for: a1-25 (The Accusative I) and the rest of A1.2
 
 ## Notes for Content Writing
-- This is a "Checkpoint" module, meaning pedagogy is TTT (Test-Teach-Test) or Review-focused.
-- Immersion is low (A1), so instructions must be in English, but the "test" items should be in Ukrainian.
-- Use the "Friendly Hostel Host" persona to make the "exam" feel like a helpful check-in.
-
+- Persona: Friendly Hostel Host. Frame the checkpoint as a supportive check-in.
+- Bridge module: Provide clear English scaffolding (Immersion < 50%) since learners are still at A1.1.
+- Decolonized framing: Treat the Ukrainian alphabet as an independent system. Highlight uniquely Ukrainian letters ('Ґ', 'Є', 'І', 'Ї') positively.
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Огляд та мета"
-    words: 250
-    points:
-      - "Мета контрольної точки: перевірка навичок A1.1 (фонологія, морфологія, синтаксис)"
-      - "Практичний підхід: як працювати з модулем-чекапом (це не новий матеріал, а діагностика)"
-      - "Що робити, якщо відповідь неправильна: стратегії повторення попередніх модулів"
-      - "Immersion Note: A1 level requires clear English instructions for all tasks"
-  - section: "Навичка 1: Читання кирилиці"
-    words: 300
-    points:
-      - "Впізнавання всіх 33 літер: фокус на візуальних відмінностях друкованих та писаних літер (Київ, Олена)"
-      - "Читання слів без транслітерації: стратегії відмови від латиниці"
-      - "Типова помилка: розрізнення звуків И (bit) та І (bee)"
-      - "Літери-пастки: Г vs Ґ, Е vs Є"
-  - section: "Навичка 2: Визначення роду"
-    words: 300
-    points:
-      - "Алгоритм визначення роду за закінченням: -а/-я (ж), приголосний (ч), -о/-е (с)"
-      - "Важливі винятки: іменники на -о, що позначають осіб чоловічої статі (тато, батько, дядько)"
-      - "Іменники на -а, що є чоловічими (Микола, Ілля)"
-      - "Тренування швидкої класифікації: чоловік, жінка, місто"
-  - section: "Навичка 3: Дієвідміна"
-    words: 350
-    points:
-      - "Перша дієвідміна (група -ати): моделі відмінювання (читати → читаю)"
-      - "Друга дієвідміна (група -ити): моделі відмінювання (говорити → говорю)"
-      - "Алгоритм вибору правильного закінчення для 'вони' (-уть/-ють vs -ать/-ять)"
-      - "Типова помилка: змішування дієвідмін (говориють замість говорять)"
-  - section: "Навичка 4: Питальні речення"
-    words: 300
-    points:
-      - "Спеціальні питання: Хто? Що? Де? Коли? Куди?"
-      - "Інтонація в загальних питаннях (так/ні)"
-      - "Побудова заперечень з часткою 'не'"
-      - "Колокації: Хто це? Де ви? Що це?"
-  - section: "Навичка 5: Замовлення їжі"
-    words: 300
-    points:
-      - "Базові фрази для кафе: 'Можна мені...?', 'Я хочу...'"
-      - "Маркери ввічливості: 'будь ласка', 'дякую'"
-      - "Культурний контекст: Львівська кавова культура та Юрій Кульчицький (віденська кава)"
-      - "Обов'язкова фраза: 'Смачного!'"
-      - "Читання простого меню та прохання рахунку"
-  - section: "Інтеграційне завдання"
+  - section: "Огляд"
     words: 200
     points:
-      - "Інтегрований діалог у кафе: поєднання читання, роду, дієслів та питань"
-      - "Культурна замітка: 'піти на каву' як соціальний ритуал спілкування"
-      - "Чек-ліст самооцінки: чи готові ви до рівня A1.2?"
+      - "Explicit English scaffolding paragraph explaining that this is a Checkpoint module for A1.1 skills"
+      - "Welcoming message from the 'Friendly Hostel Host' persona, outlining the Test-Teach-Test approach"
+      - "Brief summary of the skills to be tested: Cyrillic reading, gender, verbs, questions"
+  - section: "Навичка 1: Читання та рід"
+    words: 500
+    points:
+      - "H3 for Cyrillic reading check, focusing on reading words without transliteration. Explicitly address 'И' vs 'І' using English pronunciation equivalents (bit vs bee)"
+      - "H3 for Noun Gender. Provide a clear table of the 3 genders (-а/-я, consonant, -о/-е)"
+      - "Explicit rule and examples for exceptions like 'тато' (masculine despite -o ending), framing it positively"
+      - "Short practice sentences identifying the gender of items found in a hostel room"
+  - section: "Навичка 2: Дієслова та питання"
+    words: 600
+    points:
+      - "H3 for Present Tense Conjugation. Contrast Class I (читати, писати) and Class II (говорити) with clear conjugation tables"
+      - "Specific focus on the 'вони' forms (-уть/-ють vs -ать/-ять) to prevent mixing errors"
+      - "H3 for Question Formation. List the core question words (Хто, Що, Де, Куди) with example Q&A pairs"
+      - "Explain basic negation with 'не' placed before the verb"
+  - section: "Культурний контекст: Кафе"
+    words: 400
+    points:
+      - "H3 detailing Lviv's coffee culture, introducing Yuriy Kulchytsky and the Vienna connection, emphasizing Ukraine's European heritage"
+      - "H3 on cafe etiquette: introduce the mandatory phrase 'Смачного!' and polite requests like 'Дайте, будь ласка' and 'Можна рахунок?'"
+      - "Vocabulary mini-table for cafe essentials: кава, чорна кава, рахунок"
+  - section: "Інтеграційне завдання"
+    words: 300
+    points:
+      - "H3 presenting a comprehensive role-play dialogue 'У кафе' that incorporates reading a menu, determining noun gender for orders, and conjugating verbs"
+      - "Provide a self-assessment checklist for the learner (Can I read the menu? Can I ask basic questions?)"
+      - "Provide clear transition guidance acknowledging their readiness for A1.2"
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -117,12 +77,6 @@ content_outline:
 **Step**: Full Phase A
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: N/A
+**Self-Correction**: Dropped English parentheses from plan's outline headings to ensure clean Ukrainian H2 headings.
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5381 chars)
-✅ Message sent to Claude (ID: 7902)
-✓ Message 7891 acknowledged

@@ -2,36 +2,45 @@ slug: numbers-and-money
 title: Numbers & Money
 word_target: 2000
 content_outline:
-- section: 'Розминка: Числа в житті'
-  words: 250
+- section: Вступ
+  words: 300
   points:
-  - 'Engage: Identify numbers in daily life (prices, bus numbers, addresses)'
-  - 'Scaffolding Note: Grammar explanations in English (A1 standard)'
-  - 'Goal: Counting 0-100 and handling money transactions'
-  - 'Utility: Why numbers are the key to independence in a new country'
-- section: 'Теорія: Числа та гроші'
-  words: 900
+  - 'English Scaffolding: Briefly introduce the goal of counting to 100 and handling
+    money, using English to ensure clarity (A1 immersion target < 50%).'
+  - 'Relevance: Explain how numbers unlock daily independence (prices, bus routes,
+    addresses).'
+  - 'Motivational Hook: A short, simple Ukrainian dialogue asking for a price to activate
+    prior knowledge.'
+- section: Презентація
+  words: 800
   points:
-  - 'Numbers 0-10: Phonetics focus on ''п''ять'' [pjat''] and ''сім'' (soft s)'
-  - 'Numbers 11-19: The ''на-дцять'' pattern and stress shift (одинАдцять)'
-  - 'Tens 20-100: Construction logic and the spelling of 50-80 (no soft sign)'
-  - 'Grammar: The ''1-2-5 Rule'' visual table (Nominative Sg / Nominative Pl / Genitive
-    Pl)'
-  - 'Currency: Гривня and Копійка — applying the 1-2-5 rule (1 гривня, 2 гривні, 5
-    гривень)'
-  - 'Gender Alert: ''Два'' vs ''Дві'' — crucial for currency (дві гривні)'
-- section: 'Практика: У магазині'
-  words: 500
+  - 'H3: Numbers 0-10. Focus on phonetics, especially the apostrophe pause in «п''ять»
+    [pjat''] and the soft «с» in «сім».'
+  - 'H3: Numbers 11-19. Explain the «-надцять» suffix and explicitly highlight the
+    stress shift (e.g., одинАдцять).'
+  - 'H3: Tens 20-100. Show the construction logic. Include a warning about the absence
+    of the soft sign in 50-80 (п''ятдесят, шістдесят).'
+  - 'H3: The 1-2-5 Rule. Visual table mapping numbers to cases: 1 (Nom Sg), 2-4 (Nom
+    Pl), 5+ (Gen Pl).'
+  - 'H3: Currency & Gender. Apply the rule to «гривня». Explicitly contrast «два»
+    (masculine/neuter) vs. «дві» (feminine), emphasizing «дві гривні».'
+- section: Практика
+  words: 600
   points:
-  - 'Key Phrase: ''Скільки коштує?'' (How much does it cost?)'
-  - 'Key Phrase: ''Скільки з мене?'' (How much do I owe?)'
-  - 'Math basics: Плюс (+), мінус (-), дорівнює (=) for simple totals'
-  - 'Dialogue: Buying coffee (using realistic prices)'
-  - 'Roleplay: The Bazaar Transaction (negotiating and paying)'
-- section: 'Культурний контекст: Історія гривні'
-  words: 350
+  - 'H3: Useful Phrases. Introduce and break down «Скільки коштує?» and «Скільки з
+    мене?».'
+  - 'H3: Simple Math. Introduce плюс, мінус, дорівнює for basic arithmetic practice
+    with prices.'
+  - 'H3: At the Bazaar. A realistic roleplay dialogue buying coffee and snacks, incorporating
+    «Це дуже дорого!» and «У вас є здача?».'
+  - 'Guided drill examples: Step-by-step transformation of phrases (e.g., 3 гривні
+    -> 10 гривень).'
+- section: Культурний контекст
+  words: 300
   points:
-  - 'Origin: The ''hryvna'' neck ring of Kyivan Rus'
-  - 'Symbolism: The ₴ sign and its stability'
-  - 'Proverb: ''Копійка береже гривню'' (Value of small savings)'
-  - 'Modern Usage: Cash vs Card culture in Ukraine'
+  - 'H3: The Ancient Hryvnia. Discuss the 11th-century origins of the word from Kyivan
+    Rus neck ornaments.'
+  - 'H3: The Symbol of Stability. Explain the ₴ symbol''s design (cursive г + two
+    lines).'
+  - 'H3: Folk Wisdom. Introduce the proverb «Копійка гривню береже» with its English
+    equivalent and meaning.'

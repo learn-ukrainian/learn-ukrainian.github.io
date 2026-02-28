@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "velychko-ruin-baroque-2",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T20:56:17Z",
+      "task_id": "v3-velychko-ruin-baroque-2-pA",
+      "mode": "meta-only"
+    }
+  }
+}

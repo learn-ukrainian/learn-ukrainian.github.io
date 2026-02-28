@@ -5,22 +5,22 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T12:28:31Z",
+      "ts": "2026-02-28T21:28:57Z",
       "task_id": "v3-direction-and-origin-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-28T12:32:33Z"
+      "ts": "2026-02-28T21:34:32Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-28T12:34:57Z",
-      "task_id": "v3-direction-and-origin-pC"
+      "ts": "2026-02-28T21:34:32Z",
+      "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-28T12:42:30Z",
+      "ts": "2026-02-28T21:37:07Z",
       "attempts": 2
     }
   }

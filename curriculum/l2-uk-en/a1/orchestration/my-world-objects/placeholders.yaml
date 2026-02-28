@@ -2,7 +2,7 @@ TRACK: a1
 LEVEL: A1
 SLUG: my-world-objects
 TOPIC_TITLE: 'My World: Objects'
-MODULE_NUM: '5'
+MODULE_NUM: '10'
 PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/my-world-objects.yaml
 META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/my-world-objects.yaml
 CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/my-world-objects.md
@@ -17,10 +17,10 @@ SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
 PERSONA_ROLE: Interior Designer
-IMMERSION_RULE: 'TARGET: 10-25% Ukrainian, 75-90% English. ALL explanatory prose in
-  English. Grammar explained in English. Ukrainian in examples and short phrases only
-  — always with English translations. Callout text in English. Ukrainian sentences
-  max 10 words.'
+IMMERSION_RULE: 'TARGET: 15-35% Ukrainian, 65-85% English. Explanatory prose primarily
+  in English. Grammar concepts explained in English with Ukrainian terminology introduced
+  (bolded, with translation on first use). Examples increasingly in Ukrainian with
+  translations. Callout text in English. Ukrainian sentences max 10 words.'
 LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Max 10 words per Ukrainian sentence (STRICT — count every word)

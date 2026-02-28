@@ -1,33 +1,35 @@
 # Дослідження: Adjective Case Forms
 
 ## State Standard Reference
-§4.2.1.2: "Прикметник: форми знахідного та місцевого відмінків прикметників чоловічого роду із закінченням -ий... жіночого роду із закінченням -а... середнього роду із закінченням -е..."
-§4.2.3.2: "Знахідний відмінок: Без прийменника (об’єкт дії)... Із прийменниками: в, у, на... про..."
+§4.2.1.2: "форми знахідного та місцевого відмінків прикметників чоловічого, жіночого, середнього роду; форми знахідного та місцевого відмінків прикметників чоловічого роду із закінченням -ий... жіночого роду із закінченням -а... середнього роду із закінченням -е..."
+§4.2.3.2: "Знахідний відмінок: ... Без прийменника (об’єкт дії) ... Із прийменниками: в, у, на (указівка на кінцевий пункт руху або переміщення)..."
 §4.2.3.3: "Місцевий відмінок: у, в, на (позначення місця)..."
-Alignment: This module directly addresses the requirement to form and use adjectives in the Accusative (for direct objects and direction) and Locative (for location) cases, ensuring gender agreement with nouns as specified in the standard.
+Alignment: This module exactly covers the required adjective declension forms and their usage in Accusative (direct object, destination) and Locative (location) cases as mandated by the A1 morphology and syntax standards.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| новий (new) | High / Textbook | новий фільм, нову роботу, у новому місті |
-| великий (big) | High / Textbook | великий парк, велике вікно, на великій площі |
-| старий (old) | High / Textbook | старий друг, старий будинок, у старій церкві |
-| красивий (beautiful)| High / Textbook | красива дівчина, красиве місто, красиву сукню |
-| гарний (good/pretty)| High / Corpus | гарний день, гарну книгу |
+| новий (new) | High frequency | новий фільм, нову книгу, у новому місті |
+| великий (big) | High frequency | великий парк, велику площу, у великому парку |
+| смачний (tasty) | High frequency | смачний борщ, смачну каву |
+| старий (old) | High frequency | старе місто, старий будинок, у старій церкві |
+| цікавий (interesting)| High frequency | цікавий фільм, цікаву книгу |
+| український (Ukrainian)| High frequency | українська мова, в українському місті |
 
 ## Cultural Hooks
-1. **Describing historical cities:** Ukrainians often use the Locative case with adjectives to describe places of cultural significance, such as walking «у старому Львові» (in old Lviv) or meeting «на великій площі» (on the large square).
-2. **Harmonious agreement:** Ukrainian places a strong emphasis on acoustic harmony (милозвучність). Adjective endings often "rhyme" with their corresponding noun endings in oblique cases (e.g., нов**у** книг**у**), creating a poetic rhythm in everyday speech.
+1. **"Старе місто" (Old Town)**: Many Ukrainian cities, such as Kyiv and Lviv, have historic centers commonly referred to as "Старе місто". Describing a walk in the old town (у Старому місті) perfectly contextualizes the Locative case.
+2. **Harmonious Agreement (Rhyming)**: Ukrainian adjectives "rhyme" with nouns, especially in the feminine accusative (-у/-ю: нову книгу, смачну каву). This creates a melodic, poetic flow that is a defining characteristic of the Ukrainian language.
 
 ## Common Learner Errors
-1. **The "Frozen Adjective" mistake:** Learners often change the noun to the correct case but leave the adjective in the Nominative (e.g., *Я читаю цікавий книгу* instead of *цікаву книгу*).
-2. **Forgetting Animacy:** Applying the inanimate rule (Nom = Acc) to animate masculine nouns (e.g., *Я бачу новий студент* instead of *Я бачу нового студента*).
+1. **The "Frozen" Adjective**: *красивий книгу → красиву книгу. Learners often change the noun but forget to change the adjective, leaving it in the Nominative case.
+2. **Animate Masculine Accusative**: *бачу новий студент → бачу нового студента. Forgetting that animate masculine nouns and their adjectives take the Genitive form in the Accusative case.
+3. **Locative Mismatch**: *у новий місті → у новому місті. Leaving the adjective in the Nominative while the noun is correctly placed in the Locative case.
 
 ## Cross-References
-- Builds on: a1-29 (Around the City) - applies navigation vocabulary to Locative.
-- Prepares for: a1-31 (Pronoun Declension) - establishes the concept of modifier agreement.
+- Builds on: a1-29 (Around the City)
+- Prepares for: a1-31 (Pronoun Declension)
 
 ## Notes for Content Writing
-- **Decolonized Framing:** Treat Ukrainian adjective declension as an independent, logical system. Emphasize the beauty and rhythm of noun-adjective agreement rather than comparing it to other Slavic languages.
-- **Scaffolding:** Since this is A1, English scaffolding is MANDATORY for all grammar explanations. Define the case and gender rules clearly in English before presenting the Ukrainian examples.
-- **Formatting:** Use tables to cleanly present the Nom → Acc → Loc comparisons.
+- **Decolonized Framing**: Present Ukrainian adjective-noun agreement as a beautiful, harmonious feature that gives the language its melodic quality and allows for flexible word order, rather than framing it as a "rule-heavy" or "complex" system. Do not compare it to Russian.
+- **Scaffolding**: As an A1 module (Target Immersion ~35-40%), rely on clear English explanations for the grammar concepts before providing the Ukrainian examples.
+- **Visuals**: Use tables to clearly contrast Nominative vs. Accusative vs. Locative endings.

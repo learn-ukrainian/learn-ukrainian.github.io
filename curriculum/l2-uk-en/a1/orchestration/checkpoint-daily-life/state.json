@@ -1,0 +1,25 @@
+{
+  "slug": "checkpoint-daily-life",
+  "track": "a1",
+  "module_num": 44,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-28T22:55:07Z",
+      "words": 6797,
+      "attempts": 1
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T22:59:49Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T22:59:49Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-28T22:59:49Z"
+}

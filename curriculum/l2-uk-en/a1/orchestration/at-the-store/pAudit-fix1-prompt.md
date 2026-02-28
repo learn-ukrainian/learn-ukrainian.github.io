@@ -18,18 +18,20 @@
   Module:  at-the-store
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  1 Outline Compliance Errors
   failing gates:
-    lesson: 2145/2000 (raw: 2304) | pedagogy: 2 violations | immersion: 15.5% LOW (target 35-55% (M38))
+    lesson: 2459/2000 (raw: 2614) | pedagogy: 4 violations | immersion: 12.2% LOW (target 35-55% (M61))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+       → FIX: Change '## Підсумок' to '# Підсумок' for top-level TOC compliance
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 25/100)
-     → 2 violations (minor)
-     → Immersion 19% off target
+
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 75/100)
+     → 4 violations (moderate)
+     → 3 grammar-level violations (fundamental)
+     → Immersion 23% off target (major rebalancing needed)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/at-the-store-audit.md
@@ -37,11 +39,9 @@
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
-  Critical Failures:
-    • 1 Outline Compliance Errors
-
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/at-the-store-audit.log for details)
         ```
+
 
         ## Files to Fix
 

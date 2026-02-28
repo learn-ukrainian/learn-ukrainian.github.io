@@ -2,15 +2,15 @@
   "module": "holidays-and-traditions",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:49:04.255228Z",
+  "last_audit": "2026-02-28T18:08:16.768335Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:41:45.951631Z",
-    "meta": "2026-02-20T01:41:22.143981Z",
+    "md": "2026-02-28T18:07:52.154528Z",
+    "meta": "2026-02-28T18:00:51.410021Z",
     "activities": "2026-02-22T08:03:30.926786Z",
     "vocabulary": "2026-02-26T10:56:38.074390Z",
     "plan": "2026-02-28T03:02:37.231618Z",
-    "research": "2026-02-20T01:36:36.226218Z"
+    "research": "2026-02-28T18:00:51.398265Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2593/2000 (raw: 2844)"
+      "message": "3009/2000 (raw: 3334)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "20/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 3,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

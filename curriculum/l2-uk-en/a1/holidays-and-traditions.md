@@ -1,348 +1,213 @@
 <!-- SCOPE
-Covers: Holidays, Greetings, Wishes, Birthday traditions, Gift etiquette
+Covers: Major Ukrainian holidays, greetings (З + Instrumental), wishes (Бажаю + Genitive), birthdays, giving/receiving gifts.
 Not covered:
-  - Full Instrumental case paradigm
-  - Full Genitive case paradigm
-Related: a1-23, a1-32, a1-34
+  - Full declension of the Instrumental case → a2-01
+  - Full declension of the Genitive case → a2-02
+Related: a1-23, a1-49, a1-34
 -->
 
 # Holidays & Traditions
 
 > **Чому це важливо?**
 >
-> Holidays are the soul of Ukrainian culture. Knowing how to greet someone properly opens doors and hearts instantly. In this lesson, you will learn the magic formulas to wish happiness, health, and success like a native speaker.
+> Holidays are the heartbeat of any culture, bringing families together and preserving traditions across generations. In Ukraine, celebrations are rich with history, unique foods, and special greetings that you will hear everywhere. Learning these traditions and the specific phrases used to express good wishes will allow you to connect with Ukrainians on a deeper, more personal level during their most cherished moments.
 
-## Warm-up
+## Вступ та культура
 
-### Улюблені свята (Favorite Holidays)
+### Основні свята в Україні
+В Україні ми маємо багато свят. Це завжди радість, родина та смачна їжа. Ми маємо державні свята та релігійні свята. Одне велике свято — це Нови́й рі́к. Ми святкуємо його взимку. Інше дуже важливе свято — це Різдво́. Різдво об'єднує всі родини. Навесні ми святкуємо велике свято — Вели́кдень. Українці люблять святкува́ти свята вдома. Зазвичай ми святкуємо з родиною та друзями. Ми готуємо багато смачних страв. Ми співаємо старі пісні. На кожне свято ми маємо цікаві традиції. Ці традиції живуть дуже довго і передаються дітям.
 
-Вітаю! Сьогодні ми починаємо дуже важливу тему. Ця тема — **свята** (holidays). Українці люблять святкувати. Наш календар має красиві традиції. Давні звичаї живуть і сьогодні.
+In Ukraine, we have many holidays. It is always joy, family, and delicious food. We have state holidays and religious holidays. One big holiday is New Year (**Нови́й рі́к**). We celebrate it in winter. Another very important holiday is Christmas (**Різдво́**). Christmas unites all families. In spring, we celebrate a great holiday — Easter (**Вели́кдень**). Ukrainians love to celebrate (**святкува́ти**) holidays at home. Usually, we celebrate with family and friends. We prepare many delicious dishes. We sing old songs. For every holiday, we have interesting traditions. These traditions live very long and are passed down to children.
 
-В Україні ми маємо два типи свят. Це **державні** (state) свята. І це **релігійні** (religious) свята. Ви вже вивчили головні свята. Тепер вивчимо їхні назви українською мовою.
+| Українська | English | Приклад |
+|------------|---------|---------|
+| свя́то | holiday | Сьогодні велике свято. |
+| Нови́й рі́к | New Year | Новий рік — веселе свято. |
+| Різдво́ | Christmas | Ми святкуємо Різдво вдома. |
+| Вели́кдень | Easter | Великдень буде навесні. |
 
-Перше свято — **Новий рік** (New Year). Це найпопулярніше свято. Ми святкуємо його із сім'єю. Ми святкуємо його з друзями. Це ніч 31 грудня. Люди готують їжу. Люди дивляться телевізор. Ми чекаємо на дванадцяту годину.
+### Святвечір та традиція дванадцяти страв
+Перед Різдвом українці святкують Святвечір. Це дуже важливий і тихий вечір. Зазвичай уся родина збирається за столом. На столі традиційно є дванадцять пісних страв. Пісні страви не мають м'яса або молока. Це давня українська традиція. Головна страва на столі — це Кутя́. Кутя — це солодка каша. Вона має пшеницю, мак, мед, горіхи та рідко родзинки. Кутя символізує життя, здоров'я та пам'ять про родину. Ми завжди починаємо святкову вечерю з куті. Це дуже смачна і ситна страва. Кожен член родини має з'їсти трохи куті.
 
-Далі йде **Різдво** (Christmas). Багато століть українці святкували його 7 січня. Це був Юліанський календар. Але зараз Україна має новий календар. Ми святкуємо **Різдво** 25 грудня. Весь світ святкує у цей день. Це тихе свято. Це сімейне свято. Ми співаємо колядки. На Різдво ми також вітаємо: **«Христос народився!»** (Christ is born!) — а у відповідь кажемо: **«Славімо його!»** (Let us glorify Him!).
+Before Christmas, Ukrainians celebrate Christmas Eve (**Святвечір**). This is a very important and quiet evening. Usually, the whole family gathers at the table. On the table, there are traditionally twelve meatless dishes. Meatless dishes do not have meat or milk. This is an ancient Ukrainian tradition. The main dish on the table is **Кутя́** (Kutia). Kutia is a sweet porridge. It has wheat, poppy seeds, honey, nuts, and sometimes raisins. Kutia symbolizes life, health, and memory of the family. We always start the festive dinner with Kutia. It is a very delicious and filling dish. Every family member must eat a little bit of Kutia.
 
-Нарешті, весною приходить **Великдень** (Easter). Це найважливіше релігійне свято. Це свято Воскресіння. Ми йдемо до церкви. Ми святимо паску.
+> [!cultural] **Символізм числа дванадцять**
+> The twelve meatless dishes on Christmas Eve represent the twelve apostles of Jesus Christ. In older folklore, they also represented the twelve months of the year. Preparing these dishes takes a lot of time, but it brings the family together. The meal only begins when the first star appears in the winter sky.
 
-> [!culture] **12 страв (12 Dishes)**
-> On Christmas Eve (**Святвечір**), tradition requires exactly 12 meatless dishes on the table. Найважливіша страва — **кутя** (kutia). Це солодка каша. Вона з пшениці, маку, меду та горіхів. Ви не можете почати вечерю без куті. Спочатку скуштуйте кутю! Це закон традиції.
+### Історія пісні «Щедрик»
+Багато людей у світі знають пісню про дзвоники на Різдво. Але це українська пісня. Вона називається «Щедрик». Її писав український композитор Микола Леонтович. Спочатку це була пісня для Нового року, а не для Різдва. Раніше українці святкували Новий рік навесні. У пісні співається про маленьку ластівку. Ластівка — це весняна пташка. Вона прилітає навесні. Вона приносить добрі новини та щастя в дім. Микола Леонтович робив чудову музику для цієї старої пісні. Сьогодні «Щедрик» співають у всьому світі. Ми дуже пишаємося цією піснею. Вона показує красу нашої культури.
 
-### Український голос у світі
-Ви знали цікавий факт? Одна з найвідоміших різдвяних пісень у світі — українська. Мелодія "Carol of the Bells" — це наша пісня. Це стародавня народна пісня **«Щедрик»**.
+Many people in the world know the song about bells at Christmas. But this is a Ukrainian song. It is called «Щедрик» (Shchedryk). It was written by the Ukrainian composer Mykola Leontovych. Originally, this was a song for the New Year, not for Christmas. Previously, Ukrainians celebrated the New Year in spring. The song sings about a little swallow. A swallow is a spring bird. It arrives in spring. It brings good news and happiness into the house. Mykola Leontovych made wonderful music for this old song. Today, «Shchedryk» is sung all over the world. We are very proud of this song. It shows the beauty of our culture.
 
-Її обробив український композитор **Микола Леонтович** (Mykola Leontovych). Слово «Щедрик» походить від слова **щедрий** (generous). Це історія про ластівку. Ластівка летить у дім. Вона пророкує щедрий рік для родини. Коли ви чуєте цю мелодію, пам'ятайте про це. Це українське побажання достатку! Весь світ співає цю пісню. Але вона має українську душу.
+> [!note] **«Щедрик» у світі**
+> When you hear the famous "Carol of the Bells" in movies, you are actually listening to an ancient Ukrainian winter greeting. The English lyrics were written later and changed the theme to Christmas bells, but the original Ukrainian text is a magical chant wishing a family wealth, health, and a good harvest.
 
-### Сезонність (Seasonality)
-Let's match the holidays to their seasons. In Ukrainian, we often use the preposition **на** (on/at) with holidays.
+## Презентація: Вітання
 
-| Holiday | Season | Example |
-| :--- | :--- | :--- |
-| **Новий рік** | **зима** (winter) | Ми святкуємо взимку. |
-| **Різдво** | **зима** (winter) | На Різдво ми вдома. |
-| **Великдень** | **весна** (spring) | Це весняне свято. |
-| **День Незалежності** | **літо** (summer) | 24 серпня (August 24th). |
-| **День Святого Миколая** | **зима** (winter) | 6 грудня (December 6th). |
+### Фіксована формула привітання
+Як ми вітаємо людей зі святом? Ми маємо спеціальну формулу. Ми кажемо слово «З» і додаємо назву свята. Але назва свята трохи змінює своє закінчення. Це орудний відмінок. Вам не треба зараз вчити всі граматичні правила. Просто запам'ятайте ці фрази як готові короткі формули. Ми кажемо: «З Новим роком!». Ми також кажемо: «З Різдвом!». Навесні ми кажемо: «З Великоднем!». Іноді ви не знаєте точну назву свята. Тоді ви можете просто сказати: «Зі святом!». Це дуже зручна й універсальна фраза для будь-якого дня.
 
-## Presentation
+How do we greet people for a holiday? We have a special formula. We say the word «З» (with) and add the name of the holiday. But the name of the holiday changes its ending slightly. This is the Instrumental case. You do not need to learn all the grammatical rules right now. Just remember these phrases as ready-made short formulas. We say: «З Новим роком!» (Happy New Year!). We also say: «З Різдвом!» (Merry Christmas!). In spring, we say: «З Великоднем!» (Happy Easter!). If you do not know the exact name of the holiday, you can simply say: «Зі святом!» (Happy holiday!). This is a very convenient and universal phrase for any day.
 
-### Як вітати зі святом (How to Greet)
+> [!warning] **Обережно: часта помилка**
+> A very common mistake for learners is to translate "Happy New Year" directly and use the Nominative case: «З Новий рік». This is strictly incorrect! The preposition **з** always requires the holiday name to change its form. You must say «З Новим роком». Think of the ending **-ом** as an essential part of the holiday formula.
 
-Тепер давайте навчимося говорити "Happy New Year". Або "Merry Christmas". In English, we use the adjective "Happy" or "Merry". In Ukrainian, we use a totally different logic. We say "I congratulate [you] **with** the Holiday".
+### Дієслово «вітати»
+Ми також маємо дієслово віта́ти. Це дієслово означає сам процес. Ми використовуємо його для привітання людей. Після цього дієслова ми також використовуємо прийменник «з» і спеціальне закінчення. Я вітаю тебе зі святом. Ми вітаємо вас з Новим роком. Вона вітає свого друга з Різдвом. Це дуже корисне дієслово для всіх свят. Ви можете використовувати його в листах або в розмові.
 
-Ukrainian culture is deeply community-oriented. Holidays are not just days off work; they are days to be **together**. A greeting is not just a formality. It is a verbal gift. When you greet someone, you are acknowledging them and sharing the joy of the day.
+We also have the verb **віта́ти** (to congratulate, to greet). This verb means the process itself. We use it for greeting people. After this verb, we also use the preposition «з» (with) and the special ending. Я вітаю тебе (I congratulate you). Ми вітаємо вас з Новим роком (We congratulate you on the New Year). Вона вітає свого друга з Різдвом (She congratulates her friend on Christmas). This is a very useful verb for all holidays. You can use it in letters or in conversation.
 
-### Формула привітання (The Greeting Formula)
-The core word is **вітати** (to congratulate/greet). You can say just «Вітаю!» (Congratulations!), but usually, we add the specific occasion using the preposition **з** (with).
+> [!tip] **Практична порада**
+> You can use the verb **вітати** entirely on its own when handing someone a gift, walking into a party, or even celebrating a personal achievement. Just smiling and saying «Вітаю!» (Congratulations! / Greetings!) is a perfect, polite way to acknowledge a special occasion without needing a long sentence.
 
-The grammar rule is simple: **З + Орудний відмінок** (Instrumental Case).
-Don't worry about memorizing the whole case table yet. For now, just remember these "frozen" chunks.
+### Приклади привітань у контексті
+Подивімося, як люди використовують ці фрази кожного дня. Ми часто пишемо ці теплі слова на листівках. Ми також кажемо їх друзям і колегам на вулиці. Уважно прочитайте ці короткі ситуації. Зверніть увагу на закінчення слів у діалогах.
 
-1. **З Новим роком!** (Happy New Year!)
-   - Here, the root is **рік** (year), but notice the ending **-ом**.
-2. **З Різдвом!** (Merry Christmas!)
-   - Notice how **Різдво** changes form to end in **-ом**.
-3. **З Великоднем!** (Happy Easter!)
-   - The dictionary form is **Великдень**, but here it ends in **-ем**.
+Let's see how people use these phrases every day. We often write these warm words on greeting cards. We also say them to friends and colleagues on the street. Read these short situations carefully. Pay attention to the endings of the words in the dialogues.
 
-### Часта помилка (Common Mistake)
-Learners often try to translate directly from English "Happy New Year" and just say the name of the holiday. This sounds very strange to a Ukrainian ear. It sounds like you are just pointing at the calendar and reading the date.
+**Ситуація 1: Зимова зустріч**
+— Привіт, Олено! З Новим роком!
+— Привіт, Марку! Дякую, і тебе з Новим роком!
 
-> [!warning] **Stop: Nominative vs. Instrumental**
-> ❌ **Incorrect:** «З Новий рік!» (With New Year [subject])
-> ❌ **Incorrect:** «З Різдво!» (With Christmas [subject])
-> ✅ **Correct:** «З Новим рок**ом**!» (With New Year [instrument])
->
-> Always change the ending after **з**! Imagine the **з** is a magnet that pulls the ending **-ом** onto the word. Without the correct ending, the sentence feels broken and incomplete.
+**Ситуація 2: Офіційне свято**
+— Добрий вечір, пане Іване. З Різдвом!
+— Добрий вечір. Дякую. Бажаю вам гарного вечора.
 
-### Універсальне привітання (Universal Greeting)
-If you forget the specific name of the holiday, or you just want to say "Happy Holidays!", use this magic phrase:
+**Ситуація 3: На роботі**
+— Зі святом, колеги!
+— Дякуємо! Зі святом!
 
-**Зі святом!** (Happy Holiday!)
+**Ситуація 4: Весна**
+— Привіт, друзі! З Великоднем!
+— Привіт! Дякуємо. І тебе з Великоднем!
 
-Wait, why **зі**?
-We use **зі** instead of **з** when the next word starts with a heavy cluster of consonants (like **св-** in **свято**), to make it easier to pronounce. Try saying "z-svyato" — it's hard! "**Zi** svyato" flows much better. This is called **euphony** (милозвучність) — the love for beautiful sound.
+| Називний відмінок (Що це?) | Привітання (З чим?) | English Equivalent |
+|----------------------------|---------------------|--------------------|
+| Новий рік | З Новим роком! | Happy New Year! |
+| Різдво | З Різдвом! | Merry Christmas! |
+| Великдень | З Великоднем! | Happy Easter! |
+| свято | Зі святом! | Happy holiday! |
 
-**Use cases:**
-- You meet a neighbor on Easter: «Зі святом!»
-- You walk into a shop on Independence Day: «Зі святом!»
-- You see a colleague on Christmas: «Зі святом!»
+## Презентація: Побажання
 
-**Mini-dialogue:**
-— Доброго ранку, сусіде! Зі святом!
-— Дякую! І вас зі святом! Гарного дня!
+### Дієслово «бажати» та родовий відмінок
+На велике свято ми кажемо добрі слова. Ми використовуємо дієслово бажа́ти. Після цього дієслова ми використовуємо родовий відмінок. Це дуже важливе граматичне правило в українській мові. Ми бажаємо абстрактні речі. Ми не можемо торкнутися їх руками. Тому ми змінюємо закінчення слова. Ми зазвичай додаємо закінчення -я або -у до слова.
 
-## Presentation 2
+On a big holiday, we say kind words. We use the verb **бажа́ти** (to wish). After this verb, we use the Genitive case. This is a very important grammatical rule in Ukrainian. We wish for abstract things. We cannot touch them with our hands. Therefore, we change the ending of the word. We usually add the ending **-я** or **-у** to the word.
 
-### Лексика: Найкращі побажання
+> [!warning] **Часта помилка: Знахідний відмінок**
+> A classic error is using the Accusative case for wishes, treating them just like a direct object. Learners often say «Бажаю успіх» (I wish success). This sounds unnatural in Ukrainian. When wishing for abstract concepts like success, health, or joy, you are wishing for "a portion of" it, which strictly requires the Genitive case: «Бажаю успіху».
 
-Привітання — це перший крок. Другий крок — **бажати** (to wish). After you say "Happy Birthday," you usually wish for something good.
+### Основні слова для побажань
+Найчастіше українці бажають ща́стя. Це слово означає велику радість у житті. Ми також завжди бажаємо здоро́в'я. Людина буде мати багато сил. Вона не буде хворіти. Ще ми дуже часто бажаємо успі́ху. Усе виходить добре на роботі або у школі. Подивіться на ці слова. Вони змінюються для побажання.
 
-### The Verb "Бажаю" (I Wish)
-Here we use the verb **бажаю**. The structure is: **Бажаю** (I wish) + **[Genitive Case]**.
-Why Genitive? Because you are wishing *of* something (some amount of happiness, some health).
+Most often, Ukrainians wish for happiness (**ща́стя**). This word means great joy in life. We also always wish for health (**здоро́в'я**). A person will have a lot of strength. They will not be sick. We also very frequently wish for success (**успі́ху**). Everything goes well at work or at school. Look at these words. They change for a wish.
 
-Here are the big four wishes you will hear constantly. I have added the IPA pronunciation for the first time, because some are tricky!
+| Слово (Називний) | Форма для побажання (Родовий) | Переклад |
+|------------------|-------------------------------|----------|
+| ща́стя | бажаю щастя | I wish happiness |
+| здоро́в'я | бажаю здоров'я | I wish health |
+| успі́х | бажаю успіху | I wish success |
 
-1. **Ща́стя** (happiness)
-   - Usage: «Бажаю щастя!»
-   - Це дуже популярне побажання. Всі хочуть щастя. Щастя — це гарний момент.
-2. **Здоро́в'я** (health)
-   - Usage: «Бажаю здоров'я!»
-   - Здоров'я — це найважливіше. Без здоров'я немає нічого. Ми завжди бажаємо здоров'я.
-3. **У́спіху** (success)
-   - Usage: «Бажаю успіху!»
-   - Це побажання для роботи. Також для навчання. Ваш керівник бажає вам успіху.
-4. **Любо́ві** (love)
-   - Usage: «Бажаю любові!»
-   - Молодятам ми бажаємо любові. Або друзям. Любов гріє серце.
+> [!note] **Вимова складних слів**
+> Pay attention to the pronunciation of these beautiful but tricky words:
+> - **ща́стя** (happiness) is pronounced as /ˈʃtʃɑstʲɐ/. The sound «щ» is like "shch" in "fresh cheese".
+> - **здоро́в'я** (health) is pronounced as /zdɔˈrɔu̯jɐ/. The apostrophe means you pause slightly and pronounce the «я» clearly as "ya".
 
-Бажайте здоров'я батькам. Студентам потрібен успіх. Ми бажаємо миру всім. Мир дуже важливий для України зараз. Це актуальне побажання.
+### Приклади вживання побажань
+Ми можемо легко комбінувати наші привітання і наші побажання. Спочатку ми називаємо свято. Потім ми кажемо, чого ми щиро бажаємо. Це звучить дуже природно, тепло і гарно. Прочитайте ці повні речення. Вони допоможуть вам говорити дуже гарно.
 
-> [!tip] **Pronunciation Check**
-> Look at **щастя**. That first letter **Щ** makes two sounds: [ʃt͡ʃ] (sh+ch). Like "fre**sh ch**eese".
-> Look at **здоров'я**. The apostrophe means the **в** is hard, and the **я** starts with a "y" sound: [v-ya].
+We can easily combine our greetings and our wishes. First, we name the holiday. Then we say what we sincerely wish for. This sounds very natural, warm, and beautiful. Read these full sentences. They will help you speak very well.
 
-### Як відповідати (How to Respond)
-Хтось бажає вам щастя. Що ви відповідаєте?
+- З Новим роком! Бажаю щастя та здоров'я.
+- З Різдвом! Бажаю великого успіху.
+- Зі святом! Ми бажаємо вам щастя і радості.
+- Вітаю зі святом і бажаю міцного здоров'я.
+- Я бажаю тобі успіху в новій роботі.
 
-The simplest answer is **Дякую!** (Thank you!).
-If you want to wish the same thing back, say: **Навзаєм!** or **Взаємно!** (Mutually / The same to you).
+### Різниця між «вітати» та «бажати»
+Студенти часто плутають два різні дієслова: вітати та бажати. Вітати — це процес. Я вітаю тебе зі святом. Бажати — це ваші добрі емоції для іншої людини. Я бажаю тобі щастя. Ви не можете сказати: «Я вітаю тобі щастя». Це серйозна помилка. Ви повинні завжди розділяти ці два дієслова у ваших реченнях.
 
-**Mini-dialogue:**
-— **Маріє, з Новим роком! Бажаю щастя!** (Maria, Happy New Year! I wish [you] happiness!)
-— **Дякую, Андрію! Взаємно!** (Thank you, Andriy! The same to you!)
+Students often confuse two different verbs: **вітати** and **бажати**. **Вітати** is the act of congratulating or greeting. Я вітаю тебе (I congratulate you). **Бажати** is your good emotions for another person. Я бажаю тобі щастя (I wish you happiness). You cannot say: «Я вітаю тобі щастя». This is a serious mistake. You must always separate these two verbs in your sentences.
 
-### More Specific Wishes
-Sometimes we want to be more creative. You can stack wishes using commas.
+### Міні-діалог: Зустріч і побажання
+— Добрий день, Олександре! З Новим роком!
+— Добрий день, Маріє! Дякую, і вас з Новим роком.
+— Бажаю вам великого щастя, здоров'я та успіху в роботі.
+— Дуже дякую! Взаємно!
 
-**Бажаю щастя, здоров'я та миру.** (I wish happiness, health, and peace.)
-**Бажаю гарного дня!** (Have a nice day! / I wish a nice day!)
+— Good afternoon, Oleksandr! Happy New Year!
+— Good afternoon, Mariia! Thank you, and Happy New Year to you too.
+— I wish you great happiness, health, and success at work.
+— Thank you very much! Mutually! (Same to you!)
 
-Notice that for "Have a nice day", we also use the Genitive case.
-- Nominative: **гарний день**
-- Genitive: **гарного дня**
+> [!note] **Слово «Взаємно»**
+> When someone gives you a long, beautiful list of wishes, you do not need to repeat the whole list back to them. You can simply smile and say «Дякую! Взаємно!» (Thank you! Mutually! / Same to you!). It is a highly frequent, polite shortcut in Ukrainian conversation.
 
-## Presentation 3
+## Практика та дні народження
 
-### Тема: День народження
+### Традиції дня народження
+День наро́дження — це дуже особливе і важливе свято для кожної людини. Ми завжди питаємо друзів: «Коли твій день народження?». Для відповіді ми використовуємо родовий відмінок. Наприклад, ми кажемо: «П'ятого травня» або «Десятого вересня». На день народження ми завжди купуємо солодкий то́рт. На торті є яскраві сві́чки. Людина повинна подумати про своє бажання та задути свічки. Це дуже весела традиція для дорослих і дітей.
 
-Найбільш особисте свято — це **день народження** (birthday). Literally, it means "Day of Birth". Це ваш день. Це особливий день.
+A birthday (**день наро́дження**) is a very special and important holiday for every person. We always ask friends: "When is your birthday?" («Коли твій день народження?»). For the answer, we use the Genitive case. For example, we say: "The fifth of May" («П'ятого травня») or "The tenth of September" («Десятого вересня»). For a birthday, we always buy a sweet cake (**то́рт**). On the cake, there are bright candles (**сві́чки**). The person must think about their wish and blow out the candles. This is a very fun tradition for adults and children.
 
-### Питання про дату (Asking the Date)
-To ask about the date, we say:
-**Коли твій день народження?** (When is your birthday?)
+> [!cultural] **Тягнути за вуха**
+> There is a funny and slightly strange Ukrainian birthday tradition. Friends and family might gently pull the birthday person's ears — one pull for every year of their life! While doing this, they enthusiastically say: «Рости великий!» (Grow big!). It is a playful custom, mostly done with children to wish them growth and health, but sometimes close adult friends do it as a joke too.
 
-To answer, we use the Genitive case for the date, usually followed by the month.
-— **П'ятого травня.** (On the fifth of May.)
-— **Першого січня.** (On the first of January.)
-— **Двадцять четвертого серпня.** (On the twenty-fourth of August.)
+### Дарувати та отримувати подарунки
+Для багатьох людей гарне свято неможливе без подарунків. Подару́нок — це спеціальна річ. Ми даємо її іншій людині для радості. Ми використовуємо дієслово дарувати. Я дуже люблю дарувати подарунки своїй родині. Ми часто даруємо цікаві книги, квіти або іграшки. Але також дуже приємно отрима́ти подарунок. Ми кажемо: «Він отримав дуже гарний подарунок». Ви даруєте подарунок і кажете: «Це для тебе». А людина відповідає: «Який чудовий подарунок! Дуже дякую».
 
-It is useful to know the months.
-- **Січень** (January) — mid-winter.
-- **Травень** (May) — late spring.
-- **Серпень** (August) — late summer.
+For many people, a good holiday is impossible without gifts. A gift (**подару́нок**) is a special thing that we give to another person to make them happy. We use the verb "to give as a gift" (**дарувати**). I really love giving gifts to my family. We often give interesting books, flowers, or toys. But it is also very pleasant to receive (**отрима́ти**) a gift. We say: "He received a very beautiful gift" («Він отримав дуже гарний подарунок»). You give a gift and you say: «Це для тебе» (This is for you). And the person answers: «Який чудовий подарунок! Дуже дякую» (What a wonderful gift! Thank you very much).
 
-**Dialogue:**
-— Коли твій день народження, Анно?
-— П'ятого травня. Це весна. Я люблю весну.
-— А твій, Іване?
-— Першого січня. Це зима. Я люблю сніг.
-— А у тебе, Максиме?
-— У мене влітку. Двадцять четвертого серпня. Це велике свято!
+| Українська | English | Приклад |
+|------------|---------|---------|
+| подарунок | gift | Це великий подарунок для тебе. |
+| дарувати | to give a gift | Я люблю дарувати нові книги. |
+| отримати | to receive | Я отримав цікавий подарунок сьогодні. |
 
-> [!note] **Grammar Recall**
-> Remember lesson A1-23? To say "on a date", we change the number ending.
-> П'ять (5) → **П'ятого** (on the 5th).
-> Один (1) → **Першого** (on the 1st).
+### Практичне завдання: Написання листівки
+Тепер ви маєте самостійно написати коротку листівку для вашого друга. Це дуже просте завдання. Спочатку ви пишете привітання. Використовуйте формулу з орудним відмінком, яку ми вивчили. Потім ви пишете ваші побажання. Використовуйте дієслово «бажати» та родовий відмінок. Наприкінці тексту ви просто пишете своє ім'я.
 
-### Традиція: Тягнути за вуха
-В Україні є кумедна традиція. Вона для дітей. Іноді вона для дорослих! Замість "стусанів" (bumps), у нас є "вуха" (ears).
+Now you have to independently write a short greeting card for your friend. This is a very simple task. First, you write the greeting. Use the formula with the Instrumental case that we learned. Then you write your wishes. Use the verb "to wish" («бажати») and the Genitive case. At the end of the text, you simply write your name.
 
-Гості піднімають іменинника за вуха вгору. Один раз за кожен рік життя. Ми кажемо: **«Рости великий!»** (Grow big!) для хлопчиків. Або кажемо **«Рости велика!»** для дівчаток. Ідея проста. Дитина має рости вищою. Символічно, ми допомагаємо дитині рости. Ми бажаємо дитині росту. Вона буде високою і здоровою, як дерево.
+**Крок 1 (Step 1): Привітання**
+Start with the greeting, addressing the person.
+- З днем народження, Марку! (Happy birthday, Mark!)
+- З Новим роком, Олено! (Happy New Year, Olena!)
 
-Ця традиція стара. Вона дуже весела. Батьки роблять це. Друзі роблять це. Дитина сміється. Всі рахують: "Один, два, три...". Це щасливий момент. Не бійтеся. Це не боляче. Це добра традиція. Це побажання росту! Ця традиція унікальна. Інші країни її не мають. Вона особлива для України.
+**Крок 2 (Step 2): Побажання**
+Add your wishes using the Genitive forms.
+- Бажаю тобі щастя, міцного здоров'я та великого успіху! (I wish you happiness, strong health, and great success!)
 
-### Привітання з днем народження
-Фраза тут трохи інша.
-**З днем народження!** (Happy Birthday!)
+**Крок 3 (Step 3): Завершення**
+Add a warm closing and your name.
+- Твій друг, Антон. (Your friend, Anton.)
+- Твоя подруга, Анна. (Your friend [female], Anna.)
 
-Let's break it down:
-- **З** (with)
-- **днем** (day — Instrumental case)
-- **народження** (of birth — Genitive case)
+### Модель ідеальної листівки
+Уважно прочитайте цю готову листівку. Вона має всі важливі елементи для гарного привітання. Вона є базовою моделлю для ваших текстів. Це ідеальний та дуже ввічливий приклад.
 
-This is a fixed phrase. Just memorize it as a single block: **З днем народження!** You can also say **З іменинами!** (Happy Name Day), but that is specifically for the day of your Saint/Angel, not your birth date. But today, many people use them almost interchangeably or celebrate only one.
+Read this ready-made greeting card carefully. It has all the important elements for a good greeting. It is a base model for your texts. This is a perfect and very polite example.
 
-## Practice
-
-### Листівки та привітання
-
-Тепер давайте об'єднаємо все разом. Ви пишете **листівку** (greeting card). Або ви пишете повідомлення у Facebook. Це для вашої української подруги Олени.
-
-### Структура привітання (Structure of a Greeting)
-A standard greeting usually has four parts:
-
-1. **Звертання** (Address) — Who is it for?
-   - **Дорога Олено!** (Dear Olena! - for female friends/family)
-   - **Дорогий Іване!** (Dear Ivan! - for male friends/family)
-   - **Шановний пане Андрію!** (Respected Mr. Andriy! - formal)
-   - **Шановна пані Оксано!** (Respected Ms. Oksana! - formal)
-
-2. **Свято** (The Holiday) — What is the occasion?
-   - **Вітаю з днем народження!**
-   - **Вітаю зі святом!**
-   - **Щиро вітаю з Новим роком!** (Sincerely congratulate with New Year!)
-
-3. **Побажання** (Wishes) — What do you want for them?
-   - **Бажаю тобі щастя, здоров'я і любові.** (I wish you happiness, health, and love.)
-   - **Бажаю успіху в роботі!** (I wish success in work!)
-   - **Бажаю здійснення мрій!** (I wish fulfillment of dreams!)
-
-4. **Підпис** (Signature) — Who is it from?
-   - **Твій друг, Том.** (Your friend, Tom.)
-   - **Твоя подруга, Анна.** (Your friend [female], Anna.)
-   - **З повагою, Джон.** (With respect, John. - formal)
-   - **З найкращими побажаннями, Марія.** (With best wishes, Maria.)
-
-Greeting cards can be paper or electronic. But the words are always the same. Start with the name. Then mention the holiday. Finally, write your wishes. This structure is polite. It is standard in Ukraine.
-
-### Informal vs. Formal
-Are you writing to a teacher or boss? Use **Ви** (formal You).
-- Informal: **Бажаю тобі...** (I wish to you [informal])
-- Formal: **Бажаю Вам...** (I wish to You [formal])
-- Informal: **Вітаю тебе...** (I congratulate you [informal])
-- Formal: **Вітаю Вас...** (I congratulate You [formal])
-
-**Example Card (Informal):**
-> **Дорогий Максиме!**
-> **Вітаю з Різдвом!**
-> **Бажаю тобі і твоїй родині миру, тепла і добра.**
-> **Щасливого Різдва!**
-> **Твій друг, Джон.**
-
-Notice **«тепла і добра»** (warmth and kindness) — very popular Ukrainian wishes. Warmth here means emotional warmth, not just temperature.
-
-## Practice 2
-
-### Ситуації: Обмін подарунками
-
-Свято неповне без подарунка (**подарунок**). Українці — дуже щедрі люди. Ви йдете в гості. Принесіть подарунок. Це може бути шоколад. Це можуть бути квіти. Або вино. Це ввічливо. Ми рідко приходимо з порожніми руками.
-
-**Гостинність (Hospitality)**
-Ukrainians are famous for hospitality (**гостинність**). If you are a guest, you are treated like royalty. But guests also have responsibilities. A small gift shows respect to the host. Even a simple chocolate bar for the kids or a bottle of juice is enough. It says: "I appreciate your invitation."
-
-What do we gift? Ukrainians love books. We gift flowers. We gift sweets. Lviv chocolate is very famous. It is a tasty gift. Handmade items (**ручна робота**) are also very popular now.
-
-У мене є подруга. Її звати Оксана. Вона любить книги. Я дарую книгу. Це для неї. Вона щаслива. Я кажу: «Це тобі». Вона каже: «Дякую». Подарунки важливі. Вони показують любов. Вони показують повагу.
-
-### The Verb "Дарувати" (To Give a Gift)
-We have a special verb for giving gifts: **дарувати**.
-- **Я дарую тобі книгу.** (I am gifting you a book.)
-- **Ми даруємо квіти.** (We are gifting flowers.)
-
-### Етикет (Etiquette)
-Ви даруєте подарунок. Ви не просто кладете його на стіл мовчки. Ви говорите теплі слова.
-
-**Giving the gift:**
-— **Це тобі!** (This is for you!)
-— **Це маленький подарунок для тебе.** (This is a small gift for you.)
-— **Сподіваюся, тобі сподобається.** (I hope you will like it.)
-
-**Receiving the gift:**
-In Ukraine, it is polite to open the gift immediately. Show your emotion! Smile and say thank you. Do not put it away for later.
-— **Дякую! Це дуже приємно.** (Thank you! This is very pleasant.)
-— **Вау! Який гарний подарунок!** (Wow! What a beautiful gift!)
-— **Не треба було!** (You shouldn't have! — polite modesty)
-— **Я давно про це мріяв!** (I have been dreaming about this for a long time!)
-
-За святковим столом ми піднімаємо келихи і кажемо **«Будьмо!»** (Cheers! / Let us be!). Це найпопулярніший український тост.
-
-Маленька порада: не даруйте **ножі** або інші гострі предмети. Гострі речі приносять сварку. Ви даруєте ніж? Візьміть за нього символічну **монету**. Тоді все буде добре!
-
-> [!context] **Flowers (Квіти)**
-> If you give flowers, make sure there is an **odd number** of stems (3, 5, 7, etc.). Even numbers (2, 4, 6) are strictly for funerals. This is a very serious rule in Ukraine! Also, avoid yellow flowers for a romantic partner — some believe they signal separation. Red or white roses are safe choices.
-
-## Practice 3
-
-### Творче завдання: Пишемо привітання
-
-Тепер ваша черга. Напишіть привітання. Це привітання з днем народження. Воно для українського друга Андрія.
-
-**Checklist:**
-1. Start with "Дорогий Андрію" (Vocative case).
-2. Use the formula "Вітаю з...".
-3. Use "Бажаю..." with Genitive words.
-4. Sign it at the end.
-
-Check your text. Grammar is important. Use a dictionary. Write two versions. One for a friend. One for a colleague. This practice helps you remember the phrases. Не поспішайте. Подумайте про слова. Використовуйте таблиці. Ваші друзі будуть раді. Вони побачать вашу працю.
-
-**Model Answer:**
-> **Дорогий Андрію!**
-> **Вітаю тебе з днем народження!**
-> **Бажаю великого успіху, міцного здоров'я і вірних друзів.**
-> **Нехай щастить!** (Good luck! / Let it be lucky!)
-> **Твій друг, [Ваше ім'я].**
-
-### Електронні привітання (Digital Greetings)
-We live in the digital age. In Ukraine, people love sending greetings via Viber, Telegram, or Instagram. It is very common to send a picture (a digital card) and a short text.
-
-**Template for a Friend (SMS/Viber):**
-> Привіт! Зі святом! 🎉 Бажаю щастя і любові! ❤️
-
-**Template for a Colleague (Email):**
-> Шановна Ірино Петрівно!
-> Вітаю Вас зі святом. Бажаю натхнення та професійного успіху.
-> З повагою,
-> [Ваше ім'я]
-
-### Корисні слова (Useful Words)
-Ось кілька прикметників. Вони зроблять ваші побажання сильнішими:
-- **міцне** здоров'я (strong/solid health)
-- **велике** щастя (great happiness)
-- **справжня** любов (true/real love)
-- **вірні** друзі (faithful/loyal friends)
-- **сімейний** затишок (family coziness)
-- **безмежна** радість (limitless joy)
-
-Використовуйте ці слова. Вони показують вашу турботу. Ваша українська мова стає кращою.
-
-### The Power of Sincerity
-Remember, a greeting is about connection. Don't worry if you make a small mistake. If you say "З Новий рік" instead of "З Новим роком", people will still smile. They will appreciate that you are trying to speak their language. Sincerity covers all grammar sins!
+> З днем народження, Олено!
+> Щиро вітаю тебе! Бажаю багато радості, міцного здоров'я та світлих днів. Нехай кожен день буде гарним і світлим.
+> Я маю для тебе маленький подарунок.
+> Твоя подруга, Марія.
 
 ---
 
-# Summary
+# Підсумок
 
-Вітаю! Тепер ви готові. Ви — найкращий гість на вечірці. Тепер ви маєте арсенал привітань. Ви знаєте побажання. Ви вмієте підписати листівку.
+Сьогодні ми вивчили багато нових і важливих слів. Ми говорили про найбільші свята: Новий рік, Різдво та Великдень. Ми дізналися про тихий Святвечір та традиційну кутю. Всесвітньо відома пісня «Щедрик» має українське походження. Ми вивчили, як правильно вітати людей: «З Новим роком!», «З Різдвом!», «З Великоднем!». Тут треба використовувати орудний відмінок. Також ми навчилися щиро бажати щастя, здоров'я та успіху друзям. Для побажань ми завжди використовуємо родовий відмінок. Ми ніколи не використовуємо знахідний. Нарешті, ми обговорили дні народження, торти, свічки та подарунки. Тепер ви можете написати чудову листівку. Ви можете привітати друга з днем народження.
 
-Пам'ятайте головне. Найважливіша частина свята — це **щирість** (sincerity). Не має значення граматика. Дивіться в очі. Кажіть «Бажаю щастя» з посмішкою. Це ідеальна українська мова.
+Today we learned many new and important words. We talked about the biggest holidays: New Year, Christmas, and Easter. We learned about the quiet Christmas Eve and traditional Kutia. The globally famous song "Shchedryk" has Ukrainian origins. We learned how to correctly greet people: "Happy New Year!", "Merry Christmas!", "Happy Easter!". Here we need to use the Instrumental case. We also learned to sincerely wish happiness, health, and success to friends. For wishes, we always use the Genitive case. We never use the Accusative. Finally, we discussed birthdays, cakes, candles, and gifts. Now you can write a wonderful greeting card. You can congratulate your friend on their birthday.
 
 **Перевірте себе:**
-1. What case do we use after the preposition **З** in greetings? (Nominative or Instrumental?)
-2. How do you say "Merry Christmas" in Ukrainian?
-3. What is the traditional Christmas dish made of wheat and poppy seeds?
-4. After **Бажаю** (I wish), which case do we use for the things we wish for?
-5. Correct the mistake: «З Новий рік!»
-6. If you give roses to a girl, how many should you buy: 3 or 4?
+1. Як правильно сказати: «З Новий рік» чи «З Новим роком»? Чому ми маємо використовувати саме цю форму?
+2. Які три слова абстрактних понять ми найчастіше використовуємо після дієслова «бажати»?
+3. Який граматичний відмінок ми повинні обов'язково використовувати після дієслова «бажати»?
+4. Що таке «кутя»? Коли традиційно українці її їдять?
+5. Яку коротку та ввічливу фразу ви можете сказати, після хороших побажань на свято?
+6. Як правильно перекласти англійською мовою дуже корисне словосполучення «отримати подарунок»?
+
+---

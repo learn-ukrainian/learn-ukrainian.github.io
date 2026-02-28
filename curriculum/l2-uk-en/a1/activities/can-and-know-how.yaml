@@ -1,0 +1,569 @@
+- type: match-up
+  title: "Знайдіть переклад дієслів"
+  instruction: "Match the Ukrainian verbs with their English meanings."
+  pairs:
+    - left: "плавати"
+      right: "to swim"
+    - left: "готувати"
+      right: "to cook"
+    - left: "фотографувати"
+      right: "to photograph"
+    - left: "курити"
+      right: "to smoke"
+    - left: "водити"
+      right: "to drive"
+    - left: "кататися"
+      right: "to ride"
+    - left: "малювати"
+      right: "to draw"
+    - left: "співати"
+      right: "to sing"
+
+- type: group-sort
+  title: "Розподіліть форми дієслів"
+  instruction: "Sort the conjugated verb forms into their correct infinitive groups."
+  groups:
+    - name: "Могти"
+      items:
+        - "можу"
+        - "можеш"
+        - "може"
+        - "можемо"
+        - "можете"
+        - "можуть"
+    - name: "Вміти"
+      items:
+        - "вмію"
+        - "вмієш"
+        - "вміє"
+        - "вміємо"
+        - "вмієте"
+        - "вміють"
+
+- type: quiz
+  title: "Оберіть правильне слово"
+  instruction: "Read the situation and choose the correct modal word."
+  items:
+    - question: "Що ви скажете, якщо ви зараз дуже зайняті?"
+      explanation: "Use 'не можу' to describe a temporary lack of time."
+      options:
+        - text: "Я не можу прийти."
+          correct: true
+        - text: "Я не вмію прийти."
+          correct: false
+        - text: "Мені не можна прийти."
+          correct: false
+        - text: "Я не хочу прийти."
+          correct: false
+    - question: "Як запитати, чи має людина навичку плавати?"
+      explanation: "Use 'вміти' for learned skills."
+      options:
+        - text: "Ти вмієш плавати?"
+          correct: true
+        - text: "Ти можеш плавати?"
+          correct: false
+        - text: "Можна плавати?"
+          correct: false
+        - text: "Ти плаваєш зараз?"
+          correct: false
+    - question: "Ви хочете ввічливо запитати дозвіл у незнайомця."
+      explanation: "'Можна' is the polite, impersonal way to ask for permission."
+      options:
+        - text: "Можна взяти цей стілець?"
+          correct: true
+        - text: "Я можу взяти стілець?"
+          correct: false
+        - text: "Я вмію брати стілець?"
+          correct: false
+        - text: "Ти можеш взяти стілець?"
+          correct: false
+    - question: "Що написано на знаку, якщо тут заборонено курити?"
+      explanation: "'Не можна' expresses a strict external rule or prohibition."
+      options:
+        - text: "Тут не можна курити."
+          correct: true
+        - text: "Тут не вміють курити."
+          correct: false
+        - text: "Я не можу курити."
+          correct: false
+        - text: "Ми не можемо курити."
+          correct: false
+    - question: "Як сказати, що ви ніколи не вчилися водити машину?"
+      explanation: "Use 'не вмію' to describe a lack of practical knowledge."
+      options:
+        - text: "Я не вмію водити."
+          correct: true
+        - text: "Я не можу водити."
+          correct: false
+        - text: "Мені не можна водити."
+          correct: false
+        - text: "Тут не можна водити."
+          correct: false
+    - question: "Вибачення, якщо сьогодні ви почуваєтеся дуже хворим."
+      explanation: "Health is a temporary circumstance, so use 'не можу'."
+      options:
+        - text: "Я не можу допомогти сьогодні."
+          correct: true
+        - text: "Я не вмію допомогти сьогодні."
+          correct: false
+        - text: "Мені не можна допомогти сьогодні."
+          correct: false
+        - text: "Я не хочу допомогти зараз."
+          correct: false
+    - question: "Як запитати колегу про його вільний час завтра?"
+      explanation: "Use 'могти' to ask about circumstantial ability and time."
+      options:
+        - text: "Ти можеш прийти завтра?"
+          correct: true
+        - text: "Ти вмієш прийти завтра?"
+          correct: false
+        - text: "Тобі можна прийти завтра?"
+          correct: false
+        - text: "Ти приходиш часто?"
+          correct: false
+    - question: "Як описати свій талант до малювання картин?"
+      explanation: "Artistic talents and acquired skills use 'вміти'."
+      options:
+        - text: "Я добре вмію малювати."
+          correct: true
+        - text: "Я добре можу малювати."
+          correct: false
+        - text: "Мені можна добре малювати."
+          correct: false
+        - text: "Я малюю зараз добре."
+          correct: false
+
+- type: fill-in
+  title: "Вставте правильну форму 'могти'"
+  instruction: "Choose the correctly conjugated form of the verb 'могти'."
+  items:
+    - sentence: "Я _____ допомогти вам сьогодні ввечері."
+      answer: "можу"
+      options:
+        - "можу"
+        - "можеш"
+        - "може"
+        - "можемо"
+      explanation: "First person singular (I) takes the form 'можу'."
+    - sentence: "Ти _____ прийти до мене завтра?"
+      answer: "можеш"
+      options:
+        - "можу"
+        - "можеш"
+        - "може"
+        - "можемо"
+      explanation: "Second person singular (you) takes the form 'можеш'."
+    - sentence: "Він зараз не _____ говорити по телефону."
+      answer: "може"
+      options:
+        - "можу"
+        - "можеш"
+        - "може"
+        - "можуть"
+      explanation: "Third person singular (he) takes the form 'може'."
+    - sentence: "Ми _____ зачекати тут десять хвилин."
+      answer: "можемо"
+      options:
+        - "можемо"
+        - "можете"
+        - "можуть"
+        - "можу"
+      explanation: "First person plural (we) takes the form 'можемо'."
+    - sentence: "Ви _____ зробити це завдання сьогодні?"
+      answer: "можете"
+      options:
+        - "можемо"
+        - "можете"
+        - "можуть"
+        - "може"
+      explanation: "Second person plural/formal (you) takes the form 'можете'."
+    - sentence: "Вони _____ допомогти нам зробити цей проєкт."
+      answer: "можуть"
+      options:
+        - "можемо"
+        - "можете"
+        - "можуть"
+        - "можеш"
+      explanation: "Third person plural (they) takes the form 'можуть'."
+    - sentence: "Моя сестра не _____ прийти на зустріч."
+      answer: "може"
+      options:
+        - "можу"
+        - "можеш"
+        - "може"
+        - "можуть"
+      explanation: "Сестра (she) is third person singular, so we use 'може'."
+    - sentence: "Мої друзі _____ зачекати мене у кафе."
+      answer: "можуть"
+      options:
+        - "можемо"
+        - "можете"
+        - "можуть"
+        - "може"
+      explanation: "Друзі (they) is third person plural, so we use 'можуть'."
+
+- type: quiz
+  title: "Оцінка правильності фраз"
+  instruction: "Determine if the phrase is correct or incorrect for the situation."
+  items:
+    - question: "Щоб запитати людину, чи має вона навичку гри на гітарі, ви скажете 'Ти можеш грати на гітарі?' чи 'Ти вмієш грати?'"
+      explanation: "You must use 'вмієш' to ask about a learned skill like playing an instrument."
+      options:
+        - text: "Ти вмієш грати?"
+          correct: true
+        - text: "Ти можеш грати?"
+          correct: false
+        - text: "Можна грати?"
+          correct: false
+        - text: "Ви граєте?"
+          correct: false
+    - question: "Ви захворіли і не йдете на роботу. Що ви скажете своєму босу?"
+      explanation: "Sickness is a temporary circumstance. You must say 'Я не можу працювати сьогодні'."
+      options:
+        - text: "Я не можу працювати сьогодні."
+          correct: true
+        - text: "Я не вмію працювати сьогодні."
+          correct: false
+        - text: "Мені не можна працювати."
+          correct: false
+        - text: "Я не буду працювати."
+          correct: false
+    - question: "Як правильно і дуже ввічливо запитати дозволу взяти стілець у кафе?"
+      explanation: "Using 'Можна + infinitive' is the perfect, polite way to ask for general permission."
+      options:
+        - text: "Можна взяти стілець?"
+          correct: true
+        - text: "Я можу взяти стілець?"
+          correct: false
+        - text: "Ти можеш дати стілець?"
+          correct: false
+        - text: "Я вмію брати стілець?"
+          correct: false
+    - question: "Яку фразу ви швидше за все побачите на знаку, що забороняє паркування?"
+      explanation: "'Не можна' is used to express external rules and prohibitions on signs."
+      options:
+        - text: "Тут не можна паркуватися."
+          correct: true
+        - text: "Тут не вміють паркуватися."
+          correct: false
+        - text: "Я не можу паркуватися."
+          correct: false
+        - text: "Ми не можемо паркуватися."
+          correct: false
+    - question: "Ви ніколи не вчилися плавати. Що ви скажете друзям у басейні?"
+      explanation: "If you lack the knowledge, you must use 'не вмію'."
+      options:
+        - text: "Я не вмію плавати."
+          correct: true
+        - text: "Я не можу плавати."
+          correct: false
+        - text: "Мені не можна плавати."
+          correct: false
+        - text: "Тут не можна плавати."
+          correct: false
+    - question: "Слово 'можна' завжди змінює свою форму залежно від особи (я, ти, він)?"
+      explanation: "'Можна' is impersonal and stays the same regardless of the person."
+      options:
+        - text: "Ні, воно завжди однакове."
+          correct: true
+        - text: "Так, воно завжди змінюється."
+          correct: false
+        - text: "Воно змінюється тільки для 'я'."
+          correct: false
+        - text: "Воно змінюється тільки у минулому."
+          correct: false
+    - question: "Ваш друг каже: 'Я не можу говорити'. Що це означає у цій ситуації?"
+      explanation: "It means a temporary lack of time or ability."
+      options:
+        - text: "Він зараз дуже зайнятий."
+          correct: true
+        - text: "Він не вміє говорити."
+          correct: false
+        - text: "Йому заборонили говорити."
+          correct: false
+        - text: "Він ніколи не говорив."
+          correct: false
+    - question: "Що означає, якщо людина каже 'Я не вмію готувати'?"
+      explanation: "This describes a lack of a learned skill."
+      options:
+        - text: "Вона ніколи не вчилася готувати."
+          correct: true
+        - text: "Вона зараз не має часу готувати."
+          correct: false
+        - text: "Їй заборонено готувати їжу."
+          correct: false
+        - text: "На кухні немає світла."
+          correct: false
+
+- type: unjumble
+  title: "Складіть речення"
+  instruction: "Rearrange the words to form correct sentences."
+  items:
+    - words:
+        - "Я"
+        - "добре"
+        - "вмію"
+        - "плавати"
+      answer: "Я добре вмію плавати"
+    - words:
+        - "Тут"
+        - "не"
+        - "можна"
+        - "курити"
+      answer: "Тут не можна курити"
+    - words:
+        - "Ти"
+        - "можеш"
+        - "прийти"
+        - "завтра"
+      answer: "Ти можеш прийти завтра"
+    - words:
+        - "Ми"
+        - "не"
+        - "можемо"
+        - "допомогти"
+      answer: "Ми не можемо допомогти"
+    - words:
+        - "Вона"
+        - "вміє"
+        - "готувати"
+        - "вечерю"
+      answer: "Вона вміє готувати вечерю"
+    - words:
+        - "Можна"
+        - "подивитися"
+        - "це"
+        - "меню"
+      answer: "Можна подивитися це меню"
+
+- type: fill-in
+  title: "Вставте правильну форму 'вміти'"
+  instruction: "Choose the correctly conjugated form of the verb 'вміти'."
+  items:
+    - sentence: "Я _____ дуже добре грати на гітарі."
+      answer: "вмію"
+      options:
+        - "вмію"
+        - "вмієш"
+        - "вміє"
+        - "вміємо"
+      explanation: "First person singular is 'вмію'."
+    - sentence: "Ти _____ малювати гарні картини?"
+      answer: "вмієш"
+      options:
+        - "вмію"
+        - "вмієш"
+        - "вміє"
+        - "вміють"
+      explanation: "Second person singular is 'вмієш'."
+    - sentence: "Мій брат не _____ плавати кролем."
+      answer: "вміє"
+      options:
+        - "вмію"
+        - "вмієш"
+        - "вміє"
+        - "вміють"
+      explanation: "Брат (he) takes the form 'вміє'."
+    - sentence: "Ми _____ кататися на велосипеді."
+      answer: "вміємо"
+      options:
+        - "вміє"
+        - "вміємо"
+        - "вмієте"
+        - "вміють"
+      explanation: "First person plural is 'вміємо'."
+    - sentence: "Ви _____ смачно готувати вечерю?"
+      answer: "вмієте"
+      options:
+        - "вміє"
+        - "вміємо"
+        - "вмієте"
+        - "вміють"
+      explanation: "Second person plural/formal is 'вмієте'."
+    - sentence: "Ці діти чудово _____ співати пісні."
+      answer: "вміють"
+      options:
+        - "вміє"
+        - "вміємо"
+        - "вмієте"
+        - "вміють"
+      explanation: "Діти (they) takes the form 'вміють'."
+
+- type: match-up
+  title: "Знайдіть значення заперечень"
+  instruction: "Match the Ukrainian negation with its situational meaning."
+  pairs:
+    - left: "Я не можу прийти."
+      right: "I lack the time today."
+    - left: "Я не вмію плавати."
+      right: "I lack the learned skill."
+    - left: "Тут не можна курити."
+      right: "It is forbidden by rules."
+    - left: "Я не можу говорити."
+      right: "I am busy right now."
+    - left: "Я не вмію водити."
+      right: "I never learned to drive."
+    - left: "Тут не можна паркуватися."
+      right: "It is against the law here."
+
+- type: fill-in
+  title: "Оберіть правильне слово для ситуації"
+  instruction: "Choose the correct word to complete the sentence based on the context."
+  items:
+    - sentence: "Вибачте, я сьогодні зайнятий і не _____ прийти на зустріч."
+      answer: "можу"
+      options:
+        - "можу"
+        - "вмію"
+        - "можеш"
+        - "можна"
+      explanation: "Temporary lack of time requires 'можу'."
+    - sentence: "Мій друг дуже гарно _____ малювати портрети."
+      answer: "вміє"
+      options:
+        - "може"
+        - "вміє"
+        - "можна"
+        - "вміють"
+      explanation: "Drawing is a learned skill, so use 'вміє'."
+    - sentence: "Вибачте, тут _____ взяти цей вільний стілець?"
+      answer: "можна"
+      options:
+        - "може"
+        - "вмію"
+        - "можна"
+        - "можуть"
+      explanation: "Asking for general permission uses the impersonal 'можна'."
+    - sentence: "Я ніколи не вчився, тому я не _____ водити машину."
+      answer: "вмію"
+      options:
+        - "можу"
+        - "вмію"
+        - "можна"
+        - "вміє"
+      explanation: "Lack of a learned skill requires 'вмію'."
+    - sentence: "У цій бібліотеці дуже тихо, тут не _____ голосно говорити."
+      answer: "можна"
+      options:
+        - "можу"
+        - "вмію"
+        - "можна"
+        - "може"
+      explanation: "A rule in a library is expressed with 'не можна'."
+    - sentence: "Чи ти _____ допомогти мені зробити це завдання зараз?"
+      answer: "можеш"
+      options:
+        - "можеш"
+        - "вмієш"
+        - "можна"
+        - "можете"
+      explanation: "Asking about someone's availability right now requires 'можеш'."
+    - sentence: "Моя сестра чудово _____ готувати український борщ."
+      answer: "вміє"
+      options:
+        - "може"
+        - "вміє"
+        - "можна"
+        - "можеш"
+      explanation: "Cooking is a learned practical skill, so use 'вміє'."
+    - sentence: "Сьогодні басейн зачинений, тому ми не _____ плавати."
+      answer: "можемо"
+      options:
+        - "можемо"
+        - "вміємо"
+        - "можна"
+        - "можете"
+      explanation: "A temporary circumstance (pool is closed) means we use 'можемо'."
+
+- type: quiz
+  title: "Правила та дозволи у місті"
+  instruction: "Choose the correct phrase for each urban situation."
+  items:
+    - question: "Що ви запитаєте в ресторані, щоб подивитися меню?"
+      explanation: "'Можна подивитися це меню?' is the polite, standard way."
+      options:
+        - text: "Можна подивитися це меню?"
+          correct: true
+        - text: "Я вмію дивитися меню?"
+          correct: false
+        - text: "Ти можеш подивитися меню?"
+          correct: false
+        - text: "Не можна дивитися меню?"
+          correct: false
+    - question: "Яку фразу ви побачите біля лікарні на знаку?"
+      explanation: "Signs prohibiting noise use 'Тут не можна...'."
+      options:
+        - text: "Тут не можна голосно говорити."
+          correct: true
+        - text: "Я не можу голосно говорити."
+          correct: false
+        - text: "Я не вмію голосно говорити."
+          correct: false
+        - text: "Тут не вміють говорити."
+          correct: false
+    - question: "Як ви ввічливо запитаєте дозволу увійти до кабінету лікаря?"
+      explanation: "'Можна увійти?' is impersonal and polite."
+      options:
+        - text: "Можна увійти до кабінету?"
+          correct: true
+        - text: "Я вмію увійти до кабінету?"
+          correct: false
+        - text: "Ви вмієте увійти до кабінету?"
+          correct: false
+        - text: "Ти можеш увійти до кабінету?"
+          correct: false
+    - question: "Ви хочете зробити фото в музеї. Що ви запитаєте?"
+      explanation: "Ask for permission using 'Тут можна фотографувати?'."
+      options:
+        - text: "Тут можна фотографувати?"
+          correct: true
+        - text: "Я вмію фотографувати тут?"
+          correct: false
+        - text: "Ви вмієте фотографувати?"
+          correct: false
+        - text: "Ти можеш фотографувати?"
+          correct: false
+    - question: "Ваш друг пропонує піти в кіно, але ви хворієте."
+      explanation: "You lack the physical state to go, so you use 'не можу'."
+      options:
+        - text: "Я не можу піти сьогодні."
+          correct: true
+        - text: "Я не вмію піти сьогодні."
+          correct: false
+        - text: "Мені не можна піти сьогодні."
+          correct: false
+        - text: "Тут не можна піти сьогодні."
+          correct: false
+    - question: "Ви бачите знак із перекресленою сигаретою. Що він означає?"
+      explanation: "This is a strict prohibition sign, so it means 'не можна курити'."
+      options:
+        - text: "Тут не можна курити."
+          correct: true
+        - text: "Тут можна курити."
+          correct: false
+        - text: "Я не вмію курити."
+          correct: false
+        - text: "Я не можу курити."
+          correct: false
+    - question: "Ви хочете запитати друга, чи має він вільний час увечері."
+      explanation: "Asking about free time uses 'можеш'."
+      options:
+        - text: "Ти можеш зустрітися зі мною?"
+          correct: true
+        - text: "Ти вмієш зустрітися зі мною?"
+          correct: false
+        - text: "Можна зустрітися зі мною?"
+          correct: false
+        - text: "Ти не вмієш зустрітися?"
+          correct: false
+    - question: "Як сказати, що ви ніколи не грали на музичних інструментах?"
+      explanation: "Playing an instrument is a learned skill, so you 'не вмію грати'."
+      options:
+        - text: "Я не вмію грати на гітарі."
+          correct: true
+        - text: "Я не можу грати на гітарі."
+          correct: false
+        - text: "Тут не можна грати на гітарі."
+          correct: false
+        - text: "Мені не можна грати."
+          correct: false

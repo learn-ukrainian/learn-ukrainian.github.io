@@ -1,0 +1,13 @@
+{
+  "track": "ruth",
+  "slug": "likarski-poradnyky",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T21:46:28Z",
+      "task_id": "v3-likarski-poradnyky-pA",
+      "mode": "meta-only"
+    }
+  }
+}

@@ -1,59 +1,25 @@
 {
   "slug": "phone-basics",
   "track": "a1",
-  "module_num": 41,
+  "module_num": 58,
   "mode": "v3",
   "phases": {
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-20T22:58:13Z",
-      "words": 2890,
+      "timestamp": "2026-02-28T18:46:14Z",
+      "words": 3499,
       "attempts": 1
-    },
-    "3a": {
-      "status": "complete",
-      "timestamp": "2026-02-20T22:59:44Z",
-      "note": "v3-phase-C"
-    },
-    "3b": {
-      "status": "complete",
-      "timestamp": "2026-02-20T22:59:44Z",
-      "note": "v3-phase-C"
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-23T00:25:20Z",
-      "note": "v3-audit-autofix"
+      "timestamp": "2026-02-28T18:49:08Z",
+      "note": "v3-audit"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-23T00:25:20Z",
-      "note": "v3-audit-autofix"
-    },
-    "6": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:29:52Z",
-      "note": "v3-phase-D"
-    },
-    "6b": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:29:52Z",
-      "note": "v3-phase-D"
-    },
-    "7-final": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:29:52Z",
-      "note": "v3-phase-D"
-    },
-    "9-final-review": {
-      "status": "complete",
-      "timestamp": "2026-02-20T23:14:50Z",
-      "verdict": "APPROVE"
-    },
-    "8": {
-      "status": "complete",
-      "timestamp": "2026-02-23T00:29:53Z"
+      "timestamp": "2026-02-28T18:49:08Z",
+      "note": "v3-audit"
     }
   },
-  "last_updated": "2026-02-23T00:29:53Z"
+  "last_updated": "2026-02-28T18:49:08Z"
 }

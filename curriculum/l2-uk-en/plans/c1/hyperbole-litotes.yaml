@@ -1,6 +1,6 @@
-module: c1-038
+module: c1-050
 level: C1
-sequence: 38
+sequence: 50
 slug: hyperbole-litotes
 version: '2.0'
 title: 'Гіпербола та літота: Гра масштабів'
@@ -68,7 +68,7 @@ grammar:
 - Hyperbole (exaggeration)
 - Litotes (understatement via double negation)
 - Emphasis and modesty strategies
-phase: C1.4 Advanced Stylistics & Rhetoric
+phase: C1.5 [Stylistics & Rhetoric]
 persona:
   voice: Senior Specialist
   role: Майстер риторики

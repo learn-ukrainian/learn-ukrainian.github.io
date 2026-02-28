@@ -1,10 +1,12 @@
-module: c2-022
-level: c2
-sequence: 22
+module: c2-018
+level: C2
+sequence: 18
+slug: rhythm-prosody
 version: '2.0'
 title: Ритм і просодія прози
 focus: stylistics
 pedagogy: TTT
+phase: 'C2.1 [Stylistics & Rhetoric]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: 'Вступ: Природа ритму в прозовому тексті (Introduction: The Nature of Rhythm
     in Prose)'
-  words: 600
+  words: 650
   points:
   - Поняття ритму як «серцебиття» тексту та його відмінність від поетичного метра
     (відсутність регулярної стопи)
@@ -33,7 +35,7 @@ content_outline:
     ритмічної варіативності'
 - section: Фонетична стилістика та закони евфонії (Phonetic Stylistics and Laws of
     Euphony)
-  words: 1000
+  words: 1100
   points:
   - 'Дотримання §4.3.2 Держстандарту: чергування у/в, і/й, з/зі/із як стилістичний
     імператив української мови'
@@ -44,7 +46,7 @@ content_outline:
     вправи на редагування важковимовних кластерів'
 - section: Синтаксична архітектура та інтонаційний період (Syntactic Architecture
     and Intonational Period)
-  words: 1000
+  words: 1100
   points:
   - 'Структура синтаксичного періоду: протасис (підвищення напруги) та аподосис (логічне
     завершення/спад)'
@@ -56,7 +58,7 @@ content_outline:
     кожного значущого слова'
 - section: 'Ритмічні стратегії класиків: Коцюбинський vs. Стефаник (Rhythmic Strategies
     of Classics: Kotsiubynsky vs. Stefanyk)'
-  words: 1000
+  words: 1100
   points:
   - 'Культурний гачок: Михайло Коцюбинський та «музична проза» («Intermezzo») — імпресіоністичний
     ритм на асоціаціях'
@@ -68,7 +70,7 @@ content_outline:
     шедевром (на прикладі М. Бажана або М. Лукаша)'
 - section: 'Практикум: Техніки шліфування індивідуального ритму (Workshop: Techniques
     for Refining Individual Rhythm)'
-  words: 900
+  words: 1050
   points:
   - Читання вголос як основний інструмент діагностики ритмічних збоїв у власному тексті
   - 'Вправи на редагування темпу: розширення періодів для рефлексії та стиснення для

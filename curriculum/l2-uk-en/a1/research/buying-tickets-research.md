@@ -1,32 +1,31 @@
-# Дослідження: Buying Tickets (A1)
+# Дослідження: Buying Tickets
 
 ## State Standard Reference
-§3.7 Подорожі: "вокзал, автовокзал, аеропорт (летовище); основні дії на позначення руху (іти, їхати – у базових фразах)"
-§2 Каталог А: "прохання зробити щось: Дайте, будь ласка"
-Alignment: Цей модуль реалізує лексичну тему §3.7 та комунікативну інтенцію §2 (купівля квитка) через лексичні конструкції руху.
+§3.7: "вокзал, автовокзал, аеропорт (летовище); перетин кордону (митний контроль); основні дії на позначення руху (іти, їхати – у базових фразах); назви частин світу; туристичні принади (цікаві місця й об’єкти)."
+Alignment: This module directly fulfills the thematic requirements of §3.7 by teaching vocabulary for stations (вокзал, автовокзал), ticket purchasing, and basic movement destinations (їхати до).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **квиток** | High (Top 500) | квиток до Києва, електронний квиток, купувати квиток |
-| **поїзд** | High | сідати на поїзд, розклад поїздів, швидкий поїзд |
-| **вокзал** | High | залізничний вокзал, на вокзалі, центральний вокзал |
-| **місце** | Very High | вільне місце, нижнє/верхнє місце, ваше місце |
-| **до** | High (Prep) | до Львова, до Києва (direction) |
+| квиток | Top 500 | купити квиток, один квиток, електронний квиток |
+| поїзд | High frequency | сісти на поїзд, розклад поїздів |
+| вокзал | High frequency | залізничний вокзал, автовокзал |
+| місце | Very high frequency | ваше місце, вільне місце, нижнє місце |
+| до (preposition) | Top 100 | до Києва, до Львова, квиток до |
 
 ## Cultural Hooks
-1.  **Укрзалізниця & Tea**: The iconic tradition of drinking tea from glass holders (`підстаканники`) served by conductors (`провідники`). It's a symbol of Ukrainian train travel comfort.
-2.  **Carriage Classes**: The social distinction between `плацкарт` (open dormitory style, communal food sharing) and `купе` (closed 4-berth compartment, more privacy). Note: modern Intercity trains are changing this, but sleepers remain dominant for long distances.
+1. **Укрзалізниця & Підстаканники**: The modern Ukrainian railway experience blends high-tech (app-based electronic tickets, QR codes) with beloved traditions, like drinking tea served by the conductor (провідник) in iconic metal glass holders (підстаканники).
+2. **Плацкарт Culture**: The open-plan sleeping carriage (плацкарт) is a unique social space in Eastern European travel. Rather than framing it negatively, it should be presented as an authentic way to experience local life, sharing food and stories.
 
 ## Common Learner Errors
-1.  **Direction Preposition**: Using *в* instead of *до* for movement towards a city (e.g., *їхати в Львів* ❌ instead of *їхати до Львова* ✅). *Note: In A1, this is taught as a lexical chunks pattern.*
-2.  **Gender Agreement**: *Одна квиток* ❌ instead of *Один квиток* ✅ (students confuse masculine *квиток* with feminine due to -ок/-ка endings or L1 interference).
-3.  **Case Confusion**: Using Nominative for destination (*до Львів* ❌ instead of *до Львова* ✅).
+1. **Wrong direction preposition**: "їхати в Львів" → "їхати до Львова" — English speakers default to "in/into" for cities, but Ukrainian uses "до" (to) + Genitive for destination.
+2. **Gender mismatch with numbers**: "одна квиток" → "один квиток" — Learners forget that "квиток" is masculine and use the feminine "одна" by default.
 
 ## Cross-References
-- Builds on: **a1-17** (Numbers and Money - crucial for prices and times), **a1-38** (At the Store - transactional phrases).
-- Prepares for: **a1-40** (Taking Transport - focuses on the act of riding/routes).
+- Builds on: a1-22 (Numbers and Money), a1-61 (At the Store)
+- Prepares for: a1-57 (Taking Transport)
 
 ## Notes for Content Writing
-- **Grammar Scope**: A1 State Standard formally introduces Accusative (`в/на`) for direction. The construction `до + Genitive` is technically A2, so for A1 it must be treated as **"Lexicalized Grammar"** (fixed formulas: *до Києва, до Львова*). Avoid deep Genitive case theory; focus on the pattern.
-- **Realism**: Use explicit distinctions between `автовокзал` (intercity bus terminal) and `автостанція` (smaller local station) as this is critical for navigation in Ukraine.
+- **Decolonized Framing**: Present the railway culture (tea, platzkart) as a distinctly Ukrainian experience, emphasizing the modern efficiency of Укрзалізниця (UZ) rather than framing it as a relic of the Soviet past.
+- **Lexicalized Grammar**: Since this is A1, do not explain the full Genitive case paradigm. Treat "до Києва" and "до Львова" as fixed lexical chunks.
+- **English Scaffolding**: As an A1 module, use English to introduce new concepts, but rely heavily on Ukrainian for the mini-dialogues and examples.

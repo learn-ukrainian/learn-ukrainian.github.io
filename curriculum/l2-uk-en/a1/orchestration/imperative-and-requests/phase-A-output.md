@@ -3,37 +3,35 @@
 # Дослідження: Imperative and Requests
 
 ## State Standard Reference
-§4.2.4.2: "Imperative mood — 2nd person only at A1"
-Alignment: This module strictly adheres to the A1 limitation by teaching only the 2nd person singular ("ти") and plural/formal ("ви") imperative forms, deliberately excluding 1st person plural ("Let's") and 3rd person forms which are reserved for A2.
+§4.2.4.2: "Наказовий спосіб. Форми 2-ї особи однини і множини наказового способу деяких дієслів: читати (читай, читайте), прочитати (прочитай, прочитайте), сказати (скажи, скажіть), дати (дай, дайте), писати (пиши, пишіть), написати (напиши, напишіть), сідати (сідай, сідайте), сидіти (сиди, сидіть)."
+Alignment: The module precisely targets the A1 requirement by teaching the 2nd person singular and plural imperative forms of essential verbs.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| читай(те) | High (classroom) | читайте текст, читай уголос |
-| пиши(те) | High (classroom) | пишіть у зошиті, пиши ручкою |
-| скажи(те) | Very High (daily) | скажіть, будь ласка; скажи мені |
-| дай(те) | Very High (daily) | дайте, будь ласка; дай сюди |
-| іди(те) | High (movement) | ідіть сюди, іди додому |
-| слухай(те)| High (classroom) | слухайте уважно, слухай мене |
-| дивись(те)| High (classroom) | дивіться на дошку, дивись туди |
-| стій(те) | Medium (safety) | стійте!, не рухайтеся |
+| сказати | High (Top 20 verbs) | Скажіть, будь ласка... |
+| дати | High (Top 20 verbs) | Дайте, будь ласка... |
+| іти | High | Ідіть сюди, іди туди |
+| читати | Medium-High (Classroom) | Читайте текст |
 
 ## Cultural Hooks
-1. "Будь ласка" (please) is always written as two separate words without a hyphen in Ukrainian. It is the universal and authentic way to transform a harsh command into a polite request.
-2. The distinction between "ти" and "ви" is a core pillar of Ukrainian social etiquette. Using the "ви" form of the imperative (ending in -те/-іть) is non-negotiable when speaking to strangers, elders, or service workers to show respect.
+1. **The Politeness of "Будь ласка"**: In Ukrainian, the imperative mood combined with "будь ласка" is the standard, culturally appropriate way to make a polite request. It does not sound harsh or bossy, unlike direct commands in some other languages.
+2. **Flexible Syntax**: The phrase "будь ласка" can naturally float within the sentence (beginning, middle, or end) without changing the core meaning, showcasing the fluidity of Ukrainian word order.
 
 ## Common Learner Errors
-1. **Infinitive instead of Imperative** → "Читати текст!" instead of "Читайте текст!". *Why it happens*: In English, the base verb (read) is used for commands. Learners mistakenly use the Ukrainian infinitive (читати). The infinitive is only used for impersonal rules/signs, not direct communication.
-2. **Over-regularization of Irregular Stems** → "Дайи" instead of "Дай", or "Сказай" instead of "Скажи". *Why it happens*: Applying regular verb suffix rules to highly irregular or mutating stems. These must be memorized as set forms.
+1. Infinitive instead of Imperative → *Читати текст!* instead of *Читай текст!* — Learners often translate "to read" as a command directly, but infinitives are for impersonal signs, not personal requests.
+2. Incorrect stem extraction → *Пис!* instead of *Пиши!* — Learners simply drop "-ати" without applying the consonant stem suffix "-и".
+3. Overusing "Ти" → Using *Дай!* with strangers — Failing to apply the "-те/-іть" suffix for the polite/plural "Ви" form in service contexts.
 
 ## Cross-References
 - Builds on: a1-46 (Must and Want)
 - Prepares for: a1-48 (Body and Health), a1-55 (Prohibitions and Signs)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Emphasize Ukrainian consonant mutations (like к→ж in сказати→скажи) as natural, beautiful features of the language without comparing them to Russian. Do not frame "будь ласка" in relation to "пожалуйста".
-- **Scaffolding**: Since this is A1, ensure heavy English scaffolding is used to explain the concept of the imperative mood before presenting the Ukrainian paradigms.
-- **Tone**: Maintain the "Patient Supportive Tutor" persona. Frame the commands not as aggressive orders, but as helpful classroom instructions and everyday requests.
+- Module is in A1.5 (Immersion: 35-40%). Ensure English scaffolding is explicitly provided for the grammatical theory of the imperative mood.
+- Frame the Ukrainian imperative positively: it is an efficient and polite way to communicate when paired with appropriate softeners.
+- Ensure vocabulary hints do not use Russianisms.
+- Keep phonetic explanations of consonant mutations (к→ж) very simple and focused on pattern recognition rather than deep phonology.
 
 ===RESEARCH_END===
 
@@ -42,35 +40,35 @@ content_outline:
   - section: "Наказовий спосіб"
     words: 500
     points:
-      - "Introductory English scaffolding: Define the imperative mood (commands, requests, instructions) using simple analogies."
-      - "H3: 'Ти' vs 'Ви' - Explain the critical social difference. Define the formation rule: remove the -ти infinitive ending and add the appropriate imperative suffix."
-      - "H3: Suffix Patterns - Explain the basic suffix additions depending on whether the stem ends in a vowel (-й) or a consonant (-и)."
-      - "Provide a clear warning and examples contrasting direct personal commands (Читай!) with impersonal infinitive rules (Читати!)."
+      - "H3: Вступ. Provide English scaffolding to define the imperative mood. Reassure learners that using imperatives is polite and normal in Ukrainian daily life."
+      - "H3: Форми «Ти» та «Ви». Define the social context for «Ти» (informal/singular) and «Ви» (formal/plural). Explain that «Ви» adds «-те» or «-іть» to the «Ти» form."
+      - "H3: Правила утворення. Explain dropping the «-ти» infinitive ending. Detail the two patterns: vowel stems take «-й/-йте» (читати → читай), consonant stems take «-и/-іть» (робити → роби), with 2+ examples each."
+      - "Увага (Learner Warning): Contrast personal commands («Читай!») with impersonal infinitives («Читати!»), explaining why learners shouldn't use infinitives for direct requests."
   - section: "Вісім обов'язкових дієслів"
     words: 500
     points:
-      - "Introduce the 8 essential State Standard verbs required for A1. Provide a master reference table with Infinitive, 'Ти' form, and 'Ви' form."
-      - "H3: Regular Classroom Verbs - Focus on читати, слухати, дивитися, іти with simple classroom context sentences."
-      - "H3: Consonant Mutations - Explain the к→ж mutation in сказати → скажи(те) and the sibilant shift in писати → пиши(те)."
-      - "H3: Irregular Short Forms - Explicitly drill дати → дай(те) and стояти → стій(те) as exceptions that must be memorized."
+      - "H3: Таблиця дієслів. Present a table of the 8 State Standard verbs (читати, писати, сказати, дати, іти, слухати, дивитися, стояти) with Infinitive, «Ти» form, «Ви» form, and English translation."
+      - "H3: Класні команди. Provide short, contextual Ukrainian sentences for regular verbs (читати, слухати, дивитися, іти), e.g., «Слухайте уважно»."
+      - "H3: Зміни приголосних. Gently explain consonant mutations for сказати (к→ж: скажи) and писати (с→ш: пиши). Focus on the pattern."
+      - "H3: Важливі винятки. Highlight the irregular stems for дати (дай/дайте) and стояти (стій/стійте) that require strict memorization."
   - section: "Ввічливе прохання"
     words: 400
     points:
-      - "H3: The Magic Words 'Будь ласка' - Teach it as the universal polite softener. Show its flexibility at the beginning, middle, or end of a sentence."
-      - "H3: Formal Requests - Introduce 'Прошу вас' + infinitive for highly formal or service-oriented contexts."
-      - "Provide a brief, simplified preview of the advanced pattern 'Чи не могли б ви...?' (Could you...?) as an aspirational polite phrase for A1 learners."
+      - "H3: Чарівні слова «будь ласка». Introduce «будь ласка» as the universal softener. Provide 3 examples showing its flexible position (start, middle, end of sentence)."
+      - "H3: Офіційні прохання з «прошу». Introduce the structure «Прошу вас» + infinitive for formal or service contexts, with 2 examples."
+      - "H3: Ввічлива конструкція. Provide a simplified preview of «Чи не могли б ви...?» (Could you...?) as a fixed, polite vocabulary chunk for A1 learners."
   - section: "Заборони"
     words: 300
     points:
-      - "Explain negative imperatives: simply add the particle 'не' before the established imperative form."
-      - "Provide 5-6 clear examples of common negative commands (Не кури! Не біжи! Не чіпай!)."
-      - "Preview concept for module a1-55: Briefly distinguish between a direct personal prohibition (Не чіпай!) and a public sign (Не торкатися!)."
+      - "H3: Заперечна форма. Explain the rule of adding the negative particle «не» directly before the imperative verb."
+      - "Приклади (Examples): Provide 5-6 bulleted examples of common negative commands (e.g., Не кури! Не біжи! Не чіпай!)."
+      - "Контекст (Context Note): Briefly preview the difference between personal prohibitions (Не чіпай!) and public impersonal signs (Не торкатися! - linking to module a1-55)."
   - section: "Практика"
     words: 300
     points:
-      - "Include a mini-dialogue demonstrating polite requests in a cafe or classroom setting."
-      - "Provide an escalation drill: show the progression from a direct 'ти' command (Дай), to a polite 'ви' command (Дайте, будь ласка), to an indirect request."
-      - "Add a brief 'Self-Check' English-to-Ukrainian situational prompt exercise for the 8 required verbs."
+      - "H3: Міні-діалог. Present a short, realistic dialogue in a cafe or classroom combining direct commands and polite requests."
+      - "H3: Тренування ввічливості. Demonstrate 'politeness escalation' with a step-by-step upgrade: «Дай» → «Дайте» → «Дайте, будь ласка»."
+      - "H3: Перевірка. A 4-item self-check where the learner translates situational English commands into Ukrainian using the 8 required verbs."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===

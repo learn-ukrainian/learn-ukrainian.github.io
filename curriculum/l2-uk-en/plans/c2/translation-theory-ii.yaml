@@ -1,10 +1,12 @@
-module: c2-085
-level: c2
-sequence: 85
+module: c2-076
+level: C2
+sequence: 76
+slug: translation-theory-ii
 version: '2.0'
 title: Теорія перекладу II — Поглиблений курс
 focus: stylistics
 pedagogy: TTT
+phase: 'C2.4 [Meta-Skills & Capstone]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: 'Вступ: Перекладознавство та українська традиція (Introduction: Translation
     Studies and Ukrainian Tradition)'
-  words: 700
+  words: 900
   points:
   - 'Місце перекладознавства серед гуманітарних наук та його розвиток в Україні: від
     Котляревського до сучасності'
@@ -35,7 +37,7 @@ content_outline:
     повідомлень) як форма перекладацької компресії'
 - section: 'Ключові концепції: Еквівалентність та адекватність (Key Concepts: Equivalence
     and Adequacy)'
-  words: 800
+  words: 1000
   points:
   - Диференціація понять «еквівалентність» та «адекватність» у сучасному перекладознавчому
     дискурсі
@@ -47,7 +49,7 @@ content_outline:
     інтенції'
 - section: 'Перекладацькі стратегії: Одомашнення та очуження (Translation Strategies:
     Domestication and Foreignization)'
-  words: 900
+  words: 1100
   points:
   - 'Концепція Лоуренса Венуті: «невидимість» перекладача та етичний вибір між двома
     полюсами'
@@ -59,7 +61,7 @@ content_outline:
     ідентичності
 - section: Трансформації та типові помилки перекладача (Transformations and Common
     Translator Errors)
-  words: 800
+  words: 1000
   points:
   - 'Лексичні та граматичні трансформації: конкретизація, генералізація, модуляція
     та перестановка'
@@ -71,7 +73,7 @@ content_outline:
     природного балансу
 - section: Етика, деколонізація та оцінка якості (Ethics, Decolonization, and Quality
     Assessment)
-  words: 800
+  words: 1000
   points:
   - 'Відповідальність перекладача в постколоніальному контексті: рішення щодо збереження
     чи стирання «іншості» (agency)'

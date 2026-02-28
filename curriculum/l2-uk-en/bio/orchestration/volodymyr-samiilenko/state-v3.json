@@ -5,9 +5,9 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T00:06:26Z",
+      "ts": "2026-02-28T18:35:25Z",
       "task_id": "v3-volodymyr-samiilenko-pA",
-      "mode": "full"
+      "mode": "meta-only"
     }
   }
 }

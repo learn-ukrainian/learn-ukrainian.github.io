@@ -1,10 +1,12 @@
-module: c2-047
-level: c2
-sequence: 47
+module: c2-045
+level: C2
+sequence: 45
+slug: terminology-acquisition-i
 version: '2.0'
 title: Опанування термінології I — Системний підхід
 focus: vocabulary
 pedagogy: TTT
+phase: 'C2.3 [Professional Language]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: 'Вступ: Когнітивні стратегії та історичний контекст (Introduction: Cognitive
     Strategies and Historical Context)'
-  words: 700
+  words: 900
   points:
   - Чому системний підхід (когнітивні карти) ефективніший за механічне заучування
     на рівні C2.
@@ -34,7 +36,7 @@ content_outline:
   - 'Внесок Івана Пулюя: Розробка фізичної термінології та стратегії творення питомих
     відповідників.'
 - section: Словотворення та нормативні моделі (Word Formation and Normative Models)
-  words: 900
+  words: 1100
   points:
   - 'Державний стандарт (§4.1.1.1): Опанування професіоналізмів та відмінюваних абревіатур
     у межах фаху.'
@@ -46,7 +48,7 @@ content_outline:
     гіпербола в лінгвістиці та математиці).'
 - section: Міжнародний пласт та міжмовна інтерференція (International Layer and Interlingual
     Interference)
-  words: 800
+  words: 1000
   points:
   - Греко-латинські елементи в науковій мові та стратегії розпізнавання когнатів (cognates).
   - 'Попередження помилок: ''Фальшиві друзі перекладача'' у термінології — розбір
@@ -55,7 +57,7 @@ content_outline:
     до української мови.'
 - section: Синтаксис терміна та подолання типових помилок (Term Syntax and Overcoming
     Typical Errors)
-  words: 800
+  words: 1000
   points:
   - 'Типова помилка: Виправлення активних дієприкметників (наприклад, ''домінуючий
     фактор'' → ''панівний чинник'').'
@@ -64,7 +66,7 @@ content_outline:
   - 'Контекстуальне виведення значення: використання контекстних підказок для інференції
     значень вузькоспеціальних термінів.'
 - section: Академічне опрацювання та ресурси (Academic Processing and Resources)
-  words: 800
+  words: 1000
   points:
   - 'Державний стандарт (§4.3.8): Уміння утворювати вторинні тексти (реферати, повідомлення)
     на основі опрацьованої термінології.'

@@ -7,46 +7,54 @@ content_outline:
   points:
   - 'Note for author: Use English scaffolding for all grammar rules and explanations
     (A1 requirement: 10-50% immersion).'
-  - Introduce the question 'Куди?' (Where to?) and contrast it conceptually with 'Де?'
-    (Where at?).
-  - 'Explain the rule for direction: verbs of motion (іти, їхати) + в/у or на + Accusative
-    case.'
-  - Detail the Accusative forms for inanimate nouns (masculine remains same, feminine
-    -а/-я changes to -у/-ю).
-  - 'Provide clear examples: Я іду в магазин, Я їду на роботу. Include a strict decolonization
-    note: always use ''в Україну'' (entering the state), never ''на Україну''.'
+  - 'Introduce the concept of direction vs. location: contrast the question ''Куди?''
+    (Where to?) with ''Де?'' (Where at?).'
+  - 'Provide the primary rule for direction: Verbs of motion (іти, їхати) + prepositions
+    ''в/у'' or ''на'' + Accusative case.'
+  - 'Explain Accusative case changes for inanimate nouns: masculine remains the same
+    as dictionary form, feminine ''-а/-я'' changes to ''-у/-ю''. Each rule gets a
+    clear H3 subsection.'
+  - Provide contrasting examples to prevent common errors (e.g., 'в магазині' vs 'в
+    магазин').
+  - 'Include a strict decolonization note in English: always use ''в Україну'' (into
+    the sovereign state), never the imperial ''на Україну''.'
 - section: До + Родовий
   words: 400
   points:
-  - Introduce 'до' + Genitive case for direction using English scaffolding.
-  - 'Explain its specific semantic use: approaching a boundary, a city, or going to
-    see a person (до лікаря, до Києва).'
-  - 'Contrast with в/у: ''в лікарню'' (entering the building) vs ''до лікаря'' (visiting
-    the person).'
-  - Provide a brief Genitive ending overview (-а/-я for masculine, -и/-і for feminine)
-    for the core examples used.
+  - Introduce the preposition 'до' (to/towards) and explicitly state it requires the
+    Genitive case, using English explanations.
+  - 'Explain the semantic usage of ''до'': going to see a person (до лікаря, до друга)
+    or approaching a boundary/city (до Києва).'
+  - Create a distinct H3 to contrast 'в/у' (entering inside a building, like 'в лікарню')
+    vs 'до' (going to a person, like 'до лікаря').
+  - Provide a brief, simplified overview of Genitive endings for the core examples
+    used here (masculine '-а/-я', feminine '-и/-і') so learners can recognize the
+    pattern.
 - section: Звідки? + Родовий
   words: 400
   points:
-  - Introduce the question 'Звідки?' (Where from?) with clear English explanations.
-  - Explain 'з / із / зі' + Genitive for spatial origin (з України, зі Львова). Reiterate
-    the decolonized 'з України'.
-  - Explain 'від' + Genitive for origin/returning from a person (від мами, від лікаря).
-  - Include phonetic/euphony rules for choosing between з, із, and зі.
+  - Introduce the question 'Звідки?' (Where from?) using English scaffolding.
+  - Explain the prepositions 'з / із / зі' + Genitive case for spatial origin (e.g.,
+    'з України', 'зі Львова'). Reiterate the decolonized 'з України'.
+  - Explain the preposition 'від' + Genitive for origin related to a person (e.g.,
+    returning 'від лікаря', a gift 'від мами').
+  - Dedicate a subsection to the basic phonetic/euphony rules for choosing between
+    'з', 'із', and 'зі' to sound natural.
 - section: Три питання
   words: 400
   points:
-  - 'Present the unified spatial paradigm: Де? (Location) → Куди? (Destination) →
-    Звідки? (Origin).'
-  - 'Create a comprehensive summary table showing parallel phrases: в школі / в школу
-    / зі школи.'
-  - Demonstrate with multiple noun types (a building, an event, a person, a country).
+  - 'Present the unified spatial paradigm connecting what they''ve learned: Де? (Location)
+    → Куди? (Destination) → Звідки? (Origin).'
+  - Include a comprehensive summary table showing parallel phrases for the same root
+    concept (e.g., в школі / в школу / зі школи).
+  - 'Demonstrate the paradigm with multiple noun types: a building (школа), an event
+    (робота), a person (лікар), and a country (Україна).'
 - section: Практика
   words: 300
   points:
-  - Provide simple dialogue examples reflecting real-life travel and daily movement
-    (Куди ти йдеш? — Я на роботу).
-  - 'Include guided transformation examples: taking a location and producing its direction
-    and origin equivalents.'
-  - Ensure all examples have English translations, maintaining the A1 safe-harbor
-    approach.
+  - Provide 2-3 short, realistic mini-dialogues reflecting daily movement and travel
+    (e.g., meeting at the train station, asking where someone is from).
+  - 'Include guided transformation examples: show a location sentence and walk the
+    learner through producing its direction and origin equivalents.'
+  - Ensure all examples and dialogues have side-by-side English translations to maintain
+    the A1 safe-harbor approach.

@@ -2,46 +2,45 @@ slug: at-the-restaurant
 title: At the Restaurant
 word_target: 2000
 content_outline:
-- section: 'Розминка: Структура меню та етикет'
-  words: 400
+- section: Вступ та культурний контекст
+  words: 450
   points:
-  - Explain the 'First' (soup), 'Second' (main), 'Dessert' structure typical in Ukraine
-    with cultural emphasis
-  - 'Cultural note: The difference between ''ресторан'' (formal, evening) and ''кафе''
-    (casual, all-day)'
-  - 'The universal toast: «Будьмо!» — meaning, pronunciation, and usage in social
-    settings'
-  - 'Vocabulary introduction: categories of dishes (перші страви, гарніри, напої)'
-- section: 'Презентація: Як зробити замовлення'
-  words: 800
+  - Introduce the module context using explicit English scaffolding suitable for A1
+    (25-35% immersion). Present State Standard §3.9 vocabulary for restaurants.
+  - 'Explain the traditional tripartite Ukrainian menu structure: «Перше» (soups/borshch),
+    «Друге» (main dishes/meat/fish with «гарнір»), and «Третє» (drinks/dessert).'
+  - Highlight the cultural distinction between a formal «ресторан» and a casual «кафе».
+  - 'Detail tipping etiquette («чайові»): 10% is standard, and while card payments
+    are ubiquitous in modern Ukraine, cash tips remain popular.'
+- section: 'Презентація: Мова замовлення'
+  words: 650
   points:
-  - 'Step 1: Reservation phrases («Я хотів би замовити столик на...», «У вас є вільний
-    столик?»)'
-  - 'Step 2: Asking for a table on arrival («Столик на двох, будь ласка», «Ми хотіли
-    б сісти біля вікна»)'
-  - 'Step 3: Reading the menu and asking questions («З чого це?», «Це гостре?», «Що
-    ви порадите?»)'
-  - 'Grammar focus: Future tense for ordering («Я буду...» + Accusative Case) — clear
-    examples of case changes'
-  - 'Dietary needs: «Без м''яса» (вегетаріанське), «Без глютену», «У мене алергія
-    на...»'
-  - 'The Bill: «Рахунок, будь ласка», payment methods («Карткою чи готівкою?»), and
-    tipping etiquette'
-- section: 'Практика: Діалоги у ресторані'
+  - 'Present Grammar §4.2.4.1: Future Tense of «бути» (буду, будеш, буде). Establish
+    «Я буду...» as the most natural phrasing for ordering.'
+  - 'Integrate Grammar §4.2.3.2.1: Accusative Case (Знахідний відмінок) for direct
+    objects. Provide 5+ clear example sentences demonstrating the shift from Nominative
+    to Accusative.'
+  - Address and explicitly drill the common learner error of using the Nominative
+    instead of Accusative (e.g., emphasize «Я буду каву» ✅ over «Я буду кава» ❌).
+  - Differentiate the verbs «бронювати» (for tables/reservations) and «замовити» (for
+    dishes), showing accurate usage in context.
+- section: 'Практика: Типові ситуації'
   words: 500
   points:
-  - 'Dialogue 1: Ordering a full three-course dinner (Waitperson vs Guest) — emphasizing
-    the ''Я буду...'' structure'
-  - 'Dialogue 2: Dealing with a problem politely («Вибачте, це холодне», «Я це не
-    замовляв») — polite conflict resolution'
-  - 'Dialogue 3: Splitting the bill («Окремо» vs «Разом») — typical scenario for friends'
-  - 'Drill: Polite request markers («Можна...?», «Будь ласка», «Дякую»)'
-- section: 'Культурний контекст: Українська гостинність'
-  words: 300
+  - Provide 2 mini-dialogues showcasing typical interactions with the «офіціант» (asking
+    for a menu, placing an order).
+  - Explicitly teach and reinforce the word «рахунок» (bill) in phrases like «рахунок,
+    будь ласка», correcting the common Russian interference («счёт» ❌).
+  - 'Introduce modern dietary phrases: «без м''яса» (vegetarian) and «без глютену»
+    (gluten-free), reflecting contemporary Ukrainian dining culture.'
+  - Include an engagement box highlighting how to politely ask questions about the
+    menu (e.g., «З чого це?», «Це гостре?»).
+- section: Підсумок та етикет
+  words: 400
   points:
-  - 'Narrative: A typical evening out in a Ukrainian restaurant (atmosphere, live
-    music, ''жива музика'')'
-  - Phrase «Смачного!» (Bon appetit) — when and how to use it (waiter to guest, guest
-    to guest)
-  - Brief mention of traditional dishes often found on 'Second' course (varenyky,
-    kotleta po-kyivsky) to reinforce vocabulary
+  - 'Introduce the cultural hook of the universal Ukrainian toast: «Будьмо!» and the
+    response «Гей!», explaining its social significance.'
+  - 'Summarize polite closures and dining etiquette: «смачного» (bon appetit), «дякую»,
+    and the polite intonation of «будь ласка».'
+  - Provide a brief recap table of the «Я буду... + Accusative» structure as the core
+    grammatical takeaway.

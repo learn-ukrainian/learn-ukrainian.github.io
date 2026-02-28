@@ -1,7 +1,7 @@
 # Audit Report: M36 — yesterday-past-tense.md
 **Level:** A1 | **Module:** M36 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 2000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-02-28 13:52:09
+**Generated:** 2026-02-28 22:46:26
 
 ## Configuration
 **Type:** A1-grammar
@@ -17,7 +17,7 @@
 **Transliteration:** Allowed
 
 ## Gates
-- **Words:** ✅ 3124/2000 (raw: 3294)
+- **Words:** ✅ 3341/2000 (raw: 3471)
 - **Activities:** ⏳ Deferred (content-only audit)
 - **Density:** ⏳ Deferred (content-only audit)
 - **Unique_types:** ⏳ Deferred (content-only audit)
@@ -29,17 +29,17 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** 🇺🇦 38.6% (target 35-55% (M36))
+- **Immersion:** 🇺🇦 35.2% (target 35-55% (M36))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Yesterday - Past Tense** | ✅ | 79 | Included in Core |
-| **Вступ: Що було вчора?** | ✅ | 686 | Included in Core |
-| **Основи минулого часу** | ✅ | 925 | Included in Core |
-| **Складні випадки та практика** | ✅ | 870 | Included in Core |
-| **Підсумок: Мій день** | ✅ | 564 | Included in Core |
+| **Yesterday - Past Tense** | ✅ | 45 | Included in Core |
+| **Вступ: Що було вчора?** | ✅ | 746 | Included in Core |
+| **Основи минулого часу** | ✅ | 690 | Included in Core |
+| **Складні випадки та практика** | ✅ | 832 | Included in Core |
+| **Підсумок: Мій день** | ✅ | 1028 | Included in Core |

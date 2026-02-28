@@ -1,6 +1,6 @@
-module: c1-051
+module: c1-071
 level: C1
-sequence: 51
+sequence: 71
 slug: hopak-i-kozachok
 version: '2.0'
 title: 'Гопак і козачок: Танці волі та сили'
@@ -64,7 +64,7 @@ objectives:
 grammar:
 - Dynamic narrative registers
 - Terminology of movement
-phase: C1.5 Folk Culture & Fine Arts
+phase: C1.6 [Folk Culture & Traditions]
 persona:
   voice: Senior Specialist
   role: Отаман

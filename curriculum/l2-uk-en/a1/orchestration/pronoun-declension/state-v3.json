@@ -5,9 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:37:07Z",
+      "ts": "2026-02-28T20:30:14Z",
       "task_id": "v3-pronoun-declension-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T20:32:51Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T20:35:27Z",
+      "task_id": "v3-pronoun-declension-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T20:51:42Z",
+      "attempts": 4
     }
   }
 }

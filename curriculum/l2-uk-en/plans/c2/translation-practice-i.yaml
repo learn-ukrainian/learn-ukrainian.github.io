@@ -1,10 +1,12 @@
-module: c2-086
-level: c2
-sequence: 86
+module: c2-077
+level: C2
+sequence: 77
+slug: translation-practice-i
 version: '2.0'
 title: Практика перекладу I — Літературний переклад
 focus: practice
 pedagogy: TTT
+phase: 'C2.4 [Meta-Skills & Capstone]'
 objectives:
 - TBD
 sources:

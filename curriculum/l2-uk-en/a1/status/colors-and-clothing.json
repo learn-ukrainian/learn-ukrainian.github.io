@@ -2,15 +2,15 @@
   "module": "colors-and-clothing",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:27:17.061673Z",
+  "last_audit": "2026-02-28T17:31:24.756621Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:02.798046Z",
-    "meta": "2026-02-19T22:26:17.357667Z",
+    "md": "2026-02-28T17:31:02.030643Z",
+    "meta": "2026-02-28T17:22:54.793760Z",
     "activities": "2026-02-22T23:41:29.161194Z",
     "vocabulary": "2026-02-26T10:56:38.072172Z",
     "plan": "2026-02-28T03:02:37.187153Z",
-    "research": "2026-02-19T22:26:17.351042Z"
+    "research": "2026-02-28T17:22:54.781999Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2287/2000 (raw: 2525)"
+      "message": "3370/2000 (raw: 3648)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "9/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "31/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 3,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

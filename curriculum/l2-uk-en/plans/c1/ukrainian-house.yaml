@@ -1,6 +1,6 @@
-module: c1-068
+module: c1-087
 level: C1
-sequence: 68
+sequence: 87
 slug: ukrainian-house
 version: '2.0'
 title: Українська хата - архітектура та побут
@@ -64,7 +64,7 @@ objectives:
 grammar:
 - architectural terminology
 - spatial descriptions
-phase: C1.5 Folk Culture & Arts
+phase: C1.6 [Folk Culture & Traditions]
 persona:
   voice: Senior Specialist
   role: Етно-архітектор

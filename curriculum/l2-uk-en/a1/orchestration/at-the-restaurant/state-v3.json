@@ -3,31 +3,25 @@
   "slug": "at-the-restaurant",
   "mode": "v3",
   "phases": {
-    "v3-B": {
-      "status": "complete",
-      "ts": "2026-02-20T22:22:23Z",
-      "note": "migrated-from-v2"
-    },
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-20T22:22:25Z",
-      "note": "adopted-existing-meta"
+      "ts": "2026-02-28T17:36:52Z",
+      "task_id": "v3-at-the-restaurant-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T17:42:38Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-20T22:22:25Z",
+      "ts": "2026-02-28T17:42:38Z",
       "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-23T00:03:07Z",
-      "attempts": 1
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-26T13:13:15Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T17:47:09Z",
+      "attempts": 2
     }
   }
 }

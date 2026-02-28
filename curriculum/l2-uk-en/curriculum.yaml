@@ -373,114 +373,119 @@ levels:
   c1:
     type: core
     modules:
-      - b2-review-bridge
-      - academic-style-markers
-      - research-verbs
-      - analysis-vocabulary
-      - logical-connectors
-      - hedging-modality
-      - citation-reference
-      - essay-structure
-      - thesis-development
-      - counterarguments
-      - summary-paraphrase
-      - research-article
-      - abstract-writing
-      - literature-review
-      - oral-presentations
-      - advanced-punctuation
-      - irregular-verbs-complete
-      - essay-writing-practice
-      - practice-ii-article-critique
-      - c1-1-checkpoint
-      - cv-resume-writing
-      - job-interview
-      - business-etiquette
-      - digital-communication
-      - political-system
-      - media-landscape
-      - global-context
-      - dialects-of-ukrainian
-      - surzhyk
-      - history-of-language
-      - diaspora-ukrainian
-      - professional-scenarios
-      - case-studies
-      - review
-      - speaking-practice
-      - metaphor-simile
-      - irony-sarcasm
-      - hyperbole-litotes
-      - euphemism-taboo
-      - rhetorical-questions
-      - degrees-of-certainty
-      - politeness-strategies
-      - high-formal-register
-      - intimate-register
-      - slang-youth
-      - review-c1-4
-      - checkpoint-c1-4
-      - kobzari-bandura
-      - ritual-songs
-      - kolyskovi-ta-dumy
-      - hopak-i-kozachok
-      - rehionalni-tantsi
-      - pysanky
-      - vyshyvanka
-      - honcharstvo-ta-rizbyarstvo
-      - narodna-mifolohiia
-      - narodna-medytsyna
-      - kozatski-lehendy
-      - kazky-ta-prytchi
-      - zymovi-obriady
-      - vesna-ta-lito
-      - khrestyny-ta-vesillia
-      - pomynalni-obriady
-      - halychyna
-      - ukrainian-avant-garde
-      - traditional-clothing
-      - ukrainian-cuisine-traditions
-      - ukrainian-house
-      - winter-holidays
-      - spring-holidays
-      - summer-holidays
-      - wedding-rituals
-      - birth-rituals
-      - funeral-rituals
-      - podillia-ta-volyn
-      - klasychna-muzyka-1-vytoky
-      - klasychna-muzyka-2-natsionalna-shkola
-      - klasychna-muzyka-3-modernizm-i-suchasnist
-      - operne-mystetstvo
-      - vokalne-mystetstvo
-      - obrazotvorche-mystetstvo-1
-      - obrazotvorche-mystetstvo-2
-      - balet-i-tanets
-      - teatralne-mystetstvo-1
-      - teatralne-mystetstvo-2
-      - ukrainska-arkhitektura
-      - suchasna-muzyka
-      - ukrainske-kino
-      - praktyka-1-narodna-kultura
-      - praktyka-2-vysoke-mystetstvo
-      - c1-5-checkpoint
-      - istoriia-ukrainskoi-literatury
-      - kotliarevskyi-eneida
-      - shevchenko-shchodennyk-lysty
-      - shevchenko-poeziia
-      - shevchenko-spadshchyna
-      - franko-liryka
-      - franko-proza
-      - lesya-ukrainka-liryka
-      - lesya-ukrainka-drama
-      - vovchok-myrnyi
-      - kotsiubynskyi
-      - literaturoznavcha-terminolohiia
-      - analiz-poezii
-      - c1-6-review
-      - c1-6-checkpoint
-      - asyndetic-semantics
-      - persuasive-speech
+      # Phase C1.1: Academic Writing & Research [20 modules]
+      - b2-review-bridge                     # 1
+      - academic-style-markers               # 2
+      - research-verbs                       # 3
+      - analysis-vocabulary                  # 4
+      - logical-connectors                   # 5
+      - hedging-modality                     # 6
+      - citation-reference                   # 7
+      - essay-structure                      # 8
+      - thesis-development                   # 9
+      - counterarguments                     # 10
+      - summary-paraphrase                   # 11
+      - research-article                     # 12
+      - abstract-writing                     # 13
+      - literature-review                    # 14
+      - oral-presentations                   # 15
+      - advanced-punctuation                 # 16
+      - irregular-verbs-complete             # 17
+      - essay-writing-practice               # 18
+      - practice-ii-article-critique         # 19
+      - c1-1-checkpoint                      # 20
+      # Phase C1.2: Professional Communication [7 modules]
+      - cv-resume-writing                    # 21
+      - job-interview                        # 22
+      - business-etiquette                   # 23
+      - digital-communication               # 24
+      - political-system                     # 25
+      - media-landscape                      # 26
+      - global-context                       # 27
+      # Phase C1.3: Мовознавство & Sociolinguistics [13 modules]
+      - zahalne-movoznavstvo                 # 28
+      - dialects-of-ukrainian                # 29
+      - surzhyk                              # 30
+      - history-of-language                  # 31
+      - diaspora-ukrainian                   # 32
+      - leksykolohiia-c1                     # 33
+      - morfolohichna-norma-c1               # 34
+      - tekstoznavstvo                       # 35
+      - professional-scenarios               # 36
+      - case-studies                         # 37
+      - review                               # 38
+      - speaking-practice                    # 39
+      - checkpoint-movoznavstvo              # 40
+      # Phase C1.4: Complex Sentences [7 modules]
+      - skladnosuriadne-rechennia            # 41
+      - skladnopidriadne-oznachalne-zyasuvalne  # 42
+      - skladnopidriadne-obstavynne          # 43
+      - asyndetic-semantics                  # 44
+      - combined-complex-sentences           # 45
+      - complex-sentence-practice            # 46
+      - checkpoint-complex-sentences         # 47
+      # Phase C1.5: Stylistics & Rhetoric [20 modules]
+      - metaphor-simile                      # 48
+      - irony-sarcasm                        # 49
+      - hyperbole-litotes                    # 50
+      - euphemism-taboo                      # 51
+      - rhetorical-questions                 # 52
+      - fonetychni-stylistychni-zasoby       # 53
+      - morfolohichni-stylistychni-zasoby    # 54
+      - syntaksychni-stylistychni-zasoby     # 55
+      - frazeolohichni-stylistychni-zasoby   # 56
+      - degrees-of-certainty                 # 57
+      - politeness-strategies                # 58
+      - high-formal-register                 # 59
+      - intimate-register                    # 60
+      - slang-youth                          # 61
+      - persuasive-speech                    # 62
+      - istoriia-ukrainskoi-literatury       # 63
+      - literaturoznavcha-terminolohiia      # 64
+      - analiz-poezii                        # 65
+      - review-c1-5                          # 66
+      - checkpoint-c1-5                      # 67
+      # Phase C1.6: Folk Culture & Traditions [23 modules]
+      - kobzari-bandura                      # 68
+      - ritual-songs                         # 69
+      - kolyskovi-ta-dumy                    # 70
+      - hopak-i-kozachok                     # 71
+      - rehionalni-tantsi                    # 72
+      - pysanky                              # 73
+      - vyshyvanka                           # 74
+      - honcharstvo-ta-rizbyarstvo           # 75
+      - narodna-mifolohiia                   # 76
+      - narodna-medytsyna                    # 77
+      - kozatski-lehendy                     # 78
+      - kazky-ta-prytchi                     # 79
+      - zymovi-obriady                       # 80
+      - vesna-ta-lito                        # 81
+      - khrestyny-ta-vesillia                # 82
+      - pomynalni-obriady                    # 83
+      - halychyna                            # 84
+      - traditional-clothing                 # 85
+      - ukrainian-cuisine-traditions         # 86
+      - ukrainian-house                      # 87
+      - podillia-ta-volyn                    # 88
+      - praktyka-1-narodna-kultura           # 89
+      - checkpoint-folk-culture              # 90
+      # Phase C1.7: Fine Arts & High Culture [16 modules]
+      - ukrainian-avant-garde                # 91
+      - klasychna-muzyka-1-vytoky            # 92
+      - klasychna-muzyka-2-natsionalna-shkola  # 93
+      - klasychna-muzyka-3-modernizm-i-suchasnist  # 94
+      - operne-mystetstvo                    # 95
+      - vokalne-mystetstvo                   # 96
+      - obrazotvorche-mystetstvo-1           # 97
+      - obrazotvorche-mystetstvo-2           # 98
+      - balet-i-tanets                       # 99
+      - teatralne-mystetstvo-1               # 100
+      - teatralne-mystetstvo-2               # 101
+      - ukrainska-arkhitektura               # 102
+      - suchasna-muzyka                      # 103
+      - ukrainske-kino                       # 104
+      - praktyka-2-vysoke-mystetstvo         # 105
+      - c1-final-checkpoint                  # 106
   hist:
     type: track
     modules:
@@ -1264,107 +1269,104 @@ levels:
   c2:
     type: core
     modules:
-      - c1-bridge-assessment
-      - milozvuchnist-complete
-      - naukovyi-styl-mastery
-      - ofitsiynyi-styl-mastery
-      - publitsystychnyi-styl
-      - khudozhniy-styl
-      - rozmovnyi-styl
-      - relihiynyi-styl
-      - epistolyarnyi-styl
-      - style-transformation-i
-      - style-transformation-ii
-      - lexical-stylistics
-      - syntactic-stylistics
-      - individual-voice-i
-      - individual-voice-ii
-      - text-coherence
-      - c2-1-practice-i
-      - c2-1-practice-ii
-      - c2-1-review
-      - c2-1-checkpoint
-      - stylistic-devices-mastery
-      - rhythm-prosody
-      - intertextuality
-      - style-blending
-      - c2-1-final-checkpoint
-      - literary-theory
-      - narratology
-      - poetyka-verse-analysis
-      - poetyka-prose-analysis
-      - intertextuality-ii
-      - literary-criticism-methods
-      - writing-literary-essays
-      - translation-theory
-      - literary-translation-i
-      - literary-translation-ii
-      - creative-writing-poetry
-      - creative-writing-prose
-      - contemporary-literature
-      - digital-literature
-      - literary-prizes-canon
-      - literary-community
-      - c2-2-practice-i
-      - c2-2-practice-ii
-      - c2-2-review
-      - c2-2-checkpoint
-      - professional-language-overview
-      - terminology-acquisition-i
-      - terminology-acquisition-ii
-      - reading-professional-texts-i
-      - reading-professional-texts-ii
-      - professional-document-types
-      - writing-professional-documents-i
-      - writing-professional-documents-ii
-      - professional-oral-communication
-      - c2-3-midpoint-checkpoint
-      - professional-correspondence
-      - professional-discussions
-      - cross-domain-communication
-      - professional-research-skills
-      - building-domain-expertise
-      - legal-ukrainian-i
-      - legal-ukrainian-ii
-      - legal-ukrainian-iii
-      - legal-ukrainian-iv
-      - legal-ukrainian-v
-      - medical-ukrainian-i
-      - medical-ukrainian-ii
-      - medical-ukrainian-iii
-      - medical-ukrainian-iv
-      - medical-ukrainian-v
-      - professional-portfolio-i
-      - professional-portfolio-ii
-      - professional-identity
-      - c2-3-review
-      - c2-3-checkpoint
-      - complete-grammar-review
-      - rare-archaic-forms
-      - regional-varieties
-      - sociolinguistic-mastery
-      - error-analysis
-      - native-like-fluency
-      - teaching-ukrainian-i
-      - teaching-ukrainian-ii
-      - teaching-ukrainian-iii
-      - translation-theory-ii
-      - translation-practice-i
-      - translation-practice-ii
-      - interpretation-advanced
-      - capstone-topic-selection
-      - capstone-research-project
-      - capstone-drafting
-      - capstone-revision
-      - capstone-polish
-      - capstone-defense
-      - final-review-i
-      - final-review-ii
-      - final-review-iii
-      - final-exam-integrated-skills
-      - c2-certification-preparation
-      - c2-riven-zaversheno
-      - advanced-rhetoric
+      # ── C2.1 Stylistics & Rhetoric (26 modules) ──────────────────────
+      - c1-bridge-assessment          # 1  — Entry diagnostic
+      - milozvuchnist-complete        # 2  — Euphony mastery
+      - naukovyi-styl-mastery         # 3  — Scientific style
+      - ofitsiynyi-styl-mastery       # 4  — Official style
+      - publitsystychnyi-styl         # 5  — Journalistic style
+      - khudozhniy-styl               # 6  — Artistic style
+      - rozmovnyi-styl                # 7  — Conversational style
+      - relihiynyi-styl               # 8  — Religious style (C2-only)
+      - epistolyarnyi-styl            # 9  — Epistolary style (C2-only)
+      - style-transformation-i        # 10 — Style transformation: theory
+      - style-transformation-ii       # 11 — Style transformation: practice
+      - lexical-stylistics            # 12 — Lexical stylistic devices
+      - syntactic-stylistics          # 13 — Syntactic stylistic devices (production mastery)
+      - individual-voice-i            # 14 — Building individual voice: theory
+      - individual-voice-ii           # 15 — Building individual voice: practice
+      - text-coherence                # 16 — Text coherence & cohesion
+      - stylistic-devices-mastery     # 17 — Comprehensive stylistic devices
+      - rhythm-prosody                # 18 — Rhythm & prosody in text
+      - intertextuality               # 19 — Intertextuality fundamentals
+      - style-blending                # 20 — Style blending & hybridization
+      - advanced-rhetoric             # 21 — Rhetoric: figures & composition (MOVED from 101)
+      - practical-rhetoric            # 22 — Rhetoric: persuasion & debate (NEW)
+      - c2-1-practice-i              # 23 — Phase practice I
+      - c2-1-practice-ii             # 24 — Phase practice II
+      - c2-1-review                  # 25 — Phase review
+      - c2-1-checkpoint              # 26 — Phase checkpoint (merged)
+      # ── C2.2 Literature & Creative Writing (17 modules) ──────────────
+      # Removed → LIT: poetyka-verse-analysis, poetyka-prose-analysis,
+      #   intertextuality-ii, literary-criticism-methods
+      - literary-theory               # 27 — Literary theory schools
+      - narratology                   # 28 — Narratology & narrative analysis
+      - writing-literary-essays       # 29 — Literary essay writing
+      - translation-theory            # 30 — Translation theory
+      - literary-translation-i        # 31 — Literary translation: poetry
+      - literary-translation-ii       # 32 — Literary translation: prose
+      - creative-writing-poetry       # 33 — Creative writing: poetry
+      - creative-writing-prose        # 34 — Creative writing: prose
+      - creative-writing-nonfiction   # 35 — Creative writing: nonfiction (NEW)
+      - contemporary-literature       # 36 — Contemporary Ukrainian literature
+      - digital-literature            # 37 — Digital literature & new media
+      - literary-prizes-canon         # 38 — Literary prizes & canon formation
+      - literary-community            # 39 — Literary community & publishing
+      - c2-2-practice-i              # 40 — Phase practice I
+      - c2-2-practice-ii             # 41 — Phase practice II
+      - c2-2-review                  # 42 — Phase review
+      - c2-2-checkpoint              # 43 — Phase checkpoint
+      # ── C2.3 Professional Language (21 modules) ──────────────────────
+      # Removed → STEM: legal-ukrainian-i..v, medical-ukrainian-i..v
+      - professional-language-overview # 44 — Professional communication overview
+      - terminology-acquisition-i     # 45 — Terminology systems I
+      - terminology-acquisition-ii    # 46 — Terminology systems II
+      - reading-professional-texts-i  # 47 — Reading professional texts I
+      - reading-professional-texts-ii # 48 — Reading professional texts II
+      - professional-document-types   # 49 — Professional document types
+      - writing-professional-documents-i  # 50 — Professional writing I
+      - writing-professional-documents-ii # 51 — Professional writing II
+      - professional-oral-communication   # 52 — Professional oral communication
+      - c2-3-midpoint-checkpoint     # 53 — Midpoint checkpoint
+      - professional-correspondence   # 54 — Professional correspondence
+      - professional-discussions      # 55 — Professional discussions
+      - cross-domain-communication    # 56 — Cross-domain communication
+      - professional-research-skills  # 57 — Professional research skills
+      - building-domain-expertise     # 58 — Building domain expertise
+      - academic-publishing           # 59 — Academic publishing in Ukrainian (NEW)
+      - professional-portfolio-i      # 60 — Professional portfolio I
+      - professional-portfolio-ii     # 61 — Professional portfolio II
+      - professional-identity         # 62 — Professional identity
+      - c2-3-review                  # 63 — Phase review
+      - c2-3-checkpoint              # 64 — Phase checkpoint
+      # ── C2.4 Meta-Skills & Capstone (27 modules) ────────────────────
+      - complete-grammar-review       # 65 — Complete grammar review
+      - rare-archaic-forms            # 66 — Rare & archaic forms
+      - regional-varieties            # 67 — Regional varieties
+      - sociolinguistic-mastery       # 68 — Sociolinguistic mastery
+      - language-policy-decolonization # 69 — Language policy & decolonization (NEW)
+      - corpus-linguistics            # 70 — Corpus linguistics & digital tools (NEW)
+      - error-analysis                # 71 — Error analysis & self-correction
+      - native-like-fluency           # 72 — Native-like fluency strategies
+      - teaching-ukrainian-i          # 73 — Teaching Ukrainian I
+      - teaching-ukrainian-ii         # 74 — Teaching Ukrainian II
+      - teaching-ukrainian-iii        # 75 — Teaching Ukrainian III
+      - translation-theory-ii         # 76 — Translation theory: advanced
+      - translation-practice-i        # 77 — Translation practice I
+      - translation-practice-ii       # 78 — Translation practice II
+      - interpretation-advanced       # 79 — Advanced interpretation
+      - capstone-topic-selection      # 80 — Capstone: topic selection
+      - capstone-research-project     # 81 — Capstone: research
+      - capstone-drafting             # 82 — Capstone: drafting
+      - capstone-revision             # 83 — Capstone: revision
+      - capstone-polish               # 84 — Capstone: polish
+      - capstone-defense              # 85 — Capstone: defense
+      - final-review-i               # 86 — Final review I
+      - final-review-ii              # 87 — Final review II
+      - final-review-iii             # 88 — Final review III
+      - final-exam-integrated-skills  # 89 — Final exam
+      - c2-certification-preparation  # 90 — Certification preparation
+      - c2-riven-zaversheno          # 91 — Level completion
   oes:
     type: track
     modules:

@@ -2,49 +2,45 @@ slug: mine-and-yours
 title: Mine and Yours
 word_target: 2000
 content_outline:
-- section: 'Вступ: Бюро знахідок'
-  words: 250
-  points:
-  - 'Set the scene: A ''Lost and Found'' (Бюро знахідок) scenario where identifying
-    owners is critical.'
-  - 'Introduce the core questions: Чий? (Whose m.), Чия? (Whose f.), Чиє? (Whose n.),
-    Чиї? (Whose pl.).'
-  - 'Anchor the concept: In Ukrainian, the question word changes based on the object,
-    not the owner.'
-  - 'English Scaffolding: Briefly explain that unlike English ''whose'', Ukrainian
-    has gender forms.'
-- section: 'Граматика: Мій, твій, наш'
-  words: 750
-  points:
-  - Present the full paradigm for 'my' (мій, моя, моє, мої) with clear gender-coded
-    examples.
-  - Present the full paradigm for 'your' (informal) (твій, твоя, твоє, твої) - note
-    parallel to 'мій'.
-  - Present 'our' (наш, наша, наше, наші) and 'your' (formal/plural) (ваш, ваша, ваше,
-    ваші).
-  - 'Highlight the vowel loss pattern in ''ваш/наш'' (наш -> нашого, but here specifically
-    nominative gender forms: наш -> наша).'
-  - 'Visual Aid: A comprehensive master table of changing possessives.'
-- section: 'Граматика: Його, її, їхній'
+- section: 'Вступ: Чия це річ?'
   words: 400
   points:
-  - 'Introduce the ''Easy Ones'': ''його'' (his) and ''її'' (her) do NOT change for
-    the object''s gender.'
-  - 'Contrast: ''мій стіл / моя лампа'' BUT ''його стіл / його лампа''.'
-  - 'Introduce ''їхній'' (their): Explain it DOES change (їхній, їхня, їхнє, їхні)
-    like an adjective.'
-  - 'Cultural/Correctness Note: Why we use ''їхній'' instead of ''їх'' (avoiding Surzhyk).'
-- section: 'Практика: Чия це річ?'
-  words: 300
+  - 'Note: 25-35% immersion. Provide English scaffolding for complex grammar explanations,
+    specifically the concept of gender agreement.'
+  - Створити контекст «Бюро знахідок» (Lost and Found) з використанням побутових предметів
+    (телефон, ключі, паспорт) для введення питань «Чий? Чия? Чиє? Чиї?».
+  - 'Пояснити ключову відмінність від англійської: в українській мові присвійний займенник
+    узгоджується з граматичним родом предмета (possessed object), а не з тим, кому
+    він належить (owner).'
+- section: 'Презентація: Система форм та узгодження'
+  words: 650
   points:
-  - 'Guided Practice: Matching nouns to correct possessive forms based on endings.'
-  - 'Common Error Alert: Watch out for ''мій'' with feminine nouns ending in consonant
-    (if any) or abstract nouns.'
-  - 'Scenario: Identifying items in a classroom or bag (Це твоя ручка? Ні, це моя).'
-- section: 'Культура: Твій чи Ваш?'
-  words: 300
+  - Представити змінювані форми (мій, твій, наш, ваш) за допомогою чітких таблиць.
+    Показати узгодження для чоловічого, жіночого, середнього роду та множини з 2-3
+    прикладами на кожну форму.
+  - Пояснити незмінювані форми (його, її) — підкреслити, що вони залишаються стабільними
+    незалежно від роду предмета, що є полегшенням для початківців.
+  - 'Деколонізаційний акцент: ввести займенник «їхній» як літературний стандарт. Чітко
+    розмежувати його з помилковим незмінним «їх», наводячи приклади правильного узгодження
+    (їхній дім, їхня машина).'
+  - 'Ввести базову концепцію рефлексивного займенника «свій»: пояснити контраст між
+    «його/її» (чужа річ) та «свій» (власна річ) для уникнення типових помилок.'
+- section: 'Культурний контекст: Етикет та еволюція стосунків'
+  words: 400
   points:
-  - 'Social Etiquette: When to use ''Твій'' (friends, family, children) vs ''Ваш''
-    (strangers, elders, officials).'
-  - 'The ''Capital V'' rule: Writing ''Ваш'' in letters/emails as a sign of respect.'
-  - Mini-dialogues illustrating the shift or strict usage.
+  - 'Описати соціальну дистанцію: суворе розрізнення ситуацій для використання «твій»
+    (родина, друзі) та «ваш» (незнайомці, старші, офіційні особи).'
+  - Розповісти про ритуал «переходу на ти» як важливу віху в українській комунікації.
+  - Згадати правило етикету щодо написання «Ваш» з великої літери в листах як вияв
+    поваги.
+  - Розібрати стратегії подолання 'Gender Mismatch' (напр., *мій мама*) з фокусом
+    на аналізі закінчень іменників.
+- section: Практика та продукція
+  words: 550
+  points:
+  - 'Надати керовану практику: 3-4 міні-діалоги на заміну іменників займенниками в
+    контексті повсякдення.'
+  - Додати вправи на відпрацювання узгодження (наприклад, підбір правильної форми
+    займенника до слів 'рюкзак', 'адреса', 'місто').
+  - 'Створити продуктивний етап: сценарій/рольова гра ''Чия це сумка?'', спрямована
+    на автоматизацію використання питальних (чий/чия/чиє) та присвійних займенників.'

@@ -1,69 +1,69 @@
-  lemma: вмиватися
+- lemma: вмиватися
   pos: verb
   translation: to wash one's face
-  lemma: одягатися
+- lemma: одягатися
   pos: verb
   translation: to dress oneself
-  lemma: дивитися
+- lemma: дивитися
   pos: verb
   translation: to look, to watch
-  lemma: сміятися
+- lemma: сміятися
   pos: verb
   translation: to laugh
-  lemma: називатися
+- lemma: називатися
   pos: verb
   translation: to be called
-  lemma: вчитися
+- lemma: вчитися
   pos: verb
   translation: to study, to learn
-  lemma: займатися
+- lemma: займатися
   pos: verb
   translation: to engage in, to practice
-  lemma: повертатися
+- lemma: повертатися
   pos: verb
   translation: to return, to come back
-  lemma: зупинятися
+- lemma: зупинятися
   pos: verb
   translation: to stop (oneself)
-  lemma: зустрічатися
+- lemma: зустрічатися
   pos: verb
   translation: to meet (each other)
-  lemma: вітатися
+- lemma: вітатися
   pos: verb
   translation: to greet (each other)
-  lemma: цілуватися
+- lemma: цілуватися
   pos: verb
   translation: to kiss (each other)
-  lemma: обійматися
+- lemma: обійматися
   pos: verb
   translation: to hug (each other)
-  lemma: хвилюватися
+- lemma: хвилюватися
   pos: verb
   translation: to worry
-  lemma: боятися
+- lemma: боятися
   pos: verb
   translation: to be afraid
-  lemma: надіятися
+- lemma: надіятися
   pos: verb
   translation: to hope
-  lemma: прокидатися
+- lemma: прокидатися
   pos: verb
   translation: to wake up
-  lemma: взуватися
+- lemma: взуватися
   pos: verb
   translation: to put on shoes
-  lemma: почуватися
+- lemma: почуватися
   pos: verb
   translation: to feel (about health/state)
-  lemma: втомлюватися
+- lemma: втомлюватися
   pos: verb
   translation: to get tired
-  lemma: дієслово
+- lemma: дієслово
   pos: noun
   translation: verb
-  lemma: сподіватися
+- lemma: сподіватися
   pos: verb
   translation: to hope
-  lemma: лінуватися
+- lemma: лінуватися
   pos: verb
   translation: to be lazy

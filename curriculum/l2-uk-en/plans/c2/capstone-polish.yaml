@@ -1,10 +1,12 @@
-module: c2-093
-level: c2
-sequence: 93
+module: c2-084
+level: C2
+sequence: 84
+slug: capstone-polish
 version: '2.0'
 title: Дипломний проєкт — Фінальне шліфування
 focus: practice
 pedagogy: TTT
+phase: 'C2.4 [Meta-Skills & Capstone]'
 objectives:
 - TBD
 sources:
@@ -22,7 +24,7 @@ sources:
   notes: Typography conventions for Ukrainian
 content_outline:
 - section: Вступ — Від редагування до шліфування (Introduction — From Editing to Polishing)
-  words: 500
+  words: 850
   points:
   - 'Learner error: confusion of ''редагування'' (improving logic/flow) with ''коректура''
     (fixing typos/grammar) — strategy for separating these stages to avoid circular
@@ -31,7 +33,7 @@ content_outline:
     establish a checklist for the final ''Senior Specialist'' sign-off.'
 - section: Мовна коректура та синтаксична чистота (Language Proofreading and Syntactic
     Clarity)
-  words: 750
+  words: 1250
   points:
   - 'Syntactic decolonization: identifying and replacing passive Anglicisms/Sovietisms
     (''було проведено аналіз'') with active Ukrainian constructions (''автор дослідив'',
@@ -39,17 +41,19 @@ content_outline:
   - 'Advanced proofreading: verifying orthography (apostrophe, soft sign) in complex
     professional terminology and ensuring correct case agreement in multi-level nested
     lists.'
+  - 'Додаткові творчі та аналітичні завдання з комплексною інтеграцією навичок попередніх модулів'
 - section: Технічний нормоконтроль та вимоги ДСТУ (Technical Normocontrol and DSTU
     Requirements)
-  words: 750
+  words: 1250
   points:
   - 'Cultural hook: ''Нормоконтроль'' — navigating the specific Ukrainian academic
     stage where a dedicated officer verifies margins, fonts, and DSTU alignment.'
   - 'Mastering DSTU 8302:2015: applying specific punctuation rules for the bibliography,
     including the correct use of double slashes (//) and square brackets for citations.'
+  - 'Додаткові творчі та аналітичні завдання з комплексною інтеграцією навичок попередніх модулів'
 - section: Вторинні тексти — Анотація та ключові слова (Secondary Texts — Abstract
     and Keywords)
-  words: 500
+  words: 850
   points:
   - 'Applying §4.3.8: structuring the ''анотація'' (abstract) as a high-density summary
     of research novelty, methodology, and key results in professional style.'
@@ -57,7 +61,7 @@ content_outline:
     and English abstracts to maintain semantic consistency.'
 - section: Академічна доброчесність та фінальна презентація (Academic Integrity and
     Final Presentation)
-  words: 500
+  words: 800
   points:
   - 'Academic honesty: interpreting Unicheck/StrikePlagiarism reports and defining
     the acceptable boundaries for self-citation (самоцитування).'

@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2304/2000 (raw: 2542) | pedagogy: 1 violations
+    lesson: 3754/2000 (raw: 3914) | pedagogy: 12 violations | immersion: 22.9% LOW (target 25-40% (M12))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📚 PEDAGOGICAL VIOLATIONS FOUND:
-    [GRAMMAR] Participle used before B1: 'улюблений'
-       → FIX: Participles not allowed until B1. Use relative clauses or simple sentences.
+       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 1 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 14 violations (severe - consider revision)
+     → 12 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/colors-and-clothing-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/colors-and-clothing-audit.log for details)
         ```
+
 
         ## Files to Fix
 

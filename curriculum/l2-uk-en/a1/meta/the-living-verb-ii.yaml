@@ -2,54 +2,41 @@ slug: the-living-verb-ii
 title: The Living Verb II
 word_target: 2000
 content_outline:
-- section: 'Вступ: Родина -ити'
-  words: 250
+- section: 'Вступ: Тріада гостинності'
+  words: 400
   points:
-  - Introduce the concept of 'Second Conjugation' (-ити verbs) as the second major
-    family of Ukrainian verbs.
-  - 'Contrast with First Conjugation (-ати) using a simple visual hook: A vs I (Hard
-    vs Soft).'
-  - 'List the ''Star Verbs'' of this lesson: говорити, робити, любити, бачити.'
-  - 'ENGLISH POLICY: Use English to clearly explain that these verbs work exactly
-    like the previous ones, just with a different vowel vowel in the ending.'
-- section: 'Презентація: Друга дієвідміна'
-  words: 800
+  - Define the Second Conjugation (-ити) as the second pillar of Ukrainian verbal
+    action, focusing on ongoing and habitual meanings.
+  - 'Establish the Cultural Motivator: The ''Triad of Hospitality'' (їсти, пити, говорити)
+    forming the core of Ukrainian social interaction.'
+  - 'ENGLISH POLICY: Provide explicit English scaffolding to anchor the module, reviewing
+    the difference between Class I and Class II verbs.'
+- section: 'Презентація: Моделі та мутації'
+  words: 650
   points:
-  - 'Visual Paradigm: Side-by-side comparison of ''читати'' (Type 1) vs ''говорити''
-    (Type 2).'
-  - 'The Golden Rule of Type 2: The dominating vowel is ''И'' (or ''І'' after vowels),
-    replacing ''Е/Є''.'
-  - 'Step-by-step conjugation of ''говорити'': я говорю, ти говориш, він говорить...'
-  - 'The ''Labial L'' phenomenon: Explain ''роблю'', ''люблю'' as a natural bridge
-    for lip sounds (б, п, в, м, ф) before -ю.'
-  - 'Consonant Mutations (The ''Hisss'' Rule): Explain ''сидіти'' → ''сиджу'' (д →
-    дж) and ''ходити'' → ''ходжу'' as a softening for the ''Я'' form.'
-  - 'Bonus Irregulars: Introduce ''їсти'' (я їм, ти їси...) and ''пити'' (regular:
-    п''ю, п''єш) with caution signs.'
-- section: 'Практика: Тренування форм'
+  - 'Compare paradigms visually: Class I (-ати, vowel е/є) versus Class II (-ити,
+    vowel и/і), using ''читати'' vs ''говорити''.'
+  - Explain consonant mutation for the 'Я' form using 'сидіти' (я сиджу), directly
+    addressing State Standard §4.2.4.1.
+  - Frame the 'Labial L' ('робити' → 'я роблю', 'любити' → 'я люблю') as a natural
+    physical bridge for lip consonants before 'ю'.
+  - Introduce the irregulars 'їсти' (я їм) and 'пити' (я п'ю), contrasting 'бачити'
+    (faculty) with 'дивитися' (process) to prevent early semantic confusion.
+- section: 'Практика: Помилки та автоматизація'
+  words: 500
+  points:
+  - Detail contrastive drills to prevent Conjugation Mixing, explicitly warning against
+    the common error 'ти робеш' instead of 'ти робиш'.
+  - Focus on Mutation Mastery with intensive 'Я'-form drills for verbs like 'ходити'
+    (ходжу) to eliminate omission errors like 'я ходю'.
+  - Include structural sorting exercises to build learner intuition for vowel patterns
+    in endings.
+- section: Продукування та культурний контекст
   words: 450
   points:
-  - 'Drill 1: ''Identification'' — Is it Type 1 (-ати/-яти) or Type 2 (-ити/-іти)?
-    Sorting exercise.'
-  - 'Drill 2: ''The I-Form Challenge'' — Focus specifically on mutations (сиджу, ходжу,
-    їжджу, плачу).'
-  - 'Drill 3: ''Conjugation Grid'' — Full table practice for high-frequency verbs
-    (робити, бачити).'
-  - 'Common Error Alert: Explicitly warn against ''ти робеш'' (It''s ''робиш''!).'
-- section: 'Використання: Розповіді про дії'
-  words: 300
-  points:
-  - 'Sentence Building: Combine subject + verb + object (e.g., ''Я люблю каву'', ''Ми
-    робимо піцу'').'
-  - 'Collocations: Introduce fixed phrases like ''робити помилки'' (to make mistakes),
-    ''говорити правду'' (to tell the truth).'
-  - 'Dialogue scaffolding: A short Q&A structure asking ''Що ти робиш?'' and answering
-    with various verbs.'
-- section: 'Культурний контекст: Глибина слова'
-  words: 200
-  points:
-  - 'Etymology: The deep connection between ''любити'' (to love) and ''люди'' (people).'
-  - 'Historical Note: The -ити class is ancient (Proto-Slavic), showing how stable
-    this pattern has been for over a millennium.'
-  - 'Hospitality Triad: Mention how ''їсти, пити, говорити'' are the core of Ukrainian
-    guest culture.'
+  - Guide contextual sentence production using high-frequency collocations ('робити
+    домашнє завдання', 'любити природу', 'говорити українською').
+  - 'Deep Culture: Explain the etymology of ''любити'' and its connection to ''люди''
+    (people) and human belonging.'
+  - 'Discuss the social ethics of hospitality: the cultural weight of ''їсти'' and
+    ''пити'' in hosting, and how refusing a meal is perceived.'

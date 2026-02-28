@@ -55,10 +55,10 @@ Write with these in mind — errors here trigger Phase D repair cycles:
 
 | Section | Target | Write Minimum (1.5x) |
 |---------|--------|---------------------|
-| Вступ (Introduction) | 450 | 675 |
-| Презентація (Presentation) | 650 | 975 |
-| Практика (Practice) | 550 | 825 |
-| Продукція та Підсумок (Production and Summary) | 350 | 525 |
+| Вступ | 450 | 675 |
+| Презентація | 650 | 975 |
+| Практика | 550 | 825 |
+| Продукція та Підсумок | 350 | 525 |
 | **Total** | **2000** | **3000** |
 
 ---

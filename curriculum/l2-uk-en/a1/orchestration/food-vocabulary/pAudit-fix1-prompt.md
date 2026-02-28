@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 3818/2000 (raw: 4088) | pedagogy: 3 violations | immersion: 18.8% LOW (target 35-55% (M39))
+    lesson: 5041/2000 (raw: 5285) | pedagogy: 21 violations | immersion: 25.0% LOW (target 35-55% (M39))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
+       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 55/100)
-     → Revision recommended (severity 55/100)
-     → 5 violations (moderate)
-     → 3 grammar-level violations (fundamental)
-     → Immersion 16% off target
+  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 80/100)
+     → 24 violations (severe - consider revision)
+     → 15 grammar-level violations (fundamental)
+     → Immersion 10% off target (minor)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/food-vocabulary-audit.md

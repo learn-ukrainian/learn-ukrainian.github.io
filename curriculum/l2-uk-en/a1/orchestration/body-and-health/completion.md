@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 31 — E2E
+PASS: pipeline a1 48
 
   Module:   body-and-health
   Track:    a1
-  Mode:     e2e
-  Words:    2604 (target: 2000)
+  Mode:     v3
+  Words:    4844 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-22T23:20:09Z
+  Date:     2026-02-28T16:33:18Z

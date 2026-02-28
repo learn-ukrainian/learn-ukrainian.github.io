@@ -1,101 +1,71 @@
-✅ Message sent to Gemini (ID: 9947) [auto-acked: self-addressed]
-✓ Message 9947 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #9947...
-📨 Message #9947
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-buying-tickets-pA
-   Time: 2026-02-20T18:16:12.345122+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/buying-tickets/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
-# Дослідження: Buying Tickets (A1)
+# Дослідження: Buying Tickets
 
 ## State Standard Reference
-§3.7 Подорожі: "вокзал, автовокзал, аеропорт (летовище); основні дії на позначення руху (іти, їхати – у базових фразах)"
-§2 Каталог А: "прохання зробити щось: Дайте, будь ласка"
-Alignment: Цей модуль реалізує лексичну тему §3.7 та комунікативну інтенцію §2 (купівля квитка) через лексичні конструкції руху.
+§3.7: "вокзал, автовокзал, аеропорт (летовище); перетин кордону (митний контроль); основні дії на позначення руху (іти, їхати – у базових фразах); назви частин світу; туристичні принади (цікаві місця й об’єкти)."
+Alignment: This module directly fulfills the thematic requirements of §3.7 by teaching vocabulary for stations (вокзал, автовокзал), ticket purchasing, and basic movement destinations (їхати до).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **квиток** | High (Top 500) | квиток до Києва, електронний квиток, купувати квиток |
-| **поїзд** | High | сідати на поїзд, розклад поїздів, швидкий поїзд |
-| **вокзал** | High | залізничний вокзал, на вокзалі, центральний вокзал |
-| **місце** | Very High | вільне місце, нижнє/верхнє місце, ваше місце |
-| **до** | High (Prep) | до Львова, до Києва (direction) |
+| квиток | Top 500 | купити квиток, один квиток, електронний квиток |
+| поїзд | High frequency | сісти на поїзд, розклад поїздів |
+| вокзал | High frequency | залізничний вокзал, автовокзал |
+| місце | Very high frequency | ваше місце, вільне місце, нижнє місце |
+| до (preposition) | Top 100 | до Києва, до Львова, квиток до |
 
 ## Cultural Hooks
-1.  **Укрзалізниця & Tea**: The iconic tradition of drinking tea from glass holders (`підстаканники`) served by conductors (`провідники`). It's a symbol of Ukrainian train travel comfort.
-2.  **Carriage Classes**: The social distinction between `плацкарт` (open dormitory style, communal food sharing) and `купе` (closed 4-berth compartment, more privacy). Note: modern Intercity trains are changing this, but sleepers remain dominant for long distances.
+1. **Укрзалізниця & Підстаканники**: The modern Ukrainian railway experience blends high-tech (app-based electronic tickets, QR codes) with beloved traditions, like drinking tea served by the conductor (провідник) in iconic metal glass holders (підстаканники).
+2. **Плацкарт Culture**: The open-plan sleeping carriage (плацкарт) is a unique social space in Eastern European travel. Rather than framing it negatively, it should be presented as an authentic way to experience local life, sharing food and stories.
 
 ## Common Learner Errors
-1.  **Direction Preposition**: Using *в* instead of *до* for movement towards a city (e.g., *їхати в Львів* ❌ instead of *їхати до Львова* ✅). *Note: In A1, this is taught as a lexical chunks pattern.*
-2.  **Gender Agreement**: *Одна квиток* ❌ instead of *Один квиток* ✅ (students confuse masculine *квиток* with feminine due to -ок/-ка endings or L1 interference).
-3.  **Case Confusion**: Using Nominative for destination (*до Львів* ❌ instead of *до Львова* ✅).
+1. **Wrong direction preposition**: "їхати в Львів" → "їхати до Львова" — English speakers default to "in/into" for cities, but Ukrainian uses "до" (to) + Genitive for destination.
+2. **Gender mismatch with numbers**: "одна квиток" → "один квиток" — Learners forget that "квиток" is masculine and use the feminine "одна" by default.
 
 ## Cross-References
-- Builds on: **a1-17** (Numbers and Money - crucial for prices and times), **a1-38** (At the Store - transactional phrases).
-- Prepares for: **a1-40** (Taking Transport - focuses on the act of riding/routes).
+- Builds on: a1-22 (Numbers and Money), a1-61 (At the Store)
+- Prepares for: a1-57 (Taking Transport)
 
 ## Notes for Content Writing
-- **Grammar Scope**: A1 State Standard formally introduces Accusative (`в/на`) for direction. The construction `до + Genitive` is technically A2, so for A1 it must be treated as **"Lexicalized Grammar"** (fixed formulas: *до Києва, до Львова*). Avoid deep Genitive case theory; focus on the pattern.
-- **Realism**: Use explicit distinctions between `автовокзал` (intercity bus terminal) and `автостанція` (smaller local station) as this is critical for navigation in Ukraine.
+- **Decolonized Framing**: Present the railway culture (tea, platzkart) as a distinctly Ukrainian experience, emphasizing the modern efficiency of Укрзалізниця (UZ) rather than framing it as a relic of the Soviet past.
+- **Lexicalized Grammar**: Since this is A1, do not explain the full Genitive case paradigm. Treat "до Києва" and "до Львова" as fixed lexical chunks.
+- **English Scaffolding**: As an A1 module, use English to introduce new concepts, but rely heavily on Ukrainian for the mini-dialogues and examples.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Види транспорту та вокзали"
-    words: 300
+  - section: "Вступ та підготовка"
+    words: 450
     points:
-      - "Distinguish basic transport types: поїзд (train), автобус (bus), маршрутка (minibus)"
-      - "Define location hubs: вокзал (major terminal) vs станція/зупинка (stop)"
-      - "Introduce collocations: центральний вокзал, залізничний вокзал"
-      - "Visual/Context: Arriving at the station signage"
-
-  - section: "Купівля квитка та напрямок"
-    words: 500
+      - "Introduce main transport types using simple definitions: `поїзд`, `автобус`, `маршрутка`. Provide English scaffolding for clear understanding."
+      - "Explain the critical difference between `вокзал` (major train hub), `автовокзал` (major bus hub), and `автостанція` (local stop)."
+      - "Introduce the construction `до` + City (Genitive) as a fixed lexical chunk for destinations (`до Києва`, `до Львова`, `до Одеси`)."
+      - "Include a mini-dialogue asking about transport options to a specific city."
+  - section: "Каса та замовлення"
+    words: 650
     points:
-      - "The core request formula: 'Один квиток до..., будь ласка'"
-      - "Grammar Pattern: 'до + City' (Genitive endings for basic cities: -а/-я) as fixed chunks"
-      - "Common error alert: 'їхати в' vs 'їхати до'"
-      - "Return options: 'туди й назад' vs 'в один бік'"
-
-  - section: "Деталі подорожі: Клас і Розклад"
-    words: 500
+      - "Present the core transaction phrase for the ticket office: `Один квиток до..., будь ласка`."
+      - "Explicitly warn against the common gender agreement error (`одна квиток` vs correct `один квиток`)."
+      - "Explain ticket options: `туди й назад` (round trip) versus `в один бік` (one way)."
+      - "Contrast traditional `квиткова каса` with modern `електронний квиток`, noting the high digitalization of Укрзалізниця."
+      - "Introduce carriage classes: `Купе` (compartment) vs `Плацкарт` (open plan), framing 'плацкарт' as an authentic social experience."
+  - section: "Поїздка та комфорт"
+    words: 550
     points:
-      - "Carriage types cultural context: Купе vs Плацкарт vs Сидячий (Intercity)"
-      - "Seat specification: нижнє (lower) vs верхнє (upper) місце"
-      - "Schedule inquiries: 'О котрій відправлення?', 'Коли прибуття?'"
-      - "Platform navigation: 'Яка платформа?', 'Який вагон?'"
-
-  - section: "Практика: Діалоги на вокзалі"
-    words: 400
+      - "Teach platform navigation questions: `На якій платформі?` and `В якому вагоні?`."
+      - "Review numbers (from prerequisite module) to specify carriage and seat numbers."
+      - "Explain seat types: `нижнє місце` (lower) vs `верхнє місце` (upper)."
+      - "Introduce schedule inquiries: `О котрій відправлення?` and `Коли прибуття?`."
+      - "Share the cultural hook of drinking tea from a `підстаканник` served by the `провідник`."
+  - section: "Практика та підсумок"
+    words: 350
     points:
-      - "Scenario 1: Buying a train ticket to Lviv (Polite request focus)"
-      - "Scenario 2: Bus station inquiry (Schedule focus)"
-      - "Scenario 3: Clarifying details (Change of ticket/platform check)"
-      - "Reinforce usage of 'автовокзал' vs 'залізничний вокзал'"
-
-  - section: "Подорож поїздом: Традиції"
-    words: 300
-    points:
-      - "Narrative closing: The atmosphere of a Ukrainian train journey"
-      - "Cultural anchor: Tea in 'підстаканники' and interaction with the 'провідник'"
-      - "Practical vocabulary recap in context (ticket, tea, bed linen)"
-      - "Final motivation: 'Щасливої дороги!'"
+      - "Provide a comprehensive simulation dialogue: buying a ticket to the Carpathians, finding the train, and speaking with the conductor."
+      - "Include a controlled practice check to reinforce `до` instead of `в` for cities."
+      - "Recap key vocabulary (ticket, station, train, conductor) in a quick reference format."
+      - "Conclude the module with the traditional travel wish: `Щасливої дороги!`."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -106,11 +76,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (4653 chars)
-✅ Message sent to Claude (ID: 9948)
-✓ Message 9948 acknowledged
-   Auto-acknowledged reply #9948 (stdout delivery — no inbox accumulation)
-✓ Message 9947 acknowledged

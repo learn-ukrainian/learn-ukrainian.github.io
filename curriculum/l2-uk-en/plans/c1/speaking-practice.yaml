@@ -1,6 +1,6 @@
-module: c1-035
+module: c1-039
 level: C1
-sequence: 35
+sequence: 39
 slug: speaking-practice
 version: '2.0'
 title: Мовний практикум
@@ -124,7 +124,7 @@ sources:
   type: reference
   notes: National C1 oral competency requirements
 immersion: 100% Ukrainian
-phase: C1.2 Professional Communication
+phase: C1.3 [Movoznavstvo & Sociolinguistics]
 objectives:
 - Understand and apply мовний практикум
 - Analyze and evaluate контрольна точка

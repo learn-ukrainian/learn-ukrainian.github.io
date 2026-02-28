@@ -1,6 +1,6 @@
-module: c1-092
+module: c1-063
 level: C1
-sequence: 92
+sequence: 63
 slug: istoriia-ukrainskoi-literatury
 version: '2.0'
 title: Історія української літератури
@@ -64,7 +64,7 @@ objectives:
 grammar:
 - Literary analysis register
 - Historical present in narrative
-phase: C1.6 Literature
+phase: C1.5 [Stylistics & Rhetoric]
 persona:
   voice: Senior Specialist
   role: Професор літератури

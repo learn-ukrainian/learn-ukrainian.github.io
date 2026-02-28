@@ -5,6 +5,8 @@
 > **Your #1 job: Write 3000 words of rich, structured Ukrainian content.**
 > Every concept gets dedicated depth. Every H3 gets 80-100+ words. This is how you hit the target.
 
+> **Output capacity: You can generate 65,000+ tokens per response.** A 2000-word Ukrainian module is ~4K tokens — well within your single-turn limit. Do NOT preemptively truncate, self-limit, or report TOKEN_LIMIT_TRUNCATION friction. Write the complete module in full.
+
 ## Files to Read
 
 | File | Purpose |
@@ -16,15 +18,36 @@
 
 Read ALL four files before writing anything.
 
+## Primary Source Excerpts (Cite These — Don't Invent Quotes)
+
+These passages were retrieved from indexed primary sources (litopys.org.ua). When you need to cite a primary source, prefer these verified passages over inventing quotes from memory. You may paraphrase or excerpt, but attribute correctly.
+
+(No primary source excerpts available from RAG)
+
+---
+
 ## Your Task
 
 Write the full lesson prose for **Mine and Yours** (a1 track).
 
 - **Total minimum**: 2000 words
 - **Write at least**: 3000 words (1.5x — aim for depth, not padding)
-- **Immersion**: TARGET: 25-40% Ukrainian, 60-75% English. Grammar RULES explained in English. But cultural notes, practical sections, and observations USE simple Ukrainian (2-3 sentence paragraphs, max 10 words per sentence) with English gloss in parentheses for new words. Provide 3-4 Ukrainian examples per grammar point (not just 1-2). Practice/drill instructions in Ukrainian. Some callout/tip text in Ukrainian. The student reads simple Ukrainian — use it for concrete, practical content while keeping abstract grammar explanations in English.
+- **Immersion**: TARGET: 25-40% Ukrainian, 60-75% English. Write cultural notes, practical sections, observations, and drill instructions in Ukrainian first (2-3 sentence paragraphs, max 10 words per sentence), then add English translation below. CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. Grammar RULES stay in English. Provide 3-4 Ukrainian examples per grammar point. Some callout/tip text in Ukrainian. A1 register only — simple concrete vocabulary.
 - **Engagement callouts**: 4+ across sections, at least 4 different types
 - **Example sentences**: 8+ in varied formats (inline, standalone, tables, dialogues)
+
+## Downstream Audit Gates (your content will be checked for)
+
+Write with these in mind — errors here trigger Phase D repair cycles:
+- **Word count**: minimum **2000** words (hard gate)
+- **Colonial framing**: NEVER define Ukrainian by contrast with Russian (hard fail)
+- **Russianisms**: banned words — кушати, приймати участь, получати, самий кращий, слідуючий (hard fail)
+- **Russian characters**: ы, э, ё, ъ must NEVER appear (hard fail)
+- **Euphony**: і/й, у/в, з/із alternation (auto-fixable but better to write correctly)
+- **Engagement callouts**: 4+ using counted types ([!tip], [!warning], [!quote], [!myth-buster], [!culture], [!fact], [!context], [!reflection], [!note])
+- **Duplicate headers**: no two H2s sharing the same keyword (e.g., two headers containing «спадщина»)
+
+---
 
 ## Section Word Budgets
 
@@ -32,11 +55,10 @@ Write the full lesson prose for **Mine and Yours** (a1 track).
 
 | Section | Target | Write Minimum (1.5x) |
 |---------|--------|---------------------|
-| Вступ: Бюро знахідок | 250 | 375 |
-| Граматика: Мій, твій, наш | 750 | 1125 |
-| Практика: Чия це річ? | 400 | 600 |
-| Діалоги: Це мій телефон | 300 | 450 |
-| Культура: Твій чи Ваш? | 300 | 450 |
+| Вступ: Чия це річ? | 400 | 600 |
+| Презентація: Система форм та узгодження | 650 | 975 |
+| Культурний контекст: Етикет та еволюція стосунків | 400 | 600 |
+| Практика та продукція | 550 | 825 |
 | **Total** | **2000** | **3000** |
 
 ---
@@ -94,12 +116,14 @@ All items in a category: SAME format, SAME depth (±20%), SAME example count (±
 
 ### Rule 4: Example Variety
 
-FORBIDDEN: 5+ consecutive `_Приклад:_` lines. Mix these formats across sections:
-- Standalone examples with context (max 3-4 consecutive)
+FORBIDDEN: 5+ consecutive examples in the same format (bullet lists, `_Приклад:_` blocks, `**Ukrainian.** (English.)` lines — any uniform pattern). Mix these formats across sections:
+- Standalone examples with context (max 3-4 consecutive in one format)
 - **Comparison tables** (paradigms, aspect pairs, case usage)
 - Inline examples woven into prose
 - **Mini-dialogues** showing real usage
 - Callout boxes with examples
+
+**Anti-batching rule**: If you notice 3+ sections each presenting examples as identical bullet lists, STOP and vary the format. Use a table in one section, inline examples in another, a dialogue in a third.
 
 ### Rule 5: Callout Type Variety
 
@@ -143,6 +167,15 @@ Connect 2-3 grammar or vocabulary points to Ukrainian cultural context:
 - Use storytelling and real-world scenarios, not dry textbook listing
 - Each section should have its own narrative arc, not repeat the same skeleton
 
+### Rule 9: Prefer Active Voice
+
+Ukrainian strongly prefers active constructions. Use passive only when:
+- The agent is truly unknown: «Книгу було знайдено» (who found it is irrelevant)
+- Emphasis is intentionally on the object, not the actor
+
+Avoid: «Це може бути використано...», «Правило застосовується...»
+Prefer: «Ви можете використати...», «Ми застосовуємо правило...»
+
 ---
 
 ## How to Hit 3000 Words (Expansion Method)
@@ -185,6 +218,50 @@ Connect 2-3 grammar or vocabulary points to Ukrainian cultural context:
 
 This is the #1 generation error from previous rebuilds. Scan EVERY sentence before submitting. If you find ANY English word that is not inside parentheses `()` as a translation, fix it immediately.
 
+### No Word Salad (HARD FAIL)
+
+**Every paragraph must have ONE clear point and logical flow between sentences.** Do NOT string together unrelated observations.
+
+```markdown
+❌ WRONG (three disconnected claims stitched together):
+"Ukraine is a very digital country. You'll often see prices written as «50 грн».
+Cashiers speak fast. Telling 50 from 15 by ear is a superpower."
+
+✅ RIGHT (one clear point with logical flow):
+"In shops, prices are written as digits — «50 грн». Reading them is easy.
+But when the cashier says the total out loud, you need to catch the difference
+between п'ятдесят (50) and п'ятнадцять (15). Training your ear for these
+pairs is one of the most practical skills in this lesson."
+```
+
+**Also forbidden:** Alternating sentence language randomly within a paragraph (Ukrainian sentence, then English sentence, then Ukrainian again with no pattern). Each paragraph should have a consistent language frame — either English prose with Ukrainian terms introduced, or Ukrainian prose with English glosses.
+
+### Colonial Framing: Ukrainian Stands on Its Own (HARD FAIL if found)
+
+**NEVER define Ukrainian by contrast with Russian.** Ukrainian is an independent language with its own history — it does not need Russian as a reference point.
+
+**BANNED patterns:**
+- "Unlike Russian, Ukrainian..." — presents Russian as the baseline
+- "Different from Russian..." — positions Russian as the default
+- "Russian does not have/use..." — defines Ukrainian by what Russian lacks
+- "Looks/sounds like Russian..." — treats Ukrainian as derivative
+- "To a Western eye..." — patronizing outsider framing
+- Any reference to "Russian script", "Russian alphabet", or "Russian letters" as comparison point
+
+**How to write instead:**
+- Present Ukrainian features positively: "Ukrainian has..." / "In Ukrainian, ..."
+- Name the feature directly: "The letter Ї is uniquely Ukrainian — it exists in no other alphabet"
+- Use typological comparisons to non-Russian languages when helpful: "Similar to how Portuguese nasalizes vowels..."
+- Anchor in Ukrainian identity: "This letter has been part of Ukrainian writing since..."
+
+**Legitimate exceptions** (must be explicitly framed as decolonization/myth-busting):
+- `[!myth-buster]` blocks debunking Russian propaganda about Ukrainian
+- `[!decolonization]` blocks discussing language resistance and independence
+- Historical context about Russification, language bans, or colonial repression
+- Kyiv/Kiev transliteration context
+
+**Why this matters:** For decades, Ukrainian was presented in textbooks as "a dialect of Russian" or defined solely through differences from Russian. This is colonial framing. Our curriculum presents Ukrainian on its own terms — as a rich, independent European language.
+
 ### Russianisms (Pre-Output Scan — HARD FAIL if found)
 
 Before submitting, scan your ENTIRE output for these. They cause automatic audit failure:
@@ -199,37 +276,44 @@ Before submitting, scan your ENTIRE output for these. They cause automatic audit
 | слідуючий | наступний |
 | любий (= будь-який) | будь-який |
 | на то, що | на те, що |
+| красивий | гарний |
+| прекрасне / прекрасний | чудовий / чудове |
 
 Also scan for Russian characters: **ы, э, ё, ъ** — these must NEVER appear in Ukrainian text.
 
-### Pronunciation: IPA Only (HARD FAIL if Latin transliteration found)
+### Euphony / Милозвучність (WARNING if violated)
 
-**Level-gated IPA rules:**
-- **A1–A2**: IPA allowed ONLY on the **first occurrence** of each new vocabulary word when it is introduced. NEVER transcribe full sentences, example phrases, or words the student has already seen in earlier modules. The goal is a pronunciation hint on unfamiliar words, not a phonetics textbook.
-- **B1+**: Do NOT include inline IPA `[...]` transcriptions in the content markdown. IPA belongs ONLY in the vocabulary YAML file. Students at B1+ can read Cyrillic — cluttering prose with `` breaks immersion and readability.
+Ukrainian prose must follow euphony rules. Scan your output before submitting:
 
-**When IPA IS used (A1–A2 content, or any vocabulary file):**
-- ALL pronunciation MUST use IPA symbols. Latin transliterations are BANNED.
-- Maximum ~15-25 IPA annotations per module (one per new word). If you have more, you are over-annotating.
+| Rule | Avoid (Bad) | Use (Good) |
+|------|-------------|------------|
+| і → й between vowels | вона і Олена | вона й Олена |
+| й → і after consonant | він й Олена | він і Олена |
+| у → в before vowel | у Одесі | в Одесі |
+| в → у before в, ф | в вікні | у вікні |
+| в → у before consonant cluster | в зграї | у зграї |
+| з → із/зі before з, с, ш, ч | з зброєю | із зброєю (або зі) |
+| Vary conjunctions | він і вона і Іван | він і вона та Іван |
+
+Key: й can ONLY follow a vowel. After a consonant, always use і — even before a vowel.
+
+### Pronunciation (HARD FAIL if Latin transliteration found)
+
+**Pronunciation rules:**
+- **A1–A2**: Use **stress marks** (мі́сто) for pronunciation hints on the first occurrence of new vocabulary words.
+- **B1+**: No pronunciation annotations in content.
+
+**Latin transliterations are BANNED at ALL levels.** Never use kh, sh, ch, zh, ts, ya, yu, ye, shch.
 
 ```markdown
 ❌ WRONG (Latin transliteration):
 "Х sounds like 'kh' in Scottish 'loch'"
 "хліб (khlib)"
 
-✅ RIGHT (IPA with English approximation):
-"**Х** — [x], like the «ch» in Scottish «loch»"
-"**хліб** — [xlʲib]"
+✅ RIGHT (stress mark + English approximation):
+"**Х**, like the «ch» in Scottish «loch»"
+"**хлі́б** — like English «hleeb» but with a «ch» sound"
 ```
-
-**IPA Rules:**
-- Use IPA symbols in square brackets: `[x]`, `[ʃ]`, `[tʃ]`, `[ʒ]`, `[ts]`, `[dʒ]`
-- Add English approximation for accessibility: `[ʃ] — like «sh» in «shoe»`
-- Mark palatalization: `[lʲ]`, `[dʲ]`, `[nʲ]`, `[tʲ]` (NOT just `[l]`, `[d]`)
-- Mark the soft Л correctly: `[lʲ]` vs hard `[l]`
-- Use `[ʋ]` for Ukrainian В (NOT `[v]` or `[w]` — it's a labiodental approximant)
-- Use `/u/` for Ukrainian у (NOT `/ʊ/` — Ukrainian has no lax /ʊ/ phoneme)
-- NEVER use Latin shortcuts: kh, sh, ch, zh, ts, ya, yu, ye, shch
 
 ### Typography
 
@@ -258,6 +342,48 @@ Rotate openers: definition-first, question-led, scenario-led, function-first. No
 ### Visual Aids (Grammar Modules)
 
 Use tables for comparing patterns/paradigms/categories. Use mermaid flowcharts for decision logic (aspect choice, case selection). Don't force — use when pedagogically clearer than prose.
+
+---
+
+## Pre-Submission Verification (MANDATORY — do this BEFORE writing your final output)
+
+After drafting your content, run these three checks. Fix any issues found before outputting.
+
+### Check 1: Plan Compliance
+
+Open the `content_outline` from `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/mine-and-yours.yaml`. Go through EVERY `points:` item in EVERY section:
+- Does your content address this point with dedicated prose (not just a passing mention)?
+- If a point is missing or only touched in a phrase, **add it now** — write a full paragraph or subsection for it.
+- Each outline point should map to at least 50-100 words of content.
+
+### Check 2: Fact-Check Absolute Claims
+
+Search your draft for these signal words (in both Ukrainian and English):
+**«унікальний»**, **«єдиний»**, **«перший»**, **«ніколи»**, **«жодний»**, **«тільки»**, **«лише»**, **unique**, **only**, **first**, **never**, **no other**, **the oldest**, **the most**
+
+For EACH occurrence, ask: **Is this literally true? Can I name a counterexample?**
+- If the claim is uncertain or an overgeneralization, **soften it now**:
+  - «єдиний» → «один із небагатьох» or «характерний для»
+  - «unique to Ukrainian» → «distinctive in Ukrainian» or «sets Ukrainian apart from its neighbors»
+  - «the first» → «one of the earliest» or «among the first» (unless you have a citation)
+  - «never» → «rarely» or «almost never» (unless it's a grammatical absolute)
+- Historical dates and biographical facts: verify against the research file. If the research doesn't confirm it, **remove the claim**.
+
+### Check 3: Section Word Counts
+
+Count words per section. Compare against the `words:` allocation in the content_outline:
+- If any section is below 70% of its budget → **expand it** (add examples, callouts, tables)
+- If the total is below 2000 → expand the thinnest sections first
+- Report the counts honestly in the `===WORD_COUNTS===` block
+
+### Check 4: Anti-Surzhyk & Language Scan
+
+Re-read your entire draft one more time looking for:
+- Any Russianisms from the table above (кушати, получати, etc.)
+- Any Russian characters (ы, э, ё, ъ)
+- Any English words outside of parenthetical translations
+- Any colonial framing ("Unlike Russian...", "Different from Russian...")
+- If you find any, fix them now.
 
 ---
 
@@ -318,6 +444,16 @@ Total: {total} words (target: 2000, ratio: {total/WORD_TARGET}x)
 ===WORD_COUNTS===
 ```
 
+Then report your verification results:
+
+```
+===VERIFICATION_START===
+Plan compliance: {X}/{Y} outline points addressed (list any points you added during verification)
+Absolute claims: {number checked} — {list each softened or removed claim, or "all verified"}
+Language scan: {CLEAN or list of fixes made}
+===VERIFICATION_END===
+```
+
 ## Friction Report (MANDATORY)
 
 ```
@@ -338,5 +474,6 @@ Total: {total} words (target: 2000, ratio: {total/WORD_TARGET}x)
 - Do NOT skip sections from the content_outline
 - Do NOT write fewer than 2000 words total
 - Do NOT request skills or delegate to Claude
-- Do NOT fabricate quotes, dates, or historical facts
+- Do NOT fabricate quotes, dates, or historical facts — if the research file doesn't confirm it, don't claim it
+- Do NOT make absolute claims ("unique", "only", "first", "never") without verification — soften if uncertain
 - Do NOT use straight quotes "..." — always «...»

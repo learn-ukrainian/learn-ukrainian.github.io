@@ -1,6 +1,6 @@
-module: c1-043
-level: c1
-sequence: 43
+module: c1-059
+level: C1
+sequence: 59
 slug: high-formal-register
 version: '2.0'
 title: 'Офіційно-діловий стиль: Мова документів'
@@ -128,7 +128,7 @@ activity_hints:
   items: 12
 register: офіційно-діловий
 immersion: 100% Ukrainian
-phase: C1.3 [Advanced Stylistics & Rhetoric]
+phase: C1.5 [Stylistics & Rhetoric]
 persona:
   voice: Senior Specialist
   role: Державний службовець

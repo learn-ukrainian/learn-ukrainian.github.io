@@ -1,10 +1,12 @@
-module: interpretation-advanced
-level: c2
-sequence: 88
+module: c2-079
+level: C2
+sequence: 79
+slug: interpretation-advanced
 version: '2.0'
 title: Поглиблений усний переклад
 focus: practice
 pedagogy: TTT
+phase: 'C2.4 [Meta-Skills & Capstone]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: Вступ — Усний переклад як професія (Introduction — Interpretation as a
     Profession)
-  words: 600
+  words: 750
   points:
   - 'Професійний ландшафт: Зростання попиту на українських перекладачів у міжнародних
     організаціях (НАТО, ЄС, ООН) після 2022 року та роль прискорених програм AIIC.'
@@ -32,7 +34,7 @@ content_outline:
   - 'Відповідність Стандарту §1.4.1.1.1: Формування вміння невимушено виступати в
     офіційних ситуаціях, адаптуючи регістр мовлення до різних аудиторій.'
 - section: Методологія та когнітивні моделі (Methodology and Cognitive Models)
-  words: 850
+  words: 1050
   points:
   - 'Когнітивне навантаження: Аналіз Моделі зусиль Даніеля Жіля (Gile''s Effort Model)
     — розподіл уваги між слуханням, пам''яттю та відтворенням.'
@@ -42,7 +44,7 @@ content_outline:
     в синхронному перекладі для мінімізації смислових помилок (Learner Error 3).'
 - section: Техніка послідовного перекладу та нотація (Consecutive Interpretation and
     Note-taking)
-  words: 900
+  words: 1100
   points:
   - 'Система нотації: Застосування принципів Жана-Франсуа Розана; розробка індивідуальних
     символів та стратегій скорочення для фіксації ключових змістових блоків.'
@@ -52,7 +54,7 @@ content_outline:
     відтворення складних наукових та офіційних текстів (§3.13).'
 - section: Синхронний переклад та професійне середовище (Simultaneous Interpretation
     and Professional Environment)
-  words: 800
+  words: 1000
   points:
   - 'Професійне середовище: Технічні вимоги до кабіни перекладача (ISO 2603) та етика
     взаємодії з напарником під час зміни.'
@@ -62,7 +64,7 @@ content_outline:
     перефразування для подолання екстремального темпу мовлення.'
 - section: Етика, корекція та практична адаптація (Ethics, Correction, and Practical
     Adaptation)
-  words: 850
+  words: 1100
   points:
   - 'Стратегії корекції: Використання прихованих методів виправлення помилок та полегшення
     вислову, щоб співрозмовники їх не зауважили (§1.4.1.1.1).'

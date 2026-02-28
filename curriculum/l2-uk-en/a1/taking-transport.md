@@ -1,329 +1,280 @@
 <!-- SCOPE
-Covers: Public transport vocabulary, Motion verbs (іти vs їхати), Instrumental case for transport, Locative vs Accusative for location/direction, Marshrutka etiquette.
+Covers: Core transportation vocabulary, verbs of motion basics (їхати vs йти), asking for directions to transport, buying tickets, transport etiquette.
 Not covered:
-  - Complex declension of all cases (A2 topic) → a2-05
-  - Intercity travel (trains/planes) → a1-42
-Related: a1-15, a1-39
+  - Advanced verbs of motion (prefixes, multidirectional) → covered in B1
+  - Complex case declensions for destinations → covered in A2
+Related: finding-places, city-vocabulary
 -->
 
-# Taking Transport
+# Громадський транспорт: Як пересуватися містом
 
+> [!note]
 > **Чому це важливо?**
 >
-> Navigating a Ukrainian city is an adventure in itself. Whether you are descending into the world's deepest metro station in Kyiv or negotiating space in a crowded **маршрутка**, knowing the right words is not just about travel—it is about survival and confidence. This lesson gives you the keys to move freely, pay correctly, and understand the unique rhythm of Ukrainian urban life.
+> Ukrainian cities have excellent and highly developed public transportation networks. Whether you are navigating the deep underground stations of the Kyiv Metro, catching a yellow minibus, or taking an electric trolleybus across town, knowing how to talk about transport is essential for daily life. This module will give you the vocabulary and grammar you need to navigate the city confidently and politely.
 
-## Вступ: Транспорт у місті
+## Вступ
 
-Imagine you have arrived in Kyiv, Lviv, or Kharkiv. The city is alive. You see yellow buses (**автобуси**), fast trams (**трамваї**), and the legendary **метро**. How do you choose? How do you say "I am going by metro"?
+Public transportation in Ukraine is diverse. You will find standard buses, but also extensive networks of electric vehicles. Let us explore the core vocabulary for getting around the city.
 
-In this section, we will look at the main types of transport and the grammar of movement.
+### Міський наземний транспорт
 
-### Основні види транспорту (Main Transport Types)
+Міський транспорт в Україні дуже популярний. Найчастіше люди використовують автобус, тролейбус або трамвай. 
 
-Ukrainian cities rely heavily on public transport.
+Мережа наземного транспорту в українських містах дуже велика. Це недорого. Ось три головні види великого громадського транспорту:
+- **Авто́бус** — bus. This is the standard city bus. They operate on fixed routes and stop only at designated stops.
+- **Троле́йбус** — trolleybus. This is an electric bus that draws power from overhead wires using spring-loaded trolley poles. Trolleybus networks are very common in Ukraine and are an eco-friendly way to travel.
+- **Трамва́й** — tram. Trams run on tracks built into the city streets. Some cities, like Lviv, are famous for their beautiful historic tram networks. 
 
-**Метро́** — The Metro.
-Це серце Києва, Харкова та Дніпра. Це швидко, надійно і дешево.
-In Kyiv, it is also a bomb shelter and an architectural marvel. The stations are often like underground palaces.
-
-**Авто́бус** — Bus.
-Це великий муніципальний транспорт. Автобуси їздять регулярно.
-They follow a strict schedule and stop only at designated stops.
-
-**Троле́йбус** — Trolleybus.
-Це електричний автобус. Він має «роги», підключені до дротів. Це повільніше, ніж метро, але дуже екологічно.
-
-**Трамва́й** — Tram.
-Трамвай їде рейками. У Львові це король центру міста.
-In Kyiv, the tram takes you from the railway station to the historic Podil district.
-
-**Маршру́тка** — Minibus taxi.
-Повна назва — **маршрутне таксі**, але всі кажуть просто **маршрутка**.
-These are smaller yellow or white buses. They go everywhere, even where the metro does not. They have their own unique social rules!
-
-> [!culture]
-> **Deepest in the World**
-> The station **Арсена́льна** in Kyiv is the deepest metro station in the world, at 105.5 meters underground. The escalator ride takes about 5 minutes! People actually read books or listen to podcasts just while riding down to the train.
-
-### Іти чи Їхати? (To Walk or To Ride?)
-
-In English, you can say "I go to the park" (walking) and "I go to Lviv" (driving). In Ukrainian, these are two completely different actions. You must choose the right verb.
-
-**Іти́** — To go on foot (to walk).
-Use this when you are using your legs.
-*   Я **йду** в парк. — I am walking to the park.
-*   Він **іде** додому. — He is walking home.
-
-**Ї́хати** — To go by vehicle (to ride/drive).
-Use this for any transport: car, bus, bike, train, or metro. Even if you are just a passenger standing still inside the bus, you are **їхати**.
-*   Я **їду** на роботу. — I am riding to work.
-*   Ми **їдемо** в Київ. — We are travelling to Kyiv.
-
-> [!warning]
-> **Don't Walk the Metro**
-> A common mistake is saying «Я йду на метро». This sounds like you are walking on top of the train or walking inside the tunnel!
-> *   Correct: **Я їду на метро.** (I go by metro / I take the metro.)
-> *   Correct: **Я йду в метро.** (I am walking *into* the metro station entrance.)
-
-### Чим ви їдете? (By what means?)
-
-When we talk about the *means* of transport, Ukrainian uses the **Instrumental Case**. We answer the question **Чим?** (By what means?).
-
-For masculine nouns ending in a consonant (which is most transport), we add the ending **-ом** [ɔm].
-
-*   **Автобус** → **Автобусом** — by bus
-*   **Тролейбус** → **Тролейбусом** — by trolleybus
-*   **Трамвай** → **Трамваєм** — by tram (soft ending gets -єм)
-*   **Поїзд** → **Поїздом** — by train
-*   **Таксі** and **Метро** are indeclinable! They never change form. Use **на** with these words:
-    *   Я їду **на таксі**. — I go by taxi.
-    *   Я їду **на метро**. — I go by metro.
-
-Let's look at a comparison table of these forms.
-
-| Transport (Nominative) | By Transport (Instrumental) | Example Sentence |
-|------------------------|-----------------------------|------------------|
-| Автобус | Автобус**ом** | Я їду на роботу автобусом. |
-| Тролейбус | Тролейбус**ом** | Ми їдемо додому тролейбусом. |
-| Трамвай | Трамва**єм** | Вона їде в центр трамваєм. |
-| Метро | на метро | Ти їдеш на метро? |
-| Таксі | на таксі | Вони їдуть на таксі. |
-
-## Презентація: Види транспорту та оплата
-
-Now that we know *how* to move, let's learn the specific vocabulary for stops, tickets, and transfers. This vocabulary is essential for reading signs and listening to announcements.
-
-### Зупинка чи Станція? (Stop or Station?)
-
-In English, we often use "station" for everything. In Ukrainian, there is a strict difference.
-
-**Зупи́нка** — A stop.
-Це місце для наземного транспорту: автобуса, трамвая, тролейбуса. Зазвичай це просто навіс або знак на вулиці.
-*   **Автобусна зупинка** — Bus stop.
-*   **Наступна зупинка** — Next stop.
-*   **Я чекаю на зупинці** — I am waiting at the stop.
-
-**Ста́нція** — A station.
-Це велика будівля або інфраструктурний об'єкт. Ми використовуємо це слово *тільки* для метро та залізниці.
-*   **Станція метро** — Metro station.
-*   **Станція «Хрещатик»** — Khreshchatyk station.
-*   **Залізнична станція** — Railway station.
-
-> [!tip]
-> **Listen for the difference**
-> In the metro, you will hear: «Обережно, двері зачиняються. Наступна **станція** — Майдан Незалежності».
-> On the bus, you will hear: «Наступна **зупинка** — вулиця Садова».
-
-### Голос Метро (The Voice of the Metro)
-
-If you travel by Kyiv metro, you will memorize certain phrases forever. They are played at every station.
-
-**«Обережно, двері зачиняються»** — Caution, the doors are closing.
-This is the signal to step back. The doors in older trains close with considerable force!
-
-**«Наступна станція...»** — Next station is...
-Listen for this to know when to get ready.
-
-**«Вихід до міста...»** — Exit to the city...
-The announcement often tells you which streets you can reach from the station.
-
-> [!culture]
-> **The Iconic Voice**
-> For decades, the deep, calm baritone of the Kyiv Metro announcements became a symbol of the city. Even during the most chaotic rush hour, that voice remained a constant. The older recordings are still legendary, though newer lines now feature different voices.
-
-### Оплата проїзду (Paying the Fare)
-
-Як платити? У Києві старі квитки вже зникають.
-
-**Квито́к** — Ticket.
-Це загальне слово. Це може бути QR-код. Але це все одно **квиток**.
-*   **Купити квиток** — To buy a ticket.
-*   **Один квиток, будь ласка** — One ticket, please.
-
-**Проїзни́й** — Travel pass / Transit card.
-Це пластикова картка або передплата у додатку.
-*   **У мене є проїзний** — I have a pass.
-
-**Валідатор** — Validator.
-Це помаранчевий або жовтий пристрій в автобусі. Треба прикласти сюди картку або телефон.
-
-**Прокомпостува́ти** — To validate (old style).
-Історично це означало пробити дірки у паперовому квитку. Старші люди досі вживають це слово, але молодь каже **завалідувати**.
-*   **Треба завалідувати квиток** — Need to validate the ticket.
+Ці три слова — це чоловічий рід. Вони закінчуються на твердий приголосний. Ми часто використовуємо ці слова в місті.
 
 > [!fact]
-> **Kyiv Digital**
-> Kyiv is a "smartphone city." You almost never pay cash in municipal transport (metro, bus, tram). You use the app **Київ Цифровий** (Kyiv Digital) to generate a QR-code or use a bank card (PayPass). However, in **маршрутки** (minibuses), cash is still king!
+> **Екологічний транспорт**
+> Ukraine has one of the largest trolleybus networks in the world. Kyiv, Kharkiv, and Odesa rely heavily on this electric transport, making the streets quieter and reducing pollution compared to standard diesel buses.
 
-### Пересадка (Transfer)
+### Феномен маршрутки
 
-Often, one train is not enough. You need to switch lines.
+Маршрутка — це маленький автобус. Це дуже популярний транспорт в Україні. Маршрутки їздять швидко і часто.
 
-**Переса́дка** — Transfer.
-*   **Станція пересадки** — Transfer station.
-*   **Ми робимо пересадку** — We are making a transfer.
+**Маршру́тка** — це приватний мініавтобус. Він має один маршрут. Слово походить від «маршрутне таксі». Вони зазвичай жовті або білі. Маршрутки є в кожному українському місті.
 
-**Пересісти на...** — To change to... / To transfer to...
-This verb requires the Accusative case because it involves motion/direction.
-*   Я хочу **пересісти на** метро. — I want to transfer to the metro.
-*   Тут можна **пересісти на** автобус номер 5. — Here you can transfer to bus number 5.
+Маршрутки швидші, ніж великі автобуси. Сьогодні вони зупиняються на офіційних зупинках. Це унікальний культурний досвід. На зупинці ви можете підняти руку. Тоді маршрутка зупиняється.
 
-Here is a simple logic for transfers:
-1.  **Вийти** — To exit the train.
-2.  **Перейти** — To walk/cross to the other station.
-3.  **Сісти** — To sit/board the new train.
+### Підземний транспорт: Метро
 
-### Grammar Focus: Where vs. Where To?
+Київ має метро. Харків має метро. Дніпро має метро.
 
-This is the most critical grammar point for navigation. You must distinguish between **Location** (Static) and **Direction** (Dynamic).
+**Метро́** — це найшвидший транспорт у великому місті. Це допомагає уникати заторів. Київське метро має дуже глибокі станції.
 
-**Де? (Where?) → Locative Case**
-When you are *already* somewhere.
-*   Prepositions: **у/в** (in), **на** (on).
-*   Ending: usually **-і** or **-у**.
-*   Я **в** метр**о**. (I am in the metro.)
-*   Ми **на** зупинц**і**. (We are at the stop.)
+Граматично слово **метро** дуже просте для студентів. Це середній рід. Найкраще те, що це слово **незмінне**. Воно ніколи не змінює закінчення!
 
-**Куди? (Where to?) → Accusative Case**
-When you are *moving* towards somewhere.
-*   Prepositions: **у/в** (into), **на** (onto).
-*   Ending: noun usually does not change for inanimate objects (masculine/neuter).
-*   Я йду **в** метр**о**. (I am going *into* the metro.)
-*   Ми йдемо **на** зупинк**у**. (We are walking *to* the stop.)
-
-Let's compare them:
-
-| Question | Case | Preposition | Example | Meaning |
-|---|---|---|---|---|
-| **Де** ти? | Locative | **на** | Я **на** зупинц**і**. | I am *at* the stop (waiting). |
-| **Куди** ти йдеш? | Accusative | **на** | Я йду **на** зупинк**у**. | I am walking *to* the stop. |
-| **Де** він? | Locative | **у** | Він **у** автобус**і**. | He is *inside* the bus. |
-| **Куди** він сів? | Accusative | **у** | Він сів **у** автобус. | He got *into* the bus. |
-
-## Практика: Орієнтування в місті
-
-Now let's use this vocabulary in real situations. You are lost, you need a ticket, or you are stuck in a crowded marshrutka. What do you say?
-
-### Asking for Directions
-
-The universal formula for asking "How do I get to...?" is:
-
-**Як доїхати до...?** — How to get (drive) to...?
-Use the Genitive case after **до**.
-
-*   **Вибачте, як доїхати до центру?** — Excuse me, how do I get to the center?
-*   **Як доїхати до вокзалу?** — How do I get to the railway station?
-*   **Як доїхати до вулиці Шевченка?** — How do I get to Shevchenko street?
-
-Possible answers you might hear:
-*   **Треба сісти на метро.** — You need to take the metro.
-*   **Їдьте прямо.** — Go straight.
-*   **Це далеко.** — It is far.
-*   **Це близько.** — It is near.
-
-**Діалог на вулиці**
-— Вибачте, ви не знаєте, де метро «Арсенальна»?
-— Добрий день. Так, знаю. Це недалеко.
-— Як туди дійти?
-— Йдіть прямо, потім поверніть направо. Там буде парк. Метро біля парку.
-— Дякую! Це далеко пішки?
-— Ні, це близько. 5 хвилин.
-— Дякую за допомогу!
-— Будь ласка. Гарного дня!
-
-### Сценарії в маршрутці (The Marshrutka Experience)
-
-Їздити в маршрутці — це справжнє мистецтво. Тут треба говорити голосно!
-
-**Сценарій 1: Оплата (Paying)**
-Ви стоїте біля задніх дверей. Людей багато. У вас є готівка.
-**Ви:** «Передайте, будь ласка, за одного.» — Pass for one, please.
-**Пасажир:** Бере гроші і передає водієві.
-**Водій:** Передає решту назад.
-
-**Сценарій 2: Вихід (Exiting)**
-Маршрутка зупиняється тільки на вимогу! Треба кричати.
-**Ви:** «На зупинці, будь ласка!» — At the stop, please!
-**Або просто:** «Наступна!» — The next one!
-
-**Сценарій 3: Натовп (The Crowd)**
-Автобус повний. Ви стоїте біля дверей. Людина позаду хоче вийти.
-**Пасажир:** «Ви виходите?» — Are you getting off?
-**Ви (ні):** «Ні, давайте поміняємось.» — No, let's switch places.
-**Ви (так):** «Так, виходжу.» — Yes, I am getting off.
-
-**Сценарій 4: Ви не знаєте, де ви (Lost)**
-Ви дивитесь у вікно. Ви не знаєте вулицю. Треба запитати.
-**Ви:** «Вибачте, яка це зупинка?» — Excuse me, what stop is this?
-**Пасажир:** «Це вулиця Садова.» — This is Sadova street.
-**Ви:** «Дякую! Мені треба виходити!» — Thank you! I need to get off!
-**Ви (водію):** «Зупиніть тут, будь ласка!» — Stop here, please!
+*   Це метро. — Nominative case.
+*   Я бачу метро. — Accusative case.
+*   Я їду в метро. — Locative case.
 
 > [!myth-buster]
-> **Is Marshrutka Scary?**
-> Some guidebooks warn tourists to avoid marshrutkas. Don't be afraid! Yes, they can be crowded and chaotic. Yes, the drivers drive fast. But they are the lifelines of the city. Riding one makes you a true local. Just remember to hold on tight to the handrail (**триматися за поручень**)!
+> **Myth:** The word "метро" changes endings like "вікно".
+> **Fact:** No! "Метро" is an indeclinable foreign loanword. It is always "метро", whether you are talking about one metro, many metros, or being inside the metro. The same rule applies to the word **таксі**.
 
-### Exercise: Де or Куди?
+### Транспорт для подорожей
 
-Let's test your logic. Look at the context and decide if it is a Location (Where?) or Direction (Where to?).
+Ви їдете в інше місто. Вибирайте поїзд. Поїзд відправляється з вокзалу.
 
-1.  **Context:** You are sitting inside a tram. Friend calls.
-    *   Friend: Ти де?
-    *   You: Я _____ (трамвай).
-    *   *Answer:* Я **в трамваї**. (Locative)
+Ви хочете поїхати в інше місто. Тоді ви використовуєте залізницю.
+- **По́їзд** — train. The Ukrainian railway system is vast and reliable. Trains are the primary method of long-distance travel.
+- **Вокза́л** — train station. This is the main railway station. In Kyiv, the central station is simply called «Київ-Пасажирський», but everyone refers to the building as «вокзал».
 
-2.  **Context:** You see a bus approaching and you run towards it.
-    *   Friend: Куди ти біжиш?
-    *   You: Я біжу _____ (автобус).
-    *   *Answer:* Я біжу **в автобус**. (Accusative)
+Інший варіант для подорожей — це **таксі́**. Слово «таксі» ніколи не змінює закінчення. Ви можете замовити таксі через мобільні додатки. Це дуже популярно в Україні.
 
-3.  **Context:** You are waiting for a friend.
-    *   Friend: Де ми зустрінемось?
-    *   You: _____ (зупинка).
-    *   *Answer:* **На зупинці**. (Locative)
+## Презентація
 
-## Закріплення: Подорож метром
+Це важливо правильно говорити про рух українською. Ми використовуємо різні дієслова. Це залежить від методу транспортування. Англійська має "I am going" для прогулянки і для авто. Українська має різні слова.
 
-Let's put everything together into a story. Read this narrative about a trip on the Kyiv metro. Pay attention to the bold words.
+### Дієслово «йти»
 
-### Подорож на метро (A Trip on the Metro)
+Ми використовуємо дієслово «йти», коли ми йдемо пішки. Ми не використовуємо транспорт.
 
-Я живу в Києві. Щоранку я **їду на роботу** на метро. Моя **станція** називається «Оболонь».
+Дієслово **йти** означає рух пішки. Ви йдете на зупинку, йдете в парк або на роботу. Подивіться на форми теперішнього часу.
 
-Я заходжу **у вестибюль**. Тут дуже гарно і світло. Я бачу каси, але там черга. Я не хочу чекати. Я дістаю телефон та відкриваю додаток «Київ Цифровий». Потім я **прикладаю** телефон до **валідатора**. Чути звук «пік!». Зелене світло! Турнікет відкривається, й я йду далі.
+| Особа | Дієслово |
+| :--- | :--- |
+| Я | **йду** |
+| Ти | **йдеш** |
+| Він / Вона / Воно | **йде** |
+| Ми | **йдемо** |
+| Ви | **йдете** |
+| Вони | **йдуть** |
 
-Я стаю на **ескалатор**. Він дуже довгий. Це глибока станція. Я їду вниз і дивлюся на рекламу. Люди стоять праворуч, а ліворуч хтось біжить. Я слухаю музику в навушниках. Станція схожа на палац. Тут є колони та люстри.
+Notice that the root is just «йд-» and we add standard present tense endings. Let us look at some examples:
 
-На платформі багато людей. Всі чекають. Чути шум поїзда. Поїзд приїжджає швидко і зупиняється.
+*   Я йду на зупинку. — I am walking to the stop.
+*   Куди ти йдеш? — Where are you walking to?
+*   Ми йдемо в парк. — We are walking to the park.
+*   Вона йде на роботу пішки. — She goes to work on foot.
 
-Я заходжу **у вагон**. Тут прохолодно і зручно. Я знаходжу вільне місце та сідаю. Але потім заходить старенька бабуся, й я встаю. Вона каже «Дякую!».
+> [!tip]
+> **Euphony Rule: йти vs іти**
+> You will often see this verb spelled as **іти**. Ukrainian loves euphony. If the previous word ends in a consonant, we use **іти** to make it easier to say. If the previous word ends in a vowel, we use **йти**.
+> *   Він **і**де.
+> *   Вона **й**де.
 
-Голос каже: «Обережно, двері зачиняються. Наступна станція — "Тараса Шевченка"».
+### Дієслово «їхати»
 
-Мені треба зробити **пересадку** на станції «Майдан Незалежності». Це центр міста. Я виходжу з поїзда і йду довгим переходом. Там грає музикант на гітарі. Люди кидають гроші. Я теж кидаю 10 гривень.
+Ми використовуємо дієслово «їхати», коли ми використовуємо транспорт. Автобус, метро, таксі або велосипед — для всього потрібне дієслово «їхати».
 
-Я переходжу на синю лінію та чекаю **наступний** поїзд. Він приїжджає через 2 хвилини.
+Дієслово **ї́хати** ми використовуємо для транспорту. Ви не можете «йти» автобусом. Для автобуса, поїзда або велосипеда треба використовувати «їхати».
 
-Через 20 хвилин я вже **на роботі**. Я люблю метро. Це дуже зручно і швидко!
+Here is the present tense conjugation for «їхати». Notice that the «х» in the infinitive changes to a «д» in the conjugated forms. This is a very common consonant mutation in Ukrainian.
 
-### Comprehension Check
+| Особа | Дієслово |
+| :--- | :--- |
+| Я | **ї́ду** |
+| Ти | **ї́деш** |
+| Він / Вона / Воно | **ї́де** |
+| Ми | **ї́демо** |
+| Ви | **ї́дете** |
+| Вони | **ї́дуть** |
 
-1.  **Чим** герой їде на роботу? (How/By what means does the hero go to work?)
-2.  Як він платить за **проїзд**? (How does he pay for the fare?)
-3.  Що він робить на станції «Майдан Незалежності»? (What does he do at Maidan Nezalezhnosti station?)
+Let us see this verb in action:
+
+*   Я їду на роботу. — I am going to work.
+*   Куди ви їдете? — Where are you going?
+*   Мій брат їде в Київ. — My brother is traveling to Kyiv.
+*   Ми їдемо додому. — We are going home.
+
+### Як сказати «by bus» або «by metro»?
+
+Ми хочемо назвати транспорт. Ми маємо два варіанти. Перший варіант — це Орудний відмінок.
+
+When you want to specify *which* transport you are taking, Ukrainian uses the Instrumental case. To say "by transport", you simply add **-ом** to the end of the masculine word.
+
+*   автобус + ом = **автобусом** 
+*   тролейбус + ом = **тролейбусом** 
+*   трамвай + єм = **трамваєм**
+*   поїзд + ом = **поїздом** 
+
+Let us combine our new verb with these new forms:
+*   Я їду автобусом. — I am going by bus.
+*   Він їде поїздом. — He is traveling by train.
+*   Ми їдемо трамваєм. — We are going by tram.
+
+What about words that do not change? As we learned earlier, «метро» and «таксі» are indeclinable. You just use the word exactly as it is!
+*   Я їду метро. — I am going by metro.
+*   Вона їде таксі. — She is going by taxi.
+
+> [!culture]
+> **"На автобусі" vs "Автобусом"**
+> In casual spoken Ukrainian, you will very frequently hear people use the preposition **на** + the Locative case.
+> Я їду на автобусі. 
+> Вона їде на поїзді. 
+> Ми їдемо на метро. 
+> While "автобусом" is more formal, "на автобусі" is perfectly acceptable. For now, stick to the simple "-ом" ending, but do not be surprised when you hear "на" on the streets!
+
+## Практика
+
+Now that we know the vocabulary and the verbs, let us look at how to use them in real-life situations. Navigating the city requires asking questions, buying tickets, and knowing what to say inside the vehicle.
+
+### Пошук зупинки
+
+Ви хочете поїхати. Спочатку треба знайти зупинку або станцію. Ви можете запитати людей на вулиці.
+
+To take public transport, you first need to find the stop. 
+- **Зупи́нка** — stop. Used for buses, trolleybuses, trams, and marshrutkas.
+- **Ста́нція** — station. Used for the metro or regional trains.
+
+When asking for directions, start politely with «Перепрошую» or «Скажіть, будь ласка». Then, simply ask «де» followed by what you are looking for.
+
+*   Перепрошую, де зупинка автобуса? — Excuse me, where is the bus stop?
+*   Скажіть, будь ласка, де станція метро? — Tell me, please, where is the metro station?
+*   Де залізничний вокзал? — Where is the railway station?
+*   Цей автобус їде в центр? — Does this bus go to the center?
+
+### Купівля квитка
+
+Сьогодні в Україні можна платити карткою або телефоном. Але іноді ви купуєте паперовий квиток.
+
+A ticket in Ukrainian is **квито́к**. Today, in major cities like Kyiv or Lviv, you can often pay for your fare simply by tapping your credit card or phone on the validator terminal inside the bus or at the metro turnstile. 
+
+However, you still might need to buy a physical ticket from a **ка́са** (ticket window) or a driver. Here are the essential phrases for purchasing a ticket.
+
+*   Один квиток, будь ласка. — One ticket, please.
+*   Два квитки, будь ласка. — Two tickets, please.
+*   Скільки коштує квиток? — How much does a ticket cost?
+*   Скільки коштує проїзд? — How much is the fare?
+
+If you are paying the driver in a marshrutka, you simply hand them the cash when you board. 
+
+> [!warning]
+> **The word "Ticket"**
+> Never use the English word "ticket" or the Russian word "билет" when trying to buy one. The correct Ukrainian word is exclusively **квиток**. For a train or plane, you might also hear **проїзний документ** in very formal contexts, but for daily life, **квиток** is the only word you need.
+
+### Спілкування в маршрутці
+
+У маршрутці люди часто говорять одне з одним. Це дуже цікавий культурний досвід.
+
+У маршрутці треба більше говорити. Маршрутки часто мають багато людей. Ви заходите через задні двері. Ви не можете дати гроші водію. Тому українці мають цікаву систему. Ви даєте гроші іншій людині і кажете:
+*   **Передайте, будь ласка.** — Pass this along, please.
+*   **За проїзд, будь ласка.** — For the fare, please.
+
+Гроші йдуть від людини до людини. Ваша решта повертається так само! Ви хочете вийти. Водій не завжди зупиняється. Треба голосно сказати:
+*   **На зупинці, будь ласка!** — At the stop, please!
+*   **Зупиніть тут, будь ласка.** — Stop here, please.
+
+### Чи ви виходите?
+
+У транспорті багато людей. Ви питаєте людей. Вони виходять тут?
+
+Ви в автобусі. Там багато людей. Ви хочете вийти, але попереду люди. В Україні не можна просто йти мовчки. Треба запитати людину попереду. Вона теж виходить? Ні? Тоді людина дає дорогу.
+
+The essential phrase is:
+*   **Ви виходите?** — Are you getting off?
+
+Хтось питає вас. Ви можете відповісти:
+*   **Так, виходжу.** — Yes, I am getting off.
+*   **Ні, не виходжу.** — No, I am not getting off.
+
+Ви кажете «ні». Тоді треба дати людині дорогу до дверей.
+
+### Діалоги з реального життя
+
+Ці фрази працюють у реальних ситуаціях. Ми говоримо на вулиці. Ми говоримо у транспорті.
+
+Let us look at three mini-dialogues to see how all this vocabulary comes together in natural conversation.
+
+**Діалог 1: На вулиці**
+> — Перепрошую, ви не знаєте, де станція метро?
+> — Так, ідіть прямо, а потім направо.
+> — Дуже дякую!
+> — Прошу.
+
+*— Excuse me, do you know where the metro station is?*
+*— Yes, go straight, and then to the right.*
+*— Thank you very much!*
+*— You're welcome.*
+
+**Діалог 2: Купівля квитка**
+> — Добрий день. Два квитки, будь ласка.
+> — Добрий день. Шістнадцять гривень.
+> — Ось, будь ласка.
+> — Дякую. Ваш квиток.
+
+*— Good afternoon. Two tickets, please.*
+*— Good afternoon. Sixteen hryvnias.*
+*— Here you go, please.*
+*— Thank you. Your ticket.*
+
+**Діалог 3: В автобусі**
+> — Перепрошую, ви виходите на наступній зупинці?
+> — Ні, не виходжу. Проходьте, будь ласка.
+> — Дякую. Зупиніть на зупинці, будь ласка!
+
+*— Excuse me, are you getting off at the next stop?*
+*— No, I am not getting off. Pass through, please.*
+*— Thank you. Stop at the stop, please!*
+
+> [!quote]
+> **Urban rhythm**
+> "Метро гуде, трамвай дзвенить, а місто живе своїм життям." 
+> Transportation is the lifeblood of Ukrainian cities. Listening to the specific sounds — the rumble of the old Tatra trams in Lviv or the heavy doors of the Kyiv metro — is part of immersing yourself in the country.
 
 ---
 
 ## Підсумок
 
-Congratulations! You have navigated the complexities of Ukrainian urban transport. You now know the difference between simply walking (**іти**) and riding (**їхати**). You can distinguish a street stop (**зупинка**) from a metro station (**станція**). You know that to pay, you might need a **квиток** or just your smartphone to **завалідувати** payment. And most importantly, you are ready to survive the social interaction of a **маршрутка**.
+Ми вивчили важливі слова. Ці слова потрібні в місті. Тепер ви знаєте, як користуватися транспортом.
 
-Moving through the city is the best language practice. Every sign, every announcement, and every interaction with a driver is a lesson. So, buy a ticket, validate it, and enjoy the ride!
+In this lesson, we have covered the essential building blocks for navigating a Ukrainian city. You learned the names of the core vehicles: **автобус**, **тролейбус**, **трамвай**, and **маршрутка**. You also learned about rail transport like the **метро** and **поїзд**. Knowing the difference between surface transport (наземний транспорт) and the metro (підземний транспорт) is essential for daily navigation. The word **зупинка** is your key to finding buses and trams, while **станція** helps you locate the metro. 
+
+Crucially, you learned the difference between the two verbs of motion: **йти** and **їхати**. Remember that in Ukrainian, the method of your movement must be specified by the verb you choose. You cannot walk a bus! When you are moving on foot, you always use the verb **йти**. When you are sitting in a vehicle and moving across the city, you must always use the verb **їхати**. This is one of the most fundamental rules of the Ukrainian language. 
+
+Finally, we covered the practical survival phrases for buying a **квиток**, finding a **зупинка**, and politely navigating crowded spaces by asking «Ви виходите?». Passing money in a marshrutka by saying «За проїзд, будь ласка» is a uniquely Ukrainian experience that you are now fully prepared for. With these tools, you are ready to explore the city confidently. The city is waiting for you! 
 
 **Перевірте себе:**
-
-1.  Which verb do you use for taking a bus: **іти** or **їхати**?
-2.  If you are *at* the stop, do you use Locative or Accusative case?
-3.  What is the Ukrainian word for a "transfer" between trains?
-4.  What do you ask a passenger standing in front of the door if you need to exit?
-5.  How do you say "I am going by taxi"?
+1. What is the difference between «йти» and «їхати»? When do you use each one?
+2. Translate to Ukrainian: "Excuse me, where is the bus stop?"
+3. You are standing in front of the doors on a crowded metro, but it is not your stop. Someone behind you says "Ви виходите?". What should you reply to let them know you are staying on?
+4. How do you say "by tram" using the Instrumental case ending?
+5. True or false: The word «метро» changes its ending depending on its grammatical role in the sentence.
+6. Which word is used for a train station and what is the Ukrainian railway called?
+7. What do you say in a marshrutka when you pass your money to the driver through other people?
+8. Why is the Kyiv metro special compared to other metro systems?

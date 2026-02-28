@@ -2,7 +2,7 @@ TRACK: a1
 LEVEL: A1
 SLUG: emergencies
 TOPIC_TITLE: Emergencies
-MODULE_NUM: '42'
+MODULE_NUM: '62'
 PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/a1/emergencies.yaml
 META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/meta/emergencies.yaml
 CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/emergencies.md
@@ -17,10 +17,11 @@ SKILL_IDENTITY: Patient & Supportive Ukrainian Tutor
 PERSONA_FLAVOR: The Helpful Neighbor
 PERSONA_VOICE: Patient Supportive Tutor
 PERSONA_ROLE: Emergency Dispatcher
-IMMERSION_RULE: 'TARGET: 35-55% Ukrainian, 45-65% English. Explanatory prose mixed
-  — short Ukrainian sentences woven into English explanations. Grammar still anchored
-  in English. Examples primarily Ukrainian with translations. Ukrainian sentences
-  max 10 words.'
+IMMERSION_RULE: 'TARGET: 35-55% Ukrainian, 45-65% English. Write ALL section content
+  in Ukrainian first (max 10 words per sentence). Then add English translation paragraphs
+  for grammar explanations to bring Ukrainian down to 35-55%. CRITICAL: NEVER mix
+  languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. Grammar
+  rules still anchored in English. A1 register — simple concrete vocabulary.'
 LEVEL_CONSTRAINTS: 'HARD GRAMMAR RULES (audit will reject violations):
 
   - Max 10 words per Ukrainian sentence (STRICT — count every word)
@@ -476,6 +477,49 @@ D1_OUTPUT_FORMAT: '## Output Format
   separate step if needed.
 
 
+  ### Output Block 0: Citation Bank (BEFORE the review)
+
+
+  **MANDATORY** — Build this FIRST by reading files with Read tool and copy-pasting
+  exact quotes.
+
+  Each citation must be verified with Grep before adding to the bank.
+
+  Use `「...」` (CJK corner brackets) for ALL Ukrainian citations — NOT `«»` (those
+  appear inside Ukrainian text and cause parsing collisions).
+
+
+  ```
+
+  ===CITATION_BANK_START===
+
+  1. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+
+  2. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+
+  3. Line {N}: 「{exact Ukrainian text copy-pasted from Read output}」
+
+  ...
+
+  ===CITATION_BANK_END===
+
+  ```
+
+
+  **Rules:**
+
+  - Every entry MUST be copy-pasted verbatim from Read tool output — zero rewording
+
+  - Verify each with Grep before adding: `Grep pattern="first 5 words" path="{CONTENT_PATH}"`
+
+  - If Grep returns no match, you paraphrased — delete and re-copy
+
+  - Minimum 8 citations for modules >2000 words
+
+  - In the review body below, you may ONLY use `「」` citations that appear in this
+  bank
+
+
   ### Output Block 1: Review
 
 
@@ -545,7 +589,7 @@ D1_OUTPUT_FORMAT: '## Output Format
 
   - **Location**: Line {N} / Section "{name}"
 
-  - **Original**: «{exact Ukrainian text verified via Grep}»
+  - **Original**: 「{exact Ukrainian text from Citation Bank}」
 
   - **Problem**: {why it''s wrong}
 
@@ -562,7 +606,7 @@ D1_OUTPUT_FORMAT: '## Output Format
 
   |------|---------|-----------|------|
 
-  | {N} | «{original}» | «{fixed}» | Russianisms / Calque / Scope / Grammar |
+  | {N} | 「{original}」 | 「{fixed}」 | Russianisms / Calque / Scope / Grammar |
 
 
   ## Beginner Safety Audit
@@ -593,7 +637,7 @@ D1_OUTPUT_FORMAT: '## Output Format
 
   **What to fix:**
 
-  1. Line {N}: Change «{current}» -> «{replacement}» — {why}
+  1. Line {N}: Change 「{current}」 -> 「{replacement}」 — {why}
 
   2. Section "{name}": {action} — {impact}
 
@@ -643,7 +687,7 @@ D1_OUTPUT_FORMAT: '## Output Format
 
   - Ukrainian sentences verified: {X}
 
-  - Factual claims verified: {X}
+  - Citations in bank: {X}
 
   - Issues found: {X}
 
@@ -692,10 +736,17 @@ D1_OUTPUT_FORMAT: '## Output Format
   ## CRITICAL: Output Format Reminder
 
 
-  Your output MUST start with `===REVIEW_START===` and end with `===REVIEW_END===`.
-  The extraction pipeline uses these exact delimiters. Any output without these delimiters
-  is **automatically discarded** and the entire phase fails. Do not write a summary
-  or conversational response — output the structured review inside the delimiters.
+  **CITATION RULE (LAST REMINDER):** Every `「」`-quoted Ukrainian text in your review
+  MUST appear verbatim in the source files. If you cannot find it with Grep, do NOT
+  cite it — you are hallucinating. Use your Citation Bank as the single source of
+  verified quotes.
+
+
+  Your output MUST contain `===CITATION_BANK_START===` / `===CITATION_BANK_END===`
+  BEFORE `===REVIEW_START===` / `===REVIEW_END===`. The extraction pipeline uses these
+  exact delimiters. Any output without these delimiters is **automatically discarded**
+  and the entire phase fails. Do not write a summary or conversational response —
+  output the citation bank, then the structured review inside the delimiters.
 
   '
 SCORING_SECTION: "### STEP 4: Score 7 Dimensions\n\n| # | Dimension | Weight | Auto-fail\

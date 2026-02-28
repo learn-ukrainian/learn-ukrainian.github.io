@@ -2,15 +2,15 @@
   "module": "a1-final-exam",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:56:32.292280Z",
+  "last_audit": "2026-02-28T21:17:20.727075Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-22T18:41:36.864414Z",
-    "meta": "2026-02-22T09:08:18.375105Z",
+    "md": "2026-02-28T21:17:00.301005Z",
+    "meta": "2026-02-28T21:04:32.226145Z",
     "activities": "2026-02-22T09:13:58.737740Z",
     "vocabulary": "2026-02-26T10:56:38.067181Z",
     "plan": "2026-02-28T03:02:13.877969Z",
-    "research": "2026-02-22T09:08:18.372301Z"
+    "research": "2026-02-28T21:04:32.218435Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "3548/2000 (raw: 3687)"
+      "message": "4898/2000 (raw: 5121)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "20/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 3,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

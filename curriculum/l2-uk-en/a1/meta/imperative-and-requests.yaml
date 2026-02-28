@@ -5,47 +5,52 @@ content_outline:
 - section: Наказовий спосіб
   words: 500
   points:
-  - 'Introductory English scaffolding: Define the imperative mood (commands, requests,
-    instructions) using simple analogies.'
-  - 'H3: ''Ти'' vs ''Ви'' - Explain the critical social difference. Define the formation
-    rule: remove the -ти infinitive ending and add the appropriate imperative suffix.'
-  - 'H3: Suffix Patterns - Explain the basic suffix additions depending on whether
-    the stem ends in a vowel (-й) or a consonant (-и).'
-  - Provide a clear warning and examples contrasting direct personal commands (Читай!)
-    with impersonal infinitive rules (Читати!).
+  - 'H3: Вступ. Provide English scaffolding to define the imperative mood. Reassure
+    learners that using imperatives is polite and normal in Ukrainian daily life.'
+  - 'H3: Форми «Ти» та «Ви». Define the social context for «Ти» (informal/singular)
+    and «Ви» (formal/plural). Explain that «Ви» adds «-те» or «-іть» to the «Ти» form.'
+  - 'H3: Правила утворення. Explain dropping the «-ти» infinitive ending. Detail the
+    two patterns: vowel stems take «-й/-йте» (читати → читай), consonant stems take
+    «-и/-іть» (робити → роби), with 2+ examples each.'
+  - 'Увага (Learner Warning): Contrast personal commands («Читай!») with impersonal
+    infinitives («Читати!»), explaining why learners shouldn''t use infinitives for
+    direct requests.'
 - section: Вісім обов'язкових дієслів
   words: 500
   points:
-  - Introduce the 8 essential State Standard verbs required for A1. Provide a master
-    reference table with Infinitive, 'Ти' form, and 'Ви' form.
-  - 'H3: Regular Classroom Verbs - Focus on читати, слухати, дивитися, іти with simple
-    classroom context sentences.'
-  - 'H3: Consonant Mutations - Explain the к→ж mutation in сказати → скажи(те) and
-    the sibilant shift in писати → пиши(те).'
-  - 'H3: Irregular Short Forms - Explicitly drill дати → дай(те) and стояти → стій(те)
-    as exceptions that must be memorized.'
+  - 'H3: Таблиця дієслів. Present a table of the 8 State Standard verbs (читати, писати,
+    сказати, дати, іти, слухати, дивитися, стояти) with Infinitive, «Ти» form, «Ви»
+    form, and English translation.'
+  - 'H3: Класні команди. Provide short, contextual Ukrainian sentences for regular
+    verbs (читати, слухати, дивитися, іти), e.g., «Слухайте уважно».'
+  - 'H3: Зміни приголосних. Gently explain consonant mutations for сказати (к→ж: скажи)
+    and писати (с→ш: пиши). Focus on the pattern.'
+  - 'H3: Важливі винятки. Highlight the irregular stems for дати (дай/дайте) and стояти
+    (стій/стійте) that require strict memorization.'
 - section: Ввічливе прохання
   words: 400
   points:
-  - 'H3: The Magic Words ''Будь ласка'' - Teach it as the universal polite softener.
-    Show its flexibility at the beginning, middle, or end of a sentence.'
-  - 'H3: Formal Requests - Introduce ''Прошу вас'' + infinitive for highly formal
-    or service-oriented contexts.'
-  - Provide a brief, simplified preview of the advanced pattern 'Чи не могли б ви...?'
-    (Could you...?) as an aspirational polite phrase for A1 learners.
+  - 'H3: Чарівні слова «будь ласка». Introduce «будь ласка» as the universal softener.
+    Provide 3 examples showing its flexible position (start, middle, end of sentence).'
+  - 'H3: Офіційні прохання з «прошу». Introduce the structure «Прошу вас» + infinitive
+    for formal or service contexts, with 2 examples.'
+  - 'H3: Ввічлива конструкція. Provide a simplified preview of «Чи не могли б ви...?»
+    (Could you...?) as a fixed, polite vocabulary chunk for A1 learners.'
 - section: Заборони
   words: 300
   points:
-  - 'Explain negative imperatives: simply add the particle ''не'' before the established
-    imperative form.'
-  - Provide 5-6 clear examples of common negative commands (Не кури! Не біжи! Не чіпай!).
-  - 'Preview concept for module a1-55: Briefly distinguish between a direct personal
-    prohibition (Не чіпай!) and a public sign (Не торкатися!).'
+  - 'H3: Заперечна форма. Explain the rule of adding the negative particle «не» directly
+    before the imperative verb.'
+  - 'Приклади (Examples): Provide 5-6 bulleted examples of common negative commands
+    (e.g., Не кури! Не біжи! Не чіпай!).'
+  - 'Контекст (Context Note): Briefly preview the difference between personal prohibitions
+    (Не чіпай!) and public impersonal signs (Не торкатися! - linking to module a1-55).'
 - section: Практика
   words: 300
   points:
-  - Include a mini-dialogue demonstrating polite requests in a cafe or classroom setting.
-  - 'Provide an escalation drill: show the progression from a direct ''ти'' command
-    (Дай), to a polite ''ви'' command (Дайте, будь ласка), to an indirect request.'
-  - Add a brief 'Self-Check' English-to-Ukrainian situational prompt exercise for
-    the 8 required verbs.
+  - 'H3: Міні-діалог. Present a short, realistic dialogue in a cafe or classroom combining
+    direct commands and polite requests.'
+  - 'H3: Тренування ввічливості. Demonstrate ''politeness escalation'' with a step-by-step
+    upgrade: «Дай» → «Дайте» → «Дайте, будь ласка».'
+  - 'H3: Перевірка. A 4-item self-check where the learner translates situational English
+    commands into Ukrainian using the 8 required verbs.'

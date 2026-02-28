@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 39 — E2E
+PASS: pipeline a1 56
 
   Module:   buying-tickets
   Track:    a1
-  Mode:     e2e
-  Words:    2817 (target: 2000)
+  Mode:     v3
+  Words:    3609 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-23T00:20:43Z
+  Date:     2026-02-28T18:31:23Z

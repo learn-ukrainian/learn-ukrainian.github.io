@@ -2,15 +2,15 @@
   "module": "my-world-objects",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:27:14.302908Z",
+  "last_audit": "2026-02-28T16:56:39.283993Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:02.806068Z",
-    "meta": "2026-02-19T19:17:38.767055Z",
+    "md": "2026-02-28T16:56:24.001027Z",
+    "meta": "2026-02-28T16:47:10.432877Z",
     "activities": "2026-02-21T23:30:05.693686Z",
     "vocabulary": "2026-02-26T10:56:53.938498Z",
     "plan": "2026-02-28T03:02:37.269330Z",
-    "research": "2026-02-19T19:17:38.757088Z"
+    "research": "2026-02-28T16:47:10.409813Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "2214/2000 (raw: 2593) | immersion: 13.2% LOW (target 15-35% (M10))"
+      "status": "pass",
+      "violations": 0,
+      "message": "4047/2000 (raw: 4205)"
     },
     "activities": {
       "status": "deferred",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 2,
-    "fail_count": 1,
+    "pass_count": 3,
+    "fail_count": 0,
     "deferred_count": 3
   }
 }

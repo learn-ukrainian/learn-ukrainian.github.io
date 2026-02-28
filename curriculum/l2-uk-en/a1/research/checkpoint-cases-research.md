@@ -1,33 +1,33 @@
 # Дослідження: Checkpoint: Cases
 
 ## State Standard Reference
-§4.2.3.2: "Знахідний відмінок... Із прийменниками: в, у, на (указівка на кінцевий пункт руху або переміщення)..."
-§4.2.3.3: "Місцевий відмінок: у, в, на (позначення місця)..."
-Alignment: The module aligns perfectly with the A1 core standard by contrasting Locative (location) and Accusative (direction/object) cases alongside their spatial prepositions.
+§4.2.3.2. Знахідний відмінок: "в, у, на (указівка на кінцевий пункт руху або переміщення)... про (з дієсловами думати, мріяти)"
+§4.2.3.3. Місцевий відмінок: "у, в, на (позначення місця): Спортивний костюм у великій сумці. Студент працює в новій лабораторії. Гроші лежать на столі"
+Alignment: Цей модуль безпосередньо відповідає вимогам стандарту щодо використання Знахідного відмінка для напрямку руху та об'єкта, а також Місцевого відмінка для позначення місця. Також вводиться базове використання Родового відмінка для позначення відсутності («немає»).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| де | High (Core Spatial) | Де ти? Де знаходиться? |
-| куди | High (Core Spatial) | Куди ти йдеш? Куди їдеш? |
-| звідки | High (Core Spatial) | Звідки ти? Звідки це? |
-| немає | High (Core Grammatical) | немає кави, немає часу |
-| новий | High (Top 100 Adj) | нове місто, нову книгу |
+| де | High (Top 100) | Де ти? Де кафе? |
+| куди | High (Top 200) | Куди ти йдеш? Куди їдеш? |
+| немає | High (Top 100) | немає кави, немає часу |
+| новий | High (Top 100) | нове місто, нову книгу |
+| мене | High (Pronouns) | для мене, у мене, бачить мене |
 
 ## Cultural Hooks
-1. **Navigating a Ukrainian City**: Giving and understanding addresses involves a constant dance between cases. Identifying location uses Locative (Я на вулиці Хрещатик), but declaring movement uses Accusative (Я йду на вулицю Хрещатик). Navigating places like Kyiv's Podil perfectly models these locational shifts naturally.
-2. **Everyday Transactions**: Scenarios like ordering coffee at a café or going to "Нова пошта" encapsulate the dichotomy of possession vs. absence ("I want [Accusative]" vs "There is no [Genitive]").
+1. Українці надзвичайно гостинні і завжди допомагають з навігацією. Запитання «Де тут кафе?» на вулиці (наприклад, у Львові чи Києві) часто супроводжується дуже детальними інструкціями та порадами.
+2. Культура прогулянок («прогулянка містом»): навігація містом (площі, парки, кав'ярні) є важливою частиною соціального життя, тому орієнтація в просторі — ключова навичка.
 
 ## Common Learner Errors
-1. **Direction vs. Location** → Using Locative instead of Accusative for a destination (Йду в парку замість Йду в парк). This occurs because learners translate the English preposition "in/to" without recognizing the structural change caused by movement.
-2. **Missing Pronoun Prefix** → Forgetting the 'н-' prefix on pronouns following prepositions (для його замість для нього).
-3. **Accusative Overgeneralization** → Applying the feminine -у/-ю ending to inanimate masculine or neuter nouns (бачу столу замість бачу стіл).
+1. Плутанина «де» та «куди» → Використання "Where are you going?" як «Де ти йдеш?» замість «Куди ти йдеш?» — англомовні студенти часто не розрізняють напрямок і місцезнаходження, оскільки англійська використовує "where" для обох.
+2. Пропуск префікса «н-» у займенниках → Використання «біля його» замість «біля нього» — англійська не змінює корінь займенника після прийменників.
+3. Ігнорування узгодження прикметників → «у новий місті» замість «у новому місті».
 
 ## Cross-References
 - Builds on: a1-33 (Prepositions of Place)
 - Prepares for: a1-35 (Direction and Origin)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Present the Ukrainian spatial preposition system as an elegant, logical, and independent structure. Focus strictly on the Destination vs. Location dichotomy without referencing Russian. 
-- **Scaffolding**: This is an A1 module (M34). The immersion target is 35-40%. English scaffolding is explicitly required for grammatical explanations and structuring the checkpoint.
-- **Word Target**: Minimum 2000 words. Use clear tables, extensive situational examples, and a robust integration text to reach the word count naturally.
+- Занурення (immersion) 35-40%: англійська обов'язкова для пояснення граматики (відмінків), оскільки це рівень A1.
+- Потрібно позитивно описувати українську відмінкову систему як точну та логічну просторову навігацію. Ніколи не порівнювати з російською.
+- Чітко виділіть різницю між неживими та живими об'єктами в Знахідному відмінку.

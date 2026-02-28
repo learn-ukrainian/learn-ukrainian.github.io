@@ -1,6 +1,6 @@
-module: c1-103
+module: c1-064
 level: C1
-sequence: 103
+sequence: 64
 slug: literaturoznavcha-terminolohiia
 version: '2.0'
 title: Літературознавча термінологія
@@ -69,7 +69,7 @@ objectives:
 grammar:
 - Academic register syntax
 - Abstract noun derivation
-phase: C1.6 Literature
+phase: C1.5 [Stylistics & Rhetoric]
 persona:
   voice: Senior Specialist
   role: Укладач енциклопедії

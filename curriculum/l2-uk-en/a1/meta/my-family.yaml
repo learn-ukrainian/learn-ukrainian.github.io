@@ -5,45 +5,40 @@ naturalness:
 title: My Family
 word_target: 2000
 content_outline:
-- section: 'Розминка: Члени сім''ї'
-  words: 350
-  points:
-  - 'Introduce core nuclear family terms: мама, тато, брат, сестра, син, донька.'
-  - 'Grammar hook: Briefly revisit gender (чоловічий/жіночий рід) via family roles.'
-  - 'Cultural note: Usage of affectionate terms (мама/тато vs. матір/батько).'
-  - 'Activity: Simple identification (Це мій тато. Це моя мама).'
-- section: Близька та розширена родина
+- section: 'Вступ: Моя сім''я'
   words: 400
   points:
-  - 'Expand to extended family: дідусь, бабуся, дядько, тітка, онук, онука.'
-  - Explain the 'У мене є...' construction for family (У мене є брат. У мене є сестра).
-  - Address the 'чоловік/дружина' vocabulary and the 'чоловік = man/husband' distinction.
-  - 'Cultural hook: The concept of ''родина'' vs ''сім''я'' and multigenerational
-    living.'
-- section: 'Опис родини: Вік та характер'
-  words: 400
+  - 'Introduce English scaffolding: Briefly explain the importance of family in Ukrainian
+    culture.'
+  - 'Introduce core nuclear family vocabulary: мама, тато, брат, сестра, син, донька.'
+  - Explain the cultural and semantic difference between «сім'я» (nuclear) and «родина»
+    (extended lineage).
+  - 'Practice the question «Хто це?» with simple answers: «Це моя мама».'
+- section: 'Презентація: Близька та розширена родина'
+  words: 600
   points:
-  - Combine family terms with adjectives from A1-31 (добра, веселий, старий, молодий).
-  - Introduce 'старший' (older) and 'молодший' (younger) for siblings.
-  - Basic age construction reinforcement: simple number phrases (25 років).
-  - 'Status/Profession basics: ''Мій тато — лікар''.'
-- section: 'Практика: Моя сім''я'
-  words: 300
+  - 'Introduce extended family vocabulary: дідусь, бабуся, дядько, тітка, онук, онука.'
+  - Provide English scaffolding to explain the possessive construction «У мене є...»
+    (I have).
+  - Explicitly address and correct the common English calque «Я маю...».
+  - Drill possessive pronoun agreement (мій/моя) with family members. Explicitly prevent
+    the «мій сестра» error by focusing on feminine endings.
+- section: 'Презентація: Характеристики та стосунки'
+  words: 500
   points:
-  - 'Grammar focus: Possessive pronouns (мій, моя, моє, мої) with family members.'
-  - 'Drill gender agreement: мій дідусь, моя бабуся, мої батьки.'
-  - 'Common error alert: Fix ''Мій мама'' mistakes explicitly.'
-  - 'Mini-text: Reading a short paragraph about someone''s family structure.'
-- section: Діалоги та фотоальбом
-  words: 300
+  - 'Introduce terms for spouses: чоловік (husband) and дружина (wife).'
+  - Explain the dual meaning of «чоловік» (man/husband) and establish «дружина» as
+    the standard term for wife.
+  - Combine family terms with adjectives learned previously (добра бабуся, мудрий
+    дідусь).
+  - 'Introduce basic age/sibling descriptors: старший брат, молодша сестра.'
+- section: 'Практика: Звертання та спілкування'
+  words: 500
   points:
-  - 'Scenario: Showing photos to a friend (''Хто це?'' — ''Це моя сестра'').'
-  - 'Introduce Vocative case forms for address: Мамо, Тату, Бабусю, Дідусю.'
-  - 'Explanation: Why we change endings when calling someone.'
-  - 'Dialogue practice: Asking about friend''s family (''У тебе є брат?'').'
-- section: 'Підсумок: Розповідь про себе'
-  words: 250
-  points:
-  - 'Synthesize all elements: Name family members + Age + Description + Profession.'
-  - 'Model text: A complete self-presentation about family.'
-  - 'Final checklist: Can you name 10 family members? Can you say who you have?'
+  - Provide English scaffolding to introduce the Vocative case (Кличний відмінок)
+    as a unique and beautiful feature of Ukrainian for addressing people.
+  - 'Teach the specific, high-frequency Vocative forms for family: мамо, тату, бабусю,
+    дідусю.'
+  - Create mini-dialogues showing how to address family vs. talking about them.
+  - 'Synthesis: A short reading text describing a family tree (using all concepts:
+    relationships, possessives, adjectives).'

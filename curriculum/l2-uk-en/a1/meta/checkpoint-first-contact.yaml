@@ -2,55 +2,48 @@ slug: checkpoint-first-contact
 title: 'Checkpoint: First Contact'
 word_target: 2000
 content_outline:
-- section: Огляд та мета
-  words: 250
-  points:
-  - 'Мета контрольної точки: перевірка навичок A1.1 (фонологія, морфологія, синтаксис)'
-  - 'Практичний підхід: як працювати з модулем-чекапом (це не новий матеріал, а діагностика)'
-  - 'Що робити, якщо відповідь неправильна: стратегії повторення попередніх модулів'
-  - 'Immersion Note: A1 level requires clear English instructions for all tasks'
-- section: 'Навичка 1: Читання кирилиці'
-  words: 300
-  points:
-  - 'Впізнавання всіх 33 літер: фокус на візуальних відмінностях друкованих та писаних
-    літер (Київ, Олена)'
-  - 'Читання слів без транслітерації: стратегії відмови від латиниці'
-  - 'Типова помилка: розрізнення звуків И (bit) та І (bee)'
-  - 'Літери-пастки: Г vs Ґ, Е vs Є'
-- section: 'Навичка 2: Визначення роду'
-  words: 300
-  points:
-  - 'Алгоритм визначення роду за закінченням: -а/-я (ж), приголосний (ч), -о/-е (с)'
-  - 'Важливі винятки: іменники на -о, що позначають осіб чоловічої статі (тато, батько,
-    дядько)'
-  - Іменники на -а, що є чоловічими (Микола, Ілля)
-  - 'Тренування швидкої класифікації: чоловік, жінка, місто'
-- section: 'Навичка 3: Дієвідміна'
-  words: 350
-  points:
-  - 'Перша дієвідміна (група -ати): моделі відмінювання (читати → читаю)'
-  - 'Друга дієвідміна (група -ити): моделі відмінювання (говорити → говорю)'
-  - Алгоритм вибору правильного закінчення для 'вони' (-уть/-ють vs -ать/-ять)
-  - 'Типова помилка: змішування дієвідмін (говориють замість говорять)'
-- section: 'Навичка 4: Питальні речення'
-  words: 300
-  points:
-  - 'Спеціальні питання: Хто? Що? Де? Коли? Куди?'
-  - Інтонація в загальних питаннях (так/ні)
-  - Побудова заперечень з часткою 'не'
-  - 'Колокації: Хто це? Де ви? Що це?'
-- section: 'Навичка 5: Замовлення їжі'
-  words: 300
-  points:
-  - 'Базові фрази для кафе: ''Можна мені...?'', ''Я хочу...'''
-  - 'Маркери ввічливості: ''будь ласка'', ''дякую'''
-  - 'Культурний контекст: Львівська кавова культура та Юрій Кульчицький (віденська
-    кава)'
-  - 'Обов''язкова фраза: ''Смачного!'''
-  - Читання простого меню та прохання рахунку
-- section: Інтеграційне завдання
+- section: Огляд
   words: 200
   points:
-  - 'Інтегрований діалог у кафе: поєднання читання, роду, дієслів та питань'
-  - 'Культурна замітка: ''піти на каву'' як соціальний ритуал спілкування'
-  - 'Чек-ліст самооцінки: чи готові ви до рівня A1.2?'
+  - Explicit English scaffolding paragraph explaining that this is a Checkpoint module
+    for A1.1 skills
+  - Welcoming message from the 'Friendly Hostel Host' persona, outlining the Test-Teach-Test
+    approach
+  - 'Brief summary of the skills to be tested: Cyrillic reading, gender, verbs, questions'
+- section: 'Навичка 1: Читання та рід'
+  words: 500
+  points:
+  - H3 for Cyrillic reading check, focusing on reading words without transliteration.
+    Explicitly address 'И' vs 'І' using English pronunciation equivalents (bit vs
+    bee)
+  - H3 for Noun Gender. Provide a clear table of the 3 genders (-а/-я, consonant,
+    -о/-е)
+  - Explicit rule and examples for exceptions like 'тато' (masculine despite -o ending),
+    framing it positively
+  - Short practice sentences identifying the gender of items found in a hostel room
+- section: 'Навичка 2: Дієслова та питання'
+  words: 600
+  points:
+  - H3 for Present Tense Conjugation. Contrast Class I (читати, писати) and Class
+    II (говорити) with clear conjugation tables
+  - Specific focus on the 'вони' forms (-уть/-ють vs -ать/-ять) to prevent mixing
+    errors
+  - H3 for Question Formation. List the core question words (Хто, Що, Де, Куди) with
+    example Q&A pairs
+  - Explain basic negation with 'не' placed before the verb
+- section: 'Культурний контекст: Кафе'
+  words: 400
+  points:
+  - H3 detailing Lviv's coffee culture, introducing Yuriy Kulchytsky and the Vienna
+    connection, emphasizing Ukraine's European heritage
+  - 'H3 on cafe etiquette: introduce the mandatory phrase ''Смачного!'' and polite
+    requests like ''Дайте, будь ласка'' and ''Можна рахунок?'''
+  - 'Vocabulary mini-table for cafe essentials: кава, чорна кава, рахунок'
+- section: Інтеграційне завдання
+  words: 300
+  points:
+  - H3 presenting a comprehensive role-play dialogue 'У кафе' that incorporates reading
+    a menu, determining noun gender for orders, and conjugating verbs
+  - Provide a self-assessment checklist for the learner (Can I read the menu? Can
+    I ask basic questions?)
+  - Provide clear transition guidance acknowledging their readiness for A1.2

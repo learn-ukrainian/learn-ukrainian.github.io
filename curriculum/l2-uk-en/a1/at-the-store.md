@@ -1,411 +1,281 @@
 <!-- SCOPE
-Covers: Supermarket departments, asking for location, checkout interactions, payment methods, cultural aspects of Ukrainian supermarkets (Silpo), Accusative case for direct objects.
+Covers: Navigating a supermarket, finding departments, checkout phrases, Accusative case for feminine shopping items, Locative case for locations.
 Not covered:
-  - Complex numbers (A1-25) -> numbers
-  - Instrumental case grammar -> A2
-Related: a1-37 (At the Market), a1-39 (Buying Tickets)
+  - Complex plural declensions for groceries
+  - Advanced consumer rights disputes
+Related: a1-60 (At the Market), a1-56 (Buying Tickets)
 -->
 
 # At the Store
 
 > **Чому це важливо?**
 >
-> Shopping for food is one of the most immediate needs in a new country. In Ukraine, visiting a supermarket can be more than just a chore—it can be a cultural adventure. This lesson will give you the confidence to find what you need, ask for help, and handle the checkout like a local.
+> Navigating a supermarket is an essential survival skill for everyday life. In Ukraine, however, shopping is more than just acquiring groceries; it is a highly standardized cultural interaction and often a visually immersive experience. Mastering the specific vocabulary and fixed phrases of the checkout counter will give you immense confidence and help you sound completely natural in your daily routine.
 
-## Український супермаркет: більше ніж просто покупки
+## Вступ
 
-Ласкаво просимо у світ українських магазинів! Ви знаєте звичайні магазини? Українські супермаркети інші. Вони цікаві та красиві. Вони вас здивують. Let’s start with the basics of where we are going.
+**Украї́нський суперма́ркет — це ду́же вели́кий магази́н. Тут є сві́жий хліб і смачни́й сир. Ви мо́жете купи́ти всі проду́кти. Украї́нці ду́же любля́ть ці магази́ни. Вони́ ма́ють гарни́й диза́йн.** (Shopping for food is a fundamental human activity. When you walk into a Ukrainian supermarket, you see a large and beautiful space. There is fresh bread and tasty cheese. Ukrainians love big stores.) 
 
-### Магазин чи Супермаркет?
-Англійською ми кажемо "store". Українською є різниця.
+**Мере́жа «Сільпо́» ма́є темати́чні магази́ни. Ко́жен магази́н — це мисте́цтво. Оди́н магази́н ма́є те́му яма́йського куро́рту. І́нший магази́н ма́є те́му відеогри́. Це ро́бить проце́с купі́влі ду́же ціка́вим.** (The "Silpo" chain has thematic stores. Every store is art. One store has a Jamaican resort theme. Another store has a video game theme. This transforms a mundane chore into an engaging visual journey.) 
 
-**Магази́н** — це загальне слово. Це може бути магазин одягу. Це може бути будівельний магазин. Або це продуктовий магазин.
-*   **Продукто́вий магази́н** — Grocery store.
-*   **Я йду в магазин.** — I am going to the store.
+> [!culture] Тематичні супермаркети
+> The «Сільпо́» (Silpo) supermarket chain is famous across Europe for its unique store designs. Instead of standard branding, many locations have specific themes. You might buy your groceries in a store decorated like a Jamaican resort, a Steampunk laboratory, an homage to the video game Grand Theft Auto, or the universe of *The Little Prince*. This commitment to aesthetic immersion is a hallmark of contemporary Ukrainian urban culture.
 
-**Суперма́ркет** — це великий магазин самообслуговування. Тут українці купують продукти на тиждень.
-*   **Цей супермаркет дуже великий.** — This supermarket is very big.
-*   **Ми в супермаркеті.** — We are in the supermarket.
+**На ка́сі є свої́ пра́вила. Це ду́же шви́дкий проце́с. Каси́р за́вжди запиту́є про паке́т. Він ка́же: «Паке́т потрі́бен?». Ви мо́жете сказа́ти: «Так, будь ла́ска» або́ «Ні, дя́кую». Це ду́же важли́вий ритуа́л.** (Beyond the visuals, there is a distinct communicative rhythm to shopping in Ukraine. The interactions are fast. When you reach the checkout line, the cashier will almost always ask: "Do you need a bag?". This is a very important ritual.)
 
-**Гіперма́ркет** — це дуже великий магазин (як Ашан або Метро). Тут продають все: їжу, одяг, електроніку.
+**У цьому уроці ми вивчаємо правила магазину. Ми вчимося шукати товари. Ми вчимося питати про відділи. Також ми говоримо на касі.** (In this lesson we study store rules. We learn to look for goods. We learn to ask about departments. Also we speak at the checkout.) 
 
-> [!tip]
-> **Usage Note:** While **магазин** is universal, use **супермаркет** when you specifically mean a large grocery store with carts and aisles. If you say "Я йду в маркет" (colloquial), everyone understands you mean the grocery store.
+Furthermore, we will introduce the grammatical mechanics necessary to describe what you are buying. By the end of this module, you will have the tools to independently complete a full shopping trip, interact with staff, and confidently handle your transactions.
 
-### Феномен «Сільпо»
-Дизайн мережі **«Сільпо»** часто дивує туристів. Вони створюють "тематичні" супермаркети.
+### Текст для читання: Супермаркет
+Сьогодні я йду в магазин. Це дуже великий магазин. Це продуктовий магазин. Я беру великий візок. Я роблю закупи. Я бачу молочний відділ. Я купую молоко і сметану. Молоко тут. Сметана там. Потім я йду у м'ясний відділ. Я купую свіже м'ясо. Також я бачу хлібний відділ. Я купую чорний хліб. Я дуже люблю чорний хліб. Цей магазин дуже гарний. Він має цікавий дизайн. Тут приємно робити закупи.
 
-У Львові є Сільпо у стилі відеогри *Grand Theft Auto*. У Києві є магазини у стилі Стімпанк. Є магазин у стилі *Аліса у Країні Чудес*.
+**Діалог: Супермаркет**
+— Добрий день.
+— Добрий день. Це супермаркет?
+— Так, це продуктовий магазин.
+— Він великий?
+— Так, він дуже великий.
+— Тут є свіжий хліб?
+— Так, хліб дуже свіжий.
+— Чудово! Я йду в магазин.
+— Бажаю успіху!
+— Дякую.
 
-Чому це важливо? Для українців культура їжі — це життя. Супермаркет — це не просто склад. Це місце естетики. Ви заходите в український супермаркет. Подивіться на дизайн.
+## Презентація
 
-> [!culture]
-> **Cultural Insight:** "Silpo" comes from the Soviet-era abbreviation "сільське споживання" (rural consumption), but the modern brand has completely reinvented itself as a symbol of modern, artistic urban life. It’s a great example of how Ukraine reclaims and transforms its past.
+### Відділи супермаркету
+**Ко́жен магази́н ма́є відді́ли. Ві́дділ — це спеціа́льна зо́на. Тут є моло́чний ві́дділ. Там є м'ясни́й ві́дділ. Зна́ння цих слів допомага́є орієнтува́тися.** (Every store has departments. A department is a special zone. Here is the dairy department. There is the meat department. Knowing these words allows you to follow directions.) 
 
-### Іти в магазин vs Робити закупи
-Як сказати "I am going shopping"? Є два способи:
+When you want to state that an item is located inside a specific department, you must use the Locative case. For these masculine adjectives and nouns, this generally means the endings shift to «-ому» and «-і». The question word for this is «у яко́му ві́дділі?» (in which department?).
 
-1.  **Іти́ в магази́н** — To go to the store.
-    *   This focuses on the *movement* to a destination.
-    *   *Usage:* "Where are you?" "Я йду в магазин." (I am walking to the store).
+**Молоко́ у моло́чному ві́дділі.** (Milk is in the dairy department.)
+**М'я́со у м'ясно́му ві́дділі.** (Meat is in the meat department.)
+**Хліб у хлі́бному ві́дділі.** (Bread is in the bakery department.)
+**Торт у конди́терському ві́дділі.** (The cake is in the confectionery department.)
 
-2.  **Роби́ти за́купи** — To do the shopping.
-    *   This focuses on the *activity* of buying supplies.
-    *   *Usage:* "What are you doing on Saturday?" "Я роблю закупи." (I am doing the shopping).
+By memorizing the base word «ві́дділ», you can easily deduce the meaning of the various sections simply by recognizing the root word attached to it (like молок- for dairy, or м'яс- for meat). 
 
-> [!warning]
-> **Avoid the Russianism:** You might hear some people use the word "покупка" (purchase) to mean shopping, but standard Ukrainian prefers **купі́вля** for the process or **закупи** for the activity. Stick to "Я йду в магазин" for now—it is always correct!
+### Питання про місцезнаходження
+**Іноді́ ви не ба́чите това́р. Ви шука́єте смета́ну чи молоко́. Ви мо́жете запита́ти працівника́. Це ду́же про́сто і вві́чливо.** (If you find yourself lost among the aisles, you will need to ask store employees for assistance. You can ask an employee. It is very simple and polite.) 
 
-## Відділи та товари
+The first method utilizes the reflexive verb «знахо́диться» (is located). The second, slightly simpler method relies on the phrase «де тут...» (where here is...). When staff reply, they will often point you toward a specific aisle or shelf, known as a «поли́ця».
 
-Супермаркети мають різні відділи (**departments**). Knowing these words will help you navigate signs and ask staff for help. Слово "department" — це **відділ**.
+**Ви́бачте, де знахо́диться моло́чний ві́дділ?** (Excuse me, where is the dairy department located?)
+**Де тут м'ясни́й ві́дділ, будь ла́ска?** (Where is the meat department here, please?)
+**Ви́бачте, де хліб?** (Excuse me, where is the bread?)
+**Олі́я на поли́ці.** (The cooking oil is on the shelf.)
 
-### Основні відділи
-Ось три головні відділи:
+> [!tip] Привернення уваги
+> Always start your inquiry with «Ви́бачте» (Excuse me). Ukrainian retail workers are typically very busy stocking shelves, and a polite «Ви́бачте» serves as a gentle audio cue that you are about to ask a question, ensuring they are ready to listen.
 
-1.  **О́вочі та фру́кти** — Vegetables and fruits. Зазвичай це перший відділ.
-    *   **Це перший відділ.** Тут завжди свіжі продукти.
-    *   **Я́блука**, **банани**, **карто́пля** і **мо́рква**.
-    *   **Я люблю свіжі фрукти.** (I love fresh fruits.)
+### Текст для читання: Де знаходиться вода?
+Ви в магазині. Ви шукаєте воду. Ви не бачите воду. Тут є полиця. Там немає води. Ви бачите працівника. Він має гарну форму. Ви кажете: «Вибачте». Працівник дивиться на вас. Ви запитуєте: «Де вода?». Або: «Де знаходиться вода?». Працівник каже: «Вода там». Він показує направо. Ви йдете направо. Там є велика полиця. Ви бачите свіжу воду. Ви берете воду. Ви дуже раді. Ви йдете на касу. Це був успішний пошук.
 
-2.  **Хліб** та **Ви́пічка** — Bread and Bakery.
-    *   **Українці люблять хліб.** Тут завжди пахне дуже смачно.
-    *   **Я купую чорний хліб і білий батон.** (I buy black bread and a white loaf.)
+**Діалог: Де відділ?**
+— Вибачте.
+— Слухаю вас.
+— Де знаходиться молочний відділ?
+— Він там, направо.
+— А де м'ясний відділ?
+— Він тут, наліво.
+— Дякую.
+— Прошу.
+— Ваші товари дуже свіжі.
+— Так, ми маємо добрі товари.
+— Я беру сметану.
+— Це добрий вибір.
 
-3.  **Напо́ї** — Drinks. Тут є вода, сік та алкоголь.
-    *   **Тут є різні напої:** вода, сік, пиво, вино.
-    *   **Вода́** — Water.
-    *   **Сік** — Juice.
+### Знахідний відмінок: що ми купуємо?
+Whenever you purchase an item, that item becomes the direct object of your action. In Ukrainian, direct objects must be placed into the Accusative case (Знахідний відмінок). This grammatical shift signals that the noun is receiving the action of the verb, such as "buying" or "taking."
 
-*   **Де хліб?** — Where is the bread?
-*   **Тут свіжі овочі.** — Here are fresh vegetables.
+For this lesson, we will focus specifically on feminine nouns that end in «-а» or «-я». When these words become the object of your purchase, their endings change to «-у» or «-ю». This is one of the most consistent and frequent grammatical changes you will make while shopping.
 
-### Молочний та М'ясний відділи
-Ці відділи дуже важливі.
+| Називний відмінок (Dictionary Form) | Знахідний відмінок (Direct Object) | Переклад (Translation) |
+| :--- | :--- | :--- |
+| ка́ва | ка́в**у** | coffee |
+| вода́ | во́д**у** | water |
+| смета́на | смета́н**у** | sour cream |
+| олі́я | олі́**ю** | cooking oil |
 
-**Моло́чний відділ** — Dairy department.
-Тут є **молоко** (milk), **масло** (butter) і **сметана**. Також тут є **кефір** та **ряжанка**.
-*   **Я купую молоко і сир.** (I buy milk and cheese.)
-*   **Сметана тут.** (Sour cream is here.)
+Let us see how these words change when placed into full sentences alongside the verb «купува́ти» (to buy) or «бра́ти» (to take). 
 
-**М'ясни́й відділ** — Meat department.
-Тут ви купуєте **м'ясо** (fresh meat) і **ковбасу** (sausage).
-*   **Це свіже м'ясо?** (Is this fresh meat?)
-*   **Дайте, будь ласка, ковбасу.** (Give me the sausage, please.)
+**Я купу́ю во́ду.** (I am buying water.)
+**Він бере́ ка́ву.** (He is taking coffee.)
+**Ми купу́ємо смета́ну.** (We are buying sour cream.)
+**Вона́ бере́ олі́ю.** (She is taking cooking oil.)
 
-### Кондитерський відділ
-This is the "Confectionery" or "Sweets" department. Часто він називається просто **Со́лодощі**.
+### На касі: ритуал оплати
+**Фінал ваших закупів — це каса. Касир працює дуже швидко. Він говорить короткі фрази. Ми слухаємо уважно.** (The end of shopping is the checkout. The cashier works very fast. He says short phrases. We listen carefully.) 
 
-**Українці мають «солодкий зуб» (sweet tooth).** У цьому відділі ви знайдете:
-*   **Цуке́рки** — Candies/Chocolates.
-*   **Пе́чиво** — Cookies/Biscuits.
-*   **Торти́** — Cakes.
+**Споча́тку каси́р пита́є про паке́т. Якщо́ ви ка́жете «так», він дає́ паке́т. По́тім він пита́є про опла́ту.** (The transaction generally opens with a question about bags. If you say "yes", they give you a bag. Then they ask about payment.) 
 
-### Мій список покупок (My Shopping List)
+**Паке́т потрі́бен?** (Do you need a bag?)
+**Так, потрі́бен.** (Yes, it is needed.)
+**Готі́вкою чи ка́рткою?** (Cash or card?)
+**Я плачу́ ка́рткою.** (I am paying by card.)
+**Я плачу́ готі́вкою.** (I am paying in cash.)
 
-Imagine you are going to the store. Here is your list in Ukrainian.
+The words «готі́вкою» and «ка́рткою» are in the Instrumental case. At this stage, you do not need to memorize the complex rules for this case; simply treat these words as fixed, ready-to-use lexical chunks that guarantee checkout success.
 
-> **Список покупок:**
-> 1. **Молоко** (один пакет)
-> 2. **Хліб** (чорний)
-> 3. **Яблука** (один кілограм)
-> 4. **Картопля** (два кілограми)
-> 5. **Сметана** (великий стакан)
-> 6. **Цукерки** «Червоний мак» (двісті грамів)
-> 7. **Вода** (без газу)
+> [!myth-buster] Готівка проти технологій
+> You might assume that cash («готі́вка») is king in Eastern Europe. In reality, Ukraine is one of the most highly digitized countries in the world regarding consumer finance. Contactless payment via smartphone or smartwatch is ubiquitous, even in small kiosks. You will rarely need physical cash in a major city.
 
-### Grammar: У якому відділі?
-To ask "In which department...?", we use the phrase **У якому відділі...?**. Notice that the word *відділ* changes to *відділі*. This is the Locative case, which tells us *where* something is.
+## Практика
 
-*   **У якому відділі молоко?** — In which department is the milk?
-*   **У якому відділі цукерки?** — In which department are the sweets?
-*   **Молоко у молочному відділі.** — Milk is in the dairy department.
+### Напрямок чи місце?
+**Ви йдете́ в магази́н чи ви вже там? Це важли́ве пра́вило. Якщо́ це на́прямок, ми ка́жемо «в магази́н». Якщо́ це мі́сце, ми ка́жемо «у магази́ні».** (Are you going into the store or are you already there? This is an important rule. If it is a destination, we say "into the store". If it is a location, we say "in the store".)
 
-> [!observe]
-> **Pattern Notice:** See the ending **-і** in *відділ**і***? This small change signals "location." We learned this with "у магазин**і**" (in the store). It’s a consistent pattern for masculine nouns describing a place.
+When you are moving toward the store (destination), you use the preposition «в» (or «у») followed by the Accusative case. For inanimate masculine words like «магази́н», the Accusative form is identical to the dictionary form. However, when you are already inside the store (location), you use the Locative case, which requires the «-і» ending.
 
-## Пошук і допомога: де знаходиться...?
+**Я йду в магази́н.** (I am going into the store. - Destination)
+**Я йду в суперма́ркет.** (I am going into the supermarket. - Destination)
+**Ми зараз у магази́ні.** (We are in the store right now. - Location)
+**Вона́ купу́є хліб у суперма́ркеті.** (She buys bread in the supermarket. - Location)
 
-Навіть із вказівниками можна загубитися. Ось як ввічливо попросити про допомогу.
+**За́вжди пита́йте се́бе: «Я йду туди́ чи я вже там?». Це допомага́є уника́ти поми́лок. Украї́нці ду́же зве́ртають на це ува́гу.** (Always ask yourself: "Am I traveling there, or am I already inside?". This helps to avoid mistakes. Ukrainians pay a lot of attention to this.)"
 
-### Де знаходиться...?
-Найбільш формальний спосіб запитати про місце — використати дієслово **знахо́диться** (is located).
+### Обережно: суржик
+**Сло́во «поку́пка» — це су́ржик. Бага́то люде́й ка́жуть так на ву́лиці. Але́ це непра́вильно. Украї́нська мо́ва ма́є і́нші слова́.** (The word "pokupka" is Surzhyk. Many people say this on the street. But it is incorrect. The Ukrainian language has other words.)
 
-*   **Де знаходиться хліб?** — Where is the bread located?
-*   **Де знаходиться каса?** — Where is the checkout located?
+**Пра́вильно говори́ти «заку́пи» або́ «купі́вля». Це аутенти́чні украї́нські слова́. Вони́ звучать ду́же приро́дно.** (It is correct to say "zakupy" or "kupivlia". These are authentic Ukrainian words. They sound very natural.) 
 
-Ви також можете просто сказати **Де...?**. Це швидко і нормально.
-*   **Де молоко?** — Where is the milk?
+> [!decolonization] Автентична лексика
+> To sound natural and culturally grounded, replace the non-standard «поку́пка» with authentic Ukrainian alternatives. The formal process of buying is «купі́вля». When referring to the act of doing a large grocery run, the best term is «заку́пи». 
 
-> [!myth-buster]
-> **Myth:** "Znakhodytsya" means "to find."
-> **Fact:** No! **Знаходити** means "to find" (active), but **знаходити** + **ся** (reflexive) means "to find itself" or "to be located." If you say "Я знаходжу хліб," you mean "I am finding bread" (like a treasure hunter). If you ask "Де знаходиться хліб?", you mean "Where is the bread located?"
+**Я роблю́ заку́пи.** (I am doing the grocery shopping.)
+**Ми йдемо́ на заку́пи.** (We are going shopping.)
+**Ця купі́вля ду́же швидка́.** (This purchase is very fast.)
 
-### Скажіть, будь ласка...
-Ввічливість відкриває двері. Перед питанням використовуйте магічну фразу: **Скажіть, будь ласка...** (Tell me, please...).
+### Текст для читання: Акція і ціна
+В магазині є акція. Це нова акція. Тут велика знижка. Ви бачите сир. Це добрий сир. Ви купуєте сир. Ви також бачите торт. Ви питаєте: «Яка ціна?». Ціна дуже добра. Ви берете торт. Торт дуже смачний. Ви йдете на касу. Ви бачите проблему. Ціна на касі інша. Ви кажете: «Вибачте». Ви кажете: «Ціна неправильна». Касир каже: «Хвилинку, будь ласка». Він дивиться на полицю. Він бачить жовтий цінник. Він каже: «Так, це акція». Він робить знижку. Ви платите карткою. Ви берете чек. На чеку все правильно. Ви йдете додому. Український магазин — це цікаво.
 
-*   **Скажіть, будь ласка, де цукор?** — Tell me please, where is the sugar?
-*   **Вибачте, скажіть, будь ласка, де вода?** — Excuse me, tell me please, where is the water?
+**Діалог: Ціна і знижка**
+— Вибачте.
+— Так?
+— Яка ціна?
+— Ця ціна добра. Це акція.
+— Це велика знижка?
+— Так, знижка велика.
+— Я беру цей сир.
+— Добре.
+— Я також беру молоко.
+— Це свіже молоко.
+— Дякую за допомогу.
+— Будь ласка.
 
-**Ви́бачте** — "Excuse me" — це чудове слово. Воно привертає увагу працівника.
+### Узгодження роду: ця ціна
+**Ви ча́сто хо́чете показа́ти това́р. Або́ запита́ти про конкре́тну ціну́. Для цьо́го ми ви́користовуємо слова́ «цей», «ця», «це».** (You often want to show a product. Or ask about a specific price. For this we use the words "this" or "that".) 
 
-Ви також можете сказати: **Підкажіть, будь ласка...** (Could you tell me, please...). Це теж дуже ввічливо.
-*   **Підкажіть, будь ласка, де кава?** — Could you tell me, please, where is the coffee?
+**Слова «ціна», «каса» і «знижка» — це жіночий рід. Тому ми завжди кажемо «ця ціна». Або ми кажемо «ця знижка». Це важливо знати.** (The words price, checkout, and discount are feminine. Therefore we always say this price. Or we say this discount. This is important to know.) 
 
-### Тут vs Там
-Працівник відповідає. Він показує рукою. Він каже:
+**Ця ціна́ ду́же до́бра.** (This price is very good.)
+**Ця ка́са ві́льна?** (Is this checkout free?)
+**Ця зни́жка вели́ка.** (This discount is big.)
+**Ця а́кція нова́.** (This promotion is new.)
 
-1.  **Тут** [tut] — Here. Used for objects close to the speaker.
-2.  **Там** — There. Used for objects further away.
+Practicing these pairings ensures that the gender agreement becomes automatic, preventing the common mistake of defaulting to masculine pronouns for everything.
 
-*   **Молоко тут.** — Milk is here.
-*   **Хліб там, прямо.** — Bread is there, straight ahead.
-*   **Це тут?** — Is it here?
-*   **Ні, це там.** — No, it is there.
+### Чоловічий рід: без змін
+While we have spent considerable time modifying feminine endings for the Accusative case, there is highly reassuring news regarding masculine nouns. 
 
-### Asking an Employee
-Кого запитати? Шукайте працівника. Він має форму. Він має бейдж. Ви можете просто сказати "Вибачте..." або "Перепрошую...".
+When dealing with inanimate objects—things that are not alive, such as food, receipts, or carts—masculine nouns undergo absolutely no change when they become direct objects. Their Accusative form is identical to their Nominative (dictionary) form. 
 
-**Sample Mini-Dialogue:**
-**Ви:** Вибачте, скажіть, будь ласка, де знаходиться сметана?
-*(Excuse me, tell me please, where is the sour cream located?)*
-**Працівник:** Сметана там, у молочному відділі. Прямо і направо.
-*(Sour cream is there, in the dairy department. Straight and to the right.)*
-**Ви:** Дякую!
-*(Thank you!)*
+**Я купу́ю сир.** (I am buying cheese.)
+**Він бере́ паке́т.** (He is taking a bag.)
+**Я ма́ю чек.** (I have a receipt.)
+**Ми беремо́ візо́к.** (We are taking a shopping cart.)
 
-> [!tip]
-> **Pro Tip:** If you don't know the name of the item in Ukrainian, you can show a photo on your phone and ask: **Де це?** (Where is this?). It works every time!
+> [!warning] Надмірна корекція
+> A frequent error among enthusiastic learners is applying endings where they do not belong. Because animate masculine nouns (like animals or people) *do* take an «-а» ending in the Accusative, learners sometimes mistakenly say «Я купую сира» (Incorrect). Always remember: for inanimate grocery items, the masculine word stays exactly the same!
 
-## На касі: пакет, картка і чек
+## Продукція
 
-Ви маєте продукти. Тепер фінальна битва: **ка́са**. Ця взаємодія має сценарій. Ви знаєте сценарій. Все буде легко.
+### Пошук товарів
+**Ви йдете в супермаркет. Це великий магазин. Тут дуже світло. Ви хочете купити продукти. Спочатку ви шукаєте кошик. Або ви берете великий візок.** (You go into the supermarket. It is a big store. It is very bright here. You want to buy groceries. First you look for a basket. Or you take a big cart.) 
 
-### The "Bag Ritual"
-Ви підходите до каси. Касир запитує: **Пакет потрібен?** — Do you need a bag?
+Once equipped, you need to locate the dairy section for milk and the bakery section for fresh bread. You approach an employee who is organizing goods on a «поли́ця» (shelf).
 
-Ваші варіанти:
-1.  **Так, будь ласка.** — Yes, please.
-2.  **Ні, дякую.** — No, thank you.
-3.  **Великий, будь ласка.** — A big one, please.
+— **Ви́бачте, де знахо́диться моло́чний ві́дділ?** (Excuse me, where is the dairy department located?)
+— **Пря́мо і напра́во.** (Straight and to the right.)
+— **Ду́же дя́кую.** (Thank you very much.)
 
-**Паке́т** — це пластикова сумка. Українці часто мають "пакет з пакетами" вдома.
-Українці дбають про природу. Багато людей мають еко-сумку. Це багаторазова сумка.
-У вас є своя сумка? Ви кажете: **«Ні, дякую. У мене своя сумка»**.
+Next, you find a loaf of artisan bread, but there is no sticker on it. You need to verify the cost before placing it into your basket. You find another employee nearby.
 
-Касир сканує продукти. Ви складаєте продукти в пакет. Треба робити це швидко. Інші люди чекають. Це справжній спорт!
+— **Ви́бачте, яка́ ціна́?** (Excuse me, what is the price?)
+— **Ця ціна́ — три́дцять гри́вень.** (This price is thirty hryvnias.)
+— **Це това́р по а́кції?** (Is this a promotional item?)
+— **Так, це акці́йна зни́жка.** (Yes, this is a promotional discount.)
+— **Чудо́во, я беру́ хліб.** (Great, I am taking the bread.)
 
-### Каса самообслуговування (Self-checkout)
-У багатьох супермаркетах є каса самообслуговування. Це дуже зручно.
-Ви робите все самі.
-1.  Ви скануєте товар. Скануйте штрих-код. Штрих-код є на товарі.
-2.  Ви кладете товар на ваги.
-3.  Тут є меню. Товару немає в меню? Шукайте картинку. Наприклад, овочі або фрукти.
-4.  Треба зважити банани. Ви кладете банани на ваги. Ви натискаєте «Банан». Машина друкує етикетку.
-5.  Ви платите карткою.
-Тут немає касира. Ви не чекаєте. Але треба бути уважним.
-Інтерфейс має українську мову. Також є англійська мова. Це важко? Вибирайте англійську.
+### Розрахунок на касі
+With your items collected, you proceed to the front of the store. You look for a green light signaling a «ві́льна ка́са» (free checkout) or join the «че́рга до ка́си» (checkout line). As you step up, the rapid, highly scripted dialogue begins. You must be ready to confirm your bag preference, loyalty program status, and payment method in quick succession.
 
-### Готівка vs Картка
-Касир запитує, як ви платите: **Карткою чи готівкою?** (By card or by cash?).
+— **До́брий день.** (Good afternoon.)
+— **До́брий день. Паке́т потрі́бен?** (Good afternoon. Do you need a bag?)
+— **Так, вели́кий паке́т, будь ла́ска.** (Yes, a large bag, please.)
+— **Ка́ртка на зни́жку є?** (Do you have a discount card?)
+— **Ні, нема́є.** (No, I do not have one.)
+— **Готі́вкою чи ка́рткою?** (Cash or card?)
+— **Я плачу́ ка́рткою.** (I am paying by card.)
+— **Ось ваш чек. Дя́кую.** (Here is your receipt. Thank you.)
+— **До поба́чення.** (Goodbye.)
 
-Ви відповідаєте просто:
-*   **Карткою, будь ласка.** (By card, please.)
-*   **Готівкою.** (By cash.)
+Notice how the cashier drops unnecessary verbs to speed up the process. «Картка на знижку є?» is a streamlined, efficient way of asking if you participate in the store's loyalty program. By matching this concise rhythm, your transaction will be seamless.
 
-Українська валюта — гривня. Є банкноти і монети.
-Касир може запитати: "У вас є дрібні?". Це означає монети.
-Ви кажете: "Так, ось 10 гривень".
+### Вирішення проблем
+Even in the most organized stores, minor discrepancies occur. The most common issue is a mismatch between the tag on the shelf and the total in the system. If you notice an error while the cashier is scanning your items, you should flag it immediately, but politely.
 
-### PayPass і телефон
-В Україні ми любимо технології.
-Ми платимо телефоном. Це швидко.
-Ви просто прикладаєте телефон до терміналу.
-Звук "Пім!". Оплата пройшла.
-Це магія.
+— **Ви́бачте, ця ціна́ непра́вильна.** (Excuse me, this price is wrong.)
+— **Хвили́нку, будь ла́ска.** (One minute, please.)
+— **На поли́ці і́нша ціна́.** (On the shelf, there is a different price.)
 
-### The Receipt (Чек)
-Після оплати ви отримуєте **чек** (receipt).
+If you need a physical record of the transaction—perhaps for expense tracking or simply because the machine ran out of paper—you can explicitly request it at the end of the exchange.
 
-*   **Ваш чек.** — Your receipt.
-*   **Чек потрібен?** — Do you need the receipt?
+— **Чек, будь ла́ска.** (Receipt, please.)
+— **Ось, візьмі́ть.** (Here, take it.)
 
-Чек — це документ. Ви бачите список товарів. Ви бачите ціни. Ви бачите суму. Перевірте чек. Іноді є помилки.
-Потрібен чек? Скажіть касиру: «Так, будь ласка».
-Чек важливий. Ви купили поганий продукт? Ви можете повернути його.
-Без чека це неможливо.
-Зберігайте чек. Це правило.
-Також на чеку є бонуси. Ви збираєте бонуси. Потім ви купуєте продукти дешевше.
+### Текст для читання: На касі
+Зараз я йду на касу. Тут є вільна каса. Касир каже: «Добрий день». Я кажу: «Добрий день». Касир питає про пакет. Я кажу: «Так, пакет потрібен». Я беру великий пакет. Касир сканує мої продукти. Я дивлюся на ціну. Ця ціна дуже добра. Це акційна знижка. Касир питає: «Карткою чи готівкою?». Я завжди плачу карткою. Я плачу карткою зараз. Касир дає мій чек. Я беру мій чек. Я кажу: «Дуже дякую». Касир каже: «До побачення». Мої закупи дуже швидкі. Це була швидка купівля. Я йду додому.
 
-**Культурна фішка:** У «Сільпо» не викидайте чек! Подивіться вниз. Там зазвичай є **Передбачення** або смішна цитата.
-Це може бути цитата. Наприклад: "Сьогодні чудовий день". Це приємна деталь. Люди усміхаються.
+**Діалог: Оплата**
+— Добрий день.
+— Добрий день. Пакет потрібен?
+— Ні, дякую.
+— Карткою чи готівкою?
+— Карткою.
+— Ваша оплата.
+— Дякую.
+— Ось ваш чек.
+— На чеку є передбачення?
+— Так, є.
+— Дуже цікаво. До побачення.
+— На все добре.
 
-### Grammar: Accusative Case (Direct Objects)
-Ви кажете: "Я купую воду". Слово "вода" змінюється. Це **Знахідний відмінок** (Accusative Case).
+# Підсумок
 
-Rule for feminine nouns ending in **-а** or **-я**:
-*   **-а** changes to **-у**
-*   **-я** changes to **-ю**
+You now possess the foundational tools required to conquer a Ukrainian supermarket. You understand that retail spaces here often strive for thematic beauty, elevating the shopping experience. You are also prepared for the "Bag Ritual," recognizing «Паке́т потрібен?» as the gateway phrase to every checkout transaction. 
 
-Examples:
-*   **Вода** (Water) → Я купую **воду**. (I buy water).
-*   **Кава** (Coffee) → Я купую **каву**. (I buy coffee).
-*   **Сметана** → Я купую **сметану**. (I buy sour cream).
-*   **Ковбаса** (Sausage) → Я купую **ковбасу**. (I buy sausage).
-*   **Картопля** (Potato) → Я купую **картоплю**. (I buy potato).
+> [!fact] Передбачення на чеках
+> When you receive your «чек» (receipt) at a Silpo supermarket, do not throw it away immediately! This chain has a beloved tradition of printing short «передба́чення» (predictions or fortunes) at the very bottom. These range from philosophical musings to humorous advice, turning the end of your shopping trip into a delightful reading exercise. 
 
-> [!observe]
-> **Look closer:**
-> **Це вода.** (This is water. Subject. No change.)
-> **Я п'ю воду.** (I drink water. Object. Change -а to -у.)
-> This change tells the listener "water is being drunk," not "water is doing the drinking."
+Grammatically, you have unlocked the Accusative case for feminine nouns (changing -а/-я to -у/-ю), allowing you to accurately declare what you are buying. You also know to leave inanimate masculine nouns untouched. You can distinguish between traveling to a store (destination) and being inside one (location), ensuring your spatial descriptions are accurate. 
 
-## Акції та знижки
-
-Усі люблять знижки. В українських супермаркетах багато жовтих цінників. Це добра ціна. Ми любимо економити. Але увага!
-
-### Акція and Знижка
-Ось два слова. Їх треба знати:
-
-1.  **А́кція** — Promotion / Sale.
-    *   Ви бачите жовтий цінник? Це зазвичай **АКЦІЯ**.
-    *   **Це акція?** — Is this a promotion?
-
-2.  **Зни́жка** — Discount.
-    *   **Велика знижка.** — Big discount.
-    *   **Знижка 50% (п'ятдесят відсотків).** — 50% discount.
-
-Дивіться на дату. Це свіжий продукт? Чому це акція? Можливо, **те́рмін прида́тності** (expiration date) минув. Шукайте на етикетці слова **«Вжити до»**.
-Також є акція "1+1". Ви купуєте один товар. Другий товар безкоштовно. Це дуже вигідно.
-
-Є проблема? Ціна на касі інша? Скажіть: **«Ця ціна неправильна»**. Касир перевірить.
-Товар пробився двічі? Скажіть: **«Товар пробився двічі»** (The item scanned twice). Касир виправить.
-
-### Asking about Price
-Іноді ціни немає. Треба запитати: "Скільки це коштує?".
-
-*   **Скільки коштує?** — How much does it cost?
-    *   *Usage:* **Скільки коштує молоко?** (How much does milk cost?)
-
-*   **Яка ціна?** — What is the price?
-    *   *Usage:* **Вибачте! Яка ціна?** (Excuse me! What is the price?)
-
-**Ціна́** — це слово "price." It is feminine (ends in -a), so we ask **Яка** ціна?.
-
-### Loyalty Cards
-Касир може запитати: **Картка є?** або **Власний Рахунок є?**. Це про картку лояльності.
-
-*   **Так, є.** — Yes, I have (it).
-*   **Ні, немає.** — No, I don't have (it).
-*   **У додатку.** — In the app.
-
-> [!culture]
-> **App Culture:** Ukrainians rely heavily on smartphone apps for shopping. Chains like Silpo, ATB, and Varus have excellent apps where you can see your bonuses, current sales, and even check prices by scanning barcodes. Answering **"У додатку"** (In the app) is a very common local response.
-
-## Практика: У супермаркеті
-
-Let's practice real conversations. Read these dialogues aloud to feel confident.
-
-### Діалог 1: Пошук товару
-**Покупець:** Вибачте! Скажіть, будь ласка, де знаходиться кава?
-*(Excuse me! Tell me please, where is the coffee located?)*
-
-**Працівник:** Кава там, у відділі «Напої».
-*(Coffee is there, in the "Drinks" section.)*
-
-**Покупець:** Дякую!
-*(Thank you!)*
-
-### Діалог 2: Оплата на касі
-**Касир:** Добрий день! Пакет потрібен?
-*(Good day! Do you need a bag?)*
-
-**Покупець:** Так, будь ласка.
-*(Yes, please.)*
-
-**Касир:** Карткою чи готівкою?
-*(By card or by cash?)*
-
-**Покупець:** Карткою.
-*(By card.)*
-
-**Касир:** Ваш чек. Дякую за покупку!
-*(Your receipt. Thank you for the purchase!)*
-
-### Діалог 3: Повернення товару
-**Покупець:** Добрий день. Я хочу повернути це молоко.
-*(Good day. I want to return this milk.)*
-
-**Касир:** Чому?
-*(Why?)*
-
-**Покупець:** Воно погане.
-*(It is bad.)*
-
-**Касир:** Добре. Ваш чек?
-*(Okay. Your receipt?)*
-
-**Покупець:** Ось чек.
-*(Here is the receipt.)*
-
-**Касир:** Дякую. Гроші на картку.
-*(Thank you. Money to the card.)*
-
-## Читання: Андрій у магазині
-
-Read this story about Andrii going to the store.
-
-**Андрій йде в магазин**
-
-Андрій любить ходити в супермаркет «Сільпо». Це великий і красивий магазин. Сьогодні Андрій купує продукти на вечерю.
-*(Andrii likes going to the "Silpo" supermarket. This is a big and beautiful store. Today Andrii buys groceries for dinner.)*
-
-Він бере кошик. Спочатку він йде у відділ «Овочі та фрукти». Там є яблука, банани, картопля і морква. Андрій бере яблука і картоплю.
-*(He takes a basket. First he goes to the "Vegetables and Fruits" department. There are apples, bananas, potatoes and carrots. Andrii takes apples and potatoes.)*
-
-Потім він шукає молоко. Він не бачить молоко. Він запитує працівника: «Вибачте! Де знаходиться молоко?»
-*(Then he looks for milk. He does not see milk. He asks an employee: "Excuse me! Where is the milk located?")*
-
-Працівник каже: «Молоко там, у молочному відділі. Це прямо і направо».
-*(The employee says: "Milk is there, in the dairy department. It is straight and to the right".)*
-
-Андрій йде у молочний відділ. Він бере молоко, масло і сметану. Також він купує свіжий хліб та смачні цукерки.
-*(Andrii goes to the dairy department. He takes milk, butter and sour cream. Also he buys fresh bread and tasty candies.)*
-
-На касі є черга. Андрій чекає. Касир запитує: «Пакет потрібен?»
-*(At the checkout there is a line. Andrii waits. The cashier asks: "Do you need a bag?")*
-
-Андрій каже: «Ні, дякую. У мене є сумка».
-*(Andrii says: "No, thank you. I have a bag".)*
-
-Касир запитує: «Карткою чи готівкою?»
-*(The cashier asks: "By card or by cash?")*
-
-Андрій відповідає: «Карткою, будь ласка». Він платить телефоном.
-*(Andrii answers: "By card, please". He pays by phone.)*
-
-Касир дає чек. На чеку є передбачення: «Сьогодні твій день!». Андрій усміхається.
-*(The cashier gives a receipt. On the receipt there is a prediction: "Today is your day!". Andrii smiles.)*
-
----
-
-# Підсумок: ваш похід у магазин
-
-Congratulations! You have just completed a virtual trip to a Ukrainian supermarket. You learned that it is more than just buying food—it can be an experience of design and culture.
-
-**Let's recap your journey:**
-1.  **Ви зайшли в супермаркет** (можливо, тематичний).
-2.  **Ви взяли кошик або візок.** (You took a basket or cart.)
-3.  **Ви пішли у молочний відділ і взяли сметану.** (You went to the dairy department and took sour cream.)
-4.  **Ви запитали:** «Скажіть, будь ласка, де хліб?»
-5.  **На касі ви сказали:** «Так, пакет потрібен» і заплатили **карткою**.
-6.  **Ви прочитали свій чек** і знайшли там передбачення.
+**Основні фрази (Key Phrases):**
+*   **продукто́вий магази́н** — grocery store
+*   **у яко́му ві́дділі?** — in which department?
+*   **акці́йна зни́жка** — promotional discount
+*   **че́рга до ка́си** — checkout line
+*   **ціна́ за кілогра́м** — price per kilogram
+*   **ка́ртка на зни́жку** — discount card
+*   **покла́сти в паке́т** — to put into a bag
 
 **Перевірте себе:**
-1.  How do you politely ask where the milk is located?
-2.  What does the cashier mean when they ask «Пакет потрібен?»?
-3.  How do you say "I am buying water" (changing the ending of *вода*)?
-4.  What is the difference between *магазин* and *супермаркет*?
-5.  If you see a yellow tag saying **АКЦІЯ**, what does it mean?
+1. How do you respond to the common cashier question, «Паке́т потрібен?»?
+2. If the dictionary word is «вода́», what is the correct form when saying "I am buying water"?
+3. Why does the word «сир» not change in the sentence «Я купую сир»?
+4. What is the difference in meaning between «в магазин» and «у магазині»?
+5. How do you politely inform a cashier that "This price is wrong"?
+6. Which phrase acts as a fixed chunk for choosing a payment method?
 
-Next time you are in Ukraine, go to a Silpo, buy some «цукерки», and enjoy the art!
+---

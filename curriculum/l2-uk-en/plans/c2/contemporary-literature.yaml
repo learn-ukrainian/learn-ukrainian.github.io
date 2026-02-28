@@ -1,10 +1,12 @@
-module: c2-038
-level: c2
-sequence: 38
+module: c2-036
+level: C2
+sequence: 36
+slug: contemporary-literature
 version: '2.0'
 title: Сучасна українська література
 focus: literature
 pedagogy: TTT
+phase: 'C2.2 [Literature & Creative Writing]'
 objectives:
 - TBD
 sources:

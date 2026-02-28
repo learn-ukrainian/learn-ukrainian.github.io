@@ -1,10 +1,12 @@
-module: c2-032
-level: c2
-sequence: 32
+module: c2-029
+level: C2
+sequence: 29
+slug: writing-literary-essays
 version: '2.0'
 title: Написання літературознавчих есеїв
 focus: literature
 pedagogy: TTT
+phase: 'C2.2 [Literature & Creative Writing]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: 'Вступ: Літературознавчий есей як інтелектуальний жанр (Introduction: Literary
     Essay as an Intellectual Genre)'
-  words: 600
+  words: 750
   points:
   - 'Дефініція есею згідно з вимогами Держстандарту §4.3.8: розмежування вторинного
     тексту (реферат) та авторського аналітичного есею'
@@ -33,7 +35,7 @@ content_outline:
     баченням та академічною строгістю'
 - section: 'Аналітична стратегія: Від переказу до інтерпретації (Analytical Strategy:
     From Plot to Interpretation)'
-  words: 850
+  words: 1050
   points:
   - 'Корекція типової помилки: подолання надмірного переказу сюжету («що сталося»)
     через фокус на аналітичних питаннях «чому?» та «як?»'
@@ -43,7 +45,7 @@ content_outline:
     погляд на твір, а не констатує загальновідомі факти'
 - section: Аргументація та робота з текстовими доказами (Argumentation and Working
     with Evidence)
-  words: 950
+  words: 1200
   points:
   - 'Подолання суб’єктивності без доказів: перетворення емоційного відгуку («це гарно»)
     на аргументовану позицію, підкріплену цитатами'
@@ -53,7 +55,7 @@ content_outline:
     в літературознавчому дискурсі'
 - section: Стилістика та сучасні дискурсивні практики (Stylistics and Modern Discursive
     Practices)
-  words: 800
+  words: 1000
   points:
   - 'Корекція стилістичного міксу: дотримання інтелектуальної прозорості (academic
     clarity) та уникнення недоречного пафосу або просторіччя'
@@ -63,7 +65,7 @@ content_outline:
     ''екзистенціальний'' у контексті аналізу твору'
 - section: Алгоритм редагування та досконалість форми (Editing Algorithm and Formal
     Perfection)
-  words: 500
+  words: 600
   points:
   - 'Дотримання стандарту §4.3.6: створення логічного та зв’язного тексту за планом,
     робота над структурою переконуючих переходів'
@@ -71,7 +73,7 @@ content_outline:
     мовних кліше'
 - section: 'Підсумок: Від чернетки до професійної публікації (Summary: From Draft
     to Professional Publication)'
-  words: 300
+  words: 400
   points:
   - Трансформація академічної навички у професійне портфоліо культурного оглядача
     та критика

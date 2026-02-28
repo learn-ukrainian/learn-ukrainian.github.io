@@ -5,29 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-22T08:08:18Z",
+      "ts": "2026-02-28T20:04:32Z",
       "task_id": "v3-a1-final-exam-pA",
       "mode": "full"
     },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-22T08:11:18Z"
+      "ts": "2026-02-28T20:08:53Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-22T08:13:58Z",
-      "task_id": "v3-a1-final-exam-pC"
+      "ts": "2026-02-28T20:08:53Z",
+      "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-23T00:39:26Z",
-      "attempts": 1
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-23T00:44:44Z",
-      "attempts": 1,
-      "note": "d1-only"
+      "ts": "2026-02-28T20:17:20Z",
+      "attempts": 2
     }
   }
 }

@@ -3,37 +3,35 @@
 # Дослідження: Likes and Preferences
 
 ## State Standard Reference
-§4.2.3.2.1: "Знахідний відмінок: Без прийменника (об’єкт дії): Віра читає цікаву книжку."
-§4.2.4.1: "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш, читає, читаємо, читаєте, читають)... дивитися (дивлюся, дивишся, дивиться, дивимося, дивитеся, дивляться)."
-Alignment: This module introduces the Accusative case for direct objects (Я люблю/хочу каву) and present tense verb conjugation. Note: Dative case (Мені подобається) is officially an A2 requirement (§4.2.2.3) in the State Standard, so here it is strictly taught as a fixed lexical chunk without requiring learners to generate Dative forms from scratch.
+§4.2.3.2: "Знахідний відмінок: Без прийменника (об’єкт дії): Віра читає цікаву книжку."
+§4.2.4.1: "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш, читає...)"
+Alignment: This module introduces the Accusative case for direct objects (with `любити` and `хотіти`) and present tense verb conjugation for expressing preferences, thoroughly aligning with A1 morphological and syntactic requirements.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| подобатися | High | мені подобається, тобі подобається, подобається читати |
-| любити | High | дуже любити, любити музику, любити спорт |
-| хотіти | Very High | хочу їсти, хочу спати, хочу каву |
-| кава | High | чорна кава, пити каву, смачна кава |
-| цікавий | Medium | цікавий фільм, цікава книга, цікава людина |
+| подобатися | High (A1 Core) | мені подобається, тобі подобається |
+| любити | High (A1 Core) | люблю каву, люблю читати |
+| хотіти | High (A1 Core) | хочу їсти, хочу каву |
+| кава | High (A1 Core) | смачна кава, пити каву |
 
 ## Cultural Hooks
-1. **Coffee Culture**: Lviv is historically famous for its coffee culture (кавова культура), making "Мені подобається кава" a highly authentic and practical starting point for discussing preferences in Ukraine.
-2. **Directness**: Ukrainians often express wants more directly than English speakers. Saying "Я хочу каву" is perfectly polite in casual settings and doesn't always need "I would like" padding.
+1. **Lviv Coffee Culture (Львівська кава)**: Coffee is deeply ingrained in Ukrainian urban culture, especially in Lviv. Discussing preferences around "кава" is a very natural and common conversational anchor for beginners.
+2. **Directness of "Я хочу"**: In English, saying "I want" can sometimes sound impolite or demanding (where "I would like" is preferred). In Ukrainian, "Я хочу" is culturally standard and polite in everyday situations (like ordering in a cafe), especially when paired with "будь ласка".
 
 ## Common Learner Errors
-1. "Я подобаюся кава" → Correct: "Мені подобається кава" — English speakers try to make "I" the nominative subject.
-2. "Мені подобається квіти" → Correct: "Мені подобаються квіти" — Failing to match the verb ending (-ть) with the plural subject because they think "Мені" is the subject.
-3. "Я люблю кава" → Correct: "Я люблю каву" — Forgetting to apply the Accusative case to feminine nouns ending in -а.
+1. **"Я подобаюся каву"** → *Мені подобається кава* — English syntax interference (Subject-Verb-Object) applied to a Dative-experiencer construction.
+2. **"Мені подобається музику"** → *Мені подобається музика* — Using the Accusative case for the object liked instead of the Nominative case (forgetting that the thing liked is the grammatical subject).
+3. **Using "подобається" for deep affection** → *Я люблю маму* (not *Мені подобається мама*) — Misunderstanding the semantic difference between aesthetic appeal/liking (подобається) and deep love/active enjoyment (любити).
 
 ## Cross-References
 - Builds on: a1-18 (Questions and Negation)
 - Prepares for: a1-20 (Mine and Yours)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Avoid using Russian as a baseline to explain the Dative structure (e.g., do not say "Just like in Russian, we use..."). Explain it independently as a core feature of Ukrainian where the feeling comes *to* the person.
-- Ensure strict adherence to the A1 immersion band (25-35%). English scaffolding must be used to explain the grammar mechanics (Accusative objects, Dative chunks) before presenting Ukrainian examples.
-- Emphasize the difference in meaning: "подобається" (it appeals to me / state) vs "люблю" (I love it / active enjoyment).
-- Only use IPA on the first occurrence of new vocabulary.
+- **Decolonized Framing**: Teach "Мені подобається" as a natural, elegant European Dative-experiencer construction (similar to Spanish "me gusta" or Italian "mi piace"), avoiding any comparisons to Russian. Emphasize Ukrainian syntax on its own terms.
+- **Scaffolding Limit**: Use English scaffolding (up to 50% for this A1 module) to clearly explain the difference between the "experiencer" (мені) and the "subject" (кава) in the "подобається" construction.
+- Do not introduce the full Dative or Accusative paradigms; focus purely on the lexical chunks needed for these specific verbs.
 
 ===RESEARCH_END===
 
@@ -42,37 +40,38 @@ content_outline:
   - section: "Мені подобається"
     words: 500
     points:
-      - "Introduce the English scaffolding required for this grammar concept."
-      - "Explain the Dative chunk 'Мені' (to me) and 'Тобі' (to you). Do not teach the full Dative paradigm yet."
-      - "Explain the grammatical structure: the thing being liked is the actual subject (Nominative)."
-      - "Differentiate between singular 'подобається' (Мені подобається музика) and plural 'подобаються' (Мені подобаються квіти)."
-      - "Show how to use it with infinitives: Мені подобається читати."
+      - "Use English scaffolding (approx. 40-50% for this section) to explain the Dative-experiencer concept: the person is the 'receiver' of the feeling, and the thing liked is the grammatical subject."
+      - "Introduce the lexical chunks 'Мені' (to me) and 'Тобі' (to you). Explicitly state that learners do not need to memorize the full Dative case yet."
+      - "Provide 3-4 examples of 'Мені подобається + [Nominative singular noun]' (e.g., Мені подобається музика)."
+      - "Provide 3-4 examples of 'Мені подобаються + [Nominative plural noun]' (e.g., Мені подобаються квіти) to show subject-verb agreement."
+      - "Demonstrate the construction with infinitives (e.g., Мені подобається читати) with 2-3 clear examples."
   - section: "Я люблю"
     words: 400
     points:
-      - "Introduce the verb 'любити' (Class II conjugation) with its full present tense paradigm (люблю, любиш, любить...)."
-      - "Explain the Accusative case requirement for the direct object (e.g., кава -> каву)."
-      - "Contrast the meaning and usage of 'подобається' (appeals to me) versus 'люблю' (strong active affection/enjoyment)."
-      - "Provide examples mixing nouns and infinitives: Я люблю каву, Я люблю спорт, Я люблю читати."
+      - "Introduce the verb 'любити' and provide a clear table of its full present tense conjugation (Class II)."
+      - "Explain the Accusative case requirement for direct objects. Give 4-5 examples showing Nominative to Accusative transformation for feminine nouns (-а -> -у, e.g., кава -> каву)."
+      - "Clearly contrast the semantics: 'подобається' (aesthetic appeal, state) vs 'люблю' (strong active enjoyment, love). Include a 'Cultural Guide' callout explaining this nuance."
+      - "Provide 3-4 examples mixing nouns and infinitives (Я люблю спорт, Я люблю читати)."
   - section: "Я хочу"
     words: 400
     points:
-      - "Introduce the verb 'хотіти' and its irregular conjugation pattern (хочу, хочеш, хоче, хочемо, хочете, хочуть)."
-      - "Demonstrate usage with infinitives for actions: Я хочу їсти, Я хочу піти."
-      - "Demonstrate usage with Accusative objects for things: Я хочу каву, Я хочу квиток."
-      - "Explain cultural context: using 'Я хочу' is natural and acceptable in conversational Ukrainian without sounding rude."
-  - section: "Порівняння вподобань"
+      - "Introduce the irregular verb 'хотіти' and provide a table of its full present tense conjugation."
+      - "Demonstrate 'Я хочу + infinitive' for actions (Я хочу їсти, Я хочу піти) with 3-4 examples."
+      - "Demonstrate 'Я хочу + Accusative noun' for objects (Я хочу каву, Я хочу квиток) with 3-4 examples."
+      - "Include a cultural note on directness: explain that 'Я хочу' is perfectly polite in Ukrainian daily life and does not sound rude like 'I want' might in English."
+  - section: "Порівняння"
     words: 400
     points:
-      - "Introduce question forms to ask about preferences: А ти? Тобі подобається...? Ти любиш...? Ви хочете...?"
-      - "Provide mini-dialogues comparing what different people like, utilizing common vocabulary (їжа, музика, спорт)."
-      - "Integrate cultural hooks about Ukrainian preferences (e.g., coffee culture in Lviv, traditional foods)."
+      - "Introduce question formats: 'А ти?', 'Тобі подобається...?', 'Ти любиш...?', 'Ви хочете?'."
+      - "Write 2-3 short, natural mini-dialogues (4-6 lines each) where people compare their preferences regarding food, music, or free time."
+      - "Integrate cultural vocabulary naturally into the dialogues (e.g., борщ, львівська кава)."
+      - "Highlight how to use 'А' (And/But) to contrast preferences (e.g., Мені подобається чай, а тобі?)."
   - section: "Практика"
     words: 300
     points:
-      - "Include a summary table contrasting the three structures (подобається, люблю, хочу) with their required grammar (Nominative vs Accusative vs Infinitive)."
-      - "Provide simple sentence matching examples to reinforce the rules."
-      - "Set up the context for the upcoming interactive activities."
+      - "Create a summary visual table contrasting all three constructions side-by-side: verb, meaning, and required following grammar (Nominative vs Accusative vs Infinitive)."
+      - "Provide 4-5 guided practice sentences with English translations to solidify the rules before the interactive activities."
+      - "Write a brief, encouraging conclusion setting up the interactive exercises."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -80,6 +79,6 @@ content_outline:
 **Step**: Full Phase A
 **Friction Type**: NONE
 **Raw Error**: None
-**Self-Correction**: Refined section headings in the meta outline to be fully in Ukrainian (`Порівняння вподобань`, `Практика`) instead of copying the bilingual ones from the plan to strictly adhere to the prompt's rules. Made sure the Dative case usage was addressed as a chunking approach since the state standard puts Dative in A2.
+**Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===

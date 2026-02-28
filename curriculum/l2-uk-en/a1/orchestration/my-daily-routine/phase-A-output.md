@@ -3,35 +3,39 @@
 # Дослідження: My Daily Routine
 
 ## State Standard Reference
-§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: ... дивитися (дивлюся, дивишся, дивиться, дивимося, дивитеся, дивляться);"
-§3.4: "типові щоденні заняття; окреслення часу"
-§3.5: "робочий день; вихідний день; обідня перерва; початок і кінець робочого дня."
-Alignment: This module strictly aligns with the A1 thematic requirements for describing daily life and activities, as well as the morphological requirement to correctly conjugate Class II reflexive verbs in the present tense.
+§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: ... дивитися (дивлюся, дивишся, дивиться, дивимося, дивитеся, дивляться); утворення форм минулого часу дієслова: ... сміявся, сміялася, сміялося, сміялися"
+§3.4: Побут: "типові щоденні заняття... окреслення часу (пори року, місяці, дні тижня, години і хвилини – телеграфний стиль)"
+§3.5: Діяльність: "робочий день; вихідний день; обідня перерва; початок і кінець робочого дня"
+Alignment: Fulfills thematic requirements for daily routines and daily activity, and morphological requirement for reflexive verbs (-ся/-сь) in the present tense.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| прокидатися | High (Daily Life) | рано прокидатися, прокидатися о сьомій |
-| вмиватися | Medium (Hygiene) | вмиватися вранці, швидко вмиватися |
-| одягатися | High (Routine) | швидко одягатися, тепло одягатися |
-| дивитися | High (Core Verb) | дивитися фільм, дивитися телевізор |
-| зазвичай | High (Adverb) | я зазвичай встаю, як зазвичай |
+| прокидатися | High / Core | рано прокидатися, прокидатися о сьомій |
+| вмиватися | Medium / Core | швидко вмиватися |
+| одягатися | High / Core | тепло одягатися |
+| снідати/обідати/вечеряти | High / Core | смачно обідати |
+| дивитися | High / Core | дивитися телевізор |
+| лягати спати | High / Core | лягати пізно |
+| зазвичай | High / Core | як зазвичай, зазвичай встаю |
 
 ## Cultural Hooks
-1. **The Ukrainian "Обід"**: Unlike Western lunch habits (which are often light sandwiches), the traditional Ukrainian *обід* (13:00–14:00) is the main, most substantial meal of the day, typically consisting of a first course (soup/borscht) and a second course (meat/fish with a side).
-2. **"Домашній одяг" (Home Clothes)**: It is a strong cultural norm in Ukraine to change out of one's "street clothes" immediately upon returning home, switching into comfortable *домашній одяг* to separate the public sphere from the private, clean sphere of the home.
+1. **Обід (Lunch)**: In Ukraine, the main substantial meal of the day occurs between 13:00 and 14:00, typically consisting of a first course (soup/borscht) and a second course (meat and side dish), contrasting with the lighter Western sandwich culture.
+2. **Домашній одяг (Home clothes)**: It is a strong cultural norm to change out of street clothes immediately upon arriving home to maintain cleanliness and separate the public sphere from the private resting space.
 
 ## Common Learner Errors
-1. **Reflexive vs. Transitive Washing**: Learners often misuse the reflexive «вмиватися» (which means to wash one's own face/body) when they mean to wash an object. *Error*: Я вмиваю руки. → *Correct*: Я мию руки. 
-2. **Time Expressions**: Using «в» + Accusative for telling time on the clock (a common Surzhyk error). *Error*: в сьому годину. → *Correct*: о сьомій годині (Locative case).
+1. Confusing "вмиватися" vs "мити руки" → English "to wash up" is often translated incorrectly. "Вмиватися" is strictly reflexive (washing one's face/body), while "мити руки" is transitive (washing hands).
+2. Time Prepositions → English speakers use "в" + Accusative for time, but Ukrainian requires the Locative pattern "о сьомій годині" for scheduling exact hours.
+3. Reflexive Suffixes → Misapplying "-ся" and "-сь". "-ся" follows consonants (дивишся), while "-сь" follows vowels (дивлюсь).
 
 ## Cross-References
 - Builds on: a1-17 (Reflexive Verbs), a1-23 (What Time Is It)
 - Prepares for: a1-11 (Describing Things - Adjectives), a1-30 (Checkpoint Consolidation)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: When addressing the time expression error («о сьомій» vs «в сьому»), emphasize that «о / об» + Locative is the authentic Ukrainian scheduling structure, distinguishing it clearly from Surzhyk or Russian-influenced habits. Teach Ukrainian grammar as an independent, logical system.
-- **Immersion Target**: Since this is M38 (late A1), aim for ~35-40% immersion. Use English scaffolding to clearly explain the `-ся/-сь` reflexive rules, but rely heavily on Ukrainian for the routine timeline examples.
+- Maintain 35-40% immersion using English scaffolding for new grammatical concepts.
+- Use explicit Ukrainian framing: grammar is described by its own internal logic, not contrasted as "unlike Russian" or using Russianisms (e.g., use "їсти", not "кушати").
+- Allocate space carefully: the minimum target is 2000 words, ensure the practice and presentation sections are expanded adequately with examples and miniature dialogues.
 
 ===RESEARCH_END===
 
@@ -45,7 +49,7 @@ content_outline:
   - section: "Презентація"
     words: 600
     points:
-      - "Each reflexive verb concept gets its own H3. Define 'прокидатися' and 'вмиватися' with 3+ examples each."
+      - "Give 'прокидатися' and 'вмиватися' their own H3 with definition and 3+ examples each."
       - "Create an H3 to explicitly contrast reflexive 'вмиватися' (washing oneself) with transitive 'мити руки' (washing hands), addressing the common learner error."
       - "Create an H3 for the conjugation of 'дивитися' (дивлюся, дивишся) and explain the -ся/-сь rule (-сь after vowels, -ся after consonants)."
       - "Include a cultural note box about 'Обід' being the main, substantial meal of the day (13:00-14:00)."

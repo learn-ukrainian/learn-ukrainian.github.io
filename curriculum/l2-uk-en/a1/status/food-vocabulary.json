@@ -2,15 +2,15 @@
   "module": "food-vocabulary",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T14:22:59.876147Z",
+  "last_audit": "2026-02-28T23:08:04.075860Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-28T14:22:42.321154Z",
-    "meta": "2026-02-28T14:08:34.456281Z",
+    "md": "2026-02-28T23:07:42.356205Z",
+    "meta": "2026-02-28T23:02:22.941071Z",
     "activities": "2026-02-28T14:15:55.558384Z",
     "vocabulary": "2026-02-28T14:15:55.558846Z",
     "plan": "2026-02-28T02:53:04.285935Z",
-    "research": "2026-02-28T14:08:34.449209Z"
+    "research": "2026-02-28T23:02:22.931698Z"
   },
   "gates": {
     "meta": {
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "4381/2000 (raw: 4669)"
+      "message": "3282/2000 (raw: 3526)"
     },
     "activities": {
       "status": "deferred",

@@ -1,57 +1,39 @@
-✅ Message sent to Gemini (ID: 11465) [auto-acked: self-addressed]
-✓ Message 11465 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #11465...
-📨 Message #11465
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-phone-basics-pA
-   Time: 2026-02-20T22:55:21.480191+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/phone-basics/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
 # Дослідження: Phone Basics
 
 ## State Standard Reference
-§4.2.4.2: "Форми 2-ї особи однини і множини наказового способу деяких дієслів: читати (читай, читайте)... сказати (скажи, скажіть)... дати (дай, дайте)..."
-Alignment: This module utilizes 2nd person imperative forms (both singular and plural) to manage phone conversations and make polite requests (e.g., Зачекайте, будь ласка; Повторіть, будь ласка; Скажіть, будь ласка).
+§2 Каталог А: "привернути чиюсь увагу, установити контакт: Вибачте. Можна запитати? Скажіть, будь ласка;"
+§4.2.4.2 Наказовий спосіб: "Форми 2-ї особи однини і множини наказового способу" (e.g., зачекайте, повторіть)
+§3.3 Каталог Б: "громадські заклади (..., пошта)"
+Alignment: The module directly addresses the A1 communicative intentions for establishing contact, using polite 2nd-person imperatives for phone management, and engaging with public/delivery services.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| телефон | Very High | номер телефону, мій телефон |
-| дзвонити | Very High | дзвонити другу/мамі, дзвонити в офіс |
-| повідомлення | High (Digital) | написати повідомлення, залишити повідомлення |
-| зайнятий | High | лінія зайнята, я зайнятий |
-| передзвонити | High | передзвонити пізніше, я передзвоню |
+| телефон | Very High / Daily life | номер телефону, мобільний телефон |
+| дзвонити | Very High / Spoken | дзвонити другові, дзвонити мамі |
+| повідомлення | High / Digital | написати повідомлення, залишити повідомлення |
+| зайнятий | Medium / State | лінія зайнята, я зараз зайнятий |
+| слухаю | High / Professional | Слухаю вас, Олена слухає |
 
 ## Cultural Hooks
-1. While "Алло!" is universally understood and used for informal calls, the standard polite/professional greeting when answering a call in Ukraine is "Слухаю!" (I'm listening) or "Слухаю вас!". It signals readiness and professional attention.
-2. The modern sign-off for calls and messengers in Ukraine is "До зв'язку!" (Talk soon / Until the next connection). It effectively bridges the gap between the highly formal "До побачення" and the overly casual "Бувай".
+1. **The "Слухаю" greeting**: Unlike the universal English "Hello", Ukrainians frequently use "Слухаю" (I'm listening) or "Слухаю вас" in professional or semi-formal contexts (e.g., receptionists, clinics, or when receiving a call from an unknown number) as a polite signal of readiness to engage.
+2. **Couriers and "Ви"**: In modern Ukraine, interaction with delivery services (Nova Poshta, food delivery) is a daily occurrence. The standard interaction is highly polite, almost exclusively using "Ви" and polite imperatives, despite the brief and transactional nature of the call.
 
 ## Common Learner Errors
-1. "Я є Олена" → "Це Олена" або "Олена слухає" — English literal translation of the copula 'to be' when identifying oneself on the phone.
-2. Mispronunciation of "дз" → single affricate /dz/ — Learners often pronounce it as two distinct sounds /d/ and /z/ in the high-frequency word "дзвонити".
-3. Overusing informal "ти" on the phone → default to "Ви" — Learners often use "ти" with couriers or receptionists due to the lack of T-V distinction in English.
+1. **"Я є [Ім'я]" instead of "Це [Ім'я]"** → English speakers translate "It is me" or "I am..." literally. The natural Ukrainian phone identification is "Це Олена" or "Олена слухає".
+2. **Pronouncing "дз" as two sounds** → Learners often pronounce /d/ + /z/ in "дзвонити". It must be a single affricate sound, similar to 'ds' in 'woods'.
+3. **Overusing informal greetings** → Defaulting to "Привіт" or "ти" with service workers/couriers instead of the expected polite register.
 
 ## Cross-References
-- Builds on: a1-07 (Questions and Negation), a1-40 (Taking Transport)
-- Prepares for: a1-42 (Emergencies), a1-43 (Combined Practice)
+- Builds on: a1-18 (Questions and Negation), a1-57 (Taking Transport)
+- Prepares for: a1-62 (Emergencies), a1-43 (Combined Practice)
 
 ## Notes for Content Writing
-- Since this is an A1 module (immersion target 10-40%), English scaffolding is absolutely required for explaining the T-V distinction ("Ви" vs. "ти"), the cultural nuances of greetings ("Алло" vs. "Слухаю"), and the phonetic breakdown of the "дз" sound.
-- Ensure all new grammar (polite imperatives) is explained in English before presenting the Ukrainian examples.
-- Ukrainian grammar should be framed positively without comparing it to Russian.
+- **Decolonized Framing**: Emphasize that Ukrainian phone etiquette has its own distinct rhythm and authentic markers (like the widespread use of "Слухаю" and "До зв'язку"). Focus purely on the Ukrainian language system without drawing comparisons to Russian habits.
+- **English Scaffolding**: Since this is an A1 level module, ensure the introduction provides clear English scaffolding to explain the situational boundary between "Алло" and "Слухаю".
+- Ensure vocabulary and examples remain strictly within the Ukrainian standard (e.g., avoid colloquial Russianisms like "получати" or "понятно").
 
 ===RESEARCH_END===
 
@@ -60,28 +42,28 @@ content_outline:
   - section: "Вступ та етикет"
     words: 450
     points:
-      - "Provide English scaffolding to explain the cultural difference between phone greetings: the informal «Алло!» versus the professional «Слухаю!»."
-      - "Define formal vs. informal address rules on the phone. Clearly explain the necessity of defaulting to «Ви» for strangers (couriers, receptionists) and using «ти» for friends."
-      - "Include a phonetics tip on how to pronounce the single affricate sound «дз» in «дзвонити» and «дзвінок» (e.g., comparing it to the 'ds' in 'woods')."
+      - "Use English scaffolding (A1 level) to explain the cultural nuance of phone greetings: the universal «Алло!» versus the distinctly Ukrainian polite/professional «Слухаю!»."
+      - "Define formal vs. informal address rules on the phone. Clearly explain the necessity of defaulting to «Ви» for strangers (couriers, receptionists) and «ти» for friends."
+      - "Include a phonetics tip (H3) on pronouncing the single affricate sound «дз» in «дзвонити» and «дзвінок», explicitly correcting the learner error of splitting it into /d/ + /z/."
   - section: "Презентація: Основні структури"
     words: 650
     points:
-      - "Explain how to properly identify oneself on the phone («Це Олена» or «Олена слухає»), explicitly correcting the common literal translation error «Я є...»."
-      - "Introduce polite contact phrases like «Чи можу я поговорити з...?» and «Скажіть, будь ласка» with a short 4-line bilingual mini-dialogue."
-      - "Present 2nd person polite imperatives (§4.2.4.2) used for handling call flow and delays: «Зачекайте, будь ласка», «Повторіть, будь ласка»."
-      - "Introduce modern conversation closings, heavily emphasizing «До зв'язку!» as the standard sign-off."
+      - "Explain self-identification on the phone («Це Олена» or «Олена слухає»), explicitly correcting the English-influenced literal translation error «Я є Олена»."
+      - "Introduce polite contact phrases from State Standard §2 («Чи можу я поговорити з...?», «Скажіть, будь ласка») with a short 4-line bilingual mini-dialogue."
+      - "Present 2nd person polite imperatives (State Standard §4.2.4.2) used for handling call delays: «Зачекайте, будь ласка», «Повторіть, будь ласка»."
+      - "Introduce modern conversation closings, presenting «До зв'язку!» (Talk soon) as the modern, authentic Ukrainian standard sign-off."
   - section: "Практика: Життєві ситуації"
     words: 550
     points:
-      - "Present Scenario 1: The wrong number. Teach «Вибачте, я помилився номером» as a fixed, formulaic chunk and include a short practice dialogue."
-      - "Present Scenario 2: The courier delivery. Practice practical phrases like «Я буду через 5 хвилин» and «Залиште біля дверей»."
-      - "Present Scenario 3: Digital messaging alternatives. Focus on the collocations «написати повідомлення» and «залишити повідомлення»."
+      - "Present Scenario 1: The wrong number. Teach «Вибачте, я помилився номером» as a fixed formulaic chunk with a short practice dialogue."
+      - "Present Scenario 2: The courier delivery (State Standard Catalog B). Practice practical phrases like «Я буду через 5 хвилин» and «Залиште біля дверей»."
+      - "Present Scenario 3: Digital messaging. Focus on high-frequency collocations «написати повідомлення» and «залишити повідомлення»."
   - section: "Продукція та підсумок"
     words: 350
     points:
       - "Provide a summary table comparing Formal vs. Informal phone phrases side-by-side."
-      - "Create a dialogue simulation containing two parts: a formal call to a clinic/office using «Слухаю вас» and «Ви», and an informal call to a friend using «Алло»."
-      - "Include a short recap of high-frequency collocations (e.g., «дзвонити мамі», «лінія зайнята», «номер телефону»)."
+      - "Create a dialogue simulation containing two parts: a formal call to an office using «Слухаю вас» and «Ви», and an informal call to a friend using «Алло»."
+      - "Include a recap list of high-frequency collocations (e.g., «дзвонити мамі», «лінія зайнята», «номер телефону»)."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -92,11 +74,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (4915 chars)
-✅ Message sent to Claude (ID: 11473)
-✓ Message 11473 acknowledged
-   Auto-acknowledged reply #11473 (stdout delivery — no inbox accumulation)
-✓ Message 11465 acknowledged

@@ -1,6 +1,6 @@
-module: c1-108
+module: c1-062
 level: C1
-sequence: 108
+sequence: 62
 slug: persuasive-speech
 version: '2.0'
 title: Переконлива промова
@@ -123,7 +123,7 @@ grammar:
 - Register-appropriate persuasion strategies
 register: літературний
 immersion: 100% Ukrainian
-phase: C1.5 [Literature]
+phase: C1.5 [Stylistics & Rhetoric]
 persona:
   voice: Senior Specialist
   role: Political Speechwriter

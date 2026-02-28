@@ -1,39 +1,36 @@
 ===RESEARCH_START===
-
 # Дослідження: Shopping and Market
 
 ## State Standard Reference
-§3.8: "Купівля (закупи): магазини і ринки; споживчі товари (овочі, фрукти, м’ясо і молочні продукти, хліб, яйця); засоби гігієни (мило, шампунь, зубна паста); основні канцелярські товари; одиниці ваги й об’єму; гроші."
-Alignment: This module directly addresses the thematic requirements for A1 shopping by covering stores, markets, essential hygiene products, measurement units, and currency expressions. 
+§3.8 Купівля (закупи): "магазини і ринки; споживчі товари (овочі, фрукти, м’ясо і молочні продукти, хліб, яйця); засоби гігієни (мило, шампунь, зубна паста); основні канцелярські товари; одиниці ваги й об’єму; гроші."
+§4.2.4.2 Наказовий спосіб: "Форми 2-ї особи однини і множини... дати (дай, дайте)."
+Alignment: Directly addresses the A1 thematic requirements for shopping, currency, units of measurement, hygiene products, and the grammatical requirement for basic polite imperative requests.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| коштувати | Core verb, very high | Скільки коштує? Скільки це коштує? |
-| купити | Core perfective verb | Я хочу купити... Де можна купити? |
-| гривня | High (everyday survival) | одна гривня, дві гривні, п'ять гривень |
-| кілограм | High | кілограм яблук, два кілограми |
-| літр | High | літр молока |
-| пачка / пляшка | High (packaging) | пачка цукру, пляшка води |
+| коштувати | High (Everyday) | Скільки коштує...? |
+| гривня | High (Currency) | одна гривня, п'ять гривень |
+| кілограм | High (Measurement) | кілограм яблук, два кілограми |
+| шампунь | Med (Hygiene) | чоловічий шампунь (note: masculine gender) |
 
 ## Cultural Hooks
-1. **The Ukrainian "Ринок" (Market):** Bazaars and open-air markets are an essential part of Ukrainian daily life and culture (e.g., the historical Zhytniy Market in Kyiv). They are the primary places for buying fresh, seasonal produce, and interacting directly with vendors.
-2. **Direct Politeness:** Using the imperative "Дайте, будь ласка" (Give me, please) is the culturally appropriate and polite way to request items in a store. It reflects clarity and directness, unlike the overly layered "Could you possibly..." common in English.
+1. **Direct politeness:** In Ukrainian, using the imperative «Дайте, будь ласка» (Give me, please) is the standard, culturally polite way to request items in a store. It is not considered rude or demanding as a direct translation might imply in English.
+2. **The «ринок» (market):** Outdoor markets remain a vital part of daily Ukrainian life for buying fresh produce. Interaction is direct, personal, and often involves asking for specific weights of loose items.
 
 ## Common Learner Errors
-1. **Using "мати" instead of "є"** → *У вас є молоко?* (Correct) instead of *Ви маєте молоко?* (Incorrect for stores). Learners often translate "Do you have" literally.
-2. **Number-noun case mismatch** → *п'ять гривні* (Incorrect) instead of *п'ять гривень* (Correct Genitive plural for 5+). 
-3. **Plural vs. Singular verb for prices** → Overcomplicating price questions by conjugating *коштувати* for every item instead of using the formulaic *Скільки коштує [item]?* or *Скільки це коштує?*
+1. **"Ви маєте...?" instead of "У вас є...?":** Direct translation of "Do you have?" leads to unnatural phrasing. Ukrainians use the existential «У вас є...?» to check availability in a store.
+2. **"Кілограм яблука" instead of "Кілограм яблук":** Failing to use the Genitive plural after units of measurement. This must be taught as formulaic chunks at A1 to avoid overwhelming learners with full case paradigms.
+3. **Treating "шампунь" as feminine:** It is a masculine noun in Ukrainian (цей шампунь), which often confuses learners whose native languages have it as feminine or neuter.
 
 ## Cross-References
 - Builds on: a1-17 (Numbers and Money), a1-18 (Formulaic Genitive), a1-39 (Food and Drink)
 - Prepares for: a1-41 (At the Cafe)
 
 ## Notes for Content Writing
-- **Scaffolding:** As an A1 module, English scaffolding is required for all grammar explanations, particularly for the number-noun agreement with "гривня" and units.
-- **Decolonization:** Focus purely on Ukrainian shopping culture. The currency "гривня" traces back to Kyivan Rus'; present it authentically. Ensure no Russian-origin vocabulary slips into examples.
-- **Tone:** Use the "Patient Supportive Tutor" persona. Break down the transaction flow step-by-step so learners feel safe entering a Ukrainian shop.
-
+- Rely heavily on English scaffolding for the agreement rules (numbers + units/currency).
+- Emphasize the cultural naturalness of «Дайте, будь ласка» so learners feel confident using it.
+- Present «кілограм яблук» and similar phrases as vocabulary chunks.
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
@@ -41,34 +38,33 @@ content_outline:
   - section: "Скільки коштує?"
     words: 500
     points:
-      - "H3: English explanation of the verb «коштувати» and the universal question «Скільки це коштує?». Explain why we rely on the 3rd person singular «коштує»."
-      - "H3: Review of numbers and the currency «гривня». English scaffolding explaining the agreement rules: 1 гривня, 2-4 гривні, 5+ гривень."
-      - "H3: 5+ bilingual examples showing price questions and answers (e.g., «Скільки коштує борщ? — Борщ коштує сімдесят гривень.»)."
-      - "H3: A short, realistic mini-dialogue demonstrating a simple price inquiry."
+      - "H3: Introduction & Verb. English scaffolding explaining the goal of the module and the verb «коштувати». Define the universal question «Скільки це коштує?» and explain why we use the 3rd person singular/plural."
+      - "H3: Currency Agreement. English explanation recalling rules from A1-17: 1 гривня, 2-4 гривні, 5+ гривень."
+      - "H3: Examples. 6+ bilingual example sentences showing price questions and answers with various food items (e.g., «Скільки коштує хліб? — Хліб коштує двадцять гривень.»)."
   - section: "У магазині"
     words: 400
     points:
-      - "H3: Polite requests. Introduce «Дайте, будь ласка...» and «Я хочу купити...» with English context on cultural politeness (directness is polite and natural in Ukrainian)."
-      - "H3: Checking availability. Explicitly contrast using «У вас є...?» with the verb «мати» to prevent the common learner error of direct translation."
-      - "H3: Complete transaction dialogue. Provide a full bilingual role-play (greeting → asking for item → asking price → paying → thanking) with line-by-line translations."
+      - "H3: Polite Requests. Introduce «Дайте, будь ласка...» and «Я хочу купити...». Explain in English that direct imperatives with «будь ласка» are culturally polite in Ukrainian."
+      - "H3: Availability. Explicitly contrast the natural «У вас є...?» with the English 'Do you have?', warning against using the verb «мати» in this context."
+      - "H3: Dialogue. A complete bilingual role-play dialogue (greeting → asking for item → price → paying → thanking) in a local store."
   - section: "Кількість та одиниці"
     words: 400
     points:
-      - "H3: Essential units. Introduce «кілограм», «літр», «пачка», «пляшка», «штука» with English definitions and examples of typical products for each."
-      - "H3: Formulaic Genitive chunks. Teach phrases like «кілограм яблук» or «літр молока» as fixed chunks to memorize, explicitly referencing the pattern from A1-18."
-      - "H3: Numbers with units. English explanation of case agreement with units (e.g., «два кілограми» vs «п'ять літрів»), providing a clear reference table."
+      - "H3: Units Vocabulary. Introduce «кілограм», «літр», «пачка», «пляшка», «штука» with English definitions and visual formatting."
+      - "H3: Formulaic Genitive. Connect to A1-18. Teach phrases as fixed chunks (e.g., «кілограм яблук», «літр молока») rather than full grammar rules."
+      - "H3: Numbers with Units. English explanation of case agreement with units (e.g., «два літри» vs «п'ять літрів»), providing a clear reference table."
   - section: "Засоби гігієни"
     words: 300
     points:
-      - "H3: Essential hygiene vocabulary mandated by the State Standard: «мило», «зубна паста», «шампунь», «рушник», «туалетний папір»."
-      - "H3: Asking for locations. Combine shopping skills with location questions: «Де можна купити...?», «Де тут аптека?», «Де тут магазин?»."
-      - "H3: Provide 5+ bilingual example sentences demonstrating how to ask for these hygiene products in a pharmacy or store setting."
+      - "H3: Hygiene Vocabulary. Introduce State Standard mandated items: «мило», «зубна паста», «шампунь» (explicitly note masculine gender), «рушник», «туалетний папір»."
+      - "H3: Location Questions. Combine shopping with location queries: «Де можна купити...?», «Де тут аптека?»."
+      - "H3: Examples. 5+ bilingual sentences asking for hygiene products or their locations in a store."
   - section: "Практика"
     words: 400
     points:
-      - "H3: Dialogue at the market («На ринку»). A realistic role-play incorporating greetings, asking for fresh produce quantities, and negotiating price."
-      - "H3: Dialogue at the store («У магазині»). A role-play focused on finding and purchasing hygiene products."
-      - "H3: Shopping List reading exercise. Present a written shopping list with specific quantities (e.g., «2 літри молока, 1 пачка цукру») for learners to decode in context."
+      - "H3: На ринку. A realistic bilingual role-play dialogue at the outdoor market, asking for fresh produce quantities and paying."
+      - "H3: В аптеці. A short dialogue focused on finding and purchasing hygiene products."
+      - "H3: Список покупок (Shopping List). A reading exercise presenting a typical Ukrainian shopping list with quantities (e.g., «2 літри молока», «1 пачка масла») for learners to decode in context."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===

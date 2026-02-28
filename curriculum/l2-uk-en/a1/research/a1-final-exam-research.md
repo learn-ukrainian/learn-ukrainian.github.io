@@ -1,34 +1,36 @@
 # Дослідження: A1 Final Exam
 
 ## State Standard Reference
-§4.2.3, §4.3.1, §4.3.2: "4.2.3.1. Називний відмінок: суб’єкт активної дії... 4.3.1. Просте речення: розповідне речення... 4.3.2. Складне речення: складні (складносурядні) речення зі сполучниками і (й), але..."
-Alignment: This module acts as a comprehensive assessment of morphological competence (core noun cases, verb conjugation) per §4.2 and syntactic structures (simple and basic complex sentences) per §4.3 of the State Standard for A1.
+§4.2.3 (Cases): "4.2.3.1. Називний відмінок... 4.2.3.2. Знахідний відмінок... 4.2.3.3. Місцевий відмінок... 4.2.3.4. Кличний відмінок"
+§4.2.4.1 (Verbs): "дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш...), працювати..."
+§4.3.1 - §4.3.2 (Syntax): "розповідне речення... питальне речення зі спеціальними словами де, звідки, куди, що, хто... складні (складносурядні) речення зі сполучниками і (й), але"
+Alignment: This module acts as the definitive comprehensive assessment for all required A1 morphological and syntactic competencies specified in the 2024 State Standard.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| знати | Rank 6 / Most Used Verbs | знати мову, знати відповідь, я знаю |
-| говорити | Rank 16 / Most Used Verbs | говорити українською, говорити правду |
-| слухати | Rank 21 / Most Used Verbs | слухати музику, слухати вчителя |
-| розуміти | High frequency | добре розуміти, розуміти текст |
-| читати | High frequency | читати книжку, читати текст |
-| писати | High frequency | писати лист, писати вправу |
-| питати | High frequency | питати викладача, питати дорогу |
-| відповідати | High frequency | студент відповідає, відповідати на запитання |
+| знати | Rank 6 (Most Used Verbs) | знати мову, я знаю |
+| говорити | Rank 16 (Most Used Verbs) | говорити українською, говорити правду |
+| слухати | Rank 21 (Most Used Verbs) | слухати вчителя, слухати музику |
+| розуміти | High educational freq | добре розуміти, розуміти текст |
+| читати | High freq (Core A1 verb) | читати текст, читати книжку |
+| кава | High freq (Food/Culture) | пити каву, львівська кава |
+| каштан | Mid freq (Cultural hook) | київські каштани |
 
 ## Cultural Hooks
-1. Каштани (Chestnuts) in Kyiv: Mentioned as early as 1800 by Maksym Berlynsky, chestnut trees became an official symbol of Kyiv in 1969 and are immortalized in the "Kyiv Waltz" (1950).
-2. Lviv Coffee and Printing: Yuriy Kulchytsky, a Ukrainian, popularized coffee in Vienna in 1683, inspiring Lviv's deep coffee tradition. Additionally, Lviv has a rich printing history dating back to 1460 with the printing press of Stepan Dropan.
+1. Kyiv (Heart of Ukraine): Founded in the 5th century, the Dnipro River and chestnut trees (каштани) are its iconic symbols, representing both ancient history and spring beauty.
+2. Lviv (Cultural Capital): Famous for its deep-rooted coffee culture (кава) dating back to the late 18th century, and its historical significance in book printing and European architecture.
 
 ## Common Learner Errors
-1. Case Confusion (Accusative vs. Locative) → "Я йду в магазин" (motion, Accusative) vs "Я в магазині" (location, Locative) — Learners confuse the prepositions "в/на" due to not distinguishing motion from state.
-2. Gender Agreement in Adjectives → "Моя велика машина" vs "Мій велика машина" — Learners forget to match the adjective gender ending with the noun gender.
-3. Conjugation Classes (-ати vs -ити) → "Він читає" vs "Він робить" — Confusing Class I and Class II verb endings in the present tense.
+1. Accusative vs. Locative confusion for destinations: "Я йду в магазині" (Incorrect - Locative used for motion) → "Я йду в магазин" (Correct - Accusative used for direction/motion).
+2. Adjective Gender mismatch: "Мій велика машина" (Incorrect) → "Моя велика машина" (Correct - feminine agreement across all modifiers).
+3. Class I vs Class II conjugation errors: "Він робє" (Incorrect analogy to -ати verbs) → "Він робить" (Correct - Class II -ити stem).
 
 ## Cross-References
 - Builds on: a1-43 (Combined Practice)
-- Prepares for: a2-01 (A2 Introduction)
+- Prepares for: a2-01 (A2 Introduction - Genitive and Dative cases)
 
 ## Notes for Content Writing
-- A1 Final Exam serves as a celebration of reaching the end of the A1 level. Maintain a highly supportive "Patient Supportive Tutor" persona.
-- Keep English scaffolding as required by A1 rules (explanations in English, examples in Ukrainian).
+- Frame Ukrainian grammar independently as a beautiful, logical system. Do not compare it to Russian cases or syntax.
+- Ensure the "Patient Supportive Tutor" persona is prominent, reducing test anxiety and celebrating the completion of A1.
+- English scaffolding is still required for the grammar review sections (Immersion ~40-50%), but reading texts should be entirely in A1-level Ukrainian.

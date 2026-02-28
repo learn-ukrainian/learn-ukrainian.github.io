@@ -1,36 +1,33 @@
-# Дослідження: My Family (A1.32)
+# Дослідження: My Family
 
 ## State Standard Reference
-§3.1 (Людина): "сім’я і члени сім’ї, родичі; статус інших людей з оточення (друг / подруга, колега, сусід / сусідка)."
-§4.2.1.1 (Іменник): "форми знахідного та місцевого відмінків іменників... мама (маму, на мамі), тато (тата, на татові)... уживання форм кличного відмінка: Остапе, Олено..."
-§4.2.2 (Займенник): "утворення родових форм присвійних займенників: мій, моя, моє; твій, твоя, твоє..."
-
-Alignment: This module directly addresses the §3.1 theme "Family" and implements the morphological requirements for noun cases (Nominative basics, Vocative intro) and possessive pronoun agreement (§4.2.2).
+§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм присвійних займенників: мій, моя, моє... форм множини: мої..."
+§4.2.3.4: "Кличний відмінок (адресат мовлення – потенційний суб’єкт дії): Пане / пані, скажіть, будь ласка... Дівчино..."
+Alignment: This module introduces possessive pronoun agreement for family members (§4.2.2) and the fundamental Vocative forms for addressing parents/grandparents (§4.2.3.4).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| сім'я | High / Core A1 | велика сім'я, моя сім'я |
-| родина | High / Core A1 | вся родина, збиратися родиною |
-| мама / тато | Very High | рідна мама, мій тато |
-| брат / сестра | High | старший брат, молодша сестра, рідні брати |
-| дідусь / бабуся | High | любий дідусь, добра бабуся |
-| чоловік / дружина | High | мій чоловік, моя дружина |
+| мама | Extremely high | моя мама, рідна мама |
+| тато | Extremely high | мій тато, рідний тато |
+| сім'я | High | велика сім'я, моя сім'я |
+| родина | High | вся родина |
+| чоловік| High | мій чоловік (husband vs man) |
+| дружина| High | моя дружина |
 
 ## Cultural Hooks
-1. **Сім'я vs Родина**: "Сім'я" typically refers to the immediate nuclear unit living together, while "родина" implies the extended family lineage and kinship network.
-2. **Grandparents' Role**: In Ukraine, grandparents (бабуся і дідусь) play a very active role in raising grandchildren, often living with or very close to the young family.
-3. **Vocative Importance**: Addressing parents as "мамо" and "тату" (not "мама" and "тато") is a hallmark of natural Ukrainian speech, even for beginners.
+1. **Сім'я vs. Родина**: The distinction between nuclear family (сім'я) and the broader extended family/bloodline/lineage (родина) is fundamental to Ukrainian culture, reflecting strong communal bonds.
+2. **Multigenerational Living & Grandparents**: Grandparents (дідусь та бабуся) historically and currently play a very active role in raising children in Ukraine. Multigenerational households are common and valued.
 
 ## Common Learner Errors
-1. **Possessive Gender Agreement**: "Мій сестра" instead of "Моя сестра". (Cause: generalizing 'my' from English).
-2. **Lexical Confusion**: Using "чоловік" for "husband" is correct, but beginners may confuse it with generic "man". Using "жінка" for "wife" is common colloquially but "дружина" is the standard neutral term taught first.
-3. **Construction Choice**: Overusing "Я маю..." (calque from "I have...") instead of natural "У мене є..." for introducing family members.
+1. **"Мій сестра" / "Мій мама"** → **"Моя сестра" / "Моя мама"** — English speakers often fail to agree the possessive pronoun "my" with the gender of the noun.
+2. **"Я маю брата"** → **"У мене є брат"** — While grammatically possible, "я маю" is often a direct calque from English "I have". "У мене є" is the natural, idiomatic way to express having family members at the A1 level.
 
 ## Cross-References
-- **Builds on**: A1-14 (Mine and Yours — possessives), A1-31 (Body and Health — physical description adjectives).
-- **Prepares for**: A1-33 (Holidays — family gathering contexts).
+- Builds on: a1-20 (Mine and Yours), a1-48 (Body and Health)
+- Prepares for: a1-50 (Holidays and Traditions), a1-34 (Checkpoint Core Grammar)
 
 ## Notes for Content Writing
-- **Scaffolding**: Immersion target is ~35-40%. English must be used for all grammar explanations (Possessives, Vocative rules).
-- **Activity Focus**: Ensure "family tree" logic is clear. Use simple "Who is who?" logic puzzles.
+- **Decolonized framing**: When introducing the Vocative case (кличний відмінок), present it as a beautiful, distinct feature of the Ukrainian language that builds emotional connection, rather than comparing it to languages that have lost it (like Russian).
+- Ensure 10-50% immersion (heavy English scaffolding for A1 grammar concepts like possessive agreement and the Vocative case).
+- Do not use the word "жінка" when specifically meaning "wife" (use "дружина" as the neutral standard) to teach precise vocabulary.

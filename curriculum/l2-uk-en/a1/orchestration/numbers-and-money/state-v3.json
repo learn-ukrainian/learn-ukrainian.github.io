@@ -1,0 +1,27 @@
+{
+  "track": "a1",
+  "slug": "numbers-and-money",
+  "mode": "v3",
+  "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T18:32:25Z",
+      "task_id": "v3-numbers-and-money-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T18:35:14Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T18:35:14Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T18:42:22Z",
+      "attempts": 2
+    }
+  }
+}

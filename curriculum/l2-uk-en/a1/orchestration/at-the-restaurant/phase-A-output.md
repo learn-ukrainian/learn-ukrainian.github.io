@@ -1,92 +1,73 @@
-✅ Message sent to Gemini (ID: 9886) [auto-acked: self-addressed]
-✓ Message 9886 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #9886...
-📨 Message #9886
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-at-the-restaurant-pA
-   Time: 2026-02-20T15:53:45.409942+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/at-the-restaurant/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
 # Дослідження: At the Restaurant
 
 ## State Standard Reference
 §3.9: "Ресторан, кафе: страви; напої; посуд і столові прибори."
-§4.2.4.1: "Утворення складеної форми майбутнього часу дієслів недоконаного виду: буду читати... дієвідмінювання дієслова бути в майбутньому часі: буду, будеш..."
-§4.2.3.2.1: "Знахідний відмінок без прийменника (об’єкт дії): Віра читає цікаву книжку."
-Alignment: This module directly addresses the thematic requirement "Restaurant, cafe" (§3.9) and implements the grammatical requirements for Future Tense (§4.2.4.1) and Accusative Case for direct objects (§4.2.3.2.1) in the context of ordering food ("Я буду борщ").
+§4.2.4.1: "дієвідмінювання дієслова бути в майбутньому часі: буду, будеш, буде, будемо, будете, будуть"
+§4.2.3.2.1: "Знахідний відмінок: Без прийменника (об’єкт дії)"
+Alignment: This module precisely aligns with the State Standard by combining the thematic setting of dining (§3.9) with the structural grammar of the future tense of "бути" (§4.2.4.1) and the accusative case for direct objects (§4.2.3.2.1) to create authentic, foundational ordering patterns.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| **замовити** | High (Common usage) | замовити столик (book a table), замовити страву (order a dish), зробити замовлення (place an order), готовий замовити (ready to order). |
-| **рахунок** | High (Essential) | попросити рахунок (ask for the bill), оплатити рахунок (pay the bill), рахунок, будь ласка (the bill, please). |
-| **страва** | Medium-High | перша страва (first course), друга страва (main course), національна страва (national dish), смачна страва (delicious dish). |
-| **офіціант** | Medium (Context specific) | покликати офіціанта (call the waiter), запитати офіціанта (ask the waiter), наш офіціант (our waiter). |
+| замовити | High | замовити страву, замовити столик |
+| рахунок | High | попросити рахунок, оплатити рахунок |
+| страва | High | перша страва, національна страва |
+| офіціант | Medium | покликати офіціанта, дати меню |
+| бути | Core | Я буду... (ordering structure) |
+| перше | High (dining) | суп на перше |
+| друге | High (dining) | на друге з гарніром |
+| столик | High | столик на двох, вільний столик |
 
 ## Cultural Hooks
-1. **Toasting**: The universal Ukrainian toast is «Будьмо!» (Let us be!), often accompanied by «Гей! Гей! Гей!» in group settings. It is used for almost any drink, not just alcohol.
-2. **Menu Structure**: A traditional Ukrainian meal structure is distinct: "Перше" (First) is always soup/borshch, "Друге" (Second) is the main meat/garnish dish, and "Трете" (Third) is often a drink (compote/uzvar) or dessert.
-3. **Tipping**: "Чайові" are typically 10% and are often preferred in cash (scan-to-pay tips are becoming common in cities but cash is safer).
+1. **Dining Registers**: In Ukraine, there is a distinct cultural boundary between a «ресторан» (often formal, celebratory, evening-focused, sometimes with live music) and a «кафе» (casual, daily, coffee and quick meals).
+2. **The Universal Toast**: «Будьмо!» (literally "Let us be!") is the most common and versatile Ukrainian toast, often met with a collective, rhythmic response of «Гей!».
+3. **Tipping Culture**: A standard «чайові» is 10%. While Ukraine has highly advanced scan-to-pay and card payment systems, leaving cash tips is still frequently appreciated by service staff.
 
 ## Common Learner Errors
-1. **Case Mismatch**: Learners often use Nominative instead of Accusative when ordering: «Я буду *кава*» (Incorrect) → «Я буду *каву*» (Correct). *Why*: L1 interference where objects don't change form.
-2. **Russian Interference**: Using «счёт» instead of «рахунок». *Why*: Common Surzhyk or Russian influence in media.
-3. **Verb Confusion**: Using «бронювати» for food. While «бронювати» works for tables (booking), «замовити» is the universal verb for ordering specific dishes.
+1. **Case Mismatch when Ordering**: Learners often default to the Nominative case when pointing at a menu item (e.g., «Я буду кава» ❌) instead of using the mandatory Accusative case for the direct object («Я буду каву» ✅).
+2. **Russian Interference for "Bill"**: Learners with prior Slavic exposure frequently use the Russianism «счёт» ❌ instead of the authentic Ukrainian «рахунок» ✅.
 
 ## Cross-References
-- Builds on: a1-35 (At the Café Practical) - expands simple ordering to full meals.
-- Prepares for: a1-37 (At the Market) - vocabulary for food items; a1-38 (At the Store).
+- Builds on: a1-35 (At the Café Practical)
+- Prepares for: a1-60 (At the Market), a1-61 (At the Store)
 
 ## Notes for Content Writing
-- **Politeness**: Emphasize «будь ласка» and polite intonation. Ukrainian service culture has shifted significantly to be very customer-focused and polite.
-- **Dietary Needs**: "Vegetarian" and "Gluten-free" are well-understood concepts in modern Ukrainian urban dining.
+- **Decolonized Framing**: Frame the Ukrainian service industry as modern and dynamic. Emphasize authentic Ukrainian terms («рахунок», «замовити») and avoid any implicit framing that Ukrainian is a variation of Russian. Explain rules natively.
+- **Immersion Target**: As an A1 module in phase 5, aim for 25-35% immersion. Use English to clearly scaffold the grammatical relationship between "бути" and the Accusative case, but immerse the student in Ukrainian for all mini-dialogues and example phrases.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Розминка: Структура меню та етикет"
-    words: 400
+  - section: "Вступ та культурний контекст"
+    words: 450
     points:
-      - "Explain the 'First' (soup), 'Second' (main), 'Dessert' structure typical in Ukraine with cultural emphasis"
-      - "Cultural note: The difference between 'ресторан' (formal, evening) and 'кафе' (casual, all-day)"
-      - "The universal toast: «Будьмо!» — meaning, pronunciation, and usage in social settings"
-      - "Vocabulary introduction: categories of dishes (перші страви, гарніри, напої)"
-  - section: "Презентація: Як зробити замовлення"
-    words: 800
+      - "Introduce the module context using explicit English scaffolding suitable for A1 (25-35% immersion). Present State Standard §3.9 vocabulary for restaurants."
+      - "Explain the traditional tripartite Ukrainian menu structure: «Перше» (soups/borshch), «Друге» (main dishes/meat/fish with «гарнір»), and «Третє» (drinks/dessert)."
+      - "Highlight the cultural distinction between a formal «ресторан» and a casual «кафе»."
+      - "Detail tipping etiquette («чайові»): 10% is standard, and while card payments are ubiquitous in modern Ukraine, cash tips remain popular."
+  - section: "Презентація: Мова замовлення"
+    words: 650
     points:
-      - "Step 1: Reservation phrases («Я хотів би замовити столик на...», «У вас є вільний столик?»)"
-      - "Step 2: Asking for a table on arrival («Столик на двох, будь ласка», «Ми хотіли б сісти біля вікна»)"
-      - "Step 3: Reading the menu and asking questions («З чого це?», «Це гостре?», «Що ви порадите?»)"
-      - "Grammar focus: Future tense for ordering («Я буду...» + Accusative Case) — clear examples of case changes"
-      - "Dietary needs: «Без м'яса» (вегетаріанське), «Без глютену», «У мене алергія на...»"
-      - "The Bill: «Рахунок, будь ласка», payment methods («Карткою чи готівкою?»), and tipping etiquette"
-  - section: "Практика: Діалоги у ресторані"
+      - "Present Grammar §4.2.4.1: Future Tense of «бути» (буду, будеш, буде). Establish «Я буду...» as the most natural phrasing for ordering."
+      - "Integrate Grammar §4.2.3.2.1: Accusative Case (Знахідний відмінок) for direct objects. Provide 5+ clear example sentences demonstrating the shift from Nominative to Accusative."
+      - "Address and explicitly drill the common learner error of using the Nominative instead of Accusative (e.g., emphasize «Я буду каву» ✅ over «Я буду кава» ❌)."
+      - "Differentiate the verbs «бронювати» (for tables/reservations) and «замовити» (for dishes), showing accurate usage in context."
+  - section: "Практика: Типові ситуації"
     words: 500
     points:
-      - "Dialogue 1: Ordering a full three-course dinner (Waitperson vs Guest) — emphasizing the 'Я буду...' structure"
-      - "Dialogue 2: Dealing with a problem politely («Вибачте, це холодне», «Я це не замовляв») — polite conflict resolution"
-      - "Dialogue 3: Splitting the bill («Окремо» vs «Разом») — typical scenario for friends"
-      - "Drill: Polite request markers («Можна...?», «Будь ласка», «Дякую»)"
-  - section: "Культурний контекст: Українська гостинність"
-    words: 300
+      - "Provide 2 mini-dialogues showcasing typical interactions with the «офіціант» (asking for a menu, placing an order)."
+      - "Explicitly teach and reinforce the word «рахунок» (bill) in phrases like «рахунок, будь ласка», correcting the common Russian interference («счёт» ❌)."
+      - "Introduce modern dietary phrases: «без м'яса» (vegetarian) and «без глютену» (gluten-free), reflecting contemporary Ukrainian dining culture."
+      - "Include an engagement box highlighting how to politely ask questions about the menu (e.g., «З чого це?», «Це гостре?»)."
+  - section: "Підсумок та етикет"
+    words: 400
     points:
-      - "Narrative: A typical evening out in a Ukrainian restaurant (atmosphere, live music, 'жива музика')"
-      - "Phrase «Смачного!» (Bon appetit) — when and how to use it (waiter to guest, guest to guest)"
-      - "Brief mention of traditional dishes often found on 'Second' course (varenyky, kotleta po-kyivsky) to reinforce vocabulary"
+      - "Introduce the cultural hook of the universal Ukrainian toast: «Будьмо!» and the response «Гей!», explaining its social significance."
+      - "Summarize polite closures and dining etiquette: «смачного» (bon appetit), «дякую», and the polite intonation of «будь ласка»."
+      - "Provide a brief recap table of the «Я буду... + Accusative» structure as the core grammatical takeaway."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -97,11 +78,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5393 chars)
-✅ Message sent to Claude (ID: 9887)
-✓ Message 9887 acknowledged
-   Auto-acknowledged reply #9887 (stdout delivery — no inbox accumulation)
-✓ Message 9886 acknowledged

@@ -3,50 +3,55 @@ title: Plurals and Alternation
 word_target: 2000
 content_outline:
 - section: Множина іменників
-  words: 450
+  words: 500
   points:
-  - 'Introductory English scaffolding: explain how Ukrainian categorizes plurals by
-    the noun''s gender.'
-  - 'H3: Masculine nouns (-и/-і endings) with examples (студент → студенти, хлопець
-    → хлопці).'
-  - 'H3: Feminine nouns (-и/-і replacing -а/-я) with examples (книга → книги, земля
-    → землі).'
-  - 'H3: Neuter nouns (-а/-я replacing -о/-е) with examples (місто → міста, море →
-    моря).'
-  - 'H3: Common irregulars (діти, люди, очі) presented as high-frequency exceptions
-    that must be memorized.'
+  - 'Introductory English scaffolding: explain that Ukrainian categorizes plurals
+    strictly by the noun''s gender and final letter.'
+  - 'H3 for Masculine nouns (-и/-і endings): Provide the rule and clear examples (студент
+    → студенти, хлопець → хлопці).'
+  - 'H3 for Feminine nouns (-и/-і replacing -а/-я): Explain the vowel replacement
+    rule with examples (книга → книги, земля → землі).'
+  - 'H3 for Neuter nouns (-а/-я replacing -о/-е): Highlight this distinct pattern
+    (місто → міста, море → моря) and explicitly warn against using -и.'
+  - 'H3 for Irregular plurals: Present high-frequency exceptions (діти, люди, очі)
+    that require immediate memorization, explaining them as common core vocabulary.'
 - section: Чергування
   words: 450
   points:
-  - 'English scaffolding: introduce vowel alternation (і → о/е) as a rhythmic, flowing
-    feature of Ukrainian pronunciation rather than a strict exception.'
-  - 'H3: The ''і → о'' pattern with clear examples (кіт → коти, рік → роки).'
-  - 'H3: The ''і → е'' pattern with clear examples (піч → печі, палець → пальці).'
-  - 'Rule of thumb for learners: if a masculine noun has ''і'' in its final closed
-    syllable, check if it alternates to ''о'' or ''е'' in the plural.'
+  - 'English scaffolding: Introduce vowel alternation (і → о/е) as a rhythmic feature
+    related to closed and open syllables, rather than an arbitrary exception.'
+  - 'H3 for the ''і → о'' pattern: Provide clear breakdown and examples (кіт → коти,
+    рік → роки).'
+  - 'H3 for the ''і → е'' pattern: Provide clear breakdown and examples (піч → печі,
+    палець → пальці).'
+  - 'Learner Strategy Box: Teach a simple rule of thumb — if a monosyllabic masculine
+    noun has ''і'', always check if it reverts to ''о'' or ''е'' in the plural.'
 - section: Множина прикметників
   words: 400
   points:
-  - 'H3: The great simplification — explain how all three genders elegantly collapse
+  - 'H3 for The Simplification: Celebrate that all three genders (m, f, n) collapse
     into a single plural form ending in -і/-ї.'
-  - 'H3: Hard stem vs. soft stem adjectives in the plural (новий → нові, синій → сині).'
-  - 'H3: Building phrases — practice combining plural adjectives with plural nouns
-    (нові книги, великі міста), recycling vocabulary from module a1-12.'
+  - 'H3 for Hard vs. Soft stems: Show the visual pattern difference without overcomplicating
+    (новий → нові, синій → сині).'
+  - 'H3 for Building Noun Phrases: Guided practice combining plural adjectives with
+    plural nouns (нові книги, великі міста), integrating vocabulary from a1-12.'
 - section: Винятки та особливості
-  words: 400
+  words: 350
   points:
-  - 'H3: Uncountable nouns (молоко, цукор, вода, повітря) that exist only in the singular.'
-  - 'H3: Plural-only nouns (гроші, двері, ножиці, окуляри), highlighting interesting
-    cultural overlaps and differences with English.'
-  - 'H3: Stress shifts in plural forms (рукА → рУки, сестрА → сЕстри, нОга → нОги),
-    reviewing the stress mobility concept.'
+  - 'H3 for Uncountable nouns: Explain concepts that exist only in singular (молоко,
+    цукор, вода, повітря).'
+  - 'H3 for Plural-only nouns (Pluralia tantum): Contrast Ukrainian and English usage
+    with examples like гроші (money) and двері (door).'
+  - 'H3 for Stress Shifts: Briefly revisit the concept of stress mobility, showing
+    how stress can jump when a word becomes plural (рукА → рУки).'
 - section: Практика
   words: 300
   points:
-  - 'Self-check 1: Matching singular nouns to their correct plural forms across all
-    genders.'
-  - 'Self-check 2: Identifying the correct vowel alternation (і → о/е) in short sentences.'
-  - 'Self-check 3: Reading comprehension using simple plural noun phrases in context
-    (e.g., Це нові книги).'
-  - Provide brief model answers and reassuring English encouragement before the upcoming
-    checkpoint.
+  - 'Self-check 1: Matching exercises to pair singular nouns with their correct plurals
+    across all genders.'
+  - 'Self-check 2: Fill-in-the-blank sentences focusing specifically on identifying
+    the correct vowel alternation (і → о/е).'
+  - 'Self-check 3: Reading comprehension using short, simple sentences with plural
+    noun phrases.'
+  - Provide clear model answers and encouraging English feedback, reminding them they
+    are ready for the Checkpoint.

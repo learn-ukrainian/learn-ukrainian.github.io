@@ -1,10 +1,12 @@
-module: c2-052
-level: c2
-sequence: 52
+module: c2-050
+level: C2
+sequence: 50
+slug: writing-professional-documents-i
 version: '2.0'
 title: Написання професійних документів I — Звіти та реферати
 focus: grammar
 pedagogy: TTT
+phase: 'C2.3 [Professional Language]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: 'Вступ: Специфіка письмового професійного мовлення (Introduction: Specifics
     of Written Professional Speech)'
-  words: 500
+  words: 600
   points:
   - 'Аналіз відмінностей між усним та письмовим мовленням у професійному контексті:
     від оперативності до нормативної закріпленості.'
@@ -33,7 +35,7 @@ content_outline:
     тексту та врахування потреб адресата.'
 - section: Феномен реферату в українському дискурсі (The Phenomenon of the 'Referat'
     in Ukrainian Discourse)
-  words: 800
+  words: 1000
   points:
   - 'Культурний код реферату: від студентського огляду літератури (literature review)
     до серйозного наукового синтезу.'
@@ -43,7 +45,7 @@ content_outline:
     структурування вторинного тексту.'
 - section: 'Анотація vs. Реферат: Теорія і практика (Annotation vs. Abstract: Theory
     and Practice)'
-  words: 700
+  words: 900
   points:
   - 'Подолання плутанини: анотація як стисла характеристика («реклама») vs. реферат
     як виклад змісту («спойлер»).'
@@ -53,7 +55,7 @@ content_outline:
     друкованих знаків.'
 - section: Звіт як офіційний документ та ДСТУ 3008:2015 (The Report as an Official
     Document and DSTU 3008:2015)
-  words: 1000
+  words: 1250
   points:
   - 'ДСТУ 3008:2015 як «біблія» українського звітування: вивчення обов''язкових структурних
     елементів (титульний аркуш, зміст, вступ, основна частина, висновки).'
@@ -63,7 +65,7 @@ content_outline:
     шрифтів та правил нумерації розділів.'
 - section: 'Культура професійної мови: Граматика та десуб''єктивізація (Professional
     Language Culture: Grammar and De-subjectivization)'
-  words: 1000
+  words: 1250
   points:
   - 'Корекція типових помилок: вживання прийменникових конструкцій — «згідно з інструкцією»
     (Instr.) замість кальки «згідно інструкції» (Gen.).'

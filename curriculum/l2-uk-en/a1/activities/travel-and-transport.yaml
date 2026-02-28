@@ -1,0 +1,444 @@
+- type: match-up
+  title: 'Транспорт: знайдіть пару'
+  pairs:
+  - left: автобус
+    right: bus
+  - left: тролейбус
+    right: trolleybus
+  - left: трамвай
+    right: tram
+  - left: метро
+    right: metro
+  - left: маршрутка
+    right: minibus
+  - left: літак
+    right: airplane
+  - left: потяг
+    right: train
+  - left: корабель
+    right: ship
+  - left: автомобіль
+    right: car
+  - left: таксі
+    right: taxi
+  instruction: З'єднайте відповідні елементи.
+- type: quiz
+  title: 'Перевірте знання: Транспорт і граматика'
+  items:
+  - question: Який транспорт зазвичай їде під землею?
+    explanation: Метро — це підземний вид транспорту.
+    options:
+    - text: метро
+      correct: true
+    - text: автобус
+      correct: false
+    - text: літак
+      correct: false
+    - text: потяг
+      correct: false
+  - question: 'Як правильно сказати англійську фразу: I am traveling to Kyiv?'
+    explanation: Ми використовуємо дієслово їхати для подорожей транспортом, і прийменник
+      в для міст.
+    options:
+    - text: Я їду в Київ
+      correct: true
+    - text: Я іду в Київ
+      correct: false
+    - text: Я їду на Київ
+      correct: false
+    - text: Я іду на Київ
+      correct: false
+  - question: Де на вокзалі можна купити квиток на потяг?
+    explanation: Квитки завжди продають у касі.
+    options:
+    - text: у касі
+      correct: true
+    - text: на пероні
+      correct: false
+    - text: у розкладі
+      correct: false
+    - text: у терміналі
+      correct: false
+  - question: Як сказати фразу by bus українською мовою?
+    explanation: Ми використовуємо прийменник на та Місцевий відмінок.
+    options:
+    - text: на автобусі
+      correct: true
+    - text: в автобусі
+      correct: false
+    - text: автобус
+      correct: false
+    - text: на автобус
+      correct: false
+  - question: Яке українське слово має значення straight?
+    explanation: Прямо означає straight.
+    options:
+    - text: прямо
+      correct: true
+    - text: ліворуч
+      correct: false
+    - text: праворуч
+      correct: false
+    - text: назад
+      correct: false
+  - question: Де ви чекаєте на свій рейс в аеропорту?
+    explanation: В аеропорту люди чекають на рейс у терміналі.
+    options:
+    - text: у терміналі
+      correct: true
+    - text: на пероні
+      correct: false
+    - text: на колії
+      correct: false
+    - text: у вагоні
+      correct: false
+  instruction: Оберіть правильну відповідь.
+- type: fill-in
+  title: 'Заповніть пропуски: На вокзалі та в дорозі'
+  items:
+  - sentence: Мені потрібен один ... до Одеси.
+    answer: квиток
+    options:
+    - квиток
+    - вокзал
+    - перон
+    - розклад
+  - sentence: Мій ... відправляється о другій годині.
+    answer: потяг
+    options:
+    - потяг
+    - каса
+    - зупинка
+    - квиток
+  - sentence: Скажіть, будь ласка, де знаходиться ... вокзал?
+    answer: залізничний
+    options:
+    - залізничний
+    - головна
+    - підземний
+    - перший
+  - sentence: Ідіть прямо, а на перехресті поверніть ... .
+    answer: праворуч
+    options:
+    - праворуч
+    - правильно
+    - далеко
+    - тут
+  - sentence: Ми дуже далеко від центру, нам треба взяти ... .
+    answer: таксі
+    options:
+    - таксі
+    - зупинка
+    - каса
+    - літак
+  - sentence: Коли ви летите літаком, ви маєте здати свій ... .
+    answer: багаж
+    options:
+    - багаж
+    - розклад
+    - термінал
+    - паспорт
+  instruction: Оберіть правильне слово для заповнення пропуску.
+- type: unjumble
+  title: 'Складіть речення: Як пройти'
+  items:
+  - words:
+    - Ідіть
+    - прямо
+    - по
+    - вулиці
+    answer: Ідіть прямо по вулиці
+  - words:
+    - Де
+    - знаходиться
+    - станція
+    - метро
+    answer: Де знаходиться станція метро
+  - words:
+    - Поверніть
+    - ліворуч
+    - на
+    - перехресті
+    answer: Поверніть ліворуч на перехресті
+  - words:
+    - Аптека
+    - там
+    - праворуч
+    answer: Аптека там праворуч
+  - words:
+    - Як
+    - дійти
+    - до
+    - музею
+    answer: Як дійти до музею
+  - words:
+    - Зупинка
+    - автобуса
+    - дуже
+    - близько
+    answer: Зупинка автобуса дуже близько
+  instruction: Розташуйте слова у правильному порядку.
+- type: group-sort
+  title: Розподіліть слова за групами
+  groups:
+  - name: Транспорт
+    items:
+    - автобус
+    - тролейбус
+    - трамвай
+    - потяг
+    - метро
+    - літак
+  - name: Місця
+    items:
+    - вокзал
+    - аеропорт
+    - каса
+    - перон
+    - зупинка
+    - термінал
+  instruction: Розподіліть елементи за групами.
+- type: quiz
+  title: 'Перевірте себе: факти про подорожі'
+  items:
+  - question: Чи змінює слово метро своє закінчення в різних відмінках?
+    explanation: Слово метро є незмінним (indeclinable).
+    options:
+    - text: Ні, воно не змінюється
+      correct: true
+    - text: Так, завжди змінюється
+      correct: false
+    - text: Змінюється тільки в множині
+      correct: false
+    - text: Змінюється як іменник
+      correct: false
+  - question: Як правильно сказати фразу by car українською мовою?
+    explanation: Ми використовуємо прийменник на з місцевим відмінком.
+    options:
+    - text: на автомобілі
+      correct: true
+    - text: в автомобілі
+      correct: false
+    - text: з автомобілем
+      correct: false
+    - text: автомобіль
+      correct: false
+  - question: Яке дієслово ви використаєте для подорожі літаком до іншого міста?
+    explanation: Для літака та іншого транспорту ми використовуємо їхати або летіти.
+    options:
+    - text: їхати або летіти
+      correct: true
+    - text: іти
+      correct: false
+    - text: бігти
+      correct: false
+    - text: гуляти
+      correct: false
+  - question: Як правильно сказати, що ви подорожуєте до України?
+    explanation: В Україну — це правильна форма для незалежної країни.
+    options:
+    - text: в Україну
+      correct: true
+    - text: на Україну
+      correct: false
+    - text: до Україна
+      correct: false
+    - text: через Україна
+      correct: false
+  - question: Що означає слово праворуч в українській мові?
+    explanation: Праворуч означає to the right.
+    options:
+    - text: to the right
+      correct: true
+    - text: correct
+      correct: false
+    - text: to the left
+      correct: false
+    - text: straight
+      correct: false
+  - question: Який транспорт часто використовують для поїздки до іншого міста?
+    explanation: Потяг — популярний вид міжміського транспорту в Україні.
+    options:
+    - text: потяг
+      correct: true
+    - text: метро
+      correct: false
+    - text: тролейбус
+      correct: false
+    - text: трамвай
+      correct: false
+  instruction: Оберіть правильну відповідь.
+- type: match-up
+  title: 'На вокзалі: знайдіть пару'
+  pairs:
+  - left: каса
+    right: ticket office
+  - left: розклад
+    right: schedule
+  - left: перон
+    right: platform
+  - left: багаж
+    right: luggage
+  - left: рейс
+    right: flight
+  - left: квиток
+    right: ticket
+  instruction: З'єднайте відповідні елементи.
+- type: quiz
+  title: 'Дієслова руху: іти чи їхати?'
+  items:
+  - question: Яке дієслово ви використаєте для речення I am walking to the park?
+    explanation: Іти означає рух пішки (on foot).
+    options:
+    - text: іти
+      correct: true
+    - text: їхати
+      correct: false
+    - text: летіти
+      correct: false
+    - text: стояти
+      correct: false
+  - question: 'Яке слово треба вставити: Ми ... на роботу на автобусі.'
+    explanation: Форма для ми — їдемо (by transport).
+    options:
+    - text: їдемо
+      correct: true
+    - text: ідемо
+      correct: false
+    - text: їдуть
+      correct: false
+    - text: ідуть
+      correct: false
+  - question: 'Яке слово треба вставити: Вона ... в магазин пішки.'
+    explanation: Вона іде (she walks).
+    options:
+    - text: іде
+      correct: true
+    - text: їде
+      correct: false
+    - text: іду
+      correct: false
+    - text: їдемо
+      correct: false
+  - question: 'Яке слово треба вставити: Вони ... до Львова на потязі.'
+    explanation: Вони їдуть (they travel by transport).
+    options:
+    - text: їдуть
+      correct: true
+    - text: ідуть
+      correct: false
+    - text: їде
+      correct: false
+    - text: іде
+      correct: false
+  - question: 'Яке слово треба вставити: Я ... в ресторан пішки.'
+    explanation: Я іду (I walk).
+    options:
+    - text: іду
+      correct: true
+    - text: їду
+      correct: false
+    - text: іде
+      correct: false
+    - text: їдемо
+      correct: false
+  - question: 'Яке слово треба вставити: Ти ... на метро кожного дня?'
+    explanation: Ти їдеш (you ride).
+    options:
+    - text: їдеш
+      correct: true
+    - text: ідеш
+      correct: false
+    - text: їде
+      correct: false
+    - text: іду
+      correct: false
+  instruction: Оберіть правильну відповідь.
+- type: fill-in
+  title: 'Заповніть пропуски: Напрямки'
+  items:
+  - sentence: Вибачте, ви не ..., де знаходиться театр?
+    answer: підкажете
+    options:
+    - підкажете
+    - скажете
+    - ідете
+    - їдете
+  - sentence: Вам треба йти ... по цій вулиці.
+    answer: прямо
+    options:
+    - прямо
+    - назад
+    - близько
+    - квиток
+  - sentence: Це не дуже ..., це близько.
+    answer: далеко
+    options:
+    - далеко
+    - прямо
+    - ліворуч
+    - тут
+  - sentence: Потім на ... поверніть праворуч.
+    answer: перехресті
+    options:
+    - перехресті
+    - вокзалі
+    - аеропорту
+    - зупинці
+  - sentence: Зупинка тролейбуса знаходиться там, ... .
+    answer: ліворуч
+    options:
+    - ліворуч
+    - правильно
+    - квиток
+    - прямо
+  - sentence: Дуже дякую за вашу ...!
+    answer: допомогу
+    options:
+    - допомогу
+    - дорогу
+    - вулицю
+    - зупинку
+  instruction: Оберіть правильне слово для заповнення пропуску.
+- type: unjumble
+  title: 'Складіть речення: Подорож і квитки'
+  items:
+  - words:
+    - Дайте
+    - один
+    - квиток
+    - до
+    - Києва
+    answer: Дайте один квиток до Києва
+  - words:
+    - Скільки
+    - коштує
+    - цей
+    - квиток
+    answer: Скільки коштує цей квиток
+  - words:
+    - Ми
+    - їдемо
+    - в
+    - Україну
+    answer: Ми їдемо в Україну
+  - words:
+    - Він
+    - іде
+    - на
+    - роботу
+    answer: Він іде на роботу
+  - words:
+    - Що
+    - ти
+    - береш
+    - у
+    - подорож
+    answer: Що ти береш у подорож
+  - words:
+    - Мій
+    - літак
+    - летить
+    - завтра
+    answer: Мій літак летить завтра
+  instruction: Розташуйте слова у правильному порядку.

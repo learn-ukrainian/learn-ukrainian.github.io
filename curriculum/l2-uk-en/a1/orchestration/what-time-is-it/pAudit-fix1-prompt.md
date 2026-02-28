@@ -18,17 +18,19 @@
   Module:  what-time-is-it
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
-  2 Outline Compliance Errors
+  3 Outline Compliance Errors
+  failing gates:
+    lesson: 2866/2000 (raw: 3315) | pedagogy: 4 violations | immersion: 14.6% LOW (target 35-55% (M23))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  Grammar      ℹ️ N/A (covered by naturalness)
-  Naturalness  ℹ️ PENDING — awaiting review
-  Activity_quality ⏳ Deferred (content-only audit)
-  Research     ✅ Content aligned with research
-  Immersion    🇺🇦 40.9% (target 35-55% (M23))
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 55/100)
+     → Revision recommended (severity 55/100)
+     → 4 violations (moderate)
+     → Immersion 20% off target (major rebalancing needed)
+
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/what-time-is-it-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/what-time-is-it.json
@@ -36,10 +38,11 @@
   ❌ AUDIT FAILED. Correct errors before proceeding.
 
   Critical Failures:
-    • 2 Outline Compliance Errors
+    • 3 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/what-time-is-it-audit.log for details)
         ```
+
 
         ## Files to Fix
 

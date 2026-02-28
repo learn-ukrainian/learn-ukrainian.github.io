@@ -1,6 +1,6 @@
-module: c1-029
+module: c1-030
 level: C1
-sequence: 29
+sequence: 30
 slug: surzhyk
 version: '2.0'
 title: 'Суржик: Феномен змішування'
@@ -118,7 +118,7 @@ sources:
   type: reference
   notes: Academic analysis of Surzhyk
 immersion: 100% Ukrainian
-phase: C1.2 Professional Communication
+phase: C1.3 [Movoznavstvo & Sociolinguistics]
 objectives:
 - 'Identify and correctly use суржик: феномен змішування'
 - Form and apply що таке суржик

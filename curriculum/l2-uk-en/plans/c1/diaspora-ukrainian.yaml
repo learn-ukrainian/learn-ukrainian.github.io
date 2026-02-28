@@ -1,6 +1,6 @@
-module: c1-031
+module: c1-032
 level: C1
-sequence: 31
+sequence: 32
 slug: diaspora-ukrainian
 version: '2.0'
 title: Українська діаспора
@@ -126,7 +126,7 @@ sources:
   type: secondary
   notes: Research on diaspora language
 immersion: 100% Ukrainian
-phase: C1.2 Professional Communication
+phase: C1.3 [Movoznavstvo & Sociolinguistics]
 objectives:
 - Understand and apply українська діаспора
 - Analyze and evaluate історія еміграції

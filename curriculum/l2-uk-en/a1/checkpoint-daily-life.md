@@ -1,0 +1,416 @@
+<!-- SCOPE
+Covers: Consolidation of A1.4 skills (past/future tenses, daily routine, food, shopping, weather).
+Not covered:
+  - Perfective future tense detail → a1-46
+Related: a1-39, a1-40, a1-43
+-->
+
+# Checkpoint: Daily Life
+
+> **Чому це важливо?**
+>
+> Цей навчальний модуль надійно допомагає закріпити здобуті знання. Ви навчитеся дуже впевнено розповідати про свій щоденний розклад. Ви також зможете легко будувати особисті плани на майбутнє.
+>
+> *This educational module reliably helps you consolidate your acquired knowledge. You will learn to very confidently talk about your daily schedule. You will also be able to easily make personal plans for the future.*
+
+## Огляд
+
+### Ласкаво просимо
+Вітаю вас у цьому новому важливому модулі нашого курсу. Це дуже відповідальний етап вашого поточного мовного навчання. Сьогодні ми надзвичайно ефективно повторимо багато корисних граматичних тем. Ми детально згадаємо минулий та майбутній час усіх дієслів. Ми також обов'язково поговоримо про ваш звичайний щоденний розклад. Будь ласка, зовсім не хвилюйтеся перед цим корисним повторенням. Ви вже добре знаєте дуже багато різних українських слів. Моя головна мета — допомогти студентам почуватися максимально впевнено. Ми будемо спокійно і радісно працювати дуже добре. У вас усе обов'язково вийде дуже добре сьогодні.
+
+*Welcome to this new important module of our course. This is a very responsible stage of your current language learning. Today we will extremely effectively review many useful grammatical topics. We will recall the past and future tenses of all verbs in detail. We will also definitely talk about your usual daily schedule. Please do not worry at all before this useful review. You already know a great variety of different Ukrainian words well. My main goal is to help you feel maximally confident. We will work calmly and joyfully step by step. You will definitely succeed and do very well today.*
+
+### Як працювати з цим модулем
+Цей практичний навчальний модуль має особливу чітку структуру. Ми використовуватимемо англійську мову для точного пояснення складної граматики. Це надійно допоможе краще зрозуміти нові мовні правила. Але абсолютно всі практичні приклади будуть тільки українською мовою. Тексти для читання також будуть завжди виключно українською мовою. Дуже важливо регулярно читати всі нові приклади вголос щоразу. Так ви набагато краще і швидше запам'ятаєте нові слова. Намагайтеся повністю зануритися і постійно думати лише українською мовою. Це найкращий і найшвидший шлях до вашого мовного прогресу.
+
+*This practical educational module has a special clear structure. We will use the English language to accurately explain complex grammar. This will reliably help you better understand the new linguistic rules. However, absolutely all practical examples will be only in the Ukrainian language. The reading passages will also always be exclusively in the Ukrainian language. It is very important to regularly read all new examples out loud every time. This way, you will memorize new words much better and faster. Try to immerse yourself completely and constantly think only in the Ukrainian language. This is the best and fastest path to your language progress.*
+
+## Навичка 1: Часові форми
+
+### Модель: Минулий час
+Минулий час в українській мові завжди залежить від роду. Це дуже важливе і дійсно фундаментальне правило для запам'ятовування. Для чоловічого роду ми завжди додаємо одне спеціальне закінчення. Це коротке закінчення — просто одна літера «в». Ми додаємо її безпосередньо до кінця основи нашого дієслова. Це правило стосується слова «він» або будь-яких чоловічих імен. Наприклад, дорослий чоловік робив щось корисне вчора ввечері. Ми повинні завжди чітко пам'ятати про це граматичне правило. Воно робить вашу розмовну мову абсолютно правильною і природною.
+
+*The past tense in the Ukrainian language always depends on the gender. This is a very important and truly fundamental rule to remember. For the masculine gender, we always add one special ending. This short ending is simply the single letter «в». We add it directly to the end of the stem of our verb. This rule applies to the pronoun «він» (he) or any masculine names. For example, when an adult man did something useful yesterday evening. We must always clearly remember this grammatical rule. It makes your spoken language absolutely correct and natural.*
+
+* **Вчора ввечері я довго працював удома біля комп'ютера.**
+  *Yesterday evening I worked at home near the computer for a long time.*
+* **Мій старший брат довго читав нову цікаву книгу.**
+  *My older brother read a new interesting book for a long time.*
+* **Він дуже смачно снідав надзвичайно рано вранці.**
+  *He had a very tasty breakfast extremely early in the morning.*
+
+Ми дуже часто використовуємо слово **вчора** в таких реченнях. Воно завжди чітко показує фінальне завершення певної минулої дії.
+
+*We very often use the word **вчора** (yesterday) in such sentences. It always clearly shows the final completion of a certain past action.*
+
+### Форми жіночого роду
+Жіночий рід має своє зовсім інше і довше закінчення. Це спеціальне закінчення — склад «ла». Ми також додаємо його прямо до основи головного дієслова. Ми завжди використовуємо цю форму для слова «вона». Це правило стабільно працює для абсолютно всіх жіночих імен. Дуже важливо постійно пам'ятати про цей правильний жіночий рід. Інакше ви можете зробити неприємну граматичну помилку в розмові. Слухайте уважно всіх носіїв мови під час їхнього спілкування. Вони завжди дуже чітко вимовляють цей довгий звук наприкінці.
+
+*The feminine gender has its own completely different and longer ending. This special ending is the open syllable «ла». We also add it directly to the stem of the main verb. We always use this form for the pronoun «вона» (she). This rule works stably for absolutely all feminine names. It is very important to constantly remember this correct feminine gender. Otherwise, you might make an unpleasant grammatical mistake in conversation. Listen carefully to all native speakers during their communication. They always pronounce this long sound very clearly at the end.*
+
+Ви можете часто почути це правило в повсякденних розмовах. Наприклад, молода дівчина може впевнено сказати колегам: 
+**«Вчора я багато працювала в нашому світлому офісі»**.
+*You can often hear this rule in everyday conversations. For example, a young girl might confidently say to colleagues: "Yesterday I worked a lot in our bright office."*
+
+Про іншу людину ми скажемо так: 
+**«Моя менша сестра читала цей новий популярний журнал»**.
+*If we are talking about a completely different person, we will say: "My younger sister read this new popular magazine."*
+
+Або описуючи обідній час, ми можемо додати: 
+**«Вона дуже смачно обідала в дорогому італійському ресторані»**.
+*Or describing lunchtime, we can add: "She had a very tasty lunch in an expensive Italian restaurant."*
+
+> [!warning] Уникайте поширених помилок
+> Англомовні студенти дуже часто забувають про рід у минулому часі. Вони можуть випадково сказати фразу «Він ходила». Це є абсолютно неправильно в сучасній українській граматиці. Завжди уважно перевіряйте, хто саме виконує цю конкретну дію. Чоловік — це завжди «ходив». Жінка — це завжди «ходила».
+
+
+
+*English-speaking students very often forget about gender in the past tense. They might accidentally say the phrase «Він ходила» (He went [feminine]). This is absolutely incorrect in modern Ukrainian grammar. Always carefully check exactly who is performing this specific action. A man is always «ходив». A woman is always «ходила».*
+
+### Plural та середній рід
+Середній рід завжди має своє власне коротке закінчення «ло». Воно використовується виключно для вказівного слова «воно». Це стосується таких нейтральних слів, як «сонце», «море», «місто». Форма plural завжди має тільки одне закінчення «ли». Ми стабільно використовуємо його для словоів «ми», «ви», «вони». Це граматичне правило є дуже логічним і надзвичайно стабільним. Воно дуже допомагає розуміти одне одного набагато краще. У формі plural ми взагалі ніколи не думаємо про рід.
+
+*The neuter gender always has its own short ending «ло». It is used exclusively for the demonstrative pronoun «воно» (it). This applies to such neutral words as «сонце» (sun), «море» (sea), «місто» (city). The plural, however, always has only one ending «ли». We stably use it for the pronouns «ми» (we), «ви» (you plural/formal), «вони» (they). This grammatical rule is very logical and extremely stable. It really helps us understand each other much better. In the plural, we never think about gender at all.*
+
+Тут ми детально представимо всі відомі форми разом.
+*Here we will present all known forms together in detail.*
+
+| Pronoun (Pronoun) | Закінчення (Ending) | Приклад (Example) |
+|---------------------|---------------------|-------------------|
+| Воно (Neuter)       | -ло                 | Сонце світило.    |
+| Ми (We)             | -ли                 | Ми купували.      |
+| Ви (You plural)     | -ли                 | Ви читали?        |
+| Вони (They)         | -ли                 | Вони вечеряли.    |
+
+Ця зручна таблиця показує загальну систему закінчень для дієслів.
+*This convenient table shows the general system of endings for verbs.*
+
+### Практика: Майбутні плани
+
+**Ваша черга:** спробуйте утворити правильну форму майбутнього часу.
+
+Тепер ми дуже детально розглянемо форму майбутнього часу. Він ідеально допомагає розповідати про ваші майбутні особисті плани. Українська мова має дуже зручну аналітичну форму майбутнього часу. Для неї ми використовуємо спеціальне допоміжне дієслово «бути». Ми просто змінюємо його правильну форму за особами. Після цього допоміжного слова ми завжди додаємо звичайний інфінітив. Інфінітив вашого головного дієслова ніколи не змінюється в реченні.
+
+*Now we will very carefully examine the future tense form. It perfectly helps to talk about your future personal plans. The Ukrainian language has a very convenient analytical form of the future tense. For it, we really need the special auxiliary verb «бути» (to be). We simply change its correct form according to persons. After this auxiliary word, we always add the regular infinitive. The infinitive of your main verb never changes in the sentence.*
+
+* Я **буду**
+* Ти **будеш**
+* Він / Вона / Воно **буде**
+* Ми **будемо**
+* Ви **будете**
+* Вони **будуть**
+
+> [!fact] Структурний факт
+> Аналітична форма майбутнього часу є надзвичайно популярною в розмові. Її дуже легко утворити навіть абсолютним мовним початківцям. Ви повинні добре знати лише правильні форми слова «бути». Ваше головне дієслово дії завжди залишається у формі словника.
+
+
+
+*The analytical form of the future tense is extremely popular in conversation. It is very easy to form even for absolute language beginners. You only need to know the correct forms of the word «бути» well. Your main action verb always remains in its dictionary form.*
+
+### Завтрашні дії: Практичне використання
+Ми дуже часто і природно використовуємо важливе слово **завтра**. Воно завжди чітко показує наші плани на наступний день. Ви можете дуже легко додавати абсолютно різні дієслова сюди. Граматична структура завжди залишається однаковою для всіх нових слів. Це надійно робить ваше щоденне планування дуже простим завданням. Ви можете тепер впевнено говорити про свої майбутні дії.
+
+*We very often and naturally use the important word **завтра** (tomorrow). It always clearly shows our plans for the next day. You can very easily add absolutely different verbs here. The grammatical structure always remains the same for all new words. This reliably makes your daily planning a very simple task. You can now confidently talk about your future actions.*
+
+Давайте уважно подивимося, як звичайні люди обговорюють свої плани.
+*Let us carefully look at how ordinary people discuss their plans.*
+
+**Розмова найкращих друзів:**
+— Що ти будеш робити завтра рано вранці?
+*(What will you do tomorrow early in the morning?)*
+— Завтра вранці я буду довго читати нову книгу.
+*(Tomorrow morning I will read a new book for a long time.)*
+— Я буду купувати різні нові речі в магазині.
+*(I will buy various new things in the store.)*
+— Чудово. Тоді вдень ми будемо разом смачно обідати.
+*(Great. Then in the afternoon we will have a tasty lunch together.)*
+
+Цей короткий діалог чудово демонструє дуже природне використання конструкцій.
+*This short dialogue perfectly demonstrates the very natural use of constructions.*
+
+### Напрямок: Запитання Куди
+Українська мова завжди дуже чітко розділяє активний напрямок і локацію. Під час руху ми активно і цілеспрямовано рухаємося, ми питаємо «Куди?». Це завжди показує швидкий рух до певної нової мети. Ми обов'язково використовуємо правильний знахідний відмінок для цього завдання. Ми дуже часто додаємо короткі корисні прийменники «в» або «на». Знахідний відмінок суттєво змінює всі слова саме жіночого роду. Їхнє стандартне закінчення «а» відразу змінюється на літеру «у».
+
+*The Ukrainian language always very clearly separates active direction and location. When we are actively and purposefully moving, we ask «Куди?» (Where to?). This always shows fast movement to a certain new goal. We absolutely must use the correct Accusative case for this task. We very often add the short useful prepositions «в» (in/to) or «на» (on/to). The Accusative case significantly changes all words specifically of the feminine gender. Their standard ending «а» immediately changes to the letter «у».*
+
+Давайте порівняємо слова чоловічого та жіночого роду під час руху.
+*Let us compare masculine and feminine words during movement.*
+
+**Чоловічий рід (зовсім не змінюється):**
+*Masculine gender (does not change at all):*
+**Я дуже швидко йду в цей великий магазин.**
+*I am walking very quickly to this big store.*
+**Мій найкращий друг іде в той новий парк.**
+*My best friend is going to that new park.*
+
+**Жіночий рід (закінчення завжди змінюється на «у»):**
+*Feminine gender (ending always changes to «у»):*
+**Він дуже повільно їде на свою нову роботу.**
+*He is driving very slowly to his new job.*
+**Ми дуже радісно йдемо в цю затишну кав'ярню.**
+*We are very happily going to this cozy coffee shop.*
+
+> [!tip] Корисна стратегія
+> Завжди подумки питайте себе перед тим, як сказати речення. Це активний рух чи це просто статика на місці? Іноді ви кудись направляєтеся, це завжди буде напрямок. Англійська мова часто використовує зручне слово «to» для напрямку.
+
+
+
+*Always mentally ask yourself before saying a sentence. Is this active movement or is it just statics in place? If you are heading somewhere, it will always be a direction. The English language often uses the convenient word «to» for direction.*
+
+### Локація: Запитання Де
+У цей час ми спокійно знаходимося десь, ми питаємо «Де?». Це завжди означає повну статику в одному конкретному місці. Тут абсолютно немає ніякого руху до будь-якої нової точки. Для цього ми використовуємо тільки наш місцевий відмінок. Він також має такі самі прийменники «в» або «на». Але закінчення цих слів будуть вже зовсім-зовсім іншими. Найчастіше ми просто додаємо літеру «й» або «у» наприкінці.
+
+*When we are already calmly located somewhere, we ask «Де?» (Where?). This always means complete statics in one specific place. There is absolutely no movement to any new point here. For this, we use only our Locative case. It also has the same prepositions «в» (in/at) or «на» (on/at). But the endings of these words will be completely, completely different. Most often, we simply add the letter «і» or «у» at the end.*
+
+| Питання (Question) | Відмінок (Case) | Приклад (Example) |
+|--------------------|-----------------|-------------------|
+| Куди? (Motion)     | Знахідний       | Я йду в парк.     |
+| Де? (Location)     | Місцевий        | Я гуляю в парку.  |
+
+Ця дуже чітка різниця є критично важливою для правильного розуміння. Вона дійсно робить вашу розмовну українську мову по-справжньому природною.
+*This very clear difference is critically important for correct understanding. It truly makes your spoken Ukrainian language genuinely natural.*
+
+### Самоперевірка
+- ☐ Я знаю закінчення минулого часу.
+- ☐ Я розумію питання Куди і Де.
+
+## Навичка 2: Повсякденне життя
+
+### Модель: Ранкова рутина
+Наш кожен новий день складається з багатьох різних постійних дій. Ми використовуємо спеціальні популярні дієслова для опису цих повсякденних справ. Кожен свіжий ранок завжди починається з того. Мии встаємо. Слово **вставати** дуже чітко означає формальний початок вашого активного дня. Ми дуже часто кажемо точний час нашого звичайного ранкового пробудження. Відразу після цього ми завжди йдемо на кухню ситно снідати. Слово **снідати** означає смачно їсти найпершу їжу рано вранці. Ми можемо використовувати різні граматичні часи для опису нашої рутини.
+
+*Every new day of ours consists of many different constant actions. We use special popular verbs to describe these everyday chores. Every fresh morning always begins with us getting up. The word **вставати** (to get up) very clearly signifies the formal beginning of your active day. We very often state the exact time of our usual morning awakening. Right after that, we always go to the kitchen to have a hearty breakfast. The word **снідати** (to have breakfast) means to eat the very first meal deliciously early in the morning. We can use different grammatical tenses to describe our routine.*
+
+* **Зазвичай я швидко встаю рівно о сьомій годині ранку.**
+  *Usually I get up quickly exactly at seven o'clock in the morning.*
+* **Вчора вранці я встав дуже пізно через сильну втому.**
+  *Yesterday morning I got up very late because of strong fatigue.*
+* **Завтра я буду снідати дуже рано перед своєю роботою.**
+  *Tomorrow Later, I intend to have breakfast very early before my work.*
+
+> [!observe] Зверніть увагу на час
+> Слово «вранці» завжди чітко відповідає на просте питання «коли?». Воно прямо походить від нашого базового слова «ранок». Ми завжди використовуємо його для точного опису початку дня.
+
+
+
+*The word «вранці» (in the morning) always clearly answers the simple question «when?». It directly comes from our base word «ранок» (morning). We always use it for an accurate description of the beginning of the day.*
+
+### Денні та вечірні справи
+Після дуже смачного сніданку ми зазвичай довго працюємо або вчимося. Вдень ми маємо час. Ми їмо ситний обід. Слово **обідати** завжди означає їсти гарячу їжу в середині дня. В українській багатій культурі щоденний обід є надзвичайно важливою традицією. Це найчастіше найбільший і найситніший прийом гарячої їжі за день. Пізно ввечері ми всі нарешті повертаємося додому після складної роботи. Тоді ми будемо спокійно **вечеряти** у дружньому колі нашої родини. Наприкінці довгого продуктивного дня ми дуже втомлюємося і лягаємо спати.
+
+*After a very tasty breakfast, we usually work or study for a long time. During the day, we absolutely must have enough time for a very hearty lunch. The word **обідати** (to have lunch) always means to eat hot food in the middle of the day. In the rich Ukrainian culture, the daily lunch is an extremely important tradition. It is most often the largest and heartiest consumption of hot food in the day. Late in the evening, we all finally return home after hard work. Then we will calmly **вечеряти** (have dinner) in the friendly circle of our family. At the end of a long productive day, we get very tired and go to sleep.*
+
+Спробуйте гарно описати свій робочий день одним суцільним логічним текстом.
+*Try to beautifully describe your workday in one continuous logical text.*
+
+Наприклад: **«Я дуже часто смачно обідаю з моїми веселими колегами»**.
+*For example: "I very often have a tasty lunch with my cheerful colleagues."*
+
+Або інший варіант: **«Іноді я обідаю дуже пізно через складну роботу»**.
+*Or another option: "Sometimes I have lunch very late because of complex work."*
+
+Тоді день закінчується: **«Вчора ми радісно вечеряли вдома біля нового телевізора»**.
+*When the day ends: "Yesterday we happily had dinner at home near the new TV."*
+
+Для опису звичок: **«Мій брат рідко вечеряє в дорогому італійському ресторані»**.
+*For describing habits: "My brother rarely has dinner in an expensive Italian restaurant."*
+
+І наостанок: **«Я завжди швидко лягаю спати рівно о десятій годині»**.
+*And finally: "I always go to bed quickly exactly at ten o'clock."*
+
+> [!culture] Культурний контекст обіду
+> Традиційний обід має кілька страв. Це важливо в Україні. Це зазвичай гарячий суп, наприклад, наш надзвичайно відомий український борщ. Також завжди є ситна друга страва: м'ясо або риба. Вечеря найчастіше буває набагато легшою за цей великий денний обід.
+
+
+
+*In Ukraine, any traditional lunch absolutely must include several different dishes. This is usually a hot soup, for example, our extremely famous Ukrainian borscht. There is also always a hearty second course: meat or fish. Dinner is most often much lighter than this large daily lunch.*
+
+### Практика: Замовлення у кафе
+
+**Ваша черга:** прочитайте цей діалог.
+
+Ми дуже часто їмо не тільки вдома, але й у кафе. Це завжди вимагає від нас знання спеціальних і корисних слів. Ми повинні вміти швидко і правильно читати меню цього закладу. Також дуже важливо вміти максимально ввічливо робити своє замовлення офіціанту. Ми постійно використовуємо ввічливі форми. Це наше щоденне спілкування. Це завжди чудово допомагає створити приємну та дуже дружню атмосферу. Ми дуже часто кажемо фразу «я хочу» або «дайте, будь ласка».
+
+*We very often eat not only at home, but also in a cafe. This always requires us to know special and useful words. We must be able to read the menu of this establishment quickly and correctly. It is also very important to be able to make your order to the waiter as politely as possible. We constantly use only polite forms during our everyday communication. This always wonderfully helps to create a pleasant and very friendly atmosphere. We very often say the phrase «я хочу» (I want) or «дайте, будь ласка» (give me, please).*
+
+**Короткий ввічливий діалог у кафе:**
+— Доброго дня! Що ви будете смачного замовляти сьогодні в нас?
+*(Hello! What delicious thing will you be ordering with us today?)*
+— Доброго дня. Я буду чорну каву та дуже солодкий торт.
+*(Hello. I will have black coffee and a very sweet cake.)*
+— Дайте, будь ласка, ваш найсмачніший шоколадний торт до цієї кави.
+*(Give me your tastiest chocolate cake with this coffee, please.)*
+
+### Покупки та ціни в крамниці
+Ще одна надзвичайно важлива і щоденна частина нашого життя — покупки. Ми регулярно і дуже часто ходимо у продуктовий магазин поруч. Там ми можемо щодня **купувати** найкращі свіжі продукти для родини. Найважливіше і найчастіше питання в будь-якому магазині завжди стосується ціни. Ми дуже ввічливо запитуємо привітного продавця: «Скільки коштує цей конкретний товар?». Ми також часто використовуємо спеціальні слова для опису точної кількості. Наприклад, ми просимо швидко зважити кілограм яблук або літр молока.
+
+*Another extremely important and daily part of our life is shopping. We regularly and very frequently go to the grocery store nearby. There we can **купувати** (buy) the best fresh groceries for the family every day. The most important and frequent question in any store always concerns the price. We very politely ask the friendly salesperson: «Скільки коштує цей конкретний товар?» (How much does this specific item cost?). We also often use special words to describe the exact quantity. For example, we ask them to quickly weigh a kilogram of apples or a liter of milk.*
+
+Питання покупця: **Скажіть, будь ласка, скільки коштує цей надзвичайно свіжий хліб?**
+*Customer's question: Tell me, please, how much does this extremely fresh bread cost?*
+
+Відповідь продавця: **Цей білий хліб зараз коштує рівно тридцять українських гривень.**
+*Salesperson's answer: This white bread currently costs exactly thirty Ukrainian hryvnias.*
+
+Прохання покупця: **Дайте, будь ласка, рівно один кілограм червоних солодких яблук.**
+*Customer's request: Give me exactly one kilogram of red sweet apples, please.*
+
+Намір покупця: **Я також хочу купити холодне молоко та твердий сир.**
+*Customer's intention: I also want to buy cold milk and hard cheese.*
+
+> [!myth-buster] Завжди використовуйте «будь ласка»
+> Дехто думає інше. Вони кажуть: продавці не чекають ввічливості. Це надзвичайно великий міф. Наше суспільство є дуже швидкоплинним. Часто використовуйте слово «будь ласка». Робіть це під час покупок. Це чітко показує вашу високу повагу до важкої роботи продавця.
+
+
+
+*Some people sometimes think that salespeople do not expect politeness from customers at all. This is an extremely big myth in our modern fast-paced society. Use the word «будь ласка» (please) as often as possible during your daily shopping. This clearly shows your high respect for the hard work of the salesperson.*
+
+### Самоперевірка
+- ☐ Я знаю слова про рутину.
+- ☐ Я можу зробити замовлення.
+
+## Навичка 3: Опис та погода
+
+### Модель: Прислівники
+Ми постійно використовуємо різні дієслова для опису наших щоденних дій. Але ми часто щиро хочемо описати, як саме проходять дії. Для цього ми використовуємо спеціальні прислівники способу цієї дії. Вони завжди дуже чітко відповідають на одне просте питання «як?». Ці особливі короткі слова ніколи не змінюють свою початкову форму. Вони легко роблять нашу щоденну мову набагато більш детальною й яскравою. Вони є дійсно надзвичайно корисними для вільного та дуже природного спілкування.
+
+*We constantly use various verbs to describe our everyday actions. But we often sincerely want to describe exactly how the actions take place. For this, we really need special adverbs of manner for this action. They always very clearly answer one simple question «як?» (how?). These special short words never change their initial form. They easily make our daily language much more detailed and colorful. They are truly extremely useful for fluent and very natural communication.*
+
+* **Мій новий молодий колега дуже добре працює в нашому офісі.**
+  *My new young colleague works very well in our office.*
+* **Я дуже погано сплю останнім часом через мій постійний стрес.**
+  *I sleep very poorly lately because of my constant stress.*
+* **Ти дуже добре й абсолютно правильно говориш сучасною українською мовою.**
+  *You speak modern Ukrainian very well and absolutely correctly.*
+* **Вони дуже уважно слухали нові правила на сьогоднішньому цікавому уроці.**
+  *They listened to the new rules very carefully in today's interesting lesson.*
+
+Ми вільно ставимо прислівник. Він стоїть біля дієслова.
+
+*We can freely place the adverb directly before the verb or after it.*
+
+### Швидкість та гучність
+Ми дуже часто описуємо загальну швидкість або гучність нашої дії. Для цього існують спеціальні дуже зручні пари коротких протилежних слів. Наприклад, ми можемо робити щось дуже швидко або дуже повільно. Ми також можемо постійно говорити дуже тихо або занадто голосно. Це дійсно дуже базові, але абсолютно критично важливі мовні концепції. Їх дуже легко запам'ятати через такі прості і логічні антоніми. Завжди вчіть ці корисні слова парами для вашого найкращого результату.
+
+*We very often describe the overall speed or volume of our action. For this, there are special very convenient pairs of short opposite words. For example, we can do something very fast or very slowly. We can also constantly speak very quietly or far too loudly. These are indeed very basic, but absolutely critically important linguistic concepts. It is very easy to remember them through such simple and logical antonyms. Always learn these useful words in pairs for your best result.*
+
+| Антоніми (Antonyms) | Приклад (Example) |
+|---------------------|-------------------|
+| швидко - повільно   | Цей поїзд їде швидко. |
+| тихо - голосно      | Вона співає тихо.     |
+
+> [!note] Зверніть увагу на закінчення
+> Такі прислівники часто мають літеру «о» в кінці. Наприклад, уважно подивіться на слова: добре, погано, швидко, дуже тихо. Це й є головний граматичний маркер цієї дуже важливої частини мови.
+
+
+
+*These typical Ukrainian adverbs very often end with the letter «о». For example, look carefully at the words: добре (well), погано (poorly), швидко (fast), дуже тихо (very quietly). This is the main grammatical marker of this very important part of speech.*
+
+### Практика: Погода
+
+**Ваша черга:** опишіть погоду.
+
+Щоденні розмови про місцеву погоду є надзвичайно популярними абсолютно всюди. Це ідеальна легка тема. З неї починають бесіду. В українській мові ми завжди використовуємо цікаві короткі безособові конструкції. Це означає. Він такому реченні абсолютно немає ніякого суб'єкта. Ми просто використовуємо одне коротке слово для дуже чіткого опису. Наприклад, ми часто кажемо: **тепло**, **холодно**, **сонячно**, **дуже хмарно**. Ми також дуже часто додаємо популярне слово **сьогодні** для контексту.
+
+*Everyday conversations about the local weather are extremely popular absolutely everywhere. This is truly a perfect easy topic for starting any friendly conversation. In the Ukrainian language, we always use interesting short impersonal constructions. This means that in such a sentence there is absolutely no subject. We simply use one short word for a very clear description. For example, we often say: **тепло** (warm), **холодно** (cold), **сонячно** (sunny), **дуже хмарно** (very cloudy). We also very often add the popular word **сьогодні** (today) for context.*
+
+Ми можемо легко описувати поточну ситуацію. Вона на вулиці. Ви можете радісно сказати: 
+**«Сьогодні на вулиці дуже тепло і приємно довго гуляти»**.
+*We can very easily describe the current situation right outside our window. You can joyfully say: "Today it is very warm outside and pleasant to walk for a long time."*
+
+Ви зараз згадуєте минуле. Ви можете впевнено сказати друзям: 
+**«Вчора пізно ввечері було дуже холодно і йшов сильний дощ»**.
+*If you are now recalling the past, you can confidently tell friends: "Yesterday late evening it was very cold and it rained heavily."*
+
+А прогнозуючи найближче майбутнє, завжди використовуйте таку зручну структуру: 
+**«Прогноз погоди каже: завтра обов'язково буде тепло і сонячно»**.
+*And when forecasting the near future, always use this convenient structure: "The weather forecast says that tomorrow it will definitely be warm and sunny."*
+
+### Вплив сезонів
+Будь-яка місцева погода дуже сильно залежить від поточного сезону. Ми маємо чотири абсолютно різні пори року в нашому кліматі. Для правильної відповісти на питання «коли?», ми дещо змінюємо форму слова. Холодна зима швидко перетворюється на слово **взимку** в нашому реченні. Спекотне літо стає зручним словом **влітку** під час нашої розмови. Квітуча весна — це прекрасний час. Ми називаємо **навесні**. Золота осінь — це красивий час, про який ми кажемо **восени**. Ми можемо легко і правильно комбінувати ці слова з нашими знаннями погоди.
+
+*Any local weather always depends very heavily on the current season. We have four absolutely different seasons of the year in our climate. To correctly answer the question «when?», we slightly change the form of the word. Cold winter quickly turns into the word **взимку** (in winter) in our sentence. Hot summer becomes the convenient word **влітку** (in summer) during our conversation. Blooming spring is a beautiful time that we call **навесні** (in spring). Golden autumn is a beautiful time about which we say **восени** (in autumn). We can easily and correctly combine these words with our weather knowledge.*
+
+* **Взимку в наших високих горах завжди дуже і дуже холодно.**
+  *In winter, it is always very, very cold in our high mountains.*
+* **Влітку тут надзвичайно тепло і можна довго плавати в морі.**
+  *In summer, it is extremely warm here and you can swim in the sea for a long time.*
+* **Восени у цьому старому місті часто буває дуже сіро і хмарно.**
+  *In autumn, it is often very gray and cloudy in this old city.*
+* **Навесні ми будемо дуже багато гуляти в нашому зеленому парку.**
+  *In spring, we will walk a lot in our green park.*
+
+### Самоперевірка
+- ☐ Я розумію прислівники швидко/повільно.
+- ☐ Я можу описати погоду.
+
+## Інтеграційне завдання
+
+### Вчорашні події
+Тепер давайте ефективно об'єднаємо знання. Ми зробимо це разом. Ми уважно прочитаємо короткий текст. Він є дуже змістовним. Він максимально детально описує один звичайний минулий день молодої людини. Зверніть свою особливу і пильну увагу на всі використані тут дієслова. Вони всі без жодного винятку стоять у правильній формі минулого часу. Ви легко побачите знайомі слова. Вони про щоденну рутину. Ви побачите дуже точний опис. Це ранкова і вечірня погода. Будь ласка, читайте цей текст. Робіть це гучно вголос.
+
+*Now let us extremely effectively combine all our previous knowledge together. We will now very carefully read a short but very deep meaningful text. It describes one ordinary past day of a young person in maximum detail. Pay your special and close attention to all the verbs used here. They are all without a single exception in the correct past tense form. You will also easily see familiar words about the daily morning and evening routine. You will definitely see a very accurate description of the morning and evening weather today. Please read this text as slowly as possible and very loudly out loud.*
+
+**Мій звичайний вчорашній день:**
+> Вчора я дуже важко встав рівно о сьомій годині ранку. Надворі було дуже холодно. Також було надзвичайно хмарно вранці. Я дуже швидко снідав на своїй маленькій, але дуже затишній кухні. Я їв дуже смачну гарячу кашу та пив міцну чорну каву. Потім я швидко пішов на свою улюблену і дуже цікаву роботу. Я дуже багато і дійсно довго працював над новим складним проектом. Вдень я надзвичайно смачно обідав у гарному і світлому кафе поруч. Я купував гарячий український суп і дуже свіжий зелений овочевий салат. Увечері я дуже спокійно вечеряв удома разом зі своєю великою родиною. Я довго читав нову цікаву книгу та слухав класичну музику тихо. Я ліг спати дуже пізно вночі після цього дійсно важкого дня. Це був дійсно довгий, але дуже продуктивний і хороший робочий день.
+
+*My ordinary yesterday:*
+*> Yesterday I got up very heavily exactly at seven o'clock in the morning. Outside it was very cold and extremely cloudy all this long morning. I had breakfast very quickly in my small but very cozy kitchen. I ate very tasty hot porridge and drank strong black coffee. Then I went quickly to my favorite and very interesting job. I worked very much and indeed for a long time on a new complex project. During the day, I had an extremely tasty lunch in a nice and bright cafe nearby. I bought hot Ukrainian soup and a very fresh green vegetable salad. In the evening, I had a very calm dinner at home together with my large family. I read a new interesting book for a long time and listened to classical music quietly. I went to sleep very late at night after this truly hard day. It was truly a long, but very productive and good workday.*
+
+### Майбутні перспективи
+Тепер ми надзвичайно детально подивимося на майбутні особисті плани людини. Цей текст використовує аналітичну форму. Це майбутній час дієслів. Він абсолютно чітко показує: ця людина буде робити завтра. Тут також є дуже корисні слова про очікувану завтрашню сонячну погоду. Ви побачите популярну лексику. Тут є слова для покупок. Спробуйте самостійно знайти ці форми. Вони є прямо тут. Це чудова і дуже ефективна інтелектуальна практика для вашого активного мозку.
+
+*Now we will look extremely closely at a person's future personal plans. The following interesting text very intensively uses the analytical future tense form of verbs. It absolutely clearly shows exactly what this person will be doing tomorrow. There are also very useful words about the expected sunny weather tomorrow here. You will definitely see popular vocabulary for shopping and exact directions of movement. Try absolutely independently to find all analytical forms of the future tense right here. This is an excellent and very effective intellectual practice for your active brain.*
+
+**Мої великі плани на завтра:**
+> Завтра нарешті буде субота, і я зовсім не буду нічого працювати. Я буду солодко спати дуже довго і максимально спокійно весь ранок. Я встану дуже пізно і буду відчувати себе абсолютно чудово сьогодні. Прогноз погоди чітко каже: завтра буде надзвичайно тепло і сонячно. Я буду снідати дуже повільно і пити свій смачний зелений чай. Потім я швидко піду в найбільший продуктовий магазин поруч із домом. Я буду купувати найкращі свіжі продукти для всієї моєї великої родини. Я хочу купити найсолодші фрукти та дуже корисні свіжі зелені овочі. Увечері ми з моїми найкращими хорошими друзями підемо в новий ресторан. Ми обов'язково будемо замовляти піцу. Вона гаряча та італійська. Ми будемо відпочивати дуже добре і щиро сміятися цілий чудовий вечір.
+
+*My big plans for tomorrow:*
+*> Tomorrow will finally be Saturday, and I will not work at all. Tomorrow, I want to sleep sweetly for a very long time and as calmly as possible all morning. My goal is to get up very late and I will feel absolutely wonderful today. The weather forecast clearly says that tomorrow it will be extremely warm and sunny. Later, I intend to have breakfast very slowly and drink my tasty green tea. Then I will go quickly to the largest grocery store near the house. I will buy the best fresh groceries for my entire large family. I want to buy the sweetest fruits and very healthy fresh green vegetables. In the evening, my best good friends and I will go to a new restaurant. We will definitely order the largest and very tasty hot Italian pizza. We will rest very well and sincerely laugh the whole wonderful evening.*
+
+### Ваш прогрес
+Ви щойно виконали абсолютно чудову і дійсно дуже важливу навчальну роботу. Цей практичний навчальний модуль був дійсно дуже великим і надзвичайно серйозним. Він містив багато важливої інформації. Вона дуже потрібна. Тепер ви можете об'єктивно перевірити знання. Зробіть це зараз. Дуже уважно прочитайте ці твердження. Вони про нові навички. Ви згодні з цими твердженнями. Тепер ви готові йти далі. Ви можете щиро і справедливо пишатися собою та своєю щоденною працею.
+
+*You have just done an absolutely wonderful and truly very important educational job. This practical educational module was indeed very large and extremely serious. It contained an extremely large amount of important and very necessary new grammatical information. Now you can finally absolutely objectively check your own acquired knowledge. Read these summary statements about all your new skills very carefully. If you completely and sincerely agree with them, you are ready to move forward. You can sincerely and justly be proud of yourself and your daily hard work.*
+
+1. Я дуже добре розумію граматичну різницю між минулим і майбутнім часом. 
+*(I understand the grammatical difference between past and future tenses very well.)*
+2. Я тепер твердо знаю всі закінчення для чоловічого і жіночого роду. 
+*(I now firmly know all the endings for masculine and feminine genders.)*
+3. Я можу абсолютно вільно розповісти: що я робив вчора вдень. 
+*(I can absolutely freely say exactly what I did yesterday afternoon.)*
+4. Я можу дуже чітко пояснити, куди я зараз цілеспрямовано йду вулицею. 
+*(I can very clearly explain where I am currently purposefully walking down the street.)*
+5. Я можу дуже легко замовити їжу і запитати точну ціну товару. 
+*(I can very easily order food and ask for the exact price of an item.)*
+6. Я можу абсолютно правильно описати погоду на вулиці за допомогою прислівників. 
+*(I can absolutely correctly describe the weather outside with the help of adverbs.)*
+
+> [!quote] Ваша щоденна мотивація
+> «Вивчення нової мови — це довга, але завжди надзвичайно захоплива життєва подорож. Маленький крок робить вас розумнішими. Ви стаєте набагато сильнішими». Ви вже зробили багато важливих кроків. Вони неймовірно сміливі. Ваша розмовна українська мова стає все кращою з кожним новим днем. Будь ласка, продовжуйте своє інтенсивне навчання в тому ж самому активному дусі.
+
+
+
+*«Learning a new language is a long, but always an extremely exciting life journey. Every new small step makes you significantly smarter and much stronger». You have already successfully taken very many important and incredibly bold steps forward. Your spoken Ukrainian language is getting better and better with every new day. Please continue your intensive studies in the exact same active spirit.*
+
+---
+
+# Підсумок
+
+Сьогодні ми дуже успішно і глибоко повторили весь ключовий граматичний матеріал. Ми почали наш інтенсивний урок з дуже важливої граматики часових форм. Ми детально згадали минулий час. Ми повторили всі закінчення. Ми навчилися звертати увагу. Рід суб'єкта є дуже важливим. Жіночий рід абсолютно обов'язково потребує закінчення «ла», а чоловічий — букви «в». Ми також дуже ретельно і глибоко розглянули аналітичний майбутній час дієслів. Ця зручна конструкція має слово «бути». Вона дозволяє будувати плани. Ви можете абсолютно вільно розповідати. Це ваш щоденний розклад.
+
+*Today we very successfully and deeply reviewed all the key grammatical material. We started our intensive lesson with the very important grammar of tense forms. We recalled the past tense and all its special endings in maximum detail. We reliably learned to always pay very close attention to the gender of the subject. The feminine gender absolutely obligatorily requires the ending «ла», and the masculine — the letter «в». We also very carefully and deeply examined the analytical future tense of verbs. This convenient construction with the auxiliary word «бути» allows making plans extremely easily. You can now absolutely freely and naturally talk about your daily schedule.*
+
+Ми надзвичайно ефективно повторили дієслова. Вони для щоденної рутини. Важливі слова допомагають описати день. Це слова про рутину. Ми максимально детально згадали розмови. Так ми ввічливо спілкуємося. Коротке питання «Скільки коштує?» є одним із найголовніших під час будь-яких покупок. Також ми дуже успішно попрактикували опис. Це щоденна місцева погода. Ви можете дуже природно сказати це. Сьогодні тепло або холодно. Ви знаєте прислівники «добре», «швидко», «повільно». Ви використовуєте їх правильно. Це робить ваші розповіді багатими. Вони цікаві для слухачів. Ваші великі тексти яскраві. Вони показали високий мовний рівень.
+
+*We extremely effectively reviewed all useful verbs for your daily routine. The important words «вставати», «снідати», «обідати», «вечеряти» help to describe the day very clearly. We also recalled in maximum detail how to communicate correctly and very politely in a cafe. The short question «Скільки коштує?» is one of the most important during any shopping. In addition, we very successfully practiced a detailed description of the daily local weather. You can very naturally say that today is extremely warm or very cold. You now know well how to use adverbs like «добре», «швидко», «повільно» absolutely correctly. This makes your personal stories extremely rich and truly interesting for listeners. Your large texts about yesterday and tomorrow brightly demonstrated your high linguistic level.*
+
+**Перевірте себе:**
+1. Яке закінчення завжди і обов'язково має минулий час для слова «вона»?
+2. Яке допоміжне спеціальне слово ми використовуємо а потім інфінітив у майбутньому часі?
+3. Як максимально ввічливо запитати точну ціну товару в типовій українській крамниці?
+4. Яке питання ми ставимо для активного напрямку: «Куди?» чи стаціонарного «Де?»
+5. Як дуже коротко сказати про погоду, на вулиці досить низька температура?
+6. Спробуйте детально розповісти про ваш завтрашній ранок трьома великими і повними реченнями.
+
+---

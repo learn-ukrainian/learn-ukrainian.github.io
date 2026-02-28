@@ -1,7 +1,7 @@
 # Audit Report: M18 — questions-and-negation.md
 **Level:** A1 | **Module:** M18 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 2000
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-02-28 03:30:15
+**Overall Status:** ✅ PASS
+**Generated:** 2026-02-28 18:48:53
 
 ## Configuration
 **Type:** A1-grammar
@@ -16,29 +16,39 @@
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
 
-## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово
-  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+## Activity Breakdown
+| # | Type | Title | Items | Min | Status |
+|---|------|-------|-------|-----|--------|
+| 1 | quiz | Основи запитань | 8 | 8 | ✅ |
+| 2 | match-up | Питальні слова | 8 | 8 | ✅ |
+| 3 | group-sort | Хто чи Що? | 12 | 12 | ✅ |
+| 4 | fill-in | Оберіть правильне слово | 8 | 8 | ✅ |
+| 5 | fill-in | Скажіть «ні» | 8 | 8 | ✅ |
+| 6 | match-up | Запитання та відповіді | 8 | 8 | ✅ |
+| 7 | unjumble | Побудуйте речення | 8 | 6 | ✅ |
+| 8 | fill-in | Ввічливі запитання | 8 | 8 | ✅ |
 
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
+**Summary:**
+- Total activities: 8 (target: 8-12) ✅
+- Unique types: 5 (minimum: 4) ✅
+- Priority types used: 4/5 (fill-in, match-up, quiz, unjumble) ✅
+- Required types used: 1/1 (fill-in) ✅
+- Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 2730/2000 (raw: 2895)
-- **Activities:** ⏳ Deferred (content-only audit)
-- **Density:** ⏳ Deferred (content-only audit)
-- **Unique_types:** ⏳ Deferred (content-only audit)
-- **Priority:** ⏳ Deferred (content-only audit)
-- **Engagement:** ✅ 5/3
+- **Words:** ✅ 2728/2000 (raw: 2934)
+- **Activities:** ✅ 8/8
+- **Density:** ✅ All > 12
+- **Unique_types:** ✅ 5/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ⏳ Deferred (content-only audit)
+- **Vocab:** ⚠️ 0 < 1 (soft target)
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Content_heavy:** ⏳ Deferred (content-only audit)
-- **Immersion:** ❌ 21.3% LOW (target 25-40% (M18))
+- **Content_heavy:** ℹ️ N/A (standard module)
+- **Immersion:** 🇺🇦 25.2% (target 25-40% (M18))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -47,10 +57,10 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 0 | Included in Core |
-| **Questions & Negation** | ✅ | 50 | Included in Core |
-| **Вступ: Мистецтво ставити питання** | ✅ | 421 | Included in Core |
-| **Граматика: Як будувати питання** | ✅ | 993 | Included in Core |
-| **Практика: Інтонація та конструктор** | ✅ | 469 | Included in Core |
-| **Застосування: Розмова в реальному житті** | ✅ | 315 | Included in Core |
-| **Культурний контекст: Ввічливість і гумор** | ✅ | 286 | Included in Core |
-| **Підсумок** | ✅ | 196 | Included in Core |
+| **Questions & Negation: Asking Questions and Saying No** | ✅ | 58 | Included in Core |
+| **Вступ: Основи заперечення та інтонації** | ✅ | 317 | Included in Core |
+| **Презентація: Питальні конструкції** | ✅ | 784 | Included in Core |
+| **Практика: Тренування заперечень та запитань** | ✅ | 596 | Included in Core |
+| **Продукція: Комунікативні сценарії** | ✅ | 514 | Included in Core |
+| **Культурний контекст та ALF** | ✅ | 173 | Included in Core |
+| **Підсумок** | ✅ | 286 | Included in Core |

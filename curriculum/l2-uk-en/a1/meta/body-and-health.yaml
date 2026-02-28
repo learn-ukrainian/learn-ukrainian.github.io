@@ -2,48 +2,53 @@ slug: body-and-health
 title: Body & Health
 word_target: 2000
 content_outline:
-- section: 'Розминка: Частини тіла'
-  words: 250
+- section: 'Вступ: Частини тіла та народна мудрість'
+  words: 400
   points:
-  - Introduction to body parts (голова, рука, нога, спина, живіт)
-  - 'Visual focus: Singular vs Plural (око/очі, вухо/вуха) with distinct endings'
-  - 'Cultural hook: Proverb «У здоровому тілі — здоровий дух»'
-  - 'Interactive check: Pointing to body parts'
-- section: 'Граматика: Конструкція «У мене болить...»'
-  words: 450
+  - 'Note for bridge module: English scaffolding is required for all new vocabulary
+    introduction and grammar concepts to maintain A1 immersion levels.'
+  - 'Introduce high-frequency body parts in a clear table format: голова, рука, нога,
+    спина, живіт (State Standard §3.10).'
+  - 'Highlight visual pairs for singular/plural with English translations: око/очі,
+    вухо/вуха, emphasizing the distinct morphological endings.'
+  - 'Cultural Hook: Present the proverb «У здоровому тілі — здоровий дух» with brief
+    English context on its usage in daily life and sports.'
+  - 'Interactive grammar check: Briefly review location with ''де?'' (на голові, на
+    руках) connecting back to module a1-30.'
+- section: 'Презентація: Як ми говоримо про біль'
+  words: 600
   points:
-  - 'Core structure: «У мене болить + [singular noun]» vs «У мене болять + [plural
-    noun]»'
-  - 'Grammar alert: Agreement with the body part (subject), not the person'
-  - 'State expressions: «Мені погано» vs «Мені добре» (Dative pronouns introduced
-    as chunks)'
-  - 'Symptom vocabulary: температура, кашель, нежить, головний біль'
-  - 'Collocations: «міряти температуру», «висока температура»'
-- section: 'Лексика: Вирази про здоров''я'
-  words: 300
+  - 'Grammar explanation (in English): Present the core structure «У мене болить +
+    [singular subject]» and «У мене болять + [plural subject]».'
+  - 'Learner error warning: Explicitly drill that the body part is the active subject,
+    contrasting the incorrect «У мене болять голова» with the correct «У мене болить
+    голова».'
+  - 'Introduce State Standard §4.2.1.4: Impersonal phrases for health states «Мені
+    погано / Мені добре». Explicitly warn against the direct translation error ''Я
+    погано''.'
+  - 'Provide vocabulary for common symptoms: температура, кашель, нежить, головний
+    біль, with key collocations like ''міряти температуру''.'
+  - 'Cultural Insight: Describe the Ukrainian tradition of ''траволікування'' (phytotherapy)
+    and the custom of drinking tea with ''малина'' or ''калина''.'
+- section: 'Діалог: У лікаря та в аптеці'
+  words: 500
   points:
-  - 'Distinction: «хворий» (adjective/state) vs «хворіти» (verb/process)'
-  - 'Reflexive verb usage: «почувати себе» (How do you feel?)'
-  - 'Necessity: «Мені потрібно до лікаря» (using ''до'' + Genitive for person)'
-  - 'Register check: Casual «Я захворів» vs Formal «У мене симптоми...»'
-- section: 'Лексика: В аптеці'
-  words: 350
+  - Provide a structured dialogue with a 'сімейний лікар', contrasting the person
+    'лікар' with the place 'лікарня' to correct the 'Я йду в лікар' error.
+  - 'Pharmacy context: Explain navigating an ''аптека'' versus an ''аптечний пункт'',
+    including recognizing the ubiquitous green cross.'
+  - 'Introduce functional Genitive phrases for medicine: «Дайте, будь ласка, ліки
+    від...» (від кашлю, від болю).'
+  - 'Present typical doctor/patient dialogue phrases: «Що вас турбує?» versus the
+    patient reply «У мене висока температура».'
+- section: 'Практика: Пояснення причин'
+  words: 500
   points:
-  - 'Cultural insight: Herbal teas (малина, калина) and phytotherapy popular in Ukraine'
-  - 'Buying medicine: «Дайте, будь ласка, ліки від...» (Genitive: від кашлю, від болю)'
-  - 'Key nouns: таблетки, сироп, вітаміни, рецепт'
-  - 'Dialogue phrases: «Скільки коштує?», «Як приймати?»'
-- section: 'Ситуація: У лікаря'
-  words: 350
-  points:
-  - 'Typical dialogue flow: Greeting → Complaint → Examination → Advice'
-  - 'Doctor''s questions: «Що вас турбує?», «Де болить?»'
-  - 'Patient''s answers: «Я погано сплю», «У мене немає апетиту»'
-  - 'Simple advice (Imperative familiarization): «Пийте чай», «Відпочивайте»'
-- section: 'Практикум: Діалоги про здоров''я'
-  words: 300
-  points:
-  - 'Scenario 1: Describing symptoms to a friend (Casual)'
-  - 'Scenario 2: At the doctor''s office (Formal, using «тому що/бо»)'
-  - 'Scenario 3: Buying medicine at the pharmacy'
-  - 'Final check: Matching symptoms to remedies'
+  - 'Grammar explanation (State Standard §4.3.2): Teach how to build complex causal
+    sentences using ''бо'' and ''тому що'' (e.g., «Я не прийшов, бо я хворий»).'
+  - 'Lexical distinction: Contrast ''хворий'' (adjective describing a state) with
+    ''хворіти'' (verb describing an ongoing process).'
+  - 'Provide two contrasting roleplays: A casual dialogue with a friend about feeling
+    unwell versus a formal dialogue at the polyclinic.'
+  - 'Summary: Recap the ''У мене болить'' construction and the usage of Dative pronouns
+    for expressing health conditions.'

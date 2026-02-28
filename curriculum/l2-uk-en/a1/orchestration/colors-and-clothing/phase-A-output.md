@@ -1,109 +1,67 @@
-✅ Message sent to Gemini (ID: 8711)
-✓ Message 8711 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #8711...
-📨 Message #8711
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-colors-and-clothing-pA
-   Time: 2026-02-19T21:24:33.494978+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/colors-and-clothing/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
 # Дослідження: Colors & Clothing
 
 ## State Standard Reference
-§4.2.1.2: "Прикметник: узгодження прикметників з іменниками в роді й числі: іноземний студент, домашній одяг; зелена сумка, літня погода..."
-Alignment: Цей модуль безпосередньо реалізує вимогу стандарту щодо узгодження прикметників з іменниками (на прикладі кольорів) та тему "Зовнішність" (§3.1).
+§4.2.1.2: "узгодження прикметників з іменниками в роді й числі... форми знахідного та місцевого відмінків прикметників"
+§4.2.3.2.1: "Знахідний відмінок: Без прийменника (об’єкт дії): Віра читає цікаву книжку."
+Alignment: This module directly addresses the A1 requirement to agree adjectives with nouns in gender/number, and the use of the accusative case for direct objects (clothing items worn).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| білий | High / Core A1 | біла сорочка, білий сніг, білий світ |
-| чорний | High / Core A1 | чорна кава, чорні штани, чорний хліб |
-| червоний | High / Core A1 | червона ручка, червоне вино, червона калина |
-| сорочка | High / Core A1 | вишита сорочка, біла сорочка, одягати сорочку |
-| штани | High / Core A1 | нові штани, джинсові штани (plural only) |
-| сукня | High / Syn: плаття | вечірня сукня, нова сукня, гарна сукня |
-| носити | High / Verb | носити одяг, носити окуляри, носити з собою |
+| білий, чорний, червоний | High Core A1 | біла сорочка, чорний хліб, червона калина |
+| сорочка | High Core A1 | вишита сорочка, біла сорочка |
+| сукня | High Core A1 | нова сукня, вечірня сукня (standard literary synonym over "плаття") |
+| штани / джинси | High Core A1 | нові штани, сині джинси (pluralia tantum) |
+| носити | Verb High | носити одяг, носити окуляри |
 
 ## Cultural Hooks
-1. **Вишиванка як оберіг**: Вишивка на комірі та рукавах традиційно вважалася захистом (оберегом) для людини, "закриваючи" вразливі місця від негативної енергії.
-2. **Символізм кольорів**: У традиційній українській культурі червоний — це колір життя, енергії та любові (а не небезпеки), чорний — колір родючої землі та мудрості (а не лише трауру), білий — символ чистоти та божественного світу.
+1. **Symbolism of Colors in Embroidery**: Ukrainian tradition heavily relies on color coding. Red (червоний) symbolizes life, love, and energy, while black (чорний) represents the fertile soil and wisdom. White (білий) is purity. 
+2. **Vyshyvanka as an Oberyh (Оберіг)**: Traditional embroidery is not just decorative; it acts as a talisman. Embroidery on collars and cuffs forms a protective circle, "sealing" energy zones.
 
 ## Common Learner Errors
-1. **Gender Agreement**: "червоний сорочка" → *червона сорочка* — Learner often defaults to masculine adjective form for all nouns.
-2. **Accusative Feminine**: "Я ношу червона сукня" → *Я ношу червону сукню* — Learner fails to change ending for feminine object.
-3. **Pluralia Tantum**: "цей штани" / "один штани" → *ці штани* / *одні штани* — Learner treats "pants" as singular or uses wrong number agreement.
+1. **Gender disagreement** → *червоний сорочка* (Incorrect). Correct form: *червона сорочка*. Adjectives must match the noun's gender.
+2. **Missing Accusative ending for feminine nouns** → *Я ношу червона сукня* (Incorrect). Correct form: *Я ношу червону сукню*. The verb "носити" requires the direct object to be in the accusative.
+3. **Pluralia Tantum singularization** → *цей штани / один штани* (Incorrect). Correct form: *ці штани / одні штани*.
 
 ## Cross-References
-- Builds on: a1-26 (Describing Things - Adjectives) — relies on understanding gender basics.
-- Prepares for: a1-28 (Description - Adverbs) — expands description capabilities; a1-30 (Checkpoint).
+- Builds on: a1-11 (Describing Things - Adjectives)
+- Prepares for: a1-28 (Description - Adverbs), a1-30 (Checkpoint Consolidation)
 
 ## Notes for Content Writing
-- Ensure clear distinction between "плаття" and "сукня" (use "сукня" as primary stylistic choice for elegance, but acknowledge "плаття" as common synonym).
-- Emphasize that "джинси" follows the same logic as "штани".
+- **Decolonized Framing**: Emphasize Ukrainian symbolic traditions (like the meaning of red and black in song/embroidery) independently. Promote the literary word "сукня" over the more colloquially mixed "плаття".
+- **Bridging Strategy**: As an A1.1 module, immersion is around 25-35%. Use English to explain the cultural concepts and the concept of direct object/accusative case, providing clear, unambiguous Ukrainian examples.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Кольори навколо нас"
-    words: 250
-    points:
-      - "Cultural hook: Introduction to Ukrainian color symbolism (red=life, black=earth, white=purity)."
-      - "Interactive warm-up: Identifying colors in immediate environment."
-      - "Brief introduction of 'улюблений колір' (favorite color) concept."
-  - section: "Основні кольори та узгодження"
-    words: 350
-    points:
-      - "Presentation of core colors (білий, чорний, червоний, синій, зелений, жовтий) with gender forms."
-      - "Grammar focus: Adjective-Noun agreement (masculine, feminine, neuter examples)."
-      - "Visual table: Matching colors to nouns (e.g., червоний автобус, червона ручка, червоне яблуко)."
-      - "Note on invariant colors (бордо, беж, хакі) as exceptions."
-  - section: "Одяг і дієслово «носити»"
+  - section: "Вступ та культурний контекст (Introduction & Cultural Context)"
     words: 400
     points:
-      - "Vocabulary presentation: Basic clothing items (сорочка, сукня, куртка, светр)."
-      - "Grammar focus: Verb 'носити' (to wear) + Accusative case (direct object)."
-      - "Specific attention to feminine Accusative endings (-а -> -у): 'червона сукня' -> 'червону сукню'."
-      - "Distinction between 'носити' (habitual/state) vs 'одягати' (putting on - brief mention)."
-  - section: "Множина: штани та окуляри"
-    words: 250
+      - "Explicit English scaffolding: Use English to introduce the symbolic meaning of colors in Ukrainian tradition, integrating the vocabulary (червоний - life/love, чорний - fertile earth, білий - purity)."
+      - "Cultural Hook: Explain the vyshyvanka as an 'оберіг' (talisman), highlighting how the embroidered patterns on collars and cuffs are traditionally meant to protect the wearer's energy zones."
+  - section: "Презентація кольорів та граматика узгодження (Colors & Grammar of Agreement)"
+    words: 500
     points:
-      - "Concept of Pluralia Tantum (plural-only nouns): штани, джинси, окуляри."
-      - "Grammar focus: Plural adjective agreement (сині штани, нові окуляри)."
-      - "Demonstrative pronoun agreement: 'ці' штани (not 'цей')."
-      - "Practice identifying plural-only items versus regular plurals."
-  - section: "Опис зовнішності та вишиванка"
-    words: 350
+      - "Present the core colors mandated by the standard (білий, чорний, червоний, синій, зелений, жовтий)."
+      - "Provide a clear paradigm for Adjective-Noun agreement across masculine (-ий/ій), feminine (-а/я), and neuter (-е/є) genders."
+      - "Contrast correct and incorrect forms to preempt the 'червоний сорочка' error, emphasizing that the adjective mirrors the noun."
+      - "Briefly note invariant loan colors (бордо, беж, хакі) that do not change endings."
+  - section: "Одяг та дієслово «носити» (Clothing & the Verb 'To Wear')"
+    words: 600
     points:
-      - "Cultural hook: The Vyshyvanka as a talisman and seal of energy."
-      - "Constructing a full description: 'Він має...' vs 'На ньому...' (On him is...)."
-      - "Shopping context: Asking for size ('Який це розмір?') and price ('Скільки коштує?')."
-      - "Review of numbers in pricing context."
-  - section: "Діалог: У магазині одягу"
-    words: 200
+      - "Introduce basic clothing vocabulary (сорочка, штани, сукня, куртка, светр), noting the stylistic preference for 'сукня' as elegant/literary."
+      - "Explain the verb 'носити' and introduce the Accusative case for direct objects (§4.2.3.2.1)."
+      - "Provide focused practice on the feminine Accusative shift (-а/-я to -у/-ю), contrasting Nominative vs. Accusative: 'Це червона сукня' vs 'Я ношу червону сукню'."
+      - "Introduce Pluralia Tantum (штани, джинси, окуляри), explaining they take plural adjectives and pronouns ('ці сині штани')."
+  - section: "Практичне застосування та покупки (Practice & Shopping)"
+    words: 500
     points:
-      - "Scenario: Customer buying a shirt or pants."
-      - "Key phrases: 'Я шукаю...', 'Можна поміряти?', 'Це мені пасує'."
-      - "Role-play elements for learner practice."
-  - section: "Практика: Мій улюблений одяг"
-    words: 200
-    points:
-      - "Guided writing task: Describing own favorite outfit."
-      - "Checklist for learners: Color + Item + Correct Case."
-      - "Final consolidation of gender and number agreement."
+      - "Provide a situational mini-dialogue ('У магазині одягу') focused on asking for size and price, revising numerals in context."
+      - "Demonstrate key phrases: 'Мені подобається цей колір', 'Ці штани мені підходять', 'Скільки коштує?'."
+      - "Scaffold a guided text demonstrating how to describe a favorite outfit, integrating colors, clothing items, and the correct accusative forms."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -114,11 +72,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5070 chars)
-✅ Message sent to Claude (ID: 8715)
-✓ Message 8715 acknowledged
-   Auto-acknowledged reply #8715 (stdout delivery — no inbox accumulation)
-✓ Message 8711 acknowledged

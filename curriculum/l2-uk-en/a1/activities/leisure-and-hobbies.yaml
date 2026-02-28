@@ -1,0 +1,472 @@
+- type: quiz
+  title: Перевірка розуміння слів
+  items:
+  - question: Що ми зазвичай робимо у великому парку?
+    explanation: У парку ми найчастіше гуляємо.
+    options:
+    - text: гуляти
+      correct: true
+    - text: читати
+      correct: false
+    - text: готувати
+      correct: false
+    - text: малювати
+      correct: false
+  - question: Яке слово означає улюблене заняття людини для душі?
+    explanation: Улюблене заняття для душі називається хобі.
+    options:
+    - text: хобі
+      correct: true
+    - text: робота
+      correct: false
+    - text: школа
+      correct: false
+    - text: спорт
+      correct: false
+  - question: Що ми зазвичай робимо, коли вмикаємо цікавий фільм?
+    explanation: Фільми ми зазвичай дивимося.
+    options:
+    - text: дивитися
+      correct: true
+    - text: співати
+      correct: false
+    - text: танцювати
+      correct: false
+    - text: плавати
+      correct: false
+  - question: Яке дієслово ми використовуємо разом зі словом книга?
+    explanation: Книгу ми зазвичай читаємо.
+    options:
+    - text: читати
+      correct: true
+    - text: писати
+      correct: false
+    - text: слухати
+      correct: false
+    - text: робити
+      correct: false
+  - question: Куди ми йдемо, щоб подивитися новий цікавий фільм?
+    explanation: Нові фільми ми дивимося у кіно.
+    options:
+    - text: у кіно
+      correct: true
+    - text: у парк
+      correct: false
+    - text: на роботу
+      correct: false
+    - text: у ліс
+      correct: false
+  - question: Яке слово означає фізичну активність або різні ігри?
+    explanation: Фізична активність називається спорт.
+    options:
+    - text: спорт
+      correct: true
+    - text: музика
+      correct: false
+    - text: кіно
+      correct: false
+    - text: книга
+      correct: false
+  - question: Що ми робимо на кухні у наш вільний час?
+    explanation: На кухні ми готуємо їжу.
+    options:
+    - text: готувати
+      correct: true
+    - text: гуляти
+      correct: false
+    - text: малювати
+      correct: false
+    - text: читати
+      correct: false
+  - question: Яке дієслово ми використовуємо, коли створюємо красиву картину?
+    explanation: Картину ми зазвичай малюємо.
+    options:
+    - text: малювати
+      correct: true
+    - text: співати
+      correct: false
+    - text: слухати
+      correct: false
+    - text: грати
+      correct: false
+  instruction: Оберіть правильну відповідь.
+- type: quiz
+  title: Що вони роблять?
+  items:
+  - question: Що робить людина, яка має гітару або піаніно?
+    explanation: На гітарі або піаніно ми граємо.
+    options:
+    - text: грати
+      correct: true
+    - text: гуляти
+      correct: false
+    - text: малювати
+      correct: false
+    - text: плавати
+      correct: false
+  - question: Що ми зазвичай робимо, коли чуємо ритмічну музику?
+    explanation: Коли грає музика, ми танцюємо.
+    options:
+    - text: танцювати
+      correct: true
+    - text: читати
+      correct: false
+    - text: спати
+      correct: false
+    - text: писати
+      correct: false
+  - question: Що означає словосполучення вільний час українською мовою сьогодні?
+    explanation: Це час для відпочинку та хобі.
+    options:
+    - text: час для хобі
+      correct: true
+    - text: час для роботи
+      correct: false
+    - text: час для школи
+      correct: false
+    - text: час для стресу
+      correct: false
+  - question: Що ми беремо з собою, коли йдемо фотографувати?
+    explanation: Щоб фотографувати, потрібен фотоапарат або телефон.
+    options:
+    - text: камеру
+      correct: true
+    - text: книгу
+      correct: false
+    - text: м'яч
+      correct: false
+    - text: гітару
+      correct: false
+  - question: Що ми зазвичай робимо у басейні або у морі?
+    explanation: У басейні або морі ми плаваємо.
+    options:
+    - text: плавати
+      correct: true
+    - text: літати
+      correct: false
+    - text: бігати
+      correct: false
+    - text: стрибати
+      correct: false
+  - question: Як ми називаємо період, коли ми не працюємо взагалі?
+    explanation: Час без роботи - це відпочинок.
+    options:
+    - text: відпочинок
+      correct: true
+    - text: робота
+      correct: false
+    - text: навчання
+      correct: false
+    - text: спорт
+      correct: false
+  - question: Яке дієслово означає їхати в інші міста або країни?
+    explanation: Подорожувати означає їздити у нові місця.
+    options:
+    - text: подорожувати
+      correct: true
+    - text: малювати
+      correct: false
+    - text: готувати
+      correct: false
+    - text: гуляти
+      correct: false
+  - question: Що ми використовуємо, щоб слухати улюблену сучасну музику?
+    explanation: Музику слухають у навушниках.
+    options:
+    - text: навушники
+      correct: true
+    - text: окуляри
+      correct: false
+    - text: книги
+      correct: false
+    - text: каструлі
+      correct: false
+  instruction: Оберіть правильну відповідь.
+- type: unjumble
+  title: Складіть правильні речення
+  items:
+  - words:
+    - у
+    - мене
+    - є
+    - нове
+    - хобі
+    answer: У мене є нове хобі
+  - words:
+    - я
+    - люблю
+    - читати
+    - цікаві
+    - книги
+    answer: Я люблю читати цікаві книги
+  - words:
+    - ми
+    - часто
+    - гуляємо
+    - у
+    - парку
+    answer: Ми часто гуляємо у парку
+  - words:
+    - він
+    - добре
+    - грає
+    - у
+    - футбол
+    answer: Він добре грає у футбол
+  - words:
+    - вона
+    - гарно
+    - малює
+    - великі
+    - картини
+    answer: Вона гарно малює великі картини
+  - words:
+    - у
+    - вільний
+    - час
+    - я
+    - відпочиваю
+    answer: У вільний час я відпочиваю
+  instruction: Розташуйте слова у правильному порядку.
+- type: unjumble
+  title: Складіть речення про відпочинок
+  items:
+  - words:
+    - вони
+    - люблять
+    - дивитися
+    - старе
+    - кіно
+    answer: Вони люблять дивитися старе кіно
+  - words:
+    - мій
+    - брат
+    - любить
+    - слухати
+    - музику
+    answer: Мій брат любить слухати музику
+  - words:
+    - моя
+    - сестра
+    - часто
+    - готує
+    - вечерю
+    answer: Моя сестра часто готує вечерю
+  - words:
+    - ми
+    - дуже
+    - любимо
+    - багато
+    - подорожувати
+    answer: Ми дуже любимо багато подорожувати
+  - words:
+    - ти
+    - гарно
+    - співаєш
+    - українські
+    - пісні
+    answer: Ти гарно співаєш українські пісні
+  - words:
+    - я
+    - завжди
+    - танцюю
+    - на
+    - вечірці
+    answer: Я завжди танцюю на вечірці
+  instruction: Розташуйте слова у правильному порядку.
+- type: anagram
+  title: Розшифруйте назви хобі
+  instruction: Rearrange the letters to form words about hobbies.
+  items:
+  - scrambled: С П О Т Р
+    answer: СПОРТ
+  - scrambled: Х О І Б
+    answer: ХОБІ
+  - scrambled: К И Н А Г
+    answer: КНИГА
+  - scrambled: І К О Н
+    answer: КІНО
+  - scrambled: П Р А К
+    answer: ПАРК
+  - scrambled: І Ф М Л Ь
+    answer: ФІЛЬМ
+  - scrambled: У М И З А К
+    answer: МУЗИКА
+  - scrambled: А Ч С
+    answer: ЧАС
+- type: anagram
+  title: Розшифруйте дієслова
+  instruction: Rearrange the letters to form action verbs.
+  items:
+  - scrambled: а г т р и
+    answer: грати
+  - scrambled: и ч а т и т
+    answer: читати
+  - scrambled: я г у л и т
+    answer: гуляти
+  - scrambled: с п в і а и т
+    answer: співати
+  - scrambled: в а л п т и а
+    answer: плавати
+  - scrambled: м ю в а л т и а
+    answer: малювати
+  - scrambled: и и в д и с т я
+    answer: дивитися
+  - scrambled: ц ю т а н в т и а
+    answer: танцювати
+- type: group-sort
+  title: Розподіліть слова за групами
+  groups:
+  - name: Іменники
+    items:
+    - книга
+    - фільм
+    - спорт
+    - музика
+    - парк
+  - name: Дієслова
+    items:
+    - читати
+    - дивитися
+    - грати
+    - слухати
+    - гуляти
+  instruction: Розподіліть елементи за групами.
+- type: group-sort
+  title: Місце чи активність?
+  groups:
+  - name: Місце (де?)
+    items:
+    - парк
+    - кіно
+    - дім
+    - стадіон
+    - басейн
+  - name: Активність (що робити?)
+    items:
+    - малювати
+    - танцювати
+    - подорожувати
+    - готувати
+    - плавати
+  instruction: Розподіліть елементи за групами.
+- type: fill-in
+  title: Вставте правильне дієслово
+  items:
+  - sentence: Я люблю {читати} цікаві книги ввечері.
+    answer: читати
+    options:
+    - читати
+    - слухати
+    - гуляти
+    - малювати
+  - sentence: Мій друг любить {грати} у футбол.
+    answer: грати
+    options:
+    - грати
+    - робити
+    - дивитися
+    - співати
+  - sentence: Ми часто ходимо {гуляти} у великий парк.
+    answer: гуляти
+    options:
+    - гуляти
+    - готувати
+    - читати
+    - писати
+  - sentence: У кіно ми будемо {дивитися} новий фільм.
+    answer: дивитися
+    options:
+    - дивитися
+    - слухати
+    - плавати
+    - грати
+  - sentence: Моя мама дуже смачно вміє {готувати}.
+    answer: готувати
+    options:
+    - готувати
+    - танцювати
+    - малювати
+    - співати
+  - sentence: Вона любить {малювати} красиві картини.
+    answer: малювати
+    options:
+    - малювати
+    - читати
+    - грати
+    - робити
+  - sentence: У басейні я можу довго {плавати}.
+    answer: плавати
+    options:
+    - плавати
+    - гуляти
+    - співати
+    - дивитися
+  - sentence: Ми любимо голосно {співати} пісні.
+    answer: співати
+    options:
+    - співати
+    - читати
+    - малювати
+    - готувати
+  instruction: Оберіть правильне слово для заповнення пропуску.
+- type: fill-in
+  title: Вставте правильний іменник
+  items:
+  - sentence: Моє улюблене {хобі} — це фотографія.
+    answer: хобі
+    options:
+    - хобі
+    - робота
+    - місто
+    - спорт
+  - sentence: У мене є {час} на відпочинок сьогодні.
+    answer: час
+    options:
+    - час
+    - парк
+    - фільм
+    - книга
+  - sentence: Це дуже цікава {книга} про історію.
+    answer: книга
+    options:
+    - книга
+    - музика
+    - картина
+    - пісня
+  - sentence: Ми слухаємо сучасну {музику} в машині.
+    answer: музику
+    options:
+    - музику
+    - книгу
+    - воду
+    - їжу
+  - sentence: Це відомий американський {фільм} про кохання.
+    answer: фільм
+    options:
+    - фільм
+    - парк
+    - спорт
+    - басейн
+  - sentence: Ми йдемо на прогулянку у міський {парк}.
+    answer: парк
+    options:
+    - парк
+    - кіно
+    - робота
+    - магазин
+  - sentence: Мій улюблений {спорт} — це теніс.
+    answer: спорт
+    options:
+    - спорт
+    - фільм
+    - час
+    - музика
+  - sentence: Сьогодні ми йдемо у {кіно} на прем'єру.
+    answer: кіно
+    options:
+    - кіно
+    - книга
+    - робота
+    - басейн
+  instruction: Оберіть правильне слово для заповнення пропуску.

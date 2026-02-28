@@ -3,76 +3,77 @@
 # Дослідження: Must and Want
 
 ## State Standard Reference
-No specific morphology §reference for "треба", "повинен", or "хотіти" exists in the A1 morphology mapping, but it functionally aligns with Catalogue A communicative intentions (expressing needs, wants, and ability) and connects to §4.2.4.1 (Indicative mood conjugations of irregular high-frequency verbs like "могти" and "іти"). 
-Alignment: Fulfills the core A1 communicative goals of expressing necessity, obligation, and desire.
+§1.1.2.2 (Діалогічне мовлення): "дуже прості вказівки про можливість отримати їжу, воду, першу допомогу тощо: Будь ласка, дайте воду / чай / каву / сік. Я хочу їсти / пити. Де їдальня / кафе / ресторан? Мені треба лікаря / ліки / швидку допомогу."
+Alignment: This module directly fulfills the A1 communicative mandate to express desires (хочу) and basic necessities (треба/потрібен) in practical survival contexts (getting food, medical help).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| треба | Top 100 (Spoken) | Мені треба, треба йти, треба працювати |
-| хотіти | Top 100 (Verb) | Я хочу каву, хочу спати |
-| повинен | Mid-High | Я повинен зробити, вона повинна |
-| потрібно | Mid | Потрібно знати, мені потрібно |
+| треба | High (GRAC Corpus) | мені треба, треба йти, що треба |
+| потрібно | Moderate (GRAC) | потрібно зробити, дуже потрібно |
+| повинен | Mod-High (GRAC) | я повинен, ми повинні, він повинен був |
+| хотіти | Very High (Top 50) | хочу їсти, хочу сказати, я б хотів |
 
 ## Cultural Hooks
-1. **Directness in Cafés**: In Ukrainian culture, saying "Я хочу каву" (I want a coffee) is perfectly normal and not considered rude, unlike the English "I want," which can sound demanding. However, "Я б хотів/хотіла" is often used as the polite standard.
-2. **"Треба" as a Cultural Cornerstone**: The word "треба" is used ubiquitously in everyday spoken Ukrainian to describe everything from biological needs to collective societal obligations, reflecting a culture that values shared duty and collective action.
+1. **The Dative Mindset**: Ukrainian conceptually frames states of necessity not as something you "own" (like English "I have a need"), but as a state that happens *to* you (Мені треба - To me it is necessary). This emphasizes reception of a state over possession.
+2. **Guest Etiquette**: A practical way to show intensity differences. Taking off shoes inside is an impersonal necessity ("Треба роззуватися" - it's just how the world works here), but bringing a gift or flowers is a stronger social duty ("Гість повинен принести...").
 
 ## Common Learner Errors
-1. **Case Mismatch with Треба** → *Я треба* instead of the correct *Мені треба* — Learners mistakenly try to use Nominative subjects with impersonal constructions instead of the required Dative experiencer.
-2. **Stem Change Ignored** → *Я хотю / ти хотиш* instead of the correct *Я хочу / ти хочеш* — Learners fail to apply the irregular хот- → хоч- consonant mutation.
-3. **Gender Agreement with Повинен** → A female speaker saying *Я повинен* instead of *Я повинна* — Forgetting that "повинен" acts like an adjective and must agree with the subject's gender.
+1. **Case mismatch with треба**: `Я треба` instead of `Мені треба` — applying English Nominative (Subject-Verb-Object) logic instead of the Ukrainian Dative experiencer pattern.
+2. **Gender mismatch with повинен**: Female speakers defaulting to the masculine `повинен` instead of `повинна` (treating it as an invariable modal like the English "must").
+3. **Case confusion after хотіти**: Using Nominative for the object (`Я хочу кава`) instead of Accusative (`Я хочу каву`).
 
 ## Cross-References
 - Builds on: a1-45 (Can and Know How)
 - Prepares for: a1-47 (Imperative and Requests)
 
 ## Notes for Content Writing
-- Avoid translating "must" directly to a single word; emphasize the structural differences between impersonal "треба" (dative experiencer) and personal "повинен" (nominative subject).
-- Ensure English scaffolding is clear for the Dative case, as learners might not have fully mastered it yet (Dative is formally introduced later according to the State Standard mapping, but is used functionally here).
-- Strictly avoid comparing these structures to Russian equivalents (e.g., надо/должен). Frame the Ukrainian impersonal construction as a standalone, independent grammatical feature.
+- **Decolonization**: Avoid using English as the universal benchmark. Frame the Dative experiencer pattern as a core, authentic feature of the Ukrainian language's worldview, not as a "weird exception" to the rules.
+- **Scaffolding**: Adhere to the A1 immersion policy (10-50%). Since these grammar structures differ significantly from English, provide clear English scaffolding to explain the structural difference between `Мені треба` and `Я повинен` before giving Ukrainian examples.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Треба та Потрібно"
+  - section: "Треба / Потрібно"
     words: 500
     points:
-      - "Introduce the impersonal necessity construction: Треба + infinitive (e.g., Треба працювати). Include English scaffolding for 'It is necessary to...' since immersion is < 90%."
-      - "Explain the Dative + треба pattern: Мені треба йти. Frame it clearly without referencing Russian structures. Provide examples for 1st, 2nd, and 3rd person pronouns."
-      - "Introduce 'потрібно' as a slightly more formal synonym. Show how it can be used interchangeably with 'треба' in most A1 contexts."
-      - "Explain the short adjective forms: потрібен (m), потрібна (f), потрібне (n), потрібні (pl) for 'need a noun'. Emphasize that it agrees with the noun needed, not the speaker."
+      - "Start with English scaffolding: Explicitly explain the 'It is necessary to...' concept in English, strictly following A1 scaffolding rules."
+      - "Create an H3 to introduce the impersonal construction: Треба + infinitive (Треба працювати). Emphasize that 'треба' is invariable."
+      - "Create an H3 for the Dative experiencer pattern. Provide a simple table mapping English 'I/You' to Ukrainian Dative pronouns (мені, тобі, йому, їй, нам, вам, їм) used with 'треба'."
+      - "Introduce 'потрібно' as a slightly more formal, written synonym of 'треба'."
+      - "Create an H3 for short adjectives: потрібен (m), потрібна (f), потрібне (n), потрібні (pl). Explain they agree with the *needed noun*, not the speaker (Мені потрібна допомога)."
   - section: "Повинен"
     words: 400
     points:
-      - "Introduce personal obligation: Я повинен / повинна працювати. Show that unlike 'треба', the subject is explicit (Nominative)."
-      - "Detail the gender agreement paradigm: повинен (m), повинна (f), повинне (n), повинні (pl). Provide drills: Він повинен, Вона повинна, Вони повинні."
-      - "Explain the semantic nuance: implies personal duty or moral obligation, stronger than 'треба'. Address the common error of using 'повинен' for impersonal necessity."
+      - "Introduce personal obligation: Subject + повинен + infinitive. Contrast structurally with 'треба' (requires Nominative subject, not Dative)."
+      - "Provide a clear H3 paradigm table for gender/number agreement: повинен (m), повинна (f), повинне (n), повинні (pl)."
+      - "Address the common error: explicitly remind female learners to use 'я повинна', not 'я повинен'."
+      - "Explain semantic nuance: 'повинен' implies strong personal duty or moral obligation. Contrast with the general necessity of 'треба'."
   - section: "Хотіти"
     words: 400
     points:
-      - "Present the full present tense conjugation: хочу, хочеш, хоче, хочемо, хочете, хочуть. Highlight the irregular stem change (хот- → хоч-)."
-      - "Illustrate the two core patterns: хочу + infinitive (Я хочу спати) and хочу + Accusative (Я хочу каву)."
-      - "Introduce the polite variant 'Я б хотів/хотіла...' (I would like...). Explain how the conditional particle 'б' softens the request in real-life situations (e.g., ordering in a café)."
+      - "Provide an H3 table for the full present tense conjugation of 'хотіти'. Highlight the irregular stem change (хот- → хоч-)."
+      - "Explain the two common syntactic patterns with examples: хочу + infinitive (Я хочу спати) vs хочу + Accusative object (Я хочу воду)."
+      - "Introduce the polite conditional variant: 'Я б хотів / Я б хотіла' (I would like). Provide a dialogue snippet in a café context."
   - section: "Порівняння"
     words: 400
     points:
-      - "Contrast the three modals: треба (impersonal necessity), повинен (personal duty), and хочу (personal desire). Explain how each fills a different communicative niche."
-      - "Map out the intensity scale: хочу (weakest) → треба (medium) → повинен (strongest). Use clear context scenarios to show the difference."
-      - "Provide contrasting contextual examples using the same speaker but different modals (e.g., Я хочу відпочити vs Мені треба відпочити vs Я повинен працювати) to highlight meaning shifts."
+      - "Provide a 3-way contrast summary table: треба (impersonal necessity) vs повинен (personal duty) vs хочу (personal desire)."
+      - "Integrate the 'Guest Etiquette' cultural hook: taking off shoes ('треба' - impersonal rule) vs bringing a gift ('повинен' - social duty)."
+      - "Show contextual contrast using the same subject: Я хочу працювати (desire) vs Мені треба працювати (financial need) vs Я повинен працювати (duty)."
   - section: "Практика"
     words: 300
     points:
-      - "Situation drills: Present simple A1 scenarios (e.g., being sick, at work, at a café) and require the learner to choose the correct modal construction."
-      - "Dialogue practice: Provide 2-3 short role-play dialogues using modals in everyday conversations (requesting help, expressing wishes, discussing duties) to build automaticity."
+      - "Include situation drills: Present 3 short scenarios (being sick, at a café, visiting a friend) and ask which modal fits best."
+      - "Provide 2 short role-play mini-dialogues demonstrating these modals in everyday conversations."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
 **Phase**: Phase A: Meta + Research (Core)
-**Step**: Full Phase A
-**Friction Type**: STATE_STANDARD_NOT_FOUND
-**Raw Error**: None
-**Self-Correction**: Could not find a specific explicit §reference for "треба", "повинен", or "хотіти" in the A1 morphology section of the State Standard mapping file, nor in lines 672-747 of the full text. Concluded that these modal expressions fall under broader communicative intentions (Catalogue A) and indicative verb usage (§4.2.4.1), and noted this workaround in the research block.
-**Proposed Tooling Fix**: Add specific grammatical/vocabulary mappings for high-frequency modal and impersonal constructions (треба, можна, повинен) to `state-standard-2024-mapping.yaml` to prevent lookup failures during Phase A.
+**Step**: Lightweight Research
+**Friction Type**: BUG
+**Raw Error**: `error: The argument '--threads <NUM>' requires 1 values, but 2 were provided` when using `grep_search`.
+**Self-Correction**: Switched to `run_shell_command("rg -n '...'")` instead to bypass the bug with the custom search tool.
+**Proposed Tooling Fix**: Fix the `--threads` argument injection bug in the `grep_search` and `search_file_content` tools within the agent's MCP/environment.
 ===FRICTION_END===

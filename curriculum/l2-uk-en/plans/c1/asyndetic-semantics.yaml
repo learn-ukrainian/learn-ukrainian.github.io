@@ -1,6 +1,6 @@
-module: c1-107
+module: c1-044
 level: C1
-sequence: 107
+sequence: 44
 slug: asyndetic-semantics
 version: '2.0'
 title: 'Безсполучникове речення: логіка тире і двокрапки'
@@ -99,9 +99,9 @@ activity_hints:
 focus: grammar
 pedagogy: PPP
 prerequisites:
-- c1-106 (C1.6 Checkpoint)
+- c1-43 (skladnopidriadne-obstavynne)
 connects_to:
-- c1-108 (Persuasive Speech)
+- c1-45 (combined-complex-sentences)
 - c1-016 (Advanced Punctuation)
 objectives:
 - Learner can identify the semantic relationship in asyndetic sentences
@@ -115,7 +115,7 @@ grammar:
 - Semantic analysis of punctuation choices
 register: літературний
 immersion: 100% Ukrainian
-phase: C1.5 [Literature]
+phase: C1.4 [Complex Sentences]
 persona:
   voice: Senior Specialist
   role: Literary Editor

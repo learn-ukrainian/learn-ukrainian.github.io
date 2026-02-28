@@ -1,408 +1,452 @@
 <!-- SCOPE
-Covers: Telling time (hours, minutes), asking for time, days of the week, months of the year, time prepositions (о, до, після), daily schedules.
+Covers: Telling time (current and scheduled), days of the week, months, and essential time prepositions.
 Not covered:
-  - Complex time fractions (quarter past/to) → A2
-  - Instrumental case for time durations → A2
-Related: a1-17 (Numbers), a1-22 (Future Tense), a1-25 (Daily Routine)
+  - Complex time fractions (пів на, чверть до) → reserved for later levels
+Related: a1-22, a1-37
 -->
 
 # What Time Is It?
 
 > **Чому це важливо?**
 >
-> Knowing the time is essential for daily life in Ukraine. Whether you are catching a train or arranging a coffee meeting with a friend, precision matters. After this lesson, you will be able to read the clock, schedule appointments, and understand train tickets in Ukrainian.
+> In Ukrainian culture, punctuality is deeply respected and serves as a powerful symbol of reliability. Being «вча́сно» (on time) is considered a mark of professionalism and personal integrity. Whether you are catching a train or meeting a friend for coffee, knowing how to communicate time accurately is essential for everyday interactions in Ukraine.
 
-## Warm-up
+## Вступ
 
-Вітаємо на уроці про час. Уявіть вокзал **Київ-Пасажирський**. Поїзди прибувають. Люди чекають. Вони дивляться на годинник. Час — це важливо. В Україні поїзди точні.
+### Практика читання (Reading Practice)
+«Це мій день. Я маю розклад.
+Розклад — це важливо. Я люблю розклад.
+Зараз ранок. Це шоста година.
+Я прокидаюся рано. Я встаю.
+Я йду у ванну. Це кімната.
+Я вмиваюся. Я чищу зуби.
+Я йду на кухню. Кухня велика.
+Я готую сніданок. Сніданок смачний.
+Я їм кашу. Я п'ю каву.
+Я люблю каву. Кава гаряча.
+Зараз сьома година. Я одягаюся.
+Я беру сумку. Сумка чорна.
+Я виходжу на вулицю. На вулиці тепло.
+Сьогодні гарна погода. Світить сонце.
+Я йду на зупинку. Це зупинка.
+Я чекаю автобус. Автобус великий.
+Я сідаю в автобус. Я їду на роботу.
+Зараз восьма година. Я на роботі.
+Робота цікава. Я люблю роботу.
+Тут працюють люди. Це мої колеги.
+Він мій колега. Вона моя колега.
+Ми працюємо разом. Ми говоримо.
+Зараз дев'ята година. Я читаю документи.
+Зараз десята година. Я пишу листи.
+Зараз одинадцята година. Я маю перерву.
+Я п'ю чай. Чай смачний.
+Зараз дванадцята година. Це день.
+Зараз перша година. Це обід.
+Я йду в кафе. Кафе близько.
+Я їм суп. Суп гарячий.
+Я їм салат. Салат смачний.
+Я п'ю сік. Сік холодний.
+Зараз друга година. Я знову працюю.
+Зараз третя година. Я маю зустріч.
+Зустріч цікава. Люди говорять.
+Зараз четверта година. Я пишу звіт.
+Зараз п'ята година. Я закінчую роботу.
+Я йду додому. Я йду пішки.
+Я люблю ходити. Це корисно.
+Зараз шоста година. Я вдома.
+Це мій дім. Дім затишний.
+Тут тихо. Я відпочиваю.
+Зараз сьома година. Це вечір.
+Я готую вечерю. Вечеря легка.
+Я їм овочі. Я їм рибу.
+Зараз восьма година. Я дивлюся фільм.
+Фільм цікавий. Я люблю фільми.
+Зараз дев'ята година. Я читаю книгу.
+Книга велика. Я читаю багато.
+Зараз десята година. Я йду у ванну.
+Я вмиваюся. Я готуюся до сну.
+Зараз одинадцята година. Я лягаю спати.
+Це ніч. Надворі темно.
+Я сплю. Я бачу сни.
+Сни цікаві. Це хороший кінець дня.
+Завтра новий день. Завтра вівторок.
+Сьогодні понеділок. Понеділок — це робота.
+Вівторок — це робота. Середа — це робота.
+Четвер — це робота. П'ятниця — це робота.
+Субота — це вихідний. Неділя — це вихідний.
+Я люблю вихідні. Я гуляю.
+Я йду в парк. Парк великий.
+Там дерева. Там птахи.
+Я дивлюся на птахів. Це красиво.
+Я маю час. Час — це життя.
+Годинник іде. Час іде.
+Я дивлюся на годинник. Зараз ранок.
+Зараз перша година. Зараз друга година.
+Зараз третя година. Зараз четверта година.
+Зараз п'ята година. Зараз шоста година.
+Зараз сьома година. Зараз восьма година.
+Зараз дев'ята година. Зараз десята година.
+Зараз одинадцята година. Зараз дванадцята година.
+Я знаю час. Він знає час.
+Вона знає час. Ми знаємо час.
+Ви знаєте час. Вони знають час.
+Я питаю: котра година?
+Ви питаєте: котра година?
+Вони питають: котра година?
+Це важливе питання. Люди хочуть знати.
+Люди дивляться на телефон.
+Телефон показує час.
+Люди дивляться на годинник.
+Годинник показує час.
+Це зручно. Це просто.
+Я розумію час. Я планую час.
+Я маю план. План хороший.
+Я роблю все вчасно.
+Це українська мова. Я читаю українською.
+Я розумію українську. Це дуже приємно.
+Я знаю слова. Я вчу нові слова.
+Слова прості. Слова корисні.
+Це моя практика. Це мій успіх.»
 
-> [!culture] **Ukrzaliznytsia Punctuality**
-> The Ukrainian railway system, **Укрзалізни́ця**, is legendary for its resilience and punctuality. Even during the most difficult times of war, the vast majority of trains continue to run on schedule. In Ukraine, time is respected. Being "on time" (**вча́сно**) is a sign of reliability.
 
-Тут ми маємо два питання. Перше питання: "Котра година?". Друге питання: "О котрій годині?".
+### The Value of Being "Вчасно"
+Understanding how to talk about time is one of the most practical skills you can develop in any language. In this module, we will explore how to express time, days of the week, and months of the year in Ukrainian. We will look at the grammatical structures required to ask for the current time, schedule appointments, and discuss daily routines. By the end of this lesson, you will be able to navigate schedules, read timetables, and confidently arrange meetings.
 
-### The Two Questions
+Ukrainian society places a high value on the concept of time. The national railway system, Ukrzaliznytsia, is a perfect example of this dedication. Even during incredibly difficult times, such as the full-scale war, Ukrainian domestic trains maintained a remarkable punctuality rate of over ninety percent. This phenomenon is often referred to as "Iron Diplomacy." Being **вча́сно** (on time) is not just a matter of convenience; it represents societal resilience and a deep respect for the schedules of others. When you tell someone you will arrive at a certain hour, they will expect you to honor that commitment.
 
-Ми розрізняємо "стан" і "розклад".
+### Two Core Questions for Time
+When you want to talk about time in Ukrainian, you must first understand the difference between two fundamental questions. In English, you might use the phrase "what time" for several different situations. Ukrainian makes a strict distinction depending on whether you are asking about the clock right now, or asking about a planned event in the future.
 
-To ask "What time is it?", use:
-**Котра година?** — literally "Which hour?"
+The first question is «**Котра́ годи́на?**». This translates to "What time is it?". You use this question when you want to know the current time on the clock. It literally asks "Which hour is it?".
 
-To ask "At what time?", use:
-**О котрій годині?** — or simply **О котрій?**
+The second question is «**О котрі́й?**». This translates to "At what time?". You use this question when you are asking about the start time of an event, a meeting, or a train departure. It is used to schedule and plan. Mixing up these two questions is a common error, so it is important to practice recognizing which situation you are in.
 
-Understanding this difference is the key to this entire module. The first question asks for a noun phrase (It is five o'clock). The second question asks for a prepositional phrase (At five o'clock).
+### Polite Address: The Vocative Case
+When you need to ask a stranger for the time on the street, it is important to be polite. Ukrainian grammar uses a special case called the Vocative case (Кличний відмінок) to address people directly. This case changes the ending of a noun to show that you are calling out to that person.
 
-### Being Polite
+If you are speaking to a man, you use the word «**па́не**» (Sir, Mr.). This is the Vocative form of the noun «пан». If you are speaking to a woman, you use the word «**па́ні**» (Madam, Ms.). The word «пані» does not change its form in the Vocative case.
 
-Politeness is important. When you ask a stranger for the time, use **пане** (sir) or **пані** (madam).
+Here are examples of how to politely stop someone to ask for the time:
 
-Use this standard polite formula:
-**Перепрошую, пане, котра година?** (Excuse me, sir, what time is it?)
-**Скажіть, будь ласка, котра година?** (Tell me, please, what time is it?)
+«Па́не, скажі́ть, будь ла́ска, котра́ годи́на?» (Sir, tell me please, what time is it?)
+«Па́ні, ви не зна́єте, котра́ годи́на?» (Madam, do you not know what time it is?)
 
-> [!tip] **Pronunciation Hint**
-> In the word **година**, the **г** is the soft, voiced [ɦ], similar to the 'h' in "hello" but more voiced. It is never the hard [g] sound.
+> [!tip] **Vocabulary Focus**
+> The word **за́раз** (now) is very useful when asking about the current time. You can add it to your question to make it more natural: «Котра́ за́раз годи́на?» (What time is it now?).
 
----
 
-## Presentation: The Clock Face
 
-Подивіться на годинник. Слово **година** має жіночий рід. Тому ми маємо правило. Ми не кажемо "один, два". Ми кажемо "перша, друга".
+### Практика читання (Reading Practice)
+«Це годинник. Він показує час.
+Зараз ранок. Зараз перша година.
+Зараз друга година. Зараз третя година.
+Зараз четверта година. Зараз п'ята година.
+Зараз шоста година. Зараз сьома година.
+Зараз восьма година. Зараз дев'ята година.
+Зараз десята година. Зараз одинадцята година.
+Зараз дванадцята година. Це день.
+Сьогодні гарний день. Я працюю.
+Він працює. Вона працює. Вони працюють.
+Ми працюємо. Ви працюєте. Я відпочиваю.
+Зараз вечір. Зараз пізно. Я йду додому.
+Зараз ніч. Це дуже пізно. Я сплю.
+Я люблю ранок. Ранок — це добре.
+Я п'ю чай. Він п'є каву.
+Вона п'є чай. Ми п'ємо каву.
+Це смачно. Чай смачний. Кава смачна.
+Сьогодні тепло. Завтра буде тепло.
+Вчора було тепло. Це добре.
+Я йду на роботу. Робота — це добре.
+Він йде на роботу. Вона йде на роботу.
+Ми йдемо на роботу. Вони йдуть на роботу.
+Це мій день. Це мій тиждень.
+Це мій місяць. Це мій рік.
+Я читаю книгу. Книга цікава.
+Він читає книгу. Вона читає книгу.
+Ми читаємо книги. Вони читають книги.»
 
-### The Hours (Ordinal Numbers)
+## Презентація часу
 
-Дивіться на циферблат. Ви кажете: "Це перша година". Або: "Це друга година".
+### Hours and Ordinal Numbers
+In Ukrainian, the word for hour is **годи́на**. This word is a feminine noun. Because of this grammatical gender, whenever we identify the hour on the clock, we must use feminine ordinal numbers. Ordinal numbers are words that indicate a position in a sequence, such as "first", "second", or "third". We do not use regular counting numbers like "one", "two", or "three" when stating the current hour.
 
-Ось схема для годин:
-
-*   01:00 — **Перша година**
-*   02:00 — **Друга година**
-*   03:00 — **Третя година**
-*   04:00 — **Четверта година**
-*   05:00 — **П'ята година**
-*   06:00 — **Шоста година**
-*   07:00 — **Сьома година**
-*   08:00 — **Восьма година**
-*   09:00 — **Дев'ята година**
-*   10:00 — **Десята година**
-*   11:00 — **Одинадцята година**
-*   12:00 — **Дванадцята година**
+For example, to say "It is one o'clock", a Ukrainian speaker literally says "It is the first hour". To say "It is two o'clock", they say "It is the second hour". All of these numbers will end in the feminine suffixes "-а" or "-я" to perfectly agree with the noun «годи́на».
 
 > [!warning] **Common Mistake**
-> Do not say "Це два годин" (It is two o'clock). Це помилка. Always use the ordinal feminine form: **Зараз друга година** (Now is the second hour).
-
-### The Minutes (Telegraphic Style)
-
-For minutes (**хвилини**), we use a simple "digital" style. It is perfect for beginners. You simply say the hour (ordinal) and the minutes (cardinal number).
-
-Формат: **[Година (жіночий рід)] + [Хвилина (число)]**
-
-*   10:20 — **Деся́та два́дцять**
-*   05:30 — **П'ята́ три́дцять**
-*   08:15 — **Во́сьма п'ятна́дцять**
-*   02:45 — **Дру́га со́рок п'ять**
-*   11:10 — **Одина́дцята де́сять**
-*   12:50 — **Двана́дцята п'ятдеся́т**
-
-Цей метод — простий. Ви говорите годину і хвилини. Це ввічливо та правильно.
-
-> [!note] **Preview: Half and Quarter**
-> In everyday speech, you may also hear **пів на другу** (half past one, literally "half to the second hour") and **чверть на третю** (quarter past two). These forms are common but more complex — we will learn them at a later stage. For now, the telegraphic style covers all your needs.
-
-### Defining "Now"
-
-To say "now", use the word **за́раз**.
-
-*   **Зараз третя десять.** (It is 3:10 now.)
-*   **Зараз шоста сорок.** (It is 6:40 now.)
-
-### Nuances: Exact and Approximate Time
-
-To be precise, use the word **рівно** (exactly).
-*   **Зараз рівно п'ята година.** (It is exactly five o'clock.)
-*   **Поїзд відправляється рівно о другій.** (The train departs at exactly two.)
-
-If you are not sure, use **приблизно** (approximately) or **майже** (almost).
-*   **Зараз приблизно третя.** (It is approximately three.)
-*   **Вже майже восьма.** (It is almost eight.)
-
-Ви також можете запитати: "Маєте точний час?" (Do you have the exact time?).
-
-### Useful Phrases (Корисні фрази)
-
-*   **Вибачте, ви маєте час?** (Sorry, do you have the time?)
-*   **Чи ваш годинник правильний?** (Is your clock correct?)
-*   **Мій годинник поспішає.** (My watch is fast.)
-*   **Мій годинник відстає.** (My watch is slow.)
-*   **Я запізнююся!** (I am late!)
-*   **Ми маємо час.** (We have time.)
-
-> [!note] **Short Answers**
-> In casual speech, if someone asks **Котра година?**, you can answer simply with the number if the context is clear: **П'ята.** (Five.) But using the full phrase **П'ята година** is more polite and formal.
-
-> [!myth-buster] **Digital vs. Analog**
-> You might hear that you *must* use complex phrases like "quarter to three" to sound native. While those forms exist and are beautiful, modern Ukrainians living in a digital world frequently use the "telegraphic style" (hours + minutes) because it is faster and clearer, especially for train schedules and meetings.
-
----
-
-## Days of the Week
-
-Плануйте свій час. Вчіть дні тижня (**дні тижня**). В Україні тиждень починається з понеділка.
-
-### The Names and Etymology
-
-Українські назви днів тижня дуже логічні. Note that they are written with a lowercase letter unless they start a sentence.
-
-1.  **понеді́лок** — **Monday**. Literally "after Sunday" (по-неділі).
-2.  **вівто́рок** — **Tuesday**. From "second" (вторий).
-3.  **середа́** — **Wednesday**. The "middle" (середина) of the work week.
-4.  **четве́р** — **Thursday**. The "fourth" (четвертий) day.
-5.  **п'я́тниця** — **Friday**. The "fifth" (п'ятий) day.
-6.  **субо́та** — **Saturday**. From "Sabbath".
-7.  **неді́ля** — **Sunday**. Literally "no work" (не діло).
-
-### Grammar: "On" a Day (Accusative)
-
-To say that something happens *on* a specific day, we use the preposition **у** (or **в**) and the **Accusative case**.
-
-For masculine nouns (consonant ending), the word usually does not change:
-*   **понеділок** → **у понеділок** (on Monday)
-*   **вівторок** → **у вівторок** (on Tuesday)
-*   **четвер** → **у четвер** (on Thursday)
-
-For feminine nouns (ending in -а/-я), the ending changes to **-у** or **-ю**:
-*   **середа** → **у середу** (on Wednesday)
-*   **п'ятниця** → **у п'ятницю** (on Friday)
-*   **субота** → **у суботу** (on Saturday)
-*   **неділя** → **у неділю** (on Sunday)
-
-> [!observe] **У or В?**
-> You will see both **у** and **в**. The choice depends on the sound *before* the preposition. Use **у** after a consonant or at the start of a sentence (**У понеділок я працюю**). Use **в** after a vowel (**Я працюю в понеділок**).
-
-### Weekly Context and Planning
-
-Ми часто говоримо про планування тижня. Дуже важливо знати робочі дні. Також важливо знати вихідні дні.
-*   **ти́ждень** — week
-*   **робо́чий день** — workday (Monday through Friday)
-*   **вихідни́й** (or **вихідні́ дні**) — weekend (Saturday and Sunday)
-*   **сього́дні** — today
-*   **за́втра** — tomorrow
-*   **вчора** — yesterday
-
-Коли ми плануємо:
-*   **на цьому тижні** — on this week (Locative)
-*   **наступного тижня** — next week (Genitive)
-*   **минулого тижня** — last week (Genitive)
-
-> [!culture] **The Ukrainian Weekend**
-> The concept of a weekend (**вихідні**) is very important. Ukrainians usually work from Monday (**понеділок**) to Friday (**п'ятниця**). Saturday (**субота**) and Sunday (**неділя**) are traditionally days for family, resting, and visiting the dacha or countryside. When making plans, you might say: **Що ти робиш на вихідних?** (What are you doing on the weekend?).
-
----
-
-## Months of the Year
-
-Українські назви місяців (**місяці**) показують природу. Вони стародавні та описові. Вони дуже відрізняються від латинських назв (January, February) в англійській мові.
-
-### Winter (Зима)
-
-*   **гру́день** — **December**. From **грудка** (frozen clod of earth).
-*   **сі́чень** — **January**. From **сікти** (to cut/slash), referring to biting winds or cutting wood.
-*   **лю́тий** — **February**. Literally "fierce" or "ferocious" cold.
-
-### Spring (Весна)
-
-*   **бе́резень** — **March**. Named after the birch tree (**береза**) sap.
-*   **кві́тень** — **April**. Derived from the word for flowers (**квіти**).
-*   **тра́вень** — **May**. Comes from the word for grass (**трава**).
-
-### Summer (Літо)
-
-*   **че́рвень** — **June**. From **червоний** (red), referencing berries or cochineal insects.
-*   **ли́пень** — **July**. The time when the linden tree (**липа**) blooms.
-*   **се́рпень** — **August**. Named after the sickle (**серп**) used for harvest.
-
-### Autumn (Осінь)
-
-*   **ве́ресень** — **September**. The month of heather (**верес**) blooming.
-*   **жо́втень** — **October**. The month of yellow (**жовтий**) leaves.
-*   **листопа́д** — **November**. Literally "leaf fall" (**листя** + **падати**).
-
-### Grammar: "In" a Month (Locative)
-
-To say *in* a month, we use the preposition **у** (or **в**) plus the **Locative case**. Since all month names end in a consonant (except **лютий**), they follow a predictable pattern.
-
-Most months take the ending **-і**:
-*   **січень** → **у січні** (in January)
-*   **квітень** → **у квітні** (in April)
-*   **травень** → **у травні** (in May)
-*   **вересень** → **у вересні** (in September)
-*   **жовтень** → **у жовтні** (in October)
-
-**Exceptions:**
-*   **лютий** behaves like an adjective → **у лютому** (in February)
-*   **листопад** keeps the hard stem → **у листопаді** (in November)
-
-### Talking About Your Birthday
-
-To ask someone when their birthday is, you might say:
-*   **У якому місяці твій день народження?** (In which month is your birthday?)
-*   **Мій день народження у травні.** (My birthday is in May.)
-*   **Свято Миколая у грудні.** (St. Nicholas Day is in December.)
-*   **Різдво у січні або у грудні.** (Christmas is in January or in December.)
-
-> [!tip] **Memory Aid**
-> Grouping months by season helps you remember them. **Квітень** (April) has flowers. **Жовтень** (October) is yellow. **Січень** (January) cuts with cold. **Листопад** (November) describes leaves falling. The names tell a story of the Ukrainian year. They are closely tied to the agricultural cycle and the changes in nature, which makes them very poetic and logical once you understand their root meanings.
-
----
-
-## Time Prepositions
-
-Ми використовуємо три важливі прийменники: **о**, **до**, і **після**.
-
-### At a Time (О / Об)
-
-When you answer the question **О котрій годині?** (At what time?), use the preposition **о** (or **об**).
-
-The noun **година** changes to the Locative form **годині**. The ordinal number also changes.
-
-*   1:00 → **О першій годині** (At one o'clock)
-*   2:00 → **О другій годині** (At two o'clock)
-*   3:00 → **О третій годині** (At three o'clock)
-*   7:00 → **О сьомій годині** (At seven o'clock)
-*   11:00 → **Об одинадцятій годині** (At eleven o'clock)
-
-Often, in speech, we drop the word **годині**:
-*   **Поїзд прибуває о шостій.** (The train arrives at six.)
-*   **Ми зустрічаємося о другій двадцять.** (We are meeting at 2:20.)
-
-### Until (До)
-
-The preposition **до** indicates the end of a duration or a deadline. It requires the **Genitive case**.
-*   **до** — until / to
-
-Examples:
-*   **Я працюю до п'ятої.** (I work until five.)
-*   **Магазин працює до дев'ятої вечора.** (The store works until nine in the evening.)
-
-### After (Після)
-
-The preposition **після** indicates a time later than an event. It also requires the **Genitive case**. You can use it with hours, or with parts of the day or specific events.
-*   **пі́сля** — after
-
-Examples:
-*   **Після шостої я вдома.** (After six I am at home.)
-*   **Ми обідаємо після першої.** (We have lunch after one.)
-*   **Після роботи ми йдемо в кіно.** (After work we are going to the cinema.)
-*   **Після обіду я п'ю каву.** (After lunch I drink coffee.)
-
-> [!context] **Working Hours and Breaks**
-> You will often see signs on shops: **Години роботи: з 9:00 до 18:00**. The preposition **з** (from) pairs with **до** (until). "From nine to six" is **з дев'ятої до шостої**. You might also see a sign for a lunch break: **Перерва: з 13:00 до 14:00**. This means the shop will be closed during that hour. Always check these signs when visiting smaller shops or government offices in Ukraine.
-
----
-
-## Presentation 2: Daily Schedules
-
-Тепер подивимося на реальне життя. Розклад має години, частини доби і події.
-
-### The 24-Hour vs. 12-Hour Format
-
-Ukraine officially uses the 24-hour clock for all written schedules.
-*   **13:00** — **тринадцята година**
-*   **20:00** — **двадцята година**
-
-However, in casual conversation, people often use the 12-hour format and add the part of the day.
-
-*   **Ранок** (Morning): **сьома ранку** (7:00 AM)
-*   **День** (Day/Afternoon): **друга дня** (2:00 PM)
-*   **Вечір** (Evening): **восьма вечора** (8:00 PM)
-*   **Ніч** (Night): **третя ночі** (3:00 AM)
-
-> [!warning] **Context Matters**
-> If you buy a train ticket, it will always show **17:30**, not 5:30 PM. Be comfortable reading the 24-hour format (**сімнадцята тридцять**) to avoid missing your train!
-
-### Daily Routine Vocabulary
-
-Let's look at a typical day for a conductor (**провідник**) on Ukrzaliznytsia.
-
-*   **прокидатися** — to wake up
-*   **сні́дати** — to have breakfast
-*   **працюва́ти** — to work
-*   **обі́дати** — to have lunch
-*   **вече́ряти** — to have dinner
-*   **ляга́ти спа́ти** — to go to sleep
-
-**Example Schedule:**
-*   06:00 — Я прокидаюся о шостій ранку.
-*   07:00 — Я снідаю о сьомій.
-*   08:00 — Я починаю працювати о восьмій.
-*   13:00 — Я обідаю о першій дня.
-*   22:00 — Я лягаю спати о десятій вечора.
-
-### Reading a Ticket and Timetables
-
-Подивіться на квиток на поїзд "Київ-Львів". Укрзалізниця використовує 24-годинний формат.
-*   **Відправлення** (Departure): **06:45** (шоста сорок п'ять)
-*   **Прибуття** (Arrival): **11:55** (одинадцята п'ятдесят п'ять)
-*   **Дата** (Date): **12.05** (дванадцяте травня)
-*   **Вагон** (Carriage) and **Місце** (Seat) are also important, but time is critical.
-
-Читайте ці три рядки уважно. Коли ви плануєте подорож, завжди перевіряйте час. You must arrive at the station at least twenty minutes before departure.
-
-> [!note] **Public Transport Schedules**
-> Beyond trains, you will also see schedules (**розклад**) for buses (**автобус**) and trams (**трамвай**). They also strictly use the 24-hour clock. If a bus schedule says it arrives at 14:15, you should read it as **чотирнадцята п'ятнадцять**. Being able to quickly process this format is a vital survival skill in any Ukrainian city.
-
----
-
-## Practice
-
-### Читання: Мій ідеальний день
-
-Прочитайте текст про ідеальний день.
-
-Мене звати Максим. Я люблю планувати свій день.
-Я прокидаюся о сьомій ранку. Це ідеальний час. Я снідаю о сьомій тридцять. Я п'ю каву та їм круасан.
-О восьмій я йду на роботу. Я працюю в офісі. Офіс у центрі міста.
-Ми обідаємо о першій годині дня. Ми любимо піцу або суп.
-Я закінчую працювати о шостій вечора.
-Увечері я відпочиваю. Я читаю книгу або дивлюся фільм.
-Я лягаю спати об одинадцятій. Завтра буде новий день.
-
-### Dialogue 1: Asking for Time
-
-**Ситуація:** Ви на Хрещатику.
-
-— **Перепрошую, котра година?** (Excuse me, what time is it?)
-— **Зараз друга двадцять.** (It is 2:20 now.)
-— **Дякую!** (Thank you!)
-— **Будь ласка.** (You're welcome.)
-
-### Dialogue 2: Planning a Meeting
-
-**Ситуація:** Друзі домовляються про каву.
-
-— **Привіт! Давай зустрінемося у вівторок?** (Hi! Let's meet on Tuesday?)
-— **Привіт. У вівторок я працюю до шостої.** (Hi. On Tuesday I work until six.)
-— **Тоді о сьомій вечора?** (Then at seven in the evening?)
-— **Чудово. До зустрічі!** (Great. See you!)
-
-### Dialogue 3: At the Station
-
-**Ситуація:** Ви купуєте квиток на поїзд.
-
-— **Добрий день. Коли відправляється поїзд до Львова?** (Good afternoon. When does the train to Lviv depart?)
-— **Поїзд відправляється о п'ятій тридцять.** (The train departs at 5:30.)
-— **О котрій він прибуває до Львова?** (At what time does it arrive in Lviv?)
-— **Він прибуває об одинадцятій сорок п'ять.** (It arrives at 11:45.)
-— **Дякую. Один квиток, будь ласка.** (Thank you. One ticket, please.)
-
-### Ситуація: Робочий день
-
-Опишіть свій робочий графік. (Describe your work schedule.)
-
-1.  **Я починаю працювати о дев'ятій ранку.** (I start working at 9 AM.)
-2.  **Ми маємо перерву о першій дня.** (We have a break at 1 PM.)
-3.  **Офіс зачиняється о шостій вечора.** (The office closes at 6 PM.)
-
-### Ситуація: Мій тиждень
-
-Спробуйте скласти схожі речення про свій тиждень:
-1.  **У понеділок я працюю.** (On Monday I work.)
-2.  **У середу я маю урок.** (On Wednesday I have a lesson.)
-3.  **У суботу я відпочиваю.** (On Saturday I rest.)
+> A very frequent error among learners is directly translating "two hours" to state the time. You must never say «два годи́н» to mean "It is two o'clock". «Два» is a regular cardinal number, and it does not work here. You must use the feminine ordinal number: «За́раз дру́га годи́на» (It is now two o'clock).
+
+### The 12-Hour Clock
+Here is the complete list of the first twelve hours. Notice how every number is a feminine ordinal adjective. You will use these numbers to answer the question «Котра́ годи́на?».
+
+| Ukrainian | English Translation |
+| :--- | :--- |
+| **пе́рша годи́на** | one o'clock (the first hour) |
+| **дру́га годи́на** | two o'clock (the second hour) |
+| **тре́тя годи́на** | three o'clock (the third hour) |
+| **четве́рта годи́на** | four o'clock (the fourth hour) |
+| **п'я́та годи́на** | five o'clock (the fifth hour) |
+| **шо́ста годи́на** | six o'clock (the sixth hour) |
+| **сьо́ма годи́на** | seven o'clock (the seventh hour) |
+| **во́сьма годи́на** | eight o'clock (the eighth hour) |
+| **дев'я́та годи́на** | nine o'clock (the ninth hour) |
+| **деся́та годи́на** | ten o'clock (the tenth hour) |
+| **одина́дцята годи́на** | eleven o'clock (the eleventh hour) |
+| **двана́дцята годи́на** | twelve o'clock (the twelfth hour) |
+
+You can also use these forms without the word «годи́на» if the context is clear. For example, if someone asks the time, you can simply reply: «За́раз во́сьма» (It is now eight).
+
+### Minutes and the Telegraphic Style
+The Ukrainian word for minute is **хвили́на**. Just like «годи́на», it is a feminine noun. When telling the time with minutes, things can get grammatically complex, but there is a very simple method that is perfect for the A1 level. We call this the "telegraphic style".
+
+In the telegraphic style, you simply state the hour using the ordinal number, and then you state the minutes using regular cardinal numbers. You do not need to use complicated fractions like "half past" or "quarter to". This is exactly how digital clocks display the time, and it is universally understood in Ukraine.
+
+For example, to say 5:30, you use the ordinal number for five, and the cardinal number for thirty: «п'я́та годи́на три́дцять хвили́н». In casual conversation, you can drop the nouns and just say: «п'я́та три́дцять».
+
+### Practical Examples with Minutes
+Let us look at some practical examples of telling the time using the telegraphic style. Remember, the first number is always ordinal, and the second number is always cardinal.
+
+«За́раз шо́ста годи́на де́сять хвили́н.» (It is now 6:10.)
+«Вже деся́та два́дцять.» (It is already 10:20.)
+«Котра́ годи́на? Одина́дцята со́рок п'ять.» (What time is it? 11:45.)
+«За́раз пе́рша п'ятна́дцять.» (It is now 1:15.)
+
+This structure allows you to express any possible time on the clock using the numbers you have already learned in previous modules. Practice reading digital clocks out loud using this format to build your confidence.
+
+### Social Scenarios: Asking for the Time
+Knowing the numbers is only the first step. You must also feel confident initiating the conversation. In Ukraine, it is perfectly acceptable to ask a stranger for the time, provided you use the polite Vocative forms we discussed earlier.
+
+Imagine you are waiting at a bus stop and your phone battery has died. You turn to the person next to you.
+«Вибача́йте, котра́ за́раз годи́на?» (Excuse me, what time is it now?)
+
+Or perhaps you are in a cafe and need to check the time before your next meeting.
+«Скажі́ть, будь ла́ска, вже є дру́га годи́на?» (Tell me please, is it already two o'clock?)
+
+Practicing these full phrases will make your interactions sound much more natural and respectful than simply pointing at your wrist and saying a single word.
+
+> [!context] **Daily Routine Observation**
+> When scheduling your **день** (day), you will notice that people often prefer exact minutes over rough estimates. Saying «во́сьма п'ятна́дцять» is very common in professional environments where every **хвили́на** (minute) counts.
+
+
+
+### Практика читання (Reading Practice)
+«Це тиждень. Понеділок — перший день.
+Вівторок — другий день. Середа — третій день.
+Четвер — четвертий день. П'ятниця — п'ятий день.
+Субота — шостий день. Неділя — сьомий день.
+Я працюю у понеділок. Я працюю у вівторок.
+Я працюю у середу. Я працюю у четвер.
+Я працюю у п'ятницю. Я відпочиваю у суботу.
+Я відпочиваю у неділю.
+Сьогодні понеділок. Завтра вівторок.
+Вчора була неділя.
+Це місяць. Це рік. Це зима.
+Грудень, січень, лютий — це зима.
+Це весна. Березень, квітень, травень — це весна.
+Це літо. Червень, липень, серпень — це літо.
+Це осінь. Вересень, жовтень, листопад — це осінь.
+Це кімната. Тут стіл. Тут стілець.
+Я сиджу. Він сидить. Вона сидить.
+Ми сидимо. Ви сидите. Вони сидять.
+Це мій стіл. Це мій стілець.
+Я бачу годинник. Годинник великий.
+Він показує час. Час — це важливо.
+Я маю час. Він має час.
+Вона має час. Ми маємо час.
+Ви маєте час. Вони мають час.
+Я знаю час. Він знає час.
+Вона знає час. Ми знаємо час.
+Це добре. Це дуже добре.»
+
+## Дні та місяці
+
+### The Days of the Week
+The Ukrainian word for week is **ти́ждень**. The days of the week are closely tied to their numerical order in the Slavic tradition. Monday is the beginning of the work week, and Sunday is the final day of rest. Note that in Ukrainian orthography, days of the week are always written with lowercase letters, unlike in English.
+
+1. **понеді́лок** (Monday)
+2. **вівто́рок** (Tuesday)
+3. **середа́** (Wednesday)
+4. **четве́р** (Thursday)
+5. **п'я́тниця** (Friday)
+6. **субо́та** (Saturday)
+7. **неді́ля** (Sunday)
+
+The word **день** (day) is used frequently in phrases like «до́брий день» (good day) or «робо́чий день» (work day). When discussing the days of the week, we often refer to them simply as «дні ти́жня» (days of the week).
+
+### Grammar: "On a Day" Using the Accusative Case
+When you want to say that an event happens "on Monday" or "on Friday", you must use a specific grammatical structure. You cannot just say the name of the day. You must use the preposition **у** or **в** followed by the Accusative case (Знахідний відмінок). This rule applies whenever a day of the week denotes the time of an action.
+
+For masculine days that end in a consonant (понеділок, вівторок, четвер), the Accusative form is identical to the dictionary form. Nothing changes.
+«У понеді́лок.» (On Monday.)
+«У вівто́рок.» (On Tuesday.)
+«У четве́р.» (On Thursday.)
+
+For feminine days that end in "-а" or "-я" (середа, п'ятниця, субота, неділя), the ending changes to "-у" or "-ю" in the Accusative case.
+«У сере́ду.» (On Wednesday.)
+«У п'я́тницю.» (On Friday.)
+«У субо́ту.» (On Saturday.)
+«У неді́лю.» (On Sunday.)
+
+> [!warning] **Case Selection Error**
+> English speakers often want to use the Locative case for days because they translate the preposition "in" or "at" directly. You must not use the Locative case for days. Saying «у понеді́лку» is grammatically incorrect. Always use the Accusative case: «у понеді́лок».
+
+### Euphony: Choosing Between "У" and "В"
+Ukrainian is known for its euphony (милозвучність), which means the language naturally adjusts words to sound pleasant and flow smoothly. When choosing between the prepositions **у** and **в**, you must look at the letters surrounding the preposition.
+
+If the previous word ends in a consonant, or if the day of the week begins with a cluster of consonants, you must use **у**. This prevents too many consonants from clashing together.
+«Він працю́є у вівто́рок.» (He works on Tuesday. — «у» because «вівторок» starts with a consonant cluster).
+
+If the previous word ends in a vowel and the day begins with a single consonant, you use **в**.
+«Ми відпочива́ємо в субо́ту.» (We rest on Saturday. — «в» because «відпочиваємо» ends in a vowel and «субота» starts with a single consonant).
+
+### The Ukrainian Calendar and Months
+The word for month is **мі́сяць**, and the word for year is **рік**. The traditional Ukrainian month names are independent of the Roman system used in English and many other languages. Ukrainian months have authentic Slavic names that deeply reflect the natural environment, agricultural cycles, and weather patterns of Ukraine.
+
+These names are incredibly poetic. For example, the month of January is «сі́чень», which comes from the word for "cutting," describing the biting, cutting cold of winter winds. The month of August is «се́рпень», which comes from the word for "sickle," representing the traditional time of the grain harvest. Learning these months gives you a direct connection to the Ukrainian landscape. Like the days of the week, month names are written with lowercase letters.
+
+### The Twelve Months by Season
+Here are the twelve months, grouped by their respective seasons. Recognizing these seasonal patterns will help you memorize the vocabulary faster.
+
+| Season | Ukrainian Month | Origin / Meaning |
+| :--- | :--- | :--- |
+| **Winter** | **гру́день** (December) | Frozen clods of earth |
+| **Winter** | **сі́чень** (January) | Cutting, biting cold |
+| **Winter** | **лю́тий** (February) | Fierce, fierce frost |
+| **Spring** | **бе́резень** (March) | Birch trees blooming |
+| **Spring** | **кві́тень** (April) | Flowers blossoming |
+| **Spring** | **тра́вень** (May) | Green grass growing |
+| **Summer** | **че́рвень** (June) | Red insects / blooming |
+| **Summer** | **ли́пень** (July) | Linden trees flowering |
+| **Summer** | **се́рпень** (August) | The sickle, harvesting |
+| **Autumn** | **ве́ресень** (September)| Heather blooming |
+| **Autumn** | **жо́втень** (October) | Yellow leaves falling |
+| **Autumn** | **листопа́д** (November) | Leaves dropping |
+
+> [!culture] **Cultural Connection**
+> Knowing the meaning behind the months makes them much easier to remember. When you say **тра́вень** (May), you can picture the lush green grass. When you say **жо́втень** (October), you can visualize the beautiful yellow autumn leaves across the city of Kyiv. This shows how deeply the language is tied to nature.
+
+### Grammar: "In a Month" Using the Locative Case
+When you want to express that something happens "in a specific month", such as "in January" or "in May", you use the Locative case (Місцевий відмінок). The grammatical rule is to use the preposition **у** or **в** followed by the Locative form of the month.
+
+Almost all Ukrainian month names end in the soft suffix "-ень". In the Locative case, this ending drops the vowel and adds the letter "-і". The month «листопа́д» simply adds "-і" to the end.
+
+«У гру́дні.» (In December.)
+«У сі́чні.» (In January.)
+«У тра́вні.» (In May.)
+«У се́рпні.» (In August.)
+«У листопа́ді.» (In November.)
+
+Examples in context:
+«Мій день наро́дження у ве́ресні.» (My birthday is in September.)
+«У лі́тні мі́сяці ду́же те́пло.» (In the summer months, it is very warm.)
+
+
+
+### Практика читання (Reading Practice)
+«Я маю розклад. Я прокидаюся рано.
+Це о шостій годині. Я снідаю.
+Я йду на роботу. Це о восьмій годині.
+Я працюю. Я працюю до першої години.
+Я обідаю. Це обід.
+Я працюю до шостої години.
+Я йду додому. Я вечеряю.
+Я відпочиваю. Я читаю.
+Я сплю. Це о десятій годині.
+Він має розклад. Вона має розклад.
+Ми маємо розклад. Ви маєте розклад.
+Це дуже добре. Розклад — це важливо.
+Я приходжу вчасно. Він приходить вчасно.
+Вона приходить вчасно. Ми приходимо вчасно.
+Ви приходите вчасно. Вони приходять вчасно.
+Це українська мова. Я вивчаю мову.
+Він вивчає мову. Вона вивчає мову.
+Ми вивчаємо мову. Вони вивчають мову.
+Це урок. Урок цікавий.
+Я слухаю урок. Він слухає урок.
+Ми слухаємо урок. Це мій урок.
+Зараз день. Зараз світло.
+Ввечері темно. Вночі дуже темно.
+Я бачу день. Я бачу вечір.
+Це мій розклад. Я люблю розклад.
+Розклад — це час. Час іде.»
+
+## Практика та розклад
+
+### Scheduling with "О Котрій?"
+Now that we know how to identify the current time, we need to learn how to schedule events. When we ask «**О котрі́й?**» (At what time?), we must use a specific preposition to answer. We use the preposition **о** (or **об** before vowels) followed by the Locative case.
+
+Fortunately, for hours, the Locative case looks very similar to the regular form. You will use the feminine ordinal numbers, but they will take the Locative ending "-ій".
+
+«О пе́ршій годи́ні.» (At one o'clock.)
+«О дру́гій годи́ні.» (At two o'clock.)
+«О п'я́тій годи́ні.» (At five o'clock.)
+«О деся́тій годи́ні.» (At ten o'clock.)
+
+«О котрі́й годи́ні конце́рт?» (At what time is the concert?)
+«Конце́рт о сьо́мій годи́ні.» (The concert is at seven o'clock.)
+
+### Essential Prepositions for Time Planning
+To create full schedules and routines, you need a few more prepositions. These prepositions allow you to define durations and sequences of events.
+
+1. **до** (until, before): This preposition is followed by the Genitive case.
+«Я працю́ю до шо́стої годи́ни.» (I work until six o'clock.)
+«Він чита́є до о́біду.» (He reads before lunch.)
+
+2. **пі́сля** (after): This preposition is also followed by the Genitive case.
+«Пі́сля робо́ти я йду додо́му.» (After work, I go home.)
+«Ми зустрінемося пі́сля во́сьмої.» (We will meet after eight.)
+
+3. **з ... до** (from ... to): This paired structure is perfect for stating business hours or shifts. Both parts take the Genitive case.
+«Магази́н працю́є з дев'я́тої до сьо́мої.» (The store works from nine to seven.)
+
+### The 24-Hour vs. 12-Hour Register
+In Ukraine, the way you express time depends heavily on the context and the register of your speech. The 24-hour format is the official standard. It is used exclusively for public transport timetables, flight departures, digital devices, and formal announcements.
+«По́їзд прибува́є о чотирна́дцятій три́дцять.» (The train arrives at 14:30.)
+
+However, in everyday, conversational speech (розмо́вний стиль), people almost always use the 12-hour format. To clarify which part of the day they mean, they add specific time nouns: **ра́нок** (morning), **день** (day), and **ве́чір** (evening).
+«О дру́гій годи́ні дня.» (At two o'clock in the day / 2:00 PM.)
+«О во́сьмій годи́ні ра́нку.» (At eight o'clock in the morning / 8:00 AM.)
+«О сьо́мій годи́ні ве́чора.» (At seven o'clock in the evening / 7:00 PM.)
+
+> [!fact] **Early and Late**
+> In Ukrainian, the concept of **ра́но** (early) and **пі́зно** (late) is often used when discussing schedules. If a meeting is at 6:00 AM, someone might complain: «Це ду́же ра́но!» (That is very early!). If a train arrives at midnight, they might say: «Це ду́же пі́зно.» (That is very late.).
+
+### Reading Scenario: A Conductor's Schedule
+Let us look at a practical application of these time rules by reading a simple schedule for a train conductor. Notice how the days of the week, hours, and prepositions work together to describe a routine.
+
+«Мій робо́чий ти́ждень почина́ється у понеді́лок. Я прокида́юся ра́но. Це о п'я́тій годи́ні. Мій по́їзд відправля́ється о шо́стій со́рок п'ять. Я працю́ю ці́лий день. З деся́тої до двана́дцятої я перевіря́ю квитки́. Я працю́ю до во́сьмої годи́ни ве́чора. Це до́вгий робо́чий день. У сере́ду і в четве́р я ма́ю вихідні́ дні. Я відпочива́ю і чита́ю кни́ги.»
+
+(My work week begins on Monday. I wake up early. It is at five o'clock. My train departs at 6:45. I work the whole day. From ten until twelve, I check tickets. I work until eight o'clock in the evening. It is a long work day. On Wednesday and Thursday, I have days off. I rest and read books.)
+
+### Mini-Dialogue: Planning a Meeting
+Finally, let us review a short conversation between two friends trying to schedule a meeting for the upcoming week. This dialogue integrates the questions, the days, and the time expressions.
+
+**Оле́на:** Приві́т! Як спра́ви? Ми мо́жемо зустрі́тися на цьо́му ти́жні?
+(Hi! How are things? Can we meet this week?)
+**Іва́н:** Приві́т! Так, звича́йно. Коли́ ти ві́льна?
+(Hi! Yes, of course. When are you free?)
+**Оле́на:** Я ві́льна у вівто́рок пі́сля робо́ти.
+(I am free on Tuesday after work.)
+**Іва́н:** Су́пер. О котрі́й годи́ні?
+(Super. At what time?)
+**Оле́на:** О шо́стій три́дцять ве́чора. Це до́бре?
+(At 6:30 in the evening. Is that good?)
+**Іва́н:** Так, це вча́сно. До зу́стрічі у вівто́рок!
+(Yes, that is on time. See you on Tuesday!)
 
 ---
 
 # Підсумок
 
-Congratulations! You have mastered the essential tools for navigating time in Ukrainian. You can now read the clock, schedule appointments, and understand your train ticket. Remember, accuracy with time is respected in Ukraine, so use your new skills to be **вчасно** (on time).
+Congratulations! You have completed a comprehensive module on expressing time in Ukrainian. You learned that identifying the current hour requires the question «Котра́ годи́на?» and the use of feminine ordinal numbers like «пе́рша» and «дру́га». You also learned that scheduling an event requires the question «О котрі́й?» and the preposition «о».
+
+We explored the days of the week, noting that they require the Accusative case to express when an action happens («у понеді́лок», «у п'я́тницю»). We then covered the poetic, nature-inspired names of the twelve Ukrainian months, which require the Locative case («у сі́чні», «у тра́вні»). Finally, we practiced combining these elements with prepositions like «до», «після», and «з... до» to read schedules and plan meetings.
 
 **Перевірте себе:**
+1. What is the difference between asking «Котра́ годи́на?» and «О котрі́й?»?
+2. Why do we say «дру́га годи́на» instead of using the number «два»?
+3. Which grammatical case do you use with the preposition «у» to say "on Friday"?
+4. Which grammatical case do you use to say "in August"?
+5. How would you read the time "14:30" using the telegraphic style for a train schedule?
+6. What forms of address do you use to politely ask a man or a woman for the time?
 
-1.  How do you ask "What time is it?" versus "At what time?"?
-2.  What gender is the word **година**, and how does that affect the number (e.g., is it *один* or *перша*)?
-3.  How do you say "On Monday" and "In January" (which cases do you use)?
-4.  If a shop is open **з 9:00 до 18:00**, what prepositions are used?
-5.  What is the difference between official time (17:00) and spoken time (п'ята вечора)?
-
-You are now ready to keep time with the best of them. **До наступного уроку!** (Until the next lesson!)
+---

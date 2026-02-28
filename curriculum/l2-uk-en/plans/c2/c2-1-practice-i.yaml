@@ -1,10 +1,12 @@
-module: c2-017
-level: c2
-sequence: 17
+module: c2-023
+level: C2
+sequence: 23
+slug: c2-1-practice-i
 version: '2.0'
 title: Практика C2.1 I — Стилістичне портфоліо
 focus: practice
 pedagogy: TTT
+phase: 'C2.1 [Stylistics & Rhetoric]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: 'Вступ: Портфоліо як вияв мовної особистості (Introduction: Portfolio as
     Linguistic Identity Expression)'
-  words: 400
+  words: 500
   points:
   - Концепція 'мовної особистості' та 'ідіостилю' як центральних цілей рівня C2 —
     портфоліо як доказ стилістичної гнучкості
@@ -31,7 +33,7 @@ content_outline:
     та рубрики оцінювання виробничих навичок'
 - section: 'Науковий стиль: Академічний дискурс та уникнення пасиву (Scientific Style:
     Academic Discourse and Avoiding Passive)'
-  words: 600
+  words: 750
   points:
   - 'Типова помилка: надмірне вживання пасивних конструкцій (напр. ''було зроблено
     аналіз'') замість активних або безособових форм (''проаналізовано'')'
@@ -39,7 +41,7 @@ content_outline:
     наукового реєстру без канцеляризмів
 - section: 'Офіційно-діловий стиль: Стандарти, кліше та точність (Official-Business
     Style: Standards, Clichés, and Precision)'
-  words: 600
+  words: 750
   points:
   - Роль функціональних кліше як позитивного явища стандартизації в офіційних документах
     на противагу їхньому негативному впливу в інших стилях
@@ -47,7 +49,7 @@ content_outline:
     юридично точних текстах та ділових листах'
 - section: 'Публіцистичний стиль: Полемічна майстерність та аналітика (Journalistic
     Style: Polemical Mastery and Analytics)'
-  words: 600
+  words: 750
   points:
   - 'Культурний гачок: Памфлети Миколи Хвильового 1920-х років як взірець інтелектуальної
     полеміки, що поєднує гостроту стилю з аналітичною глибиною'
@@ -55,7 +57,7 @@ content_outline:
     колонкою та фактологічним журналістським звітом'
 - section: 'Художній стиль: Пошук власного ідіостилю (Artistic Style: Searching for
     Own Idiostyle)'
-  words: 600
+  words: 750
   points:
   - 'Творче письмо: подолання мовних штампів та робота над індивідуальною образністю
     (ідіостилем) у межах літературного уривку'
@@ -63,7 +65,7 @@ content_outline:
     відповідно до вимог C2.2 (Literary Mastery)
 - section: 'Епістолярій та розмовність: Тон, кличний відмінок та Франко (Epistolary
     and Colloquial: Tone, Vocative, and Franko)'
-  words: 800
+  words: 1000
   points:
   - Епістолярна спадщина Івана Франка як приклад майстерного переходу від офіційного
     до інтимного тону в листуванні
@@ -73,7 +75,7 @@ content_outline:
     бюрократизмів у живому спілкуванні'
 - section: 'Самооцінка та рефлексія: Критерії успіху (Self-assessment and Reflection:
     Success Criteria)'
-  words: 400
+  words: 500
   points:
   - Критичний аналіз створених текстів за дескрипторами якості державного стандарту
     та виявлення індивідуальних стилістичних лакун

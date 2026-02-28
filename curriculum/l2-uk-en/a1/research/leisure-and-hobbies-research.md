@@ -2,31 +2,33 @@
 
 ## State Standard Reference
 §3.6: "Дозвілля, відпочинок: уподобання (хобі); види спорту і спортивних споруд (стадіон, спортзал, басейн)."
-§4.2.3.2: "Знахідний відмінок: Без прийменника (об’єкт дії)... Із прийменниками: в, у, на (указівка на кінцевий пункт руху або переміщення)."
-Alignment: Directly addresses the thematic catalogue for leisure/hobbies, and applies the Accusative case for destinations (ходити в) and activities.
+§4.2.3.2.2: "в, у, на (указівка на кінцевий пункт руху або переміщення)"
+§4.2.3.3: "у, в, на (позначення місця)"
+Alignment: This module directly addresses the A1 thematic requirement for leisure/sports vocabulary and the syntactic requirement to distinguish destination (Accusative) from location (Locative).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| хобі | High (conversational) | моє хобі, улюблене хобі |
-| грати | High (core verb) | грати в футбол, грати на гітарі |
-| кіно | High (leisure) | йти в кіно, дивитися кіно |
-| спортзал | Medium (daily life) | ходити в спортзал, тренуватися в спортзалі |
+| хобі | High (Common A1) | Моє хобі — це... |
+| грати | High (Core verb) | грати в футбол / шахи |
+| ходити | High (Motion verb) | ходити в кіно / парк |
+| басейн | Medium (Venue) | плавати в басейні |
+| кіно | High (Entertainment)| ходити в кіно (indeclinable) |
 
 ## Cultural Hooks
-1. Chess (шахи) holds a special place in Ukrainian leisure, often played publicly in city parks (like Shevchenko Park in Kyiv) as a communal activity.
-2. Foraging for mushrooms (збирання грибів) is a deeply traditional, seasonal outdoor hobby in Ukraine, connecting leisure with nature.
+1. Chess (шахи) holds a special place in Ukrainian leisure culture, often played by people across generations in public spaces like Taras Shevchenko Park in Kyiv.
+2. Gathering with friends (зустрічатися з друзями) frequently involves walking in parks (гуляти в парку) or visiting cafes, a central part of weekend socializing in Ukraine.
 
 ## Common Learner Errors
-1. "Я граю гітару" → "Я граю на гітарі" — Learners often use a direct object (Accusative) for instruments instead of the required "на + Locative" construction.
-2. "Моя хобі" → "Моє хобі" — Borrowed words ending in "-і" like "хобі" are indeclinable neuter nouns, but learners often mistake them for feminine or plural.
-3. "Я йду в парку" → "Я йду в парк" — Confusing Locative (location) with Accusative (destination/motion) when talking about going to leisure venues.
+1. "Я граю футбол" → Correct: "Я граю в футбол" — Learners often drop the preposition "в" required for team sports in Ukrainian.
+2. Mixing destination and location → Correct: "Я йду в басейн" (Accusative) vs "Я плаваю в басейні" (Locative). Learners confuse the case endings when the preposition is the same.
 
 ## Cross-References
 - Builds on: a1-50 (Holidays and Traditions)
 - Prepares for: a1-52 (Travel and Transport)
 
 ## Notes for Content Writing
-- Decolonized framing: Emphasize Ukrainian's precise distinction between instruments (на + Locative) and games/sports (в + Accusative) as a feature of its grammatical logic. Do not frame it as "unlike Russian" or "same as Russian".
-- English Scaffolding: Since this is A1 (10-50% immersion), provide clear English explanations for the "грати в/на" and "ходити в" constructions before showing Ukrainian examples.
-- Ensure all new vocabulary (хобі, спортзал, басейн) gets IPA on first occurrence only.
+- English scaffolding is mandatory for all grammar explanations, as this is an A1 module.
+- Keep sentences short (max 8-10 Ukrainian words per sentence).
+- Frame the "в/на + Accusative/Locative" rules purely as Ukrainian spatial logic. Never use Russian as a comparative baseline.
+- Provide IPA only for the first occurrence of new vocabulary words.

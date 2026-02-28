@@ -1,6 +1,6 @@
-module: c1-028
+module: c1-029
 level: C1
-sequence: 28
+sequence: 29
 slug: dialects-of-ukrainian
 version: '2.0'
 title: Діалекти та наріччя
@@ -129,7 +129,7 @@ sources:
   type: reference
   notes: Dialectology textbook
 immersion: 100% Ukrainian
-phase: C1.2 Professional Communication
+phase: C1.3 [Movoznavstvo & Sociolinguistics]
 objectives:
 - Identify and correctly use діалекти та наріччя
 - Form and apply діалектологія

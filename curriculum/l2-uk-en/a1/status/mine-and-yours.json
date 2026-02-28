@@ -2,15 +2,15 @@
   "module": "mine-and-yours",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:31:15.133291Z",
+  "last_audit": "2026-02-28T19:19:44.238627Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:02.803319Z",
-    "meta": "2026-02-19T23:03:00.692510Z",
+    "md": "2026-02-28T19:19:24.638572Z",
+    "meta": "2026-02-28T19:08:21.530994Z",
     "activities": "2026-02-20T22:49:23.380444Z",
     "vocabulary": "2026-02-26T10:56:53.938130Z",
     "plan": "2026-02-28T03:02:37.249703Z",
-    "research": "2026-02-19T23:03:00.684089Z"
+    "research": "2026-02-28T19:08:21.522697Z"
   },
   "gates": {
     "meta": {
@@ -19,19 +19,19 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "3014/2000 (raw: 3485) | pedagogy: 1 violations"
+      "status": "pass",
+      "violations": 0,
+      "message": "3014/2000 (raw: 3471)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "16/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "skipped",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
-    "deferred_count": 0
+    "pass_count": 3,
+    "fail_count": 0,
+    "deferred_count": 3
   }
 }

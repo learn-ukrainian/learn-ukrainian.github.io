@@ -18,26 +18,28 @@
   Module:  direction-and-origin
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
+  4 Outline Compliance Errors
   failing gates:
-    lesson: 4744/2000 (raw: 5027) | pedagogy: 13 violations | immersion: 28.1% LOW (target 35-55% (M35))
+    meta: Valid Structure | Lint: 1 Format Errors
+    lesson: 3970/2000 (raw: 4352) | pedagogy: 13 violations | immersion: 35.0% LOW (target 35-55% (M35))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
-
-
-  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 80/100)
-     → 14 violations (severe - consider revision)
-     → 9 grammar-level violations (fundamental)
-     → Immersion 7% off target (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 72/100)
+     → Revision recommended (severity 72/100)
+     → 15 violations (severe - consider revision)
+     → 10 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/direction-and-origin-audit.md
   Status: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/status/direction-and-origin.json
 
   ❌ AUDIT FAILED. Correct errors before proceeding.
+
+  Critical Failures:
+    • 4 Outline Compliance Errors
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/direction-and-origin-audit.log for details)
         ```

@@ -1,6 +1,6 @@
-module: c1-058
+module: c1-078
 level: C1
-sequence: 58
+sequence: 78
 slug: kozatski-lehendy
 version: '2.0'
 title: Козацькі легенди
@@ -65,7 +65,7 @@ objectives:
 grammar:
 - Heroic narrative register
 - Epic stylistics
-phase: C1.5 Folk Culture & Fine Arts
+phase: C1.6 [Folk Culture & Traditions]
 persona:
   voice: Senior Specialist
   role: Характерник

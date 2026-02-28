@@ -5,9 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:38:30Z",
+      "ts": "2026-02-28T21:05:01Z",
       "task_id": "v3-prepositions-of-place-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T21:08:33Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T21:10:33Z",
+      "task_id": "v3-prepositions-of-place-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T21:18:07Z",
+      "attempts": 2
     }
   }
 }

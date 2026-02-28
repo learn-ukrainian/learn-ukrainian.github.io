@@ -1,33 +1,33 @@
 # Дослідження: Checkpoint: Sentences
 
 ## State Standard Reference
-§4.2.4.1: "дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш, читає...), дивитися (дивлюся...)"
-§4.3.1: "питальне речення зі спеціальними словами де, звідки, куди, що, хто... стверджувальні й заперечні речення"
-§4.2.2: "утворення родових форм присвійних займенників: мій, моя, моє... утворення родових форм вказівних займенників: той, та, те; цей, ця, це"
-Alignment: This checkpoint directly assesses the core morphological and syntactic competencies mandated for A1, specifically present tense verbs, basic sentence structures, questions, and pronoun agreement.
+§4.2.4.1: "Дійсний спосіб: дієвідмінювання дієслів у теперішньому часі: читати (читаю, читаєш, читає...), працювати... сидіти... дивитися (дивлюся...)."
+§4.2.2: "Утворення родових форм присвійних займенників: мій, моя, моє; твій, твоя, твоє... вказівних: той, та, те; цей, ця, це."
+§4.3.1: "Просте речення: питальне речення: Чи студент відповідає?... спеціальні слова де, звідки, куди, що, хто... стверджувальні й заперечні речення."
+Alignment: Цей модуль є консолідацією навичок рівня A1.2, що відповідає вимогам Державного стандарту щодо базової морфології (дієвідміни, займенники) та синтаксису (питання, заперечення).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| говорити | High (Core A1) | говорити українською, говорити про |
-| подобатися | High (Core A1) | мені дуже подобається, тобі подобається |
-| цей / той | High (Core A1) | цей день, ця книга, той будинок |
-| тому що | High (Core A1) | тому що я хочу, тому що це цікаво |
+| подобатися | High (A1) | мені подобається, тобі подобається |
+| хотіти | Very High (A1) | я хочу каву, я хочу їсти |
+| цей / той | Very High (A1) | цей стілець, та вулиця |
+| тому що / бо | High (A1/A2) | я читаю, тому що... |
 
 ## Cultural Hooks
-1. **Communicative Politeness**: Ukrainians often preface questions to strangers with "Скажіть, будь ласка..." (Tell me, please...), which softens direct questions and is a vital pragmatic skill.
-2. **Expressing Preferences**: The Dative construction "мені подобається" (it is pleasing to me) is the most natural way to express general likes, while "я люблю" is reserved for stronger emotional attachment or habitual activities.
+1. Українці часто використовують конструкцію «Мені подобається» для предметів та дій, тоді як «Я люблю» має сильніше емоційне забарвлення і часто використовується щодо людей або сильних захоплень.
+2. Під час замовлення в кафе українці часто використовують пряме «Я хочу...» або «Мені, будь ласка...», що є цілком ввічливим, на відміну від англійського "I want", яке може звучати занадто прямолінійно.
 
 ## Common Learner Errors
-1. **Conjugation Class Confusion**: Mixing up 3rd person plural endings (e.g., *вони говоруть* instead of *вони говорять*). → Overgeneralization of Class I rules to Class II verbs.
-2. **Direct Translation of "Like"**: Saying *Я подобаюсь* (I am pleasing) instead of *Мені подобається* (It is pleasing to me). → Caused by mapping English Subject-Verb order onto the Ukrainian Dative-experiencer construction.
-3. **Pronoun Agreement**: Failing to align the gender of possessives/demonstratives with the noun (e.g., *мій книга* instead of *моя книга*).
+1. *Я подобаю каву* → Мені подобається кава — Прямий переклад англійської структури "I like" замість давального відмінка.
+2. *Вони говорють / Вони читать* → Вони говорять / Вони читають — Плутанина закінчень 3-ї особи множини між I та II дієвідмінами (-уть/-ють vs -ать/-ять).
+3. Зміна порядку слів у загальних питаннях — Українські питання з «Чи» або питання з питальними словами не вимагають складної інверсії підмета та присудка, як в англійській.
 
 ## Cross-References
-- Builds on: A1.2 phase modules (verbs, question words, preferences)
-- Prepares for: a1-25 (The Accusative I) — a solid grasp of sentence structure is needed before introducing direct objects in a new case.
+- Builds on: a1-23 (What Time Is It)
+- Prepares for: a1-25 (The Accusative I)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Emphasize Ukrainian's distinct interrogative particle "Чи" and its unique reflexive enclitics (-ся/-сь). Do not present Ukrainian grammar as a variation of Russian; frame it as an independent, logical Slavic system.
-- **Scaffolding**: Since this is A1, use English explicitly to explain grammar concepts before jumping into Ukrainian examples.
-- **Tone**: Patient, encouraging, and structured (Language Examiner persona with a "Safe Harbor" approach).
+- English scaffolding is mandatory (immersion is ~30-40%). Explain all grammar rules in English first.
+- Emphasize the "Safe Harbor" approach: this is a checkpoint to build confidence, not a stressful test.
+- Decolonized framing: Treat Ukrainian structures (like "Мені подобається" and flexible word order) as natural, efficient systems, not as "exceptions" or "different from" other languages.

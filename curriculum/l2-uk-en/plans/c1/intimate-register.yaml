@@ -1,11 +1,14 @@
-module: c1-044
-level: c1
-sequence: 44
+module: c1-060
+
+sequence: 60
+
+slug: intimate-register
 version: '1.0'
 title: 'Інтимно-ласкавий стиль: Мова близьких стосунків'
 subtitle: 'Intimate Register: Language of Close Relationships'
 focus: style
-pedagogy: Sociolinguistics
+
+phase: C1.5 [Stylistics & Rhetoric]
 objectives:
 - Learner can identify and use diminutive forms to express affection
 - Learner can distinguish between neutral and intimate registers

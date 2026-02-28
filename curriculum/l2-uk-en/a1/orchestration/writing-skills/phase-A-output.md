@@ -3,35 +3,34 @@
 # Дослідження: Writing Skills
 
 ## State Standard Reference
-§1.3 (Письмо): "написати адресу проживання, указавши країну, місто, вулицю, номер... заповнити прості формуляри та анкети... заадресувати конверт; прості, короткі привітання, зокрема на поштових листівках."
-Alignment: This module directly fulfills the A1 competency requirements for written production regarding daily life forms, basic correspondence, and addressing envelopes.
+§3.1, §3.3: "ім’я і прізвище, адреса, стать, вік, дата і місце народження; ... пошта"
+Alignment: This module strictly aligns with the A1 thematic requirements by teaching learners how to express basic personal information (name, address, age, gender) on forms and how to navigate basic postal communication.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| анкета | High (Forms/Bureaucracy) | заповнити анкету, електронна анкета |
-| листівка | Medium (Travel/Holidays) | поштова листівка, надіслати листівку |
-| прізвище | Very High (ID/Forms) | ім'я та прізвище, дівоче прізвище |
-| адреса | Very High (Daily/Post) | домашня адреса, електронна адреса |
-| індекс | Medium (Post) | поштовий індекс, вказати індекс |
+| прізвище | High (A1/A2) | Ваше прізвище, прізвище та ім'я |
+| адреса | High (A1/A2) | домашня адреса, за адресою |
+| стать | Medium (Form specific) | чоловіча стать, жіноча стать |
+| листівка | Medium (A1) | поштова листівка, відправити листівку |
+| по батькові | High (Cultural) | ім'я по батькові |
 
 ## Cultural Hooks
-1. **European Postal Standards**: Independent Ukraine successfully transitioned its postal addressing system from the Soviet "general-to-specific" format (Country → City → Street → Name) to the European "specific-to-general" standard (Name → Street → City → Postcode), reflecting its integration into global systems. 
-2. **The "По батькові" (Patronymic) Reality**: While everyday communication rarely uses patronymics among younger generations, every official Ukrainian form (анкета) still rigorously requires it. Knowing how to parse "Прізвище, Ім'я, По батькові" (ПІБ) is an essential survival skill for navigating any Ukrainian institution.
+1. **Modern Address Format:** Modern Ukrainian address formatting aligns with the European specific-to-general model (Name → Street → City → Postcode), a conscious shift away from the older Soviet general-to-specific system.
+2. **Patronymics (по батькові):** Often misunderstood by English speakers as a purely "Russian" feature, patronymics formed with the native suffixes -ович / -івна are a deeply rooted East Slavic and Ukrainian naming tradition used in official contexts and on standard forms.
 
 ## Common Learner Errors
-1. **Name confusion** → Confusing "ім'я" with full name. English speakers often put their full name under "ім'я", leaving "прізвище" blank.
-2. **Greeting Case** → *Привіт з Київ* (Nominative) instead of the correct *Привіт з Києва* (Genitive). Learners forget that "з" (from) demands the Genitive case.
-3. **Date Format** → Writing MM.DD.YYYY. Ukraine strictly uses DD.MM.YYYY. 
+1. **Translating age literally:** Saying "Я 20 років" (I am 20 years) instead of the correct Dative construction "Мені 20 років" (To me is 20 years).
+2. **Form gender options:** Learners often write "чоловік / жінка" (man / woman) instead of the correct adjectival forms expected on official documents: "чоловіча / жіноча" (male / female).
+3. **Envelope recipients:** Using the Nominative case for names instead of the Dative for "Кому" (To whom) and Genitive for "Від кого" (From whom).
 
 ## Cross-References
 - Builds on: a1-58 (Phone Basics)
 - Prepares for: a1-60 (At the Market)
 
 ## Notes for Content Writing
-- **Decolonized Framing**: Highlight the modern Ukrainian postal system (Ukrposhta) and its European address format. Do not compare it to Russian/Soviet bureaucracy. Frame form-filling as a normal part of modern digital and physical life in Ukraine.
-- **English Scaffolding**: Since this is A1, provide clear English explanations for the structure of forms and postcards before diving into Ukrainian examples.
-- **Visuals**: A mock-up table of a Ukrainian form (анкета) and an envelope (конверт) will be highly effective here.
+- The original plan states that English addresses are "general-to-specific" which is incorrect. Correct this in the content by simply noting that modern Ukrainian addresses use the specific-to-general European format.
+- Ensure English scaffolding is explicitly provided for all grammar explanations and cultural nuances, maintaining the ~40% immersion target suitable for late A1.
 
 ===RESEARCH_END===
 
@@ -40,43 +39,45 @@ content_outline:
   - section: "Поштова листівка"
     words: 450
     points:
-      - "Provide English scaffolding: Explain the goal of writing a short postcard from a Ukrainian city."
-      - "Introduce the standard postcard template using H3s: Greeting, Body (3-4 sentences), Sign-off."
-      - "Grammar focus: Explain the 'Привіт з + Genitive' construction (e.g., Привіт з Києва, Привіт зі Львова)."
-      - "Provide a fully translated example of a complete postcard."
+      - "English scaffolding: Briefly introduce the goal of writing a short postcard in Ukrainian."
+      - "Postcard template (H3): Break down the structure into Greeting (Привіт з + Genitive), Body (3-4 simple sentences about the weather or sights), and Sign-off (Бувай + Signature)."
+      - "Grammar focus (H3): Explicitly teach the 'Привіт з + Genitive' construction with 3 clear examples (з Києва, зі Львова, з Одеси)."
+      - "Provide a fully translated model postcard from a Ukrainian city."
   - section: "Анкета"
     words: 450
     points:
-      - "Introduce the concept of 'анкета' (form) and its importance in Ukrainian daily life."
-      - "Breakdown form fields: Прізвище, Ім'я, По батькові, Дата народження, Стать, Телефон, Електронна пошта."
-      - "Explain cultural nuances: The use of DD.MM.YYYY for dates and the standard options for gender (чоловіча/жіноча)."
-      - "Include a visual table representing a blank Ukrainian form with English translations."
+      - "English scaffolding: Explain the importance of forms (анкета) and standard date formats (DD.MM.YYYY)."
+      - "Vocab breakdown (H3): Define essential fields: Прізвище, Ім'я, По батькові, Дата народження, Стать, Телефон, Електронна пошта."
+      - "Explain the 'Стать' options explicitly: point out that forms use adjectives (чоловіча/жіноча), not nouns (чоловік/жінка)."
+      - "Provide a visual table representing a blank Ukrainian registration form mapped to English translations."
   - section: "Про себе"
     words: 400
     points:
-      - "Guide the learner on how to synthesize previous knowledge into a short 'About Me' paragraph (30-50 words)."
-      - "Provide the template: Мене звати... Мені ... років. Я з... Я працюю/вчуся... Моє хобі..."
-      - "Show 2-3 short, distinct examples of character profiles (e.g., a student, a professional) with English translations."
+      - "English scaffolding: Guide learners to combine previously learned A1 phrases into a cohesive 30-50 word self-introduction."
+      - "Provide a structured template: Мене звати... Мені ... років. Я з... Я працюю/вчуся... Моє хобі..."
+      - "Highlight the use of Dative in 'Мені ... років' to preempt literal translation errors from English."
+      - "Show 3 short, distinct character profiles (e.g., a student, a professional) in Ukrainian with English translations."
   - section: "Конверт та адреса"
     words: 400
     points:
-      - "Explain the modern Ukrainian address format: specific to general (Name → Street → City → Postcode)."
-      - "Introduce Dative (Кому) and Genitive (Від кого) briefly as formulaic phrases used on envelopes."
-      - "Define essential abbreviations: вул. (вулиця), буд. (будинок), кв. (квартира)."
-      - "Provide a visual layout of a correctly addressed envelope."
+      - "Cultural note: Explain that the modern Ukrainian address format is specific-to-general (Name → Street → City → Postcode), aligning with European standards."
+      - "Envelope formulas (H3): Introduce Dative for 'Кому' (To whom) and Genitive for 'Від кого' (From whom)."
+      - "Define essential address abbreviations: вул. (вулиця), буд. (будинок), кв. (квартира)."
+      - "Provide a visual layout of a correctly addressed envelope with translated labels."
   - section: "Практика"
     words: 300
     points:
-      - "Provide a guided writing prompt: Ask the learner to mentally fill out a provided blank form."
-      - "Provide a postcard prompt: 'You are in Odesa. Write 4 sentences using the template.' Include the model answer."
-      - "Encourage the learner to write their own 40-word 'Про себе' text based on the section template."
+      - "English scaffolding: Explain the goal of the practice exercises."
+      - "Provide a guided mental exercise: Map sample personal data to correct form fields."
+      - "Provide a postcard writing prompt ('You are in Odesa. Write 4 sentences.') accompanied by a model answer."
+      - "Encourage the learner to write their own 40-word 'Про себе' paragraph based on the section template."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
 **Phase**: Phase A: Meta + Research (Core)
-**Step**: Searching the UKRAINIAN-STATE-STANDARD-2024.txt for standard references
-**Friction Type**: TOOL_REDUNDANCY
-**Raw Error**: Error during grep search operation: Process exited with code 2: error: The argument '--threads <NUM>' requires 1 values, but 2 were provided
-**Self-Correction**: Bypassed the broken `grep_search` custom tool and successfully used `run_shell_command` with `rg` to extract the exact requirements from §1.3 (Письмо).
-**Proposed Tooling Fix**: The underlying definition of the `grep_search` tool appears to be injecting a duplicate or improperly formatted `--threads` flag into the `rg` command. The tool implementation needs to be fixed.
+**Step**: Full Phase A
+**Friction Type**: NONE
+**Raw Error**: None
+**Self-Correction**: N/A
+**Proposed Tooling Fix**: N/A
 ===FRICTION_END===

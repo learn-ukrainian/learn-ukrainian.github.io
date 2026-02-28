@@ -1,113 +1,78 @@
-✅ Message sent to Gemini (ID: 8788)
-✓ Message 8788 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #8788...
-📨 Message #8788
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-numbers-and-money-pA
-   Time: 2026-02-19T22:20:25.749050+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/numbers-and-money/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
-# Дослідження: Numbers & Money (A1 Core)
+# Дослідження: Numbers & Money
 
 ## State Standard Reference
-§3.8 (Тематичний зміст): "Купівля: основні продукти харчування; одяг і взуття; засоби гігієни... гроші."
-Alignment: This module directly addresses the required theme of "Money" and enables basic transactions, a core A1 communicative competence. While morphological declension of cardinals is formally introduced in A2 (§4.2.1.3), A1 learners require lexical mastery of numbers 0-100 and basic agreement patterns (1-2-5) for practical shopping scenarios.
+§4.2.1.3: "Числівник. Уживання родових форм порядкових числівників..." та §3 (Thematic Catalogue): "купівля" (shopping).
+Alignment: The State Standard outlines numeral usage and case agreement. While explicit references in §4.2.1.3 emphasize ordinals, the mastery of cardinal numerals (0-100) and their syntactic agreement (nominative vs. genitive forms for counting) is the mandatory foundation for A1 thematic competency in shopping and everyday transactions.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| один (one) | High (Top 100) | один раз, одна гривня |
-| два (two) | High (Top 100) | два дні, дві гривні (feminine!) |
-| п'ять (five) | High | п'ять хвилин, п'ять гривень |
-| гривня (hryvnia) | High (Contextual) | скільки гривень? одна гривня |
-| скільки (how much) | High | скільки коштує? скільки з мене? |
-| коштувати (to cost) | Medium | скільки це коштує? |
-| ціна (price) | Medium | яка ціна? висока ціна |
+| один | High (Top 100) | один раз, одна гривня |
+| два | High (Top 100) | два дні, дві гривні |
+| три | High | три години, три гривні |
+| п'ять | High | п'ять хвилин, п'ять гривень |
+| десять | High | десять разів, десять гривень |
+| гривня | High (Contextual) | одна гривня, п'ять гривень |
+| скільки | High (Top 200) | скільки коштує, скільки з мене |
+| коштувати | Medium (Essential A1) | скільки це коштує |
 
 ## Cultural Hooks
-1. **The Hryvnia's Origin**: The word "hryvnia" comes from "hryva" (mane), referring to a valuable neck ring or torque made of silver or gold used in Kyivan Rus (11th century).
-2. **The Kopeck Proverb**: "Копійка береже гривню" (A kopeck saves a hryvnia) — reflecting traditional frugality and the value of small savings.
-3. **Symbol**: The symbol ₴ (derived from cursive 'г' with double strokes) represents stability, similar to € or ¥.
+1. **Origin of the Hryvnia**: The word "гривня" dates back to Kyivan Rus (11th century), where a *hryvna* was a valuable neck ornament or a specific weight of silver/gold, demonstrating the deep, independent historical roots of Ukraine's currency.
+2. **The ₴ Symbol**: Introduced in 2004, the symbol consists of the cursive Ukrainian letter *г* (h) with two horizontal strokes, which symbolize stability (similar to the Euro € or Yen ¥).
 
 ## Common Learner Errors
-1. **Gender of "Two"**: Using "два гривні" instead of "дві гривні". (Correction: "гривня" is feminine, so use "дві").
-2. **The 1-2-5 Rule**: Confusion over endings. 1 (Nom Sg), 2-4 (Nom Pl), 5+ (Gen Pl). Learners often say "п'ять гривні" instead of "п'ять гривень".
-3. **Pronunciation of "п'ять"**: Missing the apostrophe pause [pjat'] or softening the 'p' inappropriately.
-4. **Teen Stress**: Putting stress on the root instead of 'над' in 11-19 (e.g., saying "одИннадцять" instead of "одинАдцять").
+1. **Gender disagreement with 2**: Learners often say *два гривні (using the masculine "два" instead of the feminine "дві" for "гривня"). → Correct: дві гривні.
+2. **Ignoring the apostrophe in 5**: Learners pronounce "п'ять" as a single soft syllable (pyat) instead of articulating the hard consonant, the pause, and the jotated vowel [p-jat'].
+3. **Plural forms with 5+**: Defaulting to the nominative plural instead of the genitive plural (e.g., saying *п'ять гривні instead of the correct п'ять гривень).
 
 ## Cross-References
-- Builds on: `a1-16` (The Genitive I) — specifically the concept of case endings, though here it's taught as a fixed pattern.
-- Prepares for: `a1-18` (Food and Shopping) — essential prerequisite for price discussions.
-- Prepares for: `a1-23` (What Time Is It) — numbers 1-60 are critical for telling time.
+- Builds on: a1-32 (The Genitive I) - required for understanding "5 гривень".
+- Prepares for: a1-18 (Food and Shopping), a1-23 (What Time Is It).
 
 ## Notes for Content Writing
-- **Scaffolding**: Since this is A1.2, use English for the "1-2-5 Rule" explanation to ensure clarity. The distinction between "2 гривні" and "5 гривень" is often the first encounter with Genitive Plural for beginners.
-- **Visuals**: Use a clear table for the 1-2-5 pattern (Visual Agreement Tables are crucial per plan).
-- **Reality Check**: Use realistic 2024 prices (e.g., Coffee ~50 UAH, Bread ~25 UAH) to keep dialogues authentic.
+- **Decolonized Framing**: Present the hryvnia's history strictly through the lens of Kyivan Rus and Ukrainian statehood. Avoid framing counting patterns as "like Russian but different"; instead, present the "1-2-5 rule" as the internal, logical system of Ukrainian.
+- **Scaffolding**: This is A1. Ensure the "1-2-5" rule is explained clearly in English with simple visual tables before diving into Ukrainian examples.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Розминка: Числа в житті"
-    words: 250
+  - section: "Вступ"
+    words: 300
     points:
-      - "Engage: Identify numbers in daily life (prices, bus numbers, addresses)"
-      - "Scaffolding Note: Grammar explanations in English (A1 standard)"
-      - "Goal: Counting 0-100 and handling money transactions"
-      - "Utility: Why numbers are the key to independence in a new country"
-  - section: "Теорія: Числа та гроші"
-    words: 900
+      - "English Scaffolding: Briefly introduce the goal of counting to 100 and handling money, using English to ensure clarity (A1 immersion target < 50%)."
+      - "Relevance: Explain how numbers unlock daily independence (prices, bus routes, addresses)."
+      - "Motivational Hook: A short, simple Ukrainian dialogue asking for a price to activate prior knowledge."
+  - section: "Презентація"
+    words: 800
     points:
-      - "Numbers 0-10: Phonetics focus on 'п'ять' [pjat'] and 'сім' (soft s)"
-      - "Numbers 11-19: The 'на-дцять' pattern and stress shift (одинАдцять)"
-      - "Tens 20-100: Construction logic and the spelling of 50-80 (no soft sign)"
-      - "Grammar: The '1-2-5 Rule' visual table (Nominative Sg / Nominative Pl / Genitive Pl)"
-      - "Currency: Гривня and Копійка — applying the 1-2-5 rule (1 гривня, 2 гривні, 5 гривень)"
-      - "Gender Alert: 'Два' vs 'Дві' — crucial for currency (дві гривні)"
-  - section: "Практика: У магазині"
-    words: 500
+      - "H3: Numbers 0-10. Focus on phonetics, especially the apostrophe pause in «п'ять» [pjat'] and the soft «с» in «сім»."
+      - "H3: Numbers 11-19. Explain the «-надцять» suffix and explicitly highlight the stress shift (e.g., одинАдцять)."
+      - "H3: Tens 20-100. Show the construction logic. Include a warning about the absence of the soft sign in 50-80 (п'ятдесят, шістдесят)."
+      - "H3: The 1-2-5 Rule. Visual table mapping numbers to cases: 1 (Nom Sg), 2-4 (Nom Pl), 5+ (Gen Pl)."
+      - "H3: Currency & Gender. Apply the rule to «гривня». Explicitly contrast «два» (masculine/neuter) vs. «дві» (feminine), emphasizing «дві гривні»."
+  - section: "Практика"
+    words: 600
     points:
-      - "Key Phrase: 'Скільки коштує?' (How much does it cost?)"
-      - "Key Phrase: 'Скільки з мене?' (How much do I owe?)"
-      - "Math basics: Плюс (+), мінус (-), дорівнює (=) for simple totals"
-      - "Dialogue: Buying coffee (using realistic prices)"
-      - "Roleplay: The Bazaar Transaction (negotiating and paying)"
-  - section: "Культурний контекст: Історія гривні"
-    words: 350
+      - "H3: Useful Phrases. Introduce and break down «Скільки коштує?» and «Скільки з мене?»."
+      - "H3: Simple Math. Introduce плюс, мінус, дорівнює for basic arithmetic practice with prices."
+      - "H3: At the Bazaar. A realistic roleplay dialogue buying coffee and snacks, incorporating «Це дуже дорого!» and «У вас є здача?»."
+      - "Guided drill examples: Step-by-step transformation of phrases (e.g., 3 гривні -> 10 гривень)."
+  - section: "Культурний контекст"
+    words: 300
     points:
-      - "Origin: The 'hryvna' neck ring of Kyivan Rus"
-      - "Symbolism: The ₴ sign and its stability"
-      - "Proverb: 'Копійка береже гривню' (Value of small savings)"
-      - "Modern Usage: Cash vs Card culture in Ukraine"
+      - "H3: The Ancient Hryvnia. Discuss the 11th-century origins of the word from Kyivan Rus neck ornaments."
+      - "H3: The Symbol of Stability. Explain the ₴ symbol's design (cursive г + two lines)."
+      - "H3: Folk Wisdom. Introduce the proverb «Копійка гривню береже» with its English equivalent and meaning."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
 **Phase**: Phase A: Meta + Research (Core)
-**Step**: Researching State Standard
-**Friction Type**: STATE_STANDARD_NOT_FOUND
-**Raw Error**: Cardinal numerals (кількісні числівники) not explicitly listed in A1 Morphology (§4.2), only Ordinals (§4.2.1.3). A2 (§4.2.1.3) lists Cardinals formally.
-**Self-Correction**: Located "гроші" (money) in A1 Themes (§3.8), confirming the requirement. Proceeded with the understanding that A1 treatment of numbers is primarily lexical/thematic, with formal declension deferred to A2, though basic agreement (1-2-5) is essential for the "money" theme.
+**Step**: State Standard Lookup
+**Friction Type**: STATE_STANDARD_ALIGNMENT
+**Raw Error**: None
+**Self-Correction**: The mapping file provided lines for §4.2.1.3 which specifically detailed ordinal numeral endings (перший, другий). Since this A1 module focuses on cardinal numbers (0-100) and shopping, I linked the cardinal prerequisite to the A1 thematic requirement for "купівля" (shopping) and broader numeral morphology without fabricating a non-existent explicit line for cardinals in that specific snippet.
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5232 chars)
-✅ Message sent to Claude (ID: 8795)
-✓ Message 8795 acknowledged
-   Auto-acknowledged reply #8795 (stdout delivery — no inbox accumulation)
-✓ Message 8788 acknowledged

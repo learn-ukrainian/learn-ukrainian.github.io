@@ -1,59 +1,25 @@
 {
   "slug": "describing-things-adjectives",
   "track": "a1",
-  "module_num": 26,
+  "module_num": 11,
   "mode": "v3",
   "phases": {
     "2": {
       "status": "complete",
-      "timestamp": "2026-02-19T20:46:30Z",
-      "words": 2221,
+      "timestamp": "2026-02-28T16:02:10Z",
+      "words": 4792,
       "attempts": 1
-    },
-    "3a": {
-      "status": "complete",
-      "timestamp": "2026-02-19T20:47:47Z",
-      "note": "v3-phase-C"
-    },
-    "3b": {
-      "status": "complete",
-      "timestamp": "2026-02-19T20:47:47Z",
-      "note": "v3-phase-C"
     },
     "3": {
       "status": "complete",
-      "timestamp": "2026-02-22T22:37:23Z",
+      "timestamp": "2026-02-28T16:21:47Z",
       "note": "v3-audit"
     },
     "5-enrich": {
       "status": "complete",
-      "timestamp": "2026-02-22T22:37:23Z",
+      "timestamp": "2026-02-28T16:21:47Z",
       "note": "v3-audit"
-    },
-    "6": {
-      "status": "complete",
-      "timestamp": "2026-02-22T22:41:24Z",
-      "note": "v3-phase-D"
-    },
-    "6b": {
-      "status": "complete",
-      "timestamp": "2026-02-22T22:41:24Z",
-      "note": "v3-phase-D"
-    },
-    "7-final": {
-      "status": "complete",
-      "timestamp": "2026-02-22T22:41:24Z",
-      "note": "v3-phase-D"
-    },
-    "9-final-review": {
-      "status": "complete",
-      "timestamp": "2026-02-20T23:18:21Z",
-      "verdict": "APPROVE"
-    },
-    "8": {
-      "status": "complete",
-      "timestamp": "2026-02-22T22:41:25Z"
     }
   },
-  "last_updated": "2026-02-22T22:41:25Z"
+  "last_updated": "2026-02-28T16:21:47Z"
 }

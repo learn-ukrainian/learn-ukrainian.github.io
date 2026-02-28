@@ -2,46 +2,47 @@ slug: reflexive-verbs
 title: Reflexive Verbs (-ся)
 word_target: 2000
 content_outline:
-- section: 'Розминка: Що таке зворотні дієслова?'
-  words: 300
-  points:
-  - 'Analogy: Use the ''mirror'' concept to explain how -ся reflects action back to
-    the subject (мити vs митися)'
-  - 'Etymology: Briefly explain -ся as a contraction of себе (self) to ground the
-    logic'
-  - 'Redundancy Alert: Explicitly warn against saying ''Я мию себе'' (The Myself Redundancy)'
-  - 'Scaffolding: Use clear English to introduce the concept of reflexivity before
-    diving into forms'
-- section: 'Теорія: Відмінювання та групи'
-  words: 700
-  points:
-  - 'Euphony Rule: -ся after consonants, -сь after vowels (The Golden Rule)'
-  - 'Conjugation Table: Full present tense paradigm for ''дивитися'' and ''вмиватися''
-    (Standard alignment)'
-  - 'Type 1 (True Reflexive): Routine verbs (вмиватися, одягатися) with collocations
-    (холодною водою, тепло)'
-  - 'Type 2 (Reciprocal): Social verbs (зустрічатися, цілуватися) — action shared
-    between two people'
-  - 'Type 3 (Lexicalized): Verbs where -ся changes meaning (сміятися, дивитися, подобатися)'
-  - 'Preposition Check: Teach ''сміятися з'' (laugh from) explicitly to prevent ''laugh
-    at'' error'
-- section: 'Практика: Дія на себе чи на іншого?'
-  words: 600
-  points:
-  - 'Contrast Pairs: Direct comparison of transitive vs reflexive (мити посуд vs митися;
-    одягати ляльку vs одягатися)'
-  - 'Selection Drill: Scenarios requiring choice between -ся and -сь forms based on
-    ending'
-  - 'Contextual Usage: High-frequency sentences with ''вчитися'' vs ''вчити'' (studying
-    vs teaching/learning object)'
-  - 'Identification: Spotting reflexive verbs in short simple sentences'
-- section: 'Культура: Секрети вимови'
+- section: 'Вступ: Дзеркало дії'
   words: 400
   points:
-  - 'Phonetic Drill: The [ц'':а] sound for -ться endings — the ''softness'' marker
-    of Ukrainian'
-  - 'Logic in Etiquette: The ''Вибачаюсь'' vs ''Вибачте'' distinction — why ''excusing
-    oneself'' is illogical'
-  - 'Daily Life: How reflexive verbs encode the Ukrainian focus on self-reliance in
-    routine (hardening with cold water)'
-  - 'Summary: Recap of conjugation rules and the reflexive concept'
+  - 'Use English scaffolding to introduce the ''mirror'' analogy: explain how the
+    suffix -ся reflects the action back onto the subject (мити vs митися).'
+  - 'Provide etymological context: explain that -ся is a contraction of the word ''себе''
+    (self), which helps solidify the grammatical logic.'
+  - 'Address the common learner mistake: ''The Myself Redundancy'', explicitly warning
+    against unnatural phrases like ''Я мию себе''.'
+  - 'Incorporate the Cultural Hook: The ''Apology'' Logic, showing why ''Вибачаюсь''
+    (I excuse myself) is illogical compared to ''Вибачте''.'
+- section: 'Презентація: Форми та відмінювання'
+  words: 600
+  points:
+  - 'Explain the phonetic rule for endings: use -ся after consonants (миється) and
+    -сь after vowels (миюсь).'
+  - Provide a full present tense conjugation table for 'дивитися', strictly aligning
+    with the State Standard §4.2.4.1 paradigm (дивлюся, дивишся, дивиться...).
+  - Briefly introduce past tense forms (сміявся, сміялася, сміялося, сміялися) to
+    prove the suffix persists across tenses.
+  - Include a pronunciation guide focusing on the long soft [ц':а] for '-ться', emphasizing
+    it as a key marker of Ukrainian phonetics.
+- section: Семантичні групи
+  words: 500
+  points:
+  - 'Present Type 1 (True Reflexive): Focus on daily routine verbs (вмиватися, одягатися)
+    alongside common collocations (вмиватися холодною водою).'
+  - 'Present Type 2 (Reciprocal): Explain verbs involving mutual action (зустрічатися,
+    вітатися, цілуватися), where -ся means ''each other''.'
+  - 'Present Type 3 (Lexicalized): Cover verbs that are always reflexive (сміятися,
+    подобатися), addressing the common error by teaching ''сміятися з''.'
+  - Clarify agent confusion by directly contrasting 'називати' (to name something)
+    with the high-frequency 'називатися' (to be called).
+- section: Практика та застосування
+  words: 500
+  points:
+  - Drill transitive ↔ reflexive contrast using clear sentence pairs (e.g., 'мити
+    тарілку' vs 'митися').
+  - Integrate vocabulary into daily routine contexts (вчитися в школі, повертатися
+    додому) to set up a foundation for module a1-38.
+  - Create conjugation-focused examples for high-frequency verbs like 'дивитися' and
+    'вчитися'.
+  - Present short mini-dialogues focused on social interaction (знайомитися, вітатися)
+    to build practical communicative skills.

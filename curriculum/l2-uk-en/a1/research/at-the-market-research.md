@@ -1,33 +1,35 @@
 # Дослідження: At the Market
 
 ## State Standard Reference
-§3.8: "Купівля (закупи): магазини і ринки; споживчі товари (овочі, фрукти...); одиниці ваги й об’єму; гроші."
-Alignment: Module teaches specific vocabulary for "units of weight" (кілограм) and "consumer goods" (vegetables/fruits) directly addressing the thematic requirement of §3.8 and the grammatical application of Numerals (§4.2.1.3).
+§3.8: "Купівля (закупи): магазини і ринки; споживчі товари (овочі, фрукти, м’ясо і молочні продукти, хліб, яйця)... одиниці ваги й об’єму; гроші."
+§4.2.3.2.1: "Знахідний відмінок... Без прийменника (об’єкт дії)"
+Alignment: The module perfectly aligns with the A1 thematic requirement to cover "Purchasing", specifically markets, consumer goods (fruits, vegetables), units of weight, and money. It practically applies the Accusative case for direct objects when making polite requests ("Дайте...").
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| ринок | High (Common) | на ринку, піти на ринок, фермерський ринок, "базар" (colloquial synonym) |
-| кілограм | High (Shopping) | один кілограм, два кілограми (Nom.Pl), п'ять кілограмів (Gen.Pl), пів кілограма |
-| свіжий | High (General) | свіжі овочі, свіже молоко, свіжий хліб, "тільки з грядки" (idiom: fresh from the garden) |
-| скільки | High (Basic) | Скільки коштує?, Скільки з мене?, Скільки це важить? |
-| дайте | High (Request) | Дайте, будь ласка; Дайте мені...; Можна... (polite alternative) |
+| ринок | High (Daily life) | на ринку, піти на ринок, базар (colloquial) |
+| кілограм | High (Commerce) | один кілограм, два кілограми, пів кілограма |
+| свіжий | High (Food) | свіжі овочі, свіжі фрукти, тільки з грядки |
+| штука | Medium (Commerce) | одна штука, поштучно |
+| скільки | Core interrogative| скільки коштує?, скільки з мене? |
+| здача | Medium (Commerce) | без здачі, візьміть здачу |
 
 ## Cultural Hooks
-1. **Бессарабський ринок (Київ)**: Побудований у 1910-1912 рр. (архітектор Генрик Гай), стиль модерн. Перший критий ринок з холодильними камерами. Відомий як "найдорожчий" ринок ("дорого, як на Бессарабці").
-2. **Привоз (Одеса)**: Легендарний ринок (1827 р.), символ одеського гумору та торгівлі. Назва від "привозити" (продаж з возів). Тут "можна купити все" і обов'язково треба торгуватися.
-3. **Культура "Спробуйте!"**: На українському базарі нормально і навіть бажано куштувати товар (сир, фрукти) перед покупкою.
+1. **Odesa's Pryvoz (Привоз)**: Established in 1827, it is legendary for its vibrant atmosphere, unique humor, and the cultural expectation of tasting food and bargaining. It epitomizes the authentic Ukrainian "bazar" experience.
+2. **Kyiv's Bessarabskyi Market (Бессарабський ринок)**: Built in 1912 in early modern style, it was the first indoor market in Kyiv to feature modern refrigeration. It remains an iconic, premium marketplace in the capital.
+3. **The tradition of "Спробуйте!" (Try it!)**: In Ukrainian markets, vendors actively encourage buyers to taste their products (cheese, fruit, honey) to prove quality and establish trust.
 
 ## Common Learner Errors
-1. **Case after Numbers (2-4)**: Using singular or wrong plural form (e.g., "Два кілограм" instead of "Два кілограми"). Correct: 2, 3, 4 + Nominative Plural.
-2. **Genitive Object**: Using Nominative for the substance being measured (e.g., "Кілограм картопля" instead of "Кілограм картоплі").
-3. **Change vs. Rest**: Confusion between "здача" (money change) and "решта" (remainder/rest). In shopping, "здача" is the standard term.
+1. **Case after quantity** → *Кілограм картопля* (wrong) vs *Кілограм картоплі* (correct) — Learners default to Nominative instead of Genitive after units of measurement.
+2. **Number agreement** → *Два кілограм* (wrong) vs *Два кілограми* (correct) — Learners forget to decline the unit of measurement after numbers 2-4.
+3. **False friends/Synonyms** → Confusing *здача* (change in money) with *решта* (the rest of something).
 
 ## Cross-References
-- Builds on: a1-18 (Food and Shopping), a1-36 (At the Restaurant) - reuses food vocab.
-- Prepares for: a1-38 (At the Store), A2 Genitive case (full declension).
+- Builds on: a1-18 (Food and Shopping), a1-53 (At the Restaurant)
+- Prepares for: a1-61 (At the Store)
 
 ## Notes for Content Writing
-- Focus on the "lexical chunk" approach for Genitive: teach "кілограм + [noun in Genitive]" as a pattern without deep case theory declension tables.
-- Use "Привоз" for the narrative section to inject humor and atmosphere.
-- Highlight the politeness marker "будь ласка" in all requests.
+- **Decolonized framing**: Emphasize the distinct nature of the Ukrainian *bazar* as a social hub. Highlight local markets (Pryvoz, Bessarabka) on their own terms without comparative references to Russian equivalents. Avoid any Russianisms in vocabulary.
+- **Scaffolding**: As an A1 module, English scaffolding is mandatory for grammatical concepts (like the "кілограм + noun" chunk) and explaining the cultural nuances of the market.
+- **Tone**: Adopt a Patient & Supportive Ukrainian Tutor persona. Build a "Safe Harbor" by presenting "кілограм + noun" as a simple vocabulary chunk rather than an intimidating grammar table.

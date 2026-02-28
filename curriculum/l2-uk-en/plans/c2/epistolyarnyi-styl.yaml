@@ -1,10 +1,12 @@
 module: c2-009
-level: c2
+level: C2
 sequence: 9
+slug: epistolyarnyi-styl
 version: '2.0'
 title: Епістолярний стиль — Повна кореспонденція
 focus: stylistics
 pedagogy: TTT
+phase: 'C2.1 [Stylistics & Rhetoric]'
 objectives:
 - TBD
 sources:
@@ -22,7 +24,7 @@ sources:
   notes: C2 requirements for all correspondence types
 content_outline:
 - section: Вступ — Феномен епістолярію (Introduction — The Epistolary Phenomenon)
-  words: 500
+  words: 600
   points:
   - 'Епістолярний стиль як самостійна функціональна система: визначення згідно з Держстандартом
     §4.3.1.1 та історія становлення в Україні'
@@ -32,7 +34,7 @@ content_outline:
     залежно від статусу адресата'
 - section: Офіційно-ділові листи та Державний стандарт (Official and Business Letters
     and the State Standard)
-  words: 900
+  words: 1100
   points:
   - 'Нормативні вимоги до офіційного листа (Держстандарт §4.3.4): система звертань
     («Пані і панове!», «Шановний пане голово!») та їх стилістичне навантаження'
@@ -44,7 +46,7 @@ content_outline:
     коми після імені/прізвища (порівняння з англійською пунктуацією)'
 - section: 'Ділова та електронна комунікація: еволюція нетикету (Business and Electronic
     Communication: Evolution of Netiquette)'
-  words: 1000
+  words: 1250
   points:
   - 'Цифрова трансформація листування: email-етикет проти месенджерів — правила нетикету
     в сучасному українському бізнес-середовищі'
@@ -56,7 +58,7 @@ content_outline:
     до нормативних «Добрий день!» або «Вітаю!» у діловому контакті'
 - section: Приватна кореспонденція та культурна пам'ять (Private Correspondence and
     Cultural Memory)
-  words: 1000
+  words: 1250
   points:
   - 'Епістолярій Лесі Українки як взірець інтелектуального модернізму: аналіз листів
     до Ольги Кобилянської як приклад емоційної довершеності та стилю'
@@ -68,7 +70,7 @@ content_outline:
     та епоху (аналіз лексичного складу історичних листів)'
 - section: 'Практикум: трансформація та подолання типових помилок (Workshop: Transformation
     and Overcoming Common Errors)'
-  words: 600
+  words: 800
   points:
   - 'Трансформація тексту за Держстандартом §4.3.7: перетворення неформального повідомлення
     у месенджері на офіційний email із дотриманням усіх реквізитів'

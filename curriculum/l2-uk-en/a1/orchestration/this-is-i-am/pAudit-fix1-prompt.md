@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2507/2000 (raw: 2770) | pedagogy: 1 violations
+    lesson: 3075/2000 (raw: 3293) | pedagogy: 3 violations | immersion: 4.6% LOW (target 15-35% (M09))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-  📚 PEDAGOGICAL VIOLATIONS FOUND:
-    [VOCAB_NOT_IN_CONTENT] Only 9/21 (43%) vocabulary words appear in content+activities. Missing: вона, вони, воно, він, ні, так, там, тут, хто, це (+2 more)
-       → FIX: Vocabulary words MUST appear in the module content or activities. Either use these words in the prose/examples, add activities that practice them, or remove them from the vocabulary YAML if they don't belong in this module.
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 1 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 55/100)
+     → Revision recommended (severity 55/100)
+     → 4 violations (moderate)
+     → 3 grammar-level violations (fundamental)
+     → Immersion 10% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/this-is-i-am-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/this-is-i-am-audit.log for details)
         ```
+
 
         ## Files to Fix
 

@@ -5,9 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T02:34:45Z",
+      "ts": "2026-02-28T19:43:25Z",
       "task_id": "v3-accusative-prepositions-pA",
       "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T19:45:30Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T19:47:47Z",
+      "task_id": "v3-accusative-prepositions-pC"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T19:54:43Z",
+      "attempts": 2
     }
   }
 }

@@ -19,7 +19,7 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 3532/2000 (raw: 3731) | pedagogy: 7 violations
+    lesson: 4940/2000 (raw: 5381) | pedagogy: 67 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
@@ -30,8 +30,8 @@
 
   📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
      → Revision recommended (severity 70/100)
-     → 11 violations (severe - consider revision)
-     → 6 grammar-level violations (fundamental)
+     → 69 violations (severe - consider revision)
+     → 31 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/my-daily-routine-audit.md

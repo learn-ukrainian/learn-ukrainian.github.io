@@ -1,0 +1,25 @@
+{
+  "slug": "the-living-verb-ii",
+  "track": "a1",
+  "module_num": 16,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-28T17:15:59Z",
+      "words": 4016,
+      "attempts": 1
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T17:20:41Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T17:20:41Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-28T17:20:41Z"
+}

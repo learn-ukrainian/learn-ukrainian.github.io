@@ -2,39 +2,43 @@ slug: buying-tickets
 title: Buying Tickets
 word_target: 2000
 content_outline:
-- section: Види транспорту та вокзали
-  words: 300
+- section: Вступ та підготовка
+  words: 450
   points:
-  - 'Distinguish basic transport types: поїзд (train), автобус (bus), маршрутка (minibus)'
-  - 'Define location hubs: вокзал (major terminal) vs станція/зупинка (stop)'
-  - 'Introduce collocations: центральний вокзал, залізничний вокзал'
-  - 'Visual/Context: Arriving at the station signage'
-- section: Купівля квитка та напрямок
-  words: 500
+  - 'Introduce main transport types using simple definitions: `поїзд`, `автобус`,
+    `маршрутка`. Provide English scaffolding for clear understanding.'
+  - Explain the critical difference between `вокзал` (major train hub), `автовокзал`
+    (major bus hub), and `автостанція` (local stop).
+  - Introduce the construction `до` + City (Genitive) as a fixed lexical chunk for
+    destinations (`до Києва`, `до Львова`, `до Одеси`).
+  - Include a mini-dialogue asking about transport options to a specific city.
+- section: Каса та замовлення
+  words: 650
   points:
-  - 'The core request formula: ''Один квиток до..., будь ласка'''
-  - 'Grammar Pattern: ''до + City'' (Genitive endings for basic cities: -а/-я) as
-    fixed chunks'
-  - 'Common error alert: ''їхати в'' vs ''їхати до'''
-  - 'Return options: ''туди й назад'' vs ''в один бік'''
-- section: 'Деталі подорожі: Клас і Розклад'
-  words: 500
+  - 'Present the core transaction phrase for the ticket office: `Один квиток до...,
+    будь ласка`.'
+  - Explicitly warn against the common gender agreement error (`одна квиток` vs correct
+    `один квиток`).
+  - 'Explain ticket options: `туди й назад` (round trip) versus `в один бік` (one
+    way).'
+  - Contrast traditional `квиткова каса` with modern `електронний квиток`, noting
+    the high digitalization of Укрзалізниця.
+  - 'Introduce carriage classes: `Купе` (compartment) vs `Плацкарт` (open plan), framing
+    ''плацкарт'' as an authentic social experience.'
+- section: Поїздка та комфорт
+  words: 550
   points:
-  - 'Carriage types cultural context: Купе vs Плацкарт vs Сидячий (Intercity)'
-  - 'Seat specification: нижнє (lower) vs верхнє (upper) місце'
-  - 'Schedule inquiries: ''О котрій відправлення?'', ''Коли прибуття?'''
-  - 'Platform navigation: ''Яка платформа?'', ''Який вагон?'''
-- section: 'Практика: Діалоги на вокзалі'
-  words: 400
+  - 'Teach platform navigation questions: `На якій платформі?` and `В якому вагоні?`.'
+  - Review numbers (from prerequisite module) to specify carriage and seat numbers.
+  - 'Explain seat types: `нижнє місце` (lower) vs `верхнє місце` (upper).'
+  - 'Introduce schedule inquiries: `О котрій відправлення?` and `Коли прибуття?`.'
+  - Share the cultural hook of drinking tea from a `підстаканник` served by the `провідник`.
+- section: Практика та підсумок
+  words: 350
   points:
-  - 'Scenario 1: Buying a train ticket to Lviv (Polite request focus)'
-  - 'Scenario 2: Bus station inquiry (Schedule focus)'
-  - 'Scenario 3: Clarifying details (Change of ticket/platform check)'
-  - Reinforce usage of 'автовокзал' vs 'залізничний вокзал'
-- section: 'Подорож поїздом: Традиції'
-  words: 300
-  points:
-  - 'Narrative closing: The atmosphere of a Ukrainian train journey'
-  - 'Cultural anchor: Tea in ''підстаканники'' and interaction with the ''провідник'''
-  - Practical vocabulary recap in context (ticket, tea, bed linen)
-  - 'Final motivation: ''Щасливої дороги!'''
+  - 'Provide a comprehensive simulation dialogue: buying a ticket to the Carpathians,
+    finding the train, and speaking with the conductor.'
+  - Include a controlled practice check to reinforce `до` instead of `в` for cities.
+  - Recap key vocabulary (ticket, station, train, conductor) in a quick reference
+    format.
+  - 'Conclude the module with the traditional travel wish: `Щасливої дороги!`.'

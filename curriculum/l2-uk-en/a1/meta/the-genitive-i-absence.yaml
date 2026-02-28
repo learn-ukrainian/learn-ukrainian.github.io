@@ -2,45 +2,50 @@ slug: the-genitive-i-absence
 title: 'The Genitive I: Absence'
 word_target: 2000
 content_outline:
-- section: 'Вступ: Ситуація відсутності'
-  words: 300
-  points:
-  - Introduce the concept of absence using the phrase 'У мене немає...'. Explicitly
-    address the common learner error of keeping the noun in Nominative (e.g., *У мене
-    немає квиток*).
-  - Contrast 'є' (presence) vs 'немає' (absence) using simple binary examples (Yes/No).
-    Focus on ready-made communicative models per State Standard §4.0.
-  - 'Immersion Note: Use English to explain the logic of ''Absence = Genitive''.'
-- section: 'Граматика: Конструкція «Немає» та «Без»'
-  words: 800
-  points:
-  - 'Explain the construction ''немає + Genitive'' (e.g., *Немає часу*). Introduce
-    high-frequency fixed formulaic phrases as chunks: *немає часу* (abstract), *немає
-    грошей* (plural exception).'
-  - 'Break down Genitive endings: -а/-я for masculine (hard/soft), -и/-і for feminine
-    (hard/soft). Specifically highlight the masculine ending -а (concrete) vs -у (abstract
-    like *часу*) to prevent errors.'
-  - 'Introduce the preposition ''без + Genitive'' (without). Provide key collocations
-    for daily life: *кава без цукру, чай без молока, автобус без квитка*.'
-  - 'Clarify Negation: ''не маю + Genitive'' (I do not have) vs ''немає'' (There is
-    no). Explain the distinction between ''немає'' (absence) and the particle ''не''
-    (simple negation, e.g., *Я не лікар*).'
-- section: 'Практика: Родовий відмінок у дії'
-  words: 500
-  points:
-  - 'Transformation drill: Nominative → Genitive. Use a simple Visual Mapping table
-    (Nom → Gen) with clear arrows (e.g., *хліб → хліба*, *вода → води*).'
-  - 'Sentence building: Construct sentences with ''немає'' and ''без'' using high-frequency
-    vocabulary (*цукор, квиток, час, ключ, телефон*).'
-  - 'Dialogue practice: ''У тебе є...? — Ні, немає''. Create mini-dialogues focused
-    on softened refusals in a shopping or home context (e.g., *Вибачте, кави немає*).'
-- section: 'Культурний контекст: «Немає проблем»'
+- section: Вступ
   words: 400
   points:
-  - Explore typical expressions with 'немає', focusing on *Немає проблем!*. Explain
-    its social function as a polite, flexible response.
-  - Discuss polite refusals in Ukrainian culture. Explain how using the factual 'немає'
-    (it doesn't exist) is often preferred over a direct personal refusal to soften
-    the blow (e.g., *На жаль, хліба немає*).
-  - Introduce the proverb *Немає диму без вогню* (No smoke without fire) to reinforce
-    the grammar structure in a memorable way.
+  - 'Explicitly define the immersion level strategy (35-40%): Use English scaffolding
+    to clearly explain the conceptual difference between presence (є) and absence
+    (немає).'
+  - 'Address Learner Error 2 directly in English: contrast the grammatical negation
+    of state ''не'' (Я не студент) with existential absence ''немає'' (У мене немає
+    квитка).'
+  - Provide a visual comparison table contrasting 'У мене є...' (possession, Nominative)
+    with 'У мене немає...' (absence, Genitive) using simple vocabulary.
+- section: Презентація
+  words: 600
+  points:
+  - Create an H3 section defining the 'немає + Родовий відмінок' construction. Introduce
+    'немає часу' and 'немає грошей' as fixed lexical chunks to build immediate fluency.
+  - 'Create an H3 section for masculine noun endings. Explain the semantic split specifically
+    to address Learner Error 3: -а/-я for concrete objects (хліба, квитка) and -у/-ю
+    for abstract/substances (часу, цукру, газу).'
+  - 'Create an H3 section for feminine noun endings. Explain the hard/soft shift:
+    -и/-і (вода → води, проблема → проблеми).'
+  - 'Create an H3 section introducing the preposition ''без'' (without) + Genitive.
+    Provide essential daily collocations: ''кава без цукру'', ''вода без газу''.'
+- section: Практика
+  words: 600
+  points:
+  - Address Learner Error 1 (Case Neglect) with an H3 focused on 'minimal pairs' practice,
+    highlighting the mandatory shift from Nominative to Genitive (є квиток -> немає
+    квитка).
+  - Design a 'Nominative to Genitive' transformation table showing clear visual mapping
+    of ending changes for target vocabulary (хліб, вода, час, цукор).
+  - Create an H3 with 3 mini-dialogues set in a restaurant or shop (aligning with
+    State Standard §3.8/3.9). Focus on ordering items 'без цукру' and polite inquiries
+    about availability.
+  - Include 5 self-check questions requiring the learner to supply the correct Genitive
+    ending for nouns following 'немає' and 'без'.
+- section: Культурний контекст
+  words: 400
+  points:
+  - Create an H3 exploring the ubiquitous phrase 'Немає проблем!'. Explain its social
+    utility as a flexible, polite response to requests, apologies, or minor issues.
+  - Create an H3 discussing polite refusals in Ukraine. Explain how using the factual
+    'немає' (it doesn't exist/is unavailable) softens a refusal compared to a direct
+    'ні'.
+  - Provide a breakdown of the proverb 'Немає диму без вогню' (No smoke without fire),
+    demonstrating how it perfectly encapsulates the grammar of the module ('немає'
+    + Gen, 'без' + Gen).

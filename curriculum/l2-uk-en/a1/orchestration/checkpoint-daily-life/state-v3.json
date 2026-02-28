@@ -4,8 +4,24 @@
   "mode": "v3",
   "phases": {
     "v3-A": {
-      "status": "failed",
-      "ts": "2026-02-28T15:04:05Z"
+      "status": "complete",
+      "ts": "2026-02-28T22:50:41Z",
+      "task_id": "v3-checkpoint-daily-life-pA",
+      "mode": "full"
+    },
+    "v3-B": {
+      "status": "complete",
+      "ts": "2026-02-28T22:55:07Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T22:55:07Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T22:59:49Z",
+      "attempts": 2
     }
   }
 }

@@ -1,0 +1,35 @@
+{
+  "slug": "leisure-and-hobbies",
+  "track": "a1",
+  "module_num": 51,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-28T17:12:48Z",
+      "words": 3909,
+      "attempts": 1
+    },
+    "3a": {
+      "status": "complete",
+      "timestamp": "2026-02-28T17:15:41Z",
+      "note": "v3-phase-C"
+    },
+    "3b": {
+      "status": "complete",
+      "timestamp": "2026-02-28T17:15:41Z",
+      "note": "v3-phase-C"
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T17:23:32Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T17:23:32Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-28T17:23:32Z"
+}

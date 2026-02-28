@@ -2,44 +2,49 @@ slug: taking-transport
 title: Taking Transport
 word_target: 2000
 content_outline:
-- section: 'Вступ: Транспорт у місті'
-  words: 350
-  points:
-  - Introduce main transport types (метро, автобус, тролейбус, трамвай, маршрутка)
-    with images/icons context.
-  - Briefly engage with the 'Arsenalna' cultural hook (deepest station).
-  - 'Grammar hook: Briefly contrast ''іти'' (foot) vs ''їхати'' (transport) to set
-    the stage.'
-  - 'Ask the learner: ''Як ви їздите на роботу?'' introducing the Instrumental case
-    pattern (-ом/-ем) for means of transport.'
-- section: 'Презентація: Види транспорту та оплата'
-  words: 650
-  points:
-  - 'Vocabulary deep dive: ''зупинка'' (ground transport) vs ''станція'' (metro/train).
-    Visual comparison.'
-  - 'Key Phrases: ''Наступна зупинка...'', ''Обережно, двері зачиняються''. Mention
-    the ''Voice of the Metro'' culture.'
-  - 'Payment methods: ''квиток'', ''проїзний'', ''валідатор'', ''QR-код''. Pronunciation
-    focus on ''прокомпостувати'' (legacy term but useful) vs ''завалідувати''.'
-  - 'Transfer logic: ''робити пересадку'', ''пересісти на...''. Simple diagram of
-    a transfer.'
-  - 'Grammar focus: Accusative for Direction (''Куди?'' -> в метро) vs Locative for
-    Location (''Де?'' -> у метро).'
-- section: 'Практика: Орієнтування в місті'
-  words: 600
-  points:
-  - 'Scenario: Asking for directions (''Як доїхати до...?''). Structured dialogue
-    frame.'
-  - 'Scenario: Buying a ticket/interacting with a driver (''Один квиток, будь ласка'',
-    ''Передайте за проїзд'').'
-  - 'Marshrutka etiquette: ''На зупинці!'' (Stop here!), ''Ви виходите?'' (Are you
-    getting off? - crucial for crowded buses).'
-  - 'Exercise: Distinguishing ''Де'' vs ''Куди'' in context (fill-in-the-blank logic).'
-- section: 'Закріплення: Подорож метром'
+- section: Вступ
   words: 400
   points:
-  - 'Narrative text: A story about a trip through Kyiv metro (entering, validating,
-    escalator, waiting, transfer).'
-  - 'Highlight sensory details: noise of the train, voice announcements, crowd flow.'
-  - 'Contextual vocabulary: ''ескалатор'', ''платформа'', ''перехід''.'
-  - 'Final check: Comprehension questions based on the narrative.'
+  - Introduce the 'Marshrutka Veteran' persona with an English scaffolding paragraph
+    welcoming the learner to the topic of urban transport (громадський транспорт).
+  - 'Contrast the basic verbs of motion: іти (on foot) vs їхати (by vehicle), providing
+    3 parallel example sentences.'
+  - 'Explicitly address and correct the common English-transfer error: ''Я йду на
+    метро'' -> ''Я їду на метро''.'
+  - 'Introduce the modern Ukrainian context: the blend of traditional transport networks
+    with the Kyiv Digital (Київ Цифровий) ecosystem.'
+- section: Презентація
+  words: 600
+  points:
+  - 'Categorize transport vocabulary into ground (зупинка: автобус, тролейбус, трамвай,
+    маршрутка) and underground (станція: метро), with examples for each.'
+  - Present the cultural hook about Arsenalna station (the world's deepest) and the
+    culture of reading/listening to music on long escalators.
+  - 'Grammar H3: Explain Accusative (Destination/Куди) vs. Locative (Location/Де)
+    with a 4-row comparative table (e.g., їду в метро vs я в метро).'
+  - 'Grammar H3: Explain case selection for transit, establishing Locative (їхати
+    на автобусі) as the primary pattern while introducing Instrumental (їхати автобусом)
+    to correct the ''їду автобус'' omission error.'
+- section: Практика
+  words: 600
+  points:
+  - 'Dialogue H3: Paying for fare. Provide a mini-dialogue contrasting traditional
+    cash payment (Передайте за проїзд) with modern digital validation (валідатор,
+    прикласти картку).'
+  - 'Phrasebook H3: Navigating crowds. Teach essential phrases like ''Ви виходите?''
+    (Are you getting off?) and ''Обережно, двері зачиняються''.'
+  - 'Scenario: Provide a structured Q&A frame for asking directions (Як доїхати до...?)
+    and navigating transfers (станція пересадки).'
+  - Include a short 5-6 sentence reading paragraph about a commute to work, requiring
+    the learner to observe the 'Де' vs 'Куди' distinctions in context.
+- section: Підсумок
+  words: 400
+  points:
+  - Provide a summary table consolidating the іти vs їхати rules and the key prepositions
+    for transport.
+  - Review the top 5 survival phrases from the lesson (e.g., Зупиніть на зупинці,
+    Ви виходите?).
+  - Include a short concluding message from the persona encouraging the learner to
+    feel confident traveling in a Ukrainian city.
+  - Provide a bridging sentence preparing the learner for the upcoming Phone Basics
+    and Emergencies modules by emphasizing location awareness.

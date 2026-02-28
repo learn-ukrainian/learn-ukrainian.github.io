@@ -2,15 +2,15 @@
   "module": "at-the-restaurant",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-02-28T03:51:28.339857Z",
+  "last_audit": "2026-02-28T18:47:09.605037Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-02-26T11:21:02.781221Z",
-    "meta": "2026-02-20T16:55:41.401016Z",
+    "md": "2026-02-28T18:46:47.275238Z",
+    "meta": "2026-02-28T18:36:52.441696Z",
     "activities": "2026-02-20T23:27:47.014370Z",
     "vocabulary": "2026-02-26T10:56:38.069387Z",
     "plan": "2026-02-28T03:02:13.896607Z",
-    "research": "2026-02-20T16:55:41.393592Z"
+    "research": "2026-02-28T18:36:52.432998Z"
   },
   "gates": {
     "meta": {
@@ -21,17 +21,17 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "2863/2000 (raw: 3075)"
+      "message": "5554/2000 (raw: 5948)"
     },
     "activities": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "10/8"
+      "message": "Deferred (content-only audit)"
     },
     "vocabulary": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
-      "message": "20/1"
+      "message": "Deferred (content-only audit)"
     },
     "naturalness": {
       "status": "info",
@@ -44,16 +44,16 @@
       "message": "Content aligned with research"
     },
     "review": {
-      "status": "pass",
+      "status": "deferred",
       "violations": 0,
       "message": ""
     }
   },
   "overall": {
-    "status": "pass",
+    "status": "content-complete",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 3,
     "fail_count": 0,
-    "deferred_count": 0
+    "deferred_count": 3
   }
 }

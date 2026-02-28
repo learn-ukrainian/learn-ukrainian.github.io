@@ -1,5 +1,5 @@
 <!-- SCOPE
-Covers: Comprehensive review and assessment of A1 morphology, syntax, and communicative skills
+Covers: Comprehensive review of A1 grammar (cases, verb conjugation, syntax) and vocabulary.
 Not covered:
   - Genitive and Dative cases → a2-01
 Related: a1-43
@@ -9,185 +9,240 @@ Related: a1-43
 
 > **Чому це важливо?**
 >
-> You have reached a massive milestone: the end of the A1 level! This final review and assessment module consolidates everything you have learned, from basic verb conjugations to navigating Ukrainian cities. It proves your readiness to step confidently into the A2 journey.
+> Цей фінальний тест перевіряє ваші знання. Ви покажете свої нові мовні навички. Це ваш міст до наступного рівня.
+>
+> (This final test checks your knowledge. You will show your new language skills. This is your bridge to the next level.)
 
 ## Вступ та орієнтація
 
 ### Структура фінального тесту
-Ласкаво просимо! Welcome to your final A1 module. You have worked incredibly hard to reach this point, and I am so proud of your progress. Чудова робота! This final exam is not meant to trick you; rather, it is a celebration of what you know. We will review the core building blocks of the language together so that you feel completely prepared. The test structure is divided into clear, manageable sections. First, we will look at morphology and syntax—how words change their endings and how sentences are built. Then, we will take a cultural journey to apply your knowledge in real-world scenarios. Finally, we will test your communicative skills with practical situations. You will not face anything you have not already seen. Це дуже добре. Ми маємо час. Студент читає текст. Ми розуміємо це добре. Ми хочемо знати мову. Це наш успіх. Ми любимо читати. Ми добре працюємо. Це цікаво. Це великий плюс. Ми знаємо багато. Україна дуже гарна. Ми чекаємо новий текст.
+Цей тест має кілька важливих частин. Ми перевіримо читання, аудіювання та граматику. Ви будете виконувати різні цікаві завдання. Ви успішно завершили цей довгий курс. Тепер ви готові до перевірки знань. (This test has several important parts. We will check reading, listening, and grammar. You will perform various interesting tasks. You have successfully completed this long course. Now you are ready for the knowledge check.)
+
+Цей фінальний тест комплексно оцінює ваші комунікативні навички. Ми хочемо бачити ваші навички в реальному житті. Екзамен має кілька різних секцій. Спочатку ви покажете розуміння базової граматики та словника. Потім ви виконаєте завдання на читання. Після цього ми перевіримо навички аудіювання за допомогою аудіо записів. Кожна частина тесту розроблена справедливо. Тут немає питань із підступом. Мета — показати ваші нові здібності.
+*(The final assessment is structured to evaluate your practical communication skills comprehensively. We want to see exactly how you use the language in real life. The exam includes multiple distinct sections. First, you will demonstrate your understanding of fundamental grammar and core vocabulary. Then, you will complete reading comprehension tasks based on cultural texts. After that, we will check your listening skills using authentic audio recordings. Every part of the test is meticulously designed to be fair, transparent, and supportive. There are no trick questions here. The goal is to let you showcase your newly acquired abilities.)*
+
+> [!note] Святкування прогресу (Celebrating Progress)
+> You have reached an incredible milestone in your language journey. Completing the A1 level means you have built a robust and solid foundation in Ukrainian. This final module is not just an exam; it is a profound celebration of all your hard work and daily dedication.
+
+### Очікування щодо мови
+Інструкції в тесті написані англійською мовою. Але самі тексти будуть тільки українською. Ви маєте уважно читати кожне слово. (The instructions in the test are written in English. But the texts themselves will be only in Ukrainian. You must read every word carefully.)
+
+Під час оцінювання ви відчуєте збалансоване мовне середовище. Усі інструкції надаються англійською мовою для повного розуміння. Ця стратегічна підтримка зменшує стрес. Однак тексти для читання та аудіо треки будуть повністю українською. Це перевіряє ваше справжнє занурення. Не хвилюйтеся про незнайомі нові слова. Зосередьтеся на головній ідеї. Ви вже маєте інструменти для розуміння текстів.
+*(During the assessment, you will experience a carefully balanced language environment. To ensure you completely understand what to do, all task instructions are provided in English. This strategic scaffolding reduces unnecessary stress and cognitive load. However, the reading passages and listening audio tracks will be entirely in Ukrainian. This tests your true immersion and real-time comprehension. Do not worry if you do not immediately recognize every single word. Focus on grasping the main idea and use context clues to find the correct answer. You already possess the tools needed to decode meaning from unfamiliar texts.)*
 
 ### Як оцінюється кожна частина
-Do not worry about every single mistake. A **по́ми́лка** (mistake) is just a normal stepping stone to fluency, and making them means you are trying. Your **оці́нка** (grade) in this course is based on your overall ability to communicate effectively, not on absolute perfection. For the grammar sections, we evaluate your understanding of core noun cases and verb classes. For the reading and listening parts, we evaluate if you can extract the main idea and key details from a short passage. When you perform practical tasks during oral assessments, the primary goal is successful interaction. If you can order a drink and buy a train ticket, you will pass! We want to see that you can use the language, even if a few endings are not perfect. Студент знає правило. Ми маємо нове слово. Ми пишемо швидко. Вчитель питає нас. Ми добре знаємо це. Мова дуже цікава. Це наш час. Ми багато читаємо. Ми хочемо розуміти все. Це дуже просто. Ми маємо хорошу пам'ять. Ми любимо працювати. Це наш день.
+Ваша оцінка залежить від вашого розуміння. Кожна помилка — це просто новий досвід. Ми хочемо бачити ваші практичні навички. (Your grade depends on your understanding. Every mistake is just a new experience. We want to see your practical skills.)
 
-> [!tip] **Порада від вчителя**
-> Take a deep breath before you start any **завда́ння** (task). Read the instructions carefully. If you forget a specific ending, use the context to make your best guess. You know more than you think, and your instincts are often correct. Це дуже добре. Ми маємо час. Студент читає текст. Ми розуміємо це добре. Ми хочемо знати мову. Це наш успіх. Ми любимо читати. Ми добре працюємо. Це цікаво. Це великий плюс. Ми знаємо багато. Україна дуже гарна. Ми чекаємо новий текст.
+Ваш результат оцінюється на основі вашої здатності ефективно спілкуватися. Ми абсолютно не очікуємо досконалості на рівні A1. Ваша **оцінка** показує ваш рівень комунікації. Робити **помилку** під час тесту — це абсолютно нормально. Помилки — це природна і необхідна частина процесу навчання. Вони чітко показують нові завдання для практики. Наша головна мета — святкувати те, и робите **правильно**.
+*(Your overall performance is evaluated based on your ability to communicate effectively and clearly. We absolutely do not expect absolute perfection at the A1 level. Your **оцінка** (grade) reflects how well you can convey your message and understand others in a conversational context. If you make a **помилка** (mistake) during the test, do not panic or feel discouraged. Mistakes are a natural, inevitable, and necessary part of the language learning process. They clearly show us what we need to practice more in the future. Our primary goal as Patient Supportive Tutors is to celebrate what you do **правильно** (correctly).)*
 
 ### Поради для успішного складання
-To succeed today, focus on calm confidence. Read each Ukrainian sentence out loud; your ears will often catch a grammar error before your eyes do. When choosing between cases, always ask yourself the core question (for example, "Where to?" versus "Where at?"). Remember that Ukrainian is a very logical language with reliable patterns. Trust the patterns you have practiced over the last forty-three modules. Це дуже хороший рівень. Ми знаємо це. Ми працюємо добре. Ви все знаєте! (You know everything!) Take your time, focus on the meaning, and remember that this is your moment to shine. Every word you speak correctly is a victory. Це ваша перемога. Ви знаєте багато. Ми читаємо багато. 
+Слухайте уважно і ніколи не поспішайте. Ви вже маєте всі необхідні знання. Ви будете успішно відповідати на питання. (Listen carefully and never rush. You already have all the necessary knowledge. You will successfully answer the questions.)
+
+До початку тесту зробіть глибокий вдих. Ви багато разів практикували ці концепції. Читайте кожне запитання повільно. Уважно **слухайте** аудіо. Зосередьтеся на знайомих дієсловах та іменниках. Під час письма згадайте базові правила. Довіряйте своїй інтуїції і намагайтеся не сумніватися у своїх перших відповідях. Ви повністю готові до цього виклику.
+*(Before you begin the test, take a deep, calming breath. You have practiced these specific concepts many times throughout the previous modules. Read each question slowly and methodically. When you need to **слухати** (listen) to the audio recordings, focus on identifying familiar verbs and nouns. When you need to **писати** (write), remember the basic spelling rules and sound patterns. Trust your trained intuition and try not to second-guess your very first answers. You are fully prepared, equipped, and ready for this rewarding challenge.)*
 
 ## Морфологічний та синтаксичний огляд
 
-### Називний відмінок (Nominative Case)
-The Nominative case is the dictionary form of a noun. Це базова форма. It acts as the subject of the sentence—the person, place, or thing that is performing the main action. Whenever you look up a new word in a dictionary, it is always presented in the Nominative case. It answers the fundamental questions «Хто?» (Who?) or «Що?» (What?). 
+### Називний та Кличний відмінки
+Іменники завжди мають різні граматичні форми. Називний відмінок — це базова словникова форма. Кличний відмінок використовується для ввічливого звертання. (Nouns always have different grammatical forms. Nominative case is the basic dictionary form. Vocative case is used for polite addressing.)
 
-*   **Студент** добре розуміє цей довгий текст. (The student understands this long text well.)
-*   **Київ** — дуже гарне і велике місто. (Kyiv is a very beautiful and big city.)
-*   Моя **подруга** багато читає ввечері. (My female friend reads a lot in the evening.)
+Слова змінюють свої закінчення залежно від граматичної ролі в реченні. Ця морфологічна система дуже красива і логічна. Називний відмінок — це завжди суб'єкт речення. Він чітко говорить, хто або иконує дію. Ви завжди знайдете цю форму у словнику. Коли ви хочете покликати когось, ви маєте використовувати Кличний відмінок. Це робить вашу мову ввічливою.
+*(In Ukrainian, nouns change their endings depending on their specific grammatical role in the sentence. This morphological system is beautiful and highly logical. The Nominative case is always the subject of the sentence. It tells us clearly who or what is performing the main action. You will always find this exact form when you look up a word in the dictionary. When you want to call someone's name or address them directly, you must use the Vocative case. This essential feature makes your speech polite, natural, and culturally authentic.)* 
 
-We use the Nominative case to state facts, name objects, and identify the main actor in our sentence. It is the anchor of your grammar, the starting point from which all other cases are formed. Студент знає правило. Ми маємо нове слово. Ми пишемо швидко. Вчитель питає нас. Ми добре знаємо це. Мова дуже цікава. Це наш час. Ми багато читаємо. Ми хочемо розуміти все. Це дуже просто. Ми маємо хорошу пам'ять. Ми любимо працювати. Це наш день. Це дуже важливо. Ми знаємо відмінки. Ми працюємо добре. 
+**Приклади (Examples):**
+1. Цей розумний студент добре читає текст. (This smart student reads the text well. — Nominative)
+2. Моя мама готує дуже смачну вечерю. (My mom is preparing a very tasty dinner. — Nominative)
+3. Привіт, Олено! Як твої справи сьогодні? (Hi, Olena! How are your things today? — Vocative)
+4. Добрий день, пане Максиме! Радий бачити. (Good afternoon, Mr. Maksym! Glad to see you. — Vocative)
 
-### Знахідний відмінок (Accusative Case)
-The Accusative case marks the direct object—the thing being acted upon directly by the verb. It answers the questions «Кого?» (Whom?) or «Що?» (What?). Crucially for your exam, it is also used to indicate destination and motion when paired with the prepositions **в/у** (in/into) or **на** (on/onto), answering the question «Куди?» (Where to?). Це дуже добре. Ми маємо час. Студент читає текст. Ми розуміємо це добре. Ми хочемо знати мову. Це наш успіх. Ми любимо читати. Ми добре працюємо. Це цікаво. Це великий плюс. Ми знаємо багато. Україна дуже гарна. Ми чекаємо новий текст.
+You will practically use the Vocative case in every daily conversation. Whether you are greeting a close friend or writing a formal email to a colleague, knowing how to address people correctly is an absolute core A1 skill.
 
-*   Вона уважно слухає **вчителя**. (She is listening to the teacher attentively.)
-*   Я щодня читаю цікаву **книжку**. (I read an interesting book every day.)
-*   Мій брат зараз іде в **магазин**. (My brother is going to the store right now.)
+### Знахідний відмінок та напрямок
+Знахідний відмінок показує прямий об'єкт. Ми також використовуємо його для напрямку. Ця форма відповідає на питання куди. (The Accusative case shows us the direct object. We also use it for direction. This form answers the question where to.)
 
-> [!warning] **Обережно!**
-> Do not confuse motion (Accusative) with location (Locative). «Я йду в магазин» means you are moving toward or into the store, so "магазин" takes the Accusative case ending (which for masculine inanimate nouns is identical to the Nominative).
+The Accusative case is one of the most frequently and widely used grammatical forms in the language. Its primary syntactic function is to indicate the direct object of a transitive action. For example, when you read a book, the book receives the action; thus, it is the direct object. Another fundamentally crucial function of the Accusative case is expressing physical motion towards a specific destination. When you are going somewhere, you must use the Accusative case immediately after the prepositions "в" (into) or "на" (onto).
 
-### Місцевий відмінок (Locative Case)
-The Locative case tells us exactly where something is located or where an action is taking place. It answers the question «Де?» (Where at?) and is always used with a preposition, most commonly **в/у** (in) or **на** (on). Unlike the Accusative case, it describes a static state or location, not a destination. Студент знає правило. Ми маємо нове слово. Ми пишемо швидко. Вчитель питає нас. Ми добре знаємо це. Мова дуже цікава. Це наш час. Ми багато читаємо. Ми хочемо розуміти все. Це дуже просто. Ми маємо хорошу пам'ять. Ми любимо працювати. Це наш день.
+**Приклади (Examples):**
+1. Я щодня читаю цікаву нову книгу. (I read an interesting new book every day. — Direct Object)
+2. Ми щиро любимо нашу рідну країну. (We sincerely love our native country. — Direct Object)
+3. Мій старший брат іде в магазин. (My older brother is going to the store. — Destination)
+4. Вони швидко їдуть на нову роботу. (They are driving quickly to the new work. — Destination)
 
-*   Я працюю в новому **офісі**. (I work in a new office.)
-*   Мій тато зараз на **роботі**. (My dad is at work right now.)
-* Ми живемо і працюємо у **Україні**. (We live and work in Ukraine.)
+### Місцевий відмінок та розташування
+Місцевий відмінок показує точне місце дії. Він завжди відповідає на питання де. Цей відмінок завжди має прийменник. (The Locative case shows the exact place of action. It always answers the question where. This case always has a preposition.)
 
-Let's compare the two cases directly to see the difference in action:
-*   Motion (Accusative): Ми їдемо в **місто**. (We are driving to the city.)
-*   Location (Locative): Ми зараз гуляємо в **місті**. (We are walking in the city right now.)
+While the Accusative case shows dynamic movement and where you are going, the Locative case shows static position and where you currently are. This conceptual distinction is a very common point of confusion for learners. The Locative case meticulously describes a static, unchanging location. It strictly requires the use of prepositions like "в" (in) or "на" (on) to indicate spatial position. You absolutely cannot use the Locative case by itself without an accompanying preposition.
 
-### Кличний відмінок (Vocative Case)
-The Vocative case is used specifically for addressing someone directly. It is a beautiful feature of Ukrainian that shows respect, politeness, and personal connection. When you call someone by their name, their title, or a family relationship, you change the ending of the noun to signal that you are talking to them.
+**Приклади (Examples):**
+1. Мій новий телефон лежить на столі. (My new phone is lying on the table. — Location)
+2. Ми зараз перебуваємо у великому місті. (We are currently staying in a big city. — Location)
+3. Моя молодша сестра працює в школі. (My younger sister works in a school. — Location)
+4. Я щасливо живу в незалежній Україні. (I happily live in independent Ukraine. — Location)
 
-*   **Олено**, ти добре розумієш це нове правило? (Olena, do you understand this new rule well?)
-*   Добрий день, **пане**! (Good afternoon, sir!)
-*   **Мамо**, я вже йду додому. (Mom, I am already going home.)
+> [!warning] Напрямок проти місця (Direction vs. Location)
+> One of the most common challenges at the A1 level is distinguishing between motion and static location. Let's look at a typical learner mistake and comprehensively correct it. Always ask yourself a simple question before speaking: Are you moving towards a place, or are you already inside that place?
+> 
+> **Типова помилка (Common Mistake):**
+> ❌ Я йду в магазині. (Incorrect — uses Locative ending "-і" for an action of motion)
+> 
+> **Правильно (Correct):**
+> ✅ Я йду в магазин. (Correct — uses Accusative form for destination)
+> ✅ Я зараз у магазині. (Correct — uses Locative form for static location)
 
-You will use this case constantly in daily conversation, emails, text messages, and formal greetings. It adds a layer of warmth and cultural authenticity to your spoken Ukrainian. Ми розуміємо все. Ми швидко купуємо квитки. Це дуже цікаво. Ми знаємо цю зупинку. Ми йдемо туди. Це наша подорож. Ми маємо новий словник. Ми добре знаємо слова. Ми любимо говорити. Це наша культура. Ми хочемо знати більше. Це чудовий день. Ми добре слухаємо. Ми любимо говорити. Це наша культура. Ми поважаємо людей.
+### Узгодження роду в реченні
+Прикметники завжди мають форму головного іменника. Вони узгоджуються в роді та числі. Це дуже важливе базове граматичне правило. (Adjectives always take the form of the main noun. They agree in gender and number. This is a very important basic grammar rule.)
 
-### Узгодження роду (Gender Agreement)
-In Ukrainian, adjectives and possessive pronouns must strictly match the gender (masculine, feminine, or neuter) and the number of the noun they describe. This is called gender agreement. A very common learner error is forgetting to change the adjective ending to match the noun's gender. Це дуже добре. Ми маємо час. Студент читає текст. Ми розуміємо це добре. Ми хочемо знати мову. Це наш успіх. Ми любимо читати. Ми добре працюємо. Це цікаво. Це великий плюс. Ми знаємо багато. Україна дуже гарна. Ми чекаємо новий текст.
+Граматична гармонія та узгодження — це дуже фундаментальні принципи. Слово-опис не може існувати самостійно. Воно має точно відображати головне слово. Це правило означає єдність форми. Рід, число та відмінок повинні відповідати головному слову. Ці елементи створюють дуже правильні красиві речення.
+*(In Ukrainian, grammatical harmony and structural agreement are fundamental principles. An adjective cannot exist independently; it must perfectly mirror the noun it describes. This strict rule means that the gender (masculine, feminine, or neuter), the number (singular or plural), and the case of the adjective must perfectly match the corresponding noun. Failing to match these elements creates sentences that sound disjointed to native speakers.)*
 
-*   **Правильно**: Моя велика машина стоїть там. (My big car stands there.) — *Feminine pronoun + feminine adjective + feminine noun.*
-*   **Помилка**: Мій велика машина. (Incorrect: Masculine pronoun mixed with a feminine noun.)
-*   **Правильно**: Це гарне місто має довгу історію. (This beautiful city has a long history.) — *Neuter adjective + neuter noun.*
+**Узгодження (Agreement Examples):**
+- ❌ Мій велика машина. (Incorrect — masculine pronoun mixed with feminine noun)
+- ✅ Моя велика машина. (Correct — feminine agreement perfectly aligned across all words)
+- ✅ Мій новий світлий дім. (Correct — masculine agreement aligned)
+- ✅ Моє гарне тихе місто. (Correct — neuter agreement aligned)
 
-Always look at the ending of the noun first, then select the matching adjective ending (-ий for masculine, -а for feminine, -е for neuter). Студент знає правило. Ми маємо нове слово. Ми пишемо швидко. Вчитель питає нас. Ми добре знаємо це. Мова дуже цікава. Це наш час. Ми багато читаємо. Ми хочемо розуміти все. Це дуже просто. Ми маємо хорошу пам'ять. Ми любимо працювати. Це наш день. 
+When you learn a brand new noun, always memorize its gender alongside its meaning. This simple proactive habit will save you from making frustrating agreement mistakes in the future. The ending letter of the noun usually gives you a clear and reliable hint.
 
-### Дієвідміни дієслів (Verb Conjugations)
-Ukrainian verbs are divided into two main conjugation classes based on their present tense endings. Class I verbs typically end in **-ати** or **-яти** and take personal endings with the vowel **-е-** (or **-є-**). The second class works differently. Class II verbs typically end in **-ити** or **-іти**. Це дуже добре. Ми маємо час. Студент читає текст. Ми розуміємо це добре. Ми хочемо знати мову. Це наш успіх. Ми любимо читати. Ми добре працюємо. Це цікаво. Це великий плюс. Ми знаємо багато. Україна дуже гарна. Ми чекаємо новий текст.
+### Дієвідмінювання: Клас I та Клас II
+Українські дієслова мають два основні класи. Вони відмінюються за різними фонетичними правилами. Ви маєте знати закінчення кожного класу. (Ukrainian verbs have two main classes. They conjugate according to different phonetic rules. You must know the endings of each class.)
 
-**Class I (-ати): читати (to read), знати (to know)**
-*   Я чит**аю**, ти чит**аєш**, він чит**ає**.
-*   Ми чит**аємо**, ви чит**аєте**, вони чит**ають**.
-*   Я добре зн**аю** українську мову. (I know the Ukrainian language well.)
+Verbs are the active engine of every single sentence. In the present tense, Ukrainian verbs are categorized into two main conjugation patterns: Class I and Class II. Class I verbs typically end in "-ати" or "-яти" in their infinitive dictionary form. Their conjugated endings feature the characteristic vowels "е" or "є". Class II verbs usually end in "-ити" or "-іти". They use the vowels "и" or "ї" instead. Let's thoroughly compare them.
 
-**Class II (-ити): говорити (to speak), робити (to do)**
-*   Я говор**ю**, ти говор**иш**, вона говор**ить**.
-*   Ми говор**имо**, ви говор**ите**, вони говор**ять**.
-*   Він щодня роб**ить** домашнє завдання. (He does homework every day.)
+| Хто (Who)           | Клас I (Class I) - читати | Клас II (Class II) - робити |
+|---------------------|---------------------------|-----------------------------|
+| Я (I)               | читаю (read)              | роблю (do)                  |
+| Ти (You)            | читаєш (read)             | робиш (do)                  |
+| Він/Вона/Воно       | читає (reads)             | робить (does)               |
+| Ми (We)             | читаємо (read)            | робимо (do)                 |
+| Ви (You - plural)   | читаєте (read)            | робите (do)                 |
+| Вони (They)         | читають (read)            | роблять (do)                |
 
-> [!observe] **Зверніть увагу**
-> Verbs like **слухати** (to listen), **розуміти** (to understand), and **питати** (to ask) are all Class I verbs. Practice conjugating them aloud to build muscle memory, as they appear very frequently in daily conversations.
+Recognizing the correct verb class is absolutely essential for clear communication. Many highly frequently used verbs belong firmly to these classes. For example, the verbs **знати** (to know) and **питати** (to ask) strictly belong to Class I. The verbs **говорити** (to speak) and **розуміти** (to understand) belong reliably to Class II. Do not mix their distinct endings.
 
-### Базовий синтаксис та питання
-Ukrainian syntax is relatively flexible, but the standard, neutral word order is Subject-Verb-Object (SVO), similar to English. This structure provides a clear and predictable way to build sentences. Студент знає правило. Ми маємо нове слово. Ми пишемо швидко. Вчитель питає нас. Ми добре знаємо це. Мова дуже цікава. Це наш час. Ми багато читаємо. Ми хочемо розуміти все. Це дуже просто. Ми маємо хорошу пам'ять. Ми любимо працювати. Це наш день.
+### Синтаксичні структури та питання
+Порядок слів тут гнучкий. Але базовий порядок дуже схожий завжди. Ми часто використовуємо спеціальні питальні слова. (Word order here is flexible. But the basic order is very similar always. We often use special question words.)
 
-*   Вчитель часто питає нового студента. (The teacher often asks the new student.)
-*   Студент швидко відповідає на запитання. (The student answers the question quickly.)
+Creating accurate sentences in Ukrainian is a very straightforward process once you know the basic underlying structure. The standard and most neutral word order is Subject-Verb-Object (SVO), just like in English syntax. However, because the noun cases clearly and unambiguously show who is doing what, you can freely change the word order for stylistic emphasis without changing the core meaning of the sentence. Forming questions correctly is another vital skill.
 
-To form a general question (a yes/no question), you can simply change your intonation, raising your pitch at the end of the sentence, or you can add the particle **чи** at the very beginning.
+**Спеціальні питання (Special Questions):**
+Special questions require specific, detailed information. They begin with essential question words such as **де** (where), **звідки** (from where), **куди** (where to), **що** (what), and **хто** (who).
 
-*   Ти зараз читаєш цей новий текст? (Are you reading this new text now?)
-*   Чи це наш великий жовтий автобус? (Is this our big yellow bus?)
+- Звідки ви приїхали до нас сьогодні? (Where did you come to us from today?)
+- Що ти хочеш читати ввечері вдома? (What do you want to read in the evening at home?)
+- Хто точно знає правильну відповідь зараз? (Who exactly knows the correct answer now?)
+- Куди вони йдуть працювати цього ранку? (Where are they going to work this morning?)
 
-For special questions, we use specific question words at the beginning of the sentence: **хто** (who), **що** (what), **де** (where), **куди** (where to), and **звідки** (where from). Це дуже добре. Ми маємо час. Студент читає текст. Ми розуміємо це добре. Ми хочемо знати мову. Це наш успіх. Ми любимо читати. Ми добре працюємо. Це цікаво. Це великий плюс. Ми знаємо багато. Україна дуже гарна. Ми чекаємо новий текст. Це гарне правило. Ми знаємо ці слова. Питання дуже важливе.
-
-*   Де ти працюєш кожного дня? (Where do you work every day?)
-*   Куди ви йдете сьогодні ввечері? (Where are you going this evening?)
+> [!tip] Практика запитань (Question Practice)
+> To practice, try turning any statement into a question. If you confidently say "Я йду в магазин" (I am going to the store), challenge yourself to immediately ask "Куди ти йдеш?" (Where are you going?). Mastering these interrogative syntactic structures allows you to seamlessly engage in meaningful conversations and gather information effectively.
 
 ## Культурна подорож: Київ та Львів
 
 ### Подорож Україною
-Language truly comes alive when we use it to explore new places and meet new people. Let's take a theoretical trip around Ukraine to test your vocabulary related to transport, food, and navigating the city. When you travel, you will constantly use verbs like **говорити** (to speak) and **слухати** (to listen). You need to ask for directions, buy tickets, and understand the answers clearly. Ми розуміємо все. Ми швидко купуємо квитки. Це дуже цікаво. Ми знаємо цю зупинку. Ми йдемо туди. Це наша подорож. Ми маємо новий словник. Ми добре знаємо слова. Ми любимо говорити. Це наша культура. Ми хочемо знати більше. Це чудовий день. Ми добре слухаємо. Ми розуміємо все. Ми швидко купуємо квитки. Це дуже цікаво. 
+Ми починаємо нашу віртуальну подорож Україною. Це чудова можливість перевірити ваші знання. Ви будете читати про різні міста. (We begin our virtual journey around Ukraine. This is a great opportunity to test your knowledge. You will read about different cities.)
 
-*   Ми сьогодні їдемо швидким поїздом. (We are traveling by fast train today.)
-*   Скажіть, де знаходиться головний вокзал? (Tell me, where is the main train station located?)
-*   Я дуже хочу замовити смачний обід. (I really want to order a tasty lunch.)
-
-This narrative context will test how well you integrate grammar concepts with practical vocabulary in a seamless way. Київ дуже великий. Ми знаємо це місто. Львів також гарний. Ми подорожуємо швидко. Ми маємо квитки. Ми їдемо далеко. Це наш новий день. Ми любимо смачну їжу. Студент має каву. Ми хочемо гуляти. Це дуже весело. Ми маємо гарний настрій. Ми хочемо пити каву. Ми подорожуємо швидко. Ми маємо квитки. Ми їдемо далеко.
+Вивчення мови і місцева культура дуже пов'язані. У цьому фінальному тесті ваші завдання на читання — це тематична подорож Україною. Ви будете віртуально подорожувати. Ваша подорож іде від історичної столиці до культурного центру. Ця цікава історія інтегрує практичний словник. Ви будете активно використовувати нові слова. Вони стосуються транспорту, їжі та щоденного життя. Читайте ці тексти уважно. Уявляйте себе на цих старовинних вулицях. Ви говорите з місцевими людьми. Цей багатий контекст робить мову дуже живою.
+*(Immersive language learning is deeply and inextricably connected to exploring local culture and geography. In this final exam, your comprehensive reading tasks will be beautifully framed around a thematic journey across Ukraine. You will conceptually travel from the bustling historical capital in the center to the vibrant cultural hub in the west. This engaging thematic narrative effortlessly integrates practical vocabulary from many different conceptual topics. You will need to actively use vocabulary related directly to public transport, traditional food, and everyday daily life. As you read these curated texts, vividly imagine yourself walking down these ancient cobblestone streets and interacting warmly with the local people. This rich context makes the language come brilliantly alive.)*
 
 ### Київ — серце України
-Kyiv is the capital and the vibrant heart of Ukraine. Founded in the fifth century, it is a dynamic city where ancient history meets modern, fast-paced life. As you walk through Kyiv, you will see the beautiful Dnipro river dividing the city into the right and left banks. 
+Київ — це велика і старовинна столиця. Тут тече широка річка Дніпро завжди. Навесні в місті квітнуть зелені каштани. (Kyiv is a large and ancient capital. The wide Dnipro River flows here always. In spring, green chestnut trees bloom in the city.)
 
-One of the most famous and beloved symbols of Kyiv is the **кашта́н** (chestnut tree). Київ дуже великий. Ми знаємо це місто. Львів також гарний. Ми подорожуємо швидко. Ми маємо квитки. Ми їдемо далеко. Це наш новий день. Ми любимо смачну їжу. Студент має каву. Ми хочемо гуляти. Це дуже весело. Ми маємо гарний настрій. Ми хочемо пити каву. Mentioned in historical literature as early as 1800 by Maksym Berlynsky, chestnut trees bloom beautifully in May and became an official symbol of the city in 1969. 
+Київ — це не просто сучасний адміністративний центр. Це справжнє історичне серце України. Він має статус одного з найстаріших міст Східної Європи. Його глибока історія робить його цікавим місцем. Велике місто має дуже красиву географію. Широка і велична річка Дніпро розділяє місто на правий і лівий береги. Читайте тексти про Київ уважно. Звертайте увагу на культурні символи. **Каштан** — це дуже популярний символ Києва. Кожного травня місто має багато білих і рожевих квітів.
+*(Kyiv is not just the modern administrative center; it is the true historical heart of Ukraine. Founded deep in the 5th century, it is recognized as one of the oldest and most historically significant cities in Eastern Europe. Its deep historical status makes it an endlessly fascinating place to explore linguistically. The sprawling city is defined by its stunning geography, particularly the wide and majestic Dnipro River that gracefully divides the city into the right and left banks. When you read assessment texts about Kyiv, pay close attention to the cultural symbols. The blooming **кашта́н** (chestnut tree) is the iconic, beloved symbol of Kyiv. Every May, the city dramatically transforms into a magnificent sea of white and pink chestnut blossoms.)*
 
-*   Київ — дуже старе і красиве місто. (Kyiv is a very old and beautiful city.)
-*   Навесні зелені каштани цвітуть дуже красиво. (In spring, the green chestnut trees bloom very beautifully.)
-*   Ми довго гуляємо біля річки Дніпро. (We are walking near the Dnipro river for a long time.)
+**Текст для читання (Reading Practice Text):**
+Київ має дуже довгу і цікаву історію. Це могутнє місто стоїть біля Дніпра. Місцеві люди люблять гуляти в парках. Навесні всі туристи фотографують білі каштани. У центрі міста є старовинні церкви. Гості часто купують тут гарні сувеніри. Я дуже хочу поїхати туди теплим літом.
+*(Kyiv has a very long interesting history. This mighty city stands near the Dnipro. Local people love walking in the parks. In spring, all tourists photograph the white chestnut trees. In the city center, there are ancient churches. Guests often buy beautiful souvenirs here. I want to go there in the warm summer.)*
 
-> [!culture] **Культурний факт**
-> The famous song "Kyiv Waltz," written in 1950, immortalized the blooming chestnuts of Kyiv, making them an enduring romantic symbol of the Ukrainian capital that every resident cherishes.
+Notice carefully how this text uses basic A1 sentence structures but successfully conveys rich cultural information. You will definitely encounter similar passages in your exam.
 
 ### Львів — культурна столиця
-If Kyiv is the heart, Lviv is often proudly called the cultural capital. Located in western Ukraine, Lviv is famous for its cobblestone streets, distinct European architecture, and deep, enduring traditions. One tradition stands out above all others: **ка́ва** (coffee). 
+Львів має особливу атмосферу дуже старого міста. Тут завжди пахне свіжа смачна кава. Це романтичне місто вузьких вулиць і книг. (Lviv has a special atmosphere of a very old city. Fresh tasty coffee always smells here. It is a romantic city of narrow streets and books.)
 
-A Ukrainian named Yuriy Kulchytsky helped popularize coffee in Vienna in 1683, and Lviv enthusiastically adopted a rich coffee culture that thrives vibrantly today. Київ дуже великий. Ми знаємо це місто. Львів також гарний. Ми подорожуємо швидко. Ми маємо квитки. Ми їдемо далеко. Це наш новий день. Ми любимо смачну їжу. Студент має каву. Ми хочемо гуляти. Це дуже весело. Ми маємо гарний настрій. Ми хочемо пити каву. Lviv is also a historic center for literature and education; the city has a profound printing history dating back to 1460, connected to the early printing press of Stepan Dropan.
+Далі ми їдемо на захід до Львова. Це культурна столиця України. Стара архітектура розповідає цікаві історії. Львів дуже відомий своєю культурою кави. Традиція пити каву має довгу історію. Затишні кав'ярні є всюди. Також Львів має особливе місце в історії літератури. Це дім для найстарішої друкарні. Місто має велику традицію освіти та мистецтва.
+*(Moving westward across the country, we arrive in Lviv, which is widely considered the beating cultural capital of Ukraine. The remarkably preserved architecture here tells intricate stories of centuries past, seamlessly blending different classical European styles. Lviv is internationally famous for its deep-rooted, passionate coffee culture. The cherished tradition of brewing and drinking **ка́ва** (coffee) here magically dates back to the late 18th century, and cozy, aromatic coffee shops are hidden delightfully in every corner of the old town. Furthermore, Lviv elegantly holds a special place in the nation's literary history. It is proudly home to the legacy of the oldest printing house in Ukraine, reflecting a very long tradition of book printing, education, and artistic expression.)*
 
-*   Я дуже люблю пити чорну каву у Львові. (I really love drinking black coffee in Lviv.)
-*   Тут працює багато старих і затишних кав'ярень. (Many old and cozy coffee shops work here.)
-*   Ми тихо читаємо цікаву книгу в кафе. (We are quietly reading an interesting book in the cafe.)
+**Текст для читання (Reading Practice Text):**
+Львів — це чудове місто старої кави. Зранку люди повільно йдуть у кав'ярню. Вони п'ють гарячу каву і говорять. На вулицях гарно грають талановиті музиканти. У місті є багато старих книгарень. Я дуже люблю читати книги там. Це надзвичайно спокійне і дуже гарне місце.
+*(Lviv is a wonderful city of old coffee. In the morning, people slowly go to the cafe. They drink hot coffee and talk. On the streets, talented musicians play beautifully. In the city, there are many old bookstores. I very much love reading books there. It is an extremely calm and very beautiful place.)*
 
-### Практична комунікація в подорожі
-When visiting these wonderful cities, you must routinely use numbers, tell the time correctly, and deploy basic communication phrases without hesitation. Imagine you are planning your day out in the city center.
+> [!culture] Кавові традиції (Coffee Traditions)
+> In Lviv, ordering coffee is an art form. You won't just ask for a generic drink. You might ask for «кава по-львівськи» (Lviv-style coffee), which is traditionally brewed in a small copper pot over hot sand. Understanding these cultural nuances makes language learning infinitely more rewarding.
 
-*   Вибачте, котра зараз точна година? (Excuse me, what exact time is it now?)
-*   Зараз рівно друга година дня. (It is exactly two o'clock in the afternoon now.)
-*   Скільки коштує цей квиток на трамвай? (How much does this ticket for the tram cost?)
-*   Квиток коштує рівно сто гривень. (The ticket costs exactly one hundred hryvnias.)
+### Практичне спілкування в дорозі
+Під час подорожі ви маєте багато спілкуватися. Ви будете впевнено купувати квитки на поїзд. Ви також будете правильно запитувати про час. (During the trip, you must communicate a lot. You will confidently buy tickets for the train. You will also correctly ask about the time.)
 
-> [!myth-buster] **Руйнуємо міфи**
-> You might hear rumors that Ukrainian cities only use other languages, but this is a persistent colonial myth. Ukrainian is the vibrant, daily language of business, culture, and social life in both Kyiv and Lviv. Speaking Ukrainian opens doors to authentic cultural experiences and warm interactions.
+Автентична подорож — це не тільки пасивний огляд. Це активне спілкування. Успішна подорож Україною вимагає ваших мовних навичок. Використовуйте числа для розуміння цін на ринку. Добре знати правильні маршрути автобусів. Також ви купуєте квитки на вокзалі. Вміння запитати час — це дуже важливо. Це допоможе не запізнитися на поїзд. Ми побачимо, як ці елементи працюють у типовому діалозі.
+*(A true cultural journey is not just about passive sightseeing; it is mostly about practical, active interactions. To successfully and comfortably navigate through Ukraine, you must directly apply your functional language skills. You need to confidently use numbers to understand prices at the market, identify correct bus routes, and buy tickets at the railway station. You must also know exactly how to ask and tell the time to ensure you do not miss your scheduled train. Let's look at how these varied elements elegantly come together in a highly typical travel dialogue.)*
+
+**Міні-діалог: На вокзалі (Mini-Dialogue: At the Station):**
+— Добрий день! Скільки коштує квиток до Києва? (Good afternoon! How much does a ticket to Kyiv cost?)
+— Добрий день. Цей квиток коштує п'ятсот гривень. (Good afternoon. This ticket costs five hundred hryvnias.)
+— О котрій годині відправляється мій швидкий поїзд? (At what time does my fast train depart?)
+— Поїзд відправляється о сьомій годині вечора сьогодні. (The train departs at seven o'clock in the evening today.)
+— Дякую! Я зараз купую цей потрібний квиток. (Thank you! I am buying this necessary ticket now.)
+
+Ця ситуація має великі числа і вирази часу. Вона також має ввічливі фрази. Ваш фінальний тест буде мати схожі практичні завдання. Ми хочемо побачити ваше легке спілкування щодня.
+*(This realistic scenario effortlessly integrates large numbers, vital time expressions, and basic polite phrases. Your final exam will directly include similar practical situations to verify that you can handle everyday communication smoothly and with great confidence.)*
 
 ## Фінальне оцінювання та перехід до A2
 
-### Слухання та читання
-Your final assessment includes dedicated sections for listening and reading comprehension. You need to demonstrate that you understand simple sentences and basic complex sentences connected by common conjunctions like **і/й** (and), **а** (but/and - showing contrast), and **але** (but - showing opposition).
+### Аудіювання та читання
+Ви будете уважно слухати короткі аудіо записи. Ви також будете швидко читати невеликі тексти. Ми перевіримо ваше розуміння базових складних речень. (You will carefully listen to short audio recordings. You will also quickly read small texts. We will check your understanding of basic complex sentences.)
 
-*   Я уважно читаю книгу, **а** він тихо слухає музику. (I am reading a book attentively, and/while he is quietly listening to music.)
-*   Я дуже хочу пити каву, **але** я зараз не маю часу. (I really want to drink coffee, but I do not have time right now.)
-*   Ми добре знаємо англійську **і** українську мови. (We know the English and Ukrainian languages well.)
+Цей тест перевіряє читання та аудіювання. Ці завдання показують ваше розуміння інформації. Ви будете слухати носіїв мови. Вони говорять про щоденні ситуації. Тексти для читання мають довгі речення. Вони використовують слова «й», «а» або «але». Розуміння цих слів дуже важливе для правильного читання.
+*(The core of your upcoming assessment focuses heavily on receptive skills: listening and reading. These critical tasks rigorously verify your ability to process spoken and written information accurately in real time. You will listen to native speakers conversing in various everyday situations. The reading passages will occasionally feature basic complex sentences. At the A1 level, a complex sentence is usually formed by naturally joining two distinct simple clauses with connecting conjunctions like "і" (and), "а" (and/but - indicating contrast), or "але" (but - indicating direct opposition). Understanding precisely how these small but mighty words connect ideas is absolutely crucial for fluid comprehension.)*
 
-Focus on identifying the main subject and the primary verb. Це дуже добре. Ми маємо час. Студент читає текст. Ми розуміємо це добре. Ми хочемо знати мову. Це наш успіх. Ми любимо читати. Ми добре працюємо. Це цікаво. Це великий плюс. Ми знаємо багато. Україна дуже гарна. Ми чекаємо новий текст. If you can spot "хто" (who) and "що робить" (what they are doing), you will easily grasp the core meaning of any passage. Ми уважно читаємо. Ми маємо час. Ми добре працюємо.
+**Приклади складних речень (Examples of Complex Sentences):**
+1. Брат читає нову книгу, і сестра малює. (Brother is reading a new book, and sister is drawing. — Simple addition)
+2. Я люблю солодку каву, а друг п'є чай. (I love sweet coffee, and my friend drinks tea. — Contrast)
+3. Ми дуже хочемо гуляти, але надворі йде дощ. (We really want to walk, but it is raining outside. — Opposition)
+
+Читайте або слухайте дуже уважно. Звертайте велику увагу на ці слова. Вони дуже допомагають. Вони показують логіку думок.
+*(When you attentively read or listen during the exam, pay extremely close attention to these conjunctions. They act as vital signposts, smoothly guiding you through the logical flow of the speaker's overarching thoughts.)*
 
 ### Практичні життєві ситуації
-We will test your oral skills with straightforward role-play prompts based on real-world scenarios. You will need to demonstrate that you can handle daily tasks independently and confidently. Ми розуміємо все. Ми швидко купуємо квитки. Це дуже цікаво. Ми знаємо цю зупинку. Ми йдемо туди. Це наша подорож. Ми маємо новий словник. Ми добре знаємо слова. Ми любимо говорити. Це наша культура. Ми хочемо знати більше. Це чудовий день. Ми добре слухаємо.
+Оцінювання обов'язково включає усні комунікативні практичні завдання. Ви будете самостійно розігрувати реальні життєві ситуації. Ви маєте показати свої найкращі навички спілкування. (The assessment necessarily includes oral communicative practical tasks. You will independently role-play real life situations. You must show your best communication skills.)
 
-1.  **Купівля квитків:** You must ask for a ticket to a specific destination and clearly understand the price the cashier tells you.
-2.  **Замовлення кави:** You will greet the barista politely, order your preferred drink, and say thank you.
-3.  **Знайомство:** You will introduce yourself, say where you are from, and ask the other person basic questions about themselves.
+Мова — це інструмент для спілкування. Усні завдання симулюють реальні життєві ситуації. Уявіть себе зараз у кафе в Україні. Ви маєте розказати про себе. Також ви замовляєте їжу або запитати дорогу на вулиці. Ваше завдання — відповідати природно і чітко. Ми хочемо бачити ваш словник у дії. Ми повторимо важливі фрази.
+*(Language is a powerful tool for human connection, not just a rigid set of academic rules. Therefore, the oral assessment tasks will closely simulate completely real-world scenarios. Imagine you are standing in a cafe in Ukraine right now. You need to confidently introduce yourself, order food in a busy restaurant, or gracefully ask for directions on the street. Your task is to respond to prompts naturally, clearly, and accurately. We want to see how you effectively use your vocabulary under mild, realistic pressure. Let's review some key phrases for ordering.)*
 
-*   Добрий день! Дайте, будь ласка, один квиток до Києва. (Good afternoon! Please give me one ticket to Kyiv.)
-*   Я буду пити чорну каву без цукру. Дуже дякую! (I will drink black coffee without sugar. Thank you very much!)
+**У кафе (In the Cafe):**
+— Я обов'язково буду чорну каву і торт. (I will definitely have black coffee and cake.)
+— Дайте, будь ласка, меню на цей стіл. (Please give the menu for this table.)
+— Можна мій рахунок, будь ласка, прямо зараз? (Can I have my bill, please, right now?)
+
+Ввічливі слова роблять вашу мову дуже ефективною. Практикуйте ці слова багато разів. Це дасть велику впевненість на тесті.
+*(Using polite phrases like "будь ласка" (please) and "дякую" (thank you) instantly makes your speech polite, culturally appropriate, and highly effective. Practice saying these aloud multiple times to steadily build your vocal confidence before the exam.)*
 
 ### Готовність до рівня A2
-By passing this comprehensive assessment, you unequivocally prove your readiness for Level A2. In the next level, we will build steadily on this strong foundation. You will learn the Genitive case (to express possession and absence) and the Dative case (to give things to people or show direction). You will also explore verb aspects, allowing you to talk precisely about completed actions versus ongoing, repeated processes. Your vocabulary will expand dramatically, and your sentences will become richer and more complex. Everything you have learned here in A1 is the essential bedrock for that future success. Ми чекаємо новий рівень. Ми знаємо багато слів. Це великий успіх. Ми маємо новий текст. Ми швидко читаємо. Це наш словник. Ми любимо мову. Ми маємо гарний результат. Це дуже приємно. Ми хочемо йти далі. Ми знаємо це правило. Студент дуже радий. Ми закінчуємо цей рівень. Ми чекаємо новий рівень. Ми знаємо багато слів. Це великий успіх.
+Ви вже маєте дуже міцну надійну граматичну базу. Тепер ви повністю готові до нових викликів. Наступний рівень швидко відкриє нові мовні можливості. (You already have a very strong reliable grammatical base. Now you are fully ready for new challenges. The next level will quickly open new language opportunities.)
 
-### Ваше досягнення
-Take a quiet moment to reflect deeply on your monumental achievement. Forty-four modules ago, you started from scratch with the alphabet. Now, you can read full texts, understand intricate grammar systems, order food in restaurants, and have basic conversations in a completely new language. You have shown incredible dedication and resilience. Ви великі молодці! (You are great!) Review your notes, trust your hard-earned knowledge, and approach the final exam with joy and excitement. Ми чекаємо новий рівень. Ми знаємо багато слів. Це великий успіх. Ми маємо новий текст. Ми швидко читаємо. Це наш словник. Ми любимо мову. Ми маємо гарний результат. Це дуже приємно. Ми хочемо йти далі. Ми знаємо це правило. Студент дуже радий. Ми закінчуємо цей рівень. Ми починаємо зараз. Ви знаєте українську мову. Це ваш успіх. 
+Успішний фінальний тест показує ваші базові знання. Ви маєте міцний фундамент для майбутнього навчання. Скоро ви перейдете на рівень А2. Ви будете вивчати Родовий відмінок для опису власності. Також ви будете вивчати Давальний відмінок для передачі речей. Ваші базові знання дуже допоможуть вивчати ці нові теми.
+*(Successfully completing this final comprehensive exam firmly proves that you have mastered the linguistic essentials. You have built a tremendously solid foundation that will reliably support all your future, more advanced learning. As you actively prepare to officially transition to the exciting A2 level, you can greatly look forward to vastly expanding your personal expressiveness. You will soon thoughtfully learn how to formally describe possession, belonging, and total absence using the Genitive case. You will also learn how to express giving items and receiving favors using the Dative case. The core concepts you have completely mastered here—such as verb conjugation and basic noun cases—will make learning these new, slightly more complex structures much easier.)* 
+
+### Наступний крок у вашій подорожі
+Ви зробили дійсно величезну роботу на цьому курсі. Ми щиро пишаємося вашим великим щоденним прогресом сьогодні. Бажаємо успіхів на цьому фінальному тесті. (You have done a truly huge work in this course. We are sincerely proud of your great daily progress today. We wish you incredible success on this final test.)
+
+Згадайте ваш перший модуль. Ви почали з кирилиці та нових звуків. Тепер ви читаєте тексти про історію та культуру. Ви правильно відмінюєте дієслова. Це дуже велике досягнення. Святкуйте свою роботу. Починайте цей тест спокійно. Ви маєте знання та навички для успіху. Ми чекаємо вас на рівні А2!
+*(Think back deeply to your very first introductory module. You bravely started with learning the Cyrillic alphabet and painstakingly pronouncing simple new sounds. Now, you are fluently reading texts about Ukrainian history and culture, conjugating verbs properly, and accurately understanding case systems. This is a genuinely remarkable, hard-earned achievement. Take a moment to deeply celebrate your dedication and consistency. Approach this final assessment with calm confidence. You have the accumulated knowledge, the practiced skills, and the sharp intuition to succeed fully. We are very excited to see you shine brightly and enthusiastically welcome you to the A2 level!)*
 
 ---
 
 # Підсумок
 
-You have successfully completed the comprehensive review for the A1 Final Exam! Together, we revisited the core noun cases (Nominative, Accusative, Locative, and Vocative) and clarified the crucial difference between motion and location. We reviewed the rules of gender agreement and the two main verb conjugation classes. We then applied this theoretical knowledge to a cultural journey through the vibrant cities of Kyiv and Lviv, exploring chestnut trees and coffee culture while practicing essential travel vocabulary. Finally, we outlined the practical scenarios you will face in your oral assessment. You are now fully prepared to demonstrate your mastery and transition to the A2 level.
+Ви блискуче пройшли весь матеріал для рівня А1. Ви вивчили відмінки, дієслова та багато нових слів. Тепер час спокійно перевірити власні знання. Ми впевнені у вашому великому майбутньому успіху.
+*(You brilliantly passed all the material for the A1 level. You learned cases, verbs, and many new words. Now it is time to calmly check your own knowledge. We are confident in your great future success.)*
 
-**Перевірте себе:**
-1. Який відмінок ми використовуємо для напрямку руху («в» або «на») (наприклад, «я йду в магазин»)?
-2. Як правильно сказати українською: «Моя велика машина» чи «Мій велика машина»? Чому саме так?
-3. До якої дієвідміни належить дієслово «робити» (Class I чи Class II)?
-4. Яке дерево традиційно є відомим символом міста Києва?
-5. Яке слово ми можемо використати для побудови загального питання (yes/no question) на початку речення?
+Цей модуль — це кінець вашої подорожі А1. Ви повторили базові елементи української мови. Ви досліджували багаті культурні ландшафти Києва та Львова. Ви практикували важливі комунікативні ситуації. Тепер ви знаєте класи дієслів. Ви знаєте узгодження слів. Ви використовуєте правильні відмінки для місця та руху.
+*(This module marks the culmination of your A1 journey. You have reviewed the fundamental building blocks of the Ukrainian language, explored the rich cultural landscapes of Kyiv and Lviv, and practiced essential communicative scenarios. You now know how to navigate verb classes, agree adjectives with nouns, and employ correct noun cases for location and motion.)* 
+
+**Перевірте себе (Self-Check):**
+1. Which case do you use to describe the static location of an object (e.g., "in the city")?
+2. How do the endings of Class I verbs differ from Class II verbs in the present tense?
+3. If you want to say "I am going to the store," why must you use the Accusative case instead of the Locative?
+4. How do you correctly agree the adjective "новий" (new) with a feminine noun?
+5. Which major Ukrainian city is deeply famous for its centuries-old coffee culture?
+6. Can you translate and explain the difference between «і», «а», and «але» in a complex sentence?
 
 ---

@@ -1,10 +1,12 @@
-module: c2-035
-level: c2
-sequence: 35
+module: c2-032
+level: C2
+sequence: 32
+slug: literary-translation-ii
 version: '2.0'
 title: Літературний переклад II — проза
 focus: literature
 pedagogy: TTT
+phase: 'C2.2 [Literature & Creative Writing]'
 objectives:
 - TBD
 sources:
@@ -23,7 +25,7 @@ sources:
 content_outline:
 - section: 'Вступ — Специфіка та етика перекладу прози (Introduction: Specifics and
     Ethics of Prose Translation)'
-  words: 500
+  words: 600
   points:
   - 'Специфіка художнього перекладу прози згідно з Держстандартом (§4.3.6): створення
     тексту певного стилю за планом та етика перекладу як інтерпретації.'
@@ -33,7 +35,7 @@ content_outline:
     української літератури за кордоном).'
 - section: Відтворення авторського голосу та ідіолекту (Reconstructing Authorial Voice
     and Idiolect)
-  words: 700
+  words: 900
   points:
   - 'Ідентифікація авторського ідіолекту та збереження тону через стилістичні засоби
     лексики (§4.3.3): неологізми, епітети, метафори та синекдоха.'
@@ -43,7 +45,7 @@ content_outline:
     мови розгалужені атрибутивні конструкції.'
 - section: Соціолекти, діалоги та мовлення персонажів (Sociolects, Dialogues, and
     Character Speech)
-  words: 800
+  words: 1000
   points:
   - 'Помилка №2: нівелювання соціолекту персонажів — використання лексичних та синтаксичних
     засобів української мови для передачі соціальної характеризації.'
@@ -53,7 +55,7 @@ content_outline:
     та художнім регістрами в межах діалогу.'
 - section: Стратегії перекладу реалій та культурна адаптація (Strategies for Realia
     Translation and Cultural Adaptation)
-  words: 800
+  words: 1000
   points:
   - 'Типи реалій та методи їх передачі: транскрипція, калька, генералізація або функціональний
     аналог (кейс безеквівалентної лексики за Влаховим і Флоріним).'
@@ -63,7 +65,7 @@ content_outline:
     через метод експлікації прихованих смислів.
 - section: 'Практикум перекладу — з англійської та на англійську (Translation Workshop:
     From and To English)'
-  words: 1200
+  words: 1500
   points:
   - 'Педагогіка TTT: аналіз та самостійний переклад уривку прози перед вивченням теоретичних
     моделей (метод проб і помилок).'

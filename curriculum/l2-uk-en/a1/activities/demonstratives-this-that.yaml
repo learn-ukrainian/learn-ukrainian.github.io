@@ -1,0 +1,520 @@
+- type: quiz
+  title: Оберіть правильний вказівний займенник (близько)
+  items:
+  - question: Який займенник потрібно використати зі словом хлопець?
+    explanation: Слово хлопець чоловічого роду.
+    options:
+    - text: цей
+      correct: true
+    - text: ця
+      correct: false
+    - text: це
+      correct: false
+    - text: ці
+      correct: false
+  - question: Який займенник потрібно використати зі словом дівчина?
+    explanation: Слово дівчина жіночого роду.
+    options:
+    - text: ця
+      correct: true
+    - text: цей
+      correct: false
+    - text: це
+      correct: false
+    - text: ці
+      correct: false
+  - question: Як правильно сказати this city українською мовою?
+    explanation: Слово місто середнього роду.
+    options:
+    - text: це місто
+      correct: true
+    - text: цей місто
+      correct: false
+    - text: ця місто
+      correct: false
+    - text: ці місто
+      correct: false
+  - question: Який займенник використовується для множини (студенти)?
+    explanation: Для всіх родів у множині використовується ці.
+    options:
+    - text: ці
+      correct: true
+    - text: цей
+      correct: false
+    - text: ця
+      correct: false
+    - text: це
+      correct: false
+  - question: Як правильно сказати this street українською мовою?
+    explanation: Слово вулиця жіночого роду.
+    options:
+    - text: ця вулиця
+      correct: true
+    - text: цей вулиця
+      correct: false
+    - text: це вулиця
+      correct: false
+    - text: ці вулиця
+      correct: false
+  - question: Як правильно сказати this building українською мовою?
+    explanation: Слово будинок чоловічого роду.
+    options:
+    - text: цей будинок
+      correct: true
+    - text: ця будинок
+      correct: false
+    - text: це будинок
+      correct: false
+    - text: ці будинок
+      correct: false
+  - question: Як правильно сказати these lakes українською мовою?
+    explanation: Озера - це множина, тому використовуємо ці.
+    options:
+    - text: ці озера
+      correct: true
+    - text: цей озера
+      correct: false
+    - text: ця озера
+      correct: false
+    - text: це озера
+      correct: false
+  - question: Який займенник потрібен для слова кава (this coffee)?
+    explanation: Слово кава жіночого роду.
+    options:
+    - text: ця
+      correct: true
+    - text: цей
+      correct: false
+    - text: це
+      correct: false
+    - text: ці
+      correct: false
+  instruction: Оберіть правильну відповідь.
+- type: fill-in
+  title: Заповніть пропуски (цей, ця, це, ці)
+  items:
+  - sentence: Я бачу _____ високий будинок.
+    answer: цей
+    options:
+    - цей
+    - ця
+    - це
+    - ці
+  - sentence: Мені дуже подобається _____ книга.
+    answer: ця
+    options:
+    - ця
+    - цей
+    - це
+    - ці
+  - sentence: _____ велике озеро дуже гарне.
+    answer: це
+    options:
+    - це
+    - цей
+    - ця
+    - ці
+  - sentence: _____ нові студенти читають текст.
+    answer: ці
+    options:
+    - ці
+    - цей
+    - ця
+    - це
+  - sentence: _____ стілець дуже зручний для роботи.
+    answer: цей
+    options:
+    - цей
+    - ця
+    - це
+    - ці
+  - sentence: _____ тиха вулиця знаходиться в центрі.
+    answer: ця
+    options:
+    - ця
+    - цей
+    - це
+    - ці
+  - sentence: _____ старі міста мають багату історію.
+    answer: ці
+    options:
+    - ці
+    - цей
+    - ця
+    - це
+  - sentence: Я знаю _____ нове слово українською.
+    answer: це
+    options:
+    - це
+    - цей
+    - ця
+    - ці
+  instruction: Оберіть правильне слово для заповнення пропуску.
+- type: match-up
+  title: Знайдіть переклад слів
+  pairs:
+  - left: цей будинок
+    right: this building
+  - left: та вулиця
+    right: that street
+  - left: ці студенти
+    right: these students
+  - left: те озеро
+    right: that lake
+  - left: той стілець
+    right: that chair
+  - left: ця дівчина
+    right: this girl
+  - left: ті люди
+    right: those people
+  - left: це місто
+    right: this city
+  instruction: З'єднайте відповідні елементи.
+- type: group-sort
+  title: Розподіліть іменники за групами (близько)
+  groups:
+  - name: Цей (Чоловічий рід)
+    items:
+    - будинок
+    - стілець
+    - чоловік
+    - хлопець
+  - name: Ця (Жіночий рід)
+    items:
+    - вулиця
+    - дівчина
+    - кава
+    - книга
+  - name: Це (Середній рід)
+    items:
+    - озеро
+    - місто
+    - слово
+    - кафе
+  - name: Ці (Множина)
+    items:
+    - будинки
+    - міста
+    - студенти
+    - люди
+  instruction: Розподіліть елементи за групами.
+- type: quiz
+  title: Оберіть правильний вказівний займенник (далеко)
+  items:
+  - question: Який займенник використовуємо для слова будинок далеко?
+    explanation: Будинок чоловічого роду, далеко - той.
+    options:
+    - text: той
+      correct: true
+    - text: цей
+      correct: false
+    - text: та
+      correct: false
+    - text: те
+      correct: false
+  - question: Як сказати that street українською мовою?
+    explanation: Вулиця жіночого роду, далеко - та.
+    options:
+    - text: та вулиця
+      correct: true
+    - text: ця вулиця
+      correct: false
+    - text: той вулиця
+      correct: false
+    - text: те вулиця
+      correct: false
+  - question: Як сказати those people українською мовою?
+    explanation: Люди - множина, далеко - ті.
+    options:
+    - text: ті люди
+      correct: true
+    - text: ці люди
+      correct: false
+    - text: той люди
+      correct: false
+    - text: та люди
+      correct: false
+  - question: Який займенник використовуємо для слова озеро далеко?
+    explanation: Озеро середнього роду, далеко - те.
+    options:
+    - text: те
+      correct: true
+    - text: це
+      correct: false
+    - text: той
+      correct: false
+    - text: та
+      correct: false
+  - question: Як сказати that chair українською мовою?
+    explanation: Стілець чоловічого роду, далеко - той.
+    options:
+    - text: той стілець
+      correct: true
+    - text: цей стілець
+      correct: false
+    - text: та стілець
+      correct: false
+    - text: те стілець
+      correct: false
+  - question: Який займенник показує множину для віддалених об'єктів?
+    explanation: Для всіх родів у множині далеко використовується ті.
+    options:
+    - text: ті
+      correct: true
+    - text: ці
+      correct: false
+    - text: той
+      correct: false
+    - text: та
+      correct: false
+  - question: Як сказати that girl українською мовою?
+    explanation: Дівчина жіночого роду, далеко - та.
+    options:
+    - text: та дівчина
+      correct: true
+    - text: ця дівчина
+      correct: false
+    - text: той дівчина
+      correct: false
+    - text: те дівчина
+      correct: false
+  - question: Який займенник потрібен для слова слово (that word)?
+    explanation: Слово середнього роду, далеко - те.
+    options:
+    - text: те
+      correct: true
+    - text: це
+      correct: false
+    - text: той
+      correct: false
+    - text: та
+      correct: false
+  instruction: Оберіть правильну відповідь.
+- type: fill-in
+  title: Заповніть пропуски (той, та, те, ті)
+  items:
+  - sentence: _____ чоловік стоїть там дуже довго.
+    answer: той
+    options:
+    - той
+    - та
+    - те
+    - ті
+  - sentence: _____ довга вулиця веде до парку.
+    answer: та
+    options:
+    - та
+    - той
+    - те
+    - ті
+  - sentence: Я добре пам'ятаю _____ старе місто.
+    answer: те
+    options:
+    - те
+    - той
+    - та
+    - ті
+  - sentence: _____ розумні студенти вже прочитали книгу.
+    answer: ті
+    options:
+    - ті
+    - той
+    - та
+    - те
+  - sentence: _____ новий стілець вільний для вас.
+    answer: той
+    options:
+    - той
+    - та
+    - те
+    - ті
+  - sentence: Мені дуже потрібна _____ цікава книга.
+    answer: та
+    options:
+    - та
+    - той
+    - те
+    - ті
+  - sentence: Я бачу _____ високі будинки далеко.
+    answer: ті
+    options:
+    - ті
+    - той
+    - та
+    - те
+  - sentence: _____ глибоке озеро знаходиться в горах.
+    answer: те
+    options:
+    - те
+    - той
+    - та
+    - ті
+  instruction: Оберіть правильне слово для заповнення пропуску.
+- type: unjumble
+  title: Складіть речення
+  items:
+  - words:
+    - цей
+    - чоловік
+    - чекає
+    answer: Цей чоловік чекає
+  - words:
+    - та
+    - дівчина
+    - співає
+    answer: Та дівчина співає
+  - words:
+    - ці
+    - вулиці
+    - старі
+    answer: Ці вулиці старі
+  - words:
+    - я
+    - бачу
+    - той
+    - будинок
+    answer: Я бачу той будинок
+  - words:
+    - те
+    - озеро
+    - глибоке
+    answer: Те озеро глибоке
+  - words:
+    - ті
+    - люди
+    - чекають
+    answer: Ті люди чекають
+  instruction: Розташуйте слова у правильному порядку.
+- type: group-sort
+  title: Розподіліть слова за відстанню
+  groups:
+  - name: Близько (This / These)
+    items:
+    - цей
+    - ця
+    - це
+    - ці
+    - цей стілець
+    - ці міста
+  - name: Далеко (That / Those)
+    items:
+    - той
+    - та
+    - те
+    - ті
+    - той стілець
+    - ті міста
+  instruction: Розподіліть елементи за групами.
+- type: match-up
+  title: Знайдіть відповідність до функцій слів
+  pairs:
+  - left: Це велике місто
+    right: Invariable copula (This is a)
+  - left: Це місто велике
+    right: Demonstrative pronoun (This city)
+  - left: Та дівчина читає
+    right: Distant demonstrative (That girl)
+  - left: Дівчина та хлопець
+    right: Conjunction (and)
+  - left: Ці книги нові
+    right: Plural demonstrative (These books)
+  - left: Ті люди чекають
+    right: Plural distant demonstrative (Those people)
+  - left: Цей чоловік чекає
+    right: Masculine demonstrative (This man)
+  - left: Той чоловік стоїть
+    right: Distant masculine demonstrative (That man)
+  instruction: З'єднайте відповідні елементи.
+- type: quiz
+  title: Перевірте знання контексту
+  items:
+  - question: Ви в магазині і хочете торт прямо перед вами. Що ви скажете?
+    explanation: Для предметів поруч використовуємо цей.
+    options:
+    - text: Дайте мені цей торт
+      correct: true
+    - text: Дайте мені той торт
+      correct: false
+    - text: Дайте мені це торт
+      correct: false
+    - text: Дайте мені та торт
+      correct: false
+  - question: Ви хочете торт на дальній полиці. Що ви скажете?
+    explanation: Для віддалених предметів використовуємо той.
+    options:
+    - text: Дайте мені той торт
+      correct: true
+    - text: Дайте мені цей торт
+      correct: false
+    - text: Дайте мені те торт
+      correct: false
+    - text: Дайте мені та торт
+      correct: false
+  - question: Як перекладається слово та у реченні Дівчина та хлопець?
+    explanation: Тут слово та є сполучником і перекладається як and.
+    options:
+    - text: and
+      correct: true
+    - text: that
+      correct: false
+    - text: this
+      correct: false
+    - text: those
+      correct: false
+  - question: Який займенник використовуємо для подій, що відбуваються зараз?
+    explanation: Для теперішніх подій використовуємо близькі форми.
+    options:
+    - text: цей день
+      correct: true
+    - text: той день
+      correct: false
+    - text: та день
+      correct: false
+    - text: те день
+      correct: false
+  - question: Який займенник використовуємо для подій у минулому?
+    explanation: Для минулих подій використовуємо віддалені форми.
+    options:
+    - text: той день
+      correct: true
+    - text: цей день
+      correct: false
+    - text: ця день
+      correct: false
+    - text: це день
+      correct: false
+  - question: Як сказати This is a chair українською (як зв'язка)?
+    explanation: Слово Це використовується як незмінна зв'язка.
+    options:
+    - text: Це стілець
+      correct: true
+    - text: Цей стілець
+      correct: false
+    - text: Той стілець
+      correct: false
+    - text: Ця стілець
+      correct: false
+  - question: Як сказати That is a building українською (як зв'язка)?
+    explanation: Незмінна зв'язка Це перекладається і як this is, і як that is в простих
+      реченнях.
+    options:
+    - text: Це будинок
+      correct: true
+    - text: Той будинок
+      correct: false
+    - text: Цей будинок
+      correct: false
+    - text: Та будинок
+      correct: false
+  - question: Що означає фраза Цей стілець мій?
+    explanation: Слово цей вказує на конкретний стілець поруч.
+    options:
+    - text: This chair is mine
+      correct: true
+    - text: That chair is mine
+      correct: false
+    - text: This is my chair
+      correct: false
+    - text: That is my chair
+      correct: false
+  instruction: Оберіть правильну відповідь.

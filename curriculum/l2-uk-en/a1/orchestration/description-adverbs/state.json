@@ -1,0 +1,25 @@
+{
+  "slug": "description-adverbs",
+  "track": "a1",
+  "module_num": 42,
+  "mode": "v3",
+  "phases": {
+    "2": {
+      "status": "complete",
+      "timestamp": "2026-02-28T22:28:39Z",
+      "words": 3494,
+      "attempts": 1
+    },
+    "3": {
+      "status": "complete",
+      "timestamp": "2026-02-28T22:38:10Z",
+      "note": "v3-audit"
+    },
+    "5-enrich": {
+      "status": "complete",
+      "timestamp": "2026-02-28T22:38:11Z",
+      "note": "v3-audit"
+    }
+  },
+  "last_updated": "2026-02-28T22:38:11Z"
+}

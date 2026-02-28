@@ -3,29 +3,24 @@
   "slug": "at-the-store",
   "mode": "v3",
   "phases": {
+    "v3-A": {
+      "status": "complete",
+      "ts": "2026-02-28T19:13:43Z",
+      "task_id": "v3-at-the-store-pA",
+      "mode": "full"
+    },
     "v3-B": {
       "status": "complete",
-      "ts": "2026-02-20T22:38:06Z",
-      "note": "migrated-from-v2"
+      "ts": "2026-02-28T19:17:11Z"
     },
     "v3-C": {
       "status": "complete",
-      "ts": "2026-02-20T22:38:06Z",
-      "note": "migrated-from-v2"
-    },
-    "v3-A": {
-      "status": "complete",
-      "ts": "2026-02-20T22:38:07Z",
-      "note": "adopted-existing-meta"
+      "ts": "2026-02-28T19:17:11Z",
+      "note": "adopted-existing"
     },
     "v3-audit": {
       "status": "complete",
-      "ts": "2026-02-22T08:28:11Z",
-      "attempts": 1
-    },
-    "v3-D": {
-      "status": "complete",
-      "ts": "2026-02-22T08:38:10Z",
+      "ts": "2026-02-28T19:38:07Z",
       "attempts": 2
     }
   }

@@ -1,294 +1,237 @@
 <!-- SCOPE
-Covers: Calling emergency services, describing location and problems, urgent imperative requests, vocative case for addressing personnel.
+Covers: Calling for help, emergency services (112, 101, 102, 103), vocative case for address, polite imperative requests, describing location and problems.
 Not covered:
-  - Complex medical symptoms and internal anatomy → a1-31
-Related: a1-31, a1-41, a1-43
+  - Detailed medical symptoms → a1-48
+  - General phone conversations → a1-58
+Related: a1-48, a1-58, a1-43
 -->
 
-# Emergencies
+# Екстрені ситуації
 
 > **Чому це важливо?**
 >
-> Знати ці фрази — це дуже важлива навичка. Вони гарантують вашу безпеку. Ви вивчите правильні слова. Ви зрозумієте сучасну систему 112.
+> Learning how to ask for help is the most fundamental and critical skill for your personal safety in any foreign country. In an emergency situation, panic can easily set in, and complex grammar rules will vanish from your mind. Clear, direct, and practiced communication saves lives. This lesson meticulously equips you with the exact, functional phrases needed to summon emergency services, describe your precise location, and explain the nature of your problem in clear Ukrainian. You will learn not just what to say, but how the Ukrainian emergency dispatch system works, ensuring you are fully prepared for any unforeseen circumstances.
 
 ## Вступ
 
-### The Essential Cry for Help: «Допоможіть!»
+### Запит про допомогу
+Потрібна допомога? Це базова ситуація. Ви повинні знати головні слова. Це рятує життя. Не треба говорити складно. Говоріть просто і чітко. Люди вас зрозуміють.
 
-У стресовій ситуації у вас немає часу на складні речення. Найважливіше слово у цьому модулі — **допоможіть** (help!). Це формальна форма дієслова "допомагати" (to help). Ви використовуєте її як команду.
+Просити про допомогу є важливим. Це рятує життя. Використовуйте прості слова. Головне слово — це **«Допоможіть!»**. Це дуже сильне слово. Люди чують це слово. Вони розуміють проблему. Вони реагують швидко. Українці завжди допомагають на вулиці. Ви можете відчувати паніку. Це нормально. Але прості фрази дають впевненість. Ми будемо вивчати ці фрази. Ви будете готові.
 
-Ви кричите **«Допоможіть!»**. Ви звертаєтеся до групи людей або до незнайомця. Це дуже сильне слово. Воно показує вашу проблему. Українці одразу реагують на це слово.
+Слово «Допоможіть!» — це наказ. Це прямий наказ. Це дуже ефективно. Ви не втрачаєте час. Пізніше ми вивчимо ввічливі прохання. Вони корисні для інших ситуацій. Зараз просто запам'ятайте це головне слово.
 
-Look at these examples of how to use this vital word in context:
+*   «Допоможіть!» (Help!)
+*   «Мені потрібна допомога.» (I need help.)
+*   «Допоможіть, будь ласка.» (Help, please.)
+*   «Тут потрібна допомога!» (Help is needed here!)
 
-*   **«Допоможіть, будь ласка!»** (Help, please!) — You can use this when the situation is serious but perhaps not immediately life-threatening, such as being stranded or completely lost.
-*   **«Мені потрібна допомо́га!»** (I need help!) — Here, **допомо́га** is the noun form. Notice that the stress falls heavily on the syllable "мо".
-*   **«Допоможіть, сталася ава́рія!»** (Help, an accident has happened!) — This quickly communicates both the urgent need for assistance and the specific reason why help is required.
+### Система екстрених служб в Україні
+В Україні є нова система. Це єдиний номер сто дванадцять. Це європейський стандарт. Ми також маємо старі номери. Вони працюють дуже швидко. Система працює добре.
 
-> [!tip]
-> In moments of sheer panic, do not worry about remembering perfect grammar, noun cases, or exact pronunciation. The word **«Допоможіть!»** is universally understood across every city and village in Ukraine. Shout it clearly and loudly.
+Україна має нову систему. Це швидка допомога. Країна переходить на номер **112**. Це європейський стандарт. Це великий крок. Це сучасна інфраструктура. Номер 112 — це центральний пункт. Ви дзвоните туди. Оператор чує вас. Оператор розуміє проблему. Оператор знає тип допомоги. Він викликає медичну службу. Або він викликає поліцію. Він також викликає рятувальників. Це працює дуже добре.
 
-If you are speaking to a single close friend or family member informally, the form changes slightly to **допоможи**, but in a public emergency where you are addressing strangers on the street, the formal/plural **допоможіть** is always the safest, most effective, and most polite choice.
+Але старі номери також працюють. Вони працюють дуже швидко. Ви знаєте конкретну службу? Дзвоніть прямо туди. Ці номери є всюди. Вони є на автомобілях. Вони є на білбордах. Вони є в метро. Ви повинні знати всі номери. Це важливо для безпеки. Це гнучкий інструмент. Служба 112 має англомовних операторів. Це дуже добре. Іноземці можуть говорити англійською. Це великий плюс.
 
-### The European Integration of Emergency Services
+### Коли і куди дзвонити
+Ви знаєте українські номери? Їх три. Це сто один, сто два, сто три. Кожен номер має свою функцію. Треба знати ці номери. Запам'ятайте їх зараз.
 
-Професійна допомога в Україні працює сучасно. З 2023 року система 112 активно працює по всій Україні.
+Ви не дзвоните 112? Ви повинні знати інші номери. Це економить час. Ось детальний опис.
 
-Цей перехід — символ європейської інтеграції. Раніше люди пам'ятали різні номери. Тепер номер 112 з'єднує вас із диспетчером. Диспетчер може викликати швидку та поліцію за адресою.
+**101: Пожежна служба** (Fire service and Rescue)
+Ви бачите пожежу? Ви відчуваєте газ? Дзвоніть 101. Там є рятувальники. Вони допомагають швидко.
+*   «Тут велика пожежа!» (There is a big fire here!)
+*   «Телефонуйте сто один!» (Call one zero one!)
+*   «Потрібні рятувальники!» (Rescuers are needed!)
 
-Деякі оператори 112 говорять англійською мовою. Знання української мови прискорить процес і гарантує вашу безпеку.
+**102: Поліція** (Police)
+Є злочин? Є аварія? Є загроза? Дзвоніть 102. Поліція в Україні працює добре. Вони реагують дуже швидко.
+*   «Викличте поліцію, будь ласка!» (Summon the police, please!)
+*   «Сталася серйозна аварія.» (A serious accident happened.)
+*   «У мене вкрали речі.» (My things were stolen.)
 
-### The Traditional Three: 101, 102, 103
+**103: Швидка допомога** (Ambulance / Emergency Medical Services)
+Є серйозна травма? Це критична ситуація? Дзвоніть 103. Медики приїдуть.
+*   «Потрібна швидка допомога!» (An ambulance is needed!)
+*   «Тут серйозна травма.» (There is a serious injury here.)
+*   «Людині дуже погано.» (A person feels very bad.)
 
-Система 112 — це сучасний стандарт. Але старі короткі номери також працюють. Українці часто їх використовують. Ці слова дуже важливі для безпеки.
-
-Вивчимо ці служби:
-
-1.  **Номер 101: Поже́жна** (Number 101: Fire service)
-    Ви дзвоните 101, коли є пожежа або дим. Офіційна назва — **пожежна служба**. Але люди кажуть просто: **пожежна**.
-2.  **Номер 102: Полі́ція** (Number 102: Police)
-    Ви дзвоните 102, коли є злочин або ДТП. Слово **поліція** дуже схоже на англійське слово.
-3.  **Номер 103: Шви́дка** (Number 103: Ambulance)
-    Ви дзвоните 103, коли потрібна медична допомога. Офіційна назва — **швидка медична допомога**. Але українці кажуть просто: **швидка**.
-
-Here are practical examples of how to distinguish these services in spoken Ukrainian:
-
-*   **«Потрібна швидка, тут травма!»** (We need an ambulance, there is an injury here!)
-*   **«Терміново телефонуйте в поліцію!»** (Urgently telephone the police!)
-*   **«Пожежна вже їде, не хвилюйтеся.»** (The fire service is already coming, do not worry.)
-
-When should you call 112 versus using the direct traditional numbers? If the situation is highly complex—for example, a massive car accident that requires both an ambulance for injuries and the police for traffic control—always dial 112. The unified dispatcher will coordinate multiple response units. If the situation is entirely isolated, such as a localized medical issue at home, calling 103 directly might connect you to medical professionals slightly faster.
+> [!fact] The Meaning of "Швидка"
+> The standard Ukrainian term for the ambulance service is «швидка допомога», which literally translates as "fast help". Even in everyday speech, it is usually shortened to simply «швидка» (the fast one). Despite the immense logistical challenges and dangers of the ongoing war, the medical dispatch system remains remarkably resilient and consistently prioritizes rapid, life-saving response times to critical traumas.
 
 ## Презентація
 
-### The Vocative Case for Emergencies
+### Кличний відмінок: The Vocative Case
+Як звернутися до лікаря? Не кажіть просто «лікар». Використовуйте спеціальну форму. Це кличний відмінок. Це дуже красиво і правильно. Це українська традиція.
 
-Ви звертаєтеся до людини. Не можна використовувати словникову форму (називний відмінок). Українська граматика вимагає спеціальну форму. Ця форма називається **Кличний відмінок**.
+Ви звертаєтеся до людини? Не використовуйте звичайну форму слова. Використовуйте кличний відмінок. Це спеціальна форма. Вона показує повагу. Вона робить розмову чіткою. Вона привертає увагу. Це важливо в екстреній ситуації. Це стара українська традиція.
 
-Це дуже важливо під час екстреної ситуації. Не можна просто кричати «поліція!». Це звучить дуже неприродно. Ви повинні змінити закінчення слова. Це показує вашу повагу.
+Ви кажете просто «Лікар!»? Це звучить дивно. Це не звернення. Кличний відмінок змінює кінець слова. Це сигнал для людини. Вона розуміє звернення.
 
-Here are the key Vocative transformations you need to memorize for addressing emergency personnel:
+Це не просто правило. Це частина української ідентичності. Російська мова не має цієї форми. Радянські часи ігнорували кличний відмінок. Тому використання кличного відмінка сьогодні є важливим. Це збереження мови.
 
-*   **Лі́кар** (Doctor) becomes **Лі́карю!** (Doctor!)
-    *   *Usage:* **«Лікарю, допоможіть моєму другові!»** (Doctor, help my friend!)
-*   **Полі́ція** (Police) — The vocative form is **Полі́ціє!**, but in practice native speakers shout the nominative **«Поліція!»** as an exclamation. To address an individual officer, use **«Офіцере!»** or **«Пане офіцере!»**
-    *   *Usage:* **«Поліція! Допоможіть!»** (Police! Help!) or **«Пане офіцере, зупиніть його!»** (Officer, stop him!)
-*   **Рятува́льник** (Rescuer) becomes **Рятува́льнику!** (Rescuer!) or in the plural **Рятува́льники!** (Rescuers!)
-    *   *Usage:* **«Рятувальники, ми тут, під завалами!»** (Rescuers, we are here, under the rubble!)
+| Називний (Dictionary Form) | Кличний (Direct Address) | Context of Usage |
+| :--- | :--- | :--- |
+| лі́кар (doctor) | **лі́карю!** | Addressing a medical professional directly for immediate help. |
+| полі́ція (police) | **полі́ціє!** | Calling out to a group of police officers passing nearby. |
+| рятува́льник (rescuer) | **рятува́льнику!** | Addressing a single rescue worker pulling someone from debris. |
+| пан (sir / mr.) | **па́не!** | Polite, formal address to an unknown adult man in the street. |
+| па́ні (madam / ms.) | **па́ні!** | Polite, formal address to an unknown woman. (This specific word does not change form). |
 
-Here is a summary of the Vocative patterns you need for emergencies:
+> [!warning] Grammatical Safety Rule: Don't yell the Nominative!
+> A surprisingly common and persistent learner error is shouting the basic nominative form «Лікар!» when trying to get a busy doctor's attention. Always force yourself to use the correct Vocative form «Лікарю!» to make it a clear, direct address.
 
-| Nominative | Vocative | Pattern |
-|---|---|---|
-| **лікар** | **лікарю!** | Masculine nouns ending in **-ар** take **-ю** |
-| **офіцер** | **офіцере!** | Most masculine nouns ending in a hard consonant take **-е** |
-| **рятувальник** | **рятувальнику!** | Masculine nouns ending in **-ник** take **-у** |
-| **поліція** | **поліціє!** *(theoretical)* | Feminine **-ія** → **-іє** (but in practice Ukrainians use nominative **Поліція!** as exclamation) |
+### Базовий словник: Core Emergency Vocabulary
+Ось важливі слова. Вивчіть їх. Зверніть увагу на наголос. Правильна вимова — це дуже важливо. Використовуйте ці слова в розмові. Ви будете готові.
 
-The ending depends on the noun's declension pattern. Memorize these four forms — they cover the most common emergency personnel you might need to address.
+Треба знати головні слова. Вони допомагають описати ситуацію. Ви можете просити про допомогу. Зверніть увагу на наголос. Правильна вимова є дуже важливою. Диспетчер повинен вас розуміти. Вулиця може бути шумною. Зв'язок може бути поганим. Тому говоріть чітко.
 
-> [!culture]
-> The Vocative case is a living grammatical feature shared across several Slavic languages, including Polish, Czech, and Croatian. In Ukrainian, it remains highly productive and expected in everyday speech — using **«Лікарю!»** instead of a flat «Лікар!» signals respect and natural fluency. Native speakers notice immediately when a foreigner uses correct Vocative forms.
+*   **допомо́га** (help) — One of the most critical nouns in this module. You will use it constantly in essential collocations like «потребувати допомоги» (to need help) or «надати допомогу» (to provide help).
+*   **швидка́** (ambulance) — As mentioned, this is the short, universally used everyday term for an ambulance. You will frequently hear «чекати на швидку» (to wait for the ambulance).
+*   **полі́ція** (police) — This versatile word refers to both the abstract institution of law enforcement and the physical officers themselves. Examples include «патрульна поліція» (patrol police) or «працівник поліції» (police worker).
+*   **небезпе́ка** (danger) — Use this noun to describe a generally threatening or highly unsafe situation. «Ми в небезпеці» (We are in danger).
+*   **ава́рія** (accident) — This is the most commonly used word for vehicular car crashes. In official contexts, it is often abbreviated as ДТП (дорожньо-транспортна пригода).
+*   **ліка́рня** (hospital) — The physical, architectural building where you receive intensive medical care, such as «районна лікарня» (district hospital).
+*   **докуме́нти** (documents) — A crucial plural noun for administrative interactions with the police, especially if you face the misfortune of having to «втратити документи» (to lose documents).
+*   **тра́вма** (injury) — Used to describe physical harm, damage, or wounds to the human body. «Отримати серйозну травму» (to receive a serious injury).
+*   **сві́док** (witness) — A highly important legal term for a person who physically saw the event happen and can confirm details. «Шукати свідків» (to look for witnesses).
 
-### Дієслово «Викликати» та «Дзвонити»
+### Лексична різниця: Викликати vs. Дзвонити
+Це часта помилка. Студенти плутають два дієслова. Це слова «дзвонити» та «викликати». Вони мають різне значення. Ми пояснимо цю різницю. Уважно читайте правила.
 
-Англійське дієслово "to call" має два значення. Українська мова розрізняє ці поняття.
+Студенти часто плутають два слова. Це дієслова «дзвонити» та «викликати». Вони мають різне значення. Ви повинні знати різницю. Це дуже важливо.
 
-1.  **Дзвони́ти** (to ring / to dial a phone number)
-    Ви використовуєте це дієслово для опису процесу. Ви говорите по телефону.
-    *   *Example:* **«Я буду дзвонити мамі.»** (I will call mom.)
-    *   *Example:* **«Не треба дзвонити зараз, пізно.»** (No need to call right now, it is late.)
+**Дзвонити** означає просто набрати номер. Ви використовуєте телефон. Ви дзвоните людині.
+*   «Я буду дзвонити мамі ввечері.» (I will call mom in the evening.)
+*   «Треба дзвонити на номер сто два.» (You need to dial the number one zero two.)
+*   «Він дзвонить другові.» (He is calling a friend.)
 
-2.  **Викликáти** (to summon / to dispatch)
-    Ви використовуєте це дієслово для екстреної служби. Служба їде на вашу адресу.
-    *   **«Я хочу викликати поліцію.»** (I want to summon the police.)
-    *   **«Будь ласка, потрібно терміново викликати швидку!»** (Please, it is necessary to urgently summon an ambulance!)
-    *   **«Хто викликав пожежників на цю вулицю?»** (Who summoned the firefighters to this street?)
+**Викликати** означає просити службу приїхати. Ви чекаєте на місці. Ви хочете бачити поліцію тут. Ви хочете бачити швидку тут.
+*   «Він негайно викликав швидку.» (He immediately summoned the ambulance.)
+*   «Будь ласка, терміново викличте поліцію!» (Please, urgently summon the police!)
+*   «Ми викликали пожежників.» (We summoned the firefighters.)
 
-| | **Дзвонити** | **Викликати** |
-|---|---|---|
-| Meaning | to ring / to dial | to summon / to dispatch |
-| Use | phone conversations | requesting service arrival |
-| Example | Я дзвоню мамі | Я викликаю поліцію |
+> [!myth-buster] Eradicating the Russism «Визивати»
+> Many early-stage learners, and sadly even some native speakers who have been subjected to heavy colonial linguistic influence over decades, incorrectly use the word «визивати» to mean "summon". This is a severely non-standard, grammatically incorrect Russism. The authentic, correct, and culturally standard Ukrainian verb for summoning a service is strictly and only **«викликати»**. You must never say the incorrect phrase «визивати швидку»; you must always train your brain to say the pure Ukrainian **«викликати швидку»**.
 
-> [!warning]
-> **LEARNER ERROR CHECK:** Never say **«дзвонити поліцію»**. This translates literally to "to ring the police" but sounds grammatically broken in Ukrainian. If you must use the word for phone, you would say «дзвонити в поліцію» (to call into the police station), but **«викликати поліцію»** is the standard, correct, and professional way to request their physical presence.
+### Шаблони фраз: Describing Problems and Locations
+Де ви зараз? Що саме сталося? Диспетчер хоче знати це. Говоріть коротко. Використовуйте прості фрази. Це найкращий спосіб. Не треба багато слів.
 
-### Avoiding the Common Error: The Russism «Визивати»
+Коли ви телефонуєте 112 або 103, ви повинні повідомити дві речі. Це ваше точне місце. Також це характер ситуації. Ми збережемо всі фрази короткими. Вони дуже функціональні. Максимум 10 слів. Складна граматика не потрібна. Тут потрібна максимальна ясність.
 
-When discussing the verb "to summon", we must carefully address a very common linguistic impurity you might hear on the streets. Because of centuries of forced language contact and colonial policies, you might hear some people incorrectly use the word «визивати» instead of the correct word «викликати». 
+**Stating your physical location:**
+You will heavily rely on the basic prepositions «біля» (near) or «на» (on) to provide recognizable landmarks to the dispatcher.
+*   «Я зараз біля метро.» (I am currently near the metro.)
+*   «Ми стоїмо на вулиці Хрещатик.» (We are standing on Khreshchatyk street.)
+*   «Моя точна адреса...» (My exact address is...)
+*   «Я знаходжуся в парку.» (I am located in the park.)
 
-The word **«Визивати»** is a Russism—a direct, unadapted borrowing from the Russian verb. It is not normative Ukrainian, it is grammatically alien to the language's core structure, and it should be avoided entirely in your speech.
-
-*   ❌ Incorrect (Russism): «Треба визивати швидку.»
-*   ✅ Correct (Normative Ukrainian): **«Треба викликати швидку.»**
-
-Using **викликати** shows deep respect for the Ukrainian language and demonstrates that you are actively learning the clean, standardized form of the language. When speaking with emergency dispatch operators, clear and correct vocabulary prevents any potential misunderstandings and ensures rapid service.
-
-> [!myth-buster]
-> Some language learners mistakenly believe that using Russian-sounding words in Eastern or Southern Ukraine will make them better understood during an emergency. This is a pervasive colonial myth. Standard Ukrainian, specifically the normative word **викликати**, is universally understood by dispatchers across Ukraine.
-
-### Describing Your Location
-
-Коли ви дзвоните 112, перше питання диспетчера — це ваша адреса. Без адреси вони не можуть допомогти. Потрібно знати прості фрази для опису вашого місця.
-
-Here are the most effective phrases to precisely pinpoint your location:
-
-1.  **Я біля...** (I am near...) + Genitive Case
-    *   **«Я біля метро 'Хрещатик'.»** (I am near the 'Khreshchatyk' metro station.)
-    *   **«Ми біля великого парку.»** (We are near the large park.)
-    *   Identifying major urban landmarks (metro stations, parks, big monuments, shopping malls) is often the fastest way for first responders to locate you.
-
-2.  **На розі вулиць...** (On the corner of streets...) + Genitive Case
-    *   **«Я на розі вулиць Шевченка та Франка.»** (I am on the corner of Shevchenko and Franko streets.)
-    *   Intersections are precise and helpful for ambulance drivers navigating city grids.
-
-3.  **За цією адре́сою:** (At this exact address:)
-    *   **«Швидка потрібна за цією адресою: вулиця Лесі Українки, будинок п'ять.»** (An ambulance is needed at this address: Lesia Ukrainka street, building five.)
-
-Practice stating your current location right now using these three structures. Clear pronunciation of **адре́са** (address) helps dispatchers find you faster.
-
-### Describing the Problem
-
-Диспетчер знає вашу адресу. Тепер швидко скажіть про проблему. Ваші речення повинні бути дуже короткі та точні. Не використовуйте зайві деталі. 
-
-Here are the core vocabulary items and descriptive phrases for reporting an emergency:
-
-*   **Сталася ава́рія.** (An accident has happened.)
-    The noun **аварія** is extremely versatile. It can refer to a car crash, an industrial accident, or even a severe mechanical breakdown in your apartment (like a burst water pipe flooding the floor). 
-    *   *Usage:* **«Допоможіть, на розі вулиць сталася серйозна аварія.»** (Help, a serious accident happened on the corner of the streets.)
-
-*   **ДТП** (Road traffic accident)
-    This is an official abbreviation for дорожньо-транспортна пригода. You will hear police officers, news reports, and dispatchers use **ДТП** constantly when referring to vehicular crashes.
-    *   *Usage:* **«Тут велика ДТП, машини розбиті.»** (There is a large road traffic accident here, the cars are smashed.)
-
-*   **Є небезпе́ка.** (There is danger.)
-    Use this phrase if you feel physically threatened or if the situation is highly unstable and could worsen (for example, smelling a gas leak or observing an aggressive person).
-    *   *Usage:* **«Мені потрібна поліція, тут є небезпека для життя.»** (I need the police, there is danger to life here.)
-
-*   **Тра́вма** (Injury)
-    If someone is physically hurt and bleeding or broken, specify that there is an injury to ensure medical staff bring the right equipment.
-    *   *Usage:* **«Викликайте швидку, людина отримала важку травму.»** (Summon an ambulance, a person received a heavy injury.)
-
-By combining your location and the problem, you form a perfect, complete emergency report: **«Я біля метро. Сталася аварія. Є травма. Викликайте швидку!»** (I am near the metro. An accident has happened. There is an injury. Summon an ambulance!)
+**Describing the specific problem:**
+Use simple, direct noun phrases or extremely basic verbs to state the core issue without unnecessary adjectives.
+*   «Тут щойно сталася аварія.» (An accident just happened here.)
+*   «Цій людині дуже погано.» (This person feels very bad.)
+*   «У нас у будинку пожежа.» (We have a fire in the building.)
+*   «У мене немає документів.» (I do not have documents.)
 
 ## Практика
 
-### Scenario 1: Calling 112 for a Car Accident
+### Сценарій 1: Дзвінок диспетчеру 112 (Аварія)
+Ви бачите аварію. На вулиці ДТП. Ви берете телефон. Ви дзвоните сто дванадцять. Що ви говорите? Слухайте цей діалог. Вчіть ці фрази.
 
-Let's put this vocabulary into practice. Imagine you are walking down a busy avenue and witness a car crash at an intersection. You dial 112. Read this dialogue and notice how the caller provides concise, factual information.
+Давайте проаналізуємо реалістичний стресовий сценарій. Уявіть серйозну автомобільну аварію. Ви негайно дістаєте телефон. Ви набираєте єдиний номер 112. Професійний диспетчер говорить швидко. Він ставить стандартні питання. Ваша мета — давати чіткі відповіді. Вони дуже короткі. Не потрібно будувати складні речення. Сфокусуйтеся на головних словах. Це аварія, адреса, травма, швидка.
 
-**Диспетчер (Dispatcher):** Екстрена служба 112. Що у вас сталося? (Emergency service 112. What happened at your location?)
-**Ви (You):** Добрий день. На розі вулиць сталася серйозна ДТП. (Good afternoon. A serious road traffic accident happened on the corner of the streets.)
-**Диспетчер:** Назвіть точну адресу, будь ласка. (Name the exact address, please.)
-**Ви:** Я біля центрального парку, вулиця Свободи. (I am near the central park, Svobody street.)
-**Диспетчер:** Чи є постраждалі люди? Потрібна швидка допомога? (Are there injured people? Is an ambulance needed?)
-**Ви:** Так, є серйозна травма. (Yes, there is a serious injury.)
-**Диспетчер:** Зрозумів. Я викликаю швидку та поліцію. Чи є свідки? (Understood. I am dispatching an ambulance and police. Are there witnesses?)
-**Ви:** Так, я свідок. Я чекаю тут. (Yes, I am a witness. I am waiting here.)
+Зверніть увагу в діалозі нижче. Людина правильно використовує дієслово «викликати». Вона чітко називає локацію. Вона просить про медичну допомогу. Зверніть увагу на питання диспетчера. Він каже «Що у вас сталося?». Це нейтральний спосіб запитати про подію.
 
-Let's break down two critical vocabulary words from this scenario:
-1.  **Сві́док** (Witness). A **свідок** is someone who directly observed the event with their own eyes. Police officers will always actively search for witnesses to establish facts. If you saw the crash happen, you must state **«Я свідок»**. 
-2.  **ДТП**. Notice how naturally the dispatcher understood the three-letter abbreviation for the car accident. It is standard terminology across all levels of society.
+**Диспетчер:** Екстрена служба сто дванадцять. Що у вас сталося? (Emergency service one hundred twelve. What happened at your location?)
+**Ви:** Добрий день. Сталася аварія. Це ДТП. (Good afternoon. An accident happened. It is a car crash.)
+**Диспетчер:** Зрозумів. Назвіть вашу точну адресу, будь ласка. (Understood. Name your exact address, please.)
+**Ви:** Я знаходжуся біля метро Університет. (I am located near the Universytet metro.)
+**Диспетчер:** Чи є там серйозні травми? (Are there serious injuries there?)
+**Ви:** Так, терміново потрібна швидка допомога. (Yes, an ambulance is urgently needed.)
+**Диспетчер:** Інформацію прийнято. Викликаю швидку та патрульну поліцію. Залишайтеся на місці. (Information accepted. I am summoning an ambulance and patrol police. Stay in place.)
+**Ви:** Добре, я чекаю тут. Також є свідки. (Good, I am waiting here. Also there are witnesses.)
 
-### Scenario 2: Speaking with the Police About Documents
+> [!tip] The Golden Rule: Stay Calm and Concise
+> Emergency dispatchers are highly trained professionals who know exactly how to extract vital information from panicked callers. If you do not fully understand a long, rapid-fire Ukrainian question, do not freeze. Simply, calmly repeat your core, most important needs like a mantra: «Аварія. Моя адреса... Потрібна швидка.» (Accident. My address... Ambulance needed.)
 
-Not all emergencies involve physical danger or medical trauma. Losing your official identification or passport in a foreign country is a stressful situation that requires a calm, structured interaction with a **працівник поліції** (police worker or police officer). 
+### Сценарій 2: Втрата документів (Розмова з поліцією)
+У вас немає паспорта? У вас немає документів? Це велика проблема. Треба йти в поліцію. Там ви пишете заяву. Це офіційний процес.
 
-In this specific scenario, you need to report missing personal documents on the street.
+Інша екстрена ситуація — це втрата паспорта або гаманця. Ця ситуація вимагає прямої розмови. Ви говорите з поліцією. У цьому сценарії треба чітко пояснити ситуацію. Ви просите скласти заяву. Головні фрази є простими. Це «не мати документів» або «вкрасти». Також це офіційні фрази «пред'явити документи» та «подати заяву».
 
-**Працівник поліції (Police officer):** Добрий день. Патрульна поліція. Пред'явіть ваші документи, будь ласка. (Good afternoon. Patrol police. Present your documents, please.)
-**Ви (You):** Добрий день. У мене велика проблема. Я шукаю паспорт. (Good afternoon. I have a big problem. I am looking for my passport.)
-**Працівник поліції:** Ви просто шукаєте чи у вас вкрали документи? (Are you simply looking for them, or were your documents stolen?)
-**Ви:** Я не знаю точно. Можливо, вкрали гаманець у метро. (I do not know exactly. Possibly, they stole the wallet in the metro.)
-**Працівник поліції:** Зрозуміло. Потрібно піти у відділок і подати заяву в поліцію. (Understood. It is necessary to go to the station and submit a statement to the police.)
+«Заява» — це офіційний письмовий документ. У будь-якій системі «заява» починає правовий процес. Ви не можете просто розповісти історію. Ви повинні офіційно написати «заяву». Це закон.
 
-This dialogue shows the practical difference between two key verbs:
-*   **Шука́ти** (to look for): **«Я шукаю документи.»** (I am looking for the documents.) — This implies an unfortunate accident or carelessness strictly on your part where you misplaced them.
-*   **Вкра́сти** (to steal): **«У мене вкрали документи.»** (They stole documents from me.) — This implies a deliberate crime was committed against you. Notice the grammatical structure «у мене вкрали» (literally "by me they stole"), which is the most natural, idiomatic way to express victimhood of theft in Ukrainian.
+Коли ви говорите з поліцейським, підтримуйте шанобливий тон. Ви можете використовувати ввічливе звернення «Пане поліцейський». Потім використовуйте ввічливі прохання. Вони допомагають орієнтуватися.
 
-You will also absolutely need to know the formal administrative phrase **подати заяву** (to submit a statement/application). A **заява** is a legally binding, official written report. You cannot simply casually tell the police your passport is missing and expect action; you must formally and physically **написати заяву** (write a statement) on paper for the investigation to begin.
+**Ви:** Добрий день, пане поліцейський. Мені терміново потрібна допомога. (Good afternoon, Mr. Policeman. I urgently need help.)
+**Поліцейський:** Добрий день. Заспокойтеся. Що саме сталося? (Good afternoon. Calm down. What exactly happened?)
+**Ви:** У мене сьогодні немає документів. Або, можливо, у мене вкрали гаманець. (I do not have documents today. Or, maybe, someone stole my wallet.)
+**Поліцейський:** Я зрозумів. Ви можете зараз пред'явити інші документи? (I understood. Can you now present other documents?)
+**Ви:** Ні, на жаль, у мене абсолютно нічого немає. (No, unfortunately, I have absolutely nothing.)
+**Поліцейський:** Це проблема. Треба офіційно подати заяву в поліцію. (This is a problem. You need to officially submit a statement to the police.)
+**Ви:** Добре, я згоден. Скажіть, будь ласка, як написати заяву? (Good, I agree. Tell me, please, how to write a statement?)
+**Поліцейський:** Пройдіть, будь ласка, до відділку. (Come, please, to the station.)
 
-> [!note]
-> The specific phrase **«пред'явити документи»** is highly formalized police and border guard language. When a uniformed officer asks you to legally show your identification, they will almost always use this exact, formal verb rather than the simple, everyday word for "show" (показати).
+### Ввічливі прохання: Forming Polite Imperatives
+Як бути ввічливим? Це не складно. Використовуйте слово «будь ласка». Це магічне слово. Воно змінює тон розмови. Поліція любить ввічливість. Говоріть правильно.
 
-### Polite Imperative Requests: The Power of «Скажіть» and «Дайте»
+In serious but essentially non-life-threatening emergencies—such as navigating the bureaucracy of reporting lost items at a local police station—it is culturally and practically highly important to use polite, respectful requests. According to the foundational State Standard guidelines for A1, you must intensely focus on mastering the 2nd person plural imperative forms. These forms serve as the grammatically formal "you" (Ви), showing instant respect to the authority figure or stranger helping you.
 
-Ви вмієте кричати «Допоможіть!». Це дуже термінова команда. Але також потрібно знати ввічливі прохання. Наказовий спосіб — це дуже важлива тема. 
+To correctly construct a formal, polite request, you simply take the base plural imperative verb form and attach the culturally essential magic phrase **«будь ласка»** (please). This immediately softens the harshness of a direct command and demonstrates excellent manners while navigating a stressful, difficult administrative process.
 
-Ми вивчимо формальні форми двох дієслів: **сказати** (to say/tell) та **дати** (to give). 
+| Direct Command (Harsh/Rude) | Polite Request (Recommended) |
+| :--- | :--- |
+| Дай заяву! (Give the statement!) | **Дайте, будь ласка, заяву.** |
+| Скажи адресу! (Tell the address!) | **Скажіть, будь ласка, адресу.** |
+| Допоможи мені! (Help me!) | **Допоможіть, будь ласка.** |
+| Покажи дорогу! (Show the way!) | **Покажіть, будь ласка, дорогу.** |
 
-Ми беремо корінь дієслова. Ми додаємо закінчення **-іть** або **-те**. І ми завжди додаємо фразу **будь ласка** (please). Це робить команду ввічливою.
+Notice how adding «будь ласка» and using the plural/formal «-те» verb ending completely transforms the tone from a harsh, aggressive demand to a cooperative, culturally appropriate plea.
 
-1.  **Скажі́ть, будь ласка...** (Tell me, please...)
-    Use this powerful structure when you urgently need information, directions, or clarification from a stranger or official.
-    *   *Usage:* **«Скажіть, будь ласка, де найближча лікарня?»** (Tell me, please, where is the nearest hospital?)
-    *   *Usage:* **«Скажіть, будь ласка, вашу точну адресу.»** (Tell me, please, your exact address.)
-    *   *Usage:* **«Скажіть, куди зараз йти?»** (Tell me where we should go now?)
+**Practical Examples in Context:**
+*   «Скажіть, будь ласка, точну адресу лікарні.» (Tell me, please, the exact address of the hospital.)
+*   «Дайте, будь ласка, офіційний бланк заяви.» (Give me, please, the official statement form.)
+*   «Покажіть, будь ласка, ваші особисті документи.» (Show, please, your personal documents. — A police officer might say this directly to you.)
+*   «Допоможіть, будь ласка, знайти свідків аварії.» (Help me, please, find witnesses to the accident.)
 
-2.  **Да́йте, будь ласка...** (Give me, please...)
-    Use this direct structure when you physically need an object, a document, or a resource handed to you immediately.
-    *   *Usage:* **«Дайте, будь ласка, офіційну довідку.»** (Give me, please, an official certificate/document.)
-    *   *Usage:* **«Дайте, будь ласка, чисту воду, тут серйозна травма.»** (Give me, please, clean water, there is a serious injury here.)
-    *   *Usage:* **«Дайте ваш телефон, мені потрібно викликати поліцію.»** (Give your phone, I need to summon the police.)
-
-By using the formal **Скажіть** and **Дайте** with **будь ласка**, you stay polite and respectful to police officers, doctors, and strangers, even while commanding them to act.
+Consistently using these specific, structured imperative forms ensures you remain appropriately respectful and cooperative, which dramatically increases the likelihood of receiving fast, helpful assistance from busy officials.
 
 ## Виробництво та підсумок
 
-### Рольова гра: У посольстві
+### Рольова гра: Відновлення документів у посольстві
+Тепер ваша черга. Ви у посольстві. Або ви в поліції. Працівник вас слухає. Що ви скажете? Напишіть ваш діалог. Практикуйте ці слова.
 
-Ви подали **заяву** у відділок поліції. Тепер ви стоїте у вашому посольстві. Хтось вкрав паспорт. Ви хочете новий паспорт. Прочитайте цей діалог дуже уважно. Це ваша розмова. 
+Now it is time for you to actively practice synthesizing all these elements. Imagine you are standing at the front desk of your country's embassy, or perhaps at a main municipal police station in the center of Kyiv, because you have realized your international passport is entirely missing. You need to clearly, politely, and effectively explain this highly stressful situation to the official sitting at the desk.
 
-**Консул (Consul):** Доброго ранку. Чим я можу допомогти сьогодні? (Good morning. How can I help today?)
-**Ви (You):** Доброго ранку. Мені терміново потрібна допомога. У мене вкрали всі документи. (Good morning. I urgently need help. All my documents were stolen from me.)
-**Консул:** Це дуже неприємно. Де саме це сталося? Ви викликали поліцію на місце? (This is very unpleasant. Where exactly did this happen? Did you summon the police to the location?)
-**Ви:** Так, це сталося вчора біля станції метро. Сталася крадіжка. Я одразу викликав патрульну поліцію. (Yes, it happened yesterday near the metro station. A theft happened. I immediately summoned the patrol police.)
-**Консул:** Ви вже написали офіційну заяву у відділку? (Have you already written an official statement at the station?)
-**Ви:** Так, звісно. Ось офіційна довідка від працівника поліції. (Yes, of course. Here is the official certificate from the police worker.)
-**Консул:** Дуже добре. Дайте, будь ласка, ваші нові фотографії. Ми негайно почнемо процес відновлення. (Very good. Give me, please, your new photographs. We will immediately start the restoration process.)
+**Your interactive goal for this role-play:**
+1. Formally greet the official and clearly state that you require immediate help.
+2. Factually explain that you do not have your vital documents («У мене немає документів»).
+3. Utilize a perfectly structured polite request to ask the official for a standard statement form («Дайте, будь ласка, заяву»).
+4. Ask the official to provide you with the correct address of the nearest main police station so you can file a broader report («Скажіть, будь ласка, адресу поліції»).
 
-This role-play brings together everything from the module: reporting a problem, stating your location, using the correct verbs for summoning services, and providing legal documentation.
+Draft your complete half of this hypothetical dialogue on a piece of paper. Practice saying it out loud several times, paying rigorous attention to the correct syllable stress on crucial multi-syllabic words like «докуме́нти» and «зая́ва». Remember to exclusively use the formal, plural imperative verb forms to strictly maintain a polite, respectful tone throughout the entire interaction.
 
-### Ukrainian Digital Resilience: «Дія» and «єДопомога»
+### Цифрова стійкість: Додаток «Дія» як інструмент безпеки
+Ви маєте смартфон? Завантажте додаток «Дія». Це цифрова держава. Там є ваші документи. Це працює під час війни. Це дуже зручно.
 
-> [!culture]
-> Україна має сучасну систему електронних державних послуг.
->
-> Додаток **«Дія»** — це приклад цифрової трансформації державних послуг. Він безпечно зберігає електронні паспорти у смартфоні. Електронні документи в «Дії» є легальними. Вони працюють для поліції та в банку.
->
-> Програма **«єДопомога»** — це державна грошова допомога через додаток «Дія». Внутрішньо переміщені особи та постраждалі від війни отримують фінансову підтримку.
->
-> Ця система гарантує швидку та надійну допомогу.
+> [!culture] Digital Resilience and the "Дія" Ecosystem
+> Modern Ukraine successfully operates a truly world-leading, fully integrated digital government application called **«Дія»** (Action). It is frequently described as an entire "state in a smartphone". During any form of emergency or crisis, having this app installed is completely revolutionary. It securely stores legally recognized digital versions of your passport, driver's license, and taxpayer identification number, which possess the exact same legal power and validity as their physical paper counterparts. If you happen to lose your physical wallet on the street, your digital documents stored securely in «Дія» are legally valid for presenting to the patrol police or at security checkpoints. Furthermore, the application features specific, localized emergency alert systems and provides direct digital links to «єДопомога» (eHelp) state services, deeply demonstrating Ukraine's remarkable, world-class digital resilience and adaptability during wartime conditions.
 
-### Швидкі відповіді
+### Підсумок та самоперевірка
+Ми закінчуємо урок. Ви багато вивчили. Тепер ви знаєте фрази. Ви можете викликати допомогу. Перевірте свої знання зараз. Дайте відповіді на запитання.
 
-В екстреній ситуації у вас немає часу перекладати речення. Ви повинні слухати питання і відповідати миттєво. Подивімося на дуже популярні питання диспетчерів та поліції. Практикуйте ці швидкі відповіді. Вони повинні стати вашим рефлексом.
+When you are actively making an emergency phone call, the professional dispatcher will strictly drive the flow of the conversation. Your primary task is to map their extremely fast, standardized questions to your simple, mentally prepared, automatic responses. You must memorize these critical pairings:
 
-**Question:** Що у вас сталося? (What happened at your location?)
-**Response:** Сталася серйозна аварія! / Мені потрібна допомога! / Тут є небезпека!
-
-**Question:** Назвіть вашу точну адресу. (Name your exact address.)
-**Response:** Я біля станції метро. / Я на розі вулиць. / Я знаходжусь за цією адресою...
-
-**Question:** Яку саме службу викликати? (Which exact service should we summon?)
-**Response:** Терміново викликайте швидку! / Викликайте поліцію! / Потрібні пожежники!
-
-**Question:** Чи є на місці постраждалі люди? (Are there injured people on site?)
-**Response:** Так, є дуже серйозна травма. / Терміново потрібна лікарня.
-
-### Підсумок
-
-Ви вивчили критично важливу мову безпеки. Слово **«Допоможіть!»** — це ваш перший захист. Ви розумієте систему 112 та ролі служб: **пожежна**, **поліція** та **швидка**.
-
-Ви знаєте різницю між словами **дзвонити** та **викликати**. Не можна використовувати русизм «визивати». Ви практикували Кличний відмінок для звертання. Ви навчилися робити ввічливі прохання: **«Скажіть»** та **«Дайте»**. Ви вмієте повідомити про вкрадені **документи**. Ви знаєте свою адресу.
+*   **Dispatcher:** «Що у вас сталося?» (What happened at your location?) → **Your rapid response:** «Сталася аварія.» (An accident happened.) or «У нас пожежа.» (We have a fire.)
+*   **Dispatcher:** «Яка ваша точна адреса?» (What is your exact address?) → **Your rapid response:** «Я зараз біля метро...» (I am now near the metro...) or «Моя вулиця...» (My street is...)
+*   **Dispatcher:** «Потрібна швидка?» (Is an ambulance needed?) → **Your rapid response:** «Так, терміново викличте швидку.» (Yes, urgently summon an ambulance.)
 
 **Перевірте себе:**
-1. How do you correctly say the phrase "Summon an ambulance" in normative Ukrainian without using any Russian-influenced vocabulary?
-2. If you want to urgently get the attention of a doctor in a crowded hospital, what specific grammatical form of the word «лікар» must you use?
-3. What is the fundamental legal and situational difference in meaning between saying «Я шукаю документи» and saying «У мене вкрали документи»?
-4. How do you construct a polite but firm imperative command asking a police officer to tell you the correct address?
-5. In what specific, complex scenarios should you immediately call the unified 112 dispatcher instead of dialing 101, 102, or 103 directly?
-6. How do you accurately tell an emergency dispatcher that you are located "near the metro" or "on the corner of the streets"?
+1. Which specific three-digit number represents the unified, centralized emergency dispatch system currently operating in Ukraine?
+2. Translate this crucial instruction into Ukrainian: "I need to summon an ambulance." (Be extremely careful to use the correct verb, not the Russism!)
+3. What is the exact, correct Vocative case form for directly addressing a medical doctor (лікар) to get their immediate attention?
+4. Translate this polite request into Ukrainian: "Give me, please, an official statement form."
+5. If you lose your physical, paper passport while walking in the city, what specific Ukrainian digital government application might legally save you?
+6. Which of these two phrases is grammatically and culturally correct: «дзвонити поліцію» or «викликати поліцію»?
 
 ---

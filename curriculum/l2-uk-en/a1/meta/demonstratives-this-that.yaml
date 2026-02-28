@@ -5,45 +5,51 @@ content_outline:
 - section: Цей/ця/це (This)
   words: 500
   points:
-  - 'Use English scaffolding to explain gender agreement for demonstratives. Introduce
-    forms: цей (чоловічий), ця (жіночий), це (середній).'
-  - Provide simple examples matching demonstratives with familiar vocabulary (цей
-    хлопець, ця дівчина, це місто).
-  - Dedicate a specific H3 to the critical difference between the copula 'Це' (This
-    is a cafe) and the demonstrative 'це' (This cafe is nice).
+  - Provide English scaffolding to explain the concept of demonstrative pronouns and
+    their mandatory gender agreement with nouns in Ukrainian.
+  - Create an H3 for the masculine 'цей', an H3 for the feminine 'ця', and an H3 for
+    the neuter 'це', each with a clear definition, 3+ simple examples (e.g., цей хлопець,
+    ця дівчина, це місто), and English translations.
+  - Dedicate a specific H3 to the critical difference between the invariable copula
+    'Це' (This is a cafe) and the demonstrative 'це' (This cafe is nice), using visual
+    contrast and explicit warnings to prevent confusion.
 - section: Ці (These)
   words: 300
   points:
-  - Introduce 'ці' as the universal plural form for all genders (ці книги, ці студенти,
-    ці міста).
-  - Show the singular-to-plural transformation (цей → ці, ця → ці, це → ці) in a clear
-    table format.
-  - Highlight and explain the common learner error of using singular demonstratives
-    with plural nouns (*цей книги).
+  - Create an H3 to introduce 'ці' as the universal plural form for all genders, emphasizing
+    its simplicity compared to singular forms.
+  - 'Include a markdown table demonstrating the singular-to-plural transformation
+    for all genders: цей → ці, ця → ці, це → ці, with noun examples.'
+  - Include an explicit 'Common Learner Error' warning about using singular demonstratives
+    with plural nouns (e.g., *цей книги замість ці книги).
 - section: Той/та/те/ті (That/Those)
   words: 500
   points:
-  - 'Introduce the concept of spatial distance and the forms: той (чол.), та (жін.),
-    те (серед.), ті (множ.).'
-  - Provide examples linking forms to basic nouns (той будинок, та вулиця, те озеро,
-    ті люди).
+  - 'Provide English scaffolding to explain spatial distance (''that'' over there,
+    away from the speaker) and introduce the four distant forms: той, та, те, ті.'
+  - Create an H3 for the singular forms (той, та, те) with gender agreement examples,
+    and a separate H3 for the plural form (ті) with examples (той будинок, та вулиця,
+    те озеро, ті люди).
   - Create an H3 to explain the contextual difference between the feminine demonstrative
-    'та' (that girl) and the conjunction 'та' (and), using clear contrasting sentences.
+    'та' (that girl) and the conjunction 'та' (and), using clear contrasting sentences
+    (e.g., Та дівчина та її подруга).
 - section: Цей vs Той у контексті (This vs That in context)
   words: 400
   points:
-  - Compare spatial proximity (близько vs далеко) using paired examples (цей стілець
-    vs той стілець).
-  - Include a mini-dialogue set in a shop context (e.g., 'Дайте мені цей торт' vs
-    'Дайте мені той торт').
-  - 'Briefly mention textual distance: using ''цей'' for something just mentioned
-    and ''той'' for something mentioned previously.'
+  - Create an H3 comparing spatial proximity (близько vs далеко) using paired contrasting
+    examples (цей стілець vs той стілець).
+  - Include a culturally relevant mini-dialogue set in a Ukrainian market (базар)
+    or bakery context, demonstrating the practical use of 'Дайте мені цей торт' vs
+    'Дайте мені той торт'.
+  - 'Create an H3 briefly explaining textual distance: using ''цей'' for something
+    just mentioned and ''той'' for something mentioned previously in a conversation.'
 - section: Практика (Practice)
   words: 300
   points:
-  - Provide a summary reference table grouping all forms by distance (this/these vs
-    that/those) and gender.
-  - Present guided examples prompting the learner to choose the correct demonstrative
-    based on noun gender and number.
-  - Set up a brief self-check section to contrast 'this' and 'that' based on spatial
-    distance.
+  - Provide a comprehensive summary reference table grouping all forms by distance
+    (близько/далеко) and gender/number.
+  - Present 4-5 guided examples prompting the learner to mentally choose the correct
+    demonstrative based on noun gender and number, providing the answers immediately
+    after.
+  - Set up a brief self-check section contrasting 'this' and 'that' based on spatial
+    distance cues to reinforce the primary learning objective.

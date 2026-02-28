@@ -1,104 +1,68 @@
-✅ Message sent to Gemini (ID: 8761)
-✓ Message 8761 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #8761...
-📨 Message #8761
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-around-the-city-pA
-   Time: 2026-02-19T22:02:26.731741+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/around-the-city/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
-# Дослідження: Around the City (A1)
+# Дослідження: Around the City
 
 ## State Standard Reference
-§4.2.3.3: "Місцевий відмінок: у, в, на (позначення місця): Студент працює в новій лабораторії. Гроші лежать на столі."
-§4.2.3.2.2: "Знахідний відмінок: Із прийменниками: в, у, на (указівка на кінцевий пункт руху або переміщення): Степан заходить у кімнату."
-Alignment: This module directly addresses the distinction between static location (Locative) and motion towards a destination (Accusative), which is a core A1 competency.
+§4.2.3.2.2: "в, у, на (указівка на кінцевий пункт руху або переміщення)"
+§4.2.3.3: "у, в, на (позначення місця)"
+Alignment: This module directly addresses the fundamental distinction between static location (Locative, §4.2.3.3) and motion to a destination (Accusative, §4.2.3.2) using spatial prepositions.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| вулиця | High (Top 100 nouns) | на вулиці (Loc), йти по вулиці (Loc/Dat variant often used by learners, though Instr is correct later) |
-| площа | High | на площі, Майдан Незалежності |
-| зупинка | Medium-High | на зупинці, автобусна зупинка |
-| аптека | High | в аптеці, цілодобова аптека |
 | прямо | High | йти прямо, їхати прямо |
-| ліворуч/праворуч | Medium (More formal than наліво/направо) | поверніть ліворуч, подивіться праворуч |
+| наліво / ліворуч | High | повернути наліво, зліва |
+| направо / праворуч | High | повернути направо, справа |
+| зупинка | High | на зупинці, автобусна зупинка |
+| площа | High | на площі, центральна площа |
+| аптека | Top 100 nouns | в аптеці, біля аптеки |
 
 ## Cultural Hooks
-1. **Marshrutka Etiquette**: In Ukraine, passengers must often shout "На зупинці, будь ласка!" (At the stop, please!) to get the driver to stop, unlike in many Western countries with fixed stops.
-2. **Maidan vs Ploshcha**: The central square is the heart of any Ukrainian city. "Майдан" implies a large, open space often associated with public gatherings (e.g., Maidan Nezalezhnosti), while "Площа" is the general term. Landmarks are used more than street names for directions.
+1. **Marshrutka Etiquette**: In Ukrainian public transport, especially *marshrutkas*, stops are on-demand. Passengers must shout «На зупинці, будь ласка!» (At the stop, please!) loudly, about 100 meters before the stop. This perfectly anchors the Locative case in high-stakes daily survival.
+2. **Майдан vs Площа**: While both translate to "square," they are culturally distinct. *Площа* (Slavic root for flat) is an architectural, geometric space. *Майдан* (Turkic/Persian origin) is an open, community-centric gathering place, now deeply symbolic of civic resistance and the horizontal power of the people (e.g., Maidan Nezalezhnosti).
 
 ## Common Learner Errors
-1. **Case Confusion (Prepositions)**: Using Nominative after `біля` or `навпроти`. *Error:* "Біля аптека." → *Correct:* "Біля аптеки." (Learners need these as fixed chunks).
-2. **Preposition Confusion (В vs НА)**: Applying logical "in" to open spaces. *Error:* "В площі." → *Correct:* "На площі." (Also "на пошті", "на зупинці").
-3. **Question Word Confusion**: Using "Де" for destination. *Error:* "Де ти йдеш?" → *Correct:* "Куди ти йдеш?"
+1. «Де ти йдеш?» → «Куди ти йдеш?» — Applying static location question words to verbs of motion.
+2. «В площі», «в зупинці» → «На площі», «на зупинці» — Incorrectly mapping the English "in/at" to the universal «в», ignoring surface-level/open-space preposition rules for «на».
+3. «Біля аптека» → «Біля аптеки» — Forgetting that spatial prepositions like *біля* and *навпроти* demand the Genitive case, not Nominative.
 
 ## Cross-References
-- **Builds on**: `a1-13` (The Locative - basic forms), `a1-14` (Mine and Yours - possessives).
-- **Prepares for**: `a1-40` (Taking Transport - more complex travel scenarios).
+- Builds on: a1-28 (The Locative), a1-20 (Mine and Yours)
+- Prepares for: a1-32 (The Genitive I), a1-57 (Taking Transport)
 
 ## Notes for Content Writing
-- Focus heavily on the "Де" (Locative) vs "Куди" (Accusative) distinction as it's a fundamental concept often missed.
-- Use visual descriptions for `ліворуч` / `праворуч` to help memorisation.
-- Keep the `біля` + Genitive explanation very simple ("lexical chunk") to avoid overwhelming A1 learners with full Genitive rules.
+- Use English scaffolding in the introduction to clearly delineate "Location" vs "Direction" before diving into Ukrainian dialogues.
+- Frame Ukrainian spatial logic independently. Do not compare to Russian equivalents; explain the internal logic of open/closed spaces for в/на.
+- Introduce *біля* and *навпроти* as fixed "lexical chunks" combined with the Genitive ending to avoid overwhelming A1 learners with full Genitive paradigm theory.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Вступ: Місто та орієнтири"
-    words: 250
-    points:
-      - "Welcome to the city center: The concept of 'Майдан' or 'Площа' as the navigation hub."
-      - "Establish the goal: Not just knowing *where* things are, but *how* to find them."
-      - "Core distinction intro: 'Ми тут' (Location) vs 'Ми йдемо туди' (Direction)."
-  - section: "Лексика: Інфраструктура та локація"
-    words: 450
-    points:
-      - "Essential city places: 'аптека', 'пошта', 'зупинка', 'парк', 'станція', 'банк'."
-      - "Locative Case Recap (State Standard §4.2.3.3): Using 'в/у' vs 'на'."
-      - "Specific 'на' exceptions: 'на пошті', 'на зупинці', 'на площі', 'на вулиці'."
-      - "Pattern practice: 'Де ти?' — 'Я в парку', 'Я на зупинці'."
-  - section: "Граматика: Де чи Куди?"
-    words: 500
-    points:
-      - "The 'Motion' concept (State Standard §4.2.3.2.2): Moving *to* a place."
-      - "Question words comparison: 'Де?' (Static) vs 'Куди?' (Dynamic)."
-      - "Accusative for direction: 'Я йду в парк' (unchanged masculine inanimate) vs 'Я йду в аптеку' (feminine -у)."
-      - "Visual comparison table: 'В аптеці' (Locative) vs 'В аптеку' (Accusative)."
-      - "Common Error Alert: 'Де ти йдеш?' is wrong."
-  - section: "Лексика: Напрямки та рух"
+  - section: "Вступ: Міський простір"
     words: 400
     points:
-      - "Directional adverbs: 'прямо', 'наліво' (ліворуч), 'направо' (праворуч), 'назад'."
-      - "Prepositions of place (fixed chunks): 'біля' + Genitive, 'навпроти' + Genitive."
-      - "Simple Imperatives for directions: 'Ідіть прямо', 'Поверніть направо'."
-      - "Cultural note: Ukrainians use landmarks ('біля банку') more than distances ('100 метрів')."
-  - section: "Практика: Як пройти?"
-    words: 250
+      - "Scaffolding notice: Use English scaffolding to establish the core concepts of urban navigation before transitioning to Ukrainian dialogues."
+      - "Cultural Hook: Contrast the architectural «Площа» with the community-centric «Майдан», highlighting the civic significance of the latter."
+      - "Core Concept: Define the difference between seeking a location («Де знаходиться...?») and seeking a route («Як дістатися до...?»)."
+  - section: "Презентація: Граматика та напрямки"
+    words: 600
     points:
-      - "Structured Dialogue: A tourist asks a local for directions to the Metro."
-      - "Key phrase: 'Скажіть, будь ласка, як дістатися до...?' vs simple 'Де...?'."
-      - "Map navigation scenario: Follow a sequence of 3 instructions to find a hidden destination."
-  - section: "Культурний контекст: Український транспорт"
-    words: 150
+      - "Locative Prepositions: Contrast «на» (open spaces/infrastructure: зупинці, пошті, площі) with «в» (enclosed buildings: аптеці), explicitly addressing common learner errors."
+      - "Directional Vocabulary: Provide clear definitions and examples for «прямо», «наліво/ліворуч», and «направо/праворуч»."
+      - "Grammar of Motion: Contrast static location «Де» (Locative) with movement towards a goal «Куди» (Accusative) as per State Standard §4.2.3.2/3."
+      - "Genitive Chunks: Introduce «біля» and «навпроти» as fixed lexical blocks requiring the Genitive case (біля аптеки), without teaching the full case paradigm."
+  - section: "Практика: Орієнтування за мапою"
+    words: 600
     points:
-      - "The Marshrutka phenomenon: It stops on demand."
-      - "Vital phrase: 'На зупинці, будь ласка!' (shouting required)."
-      - "City rhythm: Walking culture in Ukrainian cities vs car culture."
+      - "Landmark Navigation: Present a mini-dialogue demonstrating how Ukrainians navigate using landmarks instead of cardinal directions."
+      - "Де vs Куди Drill: Include a guided narrative requiring the learner to distinguish between static presence and directional motion."
+      - "Preposition Selection: Create a scenario (e.g., meeting a friend) focusing on selecting the correct preposition (в/на) for various city locations."
+  - section: "Культура та Продакшн: Життя в місті"
+    words: 400
+    points:
+      - "Transport Culture: Explain the necessity and etiquette of shouting «На зупинці, будь ласка!» in a marshrutka, reinforcing the Locative case."
+      - "Roleplay Setup: Design the 'Lost Tourist' scenario where the learner must combine landmarks, directions, and prepositions to guide someone to their home or a café."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -109,11 +73,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5153 chars)
-✅ Message sent to Claude (ID: 8767)
-✓ Message 8767 acknowledged
-   Auto-acknowledged reply #8767 (stdout delivery — no inbox accumulation)
-✓ Message 8761 acknowledged

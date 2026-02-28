@@ -1,32 +1,33 @@
 # Дослідження: The Accusative II: People
 
 ## State Standard Reference
-§4.2.1.1: "форми знахідного та місцевого відмінків іменників чоловічого роду...: син (сина...), тато (тата...); учитель (учителя...); форми знахідного... іменників жіночого роду...: мама (маму...), сестра (сестру...)"
-Alignment: This module explicitly teaches the forms listed in §4.2.1.1 for animate nouns, covering the deviation for masculine nouns (Acc=Gen) and the standard pattern for feminine nouns.
+§4.2.1.1: "форми знахідного та місцевого відмінків іменників чоловічого роду з основою на твердий приголосний: син (сина...), тато (тата...); форми знахідного... з основою на м’який приголосний: учитель (учителя...); форми знахідного... жіночого роду...: мама (маму...)"
+Alignment: This module fulfills the A1 competency of applying the correct accusative endings to animate nouns, specifically distinguishing between the Acc=Gen pattern for masculine animate nouns and the standard Acc forms for feminine nouns.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| брат | High (Core A1) | рідний брат, старший брат, мій брат |
-| сестра | High (Core A1) | рідна сестра, молодша сестра |
-| друг | High (Core A1) | найкращий друг, старий друг (old friend) |
-| мама | Very High | люблю маму, чекаю маму |
-| тато | Very High | бачу тата, знаю тата |
-| лікар | High (Professions) | чекати лікаря, викликати лікаря |
+| мама, тато | Very High | люба мама, бачу тата |
+| брат, сестра | High | рідний брат, старша сестра |
+| друг | High | найкращий друг, вірний друг |
+| лікар, вчитель | High | чекати лікаря, знати вчителя |
+| кіт, пес | Medium-High | бачу кота, маю пса |
 
 ## Cultural Hooks
-1. **Friend vs. Acquaintance**: The word `друг` implies a much deeper bond in Ukrainian than "friend" in English. It is reserved for people you trust explicitly ("soulmates"). Casual contacts are `знайомий`.
-2. **Diminutives**: Adult Ukrainians frequently use diminutive forms for parents (`матуся`, `татусь`) and siblings (`братик`, `сестричка`) within the family circle, indicating warmth and closeness.
+1. "Друг" in Ukrainian culture implies a deep, soulmate-like connection, not just a casual acquaintance ("знайомий"). The threshold for calling someone a "друг" is higher than in English-speaking cultures.
+2. The use of diminutives like "матуся" and "татусь" is very common and completely normal even among adults, reflecting deep warmth and closeness in Ukrainian family dynamics.
 
 ## Common Learner Errors
-1. **The Masculine Animate Trap**: `Я бачу *брат*` (Incorrect) → `Я бачу брата` (Correct). Learners often fail to apply the specific animate rule for masculine nouns, leaving them in Nominative like objects (`стіл`).
-2. **Feminine Overthinking**: `Я бачу *сестри*` (Incorrect) → `Я бачу сестру` (Correct). Learners wrongly generalize the "Accusative = Genitive" rule to feminine nouns, where it does NOT apply (Feminine Accusative is unique: -у/-ю).
-3. **Animal Animacy Confusion**: `Я маю *кіт*` (Incorrect) → `Я маю кота` (Correct). Learners forget that animals are grammatically "people" (animate).
+1. "The Masculine Animate Trap" → "Я бачу брата" (not "брат") — Learners over-generalize the Acc=Nom rule from inanimate objects to people.
+2. "Feminine Overthinking" → "Я бачу сестру" (not "сестри") — Learners incorrectly apply the Acc=Gen rule to feminine animate nouns.
+3. "Animal Animacy Confusion" → "Я маю кота" (not "кіт") — Learners treat animals as inanimate objects due to translation interference from English ("it").
 
 ## Cross-References
-- Builds on: `a1-11` (The Accusative I - Things), `a1-05` (Genders & Nouns)
-- Prepares for: `a1-13` (The Locative - uses similar endings for some forms), `a1-32` (My Family - expands vocabulary)
+- Builds on: a1-11 (The Accusative I - Things)
+- Prepares for: a1-28 (The Locative), a1-49 (My Family)
 
 ## Notes for Content Writing
-- **Scaffolding**: This is A1.2. Use clear English explanations for the "Animate Rule" logic.
-- **Visuals**: Use the "Heart Words" (Animate) vs "Stone Words" (Inanimate) metaphor suggested in the plan to make the grammatical category concrete.
+- English scaffolding is required for introductions and complex grammatical concepts, as this is an A1 module.
+- Decolonized framing: Explain the internal logic of Ukrainian morphology positively. Do NOT frame Ukrainian animacy rules as "different from Russian" or use Russian as a baseline.
+- Ensure examples avoid Russianisms (e.g., use "їсти", "отримувати").
+- Clearly visualize the distinction between masculine and feminine animate rules using tables.

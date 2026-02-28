@@ -1,102 +1,69 @@
-✅ Message sent to Gemini (ID: 8378)
-✓ Message 8378 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #8378...
-📨 Message #8378
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-my-world-objects-pA
-   Time: 2026-02-19T18:16:43.899857+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/my-world-objects/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
 # Дослідження: My World: Objects
 
 ## State Standard Reference
-§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм вказівних займенників: той, та, те; цей, ця, це... утворення форм множини присвійних і вказівних займенників: мої, твої, наші, ваші, їхні, ті, ці."
-Alignment: This module directly addresses the formation and usage of gendered demonstrative pronouns (цей/той) and their plural forms as explicitly required by the standard.
+§4.2.2: "Утворення та вживання родових і числових форм деяких займенників... утворення родових форм вказівних займенників: той, та, те; цей, ця, це... утворення форм множини присвійних і вказівних займенників: ... ті, ці."
+Alignment: This module precisely delivers the §4.2.2 requirement by introducing the formation and usage of demonstrative pronouns (цей/той) across all genders and the plural form, mapping them to foundational vocabulary.
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| цей / ця / це / ці | High (Top 100) | цей стіл, ця кімната, це вікно, ці речі |
-| той / та / те / ті | High (Top 200) | той будинок, та жінка, те місце, ті люди |
-| стіл | High (Household) | на столі, за столом, письмовий стіл, обідній стіл |
-| шафа | High (Household) | у шафі, книжкова шафа, шафа для одягу |
-| ліжко | Medium (Household) | у ліжку, лягати в ліжко, двоспальне ліжко |
-| вікно | High (General) | біля вікна, дивитися у вікно, відчинити вікно |
+| цей / той | Top 100 / 200 | цей стіл, той будинок, ця кімната |
+| стіл | High (household) | письмовий стіл, на столі |
+| вікно | High (general) | біля вікна, велике вікно |
+| книга | High | цікава книга, читати книгу |
+| двері | High (plural only) | ці двері, вхідні двері |
 
 ## Cultural Hooks
-1. **"В гостях добре, а вдома краще"**: A quintessential Ukrainian proverb equivalent to "East or West, home is best," reflecting the deep cultural value placed on the home (дім/хата) as a sanctuary.
-2. **Pokuttia (Покуття)**: The traditional "Red Corner" in a Ukrainian home, placed diagonally from the stove (піч), where icons and rushnyky were kept. While modern apartments lack the stove, the concept of a spiritual focal point remains relevant in design and tradition.
+1. **Покуття (Pokuttia)**: The "Red Corner" or focal point of a traditional Ukrainian home. Historically the place for icons and embroidered towels (rushnyky), demonstrating how physical space and objects are culturally organized.
+2. **Дім vs Хата vs Квартира**: The emotional anchor of the proverb «В гостях добре, а вдома краще» introduces the cultural warmth of 'дім' (home) as a concept, contrasting with a physical 'квартира' (modern apartment) and 'хата' (traditional rural house).
 
 ## Common Learner Errors
-1. **Identificational vs. Demonstrative "Це"**: Confusing "Це стіл" (This is a table - Identification) with "Цей стіл" (This specific table - Specification).
-   *   *Correction*: Teach that "Це" acts as a subject placeholder ("It/This is"), while "Цей/Ця/Це" acts as an adjective modifying a noun.
-2. **Gender Mismatch**: Using "цей" for all genders (e.g., "Цей книга").
-   *   *Correction*: Reinforce the rhyme/sound association (Ця -> КнигА).
-3. **Proximity Confusion**: Using "цей" for distant objects instead of "той".
-   *   *Correction*: Use clear physical gestures (touching vs. pointing) and the mnemonic "T" for "There/That".
+1. **Identification vs Specification**: Confusing the invariant subject "Це" in "Це стіл" (This is a table) with the gendered demonstrative adjective "Цей" in "Цей стіл" (This table).
+2. **Gender Mismatch**: Defaulting to the masculine "цей" for all objects (e.g., saying "цей книга" instead of "ця книга") because English "this" does not change.
 
 ## Cross-References
-- **Builds on**: a1-03 (Genders), a1-04 (This Is / I Am)
-- **Prepares for**: a1-06 (The Living Verb I), a1-15 (Around the City)
+- Builds on: a1-09 (This Is, I Am)
+- Prepares for: a1-15 (The Living Verb I), a1-29 (Around the City)
 
 ## Notes for Content Writing
-- **Visual Scaffolding**: Essential to clearly distinguish near/far. Use icons of a hand touching (near) vs. a finger pointing (far).
-- **Immersion Control**: A1 level requires heavy English scaffolding for the grammar explanation of the two different "This" concepts (Identification vs. Demonstration).
-- **Nuance**: Briefly mention that "двері" is always plural, avoiding confusion when a learner tries to say "ця двері".
+- **Decolonization & Framing**: Frame the Ukrainian gender-matching system (e.g., цЯ-книгА, цЕ-вікнО) as an elegant, rhythmic, and poetic feature native to the language's structure. Emphasize how endings naturally rhyme, aiding memory. Do not use Russian grammar as a comparison point.
+- **Scaffolding Requirement**: As an A1 First Contact module (immersion 15-25%), explicit English metalanguage is required to explain the grammatical distinction between pointing at an object (identification) and modifying a noun (specification).
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Вступ: Вказуємо на світ"
-    words: 250
-    points:
-      - "Introduce the core concept: pointing at things near (touchable) vs. far (pointable)"
-      - "Visual Scaffolding: Establish the hand gestures/icons for 'here' vs 'there'"
-      - "Recall Module 03 genders (Masculine/Feminine/Neuter) as the prerequisite logic"
-      - "Context setting: We are exploring a personal space (room) and identifying specific items"
-  - section: "Теорія: Вказівні займенники (Цей і Той)"
-    words: 600
-    points:
-      - "Near Demonstratives Table: цей (m), ця (f), це (n), ці (pl) — emphasize endings matching nouns"
-      - "Far Demonstratives Table: той (m), та (f), те (n), ті (pl) — highlight the 'T' sound for 'That/There'"
-      - "CRITICAL DISTINCTION: 'Це' (This is... / Subject) vs 'Цей/Ця/Це' (This [noun]... / Adjective)"
-      - "Common Error Alert: Contrast 'Це стіл' (Identification) with 'Цей стіл' (Specification)"
-      - "Gender Agreement Examples: Цей стіл (m), Ця шафа (f), Те вікно (n), Ці речі (pl)"
-  - section: "Практика: Побут і речі"
-    words: 500
-    points:
-      - "Core Vocabulary Introduction: Furniture (диван, шафа, ліжко, стілець) and items (телефон, книга, лампа)"
-      - "Drill: Gender Matching — align new objects with their correct demonstrative (e.g., Лампа -> Вона -> Ця)"
-      - "Mini-dialogues: 'Що це?' (Identification) -> 'Це шафа.' -> 'Ця шафа велика.' (Description)"
-      - "Proximity Drill: Contrast 'Цей телефон' (in hand) vs 'Той телевізор' (on wall)"
-  - section: "Культурний контекст: Український дім"
-    words: 350
-    points:
-      - "Proverb: 'В гостях добре, а вдома краще' — discussion of 'дім' vs 'хата' vs 'квартира'"
-      - "Traditional vs Modern: The concept of 'Pokuttia' (Red Corner) and its modern equivalents (focal points)"
-      - "Linguistic Note: Why 'телефон' is masculine and 'лампа' is feminine (grammatical gender vs. reality)"
-      - "Special Case: 'Двері' (door) is always plural — usage with 'ці/ті'"
-  - section: "Використання: Описуємо кімнату"
+  - section: "Вступ"
     words: 300
     points:
-      - "Scenario: Giving a tour of your room (virtual or real)"
-      - "Production Task: Point to and name 3 near objects and 3 far objects with correct gender"
-      - "Synthesis: Combine Identification ('Це...') with Specification ('Цей...')"
-      - "Final Confidence Check: Distinguishing 'Цей' vs 'Той' in rapid succession"
+      - "Explicit English scaffolding: explain the core goal of pointing to near vs. far objects in our personal space before introducing Ukrainian terminology."
+      - "Recap module a1-03 (Gender) quickly: remind learners that every object has a grammatical gender, which is the necessary key to unlocking demonstratives."
+      - "Introduce the cultural proverb «В гостях добре, а вдома краще» (East or West, home is best) to set a welcoming, home-centric theme for the vocabulary."
+  - section: "Презентація"
+    words: 700
+    points:
+      - "H3: Near Objects (Цей, Ця, Це, Ці). Present the table of 'near' demonstratives with hand-touching visual cues. Emphasize the rhyming endings (цЯ книгА, цЕ вікнО)."
+      - "H3: Far Objects (Той, Та, Те, Ті). Present the table of 'far' demonstratives. Provide a phonetic mnemonic: the 'T' sound for 'That/There'."
+      - "H3: The 'Це' vs 'Цей' Hurdle. Provide a clear contrast using English metalanguage: 'Це стіл' (Identification: This is a table) vs 'Цей стіл' (Specification: This table)."
+      - "H3: Special Plurals. Highlight the inherently plural noun 'двері' (ці двері / ті двері) directly from the research vocabulary, noting it always takes the plural demonstrative."
+  - section: "Практика"
+    words: 450
+    points:
+      - "H3: Gender Matching Drill. Use minimal pairs and phonological reinforcement to correct the common learner error 'цей книга' (always match the ending!)."
+      - "H3: Sorting the Room. Group new household vocabulary (ніж, ложка, диван, шафа, ліжко) by their grammatical gender using 'цей' and 'той'."
+      - "H3: Near or Far? Mini-dialogues applying the proximity concept. Contrast 'Цей телефон' (in hand) vs 'Той стіл' (across the room) using clear spatial contexts."
+  - section: "Культурний контекст"
+    words: 300
+    points:
+      - "H3: The Traditional Ukrainian Home. Explain the concept of 'Покуття' (Red Corner) as a traditional focal point for spatial orientation in a room."
+      - "H3: Дім, Хата, Квартира. Contrast the rural 'хата' with the modern urban 'квартира', while discussing the broader, emotional concept of 'дім' (home) as the space where one belongs."
+  - section: "Продукція та підсумок"
+    words: 250
+    points:
+      - "H3: Interior Designer Task. Persona roleplay navigating a living space: point to 3 distant and 3 near objects, specifying them with the correct gendered demonstratives."
+      - "Review checklist of §4.2.2 State Standard competencies: self-assessing the ability to match demonstrative gender/number with basic household items."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
@@ -107,11 +74,3 @@ content_outline:
 **Self-Correction**: N/A
 **Proposed Tooling Fix**: N/A
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (5530 chars)
-✅ Message sent to Claude (ID: 8383)
-✓ Message 8383 acknowledged
-   Auto-acknowledged reply #8383 (stdout delivery — no inbox accumulation)
-✓ Message 8378 acknowledged

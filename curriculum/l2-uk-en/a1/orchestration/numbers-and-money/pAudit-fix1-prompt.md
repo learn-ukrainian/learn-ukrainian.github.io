@@ -19,19 +19,19 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    lesson: 2621/2000 (raw: 2944) | pedagogy: 1 violations
+    lesson: 3479/2000 (raw: 3628) | pedagogy: 6 violations | immersion: 19.2% LOW (target 35-55% (M22))
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
 
 ─── Audit output (last 15 lines) ───
-       → FIX: Break into shorter sentences. First 5 words: 'Проте менших містах або на...'
-    [SECTION_BALANCE_BLOATED] Section 'Теорія: Числа та гроші' has 1394 words (49% of total). Bloated sections: 'Теорія: Числа та гроші' (49%)
-       → FIX: Consider splitting the large section or expanding smaller sections to improve balance.
 
 
-  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 5/100)
-     → 2 violations (minor)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 9 violations (significant)
+     → 5 grammar-level violations (fundamental)
+     → Immersion 16% off target
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/numbers-and-money-audit.md
@@ -41,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/numbers-and-money-audit.log for details)
         ```
+
 
         ## Files to Fix
 

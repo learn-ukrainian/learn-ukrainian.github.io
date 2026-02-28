@@ -1,6 +1,6 @@
-module: c1-039
+module: c1-051
 level: C1
-sequence: 39
+sequence: 51
 slug: euphemism-taboo
 version: '2.0'
 title: 'Евфемізми та табу: Мова делікатності'
@@ -71,7 +71,7 @@ grammar:
 - Euphemisms for death, illness, and bodily functions
 - Social and political euphemisms
 - Taboo topics in Ukrainian culture
-phase: C1.4 Advanced Stylistics & Rhetoric
+phase: C1.5 [Stylistics & Rhetoric]
 persona:
   voice: Senior Specialist
   role: Соціолінгвіст

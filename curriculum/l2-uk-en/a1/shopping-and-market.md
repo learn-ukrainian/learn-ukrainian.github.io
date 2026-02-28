@@ -1,438 +1,420 @@
 <!-- SCOPE
-Covers: Asking for prices, shopping phrases, numbers with currency and units, basic hygiene products.
+Covers: Asking for prices, polite shopping requests, units of measurement, hygiene products
 Not covered:
-  - Food vocabulary (covered in a1-39)
-  - Cafe phrases (covered in a1-41)
-Related: a1-17, a1-18, a1-39
+  - Advanced case declensions for all numbers → Covered in future grammar modules
+Related: a1-17, a1-18, a1-39, a1-41
 -->
 
 # Shopping and Market
 
 > **Чому це важливо?**
 >
-> Ми робимо покупки щодня. Вміння запитати ціну та купити прості речі дає свободу. Це ваш перший крок до самостійного життя в Україні.
->
-> We make purchases every single day. The ability to ask for a price and buy basic items gives you freedom and confidence. This is your first step toward independent living in Ukraine.
+> Купівля товарів — це базова навичка для життя. (Buying goods is a basic skill for life.)
+> Використання правильних слів робить комунікацію дуже простою. (Using the right words makes communication very simple.)
+> Українці цінують прямі, але ввічливі прохання. (Ukrainians value direct but polite requests.)
+> Цей урок дає інструменти для щоденних покупок. (This lesson will give you the tools for daily shopping.)
 
 ## Скільки коштує?
 
-### Дієслово «коштувати»
+### Дієслово та питання
+Ми заходимо в магазин. Нас цікавлять ціни. (When we enter a store, we are interested in prices.)
+Це перше і найважливіше питання для кожного покупця. (This is the first and most important question for every buyer.)
+Ми використовуємо дієслово **коштува́ти** — to cost.
+Це дієслово першої групи. (This is a verb of the first group.)
+Але не треба знати всі його форми зараз. (But you do not need to know all its forms now.)
+Ми майже ніколи не кажемо «я коштую» або «ти коштуєш». (We almost never say "I cost" or "you cost".)
+Для щоденних покупок є дві прості форми. (For daily shopping, we need only two basic forms.)
 
-Ми використовуємо дієслово «коштувати», коли говоримо про ціну. Це дієслово є дуже важливим для щоденного життя. Найчастіше ми використовуємо форму третьої особи однини. Ця форма звучить як «коштує». Ми також маємо форму множини. Вона звучить як «коштують».
+The verb **коштува́ти** is used almost exclusively in the third person. Because we are always asking about the price of an object (he/she/it) or multiple objects (they), you only need to master the singular and plural forms.
 
-We use **коштува́ти** (to cost) for prices. Most often, we use the singular form «коштує». For plural, we use «коштують».
+*   Він, вона, воно **коштує** — It costs
+*   Вони **коштують** — They cost
 
-When you enter a store or a market, ask: «Скільки це коштує?». The word «скільки» means "how much". The word «це» means "this". The complete phrase translates to "How much does this cost?". The subject of the sentence is the item. Because an item is an "it", we rely on the third-person singular form «коштує». If you are asking about multiple items, use the plural form «коштують». Using the singular form «коштує» with the word «це» works for almost every situation.
+Питання починається зі слова «скільки» (how much). (The question begins with the word "how much".)
+Далі ми ставимо наше нове дієслово. (Next we place our new verb.)
+Потім ми називаємо потрібний товар. (Then we name the good that interests us.)
 
-> [!tip] Universal Shopping Phrase
-> Завжди пам'ятайте фразу «Скільки це коштує?». Ви можете просто показати на товар і запитати.
-> Always remember the phrase «Скільки це коштує?». You can simply point at the item and ask. This saves you if you forget the name of the product or cannot pronounce it correctly yet!
+*   Скільки коштує вода? (How much does water cost?)
+*   Скільки коштує цей хліб? (How much does this bread cost?)
+*   Скільки коштують ці помідори? (How much do these tomatoes cost?)
+*   Скільки коштують квитки? (How much do the tickets cost?)
 
-### Валюта та числа
+Ви не знаєте назву товару? Є просте рішення. (If you do not know the name of the good, there is a simple solution.)
+Ви можете просто показати пальцем на предмет. (You can simply point your finger at the object.)
+Тоді ви використовуєте універсальне питання. (Then you use the universal question.)
 
-Українська валюта називається «гривня». Це дуже старе слово. Воно походить від часів Київської Русі. Ми маємо особливі правила для чисел і слова «гривня». Пам'ятайте ці правила для успішних покупок.
+*   Скільки це коштує? (How much does this cost?)
 
-Our currency is the **гри́вня** (hryvnia). You need to remember the special rules for combining numbers with the word «гривня».
+Це найкорисніша фраза для туриста в Україні. (This is the most useful phrase for a tourist in Ukraine.)
+Продавець одразу зрозуміє вас і назве ціну. (The seller will immediately understand you and name the price.)
 
-In a previous lesson, we learned that nouns change endings after numbers. The word for our currency follows this exact pattern. 
+### Правила валюти
+Гроші в Україні мають назву **гри́вня** (hryvnia).
+Це національна валюта, яку ми використовуємо щодня. (This is the national currency that we use every day.)
+Українські слова змінюють закінчення. (You already know that Ukrainian words change their endings.)
+Слово «гривня» також змінює свою форму. (The word "hryvnia" also changes its form.)
+Ця зміна залежить від останньої цифри у числі. (This change depends on the last digit in the number.)
+Ми вивчали це правило раніше. Ми говорили про цифри. (We studied this rule when we talked about numbers.)
+Зараз ми повторимо ці три важливі групи. (Now we will review these three important groups.)
 
-When the price ends in the number one, we use the nominative singular form. Notice how the number "one" matches the feminine gender of the currency.
-*   **одна́ гри́вня** (one hryvnia)
-*   **два́дцять одна́ гри́вня** (twenty-one hryvnias)
-*   **со́рок одна́ гри́вня** (forty-one hryvnias)
+When you combine numbers with currency, the noun must agree with the number. This is a fundamental pattern in the Ukrainian language. Instead of memorizing the names of the grammatical cases, it is much more effective to memorize these three rhythmic groups as fixed chunks.
 
-When the price ends in the numbers two, three, or four, we use the nominative plural form. Again, the number "two" has a special feminine form.
-*   **дві гри́вні** (two hryvnias)
-*   **три гри́вні** (three hryvnias)
-*   **со́рок чоти́ри гри́вні** (forty-four hryvnias)
+**Група 1: Закінчення на цифру один.**
+Ціна закінчується на цифру 1. Слово має словникову форму. (If the price ends in 1, the word stays in the dictionary form.)
+Це форма називного відмінка жіночого роду. (This is the nominative feminine form.)
+*   одна гривня (one hryvnia)
+*   двадцять одна гривня (twenty-one hryvnias)
+*   сорок одна гривня (forty-one hryvnias)
+*   сто одна гривня (one hundred and one hryvnias)
 
-When the price ends in the number five, any number above five, or zero, we use the genitive plural form. This is the most common form you will hear in daily life.
-*   **п'ять гри́вень** (five hryvnias)
-*   **де́сять гри́вень** (ten hryvnias)
-*   **сто гри́вень** (one hundred hryvnias)
+**Група 2: Закінчення на цифри два, три, чотири.**
+Ціна закінчується на цифри 2, 3 або 4. Слово має закінчення -і. (If the price ends in 2, 3, or 4, the word changes its ending to -і.)
+Це форма родового відмінка однини. (This is the genitive singular form.)
+*   дві гривні (two hryvnias)
+*   три гривні (three hryvnias)
+*   чотири гривні (four hryvnias)
+*   п'ятдесят дві гривні (fifty-two hryvnias)
 
-> [!fact] The Name "Hryvnia"
-> Слово «гривня» означало прикрасу на шию. Згодом воно стало назвою грошей. 
-> The word «гривня» originally meant a piece of jewelry worn around the neck. Later, it became the name for money. It has been the official currency of modern Ukraine since 1996.
+**Група 3: Закінчення на п'ять і більше, та нуль.**
+Ціна закінчується на цифри 5, 6, 7, 8, 9 або 0. Ми відкидаємо останню літеру. (If the price ends in 5, 6, 7, 8, 9, or 0, we drop the last letter.)
+Це форма родового відмінка множини. (This is the genitive plural form.)
+*   п'ять гривень (five hryvnias)
+*   десять гривень (ten hryvnias)
+*   двадцять гривень (twenty hryvnias)
+*   сто гривень (one hundred hryvnias)
 
-### Запитуємо ціну
+> [!tip] Практична порада
+> When native speakers talk fast, the difference between «гривні» and «гривень» can be subtle. Focus on mastering the first two groups (1, 2-4). If you accidentally use the wrong ending, people will still perfectly understand the price.
 
-Тепер ми можемо запитати ціну конкретного товару. Ми також можемо дати повну відповідь. Подивімося на різні приклади. Так ви зрозумієте логіку.
+### Приклади використання
+Ми маємо добре запам'ятати ці правила. Ми дивимося на контекст. (To remember these rules well, we need context.)
+Ми маємо побачити повні речення з цінами. (We have to see full sentences with prices.)
+Зараз ми розглянемо різні ситуації в магазині. (Now we will look at different situations in a store.)
+Зверніть увагу на те, як продавець відповідає на питання. (Pay attention to how the seller answers the question.)
 
-Now we can ask the price of a specific item. We can also give a full answer. Let us look at different examples so you understand the logic.
+These bilingual examples show the complete cycle of asking and answering price questions. Notice that while the full sentence uses the verb «коштує», sellers will frequently give just the number and currency in real life.
 
-When you want to ask about a specific item, you replace the word «це» (this) with the name of the item. Here are several examples to show you how this works in practice.
+**Ситуація 1: Прості продукти**
+— Скільки коштує цей хліб? (How much does this bread cost?)
+— Цей хліб коштує двадцять п'ять гривень. (This bread costs twenty-five hryvnias.)
 
-Скільки коштує борщ?
-How much does the borsch cost?
+**Ситуація 2: Дорожчі товари**
+— Скільки коштує торт? (How much does the cake cost?)
+— Торт коштує триста сорок одну гривню. (The cake costs three hundred forty-one hryvnias.)
+*(Note: Because 1 behaves like an adjective, it takes the accusative case here, but sellers often say the nominative.)*
 
-Борщ коштує сімдесят гривень.
-The borsch costs seventy hryvnias.
+**Ситуація 3: Товари у множині**
+— Скільки коштують ці банани? (How much do these bananas cost?)
+— Вони коштують шістдесят дві гривні. (They cost sixty-two hryvnias.)
 
-А скільки коштує кава?
-And how much does the coffee cost?
+**Ситуація 4: Питання без назви товару**
+— Вибачте, скільки це коштує? (Excuse me, how much does this cost?)
+— Це коштує сто двадцять гривень. (This costs one hundred twenty hryvnias.)
 
-Кава коштує сорок п'ять гривень.
-The coffee costs forty-five hryvnias.
+**Ситуація 5: Швидка відповідь**
+— Скільки коштує молоко? (How much does milk cost?)
+— Сорок гривень. (Forty hryvnias.)
 
-Скажіть, скільки коштують ці яблука?
-Tell me, how much do these apples cost?
-
-Яблука коштують тридцять гривень.
-The apples cost thirty hryvnias.
-
-Notice that in the last example, we used the plural form «коштують» because "apples" is a plural noun. But if you just say «Скільки коштує кілограм?», you go back to the singular form, because "kilogram" is singular.
-
-### Короткий діалог: Запитання про ціну
-
-Уявімо типову ситуацію на ринку. Покупець хоче дізнатися ціну. Продавець відповідає. Зверніть увагу на простоту речень.
-
-Let us imagine a typical situation at the market. A buyer wants to find out the price. The vendor answers. Pay attention to the simplicity of the sentences.
-
-Read this short dialogue aloud. Pay attention to how the question is formed and how the number agrees with the currency in the answer.
-
-**Покупець:** Добрий день! Скільки коштує цей хліб?
-**Продавець:** Добрий день. Цей хліб коштує двадцять чотири гривні.
-**Покупець:** А скільки коштує молоко?
-**Продавець:** Молоко коштує сорок гривень.
-
-**Buyer:** Good afternoon! How much does this bread cost?
-**Vendor:** Good afternoon. This bread costs twenty-four hryvnias.
-**Buyer:** And how much does the milk cost?
-**Vendor:** The milk costs forty hryvnias.
-
-This is the most common type of interaction you will have in a small shop or at a market stall. It is fast, efficient, and relies completely on the verb «коштувати».
+Використовуйте ці фрази під час кожної покупки. (Use these phrases during every purchase.)
+Це найкраща практика для вашого мозку. (This is the best practice for your brain.)
 
 ## У магазині
 
 ### Ввічливі прохання
+Культура спілкування відрізняється в різних країнах. (Communication culture differs in different countries.)
+В Україні ми спілкуємося дуже прямо. (In Ukraine, we communicate very directly.)
+Коли ми хочемо щось купити, ми даємо коротку інструкцію. (When we want to buy something, we give a short instruction.)
+Ми використовуємо слово «дайте» (give).
+Це форма наказового способу для другої особи множини. (This is the imperative form for the second person plural.)
+Для іноземців це часто звучить надто прямо. (For foreigners, this often sounds too direct.)
+Але це абсолютно нормальна і ввічлива фраза. (But this is an absolutely normal and polite phrase.)
 
-Українська культура спілкування є дуже прямою. Ми не використовуємо довгі вступні фрази. Пряме прохання є нормальним і ввічливим. Ми найчастіше кажемо «дайте, будь ласка».
+Direct translation often creates confusion here. In English, commanding a shop worker by saying "Give me bread" sounds rude and demanding. English speakers prefer soft questions like "Could I possibly have some bread, please?". In Ukrainian, the direct imperative form «Дайте, будь ласка...» (Give, please...) is the standard, polite, and culturally expected way to make a request.
 
-Ukrainian communication culture is very direct. We do not use long introductory phrases. A direct request is normal and polite. We most often say "give me, please".
+*   Дайте, будь ласка, пакет. (Give me, please, a bag.)
+*   Дайте, будь ласка, чек. (Give me, please, a receipt.)
 
-English speakers often try to be polite by using very long, indirect questions. You might be tempted to translate "Could you possibly give me..." or "I would like to have...". In Ukrainian, this sounds unnatural and confusing. The best and most polite way to ask for something in a store is to use the imperative mood combined with the word for please.
+Ви маєте плани на покупку? Є інша фраза. (If you want to talk about your plans, there is another phrase.)
+Ви можете використовувати слово **купи́ти** — to buy.
+Це дієслово доконаного виду. (This is a perfective verb.)
+Воно означає одну успішну дію. (It means one successful action.)
+Ми кажемо: «Я хочу купити...» (I want to buy...).
 
-Дайте, будь ласка, хліб.
-Give me the bread, please.
+*   Я хочу купити свіжий хліб. (I want to buy fresh bread.)
+*   Я хочу купити квитки в кіно. (I want to buy tickets to the cinema.)
+*   Я хочу купити воду. (I want to buy water.)
 
-Дайте, будь ласка, воду.
-Give me the water, please.
+### Наявність товарів
+Часто ми не бачимо потрібний товар на полиці. (Often we do not see the needed good on the shelf.)
+Треба запитати працівника магазину. (We need to ask the store employee.)
+Для цього українці використовують дуже специфічну конструкцію. (For this, Ukrainians use a very specific construction.)
+Ми не запитуємо, чи працівник має цей товар. (We do not ask if the employee has this good.)
+Ми запитуємо, чи цей товар існує в магазині. (We ask if this good exists in the store.)
 
-Another excellent phrase you can use is **я хочу купи́ти** (I want to buy). This uses the perfective verb «купити», which means to complete the action of buying entirely.
+> [!myth-buster] "Do you have...?"
+> A classic learner mistake is translating the English "Do you have?" word-for-word into «Ви маєте...?» using the verb «мати» (to have). While grammatically correct, it sounds extremely unnatural in a shopping context. Ukrainians use the existential structure «У вас є...?» (literally: "By you is there...?").
 
-Я хочу купити цей журнал.
-I want to buy this magazine.
+Let's look at the correct and incorrect patterns for checking availability. You must train yourself to automatically use the «У вас є...?» pattern.
 
-Я хочу купити телефон.
-I want to buy a phone.
+**Неправильно — Unnatural phrasing:**
+*   Ви маєте молоко?
+*   Ви маєте свіжі фрукти?
+*   Ви маєте цей шампунь?
 
-If you want to ask for permission or check if it is possible to get something, you can simply use the word «можна» (may I / is it possible).
+**Правильно — Natural phrasing:**
+*   У вас є молоко? (Do you have milk?)
+*   У вас є свіжі фрукти? (Do you have fresh fruits?)
+*   У вас є термінал? (Do you have a card terminal?)
 
-Можна каву, будь ласка?
-May I have a coffee, please?
+Відповідь продавця також буде дуже короткою. (The seller's answer will also be very short.)
+Товар є. Ви почуєте: «Так, є». (If the good is there, you will hear: "Yes, there is.")
+Товару немає. Продавець скаже: «Ні, немає». (If the good is not there, the seller will say: "No, there is not.")
 
-> [!culture] Directness is Politeness
-> В Україні прямі фрази не є грубими. Фраза «Дайте, будь ласка» — це стандарт ввічливості.
-> In Ukraine, direct phrases are not rude. The phrase «Дайте, будь ласка» is the standard of politeness. You do not need to apologize for asking the vendor to do their job!
+### Типовий діалог
+Тепер ми поєднаємо всі ці фрази разом. (Now we will combine all these phrases together.)
+Ви зайшли в невеликий місцевий магазин. (Imagine that you entered a small local store.)
+Це «магазин біля дому». (This is a so-called "convenience store".)
+Ви маєте привітатися, перевірити товар, запитати ціну і заплатити. (You need to greet, check the availability of the good, ask the price, and pay.)
 
-### Наявність товару
+This role-play represents a complete, typical transaction. Notice the logical flow: greeting → availability check → request → price check → payment → closing.
 
-Іноді ми хочемо запитати, чи є товар у магазині. Для цього ми використовуємо слово «є». Ми також можемо запитати «у вас є». Це дуже важлива конструкція для покупців.
+**Продавець:** Добрий день! (Good afternoon!)
+**Покупець:** Добрий день. У вас є свіже молоко? (Good afternoon. Do you have fresh milk?)
+**Продавець:** Так, є. (Yes, we do.)
+**Покупець:** Дайте, будь ласка, молоко й один білий хліб. (Give me, please, milk and one white bread.)
+**Продавець:** Ось, будь ласка. Щось ще? (Here you go. Anything else?)
+**Покупець:** Ні, дякую. Скільки це все коштує? (No, thank you. How much does all this cost?)
+**Продавець:** Сорок п'ять гривень. (Forty-five hryvnias.)
+**Покупець:** Ось п'ятдесят гривень. (Here is fifty hryvnias.)
+**Продавець:** Ваша решта — п'ять гривень. Дякую за покупку. (Your change is five hryvnias. Thank you for the purchase.)
+**Покупець:** Дякую. До побачення! (Thank you. Goodbye!)
 
-Sometimes we need to ask if an item is in the store. For this, we use the word "is/exists". We can also ask "do you have". This is a very important construction for buyers.
-
-When English speakers want to check availability, they naturally think of the verb "to have". Many learners try to translate "Do you have milk?" literally, using the Ukrainian verb "to have". This is a common mistake. In Ukrainian stores, we do not ask if the vendor personally owns the milk. Instead, we ask if the milk *exists* at their location.
-
-To do this, we use the simple existence word «є» (is/there is) or the location phrase «у вас є» (is there at your place).
-
-Є молоко?
-Is there milk? (Do you have milk?)
-
-У вас є хліб?
-Is there bread at your place? (Do you have bread?)
-
-> [!warning] Do Not Use "Мати" for Shopping
-> Ніколи не питайте «Ви маєте молоко?». Це звучить дуже дивно. Завжди використовуйте конструкцію «У вас є...?».
-> Never ask "Ви маєте молоко?". This sounds very strange. Always use the construction "У вас є...?". The verb "мати" implies personal ownership, not store inventory.
-
-### Повний процес покупки
-
-Тепер ми можемо об'єднати всі кроки в одну розмову. Ми привітаємося, запитаємо про товар, дізнаємося ціну і заплатимо. Ми також поговоримо про решту або оплату карткою.
-
-Now we can combine all the steps into one conversation. We will say hello, ask about the item, find out the price, and pay. We will also talk about the change or payment by card.
-
-A complete shopping transaction follows a predictable rhythm. You will hear the vendor offer you your **ре́шта** (change) if you pay with cash. Nowadays, many people prefer to pay with a **ка́ртка** (bank card). Let us look at a full role-play of this scenario.
-
-**Покупець:** Добрий день.
-**Продавець:** Добрий день. Що ви хочете?
-**Покупець:** У вас є свіжий хліб?
-**Продавець:** Так, є.
-**Покупець:** Дайте, будь ласка, один хліб. Скільки він коштує?
-**Продавець:** Хліб коштує тридцять п'ять гривень.
-**Покупець:** Ось п'ятдесят гривень.
-**Продавець:** Дякую. Ваша решта — п'ятнадцять гривень.
-**Покупець:** Дякую. До побачення!
-**Продавець:** На все добре.
-
-**Buyer:** Good afternoon.
-**Vendor:** Good afternoon. What do you want?
-**Buyer:** Do you have fresh bread?
-**Vendor:** Yes, we do.
-**Buyer:** Give me one bread, please. How much does it cost?
-**Vendor:** The bread costs thirty-five hryvnias.
-**Buyer:** Here is fifty hryvnias.
-**Vendor:** Thank you. Your change is fifteen hryvnias.
-**Buyer:** Thank you. Goodbye!
-**Vendor:** All the best.
-
-If you want to pay by card instead of cash, you simply ask: «Можна оплатити карткою?» (Can I pay by card?). The vendor will say «Так» and point you to the terminal.
+Цей скрипт працює в будь-якому маленькому магазині. (This script works in any small store.)
+Вивчіть ці репліки, і ви будете почуватися впевнено. (Learn these lines, and you will feel confident.)
 
 ## Кількість та одиниці
 
-### Основні одиниці вимірювання
+### Словник одиниць
+Різні товари мають різний фізичний стан. (Different goods have a different physical state.)
+Ми не можемо порахувати воду або м'ясо поштучно. (We cannot count water or meat by the piece.)
+Для цього є спеціальні слова. (For this, we need special words.)
+Це одиниці виміру та назви упаковок. (These are units of measurement and names of packaging.)
+В українській ці слова дуже важливі. (In the Ukrainian language, these words are very important.)
+Кожне слово має свій граматичний рід. (Each word has its grammatical gender.)
+Цей рід впливає на форму числа поруч. (This gender affects the form of the number next to it.)
 
-На ринку ми не можемо просто сказати «дайте цукор». Ми називаємо точну кількість. Для цього існують спеціальні слова. Ми називаємо їх одиницями вимірювання. Вони мають різні роди.
+To order effectively, you must know the common units of measurement and containers. Pay close attention to the gender of each unit, because it determines how you will combine them with numbers later.
 
-At the market, we cannot just say "give sugar". We need to specify the exact quantity. There are special words for this. We call them units of measurement. They have different genders.
+| Одиниця (Unit) | Рід (Gender) | Що ми вимірюємо? (What do we measure?) |
+|---|---|---|
+| **кілогра́м** (kilogram) | Чоловічий (Masc.) | картопля, яблука, м'ясо (potatoes, apples, meat) |
+| **літр** (litre) | Чоловічий (Masc.) | вода, молоко, сік (water, milk, juice) |
+| **па́чка** (packet / pack) | Жіночий (Fem.) | чай, масло, печиво (tea, butter, cookies) |
+| **пля́шка** (bottle) | Жіночий (Fem.) | мінеральна вода, вино (mineral water, wine) |
+| **шту́ка** (piece / item) | Жіночий (Fem.) | лимони, яйця, хліб (lemons, eggs, bread) |
 
-To shop successfully, especially for groceries, you need to know how things are packaged and weighed. Here are the essential units of measurement you must learn, along with their grammatical gender.
+Слово «штука» є дуже універсальним. (The word "piece" is very universal.)
+Ви не знаєте точну упаковку? Ви можете використовувати його. (You can use it when you do not know the exact packaging.)
 
-*   **кілогра́м** (kilogram) — We use this for solid foods, fruits, vegetables, and meat. This noun belongs to the masculine group.
-*   **лі́тр** (litre) — We use this for liquids like milk, water, and juice. Masculine gender is also used for this one.
-*   **па́чка** (packet / box) — We use this for dry goods packed in cardboard or paper, like sugar, salt, or butter. This is a feminine word.
-*   **пля́шка** (bottle) — We use this for liquids sold in glass or plastic. Notice that it takes feminine endings.
-*   **шту́ка** (piece / item) — We use this when counting individual items that do not have a specific container, like eggs, lemons, or pens. Treat this as a feminine noun.
+### Формульний родовий відмінок
+Ми знову зустрічаємося з родовим відмінком. (We meet the genitive case again.)
+Це дуже частий гість в українській граматиці. (This is a very frequent guest in Ukrainian grammar.)
+Коли ми називаємо одиницю об'єму, наступне слово змінюється. (When we name a unit of volume, the next word changes.)
+Воно показує, із чого складається ця одиниця. (It shows what this unit consists of.)
+На цьому етапі ми не вчимо складні правила. (At this stage, we do not learn complex rules.)
+Ми запам'ятовуємо ці фрази як готові формули. (We memorize these phrases as ready-made formulas.)
 
-### Конструкції з родовим відмінком
+In English, we connect a container and a substance with the word "of" (a bottle *of* water). Ukrainian does not use a preposition here. Instead, the substance noun changes its ending to the Genitive case. For now, treat these high-frequency pairings as fixed vocabulary chunks. Do not worry about declining every possible noun yet.
 
-Ми використовуємо одиниці вимірювання. Тоді ми змінюємо форму наступного слова. Це правило працює без винятків. Ми використовуємо родовий відмінок, Це показує приналежність.
+*   кілограм **яблук** (a kilogram of apples)
+*   кілограм **м'яса** (a kilogram of meat)
+*   літр **молока** (a litre of milk)
+*   літр **води** (a litre of water)
+*   пачка **чаю** (a packet of tea)
+*   пачка **кави** (a packet of coffee)
+*   пляшка **пива** (a bottle of beer)
+*   десять **штук** (ten pieces)
 
-When we use units of measurement, we always change the form of the following word. This rule works without exceptions. We use the genitive case to show possession.
+> [!culture] Зважування на ринку
+> At Ukrainian farmers' markets (ри́нок), vendors have digital scales on their tables. You do not pick up pre-packaged bags. You select the produce, and the vendor weighs it. You will frequently hear the phrase «Зважте мені...» — Weigh for me... followed by the exact kilograms or grams.
 
-In a previous lesson, you learned about the formulaic Genitive case. It is the grammatical case we use to show possession or "of" something. When you say "a kilogram of apples", the word "apples" must be in the Genitive case. We recommend memorizing these common combinations as fixed chunks. Do not try to analyze the grammar every time you speak; just learn the phrase as one logical block.
+### Числа з одиницями
+Часто ми купуємо багато товару. (Often we need to buy a large quantity of a good.)
+Тоді ми ставимо цифру перед нашою одиницею. (Then we put a number before our unit.)
+Тут є схожа система. (The same system works here as with currency.)
+Одиниця виміру змінює закінчення залежно від цифри. (The unit of measurement changes the ending depending on the number.)
+Подивімося на два найпопулярніші слова: літр та кілограм. (Let's look at the two most popular words: litre and kilogram.)
 
-Кілограм яблук.
-A kilogram of apples.
+Just like «гривня», units of measurement change depending on the number before them. Because both **літр** and **кілогра́м** are masculine nouns, they follow the exact same masculine number-agreement pattern.
 
-Літр молока.
-A litre of milk.
+**Правила для слова «кілограм»:**
+*   1: один кілогра́м — Nominative singular
+*   2, 3, 4: два, три, чотири кілогра́ми — Genitive singular
+*   5, 6, 7, 8, 9, 10: п'ять, шість, десять кілогра́мів — Genitive plural
 
-Пачка цукру.
-A packet of sugar.
+**Правила для слова «літр»:**
+*   1: один літр — Nominative singular
+*   2, 3, 4: два, три, чотири лі́три — Genitive singular
+*   5, 6, 7, 8, 9, 10: п'ять, шість, десять лі́трів — Genitive plural
 
-Пляшка води.
-A bottle of water.
+Тепер ви можете будувати складні речення. (Now you can build complex sentences.)
+Ви поєднуєте ввічливе прохання, число, одиницю і товар. (You combine a polite request, a number, a unit, and a good.)
 
-In all of these examples, the second word (яблук, молока, цукру, води) is modified. It answers the question "a unit *of what*?". This is the core function of the Genitive case in shopping contexts.
+*   Дайте, будь ласка, два літри молока. (Give me, please, two litres of milk.)
+*   Мені потрібні три кілограми картоплі. (I need three kilograms of potatoes.)
+*   Я хочу купити дві пляшки води. (I want to buy two bottles of water.)
+*   Дайте одну пачку чорного чаю. (Give me one packet of black tea.)
 
-### Числа з одиницями вимірювання
-
-Ми також можемо додавати числа до одиниць вимірювання. Правила такі самі, як і для слова «гривня». Одиниця вимірювання змінює своє закінчення залежно від числа.
-
-We can also add numbers to units of measurement. The rules are the same as for the word "hryvnia". The unit of measurement changes its ending depending on the number.
-
-Let us review how numbers interact with these units. We will use the masculine word «кілограм» and the feminine word «пляшка» as our examples in a comparison table. The endings behave exactly like currency.
-
-| Number | Rule | Masculine: кілограм | Feminine: пляшка |
-| :--- | :--- | :--- | :--- |
-| 1 | Nominative Singular | один кілограм | одна пляшка |
-| 2, 3, 4 | Nominative Plural | два кілограми | дві пляшки |
-| 5+ | Genitive Plural | п'ять кілограмів | п'ять пляшок |
-
-Notice that the word for "one" and "two" changes gender to match the noun. «Один» and «два» are used for masculine nouns like «кілограм». «Одна» and «дві» are used for feminine nouns like «пляшка».
-
-Дайте, будь ласка, два кілограми помідорів.
-Give me two kilograms of tomatoes, please.
-
-Я хочу купити три пляшки води.
-I want to buy three bottles of water.
-
-Дайте п'ять штук яєць.
-Give me five pieces of eggs.
-
-> [!observe] Combining Numbers and Quantities
-> Ви можете сказати довгу фразу: «Дайте два літри молока». Спочатку йде число, потім одиниця вимірювання, а потім товар.
-> You can say a long phrase: "Give me two litres of milk." First comes the number, then the unit of measurement, and then the item. This is the ultimate formula for market shopping!
+Це звучить дуже природно і правильно. (This sounds very natural and correct.)
+Продавці будуть приємно здивовані вашою українською. (Sellers will be pleasantly surprised by your Ukrainian.)
 
 ## Засоби гігієни
 
-### Основні засоби гігієни
+### Словник гігієни
+Магазин — це місце не тільки для їжі. (A store is a place not only for food.)
+Ми регулярно купуємо речі для чистоти. (We regularly need things for cleanliness.)
+Ця категорія товарів називається «засоби гігієни». (This category of goods is called hygiene products.)
+Знання цих слів критично важливе. (Knowledge of these words is critically important.)
+Це дуже важливо під час вашої подорожі. (Especially when you travel and stay in a hotel.)
 
-У магазині ми купуємо не тільки їжу. Ми також купуємо речі для ванної кімнати. Це засоби гігієни. Вони дуже важливі для щоденного комфорту і здоров'я.
+Here is the essential vocabulary for personal care items mandated by the State Standard. Pay close attention to the gender of each item. Knowing the gender helps you use the right adjectives (like "this" or "my").
 
-In the store, we do not only buy food. We also need things for the bathroom. These are hygiene products. They are very important for everyday comfort and health.
+*   **ми́ло** (soap) — Середній рід (Neuter). Це нове мило. (This is new soap.)
+*   **зубна́ па́ста** (toothpaste) — Жіночий рід (Feminine). Ця зубна паста. (This toothpaste.)
+*   **шампу́нь** (shampoo) — Чоловічий рід (Masculine). Цей дорогий шампунь. (This expensive shampoo.)
+*   **рушни́к** (towel) — Чоловічий рід (Masculine). Це чистий рушник. (This is a clean towel.)
+*   **туале́тний папі́р** (toilet paper) — Чоловічий рід (Masculine). Це туалетний папір. (This is toilet paper.)
 
-According to standard curriculum requirements, you need to know how to ask for basic personal care items. These items use different packaging, so combining them with numbers requires attention to gender. Here is the essential vocabulary list you should memorize.
+> [!warning] Пастка для іноземців — Foreigner Trap
+> In many European languages, the word for shampoo is feminine or neuter. In Ukrainian, **шампу́нь** is strictly masculine. You must say «мій шампунь» (my shampoo), never «моя шампунь». This is a very common error among language learners.
 
-*   **ми́ло** (soap) — A neuter noun. You buy it in pieces or liquid form.
-*   **зубна́ па́ста** (toothpaste) — A feminine phrase. Usually bought in a tube, which we can call a «тюбик» or simply a «пачка».
-*   **шампу́нь** (shampoo) — A masculine noun. Many learners incorrectly assume it is feminine because it ends in a soft sign. Remember: it is masculine! (один шампунь).
-*   **рушни́к** (towel) — A masculine noun. Towels are deeply embedded in Ukrainian culture, often featuring traditional embroidery.
-*   **туале́тний папі́р** (toilet paper) — A masculine phrase.
+### Питання про місце
+Великі супермаркети мають заплутану структуру. (Large supermarkets have a confusing structure.)
+Часто дуже важко знайти маленьке мило або пасту. (Often it is very difficult to find a small soap or paste.)
+Ви маєте знати ці питання. (You need to be able to ask for directions.)
+Ми використовуємо слово «де» (where).
+Ми комбінуємо його зі словом «можна» (it is possible) і дієсловом «купити» — to buy.
+Це універсальна формула для пошуку речей. (This is a universal formula for finding things.)
 
-> [!myth-buster] Gender of Shampoo
-> Багато студентів думають: слово «шампунь» жіночого роду. Це помилка! Слово «шампунь» це чоловічий рід. Ми кажемо «мій шампунь», а не «моя шампунь».
-> Many students think the word "shampoo" is feminine. This is a mistake! The word "shampoo" in Ukrainian is masculine. We say "my shampoo", not "my shampoo" (feminine form).
+When you are looking for specific hygiene items, you might need to ask a store employee for directions, or ask someone on the street where to find the nearest pharmacy. The structure «Де можна купити...?» translates to "Where is it possible to buy...?".
 
-### Як запитати дорогу
+*   Вибачте, де можна купити мило? (Excuse me, where can one buy soap?)
+*   Скажіть, будь ласка, де можна купити рушник? (Tell me, please, where can one buy a towel?)
+*   Де можна купити хороший шампунь? (Where can one buy good shampoo?)
 
-Ви шукаєте ці товари. Ви шукаєте магазин. Іноді ви не знаєте, куди йти на новій вулиці. Тоді ви запитуєте місцевих жителів.
+Ви шукаєте конкретну будівлю? Ця фраза є короткою. (If you are looking for a specific building, the phrase becomes even shorter.)
+Ви просто запитуєте: «Де тут...?» (You simply ask: "Where is... here?").
 
-When you are looking for these items, you need to find the right store. Sometimes you do not know where to go on a new street. Then you need to ask the local residents.
+*   Де тут аптека? (Where is the pharmacy here?)
+*   Де тут великий супермаркет? (Where is the large supermarket here?)
+*   Де тут магазин косметики? (Where is the cosmetics store here?)
 
-To combine your shopping vocabulary with navigation, you can use the phrase «Де можна купити...?» (Where can one buy...?). This is an impersonal construction that is very polite and natural. You can also simply ask for the location of the store or pharmacy.
+### Приклади в контексті
+Подивімося на ці слова в реальних ситуаціях. (Let's look at these words in real situations.)
+Коли ви шукаєте гігієнічні товари, ви спілкуєтесь з консультантами. (When you are looking for hygiene goods, you communicate with consultants.)
+Ось кілька корисних речень. (Here are a few useful sentences.)
+Вони допоможуть уникнути стресу. (They will help you avoid stress.)
 
-Де можна купити мило?
-Where can one buy soap?
+These bilingual examples demonstrate how to combine your new hygiene vocabulary with the shopping requests and location questions we learned earlier.
 
-Де тут аптека?
-Where is the pharmacy here?
+*   У вас є чоловічий шампунь? (Do you have men's shampoo?)
+*   Дайте, будь ласка, туалетний папір. (Give me, please, toilet paper.)
+*   Де тут можна купити зубну пасту? (Where can one buy toothpaste here?)
+*   Я хочу купити рідке мило і новий рушник. (I want to buy liquid soap and a new towel.)
+*   Скільки коштує цей шампунь? (How much does this shampoo cost?)
+*   Аптека там, прямо і праворуч. (The pharmacy is there, straight ahead and to the right.)
 
-Де тут найближчий магазин?
-Where is the nearest store here?
-
-### Купівля гігієнічних засобів
-
-Подивімося, як ці слова працюють у повних реченнях. Ви можете використовувати ці фрази в аптеці або у великому супермаркеті.
-
-Let us see how these words work in full sentences. You can use these phrases in a pharmacy or in a large supermarket.
-
-Here are five bilingual examples demonstrating how to purchase hygiene products using the polite request forms we learned earlier. Notice how we use the verb «коштувати» and the word «є» in these real-life scenarios.
-
-Дайте, будь ласка, туалетний папір.
-Give me toilet paper, please.
-
-Я хочу купити цей шампунь.
-I want to buy this shampoo.
-
-У вас є зубна паста?
-Do you have toothpaste?
-
-Скільки коштує це мило?
-How much does this soap cost?
-
-Мені потрібен новий рушник.
-I need a new towel.
+> [!fact] Символізм рушника
+> The word **рушни́к** (towel) has deep cultural roots in Ukraine. While today it refers to a standard bathroom towel, an embroidered towel (виши́тий рушни́к) is a profound national symbol. It is used in traditional weddings, to welcome important guests with bread and salt, and to decorate homes with protective symbols.
 
 ## Практика
 
-### Діалог на ринку
+### На ринку
+Ринок — це серце українського міста. (The market is the heart of a Ukrainian city.)
+Це місце, де вирує життя. (This is a place where life boils.)
+Тут ви можете знайти найсвіжіші продукти. (Here you can find the freshest products.)
+Продавці тут дуже говіркі. (Sellers here are very talkative.)
+Вони люблять рекламувати свій товар. (They love to advertise their good.)
+Вони часто самі пропонують купити товар. (They often offer you to buy something themselves.)
 
-Ринок — це чудове місце для практики української мови. Тут ви повинні говорити з людьми, а не просто брати товари з полиці. Це класичний базарний діалог про свіжі продукти.
+This extended dialogue takes place at a bustling outdoor market. Pay attention to how the buyer specifies quantities using the genitive chunks and how the vendor calculates the final price.
 
-The market is a wonderful place to practice the Ukrainian language. Here you must speak with people, not just take items from the shelf. This is a classic bazaar dialogue about fresh produce.
+**Продавець:** Добрий ранок! Підходьте, купуйте свіжі овочі! (Good morning! Come over, buy fresh vegetables!)
+**Покупець:** Добрий ранок. Скільки коштують ці великі помідори? (Good morning. How much do these large tomatoes cost?)
+**Продавець:** Ці помідори коштують вісімдесят гривень за кілограм. Вони дуже солодкі і смачні. (These tomatoes cost eighty hryvnias per kilogram. They are very sweet and tasty.)
+**Покупець:** Добре. Дайте, будь ласка, два кілограми. (Good. Give me, please, two kilograms.)
+**Продавець:** Ось, будь ласка, рівно два кілограми. Щось ще? (Here you go, exactly two kilograms. Anything else?)
+**Покупець:** Так. У вас є зелені яблука? (Yes. Do you have green apples?)
+**Продавець:** Звісно є. Тридцять гривень за кілограм. (Of course we do. Thirty hryvnias per kilogram.)
+**Покупець:** Дайте один кілограм яблук, будь ласка. Скільки це все коштує? (Give me one kilogram of apples, please. How much does all this cost?)
+**Продавець:** Вісімдесят плюс вісімдесят — сто шістдесят. І яблука — тридцять. Разом сто дев'яносто гривень. (Eighty plus eighty is one hundred sixty. And apples — thirty. Altogether one hundred ninety hryvnias.)
+**Покупець:** Ось двісті гривень. У вас є решта? (Here is two hundred hryvnias. Do you have change?)
+**Продавець:** Так, звісно. Ваша решта — десять гривень. Дякую! (Yes, of course. Your change is ten hryvnias. Thank you!)
 
-Read this dialogue. Pay attention to how the buyer specifies exact quantities and units of measurement. The vendor uses direct, efficient language and calculates the total price.
+### В аптеці
+Аптека — це не тільки ліки і таблетки. (A pharmacy is not only medicines and pills.)
+Там є великий відділ косметики. (There is a large cosmetics department there.)
+Люди часто купують шампунь саме в аптеці. (People often buy shampoo exactly in a pharmacy.)
+Розмова там зазвичай більш офіційна і коротка. (The conversation there is usually more formal and short.)
+Фармацевти працюють швидко. (Pharmacists work fast.)
+Давайте прочитаємо цей короткий діалог. (Let's read this short dialogue.)
 
-**Покупець:** Добрий ранок!
-**Продавець:** Добрий ранок. Що шукаєте сьогодні?
-**Покупець:** У вас є свіжі яблука?
-**Продавець:** Так, звичайно. Дуже солодкі яблука.
-**Покупець:** Скільки коштує один кілограм?
-**Продавець:** Тридцять гривень за кілограм.
-**Покупець:** Дайте, будь ласка, два кілограми яблук. І ще кілограм помідорів.
-**Продавець:** Добре. З вас дев'яносто гривень загалом.
-**Покупець:** Ось сто гривень.
-**Продавець:** Дякую. Ось ваша решта — десять гривень. Гарного дня!
-**Покупець:** Дякую, до побачення.
+Here is a focused interaction in a pharmacy (**апте́ка**), combining hygiene vocabulary with basic shopping requests.
 
-**Buyer:** Good morning!
-**Vendor:** Good morning. What are you looking for today?
-**Buyer:** Do you have fresh apples?
-**Vendor:** Yes, of course. Very sweet apples.
-**Buyer:** How much does one kilogram cost?
-**Vendor:** Thirty hryvnias per kilogram.
-**Buyer:** Give me two kilograms of apples, please. And also a kilogram of tomatoes.
-**Vendor:** Good. From you, ninety hryvnias in total (That will be ninety hryvnias).
-**Buyer:** Here is one hundred hryvnias.
-**Vendor:** Thank you. Here is your change — ten hryvnias. Have a good day!
-**Buyer:** Thank you, goodbye.
+**Покупець:** Добрий день. У вас є дитячий шампунь? (Good afternoon. Do you have baby shampoo?)
+**Фармацевт:** Добрий день. Так, є. Який саме ви хочете? (Good afternoon. Yes, we do. Which exactly do you want?)
+**Покупець:** Дайте, будь ласка, отой жовтий, одну пляшку. І ще потрібна зубна паста. (Give me, please, that yellow one, one bottle. And I also need toothpaste.)
+**Фармацевт:** Ось шампунь і паста. Це все? (Here is the shampoo and paste. Is that all?)
+**Покупець:** Так, дякую. Ви приймаєте банківську картку? (Yes, thank you. Do you accept a bank card?)
+**Фармацевт:** Так, звичайно. Прикладайте картку. Дякую за покупку. (Yes, of course. Tap the card. Thank you for the purchase.)
 
-### Діалог у магазині засобів гігієни
+### Список покупок
+Підготовка до походу в супермаркет — це створення списку. (Preparation for a trip to the supermarket is the creation of a list.)
+Ми записуємо всі потрібні речі. (We write down everything we need.)
+Ми використовуємо скорочення для одиниць виміру. (We use abbreviations for units of measurement.)
+«Кг» — це кілограм, «л» — це літр, «шт» — це штука. (Kg is kilogram, l is litre, sht is piece.)
+Читання таких списків — це чудова вправа для іноземців. (Reading such lists is a wonderful exercise for foreigners.)
+Вона вчить вас бачити патерни в реальному житті. (It teaches you to see patterns in real life.)
 
-Тепер ми підемо в невеликий магазин. Ми хочемо купити речі для ванної кімнати. Сценарій спілкування тут трохи відрізняється від відкритого ринку.
+Reading an authentic Ukrainian shopping list (**спи́сок поку́пок**) is an excellent way to practice interpreting quantities and unit abbreviations. See if you can mentally pronounce the full phrases including the correct grammatical endings.
 
-Now we will go to a small store. We need to buy things for the bathroom. The communication scenario here is a little different from the open market.
+**Мій список покупок на вихідні:**
+*   Свіже молоко — 2 л (два літри молока)
+*   Білий хліб — 1 шт. (одна штука)
+*   Червоні яблука — 3 кг (три кілограми яблук)
+*   Вершкове масло — 1 пачка (одна пачка масла)
+*   Мінеральна вода — 2 пляшки (дві пляшки води)
+*   Дитяче мило — 2 шт. (дві штуки)
+*   Зубна паста — 1 шт. (одна штука)
 
-In a store, prices are usually fixed, and you might need to ask the shop assistant to find specific hygienic things on the shelf for you.
-
-**Покупець:** Добрий день. Де можна купити шампунь?
-**Продавець:** Добрий день. Шампунь там, на другій полиці.
-**Покупець:** Дякую. А у вас є дитяче мило і зубна паста?
-**Продавець:** Так, є. Яке саме мило ви хочете?
-**Покупець:** Дайте, будь ласка, ось це мило й одну пачку зубної пасти. Скільки це все коштує?
-**Продавець:** Шампунь коштує сто гривень, мило — двадцять гривень, паста — шістдесят гривень. Разом сто вісімдесят гривень.
-**Покупець:** Можна оплатити карткою?
-**Продавець:** Так, звичайно, прикладайте картку.
-**Покупець:** Дякую! На все добре.
-
-**Buyer:** Good afternoon. Where can I buy shampoo?
-**Vendor:** Good afternoon. The shampoo is there, on the second shelf.
-**Buyer:** Thank you. And do you have baby soap and toothpaste?
-**Vendor:** Yes, we do. Which exact soap do you want?
-**Buyer:** Give me this soap here and one packet of toothpaste, please. How much does this all cost?
-**Vendor:** The shampoo costs one hundred hryvnias, the soap — twenty hryvnias, the paste — sixty hryvnias. Altogether one hundred eighty hryvnias.
-**Buyer:** Can I pay by card?
-**Vendor:** Yes, of course, apply the card.
-**Buyer:** Thank you! All the best.
-
-### Вправа на читання: Список покупок
-
-Українці часто пишуть списки покупок . Прочитаймо типовий список. Спробуйте зрозуміти кожне слово та розшифрувати одиниці.
-
-Ukrainians often write shopping lists before going to a large supermarket. Let us read a typical list. Try to understand every word and decode the units.
-
-When reading a handwritten or printed shopping list in Ukraine, you will see abbreviations and specific combinations of numbers and nouns. Analyze this text:
-
-> **Список у магазин:**
-> 1. Хліб чорний (1 штука)
-> 2. Молоко (2 літри)
-> 3. Вода мінеральна (3 пляшки)
-> 4. Цукор (1 пачка)
-> 5. Яблука (1 кілограм)
-> 6. Мило дитяче (2 штуки)
-
-As an exercise, read the list out loud and construct full, correct sentences about what you need to buy using the phrases you learned today. For example: "Я хочу купити один чорний хліб. Мені треба два літри молока." (I want to buy one black bread. I need two litres of milk.) Pay special attention to the numbers "two" and "three" modifying the nouns.
-
-### Практика запитань та відповідей
-
-Ви хочете швидко говорити. Потрібна автоматична реакція. Ви повинні тренувати ці питання щодня. Тоді ви не будете думати про граматику під час розмови.
-
-To speak quickly, you need an automatic reaction. You must train these questions every day. Then you will not think about grammar during a conversation.
-
-Practice these question and answer pairs. Cover the answer, read the question, and say the answer aloud using the number provided in parentheses. This builds muscle memory for the complex rules.
-
-Скільки коштує кава? (45)
-Це коштує сорок п'ять гривень.
-
-А скільки коштує хліб? (22)
-Це коштує двадцять дві гривні.
-
-Підкажіть, скільки коштує шампунь? (120)
-Це коштує сто двадцять гривень.
-
-Скільки коштують ці помідори? (51)
-Вони коштують п'ятдесят одну гривню.
-
-І скільки коштує вода? (15)
-Це коштує п'ятнадцять гривень.
-
-If you can answer these instantly, you are fully prepared to go shopping in Ukraine and handle any transaction!
+Ви бачите чітку систему закінчень. (You see a clear system of endings.)
+Після цифри «два» ми використовуємо форму «літри» та «пляшки». (After the number "two" we use the form "litres" and "bottles".)
+Після цифри «три» ми використовуємо форму «кілограми». (After the number "three" we use the form "kilograms".)
+Це правило працює завжди. (This rule works always.)
+Тепер ви маєте всі необхідні знання. (Now you have all the necessary knowledge.)
+Ви повністю готові йти в український магазин і купувати самостійно! (You are fully ready to go to a Ukrainian store and shop independently!)
 
 ---
 
 # Підсумок
 
-У цьому уроці ви навчилися робити покупки в Україні. Ви вивчили дієслово «коштувати» і знаєте, як легко запитати ціну. Ви можете використовувати прямі фрази, наприклад, «Дайте, будь ласка», розуміючи, що це є нормою ввічливості. Ви знаєте, як поєднувати числа зі словом «гривня». Ви знаєте основні одиниці вимірювання (кілограм, літр, пляшка). Нарешті, ви вивчили основні засоби гігієни. Це мило, шампунь і рушник.
+У цьому уроці ви опанували прості навички шопінгу. (In this lesson, you mastered the basic skills of shopping in the Ukrainian language.)
+Ви навчилися ставити головне питання: «Скільки це коштує?». (You learned to ask the main question: "How much does this cost?".)
+Ви повторили правила для валюти «гривня». Вона змінює своє закінчення. (You reviewed how the currency "hryvnia" changes its ending after different numbers.)
+Ви знаєте пряме прохання «Дайте, будь ласка». Воно є дуже ввічливим. (Now you understand that the direct request "Give me, please" is polite in Ukrainian culture.)
+Ви також уникаєте типової помилки і використовуєте «У вас є...?» замість дослівного перекладу. (You also avoid a typical mistake and use "Do you have...?" instead of a literal translation.)
+Ви вивчили важливі одиниці виміру: кілограм, літр, пляшка, пачка, штука. (You learned important units of measurement: kilogram, litre, bottle, packet, piece.)
+Ви запам'ятали засоби гігієни. Ви знаєте про чоловічий рід слова «шампунь». (And finally, you memorized basic hygiene products and found out that the word "shampoo" is always masculine.)
 
-In this lesson, you learned how to shop in Ukraine. You studied the verb «коштувати» and know how to easily ask the price. You can use direct phrases, for example, «Дайте, будь ласка», understanding that this is the norm of politeness. You also know how to correctly combine numbers with the word «гривня» and basic units of measurement (kilogram, litre, bottle). Finally, you learned basic hygiene products, such as soap, shampoo, and towel.
+Ці знання роблять вас самостійним туристом в Україні. (This knowledge makes you an independent tourist in Ukraine.)
+Ви можете спілкуватися з продавцями без страху. (You can communicate with sellers without fear.)
 
 **Перевірте себе:**
-1. Як запитати "How much does this cost?" українською мовою?
-2. Яку форму має слово «гривня» після числа 5? А після числа 3?
-3. Чому фраза «Ви маєте молоко?» звучить неприродно в українському магазині? Що потрібно сказати замість неї?
-4. Яка правильна форма: «один шампунь» чи «одна шампунь»? Чому?
-5. Як сказати "Give me two kilograms of apples, please" та "May I pay by card"?
+1. Ви не знаєте назву товару. Як запитати універсальне питання про ціну?
+2. Яку форму має слово «гривня» після цифри 5 (наприклад, 45)?
+3. Як українською буде пряме прохання "Give me, please"? Чому це не грубо?
+4. Яке питання натурально використовувати замість англійського "Do you have?" у магазині?
+5. Який граматичний рід має слово «шампунь»?
+6. Як сказати українською "two kilograms of apples" та "one litre of milk"?
 
 ---

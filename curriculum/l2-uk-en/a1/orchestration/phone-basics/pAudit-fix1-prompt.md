@@ -19,8 +19,7 @@
 ────────────────────────────────────────────────────────────
   audit script returned non-zero exit code
   failing gates:
-    meta: Valid Structure | Lint: 2 Format Errors
-    lesson: 2709/2000 (raw: 2890) | pedagogy: 5 violations | immersion: 10.3% LOW (target 35-55% (M41))
+    lesson: 3314/2000 (raw: 3499) | engagement: 0/3 | pedagogy: 34 violations
 
   Otaman has NOT completed this module.
   Fix the issues above and re-run this script.
@@ -29,10 +28,10 @@
        → FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 
-  🔄 RECOMMENDATION: REWRITE FROM SCRATCH (severity 77/100)
-     → 5 violations (moderate)
-     → 4 grammar-level violations (fundamental)
-     → Immersion 25% off target (major rebalancing needed)
+  📝 RECOMMENDATION: UPDATE (patch fixes) (severity 70/100)
+     → Revision recommended (severity 70/100)
+     → 36 violations (severe - consider revision)
+     → 24 grammar-level violations (fundamental)
 
 
   Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/phone-basics-audit.md
@@ -42,6 +41,7 @@
 
   ❌ AUDIT FAILED (see curriculum/l2-uk-en/krisztiankoos/audit/phone-basics-audit.log for details)
         ```
+
 
         ## Files to Fix
 

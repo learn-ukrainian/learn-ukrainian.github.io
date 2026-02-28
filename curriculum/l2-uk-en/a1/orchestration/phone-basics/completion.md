@@ -1,10 +1,10 @@
-PASS: build_module_v2.py a1 41 — E2E
+PASS: pipeline a1 58
 
   Module:   phone-basics
   Track:    a1
-  Mode:     e2e
-  Words:    2306 (target: 2000)
+  Mode:     v3
+  Words:    3264 (target: 2000)
   Sections: ?/?
   Archive:  no
   Verdict:  PASS
-  Date:     2026-02-23T00:29:53Z
+  Date:     2026-02-28T18:49:08Z

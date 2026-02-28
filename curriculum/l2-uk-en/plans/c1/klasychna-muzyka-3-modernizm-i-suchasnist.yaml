@@ -1,6 +1,6 @@
-module: c1-078
+module: c1-094
 level: C1
-sequence: 78
+sequence: 94
 slug: klasychna-muzyka-3-modernizm-i-suchasnist
 version: '2.0'
 title: Класична музика III — Модернізм і сучасність
@@ -70,7 +70,7 @@ objectives:
 grammar:
 - Comparative stylistic analysis
 - Register of academic critique
-phase: C1.5 Folk Culture & Fine Arts
+phase: C1.7 [Fine Arts & High Culture]
 persona:
   voice: Senior Specialist
   role: Куратор філармонії

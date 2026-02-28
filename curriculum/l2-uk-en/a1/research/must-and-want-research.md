@@ -1,31 +1,30 @@
 # Дослідження: Must and Want
 
 ## State Standard Reference
-No specific morphology §reference for "треба", "повинен", or "хотіти" exists in the A1 morphology mapping, but it functionally aligns with Catalogue A communicative intentions (expressing needs, wants, and ability) and connects to §4.2.4.1 (Indicative mood conjugations of irregular high-frequency verbs like "могти" and "іти"). 
-Alignment: Fulfills the core A1 communicative goals of expressing necessity, obligation, and desire.
+§1.1.2.2 (Діалогічне мовлення): "дуже прості вказівки про можливість отримати їжу, воду, першу допомогу тощо: Будь ласка, дайте воду / чай / каву / сік. Я хочу їсти / пити. Де їдальня / кафе / ресторан? Мені треба лікаря / ліки / швидку допомогу."
+Alignment: This module directly fulfills the A1 communicative mandate to express desires (хочу) and basic necessities (треба/потрібен) in practical survival contexts (getting food, medical help).
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| треба | Top 100 (Spoken) | Мені треба, треба йти, треба працювати |
-| хотіти | Top 100 (Verb) | Я хочу каву, хочу спати |
-| повинен | Mid-High | Я повинен зробити, вона повинна |
-| потрібно | Mid | Потрібно знати, мені потрібно |
+| треба | High (GRAC Corpus) | мені треба, треба йти, що треба |
+| потрібно | Moderate (GRAC) | потрібно зробити, дуже потрібно |
+| повинен | Mod-High (GRAC) | я повинен, ми повинні, він повинен був |
+| хотіти | Very High (Top 50) | хочу їсти, хочу сказати, я б хотів |
 
 ## Cultural Hooks
-1. **Directness in Cafés**: In Ukrainian culture, saying "Я хочу каву" (I want a coffee) is perfectly normal and not considered rude, unlike the English "I want," which can sound demanding. However, "Я б хотів/хотіла" is often used as the polite standard.
-2. **"Треба" as a Cultural Cornerstone**: The word "треба" is used ubiquitously in everyday spoken Ukrainian to describe everything from biological needs to collective societal obligations, reflecting a culture that values shared duty and collective action.
+1. **The Dative Mindset**: Ukrainian conceptually frames states of necessity not as something you "own" (like English "I have a need"), but as a state that happens *to* you (Мені треба - To me it is necessary). This emphasizes reception of a state over possession.
+2. **Guest Etiquette**: A practical way to show intensity differences. Taking off shoes inside is an impersonal necessity ("Треба роззуватися" - it's just how the world works here), but bringing a gift or flowers is a stronger social duty ("Гість повинен принести...").
 
 ## Common Learner Errors
-1. **Case Mismatch with Треба** → *Я треба* instead of the correct *Мені треба* — Learners mistakenly try to use Nominative subjects with impersonal constructions instead of the required Dative experiencer.
-2. **Stem Change Ignored** → *Я хотю / ти хотиш* instead of the correct *Я хочу / ти хочеш* — Learners fail to apply the irregular хот- → хоч- consonant mutation.
-3. **Gender Agreement with Повинен** → A female speaker saying *Я повинен* instead of *Я повинна* — Forgetting that "повинен" acts like an adjective and must agree with the subject's gender.
+1. **Case mismatch with треба**: `Я треба` instead of `Мені треба` — applying English Nominative (Subject-Verb-Object) logic instead of the Ukrainian Dative experiencer pattern.
+2. **Gender mismatch with повинен**: Female speakers defaulting to the masculine `повинен` instead of `повинна` (treating it as an invariable modal like the English "must").
+3. **Case confusion after хотіти**: Using Nominative for the object (`Я хочу кава`) instead of Accusative (`Я хочу каву`).
 
 ## Cross-References
 - Builds on: a1-45 (Can and Know How)
 - Prepares for: a1-47 (Imperative and Requests)
 
 ## Notes for Content Writing
-- Avoid translating "must" directly to a single word; emphasize the structural differences between impersonal "треба" (dative experiencer) and personal "повинен" (nominative subject).
-- Ensure English scaffolding is clear for the Dative case, as learners might not have fully mastered it yet (Dative is formally introduced later according to the State Standard mapping, but is used functionally here).
-- Strictly avoid comparing these structures to Russian equivalents (e.g., надо/должен). Frame the Ukrainian impersonal construction as a standalone, independent grammatical feature.
+- **Decolonization**: Avoid using English as the universal benchmark. Frame the Dative experiencer pattern as a core, authentic feature of the Ukrainian language's worldview, not as a "weird exception" to the rules.
+- **Scaffolding**: Adhere to the A1 immersion policy (10-50%). Since these grammar structures differ significantly from English, provide clear English scaffolding to explain the structural difference between `Мені треба` and `Я повинен` before giving Ukrainian examples.

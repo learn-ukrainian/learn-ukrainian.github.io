@@ -5,13 +5,23 @@
   "phases": {
     "v3-A": {
       "status": "complete",
-      "ts": "2026-02-28T13:42:03Z",
+      "ts": "2026-02-28T22:25:55Z",
       "task_id": "v3-description-adverbs-pA",
       "mode": "full"
     },
     "v3-B": {
-      "status": "failed",
-      "ts": "2026-02-28T14:30:41Z"
+      "status": "complete",
+      "ts": "2026-02-28T22:28:39Z"
+    },
+    "v3-C": {
+      "status": "complete",
+      "ts": "2026-02-28T22:28:39Z",
+      "note": "adopted-existing"
+    },
+    "v3-audit": {
+      "status": "complete",
+      "ts": "2026-02-28T22:38:10Z",
+      "attempts": 2
     }
   }
 }

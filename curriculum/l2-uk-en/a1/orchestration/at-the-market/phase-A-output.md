@@ -1,107 +1,76 @@
-✅ Message sent to Gemini (ID: 9921) [auto-acked: self-addressed]
-✓ Message 9921 acknowledged
-   Pre-acknowledged (orchestration mode — won't appear in Gemini inbox)
-
-🚀 Invoking Gemini to process message #9921...
-📨 Message #9921
-   From: gemini → To: gemini
-   Type: query
-   Task: v3-at-the-market-pA
-   Time: 2026-02-20T17:12:07.634113+00:00
-
-============================================================
-
-Activate skill full-rebuild-core-a. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/at-the-market/phase-A-prompt.md
-
-============================================================
-📎 Attached Data:
-{"to_model": "gemini-3-pro-preview"}
-
-🤖 Processing with Gemini (gemini-3-pro-preview) [sync, 15 min timeout]...
 ===RESEARCH_START===
 
 # Дослідження: At the Market
 
 ## State Standard Reference
-§3.8: "Купівля (закупи): магазини і ринки; споживчі товари (овочі, фрукти...); одиниці ваги й об’єму; гроші."
-Alignment: Module teaches specific vocabulary for "units of weight" (кілограм) and "consumer goods" (vegetables/fruits) directly addressing the thematic requirement of §3.8 and the grammatical application of Numerals (§4.2.1.3).
+§3.8: "Купівля (закупи): магазини і ринки; споживчі товари (овочі, фрукти, м’ясо і молочні продукти, хліб, яйця)... одиниці ваги й об’єму; гроші."
+§4.2.3.2.1: "Знахідний відмінок... Без прийменника (об’єкт дії)"
+Alignment: The module perfectly aligns with the A1 thematic requirement to cover "Purchasing", specifically markets, consumer goods (fruits, vegetables), units of weight, and money. It practically applies the Accusative case for direct objects when making polite requests ("Дайте...").
 
 ## Vocabulary Frequency
 | Word | Frequency / Source | Key collocations |
 |------|-------------------|------------------|
-| ринок | High (Common) | на ринку, піти на ринок, фермерський ринок, "базар" (colloquial synonym) |
-| кілограм | High (Shopping) | один кілограм, два кілограми (Nom.Pl), п'ять кілограмів (Gen.Pl), пів кілограма |
-| свіжий | High (General) | свіжі овочі, свіже молоко, свіжий хліб, "тільки з грядки" (idiom: fresh from the garden) |
-| скільки | High (Basic) | Скільки коштує?, Скільки з мене?, Скільки це важить? |
-| дайте | High (Request) | Дайте, будь ласка; Дайте мені...; Можна... (polite alternative) |
+| ринок | High (Daily life) | на ринку, піти на ринок, базар (colloquial) |
+| кілограм | High (Commerce) | один кілограм, два кілограми, пів кілограма |
+| свіжий | High (Food) | свіжі овочі, свіжі фрукти, тільки з грядки |
+| штука | Medium (Commerce) | одна штука, поштучно |
+| скільки | Core interrogative| скільки коштує?, скільки з мене? |
+| здача | Medium (Commerce) | без здачі, візьміть здачу |
 
 ## Cultural Hooks
-1. **Бессарабський ринок (Київ)**: Побудований у 1910-1912 рр. (архітектор Генрик Гай), стиль модерн. Перший критий ринок з холодильними камерами. Відомий як "найдорожчий" ринок ("дорого, як на Бессарабці").
-2. **Привоз (Одеса)**: Легендарний ринок (1827 р.), символ одеського гумору та торгівлі. Назва від "привозити" (продаж з возів). Тут "можна купити все" і обов'язково треба торгуватися.
-3. **Культура "Спробуйте!"**: На українському базарі нормально і навіть бажано куштувати товар (сир, фрукти) перед покупкою.
+1. **Odesa's Pryvoz (Привоз)**: Established in 1827, it is legendary for its vibrant atmosphere, unique humor, and the cultural expectation of tasting food and bargaining. It epitomizes the authentic Ukrainian "bazar" experience.
+2. **Kyiv's Bessarabskyi Market (Бессарабський ринок)**: Built in 1912 in early modern style, it was the first indoor market in Kyiv to feature modern refrigeration. It remains an iconic, premium marketplace in the capital.
+3. **The tradition of "Спробуйте!" (Try it!)**: In Ukrainian markets, vendors actively encourage buyers to taste their products (cheese, fruit, honey) to prove quality and establish trust.
 
 ## Common Learner Errors
-1. **Case after Numbers (2-4)**: Using singular or wrong plural form (e.g., "Два кілограм" instead of "Два кілограми"). Correct: 2, 3, 4 + Nominative Plural.
-2. **Genitive Object**: Using Nominative for the substance being measured (e.g., "Кілограм картопля" instead of "Кілограм картоплі").
-3. **Change vs. Rest**: Confusion between "здача" (money change) and "решта" (remainder/rest). In shopping, "здача" is the standard term.
+1. **Case after quantity** → *Кілограм картопля* (wrong) vs *Кілограм картоплі* (correct) — Learners default to Nominative instead of Genitive after units of measurement.
+2. **Number agreement** → *Два кілограм* (wrong) vs *Два кілограми* (correct) — Learners forget to decline the unit of measurement after numbers 2-4.
+3. **False friends/Synonyms** → Confusing *здача* (change in money) with *решта* (the rest of something).
 
 ## Cross-References
-- Builds on: a1-18 (Food and Shopping), a1-36 (At the Restaurant) - reuses food vocab.
-- Prepares for: a1-38 (At the Store), A2 Genitive case (full declension).
+- Builds on: a1-18 (Food and Shopping), a1-53 (At the Restaurant)
+- Prepares for: a1-61 (At the Store)
 
 ## Notes for Content Writing
-- Focus on the "lexical chunk" approach for Genitive: teach "кілограм + [noun in Genitive]" as a pattern without deep case theory declension tables.
-- Use "Привоз" for the narrative section to inject humor and atmosphere.
-- Highlight the politeness marker "будь ласка" in all requests.
+- **Decolonized framing**: Emphasize the distinct nature of the Ukrainian *bazar* as a social hub. Highlight local markets (Pryvoz, Bessarabka) on their own terms without comparative references to Russian equivalents. Avoid any Russianisms in vocabulary.
+- **Scaffolding**: As an A1 module, English scaffolding is mandatory for grammatical concepts (like the "кілограм + noun" chunk) and explaining the cultural nuances of the market.
+- **Tone**: Adopt a Patient & Supportive Ukrainian Tutor persona. Build a "Safe Harbor" by presenting "кілограм + noun" as a simple vocabulary chunk rather than an intimidating grammar table.
 
 ===RESEARCH_END===
 
 ===META_OUTLINE_START===
 content_outline:
-  - section: "Вступ: Культура українського ринку"
-    words: 400
+  - section: "Вступ та культура"
+    words: 500
     points:
-      - "Intro to the Ukrainian 'bazar' vs. 'supermarket' — atmosphere, freshness, interaction."
-      - "Cultural Spotlight 1: Bessarabskyi Rynok (Kyiv) — history (1912), architecture, status."
-      - "Cultural Spotlight 2: Pryvoz (Odesa) — humor, bargaining, 'tasting' tradition."
-      - "Why Ukrainians love markets: 'svizhe' (fresh), 'domashnie' (homemade), engaging with vendors."
-  - section: "Лексика та Граматика: Як купувати?"
+      - "Introduce the vibrant culture of the Ukrainian market (базар). Contrast it with supermarkets, focusing on fresh (свіжий), homemade (домашній) products, and social interaction. Use English scaffolding for cultural concepts."
+      - "Cultural Spotlight: Odesa's legendary Pryvoz (Привоз, 1827) and its humor, and Kyiv's historic Bessarabskyi Market (Бессарабський ринок, 1912)."
+      - "Explain the tradition of «Спробуйте!» (Try it!): the importance of tasting goods before buying to build trust with the vendor."
+  - section: "Презентація лексики та граматики"
     words: 600
     points:
-      - "Core Vocab: Units of measurement (кілограм, грам, пучок, штука). Visual aid for 'пучок' (bunch)."
-      - "Grammar Lite: The 'Kilogram' Pattern. Formula: Number + Unit + Noun (Genitive). Examples: 'кілограм картоплі', 'два кілограми яблук'."
-      - "Asking Price: 'Скільки коштує?' vs 'По скільки?' (colloquial for price per unit). 'Скільки з мене?' (Total)."
-      - "Quality Adjectives: 'свіжий', 'солодкий', 'смачний', 'стиглий' (ripe). Collocations table."
-  - section: "Практика: Діалоги на ринку"
-    words: 600
-    points:
-      - "Polite Requests: 'Дайте, будь ласка...', 'Зважте, будь ласка...' (Weigh, please), 'Можна...?'."
-      - "Dialogue 1: Vegetables. Buying potatoes and 'greenery' (зелень/пучок). Focus on quantities."
-      - "Dialogue 2: Fruits. Buying apples and tasting them ('Можна спробувати?'). focus on adjectives."
-      - "Dialogue 3: Payment & Haggling. Simple polite bargaining ('А дешевше?'). Terminology: 'здача' (change), 'готівка' (cash), 'картка' (card)."
-  - section: "Історія: Мій похід на Привоз"
+      - "Introduce essential vocabulary: кілограм, грам, штука, пучок, овочі, фрукти. Use tables with English translations and IPA for first occurrences."
+      - "Grammar Lite: Teach the «кілограм + родовий відмінок» pattern as a lexical chunk (e.g., «кілограм картоплі», «кілограм яблук»). Do not dive into deep Genitive theory."
+      - "Essential phrases: Polite requests («Дайте, будь ласка», «Можна...») and asking about price («Скільки коштує?», «Скільки з мене?»)."
+  - section: "Мовні помилки та практика"
     words: 400
     points:
-      - "Narrative from the Persona's perspective (Teacher sharing a story)."
-      - "Setting the scene: Noise, smells, colors of Odesa's Pryvoz."
-      - "Interaction with a charismatic vendor (Auntie Sonia type character)."
-      - "The purchase: Getting the best 'domashniy syr' (homemade cheese) or fruit through conversation."
-      - "Conclusion: The market is about people, not just food."
+      - "Address quantity errors: Explicitly contrast «Кілограм картопля» (wrong) with «Кілограм картоплі» (correct)."
+      - "Address number agreement errors: Explain the difference between «Два кілограми» (Nom.Pl for 2-4) and «П'ять кілограмів» (Gen.Pl for 5+)."
+      - "Clarify vocabulary nuance: Teach the difference between «здача» (change) and «решта» (the rest), focusing on «без здачі» and «візьміть здачу»."
+  - section: "Діалоги та рольові ігри"
+    words: 500
+    points:
+      - "Mini-dialogue 1: Buying vegetables by weight. Demonstrate polite requests, asking for «кілограм помідорів», and finding out the total price."
+      - "Mini-dialogue 2: A lively scenario at Pryvoz. Buying fruit, tasting it («Можна спробувати?»), and practicing light bargaining («А дешевше можна?»)."
+      - "Interactive Roleplay: Provide a guided scenario for learners to practice being the buyer, using all learned units of measurement and polite phrases."
 ===META_OUTLINE_END===
 
 ===FRICTION_START===
 **Phase**: Phase A: Meta + Research (Core)
-**Step**: Full Phase A
-**Friction Type**: NONE
-**Raw Error**: None
-**Self-Correction**: N/A
-**Proposed Tooling Fix**: N/A
+**Step**: Search file content for State Standard references
+**Friction Type**: TOOL_ERROR
+**Raw Error**: Error during grep search operation: Process exited with code 2: error: The argument '--threads <NUM>' requires 1 values, but 2 were provided
+**Self-Correction**: Shifted from `grep_search` tool to `run_shell_command` utilizing `rg` as directed by project context workarounds.
+**Proposed Tooling Fix**: Fix the `grep_search` tool to correctly handle the `--threads` argument or remove duplicate thread flags being injected.
 ===FRICTION_END===
-
-
-────────────────────────────────────────
-✅ Gemini finished (4843 chars)
-✅ Message sent to Claude (ID: 9922)
-✓ Message 9922 acknowledged
-   Auto-acknowledged reply #9922 (stdout delivery — no inbox accumulation)
-✓ Message 9921 acknowledged
