@@ -315,9 +315,9 @@ has_meta=$(test -f curriculum/l2-uk-en/${level}/meta/${slug}.yaml && echo 1 || e
 has_lesson=$(test -f curriculum/l2-uk-en/${level}/${slug}.md && echo 1 || echo 0)
 has_activities=$(test -f curriculum/l2-uk-en/${level}/activities/${slug}.yaml && echo 1 || echo 0)
 # Check for either module-N.mdx (core) or slug.mdx (tracks)
-if [[ -f docusaurus/docs/${level}/module-${num}.mdx ]]; then
+if [[ -f starlight/src/content/docs/${level}/module-${num}.mdx ]]; then
   has_mdx=1
-elif [[ -f docusaurus/docs/${level}/${slug}.mdx ]]; then
+elif [[ -f starlight/src/content/docs/${level}/${slug}.mdx ]]; then
   has_mdx=1
 else
   has_mdx=0
@@ -601,7 +601,7 @@ Files generated:
 - {slug}.md
 - activities/{slug}.yaml
 - vocabulary/{slug}.yaml (skeleton)
-- docusaurus/docs/{level}/{mdx_filename}
+- starlight/src/content/docs/{level}/{mdx_filename}
 
 Preview: http://localhost:3000/docs/{level}/{slug_or_module_num}
 

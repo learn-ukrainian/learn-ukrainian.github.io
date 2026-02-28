@@ -72,7 +72,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         From absolute beginner to native-level proficiency.
-        1,468 modules aligned with CEFR and Ukrainian State Standards.
+        1,503 modules aligned with CEFR and Ukrainian State Standards.
       </>
     ),
   },
@@ -138,42 +138,42 @@ export default function Home(): ReactNode {
                 level="A1"
                 name="Beginner"
                 description="Cyrillic alphabet, basic phrases, practical scenarios"
-                modules={44}
+                modules={64}
                 color="#2E7D32"
               />
               <LevelCard
                 level="A2"
                 name="Elementary"
                 description="All 7 cases, verb aspects, practical scenarios"
-                modules={71}
+                modules={76}
                 color="#1565C0"
               />
               <LevelCard
                 level="B1"
                 name="Intermediate"
                 description="Aspect mastery, motion verbs, communication skills"
-                modules={94}
+                modules={100}
                 color="#E65100"
               />
               <LevelCard
                 level="B2"
                 name="Upper-Intermediate"
                 description="Passive voice, registers, professional basics"
-                modules={95}
+                modules={85}
                 color="#C2185B"
               />
               <LevelCard
                 level="C1"
                 name="Advanced"
                 description="Stylistics, literature, complex grammar"
-                modules={108}
+                modules={106}
                 color="#7B1FA2"
               />
               <LevelCard
                 level="C2"
                 name="Mastery"
                 description="Native-level proficiency"
-                modules={101}
+                modules={91}
                 color="#C62828"
               />
             </div>
@@ -200,7 +200,7 @@ export default function Home(): ReactNode {
                 level="BIO"
                 name="Biographies"
                 description="Notable Ukrainians through history"
-                modules={172}
+                modules={176}
                 color="#607D8B"
               />
               <LevelCard
@@ -221,7 +221,7 @@ export default function Home(): ReactNode {
                 level="LIT"
                 name="Literature"
                 description="Ukrainian classics and literary analysis"
-                modules={217}
+                modules={221}
                 color="#5D4037"
               />
             </div>
@@ -237,14 +237,14 @@ export default function Home(): ReactNode {
                 level="OES"
                 name="Old East Slavic"
                 description="Language of Kyivan Rus' (X-XIII century)"
-                modules={100}
+                modules={103}
                 color="#8D6E63"
               />
               <LevelCard
                 level="RUTH"
                 name="Ruthenian"
                 description="Middle Ukrainian (XIV-XVIII century)"
-                modules={100}
+                modules={115}
                 color="#A1887F"
               />
             </div>

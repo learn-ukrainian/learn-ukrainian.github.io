@@ -406,12 +406,12 @@ When ALL audit gates show ✅:
 .venv/bin/python scripts/generate_mdx.py l2-uk-en ${level} ${module_num}
 ```
 
-This generates: `docusaurus/docs/${level}/${slug}.mdx`
+This generates: `starlight/src/content/docs/${level}/${slug}.mdx`
 
 **Verify the MDX was created:**
 
 ```bash
-ls -la docusaurus/docs/${level}/${slug}.mdx
+ls -la starlight/src/content/docs/${level}/${slug}.mdx
 ```
 
 ---
@@ -518,7 +518,7 @@ Final metrics:
   - Activities: {count} ({types} types)
   - Immersion: {percentage}%
 
-MDX Generated: ✅ docusaurus/docs/{level}/{slug}.mdx
+MDX Generated: ✅ starlight/src/content/docs/{level}/{slug}.mdx
 
 MODULE APPROVED
 ```

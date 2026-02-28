@@ -288,7 +288,7 @@ Only read stage docs for complex cases:
 On completion:
 
 - Module file: `curriculum/l2-uk-en/{level}/{num}-{slug}.md`
-- MDX: `docusaurus/docs/{level}/module-{num}.mdx`
+- MDX: `starlight/src/content/docs/{level}/module-{num}.mdx`
 - ~~JSON: `output/json/l2-uk-en/{level}/module-{num}.json`~~ (Vibe app on hold)
 
 Status: APPROVED (pipeline passes) or NEEDS MANUAL REVIEW

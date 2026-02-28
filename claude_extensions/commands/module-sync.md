@@ -302,7 +302,7 @@ Final metrics:
   - Naturalness: {score}/10
   - Immersion: {percentage}%
 
-Deployed: docusaurus/docs/{level}/module-{num}.mdx
+Deployed: starlight/src/content/docs/{level}/module-{num}.mdx
 Audit report: curriculum/l2-uk-en/{level}/review/{slug}-review.md
 ```
 

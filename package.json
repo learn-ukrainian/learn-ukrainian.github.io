@@ -34,7 +34,7 @@
     "claude:deploy": "scripts/deploy_prompts.sh",
     "lint:md": "markdownlint-cli2 \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",
     "lint:md:fix": "markdownlint-cli2 --fix \"curriculum/**/*.md\" \"docs/**/*.md\" \"*.md\"",
-    "lint:mdx": "markdownlint-cli2 \"docusaurus/docs/**/*.mdx\"",
+    "lint:mdx": "markdownlint-cli2 \"starlight/src/content/docs/**/*.mdx\"",
     "lint:yaml": ".venv/bin/yamllint .",
     "audit": ".venv/bin/python scripts/audit_level.py",
     "audit:rehash": ".venv/bin/python scripts/rehash_module.py",

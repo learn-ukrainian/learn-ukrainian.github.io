@@ -165,7 +165,7 @@ def build_level_landing(level, config, is_track=False):
     # Count stats
     built_count = len(mdx_files)
     ready_count = len(review_files)
-    qa_count = built_count - ready_count
+    qa_count = max(0, built_count - ready_count)
     in_progress_count = len([n for n in meta_files if n not in mdx_files])
 
     # Determine status emoji for header

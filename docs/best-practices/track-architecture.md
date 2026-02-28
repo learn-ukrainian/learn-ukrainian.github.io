@@ -8,20 +8,20 @@
 
 | Track | Level | Type | Modules | Word Target | Pedagogy |
 |-------|-------|------|---------|-------------|---------|
-| `a1` | A1 | Core | 44 | 750w | PPP |
-| `a2` | A2 | Core | 71 | 1000w | PPP |
-| `b1` | B1 | Core | 94 | 1500w | TTT |
-| `b2` | B2 | Core | 95 | 1750w | TTT |
-| `c1` | C1 | Core | 109 | 3000w | CLIL |
-| `c2` | C2 | Core | 101 | 3000w | CLIL |
-| `b2-pro` | B2 | Core (professional) | 40 | 1750w | CLIL |
-| `c1-pro` | C1 | Core (professional) | 50 | 3000w | CLIL |
+| `a1` | A1 | Core | 64 | 2000w | PPP |
+| `a2` | A2 | Core | 76 | 3000w | PPP |
+| `b1` | B1 | Core | 100 | 4000w | TTT |
+| `b2` | B2 | Core | 85 | 4000w | TTT |
+| `c1` | C1 | Core | 106 | 4000w | CLIL |
+| `c2` | C2 | Core | 91 | 5000w | CLIL |
+| `b2-pro` | B2 | Core (professional) | 40 | 4000w | CLIL |
+| `c1-pro` | C1 | Core (professional) | 50 | 4000w | CLIL |
 | `hist` | B2 | Seminar | 140 | 5000w | CBI |
-| `bio` | C1 | Seminar | 175 | 5000w | CBI |
+| `bio` | C1 | Seminar | 176 | 5000w | CBI |
 | `istorio` | C1 | Seminar | 136 | 5000w | CBI |
-| `lit` | C1+ | Seminar | 218 | 2500w | CBI |
-| `oes` | C2 | Seminar | 100 | 3000w | CBI |
-| `ruth` | C2 | Seminar | 112 | 3000w | CBI |
+| `lit` | C1+ | Seminar | 221 | 5000w | CBI |
+| `oes` | C2 | Seminar | 103 | 5000w | CBI |
+| `ruth` | C2 | Seminar | 115 | 5000w | CBI |
 
 ---
 
