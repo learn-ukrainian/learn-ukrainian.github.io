@@ -1,62 +1,66 @@
 # Learn Ukrainian
 
-**Мова – душа народу • Language is the soul of a nation**
+**Мова -- душа народу** | Language is the soul of a nation
 
-A free, open-source Ukrainian language course from A1 to C2, based on the **Ukrainian State Standard 2024**.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Deploy](https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/workflows/deploy-pages.yml)
+[![Modules](https://img.shields.io/badge/modules-1%2C503-orange)](https://learn-ukrainian.github.io)
 
-**[Start Learning →](https://learn-ukrainian.github.io)**
+A free, open-source Ukrainian language course from A1 to C2, based on the **Ukrainian State Standard 2024** and aligned with **CEFR**.
+
+**[Start Learning](https://learn-ukrainian.github.io)**
 
 ---
 
 ## What is this?
 
-A complete Ukrainian language curriculum for English speakers:
+A comprehensive Ukrainian language curriculum with 1,503 modules across 14 tracks:
 
-- **6 CEFR levels** (A1 → C2) with 500+ interactive lessons
-- **Theory-first approach** — understand grammar deeply, not just memorize phrases
-- **Interactive exercises** — quizzes, drag-and-drop, fill-in-the-blank, error correction
-- **Cultural context** — Ukrainian history, traditions, music, and literature
-- **100% free** — no ads, no subscriptions, no paywalls
+- **6 core CEFR levels** (A1 -- C2) covering grammar, vocabulary, and communication
+- **8 specialization tracks** -- history, biographies, literature, professional Ukrainian, Old East Slavic, and Ruthenian
+- **Theory-first approach** -- understand grammar deeply, not just memorize phrases
+- **Interactive exercises** -- quizzes, matching, fill-in-the-blank, error correction
+- **Cultural context** -- decolonization perspective, authentic Ukrainian sources
+- **100% free** -- no ads, no subscriptions, no paywalls
 
-## Quick Links
+## Tracks
 
-| Level | Description | Status |
-|-------|-------------|--------|
-| [**A1 Beginner**](https://learn-ukrainian.github.io/docs/a1/) | Cyrillic alphabet, basic phrases, simple grammar | ✅ Complete (34 lessons) |
-| [**A2 Elementary**](https://learn-ukrainian.github.io/docs/a2/) | All 7 cases, verb aspects, comparisons | ✅ Complete (57 lessons) |
-| [**B1 Intermediate**](https://learn-ukrainian.github.io/docs/b1/) | Complex sentences, motion verbs, participles | 🔍 In QA (85 lessons) |
-| [**B2 Upper-Intermediate**](https://learn-ukrainian.github.io/docs/b2/) | Grammar mastery, phraseology, Ukrainian history | 📋 Planned (110 lessons) |
-| [**C1 Advanced**](https://learn-ukrainian.github.io/docs/c1/) | Biographies, stylistics, folk culture, literature | 📋 Planned (160 lessons) |
-| [**C2 Mastery**](https://learn-ukrainian.github.io/docs/c2/) | Native-level proficiency, professional specialization | 📋 Planned (100 lessons) |
+### Core Levels
+
+| Level | Modules | Description |
+|-------|---------|-------------|
+| [**A1**](https://learn-ukrainian.github.io/a1/) | 64 | Beginner -- Cyrillic alphabet, basic grammar, practical scenarios |
+| [**A2**](https://learn-ukrainian.github.io/a2/) | 76 | Elementary -- All 7 cases, aspect intro, practical scenarios |
+| [**B1**](https://learn-ukrainian.github.io/b1/) | 100 | Intermediate -- Aspect mastery, motion verbs, communication |
+| [**B2**](https://learn-ukrainian.github.io/b2/) | 85 | Upper-Intermediate -- Passive voice, registers, professional basics |
+| [**C1**](https://learn-ukrainian.github.io/c1/) | 106 | Advanced -- Stylistics, literature, complex grammar |
+| [**C2**](https://learn-ukrainian.github.io/c2/) | 91 | Mastery -- Native-level proficiency |
+
+### Specialization Tracks
+
+| Track | Modules | Description |
+|-------|---------|-------------|
+| [**HIST**](https://learn-ukrainian.github.io/hist/) | 140 | Ukrainian history from origins to present |
+| [**ISTORIO**](https://learn-ukrainian.github.io/istorio/) | 136 | Advanced historiography -- primary sources, imperial mechanisms |
+| [**BIO**](https://learn-ukrainian.github.io/bio/) | 176 | Notable Ukrainians through history |
+| [**LIT**](https://learn-ukrainian.github.io/lit/) | 221 | Ukrainian classics and literary analysis |
+| [**B2-PRO**](https://learn-ukrainian.github.io/b2-pro/) | 40 | Professional -- business communication, technical domains |
+| [**C1-PRO**](https://learn-ukrainian.github.io/c1-pro/) | 50 | Professional mastery -- executive, academic, specialized |
+| [**OES**](https://learn-ukrainian.github.io/oes/) | 103 | Old East Slavic -- historical linguistics (X--XIII century) |
+| [**RUTH**](https://learn-ukrainian.github.io/ruth/) | 115 | Ruthenian -- Middle Ukrainian (XIV--XVIII century) |
 
 ## Why Learn Ukrainian?
 
 - **45 million speakers** worldwide
-- **Rich literary tradition** — Shevchenko, Franko, Lesya Ukrainka
-- **Unique grammar** — 7 cases, verbal aspect, motion verb system
-- **Growing global interest** — solidarity with Ukraine
-
-## Features
-
-### For Learners
-
-- Step-by-step progression from zero to fluency
-- IPA pronunciation guides for every word
-- Authentic YouTube videos and podcasts
-- Self-assessment checkpoints every 10 lessons
-
-### For Developers
-
-- Open-source curriculum in Markdown
-- Automated quality audits
-- JSON export for app integration
-- Docusaurus-powered web platform
+- **Rich literary tradition** -- Shevchenko, Franko, Lesya Ukrainka
+- **Unique grammar** -- 7 cases, verbal aspect, motion verb system
+- **Growing global interest** -- solidarity with Ukraine
 
 ## Getting Started
 
 ### Online (Recommended)
 
-Visit **[learn-ukrainian.github.io](https://learn-ukrainian.github.io)** and start with A1 Module 1.
+Visit **[learn-ukrainian.github.io](https://learn-ukrainian.github.io)** and start with A1.
 
 ### Local Development
 
@@ -65,46 +69,55 @@ git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
 npm install
 
-# Start the web platform
-cd docusaurus && pnpm start
-# Opens at http://localhost:3000/
+# Start the website (Astro Starlight)
+npm run dev:starlight
+# Opens at http://localhost:4321/
 ```
+
+**Requirements:** Node.js 20+, Python 3.12+ (for build scripts and audits)
 
 ## Project Structure
 
 ```
 learn-ukrainian/
-├── curriculum/l2-uk-en/     # Source lessons (Markdown)
-│   ├── a1/                  # A1: 34 modules
-│   ├── a2/                  # A2: 57 modules
-│   ├── b1/                  # B1: 85 modules (in progress)
-│   └── ...                  # B2, C1, C2
-├── docusaurus/              # Web platform
-│   ├── docs/                # Generated lesson pages
-│   └── src/components/      # Interactive activities
-├── scripts/                 # Build tools & quality audits
-└── docs/                    # Curriculum plans
+├── curriculum/l2-uk-en/        # Source curriculum
+│   ├── plans/{track}/          # Module plans (source of truth)
+│   ├── {track}/                # Content, activities, vocabulary
+│   │   ├── meta/               # Build configuration
+│   │   ├── activities/         # Interactive exercises (YAML)
+│   │   ├── vocabulary/         # Vocabulary lists (YAML)
+│   │   ├── research/           # Research notes (seminar tracks)
+│   │   └── status/             # Audit results (auto-generated)
+│   └── curriculum.yaml         # Module manifest
+├── starlight/                  # Website (Astro Starlight)
+│   └── src/content/docs/       # Published module pages (MDX)
+├── scripts/                    # Build tools, audits, batch processing
+├── schemas/                    # JSON Schema for YAML validation
+└── docs/                       # Architecture docs, best practices
 ```
 
 ## Standards & Quality
 
-- **CEFR-aligned** — Common European Framework of Reference
-- **Ukrainian State Standard 2024** — Official language proficiency requirements
-- **Automated audits** — Every lesson checked for vocabulary, grammar, activity counts
-- **Looking for native reviewers** — Help us improve linguistic accuracy!
+- **CEFR-aligned** -- Common European Framework of Reference for Languages
+- **Ukrainian State Standard 2024** -- Official language proficiency requirements
+- **Automated audits** -- every module checked for word count, vocabulary, activities, naturalness
+- **Cross-agent review** -- AI-assisted build pipeline with adversarial quality gates
 
 ## Contributing
 
-We welcome contributions! See:
-- `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` — Content quality standards
-- `CLAUDE.md` — AI agent instructions
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+Areas where help is especially welcome:
+- Native speaker review of Ukrainian text
+- Activity design and testing
+- Bug reports and content corrections
 
 ## License
 
-Content is provided for educational use. See LICENSE for details.
+[MIT](LICENSE) -- free to use, modify, and distribute.
 
 ---
 
-**Слава Україні! 🇺🇦**
+**Слава Україні!** 🇺🇦
 
-*Learn Ukrainian is an open-source project. Star us on GitHub to support Ukrainian language education.*
+*Star us on GitHub to support Ukrainian language education.*
