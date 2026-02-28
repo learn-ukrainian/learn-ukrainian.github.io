@@ -101,32 +101,39 @@ IMMERSION_RULES: dict[str, str] = {
     "a1-m11-20": (
         "TARGET: 25-40% Ukrainian, 60-75% English. "
         "Write cultural notes, practical sections, observations, and drill instructions in Ukrainian first "
-        "(2-3 sentence paragraphs, max 10 words per sentence), then add English gloss in parentheses for new words. "
+        "(2-3 sentence paragraphs, max 10 words per sentence), then add English translation below. "
+        "CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. "
         "Grammar RULES stay in English. Provide 3-4 Ukrainian examples per grammar point. "
-        "Some callout/tip text in Ukrainian. The student reads simple Ukrainian — "
-        "use it for concrete, practical content while keeping abstract grammar explanations in English."
+        "Some callout/tip text in Ukrainian. A1 register only — simple concrete vocabulary."
     ),
     "a1-m21+": (
         "TARGET: 35-55% Ukrainian, 45-65% English. "
         "Write ALL section content in Ukrainian first (max 10 words per sentence). "
-        "Then add English translations for grammar explanations and abstract concepts to bring Ukrainian down to 35-55%. "
-        "Grammar rules still anchored in English. Examples in Ukrainian with translations."
+        "Then add English translation paragraphs for grammar explanations to bring Ukrainian down to 35-55%. "
+        "CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. "
+        "Grammar rules still anchored in English. A1 register — simple concrete vocabulary."
     ),
     "a2-m01-20": (
         "TARGET: 50-60% Ukrainian, 40-50% English. "
         "APPROACH: Write ALL content in Ukrainian first — every paragraph, every explanation, every example. "
-        "Then add English translations ONLY for grammar theory paragraphs and abstract explanations "
+        "Then add English translation paragraphs after Ukrainian paragraphs where needed for grammar theory, "
         "to bring the balance to 50-60% Ukrainian / 40-50% English. "
-        "The Ukrainian text is the primary content; English is the translation layer. "
+        "CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. "
+        "Ukrainian paragraph first, then English translation paragraph below it. Never 'Pronouns in the Dative case відкривають...'. "
+        "COMPLEXITY: A2 register ONLY. Concrete everyday vocabulary (їсти, ходити, купувати, подобатися). "
+        "NO literary/poetic language. NO abstract nouns (почуття, відчуття, стан, сутність). "
+        "NO metaphors or figurative speech. Write like a simple conversation, not an essay. "
         "Ukrainian sentences max 15 words. Max 2 clauses. "
         "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
     ),
     "a2-m21-50": (
         "TARGET: 60-75% Ukrainian, 25-40% English. "
         "APPROACH: Write ALL content in Ukrainian first. "
-        "Then add English translations ONLY for abstract grammar concepts "
+        "Then add English translation paragraphs ONLY for abstract grammar concepts "
         "to bring the balance to 60-75% Ukrainian / 25-40% English. "
+        "CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. "
         "Dialogues, cultural context, examples, section intros — all stay Ukrainian-only. "
+        "COMPLEXITY: A2 register. Concrete everyday vocabulary. No literary language, no metaphors. "
         "Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. "
         "Simple subordinate clauses only. Aspect pairs introduced. No participles."
     ),
@@ -134,6 +141,8 @@ IMMERSION_RULES: dict[str, str] = {
         "TARGET: 75-90% Ukrainian, 10-25% English. "
         "APPROACH: Write ALL content in Ukrainian first. "
         "Add English only in vocabulary tables and one-line grammar notes where absolutely needed. "
+        "CRITICAL: NEVER mix languages within a sentence. Each sentence is 100% Ukrainian OR 100% English. "
+        "COMPLEXITY: A2 register. Concrete everyday vocabulary. No literary language, no metaphors. "
         "Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. "
         "All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles."
     ),
