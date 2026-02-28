@@ -1,0 +1,227 @@
+module: abetka-4
+track: l2-uk-direct
+level: a1
+type: script_foundation
+title: "Абетка — повний набір"
+subtitle: "Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ ДЗ + апостроф"
+standard_ref: "§4.1.1 — alphabet, §4.1.2 — apostrophe, §4.1.4 — vowels/consonants"
+textbook_ref: "Bolshakova 2018 Part 1, pp.60-76"
+
+playlist: "https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV"
+playlist_credit: "Anna Ohoiko — Ukrainian Lessons"
+
+# After abetka-1+2+3: А М Л У Н С К И Р Б В Д І П Т Г Ґ Е З Ж Ш Х (22 letters)
+# This module: Й Ч Щ Я Ю Є Ь Ї Ц Ф + digraphs ДЖ/ДЗ + apostrophe
+# After this module: FULL ALPHABET — learner can read any Ukrainian text
+letters:
+  - upper: Й
+    lower: й
+    sound_type: consonant
+    note: "Й — дуже короткий звук. Ніколи не утворює склад сам по собі."
+    key_word: йогурт
+    emoji: "\U0001F95B"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=aq0cjB90s3w"
+
+  - upper: Ч
+    lower: ч
+    sound_type: consonant
+    note: "Ч — злитий звук: Т + Ш вимовляються як одне ціле."
+    key_word: черепаха
+    emoji: "\U0001F422"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=UsJkbdsY2RA"
+
+  - upper: Щ
+    lower: щ
+    sound_type: consonant
+    note: "Щ — це два звуки разом: [шч]. Одна буква — два звуки."
+    key_word: щітка
+    emoji: "\U0001FAA5"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=QmBLieIuf6Q"
+
+  - upper: Я
+    lower: я
+    sound_type: vowel
+    note: "Я — починається зі звуку Й. Також це слово: Я = я (я іду, я читаю)."
+    key_word: яблуко
+    emoji: "\U0001F34E"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=yhSAf41LX8I"
+
+  - upper: Ю
+    lower: ю
+    sound_type: vowel
+    note: "Ю — починається зі звуку Й. На початку слова і після голосної чути обидва звуки."
+    key_word: юнак
+    emoji: "\U0001F9D1"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=9JdIBYCTWGw"
+
+  - upper: Є
+    lower: є
+    sound_type: vowel
+    note: "Є — завжди починається зі звуку Й. На початку слова і після голосної чути обидва звуки."
+    key_word: єнот
+    emoji: "\U0001F99D"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=O0bwRyyBQSc"
+
+  - upper: Ь
+    lower: ь
+    sound_type: special
+    note: "М'який знак — не має власного звуку. Пом'якшує приголосний перед собою."
+    key_word: сіль
+    emoji: "\U0001F9C2"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=cJlal8XKBxo"
+
+  - upper: Ї
+    lower: ї
+    sound_type: vowel
+    note: "Ї — завжди починається зі звуку Й. Завжди."
+    key_word: їжак
+    emoji: "\U0001F994"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=UcjdjQXhAY8"
+
+  - upper: Ц
+    lower: ц
+    sound_type: consonant
+    note: "Ц — злитий звук: Т + С вимовляються як одне ціле."
+    key_word: цибуля
+    emoji: "\U0001F9C5"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=u44eCjR2Oz8"
+
+  - upper: Ф
+    lower: ф
+    sound_type: consonant
+    note: "Ф — рідко зустрічається в українських словах. Переважно в запозиченнях."
+    key_word: фламінго
+    emoji: "\U0001F9A9"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=haHRsFFZRQI"
+
+# Йотовані голосні — special group, taught as a set
+yotovani:
+  note: "Я, Ю, Є, Ї — починаються зі звуку Й. Тому їх називають 'йотовані'."
+  letters: [Я, Ю, Є, Ї]
+
+# Digraphs — two letters, one sound
+digraphs:
+  - letters: ДЖ
+    sound_type: consonant
+    note: "ДЖ — дві букви, один звук. Вимовляється злито, як одне ціле."
+    key_word: джерело
+    emoji: "\u26F2"
+    image_url: null
+    pronunciation_video: null
+
+  - letters: ДЗ
+    sound_type: consonant
+    note: "ДЗ — дві букви, один звук. Вимовляється злито, як одне ціле."
+    key_word: дзвін
+    emoji: "\U0001F514"
+    image_url: null
+    pronunciation_video: null
+
+# Apostrophe
+apostrophe:
+  symbol: "'"
+  note: "Апостроф — розділяє приголосний від Я, Ю, Є, Ї. Обидва звуки вимовляються повністю."
+  example_word: "м'яч"
+  emoji: "\u26BD"
+
+# Complete alphabet summary
+vowels: [А, Е, И, І, О, У, Є, Ї, Ю, Я]
+consonants: [Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ]
+special: [Ь]
+
+# Stress rule — introduced here, practiced in sklad module
+stress:
+  rule: "Наголос в українській мові вільний — він може падати на будь-який склад."
+  marker: "У словнику наголошений склад позначається знаком ´ над голосною."
+  examples:
+    - word: "арбу\u0301з"
+      stressed_syllable: буз
+    - word: "я\u0301блуко"
+      stressed_syllable: яб
+    - word: "черепа\u0301ха"
+      stressed_syllable: па
+
+activities:
+  - type: watch_and_repeat
+    title: "Слухай і повторюй"
+    items:
+      - letter: Й
+        video: "https://www.youtube.com/watch?v=aq0cjB90s3w"
+      - letter: Ч
+        video: "https://www.youtube.com/watch?v=UsJkbdsY2RA"
+      - letter: Щ
+        video: "https://www.youtube.com/watch?v=QmBLieIuf6Q"
+      - letter: Я
+        video: "https://www.youtube.com/watch?v=yhSAf41LX8I"
+      - letter: Ю
+        video: "https://www.youtube.com/watch?v=9JdIBYCTWGw"
+      - letter: Є
+        video: "https://www.youtube.com/watch?v=O0bwRyyBQSc"
+      - letter: Ь
+        video: "https://www.youtube.com/watch?v=cJlal8XKBxo"
+      - letter: Ї
+        video: "https://www.youtube.com/watch?v=UcjdjQXhAY8"
+      - letter: Ц
+        video: "https://www.youtube.com/watch?v=u44eCjR2Oz8"
+      - letter: Ф
+        video: "https://www.youtube.com/watch?v=haHRsFFZRQI"
+
+  - type: classify
+    title: "Йотований чи ні?"
+    instruction: "Йотовані починаються зі звуку Й"
+    categories:
+      - label: "йотований"
+        symbol_hint: "yotated"
+        items: [Я, Ю, Є, Ї]
+      - label: "не йотований"
+        symbol_hint: "plain"
+        items: [А, У, Е, И, І, О]
+
+  - type: classify
+    title: "Повна абетка — голосний чи приголосний?"
+    categories:
+      - label: "•"
+        symbol_hint: "голосний"
+        items: [А, Е, И, І, О, У, Є, Ї, Ю, Я]
+      - label: "—"
+        symbol_hint: "приголосний"
+        items: [Б, В, Г, Ґ, Д, Ж, З, Й, К, Л, М, Н, П, Р, С, Т, Ф, Х, Ц, Ч, Ш, Щ]
+
+  - type: image_to_letter
+    title: "Яка перша буква?"
+    items:
+      - emoji: "\U0001F422"
+        answer: Ч
+        distractors: [Ш, Щ]
+      - emoji: "\U0001FAA5"
+        answer: Щ
+        distractors: [Ш, Ч]
+      - emoji: "\U0001F34E"
+        answer: Я
+        distractors: [Є, Ї]
+      - emoji: "\U0001F99D"
+        answer: Є
+        distractors: [Е, Ї]
+      - emoji: "\U0001F994"
+        answer: Ї
+        distractors: [І, Є]
+      - emoji: "\U0001F9C5"
+        answer: Ц
+        distractors: [С, З]
+      - emoji: "\U0001F9A9"
+        answer: Ф
+        distractors: [П, Х]
+      - emoji: "\U0001F9C2"
+        answer: С
+        distractors: [З, Ц]
+        note: "сіль — С, не Ь. Ь ніколи не починає слово."

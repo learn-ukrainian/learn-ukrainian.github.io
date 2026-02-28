@@ -9,10 +9,13 @@ standard_ref: docs/l2-uk-en/state-standard-2024-mapping.yaml
 
 levels:
   a1:
-    modules: 44
+    modules: 47
     sequence:
-      # Phase 0: Script (1-3)
-      - abetka                    # Alphabet, 33 letters, sounds
+      # Phase 0: Script (1-6)
+      - abetka-1                  # А М Л У Н С — first vowel + first consonants → syllables
+      - abetka-2                  # К И Р Б В Д І — first real words: МАМА, БАНАН, ВОДА
+      - abetka-3                  # П Т Г Ґ Е З Ж Ш Х — voiced/voiceless pairs, most text readable
+      - abetka-4                  # Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ/ДЗ + apostrophe — full alphabet
       - sklad                     # Syllables, stress mark, reading
       - naholos                   # Stress patterns, intonation
 

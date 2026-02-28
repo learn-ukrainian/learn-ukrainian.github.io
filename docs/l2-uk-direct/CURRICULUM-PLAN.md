@@ -4,7 +4,7 @@
 > State standard reference: `docs/l2-uk-en/state-standard-2024-mapping.yaml`
 > Gap analysis: `docs/l2-uk-direct/A1-GAP-ANALYSIS.md`
 > Research notes: `docs/l2-uk-direct/textbook-reading-notes/` (6 textbooks + cross-reference synthesis)
-> Companion plans: [A2-CURRICULUM.md](A2-CURRICULUM.md) (38 modules) | [B1-CURRICULUM.md](B1-CURRICULUM.md) (42 modules)
+> Companion plans: [A2-CURRICULUM.md](A2-CURRICULUM.md) (40 modules) | [B1-CURRICULUM.md](B1-CURRICULUM.md) (45 modules) | [B2-CURRICULUM.md](B2-CURRICULUM.md) (46 modules)
 > GH Issues: Infrastructure [#661](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/661) | Content [#662](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/662) | Textbooks [#663](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/663) | Scripts [#664](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/664)
 
 ---
@@ -43,56 +43,88 @@
 
 ---
 
-## A1 — Full Module Sequence (44 modules)
+## A1 — Full Module Sequence (47 modules)
 
 ---
 
-### Phase 0: Script (Modules 1–3)
-*Goal: learner can read Ukrainian text aloud. Activities: pre-literacy only.*
-*Textbook source: Grade 1 Буквар (both parts).*
+### Phase 0: Script (Modules 1–6)
+*Goal: learner can read Ukrainian text aloud. Activities: pre-literacy only (modules 1–4).*
+*Textbook source: Grade 1 Буквар (Bolshakova 2018/2025, both parts).*
+*Letter order follows Bolshakova's pedagogical sequence, not alphabetical order.*
 
 ---
 
-#### Module 1: `abetka`
-**Focus**: Ukrainian alphabet — 33 letters, sounds, letter groups
+#### Module 1: `abetka-1`
+**Focus**: А М Л У Н С — first vowel + first consonants → syllables
 **Type**: `script_foundation`
-**Status**: ✅ Draft (abetka.yaml complete, validator passes)
+**Status**: ✅ Draft (abetka-1.yaml complete)
+**State standard**: §4.1.1 (alphabet), §4.1.4 (vowels/consonants)
+
+**Letters** (6): А, М, Л, У, Н, С
+**Key goal**: Learn 2 vowels + 4 high-frequency consonants. Form first syllables: МА, МУ, НА, НУ, ЛА, ЛУ, СА, СУ.
+**Mascot video**: Черепаха Аха (Операція Черепаха)
+
+**Activities** (pre-literacy only):
+1. `watch_and_repeat` — Anna Ohoiko pronunciation videos (6 videos)
+2. `classify` — vowels (А, У) vs consonants (М, Л, Н, С)
+3. `image_to_letter` — emoji → first letter from {А, М, Л, У, Н, С}
+
+---
+
+#### Module 2: `abetka-2`
+**Focus**: К И Р Б В Д І — first real words: МАМА, БАНАН, ВОДА
+**Type**: `script_foundation`
+**Status**: ✅ Draft (abetka-2.yaml complete)
+**State standard**: §4.1.1 (alphabet), §4.1.4 (vowels/consonants)
+
+**Letters** (7): К, И, Р, Б, В, Д, І (13 total after this module)
+**Key goal**: With 13 letters, learner reads real words: МАМА, БАНАН, РУКА, ВОДА, МОЛОКО, СИЛА, КІНО.
+
+**Activities** (pre-literacy only):
+1. `watch_and_repeat` — Anna Ohoiko pronunciation videos (7 videos)
+2. `classify` — vowels (А, У, И, І) vs consonants (М, Л, Н, С, К, Р, Б, В, Д)
+3. `image_to_letter` — emoji → first letter from 13-letter set
+
+---
+
+#### Module 3: `abetka-3`
+**Focus**: П Т Г Ґ Е З Ж Ш Х — voiced/voiceless pairs, most text readable
+**Type**: `script_foundation`
+**Status**: ✅ Draft (abetka-3.yaml complete)
+**State standard**: §4.1.1 (alphabet), §4.1.4 (vowels/consonants)
+
+**Letters** (9): П, Т, Г, Ґ, Е, З, Ж, Ш, Х (22 total after this module)
+**Key goal**: Voiced/voiceless pairs (Г/Х, Ж/Ш, З/С). Nearly all common Ukrainian text is now readable.
+
+**Activities** (pre-literacy only):
+1. `watch_and_repeat` — Anna Ohoiko pronunciation videos (9 videos)
+2. `classify` — vowel vs consonant; voiced vs voiceless
+3. `image_to_letter` — emoji → first letter from 22-letter set
+
+---
+
+#### Module 4: `abetka-4`
+**Focus**: Й Ч Щ Я Ю Є Ь Ї Ц Ф + ДЖ/ДЗ + apostrophe — full alphabet
+**Type**: `script_foundation`
+**Status**: ✅ Draft (abetka-4.yaml complete)
 **State standard**: §4.1.1 (alphabet), §4.1.2 (apostrophe), §4.1.4 (vowels/consonants)
 
-**Letters section** (33 letters):
-All letters with: `upper`, `lower`, `sound_type`, `key_word`, `emoji`, `pronunciation_video` (Anna Ohoiko YouTube).
+**Letters** (10 + 2 digraphs + apostrophe): Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф + ДЖ, ДЗ
+**Key goal**: Complete alphabet mastery (33 letters). Йотовані group (Я, Ю, Є, Ї). Stress rule introduced.
+**Full alphabet summary**: 10 vowels + 22 consonants + Ь (special)
 
-Special entries:
-- Apostrophe (ʼ) — not a letter, a separator (б'ю, п'ять, м'яч)
-- Soft sign (Ь) — softens preceding consonant (НЬ, ЛЬ, ТЬ); never starts a word
+**Activities** (pre-literacy only):
+1. `watch_and_repeat` — Anna Ohoiko pronunciation videos (10 videos)
+2. `classify` — йотований vs не йотований; full alphabet vowel/consonant
+3. `image_to_letter` — emoji → first letter from full 33-letter set
 
-Letter groups taught:
-- Vowels (10): А Е И І О У Є Ї Ю Я
-- Consonants (23): Б В Г Ґ Д Ж З Й К Л М Н П Р С Т Ф Х Ц Ч Ш Щ + Ь
-- Digraphs flagged: ДЖ, ДЗ (single sounds, two letters)
-
-Tricky pairs to emphasize:
-- Г (voiced fricative, like Arabic غ) vs Ґ (plosive, like English G)
-- И (central vowel) vs І (front vowel) vs Ї (always /ji/)
-- Р is trilled — not English R
-- Щ = /ʃtʃ/ — two sounds fused
-
-**Activities** (pre-literacy only — no reading required):
-
-1. `watch_and_repeat` — Anna Ohoiko pronunciation videos, one per letter group (vowels, then consonant groups)
-2. `watch_and_repeat` — special sounds (Г/Ґ, Ш/Щ/Ч, Р trill)
-3. `image_to_letter` — 30+ emoji → tap the first letter (see abetka.yaml for full list)
-4. `classify` — sort letters into vowels (•) vs consonants (—)
-5. `classify` — soft vs hard consonants (using • = soft, ─ = hard symbols)
-
-**Textbook images**: Each letter has a dedicated page in Bolshakova Букvar 2025 (Part 1) with illustrations.
-See `textbook-reading-notes/bolshakova-bukvar-mapping.md` for PDF page offsets (content page N = PDF page N + 5).
-Key image pages: А=p.20, О=p.22, У=p.24, М=p.26, С=p.30, Н=p.33, Л=p.36 ... Ф=p.123.
+**Textbook images**: Bolshakova Букvar 2018/2025 (Part 1) with illustrations for all letters.
+See `textbook-reading-notes/bolshakova-bukvar-mapping.md` for PDF page offsets.
 Part 2 re-teaches all 33 letters in different order (spiral learning) — additional image sources available.
 
 ---
 
-#### Module 2: `sklad`
+#### Module 5: `sklad`
 **Focus**: Syllables, stress mark, reading syllables aloud
 **Type**: `script_foundation`
 **Status**: 🔲 Not built
@@ -119,7 +151,7 @@ Part 2 re-teaches all 33 letters in different order (spiral learning) — additi
 
 ---
 
-#### Module 3: `naholos`
+#### Module 6: `naholos`
 **Focus**: Stress patterns, fluent reading of short words
 **Type**: `script_foundation`
 **Status**: 🔲 Not built
@@ -148,13 +180,13 @@ Part 2 re-teaches all 33 letters in different order (spiral learning) — additi
 
 ---
 
-### Phase 1: First Words (Modules 4–9)
+### Phase 1: First Words (Modules 7–12)
 *Goal: learner names things and actions, greets people, introduces self.*
 *Communicative competence before grammar analysis — greetings first, then naming, then verbs.*
 
 ---
 
-#### Module 4: `pryvit` 🆕
+#### Module 7: `pryvit` 🆕
 **Focus**: Greetings, farewells, politeness formulas, basic social interaction
 **Type**: `communicative`
 **Status**: 🔲 Not built
@@ -193,7 +225,7 @@ Part 2 re-teaches all 33 letters in different order (spiral learning) — additi
 
 ---
 
-#### Module 5: `tse`
+#### Module 8: `tse`
 **Focus**: Це... — naming things and people. ХТО? ЩО?
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -234,7 +266,7 @@ Key vocabulary notes:
 
 ---
 
-#### Module 6: `ya` 🆕
+#### Module 9: `ya` 🆕
 **Focus**: Self-introduction — name, nationality, country, language, age, profession
 **Type**: `communicative` + `vocabulary`
 **Status**: 🔲 Not built
@@ -278,7 +310,7 @@ Professions: студент, лікар, вчитель/вчителька, ін
 
 ---
 
-#### Module 7: `shcho-robyt`
+#### Module 10: `shcho-robyt`
 **Focus**: Actions — ЩО РОБИТЬ? Present tense, 3rd person singular
 **Type**: `vocabulary` + `grammar`
 **Status**: 🔲 Not built
@@ -330,7 +362,7 @@ Conjugation note (teach as patterns, not rules):
 
 ---
 
-#### Module 8: `yakyi`
+#### Module 11: `yakyi`
 **Focus**: Descriptions — ЯКИЙ? ЯКА? ЯКЕ? Gender agreement
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -374,7 +406,7 @@ Conjugation note (teach as patterns, not rules):
 
 ---
 
-#### Module 9: `mnozh` 🆕
+#### Module 12: `mnozh` 🆕
 **Focus**: Plural formation — nouns and adjectives
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -428,12 +460,12 @@ Conjugation note (teach as patterns, not rules):
 
 ---
 
-### Phase 2: Sentences (Modules 10–16)
+### Phase 2: Sentences (Modules 13–19)
 *Goal: learner makes full sentences, asks all types of questions, expresses preferences.*
 
 ---
 
-#### Module 10: `ya-ty-vin`
+#### Module 13: `ya-ty-vin`
 **Focus**: Personal pronouns + verb conjugation I/II
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -486,7 +518,7 @@ Conjugation II (говорити type — most -ити/-іти verbs):
 
 ---
 
-#### Module 11: `rechennia`
+#### Module 14: `rechennia`
 **Focus**: Building sentences — SVO anatomy, questions, negation
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -520,7 +552,7 @@ Statement vs question word order:
 
 ---
 
-#### Module 12: `spoluchnyky` 🆕
+#### Module 15: `spoluchnyky` 🆕
 **Focus**: Connectors and compound sentences — і/й, а, але, тому що, бо, Чи-questions
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -554,7 +586,7 @@ Statement vs question word order:
 
 ---
 
-#### Module 13: `zapytuyu`
+#### Module 16: `zapytuyu`
 **Focus**: Questions and negation — full question system
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -600,7 +632,7 @@ Statement vs question word order:
 
 ---
 
-#### Module 14: `chysla`
+#### Module 17: `chysla`
 **Focus**: Numbers 1–100, time expressions, quantities
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -636,7 +668,7 @@ Fixed phrases (memorize as chunks):
 
 ---
 
-#### Module 15: `podobається` 🆕
+#### Module 18: `podobається` 🆕
 **Focus**: Expressing preferences — likes, dislikes, wants
 **Type**: `communicative` + `grammar`
 **Status**: 🔲 Not built
@@ -685,7 +717,7 @@ Fixed phrases (memorize as chunks):
 
 ---
 
-#### Module 16: `zovnishnist` 🆕
+#### Module 19: `zovnishnist` 🆕
 **Focus**: Describing people — appearance, physical features
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -722,7 +754,7 @@ Fixed phrases (memorize as chunks):
 
 ### Checkpoint 1 (Module 17) 🆕
 
-#### Module 17: `checkpoint-1`
+#### Module 20: `checkpoint-1`
 **Focus**: Review and assessment of modules 4–16
 **Type**: `checkpoint`
 **Status**: 🔲 Not built
@@ -749,12 +781,12 @@ Fixed phrases (memorize as chunks):
 
 ---
 
-### Phase 3: Accusative (Modules 18–20)
+### Phase 3: Accusative (Modules 21–23)
 *Goal: learner says what they do/want/see — direct object.*
 
 ---
 
-#### Module 18: `znavidminnyk-i`
+#### Module 21: `znavidminnyk-i`
 **Focus**: Accusative — inanimate objects (ЩО?)
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -795,7 +827,7 @@ Taught as: ЩО? (asking about a subject) → ЩО БАЧИТЬ? / ЩО ЧИТА
 
 ---
 
-#### Module 19: `znavidminnyk-ii`
+#### Module 22: `znavidminnyk-ii`
 **Focus**: Accusative — animate (КОГО?)
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -831,7 +863,7 @@ Taught as: ЩО? (asking about a subject) → ЩО БАЧИТЬ? / ЩО ЧИТА
 
 ---
 
-#### Module 20: `znavidminnyk-priymennyky` 🆕
+#### Module 23: `znavidminnyk-priymennyky` 🆕
 **Focus**: Accusative with prepositions — direction, time, topic
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -867,12 +899,12 @@ Taught as: ЩО? (asking about a subject) → ЩО БАЧИТЬ? / ЩО ЧИТА
 
 ---
 
-### Phase 4: Location (Modules 21–23)
+### Phase 4: Location (Modules 24–26)
 *Goal: learner says where things are.*
 
 ---
 
-#### Module 21: `mistse`
+#### Module 24: `mistse`
 **Focus**: Locative case — where things are (ДЕ?)
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -915,7 +947,7 @@ Taught as: ЩО? (asking about a subject) → ЩО БАЧИТЬ? / ЩО ЧИТА
 
 ---
 
-#### Module 22: `misto`
+#### Module 25: `misto`
 **Focus**: The city — location vocabulary + locative + **city transport**
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -960,7 +992,7 @@ Taught as: ЩО? (asking about a subject) → ЩО БАЧИТЬ? / ЩО ЧИТА
 
 ---
 
-#### Module 23: `dim`
+#### Module 26: `dim`
 **Focus**: Home and rooms — locative practice in domestic context
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -999,12 +1031,12 @@ Housing types: квартира, будинок (приватний будино
 
 ---
 
-### Phase 5: Pronoun & Adjective Forms (Modules 24–26) 🆕
+### Phase 5: Pronoun & Adjective Forms (Modules 27–29) 🆕
 *Goal: learner correctly uses pronoun and adjective forms in accusative/locative.*
 
 ---
 
-#### Module 24: `mene-tobi` 🆕
+#### Module 27: `mene-tobi` 🆕
 **Focus**: Personal pronoun declension — oblique case forms
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -1047,7 +1079,7 @@ Housing types: квартира, будинок (приватний будино
 
 ---
 
-#### Module 25: `tsej-toj` 🆕
+#### Module 28: `tsej-toj` 🆕
 **Focus**: Demonstrative pronouns — цей/ця/це, той/та/те + plurals
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -1088,7 +1120,7 @@ Housing types: квартира, будинок (приватний будино
 
 ---
 
-#### Module 26: `prykmetnyk-vidminky` 🆕
+#### Module 29: `prykmetnyk-vidminky` 🆕
 **Focus**: Adjective forms in accusative and locative
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -1138,12 +1170,12 @@ Housing types: квартира, будинок (приватний будино
 
 ---
 
-### Phase 6: Time & Daily Life (Modules 27–33)
+### Phase 6: Time & Daily Life (Modules 30–36)
 *Goal: learner describes routine, needs, feelings, leisure activities.*
 
 ---
 
-#### Module 27: `chas`
+#### Module 30: `chas`
 **Focus**: Time — clock time, days, months, future tense
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -1153,6 +1185,14 @@ Housing types: квартира, будинок (приватний будино
 **Clock time** (teach ordinals in fixed time phrases):
 - Котра година? — Перша/Друга/Третя... година (1st, 2nd, 3rd... o'clock)
 - О котрій? — О першій / О другій / О третій... годині (at 1, 2, 3... o'clock)
+- **Half and quarter hours** (fixed phrases — teach as chunks, not rules):
+  - пів на третю (2:30 — "half towards 3rd")
+  - чверть на п'яту (4:15 — "quarter towards 5th")
+  - за чверть п'ята (4:45 — "quarter before 5th")
+  - за десять хвилин шоста (5:50)
+  - двадцять хвилин на сьому (6:20)
+- Pattern: minutes before half → «на + accusative of NEXT hour», minutes after half → «за + nominative of NEXT hour»
+- **Receptive only at A1** — learner must understand these in context; active production drilled at A2
 
 **Days of the week** (consolidation from module 19):
 понеділок, вівторок, середа, четвер, п'ятниця, субота, неділя
@@ -1179,10 +1219,11 @@ Housing types: квартира, будинок (приватний будино
    - answer: ЗИМА
    - answer_emoji: ❄️
 6. `true_false` — «Вчора я буду грати» → false (вчора = past; буду = future)
+7. `classify` — match clock face/digital time to Ukrainian phrase: «2:30» → «пів на третю», «4:15» → «чверть на п'яту», «5:45» → «за чверть шоста» (6 items, receptive only)
 
 ---
 
-#### Module 28: `den`
+#### Module 31: `den`
 **Focus**: Daily routine — sequence of actions, reflexive verbs (present tense only)
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -1223,7 +1264,7 @@ Housing types: квартира, будинок (приватний будино
 
 ---
 
-#### Module 29: `mynule` 🆕
+#### Module 32: `mynule` 🆕
 **Focus**: Past tense — formation, gender agreement, present↔past contrast
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -1268,7 +1309,7 @@ Housing types: квартира, будинок (приватний будино
 
 ---
 
-#### Module 30: `yizha`
+#### Module 33: `yizha`
 **Focus**: Food vocabulary — eating, ordering, tableware
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -1309,7 +1350,7 @@ Housing types: квартира, будинок (приватний будино
 
 ---
 
-#### Module 31: `kupuvatysia`
+#### Module 34: `kupuvatysia`
 **Focus**: Shopping — buying things, prices, hygiene products
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -1349,7 +1390,7 @@ Housing types: квартира, будинок (приватний будино
 
 ---
 
-#### Module 32: `zdorovia`
+#### Module 35: `zdorovia`
 **Focus**: Body and health
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -1384,7 +1425,7 @@ Fixed phrases:
 
 ---
 
-#### Module 33: `dozvillia` 🆕
+#### Module 36: `dozvillia` 🆕
 **Focus**: Leisure, hobbies, sports, sports venues
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -1428,7 +1469,7 @@ Fixed phrases:
 
 ### Checkpoint 2 (Module 34) 🆕
 
-#### Module 34: `checkpoint-2`
+#### Module 37: `checkpoint-2`
 **Focus**: Review and assessment of modules 18–33
 **Type**: `checkpoint`
 **Status**: 🔲 Not built
@@ -1453,12 +1494,12 @@ Fixed phrases:
 
 ---
 
-### Phase 7: World (Modules 35–38)
+### Phase 7: World (Modules 38–41)
 *Goal: learner describes nature, family, traditions, and can handle travel situations.*
 
 ---
 
-#### Module 35: `pryroda`
+#### Module 38: `pryroda`
 **Focus**: Nature and weather
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -1494,7 +1535,7 @@ Fixed weather phrases:
 
 ---
 
-#### Module 36: `sim-ya`
+#### Module 39: `sim-ya`
 **Focus**: Family, relationships, vocative, extended appearance
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -1540,7 +1581,7 @@ Status: друг/подруга, колега, сусід/сусідка
 
 ---
 
-#### Module 37: `sviatky`
+#### Module 40: `sviatky`
 **Focus**: Holidays, traditions, birthday, wedding, gifts
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -1574,7 +1615,7 @@ Greeting expressions:
 
 ---
 
-#### Module 38: `podorozhi` 🆕
+#### Module 41: `podorozhi` 🆕
 **Focus**: Travel — station, airport, directions, world regions, sightseeing
 **Type**: `vocabulary`
 **Status**: 🔲 Not built
@@ -1615,12 +1656,12 @@ Greeting expressions:
 
 ---
 
-### Phase 8: Real-World Skills (Modules 39–42) 🆕
+### Phase 8: Real-World Skills (Modules 42–45) 🆕
 *Goal: learner handles real-world Ukrainian — commands, signs, writing.*
 
 ---
 
-#### Module 39: `nakazy` 🆕
+#### Module 42: `nakazy` 🆕
 **Focus**: Imperative — commands, requests, polite forms
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -1659,7 +1700,7 @@ Greeting expressions:
 
 ---
 
-#### Module 40: `zaborony-dokonane` 🆕
+#### Module 43: `zaborony-dokonane` 🆕
 **Focus**: Prohibitions, perfective vs imperfective contrast, perfective future preview
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -1699,7 +1740,7 @@ Greeting expressions:
 
 ---
 
-#### Module 41: `znaky-ta-napysy` 🆕
+#### Module 44: `znaky-ta-napysy` 🆕
 **Focus**: Signs, real-world reading — schedules, tickets, receipts, forms, menus
 **Type**: `reading`
 **Status**: 🔲 Not built
@@ -1733,7 +1774,7 @@ Greeting expressions:
 
 ---
 
-#### Module 42: `lystuvannia` 🆕
+#### Module 45: `lystuvannia` 🆕
 **Focus**: Writing practice — postcards, SMS, self-description, forms, envelope
 **Type**: `writing`
 **Status**: 🔲 Not built
@@ -1762,11 +1803,11 @@ Greeting expressions:
 
 ---
 
-### Phase 9: Polish & Assessment (Modules 43–44)
+### Phase 9: Polish & Assessment (Modules 46–47)
 
 ---
 
-#### Module 43: `eufoniia`
+#### Module 46: `eufoniia`
 **Focus**: Euphony — у/в, і/й, з/із/зі alternation
 **Type**: `grammar`
 **Status**: 🔲 Not built
@@ -1802,7 +1843,7 @@ Greeting expressions:
 
 ---
 
-#### Module 44: `checkpoint-a1`
+#### Module 47: `checkpoint-a1`
 **Focus**: Final A1 comprehensive assessment — all skills, no new content
 **Type**: `checkpoint`
 **Status**: 🔲 Not built

@@ -99,32 +99,41 @@ IMMERSION_RULES: dict[str, str] = {
         "Examples increasingly in Ukrainian with translations. Callout text in English. Ukrainian sentences max 10 words."
     ),
     "a1-m11-20": (
-        "TARGET: 25-40% Ukrainian, 60-75% English. Grammar RULES explained in English. "
-        "But cultural notes, practical sections, and observations USE simple Ukrainian (2-3 sentence paragraphs, "
-        "max 10 words per sentence) with English gloss in parentheses for new words. "
-        "Provide 3-4 Ukrainian examples per grammar point (not just 1-2). "
-        "Practice/drill instructions in Ukrainian. Some callout/tip text in Ukrainian. "
-        "The student reads simple Ukrainian — use it for concrete, practical content "
-        "while keeping abstract grammar explanations in English."
+        "TARGET: 25-40% Ukrainian, 60-75% English. "
+        "Write cultural notes, practical sections, observations, and drill instructions in Ukrainian first "
+        "(2-3 sentence paragraphs, max 10 words per sentence), then add English gloss in parentheses for new words. "
+        "Grammar RULES stay in English. Provide 3-4 Ukrainian examples per grammar point. "
+        "Some callout/tip text in Ukrainian. The student reads simple Ukrainian — "
+        "use it for concrete, practical content while keeping abstract grammar explanations in English."
     ),
     "a1-m21+": (
-        "TARGET: 35-55% Ukrainian, 45-65% English. Explanatory prose mixed — short Ukrainian sentences "
-        "woven into English explanations. Grammar still anchored in English. "
-        "Examples primarily Ukrainian with translations. Ukrainian sentences max 10 words."
+        "TARGET: 35-55% Ukrainian, 45-65% English. "
+        "Write ALL section content in Ukrainian first (max 10 words per sentence). "
+        "Then add English translations for grammar explanations and abstract concepts to bring Ukrainian down to 35-55%. "
+        "Grammar rules still anchored in English. Examples in Ukrainian with translations."
     ),
     "a2-m01-20": (
-        "TARGET: 50-60% Ukrainian, 40-50% English. Grammar theory in English, dialogues and examples in Ukrainian. "
-        "Section intros can mix languages. Ukrainian sentences max 15 words. Max 2 clauses. "
+        "TARGET: 50-60% Ukrainian, 40-50% English. "
+        "APPROACH: Write ALL content in Ukrainian first — every paragraph, every explanation, every example. "
+        "Then add English translations ONLY for grammar theory paragraphs and abstract explanations "
+        "to bring the balance to 50-60% Ukrainian / 40-50% English. "
+        "The Ukrainian text is the primary content; English is the translation layer. "
+        "Ukrainian sentences max 15 words. Max 2 clauses. "
         "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
     ),
     "a2-m21-50": (
-        "TARGET: 60-75% Ukrainian, 25-40% English. English only for abstract grammar concepts. "
-        "Ukrainian for everything else — examples, dialogues, cultural context. "
+        "TARGET: 60-75% Ukrainian, 25-40% English. "
+        "APPROACH: Write ALL content in Ukrainian first. "
+        "Then add English translations ONLY for abstract grammar concepts "
+        "to bring the balance to 60-75% Ukrainian / 25-40% English. "
+        "Dialogues, cultural context, examples, section intros — all stay Ukrainian-only. "
         "Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. "
         "Simple subordinate clauses only. Aspect pairs introduced. No participles."
     ),
     "a2-m51-70": (
-        "TARGET: 75-90% Ukrainian, 10-25% English. English only in vocabulary tables and brief grammar notes. "
+        "TARGET: 75-90% Ukrainian, 10-25% English. "
+        "APPROACH: Write ALL content in Ukrainian first. "
+        "Add English only in vocabulary tables and one-line grammar notes where absolutely needed. "
         "Near-full Ukrainian immersion. Ukrainian sentences max 15 words. Max 2 clauses. "
         "All cases allowed. Simple subordinate clauses only. Full aspect pairs. No participles."
     ),

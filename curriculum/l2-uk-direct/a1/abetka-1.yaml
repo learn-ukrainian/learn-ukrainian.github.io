@@ -1,0 +1,137 @@
+module: abetka-1
+track: l2-uk-direct
+level: a1
+type: script_foundation
+title: "Абетка — перші букви"
+subtitle: "А М Л У Н С — перший голосний і перші приголосні"
+standard_ref: "§4.1.1 — alphabet, §4.1.4 — vowels/consonants"
+textbook_ref: "Bolshakova 2018 Part 1, pp.12-22"
+
+# Операція Черепаха — mascot video
+mascot_video: "https://www.youtube.com/watch?v=MImM8y_htqY"
+mascot_credit: "Черепаха Аха — Телекомпанія Малятко ТВ"
+
+playlist: "https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV"
+playlist_credit: "Anna Ohoiko — Ukrainian Lessons"
+
+overview_video: "https://www.youtube.com/watch?v=ksXIXj7CXwc"
+overview_credit: "Anna Ohoiko — Ukrainian Letters and Sounds"
+
+# Bolshakova's pedagogical order: А first (open vowel),
+# then М Л Н С (high-frequency consonants).
+# After this module learner reads syllables: МА, НА, ЛА, СУ, МУ, НУ...
+letters:
+  - upper: А
+    lower: а
+    sound_type: vowel
+    key_word: арбуз
+    emoji: "\U0001F349"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=hvB3VpcR3ZE"
+
+  - upper: М
+    lower: м
+    sound_type: consonant
+    key_word: мама
+    emoji: "\U0001F469"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=Ez95H4ibuJo"
+
+  - upper: Л
+    lower: л
+    sound_type: consonant
+    key_word: лимон
+    emoji: "\U0001F34B"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=v6-3Xg52Buk"
+
+  - upper: У
+    lower: у
+    sound_type: vowel
+    key_word: улитка
+    emoji: "\U0001F40C"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=VB1O6PmtYRU"
+
+  - upper: Н
+    lower: н
+    sound_type: consonant
+    key_word: ніс
+    emoji: "\U0001F443"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=vNUfiKHPYaU"
+
+  - upper: С
+    lower: с
+    sound_type: consonant
+    key_word: сонце
+    emoji: "\u2600\uFE0F"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=7UsFBgSL91E"
+
+# First syllable practice — combine what we just learned
+syllables:
+  - МА
+  - МУ
+  - НА
+  - НУ
+  - ЛА
+  - ЛУ
+  - СА
+  - СУ
+  - АМ
+  - УМ
+  - АН
+  - УН
+  - АС
+  - УС
+
+activities:
+  - type: watch_and_repeat
+    title: "Слухай і повторюй"
+    items:
+      - letter: А
+        video: "https://www.youtube.com/watch?v=hvB3VpcR3ZE"
+      - letter: М
+        video: "https://www.youtube.com/watch?v=Ez95H4ibuJo"
+      - letter: Л
+        video: "https://www.youtube.com/watch?v=v6-3Xg52Buk"
+      - letter: У
+        video: "https://www.youtube.com/watch?v=VB1O6PmtYRU"
+      - letter: Н
+        video: "https://www.youtube.com/watch?v=vNUfiKHPYaU"
+      - letter: С
+        video: "https://www.youtube.com/watch?v=7UsFBgSL91E"
+
+  - type: classify
+    title: "Голосний чи приголосний?"
+    instruction: "• = голосний (тільки голос), — = приголосний (шум)"
+    categories:
+      - label: "•"
+        symbol_hint: "голосний"
+        items: [А, У]
+      - label: "—"
+        symbol_hint: "приголосний"
+        items: [М, Л, Н, С]
+
+  - type: image_to_letter
+    title: "Яка перша буква?"
+    items:
+      - emoji: "\U0001F349"
+        answer: А
+        distractors: [М, У]
+      - emoji: "\U0001F469"
+        answer: М
+        distractors: [Н, Л]
+      - emoji: "\U0001F34B"
+        answer: Л
+        distractors: [М, Н]
+      - emoji: "\U0001F40C"
+        answer: У
+        distractors: [А, С]
+      - emoji: "\U0001F443"
+        answer: Н
+        distractors: [М, Л]
+      - emoji: "\u2600\uFE0F"
+        answer: С
+        distractors: [Н, М]

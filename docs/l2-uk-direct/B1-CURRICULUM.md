@@ -14,12 +14,12 @@
 | Feature | A2 (covered) | B1 (new) |
 |---------|-------------|----------|
 | Cases | All 7 basic paradigms | **Full paradigm tables** (4 відміни × 3 groups), genitive -а/-я vs -у/-ю semantic rule |
-| Verbs | Aspect, full imperative, motion + prefixed | **Conditional mood** (якби + past), synthetic future (-тиму), irregular verbs |
+| Verbs | Aspect, full imperative, motion + prefixed, synthetic future | **Conditional mood** (якби + past), future in context (register + aspect choice), irregular verbs |
 | Adjectives | Comparison (regular + irregular) | **Full declension**, short forms (зелен, потрібен) |
 | Numerals | Declension 1–4 | **Full cardinal declension** (5–1000), indefinite (багато, кілька) |
 | Pronouns | Full personal + reflexive + relative | **Expanded** demonstrative, interrogative-relative in all cases |
 | Syntax | Complex with що/щоб/де/куди/бо/коли | **Conditional** (якщо/якби), **concessive** (хоч), attributive (який in all cases), direct/indirect speech |
-| Word formation | Aspect pairs, prefixed motion | **Agent/verbal/place nouns**, adjective derivation, adverb formation |
+| Word formation | Aspect pairs, 8 motion prefixes | **Motion aspect pairs** (прийти↔приходити), **verbal/place nouns** from motion (вхід, перехід), adjective/adverb derivation |
 | Vocabulary | 1800 cumulative | 3300 cumulative (+1500 new) |
 | Topics | 14 | 15 (adds суспільні відносини) |
 | Dialogue | 8–10 turns | **10–12 turns** |
@@ -51,6 +51,12 @@
 ### Phase 1: Full Declension System (Modules 1–8)
 *Goal: learner masters complete noun paradigm tables.*
 *Primary textbook source: Grade 6 (Avramenko §40–59); supplemented from Grades 3–5 as needed.*
+
+**Anti-fatigue design note**: 7 consecutive paradigm modules risk drill fatigue. Mitigations:
+- Every module MUST include at least one `reading` activity with authentic textbook content (not just isolated drills)
+- Every module MUST include at least one `riddle` or `tongue_twister` from textbooks using that відміна's nouns
+- Modules 2–7: each paradigm is presented through a **thematic mini-context** (family, nature, city, food, etc.) so vocabulary feels purposeful, not abstract
+- Module 4 (genitive rule) doubles as a **detective game** — "why does Kyiv get -а but university get -у?"
 
 ---
 
@@ -201,8 +207,10 @@
 
 1. `pattern_drill` — decline «вікно» (тверда), «поле» (м'яка), «обличчя» (мішана-ish)
 2. `classify` — neuter nouns into groups by ending: -о / -е / -я
-3. `build_sentence` — sentences using neuter II відміна in context
+3. `build_sentence` — sentences about nature/places using neuter nouns: «Сонце світить на поле. Море блищить.»
 4. `true_false` — «"Знання" — це іменник чоловічого роду» → false (середній)
+5. `riddle` — Grade 3 textbook: nouns that are neuter (сонце, небо, море) — guess from description
+6. `reading` — short descriptive passage (nature scene) heavy with neuter nouns | identify all neuter forms and their cases
 
 ---
 
@@ -273,8 +281,10 @@
 1. `pattern_drill` — form plural of 20 nouns across all відміни
 2. `pattern_drill` — decline «книги» (I відміна plural), «столи» (II відміна plural)
 3. `classify` — pluralia tantum vs singularia tantum
-4. `build_sentence` — sentences with plural nouns in various cases
+4. `build_sentence` — sentences with plural nouns in various cases: shopping list, family descriptions
 5. `true_false` — «"Канікули" має однину» → false (pluralia tantum)
+6. `riddle` — Grade 3 textbook: «Мають вуха, а не чують. Мають рот, а не говорять.» → ляльки/іграшки (plural practice)
+7. `reading` — shopping dialogue with many plural genitive forms (багато яблук, три кілограми помідорів) | identify case of each plural noun
 
 ---
 
@@ -549,32 +559,35 @@
 
 ---
 
-#### Module 18: `syntetychne-maibutnie`
-**Focus**: Synthetic future — -тиму/-тимеш/-тиме/-тимемо/-тимете/-тимуть
+#### Module 18: `maibutnie-v-konteksti`
+**Focus**: Future tense in complex contexts — subordinate clauses, conditional future, register/aspect choices
 **Type**: `grammar`
-**State standard**: §4.2.3 (synthetic future: боротимуся, питимеш, кричатиме)
+**State standard**: §4.2.3 (future tense in context), §4.3.4 (complex sentences with future)
 
-**Formation**: infinitive stem + -му/-меш/-ме/-мемо/-мете/-муть
+**Prerequisite**: A2 Module 18 already taught all three future forms (compound буду + inf, synthetic -тиму, perfective simple). This module focuses on **choosing the right form in context**.
 
-| Person | читати | говорити |
-|---|---|---|
-| я | читатиму | говоритиму |
-| ти | читатимеш | говоритимеш |
-| він/вона | читатиме | говоритиме |
-| ми | читатимемо | говоритимемо |
-| ви | читатимете | говоритимете |
-| вони | читатимуть | говоритимуть |
+**Future in subordinate clauses**:
+- Якщо буде дощ, ми **залишимося** вдома. (condition → perfective)
+- Коли він **прийде**, ми **почнемо**. (temporal → perfective for sequence)
+- Я **читатиму**, поки ти **готуватимеш** вечерю. (simultaneous → synthetic/imperfective)
 
-**A2 had**: compound future (буду + infinitive). B1 adds synthetic as alternative.
-Both forms are equally correct: «Я буду читати» = «Я читатиму».
+**Register differences** (which form when):
+- Compound (буду + inf) — colloquial, spoken: «Я буду робити»
+- Synthetic (-тиму) — formal, written, news: «Президент зустрічатиме делегацію»
+- Perfective simple — completed future: «Я зроблю це завтра»
+
+**Aspect choice in future** (consolidation):
+- Imperfective future for process/duration: «Я буду працювати весь день»
+- Perfective future for result: «Я зроблю цю роботу до вечора»
+- Common errors: *«Я буду зробити» (wrong — perfective can't use compound future)
 
 **Activities**:
 
-1. `pattern_drill` — form synthetic future: «читати → я» → «читатиму» (all persons, 5 verbs)
-2. `classify` — compound vs synthetic future (both correct — identify which is which)
-3. `build_sentence` — plans using synthetic future
-4. `true_false` — «"Він читатиме" і "він буде читати" — це різне» → false (same meaning)
-5. `reading` — plan description using both future forms | comprehension
+1. `classify` — sort 12 future sentences by register: розмовний (compound) vs офіційний (synthetic) vs результативний (perfective)
+2. `build_sentence` — complete conditional sentences: «Якщо..., то...» with correct future form (8 items)
+3. `pattern_drill` — aspect choice: «працювати (весь день) → я...» → «буду працювати» vs «зробити (до вечора) → я...» → «зроблю» (10 items)
+4. `true_false` — «"Я буду зробити" — це правильно» → false (perfective can't use compound)
+5. `reading` — newspaper excerpt using formal synthetic future | identify all future forms and explain register choice
 
 ---
 
@@ -631,39 +644,60 @@ Both forms are equally correct: «Я буду читати» = «Я читати
 
 ---
 
-#### Module 21: `ruh-prefiksy-b1`
-**Focus**: Prefixed motion verbs — all prefixes with іти/їхати/ходити/їздити
+#### Module 21: `ruh-aspekt-i-pohidni`
+**Focus**: Motion verb aspect pairs + verbal noun derivation from motion verbs
 **Type**: `grammar`
-**State standard**: §4.3 (prefixed motion verbs)
-**Textbook source**: Grade 5 (verb morphology), Grade 4 (basic motion verb pairs)
+**State standard**: §4.3 (prefixed motion verbs — aspect pairs), §4.4.1 (word formation — verbal nouns)
+**Textbook source**: Grade 5 (verb morphology, word formation), Grade 4 (basic motion verb pairs)
 
-**Motion verb prefix system**:
+**Prerequisite**: A2 Module 17 already taught all 8 motion verb prefixes (при-, ви-, за-, пере-, до-, від-, по-, об-). This module focuses on **what A2 didn't cover**: aspect pairs and derivation.
 
-| Prefix | Meaning | іти → | їхати → |
-|---|---|---|---|
-| при- | arrive | прийти | приїхати |
-| ви- | exit/out | вийти | виїхати |
-| за- | drop by | зайти | заїхати |
-| пере- | cross | перейти | переїхати |
-| до- | reach | дійти | доїхати |
-| від- | depart | відійти | від'їхати |
-| у-/в- | enter | увійти | в'їхати |
-| об- | around | обійти | об'їхати |
-| по- | set off | піти | поїхати |
+**New prefix**: у-/в- (enter) — the only prefix not covered at A2:
+- увійти / в'їхати — perfective (enter once)
+- уходити / в'їжджати — imperfective (enter repeatedly / be entering)
 
-**Apostrophe in prefixed motion**: від'їхати, з'їхати, в'їхати, об'їхати (after prefix ending in consonant, before ї)
+**Aspect pairs in prefixed motion** (B1-new — A2 only taught perfective):
 
-**Vocabulary** (25 words — all prefixed forms above + contexts):
-- зупинка (stop), перехрестя (intersection), в'їзд (entrance), виїзд (exit)
-- наближатися (approach), віддалятися (move away), обминати (bypass)
+| Perfective (one-time) | Imperfective (habitual) | Meaning |
+|---|---|---|
+| прийти | приходити | arrive |
+| вийти | виходити | exit |
+| зайти | заходити | drop by |
+| перейти | переходити | cross |
+| дійти | доходити | reach |
+| відійти | відходити | depart |
+| увійти | уходити | enter |
+| обійти | обходити | go around |
+
+Pattern: perfective (іти-base) → imperfective (ходити-base). Same for їхати → їздити.
+
+**Apostrophe in prefixed motion**: від'їхати, з'їхати, в'їхати, об'їхати (after consonant prefix, before ї)
+
+**Verbal noun derivation from motion verbs** (word formation — feeds Phase 3):
+
+| Verb | → Noun | Meaning |
+|---|---|---|
+| увійти | вхід | entrance |
+| вийти | вихід | exit |
+| перейти | перехід | crossing, passage |
+| обійти | обхід | detour, bypass |
+| в'їхати | в'їзд | vehicle entrance |
+| виїхати | виїзд | vehicle exit |
+| зайти | захід (сонця) | sunset (the sun "drops by") |
+| підійти | підхід | approach |
+
+**Vocabulary** (25 words):
+- All aspect pairs above (16 verbs: 8 perfective + 8 imperfective)
+- Derived nouns: вхід, вихід, перехід, обхід, в'їзд, виїзд, підхід, захід
+- зупинка (stop), перехрестя (intersection)
 
 **Activities**:
-1. `pattern_drill` — prefix + motion verb: «при- + іти → ?» → «прийти» (18 combinations)
-2. `classify` — sort prefixed verbs by meaning: arrive vs depart vs cross vs enter
-3. `build_sentence` — describe a route using prefixed verbs: «Я вийшов з дому, перейшов дорогу, зайшов до магазину...»
-4. `true_false` — «"Від'їхати" пишеться без апострофа» → false (requires apostrophe)
-5. `pattern_drill` — їхати derivatives: «при- + їхати → ?» → «приїхати» (9 verbs)
-6. `reading` — travel narrative with many prefixed motion verbs | trace the route on a map description
+1. `classify` — sort 12 prefixed motion verbs: одноразова дія (perfective: прийти) vs багаторазова (imperfective: приходити)
+2. `pattern_drill` — aspect pair formation: «прийти → impf?» → «приходити» (8 pairs)
+3. `build_sentence` — choose correct aspect: «Він щодня ___ на роботу» (приходить) vs «Він вже ___» (прийшов) (10 items)
+4. `pattern_drill` — verbal noun derivation: «увійти → noun?» → «вхід» (8 items)
+5. `true_false` — «"Від'їхати" пишеться без апострофа» → false (requires apostrophe)
+6. `reading` — city navigation text mixing perfective events and imperfective habits | identify aspect of each motion verb
 
 ---
 

@@ -1,0 +1,144 @@
+module: abetka-2
+track: l2-uk-direct
+level: a1
+type: script_foundation
+title: "Абетка — перші слова"
+subtitle: "К И Р Б В Д І — тепер можна читати слова!"
+standard_ref: "§4.1.1 — alphabet, §4.1.4 — vowels/consonants"
+textbook_ref: "Bolshakova 2018 Part 1, pp.26-40"
+
+playlist: "https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV"
+playlist_credit: "Anna Ohoiko — Ukrainian Lessons"
+
+# After abetka-1: А М Л У Н С
+# After this module: + К И Р Б В Д І = 13 letters total
+# Can now read: МАМА, БАНАН, РУКА, ВОДА, МОЛОКО, КІНО, СИЛА, ДІРКА...
+letters:
+  - upper: К
+    lower: к
+    sound_type: consonant
+    key_word: кіт
+    emoji: "\U0001F431"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=J7sGEI4-xJo"
+
+  - upper: И
+    lower: и
+    sound_type: vowel
+    note: "И — особливий звук. Немає точного аналогу в інших мовах. Слухай уважно!"
+    key_word: риба
+    emoji: "\U0001F41F"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=W-1rCu0indE"
+
+  - upper: Р
+    lower: р
+    sound_type: consonant
+    note: "Р — вібруючий звук. Кінчик язика вібрує біля верхніх зубів."
+    key_word: ракета
+    emoji: "\U0001F680"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=fMGsQ5KPQgg"
+
+  - upper: Б
+    lower: б
+    sound_type: consonant
+    key_word: банан
+    emoji: "\U0001F34C"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=V1hxBE_JbGg"
+
+  - upper: В
+    lower: в
+    sound_type: consonant
+    key_word: вовк
+    emoji: "\U0001F43A"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=aFcvYfvQ2X4"
+
+  - upper: Д
+    lower: д
+    sound_type: consonant
+    key_word: дім
+    emoji: "\U0001F3E0"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=g4Bh-lqzd48"
+
+  - upper: І
+    lower: і
+    sound_type: vowel
+    key_word: індик
+    emoji: "\U0001F983"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=Z9TH0H4ShGo"
+
+# First real words — using all 13 known letters
+first_words:
+  - МАМА
+  - БАНАН
+  - РУКА
+  - ВОДА
+  - МОЛОКО
+  - СИЛА
+  - ДІРКА
+  - КІНО
+  - МІНА
+  - ЛИСА
+  - НИВА
+  - СЛИВА
+
+activities:
+  - type: watch_and_repeat
+    title: "Слухай і повторюй"
+    items:
+      - letter: К
+        video: "https://www.youtube.com/watch?v=J7sGEI4-xJo"
+      - letter: И
+        video: "https://www.youtube.com/watch?v=W-1rCu0indE"
+      - letter: Р
+        video: "https://www.youtube.com/watch?v=fMGsQ5KPQgg"
+      - letter: Б
+        video: "https://www.youtube.com/watch?v=V1hxBE_JbGg"
+      - letter: В
+        video: "https://www.youtube.com/watch?v=aFcvYfvQ2X4"
+      - letter: Д
+        video: "https://www.youtube.com/watch?v=g4Bh-lqzd48"
+      - letter: І
+        video: "https://www.youtube.com/watch?v=Z9TH0H4ShGo"
+
+  - type: classify
+    title: "Голосний чи приголосний?"
+    instruction: "• = голосний, — = приголосний"
+    categories:
+      - label: "•"
+        symbol_hint: "голосний"
+        items: [И, І]
+      - label: "—"
+        symbol_hint: "приголосний"
+        items: [К, Р, Б, В, Д]
+
+  - type: image_to_letter
+    title: "Яка перша буква?"
+    items:
+      - emoji: "\U0001F431"
+        answer: К
+        distractors: [Б, Д]
+      - emoji: "\U0001F41F"
+        answer: Р
+        distractors: [Л, Н]
+        note: "риба — Р"
+      - emoji: "\U0001F680"
+        answer: Р
+        distractors: [К, Б]
+      - emoji: "\U0001F34C"
+        answer: Б
+        distractors: [В, Д]
+      - emoji: "\U0001F43A"
+        answer: В
+        distractors: [Б, Д]
+      - emoji: "\U0001F3E0"
+        answer: Д
+        distractors: [Б, К]
+      - emoji: "\U0001F983"
+        answer: І
+        distractors: [И, А]

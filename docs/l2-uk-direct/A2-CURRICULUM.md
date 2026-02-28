@@ -735,6 +735,11 @@
 
 **Ordinal agreement review**: перший/перша/перше, другий/друга/друге — agree like adjectives in gender/number/case
 
+**Time fractions — active production** (introduced receptively at A1 Module 30):
+- пів на третю (2:30), чверть на п'яту (4:15), за чверть п'ята (4:45)
+- Pattern drill: digital time → Ukrainian phrase (now active, not just receptive)
+- Requires ordinal forms → natural integration with numeral declension
+
 **Activities**:
 
 1. `pattern_drill` — decline «два»: «два → Р.в.» → «двох» (all cases)
@@ -743,6 +748,7 @@
 4. `true_false` — «Три книг» → false (три книги — with gen sg)
 5. `classify` — cardinal (скільки?) vs ordinal (котрий?)
 6. `reading` — shopping list with quantities and prices | comprehension: Скільки коштує? Скільки всього?
+7. `pattern_drill` — time fractions: «2:30» → «пів на третю», «4:15» → «чверть на п'яту», «7:45» → «за чверть восьма» (8 items)
 
 ---
 

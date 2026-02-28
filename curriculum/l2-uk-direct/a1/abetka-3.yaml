@@ -1,0 +1,176 @@
+module: abetka-3
+track: l2-uk-direct
+level: a1
+type: script_foundation
+title: "Абетка — ширший світ"
+subtitle: "П Т Г Ґ Е З Ж Ш Х — майже все можна прочитати"
+standard_ref: "§4.1.1 — alphabet, §4.1.4 — vowels/consonants"
+textbook_ref: "Bolshakova 2018 Part 1, pp.42-58"
+
+playlist: "https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV"
+playlist_credit: "Anna Ohoiko — Ukrainian Lessons"
+
+# After abetka-1+2: А М Л У Н С К И Р Б В Д І (13 letters)
+# After this module: + П Т Г Ґ Е З Ж Ш Х = 22 letters total
+# Nearly all common Ukrainian text is now readable
+letters:
+  - upper: П
+    lower: п
+    sound_type: consonant
+    key_word: павук
+    emoji: "\U0001F577\uFE0F"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=JksSjjxyW5Y"
+
+  - upper: Т
+    lower: т
+    sound_type: consonant
+    key_word: тигр
+    emoji: "\U0001F42F"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=m-jcLR_gK0k"
+
+  - upper: Г
+    lower: г
+    sound_type: consonant
+    note: "Г — м'який горловий звук. Повітря проходить вільно. Слухай відео уважно!"
+    key_word: гора
+    emoji: "\u26F0\uFE0F"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=gVnclpSI0DU"
+
+  - upper: Ґ
+    lower: ґ
+    sound_type: consonant
+    note: "Ґ — твердий звук. Вимовляється в горлі, голосні зв'язки вібрують. Рідко вживається."
+    key_word: ґанок
+    emoji: "\U0001F6AA"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=gNjHqjTW9WQ"
+
+  - upper: Е
+    lower: е
+    sound_type: vowel
+    key_word: екран
+    emoji: "\U0001F4FA"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=KFlsroBW0dk"
+
+  - upper: З
+    lower: з
+    sound_type: consonant
+    key_word: зебра
+    emoji: "\U0001F993"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=BhASNxitC1A"
+
+  - upper: Ж
+    lower: ж
+    sound_type: consonant
+    note: "Ж — шиплячий дзвінкий звук. Язик піднятий, губи округлені."
+    key_word: жук
+    emoji: "\U0001FAB2"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=dIrGVcqPwqM"
+
+  - upper: Ш
+    lower: ш
+    sound_type: consonant
+    note: "Ш — шиплячий глухий звук. Губи округлені, язик піднятий. Порівняй: Ж (дзвінкий) — Ш (глухий)."
+    key_word: шапка
+    emoji: "\U0001F9E2"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=1D-6MIw3OXY"
+
+  - upper: Х
+    lower: х
+    sound_type: consonant
+    note: "Х — глухий звук із горла. Повітря проходить із тертям. Порівняй: Г (дзвінкий) — Х (глухий)."
+    key_word: хліб
+    emoji: "\U0001F35E"
+    image_url: null
+    pronunciation_video: "https://www.youtube.com/watch?v=vpr58zJSJKc"
+
+# Voiced/voiceless pairs — taught together as in bukvars
+sound_pairs:
+  - voiced: Г
+    voiceless: Х
+    note: "Г — дзвінкий (горло вібрує), Х — глухий (повітря шумить)"
+  - voiced: Ж
+    voiceless: Ш
+    note: "Ж — дзвінкий шиплячий, Ш — глухий шиплячий"
+  - voiced: З
+    voiceless: С
+    note: "З — дзвінкий свистячий, С — глухий свистячий (з abetka-1)"
+
+activities:
+  - type: watch_and_repeat
+    title: "Слухай і повторюй"
+    items:
+      - letter: П
+        video: "https://www.youtube.com/watch?v=JksSjjxyW5Y"
+      - letter: Т
+        video: "https://www.youtube.com/watch?v=m-jcLR_gK0k"
+      - letter: Г
+        video: "https://www.youtube.com/watch?v=gVnclpSI0DU"
+      - letter: Ґ
+        video: "https://www.youtube.com/watch?v=gNjHqjTW9WQ"
+      - letter: Е
+        video: "https://www.youtube.com/watch?v=KFlsroBW0dk"
+      - letter: З
+        video: "https://www.youtube.com/watch?v=BhASNxitC1A"
+      - letter: Ж
+        video: "https://www.youtube.com/watch?v=dIrGVcqPwqM"
+      - letter: Ш
+        video: "https://www.youtube.com/watch?v=1D-6MIw3OXY"
+      - letter: Х
+        video: "https://www.youtube.com/watch?v=vpr58zJSJKc"
+
+  - type: classify
+    title: "Голосний чи приголосний?"
+    categories:
+      - label: "•"
+        symbol_hint: "голосний"
+        items: [Е]
+      - label: "—"
+        symbol_hint: "приголосний"
+        items: [П, Т, Г, Ґ, З, Ж, Ш, Х]
+
+  - type: classify
+    title: "Дзвінкий чи глухий?"
+    instruction: "Дзвінкий = горло вібрує. Глухий = тільки повітря."
+    categories:
+      - label: "дзвінкий"
+        symbol_hint: "voiced"
+        items: [Г, Ж, З]
+      - label: "глухий"
+        symbol_hint: "voiceless"
+        items: [Х, Ш, С, П, Т, К]
+
+  - type: image_to_letter
+    title: "Яка перша буква?"
+    items:
+      - emoji: "\U0001F577\uFE0F"
+        answer: П
+        distractors: [Б, Т]
+      - emoji: "\U0001F42F"
+        answer: Т
+        distractors: [Д, П]
+      - emoji: "\u26F0\uFE0F"
+        answer: Г
+        distractors: [К, Х]
+      - emoji: "\U0001F4FA"
+        answer: Е
+        distractors: [А, І]
+      - emoji: "\U0001F993"
+        answer: З
+        distractors: [С, Ж]
+      - emoji: "\U0001FAB2"
+        answer: Ж
+        distractors: [З, Ш]
+      - emoji: "\U0001F9E2"
+        answer: Ш
+        distractors: [Ж, Щ]
+      - emoji: "\U0001F35E"
+        answer: Х
+        distractors: [Г, К]
