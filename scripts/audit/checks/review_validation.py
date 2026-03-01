@@ -2,10 +2,10 @@
 Check for valid content review files across all tiers.
 
 Four review tiers with different standards:
-  Tier 1 (Beginner): A1, A2 — /review-content-core-a + tier-1-beginner
-  Tier 2 (Core):     B1, B2, B2-PRO — /review-content-v4 + tier-2-core
-  Tier 3 (Seminar):  HIST, ISTORIO, BIO, LIT, OES, RUTH — /review-content-v4 + tier-3-seminar
-  Tier 4 (Advanced): C1, C1-PRO, C2 — /review-content-v4 + tier-4-advanced
+  Tier 1 (Beginner): A1, A2 — build_module.py Phase D + tier-1-beginner
+  Tier 2 (Core):     B1, B2, B2-PRO — build_module.py Phase D + tier-2-core
+  Tier 3 (Seminar):  HIST, ISTORIO, BIO, LIT, OES, RUTH — build_module.py Phase D + tier-3-seminar
+  Tier 4 (Advanced): C1, C1-PRO, C2 — build_module.py Phase D + tier-4-advanced
 
 Detection heuristics:
   - Missing review file
@@ -61,7 +61,7 @@ TIER_CONFIG = {
         'name': 'Beginner',
         'levels': {'A1', 'A2'},
         'tracks': set(),
-        'review_cmd': '/review-content-core-a',
+        'review_cmd': 'build_module.py Phase D (tier-1-beginner)',
         'tier_ref': 'claude_extensions/commands/review-tiers/tier-1-beginner.md',
         'min_chars': 400,
         'min_dimensions': 7,
@@ -76,7 +76,7 @@ TIER_CONFIG = {
         'name': 'Core',
         'levels': {'B1', 'B2'},
         'tracks': {'b2-pro'},
-        'review_cmd': '/review-content-v4',
+        'review_cmd': 'build_module.py Phase D',
         'tier_ref': 'claude_extensions/commands/review-tiers/tier-2-core.md',
         'min_chars': 800,
         'min_dimensions': 8,
@@ -92,7 +92,7 @@ TIER_CONFIG = {
         'name': 'Seminar',
         'levels': set(),
         'tracks': TIER_3_TRACKS,
-        'review_cmd': '/review-content-v4',
+        'review_cmd': 'build_module.py Phase D',
         'tier_ref': 'claude_extensions/commands/review-tiers/tier-3-seminar.md',
         'min_chars': 1500,
         'min_dimensions': 10,
@@ -108,7 +108,7 @@ TIER_CONFIG = {
         'name': 'Advanced',
         'levels': {'C1', 'C2'},
         'tracks': {'c1-pro', 'c2-pro'},
-        'review_cmd': '/review-content-v4',
+        'review_cmd': 'build_module.py Phase D',
         'tier_ref': 'claude_extensions/commands/review-tiers/tier-4-advanced.md',
         'min_chars': 800,
         'min_dimensions': 8,

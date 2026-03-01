@@ -401,6 +401,10 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 
 **Activities exist to practice Ukrainian language skills, NOT to test subject knowledge.**
 
+**This rule has TWO scopes:**
+
+#### 10a. Content-heavy modules (HIST, BIO, ISTORIO, LIT, RUTH, OES)
+
 **The Golden Rule:** Can the learner answer this question WITHOUT reading the Ukrainian text? If YES → it tests content recall, not language. **REWRITE IT.**
 
 **❌ FORBIDDEN patterns (test content recall):**
@@ -417,9 +421,21 @@ print(LEVEL_CONFIG['{LEVEL}']['target_words'])
 - "Яку функцію автор підкреслює..."
 - "Який аргумент автор наводить..."
 
-**Applies to:** ALL quiz/reading/essay activities in HIST, BIO, ISTORIO, LIT, and any content-heavy module.
-
 **If you write a quiz question answerable from general knowledge alone, you have FAILED the activity.**
+
+#### 10b. ZNO-format activities (EXEMPT from 10a)
+
+**ZNO-sourced activities test language mechanics directly** — наголос, фонетика, орфографія, морфологія, синтаксис, лексика, стилістика. They are standalone language skill tests that do NOT reference a reading passage.
+
+**These are VALID despite being answerable without reading module text:**
+
+- "Позначте рядок, у якому наголос падає на другий склад у всіх словах" (stress)
+- "Позначте речення, що потребує редагування" (error finding)
+- "Позначте рядок, у якому всі іменники мають закінчення -у(-ю)" (morphology)
+
+**ZNO activity types** (`zno_row_select`, `zno_sentence_select`, `zno_error_find`, `zno_fill_ending`) are exempt from rule 10a because they test **language competence**, not content recall. Source: real Ukrainian ЗНО exam questions (`osyvokon/zno`, MIT license).
+
+**Applies to:** Both `l2-uk-en` (A2+) and `l2-uk-direct` (A2+) tracks.
 
 ---
 

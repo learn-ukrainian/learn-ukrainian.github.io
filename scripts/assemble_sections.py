@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble section-by-section Phase 2 output into a single content file.
 
-For the Claude /orchestrate-rebuild path, Phase 2 may be dispatched as
+For section-by-section content generation, Phase 2 may be dispatched as
 individual section prompts. This script concatenates the extracted sections
 and summary into a single content block, then validates the result.
 
