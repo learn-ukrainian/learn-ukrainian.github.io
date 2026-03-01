@@ -2,7 +2,7 @@
 """
 Controllable research preseed runner.
 
-Runs build_module_v3.py --research-only for queued tracks, one module at a time
+Runs build_module.py --research-only for queued tracks, one module at a time
 per engine (Gemini/Claude). Clean signal handling — Ctrl+C stops after current module.
 
 Usage:
@@ -40,7 +40,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CURRICULUM = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 PYTHON = str(PROJECT_ROOT / ".venv" / "bin" / "python")
-BUILDER = str(PROJECT_ROOT / "scripts" / "build_module_v3.py")
+BUILDER = str(PROJECT_ROOT / "scripts" / "build_module.py")
 LOG_DIR = PROJECT_ROOT / "logs" / "preseed"
 
 # ── Signal handling ──────────────────────────────────────────────────────

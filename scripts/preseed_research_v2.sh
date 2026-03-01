@@ -87,10 +87,10 @@ launch() {
   local logfile="$LOGDIR/${track}-${TIMESTAMP}.log"
 
   if [ "$engine" = "claude" ]; then
-    .venv/bin/python scripts/build_module_v3.py "$track" --all --research-only --use-claude A \
+    .venv/bin/python scripts/build_module.py "$track" --all --research-only --use-claude A \
       > "$logfile" 2>&1 &
   else
-    .venv/bin/python scripts/build_module_v3.py "$track" --all --research-only \
+    .venv/bin/python scripts/build_module.py "$track" --all --research-only \
       > "$logfile" 2>&1 &
   fi
   local pid=$!

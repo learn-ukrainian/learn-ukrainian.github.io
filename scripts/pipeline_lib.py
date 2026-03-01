@@ -2,7 +2,7 @@
 """Pipeline shared utilities — single source of truth for build pipeline functions.
 
 Consolidates shared utilities from build_module.py (v1) and build_module_v2.py (v2)
-into a clean library with no monkey-patching. Used by build_module_v3.py and external
+into a clean library with no monkey-patching. Used by build_module.py and external
 scripts.
 
 Key design decisions:

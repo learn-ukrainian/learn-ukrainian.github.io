@@ -4,7 +4,7 @@
 
 Two changes to the v4 pipeline:
 
-1. **Rename**: `build_module_v3.py` → `build_module.py`. The file runs v4 by default now — the v3 name is misleading.
+1. **Rename**: `build_module.py` → `build_module.py`. The file runs v4 by default now — the v3 name is misleading.
 2. **Discover phase**: Add video/blog discovery between research and content. Videos become first-class content elements planned during research, not bolted on after.
 
 Pipeline becomes:
@@ -16,12 +16,12 @@ GH tracking: #703 (rename), #711 (discover phase).
 
 ---
 
-## Task 1: Rename `build_module_v3.py` → `build_module.py`
+## Task 1: Rename `build_module.py` → `build_module.py`
 
 ### 1.1 Git rename
 
 ```bash
-git mv scripts/build_module_v3.py scripts/build_module.py
+git mv scripts/build_module.py scripts/build_module.py
 ```
 
 Update internal docstring (7 self-references in usage block).
@@ -30,7 +30,7 @@ Update internal docstring (7 self-references in usage block).
 
 | File | Change |
 |------|--------|
-| `tests/test_build_module_v3_comprehensive.py` | `from scripts.build_module_v3 import` → `from scripts.build_module import` (~14 refs) |
+| `tests/test_build_module_comprehensive.py` | `from scripts.build_module import` → `from scripts.build_module import` (~14 refs) |
 | `tests/test_build_pipeline.py` | Same pattern (1 ref) |
 | `tests/test_pipeline_v3.py` | Same pattern (1 ref) |
 | `tests/test_v3_state.py` | Same pattern (1 ref) |
@@ -41,10 +41,10 @@ Do NOT rename test files — they describe what they test.
 
 | File | Lines | Change |
 |------|-------|--------|
-| `scripts/assess_research.py` | 367, 397, 510, 660 | `build_module_v3.py` → `build_module.py` |
+| `scripts/assess_research.py` | 367, 397, 510, 660 | `build_module.py` → `build_module.py` |
 | `scripts/preseed_runner.py` | 5, 39 | Same |
 | `scripts/_archived/preseed_runner.py` | 5, 43 | Same |
-| `scripts/api/comms_router.py` | 516, 525, 529 | `build_module_v3` → `build_module` (string match + regex) |
+| `scripts/api/comms_router.py` | 516, 525, 529 | `build_module` → `build_module` (string match + regex) |
 
 ### 1.4 Update supporting files
 
@@ -57,7 +57,7 @@ Do NOT rename test files — they describe what they test.
 
 ### 1.5 Bulk update docs (12 files)
 
-Find-and-replace `build_module_v3` → `build_module` in:
+Find-and-replace `build_module` → `build_module` in:
 - `docs/SCRIPTS.md` (22 refs)
 - `docs/ARCHITECTURE.md` (3 refs)
 - `docs/MONITOR-API.md`, `docs/ai_team/blue-team-claude.md`
@@ -74,7 +74,7 @@ Update `tasks/memory.json` entity observations (4 refs).
 ```bash
 npm run claude:deploy
 .venv/bin/python -m py_compile scripts/build_module.py
-.venv/bin/python -m pytest tests/test_build_module_v3_comprehensive.py tests/test_build_pipeline.py tests/test_pipeline_v3.py tests/test_v3_state.py -x
+.venv/bin/python -m pytest tests/test_build_module_comprehensive.py tests/test_build_pipeline.py tests/test_pipeline_v3.py tests/test_v3_state.py -x
 ```
 
 ### 1.8 What NOT to touch
@@ -85,7 +85,7 @@ npm run claude:deploy
 
 ### 1.9 Commit
 
-`refactor: rename build_module_v3.py to build_module.py (#703)`
+`refactor: rename build_module.py to build_module.py (#703)`
 
 ---
 
@@ -300,10 +300,40 @@ npm run claude:deploy
 
 ---
 
+## Task 0: Close Superseded Media Issues
+
+Before implementation, close issues that #711's automated discover phase replaces:
+
+| Issue | Title | Action |
+|-------|-------|--------|
+| #358 | External Content Coverage (epic) | Close — absorbed into #711. Useful element: B1+ immersion constraint (only Ukrainian-language sources). Already reflected in channel allowlist (all channels are Ukrainian-language). |
+| #334 | Podcast Ingestion Pipeline | Close — discover phase handles audio/video search generically. Podcasts can be added as a channel type later. |
+| #304 | B1 Media Pairing | Close — superseded by automated per-module discovery. |
+| #238 | B2 Media Pairing | Close — same. |
+| #239 | C1 Media Pairing | Close — same. |
+| #240 | C2 Media Pairing | Close — same. |
+| #639 | Реальна Історія Integration (epic) | Close — channel already in allowlist with track tags `["hist", "istorio", "bio"]`. Useful element: approved-sources policy (only channels with factual, non-propagandistic content). Already enforced by curated allowlist. |
+
+Reference `#711` in each close comment.
+
+---
+
+### 2.10 Simplify pass
+
+Run `/simplify` on all changed files after Task 2 implementation:
+- `scripts/video_discovery.py` — check for DRY violations with `pipeline_lib.py`, unnecessary abstractions
+- `scripts/build_module.py` — check new `phase_discover_v4()` follows existing phase patterns cleanly
+- `scripts/pipeline_lib.py` — check `{VIDEO_DISCOVERY}` placeholder injection is consistent with existing placeholders
+
+Fix any issues found, then re-run verification (2.8).
+
+---
+
 ## Execution Order
 
-1. Steps 1.1–1.9: Rename + commit
-2. Steps 2.1–2.9: Discover phase + commit
+1. Step 0: Close superseded issues
+2. Steps 1.1–1.9: Rename + commit
+3. Steps 2.1–2.10: Discover phase + simplify + commit
 
 Rename first because discover adds code to the renamed file.
 
@@ -313,9 +343,9 @@ Rename first because discover adds code to the renamed file.
 
 ### Rename
 - [ ] `py_compile scripts/build_module.py` passes
-- [ ] Tests pass: `pytest tests/test_build_module_v3_comprehensive.py tests/test_build_pipeline.py -x`
+- [ ] Tests pass: `pytest tests/test_build_module_comprehensive.py tests/test_build_pipeline.py -x`
 - [ ] `scripts/build_module.py a1 1 --dry-run` works
-- [ ] `grep -r "build_module_v3" scripts/ tests/ docs/ claude_extensions/ --include="*.py" --include="*.sh" --include="*.md"` returns only orchestration/log files
+- [ ] `grep -r "build_module" scripts/ tests/ docs/ claude_extensions/ --include="*.py" --include="*.sh" --include="*.md"` returns only orchestration/log files
 
 ### Discover phase
 - [ ] `scripts/build_module.py a1 1 --dry-run` shows discover phase in sequence

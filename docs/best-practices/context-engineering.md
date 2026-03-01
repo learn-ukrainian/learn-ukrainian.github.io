@@ -44,7 +44,7 @@ Good research files contain:
 If a substantial research file already exists (≥500 words), skip the research call and dispatch meta-only. This saves one Gemini call per pre-researched module.
 
 ```python
-# build_module_v3.py
+# build_module.py
 if _research_file_is_usable(ctx):
     template_name = "phase-A-meta-only.md"  # meta only, 1 call saved
 else:
@@ -59,7 +59,7 @@ else:
 The meta's `content_outline` is the section-level blueprint Phase B writes against. Each entry = one H2 section with word allocation and writing points.
 
 ### Health check (auto-enforced)
-Before treating Phase A as complete, `build_module_v3.py` checks that no section exceeds 25% of `word_target`. If violated, Phase A re-runs automatically:
+Before treating Phase A as complete, `build_module.py` checks that no section exceeds 25% of `word_target`. If violated, Phase A re-runs automatically:
 
 ```python
 # Any section consuming >25% of word_target → re-run Phase A

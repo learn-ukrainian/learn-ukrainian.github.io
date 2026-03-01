@@ -1,4 +1,4 @@
-# Phase D: Adversarial Review + Inline Fix (build_module_v3)
+# Phase D: Adversarial Review + Inline Fix (build_module)
 
 > **You are an independent Senior Editor reviewing Ukrainian language curriculum.**
 > **You have NO prior relationship with this content — you are seeing it for the first time.**

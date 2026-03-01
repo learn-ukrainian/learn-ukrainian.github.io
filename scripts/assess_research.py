@@ -38,7 +38,7 @@ from research_quality import (
 
 
 def _clear_v3_phase_a(track_id: str, slug: str) -> bool:
-    """Clear Phase A from state-v3.json so build_module_v3 re-runs it with improved research.
+    """Clear Phase A from state-v3.json so build_module re-runs it with improved research.
 
     Called after --upgrade successfully upgrades a module's research to 9+.
     Without this, v3 would skip Phase A (still marked complete) and use a stale
@@ -364,14 +364,14 @@ def _render_refresh_queue(track_id: str, results: list[dict]):
     print("\u2550" * 70)
     if queue:
         print(f"{len(queue)} module(s) ready for content refresh")
-        print(f"Run: .venv/bin/python scripts/build_module_v3.py {track_id} {{num}} --refresh")
+        print(f"Run: .venv/bin/python scripts/build_module.py {track_id} {{num}} --refresh")
     else:
         print("No modules need content refresh.")
     print()
 
 
 def _process_refresh_queue(track_id: str, results: list[dict]):
-    """Process the refresh queue — run build_module_v3.py --refresh for each module."""
+    """Process the refresh queue — run build_module.py --refresh for each module."""
     import subprocess
 
     queue = _build_refresh_queue(results)
@@ -394,7 +394,7 @@ def _process_refresh_queue(track_id: str, results: list[dict]):
 
         cmd = [
             str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
-            str(SCRIPTS_DIR / "build_module_v3.py"),
+            str(SCRIPTS_DIR / "build_module.py"),
             track_id, str(num), "--refresh",
         ]
         try:
@@ -507,7 +507,7 @@ def _process_upgrade_queue(track_id: str, results: list[dict], min_score: int = 
             _clear_v3_phase_a(track_id, slug)
             cmd = [
                 str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
-                str(SCRIPTS_DIR / "build_module_v3.py"),
+                str(SCRIPTS_DIR / "build_module.py"),
                 track_id, str(num), "--research-only",
             ]
             try:
@@ -657,7 +657,7 @@ def _process_enrich_plans(track_id: str, results: list[dict], min_score: int = 9
 
         cmd = [
             str(SCRIPTS_DIR / ".." / ".venv" / "bin" / "python"),
-            str(SCRIPTS_DIR / "build_module_v3.py"),
+            str(SCRIPTS_DIR / "build_module.py"),
             track_id, str(num), "--force-phase", "0.5",
         ]
         try:

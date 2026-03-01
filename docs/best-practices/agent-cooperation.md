@@ -152,7 +152,7 @@ Gemini outputs verbose thinking tokens (10-100K chars). All structured output us
 
 ```python
 # Extraction utility
-from build_module_v3 import _extract_delimiter
+from build_module import _extract_delimiter
 research = _extract_delimiter(output, "===RESEARCH_START===", "===RESEARCH_END===")
 ```
 
@@ -164,7 +164,7 @@ Never parse Gemini's prose output for structured data.
 
 If Gemini is stuck (not completing a phase, silently failing):
 ```bash
-.venv/bin/python scripts/build_module_v3.py {track} {num} --force-phase {A|B|C|D}
+.venv/bin/python scripts/build_module.py {track} {num} --force-phase {A|B|C|D}
 ```
 
 Or use the process-escalations skill:

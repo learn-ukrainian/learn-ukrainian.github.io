@@ -49,7 +49,7 @@ curl -s http://localhost:8765/api/state/review-coverage | python3 -m json.tool
 |----------|-------------|
 | `/api/state/summary` | Session start — total snapshot |
 | `/api/state/pipeline/{track}` | Inspect one track's v3 phase progress |
-| `/api/state/ready-to-build` | Before `build_module_v3 --all` |
+| `/api/state/ready-to-build` | Before `build_module --all` |
 | `/api/state/weak-points` | After batch — find what needs fixing |
 | `/api/state/failing` | After batch — find hard failures |
 | `/api/state/research-coverage` | Research quality health check |

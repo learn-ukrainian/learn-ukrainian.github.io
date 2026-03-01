@@ -150,7 +150,7 @@ scripts/audit_module.sh curriculum/l2-uk-en/{track}/{file}.md
 scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{track}/{file}.md
 
 # Verify module without rebuilding
-.venv/bin/python scripts/build_module_v3.py {track} {num} --verify
+.venv/bin/python scripts/build_module.py {track} {num} --verify
 
 # Batch verification
 .venv/bin/python scripts/verify_track.py {track}

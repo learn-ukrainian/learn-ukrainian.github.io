@@ -10,12 +10,12 @@
 
 ```bash
 # ✅ Correct
-.venv/bin/python scripts/build_module_v3.py bio 5
+.venv/bin/python scripts/build_module.py bio 5
 scripts/audit_module.sh curriculum/l2-uk-en/bio/module.md  # wraps venv automatically
 
 # ❌ Wrong
-python3 scripts/build_module_v3.py   # missing deps
-python scripts/build_module_v3.py    # wrong version
+python3 scripts/build_module.py   # missing deps
+python scripts/build_module.py    # wrong version
 ```
 
 **Why:** The venv uses pyenv Python 3.12.8 compiled with `--enable-loadable-sqlite-extensions` for sqlite-vec. Homebrew Python will silently fail on vector search.
@@ -35,7 +35,7 @@ v3 > v2 > v1
 
 | Script | Use for | Status |
 |--------|---------|--------|
-| `build_module_v3.py` | All new builds | **Preferred** |
+| `build_module.py` | All new builds | **Preferred** |
 | `build_module_v2.py` | Fallback if v3 has issues | Stable |
 | `build_module.py` (v1) | Utility library only | Do not invoke directly |
 
@@ -113,7 +113,7 @@ Always include: `status`, `ts`. Add `mode`, `note`, `task_id` as needed for obse
 
 ## Delimiter Extraction
 
-Use `_extract_delimiter()` from `build_module_v3.py` for all structured output parsing:
+Use `_extract_delimiter()` from `build_module.py` for all structured output parsing:
 
 ```python
 def _extract_delimiter(text: str, start_tag: str, end_tag: str) -> str | None:

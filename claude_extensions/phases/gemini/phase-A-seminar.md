@@ -1,6 +1,6 @@
 # Phase A: Research + Meta (Seminar Track)
 
-> **You are Gemini, executing Phase A of an optimised rebuild (build_module_v3).**
+> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**
 > **This is a combined Phase 0 + Phase 1. Your ONLY task: Research the topic AND produce the meta outline in one pass.**
 
 ---

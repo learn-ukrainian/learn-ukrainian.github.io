@@ -109,7 +109,7 @@ Always include explicit DO NOT rules at the end. Gemini fills gaps with hallucin
 Always open with a clear identity statement:
 
 ```markdown
-> **You are Gemini, executing Phase A of an optimised rebuild (build_module_v3).**
+> **You are Gemini, executing Phase A of an optimised rebuild (build_module).**
 > **This is a combined Phase 0 + Phase 1. Your ONLY task: Research the topic AND produce the meta outline in one pass.**
 ```
 

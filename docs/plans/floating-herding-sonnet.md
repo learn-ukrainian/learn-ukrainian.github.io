@@ -199,7 +199,7 @@ for slug in the-cyrillic-code-iii the-cyrillic-code-iv \
   checkpoint-sentences checkpoint-cases checkpoint-daily-life checkpoint-communication \
   prepositions-of-place direction-and-origin food-vocabulary shopping-and-market \
   can-and-know-how must-and-want; do
-  .venv/bin/python scripts/build_module_v3.py a1 "$slug" --stop-before D
+  .venv/bin/python scripts/build_module.py a1 "$slug" --stop-before D
 done
 ```
 
@@ -209,7 +209,7 @@ done
 for slug in the-cyrillic-code-i the-cyrillic-code-ii \
   this-is-i-am questions-and-negation what-time-is-it \
   tomorrow-future-tense my-family holidays-and-traditions; do
-  .venv/bin/python scripts/build_module_v3.py a1 "$slug" --rebuild --stop-before D
+  .venv/bin/python scripts/build_module.py a1 "$slug" --rebuild --stop-before D
 done
 ```
 

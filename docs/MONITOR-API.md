@@ -255,7 +255,7 @@ curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
 ```
 
-Returns list sorted by track then num. Use before running `build_module_v3.py --all`.
+Returns list sorted by track then num. Use before running `build_module.py --all`.
 
 ---
 

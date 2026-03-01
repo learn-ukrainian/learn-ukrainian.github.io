@@ -1,6 +1,6 @@
 # Phase A: Meta Outline Only (Research Already Exists)
 
-> **You are Gemini, executing Phase A (meta-only mode) of an optimised rebuild (build_module_v3).**
+> **You are Gemini, executing Phase A (meta-only mode) of an optimised rebuild (build_module).**
 > **Research is already complete. Your ONLY task: Rebuild the meta outline from the existing research.**
 
 ---

@@ -4,7 +4,7 @@
 DEPRECATION NOTICE (pipeline use):
     As of 2026-02-25, proofreading's best features (track calibration, bilingual
     exemptions, Russianism lookup tables, LLM filler detection) have been absorbed
-    into Phase D of build_module_v3.py. This script is no longer called as a pipeline
+    into Phase D of build_module.py. This script is no longer called as a pipeline
     step. It remains available as a **standalone dev tool** for ad-hoc quality checks
     and for calibration coverage testing (verifying Phase D catches everything
     proofread.py catches, per track, before fully deprecating).

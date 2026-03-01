@@ -114,7 +114,7 @@ def main():
     # Group by track for batch commands
     tracks = sorted(set(m["track"] for m in modules))
     for t in tracks:
-        print(f"  .venv/bin/python scripts/build_module_v3.py {t} --all")
+        print(f"  .venv/bin/python scripts/build_module.py {t} --all")
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 """
-Tests for build_module_v3.py pipeline logic.
+Tests for build_module.py pipeline logic.
 
 Covers the pure/testable functions in the build pipeline:
 - _extract_delimiter() — delimiter parsing
@@ -23,7 +23,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from build_module_v3 import (
+from build_module import (
     _extract_delimiter,
     _count_diff_lines,
     _extract_audit_failures,

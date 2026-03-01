@@ -2,7 +2,7 @@
 # Hook: Check for unread Claude messages on every prompt (BeforeAgent event)
 # Queries the MCP message broker SQLite DB directly (no MCP overhead)
 #
-# PIPELINE GUARD: Skips during build_module_v3 / ai_agent_bridge runs
+# PIPELINE GUARD: Skips during build_module / ai_agent_bridge runs
 # to prevent ping-pong between automated pipeline phases.
 
 # Skip in pipeline/headless mode

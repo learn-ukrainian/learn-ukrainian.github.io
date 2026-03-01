@@ -1,5 +1,5 @@
 """
-Unit tests for Phase D pipeline logic in build_module_v3.py.
+Unit tests for Phase D pipeline logic in build_module.py.
 
 Covers deterministic functions — no LLM calls, no network.
 
@@ -37,7 +37,7 @@ from scripts.audit.checks.review_validation import (
     _verify_citations_against_source,
 )
 
-from scripts.build_module_v3 import (
+from scripts.build_module import (
     _extract_delimiter,
     _extract_delimiter_tolerant,
     _all_issues_diffuse,
@@ -294,7 +294,7 @@ class TestVerifyCitationsAgainstSource:
 # ===========================================================================
 
 class TestParseD1Review:
-    """Tests for _parse_d1_review() in build_module_v3.py."""
+    """Tests for _parse_d1_review() in build_module.py."""
 
     def test_pass_verdict_markdown(self):
         """Markdown review with PASS verdict is parsed correctly."""
@@ -438,7 +438,7 @@ class TestParseD1Review:
 # ===========================================================================
 
 class TestQuickReviewQualityGate:
-    """Tests for _quick_review_quality_gate() in build_module_v3.py."""
+    """Tests for _quick_review_quality_gate() in build_module.py."""
 
     def _make_content(self, tmp_path, word_count=2000):
         """Helper: create a content file with N words."""
@@ -526,7 +526,7 @@ class TestQuickReviewQualityGate:
 # ===========================================================================
 
 class TestAllIssuesDiffuse:
-    """Tests for _all_issues_diffuse() in build_module_v3.py."""
+    """Tests for _all_issues_diffuse() in build_module.py."""
 
     def test_no_failing_codes_returns_false(self):
         """Audit with no failures → False (review issues are targeted)."""
@@ -564,7 +564,7 @@ class TestAllIssuesDiffuse:
 
 
 class TestCountDiffLines:
-    """Tests for _count_diff_lines() in build_module_v3.py."""
+    """Tests for _count_diff_lines() in build_module.py."""
 
     def test_identical_texts(self):
         """Identical texts → 0 changed lines."""
@@ -847,7 +847,7 @@ class TestPhaseDRoutingMatrix:
     NOTE: These tests verify the DECISION LOGIC that determines whether a module
     enters D.2 repair, not the full phase_D_v3() function (which requires LLM
     calls, file I/O, and audit infrastructure). The routing expressions under
-    test are from build_module_v3.py:2636-2700.
+    test are from build_module.py:2636-2700.
 
     Tests that call actual functions (like _all_issues_diffuse) provide real
     integration coverage. Tests that verify boolean expressions document the
@@ -909,7 +909,7 @@ class TestD2PromptInjection:
 
     NOTE: These tests verify the string replacement logic that determines
     what gets injected into the D.2 prompt template. The actual injection
-    happens at build_module_v3.py:2718-2728. These are executable specs
+    happens at build_module.py:2718-2728. These are executable specs
     documenting the two injection modes.
     """
 

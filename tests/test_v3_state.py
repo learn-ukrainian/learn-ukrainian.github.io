@@ -21,7 +21,7 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from scripts.build_module_v3 import (
+from scripts.build_module import (
     _load_state_v3,
     _save_state_v3,
     _is_phase_v3_complete,

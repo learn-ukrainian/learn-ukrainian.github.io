@@ -1,5 +1,5 @@
 """
-Comprehensive tests for build_module_v3.py.
+Comprehensive tests for build_module.py.
 
 Covers functions NOT already tested in test_v3_state.py and test_build_pipeline.py:
 - _max_audit_iters — track-aware iteration limits
@@ -33,7 +33,7 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from scripts.build_module_v3 import (
+from scripts.build_module import (
     _max_audit_iters,
     _mark_phase_v3,
     _load_state_v3,
@@ -430,7 +430,7 @@ class TestRegressionSubprocessImport:
 
     def test_subprocess_is_imported(self):
         """Verify subprocess is in the module's namespace."""
-        import scripts.build_module_v3 as mod
+        import scripts.build_module as mod
         # subprocess should be importable and the TimeoutExpired exception accessible
         assert hasattr(mod, 'subprocess')
         assert hasattr(mod.subprocess, 'TimeoutExpired')
@@ -442,7 +442,7 @@ class TestRegressionContentPathBound:
     def test_content_path_assigned_before_use(self):
         """Verify the source code assigns content_path before the auto-fix block."""
         import inspect
-        from scripts.build_module_v3 import phase_audit_v3
+        from scripts.build_module import phase_audit_v3
         source = inspect.getsource(phase_audit_v3)
 
         # content_path must be assigned before the auto-fix loop
@@ -458,7 +458,7 @@ class TestRegressionStaleVocabulary:
     def test_stale_vocab_deleted_on_invalid_activities(self):
         """Verify the source code unlinks voc_path when activities are invalid."""
         import inspect
-        from scripts.build_module_v3 import phase_C_v3
+        from scripts.build_module import phase_C_v3
         source = inspect.getsource(phase_C_v3)
 
         # Should contain logic to unlink vocab when activities are invalid
@@ -524,7 +524,7 @@ class TestComputeAuditMetricsDefensiveAccess:
     def test_missing_word_target_attribute(self, mock_ctx):
         """ctx without word_target should not crash."""
         from types import SimpleNamespace
-        from scripts.build_module_v3 import _compute_audit_metrics
+        from scripts.build_module import _compute_audit_metrics
         # Create a ctx-like object that truly lacks word_target
         ctx = SimpleNamespace(
             paths=mock_ctx.paths,
@@ -533,7 +533,7 @@ class TestComputeAuditMetricsDefensiveAccess:
         )
 
         # Should use getattr fallback (word_target absent → 0)
-        with patch("scripts.build_module_v3.run_verify", return_value=(True, "")):
+        with patch("scripts.build_module.run_verify", return_value=(True, "")):
             metrics = _compute_audit_metrics(ctx)
         assert "COMPUTED_WORD_TARGET" in metrics
         assert metrics["COMPUTED_WORD_TARGET"] == "0"
@@ -548,7 +548,7 @@ class TestValidateAuditState:
 
     def test_skips_when_force_phase_set(self, mock_ctx):
         """With force_phase, should not revalidate."""
-        from scripts.build_module_v3 import _validate_audit_state
+        from scripts.build_module import _validate_audit_state
         mock_ctx.force_phase = "D"
         state = {"phases": {"v3-audit": {"status": "complete"}}}
         # Should return without changes
@@ -557,7 +557,7 @@ class TestValidateAuditState:
 
     def test_skips_when_audit_not_complete(self, mock_ctx):
         """When audit is not marked complete, should not revalidate."""
-        from scripts.build_module_v3 import _validate_audit_state
+        from scripts.build_module import _validate_audit_state
         state = {"phases": {}}
         _validate_audit_state(mock_ctx, state)
         # No changes expected
@@ -565,12 +565,12 @@ class TestValidateAuditState:
 
     def test_clears_stale_on_audit_fail(self, mock_ctx):
         """When audit passes in state but fails under current rules, clears state."""
-        from scripts.build_module_v3 import _validate_audit_state
+        from scripts.build_module import _validate_audit_state
         state = {"phases": {
             "v3-audit": {"status": "complete"},
             "v3-D": {"status": "complete"},
         }}
-        with patch("scripts.build_module_v3.run_verify", return_value=(False, "FAIL")):
+        with patch("scripts.build_module.run_verify", return_value=(False, "FAIL")):
             _validate_audit_state(mock_ctx, state)
         # Both audit and D should be cleared
         assert "v3-audit" not in state["phases"]
@@ -578,19 +578,19 @@ class TestValidateAuditState:
 
     def test_preserves_when_still_passing(self, mock_ctx):
         """When audit still passes, should preserve state."""
-        from scripts.build_module_v3 import _validate_audit_state
+        from scripts.build_module import _validate_audit_state
         state = {"phases": {"v3-audit": {"status": "complete"}}}
-        with patch("scripts.build_module_v3.run_verify", return_value=(True, "")):
+        with patch("scripts.build_module.run_verify", return_value=(True, "")):
             _validate_audit_state(mock_ctx, state)
         assert state["phases"]["v3-audit"]["status"] == "complete"
 
     def test_failed_state_that_now_passes(self, mock_ctx):
         """Previously failed audit that now passes → mark complete."""
-        from scripts.build_module_v3 import _validate_audit_state
+        from scripts.build_module import _validate_audit_state
         state = {"phases": {"v3-audit": {"status": "failed", "attempts": 3}}}
-        with patch("scripts.build_module_v3.run_verify", return_value=(True, "")), \
-             patch("scripts.build_module_v3._mark_phase_v3") as mock_mark, \
-             patch("scripts.build_module_v3._save_state_v3"):
+        with patch("scripts.build_module.run_verify", return_value=(True, "")), \
+             patch("scripts.build_module._mark_phase_v3") as mock_mark, \
+             patch("scripts.build_module._save_state_v3"):
             _validate_audit_state(mock_ctx, state)
         mock_mark.assert_called_once()
         call_args = mock_mark.call_args
@@ -607,14 +607,14 @@ class TestMigrateV2ToV3:
 
     def test_skips_when_v3_has_phases(self, mock_ctx):
         """If v3 state already has phases, migration should not run."""
-        from scripts.build_module_v3 import _migrate_v2_state_to_v3
+        from scripts.build_module import _migrate_v2_state_to_v3
         state = {"phases": {"v3-A": {"status": "complete"}}}
         result = _migrate_v2_state_to_v3(mock_ctx, state)
         assert result is False
 
     def test_skips_when_v2_empty(self, mock_ctx):
         """If v2 state has no phases, nothing to migrate."""
-        from scripts.build_module_v3 import _migrate_v2_state_to_v3
+        from scripts.build_module import _migrate_v2_state_to_v3
         state = {"phases": {}}
         mock_ctx.state = {"phases": {}}
         result = _migrate_v2_state_to_v3(mock_ctx, state)
@@ -622,7 +622,7 @@ class TestMigrateV2ToV3:
 
     def test_migrates_complete_phases(self, mock_ctx):
         """v2 phases 0+1 complete with meta → migrates to v3 Phase A."""
-        from scripts.build_module_v3 import _migrate_v2_state_to_v3
+        from scripts.build_module import _migrate_v2_state_to_v3
         state = {"phases": {}}
         mock_ctx.state = {"phases": {
             "0": {"status": "complete"},
@@ -631,7 +631,7 @@ class TestMigrateV2ToV3:
         # Meta must exist for artifact check
         mock_ctx.paths["meta"].write_text("word_target: 3000\n", "utf-8")
 
-        with patch("scripts.build_module_v3._mark_phase_v3") as mock_mark:
+        with patch("scripts.build_module._mark_phase_v3") as mock_mark:
             result = _migrate_v2_state_to_v3(mock_ctx, state)
         assert result is True
         # Phase A should have been marked
@@ -640,13 +640,13 @@ class TestMigrateV2ToV3:
 
     def test_skips_incomplete_v2_phases(self, mock_ctx):
         """If required v2 phases are not complete, don't migrate."""
-        from scripts.build_module_v3 import _migrate_v2_state_to_v3
+        from scripts.build_module import _migrate_v2_state_to_v3
         state = {"phases": {}}
         mock_ctx.state = {"phases": {
             "0": {"status": "complete"},
             "1": {"status": "in-progress"},  # Not complete
         }}
-        with patch("scripts.build_module_v3._mark_phase_v3") as mock_mark:
+        with patch("scripts.build_module._mark_phase_v3") as mock_mark:
             result = _migrate_v2_state_to_v3(mock_ctx, state)
         # Phase A should NOT be migrated
         a_calls = [c for c in mock_mark.call_args_list if len(c[0]) > 2 and c[0][2] == "A"]
@@ -696,7 +696,7 @@ class TestInvalidateStaleArtifacts:
 
     def test_deletes_status_cache(self, mock_ctx, tmp_path):
         """Status cache should be deleted after content rebuild."""
-        from scripts.build_module_v3 import _invalidate_stale_artifacts
+        from scripts.build_module import _invalidate_stale_artifacts
         track_dir = tmp_path
         mock_ctx.paths["md"] = track_dir / "test-module.md"
         status_file = track_dir / "status" / "test-module.json"
@@ -708,7 +708,7 @@ class TestInvalidateStaleArtifacts:
 
     def test_deletes_review_files(self, mock_ctx, tmp_path):
         """Old review files should be deleted after content rebuild."""
-        from scripts.build_module_v3 import _invalidate_stale_artifacts
+        from scripts.build_module import _invalidate_stale_artifacts
         track_dir = tmp_path
         mock_ctx.paths["md"] = track_dir / "test-module.md"
         review_dir = track_dir / "review"
@@ -721,7 +721,7 @@ class TestInvalidateStaleArtifacts:
 
     def test_handles_missing_files_gracefully(self, mock_ctx, tmp_path):
         """Should not crash if files don't exist."""
-        from scripts.build_module_v3 import _invalidate_stale_artifacts
+        from scripts.build_module import _invalidate_stale_artifacts
         mock_ctx.paths["md"] = tmp_path / "test-module.md"
         # No status, review, or audit files exist
         _invalidate_stale_artifacts(mock_ctx)  # Should not raise
@@ -736,7 +736,7 @@ class TestApplyFindReplaceFixes:
 
     def test_exact_match(self, tmp_path):
         """Exact FIND text should be replaced."""
-        from scripts.build_module_v3 import _apply_find_replace_fixes
+        from scripts.build_module import _apply_find_replace_fixes
         f = tmp_path / "content.md"
         f.write_text("Line one.\nIn Russian, this word is feminine.\nLine three.\n", "utf-8")
 
@@ -759,7 +759,7 @@ class TestApplyFindReplaceFixes:
 
     def test_multiline_find(self, tmp_path):
         """Multi-line FIND text should be replaced."""
-        from scripts.build_module_v3 import _apply_find_replace_fixes
+        from scripts.build_module import _apply_find_replace_fixes
         f = tmp_path / "content.md"
         f.write_text("Before.\n**The Dog:**\nIn Russian, this is feminine.\nAfter.\n", "utf-8")
 
@@ -782,7 +782,7 @@ class TestApplyFindReplaceFixes:
 
     def test_no_match_returns_zero(self, tmp_path):
         """FIND text not in file → 0 applied."""
-        from scripts.build_module_v3 import _apply_find_replace_fixes
+        from scripts.build_module import _apply_find_replace_fixes
         f = tmp_path / "content.md"
         f.write_text("Normal content here.\n", "utf-8")
 
@@ -802,7 +802,7 @@ class TestApplyFindReplaceFixes:
 
     def test_multiple_files(self, tmp_path):
         """Fixes targeting different files should only apply to matching file."""
-        from scripts.build_module_v3 import _apply_find_replace_fixes
+        from scripts.build_module import _apply_find_replace_fixes
         content = tmp_path / "content.md"
         activities = tmp_path / "activities.yaml"
         content.write_text("Content line to fix.\n", "utf-8")
@@ -835,7 +835,7 @@ class TestApplyFindReplaceFixes:
 
     def test_guillemet_stripping(self, tmp_path):
         """«» around FIND/REPLACE text should be stripped."""
-        from scripts.build_module_v3 import _apply_find_replace_fixes
+        from scripts.build_module import _apply_find_replace_fixes
         f = tmp_path / "content.md"
         f.write_text("Привіт, як справи?\n", "utf-8")
 
@@ -856,7 +856,7 @@ class TestApplyFindReplaceFixes:
 
     def test_no_delimiter_returns_zero(self, tmp_path):
         """No ===SECTION_FIX_START=== → 0 applied."""
-        from scripts.build_module_v3 import _apply_find_replace_fixes
+        from scripts.build_module import _apply_find_replace_fixes
         f = tmp_path / "content.md"
         f.write_text("Content.\n", "utf-8")
         applied = _apply_find_replace_fixes(f, "No fix block here.")

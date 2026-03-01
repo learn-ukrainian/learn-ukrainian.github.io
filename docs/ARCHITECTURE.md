@@ -371,7 +371,7 @@ See `docs/MARKDOWN-FORMAT.md` for the complete spec.
 
 ## AI Build Pipeline (v3 — Hybrid Gemini+Claude)
 
-`scripts/build_module_v3.py` orchestrates module creation using the best LLM for each phase.
+`scripts/build_module.py` orchestrates module creation using the best LLM for each phase.
 Gemini handles research and long-form prose (1M context, fast iteration);
 Claude handles interactive activities and final QA (better reasoning, structured outputs).
 
@@ -421,14 +421,14 @@ Override per-session with `--claude-model-A`, `--claude-model-C`, `--claude-mode
 
 Phase F (and optionally A/C) call the headless Claude CLI directly via subprocess.
 When running from Claude Code's bash tool, the 2-minute timeout applies.
-**Solution:** Run `build_module_v3.py` directly from a terminal, not from Claude Code:
+**Solution:** Run `build_module.py` directly from a terminal, not from Claude Code:
 
 ```bash
 # Terminal (no timeout): Claude handles Phase C + F automatically
-.venv/bin/python scripts/build_module_v3.py bio --all --final-review
+.venv/bin/python scripts/build_module.py bio --all --final-review
 
 # Route Phase A to Claude too (e.g. for c1/c2 where Claude research is preferred)
-.venv/bin/python scripts/build_module_v3.py c1 --all --use-claude A
+.venv/bin/python scripts/build_module.py c1 --all --use-claude A
 ```
 
 The script removes `CLAUDECODE` from the environment before spawning Claude CLI to avoid
