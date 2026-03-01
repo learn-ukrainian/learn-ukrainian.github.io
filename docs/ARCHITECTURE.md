@@ -369,25 +369,32 @@ See `docs/MARKDOWN-FORMAT.md` for the complete spec.
 | word | слово |
 ```
 
-## AI Build Pipeline (v3 — Hybrid Gemini+Claude)
+## AI Build Pipeline (v4 — Hybrid Gemini+Claude)
 
 `scripts/build_module.py` orchestrates module creation using the best LLM for each phase.
-Gemini handles research and long-form prose (1M context, fast iteration);
+Gemini handles research, discovery, and long-form prose (1M context, fast iteration);
 Claude handles interactive activities and final QA (better reasoning, structured outputs).
+
+### Pipeline v4 (default)
+
+```
+research → discover → content → activities → validate → [review] → mdx
+```
 
 ### Phase-to-LLM Assignment
 
 | Phase | LLM | Default Model | Purpose |
 |-------|-----|---------------|---------|
-| **A** — Research + Meta | Gemini | `gemini-2.5-pro` | Web research, meta outline, friction hooks |
-| **B** — Content + Prose | Gemini | `gemini-2.5-pro` | Full lesson prose with track context |
-| **C** — Activities + Vocab | **Claude** | Sonnet (core) / Opus (seminar) | Interactive activities, vocabulary YAML |
-| **audit** — Fix loop | Gemini | `gemini-2.5-pro` | Prose + enrichment audit, up to 3 fix passes |
-| **D** — Review + Fix | Gemini | `gemini-2.5-pro` | Adversarial review + section fixes, max 2 iters |
-| **E** — MDX generation | _(no LLM)_ | — | Deterministic: markdown → Docusaurus MDX |
-| **F** — Final QA gate | **Claude** | Opus (always) | Deep semantic review, fix iterations, APPROVE/REJECT |
+| **research** | Gemini | `gemini-2.5-pro` | Web research, meta outline, friction hooks |
+| **discover** | Gemini | `gemini-2.5-flash` | YouTube search across curated channels, transcript scoring |
+| **content** | Gemini | `gemini-2.5-pro` | Full lesson prose with track context + video discoveries |
+| **activities** | **Claude** | Sonnet (core) / Opus (seminar) | Interactive activities, vocabulary YAML |
+| **validate** | Gemini | `gemini-2.5-pro` | Audit + screen + fix loop |
+| **review** _(optional)_ | **Claude** | Opus (always) | Cross-agent adversarial review, max 2 fix attempts |
+| **mdx** | _(no LLM)_ | — | Deterministic: markdown → Docusaurus MDX |
 
-**Rule:** Phase E (MDX) is always last — after Phase F if `--final-review`, after Phase D otherwise.
+**Non-blocking phases:** discover, validate, review — failures don't halt the pipeline.
+**Rule:** MDX always runs last, even on validate/review failure (for preview).
 
 ### Model Selection Logic
 

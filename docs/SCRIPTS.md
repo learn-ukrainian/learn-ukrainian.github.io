@@ -1621,8 +1621,17 @@ and routes phases to the best LLM: Gemini for research/prose, Claude for activit
 # Nuke v3 state and restart from Phase A
 .venv/bin/python scripts/build_module.py {track} {num} --rebuild
 
-# Re-run a single phase (A/B/C/audit/D/E/F)
-.venv/bin/python scripts/build_module.py {track} {num} --force-phase D
+# Re-run a single v4 phase (research/discover/content/activities/validate/review/mdx)
+.venv/bin/python scripts/build_module.py {track} {num} --force-phase validate
+
+# Skip video/blog discovery (faster builds when not needed)
+.venv/bin/python scripts/build_module.py {track} {num} --skip-discover
+
+# Run only the discover phase for a module
+.venv/bin/python scripts/build_module.py {track} {num} --force-phase discover
+
+# Restart from discover phase onward
+.venv/bin/python scripts/build_module.py {track} {num} --restart-from discover
 
 # Dry-run (show plan, no LLM dispatches)
 .venv/bin/python scripts/build_module.py {track} {num} --dry-run
@@ -1630,8 +1639,8 @@ and routes phases to the best LLM: Gemini for research/prose, Claude for activit
 # Just verify (run audit, print PASS/FAIL, exit)
 .venv/bin/python scripts/build_module.py {track} {num} --verify
 
-# + Phase F: optional final QA gate after Phase D
-.venv/bin/python scripts/build_module.py {track} {num} --final-review
+# + Review: optional Claude QA gate
+.venv/bin/python scripts/build_module.py {track} {num} --review
 
 # Phase F via Gemini (cross-agent: D=Claude, F=Gemini)
 .venv/bin/python scripts/build_module.py {track} {num} --final-review --final-review-agent gemini
@@ -1639,7 +1648,7 @@ and routes phases to the best LLM: Gemini for research/prose, Claude for activit
 
 **Cross-agent pipeline:**
 
-Phase D (review) always uses Claude — the opposite agent from Phase B (Gemini builds content).
+Review phase always uses Claude — the opposite agent from content (Gemini builds).
 This prevents self-review gaming detected by anti-gaming audit checks (issue #610).
 
 **Hybrid LLM routing — `--use-claude`:**
@@ -1699,15 +1708,20 @@ CLAUDE_MODEL_SEMINAR_ACTIVITIES = CLAUDE_OPUS    # Phase C, seminar tracks
 CLAUDE_MODEL_FINAL_REVIEW       = CLAUDE_OPUS    # Phase F, all tracks
 ```
 
-**Pipeline phases:**
+**Pipeline v4 phases (default):**
 ```
-Phase A (research+meta)   [Gemini by default; --use-claude A for Claude]
-→ B (content+track-ctx)  [Gemini always]
-→ C (activities+vocab)   [Claude: sonnet for core, opus for seminar]
-→ audit (fix loop, max 3 Gemini fix calls)
-→ D (review+fix loop, max 2 Gemini iters)
-→ [F: Claude QA gate, --final-review; opus always]
-→ E (MDX generation, always last, no LLM call)
+research    (research+meta)    [Gemini by default; --use-claude A for Claude]
+→ discover  (video+blog search) [Gemini Flash; --skip-discover to bypass]
+→ content   (prose+track-ctx)  [Gemini always]
+→ activities (activities+vocab) [Claude: sonnet for core, opus for seminar]
+→ validate  (audit+screen+fix) [deterministic + Gemini fix loop]
+→ [review: Claude QA gate, --review to enable; opus always]
+→ mdx       (MDX generation, always last, no LLM call)
+```
+
+**Legacy v3 phases (--v3 flag):**
+```
+Phase A (research+meta) → B (content) → C (activities) → audit → D (review) → [F] → E (MDX)
 ```
 
 **v3 vs v2:**

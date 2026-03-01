@@ -42,13 +42,13 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 <critical>
 
-**Cross-agent build pipeline (v3):**
-- **Gemini** builds: Phase A (research+meta), Phase B (prose), Phase C (activities+vocab)
-- **Claude** reviews: Phase D (cross-agent adversarial review, max 3 attempts)
-- **Phase F** (optional): final QA gate, agent-selectable (`--final-review-agent claude|gemini`)
-- Phase D has two sub-phases: **D.1** (evidence review only) → **D.2** (targeted repair, only if D.1 finds issues)
-- Phase D exhaustion (3 attempts) = module marked `needs-rebuild` (no escalation back to Gemini)
-- Model defaults: `scripts/batch_gemini_config.py` | Phase D default: `claude-opus-4-6`
+**Cross-agent build pipeline (v4):**
+- Pipeline: research → discover → content → activities → validate → [review] → mdx
+- **Gemini** builds: research, discover (video/blog search), content, activities
+- **Claude** reviews: review phase (cross-agent adversarial, max 2 fix attempts)
+- **Discover** phase: automated YouTube search across curated channel allowlist, Gemini Flash scoring
+- Discover is non-blocking — failures don't halt the pipeline. Skip with `--skip-discover`.
+- Model defaults: `scripts/batch_gemini_config.py` | Review default: `claude-opus-4-6`
 
 **An LLM must NEVER review its own work.** Gemini builds → Claude reviews. Enforced by `SELF_REVIEW_DETECTED` audit gate.
 
