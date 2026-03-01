@@ -3152,7 +3152,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         total_attempts = 2 + d2_iter
 
         log(f"  D.2{iter_suffix}: Dispatching targeted repair...")
-        failures = _extract_audit_failures(audit_out)
+        failures = _extract_audit_failures(audit_out) or "None (audit passed). Focus exclusively on the Fix Plan."
 
         prompt_file2 = ctx.orch_dir / f"phase-D-prompt-{2 + d2_iter}.md"
         if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
@@ -3975,7 +3975,7 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
         total_attempts = 2 + fix_iter
 
         log(f"  review: Fix attempt {fix_iter + 1}/{MAX_REVIEW_FIX_ITERS}{iter_suffix}...")
-        failures = _extract_audit_failures(audit_out)
+        failures = _extract_audit_failures(audit_out) or "None (audit passed). Focus exclusively on the Fix Plan."
 
         prompt_file2 = ctx.orch_dir / f"review-fix-{fix_iter + 1}-prompt.md"
         if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):

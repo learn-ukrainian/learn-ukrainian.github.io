@@ -93,6 +93,7 @@ corrected activity text
 - **FIND text must be verbatim** from the file content provided above — copy-paste exactly
 - Only fix issues documented in the Fix Plan or audit failures above
 - You MAY add new activities or modify existing ones if the Fix Plan explicitly requests it
+- To ADD a new YAML item, FIND the last existing item in the list, REPLACE it with that same item followed by your new item. Preserve exact YAML indentation.
 - Do NOT add new prose sections or vocabulary items unless the Fix Plan explicitly requests it
 - Maximum **20 FIND/REPLACE pairs** total (prioritize the most impactful fixes)
 - Each FILE: line starts a new sub-block for that file
