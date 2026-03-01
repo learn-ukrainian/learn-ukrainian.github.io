@@ -1392,7 +1392,7 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
 
         if content_sufficient:
             # Content was built against this meta — lock it, skip health checks entirely
-            log(f"  Phase A: SKIP (meta locked — content exists at {wc}w, target {ctx.word_target}w)")
+            log(f"  research: SKIP (meta locked — content exists at {wc}w, target {ctx.word_target}w)")
             return True
         elif _meta_has_oversized_sections(ctx):
             # No content yet, meta is bad — re-run
@@ -1405,7 +1405,7 @@ def phase_A_v3(ctx: ModuleContext, state: dict) -> bool:
                 log("  Phase A: State says complete but meta missing — re-running")
                 _mark_phase_v3(ctx, state, phase, "pending", note="missing-meta-reset")
             else:
-                log("  Phase A: SKIP (already complete)")
+                log("  research: SKIP (already complete)")
                 return True
     elif not force_research and not getattr(ctx, "refresh", False) and not _is_phase_v3_complete(ctx, phase, state):
         # Phase A not yet complete in v3 state — but check if content already exists
@@ -1560,7 +1560,7 @@ def phase_B_v3(ctx: ModuleContext, state: dict) -> bool:
     """Phase B: Write prose. Delegates to v2's phase_2_content."""
     phase = "B"
     if _is_phase_v3_complete(ctx, phase, state):
-        log("  Phase B: SKIP (already complete)")
+        log("  content: SKIP (already complete)")
         return True
 
     # Layer 2B: Artifact guard — if content .md already exists and is substantial,
@@ -1715,7 +1715,7 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
     """Phase C: Generate activities + vocabulary in a single Gemini call."""
     phase = "C"
     if _is_phase_v3_complete(ctx, phase, state):
-        log("  Phase C: SKIP (already complete)")
+        log("  activities: SKIP (already complete)")
         return True
 
     # Check if both files already exist and are valid
@@ -2477,6 +2477,29 @@ def _parse_d1_review(raw_output: str) -> D1Result:
 _parse_d1_yaml = _parse_d1_review
 
 
+def _extract_fix_plan(review_text: str) -> str:
+    """Extract only actionable sections from a D.1 review for the D.2 fix prompt.
+
+    Pulls: Critical Issues Found, Ukrainian Language Issues, Fix Plan to Reach *.
+    Falls back to full review text if no sections are found.
+    """
+    sections: list[str] = []
+    # Try multiple header variants for each section
+    _PATTERNS = [
+        r'(## Critical Issues Found\s*\n.*?)(?=\n## |\Z)',
+        r'(## Ukrainian Language Issues\s*\n.*?)(?=\n## |\Z)',
+        r'(## Fix Plan to Reach [^\n]+\n.*?)(?=\n## |\Z)',
+    ]
+    for pattern in _PATTERNS:
+        m = re.search(pattern, review_text, re.DOTALL)
+        if m:
+            sections.append(m.group(1).strip())
+
+    if not sections:
+        return review_text  # fallback: inject full review
+    return "\n\n---\n\n".join(sections)
+
+
 # ---------------------------------------------------------------------------
 # Track calibration system — per-level calibration injected into D.1 prompt
 # ---------------------------------------------------------------------------
@@ -2622,20 +2645,35 @@ def _prefetch_rag_context(ctx: ModuleContext) -> str:
 TIMEOUT_REVIEW_CORE = 600       # A1-B2 core tracks (10 min)
 TIMEOUT_REVIEW_SEMINAR = 750    # Seminar tracks (12.5 min)
 
+# D.2 fix timeouts — shorter than D.1 (mechanical task, no tools)
+TIMEOUT_FIX_CORE = 120          # A1-B2 fix (2 min)
+TIMEOUT_FIX_SEMINAR = 180       # Seminar fix (3 min)
+TIMEOUT_FIX_AUDIT_ONLY = 90     # Audit-only fix (1.5 min)
+
 
 def _get_review_timeout(track: str) -> int:
-    """Return the appropriate D.1/D.2 timeout for a track."""
+    """Return the appropriate D.1 review timeout for a track."""
     key = "lit" if track.startswith("lit-") else track
     if key in _SEMINAR_TIMEOUT_TRACKS or key in SEMINAR_TRACKS:
         return TIMEOUT_REVIEW_SEMINAR
     return TIMEOUT_REVIEW_CORE
 
 
+def _get_fix_timeout(track: str, audit_only: bool = False) -> int:
+    """Return the appropriate D.2 fix timeout for a track."""
+    if audit_only:
+        return TIMEOUT_FIX_AUDIT_ONLY
+    key = "lit" if track.startswith("lit-") else track
+    if key in _SEMINAR_TIMEOUT_TRACKS or key in SEMINAR_TRACKS:
+        return TIMEOUT_FIX_SEMINAR
+    return TIMEOUT_FIX_CORE
+
+
 # ---------------------------------------------------------------------------
 # D.0: Deterministic Screen
 # ---------------------------------------------------------------------------
 
-def _deterministic_screen(ctx: ModuleContext) -> DScreenResult:
+def _deterministic_screen(ctx: ModuleContext, skip_review: bool = False) -> DScreenResult:
     """D.0: Run all deterministic checks before LLM review.
 
     Orchestrates:
@@ -2645,6 +2683,10 @@ def _deterministic_screen(ctx: ModuleContext) -> DScreenResult:
     4. Russicism regex scan — from russicism_detection.py
     5. LLM filler regex scan — absorbed from proofread.py patterns
     6. RAG word verification — VESUM + Qdrant (graceful degradation)
+
+    Args:
+        skip_review: If True, pass --skip-review to audit (used when review
+            phase runs later and MISSING_REVIEW is expected).
 
     Returns DScreenResult with all findings for D.1 injection.
     """
@@ -2667,7 +2709,8 @@ def _deterministic_screen(ctx: ModuleContext) -> DScreenResult:
 
     # 4. Single audit run
     if content_path and content_path.exists():
-        result.audit_passed, result.audit_output = run_verify(content_path, content_only=False)
+        result.audit_passed, result.audit_output = run_verify(
+            content_path, content_only=False, skip_review=skip_review)
         result.metrics["COMPUTED_AUDIT_STATUS"] = "PASS" if result.audit_passed else "FAIL"
     else:
         result.audit_passed = False
@@ -2699,12 +2742,12 @@ def _deterministic_screen(ctx: ModuleContext) -> DScreenResult:
         except Exception as e:
             logger.warning("D.0: LLM filler scan failed: %s", e)
 
-    # 7. RAG word verification (VESUM + Qdrant)
+    # 7. Word verification (VESUM only — RAG/Qdrant adds latency for marginal value)
     if content_path and content_path.exists():
         try:
             from rag_batch_verify import verify_module as rag_verify_module
             rag_results, rag_stats = rag_verify_module(
-                content_path, use_rag=True, skip_activities=False,
+                content_path, use_rag=False, skip_activities=False,
             )
             result.rag_verify_stats = rag_stats
             result.rag_verify_not_found = [
@@ -2816,7 +2859,7 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     """
     phase = "D"
     if _is_phase_v3_complete(ctx, phase, state):
-        log("  Phase D: SKIP (already complete)")
+        log("  validate: SKIP (already complete)")
         return True
 
     # Pre-D activity validation gate (#606)
@@ -3102,6 +3145,8 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     # -----------------------------------------------------------------------
     MAX_D2_ITERS = 2
 
+    v3_fix_timeout = _get_fix_timeout(ctx.track, audit_only=_audit_only_d2)
+
     for d2_iter in range(MAX_D2_ITERS):
         iter_suffix = "" if d2_iter == 0 else f" (iter {d2_iter + 1})"
         total_attempts = 2 + d2_iter
@@ -3113,27 +3158,36 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
         if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
             return False
 
-        prompt2_text = prompt_file2.read_text("utf-8")
+        # Build fix plan (extracted actionable sections or audit-only notice)
         if _audit_only_d2:
-            # Review said PASS — only inject audit failures, not review issues
-            audit_only_notice = (
+            fix_plan = (
                 "**IMPORTANT: The D.1 review verdict was PASS. "
                 "Fix ONLY the audit failures listed below. "
                 "Do NOT fix review suggestions — they are informational only.**\n\n"
                 "(Review omitted — verdict was PASS)\n"
             )
-            prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", audit_only_notice)
         else:
-            prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", review_text)
+            fix_plan = _extract_fix_plan(review_text)
+
+        # Read file contents for inline injection (no tool calls needed)
+        content_text = ctx.paths["md"].read_text("utf-8") if ctx.paths["md"].exists() else "(file not found)"
+        act_path = ctx.paths.get("activities")
+        act_text = act_path.read_text("utf-8") if act_path and act_path.exists() else "(no activities file)"
+        vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+        vocab_text = vp.read_text("utf-8") if vp and vp.exists() else "(no vocabulary file)"
+
+        prompt2_text = prompt_file2.read_text("utf-8")
+        prompt2_text = prompt2_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
         prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
-        # Inject track calibration for voice-matched repairs
-        prompt2_text = prompt2_text.replace("{TRACK_CALIBRATION}", track_calibration or "")
+        prompt2_text = prompt2_text.replace("{CONTENT_TEXT}", content_text)
+        prompt2_text = prompt2_text.replace("{ACTIVITIES_TEXT}", act_text)
+        prompt2_text = prompt2_text.replace("{VOCAB_TEXT}", vocab_text)
         prompt_file2.write_text(prompt2_text, "utf-8")
 
         ok2, raw_output2 = _dispatch_claude_phase(
             prompt_file2, f"Phase D.2{iter_suffix}",
-            model=claude_model_D, timeout=review_timeout,
-            allow_tools=["Read", "Grep", "Glob"],
+            model=claude_model_D, timeout=v3_fix_timeout,
+            allow_tools=[],
         )
         if not ok2:
             log(f"  D.2{iter_suffix}: Dispatch FAILED")
@@ -3336,7 +3390,7 @@ def _phase_F_gemini(ctx: ModuleContext) -> bool:
 
     phase = "9-final-review"
     if is_phase_complete(ctx, phase):
-        log("  Phase F (Gemini): SKIP (already complete)")
+        log("  review: SKIP (already complete)")
         return True
 
     if ctx.dry_run:
@@ -3413,11 +3467,15 @@ _V4_TO_V3_PHASE_MAP: dict[str, list[str]] = {
 }
 
 
+# Empty v3 state — passed to v3 functions when called from v4 so they
+# never see themselves as "complete" (v4 state is authoritative).
+_V3_EMPTY_STATE: dict = {"phases": {}}
+
+
 def _v3_state_for_delegation(ctx: ModuleContext) -> dict:
     """Load v3 state for delegating to v3 phase functions.
 
-    v3 functions internally call _mark_phase_v3 which writes to state-v3.json.
-    We must pass a v3 state dict, not the v4 state, to avoid corruption.
+    Only used by run_pipeline_v3 (--v3 flag). v4 passes _V3_EMPTY_STATE instead.
     """
     return _load_state_v3(ctx)
 
@@ -3445,12 +3503,11 @@ def _clear_v3_phases_for_v4(ctx: ModuleContext, v4_phase_ids: list[str]) -> None
 
 
 def phase_research_v4(ctx: ModuleContext, state: dict) -> bool:
-    """v4 research = v3 Phase A."""
+    """v4 research = v3 Phase A (skip v3 state check — v4 state is authoritative)."""
     if _is_phase_v4_complete(ctx, "research", state):
         log("  research: SKIP (already complete)")
         return True
-    v3_state = _v3_state_for_delegation(ctx)
-    result = phase_A_v3(ctx, v3_state)
+    result = phase_A_v3(ctx, _V3_EMPTY_STATE)
     if result:
         _mark_phase_v4(ctx, state, "research", "complete")
     return result
@@ -3498,6 +3555,8 @@ def phase_discover_v4(ctx: ModuleContext, state: dict) -> bool:
 
     if result.error:
         log(f"  discover: completed with error: {result.error}")
+    elif result.warning:
+        log(f"  discover: {result.warning}")
     else:
         relevant = [v for v in result.videos if v.relevance_score >= 0.5]
         log(f"  discover: found {len(result.videos)} videos, {len(relevant)} relevant")
@@ -3531,24 +3590,22 @@ def _append_discovery_to_research(ctx: ModuleContext, result) -> None:
 
 
 def phase_content_v4(ctx: ModuleContext, state: dict) -> bool:
-    """v4 content = v3 Phase B."""
+    """v4 content = v3 Phase B (skip v3 state check — v4 state is authoritative)."""
     if _is_phase_v4_complete(ctx, "content", state):
         log("  content: SKIP (already complete)")
         return True
-    v3_state = _v3_state_for_delegation(ctx)
-    result = phase_B_v3(ctx, v3_state)
+    result = phase_B_v3(ctx, _V3_EMPTY_STATE)
     if result:
         _mark_phase_v4(ctx, state, "content", "complete")
     return result
 
 
 def phase_activities_v4(ctx: ModuleContext, state: dict) -> bool:
-    """v4 activities = v3 Phase C."""
+    """v4 activities = v3 Phase C (skip v3 state check — v4 state is authoritative)."""
     if _is_phase_v4_complete(ctx, "activities", state):
         log("  activities: SKIP (already complete)")
         return True
-    v3_state = _v3_state_for_delegation(ctx)
-    result = phase_C_v3(ctx, v3_state)
+    result = phase_C_v3(ctx, _V3_EMPTY_STATE)
     if result:
         _mark_phase_v4(ctx, state, "activities", "complete")
     return result
@@ -3561,6 +3618,9 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
     Runs content_only=False (full audit including activities).
     """
     phase = "validate"
+    # When review phase follows, skip the review gate in audit
+    # (MISSING_REVIEW is expected — review phase creates the review file)
+    _skip_review = getattr(ctx, "review", False) or getattr(ctx, "final_review", False)
     if _is_phase_v4_complete(ctx, phase, state):
         log("  validate: SKIP (already complete)")
         return True
@@ -3587,9 +3647,16 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
         log(f"  validate: {auto_fix_total} deterministic fix(es) applied")
 
     # Initial screen (content_only=False — full audit including activities)
-    screen = _deterministic_screen(ctx)
-    log(f"  validate: Initial — audit {'PASS' if screen.audit_passed else 'FAIL'}, "
-        f"{len(screen.deterministic_issues)} issue(s)")
+    screen = _deterministic_screen(ctx, skip_review=_skip_review)
+    det_count = len(screen.deterministic_issues)
+    if screen.audit_passed and det_count == 0:
+        log("  validate: Initial — PASS")
+    elif screen.audit_passed:
+        log(f"  validate: Initial — audit PASS, {det_count} deterministic issue(s)")
+    elif det_count > 0:
+        log(f"  validate: Initial — audit FAIL, {det_count} deterministic issue(s)")
+    else:
+        log("  validate: Initial — audit FAIL (gate violations, no deterministic issues)")
 
     if screen.audit_passed and not screen.deterministic_issues:
         _save_screen_result(ctx, screen)
@@ -3629,9 +3696,16 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
             log(f"  validate: proofread.py error: {e} — continuing")
 
         # Re-screen after proofread
-        screen = _deterministic_screen(ctx)
-        log(f"  validate: Post-proofread — audit {'PASS' if screen.audit_passed else 'FAIL'}, "
-            f"{len(screen.deterministic_issues)} issue(s)")
+        screen = _deterministic_screen(ctx, skip_review=_skip_review)
+        det_count = len(screen.deterministic_issues)
+        if screen.audit_passed and det_count == 0:
+            log("  validate: Post-proofread — PASS")
+        elif screen.audit_passed:
+            log(f"  validate: Post-proofread — audit PASS, {det_count} deterministic issue(s)")
+        elif det_count > 0:
+            log(f"  validate: Post-proofread — audit FAIL, {det_count} deterministic issue(s)")
+        else:
+            log("  validate: Post-proofread — audit FAIL (gate violations, no deterministic issues)")
 
         if screen.audit_passed and not screen.deterministic_issues:
             _save_screen_result(ctx, screen)
@@ -3678,7 +3752,7 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
         _run_deterministic_fixes(ctx)
 
         # Re-screen
-        screen = _deterministic_screen(ctx)
+        screen = _deterministic_screen(ctx, skip_review=_skip_review)
 
         if screen.audit_passed and not screen.deterministic_issues:
             _save_screen_result(ctx, screen)
@@ -3690,7 +3764,7 @@ def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
             log(f"  validate: EXHAUSTED — {max_iters} fix attempts")
             # Try escalation to Claude
             if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False):
-                screen = _deterministic_screen(ctx)
+                screen = _deterministic_screen(ctx, skip_review=_skip_review)
                 _save_screen_result(ctx, screen)
                 _mark_phase_v4(ctx, state, phase, "complete",
                                attempts=attempt, note="escalation-claude")
@@ -3894,6 +3968,8 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
     # -----------------------------------------------------------------------
     # Fix attempts (up to MAX_REVIEW_FIX_ITERS)
     # -----------------------------------------------------------------------
+    fix_timeout = _get_fix_timeout(ctx.track, audit_only=_audit_only_fix)
+
     for fix_iter in range(MAX_REVIEW_FIX_ITERS):
         iter_suffix = "" if fix_iter == 0 else f" (iter {fix_iter + 1})"
         total_attempts = 2 + fix_iter
@@ -3905,25 +3981,36 @@ def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
         if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
             return False
 
-        prompt2_text = prompt_file2.read_text("utf-8")
+        # Build fix plan (extracted actionable sections or audit-only notice)
         if _audit_only_fix:
-            audit_only_notice = (
+            fix_plan = (
                 "**IMPORTANT: The review verdict was PASS. "
                 "Fix ONLY the audit failures listed below. "
                 "Do NOT fix review suggestions — they are informational only.**\n\n"
                 "(Review omitted — verdict was PASS)\n"
             )
-            prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", audit_only_notice)
         else:
-            prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", review_text)
+            fix_plan = _extract_fix_plan(review_text)
+
+        # Read file contents for inline injection (no tool calls needed)
+        content_text = ctx.paths["md"].read_text("utf-8") if ctx.paths["md"].exists() else "(file not found)"
+        act_path = ctx.paths.get("activities")
+        act_text = act_path.read_text("utf-8") if act_path and act_path.exists() else "(no activities file)"
+        vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+        vocab_text = vp.read_text("utf-8") if vp and vp.exists() else "(no vocabulary file)"
+
+        prompt2_text = prompt_file2.read_text("utf-8")
+        prompt2_text = prompt2_text.replace("{EXTRACTED_FIX_PLAN}", fix_plan)
         prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
-        prompt2_text = prompt2_text.replace("{TRACK_CALIBRATION}", track_calibration or "")
+        prompt2_text = prompt2_text.replace("{CONTENT_TEXT}", content_text)
+        prompt2_text = prompt2_text.replace("{ACTIVITIES_TEXT}", act_text)
+        prompt2_text = prompt2_text.replace("{VOCAB_TEXT}", vocab_text)
         prompt_file2.write_text(prompt2_text, "utf-8")
 
         ok2, raw_output2 = _dispatch_claude_phase(
             prompt_file2, f"Phase D.2{iter_suffix}",
-            model=claude_model, timeout=review_timeout,
-            allow_tools=["Read", "Grep", "Glob"],
+            model=claude_model, timeout=fix_timeout,
+            allow_tools=[],
         )
         if not ok2:
             log(f"  review: Fix dispatch failed{iter_suffix}")

@@ -1,7 +1,7 @@
 # Phase D.2: Targeted Repair
 
 > **You are an expert Ukrainian language editor applying targeted fixes based on a review.**
-> **You have file system access.** Use Read and Grep to verify every fix against the actual file content.
+> **All file content is provided inline below — no tool calls needed.**
 
 ---
 
@@ -14,23 +14,9 @@
 
 ---
 
-## Track Calibration
+## Fix Plan (from Phase D.1 review)
 
-{TRACK_CALIBRATION}
-
----
-
-## Files You Can Read (use Read tool)
-
-1. **Content**: `{CONTENT_PATH}`
-2. **Activities**: `{ACTIVITIES_PATH}`
-3. **Vocabulary**: `{VOCAB_PATH}`
-
----
-
-## Review (from Phase D.1)
-
-{INJECTED_REVIEW_TEXT}
+{EXTRACTED_FIX_PLAN}
 
 ---
 
@@ -42,15 +28,35 @@
 
 ---
 
+## File Content (verbatim — use for FIND text)
+
+### Content: `{CONTENT_PATH}`
+
+```markdown
+{CONTENT_TEXT}
+```
+
+### Activities: `{ACTIVITIES_PATH}`
+
+```yaml
+{ACTIVITIES_TEXT}
+```
+
+### Vocabulary: `{VOCAB_PATH}`
+
+```yaml
+{VOCAB_TEXT}
+```
+
+---
+
 ## Instructions
 
-1. Read the content file using the Read tool
-2. For each issue identified in the review OR in the audit failures:
-   a. Use Grep to find the exact text that needs fixing
-   b. Produce a FIND/REPLACE pair with verbatim FIND text
-3. Only fix issues documented above — no silent extra changes
-4. Prioritize fixes by impact: audit gate failures first, then review issues
-5. For Russianisms: replace with the standard Ukrainian form from the calibration table
+1. For each issue identified in the Fix Plan OR in the audit failures:
+   a. Copy-paste the exact FIND text verbatim from the file content above
+   b. Produce a FIND/REPLACE pair
+2. Only fix issues documented above — no silent extra changes
+3. Prioritize fixes by impact: audit gate failures first, then review issues
 
 ---
 
@@ -84,10 +90,10 @@ corrected activity text
 
 ## Fix Rules
 
-- **FIND text must be verbatim** from the file — use Grep to verify before including
-- Only fix issues documented in the review or audit failures above
-- You MAY add new activities or modify existing ones if the review's Fix Plan explicitly requests it
-- Do NOT add new prose sections or vocabulary items unless the review's Fix Plan explicitly requests it
+- **FIND text must be verbatim** from the file content provided above — copy-paste exactly
+- Only fix issues documented in the Fix Plan or audit failures above
+- You MAY add new activities or modify existing ones if the Fix Plan explicitly requests it
+- Do NOT add new prose sections or vocabulary items unless the Fix Plan explicitly requests it
 - Maximum **20 FIND/REPLACE pairs** total (prioritize the most impactful fixes)
 - Each FILE: line starts a new sub-block for that file
 - If nothing needs fixing, output:
@@ -120,5 +126,5 @@ After the fix block, include:
 - Do NOT write a review — that was already done in Phase D.1
 - Do NOT output ===REVIEW_START=== blocks
 - Do NOT modify files directly — only output fix blocks
-- You MAY add/modify activities if the review's Fix Plan requests it (use FIND/REPLACE on the YAML file)
+- You MAY add/modify activities if the Fix Plan requests it (use FIND/REPLACE on the YAML file)
 - Do NOT make cosmetic changes beyond what the review flagged
