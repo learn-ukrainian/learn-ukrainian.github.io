@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Префікси руху в інших дієсловах
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -328,7 +334,23 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **відповісти** |  | to answer, to reply | дієсл |  |
+| **приготувати** |  | to prepare, to cook | дієсл |  |
+| **записати** |  | to write down, to record | дієсл |  |
+| **вивчити** |  | to learn completely, to memorize | дієсл |  |
+| **відмовитися** |  | to refuse, to decline | дієсл |  |
+| **приєднатися** |  | to join (a group or structure) | дієсл |  |
+| **заговорити** |  | to start speaking | дієсл |  |
+| **переробити** |  | to redo, to completely remake | дієсл |  |
+| **виробляти** |  | to produce, to manufacture | дієсл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Знайдіть відповідність: значення префіксів
 
@@ -381,16 +403,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Після зауважень редактора письменник мусив переписати свою статтю.", "answer": "переписати", "options": ["переписати", "записати", "виписати", "дописати"]}, {"sentence": "Коли настав її день народження, вона несподівано заспівала від радості.", "answer": "заспівала", "options": ["заспівала", "переспівала", "виспівала", "відспівала"]}, {"sentence": "Студент зміг повністю вивчити цей граматичний матеріал за тиждень.", "answer": "вивчити", "options": ["вивчити", "завчити", "довчити", "привчити"]}, {"sentence": "Під час ділової зустрічі важливо професійно підійти до вирішення проблем.", "answer": "підійти", "options": ["підійти", "зайти", "перейти", "відійти"]}, {"sentence": "Вона швидко записала адресу в телефон, щоб не забути.", "answer": "записала", "options": ["записала", "переписала", "написала", "виписала"]}, {"sentence": "Ми змушені були відмовитися від цієї подорожі через погану погоду.", "answer": "відмовитися", "options": ["відмовитися", "замовитися", "домовитися", "перемовитися"]}, {"sentence": "Я обіцяю, що ми зможемо виконати цю роботу дуже якісно.", "answer": "виконати", "options": ["виконати", "доконати", "законати", "переконати"]}, {"sentence": "Треба уважно переглянути цей договір перед тим, як його підписувати.", "answer": "переглянути", "options": ["переглянути", "поглянути", "заглянути", "доглянути"]}, {"sentence": "Він вирішив приєднатися до нашого благодійного проєкту вчора.", "answer": "приєднатися", "options": ["приєднатися", "з'єднатися", "об'єднатися", "від'єднатися"]}, {"sentence": "На жаль, він так і не зміг чесно відповісти на моє запитання.", "answer": "відповісти", "options": ["відповісти", "заповісти", "розповісти", "доповісти"]}, {"sentence": "Щоб здивувати маму, я планую приготувати великий торт.", "answer": "приготувати", "options": ["приготувати", "доготувати", "заготувати", "виготувати"]}, {"sentence": "Якщо ви дуже втомлені, не варто так багато перепрацювати на роботі.", "answer": "перепрацювати", "options": ["перепрацювати", "запрацювати", "допрацювати", "випрацювати"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **відповісти** | [ʋʲidpɔˈʋʲiˈstɪ] | to answer, to reply | дієсл |  |
-| **приготувати** | [prɪɦɔtuˈʋɑtɪ] | to prepare, to cook | дієсл |  |
-| **записати** | [zɑpɪˈsɑtɪ] | to write down, to record | дієсл |  |
-| **вивчити** | [ˈʋɪu̯t͡ʃɪtɪ] | to learn completely, to memorize | дієсл |  |
-| **відмовитися** | [ʋʲiˈdmɔʋɪtɪsʲɑ] | to refuse, to decline | дієсл |  |
-| **приєднатися** | [prɪjɛˈdnɑtɪsʲɑ] | to join (a group or structure) | дієсл |  |
-| **заговорити** | [zɑɦɔʋɔˈrɪtɪ] | to start speaking | дієсл |  |
-| **переробити** | [pɛrɛrɔˈbɪtɪ] | to redo, to completely remake | дієсл |  |
-| **виробляти** | [ʋɪrɔˈblʲɑtɪ] | to produce, to manufacture | дієсл |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

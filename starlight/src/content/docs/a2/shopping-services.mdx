@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Купівля та послуги
+{/**/}
 
 > **Чому це важливо?**
 > Купівля товарів та замовлення послуг — це базова комунікативна навичка для щоденного життя. Цей об'ємний модуль допоможе вам впевнено та вільно спілкуватися в українських магазинах. Ви навчитеся правильно питати про ціну. Також ви зможете вибирати свіжі продукти на ринку та платити за послуги.
@@ -310,7 +316,43 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| магазин |  | store | noun | ч | йти в магазин, продуктовий магазин |
+| ціна |  | price | noun | ж | висока ціна, яка ціна? |
+| купувати |  | to buy | verb |  | купувати продукти |
+| платити |  | to pay | verb |  | платити карткою, платити готівкою |
+| гроші |  | money | noun |  | паперові гроші |
+| картка |  | card | noun | ж | банківська картка |
+| готівка |  | cash | noun | ж | платити готівкою |
+| чек |  | receipt | noun | ч | фіскальний чек |
+| знижка |  | discount | noun | ж | сезонні знижки |
+| каса |  | checkout | noun | ж | де каса?, на касі |
+| здача |  | change | noun | ж | ваша здача |
+| пакет |  | bag | noun | ч | великий пакет |
+| примірка |  | fitting room | noun | ж | де примірка? |
+| розмір |  | size | noun | ч | мій розмір |
+| перукарня |  | hairdresser | noun | ж | йти в перукарню |
+| хімчистка |  | dry cleaning | noun | ж | віддати в хімчистку |
+| ремонт |  | repair | noun | ч | ремонт взуття |
+| овочі |  | vegetables | noun |  |  |
+| фрукти |  | fruits | noun |  |  |
+| м'ясо |  | meat | noun | с |  |
+| хліб |  | bread | noun | ч |  |
+| продавати |  | to sell | verb |  |  |
+| супермаркет |  | supermarket | noun | ч |  |
+| ринок |  | market | noun | ч |  |
+| кілограм |  | kilogram | noun | ч |  |
+| місцевий |  | locative | adjective |  |  |
+| знахідний |  | accusative | adjective |  |  |
+| орудний |  | instrumental | adjective |  |  |
+| називний |  | nominative | adjective |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: Базова лексика
 
@@ -369,36 +411,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Я підходжу до вільної [___:0]}, щоб заплатити за товари. Касир сканує мій [___:1]} і питає: \"Вам потрібен великий пластиковий [___:2]}?\". Я погоджуюся. Потім касир запитує: \"Чи є у вас бонусна [___:3]} нашого магазину?\". Я кажу, що немає. Загальна [___:4]} моєї покупки становить двісті гривень. Касир питає: \"Як ви будете [___:5]} сьогодні?\". Я відповідаю: \"Я хочу платити банківською [___:6]}\". Я прикладаю картку до термінала. Після успішної оплати касир видає мені довгий фіскальний [___:7]}. Оскільки я не давав паперові [___:8]}, мені не потрібна [___:9]}."} blanks={JSON.parse(`[{"index": 0, "answer": "каси", "options": ["каси", "знижки", "черги", "примірки"]}, {"index": 1, "answer": "товар", "options": ["товар", "пакет", "чек", "розмір"]}, {"index": 2, "answer": "пакет", "options": ["пакет", "чек", "термінал", "товар"]}, {"index": 3, "answer": "картка", "options": ["картка", "знижка", "здача", "каса"]}, {"index": 4, "answer": "ціна", "options": ["ціна", "вага", "знижка", "здача"]}, {"index": 5, "answer": "платити", "options": ["платити", "купувати", "продавати", "зважити"]}, {"index": 6, "answer": "карткою", "options": ["карткою", "картою", "готівкою", "карта"]}, {"index": 7, "answer": "чек", "options": ["чек", "пакет", "термінал", "товар"]}, {"index": 8, "answer": "гроші", "options": ["гроші", "чеки", "картки", "пакети"]}, {"index": 9, "answer": "здача", "options": ["здача", "знижка", "каса", "ціна"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| магазин | [mɑɦɑˈzɪn] | store | noun | ч | йти в магазин, продуктовий магазин |
-| ціна | [t͡sʲiˈnɑ] | price | noun | ж | висока ціна, яка ціна? |
-| купувати | [kupuˈʋɑtɪ] | to buy | verb |  | купувати продукти |
-| платити | [plɑˈtɪtɪ] | to pay | verb |  | платити карткою, платити готівкою |
-| гроші | [ɦrɔʃʲi] | money | noun |  | паперові гроші |
-| картка | [ˈkɑrtkɑ] | card | noun | ж | банківська картка |
-| готівка | [ɦɔˈtʲiu̯kɑ] | cash | noun | ж | платити готівкою |
-| чек | [t͡ʃɛk] | receipt | noun | ч | фіскальний чек |
-| знижка | [ˈznɪʒkɑ] | discount | noun | ж | сезонні знижки |
-| каса | [ˈkɑsɑ] | checkout | noun | ж | де каса?, на касі |
-| здача | [ˈzdɑt͡ʃɑ] | change | noun | ж | ваша здача |
-| пакет | [pɑˈkɛt] | bag | noun | ч | великий пакет |
-| примірка | [prɪˈmʲirkɑ] | fitting room | noun | ж | де примірка? |
-| розмір | [rɔzʲmʲir] | size | noun | ч | мій розмір |
-| перукарня | [pɛruˈkɑrnʲɑ] | hairdresser | noun | ж | йти в перукарню |
-| хімчистка | [xʲiˈmt͡ʃɪstkɑ] | dry cleaning | noun | ж | віддати в хімчистку |
-| ремонт | [rɛˈmɔnt] | repair | noun | ч | ремонт взуття |
-| овочі | [ˈɔʋɔt͡ʃʲi] | vegetables | noun |  |  |
-| фрукти | [ˈfruktɪ] | fruits | noun |  |  |
-| м'ясо | [ˈmjɑsɔ] | meat | noun | с |  |
-| хліб | [xlʲib] | bread | noun | ч |  |
-| продавати | [prɔdɑˈʋɑtɪ] | to sell | verb |  |  |
-| супермаркет | [supɛrˈmɑrkɛt] | supermarket | noun | ч |  |
-| ринок | [ˈrɪnɔk] | market | noun | ч |  |
-| кілограм | [kʲilɔˈɦrɑm] | kilogram | noun | ч |  |
-| місцевий | [mʲiˈst͡sɛʋɪj] | locative | adjective |  |  |
-| знахідний | [znɑxʲidˈnɪj] | accusative | adjective |  |  |
-| орудний | [ɔˈrudnɪj] | instrumental | adjective |  |  |
-| називний | [nɑzɪu̯ˈnɪj] | nominative | adjective |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

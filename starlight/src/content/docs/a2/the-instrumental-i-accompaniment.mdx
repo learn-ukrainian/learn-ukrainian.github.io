@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# The Instrumental I — Accompaniment
 
 > **Чому це важливо?**
 >
@@ -509,7 +515,49 @@ To achieve true fluency, you must compare correct and incorrect sentences carefu
 5. Перекладіть українською: «I am walking with a friend (male).»
 6. Складіть речення зі словами: я / розмовляти / вчитель.
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| з |  | with | prep |  |  |
+| із |  | with | prep |  |  |
+| зі |  | with | prep |  |  |
+| разом |  | together | adv |  |  |
+| разом з |  | together with | phrase |  |  |
+| поруч з |  | next to / beside | phrase |  |  |
+| гуляти |  | to walk / to hang out | verb |  | гуляти з кимось (to hang out with someone) |
+| розмовляти |  | to talk | verb |  | розмовляти з кимось (to talk with someone) |
+| зустрічатися |  | to meet / to date | verb |  | зустрічатися з кимось (to date someone / meet up) |
+| вітатися |  | to greet | verb |  | вітатися з кимось (to say hello to someone) |
+| спілкуватися |  | to communicate / socialize | verb |  |  |
+| жити |  | to live | verb |  | жити з кимось (to live with someone) |
+| працювати |  | to work | verb |  | працювати з кимось (to work with someone) |
+| грати |  | to play | verb |  | грати з кимось (to play with someone) |
+| дружити |  | to be friends | verb |  |  |
+| товаришувати |  | to be friends / comrades | verb |  |  |
+| приятелювати |  | to be pals / acquaintances | verb |  |  |
+| посваритися |  | to quarrel | verb |  |  |
+| помиритися |  | to make up / reconcile | verb |  |  |
+| знайомитися |  | to get acquainted | verb |  |  |
+| друг |  | friend (male/generic) | noun | ч |  |
+| подруга |  | friend (female) | noun | ж |  |
+| приятель |  | buddy / pal | noun | ч |  |
+| знайомий |  | acquaintance | noun | ч |  |
+| сусід |  | neighbor | noun | ч |  |
+| колега |  | colleague | noun | ч |  |
+| партнер |  | partner | noun | ч |  |
+| іменник |  | noun (grammar term) | noun | ч |  |
+| прикметник |  | adjective (grammar term) | noun | ч |  |
+| називний |  | nominative (case name) | adj |  |  |
+| орудний |  | instrumental (case name) | adj |  |  |
+| займенник |  | pronoun (grammar term) | noun | ч |  |
+| одружитися |  | to get married | verb |  | одружитися з кимось (to marry someone) |
+| подружитися |  | to become friends | verb |  | подружитися з кимось (to become friends with someone) |
+| познайомитися |  | to get acquainted / to meet | verb |  | познайомитися з кимось (to meet someone new) |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Хто з ким? (Who is with whom?)
 
@@ -568,42 +616,29 @@ To achieve true fluency, you must compare correct and incorrect sentences carefu
 
 <Cloze client:load passage={"Минулого літа я їздив на море. Я їздив не сам, а [___:0]} (друг). Його звати Іван. Ми жили в готелі разом [___:1]} (Іван). Щовечора ми гуляли [___:2]} (хлопці) біля моря. Одного разу ми познайомилися [___:3]} (дівчина). Її звати Олена. Вона була там [___:4]} (сестра). Ми всі разом пішли на вечерю. Я сидів поруч [___:5]} (Олена). Іван розмовляв [___:6]} (сестра) Олени. Ми їли рибу [___:7]} (овочі) і пили чай [___:8]} (лимон). Це був чудовий час [___:9]} (друзі)! Олена сфотографувалася [___:10]} (Іван) на пам'ять. Ми домовилися зустрітися [___:11]} (родина) наступного літа."} blanks={JSON.parse(`[{"index": 0, "answer": "з другом", "options": ["з другом", "з друга", "з другу", "з друзі"]}, {"index": 1, "answer": "з Іваном", "options": ["з Іваном", "з Івана", "з Івану", "з Іване"]}, {"index": 2, "answer": "з хлопцями", "options": ["з хлопцями", "з хлопців", "з хлопцям", "з хлопці"]}, {"index": 3, "answer": "з дівчиною", "options": ["з дівчиною", "з дівчини", "з дівчині", "з дівчину"]}, {"index": 4, "answer": "з сестрою", "options": ["з сестрою", "з сестри", "з сестрі", "з сестру"]}, {"index": 5, "answer": "з Оленою", "options": ["з Оленою", "з Олени", "з Олені", "з Олену"]}, {"index": 6, "answer": "з сестрою", "options": ["з сестрою", "з сестри", "з сестрі", "з сестру"]}, {"index": 7, "answer": "з овочами", "options": ["з овочами", "з овочі", "з овочів", "з овочах"]}, {"index": 8, "answer": "з лимоном", "options": ["з лимоном", "з лимона", "з лимону", "з лимоні"]}, {"index": 9, "answer": "з друзями", "options": ["з друзями", "з друзів", "з друзях", "з друзі"]}, {"index": 10, "answer": "з Іваном", "options": ["з Іваном", "з Івана", "з Івану", "з Івані"]}, {"index": 11, "answer": "з родиною", "options": ["з родиною", "з родини", "з родині", "з родину"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| з | [z] | with | prep |  |  |
-| із | [iz] | with | prep |  |  |
-| зі | [zʲi] | with | prep |  |  |
-| разом | [ˈrɑzɔm] | together | adv |  |  |
-| разом з | [ˈrɑzɔm z] | together with | phrase |  |  |
-| поруч з | [ˈpɔrut͡ʃ z] | next to / beside | phrase |  |  |
-| гуляти | [ɦuˈlʲɑtɪ] | to walk / to hang out | verb |  | гуляти з кимось (to hang out with someone) |
-| розмовляти | [rɔzmɔˈʋlʲɑtɪ] | to talk | verb |  | розмовляти з кимось (to talk with someone) |
-| зустрічатися | [zustʲrʲiˈt͡ʃɑtɪsʲɑ] | to meet / to date | verb |  | зустрічатися з кимось (to date someone / meet up) |
-| вітатися | [ʋʲiˈtɑtɪsʲɑ] | to greet | verb |  | вітатися з кимось (to say hello to someone) |
-| спілкуватися | [sʲpʲilkuˈʋɑtɪsʲɑ] | to communicate / socialize | verb |  |  |
-| жити | [ˈʒɪtɪ] | to live | verb |  | жити з кимось (to live with someone) |
-| працювати | [prɑt͡sʲuˈʋɑtɪ] | to work | verb |  | працювати з кимось (to work with someone) |
-| грати | [ˈɦrɑtɪ] | to play | verb |  | грати з кимось (to play with someone) |
-| дружити | [druˈʒɪtɪ] | to be friends | verb |  |  |
-| товаришувати | [tɔʋɑrɪʃuˈʋɑtɪ] | to be friends / comrades | verb |  |  |
-| приятелювати | [prɪjɑtɛlʲuˈʋɑtɪ] | to be pals / acquaintances | verb |  |  |
-| посваритися | [pɔsʋɑˈrɪtɪsʲɑ] | to quarrel | verb |  |  |
-| помиритися | [pɔmɪˈrɪtɪsʲɑ] | to make up / reconcile | verb |  |  |
-| знайомитися | [znɑˈjɔmɪtɪsʲɑ] | to get acquainted | verb |  |  |
-| друг | [druɦ] | friend (male/generic) | noun | ч |  |
-| подруга | [ˈpɔdruɦɑ] | friend (female) | noun | ж |  |
-| приятель | [ˈprɪjɑtɛlʲ] | buddy / pal | noun | ч |  |
-| знайомий | [znɑˈjɔmɪj] | acquaintance | noun | ч |  |
-| сусід | [suˈsʲid] | neighbor | noun | ч |  |
-| колега | [kɔˈlɛɦɑ] | colleague | noun | ч |  |
-| партнер | [pɑrˈtnɛr] | partner | noun | ч |  |
-| іменник | [iˈmɛnːɪk] | noun (grammar term) | noun | ч |  |
-| прикметник | [prɪˈkmɛtnɪk] | adjective (grammar term) | noun | ч |  |
-| називний | [nɑzɪˈʋnɪj] | nominative (case name) | adj |  |  |
-| орудний | [ɔˈrudnɪj] | instrumental (case name) | adj |  |  |
-| займенник | [zɑjˈmɛnːɪk] | pronoun (grammar term) | noun | ч |  |
-| одружитися | [ɔdruˈʒɪtɪsʲɑ] | to get married | verb |  | одружитися з кимось (to marry someone) |
-| подружитися | [pɔdruˈʒɪtɪsʲɑ] | to become friends | verb |  | подружитися з кимось (to become friends with someone) |
-| познайомитися | [pɔznɑˈjɔmɪtɪsʲɑ] | to get acquainted / to meet | verb |  | познайомитися з кимось (to meet someone new) |
+:::info[🎧 🔗 External Resources]
+
+**🎧 Podcasts:**
+- [ULP 2-61 Christmas dinner in Ukraine + Instrumental case](https://www.ukrainianlessons.com/lesson/61/) — Level-aligned topic match: instrumental
+- [ULP 2-62 New Year's Eve in Ukraine + Instrumental case of Pronouns](https://www.ukrainianlessons.com/lesson/62/) — Level-aligned topic match: instrumental
+
+**📖 Articles:**
+- [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Unknown
+
+**🌐 Websites:**
+- [Dobra Forma 9-1: Instrumental Case (Intro)](https://opentext.ku.edu/dobraforma/chapter/9-1/) — University of Kansas
+- [Dobra Forma 9-4: Instrumental Case (зі and із)](https://opentext.ku.edu/dobraforma/chapter/9-4/) — University of Kansas
+- [Instrumental Case Guide](https://www.talkukrainian.com/instrumental-case/) — Unknown
+- [Instrumental Usage](https://www.speakua.com/blog/instrumental-case-ukrainian) — Unknown
+:::
+
+### 📺 YouTube
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=lmPHpt2DGos" label="Instrumental Case Explained" />
+*Speak Ukrainian*
+
+</TabItem>
+</Tabs>

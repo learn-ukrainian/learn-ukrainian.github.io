@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Вид у наказовому способі
+{/**/}
 
 :::warning[❗ **Чому це важливо?**]
 
@@ -364,7 +370,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 4. Яке дієслово ви впевнено використаєте, щоб турботливо попередити друга про дуже слизьку підлогу в коридорі: «не падай» чи «не впади»? Чому інший варіант звучить так кумедно і дуже неприродно?
 5. У яких конкретних соціальних ситуаціях доречно використовувати розмовні аналітичні конструкції з «давай(те)», а коли краще і правильніше застосувати класичні, піднесені синтетичні форми на зразок «робімо»?
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **наказовий спосіб** |  | imperative mood | ім |  |
+| **будь ласка** |  | please | particle |  |
+| **негайно** |  | immediately | adverb |  |
+| **обов'язково** |  | definitely, must | adverb |  |
+| **пам'ятай** |  | remember | дієсл |  |
+| **запам'ятай** |  | memorize | дієсл |  |
+| **перестань** |  | stop | дієсл |  |
+| **давай** |  | let's | дієсл |  |
+| **припини** |  | stop, cease | дієсл |  |
+| **продовжуй** |  | continue | дієсл |  |
+| **зачекай** |  | wait | дієсл |  |
+| **чекай** |  | wait | дієсл |  |
+| **дієслово** |  | verb | ім |  |
+| **вид** |  | aspect | ім |  |
+| **недоконаний** |  | imperfective | adjective |  |
+| **доконаний** |  | perfective | adjective |  |
+| **запрошення** |  | invitation | ім |  |
+| **наказ** |  | order, command | ім |  |
+| **дія** |  | action | ім |  |
+| **результат** |  | result | ім |  |
+| **процес** |  | process | ім |  |
+| **заборона** |  | prohibition | ім |  |
+| **застереження** |  | warning | ім |  |
+| **ввічливий** |  | polite | adjective |  |
+| **гостинність** |  | hospitality | ім |  |
+| **прохання** |  | request | ім |  |
+| **правило** |  | rule | ім |  |
+| **помилка** |  | mistake, error | ім |  |
+| **порада** |  | advice | ім |  |
+| **обережно** |  | carefully, watch out | adverb |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Оберіть правильний вид дієслова
 
@@ -422,37 +465,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"В українській мові [___:0]} дієслова грає величезну роль. Якщо ви хочете висловити ввічливе [___:1]}, завжди використовуйте [___:2]} вид. Наприклад, коли приходять гості, кажіть їм '[___:3]}', а не 'сядьте'. Це покаже вашу [___:4]} і повагу. Натомість, якщо вам потрібен швидкий [___:5]}, використовуйте [___:6]} вид. Наприклад, керівник може сказати: '[___:7]} цей звіт [___:8]}'. Такий [___:9]} звучить дуже чітко. Зверніть увагу на [___:10]} дії. Для заборони ми використовуємо недоконаний вид, наприклад: 'не [___:11]} цього'. А для того, щоб висловити [___:12]} від нещасного випадку, потрібен доконаний вид: 'обережно, не [___:13]}'."} blanks={JSON.parse(`[{"index": 0, "answer": "вид", "options": ["вид", "час", "наказ", "результат"]}, {"index": 1, "answer": "запрошення", "options": ["запрошення", "правило", "застереження", "заборона"]}, {"index": 2, "answer": "недоконаний", "options": ["недоконаний", "доконаний", "минулий", "ввічливий"]}, {"index": 3, "answer": "сідайте", "options": ["сідайте", "сядьте", "сісти", "сидіти"]}, {"index": 4, "answer": "гостинність", "options": ["гостинність", "помилку", "дію", "небезпеку"]}, {"index": 5, "answer": "результат", "options": ["результат", "процес", "вид", "варіант"]}, {"index": 6, "answer": "доконаний", "options": ["доконаний", "недоконаний", "майбутній", "суворий"]}, {"index": 7, "answer": "роздрукуй", "options": ["роздрукуй", "друкуй", "роздруковуй", "друкувати"]}, {"index": 8, "answer": "негайно", "options": ["негайно", "обережно", "ніколи", "завжди"]}, {"index": 9, "answer": "наказ", "options": ["наказ", "прохання", "процес", "заборона"]}, {"index": 10, "answer": "заперечення", "options": ["заперечення", "завершення", "запрошення", "заохочення"]}, {"index": 11, "answer": "роби", "options": ["роби", "зроби", "робити", "зробити"]}, {"index": 12, "answer": "застереження", "options": ["застереження", "заборона", "порада", "правило"]}, {"index": 13, "answer": "впади", "options": ["впади", "падай", "падати", "впасти"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **наказовий спосіб** | [nɑkɑˈzɔʋɪj ˈspɔsʲib] | imperative mood | ім |  |
-| **будь ласка** | [budʲ ˈlɑskɑ] | please | particle |  |
-| **негайно** | [nɛˈɦɑjnɔ] | immediately | adverb |  |
-| **обов'язково** | [ɔbɔu̯jɑˈzkɔʋɔ] | definitely, must | adverb |  |
-| **пам'ятай** | [pɑmjɑˈtɑj] | remember | дієсл |  |
-| **запам'ятай** | [zɑpɑmjɑˈtɑj] | memorize | дієсл |  |
-| **перестань** | [pɛrɛˈstɑnʲ] | stop | дієсл |  |
-| **давай** | [dɑˈʋɑj] | let's | дієсл |  |
-| **припини** | [prɪpɪˈnɪ] | stop, cease | дієсл |  |
-| **продовжуй** | [prɔˈdɔu̯ʒuj] | continue | дієсл |  |
-| **зачекай** | [zɑt͡ʃɛˈkɑj] | wait | дієсл |  |
-| **чекай** | [t͡ʃɛˈkɑj] | wait | дієсл |  |
-| **дієслово** | [dʲijɛˈslɔʋɔ] | verb | ім |  |
-| **вид** | [ʋɪd] | aspect | ім |  |
-| **недоконаний** | [nɛdɔˈkɔnɑnɪj] | imperfective | adjective |  |
-| **доконаний** | [dɔˈkɔnɑnɪj] | perfective | adjective |  |
-| **запрошення** | [zɑˈprɔʃɛnʲːɑ] | invitation | ім |  |
-| **наказ** | [nɑˈkɑz] | order, command | ім |  |
-| **дія** | [ˈdʲijɑ] | action | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **заборона** | [zɑbɔˈrɔnɑ] | prohibition | ім |  |
-| **застереження** | [zɑstɛˈrɛʒɛnʲːɑ] | warning | ім |  |
-| **ввічливий** | [ˈʋʲːit͡ʃlɪʋɪj] | polite | adjective |  |
-| **гостинність** | [ɦɔˈstɪnʲːisʲtʲ] | hospitality | ім |  |
-| **прохання** | [prɔˈxɑnʲːɑ] | request | ім |  |
-| **правило** | [prɑʋɪlɔ] | rule | ім |  |
-| **помилка** | [ˈpɔˈmɪlkɑ] | mistake, error | ім |  |
-| **порада** | [pɔˈrɑdɑ] | advice | ім |  |
-| **обережно** | [ɔbɛˈrɛʒnɔ] | carefully, watch out | adverb |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

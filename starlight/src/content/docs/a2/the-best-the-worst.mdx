@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# The Best, The Worst
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -335,7 +341,39 @@ Remember, a superlative is still an adjective — it must always agree with the 
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| найкращий |  | the best | adjective |  |  |
+| найгірший |  | the worst | adjective |  |  |
+| найбільший |  | the biggest, the largest | adjective |  |  |
+| найменший |  | the smallest | adjective |  |  |
+| найбільш |  | the most | adverb |  |  |
+| найменш |  | the least | adverb |  |  |
+| найважливіший |  | the most important | adjective |  |  |
+| найвищий |  | the highest | adjective |  |  |
+| якнайшвидше |  | as fast as possible | adverb |  |  |
+| щонайкращий |  | the best possible | adjective |  |  |
+| найсолодший |  | the sweetest | adjective |  |  |
+| найстаріший |  | the oldest | adjective |  |  |
+| найрозумніший |  | the smartest | adjective |  |  |
+| найглибший |  | the deepest | adjective |  |  |
+| найдовший |  | the longest | adjective |  |  |
+| найсмачніший |  | the tastiest | adjective |  |  |
+| найцікавіший |  | the most interesting | adjective |  |  |
+| найдорожчий |  | the most expensive | adjective |  |  |
+| найпотужніший |  | the most powerful | adjective |  |  |
+| станція |  | station | noun | ж |  |
+| гора |  | mountain | noun | ж |  |
+| печера |  | cave | noun | ж |  |
+| літак |  | airplane | noun | ч |  |
+| рекорд |  | record | noun | ч |  |
+| успіх |  | success | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: від звичайного до найвищого ступеня
 
@@ -400,32 +438,10 @@ Remember, a superlative is still an adjective — it must always agree with the 
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Який телефон ти хочеш купити? Мені потрібен ___ варіант.", "answer": "найкращий", "options": ["найкращий", "самий кращий", "кращий", "добрий"]}, {"sentence": "Він коштує багато грошей. Це ___ модель у магазині.", "answer": "найдорожча", "options": ["найдорожча", "найдорожчий", "дорожча", "сама дорога"]}, {"sentence": "Я хочу отримати його ___.", "answer": "якнайшвидше", "options": ["якнайшвидше", "швидше", "найшвидший", "швидко"]}, {"sentence": "Але це також ___ телефон з усіх.", "answer": "найпотужніший", "options": ["найпотужніший", "самий потужний", "потужніший", "найбільш потужніший"]}, {"sentence": "Це ___ новина для мене!", "answer": "найкраща", "options": ["найкраща", "найкращий", "краща", "сама краща"]}, {"sentence": "Ти зробив ___ вибір.", "answer": "найбільш ідеальний", "options": ["найбільш ідеальний", "самий ідеальний", "ідеальний", "більш ідеальний"]}, {"sentence": "Так, це ___ подарунок на день народження.", "answer": "найкращий", "options": ["найкращий", "кращий", "самий кращий", "найбільш кращий"]}, {"sentence": "Я згоден, це ___ ідея.", "answer": "найцікавіша", "options": ["найцікавіша", "найцікавіший", "цікавіша", "сама цікава"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| найкращий | [nɑjˈkrɑʃt͡ʃɪj] | the best | adjective |  |  |
-| найгірший | [nɑjˈɦʲirʃɪj] | the worst | adjective |  |  |
-| найбільший | [nɑjˈbʲilʲʃɪj] | the biggest, the largest | adjective |  |  |
-| найменший | [nɑjˈmɛnʃɪj] | the smallest | adjective |  |  |
-| найбільш | [nɑjˈbʲilʲʃ] | the most | adverb |  |  |
-| найменш | [nɑjˈmɛnʃ] | the least | adverb |  |  |
-| найважливіший | [nɑjʋɑˈʒlɪˈʋʲiʃɪj] | the most important | adjective |  |  |
-| найвищий | [nɑˈjʋɪʃt͡ʃɪj] | the highest | adjective |  |  |
-| якнайшвидше | [jɑknɑjˈʃʋɪd͡ʒʃɛ] | as fast as possible | adverb |  |  |
-| щонайкращий | [ʃt͡ʃɔnɑjˈkrɑʃt͡ʃɪj] | the best possible | adjective |  |  |
-| найсолодший | [nɑjsɔˈlɔd͡ʒʃɪj] | the sweetest | adjective |  |  |
-| найстаріший | [nɑjstɑˈrʲiʃɪj] | the oldest | adjective |  |  |
-| найрозумніший | [nɑjrɔzuˈmnʲiʃɪj] | the smartest | adjective |  |  |
-| найглибший | [nɑjˈɦlɪbʃɪj] | the deepest | adjective |  |  |
-| найдовший | [nɑjˈdɔu̯ʃɪj] | the longest | adjective |  |  |
-| найсмачніший | [nɑjsmɑˈt͡ʃnʲiʃɪj] | the tastiest | adjective |  |  |
-| найцікавіший | [nɑjt͡sʲikɑˈʋʲiʃɪj] | the most interesting | adjective |  |  |
-| найдорожчий | [nɑjdɔˈrɔʒt͡ʃɪj] | the most expensive | adjective |  |  |
-| найпотужніший | [nɑjpɔˈtuʒnʲiʃɪj] | the most powerful | adjective |  |  |
-| станція | [ˈstɑnʲt͡sʲijɑ] | station | noun | ж |  |
-| гора | [ɦɔˈrɑ] | mountain | noun | ж |  |
-| печера | [pɛˈt͡ʃɛrɑ] | cave | noun | ж |  |
-| літак | [lʲiˈtɑk] | airplane | noun | ч |  |
-| рекорд | [rɛˈkɔrd] | record | noun | ч |  |
-| успіх | [ˈusʲpʲix] | success | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

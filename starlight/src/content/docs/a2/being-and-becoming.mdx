@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Being and Becoming: Identity in Motion
 
 > **Чому це важливо?**
 >
@@ -519,7 +525,13 @@ Congratulations! You have mastered the "Identity Cases".
 
 До зустрічі!
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+*No vocabulary for this module.*
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Основи: Хто чи Ким?
 
@@ -577,3 +589,15 @@ Congratulations! You have mastered the "Identity Cases".
 ### Утворення фемінітивів
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Він — студент, вона — (студент) ________.", "answer": "студентка", "options": ["студентка", "студенткою", "студенти", "студента"]}, {"sentence": "Він — вчитель, вона — (вчитель) ________.", "answer": "вчителька", "options": ["вчителька", "вчителькою", "вчителі", "вчителя"]}, {"sentence": "Він — директор, вона — (директор) ________.", "answer": "директорка", "options": ["директорка", "директоркою", "директори", "директора"]}, {"sentence": "Він — художник, вона — (художник) ________.", "answer": "художниця", "options": ["художниця", "художницею", "художники", "художника"]}, {"sentence": "Він — автор, вона — (автор) ________.", "answer": "авторка", "options": ["авторка", "авторкою", "автори", "автора"]}, {"sentence": "Він — поет, вона — (поет) ________.", "answer": "поетка", "options": ["поетка", "поеткою", "поети", "поета"]}, {"sentence": "Він — дизайнер, вона — (дизайнер) ________.", "answer": "дизайнерка", "options": ["дизайнерка", "дизайнеркою", "дизайнери", "дизайнера"]}, {"sentence": "Він — психолог, вона — (психолог) ________.", "answer": "психологиня", "options": ["психологиня", "психологинею", "психологи", "психолога"]}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🌐 Websites:**
+- [Dobra Forma 10-3: Instrumental with працювати, бути, стати](https://opentext.ku.edu/dobraforma/chapter/10-3/) — University of Kansas
+:::
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# My Family (Моя сім'я)
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -47,7 +53,7 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 > Сьогодні ми будемо говорити про маму, тата, брата і сестру. Це цікава і корисна тема!
 > Мій брат — мій друг. Моя сестра — моя подруга. У нас дружна родина.
 
-## Розминка: Члени сім'ї (Warm-up: Family Members)
+## Вступ: Моя сім'я
 
 Let's start with the most important people in our lives: the nuclear family. In Ukrainian, family terms often carry gender information, which helps you reinforce the masculine and feminine patterns you already know.
 
@@ -58,7 +64,7 @@ Let's start with the most important people in our lives: the nuclear family. In 
 Мама і тато люблять дітей. Діти люблять батьків.
 Це дуже просто і дуже важливо.
 
-### Українські сімейні традиції (Ukrainian Family Traditions)
+### Українські сімейні традиції
 
 В Україні сім'я — це все.
 Ми любимо бути разом.
@@ -71,7 +77,7 @@ Let's start with the most important people in our lives: the nuclear family. In 
 На Великдень ми теж разом.
 Це дуже добре.
 
-### Батьки (Parents)
+### Батьки
 
 The general word for parents is **батьки́**. But individually, we use specific terms depending on formality and warmth.
 
@@ -92,7 +98,7 @@ The formal word for father is **ба́тько**. It is more common than "мат
 You might hear the word **не́нька** in songs or poetry. This is a very tender, poetic, and old-fashioned word for mother. Ukrainians often call Ukraine "Ненька Україна" (Mother Ukraine). It shows deep love and reverence.
 :::
 
-### Діти (Children)
+### Діти
 
 When we talk about children (**ді́ти**), we distinguish between a son and a daughter.
 
@@ -107,7 +113,7 @@ A daughter is **до́нька** or sometimes **дочка́**. Both are correct
 If you want to say "This is my child" (singular, gender-neutral), you use **дити́на**.
 - **Це моя дитина.** (This is my child.)
 
-### Брати і сестри (Brothers and Sisters)
+### Брати і сестри
 
 Siblings are often your best friends. The terminology here is straightforward but essential for building your family tree.
 
@@ -130,11 +136,11 @@ Remember the "Magic Vocalic Check"?
 - **Тато** acts masculine grammatically: "Мій тато" (not "моє").
 :::
 
-## Близька та розширена родина (Close and Extended Family)
+## Презентація: Близька та розширена родина
 
 In Ukraine, the concept of family often extends beyond just parents and children. Grandparents often live with the family or help raise grandchildren, creating a strong multi-generational bond.
 
-### Старше покоління (Older Generation)
+### Старше покоління
 
 Grandparents are the pillars of a Ukrainian family.
 
@@ -146,7 +152,7 @@ A grandmother is **бабу́ся**. Just like with grandfather, you might hear 
 - **Моя бабуся добра.** (My grandmother is kind.)
 - **Бабуся готує їсти.** (Grandma is cooking.)
 
-### Дядько і Тітка (Uncle and Aunt)
+### Дядько і Тітка
 
 Expanding the circle, let's look at your parents' siblings.
 
@@ -162,7 +168,7 @@ An aunt is **ті́тка**. Standard feminine noun ending in -а.
 In English, you might call a close family friend "Uncle" or "Auntie". In Ukrainian, we do this too! Children often address close friends of their parents as **дядько** or **тітка** followed by their name, even if they aren't blood relatives. It's a sign of respect and closeness.
 :::
 
-### Онуки (Grandchildren)
+### Онуки
 
 If you are a grandparent (or talking about one), you talk about grandchildren.
 
@@ -174,7 +180,7 @@ A granddaughter is **ону́ка**. Feminine, -а ending.
 
 Notice the pattern? **Син/Донька**, **Онук/Онука**. The endings make the gender clear instantly.
 
-### Подружжя (Spouses)
+### Подружжя
 
 Finally, how do we talk about husbands and wives? This pair has a little secret that confuses beginners.
 
@@ -189,7 +195,7 @@ A wife is **дружи́на**.
 
 Some learners try to use **жі́нка** (woman) for "wife". While this is common in colloquial speech (just like "чоловік"), **дружина** is the more precise and standard term for "wife". I recommend using **дружина** to avoid confusion.
 
-### Моє велике родинне дерево (My Big Family Tree)
+### Моє велике родинне дерево
 
 Прочитайте текст про велику українську родину:
 
@@ -206,7 +212,7 @@ Some learners try to use **жі́нка** (woman) for "wife". While this is comm
 
 ### Конструкція "У мене є..." (I have...)
 
-Now, how do you say "I have a brother"? In English, we use the verb "to have". In Ukrainian, we use a different structure: **"У мене є..."** [u ˈmɛnɛ jɛ].
+Now, how do you say "I have a brother"? In English, we use the verb "to have". In Ukrainian, we use a different structure: **"У мене є..."**.
 
 Literally, this translates to "At me there is...".
 - **У мене є мама.** (I have a mom.)
@@ -222,11 +228,11 @@ Do not use "Я маю" (I have) for family relationships in standard conversatio
 | He has a son. | **У нього є син.** | At him is son. |
 | She has a daughter. | **У неї є донька.** | At her is daughter. |
 
-## Опис родини: Вік та характер (Describing Family: Age & Character)
+## Презентація: Характеристики та стосунки
 
 Now that we know who they are, let's describe them. We can use the adjectives we learned in previous lessons and introduce some new family-specific ones.
 
-### Старший та Молодший (Older and Younger)
+### Старший та Молодший
 
 When you have siblings, their age relative to you is an important distinction.
 
@@ -243,7 +249,7 @@ These act like normal adjectives. Notice how the endings change to match the gen
 - Masc: Старш**ий** брат
 - Fem: Старш**а** сестра
 
-### Характер та Зовнішність (Character and Appearance)
+### Характер та Зовнішність
 
 Let's bring your family descriptions to life using words you might remember, plus a few new helpful ones.
 
@@ -262,14 +268,14 @@ Use **розу́мний** (smart/clever).
 :::tip[🔍 **Adjective Agreement**]
 Look at the endings!
 - Тат**о** (Masc) → Розумн**ий**, Добр**ий**, Весел**ий**
-- Брат (Masc) → Старш**ий**, Молодш**ий**
+- Брат → Старш**ий**, Молодш**ий**
 - Мам**а** (Fem) → Розумн**а**, Добр**а**, Весел**а**
 - Сестр**а** (Fem) → Старш**а**, Молодш**а**
 
 Your adjective must always "rhyme" grammatically with the person you are describing.
 :::
 
-### Практика опису (Description Practice)
+### Практика опису
 
 Describe your family using these adjectives. Repeat after the examples:
 
@@ -279,7 +285,7 @@ Describe your family using these adjectives. Repeat after the examples:
 - **Тато:** сильний, розумний, добрий, веселий, старий, рідний.
     - Мій тато сильний і розумний.
     - Він добрий батько.
-- **Бабуся:** стара, добра, мудра (wise), мила (sweet).
+- **Бабуся:** стара, добра, мудра, мила.
     - Моя бабуся мила і добра.
 - **Дідусь:** старий, сильний, мудрий, веселий.
     - Мій дідусь ще сильний.
@@ -288,24 +294,24 @@ Describe your family using these adjectives. Repeat after the examples:
 - **Брат:** малий, великий, веселий, сильний, розумний.
     - Мій брат дуже веселий.
 
-### Вік (Age)
+### Вік
 
 Talking about exact age in Ukrainian requires a specific grammar case (Dative) that we will study deeply later. For now, let's use adjectives to describe age.
 
-**Молодий / Молода** [mɔlɔˈdɪj / mɔlɔˈdɑ] (Young)
+**Молодий mɔlɔˈdɑ] (Young)
 - **Він молодий.** (He is young.)
 - **Вона молода.** (She is young.)
 - **Мої батьки молоді.** (My parents are young.)
 
-**Старий / Стара** [stɑˈrɪj / stɑˈrɑ] (Old)
+**Старий stɑˈrɑ] (Old)
 - **Мій дідусь старий.** (My grandfather is old.)
 - **Моя бабуся стара.** (My grandmother is old.)
 
-**Дорослий / Доросла** [dɔˈrɔslɪj / dɔˈrɔslɑ] (Adult/Grown-up)
+**Дорослий dɔˈrɔslɑ] (Adult/Grown-up)
 - **Мій син вже дорослий.** (My son is already an adult.)
 - **Моя донька вже доросла.** (My daughter is already an adult.)
 
-**Маленький / Маленька** [mɑˈlɛnʲkɪj / mɑˈlɛnʲkɑ] (Small/Little)
+**Маленький mɑˈlɛnʲkɑ] (Small/Little)
 - **Мій брат ще маленький.** (My brother is still small.)
 - **Це маленька дитина.** (This is a small child.)
 
@@ -313,7 +319,7 @@ Talking about exact age in Ukrainian requires a specific grammar case (Dative) t
 To say "He is 25 years old", Ukrainian uses a special grammar called the **Dative Case** (literally "To him is 25 years"). We will master this in A2. For now, describing people as **молодий** (young) or **дорослий** (adult) is perfect!
 :::
 
-### Професія (Profession)
+### Професія
 
 Describing what your family does is another great way to practice. We use the construction: **[Person] — [Profession].** Note the dash! In writing, it replaces the word "is".
 
@@ -329,7 +335,7 @@ Remember, nouns for professions often have gender too!
 
 Let's focus on putting these pieces together. The glue that holds family descriptions together is the word "MY". In Ukrainian, "my" changes based on who you are talking about.
 
-### Присвійні займенники (Possessive Pronouns)
+### Присвійні займенники
 
 You have seen these before, but let's master them with family terms.
 
@@ -375,7 +381,7 @@ The word "my" agrees with the **family member**, not with **you**.
 - ❌ Incorrect: **Моя** тато (Feminine "my" + Masculine "dad")
 - ✅ Correct: **Мій** тато (Masculine "my" + Masculine "dad")
 
-### Так чи Ні? (True or False?)
+### Так чи Ні?
 
 Read the questions and answer **Так** (Yes) or **Ні** (No).
 
@@ -401,7 +407,7 @@ Did you catch everything?
 4. Younger sister (Katya) is a small schoolgirl.
 5. Grandparents live in the village.
 
-## Діалоги та фотоальбом
+## Практика: Звертання та спілкування
 
 *(Dialogues and Photo Album)*
 
@@ -422,7 +428,7 @@ You can follow up with details:
 - **Так, це моя сестра.** (Yes, this is my sister.)
 - **Ні, це моя мама!** (No, this is my mom!) — *Be careful not to mix them up!*
 
-### Моя розмова (My Conversation)
+### Моя розмова
 
 **Прочитайте діалог вголос.** (Read the dialogue aloud.)
 
@@ -460,7 +466,7 @@ You can follow up with details:
 
 </div>
 
-### Телефонна розмова (Phone Conversation)
+### Телефонна розмова
 
 Listen to this call:
 
@@ -486,7 +492,7 @@ Listen to this call:
 
 </div>
 
-### Корисні фрази (Useful Phrases)
+### Корисні фрази
 
 - **Привіт, мамо!** (Hi Mom!)
 - **Добрий день, тату!** (Good day Dad!)
@@ -495,7 +501,7 @@ Listen to this call:
 - **Як справи, бабусю?** (How are you Grandma?)
 - **Я люблю свою родину.** (I love my family.)
 
-### Кличний відмінок (Vocative Case)
+### Кличний відмінок
 
 Here is a special superpower of the Ukrainian language. When we **call** or **address** someone directly, we change their name slightly. This is called the **Vocative Case** (**Кличний відмінок**). We don't just say "Mom", we say "Oh Mom!".
 
@@ -519,7 +525,7 @@ You don't need to learn the whole grammar table yet, but you MUST know these fou
 It shows intimacy and direction. It signals "I am talking TO you, not ABOUT you." If you shout "Мама!" at your mother, it sounds like you are reading a label on her forehead. "Мамо!" sounds like you are calling her name. It is much more natural and polite.
 :::
 
-### Dialogue Practice: Фотографії (Photos)
+### Dialogue Practice: Фотографії
 
 Let's practice a conversation between two friends, Oksana and Tom.
 
@@ -565,7 +571,7 @@ Let's practice a conversation between two friends, Oksana and Tom.
 
 ---
 
-## 📋 Підсумок: Розповідь про себе (Summary)
+## 📋 Підсумок: Розповідь про себе
 
 Today you have built the foundation for describing your most personal circle: your family. You can now name your relatives, distinguish between older and younger siblings, state their professions, and even call your grandmother for dinner using the correct vocative form!
 
@@ -574,7 +580,7 @@ Remember the golden rules:
 2. **Existence**: Use "У мене є..." to say "I have...".
 3. **Address**: Use "Мамо", "Тату", "Бабусю", "Дідусю" when talking TO them.
 
-### Моя розповідь (My Story)
+### Моя розповідь
 
 Use this template to talk about your family:
 
@@ -585,9 +591,9 @@ Use this template to talk about your family:
 У мене є молодша сестра [Ім'я]. Вона школярка.
 Я люблю свою родину!"
 
-### Сімейні цінності (Family Values)
+### Сімейні цінності
 
-Що важливо для сім'ї?
+Головне для сім'ї:
 
 - **Любов** (Love). Ми любимо маму і тата.
 - **Повага** (Respect). Ми поважаємо бабусю і дідуся.
@@ -597,7 +603,7 @@ Use this template to talk about your family:
 Це прості правила. Але вони дуже важливі.
 Українська родина — це команда.
 
-### Поради (Tips)
+### Поради
 
 Любіть свою сім'ю.
 Говоріть "Мамо, я люблю тебе".
@@ -617,7 +623,35 @@ Use this template to talk about your family:
 You are ready to introduce your family to the world. In the next lesson, we will learn about holidays and traditions, where family plays the starring role.
 **До зустрічі!** (See you!)
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| мама |  | mom | noun | ж |  |
+| тато |  | dad | noun | ч |  |
+| батьки |  | parents | noun |  |  |
+| син |  | son | noun | ч |  |
+| донька |  | daughter | noun | ж |  |
+| діти |  | children | noun |  |  |
+| дитина |  | child | noun | ж |  |
+| брат |  | brother | noun | ч |  |
+| сестра |  | sister | noun | ж |  |
+| дідусь |  | grandfather | noun | ч |  |
+| бабуся |  | grandmother | noun | ж |  |
+| дядько |  | uncle | noun | ч |  |
+| тітка |  | aunt | noun | ж |  |
+| онук |  | grandson | noun | ч |  |
+| онука |  | granddaughter | noun | ж |  |
+| чоловік |  | husband | noun | ч |  |
+| дружина |  | wife | noun | ж |  |
+| сім'я |  | family | noun | ж |  |
+| родина |  | family | noun | ж |  |
+| старший |  | older | adj |  |  |
+| молодший |  | younger | adj |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Пари: Чоловік і Жінка
 
@@ -659,28 +693,10 @@ You are ready to introduce your family to the world. In the next lesson, we will
 
 <Quiz client:load questions={JSON.parse(`[{"question": "Як правильно перекласти українською фразу «My family»?", "options": [{"text": "Моя сім'я", "correct": true}, {"text": "Мій сім'я", "correct": false}, {"text": "Мої сім'я", "correct": false}, {"text": "Моє сім'я", "correct": false}], "explanation": "Family is «моя сім'я» or «моя родина»."}, {"question": "Оберіть слово, яке належить до чоловічого роду.", "options": [{"text": "Тато", "correct": true}, {"text": "Мама", "correct": false}, {"text": "Сестра", "correct": false}, {"text": "Бабуся", "correct": false}], "explanation": "«Тато» ends in -o but refers to a male, so it is masculine."}, {"question": "Яка фраза є правильним перекладом «I have a brother»?", "options": [{"text": "У мене є брат", "correct": true}, {"text": "Я маю брат", "correct": false}, {"text": "Мій є брат", "correct": false}, {"text": "У мене брат", "correct": false}], "explanation": "We use the construction «У мене є...»."}, {"question": "Що означає українське слово «донька» англійською мовою?", "options": [{"text": "Daughter", "correct": true}, {"text": "Son", "correct": false}, {"text": "Sister", "correct": false}, {"text": "Aunt", "correct": false}], "explanation": "«Донька» means daughter."}, {"question": "Яка форма є правильною для звертання до тата?", "options": [{"text": "Тату!", "correct": true}, {"text": "Тато!", "correct": false}, {"text": "Тата!", "correct": false}, {"text": "Татові!", "correct": false}], "explanation": "Vocative form for «тато» is «тату»."}, {"question": "Яке українське слово має значення «Parents» англійською?", "options": [{"text": "Батьки", "correct": true}, {"text": "Родичі", "correct": false}, {"text": "Діти", "correct": false}, {"text": "Друзі", "correct": false}], "explanation": "Parents translates to «Батьки»."}, {"question": "Як сказати «older brother» українською мовою?", "options": [{"text": "Старший брат", "correct": true}, {"text": "Молодший брат", "correct": false}, {"text": "Великий брат", "correct": false}, {"text": "Старий брат", "correct": false}], "explanation": "Older is «старший»."}, {"question": "Яке закінчення має прикметник у фразі «Моя мама добр...»?", "options": [{"text": "-а (добра)", "correct": true}, {"text": "-ий (добрий)", "correct": false}, {"text": "-е (добре)", "correct": false}, {"text": "-і (добрі)", "correct": false}], "explanation": "Feminine gender requires -a."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| мама | [ˈmɑmɑ] | mom | noun | ж |  |
-| тато | [ˈtɑtɔ] | dad | noun | ч |  |
-| батьки | [bɑˈtʲkɪ] | parents | noun |  |  |
-| син | [sɪn] | son | noun | ч |  |
-| донька | [ˈdɔnʲkɑ] | daughter | noun | ж |  |
-| діти | [ˈdʲitɪ] | children | noun |  |  |
-| дитина | [dɪˈtɪnɑ] | child | noun | ж |  |
-| брат | [brɑt] | brother | noun | ч |  |
-| сестра | [sɛˈstrɑ] | sister | noun | ж |  |
-| дідусь | [dʲiˈdusʲ] | grandfather | noun | ч |  |
-| бабуся | [bɑˈbusʲɑ] | grandmother | noun | ж |  |
-| дядько | [ˈdʲɑdʲkɔ] | uncle | noun | ч |  |
-| тітка | [ˈtʲitkɑ] | aunt | noun | ж |  |
-| онук | [ɔˈnuk] | grandson | noun | ч |  |
-| онука | [ɔˈnukɑ] | granddaughter | noun | ж |  |
-| чоловік | [t͡ʃɔlɔˈʋʲik] | husband | noun | ч |  |
-| дружина | [druˈʒɪnɑ] | wife | noun | ж |  |
-| сім'я | [sʲiˈmjɑ] | family | noun | ж |  |
-| родина | [rɔˈdɪnɑ] | family | noun | ж |  |
-| старший | [stɑrʃɪj] | older | adj |  |  |
-| молодший | [mɔˈlɔd͡ʒʃɪj] | younger | adj |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Підрядні означальні: коли, що
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -337,7 +343,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **коли** |  | when | conjunction |  |
+| **що** |  | that (conjunction) | conjunction |  |
+| **що** |  | that / which | pronoun |  |
+| **час** |  | time | ім |  |
+| **момент** |  | moment | ім |  |
+| **факт** |  | fact | ім |  |
+| **те** |  | that (neuter) | pronoun |  |
+| **все** |  | everything | pronoun |  |
+| **до того як** |  | before | conjunction |  |
+| **після того як** |  | after | conjunction |  |
+| **поки** |  | while / until | conjunction |  |
+| **одночасно** |  | simultaneously | adverb |  |
+| **коли завгодно** |  | whenever | фраза |  |
+| **вирішальний** |  | decisive | adjective |  |
+| **слушний** |  | appropriate / right (moment) | adjective |  |
+| **невідворотний** |  | inevitable | adjective |  |
+| **історичний** |  | historical | adjective |  |
+| **плинність** |  | fluidity | ім |  |
+| **стабілізувати** |  | to stabilize | дієсл |  |
+| **констатація** |  | statement / acknowledgment | ім |  |
+| **дарма що** |  | even though / despite the fact that | фраза |  |
+| **узагальнення** |  | generalization | ім |  |
+| **неминучий** |  | unavoidable | adjective |  |
+| **паралельно** |  | in parallel / simultaneously | adverb |  |
+| **послідовність** |  | sequence | ім |  |
+| **розуміти** |  | to understand | дієсл |  |
+| **з того часу** |  | since that time | фраза |  |
+| **на час** |  | by the time | фраза |  |
+| **бачити** |  | to see | дієсл |  |
+| **який** |  | which | pronoun |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Оберіть правильний сполучник: коли чи що
 
@@ -395,37 +438,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <GroupSort client:load groups={JSON.parse(`{"Сполучник (Констатація факту)": ["Вона думає, що це правильне рішення.", "Усі почули, що заграла музика.", "Я не знав, що ти вже повернувся.", "Ми помітили, що ціни змінилися."], "Займенник (Опис предмета)": ["Це будинок, що стоїть на розі вулиці.", "Студенти, що склали іспит, можуть відпочивати.", "Фільм, що ми подивилися, був неймовірним.", "Проєкт, що ми завершили, отримав нагороду."]}`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **коли** | [kɔˈlɪ] | when | conjunction |  |
-| **що** | [ʃt͡ʃɔ] | that (conjunction) | conjunction |  |
-| **що** | [ʃt͡ʃɔ] | that / which | pronoun |  |
-| **час** | [t͡ʃɑs] | time | ім |  |
-| **момент** | [mɔˈmɛnt] | moment | ім |  |
-| **факт** | [fɑkt] | fact | ім |  |
-| **те** | [tɛ] | that (neuter) | pronoun |  |
-| **все** | [ʍsɛ] | everything | pronoun |  |
-| **до того як** | [dɔ tɔˈɦɔ jɑk] | before | conjunction |  |
-| **після того як** | [ˈpʲisʲlʲɑ tɔˈɦɔ jɑk] | after | conjunction |  |
-| **поки** | [ˈpɔkɪ] | while / until | conjunction |  |
-| **одночасно** | [ɔdnɔˈt͡ʃɑsnɔ] | simultaneously | adverb |  |
-| **коли завгодно** | [kɔlɪ zɑˈʋɦɔdnɔ] | whenever | фраза |  |
-| **вирішальний** | [ʋɪrʲiˈʃɑlʲnɪj] | decisive | adjective |  |
-| **слушний** | [ˈsluʃnɪj] | appropriate / right (moment) | adjective |  |
-| **невідворотний** | [nɛʋʲidʋɔˈrɔtnɪj] | inevitable | adjective |  |
-| **історичний** | [istɔˈrɪt͡ʃnɪj] | historical | adjective |  |
-| **плинність** | [ˈplɪnʲːisʲtʲ] | fluidity | ім |  |
-| **стабілізувати** | [stɑbʲilʲizuˈʋɑtɪ] | to stabilize | дієсл |  |
-| **констатація** | [kɔnstɑˈtɑt͡sʲijɑ] | statement / acknowledgment | ім |  |
-| **дарма що** | [dɑrˈmɑ ʃt͡ʃɔ] | even though / despite the fact that | фраза |  |
-| **узагальнення** | [uzɑˈɦɑlʲnɛnʲːɑ] | generalization | ім |  |
-| **неминучий** | [nɛmɪˈnut͡ʃɪj] | unavoidable | adjective |  |
-| **паралельно** | [pɑrɑˈlɛlʲnɔ] | in parallel / simultaneously | adverb |  |
-| **послідовність** | [pɔsʲlʲiˈdɔu̯nʲisʲtʲ] | sequence | ім |  |
-| **розуміти** | [rɔzuˈmʲitɪ] | to understand | дієсл |  |
-| **з того часу** | [z tɔɦɔ ˈt͡ʃɑsu] | since that time | фраза |  |
-| **на час** | [nɑ t͡ʃɑs] | by the time | фраза |  |
-| **бачити** | [ˈbɑt͡ʃɪtɪ] | to see | дієсл |  |
-| **який** | [jɑˈkɪj] | which | pronoun |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

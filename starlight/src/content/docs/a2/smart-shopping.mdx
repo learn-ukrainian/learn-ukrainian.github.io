@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Smart Shopping
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -381,7 +387,39 @@ But for true comparisons involving "better", "faster", "cheaper", you must exclu
 
 Ви чудово впоралися з цим об'ємним матеріалом! Тепер ви повністю готові вирушати на справжній український шопінг. Ви зможете знаходити найкращі ціни, отримувати приємні знижки та насолоджуватися спілкуванням з людьми. Бажаємо вам вигідних покупок та гарного настрою!
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| ціна |  | price | noun | ж |  |
+| знижка |  | discount | noun | ж |  |
+| решта |  | change (money) | noun | ж |  |
+| чек |  | receipt | noun | ч |  |
+| кращий |  | better | adjective |  |  |
+| дешевий |  | cheap | adjective |  |  |
+| ринок |  | market | noun | ч |  |
+| кошик |  | basket / cart | noun | ч |  |
+| оформити |  | to checkout / process | verb |  |  |
+| доставка |  | delivery | noun | ж |  |
+| стакан |  | glass (unit of measurement) | noun | ч |  |
+| пучок |  | bunch | noun | ч |  |
+| супермаркет |  | supermarket | noun | ч |  |
+| базар |  | bazaar | noun | ч |  |
+| продавець |  | vendor / seller | noun | ч |  |
+| готівка |  | cash | noun | ж |  |
+| замовлення |  | order | noun | с |  |
+| свіжий |  | fresh | adjective |  |  |
+| домашній |  | homemade / homegrown | adjective |  |  |
+| якість |  | quality | noun | ж |  |
+| більший |  | bigger | adjective |  |  |
+| менший |  | smaller | adjective |  |  |
+| гірший |  | worse | adjective |  |  |
+| дорожчий |  | more expensive | adjective |  |  |
+| важливіший |  | more important | adjective |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: словник покупця
 
@@ -440,32 +478,10 @@ But for true comparisons involving "better", "faster", "cheaper", you must exclu
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Скажіть, будь ласка, яка _ на ці яблука?", "answer": "ціна", "options": ["ціна", "знижка", "решта", "чек"]}, {"sentence": "Якщо я куплю три кілограми, чи буде якась _?", "answer": "знижка", "options": ["знижка", "решта", "доставка", "кошик"]}, {"sentence": "Я дав вам двісті гривень, а де моя _?", "answer": "решта", "options": ["решта", "чек", "знижка", "ціна"]}, {"sentence": "Дякую за інформацію, але я ще _.", "answer": "подумаю", "options": ["подумаю", "куплю", "оформлю", "заплачу"]}, {"sentence": "Цей пучок кропу більший, _ той маленький пучок.", "answer": "ніж", "options": ["ніж", "за", "як", "так"]}, {"sentence": "Ваш товар набагато дорожчий _ мій товар.", "answer": "за", "options": ["за", "ніж", "як", "від"]}, {"sentence": "Ці ягоди — це найкраща _ на всьому ринку.", "answer": "якість", "options": ["якість", "ціна", "решта", "знижка"]}, {"sentence": "Бабусю, дайте мені, будь ласка, один _ малини.", "answer": "стакан", "options": ["стакан", "пучок", "кошик", "шматок"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| ціна | [t͡sʲiˈnɑ] | price | noun | ж |  |
-| знижка | [ˈznɪʒkɑ] | discount | noun | ж |  |
-| решта | [ˈrɛʃtɑ] | change (money) | noun | ж |  |
-| чек | [t͡ʃɛk] | receipt | noun | ч |  |
-| кращий | [ˈkrɑʃt͡ʃɪj] | better | adjective |  |  |
-| дешевий | [dɛˈʃɛʋɪj] | cheap | adjective |  |  |
-| ринок | [ˈrɪnɔk] | market | noun | ч |  |
-| кошик | [ˈkɔʃɪk] | basket / cart | noun | ч |  |
-| оформити | [ɔˈfɔrmɪtɪ] | to checkout / process | verb |  |  |
-| доставка | [dɔˈstɑu̯kɑ] | delivery | noun | ж |  |
-| стакан | [stɑˈkɑn] | glass (unit of measurement) | noun | ч |  |
-| пучок | [puˈt͡ʃɔk] | bunch | noun | ч |  |
-| супермаркет | [supɛrˈmɑrkɛt] | supermarket | noun | ч |  |
-| базар | [bɑˈzɑr] | bazaar | noun | ч |  |
-| продавець | [prɔdɑˈʋɛt͡sʲ] | vendor / seller | noun | ч |  |
-| готівка | [ɦɔˈtʲiu̯kɑ] | cash | noun | ж |  |
-| замовлення | [zɑˈmɔu̯lɛnʲːɑ] | order | noun | с |  |
-| свіжий | [ˈsʲʋʲiʒɪj] | fresh | adjective |  |  |
-| домашній | [dɔˈmɑʃnʲij] | homemade / homegrown | adjective |  |  |
-| якість | [ˈjɑkʲisʲtʲ] | quality | noun | ж |  |
-| більший | [ˈbʲilʲʃɪj] | bigger | adjective |  |  |
-| менший | [ˈmɛnʃɪj] | smaller | adjective |  |  |
-| гірший | [ˈɦʲirʃɪj] | worse | adjective |  |  |
-| дорожчий | [dɔˈrɔʒt͡ʃɪj] | more expensive | adjective |  |  |
-| важливіший | [ʋɑˈʒlɪˈʋʲiʃɪj] | more important | adjective |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

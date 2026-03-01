@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Непрямі питання та накази
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -419,7 +425,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 Завжди пам'ятайте, що справжня мовна майстерність приходить виключно із щоденною практикою. Уважно слухайте розмови носіїв мови на вулиці чи в подкастах. Завжди звертайте увагу на їхню спадну інтонацію та точний вибір дієслів. Так ви дуже швидко та непомітно адаптуєте всі ці складні граматичні структури до власного активного словника.
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **питання** |  | question | ім |  |
+| **наказ** |  | command | ім |  |
+| **прохання** |  | request | ім |  |
+| **чи** |  | whether / if | conjunction |  |
+| **запитати** |  | to ask | дієсл |  |
+| **наказати** |  | to order | дієсл |  |
+| **просити** |  | to request / to ask to do | дієсл |  |
+| **щоб** |  | that / in order to | conjunction |  |
+| **поцікавитися** |  | to wonder / to inquire | дієсл |  |
+| **вимагати** |  | to demand | дієсл |  |
+| **умовляти** |  | to persuade / to coax | дієсл |  |
+| **заборонити** |  | to forbid | дієсл |  |
+| **сполучник** |  | conjunction | ім |  |
+| **сумнів** |  | doubt | ім |  |
+| **ввічливий** |  | polite | adjective |  |
+| **грубий** |  | rude | adjective |  |
+| **доручення** |  | errand / task | ім |  |
+| **підлеглий** |  | subordinate | ім |  |
+| **керівник** |  | manager / leader | ім |  |
+| **інтонація** |  | intonation | ім |  |
+| **ствердження** |  | statement | ім |  |
+| **виняток** |  | exception | ім |  |
+| **переконати** |  | to convince | дієсл |  |
+| **відмовити** |  | to refuse | дієсл |  |
+| **згода** |  | agreement / consent | ім |  |
+| **наголосити** |  | to emphasize | дієсл |  |
+| **з'ясувати** |  | to find out / clarify | дієсл |  |
+| **розпитувати** |  | to inquire (continually) | дієсл |  |
+| **настійливий** |  | persistent | adjective |  |
+| **співрозмовник** |  | interlocutor | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Трансформація загальних питань та наказів
 
@@ -476,37 +519,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Translate client:load questions={JSON.parse(`[{"source": "He asked me if I wanted coffee.", "options": [{"text": "Він запитав мене, чи я хочу кави.", "correct": true}, {"text": "Він запитав мене, що я хочу кави.", "correct": false}, {"text": "Він попросив мене, чи я хочу кави.", "correct": false}, {"text": "Він поцікавився, щоб я пив каву.", "correct": false}]}, {"source": "The boss asked us to finish the report.", "options": [{"text": "Шеф попросив, щоб ми закінчили звіт.", "correct": true}, {"text": "Шеф запитав нас закінчити звіт.", "correct": false}, {"text": "Шеф поцікавився, щоб ми закінчуємо звіт.", "correct": false}, {"text": "Шеф сказав, чи ми закінчимо звіт.", "correct": false}]}, {"source": "I wondered where she lived.", "options": [{"text": "Я поцікавився, де вона живе.", "correct": true}, {"text": "Я поцікавився, чи де вона живе.", "correct": false}, {"text": "Я попросив, де вона живе.", "correct": false}, {"text": "Я запитав, щоб де вона жила.", "correct": false}]}, {"source": "They demanded that he return the money.", "options": [{"text": "Вони вимагали, щоб він повернув гроші.", "correct": true}, {"text": "Вони вимагали, чи він повернув гроші.", "correct": false}, {"text": "Вони запитали, щоб він повертав гроші.", "correct": false}, {"text": "Вони умовляли, що він повернув гроші.", "correct": false}]}, {"source": "She asked him not to be late.", "options": [{"text": "Вона попросила, щоб він не запізнювався.", "correct": true}, {"text": "Вона запитала його не запізнюватися.", "correct": false}, {"text": "Вона сказала, що він не запізнювався.", "correct": false}, {"text": "Вона попросила, щоб він не запізнюється.", "correct": false}]}, {"source": "My friend asked me what I was doing.", "options": [{"text": "Мій друг запитав мене, що я роблю.", "correct": true}, {"text": "Мій друг запитав мене, чи що я роблю.", "correct": false}, {"text": "Мій друг попросив мене, що я роблю.", "correct": false}, {"text": "Мій друг поцікавився, щоб я робив.", "correct": false}]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **питання** | [pɪˈtɑnʲːɑ] | question | ім |  |
-| **наказ** | [nɑˈkɑz] | command | ім |  |
-| **прохання** | [prɔˈxɑnʲːɑ] | request | ім |  |
-| **чи** | [t͡ʃɪ] | whether / if | conjunction |  |
-| **запитати** | [zɑpɪˈtɑtɪ] | to ask | дієсл |  |
-| **наказати** | [nɑkɑˈzɑtɪ] | to order | дієсл |  |
-| **просити** | [prɔˈsɪtɪ] | to request / to ask to do | дієсл |  |
-| **щоб** | [ʃt͡ʃɔb] | that / in order to | conjunction |  |
-| **поцікавитися** | [pɔt͡sʲiˈkɑʋɪtɪsʲɑ] | to wonder / to inquire | дієсл |  |
-| **вимагати** | [ʋɪmɑˈɦɑtɪ] | to demand | дієсл |  |
-| **умовляти** | [umɔˈʋlʲɑtɪ] | to persuade / to coax | дієсл |  |
-| **заборонити** | [zɑbɔrɔˈnɪtɪ] | to forbid | дієсл |  |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | conjunction | ім |  |
-| **сумнів** | [ˈsumnʲiu̯] | doubt | ім |  |
-| **ввічливий** | [ˈʋʲːit͡ʃlɪʋɪj] | polite | adjective |  |
-| **грубий** | [ˈɦrubɪj] | rude | adjective |  |
-| **доручення** | [dɔˈrut͡ʃɛnʲːɑ] | errand / task | ім |  |
-| **підлеглий** | [pʲiˈdlɛɦlɪj] | subordinate | ім |  |
-| **керівник** | [kɛrʲiˈʋnɪk] | manager / leader | ім |  |
-| **інтонація** | [intɔˈnɑt͡sʲijɑ] | intonation | ім |  |
-| **ствердження** | [ˈstʋɛrd͡ʒɛnʲːɑ] | statement | ім |  |
-| **виняток** | [ˈʋɪnʲɑtɔk] | exception | ім |  |
-| **переконати** | [pɛrɛkɔˈnɑtɪ] | to convince | дієсл |  |
-| **відмовити** | [ʋʲiˈdmɔʋɪtɪ] | to refuse | дієсл |  |
-| **згода** | [ˈzɦɔdɑ] | agreement / consent | ім |  |
-| **наголосити** | [nɑɦɔlɔˈsɪtɪ] | to emphasize | дієсл |  |
-| **з'ясувати** | [zjɑsuʋɑtɪ] | to find out / clarify | дієсл |  |
-| **розпитувати** | [rɔˈzpɪtuʋɑtɪ] | to inquire (continually) | дієсл |  |
-| **настійливий** | [nɑˈsʲtʲijlɪʋɪj] | persistent | adjective |  |
-| **співрозмовник** | [sʲpʲiu̯rɔˈzmɔu̯nɪk] | interlocutor | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

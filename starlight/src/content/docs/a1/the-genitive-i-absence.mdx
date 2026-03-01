@@ -34,20 +34,27 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# The Genitive I: Absence
+{/**/}
 
 > **Чому це важливо?**
 >
 > In Ukrainian, to say "no" or "don't have", we use **немає**. Whether you are ordering coffee "without milk" or hearing that tickets are "sold out," understanding absence is key. In this lesson, we unlock the **Genitive Case** (Родовий відмінок) — the grammar of "no," "without," and "I don't have."
 
-## Вступ: Ситуація відсутності
+## Вступ
 
 ### What is "Absence" in Ukrainian?
 
-In English, when we want to say something is missing, we use negative verbs like "don't have" or "there isn't." In Ukrainian, we have a special word for this: **нема́є**. It means "there is not" or "it is absent."
+Англійська має слова "don't have" або "there isn't". Українська має спеціальне слово: **нема́є**. Це означає "there is not" або "it is absent".
+(English uses negative verbs like "don't have" or "there isn't." Ukrainian has a special word for this: **нема́є**. It means "there is not" or "it is absent.")
 
 **Немає** changes the word that follows it. You cannot use the dictionary form. You must change the word's form to show that it is missing. This change is called the **Genitive Case**.
 
@@ -55,19 +62,21 @@ When an object is present, it is unchanged (Nominative case). When it is absent,
 
 ### The "Nominative Trap"
 
-A common mistake is using the dictionary form after **немає**. For example, the word for "ticket" is **квито́к**.
+Часта помилка — це використання словникової форми після **немає**. Наприклад, слово "ticket" — це **квито́к**.
+(A common mistake is using the dictionary form after **немає**. For example, the word for "ticket" is **квито́к**.)
 
 - ❌ *У мене немає квиток.* (Incorrect!)
 
 To a Ukrainian ear, this is confusing. The correct way to say it is:
 
-- ✅ **У мене немає квитка.** [u ˈmɛnɛ nɛˈmɑjɛ kʋɪˈtka]
+- ✅ **У мене немає квитка.**
 
 Notice how **квиток** became **квитка**? That small change at the end is the signal of absence. It tells the listener, "This object is not here."
 
 ### Contrast: Є vs. Немає
 
-You already know **є** [je] (is/there is/have). **Є** indicates existence. **Немає** indicates non-existence.
+Ви вже знаєте слово **є** [je] (is/there is/have). **Є** означає наявність. **Немає** означає відсутність.
+(You already know **є** [je] (is/there is/have). **Є** indicates existence. **Немає** indicates non-existence.)
 
 When you use **є**, the object stays in its dictionary form (Nominative):
 - **У мене є час.** (I have time.) — *Time is the subject.*
@@ -87,18 +96,17 @@ The base word is the same, but the "tail" of the word changes to match the situa
 
 ---
 
-## Граматика: Конструкція «Немає» та «Без»
+## Презентація
 
 ### The Structure of Absence: Немає + Genitive
 
-The word **нема́є** is the negative counterpart of **є** (there is / there exists). In spoken Ukrainian, you will often hear it shortened to **нема́**.
-
-Whenever you use this word to say "there is no X" or "I don't have X," the "X" **must** be in the Genitive case.
+Слово **нема́є** — це заперечення слова **є**. Українці часто говорять коротко: **нема́**. Ви кажете "there is no X". Об'єкт "X" завжди має Родовий відмінок.
+(The word **нема́є** is the negative counterpart of **є**. Ukrainians often say it short: **нема́**. You say "there is no X". The object "X" always has the Genitive case.)
 
 **Examples in context:**
-- **Тут немає інтернету.** [tut nɛˈmɑjɛ intɛrˈnɛtu] (There is no internet here.)
-- **У мене немає паспорта.** [u ˈmɛnɛ nɛˈmɑjɛ ˈpɑspɔrta] (I don't have a passport.)
-- **Сьогодні немає концерту.** [sʲɔˈɦɔdnʲi nɛˈmɑjɛ kɔnˈt͡sɛrtu] (There is no concert today.)
+- **Тут немає інтернету.** (There is no internet here.)
+- **У мене немає паспорта.** (I don't have a passport.)
+- **Сьогодні немає концерту.** (There is no concert today.)
 
 ### Genitive Endings: Masculine Hard Nouns (-а)
 
@@ -147,7 +155,8 @@ This usually happens with:
 
 ### Genitive Endings: Feminine Nouns (-и / -і)
 
-Feminine nouns usually end in **-а** or **-я**. Switch the vowel.
+Жіночі іменники зазвичай мають закінчення **-а** або **-я**. Ми змінюємо ці голосні.
+(Feminine nouns usually end in **-а** or **-я**. We switch the vowel.)
 
 **Hard Rule (-а → -и):**
 If the word ends in **-а** (after a hard consonant), change it to **-и**.
@@ -170,7 +179,8 @@ Singular words ending in **-ія** become **-ії**:
 
 ### The Preposition «Без» (Without)
 
-**Без** (without) also triggers the Genitive case. If you are "without" something, it is absent.
+Прийменник **без** (without) також вимагає Родового відмінка. Відсутній об'єкт має нове закінчення.
+(The preposition **Без** (without) also triggers the Genitive case. If you are "without" something, it is absent.)
 
 **Food & Drink:**
 - **Кава без цукру.** (Coffee without sugar.) — *цукор* (substance) → *цукру*
@@ -191,7 +201,8 @@ Neuter nouns act like masculine hard nouns:
 
 ### Negation: Немає vs. Не
 
-Do not confuse **немає** (absence) with the particle **не** (negation).
+Не плутайте слово **немає** (відсутність) і частку **не** (заперечення).
+(Do not confuse **немає** (absence) with the particle **не** (negation).)
 
 **When to use НЕ (Not):**
 Use **не** to negate an action or a description. It goes before the verb or adjective.
@@ -200,7 +211,8 @@ Use **не** to negate an action or a description. It goes before the verb or ad
 - **Це не дорого.** (This is not expensive.) — *Description negation*
 
 **When to use НЕМАЄ (There is no / Don't have):**
-Use **немає** when talking about the *existence* or *possession* of an object.
+Використовуйте **немає** для відсутності об'єкта.
+(Use **немає** when talking about the *existence* or *possession* of an object.)
 - **Тут немає студента.** (There is no student here.) — *Absence*
 - **У мене немає часу.** (I have no time.) — *Lack of possession*
 
@@ -210,7 +222,8 @@ Use **немає** when talking about the *existence* or *possession* of an obje
 
 ### A Special Case: «Гроші» (Money)
 
-The word **гроші** (money) is plural in Ukrainian. You **must** know how to say "no money" because it is a very common phrase.
+Слово **гроші** (money) — це завжди форма plural. Ви повинні знати фразу "no money". Ця фраза дуже часта.
+(The word **гроші** (money) is always a plural form. You **must** know how to say "no money" because it is a very common phrase.)
 
 Memorize this as a fixed phrase:
 - Nominative: **гроші**
@@ -240,7 +253,7 @@ Never say: *Тут не кава* (This is not coffee - identity) when you mean 
 
 ---
 
-## Практика: Родовий відмінок у дії
+## Практика
 
 ### Таблиця змін (Visual Mapping)
 
@@ -262,14 +275,14 @@ Review how words transform from "Presence" (Nominative) to "Absence" (Genitive).
 Here are full sentences. Notice how the grammar changes slightly depending on what we are saying is missing.
 
 **Модель 1: Відсутність (Location)**
-- **Вдома немає хліба.** [ˈʋdɔmɑ nɛˈmɑjɛ ˈxlʲibɑ] (There is no bread at home.)
-- **У місті немає парку.** [u ˈmʲistʲi nɛˈmɑjɛ ˈpɑrku] (There is no park in the city.)
-- **Тут немає сигналу.** [tut nɛˈmɑjɛ sɪɦˈnɑlu] (There is no signal here.)
+- **Вдома немає хліба.** (There is no bread at home.)
+- **У місті немає парку.** (There is no park in the city.)
+- **Тут немає сигналу.** (There is no signal here.)
 
 **Модель 2: Особиста власність (Person)**
-- **У мене немає ключа.** [u ˈmɛnɛ nɛˈmɑjɛ klʲuˈt͡ʃɑ] (I don't have a key.)
-- **У тебе немає часу.** [u ˈtɛbɛ nɛˈmɑjɛ ˈt͡ʃɑsu] (You don't have time.)
-- **У нас немає молока.** [u nɑs nɛˈmɑjɛ mɔlɔˈkɑ] (We don't have milk.)
+- **У мене немає ключа.** (I don't have a key.)
+- **У тебе немає часу.** (You don't have time.)
+- **У нас немає молока.** (We don't have milk.)
 
 :::info[🌍 **Контекст: «Я маю» vs «У мене є»**]
 **Possession Structure Recall**
@@ -321,11 +334,11 @@ Speaking these sentences aloud reinforces the connection between the object and 
 
 ---
 
-## 🏺 Культурний контекст: «Немає проблем»
+## 🏺 Культурний контекст
 
 ### Фраза «Немає проблем»
 
-In Ukraine, you hear this phrase constantly: **Немає проблем!** [nɛˈmɑjɛ prɔˈblɛm].
+In Ukraine, you hear this phrase constantly: **Немає проблем!**.
 
 It means "There are no problems". It is the Ukrainian equivalent of "No problem", "Don't worry about it" or "It's all good".
 
@@ -340,7 +353,6 @@ It means "There are no problems". It is the Ukrainian equivalent of "No problem"
 Український фольклор часто використовує структуру відсутності. Ось відоме прислів'я:
 
 **«Немає диму без вогню.»**
-[nɛˈmɑjɛ ˈdɪmu bɛz ʋɔˈɦnʲu]
 *(There is no smoke without fire.)*
 
 Давайте розберемо (Let's break it down):
@@ -382,9 +394,11 @@ This dynamic usage of **є/немає** is the heartbeat of daily commerce in Uk
 
 ## 📋 Підсумок
 
-Today we learned how nouns change form to show absence. You learned that **немає** removes the dictionary ending from a noun and replaces it with a Genitive suffix (**-а, -я, -и, -і, -у, -ю**).
+Сьогодні ми вивчили зміну форми слова. Слово **немає** змінює закінчення слова на суфікс Родового відмінка (**-а, -я, -и, -і, -у, -ю**).
+(Today we learned how nouns change form to show absence. You learned that **немає** removes the dictionary ending from a noun and replaces it with a Genitive suffix (**-а, -я, -и, -і, -у, -ю**).)
 
-We also learned that **без** (without) works the same way, helping you order coffee exactly how you like it. And importantly, we learned that saying **немає** is often the most polite way to say "no."
+Слово **без** (without) працює так само. Це допомагає замовити каву. І важливо пам'ятати: слово **немає** — це дуже ввічливий спосіб сказати "ні".
+(We also learned that **без** (without) works the same way, helping you order coffee exactly how you like it. And importantly, we learned that saying **немає** is often the most polite way to say "no.")
 
 **Перевірте себе:**
 
@@ -397,7 +411,13 @@ We also learned that **без** (without) works the same way, helping you order 
 
 You are now ready to navigate the world of "haves" and "have-nots" in Ukrainian. Next, we will learn to count what we *do* have!
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+*No vocabulary for this module.*
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Закінчення: -а чи -у?
 
@@ -438,3 +458,11 @@ You are now ready to navigate the world of "haves" and "have-nots" in Ukrainian.
 ### Ствердження на Заперечення
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Є час -> ...", "answer": "немає часу", "options": ["немає часу", "немає час", "немає часа", "без часу"]}, {"sentence": "Є квиток -> ...", "answer": "немає квитка", "options": ["немає квитка", "немає квиток", "немає квитку", "без квитка"]}, {"sentence": "Є вода -> ...", "answer": "немає води", "options": ["немає води", "немає вода", "без води", "немає воду"]}, {"sentence": "Є гроші -> ...", "answer": "немає грошей", "options": ["немає грошей", "немає гроші", "без грошей", "немає грошів"]}, {"sentence": "Є цукор -> ...", "answer": "немає цукру", "options": ["немає цукру", "немає цукор", "без цукру", "немає цукора"]}, {"sentence": "Є проблема -> ...", "answer": "немає проблеми", "options": ["немає проблеми", "немає проблема", "немає проблем", "без проблеми"]}, {"sentence": "Є обід -> ...", "answer": "немає обіду", "options": ["немає обіду", "немає обід", "немає обіда", "без обіду"]}, {"sentence": "Є паспорт -> ...", "answer": "немає паспорта", "options": ["немає паспорта", "немає паспорт", "немає паспорту", "без паспорта"]}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

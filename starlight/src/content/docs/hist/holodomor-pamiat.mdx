@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Голодомор: Пам'ять та визнання
 
 > **Чому це важливо?**
 >
@@ -395,15 +401,47 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| Голодомор |  | Holodomor | noun | ч |  |
+| жертви Голодомору |  | victims of Holodomor | phrase |  |  |
+| штучний голод |  | artificial famine | phrase |  |  |
+| геноцид |  | genocide | noun | ч |  |
+| Конвенція ООН |  | UN Convention | phrase |  |  |
+| ознаки геноциду |  | signs of genocide | phrase |  |  |
+| визнання |  | recognition | noun | с |  |
+| міжнародне визнання |  | international recognition | phrase |  |  |
+| боротьба за визнання |  | struggle for recognition | phrase |  |  |
+| замовчування |  | silencing | noun | с |  |
+| радянське замовчування |  | Soviet silencing | phrase |  |  |
+| стіна мовчання |  | wall of silence | phrase |  |  |
+| змова мовчання |  | conspiracy of silence | phrase |  |  |
+| свідок |  | witness | noun | ч |  |
+| свідчення очевидців |  | eyewitness accounts | phrase |  |  |
+| збирати свідчення |  | to collect testimonies | phrase |  |  |
+| пам'ять |  | memory | noun | ж |  |
+| національна пам'ять |  | national memory | phrase |  |  |
+| збереження пам'яті |  | preservation of memory | phrase |  |  |
+| меморіал |  | memorial | noun | ч |  |
+| заперечення |  | denial | noun | с |  |
+| політика заперечення |  | policy of denial | phrase |  |  |
+| комісія |  | commission | noun | ж |  |
+| дезінформація |  | disinformation | noun | ж |  |
+| архівні документи |  | archival documents | phrase |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Первинне джерело: Свідчення Гарета Джонса
 
-<ReadingActivity client:load title="Первинне джерело: Свідчення Гарета Джонса" context="" text={"Я пройшов через села і дванадцять колгоспів. Скрізь я чув стогін: У нас немає хліба, ми помираємо! Я бачив, як люди на станціях билися за шкірку від апельсина, яку я викинув. Селяни казали мені: Раніше ми годували світ, а тепер самі не маємо що їсти.\n"} source={"Гарет Джонс, 1933 рік"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`[]`)} isUkrainian={true} />
+<ReadingActivity client:load title="Первинне джерело: Свідчення Гарета Джонса" context="" text={"Я пройшов через села і дванадцять колгоспів. Скрізь я чув стогін: У нас немає хліба, ми помираємо! Я бачив, як люди на станціях билися за шкірку від апельсина, яку я викинув. Селяни казали мені: Раніше ми годували світ, а тепер самі не маємо що їсти.\n"} source={"Гарет Джонс, 1933 рік"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`[]`)} isUkrainian={false} />
 
 ### Критичний аналіз: Журналістика та свідчення
 
-<CriticalAnalysis client:load title="Критичний аналіз: Журналістика та свідчення" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Які саме деталі в тексті вказують на масштаби голоду?", "Чому ці свідчення є важливими для доведення штучності Голодомору?", "Як фраза селян про те, що вони раніше годували світ, підкреслює трагізм ситуації?"]`)} isUkrainian={true} />
+<CriticalAnalysis client:load title="Критичний аналіз: Журналістика та свідчення" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Які саме деталі в тексті вказують на масштаби голоду?", "Чому ці свідчення є важливими для доведення штучності Голодомору?", "Як фраза селян про те, що вони раніше годували світ, підкреслює трагізм ситуації?"]`)} isUkrainian={false} />
 
 ### Факти та міфи про Голодомор
 
@@ -411,38 +449,16 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ### Порівняльний аналіз: Інформаційна війна
 
-<ComparativeStudy client:load title="Порівняльний аналіз: Інформаційна війна" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Гарет Джонс", "Волтер Дюранті"]`)} criteria={JSON.parse(`["Методи збору інформації та перебування в СРСР", "Ставлення до офіційної радянської пропаганди", "Мотивація (професійний обов'язок проти кар'єризму)"]`)} prompt={"Напишіть короткий текст, порівнюючи підходи Гарета Джонса та Волтера Дюранті до висвітлення подій в Україні у 1933 році."} isUkrainian={true} />
+<ComparativeStudy client:load title="Порівняльний аналіз: Інформаційна війна" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Гарет Джонс", "Волтер Дюранті"]`)} criteria={JSON.parse(`["Методи збору інформації та перебування в СРСР", "Ставлення до офіційної радянської пропаганди", "Мотивація (професійний обов'язок проти кар'єризму)"]`)} prompt={"Напишіть короткий текст, порівнюючи підходи Гарета Джонса та Волтера Дюранті до висвітлення подій в Україні у 1933 році."} isUkrainian={false} />
 
 ### Есе: Відновлення історичної справедливості
 
-<EssayResponse client:load title="Есе: Відновлення історичної справедливості" prompt={"Чому міжнародне визнання Голодомору геноцидом є критично важливим для України сьогодні? У своїй відповіді спирайтеся на концепцію постгеноцидного суспільства та зв'язок між непокараним злом минулого і сучасною російською агресією."} modelAnswer={""} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Змістове наповнення | Глибоке розкриття теми, правильне використання історичних термінів (змова мовчання, політика заперечення). | 10 |\n| Аргументація | Логічне обґрунтування того, як непокаране зло сприяє повторенню злочинів у сучасному світі. | 10 |"} isUkrainian={true} />
+<EssayResponse client:load title="Есе: Відновлення історичної справедливості" prompt={"Чому міжнародне визнання Голодомору геноцидом є критично важливим для України сьогодні? У своїй відповіді спирайтеся на концепцію постгеноцидного суспільства та зв'язок між непокараним злом минулого і сучасною російською агресією."} modelAnswer={""} rubric={"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n| Змістове наповнення | Глибоке розкриття теми, правильне використання історичних термінів (змова мовчання, політика заперечення). | 10 |\n| Аргументація | Логічне обґрунтування того, як непокаране зло сприяє повторенню злочинів у сучасному світі. | 10 |"} isUkrainian={false} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Resources">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **Голодомор** | [ɦɔlɔdɔˈmɔr] | Holodomor | ім |  |
-| **жертви Голодомору** | [ˈʒɛrtʋɪ ɦɔlɔdɔˈmɔru] | victims of Holodomor | фраза |  |
-| **штучний голод** | [ˈʃtut͡ʃnɪj ˈɦɔlɔd] | artificial famine | фраза |  |
-| **геноцид** | [ɦɛnɔˈt͡sɪd] | genocide | ім |  |
-| **Конвенція ООН** | [kɔnˈʋɛnʲt͡sʲijɑ ɔˈɔn] | UN Convention | фраза |  |
-| **ознаки геноциду** | [ˈɔznɑkɪ ɦɛnɔˈt͡sɪdu] | signs of genocide | фраза |  |
-| **визнання** | [ʋɪˈznɑnʲːɑ] | recognition | ім |  |
-| **міжнародне визнання** | [mʲiʒnɑˈrɔdnɛ ʋɪˈznɑnʲːɑ] | international recognition | фраза |  |
-| **боротьба за визнання** | [bɔrɔˈdʲbɑ zɑ ʋɪˈznɑnʲːɑ] | struggle for recognition | фраза |  |
-| **замовчування** | [zɑˈmɔu̯t͡ʃuʋɑnʲːɑ] | silencing | ім |  |
-| **радянське замовчування** | [rɑˈdʲɑnʲsʲkɛ zɑˈmɔu̯t͡ʃuʋɑnʲːɑ] | Soviet silencing | фраза |  |
-| **стіна мовчання** | [sʲtʲiˈnɑ mɔˈʋt͡ʃɑnʲːɑ] | wall of silence | фраза |  |
-| **змова мовчання** | [ˈzmɔʋɑ mɔˈʋt͡ʃɑnʲːɑ] | conspiracy of silence | фраза |  |
-| **свідок** | [ˈsʲʋʲidɔk] | witness | ім |  |
-| **свідчення очевидців** | [ˈsʲʋʲid͡ʒt͡ʃɛnʲːɑ ɔt͡ʃɛˈʋɪd͡zʲt͡sʲiu̯] | eyewitness accounts | фраза |  |
-| **збирати свідчення** | [zbɪˈrɑtɪ ˈsʲʋʲid͡ʒt͡ʃɛnʲːɑ] | to collect testimonies | фраза |  |
-| **пам'ять** | [ˈpɑmjɑtʲ] | memory | ім |  |
-| **національна пам'ять** | [nɑt͡sʲiɔˈnɑlʲnɑ ˈpɑmjɑtʲ] | national memory | фраза |  |
-| **збереження пам'яті** | [zbɛˈrɛʒɛnʲːɑ ˈpɑmjɑtʲi] | preservation of memory | фраза |  |
-| **меморіал** | [mɛmɔrʲiˈɑl] | memorial | ім |  |
-| **заперечення** | [zɑpɛˈrɛt͡ʃɛnʲːɑ] | denial | ім |  |
-| **політика заперечення** | [pɔˈlʲitɪkɑ zɑpɛˈrɛt͡ʃɛnʲːɑ] | policy of denial | фраза |  |
-| **комісія** | [kɔˈmʲisʲijɑ] | commission | ім |  |
-| **дезінформація** | [dɛzʲinfɔrˈmɑt͡sʲijɑ] | disinformation | ім |  |
-| **архівні документи** | [ɑrˈxʲiu̯nʲi dɔkuˈmɛntɪ] | archival documents | фраза |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

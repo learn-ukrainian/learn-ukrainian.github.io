@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Hobbies and Leisure
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -360,7 +366,42 @@ By carefully memorizing these three distinct patterns you will be able to talk a
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| хобі |  | hobby | noun | с |  |
+| дозвілля |  | leisure | noun | с |  |
+| вільний час |  | free time | phrase |  |  |
+| грати |  | to play | verb |  |  |
+| займатися |  | to do / to practice | verb |  |  |
+| тихе полювання |  | mushroom picking | phrase |  |  |
+| вишивання |  | embroidery | noun | с |  |
+| музика |  | music | noun | ж |  |
+| спорт |  | sport | noun | ч |  |
+| читати |  | to read | verb |  |  |
+| малювати |  | to draw | verb |  |  |
+| вишиванка |  | embroidered shirt | noun | ж |  |
+| гітара |  | guitar | noun | ж |  |
+| шахи |  | chess | noun | p |  |
+| фотографія |  | photography | noun | ж |  |
+| подорож |  | travel / trip | noun | ж |  |
+| концерт |  | concert | noun | ч |  |
+| виставка |  | exhibition | noun | ж |  |
+| театр |  | theater | noun | ч |  |
+| кінотеатр |  | cinema | noun | ч |  |
+| подорожувати |  | to travel | verb |  |  |
+| часто |  | often | adverb |  |  |
+| рідко |  | rarely | adverb |  |  |
+| іноді |  | sometimes | adverb |  |  |
+| цікавитися |  | to be interested in | verb |  |  |
+| місцевий |  | locative | adjective |  |  |
+| знахідний |  | accusative | adjective |  |  |
+| орудний |  | instrumental | adjective |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть переклад
 
@@ -419,35 +460,10 @@ By carefully memorizing these three distinct patterns you will be able to talk a
 
 <Select client:load questions={JSON.parse(`[{"question": "З якими словами ми використовуємо дієслово займатися?", "options": [{"text": "спортом", "correct": true}, {"text": "йогою", "correct": true}, {"text": "фотографією", "correct": true}, {"text": "гітарі", "correct": false}, {"text": "футбол", "correct": false}], "explanation": "Дієслово займатися вимагає орудного відмінка і використовується для загальних активностей."}, {"question": "З якими словами ми використовуємо грати в (у)?", "options": [{"text": "теніс", "correct": true}, {"text": "шахи", "correct": true}, {"text": "футбол", "correct": true}, {"text": "піаніно", "correct": false}, {"text": "кулінарією", "correct": false}], "explanation": "Конструкція грати у або в використовується для змагальних ігор за правилами."}, {"question": "З якими словами ми обов’язково використовуємо грати на?", "options": [{"text": "гітарі", "correct": true}, {"text": "скрипці", "correct": true}, {"text": "піаніно", "correct": true}, {"text": "спорт", "correct": false}, {"text": "волейбол", "correct": false}], "explanation": "Фраза грати на використовується виключно для будь-яких музичних інструментів."}, {"question": "Які слова є популярними прислівниками частотності?", "options": [{"text": "часто", "correct": true}, {"text": "рідко", "correct": true}, {"text": "іноді", "correct": true}, {"text": "грати", "correct": false}, {"text": "гітара", "correct": false}], "explanation": "Ці важливі слова показують, як саме регулярно ми щось робимо."}, {"question": "Які з цих занять є типовим культурним дозвіллям?", "options": [{"text": "відвідування виставки", "correct": true}, {"text": "похід у театр", "correct": true}, {"text": "тихе полювання", "correct": false}, {"text": "гра в футбол", "correct": false}], "explanation": "Виставки, концерти та театри належать до спокійного культурного дозвілля."}, {"question": "Які слова обов’язково стоять у правильному орудному відмінку?", "options": [{"text": "спортом", "correct": true}, {"text": "музикою", "correct": true}, {"text": "гітарі", "correct": false}, {"text": "шахи", "correct": false}], "explanation": "Закінчення -ом та -ою дуже чітко вказують на орудний відмінок."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| хобі | [ˈxɔbʲi] | hobby | noun | с |  |
-| дозвілля | [dɔˈzʲʋʲilʲːɑ] | leisure | noun | с |  |
-| вільний час | [ˈʋʲilʲnɪj t͡ʃɑs] | free time | phrase |  |  |
-| грати | [ˈɦrɑtɪ] | to play | verb |  |  |
-| займатися | [zɑjˈmɑtɪsʲɑ] | to do / to practice | verb |  |  |
-| тихе полювання | [ˈtɪxɛ pɔlʲuˈʋɑnʲːɑ] | mushroom picking | phrase |  |  |
-| вишивання | [ʋɪʃɪˈʋɑnʲːɑ] | embroidery | noun | с |  |
-| музика | [ˈmuzɪkɑ] | music | noun | ж |  |
-| спорт | [spɔrt] | sport | noun | ч |  |
-| читати | [t͡ʃɪˈtɑtɪ] | to read | verb |  |  |
-| малювати | [mɑlʲuˈʋɑtɪ] | to draw | verb |  |  |
-| вишиванка | [ʋɪˈʃɪˈʋɑnkɑ] | embroidered shirt | noun | ж |  |
-| гітара | [ɦʲiˈtɑrɑ] | guitar | noun | ж |  |
-| шахи | [ˈʃɑxɪ] | chess | noun | p |  |
-| фотографія | [fɔtɔˈɦrɑfʲijɑ] | photography | noun | ж |  |
-| подорож | [ˈpɔdɔrɔʒ] | travel / trip | noun | ж |  |
-| концерт | [kɔnˈt͡sɛrt] | concert | noun | ч |  |
-| виставка | [ˈʋɪstɑu̯kɑ] | exhibition | noun | ж |  |
-| театр | [tɛˈɑtr] | theater | noun | ч |  |
-| кінотеатр | [kʲinɔtɛˈɑtr] | cinema | noun | ч |  |
-| подорожувати | [pɔdɔrɔʒuˈʋɑtɪ] | to travel | verb |  |  |
-| часто | [ˈt͡ʃɑstɔ] | often | adverb |  |  |
-| рідко | [ˈrʲidkɔ] | rarely | adverb |  |  |
-| іноді | [ˈinɔdʲi] | sometimes | adverb |  |  |
-| цікавитися | [t͡sʲiˈkɑʋɪtɪsʲɑ] | to be interested in | verb |  |  |
-| місцевий | [mʲiˈst͡sɛʋɪj] | locative | adjective |  |  |
-| знахідний | [znɑˈxʲidnɪj] | accusative | adjective |  |  |
-| орудний | [ɔˈrudnɪj] | instrumental | adjective |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

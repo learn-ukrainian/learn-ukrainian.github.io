@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Вид у минулому: одного разу vs щодня
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -345,7 +351,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **одного разу** |  | once, one time | adverb |  |
+| **щодня** |  | every day | adverb |  |
+| **часто** |  | often | adverb |  |
+| **іноді** |  | sometimes | adverb |  |
+| **зазвичай** |  | usually | adverb |  |
+| **того разу** |  | that time | adverb |  |
+| **того дня** |  | that day | adverb |  |
+| **завжди** |  | always | adverb |  |
+| **ніколи** |  | never | adverb |  |
+| **рідко** |  | rarely | adverb |  |
+| **регулярно** |  | regularly | adverb |  |
+| **постійно** |  | constantly | adverb |  |
+| **вперше** |  | for the first time | adverb |  |
+| **востаннє** |  | for the last time | adverb |  |
+| **неодноразово** |  | repeatedly | adverb |  |
+| **щонеділі** |  | every Sunday | adverb |  |
+| **на свята** |  | on holidays | adverb |  |
+| **читати** |  | to read (process) | дієсл |  |
+| **прочитати** |  | to read (result) | дієсл |  |
+| **писати** |  | to write (process) | дієсл |  |
+| **написати** |  | to write (result) | дієсл |  |
+| **робити** |  | to do, to make (process) | дієсл |  |
+| **зробити** |  | to do, to make (result) | дієсл |  |
+| **будувати** |  | to build (process) | дієсл |  |
+| **побудувати** |  | to build (result) | дієсл |  |
+| **вивчати** |  | to study, to learn (process) | дієсл |  |
+| **вивчити** |  | to study, to learn (result) | дієсл |  |
+| **рятувати** |  | to save (process) | дієсл |  |
+| **врятувати** |  | to save (result) | дієсл |  |
+| **рутина** |  | routine | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Оберіть правильну форму дієслова
 
@@ -407,37 +450,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
   <ErrorCorrectionItem sentence="На свята ми зібралися всією нашою великою родиною." errorWord="зібралися" correctForm="збиралися" options={JSON.parse(`["збиралися", "збираємося", "збиратися", "зберемося"]`)} explanation="На свята вказує на регулярний ритуал, дієслово має бути недоконаного виду." />
 </ErrorCorrection>
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **одного разу** | [ɔdnɔɦɔ ˈrɑzu] | once, one time | adverb |  |
-| **щодня** | [ʃt͡ʃɔˈdʲnʲɑ] | every day | adverb |  |
-| **часто** | [ˈt͡ʃɑstɔ] | often | adverb |  |
-| **іноді** | [ˈinɔdʲi] | sometimes | adverb |  |
-| **зазвичай** | [zɑzʋɪˈt͡ʃɑj] | usually | adverb |  |
-| **того разу** | [tɔɦɔ ˈrɑzu] | that time | adverb |  |
-| **того дня** | [tɔɦɔ dʲnʲɑ] | that day | adverb |  |
-| **завжди** | [ˈzɑˈʋʒdɪ] | always | adverb |  |
-| **ніколи** | [nʲikɔlɪ] | never | adverb |  |
-| **рідко** | [ˈrʲidkɔ] | rarely | adverb |  |
-| **регулярно** | [rɛɦuˈlʲɑrnɔ] | regularly | adverb |  |
-| **постійно** | [pɔˈsʲtʲijnɔ] | constantly | adverb |  |
-| **вперше** | [ˈʍpɛrʃɛ] | for the first time | adverb |  |
-| **востаннє** | [ʋɔˈstɑnʲːɛ] | for the last time | adverb |  |
-| **неодноразово** | [nɛɔdnɔrɑˈzɔʋɔ] | repeatedly | adverb |  |
-| **щонеділі** | [ʃt͡ʃɔnɛˈdʲilʲi] | every Sunday | adverb |  |
-| **на свята** | [nɑ ˈsʲʋʲɑˈtɑ] | on holidays | adverb |  |
-| **читати** | [t͡ʃɪˈtɑtɪ] | to read (process) | дієсл |  |
-| **прочитати** | [prɔt͡ʃɪˈtɑtɪ] | to read (result) | дієсл |  |
-| **писати** | [pɪˈsɑtɪ] | to write (process) | дієсл |  |
-| **написати** | [nɑpɪˈsɑtɪ] | to write (result) | дієсл |  |
-| **робити** | [rɔˈbɪtɪ] | to do, to make (process) | дієсл |  |
-| **зробити** | [zrɔˈbɪtɪ] | to do, to make (result) | дієсл |  |
-| **будувати** | [buduˈʋɑtɪ] | to build (process) | дієсл |  |
-| **побудувати** | [pɔbuduˈʋɑtɪ] | to build (result) | дієсл |  |
-| **вивчати** | [ʋɪˈʋt͡ʃɑtɪ] | to study, to learn (process) | дієсл |  |
-| **вивчити** | [ˈʋɪu̯t͡ʃɪtɪ] | to study, to learn (result) | дієсл |  |
-| **рятувати** | [rʲɑtuˈʋɑtɪ] | to save (process) | дієсл |  |
-| **врятувати** | [ʋrʲɑtuˈʋɑtɪ] | to save (result) | дієсл |  |
-| **рутина** | [ruˈtɪnɑ] | routine | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

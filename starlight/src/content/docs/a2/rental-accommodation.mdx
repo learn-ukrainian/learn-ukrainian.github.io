@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Rental Accommodation
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -361,7 +367,39 @@ When we talk about being in a location, we ask **«Де?»**. After the same pre
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| оренда |  | rent | noun |  |  |
+| зняти |  | to rent (take) | verb |  |  |
+| квартира |  | apartment | noun |  |  |
+| власник |  | owner | noun |  |  |
+| депозит |  | deposit | noun |  |  |
+| комунальні |  | utilities | noun |  |  |
+| договір |  | contract | noun |  |  |
+| меблі |  | furniture | noun plural |  |  |
+| здається |  | is for rent | verb |  |  |
+| кімната |  | room | noun |  |  |
+| євроремонт |  | Euro-renovation | noun |  |  |
+| радянський |  | Soviet | adjective |  |  |
+| рієлтор |  | realtor | noun |  |  |
+| застава |  | security deposit | noun |  |  |
+| посередник |  | middleman | noun |  |  |
+| техніка |  | appliances | noun |  |  |
+| здавати |  | to rent out (give) | verb |  |  |
+| знімати |  | to rent (take) | verb |  |  |
+| площа |  | area | noun |  |  |
+| поверх |  | floor | noun |  |  |
+| лічильник |  | meter | noun |  |  |
+| опалення |  | heating | noun |  |  |
+| довгостроковий |  | long-term | adjective |  |  |
+| подобовий |  | daily | adjective |  |  |
+| огляд |  | viewing | noun |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: слово та його значення
 
@@ -420,32 +458,10 @@ When we talk about being in a location, we ask **«Де?»**. After the same pre
 
 <MatchUp client:load pairs={JSON.parse(`[{"left": "підписати", "right": "договір оренди"}, {"left": "заплатити", "right": "за комунальні послуги"}, {"left": "повернути", "right": "страховий депозит"}, {"left": "зняти", "right": "однокімнатну квартиру"}, {"left": "дзвонити", "right": "власнику"}, {"left": "домовитися", "right": "про зустріч"}, {"left": "подивитися", "right": "квартиру"}, {"left": "перевірити", "right": "лічильники"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| оренда | [ɔˈrɛndɑ] | rent | noun |  |  |
-| зняти | [ˈzʲnʲɑtɪ] | to rent (take) | verb |  |  |
-| квартира | [kʋɑrˈtɪrɑ] | apartment | noun |  |  |
-| власник | [ˈʋlɑsnɪk] | owner | noun |  |  |
-| депозит | [dɛpɔˈzɪt] | deposit | noun |  |  |
-| комунальні | [kɔmuˈnɑlʲnʲi] | utilities | noun |  |  |
-| договір | [ˈdɔɦɔˈʋʲir] | contract | noun |  |  |
-| меблі | [ˈmɛblʲi] | furniture | noun plural |  |  |
-| здається | [zdɑˈjɛt͡sʲːɑ] | is for rent | verb |  |  |
-| кімната | [kʲiˈmnɑtɑ] | room | noun |  |  |
-| євроремонт | [jɛu̯rɔrɛˈmɔnt] | Euro-renovation | noun |  |  |
-| радянський | [rɑˈdʲɑnʲsʲkɪj] | Soviet | adjective |  |  |
-| рієлтор | [rʲijɛltɔr] | realtor | noun |  |  |
-| застава | [zɑˈstɑʋɑ] | security deposit | noun |  |  |
-| посередник | [pɔsɛˈrɛdnɪk] | middleman | noun |  |  |
-| техніка | [ˈtɛxnʲikɑ] | appliances | noun |  |  |
-| здавати | [zdɑˈʋɑtɪ] | to rent out (give) | verb |  |  |
-| знімати | [zʲnʲiˈmɑtɪ] | to rent (take) | verb |  |  |
-| площа | [ˈplɔʃt͡ʃɑ] | area | noun |  |  |
-| поверх | [pɔˈʋɛrx] | floor | noun |  |  |
-| лічильник | [lʲiˈt͡ʃɪlʲnɪk] | meter | noun |  |  |
-| опалення | [ɔˈpɑlɛnʲːɑ] | heating | noun |  |  |
-| довгостроковий | [dɔu̯ɦɔstrɔˈkɔʋɪj] | long-term | adjective |  |  |
-| подобовий | [pɔdɔbɔʋɪj] | daily | adjective |  |  |
-| огляд | [ˈɔɦlʲɑd] | viewing | noun |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Вид у запереченні
+{/**/}
 
 > **Чому це важливо?**
 > Заперечення в українській мові — це набагато більше, ніж звичайне додавання частки «не». Перед нами складна граматична та семантична система, яка впливає на вибір виду дієслова та відмінка іменника. Ваша здатність правильно будувати заперечні конструкції відображає ваші наміри, очікування та розуміння культурного контексту. Цей урок навчить вас говорити про відсутність дії природно та точно.
@@ -367,7 +373,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 4. Якщо ви хочете перекласти англійську фразу «I never drink coffee», скільки саме заперечних елементів буде у вашому правильному українському реченні?
 5. Як ви можете максимально культурно і ввічливо пом'якшити свою відмову, коли вам пропонують каву, яку ви зараз не хочете пити? Наведіть конкретний приклад такої фрази.
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **не** |  | not | particle |  |
+| **ще не** |  | not yet | фраза |  |
+| **ніколи** |  | never | adverb |  |
+| **взагалі** |  | in general / at all | adverb | взагалі не (not at all) |
+| **заборона** |  | prohibition | ім |  |
+| **попередження** |  | warning | ім |  |
+| **заперечення** |  | negation | ім |  |
+| **відмова** |  | refusal | ім |  |
+| **очікувана дія** |  | expected action | фраза |  |
+| **загальне заперечення** |  | general negation | фраза |  |
+| **нікуди** |  | nowhere (direction) | adverb |  |
+| **ніяк** |  | in no way | adverb |  |
+| **ніщо** |  | nothing | pronoun |  |
+| **ніхто** |  | nobody | pronoun |  |
+| **випадково** |  | accidentally | adverb |  |
+| **навмисне** |  | on purpose | adverb |  |
+| **жаль** |  | pity / regret | ім | На жаль, ні (Unfortunately, no) |
+| **радість** |  | joy | ім | Я б з радістю, але... (I would with joy, but...) |
+| **результат** |  | result | ім |  |
+| **процес** |  | process | ім |  |
+| **спроба** |  | attempt | ім |  |
+| **невдалий** |  | unsuccessful | adjective |  |
+| **очікування** |  | expectation | ім |  |
+| **скасовувати** |  | to cancel | дієсл |  |
+| **скасувати** |  | to cancel | дієсл |  |
+| **відмовлятися** |  | to refuse | дієсл |  |
+| **відмовитися** |  | to refuse | дієсл |  |
+| **намір** |  | intention | ім |  |
+| **факт** |  | fact | ім |  |
+| **обережно** |  | carefully / cautiously | adverb | Обережно, не впади! |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Вид дієслова в запереченні: Перевірка правил
 
@@ -418,37 +461,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Select client:load questions={JSON.parse(`[{"question": "Які фрази є ввічливими способами відмовитися від пропозиції? Оберіть усі правильні.", "options": [{"text": "На жаль, ні", "correct": true}, {"text": "Я б з радістю, але...", "correct": true}, {"text": "Ні, я не буду", "correct": false}, {"text": "Дуже дякую, але я не зможу", "correct": true}, {"text": "Ні, це дуже погано", "correct": false}], "explanation": "В українській культурі відмова має бути пом'якшеною за допомогою подяки або пояснення причини."}, {"question": "Які з цих речень є правильними прикладами подвійного заперечення в мові?", "options": [{"text": "Я ніколи не був у Києві.", "correct": true}, {"text": "Вона нікого бачила в офісі.", "correct": false}, {"text": "Ніщо не заважає мені працювати.", "correct": true}, {"text": "Він нічого розуміє сьогодні.", "correct": false}], "explanation": "Слова на 'ні-' обов'язково потребують наявності частки 'не' перед дієсловом."}, {"question": "Які з цих наказів є абсолютно правильними граматичними заборонами (недоконаний вид)?", "options": [{"text": "Не відкривай вікно!", "correct": true}, {"text": "Не відкрий вікно!", "correct": false}, {"text": "Не пиши йому повідомлення!", "correct": true}, {"text": "Не напиши йому повідомлення!", "correct": false}], "explanation": "Загальна заборона дії завжди вимагає використання недоконаного виду."}, {"question": "Які з цих наказів є правильними попередженнями про небезпеку (доконаний вид)?", "options": [{"text": "Обережно, не впади!", "correct": true}, {"text": "Обережно, не падай!", "correct": false}, {"text": "Дивись, не забудь свої ключі!", "correct": true}, {"text": "Дивись, не забувай свої ключі!", "correct": false}], "explanation": "Попередження про можливу випадкову помилку вимагає використання доконаного виду."}, {"question": "Які речення граматично правильно використовують родовий відмінок при наявному запереченні дієслова?", "options": [{"text": "Я не читав цієї цікавої книги.", "correct": true}, {"text": "Я не читав цю цікаву книгу.", "correct": false}, {"text": "Ми не маємо нового словника.", "correct": true}, {"text": "Ми не маємо новий словник.", "correct": false}], "explanation": "Прямий додаток змінює свою форму зі знахідного на родовий відмінок."}, {"question": "У яких конкретних комунікативних ситуаціях обов'язково використовується дієслово доконаного виду?", "options": [{"text": "Разом із фразою 'ще не' для очікуваної дії.", "correct": true}, {"text": "Для загальної констатації факту відсутності дії.", "correct": false}, {"text": "Для попередження про випадковий негативний результат.", "correct": true}, {"text": "Для загальної суворої заборони певної дії.", "correct": false}], "explanation": "Доконаний вид підкреслює очікування результату або попереджає про випадкову подію."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **не** | [nɛ] | not | particle |  |
-| **ще не** | [ʃt͡ʃɛ nɛ] | not yet | фраза |  |
-| **ніколи** | [nʲikɔlɪ] | never | adverb |  |
-| **взагалі** | [ʋzɑɦɑˈlʲi] | in general / at all | adverb | взагалі не (not at all) |
-| **заборона** | [zɑbɔˈrɔnɑ] | prohibition | ім |  |
-| **попередження** | [pɔpɛˈrɛd͡ʒɛnʲːɑ] | warning | ім |  |
-| **заперечення** | [zɑpɛˈrɛt͡ʃɛnʲːɑ] | negation | ім |  |
-| **відмова** | [ʋʲiˈdmɔʋɑ] | refusal | ім |  |
-| **очікувана дія** | [ɔˈt͡ʃʲikuʋɑnɑ ˈdʲijɑ] | expected action | фраза |  |
-| **загальне заперечення** | [zɑˈɦɑlʲnɛ zɑpɛˈrɛt͡ʃɛnʲːɑ] | general negation | фраза |  |
-| **нікуди** | [nʲikudɪ] | nowhere (direction) | adverb |  |
-| **ніяк** | [nʲijɑk] | in no way | adverb |  |
-| **ніщо** | [nʲiˈʃt͡ʃɔ] | nothing | pronoun |  |
-| **ніхто** | [nʲiˈxtɔ] | nobody | pronoun |  |
-| **випадково** | [ʋɪpɑˈdkɔʋɔ] | accidentally | adverb |  |
-| **навмисне** | [nɑˈʋmɪsnɛ] | on purpose | adverb |  |
-| **жаль** | [ʒɑlʲ] | pity / regret | ім | На жаль, ні (Unfortunately, no) |
-| **радість** | [ˈrɑdʲisʲtʲ] | joy | ім | Я б з радістю, але... (I would with joy, but...) |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **спроба** | [ˈsprɔbɑ] | attempt | ім |  |
-| **невдалий** | [nɛˈʋdɑlɪj] | unsuccessful | adjective |  |
-| **очікування** | [ɔˈt͡ʃʲikuʋɑnʲːɑ] | expectation | ім |  |
-| **скасовувати** | [skɑˈsɔʋuʋɑtɪ] | to cancel | дієсл |  |
-| **скасувати** | [skɑsuˈʋɑtɪ] | to cancel | дієсл |  |
-| **відмовлятися** | [ʋʲidmɔˈʋlʲɑtɪsʲɑ] | to refuse | дієсл |  |
-| **відмовитися** | [ʋʲiˈdmɔʋɪtɪsʲɑ] | to refuse | дієсл |  |
-| **намір** | [ˈnɑmʲir] | intention | ім |  |
-| **факт** | [fɑkt] | fact | ім |  |
-| **обережно** | [ɔbɛˈrɛʒnɔ] | carefully / cautiously | adverb | Обережно, не впади! |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Hotel Accommodation
+{/**/}
 
 > **Чому це важливо?**
 > Ви подорожуєте. Ви приїжджаєте в нове місто або в нову країну. Вам потрібно знайти комфортне та безпечне місце для ночівлі. Розуміння базової готельної лексики — це ваш особистий спокій і комфорт. Знаючи ці слова, ви зможете легко знайти потрібне житло в інтернеті. Ви зможете без стресу спілкуватися з адміністратором на рецепції. Ви зможете вирішити будь-які проблеми з комфортом. Ця тема робить вашу подорож приємною та повністю контрольованою.
@@ -418,7 +424,45 @@ To describe location (which answers the question "where?"), we always use the М
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| готель |  | hotel | noun | ч |  |
+| номер |  | hotel room | noun | ч |  |
+| бронювати |  | to book (process) | verb |  |  |
+| забронювати |  | to book (result) | verb |  |  |
+| заселення |  | check-in | noun | с |  |
+| виселення |  | check-out | noun | с |  |
+| ключ |  | key | noun | ч |  |
+| адміністратор |  | receptionist | noun | ч |  |
+| рахунок |  | bill | noun | ч |  |
+| одномісний |  | single (room) | adjective |  |  |
+| двомісний |  | double (room) | adjective |  |  |
+| сніданок |  | breakfast | noun | ч |  |
+| рушник |  | towel | noun | ч |  |
+| прибирання |  | cleaning service | noun | с |  |
+| кондиціонер |  | air conditioner | noun | ч |  |
+| туристичний збір |  | tourist tax | noun | ч |  |
+| рецепція |  | reception desk | noun | ж |  |
+| мило |  | soap | noun | с |  |
+| шампунь |  | shampoo | noun | ч |  |
+| ліфт |  | elevator | noun | ч |  |
+| багаж |  | luggage | noun | ч |  |
+| реєстрація |  | registration | noun | ж |  |
+| паспорт |  | passport | noun | ч |  |
+| поверх |  | floor (level of a building) | noun | ч |  |
+| люкс |  | suite (luxury room) | noun | ч |  |
+| прикметник |  | adjective | noun | ч |  |
+| місцевий |  | locative (case) | adjective |  |  |
+| недоконаний |  | imperfective (aspect) | adjective |  |  |
+| доконаний |  | perfective (aspect) | adjective |  |  |
+| вид |  | aspect | noun | ч |  |
+| знахідний |  | accusative | adjective |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: готельна лексика
 
@@ -477,38 +521,10 @@ To describe location (which answers the question "where?"), we always use the М
 
 <MatchUp client:load pairs={JSON.parse(`[{"left": "Я маю бронювання на прізвище Сміт.", "right": "Дайте, будь ласка, ваш паспорт для реєстрації."}, {"left": "О котрій годині у вас починається сніданок?", "right": "Наш ресторан працює з сьомої ранку."}, {"left": "Чи могли б ви принести мені чистий рушник?", "right": "Звісно, покоївка зараз усе принесе."}, {"left": "Як мені увімкнути цей новий кондиціонер?", "right": "Використовуйте цей пульт керування."}, {"left": "У моєму номері дуже шумно від сусідів.", "right": "Перепрошую, ми можемо дати вам інший номер."}, {"left": "До котрої години я маю звільнити номер?", "right": "Офіційний час виселення — дванадцята година."}, {"left": "Чи можу я оплатити мій туристичний збір?", "right": "Так, ви можете зробити це кредитною карткою."}, {"left": "Я залишу свій електронний ключ тут.", "right": "Добре, бажаю вам приємної прогулянки містом."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| готель | [ɦɔˈtɛlʲ] | hotel | noun | ч |  |
-| номер | [ˈnɔmɛr] | hotel room | noun | ч |  |
-| бронювати | [brɔnʲuˈʋɑtɪ] | to book (process) | verb |  |  |
-| забронювати | [zɑbrɔnʲuˈʋɑtɪ] | to book (result) | verb |  |  |
-| заселення | [zɑˈsɛlɛnʲːɑ] | check-in | noun | с |  |
-| виселення | [ˈʋɪsɛlɛnʲːɑ] | check-out | noun | с |  |
-| ключ | [klʲut͡ʃ] | key | noun | ч |  |
-| адміністратор | [ɑdʲmʲinʲiˈstrɑtɔr] | receptionist | noun | ч |  |
-| рахунок | [rɑˈxunɔk] | bill | noun | ч |  |
-| одномісний | [ɔdnɔˈmʲisnɪj] | single (room) | adjective |  |  |
-| двомісний | [dʋɔˈmʲisnɪj] | double (room) | adjective |  |  |
-| сніданок | [sʲnʲiˈdɑnɔk] | breakfast | noun | ч |  |
-| рушник | [ruˈʃnɪk] | towel | noun | ч |  |
-| прибирання | [prɪbɪˈrɑnʲːɑ] | cleaning service | noun | с |  |
-| кондиціонер | [kɔndɪt͡sʲiɔˈnɛr] | air conditioner | noun | ч |  |
-| туристичний збір | [turɪˈstɪt͡ʃnɪj zʲbʲir] | tourist tax | noun | ч |  |
-| рецепція | [rɛˈt͡sɛpt͡sʲijɑ] | reception desk | noun | ж |  |
-| мило | [ˈmɪlɔ] | soap | noun | с |  |
-| шампунь | [ʃɑmˈpunʲ] | shampoo | noun | ч |  |
-| ліфт | [lʲift] | elevator | noun | ч |  |
-| багаж | [bɑˈɦɑʒ] | luggage | noun | ч |  |
-| реєстрація | [rɛjɛˈstrɑt͡sʲijɑ] | registration | noun | ж |  |
-| паспорт | [ˈpɑspɔrt] | passport | noun | ч |  |
-| поверх | [pɔˈʋɛrx] | floor (level of a building) | noun | ч |  |
-| люкс | [lʲuks] | suite (luxury room) | noun | ч |  |
-| прикметник | [prɪˈkmɛtnɪk] | adjective | noun | ч |  |
-| місцевий | [mʲiˈst͡sɛʋɪj] | locative (case) | adjective |  |  |
-| недоконаний | [nɛdɔˈkɔnɑnɪj] | imperfective (aspect) | adjective |  |  |
-| доконаний | [dɔˈkɔnɑnɪj] | perfective (aspect) | adjective |  |  |
-| вид | [ʋɪd] | aspect | noun | ч |  |
-| знахідний | [znɑˈxʲidnɪj] | accusative | adjective |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

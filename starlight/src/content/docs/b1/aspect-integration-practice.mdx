@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Інтеграція виду: практика
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -304,7 +310,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **коли** |  | when | спол |  |
+| **після того як** |  | after | спол |  |
+| **перед тим як** |  | before | спол |  |
+| **доки** |  | while, until | спол |  |
+| **поки** |  | while | спол |  |
+| **як тільки** |  | as soon as | спол |  |
+| **одночасно** |  | simultaneously | присл |  |
+| **послідовно** |  | sequentially | присл |  |
+| **спочатку** |  | first | присл |  |
+| **потім** |  | then | присл |  |
+| **тим часом** |  | meanwhile | присл |  |
+| **нарешті** |  | finally | присл |  |
+| **раптом** |  | suddenly | присл |  |
+| **врешті-решт** |  | eventually | присл |  |
+| **зрештою** |  | after all | присл |  |
+| **недоконаний вид** |  | imperfective aspect | ім |  |
+| **доконаний вид** |  | perfective aspect | ім |  |
+| **тривалий** |  | prolonged, continuous | прикм |  |
+| **завершений** |  | completed | прикм |  |
+| **одноразовий** |  | one-time | прикм |  |
+| **регулярний** |  | regular | прикм |  |
+| **переривати** |  | to interrupt (process) | дієсл |  |
+| **перервати** |  | to interrupt (result) | дієсл |  |
+| **звичка** |  | habit | ім |  |
+| **процес** |  | process | ім |  |
+| **результат** |  | result | ім |  |
+| **дія** |  | action | ім |  |
+| **послідовність** |  | sequence | ім |  |
+| **одночасність** |  | simultaneity | ім |  |
+| **несподівано** |  | unexpectedly | присл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Правда чи брехня: правила використання виду
 
@@ -357,37 +400,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <GroupSort client:load groups={JSON.parse(`{"Послідовність подій": ["спочатку", "потім", "після того як", "перед тим як", "нарешті"], "Паралельні процеси": ["тим часом як", "одночасно", "поки"], "Раптова зміна або межа": ["як тільки", "раптом", "несподівано", "доки не"]}`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **коли** | [kɔˈlɪ] | when | спол |  |
-| **після того як** | [ˈpʲisʲlʲɑ tɔˈɦɔ jɑk] | after | спол |  |
-| **перед тим як** | [ˈpɛrɛd tɪm jɑk] | before | спол |  |
-| **доки** | [ˈdɔkɪ] | while, until | спол |  |
-| **поки** | [ˈpɔkɪ] | while | спол |  |
-| **як тільки** | [jɑk ˈtʲilʲkɪ] | as soon as | спол |  |
-| **одночасно** | [ɔdnɔˈt͡ʃɑsnɔ] | simultaneously | присл |  |
-| **послідовно** | [pɔsʲlʲiˈdɔu̯nɔ] | sequentially | присл |  |
-| **спочатку** | [spɔˈt͡ʃɑtku] | first | присл |  |
-| **потім** | [ˈpɔtʲim] | then | присл |  |
-| **тим часом** | [tɪm ˈt͡ʃɑsɔm] | meanwhile | присл |  |
-| **нарешті** | [nɑˈrɛʃtʲi] | finally | присл |  |
-| **раптом** | [ˈrɑptɔm] | suddenly | присл |  |
-| **врешті-решт** | [ˈʋrɛʃtʲi-rɛʃt] | eventually | присл |  |
-| **зрештою** | [ˈzrɛʃtɔju] | after all | присл |  |
-| **недоконаний вид** | [nɛdɔˈkɔnɑnɪj ʋɪd] | imperfective aspect | ім |  |
-| **доконаний вид** | [dɔˈkɔnɑnɪj ʋɪd] | perfective aspect | ім |  |
-| **тривалий** | [trɪˈʋɑlɪj] | prolonged, continuous | прикм |  |
-| **завершений** | [zɑˈʋɛrʃɛnɪj] | completed | прикм |  |
-| **одноразовий** | [ɔdnɔrɑˈzɔʋɪj] | one-time | прикм |  |
-| **регулярний** | [rɛɦuˈlʲɑrnɪj] | regular | прикм |  |
-| **переривати** | [pɛrɛrɪˈʋɑtɪ] | to interrupt (process) | дієсл |  |
-| **перервати** | [pɛrɛrˈʋɑtɪ] | to interrupt (result) | дієсл |  |
-| **звичка** | [ˈzʋɪt͡ʃkɑ] | habit | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **дія** | [ˈdʲijɑ] | action | ім |  |
-| **послідовність** | [pɔsʲlʲiˈdɔu̯nʲisʲtʲ] | sequence | ім |  |
-| **одночасність** | [ɔdnɔˈt͡ʃɑsʲnʲisʲtʲ] | simultaneity | ім |  |
-| **несподівано** | [nɛspɔˈdʲiʋɑnɔ] | unexpectedly | присл |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

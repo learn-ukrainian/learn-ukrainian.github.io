@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Aspect Mastery — Pairs
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -334,7 +340,33 @@ If you mention *how long* something took, use the imperfective. Якщо ви г
 4. If you narrate a sequence of past events (I woke up, I washed my face, I ate breakfast), which aspect should you use for all three verbs?
 5. Why can you not use a perfective verb in the present tense?
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| готувати |  | to cook (process) | verb |  |  |
+| приготувати |  | to cook (result) | verb |  |  |
+| мити |  | to wash (process) | verb |  |  |
+| помити |  | to wash (result) | verb |  |  |
+| дзвонити |  | to call (process) | verb |  |  |
+| подзвонити |  | to call (result) | verb |  |  |
+| купувати |  | to buy (process) | verb |  |  |
+| купити |  | to buy (result) | verb |  |  |
+| знаходити |  | to be finding, to locate | verb |  |  |
+| знайти |  | to find (result) | verb |  |  |
+| забувати |  | to forget (habit/process) | verb |  |  |
+| забути |  | to forget (result) | verb |  |  |
+| будувати |  | to build (process) | verb |  |  |
+| побудувати |  | to build (result) | verb |  |  |
+| питати |  | to ask (process) | verb |  |  |
+| запитати |  | to ask (result) | verb |  |  |
+| відповідати |  | to answer (process) | verb |  |  |
+| відповісти |  | to answer (result) | verb |  |  |
+| платити |  |  |  |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару - недоконаний і доконаний вид
 
@@ -400,26 +432,10 @@ If you mention *how long* something took, use the imperfective. Якщо ви г
   <ErrorCorrectionItem sentence="Ми будемо побудувати новий магазин." errorWord="побудувати" correctForm="будувати" options={JSON.parse(`["будувати", "побудуємо", "будували", "будуємо"]`)} explanation="Зі словом 'будемо' використовується тільки недоконаний вид." />
 </ErrorCorrection>
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| готувати | [ɦɔtuˈʋɑtɪ] | to cook (process) | verb |  |  |
-| приготувати | [prɪɦɔtuˈʋɑtɪ] | to cook (result) | verb |  |  |
-| мити | [ˈmɪtɪ] | to wash (process) | verb |  |  |
-| помити | [pɔˈmɪtɪ] | to wash (result) | verb |  |  |
-| дзвонити | [d͡zʋɔˈnɪtɪ] | to call (process) | verb |  |  |
-| подзвонити | [pɔd͡zʋɔˈnɪtɪ] | to call (result) | verb |  |  |
-| купувати | [kupuˈʋɑtɪ] | to buy (process) | verb |  |  |
-| купити | [kuˈpɪtɪ] | to buy (result) | verb |  |  |
-| знаходити | [znɑˈxɔdɪtɪ] | to be finding, to locate | verb |  |  |
-| знайти | [znɑjˈtɪ] | to find (result) | verb |  |  |
-| забувати | [zɑbuˈʋɑtɪ] | to forget (habit/process) | verb |  |  |
-| забути | [zɑˈbutɪ] | to forget (result) | verb |  |  |
-| будувати | [buduˈʋɑtɪ] | to build (process) | verb |  |  |
-| побудувати | [pɔbuduˈʋɑtɪ] | to build (result) | verb |  |  |
-| питати | [pɪˈtɑtɪ] | to ask (process) | verb |  |  |
-| запитати | [zɑpɪˈtɑtɪ] | to ask (result) | verb |  |  |
-| відповідати | [ʋʲidpɔʋʲiˈdɑtɪ] | to answer (process) | verb |  |  |
-| відповісти | [ʋʲidpɔˈʋʲiˈstɪ] | to answer (result) | verb |  |  |
-| платити | [plɑˈtɪtɪ] |  |  |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

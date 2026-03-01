@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Непряма мова: твердження
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -458,7 +464,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **сказати** |  | to say | дієсл |  |
+| **говорити** |  | to speak/talk | дієсл |  |
+| **розповісти** |  | to tell | дієсл |  |
+| **стверджувати** |  | to claim/assert | дієсл |  |
+| **повідомити** |  | to report/inform | дієсл |  |
+| **що** |  | that | conjunction |  |
+| **непряма мова** |  | indirect speech | ім |  |
+| **пряма мова** |  | direct speech | ім |  |
+| **твердження** |  | statement | ім |  |
+| **заявити** |  | to declare | дієсл |  |
+| **додати** |  | to add | дієсл |  |
+| **пояснити** |  | to explain | дієсл |  |
+| **відповісти** |  | to answer/reply | дієсл |  |
+| **зазначити** |  | to note/state | дієсл |  |
+| **підтвердити** |  | to confirm | дієсл |  |
+| **усна історія** |  | oral history | ім |  |
+| **чутки** |  | rumors | ім |  |
+| **авторитет** |  | authority | ім |  |
+| **спілкування** |  | communication | ім |  |
+| **цитувати** |  | to quote | дієсл |  |
+| **сполучник** |  | conjunction | ім |  |
+| **займенник** |  | pronoun | ім |  |
+| **кома** |  | comma | ім |  |
+| **узгодження часів** |  | tense backshift | ім |  |
+| **минулий час** |  | past tense | ім |  |
+| **теперішній час** |  | present tense | ім |  |
+| **майбутній час** |  | future tense | ім |  |
+| **прислівник** |  | adverb | ім |  |
+| **мудрість** |  | wisdom | ім |  |
+| **прислів'я** |  | proverb | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Правила непрямої мови
 
@@ -509,37 +552,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Міністерство / повідомило, / що / правила / набудуть / чинності.", "answer": "Міністерство повідомило, що правила набудуть чинності."}, {"jumbled": "Експерт / зазначив, / що / проект / потребує / фінансування.", "answer": "Експерт зазначив, що проект потребує фінансування."}, {"jumbled": "Організатори / пояснили, / що / сцена / є / небезпечною.", "answer": "Організатори пояснили, що сцена є небезпечною."}, {"jumbled": "Художник / додав, / що / шукав / натхнення / вдома.", "answer": "Художник додав, що шукав натхнення вдома."}, {"jumbled": "Люди / стверджують, / що / час / лікує / всі / рани.", "answer": "Люди стверджують, що час лікує всі рани."}, {"jumbled": "Як / кажуть / у / народі, / без / труда / нема / плода.", "answer": "Як кажуть у народі, без труда нема плода."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **сказати** | [skɑˈzɑtɪ] | to say | дієсл |  |
-| **говорити** | [ɦɔʋɔˈrɪtɪ] | to speak/talk | дієсл |  |
-| **розповісти** | [rɔzpɔˈʋʲiˈstɪ] | to tell | дієсл |  |
-| **стверджувати** | [ˈstʋɛrd͡ʒuʋɑtɪ] | to claim/assert | дієсл |  |
-| **повідомити** | [pɔʋʲiˈdɔmɪtɪ] | to report/inform | дієсл |  |
-| **що** | [ʃt͡ʃɔ] | that | conjunction |  |
-| **непряма мова** | [nɛprʲɑˈmɑ ˈmɔʋɑ] | indirect speech | ім |  |
-| **пряма мова** | [prʲɑˈmɑ ˈmɔʋɑ] | direct speech | ім |  |
-| **твердження** | [ˈtʋɛrd͡ʒɛnʲːɑ] | statement | ім |  |
-| **заявити** | [zɑjɑˈʋɪtɪ] | to declare | дієсл |  |
-| **додати** | [dɔˈdɑtɪ] | to add | дієсл |  |
-| **пояснити** | [pɔjɑˈsnɪtɪ] | to explain | дієсл |  |
-| **відповісти** | [ʋʲidpɔˈʋʲiˈstɪ] | to answer/reply | дієсл |  |
-| **зазначити** | [zɑˈznɑˈt͡ʃɪtɪ] | to note/state | дієсл |  |
-| **підтвердити** | [pʲiˈdtʋɛrdɪtɪ] | to confirm | дієсл |  |
-| **усна історія** | [ˈusnɑ iˈstɔrʲijɑ] | oral history | ім |  |
-| **чутки** | [t͡ʃuˈtkɪ] | rumors | ім |  |
-| **авторитет** | [ɑu̯tɔrɪˈtɛt] | authority | ім |  |
-| **спілкування** | [sʲpʲilkuˈʋɑnʲːɑ] | communication | ім |  |
-| **цитувати** | [t͡sɪtuˈʋɑtɪ] | to quote | дієсл |  |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | conjunction | ім |  |
-| **займенник** | [zɑjˈmɛnːɪk] | pronoun | ім |  |
-| **кома** | [ˈkɔmɑ] | comma | ім |  |
-| **узгодження часів** | [uˈzɦɔd͡ʒɛnʲːɑ t͡ʃɑˈsʲiu̯] | tense backshift | ім |  |
-| **минулий час** | [mɪˈnulɪj t͡ʃɑs] | past tense | ім |  |
-| **теперішній час** | [tɛˈpɛrʲiʃnʲij t͡ʃɑs] | present tense | ім |  |
-| **майбутній час** | [mɑjˈbutʲnʲij t͡ʃɑs] | future tense | ім |  |
-| **прислівник** | [prɪˈsʲlʲiu̯nɪk] | adverb | ім |  |
-| **мудрість** | [ˈmudʲrʲisʲtʲ] | wisdom | ім |  |
-| **прислів'я** | [prɪsʲlʲiu̯jɑ] | proverb | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

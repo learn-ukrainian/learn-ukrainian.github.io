@@ -352,16 +352,24 @@ class AuthorPageParser(HTMLParser):
 
 # ── Fetching ─────────────────────────────────────────────────────────
 
-def fetch_page(url: str) -> str:
-    """Fetch a page handling windows-1251 encoding."""
-    result = subprocess.run(
-        ["curl", "-sL", "--max-time", "30",
-         "-H", "Accept-Charset: windows-1251,utf-8",
-         url],
-        capture_output=True,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"curl failed for {url}: {result.stderr.decode()}")
+def fetch_page(url: str, retries: int = 3) -> str:
+    """Fetch a page handling windows-1251 encoding, with retries."""
+    for attempt in range(1, retries + 1):
+        result = subprocess.run(
+            ["curl", "-sL", "--max-time", "30", "--retry", "2",
+             "-H", "Accept-Charset: windows-1251,utf-8",
+             "-H", "User-Agent: Mozilla/5.0 (compatible; UkrLibScraper/1.0)",
+             url],
+            capture_output=True,
+        )
+        if result.returncode == 0 and result.stdout:
+            break
+        if attempt < retries:
+            wait = attempt * 3
+            print(f"    Retry {attempt}/{retries} for {url} (rc={result.returncode}), waiting {wait}s...")
+            time.sleep(wait)
+    else:
+        raise RuntimeError(f"curl failed for {url} after {retries} attempts: rc={result.returncode} {result.stderr.decode()}")
 
     # Try windows-1251 first (ukrlib default)
     try:

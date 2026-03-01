@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Демінутиви: майстер-клас
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -342,7 +348,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **матуся** |  | mommy | ім |  |
+| **матусенька** |  | mommy dearest | ім |  |
+| **сонечко** |  | sun/darling | ім |  |
+| **гарненько** |  | nicely/well | adverb |  |
+| **хлібчик** |  | bread | ім |  |
+| **ручка** |  | hand/pen/handle | ім |  |
+| **кавуся** |  | coffee | ім |  |
+| **демінутив** |  | diminutive | ім |  |
+| **зменшувально-пестливий** |  | diminutive-affectionate | adjective |  |
+| **ніжність** |  | tenderness | ім |  |
+| **ввічливість** |  | politeness | ім |  |
+| **іронія** |  | irony | ім |  |
+| **суфікс** |  | suffix | ім |  |
+| **відтінок** |  | nuance/shade | ім |  |
+| **спатоньки** |  | to sleep | дієсл |  |
+| **їстоньки** |  | to eat | дієсл |  |
+| **ніжка** |  | leg/table leg | ім |  |
+| **пестливий** |  | affectionate | adjective |  |
+| **зневажливий** |  | dismissive | adjective |  |
+| **розумничок** |  | clever clogs | ім |  |
+| **укольчик** |  | injection/shot | ім |  |
+| **швиденько** |  | quickly | adverb |  |
+| **добренько** |  | good/okay | adverb |  |
+| **килимок** |  | rug/mat | ім |  |
+| **договірчик** |  | contract (inappropriate diminutive) | ім |  |
+| **вічко** |  | peephole | ім |  |
+| **температурка** |  | temperature | ім |  |
+| **таблеточка** |  | pill | ім |  |
+| **спинка** |  | back | ім |  |
+| **матінка** |  | mother (poetic) | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Теорія та прагматика демінутивів
 
@@ -393,37 +436,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Українська мова має дуже багату систему зменшувально-пестливих слів, які офіційно називаються [___:0]}. Ми постійно використовуємо їх для вираження емоцій, що яскраво відображає філософію під назвою [___:1]}. Дуже часто демінутиви передають людську [___:2]} та щиру турботу. Наприклад, у медичному закладі досвідчена медсестра запропонує зробити [___:3]} замість суворого слова \"укол\", щоб швидко зняти стрес. У міській сучасній кав\"ярні привітний бариста приготує вам смачну [___:4]}. Проте демінутиви далеко не завжди означають щось абсолютно добре. Іноді вони використовуються для вираження гострої [___:5]}, як у слові \"[___:6]}\", коли ваш колега зробив серйозну дурницю. Також існують такі слова, які повністю втратили свою первинну емоційність через історичний процес [___:7]}. Типовим прикладом є нейтральне слово \"[___:8]}\", що позначає деталь дерев\"яного стола, або слово \"[___:9]}\" для звичайного письма. В офіційно-діловому стилі використання слів на кшталт \"[___:10]}\" є абсолютно неприпустимим, оскільки це миттєво руйнує вашу серйозну професійну [___:11]}. Слід також завжди уникати очевидної граматичної [___:12]}, коли ви, наприклад, кажете \"маленький [___:13]}\"."} blanks={JSON.parse(`[{"index": 0, "answer": "демінутиви", "options": ["демінутиви", "прикметники", "суфікси", "іменники"]}, {"index": 1, "answer": "кордоцентризм", "options": ["кордоцентризм", "патріотизм", "романтизм", "егоїзм"]}, {"index": 2, "answer": "ніжність", "options": ["ніжність", "агресію", "сум", "радість"]}, {"index": 3, "answer": "укольчик", "options": ["укольчик", "укол", "аналіз", "операцію"]}, {"index": 4, "answer": "кавусю", "options": ["кавусю", "каву", "кавочку", "чай"]}, {"index": 5, "answer": "іронії", "options": ["іронії", "радості", "подяки", "любові"]}, {"index": 6, "answer": "розумничок", "options": ["розумничок", "дурень", "герой", "хлопець"]}, {"index": 7, "answer": "десемантизації", "options": ["десемантизації", "деколонізації", "демократії", "деструкції"]}, {"index": 8, "answer": "ніжка", "options": ["ніжка", "нога", "деталь", "ручка"]}, {"index": 9, "answer": "ручка", "options": ["ручка", "рука", "олівець", "маркер"]}, {"index": 10, "answer": "документики", "options": ["документики", "документи", "звіти", "контракти"]}, {"index": 11, "answer": "репутацію", "options": ["репутацію", "дружбу", "кар\\"єру", "роботу"]}, {"index": 12, "answer": "тавтології", "options": ["тавтології", "помилки", "конструкції", "граматики"]}, {"index": 13, "answer": "килимок", "options": ["килимок", "килим", "стіл", "будинок"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **матуся** | [mɑˈtusʲɑ] | mommy | ім |  |
-| **матусенька** | [mɑˈtusɛnʲkɑ] | mommy dearest | ім |  |
-| **сонечко** | [ˈsɔnɛt͡ʃkɔ] | sun/darling | ім |  |
-| **гарненько** | [ɦɑrˈnɛnʲkɔ] | nicely/well | adverb |  |
-| **хлібчик** | [ˈxlʲibt͡ʃɪk] | bread | ім |  |
-| **ручка** | [ˈrut͡ʃkɑ] | hand/pen/handle | ім |  |
-| **кавуся** | [kɑˈʋusʲɑ] | coffee | ім |  |
-| **демінутив** | [dɛmʲinuˈtɪu̯] | diminutive | ім |  |
-| **зменшувально-пестливий** | [zmɛnʃuʋɑlʲnɔ-pɛˈstlɪʋɪj] | diminutive-affectionate | adjective |  |
-| **ніжність** | [ˈnʲiʒnʲisʲtʲ] | tenderness | ім |  |
-| **ввічливість** | [ˈʋʲːit͡ʃlɪʋʲisʲtʲ] | politeness | ім |  |
-| **іронія** | [iˈrɔnʲijɑ] | irony | ім |  |
-| **суфікс** | [ˈsufʲiks] | suffix | ім |  |
-| **відтінок** | [ʋʲiˈdʲtʲinɔk] | nuance/shade | ім |  |
-| **спатоньки** | [ˈspɑtɔnʲkɪ] | to sleep | дієсл |  |
-| **їстоньки** | [ˈjistɔnʲkɪ] | to eat | дієсл |  |
-| **ніжка** | [ˈnʲiʒkɑ] | leg/table leg | ім |  |
-| **пестливий** | [pɛˈstlɪʋɪj] | affectionate | adjective |  |
-| **зневажливий** | [znɛˈʋɑʒlɪʋɪj] | dismissive | adjective |  |
-| **розумничок** | [rɔˈzumnɪt͡ʃɔk] | clever clogs | ім |  |
-| **укольчик** | [ukɔlʲt͡ʃɪk] | injection/shot | ім |  |
-| **швиденько** | [ʃʋɪˈdɛnʲkɔ] | quickly | adverb |  |
-| **добренько** | [ˈdɔˈbrɛnʲkɔ] | good/okay | adverb |  |
-| **килимок** | [kɪlɪˈmɔk] | rug/mat | ім |  |
-| **договірчик** | [dɔɦɔʋʲirt͡ʃɪk] | contract (inappropriate diminutive) | ім |  |
-| **вічко** | [ˈʋʲit͡ʃkɔ] | peephole | ім |  |
-| **температурка** | [tɛmpɛrɑturkɑ] | temperature | ім |  |
-| **таблеточка** | [tɑblɛtɔt͡ʃkɑ] | pill | ім |  |
-| **спинка** | [ˈspɪnkɑ] | back | ім |  |
-| **матінка** | [ˈmɑtʲinkɑ] | mother (poetic) | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

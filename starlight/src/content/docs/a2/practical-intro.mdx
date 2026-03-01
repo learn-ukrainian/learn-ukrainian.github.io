@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Practical Intro
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -301,7 +307,47 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| речення |  | sentence | noun | с |  |
+| слово |  | word | noun | с |  |
+| граматика |  | grammar | noun | ж |  |
+| правило |  | rule | noun | с |  |
+| помилка |  | mistake | noun | ж |  |
+| правильно |  | correctly | adverb |  |  |
+| неправильно |  | incorrectly | adverb |  |  |
+| контекст |  | context | noun | ч |  |
+| відмінок |  | case | noun | ч |  |
+| вид |  | aspect | noun | ч |  |
+| сполучник |  | conjunction | noun | ч |  |
+| порядок |  | order | noun | ч |  |
+| дієслово |  | verb | noun | с |  |
+| іменник |  | noun | noun | ч |  |
+| причина |  | reason | noun | ж |  |
+| умова |  | condition | noun | ж |  |
+| мета |  | purpose | noun | ж |  |
+| результат |  | result | noun | ч |  |
+| процес |  | process | noun | ч |  |
+| звичка |  | habit | noun | ж |  |
+| суржик |  | surzhyk (mixed language) | noun | ч |  |
+| спілкування |  | communication | noun | с |  |
+| суб'єкт |  | subject | noun | ч |  |
+| об'єкт |  | object | noun | ч |  |
+| інструмент |  | tool | noun | ч |  |
+| доконаний |  | perfective (aspect) | adjective |  |  |
+| недоконаний |  | imperfective (aspect) | adjective |  |  |
+| кличний |  | vocative (case) | adjective |  |  |
+| орудний |  | instrumental (case) | adjective |  |  |
+| знахідний |  | accusative (case) | adjective |  |  |
+| називний |  | nominative (case) | adjective |  |  |
+| родовий |  | genitive (case) | adjective |  |  |
+| місцевий |  | locative (case) | adjective |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Типові помилки: відмінки та вид
 
@@ -367,40 +413,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Пане / Олександре, / будь / ласка, / зачекайте", "answer": "Пане Олександре, будь ласка, зачекайте"}, {"jumbled": "Олено, / як / твої / справи / сьогодні?", "answer": "Олено, як твої справи сьогодні?"}, {"jumbled": "Шановний / пане / директоре, / добрий / день!", "answer": "Шановний пане директоре, добрий день!"}, {"jumbled": "Юрію, / я / не / маю / часу", "answer": "Юрію, я не маю часу"}, {"jumbled": "Мамо, / я / купив / смачну / каву", "answer": "Мамо, я купив смачну каву"}, {"jumbled": "Колеги, / ми / починаємо / нашу / зустріч", "answer": "Колеги, ми починаємо нашу зустріч"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| речення | [rɛt͡ʃɛnʲːɑ] | sentence | noun | с |  |
-| слово | [ˈslɔʋɔ] | word | noun | с |  |
-| граматика | [ɦrɑˈmɑtɪkɑ] | grammar | noun | ж |  |
-| правило | [prɑʋɪlɔ] | rule | noun | с |  |
-| помилка | [ˈpɔˈmɪlkɑ] | mistake | noun | ж |  |
-| правильно | [ˈprɑʋɪlʲnɔ] | correctly | adverb |  |  |
-| неправильно | [nɛˈprɑʋɪlʲnɔ] | incorrectly | adverb |  |  |
-| контекст | [kɔnˈtɛkst] | context | noun | ч |  |
-| відмінок | [ʋʲiˈdʲmʲinɔk] | case | noun | ч |  |
-| вид | [ʋɪd] | aspect | noun | ч |  |
-| сполучник | [spɔˈlut͡ʃnɪk] | conjunction | noun | ч |  |
-| порядок | [pɔˈrʲɑdɔk] | order | noun | ч |  |
-| дієслово | [dʲijɛˈslɔʋɔ] | verb | noun | с |  |
-| іменник | [iˈmɛnːɪk] | noun | noun | ч |  |
-| причина | [prɪˈt͡ʃɪnɑ] | reason | noun | ж |  |
-| умова | [uˈmɔʋɑ] | condition | noun | ж |  |
-| мета | [mɛˈtɑ] | purpose | noun | ж |  |
-| результат | [rɛzulʲˈtɑt] | result | noun | ч |  |
-| процес | [prɔˈt͡sɛs] | process | noun | ч |  |
-| звичка | [ˈzʋɪt͡ʃkɑ] | habit | noun | ж |  |
-| суржик | [ˈsurʒɪk] | surzhyk (mixed language) | noun | ч |  |
-| спілкування | [sʲpʲilkuˈʋɑnʲːɑ] | communication | noun | с |  |
-| суб'єкт | [suˈbjɛkt] | subject | noun | ч |  |
-| об'єкт | [ɔˈbjɛkt] | object | noun | ч |  |
-| інструмент | [instruˈmɛnt] | tool | noun | ч |  |
-| доконаний | [dɔˈkɔnɑnɪj] | perfective (aspect) | adjective |  |  |
-| недоконаний | [nɛdɔˈkɔnɑnɪj] | imperfective (aspect) | adjective |  |  |
-| кличний | [ˈklɪt͡ʃnɪj] | vocative (case) | adjective |  |  |
-| орудний | [ɔˈrudnɪj] | instrumental (case) | adjective |  |  |
-| знахідний | [znɑˈxʲidnɪj] | accusative (case) | adjective |  |  |
-| називний | [nɑzɪˈʋnɪj] | nominative (case) | adjective |  |  |
-| родовий | [rɔˈdɔˈʋɪj] | genitive (case) | adjective |  |  |
-| місцевий | [mʲiˈst͡sɛʋɪj] | locative (case) | adjective |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

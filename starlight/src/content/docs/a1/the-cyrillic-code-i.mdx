@@ -38,10 +38,12 @@ import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
 import Classify from '@site/src/components/Classify';
 import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-{/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# The Cyrillic Code I
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -267,52 +269,38 @@ For your independent practice this week, we highly recommend returning repeatedl
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
 
-### Справжні друзі: Літери та звуки
+*No vocabulary for this module.*
 
-<MatchUp client:load pairs={JSON.parse(`[{"left": "А а", "right": "a (father)"}, {"left": "Е е", "right": "e (pet)"}, {"left": "І і", "right": "ee (meet)"}, {"left": "О о", "right": "o (more)"}, {"left": "К к", "right": "k (skate)"}, {"left": "М м", "right": "m (map)"}, {"left": "Т т", "right": "t (stop)"}, {"left": "мама", "right": "mom"}]`)} />
+</TabItem>
+<TabItem label="Activities">
 
-### Нові літери та хибні друзі: Звуки
+*No activities for this module.*
 
-<MatchUp client:load pairs={JSON.parse(`[{"left": "В в", "right": "v (vehicle)"}, {"left": "Н н", "right": "n (hen)"}, {"left": "Р р", "right": "r (trilled)"}, {"left": "С с", "right": "s (snake)"}, {"left": "У у", "right": "oo (moon)"}, {"left": "Х х", "right": "kh (loch)"}, {"left": "Б б", "right": "b (bank)"}, {"left": "Д д", "right": "d (door)"}, {"left": "З з", "right": "z (zebra)"}, {"left": "Л л", "right": "l (look)"}, {"left": "П п", "right": "p (park)"}, {"left": "Ф ф", "right": "f (photo)"}]`)} />
+</TabItem>
+<TabItem label="Resources">
 
-### Сортування літер
+:::info[🎧 🔗 External Resources]
 
-<GroupSort client:load groups={JSON.parse(`{"True Friends (Same as English)": ["А", "К", "М", "Т", "О", "Е", "І"], "False Friends (Look familiar, sound different)": ["В", "Н", "Р", "С", "Х", "У"], "New Letters (Unique shapes)": ["Б", "Д", "З", "Л", "П", "Ф"]}`)} />
+**📖 Articles:**
+- [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/) — Season 1 for beginners, with native speaker audio
 
-### Літери та звуки: Перевірка
+**🌐 Websites:**
+- [ENGin Program - Pronunciation Basics](https://www.enginprogram.org/post/ukrainian-pronunciation-basics-a-guide-for-learners) — Tips for tricky sounds (Щ, Ї, rolled Р)
+- [Omniglot - Ukrainian](https://www.omniglot.com/writing/ukrainian.htm) — Detailed explanation of the unique Ukrainian sounds
+- [Talk Ukrainian - Alphabet with Audio](https://talkukrainian.com/ukrainian-alphabet/) — All 33 letters with IPA and native audio
+- [Ukrainian Course - Lesson 1](https://www.ukrainiancourse.com/free-ukrainian-courses/lesson-1-the-ukrainian-alphabet/) — Interactive alphabet exercises
+:::
 
-<Quiz client:load questions={JSON.parse(`[{"question": "How do you pronounce the letter «Р» in «ресторан»?", "options": [{"text": "[r] (rolled)", "correct": true}, {"text": "[p]", "correct": false}, {"text": "[b]", "correct": false}, {"text": "[h]", "correct": false}], "explanation": "Літера Р is a trilled sound, like a purring cat."}, {"question": "How do you pronounce the letter «Н» in «ні»?", "options": [{"text": "[n]", "correct": true}, {"text": "[h]", "correct": false}, {"text": "[k]", "correct": false}, {"text": "[x]", "correct": false}], "explanation": "Літера Н makes the [n] sound, like in Hen."}, {"question": "How do you pronounce the letter «С» in «суп»?", "options": [{"text": "[s]", "correct": true}, {"text": "[k]", "correct": false}, {"text": "[c]", "correct": false}, {"text": "[ch]", "correct": false}], "explanation": "Літера С always makes the [s] sound, like a Snake."}, {"question": "How do you pronounce the letter «В» in «віза»?", "options": [{"text": "[v]", "correct": true}, {"text": "[b]", "correct": false}, {"text": "[w]", "correct": false}, {"text": "[f]", "correct": false}], "explanation": "Літера В makes the [v] sound, like in Vehicle."}, {"question": "How do you pronounce the letter «Х» in «хобі»?", "options": [{"text": "[kh] (loch)", "correct": true}, {"text": "[x] (box)", "correct": false}, {"text": "[h] (hat)", "correct": false}, {"text": "[k] (cat)", "correct": false}], "explanation": "Літера Х makes the throat-clearing sound."}, {"question": "How do you pronounce the letter «У» in «суп»?", "options": [{"text": "[oo]", "correct": true}, {"text": "[y]", "correct": false}, {"text": "[u] (but)", "correct": false}, {"text": "[i]", "correct": false}], "explanation": "Літера У makes the [u] sound, like in Moon."}, {"question": "How do you pronounce the letter «П» in «парк»?", "options": [{"text": "[p]", "correct": true}, {"text": "[n]", "correct": false}, {"text": "[r]", "correct": false}, {"text": "[h]", "correct": false}], "explanation": "Літера П makes the [p] sound."}, {"question": "How do you pronounce the letter «І» in «і»?", "options": [{"text": "[i]", "correct": true}, {"text": "[l]", "correct": false}, {"text": "[e]", "correct": false}, {"text": "[u]", "correct": false}], "explanation": "Літера І makes the [i] sound, like in Meet."}]`)} />
+### 📺 YouTube
 
-### Розшифруйте слова
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=Gt7O4FLGxjI" label="How to read the Ukrainian Alphabet. Cyrillic Letters. Part I" />
+*Speak Ukrainian*
 
-<Anagram client:load items={JSON.parse(`[{"scrambled": "б а н к", "answer": "банк", "hint": ""}, {"scrambled": "к а ф е", "answer": "кафе", "hint": ""}, {"scrambled": "п л а н", "answer": "план", "hint": ""}, {"scrambled": "ф а к т", "answer": "факт", "hint": ""}, {"scrambled": "б а р", "answer": "бар", "hint": ""}, {"scrambled": "м а м а", "answer": "мама", "hint": ""}, {"scrambled": "ф о т о", "answer": "фото", "hint": ""}, {"scrambled": "м е т р о", "answer": "метро", "hint": ""}]`)} />
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=2tEPOopp7-I" label="UKRAINIAN: handwritten cyrillic alphabet" />
+*Red Purple Ukrainian*
 
-### Переклад слів
-
-<MatchUp client:load pairs={JSON.parse(`[{"left": "банк", "right": "bank"}, {"left": "план", "right": "plan"}, {"left": "парк", "right": "park"}, {"left": "факт", "right": "fact"}, {"left": "бар", "right": "bar"}, {"left": "мама", "right": "mom"}, {"left": "кіт", "right": "cat"}, {"left": "фото", "right": "photo"}]`)} />
-
-### Заповніть пропуски
-
-<FillIn client:load items={JSON.parse(`[{"sentence": "___, будь ласка.", "answer": "Так", "options": ["Так", "Ні", "Де", "Це"]}, {"sentence": "Це ___.", "answer": "факт", "options": ["факт", "так", "де", "як"]}, {"sentence": "Де ___?", "answer": "метро", "options": ["метро", "фото", "факт", "так"]}, {"sentence": "Це мій ___.", "answer": "кіт", "options": ["кіт", "план", "факт", "так"]}, {"sentence": "___, звісно.", "answer": "Так", "options": ["Так", "Де", "Це", "Як"]}, {"sentence": "Ідемо в ___.", "answer": "кафе", "options": ["кафе", "фото", "план", "факт"]}, {"sentence": "Це моя ___.", "answer": "мама", "options": ["мама", "бар", "кіт", "план"]}, {"sentence": "Де ___?", "answer": "бар", "options": ["бар", "мама", "кіт", "так"]}]`)} />
-
-### Правда чи ні?
-
-<TrueFalse client:load items={JSON.parse(`[{"statement": "The letter «P» sounds like [p] in English.", "isTrue": false, "explanation": "False! Літера Р is a 'False Friend' and sounds like [r] (trilled)."}, {"statement": "The letter «В» sounds like [v] in 'vehicle'.", "isTrue": true, "explanation": "True! Літера В is a 'False Friend' but makes the [v] sound."}, {"statement": "The letter «Н» sounds like the English 'H'.", "isTrue": false, "explanation": "False! Літера Н makes the [n] sound, like in 'Hen'."}, {"statement": "The letter «С» always makes the [s] sound.", "isTrue": true, "explanation": "True! Літера С acts like a snake and always hisses [s]."}, {"statement": "The letter «Х» makes the sound [x] (like in 'Loch').", "isTrue": true, "explanation": "True! Літера Х is the throat-clearing sound."}, {"statement": "The Ukrainian alphabet is exactly the same as the Russian alphabet.", "isTrue": false, "explanation": "False! Ukrainian has unique letters like І, Ї, Є which Russian does not have."}, {"statement": "The letter «З» looks like the number 3 and sounds like [z].", "isTrue": true, "explanation": "True! Літера З looks like the number 3 and sounds like [z]."}, {"statement": "The letter «Л» looks like a pair of legs and makes the sound [l].", "isTrue": true, "explanation": "True! Літера Л looks like a pair of legs and makes the sound [l]."}]`)} />
-
-### Нові знайомі
-
-<Quiz client:load questions={JSON.parse(`[{"question": "Which letter makes the sound [b]?", "options": [{"text": "Б", "correct": true}, {"text": "В", "correct": false}, {"text": "Д", "correct": false}, {"text": "Ф", "correct": false}], "explanation": "Літера Б looks like a lowercase 'b' with a roof."}, {"question": "Which letter makes the sound [d]?", "options": [{"text": "Д", "correct": true}, {"text": "Л", "correct": false}, {"text": "П", "correct": false}, {"text": "Б", "correct": false}], "explanation": "Літера Д looks like a little house on legs."}, {"question": "Which letter makes the sound [z]?", "options": [{"text": "З", "correct": true}, {"text": "Е", "correct": false}, {"text": "С", "correct": false}, {"text": "В", "correct": false}], "explanation": "Літера З looks like the number 3."}, {"question": "Which letter makes the sound [l]?", "options": [{"text": "Л", "correct": true}, {"text": "П", "correct": false}, {"text": "Д", "correct": false}, {"text": "А", "correct": false}], "explanation": "Літера Л looks like a pair of legs."}, {"question": "Which letter makes the sound [p]?", "options": [{"text": "П", "correct": true}, {"text": "Л", "correct": false}, {"text": "Р", "correct": false}, {"text": "Н", "correct": false}], "explanation": "Літера П looks like a goal post."}, {"question": "Which letter makes the sound [f]?", "options": [{"text": "Ф", "correct": true}, {"text": "Р", "correct": false}, {"text": "О", "correct": false}, {"text": "В", "correct": false}], "explanation": "Літера Ф looks like hands on hips."}, {"question": "Which letter makes the sound [m]?", "options": [{"text": "М", "correct": true}, {"text": "Т", "correct": false}, {"text": "Н", "correct": false}, {"text": "П", "correct": false}], "explanation": "Літера М makes the [m] sound."}, {"question": "Which letter makes the sound [k]?", "options": [{"text": "К", "correct": true}, {"text": "Х", "correct": false}, {"text": "С", "correct": false}, {"text": "Р", "correct": false}], "explanation": "Літера К makes the [k] sound."}]`)} />
-
-### Голосні та приголосні
-
-<Classify client:load categories={JSON.parse(`[{"label": "Голосні", "items": ["А", "У"]}, {"label": "Приголосні", "items": ["М", "Л", "Н", "С"]}]`)} title="Голосні та приголосні" instruction="Sort the letters into the correct category." />
-
-### Знайди літеру
-
-<ImageToLetter client:load items={JSON.parse(`[{"emoji": "🍍", "answer": "А", "distractors": ["М", "У", "Н"]}, {"emoji": "🥕", "answer": "М", "distractors": ["Л", "С", "У"]}, {"emoji": "✈️", "answer": "Л", "distractors": ["Н", "А", "С"]}, {"emoji": "🇺🇦", "answer": "У", "distractors": ["Л", "М", "А"]}, {"emoji": "✂️", "answer": "Н", "distractors": ["С", "А", "Л"]}]`)} title="Знайди літеру" />
-
-### Дивись і повторюй
-
-<WatchAndRepeat client:load items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=hvB3VpcR3ZE", "letter": "А", "word": "ананас"}]`)} title="Дивись і повторюй" />
+</TabItem>
+</Tabs>

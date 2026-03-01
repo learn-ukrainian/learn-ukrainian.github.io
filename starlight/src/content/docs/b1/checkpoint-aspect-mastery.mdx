@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Контрольна точка: Опанування виду
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -350,7 +356,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **опанування** |  | mastery | ім |  |
+| **контрольна точка** |  | checkpoint | ім |  |
+| **самооцінка** |  | self-assessment | ім |  |
+| **готовність** |  | readiness | ім |  |
+| **повторення** |  | review, repetition | ім |  |
+| **закріплення** |  | consolidation | ім |  |
+| **перевірка** |  | verification, check | ім |  |
+| **прогрес** |  | progress | ім |  |
+| **слабка сторона** |  | weakness | ім |  |
+| **сильна сторона** |  | strength | ім |  |
+| **досягнення** |  | achievement | ім |  |
+| **гідний** |  | worthy, decent | adjective |  |
+| **рівень** |  | level | ім |  |
+| **компетенція** |  | competence | ім |  |
+| **навичка** |  | skill | ім |  |
+| **знання** |  | knowledge | ім |  |
+| **недоконаний** |  | imperfective | adjective |  |
+| **доконаний** |  | perfective | adjective |  |
+| **вид** |  | aspect | ім |  |
+| **результат** |  | result | ім |  |
+| **процес** |  | process | ім |  |
+| **намір** |  | intention | ім |  |
+| **обіцянка** |  | promise | ім |  |
+| **заборона** |  | prohibition | ім |  |
+| **наказ** |  | order, command | ім |  |
+| **синтетичний** |  | synthetic | adjective |  |
+| **аналітичний** |  | analytic | adjective |  |
+| **префікс** |  | prefix | ім |  |
+| **суфікс** |  | suffix | ім |  |
+| **чергування** |  | alternation | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Перевірка знань: Вид дієслова
 
@@ -401,37 +444,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Вивчення української граматики вимагає високої [___:0]}. Особливо важливо мати глибокі [___:1]} про види дієслова. Недоконаний [___:2]} описує довгий [___:3]} без чіткого кінця. Натомість доконаний вид завжди показує фінальний [___:4]}. Наша сьогоднішня контрольна [___:5]} допомагає оцінити ваш реальний [___:6]} у навчанні. Ваша [___:7]} до наступної складної теми залежить від правильного [___:8]} пройденого матеріалу. Регулярне інтервальне [___:9]} нових слів і правил чудово стимулює ваше успішне [___:10]} мови. Для ефективного навчання завжди робіть чесну [___:11]} своїх знань. Адекватна [___:12]} власних здобутків — це ваша найголовніша сильна [___:13]}."} blanks={JSON.parse(`[{"index": 0, "answer": "компетенції", "options": ["компетенції", "заборони", "обіцянки", "перевірки"]}, {"index": 1, "answer": "знання", "options": ["знання", "досягнення", "наміри", "результати"]}, {"index": 2, "answer": "вид", "options": ["вид", "час", "наказ", "прогрес"]}, {"index": 3, "answer": "процес", "options": ["процес", "результат", "рівень", "суфікс"]}, {"index": 4, "answer": "результат", "options": ["результат", "намір", "процес", "префікс"]}, {"index": 5, "answer": "точка", "options": ["точка", "перевірка", "заборона", "сторона"]}, {"index": 6, "answer": "прогрес", "options": ["прогрес", "рівень", "наказ", "суфікс"]}, {"index": 7, "answer": "готовність", "options": ["готовність", "компетенція", "навичка", "самооцінка"]}, {"index": 8, "answer": "закріплення", "options": ["закріплення", "чергування", "досягнення", "повторення"]}, {"index": 9, "answer": "повторення", "options": ["повторення", "опанування", "закріплення", "чергування"]}, {"index": 10, "answer": "опанування", "options": ["опанування", "повторення", "закріплення", "намір"]}, {"index": 11, "answer": "перевірка", "options": ["перевірка", "заборона", "обіцянка", "навичка"]}, {"index": 12, "answer": "самооцінка", "options": ["самооцінка", "заборона", "обіцянка", "навичка"]}, {"index": 13, "answer": "сторона", "options": ["сторона", "точка", "навичка", "перевірка"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **опанування** | [ɔpɑnuˈʋɑnʲːɑ] | mastery | ім |  |
-| **контрольна точка** | [kɔnˈtrɔlʲnɑ ˈtɔt͡ʃkɑ] | checkpoint | ім |  |
-| **самооцінка** | [sɑmɔɔˈt͡sʲinkɑ] | self-assessment | ім |  |
-| **готовність** | [ɦɔˈtɔu̯nʲisʲtʲ] | readiness | ім |  |
-| **повторення** | [pɔˈʋtɔrɛnʲːɑ] | review, repetition | ім |  |
-| **закріплення** | [zɑˈkrʲiplɛnʲːɑ] | consolidation | ім |  |
-| **перевірка** | [pɛˈrɛˈʋʲirkɑ] | verification, check | ім |  |
-| **прогрес** | [prɔˈɦrɛs] | progress | ім |  |
-| **слабка сторона** | [slɑˈbkɑ stɔrɔˈnɑ] | weakness | ім |  |
-| **сильна сторона** | [ˈsɪlʲnɑ stɔrɔˈnɑ] | strength | ім |  |
-| **досягнення** | [dɔˈsʲɑɦnɛnʲːɑ] | achievement | ім |  |
-| **гідний** | [ˈɦʲidnɪj] | worthy, decent | adjective |  |
-| **рівень** | [ˈrʲiʋɛnʲ] | level | ім |  |
-| **компетенція** | [kɔmpɛˈtɛnʲt͡sʲijɑ] | competence | ім |  |
-| **навичка** | [ˈnɑʋɪt͡ʃkɑ] | skill | ім |  |
-| **знання** | [znɑˈnʲːɑ] | knowledge | ім |  |
-| **недоконаний** | [nɛdɔˈkɔnɑnɪj] | imperfective | adjective |  |
-| **доконаний** | [dɔˈkɔnɑnɪj] | perfective | adjective |  |
-| **вид** | [ʋɪd] | aspect | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **намір** | [ˈnɑmʲir] | intention | ім |  |
-| **обіцянка** | [ɔbʲiˈt͡sʲɑnkɑ] | promise | ім |  |
-| **заборона** | [zɑbɔˈrɔnɑ] | prohibition | ім |  |
-| **наказ** | [nɑˈkɑz] | order, command | ім |  |
-| **синтетичний** | [sɪntɛˈtɪt͡ʃnɪj] | synthetic | adjective |  |
-| **аналітичний** | [ɑnɑlʲiˈtɪt͡ʃnɪj] | analytic | adjective |  |
-| **префікс** | [prɛfʲiks] | prefix | ім |  |
-| **суфікс** | [ˈsufʲiks] | suffix | ім |  |
-| **чергування** | [t͡ʃɛrɦuˈʋɑnʲːɑ] | alternation | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

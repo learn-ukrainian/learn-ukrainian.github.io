@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Nature and Weather
+{/**/}
 
 :::note[📝 Note]
 **Чому це важливо?**
@@ -79,10 +85,10 @@ Being able to talk about the weather and nature is essential for daily conversat
 
 | Слово | Вимова | Приклади у фразах | Контекст |
 |-------|--------|-------------------|----------|
-| **гора́** | [hɔˈra] | висока гора, вершина гори, у горах | Карпатські гори приваблюють багато туристів. |
+| **гора́** | | висока гора, вершина гори, у горах | Карпатські гори приваблюють багато туристів. |
 | **лі́с** | [lʲis] | густий ліс, лісова стежка, у лісі | Цей густий ліс ховає багато смачних грибів. |
-| **рі́чка** | [ˈrʲit͡ʃkɑ] | швидка річка, на березі річки | Ми дуже любимо купатися в річці влітку. |
-| **о́зеро** | [ˈɔzɛrɔ] | чисте озеро, гірське озеро | Це гірське озеро дуже холодне навіть у липні. |
+| **рі́чка** | | швидка річка, на березі річки | Ми дуже любимо купатися в річці влітку. |
+| **о́зеро** | | чисте озеро, гірське озеро | Це гірське озеро дуже холодне навіть у липні. |
 | **сте́п** | [stɛp] | широкий степ, у степу | Широкий степ гарно квітне теплою навесні. |
 
 Розглянемо ці слова в повних реченнях. Зверніть увагу на правильні закінчення.
@@ -353,7 +359,39 @@ Before finishing this lesson, carefully check your knowledge. Always avoid the m
 
 Якщо ви правильно відповіли на всі запитання, ви чудово засвоїли матеріал! Прекрасна природа України вже чекає на вас. Ви повністю готові подорожувати. Тепер ви можете ділитися враженнями з українськими друзями. Наступного разу ми будемо глибоко говорити про наші емоції та характер людини. До зустрічі!
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| погода |  | weather | noun | ж |  |
+| дощ |  | rain | noun | ч |  |
+| сніг |  | snow | noun | ч |  |
+| ліс |  | forest | noun | ч |  |
+| гора |  | mountain | noun | ж |  |
+| річка |  | river | noun | ж |  |
+| озеро |  | lake | noun | с |  |
+| клімат |  | climate | noun | ч |  |
+| природа |  | nature | noun | ж |  |
+| град |  | hail | noun | ч |  |
+| туман |  | fog | noun | ч |  |
+| степ |  | steppe, prairie | noun | ч |  |
+| довкілля |  | environment | noun | с |  |
+| тварина |  | animal | noun | ж |  |
+| буря |  | storm | noun | ж |  |
+| свійський |  | domestic (about animals) | adj |  |  |
+| дикий |  | wild | adj |  |  |
+| прохолодно |  | cool, chilly | adv |  |  |
+| жарко |  | hot | adv |  |  |
+| зручно |  | comfortable | adv |  |  |
+| сумно |  | sad | adv |  |  |
+| страшно |  | scared, scary | adv |  |  |
+| падати |  | to fall | verb |  |  |
+| йти |  | to go, to walk (also used for rain/snow) | verb |  |  |
+| прогноз |  | forecast | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: природа і погода
 
@@ -412,32 +450,10 @@ Before finishing this lesson, carefully check your knowledge. Always avoid the m
   <MarkTheWordsActivity instruction="Знайдіть і позначте всі іменники (назви предметів або явищ) у цьому короткому тексті." text="Україна має надзвичайно красиву природу. На заході стоять високі гори, де росте темний ліс. З неба часто падає холодний сніг або йде сильний дощ. На півдні лежить широкий степ." correctWords={JSON.parse(`["природу", "гори", "ліс", "сніг", "дощ", "степ"]`)} />
 </MarkTheWords>
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| погода | [pɔˈɦɔdɑ] | weather | noun | ж |  |
-| дощ | [dɔʃt͡ʃ] | rain | noun | ч |  |
-| сніг | [sʲnʲiɦ] | snow | noun | ч |  |
-| ліс | [lʲis] | forest | noun | ч |  |
-| гора | [ɦɔˈrɑ] | mountain | noun | ж |  |
-| річка | [ˈrʲit͡ʃkɑ] | river | noun | ж |  |
-| озеро | [ˈɔzɛrɔ] | lake | noun | с |  |
-| клімат | [ˈklʲimɑt] | climate | noun | ч |  |
-| природа | [prɪˈrɔdɑ] | nature | noun | ж |  |
-| град | [ɦrɑd] | hail | noun | ч |  |
-| туман | [tuˈmɑn] | fog | noun | ч |  |
-| степ | [stɛp] | steppe, prairie | noun | ч |  |
-| довкілля | [dɔˈʋkʲilʲːɑ] | environment | noun | с |  |
-| тварина | [tʋɑrɪnɑ] | animal | noun | ж |  |
-| буря | [ˈburʲɑ] | storm | noun | ж |  |
-| свійський | [ˈsʲʋʲijsʲkɪj] | domestic (about animals) | adj |  |  |
-| дикий | [ˈdɪkɪj] | wild | adj |  |  |
-| прохолодно | [prɔxɔˈlɔdnɔ] | cool, chilly | adv |  |  |
-| жарко | [ˈʒɑrkɔ] | hot | adv |  |  |
-| зручно | [ˈzrut͡ʃnɔ] | comfortable | adv |  |  |
-| сумно | [ˈsumnɔ] | sad | adv |  |  |
-| страшно | [ˈstrɑʃnɔ] | scared, scary | adv |  |  |
-| падати | [ˈpɑdɑtɪ] | to fall | verb |  |  |
-| йти | [jtɪ] | to go, to walk (also used for rain/snow) | verb |  |  |
-| прогноз | [prɔˈɦnɔz] | forecast | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

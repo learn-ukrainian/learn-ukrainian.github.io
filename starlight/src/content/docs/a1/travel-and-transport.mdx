@@ -6,4 +6,528 @@ sidebar:
   label: "52. Travel and Transport"
 ---
 
-> 🚧 **Цей модуль ще в розробці.** / **This module is under development.**
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes, { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+{/**/}
+
+> **Чому це важливо?**
+>
+> Це дуже важлива тема. Ви зможете говорити про транспорт. Ви будете орієнтуватися у місті. Ви зможете планувати подорожі. Ви також навчитеся купувати квитки. Урок дає вам корисні слова. Ви будете вільно мандрувати.
+
+## Транспорт
+
+### Вступ та Словник
+
+У цьому розділі ми вивчимо нові слова. Ви дізнаєтеся назви міського транспорту. Це дуже важливо для мандрівок Україною. Транспорт у містах працює добре. Ви можете обрати найкращий варіант. Київ має багато видів транспорту. Львів також має гарний транспорт. Давайте почнемо нашу подорож. У таблиці є нові слова. Там також є наголоси. Вони допомагають правильно говорити. Уважно читайте всі слова.
+
+**Vocabulary Table: City Transport**
+
+| Ukrainian | IPA | English |
+|-----------|-----|---------|
+| авто́бус | [ɑwˈtɔbus] | bus |
+| троле́йбус | [troˈlɛjbus] | trolleybus |
+| маршру́тка | [mɑrˈʃrutkɑ] | minibus |
+| трамва́й | [trɑmˈwɑj] | tram |
+| метро́ | [meˈtrɔ] | metro |
+
+These foundational words form the absolute basis of your practical travel vocabulary. They are highly frequent in everyday, casual conversations. You will undoubtedly hear them constantly when local residents discuss their morning commute, unexpected delays on the road, or their plans for the evening.
+
+### Міський транспорт
+
+Міський транспорт має різні види. Автобуси та тролейбуси дуже популярні. Трамваї їздять старими вулицями. Вони дуже красиві. Найбільш відомий транспорт — це маршрутка.
+
+**Маршру́тка** — це маленький автобус. Вона їде дуже швидко. Вона має свій маршрут. Це дуже зручний транспорт. Маршрутки їздять скрізь. Вони часто їдуть туди, куди великий автобус не може. Ви платите за проїзд водію. Ви платите гроші прямо в дорозі.
+
+Ось кілька прикладів. Читайте ці речення вголос.
+
+**Ukrainian:** Це мій старий автобус.
+**English:** This is my old bus.
+
+**Ukrainian:** Де найближча зупинка тролейбуса?
+**English:** Where is the nearest trolleybus stop?
+
+**Ukrainian:** Ця жовта маршрутка їде дуже швидко.
+**English:** This yellow minibus drives very fast.
+
+**Ukrainian:** Наш історичний трамвай їде досить повільно.
+**English:** Our historical tram drives quite slowly.
+
+:::warning[⚠️ Grammatical Exceptions]
+Two very important transport words in the Ukrainian language simply do not change their grammatical endings. The imported words **метро́** (metro) and **таксі́** (taxi) are strictly classified as indeclinable neuter nouns. This means their physical spelling and pronunciation stay exactly the same, no matter their grammatical role in the sentence.
+:::
+
+Let us carefully look at how this rigid linguistic rule works in actual practice. Even when the grammar usually requires a noun to change its ending to mathematically show its location or to become the object of an action, these specific loanwords stay perfectly still.
+
+**Ukrainian:** Я дуже люблю київське метро.
+**English:** I really like the Kyiv metro.
+
+**Ukrainian:** Моє рідне місто не має метро.
+**English:** My hometown does not have a metro.
+
+**Ukrainian:** Ми зараз чекаємо на жовте таксі.
+**English:** We are currently waiting for a yellow taxi.
+
+**Ukrainian:** Це приватне таксі занадто дороге для нас.
+**English:** This private taxi is too expensive for us.
+
+### Міжміський транспорт
+
+Для довгих поїздок ми беремо інший транспорт. Ви можете їхати в інше місто. Ви також можете їхати в іншу країну. Головний транспорт для цього — це потяг та літак.
+
+Слово для довгого маршруту — **по́тяг**. Слово для польоту — **літа́к**. Подивімося на приклади.
+
+**Ukrainian:** Цей сучасний потяг швидко їде до Києва.
+**English:** This modern train quickly goes to Kyiv.
+
+**Ukrainian:** Цей великий літак летить дуже високо.
+**English:** This big airplane flies very high.
+
+:::info[ℹ️ Укрзалізниця]
+Подорожі потягом дуже популярні. Вони популярні в Україні. Компанія «Укрзалізниця» є надійною. Багато людей люблять нічні потяги. Вони не люблять автомобілі чи літаки. Потяг — це цікавий досвід.
+:::
+
+Traveling cross-country by train in Ukraine is not merely about moving your physical body from one location to another. It is an enduring, fascinating social opportunity. It is a wonderful chance to drink hot, sweet tea served in special traditional glasses with metal holders, chat openly with strangers who become temporary friends, and calmly watch the vast, beautiful landscapes pass by your window.
+
+## Вокзал та аеропорт
+
+### Транспортні вузли
+
+Перед поїздкою вам потрібно знати транспортні вузли. Вокзал — це велика будівля. Тут починаються всі подорожі. Українські міста мають три головні типи вокзалів.
+
+The **залізни́чний вокза́л** is the formal, full term for the train station. The **автовокза́л** is the dedicated bus station specifically used for long-distance, intercity routes. The **аеропо́рт** is the airport, usually located far outside the noisy city center.
+
+:::tip[💡 Слово «Вокзал»]
+Слово **вокза́л** зазвичай означає залізничний вокзал. Потяг дуже важливий для України. Це слово має стандартне значення. Люди часто використовують це слово. Воно означає саме залізничний вокзал.
+:::
+
+Here is exactly how you might talk about these impressive, crowded locations.
+
+**Ukrainian:** Це головний залізничний вокзал нашого міста.
+**English:** This is the main train station of our city.
+
+**Ukrainian:** Наш новий міжміський автобус їде на автовокзал.
+**English:** Our new intercity bus goes to the bus station.
+
+**Ukrainian:** Цей міжнародний аеропорт зараз дуже великий.
+**English:** This international airport is very big right now.
+
+### Усередині вокзалу
+
+Усередині вокзалу вам треба знайти важливі місця. Це допомагає організувати поїздку. Три головні місця — це каса, зал очікування та платформа.
+
+Перше важливе місце — це **ка́са**, де ви купуєте свій квиток. Після цього ви можете піти у **зал очі́кування**. Це зручне місце для відпочинку, де пасажири чекають на потяг. Коли час прийшов, ви йдете на **платфо́рму**. Саме там ви сідаєте у свій вагон.
+
+Let us study these crucial location words in simple, highly practical sentences.
+
+**Ukrainian:** Головна каса працює щодня без жодної перерви.
+**English:** The main ticket office works every day without any break.
+
+**Ukrainian:** Теплий зал очікування знаходиться там, направо.
+**English:** The warm waiting hall is located there, to the right.
+
+**Ukrainian:** Де зараз знаходиться друга платформа?
+**English:** Where is the second platform located right now?
+
+**Ukrainian:** Наш довгий потяг прибуває на першу платформу.
+**English:** Our long train arrives at the first platform.
+
+Ці слова дуже корисні. Вони допомагають швидко орієнтуватися. Ви зможете легко знайти шлях. Це важливо на вокзалі.
+
+### Корисні фрази та квитки
+
+To successfully manage an entire journey from the absolute start to the very finish, you need to firmly know a few essential functional phrases. These phrases operate as fixed, solid chunks of language that you can easily memorize and use immediately without pausing to analyze the deep grammar.
+
+If you are completely, hopelessly lost in the winding city streets, you deeply need to ask a friendly stranger for the location of the central hub.
+
+**Ukrainian:** Перепрошую, скажіть, будь ласка, де вокзал?
+**English:** Excuse me, tell me, please, where is the station?
+
+If you desperately need to verify the origin point of your transport at the busy information desk, loudly use this exact phrase.
+
+**Ukrainian:** Звідки точно відправляється цей потяг?
+**English:** Where exactly does this train depart from?
+
+To clearly ask about the official schedule and fiercely ensure you are not late, you will strongly need to ask about the current time.
+
+**Ukrainian:** О котрій годині ми відправляємося?
+**English:** At what time do we depart?
+
+Before you can legally and safely travel, you absolutely must secure a valid ticket. The standard Ukrainian word for a paper or digital ticket is **квито́к**. To physically perform the action of buying a ticket is **купи́ти квито́к**. You also need to clearly and loudly specify to the tired cashier if your planned journey is only one way, or if you definitely plan to return home.
+
+A single, simple one-way ticket is confidently called **в оди́н бік**. A comprehensive round trip ticket, meaning you go there and safely come back, is effectively called **туди́ й наза́д**. Let us combine these incredibly useful linguistic pieces into full, very polite requests.
+
+**Ukrainian:** Добрий день, я дуже хочу купити квиток.
+**English:** Good afternoon, I really want to buy a ticket.
+
+**Ukrainian:** Дайте один дитячий квиток туди й назад, будь ласка.
+**English:** Give one children's round trip ticket, please.
+
+**Ukrainian:** Один дорослий квиток в один бік, будь ласка.
+**English:** One adult one-way ticket, please.
+
+Memorizing these exact, tested phrases will make your vital daily interactions at the stressful ticket window much smoother and infinitely less stressful.
+
+## Напрямки
+
+### Вказівники
+
+Ви повинні знати слова для орієнтування у місті. Ці прості слова допомагають знайти дорогу. Без них карти не працюють. Давайте вивчимо слова напрямків. Вони потрібні вам щодня.
+
+To say left, use **налі́во**. The spatial word for right is **напра́во**. When moving straight ahead, say **пря́мо**. To move back or backwards, you use **наза́д**.
+
+Sometimes, happily offering simple directions is simply not enough for highly complicated, chaotic urban layouts. You might intensely need to specify precisely which street turn a confused person must eventually take. For this highly specific task, we heavily rely on ordinal numbers. The descriptive phrase for the first turn is **пе́рший поворо́т**. The descriptive phrase for the second turn is **дру́гий поворо́т**.
+
+Let us meticulously review these core navigational terms in realistic, helpful contexts.
+
+**Ukrainian:** Наш новий комфортний готель там, наліво.
+**English:** Our new comfortable hotel is there, to the left.
+
+**Ukrainian:** Завжди дуже уважно дивіться направо.
+**English:** Always look very carefully to the right.
+
+**Ukrainian:** Це ваш перший поворот до старого центру.
+**English:** This is your first turn to the old center.
+
+**Ukrainian:** Наступна довга, широка вулиця — це другий поворот.
+**English:** The next long, wide street is the second turn.
+
+### Наказовий спосіб
+
+When actively and confidently giving directions to another lost person, native Ukrainians intuitively and constantly use a highly specific grammatical verb form. This unique, powerful form is formally called the imperative mood. It serves excellently to effectively express a direct command, a clear instruction, or a firm, polite request.
+
+At this solid beginner level, we will deliberately and exclusively focus on the polite plural form. This is the exact grammatical equivalent of addressing someone formally with the respectful pronoun «ви» (you, formal or plural). Fully mastering this ensures you always sound mature, respectful, and perfectly polite when giving necessary instructions to strange adults on the busy street.
+
+The formal imperative command for the physical action "turn" is **поверні́ть**. The formal imperative command for the physical action "go" or "walk" is **іді́ть**.
+
+Let us boldly combine these powerful, action-oriented verbs directly with our brand-new direction vocabulary.
+
+**Ukrainian:** Будь ласка, обережно поверніть наліво.
+**English:** Please, carefully turn left.
+
+**Ukrainian:** Дуже повільно поверніть направо тут.
+**English:** Very slowly turn right here.
+
+**Ukrainian:** Ідіть прямо і ніколи не зупиняйтеся.
+**English:** Go straight and never stop.
+
+**Ukrainian:** Ні, швидко ідіть назад до вокзалу.
+**English:** No, quickly go back to the station.
+
+:::note[📝 Ввічливі команди]
+Англійські прямі дієслова звучать грубо. Українські форми є цілком нормальними. Вони ідеально ввічливі при наданні інструкцій. Вам не потрібно пом'якшувати їх. Це стандартна практика.
+:::
+
+### Як запитати дорогу
+
+Even with an excellent, highly detailed map and a naturally good sense of direction, you will inevitably eventually need to ask a friendly, local resident for direct help. It is absolutely, undeniably crucial to deeply know the universally accepted, highly polite formulas for correctly asking directions in public.
+
+The most common, entirely natural way to politely ask how to physically reach a specific destination is the useful phrase **Як діста́тися до...?**. This rigid structure literally translates word-for-word to "How to get to...?".
+
+Notice the incredibly small but vital prepositional word **до**. Immediately after this specific word, the destination noun must fundamentally change its grammatical ending because it is operating heavily in the Genitive case. For now, do not constantly worry about the deep mathematical rules; simply and safely memorize the entire phrase as a single, functional, protective unit.
+
+**Ukrainian:** Вибачте, як швидко дістатися до метро?
+**English:** Excuse me, how to quickly get to the metro?
+
+**Ukrainian:** Як безпечно дістатися до історичного центру?
+**English:** How to safely get to the historical center?
+
+**Ukrainian:** Скажіть, як дістатися до головного вокзалу?
+**English:** Tell me, how to get to the main station?
+
+Another excellent, highly polite, and gentle option is to directly ask someone to simply tell you where a place is geographically located. You can confidently and safely use the phrase **Скажі́ть, будь ла́ска, де...?**. This translates directly to "Tell me, please, where is...?".
+
+**Ukrainian:** Скажіть, будь ласка, де зараз знаходиться банк?
+**English:** Tell me, please, where is the bank located now?
+
+**Ukrainian:** Скажіть, будь ласка, де найближча зупинка автобуса?
+**English:** Tell me, please, where is the nearest bus stop?
+
+These specific, highly polite phrases represent your ultimate, unbreakable safety net in any Ukrainian city.
+
+## Подорожі
+
+### Куди ми їдемо?
+
+When enthusiastically and vividly describing a planned journey to your friends, the absolute first detail you happily provide to your listener is usually the final destination. To successfully state exactly where you are actively going, the Ukrainian language firmly uses the vital preposition **до** immediately followed by the proper name of the target city in the Genitive case.
+
+For masculine city names that naturally end in a hard consonant, you typically add a soft «-а» or «-у» to the very end of the word. For example, the massive capital city Київ magically becomes Києва. The stunning western hub Львів transforms cleanly into Львова. This subtle, beautiful grammatical shift perfectly illustrates physical, intentional movement toward a target location.
+
+Let us carefully look at some clear, distinct examples of confidently expressing a travel destination.
+
+**Ukrainian:** Завтра рано вранці я їду до Києва.
+**English:** Tomorrow early in the morning I am going to Kyiv.
+
+**Ukrainian:** Кожного літа ми часто їдемо до Львова.
+**English:** Every summer we often go to Lviv.
+
+**Ukrainian:** Вона зараз радісно їде до сонячної Одеси.
+**English:** She is currently joyfully going to sunny Odesa.
+
+:::warning[⚠️ Дієслова руху]
+Є велика різниця між ходінням та їздою. Слово **іти́** означає тільки ходьбу. Слово **ї́хати** означає їзду на транспорті. Не використовуйте «іти» для автобуса чи потяга! Це дуже важливо пам'ятати.
+:::
+
+Let us clearly compare these two crucial, distinct verbs.
+
+**Ukrainian:** Я повільно іду пішки до великого парку.
+**English:** I am slowly walking on foot to the big park.
+
+**Ukrainian:** Я швидко їду машиною до великого парку.
+**English:** I am quickly driving by car to the big park.
+
+### Чим ми їдемо?
+
+Native English speakers very often stubbornly try to translate the incredibly common phrase "on the bus" directly word-for-word, fruitlessly and incorrectly trying to use a spatial preposition. However, Ukrainian fundamentally possesses a much more elegant, brilliantly streamlined grammatical solution for smoothly expressing the exact means of transport.
+
+Instead of heavily deploying a clunky preposition, Ukrainian naturally relies on the bare Instrumental case. The vehicle noun itself fundamentally changes its suffix ending to mathematically show that it is the pure instrument or method of travel. For standard masculine nouns like автобус or потяг, you simply attach the smooth ending «-ом».
+
+This provides an incredibly efficient, highly satisfying single-word way to explain exactly how you are rapidly traveling across the land.
+
+**Ukrainian:** Я зазвичай їду новим, швидким потягом.
+**English:** I usually travel by a new, fast train.
+
+**Ukrainian:** Ми зараз зручно їдемо міським автобусом.
+**English:** We are currently traveling comfortably by city bus.
+
+**Ukrainian:** Вони завтра летять великим, надійним літаком.
+**English:** They are flying tomorrow by a large, reliable airplane.
+
+For feminine transport nouns, such as the famous, ubiquitous маршрутка, the special grammatical ending smoothly becomes «-ою».
+
+**Ukrainian:** Вона щодня їде на роботу цією маршруткою.
+**English:** She travels to work every day by this minibus.
+
+Remember our extremely strict previous rule: the imported, foreign word **метро́** never, ever changes its physical shape. Therefore, we are absolutely forced to use a preposition here to make sense: **на метро́**.
+
+**Ukrainian:** Я щоранку швидко їду на роботу на метро.
+**English:** I quickly travel to work every morning by metro.
+
+### Тривалість подорожі
+
+The absolute final, highly practical piece of information for organizing any long journey is the expected, precise duration. To politely and clearly ask about the total, exhaustive length of a trip, you efficiently use the standard, fixed phrase **Скі́льки ча́су ї́хати?**. This essentially and clearly means "How long is the ride?" or literally translated, "How much time to travel?".
+
+To correctly and accurately answer this vital question, you must carefully combine the travel verb with a specific, chosen number and the essential noun for hour, **годи́на**. Depending strictly on the mathematical number you choose, the core word for hour correctly changes its grammatical form.
+
+Let us thoroughly practice asking and accurately answering about travel time.
+
+**Ukrainian:** Скажіть, скільки точного часу туди їхати?
+**English:** Tell me, how much exact time is the ride there?
+
+**Ukrainian:** Я їду туди рівно одну коротку годину.
+**English:** I travel there exactly one short hour.
+
+**Ukrainian:** Ми повільно їдемо майже три довгі години.
+**English:** We travel slowly for almost three long hours.
+
+**Ukrainian:** Вони їдуть нічним потягом цілих п'ять годин.
+**English:** They travel by night train for a whole five hours.
+
+Ця граматика дуже важлива. Вона поєднує числа та планування подорожей. Ви знаєте час поїздки. Це допомагає планувати день. Це також допомагає купувати квитки.
+
+## Практика
+
+### Діалог 1: На вулиці
+
+Let us very carefully examine exactly how all this distinct, rich vocabulary and surprisingly complex grammar actually comes elegantly together in a totally realistic, highly stressful everyday scenario. In this deeply instructive first dialogue, a confused, entirely lost tourist is wandering the city and politely, desperately asks a passing local resident for precise, clear directions to the nearest functional metro station. Pay special, close attention to the highly polite introductory phrases and the formal, strong imperative verbs creatively used to firmly give instructions. Read the Ukrainian lines aloud to perfectly master the intonation.
+
+**Ukrainian:** Перепрошую. Скажіть, будь ласка, де точно знаходиться метро?
+**English:** Excuse me. Tell me, please, where exactly is the metro located?
+
+**Ukrainian:** Добрий день. Метро зовсім недалеко. Ідіть прямо цією довгою вулицею.
+**English:** Good afternoon. The metro is quite not far. Go straight along this long street.
+
+**Ukrainian:** Прямо? Що робити потім?
+**English:** Straight? What to do then?
+
+**Ukrainian:** Так, усе правильно. Ідіть прямо, а потім буде другий поворот наліво.
+**English:** Yes, everything is correct. Go straight, and then there will be the second turn to the left.
+
+**Ukrainian:** Другий поворот наліво. Я все добре зрозумів.
+**English:** Second turn to the left. I understood everything well.
+
+**Ukrainian:** Саме так. Там ви одразу побачите дуже велику станцію.
+**English:** Exactly. There you will immediately see a very big station.
+
+**Ukrainian:** Дуже щиро дякую вам за вашу допомогу!
+**English:** Thank you very sincerely for your help!
+
+**Ukrainian:** Прошу. Бажаю вам винятково гарного дня!
+**English:** You are welcome. I wish you an exceptionally good day!
+
+This highly detailed, expertly crafted dialogue flawlessly and vividly demonstrates a typical, highly respectful, and successful exchange on the loud, chaotic streets of a massive Ukrainian city. The baseline grammar intrinsically involved is quite remarkably simple, but it is incredibly, undeniably effective for immediately solving urgent, highly practical spatial problems during your complex travels.
+
+### Діалог 2: Наша подорож
+
+In this second, deeply immersive scenario, two incredibly excited, close friends are enthusiastically, loudly discussing their highly anticipated upcoming vacation trip. This significantly longer, more complex dialogue skillfully and naturally integrates the absolute core concepts of travel destination, mathematically expected duration, and the carefully chosen means of transport. Notice exactly, with intense scrutiny, how the bare, prepositionless Instrumental case is actively used seamlessly and entirely naturally to boldly explain exactly how they will happily travel together.
+
+**Ukrainian:** Привіт, Марку! Куди саме ми їдемо завтра рано вранці?
+**English:** Hi, Mark! Where exactly are we going tomorrow early in the morning?
+
+**Ukrainian:** Привіт, Олено! Ми нарешті, після довгого чекання, їдемо до Львова.
+**English:** Hi, Olena! We are finally, after a long wait, going to Lviv.
+
+**Ukrainian:** Це просто неймовірно чудово! Чим ми їдемо туди? Повільним автобусом?
+**English:** This is just incredibly great! How are we traveling there? By a slow bus?
+
+**Ukrainian:** Ні, ми їдемо сучасним, дуже швидким потягом. Це набагато зручніше.
+**English:** No, we are traveling by a modern, very fast train. It is much more comfortable.
+
+**Ukrainian:** Я абсолютно і повністю згоден. Скільки часу туди їхати?
+**English:** I absolutely and completely agree. How long is the ride there?
+
+**Ukrainian:** Ми їдемо туди приблизно шість або сім годин.
+**English:** We travel there approximately six or seven hours.
+
+**Ukrainian:** Зрозуміло. О котрій рівно годині відправляється наш нічний потяг?
+**English:** Understood. At what exact time does our night train depart?
+
+**Ukrainian:** Він точно відправляється о восьмій ранку. Будь ласка, благаю, не запізнюйся!
+**English:** It exactly departs at eight in the morning. Please, I beg, do not be late!
+
+**Ukrainian:** Зовсім не хвилюйся. Я вже маю електронний квиток. До зустрічі на вокзалі!
+**English:** Do not worry at all. I already have an electronic ticket. See you at the station!
+
+Цей діалог показує планування подорожі. Друзі радісно обговорюють плани. Подорож потягом — це класика в Україні. Зверніть увагу на фразу «до Львова». Вона показує напрямок. Слово «потягом» показує вид транспорту. Це дуже точна граматика.
+
+### Перевірка
+
+Now it is truly, absolutely time to rigorously and honestly check your deep reading comprehension. Read the following evaluation questions very, very carefully. They are intentionally written entirely in the Ukrainian language without any supportive English translation to falsely comfort you. Try your absolute best to answer them directly, fully based on the two dialogues you just carefully read, absolutely without lazily looking back at the provided English translations located directly above.
+
+1. Куди саме іде турист у першому довгому діалозі на вулиці?
+2. Який конкретно швидкий транспорт використовують радісні друзі у другому діалозі?
+3. Скільки довгих годин цим близьким друзям треба їхати сучасним потягом до Львова?
+4. Що дуже ввічливо просить турист показати у першому діалозі?
+5. Чому мудрі друзі спільно вирішили їхати зручним потягом, а не великим, повільним автобусом?
+
+Відповіді на ці питання показують ваш рівень. Ви розумієте головні концепції уроку. Тепер ви готові до подорожей. Ви можете орієнтуватися у місті. Ви можете планувати маршрути. Ви добре знаєте мову.
+
+---
+
+## 📋 Підсумок
+
+У цьому уроці ви вивчили важливі слова. Тепер ви знаєте види міського транспорту. Ви знаєте слова: автобус, трамвай та маршрутка. Ви також знаєте назви вузлів. Залізничний вокзал — це дуже важливе місце. Автовокзал та аеропорт також дуже важливі. Ви можете купувати квитки. Ви можете питати дорогу. Ви знаєте, як сказати "наліво", "направо", "прямо" та "назад". Ви вмієте використовувати дієслова "іти" та "їхати". Ви розумієте ці два слова. Ви можете сказати, куди ви їдете. Ви використовуєте прийменник "до". Ви також можете сказати, чим ви їдете. Це дуже корисні знання. Ви готові до подорожі. Ви можете впевнено мандрувати містом. Ви можете мандрувати Україною. Подорожувати — це цікаво та весело.
+
+Граматика цього уроку є дуже практичною. Ви знаєте формальні форми: ідіть, поверніть. Вони допомагають давати інструкції на вулиці. Ви також знаєте форми для транспорту. Ви можете сказати: потягом, автобусом, літаком. Вам не потрібні зайві слова. Ви знаєте, як вказати напрямок. Ви також вмієте ставити питання. Ви можете спитати про час. Ви можете спитати про час поїздки. Це допомагає планувати день. Ви добре попрацювали. Ви вивчили багато нових слів. Тепер ви можете вільно говорити про транспорт. Ви маєте міцну базу. Ці навички є дуже важливими. Бажаю вам успіхів!
+
+**Перевірте себе:**
+1. Як правильно сказати англійською мовою довге словосполучення «залізничний вокзал» і чому воно таке важливе?
+2. Який саме складний відмінок ми обов'язково використовуємо для слова «потяг» у фразі «Я їду потягом»?
+3. Як правильно та ввічливо сказати: «поверніть наліво» чи «ідіть наліво» для різкої зміни напрямку на вулиці?
+4. Що конкретно і точно означає корисна, стандартна фраза «квиток туди й назад» у гучній касі?
+5. Чому ми ніколи, за жодних обставин не змінюємо кінцеве закінчення у запозиченому слові «метро»?
+
+These verified, deeply internalized linguistic skills permanently form the solid, completely unbreakable foundation of your physical mobility in any Ukrainian-speaking environment. You are fundamentally, completely ready for the open road.
+
+---
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| автобус |  | bus | noun |  |  |
+| метро |  | metro | noun |  |  |
+| потяг |  | train | noun |  |  |
+| літак |  | airplane | noun |  |  |
+| вокзал |  | train station | noun |  |  |
+| аеропорт |  | airport | noun |  |  |
+| наліво |  | left | adverb |  |  |
+| направо |  | right | adverb |  |  |
+| прямо |  | straight | adverb |  |  |
+| маршрутка |  | minibus | noun |  |  |
+| трамвай |  | tram | noun |  |  |
+| зупинка |  | stop | noun |  |  |
+| квиток |  | ticket | noun |  |  |
+| розклад |  | schedule | noun |  |  |
+| каса |  | ticket office | noun |  |  |
+| перон |  | platform | noun |  |  |
+| їхати |  | to go by vehicle | verb |  |  |
+| іти |  | to go on foot | verb |  |  |
+| тролейбус |  | trolleybus | noun |  |  |
+| назад |  | back | adverb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
+
+### Транспорт: знайдіть пару
+
+<MatchUp client:load pairs={JSON.parse(`[{"left": "автобус", "right": "bus"}, {"left": "тролейбус", "right": "trolleybus"}, {"left": "трамвай", "right": "tram"}, {"left": "метро", "right": "metro"}, {"left": "маршрутка", "right": "minibus"}, {"left": "літак", "right": "airplane"}, {"left": "потяг", "right": "train"}, {"left": "корабель", "right": "ship"}, {"left": "автомобіль", "right": "car"}, {"left": "таксі", "right": "taxi"}]`)} />
+
+### Перевірте знання: Транспорт і граматика
+
+<Quiz client:load questions={JSON.parse(`[{"question": "Який транспорт зазвичай їде під землею?", "options": [{"text": "метро", "correct": true}, {"text": "автобус", "correct": false}, {"text": "літак", "correct": false}, {"text": "потяг", "correct": false}], "explanation": "Метро — це підземний вид транспорту."}, {"question": "Як правильно сказати англійську фразу: I am traveling to Kyiv?", "options": [{"text": "Я їду в Київ", "correct": true}, {"text": "Я іду в Київ", "correct": false}, {"text": "Я їду на Київ", "correct": false}, {"text": "Я іду на Київ", "correct": false}], "explanation": "Ми використовуємо дієслово їхати для подорожей транспортом, і прийменник в для міст."}, {"question": "Де на вокзалі можна купити квиток на потяг?", "options": [{"text": "у касі", "correct": true}, {"text": "на пероні", "correct": false}, {"text": "у розкладі", "correct": false}, {"text": "у терміналі", "correct": false}], "explanation": "Квитки завжди продають у касі."}, {"question": "Як сказати фразу by bus українською мовою?", "options": [{"text": "на автобусі", "correct": true}, {"text": "в автобусі", "correct": false}, {"text": "автобус", "correct": false}, {"text": "на автобус", "correct": false}], "explanation": "Ми використовуємо прийменник на та Місцевий відмінок."}, {"question": "Яке українське слово має значення straight?", "options": [{"text": "прямо", "correct": true}, {"text": "ліворуч", "correct": false}, {"text": "праворуч", "correct": false}, {"text": "назад", "correct": false}], "explanation": "Прямо означає straight."}, {"question": "Де ви чекаєте на свій рейс в аеропорту?", "options": [{"text": "у терміналі", "correct": true}, {"text": "на пероні", "correct": false}, {"text": "на колії", "correct": false}, {"text": "у вагоні", "correct": false}], "explanation": "В аеропорту люди чекають на рейс у терміналі."}]`)} />
+
+### Заповніть пропуски: На вокзалі та в дорозі
+
+<FillIn client:load items={JSON.parse(`[{"sentence": "Мені потрібен один ... до Одеси.", "answer": "квиток", "options": ["квиток", "вокзал", "перон", "розклад"]}, {"sentence": "Мій ... відправляється о другій годині.", "answer": "потяг", "options": ["потяг", "каса", "зупинка", "квиток"]}, {"sentence": "Скажіть, будь ласка, де знаходиться ... вокзал?", "answer": "залізничний", "options": ["залізничний", "головна", "підземний", "перший"]}, {"sentence": "Ідіть прямо, а на перехресті поверніть ... .", "answer": "праворуч", "options": ["праворуч", "правильно", "далеко", "тут"]}, {"sentence": "Ми дуже далеко від центру, нам треба взяти ... .", "answer": "таксі", "options": ["таксі", "зупинка", "каса", "літак"]}, {"sentence": "Коли ви летите літаком, ви маєте здати свій ... .", "answer": "багаж", "options": ["багаж", "розклад", "термінал", "паспорт"]}]`)} />
+
+### Складіть речення: Як пройти
+
+<Unjumble client:load items={JSON.parse(`[{"jumbled": "Ідіть / прямо / по / вулиці", "answer": "Ідіть прямо по вулиці"}, {"jumbled": "Де / знаходиться / станція / метро", "answer": "Де знаходиться станція метро"}, {"jumbled": "Поверніть / ліворуч / на / перехресті", "answer": "Поверніть ліворуч на перехресті"}, {"jumbled": "Аптека / там / праворуч", "answer": "Аптека там праворуч"}, {"jumbled": "Як / дійти / до / музею", "answer": "Як дійти до музею"}, {"jumbled": "Зупинка / автобуса / дуже / близько", "answer": "Зупинка автобуса дуже близько"}]`)} />
+
+### Розподіліть слова за групами
+
+<GroupSort client:load groups={JSON.parse(`{"Транспорт": ["автобус", "тролейбус", "трамвай", "потяг", "метро", "літак"], "Місця": ["вокзал", "аеропорт", "каса", "перон", "зупинка", "термінал"]}`)} />
+
+### Перевірте себе: факти про подорожі
+
+<Quiz client:load questions={JSON.parse(`[{"question": "Чи змінює слово метро своє закінчення в різних відмінках?", "options": [{"text": "Ні, воно не змінюється", "correct": true}, {"text": "Так, завжди змінюється", "correct": false}, {"text": "Змінюється тільки в множині", "correct": false}, {"text": "Змінюється як іменник", "correct": false}], "explanation": "Слово метро є незмінним (indeclinable)."}, {"question": "Як правильно сказати фразу by car українською мовою?", "options": [{"text": "на автомобілі", "correct": true}, {"text": "в автомобілі", "correct": false}, {"text": "з автомобілем", "correct": false}, {"text": "автомобіль", "correct": false}], "explanation": "Ми використовуємо прийменник на з місцевим відмінком."}, {"question": "Яке дієслово ви використаєте для подорожі літаком до іншого міста?", "options": [{"text": "їхати або летіти", "correct": true}, {"text": "іти", "correct": false}, {"text": "бігти", "correct": false}, {"text": "гуляти", "correct": false}], "explanation": "Для літака та іншого транспорту ми використовуємо їхати або летіти."}, {"question": "Як правильно сказати, що ви подорожуєте до України?", "options": [{"text": "в Україну", "correct": true}, {"text": "на Україну", "correct": false}, {"text": "до Україна", "correct": false}, {"text": "через Україна", "correct": false}], "explanation": "В Україну — це правильна форма для незалежної країни."}, {"question": "Що означає слово праворуч в українській мові?", "options": [{"text": "to the right", "correct": true}, {"text": "correct", "correct": false}, {"text": "to the left", "correct": false}, {"text": "straight", "correct": false}], "explanation": "Праворуч означає to the right."}, {"question": "Який транспорт часто використовують для поїздки до іншого міста?", "options": [{"text": "потяг", "correct": true}, {"text": "метро", "correct": false}, {"text": "тролейбус", "correct": false}, {"text": "трамвай", "correct": false}], "explanation": "Потяг — популярний вид міжміського транспорту в Україні."}]`)} />
+
+### На вокзалі: знайдіть пару
+
+<MatchUp client:load pairs={JSON.parse(`[{"left": "каса", "right": "ticket office"}, {"left": "розклад", "right": "schedule"}, {"left": "перон", "right": "platform"}, {"left": "багаж", "right": "luggage"}, {"left": "рейс", "right": "flight"}, {"left": "квиток", "right": "ticket"}]`)} />
+
+### Дієслова руху: іти чи їхати?
+
+<Quiz client:load questions={JSON.parse(`[{"question": "Яке дієслово ви використаєте для речення I am walking to the park?", "options": [{"text": "іти", "correct": true}, {"text": "їхати", "correct": false}, {"text": "летіти", "correct": false}, {"text": "стояти", "correct": false}], "explanation": "Іти означає рух пішки (on foot)."}, {"question": "Яке слово треба вставити: Ми ... на роботу на автобусі.", "options": [{"text": "їдемо", "correct": true}, {"text": "ідемо", "correct": false}, {"text": "їдуть", "correct": false}, {"text": "ідуть", "correct": false}], "explanation": "Форма для ми — їдемо (by transport)."}, {"question": "Яке слово треба вставити: Вона ... в магазин пішки.", "options": [{"text": "іде", "correct": true}, {"text": "їде", "correct": false}, {"text": "іду", "correct": false}, {"text": "їдемо", "correct": false}], "explanation": "Вона іде (she walks)."}, {"question": "Яке слово треба вставити: Вони ... до Львова на потязі.", "options": [{"text": "їдуть", "correct": true}, {"text": "ідуть", "correct": false}, {"text": "їде", "correct": false}, {"text": "іде", "correct": false}], "explanation": "Вони їдуть (they travel by transport)."}, {"question": "Яке слово треба вставити: Я ... в ресторан пішки.", "options": [{"text": "іду", "correct": true}, {"text": "їду", "correct": false}, {"text": "іде", "correct": false}, {"text": "їдемо", "correct": false}], "explanation": "Я іду (I walk)."}, {"question": "Яке слово треба вставити: Ти ... на метро кожного дня?", "options": [{"text": "їдеш", "correct": true}, {"text": "ідеш", "correct": false}, {"text": "їде", "correct": false}, {"text": "іду", "correct": false}], "explanation": "Ти їдеш (you ride)."}]`)} />
+
+### Заповніть пропуски: Напрямки
+
+<FillIn client:load items={JSON.parse(`[{"sentence": "Вибачте, ви не ..., де знаходиться театр?", "answer": "підкажете", "options": ["підкажете", "скажете", "ідете", "їдете"]}, {"sentence": "Вам треба йти ... по цій вулиці.", "answer": "прямо", "options": ["прямо", "назад", "близько", "квиток"]}, {"sentence": "Це не дуже ..., це близько.", "answer": "далеко", "options": ["далеко", "прямо", "ліворуч", "тут"]}, {"sentence": "Потім на ... поверніть праворуч.", "answer": "перехресті", "options": ["перехресті", "вокзалі", "аеропорту", "зупинці"]}, {"sentence": "Зупинка тролейбуса знаходиться там, ... .", "answer": "ліворуч", "options": ["ліворуч", "правильно", "квиток", "прямо"]}, {"sentence": "Дуже дякую за вашу ...!", "answer": "допомогу", "options": ["допомогу", "дорогу", "вулицю", "зупинку"]}]`)} />
+
+### Складіть речення: Подорож і квитки
+
+<Unjumble client:load items={JSON.parse(`[{"jumbled": "Дайте / один / квиток / до / Києва", "answer": "Дайте один квиток до Києва"}, {"jumbled": "Скільки / коштує / цей / квиток", "answer": "Скільки коштує цей квиток"}, {"jumbled": "Ми / їдемо / в / Україну", "answer": "Ми їдемо в Україну"}, {"jumbled": "Він / іде / на / роботу", "answer": "Він іде на роботу"}, {"jumbled": "Що / ти / береш / у / подорож", "answer": "Що ти береш у подорож"}, {"jumbled": "Мій / літак / летить / завтра", "answer": "Мій літак летить завтра"}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

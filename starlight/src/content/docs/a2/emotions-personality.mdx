@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Emotions and Personality
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -485,7 +491,41 @@ Let's quickly and effectively check exactly how well you have mastered all the r
 
 Якщо ви дуже легко і без проблем відповіли на всі ці шість запитань — ми вас дуже щиро вітаємо з великим успіхом! Ви просто чудово і надзвичайно глибоко засвоїли всю складну лексику емоцій та людського характеру. Ви тепер повністю готові до нових, ще більш цікавих життєвих і мовних викликів. Наступного разу ми будемо говорити про роботу, кар'єру та професії. Ми активно використаємо ваші нові знання про старанність і терпіння. До швидкої зустрічі у нашому наступному модулі!
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| добрий |  | kind | adjective |  |  |
+| злий |  | angry / cruel | adjective |  |  |
+| щасливий |  | happy / lucky | adjective |  |  |
+| сумний |  | sad | adjective |  |  |
+| розумний |  | smart | adjective |  |  |
+| веселий |  | cheerful | adjective |  |  |
+| спокійний |  | calm | adjective |  |  |
+| нервовий |  | nervous | adjective |  |  |
+| щирий |  | sincere | adjective |  |  |
+| гостинний |  | hospitable | adjective |  |  |
+| замкнений |  | closed / unsociable | adjective |  |  |
+| симпатичний |  | good-looking / nice | adjective |  |  |
+| щедрий |  | generous | adjective |  |  |
+| скупий |  | stingy | adjective |  |  |
+| чесний |  | honest | adjective |  |  |
+| лінивий |  | lazy | adjective |  |  |
+| працьовитий |  | hardworking | adjective |  |  |
+| терплячий |  | patient | adjective |  |  |
+| радість |  | joy | noun | ж |  |
+| сум |  | sadness | noun | ч |  |
+| злість |  | anger | noun | ж |  |
+| душа |  | soul | noun | ж |  |
+| нудно |  | boring / bored | adverb |  |  |
+| весело |  | cheerfully / fun | adverb |  |  |
+| холодно |  | cold | adverb |  |  |
+| тепло |  | warm | adverb |  |  |
+| спокійно |  | calmly | adverb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть антоніми
 
@@ -544,34 +584,10 @@ Let's quickly and effectively check exactly how well you have mastered all the r
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "дуже / коли / йде / дощ / мені / сумно", "answer": "Мені дуже сумно, коли йде дощ."}, {"jumbled": "вона / щедра / бо / завжди / купує / подарунки", "answer": "Вона щедра, бо завжди купує подарунки."}, {"jumbled": "людина / ніколи / не / панікує / спокійна", "answer": "Спокійна людина ніколи не панікує."}, {"jumbled": "це / був / несподіваний / і / дуже / злий / жарт", "answer": "Це був несподіваний і дуже злий жарт."}, {"jumbled": "розумна / робить / правильний / завжди / вибір / людина", "answer": "Розумна людина завжди робить правильний вибір."}, {"jumbled": "хоче / лінивий / працювати / студент / не / багато", "answer": "Лінивий студент не хоче багато працювати."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| добрий | [ˈdɔbrɪj] | kind | adjective |  |  |
-| злий | [zlɪj] | angry / cruel | adjective |  |  |
-| щасливий | [ʃt͡ʃɑˈslɪʋɪj] | happy / lucky | adjective |  |  |
-| сумний | [suˈmnɪj] | sad | adjective |  |  |
-| розумний | [rɔˈzumnɪj] | smart | adjective |  |  |
-| веселий | [ʋɛˈsɛlɪj] | cheerful | adjective |  |  |
-| спокійний | [spɔˈkʲijnɪj] | calm | adjective |  |  |
-| нервовий | [nɛˈrʋɔʋɪj] | nervous | adjective |  |  |
-| щирий | [ˈʃt͡ʃɪrɪj] | sincere | adjective |  |  |
-| гостинний | [ɦɔˈstɪnːɪj] | hospitable | adjective |  |  |
-| замкнений | [ˈzɑmknɛnɪj] | closed / unsociable | adjective |  |  |
-| симпатичний | [sɪmpɑˈtɪt͡ʃnɪj] | good-looking / nice | adjective |  |  |
-| щедрий | [ˈʃt͡ʃɛdrɪj] | generous | adjective |  |  |
-| скупий | [skuˈpɪj] | stingy | adjective |  |  |
-| чесний | [ˈt͡ʃɛsnɪj] | honest | adjective |  |  |
-| лінивий | [lʲiˈnɪʋɪj] | lazy | adjective |  |  |
-| працьовитий | [prɑt͡sʲɔˈʋɪtɪj] | hardworking | adjective |  |  |
-| терплячий | [tɛrˈplʲɑt͡ʃɪj] | patient | adjective |  |  |
-| радість | [ˈrɑdʲisʲtʲ] | joy | noun | ж |  |
-| сум | [sum] | sadness | noun | ч |  |
-| злість | [zʲlʲisʲtʲ] | anger | noun | ж |  |
-| душа | [duˈʃɑ] | soul | noun | ж |  |
-| нудно | [ˈnudnɔ] | boring / bored | adverb |  |  |
-| весело | [ˈʋɛsɛlɔ] | cheerfully / fun | adverb |  |  |
-| холодно | [ˈxɔlɔdnɔ] | cold | adverb |  |  |
-| тепло | [tɛˈplɔ] | warm | adverb |  |  |
-| спокійно | [spɔˈkʲijnɔ] | calmly | adverb |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

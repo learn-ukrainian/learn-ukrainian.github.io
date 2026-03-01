@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# All Cases Practice
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -403,7 +409,39 @@ As an A2 learner, you have now been exposed to the entire 7-case paradigm. Use t
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| хто |  | who | pronoun |  |  |
+| що |  | what | pronoun |  |  |
+| кого |  | whom / of whom | pronoun |  |  |
+| чого |  | of what | pronoun |  |  |
+| кому |  | to whom | pronoun |  |  |
+| чому |  | to what / why | pronoun |  |  |
+| ким |  | by whom / with whom | pronoun |  |  |
+| чим |  | by what / with what | pronoun |  |  |
+| на кому |  | on whom | phrase |  |  |
+| на чому |  | on what | phrase |  |  |
+| відмінок |  | case | noun | ч |  |
+| називний |  | nominative | adjective |  |  |
+| родовий |  | genitive | adjective |  |  |
+| давальний |  | dative | adjective |  |  |
+| знахідний |  | accusative | adjective |  |  |
+| орудний |  | instrumental | adjective |  |  |
+| місцевий |  | locative | adjective |  |  |
+| кличний |  | vocative | adjective |  |  |
+| однина |  | singular | noun | ж |  |
+| множина |  | plural | noun | ж |  |
+| закінчення |  | ending | noun | с |  |
+| відмінювати |  | to decline | verb |  |  |
+| прийменник |  | preposition | noun | ч |  |
+| суддя |  | judge | noun | ч |  |
+| свідок |  | witness | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Оберіть правильну форму слова (Частина 1)
 
@@ -466,32 +504,10 @@ As an A2 learner, you have now been exposed to the entire 7-case paradigm. Use t
 
 <Cloze client:load passage={"Сьогодні ми були у [___:0]}. Там [___:1]} уважно слухав [___:2]}. У [___:3]} не було алібі. Ми дали [___:4]} важливий [___:5]}. Ми працюємо з найкращим [___:6]}. Він розповів нам про [___:7]}. Я вірю цьому [___:8]}. Завтра ми знову підемо до [___:9]}. Я буду говорити з [___:10]} про наші [___:11]}."} blanks={JSON.parse(`[{"index": 0, "answer": "суді", "options": ["суді", "суд", "судом", "суду"]}, {"index": 1, "answer": "суддя", "options": ["суддя", "суддю", "судді", "суддею"]}, {"index": 2, "answer": "свідка", "options": ["свідка", "свідок", "свідком", "свідку"]}, {"index": 3, "answer": "нього", "options": ["нього", "він", "йому", "ним"]}, {"index": 4, "answer": "офіцеру", "options": ["офіцеру", "офіцер", "офіцера", "офіцером"]}, {"index": 5, "answer": "документ", "options": ["документ", "документа", "документу", "документом"]}, {"index": 6, "answer": "адвокатом", "options": ["адвокатом", "адвокат", "адвоката", "адвокату"]}, {"index": 7, "answer": "справу", "options": ["роботу", "робота", "справу", "справа"]}, {"index": 8, "answer": "чоловіку", "options": ["чоловіку", "чоловік", "чоловіка", "чоловіком"]}, {"index": 9, "answer": "суду", "options": ["суду", "суд", "суді", "судом"]}, {"index": 10, "answer": "колегою", "options": ["колегою", "колега", "колеги", "колегу"]}, {"index": 11, "answer": "плани", "options": ["плани", "планів", "планам", "планами"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| хто | [xtɔ] | who | pronoun |  |  |
-| що | [ʃt͡ʃɔ] | what | pronoun |  |  |
-| кого | [kɔɦɔ] | whom / of whom | pronoun |  |  |
-| чого | [t͡ʃɔˈɦɔ] | of what | pronoun |  |  |
-| кому | [ˈkɔmu] | to whom | pronoun |  |  |
-| чому | [t͡ʃɔˈmu] | to what / why | pronoun |  |  |
-| ким | [kɪm] | by whom / with whom | pronoun |  |  |
-| чим | [t͡ʃɪm] | by what / with what | pronoun |  |  |
-| на кому | [nɑ ˈkɔmu] | on whom | phrase |  |  |
-| на чому | [nɑ t͡ʃɔˈmu] | on what | phrase |  |  |
-| відмінок | [ʋʲiˈdʲmʲinɔk] | case | noun | ч |  |
-| називний | [nɑzɪˈʋnɪj] | nominative | adjective |  |  |
-| родовий | [rɔˈdɔˈʋɪj] | genitive | adjective |  |  |
-| давальний | [dɑˈʋɑlʲnɪj] | dative | adjective |  |  |
-| знахідний | [znɑˈxʲidnɪj] | accusative | adjective |  |  |
-| орудний | [ɔˈrudnɪj] | instrumental | adjective |  |  |
-| місцевий | [mʲiˈst͡sɛʋɪj] | locative | adjective |  |  |
-| кличний | [ˈklɪt͡ʃnɪj] | vocative | adjective |  |  |
-| однина | [ɔdnɪˈnɑ] | singular | noun | ж |  |
-| множина | [mnɔʒɪˈnɑ] | plural | noun | ж |  |
-| закінчення | [zɑˈkʲint͡ʃɛnʲːɑ] | ending | noun | с |  |
-| відмінювати | [ʋʲiˈdʲmʲinʲuʋɑtɪ] | to decline | verb |  |  |
-| прийменник | [prɪjˈmɛnːɪk] | preposition | noun | ч |  |
-| суддя | [suˈdʲːɑ] | judge | noun | ч |  |
-| свідок | [ˈsʲʋʲidɔk] | witness | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

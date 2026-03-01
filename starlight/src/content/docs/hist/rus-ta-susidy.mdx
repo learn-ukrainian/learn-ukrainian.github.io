@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Русь та сусіди: Візантія, Польща, Угорщина
 
 > **Чому це важливо?**
 >
@@ -271,11 +277,43 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| дипломатія |  | diplomacy | noun | ж |  |
+| договір |  | treaty | noun | ч |  |
+| династичний шлюб |  | dynastic marriage | phrase |  |  |
+| сусід |  | neighbor | noun | ч |  |
+| союз |  | alliance | noun | ч |  |
+| Візантія |  | Byzantium | noun | ж |  |
+| Польща |  | Poland | noun | ж |  |
+| Угорщина |  | Hungary | noun | ж |  |
+| печеніги |  | Pechenegs | noun |  |  |
+| половці |  | Polovtsians | noun |  |  |
+| торгівля |  | trade | noun | ж |  |
+| посольство |  | embassy | noun | с |  |
+| Червенські гради |  | Cherven towns | phrase |  |  |
+| чорні клобуки |  | black hoods | phrase |  |  |
+| варяги |  | Varangians | noun |  |  |
+| степовий кордон |  | steppe frontier | phrase |  |  |
+| імперія |  | empire | noun | ж |  |
+| кочівник |  | nomad | noun | ч |  |
+| князь |  | prince | noun | ч |  |
+| літопис |  | chronicle | noun | ч |  |
+| православ'я |  | Orthodoxy | noun | с |  |
+| притулок |  | asylum | noun | ч |  |
+| васал |  | vassal | noun | ч |  |
+| регентка |  | regent (female) | noun | ж |  |
+| міжусобиця |  | internecine war | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Первинне джерело: Договір Русі з Візантією 911 року
 
-<ReadingActivity client:load title="Первинне джерело: Договір Русі з Візантією 911 року" context="" text={"Якщо хто вб’є — русин християнина або християнин русина, — хай умре на місці вбивства. Якщо ж утече вбивця, а є заможним, то хай візьмуть майно його родичі вбитого.\n"} source={"Повість минулих літ"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`["Який принцип правосуддя відображено в цій статті договору?", "Що цей договір говорить про міжнародний статус Русі?"]`)} isUkrainian={true} />
+<ReadingActivity client:load title="Первинне джерело: Договір Русі з Візантією 911 року" context="" text={"Якщо хто вб’є — русин християнина або християнин русина, — хай умре на місці вбивства. Якщо ж утече вбивця, а є заможним, то хай візьмуть майно його родичі вбитого.\n"} source={"Повість минулих літ"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`["Який принцип правосуддя відображено в цій статті договору?", "Що цей договір говорить про міжнародний статус Русі?"]`)} isUkrainian={false} />
 
 ### Перевірте розуміння
 
@@ -283,42 +321,20 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ### Аналіз правових норм Русі
 
-<CriticalAnalysis client:load title="Аналіз правових норм Русі" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Чому відповідальність за вбивство була симетричною для обох сторін у цьому договорі?", "Як цей документ спростовує теорію про 'варварство' та політичну ізольованість ранньої Русі?"]`)} isUkrainian={true} />
+<CriticalAnalysis client:load title="Аналіз правових норм Русі" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Чому відповідальність за вбивство була симетричною для обох сторін у цьому договорі?", "Як цей документ спростовує теорію про 'варварство' та політичну ізольованість ранньої Русі?"]`)} isUkrainian={false} />
 
 ### Порівняльний аналіз зовнішньої політики
 
-<ComparativeStudy client:load title="Порівняльний аналіз зовнішньої політики" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Відносини з Візантією", "Відносини з половцями"]`)} criteria={JSON.parse(`["Військові конфлікти", "Торговельні інтереси", "Династичні шлюби"]`)} prompt={"Проаналізуйте, як київські князі змінювали свої дипломатичні підходи залежно від типу сусідів (велика імперія чи мобільний кочовий народ)."} isUkrainian={true} />
+<ComparativeStudy client:load title="Порівняльний аналіз зовнішньої політики" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Відносини з Візантією", "Відносини з половцями"]`)} criteria={JSON.parse(`["Військові конфлікти", "Торговельні інтереси", "Династичні шлюби"]`)} prompt={"Проаналізуйте, як київські князі змінювали свої дипломатичні підходи залежно від типу сусідів (велика імперія чи мобільний кочовий народ)."} isUkrainian={false} />
 
 ### Есе: Геополітичний вибір Русі
 
-<EssayResponse client:load title="Есе: Геополітичний вибір Русі" prompt={"На основі матеріалу уроку, дайте обґрунтовану відповідь: чи була Київська Русь повноцінною частиною Європи, чи вона розвивалася ізольовано? Наведіть конкретні приклади династичних, торговельних та політичних зв'язків для підтвердження своєї думки."} modelAnswer={""} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Аргументація | Наявність чіткої тези та конкретних історичних прикладів. | 0 |\n| Використання термінів | Правильне і доречне вживання ключових термінів: династичний шлюб, союз, дипломатія. | 0 |"} isUkrainian={true} />
+<EssayResponse client:load title="Есе: Геополітичний вибір Русі" prompt={"На основі матеріалу уроку, дайте обґрунтовану відповідь: чи була Київська Русь повноцінною частиною Європи, чи вона розвивалася ізольовано? Наведіть конкретні приклади династичних, торговельних та політичних зв'язків для підтвердження своєї думки."} modelAnswer={""} rubric={"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n| Аргументація | Наявність чіткої тези та конкретних історичних прикладів. | 0 |\n| Використання термінів | Правильне і доречне вживання ключових термінів: династичний шлюб, союз, дипломатія. | 0 |"} isUkrainian={false} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Resources">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **дипломатія** | [dɪplɔˈmɑtʲijɑ] | diplomacy | ім |  |
-| **договір** | [ˈdɔɦɔˈʋʲir] | treaty | ім |  |
-| **династичний шлюб** | [dɪnɑˈstɪt͡ʃnɪj ʃlʲub] | dynastic marriage | фраза |  |
-| **сусід** | [suˈsʲid] | neighbor | ім |  |
-| **союз** | [sɔˈjuz] | alliance | ім |  |
-| **Візантія** | [ʋʲizɑnʲˈtʲijɑ] | Byzantium | ім |  |
-| **Польща** | [ˈpɔlʲʃt͡ʃɑ] | Poland | ім |  |
-| **Угорщина** | [uˈɦɔrʃt͡ʃɪnɑ] | Hungary | ім |  |
-| **печеніги** | [pɛt͡ʃɛˈnʲiɦɪ] | Pechenegs | ім |  |
-| **половці** | [ˈpɔlɔu̯t͡sʲi] | Polovtsians | ім |  |
-| **торгівля** | [tɔrˈɦʲiu̯lʲɑ] | trade | ім |  |
-| **посольство** | [pɔˈsɔlʲstʋɔ] | embassy | ім |  |
-| **Червенські гради** | [ˈt͡ʃɛrʋɛnsʲkʲi ˈɦrɑdɪ] | Cherven towns | фраза |  |
-| **чорні клобуки** | [ˈt͡ʃɔrnʲi klɔbuˈkɪ] | black hoods | фраза |  |
-| **варяги** | [ʋɑˈrʲɑɦɪ] | Varangians | ім |  |
-| **степовий кордон** | [stɛpɔˈʋɪj kɔrˈdɔn] | steppe frontier | фраза |  |
-| **імперія** | [imˈpɛrʲijɑ] | empire | ім |  |
-| **кочівник** | [kɔt͡ʃʲiˈʋnɪk] | nomad | ім |  |
-| **князь** | [knʲɑzʲ] | prince | ім |  |
-| **літопис** | [lʲiˈtɔpɪs] | chronicle | ім |  |
-| **православ'я** | [prɑʋɔˈslɑu̯jɑ] | Orthodoxy | ім |  |
-| **притулок** | [prɪˈtulɔk] | asylum | ім |  |
-| **васал** | [ʋɑˈsɑl] | vassal | ім |  |
-| **регентка** | [ˈrɛɦɛntkɑ] | regent (female) | ім |  |
-| **міжусобиця** | [mʲiʒuˈsɔbɪt͡sʲɑ] | internecine war | ім |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

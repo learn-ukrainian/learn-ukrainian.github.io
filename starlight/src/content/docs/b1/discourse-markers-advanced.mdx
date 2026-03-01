@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Дискурсивні маркери II: складна організація
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -407,7 +413,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **по-перше** |  | firstly | adverb |  |
+| **по-друге** |  | secondly | adverb |  |
+| **нарешті** |  | finally / at last | adverb |  |
+| **підсумовуючи** |  | summarizing | adverb |  |
+| **таким чином** |  | thus / in this way | фраза |  |
+| **особливо** |  | especially | adverb |  |
+| **передусім** |  | above all / primarily | adverb |  |
+| **загалом** |  | in general / overall | adverb |  |
+| **насамкінець** |  | in conclusion | adverb |  |
+| **головне** |  | the main thing | ім |  |
+| **з одного боку** |  | on one hand | фраза |  |
+| **з іншого боку** |  | on the other hand | фраза |  |
+| **проте** |  | however | conjunction |  |
+| **отже** |  | so / therefore | conjunction |  |
+| **крім того** |  | besides / furthermore | фраза |  |
+| **словом** |  | in a word / in short | adverb |  |
+| **дискурсивний** |  | discursive | adjective |  |
+| **маркер** |  | marker | ім |  |
+| **послідовність** |  | sequence | ім |  |
+| **додавання** |  | addition | ім |  |
+| **контраст** |  | contrast | ім |  |
+| **уточнення** |  | clarification | ім |  |
+| **результат** |  | result | ім |  |
+| **підсумок** |  | summary / conclusion | ім |  |
+| **аргумент** |  | argument | ім |  |
+| **переконання** |  | persuasion | ім |  |
+| **висновок** |  | conclusion | ім |  |
+| **відповідно** |  | accordingly | adverb |  |
+| **натомість** |  | instead / whereas | adverb |  |
+| **безсумнівно** |  | undoubtedly | adverb |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Розуміння дискурсивних маркерів
 
@@ -460,37 +503,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Translate client:load questions={JSON.parse(`[{"source": "Firstly, I want to note that this project has great potential.", "options": [{"text": "По-перше, хочу зазначити, що цей проект має великий потенціал.", "correct": true}, {"text": "Нарешті, хочу зазначити, що цей проект має великий потенціал.", "correct": false}, {"text": "Проте, хочу зазначити, що цей проект має великий потенціал.", "correct": false}, {"text": "Словом, хочу зазначити, що цей проект має великий потенціал.", "correct": false}]}, {"source": "Furthermore, our team received additional funding.", "options": [{"text": "Крім того, наша команда отримала додаткове фінансування.", "correct": true}, {"text": "Таким чином, наша команда отримала додаткове фінансування.", "correct": false}, {"text": "З одного боку, наша команда отримала додаткове фінансування.", "correct": false}, {"text": "Загалом, наша команда отримала додаткове фінансування.", "correct": false}]}, {"source": "However, reality dictates its strict conditions.", "options": [{"text": "Проте, реальність диктує свої суворі умови.", "correct": true}, {"text": "Отже, реальність диктує свої суворі умови.", "correct": false}, {"text": "По-друге, реальність диктує свої суворі умови.", "correct": false}, {"text": "Підсумовуючи, реальність диктує свої суворі умови.", "correct": false}]}, {"source": "Thus, we are forced to revise our pricing policy.", "options": [{"text": "Таким чином, ми змушені переглянути нашу цінову політику.", "correct": true}, {"text": "Натомість, ми змушені переглянути нашу цінову політику.", "correct": false}, {"text": "Передусім, ми змушені переглянути нашу цінову політику.", "correct": false}, {"text": "Особливо, ми змушені переглянути нашу цінову політику.", "correct": false}]}, {"source": "In general, our strategy turned out to be quite successful.", "options": [{"text": "Загалом, наша стратегія виявилася доволі успішною.", "correct": true}, {"text": "Насамкінець, наша стратегія виявилася доволі успішною.", "correct": false}, {"text": "Словом, наша стратегія виявилася доволі успішною.", "correct": false}, {"text": "Крім того, наша стратегія виявилася доволі успішною.", "correct": false}]}, {"source": "Summarizing the above, I want to emphasize the need for consolidation.", "options": [{"text": "Підсумовуючи вищесказане, хочу наголосити на необхідності консолідації.", "correct": true}, {"text": "Отже вищесказане, хочу наголосити на необхідності консолідації.", "correct": false}, {"text": "По-перше вищесказане, хочу наголосити на необхідності консолідації.", "correct": false}, {"text": "Нарешті вищесказане, хочу наголосити на необхідності консолідації.", "correct": false}]}, {"source": "Therefore, we must change the rules.", "options": [{"text": "Отже, ми повинні змінити правила.", "correct": true}, {"text": "Проте, ми повинні змінити правила.", "correct": false}, {"text": "З іншого боку, ми повинні змінити правила.", "correct": false}, {"text": "Особливо, ми повинні змінити правила.", "correct": false}]}, {"source": "In a word, the day was just wonderful.", "options": [{"text": "Словом, день пройшов просто чудово.", "correct": true}, {"text": "Загалом, день пройшов просто чудово.", "correct": false}, {"text": "Таким чином, день пройшов просто чудово.", "correct": false}, {"text": "Нарешті, день пройшов просто чудово.", "correct": false}]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **по-перше** | [pɔ-ˈpɛrʃɛ] | firstly | adverb |  |
-| **по-друге** | [pɔ-ˈdruɦɛ] | secondly | adverb |  |
-| **нарешті** | [nɑˈrɛʃtʲi] | finally / at last | adverb |  |
-| **підсумовуючи** | [pʲid͡zsuˈmɔʋujut͡ʃɪ] | summarizing | adverb |  |
-| **таким чином** | [tɑˈkɪm ˈt͡ʃɪnɔm] | thus / in this way | фраза |  |
-| **особливо** | [ɔsɔˈblɪʋɔ] | especially | adverb |  |
-| **передусім** | [pɛrɛduˈsʲim] | above all / primarily | adverb |  |
-| **загалом** | [zɑɦɑˈlɔm] | in general / overall | adverb |  |
-| **насамкінець** | [nɑˈsɑmkʲinɛt͡sʲ] | in conclusion | adverb |  |
-| **головне** | [ɦɔlɔˈʋnɛ] | the main thing | ім |  |
-| **з одного боку** | [z ɔdnɔɦɔ ˈbɔku] | on one hand | фраза |  |
-| **з іншого боку** | [z ˈinʃɔɦɔ ˈbɔku] | on the other hand | фраза |  |
-| **проте** | [prɔˈtɛ] | however | conjunction |  |
-| **отже** | [ˈɔd͡ʒɛ] | so / therefore | conjunction |  |
-| **крім того** | [krʲim tɔˈɦɔ] | besides / furthermore | фраза |  |
-| **словом** | [ˈslɔʋɔm] | in a word / in short | adverb |  |
-| **дискурсивний** | [dɪskurˈsɪu̯nɪj] | discursive | adjective |  |
-| **маркер** | [mɑrkɛr] | marker | ім |  |
-| **послідовність** | [pɔsʲlʲiˈdɔu̯nʲisʲtʲ] | sequence | ім |  |
-| **додавання** | [dɔdɑˈʋɑnʲːɑ] | addition | ім |  |
-| **контраст** | [kɔnˈtrɑst] | contrast | ім |  |
-| **уточнення** | [uˈtɔt͡ʃnɛnʲːɑ] | clarification | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **підсумок** | [pʲid͡zsumɔk] | summary / conclusion | ім |  |
-| **аргумент** | [ɑrɦuˈmɛnt] | argument | ім |  |
-| **переконання** | [pɛrɛkɔˈnɑnʲːɑ] | persuasion | ім |  |
-| **висновок** | [ˈʋɪsnɔʋɔk] | conclusion | ім |  |
-| **відповідно** | [ʋʲidpɔˈʋʲidnɔ] | accordingly | adverb |  |
-| **натомість** | [nɑˈtɔmʲisʲtʲ] | instead / whereas | adverb |  |
-| **безсумнівно** | [bɛzsuˈmnʲiu̯nɔ] | undoubtedly | adverb |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

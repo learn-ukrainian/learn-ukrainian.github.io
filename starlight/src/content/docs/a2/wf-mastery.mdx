@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Майстерня слів: Велика гра
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -364,7 +370,40 @@ Furthermore, you explored how suffixes do more than just change a word's grammat
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| корінь |  | root | noun | ч |  |
+| префікс |  | prefix | noun | ч |  |
+| суфікс |  | suffix | noun | ч |  |
+| творення слів |  | word formation | noun | с |  |
+| будувати |  | to build | verb |  |  |
+| аналізувати |  | to analyze | verb |  |  |
+| синтезувати |  | to synthesize | verb |  |  |
+| значення |  | meaning | noun | с |  |
+| сфотографувати |  | to take a photo | verb |  |  |
+| переписати |  | to rewrite | verb |  |  |
+| вихід |  | exit | noun | ч |  |
+| захід |  | sunset / west | noun | ч |  |
+| перехід |  | crossing | noun | ч |  |
+| записати |  | to record / write down | verb |  |  |
+| підпис |  | signature | noun | ч |  |
+| розпис |  | mural / painting | noun | ч |  |
+| робота |  | work | noun | ж |  |
+| зробити |  | to do / complete | verb |  |  |
+| виробник |  | producer / manufacturer | noun | ч |  |
+| похідний |  | derivative | adjective |  |  |
+| первісний |  | original / primary | adjective |  |  |
+| продуктивний |  | productive | adjective |  |  |
+| закінчення |  | ending | noun | с |  |
+| гідроелектростанція |  | hydroelectric station | noun | ж |  |
+| матуся |  | mommy | noun | ж |  |
+| іменник |  | noun | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Оберіть правильний префікс
 
@@ -421,33 +460,10 @@ Furthermore, you explored how suffixes do more than just change a word's grammat
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Матуся / приготувала / дуже / смачний / обід", "answer": "Матуся приготувала дуже смачний обід"}, {"jumbled": "Наш / маленький / котик / спить / на / дивані", "answer": "Наш маленький котик спить на дивані"}, {"jumbled": "Ти / моє / найкраще / сонечко / у / світі", "answer": "Ти моє найкраще сонечко у світі"}, {"jumbled": "Він / купив / гарний / будиночок / біля / моря", "answer": "Він купив гарний будиночок біля моря"}, {"jumbled": "Вона / написала / теплий / лист / для / бабусі", "answer": "Вона написала теплий лист для бабусі"}, {"jumbled": "Ми / дуже / любимо / свою / рідну / матусю", "answer": "Ми дуже любимо свою рідну матусю"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| корінь | [ˈkɔrʲinʲ] | root | noun | ч |  |
-| префікс | [prɛfʲiks] | prefix | noun | ч |  |
-| суфікс | [ˈsufʲiks] | suffix | noun | ч |  |
-| творення слів | [ˈtʋɔrɛnʲːɑ sʲlʲiu̯] | word formation | noun | с |  |
-| будувати | [buduˈʋɑtɪ] | to build | verb |  |  |
-| аналізувати | [ɑnɑlʲizuˈʋɑtɪ] | to analyze | verb |  |  |
-| синтезувати | [sɪntɛzuˈʋɑtɪ] | to synthesize | verb |  |  |
-| значення | [ˈznɑt͡ʃɛnʲːɑ] | meaning | noun | с |  |
-| сфотографувати | [sfɔtɔɦrɑfuˈʋɑtɪ] | to take a photo | verb |  |  |
-| переписати | [pɛrɛpɪˈsɑtɪ] | to rewrite | verb |  |  |
-| вихід | [ˈʋɪxʲid] | exit | noun | ч |  |
-| захід | [zɑxʲid] | sunset / west | noun | ч |  |
-| перехід | [pɛrɛˈxʲid] | crossing | noun | ч |  |
-| записати | [zɑpɪˈsɑtɪ] | to record / write down | verb |  |  |
-| підпис | [ˈpʲidpɪs] | signature | noun | ч |  |
-| розпис | [ˈrɔzpɪs] | mural / painting | noun | ч |  |
-| робота | [rɔˈbɔtɑ] | work | noun | ж |  |
-| зробити | [zrɔˈbɪtɪ] | to do / complete | verb |  |  |
-| виробник | [ʋɪrɔˈbnɪk] | producer / manufacturer | noun | ч |  |
-| похідний | [pɔxʲidnɪj] | derivative | adjective |  |  |
-| первісний | [ˈpɛrˈʋʲisnɪj] | original / primary | adjective |  |  |
-| продуктивний | [prɔduˈktɪu̯nɪj] | productive | adjective |  |  |
-| закінчення | [zɑˈkʲint͡ʃɛnʲːɑ] | ending | noun | с |  |
-| гідроелектростанція | [ɦʲidrɔɛlɛktrɔˈstɑnʲt͡sʲijɑ] | hydroelectric station | noun | ж |  |
-| матуся | [mɑˈtusʲɑ] | mommy | noun | ж |  |
-| іменник | [iˈmɛnːɪk] | noun | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

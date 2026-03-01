@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# I Think That...
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -346,7 +352,39 @@ Disagreement is a normal part of human communication. We do not always share the
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| думати |  | to think (process) | verb |  |  |
+| вважати |  | to consider, believe | verb |  |  |
+| здаватися |  | to seem | verb |  |  |
+| згоден |  | agree (masculine) | adjective |  |  |
+| згодна |  | agree (feminine) | adjective |  |  |
+| що |  | that | conjunction |  |  |
+| впевнений |  | sure, confident (masculine) | adjective |  |  |
+| впевнена |  | sure, confident (feminine) | adjective |  |  |
+| думка |  | opinion, thought | noun | ж |  |
+| на думку |  | in the opinion of | phrase |  |  |
+| можливо |  | possibly, perhaps | adverb |  |  |
+| напевно |  | probably | adverb |  |  |
+| сумніватися |  | to doubt | verb |  |  |
+| вибачте, але |  | excuse me, but | phrase |  |  |
+| на жаль |  | unfortunately | phrase |  |  |
+| особистий |  | personal | adjective |  |  |
+| експерт |  | expert | noun | ч |  |
+| з одного боку |  | on the one hand | phrase |  |  |
+| з іншого боку |  | on the other hand | phrase |  |  |
+| тому що |  | because | conjunction |  |  |
+| рація |  | rightness, reason | noun | ж |  |
+| безумовно |  | unconditionally, absolutely | adverb |  |  |
+| цілком |  | entirely, fully | adverb |  |  |
+| щирість |  | sincerity | noun | ж |  |
+| ввічливість |  | politeness | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Оберіть правильне дієслово
 
@@ -405,32 +443,10 @@ Disagreement is a normal part of human communication. We do not always share the
 
 <MatchUp client:load pairs={JSON.parse(`[{"left": "Я вважаю, що це важливо,", "right": "тому що це допомагає людям."}, {"left": "Вибачте, але я не згоден,", "right": "я маю іншу думку."}, {"left": "З одного боку, це швидко,", "right": "а з іншого боку, це дорого."}, {"left": "Мені здається,", "right": "що починається дощ."}, {"left": "Я не можу вам допомогти,", "right": "на жаль."}, {"left": "Я абсолютно впевнена,", "right": "що ми робимо правильний вибір."}, {"left": "На думку експертів,", "right": "економіка буде зростати."}, {"left": "Він довго думав над цим,", "right": "але не знайшов рішення."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| думати | [ˈdumɑtɪ] | to think (process) | verb |  |  |
-| вважати | [ʋːɑˈʒɑtɪ] | to consider, believe | verb |  |  |
-| здаватися | [zdɑˈʋɑtɪsʲɑ] | to seem | verb |  |  |
-| згоден | [ˈzɦɔdɛn] | agree (masculine) | adjective |  |  |
-| згодна | [ˈzɦɔdnɑ] | agree (feminine) | adjective |  |  |
-| що | [ʃt͡ʃɔ] | that | conjunction |  |  |
-| впевнений | [ˈʍpɛu̯nɛnɪj] | sure, confident (masculine) | adjective |  |  |
-| впевнена | [ˈʍpɛu̯nɛnɑ] | sure, confident (feminine) | adjective |  |  |
-| думка | [ˈdumkɑ] | opinion, thought | noun | ж |  |
-| на думку | [nɑ ˈdumku] | in the opinion of | phrase |  |  |
-| можливо | [mɔˈʒlɪʋɔ] | possibly, perhaps | adverb |  |  |
-| напевно | [nɑˈpɛu̯nɔ] | probably | adverb |  |  |
-| сумніватися | [sumnʲiˈʋɑtɪsʲɑ] | to doubt | verb |  |  |
-| вибачте, але | [ˈʋɪbɑt͡ʃtɛ, ɑˈlɛ] | excuse me, but | phrase |  |  |
-| на жаль | [nɑ ʒɑlʲ] | unfortunately | phrase |  |  |
-| особистий | [ɔsɔˈbɪstɪj] | personal | adjective |  |  |
-| експерт | [ɛˈkspɛrt] | expert | noun | ч |  |
-| з одного боку | [z ɔdnɔɦɔ ˈbɔku] | on the one hand | phrase |  |  |
-| з іншого боку | [z ˈinʃɔɦɔ ˈbɔku] | on the other hand | phrase |  |  |
-| тому що | [tɔˈmu ʃt͡ʃɔ] | because | conjunction |  |  |
-| рація | [ˈrɑt͡sʲijɑ] | rightness, reason | noun | ж |  |
-| безумовно | [bɛzuˈmɔu̯nɔ] | unconditionally, absolutely | adverb |  |  |
-| цілком | [t͡sʲilˈkɔm] | entirely, fully | adverb |  |  |
-| щирість | [ˈʃt͡ʃɪrʲisʲtʲ] | sincerity | noun | ж |  |
-| ввічливість | [ˈʋʲːit͡ʃlɪʋʲisʲtʲ] | politeness | noun | ж |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

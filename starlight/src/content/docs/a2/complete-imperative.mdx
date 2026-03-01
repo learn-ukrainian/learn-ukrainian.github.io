@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Complete Imperative
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -333,7 +339,39 @@ When making a toast or wishing someone well, Ukrainians frequently use the verb 
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| хай |  | let (particle) | particle |  |  |
+| нехай |  | let (particle) | particle |  |  |
+| будьмо |  | cheers / let us be | interjection |  |  |
+| бажати |  | to wish | verb |  |  |
+| ходімо |  | let's go | verb |  |  |
+| мріяти |  | to dream | verb |  |  |
+| казати |  | to say / to tell | verb |  |  |
+| пити |  | to drink | verb |  |  |
+| робімо |  | let's do | verb |  |  |
+| щастити |  | to be lucky | verb |  | хай щастить (good luck) |
+| готувати |  | to cook | verb |  |  |
+| борщ |  | borscht | noun | ч |  |
+| намет |  | tent | noun | ч |  |
+| провідник |  | guide | noun | ч |  |
+| Карпати |  | Carpathian mountains | noun | p |  |
+| успіх |  | success | noun | ч |  |
+| щастя |  | happiness | noun | с |  |
+| здоров'я |  | health | noun | с |  |
+| вітер |  | wind | noun | ч |  |
+| дощ |  | rain | noun | ч |  |
+| кипіти |  | to boil | verb |  |  |
+| сонячний |  | sunny | adj |  |  |
+| погода |  | weather | noun | ж |  |
+| зустріч |  | meeting | noun | ж |  |
+| допомагати |  | to help | verb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Популярні фрази та побажання
 
@@ -392,32 +430,10 @@ When making a toast or wishing someone well, Ukrainians frequently use the verb 
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Бажаю / тобі / великого / щастя", "answer": "Бажаю тобі великого щастя"}, {"jumbled": "Хай / усе / буде / дуже / добре", "answer": "Хай усе буде дуже добре"}, {"jumbled": "Нехай / цей / день / принесе / успіх", "answer": "Нехай цей день принесе успіх"}, {"jumbled": "Пиймо / за / нашу / спільну / перемогу", "answer": "Пиймо за нашу спільну перемогу"}, {"jumbled": "Хай / щастить / вам / у / роботі", "answer": "Хай щастить вам у роботі"}, {"jumbled": "Нехай / сонце / гріє / нас / завжди", "answer": "Нехай сонце гріє нас завжди"}, {"jumbled": "Будьмо / здорові / та / дуже / щасливі", "answer": "Будьмо здорові та дуже щасливі"}, {"jumbled": "Ходімо / разом / до / нової / мети", "answer": "Ходімо разом до нової мети"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| хай | [xɑj] | let (particle) | particle |  |  |
-| нехай | [nɛˈxɑj] | let (particle) | particle |  |  |
-| будьмо | [ˈbudʲmɔ] | cheers / let us be | interjection |  |  |
-| бажати | [bɑˈʒɑtɪ] | to wish | verb |  |  |
-| ходімо | [xɔˈdʲimɔ] | let's go | verb |  |  |
-| мріяти | [ˈmrʲijɑtɪ] | to dream | verb |  |  |
-| казати | [kɑˈzɑtɪ] | to say / to tell | verb |  |  |
-| пити | [ˈpɪtɪ] | to drink | verb |  |  |
-| робімо | [rɔˈbʲimɔ] | let's do | verb |  |  |
-| щастити | [ʃt͡ʃɑˈstɪtɪ] | to be lucky | verb |  | хай щастить (good luck) |
-| готувати | [ɦɔtuˈʋɑtɪ] | to cook | verb |  |  |
-| борщ | [bɔrʃt͡ʃ] | borscht | noun | ч |  |
-| намет | [nɑˈmɛt] | tent | noun | ч |  |
-| провідник | [prɔʋʲiˈdnɪk] | guide | noun | ч |  |
-| Карпати | [kɑrˈpɑtɪ] | Carpathian mountains | noun | p |  |
-| успіх | [ˈusʲpʲix] | success | noun | ч |  |
-| щастя | [ˈʃt͡ʃɑsʲtʲɑ] | happiness | noun | с |  |
-| здоров'я | [zdɔˈrɔu̯jɑ] | health | noun | с |  |
-| вітер | [ˈʋʲitɛr] | wind | noun | ч |  |
-| дощ | [dɔʃt͡ʃ] | rain | noun | ч |  |
-| кипіти | [kɪˈpʲitɪ] | to boil | verb |  |  |
-| сонячний | [ˈsɔnʲɑt͡ʃnɪj] | sunny | adj |  |  |
-| погода | [pɔˈɦɔdɑ] | weather | noun | ж |  |
-| зустріч | [ˈzustʲrʲit͡ʃ] | meeting | noun | ж |  |
-| допомагати | [dɔpɔmɑˈɦɑtɪ] | to help | verb |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

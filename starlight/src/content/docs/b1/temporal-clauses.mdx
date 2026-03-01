@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Часові підрядні речення
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -373,7 +379,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **коли** |  | when | conjunction |  |
+| **поки** |  | while, until | conjunction |  |
+| **перш ніж** |  | before | conjunction |  |
+| **після того як** |  | after | conjunction |  |
+| **як тільки** |  | as soon as | conjunction |  |
+| **доки** |  | while, as long as | conjunction |  |
+| **під час** |  | during | preposition |  |
+| **одночасно** |  | simultaneously | adverb |  |
+| **щойно** |  | just, as soon as | adverb |  |
+| **відтоді як** |  | since the time when | conjunction |  |
+| **до того як** |  | before | conjunction |  |
+| **тим часом як** |  | meanwhile, whereas | conjunction |  |
+| **одночасність** |  | simultaneity | ім |  |
+| **послідовність** |  | sequence | ім |  |
+| **тривалість** |  | duration | ім |  |
+| **мить** |  | moment, instant | ім |  |
+| **передувати** |  | to precede | дієсл |  |
+| **розгортатися** |  | to unfold | дієсл |  |
+| **фіксувати** |  | to fix, record | дієсл |  |
+| **раптовий** |  | sudden | adjective |  |
+| **паралельний** |  | parallel | adjective |  |
+| **фоновий** |  | background | adjective |  |
+| **заперечення** |  | negation | ім |  |
+| **очікування** |  | expectation, waiting | ім |  |
+| **межа** |  | boundary, limit | ім |  |
+| **встигнути** |  | to manage (in time) | дієсл |  |
+| **зупинятися** |  | to stop | дієсл |  |
+| **настати** |  | to arrive, come (about time) | дієсл |  |
+| **тривати** |  | to last, continue | дієсл |  |
+| **сполучник** |  | conjunction | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Виберіть правильний часовий сполучник
 
@@ -433,37 +476,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Тим / часом / як / я / готував, / вона / читала / книгу.", "answer": "Тим часом як я готував, вона читала книгу."}, {"jumbled": "Щойно / пролунав / останній / дзвінок / на / велику / перерву, / всі / студенти / швидко / вийшли / з / аудиторії / на / вулицю.", "answer": "Щойно пролунав останній дзвінок на велику перерву, всі студенти швидко вийшли з аудиторії на вулицю."}, {"jumbled": "Під / час / того / як / він / говорив, / усі / уважно / слухали.", "answer": "Під час того як він говорив, усі уважно слухали."}, {"jumbled": "Я / завжди / п'ю / каву, / коли / читаю / ранкові / новини.", "answer": "Я завжди п'ю каву, коли читаю ранкові новини."}, {"jumbled": "До / того / як / ми / зустрілися, / я / нічого / про / це / не / знав.", "answer": "До того як ми зустрілися, я нічого про це не знав."}, {"jumbled": "Відтоді / як / вона / поїхала, / він / став / дуже / сумним.", "answer": "Відтоді як вона поїхала, він став дуже сумним."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **коли** | [kɔˈlɪ] | when | conjunction |  |
-| **поки** | [ˈpɔkɪ] | while, until | conjunction |  |
-| **перш ніж** | [pɛrʃ nʲiʒ] | before | conjunction |  |
-| **після того як** | [ˈpʲisʲlʲɑ tɔˈɦɔ jɑk] | after | conjunction |  |
-| **як тільки** | [jɑk ˈtʲilʲkɪ] | as soon as | conjunction |  |
-| **доки** | [ˈdɔkɪ] | while, as long as | conjunction |  |
-| **під час** | [pʲid t͡ʃɑs] | during | preposition |  |
-| **одночасно** | [ɔdnɔˈt͡ʃɑsnɔ] | simultaneously | adverb |  |
-| **щойно** | [ˈʃt͡ʃɔjnɔ] | just, as soon as | adverb |  |
-| **відтоді як** | [ʋʲiˈdtɔˈdʲi jɑk] | since the time when | conjunction |  |
-| **до того як** | [dɔ tɔˈɦɔ jɑk] | before | conjunction |  |
-| **тим часом як** | [tɪm ˈt͡ʃɑsɔm jɑk] | meanwhile, whereas | conjunction |  |
-| **одночасність** | [ɔdnɔˈt͡ʃɑsʲnʲisʲtʲ] | simultaneity | ім |  |
-| **послідовність** | [pɔsʲlʲiˈdɔu̯nʲisʲtʲ] | sequence | ім |  |
-| **тривалість** | [trɪˈʋɑlʲisʲtʲ] | duration | ім |  |
-| **мить** | [mɪtʲ] | moment, instant | ім |  |
-| **передувати** | [pɛrɛduˈʋɑtɪ] | to precede | дієсл |  |
-| **розгортатися** | [rɔzɦɔrˈtɑtɪsʲɑ] | to unfold | дієсл |  |
-| **фіксувати** | [fʲiksuˈʋɑtɪ] | to fix, record | дієсл |  |
-| **раптовий** | [rɑˈptɔʋɪj] | sudden | adjective |  |
-| **паралельний** | [pɑrɑˈlɛlʲnɪj] | parallel | adjective |  |
-| **фоновий** | [ˈfɔnɔʋɪj] | background | adjective |  |
-| **заперечення** | [zɑpɛˈrɛt͡ʃɛnʲːɑ] | negation | ім |  |
-| **очікування** | [ɔˈt͡ʃʲikuʋɑnʲːɑ] | expectation, waiting | ім |  |
-| **межа** | [mɛˈʒɑ] | boundary, limit | ім |  |
-| **встигнути** | [ˈʍstɪɦnutɪ] | to manage (in time) | дієсл |  |
-| **зупинятися** | [zupɪˈnʲɑtɪsʲɑ] | to stop | дієсл |  |
-| **настати** | [nɑˈstɑtɪ] | to arrive, come (about time) | дієсл |  |
-| **тривати** | [trɪˈʋɑtɪ] | to last, continue | дієсл |  |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | conjunction | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

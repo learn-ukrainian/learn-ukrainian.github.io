@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Узгодження числівників з іменниками (Numerals and Nouns)
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -401,7 +407,41 @@ Always watch out for the 11-14 trap (they belong to Zone 3) and remember the "La
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| один |  | one (masculine) | numeral |  |  |
+| одна |  | one (feminine) | numeral |  |  |
+| одне |  | one (neuter) | numeral |  |  |
+| два |  | two (masculine/neuter) | numeral |  |  |
+| дві |  | two (feminine) | numeral |  |  |
+| три |  | three | numeral |  |  |
+| чотири |  | four | numeral |  |  |
+| п'ять |  | five | numeral |  |  |
+| десять |  | ten | numeral |  |  |
+| одинадцять |  | eleven | numeral |  |  |
+| дванадцять |  | twelve | numeral |  |  |
+| двадцять |  | twenty | numeral |  |  |
+| п'ятдесят |  | fifty | numeral |  |  |
+| вісімдесят |  | eighty | numeral |  |  |
+| сто |  | one hundred | numeral |  |  |
+| гривня |  | hryvnia (Ukrainian currency) | noun | ж |  |
+| долар |  | dollar | noun | ч |  |
+| євро |  | euro | noun | с |  |
+| ринок |  | market | noun | ч |  |
+| кілограм |  | kilogram | noun | ч |  |
+| пляшка |  | bottle | noun | ж |  |
+| рік |  | year | noun | ч |  |
+| продавець |  | seller / vendor | noun | ч |  |
+| покупець |  | buyer / customer | noun | ч |  |
+| решта |  | change (money returned) | noun | ж |  |
+| множина |  | plural | noun | ж |  |
+| іменник |  | noun | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Зони лічби
 
@@ -462,34 +502,10 @@ Always watch out for the 11-14 trap (they belong to Zone 3) and remember the "La
 
 <Cloze client:load passage={"Сьогодні я пішов на [___:0]}. Мені потрібно було купити фрукти та воду. Я підійшов до продавця і сказав: Дайте, будь ласка, [___:1]} кілограм яблук. Продавець дав мені яблука і сказав: Це коштує тридцять [___:2]}. Потім я взяв [___:3]} пляшки води. Вони коштували сорок [___:4]}. Разом це сімдесят [___:5]}. У мене було тільки [___:6]} гривень, тому продавець дав мені решту — тридцять [___:7]}. До речі, я запитав у продавця: Скільки вам [___:8]}? Він відповів: Мені п'ятдесят [___:9]}."} blanks={JSON.parse(`[{"index": 0, "answer": "ринок", "options": ["ринок", "магазин", "кіно", "парк"]}, {"index": 1, "answer": "один", "options": ["один", "одна", "одне", "одні"]}, {"index": 2, "answer": "гривень", "options": ["гривень", "гривні", "гривня", "гривнях"]}, {"index": 3, "answer": "дві", "options": ["дві", "два", "двох", "двом"]}, {"index": 4, "answer": "гривень", "options": ["гривень", "гривні", "гривня", "доларів"]}, {"index": 5, "answer": "гривень", "options": ["гривень", "гривні", "гривня", "євро"]}, {"index": 6, "answer": "сто", "options": ["сто", "один", "десять", "двадцять"]}, {"index": 7, "answer": "гривень", "options": ["гривень", "гривні", "доларів", "євро"]}, {"index": 8, "answer": "років", "options": ["років", "роки", "рік", "дні"]}, {"index": 9, "answer": "років", "options": ["років", "роки", "рік", "хвилин"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| один | [ɔˈdɪn] | one (masculine) | numeral |  |  |
-| одна | [ɔˈdnɑ] | one (feminine) | numeral |  |  |
-| одне | [ɔˈdnɛ] | one (neuter) | numeral |  |  |
-| два | [dʋɑ] | two (masculine/neuter) | numeral |  |  |
-| дві | [dʲʋʲi] | two (feminine) | numeral |  |  |
-| три | [trɪ] | three | numeral |  |  |
-| чотири | [t͡ʃɔˈtɪrɪ] | four | numeral |  |  |
-| п'ять | [pjɑtʲ] | five | numeral |  |  |
-| десять | [ˈdɛsʲɑtʲ] | ten | numeral |  |  |
-| одинадцять | [ɔdɪˈnɑd͡zʲt͡sʲɑtʲ] | eleven | numeral |  |  |
-| дванадцять | [dʋɑˈnɑd͡zʲt͡sʲɑtʲ] | twelve | numeral |  |  |
-| двадцять | [ˈdʋɑd͡zʲt͡sʲɑtʲ] | twenty | numeral |  |  |
-| п'ятдесят | [pjɑddɛˈsʲɑt] | fifty | numeral |  |  |
-| вісімдесят | [ʋʲisʲimdɛˈsʲɑt] | eighty | numeral |  |  |
-| сто | [stɔ] | one hundred | numeral |  |  |
-| гривня | [ˈɦrɪu̯nʲɑ] | hryvnia (Ukrainian currency) | noun | ж |  |
-| долар | [ˈdɔlɑr] | dollar | noun | ч |  |
-| євро | [ˈjɛu̯rɔ] | euro | noun | с |  |
-| ринок | [ˈrɪnɔk] | market | noun | ч |  |
-| кілограм | [kʲilɔˈɦrɑm] | kilogram | noun | ч |  |
-| пляшка | [ˈplʲɑʃkɑ] | bottle | noun | ж |  |
-| рік | [rʲik] | year | noun | ч |  |
-| продавець | [prɔdɑˈʋɛt͡sʲ] | seller / vendor | noun | ч |  |
-| покупець | [pɔkuˈpɛt͡sʲ] | buyer / customer | noun | ч |  |
-| решта | [ˈrɛʃtɑ] | change (money returned) | noun | ж |  |
-| множина | [mnɔʒɪˈnɑ] | plural | noun | ж |  |
-| іменник | [iˈmɛnːɪk] | noun | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

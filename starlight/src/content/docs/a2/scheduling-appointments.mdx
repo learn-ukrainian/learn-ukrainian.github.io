@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Scheduling Appointments
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -347,7 +353,39 @@ When calling to book an appointment, telephone etiquette follows a structured pa
 5. Що означає культурний концепт «академічна чверть» під час зустрічі?
 6. Якщо ваші плани змінилися, яке дієслово ви використаєте замість повного скасування?
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| записатися |  | to book / to sign up | verb |  |  |
+| домовитися |  | to arrange / to agree | verb |  |  |
+| зустріч |  | meeting | noun | ж |  |
+| прийом |  | appointment / reception | noun | ч |  |
+| вільний |  | free / available | adj |  |  |
+| зайнятий |  | busy / occupied | adj |  |  |
+| перенести |  | to reschedule / to move | verb |  |  |
+| скасувати |  | to cancel | verb |  |  |
+| підтвердити |  | to confirm | verb |  |  |
+| о котрій |  | at what time | phrase |  |  |
+| на котру |  | for what time | phrase |  |  |
+| пів на |  | half past | phrase |  |  |
+| нагадування |  | reminder | noun | с |  |
+| запізнення |  | lateness / delay | noun | с |  |
+| раніше |  | earlier | adv |  |  |
+| пізніше |  | later | adv |  |  |
+| месенджер |  | messenger | noun | ч |  |
+| повідомлення |  | message | noun | с |  |
+| пунктуальність |  | punctuality | noun | ж |  |
+| розклад |  | schedule | noun | ч |  |
+| графік |  | timetable / schedule | noun | ч |  |
+| адміністратор |  | administrator | noun | ч |  |
+| стоматолог |  | dentist | noun | ч |  |
+| перукар |  | hairdresser | noun | ч |  |
+| вчасно |  | on time | adv |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть переклад корисних фраз
 
@@ -404,32 +442,10 @@ When calling to book an appointment, telephone etiquette follows a structured pa
 
 <TrueFalse client:load items={JSON.parse(`[{"statement": "Слово 'скасувати' означає змінити час зустрічі на інший день тижня.", "isTrue": false, "explanation": "Скасувати означає повністю відмінити вашу зустріч."}, {"statement": "Ми можемо домовитися про цікаву зустріч з нашим шкільним другом.", "isTrue": true, "explanation": "Для неформальних дружніх розмов ми використовуємо слово домовитися."}, {"statement": "Слово 'перенести' означає назавжди видалити зустріч із календаря.", "isTrue": false, "explanation": "Перенести означає змінити час або день візиту, зберігаючи саму подію."}, {"statement": "Пів на другу — це тринадцята тридцять (13:30).", "isTrue": true, "explanation": "Пів на другу означає половину шляху до другої години."}, {"statement": "Фраза 'Я зустріну тебе на каву' звучить дуже природно українською.", "isTrue": false, "explanation": "Правильно казати: 'Я хочу зустрітися з тобою на каву'."}, {"statement": "До лікаря або кваліфікованого перукаря ми завжди записуємося.", "isTrue": true, "explanation": "Для комерційних та офіційних послуг використовуємо дієслово записатися."}, {"statement": "Питання 'На котру?' жорстко вимагає місцевого відмінка (Locative).", "isTrue": false, "explanation": "Питання 'На котру?' завжди вимагає знахідного відмінка (Accusative)."}, {"statement": "Слово 'зайнятий' може стосуватися як живої людини, так і телефонної лінії.", "isTrue": true, "explanation": "Ми можемо сказати 'я зараз зайнятий' або 'лінія зайнята'."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| записатися | [zɑpɪˈsɑtɪsʲɑ] | to book / to sign up | verb |  |  |
-| домовитися | [dɔˈmɔʋɪtɪsʲɑ] | to arrange / to agree | verb |  |  |
-| зустріч | [ˈzustʲrʲit͡ʃ] | meeting | noun | ж |  |
-| прийом | [prɪˈjɔm] | appointment / reception | noun | ч |  |
-| вільний | [ˈʋʲilʲnɪj] | free / available | adj |  |  |
-| зайнятий | [ˈzɑjnʲɑtɪj] | busy / occupied | adj |  |  |
-| перенести | [pɛrɛnɛˈstɪ] | to reschedule / to move | verb |  |  |
-| скасувати | [skɑsuˈʋɑtɪ] | to cancel | verb |  |  |
-| підтвердити | [pʲiˈdtʋɛrdɪtɪ] | to confirm | verb |  |  |
-| о котрій | [ɔ kɔˈtʲrʲij] | at what time | phrase |  |  |
-| на котру | [nɑ kɔˈtru] | for what time | phrase |  |  |
-| пів на | [pʲiu̯ nɑ] | half past | phrase |  |  |
-| нагадування | [nɑˈɦɑduʋɑnʲːɑ] | reminder | noun | с |  |
-| запізнення | [zɑˈpʲiznɛnʲːɑ] | lateness / delay | noun | с |  |
-| раніше | [rɑˈnʲiʃɛ] | earlier | adv |  |  |
-| пізніше | [pʲiˈzʲnʲiʃɛ] | later | adv |  |  |
-| месенджер | [mɛsɛnd͡ʒɛr] | messenger | noun | ч |  |
-| повідомлення | [pɔʋʲiˈdɔmlɛnʲːɑ] | message | noun | с |  |
-| пунктуальність | [punktuˈɑlʲnʲisʲtʲ] | punctuality | noun | ж |  |
-| розклад | [ˈrɔzklɑd] | schedule | noun | ч |  |
-| графік | [ˈɦrɑfʲik] | timetable / schedule | noun | ч |  |
-| адміністратор | [ɑdʲmʲinʲiˈstrɑtɔr] | administrator | noun | ч |  |
-| стоматолог | [stɔmɑˈtɔlɔɦ] | dentist | noun | ч |  |
-| перукар | [pɛruˈkɑr] | hairdresser | noun | ч |  |
-| вчасно | [ˈʍt͡ʃɑsnɔ] | on time | adv |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

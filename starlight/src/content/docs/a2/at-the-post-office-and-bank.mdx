@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# At the Post Office and Bank
+{/**/}
 
 :::note[📝 **Чому це важливо?**]
 Розуміння сфери послуг в Україні — це дуже важливо. Це ваш ключ до комфортного щоденного життя. Ви знаєте, як спілкуватися на пошті чи в банку. Ви вмієте ввічливо формулювати свої прохання. Тому ви відчуваєте себе дуже впевнено. Це допомагає швидко вирішувати всі ваші побутові питання. Ви зможете легко уникати непорозумінь.
@@ -335,7 +341,39 @@ We also covered numbers from 100 to 1000, which are absolutely necessary for und
 5. Як сказати число 500 українською мовою?
 6. У контексті сучасного українського банкінгу, що означає, коли хтось просить вас переказати гроші **«на банку»**?
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| пошта |  | post office | noun | ж |  |
+| банк |  | bank | noun | ч |  |
+| лист |  | letter | noun | ч |  |
+| посилка |  | package | noun | ж |  |
+| бандероль |  | parcel | noun | ж |  |
+| марка |  | stamp | noun | ж |  |
+| конверт |  | envelope | noun | ч |  |
+| адреса |  | address | noun | ж |  |
+| індекс |  | postal code | noun | ч |  |
+| відправляти |  | to send | verb |  |  |
+| отримувати |  | to receive | verb |  |  |
+| гроші |  | money | noun |  |  |
+| рахунок |  | account / bill | noun | ч |  |
+| картка |  | card | noun | ж |  |
+| готівка |  | cash | noun | ж |  |
+| валюта |  | currency | noun | ж |  |
+| переказ |  | transfer | noun | ч |  |
+| знімати |  | to withdraw | verb |  |  |
+| вкладати |  | to deposit | verb |  |  |
+| обмінювати |  | to exchange | verb |  |  |
+| курс |  | rate | noun | ч |  |
+| замовляти |  | to order | verb |  |  |
+| обмін |  | exchange | noun | ч |  |
+| долар |  | dollar | noun | ч |  |
+| євро |  | euro | noun | с |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: словник
 
@@ -394,32 +432,10 @@ We also covered numbers from 100 to 1000, which are absolutely necessary for und
 
 <MatchUp client:load pairs={JSON.parse(`[{"left": "сто", "right": "100"}, {"left": "двісті", "right": "200"}, {"left": "триста", "right": "300"}, {"left": "чотириста", "right": "400"}, {"left": "п'ятсот", "right": "500"}, {"left": "сімсот", "right": "700"}, {"left": "вісімсот", "right": "800"}, {"left": "тисяча", "right": "1000"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| пошта | [ˈpɔʃtɑ] | post office | noun | ж |  |
-| банк | [bɑnk] | bank | noun | ч |  |
-| лист | [lɪst] | letter | noun | ч |  |
-| посилка | [pɔˈsɪlkɑ] | package | noun | ж |  |
-| бандероль | [bɑndɛˈrɔlʲ] | parcel | noun | ж |  |
-| марка | [ˈmɑrkɑ] | stamp | noun | ж |  |
-| конверт | [kɔnˈʋɛrt] | envelope | noun | ч |  |
-| адреса | [ɑˈdrɛsɑ] | address | noun | ж |  |
-| індекс | [ˈindɛks] | postal code | noun | ч |  |
-| відправляти | [ʋʲidprɑˈʋlʲɑtɪ] | to send | verb |  |  |
-| отримувати | [ɔˈtrɪmuʋɑtɪ] | to receive | verb |  |  |
-| гроші | [ɦrɔʃʲi] | money | noun |  |  |
-| рахунок | [rɑˈxunɔk] | account / bill | noun | ч |  |
-| картка | [ˈkɑrtkɑ] | card | noun | ж |  |
-| готівка | [ɦɔˈtʲiu̯kɑ] | cash | noun | ж |  |
-| валюта | [ʋɑˈlʲutɑ] | currency | noun | ж |  |
-| переказ | [pɛˈrɛkɑz] | transfer | noun | ч |  |
-| знімати | [zʲnʲiˈmɑtɪ] | to withdraw | verb |  |  |
-| вкладати | [ʍklɑˈdɑtɪ] | to deposit | verb |  |  |
-| обмінювати | [ɔˈbmʲinʲuʋɑtɪ] | to exchange | verb |  |  |
-| курс | [kurs] | rate | noun | ч |  |
-| замовляти | [zɑmɔˈʋlʲɑtɪ] | to order | verb |  |  |
-| обмін | [ˈɔbmʲin] | exchange | noun | ч |  |
-| долар | [ˈdɔlɑr] | dollar | noun | ч |  |
-| євро | [ˈjɛu̯rɔ] | euro | noun | с |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

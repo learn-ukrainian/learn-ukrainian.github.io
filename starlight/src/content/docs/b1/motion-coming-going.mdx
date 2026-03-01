@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Рух: Прибуття та вихід
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -412,7 +418,29 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **прийти** |  | to arrive on foot | дієсл |  |
+| **приїхати** |  | to arrive by vehicle | дієсл |  |
+| **вийти** |  | to exit on foot | дієсл |  |
+| **виїхати** |  | to exit by vehicle | дієсл |  |
+| **увійти** |  | to enter on foot | дієсл |  |
+| **зайти** |  | to enter on foot / drop in | дієсл |  |
+| **в'їхати** |  | to enter by vehicle | дієсл |  |
+| **прибуття** |  | arrival | ім |  |
+| **вихід** |  | exit / way out | ім |  |
+| **вхід** |  | entrance | ім |  |
+| **прибігти** |  | to arrive running | дієсл |  |
+| **вилетіти** |  | to fly out | дієсл |  |
+| **прилетіти** |  | to arrive by air | дієсл |  |
+| **напрямок** |  | direction | ім |  |
+| **поїхати** |  | None |  |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Вибір правильного префікса напрямку
 
@@ -465,22 +493,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Сьогодні дуже напружений день. З самого ранку до нас [___:0]} велика група туристів з Канади. Вони довго стояли на вулиці, а потім [___:1]} у хол готелю. Один турист одразу [___:2]} до мене і запитав, коли вони зможуть отримати ключі. Я відповів, що попередні гості ще не [___:3]} зі своїх номерів. О дванадцятій годині старі гості здали ключі та [___:4]} з готелю на таксі. Після цього я попросив покоївку: «Будь ласка, [___:5]} у номери на другому поверсі і перевірте їх». Коли кімнати були готові, нові гості нарешті [___:6]} у свої номери. Увечері ситуація стала ще складнішою. Наш головний комп'ютер [___:7]} з ладу! Я ледве [___:8]} до тями від шоку. Добре, що системний адміністратор швидко [___:9]} і все полагодив. Вночі, коли я збирався [___:10]} з роботи додому, до готелю [___:11]} ще один гість. Він щойно [___:12]} літаком з Варшави. Я зареєстрував його, побажав доброї ночі і нарешті [___:13]} на зупинку автобуса."} blanks={JSON.parse(`[{"index": 0, "answer": "приїхала", "options": ["приїхала", "виїхала", "поїхала", "заїхала"]}, {"index": 1, "answer": "увійшли", "options": ["увійшли", "вийшли", "прийшли", "відійшли"]}, {"index": 2, "answer": "підійшов", "options": ["підійшов", "увійшов", "вийшов", "зійшов"]}, {"index": 3, "answer": "виїхали", "options": ["виїхали", "приїхали", "в'їхали", "заїхали"]}, {"index": 4, "answer": "поїхали", "options": ["поїхали", "приїхали", "увійшли", "в'їхали"]}, {"index": 5, "answer": "увійдіть", "options": ["увійдіть", "вийдіть", "підійдіть", "відійдіть"]}, {"index": 6, "answer": "зайшли", "options": ["зайшли", "вийшли", "пішли", "поїхали"]}, {"index": 7, "answer": "вийшов", "options": ["вийшов", "прийшов", "увійшов", "пішов"]}, {"index": 8, "answer": "прийшов", "options": ["прийшов", "вийшов", "увійшов", "відійшов"]}, {"index": 9, "answer": "приїхав", "options": ["приїхав", "виїхав", "поїхав", "від'їхав"]}, {"index": 10, "answer": "виходити", "options": ["виходити", "входити", "приходити", "підходити"]}, {"index": 11, "answer": "прибув", "options": ["прибув", "відбув", "пробув", "вибув"]}, {"index": 12, "answer": "прилетів", "options": ["прилетів", "вилетів", "полетів", "залетів"]}, {"index": 13, "answer": "пішов", "options": ["пішов", "прийшов", "увійшов", "зайшов"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **прийти** | [prɪjˈtɪ] | to arrive on foot | дієсл |  |
-| **приїхати** | [prɪˈjixɑtɪ] | to arrive by vehicle | дієсл |  |
-| **вийти** | [ˈʋɪjtɪ] | to exit on foot | дієсл |  |
-| **виїхати** | [ˈʋɪjixɑtɪ] | to exit by vehicle | дієсл |  |
-| **увійти** | [uʋʲijˈtɪ] | to enter on foot | дієсл |  |
-| **зайти** | [zɑjˈtɪ] | to enter on foot / drop in | дієсл |  |
-| **в'їхати** | [ˈʋjixɑtɪ] | to enter by vehicle | дієсл |  |
-| **прибуття** | [prɪbuˈtʲːɑ] | arrival | ім |  |
-| **вихід** | [ˈʋɪxʲid] | exit / way out | ім |  |
-| **вхід** | [ʍxʲid] | entrance | ім |  |
-| **прибігти** | [prɪˈbʲiɦtɪ] | to arrive running | дієсл |  |
-| **вилетіти** | [ˈʋɪlɛtʲitɪ] | to fly out | дієсл |  |
-| **прилетіти** | [prɪlɛˈtʲitɪ] | to arrive by air | дієсл |  |
-| **напрямок** | [ˈnɑprʲɑmɔk] | direction | ім |  |
-| **поїхати** | [pɔˈjixɑtɪ] | None |  |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Рух: інтеграція префіксів
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -414,7 +420,7 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ===CONTENT_START===
 
-  label: {/**/}
+{/**/}
 
 # Рух: інтеграція префіксів
 
@@ -753,7 +759,24 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **перейти** |  | to cross, switch | дієсл |  |
+| **вийти** |  | to exit, emerge | дієсл |  |
+| **прийти** |  | to arrive (on foot) | дієсл |  |
+| **зайти** |  | to drop by, enter briefly | дієсл |  |
+| **дійти** |  | to reach, walk as far as | дієсл |  |
+| **пройти** |  | to pass through, pass by | дієсл |  |
+| **відійти** |  | to step back, retreat | дієсл |  |
+| **увійти** |  | to enter | дієсл |  |
+| **піти** |  | to set off, leave | дієсл |  |
+| **походити** |  | to walk for a bit | дієсл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Перевірте знання префіксів
 
@@ -810,17 +833,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Select client:load questions={JSON.parse(`[{"question": "Які з цих популярних виразів описують абстрактну, а не фізичну зміну стану людини? Оберіть усі правильні відповіді.", "options": [{"text": "перейти на українську мову", "correct": true}, {"text": "перейти широку вулицю", "correct": false}, {"text": "перейти межу дозволеного", "correct": true}, {"text": "перейти міст через річку", "correct": false}], "explanation": "Зміна мови та перетин соціальної межі поведінки — це абстрактні філософські концепції."}, {"question": "Які дієслова ідеально підходять для опису короткого, незапланованого і теплого візиту до друга?", "options": [{"text": "зайти", "correct": true}, {"text": "увійти", "correct": false}, {"text": "заїхати", "correct": true}, {"text": "відійти", "correct": false}], "explanation": "Префікс за- має теплий відтінок короткого спонтанного візиту або приємного відхилення від курсу."}, {"question": "Які з цих дієслів завжди позначають складне досягнення або подолання довгої дистанції до фінальної межі?", "options": [{"text": "дійти", "correct": true}, {"text": "вийти", "correct": false}, {"text": "зайти", "correct": false}, {"text": "доїхати", "correct": true}], "explanation": "Префікс до- фокусується на складній дистанції до зовнішньої межі обєкта."}, {"question": "Які дієслова ми використовуємо, коли серйозно говоримо про новини, електронні повідомлення або банківські перекази?", "options": [{"text": "надійти", "correct": true}, {"text": "прийти", "correct": false}, {"text": "надходити", "correct": true}, {"text": "заходити", "correct": false}], "explanation": "В офіційно-діловому стилі інформація та гроші завжди надходять або надійшли."}, {"question": "Оберіть дієслова доконаного виду, які чітко вказують на конкретний та одноразовий результат фізичної дії.", "options": [{"text": "піти", "correct": true}, {"text": "ходити", "correct": false}, {"text": "прийти", "correct": true}, {"text": "їздити", "correct": false}], "explanation": "Додавання просторового префікса до односпрямованої основи створює доконаний вид результату."}, {"question": "Які з цих ідіоматичних виразів мають негативний соціальний контекст або описують хитру і погану поведінку?", "options": [{"text": "вийти сухим із води", "correct": true}, {"text": "дійти спільної згоди", "correct": false}, {"text": "руки ніколи не доходять", "correct": false}, {"text": "перейти всі етичні межі", "correct": true}], "explanation": "Уникнення справедливого покарання та грубе порушення норм моралі є негативними концепціями."}, {"question": "Які просторові дієслова доцільно використовувати для опису успішного уникнення небезпеки або перешкоди на дорозі?", "options": [{"text": "об'їхати", "correct": true}, {"text": "відійти", "correct": true}, {"text": "увійти", "correct": false}, {"text": "пройти", "correct": false}], "explanation": "Дієслова з префіксами об- та від- позначають стратегічне огинання перешкоди або дистанціювання від неї."}, {"question": "Які дієслова яскраво ілюструють рух великого натовпу або групи людей у різні боки від єдиного центру події?", "options": [{"text": "розійтися", "correct": true}, {"text": "розходитися", "correct": true}, {"text": "зійтися", "correct": false}, {"text": "прийти", "correct": false}], "explanation": "Префікс роз- вказує на рух багатьох субєктів у різні боки з одного центрального пункту площі."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **перейти** | [pɛrɛjˈtɪ] | to cross, switch | дієсл |  |
-| **вийти** | [ˈʋɪjtɪ] | to exit, emerge | дієсл |  |
-| **прийти** | [prɪjˈtɪ] | to arrive (on foot) | дієсл |  |
-| **зайти** | [zɑjˈtɪ] | to drop by, enter briefly | дієсл |  |
-| **дійти** | [dʲijˈtɪ] | to reach, walk as far as | дієсл |  |
-| **пройти** | [prɔjˈtɪ] | to pass through, pass by | дієсл |  |
-| **відійти** | [ʋʲidʲijˈtɪ] | to step back, retreat | дієсл |  |
-| **увійти** | [uʋʲijˈtɪ] | to enter | дієсл |  |
-| **піти** | [pʲitɪ] | to set off, leave | дієсл |  |
-| **походити** | [pɔxɔdɪtɪ] | to walk for a bit | дієсл |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

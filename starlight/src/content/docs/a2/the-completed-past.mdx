@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# The Completed Past
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -338,7 +344,26 @@ In Ukrainian, we use the "Zero Auxiliary" rule. Саме дієслово док
 4. Перекладіть: "First he arrived. Then he found the document."
 5. Чого нас вчить приказка «Кінець — справі вінець»?
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| зробив |  | did / made (masculine) | verb |  |  |
+| сказав |  | said / told (masculine) | verb |  |  |
+| написав |  | wrote (masculine) | verb |  |  |
+| прочитав |  | read completely (masculine) | verb |  |  |
+| пішов |  | went / set off (masculine) | verb |  |  |
+| прийшов |  | arrived / came (masculine) | verb |  |  |
+| зрозумів |  | understood / realized (masculine) | verb |  |  |
+| забув |  | forgot (masculine) | verb |  |  |
+| знайшов |  | found (masculine) | verb |  |  |
+| доконаний |  | perfective | adjective |  |  |
+| недоконаний |  | imperfective | adjective |  |  |
+| вид |  | aspect (grammar) | noun | masculine |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Розподіліть за групами: Рід і число
 
@@ -404,19 +429,10 @@ In Ukrainian, we use the "Zero Auxiliary" rule. Саме дієслово док
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "він / правду / сказав / директору / Нарешті", "answer": "Нарешті він сказав правду директору"}, {"jumbled": "час / Я / роботи / для / знайшов / цієї", "answer": "Я знайшов час для цієї роботи"}, {"jumbled": "Разом / ми / зробили / правильний / вибір", "answer": "Разом ми зробили правильний вибір"}, {"jumbled": "Вчора / документ / вона / прочитала / важливий", "answer": "Вчора вона прочитала важливий документ"}, {"jumbled": "Архіваріус / на / проблему / відповідь / дав", "answer": "Архіваріус дав відповідь на проблему"}, {"jumbled": "Всі / текст / студенти / написали / успішно", "answer": "Всі студенти успішно написали текст"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| зробив | [zrɔˈbɪu̯] | did / made (masculine) | verb |  |  |
-| сказав | [skɑˈzɑu̯] | said / told (masculine) | verb |  |  |
-| написав | [nɑpɪˈsɑu̯] | wrote (masculine) | verb |  |  |
-| прочитав | [prɔt͡ʃɪˈtɑu̯] | read completely (masculine) | verb |  |  |
-| пішов | [pʲiˈʃɔu̯] | went / set off (masculine) | verb |  |  |
-| прийшов | [prɪjˈʃɔu̯] | arrived / came (masculine) | verb |  |  |
-| зрозумів | [zrɔzuˈmʲiu̯] | understood / realized (masculine) | verb |  |  |
-| забув | [zɑˈbuu̯] | forgot (masculine) | verb |  |  |
-| знайшов | [znɑjˈʃɔu̯] | found (masculine) | verb |  |  |
-| доконаний | [dɔˈkɔnɑnɪj] | perfective | adjective |  |  |
-| недоконаний | [nɛdɔˈkɔnɑnɪj] | imperfective | adjective |  |  |
-| вид | [ʋɪd] | aspect (grammar) | noun | masculine |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

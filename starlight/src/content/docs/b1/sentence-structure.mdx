@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Структура речення
 
 > **Чому це важливо?**
 >
@@ -487,7 +493,39 @@ This transition to professional terminology is a rite of passage. Every Ukrainia
 
 Тепер, коли ви читатимете будь-які українські тексти — новини, книги чи пости в соцмережах — спробуйте подумки підкреслювати слова. Шукайте основу. Питайте себе: «Де тут підмет? Де присудок?». Це найкраща практика для вашого внутрішнього редактора.
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| підмет |  | subject | noun | ч |  |
+| присудок |  | predicate | noun | ч |  |
+| додаток |  | object | noun | ч |  |
+| означення |  | attribute | noun | с |  |
+| обставина |  | adverbial | noun | ж |  |
+| граматична основа |  | grammatical basis | phrase |  |  |
+| просте речення |  | simple sentence | phrase |  |  |
+| складне речення |  | complex sentence | phrase |  |  |
+| головне речення |  | main clause | phrase |  |  |
+| підрядне речення |  | subordinate clause | phrase |  |  |
+| сполучник |  | conjunction | noun | ч |  |
+| кома |  | comma | noun | ж |  |
+| крапка |  | period / full stop | noun | ж |  |
+| знак питання |  | question mark | phrase |  |  |
+| знак оклику |  | exclamation mark | phrase |  |  |
+| інверсія |  | inversion | noun | ж |  |
+| синтаксис |  | syntax | noun | ч |  |
+| пунктуація |  | punctuation | noun | ж |  |
+| однорідні члени |  | homogeneous parts | phrase |  |  |
+| складносурядне речення |  | compound sentence | phrase |  |  |
+| складнопідрядне речення |  | complex sentence with subordination | phrase |  |  |
+| двокрапка |  | colon | noun | ж |  |
+| крапка з комою |  | semicolon | phrase |  |  |
+| інтонація |  | intonation | noun | ж |  |
+| синтаксичний розбір |  | syntactic analysis | phrase |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Термінологія: Знайдіть пару
 
@@ -526,32 +564,24 @@ This transition to professional terminology is a rite of passage. Every Ukrainia
 
 <TrueFalse client:load items={JSON.parse(`[{"statement": "Підмет і присудок разом утворюють граматичну основу речення.", "isTrue": true, "explanation": "Так, граматична основа — це саме підмет (хто? що?) і присудок (що робить?)."}, {"statement": "У складному реченні завжди є лише одна граматична основа.", "isTrue": false, "explanation": "Ні, складне речення має дві або більше граматичних основ. Одна основа — це просте речення."}, {"statement": "Сполучник «а» і сполучник «але» мають однакове значення в українській мові.", "isTrue": false, "explanation": "Ні, «а» вказує на м'яке зіставлення, а «але» — на сильний контраст або протиставлення."}, {"statement": "Перед сполучником «що» у складнопідрядному реченні завжди ставиться кома.", "isTrue": true, "explanation": "Так, кома перед «що» є обов'язковою, коли воно приєднує підрядне речення до головного."}, {"statement": "В українській мові порядок слів у реченні завжди фіксований.", "isTrue": false, "explanation": "Ні, українська має вільний порядок слів. Інверсія використовується для логічного наголосу."}, {"statement": "Означення відповідає на питання «який?», «яка?», «яке?», «чий?».", "isTrue": true, "explanation": "Так, означення характеризує іменник і відповідає саме на ці питання."}, {"statement": "У складносурядному реченні частини є рівноправними і незалежними одна від одної.", "isTrue": true, "explanation": "Так, сурядні сполучники (і, а, але, або) з'єднують рівноправні, незалежні частини."}, {"statement": "Обставина відповідає на питання «кого?» або «що?».", "isTrue": false, "explanation": "Ні, на питання «кого?» і «що?» відповідає додаток. Обставина відповідає на питання «де?», «коли?», «як?»."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| підмет | [pʲidmɛt] | subject | noun | ч |  |
-| присудок | [ˈprɪsudɔk] | predicate | noun | ч |  |
-| додаток | [dɔˈdɑtɔk] | object | noun | ч |  |
-| означення | [ɔˈznɑt͡ʃɛnʲːɑ] | attribute | noun | с |  |
-| обставина | [ɔˈbstɑʋɪnɑ] | adverbial | noun | ж |  |
-| граматична основа | [ɦrɑmɑˈtɪt͡ʃnɑ ɔˈsnɔʋɑ] | grammatical basis | phrase |  |  |
-| просте речення | [ˈprɔˈstɛ rɛt͡ʃɛnʲːɑ] | simple sentence | phrase |  |  |
-| складне речення | [sklɑdnɛ rɛt͡ʃɛnʲːɑ] | complex sentence | phrase |  |  |
-| головне речення | [ɦɔlɔˈʋnɛ rɛt͡ʃɛnʲːɑ] | main clause | phrase |  |  |
-| підрядне речення | [pʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | subordinate clause | phrase |  |  |
-| сполучник | [spɔˈlut͡ʃnɪk] | conjunction | noun | ч |  |
-| кома | [ˈkɔmɑ] | comma | noun | ж |  |
-| крапка | [ˈkrɑpkɑ] | period / full stop | noun | ж |  |
-| знак питання | [znɑk pɪˈtɑnʲːɑ] | question mark | phrase |  |  |
-| знак оклику | [znɑk ˈɔklɪku] | exclamation mark | phrase |  |  |
-| інверсія | [inˈʋɛrsʲijɑ] | inversion | noun | ж |  |
-| синтаксис | [ˈsɪntɑksɪs] | syntax | noun | ч |  |
-| пунктуація | [punktuˈɑt͡sʲijɑ] | punctuation | noun | ж |  |
-| однорідні члени | [ɔdnɔˈrʲidʲnʲi ˈt͡ʃlɛnɪ] | homogeneous parts | phrase |  |  |
-| складносурядне речення | [sklɑdnɔsuˈrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | compound sentence | phrase |  |  |
-| складнопідрядне речення | [sklɑdnɔpʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | complex sentence with subordination | phrase |  |  |
-| двокрапка | [dʋɔˈkrɑpkɑ] | colon | noun | ж |  |
-| крапка з комою | [ˈkrɑpkɑ z ˈkɔmɔju] | semicolon | phrase |  |  |
-| інтонація | [intɔˈnɑt͡sʲijɑ] | intonation | noun | ж |  |
-| синтаксичний розбір | [sɪntɑˈksɪt͡ʃnɪj ˈrɔˈzʲbʲir] | syntactic analysis | phrase |  |  |
+:::info[🎧 🔗 External Resources]
+
+**🎧 Podcasts:**
+- [ULP 3-116 Великдень в Україні – Easter in Ukraine + Complex Sentences with Adverbial Clauses](https://www.ukrainianlessons.com/lesson/116/) — Level-aligned topic match: sentence
+- [ULP 3-117 Травневий пікнік – May picnic in Ukraine + Complex Sentences with Attributive Clauses](https://www.ukrainianlessons.com/lesson/117/) — Level-aligned topic match: sentence
+- [7 helpful Ukrainian words to link sentences](https://www.ukrainianlessons.com/fmu10/) — Listening review (A1): sentence
+- [Grammar point: Conditional sentences in Ukrainian](https://www.ukrainianlessons.com/fmu32/) — Listening review (A1): sentence
+
+**📖 Articles:**
+- [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Grammar episodes
+- [Ukrainian Syntax](https://www.ukrainianlessons.com/grammar/) — Grammar overview
+
+**🌐 Websites:**
+- [Sentence Analysis](https://www.youtube.com/results?search_query=ukrainian+sentence+structure) — YouTube tutorials
+:::
+
+</TabItem>
+</Tabs>

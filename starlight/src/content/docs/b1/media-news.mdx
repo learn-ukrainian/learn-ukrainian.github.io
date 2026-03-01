@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Медіа та новини
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -416,7 +422,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 5. Яке точне дієслово ви правильно використаєте, щоб описати технічний процес показу футбольного матчу по телебаченню в реальному часі для мільйонів глядачів?
 6. Знайдіть і виправте дуже грубу стилістичну помилку у цьому реченні: «Він буде приймати участь у цьому новому проєкті і планує піднімати питання екології на зборах». Як це сказати правильно?
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **новини** |  | news | ім |  |
+| **стаття** |  | article | ім |  |
+| **журналіст** |  | journalist | ім |  |
+| **ЗМІ** |  | mass media | ім |  |
+| **повідомляти** |  | to report / to inform | дієсл |  |
+| **висвітлювати** |  | to cover / to highlight | дієсл |  |
+| **телебачення** |  | television | ім |  |
+| **газета** |  | newspaper | ім |  |
+| **репортаж** |  | report | ім |  |
+| **редакція** |  | editorial office | ім |  |
+| **трансляція** |  | broadcast | ім |  |
+| **подкаст** |  | podcast | ім |  |
+| **медіаграмотність** |  | media literacy | ім |  |
+| **оприлюднювати** |  | to publish / to release | дієсл |  |
+| **брати участь** |  | to participate | фраза |  |
+| **порушувати питання** |  | to raise an issue | фраза |  |
+| **дозвілля** |  | leisure | ім |  |
+| **радіомовлення** |  | radio broadcasting | ім |  |
+| **телевізор** |  | television set | ім |  |
+| **мережа** |  | network | ім |  |
+| **інтернет** |  | internet | ім |  |
+| **преса** |  | press | ім |  |
+| **журнал** |  | magazine | ім |  |
+| **транслювати** |  | to broadcast | дієсл |  |
+| **перекладати** |  | to translate | дієсл |  |
+| **джерело** |  | source | ім |  |
+| **фактчекінг** |  | fact-checking | ім |  |
+| **фейк** |  | fake | ім |  |
+| **дезінформація** |  | disinformation | ім |  |
+| **розслідування** |  | investigation | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Значення слів
 
@@ -469,37 +512,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
   <MarkTheWordsActivity instruction="Знайдіть і позначте всі дієслова, пов'язані з роботою медіа." text="Журналісти щодня збирають факти та пишуть великі статті. Редакція ретельно перевіряє кожне джерело. Телеканали наживо транслюють важливі спортивні матчі. Офіційні установи оперативно оприлюднюють статистичні результати. Усі незалежні засоби масової інформації намагаються об'єктивно висвітлювати складні події. Ведучі ввечері повідомляють нам найсвіжіші новини." correctWords={JSON.parse(`["збирають", "пишуть", "перевіряє", "транслюють", "оприлюднюють", "висвітлювати", "повідомляють"]`)} />
 </MarkTheWords>
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **новини** | [nɔˈʋɪnɪ] | news | ім |  |
-| **стаття** | [stɑˈtʲːɑ] | article | ім |  |
-| **журналіст** | [ʒurnɑˈlʲist] | journalist | ім |  |
-| **ЗМІ** | [zʲmʲi] | mass media | ім |  |
-| **повідомляти** | [pɔʋʲidɔˈmlʲɑtɪ] | to report / to inform | дієсл |  |
-| **висвітлювати** | [ʋɪˈsʲʋʲitʲlʲuʋɑtɪ] | to cover / to highlight | дієсл |  |
-| **телебачення** | [tɛlɛˈbɑt͡ʃɛnʲːɑ] | television | ім |  |
-| **газета** | [ɦɑˈzɛtɑ] | newspaper | ім |  |
-| **репортаж** | [rɛpɔrˈtɑʒ] | report | ім |  |
-| **редакція** | [rɛˈdɑkt͡sʲijɑ] | editorial office | ім |  |
-| **трансляція** | [trɑnˈsʲlʲɑt͡sʲijɑ] | broadcast | ім |  |
-| **подкаст** | [pɔdkɑst] | podcast | ім |  |
-| **медіаграмотність** | [mɛdʲiɑɦrɑmɔtʲnʲisʲtʲ] | media literacy | ім |  |
-| **оприлюднювати** | [ɔprɪˈlʲudʲnʲuʋɑtɪ] | to publish / to release | дієсл |  |
-| **брати участь** | [ˈbrɑtɪ ˈut͡ʃɑsʲtʲ] | to participate | фраза |  |
-| **порушувати питання** | [pɔˈruʃuʋɑtɪ pɪˈtɑnʲːɑ] | to raise an issue | фраза |  |
-| **дозвілля** | [dɔˈzʲʋʲilʲːɑ] | leisure | ім |  |
-| **радіомовлення** | [rɑdʲiɔˈmɔu̯lɛnʲːɑ] | radio broadcasting | ім |  |
-| **телевізор** | [tɛlɛˈʋʲizɔr] | television set | ім |  |
-| **мережа** | [mɛˈrɛʒɑ] | network | ім |  |
-| **інтернет** | [intɛrˈnɛt] | internet | ім |  |
-| **преса** | [ˈprɛsɑ] | press | ім |  |
-| **журнал** | [ʒurˈnɑl] | magazine | ім |  |
-| **транслювати** | [trɑnsʲlʲuˈʋɑtɪ] | to broadcast | дієсл |  |
-| **перекладати** | [pɛrɛklɑˈdɑtɪ] | to translate | дієсл |  |
-| **джерело** | [d͡ʒɛrɛˈlɔ] | source | ім |  |
-| **фактчекінг** | [fɑkt͡ʃːɛkʲinɦ] | fact-checking | ім |  |
-| **фейк** | [fɛjk] | fake | ім |  |
-| **дезінформація** | [dɛzʲinfɔrˈmɑt͡sʲijɑ] | disinformation | ім |  |
-| **розслідування** | [rɔˈzsʲlʲiduʋɑnʲːɑ] | investigation | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

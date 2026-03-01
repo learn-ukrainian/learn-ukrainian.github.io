@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Допустові речення: хоча, незважаючи на
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -365,7 +371,45 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **хоча** |  | although | conjunction |  |
+| **хоч** |  | although / even | conjunction |  |
+| **незважаючи на** |  | despite | preposition |  |
+| **попри** |  | despite | preposition |  |
+| **дарма що** |  | although | conjunction |  |
+| **проте** |  | however | conjunction |  |
+| **однак** |  | however | conjunction |  |
+| **але** |  | but | conjunction |  |
+| **хоча б** |  | at least | фраза |  |
+| **хоч би як** |  | no matter how | фраза |  |
+| **попри все** |  | despite everything | фраза |  |
+| **попри те що** |  | despite the fact that | фраза |  |
+| **все одно** |  | anyway | adverb |  |
+| **тим не менш** |  | nevertheless | adverb |  |
+| **не дивлячись на** |  | despite (ERROR) | фраза |  |
+| **допустовий** |  | concessive | adjective |  |
+| **протиставний** |  | adversative | adjective |  |
+| **результат** |  | result | ім |  |
+| **умова** |  | condition | ім |  |
+| **обставина** |  | circumstance | ім |  |
+| **перешкода** |  | obstacle | ім |  |
+| **неочікуваний** |  | unexpected | adjective |  |
+| **всупереч** |  | contrary to | preposition |  |
+| **зважати** |  | to pay attention / to consider | дієсл |  |
+| **ігнорувати** |  | to ignore | дієсл |  |
+| **дебати** |  | debates | ім |  |
+| **аргумент** |  | argument | ім |  |
+| **опонент** |  | opponent | ім |  |
+| **переконливий** |  | convincing | adjective |  |
+| **компроміс** |  | compromise | ім |  |
+| **продуктивність** |  | productivity | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Перевірте знання: допустові речення
 
@@ -416,38 +460,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
   <MarkTheWordsActivity instruction="Знайдіть і позначте всі слова: 'Хоча', 'Попри', 'незважаючи', 'хоч', 'Проте'." text="Хоча сьогоднішні дебати були дуже напруженими, ми змогли знайти спільну мову. Попри гострі контраргументи опонентів, наша позиція виявилася сильнішою. Усі учасники поводилися професійно, незважаючи на сильні емоції. Ми показали хороший результат, хоч мали мало часу на підготовку. Проте найважливішим є те, що ми навчилися слухати одне одного." correctWords={JSON.parse(`["Хоча", "Попри", "незважаючи", "хоч", "Проте"]`)} />
 </MarkTheWords>
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **хоча** | [xɔˈt͡ʃɑ] | although | conjunction |  |
-| **хоч** | [xɔt͡ʃ] | although / even | conjunction |  |
-| **незважаючи на** | [nɛzʋɑˈʒɑjut͡ʃɪ nɑ] | despite | preposition |  |
-| **попри** | [ˈpɔprɪ] | despite | preposition |  |
-| **дарма що** | [dɑrˈmɑ ʃt͡ʃɔ] | although | conjunction |  |
-| **проте** | [prɔˈtɛ] | however | conjunction |  |
-| **однак** | [ɔˈdnɑk] | however | conjunction |  |
-| **але** | [ɑˈlɛ] | but | conjunction |  |
-| **хоча б** | [xɔˈt͡ʃɑ b] | at least | фраза |  |
-| **хоч би як** | [xɔt͡ʃ bɪ jɑk] | no matter how | фраза |  |
-| **попри все** | [ˈpɔprɪ ʍsɛ] | despite everything | фраза |  |
-| **попри те що** | [ˈpɔprɪ tɛ ʃt͡ʃɔ] | despite the fact that | фраза |  |
-| **все одно** | [ʍsɛ ɔˈdnɔ] | anyway | adverb |  |
-| **тим не менш** | [tɪm nɛ mɛnʃ] | nevertheless | adverb |  |
-| **не дивлячись на** | [nɛ ˈdɪu̯lʲɑt͡ʃɪsʲ nɑ] | despite (ERROR) | фраза |  |
-| **допустовий** | [dɔpuˈstɔʋɪj] | concessive | adjective |  |
-| **протиставний** | [prɔtɪˈstɑu̯nɪj] | adversative | adjective |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **умова** | [uˈmɔʋɑ] | condition | ім |  |
-| **обставина** | [ɔˈbstɑʋɪnɑ] | circumstance | ім |  |
-| **перешкода** | [pɛrɛˈʃkɔdɑ] | obstacle | ім |  |
-| **неочікуваний** | [nɛɔˈt͡ʃʲikuʋɑnɪj] | unexpected | adjective |  |
-| **всупереч** | [ˈʍsupɛrɛt͡ʃ] | contrary to | preposition |  |
-| **зважати** | [zʋɑˈʒɑtɪ] | to pay attention / to consider | дієсл |  |
-| **ігнорувати** | [iɦnɔruˈʋɑtɪ] | to ignore | дієсл |  |
-| **дебати** | [dɛˈbɑtɪ] | debates | ім |  |
-| **аргумент** | [ɑrɦuˈmɛnt] | argument | ім |  |
-| **опонент** | [ɔpɔˈnɛnt] | opponent | ім |  |
-| **переконливий** | [pɛrɛˈkɔnlɪʋɪj] | convincing | adjective |  |
-| **компроміс** | [kɔmprɔˈmʲis] | compromise | ім |  |
-| **продуктивність** | [prɔduˈktɪu̯nʲisʲtʲ] | productivity | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

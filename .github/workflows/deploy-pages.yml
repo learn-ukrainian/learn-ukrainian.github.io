@@ -1,8 +1,11 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
+  # Auto-deploy disabled — push to main no longer triggers deploy.
+  # To deploy: run manually via Actions tab (workflow_dispatch),
+  # or re-enable the push trigger below when ready.
+  # push:
+  #   branches: [main]
   workflow_dispatch:
 
 permissions:

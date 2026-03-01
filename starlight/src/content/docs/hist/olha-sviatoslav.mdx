@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Ольга та Святослав: Архітекторка Держави та Лицар Степу
 
 > **Чому це важливо?**
 >
@@ -391,19 +397,51 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| княгиня |  | princess | noun | ж |  |
+| помста |  | revenge | noun | ж |  |
+| реформа |  | reform | noun | ж |  |
+| хрещення |  | baptism | noun | с |  |
+| погост |  | tax station | noun | ч |  |
+| урок |  | fixed tribute | noun | ч |  |
+| данина |  | tribute | noun | ж |  |
+| каганат |  | khaganate | noun | ч |  |
+| завоювання |  | conquest | noun | с |  |
+| воїн |  | warrior | noun | ч |  |
+| похід |  | campaign | noun | ч |  |
+| печеніги |  | Pechenegs | noun |  |  |
+| рівноапостольна |  | equal-to-apostles | adjective |  |  |
+| Доростол |  | Dorostolon | noun | ч |  |
+| Балкани |  | Balkans | noun |  |  |
+| чаша |  | chalice | noun | ж |  |
+| дипломатія |  | diplomacy | noun | ж |  |
+| дружина |  | retinue | noun | ж |  |
+| полюддя |  | tribute collection | noun | с |  |
+| тризна |  | funeral feast | noun | ж |  |
+| облога |  | siege | noun | ж |  |
+| посол |  | ambassador | noun | ч |  |
+| ідентичність |  | identity | noun | ж |  |
+| експансія |  | expansion | noun | ж |  |
+| спадщина |  | legacy | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Літопис про реформи княгині Ольги
 
-<ReadingActivity client:load title="Літопис про реформи княгині Ольги" context="" text={"І пішла Ольга по древлянській землі з сином своїм і з дружиною, встановлюючи устави й уроки. І існують становища її й ловища... І пішла вона до Новгорода, і встановила по Мсті погости і данину, і по Лузі оброки і данину. І ловища її є по всій землі, і знаки, і місця, і погости.\n"} source={"Повість минулих літ"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`[]`)} isUkrainian={true} />
+<ReadingActivity client:load title="Літопис про реформи княгині Ольги" context="" text={"І пішла Ольга по древлянській землі з сином своїм і з дружиною, встановлюючи устави й уроки. І існують становища її й ловища... І пішла вона до Новгорода, і встановила по Мсті погости і данину, і по Лузі оброки і данину. І ловища її є по всій землі, і знаки, і місця, і погости.\n"} source={"Повість минулих літ"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`[]`)} isUkrainian={false} />
 
 ### Аналіз літописного джерела
 
-<CriticalAnalysis client:load title="Аналіз літописного джерела" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Які саме терміни вказують на інституціоналізацію збору податків?", "Чому літописець так детально перераховує місця, де Ольга встановила свої знаки?", "Як цей текст контрастує з попередньою практикою полюддя?"]`)} isUkrainian={true} />
+<CriticalAnalysis client:load title="Аналіз літописного джерела" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Які саме терміни вказують на інституціоналізацію збору податків?", "Чому літописець так детально перераховує місця, де Ольга встановила свої знаки?", "Як цей текст контрастує з попередньою практикою полюддя?"]`)} isUkrainian={false} />
 
 ### Порівняльний аналіз: Ольга та Святослав
 
-<ComparativeStudy client:load title="Порівняльний аналіз: Ольга та Святослав" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Княгиня Ольга", "Князь Святослав"]`)} criteria={JSON.parse(`["Основний інструмент політики (дипломатія чи війна)", "Ставлення до адміністративної системи", "Зовнішньополітичні пріоритети", "Ставлення до релігії"]`)} prompt={"На основі критеріїв створіть порівняльну таблицю та зробіть висновок, чий підхід був більш ефективним для розбудови держави."} isUkrainian={true} />
+<ComparativeStudy client:load title="Порівняльний аналіз: Ольга та Святослав" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Княгиня Ольга", "Князь Святослав"]`)} criteria={JSON.parse(`["Основний інструмент політики (дипломатія чи війна)", "Ставлення до адміністративної системи", "Зовнішньополітичні пріоритети", "Ставлення до релігії"]`)} prompt={"На основі критеріїв створіть порівняльну таблицю та зробіть висновок, чий підхід був більш ефективним для розбудови держави."} isUkrainian={false} />
 
 ### Перевірка фактів: Епоха Ольги та Святослава
 
@@ -411,34 +449,12 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ### Есе: Ольга чи Святослав?
 
-<EssayResponse client:load title="Есе: Ольга чи Святослав?" prompt={"Хто з правителів мав більший та довготриваліший вплив на розвиток держави - Ольга чи Святослав? Спирайтеся на конкретні факти."} modelAnswer={""} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Історична аргументація | Використання конкретних фактів для підкріплення позиції. | 10 |\n| Аналіз наслідків | Оцінка довгострокових результатів правління обох лідерів. | 10 |\n| Структура есе | Наявність чіткого вступу, основної частини та логічного висновку. | 5 |"} isUkrainian={true} />
+<EssayResponse client:load title="Есе: Ольга чи Святослав?" prompt={"Хто з правителів мав більший та довготриваліший вплив на розвиток держави - Ольга чи Святослав? Спирайтеся на конкретні факти."} modelAnswer={""} rubric={"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n| Історична аргументація | Використання конкретних фактів для підкріплення позиції. | 10 |\n| Аналіз наслідків | Оцінка довгострокових результатів правління обох лідерів. | 10 |\n| Структура есе | Наявність чіткого вступу, основної частини та логічного висновку. | 5 |"} isUkrainian={false} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Resources">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **княгиня** | [knʲɑˈɦɪnʲɑ] | princess | ім |  |
-| **помста** | [ˈpɔmstɑ] | revenge | ім |  |
-| **реформа** | [rɛˈfɔrmɑ] | reform | ім |  |
-| **хрещення** | [ˈxrɛˈʃt͡ʃɛnʲːɑ] | baptism | ім |  |
-| **погост** | [pɔˈɦɔst] | tax station | ім |  |
-| **урок** | [uˈrɔk] | fixed tribute | ім |  |
-| **данина** | [dɑˈnɪnɑ] | tribute | ім |  |
-| **каганат** | [kɑɦɑˈnɑt] | khaganate | ім |  |
-| **завоювання** | [zɑʋɔjuˈʋɑnʲːɑ] | conquest | ім |  |
-| **воїн** | [ˈʋɔjin] | warrior | ім |  |
-| **похід** | [pɔˈxʲid] | campaign | ім |  |
-| **печеніги** | [pɛt͡ʃɛˈnʲiɦɪ] | Pechenegs | ім |  |
-| **рівноапостольна** | [rʲiu̯nɔɑˈpɔstɔlʲnɑ] | equal-to-apostles | adjective |  |
-| **Доростол** | [dɔrɔstɔl] | Dorostolon | ім |  |
-| **Балкани** | [bɑlˈkɑnɪ] | Balkans | ім |  |
-| **чаша** | [ˈt͡ʃɑʃɑ] | chalice | ім |  |
-| **дипломатія** | [dɪplɔˈmɑtʲijɑ] | diplomacy | ім |  |
-| **дружина** | [druˈʒɪnɑ] | retinue | ім |  |
-| **полюддя** | [pɔˈlʲudʲːɑ] | tribute collection | ім |  |
-| **тризна** | [ˈtrɪznɑ] | funeral feast | ім |  |
-| **облога** | [ɔˈblɔɦɑ] | siege | ім |  |
-| **посол** | [pɔˈsɔl] | ambassador | ім |  |
-| **ідентичність** | [idɛnˈtɪt͡ʃnʲisʲtʲ] | identity | ім |  |
-| **експансія** | [ɛˈkspɑnʲsʲijɑ] | expansion | ім |  |
-| **спадщина** | [ˈspɑdʃt͡ʃɪnɑ] | legacy | ім |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

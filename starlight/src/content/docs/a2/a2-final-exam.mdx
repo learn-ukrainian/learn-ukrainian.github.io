@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# A2 Final Exam
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -378,7 +384,46 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| іспит |  | exam | noun | ч | скласти іспит, провалити іспит |
+| завдання |  | task | noun | с | тестове завдання, виконати завдання |
+| відповідь |  | answer | noun | ж | правильна відповідь |
+| результат |  | result | noun | ч | гарний результат |
+| рівень |  | level | noun | ч | високий рівень знань |
+| оцінка |  | grade | noun | ж | отримати високу оцінку |
+| готовий |  | ready | adj |  | бути готовим до тесту |
+| успішно |  | successfully | adv |  | успішно скласти іспит |
+| розуміння |  | comprehension | noun | с | розуміння тексту |
+| навичка |  | skill | noun | ж | практичні навички |
+| досягнення |  | achievement | noun | с | вагоме досягнення в навчанні |
+| сертифікат |  | certificate | noun | ч | отримати сертифікат |
+| складати |  | to take an exam | verb |  |  |
+| скласти |  | to pass an exam | verb |  |  |
+| провалити |  | to fail | verb |  | провалити іспит |
+| готуватися |  | to prepare | verb |  |  |
+| виконувати |  | to complete, to fulfill | verb |  | виконувати завдання |
+| виконати |  | to have completed | verb |  | швидко виконати завдання |
+| відповідати |  | to answer | verb |  |  |
+| ліворуч |  | to the left | adv |  |  |
+| праворуч |  | to the right | adv |  |  |
+| прямо |  | straight ahead | adv |  |  |
+| прямувати |  | to head towards | verb |  |  |
+| поверх |  | floor, level (of a building) | noun | ч |  |
+| вчити |  | to memorize, to learn specific items | verb |  |  |
+| недоконаний |  | imperfective (aspect) | adj |  |  |
+| родовий |  | genitive (case) | adj |  |  |
+| вид |  | aspect | noun | ч |  |
+| доконаний |  | perfective (aspect) | adj |  |  |
+| орудний |  | instrumental (case) | adj |  |  |
+| знахідний |  | accusative (case) | adj |  |  |
+| давальний |  | dative (case) | adj |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Перевірте ваші знання
 
@@ -437,39 +482,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Будь ласка, йдіть весь час _____ по цьому коридору.", "answer": "прямо", "options": ["прямо", "праворуч", "ліворуч", "назад"]}, {"sentence": "Моя аудиторія знаходиться на третьому _____.", "answer": "поверсі", "options": ["поверсі", "поверх", "поверху", "поверхом"]}, {"sentence": "Біля великого вікна поверніть _____.", "answer": "ліворуч", "options": ["ліворуч", "прямо", "рівно", "вгору"]}, {"sentence": "Ми _____ до головного входу в університет.", "answer": "прямуємо", "options": ["прямуємо", "йдемо", "біжимо", "стоїмо"]}, {"sentence": "Будь ласка, _____ на другий поверх сходами.", "answer": "підніміться", "options": ["підніміться", "спускайтеся", "поверніть", "йдіть"]}, {"sentence": "Наша екзаменаційна кімната знаходиться _____ від бібліотеки.", "answer": "праворуч", "options": ["праворуч", "прямо", "прямуємо", "рівно"]}, {"sentence": "Вам потрібно _____ до центру тестування.", "answer": "йти", "options": ["йти", "йдемо", "йдуть", "йшов"]}, {"sentence": "Після цього _____ ліворуч біля дверей.", "answer": "поверніть", "options": ["поверніть", "повернути", "повертаю", "повернув"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| іспит | [ˈispɪt] | exam | noun | ч | скласти іспит, провалити іспит |
-| завдання | [zɑˈʋdɑnʲːɑ] | task | noun | с | тестове завдання, виконати завдання |
-| відповідь | [ˈʋʲidpɔʋʲidʲ] | answer | noun | ж | правильна відповідь |
-| результат | [rɛzulʲˈtɑt] | result | noun | ч | гарний результат |
-| рівень | [ˈrʲiʋɛnʲ] | level | noun | ч | високий рівень знань |
-| оцінка | [ɔˈt͡sʲinkɑ] | grade | noun | ж | отримати високу оцінку |
-| готовий | [ɦɔˈtɔʋɪj] | ready | adj |  | бути готовим до тесту |
-| успішно | [uˈsʲpʲiʃnɔ] | successfully | adv |  | успішно скласти іспит |
-| розуміння | [rɔzuˈmʲinʲːɑ] | comprehension | noun | с | розуміння тексту |
-| навичка | [ˈnɑʋɪt͡ʃkɑ] | skill | noun | ж | практичні навички |
-| досягнення | [dɔˈsʲɑɦnɛnʲːɑ] | achievement | noun | с | вагоме досягнення в навчанні |
-| сертифікат | [sɛrtɪfʲiˈkɑt] | certificate | noun | ч | отримати сертифікат |
-| складати | [sklɑˈdɑtɪ] | to take an exam | verb |  |  |
-| скласти | [ˈsklɑstɪ] | to pass an exam | verb |  |  |
-| провалити | [prɔʋɑˈlɪtɪ] | to fail | verb |  | провалити іспит |
-| готуватися | [ɦɔtuˈʋɑtɪsʲɑ] | to prepare | verb |  |  |
-| виконувати | [ʋɪˈkɔnuʋɑtɪ] | to complete, to fulfill | verb |  | виконувати завдання |
-| виконати | [ˈʋɪkɔnɑtɪ] | to have completed | verb |  | швидко виконати завдання |
-| відповідати | [ʋʲidpɔʋʲiˈdɑtɪ] | to answer | verb |  |  |
-| ліворуч | [lʲiˈʋɔrut͡ʃ] | to the left | adv |  |  |
-| праворуч | [prɑˈʋɔrut͡ʃ] | to the right | adv |  |  |
-| прямо | [ˈprʲɑmɔ] | straight ahead | adv |  |  |
-| прямувати | [prʲɑmuˈʋɑtɪ] | to head towards | verb |  |  |
-| поверх | [pɔˈʋɛrx] | floor, level (of a building) | noun | ч |  |
-| вчити | [ˈʍt͡ʃɪtɪ] | to memorize, to learn specific items | verb |  |  |
-| недоконаний | [nɛdɔˈkɔnɑnɪj] | imperfective (aspect) | adj |  |  |
-| родовий | [rɔdɔˈʋɪj] | genitive (case) | adj |  |  |
-| вид | [ʋɪd] | aspect | noun | ч |  |
-| доконаний | [dɔˈkɔnɑnɪj] | perfective (aspect) | adj |  |  |
-| орудний | [ɔˈrudnɪj] | instrumental (case) | adj |  |  |
-| знахідний | [znɑxʲiˈdnɪj] | accusative (case) | adj |  |  |
-| давальний | [dɑˈʋɑlʲnɪj] | dative (case) | adj |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

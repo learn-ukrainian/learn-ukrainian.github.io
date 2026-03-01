@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Technology and Media
+{/**/}
 
 :::note[📝 Note]
 **Чому це важливо?**
@@ -331,7 +337,39 @@ Now, think very seriously about your own everyday personal life. How many hours 
 Сьогодні переведіть інтерфейс смартфона на українську мову. Зробіть це також для вашого улюбленого додатка. Це можна зробити в налаштуваннях системи. Спочатку вам буде трохи незвично і можливо дуже складно читати меню. Але ви дуже швидко вивчите і запам'ятаєте всі корисні слова. Ви запам'ятаєте слова на кшталт налаштування чи завантажити файл у реальному щоденному контексті! Це найкращий і найшвидший безкоштовний метод щоденного навчання.
 :::
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| комп'ютер |  | computer | noun | ч |  |
+| телефон |  | phone | noun | ч |  |
+| смартфон |  | smartphone | noun | ч |  |
+| ноутбук |  | laptop | noun | ч |  |
+| планшет |  | tablet | noun | ч |  |
+| інтернет |  | internet | noun | ч |  |
+| сайт |  | site | noun | ч |  |
+| вебсайт |  | website | noun | ч |  |
+| пошта |  | email / mail | noun | ж |  |
+| додаток |  | app / application | noun | ч |  |
+| пароль |  | password | noun | ч |  |
+| акаунт |  | account | noun | ч |  |
+| оновлення |  | update | noun | с |  |
+| підписка |  | subscription | noun | ж |  |
+| мережа |  | network | noun | ж |  |
+| посилання |  | link | noun | с |  |
+| екран |  | screen | noun | ч |  |
+| завантажити |  | to download | verb |  |  |
+| відправити |  | to send | verb |  |  |
+| шукати |  | to search | verb |  |  |
+| викласти |  | to upload / to post | verb |  |  |
+| опублікувати |  | to publish | verb |  |  |
+| встановити |  | to install | verb |  |  |
+| ввести |  | to enter (data) | verb |  |  |
+| створити |  | to create | verb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: Базова лексика
 
@@ -390,32 +428,10 @@ Now, think very seriously about your own everyday personal life. How many hours 
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Для доступу до ексклюзивних статей вам потрібна платна цифрова підписка.", "answer": "підписка", "options": ["підписка", "книга", "додаток", "пошта"]}, {"sentence": "Коли ви реєструєтесь на новому сайті, ви створюєте свій особистий акаунт.", "answer": "акаунт", "options": ["акаунт", "телефон", "інтернет", "екран"]}, {"sentence": "Я завжди радію, коли отримую нове повідомлення від моїх найкращих друзів.", "answer": "повідомлення", "options": ["повідомлення", "пароль", "оновлення", "правило"]}, {"sentence": "Цей відомий блогер щодня готує нове цікаве оновлення для своїх підписників.", "answer": "оновлення", "options": ["оновлення", "пароль", "комп'ютер", "смартфон"]}, {"sentence": "Він вирішив викласти своє гарне відео в інтернет вчора ввечері.", "answer": "викласти", "options": ["викласти", "завантажити", "видалити", "знайти"]}, {"sentence": "Мій брат зараз не може завантажити цей великий і важкий файл.", "answer": "завантажити", "options": ["завантажити", "відправити", "купити", "ввести"]}, {"sentence": "На жаль, у цьому глухому лісі взагалі немає мобільної мережі.", "answer": "мережі", "options": ["мережі", "пошти", "роботи", "кімнати"]}, {"sentence": "Обов'язково натисни на це активне посилання, щоб відкрити статтю.", "answer": "посилання", "options": ["посилання", "пароль", "додаток", "акаунт"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| комп'ютер | [kɔmˈpjutɛr] | computer | noun | ч |  |
-| телефон | [tɛlɛˈfɔn] | phone | noun | ч |  |
-| смартфон | [smɑrˈtfɔn] | smartphone | noun | ч |  |
-| ноутбук | [nɔuˈdbuk] | laptop | noun | ч |  |
-| планшет | [plɑnˈʃɛt] | tablet | noun | ч |  |
-| інтернет | [intɛrˈnɛt] | internet | noun | ч |  |
-| сайт | [sɑjt] | site | noun | ч |  |
-| вебсайт | [ʋɛˈbsɑjt] | website | noun | ч |  |
-| пошта | [ˈpɔʃtɑ] | email / mail | noun | ж |  |
-| додаток | [dɔˈdɑtɔk] | app / application | noun | ч |  |
-| пароль | [pɑˈrɔlʲ] | password | noun | ч |  |
-| акаунт | [ɑkɑunt] | account | noun | ч |  |
-| оновлення | [ɔˈnɔu̯lɛnʲːɑ] | update | noun | с |  |
-| підписка | [pʲiˈdpɪskɑ] | subscription | noun | ж |  |
-| мережа | [mɛˈrɛʒɑ] | network | noun | ж |  |
-| посилання | [pɔsɪˈlɑnʲːɑ] | link | noun | с |  |
-| екран | [ɛˈkrɑn] | screen | noun | ч |  |
-| завантажити | [zɑʋɑnˈtɑʒɪtɪ] | to download | verb |  |  |
-| відправити | [ʋʲiˈdprɑʋɪtɪ] | to send | verb |  |  |
-| шукати | [ʃuˈkɑtɪ] | to search | verb |  |  |
-| викласти | [ˈʋɪklɑstɪ] | to upload / to post | verb |  |  |
-| опублікувати | [ɔpublʲikuˈʋɑtɪ] | to publish | verb |  |  |
-| встановити | [ʍstɑnɔˈʋɪtɪ] | to install | verb |  |  |
-| ввести | [ʋːɛˈstɪ] | to enter (data) | verb |  |  |
-| створити | [stʋɔˈrɪtɪ] | to create | verb |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# If I Were
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -326,7 +332,39 @@ Notice the very elegant and highly natural, rapid shift in Olena and Maksym's de
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| якщо |  | if (real) | conjunction |  |  |
+| якби |  | if (unreal) | conjunction |  |  |
+| хотіти |  | to want | verb |  |  |
+| мрія |  | dream | noun | ж |  |
+| виграти |  | to win | verb |  |  |
+| подорож |  | trip / journey | noun | ж |  |
+| мріяти |  | to dream | verb |  |  |
+| уявляти |  | to imagine | verb |  |  |
+| фантазія |  | fantasy | noun | ж |  |
+| реальність |  | reality | noun | ж |  |
+| лотерея |  | lottery | noun | ж |  |
+| планувати |  | to plan | verb |  |  |
+| здійснити |  | to fulfill / realize | verb |  |  |
+| умова |  | condition | noun | ж |  |
+| можливо |  | possibly | adverb |  |  |
+| бажання |  | wish / desire | noun | с |  |
+| задоволення |  | pleasure | noun | с |  |
+| відпустка |  | vacation | noun | ж |  |
+| гроші |  | money | noun |  |  |
+| майбутнє |  | future | noun | с |  |
+| ввічливий |  | polite | adjective |  |  |
+| прохання |  | request | noun | с |  |
+| ситуація |  | situation | noun | ж |  |
+| змінити |  | to change | verb |  |  |
+| кав'ярня |  | coffeehouse | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Правда чи брехня?
 
@@ -385,32 +423,10 @@ Notice the very elegant and highly natural, rapid shift in Olena and Maksym's de
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Я (чоловік) дуже хотів ___ купити цей светр.", "answer": "би", "options": ["би", "б", "був", "якщо"]}, {"sentence": "Вона з радістю пішла ___ в кінотеатр.", "answer": "б", "options": ["б", "би", "була", "якби"]}, {"sentence": "Якби ми ___ вільний час, ми б поїхали в гори.", "answer": "мали", "options": ["мали", "маємо", "матимемо", "мати"]}, {"sentence": "Якби я ___ багатим, я б багато подорожував.", "answer": "був", "options": ["був", "є", "буду", "бути"]}, {"sentence": "Якщо сьогодні ___ гарна погода, ми підемо гуляти.", "answer": "буде", "options": ["буде", "було", "є", "бути"]}, {"sentence": "Мій брат обов'язково сказав ___ всю правду.", "answer": "би", "options": ["би", "б", "був", "якщо"]}, {"sentence": "Вони хотіли ___ подивитися меню ресторану.", "answer": "б", "options": ["б", "би", "були", "коли"]}, {"sentence": "Якби зараз ___ спекотне літо, ми б поїхали на море.", "answer": "було", "options": ["було", "буде", "є", "бути"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| якщо | [jɑˈkʃt͡ʃɔ] | if (real) | conjunction |  |  |
-| якби | [jɑˈɡbɪ] | if (unreal) | conjunction |  |  |
-| хотіти | [xɔˈtʲitɪ] | to want | verb |  |  |
-| мрія | [ˈmrʲijɑ] | dream | noun | ж |  |
-| виграти | [ˈʋɪɦrɑtɪ] | to win | verb |  |  |
-| подорож | [ˈpɔdɔrɔʒ] | trip / journey | noun | ж |  |
-| мріяти | [ˈmrʲijɑtɪ] | to dream | verb |  |  |
-| уявляти | [ujɑˈʋlʲɑtɪ] | to imagine | verb |  |  |
-| фантазія | [fɑnˈtɑzʲijɑ] | fantasy | noun | ж |  |
-| реальність | [rɛˈɑlʲnʲisʲtʲ] | reality | noun | ж |  |
-| лотерея | [lɔtɛˈrɛjɑ] | lottery | noun | ж |  |
-| планувати | [plɑnuˈʋɑtɪ] | to plan | verb |  |  |
-| здійснити | [zʲdʲijˈsnɪtɪ] | to fulfill / realize | verb |  |  |
-| умова | [uˈmɔʋɑ] | condition | noun | ж |  |
-| можливо | [mɔˈʒlɪʋɔ] | possibly | adverb |  |  |
-| бажання | [bɑˈʒɑnʲːɑ] | wish / desire | noun | с |  |
-| задоволення | [zɑdɔˈʋɔlɛnʲːɑ] | pleasure | noun | с |  |
-| відпустка | [ʋʲiˈdpustkɑ] | vacation | noun | ж |  |
-| гроші | [ɦrɔʃʲi] | money | noun |  |  |
-| майбутнє | [mɑjˈbutʲnʲɛ] | future | noun | с |  |
-| ввічливий | [ˈʋʲːit͡ʃlɪʋɪj] | polite | adjective |  |  |
-| прохання | [prɔˈxɑnʲːɑ] | request | noun | с |  |
-| ситуація | [sɪtuˈɑt͡sʲijɑ] | situation | noun | ж |  |
-| змінити | [zʲmʲiˈnɪtɪ] | to change | verb |  |  |
-| кав'ярня | [kɑˈʋjɑrnʲɑ] | coffeehouse | noun | ж |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

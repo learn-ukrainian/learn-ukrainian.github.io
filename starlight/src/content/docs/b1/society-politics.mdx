@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Суспільство та політика
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -406,7 +412,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **уряд** |  | government | ім |  |
+| **держава** |  | state | ім |  |
+| **влада** |  | power, authority | ім |  |
+| **вибори** |  | elections | ім |  |
+| **голосування** |  | voting | ім |  |
+| **закон** |  | law | ім |  |
+| **громадянин** |  | citizen | ім |  |
+| **право** |  | right | ім |  |
+| **обов'язок** |  | duty | ім |  |
+| **парламент** |  | parliament | ім |  |
+| **конституція** |  | constitution | ім |  |
+| **демократія** |  | democracy | ім |  |
+| **свобода** |  | freedom | ім |  |
+| **політика** |  | politics, policy | ім |  |
+| **політик** |  | politician | ім |  |
+| **суспільство** |  | society | ім |  |
+| **соборність** |  | unity | ім |  |
+| **дільниця** |  | station, precinct | ім |  |
+| **гарант** |  | guarantor | ім |  |
+| **поділ** |  | separation, division | ім |  |
+| **громадський** |  | public | adjective |  |
+| **громадянський** |  | civic | adjective |  |
+| **цивільний** |  | civil | adjective |  |
+| **державний** |  | state | adjective |  |
+| **виконавчий** |  | executive | adjective |  |
+| **законодавчий** |  | legislative | adjective |  |
+| **судовий** |  | judicial | adjective |  |
+| **ухвалювати** |  | to pass, to adopt | дієсл |  |
+| **порушувати** |  | to violate, to break | дієсл |  |
+| **захищати** |  | to protect | дієсл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Знайдіть пару: політичні словосполучення
 
@@ -457,37 +500,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
   <MarkTheWordsActivity instruction="Знайдіть і позначте всі віддієслівні іменники (слова, які описують процес чи дію як предмет)." text="Сьогодні відбулося формування нового уряду. Депутати підтримали ухвалення закону про освіту. Головна мета — розвиток національної економіки. Швидке завершення цього процесу забезпечить зростання показників та загальне покращення." correctWords={JSON.parse(`["формування", "ухвалення", "розвиток", "завершення", "зростання", "покращення"]`)} />
 </MarkTheWords>
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **уряд** | [urʲɑd] | government | ім |  |
-| **держава** | [ˈdɛrˈʒɑʋɑ] | state | ім |  |
-| **влада** | [ˈʋlɑdɑ] | power, authority | ім |  |
-| **вибори** | [ˈʋɪbɔrɪ] | elections | ім |  |
-| **голосування** | [ɦɔlɔsuˈʋɑnʲːɑ] | voting | ім |  |
-| **закон** | [zɑˈkɔn] | law | ім |  |
-| **громадянин** | [ɦrɔmɑˈdʲɑnɪn] | citizen | ім |  |
-| **право** | [ˈprɑʋɔ] | right | ім |  |
-| **обов'язок** | [ɔˈbɔu̯jɑzɔk] | duty | ім |  |
-| **парламент** | [pɑrˈlɑmɛnt] | parliament | ім |  |
-| **конституція** | [kɔnstɪˈtut͡sʲijɑ] | constitution | ім |  |
-| **демократія** | [dɛmɔˈkrɑtʲijɑ] | democracy | ім |  |
-| **свобода** | [sʋɔˈbɔdɑ] | freedom | ім |  |
-| **політика** | [pɔˈlʲitɪkɑ] | politics, policy | ім |  |
-| **політик** | [pɔˈlʲitɪk] | politician | ім |  |
-| **суспільство** | [suˈsʲpʲilʲstʋɔ] | society | ім |  |
-| **соборність** | [sɔˈbɔrnʲisʲtʲ] | unity | ім |  |
-| **дільниця** | [dʲilʲˈnɪt͡sʲɑ] | station, precinct | ім |  |
-| **гарант** | [ɦɑˈrɑnt] | guarantor | ім |  |
-| **поділ** | [pɔdʲil] | separation, division | ім |  |
-| **громадський** | [ɦrɔmɑd͡zʲsʲkɪj] | public | adjective |  |
-| **громадянський** | [ɦrɔmɑˈdʲɑnʲsʲkɪj] | civic | adjective |  |
-| **цивільний** | [t͡sɪˈʋʲilʲnɪj] | civil | adjective |  |
-| **державний** | [dɛrˈʒɑu̯nɪj] | state | adjective |  |
-| **виконавчий** | [ʋɪkɔˈnɑu̯t͡ʃɪj] | executive | adjective |  |
-| **законодавчий** | [zɑkɔnɔˈdɑu̯t͡ʃɪj] | legislative | adjective |  |
-| **судовий** | [sudɔˈʋɪj] | judicial | adjective |  |
-| **ухвалювати** | [uˈxʋɑlʲuʋɑtɪ] | to pass, to adopt | дієсл |  |
-| **порушувати** | [pɔˈruʃuʋɑtɪ] | to violate, to break | дієсл |  |
-| **захищати** | [zɑxɪˈʃt͡ʃɑtɪ] | to protect | дієсл |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

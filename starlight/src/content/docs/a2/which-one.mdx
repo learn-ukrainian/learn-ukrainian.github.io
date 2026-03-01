@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Який? Мистецтво опису та вибору
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -336,7 +342,44 @@ In real-world scenarios, the ability to use «який» correctly can make a si
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| який |  | which / that / who (masc) | pronoun | ч |  |
+| яка |  | which / that / who (fem) | pronoun | ж | Дівчина, яка читає. |
+| яке |  | which / that / who (neut) | pronoun | с | Місто, яке ніколи не спить. |
+| які |  | which / that / who (pl) | pronoun |  | Люди, які люблять подорожувати. |
+| той |  | that one (masc) | pronoun | ч |  |
+| чоловік |  | man / husband | noun | ч |  |
+| жінка |  | woman / wife | noun | ж |  |
+| ринок |  | market | noun | ч | Піти на ринок за продуктами. |
+| зважити |  | to weigh | verb |  | Який вам зважити? |
+| різниця |  | difference | noun | ж | Яка різниця? |
+| відмінок |  | grammatical case | noun | ч |  |
+| істота |  | animate noun / creature | noun | ж |  |
+| неістота |  | inanimate noun / thing | noun | ж |  |
+| хамелеон |  | chameleon | noun | ч |  |
+| свідок |  | witness | noun | ч |  |
+| підозрюваний |  | suspect | noun | ч |  |
+| рюкзак |  | backpack | noun | ч |  |
+| окуляри |  | glasses | noun |  |  |
+| вітрина |  | shop window | noun | ж |  |
+| полиця |  | shelf | noun | ж |  |
+| сукня |  | dress | noun | ж |  |
+| приналежність |  | belonging / possession | noun | ж |  |
+| точність |  | accuracy / precision | noun | ж |  |
+| жупан |  | traditional coat | noun | ч |  |
+| дзеркало |  | mirror | noun | с |  |
+| називний |  | nominative | adj |  |  |
+| родовий |  | genitive | adj |  |  |
+| знахідний |  | accusative | adj |  |  |
+| іменник |  | noun | noun |  |  |
+| множина |  | plural | noun |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Правило дзеркала: Називний відмінок
 
@@ -396,37 +439,10 @@ In real-world scenarios, the ability to use «який» correctly can make a si
   <MarkTheWordsActivity instruction="Знайдіть і позначте всі форми відносного займенника (який, якого, яка, які)." text="Ситуація перша: На вулиці. Жінка запитує перехожого про дорогу. Вона шукає вулицю, яка веде до історичного музею. Перехожий, який добре знає місто, з радістю допомагає їй.\n\nСитуація друга: У магазині. Студент хоче купити новий рюкзак. Він довго вибирає модель, яку бачив у рекламі. Продавець показує йому варіанти, які відповідають його вимогам.\n\nСитуація третя: Розмова друзів. Вони обговорюють новий фільм, який вийшов минулого тижня. Головний герой — детектив, якого грає відомий актор. Усі сцени, які відбуваються вночі, дуже напружені.\n" correctWords={JSON.parse(`["яка", "який", "яку", "які", "який", "якого", "які"]`)} />
 </MarkTheWords>
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| який | [jɑˈkɪj] | which / that / who (masc) | pronoun | ч |  |
-| яка | [jɑkɑ] | which / that / who (fem) | pronoun | ж | Дівчина, яка читає. |
-| яке | [jɑˈkɛ] | which / that / who (neut) | pronoun | с | Місто, яке ніколи не спить. |
-| які | [jɑˈkʲi] | which / that / who (pl) | pronoun |  | Люди, які люблять подорожувати. |
-| той | [tɔj] | that one (masc) | pronoun | ч |  |
-| чоловік | [t͡ʃɔlɔˈʋʲik] | man / husband | noun | ч |  |
-| жінка | [ˈʒʲinkɑ] | woman / wife | noun | ж |  |
-| ринок | [ˈrɪnɔk] | market | noun | ч | Піти на ринок за продуктами. |
-| зважити | [ˈzʋɑʒɪtɪ] | to weigh | verb |  | Який вам зважити? |
-| різниця | [rʲiˈznɪt͡sʲɑ] | difference | noun | ж | Яка різниця? |
-| відмінок | [ʋʲiˈdʲmʲinɔk] | grammatical case | noun | ч |  |
-| істота | [iˈstɔtɑ] | animate noun / creature | noun | ж |  |
-| неістота | [nɛiˈstɔtɑ] | inanimate noun / thing | noun | ж |  |
-| хамелеон | [xɑmɛlɛˈɔn] | chameleon | noun | ч |  |
-| свідок | [ˈsʲʋʲidɔk] | witness | noun | ч |  |
-| підозрюваний | [pʲiˈdɔzʲrʲuʋɑnɪj] | suspect | noun | ч |  |
-| рюкзак | [rʲuˈɡzɑk] | backpack | noun | ч |  |
-| окуляри | [ɔkuˈlʲɑrɪ] | glasses | noun |  |  |
-| вітрина | [ʋʲiˈtrɪnɑ] | shop window | noun | ж |  |
-| полиця | [pɔˈlɪt͡sʲɑ] | shelf | noun | ж |  |
-| сукня | [ˈsuknʲɑ] | dress | noun | ж |  |
-| приналежність | [prɪnɑˈlɛʒnʲisʲtʲ] | belonging / possession | noun | ж |  |
-| точність | [ˈtɔt͡ʃnʲisʲtʲ] | accuracy / precision | noun | ж |  |
-| жупан | [ʒuˈpɑn] | traditional coat | noun | ч |  |
-| дзеркало | [ˈd͡zɛrkɑlɔ] | mirror | noun | с |  |
-| називний | [nɑzɪˈʋnɪj] | nominative | adj |  |  |
-| родовий | [rɔˈdɔˈʋɪj] | genitive | adj |  |  |
-| знахідний | [znɑˈxʲidnɪj] | accusative | adj |  |  |
-| іменник | [iˈmɛnːɪk] | noun | noun |  |  |
-| множина | [mnɔʒɪˈnɑ] | plural | noun |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

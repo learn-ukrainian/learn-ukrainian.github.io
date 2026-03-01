@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Spatial Prepositions
 
 > **Чому це важливо?**
 >
@@ -595,7 +601,39 @@ Congratulations! You have just learned the map of the Ukrainian spatial universe
 
 In the next modules, we will practice these cases more deeply. But for now, look around your room. Where is your phone? *На столі*? Or *в кишені*? Try to label the world around you!
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| в |  | in / into | prep |  |  |
+| на |  | on / onto | prep |  |  |
+| під |  | under | prep |  |  |
+| над |  | above / over | prep |  |  |
+| перед |  | in front of | prep |  |  |
+| за |  | behind | prep |  |  |
+| між |  | between | prep |  |  |
+| до |  | to / towards | prep |  |  |
+| з |  | from / out of | prep |  |  |
+| напроти |  | opposite / across from | prep |  |  |
+| біля |  | near / by | prep |  |  |
+| коло |  | near / around | prep |  |  |
+| поруч |  | nearby / next to | adv |  |  |
+| навколо |  | around | prep |  |  |
+| вздовж |  | along | prep |  |  |
+| всередині |  | inside | adv |  |  |
+| ззовні |  | outside | adv |  |  |
+| посеред |  | in the middle of | prep |  |  |
+| збоку |  | on the side / from the side | adv |  |  |
+| поміж |  | among | prep |  |  |
+| стіл |  | table | noun | ч |  |
+| кімната |  | room | noun | ж |  |
+| шафа |  | wardrobe / cupboard | noun | ж |  |
+| диван |  | sofa | noun | ч |  |
+| вікно |  | window | noun | с |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: Прийменник та значення
 
@@ -655,32 +693,24 @@ In the next modules, we will practice these cases more deeply. But for now, look
 
 <Select client:load questions={JSON.parse(`[{"question": "Студент сидить ___ (at the table).", "options": [{"text": "за столом", "correct": true}, {"text": "на столі", "correct": false}, {"text": "під столом", "correct": false}, {"text": "в столі", "correct": false}], "explanation": "\\"За столом\\" is the idiomatic way to say sitting at a table (literally behind/at)."}, {"question": "Картина висить ___ (above the sofa).", "options": [{"text": "над диваном", "correct": true}, {"text": "на дивані", "correct": false}, {"text": "під диваном", "correct": false}, {"text": "перед диваном", "correct": false}], "explanation": "\\"Над\\" means above/over."}, {"question": "Ми зустрінемося ___ (near the metro).", "options": [{"text": "біля метро", "correct": true}, {"text": "в метро", "correct": false}, {"text": "на метро", "correct": false}, {"text": "під метро", "correct": false}], "explanation": "\\"Біля\\" means near/by."}, {"question": "Машина стоїть ___ (in front of the house).", "options": [{"text": "перед будинком", "correct": true}, {"text": "за будинком", "correct": false}, {"text": "в будинку", "correct": false}, {"text": "на будинку", "correct": false}], "explanation": "\\"Перед\\" means in front of."}, {"question": "Я йду ___ (to the doctor).", "options": [{"text": "до лікаря", "correct": true}, {"text": "в лікаря", "correct": false}, {"text": "на лікаря", "correct": false}, {"text": "під лікаря", "correct": false}], "explanation": "Motion towards a person uses \\"до\\"."}, {"question": "Ми йдемо ___ (to the concert).", "options": [{"text": "на концерт", "correct": true}, {"text": "в концерт", "correct": false}, {"text": "до концерту", "correct": false}, {"text": "під концерт", "correct": false}], "explanation": "Events use \\"на\\"."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| в | [ʋ] | in / into | prep |  |  |
-| на | [nɑ] | on / onto | prep |  |  |
-| під | [pʲid] | under | prep |  |  |
-| над | [nɑd] | above / over | prep |  |  |
-| перед | [ˈpɛrɛd] | in front of | prep |  |  |
-| за | [zɑ] | behind | prep |  |  |
-| між | [mʲiʒ] | between | prep |  |  |
-| до | [dɔ] | to / towards | prep |  |  |
-| з | [z] | from / out of | prep |  |  |
-| напроти | [nɑˈprɔtɪ] | opposite / across from | prep |  |  |
-| біля | [ˈbʲilʲɑ] | near / by | prep |  |  |
-| коло | [ˈkɔlɔ] | near / around | prep |  |  |
-| поруч | [ˈpɔrut͡ʃ] | nearby / next to | adv |  |  |
-| навколо | [nɑˈʋkɔlɔ] | around | prep |  |  |
-| вздовж | [ʋzdɔu̯ʒ] | along | prep |  |  |
-| всередині | [ʍsɛˈrɛdɪnʲi] | inside | adv |  |  |
-| ззовні | [ˈzzɔu̯nʲi] | outside | adv |  |  |
-| посеред | [pɔˈsɛˈrɛd] | in the middle of | prep |  |  |
-| збоку | [ˈzbɔku] | on the side / from the side | adv |  |  |
-| поміж | [pɔˈmʲiʒ] | among | prep |  |  |
-| стіл | [sʲtʲil] | table | noun | ч |  |
-| кімната | [kʲiˈmnɑtɑ] | room | noun | ж |  |
-| шафа | [ˈʃɑfɑ] | wardrobe / cupboard | noun | ж |  |
-| диван | [dɪˈʋɑn] | sofa | noun | ч |  |
-| вікно | [ʋʲiˈknɔ] | window | noun | с |  |
+:::info[🎧 🔗 External Resources]
+
+**🎧 Podcasts:**
+- [ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/lesson/57/) — Level-aligned topic match: prepositions
+
+**📖 Articles:**
+- [Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — Unknown
+- [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Unknown
+- [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Unknown
+
+**🌐 Websites:**
+- [Dobra Forma 4-1: Locative Case (в and у)](https://opentext.ku.edu/dobraforma/chapter/4-1/) — University of Kansas
+- [Dobra Forma 4-2: Locative Case (в, у and на)](https://opentext.ku.edu/dobraforma/chapter/4-2/) — University of Kansas
+- [Prepositions Guide](https://www.youtube.com/@SpeakUkrainian) — Speak Ukrainian
+:::
+
+</TabItem>
+</Tabs>

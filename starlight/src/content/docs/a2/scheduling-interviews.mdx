@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Scheduling Interviews
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -357,7 +363,39 @@ In this comprehensive lesson, we explored the key aspects of job hunting in mode
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| співбесіда |  | interview | noun | ж |  |
+| резюме |  | resume | noun | с |  |
+| вакансія |  | vacancy | noun | ж |  |
+| досвід |  | experience | noun | ч |  |
+| зарплата |  | salary | noun | ж |  |
+| обов'язки |  | duties | noun |  |  |
+| навички |  | skills | noun |  |  |
+| кандидат |  | candidate | noun | ч |  |
+| робота |  | job, employment | noun | ж |  |
+| праця |  | labor, physical/mental effort | noun | ж |  |
+| посада |  | position, post | noun | ж |  |
+| HR-менеджер |  | HR manager | noun | ч |  |
+| графік |  | schedule | noun | ч |  |
+| випробувальний термін |  | probation period | noun | ч |  |
+| соціальний пакет |  | benefits package | noun | ч |  |
+| відпустка |  | vacation, annual leave | noun | ж |  |
+| підвищення |  | promotion | noun | с |  |
+| пан |  | Mr. | noun | ч |  |
+| пані |  | Ms., Mrs. | noun | ж |  |
+| директор |  | director | noun | ч |  |
+| співробітник |  | employee | noun | ч |  |
+| програміст |  | programmer | noun | ч |  |
+| виплачувати |  | to pay (salary) | verb |  |  |
+| призначити |  | to schedule, to appoint | verb |  |  |
+| розглядати |  | to review, to consider | verb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: Базові професійні терміни
 
@@ -416,32 +454,10 @@ In this comprehensive lesson, we explored the key aspects of job hunting in mode
 
 <Quiz client:load questions={JSON.parse(`[{"question": "Яке слово означає конкретну вільну позицію у вашій компанії?", "options": [{"text": "вакансія", "correct": true}, {"text": "резюме", "correct": false}, {"text": "досвід", "correct": false}, {"text": "відпустка", "correct": false}], "explanation": "Вакансія — це вільне робоче місце у компанії для нового кандидата."}, {"question": "Як досвідчений менеджер зазвичай реагує на використання слова ти молодим кандидатом?", "options": [{"text": "це вважається дуже неввічливим", "correct": true}, {"text": "це вважається дуже дружнім", "correct": false}, {"text": "він не звертає на це увагу", "correct": false}, {"text": "це позитивно впливає на інтерв'ю", "correct": false}], "explanation": "Менеджер може бути шокований, оскільки це вважається дуже некультурним кроком."}, {"question": "Що найкраще показує ваш університетський диплом українському роботодавцю?", "options": [{"text": "вашу високу самостійну дисципліну", "correct": true}, {"text": "вашу нездатність працювати в команді", "correct": false}, {"text": "ваш великий практичний досвід роботи", "correct": false}, {"text": "вашу високу бажану зарплату", "correct": false}], "explanation": "Диплом показує здатність до швидкого навчання та вашу самостійну дисципліну."}, {"question": "Який відмінок ми обов'язково використовуємо після дієслова працювати для опису професії?", "options": [{"text": "тільки Орудний відмінок", "correct": true}, {"text": "тільки Називний відмінок", "correct": false}, {"text": "тільки Знахідний відмінок", "correct": false}, {"text": "будь-який відмінок на ваш вибір", "correct": false}], "explanation": "Після дієслова працювати завжди використовується тільки Орудний відмінок без прийменників."}, {"question": "Що дослівно означає популярне українське прислів'я Без труда нема плода?", "options": [{"text": "життєвий успіх вимагає великих зусиль", "correct": true}, {"text": "працювати щодня зовсім не обов'язково", "correct": false}, {"text": "великий успіх приходить сам по собі", "correct": false}, {"text": "пошук роботи завжди дуже легкий", "correct": false}], "explanation": "Воно означає, що будь-який життєвий успіх вимагає дуже великих зусиль."}, {"question": "Як правильно запитати про бажаний час початку роботи на співбесіді?", "options": [{"text": "Коли ви можете почати?", "correct": true}, {"text": "Скільки ви хочете отримувати грошей?", "correct": false}, {"text": "Який у вас щоденний графік роботи?", "correct": false}, {"text": "Де знаходиться ваше нове резюме?", "correct": false}], "explanation": "Менеджер зазвичай прямо питає: Коли ви можете почати?"}, {"question": "Яке слово означає гроші, які ви регулярно отримуєте за свою роботу?", "options": [{"text": "зарплата", "correct": true}, {"text": "вакансія", "correct": false}, {"text": "співбесіда", "correct": false}, {"text": "навички", "correct": false}], "explanation": "Заробітна плата або просто зарплата — це ваші регулярні фінанси."}, {"question": "Що амбітний кандидат обов'язково повинен підготувати вдома перед співбесідою?", "options": [{"text": "детальне професійне резюме", "correct": true}, {"text": "свій власний графік відпусток", "correct": false}, {"text": "соціальний пакет працівника", "correct": false}, {"text": "великий складний фінансовий звіт", "correct": false}], "explanation": "Кожен серйозний кандидат повинен створити детальне і змістовне резюме."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| співбесіда | [sʲpʲiˈʋbɛsʲidɑ] | interview | noun | ж |  |
-| резюме | [rɛzʲuˈmɛ] | resume | noun | с |  |
-| вакансія | [ʋɑˈkɑnʲsʲijɑ] | vacancy | noun | ж |  |
-| досвід | [ˈdɔsʲʋʲid] | experience | noun | ч |  |
-| зарплата | [zɑrˈplɑtɑ] | salary | noun | ж |  |
-| обов'язки | [ɔˈbɔu̯jɑzkɪ] | duties | noun |  |  |
-| навички | [ˈnɑʋɪt͡ʃkɪ] | skills | noun |  |  |
-| кандидат | [kɑndɪˈdɑt] | candidate | noun | ч |  |
-| робота | [rɔˈbɔtɑ] | job, employment | noun | ж |  |
-| праця | [ˈprɑt͡sʲɑ] | labor, physical/mental effort | noun | ж |  |
-| посада | [pɔˈsɑdɑ] | position, post | noun | ж |  |
-| HR-менеджер | [hr-ˈmɛnɛd͡ʒɛr] | HR manager | noun | ч |  |
-| графік | [ˈɦrɑfʲik] | schedule | noun | ч |  |
-| випробувальний термін | [ʋɪˈprɔbuʋɑlʲnɪj ˈtɛrmʲin] | probation period | noun | ч |  |
-| соціальний пакет | [sɔt͡sʲiˈɑlʲnɪj pɑˈkɛt] | benefits package | noun | ч |  |
-| відпустка | [ʋʲiˈdpustkɑ] | vacation, annual leave | noun | ж |  |
-| підвищення | [pʲiˈdʋɪʃt͡ʃɛnʲːɑ] | promotion | noun | с |  |
-| пан | [pɑn] | Mr. | noun | ч |  |
-| пані | [ˈpɑnʲi] | Ms., Mrs. | noun | ж |  |
-| директор | [dɪˈrɛktɔr] | director | noun | ч |  |
-| співробітник | [sʲpʲiu̯rɔˈbʲitnɪk] | employee | noun | ч |  |
-| програміст | [prɔɦrɑˈmʲist] | programmer | noun | ч |  |
-| виплачувати | [ʋɪˈplɑt͡ʃuʋɑtɪ] | to pay (salary) | verb |  |  |
-| призначити | [prɪˈznɑˈt͡ʃɪtɪ] | to schedule, to appoint | verb |  |  |
-| розглядати | [rɔzɦlʲɑˈdɑtɪ] | to review, to consider | verb |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

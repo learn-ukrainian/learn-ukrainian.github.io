@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Future Plans and Promises
+{/**/}
 
 > **Чому це важливо?**
 
@@ -282,7 +288,29 @@ To verify your understanding of today's concepts, answer the following self-chec
 5. Translate the following sentence into Ukrainian using the correct aspect: "I will go to the park, and I will be reading a book there."
 6. What cultural attitude is reflected in the proverb «Обіцянка — цяцянка, а дурневі — радість»?
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| обіцянка |  | promise | noun | ж |  |
+| слово |  | word | noun | с |  |
+| буду |  | I will be | verb |  |  |
+| зроблю |  | I will do, I will make | verb |  | Simple future form of зробити |
+| напишу |  | I will write | verb |  | Simple future form of написати |
+| скажу |  | I will say, I will tell | verb |  | Simple future form of сказати |
+| піду |  | I will go | verb |  | Simple future form of піти |
+| прочитаю |  | I will read (to the end) | verb |  | Simple future form of прочитати |
+| побачу |  | I will see | verb |  | Simple future form of побачити |
+| почую |  | I will hear | verb |  | Simple future form of почути |
+| візьму |  | I will take | verb |  | Simple future form of взяти |
+| дам |  | I will give | verb |  | Simple future form of дати |
+| вид |  | aspect (grammar) | noun | ч |  |
+| доконаний |  | perfective | adjective |  |  |
+| недоконаний |  | imperfective | adjective |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Процес чи результат?
 
@@ -343,22 +371,10 @@ To verify your understanding of today's concepts, answer the following self-chec
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Коли / ти / закінчиш / свою / роботу", "answer": "Коли ти закінчиш свою роботу"}, {"jumbled": "Я / ніколи / не / забуду / твою / допомогу", "answer": "Я ніколи не забуду твою допомогу"}, {"jumbled": "Ми / обов'язково / прийдемо / на / зустріч / вчасно", "answer": "Ми обов'язково прийдемо на зустріч вчасно"}, {"jumbled": "Вона / буде / відпочивати / вдома / цілий / день", "answer": "Вона буде відпочивати вдома цілий день"}, {"jumbled": "Я / обіцяю / що / знайду / правильне / рішення", "answer": "Я обіцяю що знайду правильне рішення"}, {"jumbled": "Що / ви / будете / робити / у / суботу", "answer": "Що ви будете робити у суботу"}, {"jumbled": "Я / дам / тобі / цю / книгу / завтра", "answer": "Я дам тобі цю книгу завтра"}, {"jumbled": "Вони / побачать / цей / новий / фільм / першими", "answer": "Вони побачать цей новий фільм першими"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| обіцянка | [ɔbʲiˈt͡sʲɑnkɑ] | promise | noun | ж |  |
-| слово | [ˈslɔʋɔ] | word | noun | с |  |
-| буду | [ˈbudu] | I will be | verb |  |  |
-| зроблю | [zrɔˈblʲu] | I will do, I will make | verb |  | Simple future form of зробити |
-| напишу | [nɑpɪˈʃu] | I will write | verb |  | Simple future form of написати |
-| скажу | [skɑˈʒu] | I will say, I will tell | verb |  | Simple future form of сказати |
-| піду | [pʲiˈdu] | I will go | verb |  | Simple future form of піти |
-| прочитаю | [prɔt͡ʃɪˈtɑju] | I will read (to the end) | verb |  | Simple future form of прочитати |
-| побачу | [pɔˈbɑt͡ʃu] | I will see | verb |  | Simple future form of побачити |
-| почую | [pɔˈt͡ʃuju] | I will hear | verb |  | Simple future form of почути |
-| візьму | [ʋʲiˈzʲmu] | I will take | verb |  | Simple future form of взяти |
-| дам | [dɑm] | I will give | verb |  | Simple future form of дати |
-| вид | [ʋɪd] | aspect (grammar) | noun | ч |  |
-| доконаний | [dɔˈkɔnɑnɪj] | perfective | adjective |  |  |
-| недоконаний | [nɛdɔˈkɔnɑnɪj] | imperfective | adjective |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

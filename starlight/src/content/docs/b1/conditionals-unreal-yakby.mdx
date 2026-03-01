@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Умовні речення: нереальна умова (якби)
+{/**/}
 
 > **Чому це важливо?**
 > Здатність вільно говорити про нереальні, уявні або суто гіпотетичні ситуації є однією з ключових ознак вільного та глибокого володіння будь-якою мовою, і українська мова тут не є винятком. Ми, як люди, постійно мріємо про те, чого немає зараз, детально аналізуємо наші минулі помилки або уявляємо захопливі альтернативні сценарії розвитку майбутніх подій. У цьому детальному модулі ви навчитеся майстерно будувати нереальні умовні речення, використовуючи специфічний сполучник «якби» та правильні граматичні форми умовного способу дієслів. Це вміння дозволить вам вийти за вузькі межі констатації простих фактів і глибоко зануритися у багатий світ фантазій, теоретичних припущень та складних культурних сенсів сучасної української мови.
@@ -257,7 +263,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **якби** |  | if (unreal) | conjunction |  |
+| **би** |  | would | particle |  |
+| **б** |  | would | particle |  |
+| **мріяти** |  | to dream | дієсл |  |
+| **уявляти** |  | to imagine | дієсл |  |
+| **нереальний** |  | unreal | adjective |  |
+| **шкодувати** |  | to regret | дієсл |  |
+| **гіпотетичний** |  | hypothetical | adjective |  |
+| **якби тільки** |  | if only | фраза |  |
+| **було б краще** |  | it would be better | фраза |  |
+| **на жаль** |  | unfortunately | фраза |  |
+| **умова** |  | condition | ім |  |
+| **спосіб** |  | mood / method | ім |  |
+| **умовний спосіб** |  | conditional mood | фраза |  |
+| **реальність** |  | reality | ім |  |
+| **фантазія** |  | fantasy / imagination | ім |  |
+| **сполучник** |  | conjunction | ім |  |
+| **частка** |  | particle (grammar) | ім |  |
+| **милозвучність** |  | euphony | ім |  |
+| **минулий час** |  | past tense | фраза |  |
+| **докір** |  | reproach / reprimand | ім |  |
+| **прислів'я** |  | proverb | ім |  |
+| **ввічливий** |  | polite | adjective |  |
+| **порада** |  | advice | ім |  |
+| **виняток** |  | exception | ім |  |
+| **передбачати** |  | to foresee / to predict | дієсл |  |
+| **обставина** |  | circumstance | ім |  |
+| **наслідок** |  | consequence / result | ім |  |
+| **альтернативний** |  | alternative | adjective |  |
+| **калька** |  | calque / loan translation | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Основи нереальної умови
 
@@ -308,37 +351,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Я дуже люблю мріяти. Іноді я [___:0]} собі абсолютно [___:1]} ситуації. [___:2]} я мав чарівну паличку, я [___:3]} зробив усіх людей на планеті щасливими. На жаль, це лише гарна [___:4]}. Я також часто розмірковую про власне минуле. Якби тільки я [___:5]} більше іноземних мов у школі, моє життя [___:6]} склалося б зовсім інакше. [___:7]} б краще, якби я більше слухав своїх батьків. Але я не хочу [___:8]} про минуле, бо змінити його неможливо. З іншого боку, [___:9]} не мої помилки, я б ніколи не став тим, ким є зараз. Тому я вважаю, що кожна людина повинна мати власну сміливу [___:10]} про світле майбутнє. Якби ми не вміли фантазувати, наше життя [___:11]} дуже нудним. Українська граматика дає нам чудовий інструмент для цього — [___:12]} спосіб та маленьку, але таку важливу модальну [___:13]} би."} blanks={JSON.parse(`[{"index": 0, "answer": "уявляю", "options": ["уявляю", "уявляв", "уявляти", "уявив"]}, {"index": 1, "answer": "нереальні", "options": ["нереальні", "реальні", "можливі", "звичайні"]}, {"index": 2, "answer": "Якби", "options": ["Якби", "Якщо", "Щоб", "Коли"]}, {"index": 3, "answer": "б", "options": ["б", "би", "щоб", "аби"]}, {"index": 4, "answer": "мрія", "options": ["мрія", "умова", "реальність", "справа"]}, {"index": 5, "answer": "вивчав", "options": ["вивчав", "вивчаю", "вивчатиму", "вивчити"]}, {"index": 6, "answer": "могло", "options": ["могло", "може", "зможе", "могти"]}, {"index": 7, "answer": "Було", "options": ["Було", "Є", "Буде", "Бути"]}, {"index": 8, "answer": "шкодувати", "options": ["шкодувати", "шкодував", "шкодую", "шкодуєш"]}, {"index": 9, "answer": "якби", "options": ["якби", "якщо", "коли", "ніби"]}, {"index": 10, "answer": "мрію", "options": ["мрію", "умову", "помилку", "фантазію"]}, {"index": 11, "answer": "було б", "options": ["було б", "є", "буде", "було"]}, {"index": 12, "answer": "умовний", "options": ["умовний", "дійсний", "наказовий", "минулий"]}, {"index": 13, "answer": "частку", "options": ["частку", "літеру", "слово", "крапку"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **якби** | [jɑˈɡbɪ] | if (unreal) | conjunction |  |
-| **би** | [bɪ] | would | particle |  |
-| **б** | [b] | would | particle |  |
-| **мріяти** | [ˈmrʲijɑtɪ] | to dream | дієсл |  |
-| **уявляти** | [ujɑˈʋlʲɑtɪ] | to imagine | дієсл |  |
-| **нереальний** | [nɛrɛˈɑlʲnɪj] | unreal | adjective |  |
-| **шкодувати** | [ʃkɔduˈʋɑtɪ] | to regret | дієсл |  |
-| **гіпотетичний** | [ɦʲipɔtɛˈtɪt͡ʃnɪj] | hypothetical | adjective |  |
-| **якби тільки** | [jɑˈɡbɪ ˈtʲilʲkɪ] | if only | фраза |  |
-| **було б краще** | [buˈlɔ b ˈkrɑʃt͡ʃɛ] | it would be better | фраза |  |
-| **на жаль** | [nɑ ʒɑlʲ] | unfortunately | фраза |  |
-| **умова** | [uˈmɔʋɑ] | condition | ім |  |
-| **спосіб** | [ˈspɔsʲib] | mood / method | ім |  |
-| **умовний спосіб** | [uˈmɔu̯nɪj ˈspɔsʲib] | conditional mood | фраза |  |
-| **реальність** | [rɛˈɑlʲnʲisʲtʲ] | reality | ім |  |
-| **фантазія** | [fɑnˈtɑzʲijɑ] | fantasy / imagination | ім |  |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | conjunction | ім |  |
-| **частка** | [ˈt͡ʃɑstkɑ] | particle (grammar) | ім |  |
-| **милозвучність** | [mɪlɔˈzʋut͡ʃnʲisʲtʲ] | euphony | ім |  |
-| **минулий час** | [mɪˈnulɪj t͡ʃɑs] | past tense | фраза |  |
-| **докір** | [ˈdɔˈkʲir] | reproach / reprimand | ім |  |
-| **прислів'я** | [prɪsʲlʲiu̯jɑ] | proverb | ім |  |
-| **ввічливий** | [ˈʋʲːit͡ʃlɪʋɪj] | polite | adjective |  |
-| **порада** | [pɔˈrɑdɑ] | advice | ім |  |
-| **виняток** | [ˈʋɪnʲɑtɔk] | exception | ім |  |
-| **передбачати** | [pɛrɛdbɑˈt͡ʃɑtɪ] | to foresee / to predict | дієсл |  |
-| **обставина** | [ɔˈbstɑʋɪnɑ] | circumstance | ім |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence / result | ім |  |
-| **альтернативний** | [ɑlʲtɛrnɑˈtɪu̯nɪj] | alternative | adjective |  |
-| **калька** | [ˈkɑlʲkɑ] | calque / loan translation | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

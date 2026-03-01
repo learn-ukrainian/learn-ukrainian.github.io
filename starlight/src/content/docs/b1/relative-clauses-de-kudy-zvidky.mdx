@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Підрядні означальні: де, куди, звідки
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -457,7 +463,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **де** |  | where (location) | adverb |  |
+| **куди** |  | where (direction to) | adverb |  |
+| **звідки** |  | where (direction from) | adverb |  |
+| **місце** |  | place | ім |  |
+| **напрямок** |  | direction | ім |  |
+| **розташування** |  | location | ім |  |
+| **походження** |  | origin | ім |  |
+| **рух** |  | movement | ім |  |
+| **статичний** |  | static | adjective |  |
+| **динамічний** |  | dynamic | adjective |  |
+| **призначення** |  | destination | ім |  |
+| **джерело** |  | source | ім |  |
+| **саме** |  | exactly / specifically | particle | used to emphasize location or direction, e.g., 'де саме', 'куди саме' |
+| **десь** |  | somewhere (location) | adverb |  |
+| **кудись** |  | somewhere (direction) | adverb |  |
+| **звідкись** |  | from somewhere | adverb |  |
+| **статика** |  | statics / state of rest | ім |  |
+| **динаміка** |  | dynamics / active movement | ім |  |
+| **там** |  | there (location) | adverb |  |
+| **туди** |  | there (direction) | adverb |  |
+| **звідти** |  | from there | adverb |  |
+| **простір** |  | space | ім |  |
+| **маршрут** |  | route | ім |  |
+| **локація** |  | location | ім |  |
+| **знаходитися** |  | to be located / situated | дієсл |  |
+| **повертатися** |  | to return | дієсл |  |
+| **вирушати** |  | to set off / depart | дієсл |  |
+| **лунати** |  | to resound / echo | дієсл |  |
+| **зупинятися** |  | to stop | дієсл |  |
+| **походити** |  | to originate / come from | дієсл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Оберіть правильне слово
 
@@ -507,37 +550,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Translate client:load questions={JSON.parse(`[{"source": "This is the old house where I lived.", "options": [{"text": "Це старий будинок, де я жив.", "correct": true}, {"text": "Це старий будинок, куди я жив.", "correct": false}]}, {"source": "Show me the road where we need to go.", "options": [{"text": "Покажи мені дорогу, куди нам потрібно йти.", "correct": true}, {"text": "Покажи мені дорогу, де нам потрібно йти.", "correct": false}]}, {"source": "The city where he comes from is very beautiful.", "options": [{"text": "Місто, звідки він походить, дуже гарне.", "correct": true}, {"text": "Місто, куди він походить, дуже гарне.", "correct": false}]}, {"source": "We will go where you want to go.", "options": [{"text": "Ми поїдемо туди, куди ти хочеш поїхати.", "correct": true}, {"text": "Ми поїдемо там, де ти хочеш поїхати.", "correct": false}]}, {"source": "It is good there, where we are not.", "options": [{"text": "Добре там, де нас немає.", "correct": true}, {"text": "Добре туди, куди нас немає.", "correct": false}]}, {"source": "He put his keys somewhere in the room.", "options": [{"text": "Він поклав ключі десь у кімнаті.", "correct": true}, {"text": "Він поклав ключі кудись у кімнаті.", "correct": false}]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **де** | [dɛ] | where (location) | adverb |  |
-| **куди** | [kuˈdɪ] | where (direction to) | adverb |  |
-| **звідки** | [ˈzʲʋʲidkɪ] | where (direction from) | adverb |  |
-| **місце** | [ˈmʲist͡sɛ] | place | ім |  |
-| **напрямок** | [ˈnɑprʲɑmɔk] | direction | ім |  |
-| **розташування** | [rɔztɑʃuˈʋɑnʲːɑ] | location | ім |  |
-| **походження** | [pɔˈxɔd͡ʒɛnʲːɑ] | origin | ім |  |
-| **рух** | [rux] | movement | ім |  |
-| **статичний** | [stɑˈtɪt͡ʃnɪj] | static | adjective |  |
-| **динамічний** | [dɪnɑˈmʲit͡ʃnɪj] | dynamic | adjective |  |
-| **призначення** | [prɪˈznɑt͡ʃɛnʲːɑ] | destination | ім |  |
-| **джерело** | [d͡ʒɛrɛˈlɔ] | source | ім |  |
-| **саме** | [ˈsɑmɛ] | exactly / specifically | particle | used to emphasize location or direction, e.g., 'де саме', 'куди саме' |
-| **десь** | [dɛsʲ] | somewhere (location) | adverb |  |
-| **кудись** | [kuˈdɪsʲ] | somewhere (direction) | adverb |  |
-| **звідкись** | [ˈzʲʋʲidkɪsʲ] | from somewhere | adverb |  |
-| **статика** | [ˈstɑtɪkɑ] | statics / state of rest | ім |  |
-| **динаміка** | [dɪˈnɑmʲikɑ] | dynamics / active movement | ім |  |
-| **там** | [tɑm] | there (location) | adverb |  |
-| **туди** | [tuˈdɪ] | there (direction) | adverb |  |
-| **звідти** | [ˈzʲʋʲidtɪ] | from there | adverb |  |
-| **простір** | [ˈprɔsʲtʲir] | space | ім |  |
-| **маршрут** | [mɑrˈʃrut] | route | ім |  |
-| **локація** | [lɔˈkɑt͡sʲijɑ] | location | ім |  |
-| **знаходитися** | [znɑˈxɔdɪtɪsʲɑ] | to be located / situated | дієсл |  |
-| **повертатися** | [pɔʋɛrˈtɑtɪsʲɑ] | to return | дієсл |  |
-| **вирушати** | [ʋɪruˈʃɑtɪ] | to set off / depart | дієсл |  |
-| **лунати** | [luˈnɑtɪ] | to resound / echo | дієсл |  |
-| **зупинятися** | [zupɪˈnʲɑtɪsʲɑ] | to stop | дієсл |  |
-| **походити** | [pɔxɔdɪtɪ] | to originate / come from | дієсл |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

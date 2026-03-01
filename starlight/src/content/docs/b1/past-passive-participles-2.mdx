@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Пасивні дієприкметники: коротка форма
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -402,7 +408,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **коротка форма** |  | short form | ім |  |
+| **безособовий** |  | impersonal | adjective |  |
+| **написано** |  | written (impersonal) | дієсл |  |
+| **зроблено** |  | done (impersonal) | дієсл |  |
+| **заборонено** |  | forbidden | дієсл |  |
+| **дозволено** |  | permitted | дієсл |  |
+| **відчинено** |  | opened | дієсл |  |
+| **зачинено** |  | closed | дієсл |  |
+| **завершено** |  | completed | дієсл |  |
+| **наголос** |  | emphasis | ім |  |
+| **оголошення** |  | announcement | ім |  |
+| **пофарбовано** |  | painted | дієсл |  |
+| **проголошено** |  | proclaimed | дієсл |  |
+| **прийнято** |  | accepted/taken | дієсл |  |
+| **підписано** |  | signed | дієсл |  |
+| **об'єктивний** |  | objective | adjective |  |
+| **факт** |  | fact | ім |  |
+| **результат** |  | result | ім |  |
+| **діяч** |  | agent/doer | ім |  |
+| **присудок** |  | predicate | ім |  |
+| **доконаний вид** |  | perfective aspect | ім |  |
+| **недоконаний вид** |  | imperfective aspect | ім |  |
+| **бюрократія** |  | bureaucracy | ім |  |
+| **інституційний** |  | institutional | adjective |  |
+| **виставка** |  | exhibition | ім |  |
+| **налаштовано** |  | configured/set up | дієсл |  |
+| **невідворотність** |  | inevitability | ім |  |
+| **розвішано** |  | hung up | дієсл |  |
+| **встановлено** |  | installed | дієсл |  |
+| **перевірено** |  | checked/verified | дієсл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Від повної форми до короткої
 
@@ -453,37 +496,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Select client:load questions={JSON.parse(`[{"question": "Оберіть граматично правильні речення (Знахідний відмінок об'єкта).", "options": [{"text": "Цю статтю написано чудово.", "correct": true}, {"text": "Ця стаття написано чудово.", "correct": false}, {"text": "Роботу виконано вчасно.", "correct": true}, {"text": "Робота виконано вчасно.", "correct": false}, {"text": "Книгу прочитано до кінця.", "correct": true}], "explanation": ""}, {"question": "Оберіть речення, які правильно описують актуальний теперішній результат.", "options": [{"text": "Документ підписано щойно.", "correct": true}, {"text": "Документ було підписано щойно.", "correct": false}, {"text": "Рішення прийнято одноголосно.", "correct": true}, {"text": "Замовлення відправлено клієнту.", "correct": true}, {"text": "Замовлення було відправлено клієнту сьогодні.", "correct": false}], "explanation": ""}, {"question": "У яких реченнях правильно використано доконаний вид для короткої форми?", "options": [{"text": "Стіну пофарбовано в синій колір.", "correct": true}, {"text": "Стіну фарбовано весь день.", "correct": false}, {"text": "Проблему вирішено швидко.", "correct": true}, {"text": "Завдання успішно виконано.", "correct": true}, {"text": "Завдання виконувано довго.", "correct": false}], "explanation": ""}, {"question": "Які вивіски написані граматично правильно?", "options": [{"text": "Вхід заборонено.", "correct": true}, {"text": "Вхід є заборонений.", "correct": false}, {"text": "Зачинено на перерву.", "correct": true}, {"text": "Палити заборонено.", "correct": true}], "explanation": ""}, {"question": "Оберіть речення, що належать до офіційно-ділового стилю.", "options": [{"text": "Акт проголошено.", "correct": true}, {"text": "Я проголосив акт.", "correct": false}, {"text": "Універсал підписано.", "correct": true}, {"text": "Будівництво об'єкта завершено.", "correct": true}, {"text": "Ми завершили будувати.", "correct": false}], "explanation": ""}, {"question": "Оберіть правильні інструкції (з інфінітивом).", "options": [{"text": "У залі дозволено фотографувати.", "correct": true}, {"text": "У залі дозволено фотографія.", "correct": false}, {"text": "Розмовляти тут заборонено.", "correct": true}, {"text": "Бігати заборонено.", "correct": true}], "explanation": ""}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **коротка форма** | [kɔˈrɔtkɑ ˈfɔrmɑ] | short form | ім |  |
-| **безособовий** | [bɛzɔsɔˈbɔʋɪj] | impersonal | adjective |  |
-| **написано** | [nɑˈpɪsɑnɔ] | written (impersonal) | дієсл |  |
-| **зроблено** | [ˈzrɔblɛnɔ] | done (impersonal) | дієсл |  |
-| **заборонено** | [zɑbɔˈrɔnɛnɔ] | forbidden | дієсл |  |
-| **дозволено** | [dɔˈzʋɔlɛnɔ] | permitted | дієсл |  |
-| **відчинено** | [ʋʲiˈd͡ʒt͡ʃɪnɛnɔ] | opened | дієсл |  |
-| **зачинено** | [zɑˈt͡ʃɪnɛnɔ] | closed | дієсл |  |
-| **завершено** | [zɑˈʋɛrʃɛnɔ] | completed | дієсл |  |
-| **наголос** | [ˈnɑɦɔlɔs] | emphasis | ім |  |
-| **оголошення** | [ɔɦɔˈlɔʃɛnʲːɑ] | announcement | ім |  |
-| **пофарбовано** | [pɔfɑrˈbɔʋɑnɔ] | painted | дієсл |  |
-| **проголошено** | [prɔɦɔˈlɔʃɛnɔ] | proclaimed | дієсл |  |
-| **прийнято** | [prɪjˈnʲɑtɔ] | accepted/taken | дієсл |  |
-| **підписано** | [pʲiˈdpɪsɑnɔ] | signed | дієсл |  |
-| **об'єктивний** | [ɔbjɛˈktɪu̯nɪj] | objective | adjective |  |
-| **факт** | [fɑkt] | fact | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **діяч** | [dʲiˈjɑt͡ʃ] | agent/doer | ім |  |
-| **присудок** | [ˈprɪsudɔk] | predicate | ім |  |
-| **доконаний вид** | [dɔˈkɔnɑnɪj ʋɪd] | perfective aspect | ім |  |
-| **недоконаний вид** | [nɛdɔˈkɔnɑnɪj ʋɪd] | imperfective aspect | ім |  |
-| **бюрократія** | [bʲurɔˈkrɑtʲijɑ] | bureaucracy | ім |  |
-| **інституційний** | [instɪtuˈt͡sʲijnɪj] | institutional | adjective |  |
-| **виставка** | [ˈʋɪstɑu̯kɑ] | exhibition | ім |  |
-| **налаштовано** | [nɑlɑˈʃtɔʋɑnɔ] | configured/set up | дієсл |  |
-| **невідворотність** | [nɛʋʲidʋɔˈrɔtʲnʲisʲtʲ] | inevitability | ім |  |
-| **розвішано** | [rɔˈzʲʋʲiʃɑnɔ] | hung up | дієсл |  |
-| **встановлено** | [ʍstɑˈnɔu̯lɛnɔ] | installed | дієсл |  |
-| **перевірено** | [pɛrɛˈʋʲirɛnɔ] | checked/verified | дієсл |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

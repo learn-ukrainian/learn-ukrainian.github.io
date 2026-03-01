@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Активні дієприкметники та їхній стиль
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -396,7 +402,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **дієприкметник** |  | participle | ім |  |
+| **канцелярит** |  | bureaucratese | ім |  |
+| **працюючий** |  | working | adjective |  |
+| **родючий** |  | fertile | adjective |  |
+| **завідуючий** |  | head | ім |  |
+| **активний** |  | active | adjective |  |
+| **теперішній час** |  | present tense | ім |  |
+| **минулий час** |  | past tense | ім |  |
+| **стилістика** |  | stylistics | ім |  |
+| **русизм** |  | russicism | ім |  |
+| **відносне речення** |  | relative clause | ім |  |
+| **палаючий** |  | burning | adjective |  |
+| **охочий** |  | willing | adjective |  |
+| **довкілля** |  | environment | ім |  |
+| **навколишній** |  | surrounding | adjective |  |
+| **узгодження** |  | agreement | ім |  |
+| **посивілий** |  | grey-haired | adjective |  |
+| **зів'ялий** |  | withered | adjective |  |
+| **зжовклий** |  | yellowed | adjective |  |
+| **опалий** |  | fallen | adjective |  |
+| **достиглий** |  | ripe | adjective |  |
+| **помарнілий** |  | haggard | adjective |  |
+| **співучий** |  | melodious | adjective |  |
+| **квітучий** |  | blooming | adjective |  |
+| **пекучий** |  | piercing | adjective |  |
+| **цілющий** |  | healing | adjective |  |
+| **завідувач** |  | head | ім |  |
+| **командувач** |  | commander | ім |  |
+| **керівник** |  | manager | ім |  |
+| **початківець** |  | beginner | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Теоретичні знання про дієприкметники
 
@@ -454,37 +497,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
   <ErrorCorrectionItem sentence="Милуючись квітучий садом, вона думала про весну." errorWord="квітучий" correctForm="квітучим" options={JSON.parse(`["квітучим", "квітучого", "квітучому", "квітучі"]`)} explanation="Іменник садом стоїть в орудному відмінку, тому лексикалізований прикметник має закінчуватися на -им." />
 </ErrorCorrection>
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **дієприкметник** | [dʲijɛprɪˈkmɛtnɪk] | participle | ім |  |
-| **канцелярит** | [kɑnt͡sɛlʲɑrɪt] | bureaucratese | ім |  |
-| **працюючий** | [prɑˈt͡sʲujut͡ʃɪj] | working | adjective |  |
-| **родючий** | [rɔˈdʲut͡ʃɪj] | fertile | adjective |  |
-| **завідуючий** | [zɑˈʋʲidujut͡ʃɪj] | head | ім |  |
-| **активний** | [ɑˈktɪu̯nɪj] | active | adjective |  |
-| **теперішній час** | [tɛˈpɛrʲiʃnʲij t͡ʃɑs] | present tense | ім |  |
-| **минулий час** | [mɪˈnulɪj t͡ʃɑs] | past tense | ім |  |
-| **стилістика** | [stɪˈlʲistɪkɑ] | stylistics | ім |  |
-| **русизм** | [ruˈsɪzm] | russicism | ім |  |
-| **відносне речення** | [ʋʲiˈdnɔsnɛ rɛt͡ʃɛnʲːɑ] | relative clause | ім |  |
-| **палаючий** | [pɑˈlɑjut͡ʃɪj] | burning | adjective |  |
-| **охочий** | [ɔˈxɔt͡ʃɪj] | willing | adjective |  |
-| **довкілля** | [dɔˈʋkʲilʲːɑ] | environment | ім |  |
-| **навколишній** | [nɑˈʋkɔlɪʃnʲij] | surrounding | adjective |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | agreement | ім |  |
-| **посивілий** | [pɔˈsɪˈʋʲilɪj] | grey-haired | adjective |  |
-| **зів'ялий** | [zʲiu̯jɑlɪj] | withered | adjective |  |
-| **зжовклий** | [ˈʒːɔu̯klɪj] | yellowed | adjective |  |
-| **опалий** | [ɔˈpɑlɪj] | fallen | adjective |  |
-| **достиглий** | [dɔˈstɪɦlɪj] | ripe | adjective |  |
-| **помарнілий** | [pɔmɑrˈnʲilɪj] | haggard | adjective |  |
-| **співучий** | [sʲpʲiˈʋut͡ʃɪj] | melodious | adjective |  |
-| **квітучий** | [kʋʲiˈtut͡ʃɪj] | blooming | adjective |  |
-| **пекучий** | [pɛˈkut͡ʃɪj] | piercing | adjective |  |
-| **цілющий** | [t͡sʲiˈlʲuʃt͡ʃɪj] | healing | adjective |  |
-| **завідувач** | [zɑˈʋʲiduʋɑt͡ʃ] | head | ім |  |
-| **командувач** | [kɔˈmɑnduʋɑt͡ʃ] | commander | ім |  |
-| **керівник** | [kɛrʲiˈʋnɪk] | manager | ім |  |
-| **початківець** | [pɔt͡ʃɑˈtʲkʲiʋɛt͡sʲ] | beginner | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

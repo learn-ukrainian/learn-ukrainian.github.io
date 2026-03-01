@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Action Verb Prefixes: Redoing, Finishing, and Opening
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -357,7 +363,26 @@ Let's look very closely at these eight typical work situations. Find the logical
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| відчинити |  | to open (physical) | verb |  | used for physical objects with hinges like doors and windows |
+| відкрити |  | to open (abstract/general) | verb |  | used for abstract processes like businesses, accounts, seasons |
+| зачинити |  | to close (physical) | verb |  | used for physical objects with hinges |
+| закрити |  | to close (abstract/general) | verb |  | used for ending abstract processes |
+| переписати |  | to rewrite, to copy | verb |  |  |
+| дописати |  | to finish writing | verb |  |  |
+| доїсти |  | to finish eating | verb |  |  |
+| почитати |  | to read for a while | verb |  |  |
+| здати |  | to hand in, to submit, to rent out | verb |  |  |
+| віддати |  | to give back, to return | verb |  |  |
+| передати |  | to pass, to hand over | verb |  |  |
+| переробити |  | to redo | verb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Перевірте свої знання про префікси
 
@@ -416,19 +441,10 @@ Let's look very closely at these eight typical work situations. Find the logical
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Він / дуже / втомився / і / раптом / заснув", "answer": "Він дуже втомився і раптом заснув"}, {"jumbled": "Ти / повинен / доїсти / цей / суп / повністю", "answer": "Ти повинен доїсти цей суп повністю"}, {"jumbled": "Ми / можемо / трохи / посидіти / в / кафе", "answer": "Ми можемо трохи посидіти в кафе"}, {"jumbled": "Директор / вирішив / закрити / ці / старі / проекти", "answer": "Директор вирішив закрити ці старі проекти"}, {"jumbled": "Я / хочу / віддати / тобі / твою / книгу", "answer": "Я хочу віддати тобі твою книгу"}, {"jumbled": "Вони / занадто / довго / гралися / і / загралися", "answer": "Вони занадто довго гралися і загралися"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| відчинити | [ʋʲid͡ʒt͡ʃɪˈnɪtɪ] | to open (physical) | verb |  | used for physical objects with hinges like doors and windows |
-| відкрити | [ʋʲiˈdkrɪtɪ] | to open (abstract/general) | verb |  | used for abstract processes like businesses, accounts, seasons |
-| зачинити | [zɑt͡ʃɪˈnɪtɪ] | to close (physical) | verb |  | used for physical objects with hinges |
-| закрити | [zɑˈkrɪtɪ] | to close (abstract/general) | verb |  | used for ending abstract processes |
-| переписати | [pɛrɛpɪˈsɑtɪ] | to rewrite, to copy | verb |  |  |
-| дописати | [dɔpɪˈsɑtɪ] | to finish writing | verb |  |  |
-| доїсти | [dɔˈjistɪ] | to finish eating | verb |  |  |
-| почитати | [pɔt͡ʃɪˈtɑtɪ] | to read for a while | verb |  |  |
-| здати | [ˈzdɑtɪ] | to hand in, to submit, to rent out | verb |  |  |
-| віддати | [ʋʲiˈdːɑtɪ] | to give back, to return | verb |  |  |
-| передати | [pɛrɛˈdɑtɪ] | to pass, to hand over | verb |  |  |
-| переробити | [pɛrɛrɔˈbɪtɪ] | to redo | verb |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

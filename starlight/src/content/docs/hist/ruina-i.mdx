@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Руїна I: Виговщина і розкол
 
 > **Чому це важливо?**
 >
@@ -237,19 +243,51 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| руїна |  | ruin / devastation | noun | ж |  |
+| розкол |  | split / schism | noun | ч |  |
+| чорна рада |  | Black Council | noun | ж |  |
+| охлократія |  | ochlocracy / mob rule | noun | ж |  |
+| міжусобиця |  | internecine strife / civil conflict | noun | ж |  |
+| булава |  | mace (symbol of power) | noun | ж |  |
+| промосковський |  | pro-Moscow | adjective |  |  |
+| пропольський |  | pro-Polish | adjective |  |  |
+| лівобережжя |  | Left Bank | noun | с |  |
+| правобережжя |  | Right Bank | noun | с |  |
+| наказний гетьман |  | acting hetman | noun | ч |  |
+| воєвода |  | voyevoda / military governor | noun | ч |  |
+| зрадник |  | traitor | noun | ч |  |
+| заколот |  | rebellion / mutiny | noun | ч |  |
+| чернь |  | commoners / mob | noun | ж |  |
+| старшина |  | Cossack officers / elite | noun | ж |  |
+| популізм |  | populism | noun | ч |  |
+| суверенітет |  | sovereignty | noun | ч |  |
+| демагог |  | demagogue | noun | ч |  |
+| найманець |  | mercenary | noun | ч |  |
+| гарнізон |  | garrison | noun | ч |  |
+| облога |  | siege | noun | ж |  |
+| автономія |  | autonomy | noun | ж |  |
+| писар |  | chancellor / clerk | noun | ч |  |
+| скарбниця |  | treasury | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Первинне джерело: Літопис Самовидця про Чорну раду
 
-<ReadingActivity client:load title="Первинне джерело: Літопис Самовидця про Чорну раду" context="" text={"Назбіралось люду незчисленна сила, і все то була сільська чернь... у чорних сорочках... У иншого сокира за поясом, у того коса на плечі, а другий притяг із колякою. І такий стався галас і заколот, що не можна було слова сказати... Почали ламати списи об голови старшини..."} source={"Роман Ракушка-Романовський"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`["Прочитайте текст та проаналізуйте, як автор описує поведінку натовпу та атмосферу ради."]`)} isUkrainian={true} />
+<ReadingActivity client:load title="Первинне джерело: Літопис Самовидця про Чорну раду" context="" text={"Назбіралось люду незчисленна сила, і все то була сільська чернь... у чорних сорочках... У иншого сокира за поясом, у того коса на плечі, а другий притяг із колякою. І такий стався галас і заколот, що не можна було слова сказати... Почали ламати списи об голови старшини..."} source={"Роман Ракушка-Романовський"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`["Прочитайте текст та проаналізуйте, як автор описує поведінку натовпу та атмосферу ради."]`)} isUkrainian={false} />
 
 ### Аналіз Літопису Самовидця
 
-<CriticalAnalysis client:load title="Аналіз Літопису Самовидця" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Як автор літопису ставиться до участі сільської черні в політичній раді?", "Які художні деталі підкреслюють неконтрольованість і агресивність натовпу?", "Як цей уривок ілюструє концепцію охлократії на практиці?", "Чому, на вашу думку, літописець критикує не лише чернь, але й козацьку старшину?"]`)} isUkrainian={true} />
+<CriticalAnalysis client:load title="Аналіз Літопису Самовидця" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Як автор літопису ставиться до участі сільської черні в політичній раді?", "Які художні деталі підкреслюють неконтрольованість і агресивність натовпу?", "Як цей уривок ілюструє концепцію охлократії на практиці?", "Чому, на вашу думку, літописець критикує не лише чернь, але й козацьку старшину?"]`)} isUkrainian={false} />
 
 ### Порівняльний аналіз політичних курсів
 
-<ComparativeStudy client:load title="Порівняльний аналіз політичних курсів" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Іван Виговський", "Іван Брюховецький"]`)} criteria={JSON.parse(`["Соціальна опора (які верстви населення їх підтримували)", "Зовнішньополітичний вектор (союзи з іноземними державами)", "Ставлення до освіти та європейських цінностей", "Реальні наслідки їхнього правління для державного суверенітету"]`)} isUkrainian={true} />
+<ComparativeStudy client:load title="Порівняльний аналіз політичних курсів" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Іван Виговський", "Іван Брюховецький"]`)} criteria={JSON.parse(`["Соціальна опора (які верстви населення їх підтримували)", "Зовнішньополітичний вектор (союзи з іноземними державами)", "Ставлення до освіти та європейських цінностей", "Реальні наслідки їхнього правління для державного суверенітету"]`)} isUkrainian={false} />
 
 ### Верифікація історичних фактів
 
@@ -257,34 +295,12 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ### Причини Руїни: внутрішній розкол чи зовнішня агресія?
 
-<EssayResponse client:load title="Причини Руїни: внутрішній розкол чи зовнішня агресія?" prompt={"Спираючись на текст модуля, проаналізуйте головні причини Руїни. Що відіграло вирішальну роль у розпаді Гетьманщини: соціальні конфлікти всередині козацького суспільства чи гібридна війна та втручання Московського царства? Наведіть конкретні історичні приклади."} modelAnswer={""} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Історична аргументація | Використання конкретних фактів та прикладів з тексту (наприклад, заколот Пушкаря, Чорна рада). | 40 |\n| Аналіз причинно-наслідкових зв’язків | Глибоке розуміння впливу зовнішніх та внутрішніх факторів на політичну ситуацію. | 40 |\n| Структура та логіка | Послідовний і чіткий виклад думок, наявність аргументованого висновку. | 20 |"} isUkrainian={true} />
+<EssayResponse client:load title="Причини Руїни: внутрішній розкол чи зовнішня агресія?" prompt={"Спираючись на текст модуля, проаналізуйте головні причини Руїни. Що відіграло вирішальну роль у розпаді Гетьманщини: соціальні конфлікти всередині козацького суспільства чи гібридна війна та втручання Московського царства? Наведіть конкретні історичні приклади."} modelAnswer={""} rubric={"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n| Історична аргументація | Використання конкретних фактів та прикладів з тексту (наприклад, заколот Пушкаря, Чорна рада). | 40 |\n| Аналіз причинно-наслідкових зв’язків | Глибоке розуміння впливу зовнішніх та внутрішніх факторів на політичну ситуацію. | 40 |\n| Структура та логіка | Послідовний і чіткий виклад думок, наявність аргументованого висновку. | 20 |"} isUkrainian={false} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Resources">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **руїна** | [ruˈjinɑ] | ruin / devastation | ім |  |
-| **розкол** | [rɔˈzkɔl] | split / schism | ім |  |
-| **чорна рада** | [ˈt͡ʃɔrnɑ ˈrɑdɑ] | Black Council | ім |  |
-| **охлократія** | [ɔxlɔˈkrɑtʲijɑ] | ochlocracy / mob rule | ім |  |
-| **міжусобиця** | [mʲiʒuˈsɔbɪt͡sʲɑ] | internecine strife / civil conflict | ім |  |
-| **булава** | [bulɑˈʋɑ] | mace (symbol of power) | ім |  |
-| **промосковський** | [prɔmɔˈskɔu̯sʲkɪj] | pro-Moscow | adjective |  |
-| **пропольський** | [prɔˈpɔlʲsʲkɪj] | pro-Polish | adjective |  |
-| **лівобережжя** | [lʲiʋɔbɛˈrɛʒʲːɑ] | Left Bank | ім |  |
-| **правобережжя** | [prɑʋɔbɛˈrɛʒʲːɑ] | Right Bank | ім |  |
-| **наказний гетьман** | [nɑkɑˈznɪj ˈɦɛtʲmɑn] | acting hetman | ім |  |
-| **воєвода** | [ʋɔjɛˈʋɔdɑ] | voyevoda / military governor | ім |  |
-| **зрадник** | [ˈzrɑdnɪk] | traitor | ім |  |
-| **заколот** | [ˈzɑkɔlɔt] | rebellion / mutiny | ім |  |
-| **чернь** | [t͡ʃɛrnʲ] | commoners / mob | ім |  |
-| **старшина** | [stɑrˈʃɪnɑ] | Cossack officers / elite | ім |  |
-| **популізм** | [pɔpuˈlʲizm] | populism | ім |  |
-| **суверенітет** | [suʋɛrɛnʲiˈtɛt] | sovereignty | ім |  |
-| **демагог** | [dɛmɑˈɦɔɦ] | demagogue | ім |  |
-| **найманець** | [ˈnɑjmɑnɛt͡sʲ] | mercenary | ім |  |
-| **гарнізон** | [ɦɑrnʲiˈzɔn] | garrison | ім |  |
-| **облога** | [ɔˈblɔɦɑ] | siege | ім |  |
-| **автономія** | [ɑu̯tɔˈnɔmʲijɑ] | autonomy | ім |  |
-| **писар** | [ˈpɪsɑr] | chancellor / clerk | ім |  |
-| **скарбниця** | [skɑrˈbnɪt͡sʲɑ] | treasury | ім |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

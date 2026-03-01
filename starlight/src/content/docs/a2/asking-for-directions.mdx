@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Asking for Directions
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -391,7 +397,42 @@ The prefix **при-** (as in **прийшов** or **приїхав**) signifie
 
 Постійно практикуйте всі ці правила під час ваших щоденних прогулянок своїм рідним містом. Просто уявіть у своїй голові. Як би ви детально пояснили дорогу до вашого дому українською мовою своїм іноземним друзям. Ця уявна. Віртуальна практика надзвичайно чудово тренує ваш мозок. Ідеально готує вас до реальних. Живих розмов в Україні. Щасливої вам дороги і нових відкриттів!
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| йти |  | to go on foot (one direction) | verb |  |  |
+| їхати |  | to go by transport (one direction) | verb |  |  |
+| повертати |  | to turn | verb |  |  |
+| зупинка |  | stop | noun | ж |  |
+| прямо |  | straight | adverb |  |  |
+| ліворуч |  | to the left | adverb |  |  |
+| праворуч |  | to the right | adverb |  |  |
+| маршрутка |  | minibus | noun | ж |  |
+| трамвай |  | tram | noun | ч |  |
+| автобус |  | bus | noun | ч |  |
+| метро |  | metro, subway | noun | с |  |
+| пересадка |  | transfer | noun | ж |  |
+| вихід |  | exit | noun | ч |  |
+| платформа |  | platform | noun | ж |  |
+| квиток |  | ticket | noun | ч |  |
+| розклад |  | schedule | noun | ч |  |
+| біля |  | near, by | preposition |  |  |
+| перед |  | in front of | preposition |  |  |
+| повз |  | past | preposition |  |  |
+| через |  | through, across | preposition |  |  |
+| маршрут |  | route | noun | ч |  |
+| іти |  | to go on foot (one direction, phonetic variant) | verb |  |  |
+| ходити |  | to walk, go regularly | verb |  |  |
+| їздити |  | to ride regularly | verb |  |  |
+| пішки |  | on foot | adverb |  |  |
+| орудний |  | Instrumental (case) | adjective |  |  |
+| місцевий |  | Locative (case) | adjective |  |  |
+| вид |  | aspect (of a verb) | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Словник транспорту та напрямків
 
@@ -456,35 +497,10 @@ The prefix **при-** (as in **прийшов** or **приїхав**) signifie
 
 <Cloze client:load passage={"Сьогодні Марк вирішив погуляти. Він вийшов з готелю і пішов [___:0]}. Через десять хвилин він опинився [___:1]} великого парку. Він вирішив пройти [___:2]} цей парк. Раптом він побачив красиву будівлю [___:3]} від себе. Це був Оперний театр! Марк захотів поїхати далі, тому він знайшов автобусну [___:4]}. Він вирішив купити [___:5]} на транспорт. Марк сів у [___:6]} номер п'ять. Цей транспорт завжди дуже повільно [___:7]} по місту. Він подивився на [___:8]} руху. Наступна станція була його [___:9]} зупинкою. Коли всі люди вийшли, він теж пішов на [___:10]}. Марк запитав у перехожого: 'Як мені тепер знайти море?'. Чоловік відповів: 'Вам треба повернути [___:11]} біля аптеки. Потім ідіть [___:12]} великий ринок. Море буде прямо [___:13]} вами!'."} blanks={JSON.parse(`[{"index": 0, "answer": "прямо", "options": ["прямо", "швидко", "ліворуч", "назад"]}, {"index": 1, "answer": "біля", "options": ["біля", "через", "повз", "перед"]}, {"index": 2, "answer": "через", "options": ["через", "біля", "повз", "перед"]}, {"index": 3, "answer": "праворуч", "options": ["праворуч", "швидко", "прямо", "позаду"]}, {"index": 4, "answer": "зупинку", "options": ["зупинку", "маршрутку", "касу", "пересадку"]}, {"index": 5, "answer": "квиток", "options": ["квиток", "розклад", "маршрут", "трамвай"]}, {"index": 6, "answer": "трамвай", "options": ["трамвай", "маршрутку", "зупинку", "квиток"]}, {"index": 7, "answer": "їде", "options": ["їде", "йде", "ходить", "їздить"]}, {"index": 8, "answer": "розклад", "options": ["розклад", "маршрут", "квиток", "зупинку"]}, {"index": 9, "answer": "кінцевою", "options": ["кінцевою", "прямою", "швидкою", "першою"]}, {"index": 10, "answer": "вихід", "options": ["вихід", "зупинку", "вхід", "пересадку"]}, {"index": 11, "answer": "ліворуч", "options": ["ліворуч", "прямо", "швидко", "красиво"]}, {"index": 12, "answer": "повз", "options": ["повз", "через", "біля", "перед"]}, {"index": 13, "answer": "перед", "options": ["перед", "біля", "повз", "через"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| йти | [jtɪ] | to go on foot (one direction) | verb |  |  |
-| їхати | [ˈjixɑtɪ] | to go by transport (one direction) | verb |  |  |
-| повертати | [pɔʋɛrˈtɑtɪ] | to turn | verb |  |  |
-| зупинка | [zuˈpɪnkɑ] | stop | noun | ж |  |
-| прямо | [ˈprʲɑmɔ] | straight | adverb |  |  |
-| ліворуч | [lʲiˈʋɔrut͡ʃ] | to the left | adverb |  |  |
-| праворуч | [prɑˈʋɔrut͡ʃ] | to the right | adverb |  |  |
-| маршрутка | [mɑrˈʃrutkɑ] | minibus | noun | ж |  |
-| трамвай | [trɑmˈʋɑj] | tram | noun | ч |  |
-| автобус | [ɑˈʋtɔbus] | bus | noun | ч |  |
-| метро | [mɛˈtrɔ] | metro, subway | noun | с |  |
-| пересадка | [pɛrɛˈsɑdkɑ] | transfer | noun | ж |  |
-| вихід | [ˈʋɪxʲid] | exit | noun | ч |  |
-| платформа | [plɑˈtfɔrmɑ] | platform | noun | ж |  |
-| квиток | [kʋɪˈtɔk] | ticket | noun | ч |  |
-| розклад | [ˈrɔzklɑd] | schedule | noun | ч |  |
-| біля | [ˈbʲilʲɑ] | near, by | preposition |  |  |
-| перед | [ˈpɛrɛd] | in front of | preposition |  |  |
-| повз | [pɔu̯z] | past | preposition |  |  |
-| через | [ˈt͡ʃɛrɛz] | through, across | preposition |  |  |
-| маршрут | [mɑrˈʃrut] | route | noun | ч |  |
-| іти | [iˈtɪ] | to go on foot (one direction, phonetic variant) | verb |  |  |
-| ходити | [xɔˈdɪtɪ] | to walk, go regularly | verb |  |  |
-| їздити | [ˈjizdɪtɪ] | to ride regularly | verb |  |  |
-| пішки | [ˈpʲiʃkɪ] | on foot | adverb |  |  |
-| орудний | [ɔˈrudnɪj] | Instrumental (case) | adjective |  |  |
-| місцевий | [mʲiˈst͡sɛʋɪj] | Locative (case) | adjective |  |  |
-| вид | [ʋɪd] | aspect (of a verb) | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Telling Stories
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -402,7 +408,39 @@ In this comprehensive module, you learned exactly how to transform a robotic, bo
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| спочатку |  | at first | adverb |  |  |
+| потім |  | then / afterwards | adverb |  |  |
+| нарешті |  | finally | adverb |  |  |
+| раптом |  | suddenly | adverb |  |  |
+| одного разу |  | once / one day | phrase |  |  |
+| несподівано |  | unexpectedly | adverb |  |  |
+| казка |  | fairytale | noun | ж |  |
+| анекдот |  | joke / short anecdote | noun | ч |  |
+| казкар |  | storyteller | noun | ч |  |
+| несподіванка |  | a surprise | noun | ж |  |
+| раніше |  | earlier / before | adverb |  |  |
+| давно |  | long ago | adverb |  |  |
+| з початку |  | from the start / from the beginning | phrase |  |  |
+| розповідь |  | story / narrative | noun | ж |  |
+| історія |  | history / story | noun | ж |  |
+| подія |  | event | noun | ж |  |
+| розповідати |  | to tell / to narrate | verb |  |  |
+| слухати |  | to listen | verb |  |  |
+| увага |  | attention | noun | ж |  |
+| недавно |  | recently | adverb |  |  |
+| кінець |  | end | noun | ч |  |
+| початок |  | start / beginning | noun | ч |  |
+| несподіваний |  | unexpected | adjective |  |  |
+| смішний |  | funny | adjective |  |  |
+| минуле |  | the past | noun | с |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть переклад
 
@@ -461,32 +499,10 @@ In this comprehensive module, you learned exactly how to transform a robotic, bo
 
 <Cloze client:load passage={"Ця цікава історія сталася зі мною влітку. [___:0]} разу ми з друзями поїхали відпочивати на море. [___:1]} погода була дуже гарна, і ми довго плавали. [___:2]} ми вирішили піти в ліс, який був біля нашого готелю. Ми гуляли там кілька годин і слухали, як співають птахи. [___:3]} небо стало чорним і почалася жахлива буря! Ми дуже злякалися. [___:4]} для нас, ця буря була дуже сильною. Ми побігли назад так швидко, як тільки могли. [___:5]} ми побачили наш готель і сховалися всередині. Ця неприємна [___:6]} дуже нас налякала. Але [___:7]} ми зрозуміли, що це була весела пригода. Ми ще довго згадували цей день і розповідали цей [___:8]} нашим колегам. Справжній [___:9]} завжди знає, як зацікавити свою аудиторію."} blanks={JSON.parse(`[{"index": 0, "answer": "Одного", "options": ["Одного", "Два", "Першого", "Цього"]}, {"index": 1, "answer": "Спочатку", "options": ["Спочатку", "Потім", "Нарешті", "Раптом"]}, {"index": 2, "answer": "Потім", "options": ["Потім", "Раніше", "Давно", "З початку"]}, {"index": 3, "answer": "Раптом", "options": ["Раптом", "Спочатку", "Нарешті", "Недавно"]}, {"index": 4, "answer": "Несподівано", "options": ["Несподівано", "Спочатку", "Потім", "Нарешті"]}, {"index": 5, "answer": "Нарешті", "options": ["Нарешті", "Раптом", "Спочатку", "Давно"]}, {"index": 6, "answer": "несподіванка", "options": ["несподіванка", "історія", "казка", "погода"]}, {"index": 7, "answer": "потім", "options": ["потім", "спочатку", "раптом", "з початку"]}, {"index": 8, "answer": "анекдот", "options": ["анекдот", "готель", "ліс", "дощ"]}, {"index": 9, "answer": "казкар", "options": ["казкар", "студент", "друг", "робот"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| спочатку | [spɔˈt͡ʃɑtku] | at first | adverb |  |  |
-| потім | [ˈpɔtʲim] | then / afterwards | adverb |  |  |
-| нарешті | [nɑˈrɛʃtʲi] | finally | adverb |  |  |
-| раптом | [ˈrɑptɔm] | suddenly | adverb |  |  |
-| одного разу | [ɔdnɔɦɔ ˈrɑzu] | once / one day | phrase |  |  |
-| несподівано | [nɛspɔˈdʲiʋɑnɔ] | unexpectedly | adverb |  |  |
-| казка | [ˈkɑzkɑ] | fairytale | noun | ж |  |
-| анекдот | [ɑnɛˈɡdɔt] | joke / short anecdote | noun | ч |  |
-| казкар | [kɑˈzkɑr] | storyteller | noun | ч |  |
-| несподіванка | [nɛspɔˈdʲiʋɑnkɑ] | a surprise | noun | ж |  |
-| раніше | [rɑˈnʲiʃɛ] | earlier / before | adverb |  |  |
-| давно | [dɑˈʋnɔ] | long ago | adverb |  |  |
-| з початку | [z pɔˈt͡ʃɑtku] | from the start / from the beginning | phrase |  |  |
-| розповідь | [ˈrɔzpɔʋʲidʲ] | story / narrative | noun | ж |  |
-| історія | [iˈstɔrʲijɑ] | history / story | noun | ж |  |
-| подія | [pɔˈdʲijɑ] | event | noun | ж |  |
-| розповідати | [rɔzpɔʋʲiˈdɑtɪ] | to tell / to narrate | verb |  |  |
-| слухати | [ˈsluxɑtɪ] | to listen | verb |  |  |
-| увага | [uˈʋɑɦɑ] | attention | noun | ж |  |
-| недавно | [nɛˈdɑu̯nɔ] | recently | adverb |  |  |
-| кінець | [kʲiˈnɛt͡sʲ] | end | noun | ч |  |
-| початок | [pɔˈt͡ʃɑtɔk] | start / beginning | noun | ч |  |
-| несподіваний | [nɛspɔˈdʲiʋɑnɪj] | unexpected | adjective |  |  |
-| смішний | [sʲmʲiˈʃnɪj] | funny | adjective |  |  |
-| минуле | [mɪˈnulɛ] | the past | noun | с |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

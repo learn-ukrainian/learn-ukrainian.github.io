@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Козацтво: витоки
 
 > **Чому це важливо?**
 >
@@ -448,54 +454,64 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| уходник |  | frontier industrialist | noun | ч |  |
+| здобичник |  | booty seeker | noun | ч |  |
+| ясир |  | captives | noun | ч |  |
+| реєстр |  | register | noun | ч |  |
+| Дике поле |  | Wild Fields | noun | с |  |
+| побратимство |  | brotherhood | noun | с |  |
+| етимологія |  | etymology | noun | ж |  |
+| кріпацтво |  | serfdom | noun | с |  |
+| промисел |  | industry or trade | noun | ч |  |
+| ватага |  | band or group | noun | ж |  |
+| шабля |  | sabre | noun | ж |  |
+| чайка |  | cossack boat | noun | ж |  |
+| розвідник |  | scout | noun | ч |  |
+| здобич |  | booty or loot | noun | ж |  |
+| втеча |  | escape or flight | noun | ж |  |
+| витривалість |  | endurance | noun | ж |  |
+| засідка |  | ambush | noun | ж |  |
+| найманець |  | mercenary | noun | ч |  |
+| галас |  | noise or clamour | noun | ч |  |
+| порох |  | gunpowder | noun | ч |  |
+| табір |  | camp or wagon fort | noun | ч |  |
+| воля |  | freedom | noun | ж |  |
+| рівність |  | equality | noun | ж |  |
+| мушкет |  | musket | noun | ч |  |
+| курінь |  | barracks | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Первинне джерело: Опис України
 
-<ReadingActivity client:load title="Первинне джерело: Опис України" context="" text={"Сотня цих козаків у таборі не боїться тисячі поляків чи навіть тисячі татар. Вони надзвичайно міцні статурою, легко переносять спеку і холод, голод і спрагу. Мало хто з них помирає від хвороби, хіба що в глибокій старості, бо більшість гине почесною смертю на війні."} source={"Гійом Левассер де Боплан (1651)"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`[]`)} isUkrainian={true} />
+<ReadingActivity client:load title="Первинне джерело: Опис України" context="" text={"Сотня цих козаків у таборі не боїться тисячі поляків чи навіть тисячі татар. Вони надзвичайно міцні статурою, легко переносять спеку і холод, голод і спрагу. Мало хто з них помирає від хвороби, хіба що в глибокій старості, бо більшість гине почесною смертю на війні."} source={"Гійом Левассер де Боплан (1651)"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`[]`)} isUkrainian={false} />
 
 ### Аналіз погляду іноземця
 
-<CriticalAnalysis client:load title="Аналіз погляду іноземця" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Які саме якості козаків Боплан виділяє як їхню найбільшу перевагу?", "Чому, на вашу думку, європейського інженера так вразила здатність козаків до виживання?"]`)} isUkrainian={true} />
+<CriticalAnalysis client:load title="Аналіз погляду іноземця" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Які саме якості козаків Боплан виділяє як їхню найбільшу перевагу?", "Чому, на вашу думку, європейського інженера так вразила здатність козаків до виживання?"]`)} isUkrainian={false} />
 
 ### Деколонізаційний аналіз витоків козацтва
 
-<EssayResponse client:load title="Деколонізаційний аналіз витоків козацтва" prompt={"Спростуйте імперський міф про те, що ранні козаки були виключно неосвіченими селянами-розбійниками. Використайте концепції Великого Кордону, уходництва та державотворчої діяльності ранніх отаманів (наприклад, Дмитра Вишневецького), щоб довести полісоціальний характер та суб'єктність козацтва."} modelAnswer={""} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Аргументація | Використання історичних концепцій (Великий Кордон, уходництво). | 10 |\n| Фактаж | Згадка історичних постатей та подій (Вишневецький, Січ). | 10 |"} isUkrainian={true} />
+<EssayResponse client:load title="Деколонізаційний аналіз витоків козацтва" prompt={"Спростуйте імперський міф про те, що ранні козаки були виключно неосвіченими селянами-розбійниками. Використайте концепції Великого Кордону, уходництва та державотворчої діяльності ранніх отаманів (наприклад, Дмитра Вишневецького), щоб довести полісоціальний характер та суб'єктність козацтва."} modelAnswer={""} rubric={"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n| Аргументація | Використання історичних концепцій (Великий Кордон, уходництво). | 10 |\n| Фактаж | Згадка історичних постатей та подій (Вишневецький, Січ). | 10 |"} isUkrainian={false} />
 
 ### Порівняння: Уходництво та кріпацтво
 
-<ComparativeStudy client:load title="Порівняння: Уходництво та кріпацтво" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Уходництво (Дике поле)", "Кріпацтво (Панські землі)"]`)} criteria={JSON.parse(`["Рівень особистої свободи", "Економічна мотивація та ризики", "Соціальний статус та перспективи"]`)} isUkrainian={true} />
+<ComparativeStudy client:load title="Порівняння: Уходництво та кріпацтво" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Уходництво (Дике поле)", "Кріпацтво (Панські землі)"]`)} criteria={JSON.parse(`["Рівень особистої свободи", "Економічна мотивація та ризики", "Соціальний статус та перспективи"]`)} isUkrainian={false} />
 
 ### Перевірка фактів: Витоки козацтва
 
 <TrueFalse client:load items={JSON.parse(`[{"statement": "Слово козак має слов'янське походження і означає людину з рушницею.", "isTrue": false, "explanation": "Етимологія слова тюркська і означає вільну людину або вартового."}, {"statement": "Перша писемна згадка про українських козаків датується 1489 роком у хроніці Марціна Бєльського.", "isTrue": true, "explanation": "Козаки згадуються як провідники польського війська на Поділлі."}, {"statement": "Дике поле було абсолютно безлюдною пустелею без жодних природних ресурсів.", "isTrue": false, "explanation": "Це була територія з багатими ресурсами, але небезпечна через кочовиків."}, {"statement": "Уходники залишали свої домівки навесні для заняття сезонними промислами у степу.", "isTrue": true, "explanation": "Вони займалися рибальством, мисливством та збором дикого меду."}, {"statement": "Здобичники нападали виключно на польські міста і ніколи не чіпали турецькі фортеці.", "isTrue": false, "explanation": "Вони атакували турецькі галери і кримські міста заради здобичі і визволення ясиру."}, {"statement": "Жінкам на ранніх етапах існування Січі було категорично заборонено перебувати на її території.", "isTrue": true, "explanation": "Це робилося для збереження постійної бойової готовності війська."}, {"statement": "Всі козаки вважалися реєстровими і отримували офіційну платню від короля.", "isTrue": false, "explanation": "Реєстровими була лише невелика частина козаків (триста осіб за першим універсалом)."}, {"statement": "Табір з возів використовувався для захисту від легкої кінноти у степу.", "isTrue": true, "explanation": "Вози утворювали непробивний периметр, з-за якого козаки вели вогонь."}, {"statement": "Князь Дмитро Вишневецький заснував фортецю на острові Мала Хортиця у шістнадцятому столітті.", "isTrue": true, "explanation": "Ця фортеця стала прототипом Запорозької Січі."}, {"statement": "Між козаками та кримськими татарами ніколи не було мирної торгівлі чи військових союзів.", "isTrue": false, "explanation": "Відносини були прагматичними, вони часто торгували і укладали тимчасові військові союзи."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Resources">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **уходник** | [uˈxɔdnɪk] | frontier industrialist | ім |  |
-| **здобичник** | [zdɔˈbɪt͡ʃnɪk] | booty seeker | ім |  |
-| **ясир** | [jɑˈsɪr] | captives | ім |  |
-| **реєстр** | [rɛˈjɛstr] | register | ім |  |
-| **Дике поле** | [ˈdɪkɛ ˈpɔlɛ] | Wild Fields | ім |  |
-| **побратимство** | [pɔbrɑˈtɪmstʋɔ] | brotherhood | ім |  |
-| **етимологія** | [ɛtɪmɔˈlɔɦʲijɑ] | etymology | ім |  |
-| **кріпацтво** | [krʲiˈpɑt͡stʋɔ] | serfdom | ім |  |
-| **промисел** | [ˈprɔmɪsɛl] | industry or trade | ім |  |
-| **ватага** | [ʋɑˈtɑɦɑ] | band or group | ім |  |
-| **шабля** | [ˈʃɑblʲɑ] | sabre | ім |  |
-| **чайка** | [ˈt͡ʃɑjkɑ] | cossack boat | ім |  |
-| **розвідник** | [rɔzʲʋʲidnɪk] | scout | ім |  |
-| **здобич** | [ˈzdɔbɪt͡ʃ] | booty or loot | ім |  |
-| **втеча** | [ˈʍtɛt͡ʃɑ] | escape or flight | ім |  |
-| **витривалість** | [ʋɪtrɪˈʋɑlʲisʲtʲ] | endurance | ім |  |
-| **засідка** | [ˈzɑsʲidkɑ] | ambush | ім |  |
-| **найманець** | [ˈnɑjmɑnɛt͡sʲ] | mercenary | ім |  |
-| **галас** | [ˈɦɑlɑs] | noise or clamour | ім |  |
-| **порох** | [ˈpɔrɔx] | gunpowder | ім |  |
-| **табір** | [ˈtɑbʲir] | camp or wagon fort | ім |  |
-| **воля** | [ˈʋɔlʲɑ] | freedom | ім |  |
-| **рівність** | [ˈrʲiu̯nʲisʲtʲ] | equality | ім |  |
-| **мушкет** | [muˈʃkɛt] | musket | ім |  |
-| **курінь** | [kuˈrʲinʲ] | barracks | ім |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

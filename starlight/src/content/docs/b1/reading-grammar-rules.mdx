@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Читаємо граматичні правила
 
 > **Чому це важливо?**
 >
@@ -605,7 +611,39 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 Ви готові впевнено рухатися далі! У наступному модулі ми заглибимося у структуру українського речення. До зустрічі!
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| використовуватися |  | to be used | verb |  |  |
+| показувати |  | to show / to indicate | verb |  |  |
+| означати |  | to mean / to signify | verb |  |  |
+| порівняти |  | to compare | verb |  |  |
+| звернути увагу |  | to pay attention / to note | verb |  |  |
+| вибрати |  | to choose / to select | verb |  |  |
+| знайти |  | to find | verb |  |  |
+| доповнити |  | to complete / to fill in | verb |  |  |
+| з'єднати |  | to connect / to match | verb |  |  |
+| перекласти |  | to translate | verb |  |  |
+| контекст |  | context | noun | ч |  |
+| маркер |  | marker | noun | ч |  |
+| частота |  | frequency | noun | ж |  |
+| стиль |  | style | noun | ч |  |
+| регістр |  | register | noun | ч |  |
+| розмовний |  | colloquial / spoken | adj |  |  |
+| літературний |  | literary / standard | adj |  |  |
+| формальний |  | formal | adj |  |  |
+| корінь |  | root | noun | ч |  |
+| префікс |  | prefix | noun | ч |  |
+| суфікс |  | suffix | noun | ч |  |
+| закінчення |  | ending | noun | с |  |
+| основа |  | stem | noun | ж |  |
+| наприклад |  | for example | adv |  |  |
+| отже |  | therefore / so | conj |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Перевірте розуміння аналітичних термінів
 
@@ -644,32 +682,25 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
   <ErrorCorrectionItem sentence="На відміну англійської, тут є три роди." errorWord="відміну" correctForm="відміну від" options={JSON.parse(`["відміну від", "відміну з", "відміну до", "відміну про"]`)} explanation="Правильна прийменникова конструкція — «на відміну від»." />
 </ErrorCorrection>
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| використовуватися | [ʋɪkɔrɪˈstɔʋuʋɑtɪsʲɑ] | to be used | verb |  |  |
-| показувати | [pɔˈkɑzuʋɑtɪ] | to show / to indicate | verb |  |  |
-| означати | [ɔznɑˈt͡ʃɑtɪ] | to mean / to signify | verb |  |  |
-| порівняти | [pɔrʲiˈʋnʲɑtɪ] | to compare | verb |  |  |
-| звернути увагу | [zʋɛrˈnutɪ uˈʋɑɦu] | to pay attention / to note | verb |  |  |
-| вибрати | [ˈʋɪbrɑtɪ] | to choose / to select | verb |  |  |
-| знайти | [znɑjˈtɪ] | to find | verb |  |  |
-| доповнити | [dɔˈpɔu̯nɪtɪ] | to complete / to fill in | verb |  |  |
-| з'єднати | [zjɛdnɑtɪ] | to connect / to match | verb |  |  |
-| перекласти | [pɛrɛˈklɑstɪ] | to translate | verb |  |  |
-| контекст | [kɔnˈtɛkst] | context | noun | ч |  |
-| маркер | [mɑrkɛr] | marker | noun | ч |  |
-| частота | [t͡ʃɑstɔˈtɑ] | frequency | noun | ж |  |
-| стиль | [stɪlʲ] | style | noun | ч |  |
-| регістр | [rɛˈɦʲistr] | register | noun | ч |  |
-| розмовний | [rɔˈzmɔu̯nɪj] | colloquial / spoken | adj |  |  |
-| літературний | [lʲitɛrɑˈturnɪj] | literary / standard | adj |  |  |
-| формальний | [fɔrˈmɑlʲnɪj] | formal | adj |  |  |
-| корінь | [ˈkɔrʲinʲ] | root | noun | ч |  |
-| префікс | [prɛfʲiks] | prefix | noun | ч |  |
-| суфікс | [ˈsufʲiks] | suffix | noun | ч |  |
-| закінчення | [zɑˈkʲint͡ʃɛnʲːɑ] | ending | noun | с |  |
-| основа | [ɔˈsnɔʋɑ] | stem | noun | ж |  |
-| наприклад | [nɑˈprɪklɑd] | for example | adv |  |  |
-| отже | [ˈɔd͡ʒɛ] | therefore / so | conj |  |  |
+:::info[🎧 🔗 External Resources]
+
+**🎧 Podcasts:**
+- [Grammar point: Accusative case / Direct object in Ukrainian](https://www.ukrainianlessons.com/fmu15/) — Listening review (A1): grammar
+- [Grammar point: Conditional sentences in Ukrainian](https://www.ukrainianlessons.com/fmu32/) — Listening review (A1): grammar
+- [Grammar point: numeral / noun agreement in Ukrainian](https://www.ukrainianlessons.com/fmu7/) — Listening review (A1): grammar
+- [Grammar point: Plural of nouns in Ukrainian](https://www.ukrainianlessons.com/fmu46/) — Listening review (A1): grammar
+- [Grammar Point: Verb conjugations in Ukrainian](https://www.ukrainianlessons.com/fmu57/) — Listening review (A1): grammar
+
+**📖 Articles:**
+- [Ukrainian Grammar Reference](https://www.ukrainianlessons.com/grammar/) — Grammar in English
+- [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Grammar episodes
+
+**🌐 Websites:**
+- [Word Formation](https://www.youtube.com/results?search_query=ukrainian+word+formation) — YouTube tutorials
+:::
+
+</TabItem>
+</Tabs>

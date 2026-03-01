@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Умовні речення: реальна умова (якщо)
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -383,7 +389,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **якщо** |  | if | conjunction |  |
+| **умова** |  | condition | ім |  |
+| **результат** |  | result | ім |  |
+| **наслідок** |  | consequence | ім |  |
+| **умовний** |  | conditional | adjective |  |
+| **реальний** |  | real | adjective |  |
+| **можливий** |  | possible | adjective |  |
+| **ймовірний** |  | probable | adjective |  |
+| **за умови що** |  | on condition that | фраза |  |
+| **у разі якщо** |  | in case | фраза |  |
+| **припускаючи** |  | assuming | participle |  |
+| **через це** |  | because of this | фраза |  |
+| **спітніти** |  | to sweat | дієсл |  |
+| **зігрітися** |  | to get warm | дієсл |  |
+| **досягти** |  | to achieve | дієсл |  |
+| **перешкода** |  | obstacle | ім |  |
+| **сценарій** |  | scenario | ім |  |
+| **впевненість** |  | certainty | ім |  |
+| **розвилка** |  | fork | ім |  |
+| **неминучий** |  | inevitable | adjective |  |
+| **сумнів** |  | doubt | ім |  |
+| **припущення** |  | assumption | ім |  |
+| **скасувати** |  | to cancel | дієсл |  |
+| **затримка** |  | delay | ім |  |
+| **злагоджено** |  | harmoniously | adverb |  |
+| **підтвердити** |  | to confirm | дієсл |  |
+| **занепокоєння** |  | concern | ім |  |
+| **невідворотність** |  | inevitability | ім |  |
+| **поступка** |  | concession | ім |  |
+| **канцелярський** |  | bureaucratic | adjective |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Граматика умовних речень
 
@@ -434,37 +477,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Translate client:load questions={JSON.parse(`[{"source": "If you come tomorrow, we will talk.", "options": [{"text": "Якщо ти прийдеш завтра, ми поговоримо.", "correct": true}, {"text": "Якщо ти приходиш завтра, ми поговоримо.", "correct": false}, {"text": "Коли ти прийдеш завтра, ми поговоримо.", "correct": false}, {"text": "Чи ти прийдеш завтра, ми поговоримо.", "correct": false}]}, {"source": "Even if it rains, I will go to the park.", "options": [{"text": "Навіть якщо піде дощ, я піду в парк.", "correct": true}, {"text": "Що якщо піде дощ, я піду в парк.", "correct": false}, {"text": "Коли піде дощ, я піду в парк.", "correct": false}, {"text": "За умови що піде дощ, я піду в парк.", "correct": false}]}, {"source": "I don't know if she will call me.", "options": [{"text": "Я не знаю, чи вона мені зателефонує.", "correct": true}, {"text": "Я не знаю, якщо вона мені зателефонує.", "correct": false}, {"text": "Я не знаю, коли вона мені зателефонує.", "correct": false}, {"text": "Я не знаю, що якщо вона мені зателефонує.", "correct": false}]}, {"source": "What if we try another method?", "options": [{"text": "Що якщо ми спробуємо інший метод?", "correct": true}, {"text": "Навіть якщо ми спробуємо інший метод?", "correct": false}, {"text": "Чи ми спробуємо інший метод?", "correct": false}, {"text": "Якщо ми спробуємо інший метод?", "correct": false}]}, {"source": "We will sign the contract on condition that you finish the work.", "options": [{"text": "Ми підпишемо договір за умови виконання роботи.", "correct": true}, {"text": "Ми підпишемо договір через це виконання роботи.", "correct": false}, {"text": "Ми підпишемо договір у результаті виконання роботи.", "correct": false}, {"text": "Ми підпишемо договір навіть якщо виконання роботи.", "correct": false}]}, {"source": "When spring comes, we will go to the mountains.", "options": [{"text": "Коли настане весна, ми поїдемо в гори.", "correct": true}, {"text": "Якщо настане весна, ми поїдемо в гори.", "correct": false}, {"text": "Що якщо настане весна, ми поїдемо в гори.", "correct": false}, {"text": "Навіть якщо настане весна, ми поїдемо в гори.", "correct": false}]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **якщо** | [jɑˈkʃt͡ʃɔ] | if | conjunction |  |
-| **умова** | [uˈmɔʋɑ] | condition | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence | ім |  |
-| **умовний** | [uˈmɔu̯nɪj] | conditional | adjective |  |
-| **реальний** | [rɛˈɑlʲnɪj] | real | adjective |  |
-| **можливий** | [mɔˈʒlɪʋɪj] | possible | adjective |  |
-| **ймовірний** | [jmɔˈʋʲirnɪj] | probable | adjective |  |
-| **за умови що** | [zɑ uˈmɔʋɪ ʃt͡ʃɔ] | on condition that | фраза |  |
-| **у разі якщо** | [u ˈrɑzʲi jɑˈkʃt͡ʃɔ] | in case | фраза |  |
-| **припускаючи** | [prɪpuˈskɑjut͡ʃɪ] | assuming | participle |  |
-| **через це** | [ˈt͡ʃɛrɛz t͡sɛ] | because of this | фраза |  |
-| **спітніти** | [sʲpʲiˈtʲnʲitɪ] | to sweat | дієсл |  |
-| **зігрітися** | [zʲiˈɦrʲitɪsʲɑ] | to get warm | дієсл |  |
-| **досягти** | [dɔsʲɑˈɦtɪ] | to achieve | дієсл |  |
-| **перешкода** | [pɛrɛˈʃkɔdɑ] | obstacle | ім |  |
-| **сценарій** | [st͡sɛˈnɑrʲij] | scenario | ім |  |
-| **впевненість** | [ˈʍpɛu̯nɛnʲisʲtʲ] | certainty | ім |  |
-| **розвилка** | [rɔˈzʋɪlkɑ] | fork | ім |  |
-| **неминучий** | [nɛmɪˈnut͡ʃɪj] | inevitable | adjective |  |
-| **сумнів** | [ˈsumnʲiu̯] | doubt | ім |  |
-| **припущення** | [prɪˈpuʃt͡ʃɛnʲːɑ] | assumption | ім |  |
-| **скасувати** | [skɑsuˈʋɑtɪ] | to cancel | дієсл |  |
-| **затримка** | [ˈzɑˈtrɪmkɑ] | delay | ім |  |
-| **злагоджено** | [ˈzlɑɦɔd͡ʒɛnɔ] | harmoniously | adverb |  |
-| **підтвердити** | [pʲiˈdtʋɛrdɪtɪ] | to confirm | дієсл |  |
-| **занепокоєння** | [zɑnɛpɔˈkɔjɛnʲːɑ] | concern | ім |  |
-| **невідворотність** | [nɛʋʲidʋɔˈrɔtʲnʲisʲtʲ] | inevitability | ім |  |
-| **поступка** | [ˈpɔstupkɑ] | concession | ім |  |
-| **канцелярський** | [kɑnt͡sɛˈlʲɑrsʲkɪj] | bureaucratic | adjective |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# She Said That...
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -390,7 +396,39 @@ Remember the beautiful "Honest Tense" system forever. The true beauty of Ukraini
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| казати |  | to say / to tell | verb |  |  |
+| говорити |  | to speak / to talk | verb |  |  |
+| питати |  | to ask | verb |  |  |
+| відповідати |  | to answer | verb |  |  |
+| плітки |  | gossip | noun | ж |  |
+| зіпсований телефон |  | broken telephone (game) | noun | ч |  |
+| чи |  | whether / if | conjunction |  |  |
+| щоб |  | in order to / that (for commands) | conjunction |  |  |
+| правда |  | truth | noun | ж |  |
+| сусід |  | neighbor (male) | noun | ч |  |
+| сусідка |  | neighbor (female) | noun | ж |  |
+| новина |  | news | noun | ж |  |
+| розмова |  | conversation | noun | ж |  |
+| питання |  | question | noun | с |  |
+| відповідь |  | answer | noun | ж |  |
+| дозвіл |  | permission | noun | ч |  |
+| дорога |  | road / way | noun | ж |  |
+| якщо |  | if (conditional) | conjunction |  |  |
+| що |  | that (statement) | conjunction |  |  |
+| вдома |  | at home | adverb |  |  |
+| директор |  | director | noun | ч |  |
+| колега |  | colleague | noun | ч |  |
+| офіс |  | office | noun | ч |  |
+| швидко |  | quickly | adverb |  |  |
+| вчора |  | yesterday | adverb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть переклад слів
 
@@ -454,32 +492,10 @@ Remember the beautiful "Honest Tense" system forever. The true beauty of Ukraini
 
 <Select client:load questions={JSON.parse(`[{"question": "Які з цих речень граматично правильні в українській мові?", "options": [{"text": "Він сказав, що він зараз багато працює.", "correct": true}, {"text": "Він сказав, що він тоді багато працював зараз.", "correct": false}, {"text": "Вона спитала, чи я маю вільний час.", "correct": true}, {"text": "Вона спитала, якщо я маю вільний час.", "correct": false}], "explanation": "В українській мові ми ніколи не робимо зсув часів (backshifting) і використовуємо 'чи' для питань."}, {"question": "Оберіть абсолютно правильні перекази суворого наказу 'Читай книгу!'", "options": [{"text": "Вчитель суворо сказав, щоб я читав книгу.", "correct": true}, {"text": "Вчитель суворо сказав, що я читаю книгу.", "correct": false}, {"text": "Вчитель суворо попросив, щоб ми читали книгу.", "correct": true}, {"text": "Вчитель суворо попросив, чи ми читаємо книгу.", "correct": false}], "explanation": "Для наказів ми обов'язково використовуємо 'щоб' і дієслово в минулому часі."}, {"question": "Які речення правильно використовують займенники (пряма мова Анни: 'Мій брат тут')?", "options": [{"text": "Анна сказала, що її брат зараз тут.", "correct": true}, {"text": "Анна сказала, що мій брат зараз тут.", "correct": false}, {"text": "Анна радісно каже, що її брат зараз тут.", "correct": true}, {"text": "Анна радісно каже, що твій брат зараз тут.", "correct": false}], "explanation": "Вам обов'язково треба змінити 'мій' на 'її', бо ці слова говорить Анна."}, {"question": "Оберіть правильне граматичне вживання дієслів 'казати' та 'говорити'", "options": [{"text": "Він каже, що завтра буде гарний вихідний.", "correct": true}, {"text": "Він говорить, що завтра буде гарний вихідний.", "correct": false}, {"text": "Ми довго і цікаво говорили про нову книгу.", "correct": true}, {"text": "Ми довго і цікаво казали про нову книгу.", "correct": false}], "explanation": "Слово 'Казати' використовується для конкретних повідомлень (що), а 'говорити' для процесу розмови (про)."}, {"question": "Які з цих непрямих питань побудовані правильно?", "options": [{"text": "Він питає, де саме знаходиться старий вокзал.", "correct": true}, {"text": "Він питає, чи де саме знаходиться старий вокзал.", "correct": false}, {"text": "Я зовсім не знаю, чи він зараз вдома.", "correct": true}, {"text": "Я зовсім не знаю, що він зараз вдома чи ні.", "correct": false}], "explanation": "Питальні слова (де, куди) самі працюють як сполучники. 'Чи' використовується без них."}, {"question": "Які фрази ідеально відповідають місцевій культурі 'бабусі на лавці'?", "options": [{"text": "Бабуся Галя дуже цікаво питає, чи сусід купив нову машину.", "correct": true}, {"text": "Вони кожного дня уважно слухають і детально переказують новини.", "correct": true}, {"text": "Бабусі ніколи не цікавляться особистим життям своїх сусідів.", "correct": false}, {"text": "Вони використовують виключно офіційний та сухий стиль мовлення.", "correct": false}], "explanation": "Ця весела культура безпосередньо пов'язана з плітками та переказом місцевих новин."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| казати | [kɑˈzɑtɪ] | to say / to tell | verb |  |  |
-| говорити | [ɦɔʋɔˈrɪtɪ] | to speak / to talk | verb |  |  |
-| питати | [pɪˈtɑtɪ] | to ask | verb |  |  |
-| відповідати | [ʋʲidpɔʋʲiˈdɑtɪ] | to answer | verb |  |  |
-| плітки | [plʲitkɪ] | gossip | noun | ж |  |
-| зіпсований телефон | [zʲiˈpsɔʋɑnɪj tɛlɛˈfɔn] | broken telephone (game) | noun | ч |  |
-| чи | [t͡ʃɪ] | whether / if | conjunction |  |  |
-| щоб | [ʃt͡ʃɔb] | in order to / that (for commands) | conjunction |  |  |
-| правда | [ˈprɑu̯dɑ] | truth | noun | ж |  |
-| сусід | [suˈsʲid] | neighbor (male) | noun | ч |  |
-| сусідка | [suˈsʲidkɑ] | neighbor (female) | noun | ж |  |
-| новина | [nɔʋɪˈnɑ] | news | noun | ж |  |
-| розмова | [rɔˈzmɔʋɑ] | conversation | noun | ж |  |
-| питання | [pɪˈtɑnʲːɑ] | question | noun | с |  |
-| відповідь | [ˈʋʲidpɔʋʲidʲ] | answer | noun | ж |  |
-| дозвіл | [ˈdɔzʲʋʲil] | permission | noun | ч |  |
-| дорога | [dɔˈrɔɦɑ] | road / way | noun | ж |  |
-| якщо | [jɑˈkʃt͡ʃɔ] | if (conditional) | conjunction |  |  |
-| що | [ʃt͡ʃɔ] | that (statement) | conjunction |  |  |
-| вдома | [ˈʋdɔmɑ] | at home | adverb |  |  |
-| директор | [dɪˈrɛktɔr] | director | noun | ч |  |
-| колега | [kɔˈlɛɦɑ] | colleague | noun | ч |  |
-| офіс | [ˈɔfʲis] | office | noun | ч |  |
-| швидко | [ˈʃʋɪdkɔ] | quickly | adverb |  |  |
-| вчора | [ˈʍt͡ʃɔrɑ] | yesterday | adverb |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

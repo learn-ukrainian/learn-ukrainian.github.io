@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Вид у минулому: результат і процес
+{/**/}
 
 :::warning[❗ Важливо]
 **Чому це важливо?**
@@ -383,7 +389,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **результат** |  | result | ім | досягти результату |
+| **процес** |  | process | ім | тривалий процес |
+| **завершення** |  | completion | ім | успішне завершення |
+| **тривалість** |  | duration | ім | тривалість дії |
+| **вже** |  | already | adverb | вже зробив |
+| **нарешті** |  | finally | adverb | нарешті прийшов |
+| **весь день** |  | all day | фраза |  |
+| **годину** |  | for an hour | ім |  |
+| **до кінця** |  | to the end | фраза |  |
+| **довго** |  | for a long time | adverb |  |
+| **ще** |  | still, yet | adverb | ще не закінчив |
+| **зараз** |  | now | adverb | я зараз працюю |
+| **поступово** |  | gradually | adverb |  |
+| **раптом** |  | suddenly | adverb |  |
+| **миттєво** |  | instantly | adverb |  |
+| **будувати** |  | to build (imperfective) | дієсл |  |
+| **збудувати** |  | to build (perfective) | дієсл |  |
+| **толока** |  | community work, mutual aid | ім |  |
+| **успішно** |  | successfully | adverb | успішно склав іспит |
+| **писати** |  | to write (imperfective) | дієсл |  |
+| **написати** |  | to write (perfective) | дієсл |  |
+| **готувати** |  | to prepare (imperfective) | дієсл |  |
+| **приготувати** |  | to prepare (perfective) | дієсл |  |
+| **шукати** |  | to look for, to search (imperfective) | дієсл |  |
+| **знайти** |  | to find (perfective) | дієсл |  |
+| **вирішувати** |  | to solve, to decide (imperfective) | дієсл |  |
+| **вирішити** |  | to solve, to decide (perfective) | дієсл |  |
+| **чекати** |  | to wait (imperfective) | дієсл |  |
+| **працювати** |  | to work (imperfective) | дієсл |  |
+| **обговорювати** |  | to discuss (imperfective) | дієсл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Процес чи результат: перевірка розуміння
 
@@ -434,37 +477,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Select client:load questions={JSON.parse(`[{"question": "Оберіть усі маркери результату (доконаного виду).", "options": [{"text": "вже", "correct": true}, {"text": "нарешті", "correct": true}, {"text": "успішно", "correct": true}, {"text": "довго", "correct": false}, {"text": "весь день", "correct": false}, {"text": "поступово", "correct": false}], "explanation": "Слова вже, нарешті та успішно є сигналами завершеної дії."}, {"question": "Оберіть усі маркери процесу (недоконаного виду).", "options": [{"text": "довго", "correct": true}, {"text": "весь день", "correct": true}, {"text": "поступово", "correct": true}, {"text": "миттєво", "correct": false}, {"text": "раптом", "correct": false}, {"text": "до кінця", "correct": false}], "explanation": "Слова довго, весь день та поступово показують тривалість дії."}, {"question": "Які дієслова описують процес навчання (недоконаний вид)?", "options": [{"text": "вивчав", "correct": true}, {"text": "відвідував", "correct": true}, {"text": "читав", "correct": true}, {"text": "закінчив", "correct": false}, {"text": "захистив", "correct": false}, {"text": "здобув", "correct": false}], "explanation": "Вивчав, відвідував і читав малюють хвилясту лінію тривалого процесу."}, {"question": "Які дієслова описують успішний результат навчання (доконаний вид)?", "options": [{"text": "закінчив", "correct": true}, {"text": "написав", "correct": true}, {"text": "здобув", "correct": true}, {"text": "готувався", "correct": false}, {"text": "шукав", "correct": false}, {"text": "вчив", "correct": false}], "explanation": "Закінчив, написав і здобув фіксують досягнення фінальної мети."}, {"question": "Які дієслова підходять для дружньої бесіди про вихідні (фокус на процесі)?", "options": [{"text": "гуляли", "correct": true}, {"text": "розмовляли", "correct": true}, {"text": "відпочивали", "correct": true}, {"text": "збудували", "correct": false}, {"text": "затвердив", "correct": false}, {"text": "вирішив", "correct": false}], "explanation": "У соціальній бесіді ми ділимося процесами та станами."}, {"question": "Які дієслова варто використовувати у звіті для керівника (фокус на результаті)?", "options": [{"text": "підготував", "correct": true}, {"text": "завершив", "correct": true}, {"text": "домовився", "correct": true}, {"text": "думав", "correct": false}, {"text": "шукав", "correct": false}, {"text": "чекав", "correct": false}], "explanation": "Керівники мислять категоріями результатів."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **результат** | [rɛzulʲˈtɑt] | result | ім | досягти результату |
-| **процес** | [prɔˈt͡sɛs] | process | ім | тривалий процес |
-| **завершення** | [zɑˈʋɛrʃɛnʲːɑ] | completion | ім | успішне завершення |
-| **тривалість** | [trɪˈʋɑlʲisʲtʲ] | duration | ім | тривалість дії |
-| **вже** | [ʋʒɛ] | already | adverb | вже зробив |
-| **нарешті** | [nɑˈrɛʃtʲi] | finally | adverb | нарешті прийшов |
-| **весь день** | [ʋɛsʲ dɛnʲ] | all day | фраза |  |
-| **годину** | [ɦɔˈdɪnu] | for an hour | ім |  |
-| **до кінця** | [dɔ kʲinʲˈt͡sʲɑ] | to the end | фраза |  |
-| **довго** | [ˈdɔu̯ɦɔ] | for a long time | adverb |  |
-| **ще** | [ʃt͡ʃɛ] | still, yet | adverb | ще не закінчив |
-| **зараз** | [ˈzɑrɑz] | now | adverb | я зараз працюю |
-| **поступово** | [pɔstuˈpɔʋɔ] | gradually | adverb |  |
-| **раптом** | [ˈrɑptɔm] | suddenly | adverb |  |
-| **миттєво** | [mɪˈtʲːɛʋɔ] | instantly | adverb |  |
-| **будувати** | [buduˈʋɑtɪ] | to build (imperfective) | дієсл |  |
-| **збудувати** | [zbuduˈʋɑtɪ] | to build (perfective) | дієсл |  |
-| **толока** | [tɔlɔkɑ] | community work, mutual aid | ім |  |
-| **успішно** | [uˈsʲpʲiʃnɔ] | successfully | adverb | успішно склав іспит |
-| **писати** | [pɪˈsɑtɪ] | to write (imperfective) | дієсл |  |
-| **написати** | [nɑpɪˈsɑtɪ] | to write (perfective) | дієсл |  |
-| **готувати** | [ɦɔtuˈʋɑtɪ] | to prepare (imperfective) | дієсл |  |
-| **приготувати** | [prɪɦɔtuˈʋɑtɪ] | to prepare (perfective) | дієсл |  |
-| **шукати** | [ʃuˈkɑtɪ] | to look for, to search (imperfective) | дієсл |  |
-| **знайти** | [znɑjˈtɪ] | to find (perfective) | дієсл |  |
-| **вирішувати** | [ʋɪˈrʲiʃuʋɑtɪ] | to solve, to decide (imperfective) | дієсл |  |
-| **вирішити** | [ˈʋɪrʲiʃɪtɪ] | to solve, to decide (perfective) | дієсл |  |
-| **чекати** | [t͡ʃɛˈkɑtɪ] | to wait (imperfective) | дієсл |  |
-| **працювати** | [prɑt͡sʲuˈʋɑtɪ] | to work (imperfective) | дієсл |  |
-| **обговорювати** | [ɔbɦɔˈʋɔrʲuʋɑtɪ] | to discuss (imperfective) | дієсл |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Числівники: збірні та дроби
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -544,7 +550,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **двоє** |  | two (collective) | numeral |  |
+| **троє** |  | three (collective) | numeral |  |
+| **четверо** |  | four (collective) | numeral |  |
+| **п'ятеро** |  | five (collective) | numeral |  |
+| **шестеро** |  | six (collective) | numeral |  |
+| **семеро** |  | seven (collective) | numeral |  |
+| **десятеро** |  | ten (collective) | numeral |  |
+| **півтора** |  | one and a half | numeral |  |
+| **півтори** |  | one and a half | numeral |  |
+| **половина** |  | half | ім |  |
+| **третина** |  | third | ім |  |
+| **чверть** |  | quarter | ім |  |
+| **відсоток** |  | percent | ім |  |
+| **утрьох** |  | the three of us/them together | adverb |  |
+| **удвох** |  | the two of us/them together | adverb |  |
+| **ножиці** |  | scissors | ім |  |
+| **окуляри** |  | glasses | ім |  |
+| **двері** |  | door | ім |  |
+| **сани** |  | sleigh | ім |  |
+| **ворота** |  | gates | ім |  |
+| **цуценя** |  | puppy | ім |  |
+| **кошеня** |  | kitten | ім |  |
+| **теля** |  | calf | ім |  |
+| **каченя** |  | duckling | ім |  |
+| **левеня** |  | lion cub | ім |  |
+| **кількісний числівник** |  | cardinal numeral | ім |  |
+| **дробовий числівник** |  | fractional numeral | ім |  |
+| **множина** |  | plural | ім |  |
+| **Святий Вечір** |  | Christmas Eve | ім |  |
+| **кутя** |  | kutia (traditional sweet dish) | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Оберіть правильний числівник
 
@@ -595,37 +638,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Загальна інфляція в цьому місяці склала 5,2 (_____) відсотка.", "answer": "п'ять цілих дві десяті", "options": ["п'ять цілих дві десяті", "п'ять і два", "п'ять цілих і два", "п'ять цілих дві десятих"]}, {"sentence": "Ми успішно виконали наше завдання на 100 (____) .", "answer": "відсотків", "options": ["відсотків", "відсотки", "відсоток", "відсотками"]}, {"sentence": "Після тренування він дуже швидко випив 1,5 (____) води.", "answer": "півтора літра", "options": ["півтора літра", "півтори літра", "півтора літрів", "півтора літру"]}, {"sentence": "До початку зустрічі залишилася 0,5 (____) .", "answer": "половина години", "options": ["половина години", "півтора години", "одна друга годин", "півтори годин"]}, {"sentence": "Вона була дуже голодна і з'їла 1/3 (____) пирога.", "answer": "третину", "options": ["третину", "третина", "третю", "одна третя"]}, {"sentence": "Його фантастичний результат на фініші — 9,9 (____) секунди.", "answer": "дев'ять цілих дев'ять десятих", "options": ["дев'ять цілих дев'ять десятих", "дев'ять і дев'ять", "дев'ять цілих і дев'ять", "дев'ять цілих дев'ять десяті"]}, {"sentence": "Банк пропонує взяти великий кредит під 12 (____) річних.", "answer": "відсотків", "options": ["відсотків", "відсотки", "відсоток", "відсотками"]}, {"sentence": "Він довго чекав її біля входу 1,5 (____) .", "answer": "півтори години", "options": ["півтори години", "півтора години", "півтори годин", "півтора годин"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **двоє** | [ˈdʋɔjɛ] | two (collective) | numeral |  |
-| **троє** | [ˈtrɔjɛ] | three (collective) | numeral |  |
-| **четверо** | [ˈt͡ʃɛtʋɛrɔ] | four (collective) | numeral |  |
-| **п'ятеро** | [ˈpjɑtɛrɔ] | five (collective) | numeral |  |
-| **шестеро** | [ˈʃɛstɛrɔ] | six (collective) | numeral |  |
-| **семеро** | [ˈsɛmɛrɔ] | seven (collective) | numeral |  |
-| **десятеро** | [ˈdɛsʲɑtɛrɔ] | ten (collective) | numeral |  |
-| **півтора** | [pʲiu̯tɔˈrɑ] | one and a half | numeral |  |
-| **півтори** | [pʲiu̯tɔˈrɪ] | one and a half | numeral |  |
-| **половина** | [pɔlɔˈʋɪnɑ] | half | ім |  |
-| **третина** | [trɛˈtɪnɑ] | third | ім |  |
-| **чверть** | [t͡ʃʋɛrtʲ] | quarter | ім |  |
-| **відсоток** | [ʋʲiˈd͡zsɔtɔk] | percent | ім |  |
-| **утрьох** | [uˈtʲrʲɔx] | the three of us/them together | adverb |  |
-| **удвох** | [uˈdʋɔx] | the two of us/them together | adverb |  |
-| **ножиці** | [ˈnɔʒɪt͡sʲi] | scissors | ім |  |
-| **окуляри** | [ɔkuˈlʲɑrɪ] | glasses | ім |  |
-| **двері** | [ˈdʋɛrʲi] | door | ім |  |
-| **сани** | [ˈsɑnɪ] | sleigh | ім |  |
-| **ворота** | [ʋɔˈrɔtɑ] | gates | ім |  |
-| **цуценя** | [t͡sut͡sɛˈnʲɑ] | puppy | ім |  |
-| **кошеня** | [kɔʃɛˈnʲɑ] | kitten | ім |  |
-| **теля** | [tɛˈlʲɑ] | calf | ім |  |
-| **каченя** | [kɑt͡ʃɛˈnʲɑ] | duckling | ім |  |
-| **левеня** | [lɛʋɛˈnʲɑ] | lion cub | ім |  |
-| **кількісний числівник** | [ˈkʲilʲkʲisnɪj t͡ʃɪˈsʲlʲiu̯nɪk] | cardinal numeral | ім |  |
-| **дробовий числівник** | [drɔbɔˈʋɪj t͡ʃɪˈsʲlʲiu̯nɪk] | fractional numeral | ім |  |
-| **множина** | [mnɔʒɪˈnɑ] | plural | ім |  |
-| **Святий Вечір** | [sʲʋʲɑˈtɪj ˈʋɛt͡ʃʲir] | Christmas Eve | ім |  |
-| **кутя** | [kuˈtʲɑ] | kutia (traditional sweet dish) | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Дієслова руху: практика та інтеграція
+{/**/}
 
 :::warning[❗ **Чому це важливо?**]
 
@@ -458,7 +464,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **спочатку** |  | at first | adverb |  |
+| **потім** |  | then | adverb |  |
+| **нарешті** |  | finally | adverb |  |
+| **напрямок** |  | direction | ім |  |
+| **маршрут** |  | route | ім |  |
+| **повернути** |  | to turn | дієсл |  |
+| **траєкторія** |  | trajectory | ім |  |
+| **прямо** |  | straight | adverb |  |
+| **на розі** |  | at the corner | фраза |  |
+| **на перехресті** |  | at the intersection | фраза |  |
+| **піднятися** |  | to go up, ascend | дієсл |  |
+| **спуститися** |  | to go down, descend | дієсл |  |
+| **на роздоріжжі** |  | at a crossroads | idiom |  |
+| **глухий кут** |  | dead end | idiom |  |
+| **фунікулер** |  | funicular | ім |  |
+| **ліворуч** |  | to the left | adverb |  |
+| **праворуч** |  | to the right | adverb |  |
+| **переходити** |  | to cross | дієсл |  |
+| **заїхати** |  | to drive in, drop by | дієсл |  |
+| **виїхати** |  | to drive out, depart | дієсл |  |
+| **сісти на** |  | to get on (transport) | фраза |  |
+| **їхати** |  | to go by vehicle | дієсл |  |
+| **іти** |  | to go by foot | дієсл |  |
+| **Чумацький Шлях** |  | Milky Way | proper noun |  |
+| **статика** |  | statics, state of rest | ім |  |
+| **динаміка** |  | dynamics, motion | ім |  |
+| **Знахідний відмінок** |  | Accusative case | ім |  |
+| **Місцевий відмінок** |  | Locative case | ім |  |
+| **Родовий відмінок** |  | Genitive case | ім |  |
+| **Орудний відмінок** |  | Instrumental case | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Вибір прийменника напрямку
 
@@ -511,37 +554,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Quiz client:load questions={JSON.parse(`[{"question": "Яке дієслово ми використовуємо, щоб сказати про початок поїздки в транспорті?", "options": [{"text": "сісти на", "correct": true}, {"text": "взяти", "correct": false}, {"text": "поїхати", "correct": false}, {"text": "піти", "correct": false}], "explanation": "Транспорт не беруть, на нього сідають."}, {"question": "Який відмінок завжди необхідний після прийменника до?", "options": [{"text": "родовий", "correct": true}, {"text": "знахідний", "correct": false}, {"text": "місцевий", "correct": false}, {"text": "орудний", "correct": false}], "explanation": "Прийменник до завжди вимагає Родового відмінка."}, {"question": "Що означає популярна українська ідіома опинитися на роздоріжжі?", "options": [{"text": "бути в ситуації вибору", "correct": true}, {"text": "заблукати в лісі", "correct": false}, {"text": "чекати на зелене світло", "correct": false}, {"text": "перейти широку вулицю", "correct": false}], "explanation": "Метафорично це означає необхідність прийняти важливе рішення."}, {"question": "Який прийменник традиційно використовується зі словом пошта?", "options": [{"text": "на", "correct": true}, {"text": "в", "correct": false}, {"text": "до", "correct": false}, {"text": "біля", "correct": false}], "explanation": "Історично ми говоримо йти на пошту, бути на пошті."}, {"question": "Як називається специфічний київський транспорт для дуже крутих схилів?", "options": [{"text": "фунікулер", "correct": true}, {"text": "метро", "correct": false}, {"text": "трамвай", "correct": false}, {"text": "тролейбус", "correct": false}], "explanation": "Фунікулер з'єднує Поділ і Верхнє місто."}, {"question": "Що означає українська ідіома зайти в глухий кут?", "options": [{"text": "опинитися у безвихідній ситуації", "correct": true}, {"text": "знайти новий шлях", "correct": false}, {"text": "побудувати свій будинок", "correct": false}, {"text": "сховатися від сильного дощу", "correct": false}], "explanation": "Це ситуація, з якої немає очевидного виходу."}, {"question": "Які слова маркери найкраще структурують опис вашого маршруту?", "options": [{"text": "спочатку і потім", "correct": true}, {"text": "ліворуч і праворуч", "correct": false}, {"text": "швидко і повільно", "correct": false}, {"text": "вгору і вниз", "correct": false}], "explanation": "Ці слова вказують на часову та логічну послідовність."}, {"question": "Який відмінок ми використовуємо для позначення статики (де знаходиться об'єкт)?", "options": [{"text": "місцевий", "correct": true}, {"text": "знахідний", "correct": false}, {"text": "родовий", "correct": false}, {"text": "називний", "correct": false}], "explanation": "Питання Де? завжди вимагає Місцевого відмінка з прийменниками в/на."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **спочатку** | [spɔˈt͡ʃɑtku] | at first | adverb |  |
-| **потім** | [ˈpɔtʲim] | then | adverb |  |
-| **нарешті** | [nɑˈrɛʃtʲi] | finally | adverb |  |
-| **напрямок** | [ˈnɑprʲɑmɔk] | direction | ім |  |
-| **маршрут** | [mɑrˈʃrut] | route | ім |  |
-| **повернути** | [pɔʋɛrˈnutɪ] | to turn | дієсл |  |
-| **траєкторія** | [trɑjɛˈktɔrʲijɑ] | trajectory | ім |  |
-| **прямо** | [ˈprʲɑmɔ] | straight | adverb |  |
-| **на розі** | [nɑ ˈrɔzʲi] | at the corner | фраза |  |
-| **на перехресті** | [nɑ pɛˈrɛxrɛsʲtʲi] | at the intersection | фраза |  |
-| **піднятися** | [pʲiˈdʲnʲɑtɪsʲɑ] | to go up, ascend | дієсл |  |
-| **спуститися** | [spuˈstɪtɪsʲɑ] | to go down, descend | дієсл |  |
-| **на роздоріжжі** | [nɑ rɔzdɔˈrʲiʒʲːi] | at a crossroads | idiom |  |
-| **глухий кут** | [ɦluˈxɪj kut] | dead end | idiom |  |
-| **фунікулер** | [funʲikuˈlɛr] | funicular | ім |  |
-| **ліворуч** | [lʲiˈʋɔrut͡ʃ] | to the left | adverb |  |
-| **праворуч** | [prɑˈʋɔrut͡ʃ] | to the right | adverb |  |
-| **переходити** | [pɛrɛxɔdɪtɪ] | to cross | дієсл |  |
-| **заїхати** | [zɑˈjixɑtɪ] | to drive in, drop by | дієсл |  |
-| **виїхати** | [ˈʋɪjixɑtɪ] | to drive out, depart | дієсл |  |
-| **сісти на** | [ˈsʲistɪ nɑ] | to get on (transport) | фраза |  |
-| **їхати** | [ˈjixɑtɪ] | to go by vehicle | дієсл |  |
-| **іти** | [iˈtɪ] | to go by foot | дієсл |  |
-| **Чумацький Шлях** | [t͡ʃuˈmɑt͡sʲkɪj ʃlʲɑx] | Milky Way | proper noun |  |
-| **статика** | [ˈstɑtɪkɑ] | statics, state of rest | ім |  |
-| **динаміка** | [dɪˈnɑmʲikɑ] | dynamics, motion | ім |  |
-| **Знахідний відмінок** | [znɑˈxʲidnɪj ʋʲiˈdʲmʲinɔk] | Accusative case | ім |  |
-| **Місцевий відмінок** | [mʲiˈst͡sɛʋɪj ʋʲiˈdʲmʲinɔk] | Locative case | ім |  |
-| **Родовий відмінок** | [rɔˈdɔˈʋɪj ʋʲiˈdʲmʲinɔk] | Genitive case | ім |  |
-| **Орудний відмінок** | [ɔˈrudnɪj ʋʲiˈdʲmʲinɔk] | Instrumental case | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

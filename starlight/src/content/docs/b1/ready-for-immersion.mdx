@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Готові до занурення
 
 > **Чому це важливо?**
 >
@@ -657,7 +663,41 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 Якщо ви можете відповісти на ці питання — шлюз відкрито. Пірнаймо!
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| граматичне поняття |  | grammatical concept | noun | с |  |
+| мовознавство |  | linguistics | noun | с |  |
+| морфологія |  | morphology | noun | ж |  |
+| синтаксис |  | syntax | noun | ч |  |
+| правопис |  | orthography/spelling | noun | ч |  |
+| наголос |  | stress/accent | noun | ч |  |
+| вимова |  | pronunciation | noun | ж |  |
+| правило |  | rule | noun | с |  |
+| закономірність |  | regularity/pattern | noun | ж |  |
+| система |  | system | noun | ж |  |
+| категорія |  | category | noun | ж |  |
+| ознака |  | feature/characteristic | noun | ж |  |
+| властивість |  | property | noun | ж |  |
+| значення |  | meaning/significance | noun | с |  |
+| функція |  | function | noun | ж |  |
+| виняток |  | exception | noun | ч |  |
+| частина мови |  | part of speech | noun | ж |  |
+| іменник |  | noun | noun | ч |  |
+| дієслово |  | verb | noun | с |  |
+| прикметник |  | adjective | noun | ч |  |
+| прислівник |  | adverb | noun | ч |  |
+| підмет |  | subject (of a sentence) | noun | ч |  |
+| присудок |  | predicate | noun | ч |  |
+| рід |  | gender (grammatical) | noun | ч |  |
+| відмінок |  | case | noun | ч |  |
+| буква |  | letter (written character) | noun | ж |  |
+| звук |  | sound (phoneme) | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Граматичні терміни: Знайдіть пару
 
@@ -692,34 +732,18 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Quiz client:load questions={JSON.parse(`[{"question": "Яка принципова різниця між звуком і буквою?", "options": [{"text": "Букву ми пишемо, а звук вимовляємо", "correct": true}, {"text": "Букву ми чуємо, а звук бачимо", "correct": false}, {"text": "Немає різниці, це одне й те саме", "correct": false}, {"text": "Звуки існують тільки в піснях", "correct": false}], "explanation": "Букви ми пишемо і бачимо, а звуки вимовляємо і чуємо."}, {"question": "Яке скорочення використовується для слова «наприклад»?", "options": [{"text": "напр.", "correct": true}, {"text": "нп.", "correct": false}, {"text": "прик.", "correct": false}, {"text": "нап.", "correct": false}], "explanation": "Стандартне скорочення — напр."}, {"question": "На яке питання відповідає додаток (object)?", "options": [{"text": "Кого? Чого? Кому? Чому?", "correct": true}, {"text": "Хто? Що?", "correct": false}, {"text": "Який? Яка? Яке?", "correct": false}, {"text": "Де? Коли? Як?", "correct": false}], "explanation": "Додаток відповідає на питання непрямих відмінків (Кого? Чого? Кому? Чому?...)."}, {"question": "Яка частина мови є незмінною (не має закінчення)?", "options": [{"text": "Прислівник", "correct": true}, {"text": "Іменник", "correct": false}, {"text": "Прикметник", "correct": false}, {"text": "Дієслово", "correct": false}], "explanation": "Прислівник не змінюється за родами, числами чи відмінками."}, {"question": "Як ми називаємо науку, яка вивчає мову та її структуру?", "options": [{"text": "Мовознавство (лінгвістика)", "correct": true}, {"text": "Вміння гарно писати", "correct": false}, {"text": "Мистецтво перекладу", "correct": false}, {"text": "Вивчення літератури", "correct": false}], "explanation": "Мовознавство (лінгвістика) — це наука про мову та її будову."}, {"question": "Яка функція закінчення у слові?", "options": [{"text": "Зв’язує слова в реченні", "correct": true}, {"text": "Утворює нові слова", "correct": false}, {"text": "Несе основне лексичне значення", "correct": false}, {"text": "Ніколи не змінюється", "correct": false}], "explanation": "Закінчення служить для зв’язку слів у реченні та виражає граматичні значення."}, {"question": "Що вивчає розділ граматики, який ми називаємо «морфологія»?", "options": [{"text": "Розділ граматики про частини мови", "correct": true}, {"text": "Розділ про звуки мови", "correct": false}, {"text": "Розділ про розділові знаки", "correct": false}, {"text": "Розділ про словниковий запас", "correct": false}], "explanation": "Морфологія вивчає частини мови та будову слова."}, {"question": "Яке дієслово належить до доконаного виду?", "options": [{"text": "написати", "correct": true}, {"text": "писати", "correct": false}, {"text": "читати", "correct": false}, {"text": "робити", "correct": false}], "explanation": "«Написати» означає завершену дію (що зробити?), отже це доконаний вид."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| граматичне поняття | [ɦrɑmɑˈtɪt͡ʃnɛ pɔˈnʲɑtʲːɑ] | grammatical concept | noun | с |  |
-| мовознавство | [mɔʋɔˈznɑu̯stʋɔ] | linguistics | noun | с |  |
-| морфологія | [mɔrfɔˈlɔɦʲijɑ] | morphology | noun | ж |  |
-| синтаксис | [ˈsɪntɑksɪs] | syntax | noun | ч |  |
-| правопис | [prɑˈʋɔpɪs] | orthography/spelling | noun | ч |  |
-| наголос | [ˈnɑɦɔlɔs] | stress/accent | noun | ч |  |
-| вимова | [ʋɪˈmɔʋɑ] | pronunciation | noun | ж |  |
-| правило | [prɑʋɪlɔ] | rule | noun | с |  |
-| закономірність | [zɑkɔnɔˈmʲirnʲisʲtʲ] | regularity/pattern | noun | ж |  |
-| система | [sɪˈstɛmɑ] | system | noun | ж |  |
-| категорія | [kɑtɛˈɦɔrʲijɑ] | category | noun | ж |  |
-| ознака | [ɔˈznɑkɑ] | feature/characteristic | noun | ж |  |
-| властивість | [ʋlɑˈstɪʋʲisʲtʲ] | property | noun | ж |  |
-| значення | [ˈznɑt͡ʃɛnʲːɑ] | meaning/significance | noun | с |  |
-| функція | [ˈfunkt͡sʲijɑ] | function | noun | ж |  |
-| виняток | [ˈʋɪnʲɑtɔk] | exception | noun | ч |  |
-| частина мови | [t͡ʃɑˈstɪnɑ ˈmɔʋɪ] | part of speech | noun | ж |  |
-| іменник | [iˈmɛnːɪk] | noun | noun | ч |  |
-| дієслово | [dʲijɛˈslɔʋɔ] | verb | noun | с |  |
-| прикметник | [prɪˈkmɛtnɪk] | adjective | noun | ч |  |
-| прислівник | [prɪˈsʲlʲiu̯nɪk] | adverb | noun | ч |  |
-| підмет | [pʲidmɛt] | subject (of a sentence) | noun | ч |  |
-| присудок | [ˈprɪsudɔk] | predicate | noun | ч |  |
-| рід | [rʲid] | gender (grammatical) | noun | ч |  |
-| відмінок | [ʋʲiˈdʲmʲinɔk] | case | noun | ч |  |
-| буква | [ˈbukʋɑ] | letter (written character) | noun | ж |  |
-| звук | [zʋuk] | sound (phoneme) | noun | ч |  |
+:::info[🎧 🔗 External Resources]
+
+**📖 Articles:**
+- [Ukrainian Grammar in Ukrainian](https://uk.wikipedia.org/wiki/Граматика_української_мови) — Wikipedia
+- [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Advanced episodes
+
+**🌐 Websites:**
+- [Ukrainian Lessons](https://www.youtube.com/c/UkrainianLessons) — YouTube channel
+:::
+
+</TabItem>
+</Tabs>

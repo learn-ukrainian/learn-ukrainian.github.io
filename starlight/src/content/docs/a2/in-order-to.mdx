@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# In Order To
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -357,7 +363,39 @@ Always remember our simple Decision Tree: Are the subjects different? Answer YES
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| щоб |  | in order to / so that | conjunction |  |  |
+| для |  | for | preposition |  |  |
+| аби |  | so that / if only | conjunction |  |  |
+| мета |  | goal / purpose | noun | ж |  |
+| намір |  | intention | noun | ч |  |
+| дія |  | action | noun | ж |  |
+| результат |  | result | noun | ч |  |
+| обговорювати |  | to discuss | verb |  |  |
+| обговорити |  | to discuss | verb |  |  |
+| пояснювати |  | to explain | verb |  |  |
+| пояснити |  | to explain | verb |  |  |
+| досягати |  | to achieve | verb |  |  |
+| досягти |  | to achieve | verb |  |  |
+| інфінітив |  | infinitive | noun | ч |  |
+| суб'єкт |  | subject / doer | noun | ч |  |
+| заробляти |  | to earn | verb |  |  |
+| заробити |  | to earn | verb |  |  |
+| успіх |  | success | noun | ч |  |
+| надійний |  | reliable | adjective |  |  |
+| спотикатися |  | to stumble | verb |  |  |
+| правило |  | rule | noun | с |  |
+| відпустка |  | vacation | noun | ж |  |
+| дохід |  | income | noun | ч |  |
+| кувати |  | to shoe (a horse) / to forge | verb |  |  |
+| минулий час |  | past tense | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Перевірте свої знання: Мета і пунктуація
 
@@ -416,32 +454,10 @@ Always remember our simple Decision Tree: Are the subjects different? Answer YES
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Я дуже хочу, щоб ти (чоловік) прочитав цю важливу статтю.", "answer": "прочитав", "options": ["прочитав", "прочитала", "прочитали", "прочитати"]}, {"sentence": "Мама зараз просить, щоб ми прибрали в нашій кімнаті.", "answer": "прибрали", "options": ["прибрали", "прибрав", "прибрала", "прибрати"]}, {"sentence": "Викладач каже, щоб студенти написали велике есе.", "answer": "написали", "options": ["написали", "написав", "написала", "написати"]}, {"sentence": "Я мрію, щоб моя країна завжди була вільною.", "answer": "була", "options": ["була", "був", "були", "бути"]}, {"sentence": "Ми всі хочемо, щоб наш новий проєкт став успішним.", "answer": "став", "options": ["став", "стала", "стали", "стати"]}, {"sentence": "Він щиро просить, щоб я (жінка) допомогла йому сьогодні.", "answer": "допомогла", "options": ["допомогла", "допоміг", "допомогли", "допомогти"]}, {"sentence": "Я хочу, щоб ти (жінка) поїхала зі мною на цей концерт.", "answer": "поїхала", "options": ["поїхала", "поїхав", "поїхали", "поїхати"]}, {"sentence": "Вони мріють, щоб їхні маленькі діти жили довго і щасливо.", "answer": "жили", "options": ["жили", "жив", "жила", "жити"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| щоб | [ʃt͡ʃɔb] | in order to / so that | conjunction |  |  |
-| для | [dʲlʲɑ] | for | preposition |  |  |
-| аби | [ɑˈbɪ] | so that / if only | conjunction |  |  |
-| мета | [mɛˈtɑ] | goal / purpose | noun | ж |  |
-| намір | [ˈnɑmʲir] | intention | noun | ч |  |
-| дія | [ˈdʲijɑ] | action | noun | ж |  |
-| результат | [rɛzulʲˈtɑt] | result | noun | ч |  |
-| обговорювати | [ɔbɦɔˈʋɔrʲuʋɑtɪ] | to discuss | verb |  |  |
-| обговорити | [ɔbɦɔʋɔˈrɪtɪ] | to discuss | verb |  |  |
-| пояснювати | [pɔˈjɑsʲnʲuʋɑtɪ] | to explain | verb |  |  |
-| пояснити | [pɔjɑˈsnɪtɪ] | to explain | verb |  |  |
-| досягати | [dɔsʲɑˈɦɑtɪ] | to achieve | verb |  |  |
-| досягти | [dɔsʲɑˈɦtɪ] | to achieve | verb |  |  |
-| інфінітив | [inʲfʲinʲiˈtɪu̯] | infinitive | noun | ч |  |
-| суб'єкт | [suˈbjɛkt] | subject / doer | noun | ч |  |
-| заробляти | [zɑrɔˈblʲɑtɪ] | to earn | verb |  |  |
-| заробити | [zɑrɔˈbɪtɪ] | to earn | verb |  |  |
-| успіх | [ˈusʲpʲix] | success | noun | ч |  |
-| надійний | [nɑˈdʲijnɪj] | reliable | adjective |  |  |
-| спотикатися | [spɔtɪˈkɑtɪsʲɑ] | to stumble | verb |  |  |
-| правило | [prɑʋɪlɔ] | rule | noun | с |  |
-| відпустка | [ʋʲiˈdpustkɑ] | vacation | noun | ж |  |
-| дохід | [dɔˈxʲid] | income | noun | ч |  |
-| кувати | [kuˈʋɑtɪ] | to shoe (a horse) / to forge | verb |  |  |
-| минулий час | [mɪˈnulɪj t͡ʃɑs] | past tense | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

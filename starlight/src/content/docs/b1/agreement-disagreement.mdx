@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Згода і незгода
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -432,7 +438,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **згода** |  | agreement | ім |  |
+| **незгода** |  | disagreement | ім |  |
+| **згоден** |  | agree | adjective |  |
+| **згодна** |  | agree | adjective |  |
+| **погоджуватися** |  | to agree | дієсл |  |
+| **заперечувати** |  | to object / to deny | дієсл |  |
+| **правильно** |  | correctly | adverb |  |
+| **абсолютно** |  | absolutely | adverb |  |
+| **частково** |  | partially | adverb |  |
+| **безперечно** |  | undoubtedly | adverb |  |
+| **яблуко незгоди** |  | bone of contention | фраза |  |
+| **дійти згоди** |  | to reach an agreement | фраза |  |
+| **спростовувати** |  | to refute | дієсл |  |
+| **визнавати** |  | to acknowledge | дієсл |  |
+| **безумовно** |  | unconditionally | adverb |  |
+| **дати згоду** |  | to give consent | фраза |  |
+| **за згодою** |  | by mutual consent | фраза |  |
+| **мовчазна згода** |  | tacit agreement | фраза |  |
+| **висловлювати незгоду** |  | to express disagreement | фраза |  |
+| **цілком погоджуватися** |  | to agree completely | фраза |  |
+| **категорично заперечувати** |  | to deny categorically | фраза |  |
+| **визнавати правоту** |  | to acknowledge rightness | фраза |  |
+| **хоча** |  | although | conjunction |  |
+| **однак** |  | however | conjunction |  |
+| **проте** |  | however | conjunction |  |
+| **вірно** |  | loyally / faithfully | adverb |  |
+| **дискусія** |  | discussion | ім |  |
+| **компроміс** |  | compromise | ім |  |
+| **опонент** |  | opponent | ім |  |
+| **аргумент** |  | argument | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Вибір правильного слова в дискусії
 
@@ -483,37 +526,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Translate client:load questions={JSON.parse(`[{"source": "We need to reach an agreement by Friday.", "options": [{"text": "Нам потрібно дійти згоди до п'ятниці.", "correct": true}, {"text": "Нам потрібно знайти згоду до п'ятниці.", "correct": false}, {"text": "Ми маємо дати згоду до п'ятниці.", "correct": false}, {"text": "Ми є згодні до п'ятниці.", "correct": false}]}, {"source": "I cannot but agree with your argument.", "options": [{"text": "Не можу не погодитися з вашим аргументом.", "correct": true}, {"text": "Я не можу погодитися з вашим аргументом.", "correct": false}, {"text": "Я мушу заперечити ваш аргумент.", "correct": false}, {"text": "Я абсолютно заперечую ваш аргумент.", "correct": false}]}, {"source": "I partially share your opinion.", "options": [{"text": "Я частково поділяю вашу думку.", "correct": true}, {"text": "Я абсолютно поділяю вашу думку.", "correct": false}, {"text": "Я безумовно поділяю вашу думку.", "correct": false}, {"text": "Я категорично поділяю вашу думку.", "correct": false}]}, {"source": "This information does not correspond to reality.", "options": [{"text": "Ця інформація не відповідає дійсності.", "correct": true}, {"text": "Ця інформація є невірною.", "correct": false}, {"text": "Ця інформація абсолютно правильна.", "correct": false}, {"text": "Ця інформація спростовує факт.", "correct": false}]}, {"source": "The committee finally reached an agreement.", "options": [{"text": "Комітет нарешті зміг дійти згоди.", "correct": true}, {"text": "Комітет нарешті зміг дати згоду.", "correct": false}, {"text": "Комітет нарешті висловив незгоду.", "correct": false}, {"text": "Комітет нарешті визнав правоту.", "correct": false}]}, {"source": "You are absolutely right. (said to a man)", "options": [{"text": "Ви абсолютно праві.", "correct": true}, {"text": "Ви абсолютно вірні.", "correct": false}, {"text": "Ти абсолютно згодна.", "correct": false}, {"text": "Ви є абсолютно згоден.", "correct": false}]}, {"source": "I am absolutely in agreement. (said by a woman)", "options": [{"text": "Я абсолютно згодна.", "correct": true}, {"text": "Я абсолютно згоден.", "correct": false}, {"text": "Я є абсолютно згодна.", "correct": false}, {"text": "Я абсолютно погоджуюся згодна.", "correct": false}]}, {"source": "I categorically deny these accusations.", "options": [{"text": "Я категорично заперечую ці звинувачення.", "correct": true}, {"text": "Я безперечно заперечую ці звинувачення.", "correct": false}, {"text": "Я частково заперечую ці звинувачення.", "correct": false}, {"text": "Я абсолютно спростовую ці звинувачення.", "correct": false}]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **згода** | [ˈzɦɔdɑ] | agreement | ім |  |
-| **незгода** | [nɛˈzɦɔdɑ] | disagreement | ім |  |
-| **згоден** | [ˈzɦɔdɛn] | agree | adjective |  |
-| **згодна** | [ˈzɦɔdnɑ] | agree | adjective |  |
-| **погоджуватися** | [pɔˈɦɔd͡ʒuʋɑtɪsʲɑ] | to agree | дієсл |  |
-| **заперечувати** | [zɑpɛˈrɛt͡ʃuʋɑtɪ] | to object / to deny | дієсл |  |
-| **правильно** | [ˈprɑʋɪlʲnɔ] | correctly | adverb |  |
-| **абсолютно** | [ɑbsɔˈlʲutnɔ] | absolutely | adverb |  |
-| **частково** | [t͡ʃɑˈstkɔʋɔ] | partially | adverb |  |
-| **безперечно** | [bɛzpɛˈrɛt͡ʃnɔ] | undoubtedly | adverb |  |
-| **яблуко незгоди** | [ˈjɑblukɔ nɛˈzɦɔdɪ] | bone of contention | фраза |  |
-| **дійти згоди** | [dʲijˈtɪ ˈzɦɔdɪ] | to reach an agreement | фраза |  |
-| **спростовувати** | [sprɔˈstɔʋuʋɑtɪ] | to refute | дієсл |  |
-| **визнавати** | [ʋɪznɑˈʋɑtɪ] | to acknowledge | дієсл |  |
-| **безумовно** | [bɛzuˈmɔu̯nɔ] | unconditionally | adverb |  |
-| **дати згоду** | [ˈdɑtɪ ˈzɦɔdu] | to give consent | фраза |  |
-| **за згодою** | [zɑ ˈzɦɔdɔju] | by mutual consent | фраза |  |
-| **мовчазна згода** | [mɔu̯t͡ʃɑˈznɑ ˈzɦɔdɑ] | tacit agreement | фраза |  |
-| **висловлювати незгоду** | [ʋɪˈslɔu̯lʲuʋɑtɪ nɛˈzɦɔdu] | to express disagreement | фраза |  |
-| **цілком погоджуватися** | [t͡sʲilˈkɔm pɔˈɦɔd͡ʒuʋɑtɪsʲɑ] | to agree completely | фраза |  |
-| **категорично заперечувати** | [kɑtɛɦɔˈrɪt͡ʃnɔ zɑpɛˈrɛt͡ʃuʋɑtɪ] | to deny categorically | фраза |  |
-| **визнавати правоту** | [ʋɪznɑˈʋɑtɪ prɑʋɔˈtu] | to acknowledge rightness | фраза |  |
-| **хоча** | [xɔˈt͡ʃɑ] | although | conjunction |  |
-| **однак** | [ɔˈdnɑk] | however | conjunction |  |
-| **проте** | [prɔˈtɛ] | however | conjunction |  |
-| **вірно** | [ˈʋʲirnɔ] | loyally / faithfully | adverb |  |
-| **дискусія** | [dɪˈskusʲijɑ] | discussion | ім |  |
-| **компроміс** | [kɔmprɔˈmʲis] | compromise | ім |  |
-| **опонент** | [ɔpɔˈnɛnt] | opponent | ім |  |
-| **аргумент** | [ɑrɦuˈmɛnt] | argument | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

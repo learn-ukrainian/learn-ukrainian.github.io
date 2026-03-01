@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Підрядні речення мети: щоб + минула форма
+{/**/}
 
 :::warning[❗ **Чому це важливо?**]
 
@@ -333,7 +339,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 4. Якщо керівник (чоловік) дає завдання команді (множина), яке закінчення матиме дієслово після «щоб» і чому?
 5. Яку типову помилку часто роблять англомовні студенти, намагаючись перекласти конструкцію «I want you to do this», і як її уникнути?
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **щоб** |  | in order to, so that | conjunction |  |
+| **бажання** |  | wish, desire | ім |  |
+| **прохання** |  | request | ім |  |
+| **вимагати** |  | to demand, to require | дієсл |  |
+| **радити** |  | to advise | дієсл |  |
+| **узгодження** |  | agreement | ім |  |
+| **наказ** |  | command, order | ім |  |
+| **необхідність** |  | necessity | ім |  |
+| **майбутнє** |  | future | ім |  |
+| **зусилля** |  | effort | ім |  |
+| **підрядне речення** |  | subordinate clause | ім |  |
+| **різнойменний** |  | different-named (having different subjects) | adjective |  |
+| **суб'єкт** |  | subject | ім |  |
+| **ініціатор** |  | initiator | ім |  |
+| **виконавець** |  | executor, performer | ім |  |
+| **волевиявлення** |  | expression of will | ім |  |
+| **докладати** |  | to apply (efforts) | дієсл |  |
+| **делегування** |  | delegation | ім |  |
+| **субординація** |  | subordination | ім |  |
+| **ввічливість** |  | politeness | ім |  |
+| **очікування** |  | expectation | ім |  |
+| **підлеглий** |  | subordinate | ім |  |
+| **задоволений** |  | satisfied | adjective |  |
+| **вчасно** |  | on time | adverb |  |
+| **заздалегідь** |  | in advance | adverb |  |
+| **наполягати** |  | to insist | дієсл |  |
+| **впливати** |  | to influence | дієсл |  |
+| **інтерференція** |  | interference | ім |  |
+| **відмінок** |  | case (grammar) | ім |  |
+| **сполучник** |  | conjunction | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Виберіть правильну форму дієслова
 
@@ -391,37 +434,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"— Доброго ранку. Я маю велике [___:0]} до вас. Директор [___:1]}, щоб ми підготували [___:2]} до п'ятниці. Це дуже важливо.\n— Розумію. Ви [___:3]}, щоб я зібрала всю статистику за місяць?\n— Саме так. Я дуже [___:4]}, щоб ви [___:5]} це до середи. Тоді в мене буде час усе проаналізувати.\n— Добре, я почну працювати над цим негайно.\n— Також є гостра [___:6]}, щоб наш дизайнер [___:7]} графіки. Ви можете йому передати?\n— Звісно. Я передам йому [___:8]}, щоб він відклав інші завдання і зайнявся цим.\n— Дякую. Наша спільна [___:9]} — щоб клієнт [___:10]} повністю [___:11]} презентацією. Я також [___:12]} на вас, щоб ви перевірили текст. Ваші [___:13]} завжди цінні."} blanks={JSON.parse(`[{"index": 0, "answer": "прохання", "options": ["прохання", "бажання", "наказ", "вимога"]}, {"index": 1, "answer": "вимагає", "options": ["вимагає", "просить", "хоче", "радить"]}, {"index": 2, "answer": "звіт", "options": ["звіт", "проєкт", "документ", "лист"]}, {"index": 3, "answer": "хочете", "options": ["хочете", "просите", "вимагаєте", "радите"]}, {"index": 4, "answer": "прошу", "options": ["прошу", "вимагаю", "хочу", "раджу"]}, {"index": 5, "answer": "зробили", "options": ["зробили", "зробив", "зробила", "зробити"]}, {"index": 6, "answer": "необхідність", "options": ["необхідність", "проблема", "мета", "ідея"]}, {"index": 7, "answer": "оновив", "options": ["оновив", "оновила", "оновили", "оновити"]}, {"index": 8, "answer": "наказ", "options": ["наказ", "прохання", "лист", "повідомлення"]}, {"index": 9, "answer": "мета", "options": ["мета", "робота", "ідея", "проблема"]}, {"index": 10, "answer": "був", "options": ["був", "була", "було", "були"]}, {"index": 11, "answer": "задоволений", "options": ["задоволений", "радий", "готовий", "сумний"]}, {"index": 12, "answer": "чекаю", "options": ["чекаю", "дивлюся", "сподіваюсь", "прошу"]}, {"index": 13, "answer": "зусилля", "options": ["зусилля", "гроші", "слова", "думки"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **щоб** | [ʃt͡ʃɔb] | in order to, so that | conjunction |  |
-| **бажання** | [bɑˈʒɑnʲːɑ] | wish, desire | ім |  |
-| **прохання** | [prɔˈxɑnʲːɑ] | request | ім |  |
-| **вимагати** | [ʋɪmɑˈɦɑtɪ] | to demand, to require | дієсл |  |
-| **радити** | [ˈrɑdɪtɪ] | to advise | дієсл |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | agreement | ім |  |
-| **наказ** | [nɑˈkɑz] | command, order | ім |  |
-| **необхідність** | [nɛɔˈbxʲidʲnʲisʲtʲ] | necessity | ім |  |
-| **майбутнє** | [mɑjˈbutʲnʲɛ] | future | ім |  |
-| **зусилля** | [zuˈsɪlʲːɑ] | effort | ім |  |
-| **підрядне речення** | [pʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | subordinate clause | ім |  |
-| **різнойменний** | [rʲiznɔjˈmɛnːɪj] | different-named (having different subjects) | adjective |  |
-| **суб'єкт** | [suˈbjɛkt] | subject | ім |  |
-| **ініціатор** | [inʲit͡sʲiˈɑtɔr] | initiator | ім |  |
-| **виконавець** | [ʋɪkɔˈnɑʋɛt͡sʲ] | executor, performer | ім |  |
-| **волевиявлення** | [ʋɔlɛˈʋɪjɑu̯lɛnʲːɑ] | expression of will | ім |  |
-| **докладати** | [dɔklɑˈdɑtɪ] | to apply (efforts) | дієсл |  |
-| **делегування** | [dɛlɛɦuˈʋɑnʲːɑ] | delegation | ім |  |
-| **субординація** | [subɔrdɪˈnɑt͡sʲijɑ] | subordination | ім |  |
-| **ввічливість** | [ˈʋʲːit͡ʃlɪʋʲisʲtʲ] | politeness | ім |  |
-| **очікування** | [ɔˈt͡ʃʲikuʋɑnʲːɑ] | expectation | ім |  |
-| **підлеглий** | [pʲiˈdlɛɦlɪj] | subordinate | ім |  |
-| **задоволений** | [zɑdɔˈʋɔlɛnɪj] | satisfied | adjective |  |
-| **вчасно** | [ˈʍt͡ʃɑsnɔ] | on time | adverb |  |
-| **заздалегідь** | [zɑzdɑlɛˈɦʲidʲ] | in advance | adverb |  |
-| **наполягати** | [nɑpɔlʲɑˈɦɑtɪ] | to insist | дієсл |  |
-| **впливати** | [ʍplɪˈʋɑtɪ] | to influence | дієсл |  |
-| **інтерференція** | [intɛrfɛˈrɛnʲt͡sʲijɑ] | interference | ім |  |
-| **відмінок** | [ʋʲiˈdʲmʲinɔk] | case (grammar) | ім |  |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | conjunction | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Вид у майбутньому часі
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -460,7 +466,45 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **майбутній час** |  | future tense | ім |  |
+| **складена форма** |  | compound form | ім |  |
+| **синтетична форма** |  | synthetic form | ім |  |
+| **простий майбутній час** |  | simple future | ім |  |
+| **збиратися** |  | to be going to | дієсл |  |
+| **мати намір** |  | to intend | фраза |  |
+| **сподіватися** |  | to hope | дієсл |  |
+| **обіцяти** |  | to promise | дієсл |  |
+| **планувати** |  | to plan | дієсл |  |
+| **гадати** |  | to think/suppose | дієсл |  |
+| **завтра** |  | tomorrow | adverb |  |
+| **через** |  | in (time) | preposition |  |
+| **потім** |  | then/later | adverb |  |
+| **скоро** |  | soon | adverb |  |
+| **зурочити** |  | to jinx | дієсл |  |
+| **результат** |  | result | ім |  |
+| **процес** |  | process | ім |  |
+| **тривалий** |  | continuous / prolonged | adjective |  |
+| **завершений** |  | completed | adjective |  |
+| **доконаний вид** |  | perfective aspect | ім |  |
+| **недоконаний вид** |  | imperfective aspect | ім |  |
+| **обережність** |  | caution | ім |  |
+| **забобон** |  | superstition | ім |  |
+| **інфінітив** |  | infinitive | ім |  |
+| **парадигма** |  | paradigm | ім |  |
+| **допоміжне дієслово** |  | auxiliary verb | ім |  |
+| **закінчення** |  | ending | ім |  |
+| **прикмета** |  | omen / sign | ім |  |
+| **подорож** |  | journey / trip | ім |  |
+| **відпустка** |  | vacation | ім |  |
+| **встигнути** |  | to manage to do in time | дієсл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Трансформуйте складену форму у синтетичну
 
@@ -511,38 +555,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Я (читати) ___ цю книгу довго.", "answer": "читатиму", "options": ["читатиму", "читатимеш", "читатиме", "читатимемо"]}, {"sentence": "Ти (працювати) ___ завтра вранці?", "answer": "працюватимеш", "options": ["працюватимеш", "працюватиму", "працюватиме", "працюватимуть"]}, {"sentence": "Він (слухати) ___ музику у своїй кімнаті.", "answer": "слухатиме", "options": ["слухатиме", "слухатимемо", "слухатимеш", "слухатимете"]}, {"sentence": "Ми (говорити) ___ тільки українською мовою.", "answer": "говоритимемо", "options": ["говоритимемо", "говоритимете", "говоритимуть", "говоритиме"]}, {"sentence": "Ви (чекати) ___ на нас біля входу?", "answer": "чекатимете", "options": ["чекатимете", "чекатимемо", "чекатимуть", "чекатимеш"]}, {"sentence": "Вони (шукати) ___ нову квартиру наступного місяця.", "answer": "шукатимуть", "options": ["шукатимуть", "шукатиме", "шукатимете", "шукатиму"]}, {"sentence": "Ми (боротися) ___ за перемогу до кінця.", "answer": "боротимемося", "options": ["боротимемося", "боротимуться", "боротиметься", "боремося"]}, {"sentence": "Вона завжди (пам'ятати) ___ цей щасливий день.", "answer": "пам'ятатиме", "options": ["пам'ятатиме", "пам'ятатиму", "пам'ятатимуть", "пам'ятатимете"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **майбутній час** | [mɑjˈbutʲnʲij t͡ʃɑs] | future tense | ім |  |
-| **складена форма** | [ˈsklɑdɛnɑ ˈfɔrmɑ] | compound form | ім |  |
-| **синтетична форма** | [sɪntɛˈtɪt͡ʃnɑ ˈfɔrmɑ] | synthetic form | ім |  |
-| **простий майбутній час** | [ˈprɔˈstɪj mɑjˈbutʲnʲij t͡ʃɑs] | simple future | ім |  |
-| **збиратися** | [zbɪˈrɑtɪsʲɑ] | to be going to | дієсл |  |
-| **мати намір** | [ˈmɑtɪ ˈnɑmʲir] | to intend | фраза |  |
-| **сподіватися** | [spɔdʲiˈʋɑtɪsʲɑ] | to hope | дієсл |  |
-| **обіцяти** | [ɔbʲiˈt͡sʲɑtɪ] | to promise | дієсл |  |
-| **планувати** | [plɑnuˈʋɑtɪ] | to plan | дієсл |  |
-| **гадати** | [ɦɑˈdɑtɪ] | to think/suppose | дієсл |  |
-| **завтра** | [ˈzɑu̯trɑ] | tomorrow | adverb |  |
-| **через** | [ˈt͡ʃɛrɛz] | in (time) | preposition |  |
-| **потім** | [ˈpɔtʲim] | then/later | adverb |  |
-| **скоро** | [ˈskɔrɔ] | soon | adverb |  |
-| **зурочити** | [zuˈrɔt͡ʃɪtɪ] | to jinx | дієсл |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **тривалий** | [trɪˈʋɑlɪj] | continuous / prolonged | adjective |  |
-| **завершений** | [zɑˈʋɛrʃɛnɪj] | completed | adjective |  |
-| **доконаний вид** | [dɔˈkɔnɑnɪj ʋɪd] | perfective aspect | ім |  |
-| **недоконаний вид** | [nɛdɔˈkɔnɑnɪj ʋɪd] | imperfective aspect | ім |  |
-| **обережність** | [ɔbɛˈrɛʒnʲisʲtʲ] | caution | ім |  |
-| **забобон** | [zɑbɔˈbɔn] | superstition | ім |  |
-| **інфінітив** | [inʲfʲinʲiˈtɪu̯] | infinitive | ім |  |
-| **парадигма** | [pɑrɑˈdɪɦmɑ] | paradigm | ім |  |
-| **допоміжне дієслово** | [dɔpɔˈmʲiˈʒnɛ dʲijɛˈslɔʋɔ] | auxiliary verb | ім |  |
-| **закінчення** | [zɑˈkʲint͡ʃɛnʲːɑ] | ending | ім |  |
-| **прикмета** | [prɪˈkmɛtɑ] | omen / sign | ім |  |
-| **подорож** | [ˈpɔdɔrɔʒ] | journey / trip | ім |  |
-| **відпустка** | [ʋʲiˈdpustkɑ] | vacation | ім |  |
-| **встигнути** | [ˈʍstɪɦnutɪ] | to manage to do in time | дієсл |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
 {/**/}
-
-# Пасив третьою особою множини
 
 > **Чому це важливо?**
 >
@@ -445,7 +451,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **казати** |  | to say | дієсл | кажуть, що... (it is said that...); мені казали (I was told) |
+| **повідомити** |  | to inform | дієсл | повідомили про... (it was reported about...); нам повідомили (we were informed) |
+| **чутка** |  | rumor | ім | чутка пішла (rumor spread); пустити чутку (start a rumor); за чутками (rumor has it) |
+| **плітка** |  | gossip | ім | розпускати плітки (spread gossip); плести плітки (weave gossip) |
+| **сказати** |  | to say, to tell | дієсл | сказали, що... (was told that...) |
+| **запитати** |  | to ask | дієсл | мене запитали (I was asked) |
+| **пообіцяти** |  | to promise | дієсл | нам пообіцяли (we were promised) |
+| **неозначено-особовий** |  | indefinite-personal | adjective |  |
+| **соціальний клей** |  | social glue | noun phrase |  |
+| **чужий рот не хлів** |  | stranger's mouth is not a barn (you can't close it) | idiom |  |
+| **сорока на хвості принесла** |  | a magpie brought it on its tail (a little bird told me) | idiom |  |
+| **побутовий** |  | everyday, domestic | adjective | побутовий пасив (everyday passive) |
+| **передати** |  | to transmit, to pass on (information) | дієсл |  |
+| **виплатити** |  | to pay out | дієсл |  |
+| **перевести** |  | to transfer | дієсл |  |
+| **затвердити** |  | to approve | дієсл |  |
+| **скасувати** |  | to cancel | дієсл |  |
+| **відхилити** |  | to reject | дієсл |  |
+| **розпускати** |  | to spread (rumors) | дієсл |  |
+| **плести** |  | to weave (gossip) | дієсл |  |
+| **інтрига** |  | intrigue | ім |  |
+| **анонімність** |  | anonymity | ім |  |
+| **джерело** |  | source | ім |  |
+| **наклеп** |  | slander, defamation | ім |  |
+| **достовірний** |  | reliable, trustworthy | adjective |  |
+| **перевірений** |  | verified | adjective |  |
+| **скандал** |  | scandal | ім |  |
+| **обговорювати** |  | to discuss | дієсл |  |
+| **сенсаційний** |  | sensational | adjective |  |
+| **імпліцитний** |  | implicit | adjective |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Від офіційного до розмовного
 
@@ -504,37 +547,21 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <EssayResponse client:load title="Світська хроніка" prompt={"Уявіть, що ви – відомий світський оглядач. Напишіть коротку статтю (мінімум 150 слів) про скандал на вчорашній церемонії нагородження. Використовуйте розмовний пасив третьої особи множини ('кажуть', 'повідомили', 'заборонили'), щоб приховати свої джерела та створити інтригу. Уникайте офіційних конструкцій на -но/-то."} modelAnswer={"Вчорашня церемонія нагородження стала справжнім шоком для багатьох присутніх. Кажуть, що скандал почався ще за лаштунками, коли одному з найвідоміших акторів несподівано відмовили у виході на сцену. Мені повідомили, що його ім'я просто викреслили зі списку гостей в останню хвилину. Звісно, офіційно ніхто нічого не пояснив, але в кулуарах одразу пішла чутка про його конфлікт із головним продюсером.\n\nЗа чутками, актору пообіцяли головну нагороду, але потім рішення різко змінили. Більше того, сорока на хвості принесла, що його навіть попросили покинути будівлю до початку трансляції. Охоронцям суворо наказали не пускати журналістів до гримерки, тому дізнатися деталі було майже неможливо. Деякі заздрісники спробували пустити чутку, що актор був у нетверезому стані, але ті, хто стояв поруч, запевняють, що це наклеп.\n\nЗараз усі чекають на офіційні коментарі, але організаторам, очевидно, порадили мовчати. Побачимо, чим усе це закінчиться, адже чужий рот не хлів — не зачинити, і правда рано чи пізно випливе назовні. Подейкують, що наступного року церемонію взагалі перенесуть в інше місто."} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Використання пасиву | Текст повинен містити щонайменше 5 прикладів пасиву третьою особою множини. | 40 |\n| Стилістика | Текст повинен бути написаний у розмовному стилі світської хроніки без офіційних форм на -но/-то. | 30 |\n| Лексика | Правильне та доречне використання слів 'чутка', 'плітка', 'кажуть' та відповідних ідіом. | 30 |"} isUkrainian={true} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **казати** | [kɑˈzɑtɪ] | to say | дієсл | кажуть, що... (it is said that...); мені казали (I was told) |
-| **повідомити** | [pɔʋʲiˈdɔmɪtɪ] | to inform | дієсл | повідомили про... (it was reported about...); нам повідомили (we were informed) |
-| **чутка** | [ˈt͡ʃutkɑ] | rumor | ім | чутка пішла (rumor spread); пустити чутку (start a rumor); за чутками (rumor has it) |
-| **плітка** | [ˈplʲitkɑ] | gossip | ім | розпускати плітки (spread gossip); плести плітки (weave gossip) |
-| **сказати** | [skɑˈzɑtɪ] | to say, to tell | дієсл | сказали, що... (was told that...) |
-| **запитати** | [zɑpɪˈtɑtɪ] | to ask | дієсл | мене запитали (I was asked) |
-| **пообіцяти** | [pɔɔbʲiˈt͡sʲɑtɪ] | to promise | дієсл | нам пообіцяли (we were promised) |
-| **неозначено-особовий** | [nɛɔznɑt͡ʃɛnɔ-ɔsɔˈbɔʋɪj] | indefinite-personal | adjective |  |
-| **соціальний клей** | [sɔt͡sʲiˈɑlʲnɪj klɛj] | social glue | noun phrase |  |
-| **чужий рот не хлів** | [t͡ʃuˈʒɪj rɔt nɛ xlʲiu̯] | stranger's mouth is not a barn (you can't close it) | idiom |  |
-| **сорока на хвості принесла** | [sɔˈrɔkɑ nɑ xʋɔˈsʲtʲi prɪnɛˈslɑ] | a magpie brought it on its tail (a little bird told me) | idiom |  |
-| **побутовий** | [pɔbuˈtɔʋɪj] | everyday, domestic | adjective | побутовий пасив (everyday passive) |
-| **передати** | [pɛrɛˈdɑtɪ] | to transmit, to pass on (information) | дієсл |  |
-| **виплатити** | [ˈʋɪplɑtɪtɪ] | to pay out | дієсл |  |
-| **перевести** | [pɛrɛʋɛˈstɪ] | to transfer | дієсл |  |
-| **затвердити** | [zɑtʋɛrdɪtɪ] | to approve | дієсл |  |
-| **скасувати** | [skɑsuˈʋɑtɪ] | to cancel | дієсл |  |
-| **відхилити** | [ʋʲidxɪˈlɪtɪ] | to reject | дієсл |  |
-| **розпускати** | [rɔzpuˈskɑtɪ] | to spread (rumors) | дієсл |  |
-| **плести** | [plɛˈstɪ] | to weave (gossip) | дієсл |  |
-| **інтрига** | [inˈtrɪɦɑ] | intrigue | ім |  |
-| **анонімність** | [ɑnɔˈnʲimnʲisʲtʲ] | anonymity | ім |  |
-| **джерело** | [d͡ʒɛrɛˈlɔ] | source | ім |  |
-| **наклеп** | [ˈnɑklɛp] | slander, defamation | ім |  |
-| **достовірний** | [dɔstɔˈʋʲirnɪj] | reliable, trustworthy | adjective |  |
-| **перевірений** | [pɛrɛˈʋʲirɛnɪj] | verified | adjective |  |
-| **скандал** | [skɑnˈdɑl] | scandal | ім |  |
-| **обговорювати** | [ɔbɦɔˈʋɔrʲuʋɑtɪ] | to discuss | дієсл |  |
-| **сенсаційний** | [sɛnsɑˈt͡sʲijnɪj] | sensational | adjective |  |
-| **імпліцитний** | [implʲiˈt͡sɪtnɪj] | implicit | adjective |  |
+:::info[🎧 🔗 Зовнішні ресурси]
+
+**🎧 Подкасти:**
+- [ULP 2-42My Room + Plural nouns in Ukrainian](https://www.ukrainianlessons.com/lesson/42/) — Cross-level topic match: plural
+- [ULP 2-43 Looking for an apartment + Special plural forms](https://www.ukrainianlessons.com/lesson/43/) — Cross-level topic match: plural
+- [ULP 2-44 My pets + Special plural forms](https://www.ukrainianlessons.com/lesson/44/) — Cross-level topic match: plural
+- [ULP 3-112 Майстер-клас з приготування вареників – How to cook varenyky +  Imperative mood of the second person plural](https://www.ukrainianlessons.com/lesson/112/) — Cross-level topic match: person, plural
+- [ULP 3-114 Майстер-клас з писанкарства – How to make pysanky +  Imperative mood of the verbs in the first person plural (Let's…)](https://www.ukrainianlessons.com/lesson/114/) — Cross-level topic match: person, plural
+
+**🌐 Сайти:**
+- [Пасивні конструкції в українській мові](https://r2u.org.ua/grammar/passive) — Детальний огляд усіх пасивних форм
+:::
+
+</TabItem>
+</Tabs>

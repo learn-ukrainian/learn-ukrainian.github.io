@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Абстрактні концепції: процеси та зміни
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -457,7 +463,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **зміна** |  | change, alteration | ім |  |
+| **розвиток** |  | development | ім |  |
+| **зростання** |  | growth, increase (abstract) | ім |  |
+| **перетворення** |  | transformation, alteration | ім |  |
+| **занепад** |  | decline, decay | ім |  |
+| **тенденція** |  | tendency, trend | ім |  |
+| **еволюція** |  | evolution | ім |  |
+| **покращення** |  | improvement | ім |  |
+| **трансформація** |  | transformation | ім |  |
+| **спад** |  | recession, downturn | ім |  |
+| **закономірність** |  | pattern, regularity | ім |  |
+| **темп** |  | rate, pace | ім |  |
+| **погіршення** |  | worsening, deterioration | ім |  |
+| **прогрес** |  | progress | ім |  |
+| **динаміка** |  | dynamics | ім |  |
+| **застій** |  | stagnation | ім |  |
+| **суб'єктність** |  | agency (in sociology) | ім |  |
+| **решта** |  | monetary change, the rest | ім |  |
+| **наслідок** |  | consequence, result | ім |  |
+| **потенціал** |  | potential | ім |  |
+| **руйнування** |  | destruction, ruining | ім |  |
+| **виробництво** |  | production, manufacturing | ім |  |
+| **ідентичність** |  | identity | ім |  |
+| **модернізація** |  | modernization | ім |  |
+| **аналітик** |  | analyst | ім |  |
+| **спостереження** |  | observation | ім |  |
+| **показник** |  | indicator, metric | ім |  |
+| **інвестиція** |  | investment | ім |  |
+| **читання** |  | reading (process) | ім |  |
+| **бачення** |  | vision (understanding) | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Знайдіть відповідність: термін та його англійський переклад
 
@@ -508,37 +551,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Аналітики постійно вивчають економічне [___:0]} у світі. Здоровий [___:1]} суспільства неможливий без інновацій. Коли ми бачимо позитивні [___:2]}, ми розуміємо, що це результат тривалої праці. Глобальна [___:3]} технологій змінює наш спосіб життя. Кожне глибоке [___:4]} системи вимагає часу та ресурсів. Якщо довго ігнорувати проблеми, починається [___:5]}, який може перетворитися на повний [___:6]}. Щоб уникнути кризи, компаніям потрібна постійна [___:7]} і пошук нових рішень. Ми часто чуємо про сталий [___:8]} та високі [___:9]} інвестицій. Кожне [___:10]} у якості сервісу приносить радість клієнтам. Водночас, ми маємо уникати ситуацій, коли відбувається [___:11]} стандартів. Справжнє [___:12]} у бізнесі — це не лише збільшення прибутків. Це фундаментальна [___:13]} нашої культури споживання."} blanks={JSON.parse(`[{"index": 0, "answer": "зростання", "options": ["зростання", "ріст", "занепад", "спад"]}, {"index": 1, "answer": "розвиток", "options": ["розвиток", "спад", "решта", "занепад"]}, {"index": 2, "answer": "тенденції", "options": ["тенденції", "занепади", "решти", "рости"]}, {"index": 3, "answer": "еволюція", "options": ["еволюція", "решта", "занепад", "спад"]}, {"index": 4, "answer": "перетворення", "options": ["перетворення", "погіршення", "занепад", "застій"]}, {"index": 5, "answer": "спад", "options": ["спад", "розвиток", "прогрес", "ріст"]}, {"index": 6, "answer": "занепад", "options": ["занепад", "розвиток", "покращення", "ріст"]}, {"index": 7, "answer": "зміна", "options": ["зміна", "решта", "занепад", "тенденція"]}, {"index": 8, "answer": "розвиток", "options": ["розвиток", "спад", "застій", "занепад"]}, {"index": 9, "answer": "темпи", "options": ["темпи", "решти", "спади", "занепади"]}, {"index": 10, "answer": "покращення", "options": ["покращення", "погіршення", "занепад", "спад"]}, {"index": 11, "answer": "погіршення", "options": ["погіршення", "покращення", "розвиток", "зростання"]}, {"index": 12, "answer": "зростання", "options": ["зростання", "ріст", "занепад", "спад"]}, {"index": 13, "answer": "трансформація", "options": ["трансформація", "решта", "застій", "спад"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **зміна** | [ˈzʲmʲinɑ] | change, alteration | ім |  |
-| **розвиток** | [ˈrɔzʋɪtɔk] | development | ім |  |
-| **зростання** | [zrɔˈstɑnʲːɑ] | growth, increase (abstract) | ім |  |
-| **перетворення** | [pɛrɛˈtʋɔrɛnʲːɑ] | transformation, alteration | ім |  |
-| **занепад** | [zɑˈnɛpɑd] | decline, decay | ім |  |
-| **тенденція** | [tɛnˈdɛnʲt͡sʲijɑ] | tendency, trend | ім |  |
-| **еволюція** | [ɛʋɔˈlʲut͡sʲijɑ] | evolution | ім |  |
-| **покращення** | [pɔˈkrɑʃt͡ʃɛnʲːɑ] | improvement | ім |  |
-| **трансформація** | [trɑnsfɔrˈmɑt͡sʲijɑ] | transformation | ім |  |
-| **спад** | [spɑd] | recession, downturn | ім |  |
-| **закономірність** | [zɑkɔnɔˈmʲirnʲisʲtʲ] | pattern, regularity | ім |  |
-| **темп** | [tɛmp] | rate, pace | ім |  |
-| **погіршення** | [pɔˈɦʲirʃɛnʲːɑ] | worsening, deterioration | ім |  |
-| **прогрес** | [prɔˈɦrɛs] | progress | ім |  |
-| **динаміка** | [dɪˈnɑmʲikɑ] | dynamics | ім |  |
-| **застій** | [zɑˈsʲtʲij] | stagnation | ім |  |
-| **суб'єктність** | [subjɛktʲnʲisʲtʲ] | agency (in sociology) | ім |  |
-| **решта** | [ˈrɛʃtɑ] | monetary change, the rest | ім |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence, result | ім |  |
-| **потенціал** | [pɔtɛnʲt͡sʲiˈɑl] | potential | ім |  |
-| **руйнування** | [rujnuˈʋɑnʲːɑ] | destruction, ruining | ім |  |
-| **виробництво** | [ʋɪrɔˈbnɪt͡stʋɔ] | production, manufacturing | ім |  |
-| **ідентичність** | [idɛnˈtɪt͡ʃnʲisʲtʲ] | identity | ім |  |
-| **модернізація** | [mɔdɛrnʲiˈzɑt͡sʲijɑ] | modernization | ім |  |
-| **аналітик** | [ɑnɑˈlʲitɪk] | analyst | ім |  |
-| **спостереження** | [spɔstɛˈrɛʒɛnʲːɑ] | observation | ім |  |
-| **показник** | [pɔˈkɑznɪk] | indicator, metric | ім |  |
-| **інвестиція** | [inʋɛˈstɪt͡sʲijɑ] | investment | ім |  |
-| **читання** | [t͡ʃɪˈtɑnʲːɑ] | reading (process) | ім |  |
-| **бачення** | [ˈbɑt͡ʃɛnʲːɑ] | vision (understanding) | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

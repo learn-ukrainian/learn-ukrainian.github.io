@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Софія Київська та культурний розквіт
 
 > **Чому це важливо?**
 > Зведення Софійського собору стало маніфестом європейської потужності Києва. Ця монументальна споруда як визначила архітектурне обличчя середньовічної столиці, так і засвідчила амбіції Русі-України як незалежної, високорозвиненої держави, цілком рівної Візантійській імперії. Вивчаючи стіни цього храму, ми можемо буквально прочитати історію нашої державності, позбавлену пізніших імперських нашарувань.
@@ -266,7 +272,39 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| собор |  | cathedral | noun | ч |  |
+| мозаїка |  | mosaic | noun | ж |  |
+| фреска |  | fresco | noun | ж |  |
+| Оранта |  | Oranta | noun | ж |  |
+| купол |  | dome | noun | ч |  |
+| неф |  | nave | noun | ч |  |
+| візантійський |  | Byzantine | adjective |  |  |
+| бароко |  | Baroque | noun | с |  |
+| графіті |  | graffiti | noun | с |  |
+| митрополит |  | metropolitan | noun | ч |  |
+| літописання |  | chronicle writing | noun | с |  |
+| іконопис |  | icon painting | noun | ч |  |
+| хрестово-купольний |  | cross-domed | adjective |  |  |
+| Нерушима стіна |  | Unbreakable Wall | noun | ж |  |
+| смальта |  | smalto | noun | ж |  |
+| заповідник |  | reserve | noun | ч |  |
+| юрисдикція |  | jurisdiction | noun | ж |  |
+| саркофаг |  | sarcophagus | noun | ч |  |
+| дзвіниця |  | bell tower | noun | ж |  |
+| апсида |  | apse | noun | ж |  |
+| скрипторій |  | scriptorium | noun | ч |  |
+| цем'янка |  | tsemianka | noun | ж |  |
+| плінфа |  | plinth | noun | ж |  |
+| каган |  | khagan | noun | ч |  |
+| суверенність |  | sovereignty | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Перевірте знання фактів
 
@@ -274,46 +312,24 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ### Первинне джерело: Маніфест Іларіона Київського
 
-<ReadingActivity client:load title="Первинне джерело: Маніфест Іларіона Київського" context="" text={"Не в худій бо землі нашій і не в невідомій вони володарювали, але в Руській, про яку знають і чують в усіх чотирьох кінцях землі."} source={"Іларіон Київський"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`[]`)} isUkrainian={true} />
+<ReadingActivity client:load title="Первинне джерело: Маніфест Іларіона Київського" context="" text={"Не в худій бо землі нашій і не в невідомій вони володарювали, але в Руській, про яку знають і чують в усіх чотирьох кінцях землі."} source={"Іларіон Київський"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`[]`)} isUkrainian={false} />
 
 ### Критичний аналіз: Маніфест суверенності
 
-<CriticalAnalysis client:load title="Критичний аналіз: Маніфест суверенності" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Як Іларіон характеризує Русь у цьому уривку?", "Чому ці слова є викликом Візантійській імперії?"]`)} modelAnswers={JSON.parse(`["Він наголошує, що Русь є великою і відомою в усьому світі державою.", "Це спростовує монополію Візантії на владу та стверджує геополітичну рівноправність Києва."]`)} isUkrainian={true} />
+<CriticalAnalysis client:load title="Критичний аналіз: Маніфест суверенності" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Як Іларіон характеризує Русь у цьому уривку?", "Чому ці слова є викликом Візантійській імперії?"]`)} modelAnswers={JSON.parse(`["Він наголошує, що Русь є великою і відомою в усьому світі державою.", "Це спростовує монополію Візантії на владу та стверджує геополітичну рівноправність Києва."]`)} isUkrainian={false} />
 
 ### Порівняльний аналіз: Архітектурні стилі
 
-<ComparativeStudy client:load title="Порівняльний аналіз: Архітектурні стилі" content={""} task={""} modelAnswer={"Первісний собор мав кладку opus mixtum та візантійські куполи. Фасади не тинькували. Під час реконструкції фасади потинькували, прикрасили ліпниною, а куполи набули форми козацького бароко."} itemsToCompare={JSON.parse(`["Автентична архітектура 11 століття", "Козацьке бароко 17-18 століть"]`)} criteria={JSON.parse(`["Зовнішнє оздоблення фасадів", "Форма та кількість куполів"]`)} prompt={"Як змінився зовнішній вигляд собору після реконструкції за часів Івана Мазепи?"} isUkrainian={true} />
+<ComparativeStudy client:load title="Порівняльний аналіз: Архітектурні стилі" content={""} task={""} modelAnswer={"Первісний собор мав кладку opus mixtum та візантійські куполи. Фасади не тинькували. Під час реконструкції фасади потинькували, прикрасили ліпниною, а куполи набули форми козацького бароко."} itemsToCompare={JSON.parse(`["Автентична архітектура 11 століття", "Козацьке бароко 17-18 століть"]`)} criteria={JSON.parse(`["Зовнішнє оздоблення фасадів", "Форма та кількість куполів"]`)} prompt={"Як змінився зовнішній вигляд собору після реконструкції за часів Івана Мазепи?"} isUkrainian={false} />
 
 ### Есе: Символ української державності
 
-<EssayResponse client:load title="Есе: Символ української державності" prompt={"Опираючись на архітектурні, мистецькі та історичні факти, поясніть, чому Софія Київська вважається головним символом європейської суб'єктності Русі-України."} modelAnswer={""} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Використання фактів | Наведено приклади архітектурних особливостей, фресок або графіті. | 40 |\n| Деколонізаційний аспект | Чітко спростовано міф про культурну провінційність Києва. | 40 |\n| Логіка та структура | Есе має вступ, аргументацію та чіткий висновок. | 20 |"} isUkrainian={true} />
+<EssayResponse client:load title="Есе: Символ української державності" prompt={"Опираючись на архітектурні, мистецькі та історичні факти, поясніть, чому Софія Київська вважається головним символом європейської суб'єктності Русі-України."} modelAnswer={""} rubric={"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n| Використання фактів | Наведено приклади архітектурних особливостей, фресок або графіті. | 40 |\n| Деколонізаційний аспект | Чітко спростовано міф про культурну провінційність Києва. | 40 |\n| Логіка та структура | Есе має вступ, аргументацію та чіткий висновок. | 20 |"} isUkrainian={false} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Resources">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **собор** | [sɔˈbɔr] | cathedral | ім |  |
-| **мозаїка** | [mɔˈzɑjikɑ] | mosaic | ім |  |
-| **фреска** | [ˈfrɛskɑ] | fresco | ім |  |
-| **Оранта** | [ɔrɑntɑ] | Oranta | ім |  |
-| **купол** | [ˈkupɔl] | dome | ім |  |
-| **неф** | [nɛf] | nave | ім |  |
-| **візантійський** | [ʋʲizɑnʲˈtʲijsʲkɪj] | Byzantine | adjective |  |
-| **бароко** | [bɑˈrɔkɔ] | Baroque | ім |  |
-| **графіті** | [ɦrɑˈfʲitʲi] | graffiti | ім |  |
-| **митрополит** | [mɪtrɔpɔˈlɪt] | metropolitan | ім |  |
-| **літописання** | [lʲitɔpɪˈsɑnʲːɑ] | chronicle writing | ім |  |
-| **іконопис** | [iˈkɔnɔpɪs] | icon painting | ім |  |
-| **хрестово-купольний** | [xrɛstɔʋɔ-ˈkupɔlʲnɪj] | cross-domed | adjective |  |
-| **Нерушима стіна** | [nɛruˈʃɪmɑ sʲtʲiˈnɑ] | Unbreakable Wall | ім |  |
-| **смальта** | [ˈsmɑlʲtɑ] | smalto | ім |  |
-| **заповідник** | [zɑpɔˈʋʲidnɪk] | reserve | ім |  |
-| **юрисдикція** | [jurɪˈzdɪkt͡sʲijɑ] | jurisdiction | ім |  |
-| **саркофаг** | [sɑrkɔˈfɑɦ] | sarcophagus | ім |  |
-| **дзвіниця** | [d͡zʲʋʲiˈnɪt͡sʲɑ] | bell tower | ім |  |
-| **апсида** | [ɑˈpsɪdɑ] | apse | ім |  |
-| **скрипторій** | [skrɪˈptɔrʲij] | scriptorium | ім |  |
-| **цем'янка** | [t͡sɛmjɑnkɑ] | tsemianka | ім |  |
-| **плінфа** | [ˈplʲinfɑ] | plinth | ім |  |
-| **каган** | [kɑˈɦɑn] | khagan | ім |  |
-| **суверенність** | [suʋɛˈrɛnʲːisʲtʲ] | sovereignty | ім |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

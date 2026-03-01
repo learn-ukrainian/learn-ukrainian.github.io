@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Абстрактні концепції: ідеї та думки
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -358,7 +364,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **ідея** |  | idea | ім |  |
+| **думка** |  | thought/opinion | ім |  |
+| **концепція** |  | concept | ім |  |
+| **теорія** |  | theory | ім |  |
+| **погляд** |  | view/opinion | ім |  |
+| **переконання** |  | belief/conviction | ім |  |
+| **цінність** |  | value | ім |  |
+| **принцип** |  | principle | ім |  |
+| **гіпотеза** |  | hypothesis | ім |  |
+| **істина** |  | truth | ім |  |
+| **справедливість** |  | justice | ім |  |
+| **бачення** |  | vision/perspective | ім |  |
+| **суперечка** |  | quarrel/dispute | ім |  |
+| **аргумент** |  | logical reason/argument | ім |  |
+| **вигляд** |  | appearance | ім |  |
+| **мислення** |  | thinking | ім |  |
+| **осяяння** |  | insight/epiphany | ім |  |
+| **задум** |  | intention/plan | ім |  |
+| **дискусія** |  | discussion | ім |  |
+| **дебати** |  | debates | ім |  |
+| **світогляд** |  | worldview | ім |  |
+| **свобода** |  | freedom | ім |  |
+| **рівність** |  | equality | ім |  |
+| **ідеал** |  | ideal | ім |  |
+| **норма** |  | norm | ім |  |
+| **розуміння** |  | understanding | ім |  |
+| **вибір** |  | choice | ім |  |
+| **гармонія** |  | harmony | ім |  |
+| **оцінка** |  | assessment/evaluation | ім |  |
+| **суспільство** |  | society | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Знайдіть пару: концепція та її значення
 
@@ -409,37 +452,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Сучасне [___:0]} постійно обговорює складні абстрактні поняття. Щоб створити щось принципово нове, людям потрібна креативна [___:1]}. Водночас дуже важливо розуміти, що моя суб'єктивна [___:2]} не завжди є абсолютною істиною для інших. Під час серйозної [___:3]} люди часто висловлюють різний [___:4]} на одну й ту саму проблему. Щоб переконати інших учасників, необхідно навести вагомий і логічний [___:5]}, а не просто починати гучну емоційну [___:6]}. Якщо ви маєте глибоке і щире [___:7]}, ви завжди будете діяти відповідно до своїх моральних правил. Ваш головний життєвий [___:8]} допомагає приймати правильні рішення у найважчих кризових ситуаціях. Справжня абстрактна [___:9]} — це високий ідеал, до якого прагнуть усі свідомі люди. Будь-яка наукова [___:10]} конче потребує довгих і ретельних доказів, щоб нарешті стати загальновизнаною теорією. Моє особисте стратегічне [___:11]} полягає в тому, що об'єктивна [___:12]} кожного промовленого слова має величезне значення. Тому повне і глибоке [___:13]} таких абстрактних категорій дозволяє нам вільно та ефективно спілкуватися у будь-якому товаристві."} blanks={JSON.parse(`[{"index": 0, "answer": "суспільство", "options": ["суспільство", "бачення", "переконання", "правило"]}, {"index": 1, "answer": "ідея", "options": ["ідея", "думка", "суперечка", "оцінка"]}, {"index": 2, "answer": "думка", "options": ["думка", "ідея", "теорія", "гіпотеза"]}, {"index": 3, "answer": "дискусії", "options": ["дискусії", "істини", "свободи", "справедливості"]}, {"index": 4, "answer": "погляд", "options": ["погляд", "вигляд", "переконання", "вибір"]}, {"index": 5, "answer": "аргумент", "options": ["аргумент", "принцип", "вигляд", "світогляд"]}, {"index": 6, "answer": "суперечку", "options": ["суперечку", "істину", "теорію", "концепцію"]}, {"index": 7, "answer": "переконання", "options": ["переконання", "бачення", "осяяння", "суспільство"]}, {"index": 8, "answer": "принцип", "options": ["принцип", "вигляд", "аргумент", "вибір"]}, {"index": 9, "answer": "цінність", "options": ["цінність", "суперечка", "думка", "оцінка"]}, {"index": 10, "answer": "гіпотеза", "options": ["гіпотеза", "істина", "свобода", "рівність"]}, {"index": 11, "answer": "бачення", "options": ["бачення", "вигляд", "мислення", "розуміння"]}, {"index": 12, "answer": "оцінка", "options": ["оцінка", "свобода", "гармонія", "рівність"]}, {"index": 13, "answer": "розуміння", "options": ["розуміння", "бачення", "мислення", "переконання"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **ідея** | [iˈdɛjɑ] | idea | ім |  |
-| **думка** | [ˈdumkɑ] | thought/opinion | ім |  |
-| **концепція** | [kɔnˈt͡sɛpt͡sʲijɑ] | concept | ім |  |
-| **теорія** | [tɛˈɔrʲijɑ] | theory | ім |  |
-| **погляд** | [ˈpɔɦlʲɑd] | view/opinion | ім |  |
-| **переконання** | [pɛrɛkɔˈnɑnʲːɑ] | belief/conviction | ім |  |
-| **цінність** | [ˈt͡sʲinʲːisʲtʲ] | value | ім |  |
-| **принцип** | [ˈprɪnt͡sɪp] | principle | ім |  |
-| **гіпотеза** | [ɦʲiˈpɔtɛzɑ] | hypothesis | ім |  |
-| **істина** | [ˈistɪnɑ] | truth | ім |  |
-| **справедливість** | [sprɑʋɛˈdlɪʋʲisʲtʲ] | justice | ім |  |
-| **бачення** | [ˈbɑt͡ʃɛnʲːɑ] | vision/perspective | ім |  |
-| **суперечка** | [supɛˈrɛt͡ʃkɑ] | quarrel/dispute | ім |  |
-| **аргумент** | [ɑrɦuˈmɛnt] | logical reason/argument | ім |  |
-| **вигляд** | [ˈʋɪɦlʲɑd] | appearance | ім |  |
-| **мислення** | [ˈmɪslɛnʲːɑ] | thinking | ім |  |
-| **осяяння** | [ɔˈsʲɑjɑnʲːɑ] | insight/epiphany | ім |  |
-| **задум** | [ˈzɑdum] | intention/plan | ім |  |
-| **дискусія** | [dɪˈskusʲijɑ] | discussion | ім |  |
-| **дебати** | [dɛˈbɑtɪ] | debates | ім |  |
-| **світогляд** | [sʲʋʲiˈtɔɦlʲɑd] | worldview | ім |  |
-| **свобода** | [sʋɔˈbɔdɑ] | freedom | ім |  |
-| **рівність** | [ˈrʲiu̯nʲisʲtʲ] | equality | ім |  |
-| **ідеал** | [idɛˈɑl] | ideal | ім |  |
-| **норма** | [ˈnɔrmɑ] | norm | ім |  |
-| **розуміння** | [rɔzuˈmʲinʲːɑ] | understanding | ім |  |
-| **вибір** | [ˈʋɪbʲir] | choice | ім |  |
-| **гармонія** | [ɦɑrˈmɔnʲijɑ] | harmony | ім |  |
-| **оцінка** | [ɔˈt͡sʲinkɑ] | assessment/evaluation | ім |  |
-| **суспільство** | [suˈsʲpʲilʲstʋɔ] | society | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

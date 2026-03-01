@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Ярослав Мудрий: Золота доба
 
 > **Чому це важливо?**
 >
@@ -387,15 +393,47 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| мудрий |  | wise | adjective |  |  |
+| золота доба |  | golden age | phrase |  |  |
+| законодавство |  | legislation | noun | с |  |
+| Руська Правда |  | Rus' Justice | phrase |  |  |
+| віра |  | wergild, fine | noun | ж |  |
+| Софія Київська |  | St. Sophia's Cathedral | phrase |  |  |
+| Золоті ворота |  | Golden Gates | phrase |  |  |
+| дипломатія |  | diplomacy | noun | ж |  |
+| династичний шлюб |  | dynastic marriage | phrase |  |  |
+| митрополит |  | metropolitan | noun | ч |  |
+| книжність |  | book learning | noun | ж |  |
+| спадщина |  | legacy, heritage | noun | ж |  |
+| міжусобиця |  | internecine war | noun | ж |  |
+| продаж |  | sale-fine | noun | ч |  |
+| тесть |  | father-in-law | noun | ч |  |
+| фортифікація |  | fortification | noun | ж |  |
+| заповіт |  | testament, will | noun | ч |  |
+| каган |  | khagan | noun | ч |  |
+| графіті |  | graffiti | noun | с |  |
+| помста |  | revenge | noun | ж |  |
+| скрипторій |  | scriptorium | noun | ч |  |
+| саркофаг |  | sarcophagus | noun | ч |  |
+| регентка |  | female regent | noun | ж |  |
+| автокефалія |  | autocephaly | noun | ж |  |
+| компенсація |  | compensation | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Первинне джерело: Руська Правда
 
-<ReadingActivity client:load title="Первинне джерело: Руська Правда" context="" text={"Якщо уб’є людина людину, то мстити брату за брата... а якщо не буде кому мстити, то покласти за голову 40 гривень.\n"} source={"Правда Ярослава (XI століття)"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`[]`)} isUkrainian={true} />
+<ReadingActivity client:load title="Первинне джерело: Руська Правда" context="" text={"Якщо уб’є людина людину, то мстити брату за брата... а якщо не буде кому мстити, то покласти за голову 40 гривень.\n"} source={"Правда Ярослава (XI століття)"} resource={JSON.parse(`{}`)} tasks={JSON.parse(`[]`)} isUkrainian={false} />
 
 ### Аналіз правових норм Руської Правди
 
-<CriticalAnalysis client:load title="Аналіз правових норм Руської Правди" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Яку соціальну мету переслідувало обмеження кола осіб, що мали право на кровну помсту?", "Як заміна кровної помсти на величезний грошовий штраф стимулювала зменшення насильства в суспільстві?"]`)} isUkrainian={true} />
+<CriticalAnalysis client:load title="Аналіз правових норм Руської Правди" context={""} question={""} modelAnswer={""} questions={JSON.parse(`["Яку соціальну мету переслідувало обмеження кола осіб, що мали право на кровну помсту?", "Як заміна кровної помсти на величезний грошовий штраф стимулювала зменшення насильства в суспільстві?"]`)} isUkrainian={false} />
 
 ### Правда чи вигадка: Золота доба
 
@@ -403,38 +441,16 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ### Порівняльний аналіз правових систем
 
-<ComparativeStudy client:load title="Порівняльний аналіз правових систем" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Руська Правда (Київська держава)", "Судебники (Московська держава)"]`)} criteria={JSON.parse(`["Мета правосуддя", "Наявність тілесних покарань та тортур", "Гуманістичний вимір і захист особистості"]`)} prompt={"На основі тексту модуля порівняйте правову філософію Києва та Москви. Як ці відмінності відображають цивілізаційний розрив між двома суспільствами?"} isUkrainian={true} />
+<ComparativeStudy client:load title="Порівняльний аналіз правових систем" content={""} task={""} modelAnswer={""} itemsToCompare={JSON.parse(`["Руська Правда (Київська держава)", "Судебники (Московська держава)"]`)} criteria={JSON.parse(`["Мета правосуддя", "Наявність тілесних покарань та тортур", "Гуманістичний вимір і захист особистості"]`)} prompt={"На основі тексту модуля порівняйте правову філософію Києва та Москви. Як ці відмінності відображають цивілізаційний розрив між двома суспільствами?"} isUkrainian={false} />
 
 ### Династична дипломатія: Тесть Європи
 
-<EssayResponse client:load title="Династична дипломатія: Тесть Європи" prompt={"Чому Ярослава Мудрого історики називають тестем Європи? Проаналізуйте його дипломатичну стратегію династичних шлюбів. Як ця політика вплинула на міжнародний авторитет Київської держави та її інтеграцію в європейський простір?"} modelAnswer={""} rubric={"\n\n#### Критерії оцінювання\n\n| Критерій | Опис | Бали |\n|---|---|---|\n| Аналіз дипломатичної стратегії | Розкрито мету та механізми шлюбної дипломатії князя. | 40 |\n| Історичні приклади | Наведено конкретні приклади шлюбів дітей Ярослава з європейськими монархами. | 30 |\n| Висновки щодо європейської інтеграції | Оцінено вплив цієї політики на статус Києва як європейського мегаполіса. | 30 |"} isUkrainian={true} />
+<EssayResponse client:load title="Династична дипломатія: Тесть Європи" prompt={"Чому Ярослава Мудрого історики називають тестем Європи? Проаналізуйте його дипломатичну стратегію династичних шлюбів. Як ця політика вплинула на міжнародний авторитет Київської держави та її інтеграцію в європейський простір?"} modelAnswer={""} rubric={"\n\n#### Rubric\n\n| Criteria | Description | Points |\n|---|---|---|\n| Аналіз дипломатичної стратегії | Розкрито мету та механізми шлюбної дипломатії князя. | 40 |\n| Історичні приклади | Наведено конкретні приклади шлюбів дітей Ярослава з європейськими монархами. | 30 |\n| Висновки щодо європейської інтеграції | Оцінено вплив цієї політики на статус Києва як європейського мегаполіса. | 30 |"} isUkrainian={false} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Resources">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **мудрий** | [ˈmudrɪj] | wise | adjective |  |
-| **золота доба** | [zɔlɔˈtɑ dɔˈbɑ] | golden age | фраза |  |
-| **законодавство** | [zɑkɔnɔˈdɑu̯stʋɔ] | legislation | ім |  |
-| **Руська Правда** | [rusʲkɑ ˈprɑu̯dɑ] | Rus' Justice | фраза |  |
-| **віра** | [ˈʋʲirɑ] | wergild, fine | ім |  |
-| **Софія Київська** | [sɔfʲijɑ ˈkɪjiu̯sʲkɑ] | St. Sophia's Cathedral | фраза |  |
-| **Золоті ворота** | [zɔlɔˈtʲi ʋɔˈrɔtɑ] | Golden Gates | фраза |  |
-| **дипломатія** | [dɪplɔˈmɑtʲijɑ] | diplomacy | ім |  |
-| **династичний шлюб** | [dɪnɑˈstɪt͡ʃnɪj ʃlʲub] | dynastic marriage | фраза |  |
-| **митрополит** | [mɪtrɔpɔˈlɪt] | metropolitan | ім |  |
-| **книжність** | [ˈknɪʒnʲisʲtʲ] | book learning | ім |  |
-| **спадщина** | [ˈspɑdʃt͡ʃɪnɑ] | legacy, heritage | ім |  |
-| **міжусобиця** | [mʲiʒuˈsɔbɪt͡sʲɑ] | internecine war | ім |  |
-| **продаж** | [ˈprɔdɑʒ] | sale-fine | ім |  |
-| **тесть** | [tɛsʲtʲ] | father-in-law | ім |  |
-| **фортифікація** | [fɔrtɪfʲiˈkɑt͡sʲijɑ] | fortification | ім |  |
-| **заповіт** | [zɑpɔˈʋʲit] | testament, will | ім |  |
-| **каган** | [kɑˈɦɑn] | khagan | ім |  |
-| **графіті** | [ɦrɑˈfʲitʲi] | graffiti | ім |  |
-| **помста** | [ˈpɔmstɑ] | revenge | ім |  |
-| **скрипторій** | [skrɪˈptɔrʲij] | scriptorium | ім |  |
-| **саркофаг** | [sɑrkɔˈfɑɦ] | sarcophagus | ім |  |
-| **регентка** | [ˈrɛɦɛntkɑ] | female regent | ім |  |
-| **автокефалія** | [ɑu̯tɔkɛˈfɑlʲijɑ] | autocephaly | ім |  |
-| **компенсація** | [kɔmpɛnˈsɑt͡sʲijɑ] | compensation | ім |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Пасивні конструкції: повна система
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -310,7 +316,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **пасивний стан** |  | passive voice | ім |  |
+| **активний стан** |  | active voice | ім |  |
+| **дієприкметник** |  | participle | ім |  |
+| **форма на -но/-то** |  | impersonal ending | ім |  |
+| **зворотний** |  | reflexive | adjective |  |
+| **трансформація** |  | transformation | ім |  |
+| **конструкція** |  | construction | ім |  |
+| **стиль** |  | style | ім |  |
+| **бути** |  | to be | дієсл |  |
+| **суфікс -ся** |  | reflexive suffix | ім |  |
+| **наголос** |  | emphasis | ім |  |
+| **агент дії** |  | agent of action | ім |  |
+| **регістр** |  | register | ім |  |
+| **уникати** |  | to avoid | дієсл |  |
+| **будуватися** |  | to be built | дієсл |  |
+| **канцелярит** |  | bureaucratese | ім |  |
+| **констатація** |  | statement / establishing | ім |  |
+| **результат** |  | result | ім |  |
+| **дія** |  | action | ім |  |
+| **стан** |  | state | ім |  |
+| **процес** |  | process | ім |  |
+| **факт** |  | fact | ім |  |
+| **узгоджуватися** |  | to agree | дієсл |  |
+| **незмінний** |  | unchangeable | adjective |  |
+| **безособовий** |  | impersonal | adjective |  |
+| **суб'єкт** |  | subject | ім |  |
+| **об'єкт** |  | object | ім |  |
+| **виконавець** |  | performer / agent | ім |  |
+| **калька** |  | calque / loan translation | ім |  |
+| **русизм** |  | Russianism | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Теорія пасивних конструкцій
 
@@ -363,37 +406,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Керівництво / дуже / незадоволене / нашими / результатами / роботи", "answer": "Керівництво дуже незадоволене нашими результатами роботи"}, {"jumbled": "Ми / постійно / уважно / стежимо / за / економічною / ситуацією", "answer": "Ми постійно уважно стежимо за економічною ситуацією"}, {"jumbled": "Українська / мова / на / генетичному / рівні / віддає / перевагу / активу", "answer": "Українська мова на генетичному рівні віддає перевагу активу"}, {"jumbled": "Головний / архітектор / успішно / спроєктував / цей / новий / будинок", "answer": "Головний архітектор успішно спроєктував цей новий будинок"}, {"jumbled": "Моя / бабуся / вчора / спекла / цей / неймовірний / вишневий / торт", "answer": "Моя бабуся вчора спекла цей неймовірний вишневий торт"}, {"jumbled": "Депутати / підняли / це / важливе / питання / на / сесії", "answer": "Депутати підняли це важливе питання на сесії"}, {"jumbled": "Фінансовий / відділ / вчасно / підготував / остаточний / звіт", "answer": "Фінансовий відділ вчасно підготував остаточний звіт"}, {"jumbled": "Наш / колега / блискуче / написав / цей / офіційний / лист", "answer": "Наш колега блискуче написав цей офіційний лист"}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **пасивний стан** | [pɑˈsɪu̯nɪj stɑn] | passive voice | ім |  |
-| **активний стан** | [ɑˈktɪu̯nɪj stɑn] | active voice | ім |  |
-| **дієприкметник** | [dʲijɛprɪˈkmɛtnɪk] | participle | ім |  |
-| **форма на -но/-то** | [ˈfɔrmɑ nɑ -nɔ/-tɔ] | impersonal ending | ім |  |
-| **зворотний** | [zʋɔˈrɔtnɪj] | reflexive | adjective |  |
-| **трансформація** | [trɑnsfɔrˈmɑt͡sʲijɑ] | transformation | ім |  |
-| **конструкція** | [kɔnˈstrukt͡sʲijɑ] | construction | ім |  |
-| **стиль** | [stɪlʲ] | style | ім |  |
-| **бути** | [ˈbutɪ] | to be | дієсл |  |
-| **суфікс -ся** | [ˈsufʲiks -sʲɑ] | reflexive suffix | ім |  |
-| **наголос** | [ˈnɑɦɔlɔs] | emphasis | ім |  |
-| **агент дії** | [ɑˈɦɛnt ˈdʲiji] | agent of action | ім |  |
-| **регістр** | [rɛˈɦʲistr] | register | ім |  |
-| **уникати** | [unɪˈkɑtɪ] | to avoid | дієсл |  |
-| **будуватися** | [buduˈʋɑtɪsʲɑ] | to be built | дієсл |  |
-| **канцелярит** | [kɑnt͡sɛlʲɑrɪt] | bureaucratese | ім |  |
-| **констатація** | [kɔnstɑˈtɑt͡sʲijɑ] | statement / establishing | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **дія** | [ˈdʲijɑ] | action | ім |  |
-| **стан** | [stɑn] | state | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **факт** | [fɑkt] | fact | ім |  |
-| **узгоджуватися** | [uˈzɦɔd͡ʒuʋɑtɪsʲɑ] | to agree | дієсл |  |
-| **незмінний** | [nɛˈzʲmʲinːɪj] | unchangeable | adjective |  |
-| **безособовий** | [bɛzɔsɔˈbɔʋɪj] | impersonal | adjective |  |
-| **суб'єкт** | [suˈbjɛkt] | subject | ім |  |
-| **об'єкт** | [ɔˈbjɛkt] | object | ім |  |
-| **виконавець** | [ʋɪkɔˈnɑʋɛt͡sʲ] | performer / agent | ім |  |
-| **калька** | [ˈkɑlʲkɑ] | calque / loan translation | ім |  |
-| **русизм** | [ruˈsɪzm] | Russianism | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

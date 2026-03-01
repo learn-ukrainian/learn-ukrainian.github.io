@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Because and Although
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -360,7 +366,41 @@ Always remember that ancient folk wisdom: every single event in the world has a 
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| тому що |  | because | conjunction |  |  |
+| бо |  | because, for | conjunction |  |  |
+| оскільки |  | since, as | conjunction |  |  |
+| але |  | but | conjunction |  |  |
+| хоча |  | although, even though | conjunction |  |  |
+| через |  | because of, due to | preposition |  |  |
+| завдяки |  | thanks to | preposition |  |  |
+| причина |  | reason, cause | noun | ж |  |
+| наслідок |  | consequence, result | noun | ч |  |
+| обставина |  | circumstance | noun | ж |  |
+| перешкода |  | obstacle | noun | ж |  |
+| допустовість |  | concession | noun | ж |  |
+| протиставлення |  | contrast, opposition | noun | с |  |
+| затор |  | traffic jam | noun | ч |  |
+| зусилля |  | effort | noun | с |  |
+| досягнення |  | achievement | noun | с |  |
+| скасовувати |  | to cancel | verb |  |  |
+| переносити |  | to postpone, to reschedule | verb |  |  |
+| одужувати |  | to recover, to get well | verb |  |  |
+| запізнюватися |  | to be late | verb |  |  |
+| впливати |  | to influence, to affect | verb |  |  |
+| пояснювати |  | to explain | verb |  |  |
+| аргументувати |  | to argue, to justify | verb |  |  |
+| успішний |  | successful | adjective |  |  |
+| трясця |  | fever, shaking | noun | ж |  |
+| давальний |  | dative (case) | adjective |  |  |
+| знахідний |  | accusative (case) | adjective |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Основи логіки та граматики
 
@@ -419,34 +459,10 @@ Always remember that ancient folk wisdom: every single event in the world has a 
 
 <Quiz client:load questions={JSON.parse(`[{"question": "Чому українці не люблять починати речення словами 'Тому що'?", "options": [{"text": "Бо головна думка (наслідок) має йти першою.", "correct": true}, {"text": "Бо це звучить занадто офіційно.", "correct": false}, {"text": "Бо це слово використовується тільки в кінці речення.", "correct": false}, {"text": "Бо це вважається русизмом.", "correct": false}], "explanation": "В українській мові логічний наслідок (головна думка) має йти перед поясненням."}, {"question": "Яке з цих слів вимагає після себе давального відмінка?", "options": [{"text": "завдяки", "correct": true}, {"text": "через", "correct": false}, {"text": "тому що", "correct": false}, {"text": "оскільки", "correct": false}], "explanation": "Слово завдяки завжди керує давальним відмінком."}, {"question": "Яке з цих слів означає 'despite the fact that'?", "options": [{"text": "хоча", "correct": true}, {"text": "але", "correct": false}, {"text": "бо", "correct": false}, {"text": "тому що", "correct": false}], "explanation": "Хоча вказує на допустовість, дію всупереч."}, {"question": "Яке речення є стилістичною помилкою (або звучить як жорсткий сарказм)?", "options": [{"text": "Я зламав ногу завдяки льоду.", "correct": true}, {"text": "Я запізнився через затори.", "correct": false}, {"text": "Ми виграли матч завдяки тренеру.", "correct": false}, {"text": "Я залишився вдома через дощ.", "correct": false}], "explanation": "Використання слова завдяки для болючої події — це груба помилка."}, {"question": "Як правильно написати речення з пунктуаційної точки зору?", "options": [{"text": "Я вдома, тому що хворий.", "correct": true}, {"text": "Я вдома тому що хворий.", "correct": false}, {"text": "Я вдома, тому, що хворий.", "correct": false}, {"text": "Тому що хворий я вдома.", "correct": false}], "explanation": "Кома ставиться тільки перед словом тому."}, {"question": "Яке слово найкраще підходить для ділового листа керівнику?", "options": [{"text": "оскільки", "correct": true}, {"text": "бо", "correct": false}, {"text": "тому що", "correct": false}, {"text": "через те що", "correct": false}], "explanation": "Оскільки — це маркер високого офіційного стилю."}, {"question": "Який відмінок ми використовуємо зі словом 'через'?", "options": [{"text": "знахідний (Accusative)", "correct": true}, {"text": "давальний (Dative)", "correct": false}, {"text": "родовий (Genitive)", "correct": false}, {"text": "місцевий (Locative)", "correct": false}], "explanation": "Через завжди вимагає знахідного відмінка."}, {"question": "Що з переліченого є прийменником (preposition), а не сполучником (conjunction)?", "options": [{"text": "завдяки", "correct": true}, {"text": "хоча", "correct": false}, {"text": "але", "correct": false}, {"text": "оскільки", "correct": false}], "explanation": "Завдяки — це прийменник, після якого йде іменник або займенник."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| тому що | [tɔˈmu ʃt͡ʃɔ] | because | conjunction |  |  |
-| бо | [bɔ] | because, for | conjunction |  |  |
-| оскільки | [ɔˈsʲkʲilʲkɪ] | since, as | conjunction |  |  |
-| але | [ɑˈlɛ] | but | conjunction |  |  |
-| хоча | [xɔˈt͡ʃɑ] | although, even though | conjunction |  |  |
-| через | [ˈt͡ʃɛrɛz] | because of, due to | preposition |  |  |
-| завдяки | [zɑu̯dʲɑˈkɪ] | thanks to | preposition |  |  |
-| причина | [prɪˈt͡ʃɪnɑ] | reason, cause | noun | ж |  |
-| наслідок | [ˈnɑsʲlʲidɔk] | consequence, result | noun | ч |  |
-| обставина | [ɔˈbstɑʋɪnɑ] | circumstance | noun | ж |  |
-| перешкода | [pɛrɛˈʃkɔdɑ] | obstacle | noun | ж |  |
-| допустовість | [dɔpuˈstɔʋʲisʲtʲ] | concession | noun | ж |  |
-| протиставлення | [prɔtɪˈstɑu̯lɛnʲːɑ] | contrast, opposition | noun | с |  |
-| затор | [zɑˈtɔr] | traffic jam | noun | ч |  |
-| зусилля | [zuˈsɪlʲːɑ] | effort | noun | с |  |
-| досягнення | [dɔˈsʲɑɦnɛnʲːɑ] | achievement | noun | с |  |
-| скасовувати | [skɑˈsɔʋuʋɑtɪ] | to cancel | verb |  |  |
-| переносити | [pɛrɛnɔsɪtɪ] | to postpone, to reschedule | verb |  |  |
-| одужувати | [ɔˈduʒuʋɑtɪ] | to recover, to get well | verb |  |  |
-| запізнюватися | [zɑˈpʲizʲnʲuʋɑtɪsʲɑ] | to be late | verb |  |  |
-| впливати | [ʍplɪˈʋɑtɪ] | to influence, to affect | verb |  |  |
-| пояснювати | [pɔˈjɑsʲnʲuʋɑtɪ] | to explain | verb |  |  |
-| аргументувати | [ɑrɦumɛntuˈʋɑtɪ] | to argue, to justify | verb |  |  |
-| успішний | [uˈsʲpʲiʃnɪj] | successful | adjective |  |  |
-| трясця | [ˈtʲrʲɑsʲt͡sʲɑ] | fever, shaking | noun | ж |  |
-| давальний | [dɑˈʋɑlʲnɪj] | dative (case) | adjective |  |  |
-| знахідний | [znɑˈxʲidnɪj] | accusative (case) | adjective |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

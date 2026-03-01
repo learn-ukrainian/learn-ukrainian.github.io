@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Checkpoint: Aspect, Comparison & Modality
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -397,7 +403,45 @@ To master aspect, you need to practice rapidly switching your perspective from a
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| робити |  | to do, to make (process) | verb |  |  |
+| зробити |  | to get done, to make (result) | verb |  |  |
+| добрий |  | good | adjective |  |  |
+| кращий |  | better | adjective |  |  |
+| один |  | one | numeral |  |  |
+| одна |  | one (feminine) | numeral |  |  |
+| одне |  | one (neuter) | numeral |  |  |
+| писати |  | to write (process) | verb |  |  |
+| написати |  | to write, to finish writing (result) | verb |  |  |
+| великий |  | big, large | adjective |  |  |
+| більший |  | bigger, larger | adjective |  |  |
+| вчасно |  | on time | adverb |  |  |
+| пізно |  | late | adverb |  |  |
+| вибір |  | choice | noun | ч |  |
+| більш |  | more | adverb |  |  |
+| менш |  | less | adverb |  |  |
+| малий |  | small | adjective |  |  |
+| менший |  | smaller | adjective |  |  |
+| поганий |  | bad | adjective |  |  |
+| гірший |  | worse | adjective |  |  |
+| приходити |  | to come, to arrive (process) | verb |  |  |
+| прийти |  | to come, to arrive (result) | verb |  |  |
+| результат |  | result | noun | ч |  |
+| процес |  | process | noun | ч |  |
+| сучасний |  | modern | adjective |  |  |
+| прикметник |  | adjective | noun |  |  |
+| недоконаний |  | imperfective | adjective |  |  |
+| називний |  | nominative | adjective |  |  |
+| доконаний |  | perfective | adjective |  |  |
+| родовий |  | genitive | adjective |  |  |
+| вид |  | aspect | noun |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Перевірте знання: Час, якість та числа
 
@@ -461,38 +505,10 @@ To master aspect, you need to practice rapidly switching your perspective from a
 
 <Cloze client:load passage={"— Привіт! Ми [___:0]} цей проєкт до п'ятниці. Що ти думаєш? — Думаю, що це мало часу. Залишилося тільки [___:1]}. Якби ми мали п'ять [___:2]}, ми [___:3]} кращий звіт. — Але ми мусимо [___:4]} роботу вчасно. Давай працювати разом. — Добре. Це [___:5]} підхід. Я буду [___:6]} першу частину зараз. — А я [___:7]} свою частину до вечора. — Чудово. [___:8]} пізно, ніж ніколи, але ми зробимо все вчасно. — Тоді [___:9]} завтра до мого кабінету!"} blanks={JSON.parse(`[{"index": 0, "answer": "маємо зробити", "options": ["маємо зробити", "маємо робити", "мали зробити", "маємо робимо"]}, {"index": 1, "answer": "три дні", "options": ["три дні", "три днів", "три день", "трьох днів"]}, {"index": 2, "answer": "днів", "options": ["днів", "дні", "день", "дня"]}, {"index": 3, "answer": "написали б", "options": ["написали б", "напишемо", "писали б", "напишуть"]}, {"index": 4, "answer": "зробити", "options": ["зробити", "робити", "робимо", "зробимо"]}, {"index": 5, "answer": "більш ефективний", "options": ["більш ефективний", "більш ефективніший", "ефективніше", "найбільш ефективно"]}, {"index": 6, "answer": "писати", "options": ["писати", "написати", "пишу", "напишу"]}, {"index": 7, "answer": "напишу", "options": ["напишу", "пишу", "писатиму", "написав"]}, {"index": 8, "answer": "Краще", "options": ["Краще", "Добре", "Більш краще", "Найкраще"]}, {"index": 9, "answer": "приходьте", "options": ["приходьте", "прийдіть", "приходити", "прийти"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| робити | [rɔˈbɪtɪ] | to do, to make (process) | verb |  |  |
-| зробити | [zrɔˈbɪtɪ] | to get done, to make (result) | verb |  |  |
-| добрий | [ˈdɔbrɪj] | good | adjective |  |  |
-| кращий | [ˈkrɑʃt͡ʃɪj] | better | adjective |  |  |
-| один | [ɔˈdɪn] | one | numeral |  |  |
-| одна | [ɔˈdnɑ] | one (feminine) | numeral |  |  |
-| одне | [ɔˈdnɛ] | one (neuter) | numeral |  |  |
-| писати | [pɪˈsɑtɪ] | to write (process) | verb |  |  |
-| написати | [nɑpɪˈsɑtɪ] | to write, to finish writing (result) | verb |  |  |
-| великий | [ʋɛˈlɪkɪj] | big, large | adjective |  |  |
-| більший | [ˈbʲilʲʃɪj] | bigger, larger | adjective |  |  |
-| вчасно | [ˈʍt͡ʃɑsnɔ] | on time | adverb |  |  |
-| пізно | [ˈpʲiznɔ] | late | adverb |  |  |
-| вибір | [ˈʋɪbʲir] | choice | noun | ч |  |
-| більш | [bʲilʲʃ] | more | adverb |  |  |
-| менш | [mɛnʃ] | less | adverb |  |  |
-| малий | [mɑˈlɪj] | small | adjective |  |  |
-| менший | [ˈmɛnʃɪj] | smaller | adjective |  |  |
-| поганий | [pɔˈɦɑnɪj] | bad | adjective |  |  |
-| гірший | [ˈɦʲirʃɪj] | worse | adjective |  |  |
-| приходити | [prɪˈxɔdɪtɪ] | to come, to arrive (process) | verb |  |  |
-| прийти | [prɪjˈtɪ] | to come, to arrive (result) | verb |  |  |
-| результат | [rɛzulʲˈtɑt] | result | noun | ч |  |
-| процес | [prɔˈt͡sɛs] | process | noun | ч |  |
-| сучасний | [suˈt͡ʃɑsnɪj] | modern | adjective |  |  |
-| прикметник | [prɪˈkmɛtnɪk] | adjective | noun |  |  |
-| недоконаний | [nɛdɔˈkɔnɑnɪj] | imperfective | adjective |  |  |
-| називний | [nɑzɪˈʋnɪj] | nominative | adjective |  |  |
-| доконаний | [dɔˈkɔnɑnɪj] | perfective | adjective |  |  |
-| родовий | [rɔˈdɔˈʋɪj] | genitive | adjective |  |  |
-| вид | [ʋɪd] | aspect | noun |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

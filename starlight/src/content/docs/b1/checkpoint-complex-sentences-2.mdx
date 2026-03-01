@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Контрольна точка: складні речення (частина 2)
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -419,7 +425,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **контрольна точка** |  | checkpoint | ім |  |
+| **повторення** |  | review | ім |  |
+| **оцінювання** |  | assessment | ім |  |
+| **інтеграція** |  | integration | ім |  |
+| **непряма мова** |  | indirect speech | ім |  |
+| **допустовий** |  | concessive | adjective |  |
+| **причиновий** |  | causal | adjective |  |
+| **часовий** |  | temporal | adjective |  |
+| **трансформація** |  | transformation | ім |  |
+| **прогрес** |  | progress | ім |  |
+| **рівень** |  | level | ім |  |
+| **готовність** |  | readiness | ім |  |
+| **парадокс** |  | paradox | ім |  |
+| **суперечність** |  | contradiction | ім |  |
+| **перешкода** |  | obstacle | ім |  |
+| **універсальний** |  | universal | adjective |  |
+| **гнучкість** |  | flexibility | ім |  |
+| **інтрига** |  | intrigue | ім |  |
+| **наполегливість** |  | persistence | ім |  |
+| **мізерний** |  | insignificant | adjective |  |
+| **автентичність** |  | authenticity | ім |  |
+| **солідно** |  | solidly / formally | adverb |  |
+| **прокрастинація** |  | procrastination | ім |  |
+| **аргументація** |  | argumentation | ім |  |
+| **наслідок** |  | consequence | ім |  |
+| **безапеляційний** |  | categorical / peremptory | adjective |  |
+| **інструкція** |  | instruction | ім |  |
+| **інтуїтивний** |  | intuitive | adjective |  |
+| **філігранно** |  | masterfully | adverb |  |
+| **свідомо** |  | consciously | adverb |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Розуміння синтаксичних концепцій
 
@@ -472,37 +515,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Translate client:load questions={JSON.parse(`[{"source": "I stayed at home because I got very sick.", "options": [{"text": "Я залишився вдома, тому що дуже захворів.", "correct": true}, {"text": "Я залишився вдома, тому дуже захворів.", "correct": false}, {"text": "Я залишився вдома, хоча дуже захворів.", "correct": false}]}, {"source": "I got very sick, therefore I stayed at home.", "options": [{"text": "Я дуже захворів, тому що залишився вдома.", "correct": false}, {"text": "Я дуже захворів, тому залишився вдома.", "correct": true}, {"text": "Я дуже захворів, бо залишився вдома.", "correct": false}]}, {"source": "Even though it was raining, we went for a walk.", "options": [{"text": "Тому що йшов дощ, ми пішли гуляти.", "correct": false}, {"text": "Хоча йшов дощ, ми пішли гуляти.", "correct": true}, {"text": "Поки йшов дощ, ми пішли гуляти.", "correct": false}]}, {"source": "He asked whether I had read this book.", "options": [{"text": "Він запитав, що я читав цю книгу.", "correct": false}, {"text": "Він запитав, чи я читав цю книгу.", "correct": true}, {"text": "Він запитав, як я читав цю книгу.", "correct": false}]}, {"source": "She asked me to close the window.", "options": [{"text": "Вона попросила, щоб я закрив вікно.", "correct": true}, {"text": "Вона попросила, що я закрив вікно.", "correct": false}, {"text": "Вона попросила, чи я закрив вікно.", "correct": false}]}, {"source": "The officer ordered to stand still.", "options": [{"text": "Офіцер наказав, щоб стояти на місці.", "correct": false}, {"text": "Офіцер наказав стояти на місці.", "correct": true}, {"text": "Офіцер наказав, чи стояти на місці.", "correct": false}]}, {"source": "I will read while you cook.", "options": [{"text": "Я буду читати, коли ти готуєш.", "correct": false}, {"text": "Я буду читати, поки ти готуєш.", "correct": true}, {"text": "Я буду читати, хоча ти готуєш.", "correct": false}]}, {"source": "We have finished the project. Thus, we can relax.", "options": [{"text": "Ми завершили проєкт. Тому що ми можемо відпочити.", "correct": false}, {"text": "Ми завершили проєкт. Отже, ми можемо відпочити.", "correct": true}, {"text": "Ми завершили проєкт. Хоча ми можемо відпочити.", "correct": false}]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **контрольна точка** | [kɔnˈtrɔlʲnɑ ˈtɔt͡ʃkɑ] | checkpoint | ім |  |
-| **повторення** | [pɔˈʋtɔrɛnʲːɑ] | review | ім |  |
-| **оцінювання** | [ɔˈt͡sʲinʲuʋɑnʲːɑ] | assessment | ім |  |
-| **інтеграція** | [intɛˈɦrɑt͡sʲijɑ] | integration | ім |  |
-| **непряма мова** | [nɛprʲɑˈmɑ ˈmɔʋɑ] | indirect speech | ім |  |
-| **допустовий** | [dɔpuˈstɔʋɪj] | concessive | adjective |  |
-| **причиновий** | [prɪt͡ʃɪˈnɔʋɪj] | causal | adjective |  |
-| **часовий** | [t͡ʃɑsɔˈʋɪj] | temporal | adjective |  |
-| **трансформація** | [trɑnsfɔrˈmɑt͡sʲijɑ] | transformation | ім |  |
-| **прогрес** | [prɔˈɦrɛs] | progress | ім |  |
-| **рівень** | [ˈrʲiʋɛnʲ] | level | ім |  |
-| **готовність** | [ɦɔˈtɔu̯nʲisʲtʲ] | readiness | ім |  |
-| **парадокс** | [pɑrɑˈdɔks] | paradox | ім |  |
-| **суперечність** | [supɛˈrɛt͡ʃnʲisʲtʲ] | contradiction | ім |  |
-| **перешкода** | [pɛrɛˈʃkɔdɑ] | obstacle | ім |  |
-| **універсальний** | [unʲiʋɛrˈsɑlʲnɪj] | universal | adjective |  |
-| **гнучкість** | [ˈɦnut͡ʃkʲisʲtʲ] | flexibility | ім |  |
-| **інтрига** | [inˈtrɪɦɑ] | intrigue | ім |  |
-| **наполегливість** | [nɑpɔˈlɛɦlɪʋʲisʲtʲ] | persistence | ім |  |
-| **мізерний** | [mʲiˈzɛrnɪj] | insignificant | adjective |  |
-| **автентичність** | [ɑu̯tɛnˈtɪt͡ʃnʲisʲtʲ] | authenticity | ім |  |
-| **солідно** | [sɔˈlʲidnɔ] | solidly / formally | adverb |  |
-| **прокрастинація** | [prɔkrɑstɪnɑt͡sʲijɑ] | procrastination | ім |  |
-| **аргументація** | [ɑrɦumɛnˈtɑt͡sʲijɑ] | argumentation | ім |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence | ім |  |
-| **безапеляційний** | [bɛzɑpɛlʲɑˈt͡sʲijnɪj] | categorical / peremptory | adjective |  |
-| **інструкція** | [inˈstrukt͡sʲijɑ] | instruction | ім |  |
-| **інтуїтивний** | [intujiˈtɪu̯nɪj] | intuitive | adjective |  |
-| **філігранно** | [fʲilʲiˈɦrɑnːɔ] | masterfully | adverb |  |
-| **свідомо** | [sʲʋʲiˈdɔmɔ] | consciously | adverb |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

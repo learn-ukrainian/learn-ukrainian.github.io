@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Online Services
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -322,7 +328,39 @@ Foreign students very often accidentally confuse two important words when talkin
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| замовлення |  | order | noun | с |  |
+| кошик |  | cart / basket | noun | ч |  |
+| доставка |  | delivery | noun | ж |  |
+| додаток |  | app / application | noun | ч |  |
+| картка |  | card | noun | ж |  |
+| переказ |  | transfer | noun | ч |  |
+| баланс |  | balance | noun | ч |  |
+| оплата |  | payment | noun | ж |  |
+| підтвердження |  | confirmation | noun | с |  |
+| відстеження |  | tracking | noun | с |  |
+| підтримка |  | support | noun | ж |  |
+| скарга |  | complaint | noun | ж |  |
+| повернення |  | return / refund | noun | с |  |
+| банка |  | jar / fundraising tool | noun | ж |  |
+| промокод |  | promo code | noun | ч |  |
+| кількість |  | quantity / amount | noun | ж |  |
+| номер |  | number / ID | noun | ч |  |
+| термінал |  | payment terminal | noun | ч |  |
+| скасувати |  | to cancel | verb |  |  |
+| оформити |  | to process / place | verb |  |  |
+| поповнити |  | to top up | verb |  |  |
+| натиснути |  | to press | verb |  |  |
+| обрати |  | to choose / select | verb |  |  |
+| підтвердити |  | to confirm | verb |  |  |
+| безкоштовний |  | free of charge | adj |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: онлайн сервіси
 
@@ -381,32 +419,10 @@ Foreign students very often accidentally confuse two important words when talkin
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Ваше поточне місце ... — вулиця Тараса Шевченка, будинок десять?", "answer": "посадки", "options": ["посадки", "призначення", "доставки", "оплати"]}, {"sentence": "А моє фінальне місце ... — головний залізничний вокзал міста.", "answer": "призначення", "options": ["призначення", "посадки", "повернення", "замовлення"]}, {"sentence": "Я дуже хотів ... баланс мого мобільного телефону на сто гривень.", "answer": "поповнити", "options": ["поповнити", "скасувати", "відстежити", "завантажити"]}, {"sentence": "Я хочу подати офіційну ... на цю технічну помилку.", "answer": "скаргу", "options": ["скаргу", "доставку", "картку", "банку"]}, {"sentence": "Назвіть ваш точний ... телефону та вашої картки, будь ласка.", "answer": "номер", "options": ["номер", "додаток", "кошик", "переказ"]}, {"sentence": "Я можу заплатити за всіх нас своєю кредитною карткою через цей ... .", "answer": "термінал", "options": ["термінал", "баланс", "промокод", "додаток"]}, {"sentence": "Скажіть, яка моя фінансова ... в цьому загальному чеку?", "answer": "частина", "options": ["частина", "скарга", "доставка", "банка"]}, {"sentence": "Я прямо зараз ... тобі ці гроші на картку.", "answer": "скину", "options": ["скину", "оформлю", "підтверджу", "натисну"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| замовлення | [zɑˈmɔu̯lɛnʲːɑ] | order | noun | с |  |
-| кошик | [ˈkɔʃɪk] | cart / basket | noun | ч |  |
-| доставка | [dɔˈstɑu̯kɑ] | delivery | noun | ж |  |
-| додаток | [dɔˈdɑtɔk] | app / application | noun | ч |  |
-| картка | [ˈkɑrtkɑ] | card | noun | ж |  |
-| переказ | [pɛˈrɛkɑz] | transfer | noun | ч |  |
-| баланс | [bɑˈlɑns] | balance | noun | ч |  |
-| оплата | [ɔˈplɑtɑ] | payment | noun | ж |  |
-| підтвердження | [pʲiˈdtʋɛrd͡ʒɛnʲːɑ] | confirmation | noun | с |  |
-| відстеження | [ʋʲiˈd͡zstɛʒɛnʲːɑ] | tracking | noun | с |  |
-| підтримка | [pʲiˈdtrɪmkɑ] | support | noun | ж |  |
-| скарга | [ˈskɑrɦɑ] | complaint | noun | ж |  |
-| повернення | [pɔˈʋɛrnɛnʲːɑ] | return / refund | noun | с |  |
-| банка | [ˈbɑnkɑ] | jar / fundraising tool | noun | ж |  |
-| промокод | [prɔmɔkɔd] | promo code | noun | ч |  |
-| кількість | [ˈkʲilʲkʲisʲtʲ] | quantity / amount | noun | ж |  |
-| номер | [ˈnɔmɛr] | number / ID | noun | ч |  |
-| термінал | [tɛrmʲiˈnɑl] | payment terminal | noun | ч |  |
-| скасувати | [skɑsuˈʋɑtɪ] | to cancel | verb |  |  |
-| оформити | [ɔˈfɔrmɪtɪ] | to process / place | verb |  |  |
-| поповнити | [pɔˈpɔu̯nɪtɪ] | to top up | verb |  |  |
-| натиснути | [nɑˈtɪsnutɪ] | to press | verb |  |  |
-| обрати | [ɔˈbrɑtɪ] | to choose / select | verb |  |  |
-| підтвердити | [pʲiˈdtʋɛrdɪtɪ] | to confirm | verb |  |  |
-| безкоштовний | [bɛzkɔˈʃtɔu̯nɪj] | free of charge | adj |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

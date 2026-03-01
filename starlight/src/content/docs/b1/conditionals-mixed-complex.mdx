@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Умовні речення: змішані та складні умови
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -359,7 +365,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **якщо не** |  | if not / unless | фраза |  |
+| **навіть якщо** |  | even if (real) | фраза |  |
+| **за умови** |  | on the condition of / provided that | фраза |  |
+| **якби** |  | if (unreal) | conjunction |  |
+| **змішаний** |  | mixed | adjective | змішаний тип умовних речень |
+| **складний** |  | complex / difficult | adjective | складні умови |
+| **ланцюговий** |  | chained | adjective | ланцюгова реакція |
+| **навіть якби** |  | even if (unreal) | фраза |  |
+| **доки** |  | as long as / until | conjunction | доки не |
+| **в іншому випадку** |  | otherwise | фраза |  |
+| **інакше** |  | differently / otherwise | adverb |  |
+| **крім того** |  | besides / furthermore | фраза |  |
+| **до того ж** |  | moreover / besides | фраза |  |
+| **тим часом** |  | meanwhile | фраза |  |
+| **проте** |  | however | conjunction |  |
+| **однак** |  | however / though | conjunction |  |
+| **втім** |  | however / though | conjunction |  |
+| **наслідок** |  | consequence / result | ім |  |
+| **припущення** |  | assumption | ім |  |
+| **ірреальний** |  | unreal | adjective |  |
+| **логічний** |  | logical | adjective |  |
+| **русизм** |  | Russianism (borrowing from Russian) | ім |  |
+| **пунктуація** |  | punctuation | ім |  |
+| **кома** |  | comma | ім |  |
+| **підрядний** |  | subordinate | adjective | підрядна частина речення |
+| **милозвучність** |  | euphony / pleasant sound | ім |  |
+| **офіційно-діловий** |  | formal / official-business | adjective | офіційно-діловий стиль |
+| **перешкода** |  | obstacle / hindrance | ім |  |
+| **угода** |  | agreement / contract | ім |  |
+| **ланцюжок** |  | chain | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Реальність чи гіпотеза: оберіть правильний варіант
 
@@ -427,37 +470,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Ми поїдемо в гори, тільки коли буде сонце. — Ми поїдемо в гори, [answer] буде сонце.", "answer": "якщо", "options": ["якщо", "якби", "доки", "за умови"]}, {"sentence": "Без твоєї допомоги я б не впорався. — [answer] не твоя допомога, я б не впорався.", "answer": "Якби", "options": ["Якби", "Якщо", "Навіть якщо", "Доки"]}, {"sentence": "Я закінчу проект незважаючи на проблеми. — Я закінчу проект, [answer] виникнуть проблеми.", "answer": "навіть якщо", "options": ["навіть якщо", "якщо не", "за умови", "якби"]}, {"sentence": "Договір діє при дотриманні правил. — Договір діє [answer] дотримання правил.", "answer": "за умови", "options": ["за умови", "якщо", "якби", "доки"]}, {"sentence": "Ми не зможемо працювати без фінансування. — Ми не зможемо працювати, [answer] не отримаємо фінансування.", "answer": "якщо", "options": ["якщо", "якби", "навіть якщо", "доки"]}, {"sentence": "Ти не складеш іспит, поки не вивчиш усе. — Ти не складеш іспит, [answer] не вивчиш усе.", "answer": "доки", "options": ["доки", "якщо", "якби", "за умови"]}, {"sentence": "Шкода, що я не знав правди. — [answer] я тільки знав правду!", "answer": "Якби", "options": ["Якби", "Якщо", "За умови", "Єслі"]}, {"sentence": "Роботу буде розпочато після підписання контракту. — Роботу буде розпочато за умови, [answer] контракт буде підписано.", "answer": "що", "options": ["що", "як", "щоб", "коли"]}, {"sentence": "Ми поїдемо на море в будь-якому разі, незважаючи на дощ. — Ми поїдемо на море, [answer] буде дощ.", "answer": "навіть якщо", "options": ["навіть якщо", "якщо не", "за умови", "якби"]}, {"sentence": "Без згоди керівника я цього не зроблю. — Я не зроблю цього, [answer] керівник не погодиться.", "answer": "якщо", "options": ["якщо", "якби", "доки", "за умови"]}, {"sentence": "З тобою ми б перемогли. — [answer] ти був з нами, ми б перемогли.", "answer": "Якби", "options": ["Якби", "Якщо", "Навіть якщо", "Доки"]}, {"sentence": "Заплатіть зараз, і ми відправимо товар. — Ми відправимо товар [answer] повної оплати.", "answer": "за умови", "options": ["за умови", "якщо", "якби", "доки"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **якщо не** | [jɑˈkʃt͡ʃɔ nɛ] | if not / unless | фраза |  |
-| **навіть якщо** | [ˈnɑʋʲitʲ jɑˈkʃt͡ʃɔ] | even if (real) | фраза |  |
-| **за умови** | [zɑ uˈmɔʋɪ] | on the condition of / provided that | фраза |  |
-| **якби** | [jɑˈɡbɪ] | if (unreal) | conjunction |  |
-| **змішаний** | [ˈzʲmʲiʃɑnɪj] | mixed | adjective | змішаний тип умовних речень |
-| **складний** | [sklɑdnɪj] | complex / difficult | adjective | складні умови |
-| **ланцюговий** | [lɑnʲt͡sʲuˈɦɔʋɪj] | chained | adjective | ланцюгова реакція |
-| **навіть якби** | [ˈnɑʋʲitʲ jɑˈɡbɪ] | even if (unreal) | фраза |  |
-| **доки** | [ˈdɔkɪ] | as long as / until | conjunction | доки не |
-| **в іншому випадку** | [ʋ ˈinʃɔmu ˈʋɪpɑdku] | otherwise | фраза |  |
-| **інакше** | [iˈnɑkʃɛ] | differently / otherwise | adverb |  |
-| **крім того** | [krʲim tɔˈɦɔ] | besides / furthermore | фраза |  |
-| **до того ж** | [dɔ tɔˈɦɔ ʒ] | moreover / besides | фраза |  |
-| **тим часом** | [tɪm ˈt͡ʃɑsɔm] | meanwhile | фраза |  |
-| **проте** | [prɔˈtɛ] | however | conjunction |  |
-| **однак** | [ɔˈdnɑk] | however / though | conjunction |  |
-| **втім** | [ʍtʲim] | however / though | conjunction |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence / result | ім |  |
-| **припущення** | [prɪˈpuʃt͡ʃɛnʲːɑ] | assumption | ім |  |
-| **ірреальний** | [irːɛˈɑlʲnɪj] | unreal | adjective |  |
-| **логічний** | [lɔˈɦʲit͡ʃnɪj] | logical | adjective |  |
-| **русизм** | [ruˈsɪzm] | Russianism (borrowing from Russian) | ім |  |
-| **пунктуація** | [punktuˈɑt͡sʲijɑ] | punctuation | ім |  |
-| **кома** | [ˈkɔmɑ] | comma | ім |  |
-| **підрядний** | [pʲiˈdʲrʲɑdnɪj] | subordinate | adjective | підрядна частина речення |
-| **милозвучність** | [mɪlɔˈzʋut͡ʃnʲisʲtʲ] | euphony / pleasant sound | ім |  |
-| **офіційно-діловий** | [ɔfʲiˈt͡sʲijnɔ-dʲilɔˈʋɪj] | formal / official-business | adjective | офіційно-діловий стиль |
-| **перешкода** | [pɛrɛˈʃkɔdɑ] | obstacle / hindrance | ім |  |
-| **угода** | [uˈɦɔdɑ] | agreement / contract | ім |  |
-| **ланцюжок** | [lɑnʲt͡sʲuˈʒɔk] | chain | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

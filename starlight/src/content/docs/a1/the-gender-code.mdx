@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Гендерний Код (The Gender Code)
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -383,7 +389,13 @@ This foundation will support everything else you build. Next, we will learn how 
 5. Is **ім'я** (name) Feminine? Explain why or why not.
 6. Look at the word **брат**. What is the ending, and what is the gender?
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+*No vocabulary for this module.*
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Сортування за родом
 
@@ -420,3 +432,11 @@ This foundation will support everything else you build. Next, we will learn how 
 ### Пастки та винятки
 
 <Quiz client:load questions={JSON.parse(`[{"question": "Якого роду слово «собака»?", "options": [{"text": "Чоловічий", "correct": true}, {"text": "Жіночий", "correct": false}, {"text": "Середній", "correct": false}, {"text": "Спільний", "correct": false}], "explanation": "В українській мові собака — це він (чоловічий рід)."}, {"question": "Якого роду слово «ім'я»?", "options": [{"text": "Середній", "correct": true}, {"text": "Жіночий", "correct": false}, {"text": "Чоловічий", "correct": false}, {"text": "Не має роду", "correct": false}], "explanation": "Ім'я закінчується на -я, але належить до 4-ї відміни середнього роду."}, {"question": "Якого роду слово «ніч»?", "options": [{"text": "Жіночий", "correct": true}, {"text": "Чоловічий", "correct": false}, {"text": "Середній", "correct": false}, {"text": "Змішаний", "correct": false}], "explanation": "Слово ніч закінчується на приголосний, але це жіночий рід."}, {"question": "Якого роду слово «день»?", "options": [{"text": "Чоловічий", "correct": true}, {"text": "Жіночий", "correct": false}, {"text": "Середній", "correct": false}, {"text": "Спільний", "correct": false}], "explanation": "День закінчується на м'який знак, це чоловічий рід."}, {"question": "Яке словосполучення правильне?", "options": [{"text": "мій тато", "correct": true}, {"text": "моє тато", "correct": false}, {"text": "моя тато", "correct": false}, {"text": "мої тато", "correct": false}], "explanation": "Тато — чоловічий рід, тому правильно «мій тато»."}, {"question": "Якого роду слово «мама»?", "options": [{"text": "Жіночий", "correct": true}, {"text": "Чоловічий", "correct": false}, {"text": "Середній", "correct": false}, {"text": "Спільний", "correct": false}], "explanation": "Мама — жіночий рід, закінчується на -а."}, {"question": "Якого роду слово «чоловік»?", "options": [{"text": "Чоловічий", "correct": true}, {"text": "Жіночий", "correct": false}, {"text": "Середній", "correct": false}, {"text": "Спільний", "correct": false}], "explanation": "Чоловік (husband/man) — чоловічий рід."}, {"question": "Якого роду слово «жінка»?", "options": [{"text": "Жіночий", "correct": true}, {"text": "Чоловічий", "correct": false}, {"text": "Середній", "correct": false}, {"text": "Спільний", "correct": false}], "explanation": "Жінка (wife/woman) — жіночий рід."}, {"question": "Якого роду слово «брат»?", "options": [{"text": "Чоловічий", "correct": true}, {"text": "Жіночий", "correct": false}, {"text": "Середній", "correct": false}, {"text": "Спільний", "correct": false}], "explanation": "Брат — чоловічий рід."}, {"question": "Якого роду слово «сестра»?", "options": [{"text": "Жіночий", "correct": true}, {"text": "Чоловічий", "correct": false}, {"text": "Середній", "correct": false}, {"text": "Спільний", "correct": false}], "explanation": "Сестра — жіночий рід."}, {"question": "Якого роду слово «дім»?", "options": [{"text": "Чоловічий", "correct": true}, {"text": "Жіночий", "correct": false}, {"text": "Середній", "correct": false}, {"text": "Спільний", "correct": false}], "explanation": "Дім — чоловічий рід."}, {"question": "Якого роду слово «серце»?", "options": [{"text": "Середній", "correct": true}, {"text": "Жіночий", "correct": false}, {"text": "Чоловічий", "correct": false}, {"text": "Спільний", "correct": false}], "explanation": "Серце — середній рід."}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

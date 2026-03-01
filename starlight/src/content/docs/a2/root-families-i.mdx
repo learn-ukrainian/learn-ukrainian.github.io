@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Root Families I: The DNA of Vocabulary
+{/**/}
 
 Привіт! Welcome to your first word-building module.
 
@@ -313,7 +319,43 @@ When you meet a familiar root with an unfamiliar prefix, read the whole sentence
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| хід |  | move, turn, progress | noun | ч |  |
+| вхід |  | entrance | noun | ч |  |
+| вихід |  | exit, solution | noun | ч |  |
+| перехід |  | crossing, transition | noun | ч |  |
+| похід |  | hike, campaign | noun | ч |  |
+| писати |  | to write | verb |  |  |
+| написати |  | to finish writing | verb |  |  |
+| підпис |  | signature | noun | ч |  |
+| опис |  | description | noun | ч |  |
+| запис |  | record, entry, recording | noun | ч |  |
+| письменник |  | writer | noun | ч |  |
+| читач |  | reader | noun | ч |  |
+| читання |  | reading | noun | с |  |
+| прочитати |  | to read through | verb |  |  |
+| побачення |  | date (romantic) | noun | с |  |
+| передбачити |  | to foresee, to predict | verb |  |  |
+| розклад |  | schedule | noun | ч |  |
+| вичитати |  | to proofread, to scold | verb |  |  |
+| обачний |  | cautious | adj |  |  |
+| сходити |  | to go and come back, to climb | verb |  |  |
+| корінь |  | root | noun | ч |  |
+| префікс |  | prefix | noun | ч |  |
+| суфікс |  | suffix | noun | ч |  |
+| бачити |  | to see | verb |  |  |
+| дивитися |  | to watch, to look at | verb |  |  |
+| іменник |  | noun | noun | ч |  |
+| вид |  | aspect (grammar), type | noun | ч |  |
+| доконаний |  | perfective (aspect) | adj |  |  |
+| недоконаний |  | imperfective (aspect) | adj |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: префікс і його значення
 
@@ -372,36 +414,10 @@ When you meet a familiar root with an unfamiliar prefix, read the whole sentence
 
 <Quiz client:load questions={JSON.parse(`[{"question": "Якщо при- означає наближення, а хід- — рух, що таке прихід?", "options": [{"text": "прибуття", "correct": true}, {"text": "відправлення", "correct": false}, {"text": "прогулянка", "correct": false}, {"text": "біг", "correct": false}], "explanation": "Прихід означає arrival, тобто рух ближче до чогось."}, {"question": "Якщо в- означає всередину, а читати — аналізувати текст, що означає дієслово вчитатися?", "options": [{"text": "уважно заглибитися в текст", "correct": true}, {"text": "швидко прочитати книгу", "correct": false}, {"text": "відмовитися від читання", "correct": false}, {"text": "голосно читати для когось", "correct": false}], "explanation": "Вчитатися означає зануритися в текст, читати дуже уважно."}, {"question": "Якщо роз- означає розділення або розповсюдження, а пис- стосується тексту, що таке розпис?", "options": [{"text": "декоративне малювання на поверхні", "correct": true}, {"text": "коротке текстове повідомлення", "correct": false}, {"text": "читання вголос", "correct": false}, {"text": "офіційний документ", "correct": false}], "explanation": "Розпис може означати процес створення орнаменту на стінах (наприклад, розпис храму)."}, {"question": "Префікс пере- означає зміну або перенесення. Що означає дієслово переписати?", "options": [{"text": "написати текст заново", "correct": true}, {"text": "прочитати текст швидко", "correct": false}, {"text": "опублікувати текст", "correct": false}, {"text": "забути текст", "correct": false}], "explanation": "Переписати означає написати текст ще раз, можливо, з певними змінами."}, {"question": "Суфікс -ка часто утворює жіночий рід професії. Як назвати жінку, яка пише книги?", "options": [{"text": "письменниця", "correct": true}, {"text": "читачка", "correct": false}, {"text": "бачка", "correct": false}, {"text": "перекладачка", "correct": false}], "explanation": "Від слова письменник за допомогою суфікса -иця або -ка (письменниця)."}, {"question": "Якщо префікс по- означає початок або коротку тривалість, що означає дієслово почитати?", "options": [{"text": "читати недовго", "correct": true}, {"text": "прочитати книгу до кінця", "correct": false}, {"text": "уважно вивчати текст", "correct": false}, {"text": "ніколи не читати", "correct": false}], "explanation": "Почитати означає читати протягом короткого періоду часу."}, {"question": "Префікс с- (з-) може означати рух униз. Що означає слово спуск (від спускатися)?", "options": [{"text": "рух донизу", "correct": true}, {"text": "рух угору", "correct": false}, {"text": "рух уперед", "correct": false}, {"text": "зупинка на місці", "correct": false}], "explanation": "Спуск означає рух з вищої точки в нижчу."}, {"question": "Якщо без- означає відсутність, а вихід означає шлях назовні, що означає прикметник безвихідний?", "options": [{"text": "ситуація, яка не має рішення", "correct": true}, {"text": "людина, яка завжди знаходить вихід", "correct": false}, {"text": "відкриті двері", "correct": false}, {"text": "початок нового проекту", "correct": false}], "explanation": "Безвихідна ситуація — це ситуація, з якої немає виходу або рішення."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| хід | [xʲid] | move, turn, progress | noun | ч |  |
-| вхід | [ʍxʲid] | entrance | noun | ч |  |
-| вихід | [ˈʋɪxʲid] | exit, solution | noun | ч |  |
-| перехід | [pɛrɛˈxʲid] | crossing, transition | noun | ч |  |
-| похід | [pɔˈxʲid] | hike, campaign | noun | ч |  |
-| писати | [pɪˈsɑtɪ] | to write | verb |  |  |
-| написати | [nɑpɪˈsɑtɪ] | to finish writing | verb |  |  |
-| підпис | [ˈpʲidpɪs] | signature | noun | ч |  |
-| опис | [ˈɔpɪs] | description | noun | ч |  |
-| запис | [ˈzɑpɪs] | record, entry, recording | noun | ч |  |
-| письменник | [pɪˈsʲmɛnːɪk] | writer | noun | ч |  |
-| читач | [t͡ʃɪˈtɑt͡ʃ] | reader | noun | ч |  |
-| читання | [t͡ʃɪˈtɑnʲːɑ] | reading | noun | с |  |
-| прочитати | [prɔt͡ʃɪˈtɑtɪ] | to read through | verb |  |  |
-| побачення | [pɔˈbɑt͡ʃɛnʲːɑ] | date (romantic) | noun | с |  |
-| передбачити | [pɛrɛˈdbɑt͡ʃɪtɪ] | to foresee, to predict | verb |  |  |
-| розклад | [ˈrɔzklɑd] | schedule | noun | ч |  |
-| вичитати | [ˈʋɪt͡ʃɪtɑtɪ] | to proofread, to scold | verb |  |  |
-| обачний | [ɔˈbɑt͡ʃnɪj] | cautious | adj |  |  |
-| сходити | [sxɔdɪtɪ] | to go and come back, to climb | verb |  |  |
-| корінь | [ˈkɔrʲinʲ] | root | noun | ч |  |
-| префікс | [prɛfʲiks] | prefix | noun | ч |  |
-| суфікс | [ˈsufʲiks] | suffix | noun | ч |  |
-| бачити | [ˈbɑt͡ʃɪtɪ] | to see | verb |  |  |
-| дивитися | [dɪˈʋɪtɪsʲɑ] | to watch, to look at | verb |  |  |
-| іменник | [iˈmɛnːɪk] | noun | noun | ч |  |
-| вид | [ʋɪd] | aspect (grammar), type | noun | ч |  |
-| доконаний | [dɔˈkɔnɑnɪj] | perfective (aspect) | adj |  |  |
-| недоконаний | [nɛdɔˈkɔnɑnɪj] | imperfective (aspect) | adj |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

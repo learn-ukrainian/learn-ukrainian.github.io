@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Food and Cooking
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -368,7 +374,40 @@ It is a very common and persistent myth that traditional, authentic Ukrainian co
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| варити |  | to boil / to cook in liquid | verb |  |  |
+| смажити |  | to fry | verb |  |  |
+| пекти |  | to bake | verb |  |  |
+| різати |  | to cut | verb |  |  |
+| каструля |  | pot | noun | ж |  |
+| сковорода |  | pan | noun | ж |  |
+| духовка |  | oven | noun | ж |  |
+| рецепт |  | recipe | noun | ч |  |
+| додавати |  | to add | verb |  |  |
+| змішувати |  | to mix | verb |  |  |
+| солодкий |  | sweet | adj |  |  |
+| солоний |  | salty | adj |  |  |
+| інгредієнт |  | ingredient | noun | ч |  |
+| страва |  | dish (food) | noun | ж |  |
+| зажарка |  | sauté / base for soup | noun | ж |  |
+| борщ |  | borshch | noun | ч |  |
+| вареники |  | varenyky / dumplings | noun | pl |  |
+| ложка |  | spoon | noun | ж |  |
+| ніж |  | knife | noun | ч |  |
+| гість |  | guest | noun | ч |  |
+| гостинність |  | hospitality | noun | ж |  |
+| сіль |  | salt | noun | ж |  |
+| перемішати |  | to mix thoroughly | verb |  |  |
+| нарізати |  | to chop / to slice | verb |  |  |
+| смак |  | taste / flavor | noun | ч |  |
+| орудний |  | instrumental | adj |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: кухонна лексика
 
@@ -427,33 +466,10 @@ It is a very common and persistent myth that traditional, authentic Ukrainian co
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Він / їсть / солоні / вареники / зі / сметаною", "answer": "Він їсть солоні вареники зі сметаною"}, {"jumbled": "Я / люблю / гарячий / чай / із / лимоном", "answer": "Я люблю гарячий чай із лимоном"}, {"jumbled": "Зажарка / дає / борщу / глибокий / червоний / колір", "answer": "Зажарка дає борщу глибокий червоний колір"}, {"jumbled": "Гостинність / це / важлива / частина / української / культури", "answer": "Гостинність це важлива частина української культури"}, {"jumbled": "Поклади / нарізані / овочі / у / велику / миску", "answer": "Поклади нарізані овочі у велику миску"}, {"jumbled": "Свіжий / хліб / завжди / стоїть / на / столі", "answer": "Свіжий хліб завжди стоїть на столі"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| варити | [ʋɑˈrɪtɪ] | to boil / to cook in liquid | verb |  |  |
-| смажити | [ˈsmɑʒɪtɪ] | to fry | verb |  |  |
-| пекти | [pɛˈktɪ] | to bake | verb |  |  |
-| різати | [ˈrʲizɑtɪ] | to cut | verb |  |  |
-| каструля | [kɑˈstrulʲɑ] | pot | noun | ж |  |
-| сковорода | [skɔʋɔrɔˈdɑ] | pan | noun | ж |  |
-| духовка | [duˈxɔu̯kɑ] | oven | noun | ж |  |
-| рецепт | [rɛˈt͡sɛpt] | recipe | noun | ч |  |
-| додавати | [dɔdɑˈʋɑtɪ] | to add | verb |  |  |
-| змішувати | [ˈzʲmʲiʃuʋɑtɪ] | to mix | verb |  |  |
-| солодкий | [sɔˈlɔdkɪj] | sweet | adj |  |  |
-| солоний | [sɔˈlɔnɪj] | salty | adj |  |  |
-| інгредієнт | [inɦrɛdʲiˈjɛnt] | ingredient | noun | ч |  |
-| страва | [ˈstrɑʋɑ] | dish (food) | noun | ж |  |
-| зажарка | [zɑʒɑrkɑ] | sauté / base for soup | noun | ж |  |
-| борщ | [bɔrʃt͡ʃ] | borshch | noun | ч |  |
-| вареники | [ʋɑˈrɛnɪkɪ] | varenyky / dumplings | noun | pl |  |
-| ложка | [ˈlɔʒkɑ] | spoon | noun | ж |  |
-| ніж | [nʲiʒ] | knife | noun | ч |  |
-| гість | [ɦʲisʲtʲ] | guest | noun | ч |  |
-| гостинність | [ɦɔˈstɪnʲːisʲtʲ] | hospitality | noun | ж |  |
-| сіль | [sʲilʲ] | salt | noun | ж |  |
-| перемішати | [pɛrɛmʲiˈʃɑtɪ] | to mix thoroughly | verb |  |  |
-| нарізати | [nɑrʲizɑtɪ] | to chop / to slice | verb |  |  |
-| смак | [smɑk] | taste / flavor | noun | ч |  |
-| орудний | [ɔˈrudnɪj] | instrumental | adj |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

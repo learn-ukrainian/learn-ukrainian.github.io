@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Root Families II: Communication and Thought
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -338,7 +344,39 @@ Sorting words into these semantic clusters is a powerful cognitive exercise that
 4. Чим відрізняється активне verb «слухати» від пасивного verb «чути»?
 5. Як українська культура пов'язує концепції уважного слухання та хорошої поведінки?
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| думати |  | to think | verb |  |  |
+| думка |  | thought, opinion | noun | ж |  |
+| говорити |  | to speak | verb |  |  |
+| розмовляти |  | to converse | verb |  |  |
+| мова |  | language | noun | ж |  |
+| слухати |  | to listen | verb |  |  |
+| слухняний |  | obedient | adjective |  |  |
+| відмова |  | refusal | noun | ж |  |
+| казати |  | to say, to tell | verb |  |  |
+| мовчання |  | silence | noun | с |  |
+| вважати |  | to consider, to believe | verb |  |  |
+| чути |  | to hear | verb |  |  |
+| розмова |  | conversation | noun | ж |  |
+| відмовляти |  | to refuse | verb |  |  |
+| розум |  | mind, intellect | noun | ч |  |
+| слух |  | hearing | noun | ч |  |
+| слово |  | word | noun | с |  |
+| звук |  | sound | noun | ч |  |
+| спілкування |  | communication | noun | с |  |
+| рішення |  | decision | noun | с |  |
+| обмін |  | exchange | noun | ч |  |
+| діалог |  | dialogue | noun | ч |  |
+| увага |  | attention | noun | ж |  |
+| розуміти |  | to understand | verb |  |  |
+| язик |  | tongue | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Сортування: Кореневі родини
 
@@ -397,32 +435,10 @@ Sorting words into these semantic clusters is a powerful cognitive exercise that
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Він / каже / що / буде / завтра / вдома", "answer": "Він каже що буде завтра вдома"}, {"jumbled": "Я / часто / слухаю / українську / музику / вранці", "answer": "Я часто слухаю українську музику вранці"}, {"jumbled": "Ця / відмова / була / дуже / несподіваною / для / нас", "answer": "Ця відмова була дуже несподіваною для нас"}, {"jumbled": "Вона / добре / говорить / українською / і / англійською", "answer": "Вона добре говорить українською і англійською"}, {"jumbled": "Ми / маємо / різні / думки / про / цю / проблему", "answer": "Ми маємо різні думки про цю проблему"}, {"jumbled": "Слово / срібло / а / мовчання / це / золото", "answer": "Слово срібло а мовчання це золото"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| думати | [ˈdumɑtɪ] | to think | verb |  |  |
-| думка | [ˈdumkɑ] | thought, opinion | noun | ж |  |
-| говорити | [ɦɔʋɔˈrɪtɪ] | to speak | verb |  |  |
-| розмовляти | [rɔzmɔˈʋlʲɑtɪ] | to converse | verb |  |  |
-| мова | [ˈmɔʋɑ] | language | noun | ж |  |
-| слухати | [ˈsluxɑtɪ] | to listen | verb |  |  |
-| слухняний | [sluˈxnʲɑnɪj] | obedient | adjective |  |  |
-| відмова | [ʋʲiˈdmɔʋɑ] | refusal | noun | ж |  |
-| казати | [kɑˈzɑtɪ] | to say, to tell | verb |  |  |
-| мовчання | [mɔˈʋt͡ʃɑnʲːɑ] | silence | noun | с |  |
-| вважати | [ʋːɑˈʒɑtɪ] | to consider, to believe | verb |  |  |
-| чути | [ˈt͡ʃutɪ] | to hear | verb |  |  |
-| розмова | [rɔˈzmɔʋɑ] | conversation | noun | ж |  |
-| відмовляти | [ʋʲidmɔˈʋlʲɑtɪ] | to refuse | verb |  |  |
-| розум | [ˈrɔzum] | mind, intellect | noun | ч |  |
-| слух | [slux] | hearing | noun | ч |  |
-| слово | [ˈslɔʋɔ] | word | noun | с |  |
-| звук | [zʋuk] | sound | noun | ч |  |
-| спілкування | [sʲpʲilkuˈʋɑnʲːɑ] | communication | noun | с |  |
-| рішення | [ˈrʲiʃɛnʲːɑ] | decision | noun | с |  |
-| обмін | [ˈɔbmʲin] | exchange | noun | ч |  |
-| діалог | [dʲiɑˈlɔɦ] | dialogue | noun | ч |  |
-| увага | [uˈʋɑɦɑ] | attention | noun | ж |  |
-| розуміти | [rɔzuˈmʲitɪ] | to understand | verb |  |  |
-| язик | [jɑˈzɪk] | tongue | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

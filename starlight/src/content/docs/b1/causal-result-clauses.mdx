@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Причинові та наслідкові речення
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -477,7 +483,44 @@ graph LR
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **тому що** |  | because | conjunction | High frequency, neutral/universal |
+| **бо** |  | because | conjunction | High frequency, spoken, often at end of sentence |
+| **через те що** |  | due to the fact that | conjunction | Medium frequency, neutral, external circumstances |
+| **тому** |  | therefore | conjunction | High frequency connector |
+| **отже** |  | thus / so | conjunction | Medium frequency, logical conclusion |
+| **причина** |  | cause / reason | ім |  |
+| **наслідок** |  | consequence / effect | ім |  |
+| **внаслідок** |  | as a result of | preposition | Low frequency, formal, takes Genitive case |
+| **оскільки** |  | since / as | conjunction | Medium frequency, formal, typically starts a sentence |
+| **завдяки** |  | thanks to | preposition | Positive cause/reason, takes Dative case |
+| **у зв'язку з** |  | in connection with / due to | preposition | Formal/official administrative register |
+| **відтак** |  | hence / consequently | adverb | Professional/journalistic style |
+| **доля** |  | fate / destiny | ім |  |
+| **висновок** |  | conclusion | ім |  |
+| **обставина** |  | circumstance | ім |  |
+| **відповідальність** |  | responsibility | ім |  |
+| **логіка** |  | logic | ім |  |
+| **дія** |  | action | ім |  |
+| **результат** |  | result | ім |  |
+| **впливати** |  | to influence | дієсл |  |
+| **вплинути** |  | to influence | дієсл |  |
+| **перешкода** |  | obstacle | ім |  |
+| **дослідження** |  | research / study | ім |  |
+| **доводити** |  | to prove | дієсл |  |
+| **скасовувати** |  | to cancel | дієсл |  |
+| **аналізувати** |  | to analyze | дієсл |  |
+| **факт** |  | fact | ім |  |
+| **закономірність** |  | regularity / pattern | ім |  |
+| **зумовлювати** |  | to cause / determine | дієсл |  |
+| **успіх** |  | success | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Заповніть пропуски сполучниками
 
@@ -543,37 +586,10 @@ graph LR
 
 <Quiz client:load questions={JSON.parse(`[{"question": "У якому стилі спілкування найчастіше використовується складений прийменник \\"у зв'язку з\\"?", "options": [{"text": "в офіційно-діловому та адміністративному", "correct": true}, {"text": "у розмовному та побутовому", "correct": false}, {"text": "у художньому та поетичному", "correct": false}, {"text": "у фольклорі та казках", "correct": false}], "explanation": "Ця конструкція належить до канцелярського, офіційного стилю."}, {"question": "Який причиновий сполучник є ідеальним для неформального листування з друзями?", "options": [{"text": "бо", "correct": true}, {"text": "оскільки", "correct": false}, {"text": "у зв'язку з", "correct": false}, {"text": "внаслідок того що", "correct": false}], "explanation": "Сполучник \\"бо\\" є розмовним, швидким та емоційним."}, {"question": "Чому початок речення зі слів \\"Тому що\\" вважається стилістично слабким на рівні B1?", "options": [{"text": "він створений для з'єднання частин всередині речення, а не для його початку", "correct": true}, {"text": "це словосполучення є застарілим і більше не використовується", "correct": false}, {"text": "воно звучить занадто офіційно для звичайної розмови", "correct": false}, {"text": "це пряма калька з російської мови", "correct": false}], "explanation": "Для початку речення українська мова пропонує елегантніші інструменти, наприклад, \\"Оскільки\\"."}, {"question": "Який наслідковий сполучник найчастіше використовується для підбиття логічного підсумку?", "options": [{"text": "отже", "correct": true}, {"text": "бо", "correct": false}, {"text": "тому що", "correct": false}, {"text": "через те що", "correct": false}], "explanation": "\\"Отже\\" є сигналом для читача, що зараз буде головний висновок з усього сказаного вище."}, {"question": "Що означає прислів'я \\"Хто полю годить, тому жито родить\\" у контексті логіки?", "options": [{"text": "наслідок є прямою та невідворотною винагородою за активну причину (працю)", "correct": true}, {"text": "сільське господарство завжди було важливою частиною економіки", "correct": false}, {"text": "погода дуже сильно впливає на врожайність полів", "correct": false}, {"text": "іноді результати з'являються абсолютно випадково", "correct": false}], "explanation": "Це прислів'я ілюструє український аграрний етос, де праця завжди зумовлює результат."}, {"question": "Як зміна пасивного стану на активний у причинових реченнях впливає на їхній зміст?", "options": [{"text": "вона підкреслює особисту відповідальність та здатність до контролю", "correct": true}, {"text": "вона робить речення довшим і складнішим для розуміння", "correct": false}, {"text": "вона приховує справжню причину події від співрозмовника", "correct": false}, {"text": "вона додає реченню відтінок фаталізму та безвиході", "correct": false}], "explanation": "Використання активного стану з причиновими сполучниками робить мову сильною, впевненою та відповідальною."}, {"question": "Яке слово слід використовувати замість русизму \\"тому як\\" на початку пояснювального речення?", "options": [{"text": "оскільки", "correct": true}, {"text": "завдяки", "correct": false}, {"text": "відтак", "correct": false}, {"text": "бо", "correct": false}], "explanation": "Питомо український відповідник для цієї структури — це \\"оскільки\\"."}, {"question": "В якому випадку доречно використати сполучник \\"завдяки тому що\\"?", "options": [{"text": "коли подія призвела до хорошого, бажаного результату", "correct": true}, {"text": "коли трапилася серйозна аварія або катастрофа", "correct": false}, {"text": "коли ми описуємо нейтральні природні явища", "correct": false}, {"text": "коли ми хочемо зняти з себе відповідальність за помилку", "correct": false}], "explanation": "Сполучник \\"завдяки\\" завжди вимагає подяки і використовується лише для позитивних подій."}, {"question": "Який з цих сполучників має унікальну властивість дуже часто стояти на самому початку речення?", "options": [{"text": "оскільки", "correct": true}, {"text": "бо", "correct": false}, {"text": "отже", "correct": false}, {"text": "тому", "correct": false}], "explanation": "\\"Оскільки\\" створює структуру, де ви спочатку задаєте передумову, а потім робите з неї логічний висновок."}, {"question": "Чому фраза \\"Завдяки пожежі будинок згорів\\" є абсолютно неправильною стилістично?", "options": [{"text": "слово \\"завдяки\\" має позитивне забарвлення і не поєднується з трагедіями", "correct": true}, {"text": "перед словом \\"завдяки\\" обов'язково потрібно ставити кому", "correct": false}, {"text": "слово \\"пожежа\\" має використовуватися в знахідному відмінку", "correct": false}, {"text": "у цьому реченні відсутній головний підмет і присудок", "correct": false}], "explanation": "Для негативних подій слід використовувати нейтральне \\"через те що\\" або \\"внаслідок\\"."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **тому що** | [tɔˈmu ʃt͡ʃɔ] | because | conjunction | High frequency, neutral/universal |
-| **бо** | [bɔ] | because | conjunction | High frequency, spoken, often at end of sentence |
-| **через те що** | [ˈt͡ʃɛrɛz tɛ ʃt͡ʃɔ] | due to the fact that | conjunction | Medium frequency, neutral, external circumstances |
-| **тому** | [tɔˈmu] | therefore | conjunction | High frequency connector |
-| **отже** | [ˈɔd͡ʒɛ] | thus / so | conjunction | Medium frequency, logical conclusion |
-| **причина** | [prɪˈt͡ʃɪnɑ] | cause / reason | ім |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence / effect | ім |  |
-| **внаслідок** | [ˈʋnɑsʲlʲidɔk] | as a result of | preposition | Low frequency, formal, takes Genitive case |
-| **оскільки** | [ɔˈsʲkʲilʲkɪ] | since / as | conjunction | Medium frequency, formal, typically starts a sentence |
-| **завдяки** | [zɑu̯dʲɑˈkɪ] | thanks to | preposition | Positive cause/reason, takes Dative case |
-| **у зв'язку з** | [u zʋjɑzku z] | in connection with / due to | preposition | Formal/official administrative register |
-| **відтак** | [ʋʲiˈdtɑk] | hence / consequently | adverb | Professional/journalistic style |
-| **доля** | [ˈdɔlʲɑ] | fate / destiny | ім |  |
-| **висновок** | [ˈʋɪsnɔʋɔk] | conclusion | ім |  |
-| **обставина** | [ɔˈbstɑʋɪnɑ] | circumstance | ім |  |
-| **відповідальність** | [ʋʲidpɔʋʲiˈdɑlʲnʲisʲtʲ] | responsibility | ім |  |
-| **логіка** | [ˈlɔɦʲikɑ] | logic | ім |  |
-| **дія** | [ˈdʲijɑ] | action | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **впливати** | [ʍplɪˈʋɑtɪ] | to influence | дієсл |  |
-| **вплинути** | [ˈʍplɪnutɪ] | to influence | дієсл |  |
-| **перешкода** | [pɛrɛˈʃkɔdɑ] | obstacle | ім |  |
-| **дослідження** | [dɔˈsʲlʲid͡ʒɛnʲːɑ] | research / study | ім |  |
-| **доводити** | [dɔˈʋɔdɪtɪ] | to prove | дієсл |  |
-| **скасовувати** | [skɑˈsɔʋuʋɑtɪ] | to cancel | дієсл |  |
-| **аналізувати** | [ɑnɑlʲizuˈʋɑtɪ] | to analyze | дієсл |  |
-| **факт** | [fɑkt] | fact | ім |  |
-| **закономірність** | [zɑkɔnɔˈmʲirnʲisʲtʲ] | regularity / pattern | ім |  |
-| **зумовлювати** | [zuˈmɔu̯lʲuʋɑtɪ] | to cause / determine | дієсл |  |
-| **успіх** | [ˈusʲpʲix] | success | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

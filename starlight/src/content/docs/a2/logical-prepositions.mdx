@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Logical Prepositions: Reasons, Time, and Relationships
 
 > **Чому це важливо?**
 >
@@ -340,7 +346,39 @@ In this comprehensive module, we have successfully transitioned from the physica
 4. Який прийменник використовується для зазначення точного часу на годиннику (clock time)?
 5. Як правильно перекласти англійське слово "during" українською, щоб уникнути дуже поширеної і кумедної помилки?
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| для |  | for | preposition |  |  |
+| без |  | without | preposition |  |  |
+| через |  | because of, through | preposition |  |  |
+| про |  | about | preposition |  |  |
+| після |  | after | preposition |  |  |
+| о |  | at (time) | preposition |  |  |
+| об |  | at (time, before vowels) | preposition |  |  |
+| завдяки |  | thanks to | preposition |  |  |
+| протягом |  | during, over the course of | preposition |  |  |
+| крім |  | except, besides | preposition |  |  |
+| замість |  | instead of | preposition |  |  |
+| від |  | from (a person or entity) | preposition |  |  |
+| з |  | from (a physical location) | preposition |  |  |
+| щодо |  | regarding | preposition |  |  |
+| стосовно |  | concerning | preposition |  |  |
+| внаслідок |  | as a result of | preposition |  |  |
+| заради |  | for the sake of | preposition |  |  |
+| всупереч |  | despite | preposition |  |  |
+| по |  | for (purpose of movement) | preposition |  |  |
+| причина |  | cause, reason | noun |  |  |
+| мета |  | purpose, goal | noun |  |  |
+| тому що |  | because | conjunction |  |  |
+| бо |  | because (short form) | conjunction |  |  |
+| щоб |  | in order to | conjunction |  |  |
+| здоров'я |  | health | noun |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: прийменник і значення
 
@@ -399,32 +437,27 @@ In this comprehensive module, we have successfully transitioned from the physica
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Усі студенти написали тест, ... Максима.", "answer": "крім", "options": ["крім", "через", "завдяки", "про"]}, {"sentence": "... кави я буду пити воду.", "answer": "замість", "options": ["замість", "протягом", "для", "після"]}, {"sentence": "Вони розмовляють ... історію України.", "answer": "про", "options": ["про", "через", "від", "завдяки"]}, {"sentence": "Я отримав посилку ... моєї бабусі.", "answer": "від", "options": ["від", "з", "для", "без"]}, {"sentence": "Ми не могли працювати ... відсутність інтернету.", "answer": "через", "options": ["через", "завдяки", "для", "протягом"]}, {"sentence": "Цей словник дуже корисний ... перекладу текстів.", "answer": "для", "options": ["для", "через", "від", "про"]}, {"sentence": "... твоєму плану ми закінчили роботу вчасно.", "answer": "завдяки", "options": ["завдяки", "через", "замість", "протягом"]}, {"sentence": "Ми чекали на автобус ... двох годин.", "answer": "протягом", "options": ["протягом", "о", "після", "замість"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| для | [dʲlʲɑ] | for | preposition |  |  |
-| без | [bɛz] | without | preposition |  |  |
-| через | [ˈt͡ʃɛrɛz] | because of, through | preposition |  |  |
-| про | [prɔ] | about | preposition |  |  |
-| після | [ˈpʲisʲlʲɑ] | after | preposition |  |  |
-| о | [ɔ] | at (time) | preposition |  |  |
-| об | [ɔb] | at (time, before vowels) | preposition |  |  |
-| завдяки | [zɑu̯dʲɑˈkɪ] | thanks to | preposition |  |  |
-| протягом | [ˈprɔtʲɑɦɔm] | during, over the course of | preposition |  |  |
-| крім | [krʲim] | except, besides | preposition |  |  |
-| замість | [ˈzɑmʲisʲtʲ] | instead of | preposition |  |  |
-| від | [ʋʲid] | from (a person or entity) | preposition |  |  |
-| з | [z] | from (a physical location) | preposition |  |  |
-| щодо | [ˈʃt͡ʃɔdɔ] | regarding | preposition |  |  |
-| стосовно | [stɔˈsɔu̯nɔ] | concerning | preposition |  |  |
-| внаслідок | [ˈʋnɑsʲlʲidɔk] | as a result of | preposition |  |  |
-| заради | [zɑˈrɑdɪ] | for the sake of | preposition |  |  |
-| всупереч | [ˈʍsupɛrɛt͡ʃ] | despite | preposition |  |  |
-| по | [pɔ] | for (purpose of movement) | preposition |  |  |
-| причина | [prɪˈt͡ʃɪnɑ] | cause, reason | noun |  |  |
-| мета | [mɛˈtɑ] | purpose, goal | noun |  |  |
-| тому що | [tɔˈmu ʃt͡ʃɔ] | because | conjunction |  |  |
-| бо | [bɔ] | because (short form) | conjunction |  |  |
-| щоб | [ʃt͡ʃɔb] | in order to | conjunction |  |  |
-| здоров'я | [zdɔˈrɔu̯jɑ] | health | noun |  |  |
+:::info[🎧 🔗 External Resources]
+
+**🎧 Podcasts:**
+- [ULP 2-57 Your schedule in Ukrainian + Accusative case with prepositions](https://www.ukrainianlessons.com/lesson/57/) — Level-aligned topic match: prepositions
+
+**📖 Articles:**
+- [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+
+**🌐 Websites:**
+- [Dobra Forma 7-1: Genitive after Prepositions (з, до, в/у)](https://opentext.ku.edu/dobraforma/chapter/7-1/) — University of Kansas
+- [Dobra Forma 7-2: Genitive after Prepositions (біля, після, для, без)](https://opentext.ku.edu/dobraforma/chapter/7-2/) — University of Kansas
+- [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+:::
+
+### 📺 YouTube
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=aqKdvKXPCMo" label="Ukrainian prepositions У, В and НА and the differe..." />
+*Speak Ukrainian*
+
+</TabItem>
+</Tabs>

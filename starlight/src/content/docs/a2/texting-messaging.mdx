@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Texting and Messaging
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -352,7 +358,39 @@ This word is absolutely standard and extremely frequently used in society. It is
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| повідомлення |  | message | noun | с |  |
+| надіслати |  | to send (formal) | verb |  |  |
+| отримати |  | to receive | verb |  |  |
+| прив |  | hi (slang) | interjection |  |  |
+| дяк |  | thanks (slang) | interjection |  |  |
+| чат |  | chat | noun | ч |  |
+| смайлик |  | emoji, smiley | noun | ч |  |
+| голосове |  | voice message | noun | с |  |
+| норм |  | fine, okay (slang) | adverb |  |  |
+| прикольно |  | cool, interesting | adverb |  |  |
+| круто |  | awesome, great | adverb |  |  |
+| стікер |  | sticker | noun | ч |  |
+| пересилати |  | to forward | verb |  |  |
+| видалити |  | to delete | verb |  |  |
+| бдлск |  | please (slang abbreviation) | particle |  |  |
+| скинути |  | to send (informal), to drop | verb |  |  |
+| дзвонити |  | to call (by phone) | verb |  |  |
+| писати |  | to write, to text | verb |  |  |
+| додаток |  | app, application | noun | ч |  |
+| канал |  | channel | noun | ч |  |
+| співрозмовник |  | interlocutor, chat partner | noun | ч |  |
+| новина |  | news | noun | ж |  |
+| файл |  | file | noun | ч |  |
+| етикет |  | etiquette | noun | ч |  |
+| цифровий |  | digital | adjective |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: словник спілкування
 
@@ -411,32 +449,10 @@ This word is absolutely standard and extremely frequently used in society. It is
 
 <Translate client:load questions={JSON.parse(`[{"source": "Send me that file, please.", "options": [{"text": "Скинь мені той файл, бдлск.", "correct": true}, {"text": "Отримай мій файл, бдлск.", "correct": false}, {"text": "Видали той файл, бдлск.", "correct": false}, {"text": "Прочитай той файл, бдлск.", "correct": false}]}, {"source": "I am recording a voice message.", "options": [{"text": "Я записую голосове повідомлення.", "correct": true}, {"text": "Я слухаю голосове повідомлення.", "correct": false}, {"text": "Я видаляю голосове повідомлення.", "correct": false}, {"text": "Я пишу текстове повідомлення.", "correct": false}]}, {"source": "Thanks for the sticker!", "options": [{"text": "Дяк за стікер!", "correct": true}, {"text": "Прив за стікер!", "correct": false}, {"text": "Норм за стікер!", "correct": false}, {"text": "Будь ласка за стікер!", "correct": false}]}, {"source": "Forward this message to your brother.", "options": [{"text": "Перешли це повідомлення своєму брату.", "correct": true}, {"text": "Надішли це повідомлення своєму брату.", "correct": false}, {"text": "Видали це повідомлення своєму брату.", "correct": false}, {"text": "Отримай це повідомлення від брата.", "correct": false}]}, {"source": "Hi! How are you today?", "options": [{"text": "Прив! Як ти сьогодні?", "correct": true}, {"text": "Дяк! Як ти сьогодні?", "correct": false}, {"text": "Норм! Як ти сьогодні?", "correct": false}, {"text": "Бдлск! Як ти сьогодні?", "correct": false}]}, {"source": "We created a new work chat.", "options": [{"text": "Ми створили новий робочий чат.", "correct": true}, {"text": "Ми видалили новий робочий чат.", "correct": false}, {"text": "Ми скинули новий робочий чат.", "correct": false}, {"text": "Ми отримали новий робочий чат.", "correct": false}]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| повідомлення | [pɔʋʲiˈdɔmlɛnʲːɑ] | message | noun | с |  |
-| надіслати | [nɑdʲiˈslɑtɪ] | to send (formal) | verb |  |  |
-| отримати | [ɔˈtrɪmɑtɪ] | to receive | verb |  |  |
-| прив | [prɪu̯] | hi (slang) | interjection |  |  |
-| дяк | [dʲɑk] | thanks (slang) | interjection |  |  |
-| чат | [t͡ʃɑt] | chat | noun | ч |  |
-| смайлик | [ˈsmɑjlɪk] | emoji, smiley | noun | ч |  |
-| голосове | [ɦɔlɔsɔˈʋɛ] | voice message | noun | с |  |
-| норм | [nɔrm] | fine, okay (slang) | adverb |  |  |
-| прикольно | [prɪkɔlʲnɔ] | cool, interesting | adverb |  |  |
-| круто | [ˈkrutɔ] | awesome, great | adverb |  |  |
-| стікер | [sʲtʲikɛr] | sticker | noun | ч |  |
-| пересилати | [pɛrɛsɪˈlɑtɪ] | to forward | verb |  |  |
-| видалити | [ˈʋɪdɑlɪtɪ] | to delete | verb |  |  |
-| бдлск | [bdlsk] | please (slang abbreviation) | particle |  |  |
-| скинути | [ˈskɪnutɪ] | to send (informal), to drop | verb |  |  |
-| дзвонити | [d͡zʋɔˈnɪtɪ] | to call (by phone) | verb |  |  |
-| писати | [pɪˈsɑtɪ] | to write, to text | verb |  |  |
-| додаток | [dɔˈdɑtɔk] | app, application | noun | ч |  |
-| канал | [kɑˈnɑl] | channel | noun | ч |  |
-| співрозмовник | [sʲpʲiu̯rɔˈzmɔu̯nɪk] | interlocutor, chat partner | noun | ч |  |
-| новина | [nɔʋɪˈnɑ] | news | noun | ж |  |
-| файл | [fɑjl] | file | noun | ч |  |
-| етикет | [ɛtɪˈkɛt] | etiquette | noun | ч |  |
-| цифровий | [t͡sɪfrɔˈʋɪj] | digital | adjective |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

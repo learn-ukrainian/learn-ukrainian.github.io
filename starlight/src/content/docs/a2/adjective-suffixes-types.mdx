@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Adjective Suffixes — Types
+{/**/}
 
 :::note[📝 Note]
 **Чому це важливо?**
@@ -305,7 +311,41 @@ Some other Slavic languages sometimes allow phonetic clusters without mutations.
 5. У чому полягає логіка вибору цих суфіксів?
 6. Знайдіть фонетичну помилку у слові «Рижський» та виправте її.
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| дерев'яний |  | wooden | adjective |  |  |
+| скляний |  | made of glass | adjective |  |  |
+| залізний |  | made of iron | adjective |  |  |
+| київський |  | from Kyiv (adj.) | adjective |  |  |
+| львівський |  | from Lviv (adj.) | adjective |  |  |
+| домашній |  | home / domestic | adjective |  |  |
+| вовняний |  | woolen | adjective |  |  |
+| металевий |  | metallic | adjective |  |  |
+| пластиковий |  | plastic (adj.) | adjective |  |  |
+| дубовий |  | made of oak | adjective |  |  |
+| празький |  | from Prague (adj.) | adjective |  |  |
+| одеський |  | from Odesa (adj.) | adjective |  |  |
+| галицький |  | from Halych (adj.) | adjective |  |  |
+| осика |  | aspen (wood) | noun | ж |  |
+| ліжник |  | Hutsul woven blanket | noun | ч |  |
+| вовна |  | wool | noun | ж |  |
+| забавка |  | toy / plaything | noun | ж |  |
+| орнамент |  | ornament / pattern | noun | ч |  |
+| вербівка |  | willow branch pattern | noun | ж |  |
+| посуд |  | tableware / dishes | noun | ч |  |
+| затишок |  | comfort / coziness | noun | ч |  |
+| скло |  | glass (material) | noun | с |  |
+| дерево |  | wood / tree | noun | с |  |
+| залізо |  | iron (material) | noun | с |  |
+| глина |  | clay | noun | ж |  |
+| прикметник |  | adjective | noun | ч |  |
+| іменник |  | noun | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: матеріал і прикметник
 
@@ -364,34 +404,10 @@ Some other Slavic languages sometimes allow phonetic clusters without mutations.
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Яворівська / забавка / це / традиційна / дерев'яна / іграшка", "answer": "Яворівська забавка це традиційна дерев'яна іграшка"}, {"jumbled": "Гуцульський / ліжник / тчуть / із / овечої / вовни", "answer": "Гуцульський ліжник тчуть із овечої вовни"}, {"jumbled": "Узимку / вовняний / светр / дуже / добре / зігріває", "answer": "Узимку вовняний светр дуже добре зігріває"}, {"jumbled": "Скляний / посуд / виглядає / дуже / красиво / на / столі", "answer": "Скляний посуд виглядає дуже красиво на столі"}, {"jumbled": "Сьогодні / студенти / роблять / складне / домашнє / завдання", "answer": "Сьогодні студенти роблять складне домашнє завдання"}, {"jumbled": "Київський / торт / є / символом / столиці / України", "answer": "Київський торт є символом столиці України"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| дерев'яний | [dɛrɛˈʋjɑnɪj] | wooden | adjective |  |  |
-| скляний | [sklʲɑˈnɪj] | made of glass | adjective |  |  |
-| залізний | [zɑˈlʲiznɪj] | made of iron | adjective |  |  |
-| київський | [ˈkɪjiu̯sʲkɪj] | from Kyiv (adj.) | adjective |  |  |
-| львівський | [lʲˈʋʲiu̯sʲkɪj] | from Lviv (adj.) | adjective |  |  |
-| домашній | [dɔˈmɑʃnʲij] | home / domestic | adjective |  |  |
-| вовняний | [ˈʋɔˈʋnʲɑnɪj] | woolen | adjective |  |  |
-| металевий | [mɛtɑˈlɛʋɪj] | metallic | adjective |  |  |
-| пластиковий | [ˈplɑstɪkɔʋɪj] | plastic (adj.) | adjective |  |  |
-| дубовий | [duˈbɔʋɪj] | made of oak | adjective |  |  |
-| празький | [ˈprɑzʲkɪj] | from Prague (adj.) | adjective |  |  |
-| одеський | [ɔˈdɛsʲkɪj] | from Odesa (adj.) | adjective |  |  |
-| галицький | [ˈɦɑlɪt͡sʲkɪj] | from Halych (adj.) | adjective |  |  |
-| осика | [ɔˈsɪkɑ] | aspen (wood) | noun | ж |  |
-| ліжник | [ˈlʲiʒnɪk] | Hutsul woven blanket | noun | ч |  |
-| вовна | [ˈʋɔu̯nɑ] | wool | noun | ж |  |
-| забавка | [ˈzɑbɑu̯kɑ] | toy / plaything | noun | ж |  |
-| орнамент | [ɔrˈnɑmɛnt] | ornament / pattern | noun | ч |  |
-| вербівка | [ʋɛrbʲiu̯kɑ] | willow branch pattern | noun | ж |  |
-| посуд | [ˈpɔsud] | tableware / dishes | noun | ч |  |
-| затишок | [ˈzɑˈtɪʃɔk] | comfort / coziness | noun | ч |  |
-| скло | [sklɔ] | glass (material) | noun | с |  |
-| дерево | [ˈdɛrɛʋɔ] | wood / tree | noun | с |  |
-| залізо | [zɑˈlʲizɔ] | iron (material) | noun | с |  |
-| глина | [ˈɦlɪnɑ] | clay | noun | ж |  |
-| прикметник | [prɪˈkmɛtnɪk] | adjective | noun | ч |  |
-| іменник | [iˈmɛnːɪk] | noun | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Пасивні дієприкметники минулого часу I
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -484,7 +490,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **написаний** |  | written | participle |  |
+| **прочитаний** |  | read | participle |  |
+| **зроблений** |  | done/made | participle |  |
+| **відкритий** |  | opened | participle |  |
+| **закритий** |  | closed | participle |  |
+| **пасивний** |  | passive | adjective |  |
+| **дієприкметник** |  | participle | ім |  |
+| **узгодження** |  | agreement | ім |  |
+| **виконаний** |  | executed/fulfilled | participle |  |
+| **улюблений** |  | favorite | participle |  |
+| **саджений** |  | planted | participle |  |
+| **ношений** |  | worn | participle |  |
+| **перехідне дієслово** |  | transitive verb | ім |  |
+| **дієприкметниковий зворот** |  | participle phrase | ім |  |
+| **збудований** |  | built | participle |  |
+| **схований** |  | hidden | participle |  |
+| **намальований** |  | drawn | participle |  |
+| **зіграний** |  | played | participle |  |
+| **сказаний** |  | said | participle |  |
+| **принесений** |  | brought | participle |  |
+| **спечений** |  | baked | participle |  |
+| **знайдений** |  | found | participle |  |
+| **звільнений** |  | freed/fired | participle |  |
+| **вирішений** |  | solved/decided | participle |  |
+| **митий** |  | washed | participle |  |
+| **битий** |  | beaten/broken | participle |  |
+| **забутий** |  | forgotten | participle |  |
+| **збуджений** |  | woken/excited | participle |  |
+| **попереджений** |  | warned | participle |  |
+| **прикрашений** |  | decorated | participle |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Утворіть пасивні дієприкметники
 
@@ -539,37 +582,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <MatchUp client:load pairs={JSON.parse(`[{"left": "Майстер робить стіл", "right": "зроблений стіл"}, {"left": "Письменник пише роман", "right": "написаний роман"}, {"left": "Директор відкриває магазин", "right": "відкритий магазин"}, {"left": "Хтось забув зошит", "right": "забутий зошит"}, {"left": "Хтось сховав скарб", "right": "схований скарб"}, {"left": "Актори зіграли спектакль", "right": "зіграний спектакль"}, {"left": "Пекар спік пиріг", "right": "спечений пиріг"}, {"left": "Робітник звільнив простір", "right": "звільнений простір"}, {"left": "Студент вирішив конфлікт", "right": "вирішений конфлікт"}, {"left": "Мати заспокоїла дитину", "right": "заспокоєна дитина"}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **написаний** | [nɑˈpɪsɑnɪj] | written | participle |  |
-| **прочитаний** | [prɔˈt͡ʃɪtɑnɪj] | read | participle |  |
-| **зроблений** | [ˈzrɔblɛnɪj] | done/made | participle |  |
-| **відкритий** | [ʋʲiˈdkrɪtɪj] | opened | participle |  |
-| **закритий** | [zɑˈkrɪtɪj] | closed | participle |  |
-| **пасивний** | [pɑˈsɪu̯nɪj] | passive | adjective |  |
-| **дієприкметник** | [dʲijɛprɪˈkmɛtnɪk] | participle | ім |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | agreement | ім |  |
-| **виконаний** | [ˈʋɪkɔnɑnɪj] | executed/fulfilled | participle |  |
-| **улюблений** | [uˈlʲublɛnɪj] | favorite | participle |  |
-| **саджений** | [ˈsɑd͡ʒɛnɪj] | planted | participle |  |
-| **ношений** | [ˈnɔʃɛnɪj] | worn | participle |  |
-| **перехідне дієслово** | [pɛrɛxʲiˈdnɛ dʲijɛˈslɔʋɔ] | transitive verb | ім |  |
-| **дієприкметниковий зворот** | [dʲijɛprɪkmɛtnɪˈkɔʋɪj zʋɔˈrɔt] | participle phrase | ім |  |
-| **збудований** | [zbuˈdɔʋɑnɪj] | built | participle |  |
-| **схований** | [ˈsxɔʋɑnɪj] | hidden | participle |  |
-| **намальований** | [nɑmɑˈlʲɔʋɑnɪj] | drawn | participle |  |
-| **зіграний** | [ˈzʲiɦrɑnɪj] | played | participle |  |
-| **сказаний** | [ˈskɑzɑnɪj] | said | participle |  |
-| **принесений** | [prɪˈnɛsɛnɪj] | brought | participle |  |
-| **спечений** | [ˈspɛt͡ʃɛnɪj] | baked | participle |  |
-| **знайдений** | [ˈznɑjdɛnɪj] | found | participle |  |
-| **звільнений** | [ˈzʲʋʲilʲnɛnɪj] | freed/fired | participle |  |
-| **вирішений** | [ˈʋɪrʲiʃɛnɪj] | solved/decided | participle |  |
-| **митий** | [ˈmɪtɪj] | washed | participle |  |
-| **битий** | [ˈbɪtɪj] | beaten/broken | participle |  |
-| **забутий** | [zɑˈbutɪj] | forgotten | participle |  |
-| **збуджений** | [ˈzbud͡ʒɛnɪj] | woken/excited | participle |  |
-| **попереджений** | [pɔpɛˈrɛd͡ʒɛnɪj] | warned | participle |  |
-| **прикрашений** | [prɪˈkrɑʃɛnɪj] | decorated | participle |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

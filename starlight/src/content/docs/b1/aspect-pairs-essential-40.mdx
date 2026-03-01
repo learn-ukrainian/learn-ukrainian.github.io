@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Видові пари: 40 найважливіших
+{/**/}
 
 :::note[📝 **Чому це важливо?**]
 
@@ -480,7 +486,33 @@ graph TD
 3. **Майбутній час** = недоконаний складений/простий (буду робити / робитиму) АБО доконаний (зроблю). НІКОЛИ не поєднуйте «буду» з доконаним видом.
 4. **Видові пари** найчастіше утворюються за допомогою префіксів (писати - написати), рідше суфіксів (закривати - закрити), або є абсолютно різними словами (брати - взяти).
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **робити** |  | to do, to make (imperfective) | дієсл |  |
+| **зробити** |  | to do, to make (perfective) | дієсл |  |
+| **говорити** |  | to speak, to talk (imperfective) | дієсл |  |
+| **сказати** |  | to say, to tell (perfective) | дієсл |  |
+| **брати** |  | to take (imperfective) | дієсл |  |
+| **взяти** |  | to take (perfective) | дієсл |  |
+| **давати** |  | to give (imperfective) | дієсл |  |
+| **дати** |  | to give (perfective) | дієсл |  |
+| **бачити** |  | to see (imperfective) | дієсл |  |
+| **побачити** |  | to see (perfective) | дієсл |  |
+| **їсти** |  | to eat (imperfective) | дієсл |  |
+| **з'їсти** |  | to eat (perfective) | дієсл |  |
+| **пити** |  | to drink (imperfective) | дієсл |  |
+| **випити** |  | to drink (perfective) | дієсл |  |
+| **писати** |  | to write (imperfective) | дієсл |  |
+| **написати** |  | to write (perfective) | дієсл |  |
+| **читати** |  | to read (imperfective) | дієсл |  |
+| **прочитати** |  | to read (perfective) | дієсл |  |
+| **вчити** |  | to study, to learn (imperfective) |  |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Знайдіть пару: недоконаний та доконаний вид
 
@@ -533,26 +565,10 @@ graph TD
 
 <Cloze client:load passage={"— Привіт, Максиме! Ти вже [___:0]} працювати?\n— Привіт, Олено. Так, я майже [___:1]}. Сьогодні я цілий день [___:2]} цей важливий звіт.\n— О, розумію. І ти вже [___:3]} його до кінця?\n— Нарешті [___:4]}. А ще я [___:5]} з керівником про новий проєкт. Ми дуже довго [___:6]}, обговорювали всі деталі.\n— Чудово. Що [___:7]} робити ввечері?\n— [___:8]} трохи свіжих продуктів по дорозі додому, а потім просто [___:9]}. А ти?\n— А я [___:10]} ту цікаву статтю, яку ти мені вчора [___:11]}. Я дуже люблю [___:12]} ввечері. До речі, ти часто [___:13]} книжки?\n— Так, я люблю літературу.\n"} blanks={JSON.parse(`[{"index": 0, "answer": "закінчуєш", "options": ["закінчуєш", "закінчиш", "закінчив", "будеш закінчувати"]}, {"index": 1, "answer": "закінчив", "options": ["закінчив", "закінчував", "закінчую", "буду закінчувати"]}, {"index": 2, "answer": "писав", "options": ["писав", "написав", "пишу", "напишу"]}, {"index": 3, "answer": "написав", "options": ["написав", "писав", "пишеш", "напишеш"]}, {"index": 4, "answer": "написав", "options": ["написав", "писав", "буду писати", "пишу"]}, {"index": 5, "answer": "поговорив", "options": ["поговорив", "говорив", "говорю", "буду говорити"]}, {"index": 6, "answer": "говорили", "options": ["говорили", "поговорили", "говоримо", "поговоримо"]}, {"index": 7, "answer": "будеш", "options": ["будеш", "буде", "буду", "будуть"]}, {"index": 8, "answer": "Куплю", "options": ["Куплю", "Купую", "Купував", "Буду купувати"]}, {"index": 9, "answer": "відпочиватиму", "options": ["відпочиватиму", "відпочину", "відпочив", "відпочиваю"]}, {"index": 10, "answer": "прочитаю", "options": ["прочитаю", "читаю", "буду прочитати", "прочитав"]}, {"index": 11, "answer": "дав", "options": ["дав", "давав", "даю", "дам"]}, {"index": 12, "answer": "читати", "options": ["читати", "прочитати", "читаю", "прочитаю"]}, {"index": 13, "answer": "купуєш", "options": ["купуєш", "купиш", "купив", "купував"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **робити** | [rɔˈbɪtɪ] | to do, to make (imperfective) | дієсл |  |
-| **зробити** | [zrɔˈbɪtɪ] | to do, to make (perfective) | дієсл |  |
-| **говорити** | [ɦɔʋɔˈrɪtɪ] | to speak, to talk (imperfective) | дієсл |  |
-| **сказати** | [skɑˈzɑtɪ] | to say, to tell (perfective) | дієсл |  |
-| **брати** | [ˈbrɑtɪ] | to take (imperfective) | дієсл |  |
-| **взяти** | [ˈʋzʲɑtɪ] | to take (perfective) | дієсл |  |
-| **давати** | [dɑˈʋɑtɪ] | to give (imperfective) | дієсл |  |
-| **дати** | [ˈdɑtɪ] | to give (perfective) | дієсл |  |
-| **бачити** | [ˈbɑt͡ʃɪtɪ] | to see (imperfective) | дієсл |  |
-| **побачити** | [pɔˈbɑt͡ʃɪtɪ] | to see (perfective) | дієсл |  |
-| **їсти** | [ˈjistɪ] | to eat (imperfective) | дієсл |  |
-| **з'їсти** | [ˈzjistɪ] | to eat (perfective) | дієсл |  |
-| **пити** | [ˈpɪtɪ] | to drink (imperfective) | дієсл |  |
-| **випити** | [ˈʋɪpɪtɪ] | to drink (perfective) | дієсл |  |
-| **писати** | [pɪˈsɑtɪ] | to write (imperfective) | дієсл |  |
-| **написати** | [nɑpɪˈsɑtɪ] | to write (perfective) | дієсл |  |
-| **читати** | [t͡ʃɪˈtɑtɪ] | to read (imperfective) | дієсл |  |
-| **прочитати** | [prɔt͡ʃɪˈtɑtɪ] | to read (perfective) | дієсл |  |
-| **вчити** | [ˈʍt͡ʃɪtɪ] | to study, to learn (imperfective) |  |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

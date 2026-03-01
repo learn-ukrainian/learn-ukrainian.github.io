@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Advanced Motion Prefixes: Crossing, Passing, and Approaching
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -367,7 +373,17 @@ These dialogues blend physical navigation with conversational idioms seamlessly.
 
 Я пишаюся вашим прогресом. Продовжуйте практикуватися, і українська мова відкриє вам свої найгарніші таємниці. До зустрічі на наступному уроці!
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| перейти |  | to cross (perfective) | verb |  |  |
+| знахідний |  | accusative | adjective |  |  |
+| родовий |  | genitive | adjective |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: дієслово та його значення
 
@@ -433,10 +449,10 @@ These dialogues blend physical navigation with conversational idioms seamlessly.
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "Вам / потрібно / перейти / вулицю / на / світлофорі", "answer": "Вам потрібно перейти вулицю на світлофорі"}, {"jumbled": "Будь / ласка / пройдіть / повз / великий / собор", "answer": "Будь ласка пройдіть повз великий собор"}, {"jumbled": "Там / ремонт / тому / обійдіть / цю / ділянку", "answer": "Там ремонт тому обійдіть цю ділянку"}, {"jumbled": "Потім / ви / підійдете / до / красивої / площі", "answer": "Потім ви підійдете до красивої площі"}, {"jumbled": "Ви / дійшли / до / залізничного / вокзалу", "answer": "Ви дійшли до залізничного вокзалу"}, {"jumbled": "Тепер / ви / можете / зайти / в / кафе", "answer": "Тепер ви можете зайти в кафе"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| перейти | [pɛrɛjˈtɪ] | to cross (perfective) | verb |  |  |
-| знахідний | [znɐxʲiˈdnɪj] | accusative | adjective |  |  |
-| родовий | [rodoˈwɪj] | genitive | adjective |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

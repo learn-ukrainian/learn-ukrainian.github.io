@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Possessive Sviy
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -363,7 +369,48 @@ Meaning: They found the dog belonging to the neighbors.
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| свій |  | one's own (masculine) | pronoun | ч | свій час, свій дім |
+| своя |  | one's own (feminine) | pronoun | ж | своя сім'я, своя справа |
+| своє |  | one's own (neuter) | pronoun | с | своє життя, своє місто |
+| свої |  | one's own (plural) | pronoun |  | свої люди, свої речі |
+| власний |  | own, private, exclusive | adjective |  | власний будинок, власна думка |
+| особистий |  | personal, private | adjective |  | особисте життя, особистий простір |
+| чужий |  | someone else's, stranger's | adjective |  | чужа країна, чужа дитина |
+| його |  | his | pronoun |  |  |
+| її |  | her | pronoun |  |  |
+| їхній |  | their | pronoun |  |  |
+| мій |  | my | pronoun |  |  |
+| твій |  | your (informal) | pronoun |  |  |
+| наш |  | our | pronoun |  |  |
+| ваш |  | your (formal/plural) | pronoun |  |  |
+| ділитися |  | to share | verb |  | ділитися своїми думками |
+| власне |  | precisely, actually | adverb |  |  |
+| самостійно |  | independently, on one's own | adverb |  |  |
+| спільний |  | shared, common | adjective |  | спільна мова, спільна власність |
+| належати |  | to belong | verb |  |  |
+| володіти |  | to own, possess | verb |  |  |
+| час |  | time | noun | ч | свій час |
+| життя |  | life | noun | с | своє життя |
+| сім'я |  | family | noun | ж | своя сім'я |
+| думка |  | thought, opinion | noun | ж | власна думка |
+| дім |  | home, house | noun | ч | свій дім |
+| займенник |  | pronoun | noun | ч |  |
+| називний |  | nominative | adjective |  |  |
+| родовий |  | genitive | adjective |  |  |
+| давальний |  | dative | adjective |  |  |
+| знахідний |  | accusative | adjective |  |  |
+| орудний |  | instrumental | adjective |  |  |
+| місцевий |  | locative | adjective |  |  |
+| прикметник |  | adjective | noun | ч |  |
+| множина |  | plural | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Чия це річ?
 
@@ -428,41 +475,10 @@ Meaning: They found the dog belonging to the neighbors.
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "She reads her (own) book. -> Вона читає ___ книгу.", "answer": "свою", "options": ["свою", "її", "власну", "особисту"]}, {"sentence": "She reads her (friend's) book. -> Вона читає ___ книгу.", "answer": "її", "options": ["її", "свою", "власну", "особисту"]}, {"sentence": "He took his (own) coat. -> Він взяв ___ пальто.", "answer": "своє", "options": ["своє", "його", "власне", "особисте"]}, {"sentence": "He took his (brother's) coat. -> Він взяв ___ пальто.", "answer": "його", "options": ["його", "своє", "власне", "особисте"]}, {"sentence": "They sold their (own) house. -> Вони продали ___ будинок.", "answer": "свій", "options": ["свій", "їхній", "власний", "особистий"]}, {"sentence": "They sold their (neighbors') house. -> Вони продали ___ будинок.", "answer": "їхній", "options": ["їхній", "свій", "власний", "особистий"]}, {"sentence": "I love my (own) mother. -> Я люблю ___ маму.", "answer": "свою", "options": ["свою", "її", "власну", "особисту"]}, {"sentence": "Did you find your (own) phone? -> Ти знайшов ___ телефон?", "answer": "свій", "options": ["свій", "його", "власний", "особистий"]}, {"sentence": "The dog ate its (own) food. -> Собака з'їв ___ їжу.", "answer": "свою", "options": ["свою", "її", "його", "їхню"]}, {"sentence": "We are talking about our (own) future. -> Ми говоримо про ___ майбутнє.", "answer": "своє", "options": ["своє", "їхнє", "власне", "особисте"]}, {"sentence": "He respects his (another man's) opinion. -> Він поважає ___ думку.", "answer": "його", "options": ["його", "свою", "власну", "особисту"]}, {"sentence": "She is looking for her (own) keys. -> Вона шукає ___ ключі.", "answer": "свої", "options": ["свої", "її", "власні", "особисті"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| свій | [sʲʋʲij] | one's own (masculine) | pronoun | ч | свій час, свій дім |
-| своя | [sʋɔˈjɑ] | one's own (feminine) | pronoun | ж | своя сім'я, своя справа |
-| своє | [sʋɔˈjɛ] | one's own (neuter) | pronoun | с | своє життя, своє місто |
-| свої | [sʋɔˈji] | one's own (plural) | pronoun |  | свої люди, свої речі |
-| власний | [ˈʋlɑsnɪj] | own, private, exclusive | adjective |  | власний будинок, власна думка |
-| особистий | [ɔsɔˈbɪstɪj] | personal, private | adjective |  | особисте життя, особистий простір |
-| чужий | [t͡ʃuˈʒɪj] | someone else's, stranger's | adjective |  | чужа країна, чужа дитина |
-| його | [ˈjɔɦɔ] | his | pronoun |  |  |
-| її | [jiji] | her | pronoun |  |  |
-| їхній | [ˈjixnʲij] | their | pronoun |  |  |
-| мій | [mʲij] | my | pronoun |  |  |
-| твій | [tʲʋʲij] | your (informal) | pronoun |  |  |
-| наш | [nɑʃ] | our | pronoun |  |  |
-| ваш | [ʋɑʃ] | your (formal/plural) | pronoun |  |  |
-| ділитися | [dʲiˈlɪtɪsʲɑ] | to share | verb |  | ділитися своїми думками |
-| власне | [ˈʋlɑsnɛ] | precisely, actually | adverb |  |  |
-| самостійно | [sɑmɔˈsʲtʲijnɔ] | independently, on one's own | adverb |  |  |
-| спільний | [ˈsʲpʲilʲnɪj] | shared, common | adjective |  | спільна мова, спільна власність |
-| належати | [nɑˈlɛʒɑtɪ] | to belong | verb |  |  |
-| володіти | [ʋɔlɔˈdʲitɪ] | to own, possess | verb |  |  |
-| час | [t͡ʃɑs] | time | noun | ч | свій час |
-| життя | [ʒɪˈtʲːɑ] | life | noun | с | своє життя |
-| сім'я | [sʲiˈmjɑ] | family | noun | ж | своя сім'я |
-| думка | [ˈdumkɑ] | thought, opinion | noun | ж | власна думка |
-| дім | [dʲim] | home, house | noun | ч | свій дім |
-| займенник | [zɑjˈmɛnːɪk] | pronoun | noun | ч |  |
-| називний | [nɑzɪˈʋnɪj] | nominative | adjective |  |  |
-| родовий | [rɔˈdɔˈʋɪj] | genitive | adjective |  |  |
-| давальний | [dɑˈʋɑlʲnɪj] | dative | adjective |  |  |
-| знахідний | [znɑˈxʲidnɪj] | accusative | adjective |  |  |
-| орудний | [ɔˈrudnɪj] | instrumental | adjective |  |  |
-| місцевий | [mʲiˈst͡sɛʋɪj] | locative | adjective |  |  |
-| прикметник | [prɪˈkmɛtnɪk] | adjective | noun | ч |  |
-| множина | [mnɔʒɪˈnɑ] | plural | noun | ж |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Checkpoint
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -379,7 +385,39 @@ For clear chronological sequence — "after" one complete action finishes, anoth
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| голова |  | head | noun | ж |  |
+| горло |  | throat | noun | с |  |
+| температура |  | temperature / fever | noun | ж |  |
+| ліки |  | medicine | noun | pl |  |
+| лікар |  | doctor | noun | ч |  |
+| живіт |  | stomach / belly | noun | ч |  |
+| застуда |  | cold | noun | ж |  |
+| рука |  | arm / hand | noun | ж |  |
+| нога |  | leg / foot | noun | ж |  |
+| малина |  | raspberry | noun | ж |  |
+| калина |  | viburnum / guelder rose | noun | ж |  |
+| мед |  | honey | noun | ч |  |
+| щоб |  | in order to / so that | conj |  |  |
+| бо |  | because | conj |  |  |
+| тому що |  | because | conj |  |  |
+| через |  | because of / due to | prep |  |  |
+| який |  | which / who / that | pron |  |  |
+| коли |  | when | conj |  |  |
+| поки |  | while / as long as | conj |  |  |
+| після того як |  | after | conj |  |  |
+| боліти |  | to ache / hurt | verb |  |  |
+| приймати |  | to take (medicine) | verb |  |  |
+| пити |  | to drink / to take (medicine) | verb |  |  |
+| хворий |  | sick | adj |  |  |
+| здоровий |  | healthy | adj |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Перевірте знання граматики
 
@@ -438,32 +476,10 @@ For clear chronological sequence — "after" one complete action finishes, anoth
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "я / почекаю / тут / поки / ти / п'єш / чай", "answer": "Я почекаю тут поки ти п'єш чай"}, {"jumbled": "вона / п'є / сироп / який / дав / їй / лікар", "answer": "Вона п'є сироп який дав їй лікар"}, {"jumbled": "ми / йшли / додому / коли / почався / сильний / дощ", "answer": "Ми йшли додому коли почався сильний дощ"}, {"jumbled": "у / нас / сьогодні / дуже / червоне / і / хворе / горло", "answer": "У нас сьогодні дуже червоне і хворе горло"}, {"jumbled": "я / завжди / приймаю / ці / ліки / тільки / вранці", "answer": "Я завжди приймаю ці ліки тільки вранці"}, {"jumbled": "вони / йдуть / в / аптеку / бо / дуже / хворі", "answer": "Вони йдуть в аптеку бо дуже хворі"}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| голова | [ɦɔlɔˈʋɑ] | head | noun | ж |  |
-| горло | [ˈɦɔrlɔ] | throat | noun | с |  |
-| температура | [tɛmpɛrɑˈturɑ] | temperature / fever | noun | ж |  |
-| ліки | [ˈlʲikɪ] | medicine | noun | pl |  |
-| лікар | [ˈlʲikɑr] | doctor | noun | ч |  |
-| живіт | [ʒɪˈʋʲit] | stomach / belly | noun | ч |  |
-| застуда | [zɑˈstudɑ] | cold | noun | ж |  |
-| рука | [ruˈkɑ] | arm / hand | noun | ж |  |
-| нога | [nɔˈɦɑ] | leg / foot | noun | ж |  |
-| малина | [mɑˈlɪnɑ] | raspberry | noun | ж |  |
-| калина | [kɑˈlɪnɑ] | viburnum / guelder rose | noun | ж |  |
-| мед | [mɛd] | honey | noun | ч |  |
-| щоб | [ʃt͡ʃɔb] | in order to / so that | conj |  |  |
-| бо | [bɔ] | because | conj |  |  |
-| тому що | [tɔˈmu ʃt͡ʃɔ] | because | conj |  |  |
-| через | [ˈt͡ʃɛrɛz] | because of / due to | prep |  |  |
-| який | [jɑˈkɪj] | which / who / that | pron |  |  |
-| коли | [kɔˈlɪ] | when | conj |  |  |
-| поки | [ˈpɔkɪ] | while / as long as | conj |  |  |
-| після того як | [ˈpʲisʲlʲɑ tɔˈɦɔ jɑk] | after | conj |  |  |
-| боліти | [bɔˈlʲitɪ] | to ache / hurt | verb |  |  |
-| приймати | [prɪjˈmɑtɪ] | to take (medicine) | verb |  |  |
-| пити | [ˈpɪtɪ] | to drink / to take (medicine) | verb |  |  |
-| хворий | [ˈxʋɔrɪj] | sick | adj |  |  |
-| здоровий | [zdɔˈrɔʋɪj] | healthy | adj |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

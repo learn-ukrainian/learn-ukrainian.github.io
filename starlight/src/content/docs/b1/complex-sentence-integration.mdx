@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Інтеграція складних речень
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -414,7 +420,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **інтеграція** |  | integration | ім |  |
+| **складний** |  | complex | adjective |  |
+| **сурядний** |  | coordinating | adjective |  |
+| **підрядний** |  | subordinating | adjective |  |
+| **багатокомпонентний** |  | multi-component | adjective |  |
+| **структура** |  | structure | ім |  |
+| **кома** |  | comma | ім |  |
+| **розділовий знак** |  | punctuation mark | ім |  |
+| **а** |  | and/but | conjunction |  |
+| **але** |  | but | conjunction |  |
+| **щоб** |  | in order to/that | conjunction |  |
+| **бо** |  | because (informal) | conjunction |  |
+| **тому що** |  | because (neutral) | conjunction |  |
+| **вкладений** |  | nested | adjective |  |
+| **паралельний** |  | parallel | adjective |  |
+| **зрозумілість** |  | clarity | ім |  |
+| **стиль** |  | style | ім |  |
+| **хоча** |  | although | conjunction |  |
+| **якщо** |  | if | conjunction |  |
+| **який** |  | which/who | pronoun |  |
+| **що** |  | that | conjunction |  |
+| **крапка** |  | dot/period | ім |  |
+| **сполучник** |  | conjunction | ім |  |
+| **речення** |  | sentence | ім |  |
+| **абзац** |  | paragraph | ім |  |
+| **текст** |  | text | ім |  |
+| **причина** |  | cause/reason | ім |  |
+| **умова** |  | condition | ім |  |
+| **мета** |  | purpose/goal | ім |  |
+| **наслідок** |  | consequence/result | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Оберіть правильний сполучник
 
@@ -472,37 +515,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Учора ми вирішили поїхати за місто, [___:0]} погода була дуже гарною. Ми взяли із собою їжу, [___:1]} зробити пікнік, [___:2]} раптом почався сильний дощ. [___:3]} ми швидко сховалися в машину, ми все одно трохи змерзли. Моя сестра сказала, [___:4]} нам краще повернутися додому. Вона завжди хвилюється, [___:5]} ми забуваємо теплі речі. Дорога, [___:6]} ми їхали, була дуже слизькою. Я обережно керував автомобілем, [___:7]} мій брат допомагав мені з навігацією. [___:8]} ми приїхали додому, було вже пізно. Ми зробили гарячий чай, [___:9]} зігрітися. Мій брат пив чай, [___:10]} я їв смачне печиво. Ми говорили про фільм, [___:11]} дивилися минулого тижня. Фільм був цікавим, [___:12]} трохи задовгим. Ми вирішили, [___:13]} наступного разу подивимося комедію."} blanks={JSON.parse(`[{"index": 0, "answer": "тому що", "options": ["тому що", "щоб", "який", "а"]}, {"index": 1, "answer": "щоб", "options": ["щоб", "бо", "який", "що"]}, {"index": 2, "answer": "але", "options": ["але", "що", "яка", "якщо"]}, {"index": 3, "answer": "Хоча", "options": ["Хоча", "Бо", "Щоб", "А"]}, {"index": 4, "answer": "що", "options": ["що", "який", "бо", "щоб"]}, {"index": 5, "answer": "коли", "options": ["коли", "що", "який", "але"]}, {"index": 6, "answer": "якою", "options": ["якою", "що", "яку", "якій"]}, {"index": 7, "answer": "а", "options": ["а", "і", "що", "бо"]}, {"index": 8, "answer": "Коли", "options": ["Коли", "Що", "Бо", "Який"]}, {"index": 9, "answer": "щоб", "options": ["щоб", "бо", "який", "а"]}, {"index": 10, "answer": "а", "options": ["а", "та", "що", "який"]}, {"index": 11, "answer": "який", "options": ["який", "що", "яку", "які"]}, {"index": 12, "answer": "але", "options": ["але", "що", "бо", "якщо"]}, {"index": 13, "answer": "що", "options": ["що", "який", "щоб", "бо"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **інтеграція** | [intɛˈɦrɑt͡sʲijɑ] | integration | ім |  |
-| **складний** | [sklɑdnɪj] | complex | adjective |  |
-| **сурядний** | [suˈrʲɑdnɪj] | coordinating | adjective |  |
-| **підрядний** | [pʲiˈdʲrʲɑdnɪj] | subordinating | adjective |  |
-| **багатокомпонентний** | [bɑɦɑtɔkɔmpɔˈnɛntnɪj] | multi-component | adjective |  |
-| **структура** | [struˈkturɑ] | structure | ім |  |
-| **кома** | [ˈkɔmɑ] | comma | ім |  |
-| **розділовий знак** | [rɔzʲdʲiˈlɔʋɪj znɑk] | punctuation mark | ім |  |
-| **а** | [ɑ] | and/but | conjunction |  |
-| **але** | [ɑˈlɛ] | but | conjunction |  |
-| **щоб** | [ʃt͡ʃɔb] | in order to/that | conjunction |  |
-| **бо** | [bɔ] | because (informal) | conjunction |  |
-| **тому що** | [tɔˈmu ʃt͡ʃɔ] | because (neutral) | conjunction |  |
-| **вкладений** | [ˈʍklɑdɛnɪj] | nested | adjective |  |
-| **паралельний** | [pɑrɑˈlɛlʲnɪj] | parallel | adjective |  |
-| **зрозумілість** | [zrɔzuˈmʲilʲisʲtʲ] | clarity | ім |  |
-| **стиль** | [stɪlʲ] | style | ім |  |
-| **хоча** | [xɔˈt͡ʃɑ] | although | conjunction |  |
-| **якщо** | [jɑˈkʃt͡ʃɔ] | if | conjunction |  |
-| **який** | [jɑˈkɪj] | which/who | pronoun |  |
-| **що** | [ʃt͡ʃɔ] | that | conjunction |  |
-| **крапка** | [ˈkrɑpkɑ] | dot/period | ім |  |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | conjunction | ім |  |
-| **речення** | [rɛt͡ʃɛnʲːɑ] | sentence | ім |  |
-| **абзац** | [ɑˈbzɑt͡s] | paragraph | ім |  |
-| **текст** | [tɛkst] | text | ім |  |
-| **причина** | [prɪˈt͡ʃɪnɑ] | cause/reason | ім |  |
-| **умова** | [uˈmɔʋɑ] | condition | ім |  |
-| **мета** | [mɛˈtɑ] | purpose/goal | ім |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence/result | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

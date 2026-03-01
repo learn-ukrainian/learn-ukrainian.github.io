@@ -34,503 +34,405 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# At the Café
+{/**/}
 
 > **Чому це важливо?**
 >
-> In Ukraine, a café is more than just a place to get caffeine—it is a social institution. Whether you are meeting a friend in Lviv or grabbing a quick espresso in Kyiv, knowing how to order politely is your golden ticket to local culture. This lesson gives you the exact phrases to feel confident, respected, and well-fed.
+> Ordering food and drinks is a very common task. Mastering polite café vocabulary and basic grammar ensures you can confidently navigate social situations.
 
-## Розминка: Кава — це культура
+## Вступ
 
-### Ласкаво просимо!
+### Українська кав'ярня
 
-**Добрий день!** Welcome to the world of Ukrainian café culture. Take a moment to imagine the setting. Can you smell that? That represents the soul of a Ukrainian city: the aroma of fresh **ка́ва** (coffee).
+«Добрий день! Ласкаво просимо до нашої кав'ярні.»
+«Атмосфера тут дуже затишна й приємна.»
+«Ми дуже раді вас бачити.»
 
-For us, coffee is not just a drink; it is a ritual. Especially in cities like Lviv, people can sit for hours with one small cup, talking about life, love, and politics. We don't just "drink coffee"—we "go for coffee" (**піти на ка́ву**). It implies spending time together, even if you actually drink tea or juice.
+Welcome! Сьогодні ми йдемо в кав'ярню. Imagine standing behind the counter, the espresso machine is hissing softly, and the scent of freshly roasted beans fills the air. Our primary goal today is to help you feel completely comfortable ordering your favorite food and drinks in Ukrainian. We will learn how to read the menu carefully and speak politely with the friendly waiter. This is a very important and useful skill for your everyday life in Ukraine.
 
-:::note[🏺 Culture]
-**Cultural Insight: The Slow Sip**
-In many Western countries, coffee is "fuel" to go. In Ukraine, coffee is a "pause." Even in a busy city, when you sit down in a **кав'я́рня** (café), the rush stops. You are expected to relax. **Українці люблять каву.** (Ukrainians love coffee.)
+В Україні похід у кафе — це важливий ритуал. Люди зустрічаються тут кожного дня. In Ukraine, going to a café is a profound social ritual. People meet to discuss business or catch up with friends.
+
+:::note[🏺 Піти на каву]
+The phrase **«піти на каву»** is a cultural cornerstone. It rarely means consuming a drink quickly. Instead, it is an open invitation to connect and spend quality time together.
 :::
 
-### The Essentials
+### Кавова історія: Львів та Кульчицький
 
-Before we look at the menu, you need the "Big Three" drinks that keep Ukraine running. These are the words you will use every single day.
+«Львів — це чудове місто на заході України.»
+«Там є дуже багато старих кав'ярень.»
+«Українці люблять пити каву щодня.»
 
-1. **ка́ва** — coffee (feminine)
-2. **чай** — tea (masculine)
-3. **вода́** — water (feminine)
+Наша кавова культура дуже стара. Серце цієї традиції — чудове місто Львів. Lviv is famous for its beautiful architecture and its hundreds of distinctive coffeehouses.
 
-You will also likely want something sweet.
-4. **ті́стечко** — pastry/cake (neuter)
+Юрій Кульчицький — це український герой. The strong connection between Ukraine and coffee involves Yuriy Kulchytsky. Під час битви за Відень він дуже допоміг місту.
 
-:::tip[💡 Tip]
-**Pronunciation Tip**
-Notice the **в** in **кава**. It is not the English 'v' (biting your lip) and not the 'w' (rounding your lips). It is a soft [ʋ], halfway between the two. Try to say "v" but without your teeth touching your lip too hard.
+Як нагороду він узяв мішки з кавою. As a reward, Kulchytsky asked for the sacks of strange dark beans that the retreating army had left behind. Він відкрив кав'ярню в Європі. Сьогодні у Львові є пам'ятник Кульчицькому.
+
+### Основний словник
+
+Before we start ordering, let's learn the essential vocabulary.
+
+| Українська | English | Frequency |
+|------------|---------|-----------|
+| **ка́ва** | coffee | Very High |
+| **чай** | tea | Very High |
+| **вода́** | water | Very High |
+| **меню́** | menu | High |
+| **офіціа́нт** | waiter | High |
+| **замовля́ти** | to order | High |
+| **бу́дь ла́ска** | please | Very High |
+
+«Це чорна кава й гарячий чай.»
+«Я читаю велике меню біля вікна.»
+«Ввічливий офіціант несе чисту воду.»
+
+Зверніть увагу на наголос. Pronouncing **«ка́ва»** correctly with the emphasis on the first syllable is your first important step to making a perfect order.
+
+## Презентація
+
+### Етикет привітання
+
+«Ми заходимо у кафе й бачимо офіціанта.»
+«Ми завжди говоримо: Добрий день!»
+«Ми завжди кажемо Ви.»
+
+When you enter a café, the very first interaction sets the tone. In Ukrainian service culture, it is the standard to use the polite **«Ви»** when speaking to staff. Maintaining this respectful distance is a sign of good manners.
+
+The correct greeting is **«Добрий день!»** or **«Добрий ранок!»**. You should avoid using **«Привіт!»** in this specific context.
+
+Once you sit down, the waiter will usually greet you:
+«Добрий день! Що бажаєте?»
+«Що ви замовите сьогодні?»
+
+### Ввічливе замовлення
+
+«Як правильно й гарно замовляти напої?»
+«Ми не кажемо офіціанту: Я хочу каву.»
+«Ми кажемо: Каву, будь ласка.»
+
+Directly translating English phrases can lead to awkward situations. In Ukrainian, saying **«Я хочу...»** sounds demanding.
+
+Instead of demanding, we use much softer alternatives. The most common phrase is simply naming the item and adding **«будь ласка»**.
+
+Another excellent option is **«Я буду...»**.
+
+:::warning[⚠️ Уникайте «Я хочу»]
+Always prefer the phrase **«Я буду...»** or simply the item name with **«будь ласка»**.
 :::
 
-### Grammar Preview: The Magic of Change
+### Граматика: Знахідний відмінок
 
-Here is a secret about Ukrainian: words change depending on what you are doing to them.
+When you order a drink, that drink becomes the direct object. In Ukrainian grammar, whenever a noun functions as a direct object, it must take the Accusative case (Знахідний відмінок).
 
-If you just see coffee on a shelf, it is **кава**.
-But if you *want* it, or *order* it, you are doing something to it. You are acting upon it. The word must change to show it is being "targeted."
+Тут слово змінює закінчення. This grammatical rule means that the ending of the noun might change from its original dictionary form.
 
-- **Кава** (Subject: "Coffee is here")
-- **Каву** (Object: "I want coffee")
+### Жіночий рід на -а
 
-Do not worry about the rules just yet. Just keep your ears open. If you hear a local say **«Я буду каву»** instead of **«Я буду кава»**, you now know why. The word is dressing up for dinner!
+The most common transformation involves feminine nouns that end in -а. The ending simply changes from -а to -у.
 
-## Презентація: Привітання та ввічливість
+«Це свіжа вода. Воду, будь ласка.»
+«Це міцна кава. Я буду каву.»
+«Це смачна піца. Ми замовимо піцу.»
 
-### Greeting the Staff
+Notice the phonetic shift from **«вода»** to **«воду»** and from **«кава»** to **«каву»**.
 
-When you enter a café, you become a guest. The relationship between a guest and a barista or **офіціа́нт** (waiter) is built on mutual respect.
+### Жіночий рід на -я
 
-The absolute first rule: Say hello. Walking up to the counter and just saying "Latte, please" is considered rude.
+Some feminine nouns end in -я. When these words become the direct object, their ending changes from -я to -ю.
 
-- **Добрий день!** [ˈdɔ.brɪj dɛnʲ] — Good day! (Standard, polite)
-- **Вітаю!** [ʋʲiˈtɑ.ju] — Greetings! (Friendly, slightly less formal but very common)
+«Тут є велика порція. Я замовлю порцію.»
+«Це диня. Я буду диню.»
+«Це полуниця. Я люблю полуницю.»
 
-### The Golden Rule: «Ви» vs «Ти»
+Whenever you want to order a food item that ends in -я, you can confidently change that final letter to -ю.
 
-In a café, you are always on **Ви** terms with the staff, regardless of their age. Even if the barista looks like a teenager, you use **Ви**. This creates a professional distance and shows respect.
+### Чоловічий і середній рід
 
-:::warning[⚠️ Warning]
-**Common Mistake Alert**
-Never say **«Привіт»** (Hi) or use verbs ending in **-єш** (like **маєш**) with service staff unless you are close personal friends. It sounds condescending. Always stick to **«Скажіть, будь ласка»** (Tell me, please), not **«Скажи»**.
+When you order an inanimate masculine object, the word does not change at all. Masculine nouns typically end in a consonant. In the Accusative case, they remain exactly the same. The same rule applies to neuter nouns.
+
+«Це зелений чай. Я буду чай.»
+«Це яблучний сік. Сік, будь ласка.»
+«Це солодке тістечко. Я буду тістечко.»
+
+Because **«чай»**, **«сік»**, and **«тістечко»** are inanimate objects, you simply use their standard dictionary form.
+
+### Корисні фрази
+
+«Я дуже люблю пити каву з молоком.»
+«Мій брат п'є чорний чай без цукру.»
+«Моя сестра замовляє воду з лимоном.»
+
+When ordering, you often want to customize your drink. In Ukrainian, changing the ingredients involves complex cases.
+
+Instead of worrying about the grammar, you should treat these modifiers as fixed phrases:
+
+- **«з молоком»** (with milk)
+- **«без цукру»** (without sugar)
+- **«з лимоном»** (with lemon)
+
+You can attach these pre-made chunks directly after your main order.
+
+«Каву з молоком, будь ласка.»
+«Я буду чай без цукру й з лимоном.»
+«Один капучино без цукру.»
+
+## Практика
+
+### Ввічливі команди
+
+«Як правильно попросити меню або рахунок?»
+«Ми використовуємо дуже ввічливі слова.»
+«Слово "будь ласка" дуже важливе.»
+
+In a restaurant, you will frequently need to ask the staff to perform an action. For this request, we use the plural imperative forms. This matches the formal **«Ви»**.
+
+«Дайте, будь ласка, барне меню.»
+«Принесіть, будь ласка, чорний чай.»
+«Покажіть, будь ласка, десерти.»
+
+The verb **«дати»** transforms into **«дайте»**. The verb **«принести»** transforms into **«принесіть»**.
+
+### Деталі замовлення
+
+«Офіціант часто запитує про важливі деталі.»
+«Ми повинні знати нові прикметники.»
+«Який розмір ви хочете?»
+
+Waiters will often ask you to clarify specifics.
+
+- **Розмір**: «великий» vs «малий»
+- **Температура**: «гарячий» vs «холодний»
+- **Газація**: «з газом» vs «без газу»
+
+«Ви бажаєте великий чи малий чай?»
+«Великий, будь ласка.»
+
+«Ви бажаєте воду з газом чи без газу?»
+«Принесіть воду без газу, будь ласка.»
+
+### Діалог 1: Швидка кава
+
+«Давайте прочитаємо дуже коротку розмову.»
+«Клієнт хоче купити каву із собою.»
+«Він купує каву й іде на роботу.»
+
+Let's observe a fast interaction.
+
+**Бариста:** Добрий день! Що ви замовите?
+(Barista: Good afternoon! What will you order?)
+**Клієнт:** Добрий день! Я буду каву з молоком.
+(Customer: Good afternoon! I will have coffee with milk.)
+**Бариста:** Бажаєте велику чи малу?
+(Barista: Do you desire large or small?)
+**Клієнт:** Велику, будь ласка. І без цукру.
+(Customer: Large, please. And without sugar.)
+**Бариста:** Добре. З вас сто гривень.
+(Barista: Good. That will be one hundred hryvnias.)
+
+:::tip[🔍 Зверніть увагу]
+Did you notice that the barista asked «Бажаєте велику чи малу?» using the -у ending? This is because the adjective automatically matches the hidden word «каву».
 :::
 
-### What You Will Hear
+### Діалог 2: Зустріч у кав'ярні
 
-After you greet them, the waiter will likely ask:
+«Тепер клієнт сидить за зручним столом.»
+«Він має час і хоче замовити десерт.»
+«Офіціант приносить меню.»
 
-- **Що бажаєте?** [ʃt͡ʃɔ bɑˈʒɑ.jɛ.tɛ] — What do you desire/wish?
-- **Що будете замовляти?** [ʃt͡ʃɔ ˈbu.dɛ.tɛ zɑ.mɔu̯ˈlʲɑ.tɪ] — What will you order?
+This dialogue is slightly longer.
 
-**Замовля́ти** means "to order." It is a key verb for this module.
+**Офіціант:** Добрий день. Ось ваше меню.
+(Waiter: Good afternoon. Here is your menu.)
+**Клієнт:** Дякую. Одну хвилину, будь ласка.
+(Customer: Thank you. One minute, please.)
+**Офіціант:** Ви готові замовляти?
+(Waiter: Are you ready to order?)
+**Клієнт:** Так. Каву, будь ласка, і смачне тістечко.
+(Customer: Yes. Coffee, please, and a tasty pastry.)
+**Офіціант:** Звичайно. Принести каву зараз чи потім?
+(Waiter: Of course. Bring the coffee now or later?)
+**Клієнт:** Зараз, будь ласка.
+(Customer: Now, please.)
 
-### Polite Requests (Imperatives)
+The phrase **«Ви готові замовляти?»** is the polite way a waiter will check on you.
 
-You need to ask for things. In English, we use "Can I get...". In Ukrainian, we often use a polite command (Imperative) followed quickly by "please."
+### Діалог 3: Вирішення проблеми
 
-Here are the two most useful verbs:
+«Іноді бувають маленькі проблеми в кафе.»
+«Ви повинні знати, як правильно їх вирішити.»
+«Треба говорити спокійно та ввічливо.»
 
-**1. Дайте** [ˈdɑj.tɛ] — Give (polite plural/formal)
-Use this for simple transactions, like asking for a menu.
-- **Дайте, будь ласка, меню.** (Give [me], please, the menu.)
+Even in the best cafés, misunderstandings can happen.
 
-**2. Принесіть** [prɪ.nɛˈsʲitʲ] — Bring (polite plural/formal)
-Use this when you are sitting at a table and the waiter needs to carry something to you.
-- **Принесіть, будь ласка, рахунок.** (Bring, please, the bill.)
+**Клієнт:** Вибачте, це чорний чай. А я замовляв зелений чай.
+(Customer: Excuse me, this is black tea. And I ordered green tea.)
+**Офіціант:** О, вибачте, будь ласка! Я зараз принесу зелений чай.
+(Waiter: Oh, excuse me, please! I will bring green tea right now.)
+**Клієнт:** Нічого страшного. Дякую.
+(Customer: Nothing terrible / It's fine. Thank you.)
 
-:::tip[🔍 Pattern Discovery]
-**Notice the Pattern**
-See the **-те** and **-іть** endings? These are the markers of a polite request to "You" (**Ви**). We will study this deeply later, but for now, memorize these two power words.
+Using the phrase **«Вибачте»** immediately softens the correction. When the waiter apologizes, the best response is the fixed phrase **«Нічого страшного»**.
+
+### Важлива різниця: Рахунок чи чек
+
+«Це дуже часта й типова помилка.»
+«Студенти часто плутають ці два важливі слова.»
+«Вони мають різне значення.»
+
+When it is finally time to leave the café, English speakers often fall into a vocabulary trap.
+
+- **Рахунок**: This is the document listing what you ordered and calculating how much you must pay. You ask for this *before* you hand over any money.
+- **Чек**: This is the printed piece of paper you receive *after* the transaction is complete.
+
+«Офіціант, можна рахунок, будь ласка?»
+«Принесіть, будь ласка, рахунок.»
+«Я хочу заплатити за вечерю.»
+
+Always remember the correct sequence: you ask the waiter for the **«рахунок»**, you pay the money, and later the cashier gives you the **«чек»**.
+
+:::tip[💡 Головне правило]
+You ask the waiter for the **«рахунок»**. The machine gives you the **«чек»**.
 :::
 
-### The Magic Word
+## Продукція та Підсумок
 
-You already know this, but it bears repeating. **Будь ла́ска** (Please).
-Attach it to everything.
-- **Меню, будь ласка.**
-- **Каву, будь ласка.**
-- **Дякую.** (Thank you.)
+### Сучасна оплата
 
-### Simple Greeting Dialogue
+«Як ви хочете платити сьогодні за каву?»
+«В Україні можна легко платити телефоном.»
+«Безготівкова оплата дуже популярна.»
 
-Let's see a simple hello.
+Ukraine has a highly developed digital banking infrastructure. You can pay with a bank card or a smartphone in almost every café.
 
-**Клієнт:** Добрий день!
-**Бариста:** Добрий день! Що бажаєте?
-**Клієнт:** Каву, будь ласка.
+When the waiter brings the bill, they will usually ask:
+«Оплата карткою чи готівкою?»
 
-## Замовлення: Знахідний відмінок
+You can simply reply:
+«Карткою.»
+«Готівкою.»
 
-### Understanding the Accusative Case
+Treat **«карткою»** and **«готівкою»** as essential vocabulary items.
 
-Now, let's look at that changing word ending again. In grammatical terms, this is the **Accusative Case** (Знахідний відмінок). It marks the direct object of the sentence—the thing being ordered, drunk, or eaten.
+### Традиція залишати чайові
 
-When you say "I order coffee," *coffee* is the object.
+«Українці дуже часто залишають чайові.»
+«Це хороший знак подяки за гарний сервіс.»
+«Ми цінуємо хорошу роботу офіціанта.»
 
-**The Rule for Feminine Nouns:**
-Feminine nouns ending in **-а** or **-я** change their endings.
+Leaving a tip is a standard practice in Ukrainian hospitality. The specific word for a tip is **«чайові»**.
 
-- **-а** changes to **-у**
-- **-я** changes to **-ю**
+«Я хочу залишити чайові для офіціанта.»
+«Ось ваші чайові. Дуже дякую!»
+«Сервіс був чудовий, ми залишаємо чайові.»
 
-**The Rule for Masculine Nouns:**
-Inanimate masculine nouns (things, not people) **do not change** in this context. They stay exactly the same.
+You can confidently say «Так, десять відсотків» when asked «Додати чайові до рахунку?».
 
-### Feminine Nouns in Action (Change it!)
-
-Let's look at our feminine drinks and foods.
-
-**Кава** (Coffee) ends in **-а**.
-- **Я замовлю каву.** (I will order coffee.)
-- **Дайте каву.** (Give coffee.)
-- **Я візьму каву.** (I will take coffee.)
-
-**Вода** (Water) ends in **-а**.
-- **Я буду воду.** (I will have water.)
-- **Принесіть воду.** (Bring water.)
-- **Дайте воду.** (Give water.)
-
-**Піца** (Pizza) ends in **-а**.
-- **Я замовлю піцу.** (I will order pizza.)
-- **Я буду піцу.** (I will have pizza.)
-
-This creates a satisfying rhyme: "Vod**a**" becomes "Vod**u**", "Kav**a**" becomes "Kav**u**", "Pits**a**" becomes "Pits**u**".
-
-### Masculine Nouns in Action (Keep it!)
-
-These words are easy. You don't have to do anything.
-
-**Чай** (Tea) — Masculine.
-- **Я буду чай.** (I will have tea.)
-- **Дайте чай.** (Give tea.)
-
-**Сік** (Juice) — Masculine.
-- **Дайте сік.** (Give juice.)
-- **Я візьму сік.** (I will take juice.)
-
-**Круаса́н** (Croissant) — Masculine.
-- **Я замовлю круасан.** (I will order a croissant.)
-- **Я буду круасан.** (I will have a croissant.)
-
-### How to Say "I Will Have..."
-
-You cannot just shout "Coffee!" politely. You need a phrase to introduce your order.
-
-**1. Я буду...** [jɑ ˈbu.du]
-Literally: "I will be..." (Meaning: I will have...)
-This is very common and polite.
-- **Я буду воду.** (I will have water.)
-- **Я буду тістечко.** (I will have a cake.)
-- **Я буду борщ.** (I will have borsch.)
-- **Я буду салат.** (I will have salad.)
-
-**2. Я візьму...** [jɑ ʋʲizʲˈmu]
-Literally: "I will take..."
-- **Я візьму еспресо.** (I will take an espresso.)
-- **Я візьму піцу.** (I will take pizza.)
-- **Я візьму суп.** (I will take soup.)
-
-:::danger[🛡️ Myth Buster]
-**Myth: "Я хочу" is polite.**
-**Reality:** No. **«Я хочу»** means "I want." It sounds demanding, like a small child pointing at a toy. Avoid using it with waiters. Use **«Я буду»** instead.
+:::info[ℹ️ Цікавий факт]
+The word **«чайові»** shares its origin with "tea money" concepts.
 :::
 
-### Comparison Table
-
-| Noun (Nominative) | Gender | Changes to (Accusative) | Example Phrase |
-|-------------------|--------|-------------------------|----------------|
-| **кава** | Feminine | **каву** (-у) | Я буду каву. |
-| **вода** | Feminine | **воду** (-у) | Дайте воду. |
-| **піца** | Feminine | **піцу** (-у) | Я візьму піцу. |
-| **кола** | Feminine | **колу** (-у) | Я буду колу. |
-| **паста** | Feminine | **пасту** (-у) | Я замовлю пасту. |
-| **булка** | Feminine | **булку** (-у) | Я буду булку. |
-| **чай** | Masculine | **чай** (no change) | Я буду чай. |
-| **сік** | Masculine | **сік** (no change) | Я буду сік. |
-| **тістечко** | Neuter | **тістечко** (no change) | Я буду тістечко. |
-
-### Practice Drills
-
-**Спробуйте сказати це українською** (Try to say this in Ukrainian):
-
-1. Для води: **Я буду воду, будь ласка.**
-2. Для чаю: **Я буду чай, будь ласка.**
-3. Для піци: **Я буду піцу, будь ласка.**
-4. Для соку: **Я буду сік, будь ласка.**
-5. Для кави: **Я буду каву, будь ласка.**
-
-Remember, practice makes perfect! The more you say **«Я буду каву»**, the more natural it feels.
-
-## Уточнення: Яку каву ви бажаєте?
-
-### Adjectives in the Accusative
-
-You rarely just order "coffee." You want "black coffee," "hot tea," or "tasty water." The adjective (describing word) must match the noun. If the noun changes to the Accusative, the adjective must play along.
-
-**Feminine Adjectives:**
-If the noun changes **-а → -у**, the adjective changes **-а → -у**.
-- **Чорна кава** → **Чорну каву**
-- **Смачна вода** → **Смачну воду**
-- **Гаряча піца** → **Гарячу піцу**
-- **Холодна вода** → **Холодну воду**
-- **Велика кава** → **Велику каву**
-
-**Masculine Adjectives:**
-If the noun doesn't change, the adjective doesn't change.
-- **Зелений чай** → **Зелений чай**
-- **Апельсиновий сік** → **Апельсиновий сік**
-- **Чорний чай** → **Чорний чай**
-- **Смачний круасан** → **Смачний круасан**
-
-### Modifications: With or Without?
-
-Coffee is often customized. We use the preposition **з** (with) or **без** (without).
-
-**З** (With) + Instrumental Case (we will learn the rules later, for now, learn these chunks):
-- **з молоко́м** — with milk
-- **з лимо́ном** — with lemon
-- **з цу́кром** — with sugar
-- **з дже́мом** — with jam
-- **з ме́дом** — with honey
-
-**Без** (Without) + Genitive Case (chunks):
-- **без цу́кру** — without sugar
-- **без молока́** — without milk
-- **без га́зу** — without gas
-- **без лимо́на** — without lemon
-- **без ме́ду** — without honey
-
-:::tip[💡 Tip]
-**Запам'ятайте!** (Memorize!)
-Don't try to analyze why "sugar" becomes "tsukr**om**" with "z" but "tsukr**u**" with "bez." Just treat **«кава з молоком»** as one single vocabulary item for now. It is easier!
-:::
-
-### Common Questions from the Barista
-
-You need to understand what they ask you to complete your order.
-
-1. **Велику чи маленьку?**
-   - **Велику, будь ласка.** (Big, please.)
-   - **Маленьку, будь ласка.** (Small, please.)
-
-2. **З чим?**
-   - **З молоком.** (With milk.)
-   - **З цукром.** (With sugar.)
-   - **З лимоном.** (With lemon.)
-
-3. **Це все?**
-   - **Так, дякую.** (Yes, thanks.)
-   - **Ні, ще воду, будь ласка.** (No, also water, please.)
-
-### Asking for a Recommendation
-
-If you are unsure what to order, you can ask:
-- **Що порадите?** — What do you recommend?
-
-This is a polite way to get the waiter's suggestion. Notice it uses the **Ви** form — just like **«Що бажаєте?»**.
-
-### Mini-Dialogue: The Latte Order
-
-**Офіціант:** Добрий день! Що будете замовляти?
-**Клієнт:** Добрий день. Я буду велику каву, будь ласка.
-**Офіціант:** З молоком чи без?
-**Клієнт:** З молоком, будь ласка. Й одне тістечко.
-**Офіціант:** Яке тістечко? Шоколадне?
-**Клієнт:** Так, шоколадне.
-**Офіціант:** Добре. Дякую.
-
-### Tasty Combinations
-
-Try ordering these delicious things:
-- **Чорну каву без цукру.** (Black coffee without sugar.)
-- **Зелений чай з лимоном.** (Green tea with lemon.)
-- **Велику піцу з сиром.** (Large pizza with cheese.)
-- **Апельсиновий сік без льоду.** (Orange juice without ice.)
-
-## Рахунок та оплата
-
-### Asking for the Bill
-
-You have finished your delicious **каву з молоком**. Now it is time to pay.
-
-To get the bill, catch the waiter's eye and say:
-- **Можна рахунок?** [ˈmɔʒ.nɑ rɑˈxunɔk] — May [I have] the bill?
-- **Принесіть, будь ласка, рахунок.** — Bring, please, the bill.
-
-**Рахунок** is the total sum you have to pay.
-
-:::warning[⚠️ Warning]
-**Check vs. Bill**
-In English, "check" and "bill" are often interchangeable. In Ukrainian, **чек** is the *receipt*—the piece of paper you get *after* you pay (proof of purchase). The thing you pay is the **рахунок**.
-- Ask for **рахунок** to pay.
-- Take the **чек** home.
-:::
-
-### Payment Methods
-
-The waiter will ask:
-- **Готівкою чи карткою?** [ɦɔˈtʲiu̯.kɔ.ju t͡ʃɪ ˈkɑrt.kɔ.ju]
-
-Your answers:
-- **Карткою, будь ласка.** (By card, please.)
-- **Готівкою.** (By cash.)
-- **Ось готівка.** (Here is cash.)
-- **Ось картка.** (Here is the card.)
-
-**Ка́ртка** is card. **Готі́вка** is cash.
-
-### Mini-Dialogue: Payment
-
-Let's pay for our coffee.
-
-**Клієнт:** Рахунок, будь ласка.
-**Офіціант:** Готівкою чи карткою?
-**Клієнт:** Готівкою. Ось 100 гривень.
-**Офіціант:** Дякую. Ось ваша решта.
-**Клієнт:** Дякую. На все добре!
-
-### Tipping Culture
-
-Leaving a tip is called **чайові́** (literally: "tea money").
-In Ukraine, it is polite to leave about 10% if you liked the service.
-- You can leave cash on the table.
-- Or say **«Дякую»** when handing over cash, which often implies "Keep the change."
-- If the bill is 450 UAH and you give 500 UAH, say **«Дякую»** or **«Решти не треба»**.
-
-### Saying Goodbye
-
-Never just walk out silently.
-- **Дякую!** (Thank you!)
-- **На все добре!** [nɑ ʋsɛ ˈdɔ.brɛ] — All the best!
-- **До побачення!** [dɔ pɔˈbɑ.t͡ʃɛ.nʲːɑ] — Goodbye!
-- **Гарного дня!** (Have a nice day!)
-
-## Практика: У кав'ярні
-
-### Reading the Menu
-
-Imagine you are looking at a chalkboard menu in a Lviv café. Try to identify the items.
-
-| НАПОЇ (Drinks) | ДЕСЕРТИ (Desserts) |
-
-| :--- | :--- |
-
-| Еспресо | Шоколадне тістечко |
-
-| Капучіно | Круасан з джемом |
-
-| Американо | Медівник |
-
-| Кава з молоком | Сирник |
-
-| Чай (зелений / чорний) | Морозиво (ванільне / шоколадне) |
-
-| Сік (апельсиновий / яблучний) | |
-
-*Note: **Медівник** is a honey cake, and **Сирник** is a cottage cheese pancake.*
-
-### Dialogue Analysis
-
-Let's break down a full interaction.
-
-**Ситуація:** *Andriy is ordering breakfast.*
-
-**Офіціант:** Вітаю! Що бажаєте?
-
-**Андрій:** Добрий день! Так. Я буду зелений чай і круасан.
-
-**Офіціант:** Чай з лимоном?
-
-**Андрій:** Ні, без лимона. Але дайте, будь ласка, воду.
-
-**Офіціант:** Газовану чи без?
-
-**Андрій:** Без газу.
-
-**Офіціант:** Добре. Це все?
-
-**Андрій:** Так. Дякую.
-
-**Офіціант:** (Later) Ваш чай і вода.
-
-**Андрій:** Дякую. Принесіть, будь ласка, рахунок.
-
-**Офіціант:** Готівкою чи карткою?
-
-**Андрій:** Карткою.
-
-**Офіціант:** Будь ласка.
-
-**Андрій:** Дякую. До побачення!
-
-:::info[🌍 Context]
-
-**Аналіз граматики** (Grammar Analysis)
-
-Look at Andriy's order:
-
-- **Чай** (masculine) → did not change.
-
-- **Круасан** (masculine) → did not change.
-
-- **Воду** (feminine, was *вода*) → changed to **-у** because he asked for it ("Give water").
-
-:::
-
-### Roleplay: Ordering for a Friend
-
-Imagine your friend wants a "large coffee with milk." How do you order for them?
-
-1. Start with "I will have, please..." -> **Я буду, будь ласка...**
-2. Next, use the adjective (Large -> Big) in Accusative -> **...велику...**
-3. Then, say the noun (Coffee) in Accusative -> **...каву...**
-4. Finally, include the modification (With milk) -> **...з молоком.**
-
-Result: **Я буду, будь ласка, велику каву з молоком.**
-
-### Extra Practice: Describing the Order
-
-Look at the table and say what you want.
-- You see "Black Tea". Say: **Я буду чорний чай.**
-- You see "Tasty Cake". Try: **Я буду смачне тістечко.**
-- You see "Cold Water". Use: **Я буду холодну воду.**
-- You see "Hot Pizza". Speak: **Я буду гарячу піцу.**
-- You see "Orange Juice". Say: **Я буду апельсиновий сік.**
-
-## 🏺 Культурний контекст: Українські кав'ярні
-
-### The Legend of Kulchytsky
-
-There is a beloved Ukrainian legend about coffee. **Юрій Кульчицький** (Yuriy Kulchytsky) was a hero of the Battle of Vienna in 1683. According to the story, as a reward for his bravery, he asked for the bags of "strange beans" the Ottoman army left behind. The Viennese thought it was camel feed. Kulchytsky knew better.
-
-Legend has it that he opened one of the first coffee houses in Vienna. But the bitter black drink was too strong for the locals. So, he added honey and milk — and that is how Ukrainians like to explain the birth of European coffee culture. In Lviv, there is a statue dedicated to him.
-
-**Юрій Кульчицький — герой Відня. Він навчив Європу пити каву. Він додав молоко і мед. Тепер кава — це традиція.**
-
-### Modern Etiquette
-
-In Ukraine, cafés are "third spaces"—not home, not work, but a place to exist.
-- **Laptop culture:** It is very common to work in cafés. Just order something every hour or so.
-- **Sharing:** It is normal to push tables together if you are a large group (ask first!).
-- **Dress code:** Ukrainians often dress up slightly to go out, even just for coffee. It is a social event.
-
-Now you are ready to walk into any **кав'ярня**, smile, and order your **філіжанку кави** (cup of coffee) like a local.
-
----
-
-## 📋 Підсумок
-
-Today we stepped into the cozy world of Ukrainian cafés. We learned that ordering is not just about vocabulary, but about grammar—changing those endings to show what you want.
-
-**Key takeaways:**
-1. **Greetings:** Always say **«Добрий день»** and use **«Ви»** with staff. (**Завжди кажіть «Добрий день» і використовуйте «Ви».**)
-2. **Grammar:** Feminine words change **-а/-я** to **-у/-ю** when you order them (Accusative case). Masculine words stay the same. (**Слова змінюються: кава → каву.**)
-3. **Politeness:** Use **«Дайте»** or **«Принесіть»** followed by **«Будь ласка»**. (**Використовуйте «Будь ласка».**)
-4. **Chunks:** Memorize **«з молоком»** and **«без цукру»** as fixed phrases. (**Запам'ятайте фрази.**)
+### Рольова гра: Повний візит до кав'ярні
+
+«Давайте прочитаємо велику історію разом.»
+«Тут є всі нові слова й важливі правила.»
+«Ми замовляємо, їмо й платимо за рахунком.»
+
+Let's combine everything we have learned. Read this story to see how naturally the vocabulary flows in real life.
+
+Клієнт заходить у затишну львівську кав'ярню. Він сідає за стіл біля великого вікна й дивиться меню. Офіціант швидко підходить до столу.
+(The customer enters a cozy Lviv café. He sits at the table near the large window and looks at the menu. The waiter quickly approaches the table.)
+
+**Офіціант:** Добрий день! Ви готові замовляти?
+(Waiter: Good afternoon! Are you ready to order?)
+**Клієнт:** Добрий день. Так. Каву, будь ласка, й шоколадне тістечко.
+(Customer: Good afternoon. Yes. Coffee, please, and a chocolate pastry.)
+**Офіціант:** Яку каву бажаєте? Капучино, еспресо чи американо?
+(Waiter: What kind of coffee would you like? Cappuccino, espresso, or americano?)
+**Клієнт:** Я буду капучино. З молоком, але без цукру.
+(Customer: I will have a cappuccino. With milk, but without sugar.)
+**Офіціант:** Добре. Щось ще?
+(Waiter: Good. Anything else?)
+**Клієнт:** Принесіть, будь ласка, склянку води без газу.
+(Customer: Bring, please, a glass of water without gas.)
+
+Клієнт повільно п'є смачну каву й їсть солодкий десерт. Потім він кличе офіціанта.
+(The customer slowly drinks tasty coffee and eats the sweet dessert. Then he calls the waiter.)
+
+**Клієнт:** Можна рахунок, будь ласка?
+(Customer: Can I have the bill, please?)
+**Офіціант:** Так, звичайно. Оплата готівкою чи карткою?
+(Waiter: Yes, of course. Payment in cash or by card?)
+**Клієнт:** Я заплачу карткою. Також я хочу залишити чайові.
+(Customer: I will pay by card. Also I want to leave a tip.)
+**Офіціант:** Дуже дякую! Гарного дня!
+(Waiter: Thank you very much! Have a good day!)
+
+This complete scenario uses the Accusative case accurately and deploys polite commands perfectly.
+
+### Підсумок
+
+«Ми сьогодні вивчили дуже багато корисного.»
+«Тепер ви можете легко замовити будь-який напій.»
+«Ви знаєте всі необхідні слова й правила.»
+
+You are now fully prepared to visit a café anywhere in Ukraine and order your absolute favorite drinks. You deeply understand the importance of the Accusative case.
+
+Here is a final visual recap of the core grammar rule for ordering direct objects:
+
+| Словник (Nominative) | Замовлення (Accusative) | Приклад (Example) |
+|----------------------|-------------------------|-------------------|
+| вода (вода́) | вод**у** | Вод**у**, будь ласка. |
+| кава (ка́ва) | кав**у** | Я буду міцну кав**у**. |
+| порція (по́рція) | порці**ю** | Принесіть порці**ю**. |
+| чай | чай (без змін) | Я буду чорний чай. |
+| тістечко | тістечко (без змін) | Тістечко, будь ласка. |
 
 **Перевірте себе:**
+1. You want to order water (вода). What exact phrase should you use?
+2. Why is it wrong to say «Я хочу кава»?
+3. The waiter asks «Ви бажаєте великий чи малий чай?». How do you reply?
+4. You are ready to leave. Do you ask for a «рахунок» or a «чек»?
+5. The waiter asks «Оплата карткою чи готівкою?». How do you say you pay by card?
 
-1. If you want to order **вода**, what do you say? "Я буду **_**."
-2. Is the word **сік** masculine or feminine? Does it change when you order it?
-3. How do you politely ask the waiter to bring the bill?
-4. What is the difference between **рахунок** and **чек**?
-5. Correct this mistake: "Офіціант, я хочу меню." (Make it polite!)
-6. How do you say "with milk" in Ukrainian?
+</TabItem>
+<TabItem label="Vocabulary">
 
-You are now equipped to caffeinate yourself across Ukraine. **Смачного!** (Bon appetit/Enjoy your meal!)
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| кава |  | coffee | noun | ж |  |
+| чай |  | tea | noun | ч |  |
+| вода |  | water | noun | ж |  |
+| сік |  | juice | noun | ч |  |
+| тістечко |  | pastry/cake | noun | с |  |
+| меню |  | menu | noun | с |  |
+| рахунок |  | bill | noun | ч |  |
+| офіціант |  | waiter | noun | ч |  |
+| замовляти |  | to order | verb |  |  |
+| принести |  | to bring | verb |  |  |
+| дати |  | to give | verb |  |  |
+| будь ласка |  | please | phrase |  |  |
+| цукор |  | sugar | noun | ч |  |
+| молоко |  | milk | noun | с |  |
+| лимон |  | lemon | noun | ч |  |
+| картка |  | card (bank) | noun | ж |  |
+| готівка |  | cash | noun | ж |  |
+| чек |  | receipt | noun | ч |  |
+| круасан |  | croissant | noun | ч |  |
+| смачний |  | tasty/delicious | adj |  |  |
+| великий |  | big/large | adj |  |  |
+| маленький |  | small | adj |  |  |
 
----
-
-## 🎯 Activities
+</TabItem>
+<TabItem label="Activities">
 
 ### Café Essentials
 
@@ -568,29 +470,10 @@ You are now equipped to caffeinate yourself across Ukraine. **Смачного!*
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Добрий {{answer}}.", "answer": "день", "options": ["день", "час", "вечір", "ранок"]}, {"sentence": "Що {{answer}}?", "answer": "бажаєте", "options": ["бажаєте", "хочете", "робите", "маєте"]}, {"sentence": "Я {{answer}} каву.", "answer": "буду", "options": ["буду", "хочу", "маю", "роблю"]}, {"sentence": "Я {{answer}} чай.", "answer": "візьму", "options": ["візьму", "дам", "несу", "маю"]}, {"sentence": "Дайте, {{answer}} ласка, меню.", "answer": "будь", "options": ["будь", "буде", "є", "має"]}, {"sentence": "{{answer}} рахунок.", "answer": "Принесіть", "options": ["Принесіть", "Дайте", "Візьміть", "Робіть"]}, {"sentence": "З {{answer}}.", "answer": "молоком", "options": ["молоком", "молока", "молоку", "молоко"]}, {"sentence": "{{answer}} цукру.", "answer": "Без", "options": ["Без", "З", "На", "В"]}, {"sentence": "{{answer}} каву.", "answer": "Велику", "options": ["Велику", "Велика", "Великий", "Велике"]}, {"sentence": "{{answer}} чай.", "answer": "Маленький", "options": ["Маленький", "Маленька", "Маленьку", "Маленьке"]}, {"sentence": "Плачу {{answer}}.", "answer": "карткою", "options": ["карткою", "картка", "картки", "картку"]}, {"sentence": "Плачу {{answer}}.", "answer": "готівкою", "options": ["готівкою", "готівка", "готівки", "готівку"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| кава | [ˈkɑʋɑ] | coffee | noun | ж |  |
-| чай | [t͡ʃɑj] | tea | noun | ч |  |
-| вода | [ʋɔˈdɑ] | water | noun | ж |  |
-| сік | [sʲik] | juice | noun | ч |  |
-| тістечко | [ˈtʲistɛt͡ʃkɔ] | pastry/cake | noun | с |  |
-| меню | [mɛˈnʲu] | menu | noun | с |  |
-| рахунок | [rɑˈxunɔk] | bill | noun | ч |  |
-| офіціант | [ɔfʲit͡sʲiˈɑnt] | waiter | noun | ч |  |
-| замовляти | [zɑmɔˈʋlʲɑtɪ] | to order | verb |  |  |
-| принести | [prɪnɛˈstɪ] | to bring | verb |  |  |
-| дати | [ˈdɑtɪ] | to give | verb |  |  |
-| будь ласка | [budʲ ˈlɑskɑ] | please | phrase |  |  |
-| цукор | [ˈt͡sukɔr] | sugar | noun | ч |  |
-| молоко | [mɔlɔˈkɔ] | milk | noun | с |  |
-| лимон | [lɪˈmɔn] | lemon | noun | ч |  |
-| картка | [ˈkɑrtkɑ] | card (bank) | noun | ж |  |
-| готівка | [ɦɔˈtʲiu̯kɑ] | cash | noun | ж |  |
-| чек | [t͡ʃɛk] | receipt | noun | ч |  |
-| круасан | [kruɑˈsɑn] | croissant | noun | ч |  |
-| смачний | [smɑˈt͡ʃnɪj] | tasty/delicious | adj |  |  |
-| великий | [ʋɛˈlɪkɪj] | big/large | adj |  |  |
-| маленький | [mɑˈlɛnʲkɪj] | small | adj |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

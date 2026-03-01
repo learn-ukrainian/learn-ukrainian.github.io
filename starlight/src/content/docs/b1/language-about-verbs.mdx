@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
 {/**/}
-
-# Мова про дієслова
 
 > **Чому це важливо?**
 >
@@ -509,7 +515,13 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 6. Яка різниця між **складеною** та **синтетичною** формами майбутнього часу? (Лише стилістична: синтетична — одне слово, складена — два).
 7. Що таке **інфінітив** і на яке питання він відповідає? (Початкова форма, що робити?).
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+*No vocabulary for this module.*
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Термінологія: Знайдіть визначення
 
@@ -547,3 +559,28 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 ### Система дієслова: Підсумок
 
 <Cloze client:load passage={"Українська система дієслова базується на категорії [___:0]}. Вона поділяється на [___:1]} та [___:2]} види. Доконаний вид позначає [___:3]}, а недоконаний — [___:4]}. Категорія [___:5]} вказує, коли відбувається дія. Ми розрізняємо [___:6]}, [___:7]} та [___:8]} часи. Дієслова також мають [___:9]}: дійсний, умовний та [___:10]}. Початкова форма дієслова називається [___:11]}. Вона відповідає на питання «що [___:12]}?». Зміна дієслова за особами називається [___:13]}."} blanks={JSON.parse(`[{"index": 0, "answer": "виду", "options": ["виду", "часу", "роду", "стану"]}, {"index": 1, "answer": "доконаний", "options": ["доконаний", "минулий", "складний", "простий"]}, {"index": 2, "answer": "недоконаний", "options": ["недоконаний", "майбутній", "теперішній", "активний"]}, {"index": 3, "answer": "результат", "options": ["результат", "процес", "дію", "стан"]}, {"index": 4, "answer": "процес", "options": ["процес", "результат", "кінець", "мету"]}, {"index": 5, "answer": "часу", "options": ["часу", "виду", "особи", "числа"]}, {"index": 6, "answer": "минулий", "options": ["минулий", "давній", "вчорашній", "колишній"]}, {"index": 7, "answer": "теперішній", "options": ["теперішній", "сьогоднішній", "актуальний", "сучасний"]}, {"index": 8, "answer": "майбутній", "options": ["майбутній", "завтрашній", "наступний", "прийдешній"]}, {"index": 9, "answer": "спосіб", "options": ["спосіб", "метод", "шлях", "стиль"]}, {"index": 10, "answer": "наказовий", "options": ["наказовий", "обов'язковий", "суворий", "важливий"]}, {"index": 11, "answer": "інфінітив", "options": ["інфінітив", "суфікс", "префікс", "корінь"]}, {"index": 12, "answer": "робити", "options": ["робити", "зробити", "роблю", "робив"]}, {"index": 13, "answer": "дієвідмінювання", "options": ["дієвідмінювання", "відмінювання", "зміна", "перетворення"]}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+:::info[🎧 🔗 External Resources]
+
+**🎧 Podcasts:**
+- [ULP 3-101 Мені погано – I don't feel good + Forming and using adverbs in Ukrainian](https://www.ukrainianlessons.com/lesson/101/) — Level-aligned topic match: verbs
+- [ULP 3-102 Запис до лікаря – Making a doctor's appointment in Ukrainian + Indefinite adverbs and pronouns](https://www.ukrainianlessons.com/lesson/102/) — Level-aligned topic match: verbs
+- [ULP 3-103 У лікаря – At the doctor's + Ukrainian adverbs derived from the numerals](https://www.ukrainianlessons.com/lesson/103/) — Level-aligned topic match: verbs
+- [ULP 3-94 У піцерії – At the pizzeria + Sound changes between imperfective and perfective verbs in Ukrainian](https://www.ukrainianlessons.com/lesson/94/) — Level-aligned topic match: verbs
+- [ULP 3-97 Плани на зимові канікули – Plans for winter holidays + Future tense of the verbs of motion](https://www.ukrainianlessons.com/lesson/97/) — Level-aligned topic match: verbs
+
+**📖 Articles:**
+- [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Grammar episodes
+- [Ukrainian Verb Aspect](https://www.ukrainianlessons.com/aspect/) — Overview in English
+:::
+
+### 📺 YouTube
+
+<YouTubeVideo client:load url="https://www.youtube.com/watch?v=WbL0P6eEJQw" label="Perfective vs Imperfective" />
+*Let's Learn Ukrainian*
+
+</TabItem>
+</Tabs>

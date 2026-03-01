@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Preferences and Choices
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -375,7 +381,39 @@ Before you conclude this module, test your understanding of these critical conce
 
 Mastering these concepts prepares you for the more complex grammatical structures ahead, such as unreal conditionals and advanced shopping dialogues. You now have the linguistic foundation to express your unique tastes and navigate the myriad choices of daily life in Ukraine.
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| подобатися |  | to like, to be pleasing | verb |  |  |
+| вибирати |  | to choose | verb |  |  |
+| краще |  | better | adverb |  |  |
+| хотів би |  | would like | verb |  |  |
+| перевага |  | preference, advantage | noun | ж |  |
+| філіжанка |  | small cup, demitasse | noun | ж |  |
+| смак |  | taste | noun | ч |  |
+| колір |  | color | noun | ч |  |
+| товариш |  | friend, comrade | noun | ч |  |
+| замовити |  | to order | verb |  |  |
+| десерт |  | dessert | noun | ч |  |
+| кава |  | coffee | noun | ж |  |
+| чай |  | tea | noun | ч |  |
+| ніж |  | than | conjunction |  |  |
+| більш |  | more | adverb |  |  |
+| менш |  | less | adverb |  |  |
+| чорний |  | black | adjective |  |  |
+| сірий |  | grey | adjective |  |  |
+| пальто |  | coat | noun | с |  |
+| куртка |  | jacket | noun | ж |  |
+| книжка |  | book | noun | ж |  |
+| місто |  | city | noun | с |  |
+| пісня |  | song | noun | ж |  |
+| любити |  | to love, to like deeply | verb |  |  |
+| віддавати |  | to give, to yield | verb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Словник: Кава і вибір
 
@@ -436,32 +474,10 @@ Mastering these concepts prepares you for the more complex grammatical structure
 
 <MatchUp client:load pairs={JSON.parse(`[{"left": "Офіціант запитує, що ви будете пити.", "right": "Я хотів би замовити каву на піску."}, {"left": "Друг пропонує подивитися фільм жахів, а ви їх не любите.", "right": "Дякую, але мені не дуже подобаються такі фільми."}, {"left": "Ви в магазині і вам пропонують дві куртки.", "right": "Мені більше подобається ця сіра куртка."}, {"left": "Ви обговорюєте з колегою професійні методи роботи.", "right": "Я віддаю перевагу традиційним методам."}, {"left": "Ви з другом не можете дійти згоди щодо найкращого десерту.", "right": "Ну що ж, на колір і смак товариш не всяк."}, {"left": "Ви порівнюєте два міста для подорожі на вихідні.", "right": "Львів — це краще ніж Київ для вихідних."}, {"left": "Ви висловлюєте свою постійну, глибоку любов до читання.", "right": "Я люблю читати історичні книжки."}, {"left": "Ви оцінюєте загальний розмір двох квартир.", "right": "Квартира А більш велика, ніж квартира Б."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| подобатися | [pɔˈdɔbɑtɪsʲɑ] | to like, to be pleasing | verb |  |  |
-| вибирати | [ʋɪbɪˈrɑtɪ] | to choose | verb |  |  |
-| краще | [ˈkrɑʃt͡ʃɛ] | better | adverb |  |  |
-| хотів би | [xɔˈtʲiu̯ bɪ] | would like | verb |  |  |
-| перевага | [pɛrɛˈʋɑɦɑ] | preference, advantage | noun | ж |  |
-| філіжанка | [fʲilʲiˈʒɑnkɑ] | small cup, demitasse | noun | ж |  |
-| смак | [smɑk] | taste | noun | ч |  |
-| колір | [ˈkɔlʲir] | color | noun | ч |  |
-| товариш | [tɔˈʋɑrɪʃ] | friend, comrade | noun | ч |  |
-| замовити | [zɑˈmɔʋɪtɪ] | to order | verb |  |  |
-| десерт | [dɛˈsɛrt] | dessert | noun | ч |  |
-| кава | [ˈkɑʋɑ] | coffee | noun | ж |  |
-| чай | [t͡ʃɑj] | tea | noun | ч |  |
-| ніж | [nʲiʒ] | than | conjunction |  |  |
-| більш | [bʲilʲʃ] | more | adverb |  |  |
-| менш | [mɛnʃ] | less | adverb |  |  |
-| чорний | [ˈt͡ʃɔrnɪj] | black | adjective |  |  |
-| сірий | [ˈsʲirɪj] | grey | adjective |  |  |
-| пальто | [pɑlʲˈtɔ] | coat | noun | с |  |
-| куртка | [ˈkurtkɑ] | jacket | noun | ж |  |
-| книжка | [ˈknɪʒkɑ] | book | noun | ж |  |
-| місто | [ˈmʲistɔ] | city | noun | с |  |
-| пісня | [ˈpʲisʲnʲɑ] | song | noun | ж |  |
-| любити | [lʲuˈbɪtɪ] | to love, to like deeply | verb |  |  |
-| віддавати | [ʋʲidːɑˈʋɑtɪ] | to give, to yield | verb |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

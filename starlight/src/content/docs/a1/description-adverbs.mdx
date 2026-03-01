@@ -34,440 +34,366 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Description: Adverbs
+{/**/}
 
 > **Чому це важливо?**
 >
-> Until now, you could describe *things* (big house, green tea). But life is about *action*. Today, you learn to describe *how* you live, work, and feel. Does he read **fast**? Do you sleep **well**? Do they **always** help? These small words bring your sentences to life and let you share your habits and personality.
+> In previous lessons, we learned how to describe static objects and people using adjectives. However, life is about movement and action. Adverbs give you the vital power to describe *how* things happen, allowing you to talk about your routines, express your opinions on activities, and add vibrant detail to your daily conversations.
 
-## Розминка: Як чи Який?
+## Вступ
 
-To start, we must clear up the biggest confusion for English speakers learning Ukrainian. In English, some words look the same whether they describe a noun or a verb (e.g., "He runs *fast*" vs. "a *fast* car"). In Ukrainian, these are **always** different words with different endings.
+### Що таке прислівник?
 
-We need to distinguish between two questions: **Який?** (What kind?) and **Як?** (How?).
+Ви будуєте нове речення. A noun is a brick. It names a person or an object. An adjective is paint. It describes a noun. Дієслово — це дія. Воно дає енергію.
 
-### Ознака предмета (Який?)
+Прислівник — це панель. Він чудово описує дію. Він показує швидкість. Він також показує час. Ви розумієте прислівники. Ви говорите вільно. Ви говорите природно. Це дуже важливо.
 
-When we describe a person or an object (a noun), we use an **Adjective**. You already know this pattern. The adjective matches the gender of the noun.
+Adjectives describe nouns. Вони відповідають на питання **Яки́й?** (What kind?). Ви бачите людину. Ви описуєте стан.
 
-- **Definition:** An adjective describes a static quality of a thing.
-- **Question:** **Який?** (masculine), **Яка?** (feminine), **Яке?** (neuter).
-- **Endings:** -ий, -а, -е.
+"Це га́рний буди́нок." (This is a beautiful house.)
+"Він розу́мний студе́нт." (He is a smart student.)
+"Це вели́ке мі́сто." (This is a large city.)
 
-Here are some examples:
-- Це **га́рний** хлопець. (This is a nice boy.) — *Який хлопець?*
-- Це **швидка́** машина. (This is a fast car.) — *Яка машина?*
-- Це **до́бре** вино. (This is good wine.) — *Яке вино?*
+Прислівник описує дію. Він відповідає на питання **Як?** (How?). Хтось робить дію. Ви берете прислівник. Ви описуєте процес.
+
+"Він чита́є шви́дко." (He reads quickly.)
+"Вона́ співа́є га́рно." (She sings beautifully.)
+"Студе́нт працю́є повільно." (The student works slowly.)
+
+Let's look at a comprehensive visual contrast to make this categorical difference completely clear in your mind.
+
+| Question | Target Focus | Part of Speech | Ukrainian Example | English Translation |
+|----------|--------------|----------------|-------------------|---------------------|
+| **Яки́й?** | Nouns (Objects/People) | Adjective | Він га́рний. | He is handsome. |
+| **Як?** | Verbs (Actions) | Adverb | Він співа́є га́рно. | He sings beautifully. |
+
+### Питання «Як?»
+
+Студент рівня А1 описує дії. Ви бачите подію. Ви описуєте подію. Питання **Як?** — це ваш інструмент. Ви берете цей інструмент. Ви питаєте співрозмовника.
+
+Whenever you want to know the manner in which something is performed, you ask this simple, one-syllable question. If someone tells you they are working, your immediate follow-up to gather more detail should be asking how that work is progressing.
+
+"Як ти працю́єш?" (How do you work?)
+"Я працю́ю до́бре." (I work well.)
+"Як він іде́?" (How is he walking?)
+"Він іде́ шви́дко." (He is walking quickly.)
+"Як вона́ говорить?" (How does she speak?)
+"Вона́ говорить ти́хо." (She speaks quietly.)
+
+### Типова помилка: Adjective замість дії
+
+One of the most frequent and persistent errors language learners make is using an adjective to describe an action. This almost always happens because of direct English L1 interference. In the English language, some common words serve a dual purpose as both adjectives and adverbs without changing their spelling. For example, the word "fast" is an adjective in the phrase "a fast car" and it remains exactly the same as an adverb in the sentence "he drives fast."
+
+Because your brain is used to this English efficiency, learners sometimes try to use the Ukrainian adjective when they actually desperately need an adverb. They recognize the concept of "good" and supply the first word they know.
+
+They might say: * "Він говорить хоро́ший."
+
+This sounds extremely unnatural to a native Ukrainian speaker. By using the adjective form, you are grammatically attempting to describe the person, not the speaking. You are essentially saying, "He speaks, and he is the good one." However, the listener expects you to describe the quality of the vocal labor itself. The action of speaking needs the description, not the person who is doing the speaking.
+
+Therefore, the Ukrainian language requires a distinctly different grammatical form for the adverb. You must specifically shift your target to the verb and say: "Він говорить до́бре."
 
 :::note[📝 Note]
-Notice that adjectives always agree with the noun they describe. If the noun changes, the adjective changes too.
+**Look at the target.**
+Before you describe something, pause and ask yourself what you are aiming at. Are you describing the noun (the person or the thing), or are you describing the verb (the action)? If your target is the verb, you must use the **Як?** form. Never point an adjective at a verb.
 :::
 
-### Ознака дії (Як?)
+## Основи та формування
 
-When we describe an action (a verb), we use an **Adverb**. This word never changes form. It does not care about gender or number. It only cares about the action.
+### Правило утворення
 
-- **Definition:** An adverb describes the manner, time, or intensity of an action.
-- **Question:** **Як?** (How?).
-- **Endings:** Mostly **-о**.
+Українська граматика має логіку. Правило створення прислівників має логіку. Воно дуже просте. Воно дуже послідовне. Ви швидко запам'ятовуєте процес.
 
-Here are some examples:
-- Він **га́рно** співає. (He sings nicely.) — *Як співає?*
-- Він їде **шви́дко**. (He drives fast.) — *Як їде?*
-- Ми сидимо **ти́хо**. (We are sitting quietly.) — *Як сидимо?*
+Ви знаєте українські слова. Ви легко формуєте нові слова. Ви не читаєте новий список. Це базове правило.
 
-### Візуальна схема: Який vs Як
+You take an adjective. Ви видаляєте закінчення **-ий**. Ви додаєте літеру **-о**. Це нове слово. Воно описує дію.
 
-Let's compare them side-by-side to see the pattern.
+Let's look at several core examples of this derivation rule in action. Notice how the spelling transformation remains completely consistent. We have included the International Phonetic Alphabet (IPA) pronunciation for your first encounter with these words.
 
-| Question | Part of Speech | Connects to... | Example | Translation |
-| :--- | :--- | :--- | :--- | :--- |
-| **Який?** (What kind?) | Adjective | Noun (Person/Thing) | Студент **серйозний** | The student is serious |
-| **Як?** (How?) | Adverb | Verb (Action) | Студент працює **серйозно** | The student works seriously |
+- **шви́дкий** (fast) → **шви́дко** [ˈʃwɪdko] (quickly)
+- **га́рний** (beautiful / good) → **га́рно** [ˈɦɑrno] (beautifully / nicely)
+- **ле́гкий** (easy) → **ле́гко** [ˈlɛɦko] (easily)
+- **важки́й** (heavy / difficult) → **ва́жко** [ˈwɑʒko] (heavily / with difficulty)
+- **повільний** (slow) → **повільно** [poˈvʲilʲno] (slowly)
+- **го́лосний** (loud) → **го́лосно** [ˈɦɔlosno] (loudly)
+- **ти́хий** (quiet) → **ти́хо** [ˈtɪxo] (quietly)
+
+This native mechanism is highly predictable and extremely useful for beginners. Once you master this specific grammatical pattern, your expressive vocabulary immediately doubles. Every time you learn a new descriptive adjective, you automatically receive a free adverb just by changing the final letter to an "о".
+
+### Виняток і чемпіон: «добре»
+
+As with all elegant language systems, there are exceptions. One notable exception that you must memorize immediately is the word for "good". The standard adjective **до́брий** (good / kind) does not follow the strict **-о** rule. Instead, it transforms into the adverb **до́бре** [ˈdɔbrɛ] (well).
+
+This specific word is incredibly important for your daily communication. It is one of the absolute highest frequency words in the entire Ukrainian language, ranking easily in the Top 100 most spoken words. While its strict grammatical role is an adverb of manner meaning "well", its cultural and conversational role is vastly broader.
+
+In daily Ukrainian life, **до́бре** acts as the universal cultural marker for agreement, confirmation, satisfaction, and general positivity. It is the exact Ukrainian equivalent of the English concepts of "Okay", "Agreed", "Sure", or "All good". You will hear this word in almost every single conversation you have.
+
+Look at how versatile it is across entirely different conversational contexts.
+
+"Ти працю́єш до́бре." (You work well. - Describing an action)
+"Ми йдемо́ в кіно́? До́бре." (We are going to the cinema? Okay/Agreed. - Confirming a plan)
+"Як ти? Усе́ до́бре." (How are you? Everything is fine. - Expressing a state of being)
+
+:::info[ℹ️ Fact]
+**The Universal Response**
+If you are ever unsure how to verbally agree with someone, how to confirm a schedule, or how to politely accept a suggestion, simply say «До́бре». It acts as a universal social lubricant. It is polite, reliably positive, and fits almost every daily conversational context perfectly.
+:::
+
+### Розташування у реченні
+
+Now that you know how to perfectly form adverbs of manner, you need to know exactly where to put them. Syntax is crucial for sounding natural. The standard word order in Ukrainian is known to be quite flexible, allowing for emotional emphasis, but there is a clear preferred structural pattern for adverbs of manner.
+
+Generally, the adverb directly follows the verb that it is describing. This standard structure puts the immediate focus on the action first, and then immediately qualifies exactly how that action is performed.
+
+Here are three simple examples rigorously following the Subject-Verb-Object-Adverb rhythm.
+
+"Я чита́ю кни́гу шви́дко." (I read the book quickly.)
+"Він ро́бить це повільно." (He does this slowly.)
+"Вона́ співа́є пі́сню га́рно." (She sings the song beautifully.)
+
+While you will certainly hear variations in native speech when speakers want to emphasize different parts of the sentence, sticking to this standard, expected placement ensures your sentences are always clear, natural, and grammatically correct as a beginner. Master the standard rule before you attempt the poetic exceptions.
+
+## Час та частота
+
+### Шкала частоти
+
+Люди мають звички. Життя має рутину. Ви робите дію. Це одна половина. Як часто ви робите дію? Це важливе питання. Ми завжди відповідаємо чесно.
+
+Прислівники часу показують ваш розклад. Ви пояснюєте вашу рутину. Без них дія відбувається тільки зараз. Так ви описуєте ритм вашого життя. Це дуже корисно для комунікації.
+
+Ось візуальна шкала частоти. Вона йде від ста відсотків до нуля. Вивчайте цю шкалу. Вона допомагає описувати ваше щоденне життя.
+
+| Frequency | Ukrainian | English |
+|-----------|-----------|---------|
+| 100% | **за́вжди** | always |
+| 80% | **зазвича́й** | usually |
+| 60% | **ча́сто** | often |
+| 30% | **іно́ді** | sometimes |
+| 10% | **рі́дко** | rarely |
+| 0% | **ніко́ли** | never |
+
+Ось як ці слова працюють у реченнях. Зверніть увагу: прислівник завжди перший. Дієслово завжди друге. Прислівники створюють контекст.
+
+"Я за́вжди п'ю міцну́ ка́ву вра́нці." (I always drink strong coffee in the morning.)
+"Він зазвича́й чита́є нови́ни." (He usually reads the news.)
+"Ми ча́сто гуля́ємо в па́рку." (We often walk in the park.)
+"Я іно́ді дивлю́ся ціка́вий фільм." (I sometimes watch an interesting movie.)
+"Вона́ рі́дко їсть м'я́со." (She rarely eats meat.)
+
+### Суворе правило: «ніколи»
+
+Слово **ніколи** вимагає особливої уваги. Воно працює інакше, ніж англійською. Це типова проблема для студентів.
+
+Англійське слово "never" не потребує інших заперечень. Ви кажете "I never drink tea".
+
+Українська граматика вимагає подвійного заперечення. Слово **ніколи** завжди працює зі словом **не**. Слово **не** стоїть поруч.
+
+Подивіться на цю структуру у стандартних реченнях.
+
+"Я ніко́ли не п'ю солодкий чай." (I never drink sweet tea.)
+"Він ніко́ли не працю́є пога́но." (He never works badly.)
+"Ми ніко́ли не чита́ємо цю газе́ту." (We never read this newspaper.)
+"Вона́ ніко́ли не готу́є сніда́нок." (She never prepares breakfast.)
 
 :::warning[⚠️ Warning]
-**Common Mistake:** Do not say «Він говорить гарний» (He speaks *good*). The verb «говорить» requires the question «Як?». You must say «Він говорить **гарно**» (He speaks *well*).
+**Do not skip the «не»!**
+Directly translating the English sentence "I never work" into the literal Ukrainian equivalent "Я ніко́ли працю́ю" is completely grammatically incorrect. It will confuse native speakers. You must always include the second negative component. Burn this formula into your memory: **ніко́ли не + verb**.
 :::
 
-### Важливі пари (Important Pairs)
+### Де і коли?
 
-Let's look at the most common pairs you will use every day. Notice how the adjective changes for gender, but the adverb stays the same.
+Ми також використовуємо прислівники місця та часу. Вони локалізують ваші дії у просторі та часі. Вони створюють базу.
 
-1. **добрий** (kind/good) → **добре** (well)
-    - Він **добрий** друг. (He is a good friend.)
-    - Він **добре** знає Київ. (He knows Kyiv well.)
+Стандарт української мови відносить ці слова до базового рівня А1. Вони дуже потрібні для щоденного життя.
 
-2. **швидкий** (fast) → **швидко** (fast/quickly)
-    - Це **швидкий** поїзд. (This is a fast train.)
-    - Поїзд їде **швидко**. (The train goes fast.)
+Для локації ми використовуємо слова **тут** та **там**. Для часу ми використовуємо **сьогодні** та **завтра**. Це незалежні слова. Вони не змінюють форму. Ви просто ставите їх у речення.
 
-3. **поганий** (bad) → **погано** (badly/poorly)
-    - Це **поганий** план. (This is a bad plan.)
-    - Я **погано** чую. (I hear badly/poorly.)
+"Ми працю́ємо тут." (We work here.)
+"Вони́ живу́ть там." (They live there.)
+"Я відпочива́ю сього́дні." (I am resting today.)
+"Ми чита́ємо ціка́ву кни́гу за́втра." (We read an interesting book tomorrow.)
 
-## Презентація: Утворення та Винятки
+Ці слова — це база для планування. Ви комбінуєте їх з іншими словами. Ви створюєте складні речення.
 
-Now that you know *when* to use an adverb, let's learn *how* to build one. The good news is that Ukrainian adverbs are very consistent. If you know the adjective, you usually know the adverb.
+"Сього́дні я працю́ю ду́же шви́дко." (Today I am working very quickly.)
+"Ми зазвича́й відпочива́ємо там." (We usually rest there.)
 
-### Правило утворення (The Rule of Formation)
+## Синтаксис та інтенсивність
 
-To make an adverb of manner (describing *how*), we usually take the stem of the adjective and add the suffix **-о**.
+### Маркери інтенсивності
 
-**The Formula:**
-`Adjective Stem` + **-о** = `Adverb`
+Іноді стандартний прислівник не має повної сили. Дія іде дуже добре. Дія іде трохи погано. Ви шукаєте новий механізм.
 
-Let's break it down step-by-step:
-1. Take the adjective: **голосний** (loud).
-2. Remove the ending `-ий`: **голосн-**.
-3. Add `-о`: **го́лосно**.
+Для цієї точності ми використовуємо модифікатори. Вони змінюють силу вашого слова. Це панель налаштувань вашого речення.
 
-Here are some examples:
-- **тихий** (quiet) → **тихо** (quietly)
-    - *Ми сидимо тихо.* (We sit quietly.)
-- **легкий** (easy/light) → **ле́гко** (easily)
-    - *Він робить це легко.* (He does this easily.)
-- **важкий** (difficult/heavy) → **ва́жко** (with difficulty/hard)
-    - *Це важко читати.* (This is hard to read.)
+Найбільш типові модифікатори:
+- **ду́же** (very)
+- **тро́хи** (a bit / slightly)
+- **зо́всім** (completely / entirely)
+- **ма́йже** (almost)
+
+Ось як вони змінюють силу в реченні.
+
+"Він чита́є ду́же шви́дко." (He reads very quickly.)
+"Я розумі́ю тро́хи пога́но." (I understand a bit badly.)
+"Вона́ працю́є ма́йже ти́хо." (She works almost quietly.)
+"Ми пишемо зо́всім повільно." (We write completely slowly.)
+
+### Суворий порядок слів
+
+Український синтаксис (порядок слів) гнучкий. Але деякі правила дуже суворі. Є одне важливе правило для модифікаторів.
+
+Модифікатор ЗАВЖДИ стоїть першим. Вони працюють як пара.
+
+Англійська граматика має свободу. Українська граматика такої свободи не має. Слово **дуже** завжди стоїть попереду. Ви змінюєте порядок. Тепер речення звучить неправильно.
+
+Подивіться на це візуальне порівняння правильного та неправильного використання.
+
+| Correct Ukrainian Sentence | Incorrect Ukrainian Sentence | English Translation |
+|----------------------------|------------------------------|---------------------|
+| Це **ду́же до́бре**. | *Це до́бре **ду́же**. | This is very good / very well. |
+| Він іде́ **ду́же шви́дко**. | *Він іде́ шви́дко **ду́же**. | He walks very quickly. |
+| Вона́ чита́є **тро́хи повільно**. | *Вона́ чита́є повільно **тро́хи**. | She reads a bit slowly. |
+
+### Розмова в реальному житті
+
+Ви хочете розуміти ці слова. Подивімося на реальний сценарій.
+
+Уявіть критика ресторанів у Києві. Він уважно дивиться. Він робить нотатки. Подивіться. Він використовує слова. Він створює яскраву картину.
+
+"Я зазвича́й їм ду́же повільно. Сього́дні я їм шви́дко. Цей суп па́хне ду́же га́рно. Ку́хар готу́є до́бре. Але́ офіціа́нт працю́є пога́но. Він за́вжди хо́дить ду́же ти́хо. Я ніко́ли не чу́ю йо́го кро́ків. Це зо́всім незру́чно."
+
+Let's break down this demanding review and translate it entirely into English.
+
+"I usually eat very slowly. Today I am eating quickly. This soup smells very nicely. The chef cooks well. But the waiter works badly. He always walks very quietly. I never hear his steps. This is completely uncomfortable."
 
 :::tip[💡 Tip]
-**Українською:**
-Це дуже просто. Ви знаєте слово "гарний"? Тоді ви знаєте слово "гарно". Ви знаєте слово "швидкий"? Тоді ви знаєте слово "швидко". Це логічно і красиво! (The concept is very simple. Do you know the word "beautiful"? Then you know the word "beautifully". Do you know the word "fast"? Then you know the word "fast". Logic is beautiful!)
+**Conversational Rhythm**
+Notice exactly how the adverbs logically group together in natural speech. Phrases like "ду́же повільно" and "за́вжди хо́дить" flow from the mouth as single, unified rhythmic units. Practice speaking these specific pairs together out loud without taking a breath or a pause in between them.
 :::
 
-### Більше прикладів (More Examples)
+## 📋 Підсумок та культура
 
-| Adjective (Який?) | Adverb (Як?) | Example Sentence |
-| :--- | :--- | :--- |
-| **активний** (active) | **активно** (actively) | Ми відпочиваємо активно. |
-| **сумний** (sad) | **сумно** (sadly) | Він дивиться сумно. |
-| **правильний** (correct) | **правильно** (correctly) | Ти пишеш правильно. |
-| **цікавий** (interesting) | **цікаво** (interestingly) | Вона розповідає цікаво. |
+### Мудрість поколінь
 
-### Винятки (Exceptions)
+Language is never just a dry collection of grammatical rules; it is deeply, inextricably connected to a nation's cultural values and historical perspectives. We can see exactly how Ukrainians traditionally view the abstract concepts of speed, rushing, and patience through a famous, widely used traditional proverb.
 
-There is one major exception that is actually just a spelling quirk, but it is the most common word in the language.
+«Повільно їдеш — далі будеш.»
 
-**добрий → добре**
-You might expect «добро», but «добро» is a noun meaning "goodness" or "property". The adverb "well" is **добре**.
+The literal, word-for-word translation of this historical phrase is: "You drive slowly, you will be further." The closest English equivalent concept would be the idiom "Haste makes waste" or the story lesson "Slow and steady wins the race."
 
-- *Я **добре** розумію.* (I understand well.)
-- *Все **добре**.* (Everything is good/well.)
+Ця фраза показує важливість слова **повільно**. Вона вчить нові покоління. Поспіх робить помилки. Обережна дія — це краще. Вона має успіх. Це глибока традиція.
 
 :::note[🏺 Culture]
-**Cultural Insight: The Magic of "Добре"**
-In Ukraine, **добре** is more than just an adverb. This is the universal word for agreement.
-- "Do you want coffee?" — **Добре.** (Okay.)
-- "I will call you later." — **Добре.** (Good/Agreed.)
-- "How are you?" — **Добре.** (Good.)
-Use it freely! This word is polite, positive, and fits almost any situation where you want to say "yes" or "okay".
+**Value of Patience**
+While modern, urban life in Ukraine is incredibly fast-paced, you will still frequently hear this ancient proverb spoken out loud when someone is rushing a complex task and making careless mistakes. It serves as a gentle, cultural reminder that doing something "повільно" (slowly) is often the only realistic path to doing it "до́бре" (well).
 :::
 
-### Позиція (Position)
+### Мій день
 
-Where do we put the adverb? In Ukrainian, word order is flexible, but for "manner" adverbs (answering "How?"), the most neutral position is **after the verb**.
+Тепер час практики. Ви описуєте ваше життя. Ви берете нові слова. Ви пишете текст. Ви описуєте звички. Це допомагає пам'яті.
 
-**Pattern:** `Subject` + `Verb` + `Adverb`.
+Look at this comprehensive example of a typical morning routine and analyze the sentence structures closely.
 
-- Він читає **швидко**. (He reads fast.)
-- Вона готує **смачно**. (She cooks tastily/deliciously.)
-- Ми живемо **весело**. (We live happily/fun.)
+"Я зазвича́й прокида́юся ра́но. Я за́вжди п'ю міцну́ ка́ву. Я готу́ю сніда́нок ду́же шви́дко. Я ніко́ли не їм повільно вра́нці. Сього́дні я працю́ю тут, у цьому́ кабіне́ті. Я за́вжди працю́ю до́бре."
 
-You *can* put it before the verb for emphasis (*Він **швидко** читає*), but sticking to "after the verb" will make your speech sound natural and clear at this stage.
+Let's translate this daily routine smoothly into English.
 
-## Презентація 2: Як часто?
+"I usually wake up early. I always drink strong coffee. I prepare breakfast very quickly. I never eat slowly in the morning. Today I am working here, in this office. I always work well."
 
-Life is routine. To talk about your habits, you need adverbs of frequency. These answer the question **Як часто?** (How often?). Unlike adverbs of manner, these usually go **before the verb**.
+By mastering these diverse adverbs, you now possess the powerful grammatical tools to tell the story of your own life with accuracy, nuance, and rich descriptive detail.
 
-### Шкала частоти (Frequency Scale)
+### Діалог: Ранок у Києві
 
-Let's look at the spectrum from 100% to 0%. Memorize this order.
+<div className="conversation">
 
-1. **за́вжди́** — Always (100%)
-    - *Я **завжди** снідаю вдома.* (I always have breakfast at home.)
-2. **зазвича́й** — Usually (80-90%)
-    - *Ми **зазвичай** працюємо тут.* (We usually work here.)
-3. **ча́сто** — Often (60-70%)
-    - *Ви **часто** гуляєте?* (Do you often walk?)
-4. **і́ноді** — Sometimes (30-50%)
-    - *Він **іноді** забуває.* (He sometimes forgets.)
-5. **рі́дко** — Rarely (10-20%)
-    - *Я **рідко** п'ю каву.* (I rarely drink coffee.)
-6. **ніколи** — Never (0%)
-    - *Вони **ніколи** не спізнюються.* (They are never late.)
+— Привіт! Ти працюєш сьогодні?
 
-:::tip[💡 Tip]
-Notice the stress in **завжди**. It is on the second syllable: zav-ZHDY.
-:::
+— Привіт. Так, я працюю. Я працюю багато.
 
-### Історія: Розклад Івана (Ivan's Schedule)
+— Ти працюєш швидко?
 
-Let's see how Ivan uses these words to describe his week.
+— Іноді я працюю швидко. Але зазвичай я працюю повільно й уважно.
 
-*Іван — студент. Він **завжди** прокидається рано, о 7:00. Він **ніколи не** запізнюється на пари (classes). Після університету він **зазвичай** йде додому. Але **іноді** він гуляє з друзями в парку. Він **часто** читає книги в бібліотеці. Він **рідко** дивиться телевізор. Чому? У нього мало часу. Іван живе дуже активно і цікаво.*
+— Це дуже добре.
 
-(Ivan is a student. He always wakes up early, at 7:00. He is never late for classes. After university he usually goes home. But sometimes he walks with friends in the park. He often reads books in the library. He rarely watches TV. Why? He has little time. Ivan lives very actively and interestingly.)
+— А ти?
 
-### Перевірка (Check)
+— Я відпочиваю тут. Я завжди відпочиваю вранці.
 
-- **Як** живе Іван? — Він живе **активно**.
-- **Як часто** він читає? — Він читає **часто**.
-- **Як часто** він дивиться телевізор? — Він дивиться **рідко**.
+— Чудово.
 
-### Синтаксис (Syntax)
+</div>
 
-While "manner" adverbs (fast, well) go after the verb, "frequency" adverbs usually sit **before** the action they describe.
+### Діалог: Робота
 
-- *Correct:* Я **часто** слухаю музику. (I often listen to music.)
-- *Acceptable but emphatic:* Я слухаю музику часто.
-- *Correct:* Ми **зазвичай** відпочиваємо в суботу. (We usually rest on Saturday.)
+<div className="conversation">
 
-### Критичне правило: Подвійне заперечення (Double Negation)
+— Ви читаєте цей текст?
 
-This is a strict rule in Ukrainian. If you use **ніколи** (never), you **MUST** also use the particle **не** (not) before the verb.
+— Так, я читаю. Я читаю уважно.
 
-In English, "I never smoke" is enough. If you say "I never do not smoke", it changes the meaning.
-In Ukrainian, you are essentially saying "I **never** do **not** smoke". Without the second negative `не`, the sentence feels incomplete and grammatically broken.
+— Він пише новий звіт?
 
-**Formula:**
-`Subject` + **ніколи** + **не** + `Verb`.
+— Він пише. Він пише дуже повільно.
 
-Examples:
-- ✅ *Я **ніколи не** їм м'ясо.* (I never eat meat.)
-- ❌ *Я ніколи їм м'ясо.* (WRONG)
-- ✅ *Він **ніколи не** співає.* (He never sings.)
-- ✅ *Ми **ніколи не** були там.* (We have never been there.)
+— Вони слухають новини?
 
-:::tip[🔍 Pattern Discovery]
-**Why do we do this?**
-Ukrainian grammar loves reinforcement. The word **ніколи** sets the negative context, and **не** executes the negation on the verb. Think of them as a team that must work together.
-:::
+— Так. Вони слухають тихо.
 
-## Презентація 3: Ступені та Інтенсивність
+— Ми працюємо гарно.
 
-Sometimes "good" is not enough. You want to say "very good" or "not good at all". We use intensity modifiers to adjust the strength of our adjectives and adverbs.
+— Це правда. Ми завжди працюємо гарно.
 
-### Модифікатори міри (Modifiers of Degree)
+</div>
 
-Here are the four most useful modifiers:
+### Діалог: Час
 
-1. **ду́же** — very / really
-    - It boosts the meaning.
-    - *Це **дуже** цікаво.* (This is very interesting.)
-    - *Він бігає **дуже** швидко.* (He runs very fast.)
+<div className="conversation">
 
-2. **тро́хи** — a little / a bit
-    - It softens the meaning.
-    - *Я **трохи** втомився.* (I am a little tired.)
-    - *Ми говоримо **трохи** тихо.* (We are speaking a bit quietly.)
+— Ти іноді гуляєш тут?
 
-3. **зо́всім** — at all / completely / quite
-    - Often used with negatives to mean "not at all".
-    - *Я **зовсім** не знаю.* (I do not know at all.)
-    - *Це **зовсім** не важко.* (This is not hard at all.)
+— Ні. Я рідко гуляю тут. Я часто працюю.
 
-4. **ма́йже** — almost
-    - Shows you are close to the limit.
-    - *Ми **майже** вдома.* (We are almost home.)
-    - *Вона **майже** готова.* (She is almost ready.)
+— Він ніколи не відпочиває?
 
-### Порівняння (Comparison)
+— Він відпочиває. Але він відпочиває пізно.
 
-See the difference intensity makes:
+— Ми завжди слухаємо музику.
 
-| Normal | Intense | Very Intense |
-| :--- | :--- | :--- |
-| Я читаю. (I read.) | Я читаю **швидко**. (I read fast.) | Я читаю **дуже швидко**. (I read very fast.) |
-| Він співає. (He sings.) | Він співає **гарно**. (He sings well.) | Він співає **дуже гарно**. (He sings very well.) |
-| Ми втомилися. (We are tired.) | Ми **трохи** втомилися. (We are a bit tired.) | Ми **дуже** втомилися. (We are very tired.) |
+— Я також слухаю музику. Я слухаю голосно.
 
-### Діалог: Як справи? (Dialogue: How are you?)
+— Добре!
 
-Let's use these words in a small talk.
+</div>
 
-**Андрій:** Привіт, Маріє! Як справи?
-**Марія:** Привіт! Все **дуже добре**. А ти як?
-**Андрій:** Я **трохи** втомився. Я багато працюю.
-**Марія:** Ти працюєш **занадто** (too) багато! Тобі треба відпочивати.
-**Андрій:** Я знаю. Я вже **майже** готовий. Я роблю фінал.
-**Марія:** Це чудово. Відпочивай **активно**!
+### Перевірте себе
 
-### Правило позиції: "Дуже" завжди попереду
+Learning a language requires constant, active self-assessment and reflection. You cannot simply read the grammar rules; you must actively test your brain's ability to recall and apply them under pressure. Now, take a moment to test your deep understanding of adverbs with these comprehensive review questions. Do not just look for the answer; try to explain the grammatical reasoning out loud to yourself before you check your notes.
 
-This is a common mistake for beginners. In some languages, intensity words can come after. In Ukrainian, **дуже** (and other modifiers) MUST come **before** the word it modifies.
+1. Which specific grammatical question does an adverb distinctly answer: **Яки́й?** or **Як?**
+2. Explain the fundamental, categorical difference between describing a noun and describing an action.
+3. How do you grammatically transform the descriptive adjective **ти́хий** into an active adverb of manner?
+4. What is the highly frequent, exceptional adverb form of the adjective **до́брий**, and how is it universally used in daily conversation?
+5. If you want to accurately and correctly say "I never read," what is the missing mandatory grammatical component in this exact sentence: "Я ніко́ли ___ чита́ю"?
+6. Is the conversational sentence "Вона́ співа́є га́рно ду́же" grammatically correct according to strict Ukrainian syntax rules? Explain exactly why or why not.
+7. Translate this complete, descriptive sentence into natural Ukrainian: "I usually work very quickly today."
 
-:::tip[💡 Tip]
-**Українською:**
-Запам'ятайте просте правило: слово **дуже** стоїть **перед** словом.
-- **Дуже** гарно. (Very beautiful.)
-- **Дуже** швидко. (Very fast.)
-Це закон!
-(Remember a simple rule: the word **duzhe** stands **before** the word. This is the law!)
-:::
+</TabItem>
+<TabItem label="Vocabulary">
 
-- ✅ *Він **дуже** добрий.* (He is very kind.)
-- ❌ *Він добрий дуже.*
+*No vocabulary for this module.*
 
-- ✅ *Я **дуже** люблю каву.* (I really love coffee.)
-- ❌ *Я люблю каву дуже.*
-
-:::danger[🛡️ Myth Buster]
-**Myth:** You can translate "I like it very much" word-for-word.
-**Fact:** No. In English, "very much" goes at the end. In Ukrainian, we simply use **дуже** before the verb "like" (люблю) or "please" (подобається).
-- English: *I like it very much.*
-- Ukrainian: *Я **дуже** люблю це.* (Literally: I very love this.)
-:::
-
-### Сполучення з іншими словами
-
-You can combine these modifiers with both adjectives and adverbs. The logic stays the same.
-
-| Modifier | + Adjective | + Adverb |
-| :--- | :--- | :--- |
-| **дуже** | дуже гарний (very beautiful) | дуже гарно (very beautifully) |
-| **трохи** | трохи сумний (a little sad) | трохи сумно (a little sadly) |
-| **зовсім** | зовсім новий (completely new) | зовсім погано (totally badly) |
-
-## Практика: Звички та Стиль Життя
-
-Now let's put it all together. You have the tools to describe your life: *actions* (verbs), *manner* (how), *frequency* (how often), and *intensity* (very/a little).
-
-### Інтеграція: Опис дій
-
-Read this short text. Notice how the adverbs paint a picture of the person's personality.
-
-*Я живу **акти́вно**. Я **завжди** прокидаюся **ра́но** (early)! Я снідаю **швидко**. Я **дуже** поспішаю. На роботі я працюю **стара́нно** (diligently). Увечері я відпочиваю **спокійно**: слухаю музику або читаю. Я **ніколи не** дивлюся телевізор. Телевізор — це нудно. Я люблю читати цікаві книги. Я читаю **швидко** і **уважно**.*
-
-(I live actively. I always wake up early! I eat breakfast quickly. I am in a great hurry. At work I work diligently. In the evening I rest calmly: I listen to music or read. I never watch TV. TV is boring. I love reading interesting books. I read fast and attentively.)
-
-### Моделювання діалогу: Твій день
-
-Let's see a conversation between two friends, Olena and Ihor. They discuss their lifestyles.
-
-**Олена:** Ігорю, привіт! Ти **часто** займаєшся спортом?
-**Ігор:** Привіт, Олено! Так, **дуже часто**. Я бігаю щоранку в парку. Це корисно і весело. А ти бігаєш?
-**Олена:** О ні. Я **ніколи не** бігаю. Це для мене **зана́дто** (too) важко. Я швидко втомлююся.
-**Ігор:** Чому? Це **легко**! Можливо, ти просто біжиш **дуже швидко**? Спробуй бігти **повільно**.
-**Олена:** Ні, я не люблю бігати. Я люблю спати **до́вго** (long/late). Я прокидаюся **пізно**, п'ю каву повільно і читаю новини.
-**Ігор:** Зрозуміло. Ми живемо **зовсім** по-різному! Ти живеш спокійно, а я живу активно.
-**Олена:** Так, це правда. Але ми **добре** розуміємо один одного!
-**Ігор:** Так! До речі (by the way), ти **сьогодні** вільна?
-**Олена:** Так, я вільна ввечері. Чому?
-**Ігор:** Давай підемо в кіно? Там показують **дуже** цікавий фільм.
-**Олена:** Добре! Я **дуже** люблю кіно.
-
-### Діалог: На вокзалі (At the Station)
-
-**Турист:** Скажіть, будь ласка, цей поїзд їде **швидко**?
-**Касир:** Так, це експрес. Він їде **дуже швидко**.
-**Турист:** А він зупиняється (stops) **часто**?
-**Касир:** Ні, він зупиняється **рідко**. Тільки у великих містах.
-**Турист:** Це **добре**. Я **дуже** поспішаю.
-**Касир:** Не хвилюйтеся (Do not worry). Ви будете там **вчасно** (on time).
-**Турист:** Дякую!
-
-### Історія: Мій брат Олег (My brother Oleh)
-
-*Мій брат Олег працює в офісі. Він працює **багато** і **старанно**. Він приходить додому **пізно**. Він **часто** втомлений. Але у суботу він відпочиває **активно**. Він грає у футбол. Він бігає **швидко** та грає **добре**. У неділю він спить **довго**. Він каже: "Я працюю **важко**, тому я відпочиваю **добре**".*
-
-(My brother Oleh works in an office. He works a lot and diligently. He comes home late. He is often tired. But on Saturday he rests actively. He plays football. He runs fast and plays well. On Sunday he sleeps long. He says: "I work hard, therefore I rest well".)
-
-### Культурний елемент: Поспіх vs Якість
-
-Ukrainian culture values quality and thoroughness. Being "fast" is good, but being "careful" is better. There is a famous proverb that teaches this balance.
-
-:::note[📜 Quote]
-**«Тихіше їдеш — далі будеш.»**
-*Literal translation:* The quieter (slower) you drive, the further you will get.
-*Meaning:* Haste makes waste. Slow and steady wins the race.
-
-Here, **тихіше** (quieter/slower) acts as an adverb describing the manner of movement. It reminds us that doing things **спокійно** (calmly) and **уважно** (attentively) often leads to better results than doing them **швидко** (fast).
-:::
-
-### Історія: Мій друг Максим (My friend Maksym)
-
-Read about another lifestyle. Notice the difference.
-
-*Мій друг Максим — музикант. Він живе **дуже** цікаво, але неспокійно. Він **часто** працює вночі. Тому він прокидається **пізно**, о 12:00. Він снідає **повільно** і п'є каву. Він грає на гітарі **голосно** та **гарно**. Сусіди (neighbors) слухають його **уважно**. Максим **ніколи не** поспішає. Він каже: "Я живу **легко** і **весело**".*
-
-(My friend Maksym is a musician. He lives very interestingly but restlessly. He often works at night. Therefore he wakes up late, at 12:00. He eats breakfast slowly and drinks coffee. He plays the guitar loudly and beautifully. Neighbors listen to him attentively. Maksym is never in a hurry. He says: "I live easily and fun".)
-
-### Перевірка тексту (Text Check)
-
-1. **Хто** Максим? — Він музикант.
-2. **Як** він живе? — Він живе цікаво, легко і весело.
-3. **Коли** він прокидається? — Він прокидається пізно.
-4. **Як** він грає? — Він грає голосно і гарно.
-
-### Мій стиль життя (My Lifestyle)
-
-Now think about your own day. Try to answer these questions using the new words.
-
-1. *Як ви читаєте українською?* (How do you read in Ukrainian?)
-    - Possible answer: *Я читаю **повільно**, але **уважно**.* (I read slowly, but attentively.)
-2. *Як часто ви готуєте вдома?* (How often do you cook at home?)
-    - Possible answer: *Я **зазвичай** готую вдома. Готувати вдома — **корисно**.* (I usually cook at home. Cooking at home is healthy.)
-3. *Ви добре знаєте це місто?* (Do you know this city well?)
-    - Possible answer: *Ні, я знаю його **погано**. Я тут вперше.* (No, I know it poorly. I am here for the first time.)
-4. *Як ви відпочиваєте?* (How do you rest?)
-    - Possible answer: *Я відпочиваю **активно**: я гуляю або займаюся спортом.* (I rest actively: I walk or do sports.)
-5. *Ви любите каву?* (Do you like coffee?)
-    - Possible answer: *Так, я **дуже** люблю каву. Я п'ю її щодня.* (Yes, I like coffee very much. I drink it every day.)
-
-:::tip[💡 Tip]
-**Українською:**
-Ви вже знаєте багато слів! Ви можете сказати, **як** ви живете. Ви знаєте, **що** ви любите. Це чудовий прогрес. Говоріть українською **часто** і **сміливо** (bravely)!
-
-(You already know many words! You can say how you live. You know what you like. This is excellent progress. Speak Ukrainian often and bravely!)
-:::
-
-### Практикуйте читання (Practice Reading)
-
-Read these sentences aloud. Try to understand them without translation.
-
-1. Він **добре** знає Київ.
-2. Ми живемо **весело** і **дружно**.
-3. Вона **завжди** приходить **вчасно**.
-4. Я **ніколи не** їм **швидко**.
-5. Ти говориш **дуже тихо**.
-6. Це **зовсім не** цікаво.
-7. Ми працюємо **багато** і **старанно**.
-8. Він бігає **повільно**, але **довго**.
-9. Я слухаю музику **часто**.
-10. Все буде **добре**!
-11. Вона готує **дуже смачно**.
-12. Це **дуже** важливо.
-13. Він говорить **голосно**.
-14. Ми працюємо **активно**.
-15. Ми бігаємо **вранці**.
-16. Вони живуть **спокійно**.
-17. Я читаю **уважно**.
-
----
-
-## 📋 Підсумок
-
-Today you unlocked the ability to describe the "texture" of your life. You moved from static descriptions (*гарний дім*) to dynamic actions (*гарно співає*).
-
-Let's recap the golden rules:
-1. **Adjective** (Який?) ≠ **Adverb** (Як?). *Добрий* describes a noun; *добре* describes a verb.
-2. **Formation:** Usually `Stem` + **-о** (*швидк-о*).
-3. **Word Order:** Manner adverbs go **after** the verb (*читаю швидко*). Frequency adverbs go **before** the verb (*часто читаю*).
-4. **Negation:** *Ніколи* needs *не* (*ніколи не знаю*).
-5. **Intensity:** *Дуже* always comes **first** (*дуже добре*).
-
-**Перевірте себе:**
-
-1. How do you say "He speaks well"? (Choose one: *Він говорить добрий* OR *Він говорить добре*)
-2. Translate "I never sleep": *Я ніколи сплю* OR *Я ніколи не сплю*?
-3. Where do you put "часто" in the sentence "I read"? (Before or after "read"?)
-4. How do you make the adverb from the adjective "голосний" (loud)?
-5. What does the phrase "Тихіше їдеш — далі будеш" teach us about speed?
-6. How do you say "very interesting" in Ukrainian?
-
-## 🎯 Activities
+</TabItem>
+<TabItem label="Activities">
 
 ### Прикметник чи Прислівник?
 
@@ -508,3 +434,11 @@ Let's recap the golden rules:
 ### Логічний вибір
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Я поспішаю, тому я йду {{answer}}.", "answer": "швидко", "options": ["швидко", "повільно", "тихо", "погано"]}, {"sentence": "Це бібліотека. Тут треба говорити {{answer}}.", "answer": "тихо", "options": ["тихо", "голосно", "швидко", "рано"]}, {"sentence": "Я прокидаюся {{answer}}, о 6:00.", "answer": "рано", "options": ["рано", "пізно", "повільно", "погано"]}, {"sentence": "Я не знаю це слово. Я розумію {{answer}}.", "answer": "погано", "options": ["погано", "добре", "швидко", "голосно"]}, {"sentence": "Це просте завдання. Я роблю його {{answer}}.", "answer": "легко", "options": ["легко", "важко", "пізно", "тихо"]}, {"sentence": "Він {{answer}} снідає вдома, майже кожен день.", "answer": "зазвичай", "options": ["зазвичай", "ніколи", "рідко", "погано"]}, {"sentence": "Він сміється. Йому {{answer}}.", "answer": "весело", "options": ["весело", "сумно", "тихо", "важко"]}, {"sentence": "Вона не поспішає. Вона йде {{answer}}.", "answer": "повільно", "options": ["повільно", "швидко", "голосно", "рано"]}]`)} />
+
+</TabItem>
+<TabItem label="Resources">
+
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

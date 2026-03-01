@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# I Feel Like...
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -367,7 +373,42 @@ By analyzing these interactions, we can clearly see that the Dative experiencer 
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| мені |  | to me | pronoun |  |  |
+| тобі |  | to you (singular) | pronoun |  |  |
+| йому |  | to him / to it | pronoun |  |  |
+| їй |  | to her | pronoun |  |  |
+| нам |  | to us | pronoun |  |  |
+| вам |  | to you (plural/formal) | pronoun |  |  |
+| їм |  | to them | pronoun |  |  |
+| холодно |  | cold / coldly | adverb |  |  |
+| жарко |  | hot / hotly | adverb |  |  |
+| сумно |  | sad / sadly | adverb |  |  |
+| весело |  | fun / merrily | adverb |  |  |
+| боляче |  | painfully / hurts | adverb |  |  |
+| нудно |  | boring / bored | adverb |  |  |
+| погано |  | bad / badly | adverb |  |  |
+| краще |  | better | adverb |  |  |
+| страшно |  | scary / scared | adverb |  |  |
+| радісно |  | joyful / joyfully | adverb |  |  |
+| неспокійно |  | uneasily / anxious | adverb |  |  |
+| радий |  | glad | adjective | ч |  |
+| щасливий |  | happy | adjective | ч |  |
+| метеозалежність |  | meteosensitivity | noun | ж |  |
+| магнітна буря |  | magnetic storm | noun | ж |  |
+| почуватися |  | to feel | verb |  |  |
+| хвилюватися |  | to worry | verb |  |  |
+| боятися |  | to fear | verb |  |  |
+| давальний |  | dative | adjective | ч |  |
+| прикметник |  | adjective | noun | ч |  |
+| називний |  | nominative | adjective | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Перевірте знання: Стан особи
 
@@ -426,35 +467,10 @@ By analyzing these interactions, we can clearly see that the Dative experiencer 
 
 <MatchUp client:load pairs={JSON.parse(`[{"left": "Я забув зимову шапку вдома.", "right": "Мені холодно."}, {"left": "Я сиджу на яскравому сонці.", "right": "Мені жарко."}, {"left": "Мій хороший друг серйозно захворів.", "right": "Мені сумно."}, {"left": "Ми граємо в дуже цікаву гру.", "right": "Нам весело."}, {"left": "Я довго слухаю нецікаву лекцію.", "right": "Мені нудно."}, {"left": "Я сильно впав з нового велосипеда.", "right": "Мені боляче."}, {"left": "На нічній вулиці зовсім темно.", "right": "Мені страшно."}, {"left": "Завтра почнеться моя літня відпустка.", "right": "Мені радісно."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| мені | [mɛˈnʲi] | to me | pronoun |  |  |
-| тобі | [tɔˈbʲi] | to you (singular) | pronoun |  |  |
-| йому | [jɔmu] | to him / to it | pronoun |  |  |
-| їй | [jij] | to her | pronoun |  |  |
-| нам | [nɑm] | to us | pronoun |  |  |
-| вам | [ʋɑm] | to you (plural/formal) | pronoun |  |  |
-| їм | [jim] | to them | pronoun |  |  |
-| холодно | [ˈxɔlɔdnɔ] | cold / coldly | adverb |  |  |
-| жарко | [ˈʒɑrkɔ] | hot / hotly | adverb |  |  |
-| сумно | [ˈsumnɔ] | sad / sadly | adverb |  |  |
-| весело | [ˈʋɛsɛlɔ] | fun / merrily | adverb |  |  |
-| боляче | [ˈbɔlʲɑt͡ʃɛ] | painfully / hurts | adverb |  |  |
-| нудно | [ˈnudnɔ] | boring / bored | adverb |  |  |
-| погано | [pɔˈɦɑnɔ] | bad / badly | adverb |  |  |
-| краще | [ˈkrɑʃt͡ʃɛ] | better | adverb |  |  |
-| страшно | [ˈstrɑʃnɔ] | scary / scared | adverb |  |  |
-| радісно | [ˈrɑdʲisnɔ] | joyful / joyfully | adverb |  |  |
-| неспокійно | [nɛspɔˈkʲijnɔ] | uneasily / anxious | adverb |  |  |
-| радий | [ˈrɑdɪj] | glad | adjective | ч |  |
-| щасливий | [ʃt͡ʃɑˈslɪʋɪj] | happy | adjective | ч |  |
-| метеозалежність | [mɛtɛɔzɑlɛʒnʲisʲtʲ] | meteosensitivity | noun | ж |  |
-| магнітна буря | [mɑˈɦnʲitnɑ ˈburʲɑ] | magnetic storm | noun | ж |  |
-| почуватися | [pɔt͡ʃuˈʋɑtɪsʲɑ] | to feel | verb |  |  |
-| хвилюватися | [xʋɪlʲuˈʋɑtɪsʲɑ] | to worry | verb |  |  |
-| боятися | [bɔˈjɑtɪsʲɑ] | to fear | verb |  |  |
-| давальний | [dɑˈʋɑlʲnɪj] | dative | adjective | ч |  |
-| прикметник | [prɪˈkmɛtnɪk] | adjective | noun | ч |  |
-| називний | [nɑzɪˈʋnɪj] | nominative | adjective | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

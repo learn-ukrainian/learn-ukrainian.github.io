@@ -1,421 +1,327 @@
-# Plan: Pipeline v4 — Named Phases, Simplified Architecture
+# Plan: Rename build_module + Discover Phase
 
 ## Context
 
-Pipeline v3 has accumulated complexity:
-- Phases named with letters (A, B, C, D, E, F) plus one named ("audit") — inconsistent
-- D.0/D.0.5 (deterministic checks) trapped inside Claude-dependent Phase D
-- Three separate fix loops (audit, D.0.5, D.2) with audit running in 5+ places
-- Separate Phase F that duplicates Phase D's review
-- User can't get full deterministic report without Claude
+Two changes to the v4 pipeline:
 
-**v4 goals:**
-- Named phases (no more A/B/C/D/E/F)
-- Merge audit + screen into single `validate` phase
-- Merge D + F into single `review` phase (report + one fix attempt)
-- Clear separation: Claude only needed for `review`
-- Three modes: research-only, rc (default), full (with review)
+1. **Rename**: `build_module_v3.py` → `build_module.py`. The file runs v4 by default now — the v3 name is misleading.
+2. **Discover phase**: Add video/blog discovery between research and content. Videos become first-class content elements planned during research, not bolted on after.
 
-## Quality Assurance Philosophy
-
-This project provides Ukrainian language education. Content quality is non-negotiable — errors in language teaching actively harm learners, and in the current political context, getting Ukrainian right matters.
-
-**Principle: review is mandatory for publication, but decoupled from build.**
-
-- RC mode builds and validates — the module is a "draft" (deterministic QA only)
-- Review mode adds Claude adversarial review — the module becomes "reviewed"
-- MDX runs in both modes (for preview), but **module status reflects review state**
-- A module without review is `status: draft` — usable for preview, not publication
-- A module with review is `status: reviewed` — publication-ready
-
-This means the cross-agent adversarial principle ("Gemini builds, Claude reviews") isn't optional — it's deferred. Every module should eventually pass review before reaching learners.
-
-## v4 Pipeline
-
+Pipeline becomes:
 ```
-research → content → activities → validate → [review] → mdx
+research → discover → content → activities → validate → [review] → mdx
 ```
 
-| Phase | What it does | Agent | Claude? |
-|-------|-------------|-------|---------|
-| `research` | Research + meta YAML | Gemini | No |
-| `content` | Prose writing | Gemini | No |
-| `activities` | Activities + vocabulary | Gemini | No |
-| `validate` | Full audit + Russicism + filler + RAG verify + Gemini fix loop | Gemini + deterministic | No |
-| `review` | Structured review + one fix attempt | Claude | **Yes** |
-| `mdx` | MDX generation + lint | Deterministic | No |
+GH tracking: #703 (rename), #711 (discover phase).
 
-### Pipeline Modes
+---
 
-- `--research-only`: just `research`
-- Default (RC): `research → content → activities → validate → mdx` (module status: `draft`)
-- `--review`: `research → content → activities → validate → review → mdx` (module status: `reviewed`)
+## Task 1: Rename `build_module_v3.py` → `build_module.py`
 
-### Resume After RC
+### 1.1 Git rename
 
-`--restart-from review` runs: `review → mdx`
+```bash
+git mv scripts/build_module_v3.py scripts/build_module.py
+```
 
-(mdx re-runs after review because review may change content)
+Update internal docstring (7 self-references in usage block).
 
-### Module Status Tracking
-
-| Pipeline mode | Status after validate | Status after review |
-|--------------|---------------------|-------------------|
-| RC (default) | `draft` | — |
-| Full (`--review`) | `draft` | `reviewed` |
-| Review fails | — | `needs-manual-review` (not `needs-rebuild` — preserves Gemini work) |
-
-## Phase Details
-
-### `validate` (merges v3: audit + screen + D.0 + D.0.5)
-
-One phase, one fix loop, one validation function:
-
-1. Run `_deterministic_screen()` — full audit (content_only=False) + Russicism + filler + RAG verify
-2. If clean → mark complete, save results
-3. If issues → Gemini fix loop (up to `max_iters` iterations):
-   - Dispatch Gemini fix prompt
-   - Apply fixes
-   - Re-run `_deterministic_screen()`
-   - If clean → break
-4. After loop: save final `DScreenResult` to `screen-result.json`
-5. Print summary report (audit pass/fail, issue counts, RAG coverage)
-
-Key change: uses `content_only=False` from the start (not prose-only). Activities exist by this point.
-
-### `review` (merges v3: D.1 + D.2 + F)
-
-Simplified — review + up to 2 fix attempts:
-
-1. Load cached `screen-result.json` from validate (stale check hashes md+activities+vocab)
-2. Claude structured review (current D.1 logic: inject metrics, deterministic issues, RAG verify into prompt)
-3. If PASS → mark `reviewed`, done
-4. If FAIL → up to 2 Claude fix attempts:
-   - Attempt 1: fix the issue Claude found
-   - Attempt 2: fix formatting breakage from attempt 1 (if any)
-   - Re-validate after each attempt
-5. If still fails after 2 attempts → mark `needs-manual-review` (preserves Gemini work)
-
-No Phase F. No re-review. Claude gets one review + up to 2 fixes.
-
-## Files to Modify
+### 1.2 Update test imports (4 files)
 
 | File | Change |
 |------|--------|
-| `scripts/build_module_v3.py` | New constants, new phase functions, new `run_pipeline_v4()`. Reuse existing internal functions (`_deterministic_screen`, `_format_*`, `_parse_d1_review`, etc.) |
+| `tests/test_build_module_v3_comprehensive.py` | `from scripts.build_module_v3 import` → `from scripts.build_module import` (~14 refs) |
+| `tests/test_build_pipeline.py` | Same pattern (1 ref) |
+| `tests/test_pipeline_v3.py` | Same pattern (1 ref) |
+| `tests/test_v3_state.py` | Same pattern (1 ref) |
 
-## Step-by-Step
+Do NOT rename test files — they describe what they test.
 
-### 1. New constants (~line 99)
+### 1.3 Update subprocess/path references (4 scripts)
 
-```python
-# v4 pipeline
-PHASE_SEQUENCE_V4 = ["research", "content", "activities", "validate", "review", "mdx"]
+| File | Lines | Change |
+|------|-------|--------|
+| `scripts/assess_research.py` | 367, 397, 510, 660 | `build_module_v3.py` → `build_module.py` |
+| `scripts/preseed_runner.py` | 5, 39 | Same |
+| `scripts/_archived/preseed_runner.py` | 5, 43 | Same |
+| `scripts/api/comms_router.py` | 516, 525, 529 | `build_module_v3` → `build_module` (string match + regex) |
 
-_V4_PHASE_STATE_IDS = {
-    "research":   ["v4-research"],
-    "content":    ["v4-content"],
-    "activities": ["v4-activities"],
-    "validate":   ["v4-validate"],
-    "review":     ["v4-review"],
-    "mdx":        ["v4-mdx"],
-}
+### 1.4 Update supporting files
 
-PHASE_LABELS_V4 = {
-    "research":   "Research + Meta",
-    "content":    "Content (prose)",
-    "activities": "Activities + Vocab",
-    "validate":   "Validate (audit + screen + Gemini fix)",
-    "review":     "Review (Claude, optional)",
-    "mdx":        "MDX Generation",
-}
+| File | Refs |
+|------|------|
+| `scripts/pipeline_lib.py` | 1 (docstring) |
+| `scripts/batch_gemini_config.py` | 1 (comment) |
+| `claude_extensions/phases/gemini/phase-A-*.md` | 5 files (header ref) |
+| `claude_extensions/hooks/check-gemini-inbox.sh` | 1 (comment) |
+
+### 1.5 Bulk update docs (12 files)
+
+Find-and-replace `build_module_v3` → `build_module` in:
+- `docs/SCRIPTS.md` (22 refs)
+- `docs/ARCHITECTURE.md` (3 refs)
+- `docs/MONITOR-API.md`, `docs/ai_team/blue-team-claude.md`
+- `docs/best-practices/` — 6 files (code-quality, prompt-engineering, audit-standards, context-engineering, agent-cooperation, gitflow)
+- `docs/plans/robust-dancing-candle.md`
+- `claude_extensions/quick-ref/monitor-api.md`
+
+### 1.6 Update memory
+
+Update `tasks/memory.json` entity observations (4 refs).
+
+### 1.7 Deploy + verify
+
+```bash
+npm run claude:deploy
+.venv/bin/python -m py_compile scripts/build_module.py
+.venv/bin/python -m pytest tests/test_build_module_v3_comprehensive.py tests/test_build_pipeline.py tests/test_pipeline_v3.py tests/test_v3_state.py -x
 ```
 
-### 2. Phase functions — thin wrappers over existing code
+### 1.8 What NOT to touch
+
+- 800+ `curriculum/*/orchestration/` prompt files — historical artifacts, regenerated on next build
+- Log files — historical
+- `.pytest_cache/` — auto-regenerated
+
+### 1.9 Commit
+
+`refactor: rename build_module_v3.py to build_module.py (#703)`
+
+---
+
+## Task 2: Implement Discover Phase
+
+### Architecture
+
+Two components:
+- **`scripts/video_discovery.py`** — standalone module: yt-dlp search, transcript download, Gemini scoring. Testable independently.
+- **`phase_discover_v4()` in `scripts/build_module.py`** — thin wrapper calling video_discovery.py, manages state.
+
+### 2.1 Create `scripts/video_discovery.py`
+
+Consolidates and generalizes existing code from `auto_enrich_yt.py` and `enrich_research_yt.py`.
 
 ```python
-def phase_research_v4(ctx, state):
-    """v4 research = v3 Phase A."""
-    return phase_A_v3(ctx, state)  # Reuse entirely
+# Key types
+@dataclass
+class VideoCandidate:
+    url: str
+    channel: str
+    title: str
+    transcript: str = ""
+    relevance_score: float = 0.0
+    relevance_note: str = ""
+    transcript_excerpt: str = ""
+    embed_suggestion: str = ""
 
-def phase_content_v4(ctx, state):
-    """v4 content = v3 Phase B."""
-    return phase_B_v3(ctx, state)  # Reuse entirely
-
-def phase_activities_v4(ctx, state):
-    """v4 activities = v3 Phase C."""
-    return phase_C_v3(ctx, state)  # Reuse entirely
-
-def phase_mdx_v4(ctx):
-    """v4 mdx = v3 Phase E."""
-    return phase_E_v3(ctx)  # Reuse entirely
+@dataclass
+class DiscoveryResult:
+    discovered_at: str = ""
+    query_keywords: list[str] = field(default_factory=list)
+    videos: list[VideoCandidate] = field(default_factory=list)
+    blogs: list[dict] = field(default_factory=list)  # future
+    error: str | None = None
 ```
 
-### 3. `phase_validate_v4()` — merged audit + screen
+**Functions (all non-blocking — return empty/default on failure):**
 
-New function that combines:
-- v3 `phase_audit_v3` fix loop logic (but with `content_only=False`)
-- v3 `_deterministic_screen()` (all 7 checks)
-- v3 D.0.5 Gemini proofread
+| Function | Source | Purpose |
+|----------|--------|---------|
+| `clean_srt(text)` | `enrich_research_yt.py:54-77` | Strip SRT metadata, dedup lines |
+| `download_transcript(url)` | `auto_enrich_yt.py` + `enrich_research_yt.py` | yt-dlp Ukrainian auto-subs → plain text |
+| `filter_channels(channels, track)` | New | Filter allowlist by track relevance (`*` matches all) |
+| `search_channel(keywords, channel, max_results)` | Generalized from `auto_enrich_yt.py:find_video_for_subject()` | yt-dlp search on single channel |
+| `score_candidates(candidates, topic, outline, vocab, dispatch_fn)` | New | Gemini Flash relevance scoring |
+| `run_discovery(topic, keywords, outline, vocab, ...)` | New | Full pipeline: search → transcript → score → rank |
+| `write_discovery_yaml(result, path)` | New | Serialize to YAML |
+| `read_discovery_yaml(path)` | New | Deserialize from YAML |
+| `format_discovery_for_template(result)` | New | Format as markdown for `{VIDEO_DISCOVERY}` placeholder |
+
+**Channel allowlist** (module-level constant, categorized by track relevance):
 
 ```python
-def phase_validate_v4(ctx, state):
-    """Validate: full deterministic checks + Gemini fix loop.
+DEFAULT_CHANNELS = [
+    # Language learning (core A1-C2)
+    {"name": "Anna Ohoiko", "handle": "@annaohoiko", "tracks": ["*"]},
+    {"name": "Ukrainian with Olha", "handle": "@ukrainianwitholha", "tracks": ["*"]},
+    {"name": "Let's Learn Ukrainian", "handle": "@LetsLearnUkrainian", "tracks": ["*"]},
+    {"name": "Learn Ukrainian Language", "handle": "@LearnUkrainianLanguage", "tracks": ["*"]},
+    {"name": "Listen & Read", "handle": "@listen-read", "tracks": ["*"]},
+    {"name": "UkrainerNet", "handle": "@ukrainernet", "tracks": ["*"]},
 
-    Merges v3 audit + screen + D.0 + D.0.5 into one phase.
-    Runs content_only=False (full audit including activities).
-    """
-    phase = "validate"
-    # ... skip if complete, dry_run guard ...
+    # History (HIST, ISTORIO, BIO)
+    {"name": "Реальна Історія", "handle": "@realhistoryua", "tracks": ["hist", "istorio", "bio"]},
+    {"name": "Harvard Ukrainian Research Institute", "handle": "@ukrainianresearchinstitute1041", "tracks": ["hist", "istorio", "bio", "lit"]},
+    {"name": "Комік Історик", "handle": "@komikistoryk", "tracks": ["hist", "istorio", "bio"]},
+    {"name": "ІМТГШ", "handle": "@imtgsh", "tracks": ["hist", "istorio"]},
 
-    # Check sidecar files exist
-    # ... (moved from phase_D_v3) ...
+    # Historical linguistics (OES, RUTH)
+    {"name": "Історія Мови", "handle": "@Istoria-Movy", "tracks": ["oes", "ruth"]},
 
-    # Initial screen
-    screen = _deterministic_screen(ctx)
-    log(f"  Validate: Initial — audit {'PASS' if screen.audit_passed else 'FAIL'}, "
-        f"{len(screen.deterministic_issues)} issue(s)")
-
-    if screen.audit_passed and not screen.deterministic_issues:
-        _save_screen_result(ctx, screen)
-        _mark_phase_v4(ctx, state, phase, "complete", attempts=0)
-        return True
-
-    # Gemini proofread fix (D.0.5 logic)
-    _run_gemini_proofread(ctx)
-
-    # Gemini fix loop (audit fix loop logic)
-    max_iters = _max_audit_iters(ctx.track)
-    for attempt in range(1, max_iters + 1):
-        screen = _deterministic_screen(ctx)
-
-        if screen.audit_passed and not screen.deterministic_issues:
-            _save_screen_result(ctx, screen)
-            _mark_phase_v4(ctx, state, phase, "complete", attempts=attempt)
-            return True
-
-        if attempt >= max_iters:
-            # Exhausted — save results anyway for reporting
-            _save_screen_result(ctx, screen)
-            _mark_phase_v4(ctx, state, phase, "failed", attempts=attempt)
-            # Escalation to Claude optional
-            return False
-
-        # Dispatch Gemini fix
-        fix_prompt = _build_fix_prompt(ctx, screen.audit_output, content_only=False)
-        # ... dispatch + apply fixes (reuse existing logic) ...
-
-    _save_screen_result(ctx, screen)
-    return False
+    # Culture & documentary (B2+, LIT, cultural modules)
+    {"name": "Суспільне Культура", "handle": "@SuspilneKultura", "tracks": ["lit", "b2", "c1", "c2"]},
+    {"name": "Суспільне Док", "handle": "@SuspilneDoc", "tracks": ["hist", "bio", "lit", "b2", "c1"]},
+    {"name": "Repainted Fox", "handle": "@repaintedfox", "tracks": ["b1", "b2", "c1"]},
+    {"name": "Klopotenko", "handle": "@klopotenko", "tracks": ["a2", "b1", "b2"]},
+    {"name": "Radio Khartia", "handle": "@RadioKhartia", "tracks": ["lit", "c1", "c2"]},
+]
 ```
 
-### 4. `phase_review_v4()` — consolidated D.1 + one fix
+The `tracks` field controls which channels are searched per module — a B1 grammar module won't waste time searching Реальна Історія, and an OES module will prioritize Історія Мови.
+
+**Key design decisions:**
+- `dispatch_fn` injected (not imported) — allows testing with mocks
+- Flash model for scoring (cheap, this is classification not generation)
+- `run_discovery()` catches all exceptions, returns `DiscoveryResult(error=...)` — non-blocking guarantee
+- Transcript cap: 50,000 chars (matches existing scripts)
+
+### 2.2 Gemini scoring prompt
+
+**Not a template file** — assembled programmatically in `score_candidates()` (matches `_build_vocab_only_prompt()` pattern in pipeline_lib.py). Structure:
+
+```
+# Video Discovery: Relevance Scoring
+
+## Module Context
+Topic: {topic}
+Sections: {outline}
+Vocabulary: {vocab}
+
+## Candidates
+{for each: url, title, channel, transcript excerpt}
+
+## Output (between delimiters)
+===DISCOVERY_SCORES_START===
+- video_url: "..."
+  relevance_score: 0.0-1.0
+  relevance_note: "..."
+  embed_suggestion: "After section X — reason"
+  transcript_excerpt: "..."
+===DISCOVERY_SCORES_END===
+```
+
+### 2.3 Register discover phase in `scripts/build_module.py`
+
+**Constants** (4 edits):
 
 ```python
-def phase_review_v4(ctx, state):
-    """Review: Claude structured review + one fix attempt.
+PHASE_SEQUENCE_V4 = ["research", "discover", "content", ...]  # add "discover" at position 1
 
-    Loads cached screen results from validate phase.
-    Claude reviews holistically (pedagogy, naturalness, accuracy).
-    If FAIL: one Claude fix attempt, then re-validate. No loop.
-    """
-    phase = "review"
-    # ... skip if complete, dry_run guard ...
-
-    # Load cached screen results (with stale hash fallback)
-    screen = _load_screen_result(ctx)
-    if screen is None:
-        screen = _deterministic_screen(ctx)
-
-    # D.1: Claude structured review (reuse existing injection + dispatch logic)
-    # ... inject metrics, deterministic issues, RAG verify into prompt ...
-    # ... dispatch Claude, parse D1Result ...
-
-    if review_result.verdict == "PASS" and screen.audit_passed:
-        _mark_phase_v4(ctx, state, phase, "complete")
-        return True
-
-    # ONE fix attempt (simplified D.2 — no loop)
-    # ... dispatch Claude fix prompt ...
-    # ... apply FIND/REPLACE fixes ...
-
-    # Re-validate after fix
-    screen = _deterministic_screen(ctx)
-    if screen.audit_passed:
-        _mark_phase_v4(ctx, state, phase, "complete", note="fixed")
-        return True
-
-    _mark_phase_v4(ctx, state, phase, "failed", note="needs-manual-review")
-    return False
+_V4_PHASE_STATE_IDS["discover"] = ["v4-discover"]
+PHASE_LABELS_V4["discover"] = "Discover (video + blog search)"
+PHASE_FUNCTIONS_V4["discover"] = phase_discover_v4
 ```
 
-### 5. `run_pipeline_v4()` — new runner
+**New function `phase_discover_v4(ctx, state)`:**
+
+- Skip if complete / `--skip-discover` / dry-run
+- Extract keywords from `ctx.topic_title` + `ctx.plan["vocabulary_hints"][:5]`
+- Call `run_discovery()` with `dispatch_gemini_raw` as `dispatch_fn` and `ctx.track` for channel filtering
+- Write `discovery.yaml` to `ctx.orch_dir`
+- Append video refs to research file
+- **Always returns True** — non-blocking
+- Marks phase complete even on failure (with empty discovery.yaml + error field)
+
+**New helper `_append_discovery_to_research(ctx, result)`:**
+
+- Appends `## Video Discovery` section to research file
+- Only includes videos with `relevance_score >= 0.5`
+
+### 2.4 Inject `{VIDEO_DISCOVERY}` into content phase
+
+**`scripts/pipeline_lib.py` — `write_placeholders()`:**
+
+After building placeholders dict, check `ctx.orch_dir / "discovery.yaml"`:
+- If exists: `read_discovery_yaml()` → `format_discovery_for_template()` → set `VIDEO_DISCOVERY`
+- If missing: `VIDEO_DISCOVERY = "(No video discoveries available)"`
+
+**`claude_extensions/phases/gemini/phase-2-content.md`:**
+
+Add after "Primary Source Excerpts" section:
+
+```markdown
+## Video Discoveries
+
+{VIDEO_DISCOVERY}
+```
+
+### 2.5 CLI flag
 
 ```python
-PHASE_FUNCTIONS_V4 = {
-    "research":   phase_research_v4,
-    "content":    phase_content_v4,
-    "activities": phase_activities_v4,
-    "validate":   phase_validate_v4,
-    "review":     phase_review_v4,
-    "mdx":        phase_mdx_v4,
-}
-
-def run_pipeline_v4(ctx, research_only=False):
-    state = _load_state_v4(ctx)
-
-    if research_only:
-        return _call_phase(phase_research_v4, "research", ctx, state)
-
-    # Determine sequence based on --review flag
-    if ctx.review:
-        sequence = PHASE_SEQUENCE_V4  # all phases including review
-    else:
-        sequence = [p for p in PHASE_SEQUENCE_V4 if p != "review"]  # RC mode
-
-    for phase_id in sequence:
-        if not _call_phase(PHASE_FUNCTIONS_V4[phase_id], phase_id, ctx, state):
-            return False
-    return True
+parser.add_argument("--skip-discover", action="store_true",
+    help="Skip video/blog discovery phase")
 ```
 
-### 6. State helpers — v4 versions
+Wire into `preflight_v4()`: `ctx.skip_discover = getattr(args, "skip_discover", False)`
 
-Reuse existing pattern but with v4 keys:
-- `_load_state_v4()` / `_save_state_v4()` — same as v3 but reads/writes `state-v4.json`
-- `_mark_phase_v4()` — same as `_mark_phase_v3()` but uses v4 state IDs
-- `_is_phase_v4_complete()` — same pattern
+Propagate in batch mode `single_args`.
 
-### 7. Screen result serialization
+### 2.6 Pipeline runner safety net
+
+Add `"discover"` to the non-blocking phase set in `run_pipeline_v4()`:
 
 ```python
-def _save_screen_result(ctx, screen: DScreenResult):
-    """Save DScreenResult + content hash for review phase reuse."""
-    content_path = ctx.paths["md"]
-    data = dataclasses.asdict(screen)
-    data["content_hash"] = hashlib.md5(content_path.read_bytes()).hexdigest()[:12]
-    (ctx.orch_dir / "screen-result.json").write_text(
-        json.dumps(data, ensure_ascii=False, indent=2), "utf-8")
-
-def _load_screen_result(ctx) -> DScreenResult | None:
-    """Load cached screen result, return None if stale or missing."""
-    f = ctx.orch_dir / "screen-result.json"
-    if not f.exists():
-        return None
-    data = json.loads(f.read_text("utf-8"))
-    content_path = ctx.paths["md"]
-    current_hash = hashlib.md5(content_path.read_bytes()).hexdigest()[:12]
-    if data.get("content_hash") != current_hash:
-        log("  Review: Cached screen stale — re-screening")
-        return None
-    return DScreenResult(**{k: v for k, v in data.items() if k != "content_hash"})
+if phase_id in ("validate", "review", "discover"):
+    log(f"  {phase_id}: FAIL — continuing")
+    continue
 ```
 
-### 8. CLI changes
+(Safety net only — `phase_discover_v4()` already always returns True.)
 
-```python
-parser.add_argument("--review", action="store_true",
-    help="Include Claude review phase (default: RC mode without review)")
-parser.add_argument("--stop-before", type=str,
-    help="Stop before this phase (e.g. --stop-before validate)")
-parser.add_argument("--restart-from", type=str,
-    help="Clear and restart from this phase (e.g. --restart-from review)")
-parser.add_argument("--force-phase", type=str,
-    help="Force re-run a single phase (e.g. --force-phase validate)")
+### 2.7 Tests
+
+**New file `tests/test_video_discovery.py`:**
+- `test_clean_srt` — known input/output
+- `test_search_channel_no_yt_dlp` — returns empty, no raise
+- `test_download_transcript_failure` — returns empty, no raise
+- `test_run_discovery_no_yt_dlp` — returns DiscoveryResult with error
+- `test_write_read_yaml_roundtrip` — serialize/deserialize
+- `test_format_empty` — fallback text
+- `test_format_with_videos` — markdown output
+
+**Add to existing test file:**
+- `test_discover_in_phase_sequence` — "discover" between "research" and "content"
+- `test_phase_discover_skip` — skip_discover=True → marks complete
+- `test_phase_discover_dry_run` — returns True
+
+### 2.8 Deploy + verify
+
+```bash
+npm run claude:deploy
+.venv/bin/python -m py_compile scripts/build_module.py
+.venv/bin/python -m py_compile scripts/video_discovery.py
+.venv/bin/python scripts/build_module.py a1 1 --dry-run  # shows discover in phase list
+.venv/bin/python scripts/build_module.py a1 1 --dry-run --skip-discover  # skips
 ```
 
-### 9. What stays, what goes
+### 2.9 Commit
 
-**Reused as-is** (internal functions):
-- `_deterministic_screen()`, `_format_*()`, `_parse_d1_review()`
-- `_dispatch_claude_phase()`, `dispatch_gemini()`
-- `_build_fix_prompt()`, `_apply_find_replace_fixes()`
-- `_prefetch_rag_context()`, `_get_track_calibration()`
-- `run_verify()`, `_run_deterministic_fixes()`
-- `phase_A_v3()`, `phase_B_v3()`, `phase_C_v3()`, `phase_E_v3()` (delegated to)
+`feat(pipeline): add discover phase for video/blog discovery (#711)`
 
-**Removed / superseded:**
-- `phase_audit_v3()` → merged into `phase_validate_v4()`
-- `phase_D_v3()` → split into `phase_validate_v4()` (D.0/D.0.5) + `phase_review_v4()` (D.1 + one D.2)
-- `phase_F_v3()` → merged into `phase_review_v4()`
-- `phase_D_rescreen()` → replaced by `--force-phase validate`
-- `run_pipeline_v3()` → replaced by `run_pipeline_v4()`
-- All v3 constants (`PHASE_SEQUENCE_V3`, `_V3_PHASE_STATE_IDS`, etc.)
-- v2→v3 migration code (no longer needed)
+---
 
-**State files:**
-- New: `state-v4.json` (fresh start, no migration from v3)
-- Old `state.json` / `state-v3.json` ignored by v4
+## Execution Order
 
-## What Changes for the User
+1. Steps 1.1–1.9: Rename + commit
+2. Steps 2.1–2.9: Discover phase + commit
 
-| Before (v3) | After (v4) |
-|-------------|------------|
-| `--stop-before D` | Default mode (RC) — no flag needed |
-| Letters: A, B, C, D, E, F, "audit" | Names: research, content, activities, validate, review, mdx |
-| 3 fix loops + audit in 5 places | 1 fix loop (validate) + 1 fix attempt (review) |
-| Phase D required for any quality report | `validate` gives full report without Claude |
-| Phase F = separate review | Consolidated into `review` |
-| `--restart-from D` | `--restart-from review` |
-| Always runs D if in pipeline | Review only runs with `--review` flag |
+Rename first because discover adds code to the renamed file.
 
-## Gemini Adversarial Review — Issues Found & Fixes
-
-### 1. State corruption via reused v3 functions (VALID)
-
-v3 phase functions internally call `_mark_phase_v3()`. Thin wrappers can't just delegate.
-
-**Fix:** Extract the core logic of each v3 phase function into an `_inner_*` function that accepts a phase-marking callback. v4 wrappers pass `_mark_phase_v4`. Alternatively, since we're rewriting: refactor phase functions to return a result tuple, and let the pipeline runner handle state marking.
-
-### 2. Incomplete cache invalidation (VALID)
-
-Screen result only hashes MD file, but validate checks activities+vocab too.
-
-**Fix:** Hash all three files: `md + activities.yaml + vocabulary.yaml`. Cache stale if any changed.
-
-### 3. No MDX on validate failure (VALID)
-
-User needs MDX preview even when validate fails. Current design halts pipeline on failure.
-
-**Fix:** MDX always runs, regardless of validate/review outcome. Change `run_pipeline_v4()` to not halt on validate failure — continue to mdx. Only `review` depends on validate passing.
-
-### 4. Proofread triggered unnecessarily (VALID)
-
-If only activities fail, Gemini prose proofread is wasteful.
-
-**Fix:** Only run `_run_gemini_proofread()` when `screen.deterministic_issues` contains prose-related issues (RUSSIANISM, LLM_FILLER) or audit output shows prose gate failures. Skip if only activity/schema issues.
-
-### 5. needs-rebuild vs needs-manual-review (VALID — typo)
-
-Plan says `needs-manual-review`, code example says `needs-rebuild`.
-
-**Fix:** Code must use `needs-manual-review`. Preserves Gemini work.
-
-### 6. One fix attempt is brittle (VALID — changed to 2)
-
-Claude's fix may break formatting, and one attempt doesn't allow self-correction.
-
-**Fix:** Allow 2 fix iterations (same as v3 D.2). One to fix the issue, one to fix formatting if needed. Still much simpler than v3's unbounded loops.
-
-### 7. Status propagation missing (VALID)
-
-No mechanism to write `draft`/`reviewed` into `status/{slug}.json`.
-
-**Fix:** After validate completes, write `"pipeline_status": "draft"` to status JSON. After review passes, update to `"pipeline_status": "reviewed"`. MDX generator doesn't need to know — status is tracked separately.
-
-### 8. Redundant audit_passed check in review (ACKNOWLEDGED)
-
-Defensive code, harmless. Keep it — belt and suspenders.
+---
 
 ## Verification
 
-1. Run default pipeline on a module → confirm: research → content → activities → validate → mdx (no review)
-2. Run `--review` → confirm review phase runs between validate and mdx
-3. Run `--restart-from review` → confirm: review → mdx
-4. Run `--force-phase validate` → confirm validate re-runs
-5. Run `--research-only` → confirm only research runs
-6. Validate phase: confirm Russicism + filler + RAG verify + full audit all run
-7. Review phase: confirm cached screen loads, Claude reviews, 2 fix attempts if FAIL
-8. Validate failure → confirm mdx still runs (preview available)
-9. Module status JSON shows `draft` after RC mode, `reviewed` after full mode
-10. Cache invalidation: edit activities.yaml → confirm review detects stale cache
+### Rename
+- [ ] `py_compile scripts/build_module.py` passes
+- [ ] Tests pass: `pytest tests/test_build_module_v3_comprehensive.py tests/test_build_pipeline.py -x`
+- [ ] `scripts/build_module.py a1 1 --dry-run` works
+- [ ] `grep -r "build_module_v3" scripts/ tests/ docs/ claude_extensions/ --include="*.py" --include="*.sh" --include="*.md"` returns only orchestration/log files
+
+### Discover phase
+- [ ] `scripts/build_module.py a1 1 --dry-run` shows discover phase in sequence
+- [ ] `--skip-discover` skips it
+- [ ] `--force-phase discover` runs only discover
+- [ ] `--restart-from discover` runs discover → content → ... → mdx
+- [ ] `py_compile scripts/video_discovery.py` passes
+- [ ] `pytest tests/test_video_discovery.py -v` passes
+- [ ] Live test (with yt-dlp): `scripts/build_module.py a1 1 --force-phase discover` produces `discovery.yaml`

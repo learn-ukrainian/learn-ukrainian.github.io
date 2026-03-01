@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# At the Pharmacy
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -386,7 +392,39 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| аптека |  | pharmacy | noun | ж |  |
+| ліки |  | medicine | noun |  |  |
+| таблетка |  | pill | noun | ж |  |
+| рецепт |  | prescription | noun | ч |  |
+| біль |  | pain | noun | ч |  |
+| кашель |  | cough | noun | ч |  |
+| температура |  | fever | noun | ж |  |
+| приймати |  | to take | verb |  |  |
+| сироп |  | syrup | noun | ч |  |
+| мазь |  | ointment | noun | ж |  |
+| дозування |  | dosage | noun | с |  |
+| ефект |  | effect | noun | ч |  |
+| протипоказання |  | contraindication | noun | с |  |
+| алергія |  | allergy | noun | ж |  |
+| фармацевт |  | pharmacist | noun | ч |  |
+| застосування |  | application | noun | с |  |
+| застуда |  | cold | noun | ж |  |
+| капсула |  | capsule | noun | ж |  |
+| краплі |  | drops | noun |  |  |
+| фітотерапія |  | herbal medicine | noun | ж |  |
+| доба |  | 24 hours | noun | ж |  |
+| інструкція |  | instruction | noun | ж |  |
+| жарознижувальний |  | antipyretic | adj |  |  |
+| знеболювальний |  | painkiller | adj |  |  |
+| зберігати |  | to store | verb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: словник аптеки
 
@@ -445,32 +483,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Quiz client:load questions={JSON.parse(`[{"question": "Фармацевт каже: 'Який саме у вас кашель? Сухий чи вологий?' Що ви відповісте?", "options": [{"text": "Він сухий. Мені потрібен сироп.", "correct": true}, {"text": "Я не люблю пити сироп.", "correct": false}, {"text": "Дайте мені таблетки від голови.", "correct": false}, {"text": "У мене немає кашлю.", "correct": false}], "explanation": "Ви маєте описати свій симптом."}, {"question": "Ви хочете запитати фармацевта про натуральні ліки. Як це зробити?", "options": [{"text": "У вас є якийсь трав'яний збір?", "correct": true}, {"text": "Дайте мені найсильніші антибіотики.", "correct": false}, {"text": "Я хочу хімічні препарати.", "correct": false}, {"text": "Які побічні ефекти має цей сироп?", "correct": false}], "explanation": "Фітотерапія або трав'яні збори — це натуральні засоби."}, {"question": "Фармацевт питає: 'У вас є електронний рецепт від лікаря?' Якщо його немає, ви скажете...", "options": [{"text": "Ні, дайте мені щось безрецептурне.", "correct": true}, {"text": "Так, але я його загубив.", "correct": false}, {"text": "Я сам собі лікар.", "correct": false}, {"text": "Рецепт не потрібен для антибіотиків.", "correct": false}], "explanation": "Без рецепта ви не можете купити рецептурні препарати."}, {"question": "Ви читаєте інструкцію і бачите слово 'протипоказання'. Що ви там шукаєте?", "options": [{"text": "Чи можна мені пити ці ліки, якщо у мене є алергія.", "correct": true}, {"text": "Скільки разів на день пити сироп.", "correct": false}, {"text": "Яка ціна у цих ліків.", "correct": false}, {"text": "Де знаходиться аптека.", "correct": false}], "explanation": "Протипоказання вказують, кому не можна приймати ці ліки."}, {"question": "Ви хочете запитати про частоту прийому ліків. Що ви скажете?", "options": [{"text": "Як правильно приймати цей сироп?", "correct": true}, {"text": "Скільки коштує цей сироп?", "correct": false}, {"text": "З чого зроблений цей сироп?", "correct": false}, {"text": "У вас є інший сироп?", "correct": false}], "explanation": "Запитання про дозування та час прийому."}, {"question": "Фармацевт каже: 'Приймайте по одній таблетці до їди.' Коли ви маєте її пити?", "options": [{"text": "За тридцять хвилин перед тим, як я буду їсти.", "correct": true}, {"text": "Разом зі сніданком.", "correct": false}, {"text": "Відразу після того, як я поїм.", "correct": false}, {"text": "Тільки ввечері перед сном.", "correct": false}], "explanation": "До їди означає перед прийомом їжі."}, {"question": "Як попросити засіб від головного болю українською мовою?", "options": [{"text": "Дайте мені таблетки від голови.", "correct": true}, {"text": "Дайте мені таблетки для голови.", "correct": false}, {"text": "Я хочу таблетки на голову.", "correct": false}, {"text": "Мені потрібні таблетки з головою.", "correct": false}], "explanation": "Конструкція 'від' + родовий відмінок."}, {"question": "Фармацевт попереджає: 'Цей препарат викликає сонливість.' Що це означає?", "options": [{"text": "Це побічний ефект. Краще не сідати за кермо.", "correct": true}, {"text": "Це означає, що ліки дуже смачні.", "correct": false}, {"text": "Ліки можна приймати тільки вранці.", "correct": false}, {"text": "Ці ліки допомагають від безсоння.", "correct": false}], "explanation": "Сонливість — це стан, коли хочеться спати, це побічний ефект."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| аптека | [ɑˈptɛkɑ] | pharmacy | noun | ж |  |
-| ліки | [ˈlʲikɪ] | medicine | noun |  |  |
-| таблетка | [tɑˈblɛtkɑ] | pill | noun | ж |  |
-| рецепт | [rɛˈt͡sɛpt] | prescription | noun | ч |  |
-| біль | [bʲilʲ] | pain | noun | ч |  |
-| кашель | [ˈkɑʃɛlʲ] | cough | noun | ч |  |
-| температура | [tɛmpɛrɑˈturɑ] | fever | noun | ж |  |
-| приймати | [prɪjˈmɑtɪ] | to take | verb |  |  |
-| сироп | [sɪˈrɔp] | syrup | noun | ч |  |
-| мазь | [mɑzʲ] | ointment | noun | ж |  |
-| дозування | [dɔzuˈʋɑnʲːɑ] | dosage | noun | с |  |
-| ефект | [ɛˈfɛkt] | effect | noun | ч |  |
-| протипоказання | [prɔtɪpɔkɑˈzɑnʲːɑ] | contraindication | noun | с |  |
-| алергія | [ɑlɛrˈɦʲijɑ] | allergy | noun | ж |  |
-| фармацевт | [fɑrmɑˈt͡sɛu̯t] | pharmacist | noun | ч |  |
-| застосування | [zɑstɔsuˈʋɑnʲːɑ] | application | noun | с |  |
-| застуда | [zɑˈstudɑ] | cold | noun | ж |  |
-| капсула | [ˈkɑpsulɑ] | capsule | noun | ж |  |
-| краплі | [ˈkrɑplʲi] | drops | noun |  |  |
-| фітотерапія | [fʲitɔtɛrɑˈpʲijɑ] | herbal medicine | noun | ж |  |
-| доба | [dɔˈbɑ] | 24 hours | noun | ж |  |
-| інструкція | [inˈstrukt͡sʲijɑ] | instruction | noun | ж |  |
-| жарознижувальний | [ʒɑrɔˈznɪʒuʋɑlʲnɪj] | antipyretic | adj |  |  |
-| знеболювальний | [znɛˈbɔlʲuʋɑlʲnɪj] | painkiller | adj |  |  |
-| зберігати | [zbɛrʲiˈɦɑtɪ] | to store | verb |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

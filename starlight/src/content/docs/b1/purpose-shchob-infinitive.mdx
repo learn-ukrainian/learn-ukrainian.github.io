@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Підрядні речення мети: щоб + інфінітив
+{/**/}
 
 > **Чому це важливо?**
 > Кожна наша дія має певну мету. Ми вивчаємо мови, працюємо над проєктами, подорожуємо країнами та спілкуємося з новими людьми. Усе це ми робимо для досягнення певного результату. Українська мова пропонує надзвичайно логічний і лаконічний спосіб вираження наміру, якщо ініціатор дії залишається незмінним. Сьогодні ми детально розглянемо, як ефективно та природно використовувати сполучник «щоб» разом із неозначеною формою дієслова. Це фундаментальна навичка, яка дозволить вам будувати складні речення швидко, впевнено та без жодних граматичних зайвостей.
@@ -366,7 +372,44 @@ graph TD
 Українська мова має одну надзвичайно виразну рису — високу милозвучність. Постійне чергування синонімічних слів «щоб» та «аби» дуже допомагає уникнути фонетичної монотонності та робить будь-який текст живим і ритмічним. Завжди звертайте свідому увагу на цю унікальну мелодику, коли ви уважно слухаєте сучасні українські пісні, подкасти або переглядаєте вечірні новини. Спробуйте самостійно аналізувати, як відомі журналісти та письменники свідомо комбінують ці сполучники, створюючи справжні музичні шедеври зі звичайних слів у щоденному комунікативному потоці.
 :::
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **щоб** |  | in order to, so that | conjunction |  |
+| **для того щоб** |  | in order to (formal) | conjunction |  |
+| **аби** |  | in order to, only if | conjunction |  |
+| **мета** |  | purpose, goal | ім |  |
+| **ціль** |  | aim, target | ім |  |
+| **намір** |  | intention | ім |  |
+| **інфінітив** |  | infinitive | ім |  |
+| **причина** |  | reason, cause | ім |  |
+| **задля** |  | for the sake of | preposition |  |
+| **заради** |  | for the sake of | preposition |  |
+| **цілеспрямований** |  | purposeful, focused | adjective |  |
+| **навмисно** |  | intentionally, deliberately | adverb |  |
+| **досягати** |  | to achieve, to reach | дієсл |  |
+| **результат** |  | result | ім |  |
+| **прагнути** |  | to strive, to desire | дієсл |  |
+| **занурення** |  | immersion | ім |  |
+| **середовище** |  | environment | ім |  |
+| **вирішувати** |  | to solve, to decide | дієсл |  |
+| **дія** |  | action | ім |  |
+| **суб'єкт** |  | subject (actor) | ім |  |
+| **підмет** |  | subject (grammar) | ім |  |
+| **доконаний вид** |  | perfective aspect | фраза |  |
+| **недоконаний вид** |  | imperfective aspect | фраза |  |
+| **офіційно-діловий** |  | official business (style) | adjective |  |
+| **стійкість** |  | resilience, stability | ім |  |
+| **переслідувати** |  | to pursue, to chase | дієсл |  |
+| **збігатися** |  | to coincide | дієсл |  |
+| **заперечний** |  | negative (grammar) | adjective |  |
+| **прислів'я** |  | proverb | ім |  |
+| **зусилля** |  | effort | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Вибір сполучника та форми дієслова
 
@@ -417,37 +460,10 @@ graph TD
   <MarkTheWordsActivity instruction="Знайдіть і позначте всі інфінітиви (неозначені форми дієслова) у тексті." text="Ми вирушили в центр міста, щоб відвідати новий музей. Студенти відкрили словники, аби знайти переклад незнайомого слова. Я тренуюся щодня, щоб виграти наступні змагання. Я купив квиток, щоб поїхати до Одеси. Вони зібралися, щоб обговорити цей план. Потрібно багато читати, щоб вільно говорити українською." correctWords={JSON.parse(`["відвідати", "знайти", "виграти", "поїхати", "обговорити", "читати", "говорити"]`)} />
 </MarkTheWords>
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **щоб** | [ʃt͡ʃɔb] | in order to, so that | conjunction |  |
-| **для того щоб** | [dʲlʲɑ tɔˈɦɔ ʃt͡ʃɔb] | in order to (formal) | conjunction |  |
-| **аби** | [ɑˈbɪ] | in order to, only if | conjunction |  |
-| **мета** | [mɛˈtɑ] | purpose, goal | ім |  |
-| **ціль** | [t͡sʲilʲ] | aim, target | ім |  |
-| **намір** | [ˈnɑmʲir] | intention | ім |  |
-| **інфінітив** | [inʲfʲinʲiˈtɪu̯] | infinitive | ім |  |
-| **причина** | [prɪˈt͡ʃɪnɑ] | reason, cause | ім |  |
-| **задля** | [ˈzɑdʲlʲɑ] | for the sake of | preposition |  |
-| **заради** | [zɑˈrɑdɪ] | for the sake of | preposition |  |
-| **цілеспрямований** | [t͡sʲilɛsprʲɑˈmɔʋɑnɪj] | purposeful, focused | adjective |  |
-| **навмисно** | [nɑˈʋmɪsnɔ] | intentionally, deliberately | adverb |  |
-| **досягати** | [dɔsʲɑˈɦɑtɪ] | to achieve, to reach | дієсл |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **прагнути** | [ˈprɑɦnutɪ] | to strive, to desire | дієсл |  |
-| **занурення** | [zɑˈnurɛnʲːɑ] | immersion | ім |  |
-| **середовище** | [sɛrɛˈdɔʋɪʃt͡ʃɛ] | environment | ім |  |
-| **вирішувати** | [ʋɪˈrʲiʃuʋɑtɪ] | to solve, to decide | дієсл |  |
-| **дія** | [ˈdʲijɑ] | action | ім |  |
-| **суб'єкт** | [suˈbjɛkt] | subject (actor) | ім |  |
-| **підмет** | [pʲidmɛt] | subject (grammar) | ім |  |
-| **доконаний вид** | [dɔˈkɔnɑnɪj ʋɪd] | perfective aspect | фраза |  |
-| **недоконаний вид** | [nɛdɔˈkɔnɑnɪj ʋɪd] | imperfective aspect | фраза |  |
-| **офіційно-діловий** | [ɔfʲiˈt͡sʲijnɔ-dʲilɔˈʋɪj] | official business (style) | adjective |  |
-| **стійкість** | [ˈsʲtʲijkʲisʲtʲ] | resilience, stability | ім |  |
-| **переслідувати** | [pɛrɛˈsʲlʲiduʋɑtɪ] | to pursue, to chase | дієсл |  |
-| **збігатися** | [zʲbʲiɦɑtɪsʲɑ] | to coincide | дієсл |  |
-| **заперечний** | [zɑpɛˈrɛt͡ʃnɪj] | negative (grammar) | adjective |  |
-| **прислів'я** | [prɪˈsʲlʲiu̯jɑ] | proverb | ім |  |
-| **зусилля** | [zuˈsɪlʲːɑ] | effort | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

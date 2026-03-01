@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Дієприслівники доконаного виду
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -499,7 +505,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **прочитавши** |  | having read | adverbial participle |  |
+| **написавши** |  | having written | adverbial participle |  |
+| **зробивши** |  | having done | adverbial participle |  |
+| **прийшовши** |  | having arrived | adverbial participle |  |
+| **побачивши** |  | having seen | adverbial participle |  |
+| **дізнавшись** |  | having learned / having found out | adverbial participle |  |
+| **сховавши** |  | having hidden | adverbial participle |  |
+| **сівши** |  | having sat down | adverbial participle |  |
+| **доконаний вид** |  | perfective aspect | ім |  |
+| **попередність** |  | priority / sequence (temporal) | ім |  |
+| **просте ускладнене речення** |  | simple complicated sentence | ім |  |
+| **послідовність** |  | sequence / succession | ім |  |
+| **основа** |  | stem (morphology) | ім |  |
+| **дієприслівниковий зворот** |  | adverbial participial phrase | ім |  |
+| **дієприслівник** |  | adverbial participle | ім |  |
+| **інфінітив** |  | infinitive | ім |  |
+| **минулий час** |  | past tense | ім |  |
+| **суфікс** |  | suffix | ім |  |
+| **голосний звук** |  | vowel sound | ім |  |
+| **приголосний звук** |  | consonant sound | ім |  |
+| **завершена дія** |  | completed action | ім |  |
+| **підмет** |  | subject (grammar) | ім |  |
+| **присудок** |  | predicate (grammar) | ім |  |
+| **безособове речення** |  | impersonal sentence | ім |  |
+| **узгодження** |  | agreement / matching (grammar) | ім |  |
+| **наслідок** |  | consequence / result | ім |  |
+| **умова** |  | condition | ім |  |
+| **прислів'я** |  | proverb | ім |  |
+| **розсудливість** |  | prudence / reasonableness | ім |  |
+| **тло** |  | background (context) | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Утворіть дієприслівники: від інфінітива до звороту
 
@@ -557,37 +600,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Ранок розпочався дуже рано. [___:0]} з ліжка, Олена пішла на кухню. [___:1]} кави, вона почала збиратися. [___:2]} тепле пальто, вона вийшла на вулицю. [___:3]} на роботу, жінка одразу увімкнула комп'ютер. [___:4]} перші електронні листи, вона зрозуміла, що день буде важким. [___:5]} глибокий вдих, Олена почала працювати. [___:6]} усі термінові звіти, вона пішла на обідню перерву. [___:7]} смачний суп, вона відчула прилив енергії. [___:8]} до офісу, Олена продовжила зустрічі з клієнтами. [___:9]} про нові вимоги керівництва, вона швидко оновила план проекту. [___:10]} свої ідеї колегам, вона отримала їхню повну підтримку. [___:11]} фінальну презентацію, команда успішно завершила день. [___:12]} робоче місце, Олена вирушила додому. Лише [___:13]} на свій улюблений диван, вона дозволила собі справді відпочити."} blanks={JSON.parse(`[{"index": 0, "answer": "Вставши", "options": ["Вставши", "Встаючи", "Встати", "Встав"]}, {"index": 1, "answer": "Випивши", "options": ["Випивши", "Випиваючи", "Випити", "Випив"]}, {"index": 2, "answer": "Одягнувши", "options": ["Одягнувши", "Одягаючи", "Одягнути", "Одягнув"]}, {"index": 3, "answer": "Прийшовши", "options": ["Прийшовши", "Приходячи", "Прийти", "Прийшов"]}, {"index": 4, "answer": "Прочитавши", "options": ["Прочитавши", "Читаючи", "Прочитати", "Прочитав"]}, {"index": 5, "answer": "Зробивши", "options": ["Зробивши", "Роблячи", "Зробити", "Зробив"]}, {"index": 6, "answer": "Написавши", "options": ["Написавши", "Пишучи", "Написати", "Написав"]}, {"index": 7, "answer": "З'ївши", "options": ["З'ївши", "Їдучи", "З'їсти", "З'їв"]}, {"index": 8, "answer": "Повернувшись", "options": ["Повернувшись", "Повертаючись", "Повернутися", "Повернувся"]}, {"index": 9, "answer": "Дізнавшись", "options": ["Дізнавшись", "Дізнаючись", "Дізнатися", "Дізнався"]}, {"index": 10, "answer": "Показавши", "options": ["Показавши", "Показуючи", "Показати", "Показав"]}, {"index": 11, "answer": "Завершивши", "options": ["Завершивши", "Завершуючи", "Завершити", "Завершив"]}, {"index": 12, "answer": "Прибравши", "options": ["Прибравши", "Прибираючи", "Прибрати", "Прибрав"]}, {"index": 13, "answer": "Сівши", "options": ["Сівши", "Сідаючи", "Сісти", "Сів"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **прочитавши** | [prɔt͡ʃɪˈtɑu̯ʃɪ] | having read | adverbial participle |  |
-| **написавши** | [nɑpɪˈsɑu̯ʃɪ] | having written | adverbial participle |  |
-| **зробивши** | [zrɔˈbɪu̯ʃɪ] | having done | adverbial participle |  |
-| **прийшовши** | [prɪjˈʃɔu̯ʃɪ] | having arrived | adverbial participle |  |
-| **побачивши** | [pɔˈbɑt͡ʃɪu̯ʃɪ] | having seen | adverbial participle |  |
-| **дізнавшись** | [dʲiˈznɑu̯ʃɪsʲ] | having learned / having found out | adverbial participle |  |
-| **сховавши** | [sxɔˈʋɑu̯ʃɪ] | having hidden | adverbial participle |  |
-| **сівши** | [ˈsʲiu̯ʃɪ] | having sat down | adverbial participle |  |
-| **доконаний вид** | [dɔˈkɔnɑnɪj ʋɪd] | perfective aspect | ім |  |
-| **попередність** | [pɔpɛrɛdʲnʲisʲtʲ] | priority / sequence (temporal) | ім |  |
-| **просте ускладнене речення** | [ˈprɔˈstɛ uˈsklɑdnɛnɛ rɛt͡ʃɛnʲːɑ] | simple complicated sentence | ім |  |
-| **послідовність** | [pɔsʲlʲiˈdɔu̯nʲisʲtʲ] | sequence / succession | ім |  |
-| **основа** | [ɔˈsnɔʋɑ] | stem (morphology) | ім |  |
-| **дієприслівниковий зворот** | [dʲijɛprɪsʲlʲiu̯nɪˈkɔʋɪj zʋɔˈrɔt] | adverbial participial phrase | ім |  |
-| **дієприслівник** | [dʲijɛprɪˈsʲlʲiu̯nɪk] | adverbial participle | ім |  |
-| **інфінітив** | [inʲfʲinʲiˈtɪu̯] | infinitive | ім |  |
-| **минулий час** | [mɪˈnulɪj t͡ʃɑs] | past tense | ім |  |
-| **суфікс** | [ˈsufʲiks] | suffix | ім |  |
-| **голосний звук** | [ɦɔlɔˈsnɪj zʋuk] | vowel sound | ім |  |
-| **приголосний звук** | [ˈprɪɦɔlɔsnɪj zʋuk] | consonant sound | ім |  |
-| **завершена дія** | [zɑˈʋɛrʃɛnɑ ˈdʲijɑ] | completed action | ім |  |
-| **підмет** | [pʲidmɛt] | subject (grammar) | ім |  |
-| **присудок** | [ˈprɪsudɔk] | predicate (grammar) | ім |  |
-| **безособове речення** | [bɛzɔsɔˈbɔʋɛ rɛt͡ʃɛnʲːɑ] | impersonal sentence | ім |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | agreement / matching (grammar) | ім |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence / result | ім |  |
-| **умова** | [uˈmɔʋɑ] | condition | ім |  |
-| **прислів'я** | [prɪsʲlʲiu̯jɑ] | proverb | ім |  |
-| **розсудливість** | [rɔˈzsudlɪʋʲisʲtʲ] | prudence / reasonableness | ім |  |
-| **тло** | [tlɔ] | background (context) | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

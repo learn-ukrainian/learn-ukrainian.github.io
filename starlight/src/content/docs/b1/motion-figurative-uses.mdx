@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Переносні значення дієслів руху
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -349,7 +355,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **виходить, що** |  | it turns out that | фраза |  |
+| **дійти до висновку** |  | reach a conclusion | фраза |  |
+| **зайти занадто далеко** |  | go too far | фраза |  |
+| **відійти від теми** |  | digress | фраза |  |
+| **підійти до питання** |  | approach a question | фраза |  |
+| **обійтися без** |  | do without | фраза |  |
+| **перейти до справи** |  | get down to business | фраза |  |
+| **пройти через** |  | go through, experience | фраза |  |
+| **вийти з ситуації** |  | get out of a situation | фраза |  |
+| **зайти в глухий кут** |  | reach a dead end | фраза |  |
+| **до мене дійшло** |  | it dawned on me | фраза |  |
+| **вийти на новий рівень** |  | reach a new level | фраза |  |
+| **переносне значення** |  | figurative meaning | ім |  |
+| **буквальний зміст** |  | literal meaning | ім |  |
+| **фразеологізм** |  | phraseological unit, idiom | ім |  |
+| **зійти з розуму** |  | go crazy | фраза |  |
+| **збожеволіти** |  | go crazy | дієсл |  |
+| **сухим із води вийти** |  | get away with something | фраза |  |
+| **виникати** |  | emerge, arise | дієсл |  |
+| **спливати** |  | pass (about time) | дієсл |  |
+| **минати** |  | pass (about time) | дієсл |  |
+| **завершуватися** |  | come to an end | дієсл |  |
+| **гоголем ходити** |  | walk proudly, strut | фраза |  |
+| **п'ятами накивати** |  | run away quickly, take to one's heels | фраза |  |
+| **вискочити як Пилип з конопель** |  | jump in inappropriately | фраза |  |
+| **глухий кут** |  | dead end | ім |  |
+| **підсумок** |  | conclusion, summary | ім |  |
+| **долати** |  | overcome | дієсл |  |
+| **межа** |  | limit, border | ім |  |
+| **перешкода** |  | obstacle | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Знайдіть пару
 
@@ -415,37 +458,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <TrueFalse client:load items={JSON.parse(`[{"statement": "Вираз «прийти до висновку» є правильним з точки зору літературної норми.", "isTrue": false, "explanation": "Правильно: дійти висновку (або дійти до висновку), бо це ментальний процес."}, {"statement": "Коли людина поводиться дуже гордовито, про неї кажуть, що вона «гоголем ходить».", "isTrue": true, "explanation": "Це фразеологізм, який описує пихату поведінку."}, {"statement": "Дієслово «обійтися» завжди вимагає після себе знахідного відмінка.", "isTrue": false, "explanation": "Воно вимагає прийменника «без» і родового відмінка (без допомоги)."}, {"statement": "Для опису несподіваної і недоречної репліки використовують вираз «вискочити як Пилип з конопель».", "isTrue": true, "explanation": "Цей фразеологізм ідеально описує соціальну незграбність."}, {"statement": "Час в українській мові зазвичай «іде», тому правильно казати «час пішов дуже швидко».", "isTrue": false, "explanation": "Час не ходить, він минає або спливає."}, {"statement": "Щоб змінити тему розмови на головну, ми маємо «перейти до справи».", "isTrue": true, "explanation": "Префікс пере- вказує на зміну фокусу уваги."}, {"statement": "Вислів «п'ятами накивати» означає дуже швидко кудись побігти або втекти.", "isTrue": true, "explanation": "Метафора стрімкої, часто боягузливої втечі."}, {"statement": "Англійське «go crazy» можна буквально перекласти як «піти божевільним».", "isTrue": false, "explanation": "Правильний український відповідник — збожеволіти або зійти з розуму."}, {"statement": "Ситуація без виходу описується метафорою «зайти у глухий кут».", "isTrue": true, "explanation": "Цей вислів прийшов з архітектури (вулиця без проїзду)."}, {"statement": "З кризи можна тільки «вийти», оскільки криза уявляється як закритий простір.", "isTrue": true, "explanation": "Рух назовні з неприємного стану передається префіксом ви-."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **виходить, що** | [ʋɪxɔdɪtʲ, ʃt͡ʃɔ] | it turns out that | фраза |  |
-| **дійти до висновку** | [dʲijˈtɪ dɔ ˈʋɪsnɔu̯ku] | reach a conclusion | фраза |  |
-| **зайти занадто далеко** | [zɑjˈtɪ zɑˈnɑdtɔ dɑˈlɛkɔ] | go too far | фраза |  |
-| **відійти від теми** | [ʋʲidʲijˈtɪ ʋʲid ˈtɛmɪ] | digress | фраза |  |
-| **підійти до питання** | [pʲidʲijˈtɪ dɔ pɪˈtɑnʲːɑ] | approach a question | фраза |  |
-| **обійтися без** | [ɔbʲijˈtɪsʲɑ bɛz] | do without | фраза |  |
-| **перейти до справи** | [pɛrɛjˈtɪ dɔ ˈsprɑʋɪ] | get down to business | фраза |  |
-| **пройти через** | [prɔjˈtɪ ˈt͡ʃɛrɛz] | go through, experience | фраза |  |
-| **вийти з ситуації** | [ˈʋɪjtɪ z sɪtuˈɑt͡sʲiji] | get out of a situation | фраза |  |
-| **зайти в глухий кут** | [zɑjˈtɪ ʋ ɦluˈxɪj kut] | reach a dead end | фраза |  |
-| **до мене дійшло** | [dɔ mɛˈnɛ dʲijˈʃlɔ] | it dawned on me | фраза |  |
-| **вийти на новий рівень** | [ˈʋɪjtɪ nɑ nɔˈʋɪj ˈrʲiʋɛnʲ] | reach a new level | фраза |  |
-| **переносне значення** | [pɛrɛnɔsnɛ ˈznɑt͡ʃɛnʲːɑ] | figurative meaning | ім |  |
-| **буквальний зміст** | [buˈkʋɑlʲnɪj zʲmʲist] | literal meaning | ім |  |
-| **фразеологізм** | [frɑzɛɔlɔˈɦʲizm] | phraseological unit, idiom | ім |  |
-| **зійти з розуму** | [zʲijˈtɪ z ˈrɔzumu] | go crazy | фраза |  |
-| **збожеволіти** | [zbɔʒɛˈʋɔlʲitɪ] | go crazy | дієсл |  |
-| **сухим із води вийти** | [suˈxɪm iz ʋɔˈdɪ ˈʋɪjtɪ] | get away with something | фраза |  |
-| **виникати** | [ʋɪnɪkɑtɪ] | emerge, arise | дієсл |  |
-| **спливати** | [splɪˈʋɑtɪ] | pass (about time) | дієсл |  |
-| **минати** | [mɪˈnɑtɪ] | pass (about time) | дієсл |  |
-| **завершуватися** | [zɑˈʋɛrʃuʋɑtɪsʲɑ] | come to an end | дієсл |  |
-| **гоголем ходити** | [ˈɦɔɦɔlɛm xɔˈdɪtɪ] | walk proudly, strut | фраза |  |
-| **п'ятами накивати** | [ˈpjɑtɑmɪ nɑkɪˈʋɑtɪ] | run away quickly, take to one's heels | фраза |  |
-| **вискочити як Пилип з конопель** | [ˈʋɪskɔt͡ʃɪtɪ jɑk pɪˈlɪp z kɔnɔˈpɛlʲ] | jump in inappropriately | фраза |  |
-| **глухий кут** | [ɦluˈxɪj kut] | dead end | ім |  |
-| **підсумок** | [pʲid͡zsumɔk] | conclusion, summary | ім |  |
-| **долати** | [dɔˈlɑtɪ] | overcome | дієсл |  |
-| **межа** | [mɛˈʒɑ] | limit, border | ім |  |
-| **перешкода** | [pɛrɛˈʃkɔdɑ] | obstacle | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

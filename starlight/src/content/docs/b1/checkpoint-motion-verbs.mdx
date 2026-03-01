@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Контрольна точка: Дієслова руху
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -377,7 +383,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **йти пішки** |  | to walk | verb phrase |  |
+| **їхати автобусом** |  | to go by bus | verb phrase |  |
+| **їхати поїздом** |  | to go by train | verb phrase |  |
+| **приходити вчасно** |  | to arrive on time | verb phrase |  |
+| **переходити вулицю** |  | to cross the street | verb phrase |  |
+| **виходити з дому** |  | to leave the house | verb phrase |  |
+| **дощ іде** |  | it is raining | фраза |  |
+| **час іде** |  | time passes | фраза |  |
+| **час біжить** |  | time flies | фраза |  |
+| **виходити на зв'язок** |  | to get in touch | verb phrase |  |
+| **приходити на думку** |  | to occur to someone | verb phrase |  |
+| **далеко піти** |  | to go far / achieve success | verb phrase |  |
+| **сходити вниз** |  | to go down | verb phrase |  |
+| **переходити на українську** |  | to switch to Ukrainian | verb phrase |  |
+| **підніматися** |  | to go up | дієсл |  |
+| **заходити** |  | to enter / go in | дієсл |  |
+| **переходити** |  | to cross / transfer | дієсл |  |
+| **виходити** |  | to exit / go out | дієсл |  |
+| **виїжджати** |  | to drive out / leave | дієсл |  |
+| **покидати** |  | to leave / abandon | дієсл |  |
+| **рятуватися** |  | to escape / save oneself | дієсл |  |
+| **приїжджати** |  | to arrive by vehicle | дієсл |  |
+| **відходити** |  | to walk away / step back | дієсл |  |
+| **від'їжджати** |  | to drive away / depart | дієсл |  |
+| **переїжджати** |  | to drive across / move | дієсл |  |
+| **об'їжджати** |  | to drive around / bypass | дієсл |  |
+| **обходити** |  | to walk around / bypass | дієсл |  |
+| **підходити** |  | to approach on foot | дієсл |  |
+| **під'їжджати** |  | to approach by vehicle | дієсл |  |
+| **ходити по руках** |  | to pass from hand to hand | фраза |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Діагностичний тест: Спосіб, напрямок і час
 
@@ -428,37 +471,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
   <MarkTheWordsActivity instruction="Уважно прочитайте текст і позначте всі дієслова руху." text="Кожного ранку я швидко виходжу з дому, щоб не запізнитися в офіс. Спочатку я йду пішки до станції, а потім починаю сходити вниз ескалатором. У метро я завжди змушений переходити на іншу лінію. Коли поїзд під'їжджає до кінцевої зупинки, я вже готуюся виходити." correctWords={JSON.parse(`["виходжу", "йду", "сходити", "переходити", "під'їжджає", "виходити"]`)} />
 </MarkTheWords>
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **йти пішки** | [jtɪ ˈpʲiʃkɪ] | to walk | verb phrase |  |
-| **їхати автобусом** | [ˈjixɑtɪ ɑˈʋtɔbusɔm] | to go by bus | verb phrase |  |
-| **їхати поїздом** | [ˈjixɑtɪ ˈpɔjizdɔm] | to go by train | verb phrase |  |
-| **приходити вчасно** | [prɪˈxɔdɪtɪ ˈʍt͡ʃɑsnɔ] | to arrive on time | verb phrase |  |
-| **переходити вулицю** | [pɛrɛxɔdɪtɪ ˈʋulɪt͡sʲu] | to cross the street | verb phrase |  |
-| **виходити з дому** | [ʋɪxɔdɪtɪ z ˈdɔmu] | to leave the house | verb phrase |  |
-| **дощ іде** | [dɔʃt͡ʃ iˈdɛ] | it is raining | фраза |  |
-| **час іде** | [t͡ʃɑs iˈdɛ] | time passes | фраза |  |
-| **час біжить** | [t͡ʃɑs bʲiˈʒɪtʲ] | time flies | фраза |  |
-| **виходити на зв'язок** | [ʋɪxɔdɪtɪ nɑ zʋjɑzɔk] | to get in touch | verb phrase |  |
-| **приходити на думку** | [prɪˈxɔdɪtɪ nɑ ˈdumku] | to occur to someone | verb phrase |  |
-| **далеко піти** | [dɑˈlɛkɔ pʲitɪ] | to go far / achieve success | verb phrase |  |
-| **сходити вниз** | [sxɔdɪtɪ ʋnɪz] | to go down | verb phrase |  |
-| **переходити на українську** | [pɛrɛxɔdɪtɪ nɑ ukrɑˈjinʲsʲku] | to switch to Ukrainian | verb phrase |  |
-| **підніматися** | [pʲidʲnʲiˈmɑtɪsʲɑ] | to go up | дієсл |  |
-| **заходити** | [zɑxɔdɪtɪ] | to enter / go in | дієсл |  |
-| **переходити** | [pɛrɛxɔdɪtɪ] | to cross / transfer | дієсл |  |
-| **виходити** | [ʋɪxɔdɪtɪ] | to exit / go out | дієсл |  |
-| **виїжджати** | [ʋɪjiˈʒd͡ʒɑtɪ] | to drive out / leave | дієсл |  |
-| **покидати** | [pɔkɪdɑtɪ] | to leave / abandon | дієсл |  |
-| **рятуватися** | [rʲɑtuˈʋɑtɪsʲɑ] | to escape / save oneself | дієсл |  |
-| **приїжджати** | [prɪjiˈʒd͡ʒɑtɪ] | to arrive by vehicle | дієсл |  |
-| **відходити** | [ʋʲidxɔdɪtɪ] | to walk away / step back | дієсл |  |
-| **від'їжджати** | [ʋʲidjiˈʒd͡ʒɑtɪ] | to drive away / depart | дієсл |  |
-| **переїжджати** | [pɛrɛjiˈʒd͡ʒɑtɪ] | to drive across / move | дієсл |  |
-| **об'їжджати** | [ɔbjiˈʒd͡ʒɑtɪ] | to drive around / bypass | дієсл |  |
-| **обходити** | [ɔbxɔdɪtɪ] | to walk around / bypass | дієсл |  |
-| **підходити** | [pʲiˈdxɔdɪtɪ] | to approach on foot | дієсл |  |
-| **під'їжджати** | [pʲidjiˈʒd͡ʒɑtɪ] | to approach by vehicle | дієсл |  |
-| **ходити по руках** | [xɔˈdɪtɪ pɔ ruˈkɑx] | to pass from hand to hand | фраза |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

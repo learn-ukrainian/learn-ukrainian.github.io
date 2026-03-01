@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Aspect Introduction
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -389,7 +395,39 @@ Let's return to the Borsch Ritual. Language is a reflection of culture. The Ukra
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| робити / зробити |  | to do, to make | verb |  |  |
+| писати / написати |  | to write | verb |  |  |
+| читати / прочитати |  | to read | verb |  |  |
+| купувати / купити |  | to buy | verb |  |  |
+| пити / випити |  | to drink | verb |  |  |
+| їсти / з'їсти |  | to eat | verb |  |  |
+| ділити / поділити |  | to divide | verb |  |  |
+| говорити / сказати |  | to say, to speak | verb |  |  |
+| брати / взяти |  | to take | verb |  |  |
+| бачити / побачити |  | to see | verb |  |  |
+| давати / дати |  | to give | verb |  |  |
+| вчити / вивчити |  | to learn | verb |  |  |
+| продавати / продати |  | to sell | verb |  |  |
+| виходити / вийти |  | to go out | verb |  |  |
+| забувати / забути |  | to forget | verb |  |  |
+| вид |  | aspect | noun | ч |  |
+| недоконаний |  | imperfective | adjective |  |  |
+| доконаний |  | perfective | adjective |  |  |
+| процес |  | process | noun | ч |  |
+| результат |  | result | noun | ч |  |
+| тривалість |  | duration | noun | ж |  |
+| завершення |  | completion | noun | с |  |
+| повторення |  | repetition | noun | с |  |
+| раптом |  | suddenly | adverb |  |  |
+| щодня |  | every day | adverb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: Недоконаний і доконаний вид
 
@@ -467,32 +505,10 @@ Let's return to the Borsch Ritual. Language is a reflection of culture. The Ukra
   <ErrorCorrectionItem sentence="Я щойно виходив на вулицю." errorWord="виходив" correctForm="вийшов" options={JSON.parse(`["вийшов", "виходжу", "вийду", "виходити"]`)} explanation="Слово щойно означає тільки-но завершену дію (доконаний вид)." />
 </ErrorCorrection>
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| робити / зробити | [rɔˈbɪtɪ / zrɔˈbɪtɪ] | to do, to make | verb |  |  |
-| писати / написати | [pɪˈsɑtɪ / nɑpɪˈsɑtɪ] | to write | verb |  |  |
-| читати / прочитати | [t͡ʃɪˈtɑtɪ / prɔt͡ʃɪˈtɑtɪ] | to read | verb |  |  |
-| купувати / купити | [kupuˈʋɑtɪ / kuˈpɪtɪ] | to buy | verb |  |  |
-| пити / випити | [ˈpɪtɪ / ˈʋɪpɪtɪ] | to drink | verb |  |  |
-| їсти / з'їсти | [ˈjistɪ / ˈzjistɪ] | to eat | verb |  |  |
-| ділити / поділити | [dʲiˈlɪtɪ / pɔdʲiˈlɪtɪ] | to divide | verb |  |  |
-| говорити / сказати | [ɦɔʋɔˈrɪtɪ / skɑˈzɑtɪ] | to say, to speak | verb |  |  |
-| брати / взяти | [ˈbrɑtɪ / ˈʋzʲɑtɪ] | to take | verb |  |  |
-| бачити / побачити | [ˈbɑt͡ʃɪtɪ / pɔˈbɑt͡ʃɪtɪ] | to see | verb |  |  |
-| давати / дати | [dɑˈʋɑtɪ / ˈdɑtɪ] | to give | verb |  |  |
-| вчити / вивчити | [ˈʍt͡ʃɪtɪ / ˈʋɪu̯t͡ʃɪtɪ] | to learn | verb |  |  |
-| продавати / продати | [prɔdɑˈʋɑtɪ / prɔˈdɑtɪ] | to sell | verb |  |  |
-| виходити / вийти | [ʋɪxɔdɪtɪ / ˈʋɪjtɪ] | to go out | verb |  |  |
-| забувати / забути | [zɑbuˈʋɑtɪ / zɑˈbutɪ] | to forget | verb |  |  |
-| вид | [ʋɪd] | aspect | noun | ч |  |
-| недоконаний | [nɛdɔˈkɔnɑnɪj] | imperfective | adjective |  |  |
-| доконаний | [dɔˈkɔnɑnɪj] | perfective | adjective |  |  |
-| процес | [prɔˈt͡sɛs] | process | noun | ч |  |
-| результат | [rɛzulʲˈtɑt] | result | noun | ч |  |
-| тривалість | [trɪˈʋɑlʲisʲtʲ] | duration | noun | ж |  |
-| завершення | [zɑˈʋɛrʃɛnʲːɑ] | completion | noun | с |  |
-| повторення | [pɔˈʋtɔrɛnʲːɑ] | repetition | noun | с |  |
-| раптом | [ˈrɑptɔm] | suddenly | adverb |  |  |
-| щодня | [ʃt͡ʃɔˈdʲnʲɑ] | every day | adverb |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

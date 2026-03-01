@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Підрядні означальні: який
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -292,7 +298,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **який** |  | which / that / who | pronoun |  |
+| **яка** |  | which / that / who | pronoun |  |
+| **яке** |  | which / that / who | pronoun |  |
+| **які** |  | which / that / who | pronoun |  |
+| **підрядний** |  | subordinate / dependent | adjective | Grammar term (e.g., підрядне речення - subordinate clause). |
+| **означальний** |  | attributive / descriptive | adjective | Grammar term indicating descriptive function. |
+| **речення** |  | sentence / clause | ім | High frequency academic term. |
+| **антецедент** |  | antecedent | ім |  |
+| **узгодження** |  | agreement / coordination | ім | Grammatical agreement between words. |
+| **відмінок** |  | case | ім |  |
+| **сполучник** |  | conjunction | ім |  |
+| **головне речення** |  | main clause | ім | The base independent clause in a complex sentence. |
+| **складний** |  | complex / difficult | adjective | Used for both complex grammar and difficult tasks. |
+| **простий** |  | simple / basic | adjective | Opposite of складний. |
+| **зв'язок** |  | connection / link / bond | ім |  |
+| **алгоритм** |  | algorithm | ім | A set of rules to follow. |
+| **синтаксис** |  | syntax | ім |  |
+| **граматика** |  | grammar | ім |  |
+| **логіка** |  | logic | ім |  |
+| **помилка** |  | error / mistake | ім |  |
+| **формальний** |  | formal | adjective | Refers to professional or academic style. |
+| **розмовний** |  | colloquial / conversational | adjective | Refers to everyday informal language. |
+| **двозначність** |  | ambiguity | ім |  |
+| **вказувати** |  | to point out / to indicate | дієсл |  |
+| **об'єднувати** |  | to combine / to unite | дієсл |  |
+| **залежати** |  | to depend | дієсл | Used with the preposition від (від чогось). |
+| **визначати** |  | to determine / to define | дієсл |  |
+| **стилістика** |  | stylistics | ім |  |
+| **частина** |  | part / section | ім |  |
+| **правило** |  | rule | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Оберіть правильну форму займенника
 
@@ -343,37 +386,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <GroupSort client:load groups={JSON.parse(`{"Називний відмінок (Активний підмет)": ["студент, який уважно читає", "дівчина, яка зараз стоїть", "місто, яке швидко росте", "люди, які багато працюють"], "Місцевий відмінок (Локація події)": ["будинок, в якому я живу", "країна, в якій ми працюємо", "міста, в яких я бував", "стіл, на якому лежить книга"], "Орудний відмінок (Супровід або засіб)": ["друг, з яким я щиро говорю", "ручка, якою я швидко пишу", "колеги, з якими я працюю", "проект, над яким я думаю"]}`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **який** | [jɑˈkɪj] | which / that / who | pronoun |  |
-| **яка** | [jɑkɑ] | which / that / who | pronoun |  |
-| **яке** | [jɑˈkɛ] | which / that / who | pronoun |  |
-| **які** | [jɑˈkʲi] | which / that / who | pronoun |  |
-| **підрядний** | [pʲiˈdʲrʲɑdnɪj] | subordinate / dependent | adjective | Grammar term (e.g., підрядне речення - subordinate clause). |
-| **означальний** | [ɔznɑˈt͡ʃɑlʲnɪj] | attributive / descriptive | adjective | Grammar term indicating descriptive function. |
-| **речення** | [rɛt͡ʃɛnʲːɑ] | sentence / clause | ім | High frequency academic term. |
-| **антецедент** | [ɑntɛt͡sɛˈdɛnt] | antecedent | ім |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | agreement / coordination | ім | Grammatical agreement between words. |
-| **відмінок** | [ʋʲiˈdʲmʲinɔk] | case | ім |  |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | conjunction | ім |  |
-| **головне речення** | [ɦɔlɔˈʋnɛ rɛt͡ʃɛnʲːɑ] | main clause | ім | The base independent clause in a complex sentence. |
-| **складний** | [sklɑdnɪj] | complex / difficult | adjective | Used for both complex grammar and difficult tasks. |
-| **простий** | [ˈprɔˈstɪj] | simple / basic | adjective | Opposite of складний. |
-| **зв'язок** | [zʋjɑzɔk] | connection / link / bond | ім |  |
-| **алгоритм** | [ɑlɦɔˈrɪtm] | algorithm | ім | A set of rules to follow. |
-| **синтаксис** | [ˈsɪntɑksɪs] | syntax | ім |  |
-| **граматика** | [ɦrɑˈmɑtɪkɑ] | grammar | ім |  |
-| **логіка** | [ˈlɔɦʲikɑ] | logic | ім |  |
-| **помилка** | [ˈpɔˈmɪlkɑ] | error / mistake | ім |  |
-| **формальний** | [fɔrˈmɑlʲnɪj] | formal | adjective | Refers to professional or academic style. |
-| **розмовний** | [rɔˈzmɔu̯nɪj] | colloquial / conversational | adjective | Refers to everyday informal language. |
-| **двозначність** | [dʋɔˈznɑt͡ʃnʲisʲtʲ] | ambiguity | ім |  |
-| **вказувати** | [ˈʍkɑzuʋɑtɪ] | to point out / to indicate | дієсл |  |
-| **об'єднувати** | [ɔbjɛdnuʋɑtɪ] | to combine / to unite | дієсл |  |
-| **залежати** | [zɑˈlɛʒɑtɪ] | to depend | дієсл | Used with the preposition від (від чогось). |
-| **визначати** | [ʋɪznɑˈt͡ʃɑtɪ] | to determine / to define | дієсл |  |
-| **стилістика** | [stɪˈlʲistɪkɑ] | stylistics | ім |  |
-| **частина** | [t͡ʃɑˈstɪnɑ] | part / section | ім |  |
-| **правило** | [prɑʋɪlɔ] | rule | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

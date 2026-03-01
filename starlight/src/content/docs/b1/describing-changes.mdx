@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Опис змін
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -319,7 +325,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **зростати** |  | to grow / increase (abstract) | дієсл |  |
+| **рости** |  | to grow (physical) | дієсл |  |
+| **зменшуватися** |  | to decrease gradually | дієсл |  |
+| **змінюватися** |  | to change itself | дієсл |  |
+| **змінювати** |  | to change something | дієсл |  |
+| **перетворюватися** |  | to transform into | дієсл |  |
+| **підвищуватися** |  | to rise / increase (levels) | дієсл |  |
+| **знижуватися** |  | to lower / decline | дієсл |  |
+| **падати** |  | to fall | дієсл |  |
+| **ставати** |  | to become | дієсл |  |
+| **покращуватися** |  | to improve | дієсл |  |
+| **погіршуватися** |  | to worsen | дієсл |  |
+| **розвиватися** |  | to develop | дієсл |  |
+| **поступово** |  | gradually | adverb |  |
+| **різко** |  | sharply / suddenly | adverb |  |
+| **стрімко** |  | rapidly | adverb |  |
+| **значно** |  | significantly | adverb |  |
+| **більш** |  | more | adverb |  |
+| **менш** |  | less | adverb |  |
+| **краще** |  | better | adverb |  |
+| **гірше** |  | worse | adverb |  |
+| **гарно** |  | well / nicely | adverb |  |
+| **погано** |  | badly / poorly | adverb |  |
+| **процес** |  | process | ім |  |
+| **результат** |  | result | ім |  |
+| **кліматолог** |  | climatologist | ім |  |
+| **еволюція** |  | evolution | ім |  |
+| **трансформація** |  | transformation | ім |  |
+| **швидкість** |  | speed | ім |  |
+| **напрямок** |  | direction | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Знайдіть пару: дієслова та їх значення
 
@@ -370,37 +413,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Unjumble client:load items={JSON.parse(`[{"jumbled": "базові / ринкові / умови / різко / змінилися", "answer": "Базові ринкові умови різко змінилися"}, {"jumbled": "загальний / рівень / інфляції / в / країні / підвищується", "answer": "Загальний рівень інфляції в країні підвищується"}, {"jumbled": "купівельна / спроможність / наших / клієнтів / стрімко / падає", "answer": "Купівельна спроможність наших клієнтів стрімко падає"}, {"jumbled": "атмосферний / тиск / сьогодні / різко / знижується", "answer": "Атмосферний тиск сьогодні різко знижується"}, {"jumbled": "холодний / північний / вітер / швидко / змінить / напрямок", "answer": "Холодний північний вітер швидко змінить напрямок"}, {"jumbled": "ми / маємо / терміново / змінювати / свою / стратегію", "answer": "Ми маємо терміново змінювати свою стратегію"}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **зростати** | [zrɔˈstɑtɪ] | to grow / increase (abstract) | дієсл |  |
-| **рости** | [rɔˈstɪ] | to grow (physical) | дієсл |  |
-| **зменшуватися** | [ˈzmɛnʃuʋɑtɪsʲɑ] | to decrease gradually | дієсл |  |
-| **змінюватися** | [ˈzʲmʲinʲuʋɑtɪsʲɑ] | to change itself | дієсл |  |
-| **змінювати** | [ˈzʲmʲinʲuʋɑtɪ] | to change something | дієсл |  |
-| **перетворюватися** | [pɛrɛˈtʋɔrʲuʋɑtɪsʲɑ] | to transform into | дієсл |  |
-| **підвищуватися** | [pʲiˈdʋɪʃt͡ʃuʋɑtɪsʲɑ] | to rise / increase (levels) | дієсл |  |
-| **знижуватися** | [ˈznɪʒuʋɑtɪsʲɑ] | to lower / decline | дієсл |  |
-| **падати** | [ˈpɑdɑtɪ] | to fall | дієсл |  |
-| **ставати** | [stɑˈʋɑtɪ] | to become | дієсл |  |
-| **покращуватися** | [pɔˈkrɑʃt͡ʃuʋɑtɪsʲɑ] | to improve | дієсл |  |
-| **погіршуватися** | [pɔˈɦʲirʃuʋɑtɪsʲɑ] | to worsen | дієсл |  |
-| **розвиватися** | [rɔzʋɪˈʋɑtɪsʲɑ] | to develop | дієсл |  |
-| **поступово** | [pɔstuˈpɔʋɔ] | gradually | adverb |  |
-| **різко** | [ˈrʲizkɔ] | sharply / suddenly | adverb |  |
-| **стрімко** | [ˈstʲrʲimkɔ] | rapidly | adverb |  |
-| **значно** | [ˈznɑt͡ʃnɔ] | significantly | adverb |  |
-| **більш** | [bʲilʲʃ] | more | adverb |  |
-| **менш** | [mɛnʃ] | less | adverb |  |
-| **краще** | [ˈkrɑʃt͡ʃɛ] | better | adverb |  |
-| **гірше** | [ˈɦʲirʃɛ] | worse | adverb |  |
-| **гарно** | [ˈɦɑrnɔ] | well / nicely | adverb |  |
-| **погано** | [pɔˈɦɑnɔ] | badly / poorly | adverb |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **кліматолог** | [klʲimɑˈtɔlɔɦ] | climatologist | ім |  |
-| **еволюція** | [ɛʋɔˈlʲut͡sʲijɑ] | evolution | ім |  |
-| **трансформація** | [trɑnsfɔrˈmɑt͡sʲijɑ] | transformation | ім |  |
-| **швидкість** | [ˈʃʋɪdʲkʲisʲtʲ] | speed | ім |  |
-| **напрямок** | [ˈnɑprʲɑmɔk] | direction | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

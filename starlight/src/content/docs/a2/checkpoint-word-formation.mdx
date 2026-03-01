@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Checkpoint: Word Formation
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -436,7 +442,43 @@ Word formation is the beautiful, incredibly logical architectural framework of t
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| корінь |  | root | noun | ч |  |
+| префікс |  | prefix | noun | ч |  |
+| суфікс |  | suffix | noun | ч |  |
+| значення |  | meaning | noun | с |  |
+| утворення |  | formation | noun | с |  |
+| помилка |  | error | noun | ж |  |
+| слово |  | word | noun | с |  |
+| правильний |  | correct | adjective |  |  |
+| морфема |  | morpheme | noun | ж |  |
+| аналіз |  | analysis | noun | ч |  |
+| синтез |  | synthesis | noun | ч |  |
+| похідний |  | derivative | adjective |  |  |
+| радість |  | joy | noun | ж |  |
+| незалежність |  | independence | noun | ж |  |
+| навчання |  | studying | noun | с |  |
+| читання |  | reading | noun | с |  |
+| викладач |  | lecturer | noun | ч |  |
+| слухач |  | listener | noun | ч |  |
+| читач |  | reader | noun | ч |  |
+| паляниця |  | palianytsia (traditional bread) | noun | ж |  |
+| співробітник |  | coworker | noun | ч |  |
+| -ння |  | suffix for verbal nouns (processes) | suffix |  |  |
+| -ість |  | suffix for abstract nouns (qualities) | suffix |  |  |
+| -ач |  | suffix for agent nouns (people) | suffix |  |  |
+| -иця |  | suffix for specific items or places | suffix |  |  |
+| прикметник |  | adjective | noun | ч |  |
+| іменник |  | noun | noun | ч |  |
+| доконаний |  | perfective | adjective |  |  |
+| вид |  | aspect | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Перевірте знання: Основи словотворення
 
@@ -495,36 +537,10 @@ Word formation is the beautiful, incredibly logical architectural framework of t
 
 <Quiz client:load questions={JSON.parse(`[{"question": "Як правильно називається людина, яка дуже уважно слухає?", "options": [{"text": "слухач", "correct": true}, {"text": "викладач", "correct": false}, {"text": "читач", "correct": false}, {"text": "лікар", "correct": false}], "explanation": "Людина, яка слухає — це слухач (від дієслова слухати)."}, {"question": "Яке абстрактне слово означає глибоку концепцію великої радості?", "options": [{"text": "радість", "correct": true}, {"text": "молодість", "correct": false}, {"text": "незалежність", "correct": false}, {"text": "відповідальність", "correct": false}], "explanation": "Це іменник радість із типовим суфіксом якості -ість."}, {"question": "Як правильно сказати про безперервний процес підготовки до державного іспиту?", "options": [{"text": "підготування", "correct": true}, {"text": "підготовка", "correct": false}, {"text": "готування", "correct": false}, {"text": "розробка", "correct": false}], "explanation": "Літературна норма для процесу вимагає суфікса -ння (підготування)."}, {"question": "Як правильно українською мовою перекласти англійське слово independence?", "options": [{"text": "незалежність", "correct": true}, {"text": "радість", "correct": false}, {"text": "молодість", "correct": false}, {"text": "читання", "correct": false}], "explanation": "Слово independence перекладається як незалежність."}, {"question": "Яке слово означає людину, що щодня працює разом з вами?", "options": [{"text": "співробітник", "correct": true}, {"text": "співрозмовник", "correct": false}, {"text": "робітник", "correct": false}, {"text": "лісовик", "correct": false}], "explanation": "Префікс спів- та корінь роб- утворюють слово співробітник (coworker)."}, {"question": "Як ми традиційно називаємо смачний, круглий український хліб?", "options": [{"text": "паляниця", "correct": true}, {"text": "крамниця", "correct": false}, {"text": "таємниця", "correct": false}, {"text": "суниця", "correct": false}], "explanation": "Цей хліб має назву паляниця, і це відомий культурний символ."}, {"question": "Як правильно і грамотно перекласти фразу to sign a document?", "options": [{"text": "підписати", "correct": true}, {"text": "переписати", "correct": false}, {"text": "виписати", "correct": false}, {"text": "записати", "correct": false}], "explanation": "Дієслово sign перекладається як підписати (додати підпис знизу)."}, {"question": "Який універсальний прикметник логічно утворений від базового слова море?", "options": [{"text": "морський", "correct": true}, {"text": "київський", "correct": false}, {"text": "львівський", "correct": false}, {"text": "студентський", "correct": false}], "explanation": "Від слова море за допомогою суфікса -ський утворюється слово морський."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| корінь | [ˈkɔrʲinʲ] | root | noun | ч |  |
-| префікс | [prɛfʲiks] | prefix | noun | ч |  |
-| суфікс | [ˈsufʲiks] | suffix | noun | ч |  |
-| значення | [ˈznɑt͡ʃɛnʲːɑ] | meaning | noun | с |  |
-| утворення | [uˈtʋɔrɛnʲːɑ] | formation | noun | с |  |
-| помилка | [ˈpɔˈmɪlkɑ] | error | noun | ж |  |
-| слово | [ˈslɔʋɔ] | word | noun | с |  |
-| правильний | [prɑʋɪlʲnɪj] | correct | adjective |  |  |
-| морфема | [mɔrˈfɛmɑ] | morpheme | noun | ж |  |
-| аналіз | [ɑˈnɑlʲiz] | analysis | noun | ч |  |
-| синтез | [ˈsɪntɛz] | synthesis | noun | ч |  |
-| похідний | [pɔxʲidnɪj] | derivative | adjective |  |  |
-| радість | [ˈrɑdʲisʲtʲ] | joy | noun | ж |  |
-| незалежність | [nɛzɑˈlɛʒnʲisʲtʲ] | independence | noun | ж |  |
-| навчання | [nɑˈʋt͡ʃɑnʲːɑ] | studying | noun | с |  |
-| читання | [t͡ʃɪˈtɑnʲːɑ] | reading | noun | с |  |
-| викладач | [ʋɪklɑˈdɑt͡ʃ] | lecturer | noun | ч |  |
-| слухач | [sluˈxɑt͡ʃ] | listener | noun | ч |  |
-| читач | [t͡ʃɪˈtɑt͡ʃ] | reader | noun | ч |  |
-| паляниця | [pɑlʲɑˈnɪt͡sʲɑ] | palianytsia (traditional bread) | noun | ж |  |
-| співробітник | [sʲpʲiu̯rɔˈbʲitnɪk] | coworker | noun | ч |  |
-| -ння | [-nʲːɑ] | suffix for verbal nouns (processes) | suffix |  |  |
-| -ість | [-isʲtʲ] | suffix for abstract nouns (qualities) | suffix |  |  |
-| -ач | [-ɑt͡ʃ] | suffix for agent nouns (people) | suffix |  |  |
-| -иця | [-ɪt͡sʲɑ] | suffix for specific items or places | suffix |  |  |
-| прикметник | [prɪˈkmɛtnɪk] | adjective | noun | ч |  |
-| іменник | [iˈmɛnːɪk] | noun | noun | ч |  |
-| доконаний | [dɔˈkɔnɑnɪj] | perfective | adjective |  |  |
-| вид | [ʋɪd] | aspect | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

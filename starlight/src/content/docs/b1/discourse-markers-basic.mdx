@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Дискурсивні маркери: базові конектори
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -308,7 +314,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **також** |  | also, too | adverb | Standard addition; high frequency across all registers. |
+| **крім того** |  | besides, in addition | фраза | Adds a new argument; collocation: 'крім того варто додати'. |
+| **але** |  | but | conjunction | Strong contrast. |
+| **однак** |  | however | conjunction | Formal contrast. |
+| **тому що** |  | because | conjunction | High frequency causal. |
+| **отже** |  | therefore, so | conjunction | Logical conclusion marker. |
+| **наприклад** |  | for example | adverb | Standard exemplification. |
+| **тобто** |  | that is, meaning | conjunction | Clarification marker. |
+| **проте** |  | nevertheless, however | conjunction | Formal contrast synonym for 'однак'. |
+| **внаслідок** |  | as a result of | preposition | Formal consequence. |
+| **зокрема** |  | in particular | adverb | Specific example. |
+| **іншими словами** |  | in other words | фраза | Standard rephrasing marker. |
+| **до речі** |  | by the way | фраза | High frequency spoken marker. |
+| **власне** |  | actually, strictly | particle | Correction/precision; often 'власне кажучи'. |
+| **безумовно** |  | certainly, unconditionally | adverb | Emphatic agreement. |
+| **по-перше** |  | firstly | adverb | Structuring arguments. |
+| **по-друге** |  | secondly | adverb | Structuring arguments. |
+| **дискурсивний** |  | discursive | adjective |  |
+| **маркер** |  | marker | ім |  |
+| **конектор** |  | connector | ім |  |
+| **вставне слово** |  | introductory word | фраза |  |
+| **сполучник** |  | conjunction | ім |  |
+| **протиставлення** |  | contrast, opposition | ім |  |
+| **причина** |  | cause, reason | ім |  |
+| **наслідок** |  | effect, consequence | ім |  |
+| **підсумок** |  | summary, result | ім |  |
+| **зв'язність** |  | cohesion, connectivity | ім |  |
+| **емпатія** |  | empathy | ім |  |
+| **ввічливість** |  | politeness | ім |  |
+| **коротше** |  | in short, shorter | adverb | Informal summary, often 'коротше кажучи'. |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Знайдіть пару: маркер та його значення
 
@@ -365,37 +408,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <GroupSort client:load groups={JSON.parse(`{"Контраст та протиставлення": ["але", "однак", "проте", "натомість"], "Причина та наслідок": ["тому що", "через те що", "отже", "внаслідок"], "Уточнення та приклади": ["наприклад", "тобто", "зокрема", "іншими словами"], "Додавання інформації": ["також", "крім того", "до того ж", "по-перше"]}`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **також** | [ˈtɑˈkɔʒ] | also, too | adverb | Standard addition; high frequency across all registers. |
-| **крім того** | [krʲim tɔˈɦɔ] | besides, in addition | фраза | Adds a new argument; collocation: 'крім того варто додати'. |
-| **але** | [ɑˈlɛ] | but | conjunction | Strong contrast. |
-| **однак** | [ɔˈdnɑk] | however | conjunction | Formal contrast. |
-| **тому що** | [tɔˈmu ʃt͡ʃɔ] | because | conjunction | High frequency causal. |
-| **отже** | [ˈɔd͡ʒɛ] | therefore, so | conjunction | Logical conclusion marker. |
-| **наприклад** | [nɑˈprɪklɑd] | for example | adverb | Standard exemplification. |
-| **тобто** | [ˈtɔbtɔ] | that is, meaning | conjunction | Clarification marker. |
-| **проте** | [prɔˈtɛ] | nevertheless, however | conjunction | Formal contrast synonym for 'однак'. |
-| **внаслідок** | [ˈʋnɑsʲlʲidɔk] | as a result of | preposition | Formal consequence. |
-| **зокрема** | [zɔˈkrɛˈmɑ] | in particular | adverb | Specific example. |
-| **іншими словами** | [ˈinʃɪmɪ slɔˈʋɑmɪ] | in other words | фраза | Standard rephrasing marker. |
-| **до речі** | [dɔ ˈrɛt͡ʃʲi] | by the way | фраза | High frequency spoken marker. |
-| **власне** | [ˈʋlɑsnɛ] | actually, strictly | particle | Correction/precision; often 'власне кажучи'. |
-| **безумовно** | [bɛzuˈmɔu̯nɔ] | certainly, unconditionally | adverb | Emphatic agreement. |
-| **по-перше** | [pɔ-ˈpɛrʃɛ] | firstly | adverb | Structuring arguments. |
-| **по-друге** | [pɔ-ˈdruɦɛ] | secondly | adverb | Structuring arguments. |
-| **дискурсивний** | [dɪskurˈsɪu̯nɪj] | discursive | adjective |  |
-| **маркер** | [mɑrkɛr] | marker | ім |  |
-| **конектор** | [kɔnɛktɔr] | connector | ім |  |
-| **вставне слово** | [ʍstɑˈʋnɛ ˈslɔʋɔ] | introductory word | фраза |  |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | conjunction | ім |  |
-| **протиставлення** | [prɔtɪˈstɑu̯lɛnʲːɑ] | contrast, opposition | ім |  |
-| **причина** | [prɪˈt͡ʃɪnɑ] | cause, reason | ім |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | effect, consequence | ім |  |
-| **підсумок** | [pʲid͡zsumɔk] | summary, result | ім |  |
-| **зв'язність** | [ˈzʋjɑzʲnʲisʲtʲ] | cohesion, connectivity | ім |  |
-| **емпатія** | [ɛmˈpɑtʲijɑ] | empathy | ім |  |
-| **ввічливість** | [ˈʋʲːit͡ʃlɪʋʲisʲtʲ] | politeness | ім |  |
-| **коротше** | [kɔˈrɔt͡ʃʃɛ] | in short, shorter | adverb | Informal summary, often 'коротше кажучи'. |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

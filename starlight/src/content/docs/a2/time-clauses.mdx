@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Time Clauses
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -354,7 +360,39 @@ In Ukrainian, we strictly distinguish between time and condition:
 5. Наведіть ваш власний, оригінальний приклад використання динамічних слів «щойно» або «як тільки» у розмові.
 6. Яку прекрасну, старовинну українську традицію ми згадуємо, коли вивчаємо важливе правило «поки не зійде перша зірка»?
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| коли |  | when | conjunction |  |  |
+| поки |  | while | conjunction |  |  |
+| перед тим як |  | before [doing something] | conjunction |  |  |
+| після того як |  | after [doing something] | conjunction |  |  |
+| щойно |  | just / as soon as | adverb |  |  |
+| як тільки |  | as soon as | conjunction |  |  |
+| поки не |  | until | conjunction |  |  |
+| якщо |  | if | conjunction |  |  |
+| кожного разу, коли |  | every time when | phrase |  |  |
+| час |  | time | noun | ч |  |
+| подія |  | event | noun | ж |  |
+| момент |  | moment | noun | ч |  |
+| процес |  | process | noun | ч |  |
+| одночасно |  | simultaneously | adverb |  |  |
+| ранок |  | morning | noun | ч |  |
+| вечір |  | evening | noun | ч |  |
+| сніданок |  | breakfast | noun | ч |  |
+| подорож |  | trip / journey | noun | ж |  |
+| чекати |  | to wait | verb |  |  |
+| починати |  | to start / to begin | verb |  |  |
+| почати |  | to start / to begin | verb |  |  |
+| закінчувати |  | to finish | verb |  |  |
+| закінчити |  | to finish | verb |  |  |
+| приїхати |  | to arrive | verb |  |  |
+| гуляти |  | to walk | verb |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Перевірте знання: Часові сполучники
 
@@ -418,32 +456,10 @@ In Ukrainian, we strictly distinguish between time and condition:
 
 <Quiz client:load questions={JSON.parse(`[{"question": "До якої частини мови в українській граматиці належить слово 'поки'?", "options": [{"text": "сполучник", "correct": true}, {"text": "іменник", "correct": false}, {"text": "дієслово", "correct": false}, {"text": "прикметник", "correct": false}], "explanation": "Слово 'поки' поєднує частини складного речення, тому це сполучник."}, {"question": "Який відмінок ми використовуємо після прийменника 'перед' у фразі 'перед тим як'?", "options": [{"text": "орудний", "correct": true}, {"text": "родовий", "correct": false}, {"text": "давальний", "correct": false}, {"text": "називний", "correct": false}], "explanation": "Прийменник 'перед' завжди вимагає орудного відмінка (ким/чим -> тим)."}, {"question": "Який відмінок ми використовуємо після прийменника 'після' у фразі 'після того як'?", "options": [{"text": "родовий", "correct": true}, {"text": "орудний", "correct": false}, {"text": "знахідний", "correct": false}, {"text": "місцевий", "correct": false}], "explanation": "Прийменник 'після' завжди вимагає родового відмінка (кого/чого -> того)."}, {"question": "Яка давня культурна традиція пов'язана зі структурою 'поки не' в Україні?", "options": [{"text": "Свята Вечеря", "correct": true}, {"text": "Великдень", "correct": false}, {"text": "Івана Купала", "correct": false}, {"text": "Масниця", "correct": false}], "explanation": "Традиція чекати, 'поки не зійде перша зірка', стосується саме Різдвяного святвечора."}, {"question": "Яке динамічне слово означає абсолютно те ж саме, що і фраза 'як тільки'?", "options": [{"text": "щойно", "correct": true}, {"text": "поки", "correct": false}, {"text": "коли", "correct": false}, {"text": "якщо", "correct": false}], "explanation": "Слова 'щойно' та 'як тільки' є абсолютними синонімами для негайних дій."}, {"question": "Яке специфічне слово ідеально описує дію, яка триває певний тривалий час?", "options": [{"text": "поки", "correct": true}, {"text": "коли", "correct": false}, {"text": "щойно", "correct": false}, {"text": "як тільки", "correct": false}], "explanation": "Для процесів та тривалих паралельних дій ми завжди використовуємо 'поки'."}, {"question": "Що саме ми обов'язково додаємо після прийменника 'перед', якщо далі йде дієслово?", "options": [{"text": "тим як", "correct": true}, {"text": "того як", "correct": false}, {"text": "тому що", "correct": false}, {"text": "так як", "correct": false}], "explanation": "Слова 'тим як' створюють міцний граматичний місток для наступного дієслова."}, {"question": "Яке слово ми використовуємо виключно для подій, які ми не впевнені, чи стануться?", "options": [{"text": "якщо", "correct": true}, {"text": "коли", "correct": false}, {"text": "поки", "correct": false}, {"text": "щойно", "correct": false}], "explanation": "Слово 'якщо' - це маркер невпевненості та можливої умови."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| коли | [kɔˈlɪ] | when | conjunction |  |  |
-| поки | [ˈpɔkɪ] | while | conjunction |  |  |
-| перед тим як | [ˈpɛrɛd tɪm jɑk] | before [doing something] | conjunction |  |  |
-| після того як | [ˈpʲisʲlʲɑ tɔˈɦɔ jɑk] | after [doing something] | conjunction |  |  |
-| щойно | [ˈʃt͡ʃɔjnɔ] | just / as soon as | adverb |  |  |
-| як тільки | [jɑk ˈtʲilʲkɪ] | as soon as | conjunction |  |  |
-| поки не | [ˈpɔkɪ nɛ] | until | conjunction |  |  |
-| якщо | [jɑˈkʃt͡ʃɔ] | if | conjunction |  |  |
-| кожного разу, коли | [ˈkɔʒnɔɦɔ ˈrɑzu, kɔˈlɪ] | every time when | phrase |  |  |
-| час | [t͡ʃɑs] | time | noun | ч |  |
-| подія | [pɔˈdʲijɑ] | event | noun | ж |  |
-| момент | [mɔˈmɛnt] | moment | noun | ч |  |
-| процес | [prɔˈt͡sɛs] | process | noun | ч |  |
-| одночасно | [ɔdnɔˈt͡ʃɑsnɔ] | simultaneously | adverb |  |  |
-| ранок | [ˈrɑnɔk] | morning | noun | ч |  |
-| вечір | [ˈʋɛt͡ʃʲir] | evening | noun | ч |  |
-| сніданок | [sʲnʲiˈdɑnɔk] | breakfast | noun | ч |  |
-| подорож | [ˈpɔdɔrɔʒ] | trip / journey | noun | ж |  |
-| чекати | [t͡ʃɛˈkɑtɪ] | to wait | verb |  |  |
-| починати | [pɔt͡ʃɪˈnɑtɪ] | to start / to begin | verb |  |  |
-| почати | [pɔˈt͡ʃɑtɪ] | to start / to begin | verb |  |  |
-| закінчувати | [zɑˈkʲint͡ʃuʋɑtɪ] | to finish | verb |  |  |
-| закінчити | [zɑˈkʲinˈt͡ʃɪtɪ] | to finish | verb |  |  |
-| приїхати | [prɪˈjixɑtɪ] | to arrive | verb |  |  |
-| гуляти | [ɦuˈlʲɑtɪ] | to walk | verb |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

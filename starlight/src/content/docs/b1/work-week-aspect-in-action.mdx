@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Робочий тиждень: вид у дії
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -406,7 +412,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **завдання** |  | task | ім |  |
+| **звіт** |  | report | ім |  |
+| **дедлайн** |  | deadline | ім |  |
+| **кінцевий термін** |  | final deadline | ім |  |
+| **зустріч** |  | meeting | ім |  |
+| **нарада** |  | meeting, conference | ім |  |
+| **результат** |  | result | ім |  |
+| **процес** |  | process | ім |  |
+| **колега** |  | colleague | ім |  |
+| **начальник** |  | boss, manager | ім |  |
+| **реченець** |  | deadline | ім |  |
+| **гнучкий графік** |  | flexible schedule | ім |  |
+| **віддалена робота** |  | remote work | ім |  |
+| **презентація** |  | presentation | ім |  |
+| **відпустка** |  | vacation, leave | ім |  |
+| **план** |  | plan | ім |  |
+| **виконувати** |  | to execute, perform (impf) | дієсл |  |
+| **виконати** |  | to execute, perform (pf) | дієсл |  |
+| **складати** |  | to compile, put together (impf) | дієсл |  |
+| **скласти** |  | to compile, put together (pf) | дієсл |  |
+| **подавати** |  | to submit (impf) | дієсл |  |
+| **подати** |  | to submit (pf) | дієсл |  |
+| **призначати** |  | to schedule, appoint (impf) | дієсл |  |
+| **призначити** |  | to schedule, appoint (pf) | дієсл |  |
+| **скасовувати** |  | to cancel (impf) | дієсл |  |
+| **скасувати** |  | to cancel (pf) | дієсл |  |
+| **переносити** |  | to reschedule, move (impf) | дієсл |  |
+| **перенести** |  | to reschedule, move (pf) | дієсл |  |
+| **готувати** |  | to prepare (impf) | дієсл |  |
+| **підготувати** |  | to prepare (pf) | дієсл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Робочі звіти та правильний вид
 
@@ -457,37 +500,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <TrueFalse client:load items={JSON.parse(`[{"statement": "Дієслова доконаного виду мають форму теперішнього часу.", "isTrue": false, "explanation": "Дієслова доконаного виду мають лише форми минулого та майбутнього часу."}, {"statement": "Слово 'дедлайн' в українській мові чоловічого роду.", "isTrue": true, "explanation": "Запозичення, що закінчуються на приголосний звук, зазвичай належать до чоловічого роду."}, {"statement": "Фраза 'Я написав звіт' означає, що процес ще триває.", "isTrue": false, "explanation": "Це доконаний вид, який означає повністю завершену дію та гарантований результат."}, {"statement": "Для опису щоденної офісної рутини ми використовуємо недоконаний вид.", "isTrue": true, "explanation": "Регулярні дії (щодня, завжди, зазвичай) передаються недоконаним видом."}, {"statement": "Слово 'реченець' є питомо українським синонімом до слова 'дедлайн'.", "isTrue": true, "explanation": "Це слово часто пропонують як красиву заміну іншомовному терміну."}, {"statement": "Якщо ви працюєте з дому, це називається віддалена робота.", "isTrue": true, "explanation": "Це дуже поширений термін для роботи поза офісом, популярний в IT-сфері."}, {"statement": "Ви можете використати дієслово доконаного виду разом зі словом 'зараз'.", "isTrue": false, "explanation": "Слово 'зараз' позначає поточний процес, тому вимагає використання недоконаного виду."}, {"statement": "Слово 'планірка' — це дуже офіційний термін для зустрічі.", "isTrue": false, "explanation": "Це розмовне, неформальне слово; офіційним терміном є 'нарада'."}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **завдання** | [zɑˈʋdɑnʲːɑ] | task | ім |  |
-| **звіт** | [zʲʋʲit] | report | ім |  |
-| **дедлайн** | [dɛdlɑjn] | deadline | ім |  |
-| **кінцевий термін** | [kʲinˈt͡sɛʋɪj ˈtɛrmʲin] | final deadline | ім |  |
-| **зустріч** | [ˈzustʲrʲit͡ʃ] | meeting | ім |  |
-| **нарада** | [nɑˈrɑdɑ] | meeting, conference | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **процес** | [prɔˈt͡sɛs] | process | ім |  |
-| **колега** | [kɔˈlɛɦɑ] | colleague | ім |  |
-| **начальник** | [nɑˈt͡ʃɑlʲnɪk] | boss, manager | ім |  |
-| **реченець** | [rɛt͡ʃɛˈnɛt͡sʲ] | deadline | ім |  |
-| **гнучкий графік** | [ɦnuˈt͡ʃkɪj ˈɦrɑfʲik] | flexible schedule | ім |  |
-| **віддалена робота** | [ʋʲiˈdːɑlɛnɑ rɔˈbɔtɑ] | remote work | ім |  |
-| **презентація** | [prɛzɛnˈtɑt͡sʲijɑ] | presentation | ім |  |
-| **відпустка** | [ʋʲiˈdpustkɑ] | vacation, leave | ім |  |
-| **план** | [plɑn] | plan | ім |  |
-| **виконувати** | [ʋɪˈkɔnuʋɑtɪ] | to execute, perform (impf) | дієсл |  |
-| **виконати** | [ˈʋɪkɔnɑtɪ] | to execute, perform (pf) | дієсл |  |
-| **складати** | [sklɑˈdɑtɪ] | to compile, put together (impf) | дієсл |  |
-| **скласти** | [ˈsklɑstɪ] | to compile, put together (pf) | дієсл |  |
-| **подавати** | [pɔdɑˈʋɑtɪ] | to submit (impf) | дієсл |  |
-| **подати** | [pɔˈdɑtɪ] | to submit (pf) | дієсл |  |
-| **призначати** | [prɪznɑˈt͡ʃɑtɪ] | to schedule, appoint (impf) | дієсл |  |
-| **призначити** | [prɪˈznɑˈt͡ʃɪtɪ] | to schedule, appoint (pf) | дієсл |  |
-| **скасовувати** | [skɑˈsɔʋuʋɑtɪ] | to cancel (impf) | дієсл |  |
-| **скасувати** | [skɑsuˈʋɑtɪ] | to cancel (pf) | дієсл |  |
-| **переносити** | [pɛrɛnɔsɪtɪ] | to reschedule, move (impf) | дієсл |  |
-| **перенести** | [pɛrɛnɛˈstɪ] | to reschedule, move (pf) | дієсл |  |
-| **готувати** | [ɦɔtuˈʋɑtɪ] | to prepare (impf) | дієсл |  |
-| **підготувати** | [pʲidɦɔtuˈʋɑtɪ] | to prepare (pf) | дієсл |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

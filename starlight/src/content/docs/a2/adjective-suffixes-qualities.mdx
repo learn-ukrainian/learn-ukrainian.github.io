@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Adjective Suffixes — Qualities
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -312,7 +318,39 @@ Now it is clearly time to actively practice your personal emotional register con
 4. Який сильний суфікс ефективно створює емоційну гіперболу або означає щось гігантське?
 5. Яка головна емоційна різниця між словами великий та величезний у розмові?
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| маленький |  | small/little | adjective |  |  |
+| гарненький |  | pretty/nice (diminutive) | adjective |  |  |
+| тепленький |  | warm (diminutive) | adjective |  |  |
+| рідненький |  | dear/kindred (diminutive) | adjective |  |  |
+| тихенький |  | quiet (diminutive) | adjective |  |  |
+| малесенький |  | tiny (emphatic diminutive) | adjective |  |  |
+| чистесенький |  | pure/clean (emphatic diminutive) | adjective |  |  |
+| страшенний |  | terrible/huge (expressive) | adjective |  |  |
+| здоровенний |  | huge/enormous (expressive) | adjective |  |  |
+| величезний |  | huge/gigantic | adjective |  |  |
+| київський |  | Kyiv (adjective) | adjective |  |  |
+| львівський |  | Lviv (adjective) | adjective |  |  |
+| український |  | Ukrainian | adjective |  |  |
+| студентський |  | student (adjective) | adjective |  |  |
+| білесенький |  | white (emphatic diminutive) | adjective |  |  |
+| тонесенький |  | thin (emphatic diminutive) | adjective |  |  |
+| довжелезний |  | long (emphatic) | adjective |  |  |
+| козацький |  | Cossack (adjective) | adjective |  |  |
+| празький |  | Prague (adjective) | adjective |  |  |
+| малий |  | small (neutral) | adjective |  |  |
+| чистий |  | clean (neutral) | adjective |  |  |
+| довгий |  | long (neutral) | adjective |  |  |
+| паперовий |  | paper (adjective) | adjective |  |  |
+| осінній |  | autumnal | adjective |  |  |
+| дерев'яний |  | wooden | adjective |  |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: нейтральний прикметник та пестлива форма
 
@@ -371,32 +409,10 @@ Now it is clearly time to actively practice your personal emotional register con
 
 <Cloze client:load passage={"Українська мова має унікальну систему суфіксів. Якщо ми хочемо показати любов до когось, ми використовуємо [___:0]} форми. Наприклад, замість простого слова малий ми кажемо [___:1]}. А замість звичайного слова теплий ми з радістю кажемо [___:2]}. Якщо ж певний предмет має надзвичайно великий розмір, ми створюємо граматичну [___:3]}. Замість слова великий ми часто використовуємо [___:4]}, а замість слова здоровий — [___:5]}. Також існують суворі правила написання для географічних назв. Наприклад, від назви міста Прага утворюється прикметник [___:6]}, а від слова козак — [___:7]}. Відносні прикметники дуже важливі, бо вони вказують на конкретний матеріал: стіл з дерева — це [___:8]} стіл, а документ з паперу — [___:9]} документ. Крім того, від слова студент ми утворюємо [___:10]} квиток. На ринку продавець може запропонувати вам [___:11]} кавунчик, щоб ви відчули себе приємно. Але в офісі ви не можете просити директора поставити [___:12]}, бо це серйозна невідповідність [___:13]}."} blanks={JSON.parse(`[{"index": 0, "answer": "пестливі", "options": ["пестливі", "величезні", "відносні", "страшенні"]}, {"index": 1, "answer": "маленький", "options": ["маленький", "величезний", "страшенний", "паперовий"]}, {"index": 2, "answer": "тепленький", "options": ["тепленький", "празький", "дерев'яний", "козацький"]}, {"index": 3, "answer": "гіперболу", "options": ["гіперболу", "пестливість", "відносність", "помилку"]}, {"index": 4, "answer": "величезний", "options": ["величезний", "малесенький", "гарненький", "тихенький"]}, {"index": 5, "answer": "здоровенний", "options": ["здоровенний", "чистесенький", "рідненький", "осінній"]}, {"index": 6, "answer": "празький", "options": ["празький", "пражський", "працький", "прагський"]}, {"index": 7, "answer": "козацький", "options": ["козацький", "козакський", "козаський", "козазький"]}, {"index": 8, "answer": "дерев'яний", "options": ["дерев'яний", "осінній", "студентський", "львівський"]}, {"index": 9, "answer": "паперовий", "options": ["паперовий", "дерев'яний", "козацький", "київський"]}, {"index": 10, "answer": "студентський", "options": ["студентський", "студенський", "студенцький", "студентний"]}, {"index": 11, "answer": "гарненький", "options": ["гарненький", "величезний", "довжелезний", "страшенний"]}, {"index": 12, "answer": "підписочок", "options": ["підписочок", "підпис", "документ", "контракт"]}, {"index": 13, "answer": "регістру", "options": ["регістру", "матеріалу", "розміру", "суфіксу"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| маленький | [mɑˈlɛnʲkɪj] | small/little | adjective |  |  |
-| гарненький | [ɦɑrˈnɛnʲkɪj] | pretty/nice (diminutive) | adjective |  |  |
-| тепленький | [tɛˈplɛnʲkɪj] | warm (diminutive) | adjective |  |  |
-| рідненький | [rʲiˈdnɛnʲkɪj] | dear/kindred (diminutive) | adjective |  |  |
-| тихенький | [tɪˈxɛnʲkɪj] | quiet (diminutive) | adjective |  |  |
-| малесенький | [mɑˈlɛsɛnʲkɪj] | tiny (emphatic diminutive) | adjective |  |  |
-| чистесенький | [t͡ʃɪˈstɛsɛnʲkɪj] | pure/clean (emphatic diminutive) | adjective |  |  |
-| страшенний | [strɑˈʃɛnːɪj] | terrible/huge (expressive) | adjective |  |  |
-| здоровенний | [zdɔrɔˈʋɛnːɪj] | huge/enormous (expressive) | adjective |  |  |
-| величезний | [ʋɛlɪˈt͡ʃɛznɪj] | huge/gigantic | adjective |  |  |
-| київський | [ˈkɪjiu̯sʲkɪj] | Kyiv (adjective) | adjective |  |  |
-| львівський | [lʲˈʋʲiu̯sʲkɪj] | Lviv (adjective) | adjective |  |  |
-| український | [ukrɑˈjinʲsʲkɪj] | Ukrainian | adjective |  |  |
-| студентський | [stuˈdɛnʲsʲkɪj] | student (adjective) | adjective |  |  |
-| білесенький | [bʲiˈlɛsɛnʲkɪj] | white (emphatic diminutive) | adjective |  |  |
-| тонесенький | [tɔˈnɛsɛnʲkɪj] | thin (emphatic diminutive) | adjective |  |  |
-| довжелезний | [dɔu̯ʒɛˈlɛznɪj] | long (emphatic) | adjective |  |  |
-| козацький | [kɔˈzɑt͡sʲkɪj] | Cossack (adjective) | adjective |  |  |
-| празький | [ˈprɑzʲkɪj] | Prague (adjective) | adjective |  |  |
-| малий | [mɑˈlɪj] | small (neutral) | adjective |  |  |
-| чистий | [ˈt͡ʃɪstɪj] | clean (neutral) | adjective |  |  |
-| довгий | [ˈdɔu̯ɦɪj] | long (neutral) | adjective |  |  |
-| паперовий | [pɑpɛˈrɔʋɪj] | paper (adjective) | adjective |  |  |
-| осінній | [ɔˈsʲinʲːij] | autumnal | adjective |  |  |
-| дерев'яний | [dɛrɛˈʋjɑnɪj] | wooden | adjective |  |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

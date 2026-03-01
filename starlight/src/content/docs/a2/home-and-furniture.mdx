@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Home and Furniture
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -360,7 +366,39 @@ Let's look closely at the word **підлога** (floor), which is essential fo
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| квартира |  | apartment | noun | ж |  |
+| будинок |  | house | noun | ч |  |
+| кімната |  | room | noun | ж |  |
+| вітальня |  | living room | noun | ж |  |
+| спальня |  | bedroom | noun | ж |  |
+| кухня |  | kitchen | noun | ж |  |
+| ванна |  | bathroom | noun | ж |  |
+| меблі |  | furniture | noun | pl |  |
+| стіл |  | table | noun | ч |  |
+| стілець |  | chair | noun | ч |  |
+| ліжко |  | bed | noun | с |  |
+| диван |  | sofa | noun | ч |  |
+| шафа |  | wardrobe | noun | ж |  |
+| підлога |  | floor | noun | ж |  |
+| стіна |  | wall | noun | ж |  |
+| килим |  | carpet | noun | ч |  |
+| холодильник |  | refrigerator | noun | ч |  |
+| пральна машина |  | washing machine | noun | ж |  |
+| поріг |  | threshold | noun | ч |  |
+| кут |  | corner | noun | ч | на розі (at the corner) |
+| Домовик |  | Domovyk (household spirit) | noun | ч |  |
+| ремонт |  | renovation | noun | ч |  |
+| обідній стіл |  | dining table | noun | ч |  |
+| письмовий стіл |  | desk | noun | ч |  |
+| шафа-купе |  | sliding wardrobe | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: кімнати та меблі
 
@@ -419,32 +457,10 @@ Let's look closely at the word **підлога** (floor), which is essential fo
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Ми купили велике двоспальне ____ для нашої нової спальні.", "answer": "ліжко", "options": ["ліжко", "шафа", "диван", "стіл"]}, {"sentence": "Моя мама дуже любить готувати смачний борщ на ____.", "answer": "кухні", "options": ["кухні", "спальні", "вітальні", "ванній"]}, {"sentence": "Обов'язково треба витирати взуття, коли переступаєш дерев'яний ____.", "answer": "поріг", "options": ["поріг", "килим", "стіл", "диван"]}, {"sentence": "Бабуся просить не сідати на ____ столу, бо це дуже погана прикмета.", "answer": "розі", "options": ["розі", "центрі", "початку", "кінці"]}, {"sentence": "Мій теплий зимовий одяг акуратно висить у високій ____.", "answer": "шафі", "options": ["шафі", "тумбочці", "валізі", "коробці"]}, {"sentence": "Вся родина ввечері збирається разом у великій світлій ____.", "answer": "вітальні", "options": ["вітальні", "ванній", "шафі", "спальні"]}, {"sentence": "Цей дерев'яний ____ має чотири зручні ніжки і підходить для роботи.", "answer": "стілець", "options": ["стілець", "стіл", "диван", "килим"]}, {"sentence": "Після прання мокрі речі дістають із автоматичної пральної ____.", "answer": "машини", "options": ["машини", "каструлі", "коробки", "шафи"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| квартира | [kʋɑrˈtɪrɑ] | apartment | noun | ж |  |
-| будинок | [buˈdɪnɔk] | house | noun | ч |  |
-| кімната | [kʲiˈmnɑtɑ] | room | noun | ж |  |
-| вітальня | [ʋʲiˈtɑlʲnʲɑ] | living room | noun | ж |  |
-| спальня | [ˈspɑlʲnʲɑ] | bedroom | noun | ж |  |
-| кухня | [ˈkuxnʲɑ] | kitchen | noun | ж |  |
-| ванна | [ˈʋɑnːɑ] | bathroom | noun | ж |  |
-| меблі | [ˈmɛblʲi] | furniture | noun | pl |  |
-| стіл | [sʲtʲil] | table | noun | ч |  |
-| стілець | [sʲtʲiˈlɛt͡sʲ] | chair | noun | ч |  |
-| ліжко | [ˈlʲiʒkɔ] | bed | noun | с |  |
-| диван | [dɪˈʋɑn] | sofa | noun | ч |  |
-| шафа | [ˈʃɑfɑ] | wardrobe | noun | ж |  |
-| підлога | [pʲiˈdlɔɦɑ] | floor | noun | ж |  |
-| стіна | [sʲtʲiˈnɑ] | wall | noun | ж |  |
-| килим | [ˈkɪlɪm] | carpet | noun | ч |  |
-| холодильник | [xɔlɔˈdɪlʲnɪk] | refrigerator | noun | ч |  |
-| пральна машина | [ˈprɑlʲnɑ mɑˈʃɪnɑ] | washing machine | noun | ж |  |
-| поріг | [pɔˈrʲiɦ] | threshold | noun | ч |  |
-| кут | [kut] | corner | noun | ч | на розі (at the corner) |
-| Домовик | [dɔmɔˈʋɪk] | Domovyk (household spirit) | noun | ч |  |
-| ремонт | [rɛˈmɔnt] | renovation | noun | ч |  |
-| обідній стіл | [ɔˈbʲidʲnʲij sʲtʲil] | dining table | noun | ч |  |
-| письмовий стіл | [pɪˈsʲmɔʋɪj sʲtʲil] | desk | noun | ч |  |
-| шафа-купе | [ˈʃɑfɑ-kuˈpɛ] | sliding wardrobe | noun | ж |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

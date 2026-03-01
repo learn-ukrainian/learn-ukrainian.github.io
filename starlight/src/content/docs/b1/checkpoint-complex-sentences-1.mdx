@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Контрольна точка: складні речення (частина 1)
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -316,7 +322,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **контрольна точка** |  | checkpoint | ім |  |
+| **повторення** |  | review | ім |  |
+| **оцінювання** |  | assessment | ім |  |
+| **формувальне оцінювання** |  | formative assessment | ім |  |
+| **самооцінювання** |  | self-assessment | ім |  |
+| **критерій** |  | criterion | ім |  |
+| **інтеграція** |  | integration | ім |  |
+| **прогрес** |  | progress | ім |  |
+| **результат** |  | result | ім |  |
+| **речення** |  | sentence | ім |  |
+| **складне речення** |  | complex sentence | ім |  |
+| **підрядне речення** |  | subordinate clause | ім |  |
+| **головне речення** |  | main clause | ім |  |
+| **синтаксис** |  | syntax | ім |  |
+| **сполучник** |  | conjunction | ім |  |
+| **відносний** |  | relative | прикм |  |
+| **узгодження** |  | agreement | ім |  |
+| **прийменник** |  | preposition | ім |  |
+| **мета** |  | purpose | ім |  |
+| **наслідок** |  | consequence | ім |  |
+| **намір** |  | intention | ім |  |
+| **інфінітив** |  | infinitive | ім |  |
+| **умова** |  | condition | ім |  |
+| **гіпотетичний** |  | hypothetical | прикм |  |
+| **реальний** |  | real | прикм |  |
+| **правильний** |  | correct | прикм |  |
+| **помилка** |  | error | ім |  |
+| **автономність** |  | autonomy | ім |  |
+| **минулий час** |  | past tense | ім |  |
+| **майбутній час** |  | future tense | ім |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Відносні речення: узгодження сполучного слова
 
@@ -374,37 +417,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"Я пишу вам щодо проєкту, [___:0]} ми обговорювали вчора. Ми підготували всі матеріали, з [___:1]} команда працюватиме. Я надсилаю документи, [___:2]} ви могли ознайомитися з ними. Ми змінили графік, щоб [___:3]} процес роботи. [___:4]} ми отримаємо фінансування до п'ятниці, ми розпочнемо вчасно. Але [___:5]} ми мали доступ раніше, ми [___:6]} вже завершили етап. Наш [___:7]} залежить від комунікації. Важливо будувати кожне [___:8]} правильно. Український [___:9]} вимагає точності. Це наша контрольна [___:10]}, яка показує [___:11]}. Регулярне [___:12]} допомагає краще розуміти матеріал. [___:13]} є ключем до успіху."} blanks={JSON.parse(`[{"index": 0, "answer": "який", "options": ["який", "якому", "якого", "яким"]}, {"index": 1, "answer": "якими", "options": ["якими", "яких", "які", "яким"]}, {"index": 2, "answer": "щоб", "options": ["щоб", "якщо", "якби", "що"]}, {"index": 3, "answer": "оптимізувати", "options": ["оптимізувати", "оптимізував", "оптимізували", "оптимізує"]}, {"index": 4, "answer": "Якщо", "options": ["Якщо", "Якби", "Щоб", "Коли"]}, {"index": 5, "answer": "якби", "options": ["якби", "якщо", "щоб", "коли б"]}, {"index": 6, "answer": "б", "options": ["б", "би", "щоб", "бо"]}, {"index": 7, "answer": "результат", "options": ["результат", "синтаксис", "критерій", "намір"]}, {"index": 8, "answer": "речення", "options": ["речення", "прогрес", "результат", "питання"]}, {"index": 9, "answer": "синтаксис", "options": ["синтаксис", "інфінітив", "прийменник", "словник"]}, {"index": 10, "answer": "точка", "options": ["точка", "мета", "умова", "оцінка"]}, {"index": 11, "answer": "прогрес", "options": ["прогрес", "намір", "прийменник", "час"]}, {"index": 12, "answer": "повторення", "options": ["повторення", "оцінювання", "речення", "узгодження"]}, {"index": 13, "answer": "Самооцінювання", "options": ["Самооцінювання", "Речення", "Синтаксис", "Умова"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **контрольна точка** | [kɔnˈtrɔlʲnɑ ˈtɔt͡ʃkɑ] | checkpoint | ім |  |
-| **повторення** | [pɔˈʋtɔrɛnʲːɑ] | review | ім |  |
-| **оцінювання** | [ɔˈt͡sʲinʲuʋɑnʲːɑ] | assessment | ім |  |
-| **формувальне оцінювання** | [fɔrmuˈʋɑlʲnɛ ɔˈt͡sʲinʲuʋɑnʲːɑ] | formative assessment | ім |  |
-| **самооцінювання** | [sɑmɔɔt͡sʲinʲuʋɑnʲːɑ] | self-assessment | ім |  |
-| **критерій** | [krɪˈtɛrʲij] | criterion | ім |  |
-| **інтеграція** | [intɛˈɦrɑt͡sʲijɑ] | integration | ім |  |
-| **прогрес** | [prɔˈɦrɛs] | progress | ім |  |
-| **результат** | [rɛzulʲˈtɑt] | result | ім |  |
-| **речення** | [rɛt͡ʃɛnʲːɑ] | sentence | ім |  |
-| **складне речення** | [sklɑdnɛ rɛt͡ʃɛnʲːɑ] | complex sentence | ім |  |
-| **підрядне речення** | [pʲiˈdʲrʲɑdnɛ rɛt͡ʃɛnʲːɑ] | subordinate clause | ім |  |
-| **головне речення** | [ɦɔlɔˈʋnɛ rɛt͡ʃɛnʲːɑ] | main clause | ім |  |
-| **синтаксис** | [ˈsɪntɑksɪs] | syntax | ім |  |
-| **сполучник** | [spɔˈlut͡ʃnɪk] | conjunction | ім |  |
-| **відносний** | [ʋʲiˈdnɔsnɪj] | relative | прикм |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | agreement | ім |  |
-| **прийменник** | [prɪjˈmɛnːɪk] | preposition | ім |  |
-| **мета** | [mɛˈtɑ] | purpose | ім |  |
-| **наслідок** | [ˈnɑsʲlʲidɔk] | consequence | ім |  |
-| **намір** | [ˈnɑmʲir] | intention | ім |  |
-| **інфінітив** | [inʲfʲinʲiˈtɪu̯] | infinitive | ім |  |
-| **умова** | [uˈmɔʋɑ] | condition | ім |  |
-| **гіпотетичний** | [ɦʲipɔtɛˈtɪt͡ʃnɪj] | hypothetical | прикм |  |
-| **реальний** | [rɛˈɑlʲnɪj] | real | прикм |  |
-| **правильний** | [prɑʋɪlʲnɪj] | correct | прикм |  |
-| **помилка** | [ˈpɔˈmɪlkɑ] | error | ім |  |
-| **автономність** | [ɑu̯tɔˈnɔmnʲisʲtʲ] | autonomy | ім |  |
-| **минулий час** | [mɪˈnulɪj t͡ʃɑs] | past tense | ім |  |
-| **майбутній час** | [mɑjˈbutʲnʲij t͡ʃɑs] | future tense | ім |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

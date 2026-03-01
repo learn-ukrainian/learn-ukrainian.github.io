@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
 
-# Контрольна точка: Просунута граматика
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -315,7 +321,44 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Вправи
+</TabItem>
+<TabItem label="Словник">
+
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+| --- | --- | --- | --- | --- |
+| **дієприслівник** |  | adverbial participle | ім |  |
+| **дієприкметник** |  | participle | ім |  |
+| **пасивний стан** |  | passive voice | фраза |  |
+| **безособова форма** |  | impersonal form | фраза |  |
+| **збірний числівник** |  | collective numeral | фраза |  |
+| **демінутив** |  | diminutive | ім |  |
+| **контрольна точка** |  | checkpoint | фраза |  |
+| **кордоцентризм** |  | cordocentrism (philosophy of the heart) | ім |  |
+| **калька** |  | calque / loan translation | ім |  |
+| **пестливий** |  | affectionate / tender | adjective |  |
+| **одночасність** |  | simultaneity | ім |  |
+| **послідовність** |  | sequence | ім |  |
+| **спатоньки** |  | to sleep (affectionate diminutive) | дієсл |  |
+| **сонечко** |  | sun (diminutive) / sweetheart | ім |  |
+| **підмет** |  | subject (grammar) | ім |  |
+| **присудок** |  | predicate (grammar) | ім |  |
+| **узгодження** |  | agreement / concord (grammar) | ім |  |
+| **орудний відмінок** |  | instrumental case | фраза |  |
+| **родовий відмінок** |  | genitive case | фраза |  |
+| **дробовий числівник** |  | fractional numeral | фраза |  |
+| **чисельник** |  | numerator | ім |  |
+| **знаменник** |  | denominator | ім |  |
+| **канцеляризм** |  | bureaucratese / officialese | ім |  |
+| **незмінний** |  | immutable / unchangeable | adjective |  |
+| **відносний займенник** |  | relative pronoun | фраза |  |
+| **змарнілий** |  | wasted / emaciated (active past participle) | adjective |  |
+| **пожовклий** |  | yellowed (active past participle) | adjective |  |
+| **інфантильний** |  | infantile / childish | adjective |  |
+| **відреставрований** |  | restored (passive participle) | adjective |  |
+| **зроблено** |  | done (impersonal resultative form) | дієсл |  |
+
+</TabItem>
+<TabItem label="Вправи">
 
 ### Комплексний тест: Частина 1
 
@@ -368,37 +411,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Cloze client:load passage={"В українській мові [___:0]} стан є більш природним, ніж [___:1]}. Коли ми не знаємо виконавця дії, краще використовувати [___:2]} форму на -но або -то. Наприклад, замість слів «статтю було написано» краще сказати просто «статтю [___:3]}». Під час створення простого ускладненого речення ми часто використовуємо [___:4]}, який виражає додаткову дію. Якщо ця дія відбувається одночасно з головною, ми обираємо форми [___:5]} виду із суфіксами -учи або -ячи. Якщо дія завершилася раніше, використовуємо форми [___:6]} виду. Дуже важливо пам'ятати, що і головну, і додаткову дію має виконувати один і той самий [___:7]}. Серед дієприкметників варто уникати російських [___:8]}, таких як «читаючий», замінюючи їх на конструкції зі словом [___:9]}. Натомість активні форми минулого часу, наприклад, «пожовкле листя», є абсолютно [___:10]}. Українській мові також притаманний [___:11]}, що проявляється у великій кількості пестливих слів — [___:12]}. Деякі з них можуть утворюватися навіть від [___:13]}, як-от слово «спатоньки»."} blanks={JSON.parse(`[{"index": 0, "answer": "активний", "options": ["активний", "пасивний", "безособовий", "дійсний"]}, {"index": 1, "answer": "пасивний", "options": ["пасивний", "активний", "минулий", "майбутній"]}, {"index": 2, "answer": "безособову", "options": ["безособову", "особову", "жіночу", "чоловічу"]}, {"index": 3, "answer": "написано", "options": ["написано", "написали", "написав", "написаний"]}, {"index": 4, "answer": "дієприслівник", "options": ["дієприслівник", "дієприкметник", "іменник", "числівник"]}, {"index": 5, "answer": "недоконаного", "options": ["недоконаного", "доконаного", "минулого", "теперішнього"]}, {"index": 6, "answer": "доконаного", "options": ["доконаного", "недоконаного", "майбутнього", "тривалого"]}, {"index": 7, "answer": "підмет", "options": ["підмет", "присудок", "додаток", "об'єкт"]}, {"index": 8, "answer": "кальок", "options": ["кальок", "діалектів", "архаїзмів", "неологізмів"]}, {"index": 9, "answer": "який", "options": ["який", "де", "коли", "чому"]}, {"index": 10, "answer": "питомими", "options": ["питомими", "чужими", "неправильними", "застарілими"]}, {"index": 11, "answer": "кордоцентризм", "options": ["кордоцентризм", "раціоналізм", "прагматизм", "реалізм"]}, {"index": 12, "answer": "демінутивів", "options": ["демінутивів", "синонімів", "антонімів", "омонімів"]}, {"index": 13, "answer": "дієслів", "options": ["дієслів", "іменників", "прикметників", "числівників"]}]`)} />
 
-## 📚 Словник
+</TabItem>
+<TabItem label="Ресурси">
 
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-| --- | --- | --- | --- | --- |
-| **дієприслівник** | [dʲijɛprɪˈsʲlʲiu̯nɪk] | adverbial participle | ім |  |
-| **дієприкметник** | [dʲijɛprɪˈkmɛtnɪk] | participle | ім |  |
-| **пасивний стан** | [pɑˈsɪu̯nɪj stɑn] | passive voice | фраза |  |
-| **безособова форма** | [bɛzɔsɔˈbɔʋɑ ˈfɔrmɑ] | impersonal form | фраза |  |
-| **збірний числівник** | [ˈzʲbʲirnɪj t͡ʃɪˈsʲlʲiu̯nɪk] | collective numeral | фраза |  |
-| **демінутив** | [dɛmʲinuˈtɪu̯] | diminutive | ім |  |
-| **контрольна точка** | [kɔnˈtrɔlʲnɑ ˈtɔt͡ʃkɑ] | checkpoint | фраза |  |
-| **кордоцентризм** | [kɔrdɔt͡sɛnˈtrɪzm] | cordocentrism (philosophy of the heart) | ім |  |
-| **калька** | [ˈkɑlʲkɑ] | calque / loan translation | ім |  |
-| **пестливий** | [pɛˈstlɪʋɪj] | affectionate / tender | adjective |  |
-| **одночасність** | [ɔdnɔˈt͡ʃɑsʲnʲisʲtʲ] | simultaneity | ім |  |
-| **послідовність** | [pɔsʲlʲiˈdɔu̯nʲisʲtʲ] | sequence | ім |  |
-| **спатоньки** | [ˈspɑtɔnʲkɪ] | to sleep (affectionate diminutive) | дієсл |  |
-| **сонечко** | [ˈsɔnɛt͡ʃkɔ] | sun (diminutive) / sweetheart | ім |  |
-| **підмет** | [pʲidmɛt] | subject (grammar) | ім |  |
-| **присудок** | [ˈprɪsudɔk] | predicate (grammar) | ім |  |
-| **узгодження** | [uˈzɦɔd͡ʒɛnʲːɑ] | agreement / concord (grammar) | ім |  |
-| **орудний відмінок** | [ɔˈrudnɪj ʋʲiˈdʲmʲinɔk] | instrumental case | фраза |  |
-| **родовий відмінок** | [rɔˈdɔˈʋɪj ʋʲiˈdʲmʲinɔk] | genitive case | фраза |  |
-| **дробовий числівник** | [drɔbɔˈʋɪj t͡ʃɪˈsʲlʲiu̯nɪk] | fractional numeral | фраза |  |
-| **чисельник** | [t͡ʃɪˈsɛlʲnɪk] | numerator | ім |  |
-| **знаменник** | [znɑˈmɛnːɪk] | denominator | ім |  |
-| **канцеляризм** | [kɑnt͡sɛlʲɑˈrɪzm] | bureaucratese / officialese | ім |  |
-| **незмінний** | [nɛˈzʲmʲinːɪj] | immutable / unchangeable | adjective |  |
-| **відносний займенник** | [ʋʲiˈdnɔsnɪj zɑjˈmɛnːɪk] | relative pronoun | фраза |  |
-| **змарнілий** | [zmɑrˈnʲilɪj] | wasted / emaciated (active past participle) | adjective |  |
-| **пожовклий** | [pɔˈʒɔu̯klɪj] | yellowed (active past participle) | adjective |  |
-| **інфантильний** | [infɑnˈtɪlʲnɪj] | infantile / childish | adjective |  |
-| **відреставрований** | [ʋʲidrɛstɑˈʋrɔʋɑnɪj] | restored (passive participle) | adjective |  |
-| **зроблено** | [ˈzrɔblɛnɔ] | done (impersonal resultative form) | дієсл |  |
+*Немає зовнішніх ресурсів для цього модуля.*
+
+</TabItem>
+</Tabs>

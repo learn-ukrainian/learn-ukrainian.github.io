@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Social Media Ukrainian
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -376,7 +382,39 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| лайк |  | like | noun | ч |  |
+| пост |  | post | noun | ч |  |
+| сторіз |  | stories | noun |  |  |
+| підписник |  | follower | noun | ч |  |
+| підписатися |  | to subscribe / to follow | verb |  |  |
+| сторінка |  | page / profile | noun | ж |  |
+| поширити |  | to share | verb |  |  |
+| дірект |  | direct / DM | noun | ч |  |
+| вподобайка |  | like (purist) | noun | ж |  |
+| світлина |  | photo (poetic/purist) | noun | ж |  |
+| стрічка |  | feed | noun | ж |  |
+| сповіщення |  | notification | noun | с |  |
+| посилання |  | link | noun | с |  |
+| накрутка |  | boosting / faking engagement | noun | ж |  |
+| профіль |  | profile | noun | ч |  |
+| лайкати |  | to like | verb |  |  |
+| постити |  | to post | verb |  |  |
+| репостити |  | to repost | verb |  |  |
+| гортати |  | to scroll | verb |  |  |
+| поділитися |  | to share (with someone) | verb |  |  |
+| застосунок |  | app / application | noun | ч |  |
+| коментар |  | comment | noun | ч |  |
+| канал |  | channel | noun | ч |  |
+| офіційний |  | official | adjective |  |  |
+| повітряна тривога |  | air raid alert | noun | ж |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Словник: Соціальні мережі
 
@@ -435,32 +473,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <FillIn client:load items={JSON.parse(`[{"sentence": "Я дуже прошу вас підписатися на наш новий інформаційний канал.", "answer": "підписатися", "options": ["підписатися", "поширити", "поділитися", "гортати"]}, {"sentence": "Кожного вечора вона любить спокійно гортати стрічку новин.", "answer": "стрічку", "options": ["стрічку", "накрутку", "світлину", "вподобайку"]}, {"sentence": "Якщо вам сподобалася ця стаття, не забудьте поставити лайк.", "answer": "лайк", "options": ["лайк", "дірект", "канал", "допис"]}, {"sentence": "Мої друзі часто знімають дуже веселі і динамічні сторіз.", "answer": "сторіз", "options": ["сторіз", "сповіщення", "посилання", "підписники"]}, {"sentence": "Для швидкого замовлення нашої смачної кави, будь ласка, пишіть у дірект.", "answer": "дірект", "options": ["дірект", "стрічку", "канал", "сайт"]}, {"sentence": "Вчора мій телефон отримав дуже важливе сповіщення про погоду.", "answer": "сповіщення", "options": ["сповіщення", "посилання", "світлину", "вподобайку"]}, {"sentence": "Штучна накрутка підписників ніколи не приносить реального успіху бізнесу.", "answer": "накрутка", "options": ["накрутка", "стрічка", "сторінка", "світлина"]}, {"sentence": "Він вирішив поширити цей корисний допис на своїй публічній сторінці.", "answer": "допис", "options": ["допис", "дірект", "канал", "сайт"]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| лайк | [lɑjk] | like | noun | ч |  |
-| пост | [pɔst] | post | noun | ч |  |
-| сторіз | [stɔrʲiz] | stories | noun |  |  |
-| підписник | [pʲidpɪsnɪk] | follower | noun | ч |  |
-| підписатися | [pʲidpɪˈsɑtɪsʲɑ] | to subscribe / to follow | verb |  |  |
-| сторінка | [stɔˈrʲinkɑ] | page / profile | noun | ж |  |
-| поширити | [pɔˈʃɪrɪtɪ] | to share | verb |  |  |
-| дірект | [dʲirɛkt] | direct / DM | noun | ч |  |
-| вподобайка | [ʍpɔdɔˈbɑjkɑ] | like (purist) | noun | ж |  |
-| світлина | [sʲʋʲiˈtlɪnɑ] | photo (poetic/purist) | noun | ж |  |
-| стрічка | [ˈstʲrʲit͡ʃkɑ] | feed | noun | ж |  |
-| сповіщення | [spɔˈʋʲiʃt͡ʃɛnʲːɑ] | notification | noun | с |  |
-| посилання | [pɔsɪˈlɑnʲːɑ] | link | noun | с |  |
-| накрутка | [nɑˈkrutkɑ] | boosting / faking engagement | noun | ж |  |
-| профіль | [ˈprɔfʲilʲ] | profile | noun | ч |  |
-| лайкати | [lɑjkɑtɪ] | to like | verb |  |  |
-| постити | [ˈpɔˈstɪtɪ] | to post | verb |  |  |
-| репостити | [rɛpɔstɪtɪ] | to repost | verb |  |  |
-| гортати | [ɦɔrˈtɑtɪ] | to scroll | verb |  |  |
-| поділитися | [pɔdʲiˈlɪtɪsʲɑ] | to share (with someone) | verb |  |  |
-| застосунок | [zɑstɔsunɔk] | app / application | noun | ч |  |
-| коментар | [kɔmɛnˈtɑr] | comment | noun | ч |  |
-| канал | [kɑˈnɑl] | channel | noun | ч |  |
-| офіційний | [ɔfʲiˈt͡sʲijnɪj] | official | adjective |  |  |
-| повітряна тривога | [pɔˈʋʲiˈtʲrʲɑnɑ trɪˈʋɔɦɑ] | air raid alert | noun | ж |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

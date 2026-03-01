@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Checkpoint — Full Grammar
+{/**/}
 
 > **Чому це важливо?**
 >
@@ -501,7 +507,46 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| помилка |  | mistake | noun | ж |  |
+| правило |  | rule | noun | с |  |
+| відмінок |  | case | noun | ч |  |
+| дієслово |  | verb | noun | с |  |
+| іменник |  | noun | noun | ч |  |
+| речення |  | sentence | noun | с |  |
+| правильно |  | correctly | adverb |  |  |
+| повторення |  | review, repetition | noun | с |  |
+| милозвучність |  | euphony | noun | ж |  |
+| вибирати |  | to choose | verb |  |  |
+| перевіряти |  | to check | verb |  |  |
+| вид |  | aspect | noun | ч |  |
+| кличний відмінок |  | vocative case | noun | ч |  |
+| граматика |  | grammar | noun | ж |  |
+| недоконаний |  | imperfective | adjective | ч |  |
+| доконаний |  | perfective | adjective | ч |  |
+| результат |  | result | noun | ч |  |
+| процес |  | process | noun | ч |  |
+| самокорекція |  | self-correction | noun | ж |  |
+| виправляти |  | to correct | verb |  |  |
+| виняток |  | exception | noun | ч |  |
+| рух |  | motion | noun | ч |  |
+| пішки |  | on foot | adverb |  |  |
+| транспорт |  | transport, vehicle | noun | ч |  |
+| звертання |  | addressing someone | noun | с |  |
+| родовий |  | genitive | adjective | ч |  |
+| знахідний |  | accusative | adjective | ч |  |
+| кличний |  | vocative | adjective | ч |  |
+| орудний |  | instrumental | adjective | ч |  |
+| називний |  | nominative | adjective | ч |  |
+| давальний |  | dative | adjective | ч |  |
+| місцевий |  | locative | adjective | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Милозвучність: оберіть У чи В
 
@@ -560,39 +605,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Select client:load questions={JSON.parse(`[{"question": "У яких реченнях дієслово має доконаний вид (результат)?", "options": [{"text": "Він купив квіти і подарував їх.", "correct": true}, {"text": "Я прочитав цю цікаву книгу.", "correct": true}, {"text": "Вона довго вибирала подарунок.", "correct": false}, {"text": "Ми часто купували свіжі фрукти.", "correct": false}], "explanation": "Доконаний вид означає, що дія повністю завершена (купив, прочитав)."}, {"question": "Які з цих слів є іменниками?", "options": [{"text": "правило", "correct": true}, {"text": "помилка", "correct": true}, {"text": "відмінок", "correct": true}, {"text": "читати", "correct": false}, {"text": "швидко", "correct": false}], "explanation": "Іменники відповідають на питання Хто? або Що?."}, {"question": "У яких реченнях використано Кличний відмінок?", "options": [{"text": "Добрий день, пане професоре!", "correct": true}, {"text": "Мамо, я вже прийшов додому.", "correct": true}, {"text": "Я бачу свого професора.", "correct": false}, {"text": "Це машина моєї мами.", "correct": false}], "explanation": "Кличний відмінок використовується для прямого звертання."}, {"question": "Які речення демонструють правильну милозвучність?", "options": [{"text": "Він живе у великому Києві.", "correct": true}, {"text": "Вона працює в школі.", "correct": true}, {"text": "Він живе в Києві.", "correct": false}, {"text": "Брат й сестра читають.", "correct": false}], "explanation": "Милозвучність уникає збігу приголосних або голосних звуків."}, {"question": "Які форми є дієсловами руху пішки?", "options": [{"text": "іти", "correct": true}, {"text": "ходити", "correct": true}, {"text": "їхати", "correct": false}, {"text": "їздити", "correct": false}], "explanation": "Іти та ходити означають рух за допомогою ніг."}, {"question": "У яких реченнях є помилка з Родовим відмінком?", "options": [{"text": "Я не маю час для цього.", "correct": true}, {"text": "Він не бачить проблему.", "correct": true}, {"text": "Я не маю часу для цього.", "correct": false}, {"text": "Він не читає книги.", "correct": false}], "explanation": "Після НЕ потрібен Родовий відмінок."}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| помилка | [ˈpɔˈmɪlkɑ] | mistake | noun | ж |  |
-| правило | [prɑʋɪlɔ] | rule | noun | с |  |
-| відмінок | [ʋʲiˈdʲmʲinɔk] | case | noun | ч |  |
-| дієслово | [dʲijɛˈslɔʋɔ] | verb | noun | с |  |
-| іменник | [iˈmɛnːɪk] | noun | noun | ч |  |
-| речення | [rɛt͡ʃɛnʲːɑ] | sentence | noun | с |  |
-| правильно | [ˈprɑʋɪlʲnɔ] | correctly | adverb |  |  |
-| повторення | [pɔˈʋtɔrɛnʲːɑ] | review, repetition | noun | с |  |
-| милозвучність | [mɪlɔˈzʋut͡ʃnʲisʲtʲ] | euphony | noun | ж |  |
-| вибирати | [ʋɪbɪˈrɑtɪ] | to choose | verb |  |  |
-| перевіряти | [pɛrɛʋʲiˈrʲɑtɪ] | to check | verb |  |  |
-| вид | [ʋɪd] | aspect | noun | ч |  |
-| кличний відмінок | [ˈklɪt͡ʃnɪj ʋʲiˈdʲmʲinɔk] | vocative case | noun | ч |  |
-| граматика | [ɦrɑˈmɑtɪkɑ] | grammar | noun | ж |  |
-| недоконаний | [nɛdɔˈkɔnɑnɪj] | imperfective | adjective | ч |  |
-| доконаний | [dɔˈkɔnɑnɪj] | perfective | adjective | ч |  |
-| результат | [rɛzulʲˈtɑt] | result | noun | ч |  |
-| процес | [prɔˈt͡sɛs] | process | noun | ч |  |
-| самокорекція | [sɑmɔkɔrɛkt͡sʲijɑ] | self-correction | noun | ж |  |
-| виправляти | [ʋɪprɑˈʋlʲɑtɪ] | to correct | verb |  |  |
-| виняток | [ˈʋɪnʲɑtɔk] | exception | noun | ч |  |
-| рух | [rux] | motion | noun | ч |  |
-| пішки | [ˈpʲiʃkɪ] | on foot | adverb |  |  |
-| транспорт | [trɑnspɔrt] | transport, vehicle | noun | ч |  |
-| звертання | [zʋɛrˈtɑnʲːɑ] | addressing someone | noun | с |  |
-| родовий | [rɔdɔˈʋɪj] | genitive | adjective | ч |  |
-| знахідний | [znɑxʲiˈdnɪj] | accusative | adjective | ч |  |
-| кличний | [ˈklɪt͡ʃnɪj] | vocative | adjective | ч |  |
-| орудний | [ɔˈrudnɪj] | instrumental | adjective | ч |  |
-| називний | [nɑzɪˈʋnɪj] | nominative | adjective | ч |  |
-| давальний | [dɑˈʋɑlʲnɪj] | dative | adjective | ч |  |
-| місцевий | [mʲiˈst͡sɛʋɪj] | locative | adjective | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>

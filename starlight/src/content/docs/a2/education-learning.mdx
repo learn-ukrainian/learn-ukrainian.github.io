@@ -34,10 +34,16 @@ import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
 import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-  label: {/**/}
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
 
-# Освіта та навчання
+{/**/}
 
 > **Чому це важливо?**
 > Освіта відіграє величезну роль у житті кожного українця. Коли ви знайомитеся з новими людьми в Україні, вони часто ставлять питання. Вони запитують про ваш університет, професію або улюблені шкільні предмети. У цьому модулі ви навчитеся впевнено говорити про свій академічний шлях. Ви зрозумієте сучасну систему оцінювання. Ви дізнаєтеся про важливі студентські традиції. Також ви навчитеся правильно використовувати дієслова навчання.
@@ -454,7 +460,39 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 ---
 
-## 🎯 Activities
+</TabItem>
+<TabItem label="Vocabulary">
+
+| Word | IPA | English | POS | Gender | Note |
+| --- | --- | --- | --- | --- | --- |
+| школа |  | school | noun | ж | ходити до школи, закінчити школу, середня школа, у школі |
+| університет |  | university | noun | ч | вступати до університету, навчатися в університеті, державний університет |
+| вчитися |  | to study | verb |  |  |
+| вивчати |  | to learn, to study | verb |  |  |
+| навчати |  | to teach, to instruct | verb |  |  |
+| предмет |  | subject | noun | ч | шкільний предмет, улюблений предмет, профільний предмет |
+| іспит |  | exam | noun | ч | складати іспит, скласти іспит, провалити іспит, випускний іспит |
+| оцінка |  | grade, mark, rating | noun | ж | отримувати оцінку, гарна оцінка, висока оцінка |
+| студент |  | university student | noun | ч |  |
+| викладач |  | lecturer, university instructor | noun | ч |  |
+| лекція |  | lecture | noun | ж | на лекції |
+| залік |  | credit, pass-fail test | noun | ч |  |
+| диплом |  | diploma, degree, final thesis | noun | ч | захищати диплом |
+| стипендія |  | scholarship, student stipend | noun | ж | отримувати стипендію |
+| курсова робота |  | course paper, term paper | noun | ж | писати курсову роботу |
+| підручник |  | textbook | noun | ч | навчатися за підручником |
+| зошит |  | notebook | noun | ч | писати в зошиті |
+| ручка |  | pen | noun | ж | писати ручкою |
+| олівець |  | pencil | noun | ч | малювати олівцем |
+| математика |  | mathematics | noun | ж |  |
+| історія |  | history | noun | ж |  |
+| фізика |  | physics | noun | ж |  |
+| учень |  | pupil, school student | noun | ч |  |
+| вчитель |  | school teacher | noun | ч |  |
+| гуртожиток |  | dormitory, student residence | noun | ч |  |
+
+</TabItem>
+<TabItem label="Activities">
 
 ### Знайдіть пару: шкільні речі
 
@@ -513,32 +551,10 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 
 <Translate client:load questions={JSON.parse(`[{"source": "She is a university student.", "options": [{"text": "Вона студентка університету.", "correct": true}, {"text": "Вона учениця університету.", "correct": false}, {"text": "Вона вчителька університету.", "correct": false}]}, {"source": "He passed the exam.", "options": [{"text": "Він успішно склав іспит.", "correct": true}, {"text": "Він довго брав іспит.", "correct": false}, {"text": "Він довго складав іспит.", "correct": false}]}, {"source": "We are studying physics.", "options": [{"text": "Ми зараз вивчаємо фізику.", "correct": true}, {"text": "Ми зараз вчимося фізику.", "correct": false}, {"text": "Ми зараз навчаємо фізику.", "correct": false}]}, {"source": "My favorite subject is history.", "options": [{"text": "Мій улюблений предмет — це історія.", "correct": true}, {"text": "Мій хороший предмет — це історія.", "correct": false}, {"text": "Мій профільний предмет — це історія.", "correct": false}]}, {"source": "I am writing with a pen in my notebook.", "options": [{"text": "Я пишу ручкою у своєму зошиті.", "correct": true}, {"text": "Я пишу з ручкою у своєму зошиті.", "correct": false}, {"text": "Я пишу чорну ручку у своєму зошиті.", "correct": false}]}, {"source": "They failed the test.", "options": [{"text": "Вони провалили цей іспит.", "correct": true}, {"text": "Вони успішно склали цей іспит.", "correct": false}, {"text": "Вони ніколи не брали іспит.", "correct": false}]}]`)} />
 
-## 📚 Vocabulary
+</TabItem>
+<TabItem label="Resources">
 
-| Word | IPA | English | POS | Gender | Note |
-| --- | --- | --- | --- | --- | --- |
-| школа | [ˈʃkɔlɑ] | school | noun | ж | ходити до школи, закінчити школу, середня школа, у школі |
-| університет | [unʲiʋɛrsɪˈtɛt] | university | noun | ч | вступати до університету, навчатися в університеті, державний університет |
-| вчитися | [ˈʍt͡ʃɪtɪsʲɑ] | to study | verb |  |  |
-| вивчати | [ʋɪˈʋt͡ʃɑtɪ] | to learn, to study | verb |  |  |
-| навчати | [nɑˈʋt͡ʃɑtɪ] | to teach, to instruct | verb |  |  |
-| предмет | [prɛˈdmɛt] | subject | noun | ч | шкільний предмет, улюблений предмет, профільний предмет |
-| іспит | [ˈispɪt] | exam | noun | ч | складати іспит, скласти іспит, провалити іспит, випускний іспит |
-| оцінка | [ɔˈt͡sʲinkɑ] | grade, mark, rating | noun | ж | отримувати оцінку, гарна оцінка, висока оцінка |
-| студент | [stuˈdɛnt] | university student | noun | ч |  |
-| викладач | [ʋɪklɑˈdɑt͡ʃ] | lecturer, university instructor | noun | ч |  |
-| лекція | [ˈlɛkt͡sʲijɑ] | lecture | noun | ж | на лекції |
-| залік | [ˈzɑlʲik] | credit, pass-fail test | noun | ч |  |
-| диплом | [dɪˈplɔm] | diploma, degree, final thesis | noun | ч | захищати диплом |
-| стипендія | [stɪˈpɛnʲdʲijɑ] | scholarship, student stipend | noun | ж | отримувати стипендію |
-| курсова робота | [kursɔˈʋɑ rɔˈbɔtɑ] | course paper, term paper | noun | ж | писати курсову роботу |
-| підручник | [pʲiˈdrut͡ʃnɪk] | textbook | noun | ч | навчатися за підручником |
-| зошит | [ˈzɔʃɪt] | notebook | noun | ч | писати в зошиті |
-| ручка | [ˈrut͡ʃkɑ] | pen | noun | ж | писати ручкою |
-| олівець | [ɔlʲiˈʋɛt͡sʲ] | pencil | noun | ч | малювати олівцем |
-| математика | [mɑtɛˈmɑtɪkɑ] | mathematics | noun | ж |  |
-| історія | [iˈstɔrʲijɑ] | history | noun | ж |  |
-| фізика | [ˈfʲizɪkɑ] | physics | noun | ж |  |
-| учень | [ˈut͡ʃɛnʲ] | pupil, school student | noun | ч |  |
-| вчитель | [ˈʍt͡ʃɪtɛlʲ] | school teacher | noun | ч |  |
-| гуртожиток | [ɦurˈtɔʒɪtɔk] | dormitory, student residence | noun | ч |  |
+*No external resources for this module.*
+
+</TabItem>
+</Tabs>
