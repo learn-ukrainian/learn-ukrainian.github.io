@@ -13,6 +13,7 @@
 # Options:
 #   --skip-activities   Content-only audit: defer activity/vocab gates (internal: prose-only loop)
 #   --skip-review       Validate content+activities, defer review gate only (#606)
+#   --no-rag-verify     Skip RAG word verification (runs by default)
 #
 # Examples:
 #   scripts/audit_module.sh curriculum/l2-uk-en/b1/09-aspect-future.md
@@ -24,6 +25,7 @@ set -euo pipefail
 # Parse arguments
 SKIP_ACTIVITIES=""
 SKIP_REVIEW=""
+RAG_VERIFY="1"
 MODULE_PATH=""
 
 for arg in "$@"; do
@@ -34,6 +36,9 @@ for arg in "$@"; do
         --skip-review)
             SKIP_REVIEW="--skip-review"
             ;;
+        --no-rag-verify)
+            RAG_VERIFY=""
+            ;;
         *)
             MODULE_PATH="$arg"
             ;;
@@ -42,7 +47,7 @@ done
 
 # Check arguments
 if [ -z "$MODULE_PATH" ]; then
-    echo "Usage: $0 [--skip-activities] [--skip-review] <module-path>"
+    echo "Usage: $0 [--skip-activities] [--skip-review] [--no-rag-verify] <module-path>"
     echo "Example: $0 curriculum/l2-uk-en/b1/09-aspect-future.md"
     exit 1
 fi
@@ -100,5 +105,24 @@ else
     echo "❌ AUDIT FAILED (see $LOG_PATH for details)"
 fi
 
-# Exit with audit exit code (IPA lint is informational, not blocking)
+# RAG word verification (non-blocking — Qdrant may be offline)
+if [ -n "$RAG_VERIFY" ]; then
+    echo ""
+    echo "Running RAG word verification..."
+    RAG_EXTRA_FLAGS=""
+    if [ -n "$SKIP_ACTIVITIES" ]; then
+        RAG_EXTRA_FLAGS="--skip-activities"
+    fi
+    set +e
+    .venv/bin/python scripts/rag_batch_verify.py $RAG_EXTRA_FLAGS "$MODULE_PATH" 2>&1
+    RAG_EXIT=$?
+    set -e
+    if [ $RAG_EXIT -ne 0 ]; then
+        echo "⚠️  RAG verification found unverified words (see audit report)"
+    else
+        echo "✅ RAG verification: all words verified"
+    fi
+fi
+
+# Exit with audit exit code (RAG verify is informational, not blocking)
 exit $AUDIT_EXIT_CODE

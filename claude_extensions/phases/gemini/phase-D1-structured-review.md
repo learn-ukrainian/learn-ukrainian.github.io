@@ -93,6 +93,16 @@ The following issues were detected by automated regex-based scanners BEFORE your
 
 ---
 
+## Pre-Computed Word Verification (D.0 VESUM + RAG)
+
+Every Ukrainian word in the module (prose, vocabulary, activities) was checked against the VESUM morphological dictionary (500K+ word forms) and school textbook corpus. Results:
+
+{RAG_WORD_VERIFICATION}
+
+**How to use**: Words marked ❌ may be hallucinated forms — verify them during your Ukrainian Grammar check. Proper nouns (names, cities) and vocative case forms are expected misses. True errors: non-existent inflections, Russianisms not in VESUM, invented words.
+
+---
+
 ## Track Calibration
 
 {TRACK_CALIBRATION}

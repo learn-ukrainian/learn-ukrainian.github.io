@@ -448,6 +448,18 @@ ACTIVITY_COMPLEXITY = {
         'OES': {'min_items': 1},
         'RUTH': {'min_items': 1},
     },
+    # =============================================================================
+    # PRE-LITERACY / BUKVAR TYPES (A1 alphabet modules)
+    # =============================================================================
+    'watch-and-repeat': {
+        'A1': {'min_items': 1},
+    },
+    'classify': {
+        'A1': {'min_items': 1},
+    },
+    'image-to-letter': {
+        'A1': {'min_items': 5},
+    },
 }
 
 # Valid activity types

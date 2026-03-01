@@ -159,15 +159,22 @@ TOTAL: 1400 / 1400 ✅
 
 **If you create a fake LLM review, you have FAILED the task.**
 
-### 7. Plan Immutability (Architecture v2.0)
+### 7. Plan Versioning (Architecture v2.1)
 
-**Plans in `plans/` are IMMUTABLE. Meta in `meta/` is mutable build config.**
+**Plans in `plans/` are the source of truth. They are versioned, not edited in-place.**
 
-> **Architecture v2.0** separates planning from building:
+> **Architecture v2.1** separates planning from building:
 >
-> - `plans/{level}/{slug}.yaml` → IMMUTABLE source of truth
+> - `plans/{level}/{slug}.yaml` → VERSIONED source of truth (requires user approval to change)
 > - `{level}/meta/{slug}.yaml` → MUTABLE build config
 > - `{level}/status/{slug}.json` → AUTO-GENERATED audit cache
+
+**Plans require user approval to change.** When a plan's approach fundamentally changes:
+
+1. Backup old plan as `{slug}.yaml.bak`
+2. Write new plan with bumped `version` field (e.g., `'2.0'` → `'3.0'`)
+3. New plan becomes the source of truth
+4. Rebuild module via pipeline
 
 **You MUST:**
 
@@ -175,20 +182,22 @@ TOTAL: 1400 / 1400 ✅
 - ✅ WRITE content that matches plan exactly
 - ✅ UPDATE status cache after audits (automatic via audit script)
 - ✅ REPORT if plan seems wrong → user reviews plan
+- ✅ GET USER APPROVAL before changing any plan file
 
 **You MUST NOT:**
 
-- ❌ MODIFY plan files (plans/\*.yaml) - EVER
-- ❌ ADD content not in the plan's content_outline
-- ❌ CHANGE word_target to match your output
+- ❌ SILENTLY modify plan files without user approval
+- ❌ CHANGE word_target to match your output (expand content instead)
 - ❌ ARGUE that plan requirements are "too strict"
+- ❌ Skip the backup step when replacing a plan
 
 **If build cannot meet plan requirements:**
 
 1. STOP building
 2. REPORT: "Plan requires X but Y is not achievable because Z"
-3. User must update plan manually (or approve exception)
-4. You do NOT modify the plan yourself
+3. Propose a new plan version with the fix
+4. User approves → backup old plan → write new version
+5. You do NOT silently modify the plan
 
 **This is MUTINY:**
 
@@ -200,7 +209,7 @@ content_outline:
     words: 500
 
 # You wrote only 3500 words, then edited plan to:
-word_target: 3500  # ← FORBIDDEN
+word_target: 3500  # ← FORBIDDEN (silently lowering targets)
 ```
 
 **Correct behavior:**

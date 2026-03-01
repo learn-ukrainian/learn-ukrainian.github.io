@@ -1388,7 +1388,11 @@ import DialectComparison from '@site/src/components/DialectComparison';
 import TranslationCritique from '@site/src/components/TranslationCritique';
 import Transcription from '@site/src/components/Transcription';
 import Observe from '@site/src/components/Observe';
-import ActivityHelp from '@site/src/components/ActivityHelp';"""
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';"""
 
     # Frontmatter
     frontmatter = f'''---
@@ -1444,6 +1448,9 @@ sidebar:
             processed = body + '\n\n' + activities_jsx
     else:
         processed = body
+
+    # 5. Embed YouTube video links as clickable thumbnails
+    processed = _embed_youtube_video_links(processed)
 
     # Convert callouts
     processed = convert_callouts(processed, is_ukrainian_forced)
@@ -1556,6 +1563,46 @@ def validate_and_clean_url(url: str, title: str = '') -> str:
         print(f"      Fixed to: {url}")
 
     return url
+
+
+# ---------------------------------------------------------------------------
+# YouTube embed helper
+# ---------------------------------------------------------------------------
+
+_YT_VIDEO_LINK_RE = re.compile(
+    r'\[([^\]]+)\]'                              # [link text]
+    r'\('                                        # (
+    r'(https?://(?:www\.)?'                      # http(s)://
+    r'(?:youtube\.com/watch\?v=|youtu\.be/)'     # youtube.com/watch?v= or youtu.be/
+    r'[^\)]+)'                                   # video ID + params
+    r'\)'                                        # )
+    r'\.?'                                       # optional trailing period
+)
+
+_YT_VID_ID_RE = re.compile(r'(?:v=|/embed/|youtu\.be/)([A-Za-z0-9_-]{11})')
+
+
+def _embed_youtube_video_links(body: str) -> str:
+    """Replace YouTube markdown links with inline ``<YouTubeVideo>`` components.
+
+    Transforms ``[text](youtube-watch-url)`` into a React component that shows
+    a thumbnail and plays the video inline when clicked (no page navigation).
+    Only matches watch / short-link URLs — playlist links are left as-is.
+    """
+
+    def _yt_replace(m: re.Match) -> str:
+        text = m.group(1)
+        url = m.group(2)
+        vid_match = _YT_VID_ID_RE.search(url)
+        if not vid_match:
+            return m.group(0)
+        label = escape_jsx(text)
+        return (
+            f'\n\n<YouTubeVideo client:load url="{url}" label="{label}" />\n\n'
+        )
+
+    return _YT_VIDEO_LINK_RE.sub(_yt_replace, body)
+
 
 def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False) -> str:
     """

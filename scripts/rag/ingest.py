@@ -433,12 +433,19 @@ def create_literary_collection(client, recreate: bool = False):
     print(f"[ingest] Collection '{LITERARY_COLLECTION}' created with indexes.")
 
 
-def ingest_literary_chunks(client, jsonl_path: Path, batch_size: int = 32):
-    """Embed and ingest literary text chunks into Qdrant."""
+def ingest_literary_chunks(
+    client, jsonl_path: Path, batch_size: int = 32, embeddings: dict | None = None,
+):
+    """Embed and ingest literary text chunks into Qdrant.
+
+    Args:
+        embeddings: Pre-computed {"dense_vecs": np.ndarray, "lexical_weights": list}.
+                    If provided, skips encoding (used with embedding cache).
+    """
     from qdrant_client.models import PointStruct, SparseVector
 
     jsonl_path = Path(jsonl_path)
-    print(f"\n[ingest] Ingesting literary chunks from {jsonl_path.name}...")
+    print(f"[ingest] Ingesting literary chunks from {jsonl_path.name}...")
 
     chunks = []
     with open(jsonl_path, "r", encoding="utf-8") as f:
@@ -449,11 +456,13 @@ def ingest_literary_chunks(client, jsonl_path: Path, batch_size: int = 32):
         print("  No chunks found, skipping.")
         return 0
 
-    print(f"  {len(chunks)} chunks to embed...")
-
-    encoder = get_text_encoder()
-    texts = [c["text"] for c in chunks]
-    embeddings = encoder.encode(texts, batch_size=batch_size)
+    if embeddings is None:
+        print(f"  {len(chunks)} chunks to embed...")
+        encoder = get_text_encoder()
+        texts = [c["text"] for c in chunks]
+        embeddings = encoder.encode(texts, batch_size=batch_size)
+    else:
+        print(f"  {len(chunks)} chunks (using cached embeddings)")
 
     dense_vecs = embeddings["dense_vecs"]
     sparse_weights = embeddings["lexical_weights"]
@@ -498,7 +507,6 @@ def ingest_literary_chunks(client, jsonl_path: Path, batch_size: int = 32):
     for i in range(0, len(points), batch_size):
         batch = points[i : i + batch_size]
         client.upsert(collection_name=LITERARY_COLLECTION, points=batch)
-        print(f"  Uploaded {min(i + batch_size, len(points))}/{len(points)}")
 
     print(f"  Done: {len(points)} literary chunks ingested.")
     return len(points)

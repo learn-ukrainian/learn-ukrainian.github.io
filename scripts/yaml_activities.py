@@ -407,6 +407,56 @@ class DebateActivity:
     model_analysis: str = ""
 
 
+# ---------------------------------------------------------------------------
+# Pre-literacy activity types (A1 Cyrillic modules)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class ClassifyCategory:
+    label: str
+    items: list[str]
+
+
+@dataclass
+class ClassifyActivity:
+    type: str = "classify"
+    title: str = ""
+    instruction: str = ""
+    categories: list[ClassifyCategory] = field(default_factory=list)
+
+
+@dataclass
+class ImageToLetterItem:
+    emoji: str
+    answer: str
+    distractors: list[str] = field(default_factory=list)
+    note: str = ""
+
+
+@dataclass
+class ImageToLetterActivity:
+    type: str = "image-to-letter"
+    title: str = ""
+    instruction: str = ""
+    items: list[ImageToLetterItem] = field(default_factory=list)
+
+
+@dataclass
+class WatchAndRepeatItem:
+    video: str
+    letter: str = ""
+    word: str = ""
+    note: str = ""
+
+
+@dataclass
+class WatchAndRepeatActivity:
+    type: str = "watch-and-repeat"
+    title: str = ""
+    instruction: str = ""
+    items: list[WatchAndRepeatItem] = field(default_factory=list)
+
+
 # Type alias
 Activity = Union[
     QuizActivity, SelectActivity, TrueFalseActivity, FillInActivity,
@@ -416,7 +466,8 @@ Activity = Union[
     EssayResponseActivity, CriticalAnalysisActivity,
     ComparativeStudyActivity, AuthorialIntentActivity,
     SourceEvaluationActivity, DebateActivity,
-    EtymologyTraceActivity, GrammarIdentifyActivity
+    EtymologyTraceActivity, GrammarIdentifyActivity,
+    ClassifyActivity, ImageToLetterActivity, WatchAndRepeatActivity,
 ]
 
 
@@ -493,6 +544,9 @@ class ActivityParser:
             'paleography-analysis': self._parse_paleography_analysis,
             'dialect-comparison': self._parse_dialect_comparison,
             'translation-critique': self._parse_translation_critique,
+            'classify': self._parse_classify,
+            'image-to-letter': self._parse_image_to_letter,
+            'watch-and-repeat': self._parse_watch_and_repeat,
         }
         parser = parsers.get(activity_type)
         return parser(data) if parser else None
@@ -824,6 +878,53 @@ class ActivityParser:
             focus_points=data.get('focus_points', [])
         )
 
+    # ------------------------------------------------------------------
+    # Pre-literacy activity parsers
+    # ------------------------------------------------------------------
+
+    def _parse_classify(self, data: dict) -> ClassifyActivity:
+        cats = []
+        for c in data.get('categories', []):
+            cats.append(ClassifyCategory(
+                label=c.get('label', ''),
+                items=c.get('items', []),
+            ))
+        return ClassifyActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            categories=cats,
+        )
+
+    def _parse_image_to_letter(self, data: dict) -> ImageToLetterActivity:
+        items = []
+        for i in data.get('items', []):
+            items.append(ImageToLetterItem(
+                emoji=i.get('emoji', ''),
+                answer=i.get('answer', ''),
+                distractors=i.get('distractors', []),
+                note=i.get('note', ''),
+            ))
+        return ImageToLetterActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            items=items,
+        )
+
+    def _parse_watch_and_repeat(self, data: dict) -> WatchAndRepeatActivity:
+        items = []
+        for i in data.get('items', []):
+            items.append(WatchAndRepeatItem(
+                video=i.get('video', ''),
+                letter=i.get('letter', ''),
+                word=i.get('word', ''),
+                note=i.get('note', ''),
+            ))
+        return WatchAndRepeatActivity(
+            title=data.get('title', ''),
+            instruction=data.get('instruction', ''),
+            items=items,
+        )
+
     def _escape_jsx(self, text: str) -> str:
         """Escapes characters that break JSX parsing when used as a string literal attribute."""
         if not text: return ""
@@ -883,6 +984,9 @@ class ActivityParser:
         if isinstance(activity, PaleographyAnalysisActivity): return self._paleography_analysis_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, DialectComparisonActivity): return self._dialect_comparison_to_mdx(activity, is_ukrainian_forced)
         if isinstance(activity, TranslationCritiqueActivity): return self._translation_critique_to_mdx(activity, is_ukrainian_forced)
+        if isinstance(activity, ClassifyActivity): return self._classify_to_mdx(activity)
+        if isinstance(activity, ImageToLetterActivity): return self._image_to_letter_to_mdx(activity)
+        if isinstance(activity, WatchAndRepeatActivity): return self._watch_and_repeat_to_mdx(activity)
         return ''
 
     def _quiz_to_mdx(self, activity: QuizActivity) -> str:
@@ -1078,3 +1182,42 @@ class ActivityParser:
         focus_points = self._dump_safe_json(activity.focus_points) if activity.focus_points else '[]'
         instruction_prop = f' instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}' if activity.instruction else ''
         return f"### {self._escape_jsx(activity.title)}\n\n<TranslationCritique client:load title=\"{self._escape_jsx(activity.title)}\"{instruction_prop} original={{{json.dumps(activity.original, ensure_ascii=False)}}} translations={{JSON.parse(`{self._dump_safe_json(translations)}`)}} focusPoints={{JSON.parse(`{focus_points}`)}} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+
+    # ------------------------------------------------------------------
+    # Pre-literacy activity renderers
+    # ------------------------------------------------------------------
+
+    def _classify_to_mdx(self, activity: ClassifyActivity) -> str:
+        cats = [{'label': c.label, 'items': c.items} for c in activity.categories]
+        props = f'categories={{JSON.parse(`{self._dump_safe_json(cats)}`)}}'
+        if activity.title:
+            props += f' title="{self._escape_jsx(activity.title)}"'
+        if activity.instruction:
+            props += f' instruction="{self._escape_jsx(activity.instruction)}"'
+        heading = activity.title or 'Classify'
+        return f"### {self._escape_jsx(heading)}\n\n<Classify client:load {props} />"
+
+    def _image_to_letter_to_mdx(self, activity: ImageToLetterActivity) -> str:
+        items = [{'emoji': i.emoji, 'answer': i.answer, 'distractors': i.distractors} for i in activity.items]
+        props = f'items={{JSON.parse(`{self._dump_safe_json(items)}`)}}'
+        if activity.title:
+            props += f' title="{self._escape_jsx(activity.title)}"'
+        heading = activity.title or 'Image to Letter'
+        return f"### {self._escape_jsx(heading)}\n\n<ImageToLetter client:load {props} />"
+
+    def _watch_and_repeat_to_mdx(self, activity: WatchAndRepeatActivity) -> str:
+        items = []
+        for i in activity.items:
+            entry: dict[str, str] = {'video': i.video}
+            if i.letter:
+                entry['letter'] = i.letter
+            if i.word:
+                entry['word'] = i.word
+            if i.note:
+                entry['note'] = i.note
+            items.append(entry)
+        props = f'items={{JSON.parse(`{self._dump_safe_json(items)}`)}}'
+        if activity.title:
+            props += f' title="{self._escape_jsx(activity.title)}"'
+        heading = activity.title or 'Watch and Repeat'
+        return f"### {self._escape_jsx(heading)}\n\n<WatchAndRepeat client:load {props} />"

@@ -24,48 +24,48 @@ letters:
   - upper: А
     lower: а
     sound_type: vowel
-    key_word: арбуз
-    emoji: "\U0001F349"
+    key_word: ананас
+    emoji: "\U0001F34D"
     image_url: null
     pronunciation_video: "https://www.youtube.com/watch?v=hvB3VpcR3ZE"
 
   - upper: М
     lower: м
     sound_type: consonant
-    key_word: мама
-    emoji: "\U0001F469"
+    key_word: морква
+    emoji: "\U0001F955"
     image_url: null
     pronunciation_video: "https://www.youtube.com/watch?v=Ez95H4ibuJo"
 
   - upper: Л
     lower: л
     sound_type: consonant
-    key_word: лимон
-    emoji: "\U0001F34B"
+    key_word: літак
+    emoji: "\u2708\uFE0F"
     image_url: null
     pronunciation_video: "https://www.youtube.com/watch?v=v6-3Xg52Buk"
 
   - upper: У
     lower: у
     sound_type: vowel
-    key_word: улитка
-    emoji: "\U0001F40C"
+    key_word: Україна
+    emoji: "\U0001F1FA\U0001F1E6"
     image_url: null
     pronunciation_video: "https://www.youtube.com/watch?v=VB1O6PmtYRU"
 
   - upper: Н
     lower: н
     sound_type: consonant
-    key_word: ніс
-    emoji: "\U0001F443"
+    key_word: ножиці
+    emoji: "\u2702\uFE0F"
     image_url: null
     pronunciation_video: "https://www.youtube.com/watch?v=vNUfiKHPYaU"
 
   - upper: С
     lower: с
     sound_type: consonant
-    key_word: сонце
-    emoji: "\u2600\uFE0F"
+    key_word: сумка
+    emoji: "\U0001F45C"
     image_url: null
     pronunciation_video: "https://www.youtube.com/watch?v=7UsFBgSL91E"
 
@@ -117,21 +117,21 @@ activities:
   - type: image_to_letter
     title: "Яка перша буква?"
     items:
-      - emoji: "\U0001F349"
+      - emoji: "\U0001F34D"
         answer: А
         distractors: [М, У]
-      - emoji: "\U0001F469"
+      - emoji: "\U0001F955"
         answer: М
         distractors: [Н, Л]
-      - emoji: "\U0001F34B"
+      - emoji: "\u2708\uFE0F"
         answer: Л
         distractors: [М, Н]
-      - emoji: "\U0001F40C"
+      - emoji: "\U0001F1FA\U0001F1E6"
         answer: У
         distractors: [А, С]
-      - emoji: "\U0001F443"
+      - emoji: "\u2702\uFE0F"
         answer: Н
         distractors: [М, Л]
-      - emoji: "\u2600\uFE0F"
+      - emoji: "\U0001F45C"
         answer: С
         distractors: [Н, М]

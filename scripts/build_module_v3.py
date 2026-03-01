@@ -1,36 +1,31 @@
 #!/usr/bin/env python3
-"""Deterministic E2E Module Builder v3 — Optimised 4-Call Pipeline.
+"""E2E Module Builder — Pipeline v4 (named phases) + v3 (legacy).
 
-v3 collapses multiple v2 phases into optimised calls, reducing round-trips
-from 8-9 calls to 4 baseline (worst case 8 with fix iterations).
+Pipeline v4 (default):
+    research → content → activities → validate → [review] → mdx
 
-Cross-agent pipeline: Gemini builds (A/B/C), Claude reviews (D).
-This prevents self-review gaming detected by anti-gaming audit checks.
+    Named phases replace v3's letter-coded A/B/C/D/E/F:
+    - validate: merges v3 audit + D.0 + D.0.5 (all deterministic checks + Gemini fix)
+    - review: merges v3 D.1 + D.2 + F (Claude review + up to 2 fix attempts)
+    - mdx: always runs, even on validate/review failure (for preview)
 
-Pipeline:
-    Phase A:  Research + Meta         (1 Gemini call) ← v2 phases 0, 0.5, 1
-    Phase B:  Content                 (1 Gemini call) ← v2 phase 2 + track context
-    Phase C:  Activities + Vocab      (1 Gemini call) ← v2 phases 4a+4b + track context
-    Audit:    Prose+Enrichment audit  (0-3 Gemini fix calls)
-    Phase D:  Review + Fix            (1-2 Claude calls) ← cross-agent review
-    Phase F:  Final Review            (opt., agent-selectable) ← v2 phase 9
-    Phase E:  MDX                     (0 LLM calls) ← ALWAYS LAST
+    Two modes:
+    - RC (default): research → content → activities → validate → mdx (status: draft)
+    - Full (--review): adds Claude review phase (status: reviewed)
 
-Baseline: 3 Gemini + 1 Claude. Worst case: 3G + 3G audit + 2C Phase D = 8.
-Typical: 4-6 calls. v2: 8-9+.
+Pipeline v3 (--v3 flag):
+    Phase A → B → C → audit → D → [F] → E (legacy, preserved for compatibility)
+
+Cross-agent pipeline: Gemini builds, Claude reviews (prevents self-review gaming).
 
 Usage:
-    .venv/bin/python scripts/build_module_v3.py a1 12
-    .venv/bin/python scripts/build_module_v3.py hist 5
-    .venv/bin/python scripts/build_module_v3.py a1 --all
-    .venv/bin/python scripts/build_module_v3.py a1 --range 1-20
-    .venv/bin/python scripts/build_module_v3.py hist --all --research-only
-    .venv/bin/python scripts/build_module_v3.py a1 12 --rebuild
-    .venv/bin/python scripts/build_module_v3.py a1 12 --dry-run
-    .venv/bin/python scripts/build_module_v3.py a1 12 --verify
-    .venv/bin/python scripts/build_module_v3.py a1 12 --force-phase B
-    .venv/bin/python scripts/build_module_v3.py a1 12 --force-phase D
-    .venv/bin/python scripts/build_module_v3.py a1 12 --final-review
+    .venv/bin/python scripts/build_module_v3.py a1 12                    # RC mode (v4)
+    .venv/bin/python scripts/build_module_v3.py a1 12 --review           # Full mode (v4)
+    .venv/bin/python scripts/build_module_v3.py hist 5 --review          # Seminar + review
+    .venv/bin/python scripts/build_module_v3.py a1 --all                 # Build all (RC)
+    .venv/bin/python scripts/build_module_v3.py a1 12 --restart-from review  # Review → mdx
+    .venv/bin/python scripts/build_module_v3.py a1 12 --force-phase validate # Re-validate
+    .venv/bin/python scripts/build_module_v3.py a1 12 --v3               # Legacy v3 pipeline
 """
 
 from __future__ import annotations
@@ -132,6 +127,31 @@ def _max_audit_iters(track: str) -> int:
 ESCALATION_MODEL_CLAUDE = "claude-opus-4-6"       # Escalation: Claude fixes what Gemini can't
 ESCALATION_MODEL_GEMINI = PRO_MODEL                # Escalation: Gemini fixes what Claude can't
 
+# ---------------------------------------------------------------------------
+# V4 pipeline constants — named phases, simplified architecture
+# ---------------------------------------------------------------------------
+PHASE_SEQUENCE_V4 = ["research", "content", "activities", "validate", "review", "mdx"]
+
+_V4_PHASE_STATE_IDS: dict[str, list[str]] = {
+    "research":   ["v4-research"],
+    "content":    ["v4-content"],
+    "activities": ["v4-activities"],
+    "validate":   ["v4-validate"],
+    "review":     ["v4-review"],
+    "mdx":        ["v4-mdx"],
+}
+
+PHASE_LABELS_V4: dict[str, str] = {
+    "research":   "Research + Meta",
+    "content":    "Content (prose)",
+    "activities": "Activities + Vocab",
+    "validate":   "Validate (audit + screen + Gemini fix)",
+    "review":     "Review (Claude, optional)",
+    "mdx":        "MDX Generation",
+}
+
+MAX_REVIEW_FIX_ITERS = 2  # Review phase: max fix attempts after Claude review
+
 # Dispatch timeouts (seconds) — fail fast instead of hanging
 TIMEOUT_CONTENT = 600       # Phase A/B: research + content generation (10 min)
 TIMEOUT_ACTIVITIES = 600    # Phase C: activities + vocab (10 min)
@@ -199,6 +219,136 @@ def _mark_phase_v3(ctx: ModuleContext, state: dict, phase_id: str, status: str, 
         for sid in _V3_PHASE_STATE_IDS.get(phase_id, [phase_id]):
             phases[sid] = {"status": status, "ts": _now_iso(), **extra}
         _save_state_v3(ctx, state)
+
+
+# ---------------------------------------------------------------------------
+# V4 state helpers
+# ---------------------------------------------------------------------------
+
+def _state_file_v4(ctx: ModuleContext) -> Path:
+    return ctx.orch_dir / "state-v4.json"
+
+
+def _load_state_v4(ctx: ModuleContext) -> dict:
+    import json
+    sf = _state_file_v4(ctx)
+    if sf.exists():
+        try:
+            return json.loads(sf.read_text("utf-8"))
+        except Exception as e:
+            from datetime import datetime
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+            backup = sf.with_suffix(f".corrupted.{ts}.json")
+            sf.rename(backup)
+            logger.warning(
+                "state-v4.json corrupted for %s/%s — backed up to %s, resetting state. Error: %s",
+                ctx.track, ctx.slug, backup.name, e,
+            )
+    return {"track": ctx.track, "slug": ctx.slug, "mode": "v4", "phases": {}}
+
+
+def _save_state_v4(ctx: ModuleContext, state: dict) -> None:
+    import json, tempfile
+    sf = _state_file_v4(ctx)
+    sf.parent.mkdir(parents=True, exist_ok=True)
+    content = json.dumps(state, indent=2, ensure_ascii=False)
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=sf.parent, suffix=".tmp")
+    try:
+        with os.fdopen(tmp_fd, "w", encoding="utf-8") as f:
+            f.write(content)
+        Path(tmp_path).replace(sf)
+    except Exception:
+        Path(tmp_path).unlink(missing_ok=True)
+        raise
+
+
+def _is_phase_v4_complete(ctx: ModuleContext, phase_id: str, state: dict) -> bool:
+    """Check if a v4 phase is marked complete in state-v4.json."""
+    for sid in _V4_PHASE_STATE_IDS.get(phase_id, [phase_id]):
+        info = state.get("phases", {}).get(sid, {})
+        if info.get("status") == "complete":
+            return True
+    return False
+
+
+def _mark_phase_v4(ctx: ModuleContext, state: dict, phase_id: str, status: str, **extra: Any) -> None:
+    """Mark a v4 phase in state-v4.json (thread-safe via file lock)."""
+    lock = _state_lock or FileLock(str(ctx.orch_dir / "state-v4.json.lock"))
+    with lock:
+        phases = state.setdefault("phases", {})
+        for sid in _V4_PHASE_STATE_IDS.get(phase_id, [phase_id]):
+            phases[sid] = {"status": status, "ts": _now_iso(), **extra}
+        _save_state_v4(ctx, state)
+
+
+# ---------------------------------------------------------------------------
+# V4 screen result serialization (cache between validate → review)
+# ---------------------------------------------------------------------------
+
+def _compute_content_hash(ctx: ModuleContext) -> str:
+    """Hash md + activities + vocab files for cache invalidation."""
+    import hashlib
+    h = hashlib.md5()
+    for key in ("md", "activities", "vocabulary", "vocab"):
+        p = ctx.paths.get(key)
+        if p and p.exists():
+            h.update(p.read_bytes())
+    return h.hexdigest()[:16]
+
+
+def _save_screen_result(ctx: ModuleContext, screen: DScreenResult) -> None:
+    """Save DScreenResult + content hash for review phase reuse."""
+    import json, dataclasses
+    data = dataclasses.asdict(screen)
+    data["content_hash"] = _compute_content_hash(ctx)
+    (ctx.orch_dir / "screen-result.json").write_text(
+        json.dumps(data, ensure_ascii=False, indent=2), "utf-8")
+
+
+def _load_screen_result(ctx: ModuleContext) -> DScreenResult | None:
+    """Load cached screen result, return None if stale or missing."""
+    import json
+    f = ctx.orch_dir / "screen-result.json"
+    if not f.exists():
+        return None
+    try:
+        data = json.loads(f.read_text("utf-8"))
+    except Exception:
+        return None
+    current_hash = _compute_content_hash(ctx)
+    if data.get("content_hash") != current_hash:
+        log("  Review: Cached screen stale — re-screening")
+        return None
+    # Reconstruct DScreenResult (drop content_hash key)
+    data.pop("content_hash", None)
+    try:
+        return DScreenResult(**data)
+    except Exception:
+        return None
+
+
+# ---------------------------------------------------------------------------
+# V4 status propagation (draft / reviewed)
+# ---------------------------------------------------------------------------
+
+def _update_pipeline_status(ctx: ModuleContext, pipeline_status: str) -> None:
+    """Write pipeline_status into status/{slug}.json."""
+    import json
+    status_path = ctx.paths.get("status")
+    if not status_path:
+        return
+    status_path.parent.mkdir(parents=True, exist_ok=True)
+    if status_path.exists():
+        try:
+            data = json.loads(status_path.read_text("utf-8"))
+        except Exception:
+            data = {}
+    else:
+        data = {}
+    data["pipeline_status"] = pipeline_status
+    data["pipeline_status_ts"] = _now_iso()
+    status_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), "utf-8")
+    log(f"  Status: {pipeline_status} → {status_path.name}")
 
 
 # ---------------------------------------------------------------------------
@@ -1571,9 +1721,35 @@ def phase_C_v3(ctx: ModuleContext, state: dict) -> bool:
     voc_path = ctx.paths.get("vocabulary")
     if (act_path and act_path.exists() and voc_path and voc_path.exists()):
         if _validate_activities_yaml(act_path):
-            log("  Phase C: ADOPT — existing activities/vocab found and valid")
-            _mark_phase_v3(ctx, state, phase, "complete", note="adopted-existing")
-            return True
+            # Staleness check: if plan or content is newer than activities,
+            # the activities are stale (built from an old plan/content).
+            # --rebuild sets ctx.refresh=True which forces regeneration.
+            stale = False
+            if getattr(ctx, "refresh", False):
+                stale = True
+                log("  Phase C: --rebuild flag set — regenerating activities/vocab")
+            else:
+                act_mtime = act_path.stat().st_mtime
+                plan_path = ctx.paths.get("plan")
+                content_path = ctx.paths.get("md")
+                for ref_path, ref_label in [
+                    (plan_path, "plan"),
+                    (content_path, "content"),
+                ]:
+                    if ref_path and ref_path.exists() and ref_path.stat().st_mtime > act_mtime:
+                        stale = True
+                        log(f"  Phase C: Activities predate {ref_label} — regenerating")
+                        break
+
+            if stale:
+                act_path.unlink(missing_ok=True)
+                if voc_path and voc_path.exists():
+                    voc_path.unlink(missing_ok=True)
+                log("  Phase C: Deleted stale activities/vocab for regeneration")
+            else:
+                log("  Phase C: ADOPT — existing activities/vocab found and valid")
+                _mark_phase_v3(ctx, state, phase, "complete", note="adopted-existing")
+                return True
         else:
             log("  Phase C: Existing activities invalid — deleting and regenerating")
             act_path.unlink(missing_ok=True)
@@ -1868,6 +2044,13 @@ def _escalate_fix(ctx: ModuleContext, audit_output: str, phase_label: str,
     # Apply section fixes from Claude's output
     if output and "===SECTION_FIX_START===" in output:
         _apply_section_fixes(ctx.paths["md"], output)
+        # Also apply to activities/vocab if not content_only
+        if not content_only:
+            if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+                _apply_section_fixes(ctx.paths["activities"], output)
+            _vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+            if _vp and _vp.exists():
+                _apply_section_fixes(_vp, output)
         escalation_agent = "Gemini" if primary_agent == "claude" else "Claude"
         log(f"  {phase_label}: {escalation_agent} escalation fixes applied")
     elif output:
@@ -2094,6 +2277,8 @@ class DScreenResult:
     audit_passed: bool = False
     audit_output: str = ""
     h2_sections: str = ""
+    rag_verify_stats: dict = field(default_factory=dict)            # RAG word verification stats
+    rag_verify_not_found: list[dict] = field(default_factory=list)  # Words not in VESUM/RAG
 
 
 @dataclass
@@ -2457,6 +2642,7 @@ def _deterministic_screen(ctx: ModuleContext) -> DScreenResult:
     3. Single run_verify() — THE one audit call for D.0
     4. Russicism regex scan — from russicism_detection.py
     5. LLM filler regex scan — absorbed from proofread.py patterns
+    6. RAG word verification — VESUM + Qdrant (graceful degradation)
 
     Returns DScreenResult with all findings for D.1 injection.
     """
@@ -2511,6 +2697,29 @@ def _deterministic_screen(ctx: ModuleContext) -> DScreenResult:
         except Exception as e:
             logger.warning("D.0: LLM filler scan failed: %s", e)
 
+    # 7. RAG word verification (VESUM + Qdrant)
+    if content_path and content_path.exists():
+        try:
+            from rag_batch_verify import verify_module as rag_verify_module
+            rag_results, rag_stats = rag_verify_module(
+                content_path, use_rag=True, skip_activities=False,
+            )
+            result.rag_verify_stats = rag_stats
+            result.rag_verify_not_found = [
+                r for r in rag_results if r["status"] in ("❌", "⚠️")
+            ]
+            n_not_found = rag_stats.get("not_found", 0)
+            n_partial = rag_stats.get("rag_hits", 0)
+            if n_not_found > 0 or n_partial > 0:
+                log(f"  D.0: RAG verify: {rag_stats['total']} words, "
+                    f"{rag_stats['vesum_hits']} VESUM ✓, "
+                    f"{n_partial} RAG-only ⚠️, {n_not_found} not found ❌")
+            else:
+                log(f"  D.0: RAG verify: {rag_stats['total']} words, "
+                    f"100% VESUM coverage ✅")
+        except Exception as e:
+            logger.warning("D.0: RAG word verification failed: %s", e)
+
     det_count = len(result.deterministic_issues)
     if det_count > 0:
         log(f"  D.0: {det_count} deterministic issue(s) found "
@@ -2549,6 +2758,47 @@ def _format_filler_phrases(issues: list[dict]) -> str:
     lines = ["D.0 found these filler phrases — verify each one:"]
     for f in filler[:10]:
         lines.append(f"- \"{f.get('text', '')}\" at {f.get('location', '?')}")
+    return "\n".join(lines)
+
+
+def _format_rag_verification(stats: dict, not_found: list[dict]) -> str:
+    """Format RAG word verification results for D.1 prompt injection."""
+    if not stats:
+        return "(RAG word verification did not run — VESUM DB may be missing)"
+
+    total = stats.get("total", 0)
+    vesum = stats.get("vesum_hits", 0)
+    coverage = (vesum / total * 100) if total else 0
+
+    lines = [
+        f"**Words checked:** {total} | **VESUM coverage:** {vesum}/{total} ({coverage:.1f}%)",
+    ]
+
+    if not not_found:
+        lines.append("All words verified ✅ — no morphological issues detected.")
+        return "\n".join(lines)
+
+    not_found_words = [r for r in not_found if r["status"] == "❌"]
+    partial_words = [r for r in not_found if r["status"] == "⚠️"]
+
+    if not_found_words:
+        lines.append("")
+        lines.append(f"**❌ Not found in VESUM or textbooks ({len(not_found_words)}):**")
+        for r in not_found_words[:15]:  # Cap at 15 to avoid prompt bloat
+            lines.append(f"- `{r['original']}` (source: {r['source']})")
+        if len(not_found_words) > 15:
+            lines.append(f"- ... and {len(not_found_words) - 15} more")
+        lines.append("")
+        lines.append("**Action:** Check if these are valid Ukrainian word forms. "
+                      "Proper nouns and vocative forms may be legitimate. "
+                      "Hallucinated forms or Russianisms must be flagged.")
+
+    if partial_words:
+        lines.append("")
+        lines.append(f"**⚠️ Found in textbooks only, not VESUM ({len(partial_words)}):**")
+        for r in partial_words[:10]:
+            lines.append(f"- `{r['original']}` (source: {r['source']})")
+
     return "\n".join(lines)
 
 
@@ -2679,6 +2929,12 @@ def phase_D_v3(ctx: ModuleContext, state: dict) -> bool:
     # RAG primary source verification (seminar tracks only)
     rag_context = _prefetch_rag_context(ctx)
     prompt_text = prompt_text.replace("{RAG_PRIMARY_SOURCES}", rag_context)
+
+    # RAG word verification (all tracks)
+    rag_word_context = _format_rag_verification(
+        screen.rag_verify_stats, screen.rag_verify_not_found,
+    )
+    prompt_text = prompt_text.replace("{RAG_WORD_VERIFICATION}", rag_word_context)
 
     prompt_file.write_text(prompt_text, "utf-8")
 
@@ -3145,7 +3401,674 @@ def _phase_F_gemini(ctx: ModuleContext) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Pipeline Runner
+# V4 Phase Functions
+# ---------------------------------------------------------------------------
+
+_V4_TO_V3_PHASE_MAP: dict[str, list[str]] = {
+    "research":   ["A", "2"],
+    "content":    ["B", "3"],
+    "activities": ["C", "5-enrich"],
+}
+
+
+def _v3_state_for_delegation(ctx: ModuleContext) -> dict:
+    """Load v3 state for delegating to v3 phase functions.
+
+    v3 functions internally call _mark_phase_v3 which writes to state-v3.json.
+    We must pass a v3 state dict, not the v4 state, to avoid corruption.
+    """
+    return _load_state_v3(ctx)
+
+
+def _clear_v3_phases_for_v4(ctx: ModuleContext, v4_phase_ids: list[str]) -> None:
+    """Clear v3 state entries for phases being re-run via v4 --force-phase/--restart-from.
+
+    When v4 forces a delegated phase (research/content/activities), the v3 state
+    must also be cleared or phase_A/B/C_v3 will see it as complete and skip.
+    """
+    v3_ids_to_clear: list[str] = []
+    for pid in v4_phase_ids:
+        v3_ids_to_clear.extend(_V4_TO_V3_PHASE_MAP.get(pid, []))
+    if not v3_ids_to_clear:
+        return
+    v3_state = _load_state_v3(ctx)
+    phases = v3_state.get("phases", {})
+    changed = False
+    for v3id in v3_ids_to_clear:
+        if v3id in phases:
+            phases.pop(v3id)
+            changed = True
+    if changed:
+        _save_state_v3(ctx, v3_state)
+
+
+def phase_research_v4(ctx: ModuleContext, state: dict) -> bool:
+    """v4 research = v3 Phase A."""
+    if _is_phase_v4_complete(ctx, "research", state):
+        log("  research: SKIP (already complete)")
+        return True
+    v3_state = _v3_state_for_delegation(ctx)
+    result = phase_A_v3(ctx, v3_state)
+    if result:
+        _mark_phase_v4(ctx, state, "research", "complete")
+    return result
+
+
+def phase_content_v4(ctx: ModuleContext, state: dict) -> bool:
+    """v4 content = v3 Phase B."""
+    if _is_phase_v4_complete(ctx, "content", state):
+        log("  content: SKIP (already complete)")
+        return True
+    v3_state = _v3_state_for_delegation(ctx)
+    result = phase_B_v3(ctx, v3_state)
+    if result:
+        _mark_phase_v4(ctx, state, "content", "complete")
+    return result
+
+
+def phase_activities_v4(ctx: ModuleContext, state: dict) -> bool:
+    """v4 activities = v3 Phase C."""
+    if _is_phase_v4_complete(ctx, "activities", state):
+        log("  activities: SKIP (already complete)")
+        return True
+    v3_state = _v3_state_for_delegation(ctx)
+    result = phase_C_v3(ctx, v3_state)
+    if result:
+        _mark_phase_v4(ctx, state, "activities", "complete")
+    return result
+
+
+def phase_validate_v4(ctx: ModuleContext, state: dict) -> bool:
+    """Validate: full deterministic checks + Gemini fix loop.
+
+    Merges v3 audit + screen + D.0 + D.0.5 into one phase.
+    Runs content_only=False (full audit including activities).
+    """
+    phase = "validate"
+    if _is_phase_v4_complete(ctx, phase, state):
+        log("  validate: SKIP (already complete)")
+        return True
+
+    if ctx.dry_run:
+        log("  validate: DRY-RUN — would run full audit + screen + fix loop")
+        return True
+
+    # Check sidecar files exist (moved from phase_D_v3)
+    act_path = ctx.paths.get("activities")
+    vocab_path = ctx.paths.get("vocabulary")
+    missing = []
+    if act_path and not act_path.exists():
+        missing.append(f"activities: {act_path.name}")
+    if vocab_path and not vocab_path.exists():
+        missing.append(f"vocabulary: {vocab_path.name}")
+    if missing:
+        log(f"  validate: BLOCKED — missing sidecar files: {', '.join(missing)}")
+        return False
+
+    # Auto-fix pass: apply deterministic fixes before any LLM call
+    auto_fix_total = _run_deterministic_fixes(ctx)
+    if auto_fix_total > 0:
+        log(f"  validate: {auto_fix_total} deterministic fix(es) applied")
+
+    # Initial screen (content_only=False — full audit including activities)
+    screen = _deterministic_screen(ctx)
+    log(f"  validate: Initial — audit {'PASS' if screen.audit_passed else 'FAIL'}, "
+        f"{len(screen.deterministic_issues)} issue(s)")
+
+    if screen.audit_passed and not screen.deterministic_issues:
+        _save_screen_result(ctx, screen)
+        _mark_phase_v4(ctx, state, phase, "complete", attempts=0)
+        _update_pipeline_status(ctx, "draft")
+        return True
+
+    # Gemini proofread (D.0.5 logic) — only when prose-related issues exist.
+    # Skip proofread if only activity/schema/vocab issues (wasteful otherwise).
+    _PROSE_ISSUE_TYPES = {"RUSSIANISM", "LLM_FILLER"}
+    _PROSE_AUDIT_KEYWORDS = {"naturalness", "word_count", "immersion", "engagement", "euphony"}
+    _has_prose_issues = any(
+        i["type"] in _PROSE_ISSUE_TYPES for i in screen.deterministic_issues
+    )
+    if not _has_prose_issues and not screen.audit_passed:
+        # Check audit output for prose-related gate failures
+        _audit_lower = screen.audit_output.lower()
+        _has_prose_issues = any(kw in _audit_lower for kw in _PROSE_AUDIT_KEYWORDS)
+    if _has_prose_issues:
+        module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
+        log(f"  validate: Dispatching Gemini proofread+fix on {ctx.slug}...")
+        proofread_cmd = [
+            sys.executable, str(SCRIPTS_DIR / "proofread.py"),
+            ctx.track, str(module_num), "--fix", "--no-mdx",
+        ]
+        try:
+            proofread_result = subprocess.run(
+                proofread_cmd, capture_output=True, text=True, timeout=300,
+            )
+            pf_lines = (proofread_result.stdout or "").strip().split("\n")
+            pf_found = [l for l in pf_lines if "FOUND:" in l or "CLEAN:" in l or "Applied" in l]
+            for line in pf_found[-3:]:
+                log(f"    {line.strip()}")
+        except subprocess.TimeoutExpired:
+            log("  validate: proofread.py timed out (300s) — continuing")
+        except Exception as e:
+            log(f"  validate: proofread.py error: {e} — continuing")
+
+        # Re-screen after proofread
+        screen = _deterministic_screen(ctx)
+        log(f"  validate: Post-proofread — audit {'PASS' if screen.audit_passed else 'FAIL'}, "
+            f"{len(screen.deterministic_issues)} issue(s)")
+
+        if screen.audit_passed and not screen.deterministic_issues:
+            _save_screen_result(ctx, screen)
+            _mark_phase_v4(ctx, state, phase, "complete", attempts=0, note="proofread-fix")
+            _update_pipeline_status(ctx, "draft")
+            return True
+
+    # Gemini fix loop (audit fix loop logic from phase_audit_v3)
+    max_iters = getattr(ctx, "max_fix", None) or _max_audit_iters(ctx.track)
+    content_path = ctx.paths["md"]
+
+    for attempt in range(1, max_iters + 1):
+        log(f"  validate: Fix attempt {attempt}/{max_iters}...")
+
+        # Build fix prompt
+        fix_prompt = _build_fix_prompt(ctx, screen.audit_output, content_only=False)
+        fix_prompt_file = ctx.orch_dir / f"validate-fix{attempt}-prompt.md"
+        fix_prompt_file.write_text(fix_prompt, "utf-8")
+
+        # Dispatch Gemini fix
+        fix_output = _gemini_output_path(ctx.slug, f"validate-fix{attempt}")
+        ok, _ = dispatch_gemini(
+            _dispatch_prompt(ctx, fix_prompt_file),
+            task_id=f"v4-{ctx.slug}-validate-fix{attempt}",
+            model=ctx.model, allow_write=True, output_file=fix_output,
+            timeout=TIMEOUT_FIX,
+        )
+        if not ok:
+            log(f"  validate: Fix dispatch {attempt} failed")
+            continue
+
+        if fix_output.exists():
+            fix_text = fix_output.read_text("utf-8")
+            if "===SECTION_FIX_START===" in fix_text:
+                _apply_section_fixes(ctx.paths["md"], fix_text)
+                # Apply fixes to activities/vocab too (content_only=False)
+                if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+                    _apply_section_fixes(ctx.paths["activities"], fix_text)
+                _vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+                if _vp and _vp.exists():
+                    _apply_section_fixes(_vp, fix_text)
+
+        # Deterministic fixes after LLM fix
+        _run_deterministic_fixes(ctx)
+
+        # Re-screen
+        screen = _deterministic_screen(ctx)
+
+        if screen.audit_passed and not screen.deterministic_issues:
+            _save_screen_result(ctx, screen)
+            _mark_phase_v4(ctx, state, phase, "complete", attempts=attempt)
+            _update_pipeline_status(ctx, "draft")
+            return True
+
+        if attempt >= max_iters:
+            log(f"  validate: EXHAUSTED — {max_iters} fix attempts")
+            # Try escalation to Claude
+            if _escalate_fix(ctx, screen.audit_output, "validate", content_only=False):
+                screen = _deterministic_screen(ctx)
+                _save_screen_result(ctx, screen)
+                _mark_phase_v4(ctx, state, phase, "complete",
+                               attempts=attempt, note="escalation-claude")
+                _update_pipeline_status(ctx, "draft")
+                return True
+            _save_screen_result(ctx, screen)
+            _mark_phase_v4(ctx, state, phase, "failed",
+                           attempts=attempt, note="exhausted")
+            _update_pipeline_status(ctx, "needs-manual-review")
+            return False
+
+    # Should not reach here, but save results for safety
+    _save_screen_result(ctx, screen)
+    _update_pipeline_status(ctx, "needs-manual-review")
+    return False
+
+
+def phase_review_v4(ctx: ModuleContext, state: dict) -> bool:
+    """Review: Claude structured review + up to 2 fix attempts.
+
+    Loads cached screen results from validate phase.
+    Claude reviews holistically (pedagogy, naturalness, accuracy).
+    If FAIL: up to 2 Claude fix attempts, then re-validate.
+    """
+    phase = "review"
+    if _is_phase_v4_complete(ctx, phase, state):
+        log("  review: SKIP (already complete)")
+        return True
+
+    if ctx.dry_run:
+        log("  review: DRY-RUN — would dispatch Claude structured review")
+        return True
+
+    # Load cached screen results (with stale hash check)
+    screen = _load_screen_result(ctx)
+    if screen is None:
+        log("  review: No cached screen — running fresh screen")
+        screen = _deterministic_screen(ctx)
+
+    # Template selection
+    d1_template = PHASES_DIR / "phase-D1-structured-review.md"
+    if not d1_template.exists():
+        d1_template = PHASES_DIR / "phase-D1-evidence-review.md"
+    d2_template = PHASES_DIR / "phase-D2-repair.md"
+    if not d1_template.exists():
+        log(f"  review: ERROR — D1 template not found: {d1_template}")
+        return False
+    if not d2_template.exists():
+        log(f"  review: ERROR — D2 template not found: {d2_template}")
+        return False
+
+    claude_model = getattr(ctx, "claude_model_D", CLAUDE_MODEL_REVIEW)
+    review_timeout = _get_review_timeout(ctx.track)
+
+    # -----------------------------------------------------------------------
+    # Claude structured review (D.1 logic)
+    # -----------------------------------------------------------------------
+    log(f"  review: Preparing structured review prompt...")
+
+    module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
+    track_calibration = _get_track_calibration(ctx.track, module_num)
+    russicism_table = _get_russicism_table(ctx.track)
+
+    prompt_file = ctx.orch_dir / "review-prompt.md"
+    if not fill_template(d1_template, ctx.orch_dir / "placeholders.yaml", prompt_file):
+        return False
+
+    # Inject all placeholders into prompt
+    prompt_text = prompt_file.read_text("utf-8")
+    prompt_text = _inject_metrics_into_prompt(prompt_text, screen.metrics)
+    prompt_text = prompt_text.replace("{COMPUTED_H2_SECTIONS}", screen.h2_sections)
+    prompt_text = prompt_text.replace("{TRACK_CALIBRATION}", track_calibration or "(No track calibration available)")
+    prompt_text = prompt_text.replace("{DETERMINISTIC_ISSUES}", _format_deterministic_issues(screen.deterministic_issues))
+    prompt_text = prompt_text.replace("{RUSSIANISM_TABLE}", russicism_table or "(No track-specific Russianism table available — use general checklist)")
+    prompt_text = prompt_text.replace("{FILLER_PHRASES}", _format_filler_phrases(screen.deterministic_issues))
+
+    # RAG primary source verification
+    rag_context = _prefetch_rag_context(ctx)
+    prompt_text = prompt_text.replace("{RAG_PRIMARY_SOURCES}", rag_context)
+
+    # RAG word verification
+    rag_word_context = _format_rag_verification(
+        screen.rag_verify_stats, screen.rag_verify_not_found,
+    )
+    prompt_text = prompt_text.replace("{RAG_WORD_VERIFICATION}", rag_word_context)
+
+    prompt_file.write_text(prompt_text, "utf-8")
+
+    log(f"  review: Dispatching Claude review ({claude_model}, {review_timeout}s)...")
+    log(f"    Metrics: {screen.metrics.get('COMPUTED_WORD_COUNT', '?')}w / "
+        f"{screen.metrics.get('COMPUTED_WORD_TARGET', '?')}w, "
+        f"{screen.metrics.get('COMPUTED_ACTIVITY_COUNT', '?')} activities, "
+        f"immersion {screen.metrics.get('COMPUTED_IMMERSION_PERCENT', '?')}%")
+
+    ok, raw_output = _dispatch_claude_phase(
+        prompt_file, "Phase D.1",
+        model=claude_model, timeout=review_timeout,
+        allow_tools=["Read", "Grep", "Glob"],
+    )
+    if not ok:
+        log("  review: Dispatch FAILED")
+        _mark_phase_v4(ctx, state, phase, "failed", attempts=1, note="dispatch-failed")
+        return False
+
+    # Parse review
+    d1 = _parse_d1_review(raw_output)
+
+    if not d1.ok or not d1.raw_review:
+        log("  review: WARNING — no REVIEW delimiters in output (retrying)")
+        (ctx.orch_dir / "review-raw-output.md").write_text(raw_output, "utf-8")
+
+        ok2, raw2 = _dispatch_claude_phase(
+            prompt_file, "Phase D.1 (retry)",
+            model=claude_model, timeout=review_timeout,
+            allow_tools=["Read", "Grep", "Glob"],
+        )
+        if ok2:
+            d1 = _parse_d1_review(raw2)
+
+        if not d1.ok or not d1.raw_review:
+            log("  review: Retry also failed — no delimiters")
+            _mark_phase_v4(ctx, state, phase, "failed", attempts=1, note="no-review")
+            return False
+
+    review_text = d1.raw_review
+
+    # Pre-save quality gate
+    qg_ok, qg_reason = _quick_review_quality_gate(review_text, ctx.paths["md"])
+    if not qg_ok:
+        log(f"  review: REJECTED — {qg_reason}")
+        (ctx.orch_dir / "review-rejected.md").write_text(review_text, "utf-8")
+        _mark_phase_v4(ctx, state, phase, "failed", attempts=1, note="shallow-review")
+        return False
+
+    # Inject Reviewed-By metadata
+    if "Reviewed-By:" not in review_text:
+        review_text = f"**Reviewed-By:** {claude_model}\n\n{review_text}"
+
+    # Save review
+    write_review_with_hash(ctx.paths["review"], review_text, ctx.paths["md"])
+    (ctx.orch_dir / "review-result.md").write_text(review_text, "utf-8")
+    log(f"  review: Review saved → {ctx.paths['review'].name}")
+
+    # Deterministic fixes after review
+    _run_deterministic_fixes(ctx)
+
+    # Post-review audit
+    passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+
+    # Check review verdict
+    review_says_fail = d1.verdict == "FAIL"
+    if not review_says_fail and d1.scores.get("overall", 10) < 9.0:
+        review_says_fail = True
+    if not d1.verdict:
+        _status_m = re.search(r'\*\*Status:\*\*\s*(FAIL|PASS)', review_text)
+        _score_m = re.search(r'\*\*Overall Score:\*\*\s*([\d.]+)/10', review_text)
+        if _status_m and _status_m.group(1) == "FAIL":
+            review_says_fail = True
+        elif _score_m and float(_score_m.group(1)) < 9.0:
+            review_says_fail = True
+
+    # Fast path: review PASS + audit PASS → done
+    if passed and not review_says_fail:
+        log("  review: PASS (no repair needed)")
+        _mark_phase_v4(ctx, state, phase, "complete", attempts=1, note="review-only")
+        _update_pipeline_status(ctx, "reviewed")
+        mark_phase_locked(ctx, "6", "complete", note="v4-review")
+        mark_phase_locked(ctx, "7-final", "complete", note="v4-review")
+        return True
+
+    # Citation failure detection
+    _CITATION_FAILURES = ("FABRICATED_CITATIONS", "UNVERIFIED_CITATIONS")
+    if any(f"\u274c [{tag}]" in audit_out for tag in _CITATION_FAILURES):
+        log("  review: REVIEW QUALITY FAILURE — fabricated/unverified citations")
+        if ctx.paths["review"].exists():
+            ctx.paths["review"].unlink()
+        _mark_phase_v4(ctx, state, phase, "failed", attempts=1, note="citation-failure")
+        return False
+
+    # Pre-fix deterministic pass
+    auto_fix_count = _run_deterministic_fixes(ctx)
+    if auto_fix_count > 0:
+        passed_after_autofix, audit_out = run_verify(ctx.paths["md"], content_only=False)
+        if passed_after_autofix and not review_says_fail:
+            _mark_phase_v4(ctx, state, phase, "complete", attempts=1, note="autofix")
+            _update_pipeline_status(ctx, "reviewed")
+            mark_phase_locked(ctx, "6", "complete", note="v4-review")
+            mark_phase_locked(ctx, "7-final", "complete", note="v4-review")
+            return True
+
+    # Pre-fix triage: skip if all issues are diffuse
+    if _all_issues_diffuse(audit_out):
+        log("  review: SKIPPED fix — all issues are diffuse (needs manual review)")
+        _mark_phase_v4(ctx, state, phase, "failed", attempts=1, note="needs-manual-review")
+        _update_pipeline_status(ctx, "needs-manual-review")
+        return False
+
+    # Determine if D.2 should fix audit failures only (review said PASS)
+    _audit_only_fix = not review_says_fail and not passed
+
+    # -----------------------------------------------------------------------
+    # Fix attempts (up to MAX_REVIEW_FIX_ITERS)
+    # -----------------------------------------------------------------------
+    for fix_iter in range(MAX_REVIEW_FIX_ITERS):
+        iter_suffix = "" if fix_iter == 0 else f" (iter {fix_iter + 1})"
+        total_attempts = 2 + fix_iter
+
+        log(f"  review: Fix attempt {fix_iter + 1}/{MAX_REVIEW_FIX_ITERS}{iter_suffix}...")
+        failures = _extract_audit_failures(audit_out)
+
+        prompt_file2 = ctx.orch_dir / f"review-fix-{fix_iter + 1}-prompt.md"
+        if not fill_template(d2_template, ctx.orch_dir / "placeholders.yaml", prompt_file2):
+            return False
+
+        prompt2_text = prompt_file2.read_text("utf-8")
+        if _audit_only_fix:
+            audit_only_notice = (
+                "**IMPORTANT: The review verdict was PASS. "
+                "Fix ONLY the audit failures listed below. "
+                "Do NOT fix review suggestions — they are informational only.**\n\n"
+                "(Review omitted — verdict was PASS)\n"
+            )
+            prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", audit_only_notice)
+        else:
+            prompt2_text = prompt2_text.replace("{INJECTED_REVIEW_TEXT}", review_text)
+        prompt2_text = prompt2_text.replace("{INJECTED_AUDIT_FAILURES}", failures)
+        prompt2_text = prompt2_text.replace("{TRACK_CALIBRATION}", track_calibration or "")
+        prompt_file2.write_text(prompt2_text, "utf-8")
+
+        ok2, raw_output2 = _dispatch_claude_phase(
+            prompt_file2, f"Phase D.2{iter_suffix}",
+            model=claude_model, timeout=review_timeout,
+            allow_tools=["Read", "Grep", "Glob"],
+        )
+        if not ok2:
+            log(f"  review: Fix dispatch failed{iter_suffix}")
+            _mark_phase_v4(ctx, state, phase, "failed",
+                           attempts=total_attempts, note="fix-dispatch-failed")
+            return False
+
+        # Apply FIND/REPLACE fixes with diff-size blocker
+        if "===SECTION_FIX_START===" in raw_output2:
+            content_before = ctx.paths["md"].read_text("utf-8")
+            act_before: str | None = None
+            if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+                act_before = ctx.paths["activities"].read_text("utf-8")
+            vp = ctx.paths.get("vocab") or ctx.paths.get("vocabulary")
+            vocab_before: str | None = None
+            if vp and vp.exists():
+                vocab_before = vp.read_text("utf-8")
+
+            n_md = _apply_find_replace_fixes(ctx.paths["md"], raw_output2)
+            n_act = 0
+            if ctx.paths.get("activities"):
+                n_act = _apply_find_replace_fixes(ctx.paths["activities"], raw_output2)
+            n_vocab = 0
+            if vp and vp.exists():
+                n_vocab = _apply_find_replace_fixes(vp, raw_output2)
+            log(f"  review: Applied {n_md} content, {n_act} activity, {n_vocab} vocab fix(es)")
+
+            fix_pair_count = raw_output2.count("FIND:") if "FIND:" in raw_output2 else 1
+            content_after = ctx.paths["md"].read_text("utf-8")
+            act_after: str | None = None
+            if ctx.paths.get("activities") and ctx.paths["activities"].exists():
+                act_after = ctx.paths["activities"].read_text("utf-8")
+            vocab_after: str | None = None
+            if vp and vp.exists():
+                vocab_after = vp.read_text("utf-8")
+
+            changed_lines = _count_diff_lines(content_before, content_after)
+            if act_before is not None and act_after is not None:
+                changed_lines += _count_diff_lines(act_before, act_after)
+            if vocab_before is not None and vocab_after is not None:
+                changed_lines += _count_diff_lines(vocab_before, vocab_after)
+            max_allowed = max(fix_pair_count * 25, 50)
+
+            if changed_lines > max_allowed:
+                log(f"  review: REJECTED — {changed_lines} lines changed "
+                    f"(max {max_allowed} for {fix_pair_count} fix pairs)")
+                ctx.paths["md"].write_text(content_before, "utf-8")
+                if act_before is not None and ctx.paths.get("activities"):
+                    ctx.paths["activities"].write_text(act_before, "utf-8")
+                if vocab_before is not None and vp:
+                    vp.write_text(vocab_before, "utf-8")
+                _mark_phase_v4(ctx, state, phase, "failed",
+                               attempts=total_attempts, note="diff-too-large")
+                _update_pipeline_status(ctx, "needs-manual-review")
+                return False
+        else:
+            log(f"  review: WARNING — no SECTION_FIX delimiters{iter_suffix}")
+            (ctx.orch_dir / f"review-fix-{fix_iter + 1}-raw.md").write_text(raw_output2, "utf-8")
+
+        # Post-fix deterministic fixes + audit
+        _run_deterministic_fixes(ctx)
+        passed, audit_out = run_verify(ctx.paths["md"], content_only=False)
+
+        if passed:
+            log(f"  review: PASS (after fix {fix_iter + 1})")
+            _mark_phase_v4(ctx, state, phase, "complete",
+                           attempts=total_attempts, note=f"fix-iter{fix_iter + 1}")
+            _update_pipeline_status(ctx, "reviewed")
+            mark_phase_locked(ctx, "6", "complete", note="v4-review")
+            mark_phase_locked(ctx, "7-final", "complete", note="v4-review")
+            return True
+
+        if fix_iter < MAX_REVIEW_FIX_ITERS - 1:
+            log(f"  review: Fix {fix_iter + 1} insufficient — trying again...")
+
+    log("  review: EXHAUSTED — review + fix attempts all insufficient")
+    _mark_phase_v4(ctx, state, phase, "failed",
+                   attempts=2 + MAX_REVIEW_FIX_ITERS, note="needs-manual-review")
+    _update_pipeline_status(ctx, "needs-manual-review")
+    return False
+
+
+def phase_mdx_v4(ctx: ModuleContext) -> bool:
+    """v4 mdx = v3 Phase E (MDX generation + lint)."""
+    # Reset v2 MDX state so it regenerates
+    ctx.state.get("phases", {}).pop("8", None)
+    save_state(ctx)
+    return phase_E_v3(ctx)
+
+
+# ---------------------------------------------------------------------------
+# V4 Pipeline Runner
+# ---------------------------------------------------------------------------
+
+PHASE_FUNCTIONS_V4: dict[str, Any] = {
+    "research":   phase_research_v4,
+    "content":    phase_content_v4,
+    "activities": phase_activities_v4,
+    "validate":   phase_validate_v4,
+    "review":     phase_review_v4,
+    "mdx":        phase_mdx_v4,
+}
+
+
+def run_pipeline_v4(ctx: ModuleContext, research_only: bool = False) -> bool:
+    """Execute the v4 named-phase pipeline."""
+    state = _load_state_v4(ctx)
+
+    log(f"\nPipeline v4: named phases — {len(PHASE_SEQUENCE_V4)} phases")
+    if ctx.dry_run:
+        log("  (DRY-RUN — no dispatches)")
+    log("")
+
+    # Determine sequence
+    has_review = getattr(ctx, "review", False)
+    if research_only:
+        sequence = ["research"]
+    elif has_review:
+        sequence = list(PHASE_SEQUENCE_V4)  # all phases including review
+    else:
+        sequence = [p for p in PHASE_SEQUENCE_V4 if p != "review"]  # RC mode
+
+    # Print phase plan
+    for phase_id in sequence:
+        label = PHASE_LABELS_V4.get(phase_id, phase_id)
+        skip_note = " [DONE]" if _is_phase_v4_complete(ctx, phase_id, state) else ""
+        log(f"  {phase_id}: {label}{skip_note}")
+    log("")
+
+    # --force-phase: single phase only
+    force_phase = ctx.force_phase
+    if force_phase:
+        force_key = force_phase.lower()
+        if force_key not in PHASE_FUNCTIONS_V4:
+            log(f"  ERROR: Unknown v4 phase '{force_phase}'. Valid: {', '.join(PHASE_SEQUENCE_V4)}")
+            return False
+        log(f"  --force-phase {force_key}: running only this phase")
+        # Clear the v4 state for this phase
+        phases = state.setdefault("phases", {})
+        for sid in _V4_PHASE_STATE_IDS.get(force_key, []):
+            phases.pop(sid, None)
+        _save_state_v4(ctx, state)
+        # Also clear v3 state for delegated phases (research/content/activities)
+        _clear_v3_phases_for_v4(ctx, [force_key])
+        func = PHASE_FUNCTIONS_V4[force_key]
+        return _call_phase_v4(func, force_key, ctx, state)
+
+    # --restart-from: clear from this phase onward and run
+    restart_from = getattr(ctx, "restart_from", None)
+    if restart_from:
+        restart_key = restart_from.lower()
+        if restart_key not in PHASE_FUNCTIONS_V4:
+            log(f"  ERROR: Unknown v4 phase '{restart_from}'. Valid: {', '.join(PHASE_SEQUENCE_V4)}")
+            return False
+        idx = PHASE_SEQUENCE_V4.index(restart_key)
+        remaining = PHASE_SEQUENCE_V4[idx:]
+        # Filter out review if not requested
+        if not has_review:
+            remaining = [p for p in remaining if p != "review"]
+        # Clear state for restarted phases (v4 + v3 delegation)
+        _clear_v3_phases_for_v4(ctx, remaining)
+        phases = state.setdefault("phases", {})
+        for pid in remaining:
+            for sid in _V4_PHASE_STATE_IDS.get(pid, []):
+                phases.pop(sid, None)
+        _save_state_v4(ctx, state)
+        log(f"  --restart-from {restart_key}: running phases {', '.join(remaining)}")
+        for phase_id in remaining:
+            if not _call_phase_v4(PHASE_FUNCTIONS_V4[phase_id], phase_id, ctx, state):
+                # validate failure doesn't halt — continue to mdx for preview
+                if phase_id == "validate":
+                    log(f"  validate: FAIL — continuing to mdx for preview")
+                    continue
+                # review failure doesn't halt — continue to mdx
+                if phase_id == "review":
+                    log(f"  review: FAIL — continuing to mdx")
+                    continue
+                log(f"\n  PIPELINE STOPPED at {phase_id}")
+                return False
+        return True
+
+    # --stop-before
+    stop_before = getattr(ctx, "stop_before_v4", None)
+
+    # Full pipeline
+    for phase_id in sequence:
+        if stop_before and phase_id == stop_before:
+            log(f"\n  Stopping before {phase_id}")
+            return True
+
+        func = PHASE_FUNCTIONS_V4[phase_id]
+        if not _call_phase_v4(func, phase_id, ctx, state):
+            # validate failure doesn't halt — continue to mdx for preview
+            if phase_id == "validate":
+                log(f"  validate: FAIL — continuing to mdx for preview")
+                continue
+            # review failure doesn't halt — continue to mdx
+            if phase_id == "review":
+                log(f"  review: FAIL — continuing to mdx")
+                continue
+            log(f"\n  PIPELINE STOPPED at {phase_id}")
+            return False
+
+        if research_only and phase_id == "research":
+            log("\n  --research-only: research complete, stopping")
+            return True
+
+    return True
+
+
+def _call_phase_v4(func: Any, phase_id: str, ctx: ModuleContext,
+                   state: dict) -> bool:
+    """Call a v4 phase function."""
+    if phase_id == "mdx":
+        return func(ctx)
+    else:
+        return func(ctx, state)
+
+
+# ---------------------------------------------------------------------------
+# V3 Pipeline Runner (legacy)
 # ---------------------------------------------------------------------------
 
 PHASE_FUNCTIONS_V3: dict[str, Any] = {
@@ -3350,11 +4273,12 @@ def preflight_v3(args: argparse.Namespace) -> ModuleContext:
     # --stop-after C   → deprecated alias, means "stop after C" (audit is skipped)
     _sb = (getattr(args, "stop_before", None) or "").upper() or None
     _sa = (getattr(args, "stop_after", None) or "").upper() or None
+    _is_v4 = not getattr(args, "use_v3", False)
     if _sb and _sa:
         log("  ERROR: --stop-before and --stop-after are mutually exclusive")
         raise SystemExit(1)
-    if _sb:
-        # Convert --stop-before X → stop after the phase preceding X
+    if _sb and not _is_v4:
+        # v3 mode: Convert --stop-before X → stop after the phase preceding X
         # Case-insensitive lookup matching PHASE_SEQUENCE_V3 keys
         _all_phases = PHASE_SEQUENCE_V3 + ["E", "F"]
         _sb_key_map = {k.upper(): k for k in _all_phases}
@@ -3401,6 +4325,37 @@ def preflight_v3(args: argparse.Namespace) -> ModuleContext:
 
     # --max-fix N: override audit fix iterations
     ctx.max_fix = getattr(args, "max_fix", None)  # type: ignore[attr-defined]
+
+    return ctx
+
+
+def preflight_v4(args: argparse.Namespace) -> ModuleContext:
+    """Resolve all paths, load plan/meta, set v4-specific attributes."""
+    # Reuse v3 preflight for common setup (paths, plan, meta, models)
+    ctx = preflight_v3(args)
+
+    # Override mode
+    ctx.mode = "v4"  # type: ignore[attr-defined]
+    ctx.state["mode"] = "v4"
+
+    # v4-specific flags
+    ctx.review = getattr(args, "review", False)  # type: ignore[attr-defined]
+
+    # --stop-before for v4 (named phases)
+    sb = getattr(args, "stop_before", None)
+    if sb:
+        sb_lower = sb.lower()
+        if sb_lower not in PHASE_FUNCTIONS_V4:
+            log(f"  ERROR: Unknown v4 phase '{sb}'. Valid: {', '.join(PHASE_SEQUENCE_V4)}")
+            raise SystemExit(1)
+        ctx.stop_before_v4 = sb_lower  # type: ignore[attr-defined]
+    else:
+        ctx.stop_before_v4 = None  # type: ignore[attr-defined]
+
+    # --restart-from for v4
+    rf = getattr(args, "restart_from", None)
+    if rf:
+        ctx.restart_from = rf.lower()  # type: ignore[attr-defined]
 
     return ctx
 
@@ -3454,23 +4409,27 @@ def _is_final_review_done(paths: dict[str, Path]) -> bool:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="E2E Module Builder v3 — 4-call optimised pipeline.",
+        description="E2E Module Builder v4 — named-phase pipeline.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""\
+            Pipeline v4 phases: research → content → activities → validate → [review] → mdx
+
             Examples:
-              %(prog)s a1 12                           # Full E2E (4 calls)
-              %(prog)s hist 5                       # Seminar track
-              %(prog)s a1 --all                        # Build entire track
-              %(prog)s a1 --range 1-20                 # Build range
-              %(prog)s hist --all --research-only   # Pre-seed all research
-              %(prog)s a1 12 --rebuild                 # Nuke v3 state, restart
-              %(prog)s a1 12 --dry-run                 # Show plan, no dispatches
-              %(prog)s a1 12 --verify                  # Just audit
-              %(prog)s a1 12 --no-track-context        # Skip track context injection
-              %(prog)s a1 12 --force-phase B           # Re-run Phase B only
-              %(prog)s a1 12 --force-phase D           # Re-run review+fix only
-              %(prog)s a1 12 --max-fix 7                # Override audit fix iterations
-              %(prog)s a1 12 --final-review            # + Claude QA gate (Phase F)
+              %(prog)s a1 12                            # RC mode (no Claude review)
+              %(prog)s a1 12 --review                   # Full mode (with Claude review)
+              %(prog)s hist 5 --review                  # Seminar + review
+              %(prog)s a1 --all                         # Build entire track (RC)
+              %(prog)s a1 --range 1-20                  # Build range
+              %(prog)s hist --all --research-only       # Pre-seed all research
+              %(prog)s a1 12 --rebuild                  # Nuke state, restart
+              %(prog)s a1 12 --dry-run                  # Show plan, no dispatches
+              %(prog)s a1 12 --verify                   # Just audit
+              %(prog)s a1 12 --force-phase validate     # Re-run validate only
+              %(prog)s a1 12 --force-phase review       # Re-run review only
+              %(prog)s a1 12 --restart-from review      # Run: review → mdx
+              %(prog)s a1 12 --stop-before review       # Run: research→content→activities→validate→mdx
+              %(prog)s a1 12 --max-fix 7                # Override fix iterations
+              %(prog)s a1 12 --v3                       # Use legacy v3 pipeline
         """),
     )
     parser.add_argument("track", help="Track identifier (a1, a2, b1, ..., bio, hist, ...)")
@@ -3482,48 +4441,50 @@ def main() -> int:
     parser.add_argument("--range", type=str, default=None, dest="build_range",
                         help="Build a range of modules (e.g. 1-20)")
     parser.add_argument("--rebuild", action="store_true",
-                        help="Nuke v3 state and rebuild from Phase A")
+                        help="Nuke state and rebuild from research")
     parser.add_argument("--force-phase", type=str, default=None,
-                        help="Re-run a single v3 phase (A/B/C/audit/D/E/F)")
+                        help="Re-run a single phase (research/content/activities/validate/review/mdx)")
     parser.add_argument("--restart-from", type=str, default=None,
-                        help="Restart from a v3 phase (A/B/C/audit/D)")
+                        help="Restart from a phase (e.g. --restart-from review)")
     parser.add_argument("--force-research", action="store_true",
-                        help="Force fresh Phase A research even if research file exists")
+                        help="Force fresh research even if research file exists")
     parser.add_argument("--dry-run", action="store_true",
-                        help="Show plan without dispatching to Gemini")
+                        help="Show plan without dispatching")
     parser.add_argument("--refresh", action="store_true",
                         help="Regenerate prose from updated research")
     parser.add_argument("--verify", action="store_true",
                         help="Just run audit, print PASS/FAIL, exit")
     parser.add_argument("--research-only", action="store_true", dest="research_only",
-                        help="Run Phase A only (pre-seed research for all modules)")
+                        help="Run research phase only")
+    parser.add_argument("--review", action="store_true",
+                        help="Include Claude review phase (default: RC mode without review)")
     parser.add_argument("--stop-before", type=str, default=None, dest="stop_before",
-                        help="Stop before this phase (e.g. --stop-before D runs A→B→C→audit then stops)")
+                        help="Stop before this phase (e.g. --stop-before validate)")
     parser.add_argument("--stop-after", type=str, default=None, dest="stop_after",
-                        help="(Deprecated: prefer --stop-before) Stop after this phase")
+                        help="(v3 compat) Stop after this phase")
     parser.add_argument("--final-review", action="store_true", dest="final_review",
-                        help="Run Phase F: final QA gate after Phase D (optional)")
+                        help="(v3 compat) Alias for --review")
     parser.add_argument("--final-review-agent", type=str, default="claude",
                         choices=["claude", "gemini"], dest="final_review_agent",
-                        help="Agent for Phase F final review (default: claude)")
+                        help="(v3 compat) Agent for final review")
     parser.add_argument("--use-claude", type=str, default="", dest="use_claude",
-                        help="Phases to run via Claude instead of Gemini (e.g. 'A', 'C', 'A C'). "
-                             "A=research, C=activities. Phase D always uses Claude (cross-agent).")
+                        help="Phases to run via Claude instead of Gemini (e.g. 'A', 'C', 'A C')")
     parser.add_argument("--gemini-model", type=str, default=None, dest="gemini_model",
-                        help="Override Gemini model for all phases (default: from batch_gemini_config)")
+                        help="Override Gemini model for all phases")
     parser.add_argument("--claude-model-A", type=str, default=None, dest="claude_model_A",
-                        help=f"Claude model for Phase A/research (default: sonnet for core, opus for seminar)")
+                        help="Claude model for research")
     parser.add_argument("--claude-model-C", type=str, default=None, dest="claude_model_C",
-                        help=f"Claude model for Phase C/activities (default: sonnet for core, opus for seminar)")
+                        help="Claude model for activities")
     parser.add_argument("--claude-model-D", type=str, default=None, dest="claude_model_D",
-                        help="Claude model for Phase D/review (default: claude-opus-4-6)")
+                        help="Claude model for review (default: claude-opus-4-6)")
     parser.add_argument("--claude-model-F", type=str, default=None, dest="claude_model_F",
-                        help="Claude model for Phase F/final-review (default: claude-opus-4-6)")
+                        help="(v3 compat) Claude model for final review")
     parser.add_argument("--max-fix", type=int, default=None, dest="max_fix",
-                        help="Override max audit fix iterations (default: 3 core, 5 seminar)")
+                        help="Override max fix iterations (default: 6 core, 8 seminar)")
     parser.add_argument("--rescreen", action="store_true",
-                        help="Run D.0 screen + D.2 repair only (skip D.1 review). "
-                             "For applying newly-added deterministic checks to already-passed modules.")
+                        help="(v3 compat) Run deterministic screen + fix only")
+    parser.add_argument("--v3", action="store_true", dest="use_v3",
+                        help="Use legacy v3 pipeline instead of v4")
 
     args = parser.parse_args()
 
@@ -3538,7 +4499,8 @@ def main() -> int:
 
         if args.build_all:
             nums = list(range(1, total + 1))
-            print(f"Building ALL {total} modules in {args.track} (v3)", flush=True)
+            _ver = "v3" if args.use_v3 else "v4"
+            print(f"Building ALL {total} modules in {args.track} ({_ver})", flush=True)
         else:
             m = re.match(r"^(\d+)-(\d+)$", args.build_range)
             if not m:
@@ -3547,7 +4509,7 @@ def main() -> int:
             if start < 1 or end > total or start > end:
                 parser.error(f"Range {start}-{end} out of bounds (track has {total} modules)")
             nums = list(range(start, end + 1))
-            print(f"Building {args.track} modules {start}-{end} ({len(nums)} modules, v3)", flush=True)
+            print(f"Building {args.track} modules {start}-{end} ({len(nums)} modules, {_ver})", flush=True)
 
         passed_list, failed_list, skipped_list = [], [], []
         t0_batch = time.time()
@@ -3642,6 +4604,7 @@ def main() -> int:
                 dry_run=args.dry_run,
                 refresh=getattr(args, "refresh", False), verify=False,
                 research_only=args.research_only,
+                review=getattr(args, "review", False) or getattr(args, "final_review", False),
                 final_review=getattr(args, "final_review", False),
                 final_review_agent=getattr(args, "final_review_agent", "claude"),
                 use_claude=getattr(args, "use_claude", ""),
@@ -3653,33 +4616,49 @@ def main() -> int:
                 stop_before=getattr(args, "stop_before", None),
                 stop_after=getattr(args, "stop_after", None),
                 rescreen=getattr(args, "rescreen", False),
+                use_v3=getattr(args, "use_v3", False),
+                gemini_model=getattr(args, "gemini_model", None),
             )
             rc = _run_single_module(single_args)
             if rc == 0:
                 passed_list.append((n, slug))
             else:
-                # Auto-rebuild: if Phase D exhausted (needs-rebuild), attempt
-                # one rebuild automatically. Max 1 rebuild per module per --all run.
+                # Auto-rebuild: if review/D exhausted, attempt one rebuild.
                 _rebuilt_ok = False
                 if not args.rebuild:
                     try:
                         _rb_paths = get_module_paths(args.track, slug)
                         _rb_orch = _rb_paths["md"].parent / "orchestration" / slug
-                        _rb_state = _rb_orch / "state-v3.json"
-                        if _rb_state.exists():
+                        _needs_rebuild = False
+                        # Check v4 state first
+                        _rb_v4 = _rb_orch / "state-v4.json"
+                        if _rb_v4.exists():
                             import json as _jrb
-                            _rb_st = _jrb.loads(_rb_state.read_text("utf-8"))
-                            _rb_d = _rb_st.get("phases", {}).get("v3-D", {})
-                            if _rb_d.get("note", "").startswith("needs-rebuild"):
-                                print(f"  AUTO-REBUILD: Phase D exhausted — attempting rebuild...", flush=True)
-                                rebuild_args = argparse.Namespace(**vars(single_args))
-                                rebuild_args.rebuild = True
-                                if _run_single_module(rebuild_args) == 0:
-                                    passed_list.append((n, slug))
-                                    print(f"  AUTO-REBUILD: SUCCESS", flush=True)
-                                    _rebuilt_ok = True
-                                else:
-                                    print(f"  AUTO-REBUILD: FAILED — module needs manual attention", flush=True)
+                            _rb_st = _jrb.loads(_rb_v4.read_text("utf-8"))
+                            for phase_key in ("v4-review", "v4-validate"):
+                                _ph = _rb_st.get("phases", {}).get(phase_key, {})
+                                if _ph.get("note", "").startswith("needs-"):
+                                    _needs_rebuild = True
+                                    break
+                        # Fallback: check v3 state
+                        if not _needs_rebuild:
+                            _rb_v3 = _rb_orch / "state-v3.json"
+                            if _rb_v3.exists():
+                                import json as _jrb
+                                _rb_st = _jrb.loads(_rb_v3.read_text("utf-8"))
+                                _rb_d = _rb_st.get("phases", {}).get("v3-D", {})
+                                if _rb_d.get("note", "").startswith("needs-rebuild"):
+                                    _needs_rebuild = True
+                        if _needs_rebuild:
+                            print(f"  AUTO-REBUILD: review exhausted — attempting rebuild...", flush=True)
+                            rebuild_args = argparse.Namespace(**vars(single_args))
+                            rebuild_args.rebuild = True
+                            if _run_single_module(rebuild_args) == 0:
+                                passed_list.append((n, slug))
+                                print(f"  AUTO-REBUILD: SUCCESS", flush=True)
+                                _rebuilt_ok = True
+                            else:
+                                print(f"  AUTO-REBUILD: FAILED — module needs manual attention", flush=True)
                     except Exception as _rbe:
                         print(f"  AUTO-REBUILD: error checking state — {_rbe}", flush=True)
                 if not _rebuilt_ok:
@@ -3689,7 +4668,7 @@ def main() -> int:
         elapsed = time.time() - t0_batch
         elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"
         print(f"\n{'='*70}", flush=True)
-        print(f"BATCH COMPLETE — {args.track} v3 [{elapsed_str}]", flush=True)
+        print(f"BATCH COMPLETE — {args.track} {_ver} [{elapsed_str}]", flush=True)
         print(f"  Passed:  {len(passed_list)}", flush=True)
         print(f"  Failed:  {len(failed_list)}", flush=True)
         print(f"  Skipped: {len(skipped_list)} (already passing)", flush=True)
@@ -3735,28 +4714,50 @@ def main() -> int:
 
 
 def _run_single_module(args: argparse.Namespace) -> int:
-    """Run the v3 pipeline for a single module. Returns 0 on success, 1 on failure."""
+    """Run the pipeline for a single module. Returns 0 on success, 1 on failure.
+
+    Uses v4 pipeline by default, v3 with --v3 flag.
+    """
+    use_v3 = getattr(args, "use_v3", False)
+
+    # Compat: --final-review implies --review in v4
+    if not use_v3 and getattr(args, "final_review", False):
+        args.review = True
+
     try:
-        # --rebuild: nuke v3 state
+        # --rebuild: nuke state files
         if args.rebuild:
             slug = slug_for_num(args.track, args.num)
             paths = get_module_paths(args.track, slug)
             orch_dir = (paths.get("orchestration")
                         or CURRICULUM_DIR / "l2-uk-en" / args.track / "orchestration" / slug)
-            state_v3 = orch_dir / "state-v3.json"
-            if state_v3.exists():
-                state_v3.unlink()
-                print("  --rebuild: cleared state-v3.json", flush=True)
+            for state_name in ("state-v4.json", "state-v3.json"):
+                sf = orch_dir / state_name
+                if sf.exists():
+                    sf.unlink()
+                    print(f"  --rebuild: cleared {state_name}", flush=True)
 
-        ctx = preflight_v3(args)
+        if use_v3:
+            ctx = preflight_v3(args)
+        else:
+            ctx = preflight_v4(args)
         _init_log(ctx.slug)
         write_placeholders(ctx)
 
-        # --rescreen: D.0 screen + D.2 repair only (skip D.1 review)
+        # --rescreen: v3 compat — D.0 screen + D.2 repair only
         if getattr(args, "rescreen", False):
             t0 = time.time()
-            state = _load_state_v3(ctx)
-            ok = phase_D_rescreen(ctx, state)
+            if use_v3:
+                state = _load_state_v3(ctx)
+                ok = phase_D_rescreen(ctx, state)
+            else:
+                # v4: --rescreen → --force-phase validate
+                state = _load_state_v4(ctx)
+                phases = state.setdefault("phases", {})
+                for sid in _V4_PHASE_STATE_IDS.get("validate", []):
+                    phases.pop(sid, None)
+                _save_state_v4(ctx, state)
+                ok = phase_validate_v4(ctx, state)
             elapsed = time.time() - t0
             elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"
             if ok:
@@ -3766,29 +4767,35 @@ def _run_single_module(args: argparse.Namespace) -> int:
             return 0 if ok else 1
 
         t0 = time.time()
-        ok = run_pipeline_v3(
-            ctx,
-            research_only=getattr(ctx, "research_only", False),
-        )
+        if use_v3:
+            ok = run_pipeline_v3(
+                ctx,
+                research_only=getattr(ctx, "research_only", False),
+            )
+        else:
+            ok = run_pipeline_v4(
+                ctx,
+                research_only=getattr(ctx, "research_only", False),
+            )
         elapsed = time.time() - t0
         elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"
 
         write_completion_report_v2(ctx, ok)
 
+        _ver = "v3" if use_v3 else "v4"
         if ok:
             if ctx.dry_run:
-                log(f"\nDRY-RUN COMPLETE — would build {ctx.slug} in v3 mode [{elapsed_str}]")
+                log(f"\nDRY-RUN COMPLETE — would build {ctx.slug} in {_ver} mode [{elapsed_str}]")
             elif ctx.force_phase:
                 log(f"\nVERDICT: PASS — phase {ctx.force_phase} complete [{elapsed_str}]")
             elif getattr(ctx, "research_only", False):
-                log(f"\nVERDICT: PASS — research complete (v3) [{elapsed_str}]")
-            elif getattr(ctx, "stop_after", None):
-                _stop_label = PHASE_LABELS_V3.get(ctx.stop_after, ctx.stop_after)
-                log(f"\nVERDICT: PARTIAL — completed through {_stop_label} [{elapsed_str}]")
+                log(f"\nVERDICT: PASS — research complete ({_ver}) [{elapsed_str}]")
+            elif getattr(ctx, "stop_before_v4", None) or getattr(ctx, "stop_after", None):
+                log(f"\nVERDICT: PARTIAL — stopped early ({_ver}) [{elapsed_str}]")
             else:
                 passed, output = run_verify(ctx.paths["md"], content_only=False)
                 if passed:
-                    log(f"\nVERDICT: PASS — {ctx.slug} fully complete (v3) [{elapsed_str}]")
+                    log(f"\nVERDICT: PASS — {ctx.slug} fully complete ({_ver}) [{elapsed_str}]")
                 else:
                     log(f"\nVERDICT: FAIL — final verification failed [{elapsed_str}]")
                     for line in output.strip().split("\n")[-15:]:
