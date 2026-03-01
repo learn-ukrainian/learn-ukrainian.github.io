@@ -916,29 +916,6 @@ CALLOUT_MAP = {
     'realworld': {'type': 'tip', 'icon': '🌐', 'title': 'Real World', 'uk_title': 'Реальний світ'},
 }
 
-def resolve_slug_links(content: str) -> str:
-    """Resolve [slug:xxx] links to actual module paths and titles.
-
-    Transforms:
-        [slug:my-world-objects] → [My World Objects](/a1/module-05)
-        [slug:trypillian-civilization] → [Трипільська цивілізація](/hist/trypillian-civilization)
-
-    RFC #410 Phase 1: Allows stable cross-module links that don't break when modules are renumbered.
-    """
-    def replace_slug_link(match):
-        slug = match.group(1)
-        module = get_module_by_slug(slug)
-        if module:
-            return f"[{module.title}]({module.path})"
-        else:
-            # Keep original if not found (will be caught by validation)
-            print(f"Warning: Unknown slug in link: {slug}")
-            return match.group(0)
-
-    # Pattern: [slug:some-module-name]
-    return re.sub(r'\[slug:([a-z0-9-]+)\]', replace_slug_link, content)
-
-
 def convert_callouts(content: str, is_ukrainian_forced: bool = False) -> str:
     """Convert GitHub-style callouts to Docusaurus admonitions.
 
@@ -1392,7 +1369,8 @@ import ActivityHelp from '@site/src/components/ActivityHelp';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
 import Classify from '@site/src/components/Classify';
-import ImageToLetter from '@site/src/components/ImageToLetter';"""
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import { Tabs, TabItem } from '@astrojs/starlight/components';"""
 
     # Frontmatter
     frontmatter = f'''---
@@ -1404,9 +1382,6 @@ sidebar:
 ---
 '''
 
-    # 0. Resolve slug links [slug:xxx] to actual paths (RFC #410)
-    body = resolve_slug_links(body)
-
     # 1. Clean up body: Remove existing Vocabulary, Activities, and Resources placeholders
     # Remove Activities
     body = re.sub(r'(^#{1,2}\s+(?:Activities|Вправи))[\s\S]*?(?=\n#{1,2}|\Z)', '', body, flags=re.MULTILINE)
@@ -1415,103 +1390,107 @@ sidebar:
     # Remove Resources callout
     body = re.sub(r'>\s*\[!resources\].*?(\n>.*)*', '', body, flags=re.MULTILINE | re.IGNORECASE)
 
-    # 2. Append new Resources (appears after Summary)
-    if external_resources:
-        resources_md = format_resources_for_mdx(external_resources, is_ukrainian_forced)
-        if resources_md:
-            body = body.rstrip() + '\n\n' + resources_md
+    # =========================================================================
+    # TABBED LAYOUT: Build 4 separate content blocks
+    # =========================================================================
 
-    # 3. Append new Vocabulary (appears last)
+    # --- TAB 1: Lesson (prose only) ---
+    lesson_content = body
+
+    # --- TAB 2: Vocabulary ---
     if vocab_items:
         vocab_header = "Словник" if is_ukrainian_forced else "Vocabulary"
-        
-        # Select vocabulary format based on headers policy
         if is_ukrainian_forced:
-            # Tier 3/4: 5 columns (Ukrainian, IPA included) - B1 M06+, B2, C1, C2, Tracks
-            vocab_md = _b1_vocab_items_to_markdown(vocab_items, vocab_header)
+            vocab_content = _b1_vocab_items_to_markdown(vocab_items, vocab_header)
         else:
-            # Tier 1/2: 6 columns (English Scaffolding) - A1, A2, B1 M01-05
-            vocab_md = _vocab_items_to_markdown(vocab_items, vocab_header)
-            
-        body = body.rstrip() + '\n\n' + vocab_md
-
-    # 4. Process activities (Injected BEFORE Vocabulary)
-    if yaml_activities:
-        act_header = "Вправи" if is_ukrainian_forced else "Activities"
-        activities_jsx = f'## 🎯 {act_header}\n\n' + yaml_activities_to_jsx(yaml_activities, is_ukrainian_forced)
-        
-        # Injected before Vocabulary/Словник
-        inject_match = re.search(r'\n(#{1,2}\s+(?:Vocabulary|Словник))', body)
-        if inject_match:
-            processed = body[:inject_match.start()] + '\n\n' + activities_jsx + '\n' + body[inject_match.start():]
-        else:
-            processed = body + '\n\n' + activities_jsx
+            vocab_content = _vocab_items_to_markdown(vocab_items, vocab_header)
+        # Strip the H2 header — the tab label serves as the header
+        vocab_content = re.sub(r'^## [^\n]+\n+', '', vocab_content)
     else:
-        processed = body
+        no_vocab_msg = "Немає словника для цього модуля." if is_ukrainian_forced else "No vocabulary for this module."
+        vocab_content = f"*{no_vocab_msg}*"
 
-    # 5. Embed YouTube video links as clickable thumbnails
-    processed = _embed_youtube_video_links(processed)
+    # --- TAB 3: Activities ---
+    if yaml_activities:
+        activities_content = yaml_activities_to_jsx(yaml_activities, is_ukrainian_forced)
+    else:
+        no_act_msg = "Немає вправ для цього модуля." if is_ukrainian_forced else "No activities for this module."
+        activities_content = f"*{no_act_msg}*"
 
-    # Convert callouts
-    processed = convert_callouts(processed, is_ukrainian_forced)
+    # --- TAB 4: Resources ---
+    resources_content = ""
+    if external_resources:
+        resources_content = format_resources_for_mdx(external_resources, is_ukrainian_forced)
+    if not resources_content:
+        no_res_msg = "Немає зовнішніх ресурсів для цього модуля." if is_ukrainian_forced else "No external resources for this module."
+        resources_content = f"*{no_res_msg}*"
 
-    # Resolve slug links (e.g., [slug:the-cyrillic-code-i] -> [The Cyrillic Code I](/a1/module-01))
-    processed = resolve_slug_links(processed)
+    # =========================================================================
+    # Process lesson content (Tab 1 only)
+    # =========================================================================
 
-    # Fix HTML for JSX compatibility (self-closing tags)
-    processed = fix_html_for_jsx(processed)
-    
-    # Convert HTML comments to JSX comments for Astro MDX compatibility
-    processed = re.sub(r'<!--(.*?)-->', r'{/**/}', processed, flags=re.DOTALL)
+    # Embed YouTube video links as clickable thumbnails (lesson prose only)
+    lesson_content = _embed_youtube_video_links(lesson_content)
 
-    # Process story sections (add blank lines between narrative lines)
-    processed = process_story_sections(processed)
+    # =========================================================================
+    # Apply shared transforms to all content blocks
+    # =========================================================================
+    def _apply_shared_transforms(text: str) -> str:
+        """Apply callout conversion, slug links, HTML fixes, comments, stories, dialogues."""
+        text = convert_callouts(text, is_ukrainian_forced)
+        text = resolve_slug_links(text)
+        text = fix_html_for_jsx(text)
+        text = re.sub(r'<!--(.*?)-->', r'{/**/}', text, flags=re.DOTALL)
+        text = process_story_sections(text)
+        text = process_dialogues(text)
+        return text
 
-    # Process dialogues (wrap em-dash lines in conversation divs)
-    processed = process_dialogues(processed)
+    lesson_content = _apply_shared_transforms(lesson_content)
+    vocab_content = _apply_shared_transforms(vocab_content)
+    activities_content = _apply_shared_transforms(activities_content)
+    resources_content = _apply_shared_transforms(resources_content)
 
-    # Remove duplicate H1 title
-    processed = re.sub(r'^#\s+[^\n]+\n', '', processed, count=1)
+    # Remove duplicate H1 title (from lesson tab only)
+    lesson_content = re.sub(r'^#\s+[^\n]+\n', '', lesson_content, count=1, flags=re.MULTILINE)
 
-    # Add emojis to H2 section headings for TOC (Standardize to H2 for Docusaurus)
-    
-    header_map = {
-        'Summary': 'Підсумок',
-        'Vocabulary': 'Словник',
-        'Self-Assessment': 'Самооцінка',
-        'External Resources': 'Зовнішні ресурси',
-        'Culture': 'Культура',
-        'Cultural Context': 'Культурний контекст',
-        'Heritage': 'Спадщина',
-        'Historical Context': 'Історичний контекст'
-    }
+    # Add emojis to H2 section headings (data-driven)
+    # (uk_text, emoji, regex_pattern, target_tab)
+    _HEADING_RULES = [
+        ('Підсумок',            '📋', r'Summary|Підсумок',                                                                  'lesson'),
+        ('Самооцінка',          '✅', r'Self-Assessment|Самооцінка',                                                         'lesson'),
+        ('Зовнішні ресурси',    '🔗', r'External Resources?|Зовнішні ресурси|Resources|Ресурси',                              'resources'),
+        ('Культура',            '🏺', r'Culture|Культура|Cultural Context|Культурний контекст|Folk Culture|Народна культура', 'lesson'),
+        ('Історичний контекст', '🕰️',  r'History|Historical Context|Історичний контекст|Heritage|Спадщина',                   'lesson'),
+    ]
+    content_blocks = {'lesson': lesson_content, 'resources': resources_content}
+    for uk_text, emoji, pattern, target in _HEADING_RULES:
+        replacement = uk_text if is_ukrainian_forced else r'\g<1>'
+        content_blocks[target] = re.sub(
+            rf'^#{{1,2}} ({pattern})', f'## {emoji} {replacement}',
+            content_blocks[target], flags=re.MULTILINE,
+        )
+    lesson_content = content_blocks['lesson']
+    resources_content = content_blocks['resources']
 
-    # Summary
-    sum_text = header_map['Summary'] if is_ukrainian_forced else r'\g<1>'
-    processed = re.sub(r'^#{1,2} (Summary|Підсумок)', f'## 📋 {sum_text}', processed, flags=re.MULTILINE)
-    
-    # Vocabulary
-    vocab_text = header_map['Vocabulary'] if is_ukrainian_forced else r'\g<1>'
-    processed = re.sub(r'^#{1,2} (Vocabulary|Словник)', f'## 📚 {vocab_text}', processed, flags=re.MULTILINE)
-    
-    # Self-Assessment
-    sa_text = header_map['Self-Assessment'] if is_ukrainian_forced else r'\g<1>'
-    processed = re.sub(r'^#{1,2} (Self-Assessment|Самооцінка)', f'## ✅ {sa_text}', processed, flags=re.MULTILINE)
-    
-    # External Resources
-    ext_text = header_map['External Resources'] if is_ukrainian_forced else r'\g<1>'
-    processed = re.sub(r'^#{1,2} (External Resources?|Зовнішні ресурси|Resources|Ресурси)', f'## 🔗 {ext_text}', processed, flags=re.MULTILINE)
-
-    # Culture / Cultural Context
-    cult_text = header_map['Culture'] if is_ukrainian_forced else r'\g<1>'
-    processed = re.sub(r'^#{1,2} (Culture|Культура|Cultural Context|Культурний контекст|Folk Culture|Народна культура)', f'## 🏺 {cult_text}', processed, flags=re.MULTILINE)
-
-    # Historical Context / Heritage
-    hist_text = header_map['Historical Context'] if is_ukrainian_forced else r'\g<1>'
-    processed = re.sub(r'^#{1,2} (History|Historical Context|Історичний контекст|Heritage|Спадщина)', f'## 🕰️ {hist_text}', processed, flags=re.MULTILINE)
+    # =========================================================================
+    # Wrap in Tabs
+    # =========================================================================
+    # (label_en, label_uk, content)
+    tabs = [
+        ("Lesson",     "Урок",    lesson_content),
+        ("Vocabulary", "Словник",  vocab_content),
+        ("Activities", "Вправи",   activities_content),
+        ("Resources",  "Ресурси",  resources_content),
+    ]
+    tab_items = '\n'.join(
+        f'<TabItem label="{uk if is_ukrainian_forced else en}">\n\n'
+        f'{content.strip()}\n\n</TabItem>'
+        for en, uk, content in tabs
+    )
+    tabbed = f'\n<Tabs syncKey="module-tab">\n{tab_items}\n</Tabs>\n'
 
     # Build MDX
-    parts = [frontmatter, imports, '', processed]
+    parts = [frontmatter, imports, '', tabbed]
 
     return normalize_mdx('\n'.join(parts))
 
@@ -1619,10 +1598,12 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
         return ""
 
     header_title = "Зовнішні ресурси" if is_ukrainian_forced else "External Resources"
-    
+    has_non_youtube = any(resources.get(t) for t in ['podcasts', 'articles', 'books', 'websites'])
+
     lines = []
-    lines.append(f"> [!resources] 🔗 {header_title}")
-    lines.append(">")
+    if has_non_youtube:
+        lines.append(f"> [!resources] 🔗 {header_title}")
+        lines.append(">")
 
     # Emoji icons per resource type
     display_names = {
@@ -1650,7 +1631,11 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
         items = resources.get(resource_type, [])
         if not items:
             continue
-            
+
+        # YouTube videos are rendered as embedded players below the callout
+        if resource_type == 'youtube':
+            continue
+
         final_display_name = display_names.get(display_name, display_name) if is_ukrainian_forced else display_name
 
         # Sort by: priority (1→5, highest first) → relevance (high→low) → title (A→Z)
@@ -1673,14 +1658,6 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
 
             if resource_type == 'podcasts':
                 desc = item.get('match_reason') or item.get('description', '')
-                if desc:
-                    lines.append(f"> - [{title}]({url}) — {desc}")
-                else:
-                    lines.append(f"> - [{title}]({url})")
-
-            elif resource_type == 'youtube':
-                channel = item.get('channel', '')
-                desc = item.get('description', channel)
                 if desc:
                     lines.append(f"> - [{title}]({url}) — {desc}")
                 else:
@@ -1719,6 +1696,42 @@ def format_resources_for_mdx(resources: dict, is_ukrainian_forced: bool = False)
 
     # Remove trailing blank line
     if lines and lines[-1] == ">":
+        lines.pop()
+
+    # --- YouTube videos as embedded players (outside the callout) ---
+    yt_items = resources.get('youtube', [])
+    if yt_items:
+        yt_header = "YouTube"
+        yt_sorted = sorted(
+            yt_items,
+            key=lambda x: (
+                -priority_map.get(x.get('priority'), 0),
+                -relevance_priority.get(x.get('relevance', 'low'), 0),
+                x.get('title', '').lower()
+            )
+        )
+        lines.append("")
+        lines.append(f"### 📺 {yt_header}")
+        lines.append("")
+        for item in yt_sorted:
+            title = item.get('title', 'Video')
+            url = validate_and_clean_url(item.get('url', ''), title)
+            channel = item.get('channel', '')
+            desc = item.get('description', '')
+            caption_parts = []
+            if channel:
+                caption_parts.append(channel)
+            if desc:
+                caption_parts.append(desc)
+            caption = " — ".join(caption_parts)
+            label = escape_jsx(title)
+            lines.append(f'<YouTubeVideo client:load url="{url}" label="{label}" />')
+            if caption:
+                lines.append(f"*{caption}*")
+            lines.append("")
+
+    # Remove any trailing empty lines
+    while lines and lines[-1] in ("", ">"):
         lines.pop()
 
     return '\n'.join(lines)
@@ -1935,9 +1948,14 @@ def main():
                 print(f'\n❌ CRITICAL: Error parsing YAML activities for {mod.slug}: {e}')
                 sys.exit(1)
 
-        # EXTERNAL RESOURCES
+        # EXTERNAL RESOURCES — try both slug formats:
+        #   "a1-the-cyrillic-code-i" (manifest slug) and
+        #   "a1-01-the-cyrillic-code-i" (numbered slug from resource generator)
         module_id = f"{mod.level}-{mod.slug}"
         module_resources = all_resources.get(module_id, {})
+        if not module_resources:
+            numbered_id = f"{mod.level}-{str(mod.local_num).zfill(2)}-{mod.slug}"
+            module_resources = all_resources.get(numbered_id, {})
 
         mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level)
 
